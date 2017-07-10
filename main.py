@@ -14,15 +14,22 @@ class MyApp(ShowBase):
         ShowBase.__init__(self)
 
         # camera
+        self.clip_plane_near = 0.01
+        self.clip_plane_far = 100
         # lens = OrthographicLens()
         lens = PerspectiveLens()
-        lens.setFov(40)
-        lens.setNear(0.1)
-        lens.setFar(100)
-        # lens.setFocalLength(50)
+        lens.setFocalLength(50)
         aspect_ratio = screen_size[0] / screen_size[1]
         lens.setAspectRatio(aspect_ratio)
         base.cam.node().setLens(lens)
+        camera.cam = base.camera
+        camera.lens = lens
+        camera.render = self.render
+        camera.fov = 40
+        camera.near_clip_plane = 0.01
+        camera.far_clip_plane = 100
+        # camera.focal_length = 50
+
 
         # input
         base.buttonThrowers[0].node().setKeystrokeEvent('keystroke')
@@ -57,83 +64,106 @@ class MyApp(ShowBase):
 
 
         # game objects
-        self.things = []
-        self.scene = Thing()
+        self.gameobjects = []
+        self.scene = Gameobject()
 
-        self.editor_camera = Thing()
+        self.editor_camera = Gameobject()
         self.editor_camera.name = 'editor_camera'
         self.editor_camera.parent = self.render
         # self.editor_camera.add_script(EditorCamera)
-        camera.cam = base.camera
-        camera.lens = lens
-        camera.render = self.render
+
         # camera.y = -100
-        camera.global_position = (0,-100,0)
+        camera.position = (0,-100,0)
         camera.rotation = (0,0,0)
-        self.things.append(self.editor_camera)
+        self.gameobjects.append(self.editor_camera)
 
         # UI
-        # ui_thing = Thing()
-        # ui_thing.name = 'ui'
-        # ui_thing.parent = self.render
-        # # ui_thing.position = (0, -2, 0)
-        # ui_thing.node_path.setPos(Vec3(0,-2,0))
-        # ui_thing.model = loader.loadModel('models/quad_rounded.egg')
-        # # ui_thing.model.hide()
-        # ui_script = ui_thing.add_script(UI)
-        # ui_script.fit_to_screen()
-        # self.things.append(ui_thing)
-        #
-        #
-        # for i in range(1):
-        #     button = Thing()
-        #     button.name = 'button'
-        #     button.parent = ui_thing
-        #     button.model = loader.loadModel('models/quad_rounded.egg')
-        #     button.global_position = (.125, 0, 0.0)
-        #     button.scale = (0.5, 0.5, 0.5)
-        #     button.origin = (-1, 0, 0)
-        #     button_script = button.add_script(Button)
-        #     button_script.ui = ui_script
-        #     button_script.color = color.gray
-        #     button_script.set_up()
-        #     self.things.append(button)
+        ui_gameobject = Gameobject()
+        ui_gameobject.name = 'ui'
+        ui_gameobject.parent = self.render
+        ui_gameobject.position = (0, -50, 0)
+        # ui_gameobject.node_path.setPos(Vec3(0,-2,0))
+        ui_gameobject.model = loader.loadModel('models/quad_rounded.egg')
+        ui_gameobject.model.hide()
+        ui_script = ui_gameobject.add_script(UI)
+        ui_script.fit_to_screen()
+        self.gameobjects.append(ui_gameobject)
+
+
+        for i in range(2):
+            button = Gameobject()
+            button.name = 'button'
+            button.parent = ui_gameobject.node_path
+            button.model = loader.loadModel('models/quad_rounded.egg')
+            button.position = (0.25 * i, 0, 0.0)
+            button.scale = (.25, 1, 0.5)
+            # button.origin = (-1, 0, 0)
+            button.collision = True
+            button.collider = (button.node_path.getPos(self.render), (0,0,0),
+                            (button.model.getScale(self.render)[0] /4, 1,
+                            button.model.getScale(self.render)[2] /4))
+
+            button_script = button.add_script(Button)
+            button_script.ui = ui_script
+            button_script.color = color.gray
+            button_script.set_up()
+            self.gameobjects.append(button)
+
+
+        # print(button.node_path.getScale(self.render))
 
 
 
-        thing = Thing()
-        thing.name = 'empty'
-        thing.parent = self.render
-        thing.model = self.loader.loadModel('models/cube.egg')
-        thing.model.reparentTo(thing.node_path)
-        thing.global_position = (0,0,0)
-        # thing.scale = .1
-        # thing.collision = True
-        # thing.collider
-        # thing.add_script('player')
-        thing.add_script(EditorCamera)
-        self.things.append(thing)
-        prev_thing = thing
+        # gameobject = Gameobject()
+        # gameobject.name = 'empty'
+        # gameobject.parent = self.render
+        # gameobject.model = self.loader.loadModel('models/cube.egg')
+        # gameobject.model.reparentTo(gameobject.node_path)
+        # gameobject.position = button.collider[0]
+        # gameobject.scale = button.collider[2]
 
-        thing = Thing()
-        thing.name = 'empty'
-        thing.parent = prev_thing
-        thing.model = self.loader.loadModel('models/cube.egg')
-        thing.model.reparentTo(thing.node_path)
-        thing.global_position = (0,0,0)
+
+        gameobject = Gameobject()
+        gameobject.name = 'empty'
+        gameobject.parent = self.render
+        gameobject.model = self.loader.loadModel('models/cube.egg')
+        gameobject.model.reparentTo(gameobject.node_path)
+        gameobject.position = (0,0,0)
+        # gameobject.scale = (0.5,0.5,0.5)
+        # gameobject.scale = .1
+        # gameobject.collision = True
+        # gameobject.collider
+        # gameobject.add_script('player')
+        gameobject.add_script(EditorCamera)
+        self.gameobjects.append(gameobject)
+        prev_gameobject = gameobject
+
+        # gameobject = Gameobject()
+        # gameobject.name = 'empty'
+        # gameobject.parent = prev_gameobject.node_path
+        # gameobject.model = self.loader.loadModel('models/cube.egg')
+        # gameobject.model.reparentTo(gameobject.node_path)
+        # gameobject.position = (3,0,0)
+        # gameobject.scale = (2,2,2)
+        # button_script = gameobject.add_script(Button)
+        # button_script.ui = ui_script
+        # button_script.color = color.gray
+        # button_script.set_up()
+        # self.gameobjects.append(gameobject)
+        # print(gameobject.node_path.getPos(self.render))
 
 
 
         # create button
-        # thing = Thing()
-        # thing.name = 'button'
-        # thing.origin = (-1,0,-1)
-        # thing.position = (0 * aspect_ratio ,0, 0)
-        # thing.scale = 0.04
-        # thing.size = (500,0,512)
+        # gameobject = gameobject()
+        # gameobject.name = 'button'
+        # gameobject.origin = (-1,0,-1)
+        # gameobject.position = (0 * aspect_ratio ,0, 0)
+        # gameobject.scale = 0.04
+        # gameobject.size = (500,0,512)
         # # button.collision = True
-        # thing.button = button.create_button(thing.name, thing.origin, thing.position, thing.size, thing.scale)
-        # self.things.append(thing)
+        # gameobject.button = button.create_button(gameobject.name, gameobject.origin, gameobject.position, gameobject.size, gameobject.scale)
+        # self.gameobjects.append(gameobject)
 
 
         self.update_task = taskMgr.add(self.update, "update")
@@ -147,9 +177,9 @@ class MyApp(ShowBase):
         dt = globalClock.getDt()
 
         mouse.update(dt)
-        for thing in self.things:
-            if thing.enabled:
-                for script in thing.scripts:
+        for gameobject in self.gameobjects:
+            if gameobject.enabled:
+                for script in gameobject.scripts:
                     try:
                         script.update(dt)
                     except:
@@ -159,9 +189,9 @@ class MyApp(ShowBase):
 
 
     def input(self, key):
-        for thing in self.things:
-            # if thing.enabled:
-            for script in thing.scripts:
+        for gameobject in self.gameobjects:
+            # if gameobject.enabled:
+            for script in gameobject.scripts:
                 try:
                     script.input(key)
                 except:

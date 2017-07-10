@@ -10,18 +10,18 @@ class EditorCamera():
     def input(self, key):
         print(key)
         if key == 'd' and key != 'd-repeat':
-            # camera.global_position += camera.right
-            camera.global_position = (camera.global_position[0] + 1, camera.global_position[1], camera.global_position[2])
+            camera.global_position += camera.right
+            # camera.global_position = (camera.global_position[0] + 1, camera.global_position[1], camera.global_position[2])
         if key == 'a':
-            # camera.global_position += camera.left
-            camera.global_position = (camera.global_position[0] - 1, camera.global_position[1], camera.global_position[2])
+            camera.global_position += camera.left
+            # camera.global_position = (camera.global_position[0] - 1, camera.global_position[1], camera.global_position[2])
 
         if key == 's':
-            # camera.global_position += camera.back
-            camera.global_position = (camera.global_position[0], camera.global_position[1] - 1, camera.global_position[2])
+            camera.global_position += camera.back
+            # camera.global_position = (camera.global_position[0], camera.global_position[1] - 1, camera.global_position[2])
         if key == 'w':
-            # camera.global_position += camera.forward
-            camera.global_position = (camera.global_position[0], camera.global_position[1] + 1, camera.global_position[2])
+            camera.global_position += camera.forward
+            # camera.global_position = (camera.global_position[0], camera.global_position[1] + 1, camera.global_position[2])
         #
         #
         # if key == 'e':

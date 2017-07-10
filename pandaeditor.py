@@ -9,6 +9,7 @@ from panda3d.core import PandaNode
 from panda3d.core import Vec3
 from panda3d.core import Point3
 
+import sys
 import math
 
 import mouse
@@ -16,7 +17,7 @@ import collision
 import camera
 import debug
 import color
-from thing import Thing
+from gameobject import Gameobject
 from button import Button
 
 # from panda3d.core import ClockObject

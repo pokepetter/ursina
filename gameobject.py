@@ -6,7 +6,7 @@ from panda3d.core import NodePath
 from panda3d.core import Vec3
 
 
-class Thing(object):
+class Gameobject(object):
 
     def __init__(self):
         self.node_path = NodePath('empty')
@@ -17,9 +17,9 @@ class Thing(object):
         self.parent = None
         self.scripts = list()
         self.model = None
-        # self.button = None
         self.collision = False
         self.collider = None
+        self.hovered = False
 
         self.global_position = (0,0,0)
         self.position = (0,0,0)
@@ -46,17 +46,13 @@ class Thing(object):
             self.node_path.setPos(Vec3(value[0], value[1], value[2]))
         if name == 'position':
             # automatically add position instead of extending the tuple
-            # if len(value) % 3 == 0:
-            #     new_value = Vec3()
-            #     for i in range(0, len(value), 3):
-            #         new_value.addX(value[i])
-            #         new_value.addY(value[i+1])
-            #         new_value.addZ(value[i+2])
-                # value = new_value
-                try:
-                    global_position = self.parent.global_position + value
-                except:
-                    pass # no attribute global_position
+            if len(value) % 3 == 0:
+                new_value = Vec3()
+                for i in range(0, len(value), 3):
+                    new_value.addX(value[i])
+                    new_value.addY(value[i+1])
+                    new_value.addZ(value[i+2])
+                value = new_value
                 self.node_path.setPos(Vec3(value[0], value[1], value[2]))
 
         if name == 'x': self.position = (value, self.position[1], self.position[2])
@@ -68,14 +64,14 @@ class Thing(object):
                                 - value[1] * self.scale[1] /2,
                                 - value[2] * self.scale[2] /2)
 
-        if name == 'global_scale':
+        if name == 'scale':
             if self.model:
                 self.node_path.setScale(value[0], value[1], value[2])
         #         self.model.setScale(self.parent, value[0], value[1], value[2])
 
         if name == 'collision':
             if value == False: self.collider = None
-            if value == True:
+            if value == True and self.collider == None:
                 try:
                     min, max = self.model.getTightBounds()
                     dimensions = max - min
@@ -94,7 +90,7 @@ class Thing(object):
         if inspect.isclass(module_name):
             class_instance = module_name()
             try:
-                class_instance.target = self
+                class_instance.gameobject = self
             except:
                 print(class_instance, 'has no target variable')
             self.scripts.append(class_instance)
@@ -107,7 +103,7 @@ class Thing(object):
             class_ = getattr(module, class_info[0])
             class_instance = class_()
             try:
-                class_instance.target = self
+                class_instance.gameobject = self
             except:
                 print(class_instance, 'has no target variable')
 
@@ -133,5 +129,5 @@ class Thing(object):
     def destroy(self):
         pass
 
-        parent.things.remove(self)
+        parent.gameobjects.remove(self)
         # nodePath.detachNode().
