@@ -21,6 +21,7 @@ class Thing(object):
         self.collision = False
         self.collider = None
 
+        self.global_position = (0,0,0)
         self.position = (0,0,0)
         self.x, self.y, self.z = 0, 0, 0
 
@@ -41,19 +42,22 @@ class Thing(object):
         if name == 'model':
             if self.model:
                 self.model.reparentTo(self.node_path)
+        if name == 'global_position':
+            self.node_path.setPos(Vec3(value[0], value[1], value[2]))
         if name == 'position':
             # automatically add position instead of extending the tuple
-            if len(value) % 3 == 0:
-                new_value = Vec3()
-                for i in range(0, len(value), 3):
-                    new_value.addX(value[i])
-                    new_value.addY(value[i+1])
-                    new_value.addZ(value[i+2])
-                value = new_value
-            if self.parent != None:
-                self.node_path.setPos(self.parent, value)
-            else:
-                self.node_path.setPos(value)
+            # if len(value) % 3 == 0:
+            #     new_value = Vec3()
+            #     for i in range(0, len(value), 3):
+            #         new_value.addX(value[i])
+            #         new_value.addY(value[i+1])
+            #         new_value.addZ(value[i+2])
+                # value = new_value
+                try:
+                    global_position = self.parent.global_position + value
+                except:
+                    pass # no attribute global_position
+                self.node_path.setPos(Vec3(value[0], value[1], value[2]))
 
         if name == 'x': self.position = (value, self.position[1], self.position[2])
         if name == 'y': self.position = (self.position[0], value, self.position[2])
@@ -64,10 +68,10 @@ class Thing(object):
                                 - value[1] * self.scale[1] /2,
                                 - value[2] * self.scale[2] /2)
 
-        if name == 'scale':
+        if name == 'global_scale':
             if self.model:
-                self.node_path.setScale(self.parent, value[0], value[1], value[2])
-                self.model.setScale(self.parent, value[0], value[1], value[2])
+                self.node_path.setScale(value[0], value[1], value[2])
+        #         self.model.setScale(self.parent, value[0], value[1], value[2])
 
         if name == 'collision':
             if value == False: self.collider = None

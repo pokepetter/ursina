@@ -58,81 +58,71 @@ class MyApp(ShowBase):
 
         # game objects
         self.things = []
+        self.scene = Thing()
 
         self.editor_camera = Thing()
         self.editor_camera.name = 'editor_camera'
         self.editor_camera.parent = self.render
-        self.editor_camera.add_script(EditorCamera)
+        # self.editor_camera.add_script(EditorCamera)
         camera.cam = base.camera
         camera.lens = lens
         camera.render = self.render
-        camera.y = -100
+        # camera.y = -100
+        camera.global_position = (0,-100,0)
         camera.rotation = (0,0,0)
         self.things.append(self.editor_camera)
 
         # UI
-        ui_thing = Thing()
-        ui_thing.name = 'ui'
-        ui_thing.parent = base.camera
-        ui_thing.position = (0, 2, 0)
-        ui_thing.model = loader.loadModel('models/quad_rounded.egg')
-        ui_thing.model.hide()
-        ui_script = ui_thing.add_script(UI)
-        ui_script.fit_to_screen()
-        self.things.append(ui_thing)
-
-
-        for i in range(1):
-            button = Thing()
-            button.name = 'button'
-            button.parent = ui_thing.node_path
-            button.model = loader.loadModel('models/quad_rounded.egg')
-            button.position = (.125, 0, 0.0)
-            button.scale = (0.5, 0.5, 0.5)
-            button.origin = (-1, 0, 0)
-            button_script = button.add_script(Button)
-            button_script.ui = ui_script
-            button_script.color = color.gray
-            button_script.set_up()
-            self.things.append(button)
-
-
-        # create game object
-        # thing = Thing()
-        # thing.name = 'empty'
-        # thing.parent = self.render #ui.node_path
-        # thing.model = self.loader.loadModel('models/quad_rounded.egg')
+        # ui_thing = Thing()
+        # ui_thing.name = 'ui'
+        # ui_thing.parent = self.render
+        # # ui_thing.position = (0, -2, 0)
+        # ui_thing.node_path.setPos(Vec3(0,-2,0))
+        # ui_thing.model = loader.loadModel('models/quad_rounded.egg')
+        # # ui_thing.model.hide()
+        # ui_script = ui_thing.add_script(UI)
+        # ui_script.fit_to_screen()
+        # self.things.append(ui_thing)
         #
-        # thing.button = thing.add_script(button.Button)
-        # thing.button.pivot = (0,0,1)
-        # thing.button.position = (0,0,0)
-        # thing.button.scale = (1,1,.05)
         #
-        # button.screen_height = math.tan((math.pi / 180) * (40 * 1)) * distance(thing.position, camera.position);
-        # button.screen_width = button.screen_height * aspect_ratio
-        # button.aspect_ratio = aspect_ratio
-        # thing.button.fit_to_screen()
-        #
+        # for i in range(1):
+        #     button = Thing()
+        #     button.name = 'button'
+        #     button.parent = ui_thing
+        #     button.model = loader.loadModel('models/quad_rounded.egg')
+        #     button.global_position = (.125, 0, 0.0)
+        #     button.scale = (0.5, 0.5, 0.5)
+        #     button.origin = (-1, 0, 0)
+        #     button_script = button.add_script(Button)
+        #     button_script.ui = ui_script
+        #     button_script.color = color.gray
+        #     button_script.set_up()
+        #     self.things.append(button)
+
+
+
+        thing = Thing()
+        thing.name = 'empty'
+        thing.parent = self.render
+        thing.model = self.loader.loadModel('models/cube.egg')
+        thing.model.reparentTo(thing.node_path)
+        thing.global_position = (0,0,0)
+        # thing.scale = .1
         # thing.collision = True
-        # print(thing.scale)
-        # thing.collider = ((0,0,0), (0,0,0), (0,0,0))
+        # thing.collider
+        # thing.add_script('player')
+        thing.add_script(EditorCamera)
+        self.things.append(thing)
+        prev_thing = thing
+
+        thing = Thing()
+        thing.name = 'empty'
+        thing.parent = prev_thing
+        thing.model = self.loader.loadModel('models/cube.egg')
+        thing.model.reparentTo(thing.node_path)
+        thing.global_position = (0,0,0)
 
 
-        # self.things.append(thing)
-        # affaf = distance(thing.position, camera.position)
-
-
-        # thing = Thing()
-        # thing.name = 'empty'
-        # thing.parent = self.render
-        # thing.model = self.loader.loadModel('models/cube.egg')
-        # thing.model.reparentTo(thing.node_path)
-        # thing.position = (0,0,0)
-        # # thing.scale = .1
-        # thing.collision = True
-        # # thing.collider
-        # # thing.add_script('player')
-        # self.things.append(thing)
 
         # create button
         # thing = Thing()
