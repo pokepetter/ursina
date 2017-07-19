@@ -8,7 +8,7 @@ class EditorCamera():
         self.mouse_start = (0,0)
 
     def input(self, key):
-        print(key)
+        # print(key)
         if key == 'd' and key != 'd-repeat':
             camera.global_position += camera.right
             # camera.global_position = (camera.global_position[0] + 1, camera.global_position[1], camera.global_position[2])

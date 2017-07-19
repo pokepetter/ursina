@@ -4,15 +4,15 @@ import importlib
 from panda3d.core import PandaNode
 from panda3d.core import NodePath
 from panda3d.core import Vec3
+from scripts import *
+from scenes import *
 
 
-class Gameobject(object):
+class Entity(object):
 
     def __init__(self):
         self.node_path = NodePath('empty')
         self.enabled = True
-        # self.parent = None
-
         self.name = 'empty'
         self.parent = None
         self.scripts = list()
@@ -38,6 +38,16 @@ class Gameobject(object):
 
     def __setattr__(self, name, value):
         object.__setattr__(self, name, value)
+        if name == 'enabled':
+            try:
+                if value == False:
+                    self.model.hide()
+                else:
+                    self.model.show()
+            except:
+                pass # no model
+            for child in self.node_path.getChildren():
+                child.enabled = value
         if name == 'parent' and value != None: self.node_path.reparentTo(value)
         if name == 'model':
             if self.model:
@@ -90,44 +100,50 @@ class Gameobject(object):
         if inspect.isclass(module_name):
             class_instance = module_name()
             try:
-                class_instance.gameobject = self
+                class_instance.entity = self
             except:
                 print(class_instance, 'has no target variable')
             self.scripts.append(class_instance)
             return class_instance
 
-        module_name = 'scripts.' + module_name
-        module = importlib.import_module(module_name, package=None)
-        class_names = inspect.getmembers(sys.modules[module_name], inspect.isclass)
-        for class_info in class_names:
-            class_ = getattr(module, class_info[0])
-            class_instance = class_()
+        module_names = (module_name,
+                        'scripts.' + module_name,
+                        'scenes.' + module_name)
+        for module_name in module_names:
             try:
-                class_instance.gameobject = self
+                module = importlib.import_module(module_name)
+                class_names = inspect.getmembers(sys.modules[module_name], inspect.isclass)
+                for cn in class_names:
+                    if cn[1].__module__ == module.__name__:
+                        class_name = cn[0]
+
+                class_ = getattr(module, class_name)
+                class_instance = class_()
+                try:
+                    class_instance.entity = self
+                except:
+                    print(class_instance, 'has no target variable')
+
+                self.scripts.append(class_instance)
+                print('added script:', class_instance)
+                return class_instance
+                break
             except:
-                print(class_instance, 'has no target variable')
-
-            self.scripts.append(class_instance)
-            print('added script:', class_instance)
-            return class_instance
-
-    # def add_script(self, class_instance):
-    #     try:
-    #         self.scripts.append(class_instance)
-    #     except:
-    #         print(class_instance, 'is not a class instance')
+                pass
+                # print("couldn't find script:", module_name)
 
 
     def get_script(self, type):
         pass
 
-    def get_children(self):
-        for child in self.node_path.getChildren():
-            print(child.name)
+    # def get_children(self):
+        # for child in self.node_path.getChildren():
+        #     print(child.name)
+        # for
 
 
     def destroy(self):
         pass
 
-        parent.gameobjects.remove(self)
+        parent.entities.remove(self)
         # nodePath.detachNode().

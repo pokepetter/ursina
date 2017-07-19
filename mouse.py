@@ -7,14 +7,14 @@ global x
 global z
 # parent
 # mouse_watcher
-global hovered_gameobject
-hovered_gameobject = None
+global hovered_entity
+hovered_entity = None
 
 
 def input(key):
-    for gameobject in parent.gameobjects:
-        if gameobject.enabled:
-            for script in gameobject.scripts:
+    for entity in parent.entities:
+        if entity.enabled:
+            for script in entity.scripts:
                 try:
                     script.input(key)
                 except:
@@ -41,15 +41,15 @@ def update(dt):
                 break
             pos = nearPoint + (farPoint * i / screen_depth)
             pos += camera.cam.getPos(parent.render) + pos
-            for gameobject in parent.gameobjects:
-                if gameobject.enabled and gameobject.collider:
-                    if collision.point_inside_gameobject(pos, gameobject):
+            for entity in parent.entities:
+                if entity.enabled and entity.collider:
+                    if collision.point_inside_entity(pos, entity):
                         collided = True
-                        global hovered_gameobject
-                        hovered_gameobject = gameobject
-                        if not gameobject.hovered:
-                            gameobject.hovered = True
-                            for script in hovered_gameobject.scripts:
+                        global hovered_entity
+                        hovered_entity = entity
+                        if not entity.hovered:
+                            entity.hovered = True
+                            for script in hovered_entity.scripts:
                                 try:
                                     script.on_mouse_enter()
                                 except:
@@ -58,9 +58,9 @@ def update(dt):
             # if it raycast the whole way through,
             if i == screen_depth-1:
                 try:
-                    if hovered_gameobject.hovered:
-                        hovered_gameobject.hovered = False
-                        for script in hovered_gameobject.scripts:
+                    if hovered_entity.hovered:
+                        hovered_entity.hovered = False
+                        for script in hovered_entity.scripts:
                             try:
                                 script.on_mouse_exit()
                             except:
@@ -69,11 +69,11 @@ def update(dt):
                     pass
 
 
-        for gameobject in parent.gameobjects:
-            if (gameobject.enabled and gameobject.collision
-            and gameobject.hovered and not gameobject == hovered_gameobject):
-                gameobject.hovered = False
-                for script in gameobject.scripts:
+        for entity in parent.entities:
+            if (entity.enabled and entity.collision
+            and entity.hovered and not entity == hovered_entity):
+                entity.hovered = False
+                for script in entity.scripts:
                     try:
                         script.on_mouse_exit()
                     except:
