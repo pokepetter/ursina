@@ -78,9 +78,9 @@ class Entity(object):
         if name == 'z': self.position = (self.position[0], self.position[1], value)
 
         if name == 'origin':
-            self.model.setPos(- value[0] * self.scale[0] /2,
-                                - value[1] * self.scale[1] /2,
-                                - value[2] * self.scale[2] /2)
+            self.model.setPos(value[0],
+                                value[1],
+                                value[2])
 
         if name == 'scale':
             if self.model:

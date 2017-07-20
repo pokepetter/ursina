@@ -39,8 +39,9 @@ def load_prefab(module_name):
     return load_script('prefabs.' + module_name)
 
 def load_scene(module_name):
-    for e in scene.entities:
-        del(e)
+    scene.clear()
+    importlib.reload(importlib.import_module('scenes.' + module_name))
+    print('loaded scene:', module_name)
     return load_script('scenes.' + module_name)
 
 

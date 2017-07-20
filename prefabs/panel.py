@@ -15,5 +15,4 @@ class Panel(Entity):
     def __setattr__(self, name, value):
         if name == 'position':
             value = tuple(x / 2 for x in value)
-            print('newpos', value)
         super().__setattr__(name, value)
