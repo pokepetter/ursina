@@ -15,41 +15,54 @@ import importlib
 
 import mouse
 import collision
+import scene
 import camera
 import debug
 import color
 from entity import Entity
-# from button import Button
-# from ui import *
 
 from scripts import *
 from scenes import *
+from prefabs import *
 
 from panda3d.core import loadPrcFileData
 
 
 screen_size = (960, 540)
 entities = []
-ui = None
+
 
 def distance(a, b):
     return math.sqrt(sum( (a - b)**2 for a, b in zip(a, b)))
 
-#
-# def load_script(module_name):
-#     if inspect.isclass(module_name):
-#         class_instance = module_name()
-#         return class_instance
-#
-#     module_names = (module_name, 'scripts.' + module_name, 'scenes.' + module_name)
-#     for module_name in module_names:
-#         try:
-#             module = importlib.import_module(module_name, package=None)
-#             class_names = inspect.getmembers(sys.modules[module_name], inspect.isclass)
-#             for class_info in class_names:
-#                 class_ = getattr(module, class_info[0])
-#                 class_instance = class_()
-#                 return class_instance
-#         except:
-#             pass
-#     print("couldn't find script:", module_name)
+def load_prefab(module_name):
+    return load_script('prefabs.' + module_name)
+
+def load_scene(module_name):
+    for e in scene.entities:
+        del(e)
+    return load_script('scenes.' + module_name)
+
+
+def load_script(module_name):
+    if inspect.isclass(module_name):
+        class_instance = module_name()
+        print('added script:', class_instance)
+        return class_instance
+    # try:
+    module = importlib.import_module(module_name)
+    class_names = inspect.getmembers(sys.modules[module_name], inspect.isclass)
+    for cn in class_names:
+        if cn[1].__module__ == module.__name__:
+            class_name = cn[0]
+            break
+
+    class_ = getattr(module, class_name)
+    class_instance = class_()
+
+    print('added script:', class_instance)
+    return class_instance
+    # except:
+    #     pass
+
+    # print("couldn't find script:", module_name)

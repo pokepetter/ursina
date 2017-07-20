@@ -1,6 +1,5 @@
 from pandaeditor import *
 
-
 class UI():
 
     def __init__(self):
@@ -19,16 +18,6 @@ class UI():
                 print(c.entity.name)
             # self.entity.enabled = not self.entity.enabled
 
-    def panel(self):
-        entity = Entity()
-        entity.name = 'panel'
-        entity.parent = ui_entity.node_path
-        entity.model = loader.loadModel('models/quad.egg')
-        tex = loader.loadTexture('textures/sketch_2.png')
-        entity.model.setTexture(tex, 1)
-        entity.position = (0, 0, 0.0)
-        entity.scale = (1, 1, 1)
-        self.entity.parent.entities.append(entity)
-        return entity
+
 
 # sys.modules[__name__] = UI()

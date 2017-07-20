@@ -9,6 +9,9 @@ class PandaEditor(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
 
+        scene.app = self
+        scene.render = self.render
+
         # camera
         self.clip_plane_near = 0.01
         self.clip_plane_far = 100
@@ -24,7 +27,7 @@ class PandaEditor(ShowBase):
         camera.fov = 40
         camera.near_clip_plane = 0.01
         camera.far_clip_plane = 100
-        # camera.focal_length = 50
+        scene.camera = camera
 
 
         # input
@@ -73,35 +76,9 @@ class PandaEditor(ShowBase):
         #                     print('class:', c)
         #                 #     scene_files.append(c)
 
-        # module_name = 'scripts.asset_button'
-        # class_names = inspect.getmembers(sys.modules[module_name], inspect.isclass)
-        # print('class_names:', class_names)
-        # module_name = 'test'
-        # module_names = (module_name,
-        #         'scripts.' + module_name,
-        #         'scenes.' + module_name)
-        # for module_name in module_names:
-        #     print('module name', module_name)
-        #     module = importlib.import_module(module_name, package=None)
-        #     class_names = inspect.getmembers(sys.modules[module_name], inspect.isclass)
-        #     print('class_names:', class_names)
-            # break
-            # for class_info in class_names:
-            #     class_ = getattr(module, class_info[0])
-            #     class_instance = class_()
-            #     try:
-            #         class_instance.entity = self
-            #     except:
-            #         print(class_instance, 'has no target variable')
-            #
-            #     self.scripts.append(class_instance)
-            #     print('added script:', class_instance)
-            #     return class_instance
 
 
-        scene_entity = Entity()
-        scene_entity.name = 'scene'
-        scene_script = scene_entity.add_script('test')
+
         # scene_script.parent = self
 
 
@@ -123,20 +100,15 @@ class PandaEditor(ShowBase):
             # for j in range(len(files[i]) * 2):
             #     ornament += '-'
 
-        self.entities = []
-
         # game objects
-        self.scene = Entity()
-
         self.editor_camera = Entity()
         self.editor_camera.name = 'editor_camera'
         self.editor_camera.parent = self.render
         # self.editor_camera.add_script(EditorCamera)
-
-        # camera.y = -100
         camera.position = (0,-100,0)
         camera.rotation = (0,0,0)
-        self.entities.append(self.editor_camera)
+        scene.entities.append(self.editor_camera)
+
 
         # UI
         ui_entity = Entity()
@@ -144,59 +116,41 @@ class PandaEditor(ShowBase):
         ui_entity.parent = self.render
         ui_entity.position = (0, -50, 0)
         ui_entity.model = loader.loadModel('models/quad.egg')
-        # ui_entity.model.hide()
         ui = ui_entity.add_script('ui')
+        ui.entity = ui_entity
         ui.fit_to_screen()
         ui_entity.model.detachNode()
+        scene.ui = ui
 
-        self.entities.append(ui_entity)
+        scene.entities.append(ui_entity)
 
-        # ui panel
-        entity = Entity()
-        entity.name = 'button'
-        entity.parent = ui_entity.node_path
-        entity.model = loader.loadModel('models/quad.egg')
-        tex = loader.loadTexture('textures/sketch_2.png')
-        entity.model.setTexture(tex, 1)
-        entity.position = (0, 0, 0.0)
-        entity.scale = (1, 1, 1)
-        self.entities.append(entity)
+
+        self.panel = load_scene('editor')
+
 
 
         # ui button
-        button = Entity()
-        button.name = 'button'
-        button.parent = ui_entity.node_path
-        button.model = loader.loadModel('models/quad_rounded.egg')
-        tex = loader.loadTexture('textures/winter_forest.png')
-        entity.model.setTexture(tex, 1)
+        button_entity = Entity()
+        button_entity.name = 'button'
+        button_entity.parent = ui_entity.node_path
+        button_entity.model = loader.loadModel('models/quad_rounded.egg')
+        # tex = loader.loadTexture('textures/winter_forest.png')
+        # button_entity.model.setTexture(tex, 1)
 
-        button.position = (0.25, 0, 0.0)
-        button.scale = (.25, 1, 0.5)
-        # button.origin = (-1, 0, 0)
-        button.collision = True
-        button.collider = (button.node_path.getPos(self.render), (0,0,0),
-                        (button.model.getScale(self.render)[0] /4, 1,
-                        button.model.getScale(self.render)[2] /4))
+        button_entity.position = (0.25, 0, 0.0)
+        button_entity.scale = (.25, 1, 0.5)
+        # button_entity.origin = (-1, 0, 0)
+        button_entity.collision = True
+        button_entity.collider = (button_entity.node_path.getPos(self.render), (0,0,0),
+                        (button_entity.model.getScale(self.render)[0] /4, 1,
+                        button_entity.model.getScale(self.render)[2] /4))
 
-        button_script = button.add_script('button')
-        button_script.ui = ui
+        button_script = button_entity.add_script('button')
+        button_script.ui = scene.ui
         button_script.color = color.gray
         button_script.set_up()
-        self.entities.append(button)
-
-
-        # print(button.node_path.getScale(self.render))
-
-
-
-        # entity = Entity()
-        # entity.name = 'empty'
-        # entity.parent = self.render
-        # entity.model = self.loader.loadModel('models/cube.egg')
-        # entity.model.reparentTo(entity.node_path)
-        # entity.position = button.collider[0]
-        # entity.scale = button.collider[2]
+        scene.entities.append(button_entity)
+        # -------------
 
 
         entity = Entity()
@@ -211,7 +165,7 @@ class PandaEditor(ShowBase):
         # entity.collider
         # entity.add_script('player')
         entity.add_script(EditorCamera)
-        self.entities.append(entity)
+        scene.entities.append(entity)
         prev_entity = entity
 
         # entity = Entity()
@@ -225,7 +179,7 @@ class PandaEditor(ShowBase):
         # button_script.ui = ui_script
         # button_script.color = color.gray
         # button_script.set_up()
-        # self.entities.append(entity)
+        # scene.entities.append(entity)
         # print(entity.node_path.getPos(self.render))
 
 
@@ -239,7 +193,7 @@ class PandaEditor(ShowBase):
         # entity.size = (500,0,512)
         # # button.collision = True
         # entity.button = button.create_button(entity.name, entity.origin, entity.position, entity.size, entity.scale)
-        # self.entities.append(entity)
+        # scene.entities.append(entity)
 
 
         self.update_task = taskMgr.add(self.update, "update")
@@ -253,7 +207,7 @@ class PandaEditor(ShowBase):
         dt = globalClock.getDt()
 
         mouse.update(dt)
-        for entity in self.entities:
+        for entity in scene.entities:
             if entity.enabled:
                 for script in entity.scripts:
                     try:
@@ -265,7 +219,7 @@ class PandaEditor(ShowBase):
 
 
     def input(self, key):
-        for entity in self.entities:
+        for entity in scene.entities:
             # if entity.enabled:
             for script in entity.scripts:
                 try:

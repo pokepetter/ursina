@@ -7,6 +7,7 @@ class Camera(object):
         self.cam = None
         self.lens = None
         self.render = None
+        self.ui = None
 
         self.fov = 40
         self.clip_plane_near = 0.01

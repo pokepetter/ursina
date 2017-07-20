@@ -6,6 +6,7 @@ from panda3d.core import NodePath
 from panda3d.core import Vec3
 from scripts import *
 from scenes import *
+import color
 
 
 class Entity(object):
@@ -13,10 +14,11 @@ class Entity(object):
     def __init__(self):
         self.node_path = NodePath('empty')
         self.enabled = True
-        self.name = 'empty'
+        self.name = 'entity'
         self.parent = None
         self.scripts = list()
         self.model = None
+        self.color = color.gray
         self.collision = False
         self.collider = None
         self.hovered = False
@@ -52,6 +54,12 @@ class Entity(object):
         if name == 'model':
             if self.model:
                 self.model.reparentTo(self.node_path)
+        if name == 'color':
+            if self.model:
+                self.model.setColorScale(value)
+        if name == 'texture':
+            if self.model:
+                self.model.setTexture(loader.loadTexture(value), 1)
         if name == 'global_position':
             self.node_path.setPos(Vec3(value[0], value[1], value[2]))
         if name == 'position':
@@ -108,7 +116,8 @@ class Entity(object):
 
         module_names = (module_name,
                         'scripts.' + module_name,
-                        'scenes.' + module_name)
+                        'scenes.' + module_name,
+                        'prefabs.' + module_name)
         for module_name in module_names:
             try:
                 module = importlib.import_module(module_name)
@@ -130,7 +139,8 @@ class Entity(object):
                 break
             except:
                 pass
-                # print("couldn't find script:", module_name)
+
+        print("couldn't find script:", module_name)
 
 
     def get_script(self, type):

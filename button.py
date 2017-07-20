@@ -1,9 +1,5 @@
 from pandaeditor import *
 
-global screen_width
-global screen_height
-global aspect_ratio
-
 
 class Button():
 

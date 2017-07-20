@@ -1,6 +1,7 @@
 from panda3d.core import *
 import camera
 import collision
+import scene
 
 global position
 global x
@@ -12,7 +13,7 @@ hovered_entity = None
 
 
 def input(key):
-    for entity in parent.entities:
+    for entity in scene.entities:
         if entity.enabled:
             for script in entity.scripts:
                 try:
@@ -41,7 +42,7 @@ def update(dt):
                 break
             pos = nearPoint + (farPoint * i / screen_depth)
             pos += camera.cam.getPos(parent.render) + pos
-            for entity in parent.entities:
+            for entity in scene.entities:
                 if entity.enabled and entity.collider:
                     if collision.point_inside_entity(pos, entity):
                         collided = True
@@ -69,7 +70,7 @@ def update(dt):
                     pass
 
 
-        for entity in parent.entities:
+        for entity in scene.entities:
             if (entity.enabled and entity.collision
             and entity.hovered and not entity == hovered_entity):
                 entity.hovered = False
