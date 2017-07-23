@@ -10,9 +10,9 @@ class Panel(Entity):
         self.parent = scene.ui.entity.node_path
         self.model = loader.loadModel('models/quad.egg')
         scene.entities.append(self)
-        print('created panel')
+        # print('created panel')
 
     def __setattr__(self, name, value):
         if name == 'position':
-            value = tuple(x / 2 for x in value)
+            value = (value[0] / 2, (value[1] / 2) - .1, value[2] / 2)
         super().__setattr__(name, value)

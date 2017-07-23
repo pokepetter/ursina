@@ -24,6 +24,7 @@ class PandaEditor(ShowBase):
         camera.cam = base.camera
         camera.lens = lens
         camera.render = self.render
+        camera.aspect_ratio = screen_size[0] / screen_size[1]
         camera.fov = 40
         camera.near_clip_plane = 0.01
         camera.far_clip_plane = 100
@@ -122,33 +123,8 @@ class PandaEditor(ShowBase):
         ui_entity.model.detachNode()
         scene.ui = ui
 
+        # self.editor_scene = load_scene('editor')
 
-        # self.panel = load_scene('editor')
-
-
-
-        # # ui button
-        # button_entity = Entity()
-        # button_entity.name = 'button'
-        # button_entity.parent = ui_entity.node_path
-        # button_entity.model = loader.loadModel('models/quad_rounded.egg')
-        # # tex = loader.loadTexture('textures/winter_forest.png')
-        # # button_entity.model.setTexture(tex, 1)
-        #
-        # button_entity.position = (0.25, 0, 0.25)
-        # button_entity.scale = (.25, 1, 0.5)
-        # # button_entity.origin = (-1, 0, 0)
-        # button_entity.collision = True
-        # button_entity.collider = (button_entity.node_path.getPos(self.render), (0,0,0),
-        #                 (button_entity.model.getScale(self.render)[0] /4, 1,
-        #                 button_entity.model.getScale(self.render)[2] /4))
-        #
-        # button_script = button_entity.add_script('button')
-        # button_script.ui = scene.ui
-        # button_script.color = color.gray
-        # button_script.set_up()
-        # scene.entities.append(button_entity)
-        # # -------------
 
 
         entity = Entity()

@@ -2,28 +2,37 @@ import sys
 sys.path.append("..")
 from pandaeditor import *
 
-class Button():
+class Button(Entity):
+
 
     def __init__(self):
-        self.entity = Entity()
-        self.entity.name = 'button'
-        self.entity.parent = ui_entity.node_path
-        self.entity.model = loader.loadModel('models/quad_rounded.egg')
-        # tex = loader.loadTexture('textures/winter_forest.png')
-        # self.entity.model.setTexture(tex, 1)
+        super().__init__()
+        self.name = 'button'
+        self.parent = scene.ui.entity.node_path
+        self.model = loader.loadModel('models/quad.egg')
+        # self.scale = (0.5,0.5,0.5)
+        self.collision = True
+        self.collider = (self.model.getPos(scene.render), # pos
+                        (0,0,0), # rot
+                        (self.model.getScale(scene.render)[0] /4,
+                        1,
+                        self.model.getScale(scene.render)[2] /4))
+        self.button_script = self.add_script('button')
+        self.button_script.ui = scene.ui
+        self.button_script.color = color.gray
+        scene.entities.append(self)
 
-        self.entity.position = (0.25, 0, 0.0)
-        self.entity.scale = (.25, 1, 0.5)
-        # self.entity.origin = (-1, 0, 0)
-        self.entity.collision = True
-        self.entity.collider = (self.entity.node_path.getPos(self.render), (0,0,0),
-                        (self.entity.model.getScale(self.render)[0] /4, 1,
-                        self.entity.model.getScale(self.render)[2] /4))
 
-        button_script = self.entity.add_script('button')
-        button_script.ui = ui_main
-        button_script.color = color.gray
-        button_script.set_up()
-        self.entities.append(self.entity)
-
-    
+    def __setattr__(self, name, value):
+        if name == 'color':
+            try:
+                self.button_script.color = value
+            except:
+                pass
+        if name == 'scale' and self.model:
+            super().__setattr__(name, value)
+            self.collider = (self.model.getPos(scene.render), (0,0,0),
+                            (self.model.getScale(scene.render)[0] /4, 1,
+                            self.model.getScale(scene.render)[2] /4))
+            # print('updating collider:', self.collider)
+        super().__setattr__(name, value)

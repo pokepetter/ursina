@@ -28,6 +28,8 @@ from prefabs import *
 from panda3d.core import loadPrcFileData
 
 
+
+
 screen_size = (960, 540)
 entities = []
 
@@ -36,6 +38,10 @@ def distance(a, b):
     return math.sqrt(sum( (a - b)**2 for a, b in zip(a, b)))
 
 def load_prefab(module_name):
+    try:
+        importlib.reload(importlib.import_module('prefabs.' + module_name))
+    except:
+        pass
     return load_script('prefabs.' + module_name)
 
 def load_scene(module_name):
@@ -48,7 +54,7 @@ def load_scene(module_name):
 def load_script(module_name):
     if inspect.isclass(module_name):
         class_instance = module_name()
-        print('added script:', class_instance)
+        # print('added script:', class_instance)
         return class_instance
     # try:
     module = importlib.import_module(module_name)
@@ -61,9 +67,12 @@ def load_script(module_name):
     class_ = getattr(module, class_name)
     class_instance = class_()
 
-    print('added script:', class_instance)
+    # print('added script:', class_instance)
     return class_instance
-    # except:
-    #     pass
 
-    # print("couldn't find script:", module_name)
+def destroy(entity):
+    try: entity.model.removeNode()
+    except: pass
+    try: entity.node_path.removeNode()
+    except: pass
+    del entity

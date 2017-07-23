@@ -1,22 +1,23 @@
 from pandaeditor import *
 
 
-class Button():
+class Button(object):
 
     def __init__(self):
         self.entity = None
-        # self.ui = None
-        self.color = color.black
+        self.highlight_color = tuple(x + 0.2 for x in color.white)
+        self.pressed_color = tuple(x - 0.2 for x in color.white)
 
 
-    def set_up(self):
-        self.entity.collision = True
-        # self.entity.model.showTightBounds()
-
-        self.highlight_color = tuple(x + 0.1 for x in self.color)
-        self.pressed_color = tuple(x - 0.2 for x in self.color)
-        self.entity.model.setColorScale(self.color)
-
+    def __setattr__(self, name, value):
+        object.__setattr__(self, name, value)
+        if name == 'color':
+            self.highlight_color = tuple(x + 0.1 for x in value)
+            if color.to_hsv(self.color)[2] > 0.2:
+                self.pressed_color = self.pressed_color = tuple(x - 0.2 for x in value)
+            else:
+                self.pressed_color = self.pressed_color = tuple(x + 0.2 for x in value)
+            print('highlight_color:', self.highlight_color)
 
     def input(self, key):
         if key == 'left mouse down':
@@ -31,9 +32,9 @@ class Button():
                 self.entity.model.setColorScale(self.color)
 
     def on_mouse_enter(self):
-        # print('enter')
+        print('enter')
         self.entity.model.setColorScale(self.highlight_color)
 
     def on_mouse_exit(self):
-        # print('exit')
+        print('exit')
         self.entity.model.setColorScale(self.color)

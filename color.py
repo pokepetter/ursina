@@ -1,22 +1,39 @@
 import colorsys
+import random
+import math
+from panda3d.core import Vec4
 
-def hsv_to_rgba(h, s, v):
-    return colorsys.hsv_to_rgb(h / 360, s, v) + (1.0,)
+def hsv_color(h, s, v):
+    return Vec4(colorsys.hsv_to_rgb((h / 360) - math.floor(h / 360), s, v) + (1,))
 
-white =         hsv_to_rgba(0, 0, 1)
-smoke =         (0.961, 0.961, 0.961, 1)
-light_gray =    (0.827, 0.827, 0.827, 1)
-gray =          (0.5, 0.5, 0.5, 1)
-black =         (0, 0, 0, 1)
-red =           hsv_to_rgba(0, 1, 1)
-orange =        hsv_to_rgba(30, 1, 1)
-yellow =        hsv_to_rgba(60, 1, 1)
-lime =          hsv_to_rgba(90, 1, 1)
-green =         hsv_to_rgba(120, 1, 1)
-turquoise =     hsv_to_rgba(150, 1, 1)
-cyan =          hsv_to_rgba(180, 1, 1)
-azure =         hsv_to_rgba(210, 1, 1)
-blue =          hsv_to_rgba(240, 1, 1)
-violet =        hsv_to_rgba(270, 1, 1)
-magenta =       hsv_to_rgba(300, 1, 1)
-pink =          hsv_to_rgba(330, 1, 1)
+def to_hsv(color):
+    return Vec4(colorsys.rgb_to_hsv(color[0], color[1], color[2]) + (1,))
+
+def inverse(color):
+    return Vec4(tuple(1 - c for c in color))
+
+def random_color():
+    return Vec4(random.random, random.random, random.random, 1)
+
+white =         hsv_color(0, 0, 1)
+smoke =         hsv_color(0, 0, 0.96)
+light_gray =    hsv_color(0, 0, 0.75)
+gray =          hsv_color(0, 0, 0.5)
+dark_gray =     hsv_color(0, 0, 0.25)
+black =         hsv_color(0, 0, 0)
+red =           hsv_color(0, 1, 1)
+orange =        hsv_color(30, 1, 1)
+yellow =        hsv_color(60, 1, 1)
+lime =          hsv_color(90, 1, 1)
+green =         hsv_color(120, 1, 1)
+turquoise =     hsv_color(150, 1, 1)
+cyan =          hsv_color(180, 1, 1)
+azure =         hsv_color(210, 1, 1)
+blue =          hsv_color(240, 1, 1)
+violet =        hsv_color(270, 1, 1)
+magenta =       hsv_color(300, 1, 1)
+pink =          hsv_color(330, 1, 1)
+
+black33 = Vec4(0,0,0, 0.33)
+black66 = Vec4(0,0,0, 0.66)
+black99 = Vec4(0,0,0, 0.99)

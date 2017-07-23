@@ -1,6 +1,7 @@
 import sys
 from panda3d.core import Vec3
 
+
 class Camera(object):
 
     def __init__(self):
@@ -8,6 +9,7 @@ class Camera(object):
         self.lens = None
         self.render = None
         self.ui = None
+        self.aspect_ratio = None
 
         self.fov = 40
         self.clip_plane_near = 0.01

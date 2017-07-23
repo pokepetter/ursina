@@ -4,9 +4,12 @@ import importlib
 from panda3d.core import PandaNode
 from panda3d.core import NodePath
 from panda3d.core import Vec3
+from panda3d.core import SamplerState
+from panda3d.core import TransparencyAttrib
 from scripts import *
 from scenes import *
 import color
+import scene
 
 
 class Entity(object):
@@ -50,16 +53,25 @@ class Entity(object):
                 pass # no model
             for child in self.node_path.getChildren():
                 child.enabled = value
-        if name == 'parent' and value != None: self.node_path.reparentTo(value)
+        if name == 'parent' and value != None:
+            try: self.node_path.reparentTo(value)
+            except:
+                try: self.node_path.reparentTo(value.model)
+                except: pass
         if name == 'model':
             if self.model:
                 self.model.reparentTo(self.node_path)
+                self.model.setColorScaleOff()
+                self.model.setTransparency(TransparencyAttrib.MAlpha)
         if name == 'color':
             if self.model:
                 self.model.setColorScale(value)
         if name == 'texture':
             if self.model:
-                self.model.setTexture(loader.loadTexture(value), 1)
+                texture = loader.loadTexture(value)
+                # texture.setMagfilter(SamplerState.FT_nearest)
+                # texture.setMinfilter(SamplerState.FT_nearest)
+                self.model.setTexture(texture, 1)
         if name == 'global_position':
             self.node_path.setPos(Vec3(value[0], value[1], value[2]))
         if name == 'position':
@@ -78,9 +90,9 @@ class Entity(object):
         if name == 'z': self.position = (self.position[0], self.position[1], value)
 
         if name == 'origin':
-            self.model.setPos(value[0],
-                                value[1],
-                                value[2])
+            self.model.setPos(-value[0] /2,
+                                -value[1] /2,
+                                -value[2] /2)
 
         if name == 'scale':
             if self.model:
@@ -96,12 +108,13 @@ class Entity(object):
                 except:
                     dimensions = (1,1,1)
 
-                # print(dimensions * self.scale)
+                collider_scale = self.model.getScale(scene.render)
+
                 self.collider = ((0,0,0),
                                 (0,0,0),
-                                (dimensions[0] * self.scale[0],
-                                dimensions[1] * self.scale[1],
-                                dimensions[2] * self.scale[2]))
+                                (dimensions[0] * collider_scale[0],
+                                dimensions[1] * collider_scale[1],
+                                dimensions[2] * collider_scale[2]))
 
 
     def add_script(self, module_name):

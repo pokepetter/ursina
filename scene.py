@@ -20,7 +20,6 @@ class Scene(object):
             except: pass
             del e
 
-        # del self.entities
         self.entities = []
         print('entities', self.entities)
 
