@@ -17,7 +17,6 @@ class Button(object):
                 self.pressed_color = self.pressed_color = tuple(x - 0.2 for x in value)
             else:
                 self.pressed_color = self.pressed_color = tuple(x + 0.2 for x in value)
-            print('highlight_color:', self.highlight_color)
 
     def input(self, key):
         if key == 'left mouse down':
@@ -32,9 +31,7 @@ class Button(object):
                 self.entity.model.setColorScale(self.color)
 
     def on_mouse_enter(self):
-        print('enter')
         self.entity.model.setColorScale(self.highlight_color)
 
     def on_mouse_exit(self):
-        print('exit')
         self.entity.model.setColorScale(self.color)

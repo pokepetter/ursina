@@ -20,6 +20,7 @@ class Button(Entity):
         self.button_script = self.add_script('button')
         self.button_script.ui = scene.ui
         self.button_script.color = color.gray
+        self.text = ''
         scene.entities.append(self)
 
 
@@ -29,10 +30,23 @@ class Button(Entity):
                 self.button_script.color = value
             except:
                 pass
+        if name == 'position':
+            value = (value[0] / 2, (value[1] / 2) - .1, value[2] / 2)
         if name == 'scale' and self.model:
             super().__setattr__(name, value)
             self.collider = (self.model.getPos(scene.render), (0,0,0),
                             (self.model.getScale(scene.render)[0] /4, 1,
                             self.model.getScale(scene.render)[2] /4))
-            # print('updating collider:', self.collider)
-        super().__setattr__(name, value)
+        if name == 'text':
+            t = load_prefab('text')
+            t.parent = self.node_path
+            t.position = (-.5,0,0)
+            t.scale = (.9,.9,.9)
+            t.text = value
+            # t.color = color.red
+
+
+            object.__setattr__(self, name, t)
+
+        else:
+            super().__setattr__(name, value)

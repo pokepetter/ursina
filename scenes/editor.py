@@ -23,6 +23,8 @@ class Editor():
         button.position = (-.487 + (i * .061), 0, 0)
         button.scale = (.06, 1, 1)
         button.color = color.orange
+        button.text = 'button'
+        # button.text.color = color.black
 
     sidebar = load_prefab('panel')
     sidebar.origin = (-.5, 0, -0.0)
@@ -41,7 +43,16 @@ class Editor():
 
     text = load_prefab('text')
     text.parent = scene_list
-    text.position = (0, 0, 0)
+    text.position = (0, -.1, 0)
     text.scale = (.9,.9,.9)
-    text.color = color.smoke
-    text.text = 'class_names = inspect.getmembers(sys.modules[module_name], inspect.isclass)'
+    t = 'test text'
+#     t = '''zxcvb nmasd ghj qwetyutuoi phklz xcvbnma sdghjqwetyutuo iphkl xcvbnm
+# asdgh jqwetyu tuoiphklzxcv bnma s ghjqw et yutu oiph klzxcvbnm asdgh jqwe tyut uoi phkl
+# zxcvb nmasd ghj qwetyutuoi phklz xcvbnma sdghjqwetyutuo iphkl xcvbnm
+# asdgh jqwetyu tuoiphklzxcv bnma s ghjqw et yutu oiph klzxcvbnm asdgh jqwe tyut uoi phkl
+# zxcvb nmasd ghj qwetyutuoi phklz xcvbnma sdghjqwetyutuo iphkl xcvbnm
+# asdgh jqwetyu tuoiphklzxcv bnma s ghjqw et yutu oiph klzxcvbnm asdgh jqwe tyut uoi phkl'''
+    # for i in range(50):
+    #     t += random.choice('zxcvbnmasdghjqwetyutuoiphkl,n')
+    text.text = t
+    text.color = color.blue

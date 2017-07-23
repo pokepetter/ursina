@@ -69,13 +69,14 @@ class PandaEditor(ShowBase):
         #             # module = importlib.import_module(os.path.join(scenes_directory, filename), package=None)
         #
         #             # class_names = inspect.getmembers(sys.modules[module_name], inspect.isclass)
-        #             # scene_files.append(filename)
+        #             # scene_6files.append(filename)
         #             with open(os.path.join(scenes_directory, filename)) as f:
         #                 p = ast.parse(f.read())
         #                 classes = [node.name for node in ast.walk(p) if isinstance(node, ast.ClassDef)]
         #                 for c in classes:
         #                     print('class:', c)
         #                 #     scene_files.append(c)
+
 
 
 
@@ -125,6 +126,14 @@ class PandaEditor(ShowBase):
 
         # self.editor_scene = load_scene('editor')
 
+        button = load_prefab('button')
+        # button.parent = toolbar
+        button.origin = (-.5, 0, 0)
+        button.position = (-.487 + (.061), 0, 0)
+        button.scale = (.06, 1, 1)
+        button.color = color.orange
+        button.text = 'hei'
+        button.text.color = color.blue
 
 
         entity = Entity()
@@ -142,19 +151,6 @@ class PandaEditor(ShowBase):
         scene.entities.append(entity)
         prev_entity = entity
 
-        # entity = Entity()
-        # entity.name = 'empty'
-        # entity.parent = prev_entity.node_path
-        # entity.model = self.loader.loadModel('models/cube.egg')
-        # entity.model.reparentTo(entity.node_path)
-        # entity.position = (3,0,0)
-        # entity.scale = (2,2,2)
-        # button_script = entity.add_script(Button)
-        # button_script.ui = ui_script
-        # button_script.color = color.gray
-        # button_script.set_up()
-        # scene.entities.append(entity)
-        # print(entity.node_path.getPos(self.render))
 
 
 

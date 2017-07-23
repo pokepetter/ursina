@@ -38,6 +38,7 @@ def distance(a, b):
     return math.sqrt(sum( (a - b)**2 for a, b in zip(a, b)))
 
 def load_prefab(module_name):
+    # if module_name != 'text':
     try:
         importlib.reload(importlib.import_module('prefabs.' + module_name))
     except:

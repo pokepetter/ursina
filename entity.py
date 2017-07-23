@@ -147,13 +147,13 @@ class Entity(object):
                     print(class_instance, 'has no target variable')
 
                 self.scripts.append(class_instance)
-                print('added script:', class_instance)
+                # print('added script:', class_instance)
                 return class_instance
                 break
             except:
                 pass
 
-        print("couldn't find script:", module_name)
+        # print("couldn't find script:", module_name)
 
 
     def get_script(self, type):
