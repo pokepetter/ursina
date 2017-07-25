@@ -7,8 +7,11 @@ class Scene(object):
         self.app = None
         self.render = None
         self.camera = None
+        self.asset_folder = None
         self.editor_camera = None
         self.ui = None
+        self.editor = None
+        self.editor_entities = []
         self.entities = []
 
     def clear(self):

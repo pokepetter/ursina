@@ -11,6 +11,7 @@ class PandaEditor(ShowBase):
 
         scene.app = self
         scene.render = self.render
+        scene.asset_folder = __file__
 
         # camera
         self.clip_plane_near = 0.01
@@ -32,9 +33,13 @@ class PandaEditor(ShowBase):
 
 
         # input
-        base.buttonThrowers[0].node().setKeystrokeEvent('keystroke')
-        self.accept('keystroke', self.input)
-        self.accept('tab', self.input, ['tab'])
+        # base.buttonThrowers[0].node().setKeystrokeEvent('keystroke')
+        base.buttonThrowers[0].node().setButtonDownEvent('buttonDown')
+        base.buttonThrowers[0].node().setButtonUpEvent('buttonUp')
+        # base.buttonThrowers[0].node().setButtonUpEvent('button_up')
+        self.accept('buttonDown', self.input)
+        self.accept('buttonUp', self.input_up)
+        self.accept('lalt', self.input, ['left alt'])
 
         base.disableMouse()
         mouse.parent = self
@@ -124,34 +129,24 @@ class PandaEditor(ShowBase):
         ui_entity.model.detachNode()
         scene.ui = ui
 
-        # self.editor_scene = load_scene('editor')
-
-        button = load_prefab('button')
-        # button.parent = toolbar
-        button.origin = (-.5, 0, 0)
-        button.position = (-.487 + (.061), 0, 0)
-        button.scale = (.06, 1, 1)
-        button.color = color.orange
-        button.text = 'hei'
-        button.text.color = color.blue
 
 
-        entity = Entity()
-        entity.name = 'empty'
-        entity.parent = self.render
-        entity.model = self.loader.loadModel('models/cube.egg')
-        entity.model.reparentTo(entity.node_path)
-        entity.position = (0,0,0)
-        # entity.scale = (0.5,0.5,0.5)
-        # entity.scale = .1
-        # entity.collision = True
-        # entity.collider
-        # entity.add_script('player')
-        entity.add_script(EditorCamera)
-        scene.entities.append(entity)
-        prev_entity = entity
+        scene.editor = load_script('editor')
 
-
+        # entity = Entity()
+        # entity.name = 'empty'
+        # entity.parent = self.render
+        # entity.model = self.loader.loadModel('models/cube.egg')
+        # entity.model.reparentTo(entity.node_path)
+        # entity.position = (0,0,0)
+        # # entity.scale = (0.5,0.5,0.5)
+        # # entity.scale = .1
+        # # entity.collision = True
+        # # entity.collider
+        # # entity.add_script('player')
+        # entity.add_script(EditorCamera)
+        # scene.entities.append(entity)
+        # prev_entity = entity
 
 
         self.update_task = taskMgr.add(self.update, "update")
@@ -178,9 +173,12 @@ class PandaEditor(ShowBase):
 
         return Task.cont
 
+    def input_up(self, key):
+        key += ' up'
+        self.input(key)
 
     def input(self, key):
-        try: scene.ui.input(key)
+        try: scene.editor.input(key)
         except: pass
         try: scene.editor_camera.input(key)
         except: pass

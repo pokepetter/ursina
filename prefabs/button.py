@@ -21,8 +21,6 @@ class Button(Entity):
         self.button_script.ui = scene.ui
         self.button_script.color = color.gray
         self.text = ''
-        scene.entities.append(self)
-
 
     def __setattr__(self, name, value):
         if name == 'color':
@@ -38,15 +36,16 @@ class Button(Entity):
                             (self.model.getScale(scene.render)[0] /4, 1,
                             self.model.getScale(scene.render)[2] /4))
         if name == 'text':
-            t = load_prefab('text')
-            t.parent = self.node_path
-            t.position = (-.5,0,0)
-            t.scale = (.9,.9,.9)
-            t.text = value
-            # t.color = color.red
+            if len(value) > 0:
+                t = load_prefab('text')
+                t.parent = self.model
+                t.position = (0,-.1,0)
+                t.scale = (.9,.9,.9)
+                t.text = value
+                # t.color = color.red
 
 
-            object.__setattr__(self, name, t)
+                object.__setattr__(self, name, t)
 
         else:
             super().__setattr__(name, value)

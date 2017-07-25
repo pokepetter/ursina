@@ -11,12 +11,6 @@ class UI():
 
 
     def input(self, key):
-        if key == 'tab':
-            # for c in self.entity.node_path.getChildren():
-            #     print(c.entity.name)
-            # self.entity.enabled = not self.entity.enabled
-            load_scene('editor')
-
         if key == 'x':
             scene.clear()
 

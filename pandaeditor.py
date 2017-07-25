@@ -31,19 +31,37 @@ from panda3d.core import loadPrcFileData
 
 
 screen_size = (960, 540)
-entities = []
 
 
 def distance(a, b):
     return math.sqrt(sum( (a - b)**2 for a, b in zip(a, b)))
 
-def load_prefab(module_name):
-    # if module_name != 'text':
-    try:
-        importlib.reload(importlib.import_module('prefabs.' + module_name))
+def load_prefab(module_name, add_to_scene=True):
+    # try:
+    #     importlib.reload(importlib.import_module('prefabs.' + module_name))
+    # except:
+    #     pass
+    prefab = load_script('prefabs.' + module_name)
+    caller = inspect.currentframe().f_back.f_locals['self']
+
+    # don't add editor entities to entity list.
+    if add_to_scene:
+        scene.entities.append(prefab)
+    else:
+        scene.editor_entities.append(prefab)
+        try: scene.entities.remove(prefab)
+        except: pass
+    # if hasattr(caller, 'name') and caller.name == 'editor':
+    #     scene.editor_entities.append(prefab)
+    #     try: scene.entities.remove(prefab)
+    #     except: pass
+    # if the caller is attached to an entity, parent the prefab to it.
+    try: prefab.parent = caller.model
     except:
-        pass
-    return load_script('prefabs.' + module_name)
+        try: prefab.parent = caller.node_path
+        except: pass
+
+    return prefab
 
 def load_scene(module_name):
     scene.clear()

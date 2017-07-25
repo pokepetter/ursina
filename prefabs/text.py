@@ -10,7 +10,7 @@ class Text(Entity):
         self.name = 'text'
         self.parent = scene.ui.entity.node_path
         self.model = loader.loadModel('models/quad.egg')
-        self.background_color = color.black33
+        self.background_color = color.clear
         # self.color = color.smoke
         self.text = ''
         self.font_size = 1

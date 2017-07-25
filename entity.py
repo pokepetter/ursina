@@ -17,8 +17,10 @@ class Entity(object):
     def __init__(self):
         self.node_path = NodePath('empty')
         self.enabled = True
+        self.visible = True
+        self.is_editor = False
         self.name = 'entity'
-        self.parent = None
+        self.parent = scene.render
         self.scripts = list()
         self.model = None
         self.color = color.gray
@@ -43,21 +45,24 @@ class Entity(object):
 
     def __setattr__(self, name, value):
         object.__setattr__(self, name, value)
-        if name == 'enabled':
+        if name == 'visible':
             try:
                 if value == False:
-                    self.model.hide()
+                    self.node_path.hide()
+                    # print('hide')
                 else:
-                    self.model.show()
+                    self.node_path.show()
+                    # print('show')
             except:
                 pass # no model
-            for child in self.node_path.getChildren():
-                child.enabled = value
+
         if name == 'parent' and value != None:
             try: self.node_path.reparentTo(value)
             except:
-                try: self.node_path.reparentTo(value.model)
-                except: pass
+                try: self.node_path.reparentTo(value.node_path)
+                except:
+                    try: self.node_path.reparentTo(value.model)
+                    except: pass
         if name == 'model':
             if self.model:
                 self.model.reparentTo(self.node_path)

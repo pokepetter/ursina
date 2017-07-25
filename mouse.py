@@ -56,6 +56,22 @@ def update(dt):
                                 except:
                                     pass
                         break
+            # editor entities:
+            if scene.editor.visible:
+                for entity in scene.editor_entities:
+                    if entity.enabled and entity.collider:
+                        if collision.point_inside_entity(pos, entity):
+                            collided = True
+                            hovered_entity = entity
+                            if not entity.hovered:
+                                entity.hovered = True
+                                for script in hovered_entity.scripts:
+                                    try:
+                                        script.on_mouse_enter()
+                                    except:
+                                        pass
+                            break
+
             # if it raycast the whole way through,
             if i == screen_depth-1:
                 try:
