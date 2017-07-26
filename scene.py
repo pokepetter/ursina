@@ -11,7 +11,6 @@ class Scene(object):
         self.editor_camera = None
         self.ui = None
         self.editor = None
-        self.editor_entities = []
         self.entities = []
 
     def clear(self):

@@ -21,8 +21,10 @@ class Text(Entity):
         scene.entities.append(self)
 
     def update_text(self):
-        char_entity = load_prefab('panel')
+        char_entity = Entity()
+        char_entity.name = 'char_temp'
         char_entity.parent = scene.render
+        char_entity.model = loader.loadModel('models/quad.egg')
         char_entity.scale = (1,1,1)
         char_entity.node_path.wrtReparentTo(self.model)
         width = char_entity.node_path.getScale()[0]
@@ -40,6 +42,8 @@ class Text(Entity):
                 x = 0
             else:
                 char_entity = load_prefab('panel')
+                char_entity.is_editor = self.is_editor
+                char_entity.name = 'char'
                 char_entity.parent = scene.render
                 char_entity.scale = (1,1,1)
                 char_entity.node_path.wrtReparentTo(self.model)

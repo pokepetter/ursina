@@ -36,21 +36,16 @@ screen_size = (960, 540)
 def distance(a, b):
     return math.sqrt(sum( (a - b)**2 for a, b in zip(a, b)))
 
-def load_prefab(module_name, add_to_scene=True):
+def load_prefab(module_name):
     # try:
     #     importlib.reload(importlib.import_module('prefabs.' + module_name))
     # except:
     #     pass
     prefab = load_script('prefabs.' + module_name)
     caller = inspect.currentframe().f_back.f_locals['self']
+    scene.entities.append(prefab)
+    
 
-    # don't add editor entities to entity list.
-    if add_to_scene:
-        scene.entities.append(prefab)
-    else:
-        scene.editor_entities.append(prefab)
-        try: scene.entities.remove(prefab)
-        except: pass
     # if hasattr(caller, 'name') and caller.name == 'editor':
     #     scene.editor_entities.append(prefab)
     #     try: scene.entities.remove(prefab)

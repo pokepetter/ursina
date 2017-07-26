@@ -32,15 +32,17 @@ class Entity(object):
         self.position = (0,0,0)
         self.x, self.y, self.z = 0, 0, 0
 
+        self.forward, self.back = (0,0,0), (0,0,0)
+        self.right, self.left = (0,0,0), (0,0,0)
+        self.up, self.down = (0,0,0), (0,0,0)
+
         self.rotation = (0,0,0)
         self.rotation_x, self.rotation_y, self.rotation_z = 0, 0, 0
 
         self.scale = (1,1,1)
         self.scale_x, self.scale_y, self.scale_z = 0, 0, 0
 
-        self.forward, self.back = (0,0,0), (0,0,0)
-        self.right, self.left = (0,0,0), (0,0,0)
-        self.up, self.down = (0,0,0), (0,0,0)
+
 
 
     def __setattr__(self, name, value):
@@ -88,6 +90,7 @@ class Entity(object):
                     new_value.addY(value[i+1])
                     new_value.addZ(value[i+2])
                 value = new_value
+                print(value)
                 self.node_path.setPos(Vec3(value[0], value[1], value[2]))
 
         if name == 'x': self.position = (value, self.position[1], self.position[2])
@@ -99,27 +102,51 @@ class Entity(object):
                                 -value[1] /2,
                                 -value[2] /2)
 
+        if name == 'rotation':
+            try:
+                # convert value from hpr to axis
+                value = (value[2] , value[0], value[1])
+                self.node_path.setHpr(value)
+
+                forward = scene.render.getRelativeVector(self.node_path, (0,1,0))
+                self.forward = (forward[0], forward[1], forward[2])
+                self.back = (-forward[0], -forward[1], -forward[2])
+
+                right = scene.render.getRelativeVector(self.node_path, (1,0,0))
+                self.right = (right[0], right[1], right[2])
+                self.left = (-right[0], -right[1], -right[2])
+
+                up = scene.render.getRelativeVector(self.node_path, (0,0,1))
+                self.up = (up[0], up[1], up[2])
+                self.down = (-up[0], -up[1], -up[2])
+            except:
+                pass
+
+        if name == 'rotation_x': self.rotation = (value, self.rotation[1], self.rotation[2])
+        if name == 'rotation_y': self.rotation = (self.rotation[0], value, self.rotation[2])
+        if name == 'rotation_z': self.rotation = (self.rotation[0], self.rotation[1], value)
+
         if name == 'scale':
             if self.model:
                 self.node_path.setScale(value[0], value[1], value[2])
         #         self.model.setScale(self.parent, value[0], value[1], value[2])
 
-        if name == 'collision':
-            if value == False: self.collider = None
-            if value == True and self.collider == None:
-                try:
-                    min, max = self.model.getTightBounds()
-                    dimensions = max - min
-                except:
-                    dimensions = (1,1,1)
-
-                collider_scale = self.model.getScale(scene.render)
-
-                self.collider = ((0,0,0),
-                                (0,0,0),
-                                (dimensions[0] * collider_scale[0],
-                                dimensions[1] * collider_scale[1],
-                                dimensions[2] * collider_scale[2]))
+        # if name == 'collision':
+        #     if value == False: self.collider = None
+        #     if value == True and self.collider == None:
+        #         try:
+        #             min, max = self.model.getTightBounds()
+        #             dimensions = max - min
+        #         except:
+        #             dimensions = (1,1,1)
+        #
+        #         collider_scale = self.model.getScale(scene.render)
+        #
+        #         self.collider = ((0,0,0),
+        #                         (0,0,0),
+        #                         (dimensions[0] * collider_scale[0],
+        #                         dimensions[1] * collider_scale[1],
+        #                         dimensions[2] * collider_scale[2]))
 
 
     def add_script(self, module_name):

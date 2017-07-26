@@ -12,7 +12,7 @@ class Filebrowser(Entity):
         # self.model = loader.loadModel('models/quad.egg')
         self.color = color.black33
         self.file_types = None
-        
+
 
     def populate(self, path):
         print(path)
@@ -28,7 +28,8 @@ class Filebrowser(Entity):
             if self.file_types:
                 for file_type in self.file_types:
                     if f.endswith(file_type) or file_type == '':
-                        button = load_prefab('button', False)
+                        button = load_prefab('button')
+                        button.is_editor = True
                         button.parent = self
                         button.position = (x * .161 , 0, (-z * .031))
                         button.scale = (.16, 1, .03)
