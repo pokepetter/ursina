@@ -13,11 +13,16 @@ class LoadTextureButton():
                 entity = Entity()
                 # entity.is_editor = True
                 entity.name = self.path
-                entity.model = loader.loadModel('models/cube.egg')
-                # entity.model.setHpr((0,180,0))
+                entity.model = 'quad'
                 entity.texture = self.path
+                # print('x:', entity.texture.getOrigFileXSize(), 'y:', entity.texture.getOrigFileYSize())
+                entity.scale = (entity.texture.getOrigFileXSize() / 100,
+                                1,
+                                entity.texture.getOrigFileYSize() / 100)
+                entity.collision = True
+                entity.add_script('button')
                 scene.entities.append(entity)
-                print('entities:')
-                for e in scene.entities:
-                    if not e.is_editor:
-                        print(e.name, e.parent.name)
+                # print('entities:')
+                # for e in scene.entities:
+                #     if not e.is_editor:
+                #         print(e.name, 'attached to ', e.parent.name)

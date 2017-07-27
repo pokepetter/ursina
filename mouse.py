@@ -29,6 +29,7 @@ class Mouse():
 
 
     def update(self, dt):
+        # return
         if self.mouse_watcher.hasMouse():
             self.x = self.mouse_watcher.getMouseX()
             self.z = self.mouse_watcher.getMouseY()
@@ -46,7 +47,7 @@ class Mouse():
                 pos = nearPoint + (farPoint * i / screen_depth)
                 pos += camera.cam.getPos(scene.render) + pos
                 for entity in scene.entities:
-                    if entity.enabled and entity.collider:
+                    if entity.enabled:
                         if collision.point_inside_entity(pos, entity):
                             collided = True
                             self.hovered_entity = entity

@@ -23,6 +23,7 @@ class Entity(object):
         self.parent = scene.render
         self.scripts = list()
         self.model = None
+        self.texture = None
         self.color = color.gray
         self.collision = False
         self.collider = None
@@ -43,18 +44,14 @@ class Entity(object):
         self.scale_x, self.scale_y, self.scale_z = 0, 0, 0
 
 
-
-
     def __setattr__(self, name, value):
         object.__setattr__(self, name, value)
         if name == 'visible':
             try:
                 if value == False:
                     self.node_path.hide()
-                    # print('hide')
                 else:
                     self.node_path.show()
-                    # print('show')
             except:
                 pass # no model
 
@@ -66,16 +63,21 @@ class Entity(object):
                     try: self.node_path.reparentTo(value.model)
                     except: pass
         if name == 'model':
-            if self.model:
+            try:
+                self.model = loader.loadModel('models/' + value + '.egg')
                 self.model.reparentTo(self.node_path)
                 self.model.setColorScaleOff()
                 self.model.setTransparency(TransparencyAttrib.MAlpha)
+            except:
+                pass
+                # print('no model with name:', 'models/', value)
         if name == 'color':
             if self.model:
                 self.model.setColorScale(value)
         if name == 'texture':
             if self.model:
                 texture = loader.loadTexture(value)
+                object.__setattr__(self, name, texture)
                 # texture.setMagfilter(SamplerState.FT_nearest)
                 # texture.setMinfilter(SamplerState.FT_nearest)
                 self.model.setTexture(texture, 1)
@@ -83,15 +85,15 @@ class Entity(object):
             self.node_path.setPos(Vec3(value[0], value[1], value[2]))
         if name == 'position':
             # automatically add position instead of extending the tuple
-            if len(value) % 3 == 0:
-                new_value = Vec3()
-                for i in range(0, len(value), 3):
-                    new_value.addX(value[i])
-                    new_value.addY(value[i+1])
-                    new_value.addZ(value[i+2])
-                value = new_value
-                print(value)
-                self.node_path.setPos(Vec3(value[0], value[1], value[2]))
+
+            new_value = Vec3()
+            for i in range(0, len(value), 3):
+                new_value.addX(value[i])
+                new_value.addY(value[i+1])
+                new_value.addZ(value[i+2])
+            value = new_value
+            self.node_path.setPos(new_value)
+            object.__setattr__(self, name, (value[0], value[1], value[2]))
 
         if name == 'x': self.position = (value, self.position[1], self.position[2])
         if name == 'y': self.position = (self.position[0], value, self.position[2])

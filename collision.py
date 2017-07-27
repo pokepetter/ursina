@@ -2,19 +2,6 @@ import scene
 global parent
 
 
-# def point_inside_entity(point, entity):
-#     if entity.collision:
-#         # check if point is inside box. //no rotation yet
-#         if (point[0] >= entity.collider[0][0] - entity.collider[2][0]
-#         and point[0] <= entity.collider[0][0] + entity.collider[2][0]
-#         and point[1] >= entity.collider[0][1] - entity.collider[2][1]
-#         and point[1] <= entity.collider[0][1] + entity.collider[2][1]):
-#             return entity
-#
-#     return False
-
-
-
 def point_inside_entity(point, entity):
     if entity.enabled and not entity.node_path.isHidden() and entity.collision:
         entity.collider = (entity.model.getPos(scene.render), (0,0,0),

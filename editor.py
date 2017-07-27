@@ -8,13 +8,31 @@ class Editor(Entity):
     def __init__(self):
         super().__init__()
         self.name = 'editor'
+        self.is_editor = True
         self.parent = scene.ui.entity.node_path
         self.editor_camera = load_script('scripts.editor_camera')
         self.editor_camera.position = (0, -100, 0)
         scene.editor_camera = self.editor_camera
 
+        self.camera_pivot = Entity()
+        self.camera_pivot.is_editor = True
+        camera.parent = self.camera_pivot
+
+        self.cursor = Entity()
+        self.cursor.is_editor = True
+        self.cursor.model = 'circle'
+
+        self.grid = load_prefab('panel')
+        self.grid.name = 'grid'
+        self.grid.parent = scene.render
+        self.grid.position = (0, 0, 0)
+        self.grid.rotation = (-90, 0, 0)
+        self.grid.scale = (10, 10, 10)
+        self.grid.color = color.lime
+
 
         toolbar = load_prefab('panel')
+        toolbar.name = 'toolbar'
         toolbar.parent = self
         toolbar.origin = (0, 0, .5)
         toolbar.position = (0, 0, .485)
@@ -23,6 +41,7 @@ class Editor(Entity):
 
         for i in range(4):
             button = load_prefab('button')
+            button.name = 'toolbar button'
             button.parent = toolbar
             button.origin = (-.5, 0, .5)
             button.position = (-.487 + (i * .061), 0, 0)
@@ -33,6 +52,7 @@ class Editor(Entity):
 
 
         sidebar = load_prefab('panel')
+        sidebar.name = 'sidebar'
         sidebar.parent = self
         sidebar.origin = (-.5, 0, -0.0)
         sidebar.position = (-.5, 0, 0)
@@ -43,12 +63,14 @@ class Editor(Entity):
         # print(color.hsv_color(90, 1, 1))
 
         self.scene_list = load_prefab('panel')
+        self.scene_list.name = 'scene_list'
         self.scene_list.parent = self
         self.scene_list.scale = (.4, 1, .5)
         self.scene_list.color = color.black33
         self.scene_list.visible = False
 
         self.model_list = load_prefab('panel')
+        self.model_list.name = 'model_list'
         self.model_list.scale = (.4, 1, .5)
         self.model_list.color = color.black33
         self.model_list.visible = False

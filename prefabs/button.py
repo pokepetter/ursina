@@ -9,7 +9,7 @@ class Button(Entity):
         super().__init__()
         self.name = 'button'
         self.parent = scene.ui.entity.node_path
-        self.model = loader.loadModel('models/quad.egg')
+        self.model = 'quad'
         # self.scale = (0.5,0.5,0.5)
         self.collision = True
         self.collider = (self.model.getPos(scene.render), # pos

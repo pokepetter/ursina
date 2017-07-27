@@ -16,6 +16,7 @@ class PandaEditor(ShowBase):
         self.clip_plane_near = 0.01
         self.clip_plane_far = 100
         # lens = OrthographicLens()
+        # lens.setFilmSize(16*2.25, 9*2.25)
         lens = PerspectiveLens()
         lens.setFocalLength(50)
         aspect_ratio = screen_size[0] / screen_size[1]
@@ -30,8 +31,9 @@ class PandaEditor(ShowBase):
         camera.fov = 40
         camera.near_clip_plane = 0.01
         camera.far_clip_plane = 100
-        camera.position = (0, -10, 0)
+        camera.position = (0, -20, 0)
         camera.rotation = (0,0,0)
+        scene.camera = camera
 
 
         # input
@@ -42,21 +44,15 @@ class PandaEditor(ShowBase):
                     'mouse2' : 'middle mouse down',
                     'mouse2 up' : 'middle mouse up',
                     'mouse3' : 'right mouse down',
-                    'mouse3 up' : 'right mouse up'}
+                    'mouse3 up' : 'right mouse up',
+                    'wheel_up' : 'scroll up',
+                    'wheel_down' : 'scroll down'}
         self.accept('buttonDown', self.input)
         self.accept('buttonUp', self.input_up)
         # self.accept('lalt', self.input, ['left alt'])
 
         base.disableMouse()
         mouse.mouse_watcher = base.mouseWatcherNode
-
-        self.accept('mouse1', mouse.input, ['left mouse down'])
-        self.accept('mouse3', mouse.input, ['right mouse down'])
-        self.accept('mouse2', mouse.input, ['middle mouse down'])
-
-        self.accept('mouse1-up', mouse.input, ['left mouse up'])
-        self.accept('mouse3-up', mouse.input, ['right mouse up'])
-        self.accept('mouse2-up', mouse.input, ['middle mouse up'])
 
         #collision
         collision.parent = self
@@ -66,7 +62,7 @@ class PandaEditor(ShowBase):
         ui_entity.name = 'ui'
         ui_entity.parent = camera.cam
         ui_entity.position = (0, 50, 0)
-        ui_entity.model = loader.loadModel('models/quad.egg')
+        ui_entity.model = 'quad'
         ui = ui_entity.add_script('ui')
         ui.entity = ui_entity
         ui.fit_to_screen()
@@ -101,8 +97,9 @@ class PandaEditor(ShowBase):
         return Task.cont
 
     def input_up(self, key):
-        key += ' up'
-        self.input(key)
+        if key != 'wheel_up' and key != 'wheel_down':
+            key += ' up'
+            self.input(key)
 
 
     def input(self, key):

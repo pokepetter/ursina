@@ -1,6 +1,7 @@
 from direct.showbase.ShowBase import ShowBase
 from panda3d.core import Lens
 from panda3d.core import PerspectiveLens
+from panda3d.core import OrthographicLens
 from direct.interval.IntervalGlobal import Sequence, Func, Wait
 from direct.task.Task import Task
 from panda3d.core import NodePath
@@ -44,12 +45,10 @@ def load_prefab(module_name):
     prefab = load_script('prefabs.' + module_name)
     caller = inspect.currentframe().f_back.f_locals['self']
     scene.entities.append(prefab)
-    
 
-    # if hasattr(caller, 'name') and caller.name == 'editor':
-    #     scene.editor_entities.append(prefab)
-    #     try: scene.entities.remove(prefab)
-    #     except: pass
+    if hasattr(caller, 'name') and caller.name == 'editor':
+        prefab.is_editor = True
+
     # if the caller is attached to an entity, parent the prefab to it.
     try: prefab.parent = caller.model
     except:

@@ -2,6 +2,7 @@ import sys
 sys.path.append("..")
 import camera
 import mouse
+import scene
 
 class EditorCamera():
 
@@ -12,16 +13,29 @@ class EditorCamera():
         self.move = False
 
     def input(self, key):
+        # print(key)
+        if key == 'middle mouse down':
+            self.camera_start = camera.position
+            self.pan = True
+        if key == 'middle mouse up':
+            self.pan = False
+
         if key == 'right mouse down':
-            self.move = True
+            self.camera_start_rotation = scene.editor.camera_pivot.rotation
+            self.rotate = True
         if key == 'right mouse up':
-            self.move = False
+            self.rotate = False
+
+        if key == 'scroll up':
+            camera.position += camera.forward * self.speed
+        if key == 'scroll down':
+            camera.position += camera.back * self.speed
 
 
         if self.move:
             if key == 'd':
                 camera.position += camera.right * self.speed
-                print(camera.right)
+                # print(camera.right)
             if key == 'a':
                 camera.position += camera.left * self.speed
 
@@ -53,16 +67,13 @@ class EditorCamera():
             # print(camera.cam.getPos())
 
 
-
-        if key == 'middle mouse down':
-            self.camera_start = camera.position
-            self.pan = True
-
-        if key == 'middle mouse up':
-            self.pan = False
-
     def update(self, dt):
-
         if self.pan:
-            camera.x = self.camera_start[0] - mouse.delta[0] * self.speed
-            camera.z = self.camera_start[2] - mouse.delta[1] * self.speed
+            camera.x = self.camera_start[0] - mouse.delta[0] * self.speed * 2
+            camera.y = self.camera_start[1]
+            camera.z = self.camera_start[2] - mouse.delta[1] * self.speed * 2
+
+        if self.rotate:
+            scene.editor.camera_pivot.rotation_z = self.camera_start_rotation[2] - mouse.delta[0] * self.speed * 20
+            scene.editor.camera_pivot.rotation_x = self.camera_start_rotation[0] + mouse.delta[1] * self.speed * 20
+            # print(scene.editor.camera_pivot.rotation_x)

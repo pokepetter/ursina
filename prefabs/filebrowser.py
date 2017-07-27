@@ -9,14 +9,12 @@ class Filebrowser(Entity):
         super().__init__()
         self.name = 'filebrowser'
         self.parent = scene.ui.entity.node_path
-        # self.model = loader.loadModel('models/quad.egg')
+        # self.model = 'quad'
         self.color = color.black33
         self.file_types = None
 
 
     def populate(self, path):
-        print(path)
-
         files = os.listdir(path)
         for i in range(math.floor(len(files) / 10) - 1):
             self.x -= 0.32 / 10

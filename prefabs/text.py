@@ -9,7 +9,7 @@ class Text(Entity):
         super().__init__()
         self.name = 'text'
         self.parent = scene.ui.entity.node_path
-        self.model = loader.loadModel('models/quad.egg')
+        self.model = 'quad'
         self.background_color = color.clear
         # self.color = color.smoke
         self.text = ''
@@ -24,7 +24,7 @@ class Text(Entity):
         char_entity = Entity()
         char_entity.name = 'char_temp'
         char_entity.parent = scene.render
-        char_entity.model = loader.loadModel('models/quad.egg')
+        char_entity.model = 'quad'
         char_entity.scale = (1,1,1)
         char_entity.node_path.wrtReparentTo(self.model)
         width = char_entity.node_path.getScale()[0]
