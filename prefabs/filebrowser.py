@@ -8,7 +8,7 @@ class Filebrowser(Entity):
     def __init__(self):
         super().__init__()
         self.name = 'filebrowser'
-        self.parent = scene.ui.entity.node_path
+        self.parent = scene.ui.entity
         # self.model = 'quad'
         self.color = color.black33
         self.file_types = None

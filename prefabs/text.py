@@ -8,7 +8,7 @@ class Text(Entity):
     def __init__(self):
         super().__init__()
         self.name = 'text'
-        self.parent = scene.ui.entity.node_path
+        self.parent = scene.ui.entity
         self.model = 'quad'
         self.background_color = color.clear
         # self.color = color.smoke
@@ -26,9 +26,9 @@ class Text(Entity):
         char_entity.parent = scene.render
         char_entity.model = 'quad'
         char_entity.scale = (1,1,1)
-        char_entity.node_path.wrtReparentTo(self.model)
-        width = char_entity.node_path.getScale()[0]
-        height = char_entity.node_path.getScale()[2]
+        char_entity.wrtReparentTo(self.model)
+        width = char_entity.getScale()[0]
+        height = char_entity.getScale()[2]
         # self.model.setScale(.1,.1,.1)
         destroy(char_entity)
 
@@ -46,7 +46,7 @@ class Text(Entity):
                 char_entity.name = 'char'
                 char_entity.parent = scene.render
                 char_entity.scale = (1,1,1)
-                char_entity.node_path.wrtReparentTo(self.model)
+                char_entity.wrtReparentTo(self.model)
                 char_entity.origin = (-.5, 0, .5)
                 char_entity.position = (-.5 + (x * width * self.character_spacing),
                                         -.1,

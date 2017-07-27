@@ -8,7 +8,7 @@ class Button(Entity):
     def __init__(self):
         super().__init__()
         self.name = 'button'
-        self.parent = scene.ui.entity.node_path
+        self.parent = scene.ui.entity
         self.model = 'quad'
         # self.scale = (0.5,0.5,0.5)
         self.collision = True

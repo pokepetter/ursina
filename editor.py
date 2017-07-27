@@ -9,10 +9,11 @@ class Editor(Entity):
         super().__init__()
         self.name = 'editor'
         self.is_editor = True
-        self.parent = scene.ui.entity.node_path
+        self.parent = scene.ui.entity
         self.editor_camera = load_script('scripts.editor_camera')
         self.editor_camera.position = (0, -100, 0)
         scene.editor_camera = self.editor_camera
+        render.explore()
 
         self.camera_pivot = Entity()
         self.camera_pivot.is_editor = True

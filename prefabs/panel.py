@@ -7,7 +7,7 @@ class Panel(Entity):
     def __init__(self):
         super().__init__()
         self.name = 'panel'
-        self.parent = scene.ui.entity.node_path
+        self.parent = scene.ui.entity
         self.model = 'quad'
         scene.entities.append(self)
         # print('created panel')

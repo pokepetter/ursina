@@ -52,7 +52,7 @@ def load_prefab(module_name):
     # if the caller is attached to an entity, parent the prefab to it.
     try: prefab.parent = caller.model
     except:
-        try: prefab.parent = caller.node_path
+        try: prefab.parent = caller
         except: pass
 
     return prefab
@@ -86,6 +86,6 @@ def load_script(module_name):
 def destroy(entity):
     try: entity.model.removeNode()
     except: pass
-    try: entity.node_path.removeNode()
+    try: entity.removeNode()
     except: pass
     del entity

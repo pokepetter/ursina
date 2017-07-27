@@ -3,7 +3,7 @@ global parent
 
 
 def point_inside_entity(point, entity):
-    if entity.enabled and not entity.node_path.isHidden() and entity.collision:
+    if entity.enabled and not entity.isHidden() and entity.collision:
         entity.collider = (entity.model.getPos(scene.render), (0,0,0),
                         (entity.model.getScale(scene.render)[0] /4, 1,
                         entity.model.getScale(scene.render)[2] /4))

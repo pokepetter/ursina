@@ -1,5 +1,4 @@
 from pandaeditor import *
-
 from os import walk
 import os
 
@@ -23,7 +22,7 @@ class PandaEditor(ShowBase):
         lens.setAspectRatio(aspect_ratio)
         base.cam.node().setLens(lens)
         camera.cam = base.camera
-        camera.cam.reparentTo(camera.node_path)
+        camera.cam.reparentTo(camera)
         camera.lens = lens
         camera.parent = self.render
         camera.render = self.render

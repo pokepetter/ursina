@@ -12,10 +12,10 @@ import color
 import scene
 
 
-class Entity(object):
+class Entity(NodePath):
 
     def __init__(self):
-        self.node_path = NodePath('empty')
+        super().__init__('empty')
         self.enabled = True
         self.visible = True
         self.is_editor = False
@@ -45,27 +45,30 @@ class Entity(object):
 
 
     def __setattr__(self, name, value):
-        object.__setattr__(self, name, value)
+        try:
+            super().__setattr__(name, value)
+        except:
+            pass
         if name == 'visible':
             try:
                 if value == False:
-                    self.node_path.hide()
+                    self.hide()
                 else:
-                    self.node_path.show()
+                    self.show()
             except:
                 pass # no model
 
         if name == 'parent' and value != None:
-            try: self.node_path.reparentTo(value)
+            try: self.reparentTo(value)
             except:
-                try: self.node_path.reparentTo(value.node_path)
+                try: self.reparentTo(value.node_path)
                 except:
-                    try: self.node_path.reparentTo(value.model)
+                    try: self.reparentTo(value.model)
                     except: pass
         if name == 'model':
             try:
                 self.model = loader.loadModel('models/' + value + '.egg')
-                self.model.reparentTo(self.node_path)
+                self.model.reparentTo(self)
                 self.model.setColorScaleOff()
                 self.model.setTransparency(TransparencyAttrib.MAlpha)
             except:
@@ -82,7 +85,7 @@ class Entity(object):
                 # texture.setMinfilter(SamplerState.FT_nearest)
                 self.model.setTexture(texture, 1)
         if name == 'global_position':
-            self.node_path.setPos(Vec3(value[0], value[1], value[2]))
+            self.setPos(Vec3(value[0], value[1], value[2]))
         if name == 'position':
             # automatically add position instead of extending the tuple
 
@@ -92,7 +95,7 @@ class Entity(object):
                 new_value.addY(value[i+1])
                 new_value.addZ(value[i+2])
             value = new_value
-            self.node_path.setPos(new_value)
+            self.setPos(new_value)
             object.__setattr__(self, name, (value[0], value[1], value[2]))
 
         if name == 'x': self.position = (value, self.position[1], self.position[2])
@@ -108,17 +111,17 @@ class Entity(object):
             try:
                 # convert value from hpr to axis
                 value = (value[2] , value[0], value[1])
-                self.node_path.setHpr(value)
+                self.setHpr(value)
 
-                forward = scene.render.getRelativeVector(self.node_path, (0,1,0))
+                forward = scene.render.getRelativeVector(self, (0,1,0))
                 self.forward = (forward[0], forward[1], forward[2])
                 self.back = (-forward[0], -forward[1], -forward[2])
 
-                right = scene.render.getRelativeVector(self.node_path, (1,0,0))
+                right = scene.render.getRelativeVector(self, (1,0,0))
                 self.right = (right[0], right[1], right[2])
                 self.left = (-right[0], -right[1], -right[2])
 
-                up = scene.render.getRelativeVector(self.node_path, (0,0,1))
+                up = scene.render.getRelativeVector(self, (0,0,1))
                 self.up = (up[0], up[1], up[2])
                 self.down = (-up[0], -up[1], -up[2])
             except:
@@ -130,7 +133,7 @@ class Entity(object):
 
         if name == 'scale':
             if self.model:
-                self.node_path.setScale(value[0], value[1], value[2])
+                self.setScale(value[0], value[1], value[2])
         #         self.model.setScale(self.parent, value[0], value[1], value[2])
 
         # if name == 'collision':
@@ -194,7 +197,7 @@ class Entity(object):
         pass
 
     # def get_children(self):
-        # for child in self.node_path.getChildren():
+        # for child in self.getChildren():
         #     print(child.name)
         # for
 

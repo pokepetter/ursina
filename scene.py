@@ -18,7 +18,7 @@ class Scene(object):
         for e in self.entities:
             try: e.model.removeNode()
             except: pass
-            try: e.node_path.removeNode()
+            try: e.removeNode()
             except: pass
             del e
 
