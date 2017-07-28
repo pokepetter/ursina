@@ -12,11 +12,7 @@ class Button(Entity):
         self.model = 'quad'
         # self.scale = (0.5,0.5,0.5)
         self.collision = True
-        self.collider = (self.model.getPos(scene.render), # pos
-                        (0,0,0), # rot
-                        (self.model.getScale(scene.render)[0] /4,
-                        1,
-                        self.model.getScale(scene.render)[2] /4))
+        self.collision = 'box'
         self.button_script = self.add_script('button')
         self.button_script.ui = scene.ui
         self.button_script.color = color.gray

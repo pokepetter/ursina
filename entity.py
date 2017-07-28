@@ -6,6 +6,7 @@ from panda3d.core import NodePath
 from panda3d.core import Vec3
 from panda3d.core import SamplerState
 from panda3d.core import TransparencyAttrib
+from collider import Collider
 from scripts import *
 from scenes import *
 import color
@@ -61,10 +62,8 @@ class Entity(NodePath):
         if name == 'parent' and value != None:
             try: self.reparentTo(value)
             except:
-                try: self.reparentTo(value.node_path)
-                except:
-                    try: self.reparentTo(value.model)
-                    except: pass
+                try: self.reparentTo(value.model)
+                except: pass
         if name == 'model':
             try:
                 self.model = loader.loadModel('models/' + value + '.egg')
@@ -136,23 +135,21 @@ class Entity(NodePath):
                 self.setScale(value[0], value[1], value[2])
         #         self.model.setScale(self.parent, value[0], value[1], value[2])
 
-        # if name == 'collision':
-        #     if value == False: self.collider = None
-        #     if value == True and self.collider == None:
-        #         try:
-        #             min, max = self.model.getTightBounds()
-        #             dimensions = max - min
-        #         except:
-        #             dimensions = (1,1,1)
-        #
-        #         collider_scale = self.model.getScale(scene.render)
-        #
-        #         self.collider = ((0,0,0),
-        #                         (0,0,0),
-        #                         (dimensions[0] * collider_scale[0],
-        #                         dimensions[1] * collider_scale[1],
-        #                         dimensions[2] * collider_scale[2]))
+        if name == 'collider':
+            # if self.collider:
+            #     self.collider.remove()
 
+            collider = Collider()
+            collider.parent = self
+            collider.shape = value
+            collider.position = (0,0,0)
+            collider.rotation = (0,0,0)
+            collider.scale = (1,1,1)
+            object.__setattr__(self, name, collider)
+
+            # self.collider = self.attachNewNode(collider)
+            if scene.world:
+                scene.world.attachRigidBody(collider)
 
     def add_script(self, module_name):
         if inspect.isclass(module_name):

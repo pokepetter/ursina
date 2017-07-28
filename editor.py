@@ -13,7 +13,6 @@ class Editor(Entity):
         self.editor_camera = load_script('scripts.editor_camera')
         self.editor_camera.position = (0, -100, 0)
         scene.editor_camera = self.editor_camera
-        render.explore()
 
         self.camera_pivot = Entity()
         self.camera_pivot.is_editor = True
@@ -29,6 +28,8 @@ class Editor(Entity):
         self.grid.position = (0, 0, 0)
         self.grid.rotation = (-90, 0, 0)
         self.grid.scale = (10, 10, 10)
+        self.grid.collider = 'box'
+        print(self.grid.collider.shape)
         self.grid.color = color.lime
 
 
@@ -92,6 +93,7 @@ class Editor(Entity):
 
 
         self.texture_list = load_prefab('filebrowser')
+        # self.texture_list.collider = 'box'
         self.texture_list.parent = self
         # self.texture_list.scale = (1, 1, 1)
         self.texture_list.visible = False
@@ -108,6 +110,11 @@ class Editor(Entity):
             self.visible = not self.visible
             if self.visible:
                 camera.position = self.editor_camera.position
+                for e in scene.entities:
+                    try:
+                        e.collider.show()
+                    except:
+                        pass
             else:
                 self.editor_camera.position = camera.position
 

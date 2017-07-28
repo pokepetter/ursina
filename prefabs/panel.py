@@ -9,6 +9,7 @@ class Panel(Entity):
         self.name = 'panel'
         self.parent = scene.ui.entity
         self.model = 'quad'
+        self.collider = 'box'
         scene.entities.append(self)
         # print('created panel')
 

@@ -6,6 +6,7 @@ class Scene(object):
     def __init__(self):
         self.app = None
         self.render = None
+        self.world = None
         self.camera = None
         self.asset_folder = None
         self.editor_camera = None

@@ -1,6 +1,8 @@
 from pandaeditor import *
 from os import walk
 import os
+from panda3d.bullet import BulletDebugNode
+
 
 class PandaEditor(ShowBase):
 
@@ -10,6 +12,23 @@ class PandaEditor(ShowBase):
         scene.app = self
         scene.render = self.render
         scene.asset_folder = __file__
+
+        #collision
+        # collision.parent = self
+        scene.world = BulletWorld()
+        scene.world.setGravity(Vec3(0, 0, -9.81))
+
+        debugNode = BulletDebugNode('Debug')
+        debugNode.showWireframe(False)
+        debugNode.showConstraints(False)
+        debugNode.showBoundingBoxes(True)
+        debugNode.showNormals(False)
+        debugNP = self.render.attachNewNode(debugNode)
+        debugNP.show()
+
+        # world = BulletWorld()
+        # world.setGravity(Vec3(0, 0, -9.81))
+        scene.world.setDebugNode(debugNP.node())
 
         # camera
         self.clip_plane_near = 0.01
@@ -53,8 +72,6 @@ class PandaEditor(ShowBase):
         base.disableMouse()
         mouse.mouse_watcher = base.mouseWatcherNode
 
-        #collision
-        collision.parent = self
 
         # UI
         ui_entity = Entity()
@@ -74,13 +91,12 @@ class PandaEditor(ShowBase):
         self.update_task = taskMgr.add(self.update, "update")
 
 
-    def test(self):
-        print(test)
 
     def update(self, task):
         # time between frames
         dt = globalClock.getDt()
 
+        scene.world.doPhysics(dt)
         mouse.update(dt)
         try: scene.editor.editor_camera.update(dt)
         except: pass

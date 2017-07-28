@@ -8,6 +8,8 @@ from panda3d.core import NodePath
 from panda3d.core import PandaNode
 from panda3d.core import Vec3
 from panda3d.core import Point3
+from panda3d.bullet import BulletWorld
+
 
 import sys
 import math
@@ -31,7 +33,7 @@ from panda3d.core import loadPrcFileData
 
 
 
-screen_size = (960, 540)
+screen_size = (1280, 720)
 
 
 def distance(a, b):
