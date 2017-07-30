@@ -97,6 +97,10 @@ class Entity(NodePath):
             self.setPos(new_value)
             object.__setattr__(self, name, (value[0], value[1], value[2]))
 
+            if self.collider:
+                self.collider.node_path.setPos(self.getPos(scene.render))
+            #     print('eikgai', new_value, '->', self.collider.node_path.getPos())
+
         if name == 'x': self.position = (value, self.position[1], self.position[2])
         if name == 'y': self.position = (self.position[0], value, self.position[2])
         if name == 'z': self.position = (self.position[0], self.position[1], value)
@@ -111,6 +115,8 @@ class Entity(NodePath):
                 # convert value from hpr to axis
                 value = (value[2] , value[0], value[1])
                 self.setHpr(value)
+                if self.collider:
+                    self.collider.node_path.setHpr(self.getHpr(scene.render))
 
                 forward = scene.render.getRelativeVector(self, (0,1,0))
                 self.forward = (forward[0], forward[1], forward[2])
@@ -133,23 +139,31 @@ class Entity(NodePath):
         if name == 'scale':
             if self.model:
                 self.setScale(value[0], value[1], value[2])
+
+            # if self.collider:
+            #     # global_scale = self.getScale(scale.render)
+            #     # self.collider.node_path.setSx(global_scale[0])
+            #     self.collider.node_path.setScale(self.getScale(scene.render))
         #         self.model.setScale(self.parent, value[0], value[1], value[2])
 
-        if name == 'collider':
+        if name == 'collider' and value != None:
             # if self.collider:
             #     self.collider.remove()
 
             collider = Collider()
-            collider.parent = self
-            collider.shape = value
-            collider.position = (0,0,0)
-            collider.rotation = (0,0,0)
-            collider.scale = (1,1,1)
+            collider.entity = self
+            collider.make_collider()
+            # collider
+            # collider.parent = self
+            # collider.shape = value
+            # collider.position = (0,0,0)
+            # collider.rotation = (0,0,0)
+            # collider.scale = (1,1,1)
             object.__setattr__(self, name, collider)
 
             # self.collider = self.attachNewNode(collider)
-            if scene.world:
-                scene.world.attachRigidBody(collider)
+            # if scene.world:
+            #     scene.world.attachRigidBody(collider)
 
     def add_script(self, module_name):
         if inspect.isclass(module_name):

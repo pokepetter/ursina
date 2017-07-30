@@ -12,7 +12,7 @@ class Button(Entity):
         self.model = 'quad'
         # self.scale = (0.5,0.5,0.5)
         self.collision = True
-        self.collision = 'box'
+        self.collider = 'box'
         self.button_script = self.add_script('button')
         self.button_script.ui = scene.ui
         self.button_script.color = color.gray

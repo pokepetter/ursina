@@ -17,7 +17,6 @@ import inspect
 import importlib
 
 import mouse
-import collision
 import scene
 import camera
 import debug
@@ -91,3 +90,11 @@ def destroy(entity):
     try: entity.removeNode()
     except: pass
     del entity
+
+
+def raycast(origin, direction, distance):
+    pFrom = Point3(origin[0], origin[1], origin[2])
+    pTo = Point3(origin[0], origin[1], origin[2]) + (direction * distance)
+    print('to', pTo)
+
+    result = scene.world.rayTestClosest(pFrom, pTo)

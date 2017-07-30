@@ -1,7 +1,7 @@
 from pandaeditor import *
 from os import walk
 import os
-from panda3d.bullet import BulletDebugNode
+
 
 
 class PandaEditor(ShowBase):
@@ -18,17 +18,11 @@ class PandaEditor(ShowBase):
         scene.world = BulletWorld()
         scene.world.setGravity(Vec3(0, 0, -9.81))
 
-        debugNode = BulletDebugNode('Debug')
-        debugNode.showWireframe(False)
-        debugNode.showConstraints(False)
-        debugNode.showBoundingBoxes(True)
-        debugNode.showNormals(False)
-        debugNP = self.render.attachNewNode(debugNode)
-        debugNP.show()
+
 
         # world = BulletWorld()
         # world.setGravity(Vec3(0, 0, -9.81))
-        scene.world.setDebugNode(debugNP.node())
+
 
         # camera
         self.clip_plane_near = 0.01

@@ -2,6 +2,7 @@ import sys
 sys.path.append("..")
 from pandaeditor import *
 import os
+from panda3d.bullet import BulletDebugNode
 
 class Editor(Entity):
 
@@ -29,7 +30,6 @@ class Editor(Entity):
         self.grid.rotation = (-90, 0, 0)
         self.grid.scale = (10, 10, 10)
         self.grid.collider = 'box'
-        print(self.grid.collider.shape)
         self.grid.color = color.lime
 
 
@@ -103,7 +103,31 @@ class Editor(Entity):
 
 
 
+        self.debugNode = BulletDebugNode('Debug')
+        self.debugNode.showWireframe(False)
+        self.debugNode.showConstraints(False)
+        self.debugNode.showBoundingBoxes(True)
+        self.debugNode.showNormals(False)
+        self.debugNP = self.attachNewNode(self.debugNode)
+        scene.world.setDebugNode(self.debugNP.node())
+        self.show_colliders = True
+        self.debugNP.show()
+
+
+
     def input(self, key):
+        if key == 'u':
+            self.grid.z += 5
+
+        if key == 'i':
+            self.grid.rotation_x += 5
+
+        if key == 'h':
+            self.show_colliders = not self.show_colliders
+            if self.show_colliders:
+                self.debugNP.show()
+            else:
+                self.debugNP.hide()
 
         if key == 'tab':
             # print(inspect.currentframe().f_back.f_locals['self'])
@@ -112,7 +136,7 @@ class Editor(Entity):
                 camera.position = self.editor_camera.position
                 for e in scene.entities:
                     try:
-                        e.collider.show()
+                        e.show()
                     except:
                         pass
             else:
