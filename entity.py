@@ -30,7 +30,7 @@ class Entity(NodePath):
         self.collider = None
         self.hovered = False
 
-        self.global_position = (0,0,0)
+        self.origin = (0,0,0)
         self.position = (0,0,0)
         self.x, self.y, self.z = 0, 0, 0
 
@@ -53,9 +53,9 @@ class Entity(NodePath):
         if name == 'visible':
             try:
                 if value == False:
-                    self.hide()
+                    self.stash()
                 else:
-                    self.show()
+                    self.unstash()
             except:
                 pass # no model
 
@@ -83,8 +83,7 @@ class Entity(NodePath):
                 # texture.setMagfilter(SamplerState.FT_nearest)
                 # texture.setMinfilter(SamplerState.FT_nearest)
                 self.model.setTexture(texture, 1)
-        if name == 'global_position':
-            self.setPos(Vec3(value[0], value[1], value[2]))
+
         if name == 'position':
             # automatically add position instead of extending the tuple
 
@@ -97,15 +96,12 @@ class Entity(NodePath):
             self.setPos(new_value)
             object.__setattr__(self, name, (value[0], value[1], value[2]))
 
-            if self.collider:
-                self.collider.node_path.setPos(self.getPos(scene.render))
-            #     print('eikgai', new_value, '->', self.collider.node_path.getPos())
 
         if name == 'x': self.position = (value, self.position[1], self.position[2])
         if name == 'y': self.position = (self.position[0], value, self.position[2])
         if name == 'z': self.position = (self.position[0], self.position[1], value)
 
-        if name == 'origin':
+        if name == 'origin' and self.model:
             self.model.setPos(-value[0] /2,
                                 -value[1] /2,
                                 -value[2] /2)
@@ -115,8 +111,6 @@ class Entity(NodePath):
                 # convert value from hpr to axis
                 value = (value[2] , value[0], value[1])
                 self.setHpr(value)
-                if self.collider:
-                    self.collider.node_path.setHpr(self.getHpr(scene.render))
 
                 forward = scene.render.getRelativeVector(self, (0,1,0))
                 self.forward = (forward[0], forward[1], forward[2])
@@ -140,16 +134,8 @@ class Entity(NodePath):
             if self.model:
                 self.setScale(value[0], value[1], value[2])
 
-            # if self.collider:
-            #     # global_scale = self.getScale(scale.render)
-            #     # self.collider.node_path.setSx(global_scale[0])
-            #     self.collider.node_path.setScale(self.getScale(scene.render))
-        #         self.model.setScale(self.parent, value[0], value[1], value[2])
 
         if name == 'collider' and value != None:
-            # if self.collider:
-            #     self.collider.remove()
-
             collider = Collider()
             collider.entity = self
             collider.make_collider()

@@ -2,6 +2,8 @@ from panda3d.core import *
 import sys
 import camera
 import scene
+from panda3d.core import CollisionTraverser, CollisionNode
+from panda3d.core import CollisionHandlerQueue, CollisionRay
 
 
 class Mouse():
@@ -16,7 +18,23 @@ class Mouse():
 
         self.hovered_entity = None
         self.mouse_pressed = False
-        self.result = None
+
+        self.picker = CollisionTraverser()  # Make a traverser
+        self.pq = CollisionHandlerQueue()  # Make a handler
+        # Make a collision node for our picker ray
+        self.pickerNode = CollisionNode('mouseRay')
+        # Attach that node to the camera since the ray will need to be positioned
+        # relative to it
+        self.pickerNP = camera.attachNewNode(self.pickerNode)
+        # Everything to be picked will use bit 1. This way if we were doing other
+        # collision we could separate it
+        # self.pickerNode.setFromCollideMask(BitMask32.bit(1))
+        self.pickerRay = CollisionRay()  # Make our ray
+        # Add it to the collision node
+        self.pickerNode.addSolid(self.pickerRay)
+        # Register the ray as something that can cause collisions
+        self.picker.addCollider(self.pickerNP, self.pq)
+
 
     def input(self, key):
         if key.endswith('mouse down'):
@@ -27,6 +45,8 @@ class Mouse():
         elif key.endswith('mouse up'):
             self.mouse_pressed = False
 
+        # self.picker.showCollisions(scene.render)
+
 
     def update(self, dt):
         if self.mouse_watcher.hasMouse():
@@ -34,20 +54,45 @@ class Mouse():
             self.z = self.mouse_watcher.getMouseY()
             self.position = (self.x, self.z)
 
-            pFrom = Point3()
-            pTo = Point3()
-            camera.lens.extrude(self.position, pFrom, pTo)
-            # Transform to global coordinates
-            pFrom = render.getRelativePoint(camera.cam, pFrom)
-            pTo = render.getRelativePoint(camera.cam, pTo)
+            self.pickerRay.setFromLens(scene.camera.lens_node, self.x, self.z)
+            self.picker.traverse(scene.render)
+            if self.pq.getNumEntries() > 0:
 
-            self.result = scene.world.rayTestClosest(pFrom, pTo)
+                self.pq.sortEntries()
+                nP = self.pq.getEntry(0).getIntoNodePath().parent
+                if nP.name.endswith('.egg'):
+                    nP = nP.parent
 
-            # print(result.hasHit())
-            # print result.getHitPos()
-            # print result.getHitNormal()
-            # print result.getHitFraction()
-            # print result.getNode()
+                for entity in scene.entities:
+                    if entity == nP:
+                        if not entity.hovered:
+                            entity.hovered = True
+                            self.hovered_entity = entity
+                            print(entity.name)
+                            for s in entity.scripts:
+                                try:
+                                    s.on_mouse_enter()
+                                except:
+                                    pass
+                    else:
+                        if entity.hovered:
+                            entity.hovered = False
+                            for s in entity.scripts:
+                                try:
+                                    s.on_mouse_exit()
+                                except:
+                                    pass
+
+            else:
+                for entity in scene.entities:
+                    if entity.hovered:
+                        entity.hovered = False
+                        for s in entity.scripts:
+                            try:
+                                s.on_mouse_exit()
+                            except:
+                                pass
+
 
 
 

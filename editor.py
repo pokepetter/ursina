@@ -25,11 +25,14 @@ class Editor(Entity):
 
         self.grid = load_prefab('panel')
         self.grid.name = 'grid'
-        self.grid.parent = scene.render
+        self.grid.parent = scene
         self.grid.position = (0, 0, 0)
         self.grid.rotation = (-90, 0, 0)
         self.grid.scale = (10, 10, 10)
+        self.grid.collision = True
         self.grid.collider = 'box'
+        self.grid.button_script = self.add_script('button')
+        self.grid.button_script.color = color.gray
         self.grid.color = color.lime
 
 
@@ -100,18 +103,6 @@ class Editor(Entity):
         # print(scene.asset_folder)
         self.texture_list.file_types = ('.png', '.jpg', '.psd', '.gif')
         self.texture_list.path = os.path.join(os.path.dirname(scene.asset_folder), 'textures')
-
-
-
-        self.debugNode = BulletDebugNode('Debug')
-        self.debugNode.showWireframe(False)
-        self.debugNode.showConstraints(False)
-        self.debugNode.showBoundingBoxes(True)
-        self.debugNode.showNormals(False)
-        self.debugNP = self.attachNewNode(self.debugNode)
-        scene.world.setDebugNode(self.debugNP.node())
-        self.show_colliders = True
-        self.debugNP.show()
 
 
 

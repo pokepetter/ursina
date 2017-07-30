@@ -9,20 +9,10 @@ class PandaEditor(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
 
+        scene.reparentTo(self.render)
         scene.app = self
         scene.render = self.render
         scene.asset_folder = __file__
-
-        #collision
-        # collision.parent = self
-        scene.world = BulletWorld()
-        scene.world.setGravity(Vec3(0, 0, -9.81))
-
-
-
-        # world = BulletWorld()
-        # world.setGravity(Vec3(0, 0, -9.81))
-
 
         # camera
         self.clip_plane_near = 0.01
@@ -37,6 +27,7 @@ class PandaEditor(ShowBase):
         camera.cam = base.camera
         camera.cam.reparentTo(camera)
         camera.lens = lens
+        camera.lens_node = LensNode('lens_node', lens)
         camera.parent = self.render
         camera.render = self.render
         camera.aspect_ratio = screen_size[0] / screen_size[1]
@@ -46,6 +37,7 @@ class PandaEditor(ShowBase):
         camera.position = (0, -20, 0)
         camera.rotation = (0,0,0)
         scene.camera = camera
+        camera.reparentTo(scene)
 
 
         # input
@@ -90,7 +82,6 @@ class PandaEditor(ShowBase):
         # time between frames
         dt = globalClock.getDt()
 
-        scene.world.doPhysics(dt)
         mouse.update(dt)
         try: scene.editor.editor_camera.update(dt)
         except: pass

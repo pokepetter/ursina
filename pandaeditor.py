@@ -1,5 +1,6 @@
 from direct.showbase.ShowBase import ShowBase
 from panda3d.core import Lens
+from panda3d.core import LensNode
 from panda3d.core import PerspectiveLens
 from panda3d.core import OrthographicLens
 from direct.interval.IntervalGlobal import Sequence, Func, Wait
@@ -8,7 +9,6 @@ from panda3d.core import NodePath
 from panda3d.core import PandaNode
 from panda3d.core import Vec3
 from panda3d.core import Point3
-from panda3d.bullet import BulletWorld
 
 
 import sys
@@ -16,12 +16,12 @@ import math
 import inspect
 import importlib
 
+from entity import Entity
 import mouse
 import scene
 import camera
 import debug
 import color
-from entity import Entity
 
 from scripts import *
 from scenes import *

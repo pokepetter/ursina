@@ -1,9 +1,11 @@
 import sys
+from panda3d.core import NodePath
 
 
-class Scene(object):
+class Scene(NodePath):
 
     def __init__(self):
+        super().__init__('')
         self.app = None
         self.render = None
         self.world = None

@@ -10,11 +10,9 @@ class Button(Entity):
         self.name = 'button'
         self.parent = scene.ui.entity
         self.model = 'quad'
-        # self.scale = (0.5,0.5,0.5)
         self.collision = True
         self.collider = 'box'
         self.button_script = self.add_script('button')
-        self.button_script.ui = scene.ui
         self.button_script.color = color.gray
         self.text = ''
 
@@ -26,11 +24,7 @@ class Button(Entity):
                 pass
         if name == 'position':
             value = (value[0] / 2, (value[1] / 2) - .1, value[2] / 2)
-        # if name == 'scale' and self.model:
-        #     super().__setattr__(name, value)
-        #     self.collider = (self.model.getPos(scene.render), (0,0,0),
-        #                     (self.model.getScale(scene.render)[0] /4, 1,
-        #                     self.model.getScale(scene.render)[2] /4))
+
         if name == 'text':
             if len(value) > 0:
                 t = load_prefab('text')

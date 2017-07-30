@@ -1,37 +1,41 @@
-from panda3d.bullet import BulletBoxShape
-from panda3d.bullet import BulletRigidBodyNode
+from panda3d.core import CollisionNode, CollisionBox
 from panda3d.core import NodePath
-# from panda3d.core import CollisionNode
 from panda3d.core import Vec3
 import scene
 
 
-class Collider(object):
+class Collider(NodePath):
     def __init__(self):
-        # super().__init__('empty')
-
+        super().__init__('collider node path')
         self.entity = None
         self.node_path = None
-        # self.collision_node = None
-        # self.shape = None
-    def make_collider(self):
-        start, end = self.entity.model.getTightBounds()
-        size = (end - start) / 2
-        y = max(.01, size[1])
-        z = max(.01, size[2])
-        shape = BulletBoxShape(Vec3(size[0], y, z))
-        # body = BulletRigidBodyNode('Bullet')
-        # self.node_path = self.entity.attachNewNode(BulletRigidBodyNode('Bullet'))
-        self.node_path = scene.render.attachNewNode(BulletRigidBodyNode('Bullet'))
 
-        self.node_path.node().addShape(shape)
-        # self.node_path.node().setMass(1.0)
-        scene.world.attachRigidBody(self.node_path.node())
+
+    def make_collider(self):
+        if self.entity.model:
+            start, end = self.entity.model.getTightBounds()
+            size = (end - start) / 2
+            y = max(.01, size[1])
+            z = max(.01, size[2])
+            self.shape = CollisionBox((0,0,0), size[0], y, z)
+        else:
+            self.shape = CollisionBox((0,0,0), .01, .01, .01)
+
+        self.node_path = self.entity.attachNewNode(CollisionNode('CollisionNode'))
+        if self.entity.model:
+            self.node_path.reparentTo(self.entity.model)
+        else:
+            self.node_path.reparentTo(self.entity)
+
+        self.node_path.node().addSolid(self.shape)
+        # cnodePath.show()
+
         print('added collider')
 
 
     def remove(self):
         self.collision_node.removeNode()
+
 
 
     # def __setattr__(self, name, value):
