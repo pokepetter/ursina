@@ -87,6 +87,7 @@ class Mouse():
                 for entity in scene.entities:
                     if entity.hovered:
                         entity.hovered = False
+                        self.hovered_entity = None
                         for s in entity.scripts:
                             try:
                                 s.on_mouse_exit()

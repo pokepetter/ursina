@@ -19,14 +19,18 @@ class Editor(Entity):
         self.camera_pivot.is_editor = True
         camera.parent = self.camera_pivot
 
-        self.cursor = Entity()
-        self.cursor.is_editor = True
-        self.cursor.model = 'circle'
+        self.transform_gizmo = Entity()
+        self.transform_gizmo.is_editor = True
+        self.transform_gizmo.model = 'cube'
+        self.transform_gizmo.scale = (.1, .1, .1)
+        self.transform_gizmo.add_script('transform_gizmo')
+        scene.entities.append(self.transform_gizmo)
+
 
         self.grid = load_prefab('panel')
         self.grid.name = 'grid'
         self.grid.parent = scene
-        self.grid.position = (0, 0, 0)
+        self.grid.position = (10, 0, 0)
         self.grid.rotation = (-90, 0, 0)
         self.grid.scale = (10, 10, 10)
         self.grid.collision = True

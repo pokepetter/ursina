@@ -6,7 +6,7 @@ import scene
 
 class Collider(NodePath):
     def __init__(self):
-        super().__init__('collider node path')
+        # super().__init__('collider node path')
         self.entity = None
         self.node_path = None
 

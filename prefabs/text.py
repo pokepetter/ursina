@@ -16,7 +16,6 @@ class Text(Entity):
         self.font_size = 1
         self.character_spacing = .45
         self.characters = list()
-        print(self.characters)
 
         scene.entities.append(self)
 
@@ -92,14 +91,18 @@ class Text(Entity):
         if name == 'text':
             object.__setattr__(self, name, value)
             self.update_text()
-        if name == 'scale' and self.model and self.collision:
+        if name == 'scale':
             super().__setattr__(name, value)
-            self.collider = (self.model.getPos(scene.render), (0,0,0),
-                            (self.model.getScale(scene.render)[0] /4, 1,
-                            self.model.getScale(scene.render)[2] /4))
         if name == 'background_color':
             self.model.setColorScale(value)
         elif name == 'color':
             self.update_colors(value)
         else:
             super().__setattr__(name, value)
+
+    # 
+    # def __getattr__(self, attrname):
+    #     try:
+    #         return self.attrname
+    #     except:
+    #         pass

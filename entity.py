@@ -147,9 +147,17 @@ class Entity(NodePath):
             # collider.scale = (1,1,1)
             object.__setattr__(self, name, collider)
 
-            # self.collider = self.attachNewNode(collider)
-            # if scene.world:
-            #     scene.world.attachRigidBody(collider)
+
+    def __getattr__(self, attrname):
+        if attrname == 'global_position':
+            # pass
+            return self.getPos(scene.render)
+        else:
+            try:
+                return self.attrname
+            except:
+                raise AttributeError()
+
 
     def add_script(self, module_name):
         if inspect.isclass(module_name):
