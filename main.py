@@ -50,7 +50,11 @@ class PandaEditor(ShowBase):
                     'mouse3' : 'right mouse down',
                     'mouse3 up' : 'right mouse up',
                     'wheel_up' : 'scroll up',
-                    'wheel_down' : 'scroll down'}
+                    'wheel_down' : 'scroll down',
+                    'arrow_left' : 'arrow left',
+                    'arrow_up' : 'arrow up',
+                    'arrow_down' : 'arrow down',
+                    'arrow_right' : 'arrow right'}
         self.accept('buttonDown', self.input)
         self.accept('buttonUp', self.input_up)
         # self.accept('lalt', self.input, ['left alt'])

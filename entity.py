@@ -41,8 +41,9 @@ class Entity(NodePath):
         self.rotation = (0,0,0)
         self.rotation_x, self.rotation_y, self.rotation_z = 0, 0, 0
 
+        self.setting_scale = False
         self.scale = (1,1,1)
-        self.scale_x, self.scale_y, self.scale_z = 0, 0, 0
+        self.scale_x, self.scale_y, self.scale_z = 1, 1, 1
 
 
     def __setattr__(self, name, value):
@@ -95,6 +96,9 @@ class Entity(NodePath):
             value = new_value
             self.setPos(new_value)
             object.__setattr__(self, name, (value[0], value[1], value[2]))
+            object.__setattr__(self, 'x', value[0])
+            object.__setattr__(self, 'y', value[1])
+            object.__setattr__(self, 'z', value[2])
 
 
         if name == 'x': self.position = (value, self.position[1], self.position[2])
@@ -111,6 +115,10 @@ class Entity(NodePath):
                 # convert value from hpr to axis
                 value = (value[2] , value[0], value[1])
                 self.setHpr(value)
+                object.__setattr__(self, name, (value[1] , value[2], value[0]))
+                object.__setattr__(self, 'rotation_x', value[0])
+                object.__setattr__(self, 'rotation_y', value[1])
+                object.__setattr__(self, 'rotation_z', value[2])
 
                 forward = scene.render.getRelativeVector(self, (0,1,0))
                 self.forward = (forward[0], forward[1], forward[2])
@@ -133,24 +141,32 @@ class Entity(NodePath):
         if name == 'scale':
             if self.model:
                 self.setScale(value[0], value[1], value[2])
+                object.__setattr__(self, name, (value[0], value[1], value[2]))
+                object.__setattr__(self, 'scale_x', value[0])
+                object.__setattr__(self, 'scale_y', value[1])
+                object.__setattr__(self, 'scale_z', value[2])
+
+
+        if name == 'scale_x': self.scale = (value, self.scale[1], self.scale[2])
+        if name == 'scale_y': self.scale = (self.scale[0], value, self.scale[2])
+        if name == 'scale_z': self.scale = (self.scale[0], self.scale[1], value)
 
 
         if name == 'collider' and value != None:
             collider = Collider()
             collider.entity = self
             collider.make_collider()
-            # collider
-            # collider.parent = self
-            # collider.shape = value
-            # collider.position = (0,0,0)
-            # collider.rotation = (0,0,0)
-            # collider.scale = (1,1,1)
             object.__setattr__(self, name, collider)
+
+        if name == 'editor_collider' and value != None:
+            editor_collider = Collider()
+            editor_collider.entity = self
+            editor_collider.make_collider()
+            object.__setattr__(self, name, editor_collider)
 
 
     def __getattr__(self, attrname):
         if attrname == 'global_position':
-            # pass
             return self.getPos(scene.render)
         else:
             try:

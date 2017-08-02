@@ -21,6 +21,7 @@ class LoadTextureButton():
                                 entity.texture.getOrigFileYSize() / 100)
                 entity.collision = True
                 entity.add_script('button')
+                entity.editor_collider = 'box'
                 scene.entities.append(entity)
                 # print('entities:')
                 # for e in scene.entities:

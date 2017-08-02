@@ -34,7 +34,7 @@ class Editor(Entity):
         self.grid.rotation = (-90, 0, 0)
         self.grid.scale = (10, 10, 10)
         self.grid.collision = True
-        self.grid.collider = 'box'
+        # self.grid.collider = 'box'
         self.grid.button_script = self.add_script('button')
         self.grid.button_script.color = color.gray
         self.grid.color = color.lime
@@ -130,12 +130,18 @@ class Editor(Entity):
             if self.visible:
                 camera.position = self.editor_camera.position
                 for e in scene.entities:
-                    try:
-                        e.show()
-                    except:
-                        pass
+                    e.show()
+                    if not e.is_editor:
+                        e.editor_collider = 'box'
+                        e.collider.stash()
+                        e.collider.node_path.show()
             else:
                 self.editor_camera.position = camera.position
+                for e in scene.entities:
+                    e.editor_collider = None
+                    e.collider.unstash()
+
+
 
         if self.visible:
             self.editor_camera.input(key)

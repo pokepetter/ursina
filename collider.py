@@ -28,7 +28,7 @@ class Collider(NodePath):
             self.node_path.reparentTo(self.entity)
 
         self.node_path.node().addSolid(self.shape)
-        # cnodePath.show()
+
 
         print('added collider')
 
