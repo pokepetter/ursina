@@ -15,19 +15,19 @@ class PandaEditor(ShowBase):
         scene.asset_folder = __file__
 
         # camera
-        self.clip_plane_near = 0.01
-        self.clip_plane_far = 100
+        # aspect_ratio = screen_size[0] / screen_size[1]
         # lens = OrthographicLens()
-        # lens.setFilmSize(16*2.25, 9*2.25)
-        lens = PerspectiveLens()
-        lens.setFocalLength(50)
-        aspect_ratio = screen_size[0] / screen_size[1]
-        lens.setAspectRatio(aspect_ratio)
-        base.cam.node().setLens(lens)
+        # orthographicSize = 20
+        # lens.setFilmSize(orthographicSize * aspect_ratio, orthographicSize)
+        # lens = PerspectiveLens()
+        # lens.setFocalLength(50)
+
+        # lens.setAspectRatio(aspect_ratio)
+        # base.cam.node().setLens(lens)
         camera.cam = base.camera
         camera.cam.reparentTo(camera)
-        camera.lens = lens
-        camera.lens_node = LensNode('lens_node', lens)
+        # camera.lens = lens
+        camera.lens_node = LensNode('lens_node', camera.lens)
         camera.parent = self.render
         camera.render = self.render
         camera.aspect_ratio = screen_size[0] / screen_size[1]
