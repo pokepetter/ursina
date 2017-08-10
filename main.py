@@ -27,13 +27,13 @@ class PandaEditor(ShowBase):
         camera.cam = base.camera
         camera.cam.reparentTo(camera)
         # camera.lens = lens
-        camera.lens_node = LensNode('lens_node', camera.lens)
+        # camera.lens_node = LensNode('lens_node', camera.lens)
         camera.parent = self.render
         camera.render = self.render
         camera.aspect_ratio = screen_size[0] / screen_size[1]
-        camera.fov = 40
-        camera.near_clip_plane = 0.01
-        camera.far_clip_plane = 100
+        # camera.fov = 40
+        # camera.near_clip_plane = 0.01
+        # camera.far_clip_plane = 100
         camera.position = (0, -20, 0)
         camera.rotation = (0,0,0)
         scene.camera = camera
