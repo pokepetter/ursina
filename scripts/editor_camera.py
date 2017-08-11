@@ -19,8 +19,8 @@ class EditorCamera():
             print(camera.fov)
 
         if key == 'p':
-            print(camera.orthographic_lens)
-            camera.orthographic = not orthographic
+            camera.orthographic = not camera.orthographic
+            print(camera.fov)
 
         if key == 'middle mouse down':
             self.camera_start = camera.position
