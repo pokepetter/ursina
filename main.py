@@ -11,31 +11,29 @@ class PandaEditor(ShowBase):
 
         scene.reparentTo(self.render)
         scene.app = self
+        scene.base = base
         scene.render = self.render
         scene.asset_folder = __file__
 
         # camera
-        self.clip_plane_near = 0.01
-        self.clip_plane_far = 100
+        # aspect_ratio = screen_size[0] / screen_size[1]
         # lens = OrthographicLens()
-        # lens.setFilmSize(16*2.25, 9*2.25)
-        lens = PerspectiveLens()
-        lens.setFocalLength(50)
-        aspect_ratio = screen_size[0] / screen_size[1]
-        lens.setAspectRatio(aspect_ratio)
-        base.cam.node().setLens(lens)
+        # orthographicSize = 20
+        # lens.setFilmSize(orthographicSize * aspect_ratio, orthographicSize)
+        # lens = PerspectiveLens()
+        # lens.setFocalLength(50)
+
+        # lens.setAspectRatio(aspect_ratio)
+        # base.cam.node().setLens(lens)
+        camera.base = base
         camera.cam = base.camera
         camera.cam.reparentTo(camera)
-        camera.lens = lens
-        camera.lens_node = LensNode('lens_node', lens)
         camera.parent = self.render
         camera.render = self.render
         camera.aspect_ratio = screen_size[0] / screen_size[1]
-        camera.fov = 40
-        camera.near_clip_plane = 0.01
-        camera.far_clip_plane = 100
+        camera.set_up()
+
         camera.position = (0, -20, 0)
-        camera.rotation = (0,0,0)
         scene.camera = camera
         camera.reparentTo(scene)
 

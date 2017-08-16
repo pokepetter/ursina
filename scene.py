@@ -7,6 +7,7 @@ class Scene(NodePath):
     def __init__(self):
         super().__init__('')
         self.app = None
+        self.base = None
         self.render = None
         self.world = None
         self.camera = None

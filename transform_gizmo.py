@@ -53,8 +53,13 @@ class TransformGizmo():
 
         self.tool = self.tools.get(key, self.tool)
 
+<<<<<<< HEAD
 
         print(self.targets)
+=======
+        if self.tool != 'none':
+            print(self.tool)
+>>>>>>> f64940ae6eda00a9895457f4c0e80ee0d5dc86a1
 
         if key == 'arrow left' and self.targets:
             if self.tool == 'move':

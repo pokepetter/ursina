@@ -14,6 +14,14 @@ class EditorCamera():
 
     def input(self, key):
         # print(key)
+        if key == '+':
+            camera.fov += 2
+            print(camera.fov)
+
+        if key == 'p':
+            camera.orthographic = not camera.orthographic
+            print(camera.fov)
+
         if key == 'middle mouse down':
             self.camera_start = camera.position
             self.pan = True
