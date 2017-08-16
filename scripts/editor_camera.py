@@ -39,6 +39,10 @@ class EditorCamera():
         if key == 'scroll down':
             camera.position += camera.back * self.speed
 
+            if camera.orthographic:
+                pass
+                # camera.fov += self.speed
+
 
         if self.move:
             if key == 'd':
