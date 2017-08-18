@@ -17,7 +17,9 @@ class Mouse():
         self.delta = (0,0)
 
         self.hovered_entity = None
-        self.mouse_pressed = False
+        self.left = False
+        self.right = False
+        self.middle = False
 
         self.picker = CollisionTraverser()  # Make a traverser
         self.pq = CollisionHandlerQueue()  # Make a handler
@@ -40,12 +42,20 @@ class Mouse():
         if key.endswith('mouse down'):
             self.start_x = self.x
             self.start_z = self.z
-            self.mouse_pressed = True
-            print(self.result.hasHit())
-        elif key.endswith('mouse up'):
-            self.mouse_pressed = False
+            # print('yay^^')
 
-        # self.picker.showCollisions(scene.render)
+        if key == 'left mouse down':
+            self.left = True
+        if key == 'left mouse up':
+            self.left = False
+        if key == 'right mouse down':
+            self.right = True
+        if key == 'right mouse up':
+            self.right = False
+        if key == 'middle mouse down':
+            self.middle = True
+        if key == 'middle mouse up':
+            self.middle = False
 
 
     def update(self, dt):
@@ -97,7 +107,7 @@ class Mouse():
 
 
 
-            if self.mouse_pressed:
+            if self.left or self.right or self.middle:
                 self.delta = (self.x - self.start_x, self.z - self.start_z)
 
 

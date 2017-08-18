@@ -7,7 +7,7 @@ class TransformGizmo():
     def __init__(self):
         self.entity = None
 
-        self.targets = list()
+        self.selection = list()
         self.add_to_selection = False
 
         self.tool = 'none'
@@ -25,25 +25,49 @@ class TransformGizmo():
         self.move_gizmo_x.is_editor = True
         self.move_gizmo_x.name = 'move_gizmo_x'
         self.move_gizmo_x.model = 'cube'
+        self.move_gizmo_x.collider = 'box'
         self.move_gizmo_x.add_script('button')
         self.move_gizmo_x.add_script('move_gizmo')
         self.move_gizmo_x.color = color.red
-        self.move_gizmo_x.scale = (.5, .1, 1.)
+        self.move_gizmo_x.scale = (.5, .1, .1)
         self.move_gizmo_x.x = .5
+        scene.entities.append(self.move_gizmo_x)
+
+
+    def update(self, dt):
+        if self.dragging_x:
+            print('dragging')
+            self.x = self.original_position + mouse.delta[0] + mouse.delta[1]
 
 
     def input(self, key):
         if key == 'left mouse down':
-            if mouse.hovered_entity and not mouse.hovered_entity.is_editor:
+            # select entities
+            if mouse.hovered_entity and mouse.hovered_entity.is_editor == False:
                 # print(mouse.hovered_entity.global_position)
                 self.entity.position = mouse.hovered_entity.global_position
                 print(entity.name)
                 if not self.add_to_selection:
-                    self.targets.clear()
+                    self.selection.clear()
+                    self.selection.append(mouse.hovered_entity)
+                else:
+                    self.selection.clear()
 
-                self.targets.append(mouse.hovered_entity)
-            else:
-                self.targets.clear()
+            #dragging the gizmo
+            self.original_transforms.clear()
+            self.original_position = self.position
+
+            if mouse.hovered_entity == self.move_gizmo_x:
+                self.dragging_x = True
+                # for selected in self.selection:
+                #     self.original_transforms.append(selected.x)
+
+
+        if key == 'left mouse up':
+            #stop dragging
+            self.dragging_x = False
+            self.dragging_y = False
+            self.dragging_z = False
 
         if key == 'left shift':
             self.add_to_selection = True
@@ -53,54 +77,47 @@ class TransformGizmo():
 
         self.tool = self.tools.get(key, self.tool)
 
-<<<<<<< HEAD
 
-        print(self.targets)
-=======
-        if self.tool != 'none':
-            print(self.tool)
->>>>>>> f64940ae6eda00a9895457f4c0e80ee0d5dc86a1
-
-        if key == 'arrow left' and self.targets:
+        if key == 'arrow left' and self.selection:
             if self.tool == 'move':
-                for target in self.targets:
+                for target in self.selection:
                     target.position += self.entity.left * self.move_interval
             elif self.tool == 'rotate':
-                for target in self.targets:
+                for target in self.selection:
                     target.rotation_z -= self.rotation_interval
             elif self.tool == 'scale':
-                for target in self.targets:
+                for target in self.selection:
                     target.scale_x += self.scale_interval
 
-        if key == 'arrow right' and self.targets:
+        if key == 'arrow right' and self.selection:
             if self.tool == 'move':
-                for target in self.targets:
+                for target in self.selection:
                     target.position += self.entity.right * self.move_interval
             elif self.tool == 'rotate':
-                for target in self.targets:
+                for target in self.selection:
                     target.rotation_z += self.rotation_interval
             elif self.tool == 'scale':
-                for target in self.targets:
+                for target in self.selection:
                     target.scale_x -= self.scale_interval
 
-        if key == 'arrow up' and self.targets:
+        if key == 'arrow up' and self.selection:
             if self.tool == 'move':
-                for target in self.targets:
+                for target in self.selection:
                     target.position += self.entity.up * self.move_interval
             elif self.tool == 'rotate':
-                for target in self.targets:
+                for target in self.selection:
                     target.rotation_x -= self.rotation_interval
             elif self.tool == 'scale':
-                for target in self.targets:
+                for target in self.selection:
                     target.scale_z += self.scale_interval
 
-        if key == 'arrow down' and self.targets:
+        if key == 'arrow down' and self.selection:
             if self.tool == 'move':
-                for target in self.targets:
+                for target in self.selection:
                     target.position += self.entity.down * self.move_interval
             elif self.tool == 'rotate':
-                for target in self.targets:
+                for target in self.selection:
                     target.rotation_x += self.rotation_interval
             elif self.tool == 'scale':
-                for target in self.targets:
+                for target in self.selection:
                     target.scale_z -= self.scale_interval
