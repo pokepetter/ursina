@@ -111,12 +111,6 @@ class Editor(Entity):
 
 
     def input(self, key):
-        if key == 'u':
-            self.grid.z += 5
-
-        if key == 'i':
-            self.grid.rotation_x += 5
-
         if key == 'h':
             self.show_colliders = not self.show_colliders
             if self.show_colliders:

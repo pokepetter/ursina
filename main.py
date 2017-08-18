@@ -15,13 +15,29 @@ class PandaEditor(ShowBase):
         scene.render = self.render
         scene.asset_folder = __file__
 
+<<<<<<< HEAD
         #camera
+=======
+
+>>>>>>> a25875d50cd4dac0a79dd256d43406d586c311c7
         camera.base = base
         camera.cam = base.camera
         camera.cam.reparentTo(camera)
         camera.parent = self.render
         camera.render = self.render
         camera.aspect_ratio = screen_size[0] / screen_size[1]
+        # UI
+        ui_entity = Entity()
+        ui_entity.name = 'ui'
+        ui_entity.parent = camera.cam
+        ui_entity.position = (0, 50, 0)
+        ui_entity.model = 'quad'
+        ui = ui_entity.add_script('ui')
+        ui.entity = ui_entity
+        ui_entity.model.hide()
+        ui.fit_to_screen()
+        scene.ui = ui
+        camera.ui = ui
         camera.set_up()
 
         camera.position = (0, -20, 0)
@@ -52,17 +68,7 @@ class PandaEditor(ShowBase):
         mouse.mouse_watcher = base.mouseWatcherNode
 
 
-        # UI
-        ui_entity = Entity()
-        ui_entity.name = 'ui'
-        ui_entity.parent = camera.cam
-        ui_entity.position = (0, 50, 0)
-        ui_entity.model = 'quad'
-        ui = ui_entity.add_script('ui')
-        ui.entity = ui_entity
-        ui.fit_to_screen()
-        ui_entity.model.hide()
-        scene.ui = ui
+
 
 
         scene.editor = load_script('editor')

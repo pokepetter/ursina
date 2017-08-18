@@ -19,6 +19,7 @@ class Camera(Entity):
         self.orthographic_lens.setAspectRatio(self.aspect_ratio)
 
         self.perspective_lens = PerspectiveLens()
+        self.perspective_lens.setAspectRatio(self.aspect_ratio)
         self.perspective_lens.setFocalLength(50)
 
         self.orthographic_lens_node = LensNode('orthographic_lens_node', self.orthographic_lens)
@@ -35,13 +36,14 @@ class Camera(Entity):
     def __setattr__(self, name, value):
 
         if name == 'orthographic':
-            print('ortho', value)
-            # try:
             if value == True:
                 self.lens = self.orthographic_lens
                 self.lens_node = self.orthographic_lens_node
                 self.base.cam.node().setLens(self.orthographic_lens)
-                # self.fov = self.fov / 2
+                try:
+                    self.fov /= 2
+                except:
+                    pass
             else:
                 self.lens = self.perspective_lens
                 self.lens_node = self.perspective_lens_node
@@ -53,12 +55,12 @@ class Camera(Entity):
                 self.lens.setFilmSize(value * self.aspect_ratio, value)
             else:
                 self.lens.setFov(value)
-        #
-        # elif name == 'near_clip_plane':
-        #     self.lens.setNear(value)
-        #     return
-        # elif name == 'far_clip_plane':
-        #     self.lens.setFar(value)
+
+        elif name == 'near_clip_plane':
+            self.lens.setNear(value)
+        elif name == 'far_clip_plane':
+            self.lens.setFar(value)
+
         super().__setattr__(name, value)
 
 

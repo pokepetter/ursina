@@ -34,9 +34,9 @@ class Entity(NodePath):
         self.position = (0,0,0)
         self.x, self.y, self.z = 0, 0, 0
 
-        self.forward, self.back = (0,0,0), (0,0,0)
-        self.right, self.left = (0,0,0), (0,0,0)
-        self.up, self.down = (0,0,0), (0,0,0)
+        self.forward, self.back = (0,1,0), (0,-1,0)
+        self.right, self.left = (1,0,0), (-1,0,0)
+        self.up, self.down = (0,0,1), (0,0,-1)
 
         self.rotation = (0,0,0)
         self.rotation_x, self.rotation_y, self.rotation_z = 0, 0, 0

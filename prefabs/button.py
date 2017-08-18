@@ -10,6 +10,10 @@ class Button(Entity):
         self.name = 'button'
         self.parent = scene.ui.entity
         self.model = 'quad'
+        self.model.setBin("fixed", 0)
+        self.model.setDepthTest(False)
+        self.model.setDepthWrite(False)
+
         self.collision = True
         self.collider = 'box'
         self.button_script = self.add_script('button')
