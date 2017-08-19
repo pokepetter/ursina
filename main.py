@@ -15,11 +15,7 @@ class PandaEditor(ShowBase):
         scene.render = self.render
         scene.asset_folder = __file__
 
-<<<<<<< HEAD
         #camera
-=======
-
->>>>>>> a25875d50cd4dac0a79dd256d43406d586c311c7
         camera.base = base
         camera.cam = base.camera
         camera.cam.reparentTo(camera)

@@ -89,6 +89,8 @@ def destroy(entity):
     except: pass
     try: entity.removeNode()
     except: pass
+    try: entity.texture.releaseAll()
+    except: pass
     del entity
 
 

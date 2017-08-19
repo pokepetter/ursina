@@ -100,7 +100,7 @@ class Text(Entity):
         else:
             super().__setattr__(name, value)
 
-    # 
+    #
     # def __getattr__(self, attrname):
     #     try:
     #         return self.attrname

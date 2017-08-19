@@ -66,6 +66,7 @@ class Entity(NodePath):
                 try: self.reparentTo(value.model)
                 except: pass
         if name == 'model':
+            pass
             try:
                 self.model = loader.loadModel('models/' + value + '.egg')
                 self.model.reparentTo(self)
@@ -221,10 +222,3 @@ class Entity(NodePath):
         # for child in self.getChildren():
         #     print(child.name)
         # for
-
-
-    def destroy(self):
-        pass
-
-        parent.entities.remove(self)
-        # nodePath.detachNode().

@@ -109,8 +109,22 @@ class Editor(Entity):
         self.texture_list.path = os.path.join(os.path.dirname(scene.asset_folder), 'textures')
 
 
+        self.entity_list = load_prefab('entity_list')
+        self.entity_list.parent = self
+        # self.entity_list.populate()
+
+        # 2D / 3D toggle
+        self.2d_button = load_prefab('button')
+        self.2d_button.parent = self
+        self.2d_button.name = '2d_button'
+        self.2d_button.text = '2D'
+        self.2d_button.position = (.1, 0)
+
 
     def input(self, key):
+        if key == 'i':
+            self.entity_list.populate()
+
         if key == 'h':
             self.show_colliders = not self.show_colliders
             if self.show_colliders:
