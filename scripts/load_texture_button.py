@@ -17,8 +17,8 @@ class LoadTextureButton():
                 entity.texture = self.path
                 # print('x:', entity.texture.getOrigFileXSize(), 'y:', entity.texture.getOrigFileYSize())
                 entity.scale = (entity.texture.getOrigFileXSize() / 100,
-                                1,
-                                entity.texture.getOrigFileYSize() / 100)
+                                entity.texture.getOrigFileYSize() / 100,
+                                1)
                 entity.collision = True
                 entity.add_script('button')
                 entity.editor_collider = 'box'

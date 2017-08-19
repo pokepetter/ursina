@@ -13,7 +13,7 @@ class Text(Entity):
         self.background_color = color.clear
         # self.color = color.smoke
         self.text = ''
-        self.font_size = 1
+        self.font_siye = 1
         self.character_spacing = .45
         self.characters = list()
 
@@ -32,12 +32,12 @@ class Text(Entity):
         destroy(char_entity)
 
         x = 0
-        z = 0
+        y = 0
         for i in range(len(self.text)):
             # if self.text[i] == ' ':
             #     pass
             if self.text[i] == '\n':
-                z -= 1
+                y -= 1
                 x = 0
             else:
                 char_entity = load_prefab('panel')
@@ -46,10 +46,10 @@ class Text(Entity):
                 char_entity.parent = scene.render
                 char_entity.scale = (1,1,1)
                 char_entity.wrtReparentTo(self.model)
-                char_entity.origin = (-.5, 0, .5)
+                char_entity.origin = (-.5, .5, 0)
                 char_entity.position = (-.5 + (x * width * self.character_spacing),
-                                        -.1,
-                                        (z * height) + .5)
+                                        (y * height) + .5,
+                                        -.1)
 
                 self.characters.append(char_entity)
 
@@ -65,7 +65,7 @@ class Text(Entity):
 
             x += 1
             if x > 50:
-                z -= 1
+                y -= 1
                 x = 0
 
     def appear(self, interval):

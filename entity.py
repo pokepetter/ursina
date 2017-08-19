@@ -34,9 +34,9 @@ class Entity(NodePath):
         self.position = (0,0,0)
         self.x, self.y, self.z = 0, 0, 0
 
-        self.forward, self.back = (0,1,0), (0,-1,0)
+        self.forward, self.back = (0,0,1), (0,0,-1)
         self.right, self.left = (1,0,0), (-1,0,0)
-        self.up, self.down = (0,0,1), (0,0,-1)
+        self.up, self.down = (0,1,0), (0,-1,0)
 
         self.rotation = (0,0,0)
         self.rotation_x, self.rotation_y, self.rotation_z = 0, 0, 0
@@ -88,14 +88,14 @@ class Entity(NodePath):
 
         if name == 'position':
             # automatically add position instead of extending the tuple
-
+            print(value)
             new_value = Vec3()
             for i in range(0, len(value), 3):
                 new_value.addX(value[i])
                 new_value.addY(value[i+1])
                 new_value.addZ(value[i+2])
             value = new_value
-            self.setPos(new_value)
+            self.setPos(Vec3(new_value[0], new_value[2], new_value[1]))
             object.__setattr__(self, name, (value[0], value[1], value[2]))
             object.__setattr__(self, 'x', value[0])
             object.__setattr__(self, 'y', value[1])
@@ -108,8 +108,8 @@ class Entity(NodePath):
 
         if name == 'origin' and self.model:
             self.model.setPos(-value[0] /2,
-                                -value[1] /2,
-                                -value[2] /2)
+                                -value[2] /2,
+                                -value[1] /2)
 
         if name == 'rotation':
             try:
@@ -140,12 +140,17 @@ class Entity(NodePath):
         if name == 'rotation_z': self.rotation = (self.rotation[0], self.rotation[1], value)
 
         if name == 'scale':
-            if self.model:
-                self.setScale(value[0], value[1], value[2])
-                object.__setattr__(self, name, (value[0], value[1], value[2]))
-                object.__setattr__(self, 'scale_x', value[0])
-                object.__setattr__(self, 'scale_y', value[1])
-                object.__setattr__(self, 'scale_z', value[2])
+            new_value = Vec3()
+            for i in range(0, len(value), 3):
+                new_value.addX(value[i])
+                new_value.addY(value[i+1])
+                new_value.addZ(value[i+2])
+            value = new_value
+            self.setScale(Vec3(new_value[0], new_value[2], new_value[1]))
+            object.__setattr__(self, name, (value[0], value[1], value[2]))
+            object.__setattr__(self, 'scale_x', value[0])
+            object.__setattr__(self, 'scale_y', value[1])
+            object.__setattr__(self, 'scale_z', value[2])
 
 
         if name == 'scale_x': self.scale = (value, self.scale[1], self.scale[2])

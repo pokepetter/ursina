@@ -12,7 +12,7 @@ class Editor(Entity):
         self.is_editor = True
         self.parent = scene.ui.entity
         self.editor_camera = load_script('scripts.editor_camera')
-        self.editor_camera.position = (0, -100, 0)
+        self.editor_camera.position = (0, 0, -100)
         scene.editor_camera = self.editor_camera
 
         self.camera_pivot = Entity()
@@ -29,33 +29,30 @@ class Editor(Entity):
 
         self.grid = load_prefab('panel')
         self.grid.name = 'grid'
-        self.grid.parent = scene
-        self.grid.position = (10, 0, 0)
-        self.grid.rotation = (-90, 0, 0)
+        self.grid.parent = scene.render
+        self.grid.position = (0, 0, 0)
+        # self.grid.rotation = (-90, 0, 0)
         self.grid.scale = (10, 10, 10)
-        self.grid.collision = True
-        # self.grid.collider = 'box'
-        self.grid.button_script = self.add_script('button')
-        self.grid.button_script.color = color.gray
         self.grid.color = color.lime
+
 
 
         toolbar = load_prefab('panel')
         toolbar.name = 'toolbar'
         toolbar.parent = self
-        toolbar.origin = (0, 0, .5)
-        toolbar.position = (0, 0, .485)
-        toolbar.scale = (1, 1, .025)
+        toolbar.origin = (0, .5, 0)
+        toolbar.position = (0,.5,0)
+        toolbar.scale = (1, .05, 1)
         toolbar.color = color.gray
 
-        for i in range(4):
-            button = load_prefab('button')
-            button.name = 'toolbar button'
-            button.parent = toolbar
-            button.origin = (-.5, 0, .5)
-            button.position = (-.487 + (i * .061), 0, 0)
-            button.scale = (.06, 1, 1)
-            button.color = color.orange
+        # for i in range(4):
+        #     button = load_prefab('button')
+        #     button.name = 'toolbar button'
+        #     button.parent = toolbar
+        #     button.origin = (-.5, .5, 0)
+        #     button.position = (-.487 + (i * .061), 0, 0)
+        #     button.scale = (.06, 1, 1)
+        #     button.color = color.orange
             # button.text = 'button'
             # button.text.color = color.black
 
@@ -63,9 +60,9 @@ class Editor(Entity):
         sidebar = load_prefab('panel')
         sidebar.name = 'sidebar'
         sidebar.parent = self
-        sidebar.origin = (-.5, 0, -0.0)
+        sidebar.origin = (-.5, 0, 0)
         sidebar.position = (-.5, 0, 0)
-        sidebar.scale = (.04, 1, .9)
+        sidebar.scale = (.04, .9, 1)
         # sidebar.color = color.gray
         sidebar.color = color.black33
         # test.color = hsv_color(210, 1, 1)
@@ -74,13 +71,13 @@ class Editor(Entity):
         self.scene_list = load_prefab('panel')
         self.scene_list.name = 'scene_list'
         self.scene_list.parent = self
-        self.scene_list.scale = (.4, 1, .5)
+        self.scene_list.scale = (.4, .5, 1)
         self.scene_list.color = color.black33
         self.scene_list.visible = False
 
         self.model_list = load_prefab('panel')
         self.model_list.name = 'model_list'
-        self.model_list.scale = (.4, 1, .5)
+        self.model_list.scale = (.4, .5, 1)
         self.model_list.color = color.black33
         self.model_list.visible = False
 
@@ -114,16 +111,16 @@ class Editor(Entity):
         # self.entity_list.populate()
 
         # 2D / 3D toggle
-        self.2d_button = load_prefab('button')
-        self.2d_button.parent = self
-        self.2d_button.name = '2d_button'
-        self.2d_button.text = '2D'
-        self.2d_button.position = (.1, 0)
+        # self.toggle_button = load_prefab('button')
+        # self.toggle_button.parent = self
+        # self.toggle_button.name = 'toggle_button'
+        # self.toggle_button.text = '2D'
+        # self.toggle_button.position = (.1, 0)
 
 
     def input(self, key):
-        if key == 'i':
-            self.entity_list.populate()
+        # if key == 'i':
+        #     self.entity_list.populate()
 
         if key == 'h':
             self.show_colliders = not self.show_colliders
@@ -153,6 +150,7 @@ class Editor(Entity):
 
         if self.visible:
             self.editor_camera.input(key)
+
 
         if key == 's':
             self.scene_list.visible = True

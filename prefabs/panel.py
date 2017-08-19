@@ -13,5 +13,5 @@ class Panel(Entity):
 
     def __setattr__(self, name, value):
         if name == 'position':
-            value = (value[0] / 2, (value[1] / 2) - .1, value[2] / 2)
+            value = (value[0] / 2, (value[1] / 2), value[2] / 2)
         super().__setattr__(name, value)

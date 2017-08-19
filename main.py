@@ -26,7 +26,7 @@ class PandaEditor(ShowBase):
         ui_entity = Entity()
         ui_entity.name = 'ui'
         ui_entity.parent = camera.cam
-        ui_entity.position = (0, 50, 0)
+        ui_entity.position = (0, 0, 50)
         ui_entity.model = 'quad'
         ui = ui_entity.add_script('ui')
         ui.entity = ui_entity
@@ -36,7 +36,7 @@ class PandaEditor(ShowBase):
         camera.ui = ui
         camera.set_up()
 
-        camera.position = (0, -20, 0)
+        camera.position = (0, 0, -20)
         scene.camera = camera
         camera.reparentTo(scene)
 

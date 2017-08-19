@@ -27,14 +27,14 @@ class Button(Entity):
             except:
                 pass
         if name == 'position':
-            value = (value[0] / 2, (value[1] / 2) - .1, value[2] / 2)
+            value = (value[0] / 2, (value[1] / 2), value[2] / 2)
 
         if name == 'text':
             if len(value) > 0:
                 t = load_prefab('text')
                 t.is_editor = self.is_editor
                 t.parent = self.model
-                t.position = (0,-.1,0)
+                t.position = (0, 0, -.1)
                 t.scale = (.9,.9,.9)
                 t.text = value
                 # t.color = color.red

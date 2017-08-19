@@ -16,18 +16,18 @@ class EntityList(Entity):
 
     def populate(self):
         print(len(scene.entities))
-        self.z = .16 / 2
+        self.y = .16 / 2
 
-        z = 0
+        y = 0
         for e in scene.entities:
             if not e.is_editor:
                 print(e.name)
                 # button = load_prefab('button')
                 # button.is_editor = True
                 # button.parent = self
-                # button.position = (.161 , 0, (-z * .031))
-                # button.scale = (.16, 1, .03)
+                # button.position = (.161 , (-y * .031), 0)
+                # button.scale = (.16, .03, 1)
                 # button.color = color.gray
                 # # button.text = e.name
                 #
-                # z += 1
+                # y += 1

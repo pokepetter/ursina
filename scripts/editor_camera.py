@@ -82,8 +82,8 @@ class EditorCamera():
     def update(self, dt):
         if self.pan:
             camera.x = self.camera_start[0] - mouse.delta[0] * self.speed * 2
-            camera.y = self.camera_start[1]
-            camera.z = self.camera_start[2] - mouse.delta[1] * self.speed * 2
+            camera.y = self.camera_start[1] - mouse.delta[1] * self.speed * 2
+            camera.z = self.camera_start[2]
 
         if self.rotate:
             scene.editor.camera_pivot.rotation_z = self.camera_start_rotation[2] - mouse.delta[0] * self.speed * 20

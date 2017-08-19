@@ -18,9 +18,9 @@ class Filebrowser(Entity):
         files = os.listdir(path)
         for i in range(math.floor(len(files) / 10) - 1):
             self.x -= 0.32 / 10
-        self.z = .16 / 2
+        self.y = .16 / 2
 
-        z = 0
+        y = 0
         x = 0
         for f in files:
             if self.file_types:
@@ -29,17 +29,17 @@ class Filebrowser(Entity):
                         button = load_prefab('button')
                         button.is_editor = True
                         button.parent = self
-                        button.position = (x * .161 , 0, (-z * .031))
-                        button.scale = (.16, 1, .03)
+                        button.position = (x * .161 , (-y * .031), 0)
+                        button.scale = (.16, .03, 1)
                         button.color = color.gray
                         button.text = f
                         if path.endswith('textures'):
                             load_texture_button = button.add_script('load_texture_button')
                             load_texture_button.path = os.path.join('textures', f)
 
-                        z += 1
-                        if z >= 10:
-                            z = 0
+                        y += 1
+                        if y >= 10:
+                            y = 0
                             x += 1
                             # self.x -= .032
 
