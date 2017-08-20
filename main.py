@@ -1,7 +1,7 @@
 from pandaeditor import *
 from os import walk
 import os
-
+from panda3d.core import Camera
 
 
 class PandaEditor(ShowBase):
@@ -22,23 +22,41 @@ class PandaEditor(ShowBase):
         camera.parent = self.render
         camera.render = self.render
         camera.aspect_ratio = screen_size[0] / screen_size[1]
-        # UI
-        ui_entity = Entity()
-        ui_entity.name = 'ui'
-        ui_entity.parent = camera.cam
-        ui_entity.position = (0, 0, 50)
-        ui_entity.model = 'quad'
-        ui = ui_entity.add_script('ui')
-        ui.entity = ui_entity
-        ui_entity.model.hide()
-        ui.fit_to_screen()
-        scene.ui = ui
-        camera.ui = ui
-        camera.set_up()
-
         camera.position = (0, 0, -20)
         scene.camera = camera
         camera.reparentTo(scene)
+        camera.set_up()
+
+        # UI
+        window = base.camNode.getDisplayRegion(0).getWindow()
+        ui_display_region = window.makeDisplayRegion()
+        ui_display_region.setSort(20)
+
+        ui_size = 40
+        ui_camera = NodePath(Camera('ui_camera'))
+        lens = OrthographicLens()
+        lens.setFilmSize(ui_size * .5 * camera.aspect_ratio, ui_size * .5)
+        lens.setNearFar(-1000, 1000)
+        ui_camera.node().setLens(lens)
+        camera.ui_lens_node = LensNode('ui_lens_node', lens)
+
+        ui_render = NodePath('ui_render')
+        ui_render.setDepthTest(False)
+        ui_render.setDepthWrite(False)
+        ui_camera.reparentTo(ui_render)
+        ui_display_region.setCamera(ui_camera)
+        scene.ui_camera = ui_camera
+        # ui_camera.hide()
+
+        ui = Entity()
+        ui.name = 'ui'
+        ui.parent = ui_camera
+        ui.model = 'quad'
+        ui.scale = (ui_size * camera.aspect_ratio, ui_size)
+        ui.model.hide()
+
+        scene.ui = ui
+        camera.ui = ui
 
 
         # input
@@ -62,8 +80,7 @@ class PandaEditor(ShowBase):
 
         base.disableMouse()
         mouse.mouse_watcher = base.mouseWatcherNode
-
-
+        mouse.enabled = True
 
 
 
@@ -78,7 +95,7 @@ class PandaEditor(ShowBase):
         dt = globalClock.getDt()
 
         mouse.update(dt)
-        try: scene.editor.editor_camera.update(dt)
+        try: scene.editor.editor_camera_script.update(dt)
         except: pass
 
         for entity in scene.entities:
