@@ -10,10 +10,13 @@ class Scene(NodePath):
         self.base = None
         self.render = None
         self.world = None
+
         self.camera = None
-        self.asset_folder = None
-        self.editor_camera = None
+        self.ui_camera = None
         self.ui = None
+
+        self.asset_folder = None
+        self.editor_camera_script = None
         self.editor = None
         self.entities = []
 

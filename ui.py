@@ -4,17 +4,23 @@ class UI():
 
     def __init__(self):
         self.entity = None
-        
+        # ui display region
+        dr = win.makeDisplayRegion()
+        dr.setSort(20)
 
-    def fit_to_screen(self):
-        screen_height = math.tan((math.pi / 180) * (40 * 1)) * distance(self.entity.getPos(render), camera.cam.getPos(render));
-        self.entity.scale = (self.entity.scale[0] * screen_height * camera.aspect_ratio, self.entity.scale[1] * screen_height, 1)
+        myCamera2d = NodePath(Camera('myCam2d'))
+        lens = OrthographicLens()
+        lens.setFilmSize(100 * camera.aspect_ratio, 100)
+        lens.setNearFar(-1000, 1000)
+        myCamera2d.node().setLens(lens)
+
+        myRender2d = NodePath('myRender2d')
+        myRender2d.setDepthTest(False)
+        myRender2d.setDepthWrite(False)
+        myCamera2d.reparentTo(myRender2d)
+        dr.setCamera(myCamera2d)
 
 
     def input(self, key):
         if key == 'x':
             scene.clear()
-
-
-
-# sys.modules[__name__] = UI()

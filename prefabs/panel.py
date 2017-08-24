@@ -7,11 +7,11 @@ class Panel(Entity):
     def __init__(self):
         super().__init__()
         self.name = 'panel'
-        self.parent = scene.ui.entity
+        self.parent = scene.ui
         self.model = 'quad'
-        scene.entities.append(self)
 
     def __setattr__(self, name, value):
         if name == 'position':
-            value = (value[0] / 2, (value[1] / 2), value[2] / 2)
+            value = (value[0] / 2, (value[1] / 2), -.1)
+
         super().__setattr__(name, value)

@@ -17,8 +17,8 @@ import inspect
 import importlib
 
 from entity import Entity
-import mouse
 import scene
+import mouse
 import camera
 import debug
 import color
@@ -32,7 +32,7 @@ from panda3d.core import loadPrcFileData
 
 
 
-screen_size = (1280, 720)
+screen_size = (1920 * .5, 1080 * .5)
 
 
 def distance(a, b):
@@ -45,7 +45,6 @@ def load_prefab(module_name):
     #     pass
     prefab = load_script('prefabs.' + module_name)
     caller = inspect.currentframe().f_back.f_locals['self']
-    scene.entities.append(prefab)
 
     if hasattr(caller, 'name') and caller.name == 'editor':
         prefab.is_editor = True

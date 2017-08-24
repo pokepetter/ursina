@@ -8,7 +8,7 @@ class EntityList(Entity):
     def __init__(self):
         super().__init__()
         self.name = 'scene_panel'
-        self.parent = scene.ui.entity
+        self.parent = scene.ui
 
         self.color = color.black33
         # self.is_editor = True

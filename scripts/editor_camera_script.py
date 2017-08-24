@@ -15,12 +15,12 @@ class EditorCamera():
     def input(self, key):
         # print(key)
         if key == '+':
-            camera.fov += 2
-            print(camera.fov)
+            camera.fov += 5
+        elif key == '-':
+            camera.fov -= 5
 
         if key == 'p':
             camera.orthographic = not camera.orthographic
-            print(camera.fov)
 
         if key == 'middle mouse down':
             self.camera_start = camera.position
@@ -35,6 +35,7 @@ class EditorCamera():
             self.rotate = False
 
         if key == 'scroll up':
+            print('wiojwoijw')
             camera.position += camera.forward * self.speed
         if key == 'scroll down':
             camera.position += camera.back * self.speed

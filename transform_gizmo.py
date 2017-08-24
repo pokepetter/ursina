@@ -33,7 +33,6 @@ class TransformGizmo():
         self.move_gizmo_x.color = color.red
         self.move_gizmo_x.scale = (.5, .1, .1)
         self.move_gizmo_x.x = .5
-        scene.entities.append(self.move_gizmo_x)
 
 
     def update(self, dt):

@@ -31,19 +31,21 @@ class Entity(NodePath):
         self.hovered = False
 
         self.origin = (0,0,0)
-        self.position = (0,0,0)
+        self.position = Vec3(0,0,0)
         self.x, self.y, self.z = 0, 0, 0
 
-        self.forward, self.back = (0,0,1), (0,0,-1)
-        self.right, self.left = (1,0,0), (-1,0,0)
-        self.up, self.down = (0,1,0), (0,-1,0)
+        self.forward, self.back = Vec3(0,0,1), Vec3(0,0,-1)
+        self.right, self.left = Vec3(1,0,0), Vec3(-1,0,0)
+        self.up, self.down = Vec3(0,1,0), Vec3(0,-1,0)
 
         self.rotation = (0,0,0)
         self.rotation_x, self.rotation_y, self.rotation_z = 0, 0, 0
 
         self.setting_scale = False
-        self.scale = (1,1,1)
+        self.scale = Vec3(1,1,1)
         self.scale_x, self.scale_y, self.scale_z = 1, 1, 1
+
+        scene.entities.append(self)
 
 
     def __setattr__(self, name, value):
@@ -51,6 +53,16 @@ class Entity(NodePath):
             super().__setattr__(name, value)
         except:
             pass
+        if name == 'enabled':
+            try:
+                # try calling on_enable() on classes inheriting from Entity
+                if value == True:
+                    self.on_enable()
+                else:
+                    self.on_disable()
+            except:
+                self.visible = value
+
         if name == 'visible':
             try:
                 if value == False:
@@ -88,18 +100,26 @@ class Entity(NodePath):
 
         if name == 'position':
             # automatically add position instead of extending the tuple
-            print(value)
+            # print(value)
             new_value = Vec3()
-            for i in range(0, len(value), 3):
-                new_value.addX(value[i])
-                new_value.addY(value[i+1])
-                new_value.addZ(value[i+2])
-            value = new_value
+
+            if len(value) % 2 == 0:
+                for i in range(0, len(value), 2):
+                    new_value.addX(value[i])
+                    new_value.addY(value[i+1])
+                new_value.addZ(self.getY())
+
+            if len(value) % 3 == 0:
+                for i in range(0, len(value), 3):
+                    new_value.addX(value[i])
+                    new_value.addY(value[i+1])
+                    new_value.addZ(value[i+2])
+
             self.setPos(Vec3(new_value[0], new_value[2], new_value[1]))
-            object.__setattr__(self, name, (value[0], value[1], value[2]))
-            object.__setattr__(self, 'x', value[0])
-            object.__setattr__(self, 'y', value[1])
-            object.__setattr__(self, 'z', value[2])
+            object.__setattr__(self, name, new_value)
+            object.__setattr__(self, 'x', new_value[0])
+            object.__setattr__(self, 'y', new_value[1])
+            object.__setattr__(self, 'z', new_value[2])
 
 
         if name == 'x': self.position = (value, self.position[1], self.position[2])
@@ -107,9 +127,24 @@ class Entity(NodePath):
         if name == 'z': self.position = (self.position[0], self.position[1], value)
 
         if name == 'origin' and self.model:
-            self.model.setPos(-value[0] /2,
-                                -value[2] /2,
-                                -value[1] /2)
+            new_value = Vec3()
+
+            if len(value) % 2 == 0:
+                for i in range(0, len(value), 2):
+                    new_value.addX(value[i])
+                    new_value.addY(value[i+1])
+                new_value.addZ(self.model.getY())
+
+            if len(value) % 3 == 0:
+                for i in range(0, len(value), 3):
+                    new_value.addX(value[i])
+                    new_value.addY(value[i+1])
+                    new_value.addZ(value[i+2])
+
+            self.model.setPos(-new_value[0] /2,
+                                -new_value[2] /2,
+                                -new_value[1] /2)
+            object.__setattr__(self, name, new_value)
 
         if name == 'rotation':
             try:
@@ -121,17 +156,17 @@ class Entity(NodePath):
                 object.__setattr__(self, 'rotation_y', value[1])
                 object.__setattr__(self, 'rotation_z', value[2])
 
-                forward = scene.render.getRelativeVector(self, (0,1,0))
-                self.forward = (forward[0], forward[1], forward[2])
-                self.back = (-forward[0], -forward[1], -forward[2])
+                forward = scene.render.getRelativeVector(self, (0,0,1))
+                self.forward = Vec3(forward[0], forward[1], forward[2])
+                self.back = Vec3(-forward[0], -forward[1], -forward[2])
 
                 right = scene.render.getRelativeVector(self, (1,0,0))
-                self.right = (right[0], right[1], right[2])
-                self.left = (-right[0], -right[1], -right[2])
+                self.right = Vec3(right[0], right[1], right[2])
+                self.left = Vec3(-right[0], -right[1], -right[2])
 
-                up = scene.render.getRelativeVector(self, (0,0,1))
-                self.up = (up[0], up[1], up[2])
-                self.down = (-up[0], -up[1], -up[2])
+                up = scene.render.getRelativeVector(self, (0,1,0))
+                self.up = Vec3(up[0], up[1], up[2])
+                self.down = Vec3(-up[0], -up[1], -up[2])
             except:
                 pass
 
@@ -141,16 +176,23 @@ class Entity(NodePath):
 
         if name == 'scale':
             new_value = Vec3()
-            for i in range(0, len(value), 3):
-                new_value.addX(value[i])
-                new_value.addY(value[i+1])
-                new_value.addZ(value[i+2])
-            value = new_value
+
+            if len(value) % 2 == 0:
+                for i in range(0, len(value), 2):
+                    new_value.addX(value[i])
+                    new_value.addY(value[i+1])
+                new_value.addZ(self.getSy())
+
+            if len(value) % 3 == 0:
+                for i in range(0, len(value), 3):
+                    new_value.addX(value[i])
+                    new_value.addY(value[i+1])
+                    new_value.addZ(value[i+2])
             self.setScale(Vec3(new_value[0], new_value[2], new_value[1]))
-            object.__setattr__(self, name, (value[0], value[1], value[2]))
-            object.__setattr__(self, 'scale_x', value[0])
-            object.__setattr__(self, 'scale_y', value[1])
-            object.__setattr__(self, 'scale_z', value[2])
+            object.__setattr__(self, name, new_value)
+            object.__setattr__(self, 'scale_x', new_value[0])
+            object.__setattr__(self, 'scale_y', new_value[1])
+            object.__setattr__(self, 'scale_z', new_value[2])
 
 
         if name == 'scale_x': self.scale = (value, self.scale[1], self.scale[2])
@@ -179,6 +221,8 @@ class Entity(NodePath):
                 return self.attrname
             except:
                 raise AttributeError()
+
+
 
 
     def add_script(self, module_name):
@@ -211,7 +255,7 @@ class Entity(NodePath):
                     print(class_instance, 'has no target variable')
 
                 self.scripts.append(class_instance)
-                # print('added script:', class_instance)
+                print('added script:', len(self.scripts))
                 return class_instance
                 break
             except:

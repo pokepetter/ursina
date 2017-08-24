@@ -8,7 +8,7 @@ class Button(Entity):
     def __init__(self):
         super().__init__()
         self.name = 'button'
-        self.parent = scene.ui.entity
+        self.parent = scene.ui
         self.model = 'quad'
         self.model.setBin("fixed", 0)
         self.model.setDepthTest(False)
@@ -26,15 +26,16 @@ class Button(Entity):
                 self.button_script.color = value
             except:
                 pass
+
         if name == 'position':
-            value = (value[0] / 2, (value[1] / 2), value[2] / 2)
+            value = (value[0] / 2, (value[1] / 2), -.1)
 
         if name == 'text':
             if len(value) > 0:
                 t = load_prefab('text')
                 t.is_editor = self.is_editor
                 t.parent = self.model
-                t.position = (0, 0, -.1)
+                t.position = (0, 0, 0)
                 t.scale = (.9,.9,.9)
                 t.text = value
                 # t.color = color.red

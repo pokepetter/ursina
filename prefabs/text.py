@@ -8,7 +8,7 @@ class Text(Entity):
     def __init__(self):
         super().__init__()
         self.name = 'text'
-        self.parent = scene.ui.entity
+        self.parent = scene.ui
         self.model = 'quad'
         self.background_color = color.clear
         # self.color = color.smoke
@@ -17,17 +17,17 @@ class Text(Entity):
         self.character_spacing = .45
         self.characters = list()
 
-        scene.entities.append(self)
 
     def update_text(self):
         char_entity = Entity()
-        char_entity.name = 'char_temp'
+        # char_entity.name = 'char_temp'
         char_entity.parent = scene.render
         char_entity.model = 'quad'
         char_entity.scale = (1,1,1)
-        char_entity.wrtReparentTo(self.model)
+        # char_entity.wrtReparentTo(self.model)
         width = char_entity.getScale()[0]
-        height = char_entity.getScale()[2]
+        # height = char_entity.getScale()[2]
+        height = width
         # self.model.setScale(.1,.1,.1)
         destroy(char_entity)
 
@@ -40,9 +40,10 @@ class Text(Entity):
                 y -= 1
                 x = 0
             else:
-                char_entity = load_prefab('panel')
+                char_entity = Entity()
+                char_entity.model = 'quad'
                 char_entity.is_editor = self.is_editor
-                char_entity.name = 'char'
+                # char_entity.name = 'char'
                 char_entity.parent = scene.render
                 char_entity.scale = (1,1,1)
                 char_entity.wrtReparentTo(self.model)

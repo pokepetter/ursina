@@ -10,6 +10,7 @@ class Mouse():
 
 
     def __init__(self):
+        self.enabled = False
         self.mouse_watcher = None
         self.position = (0,0)
         self.x = 0
@@ -23,22 +24,17 @@ class Mouse():
 
         self.picker = CollisionTraverser()  # Make a traverser
         self.pq = CollisionHandlerQueue()  # Make a handler
-        # Make a collision node for our picker ray
         self.pickerNode = CollisionNode('mouseRay')
-        # Attach that node to the camera since the ray will need to be positioned
-        # relative to it
         self.pickerNP = camera.attachNewNode(self.pickerNode)
-        # Everything to be picked will use bit 1. This way if we were doing other
-        # collision we could separate it
-        # self.pickerNode.setFromCollideMask(BitMask32.bit(1))
         self.pickerRay = CollisionRay()  # Make our ray
-        # Add it to the collision node
         self.pickerNode.addSolid(self.pickerRay)
-        # Register the ray as something that can cause collisions
         self.picker.addCollider(self.pickerNP, self.pq)
 
 
     def input(self, key):
+        if not self.enabled:
+            return
+
         if key.endswith('mouse down'):
             self.start_x = self.x
             self.start_z = self.z
@@ -59,45 +55,70 @@ class Mouse():
 
 
     def update(self, dt):
+        if not self.enabled:
+            return
+
         if self.mouse_watcher.hasMouse():
             self.x = self.mouse_watcher.getMouseX()
             self.z = self.mouse_watcher.getMouseY()
             self.position = (self.x, self.z)
 
+            if self.left or self.right or self.middle:
+                self.delta = (self.x - self.start_x, self.z - self.start_z)
+
+
+            # collide with ui
+            self.pickerNP.reparentTo(scene.ui_camera)
+            self.pickerRay.setFromLens(camera.ui_lens_node, self.x, self.z)
+            self.picker.traverse(scene.ui)
+            if self.pq.getNumEntries() > 0:
+                # print('collided with ui', self.pq.getNumEntries())
+                self.find_collision()
+                return
+
+            # collide with world
+            self.pickerNP.reparentTo(camera)
             self.pickerRay.setFromLens(scene.camera.lens_node, self.x, self.z)
             self.picker.traverse(scene.render)
             if self.pq.getNumEntries() > 0:
+                # print('collided with world', self.pq.getNumEntries())
+                self.find_collision()
+                return
 
-                self.pq.sortEntries()
-                nP = self.pq.getEntry(0).getIntoNodePath().parent
-                if nP.name.endswith('.egg'):
-                    nP = nP.parent
+            # unhover all if it didn't hit anything
+            for entity in scene.entities:
+                if entity.hovered:
+                    entity.hovered = False
+                    self.hovered_entity = None
+                    for s in entity.scripts:
+                        try:
+                            s.on_mouse_exit()
+                        except:
+                            pass
 
-                for entity in scene.entities:
-                    if entity == nP:
-                        if not entity.hovered:
-                            entity.hovered = True
-                            self.hovered_entity = entity
-                            print(entity.name)
-                            for s in entity.scripts:
-                                try:
-                                    s.on_mouse_enter()
-                                except:
-                                    pass
-                    else:
-                        if entity.hovered:
-                            entity.hovered = False
-                            for s in entity.scripts:
-                                try:
-                                    s.on_mouse_exit()
-                                except:
-                                    pass
 
-            else:
-                for entity in scene.entities:
+    def find_collision(self):
+        self.pq.sortEntries()
+        nP = self.pq.getEntry(0).getIntoNodePath().parent
+        if nP.name.endswith('.egg'):
+            nP = nP.parent
+
+            for entity in scene.entities:
+                # if hit entity is not hovered, call on_mouse_enter()
+                if entity == nP:
+                    if not entity.hovered:
+                        entity.hovered = True
+                        self.hovered_entity = entity
+                        # print(entity.name)
+                        for s in entity.scripts:
+                            try:
+                                s.on_mouse_enter()
+                            except:
+                                pass
+                # unhover the rest
+                else:
                     if entity.hovered:
                         entity.hovered = False
-                        self.hovered_entity = None
                         for s in entity.scripts:
                             try:
                                 s.on_mouse_exit()
@@ -107,8 +128,6 @@ class Mouse():
 
 
 
-            if self.left or self.right or self.middle:
-                self.delta = (self.x - self.start_x, self.z - self.start_z)
 
 
 sys.modules[__name__] = Mouse()

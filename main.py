@@ -124,10 +124,10 @@ class PandaEditor(ShowBase):
         except: pass
 
         for entity in scene.entities:
-            # if entity.enabled:
-            for script in entity.scripts:
-                try: script.input(key)
-                except: pass
+            if entity.enabled:
+                for script in entity.scripts:
+                    try: script.input(key)
+                    except: pass
 
 
     def collision_point(point=(0,0,0)):

@@ -22,7 +22,9 @@ class LoadTextureButton():
                 entity.collision = True
                 entity.add_script('button')
                 entity.editor_collider = 'box'
-                scene.entities.append(entity)
+                print(self.entity.parent.name)
+                self.entity.parent.enabled = False
+                # self.entity.parent.on_disable()
                 # print('entities:')
                 # for e in scene.entities:
                 #     if not e.is_editor:
