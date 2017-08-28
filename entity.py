@@ -188,6 +188,7 @@ class Entity(NodePath):
                     new_value.addX(value[i])
                     new_value.addY(value[i+1])
                     new_value.addZ(value[i+2])
+
             self.setScale(Vec3(new_value[0], new_value[2], new_value[1]))
             object.__setattr__(self, name, new_value)
             object.__setattr__(self, 'scale_x', new_value[0])

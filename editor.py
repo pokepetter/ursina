@@ -108,6 +108,7 @@ class Editor(Entity):
 
         self.texture_list = load_prefab('filebrowser')
         self.texture_list.parent = self
+        self.texture_list.position = (0,0)
         self.texture_list.is_editor = True
         self.texture_list.enabled = False
         self.texture_list.file_types = ('.png', '.jpg', '.psd', '.gif')

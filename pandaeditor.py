@@ -32,7 +32,7 @@ from panda3d.core import loadPrcFileData
 
 
 
-screen_size = (1920 * .5, 1080 * .5)
+screen_size = (1920 * .75, 1080 * .75)
 
 
 def distance(a, b):
