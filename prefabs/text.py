@@ -2,6 +2,7 @@ import sys
 sys.path.append("..")
 from pandaeditor import *
 import time
+from panda3d.core import TransparencyAttrib
 
 
 
@@ -11,33 +12,18 @@ class Text(Entity):
     def __init__(self):
         super().__init__()
         self.name = 'text'
-        # self.parent = scene.ui
-        self.model = 'quad'
-        self.background_color = color.clear
-        # self.color = color.smoke
+        self.color = color.blue
         self.character_spacing = .25
+        self.line_height = .5
         self.font_size = 1
+        self.character_limit = 50
         self.text = ''
         self.characters = list()
+        # self.scale = (.75,.75,.75)
 
 
     def update_text(self):
         start_time = time.time()
-        char_entity = Entity()
-        # char_entity.name = 'char_temp'
-        char_entity.parent = self.model
-        char_entity.model = 'quad'
-        # char_entity.scale = (1,1,1)
-        # char_entity.color = color.blue
-        # char_entity.wrtReparentTo(self.model)
-        width = char_entity.getScale()[0]
-        # height = char_entity.getScale()[2]
-        height = width
-        # self.model.setScale(.1,.1,.1)
-        destroy(char_entity)
-
-        self.x = -(len(self.text) * self.character_spacing /10) + self.character_spacing / 5
-        # self.x = - (width * self.character_spacing) + width * self.character_spacing
 
         x = 0
         y = 0
@@ -47,13 +33,18 @@ class Text(Entity):
             if self.text[i] == ' ':
                 pass
             elif self.text[i] == '\n':
-                y -= 1
-                x = 0
+                y -= self.line_height
+                x = -1
             else:
                 self.char_entity = loader.loadModel('models/' + 'quad' + '.egg')
                 self.char_entity.reparentTo(self)
-                self.char_entity.setColorScaleOff()
-                self.char_entity.setPos(Vec3(x * width * self.character_spacing, 1, y * height))
+                self.char_entity.setPos(Vec3(
+                    (x * 1 * self.font_size * self.character_spacing),
+                    -.1,
+                    (y * 1 * self.font_size * self.line_height)))
+                self.char_entity.setScale(self.font_size)
+                # self.char_entity.setColorScaleOff()
+                self.char_entity.setColorScale(color.blue)
 
                 self.characters.append(self.char_entity)
 
@@ -64,6 +55,8 @@ class Text(Entity):
 
                     # char_entity.texture = 'textures/font/' + char_name + '.png'
                     texture = loader.loadTexture('textures/font/' + char_name + '.png')
+                    self.char_entity.setColorScaleOff()
+                    self.char_entity.setTransparency(TransparencyAttrib.MAlpha)
                     self.char_entity.setTexture(texture, 1)
                     # if self.color:
                     #     char_entity.color = self.color
@@ -71,9 +64,9 @@ class Text(Entity):
                     pass # missing character
 
             x += 1
-            if x > 50:
-                y -= 1
+            if x > self.character_limit:
                 x = 0
+                y -= 1
 
         print("--- %s seconds ---" % (time.time() - start_time))
 
@@ -102,13 +95,11 @@ class Text(Entity):
             self.update_text()
         if name == 'scale':
             super().__setattr__(name, value)
-        if name == 'background_color':
-            self.model.setColorScale(value)
         if name == 'align':
             if value == 'left':
                 print('prant scale x:', self.parent.scale_x)
-        elif name == 'color':
-            self.update_colors(value)
+        # elif name == 'color':
+        #     self.update_colors(value)
         else:
             super().__setattr__(name, value)
 

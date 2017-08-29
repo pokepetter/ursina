@@ -36,13 +36,13 @@ class Editor(Entity):
 
 
 
-        toolbar = load_prefab('panel')
-        toolbar.name = 'toolbar'
-        toolbar.parent = self
-        toolbar.origin = (0, .5)
-        toolbar.position = (0,.5)
-        toolbar.scale = (1, .05)
-        toolbar.color = color.gray
+        # toolbar = load_prefab('panel')
+        # toolbar.name = 'toolbar'
+        # toolbar.parent = self
+        # toolbar.origin = (0, .5)
+        # toolbar.position = (0,.5)
+        # toolbar.scale = (1, .05)
+        # toolbar.color = color.gray
 
         # for i in range(4):
         #     button = load_prefab('button')
@@ -56,29 +56,29 @@ class Editor(Entity):
             # button.text.color = color.black
 
 
-        sidebar = load_prefab('panel')
-        sidebar.name = 'sidebar'
-        sidebar.parent = self
-        sidebar.origin = (-.5, 0)
-        sidebar.position = (-.5, 0)
-        sidebar.scale = (.04, .9)
-        # sidebar.color = color.gray
-        sidebar.color = color.black33
-        # test.color = hsv_color(210, 1, 1)
-        # print(color.hsv_color(90, 1, 1))
+        # sidebar = load_prefab('panel')
+        # sidebar.name = 'sidebar'
+        # sidebar.parent = self
+        # sidebar.origin = (-.5, 0)
+        # sidebar.position = (-.5, 0)
+        # sidebar.scale = (.04, .9)
+        # # sidebar.color = color.gray
+        # sidebar.color = color.black33
+        # # test.color = hsv_color(210, 1, 1)
+        # # print(color.hsv_color(90, 1, 1))
 
-        self.scene_list = load_prefab('panel')
-        self.scene_list.name = 'scene_list'
-        self.scene_list.parent = self
-        self.scene_list.scale = (.4, .5)
-        self.scene_list.color = color.black33
-        self.scene_list.visible = False
-
-        self.model_list = load_prefab('panel')
-        self.model_list.name = 'model_list'
-        self.model_list.scale = (.4, .5)
-        self.model_list.color = color.black33
-        self.model_list.visible = False
+        # self.scene_list = load_prefab('panel')
+        # self.scene_list.name = 'scene_list'
+        # self.scene_list.parent = self
+        # self.scene_list.scale = (.4, .5)
+        # self.scene_list.color = color.black33
+        # self.scene_list.visible = False
+        #
+        # self.model_list = load_prefab('panel')
+        # self.model_list.name = 'model_list'
+        # self.model_list.scale = (.4, .5)
+        # self.model_list.color = color.black33
+        # self.model_list.visible = False
 
     #     text = load_prefab('text')
     #     text.parent = self.scene_list
@@ -102,7 +102,8 @@ class Editor(Entity):
         self.load_sprite_button.position = (.2, .5, 0)
         self.load_sprite_button.scale = (.08, .05)
         self.load_sprite_button.color = color.black66
-        self.load_sprite_button.text = 'load sprite'
+        self.load_sprite_button.text = 'load\nsprite'
+        self.load_sprite_button.text_entity.x = 0
         self.menu_toggler = self.load_sprite_button.add_script('menu_toggler')
 
 
@@ -131,14 +132,15 @@ class Editor(Entity):
         self.toggle_button.scale = (.08, .05)
         self.toggle_button.color = color.black66
         self.toggle_button.text = '2D/3D'
+        self.toggle_button.text_entity.x = 0
         self.toggle_button.add_script('toggle_sideview')
 
-        # button = load_prefab('button')
-        # button.is_editor = True
-        # button.parent = self
-        # button.scale = (.16, .03, 1)
-        # button.color = color.gray
-        # button.text = 'text'
+        self.text_entity = load_prefab('text')
+        self.text_entity.parent = scene.render
+        # self.text_entity.is_editor = self.is_editor
+        # self.text_entity.wrtReparentTo(self.model)
+        self.text_entity.position = (0, 0, -10)
+        self.text_entity.text = 'test'
 
 
     def input(self, key):

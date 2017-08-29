@@ -17,7 +17,7 @@ class Filebrowser(Entity):
         self.files = None
 
         self.max_vertical = 10
-        self.button_size = (.15, .03)
+        self.button_size = (.2, .03)
 
 
     def populate(self):
@@ -54,6 +54,7 @@ class Filebrowser(Entity):
                             x += 1
 
         self.x = - ((x) * self.button_size[0] / 4)
+        self.y = ((y) * self.button_size[1] / 4)
 
         self.close_button = load_prefab('button')
         self.close_button.is_editor = True
@@ -63,6 +64,7 @@ class Filebrowser(Entity):
         self.close_button.scale = (self.button_size[1], self.button_size[1])
         self.close_button.color = color.red
         self.close_button.text = 'x'
+        self.close_button.text_entity.x = 0
         menu_toggler = self.close_button.add_script('menu_toggler')
         menu_toggler.target = self
 
