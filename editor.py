@@ -36,13 +36,13 @@ class Editor(Entity):
 
 
 
-        toolbar = load_prefab('panel')
-        toolbar.name = 'toolbar'
-        toolbar.parent = self
-        toolbar.origin = (0, .5)
-        toolbar.position = (0,.5)
-        toolbar.scale = (1, .05)
-        toolbar.color = color.gray
+        # toolbar = load_prefab('panel')
+        # toolbar.name = 'toolbar'
+        # toolbar.parent = self
+        # toolbar.origin = (0, .5)
+        # toolbar.position = (0,.5)
+        # toolbar.scale = (1, .05)
+        # toolbar.color = color.gray
 
         # for i in range(4):
         #     button = load_prefab('button')
@@ -67,18 +67,18 @@ class Editor(Entity):
         # test.color = hsv_color(210, 1, 1)
         # print(color.hsv_color(90, 1, 1))
 
-        self.scene_list = load_prefab('panel')
-        self.scene_list.name = 'scene_list'
-        self.scene_list.parent = self
-        self.scene_list.scale = (.4, .5)
-        self.scene_list.color = color.black33
-        self.scene_list.visible = False
-
-        self.model_list = load_prefab('panel')
-        self.model_list.name = 'model_list'
-        self.model_list.scale = (.4, .5)
-        self.model_list.color = color.black33
-        self.model_list.visible = False
+        # self.scene_list = load_prefab('panel')
+        # self.scene_list.name = 'scene_list'
+        # self.scene_list.parent = self
+        # self.scene_list.scale = (.4, .5)
+        # self.scene_list.color = color.black33
+        # self.scene_list.visible = False
+        #
+        # self.model_list = load_prefab('panel')
+        # self.model_list.name = 'model_list'
+        # self.model_list.scale = (.4, .5)
+        # self.model_list.color = color.black33
+        # self.model_list.visible = False
 
     #     text = load_prefab('text')
     #     text.parent = self.scene_list
@@ -102,7 +102,7 @@ class Editor(Entity):
         self.load_sprite_button.position = (.2, .5, 0)
         self.load_sprite_button.scale = (.08, .05)
         self.load_sprite_button.color = color.black66
-        self.load_sprite_button.text = 'load sprite'
+        self.load_sprite_button.text = 'load \n sprite'
         self.menu_toggler = self.load_sprite_button.add_script('menu_toggler')
 
 
@@ -113,7 +113,6 @@ class Editor(Entity):
         self.texture_list.enabled = False
         self.texture_list.file_types = ('.png', '.jpg', '.psd', '.gif')
         self.texture_list.path = os.path.join(os.path.dirname(scene.asset_folder), 'textures')
-
         self.menu_toggler.target = self.texture_list
 
 
