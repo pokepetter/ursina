@@ -20,7 +20,7 @@ class Button(Entity):
         self.button_script.color = color.gray
         self.text = ''
         self.text_entity = None
-        # self.scale = (1 / camera.aspect_ratio,1,1)
+
 
     def __setattr__(self, name, value):
         if name == 'color':
@@ -37,20 +37,11 @@ class Button(Entity):
 
             if len(value) > 0:
                 self.text_entity = load_prefab('text')
-                # self.text_entity.parent = scene.render
+                self.text_entity.parent = scene.render
                 self.text_entity.is_editor = self.is_editor
-                # self.text_entity.scale *= .5
-                self.text_entity.scale = (.5 / camera.aspect_ratio, .5 , 1)
-                # self.text_entity.scale_x /= camera.aspect_ratio
                 self.text_entity.wrtReparentTo(self.model)
-                # self.text_entity.parent = self.model
                 self.text_entity.position = (0, 0, 0)
                 self.text_entity.text = value
-                # self.text_entity.parent = scene.render
-                # self.text_entity.color = color.red
-
-
-                # object.__setattr__(self, name, self.text_entity)
 
         else:
             super().__setattr__(name, value)

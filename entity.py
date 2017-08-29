@@ -155,18 +155,6 @@ class Entity(NodePath):
                 object.__setattr__(self, 'rotation_x', value[0])
                 object.__setattr__(self, 'rotation_y', value[1])
                 object.__setattr__(self, 'rotation_z', value[2])
-
-                forward = scene.render.getRelativeVector(self, (0,0,1))
-                self.forward = Vec3(forward[0], forward[1], forward[2])
-                self.back = Vec3(-forward[0], -forward[1], -forward[2])
-
-                right = scene.render.getRelativeVector(self, (1,0,0))
-                self.right = Vec3(right[0], right[1], right[2])
-                self.left = Vec3(-right[0], -right[1], -right[2])
-
-                up = scene.render.getRelativeVector(self, (0,1,0))
-                self.up = Vec3(up[0], up[1], up[2])
-                self.down = Vec3(-up[0], -up[1], -up[2])
             except:
                 pass
 
@@ -222,8 +210,18 @@ class Entity(NodePath):
                 return self.attrname
             except:
                 raise AttributeError()
-
-
+        if attrname == 'forward':
+            return scene.render.getRelativeVector(self, (0,0,1))
+        if attrname == 'back':
+            return scene.render.getRelativeVector(self, (0,0,-1))
+        if attrname == 'right':
+            return scene.render.getRelativeVector(self, (1,0,0))
+        if attrname == 'left':
+            return scene.render.getRelativeVector(self, (-1,0,0))
+        if attrname == 'up':
+            return scene.render.getRelativeVector(self, (0,1,0))
+        if attrname == 'down':
+            return scene.render.getRelativeVector(self, (0,-1,0))
 
 
     def add_script(self, module_name):

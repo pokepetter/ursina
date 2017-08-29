@@ -1,6 +1,9 @@
 import sys
 sys.path.append("..")
 from pandaeditor import *
+import time
+
+
 
 class Text(Entity):
 
@@ -12,25 +15,29 @@ class Text(Entity):
         self.model = 'quad'
         self.background_color = color.clear
         # self.color = color.smoke
-        self.text = ''
-        self.font_siye = 1
         self.character_spacing = .25
+        self.font_size = 1
+        self.text = ''
         self.characters = list()
 
 
     def update_text(self):
+        start_time = time.time()
         char_entity = Entity()
         # char_entity.name = 'char_temp'
         char_entity.parent = self.model
         char_entity.model = 'quad'
-        char_entity.scale = (1,1,1)
-        char_entity.color = color.blue
+        # char_entity.scale = (1,1,1)
+        # char_entity.color = color.blue
         # char_entity.wrtReparentTo(self.model)
         width = char_entity.getScale()[0]
         # height = char_entity.getScale()[2]
         height = width
         # self.model.setScale(.1,.1,.1)
         destroy(char_entity)
+
+        self.x = -(len(self.text) * self.character_spacing /10) + self.character_spacing / 5
+        # self.x = - (width * self.character_spacing) + width * self.character_spacing
 
         x = 0
         y = 0
@@ -43,26 +50,23 @@ class Text(Entity):
                 y -= 1
                 x = 0
             else:
-                char_entity = Entity()
-                char_entity.model = 'quad'
-                char_entity.is_editor = self.is_editor
-                char_entity.name = 'char'
-                char_entity.parent = self.model
-                # char_entity.scale = (.1,.1,1)
-                # char_entity.wrtReparentTo(self.model)
-                char_entity.origin = (-.5, .5, 0)
-                char_entity.position = ((x * width * self.character_spacing),
-                                        (y * height))
+                self.char_entity = loader.loadModel('models/' + 'quad' + '.egg')
+                self.char_entity.reparentTo(self)
+                self.char_entity.setColorScaleOff()
+                self.char_entity.setPos(Vec3(x * width * self.character_spacing, 1, y * height))
 
-                self.characters.append(char_entity)
+                self.characters.append(self.char_entity)
 
                 try:
                     char_name = '_' + self.text[i]
                     if char_name.isupper():
                         char_name += 'u'
-                    char_entity.texture = 'textures/font/' + char_name + '.png'
-                    if self.color:
-                        char_entity.color = self.color
+
+                    # char_entity.texture = 'textures/font/' + char_name + '.png'
+                    texture = loader.loadTexture('textures/font/' + char_name + '.png')
+                    self.char_entity.setTexture(texture, 1)
+                    # if self.color:
+                    #     char_entity.color = self.color
                 except:
                     pass # missing character
 
@@ -70,6 +74,8 @@ class Text(Entity):
             if x > 50:
                 y -= 1
                 x = 0
+
+        print("--- %s seconds ---" % (time.time() - start_time))
 
     def appear(self, interval):
         for char in self.characters:
@@ -98,6 +104,9 @@ class Text(Entity):
             super().__setattr__(name, value)
         if name == 'background_color':
             self.model.setColorScale(value)
+        if name == 'align':
+            if value == 'left':
+                print('prant scale x:', self.parent.scale_x)
         elif name == 'color':
             self.update_colors(value)
         else:
