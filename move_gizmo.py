@@ -10,7 +10,7 @@ class MoveGizmo():
 
     def input(self, key):
         # if key == 'left mouse down' and self.entity.hovered:
-
+        return
         if key == 'left mouse up':
             print(mouse.delta[0])
             for t in self.entity.targets:

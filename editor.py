@@ -56,6 +56,7 @@ class Editor(Entity):
             # button.text.color = color.black
 
 
+<<<<<<< HEAD
         # sidebar = load_prefab('panel')
         # sidebar.name = 'sidebar'
         # sidebar.parent = self
@@ -66,6 +67,18 @@ class Editor(Entity):
         # sidebar.color = color.black33
         # # test.color = hsv_color(210, 1, 1)
         # # print(color.hsv_color(90, 1, 1))
+=======
+        sidebar = load_prefab('panel')
+        sidebar.name = 'sidebar'
+        sidebar.parent = self
+        sidebar.origin = (-.5, 0)
+        sidebar.position = (-.5, 0)
+        sidebar.scale = (.04, .9)
+        # sidebar.color = color.gray
+        sidebar.color = color.black33
+        # test.color = hsv_color(210, 1, 1)
+        # print(color.hsv_color(90, 1, 1))
+>>>>>>> bd5b1195df5f328f76a54053b490dd948e264f81
 
         # self.scene_list = load_prefab('panel')
         # self.scene_list.name = 'scene_list'
@@ -102,8 +115,12 @@ class Editor(Entity):
         self.load_sprite_button.position = (.2, .5, 0)
         self.load_sprite_button.scale = (.08, .05)
         self.load_sprite_button.color = color.black66
+<<<<<<< HEAD
         self.load_sprite_button.text = 'load\nsprite'
         self.load_sprite_button.text_entity.x = 0
+=======
+        self.load_sprite_button.text = 'load \n sprite'
+>>>>>>> bd5b1195df5f328f76a54053b490dd948e264f81
         self.menu_toggler = self.load_sprite_button.add_script('menu_toggler')
 
 
@@ -114,7 +131,6 @@ class Editor(Entity):
         self.texture_list.enabled = False
         self.texture_list.file_types = ('.png', '.jpg', '.psd', '.gif')
         self.texture_list.path = os.path.join(os.path.dirname(scene.asset_folder), 'textures')
-
         self.menu_toggler.target = self.texture_list
 
 

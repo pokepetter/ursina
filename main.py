@@ -147,7 +147,6 @@ loadPrcFileData('', 'win-size %i %i' % screen_size)
 # loadPrcFileData('', 'fullscreen true')
 loadPrcFileData('', 'sync-video true')
 loadPrcFileData('', 'show-frame-rate-meter true')
-# loadPrcFileData('', 'win-size 720 480')
 
 app = PandaEditor()
 app.run()
