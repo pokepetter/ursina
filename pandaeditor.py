@@ -99,3 +99,15 @@ def raycast(origin, direction, distance):
     print('to', pTo)
 
     result = scene.world.rayTestClosest(pFrom, pTo)
+
+
+import operator
+def size_list():
+    #return a list of current python objects sorted by size
+    globals_list = list()
+    globals_list.clear()
+    for e in globals():
+        # object, size
+        globals_list.append([e, sys.getsizeof(e)])
+    globals_list.sort(key=operator.itemgetter(1), reverse=True)
+    print('scene size:', globals_list)

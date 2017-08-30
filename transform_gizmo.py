@@ -36,22 +36,44 @@ class TransformGizmo():
 
 
     def update(self, dt):
-        if self.dragging_x:
-            # print(mouse.delta[0] + mouse.delta[1])
-            distance_to_camera = distance(
-                self.entity.getPos(camera.render),
-                camera.cam.getPos(camera.render))
+        if scene.editor.camera_pivot.rotation == (0,0,0):
+            if self.dragging and mouse.hovered_entity:
+                if not mouse.hovered_entity.is_editor:
+                    distance_to_camera = distance(
+                        mouse.hovered_entity.getPos(camera.render),
+                        camera.cam.getPos(camera.render)) * .35
 
-            self.entity.x = (
-                self.original_position[0]
-                + ((mouse.delta[0] + mouse.delta[1])
-                * distance_to_camera * .35))
+                    mouse.hovered_entity.position = (
+                        self.original_position[0] + (mouse.delta[0] * distance_to_camera),
+                        self.original_position[1] + (mouse.delta[1] * distance_to_camera),
+                        self.original_position[2])
+
+                    print('newpos', mouse.hovered_entity.position)
+        # if self.dragging_x:
+        #     # print(mouse.delta[0] + mouse.delta[1])
+        #     distance_to_camera = distance(
+        #         self.entity.getPos(camera.render),
+        #         camera.cam.getPos(camera.render))
+        #
+        #     self.entity.x = (
+        #         self.original_position[0]
+        #         + ((mouse.delta[0] + mouse.delta[1])
+        #         * distance_to_camera * .35))
 
             # self.move_gizmo_x.position = self.entity.x  = .5
 
 
     def input(self, key):
         if key == 'left mouse down':
+            if mouse.hovered_entity and mouse.hovered_entity.is_editor == False:
+                self.original_position = mouse.hovered_entity.position
+                self.dragging = True
+                print('org pos', self.original_position)
+
+            if mouse.hovered_entity:
+                self.dragging_target = mouse.hovered_entity
+
+
             # select entities
             if mouse.hovered_entity and mouse.hovered_entity.is_editor == False:
                 # print(mouse.hovered_entity.global_position)
@@ -74,6 +96,7 @@ class TransformGizmo():
 
         if key == 'left mouse up':
             #stop dragging
+            self.dragging = False
             self.dragging_x = False
             self.dragging_y = False
             self.dragging_z = False
