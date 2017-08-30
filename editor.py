@@ -19,6 +19,8 @@ class Editor(Entity):
         self.camera_pivot.is_editor = True
         camera.parent = self.camera_pivot
 
+
+        self.selection = list()
         self.transform_gizmo = Entity()
         self.transform_gizmo.is_editor = True
         self.transform_gizmo.model = 'cube'
@@ -56,7 +58,6 @@ class Editor(Entity):
             # button.text.color = color.black
 
 
-<<<<<<< HEAD
         # sidebar = load_prefab('panel')
         # sidebar.name = 'sidebar'
         # sidebar.parent = self
@@ -67,18 +68,6 @@ class Editor(Entity):
         # sidebar.color = color.black33
         # # test.color = hsv_color(210, 1, 1)
         # # print(color.hsv_color(90, 1, 1))
-=======
-        sidebar = load_prefab('panel')
-        sidebar.name = 'sidebar'
-        sidebar.parent = self
-        sidebar.origin = (-.5, 0)
-        sidebar.position = (-.5, 0)
-        sidebar.scale = (.04, .9)
-        # sidebar.color = color.gray
-        sidebar.color = color.black33
-        # test.color = hsv_color(210, 1, 1)
-        # print(color.hsv_color(90, 1, 1))
->>>>>>> bd5b1195df5f328f76a54053b490dd948e264f81
 
         # self.scene_list = load_prefab('panel')
         # self.scene_list.name = 'scene_list'
@@ -115,12 +104,8 @@ class Editor(Entity):
         self.load_sprite_button.position = (.2, .5, 0)
         self.load_sprite_button.scale = (.08, .05)
         self.load_sprite_button.color = color.black66
-<<<<<<< HEAD
         self.load_sprite_button.text = 'load\nsprite'
         self.load_sprite_button.text_entity.x = 0
-=======
-        self.load_sprite_button.text = 'load \n sprite'
->>>>>>> bd5b1195df5f328f76a54053b490dd948e264f81
         self.menu_toggler = self.load_sprite_button.add_script('menu_toggler')
 
 
@@ -151,12 +136,8 @@ class Editor(Entity):
         self.toggle_button.text_entity.x = 0
         self.toggle_button.add_script('toggle_sideview')
 
-        self.text_entity = load_prefab('text')
-        self.text_entity.parent = scene.render
-        # self.text_entity.is_editor = self.is_editor
-        # self.text_entity.wrtReparentTo(self.model)
-        self.text_entity.position = (0, 0, -10)
-        self.text_entity.text = 'test'
+        self.inspector = load_prefab('inspector')
+        print('inspector', self.inspector)
 
 
     def input(self, key):

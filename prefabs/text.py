@@ -33,13 +33,8 @@ class Text(Entity):
             if self.text[i] == ' ':
                 pass
             elif self.text[i] == '\n':
-<<<<<<< HEAD
                 y -= self.line_height
                 x = -1
-=======
-                y -= height
-                x = 0
->>>>>>> bd5b1195df5f328f76a54053b490dd948e264f81
             else:
                 self.char_entity = loader.loadModel('models/' + 'quad' + '.egg')
                 self.char_entity.reparentTo(self)
