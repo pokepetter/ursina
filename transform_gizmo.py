@@ -1,6 +1,6 @@
 import sys
-sys.path.append("..")
 from pandaeditor import *
+
 
 class TransformGizmo():
 
@@ -79,10 +79,10 @@ class TransformGizmo():
                 # print(mouse.hovered_entity.global_position)
                 self.entity.position = mouse.hovered_entity.global_position
                 if not self.add_to_selection:
-                    editor.selection.clear()
-                    editor.selection.append(mouse.hovered_entity)
+                    scene.editor.selection.clear()
+                    scene.editor.selection.append(mouse.hovered_entity)
                 else:
-                    editor.selection.clear()
+                    scene.editor.selection.clear()
 
             #dragging the gizmo
             # self.original_transforms.clear()
@@ -112,51 +112,51 @@ class TransformGizmo():
         self.tool = self.tools.get(key, self.tool)
 
         if key == 'delete':
-            for e in editor.selection:
+            for e in scene.editor.selection:
                 destroy(e)
 
 
 
-        if key == 'arrow left' and editor.selection:
+        if key == 'arrow left' and scene.editor.selection:
             if self.tool == 'move':
-                for target in editor.selection:
+                for target in scene.editor.selection:
                     target.position += self.entity.left * self.move_interval
             elif self.tool == 'rotate':
-                for target in editor.selection:
+                for target in scene.editor.selection:
                     target.rotation_z -= self.rotation_interval
             elif self.tool == 'scale':
-                for target in editor.selection:
+                for target in scene.editor.selection:
                     target.scale_x += self.scale_interval
 
-        if key == 'arrow right' and editor.selection:
+        if key == 'arrow right' and scene.editor.selection:
             if self.tool == 'move':
-                for target in editor.selection:
+                for target in scene.editor.selection:
                     target.position += self.entity.right * self.move_interval
             elif self.tool == 'rotate':
-                for target in editor.selection:
+                for target in scene.editor.selection:
                     target.rotation_z += self.rotation_interval
             elif self.tool == 'scale':
-                for target in editor.selection:
+                for target in scene.editor.selection:
                     target.scale_x -= self.scale_interval
 
-        if key == 'arrow up' and editor.selection:
+        if key == 'arrow up' and scene.editor.selection:
             if self.tool == 'move':
-                for target in editor.selection:
+                for target in scene.editor.selection:
                     target.position += self.entity.up * self.move_interval
             elif self.tool == 'rotate':
-                for target in editor.selection:
+                for target in scene.editor.selection:
                     target.rotation_x -= self.rotation_interval
             elif self.tool == 'scale':
-                for target in editor.selection:
+                for target in scene.editor.selection:
                     target.scale_z += self.scale_interval
 
         if key == 'arrow down' and self.selection:
             if self.tool == 'move':
-                for target in editor.selection:
+                for target in scene.editor.selection:
                     target.position += self.entity.down * self.move_interval
             elif self.tool == 'rotate':
-                for target in editor.selection:
+                for target in scene.editor.selection:
                     target.rotation_x += self.rotation_interval
             elif self.tool == 'scale':
-                for target in editor.selection:
+                for target in scene.editor.selection:
                     target.scale_z -= self.scale_interval

@@ -40,7 +40,7 @@ class Inspector(Entity):
                 self.button.text = str(i)
 
     def update(self, dt):
-        print('lol')
+        # print('lol')
         # self.selected = editor.selection[0]
         if self.visible and self.selected == None:
             self.visible = False

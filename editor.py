@@ -19,8 +19,8 @@ class Editor(Entity):
         self.camera_pivot.is_editor = True
         camera.parent = self.camera_pivot
 
-
         self.selection = list()
+
         self.transform_gizmo = Entity()
         self.transform_gizmo.is_editor = True
         self.transform_gizmo.model = 'cube'

@@ -30,8 +30,7 @@ from prefabs import *
 from panda3d.core import loadPrcFileData
 
 
-
-
+editor = None
 screen_size = (1920 * .75, 1080 * .75)
 
 
