@@ -204,7 +204,9 @@ class Entity(NodePath):
 
     def __getattr__(self, attrname):
         if attrname == 'global_position':
-            return self.getPos(scene.render)
+            global_position = self.getPos(scene.render)
+            global_position = (global_position[0], global_position[2], global_position[1])
+            return global_position
         else:
             try:
                 return self.attrname

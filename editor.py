@@ -25,6 +25,7 @@ class Editor(Entity):
         self.transform_gizmo.is_editor = True
         self.transform_gizmo.model = 'cube'
         self.transform_gizmo.scale = (.1, .1, .1)
+        self.transform_gizmo.color = color.orange
         self.transform_gizmo.add_script('transform_gizmo')
 
 
@@ -121,7 +122,7 @@ class Editor(Entity):
 
         self.entity_list = load_prefab('entity_list')
         self.entity_list.parent = self
-        # self.entity_list.populate()
+        self.entity_list.populate()
 
         # 2D / 3D toggle
         self.toggle_button = load_prefab('button')

@@ -48,6 +48,8 @@ class TransformGizmo():
                         self.original_position[1] + (mouse.delta[1] * distance_to_camera),
                         self.original_position[2])
 
+                    self.entity.position = mouse.hovered_entity.global_position
+
                     # print('newpos', mouse.hovered_entity.position)
         # if self.dragging_x:
         #     # print(mouse.delta[0] + mouse.delta[1])
