@@ -66,9 +66,9 @@ class Entity(NodePath):
         if name == 'visible':
             try:
                 if value == False:
-                    self.stash()
+                    self.hide()
                 else:
-                    self.unstash()
+                    self.show()
             except:
                 pass # no model
 
@@ -78,7 +78,6 @@ class Entity(NodePath):
                 try: self.reparentTo(value.model)
                 except: pass
         if name == 'model':
-            pass
             try:
                 self.model = loader.loadModel('models/' + value + '.egg')
                 self.model.reparentTo(self)
@@ -114,12 +113,14 @@ class Entity(NodePath):
                     new_value.addX(value[i])
                     new_value.addY(value[i+1])
                     new_value.addZ(value[i+2])
-
-            self.setPos(Vec3(new_value[0], new_value[2], new_value[1]))
-            object.__setattr__(self, name, new_value)
-            object.__setattr__(self, 'x', new_value[0])
-            object.__setattr__(self, 'y', new_value[1])
-            object.__setattr__(self, 'z', new_value[2])
+            try:
+                self.setPos(Vec3(new_value[0], new_value[2], new_value[1]))
+                object.__setattr__(self, name, new_value)
+                object.__setattr__(self, 'x', new_value[0])
+                object.__setattr__(self, 'y', new_value[1])
+                object.__setattr__(self, 'z', new_value[2])
+            except:
+                pass #cant set position
 
 
         if name == 'x': self.position = (value, self.position[1], self.position[2])
@@ -176,12 +177,14 @@ class Entity(NodePath):
                     new_value.addX(value[i])
                     new_value.addY(value[i+1])
                     new_value.addZ(value[i+2])
-
-            self.setScale(Vec3(new_value[0], new_value[2], new_value[1]))
-            object.__setattr__(self, name, new_value)
-            object.__setattr__(self, 'scale_x', new_value[0])
-            object.__setattr__(self, 'scale_y', new_value[1])
-            object.__setattr__(self, 'scale_z', new_value[2])
+            try:
+                self.setScale(Vec3(new_value[0], new_value[2], new_value[1]))
+                object.__setattr__(self, name, new_value)
+                object.__setattr__(self, 'scale_x', new_value[0])
+                object.__setattr__(self, 'scale_y', new_value[1])
+                object.__setattr__(self, 'scale_z', new_value[2])
+            except:
+                pass
 
 
         if name == 'scale_x': self.scale = (value, self.scale[1], self.scale[2])
@@ -256,7 +259,6 @@ class Entity(NodePath):
                     print(class_instance, 'has no target variable')
 
                 self.scripts.append(class_instance)
-                print('added script:', len(self.scripts))
                 return class_instance
                 break
             except:

@@ -30,7 +30,7 @@ class Collider(NodePath):
         self.node_path.node().addSolid(self.shape)
 
 
-        print('added collider')
+        # print('added collider')
 
 
     def remove(self):

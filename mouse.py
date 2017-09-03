@@ -22,6 +22,8 @@ class Mouse():
         self.right = False
         self.middle = False
 
+        self.i = 0
+        self.update_rate = 10
         self.picker = CollisionTraverser()  # Make a traverser
         self.pq = CollisionHandlerQueue()  # Make a handler
         self.pickerNode = CollisionNode('mouseRay')
@@ -29,6 +31,7 @@ class Mouse():
         self.pickerRay = CollisionRay()  # Make our ray
         self.pickerNode.addSolid(self.pickerRay)
         self.picker.addCollider(self.pickerNP, self.pq)
+        self.raycast = True
 
 
     def input(self, key):
@@ -55,8 +58,13 @@ class Mouse():
 
 
     def update(self, dt):
+        self.i += 1
+        if self.i < self.update_rate:
+            return
+
         if not self.enabled:
             return
+
 
         if self.mouse_watcher.hasMouse():
             self.x = self.mouse_watcher.getMouseX()
@@ -98,6 +106,8 @@ class Mouse():
 
 
     def find_collision(self):
+        if not self.raycast:
+            return
         self.pq.sortEntries()
         nP = self.pq.getEntry(0).getIntoNodePath().parent
         if nP.name.endswith('.egg'):
@@ -124,9 +134,6 @@ class Mouse():
                                 s.on_mouse_exit()
                             except:
                                 pass
-
-
-
 
 
 

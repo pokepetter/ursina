@@ -68,7 +68,7 @@ class Text(Entity):
                 x = 0
                 y -= 1
 
-        print("--- %s seconds ---" % (time.time() - start_time))
+        # print("--- %s seconds ---" % (time.time() - start_time))
 
     def appear(self, interval):
         for char in self.characters:

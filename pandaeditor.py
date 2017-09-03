@@ -13,6 +13,7 @@ from panda3d.core import Point3
 
 import sys
 import math
+import random
 import inspect
 import importlib
 
@@ -31,7 +32,7 @@ from panda3d.core import loadPrcFileData
 
 
 editor = None
-screen_size = (1920 * .75, 1080 * .75)
+screen_size = (1920 * .6, 1080 * .6)
 
 
 def distance(a, b):

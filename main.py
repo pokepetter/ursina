@@ -141,12 +141,12 @@ class PandaEditor(ShowBase):
     def raycast(origin, direction, distance):
         return False
 
-loadPrcFileData("", "window-title Panda Editor")
-
+loadPrcFileData("", "window-title pandaeditor")
 loadPrcFileData('', 'win-size %i %i' % screen_size)
 # loadPrcFileData('', 'fullscreen true')
 loadPrcFileData('', 'sync-video true')
 loadPrcFileData('', 'show-frame-rate-meter true')
+
 
 app = PandaEditor()
 app.run()

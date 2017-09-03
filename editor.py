@@ -39,50 +39,6 @@ class Editor(Entity):
 
 
 
-        # toolbar = load_prefab('panel')
-        # toolbar.name = 'toolbar'
-        # toolbar.parent = self
-        # toolbar.origin = (0, .5)
-        # toolbar.position = (0,.5)
-        # toolbar.scale = (1, .05)
-        # toolbar.color = color.gray
-
-        # for i in range(4):
-        #     button = load_prefab('button')
-        #     button.name = 'toolbar button'
-        #     button.parent = toolbar
-        #     button.origin = (-.5, .5, 0)
-        #     button.position = (-.487 + (i * .061), 0, 0)
-        #     button.scale = (.06, 1, 1)
-        #     button.color = color.orange
-            # button.text = 'button'
-            # button.text.color = color.black
-
-
-        # sidebar = load_prefab('panel')
-        # sidebar.name = 'sidebar'
-        # sidebar.parent = self
-        # sidebar.origin = (-.5, 0)
-        # sidebar.position = (-.5, 0)
-        # sidebar.scale = (.04, .9)
-        # # sidebar.color = color.gray
-        # sidebar.color = color.black33
-        # # test.color = hsv_color(210, 1, 1)
-        # # print(color.hsv_color(90, 1, 1))
-
-        # self.scene_list = load_prefab('panel')
-        # self.scene_list.name = 'scene_list'
-        # self.scene_list.parent = self
-        # self.scene_list.scale = (.4, .5)
-        # self.scene_list.color = color.black33
-        # self.scene_list.visible = False
-        #
-        # self.model_list = load_prefab('panel')
-        # self.model_list.name = 'model_list'
-        # self.model_list.scale = (.4, .5)
-        # self.model_list.color = color.black33
-        # self.model_list.visible = False
-
     #     text = load_prefab('text')
     #     text.parent = self.scene_list
     #     text.position = (0, -.1, 0)
@@ -122,6 +78,7 @@ class Editor(Entity):
 
         self.entity_list = load_prefab('entity_list')
         self.entity_list.parent = self
+        self.entity_list.is_editor = True
         self.entity_list.populate()
 
         # 2D / 3D toggle

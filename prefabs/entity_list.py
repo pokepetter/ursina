@@ -13,33 +13,34 @@ class EntityList(Entity):
         self.color = color.black33
         self.t = 0
         self.buttons = list()
-        # self.is_editor = True
 
         self.max_vertical = 10
         self.button_size = (.2, .025)
 
+        self.temp_entity_list = list()
+        self.scripts.append(self)
         scene.entities.append(self)
-        print('appended self')
 
-    def input(self, key):
-        print('aefiefk')
 
     def update(self, dt):
-        print('e')
         self.t += 1
-        if self.t >= 20:
-            self.populate
+        if self.t >= 50:
+            if scene.entities != self.temp_entity_list:
+                self.populate()
+            self.t = 0
+
 
     def populate(self):
+        self.temp_entity_list = list(scene.entities)
+
         for b in self.buttons:
             destroy(b)
-        # self.y = .16 / 2
+        self.buttons.clear()
 
         y = 0
         x = 0
-        for e in scene.entities:
+        for e in self.temp_entity_list:
             if not e.is_editor:
-                print(e.name)
                 button = load_prefab('button')
                 button.is_editor = True
                 button.parent = self
@@ -49,15 +50,15 @@ class EntityList(Entity):
                     (-y * (self.button_size[1])))
                 button.scale = self.button_size
                 button.color = color.black66
-                # menu_toggler = button.add_script('menu_toggler')
-                # menu_toggler.target = self
+                menu_toggler = button.add_script('menu_toggler')
+                menu_toggler.target = self
                 button.text = e.name
                 self.buttons.append(button)
 
-            y += 1
-            if y >= self.max_vertical:
-                y = 0
-                x += 1
+                y += 1
+                if y >= self.max_vertical:
+                    y = 0
+                    x += 1
 
         self.close_button = load_prefab('button')
         self.close_button.is_editor = True

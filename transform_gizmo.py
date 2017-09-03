@@ -33,6 +33,9 @@ class TransformGizmo():
         self.move_gizmo_x.scale = (.5, .1, .1)
         self.move_gizmo_x.x = .5
 
+        self.button = None
+        self.selection_buttons = list()
+
 
     def update(self, dt):
         # for moving stuff in side view
@@ -43,10 +46,11 @@ class TransformGizmo():
                         mouse.hovered_entity.getPos(camera.render),
                         camera.cam.getPos(camera.render)) * .2
 
-                    mouse.hovered_entity.position = (
-                        self.original_position[0] + (mouse.delta[0] * distance_to_camera * camera.aspect_ratio),
-                        self.original_position[1] + (mouse.delta[1] * distance_to_camera),
-                        self.original_position[2])
+                    for e in scene.editor.selection:
+                        e.position = (
+                            self.original_position[0] + (mouse.delta[0] * distance_to_camera * camera.aspect_ratio),
+                            self.original_position[1] + (mouse.delta[1] * distance_to_camera),
+                            self.original_position[2])
 
                     self.entity.position = mouse.hovered_entity.global_position
 
@@ -70,15 +74,8 @@ class TransformGizmo():
             if mouse.hovered_entity and mouse.hovered_entity.is_editor == False:
                 self.original_position = mouse.hovered_entity.position
                 self.dragging = True
-                print('org pos', self.original_position)
 
-            if mouse.hovered_entity:
-                self.dragging_target = mouse.hovered_entity
-
-
-            # select entities
-            if mouse.hovered_entity and mouse.hovered_entity.is_editor == False:
-                # print(mouse.hovered_entity.global_position)
+                # select entities
                 self.entity.position = mouse.hovered_entity.global_position
                 if not self.add_to_selection:
                     scene.editor.selection.clear()
@@ -86,6 +83,7 @@ class TransformGizmo():
                 else:
                     scene.editor.selection.clear()
 
+                # mouse.raycast = False
             #dragging the gizmo
             # self.original_transforms.clear()
             # self.original_position = self.entity.position
@@ -103,12 +101,35 @@ class TransformGizmo():
             self.dragging_x = False
             self.dragging_y = False
             self.dragging_z = False
+            # mouse.raycast = True
 
 
         if key == 'left shift':
             self.add_to_selection = True
         if key == 'left shift up':
             self.add_to_selection = False
+
+
+# selection buttons
+        if key == 't':
+            entities = list(scene.entities)
+            for e in entities:
+                if not e.is_editor:
+                    self.button = load_prefab('button')
+                    self.button.is_editor = True
+                    self.button.position = e.position
+                    self.button.scale *= .1
+                    # self.button.text = e.name
+                    self.button.color = color.orange
+                    self.sbs = self.button.add_script('selection_button')
+                    self.sbs.selection_target = e
+                    self.selection_buttons.append(self.button)
+        if key == 't up':
+            for b in self.selection_buttons:
+                destroy(b)
+            self.button = None
+            self.sbs = None
+            self.selection_buttons.clear()
 
 
         self.tool = self.tools.get(key, self.tool)
@@ -118,7 +139,7 @@ class TransformGizmo():
                 destroy(e)
 
 
-
+# move with arrow buttons
         if key == 'arrow left' and scene.editor.selection:
             if self.tool == 'move':
                 for target in scene.editor.selection:

@@ -34,10 +34,10 @@ class EditorCamera():
         if key == 'right mouse up':
             self.rotate = False
 
-        if key == 'scroll up':
+        if key == 'scroll up' and mouse.left == False:
             print('wiojwoijw')
             camera.position += camera.forward * self.speed
-        if key == 'scroll down':
+        if key == 'scroll down' and mouse.left == False:
             camera.position += camera.back * self.speed
 
             if camera.orthographic:
