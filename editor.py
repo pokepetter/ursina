@@ -22,6 +22,7 @@ class Editor(Entity):
         self.selection = list()
 
         self.transform_gizmo = Entity()
+        self.transform_gizmo.name = 'transform_gizmo'
         self.transform_gizmo.is_editor = True
         self.transform_gizmo.model = 'cube'
         self.transform_gizmo.scale = (.1, .1, .1)
@@ -179,6 +180,52 @@ class Editor(Entity):
 
 
         if key == 's':
+            defaults = {
+                'enabled' : True,
+                'visible' : True,
+                'is_editor' : False,
+                'name' : 'entity',
+                # 'parent' : scene.render
+                # self.scripts : list(),
+                # self.model : None,
+                # self.texture : None,
+                # self.color : color.gray,
+                # self.collision : False,
+                # self.collider : None,
+                # self.hovered : False,
+                #
+                # self.origin : (0,0,0),
+                # self.position : Vec3(0,0,0),
+                # self.x : 0,
+                # self.y : 0,
+                # self.z : 0,
+                #
+                # self.forward : Vec3(0,0,1),
+                # self.back : Vec3(0,0,-1),
+                # self.right : Vec3(1,0,0),
+                # self.left : Vec3(-1,0,0),
+                # self.up : Vec3(0,1,0),
+                # self.down : Vec3(0,-1,0),
+                #
+                # self.rotation : (0,0,0),
+                # self.rotation_x : 0,
+                # self.rotation_y : 0,
+                # self.rotation_z : 0,
+                #
+                # self.setting_scale : False,
+                # self.scale : Vec3(1,1,1),
+                # self.scale_x : 1,
+                # self.scale_y : 1,
+                # self.scale_z : 1
+            }
+            print('s')
+            # print(vars(self.transform_gizmo))
+            instance_attributes = self.transform_gizmo.__dict__
+            print(instance_attributes)
+            for a in instance_attributes:
+                value = instance_attributes.get(a)
+                if not value == defaults.get(a):
+                    print('adding var', a)
             self.scene_list.visible = True
         if key == 's up':
             self.scene_list.visible = False
