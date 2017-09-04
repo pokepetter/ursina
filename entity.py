@@ -67,8 +67,12 @@ class Entity(NodePath):
             try:
                 if value == False:
                     self.hide()
+                    # self.stash()
+                    self.collider.node_path.setTangible(False)
                 else:
                     self.show()
+                    # self.unstash()
+                    self.collider.node_path.setTangible(True)
             except:
                 pass # no model
 

@@ -30,7 +30,7 @@ class Text(Entity):
         for i in range(len(self.text)):
             # if self.text[i] == ' ':
             #     pass
-            if self.text[i] == ' ':
+            if self.text[i] == ' ' or self.text[i] == '\\' :
                 pass
             elif self.text[i] == '\n':
                 y -= self.line_height
@@ -53,7 +53,6 @@ class Text(Entity):
                     if char_name.isupper():
                         char_name += 'u'
 
-                    # char_entity.texture = 'textures/font/' + char_name + '.png'
                     texture = loader.loadTexture('textures/font/' + char_name + '.png')
                     self.char_entity.setColorScaleOff()
                     self.char_entity.setTransparency(TransparencyAttrib.MAlpha)

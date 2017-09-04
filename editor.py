@@ -137,55 +137,29 @@ class Editor(Entity):
 
 
         if key == 's':
-            defaults = {
-                'enabled' : True,
-                'visible' : True,
-                'is_editor' : False,
-                'name' : 'entity',
-                # 'parent' : scene.render
-                # self.scripts : list(),
-                # self.model : None,
-                # self.texture : None,
-                # self.color : color.gray,
-                # self.collision : False,
-                # self.collider : None,
-                # self.hovered : False,
-                #
-                # self.origin : (0,0,0),
-                # self.position : Vec3(0,0,0),
-                # self.x : 0,
-                # self.y : 0,
-                # self.z : 0,
-                #
-                # self.forward : Vec3(0,0,1),
-                # self.back : Vec3(0,0,-1),
-                # self.right : Vec3(1,0,0),
-                # self.left : Vec3(-1,0,0),
-                # self.up : Vec3(0,1,0),
-                # self.down : Vec3(0,-1,0),
-                #
-                # self.rotation : (0,0,0),
-                # self.rotation_x : 0,
-                # self.rotation_y : 0,
-                # self.rotation_z : 0,
-                #
-                # self.setting_scale : False,
-                # self.scale : Vec3(1,1,1),
-                # self.scale_x : 1,
-                # self.scale_y : 1,
-                # self.scale_z : 1
-            }
+            default_entity = Entity()
+            defaults = default_entity.__dict__
+            destroy(default_entity)
+
             print('s')
             # print(vars(self.transform_gizmo))
             instance_attributes = self.transform_gizmo.__dict__
+            attributes_to_ignore = (
+                'x', 'y', 'z',
+                'rotation_x', 'rotation_y', 'rotation_z',
+                'scale_x', 'scale_y', 'scale_z')
+            for to_ignore in attributes_to_ignore:
+                del instance_attributes[to_ignore]
+
             print(instance_attributes)
             for a in instance_attributes:
                 value = instance_attributes.get(a)
                 if not value == defaults.get(a):
-                    print('adding var', a)
-            self.scene_list.visible = True
-        if key == 's up':
-            self.scene_list.visible = False
+                    print('adding var', a, value)
+
+            # self.scene_list.visible = True
+        # if key == 's up':
+        #     self.scene_list.visible = False
         if key == 'm':
             print('scripts', self.load_sprite_button.scripts)
             self.model_list.visible = True
