@@ -32,4 +32,20 @@ class Scene(NodePath):
         self.entities = []
         print('entities', self.entities)
 
+
+    def save(self, name):
+        for e in self.entities:
+            if not e.is_editor:
+                # s = 'self.entity = Entity()'
+                # s += 'self.entity.name = ' e.name
+                # s += 'self.entity.parent = ' + str(e.parent)
+                # s += 'self.entity.position' + str(e.position)
+                print(inspect.getmembers(e))
+                # for s in e.scripts:
+
+
+
+                # print(s)
+
+
 sys.modules[__name__] = Scene()
