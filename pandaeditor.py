@@ -84,13 +84,18 @@ def load_script(module_name):
     return class_instance
 
 def destroy(entity):
+    scene.entities.remove(entity)
     try: entity.model.removeNode()
     except: pass
-    try: entity.removeNode()
+    try:
+        entity.removeAllChildren()
+        entity.removeNode()
     except: pass
     try: entity.texture.releaseAll()
     except: pass
-    del entity
+    try:
+        del entity
+    except: pass
 
 
 def raycast(origin, direction, distance):
