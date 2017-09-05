@@ -137,27 +137,9 @@ class Editor(Entity):
 
 
         if key == 's':
-            default_entity = Entity()
-            defaults = default_entity.__dict__
-            destroy(default_entity)
-
             print('s')
-            # print(vars(self.transform_gizmo))
-            instance_attributes = self.transform_gizmo.__dict__
-            attributes_to_ignore = (
-                'x', 'y', 'z',
-                'rotation_x', 'rotation_y', 'rotation_z',
-                'scale_x', 'scale_y', 'scale_z')
-            for to_ignore in attributes_to_ignore:
-                del instance_attributes[to_ignore]
-
-            print(instance_attributes)
-            for a in instance_attributes:
-                value = instance_attributes.get(a)
-                if not value == defaults.get(a):
-                    print('adding var', a, value)
-
-            # self.scene_list.visible = True
+            save_prefab('name')
+        #     self.scene_list.visible = True
         # if key == 's up':
         #     self.scene_list.visible = False
         if key == 'm':
