@@ -40,7 +40,7 @@ class Button(Entity):
                 self.text_entity.parent = scene.render
                 self.text_entity.is_editor = self.is_editor
                 self.text_entity.wrtReparentTo(self.model)
-                self.text_entity.position = (-.45, 0, 0)
+                self.text_entity.position = (-.2, 0, 0)
                 self.text_entity.text = value
 
         else:

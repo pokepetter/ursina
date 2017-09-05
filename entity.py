@@ -219,6 +219,21 @@ class Entity(NodePath):
                 return self.attrname
             except:
                 raise AttributeError()
+
+        if attrname == 'chi':
+            print('getting children')
+            all_children = super().children
+            new_children = list()
+            for child in all_children:
+                if not child.endswith('.egg'):
+                    new_children.append(child)
+
+            return all_children
+            # for c in self.getChildren():
+            #     print(c.__class__)
+            #     if c.__class__.__name__ == 'Entity':
+
+
         if attrname == 'forward':
             return scene.render.getRelativeVector(self, (0,0,1))
         if attrname == 'back':

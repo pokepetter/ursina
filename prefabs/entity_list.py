@@ -15,11 +15,11 @@ class EntityList(Entity):
         self.buttons = list()
 
         self.max_vertical = 10
-        self.button_size = (.2, .025)
+        self.button_size = (.16, .02)
 
         self.origin = (-.5, .5)
         self.position = (-.25, .2)
-        self.scale = (.5, .5)
+        # self.scale = (.5, .5)
 
         self.temp_entity_list = list()
         self.scripts.append(self)
@@ -54,9 +54,10 @@ class EntityList(Entity):
                     (-y * (self.button_size[1])))
                 button.scale = self.button_size
                 button.color = color.black66
+                button.text = e.name
+                # button.text_entity.size = .5
                 # menu_toggler = button.add_script('menu_toggler')
                 # menu_toggler.target = self
-                button.text = e.name
                 self.buttons.append(button)
 
                 y += 1

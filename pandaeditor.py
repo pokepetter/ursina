@@ -38,8 +38,8 @@ screen_size = (1920 * .6, 1080 * .6)
 def distance(a, b):
     return math.sqrt(sum( (a - b)**2 for a, b in zip(a, b)))
 
-def save_prefab(self, name):
-    if len(self.entities) > 0:
+def save_prefab(name):
+    if len(scene.entities) > 0:
         default_entity = Entity()
         defaults = default_entity.__dict__
         destroy(default_entity)
@@ -50,15 +50,17 @@ def save_prefab(self, name):
         for to_ignore in attributes_to_ignore:
             del defaults[to_ignore]
 
-        print('saving')
+        # print(scene.render.ls())
         for e in scene.entities:
-            if not e.is_editor:
-                instance_attributes = e.__dict__
-                print('self.entity.name = ' + e.name)
-                for a in instance_attributes:
-                    value = instance_attributes.get(a)
-                    if not value == defaults.get(a):
-                        print('self.entity.' + str(a), ' = ', value)
+            print(e)
+        # print(e.chi)
+        #     if not e.is_editor:
+        #         instance_attributes = e.__dict__
+        #         print('self.entity.name = ' + e.name)
+        #         for a in instance_attributes:
+        #             value = instance_attributes.get(a)
+        #             if not value == defaults.get(a):
+        #                 print('self.entity.' + str(a), ' = ', value)
 
 def load_prefab(module_name):
     # try:

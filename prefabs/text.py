@@ -15,11 +15,11 @@ class Text(Entity):
         self.color = color.blue
         self.character_spacing = .25
         self.line_height = .5
-        self.font_size = 1
         self.character_limit = 50
         self.text = ''
+        self.size = 1
         self.characters = list()
-        # self.scale = (.75,.75,.75)
+        self.scale = (.75,.75,.75)
 
 
     def update_text(self):
@@ -39,10 +39,10 @@ class Text(Entity):
                 self.char_entity = loader.loadModel('models/' + 'quad' + '.egg')
                 self.char_entity.reparentTo(self)
                 self.char_entity.setPos(Vec3(
-                    (x * 1 * self.font_size * self.character_spacing),
+                    (x * 1 * self.size * self.character_spacing),
                     -.1,
-                    (y * 1 * self.font_size * self.line_height)))
-                self.char_entity.setScale(self.font_size)
+                    (y * 1 * self.size * self.line_height)))
+                self.char_entity.setScale(self.size)
                 # self.char_entity.setColorScaleOff()
                 self.char_entity.setColorScale(color.blue)
 
@@ -87,20 +87,33 @@ class Text(Entity):
 
 
     def __setattr__(self, name, value):
+        try:
+            super().__setattr__(name, value)
+        except:
+            pass
+
         if name == 'position':
             value = tuple(x / 2 for x in value)
+            super.__setattr__(self, name, value)
+
+
         if name == 'text':
             object.__setattr__(self, name, value)
             self.update_text()
-        if name == 'scale':
-            super().__setattr__(name, value)
-        if name == 'align':
-            if value == 'left':
-                print('prant scale x:', self.parent.scale_x)
+        # if name == 'scale':
+        #     super().__setattr__(name, value)
+        if name == 'size':
+            object.__setattr__(self, name, value)
+            self.update_text()
+
+
+        # if name == 'align':
+        #     if value == 'left':
+        #         print('prant scale x:', self.parent.scale_x)
         # elif name == 'color':
         #     self.update_colors(value)
-        else:
-            super().__setattr__(name, value)
+        # else:
+        #     super().__setattr__(name, value)
 
     #
     # def __getattr__(self, attrname):
