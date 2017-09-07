@@ -2,21 +2,21 @@ import sys
 sys.path.append("..")
 from pandaeditor import *
 
-class Button(Entity):
+class EditorButton(Entity):
 
 
     def __init__(self):
         super().__init__()
-        self.name = 'button'
+        self.name = 'editor_button'
         self.parent = scene.ui
         self.model = 'quad'
         self.model.setBin("fixed", 0)
-        self.model.setDepthTest(False)
-        self.model.setDepthWrite(False)
+        self.model.setDepthTest(0)
+        self.model.setDepthWrite(0)
 
         self.collision = True
         self.collider = 'box'
-        self.button_script = self.add_script('button')
+        self.button_script = self.add_script('editor_button')
         self.button_script.color = color.gray
         self.text = ''
         self.text_entity = None
@@ -30,7 +30,10 @@ class Button(Entity):
                 pass
 
         if name == 'position':
-            value = (value[0] / 2, (value[1] / 2), -.1)
+            if self.has_ancestor(scene.ui):
+                value = (value[0] / 2, (value[1] / 2), -.1)
+            # else:
+            #     value = (value[0], value[1], -.1)
 
 
         if name == 'text':

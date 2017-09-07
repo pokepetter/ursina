@@ -11,7 +11,7 @@ class Inspector(Entity):
         self.parent = scene.ui
         self.is_editor = True
         self.model = 'quad'
-        self.color = color.black66
+        self.color = color.panda_button
         self.scale = (.15, .9)
         self.origin = (.5, .5)
         self.position = (.25, .2)
@@ -19,7 +19,7 @@ class Inspector(Entity):
         # append self so update() runs
         self.scripts.append(self)
 
-        self.button = load_prefab('button')
+        self.button = load_prefab('editor_button')
         self.button.is_editor = True
         self.button.parent = self
         self.button.origin = (0, .25)
@@ -30,7 +30,7 @@ class Inspector(Entity):
 
         for j in range(3):
             for i in range(3):
-                self.button = load_prefab('button')
+                self.button = load_prefab('editor_button')
                 self.button.is_editor = True
                 self.button.parent = self
                 self.button.origin = (-.5, .25)
@@ -42,7 +42,9 @@ class Inspector(Entity):
     def update(self, dt):
         # print('lol')
         # self.selected = editor.selection[0]
-        if self.visible and self.selected == None:
+        if len(scene.editor.selection) > 0:
+            self.visible = True
+        else:
             self.visible = False
 
 

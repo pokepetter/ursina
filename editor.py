@@ -21,16 +21,14 @@ class Editor(Entity):
 
         self.selection = list()
 
-        self.transform_gizmo = Entity()
+        self.transform_gizmo = load_prefab('transform_gizmo')
         self.transform_gizmo.name = 'transform_gizmo'
         self.transform_gizmo.is_editor = True
-        self.transform_gizmo.model = 'cube'
-        self.transform_gizmo.scale = (.1, .1, .1)
-        self.transform_gizmo.color = color.orange
-        self.transform_gizmo.add_script('transform_gizmo')
+        self.transform_gizmo.parent = scene.render
 
 
         self.grid = load_prefab('panel')
+        self.grid.is_editor = True
         self.grid.name = 'grid'
         self.grid.parent = scene.render
         self.grid.position = (0, 0, 0)
@@ -53,24 +51,23 @@ class Editor(Entity):
     # # asdgh jqwetyu tuoiphklzxcv bnma s ghjqw et yutu oiph klzxcvbnm asdgh jqwe tyut uoi phkl'''
     #     text.text = t
     #     # text.color = color.blue
-
-        self.load_sprite_button = load_prefab('button')
+        self.load_sprite_button = load_prefab('editor_button')
         self.load_sprite_button.is_editor = True
         self.load_sprite_button.parent = self
         self.load_sprite_button.name = 'load_sprite_button'
         self.load_sprite_button.origin = (0, .5)
         self.load_sprite_button.position = (.2, .5, 0)
         self.load_sprite_button.scale = (.08, .05)
-        self.load_sprite_button.color = color.black66
+        self.load_sprite_button.color = color.panda_button
         self.load_sprite_button.text = 'load\nsprite'
         self.load_sprite_button.text_entity.x = 0
         self.menu_toggler = self.load_sprite_button.add_script('menu_toggler')
 
 
         self.texture_list = load_prefab('filebrowser')
+        self.texture_list.is_editor = True
         self.texture_list.parent = self
         self.texture_list.position = (0,0)
-        self.texture_list.is_editor = True
         self.texture_list.enabled = False
         self.texture_list.file_types = ('.png', '.jpg', '.psd', '.gif')
         self.texture_list.path = os.path.join(os.path.dirname(scene.asset_folder), 'textures')
@@ -78,24 +75,26 @@ class Editor(Entity):
 
 
         self.entity_list = load_prefab('entity_list')
-        self.entity_list.parent = self
         self.entity_list.is_editor = True
+        self.entity_list.parent = self
         self.entity_list.populate()
 
         # 2D / 3D toggle
-        self.toggle_button = load_prefab('button')
+        self.toggle_button = load_prefab('editor_button')
         self.toggle_button.is_editor = True
         self.toggle_button.parent = self
         self.toggle_button.name = 'toggle_button'
         self.toggle_button.origin = (0, .5)
         self.toggle_button.position = (-.2, .5, 0)
         self.toggle_button.scale = (.08, .05)
-        self.toggle_button.color = color.black66
+        self.toggle_button.color = color.panda_button
         self.toggle_button.text = '2D/3D'
         self.toggle_button.text_entity.x = 0
         self.toggle_button.add_script('toggle_sideview')
 
         self.inspector = load_prefab('inspector')
+        self.inspector.is_editor = True
+        self.inspector.parent = self
         print('inspector', self.inspector)
 
 
@@ -111,9 +110,9 @@ class Editor(Entity):
                 self.debugNP.hide()
 
         if key == 'tab':
-            self.visible = not self.visible
+            self.enabled = not self.enabled
 
-            if self.visible:
+            if self.enabled:
                 camera.wrtReparentTo(self.camera_pivot)
                 camera.position = self.editor_camera_script.position
 
@@ -127,12 +126,25 @@ class Editor(Entity):
                 self.editor_camera_script.position = camera.position
                 camera.wrtReparentTo(scene.render)
                 for e in scene.entities:
-                    e.editor_collider = None
-                    e.collider.unstash()
+                    # print(e)
+                    # try:
+                    #     for s in e.scripts:
+                    #         if s.is_editor:
+                    #             e.scripts.remove(s)
+                    #     # print('scripts', e.scripts)
+                    # except:
+                    #     pass
+                    try:
+                        if e.editor_collider:
+                            e.editor_collider.stash()
+                        print('stashed')
+                        e.collider.unstash()
+                    except:
+                        pass
 
 
 
-        if self.visible:
+        if self.enabled:
             self.editor_camera_script.input(key)
 
 
@@ -147,3 +159,9 @@ class Editor(Entity):
             self.model_list.visible = True
         if key == 'm up':
             self.model_list.visible = False
+
+
+    def on_disable(self):
+        self.transform_gizmo.enabled = False
+        self.grid.enabled = False
+        self.visible = False

@@ -15,21 +15,23 @@ class PandaEditor(ShowBase):
         scene.render = self.render
         scene.asset_folder = __file__
 
+        window.load_defaults()
+
         #camera
         camera.base = base
         camera.cam = base.camera
         camera.cam.reparentTo(camera)
         camera.parent = self.render
         camera.render = self.render
-        camera.aspect_ratio = screen_size[0] / screen_size[1]
+        camera.aspect_ratio = window.size[0] / window.size[1]
         camera.position = (0, 0, -20)
         scene.camera = camera
         camera.reparentTo(scene)
         camera.set_up()
 
         # UI
-        window = base.camNode.getDisplayRegion(0).getWindow()
-        ui_display_region = window.makeDisplayRegion()
+        win = base.camNode.getDisplayRegion(0).getWindow()
+        ui_display_region = win.makeDisplayRegion()
         ui_display_region.setSort(20)
 
         ui_size = 40
@@ -41,8 +43,8 @@ class PandaEditor(ShowBase):
         camera.ui_lens_node = LensNode('ui_lens_node', lens)
 
         ui_render = NodePath('ui_render')
-        ui_render.setDepthTest(False)
-        ui_render.setDepthWrite(False)
+        ui_render.setDepthTest(0)
+        ui_render.setDepthWrite(0)
         ui_camera.reparentTo(ui_render)
         ui_display_region.setCamera(ui_camera)
         scene.ui_camera = ui_camera
@@ -57,6 +59,8 @@ class PandaEditor(ShowBase):
 
         scene.ui = ui
         camera.ui = ui
+
+        win.setClearColor(color.dark_gray)
 
 
         # input
@@ -115,6 +119,9 @@ class PandaEditor(ShowBase):
 
 
     def input(self, key):
+        if key == 'y':
+            window.fullscreen = not window.fullscreen
+
         try: key = self.dictionary[key]
         except: pass
 
@@ -122,7 +129,8 @@ class PandaEditor(ShowBase):
             destroy(scene.editor)
             scene.editor = load_script('editor')
 
-        try: scene.editor.input(key)
+        try:
+            scene.editor.input(key)
         except: pass
         try: mouse.input(key)
         except: pass
@@ -139,13 +147,8 @@ class PandaEditor(ShowBase):
 
 
     def raycast(origin, direction, distance):
-        return False
+        return 0
 
-loadPrcFileData("", "window-title pandaeditor")
-loadPrcFileData('', 'win-size %i %i' % screen_size)
-# loadPrcFileData('', 'fullscreen true')
-loadPrcFileData('', 'sync-video true')
-loadPrcFileData('', 'show-frame-rate-meter true')
 
 
 app = PandaEditor()

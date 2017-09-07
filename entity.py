@@ -9,9 +9,9 @@ from panda3d.core import TransparencyAttrib
 from collider import Collider
 from scripts import *
 from scenes import *
+import uuid
 import color
 import scene
-
 
 class Entity(NodePath):
 
@@ -20,8 +20,10 @@ class Entity(NodePath):
         self.enabled = True
         self.visible = True
         self.is_editor = False
+        # self.prefab_name = None
         self.name = 'entity'
         self.parent = scene.render
+        self.children = list()
         self.scripts = list()
         self.model = None
         self.texture = None
@@ -41,7 +43,7 @@ class Entity(NodePath):
         self.rotation = (0,0,0)
         self.rotation_x, self.rotation_y, self.rotation_z = 0, 0, 0
 
-        self.setting_scale = False
+        self.setting_scale = 0
         self.scale = Vec3(1,1,1)
         self.scale_x, self.scale_y, self.scale_z = 1, 1, 1
 
@@ -56,7 +58,7 @@ class Entity(NodePath):
         if name == 'enabled':
             try:
                 # try calling on_enable() on classes inheriting from Entity
-                if value == True:
+                if value == 1:
                     self.on_enable()
                 else:
                     self.on_disable()
@@ -67,19 +69,21 @@ class Entity(NodePath):
             try:
                 if value == False:
                     self.hide()
-                    # self.stash()
-                    self.collider.node_path.setTangible(False)
+                    self.collider.stash()
+                    # self.collider.node_path.setTangible(0)
                 else:
                     self.show()
-                    # self.unstash()
-                    self.collider.node_path.setTangible(True)
+                    self.collider.unstash()
+                    # self.collider.node_path.setTangible(1)
             except:
                 pass # no model
 
         if name == 'parent' and value != None:
-            try: self.reparentTo(value)
+            try:
+                self.reparentTo(value)
             except:
-                try: self.reparentTo(value.model)
+                try:
+                    self.reparentTo(value.model)
                 except: pass
         if name == 'model':
             try:
@@ -285,9 +289,26 @@ class Entity(NodePath):
 
         # print("couldn't find script:", module_name)
 
+    def look_at(self, target):
+        super().look_at(target)
+        self.setH(self.getH()-180)
+        self.setP(self.getP() * -1)
+
 
     def get_script(self, type):
         pass
+
+
+    def has_ancestor(self, ancestor):
+        p = self
+        for i in range(100):
+            if p.parent:
+                if p.parent == ancestor:
+                    return True
+                    break
+                p = p.parent
+
+
 
     # def get_children(self):
         # for child in self.getChildren():

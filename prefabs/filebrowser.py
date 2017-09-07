@@ -17,7 +17,7 @@ class Filebrowser(Entity):
         self.files = None
 
         self.max_vertical = 10
-        self.button_size = (.2, .03)
+        self.button_size = (.2, .025)
 
 
     def populate(self):
@@ -30,7 +30,7 @@ class Filebrowser(Entity):
             if self.file_types:
                 for file_type in self.file_types:
                     if f.endswith(file_type) or file_type == '':
-                        button = load_prefab('button')
+                        button = load_prefab('editor_button')
                         button.is_editor = True
                         button.parent = self
                         button.origin = (-.5, .5)
@@ -38,7 +38,7 @@ class Filebrowser(Entity):
                             x * (self.button_size[0]),
                             (-y * (self.button_size[1])))
                         button.scale = self.button_size
-                        button.color = color.black66
+                        button.color = color.panda_button
                         menu_toggler = button.add_script('menu_toggler')
                         menu_toggler.target = self
                         button.text = f
@@ -56,7 +56,8 @@ class Filebrowser(Entity):
         self.x = - ((x) * self.button_size[0] / 4)
         self.y = ((y) * self.button_size[1] / 4)
 
-        self.close_button = load_prefab('button')
+        self.close_button = load_prefab('editor_button')
+        self.close_button.name = 'close_button'
         self.close_button.is_editor = True
         self.close_button.parent = self
         self.close_button.origin = (.5, -.5)
@@ -76,7 +77,13 @@ class Filebrowser(Entity):
         self.files = os.listdir(self.path)
         if self.files != self.old_files:
             self.populate()
+        else:
+            for b in self.buttons:
+                b.enabled = True
 
 
     def on_disable(self):
+        for b in self.buttons:
+            b.enabled = False
+            # destroy(b)
         self.visible = False

@@ -11,7 +11,7 @@ class LoadTextureButton():
         if key == 'left mouse down' and self.entity.hovered:
             if self.path:
                 entity = Entity()
-                # entity.is_editor = True
+                # entity.is_editor = 1
                 entity.name = self.path
                 entity.model = 'quad'
                 entity.texture = self.path
@@ -22,9 +22,10 @@ class LoadTextureButton():
                 # print('random', random.uniform(-.1, .1))
                 # entity.z += random.uniform(-.1, .1)
                 entity.collision = True
-                entity.add_script('button')
+                button_script = entity.add_script('editor_button')
+                button_script.collider = None
                 entity.editor_collider = 'box'
-                print(self.entity.parent.name)
+                scene.editor.entity_list.populate()
                 # self.entity.parent.on_disable()
                 # print('entities:')
                 # for e in scene.entities:

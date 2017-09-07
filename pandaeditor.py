@@ -20,6 +20,7 @@ import importlib
 from entity import Entity
 import scene
 import mouse
+import window
 import camera
 import debug
 import color
@@ -31,42 +32,51 @@ from prefabs import *
 from panda3d.core import loadPrcFileData
 
 
-editor = None
-screen_size = (1920 * .6, 1080 * .6)
-
-
 def distance(a, b):
     return math.sqrt(sum( (a - b)**2 for a, b in zip(a, b)))
 
-def save_prefab(name):
-    if len(scene.entities) > 0:
-        default_entity = Entity()
-        defaults = default_entity.__dict__
-        destroy(default_entity)
-        attributes_to_ignore = (
-            'x', 'y', 'z',
-            'rotation_x', 'rotation_y', 'rotation_z',
-            'scale_x', 'scale_y', 'scale_z')
-        for to_ignore in attributes_to_ignore:
-            del defaults[to_ignore]
+def save_scene(name):
+    has_scene_entity = False
+    for e in scene.entities:
+        if e.name.startswith('scene') and e.parent == scene.render:
+            scene_entity = e
+            has_scene_entity = True
+            break
+    if not has_scene_entity:
+        scene_entity = Entity()
+        scene_entity.name = name
 
-        # print(scene.render.ls())
-        for e in scene.entities:
+    for e in scene.entities:
+        if not e.is_editor and e.parent == scene.render and e != scene_entity:
             print(e)
-        # print(e.chi)
-        #     if not e.is_editor:
-        #         instance_attributes = e.__dict__
-        #         print('self.entity.name = ' + e.name)
-        #         for a in instance_attributes:
-        #             value = instance_attributes.get(a)
-        #             if not value == defaults.get(a):
-        #                 print('self.entity.' + str(a), ' = ', value)
+            e.parent = parent_entity
+    save_prefab(scene_entity, name)
+    # for e in scene.entities:
+        # if e.parent = parent_entity
+
+
+def save_prefab(entity, name):
+    default_entity = Entity()
+    default_entity.name = 'default_entity'
+    defaults = default_entity.__dict__
+    destroy(default_entity)
+    attributes_to_ignore = (
+        'x', 'y', 'z',
+        'rotation_x', 'rotation_y', 'rotation_z',
+        'scale_x', 'scale_y', 'scale_z')
+    for to_ignore in attributes_to_ignore:
+        del defaults[to_ignore]
+
+    print(entity.children)
+
+        # instance_attributes = e.__dict__
+        # print('self.entity.name = ' + e.name)
+        # for a in instance_attributes:
+        #     value = instance_attributes.get(a)
+        #     if not value == defaults.get(a):
+        #         print('self.entity.' + str(a), ' = ', value)
 
 def load_prefab(module_name):
-    # try:
-    #     importlib.reload(importlib.import_module('prefabs.' + module_name))
-    # except:
-    #     pass
     prefab = load_script('prefabs.' + module_name)
     caller = inspect.currentframe().f_back.f_locals['self']
 

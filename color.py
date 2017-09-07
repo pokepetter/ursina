@@ -35,6 +35,10 @@ magenta =       hsv_color(300, 1, 1)
 pink =          hsv_color(330, 1, 1)
 
 clear =         Vec4(0, 0, 0, 0)
+white33 =       Vec4(1,1,1, 0.33)
+white66 =       Vec4(1,1,1, 0.66)
 black33 =       Vec4(0,0,0, 0.33)
 black66 =       Vec4(0,0,0, 0.66)
-black99 =       Vec4(0,0,0, 0.99)
+
+panda_background = dark_gray
+panda_button = black66

@@ -1,7 +1,7 @@
 from pandaeditor import *
 
 
-class Button(object):
+class EditorButton(object):
 
     def __init__(self):
         self.entity = None
@@ -19,6 +19,9 @@ class Button(object):
                 self.pressed_color = self.pressed_color = tuple(x + 0.2 for x in value)
 
     def input(self, key):
+        if not scene.editor.enabled:
+            return
+
         if key == 'left mouse down':
             if self.entity.hovered:
                 # print('click')
@@ -31,7 +34,11 @@ class Button(object):
                 self.entity.model.setColorScale(self.color)
 
     def on_mouse_enter(self):
+        if not scene.editor.enabled:
+            return
         self.entity.model.setColorScale(self.highlight_color)
 
     def on_mouse_exit(self):
+        if not scene.editor.enabled:
+            return
         self.entity.model.setColorScale(self.color)
