@@ -119,7 +119,7 @@ class PandaEditor(ShowBase):
 
 
     def input(self, key):
-        if key == 'y':
+        if key == 'f11':
             window.fullscreen = not window.fullscreen
 
         try: key = self.dictionary[key]

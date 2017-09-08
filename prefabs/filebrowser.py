@@ -73,6 +73,7 @@ class Filebrowser(Entity):
     def on_enable(self):
         print('enable')
         self.visible = True
+        self.x = 0
         self.old_files = self.files
         self.files = os.listdir(self.path)
         if self.files != self.old_files:
@@ -83,7 +84,5 @@ class Filebrowser(Entity):
 
 
     def on_disable(self):
-        for b in self.buttons:
-            b.enabled = False
-            # destroy(b)
+        self.x = 100
         self.visible = False

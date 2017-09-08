@@ -51,6 +51,30 @@ class Editor(Entity):
     # # asdgh jqwetyu tuoiphklzxcv bnma s ghjqw et yutu oiph klzxcvbnm asdgh jqwe tyut uoi phkl'''
     #     text.text = t
     #     # text.color = color.blue
+
+# load model
+        self.load_model_button = load_prefab('editor_button')
+        self.load_model_button.is_editor = True
+        self.load_model_button.parent = self
+        self.load_model_button.name = 'load_model_button'
+        self.load_model_button.origin = (0, .5)
+        self.load_model_button.position = (0, .5, 0)
+        self.load_model_button.scale = (.08, .05)
+        self.load_model_button.color = color.panda_button
+        self.load_model_button.text = 'load\nmodel'
+        self.load_model_button.text_entity.x = 0
+        self.menu_toggler = self.load_model_button.add_script('menu_toggler')
+
+        self.model_list = load_prefab('filebrowser')
+        self.model_list.is_editor = True
+        self.model_list.parent = self
+        self.model_list.position = (0,0)
+        self.model_list.enabled = False
+        self.model_list.file_types = ('.egg')
+        self.model_list.path = os.path.join(os.path.dirname(scene.asset_folder), 'models')
+        self.menu_toggler.target = self.model_list
+
+# load sprites
         self.load_sprite_button = load_prefab('editor_button')
         self.load_sprite_button.is_editor = True
         self.load_sprite_button.parent = self
@@ -63,7 +87,6 @@ class Editor(Entity):
         self.load_sprite_button.text_entity.x = 0
         self.menu_toggler = self.load_sprite_button.add_script('menu_toggler')
 
-
         self.texture_list = load_prefab('filebrowser')
         self.texture_list.is_editor = True
         self.texture_list.parent = self
@@ -73,7 +96,7 @@ class Editor(Entity):
         self.texture_list.path = os.path.join(os.path.dirname(scene.asset_folder), 'textures')
         self.menu_toggler.target = self.texture_list
 
-
+# entity list
         self.entity_list = load_prefab('entity_list')
         self.entity_list.is_editor = True
         self.entity_list.parent = self
@@ -154,11 +177,6 @@ class Editor(Entity):
         #     self.scene_list.visible = True
         # if key == 's up':
         #     self.scene_list.visible = False
-        if key == 'm':
-            print('scripts', self.load_sprite_button.scripts)
-            self.model_list.visible = True
-        if key == 'm up':
-            self.model_list.visible = False
 
 
     def on_disable(self):

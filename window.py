@@ -7,10 +7,8 @@ class Window(WindowProperties):
 
     def __init__(self):
         super().__init__()
-        # WindowProperties.__init__(self)
         loadPrcFileData('', 'window-title pandaeditor')
         loadPrcFileData('', 'undecorated True')
-        # loadPrcFileData('', 'fullscreen 1')
         loadPrcFileData('', 'sync-video True')
         loadPrcFileData('', 'show-frame-rate-meter True')
 
@@ -25,7 +23,7 @@ class Window(WindowProperties):
     def load_defaults(self):
         self.title = 'pandaeditor'
 
-        self.fullscreen_size = (1919, 1079)
+        self.fullscreen_size = (1920, 1080)
         self.windowed_size = (1920 * .8, 1080 * .8)
         self.size = self.windowed_size
 
@@ -58,6 +56,6 @@ class Window(WindowProperties):
             else:
                 self.size = self.windowed_size
             object.__setattr__(self, name, value)
-            
+
 
 sys.modules[__name__] = Window()
