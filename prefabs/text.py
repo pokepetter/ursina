@@ -25,11 +25,14 @@ class Text(Entity):
     def update_text(self):
         start_time = time.time()
 
+        if self.characters:
+            for c in self.characters:
+                c.removeNode()
+
         x = 0
         y = 0
         for i in range(len(self.text)):
-            # if self.text[i] == ' ':
-            #     pass
+
             if self.text[i] == ' ' or self.text[i] == '\\' :
                 pass
             elif self.text[i] == '\n':
@@ -44,7 +47,7 @@ class Text(Entity):
                     (y * 1 * self.size * self.line_height)))
                 self.char_entity.setScale(self.size)
                 # self.char_entity.setColorScaleOff()
-                self.char_entity.setColorScale(color.blue)
+                # self.char_entity.setColorScale(color.blue)
 
                 self.characters.append(self.char_entity)
 
