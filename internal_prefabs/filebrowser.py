@@ -18,6 +18,7 @@ class Filebrowser(Entity):
 
         self.max_vertical = 10
         self.button_size = (.2, .025)
+        self.button_type = ''
 
 
     def populate(self):
@@ -27,6 +28,7 @@ class Filebrowser(Entity):
         y = 0
         x = 0
         for f in self.files:
+            print('file:', f)
             if self.file_types:
                 for file_type in self.file_types:
                     if f.endswith(file_type) or file_type == '':
@@ -41,12 +43,14 @@ class Filebrowser(Entity):
                         button.color = color.panda_button
                         menu_toggler = button.add_script('menu_toggler')
                         menu_toggler.target = self
+                        # button.text = os.path.basename(f)
                         button.text = f
                         self.buttons.append(button)
-                        if self.path.endswith('textures'):
-                            self.load_texture_button = button.add_script('load_texture_button')
-                            self.load_texture_button.path = os.path.join('textures', f)
-
+                        # if self.path.endswith('textures'):
+                        print(self.button_type)
+                        self.load_button = button.add_script(self.button_type)
+                        self.load_button.path = os.path.join(self.path, f)
+                        print(self.load_button.path)
 
                         y += 1
                         if y >= self.max_vertical:

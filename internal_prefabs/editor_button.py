@@ -10,9 +10,10 @@ class EditorButton(Entity):
         self.name = 'editor_button'
         self.parent = scene.ui
         self.model = 'quad'
-        self.model.setBin("fixed", 0)
-        self.model.setDepthTest(0)
-        self.model.setDepthWrite(0)
+        if self.model:
+            self.model.setBin("fixed", 0)
+            self.model.setDepthTest(0)
+            self.model.setDepthWrite(0)
 
         self.collision = True
         self.collider = 'box'

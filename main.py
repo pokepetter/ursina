@@ -13,7 +13,7 @@ class PandaEditor(ShowBase):
         scene.app = self
         scene.base = base
         scene.render = self.render
-        scene.asset_folder = __file__
+        scene.asset_folder = os.path.dirname(__file__)
 
         window.load_defaults()
 
@@ -55,7 +55,8 @@ class PandaEditor(ShowBase):
         ui.parent = ui_camera
         ui.model = 'quad'
         ui.scale = (ui_size * camera.aspect_ratio, ui_size)
-        ui.model.hide()
+        if ui.model:
+            ui.model.hide()
 
         scene.ui = ui
         camera.ui = ui
@@ -87,7 +88,6 @@ class PandaEditor(ShowBase):
         mouse.enabled = True
 
 
-
         scene.editor = load_script('editor')
 
         self.update_task = taskMgr.add(self.update, "update")
@@ -99,8 +99,9 @@ class PandaEditor(ShowBase):
         dt = globalClock.getDt()
 
         mouse.update(dt)
-        try: scene.editor.editor_camera_script.update(dt)
-        except: pass
+        if scene.editor:
+            scene.editor.update(dt)
+        # except: pass
 
         for entity in scene.entities:
             if entity.enabled:

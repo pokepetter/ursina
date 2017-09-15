@@ -8,10 +8,12 @@ from panda3d.core import SamplerState
 from panda3d.core import TransparencyAttrib
 from collider import Collider
 from scripts import *
-from scenes import *
 import uuid
 import color
 import scene
+from os import path
+from panda3d.core import Filename
+
 
 class Entity(NodePath):
 
@@ -86,20 +88,49 @@ class Entity(NodePath):
                     self.reparentTo(value.model)
                 except: pass
         if name == 'model':
+            if value == None:
+                return None
+
+            # self.model = None
+
             try:
-                self.model = loader.loadModel('models/' + value + '.egg')
+                combined_path = (path.join(
+                    path.dirname(__file__),
+                    'internal_models/')
+                    + value + '.egg')
+                combined_path = Filename.fromOsSpecific(combined_path)
+                # print('trying to load:', combined_path)
+                self.model = loader.loadModel(combined_path)
+            except:
+                pass
+                # try:
+                #     self.model = loader.loadModel('..internal_models/' + value + '.egg')
+                # except:
+                #     pass
+
+            if self.model:
                 self.model.reparentTo(self)
                 self.model.setColorScaleOff()
                 self.model.setTransparency(TransparencyAttrib.MAlpha)
-            except:
-                pass
-                # print('no model with name:', 'models/', value)
+            else:
+                print('no model with name:', combined_path)
+
         if name == 'color':
             if self.model:
                 self.model.setColorScale(value)
         if name == 'texture':
             if self.model:
-                texture = loader.loadTexture(value)
+                try:
+                    texture = loader.loadTexture(Filename.fromOsSpecific(value))
+                except:
+                    try:
+                        texture = loader.loadTexture(
+                            Filename.fromOsSpecific(
+                            (path.join(
+                                pathf.dirname(path.dirname(__file__)),
+                                'textures/') + value)))
+                    except:
+                        pass
                 object.__setattr__(self, name, texture)
                 # texture.setMagfilter(SamplerState.FT_nearest)
                 # texture.setMinfilter(SamplerState.FT_nearest)
@@ -263,9 +294,10 @@ class Entity(NodePath):
             return class_instance
 
         module_names = (module_name,
-                        'scripts.' + module_name,
-                        'scenes.' + module_name,
-                        'prefabs.' + module_name)
+                        'internal_scripts.' + module_name,
+                        '..scripts.' + module_name)
+                        # 'scenes.' + module_name,
+                        # 'prefabs.' + module_name)
         for module_name in module_names:
             try:
                 module = importlib.import_module(module_name)

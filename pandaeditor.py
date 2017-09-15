@@ -9,9 +9,11 @@ from panda3d.core import NodePath
 from panda3d.core import PandaNode
 from panda3d.core import Vec3
 from panda3d.core import Point3
+from panda3d.core import loadPrcFileData
 
 
 import sys
+import os
 import math
 import random
 import inspect
@@ -25,11 +27,14 @@ import camera
 import debug
 import color
 
+from internal_scripts import *
+# from internal_scenes import *
+from internal_prefabs import *
+sys.path.append("..")
 from scripts import *
-from scenes import *
-from prefabs import *
+# from scenes import *
+# from prefabs import *
 
-from panda3d.core import loadPrcFileData
 
 
 def distance(a, b):
@@ -76,13 +81,14 @@ def save_prefab(entity, name):
         #     if not value == defaults.get(a):
         #         print('self.entity.' + str(a), ' = ', value)
 
+# folders = list()
+
 def load_prefab(module_name):
-    prefab = load_script('prefabs.' + module_name)
+    folders = ('internal_prefabs.', '..prefabs.')
+    prefab = load(folders, module_name)
     caller = inspect.currentframe().f_back.f_locals['self']
-
-    if hasattr(caller, 'name') and caller.name == 'editor':
-        prefab.is_editor = True
-
+    # if hasattr(caller, 'name') and caller.name == 'editor':
+    #     prefab.is_editor = True
     # if the caller is attached to an entity, parent the prefab to it.
     try: prefab.parent = caller.model
     except:
@@ -93,19 +99,41 @@ def load_prefab(module_name):
 
 def load_scene(module_name):
     scene.clear()
-    importlib.reload(importlib.import_module('scenes.' + module_name))
+    importlib.reload(importlib.import_module('..scenes.' + module_name))
     print('loaded scene:', module_name)
-    return load_script('scenes.' + module_name)
-
+    folders = ('..scenes.')
+    return load(folders, module_name)
 
 def load_script(module_name):
+    folders = ('internal_scripts.', '..scripts.')
+    return load(folders, module_name)
+
+
+
+def load(folders, module_name):
     if inspect.isclass(module_name):
         class_instance = module_name()
         # print('added script:', class_instance)
         return class_instance
-    # try:
-    module = importlib.import_module(module_name)
-    class_names = inspect.getmembers(sys.modules[module_name], inspect.isclass)
+
+    # find the module
+    module = None
+    for f in folders:
+        # print('mod:', f + module_name)
+        try:
+            module = importlib.import_module(f + module_name)
+            break
+        except:
+            pass
+
+    if not module:
+        # print(module_name, 'not found')
+        return
+    # else:
+    #     print('class:', inspect.getmembers(sys.modules[module.__name__], inspect.isclass)[0])
+
+    # load its class
+    class_names = inspect.getmembers(sys.modules[module.__name__], inspect.isclass)
     for cn in class_names:
         if cn[1].__module__ == module.__name__:
             class_name = cn[0]

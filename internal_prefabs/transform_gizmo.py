@@ -24,6 +24,7 @@ class TransformGizmo(Entity):
             'e' : 'rotate',
             'r' : 'scale'
             }
+        self.dragging = False
         self.move_interval = 1
         self.rotation_interval = 5
         self.scale_interval = .1
@@ -52,7 +53,7 @@ class TransformGizmo(Entity):
     def update(self, dt):
         # for moving stuff in side view
         if scene.editor.camera_pivot.rotation == (0,0,0) and self.dragging:
-            # print(self.entity)
+            print('w')
             if mouse.hovered_entity and mouse.hovered_entity.is_editor == False:
                 if mouse.delta[0] != 0 or mouse.delta[1] != 0:
                     distance_to_camera = distance(

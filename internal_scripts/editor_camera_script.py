@@ -8,6 +8,7 @@ class EditorCamera():
 
     def __init__(self):
         self.pan = False
+        self.rotate = False
         self.mouse_start = (0,0)
         self.speed = 2
         self.move = False

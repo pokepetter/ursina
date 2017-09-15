@@ -11,7 +11,7 @@ class Editor(Entity):
         self.name = 'editor'
         self.is_editor = True
         self.parent = scene.ui
-        self.editor_camera_script = load_script('scripts.editor_camera_script')
+        self.editor_camera_script = load_script('editor_camera_script')
         self.editor_camera_script.position = (0, 0, -100)
         scene.editor_camera_script = self.editor_camera_script
 
@@ -37,20 +37,28 @@ class Editor(Entity):
         self.grid.color = color.lime
 
 
+# load prefab
+        self.load_prefab_button = load_prefab('editor_button')
+        self.load_prefab_button.is_editor = True
+        self.load_prefab_button.parent = self
+        self.load_prefab_button.name = 'load_prefab_button'
+        self.load_prefab_button.origin = (0, .5)
+        self.load_prefab_button.position = (-.2, .5, 0)
+        self.load_prefab_button.scale = (.08, .05)
+        self.load_prefab_button.color = color.panda_button
+        self.load_prefab_button.text = 'load\nprefab'
+        self.load_prefab_button.text_entity.x = 0
+        self.menu_toggler = self.load_prefab_button.add_script('menu_toggler')
 
-    #     text = load_prefab('text')
-    #     text.parent = self.scene_list
-    #     text.position = (0, -.1, 0)
-    #     text.scale = (.9,.9,.9)
-    #     t = 'test text'
-    # #     t = '''zxcvb nmasd ghj qwetyutuoi phklz xcvbnma sdghjqwetyutuo iphkl xcvbnm
-    # # asdgh jqwetyu tuoiphklzxcv bnma s ghjqw et yutu oiph klzxcvbnm asdgh jqwe tyut uoi phkl
-    # # zxcvb nmasd ghj qwetyutuoi phklz xcvbnma sdghjqwetyutuo iphkl xcvbnm
-    # # asdgh jqwetyu tuoiphklzxcv bnma s ghjqw et yutu oiph klzxcvbnm asdgh jqwe tyut uoi phkl
-    # # zxcvb nmasd ghj qwetyutuoi phklz xcvbnma sdghjqwetyutuo iphkl xcvbnm
-    # # asdgh jqwetyu tuoiphklzxcv bnma s ghjqw et yutu oiph klzxcvbnm asdgh jqwe tyut uoi phkl'''
-    #     text.text = t
-    #     # text.color = color.blue
+        self.filebrowser = load_prefab('filebrowser')
+        self.filebrowser.is_editor = True
+        self.filebrowser.parent = self
+        self.filebrowser.position = (0,0)
+        self.filebrowser.enabled = False
+        self.filebrowser.file_types = ('.py')
+        self.filebrowser.path = os.path.join(os.path.dirname(scene.asset_folder), 'prefabs')
+        self.filebrowser.button_type = 'load_prefab_button'
+        self.menu_toggler.target = self.filebrowser
 
 # load model
         self.load_model_button = load_prefab('editor_button')
@@ -65,14 +73,38 @@ class Editor(Entity):
         self.load_model_button.text_entity.x = 0
         self.menu_toggler = self.load_model_button.add_script('menu_toggler')
 
-        self.model_list = load_prefab('filebrowser')
-        self.model_list.is_editor = True
-        self.model_list.parent = self
-        self.model_list.position = (0,0)
-        self.model_list.enabled = False
-        self.model_list.file_types = ('.egg')
-        self.model_list.path = os.path.join(os.path.dirname(scene.asset_folder), 'models')
-        self.menu_toggler.target = self.model_list
+        self.filebrowser = load_prefab('filebrowser')
+        self.filebrowser.is_editor = True
+        self.filebrowser.parent = self
+        self.filebrowser.position = (0,0)
+        self.filebrowser.enabled = False
+        self.filebrowser.file_types = ('.egg')
+        self.filebrowser.path = os.path.join(os.path.dirname(scene.asset_folder), 'models')
+        self.filebrowser.button_type = 'load_model_button'
+        self.menu_toggler.target = self.filebrowser
+
+# load primitive
+        self.load_primitive_button = load_prefab('editor_button')
+        self.load_primitive_button.is_editor = True
+        self.load_primitive_button.parent = self
+        self.load_primitive_button.name = 'load_primitive_button'
+        self.load_primitive_button.origin = (0, .5)
+        self.load_primitive_button.position = (-.1, .5, 0)
+        self.load_primitive_button.scale = (.08, .05)
+        self.load_primitive_button.color = color.panda_button
+        self.load_primitive_button.text = 'load\nprimitive'
+        self.load_primitive_button.text_entity.x = 0
+        self.menu_toggler = self.load_primitive_button.add_script('menu_toggler')
+
+        self.filebrowser = load_prefab('filebrowser')
+        self.filebrowser.is_editor = True
+        self.filebrowser.parent = self
+        self.filebrowser.position = (0,0)
+        self.filebrowser.enabled = False
+        self.filebrowser.file_types = ('.egg')
+        self.filebrowser.path = os.path.join(os.path.dirname(scene.asset_folder), 'pandaeditor/internal_models')
+        self.filebrowser.button_type = 'load_model_button'
+        self.menu_toggler.target = self.filebrowser
 
 # load sprites
         self.load_sprite_button = load_prefab('editor_button')
@@ -87,14 +119,15 @@ class Editor(Entity):
         self.load_sprite_button.text_entity.x = 0
         self.menu_toggler = self.load_sprite_button.add_script('menu_toggler')
 
-        self.texture_list = load_prefab('filebrowser')
-        self.texture_list.is_editor = True
-        self.texture_list.parent = self
-        self.texture_list.position = (0,0)
-        self.texture_list.enabled = False
-        self.texture_list.file_types = ('.png', '.jpg', '.psd', '.gif')
-        self.texture_list.path = os.path.join(os.path.dirname(scene.asset_folder), 'textures')
-        self.menu_toggler.target = self.texture_list
+        self.filebrowser = load_prefab('filebrowser')
+        self.filebrowser.is_editor = True
+        self.filebrowser.parent = self
+        self.filebrowser.position = (0,0)
+        self.filebrowser.enabled = False
+        self.filebrowser.file_types = ('.png', '.jpg', '.psd', '.gif')
+        self.filebrowser.path = os.path.join(os.path.dirname(scene.asset_folder), 'textures')
+        self.filebrowser.button_type = 'load_texture_button'
+        self.menu_toggler.target = self.filebrowser
 
 # entity list
         self.entity_list = load_prefab('entity_list')
@@ -102,13 +135,13 @@ class Editor(Entity):
         self.entity_list.parent = self
         self.entity_list.populate()
 
-        # 2D / 3D toggle
+# 2D / 3D toggle
         self.toggle_button = load_prefab('editor_button')
         self.toggle_button.is_editor = True
         self.toggle_button.parent = self
         self.toggle_button.name = 'toggle_button'
         self.toggle_button.origin = (0, .5)
-        self.toggle_button.position = (-.2, .5, 0)
+        self.toggle_button.position = (-.4, .5, 0)
         self.toggle_button.scale = (.08, .05)
         self.toggle_button.color = color.panda_button
         self.toggle_button.text = '2D/3D'
@@ -120,6 +153,10 @@ class Editor(Entity):
         self.inspector.parent = self
         print('inspector', self.inspector)
 
+
+    def update(self, dt):
+        self.editor_camera_script.update(dt)
+        self.transform_gizmo.update(dt)
 
     def input(self, key):
         # if key == 'i':
@@ -135,6 +172,7 @@ class Editor(Entity):
         if key == 'tab':
             self.enabled = not self.enabled
 
+            # enable editor
             if self.enabled:
                 camera.wrtReparentTo(self.camera_pivot)
                 camera.position = self.editor_camera_script.position
@@ -145,6 +183,7 @@ class Editor(Entity):
                         e.editor_collider = 'box'
                         e.collider.stash()
                         e.collider.node_path.show()
+            # disable editor
             else:
                 self.editor_camera_script.position = camera.position
                 camera.wrtReparentTo(scene.render)
@@ -183,3 +222,8 @@ class Editor(Entity):
         self.transform_gizmo.enabled = False
         self.grid.enabled = False
         self.visible = False
+
+    def on_enable(self):
+        self.visible = True
+        self.transform_gizmo.enabled = True
+        self.grid.enabled = True

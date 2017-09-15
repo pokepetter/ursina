@@ -1,9 +1,11 @@
 import sys
+import time
 sys.path.append("..")
 from pandaeditor import *
-import time
 from panda3d.core import TransparencyAttrib
 
+from os import path
+from panda3d.core import Filename
 
 
 class Text(Entity):
@@ -36,7 +38,7 @@ class Text(Entity):
                 y -= self.line_height
                 x = -1
             else:
-                self.char_entity = loader.loadModel('models/' + 'quad' + '.egg')
+                self.char_entity = loader.loadModel('internal_models/' + 'quad' + '.egg')
                 self.char_entity.reparentTo(self)
                 self.char_entity.setPos(Vec3(
                     (x * 1 * self.size * self.character_spacing),
@@ -53,7 +55,13 @@ class Text(Entity):
                     if char_name.isupper():
                         char_name += 'u'
 
-                    texture = loader.loadTexture('textures/font/' + char_name + '.png')
+                    texture = loader.loadTexture(
+                        Filename.fromOsSpecific(
+                            (path.join(
+                                path.dirname(path.dirname(__file__)),
+                                'font/')
+                             + char_name + '.png')))
+                    # print('tex', texture)
                     self.char_entity.setColorScaleOff()
                     self.char_entity.setTransparency(TransparencyAttrib.MAlpha)
                     self.char_entity.setTexture(texture, 1)
