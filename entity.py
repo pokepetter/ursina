@@ -253,7 +253,8 @@ class Entity(NodePath):
             try:
                 return self.attrname
             except:
-                raise AttributeError()
+                pass
+                # raise AttributeError()
 
         if attrname == 'chi':
             print('getting children')
