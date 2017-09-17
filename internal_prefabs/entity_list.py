@@ -18,10 +18,10 @@ class EntityList(Entity):
         self.buttons = list()
 
         self.max_vertical = 10
-        self.button_size = (.16, .02)
+        self.button_size = (.08, .01)
 
         self.origin = (-.5, .5)
-        self.position = (-.25, .2)
+        self.position = (-.5, .2)
         # self.scale = (.5, .5)
 
         self.temp_entity_list = list()

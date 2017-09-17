@@ -103,11 +103,6 @@ class Text(Entity):
         except:
             pass
 
-        if name == 'position':
-            value = tuple(x / 2 for x in value)
-            super.__setattr__(self, name, value)
-
-
         if name == 'text':
             object.__setattr__(self, name, value)
             self.update_text()

@@ -54,10 +54,10 @@ class PandaEditor(ShowBase):
         ui.name = 'ui'
         ui.parent = ui_camera
         ui.model = 'quad'
-        ui.scale = (ui_size * camera.aspect_ratio, ui_size)
+        ui.scale = (ui_size * camera.aspect_ratio * .5, ui_size * .5)
+        ui.color = color.white33
         if ui.model:
             ui.model.hide()
-
         scene.ui = ui
         camera.ui = ui
 

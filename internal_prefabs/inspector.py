@@ -14,7 +14,7 @@ class Inspector(Entity):
         self.color = color.panda_button
         self.scale = (.15, .9)
         self.origin = (.5, .5)
-        self.position = (.25, .2)
+        self.position = (.5, .2)
 
         # append self so update() runs
         self.scripts.append(self)
@@ -26,7 +26,6 @@ class Inspector(Entity):
         self.name_label.x = -.5
         self.name_label.scale_y = .025
         self.name_label.color = color.gray
-        # self.name_label.text = 'transform'
 
         self.transform_labels = list()
         for j in range(3):
@@ -41,12 +40,21 @@ class Inspector(Entity):
                 self.button.text = str(i)
                 self.transform_labels.append(self.button)
 
+        self.scripts_label = load_prefab('editor_button')
+        self.scripts_label.is_editor = True
+        self.scripts_label.parent = self
+        self.scripts_label.origin = (-.5, .25)
+        self.scripts_label.position = (-.5, -.025 * 4)
+        self.scripts_label.scale_y = .025
+        self.scripts_label.color = color.gray
+        self.scripts_label.text = 'scripts:'
+
         self.t = 0
 
 
     def update(self, dt):
         self.t += 1
-        if self.t > 10:
+        if self.t > 100:
             # print('t')
             self.update_inspector()
             self.t = 0
@@ -67,6 +75,8 @@ class Inspector(Entity):
         self.transform_labels[6].text = str(int(self.selected.scale_x))
         self.transform_labels[7].text = str(int(self.selected.scale_y))
         self.transform_labels[8].text = str(int(self.selected.scale_z))
+
+
 
     #
     # def on_enable(self):

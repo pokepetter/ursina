@@ -30,12 +30,6 @@ class EditorButton(Entity):
             except:
                 pass
 
-        if name == 'position':
-            if self.has_ancestor(scene.ui):
-                value = (value[0] / 2, (value[1] / 2), -.1)
-            # else:
-            #     value = (value[0], value[1], -.1)
-
 
         if name == 'text':
             if len(value) > 0:

@@ -9,9 +9,3 @@ class Panel(Entity):
         self.name = 'panel'
         self.parent = scene.ui
         self.model = 'quad'
-
-    def __setattr__(self, name, value):
-        if name == 'position':
-            value = (value[0] / 2, (value[1] / 2), -.1)
-
-        super().__setattr__(name, value)

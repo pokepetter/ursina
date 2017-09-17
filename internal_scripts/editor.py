@@ -43,7 +43,7 @@ class Editor(Entity):
         self.load_prefab_button.parent = self
         self.load_prefab_button.name = 'load_prefab_button'
         self.load_prefab_button.origin = (0, .5)
-        self.load_prefab_button.position = (-.2, .5, 0)
+        self.load_prefab_button.position = (-.2, .5)
         self.load_prefab_button.scale = (.08, .05)
         self.load_prefab_button.color = color.panda_button
         self.load_prefab_button.text = 'load\nprefab'
@@ -152,6 +152,7 @@ class Editor(Entity):
         self.inspector.is_editor = True
         self.inspector.parent = self
         print('inspector', self.inspector)
+
 
 
     def update(self, dt):

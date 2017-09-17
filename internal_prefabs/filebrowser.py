@@ -17,7 +17,7 @@ class Filebrowser(Entity):
         self.files = None
 
         self.max_vertical = 10
-        self.button_size = (.2, .025)
+        self.button_size = (.1, .00125)
         self.button_type = ''
 
 
@@ -57,8 +57,8 @@ class Filebrowser(Entity):
                             y = 0
                             x += 1
 
-        self.x = - ((x) * self.button_size[0] / 4)
-        self.y = ((y) * self.button_size[1] / 4)
+        self.x = - ((x) * self.button_size[0] / 2)
+        self.y = ((y) * self.button_size[1] / 2)
 
         self.close_button = load_prefab('editor_button')
         self.close_button.name = 'close_button'
