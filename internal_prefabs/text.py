@@ -15,13 +15,13 @@ class Text(Entity):
         super().__init__()
         self.name = 'text'
         self.color = color.blue
-        self.character_spacing = .25
-        self.line_height = .5
+        self.character_spacing = .5
+        self.line_height = 1
         self.character_limit = 50
         self.text = ''
         self.size = 1
         self.characters = list()
-        self.scale = (.75,.75,.75)
+        self.scale *= 0.355
 
 
     def update_text(self):

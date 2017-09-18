@@ -181,9 +181,9 @@ class Entity(NodePath):
                     new_value.addY(value[i+1])
                     new_value.addZ(value[i+2])
 
-            self.model.setPos(-new_value[0] /2,
-                                -new_value[2] /2,
-                                -new_value[1] /2)
+            self.model.setPos(-new_value[0],
+                                -new_value[2],
+                                -new_value[1])
             object.__setattr__(self, name, new_value)
 
         if name == 'rotation':

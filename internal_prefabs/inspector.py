@@ -12,9 +12,9 @@ class Inspector(Entity):
         self.is_editor = True
         self.model = 'quad'
         self.color = color.panda_button
-        self.scale = (.15, .9)
         self.origin = (.5, .5)
-        self.position = (.5, .2)
+        self.position = (.5, .45)
+        self.scale = (.15, .9)
 
         # append self so update() runs
         self.scripts.append(self)
@@ -22,8 +22,7 @@ class Inspector(Entity):
         self.name_label = load_prefab('editor_button')
         self.name_label.is_editor = True
         self.name_label.parent = self
-        self.name_label.origin = (0, .25)
-        self.name_label.x = -.5
+        self.name_label.origin = (.5, .5)
         self.name_label.scale_y = .025
         self.name_label.color = color.gray
 
@@ -33,8 +32,8 @@ class Inspector(Entity):
                 self.button = load_prefab('editor_button')
                 self.button.is_editor = True
                 self.button.parent = self
-                self.button.origin = (-.5, .25)
-                self.button.position = (-1 + (i / 3), -.025 - (j * .025))
+                self.button.origin = (.5, .5)
+                self.button.position = (-(i / 3), -.025 - (j * .025))
                 self.button.scale = (1 / 3, .025)
                 self.button.color = color.gray
                 self.button.text = str(i)
@@ -43,8 +42,8 @@ class Inspector(Entity):
         self.scripts_label = load_prefab('editor_button')
         self.scripts_label.is_editor = True
         self.scripts_label.parent = self
-        self.scripts_label.origin = (-.5, .25)
-        self.scripts_label.position = (-.5, -.025 * 4)
+        self.scripts_label.origin = (.5, .5)
+        self.scripts_label.position = (0, -.025 * 4)
         self.scripts_label.scale_y = .025
         self.scripts_label.color = color.gray
         self.scripts_label.text = 'scripts:'
