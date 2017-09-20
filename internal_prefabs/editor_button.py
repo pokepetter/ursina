@@ -14,6 +14,7 @@ class EditorButton(Entity):
             self.model.setBin("fixed", 0)
             self.model.setDepthTest(0)
             self.model.setDepthWrite(0)
+        # self.texture = 'panda_button'
 
         self.collision = True
         self.collider = 'box'

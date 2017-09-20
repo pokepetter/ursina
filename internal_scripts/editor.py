@@ -36,6 +36,28 @@ class Editor(Entity):
         self.grid.scale = (10, 10, 10)
         self.grid.color = color.lime
 
+# load scene
+        self.load_scene_button = load_prefab('editor_button')
+        self.load_scene_button.is_editor = True
+        self.load_scene_button.parent = self
+        self.load_scene_button.name = 'load_scene_button'
+        self.load_scene_button.origin = (0, .5)
+        self.load_scene_button.position = (-.12, .5)
+        self.load_scene_button.scale = (.06, .06)
+        self.load_scene_button.color = color.panda_button
+        self.load_scene_button.text = 'scene'
+        self.load_scene_button.text_entity.x = 0
+        self.menu_toggler = self.load_scene_button.add_script('menu_toggler')
+
+        self.filebrowser = load_prefab('filebrowser')
+        self.filebrowser.is_editor = True
+        self.filebrowser.parent = self
+        self.filebrowser.position = (0,0)
+        self.filebrowser.enabled = False
+        self.filebrowser.file_types = ('.py')
+        self.filebrowser.path = os.path.join(os.path.dirname(scene.asset_folder), 'scenes')
+        self.filebrowser.button_type = 'load_scene_button'
+        self.menu_toggler.target = self.filebrowser
 
 # load prefab
         self.load_prefab_button = load_prefab('editor_button')
@@ -43,10 +65,10 @@ class Editor(Entity):
         self.load_prefab_button.parent = self
         self.load_prefab_button.name = 'load_prefab_button'
         self.load_prefab_button.origin = (0, .5)
-        self.load_prefab_button.position = (-.2, .5)
-        self.load_prefab_button.scale = (.08, .05)
+        self.load_prefab_button.position = (-.06, .5)
+        self.load_prefab_button.scale = (.06, .06)
         self.load_prefab_button.color = color.panda_button
-        self.load_prefab_button.text = 'load\nprefab'
+        self.load_prefab_button.text = 'prefab'
         self.load_prefab_button.text_entity.x = 0
         self.menu_toggler = self.load_prefab_button.add_script('menu_toggler')
 
@@ -66,10 +88,10 @@ class Editor(Entity):
         self.load_model_button.parent = self
         self.load_model_button.name = 'load_model_button'
         self.load_model_button.origin = (0, .5)
-        self.load_model_button.position = (0, .5, 0)
-        self.load_model_button.scale = (.08, .05)
+        self.load_model_button.position = (0, .5)
+        self.load_model_button.scale = (.06, .06)
         self.load_model_button.color = color.panda_button
-        self.load_model_button.text = 'load\nmodel'
+        self.load_model_button.text = 'model'
         self.load_model_button.text_entity.x = 0
         self.menu_toggler = self.load_model_button.add_script('menu_toggler')
 
@@ -89,10 +111,10 @@ class Editor(Entity):
         self.load_primitive_button.parent = self
         self.load_primitive_button.name = 'load_primitive_button'
         self.load_primitive_button.origin = (0, .5)
-        self.load_primitive_button.position = (-.1, .5, 0)
-        self.load_primitive_button.scale = (.08, .05)
+        self.load_primitive_button.position = (.06, .5)
+        self.load_primitive_button.scale = (.06, .06)
         self.load_primitive_button.color = color.panda_button
-        self.load_primitive_button.text = 'load\nprimitive'
+        self.load_primitive_button.text = 'primitive'
         self.load_primitive_button.text_entity.x = 0
         self.menu_toggler = self.load_primitive_button.add_script('menu_toggler')
 
@@ -112,8 +134,8 @@ class Editor(Entity):
         self.load_sprite_button.parent = self
         self.load_sprite_button.name = 'load_sprite_button'
         self.load_sprite_button.origin = (0, .5)
-        self.load_sprite_button.position = (.2, .5, 0)
-        self.load_sprite_button.scale = (.08, .05)
+        self.load_sprite_button.position = (.12, .5)
+        self.load_sprite_button.scale = (.06, .06)
         self.load_sprite_button.color = color.panda_button
         self.load_sprite_button.text = 'load\nsprite'
         self.load_sprite_button.text_entity.x = 0
@@ -141,8 +163,8 @@ class Editor(Entity):
         self.toggle_button.parent = self
         self.toggle_button.name = 'toggle_button'
         self.toggle_button.origin = (0, .5)
-        self.toggle_button.position = (-.4, .5, 0)
-        self.toggle_button.scale = (.08, .05)
+        self.toggle_button.position = (-.4, .5)
+        self.toggle_button.scale = (.06, .06)
         self.toggle_button.color = color.panda_button
         self.toggle_button.text = '2D/3D'
         self.toggle_button.text_entity.x = 0
