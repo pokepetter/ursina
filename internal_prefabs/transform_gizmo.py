@@ -53,7 +53,6 @@ class TransformGizmo(Entity):
     def update(self, dt):
         # for moving stuff in side view
         if scene.editor.camera_pivot.rotation == (0,0,0) and self.dragging:
-            print('w')
             if mouse.hovered_entity and mouse.hovered_entity.is_editor == False:
                 if mouse.delta[0] != 0 or mouse.delta[1] != 0:
                     distance_to_camera = distance(

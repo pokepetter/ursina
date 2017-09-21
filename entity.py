@@ -3,6 +3,7 @@ import inspect
 import importlib
 from panda3d.core import PandaNode
 from panda3d.core import NodePath
+from panda3d.core import ModelNode
 from panda3d.core import Vec3
 from panda3d.core import SamplerState
 from panda3d.core import TransparencyAttrib
@@ -22,10 +23,10 @@ class Entity(NodePath):
         self.enabled = True
         self.visible = True
         self.is_editor = False
+        self.type = 'Entity'
         # self.prefab_name = None
         self.name = 'entity'
         self.parent = scene.render
-        self.children = list()
         self.scripts = list()
         self.model = None
         self.texture = None
@@ -81,12 +82,8 @@ class Entity(NodePath):
                 pass # no model
 
         if name == 'parent' and value != None:
-            try:
-                self.reparentTo(value)
-            except:
-                try:
-                    self.reparentTo(value.model)
-                except: pass
+            self.reparentTo(value)
+
         if name == 'model':
             if value == None:
                 return None
@@ -263,18 +260,15 @@ class Entity(NodePath):
                 pass
                 # raise AttributeError()
 
-        if attrname == 'chi':
-            print('getting children')
-            all_children = super().children
-            new_children = list()
-            for child in all_children:
-                if not child.endswith('.egg'):
-                    new_children.append(child)
+        if attrname == 'child_entities':
+            # return super().children
+            children_entities = list()
+            for c in super().children:
+                if Entity in c.__class__.__subclasses__():
+                    print('yay')
+                    children_entities.append(c)
 
-            return all_children
-            # for c in self.getChildren():
-            #     print(c.__class__)
-            #     if c.__class__.__name__ == 'Entity':
+            return children_entities
 
 
         if attrname == 'forward':
@@ -324,10 +318,11 @@ class Entity(NodePath):
                 self.scripts.append(class_instance)
                 return class_instance
                 break
-            except:
+            except Exception as e:
+                # print(e)
                 pass
 
-        # print("couldn't find script:", module_name)
+        print("couldn't find script:", module_names)
 
     def look_at(self, target):
         super().look_at(target)

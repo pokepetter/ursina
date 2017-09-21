@@ -36,10 +36,20 @@ class Editor(Entity):
         self.grid.scale = (10, 10, 10)
         self.grid.color = color.lime
 
+
+        self.toolbar = Entity()
+        self.toolbar.parent = self
+        self.layout_group = self.toolbar.add_script('grid_layout')
+        self.layout_group.update_grid()
+        # self.layout_group.origin = (0, 0)
+        print('layout group:', self.layout_group)
+        # self.layout_group.overflow = True
+        # self.layout_group.spacing = (0.1, 0)
+
 # load scene
         self.load_scene_button = load_prefab('editor_button')
         self.load_scene_button.is_editor = True
-        self.load_scene_button.parent = self
+        self.load_scene_button.parent = self.toolbar
         self.load_scene_button.name = 'load_scene_button'
         self.load_scene_button.origin = (0, .5)
         self.load_scene_button.position = (-.12, .5)
@@ -62,7 +72,7 @@ class Editor(Entity):
 # load prefab
         self.load_prefab_button = load_prefab('editor_button')
         self.load_prefab_button.is_editor = True
-        self.load_prefab_button.parent = self
+        self.load_prefab_button.parent = self.toolbar
         self.load_prefab_button.name = 'load_prefab_button'
         self.load_prefab_button.origin = (0, .5)
         self.load_prefab_button.position = (-.06, .5)
@@ -85,7 +95,7 @@ class Editor(Entity):
 # load model
         self.load_model_button = load_prefab('editor_button')
         self.load_model_button.is_editor = True
-        self.load_model_button.parent = self
+        self.load_model_button.parent = self.toolbar
         self.load_model_button.name = 'load_model_button'
         self.load_model_button.origin = (0, .5)
         self.load_model_button.position = (0, .5)
@@ -108,7 +118,7 @@ class Editor(Entity):
 # load primitive
         self.load_primitive_button = load_prefab('editor_button')
         self.load_primitive_button.is_editor = True
-        self.load_primitive_button.parent = self
+        self.load_primitive_button.parent = self.toolbar
         self.load_primitive_button.name = 'load_primitive_button'
         self.load_primitive_button.origin = (0, .5)
         self.load_primitive_button.position = (.06, .5)
@@ -131,7 +141,7 @@ class Editor(Entity):
 # load sprites
         self.load_sprite_button = load_prefab('editor_button')
         self.load_sprite_button.is_editor = True
-        self.load_sprite_button.parent = self
+        self.load_sprite_button.parent = self.toolbar
         self.load_sprite_button.name = 'load_sprite_button'
         self.load_sprite_button.origin = (0, .5)
         self.load_sprite_button.position = (.12, .5)
@@ -150,6 +160,8 @@ class Editor(Entity):
         self.filebrowser.path = os.path.join(os.path.dirname(scene.asset_folder), 'textures')
         self.filebrowser.button_type = 'load_texture_button'
         self.menu_toggler.target = self.filebrowser
+
+
 
 # entity list
         self.entity_list = load_prefab('entity_list')
