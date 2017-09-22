@@ -10,11 +10,11 @@ from panda3d.core import Filename
 
 class Text(Entity):
 
-
     def __init__(self):
         super().__init__()
         self.name = 'text'
-        self.color = color.blue
+        self.model = 'quad'
+        self.color = color.clear
         self.character_spacing = .5
         self.line_height = 1
         self.character_limit = 50
@@ -22,6 +22,8 @@ class Text(Entity):
         self.size = 1
         self.characters = list()
         self.scale *= 0.355
+        self.origin = (0, 0)
+        self.x = 0
 
 
     def update_text(self):
@@ -42,14 +44,13 @@ class Text(Entity):
                 x = -1
             else:
                 self.char_entity = loader.loadModel('internal_models/' + 'quad' + '.egg')
-                self.char_entity.reparentTo(self)
+                self.char_entity.reparentTo(self.model)
+
                 self.char_entity.setPos(Vec3(
-                    (x * 1 * self.size * self.character_spacing),
+                    x * 1 * self.size * self.character_spacing,
                     -.1,
                     (y * 1 * self.size * self.line_height)))
                 self.char_entity.setScale(self.size)
-                # self.char_entity.setColorScaleOff()
-                # self.char_entity.setColorScale(color.blue)
 
                 self.characters.append(self.char_entity)
 
@@ -64,12 +65,10 @@ class Text(Entity):
                                 path.dirname(path.dirname(__file__)),
                                 'font/')
                              + char_name + '.png')))
-                    # print('tex', texture)
+
                     self.char_entity.setColorScaleOff()
                     self.char_entity.setTransparency(TransparencyAttrib.MAlpha)
                     self.char_entity.setTexture(texture, 1)
-                    # if self.color:
-                    #     char_entity.color = self.color
                 except:
                     pass # missing character
 
@@ -78,7 +77,34 @@ class Text(Entity):
                 x = 0
                 y -= 1
 
+        try:
+            self.set_origin(self.origin)
+        except:
+            pass
         # print("--- %s seconds ---" % (time.time() - start_time))
+
+    def set_origin(self, origin):
+        # self.width = min(
+        #     self.character_limit * self.character_spacing * self.scale[0],
+        #     len(self.text) * self.character_spacing * self.scale[0])
+        self.width = 0
+        for c in self.characters:
+            self.width += c.getSx()
+        self.width *= self.character_spacing
+        print('width:', self.width)
+        test = Entity()
+        test.parent = self.model
+        test.model = 'quad'
+        test.color = color.white33
+        test.origin = (-.5, 0)
+        test.position = (-.25,0)
+        test.scale_x = self.width
+
+        self.x
+        self.model.setPos(
+            - ((origin[0] * 2) * self.width) - 1,
+            0,
+            0)
 
     def appear(self, interval):
         for char in self.characters:
@@ -90,11 +116,6 @@ class Text(Entity):
             for char in self.characters:
                 char.color = value
 
-    def align(self, value):
-        pass
-        # for char in self.characters:
-        #     if value ==
-        #     char.color = value
 
 
     def __setattr__(self, name, value):
@@ -106,24 +127,14 @@ class Text(Entity):
         if name == 'text':
             object.__setattr__(self, name, value)
             self.update_text()
-        # if name == 'scale':
-        #     super().__setattr__(name, value)
+
+        if name == 'origin':
+            object.__setattr__(self, name, value)
+            try:
+                self.set_origin(self.origin)
+            except:
+                pass
+        #     self.update_text()
         if name == 'size':
             object.__setattr__(self, name, value)
             self.update_text()
-
-
-        # if name == 'align':
-        #     if value == 'left':
-        #         print('prant scale x:', self.parent.scale_x)
-        # elif name == 'color':
-        #     self.update_colors(value)
-        # else:
-        #     super().__setattr__(name, value)
-
-    #
-    # def __getattr__(self, attrname):
-    #     try:
-    #         return self.attrname
-    #     except:
-    #         pass

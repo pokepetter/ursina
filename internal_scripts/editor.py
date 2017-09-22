@@ -39,8 +39,11 @@ class Editor(Entity):
 
         self.toolbar = Entity()
         self.toolbar.parent = self
+        self.toolbar.origin = (0, .5)
+        self.toolbar.position = (0, .5)
         self.layout_group = self.toolbar.add_script('grid_layout')
-        self.layout_group.update_grid()
+        self.layout_group.origin = (.0, .5)
+
         # self.layout_group.origin = (0, 0)
         print('layout group:', self.layout_group)
         # self.layout_group.overflow = True
@@ -51,12 +54,10 @@ class Editor(Entity):
         self.load_scene_button.is_editor = True
         self.load_scene_button.parent = self.toolbar
         self.load_scene_button.name = 'load_scene_button'
-        self.load_scene_button.origin = (0, .5)
-        self.load_scene_button.position = (-.12, .5)
         self.load_scene_button.scale = (.06, .06)
         self.load_scene_button.color = color.panda_button
         self.load_scene_button.text = 'scene'
-        self.load_scene_button.text_entity.x = 0
+        self.load_scene_button.text_entity.origin = (0,0)
         self.menu_toggler = self.load_scene_button.add_script('menu_toggler')
 
         self.filebrowser = load_prefab('filebrowser')
@@ -74,12 +75,9 @@ class Editor(Entity):
         self.load_prefab_button.is_editor = True
         self.load_prefab_button.parent = self.toolbar
         self.load_prefab_button.name = 'load_prefab_button'
-        self.load_prefab_button.origin = (0, .5)
-        self.load_prefab_button.position = (-.06, .5)
         self.load_prefab_button.scale = (.06, .06)
         self.load_prefab_button.color = color.panda_button
         self.load_prefab_button.text = 'prefab'
-        self.load_prefab_button.text_entity.x = 0
         self.menu_toggler = self.load_prefab_button.add_script('menu_toggler')
 
         self.filebrowser = load_prefab('filebrowser')
@@ -97,12 +95,9 @@ class Editor(Entity):
         self.load_model_button.is_editor = True
         self.load_model_button.parent = self.toolbar
         self.load_model_button.name = 'load_model_button'
-        self.load_model_button.origin = (0, .5)
-        self.load_model_button.position = (0, .5)
         self.load_model_button.scale = (.06, .06)
         self.load_model_button.color = color.panda_button
         self.load_model_button.text = 'model'
-        self.load_model_button.text_entity.x = 0
         self.menu_toggler = self.load_model_button.add_script('menu_toggler')
 
         self.filebrowser = load_prefab('filebrowser')
@@ -120,12 +115,9 @@ class Editor(Entity):
         self.load_primitive_button.is_editor = True
         self.load_primitive_button.parent = self.toolbar
         self.load_primitive_button.name = 'load_primitive_button'
-        self.load_primitive_button.origin = (0, .5)
-        self.load_primitive_button.position = (.06, .5)
         self.load_primitive_button.scale = (.06, .06)
         self.load_primitive_button.color = color.panda_button
         self.load_primitive_button.text = 'primitive'
-        self.load_primitive_button.text_entity.x = 0
         self.menu_toggler = self.load_primitive_button.add_script('menu_toggler')
 
         self.filebrowser = load_prefab('filebrowser')
@@ -143,12 +135,9 @@ class Editor(Entity):
         self.load_sprite_button.is_editor = True
         self.load_sprite_button.parent = self.toolbar
         self.load_sprite_button.name = 'load_sprite_button'
-        self.load_sprite_button.origin = (0, .5)
-        self.load_sprite_button.position = (.12, .5)
         self.load_sprite_button.scale = (.06, .06)
         self.load_sprite_button.color = color.panda_button
-        self.load_sprite_button.text = 'load\nsprite'
-        self.load_sprite_button.text_entity.x = 0
+        self.load_sprite_button.text = 'sprite'
         self.menu_toggler = self.load_sprite_button.add_script('menu_toggler')
 
         self.filebrowser = load_prefab('filebrowser')
@@ -162,6 +151,7 @@ class Editor(Entity):
         self.menu_toggler.target = self.filebrowser
 
 
+        self.layout_group.update_grid()
 
 # entity list
         self.entity_list = load_prefab('entity_list')

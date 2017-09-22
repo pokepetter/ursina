@@ -253,23 +253,6 @@ class Entity(NodePath):
             global_position = self.getPos(scene.render)
             global_position = (global_position[0], global_position[2], global_position[1])
             return global_position
-        else:
-            try:
-                return self.attrname
-            except:
-                pass
-                # raise AttributeError()
-
-        if attrname == 'child_entities':
-            # return super().children
-            children_entities = list()
-            for c in super().children:
-                if Entity in c.__class__.__subclasses__():
-                    print('yay')
-                    children_entities.append(c)
-
-            return children_entities
-
 
         if attrname == 'forward':
             return scene.render.getRelativeVector(self, (0,0,1))
@@ -343,9 +326,20 @@ class Entity(NodePath):
                     break
                 p = p.parent
 
+    # @property
+    # def parent(self):
+    #     return super().parent
 
+    @property
+    def children(self):
+        children_entities = list()
+        for e in scene.entities:
+            if e.parent == self:
+                children_entities.append(e)
 
-    # def get_children(self):
-        # for child in self.getChildren():
-        #     print(child.name)
-        # for
+        # for c in super().children:
+        #     if Entity in c.__class__.__subclasses__():
+        #         # children_entities.append(c)
+        #         print(c.__class__.__name__)
+
+        return children_entities
