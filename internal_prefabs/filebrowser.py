@@ -45,6 +45,7 @@ class Filebrowser(Entity):
                         menu_toggler.target = self
                         # button.text = os.path.basename(f)
                         button.text = f
+                        button.text_entity.position = (-.45, 0)
                         button.text_entity.origin = (-.5, 0)
                         self.buttons.append(button)
                         # if self.path.endswith('textures'):

@@ -84,27 +84,30 @@ class Text(Entity):
         # print("--- %s seconds ---" % (time.time() - start_time))
 
     def set_origin(self, origin):
-        # self.width = min(
-        #     self.character_limit * self.character_spacing * self.scale[0],
-        #     len(self.text) * self.character_spacing * self.scale[0])
-        self.width = 0
-        for c in self.characters:
-            self.width += c.getSx()
+        self.width = min(len(self.characters), self.character_limit)
         self.width *= self.character_spacing
-        print('width:', self.width)
-        test = Entity()
-        test.parent = self.model
-        test.model = 'quad'
-        test.color = color.white33
-        test.origin = (-.5, 0)
-        test.position = (-.25,0)
-        test.scale_x = self.width
 
-        self.x
+        # test = Entity()
+        # test.parent = self.model
+        # test.model = 'quad'
+        # test.color = color.white33
+        # test.origin = (-.5, 0)
+        # test.position = (-.25,0)
+        # test.scale_x = self.width
+
+        # -.5     - self.width * 1
+        # 0       - self.width * .5
+        # .5      - self.width * 0
+
         self.model.setPos(
-            - ((origin[0] * 2) * self.width) - 1,
+            - (self.width * ((-self.origin[0] - .5) * -1)) + .25,
             0,
             0)
+
+        # self.model.setPos(
+        #     - ((origin[0] * 2) * self.width) - 1,
+        #     0,
+        #     0)
 
     def appear(self, interval):
         for char in self.characters:

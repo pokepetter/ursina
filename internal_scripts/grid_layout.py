@@ -10,9 +10,10 @@ class GridLayout():
         self.origin = (0,0)
         self.overflow = True
         self.spacing = (.001,0)
-        self.max_x = 3
+        self.max_x = 8
         self.rows = 1
         self.limit = None
+        self.width = 0
 
         # self.model = loader.loadModel('internal_models/' + 'quad' + '.egg')
         # self.model.reparentTo(self)
@@ -23,11 +24,16 @@ class GridLayout():
             return
 
         x = 0
+        self.line_height = self.entity.children[0].scale_y + self.spacing[1]
+
+        for i in range(min(len(self.entity.children) - 1, self.max_x - 1)):
+            self.width += self.entity.children[i].scale_x + self.spacing[0]
+
         for i in range(len(self.entity.children)):
             c = self.entity.children[i]
             c.origin = self.origin
+
             prev_x = 0
-            c.y = 0
             if i <= 0:
                 c.x = 0
             else:
@@ -37,7 +43,14 @@ class GridLayout():
                     + self.spacing[0])
                     * 1)
 
-            self.width = c.x
+            if x >= self.max_x:
+                self.rows += 1
+                x = 0
+                c.x = 0
+
+            c.y = (-self.rows + 1) * self.line_height
+
+            x += 1
 
 
         for c in self.entity.children:

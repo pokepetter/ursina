@@ -213,18 +213,9 @@ class Editor(Entity):
                 self.editor_camera_script.position = camera.position
                 camera.wrtReparentTo(scene.render)
                 for e in scene.entities:
-                    # print(e)
-                    # try:
-                    #     for s in e.scripts:
-                    #         if s.is_editor:
-                    #             e.scripts.remove(s)
-                    #     # print('scripts', e.scripts)
-                    # except:
-                    #     pass
                     try:
                         if e.editor_collider:
                             e.editor_collider.stash()
-                        print('stashed')
                         e.collider.unstash()
                     except:
                         pass
