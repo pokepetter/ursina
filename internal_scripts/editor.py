@@ -44,10 +44,6 @@ class Editor(Entity):
         self.layout_group = self.toolbar.add_script('grid_layout')
         self.layout_group.origin = (.0, .5)
 
-        # self.layout_group.origin = (0, 0)
-        print('layout group:', self.layout_group)
-        # self.layout_group.overflow = True
-        # self.layout_group.spacing = (0.1, 0)
 
 # load scene
         self.load_scene_button = load_prefab('editor_button')
@@ -153,6 +149,16 @@ class Editor(Entity):
 
         self.layout_group.update_grid()
 
+
+        # self.test = Entity()
+        # self.test.model = 'cube'
+        # self.test.color = color.orange
+        # self.test.name = 'yolo'
+        # button_script = self.test.add_script('editor_button')
+        # # button_script.collider = None
+        # self.test.editor_collider = 'box'
+
+
 # entity list
         self.entity_list = load_prefab('entity_list')
         self.entity_list.is_editor = True
@@ -182,6 +188,7 @@ class Editor(Entity):
     def update(self, dt):
         self.editor_camera_script.update(dt)
         self.transform_gizmo.update(dt)
+        # self.inspector.update(dt)
 
     def input(self, key):
         # if key == 'i':

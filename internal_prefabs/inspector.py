@@ -28,7 +28,7 @@ class Inspector(Entity):
         self.name_label.text = 'selected name'
         self.name_label.text_entity.origin = (-.5,0)
         self.name_label.text_entity.x = -.45
-        self.name_label.color = color.gray
+        self.name_label.color = color.panda_button
 
         self.transform_labels = list()
         for j in range(3):
@@ -39,9 +39,9 @@ class Inspector(Entity):
                 self.button.is_editor = True
                 self.button.parent = self.vec3_group
                 self.button.origin = (.5, .5)
-                self.button.position = (-(i / 3), -.025 - (j * .025))
-                self.button.scale = (1 / 3, .025)
-                self.button.color = color.gray
+                self.button.position = (-(i / 3), 0)
+                self.button.scale = (1 / 3.05, .025)
+                self.button.color = color.panda_button
                 self.button.text = str(i)
                 self.button.text_entity.origin = (-.5,0)
                 self.transform_labels.append(self.button)
@@ -49,10 +49,8 @@ class Inspector(Entity):
         self.scripts_label = load_prefab('editor_button')
         self.scripts_label.is_editor = True
         self.scripts_label.parent = self
-        # self.scripts_label.origin = (.5, .5)
-        # self.scripts_label.position = (0, -.025 * 4)
         self.scripts_label.scale_y = .025
-        self.scripts_label.color = color.gray
+        self.scripts_label.color = color.panda_button
         self.scripts_label.text = 'scripts:'
         self.scripts_label.text_entity.origin = (-.5,0)
         self.scripts_label.text_entity.x = -.45
@@ -60,20 +58,23 @@ class Inspector(Entity):
 
         self.layout_group = self.add_script('grid_layout')
         self.layout_group.max_x = 1
+        self.layout_group.spacing = [0, .001]
         self.layout_group.origin = (.5, .5)
         self.layout_group.update_grid()
+
+        self.t = 0
 
 
     def update(self, dt):
         self.t += 1
         if self.t > 100:
-            # print('t')
+            # print('updating inspector')
             self.update_inspector()
             self.t = 0
-        # if len(scene.editor.selection) > 0:
-        #     self.visible = True
-        # else:
-        #     self.visible = False
+        if len(scene.editor.selection) > 0:
+            self.visible = True
+        else:
+            self.visible = False
 
     def update_inspector(self):
         if len(scene.editor.selection) == 0:
@@ -95,13 +96,14 @@ class Inspector(Entity):
             self.button.is_editor = True
             self.button.parent = self
             self.button.origin = (.5, .5)
-            self.button.position = (0, -.025 - 1 - (i * .025))
+            # self.button.position = (0, -.025 - 1 - (i * .025))
+            self.button.x = 0
             self.button.scale = (1, .025)
             self.button.color = color.gray
             self.button.text = str(i)
             self.button.text_entity.origin = (-.5,0)
 
-
+        self.layout_group.update_grid()
 
     #
     # def on_enable(self):

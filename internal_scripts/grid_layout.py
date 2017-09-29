@@ -25,6 +25,7 @@ class GridLayout():
 
         x = 0
         self.line_height = self.entity.children[0].scale_y + self.spacing[1]
+        print('lineheight', self.line_height)
 
         for i in range(min(len(self.entity.children) - 1, self.max_x - 1)):
             self.width += self.entity.children[i].scale_x + self.spacing[0]
