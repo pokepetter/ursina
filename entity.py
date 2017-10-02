@@ -298,6 +298,10 @@ class Entity(NodePath):
                 except:
                     print(class_instance, 'has no target variable')
 
+                name = module.__name__.split('.')
+                name = name[-1]
+                setattr(self, name, class_instance)
+
                 self.scripts.append(class_instance)
                 return class_instance
                 break

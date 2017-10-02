@@ -9,17 +9,19 @@ class EditorButton(Entity):
         super().__init__()
         self.name = 'editor_button'
         self.parent = scene.ui
+        self.is_editor = True
         self.model = 'quad'
         if self.model:
             self.model.setBin("fixed", 0)
             self.model.setDepthTest(0)
             self.model.setDepthWrite(0)
+            self.color = color.panda_button
         # self.texture = 'panda_button'
 
         self.collision = True
         self.collider = 'box'
         self.button_script = self.add_script('editor_button')
-        self.button_script.color = color.gray
+        self.button_script.color = color.panda_button
         self.text = ''
         self.text_entity = None
 
