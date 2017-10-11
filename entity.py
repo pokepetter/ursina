@@ -306,7 +306,6 @@ class Entity(NodePath):
                 return class_instance
                 break
             except Exception as e:
-                # print(e)
                 pass
 
         print("couldn't find script:", module_names)
@@ -346,4 +345,20 @@ class Entity(NodePath):
         #         # children_entities.append(c)
         #         print(c.__class__.__name__)
 
-        return children_entities
+        if len(children_entities) > 0:
+            return children_entities
+        else:
+            return None
+    # @property
+    # def descendants(self):
+    #     descendants = list()
+    #     for e in scene.entities:
+    #         if e.parent == self:
+    #             children_entities.append(e)
+    #
+    #     # for c in super().children:
+    #     #     if Entity in c.__class__.__subclasses__():
+    #     #         # children_entities.append(c)
+    #     #         print(c.__class__.__name__)
+    #
+    #     return children_entities

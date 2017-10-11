@@ -184,6 +184,45 @@ class Editor(Entity):
         print('inspector', self.inspector)
 
 
+        # testing
+        self.cube = Entity()
+        self.cube.name = 'cube'
+        # self.cube.model = 'cube'
+        # self.cube.color = color.red
+        self.cube.add_script('test')
+        self.selected = self.cube
+        random.seed(0)
+        for z in range(4):
+            for x in range(4):
+                c = Entity()
+                c.name = 'cube'
+                c.model = 'cube'
+                c.color = color.hsv_color(x * 30, 1, (z + 1) / 10)
+                c.parent = self.cube
+                c.position = (x, random.uniform(0, 1), z)
+                c.scale *= .95
+
+                d = Entity()
+                d.name = 'cube1'
+                d.model = 'cube'
+                d.parent = c
+                d.scale *= .2
+                d.y = 1
+
+
+        for e in scene.entities:
+            if e.has_ancestor(self.cube):
+                print(e.name + '_' + str(e.get_key()))
+                print('.parent = ' + e.parent.name + '_' + str(e.parent.get_key()))
+                print('.position = (' + str(e.x) + ', ' + str(e.y) + ', ' + str(e.z) + ')')
+                print('.rotation = (' + str(e.rotation[0]) + ', ' +  str(e.rotation[1]) + ', ' +  str(e.rotation[2]) + ')')
+                print('.scale = (' + str(e.scale[0]) + ', ' +  str(e.scale[1]) + ', ' +  str(e.scale[2]) + ')')
+                for s in e.scripts:
+                    print(e.name)
+
+            # print('d:', c.name)
+
+
 
     def update(self, dt):
         self.editor_camera_script.update(dt)

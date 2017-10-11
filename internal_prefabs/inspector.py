@@ -74,24 +74,7 @@ class Inspector(Entity):
         self.t = 0
 
 
-        #testing
-        cube = Entity()
-        cube.name = 'cube'
-        cube.model = 'cube'
-        cube.color = color.red
-        cube.add_script('grid_layout')
-        cube.add_script('test')
-        self.selected = cube
-        for i in range(8*8):
-            c = Entity()
-            c.parent = cube
-            c.y = random.randrange(0, 2)
-            c.name = 'cube'
-            c.model = 'cube'
-            c.color = color.red
-
-        cube.grid_layout.update_grid()
-        cube.rotation_x = 90
+        
 
 
     def update(self, dt):
