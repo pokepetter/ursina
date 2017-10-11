@@ -54,7 +54,7 @@ class TransformGizmo(Entity):
         # for moving stuff in side view
         if scene.editor.camera_pivot.rotation == (0,0,0) and self.dragging:
             if mouse.hovered_entity and mouse.hovered_entity.is_editor == False:
-                if mouse.delta[0] != 0 or mouse.delta[1] != 0:
+                if mouse.delta[0] is not 0 or mouse.delta[1] is not 0:
                     distance_to_camera = distance(
                         mouse.hovered_entity.getPos(camera.render),
                         camera.cam.getPos(camera.render)) * .2
@@ -119,7 +119,7 @@ class TransformGizmo(Entity):
         if key == 't':
             entities = list(scene.entities)
             for e in entities:
-                if not e.is_editor and e != camera and e != scene.ui:
+                if not e.is_editor and e is not camera and e is not scene.ui:
                     self.button = load_prefab('editor_button')
                     self.button.is_editor = True
                     self.button.parent = scene.render

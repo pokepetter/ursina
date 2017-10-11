@@ -29,7 +29,7 @@ if __name__ == '__main__':
     for y in range(int(image_height / char_height)):
         for x in range(int(image_width / char_width)):
             # print(char_names[i], x * char_width, y * char_height)
-            if char_names[i] != ' ' or i > len(chars_string):
+            if char_names[i] is not ' ' or i > len(chars_string):
                 rect = (x * char_width,
                         y * char_height,
                         (x * char_width) + char_width,

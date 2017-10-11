@@ -190,6 +190,8 @@ class Editor(Entity):
         # self.cube.model = 'cube'
         # self.cube.color = color.red
         self.cube.add_script('test')
+        # print(self.cube.scripts)
+        # return
         self.selected = self.cube
         random.seed(0)
         for z in range(4):
@@ -208,19 +210,62 @@ class Editor(Entity):
                 d.parent = c
                 d.scale *= .2
                 d.y = 1
+                d.color = color.orange
 
+        c.color = color.blue
+        self.parse(self.cube)
 
+    def parse(self, target):
+        break_outer = 0
+
+        entities_to_save = list()
+        entities_to_save.append(target)
         for e in scene.entities:
             if e.has_ancestor(self.cube):
-                print(e.name + '_' + str(e.get_key()))
-                print('.parent = ' + e.parent.name + '_' + str(e.parent.get_key()))
-                print('.position = (' + str(e.x) + ', ' + str(e.y) + ', ' + str(e.z) + ')')
-                print('.rotation = (' + str(e.rotation[0]) + ', ' +  str(e.rotation[1]) + ', ' +  str(e.rotation[2]) + ')')
-                print('.scale = (' + str(e.scale[0]) + ', ' +  str(e.scale[1]) + ', ' +  str(e.scale[2]) + ')')
-                for s in e.scripts:
-                    print(e.name)
+                entities_to_save.append(e)
 
-            # print('d:', c.name)
+        for e in entities_to_save:
+            prefix = e.name + '_' + str(e.get_key())
+
+            color_str = ('(' + str(e.color[0]) + ', '
+                            + str(e.color[1]) + ', '
+                            + str(e.color[2]) + ', '
+                            + str(e.color[3]) + ')')
+
+            palette = [item for item in dir(color) if not item.startswith('__')]
+            for colorname in palette:
+                if getattr(color, colorname) == e.color:
+                    color_str = 'color.' + colorname
+                    break
+
+            print(prefix + ' = Entity()' + '\n'
+                + prefix + '.enabled = ' + str(e.enabled) + '\n'
+                + prefix + '.is_editor = ' + str(e.is_editor) + '\n'
+                + prefix + '.name = ' + '\'' + str(e.name) + '\'' + '\n'
+                + prefix + '.parent = ' + e.parent.name + '_' + str(e.parent.get_key()) + '\n'
+                + prefix + '.model = ' + str(e.model) + '\n'
+                + prefix + '.color = ' + color_str + '\n'
+                + prefix + '.texture = ' + str(e.texture) + '\n'
+                + prefix + '.collision = ' + str(e.collision) + '\n'
+                + prefix + '.collider = ' + str(e.collider) + '\n'
+
+                + prefix + '.origin = (' + str(e.origin[0]) + ', ' +  str(e.origin[1]) + ', ' +  str(e.origin[2]) + ')' + '\n'
+                + prefix + '.position = (' + str(e.position[0]) + ', ' +  str(e.position[1]) + ', ' +  str(e.position[2]) + ')' + '\n'
+                + prefix + '.rotation = (' + str(e.rotation[0]) + ', ' +  str(e.rotation[1]) + ', ' +  str(e.rotation[2]) + ')' + '\n'
+                + prefix + '.scale = (' + str(e.scale[0]) + ', ' +  str(e.scale[1]) + ', ' +  str(e.scale[2]) + ')' + '\n'
+                )
+            for s in e.scripts:
+                script_prefix = prefix + '_' + str(s.__class__.__name__).lower()
+                print(script_prefix + ' = ' + prefix + '.add_script(\'' + s.__class__.__name__ + '\')')
+                scripts_vars = [item for item in dir(s) if not item.startswith('_')]
+                for var in scripts_vars:
+                    print('var:', var)
+                    # if getattr(color, colorname) == e.color:
+                break_outer = 1
+                break
+
+            if break_outer:
+                break
 
 
 
@@ -230,8 +275,8 @@ class Editor(Entity):
         # self.inspector.update(dt)
 
     def input(self, key):
-        # if key == 'i':
-        #     self.entity_list.populate()
+        if key == 'i':
+            self.parse()
 
         if key == 'h':
             self.show_colliders = not self.show_colliders
@@ -283,9 +328,9 @@ class Editor(Entity):
     def on_disable(self):
         self.transform_gizmo.enabled = False
         self.grid.enabled = False
-        self.visible = False
+        # self.enabled = False
 
     def on_enable(self):
-        self.visible = True
+        # self.enabled = True
         self.transform_gizmo.enabled = True
         self.grid.enabled = True

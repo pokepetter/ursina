@@ -21,18 +21,16 @@ class Entity(NodePath):
     def __init__(self):
         super().__init__('empty')
         self.enabled = True
-        self.visible = True
         self.is_editor = False
-        self.type = 'Entity'
-        # self.prefab_name = None
         self.name = 'entity'
         self.parent = scene.render
-        self.scripts = list()
         self.model = None
+        self.color = color.white
         self.texture = None
-        self.color = color.gray
         self.collision = False
         self.collider = None
+        self.scripts = list()
+        # self.prefab_name = None
         self.hovered = False
 
         self.origin = (0,0,0)
@@ -46,7 +44,6 @@ class Entity(NodePath):
         self.rotation = (0,0,0)
         self.rotation_x, self.rotation_y, self.rotation_z = 0, 0, 0
 
-        self.setting_scale = 0
         self.scale = Vec3(1,1,1)
         self.scale_x, self.scale_y, self.scale_z = 1, 1, 1
 
@@ -58,6 +55,8 @@ class Entity(NodePath):
             super().__setattr__(name, value)
         except:
             pass
+            # print('failed to sett attribiute:', name)
+
         if name == 'enabled':
             try:
                 # try calling on_enable() on classes inheriting from Entity
@@ -66,26 +65,19 @@ class Entity(NodePath):
                 else:
                     self.on_disable()
             except:
-                self.visible = value
+                pass
 
-        if name == 'visible':
-            try:
-                if value == False:
-                    self.hide()
-                    self.collider.stash()
-                    # self.collider.node_path.setTangible(0)
-                else:
-                    self.show()
-                    self.collider.unstash()
-                    # self.collider.node_path.setTangible(1)
-            except:
-                pass # no model
+            if value == 1:
+                if not self.is_singleton():
+                    self.unstash()
+            else:
+                self.stash()
 
-        if name == 'parent' and value != None:
+        if name == 'parent' and value is not None:
             self.reparentTo(value)
 
         if name == 'model':
-            if value == None:
+            if value is None:
                 return None
 
             # self.model = None
@@ -112,9 +104,11 @@ class Entity(NodePath):
             else:
                 print('no model with name:', combined_path)
 
-        if name == 'color':
+        if name == 'color' and value is not None:
             if self.model:
                 self.model.setColorScale(value)
+                object.__setattr__(self, name, value)
+
         if name == 'texture':
             if self.model:
                 try:
@@ -142,7 +136,6 @@ class Entity(NodePath):
 
         if name == 'position':
             # automatically add position instead of extending the tuple
-            # print(value)
             new_value = Vec3()
 
             if len(value) % 2 == 0:
@@ -163,8 +156,7 @@ class Entity(NodePath):
                 object.__setattr__(self, 'y', new_value[1])
                 object.__setattr__(self, 'z', new_value[2])
             except:
-                pass #cant set position
-
+                pass    # can't set position
 
         if name == 'x': self.position = (value, self.position[1], self.position[2])
         if name == 'y': self.position = (self.position[0], value, self.position[2])
@@ -185,17 +177,15 @@ class Entity(NodePath):
                     new_value.addY(value[i+1])
                     new_value.addZ(value[i+2])
 
-            self.model.setPos(-new_value[0],
-                                -new_value[2],
-                                -new_value[1])
+            self.model.setPos(-new_value[0], -new_value[2], -new_value[1])
             object.__setattr__(self, name, new_value)
 
         if name == 'rotation':
             try:
                 # convert value from hpr to axis
-                value = (value[2] , value[0], value[1])
+                value = (value[2], value[0], value[1])
                 self.setHpr(value)
-                object.__setattr__(self, name, (value[1] , value[2], value[0]))
+                object.__setattr__(self, name, (value[1], value[2], value[0]))
                 object.__setattr__(self, 'rotation_x', value[0])
                 object.__setattr__(self, 'rotation_y', value[1])
                 object.__setattr__(self, 'rotation_z', value[2])
@@ -235,13 +225,13 @@ class Entity(NodePath):
         if name == 'scale_z': self.scale = (self.scale[0], self.scale[1], value)
 
 
-        if name == 'collider' and value != None:
+        if name == 'collider' and value is not None:
             collider = Collider()
             collider.entity = self
             collider.make_collider()
             object.__setattr__(self, name, collider)
 
-        if name == 'editor_collider' and value != None:
+        if name == 'editor_collider' and value is not None:
             editor_collider = Collider()
             editor_collider.entity = self
             editor_collider.make_collider()
@@ -330,8 +320,9 @@ class Entity(NodePath):
                 p = p.parent
 
     # @property
-    # def parent(self):
-    #     return super().parent
+    # def color(self):
+    #     print('getting color')
+    #     return self.model.getColorScale()
 
     @property
     def children(self):
@@ -339,11 +330,6 @@ class Entity(NodePath):
         for e in scene.entities:
             if e.parent == self:
                 children_entities.append(e)
-
-        # for c in super().children:
-        #     if Entity in c.__class__.__subclasses__():
-        #         # children_entities.append(c)
-        #         print(c.__class__.__name__)
 
         if len(children_entities) > 0:
             return children_entities
