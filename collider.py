@@ -51,7 +51,7 @@ class Collider(NodePath):
     #
 
 
-        # if name == 'parent' and value != None:
+        # if name == 'parent' and value is not None:
         #     self.reparentTo(value)
 
     #         self.collision_node = value.model.attachNewNode(BulletRigidBodyNode('Bullet'))

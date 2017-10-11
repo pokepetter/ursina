@@ -52,7 +52,7 @@ def save_scene(name):
         scene_entity.name = name
 
     for e in scene.entities:
-        if not e.is_editor and e.parent == scene.render and e != scene_entity:
+        if not e.is_editor and e.parent == scene.render and e is not scene_entity:
             print(e)
             e.parent = parent_entity
     save_prefab(scene_entity, name)

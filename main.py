@@ -17,7 +17,7 @@ class PandaEditor(ShowBase):
 
         window.load_defaults()
 
-        #camera
+        # camera
         camera.base = base
         camera.cam = base.camera
         camera.cam.reparentTo(camera)
@@ -63,7 +63,6 @@ class PandaEditor(ShowBase):
 
         win.setClearColor(color.dark_gray)
 
-
         # input
         base.buttonThrowers[0].node().setButtonDownEvent('buttonDown')
         base.buttonThrowers[0].node().setButtonUpEvent('buttonUp')
@@ -86,7 +85,6 @@ class PandaEditor(ShowBase):
         base.disableMouse()
         mouse.mouse_watcher = base.mouseWatcherNode
         mouse.enabled = True
-
 
         scene.editor = load_script('editor')
 
@@ -114,7 +112,7 @@ class PandaEditor(ShowBase):
         return Task.cont
 
     def input_up(self, key):
-        if key != 'wheel_up' and key != 'wheel_down':
+        if key is not 'wheel_up' and key is not 'wheel_down':
             key += ' up'
             self.input(key)
 

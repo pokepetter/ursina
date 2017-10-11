@@ -212,16 +212,27 @@ class Editor(Entity):
 
         for e in scene.entities:
             if e.has_ancestor(self.cube):
-                print(e.name + '_' + str(e.get_key()))
-                print('.parent = ' + e.parent.name + '_' + str(e.parent.get_key()))
-                print('.position = (' + str(e.x) + ', ' + str(e.y) + ', ' + str(e.z) + ')')
-                print('.rotation = (' + str(e.rotation[0]) + ', ' +  str(e.rotation[1]) + ', ' +  str(e.rotation[2]) + ')')
-                print('.scale = (' + str(e.scale[0]) + ', ' +  str(e.scale[1]) + ', ' +  str(e.scale[2]) + ')')
+                prefix = e.name + '_' + str(e.get_key())
+                # if color.palette.contains(e.color)
+
+                print(prefix + ' = Entity()' + '\n'
+                    + prefix + '.enabled = ' + str(e.enabled) + '\n'
+                    + prefix + '.is_editor = ' + str(e.is_editor) + '\n'
+                    + prefix + '.name = ' + '\'' + str(e.name) + '\'' + '\n'
+                    + prefix + '.parent = ' + e.parent.name + '_' + str(e.parent.get_key()) + '\n'
+                    + prefix + '.model = ' + str(e.model) + '\n'
+                    + prefix + '.color = ' + str(e.color) + '\n'
+                    + prefix + '.texture = ' + str(e.texture) + '\n'
+                    + prefix + '.collision = ' + str(e.collision) + '\n'
+                    + prefix + '.collider = ' + str(e.collider) + '\n'
+
+                    + prefix + '.origin = (' + str(e.origin[0]) + ', ' +  str(e.origin[1]) + ', ' +  str(e.origin[2]) + ')' + '\n'
+                    + prefix + '.position = (' + str(e.position[0]) + ', ' +  str(e.position[1]) + ', ' +  str(e.position[2]) + ')' + '\n'
+                    + prefix + '.rotation = (' + str(e.rotation[0]) + ', ' +  str(e.rotation[1]) + ', ' +  str(e.rotation[2]) + ')' + '\n'
+                    + prefix + '.scale = (' + str(e.scale[0]) + ', ' +  str(e.scale[1]) + ', ' +  str(e.scale[2]) + ')' + '\n'
+                    )
                 for s in e.scripts:
                     print(e.name)
-
-            # print('d:', c.name)
-
 
 
     def update(self, dt):
@@ -283,9 +294,9 @@ class Editor(Entity):
     def on_disable(self):
         self.transform_gizmo.enabled = False
         self.grid.enabled = False
-        self.visible = False
+        # self.enabled = False
 
     def on_enable(self):
-        self.visible = True
+        # self.enabled = True
         self.transform_gizmo.enabled = True
         self.grid.enabled = True
