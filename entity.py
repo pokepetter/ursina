@@ -26,6 +26,7 @@ class Entity(NodePath):
         self.parent = scene.render
         self.model = None
         self.color = color.white
+        self.color = color.gray
         self.texture = None
         self.collision = False
         self.collider = None
@@ -318,11 +319,6 @@ class Entity(NodePath):
                     return True
                     break
                 p = p.parent
-
-    # @property
-    # def color(self):
-    #     print('getting color')
-    #     return self.model.getColorScale()
 
     @property
     def children(self):
