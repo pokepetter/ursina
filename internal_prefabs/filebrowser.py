@@ -49,29 +49,30 @@ class Filebrowser(Entity):
                         button.text_entity.origin = (-.5, 0)
                         self.buttons.append(button)
                         # if self.path.endswith('textures'):
-                        print(self.button_type)
+                        # print(self.button_type)
                         self.load_button = button.add_script(self.button_type)
                         self.load_button.path = os.path.join(self.path, f)
                         print(self.load_button.path)
 
                         y += 1
-                        if y >= self.max_vertical:
+                        if y > self.max_vertical:
                             y = 0
                             x += 1
 
-        self.x = - ((x) * self.button_size[0])
-        self.y = ((y) * self.button_size[1])
+        self.x = - ((x + 1) * self.button_size[0]) / 2.0
+        self.y = ((y) * self.button_size[1]) / 2
 
         self.close_button = load_prefab('editor_button')
         self.close_button.name = 'close_button'
         self.close_button.is_editor = True
         self.close_button.parent = self
-        self.close_button.origin = (.5, -.5)
-        self.close_button.position = ((x) * self.button_size[0] , 0)
-        self.close_button.scale = (self.button_size[1], self.button_size[1])
-        self.close_button.color = color.red
-        self.close_button.text = 'x'
+        self.close_button.position = (0, 0, 10)
+        self.close_button.scale *= 10
+        self.close_button.color = color.black33
+        self.close_button.button_script.highlight_color = color.black33
+        # self.close_button.text = 'x'
         self.close_button.text_entity.x = 0
+        self.buttons.append(self.close_button)
         menu_toggler = self.close_button.add_script('menu_toggler')
         menu_toggler.target = self
 

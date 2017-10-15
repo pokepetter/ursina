@@ -44,6 +44,16 @@ class Editor(Entity):
         self.layout_group = self.toolbar.add_script('grid_layout')
         self.layout_group.origin = (.0, .5)
 
+# new scene
+        self.new_scene_button = load_prefab('editor_button')
+        self.new_scene_button.is_editor = True
+        self.new_scene_button.parent = self.toolbar
+        self.new_scene_button.name = 'new_scene_button'
+        self.new_scene_button.scale = (.03, .03)
+        self.new_scene_button.color = color.panda_button
+        self.new_scene_button.text = 'scene'
+        self.new_scene_button.text_entity.origin = (0,0)
+        # self.menu_toggler = self.new_scene_button.add_script('menu_toggler')
 
 # load scene
         self.load_scene_button = load_prefab('editor_button')

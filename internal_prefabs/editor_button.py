@@ -12,9 +12,6 @@ class EditorButton(Entity):
         self.is_editor = True
         self.model = 'quad'
         if self.model:
-            self.model.setBin("fixed", 0)
-            self.model.setDepthTest(0)
-            self.model.setDepthWrite(0)
             self.color = color.panda_button
         # self.texture = 'panda_button'
 
