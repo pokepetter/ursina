@@ -30,10 +30,8 @@ import color
 from internal_scripts import *
 # from internal_scenes import *
 from internal_prefabs import *
-sys.path.append("..")
-from scripts import *
-# from scenes import *
-# from prefabs import *
+
+
 
 
 
@@ -60,28 +58,101 @@ def save_scene(name):
         # if e.parent = parent_entity
 
 
-def save_prefab(entity, name):
-    default_entity = Entity()
-    default_entity.name = 'default_entity'
-    defaults = default_entity.__dict__
-    destroy(default_entity)
-    attributes_to_ignore = (
-        'x', 'y', 'z',
-        'rotation_x', 'rotation_y', 'rotation_z',
-        'scale_x', 'scale_y', 'scale_z')
-    for to_ignore in attributes_to_ignore:
-        del defaults[to_ignore]
+def save_prefab(target, folder='prefabs'):
+    prefab_path = os.path.join(
+        os.path.dirname(scene.asset_folder),
+        'scenes',
+        target.name + '_' + str(target.get_key()) + '.py')
 
-    print(entity.children)
+    with open(prefab_path, 'w') as file:
 
-        # instance_attributes = e.__dict__
-        # print('self.entity.name = ' + e.name)
-        # for a in instance_attributes:
-        #     value = instance_attributes.get(a)
-        #     if not value == defaults.get(a):
-        #         print('self.entity.' + str(a), ' = ', value)
+        file.write('import sys\n')
+        file.write('sys.path.append("..")\n')
+        file.write('from pandaeditor import *\n\n')
 
-# folders = list()
+        file.write('class ' + target.name.title() + '_' + str(target.get_key()) + '(Entity):\n\n')
+        file.write('    def __init__(self):\n')
+        file.write('        super().__init__()\n')
+
+        entities_to_save = list()
+        entities_to_save.append(target)
+        for e in scene.entities:
+            if e.has_ancestor(target):
+                entities_to_save.append(e)
+
+        for e in entities_to_save:
+            if e is target:
+                prefix = '        self'
+            else:
+                prefix = '        self.' + e.name + '_' + str(e.get_key())
+
+            color_str = ('(' + str(e.color[0]) + ', '
+                            + str(e.color[1]) + ', '
+                            + str(e.color[2]) + ', '
+                            + str(e.color[3]) + ')')
+
+            palette = [item for item in dir(color) if not item.startswith('__')]
+            for colorname in palette:
+                if getattr(color, colorname) == e.color:
+                    color_str = 'color.' + colorname
+                    break
+
+            if e is not target:
+                file.write(prefix + ' = Entity()' + '\n')
+
+
+            parent_str = 'self.' + e.parent.name + '_' + str(e.parent.get_key())
+            if parent_str == 'render_2':
+                parent_str = 'camera.render'
+            if e.parent == target:
+                parent_str = 'self'
+
+
+            file.write(prefix + '.enabled = ' + str(e.enabled) + '\n'
+                + prefix + '.is_editor = ' + str(e.is_editor) + '\n'
+                + prefix + '.name = ' + '\'' + str(e.name) + '\'' + '\n'
+                + prefix + '.parent = ' + parent_str + '\n')
+
+            if e.model:
+                file.write(prefix + '.model = ' + '\'' + os.path.basename(str(e.model))[:4] + '\'' + '\n')
+            if e.color:
+                file.write(prefix + '.color = ' + color_str + '\n')
+            if e.texture:
+                file.write(prefix + '.texture = ' + str(e.texture) + '\n')
+
+            file.write(prefix + '.collision = ' + str(e.collision) + '\n')
+            if e.collider:
+                file.write(prefix + '.collider = ' + str(e.collider) + '\n')
+
+            file.write(
+                prefix + '.origin = (' + str(e.origin[0]) + ', ' +  str(e.origin[1]) + ', ' +  str(e.origin[2]) + ')' + '\n'
+                + prefix + '.position = (' + str(e.position[0]) + ', ' +  str(e.position[1]) + ', ' +  str(e.position[2]) + ')' + '\n'
+                + prefix + '.rotation = (' + str(e.rotation[0]) + ', ' +  str(e.rotation[1]) + ', ' +  str(e.rotation[2]) + ')' + '\n'
+                + prefix + '.scale = (' + str(e.scale[0]) + ', ' +  str(e.scale[1]) + ', ' +  str(e.scale[2]) + ')' + '\n'
+                )
+
+            for s in e.scripts:
+                if e is target:
+                    script_prefix = prefix + '.' + str(s.__class__.__name__).lower()
+                else:
+                    script_prefix = prefix + '_' + str(s.__class__.__name__).lower()
+
+                file.write(script_prefix + ' = ' + prefix[8:] + '.add_script(\'' + s.__class__.__name__ + '\')\n')
+                scripts_vars = [item for item in dir(s) if not item.startswith('_')]
+                for var in scripts_vars:
+                    varvalue = getattr(s, var)
+
+                    if not varvalue:
+                        continue
+
+                    if varvalue.__class__ == Entity:
+                        if varvalue == target:
+                            varvalue = 'self'
+                        else:
+                            varvalue = str(varvalue.name) + '_' + str(varvalue.get_key())
+
+                    file.write(script_prefix + '.' + var + ' = ' + str(varvalue) + '\n')
+
 
 def load_prefab(module_name):
     folders = ('internal_prefabs.', '..prefabs.')
@@ -98,11 +169,30 @@ def load_prefab(module_name):
     return prefab
 
 def load_scene(module_name):
-    scene.clear()
-    importlib.reload(importlib.import_module('..scenes.' + module_name))
-    print('loaded scene:', module_name)
-    folders = ('..scenes.')
-    return load(folders, module_name)
+    # scene.clear()
+    omn = module_name
+    module_name += '.py'
+    module_names = (os.path.join(os.path.dirname(__file__), module_name),
+                    os.path.join(os.path.dirname(os.path.dirname(__file__)), 'scenes', module_name))
+
+    for module_name in module_names:
+        try:
+            module = importlib.machinery.SourceFileLoader(omn, module_name).load_module()
+            class_names = inspect.getmembers(sys.modules[omn], inspect.isclass)
+            for cn in class_names:
+                if cn[1].__module__ == module.__name__:
+                    class_name = cn[0]
+            class_ = getattr(module, class_name)
+            class_instance = class_()
+            class_instance.parent = scene.render
+            print('found scene!')
+            print(scene.entities)
+            return class_instance
+            break
+        except Exception as e:
+            print(e)
+
+    print("couldn't find scene:", omn)
 
 def load_script(module_name):
     folders = ('internal_scripts.', '..scripts.')
@@ -127,7 +217,7 @@ def load(folders, module_name):
             pass
 
     if not module:
-        # print(module_name, 'not found')
+        print(module_name, 'not found')
         return
     # else:
     #     print('class:', inspect.getmembers(sys.modules[module.__name__], inspect.isclass)[0])

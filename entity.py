@@ -269,15 +269,16 @@ class Entity(NodePath):
             self.scripts.append(class_instance)
             return class_instance
 
-        module_names = (module_name,
-                        'internal_scripts.' + module_name,
-                        '..scripts.' + module_name)
-                        # 'scenes.' + module_name,
-                        # 'prefabs.' + module_name)
+        omn = module_name
+        module_name += '.py'
+        module_names = (path.join(path.dirname(__file__), module_name),
+                        path.join(path.dirname(__file__), 'internal_scripts' , module_name),
+                        path.join(path.dirname(path.dirname(__file__)), 'scripts', module_name))
+
         for module_name in module_names:
             try:
-                module = importlib.import_module(module_name)
-                class_names = inspect.getmembers(sys.modules[module_name], inspect.isclass)
+                module = importlib.machinery.SourceFileLoader(omn, module_name).load_module()
+                class_names = inspect.getmembers(sys.modules[omn], inspect.isclass)
                 for cn in class_names:
                     if cn[1].__module__ == module.__name__:
                         class_name = cn[0]

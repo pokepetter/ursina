@@ -24,13 +24,21 @@ class Scene(NodePath):
     def clear(self):
         print('clearing scene')
         for e in self.entities:
-            try: e.model.removeNode()
-            except: pass
-            try: e.removeNode()
-            except: pass
-            del e
+            if (e.has_ancestor(self.editor)
+            or e is self.camera
+            or e is self.editor
+            or e is self.ui
+            or e is self.editor.grid):
+                pass
+            else:
+                # print(e)
+                try: e.model.removeNode()
+                except: pass
+                try: e.removeNode()
+                except: pass
+                del e
 
-        self.entities = []
+                self.entities.remove(e)
         print('entities', self.entities)
 
 
