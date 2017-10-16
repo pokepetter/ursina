@@ -14,11 +14,14 @@ class LoadTextureButton():
                 entity.name = os.path.basename(self.path)
                 entity.model = 'quad'
                 entity.texture = self.path
-                entity.scale = (entity.texture.getOrigFileXSize() / 100,
-                                entity.texture.getOrigFileYSize() / 100,
+                entity.scale = (entity.texture.getOrigFileXSize() / 1000,
+                                entity.texture.getOrigFileYSize() / 1000,
                                 1)
                 entity.collision = True
                 button_script = entity.add_script('editor_button')
                 button_script.collider = None
                 entity.editor_collider = 'box'
                 scene.editor.entity_list.populate()
+
+                if scene.editor.ui_canvas:
+                    entity.parent = scene.editor.ui_canvas

@@ -169,7 +169,7 @@ def load_prefab(module_name):
     return prefab
 
 def load_scene(module_name):
-    # scene.clear()
+    scene.clear()
     omn = module_name
     module_name += '.py'
     module_names = (os.path.join(os.path.dirname(__file__), module_name),

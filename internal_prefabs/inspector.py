@@ -13,7 +13,7 @@ class Inspector(Entity):
         self.model = 'quad'
         self.color = color.panda_button
         self.origin = (.5, .5)
-        self.position = (.5, .45)
+        self.position = (window.upper_right[0], .45)
         self.scale = (.15, .9)
 
         # append self so update() runs
@@ -74,7 +74,7 @@ class Inspector(Entity):
         self.t = 0
 
 
-        
+
 
 
     def update(self, dt):

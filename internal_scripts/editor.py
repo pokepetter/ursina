@@ -40,7 +40,7 @@ class Editor(Entity):
         self.toolbar = Entity()
         self.toolbar.parent = self
         self.toolbar.origin = (0, .5)
-        self.toolbar.position = (0, .5)
+        self.toolbar.position = window.top
         self.layout_group = self.toolbar.add_script('grid_layout')
         self.layout_group.origin = (.0, .5)
 
@@ -156,24 +156,22 @@ class Editor(Entity):
         self.filebrowser.button_type = 'load_texture_button'
         self.menu_toggler.target = self.filebrowser
 
-
         self.layout_group.update_grid()
-
-
-        # self.test = Entity()
-        # self.test.model = 'cube'
-        # self.test.color = color.orange
-        # self.test.name = 'yolo'
-        # button_script = self.test.add_script('editor_button')
-        # # button_script.collider = None
-        # self.test.editor_collider = 'box'
-
 
 # entity list
         self.entity_list = load_prefab('entity_list')
         self.entity_list.is_editor = True
         self.entity_list.parent = self
+        self.entity_list.position = window.left
         self.entity_list.populate()
+
+        self.ui_canvas = Entity()
+        # self.ui_canvas.parent = camera.ui
+        self.ui_canvas.scale = (1, 1)
+        self.ui_canvas.model = 'canvas'
+        self.ui_canvas.color = color.white33
+        self.ui_canvas.add_script('canvas')
+
 
 # 2D / 3D toggle
         self.toggle_button = load_prefab('editor_button')
@@ -276,6 +274,17 @@ class Editor(Entity):
                         e.collider.unstash()
                     except:
                         pass
+
+                    try:
+                        e.start()
+                    except:
+                        pass
+                    for s in e.scripts:
+                        try:
+                            print('script:', s)
+                            s.start()
+                        except:
+                            pass
 
 
 

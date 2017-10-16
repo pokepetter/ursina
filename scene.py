@@ -28,7 +28,8 @@ class Scene(NodePath):
             or e is self.camera
             or e is self.editor
             or e is self.ui
-            or e is self.editor.grid):
+            or e is self.editor.grid
+            or e.is_editor):
                 pass
             else:
                 # print(e)

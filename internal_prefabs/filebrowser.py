@@ -70,8 +70,6 @@ class Filebrowser(Entity):
         self.close_button.scale *= 10
         self.close_button.color = color.black33
         self.close_button.button_script.highlight_color = color.black33
-        # self.close_button.text = 'x'
-        self.close_button.text_entity.x = 0
         self.buttons.append(self.close_button)
         menu_toggler = self.close_button.add_script('menu_toggler')
         menu_toggler.target = self

@@ -19,7 +19,3 @@ class UI():
         myRender2d.setDepthWrite(False)
         myCamera2d.reparentTo(myRender2d)
         dr.setCamera(myCamera2d)
-
-    def input(self, key):
-        if key == 'x':
-            scene.clear()

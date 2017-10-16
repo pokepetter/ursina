@@ -14,6 +14,7 @@ class Window(WindowProperties):
 
         self.setForeground(True)
 
+
         # self.fullscreen = False
         # self.set_cursor_hidden(True)
         # self.setCursorFilename(Filename.binaryFilename(cursorFile))
@@ -34,6 +35,16 @@ class Window(WindowProperties):
         self.fps_counter = True
         self.vsync = True
 
+        self.aspect_ratio = self.size[0] / self.size[1]
+        self.left = (-self.aspect_ratio / 2, 0)
+        self.right = (self.aspect_ratio / 2, 0)
+        self.top = (0, .5)
+        self.bottom = (0, .5)
+        self.center = (0, 0)
+        self.upper_left = (-self.aspect_ratio / 2, .5)
+        self.upper_right = (self.aspect_ratio / 2, .5)
+        self.lower_left = (-self.aspect_ratio / 2, -.5)
+        self.lower_right = (self.aspect_ratio / 2, -.5)
 
     def __setattr__(self, name, value):
         if not scene.base:
