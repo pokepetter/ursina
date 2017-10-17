@@ -87,6 +87,9 @@ class TransformGizmo(Entity):
             # self.original_transforms.clear()
             # self.original_position = self.entity.position
 
+            elif not mouse.hovered_entity:
+                scene.editor.selection.clear()
+
             if mouse.hovered_entity == self.move_gizmo_x:
                 self.dragging_x = True
                 # for selected in self.selection:

@@ -13,8 +13,11 @@ class Inspector(Entity):
         self.model = 'quad'
         self.color = color.panda_button
         self.origin = (.5, .5)
-        self.position = (window.upper_right[0], .45)
-        self.scale = (.15, .9)
+        self.position = window.upper_right
+        self.y -= .06
+        self.scale = (.2, .9)
+
+        self.script_amount = 0
 
         # append self so update() runs
         self.scripts.append(self)
@@ -61,6 +64,17 @@ class Inspector(Entity):
         self.add_script_button.text = 'add script'
         self.add_script_button.text_entity.origin = (-.5,0)
         self.add_script_button.text_entity.x = -.45
+        self.menu_toggler = self.add_script_button.add_script('menu_toggler')
+
+        self.filebrowser = load_prefab('filebrowser')
+        self.filebrowser.is_editor = True
+        self.filebrowser.parent = scene.ui
+        self.filebrowser.position = (0, 0)
+        self.filebrowser.enabled = False
+        self.filebrowser.file_types = ('.py')
+        self.filebrowser.path = os.path.join(os.path.dirname(scene.asset_folder), 'scripts')
+        self.filebrowser.button_type = 'add_script_button'
+        self.menu_toggler.target = self.filebrowser
 
 
         self.layout_group = self.add_script('grid_layout')
@@ -79,7 +93,7 @@ class Inspector(Entity):
 
     def update(self, dt):
         self.t += 1
-        if self.t > 50:
+        if self.t > 10:
             # print('updating inspector')
             self.update_inspector()
             self.t = 0
@@ -89,9 +103,15 @@ class Inspector(Entity):
         #     self.visible = False
 
     def update_inspector(self):
-        # if len(scene.editor.selection) == 0:
-        #     return
-        # self.selected = scene.editor.selection[0]
+
+        if len(scene.editor.selection) == 0:
+            self.x = 1.2
+            return
+        else:
+            self.position = (window.upper_right[0], window.upper_right[1] - .06)
+
+        self.selected = scene.editor.selection[0]
+
         self.name_label.text = self.selected.name
         self.transform_labels[0].text = str(int(self.selected.x))
         self.transform_labels[1].text = str(int(self.selected.y))
@@ -104,41 +124,25 @@ class Inspector(Entity):
         self.transform_labels[8].text = str(int(self.selected.scale_z))
 
 
-    # def draw_scripts(self):
-        # for b in self.script_buttons:
+        if len(self.selected.scripts) != self.script_amount:
+            self.script_amount = len(self.selected.scripts)
 
+            for e in self.scripts_label.children:
+                try:
+                    destroy(e)
+                except:
+                    pass
 
-        # for s in self.selected.scripts:
-        #     self.button = load_prefab('editor_button')
-        #     self.button.parent = self.scripts_label
-        #     self.button.name = 'x'
-        #
-        #
-        #     if visible_script.contains(s.__class__):
-        #         for attr in s:
-        for e in self.scripts_label.children:
-            destroy(e)
+            for i in range(len(self.selected.scripts)):
+                print('script:', self.selected.scripts[i].__class__.__name__)
+                self.button = load_prefab('editor_button')
+                self.button.parent = self.scripts_label
+                self.button.origin = (.5, .5)
+                self.button.position = (.1, - i - 1)
+                self.button.scale = (1, 1)
+                self.button.color = color.red
+                self.button.text = self.selected.scripts[i].__class__.__name__
+                self.button.text_entity.origin = (-.5,0)
+                self.button.text_entity.x = -.5
 
-        for i in range(len(self.selected.scripts)):
-            # print('script:', self.selected.scripts[i].__class__.__name__)
-            self.button = load_prefab('editor_button')
-            self.button.parent = self.scripts_label
-            self.button.origin = (.5, .5)
-            self.button.position = (.1, - i - 1)
-            self.button.scale = (1, 1)
-            self.button.color = color.red
-            self.button.text = self.selected.scripts[i].__class__.__name__
-            self.button.text_entity.origin = (-.5,0)
-            self.button.text_entity.x = -.5
-
-
-        self.add_script_button.y = -.5
-
-
-    #
-    # def on_enable(self):
-    #     print('enable')
-    #     self.visible = True
-    #
-    # def on_disable(self):
-    #     self.visible = False
+                self.add_script_button.y = -.5

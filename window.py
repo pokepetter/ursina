@@ -25,7 +25,7 @@ class Window(WindowProperties):
         self.title = 'pandaeditor'
 
         self.fullscreen_size = (1921, 1081)
-        self.windowed_size = (1920 / 1.75, 1080 / 1.75)
+        self.windowed_size = (1920 / 1.25, 1080 / 1.25)
         self.size = self.windowed_size
 
         self.borderless = True

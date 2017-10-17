@@ -29,35 +29,54 @@ class Filebrowser(Entity):
         x = 0
         for f in self.files:
             print('file:', f)
-            if self.file_types:
-                for file_type in self.file_types:
-                    if f.endswith(file_type) or file_type == '':
-                        button = load_prefab('editor_button')
-                        button.is_editor = True
-                        button.parent = self
-                        button.origin = (-.5, .5)
-                        button.position = (
-                            x * (self.button_size[0]),
-                            (-y * (self.button_size[1])))
-                        button.scale = self.button_size
-                        button.color = color.panda_button
-                        menu_toggler = button.add_script('menu_toggler')
-                        menu_toggler.target = self
-                        # button.text = os.path.basename(f)
-                        button.text = f
-                        button.text_entity.position = (-.45, 0)
-                        button.text_entity.origin = (-.5, 0)
-                        self.buttons.append(button)
-                        # if self.path.endswith('textures'):
-                        # print(self.button_type)
-                        self.load_button = button.add_script(self.button_type)
-                        self.load_button.path = os.path.join(self.path, f)
-                        print(self.load_button.path)
+            if f.startswith('__'):
+                continue
 
-                        y += 1
-                        if y > self.max_vertical:
-                            y = 0
-                            x += 1
+            for file_type in self.file_types:
+                if f.endswith(file_type) or file_type == '':
+                    button = load_prefab('editor_button')
+                    button.is_editor = True
+                    button.parent = self
+                    button.origin = (-.5, .5)
+                    button.position = (
+                        x * (self.button_size[0]),
+                        (-y * (self.button_size[1])))
+                    button.scale = self.button_size
+                    button.color = color.panda_button
+                    menu_toggler = button.add_script('menu_toggler')
+                    menu_toggler.target = self
+                    button.text = os.path.basename(f)
+                    button.text_entity.position = (-.45, 0)
+                    button.text_entity.origin = (-.5, 0)
+                    self.buttons.append(button)
+                    self.load_button = button.add_script(self.button_type)
+                    self.load_button.path = os.path.join(self.path, f)
+                    # print(self.load_button.path)
+
+                    y += 1
+                    if y > self.max_vertical:
+                        y = 0
+                        x += 1
+
+        # special case for script browser, add 'new script' button
+        if self.button_type == 'add_script_button':
+            button = load_prefab('editor_button')
+            button.is_editor = True
+            button.parent = self
+            button.origin = (-.5, .5)
+            button.position = (
+                x * (self.button_size[0]),
+                (-y * (self.button_size[1])))
+            button.scale = self.button_size
+            button.color = color.panda_button
+            menu_toggler = button.add_script('menu_toggler')
+            menu_toggler.target = self
+            button.text = f
+            button.text_entity.position = (-.45, 0)
+            button.text_entity.origin = (-.5, 0)
+            self.buttons.append(button)
+            self.load_button = button.add_script('new_script_button')
+            x += 1
 
         self.x = - ((x + 1) * self.button_size[0]) / 2.0
         self.y = ((y) * self.button_size[1]) / 2

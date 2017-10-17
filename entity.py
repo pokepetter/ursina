@@ -328,10 +328,9 @@ class Entity(NodePath):
             if e.parent == self:
                 children_entities.append(e)
 
-        if len(children_entities) > 0:
-            return children_entities
-        else:
-            return None
+
+        return children_entities
+
     # @property
     # def descendants(self):
     #     descendants = list()

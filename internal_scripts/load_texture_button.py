@@ -5,7 +5,7 @@ from pandaeditor import *
 class LoadTextureButton():
 
     def __init__(self):
-        self.path= None
+        self.path = None
 
     def input(self, key):
         if key == 'left mouse down' and self.entity.hovered:

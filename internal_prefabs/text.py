@@ -21,7 +21,7 @@ class Text(Entity):
         self.text = ''
         self.size = 1
         self.characters = list()
-        self.scale *= 0.355
+        self.scale *= 0.255
         self.origin = (0, 0)
         self.x = 0
 

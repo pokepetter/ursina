@@ -60,7 +60,7 @@ class Editor(Entity):
         self.load_scene_button.is_editor = True
         self.load_scene_button.parent = self.toolbar
         self.load_scene_button.name = 'load_scene_button'
-        self.load_scene_button.scale = (.06, .06)
+        self.load_scene_button.scale = (.1, .05)
         self.load_scene_button.color = color.panda_button
         self.load_scene_button.text = 'scene'
         self.load_scene_button.text_entity.origin = (0,0)
@@ -81,7 +81,7 @@ class Editor(Entity):
         self.load_prefab_button.is_editor = True
         self.load_prefab_button.parent = self.toolbar
         self.load_prefab_button.name = 'load_prefab_button'
-        self.load_prefab_button.scale = (.06, .06)
+        self.load_prefab_button.scale = (.1, .05)
         self.load_prefab_button.color = color.panda_button
         self.load_prefab_button.text = 'prefab'
         self.menu_toggler = self.load_prefab_button.add_script('menu_toggler')
@@ -101,7 +101,7 @@ class Editor(Entity):
         self.load_model_button.is_editor = True
         self.load_model_button.parent = self.toolbar
         self.load_model_button.name = 'load_model_button'
-        self.load_model_button.scale = (.06, .06)
+        self.load_model_button.scale = (.1, .05)
         self.load_model_button.color = color.panda_button
         self.load_model_button.text = 'model'
         self.menu_toggler = self.load_model_button.add_script('menu_toggler')
@@ -121,7 +121,7 @@ class Editor(Entity):
         self.load_primitive_button.is_editor = True
         self.load_primitive_button.parent = self.toolbar
         self.load_primitive_button.name = 'load_primitive_button'
-        self.load_primitive_button.scale = (.06, .06)
+        self.load_primitive_button.scale = (.1, .05)
         self.load_primitive_button.color = color.panda_button
         self.load_primitive_button.text = 'primitive'
         self.menu_toggler = self.load_primitive_button.add_script('menu_toggler')
@@ -141,7 +141,7 @@ class Editor(Entity):
         self.load_sprite_button.is_editor = True
         self.load_sprite_button.parent = self.toolbar
         self.load_sprite_button.name = 'load_sprite_button'
-        self.load_sprite_button.scale = (.06, .06)
+        self.load_sprite_button.scale = (.1, .05)
         self.load_sprite_button.color = color.panda_button
         self.load_sprite_button.text = 'sprite'
         self.menu_toggler = self.load_sprite_button.add_script('menu_toggler')
@@ -180,7 +180,7 @@ class Editor(Entity):
         self.toggle_button.name = 'toggle_button'
         self.toggle_button.origin = (0, .5)
         self.toggle_button.position = (-.4, .5)
-        self.toggle_button.scale = (.06, .06)
+        self.toggle_button.scale = (.1, .05)
         self.toggle_button.color = color.panda_button
         self.toggle_button.text = '2D/3D'
         self.toggle_button.text_entity.x = 0
@@ -190,6 +190,19 @@ class Editor(Entity):
         self.inspector.is_editor = True
         self.inspector.parent = self
         print('inspector', self.inspector)
+
+# exit button
+        self.exit_button = load_prefab('editor_button')
+        self.exit_button.is_editor = True
+        self.exit_button.parent = self
+        self.exit_button.name = 'toggle_button'
+        self.exit_button.origin = (.5, .5)
+        self.exit_button.position = window.upper_right
+        self.exit_button.scale = (.06, .03)
+        self.exit_button.color = color.panda_button
+        self.exit_button.text = 'X'
+        self.exit_button.text_entity.x = 0
+        # self.exit_button.add_script('toggle_sideview')
 
 
         # # testing
