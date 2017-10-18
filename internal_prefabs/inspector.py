@@ -12,9 +12,10 @@ class Inspector(Entity):
         self.is_editor = True
         self.model = 'quad'
         self.color = color.panda_button
-        self.origin = (.5, .5)
-        self.position = window.upper_right
-        self.y -= .06
+        self.origin = (-.5, .5)
+        self.position = window.upper_left
+        self.x += .2
+        self.y -= .05
         self.scale = (.2, .9)
 
         self.script_amount = 0
@@ -24,8 +25,7 @@ class Inspector(Entity):
 
         self.name_label = load_prefab('editor_button')
         self.name_label.parent = self
-        self.name_label.x = 0
-        self.name_label.origin = (.5, .5)
+        self.name_label.origin = (-.5, .5)
         self.name_label.scale_y = .025
         self.name_label.text = 'selected name'
         self.name_label.text_entity.origin = (-.5,0)
@@ -38,8 +38,8 @@ class Inspector(Entity):
             for i in range(3):
                 self.button = load_prefab('editor_button')
                 self.button.parent = self.vec3_group
-                self.button.origin = (.5, .5)
-                self.button.position = (-(i / 3), 0)
+                self.button.origin = (-.5, .5)
+                self.button.position = ((i / 3), 0)
                 self.button.scale = (1 / 3.05, .025)
                 self.button.text = str(i)
                 self.button.text_entity.origin = (-.5,0)
@@ -51,12 +51,6 @@ class Inspector(Entity):
         self.scripts_label.text = 'scripts:'
         self.scripts_label.text_entity.origin = (-.5,0)
         self.scripts_label.text_entity.x = -.45
-
-        # self.scripts_layout_group = self.add_script('grid_layout')
-        # self.scripts_layout_group.max_x = 1
-        # self.scripts_layout_group.spacing = [0, .001]
-        # self.scripts_layout_group.origin = (.5, .5)
-        # self.scripts_layout_group.update_grid()
 
         self.add_script_button = load_prefab('editor_button')
         self.add_script_button.parent = self
@@ -80,7 +74,7 @@ class Inspector(Entity):
         self.layout_group = self.add_script('grid_layout')
         self.layout_group.max_x = 1
         self.layout_group.spacing = [0, .001]
-        self.layout_group.origin = (.5, .5)
+        self.layout_group.origin = (-.5, .5)
         self.layout_group.update_grid()
 
         self.script_labels = list()
@@ -97,18 +91,15 @@ class Inspector(Entity):
             # print('updating inspector')
             self.update_inspector()
             self.t = 0
-        # if len(scene.editor.selection) > 0:
-        #     self.visible = True
-        # else:
-        #     self.visible = False
+
 
     def update_inspector(self):
 
-        if len(scene.editor.selection) == 0:
-            self.x = 1.2
-            return
-        else:
-            self.position = (window.upper_right[0], window.upper_right[1] - .06)
+        # if len(scene.editor.selection) == 0:
+        #     self.x = 1.2
+        #     return
+        # else:
+        #     self.position = (window.upper_left[0] + .2, window.top_right[1] - .06)
 
         self.selected = scene.editor.selection[0]
 
@@ -123,7 +114,6 @@ class Inspector(Entity):
         self.transform_labels[7].text = str(int(self.selected.scale_y))
         self.transform_labels[8].text = str(int(self.selected.scale_z))
 
-
         if len(self.selected.scripts) != self.script_amount:
             self.script_amount = len(self.selected.scripts)
 
@@ -137,12 +127,12 @@ class Inspector(Entity):
                 print('script:', self.selected.scripts[i].__class__.__name__)
                 self.button = load_prefab('editor_button')
                 self.button.parent = self.scripts_label
-                self.button.origin = (.5, .5)
-                self.button.position = (.1, - i - 1)
+                self.button.origin = (-.5, .5)
+                self.button.position = (0, - i - 1)
                 self.button.scale = (1, 1)
                 self.button.color = color.red
                 self.button.text = self.selected.scripts[i].__class__.__name__
                 self.button.text_entity.origin = (-.5,0)
-                self.button.text_entity.x = -.5
+                self.button.text_entity.x = -.45
 
                 self.add_script_button.y = -.5

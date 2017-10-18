@@ -12,29 +12,28 @@ class EntityList(Entity):
         super().__init__()
         self.name = 'entity_list'
         self.parent = scene.ui
+        self.is_editor = True
+        self.model = 'quad'
+        self.color = color.panda_button
+        self.origin = (-.5, .5)
+        self.position = window.upper_left
+        self.y -= .05
+        self.scale = (.199, .95)
 
-        self.color = color.black33
         self.t = 0
         self.buttons = list()
+        self.max_vertical = 1000
+        self.button_size = (1, .025)
 
-        self.max_vertical = 100
-        self.button_size = (.08, .01)
-
-        self.origin = (-.5, .5)
-        self.position = (-.5, .2)
-        # self.scale = (.5, .5)
 
         self.temp_entity_list = list()
         # self.scripts.append(self)
-
 
 
     def display(self, id, nodes, level):
         print('%s%s%s' % ('  ' * level, '\\__', id))
         for child in sorted(nodes.get(id, [])):
             self.display(child, nodes, level + 1)
-
-
 
 
     def populate(self):
@@ -104,12 +103,14 @@ class EntityList(Entity):
                 button.parent = self
                 button.origin = (-.5, .5)
                 button.position = (
-                    x * (self.button_size[0]),
-                    (-y * (self.button_size[1])))
+                    0,
+                    (-y * (self.button_size[1] + .001)))
                 button.scale = self.button_size
                 button.color = color.panda_button
                 button.text = e.name
-                # button.text_entity.size = .5
+                button.text_entity.origin = (-.5,0)
+                button.text_entity.x = -.45
+
                 selection_button = button.add_script('selection_button')
                 selection_button.selection_target = e
                 self.buttons.append(button)
@@ -118,8 +119,6 @@ class EntityList(Entity):
                 if y >= self.max_vertical:
                     y = 0
                     x += 1
-
-
 
 
         print("--- %s seconds ---" % (time.time() - start_time))

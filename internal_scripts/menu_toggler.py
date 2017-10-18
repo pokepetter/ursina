@@ -13,8 +13,8 @@ class MenuToggler():
         if key == 'left mouse down' and self.entity.hovered:
             print('op')
             # close menus before opening a new one
-            if self.entity.parent == scene.editor.toolbar:
-                for button in scene.editor.toolbar.children:
+            if self.entity.parent == scene.editor.load_menu_parent:
+                for button in scene.editor.load_menu_parent.children:
                     if button.menu_toggler:
                         button.menu_toggler.target.enabled = False
 

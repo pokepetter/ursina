@@ -17,7 +17,7 @@ class Filebrowser(Entity):
         self.files = None
 
         self.max_vertical = 10
-        self.button_size = (.2, .025)
+        self.button_size = (.16, .025)
         self.button_type = ''
 
 
@@ -39,8 +39,8 @@ class Filebrowser(Entity):
                     button.parent = self
                     button.origin = (-.5, .5)
                     button.position = (
-                        x * (self.button_size[0]),
-                        (-y * (self.button_size[1])))
+                        x * (self.button_size[0] + .001),
+                        (-y * (self.button_size[1] + .001)))
                     button.scale = self.button_size
                     button.color = color.panda_button
                     menu_toggler = button.add_script('menu_toggler')

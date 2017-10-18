@@ -42,7 +42,7 @@ class Window(WindowProperties):
         self.bottom = (0, .5)
         self.center = (0, 0)
         self.upper_left = (-self.aspect_ratio / 2, .5)
-        self.upper_right = (self.aspect_ratio / 2, .5)
+        self.top_right = (self.aspect_ratio / 2, .5)
         self.lower_left = (-self.aspect_ratio / 2, -.5)
         self.lower_right = (self.aspect_ratio / 2, -.5)
 
