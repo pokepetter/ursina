@@ -17,46 +17,28 @@ class EntityList(Entity):
         self.color = color.panda_button
         self.origin = (-.5, .5)
         self.position = window.upper_left
-        self.y -= .05
-        self.scale = (.199, .95)
+        self.y -= .1
+        self.scale = (.199, .9)
+        self.editor_collider = 'box'
 
-        self.t = 0
-        self.buttons = list()
+        self.button_parent = Entity()
+        self.button_parent.parent = self
         self.max_vertical = 1000
         self.button_size = (1, .025)
 
-
         self.temp_entity_list = list()
-        # self.scripts.append(self)
-
-
-    def display(self, id, nodes, level):
-        print('%s%s%s' % ('  ' * level, '\\__', id))
-        for child in sorted(nodes.get(id, [])):
-            self.display(child, nodes, level + 1)
+        self.add_script('scrollable')
+        self.scrollable.target = self.button_parent
+        # print('t:', self.scrollable.target)
+        self.scripts.append(self)
 
 
     def populate(self):
         # return
         start_time = time.time()
-        for b in self.buttons:
-            destroy(b)
-        self.buttons.clear()
+        for child in self.button_parent.children:
+            destroy(child)
 
-        # self.temp_entity_list = list(scene.entities)
-        # for e in reversed(self.temp_entity_list):
-        #     if e.is_editor:
-        #         self.temp_entity_list.remove(e)
-        #
-        # self.temp_entity_list.sort()
-        #
-        # hierarchy_list = list(self.temp_entity_list)
-        # parentless = list(self.temp_entity_list)
-        # indents = [0] * len(self.temp_entity_list)
-        #
-        # for e in self.temp_entity_list:
-        #     for orphan in parentless:
-        #         if orphan.parent == e:
         self.temp_entity_list = list(scene.entities)
         for e in reversed(self.temp_entity_list):
             if e.is_editor:
@@ -100,7 +82,7 @@ class EntityList(Entity):
             if not e.is_editor:
                 button = load_prefab('editor_button')
                 button.is_editor = True
-                button.parent = self
+                button.parent = self.button_parent
                 button.origin = (-.5, .5)
                 button.position = (
                     0,
@@ -113,7 +95,6 @@ class EntityList(Entity):
 
                 selection_button = button.add_script('selection_button')
                 selection_button.selection_target = e
-                self.buttons.append(button)
 
                 y += 1
                 if y >= self.max_vertical:

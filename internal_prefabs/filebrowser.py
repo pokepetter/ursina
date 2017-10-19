@@ -22,6 +22,7 @@ class Filebrowser(Entity):
 
 
     def populate(self):
+        print('populate')
         for b in self.buttons:
             destroy(b)
 
@@ -51,7 +52,7 @@ class Filebrowser(Entity):
                     self.buttons.append(button)
                     self.load_button = button.add_script(self.button_type)
                     self.load_button.path = os.path.join(self.path, f)
-                    # print(self.load_button.path)
+                    print('path', self.load_button.path)
 
                     y += 1
                     if y > self.max_vertical:

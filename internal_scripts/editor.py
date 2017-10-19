@@ -56,12 +56,24 @@ class Editor(Entity):
         self.play_button.text = 'play'
         # self.menu_toggler = self.play_button.add_script('menu_toggler')
 
+        self.pause_button = load_prefab('editor_button')
+        self.pause_button.is_editor = True
+        self.pause_button.parent = self.top_menu
+        self.pause_button.origin = (0, .5)
+        self.pause_button.name = 'pause_button'
+        self.pause_button.scale = (.1, .05)
+        self.pause_button.color = color.panda_button
+        self.pause_button.text = 'pause'
+        # self.menu_toggler = self.play_button.add_script('menu_toggler')
+
+        self.layout_group.update_grid()
+
 # load menu
         self.load_menu_parent = Entity()
         self.load_menu_parent.parent = self
         # self.load_menu_parent.origin = (.5, .5)
         self.load_menu_parent.position = window.top_right
-        self.load_menu_parent.y -= .05
+        self.load_menu_parent.y -= .1
         self.layout_group = self.load_menu_parent.add_script('grid_layout')
         self.layout_group.origin = (.5, .5)
         self.layout_group.max_x = 1

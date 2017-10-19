@@ -35,15 +35,16 @@ class EditorCamera():
         if key == 'right mouse up':
             self.rotate = False
 
-        if key == 'scroll up' and mouse.left == False:
-            print('wiojwoijw')
-            camera.position += camera.forward * self.speed
-        if key == 'scroll down' and mouse.left == False:
-            camera.position += camera.back * self.speed
+        # zooming, don't zoom if hovering an editor panel
+        if not mouse.hovered_entity or not mouse.hovered_entity.is_editor:
+            if key == 'scroll up' and mouse.left == False:
+                camera.position += camera.forward * self.speed
+            if key == 'scroll down' and mouse.left == False:
+                camera.position += camera.back * self.speed
 
-            if camera.orthographic:
-                pass
-                # camera.fov += self.speed
+                if camera.orthographic:
+                    pass
+                    # camera.fov += self.speed
 
 
         if self.move:

@@ -15,7 +15,7 @@ class Inspector(Entity):
         self.origin = (-.5, .5)
         self.position = window.upper_left
         self.x += .2
-        self.y -= .05
+        self.y -= .1
         self.scale = (.2, .9)
 
         self.script_amount = 0
@@ -59,16 +59,27 @@ class Inspector(Entity):
         self.add_script_button.text_entity.origin = (-.5,0)
         self.add_script_button.text_entity.x = -.45
         self.menu_toggler = self.add_script_button.add_script('menu_toggler')
+        self.menu_toggler_1 = self.add_script_button.add_script('menu_toggler')
+
+        self.internal_scripts_browser = load_prefab('filebrowser')
+        self.internal_scripts_browser.is_editor = True
+        self.internal_scripts_browser.parent = scene.ui
+        self.internal_scripts_browser.position = (0, 0)
+        self.internal_scripts_browser.enabled = False
+        self.internal_scripts_browser.file_types = ('.py')
+        self.internal_scripts_browser.path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'internal_scripts')
+        self.internal_scripts_browser.button_type = 'add_script_button'
+        self.menu_toggler.target = self.internal_scripts_browser
 
         self.filebrowser = load_prefab('filebrowser')
         self.filebrowser.is_editor = True
         self.filebrowser.parent = scene.ui
-        self.filebrowser.position = (0, 0)
+        self.filebrowser.position = (.0, 0)
         self.filebrowser.enabled = False
         self.filebrowser.file_types = ('.py')
         self.filebrowser.path = os.path.join(os.path.dirname(scene.asset_folder), 'scripts')
         self.filebrowser.button_type = 'add_script_button'
-        self.menu_toggler.target = self.filebrowser
+        self.menu_toggler_1.target = self.filebrowser
 
 
         self.layout_group = self.add_script('grid_layout')
