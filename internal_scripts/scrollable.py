@@ -8,7 +8,7 @@ class Scrollable():
         self.entity = None
         self.target = None
 
-        self.max = 0
+        self.max = .4
         self.min = -.4
         self.scroll_speed = .1
 
@@ -17,11 +17,10 @@ class Scrollable():
         if not self.target:
             self.target = self.entity
 
-        print(key, self.target.y)
         if self.entity.hovered:
             if key == 'scroll up':
-                self.target.y += self.scroll_speed
-            if key == 'scroll down':
                 self.target.y -= self.scroll_speed
+            if key == 'scroll down':
+                self.target.y += self.scroll_speed
 
             self.target.y = max(min(self.target.y, self.max), self.min)

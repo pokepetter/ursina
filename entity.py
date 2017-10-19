@@ -61,14 +61,14 @@ class Entity(NodePath):
         if name == 'enabled':
             try:
                 # try calling on_enable() on classes inheriting from Entity
-                if value == 1:
+                if value == True:
                     self.on_enable()
                 else:
                     self.on_disable()
             except:
                 pass
 
-            if value == 1:
+            if value == True:
                 if not self.is_singleton():
                     self.unstash()
             else:

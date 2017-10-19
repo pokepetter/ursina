@@ -194,10 +194,44 @@ class Editor(Entity):
 
         self.layout_group.update_grid()
 
+# # left menu
+#         self.load_sprite_button = load_prefab('editor_button')
+#         self.load_sprite_button.is_editor = True
+#         self.load_sprite_button.parent = self.load_menu_parent
+#         self.load_sprite_button.name = 'load_sprite_button'
+#         self.load_sprite_button.scale = (.1, .05)
+#         self.load_sprite_button.color = color.panda_button
+#         self.load_sprite_button.text = 'sprite'
+
 # entity list
         self.entity_list = load_prefab('entity_list')
         self.entity_list.parent = self
         self.entity_list.populate()
+
+        self.entity_list_header = load_prefab('editor_button')
+        self.entity_list_header.parent = self
+        self.entity_list_header.z = -2
+        self.entity_list_header.color = (color.lime + color.black) / 2
+        self.entity_list_header.position = window.top_left
+        self.entity_list_header.origin = (-.5, .5)
+        self.entity_list_header.scale = (.2, .025)
+        self.entity_list_header.text = 'entities:'
+        self.entity_list_header.text_entity.origin = (-.5,0)
+        self.entity_list_header.text_entity.x = -.45
+        self.entity_list_header.add_script('menu_toggler')
+        self.entity_list_header.menu_toggler.target = self.entity_list
+
+        self.entity_search = load_prefab('editor_button')
+        self.entity_search.parent = self
+        self.entity_search.color = (color.lime + color.black) / 2
+        self.entity_search.position = window.top_left
+        self.entity_search.y -= .025
+        self.entity_search.z = -2
+        self.entity_search.origin = (-.5, .5)
+        self.entity_search.scale = (.2, .025)
+        # self.entity_search.text = 'search:'
+        # self.entity_search.text_entity.origin = (-.5,0)
+        # self.entity_search.text_entity.x = -.45
 
 # inspector
         self.inspector = load_prefab('inspector')

@@ -13,10 +13,10 @@ class Inspector(Entity):
         self.model = 'quad'
         self.color = color.panda_button
         self.origin = (-.5, .5)
-        self.position = window.upper_left
+        self.position = window.top_left
         self.x += .2
-        self.y -= .1
-        self.scale = (.2, .9)
+        self.y -= .05
+        self.scale = (.2, 1)
 
         self.script_amount = 0
 
@@ -106,11 +106,11 @@ class Inspector(Entity):
 
     def update_inspector(self):
 
-        # if len(scene.editor.selection) == 0:
-        #     self.x = 1.2
-        #     return
-        # else:
-        #     self.position = (window.upper_left[0] + .2, window.top_right[1] - .06)
+        if len(scene.editor.selection) == 0:
+            self.x = 1.2
+            return
+        else:
+            self.position = (window.top_left[0] + .2, window.top_right[1] - .05)
 
         self.selected = scene.editor.selection[0]
 

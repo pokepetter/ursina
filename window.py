@@ -9,7 +9,7 @@ class Window(WindowProperties):
         super().__init__()
         loadPrcFileData('', 'window-title pandaeditor')
         loadPrcFileData('', 'undecorated True')
-        loadPrcFileData('', 'sync-video True')
+        loadPrcFileData('', 'sync-video False')
         loadPrcFileData('', 'show-frame-rate-meter True')
 
         self.setForeground(True)
@@ -41,10 +41,10 @@ class Window(WindowProperties):
         self.top = (0, .5)
         self.bottom = (0, .5)
         self.center = (0, 0)
-        self.upper_left = (-self.aspect_ratio / 2, .5)
+        self.top_left = (-self.aspect_ratio / 2, .5)
         self.top_right = (self.aspect_ratio / 2, .5)
-        self.lower_left = (-self.aspect_ratio / 2, -.5)
-        self.lower_right = (self.aspect_ratio / 2, -.5)
+        self.bottom_left = (-self.aspect_ratio / 2, -.5)
+        self.bottom_right = (self.aspect_ratio / 2, -.5)
 
     def __setattr__(self, name, value):
         if not scene.base:
