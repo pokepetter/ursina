@@ -10,10 +10,10 @@ class PandaEditor(ShowBase):
         ShowBase.__init__(self)
 
         scene.reparentTo(self.render)
-        scene.app = self
-        scene.base = base
+        # application.current = self
         scene.render = self.render
-        scene.asset_folder = os.path.dirname(__file__)
+        application.base = base
+        application.asset_folder = os.path.dirname(__file__)
 
         window.load_defaults()
 
@@ -31,6 +31,7 @@ class PandaEditor(ShowBase):
 
         # UI
         win = base.camNode.getDisplayRegion(0).getWindow()
+        win.setClearColor(color.dark_gray)
         ui_display_region = win.makeDisplayRegion()
         ui_display_region.setSort(20)
 
@@ -61,7 +62,7 @@ class PandaEditor(ShowBase):
         scene.ui = ui
         camera.ui = ui
 
-        win.setClearColor(color.dark_gray)
+
 
         # input
         base.buttonThrowers[0].node().setButtonDownEvent('buttonDown')
@@ -86,6 +87,7 @@ class PandaEditor(ShowBase):
         mouse.mouse_watcher = base.mouseWatcherNode
         mouse.enabled = True
 
+        scene.set_up()
         scene.editor = load_script('editor')
 
         self.update_task = taskMgr.add(self.update, "update")

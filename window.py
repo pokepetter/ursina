@@ -1,6 +1,6 @@
 import sys
 from panda3d.core import WindowProperties
-import scene
+import application
 from panda3d.core import loadPrcFileData
 
 class Window(WindowProperties):
@@ -11,6 +11,7 @@ class Window(WindowProperties):
         loadPrcFileData('', 'undecorated True')
         loadPrcFileData('', 'sync-video False')
         loadPrcFileData('', 'show-frame-rate-meter True')
+        # loadPrcFileData('', 'want-pstats True')
 
         self.setForeground(True)
 
@@ -47,7 +48,7 @@ class Window(WindowProperties):
         self.bottom_right = (self.aspect_ratio / 2, -.5)
 
     def __setattr__(self, name, value):
-        if not scene.base:
+        if not application.base:
             return
         try:
             super().__setattr__(name, value)
@@ -58,7 +59,7 @@ class Window(WindowProperties):
             self.setOrigin(
                 int((1920 - value[0]) / 2),
                 int((1080 - value[1]) / 2))
-            scene.base.win.requestProperties(self)
+            application.base.win.requestProperties(self)
             object.__setattr__(self, name, value)
 
         if name == 'fullscreen':

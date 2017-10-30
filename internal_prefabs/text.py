@@ -27,7 +27,7 @@ class Text(Entity):
 
 
     def update_text(self):
-        start_time = time.time()
+        # start_time = time.time()
 
         if self.characters:
             for c in self.characters:

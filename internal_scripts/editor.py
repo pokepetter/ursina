@@ -16,6 +16,8 @@ class Editor(Entity):
         scene.editor_camera_script = self.editor_camera_script
 
         self.camera_pivot = Entity()
+        self.camera_pivot.name = 'camera_pivot'
+        self.camera_pivot.parent = scene.render
         self.camera_pivot.is_editor = True
         camera.parent = self.camera_pivot
 
@@ -34,7 +36,7 @@ class Editor(Entity):
         self.grid.position = (0, 0, 0)
         self.grid.rotation = (-90, 0, 0)
         self.grid.scale = (10, 10, 10)
-        self.grid.color = color.lime
+        self.grid.color = color.color(90, .9, .8, .2)
 
 # top menu
         self.top_menu = Entity()
@@ -108,7 +110,7 @@ class Editor(Entity):
         self.filebrowser.position = (0,0)
         self.filebrowser.enabled = False
         self.filebrowser.file_types = ('.py')
-        self.filebrowser.path = os.path.join(os.path.dirname(scene.asset_folder), 'scenes')
+        self.filebrowser.path = os.path.join(os.path.dirname(application.asset_folder), 'scenes')
         self.filebrowser.button_type = 'load_scene_button'
         self.menu_toggler.target = self.filebrowser
 
@@ -128,7 +130,7 @@ class Editor(Entity):
         self.filebrowser.position = (0,0)
         self.filebrowser.enabled = False
         self.filebrowser.file_types = ('.py')
-        self.filebrowser.path = os.path.join(os.path.dirname(scene.asset_folder), 'prefabs')
+        self.filebrowser.path = os.path.join(os.path.dirname(application.asset_folder), 'prefabs')
         self.filebrowser.button_type = 'load_prefab_button'
         self.menu_toggler.target = self.filebrowser
 
@@ -148,7 +150,7 @@ class Editor(Entity):
         self.filebrowser.position = (0,0)
         self.filebrowser.enabled = False
         self.filebrowser.file_types = ('.egg')
-        self.filebrowser.path = os.path.join(os.path.dirname(scene.asset_folder), 'models')
+        self.filebrowser.path = os.path.join(os.path.dirname(application.asset_folder), 'models')
         self.filebrowser.button_type = 'load_model_button'
         self.menu_toggler.target = self.filebrowser
 
@@ -168,7 +170,7 @@ class Editor(Entity):
         self.filebrowser.position = (0,0)
         self.filebrowser.enabled = False
         self.filebrowser.file_types = ('.egg')
-        self.filebrowser.path = os.path.join(os.path.dirname(scene.asset_folder), 'pandaeditor/internal_models')
+        self.filebrowser.path = os.path.join(os.path.dirname(application.asset_folder), 'pandaeditor/internal_models')
         self.filebrowser.button_type = 'load_model_button'
         self.menu_toggler.target = self.filebrowser
 
@@ -188,7 +190,7 @@ class Editor(Entity):
         self.filebrowser.position = (0,0)
         self.filebrowser.enabled = False
         self.filebrowser.file_types = ('.png', '.jpg', '.psd', '.gif')
-        self.filebrowser.path = os.path.join(os.path.dirname(scene.asset_folder), 'textures')
+        self.filebrowser.path = os.path.join(os.path.dirname(application.asset_folder), 'textures')
         self.filebrowser.button_type = 'load_texture_button'
         self.menu_toggler.target = self.filebrowser
 
@@ -215,20 +217,20 @@ class Editor(Entity):
         self.entity_list_header.position = window.top_left
         self.entity_list_header.origin = (-.5, .5)
         self.entity_list_header.scale = (.2, .025)
-        self.entity_list_header.text = 'entities:'
+        self.entity_list_header.text = scene.entity.name
         self.entity_list_header.text_entity.origin = (-.5,0)
         self.entity_list_header.text_entity.x = -.45
         self.entity_list_header.add_script('menu_toggler')
         self.entity_list_header.menu_toggler.target = self.entity_list
 
-        self.entity_search = load_prefab('editor_button')
-        self.entity_search.parent = self
-        self.entity_search.color = (color.lime + color.black) / 2
-        self.entity_search.position = window.top_left
-        self.entity_search.y -= .025
-        self.entity_search.z = -2
-        self.entity_search.origin = (-.5, .5)
-        self.entity_search.scale = (.2, .025)
+        # self.entity_search = load_prefab('editor_button')
+        # self.entity_search.parent = self
+        # self.entity_search.color = (color.lime + color.black) / 2
+        # self.entity_search.position = window.top_left
+        # self.entity_search.y -= .025
+        # self.entity_search.z = -2
+        # self.entity_search.origin = (-.5, .5)
+        # self.entity_search.scale = (.2, .025)
         # self.entity_search.text = 'search:'
         # self.entity_search.text_entity.origin = (-.5,0)
         # self.entity_search.text_entity.x = -.45
@@ -237,28 +239,19 @@ class Editor(Entity):
         self.inspector = load_prefab('inspector')
         self.inspector.parent = self
 
-# temp, make into canvas prefab
-        self.ui_canvas = Entity()
-        # self.ui_canvas.parent = camera.ui
-        self.ui_canvas.scale = (1, 1)
-        self.ui_canvas.model = 'canvas'
-        self.ui_canvas.color = color.white33
-        self.ui_canvas.add_script('canvas')
-
 # 2D / 3D toggle
         self.toggle_button = load_prefab('editor_button')
         self.toggle_button.is_editor = True
         self.toggle_button.parent = self
         self.toggle_button.name = 'toggle_button'
         self.toggle_button.origin = (0, .5)
-        self.toggle_button.position = (-.4, .5)
+        self.toggle_button.position = window.top_right
+        self.toggle_button.x -= .1
         self.toggle_button.scale = (.1, .05)
         self.toggle_button.color = color.panda_button
         self.toggle_button.text = '2D/3D'
         self.toggle_button.text_entity.x = 0
         self.toggle_button.add_script('toggle_sideview')
-
-
 
 # exit button
         self.exit_button = load_prefab('editor_button')
@@ -289,7 +282,7 @@ class Editor(Entity):
         #         c = Entity()
         #         c.name = 'cube'
         #         c.model = 'cube'
-        #         c.color = color.hsv_color(x * 30, 1, (z + 1) / 10)
+        #         c.color = color.color(x * 30, 1, (z + 1) / 10)
         #         c.parent = self.cube
         #         c.position = (x, random.uniform(0, 1), z)
         #         c.scale *= .95
@@ -313,10 +306,29 @@ class Editor(Entity):
         # self.inspector.update(dt)
 
     def input(self, key):
-        if key == 'i':
-            save_prefab(self.cube)
-        if key == 'o':
-            scene.clear()
+        if key == 'left control':
+            self.ctrl = True
+        if key == 'left control up':
+            self.ctrl = False
+
+        if self.ctrl:
+            if key == 's':
+                save_prefab(scene.entity)
+
+        if key == 'c':
+            # print('show colliders')
+            for e in scene.entities:
+                if not e.is_editor and e.editor_collider:
+                    e.editor_collider.node_path.show()
+
+        if key == 'c up':
+            # print('hide colliders')
+            for e in scene.entities:
+                if not e.is_editor and e.editor_collider:
+                    e.editor_collider.node_path.hide()
+
+        if key == 'n':
+            scene.new()
         if key == 'p':
             print('p')
             e = load_scene('cube_1')

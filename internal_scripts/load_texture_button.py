@@ -23,5 +23,7 @@ class LoadTextureButton():
                 entity.editor_collider = 'box'
                 scene.editor.entity_list.populate()
 
-                if scene.editor.ui_canvas:
-                    entity.parent = scene.editor.ui_canvas
+                if not scene.editor.ui_canvas:
+                    scene.editor.ui_canvas = load_prefab('canvas')
+
+                entity.parent = scene.editor.ui_canvas

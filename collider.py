@@ -6,7 +6,7 @@ import scene
 
 class Collider(NodePath):
     def __init__(self):
-        # super().__init__('collider node path')
+        super().__init__('collider_node_path')
         self.entity = None
         self.node_path = None
 
@@ -30,7 +30,7 @@ class Collider(NodePath):
         self.node_path.node().addSolid(self.shape)
 
 
-        # print('added collider')
+        print('added collider', self.node_path)
 
 
     def remove(self):

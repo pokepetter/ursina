@@ -6,8 +6,6 @@ class Scene(NodePath):
 
     def __init__(self):
         super().__init__('')
-        self.app = None
-        self.base = None
         self.render = None
         self.world = None
 
@@ -15,35 +13,28 @@ class Scene(NodePath):
         self.ui_camera = None
         self.ui = None
 
-        self.asset_folder = None
         self.editor_camera_script = None
         self.editor = None
+
         self.entities = []
+        self.entity = None # scene parent
 
 
-    def clear(self):
-        print('clearing scene')
-        for e in self.entities:
-            if (e.has_ancestor(self.editor)
-            or e is self.camera
-            or e is self.editor
-            or e is self.ui
-            or e is self.editor.grid
-            or e.is_editor):
-                pass
-            else:
-                # print(e)
-                try: e.model.removeNode()
-                except: pass
-                try: e.removeNode()
-                except: pass
-                del e
-
-                self.entities.remove(e)
-        print('entities', self.entities)
+    def set_up(self):
+        from entity import Entity
+        self.entity = Entity()
+        self.entity.parent = self
+        self.entity.name = 'untitled_scene'
 
 
+    def new(self):
+        # from entity import Entity
+        if self.entity:
+            destroy(self.entity)
 
+        self.entity = Entity()
+        self.entity.parent = self
+        self.entity.name = 'untitled_scene'
 
 
 sys.modules[__name__] = Scene()

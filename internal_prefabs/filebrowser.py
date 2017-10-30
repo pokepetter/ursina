@@ -22,14 +22,14 @@ class Filebrowser(Entity):
 
 
     def populate(self):
-        print('populate')
+        # print('populate')
         for b in self.buttons:
             destroy(b)
 
         y = 0
         x = 0
         for f in self.files:
-            print('file:', f)
+            # print('file:', f)
             if f.startswith('__'):
                 continue
 
@@ -52,7 +52,7 @@ class Filebrowser(Entity):
                     self.buttons.append(button)
                     self.load_button = button.add_script(self.button_type)
                     self.load_button.path = os.path.join(self.path, f)
-                    print('path', self.load_button.path)
+                    # print('path', self.load_button.path)w
 
                     y += 1
                     if y > self.max_vertical:

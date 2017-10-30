@@ -22,4 +22,5 @@ class LoadModelButton():
                 button_script = entity.add_script('editor_button')
                 button_script.collider = None
                 entity.editor_collider = 'box'
+                print('collider:', button_script)
                 scene.editor.entity_list.populate()

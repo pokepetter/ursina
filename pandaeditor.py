@@ -20,6 +20,7 @@ import inspect
 import importlib
 
 from entity import Entity
+import application
 import scene
 import mouse
 import window
@@ -60,7 +61,7 @@ def save_scene(name):
 
 def save_prefab(target, folder='prefabs'):
     prefab_path = os.path.join(
-        os.path.dirname(scene.asset_folder),
+        os.path.dirname(application.asset_folder),
         'scenes',
         target.name + '_' + str(target.get_key()) + '.py')
 
@@ -184,9 +185,11 @@ def load_scene(module_name):
                     class_name = cn[0]
             class_ = getattr(module, class_name)
             class_instance = class_()
-            class_instance.parent = scene.render
+            class_instance.parent = scene
+            destroy(scene.entity)
+            scene.entity = class_instance
             print('found scene!')
-            print(scene.entities)
+            # print(scene.entities)
             return class_instance
             break
         except Exception as e:

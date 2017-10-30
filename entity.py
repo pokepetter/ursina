@@ -23,15 +23,16 @@ class Entity(NodePath):
         self.enabled = True
         self.is_editor = False
         self.name = 'entity'
-        self.parent = scene.render
+        self.parent = scene.entity
         self.model = None
         self.color = color.white
         self.color = color.gray
         self.texture = None
         self.collision = False
         self.collider = None
+        self.editor_collider = None
         self.scripts = list()
-        # self.prefab_name = None
+        self.prefab_name = None
         self.hovered = False
 
         self.origin = (0,0,0)
@@ -237,6 +238,7 @@ class Entity(NodePath):
             editor_collider.entity = self
             editor_collider.make_collider()
             object.__setattr__(self, name, editor_collider)
+            print('coll', self.editor_collider)
 
 
     def __getattr__(self, attrname):
@@ -258,6 +260,12 @@ class Entity(NodePath):
         if attrname == 'down':
             return scene.render.getRelativeVector(self, (0,-1,0))
 
+
+    def reparent_to(self, entity):
+        self.wrtReparentTo(entity)
+        pos = self.getPos(entity)
+        self.position = (pos[0], pos[2], pos[1])
+        # print('parent:', self.parent.name, 'newpos:', self.position)
 
     def add_script(self, module_name):
         if inspect.isclass(module_name):
