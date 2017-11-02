@@ -1,6 +1,7 @@
 import sys
 sys.path.append("..")
 from pandaeditor import *
+from panda3d.core import TextNode
 
 class EditorButton(Entity):
 
@@ -32,6 +33,8 @@ class EditorButton(Entity):
 
 
         if name == 'text':
+
+
             if len(value) > 0:
                 if not self.text_entity:
                     self.text_entity = load_prefab('text')
@@ -39,7 +42,8 @@ class EditorButton(Entity):
                     self.text_entity.is_editor = self.is_editor
                     self.text_entity.wrtReparentTo(self.model)
                     self.text_entity.position = (0, 0, 0)
-                self.text_entity.text = value
+                    self.text_entity.text = value
+                    self.text_entity.color = color.orange
 
         else:
             super().__setattr__(name, value)

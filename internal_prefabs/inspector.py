@@ -46,6 +46,11 @@ class Inspector(Entity):
                 self.button.text_entity.origin = (-.5,0)
                 self.transform_labels.append(self.button)
 
+        self.model_field = self.create_button('model: ')
+        self.color_field = self.create_button('color: ')
+        self.texture_field = self.create_button('texture: ')
+
+
         self.scripts_label = load_prefab('editor_button')
         self.scripts_label.parent = self
         # self.scripts_label.y = self.button_height * -5
@@ -55,12 +60,7 @@ class Inspector(Entity):
         self.scripts_label.text_entity.x = -.45
         # self.scripts_label.add_script('menu_toggler')
 
-        self.add_script_button = load_prefab('editor_button')
-        self.add_script_button.parent = self
-        self.add_script_button.scale_y = self.button_height
-        self.add_script_button.text = 'add script'
-        self.add_script_button.text_entity.origin = (-.5,0)
-        self.add_script_button.text_entity.x = -.45
+        self.add_script_button = self.create_button('add script')
         self.menu_toggler = self.add_script_button.add_script('menu_toggler')
         self.menu_toggler_1 = self.add_script_button.add_script('menu_toggler')
 
@@ -97,7 +97,14 @@ class Inspector(Entity):
         self.t = 0
 
 
-
+    def create_button(self, name=''):
+        button = load_prefab('editor_button')
+        button.parent = self
+        button.scale_y = self.button_height
+        button.text = name
+        button.text_entity.origin = (-.5,0)
+        button.text_entity.x = -.45
+        return button
 
 
     def update(self, dt):
@@ -128,6 +135,12 @@ class Inspector(Entity):
         self.transform_labels[6].text = str(int(self.selected.scale_x))
         self.transform_labels[7].text = str(int(self.selected.scale_y))
         self.transform_labels[8].text = str(int(self.selected.scale_z))
+
+
+        self.model_field.text = 'model: ' + self.selected.model.name
+        self.color_field.text = 'color: ' + self.selected.model.color
+        self.texture_field.text = 'texture: ' + self.selected.texture.name
+
 
         if len(self.selected.scripts) != self.script_amount: # if script changed, update
             self.script_amount = len(self.selected.scripts)

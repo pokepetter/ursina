@@ -26,7 +26,6 @@ class Entity(NodePath):
         self.parent = scene.entity
         self.model = None
         self.color = color.white
-        self.color = color.gray
         self.texture = None
         self.collision = False
         self.collider = None

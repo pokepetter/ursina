@@ -267,6 +267,44 @@ class Editor(Entity):
         # self.exit_button.add_script('toggle_sideview')
 
 
+        from panda3d.core import DirectionalLight
+        from panda3d.core import VBase4
+        light = DirectionalLight('light')
+        light.setColor(VBase4(1, 1, 1, 1))
+        dlnp = render.attachNewNode(light)
+        dlnp.setHpr(0, -60, 60)
+        # dlnp.setPos(0, -10, 10)
+        dlnp.setPos(0, 0, 32)
+        dlnp.setScale(100)
+        # dlnp.lookAt(0, 0, 0)
+        dlnp.node().getLens().setNearFar(.2, 100)
+        # dlnp.node().getLens().setFocalLength(100)
+
+        render.setLight(dlnp)
+        # Use a 512x512 resolution shadow map
+        light.setShadowCaster(True, 2048, 2048)
+        # Enable the shader generator for the receiving nodes
+        # render.setShaderAuto()
+        light.showFrustum()
+
+        ground = Entity()
+        ground.model = 'quad'
+        ground.y = .1
+        ground.rotation_x = -90
+        ground.scale *= 10
+        ground.setShaderAuto()
+
+        cube = Entity()
+        cube.model = 'cube'
+        cube.origin = (0, -.5, 0)
+        cube.setShaderAuto()
+
+        self.text = load_prefab('text')
+        self.text.color = color.smoke
+        # self.text.parent = scene.ui
+
+
+
         # # testing
         # self.cube = Entity()
         # self.cube.name = 'cube'
@@ -298,14 +336,18 @@ class Editor(Entity):
         # c.color = color.blue
 
 
-
-
     def update(self, dt):
         self.editor_camera_script.update(dt)
         self.transform_gizmo.update(dt)
         # self.inspector.update(dt)
 
     def input(self, key):
+        if key == 'l':
+            for e in scene.entities:
+                if not e.is_editor:
+                    render.setShaderAuto()
+                    print('set shader auto')
+
         if key == 'left control':
             self.ctrl = True
         if key == 'left control up':
