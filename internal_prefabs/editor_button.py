@@ -33,8 +33,6 @@ class EditorButton(Entity):
 
 
         if name == 'text':
-
-
             if len(value) > 0:
                 if not self.text_entity:
                     self.text_entity = load_prefab('text')
@@ -43,7 +41,5 @@ class EditorButton(Entity):
                     self.text_entity.wrtReparentTo(self.model)
                     self.text_entity.position = (0, 0, 0)
                     self.text_entity.text = value
-                    self.text_entity.color = color.orange
-
         else:
             super().__setattr__(name, value)

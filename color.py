@@ -40,5 +40,8 @@ white66 =       Vec4(1,1,1, 0.66)
 black33 =       Vec4(0,0,0, 0.33)
 black66 =       Vec4(0,0,0, 0.66)
 
+text = smoke
+
 panda_background = dark_gray
 panda_button = black66
+panda_text = smoke

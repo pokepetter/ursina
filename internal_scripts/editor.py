@@ -54,7 +54,6 @@ class Editor(Entity):
         self.play_button.origin = (0, .5)
         self.play_button.name = 'play_button'
         self.play_button.scale = (.1, .05)
-        self.play_button.color = color.panda_button
         self.play_button.text = 'play'
         # self.menu_toggler = self.play_button.add_script('menu_toggler')
 
@@ -64,7 +63,6 @@ class Editor(Entity):
         self.pause_button.origin = (0, .5)
         self.pause_button.name = 'pause_button'
         self.pause_button.scale = (.1, .05)
-        self.pause_button.color = color.panda_button
         self.pause_button.text = 'pause'
         # self.menu_toggler = self.play_button.add_script('menu_toggler')
 
@@ -87,7 +85,6 @@ class Editor(Entity):
 #         self.new_scene_button.parent = self.load_menu_parent
 #         self.new_scene_button.name = 'new_scene_button'
 #         self.new_scene_button.scale = (.1, .05)
-#         self.new_scene_button.color = color.panda_button
 #         self.new_scene_button.text = 'new scene'
 #         self.new_scene_button.text_entity.origin = (0,0)
 #         # self.menu_toggler = self.new_scene_button.add_script('menu_toggler')
@@ -98,10 +95,9 @@ class Editor(Entity):
         self.load_scene_button.parent = self.load_menu_parent
         self.load_scene_button.name = 'load_scene_button'
         self.load_scene_button.scale = (.1, .05)
-        self.load_scene_button.color = color.panda_button
         self.load_scene_button.text = 'scenes'
-        self.load_scene_button.text_entity.origin = (.5, 0)
-        self.load_scene_button.text_entity.x = .4
+        # self.load_scene_button.text_entity.origin = (.5, 0)
+        # self.load_scene_button.text_entity.x = .4
         self.menu_toggler = self.load_scene_button.add_script('menu_toggler')
 
         self.filebrowser = load_prefab('filebrowser')
@@ -120,7 +116,6 @@ class Editor(Entity):
         self.load_prefab_button.parent = self.load_menu_parent
         self.load_prefab_button.name = 'load_prefab_button'
         self.load_prefab_button.scale = (.1, .05)
-        self.load_prefab_button.color = color.panda_button
         self.load_prefab_button.text = 'prefab'
         self.menu_toggler = self.load_prefab_button.add_script('menu_toggler')
 
@@ -140,7 +135,6 @@ class Editor(Entity):
         self.load_model_button.parent = self.load_menu_parent
         self.load_model_button.name = 'load_model_button'
         self.load_model_button.scale = (.1, .05)
-        self.load_model_button.color = color.panda_button
         self.load_model_button.text = 'model'
         self.menu_toggler = self.load_model_button.add_script('menu_toggler')
 
@@ -160,7 +154,6 @@ class Editor(Entity):
         self.load_primitive_button.parent = self.load_menu_parent
         self.load_primitive_button.name = 'load_primitive_button'
         self.load_primitive_button.scale = (.1, .05)
-        self.load_primitive_button.color = color.panda_button
         self.load_primitive_button.text = 'primitive'
         self.menu_toggler = self.load_primitive_button.add_script('menu_toggler')
 
@@ -180,7 +173,6 @@ class Editor(Entity):
         self.load_sprite_button.parent = self.load_menu_parent
         self.load_sprite_button.name = 'load_sprite_button'
         self.load_sprite_button.scale = (.1, .05)
-        self.load_sprite_button.color = color.panda_button
         self.load_sprite_button.text = 'sprite'
         self.menu_toggler = self.load_sprite_button.add_script('menu_toggler')
 
@@ -202,7 +194,6 @@ class Editor(Entity):
 #         self.load_sprite_button.parent = self.load_menu_parent
 #         self.load_sprite_button.name = 'load_sprite_button'
 #         self.load_sprite_button.scale = (.1, .05)
-#         self.load_sprite_button.color = color.panda_button
 #         self.load_sprite_button.text = 'sprite'
 
 # entity list
@@ -218,8 +209,6 @@ class Editor(Entity):
         self.entity_list_header.origin = (-.5, .5)
         self.entity_list_header.scale = (.2, .025)
         self.entity_list_header.text = scene.entity.name
-        self.entity_list_header.text_entity.origin = (-.5,0)
-        self.entity_list_header.text_entity.x = -.45
         self.entity_list_header.add_script('menu_toggler')
         self.entity_list_header.menu_toggler.target = self.entity_list
 
@@ -248,7 +237,6 @@ class Editor(Entity):
         self.toggle_button.position = window.top_right
         self.toggle_button.x -= .1
         self.toggle_button.scale = (.1, .05)
-        self.toggle_button.color = color.panda_button
         self.toggle_button.text = '2D/3D'
         self.toggle_button.text_entity.x = 0
         self.toggle_button.add_script('toggle_sideview')
@@ -261,7 +249,6 @@ class Editor(Entity):
         self.exit_button.origin = (.5, .5)
         self.exit_button.position = window.top_right
         self.exit_button.scale = (.06, .03)
-        self.exit_button.color = color.panda_button
         self.exit_button.text = 'X'
         self.exit_button.text_entity.x = 0
         # self.exit_button.add_script('toggle_sideview')
@@ -292,15 +279,15 @@ class Editor(Entity):
         ground.y = .1
         ground.rotation_x = -90
         ground.scale *= 10
-        ground.setShaderAuto()
+        # ground.setShaderAuto()
 
         cube = Entity()
         cube.model = 'cube'
         cube.origin = (0, -.5, 0)
-        cube.setShaderAuto()
+        # cube.setShaderAuto()
 
         self.text = load_prefab('text')
-        self.text.color = color.smoke
+        # self.text.color = color.smoke
         # self.text.parent = scene.ui
 
 
@@ -343,10 +330,8 @@ class Editor(Entity):
 
     def input(self, key):
         if key == 'l':
-            for e in scene.entities:
-                if not e.is_editor:
-                    render.setShaderAuto()
-                    print('set shader auto')
+            render.setShaderAuto()
+            print('set shader auto')
 
         if key == 'left control':
             self.ctrl = True
