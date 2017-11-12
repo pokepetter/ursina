@@ -16,27 +16,26 @@ class Text(Entity):
         self.character_spacing = .5
         self.line_height = 1
         self.character_limit = 50
-        self.size = 1
         self.characters = list()
         self.scale *= 0.25
         self.origin = (0, 0)
 
         self.text_node = TextNode('node name')
-        self.text_node.setText("Every day in every way I'm getting better and better.")
-        self.text_node.setTextColor(color.text)
-        self.text_node.setAlign(TextNode.ACenter)
-        textNodePath = self.attachNewNode(self.text_node)
-        textNodePath.setScale(1)
+        self.font = 'font/VeraMono.ttf'
+        # self.text_node.setText("Every day in every way I'm getting better and better.")
+        self.text_node_path = self.attachNewNode(self.text_node)
+
         self.setColorScaleOff()
+        self.color = color.text
+        self.align = 'left'
 
         # temp
         # self.text_node.setFrameColor(1, 1, 1, 1)
         # self.text_node.setFrameAsMargin(0.5, 0.5, 0.5, 0.5)
 
-
         self.color = color.panda_text
-        textNodePath.setLightOff()
-        textNodePath.setBin("fixed", 0)
+        self.text_node_path.setLightOff()
+        self.text_node_path.setBin("fixed", 0)
 
         # align = 0: top, 1: center, 2:bottom
         # bounds = self.getTightBounds()
@@ -45,7 +44,7 @@ class Text(Entity):
         # z = -bounds[0][2] -1
 
         z = -.3
-        textNodePath.setZ(z)
+        self.text_node_path.setZ(z)
 
 
     def update_text(self):
@@ -73,16 +72,15 @@ class Text(Entity):
             object.__setattr__(self, name, value)
             self.text_node.setText(value)
 
-        if name == 'origin':
+        if name == 'align':
             object.__setattr__(self, name, value)
-            try:
-                self.set_origin(self.origin)
-            except:
-                pass
-        #     self.update_text()
-        if name == 'size':
-            object.__setattr__(self, name, value)
-            self.update_text()
+            if value == 'left':
+                self.text_node.setAlign(TextNode.ALeft)
+            elif value == 'center':
+                self.text_node.setAlign(TextNode.ACenter)
+            elif value == 'right':
+                self.text_node.setAlign(TextNode.ARight)
+
 
         if name == 'color':
             object.__setattr__(self, name, value)

@@ -23,12 +23,13 @@ class EntityList(Entity):
 
         self.button_parent = Entity()
         self.button_parent.parent = self
-        self.button_parent.y = -.05
+        self.button_parent.y = -.025
         self.button_parent.z = -1
         self.max_vertical = 1000
         self.button_size = (1, .015)
 
         self.temp_entity_list = list()
+        self.buttons = list()
         self.add_script('scrollable')
         self.scrollable.target = self.button_parent
         # print('t:', self.scrollable.target)
@@ -49,6 +50,7 @@ class EntityList(Entity):
         self.i = 0
         for child in self.button_parent.children:
             destroy(child)
+        self.buttons.clear()
 
         print('------------------')
         for e in scene.entity.children:
@@ -66,11 +68,13 @@ class EntityList(Entity):
         button.scale = self.button_size
         button.color = color.panda_button
         button.text = name
-        button.text_entity.origin = (-.5,0)
-        button.text_entity.x = -.45
+        button.text_entity.align = 'left'
+        button.text_entity.x = -.5
 
         selection_button = button.add_script('selection_button')
         selection_button.selection_target = entity
+        self.buttons.append(button)
+        # print(button)
 
         self.i += 1
 
@@ -82,6 +86,8 @@ class EntityList(Entity):
         self.create_button(e, indent + e.name)
         for c in e.children:
             self.traverse_tree(c, indent)
+
+        print(self.buttons)
 
 
         # print("--- %s seconds ---" % (time.time() - start_time))

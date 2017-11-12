@@ -3,8 +3,12 @@ sys.path.append("..")
 from pandaeditor import *
 import os
 from panda3d.bullet import BulletDebugNode
+from types import MethodType
 
 class Editor(Entity):
+
+    def input(self, key):
+        print('2')
 
     def __init__(self):
         super().__init__()
@@ -208,9 +212,22 @@ class Editor(Entity):
         self.entity_list_header.position = window.top_left
         self.entity_list_header.origin = (-.5, .5)
         self.entity_list_header.scale = (.2, .025)
-        self.entity_list_header.text = scene.entity.name
+        self.entity_list_header.text = ' ' + scene.entity.name
+        self.entity_list_header.text_entity.align = 'left'
+        self.entity_list_header.text_entity.x = -.5
         self.entity_list_header.add_script('menu_toggler')
         self.entity_list_header.menu_toggler.target = self.entity_list
+
+        self.save_scene_button = load_prefab('editor_button')
+        self.save_scene_button.parent = self.entity_list_header
+        self.save_scene_button.color = color.orange
+        self.save_scene_button.text = 's'
+        self.save_scene_button.origin = (0.5, 0)
+        self.save_scene_button.x = -.5
+
+
+        self.save_scene_button.input = MethodType(self.input, self.save_scene_button)
+        # self.save_scene_button.input(self, 't')
 
         # self.entity_search = load_prefab('editor_button')
         # self.entity_search.parent = self

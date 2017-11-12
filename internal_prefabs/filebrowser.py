@@ -48,7 +48,7 @@ class Filebrowser(Entity):
                     menu_toggler.target = self
                     button.text = os.path.basename(f)
                     button.text_entity.position = (-.45, 0)
-                    button.text_entity.origin = (-.5, 0)
+                    button.text_entity.align = 'left'
                     self.buttons.append(button)
                     self.load_button = button.add_script(self.button_type)
                     self.load_button.path = os.path.join(self.path, f)

@@ -15,7 +15,6 @@ class Inspector(Entity):
         self.origin = (-.5, .5)
         self.position = window.top_left
         self.x += .2
-        self.y -= .025
         self.scale = (.2, 1)
 
         self.button_height = .025
@@ -29,7 +28,7 @@ class Inspector(Entity):
         self.name_label.origin = (-.5, .5)
         self.name_label.scale_y = self.button_height
         self.name_label.text = 'selected name'
-        self.name_label.text_entity.origin = (-.5,0)
+        self.name_label.text_entity.align = 'left'
         self.name_label.text_entity.x = -.45
 
         self.transform_labels = list()
@@ -43,7 +42,7 @@ class Inspector(Entity):
                 self.button.position = ((i / 3), 0)
                 self.button.scale = (1 / 3.05, self.button_height)
                 self.button.text = str(i)
-                self.button.text_entity.origin = (-.5,0)
+                self.button.text_entity.align = 'left'
                 self.transform_labels.append(self.button)
 
         self.model_field = self.create_button('model: ')
@@ -56,7 +55,7 @@ class Inspector(Entity):
         # self.scripts_label.y = self.button_height * -5
         self.scripts_label.scale_y = self.button_height
         self.scripts_label.text = 'scripts:'
-        self.scripts_label.text_entity.origin = (-.5,0)
+        self.scripts_label.text_entity.align = 'left'
         self.scripts_label.text_entity.x = -.45
         # self.scripts_label.add_script('menu_toggler')
 
@@ -90,7 +89,6 @@ class Inspector(Entity):
         self.layout_group.spacing = [0, .001]
         self.layout_group.origin = (-.5, .5)
         self.layout_group.update_grid()
-        self.add_script_button.y = self.add_script_button.y
 
         self.script_labels = list()
 
@@ -102,7 +100,7 @@ class Inspector(Entity):
         button.parent = self
         button.scale_y = self.button_height
         button.text = name
-        button.text_entity.origin = (-.5,0)
+        button.text_entity.align = 'left'
         button.text_entity.x = -.45
         return button
 
@@ -121,7 +119,7 @@ class Inspector(Entity):
             self.x = 1.2
             return
         else:
-            self.position = (window.top_left[0] + .2, window.top_right[1] - .05)
+            self.position = (window.top_left[0] + .2, window.top_right[1] - .025)
 
         self.selected = scene.editor.selection[0]
 
@@ -162,8 +160,8 @@ class Inspector(Entity):
                 self.button.scale = (1, 1)
                 self.button.color = color.red
                 self.button.text = self.selected.scripts[i].__class__.__name__
-                self.button.text_entity.origin = (-.5,0)
-                self.button.text_entity.x = -.4
+                self.button.text_entity.align = 'left'
+                self.button.text_entity.x = -.45
 
                 scripts_vars = [item for item in dir(self.selected.scripts[i]) if not item.startswith('_')]
                 print('vars:', scripts_vars)
@@ -189,4 +187,4 @@ class Inspector(Entity):
 
 
                     self.add_script_button.y -= j * -.025
-                self.add_script_button.y -= (len(self.selected.scripts) +6) * -.025
+                self.add_script_button.y -= (len(self.selected.scripts) +7) * -.025
