@@ -3,6 +3,7 @@ sys.path.append("..")
 from pandaeditor import *
 import os
 
+
 class Inspector(Entity):
 
     def __init__(self):
@@ -23,6 +24,7 @@ class Inspector(Entity):
         # append self so update() runs
         self.scripts.append(self)
 
+# name_label
         self.name_label = load_prefab('editor_button')
         self.name_label.parent = self
         self.name_label.origin = (-.5, .5)
@@ -31,6 +33,7 @@ class Inspector(Entity):
         self.name_label.text_entity.align = 'left'
         self.name_label.text_entity.x = -.45
 
+# transform_labels
         self.transform_labels = list()
         for j in range(3):
             self.vec3_group = Entity()
@@ -45,7 +48,18 @@ class Inspector(Entity):
                 self.button.text_entity.align = 'left'
                 self.transform_labels.append(self.button)
 
+# model_field
         self.model_field = self.create_button('model: ')
+        self.filebrowser = load_prefab('filebrowser')
+        self.filebrowser.parent = camera.ui
+        self.filebrowser.position = (0,0)
+        self.filebrowser.name = 'replace_model_filebrowser'
+        self.filebrowser.file_types = ('.egg')
+        self.filebrowser.path = os.path.join(os.path.dirname(application.asset_folder), 'pandaeditor/internal_models')
+        self.filebrowser.button_type = 'replace_model_button'
+        self.menu_toggler = self.model_field.add_script('menu_toggler')
+        self.menu_toggler.target = self.filebrowser
+
         self.color_field = self.create_button('color: ')
         self.texture_field = self.create_button('texture: ')
 
@@ -104,7 +118,6 @@ class Inspector(Entity):
         button.text_entity.x = -.45
         return button
 
-
     def update(self, dt):
         self.t += 1
         if self.t > 10:
@@ -115,13 +128,15 @@ class Inspector(Entity):
 
     def update_inspector(self):
 
-        if len(scene.editor.selection) == 0:
+
+        if scene.editor.selection and len(scene.editor.selection) == 0:
             self.x = 1.2
             return
         else:
             self.position = (window.top_left[0] + .2, window.top_right[1] - .025)
 
         self.selected = scene.editor.selection[0]
+        # print('egjnie:', self.selected)
 
         self.name_label.text = self.selected.name
         self.transform_labels[0].text = str(int(self.selected.x))
@@ -135,56 +150,58 @@ class Inspector(Entity):
         self.transform_labels[8].text = str(int(self.selected.scale_z))
 
 
-        self.model_field.text = 'model: ' + self.selected.model.name
+        self.model_field.text = ('model: ' + self.selected.model.name)
+        # print('updatesed text')
+        # print(self.selected.model.name)
         self.color_field.text = 'color: ' + self.selected.model.color
         self.texture_field.text = 'texture: ' + self.selected.texture.name
 
 
-        if len(self.selected.scripts) != self.script_amount: # if script changed, update
-            self.script_amount = len(self.selected.scripts)
-
-            for e in self.scripts_label.children:
-                try:
-                    destroy(e)
-                except:
-                    pass
-
-            for i in range(1, len(self.selected.scripts)):  # skip first one to ignore EditorButton
-                # if self.selected.script[i]._class__.__name__ == 'EditorButton':
-                #     pass
-                print('script:', self.selected.scripts[i].__class__.__name__)
-                self.button = load_prefab('editor_button')
-                self.button.parent = self.scripts_label
-                self.button.origin = (-.5, .5)
-                self.button.position = (0, - i - 1)
-                self.button.scale = (1, 1)
-                self.button.color = color.red
-                self.button.text = self.selected.scripts[i].__class__.__name__
-                self.button.text_entity.align = 'left'
-                self.button.text_entity.x = -.45
-
-                scripts_vars = [item for item in dir(self.selected.scripts[i]) if not item.startswith('_')]
-                print('vars:', scripts_vars)
-
-                j = 1
-                for var in scripts_vars:
-                    if var == 'entity':
-                        continue
-
-                    self.var_button = load_prefab('editor_button')
-                    self.var_button.parent = self.button
-                    self.var_button.origin = (-.5, .5)
-                    self.var_button.position = (0, - j)
-                    self.var_button.scale = (1, 1)
-                    self.var_button.color = color.yellow
-                    self.var_button.text = var
-                    self.var_button.text_entity.origin = (-.5,0)
-                    self.var_button.text_entity.x = -.4
-
-                    varvalue = getattr(self.selected.scripts[i], var)
-
-                    j += 1
-
-
-                    self.add_script_button.y -= j * -.025
-                self.add_script_button.y -= (len(self.selected.scripts) +7) * -.025
+        # if len(self.selected.scripts) != self.script_amount: # if script changed, update
+        #     self.script_amount = len(self.selected.scripts)
+        #
+        #     for e in self.scripts_label.children:
+        #         try:
+        #             destroy(e)
+        #         except:
+        #             pass
+        #
+        #     for i in range(1, len(self.selected.scripts)):  # skip first one to ignore EditorButton
+        #         # if self.selected.script[i]._class__.__name__ == 'EditorButton':
+        #         #     pass
+        #         # print('script:', self.selected.scripts[i].__class__.__name__)
+        #         self.button = load_prefab('editor_button')
+        #         self.button.parent = self.scripts_label
+        #         self.button.origin = (-.5, .5)
+        #         self.button.position = (0, - i - 1)
+        #         self.button.scale = (1, 1)
+        #         self.button.color = color.red
+        #         self.button.text = self.selected.scripts[i].__class__.__name__
+        #         self.button.text_entity.align = 'left'
+        #         self.button.text_entity.x = -.45
+        #
+        #         scripts_vars = [item for item in dir(self.selected.scripts[i]) if not item.startswith('_')]
+        #         print('vars:', scripts_vars)
+        #
+        #         j = 1
+        #         for var in scripts_vars:
+        #             if var == 'entity':
+        #                 continue
+        #
+        #             self.var_button = load_prefab('editor_button')
+        #             self.var_button.parent = self.button
+        #             self.var_button.origin = (-.5, .5)
+        #             self.var_button.position = (0, - j)
+        #             self.var_button.scale = (1, 1)
+        #             self.var_button.color = color.yellow
+        #             self.var_button.text = var
+        #             self.var_button.text_entity.origin = (-.5,0)
+        #             self.var_button.text_entity.x = -.4
+        #
+        #             varvalue = getattr(self.selected.scripts[i], var)
+        #
+        #             j += 1
+        #
+        #
+        #             self.add_script_button.y -= j * -.025
+        #         self.add_script_button.y -= (len(self.selected.scripts) +7) * -.025

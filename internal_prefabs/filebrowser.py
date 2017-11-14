@@ -8,7 +8,9 @@ class Filebrowser(Entity):
     def __init__(self):
         super().__init__()
         self.name = 'filebrowser'
-        self.parent = scene.ui
+        self.parent = camera.ui
+        self.is_editor = True
+        self.enabled = False
         self.color = color.black33
 
         self.path = ''
@@ -96,7 +98,7 @@ class Filebrowser(Entity):
 
 
     def on_enable(self):
-        print('enable')
+        # print('filebrowser enable:', (self.path))
         self.x = 0
         self.old_files = self.files
         self.files = os.listdir(self.path)

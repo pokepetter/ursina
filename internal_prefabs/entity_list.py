@@ -90,11 +90,8 @@ class EntityList(Entity):
         print(self.buttons)
 
 
-        # print("--- %s seconds ---" % (time.time() - start_time))
-    # if __name__ == '__main__':
-    #     populate()
-    # def __iter__(self):
-    #     # "implement the iterator protocol"
-    #     for v in chain(*map(iter, self.children)):
-    #         yield v
-    #     yield self.value
+    def input(self, key):
+        if key == 'left mouse down' and self.hovered:
+            scene.editor.selection.clear()
+            for b in self.buttons:
+                b.color = color.panda_button

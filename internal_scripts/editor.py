@@ -143,10 +143,6 @@ class Editor(Entity):
         self.menu_toggler = self.load_model_button.add_script('menu_toggler')
 
         self.filebrowser = load_prefab('filebrowser')
-        self.filebrowser.is_editor = True
-        self.filebrowser.parent = self
-        self.filebrowser.position = (0,0)
-        self.filebrowser.enabled = False
         self.filebrowser.file_types = ('.egg')
         self.filebrowser.path = os.path.join(os.path.dirname(application.asset_folder), 'models')
         self.filebrowser.button_type = 'load_model_button'
@@ -162,10 +158,6 @@ class Editor(Entity):
         self.menu_toggler = self.load_primitive_button.add_script('menu_toggler')
 
         self.filebrowser = load_prefab('filebrowser')
-        self.filebrowser.is_editor = True
-        self.filebrowser.parent = self
-        self.filebrowser.position = (0,0)
-        self.filebrowser.enabled = False
         self.filebrowser.file_types = ('.egg')
         self.filebrowser.path = os.path.join(os.path.dirname(application.asset_folder), 'pandaeditor/internal_models')
         self.filebrowser.button_type = 'load_model_button'
@@ -181,10 +173,6 @@ class Editor(Entity):
         self.menu_toggler = self.load_sprite_button.add_script('menu_toggler')
 
         self.filebrowser = load_prefab('filebrowser')
-        self.filebrowser.is_editor = True
-        self.filebrowser.parent = self
-        self.filebrowser.position = (0,0)
-        self.filebrowser.enabled = False
         self.filebrowser.file_types = ('.png', '.jpg', '.psd', '.gif')
         self.filebrowser.path = os.path.join(os.path.dirname(application.asset_folder), 'textures')
         self.filebrowser.button_type = 'load_texture_button'
@@ -291,19 +279,21 @@ class Editor(Entity):
         # render.setShaderAuto()
         light.showFrustum()
 
-        ground = Entity()
-        ground.model = 'quad'
-        ground.y = .1
-        ground.rotation_x = -90
-        ground.scale *= 10
+        # ground = Entity()
+        # ground.model = 'quad'
+        # ground.y = .1
+        # ground.rotation_x = -90
+        # ground.scale *= 10
         # ground.setShaderAuto()
 
-        cube = Entity()
-        cube.model = 'cube'
-        cube.origin = (0, -.5, 0)
+        # cube = Entity()
+        # cube.model = 'cube'
+        # cube.origin = (0, -.5, 0)
         # cube.setShaderAuto()
 
-        self.text = load_prefab('text')
+        # self.t = load_prefab('text')
+        # self.t.text = 'test text'
+
         # self.text.color = color.smoke
         # self.text.parent = scene.ui
 

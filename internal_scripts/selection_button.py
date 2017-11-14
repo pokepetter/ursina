@@ -20,17 +20,14 @@ class SelectionButton():
 
         if key == 'left mouse down' and self.entity.hovered:
             # if not left_shift:
-            #     scene.editor.selection.clear()
-            print('3')
-                # for b in scene.entity_list.buttons:
-                #     print('r')
-            #         b.entity.color = color.panda_button
+            scene.editor.selection.clear()
+
+            for b in scene.editor.entity_list.buttons:
+                b.color = color.panda_button
 
             self.entity.color = color.blue
             self.dragging = True
 
-
-            print('selecting:', self.selection_target)
             scene.editor.selection.append(self.selection_target)
 
 

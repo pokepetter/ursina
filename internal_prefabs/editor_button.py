@@ -42,5 +42,8 @@ class EditorButton(Entity):
                     self.text_entity.position = (0, 0, 0)
                     self.text_entity.text = value
                     self.text_entity.align = 'center'
+                    object.__setattr__(self, name, value)
+                else:
+                    self.text_entity.text = value
         else:
             super().__setattr__(name, value)

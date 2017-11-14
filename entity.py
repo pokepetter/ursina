@@ -81,8 +81,6 @@ class Entity(NodePath):
             if value is None:
                 return None
 
-            # self.model = None
-
             try:
                 combined_path = (path.join(
                     path.dirname(__file__),
