@@ -15,8 +15,6 @@ class GridLayout():
         self.limit = None
         self.width = 0
 
-        # self.model = loader.loadModel('internal_models/' + 'quad' + '.egg')
-        # self.model.reparentTo(self)
 
     def update_grid(self):
         if not self.entity:
@@ -49,9 +47,11 @@ class GridLayout():
                 x = 0
                 c.x = 0
 
+            # self.line_height = c.scale_y + self.spacing[1]
             c.y = (-self.rows + 1) * self.line_height
 
             x += 1
+
 
 
         for c in self.entity.children:

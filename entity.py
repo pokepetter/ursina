@@ -235,7 +235,6 @@ class Entity(NodePath):
             editor_collider.entity = self
             editor_collider.make_collider()
             object.__setattr__(self, name, editor_collider)
-            print('coll', self.editor_collider)
 
 
     def __getattr__(self, attrname):
@@ -262,6 +261,7 @@ class Entity(NodePath):
         self.wrtReparentTo(entity)
         pos = self.getPos(entity)
         self.position = (pos[0], pos[2], pos[1])
+        self.scale = self.getScale(entity)
         # print('parent:', self.parent.name, 'newpos:', self.position)
 
     def add_script(self, module_name):

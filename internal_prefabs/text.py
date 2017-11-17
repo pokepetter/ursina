@@ -13,11 +13,11 @@ class Text(Entity):
     def __init__(self):
         super().__init__()
         self.name = 'text'
-        self.character_spacing = .5
-        self.line_height = 1
-        self.character_limit = 50
-        self.characters = list()
-        self.scale *= 0.25
+        # self.character_spacing = .5
+        # self.line_height = 1
+        # self.character_limit = 50
+        # self.characters = list()
+        self.scale *= 0.25 * scene.editor_font_size
         self.origin = (0, 0)
 
         self.text_node = TextNode('node name')
@@ -88,6 +88,12 @@ class Text(Entity):
                 self.text_node.setTextColor(value)
             except:
                 pass
+
+        if name == 'wordwrap':
+            object.__setattr__(self, name, value)
+            print('set wordwrap to:', value)
+            self.text_node.setWordwrap(value)
+            print('yay')
 
         if name == 'font':
             try:

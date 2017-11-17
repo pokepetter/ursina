@@ -9,8 +9,8 @@ class Window(WindowProperties):
         super().__init__()
         loadPrcFileData('', 'window-title pandaeditor')
         loadPrcFileData('', 'undecorated True')
-        loadPrcFileData('', 'sync-video False')
-        loadPrcFileData('', 'show-frame-rate-meter True')
+        loadPrcFileData('', 'sync-video True')
+        loadPrcFileData('', 'show-frame-rate-meter False')
         # loadPrcFileData('', 'want-pstats True')
 
         self.setForeground(True)

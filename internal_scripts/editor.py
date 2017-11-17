@@ -15,6 +15,7 @@ class Editor(Entity):
         self.name = 'editor'
         self.is_editor = True
         self.parent = scene.ui
+
         self.editor_camera_script = load_script('editor_camera_script')
         self.editor_camera_script.position = (0, 0, -100)
         scene.editor_camera_script = self.editor_camera_script
@@ -199,7 +200,7 @@ class Editor(Entity):
         self.entity_list_header.color = (color.lime + color.black) / 2
         self.entity_list_header.position = window.top_left
         self.entity_list_header.origin = (-.5, .5)
-        self.entity_list_header.scale = (.2, .025)
+        self.entity_list_header.scale = (.25, .025)
         self.entity_list_header.text = ' ' + scene.entity.name
         self.entity_list_header.text_entity.align = 'left'
         self.entity_list_header.text_entity.x = -.5
@@ -233,7 +234,7 @@ class Editor(Entity):
         self.inspector = load_prefab('inspector')
         self.inspector.parent = self
 
-# 2D / 3D toggle
+# view front
         self.toggle_button = load_prefab('editor_button')
         self.toggle_button.is_editor = True
         self.toggle_button.parent = self
@@ -242,8 +243,7 @@ class Editor(Entity):
         self.toggle_button.position = window.top_right
         self.toggle_button.x -= .1
         self.toggle_button.scale = (.1, .05)
-        self.toggle_button.text = '2D/3D'
-        self.toggle_button.text_entity.x = 0
+        self.toggle_button.text = 'front'
         self.toggle_button.add_script('toggle_sideview')
 
 # exit button
@@ -329,6 +329,39 @@ class Editor(Entity):
         #
         # c.color = color.blue
 
+
+#         self.text_editor = Entity()
+#         self.text_editor.parent = self
+#         self.text_bg = load_prefab('editor_button')
+#         self.text_bg.parent = self.text_editor
+#         self.text_bg.scale = (.6, .8)
+#         self.text_bg.button_script.highlight_color = self.text_bg.button_script.color
+#
+#         # text = ''
+#         # for i in range(70):
+#         #     text += str('1')
+#         text ='''import sys
+# sys.path.append("..")
+# from pandaeditor import *
+# import os
+# from panda3d.bullet import BulletDebugNode
+# from types import MethodType
+#
+# class Editor(Entity):
+#
+#     def input(self, key):
+#         print('2')
+#
+#     def __init__(self):
+#         super().__init__()
+#         self.name = 'editor'
+#         self.is_editor = True
+#         self.parent = scene.ui
+#                 '''
+#         self.text_bg.text = text
+#         self.text_bg.text_entity.align = 'left'
+#         # self.text_editor.text_entity.origin = (-.5, .5)
+#         self.text_bg.text_entity.position = (-.45, .45)
 
     def update(self, dt):
         self.editor_camera_script.update(dt)

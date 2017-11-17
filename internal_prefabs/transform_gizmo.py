@@ -153,8 +153,10 @@ class TransformGizmo(Entity):
 
         if key == 'delete':
             for e in scene.editor.selection:
-                destroy(e)
+                e.detachNode()
+                # destroy(e)
 
+            scene.editor.entity_list.populate()
 
 # move with arrow buttons
         if key == 'arrow left' and scene.editor.selection:

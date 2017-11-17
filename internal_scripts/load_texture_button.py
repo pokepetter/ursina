@@ -27,3 +27,4 @@ class LoadTextureButton():
                     scene.editor.ui_canvas = load_prefab('canvas')
 
                 entity.parent = scene.editor.ui_canvas
+                scene.editor.entity_list.populate()

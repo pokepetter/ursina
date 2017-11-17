@@ -15,6 +15,8 @@ class Scene(NodePath):
 
         self.editor_camera_script = None
         self.editor = None
+        self.editor_size = 1
+        self.editor_font_size = 1
 
         self.entities = []
         self.entity = None # scene parent

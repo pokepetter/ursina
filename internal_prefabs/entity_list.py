@@ -14,35 +14,38 @@ class EntityList(Entity):
         self.name = 'entity_list'
         self.parent = scene.ui
         self.is_editor = True
-        self.model = 'quad'
-        self.color = color.panda_button
+        # self.model = 'quad'
+        # self.color = color.panda_button
+        self.size = 1
+        print('scene:', scene)
         self.origin = (-.5, .5)
         self.position = window.top_left
-        self.scale = (.199, 1)
+        self.scale = (.249, 1)
         self.editor_collider = 'box'
 
         self.button_parent = Entity()
         self.button_parent.parent = self
-        self.button_parent.y = -.025
+        self.button_parent.y = -.025 * self.size
         self.button_parent.z = -1
         self.max_vertical = 1000
-        self.button_size = (1, .015)
+        self.button_size = (1, .025 * self.size)
+
+        self.bg = Entity()
+        self.bg.model = 'quad'
+        self.bg.color = color.panda_button
+        self.bg.parent = self
+        self.bg.origin = (-.5, .5)
 
         self.temp_entity_list = list()
         self.buttons = list()
-        self.add_script('scrollable')
-        self.scrollable.target = self.button_parent
+        self.bg.add_script('scrollable')
+        self.bg.scrollable.target = self.button_parent
         # print('t:', self.scrollable.target)
         self.scripts.append(self)
         self.t = 0
         self.i = 0
 
         self.populate()
-    # def update(self, dt):
-    #     self.t += 1
-    #     if self.t > 1000:
-    #         self.populate()
-    #         self.t = 0
 
 
     def populate(self):
@@ -52,29 +55,32 @@ class EntityList(Entity):
             destroy(child)
         self.buttons.clear()
 
-        print('------------------')
+        print('-------pop----------')
         for e in scene.entity.children:
             self.traverse_tree(e)
+
+        self.bg.y = (- (self.i + 1) * (self.button_size[1] + .001)) + .001
 
 
     def create_button(self, entity, name):
         button = load_prefab('editor_button')
-        # button.is_editor = True
+        button.is_editor = True
         button.parent = self.button_parent
         button.origin = (-.5, .5)
         button.position = (
             0,
             (-self.i * (self.button_size[1] + .001)))
-        button.scale = self.button_size
+        button.scale = self.button_size * scene.editor_size
         button.color = color.panda_button
-        button.text = name
+        button.text = name[0:min(32, len(name))]
+        # button.text = name
         button.text_entity.align = 'left'
         button.text_entity.x = -.5
+        # button.text_entity.wordwrap = button.model.getScale(scene.render)[0] * 4
 
         selection_button = button.add_script('selection_button')
         selection_button.selection_target = entity
         self.buttons.append(button)
-        # print(button)
 
         self.i += 1
 
@@ -82,12 +88,12 @@ class EntityList(Entity):
 
 
     def traverse_tree(self, e, indent=''):
-        indent += '-'
+        indent += '  '
         self.create_button(e, indent + e.name)
         for c in e.children:
             self.traverse_tree(c, indent)
 
-        print(self.buttons)
+        # print(self.buttons)
 
 
     def input(self, key):
