@@ -10,17 +10,25 @@ class LoadModelButton():
     def input(self, key):
         if key == 'left mouse down' and self.entity.hovered:
             if self.path:
-                entity = Entity()
-                entity.name = os.path.basename(self.path)
-                entity.model = os.path.basename(self.path).split('.')[0]
-                # try:
-                #     entity.texture = os.path.basename(self.path).split('.')[0]
-                # except:
-                #     pass # no texture with same name
+                self.load_model()
 
-                entity.collision = True
-                button_script = entity.add_script('editor_button')
-                button_script.collider = None
-                entity.editor_collider = 'box'
-                # print('collider:', button_script)
-                scene.editor.entity_list.populate()
+    @undoable
+    def load_model(self):
+        entity = Entity()
+        entity.name = os.path.basename(self.path)
+        entity.model = os.path.basename(self.path).split('.')[0]
+        # try:
+        #     entity.texture = os.path.basename(self.path).split('.')[0]
+        # except:
+        #     pass # no texture with same name
+
+        entity.collision = True
+        button_script = entity.add_script('editor_button')
+        button_script.collider = None
+        entity.editor_collider = 'box'
+        scene.editor.entity_list.populate()
+
+        # undo
+        yield 'Load Model ' + entity.name
+        destroy(entity)
+        scene.editor.entity_list.populate()

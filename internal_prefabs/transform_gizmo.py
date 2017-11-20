@@ -48,6 +48,31 @@ class TransformGizmo(Entity):
         self.button = None
         self.selection_buttons = list()
 
+    @undoable
+    def move(self, entities, delta_position):
+        self.original_positions = list()
+
+        for e in entities:
+            self.original_position.append(e.position)
+
+            # print('drop')
+            # for e in scene.editor.selection:
+            e.position += delta_position
+            e.position = (round(e.x, 1), round(e.y, 1), round(e.z, 1))
+        # self.position = position
+
+
+        # undo
+        yield 'Move Selection'
+        print('undo move')
+        for i in len(entities):
+            entities[i].position = self.original_positions[i]
+            entities[i].position = (
+                round(entities[i].x, 1),
+                round(entities[i].y, 1),
+                round(entities[i].z, 1)
+                )
+        # self.position = mouse.hovered_entity.global_position
 
 
     def update(self, dt):
@@ -77,6 +102,7 @@ class TransformGizmo(Entity):
 
                 # select entities
                 self.position = mouse.hovered_entity.global_position
+                self.original_position = self.position
                 if not self.add_to_selection:
                     scene.editor.selection.clear()
                     scene.editor.selection.append(mouse.hovered_entity)
@@ -99,14 +125,12 @@ class TransformGizmo(Entity):
             self.entity_right_click_menu.enabled = False
 
         if key == 'left mouse up':
-            #stop dragging
-            self.original_position = mouse.hovered_entity.position
+            self.move(
+                scene.editor.selection, (
+                (mouse.delta[0] * distance_to_camera * camera.aspect_ratio),
+                (mouse.delta[1] * distance_to_camera),
+                0))
             self.dragging = False
-            self.dragging_x = False
-            self.dragging_y = False
-            self.dragging_z = False
-            # mouse.raycast = 1
-
 
         if key == 'left shift':
             self.add_to_selection = True

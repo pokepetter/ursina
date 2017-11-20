@@ -48,6 +48,14 @@ class Inspector(Entity):
                 self.button.text_entity.x = -.43
                 self.transform_labels.append(self.button)
 
+        # self.space = self.create_button('space')
+        self.space = Entity()
+        self.space.model = 'quad'
+        self.space.parent = self
+        self.space.scale_y = .01
+        self.space.origin = (-.5, .5)
+        self.space.color = color.panda_button
+
 # model_field
         self.model_field = self.create_button('model: ')
         self.filebrowser = load_prefab('filebrowser')
@@ -64,10 +72,9 @@ class Inspector(Entity):
         self.color_field_preview = Entity()
         self.color_field_preview.parent = self.color_field.model
         self.color_field_preview.model = 'quad'
-        self.color_field_preview.origin = (-.5, 0)
-        self.color_field_preview.position = (-.2, 0)
-        self.color_field_preview.scale_x = .9
-        self.color_field_preview.scale *= .75
+        self.color_field_preview.origin = (.5, 0)
+        self.color_field_preview.position = (.5, 0)
+        self.color_field_preview.scale_x = .33
         self.color_select = load_prefab('panel')
         self.color_select.color = color.panda_button
         self.color_select.parent = camera.ui
@@ -81,9 +88,11 @@ class Inspector(Entity):
 
         self.scripts_label = self.create_button('editor_button')
         self.scripts_label.parent = self
-        self.scripts_label.text = 'scripts:'
+        self.scripts_label.text = ' '
 
         self.add_script_button = self.create_button('add script')
+        self.add_script_button.text_entity.align = 'center'
+        self.add_script_button.text_entity.x = 0
         self.menu_toggler = self.add_script_button.add_script('menu_toggler')
         self.menu_toggler_1 = self.add_script_button.add_script('menu_toggler')
 
@@ -108,18 +117,12 @@ class Inspector(Entity):
         self.menu_toggler_1.target = self.filebrowser
 
 
-        # self.layout_group = self.add_script('grid_layout')
-        # self.layout_group.max_x = 1
-        # self.layout_group.spacing = [0, .001]
-        # self.layout_group.origin = (-.5, .5)
-        # # self.layout_group.vertical = True
-        # self.layout_group.update_grid()
-
         self.new_y = 0
 
-        for child in self.children:
-            self.new_y -= child.scale_y + .001
-            child.y = self.new_y
+        for i in range(1, len(self.children)):
+
+            self.new_y -= self.children[i-1].scale_y + .001
+            self.children[i].y = self.new_y
 
         self.script_labels = list()
 
@@ -146,9 +149,9 @@ class Inspector(Entity):
 
     def update_inspector(self):
 
-        # if len(scene.editor.selection) == 0:
-        #     self.x = 1.2
-        #     return
+        if len(scene.editor.selection) == 0:
+            self.x = 1.2
+            return
         # else:
         self.x = window.top_left[0] + .25
 
@@ -169,20 +172,20 @@ class Inspector(Entity):
         self.transform_labels[7].text = str(round(self.selected.scale_y, 2))
         self.transform_labels[8].text = str(round(self.selected.scale_z, 2))
 
+        if self.selected.model:
+            self.model_field.text = ('m ' + self.selected.model.name)
 
-        self.model_field.text = ('model: ' + self.selected.model.name)
+        if self.selected.color:
+            self.color_field.text = (
+                'color: '
+                + str(self.selected.color[0]) + ','
+                + str(self.selected.color[1]) + ','
+                + str(self.selected.color[2])
+                )
+            self.color_field_preview.color = self.selected.color
 
-        self.color_field.text = (
-            'color: '
-            + str(self.selected.color[0]) + ','
-            + str(self.selected.color[1]) + ','
-            + str(self.selected.color[2])
-            )
-        self.color_field_preview.color = self.selected.color
-
-
-        self.texture_field.text = 'texture: ' + self.selected.texture.name
-
+        if self.selected.texture:
+            self.texture_field.text = 'texture: ' + self.selected.texture.name
 
         if len(self.selected.scripts) != self.script_amount: # if script changed, update
             self.script_amount = len(self.selected.scripts)
@@ -193,34 +196,28 @@ class Inspector(Entity):
                 except:
                     pass
 
+            self.prev_script_length = 0
             for i in range(1, len(self.selected.scripts)):  # skip first one to ignore EditorButton
-                # if self.selected.script[i]._class__.__name__ == 'EditorButton':
-                #     pass
-                # print('script:', self.selected.scripts[i].__class__.__name__)
-                self.button = load_prefab('editor_button')
+                self.button = self.create_button(self.selected.scripts[i].__class__.__name__)
                 self.button.parent = self.scripts_label
-                self.button.origin = (-.5, .5)
-                self.button.position = (0, - i - 1)
-                self.button.scale = (1, 1)
                 self.button.color = color.red
-                self.button.text = self.selected.scripts[i].__class__.__name__
-                self.button.text_entity.align = 'left'
-                self.button.text_entity.x = -.45
-
+                self.button.position = (0, - i - 1 - self.prev_script_length)
+                self.button.scale = (1, 1)
                 scripts_vars = [item for item in dir(self.selected.scripts[i]) if not item.startswith('_')]
-                print('vars:', scripts_vars)
+                self.prev_script_length = len(scripts_vars) - 1
+
 
                 j = 1
                 for var in scripts_vars:
                     if var == 'entity':
                         continue
 
-                    self.var_button = load_prefab('editor_button')
+                    self.var_button = self.create_button(var)
                     self.var_button.parent = self.button
                     self.var_button.origin = (-.5, .5)
                     self.var_button.position = (0, - j)
                     self.var_button.scale = (1, 1)
-                    self.var_button.color = color.yellow
+                    self.var_button.color = color.orange
                     self.var_button.text = var
                     self.var_button.text_entity.origin = (-.5,0)
                     self.var_button.text_entity.x = -.4
@@ -230,5 +227,5 @@ class Inspector(Entity):
                     j += 1
 
 
-        #             self.add_script_button.y -= j * -.025
-        #         self.add_script_button.y -= (len(self.selected.scripts) +7) * -.025
+                    # self.add_script_button.y -= j * -.025
+                # self.add_script_button.y -= (len(self.selected.scripts)+7) * .025

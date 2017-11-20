@@ -363,6 +363,7 @@ class Editor(Entity):
 #         # self.text_editor.text_entity.origin = (-.5, .5)
 #         self.text_bg.text_entity.position = (-.45, .45)
 
+
     def update(self, dt):
         self.editor_camera_script.update(dt)
         self.transform_gizmo.update(dt)
@@ -373,14 +374,15 @@ class Editor(Entity):
             render.setShaderAuto()
             print('set shader auto')
 
-        if key == 'left control':
-            self.ctrl = True
-        if key == 'left control up':
-            self.ctrl = False
 
-        if self.ctrl:
-            if key == 's':
-                save_prefab(scene.entity)
+
+        if key == 'control-s':
+            save_prefab(scene.entity)
+
+        if key == 'control-z':
+            undo.stack().undo()
+        if key == 'control-y':
+            undo.stack().redo()
 
         if key == 'c':
             # print('show colliders')

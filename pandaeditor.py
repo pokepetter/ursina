@@ -18,6 +18,9 @@ import math
 import random
 import inspect
 import importlib
+import undo
+from undo import undoable
+undo.setstack(undo.Stack())
 
 from entity import Entity
 import application

@@ -11,4 +11,4 @@ class AddScriptButton():
         if key == 'left mouse down' and self.entity.hovered:
             if self.path:
                 scene.editor.selection[0].add_script(os.path.basename(self.path)[:-3])
-                print('scripts:', scene.editor.selection[0].scripts)
+                # print('scripts:', scene.editor.selection[0].scripts)
