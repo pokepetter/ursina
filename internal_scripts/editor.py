@@ -4,6 +4,7 @@ from pandaeditor import *
 import os
 from panda3d.bullet import BulletDebugNode
 from types import MethodType
+import debugwindow
 
 class Editor(Entity):
 
