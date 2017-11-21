@@ -14,6 +14,8 @@ class PandaEditor(ShowBase):
         scene.render = self.render
         application.base = base
         application.asset_folder = os.path.dirname(__file__)
+        print('model path:', os.path.dirname(__file__))
+
 
         window.load_defaults()
 

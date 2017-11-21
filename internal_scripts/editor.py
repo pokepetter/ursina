@@ -175,7 +175,7 @@ class Editor(Entity):
 
         self.filebrowser = load_prefab('filebrowser')
         self.filebrowser.file_types = ('.png', '.jpg', '.psd', '.gif')
-        self.filebrowser.path = os.path.join(os.path.dirname(application.asset_folder), 'textures')
+        self.filebrowser.path = os.path.join(os.path.dirname(os.path.dirname(application.asset_folder)), 'textures')
         self.filebrowser.button_type = 'load_texture_button'
         self.menu_toggler.target = self.filebrowser
 
@@ -259,25 +259,25 @@ class Editor(Entity):
         # self.exit_button.add_script('toggle_sideview')
 
 
-        from panda3d.core import DirectionalLight
-        from panda3d.core import VBase4
-        light = DirectionalLight('light')
-        light.setColor(VBase4(1, 1, 1, 1))
-        dlnp = render.attachNewNode(light)
-        dlnp.setHpr(0, -60, 60)
-        # dlnp.setPos(0, -10, 10)
-        dlnp.setPos(0, 0, 32)
-        dlnp.setScale(100)
-        # dlnp.lookAt(0, 0, 0)
-        dlnp.node().getLens().setNearFar(.2, 100)
-        # dlnp.node().getLens().setFocalLength(100)
-
-        render.setLight(dlnp)
-        # Use a 512x512 resolution shadow map
-        light.setShadowCaster(True, 2048, 2048)
-        # Enable the shader generator for the receiving nodes
-        # render.setShaderAuto()
-        light.showFrustum()
+        # from panda3d.core import DirectionalLight
+        # from panda3d.core import VBase4
+        # light = DirectionalLight('light')
+        # light.setColor(VBase4(1, 1, 1, 1))
+        # dlnp = render.attachNewNode(light)
+        # dlnp.setHpr(0, -60, 60)
+        # # dlnp.setPos(0, -10, 10)
+        # dlnp.setPos(0, 0, 32)
+        # dlnp.setScale(100)
+        # # dlnp.lookAt(0, 0, 0)
+        # dlnp.node().getLens().setNearFar(.2, 100)
+        # # dlnp.node().getLens().setFocalLength(100)
+        #
+        # render.setLight(dlnp)
+        # # Use a 512x512 resolution shadow map
+        # light.setShadowCaster(True, 2048, 2048)
+        # # Enable the shader generator for the receiving nodes
+        # # render.setShaderAuto()
+        # light.showFrustum()
 
         # ground = Entity()
         # ground.model = 'quad'
@@ -426,6 +426,15 @@ class Editor(Entity):
                         e.editor_collider = 'box'
                         e.collider.stash()
                         e.collider.node_path.show()
+                        try:
+                            e.stop()
+                        except:
+                            pass
+                        for s in e.scripts:
+                            try:
+                                s.stop()
+                            except:
+                                pass
             # disable editor
             else:
                 self.editor_camera_script.position = camera.position
@@ -444,7 +453,7 @@ class Editor(Entity):
                         pass
                     for s in e.scripts:
                         try:
-                            print('script:', s)
+                            # print('script:', s)
                             s.start()
                         except:
                             pass

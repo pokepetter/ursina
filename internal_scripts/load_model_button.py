@@ -10,6 +10,7 @@ class LoadModelButton():
     def input(self, key):
         if key == 'left mouse down' and self.entity.hovered:
             if self.path:
+                print(self.path)
                 self.load_model()
 
     @undoable

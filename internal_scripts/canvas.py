@@ -17,3 +17,4 @@ class Canvas():
     def stop(self):
         self.entity.parent = self.original_parent
         self.entity.position = (0,0,0)
+        print('stopped!!!')

@@ -80,21 +80,27 @@ class Entity(NodePath):
         if name == 'model':
             if value is None:
                 return None
-
             try:
-                combined_path = (path.join(
-                    path.dirname(__file__),
-                    'internal_models/')
-                    + value + '.egg')
-                combined_path = Filename.fromOsSpecific(combined_path)
-                # print('trying to load:', combined_path)
+                combined_path = Filename.fromOsSpecific(path.join(
+                        path.dirname(__file__),
+                        'internal_models/',
+                        value + '.egg'))
+            #
+            # print('c:', combined_path)
+            #
+            # if path.exists(combined_path):
                 self.model = loader.loadModel(combined_path)
+                # print('loaded internal')
             except:
-                pass
-                # try:
-                #     self.model = loader.loadModel('..internal_models/' + value + '.egg')
-                # except:
-                #     pass
+                try:
+                    combined_path = Filename.fromOsSpecific(path.join(
+                        path.dirname(path.dirname(__file__)),
+                        'models/',
+                        value + '.egg'))
+
+                    self.model = loader.loadModel(combined_path)
+                except:
+                    pass
 
             if self.model:
                 self.model.reparentTo(self)
@@ -110,21 +116,22 @@ class Entity(NodePath):
 
         if name == 'texture':
             if self.model:
+                # try:
+                #     texture = loader.loadTexture(Filename.fromOsSpecific(value))
+                # except:
                 try:
-                    texture = loader.loadTexture(Filename.fromOsSpecific(value))
+                    texture = loader.loadTexture(
+                        Filename.fromOsSpecific(
+                        (path.join(
+                            path.dirname(path.dirname(__file__)),
+                            'textures/') + value)))
+                    # except:
+                    #     try:
+                    #         texture = loader.loadTexture(
+                    #             Filename.fromOsSpecific('internal_textures/') + value + '.png')
                 except:
-                    try:
-                        texture = loader.loadTexture(
-                            Filename.fromOsSpecific(
-                            (path.join(
-                                pathf.dirname(path.dirname(__file__)),
-                                'textures/') + value)))
-                    except:
-                        try:
-                            texture = loader.loadTexture(
-                                Filename.fromOsSpecific('internal_textures/') + value + '.png')
-                        except:
-                            pass
+                    pass
+
                 if texture:
                     object.__setattr__(self, name, texture)
                     texture.setMagfilter(SamplerState.FT_nearest)

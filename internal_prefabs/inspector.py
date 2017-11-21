@@ -68,6 +68,7 @@ class Inspector(Entity):
         self.menu_toggler = self.model_field.add_script('menu_toggler')
         self.menu_toggler.target = self.filebrowser
 
+# color_field
         self.color_field = self.create_button('color: ')
         self.color_field_preview = Entity()
         self.color_field_preview.parent = self.color_field.model
@@ -83,8 +84,17 @@ class Inspector(Entity):
         self.menu_toggler = self.color_field.add_script('menu_toggler')
         self.menu_toggler.target = self.color_select
 
-
+# texture_field
         self.texture_field = self.create_button('texture: ')
+        self.filebrowser = load_prefab('filebrowser')
+        self.filebrowser.parent = camera.ui
+        self.filebrowser.position = (0,0)
+        self.filebrowser.name = 'replace_texture_filebrowser'
+        self.filebrowser.file_types = ('.png', '.jpg')
+        self.filebrowser.path = os.path.join(os.path.dirname(application.asset_folder), 'textures')
+        self.filebrowser.button_type = 'replace_texture_button'
+        self.menu_toggler = self.texture_field.add_script('menu_toggler')
+        self.menu_toggler.target = self.filebrowser
 
         self.scripts_label = self.create_button('editor_button')
         self.scripts_label.parent = self
