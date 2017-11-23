@@ -76,6 +76,8 @@ class TransformGizmo(Entity):
 
 
     def update(self, dt):
+        if not scene.editor.enabled:    # just to make sure
+            return
         # for moving stuff in side view
         if scene.editor.camera_pivot.rotation == (0,0,0) and self.dragging:
             if mouse.hovered_entity and mouse.hovered_entity.is_editor == False:
@@ -95,6 +97,9 @@ class TransformGizmo(Entity):
 
 
     def input(self, key):
+        if not scene.editor.enabled:    # just to make sure
+            return
+
         if key == 'left mouse down':
             if mouse.hovered_entity and mouse.hovered_entity.is_editor == False:
                 self.original_position = mouse.hovered_entity.position
