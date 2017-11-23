@@ -80,6 +80,7 @@ class Entity(NodePath):
         if name == 'model':
             if value is None:
                 return None
+
             try:
                 combined_path = Filename.fromOsSpecific(path.join(
                         path.dirname(__file__),
