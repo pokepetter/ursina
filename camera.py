@@ -5,6 +5,8 @@ class Camera(Entity):
 
     def __init__(self):
         super().__init__()
+        self.name = 'camera'
+        self.is_editor = True
         self.base = None
         self.cam = None
 

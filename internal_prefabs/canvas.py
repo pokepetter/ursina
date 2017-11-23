@@ -10,5 +10,25 @@ class Canvas(Entity):
         self.model = 'canvas'
         self.origin = (0, 0, -.01)
         self.color = color.white33
-        self.add_script('canvas')
         self.editor_collider = 'box'
+
+        self.scripts.append(TestScript())
+
+
+    def start(self):
+        self.original_parent = self.parent
+        self.original_scale = self.scale
+        self.parent = scene.ui
+        self.parent = original_parent
+        self.scale = original_scale
+
+
+    def stop(self):
+        self.parent = self.original_parent
+        self.position = (0,0,0)
+
+
+class TestScript():
+
+    def input(self, key):
+        print('it works!', key)

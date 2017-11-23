@@ -58,7 +58,7 @@ class TransformGizmo(Entity):
             # print('drop')
             # for e in scene.editor.selection:
             e.position += delta_position
-            e.position = (round(e.x, 1), round(e.y, 1), round(e.z, 1))
+            e.position = (round(e.x, 2), round(e.y, 2), round(e.z, 2))
         # self.position = position
 
 
@@ -68,9 +68,9 @@ class TransformGizmo(Entity):
         for i in len(entities):
             entities[i].position = self.original_positions[i]
             entities[i].position = (
-                round(entities[i].x, 1),
-                round(entities[i].y, 1),
-                round(entities[i].z, 1)
+                round(entities[i].x, 2),
+                round(entities[i].y, 2),
+                round(entities[i].z, 2)
                 )
         # self.position = mouse.hovered_entity.global_position
 
@@ -89,7 +89,7 @@ class TransformGizmo(Entity):
                             self.original_position[0] + (mouse.delta[0] * distance_to_camera * camera.aspect_ratio),
                             self.original_position[1] + (mouse.delta[1] * distance_to_camera),
                             self.original_position[2])
-                        e.position = (round(e.x, 1), round(e.y, 1), round(e.z, 1))
+                        e.position = (round(e.x, 2), round(e.y, 2), round(e.z, 2))
 
                     self.position = mouse.hovered_entity.global_position
 

@@ -55,6 +55,7 @@ class PandaEditor(ShowBase):
 
         ui = Entity()
         ui.name = 'ui'
+        ui.is_editor = True
         ui.parent = ui_camera
         ui.model = 'quad'
         ui.scale = (ui_size * .5, ui_size * .5)
@@ -109,6 +110,11 @@ class PandaEditor(ShowBase):
 
         for entity in scene.entities:
             if entity.enabled:
+                # try:
+                #     entity.update(dt)
+                # except:
+                #     pass
+
                 for script in entity.scripts:
                     try:
                         script.update(dt)

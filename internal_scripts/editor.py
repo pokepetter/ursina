@@ -21,6 +21,7 @@ class Editor(Entity):
         scene.editor_camera_script = self.editor_camera_script
 
         self.camera_pivot = Entity()
+        self.camera_pivot.is_editor = True
         self.camera_pivot.name = 'camera_pivot'
         self.camera_pivot.parent = scene.render
         self.camera_pivot.is_editor = True
@@ -151,7 +152,6 @@ class Editor(Entity):
 
 # load primitive
         self.load_primitive_button = load_prefab('editor_button')
-        self.load_primitive_button.is_editor = True
         self.load_primitive_button.parent = self.load_menu_parent
         self.load_primitive_button.name = 'load_primitive_button'
         self.load_primitive_button.scale = (.1, .05)
@@ -166,7 +166,6 @@ class Editor(Entity):
 
 # load sprites
         self.load_sprite_button = load_prefab('editor_button')
-        self.load_sprite_button.is_editor = True
         self.load_sprite_button.parent = self.load_menu_parent
         self.load_sprite_button.name = 'load_sprite_button'
         self.load_sprite_button.scale = (.1, .05)
@@ -175,19 +174,12 @@ class Editor(Entity):
 
         self.filebrowser = load_prefab('filebrowser')
         self.filebrowser.file_types = ('.png', '.jpg', '.psd', '.gif')
-        self.filebrowser.path = os.path.join(os.path.dirname(os.path.dirname(application.asset_folder)), 'textures')
+        self.filebrowser.path = os.path.join(os.path.dirname(application.asset_folder), 'textures')
         self.filebrowser.button_type = 'load_texture_button'
         self.menu_toggler.target = self.filebrowser
 
         self.layout_group.update_grid()
 
-# # left menu
-#         self.load_sprite_button = load_prefab('editor_button')
-#         self.load_sprite_button.is_editor = True
-#         self.load_sprite_button.parent = self.load_menu_parent
-#         self.load_sprite_button.name = 'load_sprite_button'
-#         self.load_sprite_button.scale = (.1, .05)
-#         self.load_sprite_button.text = 'sprite'
 
 # entity list
         self.entity_list = load_prefab('entity_list')
@@ -257,7 +249,6 @@ class Editor(Entity):
         self.exit_button.text = 'X'
         self.exit_button.text_entity.x = 0
         # self.exit_button.add_script('toggle_sideview')
-
 
         # from panda3d.core import DirectionalLight
         # from panda3d.core import VBase4
@@ -370,6 +361,9 @@ class Editor(Entity):
         # self.inspector.update(dt)
 
     def input(self, key):
+        # if key == 'left mouse up':
+        #     print('arguments:', sys.argv)
+
         if key == 'l':
             render.setShaderAuto()
             print('set shader auto')
@@ -421,28 +415,32 @@ class Editor(Entity):
                 camera.position = self.editor_camera_script.position
 
                 for e in scene.entities:
-                    e.show()
-                    if not e.is_editor:
+                    if e.is_editor or e is scene.entity:
+                        continue
+
+                    try:
                         e.editor_collider = 'box'
                         e.collider.stash()
-                        e.collider.node_path.show()
+                    except:
+                        pass
+                    try:
+                        e.stop()
+                    except:
+                        pass
+                    for s in e.scripts:
                         try:
-                            e.stop()
+                            s.stop()
                         except:
                             pass
-                        for s in e.scripts:
-                            try:
-                                s.stop()
-                            except:
-                                pass
             # disable editor
             else:
                 self.editor_camera_script.position = camera.position
                 camera.wrtReparentTo(scene.render)
                 for e in scene.entities:
+                    if e.is_editor:
+                        continue
                     try:
-                        if e.editor_collider:
-                            e.editor_collider.stash()
+                        e.editor_collider.stash()
                         e.collider.unstash()
                     except:
                         pass
@@ -453,11 +451,9 @@ class Editor(Entity):
                         pass
                     for s in e.scripts:
                         try:
-                            # print('script:', s)
                             s.start()
                         except:
                             pass
-
 
 
         if self.enabled:

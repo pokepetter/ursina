@@ -11,6 +11,7 @@ class Scene(NodePath):
 
         self.camera = None
         self.ui_camera = None
+        self.canvas = None
         self.ui = None
 
         self.editor_camera_script = None

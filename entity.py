@@ -116,21 +116,21 @@ class Entity(NodePath):
 
         if name == 'texture':
             if self.model:
-                # try:
-                #     texture = loader.loadTexture(Filename.fromOsSpecific(value))
-                # except:
                 try:
-                    texture = loader.loadTexture(
-                        Filename.fromOsSpecific(
-                        (path.join(
-                            path.dirname(path.dirname(__file__)),
-                            'textures/') + value)))
-                    # except:
-                    #     try:
-                    #         texture = loader.loadTexture(
-                    #             Filename.fromOsSpecific('internal_textures/') + value + '.png')
+                    texture = loader.loadTexture(Filename.fromOsSpecific(value))
                 except:
-                    pass
+                    try:
+                        texture = loader.loadTexture(
+                            Filename.fromOsSpecific(
+                            (path.join(
+                                path.dirname(path.dirname(__file__)),
+                                'textures/') + value)))
+                    except:
+                        try:
+                            texture = loader.loadTexture(
+                                Filename.fromOsSpecific('internal_textures/') + value + '.png')
+                        except:
+                            pass
 
                 if texture:
                     object.__setattr__(self, name, texture)

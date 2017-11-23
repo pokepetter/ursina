@@ -29,16 +29,16 @@ class LoadTextureButton():
         scene.editor.entity_list.populate()
 
         self.auto_created_canvas = True
-        if not scene.editor.ui_canvas:
-            scene.editor.ui_canvas = load_prefab('canvas')
+        if not scene.canvas:
+            scene.canvas = load_prefab('canvas')
             self.auto_created_canvas = True
 
-        entity.parent = scene.editor.ui_canvas
+        entity.parent = scene.canvas
         scene.editor.entity_list.populate()
 
         # undo
         yield 'Load Sprite ' + entity.name
         destroy(entity)
         if self.auto_created_canvas:
-            destroy(scene.editor.ui_canvas)
+            destroy(scene.canvas)
         scene.editor.entity_list.populate()
