@@ -36,14 +36,25 @@ class Editor(Entity):
         self.transform_gizmo.parent = scene.render
 
 
-        self.grid = load_prefab('panel')
+        self.grid = Entity()
+        self.grid.model = 'cube'
         self.grid.is_editor = True
-        self.grid.name = 'grid'
+        self.grid.name = 'grid_x'
         self.grid.parent = scene.render
         self.grid.position = (0, 0, 0)
         self.grid.rotation = (-90, 0, 0)
-        self.grid.scale = (10, 10, 10)
-        self.grid.color = color.color(90, .9, .8, .2)
+        self.grid.scale = (10, .02, .02)
+        self.grid.color = color.orange
+
+        self.grid = Entity()
+        self.grid.model = 'cube'
+        self.grid.is_editor = True
+        self.grid.name = 'grid_z'
+        self.grid.parent = scene.render
+        self.grid.position = (0, 0, 0)
+        self.grid.rotation = (-90, 90, 0)
+        self.grid.scale = (10, .02, .02)
+        self.grid.color = color.lime
 
 # top menu
         self.top_menu = Entity()
@@ -202,13 +213,17 @@ class Editor(Entity):
 
         self.save_scene_button = load_prefab('editor_button')
         self.save_scene_button.parent = self.entity_list_header
-        self.save_scene_button.color = color.orange
+        self.save_scene_button.color = color.green
         self.save_scene_button.text = 's'
         self.save_scene_button.origin = (0.5, 0)
-        self.save_scene_button.x = -.5
+        self.save_scene_button.position = (1, -.5, -3)
+        self.save_scene_button.scale_x = .15
+        self.save_scene_button.add_script('save_scene_button')
 
 
-        self.save_scene_button.input = MethodType(self.input, self.save_scene_button)
+
+
+        # self.save_scene_button.input = MethodType(self.input, self.save_scene_button)
         # self.save_scene_button.input(self, 't')
 
         # self.entity_search = load_prefab('editor_button')
@@ -327,7 +342,7 @@ class Editor(Entity):
 #         self.text_bg = load_prefab('editor_button')
 #         self.text_bg.parent = self.text_editor
 #         self.text_bg.scale = (.6, .8)
-#         self.text_bg.button_script.highlight_color = self.text_bg.button_script.color
+#         self.text_bg.button_script._highlight_color = self.text_bg.button_script.color
 #
 #         # text = ''
 #         # for i in range(70):

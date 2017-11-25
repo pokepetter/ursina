@@ -16,7 +16,7 @@ class LoadModelButton():
     @undoable
     def load_model(self):
         entity = Entity()
-        entity.name = os.path.basename(self.path)
+        entity.name = os.path.basename(self.path).split('.')[0]
         entity.model = os.path.basename(self.path).split('.')[0]
         # try:
         #     entity.texture = os.path.basename(self.path).split('.')[0]

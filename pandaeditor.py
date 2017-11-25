@@ -42,22 +42,24 @@ from internal_prefabs import *
 def distance(a, b):
     return math.sqrt(sum( (a - b)**2 for a, b in zip(a, b)))
 
-def save_scene(name):
-    has_scene_entity = False
-    for e in scene.entities:
-        if e.name.startswith('scene') and e.parent == scene.render:
-            scene_entity = e
-            has_scene_entity = True
-            break
-    if not has_scene_entity:
-        scene_entity = Entity()
-        scene_entity.name = name
+# def save_scene():
+    # has_scene_entity = False
+    # for e in scene.entities:
+    #     if e.name.startswith('scene') and e.parent == scene.render:
+    #         scene_entity = e
+    #         has_scene_entity = True
+    #         break
+    # if not has_scene_entity:
+    #     scene_entity = Entity()
+    #     scene_entity.name = name
+    #
+    # for e in scene.entities:
+    #     if not e.is_editor and e.parent == scene.render and e is not scene_entity:
+    #         print(e)
+    #         e.parent = parent_entity
 
-    for e in scene.entities:
-        if not e.is_editor and e.parent == scene.render and e is not scene_entity:
-            print(e)
-            e.parent = parent_entity
-    save_prefab(scene_entity, name)
+    # save_prefab(scene_entity, name)
+
     # for e in scene.entities:
         # if e.parent = parent_entity
 
@@ -65,7 +67,7 @@ def save_scene(name):
 def save_prefab(target, folder='prefabs'):
     prefab_path = os.path.join(
         os.path.dirname(application.asset_folder),
-        'scenes',
+        folder,
         target.name + '_' + str(target.get_key()) + '.py')
 
     with open(prefab_path, 'w') as file:
@@ -104,18 +106,23 @@ def save_prefab(target, folder='prefabs'):
             if e is not target:
                 file.write(prefix + ' = Entity()' + '\n')
 
-
             parent_str = 'self.' + e.parent.name + '_' + str(e.parent.get_key())
-            if parent_str == 'render_2':
-                parent_str = 'camera.render'
             if e.parent == target:
                 parent_str = 'self'
-
 
             file.write(prefix + '.enabled = ' + str(e.enabled) + '\n'
                 + prefix + '.is_editor = ' + str(e.is_editor) + '\n'
                 + prefix + '.name = ' + '\'' + str(e.name) + '\'' + '\n'
                 + prefix + '.parent = ' + parent_str + '\n')
+
+            if e.origin != Vec3(0,0,0):
+                file.write(prefix + '.origin = ' + vec3_to_string(e.origin) + '\n')
+            if e.position != Vec3(0,0,0):
+                file.write(prefix + '.position = ' + vec3_to_string(e.position) + '\n')
+            if e.rotation != Vec3(0,0,0):
+                file.write(prefix + '.rotation = ' + vec3_to_string(e.rotation) + '\n')
+            if e.scale != Vec3(1,1,1):
+                file.write(prefix + '.scale = ' + vec3_to_string(e.scale) + '\n')
 
             if e.model:
                 file.write(prefix + '.model = ' + '\'' + os.path.basename(str(e.model))[:4] + '\'' + '\n')
@@ -128,12 +135,9 @@ def save_prefab(target, folder='prefabs'):
             if e.collider:
                 file.write(prefix + '.collider = ' + str(e.collider) + '\n')
 
-            file.write(
-                prefix + '.origin = (' + str(e.origin[0]) + ', ' +  str(e.origin[1]) + ', ' +  str(e.origin[2]) + ')' + '\n'
-                + prefix + '.position = (' + str(e.position[0]) + ', ' +  str(e.position[1]) + ', ' +  str(e.position[2]) + ')' + '\n'
-                + prefix + '.rotation = (' + str(e.rotation[0]) + ', ' +  str(e.rotation[1]) + ', ' +  str(e.rotation[2]) + ')' + '\n'
-                + prefix + '.scale = (' + str(e.scale[0]) + ', ' +  str(e.scale[1]) + ', ' +  str(e.scale[2]) + ')' + '\n'
-                )
+
+
+
 
             for s in e.scripts:
                 if e is target:
@@ -142,20 +146,33 @@ def save_prefab(target, folder='prefabs'):
                     script_prefix = prefix + '_' + str(s.__class__.__name__).lower()
 
                 file.write(script_prefix + ' = ' + prefix[8:] + '.add_script(\'' + s.__class__.__name__ + '\')\n')
-                scripts_vars = [item for item in dir(s) if not item.startswith('_')]
-                for var in scripts_vars:
+
+                for var in [item for item in vars(s) if not item.startswith('_')]:
+
                     varvalue = getattr(s, var)
 
                     if not varvalue:
                         continue
 
+                    print(type(varvalue))
+
                     if varvalue.__class__ == Entity:
-                        if varvalue == target:
+                        if varvalue is target:
                             varvalue = 'self'
                         else:
                             varvalue = str(varvalue.name) + '_' + str(varvalue.get_key())
 
+                    print('hyhrh')
                     file.write(script_prefix + '.' + var + ' = ' + str(varvalue) + '\n')
+
+        print('saved prefab:', folder, target.name)
+
+def vec3_to_string(vec3):
+    string = '(' + str(round(vec3[0], 3)) + ', ' + str(round(vec3[1], 3))
+    if vec3[2] is not 0:
+        string += ', ' + str(round(vec3[2]), 3)
+    string += ')'
+    return string
 
 
 def load_prefab(module_name):
@@ -191,7 +208,7 @@ def load_scene(module_name):
             class_instance.parent = scene
             destroy(scene.entity)
             scene.entity = class_instance
-            print('found scene!')
+            print('found scene:', module_name)
             # print(scene.entities)
             return class_instance
             break

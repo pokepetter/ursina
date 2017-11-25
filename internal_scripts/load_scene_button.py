@@ -13,3 +13,10 @@ class LoadSceneButton():
                 scene_name = os.path.basename(self.path).split('.')[0]
                 load_scene(scene_name)
                 scene.editor.entity_list.populate()
+
+                for e in scene.entities:
+                    try:
+                        e.editor_collider = 'box'
+                        e.collider.stash()
+                    except:
+                        print('couldnt add editor collider to:', e)

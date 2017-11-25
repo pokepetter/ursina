@@ -31,4 +31,4 @@ class DebugWindow():
     def flush(self):
         pass
 
-sys.stdout = DebugWindow()
+# sys.stdout = DebugWindow()

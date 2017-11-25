@@ -14,6 +14,7 @@ import color
 import scene
 from os import path
 from panda3d.core import Filename
+from undo import undoable
 
 
 class Entity(NodePath):
@@ -34,7 +35,7 @@ class Entity(NodePath):
         self.prefab_name = None
         self.hovered = False
 
-        self.origin = (0,0,0)
+        self.origin = Vec3(0,0,0)
         self.position = Vec3(0,0,0)
         self.x, self.y, self.z = 0, 0, 0
 
@@ -42,7 +43,7 @@ class Entity(NodePath):
         self.right, self.left = Vec3(1,0,0), Vec3(-1,0,0)
         self.up, self.down = Vec3(0,1,0), Vec3(0,-1,0)
 
-        self.rotation = (0,0,0)
+        self.rotation = Vec3(0,0,0)
         self.rotation_x, self.rotation_y, self.rotation_z = 0, 0, 0
 
         self.scale = Vec3(1,1,1)
@@ -156,6 +157,7 @@ class Entity(NodePath):
                     new_value.addX(value[i])
                     new_value.addY(value[i+1])
                     new_value.addZ(value[i+2])
+
             try:
                 self.setPos(Vec3(new_value[0], new_value[2], new_value[1]))
                 object.__setattr__(self, name, new_value)
@@ -190,9 +192,9 @@ class Entity(NodePath):
         if name == 'rotation':
             try:
                 # convert value from hpr to axis
-                value = (value[2], value[0], value[1])
+                value = Vec3(value[2], value[0], value[1])
                 self.setHpr(value)
-                object.__setattr__(self, name, (value[1], value[2], value[0]))
+                object.__setattr__(self, name, Vec3(value[1], value[2], value[0]))
                 object.__setattr__(self, 'rotation_x', value[0])
                 object.__setattr__(self, 'rotation_y', value[1])
                 object.__setattr__(self, 'rotation_z', value[2])
@@ -315,13 +317,27 @@ class Entity(NodePath):
 
         print("couldn't find script:", module_names)
 
+    @undoable
+    def remove_script(self, module_name):
+        for s in self.scripts:
+            if s.__module__ == module_name:
+                self.temp_script = s
+                self.scripts.remove(s)
+                self.__setattr__(module_name, None)
+                print('removed:', module_name)
+        # undo
+        yield 'remove' + module_name
+        self.scripts.append(self.temp_script)
+        self.__setattr__(module_name, self.temp_script)
+
+
     def look_at(self, target):
         super().look_at(target)
         self.setH(self.getH()-180)
         self.setP(self.getP() * -1)
 
 
-    def get_script(self, type):
+    def get_scripts_of_type(self, type):
         pass
 
 
@@ -343,6 +359,7 @@ class Entity(NodePath):
 
 
         return children_entities
+
 
     # @property
     # def descendants(self):

@@ -9,3 +9,4 @@ class Panel(Entity):
         self.name = 'panel'
         self.parent = scene.ui
         self.model = 'quad'
+        self.color = color.panda_button
