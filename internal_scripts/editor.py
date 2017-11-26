@@ -385,10 +385,6 @@ class Editor(Entity):
             print('set shader auto')
 
 
-
-        if key == 'control-s':
-            save_prefab(scene.entity)
-
         if key == 'control-z':
             undo.stack().undo()
         if key == 'control-y':
@@ -475,13 +471,6 @@ class Editor(Entity):
         if self.enabled:
             self.editor_camera_script.input(key)
 
-
-        if key == 's':
-            print('s')
-            save_prefab('name')
-        #     self.scene_list.visible = True
-        # if key == 's up':
-        #     self.scene_list.visible = False
 
 
     def on_disable(self):

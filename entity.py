@@ -275,15 +275,21 @@ class Entity(NodePath):
         # print('parent:', self.parent.name, 'newpos:', self.position)
 
     def add_script(self, module_name):
+        # instance given
+        if isinstance(module_name, object) and type(module_name) is not str:
+            print('type', type(self))
+            module_name.entity = self
+            self.scripts.append(module_name)
+            return module_name
+
+        # class name given
         if inspect.isclass(module_name):
             class_instance = module_name()
-            try:
-                class_instance.entity = self
-            except:
-                print(class_instance, 'has no target variable')
+            class_instance.entity = self
             self.scripts.append(class_instance)
             return class_instance
 
+        # module name given
         omn = module_name
         module_name += '.py'
         module_names = (path.join(path.dirname(__file__), module_name),
@@ -300,10 +306,7 @@ class Entity(NodePath):
 
                 class_ = getattr(module, class_name)
                 class_instance = class_()
-                try:
-                    class_instance.entity = self
-                except:
-                    print(class_instance, 'has no target variable')
+                class_instance.entity = self
 
                 name = module.__name__.split('.')
                 name = name[-1]

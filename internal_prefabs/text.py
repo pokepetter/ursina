@@ -61,7 +61,6 @@ class Text(Entity):
                 char.color = value
 
 
-
     def __setattr__(self, name, value):
         try:
             super().__setattr__(name, value)

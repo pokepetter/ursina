@@ -136,10 +136,6 @@ class PandaEditor(ShowBase):
         try: key = self.dictionary[key]
         except: pass
 
-        if key == 'u':
-            destroy(scene.editor)
-            scene.editor = load_script('editor')
-
         try:
             scene.editor.input(key)
         except: pass
