@@ -10,6 +10,7 @@ from panda3d.core import PandaNode
 from panda3d.core import Vec3
 from panda3d.core import Point3
 from panda3d.core import loadPrcFileData
+from panda3d.core import Filename
 
 
 import sys

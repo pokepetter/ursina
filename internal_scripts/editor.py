@@ -8,9 +8,6 @@ import debugwindow
 
 class Editor(Entity):
 
-    def input(self, key):
-        print('2')
-
     def __init__(self):
         super().__init__()
         self.name = 'editor'
@@ -143,7 +140,7 @@ class Editor(Entity):
         self.filebrowser.position = (0,0)
         self.filebrowser.enabled = False
         self.filebrowser.file_types = ('.py')
-        self.filebrowser.path = os.path.join(os.path.dirname(application.asset_folder), 'prefabs')
+        self.filebrowser.path = application.prefab_folder
         self.filebrowser.button_type = 'load_prefab_button'
         self.menu_toggler.target = self.filebrowser
 
@@ -158,7 +155,7 @@ class Editor(Entity):
 
         self.filebrowser = load_prefab('filebrowser')
         self.filebrowser.file_types = ('.egg')
-        self.filebrowser.path = os.path.join(os.path.dirname(application.asset_folder), 'models')
+        self.filebrowser.path = application.model_folder
         self.filebrowser.button_type = 'load_model_button'
         self.menu_toggler.target = self.filebrowser
 
@@ -172,7 +169,7 @@ class Editor(Entity):
 
         self.filebrowser = load_prefab('filebrowser')
         self.filebrowser.file_types = ('.egg')
-        self.filebrowser.path = os.path.join(os.path.dirname(application.asset_folder), 'pandaeditor/internal_models')
+        self.filebrowser.path = application.internal_model_folder
         self.filebrowser.button_type = 'load_model_button'
         self.menu_toggler.target = self.filebrowser
 
@@ -186,7 +183,7 @@ class Editor(Entity):
 
         self.filebrowser = load_prefab('filebrowser')
         self.filebrowser.file_types = ('.png', '.jpg', '.psd', '.gif')
-        self.filebrowser.path = os.path.join(os.path.dirname(application.asset_folder), 'textures')
+        self.filebrowser.path = application.texture_folder
         self.filebrowser.button_type = 'load_texture_button'
         self.menu_toggler.target = self.filebrowser
 
@@ -370,6 +367,8 @@ class Editor(Entity):
 #         # self.text_editor.text_entity.origin = (-.5, .5)
 #         self.text_bg.text_entity.position = (-.45, .45)
 
+        self.compress_textures()
+
 
     def update(self, dt):
         self.editor_camera_script.update(dt)
@@ -482,3 +481,22 @@ class Editor(Entity):
         # self.enabled = True
         self.transform_gizmo.enabled = True
         self.grid.enabled = True
+
+
+    def compress_textures(self):
+        # for f in os.listdir(os.path.join(application.asset_folder, 'textures')):
+        #     print('file:', f)
+        print('0')
+        import glob
+        # from panda3d.core import Filename
+        # print(Filename.fromOsSpecific(application.asset_folder + '/textures/*.png'))
+        # print(str(application.texture_folder) + '/*.png')
+        # print('png files:', glob.glob(str(application.texture_folder) + '/*.png'))
+        files = os.listdir(application.texture_folder)
+        print(files)
+
+        for f in files:
+            if f.endswith('.psd'):
+                # if f[:-4] + '.png' in files or f[:-4] + '.jpg' in files:
+                #     print('aready comressed')
+                print('compressing:', f)

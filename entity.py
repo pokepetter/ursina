@@ -7,6 +7,7 @@ from panda3d.core import ModelNode
 from panda3d.core import Vec3
 from panda3d.core import SamplerState
 from panda3d.core import TransparencyAttrib
+import application
 from collider import Collider
 from scripts import *
 import uuid
@@ -83,24 +84,13 @@ class Entity(NodePath):
                 return None
 
             try:
-                combined_path = Filename.fromOsSpecific(path.join(
-                        path.dirname(__file__),
-                        'internal_models/',
-                        value + '.egg'))
-            #
-            # print('c:', combined_path)
-            #
-            # if path.exists(combined_path):
-                self.model = loader.loadModel(combined_path)
-                # print('loaded internal')
+                self.model = loader.loadModel(Filename.fromOsSpecific(path.join(
+                        application.internal_model_folder, value + '.egg')))
+                # print('loaded primitive')
             except:
                 try:
-                    combined_path = Filename.fromOsSpecific(path.join(
-                        path.dirname(path.dirname(__file__)),
-                        'models/',
-                        value + '.egg'))
-
-                    self.model = loader.loadModel(combined_path)
+                    self.model = loader.loadModel(Filename.fromOsSpecific(path.join(
+                            application.model_folder, value + '.egg')))
                 except:
                     pass
 
