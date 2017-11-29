@@ -46,6 +46,11 @@ class Application():
             'textures'
             ))
 
+        self.compressed_texture_folder = Filename.fromOsSpecific(os.path.join(
+            self.texture_folder,
+            'compressed'
+            ))
+
 
         print('internal_model_folder:', self.internal_model_folder)
         print('model_folder:', self.model_folder)

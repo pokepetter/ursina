@@ -484,19 +484,23 @@ class Editor(Entity):
 
 
     def compress_textures(self):
-        # for f in os.listdir(os.path.join(application.asset_folder, 'textures')):
-        #     print('file:', f)
-        print('0')
-        import glob
-        # from panda3d.core import Filename
-        # print(Filename.fromOsSpecific(application.asset_folder + '/textures/*.png'))
-        # print(str(application.texture_folder) + '/*.png')
-        # print('png files:', glob.glob(str(application.texture_folder) + '/*.png'))
+        # import glob
         files = os.listdir(application.texture_folder)
-        print(files)
+        compressed_files = os.listdir(application.compressed_texture_folder)
+        # print(files)
 
         for f in files:
             if f.endswith('.psd'):
+                print('f:', application.compressed_texture_folder + '/' + f)
                 # if f[:-4] + '.png' in files or f[:-4] + '.jpg' in files:
                 #     print('aready comressed')
+                image = Image.open(application.texture_folder + '/' + f)
+                image.save(
+                    application.compressed_texture_folder + f[:-4] + '.jpg',
+                    'JPEG',
+                    quality=80,
+                    optimize=True,
+                    progressive=True
+                    )
                 print('compressing:', f)
+            # elif f.endswith('.png'):
