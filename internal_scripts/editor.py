@@ -485,18 +485,24 @@ class Editor(Entity):
 
     def compress_textures(self):
         # import glob
+        from PIL import Image
+        from os.path import dirname
         files = os.listdir(application.texture_folder)
         compressed_files = os.listdir(application.compressed_texture_folder)
         # print(files)
+        texture_dir = os.path.join(
+            dirname(dirname(dirname(os.path.abspath(__file__)))),
+            'textures'
+            )
 
         for f in files:
-            if f.endswith('.psd'):
+            if f.endswith('.psd') or f.endswith('.png'):
                 print('f:', application.compressed_texture_folder + '/' + f)
-                # if f[:-4] + '.png' in files or f[:-4] + '.jpg' in files:
-                #     print('aready comressed')
-                image = Image.open(application.texture_folder + '/' + f)
+
+                image = Image.open(os.path.join(texture_dir, f))
+
                 image.save(
-                    application.compressed_texture_folder + f[:-4] + '.jpg',
+                    os.path.join(texture_dir, 'compressed', f[:-4] + '.jpg'),
                     'JPEG',
                     quality=80,
                     optimize=True,
