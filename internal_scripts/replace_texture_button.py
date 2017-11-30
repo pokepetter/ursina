@@ -10,10 +10,25 @@ class ReplaceTextureButton():
     def input(self, key):
         if key == 'left mouse down' and self.entity.hovered:
             if self.path:
-                for s in scene.editor.selection:
-                    try:
-                        s.texture = os.path.basename(self.path)
-                    except:
-                        pass
+                self.replace_texture()
 
-                scene.editor.inspector.update_inspector()
+    @undoable
+    def replace_texture(self):
+        self.target_entities = list()
+        self.original_textures = list()
+        for s in scene.editor.selection:
+            self.original_textures.append(str(s.texture.getFullpath()))
+            self.target_entities.append(s)
+
+        for s in scene.editor.selection:
+            s.texture = self.path
+
+        print('seflselfs:', scene.editor.selection)
+        scene.editor.inspector.update_inspector()
+
+        # undo
+        yield 'replace texture'
+        print('--------------', self.original_textures)
+        for i in range(len(self.target_entities)):
+            self.target_entities[i].texture = self.original_textures[i]
+        scene.editor.inspector.update_inspector()

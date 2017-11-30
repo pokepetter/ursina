@@ -11,9 +11,7 @@ class Canvas(Entity):
         self.origin = (0, 0, -.01)
         self.color = color.white33
         self.editor_collider = 'box'
-
-        self.scripts.append(TestScript())
-
+        
 
     def start(self):
         self.original_parent = self.parent
@@ -26,9 +24,3 @@ class Canvas(Entity):
     def stop(self):
         self.parent = self.original_parent
         self.position = (0,0,0)
-
-
-class TestScript():
-
-    def input(self, key):
-        print('it works!', key)

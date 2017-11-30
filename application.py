@@ -9,46 +9,46 @@ class Application():
 
         self.internal_model_folder = Filename.fromOsSpecific(os.path.join(
             os.path.dirname(__file__),
-            'internal_models'
+            'internal_models/'
             ))
         self.internal_prefab_folder = Filename.fromOsSpecific(os.path.join(
             os.path.dirname(__file__),
-            'internal_prefabs'
+            'internal_prefabs/'
             ))
         self.internal_script_folder = Filename.fromOsSpecific(os.path.join(
             os.path.dirname(__file__),
-            'internal_scripts'
+            'internal_scripts/'
             ))
         self.internal_textures_folder = Filename.fromOsSpecific(os.path.join(
             os.path.dirname(__file__),
-            'internal_textures'
+            'internal_textures/'
             ))
 
 
         self.model_folder = Filename.fromOsSpecific(os.path.join(
             self.asset_folder,
-            'models'
+            'models/'
             ))
         self.prefab_folder = Filename.fromOsSpecific(os.path.join(
             self.asset_folder,
-            'prefabs'
+            'prefabs/'
             ))
         self.scene_folder = Filename.fromOsSpecific(os.path.join(
             self.asset_folder,
-            'scenes'
+            'scenes/'
             ))
         self.script_folder = Filename.fromOsSpecific(os.path.join(
             self.asset_folder,
-            'scripts'
+            'scripts/'
             ))
         self.texture_folder = Filename.fromOsSpecific(os.path.join(
             self.asset_folder,
-            'textures'
+            'textures/'
             ))
 
         self.compressed_texture_folder = Filename.fromOsSpecific(os.path.join(
             self.texture_folder,
-            'compressed'
+            'compressed/'
             ))
 
 

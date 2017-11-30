@@ -110,7 +110,7 @@ class Entity(NodePath):
             if self.model:
                 try:
                     texture = loader.loadTexture(
-                        application.compressed_texture_folder + value + '.jpg'
+                        application.compressed_texture_folder + value
                     )
                 except:
                     try:
@@ -118,7 +118,7 @@ class Entity(NodePath):
                     except:
                         try:
                             texture = loader.loadTexture(
-                                application.texture_folder + value + '.png'
+                                application.texture_folder + value
                             )
                         except:
                             try:
@@ -132,8 +132,8 @@ class Entity(NodePath):
                     texture.setMagfilter(SamplerState.FT_nearest)
                     texture.setMinfilter(SamplerState.FT_nearest)
                     self.model.setTexture(texture, 1)
-                else:
-                    print('failed to load texture:', value)
+                # else:
+                #     print('failed to load texture:', value)
 
         if name == 'position':
             # automatically add position instead of extending the tuple
