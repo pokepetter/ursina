@@ -264,7 +264,7 @@ class Entity(NodePath):
         self.wrtReparentTo(entity)
         pos = self.getPos(entity)
         self.position = (pos[0], pos[2], pos[1])
-        self.scale = self.getScale(entity)
+        self.__setattr__('scale', self.getScale(entity))
         # print('parent:', self.parent.name, 'newpos:', self.position)
 
     def add_script(self, module_name):

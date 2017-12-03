@@ -65,10 +65,9 @@ def distance(a, b):
         # if e.parent = parent_entity
 
 
-def save_prefab(target, folder='prefabs'):
+def save_prefab(target, path='prefabs'):
     prefab_path = os.path.join(
-        os.path.dirname(application.asset_folder),
-        folder,
+        path,
         target.name + '_' + str(target.get_key()) + '.py')
 
     with open(prefab_path, 'w') as file:
@@ -166,7 +165,7 @@ def save_prefab(target, folder='prefabs'):
                     print('hyhrh')
                     file.write(script_prefix + '.' + var + ' = ' + str(varvalue) + '\n')
 
-        print('saved prefab:', folder, target.name)
+        print('saved prefab:', path, target.name)
 
 def vec3_to_string(vec3):
     string = '(' + str(round(vec3[0], 3)) + ', ' + str(round(vec3[1], 3))
@@ -176,17 +175,17 @@ def vec3_to_string(vec3):
     return string
 
 
-def load_prefab(module_name):
-    folders = ('internal_prefabs.', '..prefabs.')
-    prefab = load(folders, module_name)
+def load_prefab(module_name, add_to_caller=False):
+    paths = ('internal_prefabs.', '..prefabs.')
+    prefab = load(paths, module_name)
     caller = inspect.currentframe().f_back.f_locals['self']
     # if hasattr(caller, 'name') and caller.name == 'editor':
     #     prefab.is_editor = True
-    # if the caller is attached to an entity, parent the prefab to it.
-    try: prefab.parent = caller.model
-    except:
-        try: prefab.parent = caller
-        except: pass
+    if add_to_caller:
+        try: prefab.parent = caller.model
+        except:
+            try: prefab.parent = caller
+            except: pass
 
     return prefab
 
@@ -219,12 +218,12 @@ def load_scene(module_name):
     print("couldn't find scene:", omn)
 
 def load_script(module_name):
-    folders = ('internal_scripts.', '..scripts.')
-    return load(folders, module_name)
+    paths = ('internal_scripts.', '..scripts.')
+    return load(paths, module_name)
 
 
 
-def load(folders, module_name):
+def load(paths, module_name):
     if inspect.isclass(module_name):
         class_instance = module_name()
         # print('added script:', class_instance)
@@ -232,7 +231,7 @@ def load(folders, module_name):
 
     # find the module
     module = None
-    for f in folders:
+    for f in paths:
         # print('mod:', f + module_name)
         try:
             module = importlib.import_module(f + module_name)

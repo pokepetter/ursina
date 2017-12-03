@@ -56,7 +56,6 @@ class Editor(Entity):
 # top menu
         self.top_menu = Entity()
         self.top_menu.parent = self
-        # self.top_menu.origin = (.5, .5)
         self.top_menu.position = window.top
         self.layout_group = self.top_menu.add_script('grid_layout')
         self.layout_group.origin = (0, .5)
@@ -64,7 +63,6 @@ class Editor(Entity):
 
 # play button
         self.play_button = load_prefab('editor_button')
-        self.play_button.is_editor = True
         self.play_button.parent = self.top_menu
         self.play_button.origin = (0, .5)
         self.play_button.name = 'play_button'
@@ -73,7 +71,6 @@ class Editor(Entity):
         # self.menu_toggler = self.play_button.add_script('menu_toggler')
 
         self.pause_button = load_prefab('editor_button')
-        self.pause_button.is_editor = True
         self.pause_button.parent = self.top_menu
         self.pause_button.origin = (0, .5)
         self.pause_button.name = 'pause_button'
@@ -106,36 +103,34 @@ class Editor(Entity):
 
 # load scene
         self.load_scene_button = load_prefab('editor_button')
-        self.load_scene_button.is_editor = True
         self.load_scene_button.parent = self.load_menu_parent
         self.load_scene_button.name = 'load_scene_button'
         self.load_scene_button.scale = (.1, .05)
         self.load_scene_button.text = 'scenes'
-        # self.load_scene_button.text_entity.origin = (.5, 0)
-        # self.load_scene_button.text_entity.x = .4
         self.menu_toggler = self.load_scene_button.add_script('menu_toggler')
+        self.load_scene_button.add_script('open_in_file_explorer')
+        self.load_scene_button.open_in_file_explorer.path = Filename.toOsSpecific(application.scene_folder)
 
         self.filebrowser = load_prefab('filebrowser')
-        self.filebrowser.is_editor = True
         self.filebrowser.parent = self
         self.filebrowser.position = (0,0)
         self.filebrowser.enabled = False
         self.filebrowser.file_types = ('.py')
-        self.filebrowser.path = os.path.join(os.path.dirname(application.asset_folder), 'scenes')
+        self.filebrowser.path = application.scene_folder
         self.filebrowser.button_type = 'load_scene_button'
         self.menu_toggler.target = self.filebrowser
 
 # load prefab
         self.load_prefab_button = load_prefab('editor_button')
-        self.load_prefab_button.is_editor = True
         self.load_prefab_button.parent = self.load_menu_parent
         self.load_prefab_button.name = 'load_prefab_button'
         self.load_prefab_button.scale = (.1, .05)
         self.load_prefab_button.text = 'prefab'
         self.menu_toggler = self.load_prefab_button.add_script('menu_toggler')
+        self.load_prefab_button.add_script('open_in_file_explorer')
+        self.load_prefab_button.open_in_file_explorer.path = Filename.toOsSpecific(application.prefab_folder)
 
         self.filebrowser = load_prefab('filebrowser')
-        self.filebrowser.is_editor = True
         self.filebrowser.parent = self
         self.filebrowser.position = (0,0)
         self.filebrowser.enabled = False
@@ -144,14 +139,16 @@ class Editor(Entity):
         self.filebrowser.button_type = 'load_prefab_button'
         self.menu_toggler.target = self.filebrowser
 
+
 # load model
         self.load_model_button = load_prefab('editor_button')
-        self.load_model_button.is_editor = True
         self.load_model_button.parent = self.load_menu_parent
         self.load_model_button.name = 'load_model_button'
         self.load_model_button.scale = (.1, .05)
         self.load_model_button.text = 'model'
         self.menu_toggler = self.load_model_button.add_script('menu_toggler')
+        self.load_model_button.add_script('open_in_file_explorer')
+        self.load_model_button.open_in_file_explorer.path = Filename.toOsSpecific(application.model_folder)
 
         self.filebrowser = load_prefab('filebrowser')
         self.filebrowser.file_types = ('.egg')
@@ -166,6 +163,8 @@ class Editor(Entity):
         self.load_primitive_button.scale = (.1, .05)
         self.load_primitive_button.text = 'primitive'
         self.menu_toggler = self.load_primitive_button.add_script('menu_toggler')
+        self.load_primitive_button.add_script('open_in_file_explorer')
+        self.load_primitive_button.open_in_file_explorer.path = Filename.toOsSpecific(application.internal_model_folder)
 
         self.filebrowser = load_prefab('filebrowser')
         self.filebrowser.file_types = ('.egg')
@@ -180,6 +179,8 @@ class Editor(Entity):
         self.load_sprite_button.scale = (.1, .05)
         self.load_sprite_button.text = 'sprite'
         self.menu_toggler = self.load_sprite_button.add_script('menu_toggler')
+        self.load_sprite_button.add_script('open_in_file_explorer')
+        self.load_sprite_button.open_in_file_explorer.path = Filename.toOsSpecific(application.texture_folder)
 
         self.filebrowser = load_prefab('filebrowser')
         self.filebrowser.file_types = ('.png', '.jpg', '.psd', '.gif')
@@ -202,9 +203,9 @@ class Editor(Entity):
         self.entity_list_header.position = window.top_left
         self.entity_list_header.origin = (-.5, .5)
         self.entity_list_header.scale = (.25, .025)
-        self.entity_list_header.text = ' ' + scene.entity.name
+        self.entity_list_header.text = scene.entity.name
         self.entity_list_header.text_entity.align = 'left'
-        self.entity_list_header.text_entity.x = -.5
+        self.entity_list_header.text_entity.x = -.45
         self.entity_list_header.add_script('menu_toggler')
         self.entity_list_header.menu_toggler.target = self.entity_list
 
@@ -217,7 +218,7 @@ class Editor(Entity):
         self.save_scene_button.scale_x = .15
         self.save_scene_button.add_script('save_scene_button')
 
-
+        # self.ask_for_scene_name_menu = load_prefab('ask_for_scene_name_menu')
 
 
         # self.save_scene_button.input = MethodType(self.input, self.save_scene_button)
@@ -484,6 +485,7 @@ class Editor(Entity):
 
 
     def compress_textures(self):
+        return
         # import glob
         from PIL import Image
         from os.path import dirname
@@ -508,5 +510,5 @@ class Editor(Entity):
                     optimize=True,
                     progressive=True
                     )
-                print('compressing:', f)
+                # print('compressing:', f)
             # elif f.endswith('.png'):
