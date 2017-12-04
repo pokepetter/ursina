@@ -81,6 +81,22 @@ class Filebrowser(Entity):
             self.load_button = button.add_script('new_script_button')
             x += 1
 
+        if self.button_type == 'load_scene_button':
+            button = load_prefab('editor_button', True)
+            button.origin = (-.5, .5)
+            button.position = (
+                x * (self.button_size[0]),
+                (-y * (self.button_size[1])))
+            button.scale = self.button_size
+            menu_toggler = button.add_script('menu_toggler')
+            menu_toggler.target = self
+            button.text = '[new scene]'
+            button.text_entity.position = (-.45, 0)
+            button.text_entity.origin = (-.5, 0)
+            self.buttons.append(button)
+            button.add_script('new_scene')
+            x += 1
+
         self.x = - ((x + 1) * self.button_size[0]) / 2.0
         self.y = ((y) * self.button_size[1]) / 2
 
