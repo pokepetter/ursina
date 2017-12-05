@@ -370,6 +370,8 @@ class Editor(Entity):
 
         self.compress_textures()
 
+        player = load_prefab('first_person_controller', True)
+
 
     def update(self, dt):
         self.editor_camera_script.update(dt)
@@ -421,53 +423,6 @@ class Editor(Entity):
         if key == 'tab':
             self.enabled = not self.enabled
 
-            # enable editor
-            if self.enabled:
-                camera.wrtReparentTo(self.camera_pivot)
-                camera.position = self.editor_camera_script.position
-
-                for e in scene.entities:
-                    if e.is_editor or e is scene.entity:
-                        continue
-
-                    try:
-                        e.editor_collider = 'box'
-                        e.collider.stash()
-                    except:
-                        pass
-                    try:
-                        e.stop()
-                    except:
-                        pass
-                    for s in e.scripts:
-                        try:
-                            s.stop()
-                        except:
-                            pass
-            # disable editor
-            else:
-                self.editor_camera_script.position = camera.position
-                camera.wrtReparentTo(scene.render)
-                for e in scene.entities:
-                    if e.is_editor:
-                        continue
-                    try:
-                        e.editor_collider.stash()
-                        e.collider.unstash()
-                    except:
-                        pass
-
-                    try:
-                        e.start()
-                    except:
-                        pass
-                    for s in e.scripts:
-                        try:
-                            s.start()
-                        except:
-                            pass
-
-
         if self.enabled:
             self.editor_camera_script.input(key)
 
@@ -476,10 +431,53 @@ class Editor(Entity):
     def on_disable(self):
         self.transform_gizmo.enabled = False
         self.grid.enabled = False
-        # self.enabled = False
+        # disable editor
+        self.editor_camera_script.position = camera.position
+        camera.wrtReparentTo(scene.render)
+        for e in scene.entities:
+            if e.is_editor:
+                continue
+            try:
+                e.editor_collider.stash()
+                e.collider.unstash()
+            except:
+                pass
+
+            try:
+                e.start()
+            except:
+                pass
+            for s in e.scripts:
+                try:
+                    s.start()
+                except:
+                    pass
+
 
     def on_enable(self):
-        # self.enabled = True
+        # enable editor
+        # if self.enabled:
+        camera.wrtReparentTo(self.camera_pivot)
+        camera.position = self.editor_camera_script.position
+
+        for e in scene.entities:
+            if e.is_editor or e is scene.entity:
+                continue
+
+            try:
+                e.editor_collider = 'box'
+                e.collider.stash()
+            except:
+                pass
+            try:
+                e.stop()
+            except:
+                pass
+            for s in e.scripts:
+                try:
+                    s.stop()
+                except:
+                    pass
         self.transform_gizmo.enabled = True
         self.grid.enabled = True
 

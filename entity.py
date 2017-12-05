@@ -185,8 +185,8 @@ class Entity(NodePath):
         if name == 'rotation':
             try:
                 # convert value from hpr to axis
-                value = Vec3(value[2], value[0], value[1])
-                self.setHpr(value)
+                # value = Vec3(value[2], value[0], value[1])
+                self.setHpr(Vec3(-value[1], value[0], value[2]))
                 object.__setattr__(self, name, Vec3(value[1], value[2], value[0]))
                 object.__setattr__(self, 'rotation_x', value[0])
                 object.__setattr__(self, 'rotation_y', value[1])

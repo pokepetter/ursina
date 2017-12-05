@@ -89,6 +89,9 @@ class EditorCamera():
             camera.z = self.camera_start[2]
 
         if self.rotate:
-            scene.editor.camera_pivot.rotation_z = self.camera_start_rotation[2] - mouse.delta[0] * self.speed * 20
-            scene.editor.camera_pivot.rotation_x = self.camera_start_rotation[0] + mouse.delta[1] * self.speed * 20
+            scene.editor.camera_pivot.rotation = (
+                mouse.delta[1] * self.speed * 20,
+                mouse.delta[0] * self.speed * 20,
+                0
+                )
             # print(scene.editor.camera_pivot.rotation_x)
