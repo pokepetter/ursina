@@ -368,7 +368,7 @@ class Editor(Entity):
 #         # self.text_editor.text_entity.origin = (-.5, .5)
 #         self.text_bg.text_entity.position = (-.45, .45)
 
-        self.compress_textures()
+        # self.compress_textures()
 
         player = load_prefab('first_person_controller', True)
 
@@ -483,7 +483,7 @@ class Editor(Entity):
 
 
     def compress_textures(self):
-        return
+        # return
         # import glob
         from PIL import Image
         from os.path import dirname
@@ -500,13 +500,20 @@ class Editor(Entity):
                 print('f:', application.compressed_texture_folder + '/' + f)
 
                 image = Image.open(os.path.join(texture_dir, f))
-
-                image.save(
-                    os.path.join(texture_dir, 'compressed', f[:-4] + '.jpg'),
-                    'JPEG',
-                    quality=80,
-                    optimize=True,
-                    progressive=True
-                    )
-                # print('compressing:', f)
+                # print(max(image.size))
+                if max(image.size) > 256:
+                    image.save(
+                        os.path.join(texture_dir, 'compressed', f[:-4] + '.jpg'),
+                        'JPEG',
+                        quality=80,
+                        optimize=True,
+                        progressive=True
+                        )
+                    print('compressing to jpg:', f)
+                else:
+                    image.save(
+                        os.path.join(texture_dir, 'compressed', f[:-4] + '.png'),
+                        'PNG'
+                        )
+                    print('compressing to png:', f)
             # elif f.endswith('.png'):

@@ -107,10 +107,17 @@ class Entity(NodePath):
                 object.__setattr__(self, name, value)
 
         if name == 'texture':
-            if self.model:
+            if not self.model:
+                return
+
+            try:
+                texture = loader.loadTexture(
+                    application.compressed_texture_folder + value + '.jpg'
+                )
+            except:
                 try:
                     texture = loader.loadTexture(
-                        application.compressed_texture_folder + value
+                        application.compressed_texture_folder + value + '.png'
                     )
                 except:
                     try:
@@ -184,19 +191,13 @@ class Entity(NodePath):
 
         if name == 'rotation':
             try:
-                # convert value from hpr to axis
-                # value = Vec3(value[2], value[0], value[1])
-                self.setHpr(Vec3(-value[1], value[0], value[2]))
-                object.__setattr__(self, name, Vec3(value[1], value[2], value[0]))
-                object.__setattr__(self, 'rotation_x', value[0])
-                object.__setattr__(self, 'rotation_y', value[1])
-                object.__setattr__(self, 'rotation_z', value[2])
+                self.setHpr(Vec3(-value[1], -value[0], value[2]))
             except:
                 pass
 
-        if name == 'rotation_x': self.rotation = (value, self.rotation[1], self.rotation[2])
-        if name == 'rotation_y': self.rotation = (self.rotation[0], value, self.rotation[2])
-        if name == 'rotation_z': self.rotation = (self.rotation[0], self.rotation[1], value)
+        if name == 'rotation_x': self.setP(-value)
+        if name == 'rotation_y': self.setH(-value)
+        if name == 'rotation_z': self.setR(value)
 
         if name == 'scale':
             new_value = Vec3()
@@ -246,18 +247,28 @@ class Entity(NodePath):
             global_position = (global_position[0], global_position[2], global_position[1])
             return global_position
 
+        if attrname == 'rotation':
+            return(-self.getP(), -self.getH(), self.getR())
+        if attrname == 'rotation_x':
+            return -self.getP()
+        if attrname == 'rotation_y':
+            return -self.getH()
+        if attrname == 'rotation_y':
+            return self.getR()
+
         if attrname == 'forward':
-            return scene.render.getRelativeVector(self, (0,0,1))
+            return scene.render.getRelativeVector(self, (0, 0, 1))
         if attrname == 'back':
-            return scene.render.getRelativeVector(self, (0,0,-1))
+            return scene.render.getRelativeVector(self, (0, 0, -1))
         if attrname == 'right':
-            return scene.render.getRelativeVector(self, (1,0,0))
+            return scene.render.getRelativeVector(self, (1, 0, 0))
         if attrname == 'left':
-            return scene.render.getRelativeVector(self, (-1,0,0))
+            return scene.render.getRelativeVector(self, (-1, 0, 0))
         if attrname == 'up':
-            return scene.render.getRelativeVector(self, (0,1,0))
+            return scene.render.getRelativeVector(self, (0, 1, 0))
         if attrname == 'down':
-            return scene.render.getRelativeVector(self, (0,-1,0))
+            return scene.render.getRelativeVector(self, (0, -1, 0))
+
 
 
     def reparent_to(self, entity):
@@ -329,8 +340,8 @@ class Entity(NodePath):
 
     def look_at(self, target):
         super().look_at(target)
-        self.setH(self.getH()-180)
-        self.setP(self.getP() * -1)
+        # self.setH(self.getH()-180)
+        # self.setP(self.getP() * -1)
 
 
     def get_scripts_of_type(self, type):

@@ -68,16 +68,16 @@ class EditorCamera():
             #
             # if key == 'r':
             #     camera.rotation_x += 1 #(camera.rotation[0] -1, camera.rotation[1], camera.rotation[2])
-            if key == 'f':
-                camera.rotation_x -= 1
+            # if key == 'f':
+            #     camera.rotation_x -= 1
             # if key == 't':
             #     camera.rotation_y += 1
             # if key == 'g':
             #     camera.rotation_y -= 1
             # if key == 'y':
-            #     camera.rotation_z += 1
+            #     camera.rotation += (0,0,10)
             # if key == 'h':
-            #     camera.rotation_z -= 1
+            #     camera.rotation_z -= 10
 
             # print(camera.cam.getPos())
 
@@ -90,8 +90,7 @@ class EditorCamera():
 
         if self.rotate:
             scene.editor.camera_pivot.rotation = (
-                mouse.delta[1] * self.speed * 20,
-                mouse.delta[0] * self.speed * 20,
+                self.camera_start_rotation[0] + mouse.delta[1] * -self.speed * 20,
+                self.camera_start_rotation[1] - mouse.delta[0] * -self.speed * 20,
                 0
                 )
-            # print(scene.editor.camera_pivot.rotation_x)
