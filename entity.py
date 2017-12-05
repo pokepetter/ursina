@@ -40,9 +40,9 @@ class Entity(NodePath):
         self.position = Vec3(0,0,0)
         self.x, self.y, self.z = 0, 0, 0
 
-        self.forward, self.back = Vec3(0,0,1), Vec3(0,0,-1)
-        self.right, self.left = Vec3(1,0,0), Vec3(-1,0,0)
-        self.up, self.down = Vec3(0,1,0), Vec3(0,-1,0)
+        # self.forward, self.back = Vec3(0,0,1), Vec3(0,0,-1)
+        # self.right, self.left = Vec3(1,0,0), Vec3(-1,0,0)
+        # self.up, self.down = Vec3(0,1,0), Vec3(0,-1,0)
 
         self.rotation = Vec3(0,0,0)
         self.rotation_x, self.rotation_y, self.rotation_z = 0, 0, 0
@@ -256,18 +256,25 @@ class Entity(NodePath):
         if attrname == 'rotation_y':
             return self.getR()
 
-        if attrname == 'forward':
-            return scene.render.getRelativeVector(self, (0, 0, 1))
-        if attrname == 'back':
-            return scene.render.getRelativeVector(self, (0, 0, -1))
-        if attrname == 'right':
-            return scene.render.getRelativeVector(self, (1, 0, 0))
-        if attrname == 'left':
-            return scene.render.getRelativeVector(self, (-1, 0, 0))
-        if attrname == 'up':
-            return scene.render.getRelativeVector(self, (0, 1, 0))
-        if attrname == 'down':
-            return scene.render.getRelativeVector(self, (0, -1, 0))
+
+    @property
+    def forward(self):
+        return scene.render.getRelativeVector(self, (0, 0, 1))
+    @property
+    def back(self):
+        return scene.render.getRelativeVector(self, (0, 0, -1))
+    @property
+    def right(self):
+        return scene.render.getRelativeVector(self, (1, 0, 0))
+    @property
+    def left(self):
+        return scene.render.getRelativeVector(self, (-1, 0, 0))
+    @property
+    def up(self):
+        return scene.render.getRelativeVector(self, (0, 1, 0))
+    @property
+    def down(self):
+        return scene.render.getRelativeVector(self, (0, -1, 0))
 
 
 

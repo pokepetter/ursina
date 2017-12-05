@@ -8,7 +8,7 @@ class FirstPersonController(Entity):
         super().__init__()
         self.model = 'cube_uv_top'
         self.texture = 'directions'
-        # self.scripts.append(self)
+        self.scripts.append(self)
 
         self.speed = .1
         self.original_speed = self.speed
@@ -16,20 +16,11 @@ class FirstPersonController(Entity):
         world = Entity()
         world.parent = scene.render
         world.model = 'quad'
+        world.texture = 'directions'
         world.rotation_x = 90
         world.scale = (20, 20, .1)
         world.color = color.lime
-        # world.texture = 'winter_forest'
-        self.rotation = (45, 0, 0)
-        # self.setH(45)
-        # self.z = 2
-        self.position = (0,0,0)
-        # self.position += self.forward
-        # print(self.forward)
-        # print(self.rotation, scene.render.getRelativeVector(self, (0,1,0)))
-        camera.x = 2
-        camera.y = 5
-        camera.look_at(self)
+
 
     def start(self):
         self.position = (0, 2, 1)
@@ -62,8 +53,8 @@ class FirstPersonController(Entity):
     def update(self, dt):
         # print(self.forward)
         if self.w:
-            # self.position += self.forward * self.speed
-            self.setPos(5, 0, 0)
+            self.position += self.forward * self.speed
+            # self.setPos(5, 0, 0)
         if self.s:
             self.position -= self.forward * self.speed
         if self.d:
