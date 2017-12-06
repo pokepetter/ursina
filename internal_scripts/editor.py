@@ -379,13 +379,9 @@ class Editor(Entity):
         # self.inspector.update(dt)
 
     def input(self, key):
-        # if key == 'left mouse up':
-        #     print('arguments:', sys.argv)
-
-        if key == 'l':
-            render.setShaderAuto()
-            print('set shader auto')
-
+        # if key == 'l':
+        #     render.setShaderAuto()
+        #     print('set shader auto')
 
         if key == 'control-z':
             undo.stack().undo()
@@ -427,7 +423,6 @@ class Editor(Entity):
             self.editor_camera_script.input(key)
 
 
-
     def on_disable(self):
         self.transform_gizmo.enabled = False
         self.grid.enabled = False
@@ -442,11 +437,10 @@ class Editor(Entity):
                 e.collider.unstash()
             except:
                 pass
-
-            try:
-                e.start()
-            except:
-                pass
+            # try:
+            #     e.start()
+            # except:
+            #     pass
             for s in e.scripts:
                 try:
                     s.start()
@@ -480,6 +474,7 @@ class Editor(Entity):
                     pass
         self.transform_gizmo.enabled = True
         self.grid.enabled = True
+        mouse.locked = False
 
 
     def compress_textures(self):

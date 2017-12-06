@@ -27,8 +27,7 @@ class FirstPersonController(Entity):
         camera.parent = self
         camera.position = (0,0,0)
         camera.rotation = (0,0,0)
-
-        self.start_mouse = mouse.position
+        mouse.locked = True
 
 
     def input(self, key):
@@ -51,10 +50,11 @@ class FirstPersonController(Entity):
 
 
     def update(self, dt):
+        if scene.editor.enabled:
+            return
         # print(self.forward)
         if self.w:
             self.position += self.forward * self.speed
-            # self.setPos(5, 0, 0)
         if self.s:
             self.position -= self.forward * self.speed
         if self.d:
@@ -62,6 +62,5 @@ class FirstPersonController(Entity):
         if self.a:
             self.x -= self.speed
 
-        print(mouse.x - self.start_mouse[1])
-        # camera.rotation_y = mouse.x - self.mouse_start[1] * 100
-        # self.rotation_z = 45
+        self.rotation_y += mouse.velocity[0] * 20
+        camera.rotation_x -= mouse.velocity[1] * 20

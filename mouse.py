@@ -2,20 +2,21 @@ from panda3d.core import *
 import sys
 import camera
 import scene
+import application
+import window
 from panda3d.core import CollisionTraverser, CollisionNode
 from panda3d.core import CollisionHandlerQueue, CollisionRay
 
 
-class Mouse():
-
+class Mouse(object):
 
     def __init__(self):
         self.enabled = False
         self.mouse_watcher = None
+        self.locked = False
         self.position = (0,0)
-        self.x = 0
-        self.z = 0
         self.delta = (0,0)
+        self.velocity = (0,0)
 
         self.hovered_entity = None
         self.left = False
@@ -33,6 +34,39 @@ class Mouse():
         self.picker.addCollider(self.pickerNP, self.pq)
         self.raycast = True
 
+    @property
+    def x(self):
+        return self.mouse_watcher.getMouseX()
+    @property
+    def y(self):
+        return self.mouse_watcher.getMouseY()
+
+
+    def __setattr__(self, name, value):
+
+        # if name == 'visible':
+        #     try:
+        #         print('cursor hidder:', value)
+        #         window.set_cursor_hidden(value)
+        #         application.base.win.requestProperties(window)
+        #         return
+        #     except:
+        #         pass
+
+        if name == 'locked':
+            try:
+                object.__setattr__(self, name, value)
+                window.set_cursor_hidden(value)
+                application.base.win.requestProperties(window)
+            except:
+                pass
+
+        try:
+            super().__setattr__(name, value)
+            # return
+        except:
+            pass
+
 
     def input(self, key):
         if not self.enabled:
@@ -40,8 +74,7 @@ class Mouse():
 
         if key.endswith('mouse down'):
             self.start_x = self.x
-            self.start_z = self.z
-            # print('yay^^')
+            self.start_y = self.y
 
         if key == 'left mouse down':
             self.left = True
@@ -66,18 +99,26 @@ class Mouse():
             return
 
 
-        if self.mouse_watcher.hasMouse():
-            self.x = self.mouse_watcher.getMouseX()
-            self.z = self.mouse_watcher.getMouseY()
-            self.position = (self.x, self.z)
+        if not self.mouse_watcher.hasMouse():
+            self.velocity = (0,0)
+
+        else:
+            if self.locked:
+                self.velocity = (self.x, self.y)
+                application.base.win.movePointer(0, round(window.size[0] / 2), round(window.size[1] / 2))
+            # else:
+            #     self.velocity = (self.x - self.prev_x, self.y - self.prev_y)
+
+            self.position = (self.x, self.y)
+
 
             if self.left or self.right or self.middle:
-                self.delta = (self.x - self.start_x, self.z - self.start_z)
+                self.delta = (self.x - self.start_x, self.y - self.start_y)
 
 
             # collide with ui
             self.pickerNP.reparentTo(scene.ui_camera)
-            self.pickerRay.setFromLens(camera.ui_lens_node, self.x, self.z)
+            self.pickerRay.setFromLens(camera.ui_lens_node, self.x, self.y)
             self.picker.traverse(scene.ui)
             if self.pq.getNumEntries() > 0:
                 # print('collided with ui', self.pq.getNumEntries())
@@ -86,7 +127,7 @@ class Mouse():
 
             # collide with world
             self.pickerNP.reparentTo(camera)
-            self.pickerRay.setFromLens(scene.camera.lens_node, self.x, self.z)
+            self.pickerRay.setFromLens(scene.camera.lens_node, self.x, self.y)
             self.picker.traverse(scene.render)
             if self.pq.getNumEntries() > 0:
                 # print('collided with world', self.pq.getNumEntries())
@@ -134,6 +175,7 @@ class Mouse():
                                 s.on_mouse_exit()
                             except:
                                 pass
+
 
 
 
