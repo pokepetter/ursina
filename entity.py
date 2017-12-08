@@ -133,14 +133,14 @@ class Entity(NodePath):
                                     application.internal_texture_folder + value + '.png')
                             except:
                                 pass
-
-                if texture:
-                    object.__setattr__(self, name, texture)
-                    texture.setMagfilter(SamplerState.FT_nearest)
-                    texture.setMinfilter(SamplerState.FT_nearest)
-                    self.model.setTexture(texture, 1)
-                # else:
-                #     print('failed to load texture:', value)
+            try:
+                object.__setattr__(self, name, texture)
+                texture.setMagfilter(SamplerState.FT_nearest)
+                texture.setMinfilter(SamplerState.FT_nearest)
+                self.model.setTexture(texture, 1)
+            except:
+                pass
+                # print('failed to load texture:', value)
 
         if name == 'position':
             # automatically add position instead of extending the tuple
