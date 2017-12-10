@@ -259,21 +259,21 @@ class Entity(NodePath):
 
     @property
     def forward(self):
-        vec =  scene.render.getRelativeVector(self, (0, 1, 0))
+        vec =  self.parent.getRelativeVector(self, (0, 1, 0))
         return Vec3(vec[0], vec[2], vec[1])
     @property
     def back(self):
         return -self.forward
     @property
     def right(self):
-        vec =  scene.render.getRelativeVector(self, (1, 0, 0))
+        vec =  self.parent.getRelativeVector(self, (1, 0, 0))
         return Vec3(vec[0], vec[2], vec[1])
     @property
     def left(self):
         return -self.right
     @property
     def up(self):
-        return scene.render.getRelativeVector(self, (0, 0, 1))
+        return self.parent.getRelativeVector(self, (0, 0, 1))
     @property
     def down(self):
         return self.up

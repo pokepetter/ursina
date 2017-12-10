@@ -44,14 +44,8 @@ class Mouse(object):
 
     def __setattr__(self, name, value):
 
-        # if name == 'visible':
-        #     try:
-        #         print('cursor hidder:', value)
-        #         window.set_cursor_hidden(value)
-        #         application.base.win.requestProperties(window)
-        #         return
-        #     except:
-        #         pass
+        if name == 'visible':
+            window.set_cursor_hidden(value)
 
         if name == 'locked':
             try:

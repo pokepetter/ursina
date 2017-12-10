@@ -369,6 +369,7 @@ class Editor(Entity):
 #         self.text_bg.text_entity.position = (-.45, .45)
 
         # self.compress_textures()
+        self.compress_models()
 
         player = load_prefab('first_person_controller', True)
 
@@ -478,8 +479,6 @@ class Editor(Entity):
 
 
     def compress_textures(self):
-        # return
-        # import glob
         from PIL import Image
         from os.path import dirname
         files = os.listdir(application.texture_folder)
@@ -512,3 +511,88 @@ class Editor(Entity):
                         )
                     print('compressing to png:', f)
             # elif f.endswith('.png'):
+
+    def compress_models(self):
+        from tinyblend import BlenderFile
+        from os.path import dirname
+        files = os.listdir(application.model_folder)
+        compressed_files = os.listdir(application.compressed_model_folder)
+        # print(files)
+        texture_dir = os.path.join(
+            dirname(dirname(dirname(os.path.abspath(__file__)))),
+            'textures'
+            )
+
+        for f in files:
+            if f.endswith('.blend'):
+                # print('f:', application.compressed_model_folder + '/' + f)
+                print('______', f)
+                blend = BlenderFile(application.model_folder + '/' + f)
+                # objects = blend.list('Object')
+                for o in blend.list('Object'):
+                    # print(o.id.name.decode("utf-8", "strict"))
+                    object_name = o.id.name.decode( "utf-8").replace(".", "_")[2:]
+                    object_name = object_name.split('\0', 1)[0]
+                    print('name:', object_name)
+                    file_name = ''.join([f.split('.')[0], '_', object_name, '.egg'])
+                    file_path = os.path.join(
+                        str(Filename.toOsSpecific(application.compressed_model_folder)),
+                        file_name
+                    )
+                    print(file_path)
+                    print(len(o.data.mloop))
+
+                    # for v in o.data.mvert:
+                    #     print('vertex:', v.co)
+                    # for e in o.data.medge:
+                    #     print('edge:', e.v1, e.v2)
+                    # for i in range(0, len(o.data.mloop), 3):
+                    #     print('triangle:',
+                    #         o.data.mloop[i].v,
+                    #         o.data.mloop[i+1].v,
+                    #         o.data.mloop[i+2].v
+                    #     )
+                    with open(file_path, 'w') as file:
+                        file.write(
+                            '<CoordinateSystem> { Z-up }\n'
+                            + '<Group> ' + object_name + ' {\n'
+                            +
+'''<Transform> {
+    <Matrix4> {
+      1.0 0.0 0.0 0.0
+      0.0 1.0 0.0 0.0
+      0.0 0.0 1.0 0.0
+      0.0 0.0 0.0 1.0
+    }
+  }'''
+
+                            + '  <VertexPool> ' + object_name + ' {\n'
+                        )
+                        for i in range(len(o.data.mvert)):
+                            file.write(
+                                '    <Vertex> '
+                                + str(i)
+                                + ' {' + str(o.data.mvert[i].co[0])
+                                + ' ' + str(o.data.mvert[i].co[1])
+                                + ' ' + str(o.data.mvert[i].co[2]) + '\n'
+                                + '      <UV> ORCO {' + '\n'
+                                + '        ' + '0.000000 0.000000' + '\n'
+                                + '      }\n'
+                                + '    }\n'
+                            )
+                        file.write('  }\n')
+
+                        for i in range(0, len(o.data.mloop)-2, 3):
+                            file.write(''.join([
+                                '  <Polygon> {\n',
+                                '    <Normal> {', '0 0 0',  '}\n',
+                                '    <VertexRef> { ',
+                                str(o.data.mloop[i].v), ' ',
+                                str(o.data.mloop[i+1].v), ' ',
+                                str(o.data.mloop[i+2].v), ' <Ref> { ',
+                                object_name, ' }}\n',
+                                '  }\n'
+                            ])
+                            )
+
+                        file.write('}')

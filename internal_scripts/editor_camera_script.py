@@ -38,33 +38,35 @@ class EditorCamera():
         # zooming, don't zoom if hovering an editor panel
         if not mouse.hovered_entity or not mouse.hovered_entity.is_editor:
             if key == 'scroll up' and mouse.left == False:
-                camera.position += camera.forward * self.speed
+                # camera.position += camera.forward * self.speed
+                camera.z += self.speed
             if key == 'scroll down' and mouse.left == False:
-                camera.position += camera.back * self.speed
+                # camera.position += camera.back * self.speed
+                camera.z -= self.speed
 
                 if camera.orthographic:
                     pass
                     # camera.fov += self.speed
 
 
-        if self.move:
+        if self.rotate:
             if key == 'd':
-                camera.position += camera.right * self.speed
+                scene.editor.camera_pivot.position += camera.right * self.speed
                 # print(camera.right)
             if key == 'a':
-                camera.position += camera.left * self.speed
+                scene.editor.camera_pivot.position += camera.left * self.speed
 
             if key == 's':
-                camera.position += camera.back * self.speed
+                scene.editor.camera_pivot.position += camera.back * self.speed
             if key == 'w':
-                camera.position += camera.forward * self.speed
+                scene.editor.camera_pivot.position += camera.forward * self.speed
 
 
 
             if key == 'e':
-                camera.position += camera.up * self.speed
+                scene.editor.camera_pivot.position += camera.up * self.speed
             if key == 'q':
-                 camera.position += camera.down * self.speed
+                 scene.editor.camera_pivot.position += camera.down * self.speed
             #
             # if key == 'r':
             #     camera.rotation_x += 1 #(camera.rotation[0] -1, camera.rotation[1], camera.rotation[2])

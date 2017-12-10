@@ -16,6 +16,7 @@ from panda3d.core import Filename
 import sys
 import os
 import math
+import re
 import random
 import inspect
 import importlib
