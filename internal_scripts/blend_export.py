@@ -1,0 +1,4 @@
+import bpy
+
+
+print('YOOYYLOOLO')

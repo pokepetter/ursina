@@ -10,16 +10,12 @@ class PandaEditor(ShowBase):
         ShowBase.__init__(self)
 
         scene.reparentTo(self.render)
-        # application.current = self
         scene.render = self.render
         application.base = base
-
-
 
         window.load_defaults()
 
         # camera
-        camera.base = base
         camera.cam = base.camera
         camera.cam.reparentTo(camera)
         camera.parent = self.render
@@ -29,6 +25,18 @@ class PandaEditor(ShowBase):
         scene.camera = camera
         camera.reparentTo(scene)
         camera.set_up()
+
+        # reapply screen effect to make it work in new resolution
+        # print('adfaaaaaa:', application.base.win)
+        # from direct.filter.CommonFilters import CommonFilters
+        # filters = CommonFilters(application.base.win, application.base.cam)
+        # filters.setAmbientOcclusion(
+        #     numsamples=64,
+        #     radius=0.1,
+        #     amount=5.0,
+        #     strength=0.05,
+        #     falloff=0.000002
+        # )
 
         # UI
         win = base.camNode.getDisplayRegion(0).getWindow()
@@ -66,6 +74,7 @@ class PandaEditor(ShowBase):
 
 
 
+
         # input
         base.buttonThrowers[0].node().setButtonDownEvent('buttonDown')
         base.buttonThrowers[0].node().setButtonUpEvent('buttonUp')
@@ -82,10 +91,29 @@ class PandaEditor(ShowBase):
                     'arrow_down' : 'arrow down',
                     'arrow_right' : 'arrow right',
                     'lcontrol' : 'left control',
-                    'rcontrol' : 'right control'}
+                    'rcontrol' : 'right control',
+                    'lshift' : 'left shift',
+                    'rshift' : 'right shift',
+                    'lalt' : 'left alt',
+                    'ralt' : 'right alt',
+                    'lcontrol up' : 'left control up',
+                    'rcontrol up' : 'right control up',
+                    'lshift up' : 'left shift up',
+                    'rshift up' : 'right shift up',
+                    'lalt up' : 'left alt up',
+                    'ralt up' : 'right alt up',
+                    'control-mouse1' : 'left mouse down',
+                    'control-mouse2' : 'middle mouse down',
+                    'control-mouse3' : 'right mouse down',
+                    'shift-mouse1' : 'left mouse down',
+                    'shift-mouse2' : 'middle mouse down',
+                    'shift-mouse3' : 'right mouse down',
+                    'alt-mouse1' : 'left mouse down',
+                    'alt-mouse2' : 'middle mouse down',
+                    'alt-mouse3' : 'right mouse down'
+                    }
         self.accept('buttonDown', self.input)
         self.accept('buttonUp', self.input_up)
-        # self.accept('lalt', self.input, ['left alt'])
 
         base.disableMouse()
         mouse.mouse_watcher = base.mouseWatcherNode
@@ -139,6 +167,8 @@ class PandaEditor(ShowBase):
             scene.editor.input(key)
         except: pass
         try: mouse.input(key)
+        except: pass
+        try: keys.input(key)
         except: pass
 
         for entity in scene.entities:

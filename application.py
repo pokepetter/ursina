@@ -19,7 +19,7 @@ class Application():
             os.path.dirname(__file__),
             'internal_scripts/'
             ))
-        self.internal_textures_folder = Filename.fromOsSpecific(os.path.join(
+        self.internal_texture_folder = Filename.fromOsSpecific(os.path.join(
             os.path.dirname(__file__),
             'internal_textures/'
             ))

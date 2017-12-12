@@ -139,12 +139,37 @@ class Mouse(object):
                         except:
                             pass
 
+    @property
+    def normal(self):
+        if not self.collision:
+            return None
+        if not self.collision.hasSurfaceNormal():
+            print('no surface normal')
+            return None
+        n = self.collision.getSurfaceNormal(self.collision.getIntoNodePath().parent)
+        return (n[0], n[2], n[1])
+
+    @property
+    def global_normal(self):
+        if not self.collision:
+            return None
+        if not self.collision.hasSurfaceNormal():
+            print('no surface normal')
+            return None
+        n = self.collision.getSurfaceNormal(scene.render)
+        return (n[0], n[2], n[1])
+
+    @property
+    def point(self):
+        return self.collision.getSurfacePoint()
+
 
     def find_collision(self):
         if not self.raycast:
             return
         self.pq.sortEntries()
-        nP = self.pq.getEntry(0).getIntoNodePath().parent
+        self.collision = self.pq.getEntry(0)
+        nP = self.collision.getIntoNodePath().parent
         if nP.name.endswith('.egg'):
             nP = nP.parent
 

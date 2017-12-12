@@ -369,9 +369,10 @@ class Editor(Entity):
 #         self.text_bg.text_entity.position = (-.45, .45)
 
         # self.compress_textures()
-        self.compress_models()
+        # self.compress_models()
 
-        player = load_prefab('first_person_controller', True)
+        # player = load_prefab('first_person_controller', True)
+        voxel_tool = load_prefab('voxel_tool', True)
 
 
     def update(self, dt):
@@ -384,9 +385,9 @@ class Editor(Entity):
         #     render.setShaderAuto()
         #     print('set shader auto')
 
-        if key == 'control-z':
+        if keys.control and key == 'z':
             undo.stack().undo()
-        if key == 'control-y':
+        if keys.control and key == 'y':
             undo.stack().redo()
 
         if key == 'c':
@@ -513,6 +514,9 @@ class Editor(Entity):
             # elif f.endswith('.png'):
 
     def compress_models(self):
+        import subprocess
+        subprocess.call(r'''"C:\Program Files\Blender Foundation\Blender\blender.exe" "D:\UnityProjects\pandagame\pandaeditor\internal_models\cube.blend" --background --python "D:\UnityProjects\pandagame\pandaeditor\internal_scripts\blend_export.py"''')
+        return
         from tinyblend import BlenderFile
         from os.path import dirname
         files = os.listdir(application.model_folder)

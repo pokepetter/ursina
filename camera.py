@@ -7,7 +7,6 @@ class Camera(Entity):
         super().__init__()
         self.name = 'camera'
         self.is_editor = True
-        self.base = None
         self.cam = None
 
         self.render = None
@@ -29,7 +28,7 @@ class Camera(Entity):
 
         self.lens = self.perspective_lens
         self.lens_node = self.perspective_lens_node
-        self.base.cam.node().setLens(self.perspective_lens)
+        # self.base.cam.node().setLens(self.perspective_lens)
 
 
     def __setattr__(self, name, value):

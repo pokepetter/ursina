@@ -13,7 +13,8 @@ def inverse(color):
     return Vec4(tuple(1 - c for c in color))
 
 def random_color():
-    return Vec4(random.random, random.random, random.random, 1)
+    return Vec4(random.random(), random.random(), random.random(), 1)
+
 
 white =         color(0, 0, 1)
 smoke =         color(0, 0, 0.96)

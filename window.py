@@ -11,17 +11,11 @@ class Window(WindowProperties):
         loadPrcFileData('', 'undecorated True')
         loadPrcFileData('', 'sync-video True')
         loadPrcFileData('', 'show-frame-rate-meter False')
+        loadPrcFileData("", "win-size 1536 864")
         # loadPrcFileData('', 'want-pstats True')
 
         self.setForeground(True)
 
-
-        # self.fullscreen = False
-        # self.set_cursor_hidden(True)
-        # application.base.win.requestProperties(self)
-        # self.setCursorFilename(Filename.binaryFilename(cursorFile))
-
-        # main.app.base.win.requestProperties(self)
 
     def load_defaults(self):
         self.title = 'pandaeditor'
@@ -60,6 +54,7 @@ class Window(WindowProperties):
             self.setOrigin(
                 int((1920 - value[0]) / 2),
                 int((1080 - value[1]) / 2))
+
             application.base.win.requestProperties(self)
             object.__setattr__(self, name, value)
 

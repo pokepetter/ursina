@@ -12,24 +12,26 @@ from panda3d.core import Point3
 from panda3d.core import loadPrcFileData
 from panda3d.core import Filename
 
-
 import sys
 import os
 import math
-import re
 import random
 import inspect
 import importlib
+
 import undo
 from undo import undoable
 undo.setstack(undo.Stack())
+# from PIL import Image     # for texture compression, editor.py
+# from tinyblend import BlenderFile     # for .blend import, editor.py
 
 from entity import Entity
 import application
 import scene
 import mouse
-import window
+import keys
 import camera
+import window
 import debug
 import color
 

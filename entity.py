@@ -110,29 +110,21 @@ class Entity(NodePath):
             if not self.model:
                 return
 
-            try:
-                texture = loader.loadTexture(
-                    application.compressed_texture_folder + value + '.jpg'
-                )
-            except:
+            paths = (
+                # application.compressed_texture_folder + value + '.jpg',
+                application.compressed_texture_folder + value + '.png',
+                application.texture_folder + value + '.jpg',
+                application.texture_folder + value + '.png',
+                application.internal_texture_folder + value + '.png',
+                Filename.fromOsSpecific(value)
+            )
+            for p in paths:
                 try:
-                    texture = loader.loadTexture(
-                        application.compressed_texture_folder + value + '.png'
-                    )
+                    texture = loader.loadTexture(p)
+                    break
                 except:
-                    try:
-                        texture = loader.loadTexture(Filename.fromOsSpecific(value))
-                    except:
-                        try:
-                            texture = loader.loadTexture(
-                                application.texture_folder + value
-                            )
-                        except:
-                            try:
-                                texture = loader.loadTexture(
-                                    application.internal_texture_folder + value + '.png')
-                            except:
-                                pass
+                    return None
+
             try:
                 object.__setattr__(self, name, texture)
                 texture.setMagfilter(SamplerState.FT_nearest)
