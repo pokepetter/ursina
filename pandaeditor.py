@@ -30,6 +30,7 @@ import application
 import scene
 import mouse
 import keys
+from keys import held_keys
 import camera
 import window
 import debug

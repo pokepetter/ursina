@@ -6,7 +6,6 @@ class Voxel(Entity):
         super().__init__()
         self.model = 'cube'
         self.collider = 'box'
-        # self.color = color.light_gray
         self.texture = 'white_cube'
         self.scripts.append(self)
 

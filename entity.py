@@ -265,7 +265,8 @@ class Entity(NodePath):
         return -self.right
     @property
     def up(self):
-        return self.parent.getRelativeVector(self, (0, 0, 1))
+        vec = self.parent.getRelativeVector(self, (0, 0, 1))
+        return Vec3(vec[0], vec[2], vec[1])
     @property
     def down(self):
         return self.up

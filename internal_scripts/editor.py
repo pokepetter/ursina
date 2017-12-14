@@ -371,7 +371,7 @@ class Editor(Entity):
         # self.compress_textures()
         # self.compress_models()
 
-        # player = load_prefab('first_person_controller', True)
+        player = load_prefab('first_person_controller', True)
         voxel_tool = load_prefab('voxel_tool', True)
 
 

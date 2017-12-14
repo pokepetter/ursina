@@ -1,4 +1,6 @@
 import sys
+from collections import defaultdict
+
 
 class Keys(object):
 
@@ -15,8 +17,15 @@ class Keys(object):
         self.left_alt = False
         self.right_alt = False
 
+        self.held_keys = defaultdict(lambda: 0)
+
 
     def input(self, key):
+        if key.endswith('up'):
+            self.held_keys[key[:-3]] = 0
+        else:
+            self.held_keys[key] = 1
+
         if key == 'left control':
             self.left_control = True
             self.control = True

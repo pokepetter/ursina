@@ -21,6 +21,11 @@ class FirstPersonController(Entity):
         world.scale = (20, 20, .1)
         world.color = color.lime
 
+        cursor = load_prefab('panel')
+        cursor.color = color.white
+        cursor.scale *= .01
+        cursor.rotation_z = 45
+
 
     def start(self):
         self.position = (0, 2, 1)
@@ -31,36 +36,14 @@ class FirstPersonController(Entity):
         mouse.locked = True
 
 
-    def input(self, key):
-        if key == 'w':
-            self.w = True
-        elif key == 'w up':
-            self.w = False
-        if key == 's':
-            self.s = True
-        elif key == 's up':
-            self.s = False
-        if key == 'd':
-            self.d = True
-        elif key == 'd up':
-            self.d = False
-        if key == 'a':
-            self.a = True
-        elif key == 'a up':
-            self.a = False
-
-
     def update(self, dt):
         if scene.editor.enabled:
             return
-        if self.w:
-            self.position += self.forward * self.speed
-        if self.s:
-            self.position += self.back * self.speed
-        if self.d:
-            self.position += self.right * self.speed
-        if self.a:
-            self.position += self.left * self.speed
+
+        self.position += self.right * held_keys['d'] * self.speed
+        self.position += self.forward * held_keys['w'] * self.speed
+        self.position += self.left * held_keys['a'] * self.speed
+        self.position += self.back * held_keys['s'] * self.speed
 
         self.rotation_y += mouse.velocity[0] * 20
         camera.rotation_x -= mouse.velocity[1] * 20
