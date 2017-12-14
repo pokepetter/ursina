@@ -295,3 +295,6 @@ def size_list():
         globals_list.append([e, sys.getsizeof(e)])
     globals_list.sort(key=operator.itemgetter(1), reverse=True)
     print('scene size:', globals_list)
+
+def clamp(value, floor, ceiling):
+    return max(min(value, ceiling), floor)

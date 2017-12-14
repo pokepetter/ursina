@@ -31,3 +31,4 @@ class NewScene():
 
     def update(self, dt):
         if self.waiting_for_reply:
+            pass

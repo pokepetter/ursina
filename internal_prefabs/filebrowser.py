@@ -48,7 +48,7 @@ class Filebrowser(Entity):
                     button.color = color.panda_button
                     menu_toggler = button.add_script('menu_toggler')
                     menu_toggler.target = self
-                    button.text = os.path.basename(f)
+                    button.text = os.path.basename(f).split('.')[0]
                     button.text_entity.position = (-.45, 0)
                     button.text_entity.align = 'left'
                     self.buttons.append(button)

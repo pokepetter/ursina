@@ -137,10 +137,10 @@ class PandaEditor(ShowBase):
 
         for entity in scene.entities:
             if entity.enabled:
-                # try:
-                #     entity.update(dt)
-                # except:
-                #     pass
+                try:
+                    entity.update(dt)
+                except:
+                    pass
 
                 for script in entity.scripts:
                     try:
@@ -173,6 +173,8 @@ class PandaEditor(ShowBase):
 
         for entity in scene.entities:
             if entity.enabled:
+                try: entity.input(key)
+                except: pass
                 for script in entity.scripts:
                     try: script.input(key)
                     except: pass

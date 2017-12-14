@@ -109,7 +109,7 @@ class Editor(Entity):
         self.load_scene_button.text = 'scenes'
         self.menu_toggler = self.load_scene_button.add_script('menu_toggler')
         self.load_scene_button.add_script('open_in_file_explorer')
-        self.load_scene_button.open_in_file_explorer.path = Filename.toOsSpecific(application.scene_folder)
+        self.load_scene_button.open_in_file_explorer.path = Filename.toOsSpecific(application.internal_scene_folder)
 
         self.filebrowser = load_prefab('filebrowser')
         self.filebrowser.parent = self
@@ -371,9 +371,8 @@ class Editor(Entity):
         # self.compress_textures()
         # self.compress_models()
 
-        player = load_prefab('first_person_controller', True)
-        voxel_tool = load_prefab('voxel_tool', True)
-
+        # player = load_prefab('first_person_controller', True)
+        # voxel_tool = load_prefab('voxel_tool', True)
 
     def update(self, dt):
         self.editor_camera_script.update(dt)

@@ -23,6 +23,10 @@ class Application():
             os.path.dirname(__file__),
             'internal_textures/'
             ))
+        self.internal_scene_folder = Filename.fromOsSpecific(os.path.join(
+            os.path.dirname(__file__),
+            'internal_scenes/'
+            ))
 
 
         self.model_folder = Filename.fromOsSpecific(os.path.join(
