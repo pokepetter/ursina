@@ -28,7 +28,7 @@ class Camera(Entity):
 
         self.lens = self.perspective_lens
         self.lens_node = self.perspective_lens_node
-        # self.base.cam.node().setLens(self.perspective_lens)
+        application.base.cam.node().setLens(self.perspective_lens)
 
 
     def __setattr__(self, name, value):
