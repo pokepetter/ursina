@@ -39,8 +39,6 @@ class AskForSceneNameMenu(Entity):
         menu_toggler = self.close_button.add_script('menu_toggler')
         menu_toggler.target = self
 
-        self.scripts.append(self)
-
 
     def input(self, key):
         if self.save_button.hovered and key == 'left mouse down' or key == 'enter':

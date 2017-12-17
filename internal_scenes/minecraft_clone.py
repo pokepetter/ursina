@@ -1,48 +1,62 @@
+import sys
+sys.path.append("..")
 from pandaeditor import *
+
 
 class MinecraftClone(Entity):
 
     def __init__(self):
         super().__init__()
+        self.name = 'minecraft_clone'
+        e = Entity()
+        e.model = 'cube'
+        cube = e.model
+        voxel_parent = Entity()
 
-        for z in range(10):
-            for x in range(10):
-                voxel = Voxel()
-                voxel.parent = self
-                voxel.position = (x, 0, z)
+        for z in range(32):
+            for x in range(32):
+                for y in range(1):
+                    voxel = Voxel()
+                    voxel.parent = voxel_parent
+                    voxel.position = (x, y, z)
 
         player = FirstPersonController()
         player.parent = self
+
+        # self.flattenStrong()
 
 
 class Voxel(Entity):
 
     def __init__(self):
         super().__init__()
+        self.name = 'voxel'
         self.model = 'cube'
+        self.origin = (0, .5, 0)
         self.collider = 'box'
-        self.texture = 'white_cube'
-        self.scripts.append(self)
+        # self.texture = 'white_cube'
+        self.color = color.random_color()
+
 
     def input(self, key):
-        if key == 'left mouse down' and self.hovered:
-            if keys.alt:
-                destroy(self)
-            else:
-                voxel = load_prefab('voxel')
+        if self.hovered:
+            if key == 'left mouse down' and self.hovered:
+                voxel = Voxel()
                 voxel.parent = self.parent
                 voxel.position = self.position + mouse.normal
+
+            if key == 'right mouse down':
+                destroy(self)
 
 
 class FirstPersonController(Entity):
 
     def __init__(self):
         super().__init__()
-        self.scripts.append(self)
         self.speed = .1
 
         cursor = load_prefab('panel')
-        cursor.color = color.white
+        cursor.color = color.dark_gray
         cursor.scale *= .01
         cursor.rotation_z = 45
 

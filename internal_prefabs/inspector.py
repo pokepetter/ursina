@@ -22,9 +22,6 @@ class Inspector(Entity):
         self.button_height = .025 * scene.editor_font_size
         self.script_amount = 0
 
-        # append self so update() runs
-        self.scripts.append(self)
-
 # name_label
         self.name_label = self.create_button('name_label')
         self.name_label.color = (color.turquoise + color.black) / 2

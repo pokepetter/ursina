@@ -120,7 +120,26 @@ class PandaEditor(ShowBase):
         mouse.enabled = True
 
         scene.set_up()
-        scene.editor = load_script('editor')
+        # scene.editor = load_script('editor')
+        t = load_scene('minecraft_clone')
+
+        # start game if there is no editor
+        # if not self.editor:
+        for e in scene.entities:
+            # if not e.has_ancestor(scene.entity):
+            #     continue
+            try:
+                e.start()
+            except:
+                pass
+            try:
+                for s in e:
+                    try:
+                        s.start()
+                    except:
+                        pass
+            except:
+                pass
 
         self.update_task = taskMgr.add(self.update, "update")
 

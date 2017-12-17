@@ -1,5 +1,3 @@
-import sys
-sys.path.append("..")
 from pandaeditor import *
 from panda3d.core import TextNode
 

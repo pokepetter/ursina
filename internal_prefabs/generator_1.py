@@ -21,9 +21,6 @@ class Generator_1(Entity):
         #             self.cube.position = (x, y, z)
 
 
-        self.scripts.append(self)
-
-
     def input(self, key):
         if key == 'g':
             print('generate stuff')

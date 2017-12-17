@@ -40,8 +40,6 @@ class EntityList(Entity):
         self.buttons = list()
         self.bg.add_script('scrollable')
         self.bg.scrollable.target = self.button_parent
-        # print('t:', self.scrollable.target)
-        self.scripts.append(self)
         self.t = 0
         self.i = 0
 

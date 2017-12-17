@@ -18,6 +18,7 @@ import math
 import random
 import inspect
 import importlib
+import re
 
 import undo
 from undo import undoable
@@ -40,7 +41,7 @@ from internal_scripts import *
 # from internal_scenes import *
 from internal_prefabs import *
 
-
+sys.path.append("..")
 
 
 
@@ -194,32 +195,38 @@ def load_prefab(module_name, add_to_caller=False):
     return prefab
 
 def load_scene(module_name):
-    # scene.clear()
-    omn = module_name
-    module_name += '.py'
-    module_names = (os.path.join(os.path.dirname(__file__), module_name),
-                    os.path.join(os.path.dirname(os.path.dirname(__file__)), 'scenes', module_name))
+    file_name = module_name + '.py'
+    module_names = (os.path.join(os.path.dirname(__file__), file_name),
+                    os.path.join(os.path.dirname(os.path.dirname(__file__)), 'scenes', file_name),
+                    os.path.join(os.path.dirname(__file__), 'internal_scenes', file_name)
+                    )
 
-    for module_name in module_names:
+    for name in module_names:
         try:
-            module = importlib.machinery.SourceFileLoader(omn, module_name).load_module()
-            class_names = inspect.getmembers(sys.modules[omn], inspect.isclass)
-            for cn in class_names:
-                if cn[1].__module__ == module.__name__:
-                    class_name = cn[0]
-            class_ = getattr(module, class_name)
+            module = importlib.machinery.SourceFileLoader(module_name, name).load_module()
+
+            print('name:', snake_to_camel(module_name))
+            try:
+                class_ = getattr(module, snake_to_camel(module_name))
+            except:
+                # load first class
+                class_names = inspect.getmembers(sys.modules[module_name], inspect.isclass)
+                for cn in class_names:
+                    if cn[1].__module__ == module.__name__:
+                        class_ = getattr(module, cn[0])
+                        break
             class_instance = class_()
             class_instance.parent = scene
             destroy(scene.entity)
             scene.entity = class_instance
-            print('found scene:', module_name)
-            # print(scene.entities)
+            print('found scene:', name)
+            # print(scene.entity.name)
             return class_instance
             break
         except Exception as e:
             print(e)
 
-    print("couldn't find scene:", omn)
+    print("couldn't find scene:", module_name)
 
 def load_script(module_name):
     paths = ('internal_scripts.', '..scripts.')
@@ -296,5 +303,19 @@ def size_list():
     globals_list.sort(key=operator.itemgetter(1), reverse=True)
     print('scene size:', globals_list)
 
+
 def clamp(value, floor, ceiling):
     return max(min(value, ceiling), floor)
+
+
+def camel_to_snake(value):
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', value)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+
+
+def snake_to_camel(value):
+    camel = ''
+    words = value.split('_')
+    for w in words:
+        camel += w.title()
+    return camel
