@@ -37,6 +37,7 @@ class Camera(Entity):
             value = max(1, value)
             try:
                 self.perspective_lens.setFov(value)
+                application.base.cam.node().setLens(self.perspective_lens)
             except:
                 pass # no lens
 

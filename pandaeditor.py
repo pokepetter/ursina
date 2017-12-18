@@ -319,3 +319,24 @@ def snake_to_camel(value):
     for w in words:
         camel += w.title()
     return camel
+
+
+def count_lines(file):
+    all_lines = 0
+    blank_lines = 0
+    comment_lines = 0
+    used_lines = 0
+
+    with open(file) as f:
+        for line in f:
+            all_lines += 1
+
+            if len(line.strip()) == 0:
+                blank_lines += 1
+
+            if line.strip().startswith('#'):
+                comment_lines += 1
+    print('all_lines:', all_lines)
+    print('blank_lines:', blank_lines)
+    print('comment_lines:', comment_lines)
+    print('used_lines:', all_lines - blank_lines - comment_lines)

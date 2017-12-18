@@ -39,8 +39,7 @@ class Editor(Entity):
         self.grid.name = 'grid_x'
         self.grid.parent = scene.render
         self.grid.position = (0, 0, 0)
-        self.grid.rotation = (-90, 0, 0)
-        self.grid.scale = (10, .02, .02)
+        self.grid.scale = (10, 0, .02)
         self.grid.color = color.orange
 
         self.grid = Entity()
@@ -49,8 +48,8 @@ class Editor(Entity):
         self.grid.name = 'grid_z'
         self.grid.parent = scene.render
         self.grid.position = (0, 0, 0)
-        self.grid.rotation = (-90, 90, 0)
-        self.grid.scale = (10, .02, .02)
+        self.grid.rotation = (0, 90, 0)
+        self.grid.scale = (10, 0, .02)
         self.grid.color = color.lime
 
 # top menu
@@ -180,11 +179,11 @@ class Editor(Entity):
         self.load_sprite_button.text = 'sprite'
         self.menu_toggler = self.load_sprite_button.add_script('menu_toggler')
         self.load_sprite_button.add_script('open_in_file_explorer')
-        self.load_sprite_button.open_in_file_explorer.path = Filename.toOsSpecific(application.texture_folder)
+        self.load_sprite_button.open_in_file_explorer.path = Filename.toOsSpecific(application.compressed_texture_folder)
 
         self.filebrowser = load_prefab('filebrowser')
-        self.filebrowser.file_types = ('.png', '.jpg', '.psd', '.gif')
-        self.filebrowser.path = application.texture_folder
+        self.filebrowser.file_types = ('.png', '.jpg', '.gif')
+        self.filebrowser.path = application.compressed_texture_folder
         self.filebrowser.button_type = 'load_texture_button'
         self.menu_toggler.target = self.filebrowser
 

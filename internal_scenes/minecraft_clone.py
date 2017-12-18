@@ -1,5 +1,5 @@
 import sys
-sys.path.append("..")
+sys.path.append('..')
 from pandaeditor import *
 
 
@@ -8,22 +8,16 @@ class MinecraftClone(Entity):
     def __init__(self):
         super().__init__()
         self.name = 'minecraft_clone'
-        e = Entity()
-        e.model = 'cube'
-        cube = e.model
-        voxel_parent = Entity()
 
         for z in range(32):
             for x in range(32):
                 for y in range(1):
                     voxel = Voxel()
-                    voxel.parent = voxel_parent
+                    voxel.parent = self
                     voxel.position = (x, y, z)
 
         player = FirstPersonController()
         player.parent = self
-
-        # self.flattenStrong()
 
 
 class Voxel(Entity):
@@ -34,8 +28,8 @@ class Voxel(Entity):
         self.model = 'cube'
         self.origin = (0, .5, 0)
         self.collider = 'box'
-        # self.texture = 'white_cube'
-        self.color = color.random_color()
+        self.texture = 'white_cube'
+        self.color = color.color(0, 0, random.uniform(.9, 1.0))
 
 
     def input(self, key):

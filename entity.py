@@ -85,9 +85,8 @@ class Entity(NodePath):
                 return None
 
             try:
-                self.model = loader.loadModel(value + '.egg')
+                self.model = loader.loadModel(value)
             except:
-                print('no model:', value + '.egg')
                 pass
 
             if self.model:

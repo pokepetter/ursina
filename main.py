@@ -122,12 +122,11 @@ class PandaEditor(ShowBase):
         scene.set_up()
         # scene.editor = load_script('editor')
         t = load_scene('minecraft_clone')
+        count_lines(inspect.getfile(t.__class__))
 
         # start game if there is no editor
-        # if not self.editor:
         for e in scene.entities:
-            # if not e.has_ancestor(scene.entity):
-            #     continue
+
             try:
                 e.start()
             except:
