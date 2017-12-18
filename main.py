@@ -120,9 +120,9 @@ class PandaEditor(ShowBase):
         mouse.enabled = True
 
         scene.set_up()
-        # scene.editor = load_script('editor')
-        t = load_scene('minecraft_clone')
-        count_lines(inspect.getfile(t.__class__))
+        scene.editor = load_script('editor')
+        # t = load_scene('minecraft_clone')
+        # count_lines(inspect.getfile(t.__class__))
 
         # start game if there is no editor
         for e in scene.entities:

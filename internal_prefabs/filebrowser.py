@@ -53,8 +53,8 @@ class Filebrowser(Entity):
                     button.text_entity.align = 'left'
                     self.buttons.append(button)
                     self.load_button = button.add_script(self.button_type)
-                    self.load_button.path = os.path.join(self.path, f)
-                    # print('path', self.load_button.path)w
+                    self.load_button.path = button.text
+                    # print('path', self.load_button.path)
 
                     y += 1
                     if y > self.max_vertical:
