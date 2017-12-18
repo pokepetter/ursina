@@ -7,6 +7,7 @@ from panda3d.core import ModelNode
 from panda3d.core import Vec3
 from panda3d.core import SamplerState
 from panda3d.core import TransparencyAttrib
+from panda3d.core import Texture
 import application
 from collider import Collider
 from scripts import *
@@ -84,15 +85,10 @@ class Entity(NodePath):
                 return None
 
             try:
-                self.model = loader.loadModel(Filename.fromOsSpecific(path.join(
-                        application.internal_model_folder, value + '.egg')))
-                # print('loaded primitive')
+                self.model = loader.loadModel(value + '.egg')
             except:
-                try:
-                    self.model = loader.loadModel(Filename.fromOsSpecific(path.join(
-                            application.model_folder, value + '.egg')))
-                except:
-                    pass
+                print('no model:', value + '.egg')
+                pass
 
             if self.model:
                 self.model.reparentTo(self)
@@ -110,20 +106,18 @@ class Entity(NodePath):
             if not self.model:
                 return
 
-            paths = (
-                # application.compressed_texture_folder + value + '.jpg',
-                application.compressed_texture_folder + value + '.png',
-                application.texture_folder + value + '.jpg',
-                application.texture_folder + value + '.png',
-                application.internal_texture_folder + value + '.png',
-                Filename.fromOsSpecific(value)
-            )
-            for p in paths:
+            if value.__class__ is Texture:
+                print('rttttttttttttttttttttt')
+                texture = value
+            else:
                 try:
-                    texture = loader.loadTexture(p)
-                    break
+                    texture = loader.loadTexture(value + '.png')
                 except:
-                    return None
+                    try:
+                        texture = loader.loadTexture(value + '.jpg')
+                    except:
+                        print('no texture:', value + '.png or', value + '.jpg')
+                        return None
 
             try:
                 object.__setattr__(self, name, texture)

@@ -1,4 +1,8 @@
-from pandaeditor import *
+# from pandaeditor import *
+import os
+import sys
+from panda3d.core import Filename
+from panda3d.core import getModelPath
 
 class Application():
 
@@ -59,12 +63,15 @@ class Application():
             'compressed/'
             ))
 
+        # loader takes the first it finds, reorder if needed.
+        model_path = getModelPath()
+        model_path.appendPath(self.internal_texture_folder)
+        model_path.appendPath(self.compressed_texture_folder)
+        model_path.appendPath(self.texture_folder)
 
-        print('internal_model_folder:', self.internal_model_folder)
-        print('model_folder:', self.model_folder)
-        print('texture_folder:', self.texture_folder)
-        print('prefab_folder:', self.prefab_folder)
-        print('scene_folder:', self.scene_folder)
+        model_path.appendPath(self.internal_model_folder)
+        model_path.appendPath(self.compressed_model_folder)
+        model_path.appendPath(self.model_folder)
 
 
 sys.modules[__name__] = Application()
