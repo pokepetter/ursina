@@ -22,6 +22,7 @@ class Mouse(object):
         self.left = False
         self.right = False
         self.middle = False
+        self.delta_drag = (0,0)
 
         self.i = 0
         self.update_rate = 10
@@ -69,6 +70,13 @@ class Mouse(object):
         if key.endswith('mouse down'):
             self.start_x = self.x
             self.start_y = self.y
+
+        elif key.endswith('mouse up'):
+            self.delta_drag = (
+                self.x - self.start_x,
+                self.y - self.start_y
+                )
+
 
         if key == 'left mouse down':
             self.left = True

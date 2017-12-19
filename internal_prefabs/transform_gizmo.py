@@ -24,7 +24,6 @@ class TransformGizmo(Entity):
             'e' : 'rotate',
             'r' : 'scale'
             }
-        self.dragging = False
         self.move_interval = 1
         self.rotation_interval = 5
         self.scale_interval = .1
@@ -46,94 +45,104 @@ class TransformGizmo(Entity):
         self.button = None
         self.selection_buttons = list()
 
+        self.trash_list = list()
+
+
     @undoable
-    def move(self, entities, delta_position):
-        self.original_positions = list()
-
-        for e in entities:
-            self.original_position.append(e.position)
-
-            # print('drop')
-            # for e in scene.editor.selection:
-            e.position += delta_position
-            e.position = (round(e.x, 2), round(e.y, 2), round(e.z, 2))
-        # self.position = position
-
+    def move_from_to(self, entities, original_positions, new_positions):
+        for i in range(len(entities)):
+            entities[i].position = new_positions[i]
 
         # undo
-        yield 'Move Selection'
-        print('undo move')
-        for i in len(entities):
-            entities[i].position = self.original_positions[i]
-            entities[i].position = (
-                round(entities[i].x, 2),
-                round(entities[i].y, 2),
-                round(entities[i].z, 2)
-                )
-        # self.position = mouse.hovered_entity.global_position
+        yield 'move selected'
+        print('move back from:', new_positions[0], 'to:', original_positions[0])
+        for i in range(len(entities)):
+            entities[i].position = original_positions[i]
+
+
+
+    @undoable
+    def delete_selected(self):
+        self.trash_list.append([e for e in scene.editor.selection])
+        print(self.trash_list[-1])
+        for e in self.trash_list[-1]:
+            e.parent_before_destroyed = e.parent
+            e.enabled = False
+            e.parent = None
+            print('m')
+
+        scene.editor.entity_list.populate()
+        print(self.trash_list)
+
+        yield 'delete selected'
+        print('restore detached')
+        # get prev from trash can
+        for e in self.trash_list[-1]:
+            e.parent = e.parent_before_destroyed
+            e.enabled = True
+            # scene.editor.selection.append(e)
+
+        del self.trash_list[-1]
+        print('trash list is now:', self.trash_list)
+
+        scene.editor.entity_list.populate()
 
 
     def update(self, dt):
         if not scene.editor.enabled:    # just to make sure
             return
         # for moving stuff in side view
-        if scene.editor.camera_pivot.rotation == (0,0,0) and self.dragging:
-            if mouse.hovered_entity and mouse.hovered_entity.is_editor == False:
-                if mouse.delta[0] is not 0 or mouse.delta[1] is not 0:
-                    distance_to_camera = distance(
-                        mouse.hovered_entity.getPos(camera.render),
-                        camera.cam.getPos(camera.render)) * .2
+        if (scene.editor.camera_pivot.rotation == (0,0,0)
+        and mouse.hovered_entity and mouse.hovered_entity.is_editor == False):
 
-                    for e in scene.editor.selection:
-                        e.position = (
-                            self.original_position[0] + (mouse.delta[0] * distance_to_camera * camera.aspect_ratio),
-                            self.original_position[1] + (mouse.delta[1] * distance_to_camera),
-                            self.original_position[2])
-                        e.position = (round(e.x, 2), round(e.y, 2), round(e.z, 2))
+            if mouse.delta_drag[0] != 0 or mouse.delta_drag[1] != 0 and mouse.left:
+                dist_to_cam = distance(
+                    mouse.hovered_entity.getPos(camera.render),
+                    camera.cam.getPos(camera.render)) * .2
 
-                    self.position = mouse.hovered_entity.global_position
+                for e in scene.editor.selection:
+                    e.position = (
+                        self.position[0] + (mouse.delta[0] * dist_to_cam * camera.aspect_ratio),
+                        self.position[1] + (mouse.delta[1] * dist_to_cam),
+                        self.position[2])
+                    e.position = (round(e.x, 2), round(e.y, 2), round(e.z, 2))
 
 
     def input(self, key):
-        if not scene.editor.enabled:    # just to make sure
-            return
-
         if key == 'left mouse down':
-            if mouse.hovered_entity and mouse.hovered_entity.is_editor == False:
-                self.original_position = mouse.hovered_entity.position
-                self.dragging = True
+            if not mouse.hovered_entity:
+                scene.editor.selection.clear()
 
+            elif mouse.hovered_entity.is_editor == False:
                 # select entities
-                self.position = mouse.hovered_entity.global_position
-                self.original_position = self.position
                 if not self.add_to_selection:
                     scene.editor.selection.clear()
                     scene.editor.selection.append(mouse.hovered_entity)
                 else:
                     scene.editor.selection.clear()
 
-                # mouse.raycast = 0
-            #dragging the gizmo
-            # self.original_transforms.clear()
-            # self.original_position = self.entity.position
+                self.start_drag_position = mouse.position
+                self.position = scene.editor.selection[-1].global_position
+                print('start drag:', self.start_drag_position)
 
-            elif not mouse.hovered_entity:
-                scene.editor.selection.clear()
+                self.temp_original_positions = [p.position for p in scene.editor.selection]
 
-            if mouse.hovered_entity == self.move_gizmo_x:
-                self.dragging_x = True
-                # for selected in self.selection:
-                #     self.original_transforms.append(selected.x)
-
-            self.entity_right_click_menu.enabled = False
 
         if key == 'left mouse up':
-            self.move(
-                scene.editor.selection, (
-                (mouse.delta[0] * distance_to_camera * camera.aspect_ratio),
-                (mouse.delta[1] * distance_to_camera),
-                0))
-            self.dragging = False
+            self.new_positions = [p.position for p in scene.editor.selection]
+            if mouse.delta_drag[0] != 0 or mouse.delta_drag[1] != 0:   # check if actually moved
+                self.original_positions = self.temp_original_positions
+                print('drop:', mouse.delta_drag[0])
+                print('move', self.new_positions[0], self.original_positions[0])
+
+                self.move_from_to(
+                    [e for e in scene.editor.selection],
+                    self.original_positions,
+                    self.new_positions
+                    )
+
+                self.position = scene.editor.selection[-1].global_position
+
 
         if key == 'left shift':
             self.add_to_selection = True
@@ -179,11 +188,8 @@ class TransformGizmo(Entity):
         self.tool = self.tools.get(key, self.tool)
 
         if key == 'delete':
-            for e in scene.editor.selection:
-                e.detachNode()
-                # destroy(e)
+            self.delete_selected()
 
-            scene.editor.entity_list.populate()
 
 # move with arrow buttons
         if key == 'arrow left' and scene.editor.selection:

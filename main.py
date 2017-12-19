@@ -149,7 +149,7 @@ class PandaEditor(ShowBase):
         dt = globalClock.getDt()
 
         mouse.update(dt)
-        if scene.editor:
+        if scene.editor and scene.editor.enabled:
             scene.editor.update(dt)
         # except: pass
 
@@ -178,11 +178,27 @@ class PandaEditor(ShowBase):
         if key == 'f11':
             window.fullscreen = not window.fullscreen
 
-        try: key = self.dictionary[key]
-        except: pass
+        try:
+            key = self.dictionary[key]
+        except:
+            pass
+        try:
+            key = key.replace('control-', '')
+        except:
+            pass
+        try:
+            key = key.replace('shift-', '')
+        except:
+            pass
+        try:
+            key = key.replace('alt-', '')
+        except:
+            pass
+
 
         try:
-            scene.editor.input(key)
+            if scene.editor and scene.editor.enabled:
+                scene.editor.input(key)
         except: pass
         try: mouse.input(key)
         except: pass
@@ -190,7 +206,7 @@ class PandaEditor(ShowBase):
         except: pass
 
         for entity in scene.entities:
-            if entity.enabled:
+            if entity.enabled and entity is not scene.editor:
                 try: entity.input(key)
                 except: pass
                 for script in entity.scripts:

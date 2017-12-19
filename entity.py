@@ -77,8 +77,14 @@ class Entity(NodePath):
             else:
                 self.stash()
 
-        if name == 'parent' and value is not None:
-            self.reparentTo(value)
+        if name == 'parent':
+            if value is None:
+                try:
+                    self.reparentTo(scene.editor.trash)
+                except:
+                    print('no trash node')
+            else:
+                self.reparentTo(value)
 
         if name == 'model':
             if value is None:

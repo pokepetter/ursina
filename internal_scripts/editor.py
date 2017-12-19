@@ -14,6 +14,9 @@ class Editor(Entity):
         self.is_editor = True
         self.parent = scene.ui
 
+        self.trash = NodePath('trash')
+        self.selection = list()
+
         self.editor_camera_script = load_script('editor_camera_script')
         self.editor_camera_script.position = (0, 0, -100)
         scene.editor_camera_script = self.editor_camera_script
@@ -25,7 +28,6 @@ class Editor(Entity):
         self.camera_pivot.is_editor = True
         camera.parent = self.camera_pivot
 
-        self.selection = list()
 
         self.transform_gizmo = load_prefab('transform_gizmo')
         self.transform_gizmo.name = 'transform_gizmo'
@@ -383,9 +385,9 @@ class Editor(Entity):
         #     render.setShaderAuto()
         #     print('set shader auto')
 
-        if keys.control and key == 'z':
+        if held_keys['control'] and key == 'z':
             undo.stack().undo()
-        if keys.control and key == 'y':
+        if held_keys['control'] and key == 'y':
             undo.stack().redo()
 
         if key == 'c':
