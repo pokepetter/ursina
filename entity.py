@@ -41,10 +41,6 @@ class Entity(NodePath):
         self.position = Vec3(0,0,0)
         self.x, self.y, self.z = 0, 0, 0
 
-        # self.forward, self.back = Vec3(0,0,1), Vec3(0,0,-1)
-        # self.right, self.left = Vec3(1,0,0), Vec3(-1,0,0)
-        # self.up, self.down = Vec3(0,1,0), Vec3(0,-1,0)
-
         self.rotation = Vec3(0,0,0)
         self.rotation_x, self.rotation_y, self.rotation_z = 0, 0, 0
 
@@ -96,9 +92,12 @@ class Entity(NodePath):
                 pass
 
             if self.model:
-                self.model.reparentTo(self)
-                self.model.setColorScaleOff()
-                self.model.setTransparency(TransparencyAttrib.MAlpha)
+                try:
+                    self.model.reparentTo(self)
+                    self.model.setColorScaleOff()
+                    self.model.setTransparency(TransparencyAttrib.MAlpha)
+                except:
+                    print('cant add model')
             else:
                 print('no model with name:', combined_path)
 
@@ -150,17 +149,13 @@ class Entity(NodePath):
                     new_value.addZ(value[i+2])
 
             try:
-                self.setPos(Vec3(new_value[0], new_value[2], new_value[1]))
-                object.__setattr__(self, name, new_value)
-                object.__setattr__(self, 'x', new_value[0])
-                object.__setattr__(self, 'y', new_value[1])
-                object.__setattr__(self, 'z', new_value[2])
+                self.setPos(new_value[0], new_value[2], new_value[1])
             except:
                 pass    # can't set position
 
-        if name == 'x': self.position = (value, self.position[1], self.position[2])
-        if name == 'y': self.position = (self.position[0], value, self.position[2])
-        if name == 'z': self.position = (self.position[0], self.position[1], value)
+        if name == 'x': self.setX(value)
+        if name == 'y': self.setZ(value)
+        if name == 'z': self.setY(value)
 
         if name == 'origin' and self.model:
             new_value = Vec3()
@@ -205,18 +200,14 @@ class Entity(NodePath):
                     new_value.addY(value[i+1])
                     new_value.addZ(value[i+2])
             try:
-                self.setScale(Vec3(new_value[0], new_value[2], new_value[1]))
-                object.__setattr__(self, name, new_value)
-                object.__setattr__(self, 'scale_x', new_value[0])
-                object.__setattr__(self, 'scale_y', new_value[1])
-                object.__setattr__(self, 'scale_z', new_value[2])
+                self.setScale(new_value[0], new_value[2], new_value[1])
             except:
                 pass
 
 
-        if name == 'scale_x': self.scale = (value, self.scale[1], self.scale[2])
-        if name == 'scale_y': self.scale = (self.scale[0], value, self.scale[2])
-        if name == 'scale_z': self.scale = (self.scale[0], self.scale[1], value)
+        if name == 'scale_x': self.setScale(value, self.scale_y, self.scale_z)
+        if name == 'scale_y': self.setScale(self.scale_x, self.scale_y, value)
+        if name == 'scale_z': self.setScale(self.scale_x, value, self.scale_z)
 
 
         if name == 'collider' and value is not None:
@@ -232,21 +223,51 @@ class Entity(NodePath):
             object.__setattr__(self, name, editor_collider)
 
 
-    def __getattr__(self, attrname):
-        if attrname == 'global_position':
-            global_position = self.getPos(scene.render)
-            global_position = (global_position[0], global_position[2], global_position[1])
-            return global_position
+    @property
+    def global_position(self):
+        global_position = self.getPos(scene.render)
+        global_position = (global_position[0], global_position[2], global_position[1])
+        return global_position
 
-        if attrname == 'rotation':
-            return(-self.getP(), -self.getH(), self.getR())
-        if attrname == 'rotation_x':
-            return -self.getP()
-        if attrname == 'rotation_y':
-            return -self.getH()
-        if attrname == 'rotation_y':
-            return self.getR()
+    @property
+    def position(self):
+        return self.getPos()
+    @property
+    def x(self):
+        return self.getX()
+    @property
+    def y(self):
+        return self.getZ()
+    @property
+    def z(self):
+        return self.getY()
 
+    @property
+    def rotation(self):
+        return(-self.getP(), -self.getH(), self.getR())
+    @property
+    def rotation_x(self):
+        return -self.getP()
+    @property
+    def rotation_y(self):
+        return -self.getH()
+    @property
+    def rotation_z(self):
+        return self.getR()
+
+    @property
+    def scale(self):
+        scale = self.getScale()
+        return Vec3(scale[0], scale[2], scale[1])
+    @property
+    def scale_x(self):
+        return self.getScale()[0]
+    @property
+    def scale_y(self):
+        return self.getScale()[2]
+    @property
+    def scale_z(self):
+        return self.getScale()[1]
 
     @property
     def forward(self):

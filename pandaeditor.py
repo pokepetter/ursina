@@ -183,10 +183,10 @@ def vec3_to_string(vec3):
 def load_prefab(module_name, add_to_caller=False):
     paths = ('internal_prefabs.', '..prefabs.')
     prefab = load(paths, module_name)
-    caller = inspect.currentframe().f_back.f_locals['self']
     # if hasattr(caller, 'name') and caller.name == 'editor':
     #     prefab.is_editor = True
     if add_to_caller:
+        caller = inspect.currentframe().f_back.f_locals['self']
         try: prefab.parent = caller.model
         except:
             try: prefab.parent = caller
