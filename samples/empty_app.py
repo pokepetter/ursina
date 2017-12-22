@@ -1,4 +1,4 @@
-import pandaeditor
+from pandaeditor import main
 
-app = pandaeditor.PandaEditor()
-app.run()
+# app = PandaEditor()
+# app.run()

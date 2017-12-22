@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import find_packages, setup
 
 setup(
     name='pandaeditor',
@@ -8,6 +8,7 @@ setup(
     author_email='pokepetter@gmail.com',
     license='MIT',
     keywords='game development',
-    py_modules=['main'],
-    # packages=find_packages(['']),
+    packages=find_packages(),
+    # packages=find_packages(['']),cmd
+    requires=['panda3d', ]
     )
