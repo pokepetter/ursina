@@ -26,8 +26,8 @@ undo.setstack(undo.Stack())
 # from PIL import Image     # for texture compression, editor.py
 # from tinyblend import BlenderFile     # for .blend import, editor.py
 
-from entity import Entity
 import application
+from entity import Entity
 import scene
 import mouse
 import keys
@@ -37,12 +37,21 @@ import window
 import debug
 import color
 
-from internal_scripts import *
-# from internal_scenes import *
-from internal_prefabs import *
-
 sys.path.append("..")
 
+
+path = Filename.toOsSpecific(application.internal_prefab_folder)
+sys.path.insert(0, path)
+# from button import Button
+
+# for py in [f[:-3] for f in os.listdir(path) if f.endswith('.py') and f[0] != '_']:
+#     m = __import__(py, globals(), locals(), [])
+#     print('imported', m)
+#
+# del sys.path[0]
+# import button
+# from button import Button
+# b = Button()
 
 
 def distance(a, b):
@@ -269,6 +278,7 @@ def load(paths, module_name):
     # print('added script:', class_instance)
     return class_instance
 
+
 def destroy(entity):
     scene.entities.remove(entity)
     try: entity.model.removeNode()
@@ -340,3 +350,9 @@ def count_lines(file):
     print('blank_lines:', blank_lines)
     print('comment_lines:', comment_lines)
     print('used_lines:', all_lines - blank_lines - comment_lines)
+
+
+def chunk_list(l, cunk_size):
+    # yield successive chunks from list
+    for i in range(0, len(l), cunk_size):
+        yield l[i:i + cunk_size]

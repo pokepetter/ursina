@@ -1,7 +1,9 @@
 import sys
 from panda3d.core import WindowProperties
-import application
 from panda3d.core import loadPrcFileData
+from entity import Entity
+import application
+
 
 class Window(WindowProperties):
 
@@ -10,12 +12,20 @@ class Window(WindowProperties):
         loadPrcFileData('', 'window-title pandaeditor')
         loadPrcFileData('', 'undecorated True')
         loadPrcFileData('', 'sync-video True')
-        loadPrcFileData('', 'show-frame-rate-meter True')
         loadPrcFileData('', 'win-size 1536 864')
         loadPrcFileData('', 'notify-level-util error')
         # loadPrcFileData('', 'want-pstats True')
 
         self.setForeground(True)
+        # self.exit = load_prefab('button')
+        # self.exit.is_editor = False
+        # self.exit.parent = self
+        # self.exit.name = 'toggle_button'
+        # self.exit.origin = (.5, .5)
+        # self.exit.position = window.top_right
+        # self.exit.scale = (.06, .03)
+        # self.exit.text = 'X'
+        # self.exit.text_entity.x = 0
 
 
     def load_defaults(self):
@@ -29,8 +39,10 @@ class Window(WindowProperties):
         self.fullscreen = False
 
         self.cursor = True
-        self.fps_counter = True
+        self.fps_counter = False
+        # self.exit_button = True
         self.vsync = True
+
 
         self.aspect_ratio = self.size[0] / self.size[1]
         self.left = (-self.aspect_ratio / 2, 0)
@@ -42,6 +54,7 @@ class Window(WindowProperties):
         self.top_right = (self.aspect_ratio / 2, .5)
         self.bottom_left = (-self.aspect_ratio / 2, -.5)
         self.bottom_right = (self.aspect_ratio / 2, -.5)
+
 
     def __setattr__(self, name, value):
         if not application.base:
@@ -65,6 +78,18 @@ class Window(WindowProperties):
             else:
                 self.size = self.windowed_size
             object.__setattr__(self, name, value)
+
+        if name == 'color':
+            application.base.camNode.getDisplayRegion(0).getWindow().setClearColor(value)
+
+        if name == 'fps_counter':
+            application.base.setFrameRateMeter(value)
+
+        if name == 'exit_button':
+            self.exit.enabled = value
+
+        # if name == 'title':
+        #     self.title = value
 
 
 sys.modules[__name__] = Window()

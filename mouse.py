@@ -1,5 +1,6 @@
 from panda3d.core import *
 import sys
+from entity import Entity
 import camera
 import scene
 import application
@@ -34,6 +35,7 @@ class Mouse(object):
         self.pickerNode.addSolid(self.pickerRay)
         self.picker.addCollider(self.pickerNP, self.pq)
         self.raycast = True
+        self.enabled = True
 
     @property
     def x(self):
@@ -141,6 +143,10 @@ class Mouse(object):
                 if entity.hovered:
                     entity.hovered = False
                     self.hovered_entity = None
+                    try:
+                        entity.on_mouse_exit()
+                    except:
+                        pass
                     for s in entity.scripts:
                         try:
                             s.on_mouse_exit()
@@ -188,6 +194,10 @@ class Mouse(object):
                         entity.hovered = True
                         self.hovered_entity = entity
                         # print(entity.name)
+                        try:
+                            entity.on_mouse_enter()
+                        except:
+                            pass
                         for s in entity.scripts:
                             try:
                                 s.on_mouse_enter()
@@ -197,6 +207,10 @@ class Mouse(object):
                 else:
                     if entity.hovered:
                         entity.hovered = False
+                        try:
+                            entity.on_mouse_exit()
+                        except:
+                            pass
                         for s in entity.scripts:
                             try:
                                 s.on_mouse_exit()

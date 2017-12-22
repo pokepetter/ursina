@@ -17,7 +17,7 @@ class Scrollable():
         if not self.target:
             self.target = self.entity
 
-        if self.entity.hovered or mouse.hovered_entity.has_ancestor(self.entity):
+        if self.entity.hovered or mouse.hovered_entity.is_editor:
             if key == 'scroll up':
                 self.target.y -= self.scroll_speed
             if key == 'scroll down':

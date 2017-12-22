@@ -73,8 +73,6 @@ class PandaEditor(ShowBase):
         camera.ui = ui
 
 
-
-
         # input
         base.buttonThrowers[0].node().setButtonDownEvent('buttonDown')
         base.buttonThrowers[0].node().setButtonUpEvent('buttonUp')
@@ -126,7 +124,6 @@ class PandaEditor(ShowBase):
 
         # start game if there is no editor
         for e in scene.entities:
-
             try:
                 e.start()
             except:

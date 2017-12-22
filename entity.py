@@ -97,7 +97,7 @@ class Entity(NodePath):
                     self.model.setColorScaleOff()
                     self.model.setTransparency(TransparencyAttrib.MAlpha)
                 except:
-                    print('cant add model')
+                    print('cant add model', value)
             else:
                 print('no model with name:', combined_path)
 

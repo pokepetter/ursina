@@ -33,7 +33,7 @@ class Text(Entity):
         # self.text_node.setFrameColor(1, 1, 1, 1)
         # self.text_node.setFrameAsMargin(0.5, 0.5, 0.5, 0.5)
 
-        self.color = color.panda_text
+        self.color = color.text_color
         self.text_node_path.setLightOff()
         self.text_node_path.setBin("fixed", 0)
 
@@ -97,6 +97,8 @@ class Text(Entity):
         if name == 'font':
             try:
                 font_file = loader.loadFont(value)
+                # font_file.setRenderMode(TextFont.RMPolygon)
+                font_file.setPixelsPerUnit(50)
                 self.text_node.setFont(font_file)
             except:
                 print('no font called:', value)

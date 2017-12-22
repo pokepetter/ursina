@@ -84,5 +84,5 @@ class R(Thread):
 
         # self.lerp()
 
-r = R()
-r.lerp()
+# r = R()
+# r.lerp()

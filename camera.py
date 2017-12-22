@@ -1,4 +1,8 @@
-from pandaeditor import *
+import sys
+from entity import Entity
+from panda3d.core import PerspectiveLens, LensNode, NodePath
+import application
+import window
 
 
 class Camera(Entity):
@@ -48,6 +52,13 @@ class Camera(Entity):
             self.lens.setFar(value)
 
         super().__setattr__(name, value)
+
+    @property
+    def aspect_ratio(self):
+        try:
+            return window.size[0] / window.size[1]
+        except:
+            return 16 / 9
 
 
 sys.modules[__name__] = Camera()

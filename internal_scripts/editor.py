@@ -390,17 +390,6 @@ class Editor(Entity):
         if held_keys['control'] and key == 'y':
             undo.stack().redo()
 
-        if key == 'c':
-            # print('show colliders')
-            for e in scene.entities:
-                if not e.is_editor and e.editor_collider:
-                    e.editor_collider.node_path.show()
-
-        if key == 'c up':
-            # print('hide colliders')
-            for e in scene.entities:
-                if not e.is_editor and e.editor_collider:
-                    e.editor_collider.node_path.hide()
 
         if key == 'n':
             scene.new()

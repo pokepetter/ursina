@@ -93,7 +93,8 @@ class TransformGizmo(Entity):
             return
         # for moving stuff in side view
         if (scene.editor.camera_pivot.rotation == (0,0,0)
-        and mouse.hovered_entity and mouse.hovered_entity.is_editor == False):
+        and mouse.hovered_entity
+        and mouse.hovered_entity.is_editor == False):
 
             if mouse.delta_drag[0] != 0 or mouse.delta_drag[1] != 0 and mouse.left:
                 dist_to_cam = distance(

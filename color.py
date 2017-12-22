@@ -46,3 +46,4 @@ text = smoke
 panda_background = dark_gray
 panda_button = black66
 panda_text = smoke
+text_color = panda_text

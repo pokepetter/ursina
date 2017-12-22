@@ -3,13 +3,13 @@ sys.path.append("..")
 from pandaeditor import *
 from panda3d.core import TextNode
 
-class EditorButton(Entity):
+class Button(Entity):
 
     def __init__(self):
         super().__init__()
         self.name = 'button'
         self.parent = scene.ui
-        self.is_editor = True
+        self.is_editor = False
         self.model = 'quad'
         if self.model:
             self.color = color.panda_button
@@ -62,7 +62,6 @@ class EditorButton(Entity):
 
 
     def on_mouse_enter(self):
-        # if not scene.editor.enabled
         self.model.setColorScale(self.highlight_color)
 
     def on_mouse_exit(self):

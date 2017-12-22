@@ -9,53 +9,37 @@ class GridLayout():
 
         self.origin = (0,0)
         self.overflow = True
-        self.spacing = (.001,0)
+        self.spacing = (.005, .005)
         self.max_x = 8
         self.rows = 1
         self.limit = None
         self.width = 0
+        self.height = 0
 
 
     def update_grid(self):
-        if not self.entity:
-            print('grid_layout is not attached to an Entity')
-            return
+        grid = chunk_list(self.entity.children, self.max_x)
+        self.width = 0
+        self.height = 0
+        y = 0
+        for row in grid:
+            if y > 0:
+                self.height += max([e.scale_y for e in row]) + self.spacing[1]
 
-        x = 0
-        self.line_height = self.entity.children[0].scale_y + self.spacing[1]
-        print('lineheight', self.line_height)
+            self.width = 0
 
-        for i in range(min(len(self.entity.children) - 1, self.max_x - 1)):
-            self.width += self.entity.children[i].scale_x + self.spacing[0]
+            for x in range(len(row)):
+                if x > 0:
+                    self.width += row[x-1].scale_x + self.spacing[0]
+                row[x].x = self.width
+                row[x].y = -self.height
 
-        for i in range(len(self.entity.children)):
-            c = self.entity.children[i]
-            c.origin = self.origin
+            y += 1
 
-            prev_x = 0
-            if i <= 0:
-                c.x = 0
-            else:
-                c.x = (
-                    (self.entity.children[i-1].x
-                    + self.entity.children[i-1].scale_x
-                    + self.spacing[0])
-                    * 1)
-
-            if x >= self.max_x:
-                self.rows += 1
-                x = 0
-                c.x = 0
-
-            # self.line_height = c.scale_y + self.spacing[1]
-            c.y = (-self.rows + 1) * self.line_height
-
-            x += 1
-
-
-
+        # center it
         for c in self.entity.children:
-            c.x -= (self.origin[0] + .5) * self.width
+            c.x -= (self.width / 2) + self.entity.children[0].scale_x / 2
+            c.y += (self.height / 2) + self.entity.children[0].scale_y / 2
 
 
     # def __setattr__(self, name, value):

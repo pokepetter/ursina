@@ -1,6 +1,7 @@
 import sys
 sys.path.append('..')
 from pandaeditor import *
+# from button import Button
 
 
 class ProjectBrowser(Entity):
@@ -9,33 +10,94 @@ class ProjectBrowser(Entity):
         super().__init__()
         self.name = 'project_browser'
 
-        window.size = (1920 * .5, 1080 * .5)
+        window.size = (1920 * .6, 1080 * .6)
+        # window.name = self.name
+        # window.color = color.color(0, 0, .9)
+        # color.text_color = color.color(0, 0, .1)
+        # camera.ui.scale *= .95
+
+        self.bg = Entity()
+        self.bg.parent = scene.ui
+        self.bg.model = 'quad'
+        self.bg.scale_x *= camera.aspect_ratio
+        self.bg.texture = 'project_browser_bg'
+        self.bg.color = color.gray
+
+        self.title = load_prefab('text')
+        self.title.parent = scene.ui
+        self.title.text = 'Choose Project'
+        # self.title.align = 'center'
+        self.title.scale /= 4
+        self.title.position = (-.5 * camera.aspect_ratio + .05, .425)
 
         self.list = Entity()
         self.list.parent = scene.ui
-        self.list.scale *= .9
-        self.list.model = 'quad'
-        self.list.color = color.gray
-        self.list.add_script('scrollable')
-
-        for i in range(10):
-            self.b = load_prefab('editor_button')
-            self.b.is_editor = False
-            self.b.collider = 'box'
-            self.b.parent = self.list
-            self.b.origin = (0, .5)
-            self.b.y = .5 - (i * .205)
-            self.b.scale = (1, .2)
-            self.b.text = 'new project'
-            self.b.text_entity.scale *= 3
-            self.b.text_entity.align = 'left'
-            self.b.text_entity.x = -.45
-
-        # e = Entity()
-        # e.model = 'quad'
-
+        self.list.x = -.5 * camera.aspect_ratio + .05
+        # self.list.scale *= .9
 
         # from project_paths import paths
-        paths = ['test0, test1, test2']
-        for p in paths:
-            print('path:', p)
+        self.paths = ('new', 'open', 'test0', 'test1', 'test2', 'test3')
+        self.index = 0
+        if len(self.paths) > 0:
+            self.index = 1
+
+
+
+        for i in range(len(self.paths)):
+            self.b = load_prefab('button')
+            s = self.b.add_script(ProjectBrowserButton())
+            s.index = i
+            self.b.parent = self.list
+            self.b.collider = 'box'
+            self.b.origin = (-.5, .5)
+            self.b.x = 0 + (i * .34)
+            self.b.scale = (.33 * 1, .33)
+            self.b.color = color.color(i * 20, .2, 1, .5)
+            if i == 0:
+                self.b.color = color.color(0, 0, .75, .5)
+            # self.b.texture = 'white_cube'
+
+            t = load_prefab('text')
+            t.text = 'Name' + str(i)
+            t.parent = self.b.model
+            t.scale *= .5
+            t.position = (-.5, .57)
+            if i == 0:
+                t.text = '+'
+                t.align = 'center'
+                t.scale *= 3
+                t.position = (0, 0)
+
+            if i > 0:
+                t = load_prefab('text')
+                t.text = self.paths[i]
+                t.parent = self.b.model
+                t.scale *= .25
+                t.position = (-.5, -.55)
+
+
+    def input(self, key):
+        if len(self.paths) > 5:
+            if key == 'scroll up':
+                self.list.x += .1
+            if key == 'scroll down':
+                self.list.x -= .1
+
+            self.list.x = clamp(self.list.x, (-len(self.paths) * .34) + .84 , -.84)
+
+
+class ProjectBrowserButton():
+
+    def input(self, key):
+        if self.entity.hovered:
+            if (key == 'left mouse down'
+            or key == 'space'
+            or key == 'enter'
+            and self.index > 0):
+                self.load_project(scene.entity.paths[self.index])
+
+    def on_mouse_enter(self):
+        scene.entity.index = self.index
+
+    def load_project(self, path):
+        print('loading project:', path)
