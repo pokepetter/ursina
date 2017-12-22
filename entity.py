@@ -231,7 +231,7 @@ class Entity(NodePath):
 
     @property
     def position(self):
-        return self.getPos()
+        return Vec3(self.getX(), self.getZ(), self.getY())
     @property
     def x(self):
         return self.getX()
@@ -289,7 +289,7 @@ class Entity(NodePath):
         return Vec3(vec[0], vec[2], vec[1])
     @property
     def down(self):
-        return self.up
+        return -self.up
 
 
 

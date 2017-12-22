@@ -11,6 +11,7 @@ from panda3d.core import Vec3
 from panda3d.core import Point3
 from panda3d.core import loadPrcFileData
 from panda3d.core import Filename
+from panda3d.core import AntialiasAttrib
 
 import sys
 import os
@@ -19,6 +20,7 @@ import random
 import inspect
 import importlib
 import re
+import subprocess
 
 import undo
 from undo import undoable
@@ -37,21 +39,12 @@ import window
 import debug
 import color
 
+import main
+
 sys.path.append("..")
-
-
 path = Filename.toOsSpecific(application.internal_prefab_folder)
 sys.path.insert(0, path)
-# from button import Button
 
-# for py in [f[:-3] for f in os.listdir(path) if f.endswith('.py') and f[0] != '_']:
-#     m = __import__(py, globals(), locals(), [])
-#     print('imported', m)
-#
-# del sys.path[0]
-# import button
-# from button import Button
-# b = Button()
 
 
 def distance(a, b):

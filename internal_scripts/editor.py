@@ -503,7 +503,6 @@ class Editor(Entity):
             # elif f.endswith('.png'):
 
     def compress_models(self):
-        import subprocess
         subprocess.call(r'''"C:\Program Files\Blender Foundation\Blender\blender.exe" "D:\UnityProjects\pandagame\pandaeditor\internal_models\cube.blend" --background --python "D:\UnityProjects\pandagame\pandaeditor\internal_scripts\blend_export.py"''')
         return
         from tinyblend import BlenderFile

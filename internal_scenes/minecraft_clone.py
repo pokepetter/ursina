@@ -1,11 +1,13 @@
 import sys
 sys.path.append('..')
 from pandaeditor import *
+# import main
 
 
 class MinecraftClone(Entity):
 
     def __init__(self):
+
         super().__init__()
         self.name = 'minecraft_clone'
 
@@ -18,6 +20,8 @@ class MinecraftClone(Entity):
 
         player = FirstPersonController()
         player.parent = self
+
+
 
 
 class Voxel(Entity):
@@ -33,6 +37,8 @@ class Voxel(Entity):
 
 
     def input(self, key):
+        # if not scene.editor or scene.editor.enabled:
+        #     return
         if self.hovered:
             if key == 'left mouse down' and self.hovered:
                 voxel = Voxel()
@@ -50,9 +56,11 @@ class FirstPersonController(Entity):
         self.speed = .1
 
         cursor = load_prefab('panel')
-        cursor.color = color.dark_gray
-        cursor.scale *= .01
+        cursor.color = color.light_gray
+        cursor.scale *= .008
         cursor.rotation_z = 45
+        if not scene.editor:
+            self.start()
 
 
     def start(self):
@@ -65,11 +73,19 @@ class FirstPersonController(Entity):
 
 
     def update(self, dt):
+        # print(self.left)
         self.position += self.right * held_keys['d'] * self.speed
         self.position += self.forward * held_keys['w'] * self.speed
         self.position += self.left * held_keys['a'] * self.speed
         self.position += self.back * held_keys['s'] * self.speed
+        self.position += self.down * held_keys['q'] * self.speed
+        self.position += self.up * held_keys['e'] * self.speed
 
         self.rotation_y += mouse.velocity[0] * 20
         camera.rotation_x -= mouse.velocity[1] * 20
         camera.rotation_x = clamp(camera.rotation_x, -90, 90)
+
+if __name__ == '__main__':
+    app = main.PandaEditor()
+    load_scene('minecraft_clone')
+    app.run()

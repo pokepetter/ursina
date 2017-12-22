@@ -1,7 +1,7 @@
 import sys
 sys.path.append('..')
 from pandaeditor import *
-# from button import Button
+import main
 
 
 class ProjectBrowser(Entity):
@@ -101,3 +101,16 @@ class ProjectBrowserButton():
 
     def load_project(self, path):
         print('loading project:', path)
+        if os.path.isdir(path):
+            print('yay')
+            subprocess.call('python.exe ' + path + 'main.py')
+            # run process python.exe, path + main.py, editor=True
+            os._exit(0)     # force exit
+        else:
+            print('project not found at:', path)
+
+if __name__ == '__main__':
+    app = main.PandaEditor()
+    load_scene('project_browser')
+    # t = ProjectBrowser()
+    app.run()

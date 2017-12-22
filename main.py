@@ -25,6 +25,7 @@ class PandaEditor(ShowBase):
         scene.camera = camera
         camera.reparentTo(scene)
         camera.set_up()
+        render.setAntialias(AntialiasAttrib.MAuto)
 
         # reapply screen effect to make it work in new resolution
         # print('adfaaaaaa:', application.base.win)
@@ -76,40 +77,41 @@ class PandaEditor(ShowBase):
         # input
         base.buttonThrowers[0].node().setButtonDownEvent('buttonDown')
         base.buttonThrowers[0].node().setButtonUpEvent('buttonUp')
-        self.dictionary = {'mouse1' : 'left mouse down',
-                    'mouse1 up' : 'left mouse up',
-                    'mouse2' : 'middle mouse down',
-                    'mouse2 up' : 'middle mouse up',
-                    'mouse3' : 'right mouse down',
-                    'mouse3 up' : 'right mouse up',
-                    'wheel_up' : 'scroll up',
-                    'wheel_down' : 'scroll down',
-                    'arrow_left' : 'arrow left',
-                    'arrow_up' : 'arrow up',
-                    'arrow_down' : 'arrow down',
-                    'arrow_right' : 'arrow right',
-                    'lcontrol' : 'left control',
-                    'rcontrol' : 'right control',
-                    'lshift' : 'left shift',
-                    'rshift' : 'right shift',
-                    'lalt' : 'left alt',
-                    'ralt' : 'right alt',
-                    'lcontrol up' : 'left control up',
-                    'rcontrol up' : 'right control up',
-                    'lshift up' : 'left shift up',
-                    'rshift up' : 'right shift up',
-                    'lalt up' : 'left alt up',
-                    'ralt up' : 'right alt up',
-                    'control-mouse1' : 'left mouse down',
-                    'control-mouse2' : 'middle mouse down',
-                    'control-mouse3' : 'right mouse down',
-                    'shift-mouse1' : 'left mouse down',
-                    'shift-mouse2' : 'middle mouse down',
-                    'shift-mouse3' : 'right mouse down',
-                    'alt-mouse1' : 'left mouse down',
-                    'alt-mouse2' : 'middle mouse down',
-                    'alt-mouse3' : 'right mouse down'
-                    }
+        self.dictionary = {
+            'mouse1' : 'left mouse down',
+            'mouse1 up' : 'left mouse up',
+            'mouse2' : 'middle mouse down',
+            'mouse2 up' : 'middle mouse up',
+            'mouse3' : 'right mouse down',
+            'mouse3 up' : 'right mouse up',
+            'wheel_up' : 'scroll up',
+            'wheel_down' : 'scroll down',
+            'arrow_left' : 'arrow left',
+            'arrow_up' : 'arrow up',
+            'arrow_down' : 'arrow down',
+            'arrow_right' : 'arrow right',
+            'lcontrol' : 'left control',
+            'rcontrol' : 'right control',
+            'lshift' : 'left shift',
+            'rshift' : 'right shift',
+            'lalt' : 'left alt',
+            'ralt' : 'right alt',
+            'lcontrol up' : 'left control up',
+            'rcontrol up' : 'right control up',
+            'lshift up' : 'left shift up',
+            'rshift up' : 'right shift up',
+            'lalt up' : 'left alt up',
+            'ralt up' : 'right alt up',
+            'control-mouse1' : 'left mouse down',
+            'control-mouse2' : 'middle mouse down',
+            'control-mouse3' : 'right mouse down',
+            'shift-mouse1' : 'left mouse down',
+            'shift-mouse2' : 'middle mouse down',
+            'shift-mouse3' : 'right mouse down',
+            'alt-mouse1' : 'left mouse down',
+            'alt-mouse2' : 'middle mouse down',
+            'alt-mouse3' : 'right mouse down'
+            }
         self.accept('buttonDown', self.input)
         self.accept('buttonUp', self.input_up)
 
@@ -118,8 +120,8 @@ class PandaEditor(ShowBase):
         mouse.enabled = True
 
         scene.set_up()
-        # scene.editor = load_script('editor')
-        t = load_scene('project_browser')
+
+        # t = load_scene('minecraft_clone')
         # count_lines(inspect.getfile(t.__class__))
 
         # start game if there is no editor
@@ -211,14 +213,13 @@ class PandaEditor(ShowBase):
                     except: pass
 
 
-    def collision_point(point=(0,0,0)):
-        return collision.point(point)
+    def load_editor(self):
+        scene.editor = load_script('editor')
 
-
-    def raycast(origin, direction, distance):
-        return 0
-
-
-
-app = PandaEditor()
-app.run()
+if __name__ == '__main__':
+    app = PandaEditor()
+    app.load_editor()
+    load_scene('minecraft_clone')
+    window.fps_counter = True
+    print('rgrg', scene.entity)
+    app.run()
