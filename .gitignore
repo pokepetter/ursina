@@ -1,1 +1,4 @@
 *.pyc
+pandaeditor.egg-info
+dist
+build

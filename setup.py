@@ -9,5 +9,5 @@ setup(
     license='MIT',
     keywords='game development',
     py_modules=['main'],
-    # packages=find_packages(),
+    # packages=find_packages(['']),
     )
