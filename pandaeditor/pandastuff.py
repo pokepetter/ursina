@@ -22,9 +22,6 @@ import importlib
 import re
 import subprocess
 
-import undo
-from undo import undoable
-undo.setstack(undo.Stack())
 # from PIL import Image     # for texture compression, editor.py
 # from tinyblend import BlenderFile     # for .blend import, editor.py
 

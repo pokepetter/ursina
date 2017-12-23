@@ -1,13 +1,16 @@
-import sys
-sys.path.append("..")
-from pandaeditor import *
 import os
 from panda3d.bullet import BulletDebugNode
 from types import MethodType
 import debugwindow
+
+from pandaeditor import *
 from pandaeditor.internal_prefabs.transform_gizmo import TransformGizmo
 from pandaeditor.internal_prefabs.entity_list import EntityList
 from pandaeditor.internal_prefabs.inspector import Inspector
+
+import undo
+from undo import undoable
+undo.setstack(undo.Stack())
 
 
 class Editor(Entity):
