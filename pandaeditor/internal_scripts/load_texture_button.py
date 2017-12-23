@@ -30,7 +30,7 @@ class LoadTextureButton():
 
         self.auto_created_canvas = True
         if not scene.canvas:
-            scene.canvas = load_prefab('canvas')
+            scene.canvas = Canvas()
             self.auto_created_canvas = True
 
         entity.parent = scene.canvas

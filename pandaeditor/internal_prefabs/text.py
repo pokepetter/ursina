@@ -8,6 +8,8 @@ from os import path
 from panda3d.core import Filename
 from panda3d.core import TextNode
 
+from pandaeditor.entity import Entity
+
 class Text(Entity):
 
     def __init__(self):

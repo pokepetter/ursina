@@ -33,7 +33,7 @@ class InputField(Entity):
 
         if name == 'text':
             if not self.text_entity:
-                self.text_entity = load_prefab('text')
+                self.text_entity = Text()
                 self.text_entity.parent = scene.render
                 # for some reason text get scaled wrong so setting sale is needed
                 self.text_entity.scale = (.05, .5, 1)

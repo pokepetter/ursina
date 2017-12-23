@@ -34,7 +34,7 @@ class Inspector(Entity):
             self.vec3_group.parent = self
             self.vec3_group.scale_y = self.button_height
             for i in range(3):
-                self.button = load_prefab('editor_button')
+                self.button = EditorButton()
                 # self.button = self.create_button('transform_field')
                 self.button.parent = self.vec3_group
                 self.button.origin = (-.5, .5)
@@ -55,7 +55,7 @@ class Inspector(Entity):
 
 # model_field
         self.model_field = self.create_button('model: ')
-        self.filebrowser = load_prefab('filebrowser')
+        self.filebrowser = Filebrowser()
         self.filebrowser.parent = camera.ui
         self.filebrowser.position = (0,0)
         self.filebrowser.name = 'replace_model_filebrowser'
@@ -73,7 +73,7 @@ class Inspector(Entity):
         self.color_field_preview.origin = (.5, 0)
         self.color_field_preview.position = (.5, 0)
         self.color_field_preview.scale_x = .33
-        self.color_select = load_prefab('panel')
+        self.color_select = Panel()
         self.color_select.color = color.panda_button
         self.color_select.parent = camera.ui
         self.color_select.scale *= .5
@@ -83,7 +83,7 @@ class Inspector(Entity):
 
 # texture_field
         self.texture_field = self.create_button('texture: ')
-        self.filebrowser = load_prefab('filebrowser')
+        self.filebrowser = Filebrowser()
         self.filebrowser.parent = camera.ui
         self.filebrowser.position = (0,0)
         self.filebrowser.name = 'replace_texture_filebrowser'
@@ -103,7 +103,7 @@ class Inspector(Entity):
         self.menu_toggler = self.add_script_button.add_script('menu_toggler')
         self.menu_toggler_1 = self.add_script_button.add_script('menu_toggler')
 
-        self.internal_scripts_browser = load_prefab('filebrowser')
+        self.internal_scripts_browser = Filebrowser()
         self.internal_scripts_browser.is_editor = True
         self.internal_scripts_browser.parent = scene.ui
         self.internal_scripts_browser.position = (0, 0)
@@ -113,7 +113,7 @@ class Inspector(Entity):
         self.internal_scripts_browser.button_type = 'add_script_button'
         self.menu_toggler.target = self.internal_scripts_browser
 
-        self.filebrowser = load_prefab('filebrowser')
+        self.filebrowser = Filebrowser()
         self.filebrowser.is_editor = True
         self.filebrowser.parent = scene.ui
         self.filebrowser.position = (.0, 0)
@@ -137,7 +137,7 @@ class Inspector(Entity):
 
 
     def create_button(self, name='', height=.025*scene.editor_size):
-        button = load_prefab('editor_button')
+        button = EditorButton()
         button.parent = self
         button.origin = (-.5, .5)
         button.scale_y = height

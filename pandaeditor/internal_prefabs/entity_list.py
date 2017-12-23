@@ -61,7 +61,7 @@ class EntityList(Entity):
 
 
     def create_button(self, entity, name):
-        button = load_prefab('editor_button')
+        button = EditorButton()
         button.is_editor = True
         button.parent = self.button_parent
         button.origin = (-.5, .5)

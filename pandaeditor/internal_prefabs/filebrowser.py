@@ -37,7 +37,7 @@ class Filebrowser(Entity):
 
             for file_type in self.file_types:
                 if f.endswith(file_type) or file_type == '':
-                    button = load_prefab('editor_button')
+                    button = EditorButton()
                     button.is_editor = True
                     button.parent = self
                     button.origin = (-.5, .5)
@@ -63,7 +63,7 @@ class Filebrowser(Entity):
 
         # special case for script browser, add 'new script' button
         if self.button_type == 'add_script_button':
-            button = load_prefab('editor_button')
+            button = EditorButton()
             button.is_editor = True
             button.parent = self
             button.origin = (-.5, .5)
@@ -82,7 +82,8 @@ class Filebrowser(Entity):
             x += 1
 
         if self.button_type == 'load_scene_button':
-            button = load_prefab('editor_button', True)
+            button = EditorButton()
+            button.parent = self
             button.origin = (-.5, .5)
             button.position = (
                 x * (self.button_size[0]),
@@ -100,7 +101,7 @@ class Filebrowser(Entity):
         self.x = - ((x + 1) * self.button_size[0]) / 2.0
         self.y = ((y) * self.button_size[1]) / 2
 
-        self.close_button = load_prefab('editor_button')
+        self.close_button = EditorButton()
         self.close_button.name = 'close_button'
         self.close_button.is_editor = True
         self.close_button.parent = self

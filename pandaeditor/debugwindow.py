@@ -5,7 +5,7 @@ class DebugWindow():
 
 
     def __init___(self):
-        self.b = load_prefab('editor_button')
+        self.b = EditorButton()
         self.i = 0
 
     def write(self, s, message='default message'):
@@ -17,7 +17,7 @@ class DebugWindow():
             pass
         pass
         try:
-            self.b = load_prefab('editor_button')
+            self.b = EditorButton()
             self.b.scale_y = .025
             self.b.y = -.5
             self.b.origin = (0, -.5)

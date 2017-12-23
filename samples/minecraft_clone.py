@@ -1,7 +1,4 @@
-import pandaeditor
-from pandaeditor import main
-from pandaeditor.entity import Entity
-from pandaeditor.pandastuff import *
+from pandaeditor import *
 
 
 class MinecraftClone(Entity):
@@ -20,8 +17,6 @@ class MinecraftClone(Entity):
 
         player = FirstPersonController()
         player.parent = self
-
-
 
 
 class Voxel(Entity):
@@ -55,9 +50,9 @@ class FirstPersonController(Entity):
         super().__init__()
         self.speed = .1
 
-        # cursor = load_prefab('panel')
-        cursor = Entity()
-        cursor.model = 'quad'
+        cursor = Panel()
+        # cursor = Entity()
+        # cursor.model = 'quad'
         cursor.color = color.light_gray
         cursor.scale *= .008
         cursor.rotation_z = 45

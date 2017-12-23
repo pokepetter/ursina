@@ -183,7 +183,7 @@ def vec3_to_string(vec3):
 
 
 def load_prefab(module_name, add_to_caller=False):
-    paths = ('internal_prefabs.', '..prefabs.')
+    paths = (application.internal_prefab_folder, application.prefab_folder)
     prefab = load(paths, module_name)
     # if hasattr(caller, 'name') and caller.name == 'editor':
     #     prefab.is_editor = True
@@ -245,7 +245,7 @@ def load(paths, module_name):
     # find the module
     module = None
     for f in paths:
-        # print('mod:', f + module_name)
+        print('mod:', f + module_name)
         try:
             module = importlib.import_module(f + module_name)
             break
@@ -349,3 +349,6 @@ def chunk_list(l, cunk_size):
     # yield successive chunks from list
     for i in range(0, len(l), cunk_size):
         yield l[i:i + cunk_size]
+
+if __name__ == '__main__':
+    Text()

@@ -18,7 +18,7 @@ class Application():
         self.package_folder = glob.glob(re.sub(r'([^:])(?=[/\\]|$)', r'[\1]', dirname(__file__)))[0] + '/'
         self.asset_folder = dirname(os.path.abspath(sys.path[0])).replace('\\', '/') + '/'
 
-        self.internal_model_folder = self.package_folder + 'internal_models'
+        self.internal_model_folder = self.package_folder + 'internal_models/'
         self.internal_prefab_folder = self.package_folder + 'internal_prefabs/'
         self.internal_script_folder = self.package_folder + 'internal_scripts/'
         self.internal_texture_folder = self.package_folder + 'internal_textures/'

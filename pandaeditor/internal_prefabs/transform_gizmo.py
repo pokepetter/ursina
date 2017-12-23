@@ -161,7 +161,7 @@ class TransformGizmo(Entity):
             entities = list(scene.entities)
             for e in entities:
                 if not e.is_editor and e is not camera and e is not scene.ui:
-                    self.button = load_prefab('editor_button')
+                    self.button = EditorButton()
                     self.button.is_editor = True
                     self.button.parent = scene.render
                     self.button.position = e.global_position

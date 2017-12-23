@@ -21,8 +21,7 @@ class PuzzleGame(Entity):
 
     def load_level(self, name):
         from PIL import Image
-        im = Image.open(Filename.toOsSpecific(application.internal_texture_folder) + '\\' + name + '.png')
-        # im = Image.open('..\\..\\levels\\' + name + '.png')
+        im = Image.open(application.internal_texture_folder + name + '.png')
         pix = im.load()
         print (im.size)
         for y in range(im.size[1]):
@@ -58,7 +57,7 @@ class FirstPersonController(Entity):
         super().__init__()
         self.speed = .1
 
-        cursor = load_prefab('panel')
+        cursor = Panel()
         cursor.color = color.dark_gray
         cursor.scale *= .01
         cursor.rotation_z = 45
@@ -84,3 +83,9 @@ class FirstPersonController(Entity):
         self.rotation_y += mouse.velocity[0] * 20
         camera.rotation_x -= mouse.velocity[1] * 20
         camera.rotation_x = clamp(camera.rotation_x, -90, 90)
+
+
+if __name__ == '__main__':
+    app = main.PandaEditor()
+    scene.entity = PuzzleGame()
+    app.run()

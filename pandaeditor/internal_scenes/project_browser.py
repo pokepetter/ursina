@@ -1,9 +1,4 @@
-import sys
-sys.path.append('..')
 from pandaeditor import *
-from pandaeditor.entity import Entity
-from pandaeditor.pandastuff import *
-from pandaeditor import main
 
 
 class ProjectBrowser(Entity):
@@ -25,7 +20,8 @@ class ProjectBrowser(Entity):
         self.bg.texture = 'project_browser_bg'
         self.bg.color = color.gray
 
-        self.title = load_prefab('text')
+        # self.title = Text()
+        self.title = Text()
         self.title.parent = scene.ui
         self.title.text = 'Choose Project'
         # self.title.align = 'center'
@@ -46,7 +42,7 @@ class ProjectBrowser(Entity):
 
 
         for i in range(len(self.paths)):
-            self.b = load_prefab('button')
+            self.b = Button()
             s = self.b.add_script(ProjectBrowserButton())
             s.index = i
             self.b.parent = self.list
@@ -59,7 +55,7 @@ class ProjectBrowser(Entity):
                 self.b.color = color.color(0, 0, .75, .5)
             # self.b.texture = 'white_cube'
 
-            t = load_prefab('text')
+            t = Text()
             t.text = 'Name' + str(i)
             t.parent = self.b.model
             t.scale *= .5
@@ -71,7 +67,7 @@ class ProjectBrowser(Entity):
                 t.position = (0, 0)
 
             if i > 0:
-                t = load_prefab('text')
+                t = Text()
                 t.text = self.paths[i]
                 t.parent = self.b.model
                 t.scale *= .25

@@ -110,7 +110,7 @@ class Entity(NodePath):
             if value.__class__ is Texture:
                 print('rttttttttttttttttttttt')
                 texture = value
-            else:
+            elif isinstance(value, str):
                 try:
                     texture = loader.loadTexture(value + '.png')
                 except:
@@ -127,7 +127,7 @@ class Entity(NodePath):
                 self.model.setTexture(texture, 1)
             except:
                 pass
-                # print('failed to load texture:', value)
+                print('no texture:', value)
 
         if name == 'position':
             # automatically add position instead of extending the tuple

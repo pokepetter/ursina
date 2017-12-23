@@ -217,7 +217,6 @@ class PandaEditor(ShowBase):
     def load_editor(self):
         scene.editor = load_script('editor')
 
-print('---yay---')
 
 if __name__ == '__main__':
     app = PandaEditor()
