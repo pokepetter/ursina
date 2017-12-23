@@ -1,8 +1,9 @@
 # pandaeditor
 A game engine built on panda3d and python.  
 
+To download and install:
 
-[[Download]](https://github.com/pokepetter/pandaeditor/releases)
+    $ pip install git+https://github.com/pokepetter/pandaeditor.git
 
 Dependencies:
   * panda3d
