@@ -1,8 +1,8 @@
 import sys
 from panda3d.core import WindowProperties
 from panda3d.core import loadPrcFileData
-from entity import Entity
-import application
+from pandaeditor.entity import Entity
+from pandaeditor import application
 
 
 class Window(WindowProperties):

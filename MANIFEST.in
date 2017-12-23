@@ -1,0 +1,7 @@
+include pandaeditor/font/*
+include pandaeditor/internal_models/*
+include pandaeditor/internal_prefabs/*
+include pandaeditor/internal_scenes/*
+include pandaeditor/internal_scripts/*
+include pandaeditor/internal_textures/*
+include pandaeditor/samples/*

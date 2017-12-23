@@ -28,22 +28,22 @@ undo.setstack(undo.Stack())
 # from PIL import Image     # for texture compression, editor.py
 # from tinyblend import BlenderFile     # for .blend import, editor.py
 
-import application
-from entity import Entity
-import scene
-import mouse
-import keys
-from keys import held_keys
-import camera
-import window
-import debug
-import color
+from pandaeditor import application
+from pandaeditor.entity import Entity
+from pandaeditor import scene
+from pandaeditor import mouse
+from pandaeditor import keys
+from pandaeditor.keys import held_keys
+from pandaeditor import camera
+from pandaeditor import window
+from pandaeditor import debug
+from pandaeditor import color
 
-import main
+from pandaeditor import main
 
 sys.path.append("..")
-path = Filename.toOsSpecific(application.internal_prefab_folder)
-sys.path.insert(0, path)
+# path = application.internal_prefab_folder
+# sys.path.insert(0, path)
 
 
 

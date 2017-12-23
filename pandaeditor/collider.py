@@ -1,7 +1,6 @@
 from panda3d.core import CollisionNode, CollisionBox
 from panda3d.core import NodePath
 from panda3d.core import Vec3
-import scene
 
 
 class Collider(NodePath):

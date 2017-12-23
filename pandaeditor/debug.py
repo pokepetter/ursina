@@ -1,4 +1,4 @@
-import camera
+from pandaeditor import camera
 from panda3d.core import LineSegs
 
 

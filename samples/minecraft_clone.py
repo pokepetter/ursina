@@ -1,7 +1,7 @@
-import sys
-sys.path.append('..')
-from pandaeditor import *
-# import main
+import pandaeditor
+from pandaeditor import main
+from pandaeditor.entity import Entity
+from pandaeditor.pandastuff import *
 
 
 class MinecraftClone(Entity):
@@ -55,7 +55,9 @@ class FirstPersonController(Entity):
         super().__init__()
         self.speed = .1
 
-        cursor = load_prefab('panel')
+        # cursor = load_prefab('panel')
+        cursor = Entity()
+        cursor.model = 'quad'
         cursor.color = color.light_gray
         cursor.scale *= .008
         cursor.rotation_z = 45
@@ -87,5 +89,6 @@ class FirstPersonController(Entity):
 
 if __name__ == '__main__':
     app = main.PandaEditor()
-    load_scene('minecraft_clone')
+    # load_scene('minecraft_clone')
+    s = MinecraftClone()
     app.run()

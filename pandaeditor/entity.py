@@ -8,15 +8,16 @@ from panda3d.core import Vec3
 from panda3d.core import SamplerState
 from panda3d.core import TransparencyAttrib
 from panda3d.core import Texture
-import application
-from collider import Collider
-from scripts import *
+from pandaeditor import application
+from pandaeditor.collider import Collider
+# from pandaeditor.scripts import *
 import uuid
-import color
-import scene
 from os import path
 from panda3d.core import Filename
 from undo import undoable
+
+from pandaeditor import color
+from pandaeditor import scene
 
 
 class Entity(NodePath):
@@ -86,20 +87,16 @@ class Entity(NodePath):
             if value is None:
                 return None
 
-            try:
-                self.model = loader.loadModel(value)
-            except:
-                pass
+            if isinstance(value, str):
+                object.__setattr__(self, name, loader.loadModel(value))
+                # print('loaded model:', value)
 
             if self.model:
-                try:
-                    self.model.reparentTo(self)
-                    self.model.setColorScaleOff()
-                    self.model.setTransparency(TransparencyAttrib.MAlpha)
-                except:
-                    print('cant add model', value)
+                self.model.reparentTo(self)
+                self.model.setColorScaleOff()
+                self.model.setTransparency(TransparencyAttrib.MAlpha)
             else:
-                print('no model with name:', combined_path)
+                print('missing model:', value)
 
         if name == 'color' and value is not None:
             if self.model:
@@ -403,3 +400,12 @@ class Entity(NodePath):
     #     #         print(c.__class__.__name__)
     #
     #     return children_entities
+if __name__ == '__main__':
+    from pandaeditor import main
+    app = main.PandaEditor()
+    e = Entity()
+    e.enabled = True
+    e.model = 'quad'
+    e.color = color.red
+    print(__name__, 'ok')
+    # app.run()

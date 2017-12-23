@@ -1,4 +1,5 @@
-from pandastuff import *
+# from pandastuff import *
+from pandaeditor.pandastuff import *
 from os import walk
 import os
 from panda3d.core import Camera
@@ -216,10 +217,12 @@ class PandaEditor(ShowBase):
     def load_editor(self):
         scene.editor = load_script('editor')
 
+print('---yay---')
+
 if __name__ == '__main__':
     app = PandaEditor()
     app.load_editor()
     # load_scene('minecraft_clone')
     window.fps_counter = True
-    print('rgrg', scene.entity)
+    print('scene entity', scene.entity)
     app.run()

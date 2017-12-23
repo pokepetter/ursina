@@ -1,7 +1,9 @@
 import sys
 sys.path.append('..')
 from pandaeditor import *
-import main
+from pandaeditor.entity import Entity
+from pandaeditor.pandastuff import *
+from pandaeditor import main
 
 
 class ProjectBrowser(Entity):

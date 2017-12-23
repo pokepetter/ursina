@@ -1,5 +1,6 @@
 import sys
 from panda3d.core import NodePath
+# from pandaeditor.entity import Entity
 
 
 class Scene(NodePath):
@@ -24,7 +25,7 @@ class Scene(NodePath):
 
 
     def set_up(self):
-        from entity import Entity
+        from pandaeditor.entity import Entity
         self.entity = Entity()
         self.entity.parent = self
         self.entity.name = 'untitled_scene'

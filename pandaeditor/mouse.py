@@ -1,10 +1,10 @@
 from panda3d.core import *
 import sys
-from entity import Entity
-import camera
-import scene
-import application
-import window
+from pandaeditor.entity import Entity
+from pandaeditor import camera
+from pandaeditor import scene
+from pandaeditor import application
+from pandaeditor import window
 from panda3d.core import CollisionTraverser, CollisionNode
 from panda3d.core import CollisionHandlerQueue, CollisionRay
 

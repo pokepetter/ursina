@@ -1,8 +1,8 @@
 import sys
-from entity import Entity
+from pandaeditor.entity import Entity
 from panda3d.core import PerspectiveLens, LensNode, NodePath
-import application
-import window
+from pandaeditor import application
+from pandaeditor import window
 
 
 class Camera(Entity):
