@@ -28,11 +28,11 @@ import subprocess
 from pandaeditor import application
 from pandaeditor.entity import Entity
 from pandaeditor import scene
+from pandaeditor import window
 from pandaeditor import mouse
 from pandaeditor import keys
 from pandaeditor.keys import held_keys
 from pandaeditor import camera
-from pandaeditor import window
 from pandaeditor import debug
 from pandaeditor import color
 

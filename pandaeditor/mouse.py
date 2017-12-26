@@ -82,6 +82,18 @@ class Mouse(object):
 
         if key == 'left mouse down':
             self.left = True
+            if self.hovered_entity:
+                try:
+                    self.hovered_entity.on_click()
+                except:
+                    pass
+                for s in self.hovered_entity.scripts:
+                    print(s)
+                    try:
+                        s.on_click()
+                    except:
+                        pass
+
         if key == 'left mouse up':
             self.left = False
         if key == 'right mouse down':
@@ -92,6 +104,7 @@ class Mouse(object):
             self.middle = True
         if key == 'middle mouse up':
             self.middle = False
+
 
 
     def update(self, dt):

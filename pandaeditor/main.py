@@ -27,7 +27,6 @@ class PandaEditor(ShowBase):
         camera.reparentTo(scene)
         camera.set_up()
         render.setAntialias(AntialiasAttrib.MAuto)
-
         # reapply screen effect to make it work in new resolution
         # print('adfaaaaaa:', application.base.win)
         # from direct.filter.CommonFilters import CommonFilters
@@ -73,6 +72,7 @@ class PandaEditor(ShowBase):
             ui.model.hide()
         scene.ui = ui
         camera.ui = ui
+        window.exit_button = True
 
 
         # input

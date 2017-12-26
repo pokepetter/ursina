@@ -1,7 +1,9 @@
 import sys
+import os
 from panda3d.core import WindowProperties
 from panda3d.core import loadPrcFileData
 from pandaeditor.entity import Entity
+from pandaeditor import color
 from pandaeditor import application
 
 
@@ -15,34 +17,35 @@ class Window(WindowProperties):
         loadPrcFileData('', 'win-size 1536 864')
         loadPrcFileData('', 'notify-level-util error')
         # loadPrcFileData('', 'want-pstats True')
-
         self.setForeground(True)
-        # self.exit = load_prefab('button')
-        # self.exit.is_editor = False
-        # self.exit.parent = self
-        # self.exit.name = 'toggle_button'
-        # self.exit.origin = (.5, .5)
-        # self.exit.position = window.top_right
-        # self.exit.scale = (.06, .03)
-        # self.exit.text = 'X'
-        # self.exit.text_entity.x = 0
 
 
     def load_defaults(self):
         self.title = 'pandaeditor'
 
-        self.fullscreen_size = (1921, 1081)
-        self.windowed_size = (1920 / 1.25, 1080 / 1.25)
+        if os.name == 'nt':
+            from win32api import GetSystemMetrics
+            self.screen_resolution = (GetSystemMetrics(0), GetSystemMetrics(1))
+        elif os.name == 'posix':
+            import subprocess
+            output = subprocess.Popen('xrandr | grep "\*" | cut -d" " -f4',shell=True, stdout=subprocess.PIPE).communicate()[0]
+            # TODO: test this in ubuntu
+
+        self.fullscreen_size = (self.screen_resolution[0] + 1, self.screen_resolution[1] + 1)
+        self.windowed_size = (self.fullscreen_size[0] / 1.25, self.fullscreen_size[1] / 1.25)
+        self.windowed_size = (self.fullscreen_size[0] / 2, self.fullscreen_size[1] / 1)
         self.size = self.windowed_size
+        # self.origin = (
+        #     int((self.screen_resolution[0] - self.size[0]) / 2),
+        #     int((self.screen_resolution[1] - self.size[1]) / 2)
+        #     )
+        self.origin = (int(self.screen_resolution[0] / 2), 0)
 
         self.borderless = True
         self.fullscreen = False
-
         self.cursor = True
         self.fps_counter = False
-        # self.exit_button = True
         self.vsync = True
-
 
         self.aspect_ratio = self.size[0] / self.size[1]
         self.left = (-self.aspect_ratio / 2, 0)
@@ -56,6 +59,22 @@ class Window(WindowProperties):
         self.bottom_right = (self.aspect_ratio / 2, -.5)
 
 
+    def make_exit_button(self):
+        from pandaeditor.internal_prefabs.button import Button
+        from pandaeditor import scene
+        self.exit_button = Button()
+        self.exit_button.is_editor = False
+        self.exit_button.parent = scene.ui
+        self.exit_button.name = 'exit_button button'
+        self.exit_button.origin = (.5, .5)
+        self.exit_button.position = self.top_right
+        self.exit_button.scale = (.025, .025)
+        self.exit_button.color = color.red
+        self.exit_button.text = 'X'
+        self.exit_button.text_entity.x = 0
+        self.exit_button.add_script('exit_button')
+
+
     def __setattr__(self, name, value):
         if not application.base:
             return
@@ -65,10 +84,11 @@ class Window(WindowProperties):
             pass
         if name == 'size':
             self.setSize(int(value[0]), int(value[1]))
-            self.setOrigin(
-                int((1920 - value[0]) / 2),
-                int((1080 - value[1]) / 2))
+            application.base.win.requestProperties(self)
+            object.__setattr__(self, name, value)
 
+        if name == 'origin':
+            self.setOrigin((value[0], value[1]))
             application.base.win.requestProperties(self)
             object.__setattr__(self, name, value)
 
@@ -86,10 +106,12 @@ class Window(WindowProperties):
             application.base.setFrameRateMeter(value)
 
         if name == 'exit_button':
-            self.exit.enabled = value
+            try:
+                self.exit_button.enabled = value
+            except:
+                self.make_exit_button()
 
         # if name == 'title':
         #     self.title = value
-
 
 sys.modules[__name__] = Window()

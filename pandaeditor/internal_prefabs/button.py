@@ -1,7 +1,6 @@
-import sys
-sys.path.append("..")
 from pandaeditor import *
 from panda3d.core import TextNode
+
 
 class Button(Entity):
 
@@ -53,6 +52,10 @@ class Button(Entity):
         if key == 'left mouse down':
             if self.hovered:
                 self.model.setColorScale(self.pressed_color)
+                try:
+                    self.on_click()
+                except:
+                    pass
 
         if key == 'left mouse up':
             if self.hovered:
@@ -66,3 +69,8 @@ class Button(Entity):
 
     def on_mouse_exit(self):
         self.model.setColorScale(self.color)
+
+
+if __name__ == '__main__':
+    app = PandaEditor()
+    app.run()

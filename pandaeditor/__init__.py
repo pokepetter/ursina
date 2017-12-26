@@ -1,6 +1,7 @@
 # do imports here so I can do a single line import
 
 from pandaeditor import main
+from pandaeditor.main import PandaEditor
 from pandaeditor.pandastuff import *
 from pandaeditor.entity import Entity
 
