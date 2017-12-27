@@ -51,8 +51,6 @@ class FirstPersonController(Entity):
         self.speed = .1
 
         cursor = Panel()
-        # cursor = Entity()
-        # cursor.model = 'quad'
         cursor.color = color.light_gray
         cursor.scale *= .008
         cursor.rotation_z = 45

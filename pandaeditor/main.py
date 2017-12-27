@@ -1,8 +1,6 @@
-# from pandastuff import *
 from pandaeditor.pandastuff import *
 from os import walk
 import os
-from panda3d.core import Camera
 
 
 class PandaEditor(ShowBase):
@@ -18,15 +16,15 @@ class PandaEditor(ShowBase):
 
         # camera
         camera.cam = base.camera
-        camera.cam.reparentTo(camera)
+        camera.cam.reparent_to(camera)
         camera.parent = self.render
         camera.render = self.render
         camera.aspect_ratio = window.size[0] / window.size[1]
         camera.position = (0, 0, -20)
         scene.camera = camera
-        camera.reparentTo(scene)
+        camera.reparent_to(scene)
         camera.set_up()
-        render.setAntialias(AntialiasAttrib.MAuto)
+        render.set_antialias(AntialiasAttrib.MAuto)
         # reapply screen effect to make it work in new resolution
         # print('adfaaaaaa:', application.base.win)
         # from direct.filter.CommonFilters import CommonFilters
@@ -40,38 +38,6 @@ class PandaEditor(ShowBase):
         # )
 
         # UI
-        win = base.camNode.getDisplayRegion(0).getWindow()
-        win.setClearColor(color.dark_gray)
-        ui_display_region = win.makeDisplayRegion()
-        ui_display_region.setSort(20)
-
-        ui_size = 40
-        ui_camera = NodePath(Camera('ui_camera'))
-        lens = OrthographicLens()
-        lens.setFilmSize(ui_size * .5 * camera.aspect_ratio, ui_size * .5)
-        lens.setNearFar(-1000, 1000)
-        ui_camera.node().setLens(lens)
-        camera.ui_lens_node = LensNode('ui_lens_node', lens)
-
-        ui_render = NodePath('ui_render')
-        ui_render.setDepthTest(0)
-        ui_render.setDepthWrite(0)
-        ui_camera.reparentTo(ui_render)
-        ui_display_region.setCamera(ui_camera)
-        scene.ui_camera = ui_camera
-        # ui_camera.hide()
-
-        ui = Entity()
-        ui.name = 'ui'
-        ui.is_editor = True
-        ui.parent = ui_camera
-        ui.model = 'quad'
-        ui.scale = (ui_size * .5, ui_size * .5)
-        # ui.color = color.white33
-        if ui.model:
-            ui.model.hide()
-        scene.ui = ui
-        camera.ui = ui
         window.exit_button = True
 
 

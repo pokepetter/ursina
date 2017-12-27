@@ -30,7 +30,7 @@ class Mouse(object):
         self.picker = CollisionTraverser()  # Make a traverser
         self.pq = CollisionHandlerQueue()  # Make a handler
         self.pickerNode = CollisionNode('mouseRay')
-        self.pickerNP = camera.attachNewNode(self.pickerNode)
+        self.pickerNP = camera.attach_new_node(self.pickerNode)
         self.pickerRay = CollisionRay()  # Make our ray
         self.pickerNode.addSolid(self.pickerRay)
         self.picker.addCollider(self.pickerNP, self.pq)
@@ -83,16 +83,11 @@ class Mouse(object):
         if key == 'left mouse down':
             self.left = True
             if self.hovered_entity:
-                try:
+                if hasattr(self.hovered_entity, 'on_click'):
                     self.hovered_entity.on_click()
-                except:
-                    pass
                 for s in self.hovered_entity.scripts:
-                    print(s)
-                    try:
+                    if hasattr(s, 'on_click'):
                         s.on_click()
-                    except:
-                        pass
 
         if key == 'left mouse up':
             self.left = False
@@ -156,15 +151,11 @@ class Mouse(object):
                 if entity.hovered:
                     entity.hovered = False
                     self.hovered_entity = None
-                    try:
+                    if hasattr(entity, 'on_mouse_exit'):
                         entity.on_mouse_exit()
-                    except:
-                        pass
                     for s in entity.scripts:
-                        try:
+                        if hasattr(s, 'on_mouse_exit'):
                             s.on_mouse_exit()
-                        except:
-                            pass
 
     @property
     def normal(self):
@@ -207,29 +198,20 @@ class Mouse(object):
                         entity.hovered = True
                         self.hovered_entity = entity
                         # print(entity.name)
-                        try:
+                        if hasattr(entity, 'on_mouse_enter'):
                             entity.on_mouse_enter()
-                        except:
-                            pass
                         for s in entity.scripts:
-                            try:
+                            if hasattr(s, 'on_mouse_enter'):
                                 s.on_mouse_enter()
-                            except:
-                                pass
                 # unhover the rest
                 else:
                     if entity.hovered:
                         entity.hovered = False
-                        try:
+                        if hasattr(entity, 'on_mouse_exit'):
                             entity.on_mouse_exit()
-                        except:
-                            pass
                         for s in entity.scripts:
-                            try:
+                            if hasattr(s, 'on_mouse_exit'):
                                 s.on_mouse_exit()
-                            except:
-                                pass
-
 
 
 
