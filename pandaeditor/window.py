@@ -66,12 +66,11 @@ class Window(WindowProperties):
         self.exit_button.is_editor = False
         self.exit_button.parent = scene.ui
         self.exit_button.name = 'exit_button button'
-        self.exit_button.position = (.5, .5)
+        self.exit_button.origin = (.5, .5)
         self.exit_button.position = self.top_right
         self.exit_button.scale = (.025, .025)
         self.exit_button.color = color.red
         self.exit_button.text = 'X'
-        self.exit_button.text_entity.x = 0
         self.exit_button.add_script('exit_button')
 
 
