@@ -47,7 +47,6 @@ class Window(WindowProperties):
         self.fps_counter = False
         self.vsync = True
 
-        self.aspect_ratio = self.size[0] / self.size[1]
         self.left = (-self.aspect_ratio / 2, 0)
         self.right = (self.aspect_ratio / 2, 0)
         self.top = (0, .5)
@@ -84,6 +83,12 @@ class Window(WindowProperties):
         if name == 'size':
             self.set_size(int(value[0]), int(value[1]))
             application.base.win.request_properties(self)
+            self.aspect_ratio = self.size[0] / self.size[1]
+            if hasattr(camera, 'perspective_lens'):
+                camera.perspective_lens.set_aspect_ratio(self.aspect_ratio)
+                camera.ui_lens.set_film_size(camera.ui_size * .5 * self.aspect_ratio, camera.ui_size * .5)
+            else:
+                print('no camera (yet)')
             object.__setattr__(self, name, value)
 
         if name == 'position':

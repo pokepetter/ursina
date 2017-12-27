@@ -16,6 +16,7 @@ class Camera(Entity):
 
         self.cam = None
         self.render = None
+        self.ui_size = 40
         self.ui_lens_node = None
         self.ui = None
         self.fov = 40
@@ -41,7 +42,6 @@ class Camera(Entity):
         self.ui_display_region = win.make_display_region()
         self.ui_display_region.set_sort(20)
 
-        self.ui_size = 40
         self.ui_camera = NodePath(PandaCamera('ui_camera'))
         self.ui_lens = OrthographicLens()
         self.ui_lens.set_film_size(self.ui_size * .5 * self.aspect_ratio, self.ui_size * .5)

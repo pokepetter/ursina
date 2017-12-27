@@ -9,13 +9,6 @@ class PuzzleGame(Entity):
         super().__init__()
         self.name = 'puzzle_game'
 
-        # for z in range(5):
-        #     for x in range(5):
-        #         voxel = Voxel()
-        #         voxel.parent = self
-        #         voxel.position = (x, 0, z)
-        self.load_level('white_cube')
-
         player = FirstPersonController()
         player.parent = self
 
@@ -27,6 +20,11 @@ class PuzzleGame(Entity):
         for y in range(im.size[1]):
             for x in range(im.size[0]):
                 print('color:', pix[x,y])
+
+    def input(self, key):
+        if key == 'l':
+            self.load_level('white_cube')
+
 
 
 class Voxel(Entity):

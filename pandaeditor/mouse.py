@@ -86,8 +86,12 @@ class Mouse(object):
                 if hasattr(self.hovered_entity, 'on_click'):
                     self.hovered_entity.on_click()
                 for s in self.hovered_entity.scripts:
-                    if hasattr(s, 'on_click'):
+                    # if hasattr(s, 'on_click'):
+                    #     s.on_click()
+                    try:
                         s.on_click()
+                    except:
+                        pass
 
         if key == 'left mouse up':
             self.left = False
