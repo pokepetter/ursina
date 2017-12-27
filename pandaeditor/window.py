@@ -31,15 +31,15 @@ class Window(WindowProperties):
             output = subprocess.Popen('xrandr | grep "\*" | cut -d" " -f4',shell=True, stdout=subprocess.PIPE).communicate()[0]
             # TODO: test this in ubuntu
 
-        self.fullscreen_size = (self.screen_resolution[0] + 1, self.screen_resolution[1] + 1)
+        self.fullscreen_size = (self.screen_resolution[0], self.screen_resolution[1])
         self.windowed_size = (self.fullscreen_size[0] / 1.25, self.fullscreen_size[1] / 1.25)
-        self.windowed_size = (self.fullscreen_size[0] / 2, self.fullscreen_size[1] / 1)
+        # self.windowed_size = (self.fullscreen_size[0] / 2, self.fullscreen_size[1] / 1)
         self.size = self.windowed_size
-        # self.origin = (
-        #     int((self.screen_resolution[0] - self.size[0]) / 2),
-        #     int((self.screen_resolution[1] - self.size[1]) / 2)
-        #     )
-        self.origin = (int(self.screen_resolution[0] / 2), 0)
+        self.position = (
+            int((self.screen_resolution[0] - self.size[0]) / 2),
+            int((self.screen_resolution[1] - self.size[1]) / 2)
+            )
+        # self.position = (int(self.screen_resolution[0] / 2), 0)
 
         self.borderless = True
         self.fullscreen = False
@@ -66,7 +66,7 @@ class Window(WindowProperties):
         self.exit_button.is_editor = False
         self.exit_button.parent = scene.ui
         self.exit_button.name = 'exit_button button'
-        self.exit_button.origin = (.5, .5)
+        self.exit_button.position = (.5, .5)
         self.exit_button.position = self.top_right
         self.exit_button.scale = (.025, .025)
         self.exit_button.color = color.red
@@ -83,13 +83,13 @@ class Window(WindowProperties):
         except:
             pass
         if name == 'size':
-            self.setSize(int(value[0]), int(value[1]))
-            application.base.win.requestProperties(self)
+            self.set_size(int(value[0]), int(value[1]))
+            application.base.win.request_properties(self)
             object.__setattr__(self, name, value)
 
-        if name == 'origin':
-            self.setOrigin((value[0], value[1]))
-            application.base.win.requestProperties(self)
+        if name == 'position':
+            self.set_origin((value[0], value[1]))
+            application.base.win.request_properties(self)
             object.__setattr__(self, name, value)
 
         if name == 'fullscreen':
@@ -100,10 +100,10 @@ class Window(WindowProperties):
             object.__setattr__(self, name, value)
 
         if name == 'color':
-            application.base.camNode.getDisplayRegion(0).getWindow().setClearColor(value)
+            application.base.camNode.get_display_region(0).get_window().set_clear_color(value)
 
         if name == 'fps_counter':
-            application.base.setFrameRateMeter(value)
+            application.base.set_frame_rate_meter(value)
 
         if name == 'exit_button':
             try:
