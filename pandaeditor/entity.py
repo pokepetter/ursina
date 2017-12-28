@@ -125,6 +125,7 @@ class Entity(NodePath):
                 texture.setMagfilter(SamplerState.FT_nearest)
                 texture.setMinfilter(SamplerState.FT_nearest)
                 self.model.setTexture(texture, 1)
+                # print('set texture:', value)
             except:
                 pass
                 print('no texture:', value)

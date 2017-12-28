@@ -1,5 +1,6 @@
 import sys
 from panda3d.core import NodePath
+from pandaeditor import color
 # from pandaeditor.entity import Entity
 
 
@@ -30,6 +31,11 @@ class Scene(NodePath):
         self.entity.parent = self
         self.entity.name = 'untitled_scene'
 
+        self.sky = Entity()
+        self.sky.scale *= 9999
+        self.sky.model = 'sky_dome'
+        self.sky.texture = 'default_sky'
+
 
     def new(self, discard_changes=False):
         if self.entity:
@@ -52,6 +58,8 @@ class Scene(NodePath):
         # scene.entity = Entity()
         # scene.entity.name = 'untitled_scene'
         # scene.editor.entity_list_header.text = scene.entity.name
+
+
 
 
 sys.modules[__name__] = Scene()
