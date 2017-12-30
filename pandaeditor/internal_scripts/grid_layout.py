@@ -38,8 +38,8 @@ class GridLayout():
 
         # center it
         for c in self.entity.children:
-            c.x -= (self.width / 2) + self.entity.children[0].scale_x / 2
-            c.y += (self.height / 2) + self.entity.children[0].scale_y / 2
+            c.x -= (self.width / 2) + (self.width * self.origin[0])
+            c.y += self.height / 2 + (self.height * self.origin[1])
 
 
     # def __setattr__(self, name, value):
@@ -71,3 +71,21 @@ class GridLayout():
     #                             -new_value[2],
     #                             -new_value[1])
     #         object.__setattr__(self, name, new_value)
+
+if __name__ == '__main__':
+    app = PandaEditor()
+
+    cl = Panel()
+    cl.scale_x = .0025
+    cl.color = color.white66
+    cl = Panel()
+    cl.scale_y = .0025
+    cl.color = color.white66
+    p = Entity()
+    gl = p.add_script(GridLayout())
+    gl.spacing = (.1, 0)
+    for i in range(5):
+        e = Panel()
+        e.parent = p
+    gl.update_grid()
+    app.run()
