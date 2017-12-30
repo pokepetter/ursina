@@ -18,18 +18,14 @@ class Button(Entity):
         self.collider = 'box'
         self.text = ''
         self.text_entity = None
-        self.highlight_color = tuple(x + 0.2 for x in color.white)
-        self.pressed_color = tuple(x - 0.2 for x in color.white)
 
 
     def __setattr__(self, name, value):
         if name == 'color':
-            self.highlight_color = tuple(x + 0.2 for x in value)
-            self.pressed_color = tuple(
-                x - 0.2 if value[2] > 0.2
-                else x + .2
-                for x in value
-                )
+            hsv = color.to_hsv(value)
+            step = .2 if hsv[2] < .2 else -.2
+            self.highlight_color = color.color(hsv[0], hsv[1], hsv[2] + step, clamp(hsv[3], .8, 1))
+            self.pressed_color = color.color(hsv[0], hsv[1], hsv[2] - step, clamp(hsv[3], .8, 1))
 
         if name == 'text':
             if len(value) > 0:
@@ -73,4 +69,5 @@ class Button(Entity):
 
 if __name__ == '__main__':
     app = PandaEditor()
+    b = Button()
     app.run()

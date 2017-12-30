@@ -8,5 +8,5 @@ class ExitButton():
 
 
     def input(self, key):
-        if key == 'q':
+        if held_keys['shift'] and key == 'q':
             self.on_click()

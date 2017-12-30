@@ -111,55 +111,53 @@ class Mouse(object):
         if self.i < self.update_rate:
             return
 
-        if not self.enabled:
+        if not self.enabled or not self.mouse_watcher.hasMouse():
+            self.velocity = (0,0)
             return
 
+        self.position = (self.x, self.y)
 
-        if not self.mouse_watcher.hasMouse():
-            self.velocity = (0,0)
-
-        else:
-            if self.locked:
-                self.velocity = (self.x, self.y)
-                application.base.win.movePointer(0, round(window.size[0] / 2), round(window.size[1] / 2))
-            # else:
-            #     self.velocity = (self.x - self.prev_x, self.y - self.prev_y)
-
-            self.position = (self.x, self.y)
+        if self.locked:
+            self.velocity = (self.x, self.y)
+            application.base.win.movePointer(0, round(window.size[0] / 2), round(window.size[1] / 2))
+        elif hasattr(self, 'prev_x'):
+            self.velocity = (self.x - self.prev_x, self.y - self.prev_y)
 
 
-            if self.left or self.right or self.middle:
-                self.delta = (self.x - self.start_x, self.y - self.start_y)
+        if self.left or self.right or self.middle:
+            self.delta = (self.x - self.start_x, self.y - self.start_y)
 
+        self.prev_x = self.x
+        self.prev_y = self.y
 
-            # collide with ui
-            self.pickerNP.reparentTo(scene.ui_camera)
-            self.pickerRay.setFromLens(camera.ui_lens_node, self.x, self.y)
-            self.picker.traverse(scene.ui)
-            if self.pq.getNumEntries() > 0:
-                # print('collided with ui', self.pq.getNumEntries())
-                self.find_collision()
-                return
+        # collide with ui
+        self.pickerNP.reparentTo(scene.ui_camera)
+        self.pickerRay.setFromLens(camera.ui_lens_node, self.x, self.y)
+        self.picker.traverse(scene.ui)
+        if self.pq.getNumEntries() > 0:
+            # print('collided with ui', self.pq.getNumEntries())
+            self.find_collision()
+            return
 
-            # collide with world
-            self.pickerNP.reparentTo(camera)
-            self.pickerRay.setFromLens(scene.camera.lens_node, self.x, self.y)
-            self.picker.traverse(scene.render)
-            if self.pq.getNumEntries() > 0:
-                # print('collided with world', self.pq.getNumEntries())
-                self.find_collision()
-                return
+        # collide with world
+        self.pickerNP.reparentTo(camera)
+        self.pickerRay.setFromLens(scene.camera.lens_node, self.x, self.y)
+        self.picker.traverse(scene.render)
+        if self.pq.getNumEntries() > 0:
+            # print('collided with world', self.pq.getNumEntries())
+            self.find_collision()
+            return
 
-            # unhover all if it didn't hit anything
-            for entity in scene.entities:
-                if entity.hovered:
-                    entity.hovered = False
-                    self.hovered_entity = None
-                    if hasattr(entity, 'on_mouse_exit'):
-                        entity.on_mouse_exit()
-                    for s in entity.scripts:
-                        if hasattr(s, 'on_mouse_exit'):
-                            s.on_mouse_exit()
+        # unhover all if it didn't hit anything
+        for entity in scene.entities:
+            if entity.hovered:
+                entity.hovered = False
+                self.hovered_entity = None
+                if hasattr(entity, 'on_mouse_exit'):
+                    entity.on_mouse_exit()
+                for s in entity.scripts:
+                    if hasattr(s, 'on_mouse_exit'):
+                        s.on_mouse_exit()
 
     @property
     def normal(self):

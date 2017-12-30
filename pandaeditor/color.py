@@ -6,8 +6,11 @@ from panda3d.core import Vec4
 def color(h, s, v, a=1):
     return Vec4(colorsys.hsv_to_rgb((h / 360) - math.floor(h / 360), s, v) + (a,))
 
+def rgba(r, g, b, a=1):
+    return Vec4(r, g, b, a)
+
 def to_hsv(color):
-    return Vec4(colorsys.rgb_to_hsv(color[0], color[1], color[2]) + (1,))
+    return Vec4(colorsys.rgb_to_hsv(color[0], color[1], color[2]) + (color[3],))
 
 def inverse(color):
     return Vec4(tuple(1 - c for c in color))

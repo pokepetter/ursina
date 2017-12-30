@@ -35,6 +35,9 @@ from pandaeditor.keys import held_keys
 from pandaeditor import camera
 from pandaeditor import debug
 from pandaeditor import color
+from pandaeditor import undo
+from pandaeditor.undo import *
+undo.setstack(undo.Stack())
 
 from pandaeditor import main
 
@@ -242,7 +245,7 @@ def load(paths, module_name):
     # find the module
     module = None
     for f in paths:
-        print('mod:', f + module_name)
+        # print('mod:', f + module_name)
         try:
             module = importlib.import_module(f + module_name)
             break
@@ -346,6 +349,3 @@ def chunk_list(l, cunk_size):
     # yield successive chunks from list
     for i in range(0, len(l), cunk_size):
         yield l[i:i + cunk_size]
-
-if __name__ == '__main__':
-    Text()

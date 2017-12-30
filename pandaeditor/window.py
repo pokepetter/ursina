@@ -44,7 +44,7 @@ class Window(WindowProperties):
         self.borderless = True
         self.fullscreen = False
         self.cursor = True
-        self.fps_counter = False
+        self.fps_counter = True
         self.vsync = True
 
         self.left = (-self.aspect_ratio / 2, 0)

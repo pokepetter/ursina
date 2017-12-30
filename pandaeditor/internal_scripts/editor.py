@@ -1,16 +1,15 @@
 import os
 from panda3d.bullet import BulletDebugNode
 from types import MethodType
-import debugwindow
+# import debugwindow
 
 from pandaeditor import *
 from pandaeditor.internal_prefabs.transform_gizmo import TransformGizmo
 from pandaeditor.internal_prefabs.entity_list import EntityList
 from pandaeditor.internal_prefabs.inspector import Inspector
+from pandaeditor.internal_scripts.editor_camera import EditorCamera
 
-import undo
-from undo import undoable
-undo.setstack(undo.Stack())
+
 
 
 class Editor(Entity):
@@ -24,16 +23,7 @@ class Editor(Entity):
         self.trash = NodePath('trash')
         self.selection = list()
 
-        self.editor_camera_script = load_script('editor_camera_script')
-        self.editor_camera_script.position = (0, 0, -100)
-        scene.editor_camera_script = self.editor_camera_script
-
-        self.camera_pivot = Entity()
-        self.camera_pivot.is_editor = True
-        self.camera_pivot.name = 'camera_pivot'
-        self.camera_pivot.parent = scene.render
-        self.camera_pivot.is_editor = True
-        camera.parent = self.camera_pivot
+        self.editor_camera = EditorCamera()
 
 
         self.transform_gizmo = TransformGizmo()
@@ -91,110 +81,53 @@ class Editor(Entity):
 # load menu
         self.load_menu_parent = Entity()
         self.load_menu_parent.parent = self
-        # self.load_menu_parent.origin = (.5, .5)
-        self.load_menu_parent.position = window.top_right
+        self.load_menu_parent.position = window.right
         self.load_menu_parent.y -= .1
         self.layout_group = self.load_menu_parent.add_script('grid_layout')
         self.layout_group.origin = (.5, .5)
         self.layout_group.max_x = 1
         self.layout_group.spacing = (0, .001)
 
-# # new scene
-#         self.new_scene_button = EditorButton()
-#         self.new_scene_button.is_editor = True
-#         self.new_scene_button.parent = self.load_menu_parent
-#         self.new_scene_button.name = 'new_scene_button'
-#         self.new_scene_button.scale = (.1, .05)
-#         self.new_scene_button.text = 'new scene'
-#         self.new_scene_button.text_entity.origin = (0,0)
-#         # self.menu_toggler = self.new_scene_button.add_script('menu_toggler')
+        button_names = ('scenes', 'prefabs', 'models', 'primitives', 'sprites')
+        button_paths = (
+            application.scene_folder,
+            application.prefab_folder,
+            application.model_folder,
+            application.internal_model_folder,
+            application.texture_folder
+            )
+        file_types = (('.py'), ('.py'), ('.egg'), ('.egg'), ('.png', '.jpg', '.gif'))
+        button_types = (
+            'load_scene_button',
+            'load_prefab_button',
+            'load_model_button',
+            'load_primitive_button',
+            'load_sprite_button'
+            )
 
-# load scene
-        self.load_scene_button = EditorButton()
-        self.load_scene_button.parent = self.load_menu_parent
-        self.load_scene_button.name = 'load_scene_button'
-        self.load_scene_button.scale = (.1, .05)
-        self.load_scene_button.text = 'scenes'
-        self.menu_toggler = self.load_scene_button.add_script('menu_toggler')
-        self.load_scene_button.add_script('open_in_file_explorer')
-        self.load_scene_button.open_in_file_explorer.path = application.internal_scene_folder
+        for i in range(len(button_names)):
+            try:
+                b = EditorButton()
+                b.parent = self.load_menu_parent
+                b.name = button_names[i]
+                b.origin = (.5, 0)
+                b.scale = (.1, .05)
+                b.text = button_names[i]
+                menu_toggler = b.add_script('menu_toggler')
+                b.add_script('open_in_file_explorer')
+                b.open_in_file_explorer.path = button_paths[i]
+                print('_______', b.name, 'path:', b.open_in_file_explorer.path)
 
-        self.filebrowser = Filebrowser()
-        self.filebrowser.parent = self
-        self.filebrowser.position = (0,0)
-        self.filebrowser.enabled = False
-        self.filebrowser.file_types = ('.py')
-        self.filebrowser.path = application.scene_folder
-        self.filebrowser.button_type = 'load_scene_button'
-        self.menu_toggler.target = self.filebrowser
+                filebrowser = Filebrowser()
+                filebrowser.parent = self
+                filebrowser.enabled = False
+                filebrowser.file_types = file_types[i]
+                filebrowser.path = button_paths[i]
+                filebrowser.button_type = button_types[i]
+                menu_toggler.target = filebrowser
+            except Exception as e:
+                print(e)
 
-# load prefab
-        self.load_prefab_button = EditorButton()
-        self.load_prefab_button.parent = self.load_menu_parent
-        self.load_prefab_button.name = 'load_prefab_button'
-        self.load_prefab_button.scale = (.1, .05)
-        self.load_prefab_button.text = 'prefab'
-        self.menu_toggler = self.load_prefab_button.add_script('menu_toggler')
-        self.load_prefab_button.add_script('open_in_file_explorer')
-        self.load_prefab_button.open_in_file_explorer.path = application.prefab_folder
-
-        self.filebrowser = Filebrowser()
-        self.filebrowser.parent = self
-        self.filebrowser.position = (0,0)
-        self.filebrowser.enabled = False
-        self.filebrowser.file_types = ('.py')
-        self.filebrowser.path = application.prefab_folder
-        self.filebrowser.button_type = 'load_prefab_button'
-        self.menu_toggler.target = self.filebrowser
-
-
-# load model
-        self.load_model_button = EditorButton()
-        self.load_model_button.parent = self.load_menu_parent
-        self.load_model_button.name = 'load_model_button'
-        self.load_model_button.scale = (.1, .05)
-        self.load_model_button.text = 'model'
-        self.menu_toggler = self.load_model_button.add_script('menu_toggler')
-        self.load_model_button.add_script('open_in_file_explorer')
-        self.load_model_button.open_in_file_explorer.path = application.model_folder
-
-        self.filebrowser = Filebrowser()
-        self.filebrowser.file_types = ('.egg')
-        self.filebrowser.path = application.model_folder
-        self.filebrowser.button_type = 'load_model_button'
-        self.menu_toggler.target = self.filebrowser
-
-# load primitive
-        self.load_primitive_button = EditorButton()
-        self.load_primitive_button.parent = self.load_menu_parent
-        self.load_primitive_button.name = 'load_primitive_button'
-        self.load_primitive_button.scale = (.1, .05)
-        self.load_primitive_button.text = 'primitive'
-        self.menu_toggler = self.load_primitive_button.add_script('menu_toggler')
-        self.load_primitive_button.add_script('open_in_file_explorer')
-        self.load_primitive_button.open_in_file_explorer.path = application.internal_model_folder
-
-        self.filebrowser = Filebrowser()
-        self.filebrowser.file_types = ('.egg')
-        self.filebrowser.path = application.internal_model_folder
-        self.filebrowser.button_type = 'load_model_button'
-        self.menu_toggler.target = self.filebrowser
-
-# load sprites
-        self.load_sprite_button = EditorButton()
-        self.load_sprite_button.parent = self.load_menu_parent
-        self.load_sprite_button.name = 'load_sprite_button'
-        self.load_sprite_button.scale = (.1, .05)
-        self.load_sprite_button.text = 'sprite'
-        self.menu_toggler = self.load_sprite_button.add_script('menu_toggler')
-        self.load_sprite_button.add_script('open_in_file_explorer')
-        self.load_sprite_button.open_in_file_explorer.path = application.compressed_texture_folder
-
-        self.filebrowser = Filebrowser()
-        self.filebrowser.file_types = ('.png', '.jpg', '.gif')
-        self.filebrowser.path = application.compressed_texture_folder
-        self.filebrowser.button_type = 'load_texture_button'
-        self.menu_toggler.target = self.filebrowser
 
         self.layout_group.update_grid()
 
@@ -227,22 +160,6 @@ class Editor(Entity):
         self.save_scene_button.add_script('save_scene_button')
 
 
-
-        # self.save_scene_button.input = MethodType(self.input, self.save_scene_button)
-        # self.save_scene_button.input(self, 't')
-
-        # self.entity_search = EditorButton()
-        # self.entity_search.parent = self
-        # self.entity_search.color = (color.lime + color.black) / 2
-        # self.entity_search.position = window.top_left
-        # self.entity_search.y -= .025
-        # self.entity_search.z = -2
-        # self.entity_search.origin = (-.5, .5)
-        # self.entity_search.scale = (.2, .025)
-        # self.entity_search.text = 'search:'
-        # self.entity_search.text_entity.origin = (-.5,0)
-        # self.entity_search.text_entity.x = -.45
-
 # inspector
         self.inspector = Inspector()
         self.inspector.parent = self
@@ -259,17 +176,7 @@ class Editor(Entity):
         self.toggle_button.text = 'front'
         self.toggle_button.add_script('toggle_sideview')
 
-# exit button
-        self.exit_button = EditorButton()
-        self.exit_button.is_editor = True
-        self.exit_button.parent = self
-        self.exit_button.name = 'toggle_button'
-        self.exit_button.origin = (.5, .5)
-        self.exit_button.position = window.top_right
-        self.exit_button.scale = (.06, .03)
-        self.exit_button.text = 'X'
-        self.exit_button.text_entity.x = 0
-        # self.exit_button.add_script('toggle_sideview')
+
 
         # from panda3d.core import DirectionalLight
         # from panda3d.core import VBase4
@@ -320,12 +227,11 @@ class Editor(Entity):
 
         # self.compress_textures()
         # self.compress_models()
+        scene.sky.color = color.gray
 
 
     def update(self, dt):
-        self.editor_camera_script.update(dt)
         self.transform_gizmo.update(dt)
-        # self.inspector.update(dt)
 
     def input(self, key):
         # if key == 'l':
@@ -357,8 +263,9 @@ class Editor(Entity):
         if key == 'tab':
             self.enabled = not self.enabled
 
-        if self.enabled:
-            self.editor_camera_script.input(key)
+        # if self.enabled:
+        #     self.editor_camera_script.input(key)
+
 
 
     def on_disable(self):

@@ -1,5 +1,3 @@
-import sys
-sys.path.append("..")
 from pandaeditor import *
 
 
@@ -92,7 +90,7 @@ class TransformGizmo(Entity):
         if not scene.editor.enabled:    # just to make sure
             return
         # for moving stuff in side view
-        if (scene.editor.camera_pivot.rotation == (0,0,0)
+        if (scene.editor.editor_camera.camera_pivot.rotation == (0,0,0)
         and mouse.hovered_entity
         and mouse.hovered_entity.is_editor == False):
 

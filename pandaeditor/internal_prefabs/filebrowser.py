@@ -24,6 +24,16 @@ class Filebrowser(Entity):
 
 
     def populate(self):
+        self.close_button = EditorButton()
+        self.close_button.name = 'close_button'
+        self.close_button.parent = self
+        self.close_button.position = (0, 0, 10)
+        self.close_button.scale *= 10
+        self.close_button.color = color.black33
+        self.close_button.button_script._highlight_color = color.black33
+        self.buttons.append(self.close_button)
+        menu_toggler = self.close_button.add_script('menu_toggler')
+        menu_toggler.target = self
         # print('populate')
         for b in self.buttons:
             destroy(b)
@@ -101,17 +111,7 @@ class Filebrowser(Entity):
         self.x = - ((x + 1) * self.button_size[0]) / 2.0
         self.y = ((y) * self.button_size[1]) / 2
 
-        self.close_button = EditorButton()
-        self.close_button.name = 'close_button'
-        self.close_button.is_editor = True
-        self.close_button.parent = self
-        self.close_button.position = (0, 0, 10)
-        self.close_button.scale *= 10
-        self.close_button.color = color.black33
-        self.close_button.button_script._highlight_color = color.black33
-        self.buttons.append(self.close_button)
-        menu_toggler = self.close_button.add_script('menu_toggler')
-        menu_toggler.target = self
+
 
 
     def on_enable(self):
