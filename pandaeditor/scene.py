@@ -31,7 +31,7 @@ class Scene(NodePath):
         self.entity.parent = self
         self.entity.name = 'untitled_scene'
 
-        self.sky = Entity()
+        self.sky = Entity('sky')
         self.sky.scale *= 9999
         self.sky.model = 'sky_dome'
         self.sky.texture = 'default_sky'

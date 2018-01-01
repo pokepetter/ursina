@@ -17,7 +17,7 @@ class AskForSceneNameMenu(Entity):
 
         self.window_title.text_entity.align = 'left'
         self.window_title.text_entity.x = -.45
-        self.window_title.remove_script('editor_button')
+        self.window_title.remove_script('editor_draggable')
 
         self.input_field = InputField()
         self.input_field.is_editor = True

@@ -34,7 +34,7 @@ class TransformGizmo(Entity):
         self.move_gizmo_x.name = 'move_gizmo_x'
         self.move_gizmo_x.model = 'cube'
         self.move_gizmo_x.collider = 'box'
-        self.move_gizmo_x.add_script('editor_button')
+        self.move_gizmo_x.add_script('editor_draggable')
         self.move_gizmo_x.add_script('move_gizmo')
         self.move_gizmo_x.color = color.red
         self.move_gizmo_x.scale = (.5, .1, .1)

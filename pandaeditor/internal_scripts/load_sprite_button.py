@@ -2,7 +2,7 @@ import sys
 sys.path.append("..")
 from pandaeditor import *
 
-class LoadTextureButton():
+class LoadSpriteButton():
 
     def __init__(self):
         self.path = None
@@ -22,10 +22,7 @@ class LoadTextureButton():
         entity.scale = (entity.texture.getOrigFileXSize() / 1000,
                         entity.texture.getOrigFileYSize() / 1000,
                         1)
-        entity.collision = True
-        button_script = entity.add_script('editor_button')
-        button_script.collider = None
-        entity.editor_collider = 'box'
+        button_script = entity.add_script('editor_draggable')
         scene.editor.entity_list.populate()
 
         self.auto_created_canvas = True

@@ -94,40 +94,37 @@ class Editor(Entity):
             application.prefab_folder,
             application.model_folder,
             application.internal_model_folder,
-            application.texture_folder
+            application.compressed_texture_folder
             )
         file_types = (('.py'), ('.py'), ('.egg'), ('.egg'), ('.png', '.jpg', '.gif'))
         button_types = (
             'load_scene_button',
             'load_prefab_button',
             'load_model_button',
-            'load_primitive_button',
+            'load_model_button',
             'load_sprite_button'
             )
 
         for i in range(len(button_names)):
-            try:
-                b = EditorButton()
-                b.parent = self.load_menu_parent
-                b.name = button_names[i]
-                b.origin = (.5, 0)
-                b.scale = (.1, .05)
-                b.text = button_names[i]
-                menu_toggler = b.add_script('menu_toggler')
-                b.add_script('open_in_file_explorer')
-                b.open_in_file_explorer.path = button_paths[i]
-                print('_______', b.name, 'path:', b.open_in_file_explorer.path)
+            b = EditorButton()
+            b.parent = self.load_menu_parent
+            b.name = button_names[i]
+            b.origin = (.5, 0)
+            b.scale = (.1, .05)
+            b.text = button_names[i]
+            menu_toggler = b.add_script('menu_toggler')
+            b.add_script('open_in_file_explorer')
+            b.open_in_file_explorer.path = button_paths[i]
 
-                filebrowser = Filebrowser()
-                filebrowser.parent = self
-                filebrowser.enabled = False
-                filebrowser.file_types = file_types[i]
-                filebrowser.path = button_paths[i]
-                filebrowser.button_type = button_types[i]
-                menu_toggler.target = filebrowser
-            except Exception as e:
-                print(e)
-
+            filebrowser = Filebrowser()
+            filebrowser.parent = self
+            filebrowser.close_button.enabled = False
+            # filebrowser.enabled = False
+            filebrowser.file_types = file_types[i]
+            filebrowser.path = button_paths[i]
+            filebrowser.button_type = button_types[i]
+            # print('ffffffffffffffffffff', filebrowser)
+            menu_toggler.target = filebrowser
 
         self.layout_group.update_grid()
 
@@ -163,7 +160,7 @@ class Editor(Entity):
 # inspector
         self.inspector = Inspector()
         self.inspector.parent = self
-
+#
 # view front
         self.toggle_button = EditorButton()
         self.toggle_button.is_editor = True
@@ -231,7 +228,7 @@ class Editor(Entity):
 
 
     def update(self, dt):
-        self.transform_gizmo.update(dt)
+        pass
 
     def input(self, key):
         # if key == 'l':

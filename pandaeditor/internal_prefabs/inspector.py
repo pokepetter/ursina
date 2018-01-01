@@ -64,6 +64,7 @@ class Inspector(Entity):
         self.filebrowser.button_type = 'replace_model_button'
         self.menu_toggler = self.model_field.add_script('menu_toggler')
         self.menu_toggler.target = self.filebrowser
+        self.filebrowser.enabled = False
 
 # color_field
         self.color_field = self.create_button('color: ')
@@ -85,15 +86,15 @@ class Inspector(Entity):
         self.texture_field = self.create_button('texture: ')
         self.filebrowser = Filebrowser()
         self.filebrowser.parent = camera.ui
-        self.filebrowser.position = (0,0)
         self.filebrowser.name = 'replace_texture_filebrowser'
         self.filebrowser.file_types = ('.png', '.jpg')
         self.filebrowser.path = application.texture_folder
         self.filebrowser.button_type = 'replace_texture_button'
         self.menu_toggler = self.texture_field.add_script('menu_toggler')
         self.menu_toggler.target = self.filebrowser
+        self.filebrowser.enabled = False
 
-        self.scripts_label = self.create_button('editor_button')
+        self.scripts_label = self.create_button('editor_draggable')
         self.scripts_label.parent = self
         self.scripts_label.text = ' '
 
@@ -106,22 +107,20 @@ class Inspector(Entity):
         self.internal_scripts_browser = Filebrowser()
         self.internal_scripts_browser.is_editor = True
         self.internal_scripts_browser.parent = scene.ui
-        self.internal_scripts_browser.position = (0, 0)
-        self.internal_scripts_browser.enabled = False
         self.internal_scripts_browser.file_types = ('.py')
         self.internal_scripts_browser.path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'internal_scripts')
         self.internal_scripts_browser.button_type = 'add_script_button'
         self.menu_toggler.target = self.internal_scripts_browser
+        self.internal_scripts_browser.enabled = False
 
         self.filebrowser = Filebrowser()
         self.filebrowser.is_editor = True
         self.filebrowser.parent = scene.ui
-        self.filebrowser.position = (.0, 0)
-        self.filebrowser.enabled = False
         self.filebrowser.file_types = ('.py')
         self.filebrowser.path = os.path.join(os.path.dirname(application.asset_folder), 'scripts')
         self.filebrowser.button_type = 'add_script_button'
         self.menu_toggler_1.target = self.filebrowser
+        self.filebrowser.enabled = False
 
 
         self.new_y = 0

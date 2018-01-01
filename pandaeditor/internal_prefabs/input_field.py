@@ -16,7 +16,7 @@ class InputField(Entity):
 
         self.collision = True
         self.collider = 'box'
-        self.button_script = self.add_script('editor_button')
+        self.button_script = self.add_script('editor_draggable')
         self.button_script.color = color.panda_button
 
         self.add_script(InputFieldScript())

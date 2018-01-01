@@ -22,11 +22,11 @@ from pandaeditor import scene
 
 class Entity(NodePath):
 
-    def __init__(self):
+    def __init__(self, name='entity'):
         super().__init__('empty')
         self.enabled = True
         self.is_editor = False
-        self.name = 'entity'
+        self.name = name
         self.parent = scene.entity
         self.model = None
         self.color = color.white
@@ -304,6 +304,7 @@ class Entity(NodePath):
             print('type', type(self))
             module_name.entity = self
             self.scripts.append(module_name)
+            # print('added script:', module_name)
             return module_name
 
         # class name given
@@ -311,14 +312,15 @@ class Entity(NodePath):
             class_instance = module_name()
             class_instance.entity = self
             self.scripts.append(class_instance)
+            # print('added script:', module_name)
             return class_instance
 
         # module name given
         omn = module_name
         module_name += '.py'
         module_names = (path.join(path.dirname(__file__), module_name),
-                        path.join(path.dirname(__file__), 'internal_scripts' , module_name),
-                        path.join(path.dirname(path.dirname(__file__)), 'scripts', module_name))
+                        path.join(application.internal_script_folder , module_name),
+                        path.join(application.script_folder, module_name))
 
         for module_name in module_names:
             try:
@@ -335,12 +337,15 @@ class Entity(NodePath):
                 name = module.__name__.split('.')
                 name = name[-1]
                 setattr(self, name, class_instance)
+                print('yooooo', class_instance.entity)
 
                 self.scripts.append(class_instance)
+                # print('added script:', module_name)
                 return class_instance
                 break
             except Exception as e:
-                pass
+                if e is FileNotFoundError == False:
+                    print(e)
 
         print("couldn't find script:", module_names)
 

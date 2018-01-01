@@ -1,5 +1,3 @@
-import sys
-sys.path.append("..")
 from pandaeditor import *
 
 class ReplaceTextureButton():

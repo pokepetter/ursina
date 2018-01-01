@@ -10,43 +10,46 @@ class Filebrowser(Entity):
         self.name = 'filebrowser'
         self.parent = camera.ui
         self.is_editor = True
-        self.enabled = False
+
         self.color = color.black33
 
         self.path = ''
-        self.buttons = list()
         self.file_types = None
+        self.buttons = list()
         self.files = None
 
         self.max_vertical = 10
         self.button_size = (.16, .025)
         self.button_type = ''
 
-
-    def populate(self):
         self.close_button = EditorButton()
         self.close_button.name = 'close_button'
         self.close_button.parent = self
         self.close_button.position = (0, 0, 10)
         self.close_button.scale *= 10
         self.close_button.color = color.black33
-        self.close_button.button_script._highlight_color = color.black33
-        self.buttons.append(self.close_button)
+        self.close_button.highlight_color = self.close_button.color
         menu_toggler = self.close_button.add_script('menu_toggler')
         menu_toggler.target = self
-        # print('populate')
+
+        self.enabled = False
+
+
+    def populate(self):
+        print('populate')
+        self.close_button.enabled = True
         for b in self.buttons:
             destroy(b)
 
         y = 0
         x = 0
         for f in self.files:
-            # print('file:', f)
             if f.startswith('__'):
                 continue
 
             for file_type in self.file_types:
                 if f.endswith(file_type) or file_type == '':
+                    print('file:', f)
                     button = EditorButton()
                     button.is_editor = True
                     button.parent = self
@@ -62,8 +65,11 @@ class Filebrowser(Entity):
                     button.text_entity.position = (-.45, 0)
                     button.text_entity.align = 'left'
                     self.buttons.append(button)
-                    self.load_button = button.add_script(self.button_type)
-                    self.load_button.path = button.text
+                    try:
+                        self.load_button = button.add_script(self.button_type)
+                        self.load_button.path = button.text
+                    except:
+                        print('no script:', self.button_type)
                     # print('path', self.load_button.path)
 
                     y += 1
@@ -118,6 +124,7 @@ class Filebrowser(Entity):
         # print('filebrowser enable:', (self.path))
         self.x = 0
         self.old_files = self.files
+        print('files in path:', self.path)
         self.files = os.listdir(self.path)
         if self.files is not self.old_files:
             self.populate()
@@ -128,3 +135,13 @@ class Filebrowser(Entity):
 
     def on_disable(self):
         self.x = 100
+
+if __name__ == '__main__':
+    app = PandaEditor()
+    test = Filebrowser()
+    test.path = application.internal_texture_folder
+    test.file_types = (('.jpg'))
+    test.button_type = 'load_sprite_button'
+    # test.enabled = False
+    # test.enabled = True
+    app.run()
