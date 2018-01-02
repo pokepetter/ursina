@@ -23,6 +23,8 @@ class LoadSpriteButton():
                         entity.texture.getOrigFileYSize() / 1000,
                         1)
         button_script = entity.add_script('editor_draggable')
+        entity.collision = True
+        entity.collider = 'box'
         scene.editor.entity_list.populate()
 
         self.auto_created_canvas = True

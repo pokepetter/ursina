@@ -43,20 +43,32 @@ class TransformGizmo(Entity):
         self.button = None
         self.selection_buttons = list()
 
+        self.prev_positions = list()
         self.trash_list = list()
 
 
     @undoable
-    def move_from_to(self, entities, original_positions, new_positions):
-        for i in range(len(entities)):
-            entities[i].position = new_positions[i]
+    def move_entities(self, entities):
+        # save these for undo
+        # self.selection_copy = [e for e in entities]
+        # self.prev_positions = [e.position for e in entities]
+        self.temp_delta = mouse.delta
+        self.prev_positions.append([e.position for e in entities])
+
+
+        for e in entities:
+            e.position = (
+                e.position[0] + (mouse.delta[0] * self.dist_to_cam * camera.aspect_ratio),
+                e.position[1] + (mouse.delta[1] * self.dist_to_cam),
+                e.position[2])
+            e.position = (round(e.x, 2), round(e.y, 2), round(e.z, 2))
 
         # undo
         yield 'move selected'
-        print('move back from:', new_positions[0], 'to:', original_positions[0])
-        for i in range(len(entities)):
-            entities[i].position = original_positions[i]
+        for i, e in enumerate(entities):
+            e.position = self.prev_positions[-1][i]
 
+        self.prev_positions.pop()
 
 
     @undoable
@@ -92,17 +104,18 @@ class TransformGizmo(Entity):
         # for moving stuff in side view
         if (scene.editor.editor_camera.camera_pivot.rotation == (0,0,0)
         and mouse.hovered_entity
-        and mouse.hovered_entity.is_editor == False):
+        and mouse.hovered_entity.is_editor == False
+        and mouse.left):
 
-            if mouse.delta_drag[0] != 0 or mouse.delta_drag[1] != 0 and mouse.left:
-                dist_to_cam = distance(
-                    mouse.hovered_entity.getPos(camera.render),
-                    camera.cam.getPos(camera.render)) * .2
+            if mouse.delta_drag[0] != 0 or mouse.delta_drag[1] != 0:
+                self.dist_to_cam = distance(
+                    mouse.hovered_entity.get_pos(camera.render),
+                    camera.cam.get_pos(camera.render)) * .2
 
-                for e in scene.editor.selection:
+                for i, e in enumerate(scene.editor.selection):
                     e.position = (
-                        self.position[0] + (mouse.delta[0] * dist_to_cam * camera.aspect_ratio),
-                        self.position[1] + (mouse.delta[1] * dist_to_cam),
+                        self.position[0] + (mouse.delta[0] * self.dist_to_cam * camera.aspect_ratio),
+                        self.position[1] + (mouse.delta[1] * self.dist_to_cam),
                         self.position[2])
                     e.position = (round(e.x, 2), round(e.y, 2), round(e.z, 2))
 
@@ -120,27 +133,18 @@ class TransformGizmo(Entity):
                 else:
                     scene.editor.selection.clear()
 
-                self.start_drag_position = mouse.position
                 self.position = scene.editor.selection[-1].global_position
-                print('start drag:', self.start_drag_position)
+                self.start_positions = [e.position for e in scene.editor.selection]
 
-                self.temp_original_positions = [p.position for p in scene.editor.selection]
 
 
         if key == 'left mouse up':
-            self.new_positions = [p.position for p in scene.editor.selection]
-            if mouse.delta_drag[0] != 0 or mouse.delta_drag[1] != 0:   # check if actually moved
-                self.original_positions = self.temp_original_positions
-                print('drop:', mouse.delta_drag[0])
-                print('move', self.new_positions[0], self.original_positions[0])
+            for i, e in enumerate(scene.editor.selection):
+                e.position = self.start_positions[i]
 
-                self.move_from_to(
-                    [e for e in scene.editor.selection],
-                    self.original_positions,
-                    self.new_positions
-                    )
+            self.move_entities(scene.editor.selection)
+            # scene.editor.selection.clear()
 
-                self.position = scene.editor.selection[-1].global_position
 
 
         if key == 'left shift':
@@ -176,6 +180,7 @@ class TransformGizmo(Entity):
                     self.button_script = self.button.add_script('selection_button')
                     self.button_script.selection_target = e
                     self.selection_buttons.append(self.button)
+
         if key == 't up':
             for b in self.selection_buttons:
                 destroy(b)
@@ -188,49 +193,3 @@ class TransformGizmo(Entity):
 
         if key == 'delete':
             self.delete_selected()
-
-
-# move with arrow buttons
-        if key == 'arrow left' and scene.editor.selection:
-            if self.tool == 'move':
-                for target in scene.editor.selection:
-                    target.position += self.entity.left * self.move_interval
-            elif self.tool == 'rotate':
-                for target in scene.editor.selection:
-                    target.rotation_z -= self.rotation_interval
-            elif self.tool == 'scale':
-                for target in scene.editor.selection:
-                    target.scale_x += self.scale_interval
-
-        if key == 'arrow right' and scene.editor.selection:
-            if self.tool == 'move':
-                for target in scene.editor.selection:
-                    target.position += self.entity.right * self.move_interval
-            elif self.tool == 'rotate':
-                for target in scene.editor.selection:
-                    target.rotation_z += self.rotation_interval
-            elif self.tool == 'scale':
-                for target in scene.editor.selection:
-                    target.scale_x -= self.scale_interval
-
-        if key == 'arrow up' and scene.editor.selection:
-            if self.tool == 'move':
-                for target in scene.editor.selection:
-                    target.position += self.entity.up * self.move_interval
-            elif self.tool == 'rotate':
-                for target in scene.editor.selection:
-                    target.rotation_x -= self.rotation_interval
-            elif self.tool == 'scale':
-                for target in scene.editor.selection:
-                    target.scale_z += self.scale_interval
-
-        if key == 'arrow down' and self.selection:
-            if self.tool == 'move':
-                for target in scene.editor.selection:
-                    target.position += self.entity.down * self.move_interval
-            elif self.tool == 'rotate':
-                for target in scene.editor.selection:
-                    target.rotation_x += self.rotation_interval
-            elif self.tool == 'scale':
-                for target in scene.editor.selection:
-                    target.scale_z -= self.scale_interval

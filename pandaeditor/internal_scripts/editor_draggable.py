@@ -4,8 +4,8 @@ class EditorDraggable():
 
     def __init__(self):
         self.entity = None
-        self.hover_color = color.orange
-        self.click_color = color.red
+        self.hover_color = color.color(0, 0, .9)
+        self.click_color = color.color(190, .5, .9, .8)
 
 
     def input(self, key):
