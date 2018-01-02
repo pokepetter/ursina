@@ -227,6 +227,15 @@ class Entity(NodePath):
         global_position = (global_position[0], global_position[2], global_position[1])
         return global_position
 
+    @global_position.setter
+    def global_position(self, value):
+        self.original_parent = self.parent
+        self.parent = scene.entity
+        self.position = value
+        self.reparent_to(self.original_parent)
+        self.original_parent = None
+
+
     @property
     def position(self):
         return Vec3(self.getX(), self.getZ(), self.getY())
@@ -293,9 +302,9 @@ class Entity(NodePath):
 
     def reparent_to(self, entity):
         self.wrtReparentTo(entity)
-        pos = self.getPos(entity)
-        self.position = (pos[0], pos[2], pos[1])
-        self.__setattr__('scale', self.getScale(entity))
+        # pos = self.getPos(entity)
+        # self.position = (pos[0], pos[2], pos[1])
+        # self.__setattr__('scale', self.getScale(entity))
         # print('parent:', self.parent.name, 'newpos:', self.position)
 
     def add_script(self, module_name):
@@ -337,8 +346,6 @@ class Entity(NodePath):
                 name = module.__name__.split('.')
                 name = name[-1]
                 setattr(self, name, class_instance)
-                print('yooooo', class_instance.entity)
-
                 self.scripts.append(class_instance)
                 # print('added script:', module_name)
                 return class_instance

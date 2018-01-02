@@ -8,11 +8,8 @@ class TransformGizmo(Entity):
         self.name = 'transform_gizmo'
 
         self.model = 'cube'
-        self.rotation_x += 45
-        self.rotation_y += 45
-        self.rotation_z += 45
         self.scale *= .1
-        self.color = color.green
+        self.color = color.lime
 
         self.add_to_selection = False
         self.tool = 'none'
@@ -22,23 +19,6 @@ class TransformGizmo(Entity):
             'e' : 'rotate',
             'r' : 'scale'
             }
-        self.move_interval = 1
-        self.rotation_interval = 5
-        self.scale_interval = .1
-
-
-
-        self.move_gizmo_x = Entity()
-        self.move_gizmo_x.is_editor = True
-        self.move_gizmo_x.parent = self
-        self.move_gizmo_x.name = 'move_gizmo_x'
-        self.move_gizmo_x.model = 'cube'
-        self.move_gizmo_x.collider = 'box'
-        self.move_gizmo_x.add_script('editor_draggable')
-        self.move_gizmo_x.add_script('move_gizmo')
-        self.move_gizmo_x.color = color.red
-        self.move_gizmo_x.scale = (.5, .1, .1)
-        self.move_gizmo_x.x = .5
 
         self.button = None
         self.selection_buttons = list()
@@ -63,12 +43,16 @@ class TransformGizmo(Entity):
                 e.position[2])
             e.position = (round(e.x, 2), round(e.y, 2), round(e.z, 2))
 
+        # print(entities[0].name, 'from:', self.prev_positions[-1][0], 'to:', entities[0].position)
+
         # undo
         yield 'move selected'
+        print('redo move')
         for i, e in enumerate(entities):
             e.position = self.prev_positions[-1][i]
 
         self.prev_positions.pop()
+        print(len(self.prev_positions))
 
 
     @undoable
@@ -101,6 +85,8 @@ class TransformGizmo(Entity):
     def update(self, dt):
         if not scene.editor.enabled:    # just to make sure
             return
+        if mouse.hovered_entity.is_editor:
+            return
         # for moving stuff in side view
         if (scene.editor.editor_camera.camera_pivot.rotation == (0,0,0)
         and mouse.hovered_entity
@@ -122,6 +108,8 @@ class TransformGizmo(Entity):
 
     def input(self, key):
         if key == 'left mouse down':
+            if mouse.hovered_entity.is_editor:
+                return
             if not mouse.hovered_entity:
                 scene.editor.selection.clear()
 
@@ -135,14 +123,24 @@ class TransformGizmo(Entity):
 
                 self.position = scene.editor.selection[-1].global_position
                 self.start_positions = [e.position for e in scene.editor.selection]
-
+                self.original_parents = [e.parent for e in scene.editor.selection]
+                for e in scene.editor.selection:
+                    e.reparent_to(scene.entity)
 
 
         if key == 'left mouse up':
+            if mouse.hovered_entity.is_editor:
+                return
+
             for i, e in enumerate(scene.editor.selection):
+                # self.original_parent = e.position
+                # e.reparent_to(scene.entity)
+                e.parent = self.original_parents[i]
                 e.position = self.start_positions[i]
+                # e.reparent_to(self.original_parent)
 
             self.move_entities(scene.editor.selection)
+            self.position = scene.editor.selection[-1].global_position
             # scene.editor.selection.clear()
 
 
