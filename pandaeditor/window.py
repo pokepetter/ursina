@@ -24,8 +24,11 @@ class Window(WindowProperties):
         self.title = 'pandaeditor'
 
         if os.name == 'nt':
-            from win32api import GetSystemMetrics
-            self.screen_resolution = (GetSystemMetrics(0), GetSystemMetrics(1))
+            try:
+                from win32api import GetSystemMetrics
+                self.screen_resolution = (GetSystemMetrics(0), GetSystemMetrics(1))
+            except:
+                print('please install pypiwin32')
         elif os.name == 'posix':
             import subprocess
             output = subprocess.Popen('xrandr | grep "\*" | cut -d" " -f4',shell=True, stdout=subprocess.PIPE).communicate()[0]

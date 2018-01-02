@@ -18,16 +18,10 @@ class LoadModelButton():
         entity = Entity()
         entity.name = os.path.basename(self.path).split('.')[0]
         entity.model = os.path.basename(self.path).split('.')[0]
-        # try:
-        #     entity.texture = os.path.basename(self.path).split('.')[0]
-        # except:
-        #     pass # no texture with same name
 
-        # button_script = entity.add_script('editor_draggable')
-        # button_script = entity.add_script(EditorDraggable())
-        self.entity.collision = True
-        self.entity.editor_collider = 'box'
-        print('..................', entity.editor_collider)
+        entity.collision = True
+        entity.editor_collider = 'box'
+        button_script = entity.add_script('editor_draggable')
         scene.editor.entity_list.populate()
 
         # undo

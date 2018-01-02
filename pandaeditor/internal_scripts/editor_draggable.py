@@ -4,12 +4,32 @@ class EditorDraggable():
 
     def __init__(self):
         self.entity = None
-    #     self.entity.collision = True
-    #     self.entity.editor_collider = 'box'
-    #
-    #
+        self.hover_color = color.orange
+        self.click_color = color.red
+
+
+    def input(self, key):
+        if self.entity.hovered:
+            if key == 'left mouse down':
+                self.entity.color = self.click_color
+            elif key == 'left mouse up':
+                self.entity.color = self.hover_color
+
+
     def on_mouse_enter(self):
-        self.entity.model.setColorScale(self.highlight_color)
+        self.original_color = self.entity.color
+        self.entity.color = self.hover_color
+
 
     def on_mouse_exit(self):
-        self.entity.model.setColorScale(self.color)
+        self.entity.color = self.original_color
+
+
+if __name__ == '__main__':
+    app = PandaEditor()
+    e = Entity("test entity")
+    e.model = 'quad'
+    e.collision = True
+    e.collider = 'box'
+    e.add_script(EditorDraggable())
+    app.run()
