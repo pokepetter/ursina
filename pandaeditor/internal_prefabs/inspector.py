@@ -34,7 +34,8 @@ class Inspector(Entity):
             self.vec3_group.parent = self
             self.vec3_group.scale_y = self.button_height
             for i in range(3):
-                self.button = EditorButton()
+                self.button = TransformField()
+                self.button.is_editor = True
                 # self.button = self.create_button('transform_field')
                 self.button.parent = self.vec3_group
                 self.button.origin = (-.5, .5)
@@ -177,6 +178,14 @@ class Inspector(Entity):
         self.transform_labels[6].text = str(round(self.selected.scale_x, 2))
         self.transform_labels[7].text = str(round(self.selected.scale_y, 2))
         self.transform_labels[8].text = str(round(self.selected.scale_z, 2))
+
+
+        for i, tl in enumerate(self.transform_labels):
+            tl.target_entity = self.selected
+            tl.axis = Vec3(0,0,0)
+            tl.transform_type = int(i/3)
+            tl.axis[int(i%3)] = 1
+
 
         if self.selected.model:
             self.model_field.text = ('m ' + self.selected.model.name)

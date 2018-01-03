@@ -21,7 +21,6 @@ class ReplaceTextureButton():
         for s in scene.editor.selection:
             s.texture = self.path
 
-        print('seflselfs:', scene.editor.selection)
         scene.editor.inspector.update_inspector()
 
         # undo

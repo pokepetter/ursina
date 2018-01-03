@@ -136,15 +136,15 @@ class Entity(NodePath):
 
             if len(value) % 2 == 0:
                 for i in range(0, len(value), 2):
-                    new_value.addX(value[i])
-                    new_value.addY(value[i+1])
-                new_value.addZ(self.getY())
+                    new_value.add_x(value[i])
+                    new_value.add_y(value[i+1])
+                new_value.add_z(self.getY())
 
             if len(value) % 3 == 0:
                 for i in range(0, len(value), 3):
-                    new_value.addX(value[i])
-                    new_value.addY(value[i+1])
-                    new_value.addZ(value[i+2])
+                    new_value.add_x(value[i])
+                    new_value.add_y(value[i+1])
+                    new_value.add_z(value[i+2])
 
             try:
                 self.setPos(new_value[0], new_value[2], new_value[1])
@@ -160,24 +160,36 @@ class Entity(NodePath):
 
             if len(value) % 2 == 0:
                 for i in range(0, len(value), 2):
-                    new_value.addX(value[i])
-                    new_value.addY(value[i+1])
-                new_value.addZ(self.model.getY())
+                    new_value.add_x(value[i])
+                    new_value.add_y(value[i+1])
+                new_value.add_z(self.model.getY())
 
             if len(value) % 3 == 0:
                 for i in range(0, len(value), 3):
-                    new_value.addX(value[i])
-                    new_value.addY(value[i+1])
-                    new_value.addZ(value[i+2])
+                    new_value.add_x(value[i])
+                    new_value.add_y(value[i+1])
+                    new_value.add_z(value[i+2])
 
             self.model.setPos(-new_value[0], -new_value[2], -new_value[1])
             object.__setattr__(self, name, new_value)
 
         if name == 'rotation':
-            try:
-                self.setHpr(Vec3(-value[1], -value[0], value[2]))
-            except:
-                pass
+            new_value = Vec3()
+
+            if len(value) % 2 == 0:
+                for i in range(0, len(value), 2):
+                    new_value.add_x(value[i])
+                    new_value.add_y(value[i+1])
+                new_value.add_z(self.getR())
+
+            if len(value) % 3 == 0:
+                for i in range(0, len(value), 3):
+                    new_value.add_x(value[i])
+                    new_value.add_y(value[i+1])
+                    new_value.add_z(value[i+2])
+
+            self.setHpr(Vec3(-new_value[1], -new_value[0], new_value[2]))
+
 
         if name == 'rotation_x': self.setP(-value)
         if name == 'rotation_y': self.setH(-value)
@@ -188,37 +200,40 @@ class Entity(NodePath):
 
             if len(value) % 2 == 0:
                 for i in range(0, len(value), 2):
-                    new_value.addX(value[i])
-                    new_value.addY(value[i+1])
-                new_value.addZ(self.getSy())
+                    new_value.add_x(value[i])
+                    new_value.add_y(value[i+1])
+                new_value.add_z(self.getSy())
 
             if len(value) % 3 == 0:
                 for i in range(0, len(value), 3):
-                    new_value.addX(value[i])
-                    new_value.addY(value[i+1])
-                    new_value.addZ(value[i+2])
-            try:
-                self.setScale(new_value[0], new_value[2], new_value[1])
-            except:
-                pass
+                    new_value.add_x(value[i])
+                    new_value.add_y(value[i+1])
+                    new_value.add_z(value[i+2])
+            self.set_scale(new_value[0], new_value[2], new_value[1])
 
 
-        if name == 'scale_x': self.setScale(value, self.scale_y, self.scale_z)
-        if name == 'scale_y': self.setScale(self.scale_x, self.scale_y, value)
-        if name == 'scale_z': self.setScale(self.scale_x, value, self.scale_z)
+        if name == 'scale_x': self.set_scale(value, self.scale_y, self.scale_z)
+        if name == 'scale_y': self.set_scale(self.scale_x, self.scale_y, value)
+        if name == 'scale_z': self.set_scale(self.scale_x, value, self.scale_z)
 
 
-        if name == 'collider' and value is not None:
-            collider = Collider()
-            collider.entity = self
-            collider.make_collider()
-            object.__setattr__(self, name, collider)
+        if name == 'collider':
+            if value is not None:
+                collider = Collider()
+                collider.entity = self
+                collider.make_collider()
+                object.__setattr__(self, name, collider)
+            elif self.collider:
+                print('destroy collider')
 
-        if name == 'editor_collider' and value is not None:
-            editor_collider = Collider()
-            editor_collider.entity = self
-            editor_collider.make_collider()
-            object.__setattr__(self, name, editor_collider)
+        if name == 'editor_collider':
+            if value is not None:
+                editor_collider = Collider()
+                editor_collider.entity = self
+                editor_collider.make_collider()
+                object.__setattr__(self, name, editor_collider)
+            elif self.editor_collider:
+                print('destroy collider')
 
 
     @property
