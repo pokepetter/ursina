@@ -72,7 +72,8 @@ class Entity(NodePath):
                 if not self.is_singleton():
                     self.unstash()
             else:
-                self.stash()
+                if not self.is_singleton():
+                    self.stash()
 
         if name == 'parent':
             if value is None:
@@ -129,6 +130,10 @@ class Entity(NodePath):
             except:
                 pass
                 print('no texture:', value)
+
+            if value == None:
+                self.model.set_texture_off(True)
+
 
         if name == 'position':
             # automatically add position instead of extending the tuple

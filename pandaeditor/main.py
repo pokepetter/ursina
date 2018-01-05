@@ -36,10 +36,7 @@ class PandaEditor(ShowBase):
         #     strength=0.05,
         #     falloff=0.000002
         # )
-
-        # UI
-        window.exit_button = True
-
+        window.make_exit_button()
 
         # input
         base.buttonThrowers[0].node().setButtonDownEvent('buttonDown')

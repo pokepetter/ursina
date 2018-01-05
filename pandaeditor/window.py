@@ -42,13 +42,6 @@ class Window(WindowProperties):
             int((self.screen_resolution[0] - self.size[0]) / 2),
             int((self.screen_resolution[1] - self.size[1]) / 2)
             )
-        # self.position = (int(self.screen_resolution[0] / 2), 0)
-
-        self.borderless = True
-        self.fullscreen = False
-        self.cursor = True
-        self.fps_counter = True
-        self.vsync = True
 
         self.left = (-self.aspect_ratio / 2, 0)
         self.right = (self.aspect_ratio / 2, 0)
@@ -60,20 +53,27 @@ class Window(WindowProperties):
         self.bottom_left = (-self.aspect_ratio / 2, -.5)
         self.bottom_right = (self.aspect_ratio / 2, -.5)
 
+        self.fullscreen = False
+        self.borderless = True
+        self.cursor = True
+        self.fps_counter = False
+        self.vsync = True
 
-    def make_exit_button(self):
+
+    def make_exit_button(self):     # called by main after setting up camera
         from pandaeditor.internal_prefabs.button import Button
         from pandaeditor import scene
         self.exit_button = Button()
         self.exit_button.is_editor = False
         self.exit_button.parent = scene.ui
-        self.exit_button.name = 'exit_button button'
+        self.exit_button.name = 'exit_button_entity'
         self.exit_button.origin = (.5, .5)
         self.exit_button.position = self.top_right
         self.exit_button.scale = (.025, .025)
         self.exit_button.color = color.red
         self.exit_button.text = 'X'
         self.exit_button.add_script('exit_button')
+        self.exit_button.enabled = True
 
 
     def __setattr__(self, name, value):
@@ -112,13 +112,21 @@ class Window(WindowProperties):
         if name == 'fps_counter':
             application.base.set_frame_rate_meter(value)
 
-        if name == 'exit_button':
-            try:
-                self.exit_button.enabled = value
-            except:
-                self.make_exit_button()
+        # if name == 'exit_button':
+        #     if not hasattr(self, 'exit_button_entity'):
+        #         self.make_exit_button()
+        #     self.exit_button_entity.enabled = value
 
-        # if name == 'title':
-        #     self.title = value
+        # if name == 'borderless':
+        #     self.set_undecorated(value)
+        #     base.win.request_properties(self)
+            # base.open_main_window(props=self)
+            # self.load_defaults()
+
 
 sys.modules[__name__] = Window()
+
+if __name__ == '__main__':
+    from pandaeditor import *
+    app = PandaEditor()
+    app.run()

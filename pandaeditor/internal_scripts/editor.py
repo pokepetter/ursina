@@ -20,6 +20,7 @@ class Editor(Entity):
         self.is_editor = True
         self.parent = scene.ui
 
+        scene.sky.texture = 'default_sky'
         self.trash = NodePath('trash')
         self.selection = list()
 
