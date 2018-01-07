@@ -85,8 +85,8 @@ class TransformGizmo(Entity):
     def update(self, dt):
         if not scene.editor.enabled:    # just to make sure
             return
-        if mouse.hovered_entity.is_editor:
-            return
+        # if mouse.hovered_entity.is_editor:
+        #     return
         # for moving stuff in side view
         if (scene.editor.editor_camera.camera_pivot.rotation == (0,0,0)
         and mouse.hovered_entity
@@ -104,6 +104,13 @@ class TransformGizmo(Entity):
                         self.position[1] + (mouse.delta[1] * self.dist_to_cam),
                         self.position[2])
                     e.position = (round(e.x, 2), round(e.y, 2), round(e.z, 2))
+
+
+# scale
+        if self.entity_to_scale:
+            self.entity_to_scale.scale = self.entity_original_scale * (1 + (mouse.x - self.start_mouse) * 4)
+            self.entity_to_scale.scale = [round(s, 2) for s in self.entity_to_scale.scale]
+
 
 
     def input(self, key):
@@ -155,6 +162,15 @@ class TransformGizmo(Entity):
                 self.entity_right_click_menu.target = mouse.hovered_entity
                 self.entity_right_click_menu.enabled = True
                 self.entity_right_click_menu.position = mouse.position
+
+        if key == 's':
+            self.start_mouse = mouse.x
+            self.entity_to_scale = scene.editor.selection[0]
+            print(self.entity_to_scale)
+            self.entity_original_scale = self.entity_to_scale.scale
+        if key == 's up':
+            # self.entity_to_sale
+            self.entity_to_scale = None
 
 # selection buttons
         if key == 't':

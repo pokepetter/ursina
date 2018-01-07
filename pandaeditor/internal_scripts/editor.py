@@ -24,7 +24,7 @@ class Editor(Entity):
         self.trash = NodePath('trash')
         self.selection = list()
 
-        self.editor_camera = EditorCamera()
+        self.editor_camera = self.add_script(EditorCamera())
 
 
         self.transform_gizmo = TransformGizmo()
@@ -229,9 +229,24 @@ class Editor(Entity):
 
 
     def update(self, dt):
-        pass
+        for s in self.scripts:
+            if hasattr(s, 'update'):
+                s.update(dt)
 
     def input(self, key):
+        if key == 'tab':
+            self.enabled = not self.enabled
+            if self.enabled:
+                print('enable editor')
+            else:
+                print('disable editor')
+
+        if not self.enabled:
+            return
+
+        for s in self.scripts:
+            if hasattr(s, 'input'):
+                s.input(key)
         # if key == 'l':
         #     render.setShaderAuto()
         #     print('set shader auto')
@@ -258,8 +273,6 @@ class Editor(Entity):
             else:
                 self.debugNP.hide()
 
-        if key == 'tab':
-            self.enabled = not self.enabled
 
         # if self.enabled:
         #     self.editor_camera_script.input(key)

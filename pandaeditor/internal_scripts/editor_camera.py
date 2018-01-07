@@ -1,6 +1,6 @@
 from pandaeditor import *
 
-class EditorCamera(Entity):
+class EditorCamera(object):
 
     def __init__(self):
         super().__init__()
@@ -44,7 +44,7 @@ class EditorCamera(Entity):
 
 
     def update(self, dt):
-        if self.enabled and mouse.right:
+        if mouse.right:
             self.camera_pivot.rotation_x -= mouse.velocity[1] * 20
             self.camera_pivot.rotation_y += mouse.velocity[0] * 20
 
@@ -55,7 +55,7 @@ class EditorCamera(Entity):
             self.camera_pivot.position += camera.up * held_keys['e'] * self.rotation_speed
             self.camera_pivot.position += camera.down * held_keys['q'] * self.rotation_speed
 
-        if self.enabled and mouse.middle:
+        if mouse.middle:
             self.camera_pivot.position -= camera.right * mouse.velocity[0] * self.pan_speed[0]
             self.camera_pivot.position -= camera.up * mouse.velocity[1] * self.pan_speed[1]
 
@@ -63,6 +63,7 @@ class EditorCamera(Entity):
 
 if __name__ == '__main__':
     app = main.PandaEditor()
+    scene.sky.texture = 'default_sky'
     e = Entity()
     e.add_script('editor_camera')
     app.run()

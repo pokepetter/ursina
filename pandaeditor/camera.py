@@ -7,6 +7,7 @@ from pandaeditor import scene
 from pandaeditor import window
 from pandaeditor import color
 
+
 class Camera(Entity):
 
     def __init__(self):
@@ -26,19 +27,27 @@ class Camera(Entity):
         print('setting up')
         win = base.camNode.get_display_region(0).get_window()
         self.display_region = win.make_display_region(0, 1, 0, 1)
+
+
         self.perspective_lens = PerspectiveLens()
         self.perspective_lens.set_aspect_ratio(self.aspect_ratio)
         self.perspective_lens.set_focal_length(50)
         self.perspective_lens_node = LensNode('perspective_lens_node', self.perspective_lens)
+
+        self.orthographic_lens = OrthographicLens()
+        self.orthographic_lens.set_film_size(self.fov * self.aspect_ratio, self.fov)
+        self.orthographic_lens_node = LensNode('orthographic_lens_node', self.orthographic_lens)
+
+        self.lens = self.perspective_lens
+        self.lens_node = self.perspective_lens_node
+        application.base.cam.node().set_lens(self.lens)
+        self.orthographic = False
+
         self.fov = 40
         self.clip_plane_near = 0.01
         self.clip_plane_far = 100
 
-        self.lens = self.perspective_lens
-        self.lens_node = self.perspective_lens_node
-        application.base.cam.node().set_lens(self.perspective_lens)
-
-        win.setClearColor(color.dark_gray)
+        # win.setClearColor(color.dark_gray)
         self.ui_display_region = win.make_display_region()
         self.ui_display_region.set_sort(20)
 
@@ -69,17 +78,40 @@ class Camera(Entity):
         scene.ui = ui
         self.ui = ui
 
+    @property
+    def orthographic(self):
+        if hasattr(self, 'lens') and self.lens == self.orthographic_lens:
+            return True
+        else:
+            return False
+
+    @orthographic.setter
+    def orthographic(self, value):
+        if value == True:
+            self.lens = self.orthographic_lens
+            self.lens_node = self.orthographic_lens_node
+            application.base.cam.node().set_lens(self.orthographic_lens)
+        else:
+            self.lens = self.perspective_lens
+            self.lens_node = self.perspective_lens_node
+            application.base.cam.node().set_lens(self.perspective_lens)
+
+
 
     def __setattr__(self, name, value):
 
         if name == 'fov':
             value = max(1, value)
-            try:
+            if not self.orthographic and hasattr(self, 'perspective_lens'):
                 self.perspective_lens.set_fov(value)
-                self.perspective_lens_node.set_y(self.perspective_lens_node.get_y() + 10)
+                # print('from:', self.perspective_lens_node.getPos())
+                # self.perspective_lens_node.set_y(self.perspective_lens_node.get_y() + 10)
+                # print('to:', self.perspective_lens_node.get_y())
+                # self.z = value
                 application.base.cam.node().set_lens(self.perspective_lens)
-            except:
-                pass # no lens
+            elif hasattr(self, 'orthographic_lens'):
+                self.orthographic_lens.set_film_size(value)
+                application.base.cam.node().set_lens(self.orthographic_lens)
 
 
         elif name == 'near_clip_plane':
@@ -89,6 +121,8 @@ class Camera(Entity):
 
         if name == 'rect':
             self.ui_display_region = self.display_region = win.make_display_region(0, 1, 0, 1)
+
+
 
         super().__setattr__(name, value)
 
@@ -103,7 +137,9 @@ sys.modules[__name__] = Camera()
 
 
 if __name__ == '__main__':
+    from pandaeditor.main import PandaEditor
     app = PandaEditor()
+    app.load_editor()
     e = Entity()
     e.model = 'quad'
     e.color = color.random_color()

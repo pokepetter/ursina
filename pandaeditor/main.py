@@ -160,7 +160,7 @@ class PandaEditor(ShowBase):
 
 
         try:
-            if scene.editor and scene.editor.enabled:
+            if scene.editor:
                 scene.editor.input(key)
         except: pass
         try: mouse.input(key)
