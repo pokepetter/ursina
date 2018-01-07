@@ -2,6 +2,7 @@
 pandaeditor.egg-info
 dist
 build
+webgl
 todo
 
 scenes

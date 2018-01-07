@@ -17,7 +17,7 @@ class Battle(Entity):
         self.bg.position = (0, 0, .1)
         self.bg.scale = ((4 * 1.05) + 1.1, 1.0)
         # self.bg.scale *= 5.5
-        self.bg.color = color.red
+        # self.bg.color = color.red
 
 
         for i in range(5):

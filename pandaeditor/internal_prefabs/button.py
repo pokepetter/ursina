@@ -39,7 +39,6 @@ class Button(Entity):
             self.text_entity.text = value
 
 
-
     def __setattr__(self, name, value):
 
         if name == 'color':
@@ -48,8 +47,8 @@ class Button(Entity):
             self.highlight_color = color.color(hsv[0], hsv[1], hsv[2] + step, clamp(hsv[3], .8, 1))
             self.pressed_color = color.color(hsv[0], hsv[1], hsv[2] - step, clamp(hsv[3], .8, 1))
 
-        else:
-            super().__setattr__(name, value)
+        super().__setattr__(name, value)
+
 
     def input(self, key):
         if key == 'left mouse down':
