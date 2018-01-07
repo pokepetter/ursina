@@ -30,13 +30,20 @@ class Window(WindowProperties):
             except:
                 print('please install pypiwin32')
         elif os.name == 'posix':
-            import subprocess
-            output = subprocess.Popen('xrandr | grep "\*" | cut -d" " -f4',shell=True, stdout=subprocess.PIPE).communicate()[0]
-            # TODO: test this in ubuntu
+            try:
+                import subprocess
+                output = subprocess.Popen('xrandr | grep "\*" | cut -d" " -f4',shell=True, stdout=subprocess.PIPE).communicate()[0]
+                output = output.decode('utf-8').replace('\n', '').split('x')
+                output = (int(output[0]), int(output[1]))
+                print(output)
+                self.screen_resolution = output
+            except:
+                print('no process xrandr to get screen resolution')
+                self.screen_resolution = (1366, 768)
+
 
         self.fullscreen_size = (self.screen_resolution[0], self.screen_resolution[1])
         self.windowed_size = (self.fullscreen_size[0] / 1.25, self.fullscreen_size[1] / 1.25)
-        # self.windowed_size = (self.fullscreen_size[0] / 2, self.fullscreen_size[1] / 1)
         self.size = self.windowed_size
         self.position = (
             int((self.screen_resolution[0] - self.size[0]) / 2),
