@@ -76,6 +76,7 @@ class Camera(Entity):
             value = max(1, value)
             try:
                 self.perspective_lens.set_fov(value)
+                self.perspective_lens_node.set_y(self.perspective_lens_node.get_y() + 10)
                 application.base.cam.node().set_lens(self.perspective_lens)
             except:
                 pass # no lens
@@ -99,3 +100,23 @@ class Camera(Entity):
             return 16 / 9
 
 sys.modules[__name__] = Camera()
+
+
+if __name__ == '__main__':
+    app = PandaEditor()
+    e = Entity()
+    e.model = 'quad'
+    e.color = color.random_color()
+    e.position = (-2, 0, 10)
+
+    e = Entity()
+    e.model = 'quad'
+    e.color = color.random_color()
+    e.position = (2, 0, 10)
+
+    e = Entity()
+    e.model = 'quad'
+    e.color = color.random_color()
+    e.position = (0, 0, 40)
+
+    app.run()
