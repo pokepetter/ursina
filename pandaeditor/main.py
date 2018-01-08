@@ -90,18 +90,13 @@ class PandaEditor(ShowBase):
 
         # start game if there is no editor
         for e in scene.entities:
-            try:
+            if hasattr(e, 'start'):
                 e.start()
-            except:
-                pass
-            try:
-                for s in e:
-                    try:
-                        s.start()
-                    except:
-                        pass
-            except:
-                pass
+            for s in e.scripts:
+                if hasattr(s, 'start'):
+                    s.start()
+
+
 
         self.update_task = taskMgr.add(self.update, "update")
 
@@ -114,20 +109,15 @@ class PandaEditor(ShowBase):
         mouse.update(dt)
         if scene.editor and scene.editor.enabled:
             scene.editor.update(dt)
-        # except: pass
 
         for entity in scene.entities:
             if entity.enabled:
-                try:
+                if hasattr(entity, 'update'):
                     entity.update(dt)
-                except:
-                    pass
 
                 for script in entity.scripts:
-                    try:
+                    if hasattr(script, 'update'):
                         script.update(dt)
-                    except:
-                        pass
 
         return Task.cont
 
@@ -170,12 +160,12 @@ class PandaEditor(ShowBase):
 
         for entity in scene.entities:
             if entity.enabled and entity is not scene.editor:
-                try: entity.input(key)
-                except: pass
-                for script in entity.scripts:
-                    try: script.input(key)
-                    except: pass
+                if hasattr(entity, 'input'):
+                    entity.input(key)
 
+                for script in entity.scripts:
+                    if hasattr(script, 'input'):
+                        script.input(key)
 
     def load_editor(self):
         scene.editor = load_script('editor')

@@ -12,6 +12,8 @@ class TransformGizmo(Entity):
         self.color = color.lime
 
         self.add_to_selection = False
+        self.entity_to_scale = None
+        self.dist_to_cam = 0
         self.tool = 'none'
         self.tools = {
             'q' : 'none',
@@ -24,6 +26,7 @@ class TransformGizmo(Entity):
         self.selection_buttons = list()
 
         self.prev_positions = list()
+        self.original_parent = list()
         self.trash_list = list()
 
 
@@ -115,12 +118,12 @@ class TransformGizmo(Entity):
 
     def input(self, key):
         if key == 'left mouse down':
-            if mouse.hovered_entity.is_editor:
+            if mouse.hovered_entity and mouse.hovered_entity.is_editor:
                 return
             if not mouse.hovered_entity:
                 scene.editor.selection.clear()
 
-            elif mouse.hovered_entity.is_editor == False:
+            elif mouse.hovered_entity and mouse.hovered_entity.is_editor == False:
                 # select entities
                 if not self.add_to_selection:
                     scene.editor.selection.clear()
@@ -128,15 +131,16 @@ class TransformGizmo(Entity):
                 else:
                     scene.editor.selection.clear()
 
-                self.position = scene.editor.selection[-1].world_position
-                self.start_positions = [e.position for e in scene.editor.selection]
-                self.original_parents = [e.parent for e in scene.editor.selection]
-                for e in scene.editor.selection:
-                    e.reparent_to(scene.entity)
+                if len(scene.editor.selection) > 0:
+                    self.position = scene.editor.selection[-1].world_position
+                    self.start_positions = [e.position for e in scene.editor.selection]
+                    self.original_parents = [e.parent for e in scene.editor.selection]
+                    for e in scene.editor.selection:
+                        e.reparent_to(scene.entity)
 
 
         if key == 'left mouse up':
-            if mouse.hovered_entity.is_editor:
+            if mouse.hovered_entity and mouse.hovered_entity.is_editor:
                 return
 
             for i, e in enumerate(scene.editor.selection):
@@ -147,7 +151,8 @@ class TransformGizmo(Entity):
                 # e.reparent_to(self.original_parent)
 
             self.move_entities(scene.editor.selection)
-            self.position = scene.editor.selection[-1].world_position
+            if len(scene.editor.selection) > 0:
+                self.position = scene.editor.selection[-1].world_position
             # scene.editor.selection.clear()
 
 
@@ -164,10 +169,11 @@ class TransformGizmo(Entity):
                 self.entity_right_click_menu.position = mouse.position
 
         if key == 's':
-            self.start_mouse = mouse.x
-            self.entity_to_scale = scene.editor.selection[0]
-            print(self.entity_to_scale)
-            self.entity_original_scale = self.entity_to_scale.scale
+            if scene.editor.selection[0]:
+                self.start_mouse = mouse.x
+                self.entity_to_scale = scene.editor.selection[0]
+                print(self.entity_to_scale)
+                self.entity_original_scale = self.entity_to_scale.scale
         if key == 's up':
             # self.entity_to_sale
             self.entity_to_scale = None

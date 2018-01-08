@@ -10,6 +10,7 @@ class TransformField(Button):
         self.transform_type = 0
         self.axis = Vec3(1, 0, 0)
         self.target_entity = None
+        self.move_entity = None
 
 
     @property
