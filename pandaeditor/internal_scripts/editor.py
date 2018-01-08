@@ -20,6 +20,12 @@ class Editor(Entity):
         self.is_editor = True
         self.parent = scene.ui
 
+        raycaster.model = 'box'
+        raycaster.color = color.yellow
+        raycaster.position = (5,0,5)
+        # raycaster.parent = self
+        print(type(raycaster))
+
         scene.sky.texture = 'default_sky'
         self.trash = NodePath('trash')
         self.selection = list()

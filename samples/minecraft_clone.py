@@ -15,6 +15,8 @@ class MinecraftClone(Entity):
                     voxel.parent = self
                     voxel.position = (x, y, z)
 
+        scene.sky.texture = 'default_sky'
+
         player = FirstPersonController()
         player.parent = self
 
@@ -68,13 +70,19 @@ class FirstPersonController(Entity):
 
 
     def update(self, dt):
-        # print(self.left)
+        if held_keys['w'] or held_keys['a'] or held_keys['s'] or held_keys['d']:
+            self.moving = True
+
+        if held_keys['w']:
+            print(raycast(self.world_position, self.forward, .1))
+            # hit = (1 - raycast(self.world_position, self.forward, .1))
+            self.position += self.forward * held_keys['w'] * self.speed
         self.position += self.right * held_keys['d'] * self.speed
-        self.position += self.forward * held_keys['w'] * self.speed
+        # self.position += self.forward * held_keys['w'] * self.speed
         self.position += self.left * held_keys['a'] * self.speed
         self.position += self.back * held_keys['s'] * self.speed
-        self.position += self.down * held_keys['q'] * self.speed
-        self.position += self.up * held_keys['e'] * self.speed
+        # self.position += self.down * held_keys['q'] * self.speed
+        # self.position += self.up * held_keys['e'] * self.speed
 
         self.rotation_y += mouse.velocity[0] * 20
         camera.rotation_x -= mouse.velocity[1] * 20

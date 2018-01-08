@@ -11,13 +11,13 @@ class Collider(NodePath):
 
 
     def make_collider(self):
-        try:    # if model
+        if hasattr(self.entity, 'model') and self.entity.model != None:
             start, end = self.entity.model.getTightBounds()
             size = (end - start) / 2
             y = max(.01, size[1])
             z = max(.01, size[2])
             self.shape = CollisionBox((0,0,0), size[0], y, z)
-        except:
+        else:
             self.shape = CollisionBox((0,0,0), .01, .01, .01)
 
         self.node_path = self.entity.attachNewNode(CollisionNode('CollisionNode'))

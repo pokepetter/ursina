@@ -223,7 +223,7 @@ class Entity(NodePath):
 
 
         if name == 'collider':
-            if value is not None:
+            if value == 'box':
                 collider = Collider()
                 collider.entity = self
                 collider.make_collider()
@@ -242,13 +242,13 @@ class Entity(NodePath):
 
 
     @property
-    def global_position(self):
-        global_position = self.getPos(scene.render)
-        global_position = (global_position[0], global_position[2], global_position[1])
-        return global_position
+    def world_position(self):
+        world_position = self.getPos(scene.render)
+        world_position = (world_position[0], world_position[2], world_position[1])
+        return world_position
 
-    @global_position.setter
-    def global_position(self, value):
+    @world_position.setter
+    def world_position(self, value):
         self.original_parent = self.parent
         self.parent = scene.entity
         self.position = value
@@ -298,21 +298,21 @@ class Entity(NodePath):
 
     @property
     def forward(self):
-        vec =  self.parent.getRelativeVector(self, (0, 1, 0))
+        vec =  scene.render.getRelativeVector(self, (0, 1, 0))
         return Vec3(vec[0], vec[2], vec[1])
     @property
     def back(self):
         return -self.forward
     @property
     def right(self):
-        vec =  self.parent.getRelativeVector(self, (1, 0, 0))
+        vec =  scene.render.getRelativeVector(self, (1, 0, 0))
         return Vec3(vec[0], vec[2], vec[1])
     @property
     def left(self):
         return -self.right
     @property
     def up(self):
-        vec = self.parent.getRelativeVector(self, (0, 0, 1))
+        vec = scene.render.getRelativeVector(self, (0, 0, 1))
         return Vec3(vec[0], vec[2], vec[1])
     @property
     def down(self):

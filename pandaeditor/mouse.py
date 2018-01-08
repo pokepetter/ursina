@@ -111,7 +111,7 @@ class Mouse(object):
         if self.i < self.update_rate:
             return
 
-        if not self.enabled or not self.mouse_watcher.hasMouse():
+        if not self.enabled or not self.mouse_watcher.has_mouse():
             self.velocity = (0,0)
             return
 
@@ -119,7 +119,7 @@ class Mouse(object):
 
         if self.locked:
             self.velocity = (self.x, self.y)
-            application.base.win.movePointer(0, round(window.size[0] / 2), round(window.size[1] / 2))
+            application.base.win.move_pointer(0, round(window.size[0] / 2), round(window.size[1] / 2))
         elif hasattr(self, 'prev_x'):
             self.velocity = (self.x - self.prev_x, self.y - self.prev_y)
 
@@ -131,19 +131,19 @@ class Mouse(object):
         self.prev_y = self.y
 
         # collide with ui
-        self.pickerNP.reparentTo(scene.ui_camera)
-        self.pickerRay.setFromLens(camera.ui_lens_node, self.x, self.y)
+        self.pickerNP.reparent_to(scene.ui_camera)
+        self.pickerRay.set_from_lens(camera.ui_lens_node, self.x, self.y)
         self.picker.traverse(scene.ui)
-        if self.pq.getNumEntries() > 0:
+        if self.pq.get_num_entries() > 0:
             # print('collided with ui', self.pq.getNumEntries())
             self.find_collision()
             return
 
         # collide with world
-        self.pickerNP.reparentTo(camera)
-        self.pickerRay.setFromLens(scene.camera.lens_node, self.x, self.y)
+        self.pickerNP.reparent_to(camera)
+        self.pickerRay.set_from_lens(scene.camera.lens_node, self.x, self.y)
         self.picker.traverse(scene.render)
-        if self.pq.getNumEntries() > 0:
+        if self.pq.get_num_entries() > 0:
             # print('collided with world', self.pq.getNumEntries())
             self.find_collision()
             return
@@ -163,33 +163,33 @@ class Mouse(object):
     def normal(self):
         if not self.collision:
             return None
-        if not self.collision.hasSurfaceNormal():
+        if not self.collision.has_surface_normal():
             print('no surface normal')
             return None
-        n = self.collision.getSurfaceNormal(self.collision.getIntoNodePath().parent)
+        n = self.collision.get_surface_normal(self.collision.get_into_node_path().parent)
         return (n[0], n[2], n[1])
 
     @property
     def global_normal(self):
         if not self.collision:
             return None
-        if not self.collision.hasSurfaceNormal():
+        if not self.collision.has_surface_normal():
             print('no surface normal')
             return None
-        n = self.collision.getSurfaceNormal(scene.render)
+        n = self.collision.get_surface_normal(scene.render)
         return (n[0], n[2], n[1])
 
     @property
     def point(self):
-        return self.collision.getSurfacePoint()
+        return self.collision.get_surface_point()
 
 
     def find_collision(self):
         if not self.raycast:
             return
-        self.pq.sortEntries()
-        self.collision = self.pq.getEntry(0)
-        nP = self.collision.getIntoNodePath().parent
+        self.pq.sort_entries()
+        self.collision = self.pq.get_entry(0)
+        nP = self.collision.get_into_node_path().parent
         if nP.name.endswith('.egg'):
             nP = nP.parent
 

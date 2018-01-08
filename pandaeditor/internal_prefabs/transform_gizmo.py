@@ -128,7 +128,7 @@ class TransformGizmo(Entity):
                 else:
                     scene.editor.selection.clear()
 
-                self.position = scene.editor.selection[-1].global_position
+                self.position = scene.editor.selection[-1].world_position
                 self.start_positions = [e.position for e in scene.editor.selection]
                 self.original_parents = [e.parent for e in scene.editor.selection]
                 for e in scene.editor.selection:
@@ -147,7 +147,7 @@ class TransformGizmo(Entity):
                 # e.reparent_to(self.original_parent)
 
             self.move_entities(scene.editor.selection)
-            self.position = scene.editor.selection[-1].global_position
+            self.position = scene.editor.selection[-1].world_position
             # scene.editor.selection.clear()
 
 
@@ -180,7 +180,7 @@ class TransformGizmo(Entity):
                     self.button = EditorButton()
                     self.button.is_editor = True
                     self.button.parent = scene.render
-                    self.button.position = e.global_position
+                    self.button.position = e.world_position
                     # self.button.position *= 2
                     # self.button.scale *= .01
                     self.button.text = e.name

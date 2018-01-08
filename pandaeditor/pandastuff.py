@@ -33,6 +33,7 @@ from pandaeditor import mouse
 from pandaeditor import keys
 from pandaeditor.keys import held_keys
 from pandaeditor import camera
+from pandaeditor import raycaster
 from pandaeditor import debug
 from pandaeditor import color
 from pandaeditor import undo
@@ -41,14 +42,14 @@ undo.setstack(undo.Stack())
 
 from pandaeditor import main
 
-sys.path.append("..")
-# path = application.internal_prefab_folder
-# sys.path.insert(0, path)
-
 
 
 def distance(a, b):
     return math.sqrt(sum( (a - b)**2 for a, b in zip(a, b)))
+
+
+def raycast(origin, direction, distance, target=scene.entity):
+    return raycaster.raycast(origin, direction, distance, target)
 
 # def save_scene():
     # has_scene_entity = False
@@ -286,13 +287,6 @@ def destroy(entity):
         del entity
     except: pass
 
-
-def raycast(origin, direction, distance):
-    pFrom = Point3(origin[0], origin[1], origin[2])
-    pTo = Point3(origin[0], origin[1], origin[2]) + (direction * distance)
-    print('to', pTo)
-
-    result = scene.world.rayTestClosest(pFrom, pTo)
 
 
 import operator
