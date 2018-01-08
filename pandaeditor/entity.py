@@ -244,7 +244,7 @@ class Entity(NodePath):
     @property
     def world_position(self):
         world_position = self.getPos(scene.render)
-        world_position = (world_position[0], world_position[2], world_position[1])
+        world_position = Vec3(world_position[0], world_position[2], world_position[1])
         return world_position
 
     @world_position.setter
