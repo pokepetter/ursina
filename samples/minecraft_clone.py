@@ -58,6 +58,9 @@ class FirstPersonController(Entity):
         super().__init__()
         self.speed = .1
 
+        self.i = 0
+        self.update_interval = 30
+
         cursor = Panel()
         cursor.color = color.light_gray
         cursor.scale *= .008
@@ -76,11 +79,16 @@ class FirstPersonController(Entity):
 
 
     def update(self, dt):
+        if self.i < self.update_interval:
+            self.i += 1
+            return
+
         if held_keys['w'] or held_keys['a'] or held_keys['s'] or held_keys['d']:
             self.moving = True
 
         if raycast(self.world_position, self.forward * 1000, 1, scene.entity):
-            print('w')
+            # print('w')
+            pass
         if held_keys['w']:
             # hit = (1 - raycast(self.world_position, self.forward, .1))
             self.position += self.forward * held_keys['w'] * self.speed

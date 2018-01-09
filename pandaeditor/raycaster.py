@@ -6,6 +6,8 @@ from pandaeditor import scene
 from panda3d.core import CollisionTraverser, CollisionNode
 from panda3d.core import CollisionHandlerQueue, CollisionRay
 from panda3d.core import Vec3
+import math
+
 
 class Raycaster(Entity):
 
@@ -21,10 +23,11 @@ class Raycaster(Entity):
         self.picker.addCollider(self.pickerNP, self.pq)
 
 
+    def distance(self, a, b):
+        return math.sqrt(sum( (a - b)**2 for a, b in zip(a, b)))
 
 
-
-    def raycast(self, origin, direction, distance, traverse_target=scene.entity):
+    def raycast(self, origin, direction, dist, traverse_target=scene.entity):
         # for debug
         self.position = origin
         self.look_at(self.position + Vec3(direction[0], direction[2], direction[1]))
@@ -37,7 +40,7 @@ class Raycaster(Entity):
         self.color = color.yellow
         self.origin = (0, 0, -.5)
 
-        self.scale = (.1, .1, distance)
+        self.scale = (.1, .1, dist)
 
 
         if traverse_target is None:
@@ -50,9 +53,9 @@ class Raycaster(Entity):
             self.pq.sort_entries()
             self.collision = self.pq.get_entry(0)
             nP = self.collision.get_into_node_path().parent
-            point = self.collision.get_surface_point(scene.render)
-            dist = distance(self.collision_ray.get_origin(), point)
-            print(dist)
+            self.point = self.collision.get_surface_point(scene.render)
+            hit_dist = self.distance(self.collision_ray.get_origin(), self.point)
+            print(self.collision_ray.get_origin(), dist)
             if nP.name.endswith('.egg'):
                 nP = nP.parent
                 return nP
