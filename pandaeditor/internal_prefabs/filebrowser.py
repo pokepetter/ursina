@@ -41,41 +41,43 @@ class Filebrowser(Entity):
         for b in self.buttons:
             destroy(b)
 
+
         y = 0
         x = 0
-        for f in self.files:
-            if f.startswith('__'):
-                continue
+        if self.files:
+            for f in self.files:
+                if f.startswith('__'):
+                    continue
 
-            for file_type in self.file_types:
-                if f.endswith(file_type) or file_type == '':
-                    print('file:', f)
-                    button = EditorButton()
-                    button.is_editor = True
-                    button.parent = self
-                    button.origin = (-.5, .5)
-                    button.position = (
-                        x * (self.button_size[0] + .001),
-                        (-y * (self.button_size[1] + .001)))
-                    button.scale = self.button_size
-                    button.color = color.panda_button
-                    menu_toggler = button.add_script('menu_toggler')
-                    menu_toggler.target = self
-                    button.text = os.path.basename(f).split('.')[0]
-                    button.text_entity.position = (-.45, 0)
-                    button.text_entity.align = 'left'
-                    self.buttons.append(button)
-                    try:
-                        self.load_button = button.add_script(self.button_type)
-                        self.load_button.path = button.text
-                    except:
-                        print('no script:', self.button_type)
-                    # print('path', self.load_button.path)
+                for file_type in self.file_types:
+                    if f.endswith(file_type) or file_type == '':
+                        print('file:', f)
+                        button = EditorButton()
+                        button.is_editor = True
+                        button.parent = self
+                        button.origin = (-.5, .5)
+                        button.position = (
+                            x * (self.button_size[0] + .001),
+                            (-y * (self.button_size[1] + .001)))
+                        button.scale = self.button_size
+                        button.color = color.panda_button
+                        menu_toggler = button.add_script('menu_toggler')
+                        menu_toggler.target = self
+                        button.text = os.path.basename(f).split('.')[0]
+                        button.text_entity.position = (-.45, 0)
+                        button.text_entity.align = 'left'
+                        self.buttons.append(button)
+                        try:
+                            self.load_button = button.add_script(self.button_type)
+                            self.load_button.path = button.text
+                        except:
+                            print('no script:', self.button_type)
+                        # print('path', self.load_button.path)
 
-                    y += 1
-                    if y > self.max_vertical:
-                        y = 0
-                        x += 1
+                        y += 1
+                        if y > self.max_vertical:
+                            y = 0
+                            x += 1
 
         # special case for script browser, add 'new script' button
         if self.button_type == 'add_script_button':
@@ -124,13 +126,14 @@ class Filebrowser(Entity):
         # print('filebrowser enable:', (self.path))
         self.x = 0
         self.old_files = self.files
-        print('files in path:', self.path)
-        self.files = os.listdir(self.path)
-        if self.files is not self.old_files:
-            self.populate()
-        else:
-            for b in self.buttons:
-                b.enabled = True
+        try:
+            self.files = os.listdir(self.path)
+            print('file count:', len(self.files))
+        except:
+            print('0 files in directory')
+            print(self.file_types, self.button_type)
+
+        self.populate()
 
 
     def on_disable(self):
@@ -142,6 +145,4 @@ if __name__ == '__main__':
     test.path = application.internal_texture_folder
     test.file_types = (('.jpg'))
     test.button_type = 'load_sprite_button'
-    # test.enabled = False
-    # test.enabled = True
     app.run()

@@ -1,5 +1,3 @@
-import sys
-sys.path.append("..")
 from pandaeditor import *
 
 class SaveSceneButton():
@@ -16,4 +14,5 @@ class SaveSceneButton():
                 self.ask_for_scene_name_menu.input_field.editing = True
             else:
                 save_prefab(scene.entity, 'scenes')
+                scene.has_changes = False
                 print('saved scene:', 'scenes', scene_entity.name)

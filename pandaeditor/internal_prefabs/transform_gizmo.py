@@ -162,13 +162,8 @@ class TransformGizmo(Entity):
         if key == 'left shift up':
             self.add_to_selection = False
 
-        if key == 'right mouse down':
-            if mouse.hovered_entity:
-                self.entity_right_click_menu.target = mouse.hovered_entity
-                self.entity_right_click_menu.enabled = True
-                self.entity_right_click_menu.position = mouse.position
 
-        if key == 's':
+        if key == 's' and not held_keys['control']:
             if scene.editor.selection[0]:
                 self.start_mouse = mouse.x
                 self.entity_to_scale = scene.editor.selection[0]

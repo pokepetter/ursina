@@ -26,6 +26,8 @@ class Editor(Entity):
         # raycaster.parent = self
         print(type(raycaster))
 
+        test = load_prefab('button')
+
         scene.sky.texture = 'default_sky'
         self.trash = NodePath('trash')
         self.selection = list()

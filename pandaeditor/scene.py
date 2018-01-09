@@ -24,6 +24,8 @@ class Scene(NodePath):
         self.entities = []
         self.entity = None # scene parent
 
+        self.has_changes = False
+
 
     def set_up(self):
         from pandaeditor.entity import Entity

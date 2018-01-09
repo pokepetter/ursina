@@ -7,7 +7,7 @@ class ProjectBrowser(Entity):
         super().__init__()
         self.name = 'project_browser'
 
-        window.size = (1920 * .6, 1080 * .6)
+        # window.size = (1920 * .6, 1080 * .6)
         # window.name = self.name
         # window.color = color.color(0, 0, .9)
         # color.text_color = color.color(0, 0, .1)

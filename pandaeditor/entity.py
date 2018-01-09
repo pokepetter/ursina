@@ -28,6 +28,7 @@ class Entity(NodePath):
         self.is_editor = False
         self.name = name
         self.parent = scene.entity
+        scene.has_changes = True
         self.model = None
         self.color = color.white
         self.texture = None

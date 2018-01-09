@@ -182,7 +182,10 @@ def vec3_to_string(vec3):
 
 def load_prefab(module_name, add_to_caller=False):
     paths = (application.internal_prefab_folder, application.prefab_folder)
-    prefab = load(paths, module_name)
+    try:
+        prefab = load(paths, module_name)
+    except:
+        print('MISSING PREFAB:', module_name)
     # if hasattr(caller, 'name') and caller.name == 'editor':
     #     prefab.is_editor = True
     if add_to_caller:
@@ -229,7 +232,7 @@ def load_scene(module_name):
     print("couldn't find scene:", module_name)
 
 def load_script(module_name):
-    paths = ('internal_scripts.', '..scripts.')
+    paths = (application.internal_script_folder, application.script_folder)
     return load(paths, module_name)
 
 
@@ -242,32 +245,42 @@ def load(paths, module_name):
 
     # find the module
     module = None
-    for f in paths:
+    module_name += '.py'
+    import importlib.util
+
+    for p in paths:
         # print('mod:', f + module_name)
-        try:
-            module = importlib.import_module(f + module_name)
-            break
-        except:
-            pass
+        # try:
+        if module_name in os.listdir(p):
+            print('yay')
+            spec = importlib.util.spec_from_file_location(module_name, p + module_name)
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            # c = foo.MyClass()
+            # print('--------------------------', c)
+        # module = importlib.import_module(f + module_name)
+        # break
+        # except:
+        #     pass
 
-    if not module:
-        print(module_name, 'not found')
-        return
-    # else:
-    #     print('class:', inspect.getmembers(sys.modules[module.__name__], inspect.isclass)[0])
+    # if not module:
+    #     print('MODULE NOT FOUND', module_name)
+    #     return None
+    # # else:
+    # #     print('class:', inspect.getmembers(sys.modules[module.__name__], inspect.isclass)[0])
+    #
+            # load its class
+            class_names = inspect.getmembers(sys.modules[module.__name__], inspect.isclass)
+            for cn in class_names:
+                if cn[1].__module__ == module.__name__:
+                    class_name = cn[0]
+                    break
 
-    # load its class
-    class_names = inspect.getmembers(sys.modules[module.__name__], inspect.isclass)
-    for cn in class_names:
-        if cn[1].__module__ == module.__name__:
-            class_name = cn[0]
-            break
+            class_ = getattr(module, class_name)
+            class_instance = class_()
 
-    class_ = getattr(module, class_name)
-    class_instance = class_()
-
-    # print('added script:', class_instance)
-    return class_instance
+            # print('added script:', class_instance)
+            return class_instance
 
 
 def destroy(entity):
