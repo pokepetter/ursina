@@ -245,32 +245,18 @@ def load(paths, module_name):
 
     # find the module
     module = None
-    module_name += '.py'
+    # module_name += '.py'
     import importlib.util
 
     for p in paths:
         # print('mod:', f + module_name)
         # try:
-        if module_name in os.listdir(p):
-            print('yay')
-            spec = importlib.util.spec_from_file_location(module_name, p + module_name)
+        if module_name + '.py' in os.listdir(p):
+            spec = importlib.util.spec_from_file_location(module_name, p + module_name + '.py')
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
-            # c = foo.MyClass()
-            # print('--------------------------', c)
-        # module = importlib.import_module(f + module_name)
-        # break
-        # except:
-        #     pass
-
-    # if not module:
-    #     print('MODULE NOT FOUND', module_name)
-    #     return None
-    # # else:
-    # #     print('class:', inspect.getmembers(sys.modules[module.__name__], inspect.isclass)[0])
-    #
             # load its class
-            class_names = inspect.getmembers(sys.modules[module.__name__], inspect.isclass)
+            class_names = inspect.getmembers(module, inspect.isclass)
             for cn in class_names:
                 if cn[1].__module__ == module.__name__:
                     class_name = cn[0]
@@ -279,7 +265,7 @@ def load(paths, module_name):
             class_ = getattr(module, class_name)
             class_instance = class_()
 
-            # print('added script:', class_instance)
+            print('added script:', class_instance)
             return class_instance
 
 

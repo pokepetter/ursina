@@ -35,7 +35,7 @@ class AskForSceneNameMenu(Entity):
         self.close_button.position = (0, 0, 10)
         self.close_button.scale *= 100
         self.close_button.color = color.black33
-        self.close_button.button_script._highlight_color = color.black33
+        self.close_button.highlight_color = color.black33
         menu_toggler = self.close_button.add_script('menu_toggler')
         menu_toggler.target = self
 
@@ -51,3 +51,7 @@ class AskForSceneNameMenu(Entity):
                 print('saved scene:', 'scenes', scene_entity.name)
 
 # class Save():
+if __name__ == '__main__':
+    app = PandaEditor()
+    test = AskForSceneNameMenu()
+    app.run()

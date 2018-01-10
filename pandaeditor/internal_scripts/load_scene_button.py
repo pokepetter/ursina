@@ -10,23 +10,9 @@ class LoadSceneButton():
             if self.path:
                 self.load_scene()
 
-    @undoable
-    def load_model(self):
-        original_scene_name = scene.entity.name
+    def load_scene(self):
         scene_name = os.path.basename(self.path).split('.')[0]
         load_scene(scene_name)
-        scene.editor.entity_list.populate()
-
-        for e in scene.entities:
-            try:
-                e.editor_collider = 'box'
-                e.collider.stash()
-            except:
-                print('couldnt add editor collider to:', e)
-
-        # undo
-        yield 'load scene'
-        load_scene(original_scene_name)
         scene.editor.entity_list.populate()
 
         for e in scene.entities:

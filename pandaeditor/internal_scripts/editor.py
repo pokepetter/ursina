@@ -26,8 +26,6 @@ class Editor(Entity):
         # raycaster.parent = self
         print(type(raycaster))
 
-        test = load_prefab('button')
-
         scene.sky.texture = 'default_sky'
         self.trash = NodePath('trash')
         self.selection = list()
@@ -97,17 +95,21 @@ class Editor(Entity):
         self.layout_group.max_x = 1
         self.layout_group.spacing = (0, .001)
 
-        button_names = ('scenes', 'prefabs', 'models', 'primitives', 'sprites')
+        button_names = ('internal\nscenes', 'scenes', 'internal\nprefabs', 'prefabs', 'models', 'primitives', 'sprites')
         button_paths = (
+            application.internal_scene_folder,
             application.scene_folder,
+            application.internal_prefab_folder,
             application.prefab_folder,
             application.model_folder,
             application.internal_model_folder,
             application.compressed_texture_folder
             )
-        file_types = (('.py'), ('.py'), ('.egg'), ('.egg'), ('.png', '.jpg', '.gif'))
+        file_types = (('.py'), ('.py'), ('.py'), ('.py'), ('.egg'), ('.egg'), ('.png', '.jpg', '.gif'))
         button_types = (
             'load_scene_button',
+            'load_scene_button',
+            'load_prefab_button',
             'load_prefab_button',
             'load_model_button',
             'load_model_button',
