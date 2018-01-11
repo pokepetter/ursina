@@ -13,7 +13,7 @@ class LoadSceneButton():
     def load_scene(self):
         scene_name = os.path.basename(self.path).split('.')[0]
         load_scene(scene_name)
-        scene.editor.entity_list.populate()
+        scene.editor.hierarchy_panel.populate()
 
         for e in scene.entities:
             try:

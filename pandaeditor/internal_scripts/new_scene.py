@@ -25,7 +25,7 @@ class NewScene():
             destroy(scene.entity)
             scene.entity = Entity()
             scene.entity.name = 'untitled_scene'
-            scene.editor.entity_list_header.text = scene.entity.name
+            scene.editor.hierarchy_panel_header.text = scene.entity.name
 
             # save_prefab
 

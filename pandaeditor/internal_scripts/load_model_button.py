@@ -22,9 +22,9 @@ class LoadModelButton():
         entity.collision = True
         entity.editor_collider = 'box'
         button_script = entity.add_script('editor_draggable')
-        scene.editor.entity_list.populate()
+        scene.editor.hierarchy_panel.populate()
 
         # undo
         yield 'Load Model ' + entity.name
         destroy(entity)
-        scene.editor.entity_list.populate()
+        scene.editor.hierarchy_panel.populate()

@@ -5,7 +5,7 @@ from types import MethodType
 
 from pandaeditor import *
 from pandaeditor.internal_prefabs.transform_gizmo import TransformGizmo
-from pandaeditor.internal_prefabs.entity_list import EntityList
+from pandaeditor.internal_prefabs.hierarchy_panel import HierarchyPanel
 from pandaeditor.internal_prefabs.inspector import Inspector
 from pandaeditor.internal_scripts.editor_camera import EditorCamera
 
@@ -141,25 +141,25 @@ class Editor(Entity):
 
 
 # entity list
-        self.entity_list = EntityList()
-        self.entity_list.parent = self
-        self.entity_list.populate()
+        self.hierarchy_panel = HierarchyPanel()
+        self.hierarchy_panel.parent = self
+        self.hierarchy_panel.populate()
 
-        self.entity_list_header = EditorButton()
-        self.entity_list_header.parent = self
-        self.entity_list_header.z = -2
-        self.entity_list_header.color = (color.lime + color.black) / 2
-        self.entity_list_header.position = window.top_left
-        self.entity_list_header.origin = (-.5, .5)
-        self.entity_list_header.scale = (.25, .025)
-        self.entity_list_header.text = scene.entity.name
-        self.entity_list_header.text_entity.align = 'left'
-        self.entity_list_header.text_entity.x = -.45
-        self.entity_list_header.add_script('menu_toggler')
-        self.entity_list_header.menu_toggler.target = self.entity_list
+        self.hierarchy_panel_header = EditorButton()
+        self.hierarchy_panel_header.parent = self
+        self.hierarchy_panel_header.z = -2
+        self.hierarchy_panel_header.color = (color.lime + color.black) / 2
+        self.hierarchy_panel_header.position = window.top_left
+        self.hierarchy_panel_header.origin = (-.5, .5)
+        self.hierarchy_panel_header.scale = (.25, .025)
+        self.hierarchy_panel_header.text = scene.entity.name
+        self.hierarchy_panel_header.text_entity.align = 'left'
+        self.hierarchy_panel_header.text_entity.x = -.45
+        self.hierarchy_panel_header.add_script('menu_toggler')
+        self.hierarchy_panel_header.menu_toggler.target = self.hierarchy_panel
 
         self.save_scene_button = EditorButton()
-        self.save_scene_button.parent = self.entity_list_header
+        self.save_scene_button.parent = self.hierarchy_panel_header
         self.save_scene_button.color = color.green
         self.save_scene_button.text = 's'
         self.save_scene_button.origin = (0.5, 0)

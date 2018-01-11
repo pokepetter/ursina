@@ -68,7 +68,7 @@ class TransformGizmo(Entity):
             e.parent = None
             print('m')
 
-        scene.editor.entity_list.populate()
+        scene.editor.hierarchy_panel.populate()
         print(self.trash_list)
 
         yield 'delete selected'
@@ -82,7 +82,7 @@ class TransformGizmo(Entity):
         del self.trash_list[-1]
         print('trash list is now:', self.trash_list)
 
-        scene.editor.entity_list.populate()
+        scene.editor.hierarchy_panel.populate()
 
 
     def update(self, dt):

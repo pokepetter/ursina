@@ -22,7 +22,7 @@ class SelectionButton():
             # if not left_shift:
             scene.editor.selection.clear()
 
-            for b in scene.editor.entity_list.buttons:
+            for b in scene.editor.hierarchy_panel.buttons:
                 b.color = color.panda_button
 
             self.entity.color = color.blue
@@ -38,7 +38,7 @@ class SelectionButton():
             if self.dragging and mouse.hovered_entity is not self.entity and mouse.hovered_entity.selection_button:
                 print('reparent to:', mouse.hovered_entity.selection_button.selection_target.name)
                 self.selection_target.reparent_to(mouse.hovered_entity.selection_button.selection_target)
-                scene.editor.entity_list.populate()
+                scene.editor.hierarchy_panel.populate()
             self.dragging = False
 
     # def update(self, dt):

@@ -25,7 +25,7 @@ class LoadSpriteButton():
         button_script = entity.add_script('editor_draggable')
         entity.collision = True
         entity.collider = 'box'
-        scene.editor.entity_list.populate()
+        scene.editor.hierarchy_panel.populate()
 
         self.auto_created_canvas = True
         if not scene.canvas:
@@ -33,11 +33,11 @@ class LoadSpriteButton():
             self.auto_created_canvas = True
 
         entity.parent = scene.canvas
-        scene.editor.entity_list.populate()
+        scene.editor.hierarchy_panel.populate()
 
         # undo
         yield 'Load Sprite ' + entity.name
         destroy(entity)
         if self.auto_created_canvas:
             destroy(scene.canvas)
-        scene.editor.entity_list.populate()
+        scene.editor.hierarchy_panel.populate()

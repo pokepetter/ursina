@@ -18,4 +18,4 @@ class LoadPrefabButton():
             except Exception e:
                 print(e)
 
-            scene.editor.entity_list.populate()
+            scene.editor.hierarchy_panel.populate()

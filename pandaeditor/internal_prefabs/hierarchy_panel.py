@@ -7,11 +7,11 @@ from collections import defaultdict
 from itertools import chain
 import time
 
-class EntityList(Entity):
+class HierarchyPanel(Entity):
 
     def __init__(self):
         super().__init__()
-        self.name = 'entity_list'
+        self.name = 'hierarchy_panel'
         self.parent = scene.ui
         self.is_editor = True
         # self.model = 'quad'
@@ -36,7 +36,7 @@ class EntityList(Entity):
         self.bg.parent = self
         self.bg.origin = (-.5, .5)
 
-        self.temp_entity_list = list()
+        self.temp_hierarchy_panel = list()
         self.buttons = list()
         self.bg.add_script('scrollable')
         self.bg.scrollable.target = self.button_parent
