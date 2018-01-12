@@ -35,6 +35,7 @@ class PandaEditor(ShowBase):
         #     strength=0.05,
         #     falloff=0.000002
         # )
+        raycaster.set_up()
         window.make_exit_button()
 
         # input

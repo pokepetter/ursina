@@ -3,6 +3,7 @@ import sys
 from pandaeditor import *
 from pandaeditor.entity import Entity
 from pandaeditor import scene
+# from pandaeditor import render
 from panda3d.core import CollisionTraverser, CollisionNode
 from panda3d.core import CollisionHandlerQueue, CollisionRay
 from panda3d.core import Vec3
@@ -13,7 +14,6 @@ class Raycaster(Entity):
 
     def __init__(self):
         super().__init__()
-        # self.parent = camera.render
         self.picker = CollisionTraverser()  # Make a traverser
         self.pq = CollisionHandlerQueue()  # Make a handler
         self.pickerNode = CollisionNode('raycaster')
@@ -22,26 +22,30 @@ class Raycaster(Entity):
         self.pickerNode.addSolid(self.collision_ray)
         self.picker.addCollider(self.pickerNP, self.pq)
 
+    def set_up(self):
+        # make debug models
+        self.debug_model = Entity('raycaster_debug_model')
+        self.debug_model.parent = render
+        self.debug_model.model = 'cube'
+        self.debug_model.color = color.yellow
+        self.debug_model.origin = (0, 0, -.5)
+
 
     def distance(self, a, b):
         return math.sqrt(sum( (a - b)**2 for a, b in zip(a, b)))
 
 
-    def raycast(self, origin, direction, dist, traverse_target=scene.entity):
+    def raycast(self, origin, direction, dist, traverse_target=scene.entity, debug=False):
         # for debug
         self.position = origin
-        self.look_at(self.position + Vec3(direction[0], direction[2], direction[1]))
+        self.look_at(self.position + direction)
 
         self.collision_ray.set_origin(Vec3(self.position[0], self.position[2], self.position[1]))
         self.collision_ray.set_direction(Vec3(self.forward[0], self.forward[2], self.forward[1]))
 
-        self.parent = render
-        self.model = 'cube'
-        self.color = color.yellow
-        self.origin = (0, 0, -.5)
-
-        self.scale = (.1, .1, dist)
-
+        self.debug_model.enabled = debug
+        if debug:
+            self.debug_model.scale = (.1, .1, dist)
 
         if traverse_target is None:
             print('traverse_target is None')
@@ -58,8 +62,9 @@ class Raycaster(Entity):
             print(self.collision_ray.get_origin(), dist)
             if nP.name.endswith('.egg'):
                 nP = nP.parent
-                return nP
+                return True, nP
         else:
+            self.point = None
             return False
 
 
@@ -72,17 +77,12 @@ class RaycasterTest(Entity):
 
     def input(self, key):
         if key == 'r':
-            print('r')
-            raycast((0,0,0), (0,0,1), 5, render)
+            if raycast((0,0,-2), (0,0,1), 5, render, debug=True):
+                print('hit', raycaster.point)
+
 
 if __name__ == '__main__':
     app = PandaEditor()
-
-    # raycaster.parent = render
-    # raycaster.model = 'cube'
-    # raycaster.color = color.yellow
-    # raycaster.origin = (0, 0, -.5)
-    # raycaster.scale *= .1
 
     d = Entity()
     d.model = 'cube'

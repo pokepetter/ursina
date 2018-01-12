@@ -392,9 +392,10 @@ class Entity(NodePath):
 
 
     def look_at(self, target):
+        if type(target) is Vec3:
+            super().look_at(Vec3(target[0], target[2], target[1]))
+            return
         super().look_at(target)
-        # self.setH(self.getH()-180)
-        # self.setP(self.getP() * -1)
 
 
     def get_scripts_of_type(self, type):
