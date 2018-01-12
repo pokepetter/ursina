@@ -8,8 +8,7 @@ class PandaEditor(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
 
-        scene.reparentTo(self.render)
-        scene.render = self.render
+        render = base.render
         application.base = base
 
         window.load_defaults()
@@ -22,7 +21,7 @@ class PandaEditor(ShowBase):
         camera.aspect_ratio = window.size[0] / window.size[1]
         camera.position = (0, 0, -20)
         scene.camera = camera
-        camera.reparent_to(scene)
+        camera.reparent_to(base.render)
         camera.set_up()
         render.set_antialias(AntialiasAttrib.MAuto)
         # reapply screen effect to make it work in new resolution

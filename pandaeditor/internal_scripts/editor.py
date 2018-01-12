@@ -36,14 +36,14 @@ class Editor(Entity):
         self.transform_gizmo = TransformGizmo()
         self.transform_gizmo.name = 'transform_gizmo'
         self.transform_gizmo.is_editor = True
-        self.transform_gizmo.parent = scene.render
+        self.transform_gizmo.parent = render
 
 
         self.grid = Entity()
         self.grid.model = 'cube'
         self.grid.is_editor = True
         self.grid.name = 'grid_x'
-        self.grid.parent = scene.render
+        self.grid.parent = render
         self.grid.position = (0, 0, 0)
         self.grid.scale = (10, 0, .02)
         self.grid.color = color.orange
@@ -52,7 +52,7 @@ class Editor(Entity):
         self.grid.model = 'cube'
         self.grid.is_editor = True
         self.grid.name = 'grid_z'
-        self.grid.parent = scene.render
+        self.grid.parent = render
         self.grid.position = (0, 0, 0)
         self.grid.rotation = (0, 90, 0)
         self.grid.scale = (10, 0, .02)
@@ -244,6 +244,11 @@ class Editor(Entity):
                 s.update(dt)
 
     def input(self, key):
+        if key == 'l':
+            for e in scene.entities:
+                if e.has_ancestor(scene.entity):
+                    print(e.name)
+
         if key == 'tab':
             self.enabled = not self.enabled
             if self.enabled:
@@ -273,7 +278,7 @@ class Editor(Entity):
             print('p')
             e = load_scene('cube_1')
             # e = load_script('cube_1')
-            e.parent = scene.render
+            e.parent = render
             print('loaded')
 
         if key == 'h':
@@ -294,7 +299,7 @@ class Editor(Entity):
         self.grid.enabled = False
         # disable editor
         self.editor_camera_script.position = camera.position
-        camera.wrtReparentTo(scene.render)
+        camera.wrtReparentTo(render)
         for e in scene.entities:
             if e.is_editor:
                 continue

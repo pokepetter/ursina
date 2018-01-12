@@ -30,7 +30,7 @@ class Button(Entity):
         if type(value) is str:
             if not self.text_entity:
                 self.text_entity = Text()
-                self.text_entity.parent = scene.render
+                self.text_entity.parent = render
                 self.text_entity.is_editor = self.is_editor
                 self.text_entity.wrtReparentTo(self.model)
                 self.text_entity.position = (0, 0, 0)

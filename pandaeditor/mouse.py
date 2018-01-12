@@ -142,7 +142,7 @@ class Mouse(object):
         # collide with world
         self.pickerNP.reparent_to(camera)
         self.pickerRay.set_from_lens(scene.camera.lens_node, self.x, self.y)
-        self.picker.traverse(scene.render)
+        self.picker.traverse(render)
         if self.pq.get_num_entries() > 0:
             # print('collided with world', self.pq.getNumEntries())
             self.find_collision()
@@ -176,7 +176,7 @@ class Mouse(object):
         if not self.collision.has_surface_normal():
             print('no surface normal')
             return None
-        n = self.collision.get_surface_normal(scene.render)
+        n = self.collision.get_surface_normal(render)
         return (n[0], n[2], n[1])
 
     @property

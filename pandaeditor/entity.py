@@ -244,7 +244,7 @@ class Entity(NodePath):
 
     @property
     def world_position(self):
-        world_position = self.getPos(scene.render)
+        world_position = self.getPos(render)
         world_position = Vec3(world_position[0], world_position[2], world_position[1])
         return world_position
 
@@ -299,21 +299,21 @@ class Entity(NodePath):
 
     @property
     def forward(self):
-        vec =  scene.render.getRelativeVector(self, (0, 1, 0))
+        vec =  render.getRelativeVector(self, (0, 1, 0))
         return Vec3(vec[0], vec[2], vec[1])
     @property
     def back(self):
         return -self.forward
     @property
     def right(self):
-        vec =  scene.render.getRelativeVector(self, (1, 0, 0))
+        vec =  render.getRelativeVector(self, (1, 0, 0))
         return Vec3(vec[0], vec[2], vec[1])
     @property
     def left(self):
         return -self.right
     @property
     def up(self):
-        vec = scene.render.getRelativeVector(self, (0, 0, 1))
+        vec = render.getRelativeVector(self, (0, 0, 1))
         return Vec3(vec[0], vec[2], vec[1])
     @property
     def down(self):

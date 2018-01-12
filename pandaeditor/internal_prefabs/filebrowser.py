@@ -110,6 +110,7 @@ class Filebrowser(Entity):
             menu_toggler = button.add_script('menu_toggler')
             menu_toggler.target = self
             button.text = '[new scene]'
+            button.text_entity.align = 'left'
             button.text_entity.position = (-.45, 0)
             button.text_entity.origin = (-.5, 0)
             self.buttons.append(button)

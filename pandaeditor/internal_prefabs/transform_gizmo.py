@@ -180,7 +180,7 @@ class TransformGizmo(Entity):
                 if not e.is_editor and e is not camera and e is not scene.ui:
                     self.button = EditorButton()
                     self.button.is_editor = True
-                    self.button.parent = scene.render
+                    self.button.parent = render
                     self.button.position = e.world_position
                     # self.button.position *= 2
                     # self.button.scale *= .01

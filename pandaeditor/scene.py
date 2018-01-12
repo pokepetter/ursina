@@ -4,10 +4,9 @@ from pandaeditor import color
 # from pandaeditor.entity import Entity
 
 
-class Scene(NodePath):
+class Scene():
 
     def __init__(self):
-        super().__init__('')
         self.render = None
         self.world = None
 
@@ -16,7 +15,6 @@ class Scene(NodePath):
         self.canvas = None
         self.ui = None
 
-        self.editor_camera_script = None
         self.editor = None
         self.editor_size = 1
         self.editor_font_size = 1
@@ -27,13 +25,16 @@ class Scene(NodePath):
         self.has_changes = False
 
 
+
+
     def set_up(self):
         from pandaeditor.entity import Entity
         self.entity = Entity()
-        self.entity.parent = self
+        self.entity.parent = render
         self.entity.name = 'untitled_scene'
 
         self.sky = Entity('sky')
+        self.sky.parent = self.entity
         self.sky.scale *= 9999
         self.sky.model = 'sky_dome'
         self.sky.color = color.gray

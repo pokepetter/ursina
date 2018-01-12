@@ -8,7 +8,7 @@ class EditorCamera(object):
 
         self.camera_pivot = Entity()
         self.camera_pivot.name = 'camera_pivot'
-        self.camera_pivot.parent = scene.editor
+        self.camera_pivot.parent = render
         self.camera_pivot.is_editor = True
 
         self.rotation_speed = .2

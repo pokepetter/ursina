@@ -51,7 +51,7 @@ def distance(a, b):
 # def save_scene():
     # has_scene_entity = False
     # for e in scene.entities:
-    #     if e.name.startswith('scene') and e.parent == scene.render:
+    #     if e.name.startswith('scene') and e.parent == render:
     #         scene_entity = e
     #         has_scene_entity = True
     #         break
@@ -60,7 +60,7 @@ def distance(a, b):
     #     scene_entity.name = name
     #
     # for e in scene.entities:
-    #     if not e.is_editor and e.parent == scene.render and e is not scene_entity:
+    #     if not e.is_editor and e.parent == render and e is not scene_entity:
     #         print(e)
     #         e.parent = parent_entity
 

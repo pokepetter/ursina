@@ -74,7 +74,7 @@ class HierarchyPanel(Entity):
         # button.text = name
         button.text_entity.align = 'left'
         button.text_entity.x = -.5
-        # button.text_entity.wordwrap = button.model.getScale(scene.render)[0] * 4
+        # button.text_entity.wordwrap = button.model.getScale(render)[0] * 4
 
         selection_button = button.add_script('selection_button')
         selection_button.selection_target = entity

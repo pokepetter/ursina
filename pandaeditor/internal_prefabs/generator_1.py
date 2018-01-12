@@ -8,7 +8,7 @@ class Generator_1(Entity):
     def __init__(self):
         super().__init__()
         # self.position_noise = .3
-        self.parent = scene.render
+        self.parent = render
         self.name = 'yolo'
         print('--------fffffff------')
 
@@ -39,7 +39,7 @@ class Generator_1(Entity):
                     self.cube = Entity()
                     self.cube.enabled = False
                     self.cube.model = 'cube'
-                    # self.cube.parent = scene.render
+                    # self.cube.parent = render
                     # self.cube.color = color.color(x * 30, 1, (z + 1) / 10)
                     self.cube.color = color.color(90, .75, .5 + (y / 16) + random.uniform(0, .1))
                     self.cube.position = (x, y, z)
@@ -52,7 +52,7 @@ class Generator_1(Entity):
             c.enabled = True
             await asyncio.sleep(0.5)
 
-                    # placeholder = scene.render.attachNewNode('placeholder')
+                    # placeholder = render.attachNewNode('placeholder')
                     # placeholder.setPos(x, z, y)
                     # block.instanceTo(placeholder)
 
