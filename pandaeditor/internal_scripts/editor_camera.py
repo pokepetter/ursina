@@ -63,7 +63,7 @@ class EditorCamera(object):
 
 if __name__ == '__main__':
     app = main.PandaEditor()
-    scene.sky.texture = 'default_sky'
+    scene.entity.sky = load_prefab('sky')
     e = Entity()
     e.add_script('editor_camera')
     app.run()

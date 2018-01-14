@@ -4,7 +4,7 @@ from pandaeditor import color
 # from pandaeditor.entity import Entity
 
 
-class Scene():
+class Scene(NodePath):
 
     def __init__(self):
         self.render = None
@@ -20,7 +20,7 @@ class Scene():
         self.editor_font_size = 1
 
         self.entities = []
-        # self.entity = None # scene parent
+        self.entity = None # scene parent
 
         self.has_changes = False
 
@@ -33,13 +33,13 @@ class Scene():
 
 
     def new(self, discard_changes=False):
-        # if self.entity:
-        #     destroy(self.entity)
+        if self.entity:
+            destroy(self.entity)
 
         from pandaeditor.entity import Entity
-        # self.entity = Entity()
-        # self.entity.parent = render
-        # self.entity.name = 'untitled_scene'
+        self.entity = Entity()
+        self.entity.parent = render
+        self.entity.name = 'untitled_scene'
 
         self.sky = Entity('sky')
         self.sky.parent = render
@@ -59,8 +59,8 @@ class Scene():
         #
         # if self.entity:
         #     destroy(self.entity)
-        # scene.entity = Entity()
-        # scene.entity.name = 'untitled_scene'
+        # base.scene = Entity()
+        # base.scene.name = 'untitled_scene'
         if self.editor:
             self.editor.hierarchy_panel_header.text = self.entity.name
 

@@ -16,7 +16,7 @@ class MinecraftClone(Entity):
                     voxel.parent = self
                     voxel.position = (x, y, z)
 
-        scene.sky.texture = 'default_sky'
+        sky = load_prefab('sky')
 
         player = FirstPersonController()
         player.parent = self
@@ -86,11 +86,11 @@ class FirstPersonController(Entity):
         if held_keys['w'] or held_keys['a'] or held_keys['s'] or held_keys['d']:
             self.moving = True
 
-        if raycast(self.world_position, self.forward * 1000, 1, scene.entity):
+        if raycast(self.world_position, self.forward * 1000, 1, base.scene):
             print('w')
             pass
         if held_keys['w']:
-            # print(scene.entity)
+            # print(base.scene)
             hit = (1 - raycast(self.world_position, self.forward, .1))
             self.position += self.forward * held_keys['w'] * self.speed
         self.position += self.right * held_keys['d'] * self.speed
@@ -106,8 +106,9 @@ class FirstPersonController(Entity):
 
 if __name__ == '__main__':
     app = main.PandaEditor()
-    # destroy(scene.entity)
-    load_scene(MinecraftClone)
-    scene.entity.name = 'minecraft_clone_scene'
-    print('-----------', scene.entity)
+    # destroy(base.scene)
+    app.scene = MinecraftClone()
+    # load_scene(MinecraftClone)
+    # base.scene.name = 'minecraft_clone_scene'
+    print('-----------', base.scene)
     app.run()

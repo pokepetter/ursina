@@ -11,8 +11,6 @@ class TextEditor(Entity):
         # self.text.position = (-.4 * 1.7, .4)
         # self.text.scale
         # self.text.text = 'efefefefkejljwglij'
-        # scene.sky.texture = None
-        # scene.sky.color = color.gray
         self.t = InputField()
 
         # self.t = Text()

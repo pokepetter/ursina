@@ -25,8 +25,6 @@ class Editor(Entity):
         raycaster.position = (5,0,5)
         # raycaster.parent = self
         print(type(raycaster))
-
-        scene.sky.texture = 'default_sky'
         self.trash = NodePath('trash')
         self.selection = list()
 
@@ -235,7 +233,6 @@ class Editor(Entity):
 
         # self.compress_textures()
         # self.compress_models()
-        scene.sky.color = color.gray
 
 
     def update(self, dt):

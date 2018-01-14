@@ -182,6 +182,7 @@ def vec3_to_string(vec3):
 
 def load_prefab(module_name, add_to_caller=False):
     paths = (application.internal_prefab_folder, application.prefab_folder)
+    prefab = None
     try:
         prefab = load(paths, module_name)
     except:
@@ -202,7 +203,6 @@ def load_scene(module_name):
     destroy(scene.entity)
     scene.entity = load(paths, module_name)
     print('found scene:', module_name, 'scene.entity:', scene.entity)
-    print('SKY:', scene.sky)
     return scene.entity
 
 
