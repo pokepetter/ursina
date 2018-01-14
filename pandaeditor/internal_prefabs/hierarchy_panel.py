@@ -54,7 +54,7 @@ class HierarchyPanel(Entity):
         self.buttons.clear()
 
         print('-------pop----------')
-        for e in scene.entity.children:
+        for e in scene.children:
             self.traverse_tree(e)
 
         self.bg.y = (- (self.i + 1) * (self.button_size[1] + .001)) + .001

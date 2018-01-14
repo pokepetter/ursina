@@ -92,10 +92,10 @@ class ProjectBrowserButton():
             or key == 'space'
             or key == 'enter'
             and self.index > 0):
-                self.load_project(scene.entity.paths[self.index])
+                self.load_project(scene.paths[self.index])
 
     def on_mouse_enter(self):
-        scene.entity.index = self.index
+        scene.index = self.index
 
     def load_project(self, path):
         print('loading project:', path)

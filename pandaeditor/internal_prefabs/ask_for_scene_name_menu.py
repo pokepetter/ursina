@@ -44,9 +44,9 @@ class AskForSceneNameMenu(Entity):
         if self.save_button.hovered and key == 'left mouse down' or key == 'enter':
             print('save field:', self.input_field.text)
             if self.input_field.text != '':
-                scene.entity.name = self.input_field.text
+                scene.name = self.input_field.text
                 scene.editor.hierarchy_panel_header.text = self.input_field.text
-                save_prefab(scene.entity, application.scene_folder)
+                save_prefab(scene, application.scene_folder)
                 self.enabled = False
                 print('saved scene:', 'scenes', scene_entity.name)
 

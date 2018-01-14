@@ -176,5 +176,5 @@ if __name__ == '__main__':
     app.load_editor()
     # load_scene('minecraft_clone')
     window.fps_counter = True
-    print('scene entity', scene.entity)
+    print('scene entity', scene)
     app.run()

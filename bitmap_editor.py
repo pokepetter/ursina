@@ -30,5 +30,5 @@ if __name__ == '__main__':
     window.size = (height, height)
     print(camera.aspect_ratio)
     # window.position = (10, 10)
-    scene.entity = BitmapEditor()
+    scene = BitmapEditor()
     app.run()

@@ -136,7 +136,7 @@ class TransformGizmo(Entity):
                     self.start_positions = [e.position for e in scene.editor.selection]
                     self.original_parents = [e.parent for e in scene.editor.selection]
                     for e in scene.editor.selection:
-                        e.reparent_to(scene.entity)
+                        e.reparent_to(scene)
 
 
         if key == 'left mouse up':
@@ -145,7 +145,7 @@ class TransformGizmo(Entity):
 
             for i, e in enumerate(scene.editor.selection):
                 # self.original_parent = e.position
-                # e.reparent_to(scene.entity)
+                # e.reparent_to(scene)
                 e.parent = self.original_parents[i]
                 e.position = self.start_positions[i]
                 # e.reparent_to(self.original_parent)

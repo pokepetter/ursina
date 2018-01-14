@@ -23,7 +23,7 @@ class Raycaster(Entity):
         self.picker.addCollider(self.pickerNP, self.pq)
 
     def set_up(self):
-        # make debug models
+        # make debug model
         self.debug_model = Entity('raycaster_debug_model')
         self.debug_model.parent = render
         self.debug_model.model = 'cube'
@@ -49,12 +49,13 @@ class Raycaster(Entity):
             self.debug_model.scale = (.1, .1, dist)
 
         if traverse_target is None:
-            print(scene.entity)
-            traverse_target = scene.entity
+            traverse_target = scene
 
+        # print('traverse', traverse_target)
         self.picker.traverse(traverse_target)
 
         if self.pq.get_num_entries() > 0:
+            print('hit')
             self.pq.sort_entries()
             self.collision = self.pq.get_entry(0)
             nP = self.collision.get_into_node_path().parent
@@ -65,6 +66,7 @@ class Raycaster(Entity):
                 nP = nP.parent
                 return True, nP
         else:
+            print('miss')
             self.point = None
             return False
 
@@ -97,6 +99,6 @@ if __name__ == '__main__':
     e.model = 'cube'
     e.color = color.lime
     e.collider = 'box'
-    raycast((0,0,0), (0,0,1), 5, scene.entity)
+    raycast((0,0,-2), (0,0,1), 5, render, debug=True)
     r = RaycasterTest()
     app.run()

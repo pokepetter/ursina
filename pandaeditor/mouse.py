@@ -87,12 +87,12 @@ class Mouse(object):
                 if hasattr(self.hovered_entity, 'on_click'):
                     self.hovered_entity.on_click()
                 for s in self.hovered_entity.scripts:
-                    # if hasattr(s, 'on_click'):
-                    #     s.on_click()
-                    try:
+                    if hasattr(s, 'on_click'):
                         s.on_click()
-                    except:
-                        pass
+                    # try:
+                        s.on_click()
+                    # except:
+                    #     pass
 
         if key == 'left mouse up':
             self.left = False
@@ -145,11 +145,11 @@ class Mouse(object):
         self.pickerRay.set_from_lens(scene.camera.lens_node, self.x, self.y)
         self.picker.traverse(base.render)
         if self.pq.get_num_entries() > 0:
-            print('collided with world', self.pq.getNumEntries())
+            # print('collided with world', self.pq.getNumEntries())
             self.find_collision()
             return
         # else:
-        #     print('mouse miss', scene.entity)
+        #     print('mouse miss', base.render)
 
         # unhover all if it didn't hit anything
         for entity in scene.entities:

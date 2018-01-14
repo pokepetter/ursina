@@ -3,9 +3,15 @@ from pandaeditor import *
 class Sky(Entity):
 
     def __init__(self, texture_name_arg='default_sky'):
-        super.__init__()
+        super().__init__()
         self.name = 'sky'
-        self.sky.scale *= 9999
-        self.sky.model = 'sky_dome'
-        # self.sky.color = color.gray
-        self.sky.texture = texture_name_arg
+        self.scale *= 9999
+        self.model = 'sky_dome'
+        # self.color = color.gray
+        self.texture = texture_name_arg
+
+
+if __name__  == '__main__':
+    app = PandaEditor()
+    test = load_prefab('sky')
+    app.run()

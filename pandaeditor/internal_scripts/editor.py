@@ -150,7 +150,7 @@ class Editor(Entity):
         self.hierarchy_panel_header.position = window.top_left
         self.hierarchy_panel_header.origin = (-.5, .5)
         self.hierarchy_panel_header.scale = (.25, .025)
-        self.hierarchy_panel_header.text = scene.entity.name
+        self.hierarchy_panel_header.text = scene.name
         self.hierarchy_panel_header.text_entity.align = 'left'
         self.hierarchy_panel_header.text_entity.x = -.45
         self.hierarchy_panel_header.add_script('menu_toggler')
@@ -243,7 +243,7 @@ class Editor(Entity):
     def input(self, key):
         if key == 'l':
             for e in scene.entities:
-                if e.has_ancestor(scene.entity):
+                if e.has_ancestor(scene):
                     print(e.name)
 
         if key == 'tab':
@@ -326,7 +326,7 @@ class Editor(Entity):
             pass
 
         for e in scene.entities:
-            if e.is_editor or e is scene.entity:
+            if e.is_editor or e is scene:
                 continue
 
             try:

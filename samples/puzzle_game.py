@@ -85,5 +85,5 @@ class FirstPersonController(Entity):
 
 if __name__ == '__main__':
     app = main.PandaEditor()
-    scene.entity = PuzzleGame()
+    scene = PuzzleGame()
     app.run()

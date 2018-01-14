@@ -4,9 +4,7 @@ from pandaeditor import *
 class MinecraftClone(Entity):
 
     def __init__(self):
-
-        super().__init__()
-        self.name = 'minecraft_clone'
+        super().__init__('minecraft_clone')
 
         for z in range(32):
             for x in range(32):
@@ -17,6 +15,7 @@ class MinecraftClone(Entity):
                     voxel.position = (x, y, z)
 
         sky = load_prefab('sky')
+        # load_prefab('button')
 
         player = FirstPersonController()
         player.parent = self
@@ -35,6 +34,8 @@ class Voxel(Entity):
 
 
     def input(self, key):
+        if key == 'l':
+            load_prefab('sky')
         # if not scene.editor or scene.editor.enabled:
         #     return
         if self.hovered:
@@ -86,12 +87,12 @@ class FirstPersonController(Entity):
         if held_keys['w'] or held_keys['a'] or held_keys['s'] or held_keys['d']:
             self.moving = True
 
-        if raycast(self.world_position, self.forward * 1000, 1, base.scene):
+        if raycast(self.world_position, self.forward * 1000, 1, scene):
             print('w')
             pass
         if held_keys['w']:
-            # print(base.scene)
-            hit = (1 - raycast(self.world_position, self.forward, .1))
+            # print(scene)
+            hit = (1 - raycast(self.world_position, self.forward, .1, scene, debug=True))
             self.position += self.forward * held_keys['w'] * self.speed
         self.position += self.right * held_keys['d'] * self.speed
         # self.position += self.forward * held_keys['w'] * self.speed
@@ -106,9 +107,8 @@ class FirstPersonController(Entity):
 
 if __name__ == '__main__':
     app = main.PandaEditor()
-    # destroy(base.scene)
-    app.scene = MinecraftClone()
-    # load_scene(MinecraftClone)
-    # base.scene.name = 'minecraft_clone_scene'
-    print('-----------', base.scene)
+    # destroy(scene)
+    # app.scene = MinecraftClone()
+    load_scene(MinecraftClone)
+    # scene.name = 'minecraft_clone_scene'
     app.run()

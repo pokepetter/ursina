@@ -200,10 +200,14 @@ def load_prefab(module_name, add_to_caller=False):
 
 def load_scene(module_name):
     paths = (application.internal_scene_folder, application.scene_folder)
-    destroy(scene.entity)
-    scene.entity = load(paths, module_name)
-    print('found scene:', module_name, 'scene.entity:', scene.entity)
-    return scene.entity
+    try:
+        for e in scene.children:
+            destroy(e)
+    except:
+        print('scene not yet initialized')
+    prefab = load(paths, module_name)
+    print('found scene:', module_name, 'prefab:', prefab)
+    return prefab
 
 
 def load_script(module_name):

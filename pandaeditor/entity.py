@@ -27,8 +27,10 @@ class Entity(NodePath):
         self.enabled = True
         self.is_editor = False
         self.name = name
-        if scene.entity:
-            self.parent = scene.entity
+        try:
+            self.parent = scene
+        except:
+            print('scene not yet initialized')
         scene.has_changes = True
         self.model = None
         self.color = color.white
@@ -252,7 +254,7 @@ class Entity(NodePath):
     @world_position.setter
     def world_position(self, value):
         self.original_parent = self.parent
-        self.parent = scene.entity
+        self.parent = scene
         self.position = value
         self.reparent_to(self.original_parent)
         self.original_parent = None
@@ -443,5 +445,5 @@ if __name__ == '__main__':
     e.enabled = True
     e.model = 'quad'
     e.color = color.red
-    print(__name__, 'ok')
+    print(type(e).__name__, 'ok')
     # app.run()

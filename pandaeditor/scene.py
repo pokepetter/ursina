@@ -7,6 +7,7 @@ from pandaeditor import color
 class Scene(NodePath):
 
     def __init__(self):
+        super().__init__('scene')
         self.render = None
         self.world = None
 
@@ -20,34 +21,25 @@ class Scene(NodePath):
         self.editor_font_size = 1
 
         self.entities = []
-        self.entity = None # scene parent
 
         self.has_changes = False
 
 
-
-
     def set_up(self):
         from pandaeditor.entity import Entity
+        self.reparent_to(render)
         self.new(discard_changes=True)
 
 
     def new(self, discard_changes=False):
-        if self.entity:
-            destroy(self.entity)
+        pass
+        # for e in self.children:
+        #     destroy(e)
 
-        from pandaeditor.entity import Entity
-        self.entity = Entity()
-        self.entity.parent = render
-        self.entity.name = 'untitled_scene'
-
-        self.sky = Entity('sky')
-        self.sky.parent = render
-        print('_______', self.sky.parent)
-        self.sky.scale *= 9999
-        self.sky.model = 'sky_dome'
-        self.sky.color = color.gray
-        self.sky.texture = 'default_sky'
+        # from pandaeditor.entity import Entity
+        # self.entity = Entity()
+        # self.entity.parent = render
+        # self.entity.name = 'scene_parent'
 
         # if not discard_changes:
         #     if self.has_changes:
@@ -59,10 +51,10 @@ class Scene(NodePath):
         #
         # if self.entity:
         #     destroy(self.entity)
-        # base.scene = Entity()
-        # base.scene.name = 'untitled_scene'
-        if self.editor:
-            self.editor.hierarchy_panel_header.text = self.entity.name
+        # scene.entity = Entity()
+        # scene.entity.name = 'untitled_scene'
+        # if self.editor:
+        #     self.editor.hierarchy_panel_header.text = self.entity.name
 
 
 
