@@ -322,8 +322,11 @@ class Editor(Entity):
     def on_enable(self):
         # enable editor
         # if self.enabled:
-        camera.wrtReparentTo(self.camera_pivot)
-        camera.position = self.editor_camera_script.position
+        try:
+            camera.wrtReparentTo(self.editor_camera.camera_pivot)
+            camera.position = self.editor_camera.position
+        except:
+            pass
 
         for e in scene.entities:
             if e.is_editor or e is scene.entity:
@@ -343,9 +346,13 @@ class Editor(Entity):
                     s.stop()
                 except:
                     pass
-        self.transform_gizmo.enabled = True
-        self.grid.enabled = True
-        mouse.locked = False
+
+        try:
+            self.transform_gizmo.enabled = True
+            self.grid.enabled = True
+            mouse.locked = False
+        except:
+            print('editor not initialized')
 
 
     def compress_textures(self):

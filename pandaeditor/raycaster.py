@@ -29,13 +29,14 @@ class Raycaster(Entity):
         self.debug_model.model = 'cube'
         self.debug_model.color = color.yellow
         self.debug_model.origin = (0, 0, -.5)
+        self.debug_model.enabled = False
 
 
     def distance(self, a, b):
         return math.sqrt(sum( (a - b)**2 for a, b in zip(a, b)))
 
 
-    def raycast(self, origin, direction, dist, traverse_target=scene.entity, debug=False):
+    def raycast(self, origin, direction, dist, traverse_target=None, debug=False):
         # for debug
         self.position = origin
         self.look_at(self.position + direction)
@@ -48,8 +49,8 @@ class Raycaster(Entity):
             self.debug_model.scale = (.1, .1, dist)
 
         if traverse_target is None:
-            print('traverse_target is None')
-            return False
+            print(scene.entity)
+            traverse_target = scene.entity
 
         self.picker.traverse(traverse_target)
 

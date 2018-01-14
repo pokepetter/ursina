@@ -87,10 +87,11 @@ class FirstPersonController(Entity):
             self.moving = True
 
         if raycast(self.world_position, self.forward * 1000, 1, scene.entity):
-            # print('w')
+            print('w')
             pass
         if held_keys['w']:
-            # hit = (1 - raycast(self.world_position, self.forward, .1))
+            # print(scene.entity)
+            hit = (1 - raycast(self.world_position, self.forward, .1))
             self.position += self.forward * held_keys['w'] * self.speed
         self.position += self.right * held_keys['d'] * self.speed
         # self.position += self.forward * held_keys['w'] * self.speed
@@ -105,6 +106,8 @@ class FirstPersonController(Entity):
 
 if __name__ == '__main__':
     app = main.PandaEditor()
-    # load_scene('minecraft_clone')
-    scene.entity = MinecraftClone()
+    # destroy(scene.entity)
+    load_scene(MinecraftClone)
+    scene.entity.name = 'minecraft_clone_scene'
+    print('-----------', scene.entity)
     app.run()

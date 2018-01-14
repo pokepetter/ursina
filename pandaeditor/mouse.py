@@ -66,6 +66,10 @@ class Mouse(object):
 
 
     def input(self, key):
+
+        if key == 't':
+            print([e for e in scene.entities])
+
         if not self.enabled:
             return
 
@@ -144,9 +148,11 @@ class Mouse(object):
         self.pickerRay.set_from_lens(scene.camera.lens_node, self.x, self.y)
         self.picker.traverse(render)
         if self.pq.get_num_entries() > 0:
-            # print('collided with world', self.pq.getNumEntries())
+            print('collided with world', self.pq.getNumEntries())
             self.find_collision()
             return
+        else:
+            print('mouse miss', scene.entity)
 
         # unhover all if it didn't hit anything
         for entity in scene.entities:

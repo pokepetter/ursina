@@ -198,38 +198,13 @@ def load_prefab(module_name, add_to_caller=False):
     return prefab
 
 def load_scene(module_name):
-    file_name = module_name + '.py'
-    module_names = (os.path.join(os.path.dirname(__file__), file_name),
-                    os.path.join(os.path.dirname(os.path.dirname(__file__)), 'scenes', file_name),
-                    os.path.join(os.path.dirname(__file__), 'internal_scenes', file_name)
-                    )
+    paths = (application.internal_scene_folder, application.scene_folder)
+    destroy(scene.entity)
+    scene.entity = load(paths, module_name)
+    print('found scene:', module_name, 'scene.entity:', scene.entity)
+    print('SKY:', scene.sky)
+    return scene.entity
 
-    for name in module_names:
-        try:
-            module = importlib.machinery.SourceFileLoader(module_name, name).load_module()
-
-            print('name:', snake_to_camel(module_name))
-            try:
-                class_ = getattr(module, snake_to_camel(module_name))
-            except:
-                # load first class
-                class_names = inspect.getmembers(sys.modules[module_name], inspect.isclass)
-                for cn in class_names:
-                    if cn[1].__module__ == module.__name__:
-                        class_ = getattr(module, cn[0])
-                        break
-            class_instance = class_()
-            class_instance.parent = scene
-            destroy(scene.entity)
-            scene.entity = class_instance
-            print('found scene:', name)
-            # print(scene.entity.name)
-            return class_instance
-            break
-        except Exception as e:
-            print(e)
-
-    print("couldn't find scene:", module_name)
 
 def load_script(module_name):
     paths = (application.internal_script_folder, application.script_folder)
@@ -270,19 +245,23 @@ def load(paths, module_name):
 
 
 def destroy(entity):
-    scene.entities.remove(entity)
-    try: entity.model.removeNode()
-    except: pass
-    try:
-        entity.removeAllChildren()
-        entity.removeNode()
-    except: pass
-    try: entity.texture.releaseAll()
-    except: pass
-    try:
-        del entity
-    except: pass
+    if entity in scene.entities:
+        scene.entities.remove(entity)
 
+    if hasattr(entity, 'model') and entity.model != None:
+        entity.model.removeNode()
+
+    # entity.removeAllChildren()
+    # try:
+
+    entity.removeNode()
+    # except:
+    #     pass
+
+    if hasattr(entity, 'texture') and entity.texture != None:
+        entity.texture.releaseAll()
+
+    del entity
 
 
 import operator

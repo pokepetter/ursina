@@ -7,6 +7,7 @@ class Filebrowser(Entity):
 
     def __init__(self):
         super().__init__()
+        self.enabled = False
         self.name = 'filebrowser'
         self.parent = camera.ui
         self.is_editor = True
@@ -31,8 +32,6 @@ class Filebrowser(Entity):
         self.close_button.highlight_color = self.close_button.color
         menu_toggler = self.close_button.add_script('menu_toggler')
         menu_toggler.target = self
-
-        self.enabled = False
 
 
     def populate(self):
