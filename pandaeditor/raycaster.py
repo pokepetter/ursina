@@ -13,23 +13,18 @@ import math
 class Raycaster(Entity):
 
     def __init__(self):
-        super().__init__()
+        super().__init__('raycaster')
         self.picker = CollisionTraverser()  # Make a traverser
         self.pq = CollisionHandlerQueue()  # Make a handler
+
         self.pickerNode = CollisionNode('raycaster')
         self.pickerNP = self.attach_new_node(self.pickerNode)
+
         self.collision_ray = CollisionRay()  # Make our ray
         self.pickerNode.addSolid(self.collision_ray)
-        self.picker.addCollider(self.pickerNP, self.pq)
 
-    def set_up(self):
-        # make debug model
-        self.debug_model = Entity('raycaster_debug_model')
-        self.debug_model.parent = render
-        self.debug_model.model = 'cube'
-        self.debug_model.color = color.yellow
-        self.debug_model.origin = (0, 0, -.5)
-        self.debug_model.enabled = False
+        self.picker.addCollider(self.pickerNP, self.pq)
+        self.pickerNP.show()
 
 
     def distance(self, a, b):
@@ -37,38 +32,52 @@ class Raycaster(Entity):
 
 
     def raycast(self, origin, direction, dist, traverse_target=None, debug=False):
-        # for debug
         self.position = origin
         self.look_at(self.position + direction)
+        # need to do this for it to work for some reason
+        self.collision_ray.set_origin(Vec3(0,0,0))
+        self.collision_ray.set_direction(Vec3(0,1,0))
 
-        self.collision_ray.set_origin(Vec3(self.position[0], self.position[2], self.position[1]))
-        self.collision_ray.set_direction(Vec3(self.forward[0], self.forward[2], self.forward[1]))
-
-        self.debug_model.enabled = debug
+        # print('np pos', self.pickerNP.get_pos(render))
+        # print('self pos', self.world_position)
+        # print('np rot:', (-self.pickerNP.getP(render), -self.pickerNP.getH(render), self.pickerNP.getR(render)))
+        # print('self rot', self.rotation)
         if debug:
-            self.debug_model.scale = (.1, .1, dist)
+            self.pickerNP.show()
+        else:
+            self.pickerNP.hide()
 
         if traverse_target is None:
             traverse_target = scene
 
-        # print('traverse', traverse_target)
         self.picker.traverse(traverse_target)
 
         if self.pq.get_num_entries() > 0:
-            print('hit')
             self.pq.sort_entries()
             self.collision = self.pq.get_entry(0)
             nP = self.collision.get_into_node_path().parent
             self.point = self.collision.get_surface_point(render)
-            hit_dist = self.distance(self.collision_ray.get_origin(), self.point)
-            print(self.collision_ray.get_origin(), dist)
-            if nP.name.endswith('.egg'):
-                nP = nP.parent
-                return True, nP
+            self.point = Vec3(self.point[0], self.point[2], self.point[1])
+            hit_dist = self.distance(self.world_position, self.point)
+            print(origin, self.point, hit_dist)
+            if hit_dist <= dist:
+                if nP.name.endswith('.egg'):
+                    nP = nP.parent
+                    print('hit')
+                    return True, nP, hit_dist
+            else:
+                print('miss')
         else:
             print('miss')
             self.point = None
             return False
+
+# class Hit():
+    # entity
+    # point
+    # distance
+    # normal
+
 
 
 sys.modules[__name__] = Raycaster()
@@ -77,28 +86,48 @@ class RaycasterTest(Entity):
 
     def __init__(self):
         super().__init__()
+        d = Entity()
+        d.parent = scene
+        d.position = (0, 0, 2)
+        d.model = 'cube'
+        d.color = color.red
+        d.collider = 'box'
+        # d.scale *= .2
 
-    def input(self, key):
-        if key == 'r':
-            if raycast((0,0,-2), (0,0,1), 5, render, debug=True):
-                print('hit', raycaster.point)
+        camera.position = (0, 15, -15)
+        camera.look_at(self)
+        camera.reparent_to(self)
+
+        # e = Entity()
+        # e.position = (0, 0, 1)
+        self.model = 'cube'
+        self.color = color.lime
+
+        self.speed = .01
+        self.rotation_speed = .1
+        # self.collider = 'box'
+
+
+    def update(self, dt):
+        self.position += self.forward * held_keys['w'] * self.speed
+        self.position += self.left * held_keys['a'] * self.speed
+        self.position += self.back * held_keys['s'] * self.speed
+        self.position += self.right * held_keys['d'] * self.speed
+
+        self.rotation_y -= held_keys['q'] * self.rotation_speed
+        self.rotation_y += held_keys['e'] * self.rotation_speed
+
+        raycast(self.world_position, self.forward, 3, render, debug=True)
+
 
 
 if __name__ == '__main__':
     app = PandaEditor()
 
-    d = Entity()
-    d.model = 'cube'
-    d.color = color.red
-    d.scale *= .2
-    camera.position = (15, 15, -15)
-    camera.look_at(raycaster)
 
-    e = Entity()
-    e.position = (0, 0, 1)
-    e.model = 'cube'
-    e.color = color.lime
-    e.collider = 'box'
-    raycast((0,0,-2), (0,0,1), 5, render, debug=True)
+
+    raycast((0,0,-2), (0,0,1), 5, render, debug=False)
     r = RaycasterTest()
+
+    cam = r.add_script('editor_camera')
     app.run()

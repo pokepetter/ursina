@@ -46,7 +46,9 @@ from pandaeditor import main
 
 
 def distance(a, b):
-    return math.sqrt(sum( (a - b)**2 for a, b in zip(a, b)))
+    return a.getDistance(b) 
+    # (point1.getXy() - point2.getXy()).length()
+
 
 # def save_scene():
     # has_scene_entity = False
