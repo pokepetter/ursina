@@ -7,7 +7,7 @@ from direct.interval.IntervalGlobal import Sequence, Func, Wait
 from direct.task.Task import Task
 from panda3d.core import NodePath
 from panda3d.core import PandaNode
-from panda3d.core import Vec3
+from panda3d.core import Vec2, Vec3
 from panda3d.core import Point3
 from panda3d.core import loadPrcFileData
 from panda3d.core import Filename
@@ -46,7 +46,7 @@ from pandaeditor import main
 
 
 def distance(a, b):
-    return a.getDistance(b) 
+    return a.getDistance(b)
     # (point1.getXy() - point2.getXy()).length()
 
 
