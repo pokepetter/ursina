@@ -42,8 +42,10 @@ class Battle(Entity):
     # def fit_inside(self, entities, target):
 
 class SkillButton(Button):
-    def __init__(self):
+    def __init__(self, skill_name='empty_skill'):
         super().__init__()
+        self.name = skill_name
+        self.texture = 
 
     def on_click()
 
