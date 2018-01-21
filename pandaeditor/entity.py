@@ -227,13 +227,14 @@ class Entity(NodePath):
 
 
         if name == 'collider':
+            if value == None:
+                print('destroy collider')
+                del(self.collider)
             if value == 'box':
                 collider = Collider()
                 collider.entity = self
                 collider.make_collider()
                 object.__setattr__(self, name, collider)
-            elif self.collider:
-                print('destroy collider')
 
         if name == 'editor_collider':
             if value is not None:

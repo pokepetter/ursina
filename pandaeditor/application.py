@@ -31,6 +31,8 @@ class Application():
         self.texture_folder = self.asset_folder + 'textures/'
 
         self.compressed_texture_folder = self.texture_folder + 'compressed/'
+        if not os.path.exists(self.compressed_texture_folder):
+            os.makedirs(self.compressed_texture_folder)
         self.compressed_model_folder = self.model_folder + 'compressed/'
 
         # loader takes the first it finds, reorder if needed.
