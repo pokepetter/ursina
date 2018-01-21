@@ -324,3 +324,37 @@ def chunk_list(l, cunk_size):
     # yield successive chunks from list
     for i in range(0, len(l), cunk_size):
         yield l[i:i + cunk_size]
+
+def compress_textures(self):
+    from PIL import Image
+    from os.path import dirname
+    files = os.listdir(application.texture_folder)
+    compressed_files = os.listdir(application.compressed_texture_folder)
+    # print(files)
+    texture_dir = os.path.join(
+        dirname(dirname(dirname(os.path.abspath(__file__)))),
+        'textures'
+        )
+
+    for f in files:
+        if f.endswith('.psd') or f.endswith('.png'):
+            print('f:', application.compressed_texture_folder + '/' + f)
+
+            image = Image.open(os.path.join(texture_dir, f))
+            # print(max(image.size))
+            if max(image.size) > 256:
+                image.save(
+                    os.path.join(texture_dir, 'compressed', f[:-4] + '.jpg'),
+                    'JPEG',
+                    quality=80,
+                    optimize=True,
+                    progressive=True
+                    )
+                print('compressing to jpg:', f)
+            else:
+                image.save(
+                    os.path.join(texture_dir, 'compressed', f[:-4] + '.png'),
+                    'PNG'
+                    )
+                print('compressing to png:', f)
+        # elif f.endswith('.png'):

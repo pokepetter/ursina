@@ -244,6 +244,12 @@ class Entity(NodePath):
             elif self.editor_collider:
                 print('destroy collider')
 
+        if name == 'render_queue':
+            if self.model:
+                self.model.setBin("fixed", value)
+            # model.setDepthTest(False)
+            # model.setDepthWrite(False)
+
 
     @property
     def world_position(self):
