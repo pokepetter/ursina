@@ -12,7 +12,7 @@ from pandaeditor.entity import Entity
 
 class Text(Entity):
 
-    def __init__(self):
+    def __init__(self, text=None):
         super().__init__()
         self.name = 'text'
         # self.character_spacing = .5
@@ -48,6 +48,9 @@ class Text(Entity):
         z = -.3
         self.text_node_path.setZ(z)
 
+        if text:
+            self.text = text
+
 
     def update_text(self):
         pass
@@ -71,7 +74,7 @@ class Text(Entity):
 
         if name == 'text':
             object.__setattr__(self, name, value)
-            self.text_node.setText(value)
+            self.text_node.setText(str(value))
 
         if name == 'align':
             object.__setattr__(self, name, value)
@@ -104,3 +107,9 @@ class Text(Entity):
                 self.text_node.setFont(font_file)
             except:
                 print('no font called:', value)
+
+if __name__ == '__main__':
+    app = PandaEditor()
+    test = Text('test')
+    # test.text = 'test text'
+    app.run()
