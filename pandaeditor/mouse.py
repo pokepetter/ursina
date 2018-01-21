@@ -15,7 +15,7 @@ class Mouse(object):
         self.enabled = False
         self.mouse_watcher = None
         self.locked = False
-        self.position = (0,0)
+        self.position = Vec2(0,0)
         self.delta = (0,0)
         self.velocity = (0,0)
 
@@ -39,16 +39,22 @@ class Mouse(object):
 
     @property
     def x(self):
-        return self.mouse_watcher.getMouseX()
+        if not self.mouse_watcher.has_mouse():
+            return 0
+        return self.mouse_watcher.getMouseX() / 2   # same space as ui stuff
+
     @property
     def y(self):
-        return self.mouse_watcher.getMouseY()
+        if not self.mouse_watcher.has_mouse():
+            return 0
+        return self.mouse_watcher.getMouseY() / 2
 
 
     def __setattr__(self, name, value):
 
         if name == 'visible':
-            window.set_cursor_hidden(value)
+            window.set_cursor_hidden(not value)
+            application.base.win.requestProperties(window)
 
         if name == 'locked':
             try:
@@ -116,7 +122,7 @@ class Mouse(object):
             self.velocity = (0,0)
             return
 
-        self.position = (self.x, self.y)
+        self.position = Vec2(self.x, self.y)
 
         if self.locked:
             self.velocity = (self.x, self.y)
@@ -133,7 +139,7 @@ class Mouse(object):
 
         # collide with ui
         self.pickerNP.reparent_to(scene.ui_camera)
-        self.pickerRay.set_from_lens(camera.ui_lens_node, self.x, self.y)
+        self.pickerRay.set_from_lens(camera.ui_lens_node, self.x * 2, self.y * 2)
         self.picker.traverse(scene.ui)
         if self.pq.get_num_entries() > 0:
             # print('collided with ui', self.pq.getNumEntries())
@@ -142,7 +148,7 @@ class Mouse(object):
 
         # collide with world
         self.pickerNP.reparent_to(camera)
-        self.pickerRay.set_from_lens(scene.camera.lens_node, self.x, self.y)
+        self.pickerRay.set_from_lens(scene.camera.lens_node, self.x * 2, self.y * 2)
         self.picker.traverse(base.render)
         if self.pq.get_num_entries() > 0:
             # print('collided with world', self.pq.getNumEntries())
