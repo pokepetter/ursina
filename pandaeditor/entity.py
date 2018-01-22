@@ -36,7 +36,7 @@ class Entity(NodePath):
         self.color = color.white
         self.texture = None
         self.collision = False
-        self.collider = None
+        # self.collider = None
         self.editor_collider = None
         self.scripts = list()
         self.prefab_name = None
@@ -56,11 +56,6 @@ class Entity(NodePath):
 
 
     def __setattr__(self, name, value):
-        try:
-            super().__setattr__(name, value)
-        except:
-            pass
-            # print('failed to sett attribiute:', name)
 
         if name == 'enabled':
             try:
@@ -86,7 +81,10 @@ class Entity(NodePath):
                 except:
                     print('no trash node')
             else:
-                self.reparentTo(value)
+                try:
+                    self.reparentTo(value)
+                except:
+                    print('invalid parent:', value)
 
         if name == 'model':
             if value is None:
@@ -100,16 +98,17 @@ class Entity(NodePath):
                 self.model.reparentTo(self)
                 self.model.setColorScaleOff()
                 self.model.setTransparency(TransparencyAttrib.MAlpha)
+                return
             else:
                 print('missing model:', value)
 
         if name == 'color' and value is not None:
-            if self.model:
+            if hasattr(self, 'model') and self.model:
                 self.model.setColorScale(value)
                 object.__setattr__(self, name, value)
 
         if name == 'texture':
-            if not self.model:
+            if not hasattr(self, 'model') or hasattr(self, 'model') and not self.model:
                 return
 
             if value.__class__ is Texture:
@@ -164,7 +163,7 @@ class Entity(NodePath):
         if name == 'y': self.setZ(value)
         if name == 'z': self.setY(value)
 
-        if name == 'origin' and self.model:
+        if name == 'origin' and hasattr(self, 'model') and self.model:
             new_value = Vec3()
 
             if len(value) % 2 == 0:
@@ -227,14 +226,24 @@ class Entity(NodePath):
 
 
         if name == 'collider':
-            if value == None:
-                print('destroy collider')
+            if value == None and self.collider:
+                print('ccccc', type(self.collider))
+                # if self.collider:
+                from pandaeditor.pandastuff import destroy
+                destroy(self.collider)
+                print('__________', self.collider)
+                if type(self.collider) is Entity:
+                    self.collider.remove_node()
                 del(self.collider)
-            if value == 'box':
+                object.__setattr__(self, name, None)
+                return
+                # print(self.collider)
+            elif value == 'box':
                 collider = Collider()
                 collider.entity = self
                 collider.make_collider()
                 object.__setattr__(self, name, collider)
+                return
 
         if name == 'editor_collider':
             if value is not None:
@@ -242,7 +251,7 @@ class Entity(NodePath):
                 editor_collider.entity = self
                 editor_collider.make_collider()
                 object.__setattr__(self, name, editor_collider)
-            elif self.editor_collider:
+            elif hasattr(self, 'editor_collider') and self.editor_collider:
                 print('destroy collider')
 
         if name == 'render_queue':
@@ -250,6 +259,12 @@ class Entity(NodePath):
                 self.model.setBin("fixed", value)
             # model.setDepthTest(False)
             # model.setDepthWrite(False)
+
+        try:
+            super().__setattr__(name, value)
+        except:
+            pass
+            # print('failed to sett attribiute:', name)
 
 
     @property
@@ -452,5 +467,10 @@ if __name__ == '__main__':
     e.enabled = True
     e.model = 'quad'
     e.color = color.red
+    e.collider = 'box'
+    print(e.collider)
+    e.collider = None
+    print(e.collider)
     print(type(e).__name__, 'ok')
+    print('e:', e)
     # app.run()
