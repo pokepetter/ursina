@@ -13,6 +13,7 @@ class Camera(Entity):
     def __init__(self):
         super().__init__()
         self.name = 'camera'
+        self.eternal = True
         self.is_editor = True
 
         self.cam = None
@@ -67,6 +68,7 @@ class Camera(Entity):
         # ui_camera.hide()
 
         ui = Entity()
+        ui.eternal = True
         ui.name = 'ui'
         ui.is_editor = True
         ui.parent = self.ui_camera

@@ -71,6 +71,7 @@ class Window(WindowProperties):
         from pandaeditor.internal_prefabs.button import Button
         from pandaeditor import scene
         self.exit_button = Button()
+        self.exit_button.eternal = True
         self.exit_button.is_editor = False
         self.exit_button.parent = scene.ui
         self.exit_button.name = 'exit_button_entity'

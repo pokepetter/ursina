@@ -14,6 +14,8 @@ class Raycaster(Entity):
 
     def __init__(self):
         super().__init__('raycaster')
+        self.eternal = True
+
         self.picker = CollisionTraverser()  # Make a traverser
         self.pq = CollisionHandlerQueue()  # Make a handler
 

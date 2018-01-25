@@ -201,6 +201,12 @@ def load_prefab(module_name, add_to_caller=False):
     return prefab
 
 def load_scene(module_name):
+    if inspect.isclass(module_name):
+        class_instance = module_name()
+        # scene =
+        return class_instance
+
+
     paths = (application.internal_scene_folder, application.scene_folder)
     try:
         for e in scene.children:
@@ -260,7 +266,7 @@ def destroy(entity):
     # entity.removeAllChildren()
     # try:
 
-    entity.removeNode()
+        entity.removeNode()
     # except:
     #     pass
 
