@@ -87,13 +87,7 @@ class PandaEditor(ShowBase):
         # t = load_scene('minecraft_clone')
         # count_lines(inspect.getfile(t.__class__))
 
-        # start game if there is no editor
-        for e in scene.entities:
-            if hasattr(e, 'start'):
-                e.start()
-            for s in e.scripts:
-                if hasattr(s, 'start'):
-                    s.start()
+
 
 
 
@@ -168,6 +162,16 @@ class PandaEditor(ShowBase):
 
     def load_editor(self):
         scene.editor = load_script('editor')
+
+    def run(self):
+        # start game if there is no editor
+        for e in scene.entities:
+            if hasattr(e, 'start'):
+                e.start()
+                for s in e.scripts:
+                    if hasattr(s, 'start'):
+                        s.start()
+        super().run()
 
 
 if __name__ == '__main__':

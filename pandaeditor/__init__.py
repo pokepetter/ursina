@@ -14,4 +14,5 @@ from pandaeditor.internal_prefabs.panel import Panel
 from pandaeditor.internal_prefabs.filebrowser import Filebrowser
 from pandaeditor.internal_prefabs.transform_field import TransformField
 from pandaeditor.internal_prefabs.sky import Sky
+from pandaeditor.derplerp import *
 # from pandaeditor.internal_scripts.editor_draggable import EditorDraggable
