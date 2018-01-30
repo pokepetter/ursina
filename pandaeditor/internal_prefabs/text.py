@@ -12,24 +12,20 @@ from pandaeditor.entity import Entity
 
 class Text(Entity):
 
-    def __init__(self, text=None):
+    def __init__(self, text_arg=None):
         super().__init__()
         self.name = 'text'
-        # self.character_spacing = .5
-        # self.line_height = 1
-        # self.character_limit = 50
-        # self.characters = list()
         self.scale *= 0.25 * scene.editor_font_size
         self.origin = (0, 0)
 
         self.text_node = TextNode('node name')
         self.font = 'font/VeraMono.ttf'
-        # self.text_node.setText("Every day in every way I'm getting better and better.")
         self.text_node_path = self.attachNewNode(self.text_node)
 
         self.setColorScaleOff()
         self.color = color.text
         self.align = 'left'
+        self.html_tags = True
 
         # temp
         # self.text_node.setFrameColor(1, 1, 1, 1)
@@ -38,18 +34,16 @@ class Text(Entity):
         self.color = color.text_color
         self.text_node_path.setLightOff()
         self.text_node_path.setBin("fixed", 0)
+        self.text_node.setPreserveTrailingWhitespace(True)
 
-        # align = 0: top, 1: center, 2:bottom
-        # bounds = self.getTightBounds()
-        # z = 1 - bounds[1][2]
-        # z = -(bounds[1] + bounds[0])[2] * .5
-        # z = -bounds[0][2] -1
+        if text_arg:
+            self.text = text_arg
 
-        z = -.3
-        self.text_node_path.setZ(z)
-
-        if text:
-            self.text = text
+        self.style_tags = (
+            '<bold>',
+            '<red>',
+            '<green>'
+            )
 
 
     def update_text(self):
@@ -59,11 +53,82 @@ class Text(Entity):
         for char in self.characters:
             char.node_path
 
-    def update_colors(self, value):
-        if hasattr(self, 'characters'):
-            print('updating colors')
-            for char in self.characters:
-                char.color = value
+
+    @property
+    def text(self):
+        return self.text_node.getText()
+
+    @text.setter
+    def text(self, value):
+        # print('--------------set text', value)
+        # self.text_node.setText(str(value))
+
+        # import string
+        # punc = string.punctuation
+
+        # thestring = "Hey, you - what are you doing here!?"
+        # s = list(value)
+        # ''.join([o for o in s if not o in self.style_tags]).split()
+        # s = ''.join([c for c in value])
+        # words =
+        import re
+        value = re.split('<red>|<green>|<blue>', value)
+
+        self.text_nodes = list()
+        # self.text_nodes.append(self.text_node)
+
+        cumulative_width = 0
+        cumulative_y = 0
+
+        for i, t in enumerate(value):
+            print(t)
+            self.text_node = TextNode(t)
+            self.text_node_path = self.attachNewNode(self.text_node)
+            self.text_node.setText(t)
+            self.text_node.setPreserveTrailingWhitespace(True)
+            self.text_node.setTextColor(color.color(i * 30, 1, .8))
+            # print('________', self.font.getSpaceAdvance())
+
+            self.text_node_path.setX(cumulative_width)
+            self.text_node_path.setZ(-cumulative_y)
+
+
+            if i > 0:
+                if value[i-1].count('\n') > 0:
+                     cumulative_width = 0
+                     cumulative_y += value[i-1].count('\n')
+
+            cumulative_width += self.text_node.getWidth()
+            print(cumulative_width, cumulative_y)
+            # a = Text(t)
+            # self.text_nodes.append(Text(str(t)))
+        # s = value.split('<red>')
+
+        # for v in value:
+        #     print(v)
+        # print('____________', value)
+
+        # else:
+        #     print('no', '<red>', 'in string')
+            # value.split('''<red>''')
+
+
+        # print(value)
+
+    @property
+    def font(self):
+        return self.text_node.getFont()
+
+    @font.setter
+    def font(self, value):
+        # try:
+        font_file = loader.loadFont(value)
+        # font_file.setRenderMode(TextFont.RMPolygon)
+        font_file.setPixelsPerUnit(50)
+        self.text_node.setFont(font_file)
+        object.__setattr__(self, name, value)
+        # except:
+        #     print('no font called:', value)
 
 
     def __setattr__(self, name, value):
@@ -71,10 +136,6 @@ class Text(Entity):
             super().__setattr__(name, value)
         except:
             pass
-
-        if name == 'text':
-            object.__setattr__(self, name, value)
-            self.text_node.setText(str(value))
 
         if name == 'align':
             object.__setattr__(self, name, value)
@@ -84,7 +145,6 @@ class Text(Entity):
                 self.text_node.setAlign(TextNode.ACenter)
             elif value == 'right':
                 self.text_node.setAlign(TextNode.ARight)
-
 
         if name == 'color':
             object.__setattr__(self, name, value)
@@ -99,17 +159,13 @@ class Text(Entity):
             self.text_node.setWordwrap(value)
             print('yay')
 
-        if name == 'font':
-            try:
-                font_file = loader.loadFont(value)
-                # font_file.setRenderMode(TextFont.RMPolygon)
-                font_file.setPixelsPerUnit(50)
-                self.text_node.setFont(font_file)
-            except:
-                print('no font called:', value)
+
 
 if __name__ == '__main__':
     app = PandaEditor()
-    test = Text('test')
+    test = Text('''
+test. <red>Hey there!
+wahzzup?
+''')
     # test.text = 'test text'
     app.run()
