@@ -36,15 +36,31 @@ class Text(Entity):
         self.text_node_path.setBin("fixed", 0)
         self.text_node.setPreserveTrailingWhitespace(True)
 
+        self.text_colors = {
+            '<default>' : color.text_color,
+            '<white>' : color.white,
+            '<smoke>' : color.smoke,
+            '<light_gray>' : color.light_gray,
+            '<gray>' : color.gray,
+            '<dark_gray>' : color.dark_gray,
+            '<black>' : color.black,
+
+            '<red>' : color.red,
+            '<orange>' : color.orange,
+            '<yellow>' : color.yellow,
+            '<lime>' : color.lime,
+            '<green>' : color.green,
+            '<turquoise>' : color.turquoise,
+            '<cyan>' : color.cyan,
+            '<azure>' : color.azure,
+            '<blue>' : color.blue,
+            '<violet>' : color.violet,
+            '<magenta>' : color.magenta,
+            '<pink>' : color.pink,
+            }
+
         if text_arg:
             self.text = text_arg
-
-        self.style_tags = (
-            '<bold>',
-            '<red>',
-            '<green>'
-            )
-
 
     def update_text(self):
         pass
@@ -60,60 +76,23 @@ class Text(Entity):
 
     @text.setter
     def text(self, value):
-        # print('--------------set text', value)
-        # self.text_node.setText(str(value))
-
-        # import string
-        # punc = string.punctuation
-
-        # thestring = "Hey, you - what are you doing here!?"
-        # s = list(value)
-        # ''.join([o for o in s if not o in self.style_tags]).split()
-        # s = ''.join([c for c in value])
-        # words =
         import re
-        value = re.split('<red>|<green>|<blue>', value)
+        self.codes = re.findall('\<.*?\>', value)
+        if not value.startswith('<'):
+            self.codes.insert(0, '<default>')
 
-        self.text_nodes = list()
-        # self.text_nodes.append(self.text_node)
-
-        cumulative_width = 0
-        cumulative_y = 0
+        re_string = ''.join([e+'|' for e in self.text_colors])
+        value = re.split(re_string, value)
+        cumulative_text = ''
 
         for i, t in enumerate(value):
-            print(t)
             self.text_node = TextNode(t)
             self.text_node_path = self.attachNewNode(self.text_node)
-            self.text_node.setText(t)
+            cumulative_text += t
+            self.text_node.setText(cumulative_text)
             self.text_node.setPreserveTrailingWhitespace(True)
-            self.text_node.setTextColor(color.color(i * 30, 1, .8))
-            # print('________', self.font.getSpaceAdvance())
-
-            self.text_node_path.setX(cumulative_width)
-            self.text_node_path.setZ(-cumulative_y)
-
-
-            if i > 0:
-                if value[i-1].count('\n') > 0:
-                     cumulative_width = 0
-                     cumulative_y += value[i-1].count('\n')
-
-            cumulative_width += self.text_node.getWidth()
-            print(cumulative_width, cumulative_y)
-            # a = Text(t)
-            # self.text_nodes.append(Text(str(t)))
-        # s = value.split('<red>')
-
-        # for v in value:
-        #     print(v)
-        # print('____________', value)
-
-        # else:
-        #     print('no', '<red>', 'in string')
-            # value.split('''<red>''')
-
-
-        # print(value)
+            if self.codes[i] in self.text_colors:
+                self.text_node.setTextColor(self.text_colors[self.codes[i]])
 
     @property
     def font(self):
@@ -163,9 +142,13 @@ class Text(Entity):
 
 if __name__ == '__main__':
     app = PandaEditor()
-    test = Text('''
-test. <red>Hey there!
-wahzzup?
+    origin = Entity()
+    origin.model = 'quad'
+    origin.scale *= .01
+    test = Text(
+'''Mestg. <red>Hey there!
+<green>wahzzup?
 ''')
+    # print(test.text_colors['<red>'])
     # test.text = 'test text'
     app.run()
