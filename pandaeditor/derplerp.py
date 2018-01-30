@@ -1,13 +1,45 @@
 from pandaeditor import *
 
+def move(entity, value, duration=.1, curve='linear'):
+    s = Sequence(entity.posInterval(duration, Point3(value[0], value[2], value[1])))
+    s.start()
+    return s
 
-def move_x(entity, value, duration=0, curve='linear'):
+def move_x(entity, value, duration=.1, curve='linear'):
     s = Sequence(entity.posInterval(duration, Point3(value, entity.z, entity.y)))
     s.start()
+    return s
 
-def move_y(entity, value, duration=0, curve='linear'):
+def move_y(entity, value, duration=.1, curve='linear'):
     s = Sequence(entity.posInterval(duration, Point3(entity.x, entity.z, value)))
     s.start()
+    return s
+
+def move_z(entity, value, duration=.1, curve='linear'):
+    s = Sequence(entity.posInterval(duration, Point3(entity.x, value, entity.y)))
+    s.start()
+    return s
+
+
+def scale(entity, value, duration=.1, curve='linear'):
+    s = Sequence(entity.scaleInterval(duration, Vec3(value[0], value[2], value[1])))
+    s.start()
+    return s
+
+def scale_x(entity, value, duration=.1, curve='linear'):
+    s = Sequence(entity.scaleInterval(duration, Vec3(value, entity.z, entity.y)))
+    s.start()
+    return s
+
+def scale_y(entity, value, duration=.1, curve='linear'):
+    s = Sequence(entity.scaleInterval(duration, Vec3(entity.x, entity.z, value)))
+    s.start()
+    return s
+
+def scale_z(entity, value, duration=.1, curve='linear'):
+    s = Sequence(entity.scaleInterval(duration, Vec3(entity.x, value, entity.y)))
+    s.start()
+    return s
 
 
 class Test(Entity):
