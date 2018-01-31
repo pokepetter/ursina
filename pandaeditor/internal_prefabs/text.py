@@ -25,7 +25,7 @@ class Text(Entity):
         self.setColorScaleOff()
         self.color = color.text
         self.align = 'left'
-        self.html_tags = True
+        self.use_tags = True
 
         # temp
         # self.text_node.setFrameColor(1, 1, 1, 1)
@@ -36,7 +36,7 @@ class Text(Entity):
         self.text_node_path.setBin("fixed", 0)
         self.text_node.setPreserveTrailingWhitespace(True)
 
-        self.text_colors = {
+        self.text_colors = {    # I use custom colors because pure colors doesn't look too good on text
             '<default>' : color.text_color,
             '<white>' : color.white,
             '<smoke>' : color.smoke,
@@ -76,6 +76,11 @@ class Text(Entity):
 
     @text.setter
     def text(self, value):
+        if not self.use_tags:
+            self.text_node.setText(value)
+            return
+
+        # base_color = color.to_hsv(self.color)
         import re
         self.codes = re.findall('\<.*?\>', value)
         if not value.startswith('<'):
@@ -92,7 +97,15 @@ class Text(Entity):
             self.text_node.setText(cumulative_text)
             self.text_node.setPreserveTrailingWhitespace(True)
             if self.codes[i] in self.text_colors:
-                self.text_node.setTextColor(self.text_colors[self.codes[i]])
+                lightness = color.to_hsv(self.color)[2]
+                c = self.text_colors[self.codes[i]]
+                if lightness > .8:
+                    c = color.tint(c, .2)
+                else:
+                    print('DDAAAARRRKKK')
+                    c = color.tint(c, -.3)
+
+                self.text_node.setTextColor(c)
 
     @property
     def font(self):
@@ -146,8 +159,8 @@ if __name__ == '__main__':
     origin.model = 'quad'
     origin.scale *= .01
     test = Text(
-'''Mestg. <red>Hey there!
-<green>wahzzup?
+'''Hi there. I can style the text with
+<azure>different <default>colors, like <red>red, <lime>green <default>and <violet>blue!
 ''')
     # print(test.text_colors['<red>'])
     # test.text = 'test text'

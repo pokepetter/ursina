@@ -18,6 +18,14 @@ def inverse(color):
 def random_color():
     return Vec4(random.random(), random.random(), random.random(), 1)
 
+def tint(color, amount=.2):
+    return Vec4(
+        max(min(color[0] + amount, 1), 0),
+        max(min(color[1] + amount, 1), 0),
+        max(min(color[2] + amount, 1), 0),
+        1
+        )
+
 
 white =         color(0, 0, 1)
 smoke =         color(0, 0, 0.96)
@@ -49,4 +57,7 @@ text = smoke
 panda_background = dark_gray
 panda_button = black66
 panda_text = smoke
-text_color = panda_text
+
+light_text = smoke
+dark_text = color(0, 0, .1)
+text_color = light_text
