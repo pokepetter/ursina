@@ -99,7 +99,9 @@ class Text(Entity):
                 if len(s) > 0:
                     # codes = re.findall('\<.*?\>', line)
                     if line.startswith('<'):
-                        color = codes.insert(0, '<default>')
+                        color = '<default>'
+                    else:
+                        color = 'find'
                     print('s:', s, color)
                     parts.append([s, 'color', 'newline'])
         # best = list()
