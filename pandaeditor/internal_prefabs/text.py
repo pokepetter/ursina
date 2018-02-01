@@ -88,7 +88,7 @@ class Text(Entity):
         for line in split_lines:
             # print(line)
 
-        # self.codes = re.findall('\<.*?\>', value)
+        # self.codes = re.findall('\<.*?\>', line)
         # if not value.startswith('<'):
         #     self.codes.insert(0, '<default>')
 
@@ -96,8 +96,12 @@ class Text(Entity):
             re_string = ''.join([e+'|' for e in self.text_colors])
             tag_split_string = re.split(re_string, line)
             for s in tag_split_string:
-                print('s:', s)
-                parts.append([s, 'color', 'newline'])
+                if len(s) > 0:
+                    # codes = re.findall('\<.*?\>', line)
+                    if line.startswith('<'):
+                        color = codes.insert(0, '<default>')
+                    print('s:', s, color)
+                    parts.append([s, 'color', 'newline'])
         # best = list()
         # new_codes = list()
 
