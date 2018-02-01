@@ -80,25 +80,73 @@ class Text(Entity):
             self.text_node.setText(value)
             return
 
-        # base_color = color.to_hsv(self.color)
         import re
-        self.codes = re.findall('\<.*?\>', value)
-        if not value.startswith('<'):
-            self.codes.insert(0, '<default>')
 
-        re_string = ''.join([e+'|' for e in self.text_colors])
-        value = re.split(re_string, value)
+        # final = dict()
+        parts = list()
+        split_lines = value.split('\n')
+        for line in split_lines:
+            # print(line)
+
+        # self.codes = re.findall('\<.*?\>', value)
+        # if not value.startswith('<'):
+        #     self.codes.insert(0, '<default>')
+
+        # value = value.replace('\n', '§')
+            re_string = ''.join([e+'|' for e in self.text_colors])
+            tag_split_string = re.split(re_string, line)
+            for s in tag_split_string:
+                print('s:', s)
+                parts.append([s, 'color', 'newline'])
+        # best = list()
+        # new_codes = list()
+
         cumulative_text = ''
 
-        for i, t in enumerate(value):
+        for i, v in enumerate(value):
+            if i > 0 and v.count('\n') > 0:
+                for j, l in enumerate(v.split('\n')):
+                    if j > 0:
+                        final.update({l : self.codes[i]})
+                    else:
+                        final.update({'<>' + v : self.codes[i]})
+        else:
+            final.update({'+' + v : self.codes[i]})
+
+        prev_x = 0
+        prev_y = 0
+
+        for i, t in enumerate(final):
+            print('t:', t)
+            if i > 0:
+                # prev_x = self.text_node_path.getX()
+                # print('l:', list(final.keys())[i-1])
+                # print(self.text_node.calcWidth(list(final.keys())[i-1].split('\n')[-1]))
+                # prev_x += self.text_node.getRight()
+                prev_x = self.text_node.calcWidth(list(final.keys())[-1])
+                # prev_x = 0
+                # prev_y = self.text_node_path.getZ()
+
+                prev_y = -self.text_node.getLineHeight() * cumulative_text.count('\n')
+                if value[i-1].endswith('\n'):
+                    prev_x = 0
+
+            cumulative_text += t
+                #     prev_y -= 1
+                # if '\n' in value[i-1]:
+                #     prev_y -= value[i-1].count('\n')
+                #     prev_x = 0
+
             self.text_node = TextNode(t)
             self.text_node_path = self.attachNewNode(self.text_node)
-            cumulative_text += t
-            self.text_node.setText(cumulative_text)
+            self.text_node.setText(t)
             self.text_node.setPreserveTrailingWhitespace(True)
-            if self.codes[i] in self.text_colors:
+            # self.text_node_path.setY(i * .1)
+            self.text_node_path.setPos(prev_x, 0, prev_y)
+
+            if final[t] in self.text_colors:
                 lightness = color.to_hsv(self.color)[2]
-                c = self.text_colors[self.codes[i]]
+                c = self.text_colors[final[t]]
                 if lightness > .8:
                     c = color.tint(c, .2)
                 else:
@@ -158,10 +206,12 @@ if __name__ == '__main__':
     origin = Entity()
     origin.model = 'quad'
     origin.scale *= .01
-    test = Text(
-'''Hi there. I can style the text with
-<azure>different <default>colors, like <red>red, <lime>green <default>and <violet>blue!
-''')
+    test = Text('''
+If target has more than <red>50% hp,
+<default>burn the enemy for 5 * INT fire damage
+for 3 turns. <yellow>Else, deal 100 damage.
+Unfreezes target. Costs <blue>10 mana.
+'''.strip())
     # print(test.text_colors['<red>'])
     # test.text = 'test text'
     app.run()
