@@ -77,19 +77,6 @@ class Text(Entity):
         return self.text_node.getText()
 
 
-
-    def create_text_section(self, text, x, y):
-        if len(text) == 0:
-            return
-
-        # print('create text:', text)
-        self.text_node = TextNode(text)
-        self.text_node_path = self.attachNewNode(self.text_node)
-        self.text_node.setText(text)
-        self.text_node.setPreserveTrailingWhitespace(True)
-            #     # self.text_node_path.setY(i * .1)
-        self.text_node_path.setPos(x, 0, y)
-
     @text.setter
     def text(self, text):
         if not self.use_tags:
@@ -98,86 +85,60 @@ class Text(Entity):
 
         sections = list()
         section = ''
-        prev_text = ''
-        x_pos = 0
-        y_pos = 0
-
+        tag = '<default>'
+        x = 0
+        y = 0
 
         i = 0
-        while i < len(text)-1:
-            # print(text[i])
+        while i < len(text):
             char = text[i]
-            # section = ''
-            if char == '\n' and text[i+1] != '<':
-                print('nn:', section)
-                self.create_text_section(section, 0, y_pos)
-                x_pos = 0
-                y_pos -= 1
-                section = ''
+            if char == '\n':
+                if len(section) > 0:
+                    sections.append([section, tag, x, y])
+                    section = ''
+                y -= 1
+                x = 0
                 i += 1
             elif char == '<': # find tag
-                next_tag = ''
+                if len(section) > 0:
+                    sections.append([section, tag, x, y])
+                    x += self.text_node.calcWidth(section)
+                    section = ''
+
+                tag = ''
                 for j in range(len(text)-i):
-                    next_tag += text[i+j]
+                    tag += text[i+j]
                     if text[i+j] == '>':
                         i += j+1
                         break
-
-                x_pos += self.text_node.calcWidth(prev_text)
-                y_pos -= 1
-                self.create_text_section(section, x_pos, y_pos)
-                self.tag = next_tag
-                # print('next tag is:', next_tag, section)
-                print('cc:', section)
-                prev_text = section
-                section = ''
             else:
                 section += char
                 i += 1
 
-        print(section)
+        sections.append([section, tag, x, y])
 
-        # prev_x = 0
-        # prev_y = 0
-        #
-        # for i, t in enumerate(final):
-        #     print('t:', t)
-        #     if i > 0:
-        #         # prev_x = self.text_node_path.getX()
-        #         # print('l:', list(final.keys())[i-1])
-        #         # print(self.text_node.calcWidth(list(final.keys())[i-1].split('\n')[-1]))
-        #         # prev_x += self.text_node.getRight()
-        #         prev_x = self.text_node.calcWidth(list(final.keys())[-1])
-        #         # prev_x = 0
-        #         # prev_y = self.text_node_path.getZ()
-        #
-        #         prev_y = -self.text_node.getLineHeight() * cumulative_text.count('\n')
-        #         if value[i-1].endswith('\n'):
-        #             prev_x = 0
-        #
-        #     cumulative_text += t
-        #         #     prev_y -= 1
-        #         # if '\n' in value[i-1]:
-        #         #     prev_y -= value[i-1].count('\n')
-        #         #     prev_x = 0
-        #
-        #     self.text_node = TextNode(t)
-        #     self.text_node_path = self.attachNewNode(self.text_node)
-        #     self.text_node.setText(t)
-        #     self.text_node.setPreserveTrailingWhitespace(True)
-        #     # self.text_node_path.setY(i * .1)
-        #     self.text_node_path.setPos(prev_x, 0, prev_y)
-        #
-        #     if final[t] in self.text_colors:
-        #         lightness = color.to_hsv(self.color)[2]
-        #         c = self.text_colors[final[t]]
-        #         if lightness > .8:
-        #             c = color.tint(c, .2)
-        #         else:
-        #             print('DDAAAARRRKKK')
-        #             c = color.tint(c, -.3)
-        #
-        #         self.text_node.setTextColor(c)
+        for s in sections:
+            # print('---', s)
+            self.create_text_section(text=s[0], tag=s[1], x=s[2], y=s[3])
+
+
+    def create_text_section(self, text, tag, x, y):
+        self.text_node = TextNode('t')
+        self.text_node_path = self.attachNewNode(self.text_node)
+        self.text_node.setText(text)
+        self.text_node.setPreserveTrailingWhitespace(True)
+        self.text_node_path.setPos(x, 0, y)
+
+        if tag in self.text_colors:
+            lightness = color.to_hsv(self.color)[2]
+            c = self.text_colors[tag]
+            if lightness > .8:
+                c = color.tint(c, .2)
+            else:
+                c = color.tint(c, -.3)
+
+            self.text_node.setTextColor(c)
+
 
     @property
     def font(self):
@@ -231,10 +192,10 @@ if __name__ == '__main__':
     origin.model = 'quad'
     origin.scale *= .01
     test = Text('''
-<lime>If <default>target has more than <red>50% hp,
-<default>burn the enemy for 5 * INT fire damage
-for 3 turns. <yellow>Else, deal 100 damage.
-Unfreezes target. Costs <blue>10 mana.
+<lime>*If <default>target has more than <red>50% hp,
+<default>*burn the enemy for 5 * INT fire damage
+*for 3 turns. <yellow>Else, deal 100 damage.
+*Unfreezes target. Costs <blue>10 mana.
 '''.strip().strip())
     # print(test.text_colors['<red>'])
     # test.text = 'test text'
