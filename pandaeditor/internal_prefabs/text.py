@@ -18,23 +18,9 @@ class Text(Entity):
         self.scale *= 0.25 * scene.editor_font_size
         self.origin = (0, 0)
 
-        self.text_node = TextNode('node name')
-        self.font = 'font/VeraMono.ttf'
-        self.text_node_path = self.attachNewNode(self.text_node)
-
         self.setColorScaleOff()
-        self.color = color.text
+        self.text_nodes = list()
         self.align = 'left'
-        self.use_tags = True
-
-        # temp
-        # self.text_node.setFrameColor(1, 1, 1, 1)
-        # self.text_node.setFrameAsMargin(0.5, 0.5, 0.5, 0.5)
-
-        self.color = color.text_color
-        self.text_node_path.setLightOff()
-        self.text_node_path.setBin("fixed", 0)
-        self.text_node.setPreserveTrailingWhitespace(True)
 
         self.text_colors = {    # I use custom colors because pure colors doesn't look too good on text
             '<default>' : color.text_color,
@@ -60,32 +46,33 @@ class Text(Entity):
             }
 
         self.tag = '<default>'
+        self.color = self.text_colors['<default>']
 
         if text_arg:
             self.text = text_arg
 
-    def update_text(self):
-        pass
-
-    def appear(self, interval):
-        for char in self.characters:
-            char.node_path
-
 
     @property
     def text(self):
-        return self.text_node.getText()
+        return ''.join([tn for tn in self.text_nodes])
 
 
     @text.setter
     def text(self, text):
-        if not self.use_tags:
-            self.text_node.setText(value)
+        text = str(text)
+        for tn in self.text_nodes:
+            tn.remove_node()
+        self.text_nodes.clear()
+
+
+        if not '<' in text:
+            self.create_text_section(text)
             return
 
         sections = list()
         section = ''
         tag = '<default>'
+        temp_text_node = TextNode('temp_text_node')
         x = 0
         y = 0
 
@@ -102,7 +89,7 @@ class Text(Entity):
             elif char == '<': # find tag
                 if len(section) > 0:
                     sections.append([section, tag, x, y])
-                    x += self.text_node.calcWidth(section)
+                    x += temp_text_node.calcWidth(section)
                     section = ''
 
                 tag = ''
@@ -122,23 +109,26 @@ class Text(Entity):
             self.create_text_section(text=s[0], tag=s[1], x=s[2], y=s[3])
 
 
-    def create_text_section(self, text, tag, x, y):
+    def create_text_section(self, text, tag='<default>', x=0, y=0):
         self.text_node = TextNode('t')
         self.text_node_path = self.attachNewNode(self.text_node)
         self.text_node.setText(text)
         self.text_node.setPreserveTrailingWhitespace(True)
         self.text_node_path.setPos(x, 0, y)
+        self.text_nodes.append(self.text_node_path)
 
         if tag in self.text_colors:
             lightness = color.to_hsv(self.color)[2]
-            c = self.text_colors[tag]
-            if lightness > .8:
-                c = color.tint(c, .2)
-            else:
-                c = color.tint(c, -.3)
+            self.color = self.text_colors[tag]
+            if not tag == '<default>':
+                if lightness > .8:
+                    self.color = color.tint(self.color, .2)
+                else:
+                    self.color = color.tint(self.color, -.3)
 
-            self.text_node.setTextColor(c)
+            self.text_node.setTextColor(self.color)
 
+        return self.text_node
 
     @property
     def font(self):
@@ -165,18 +155,15 @@ class Text(Entity):
         if name == 'align':
             object.__setattr__(self, name, value)
             if value == 'left':
-                self.text_node.setAlign(TextNode.ALeft)
+                for tn in self.text_nodes:
+                    tn.node().setAlign(TextNode.ALeft)
             elif value == 'center':
-                self.text_node.setAlign(TextNode.ACenter)
+                for tn in self.text_nodes:
+                    tn.node().setAlign(TextNode.ACenter)
             elif value == 'right':
-                self.text_node.setAlign(TextNode.ARight)
+                for tn in self.text_nodes:
+                    tn.node().setAlign(TextNode.ARight)
 
-        if name == 'color':
-            object.__setattr__(self, name, value)
-            try:
-                self.text_node.setTextColor(value)
-            except:
-                pass
 
         if name == 'wordwrap':
             object.__setattr__(self, name, value)
@@ -196,7 +183,7 @@ if __name__ == '__main__':
 <default>*burn the enemy for 5 * INT fire damage
 *for 3 turns. <yellow>Else, deal 100 damage.
 *Unfreezes target. Costs <blue>10 mana.
-'''.strip().strip())
-    # print(test.text_colors['<red>'])
-    # test.text = 'test text'
+'''.strip())
+
+    # test.text = '452 <red>some random text'
     app.run()
