@@ -27,17 +27,17 @@ def scale(entity, value, duration=.1, curve='linear'):
     return s
 
 def scale_x(entity, value, duration=.1, curve='linear'):
-    s = Sequence(entity.scaleInterval(duration, Vec3(value, entity.z, entity.y)))
+    s = Sequence(entity.scaleInterval(duration, Vec3(value, entity.scale_z, entity.scale_y)))
     s.start()
     return s
 
 def scale_y(entity, value, duration=.1, curve='linear'):
-    s = Sequence(entity.scaleInterval(duration, Vec3(entity.x, entity.z, value)))
+    s = Sequence(entity.scaleInterval(duration, Vec3(entity.scale_x, entity.scale_z, value)))
     s.start()
     return s
 
 def scale_z(entity, value, duration=.1, curve='linear'):
-    s = Sequence(entity.scaleInterval(duration, Vec3(entity.x, value, entity.y)))
+    s = Sequence(entity.scaleInterval(duration, Vec3(entity.scale_x, value, entity.scale_y)))
     s.start()
     return s
 
