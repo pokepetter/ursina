@@ -220,9 +220,9 @@ class Entity(NodePath):
             self.set_scale(new_value[0], new_value[2], new_value[1])
 
 
-        if name == 'scale_x': self.set_scale(value, self.scale_y, self.scale_z)
-        if name == 'scale_y': self.set_scale(self.scale_x, self.scale_y, value)
-        if name == 'scale_z': self.set_scale(self.scale_x, value, self.scale_z)
+        if name == 'scale_x': self.set_scale(value, self.scale_z, self.scale_y)
+        if name == 'scale_y': self.set_scale(self.scale_x, self.scale_z, value)
+        if name == 'scale_z': self.set_scale(self.scale_x, value, self.scale_y)
 
 
         if name == 'collider':
