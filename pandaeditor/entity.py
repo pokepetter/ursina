@@ -1,19 +1,21 @@
 import sys
 import inspect
 import importlib
+import random
 from panda3d.core import PandaNode
 from panda3d.core import NodePath
 from panda3d.core import ModelNode
 from panda3d.core import Vec3
+from panda3d.core import Point3
 from panda3d.core import SamplerState
 from panda3d.core import TransparencyAttrib
 from panda3d.core import Texture
 from pandaeditor import application
 from pandaeditor.collider import Collider
-# from pandaeditor.scripts import *
 import uuid
 from os import path
 from panda3d.core import Filename
+from direct.interval.IntervalGlobal import Sequence, Func, Wait
 from undo import undoable
 
 from pandaeditor import color
@@ -447,6 +449,23 @@ class Entity(NodePath):
         return children_entities
 
 
+    def shake(self, duration=.2, magnitude=1):
+        s = Sequence()
+        self.original_position = self.position
+        for i in range(int(duration / .05)):
+            s.append(self.posInterval(.05, Point3(
+                self.x + (random.uniform(-.1, .1) * magnitude),
+                self.z,
+                self.y + (random.uniform(-.1, .1) * magnitude))
+            ))
+            s.append(self.posInterval(.05, Point3(
+                self.original_position[0],
+                self.original_position[2],
+                self.original_position[1])
+            ))
+        s.start()
+
+
     # @property
     # def descendants(self):
     #     descendants = list()
@@ -460,6 +479,13 @@ class Entity(NodePath):
     #     #         print(c.__class__.__name__)
     #
     #     return children_entities
+class ShakeTester(Entity):
+    # def __init__(self):
+    #     super().__init()
+    def input(self, key):
+        if key == '1':
+            e.shake()
+
 if __name__ == '__main__':
     from pandaeditor import main
     app = main.PandaEditor()
@@ -468,9 +494,7 @@ if __name__ == '__main__':
     e.model = 'quad'
     e.color = color.red
     e.collider = 'box'
-    print(e.collider)
     e.collider = None
-    print(e.collider)
-    print(type(e).__name__, 'ok')
-    print('e:', e)
-    # app.run()
+
+    shake_tester = ShakeTester()
+    app.run()
