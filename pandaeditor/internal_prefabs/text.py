@@ -22,7 +22,7 @@ class Text(Entity):
         self.text_nodes = list()
         self.align = 'left'
 
-        self.text_colors = {    # I use custom colors because pure colors doesn't look too good on text
+        self.text_colors = {
             '<default>' : color.text_color,
             '<white>' : color.white,
             '<smoke>' : color.smoke,
