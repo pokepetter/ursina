@@ -255,8 +255,24 @@ def load(paths, module_name):
             print('added script:', class_instance)
             return class_instance
 
+def invoke(function, delay=0):
+    s = Sequence()
+    s.append(Wait(delay))
+    s.append(Func(function))
+    s.start()
+    
 
-def destroy(entity):
+def destroy(entity, delay=0):
+    if delay == 0:
+        _destroy(entity)
+        return
+
+    s = Sequence()
+    s.append(Wait(delay))
+    s.append(Func(_destroy))
+    s.start()
+
+def _destroy(entity):
     if entity in scene.entities:
         scene.entities.remove(entity)
 
