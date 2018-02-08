@@ -453,33 +453,45 @@ class Entity(NodePath):
 #------------
 
     def move(self, value, duration=.1, delay=0, curve='linear'):
-        s = Sequence(self.posInterval(duration, Point3(value[0], value[2], value[1])))
+        s = Sequence()
+        s.append(Wait(delay))
+        s.append(self.posInterval(duration, Point3(value[0], value[2], value[1])))
         s.start()
         return s
 
     def move_x(self, value, duration=.1, delay=0, curve='linear'):
-        s = Sequence(self.posInterval(duration, Point3(value, self.z, self.y)))
+        s = Sequence()
+        s.append(Wait(delay))
+        s.append(self.posInterval(duration, Point3(value, self.z, self.y)))
         s.start()
         return s
 
     def move_y(self, value, duration=.1, delay=0, curve='linear'):
-        s = Sequence(self.posInterval(duration, Point3(self.x, self.z, value)))
+        s = Sequence()
+        s.append(Wait(delay))
+        s.append(self.posInterval(duration, Point3(self.x, self.z, value)))
         s.start()
         return s
 
     def move_z(self, value, duration=.1, delay=0, curve='linear'):
-        s = Sequence(self.posInterval(duration, Point3(self.x, value, self.y)))
+        s = Sequence()
+        s.append(Wait(delay))
+        s.append(self.posInterval(duration, Point3(self.x, value, self.y)))
         s.start()
         return s
 
 
     def animate_scale(self, value, duration=.1, delay=0, curve='linear'):
-        s = Sequence(self.scaleInterval(duration, Vec3(value[0], value[2], value[1])))
+        s = Sequence()
+        s.append(Wait(delay))
+        s.append(self.scaleInterval(duration, Vec3(value[0], value[2], value[1])))
         s.start()
         return s
 
     def animate_scale_x(self, value, duration=.1, delay=0, curve='linear'):
-        s = Sequence(self.scaleInterval(duration, Vec3(value, self.scale_z, self.scale_y)))
+        s = Sequence()
+        s.append(Wait(delay))
+        s.append(self.scaleInterval(duration, Vec3(value, self.scale_z, self.scale_y)))
         s.start()
         return s
 
@@ -491,7 +503,9 @@ class Entity(NodePath):
         return s
 
     def animate_scale_z(self, value, duration=.1, delay=0, curve='linear'):
-        s = Sequence(self.scaleInterval(duration, Vec3(self.scale_x, value, self.scale_y)))
+        s = Sequence()
+        s.append(Wait(delay))
+        s.append(self.scaleInterval(duration, Vec3(self.scale_x, value, self.scale_y)))
         s.start()
         return s
 
