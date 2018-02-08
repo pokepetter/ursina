@@ -449,7 +449,7 @@ class Entity(NodePath):
         return children_entities
 
 #------------
-# AMINATIONS
+# ANIMATIONS
 #------------
 
     def move(self, value, duration=.1, delay=0, curve='linear'):
