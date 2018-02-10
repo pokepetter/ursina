@@ -255,12 +255,13 @@ def load(paths, module_name):
             print('added script:', class_instance)
             return class_instance
 
-def invoke(function, delay=0):
+def invoke(function, *args, **kwargs):
     s = Sequence()
-    s.append(Wait(delay))
-    s.append(Func(function))
+    if 'delay' in kwargs:
+        s.append(Wait(kwargs['delay']))
+    s.append(Func(function, *args))
     s.start()
-    
+
 
 def destroy(entity, delay=0):
     if delay == 0:
