@@ -13,7 +13,7 @@ class Window(WindowProperties):
         super().__init__()
         loadPrcFileData('', 'window-title pandaeditor')
         loadPrcFileData('', 'undecorated True')
-        loadPrcFileData('', 'sync-video False')
+        loadPrcFileData('', 'sync-video True')
         loadPrcFileData('', 'win-size 1536 864')
         loadPrcFileData('', 'notify-level-util error')
         # loadPrcFileData('', 'want-pstats True')
@@ -63,7 +63,7 @@ class Window(WindowProperties):
         self.fullscreen = False
         self.borderless = True
         self.cursor = True
-        self.fps_counter = False
+        self.fps_counter = True
         self.vsync = True
 
 
