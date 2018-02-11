@@ -42,7 +42,7 @@ class Window(WindowProperties):
                 self.screen_resolution = (1366, 768)
 
 
-        self.fullscreen_size = (self.screen_resolution[0], self.screen_resolution[1])
+        self.fullscreen_size = (self.screen_resolution[0]+1, self.screen_resolution[1]+1)
         self.windowed_size = (self.fullscreen_size[0] / 1.25, self.fullscreen_size[1] / 1.25)
         self.size = self.windowed_size
         self.position = (
@@ -109,9 +109,16 @@ class Window(WindowProperties):
 
         if name == 'fullscreen':
             if value == True:
+                print('FS')
                 self.size = self.fullscreen_size
+                self.position = (0, 0)
             else:
+                print('windowed')
                 self.size = self.windowed_size
+                self.position = (
+                    int((self.screen_resolution[0] - self.size[0]) / 2),
+                    int((self.screen_resolution[1] - self.size[1]) / 2)
+                    )
             object.__setattr__(self, name, value)
 
         if name == 'color':
