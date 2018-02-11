@@ -109,9 +109,11 @@ class Window(WindowProperties):
 
         if name == 'fullscreen':
             if value == True:
+                print('FS')
                 self.size = self.fullscreen_size
                 self.position = (0, 0)
             else:
+                print('windowed')
                 self.size = self.windowed_size
                 self.position = (
                     int((self.screen_resolution[0] - self.size[0]) / 2),
