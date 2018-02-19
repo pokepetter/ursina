@@ -67,18 +67,19 @@ class Camera(Entity):
         scene.ui_camera = self.ui_camera
         # ui_camera.hide()
 
-        ui = Entity()
-        ui.eternal = True
-        ui.name = 'ui'
-        ui.is_editor = True
-        ui.parent = self.ui_camera
-        ui.model = 'quad'
-        ui.scale = (self.ui_size * .5, self.ui_size * .5)
+        self.ui = Entity()
+        self.ui.eternal = True
+        self.ui.name = 'ui'
+        self.ui.is_editor = True
+        self.ui.parent = self.ui_camera
+        self.ui.model = 'quad'
+        self.original_ui_scale = (self.ui_size * .5, self.ui_size * .5)
+        self.ui.scale = self.original_ui_scale
         # ui.color = color.white33
-        if ui.model:
-            ui.model.hide()
-        scene.ui = ui
-        self.ui = ui
+        if self.ui.model:
+            self.ui.model.hide()
+        scene.ui = self.ui
+
 
     @property
     def orthographic(self):
@@ -123,6 +124,12 @@ class Camera(Entity):
 
         if name == 'rect':
             self.ui_display_region = self.display_region = win.make_display_region(0, 1, 0, 1)
+
+        if name == 'stretch_ui':
+            if value == True:
+                self.ui.scale_x *= window.aspect_ratio
+            else:
+                self.ui.scale = self.original_ui_scale
 
 
 
