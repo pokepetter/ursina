@@ -83,41 +83,45 @@ class FirstPersonController(Entity):
 
 
     def start(self):
-        # camera.parent = self
+        camera.parent = self
         self.position = (0, .5, 1)
-        camera.position = (0, 4, -4)
-        # camera.rotation = (0,0,0)
-        # camera.position = (0,2,-2)
+        # camera.position = (0, 4, -4)
+        camera.rotation = (0,0,0)
+        camera.position = (0,2,0)
         camera.fov = 90
         mouse.locked = True
 
 
     def update(self, dt):
-        camera.position = self.position + (0, 4, -4)
+        # camera.position = self.position + (0, 4, -4)
 
 
-        raycast(self.world_position, camera.forward, 100, render, debug=True)
+        # raycast(self.world_position, camera.forward, 100, render, debug=True)
         if self.i < self.update_interval:
             self.i += 1
             return
 
-        if held_keys['w'] or held_keys['a'] or held_keys['s'] or held_keys['d']:
-            self.moving = True
+        # if held_keys['w'] or held_keys['a'] or held_keys['s'] or held_keys['d']:
+        #     self.moving = True
 
 
-        # if held_keys['w']:
-            # print(scene)
-            # hit = (1 - raycast(self.world_position + self.forward, (0,0,1), 20, render, debug=True))
-            # self.position += self.forward * held_keys['w'] * self.speed
-        self.position += self.forward * held_keys['w'] * self.speed
-        self.position += self.back * held_keys['s'] * self.speed
-        self.position += self.right * held_keys['d'] * self.speed
-        self.position += self.left * held_keys['a'] * self.speed
+        if held_keys['w']:
+            if not raycast(self.world_position + self.up, self.forward, 1, scene):
+                self.position += self.forward * held_keys['w'] * self.speed
+        if held_keys['s']:
+            if not raycast(self.world_position + self.up, self.back, 1, scene):
+                self.position += self.back * held_keys['s'] * self.speed
+        if held_keys['d']:
+            if not raycast(self.world_position + self.up, self.right, 1, scene):
+                self.position += self.right * held_keys['d'] * self.speed
+        if held_keys['a']:
+            if not raycast(self.world_position + self.up, self.left, 1, scene):
+                self.position += self.left * held_keys['a'] * self.speed
         # self.position += self.up * held_keys['e'] * self.speed
         # self.position += self.down * held_keys['q'] * self.speed
         # mag = max(x, z);
 
-        # self.rotation_y += mouse.velocity[0] * 20
+        self.rotation_y += mouse.velocity[0] * 20
         camera.rotation_x -= mouse.velocity[1] * 20
         camera.rotation_x = clamp(camera.rotation_x, -90, 90)
 

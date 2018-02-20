@@ -35,6 +35,7 @@ class Mouse(object):
         self.pickerNode.addSolid(self.pickerRay)
         self.picker.addCollider(self.pickerNP, self.pq)
         self.raycast = True
+        self.collision = None
         self.enabled = True
 
     @property
@@ -196,34 +197,37 @@ class Mouse(object):
     def find_collision(self):
         if not self.raycast:
             return
-        self.pq.sort_entries()
-        for entry in self.pq.get_entries():
-            self.collision = entry
-            nP = self.collision.get_into_node_path().parent
-            if nP.name.endswith('.egg'):
-                nP = nP.parent
+        self.pq.sortEntries()
+        if len(self.pq.get_entries()) == 0:
+            self.collision = None
+            return
 
-                for entity in scene.entities:
-                    # if hit entity is not hovered, call on_mouse_enter()
-                    if entity == nP and entity.collision:
-                        if not entity.hovered:
-                            entity.hovered = True
-                            self.hovered_entity = entity
-                            # print(entity.name)
-                            if hasattr(entity, 'on_mouse_enter'):
-                                entity.on_mouse_enter()
-                            for s in entity.scripts:
-                                if hasattr(s, 'on_mouse_enter'):
-                                    s.on_mouse_enter()
-                    # unhover the rest
-                    else:
-                        if entity.hovered:
-                            entity.hovered = False
-                            if hasattr(entity, 'on_mouse_exit'):
-                                entity.on_mouse_exit()
-                            for s in entity.scripts:
-                                if hasattr(s, 'on_mouse_exit'):
-                                    s.on_mouse_exit()
+        self.collision = self.pq.getEntry(0)
+        nP = self.collision.getIntoNodePath().parent
+        if nP.name.endswith('.egg'):
+            nP = nP.parent
+
+            for entity in scene.entities:
+                # if hit entity is not hovered, call on_mouse_enter()
+                if entity == nP:
+                    if not entity.hovered:
+                        entity.hovered = True
+                        self.hovered_entity = entity
+                        # print(entity.name)
+                        if hasattr(entity, 'on_mouse_enter'):
+                            entity.on_mouse_enter()
+                        for s in entity.scripts:
+                            if hasattr(s, 'on_mouse_enter'):
+                                s.on_mouse_enter()
+                # unhover the rest
+                else:
+                    if entity.hovered:
+                        entity.hovered = False
+                        if hasattr(entity, 'on_mouse_exit'):
+                            entity.on_mouse_exit()
+                        for s in entity.scripts:
+                            if hasattr(s, 'on_mouse_exit'):
+                                s.on_mouse_exit()
 
 
 
