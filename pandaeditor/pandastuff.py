@@ -287,8 +287,9 @@ def _destroy(entity):
     # except:
     #     pass
 
-    if hasattr(entity, 'texture') and entity.texture != None:
-        entity.texture.releaseAll()
+    #unload texture
+    # if hasattr(entity, 'texture') and entity.texture != None:
+    #     entity.texture.releaseAll()
 
     del entity
 
@@ -341,6 +342,7 @@ def count_lines(file):
     print('blank_lines:', blank_lines)
     print('comment_lines:', comment_lines)
     print('used_lines:', all_lines - blank_lines - comment_lines)
+    return all_lines
 
 
 def chunk_list(l, cunk_size):

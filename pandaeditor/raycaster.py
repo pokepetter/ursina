@@ -61,16 +61,11 @@ class Raycaster(Entity):
             self.point = self.collision.get_surface_point(render)
             self.point = Vec3(self.point[0], self.point[2], self.point[1])
             hit_dist = self.distance(self.world_position, self.point)
-            print(origin, self.point, hit_dist)
             if hit_dist <= dist:
                 if nP.name.endswith('.egg'):
                     nP = nP.parent
-                    print('hit')
                     return True, nP, hit_dist
-            else:
-                print('miss')
         else:
-            print('miss')
             self.point = None
             return False
 
