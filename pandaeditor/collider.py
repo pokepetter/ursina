@@ -23,12 +23,14 @@ class Collider(NodePath):
         self.node_path = self.entity.attachNewNode(CollisionNode('CollisionNode'))
         if self.entity.model:
             self.node_path.reparentTo(self.entity.model)
+            self.node_path.wrtReparentTo(self.entity)
         else:
             self.node_path.reparentTo(self.entity)
 
         self.node_path.node().addSolid(self.shape)
         self.entity.collision = True
 
+        # self.node_path.show()
 
         # print('added collider', self.node_path)
 

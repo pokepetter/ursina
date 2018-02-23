@@ -81,6 +81,7 @@ class PandaEditor(ShowBase):
         base.disableMouse()
         mouse.mouse_watcher = base.mouseWatcherNode
         mouse.enabled = True
+        self.mouse = mouse
 
         scene.set_up()
 

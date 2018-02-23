@@ -202,33 +202,52 @@ class Mouse(object):
             self.collision = None
             return
 
+        self.collisions = list()
+        for entry in self.pq.getEntries():
+            # print(entry.getIntoNodePath().parent)
+            for entity in scene.entities:
+                if entry.getIntoNodePath().parent == entity:
+                    if entity.collision:
+                        self.collisions.append(Collision(
+                            entry.collided(),
+                            entity,
+                            entry.getSurfacePoint(render),
+                            entry.getSurfaceNormal(render)
+                            ))
+                        break
+
         self.collision = self.pq.getEntry(0)
         nP = self.collision.getIntoNodePath().parent
-        if nP.name.endswith('.egg'):
-            nP = nP.parent
 
-            for entity in scene.entities:
-                # if hit entity is not hovered, call on_mouse_enter()
-                if entity == nP:
-                    if not entity.hovered:
-                        entity.hovered = True
-                        self.hovered_entity = entity
-                        # print(entity.name)
-                        if hasattr(entity, 'on_mouse_enter'):
-                            entity.on_mouse_enter()
-                        for s in entity.scripts:
-                            if hasattr(s, 'on_mouse_enter'):
-                                s.on_mouse_enter()
-                # unhover the rest
-                else:
-                    if entity.hovered:
-                        entity.hovered = False
-                        if hasattr(entity, 'on_mouse_exit'):
-                            entity.on_mouse_exit()
-                        for s in entity.scripts:
-                            if hasattr(s, 'on_mouse_exit'):
-                                s.on_mouse_exit()
+        for entity in scene.entities:
+            # if hit entity is not hovered, call on_mouse_enter()
+            if entity == nP:
+                if not entity.hovered:
+                    entity.hovered = True
+                    self.hovered_entity = entity
+                    # print(entity.name)
+                    if hasattr(entity, 'on_mouse_enter'):
+                        entity.on_mouse_enter()
+                    for s in entity.scripts:
+                        if hasattr(s, 'on_mouse_enter'):
+                            s.on_mouse_enter()
+            # unhover the rest
+            else:
+                if entity.hovered:
+                    entity.hovered = False
+                    if hasattr(entity, 'on_mouse_exit'):
+                        entity.on_mouse_exit()
+                    for s in entity.scripts:
+                        if hasattr(s, 'on_mouse_exit'):
+                            s.on_mouse_exit()
 
+
+class Collision(object):
+    def __init__(self, collided, entity, position, normal):
+        self.collided = collided
+        self.entity = entity
+        self.position = position
+        self.normal = normal
 
 
 sys.modules[__name__] = Mouse()
