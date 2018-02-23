@@ -54,10 +54,6 @@ class Button(Entity):
         if key == 'left mouse down':
             if self.hovered:
                 self.model.setColorScale(self.pressed_color)
-                try:
-                    self.on_click()
-                except:
-                    pass
 
         if key == 'left mouse up':
             if self.hovered:
