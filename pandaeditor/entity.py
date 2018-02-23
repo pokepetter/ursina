@@ -182,6 +182,7 @@ class Entity(NodePath):
 
             self.model.setPos(-new_value[0], -new_value[2], -new_value[1])
             object.__setattr__(self, name, new_value)
+            return
 
         if name == 'rotation':
             new_value = Vec3()

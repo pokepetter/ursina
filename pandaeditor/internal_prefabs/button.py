@@ -47,6 +47,14 @@ class Button(Entity):
             self.highlight_color = color.color(hsv[0], hsv[1], hsv[2] + step, clamp(hsv[3], .8, 1))
             self.pressed_color = color.color(hsv[0], hsv[1], hsv[2] - step, clamp(hsv[3], .8, 1))
 
+        if name == 'origin':
+            super().__setattr__(name, value)
+            try:    # update collider position by making a new one
+                self.collider.remove()
+                self.collider = 'box'
+            except:
+                pass
+
         super().__setattr__(name, value)
 
 
@@ -72,4 +80,7 @@ class Button(Entity):
 if __name__ == '__main__':
     app = PandaEditor()
     b = Button()
+    b.scale *= .5
+    b.color = color.azure
+    b.origin = (-.5, -.5)
     app.run()
