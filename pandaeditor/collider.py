@@ -26,7 +26,7 @@ class Collider(NodePath):
         self.node_path = self.entity.attachNewNode(CollisionNode('CollisionNode'))
         self.node_path.node().addSolid(self.shape)
         self.entity.collision = True
-        self.node_path.show()
+        # self.node_path.show()
 
     def remove(self):
         self.node_path.removeNode()
