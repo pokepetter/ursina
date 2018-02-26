@@ -25,7 +25,7 @@ from pandaeditor import scene
 class Entity(NodePath):
 
     def __init__(self, name='entity'):
-        super().__init__('empty')
+        super().__init__(name)
         self.enabled = True
         self.is_editor = False
         self.name = name

@@ -191,8 +191,8 @@ class Mouse(object):
 
     @property
     def point(self):
-        return self.collision.get_surface_point()
-
+        p = self.collision.getSurfacePoint(self.hovered_entity)
+        return Point3(p[0], p[2], p[1])
 
     def find_collision(self):
         if not self.raycast:
@@ -211,8 +211,8 @@ class Mouse(object):
                         self.collisions.append(Collision(
                             entry.collided(),
                             entity,
-                            entry.getSurfacePoint(render),
-                            entry.getSurfaceNormal(render)
+                            entry.getSurfacePoint(entity),
+                            entry.getSurfaceNormal(entity)
                             ))
                         break
 
