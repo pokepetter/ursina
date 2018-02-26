@@ -16,3 +16,4 @@ from pandaeditor.internal_prefabs.transform_field import TransformField
 from pandaeditor.internal_prefabs.sky import Sky
 from pandaeditor.internal_prefabs.cursor import Cursor
 # from pandaeditor.internal_scripts.editor_draggable import EditorDraggable
+from pandaeditor.internal_prefabs.models import Quad, Circle, Cube
