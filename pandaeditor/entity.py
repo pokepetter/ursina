@@ -24,11 +24,13 @@ from pandaeditor import scene
 
 class Entity(NodePath):
 
-    def __init__(self, name='entity'):
+    def __init__(self, name='entity', **kwargs):
         super().__init__(name)
+        self.name = name
+        # print('red:', color.red)
+
         self.enabled = True
         self.is_editor = False
-        self.name = name
         try:
             self.parent = scene
         except:
@@ -55,6 +57,9 @@ class Entity(NodePath):
         self.scale_x, self.scale_y, self.scale_z = 1, 1, 1
 
         scene.entities.append(self)
+
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
 
     def __setattr__(self, name, value):
@@ -551,12 +556,14 @@ class ShakeTester(Entity):
 if __name__ == '__main__':
     from pandaeditor import main
     app = main.PandaEditor()
-    e = Entity()
-    e.enabled = True
-    e.model = 'quad'
-    e.color = color.red
-    e.collider = 'box'
-    e.collider = None
+    # e = Entity()
+    # e.enabled = True
+    # e.model = 'quad'
+    # e.color = color.red
+    # e.collider = 'box'
+    # e.collider = None
+
+    e = Entity(model='quad', color=color.red, collider='box')
 
     shake_tester = ShakeTester()
     app.run()
