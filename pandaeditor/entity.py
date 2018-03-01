@@ -32,9 +32,12 @@ class Entity(NodePath):
         self.enabled = True
         self.is_editor = False
         try:
-            self.parent = scene
+            self.parent = inspect.currentframe().f_back.f_locals['self']
         except:
-            print('scene not yet initialized')
+            try:
+                self.parent = scene
+            except:
+                print('scene not yet initialized')
         scene.has_changes = True
         self.model = None
         self.color = color.white
