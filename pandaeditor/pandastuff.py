@@ -1,17 +1,11 @@
 from direct.showbase.ShowBase import ShowBase
-from panda3d.core import Lens
-from panda3d.core import LensNode
-from panda3d.core import PerspectiveLens
-from panda3d.core import OrthographicLens
+from panda3d.core import Lens, LensNode, PerspectiveLens, OrthographicLens
 from direct.interval.IntervalGlobal import Sequence, Func, Wait
 from direct.task.Task import Task
-from panda3d.core import NodePath
-from panda3d.core import PandaNode
-from panda3d.core import Vec2, Vec3
-from panda3d.core import Point3
-from panda3d.core import loadPrcFileData
-from panda3d.core import Filename
-from panda3d.core import AntialiasAttrib
+from panda3d.core import NodePath, PandaNode
+from panda3d.core import Vec2, Vec3, Point3
+from panda3d.core import loadPrcFileData, Filename, AntialiasAttrib
+from panda3d.core import PNMImage, Texture
 
 import sys
 import os
