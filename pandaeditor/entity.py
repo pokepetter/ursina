@@ -119,7 +119,6 @@ class Entity(NodePath):
                 return
 
             if value.__class__ is Texture:
-                print('rttttttttttttttttttttt')
                 texture = value
             elif isinstance(value, str):
                 try:

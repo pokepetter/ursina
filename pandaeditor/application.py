@@ -14,8 +14,9 @@ class Application():
         self.base = None
         import inspect
 
-        # get path with correct cassing
+        # get path with correct casing
         self.package_folder = glob.glob(re.sub(r'([^:])(?=[/\\]|$)', r'[\1]', dirname(__file__)))[0] + '/'
+        print('package_folder:', self.package_folder)
         self.asset_folder = (os.path.abspath(sys.path[0])).replace('\\', '/') + '/'
 
         self.internal_model_folder = self.package_folder + 'internal_models/'
@@ -57,3 +58,4 @@ sys.modules[__name__] = Application()
 if __name__ == '__main__':
     from pandaeditor.main import PandaEditor
     app = PandaEditor()
+    app.run()

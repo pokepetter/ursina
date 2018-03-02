@@ -141,7 +141,7 @@ class Mouse(object):
         # collide with ui
         self.pickerNP.reparent_to(scene.ui_camera)
         self.pickerRay.set_from_lens(camera.ui_lens_node, self.x * 2, self.y * 2)
-        self.picker.traverse(scene.ui)
+        self.picker.traverse(camera.ui)
         if self.pq.get_num_entries() > 0:
             # print('collided with ui', self.pq.getNumEntries())
             self.find_collision()
@@ -191,8 +191,11 @@ class Mouse(object):
 
     @property
     def point(self):
-        p = self.collision.getSurfacePoint(self.hovered_entity)
-        return Point3(p[0], p[2], p[1])
+        if self.hovered_entity:
+            p = self.collision.getSurfacePoint(self.hovered_entity)
+            return Point3(p[0], p[2], p[1])
+        else:
+            return None
 
     def find_collision(self):
         if not self.raycast:
