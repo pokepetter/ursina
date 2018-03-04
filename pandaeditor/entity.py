@@ -17,6 +17,7 @@ from os import path
 from panda3d.core import Filename
 from direct.interval.IntervalGlobal import Sequence, Func, Wait
 from undo import undoable
+from direct.showbase import Loader
 
 from pandaeditor import color
 from pandaeditor import scene
@@ -27,17 +28,12 @@ class Entity(NodePath):
     def __init__(self, name='entity', **kwargs):
         super().__init__(name)
         self.name = name
-        # print('red:', color.red)
-
         self.enabled = True
         self.is_editor = False
         try:
-            self.parent = inspect.currentframe().f_back.f_locals['self']
+            self.parent = scene
         except:
-            try:
-                self.parent = scene
-            except:
-                print('scene not yet initialized')
+            print('scene not yet initialized')
         scene.has_changes = True
         self.model = None
         self.color = color.white
@@ -557,7 +553,7 @@ class ShakeTester(Entity):
 
 if __name__ == '__main__':
     from pandaeditor import main
-    app = main.PandaEditor()
+    # app = main.PandaEditor()
     # e = Entity()
     # e.enabled = True
     # e.model = 'quad'
@@ -568,4 +564,4 @@ if __name__ == '__main__':
     e = Entity(model='quad', color=color.red, collider='box')
 
     shake_tester = ShakeTester()
-    app.run()
+    # app.run()

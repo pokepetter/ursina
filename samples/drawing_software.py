@@ -12,16 +12,17 @@ class Paper(Entity):
         self.collider = 'box'
         self.width = 0
         self.height = 0
+        self.i = 0
 
 
     def start(self):
         self.new()
 
-    def new(self, width=256, height=256):
+    def new(self, width=1024, height=1024):
         self.width = width
         self.height = height
 
-        self.img = Image.new('RGBA', (256,256), (255, 255, 255))
+        self.img = Image.new('RGBA', (width, height), (255, 255, 255))
         self.brush = Image.open("brush.png")
 
         texture = Texture()
@@ -33,6 +34,7 @@ class Paper(Entity):
         self.texture.setRamImageAs(self.img.tobytes(), "RGBA")
 
 
+
     def update(self, dt):
         if held_keys['space']:
             camera.x -= mouse.velocity[0] * 10
@@ -42,9 +44,17 @@ class Paper(Entity):
             self.tex_x = int((mouse.point[0] + .5) * self.width)
             self.tex_y = int((mouse.point[1] + .5) * self.height)
 
-            print(self.tex_x, self.tex_y)
-            self.img.paste(self.brush, (self.tex_x, self.tex_y), self.brush)
-            self.texture.setRamImageAs(self.img.tobytes(), "RGBA")
+            # print(self.tex_x, self.tex_y)
+            self.img.paste(
+                self.brush,
+                (int(self.tex_x - (self.brush.size[0] / 2)),
+                int(self.tex_y - (self.brush.size[1] / 2))), 
+                self.brush)
+
+            self.i += 1
+            if self.i > 2:  # update image less often to reduce lag.
+                self.texture.setRamImageAs(self.img.tobytes(), "RGBA")
+                self.i = 0
 
 
 app = PandaEditor()

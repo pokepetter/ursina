@@ -1,8 +1,8 @@
 from pandaeditor import *
 
 class Quad(Entity):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.model = 'quad'
 
 class Circle(Entity):
@@ -12,15 +12,16 @@ class Circle(Entity):
         #gengerate circle16
 
 class Cube(Entity):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.model = 'cube'
 
 
-# app = PandaEditor()
-# # c = Circle()
-# e = Entity()
-# e.model = 'circle_16'
-# print('----', e.model)
-# # e.rotation_y = 90
-# app.run()
+if __name__ == '__main__':
+    app = PandaEditor()
+    # c = Circle()
+    e = Entity(model='quad')
+    e.model = 'circle_16'
+    # print('----', e.model)
+    # # e.rotation_y = 90
+    app.run()
