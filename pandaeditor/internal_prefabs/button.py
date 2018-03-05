@@ -4,8 +4,8 @@ from panda3d.core import TextNode
 
 class Button(Entity):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.name = 'button'
         self.parent = scene.ui
         self.is_editor = False

@@ -94,6 +94,10 @@ class Entity(NodePath):
 
         if name == 'model':
             if value is None:
+                if hasattr(self, 'model') and self.model != None:
+                    print('romve model')
+                    self.model.removeNode()
+                    print('romved node')
                 return None
 
             if isinstance(value, str):
@@ -553,7 +557,7 @@ class ShakeTester(Entity):
 
 if __name__ == '__main__':
     from pandaeditor import main
-    # app = main.PandaEditor()
+    app = main.PandaEditor()
     # e = Entity()
     # e.enabled = True
     # e.model = 'quad'
@@ -562,6 +566,7 @@ if __name__ == '__main__':
     # e.collider = None
 
     e = Entity(model='quad', color=color.red, collider='box')
+    e.model = None
 
     shake_tester = ShakeTester()
-    # app.run()
+    app.run()
