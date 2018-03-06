@@ -40,6 +40,7 @@ class PandaEditor(ShowBase):
         # input
         base.buttonThrowers[0].node().setButtonDownEvent('buttonDown')
         base.buttonThrowers[0].node().setButtonUpEvent('buttonUp')
+        base.buttonThrowers[0].node().setButtonRepeatEvent('buttonHold')
         self.dictionary = {
             'mouse1' : 'left mouse down',
             'mouse1 up' : 'left mouse up',
@@ -77,6 +78,7 @@ class PandaEditor(ShowBase):
             }
         self.accept('buttonDown', self.input)
         self.accept('buttonUp', self.input_up)
+        self.accept('buttonHold', self.input_hold)
 
         base.disableMouse()
         mouse.mouse_watcher = base.mouseWatcherNode
@@ -120,6 +122,10 @@ class PandaEditor(ShowBase):
             key += ' up'
             self.input(key)
 
+    def input_hold(self, key):
+        key += ' hold'
+        self.input(key)
+
 
     def input(self, key):
         if key == 'f11':
@@ -149,7 +155,7 @@ class PandaEditor(ShowBase):
         except: pass
         try: mouse.input(key)
         except: pass
-        try: keys.input(key)
+        try: input.input(key)
         except: pass
 
         for entity in scene.entities:

@@ -54,7 +54,7 @@ class Text(Entity):
 
     @property
     def text(self):
-        return ''.join([tn for tn in self.text_nodes])
+        return ''.join([tn.node().text for tn in self.text_nodes])
 
 
     @text.setter
@@ -73,6 +73,8 @@ class Text(Entity):
         section = ''
         tag = '<default>'
         temp_text_node = TextNode('temp_text_node')
+        if self.font_file:
+            temp_text_node.setFont(self.font_file)
         x = 0
         y = 0
 
@@ -109,9 +111,13 @@ class Text(Entity):
             self.create_text_section(text=s[0], tag=s[1], x=s[2], y=s[3])
 
 
+
+
     def create_text_section(self, text, tag='<default>', x=0, y=0):
         self.text_node = TextNode('t')
         self.text_node_path = self.attachNewNode(self.text_node)
+        if self.font_file:
+            self.text_node.setFont(self.font_file)
         self.text_node.setText(text)
         self.text_node.setPreserveTrailingWhitespace(True)
         self.text_node_path.setPos(x, 0, y)
@@ -132,18 +138,16 @@ class Text(Entity):
 
     @property
     def font(self):
-        return self.text_node.getFont()
+        return self._font
 
     @font.setter
     def font(self, value):
-        # try:
-        font_file = loader.loadFont(value)
+        self.font_file = loader.loadFont(value)
         # font_file.setRenderMode(TextFont.RMPolygon)
-        font_file.setPixelsPerUnit(50)
-        self.text_node.setFont(font_file)
-        object.__setattr__(self, name, value)
-        # except:
-        #     print('no font called:', value)
+        self.font_file.setPixelsPerUnit(50)
+        print('FONT FILE:', self.font_file)
+        for tn in self.text_nodes:
+            tn.setFont(self.font_file)
 
 
     def __setattr__(self, name, value):
@@ -178,12 +182,15 @@ if __name__ == '__main__':
     origin = Entity()
     origin.model = 'quad'
     origin.scale *= .01
-    test = Text('''
+    test = Text()
+    test.font = 'VeraMono.ttf'
+    test.text = '''
 <lime>*If <default>target has more than <red>50% hp,
 <default>*burn the enemy for 5 * INT fire damage
 *for 3 turns. <yellow>Else, deal 100 damage.
 *Unfreezes target. Costs <blue>10 mana.
-'''.strip())
+'''.strip()
+    # test.text = '<red>yolo<green>'
 
     # test.text = '452 <red>some random text'
     app.run()

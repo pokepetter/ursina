@@ -24,6 +24,7 @@ class Application():
         self.internal_script_folder = self.package_folder + 'internal_scripts/'
         self.internal_texture_folder = self.package_folder + 'internal_textures/'
         self.internal_scene_folder = self.package_folder + 'internal_scenes/'
+        self.internal_font_folder = self.package_folder + 'font/'
 
         self.model_folder = self.asset_folder + 'models/'
         self.prefab_folder = self.asset_folder + 'prefabs/'
@@ -46,6 +47,8 @@ class Application():
         self.model_path.appendPath(self.internal_texture_folder)
         self.model_path.appendPath(self.compressed_texture_folder)
         self.model_path.appendPath(self.texture_folder)
+
+        self.model_path.appendPath(self.internal_font_folder)
         print(self.model_path)
 
     def append_path(self, path):
