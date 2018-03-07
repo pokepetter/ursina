@@ -6,10 +6,9 @@ class TextEditor(Entity):
     def __init__(self):
 
         super().__init__()
-        self.text = Text('---')
+        self.text = Text('--------')
         self.text.font = 'Inconsolata-Regular.ttf'
-        self.text.text = 'iii'
-        print(self.text.text_nodes)
+        self.text.line_height = 1.1
         # self.text.parent = scene.ui
         # self.text.position = (-.4 * 1.7, .4)
         # self.text.position = (0, 0)

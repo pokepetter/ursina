@@ -12,7 +12,7 @@ from pandaeditor.entity import Entity
 
 class Text(Entity):
 
-    def __init__(self, text_arg=None):
+    def __init__(self, text=None):
         super().__init__()
         self.name = 'text'
         self.scale *= 0.25 * scene.editor_font_size
@@ -48,8 +48,8 @@ class Text(Entity):
         self.tag = '<default>'
         self.color = self.text_colors['<default>']
 
-        if text_arg:
-            self.text = text_arg
+        if text:
+            self.text = text
 
 
     @property
@@ -59,6 +59,7 @@ class Text(Entity):
 
     @text.setter
     def text(self, text):
+        self.raw_text = text
         text = str(text)
         for tn in self.text_nodes:
             tn.remove_node()
@@ -73,8 +74,8 @@ class Text(Entity):
         section = ''
         tag = '<default>'
         temp_text_node = TextNode('temp_text_node')
-        if self.font:
-            temp_text_node.setFont(self.font)
+        if self._font:
+            temp_text_node.setFont(self._font)
         x = 0
         y = 0
 
@@ -111,16 +112,14 @@ class Text(Entity):
             self.create_text_section(text=s[0], tag=s[1], x=s[2], y=s[3])
 
 
-
-
     def create_text_section(self, text, tag='<default>', x=0, y=0):
         self.text_node = TextNode('t')
         self.text_node_path = self.attachNewNode(self.text_node)
-        if self.font_file:
-            self.text_node.setFont(self.font_file)
+        if hasattr(self, '_font') and self._font:
+            self.text_node.setFont(self._font)
         self.text_node.setText(text)
         self.text_node.setPreserveTrailingWhitespace(True)
-        self.text_node_path.setPos(x, 0, y)
+        self.text_node_path.setPos(x, 0, y * self.line_height)
         self.text_nodes.append(self.text_node_path)
 
         if tag in self.text_colors:
@@ -143,7 +142,7 @@ class Text(Entity):
     @font.setter
     def font(self, value):
         self._font = loader.loadFont(value)
-        # font_file.setRenderMode(TextFont.RMPolygon)
+        # _font.setRenderMode(TextFont.RMPolygon)
         self._font.setPixelsPerUnit(50)
         print('FONT FILE:', self._font)
         for tn in self.text_nodes:
@@ -151,7 +150,15 @@ class Text(Entity):
 
     @property
     def line_height(self):
-        return self.text_nodes[0].getLineHeight()
+        try:
+            return self._line_height
+        except:
+            return 1
+
+    @line_height.setter
+    def line_height(self, value):
+        self._line_height = value
+        self.text = self.raw_text
 
 
     def __setattr__(self, name, value):
@@ -186,7 +193,7 @@ if __name__ == '__main__':
     origin = Entity()
     origin.model = 'quad'
     origin.scale *= .01
-    test = Text()
+    test = Text('----------')
     test.font = 'VeraMono.ttf'
     test.text = '''
 <lime>*If <default>target has more than <red>50% hp,
@@ -195,6 +202,7 @@ if __name__ == '__main__':
 *Unfreezes target. Costs <blue>10 mana.
 '''.strip()
     # test.text = '<red>yolo<green>'
+    test.line_height = 4
 
     # test.text = '452 <red>some random text'
     app.run()
