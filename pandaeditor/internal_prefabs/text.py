@@ -73,8 +73,8 @@ class Text(Entity):
         section = ''
         tag = '<default>'
         temp_text_node = TextNode('temp_text_node')
-        if self.font_file:
-            temp_text_node.setFont(self.font_file)
+        if self.font:
+            temp_text_node.setFont(self.font)
         x = 0
         y = 0
 
@@ -142,12 +142,16 @@ class Text(Entity):
 
     @font.setter
     def font(self, value):
-        self.font_file = loader.loadFont(value)
+        self._font = loader.loadFont(value)
         # font_file.setRenderMode(TextFont.RMPolygon)
-        self.font_file.setPixelsPerUnit(50)
-        print('FONT FILE:', self.font_file)
+        self._font.setPixelsPerUnit(50)
+        print('FONT FILE:', self._font)
         for tn in self.text_nodes:
-            tn.setFont(self.font_file)
+            tn.setFont(self._font)
+
+    @property
+    def line_height(self):
+        return self.text_nodes[0].getLineHeight()
 
 
     def __setattr__(self, name, value):

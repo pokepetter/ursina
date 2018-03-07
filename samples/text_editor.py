@@ -6,17 +6,23 @@ class TextEditor(Entity):
     def __init__(self):
 
         super().__init__()
-        self.text = Text()
+        self.text = Text('---')
         self.text.font = 'Inconsolata-Regular.ttf'
+        self.text.text = 'iii'
+        print(self.text.text_nodes)
         # self.text.parent = scene.ui
         # self.text.position = (-.4 * 1.7, .4)
-        self.text.position = (-.5, .4)
+        # self.text.position = (0, 0)
+        self.bg = Quad(color=color.black33, origin=(-.5, .5))
+
+        # self.o = Quad(scale = (.1, .1))
+        # self.bg.scale = self.text.getTightBounds()
+
         # self.text.align = 'top_left'
         self.text.scale *= 4
         self.character_width = .5
         self.line_height = 1
-        self.real_text = '''
-class TextEditor(Entity):
+        self.real_text = '''class TextEditor(Entity):
 
     def __init__(self):
 
@@ -36,8 +42,9 @@ class TextEditor(Entity):
 
         self.indicator = Entity(
             model = 'circle_16',
+            origin = (0, .5),
             color = color.azure,
-            z = -1,
+            z = -.1,
             scale = (.15, .15)
             )
         self.indicator_line = Entity(
@@ -51,7 +58,7 @@ class TextEditor(Entity):
 
 # self.indicator.
     def input(self, key):
-        # print(key)
+        print(key)
         if held_keys['left alt']:
             if key == 'd' or key == 'd hold':
                 self.indicator.x += self.character_width
@@ -66,6 +73,9 @@ class TextEditor(Entity):
             if key == 'q' or key == 'q hold':
                 self.indicator.x -= 10
 
+            self.indicator.x = clamp(self.indicator.x, 0, 60)
+            self.indicator.y = clamp(self.indicator.y, -1000, 0)
+
         if key == 'scroll up':
             camera.y += 1
         if key == 'scroll down':
@@ -73,6 +83,9 @@ class TextEditor(Entity):
 
         # self.text.text = self.real_text.replace('def', '<violet>def <default>')
         self.text.text = multireplace(self.real_text, self.replacements)
+
+        if key == 'left mouse down':
+            print(mouse.x, mouse.y, camera.y)
 
 
 

@@ -4,6 +4,9 @@ class Quad(Entity):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.model = 'quad'
+        # super().__init__(**kwargs)
+# def Quad(self, **kwargs):
+#     e = Entity()
 
 class Circle(Entity):
     def __init__(self, segments=16):
