@@ -20,7 +20,6 @@ class TextEditor(Entity):
         # self.text.align = 'top_left'
         self.text.scale *= 4
         self.character_width = .5
-        self.line_height = 1
         self.real_text = '''class TextEditor(Entity):
 
     def __init__(self):
@@ -42,6 +41,7 @@ class TextEditor(Entity):
         self.indicator = Entity(
             model = 'circle_16',
             origin = (0, .5),
+            y = -.2,
             color = color.azure,
             z = -.1,
             scale = (.15, .15)
@@ -64,9 +64,9 @@ class TextEditor(Entity):
             if key == 'a' or key == 'a hold':
                 self.indicator.x -= self.character_width
             if key == 'w' or key == 'w hold':
-                self.indicator.y += self.line_height
+                self.indicator.y += self.text.line_height
             if key == 's' or key == 's hold':
-                self.indicator.y -= self.line_height
+                self.indicator.y -= self.text.line_height
             if key == 'e' or key == 'e hold':
                 self.indicator.x += 10 # to end of word
             if key == 'q' or key == 'q hold':

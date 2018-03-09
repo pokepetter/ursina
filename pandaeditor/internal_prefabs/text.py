@@ -21,6 +21,11 @@ class Text(Entity):
         self.setColorScaleOff()
         self.text_nodes = list()
         self.align = 'left'
+        # self.font = 'VeraMono.ttf'
+        temp_text_node = TextNode('')
+        self._font = temp_text_node.getFont()
+
+        self.line_height = 1
 
         self.text_colors = {
             '<default>' : color.text_color,
@@ -50,6 +55,7 @@ class Text(Entity):
 
         if text:
             self.text = text
+            # self.line_height = 1
 
 
     @property
@@ -65,7 +71,6 @@ class Text(Entity):
             tn.remove_node()
         self.text_nodes.clear()
 
-
         if not '<' in text:
             self.create_text_section(text)
             return
@@ -74,8 +79,7 @@ class Text(Entity):
         section = ''
         tag = '<default>'
         temp_text_node = TextNode('temp_text_node')
-        if self._font:
-            temp_text_node.setFont(self._font)
+        temp_text_node.setFont(self.font)
         x = 0
         y = 0
 
@@ -115,8 +119,11 @@ class Text(Entity):
     def create_text_section(self, text, tag='<default>', x=0, y=0):
         self.text_node = TextNode('t')
         self.text_node_path = self.attachNewNode(self.text_node)
-        if hasattr(self, '_font') and self._font:
+        try:
             self.text_node.setFont(self._font)
+        except:
+            print('default font')
+            pass    # default font
         self.text_node.setText(text)
         self.text_node.setPreserveTrailingWhitespace(True)
         self.text_node_path.setPos(x, 0, y * self.line_height)
@@ -193,16 +200,41 @@ if __name__ == '__main__':
     origin = Entity()
     origin.model = 'quad'
     origin.scale *= .01
-    test = Text('----------')
-    test.font = 'VeraMono.ttf'
-    test.text = '''
-<lime>*If <default>target has more than <red>50% hp,
-<default>*burn the enemy for 5 * INT fire damage
-*for 3 turns. <yellow>Else, deal 100 damage.
-*Unfreezes target. Costs <blue>10 mana.
-'''.strip()
+
+    descr = '''
+Increase max health with 25% and
+raise attack with 100 for 2 turns.
+'''
+    descr = descr.strip()
+    replacements = {
+        'hp' : '<red>hp<default>',
+        'max health' : '<red>max health<default>',
+        'attack' : '<orange>attack<default>'
+    }
+    descr = multireplace(descr, replacements)
+    new_descr = ''
+    for i, char in enumerate(descr):
+        if char.isdigit():
+            if i > 0 and descr[i-1].isdigit() == False:     # start of number
+                if descr[i-1] == '-':   # negative number
+                    new_descr += '<red>'
+                else:                   # positive number
+                    new_descr += '<lime>'
+            new_descr += char
+            if descr[i+1].isdigit() == False:   # end of number
+                new_descr += '<default>'
+        else:
+            new_descr += char
+    test = Text(new_descr)
+    # test.font = 'VeraMono.ttf'
+#     test.text = '''
+# <lime>*If <default>target has more than <red>50% hp,
+# <default>*burn the enemy for 5 * INT fire damage
+# *for 3 turns. <yellow>Else, deal 100 damage.
+# *Unfreezes target. Costs <blue>10 mana.
+# '''.strip()
     # test.text = '<red>yolo<green>'
-    test.line_height = 4
+    # test.line_height = 4
 
     # test.text = '452 <red>some random text'
     app.run()
