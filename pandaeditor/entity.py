@@ -101,10 +101,14 @@ class Entity(NodePath):
                 return None
 
             if isinstance(value, str):
-                object.__setattr__(self, name, loader.loadModel(value))
+                try:
+                    object.__setattr__(self, name, loader.loadModel(value))
                 # print('loaded model:', value)
+                except:
+                    pass
+                    return
 
-            if self.model:
+            if hasattr(self, 'model') and self.model:
                 self.model.reparentTo(self)
                 self.model.setColorScaleOff()
                 self.model.setTransparency(TransparencyAttrib.MAlpha)
@@ -248,7 +252,7 @@ class Entity(NodePath):
                 object.__setattr__(self, name, None)
                 return
                 # print(self.collider)
-            elif value == 'box':
+            elif value == 'box' and hasattr(self, 'model'):
                 collider = Collider()
                 collider.entity = self
                 collider.make_collider()
@@ -557,7 +561,7 @@ class ShakeTester(Entity):
 
 if __name__ == '__main__':
     from pandaeditor import main
-    app = main.PandaEditor()
+    # app = main.PandaEditor()
     # e = Entity()
     # e.enabled = True
     # e.model = 'quad'
@@ -569,4 +573,4 @@ if __name__ == '__main__':
     e.model = None
 
     shake_tester = ShakeTester()
-    app.run()
+    # app.run()
