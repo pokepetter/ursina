@@ -15,6 +15,7 @@ import inspect
 import importlib
 import re
 import subprocess
+import traceback
 
 # from PIL import Image     # for texture compression, editor.py
 # from tinyblend import BlenderFile     # for .blend import, editor.py
@@ -39,9 +40,7 @@ from pandaeditor import main
 
 
 
-def distance(a, b):
-    return a.getDistance(b)
-    # (point1.getXy() - point2.getXy()).length()
+
 
 
 # def save_scene():
@@ -288,21 +287,6 @@ def _destroy(entity):
     del entity
 
 
-import operator
-def size_list():
-    #return a list of current python objects sorted by size
-    globals_list = list()
-    globals_list.clear()
-    for e in globals():
-        # object, size
-        globals_list.append([e, sys.getsizeof(e)])
-    globals_list.sort(key=operator.itemgetter(1), reverse=True)
-    print('scene size:', globals_list)
-
-
-def clamp(value, floor, ceiling):
-    return max(min(value, ceiling), floor)
-
 
 def camel_to_snake(value):
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', value)
@@ -332,33 +316,9 @@ def multireplace(string, replacements, ignore_case=False):
     pattern = re.compile("|".join(rep_escaped), re.I if ignore_case else 0)
     return pattern.sub(lambda match: replacements[match.group(0)], string)
 
+def printvar(var):
+     print(traceback.extract_stack(limit=2)[0][3][5:][:-1],"=", var)
 
-def count_lines(file):
-    all_lines = 0
-    blank_lines = 0
-    comment_lines = 0
-    used_lines = 0
-
-    with open(file) as f:
-        for line in f:
-            all_lines += 1
-
-            if len(line.strip()) == 0:
-                blank_lines += 1
-
-            if line.strip().startswith('#'):
-                comment_lines += 1
-    print('all_lines:', all_lines)
-    print('blank_lines:', blank_lines)
-    print('comment_lines:', comment_lines)
-    print('used_lines:', all_lines - blank_lines - comment_lines)
-    return all_lines
-
-
-def chunk_list(l, cunk_size):
-    # yield successive chunks from list
-    for i in range(0, len(l), cunk_size):
-        yield l[i:i + cunk_size]
 
 def compress_textures():
     from PIL import Image

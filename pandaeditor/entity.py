@@ -18,6 +18,7 @@ from panda3d.core import Filename
 from direct.interval.IntervalGlobal import Sequence, Func, Wait
 from undo import undoable
 from direct.showbase import Loader
+from pandamath import lerp
 
 from pandaeditor import color
 from pandaeditor import scene
@@ -289,12 +290,27 @@ class Entity(NodePath):
 
     @world_position.setter
     def world_position(self, value):
-        self.original_parent = self.parent
-        self.parent = scene
-        self.position = value
-        self.reparent_to(self.original_parent)
-        self.original_parent = None
+        self.setPos(value, render)
 
+    @property
+    def world_x(self):
+        return self.getX(render)
+    @property
+    def world_y(self):
+        return self.getZ(render)
+    @property
+    def world_z(self):
+        return self.getY(render)
+
+    @world_x.setter
+    def world_x(self, value):
+        self.setX(render, value)
+    @world_y.setter
+    def world_y(self, value):
+        self.setZ(render, value)
+    @world_z.setter
+    def world_z(self, value):
+        self.setY(render, value)
 
     @property
     def position(self):
@@ -471,17 +487,25 @@ class Entity(NodePath):
         s.start()
         return s
 
-    def move_x(self, value, duration=.1, delay=0, curve='linear'):
+    def move_x(self, value, duration=.1, delay=0, curve='linear', resolution=5):
         s = Sequence()
         s.append(Wait(delay))
-        s.append(self.posInterval(duration, Point3(value, self.z, self.y)))
+        start_val = self.x
+        for i in range(resolution):
+            s.append(Wait(duration / resolution))
+            s.append(Func(self.setX, start_val + (i / resolution * value)))
+
         s.start()
         return s
 
-    def move_y(self, value, duration=.1, delay=0, curve='linear'):
+    def move_y(self, value, duration=.1, delay=0, curve='linear', resolution=5):
         s = Sequence()
         s.append(Wait(delay))
-        s.append(self.posInterval(duration, Point3(self.x, self.z, value)))
+        start_val = self.y
+        for i in range(resolution):
+            s.append(Wait(duration / resolution))
+            s.append(Func(self.setZ, start_val + (i / resolution * value)))
+
         s.start()
         return s
 
@@ -521,7 +545,6 @@ class Entity(NodePath):
         s.start()
         return s
 
-
     def shake(self, duration=.2, magnitude=1):
         s = Sequence()
         self.original_position = self.position
@@ -553,15 +576,44 @@ class Entity(NodePath):
     #
     #     return children_entities
 class ShakeTester(Entity):
-    # def __init__(self):
-    #     super().__init()
+    def __init__(self):
+        super().__init__()
+        self.move = 1
+        self.move_y = 1
+        self.frame = 0
+        self.d = False
+
     def input(self, key):
         if key == '1':
             e.shake()
 
+        if key == 'x':
+            self.move = -self.move
+            e.move_x(self.x + self.move)
+
+        if key == 'y':
+            self.move_y = -self.move_y
+            e.move_y(self.y + self.move_y)
+
+        if key == 'd':
+            self.d = True
+        if key == 'd up':
+            self.d = False
+
+    def update(self, dt):
+        self.frame += 1
+        if self.frame >= 4:
+            if self.d:
+                e.move_x(self.x + 1, 1/60 * 4)
+            self.frame = 0
+
+
+
 if __name__ == '__main__':
     from pandaeditor import main
-    # app = main.PandaEditor()
+    from pandastuff import printvar
+
+    app = main.PandaEditor()
     # e = Entity()
     # e.enabled = True
     # e.model = 'quad'
@@ -569,8 +621,21 @@ if __name__ == '__main__':
     # e.collider = 'box'
     # e.collider = None
 
+
+    print(lerp(0, 10, .5))
+
     e = Entity(model='quad', color=color.red, collider='box')
-    e.model = None
+    printvar(e.world_position)
+
+    e.world_x = 1
+    e.world_y = 1
+    e.world_z = 1
+    printvar(e.world_x)
+    printvar(e.world_y)
+    printvar(e.world_z)
+
+
+    # e.model = None
 
     shake_tester = ShakeTester()
-    # app.run()
+    app.run()
