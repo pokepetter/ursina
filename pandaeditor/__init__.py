@@ -2,6 +2,7 @@
 
 from pandaeditor import main
 from pandaeditor.main import PandaEditor
+from pandamath import *
 from pandaeditor.pandastuff import *
 from pandaeditor.entity import Entity
 
