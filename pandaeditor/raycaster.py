@@ -33,7 +33,7 @@ class Raycaster(Entity):
         return math.sqrt(sum( (a - b)**2 for a, b in zip(a, b)))
 
 
-    def raycast(self, origin, direction, dist, traverse_target=None, debug=False):
+    def raycast(self, origin, direction, dist=1000, traverse_target=None, debug=False):
         self.position = origin
         self.look_at(self.position + direction)
         # need to do this for it to work for some reason
@@ -64,10 +64,18 @@ class Raycaster(Entity):
             if hit_dist <= dist:
                 if nP.name.endswith('.egg'):
                     nP = nP.parent
-                    return True, nP, hit_dist
+                return {'hit' : True,
+                        'entity' : nP,
+                        'distance' : hit_dist,
+                        'point' : self.point
+                        }
+            return None
         else:
-            self.point = None
-            return False
+            return {'hit' : False,
+                    'entity' : None,
+                    'distance' : dist,
+                    'point' : None
+                    }
 
 # class Hit():
     # entity

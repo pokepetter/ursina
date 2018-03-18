@@ -18,7 +18,7 @@ from panda3d.core import Filename
 from direct.interval.IntervalGlobal import Sequence, Func, Wait
 from undo import undoable
 from direct.showbase import Loader
-from pandamath import lerp
+from pandaeditor.pandamath import lerp
 
 from pandaeditor import color
 from pandaeditor import scene

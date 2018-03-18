@@ -4,7 +4,10 @@ import operator
 
 
 def distance(a, b):
-    return a.getDistance(b)
+    try:
+        return a.getDistance(b)
+    except:
+        return (a.getXy() - b.getXy()).length()
 
 def lerp(a, b, t) :
     return a+(b-a)*t
