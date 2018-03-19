@@ -10,7 +10,10 @@ def distance(a, b):
         return (a.getXy() - b.getXy()).length()
 
 def lerp(a, b, t) :
-    return a+(b-a)*t
+    return a + (b - a) * t
+
+def inverselerp(a, b, t) :
+    return (a - b) / (t - b)
 
 def clamp(value, floor, ceiling):
     return max(min(value, ceiling), floor)

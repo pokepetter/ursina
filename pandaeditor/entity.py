@@ -19,6 +19,8 @@ from direct.interval.IntervalGlobal import Sequence, Func, Wait
 from undo import undoable
 from direct.showbase import Loader
 from pandaeditor.pandamath import lerp
+from pandaeditor import easing_types
+from pandaeditor.easing_types import *
 
 from pandaeditor import color
 from pandaeditor import scene
@@ -476,6 +478,11 @@ class Entity(NodePath):
 
         return children_entities
 
+    @property
+    def grounded(self):
+        from pandaeditor.raycaster import raycast
+        return raycast(self.world_position, self.down, .05).hit
+
 #------------
 # ANIMATIONS
 #------------
@@ -491,23 +498,38 @@ class Entity(NodePath):
         s = Sequence()
         s.append(Wait(delay))
         start_val = self.x
-        for i in range(resolution):
+        for i in range(resolution+1):
+            t = i / resolution
+            t = t*t
             s.append(Wait(duration / resolution))
-            s.append(Func(self.setX, start_val + (i / resolution * value)))
+            s.append(Func(self.setX, lerp(start_val, value, t)))
 
         s.start()
         return s
 
-    def move_y(self, value, duration=.1, delay=0, curve='linear', resolution=5):
-        s = Sequence()
-        s.append(Wait(delay))
+    def move_y(self, value, duration=.1, delay=0, curve='linear', resolution=None):
+        if hasattr(self, 'mover_y') and self.mover_y:
+            self.mover_y.pause()
+            # print('interrupt mover_y')
+        self.mover_y = Sequence()
+        self.mover_y.append(Wait(delay))
         start_val = self.y
-        for i in range(resolution):
-            s.append(Wait(duration / resolution))
-            s.append(Func(self.setZ, start_val + (i / resolution * value)))
+        if not resolution:
+            resolution = int(duration * 60)
 
-        s.start()
-        return s
+        for i in range(resolution+1):
+            t = i / resolution
+            if hasattr(easing_types, curve):
+                t = getattr(easing_types, curve)(t)
+            else:
+                t = getattr(easing_types, 'ease_in_expo')(t)
+            self.mover_y.append(Wait(duration / resolution))
+            self.mover_y.append(Func(self.setZ, lerp(start_val, value, t)))
+
+        self.mover_y.start()
+        return self.mover_y
+
+
 
     def move_z(self, value, duration=.1, delay=0, curve='linear'):
         s = Sequence()
@@ -600,6 +622,14 @@ class ShakeTester(Entity):
         if key == 'd up':
             self.d = False
 
+        if key == 'space':
+            e.move_y(e.y + 2.5, .7)
+            invoke(self.fall, delay=.5)
+
+    def fall(self):
+        print('fall')
+        e.move_y(0, duration=.5)
+
     def update(self, dt):
         self.frame += 1
         if self.frame >= 4:
@@ -611,7 +641,7 @@ class ShakeTester(Entity):
 
 if __name__ == '__main__':
     from pandaeditor import main
-    from pandastuff import printvar
+    from pandastuff import printvar, invoke
 
     app = main.PandaEditor()
     # e = Entity()
