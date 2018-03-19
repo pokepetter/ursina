@@ -64,25 +64,26 @@ class Raycaster(Entity):
             if hit_dist <= dist:
                 if nP.name.endswith('.egg'):
                     nP = nP.parent
-                return {'hit' : True,
-                        'entity' : nP,
-                        'distance' : hit_dist,
-                        'point' : self.point
-                        }
-            return None
+
+                self.hit = Hit()
+                self.hit.hit = True
+                self.hit.entity = nP
+                self.hit.distance = hit_dist
+                self.hit.point = self.point
+                return self.hit
+
+            self.hit = Hit()
+            return self.hit
         else:
-            return {'hit' : False,
-                    'entity' : None,
-                    'distance' : dist,
-                    'point' : None
-                    }
+            self.hit = Hit()
+            return self.hit
 
-# class Hit():
-    # entity
-    # point
-    # distance
-    # normal
-
+class Hit():
+    def __init__(self):
+        self.hit = False
+        self.entity = None
+        self.distance = None
+        self.point = None
 
 
 sys.modules[__name__] = Raycaster()
@@ -131,6 +132,7 @@ if __name__ == '__main__':
 
 
 
+    from pandaeditor.entity import Entity
     raycast((0,0,-2), (0,0,1), 5, render, debug=False)
     r = RaycasterTest()
 
