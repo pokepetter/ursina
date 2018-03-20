@@ -478,11 +478,6 @@ class Entity(NodePath):
 
         return children_entities
 
-    @property
-    def grounded(self):
-        from pandaeditor.raycaster import raycast
-        return raycast(self.world_position, self.down, .05).hit
-
 #------------
 # ANIMATIONS
 #------------

@@ -263,7 +263,7 @@ def destroy(entity, delay=0):
 
     s = Sequence()
     s.append(Wait(delay))
-    s.append(Func(_destroy))
+    s.append(Func(_destroy, entity))
     s.start()
 
 def _destroy(entity):
@@ -276,7 +276,7 @@ def _destroy(entity):
     # entity.removeAllChildren()
     # try:
 
-        entity.removeNode()
+    entity.removeNode()
     # except:
     #     pass
 
