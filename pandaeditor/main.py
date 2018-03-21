@@ -119,14 +119,10 @@ class PandaEditor(ShowBase):
 
     def input_up(self, key):
         if key is not 'wheel_up' and key is not 'wheel_down':
-            if key in self.dictionary:
-                key = self.dictionary[key]
             key += ' up'
             self.input(key)
 
     def input_hold(self, key):
-        if key in self.dictionary:
-            key = self.dictionary[key]
         key += ' hold'
         self.input(key)
 

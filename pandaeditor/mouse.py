@@ -73,7 +73,6 @@ class Mouse(object):
 
 
     def input(self, key):
-
         if not self.enabled:
             return
 
