@@ -633,32 +633,35 @@ class ShakeTester(Entity):
             self.frame = 0
 
 
+class TestClass(Entity):
+    def __init__(self):
+        super().__init__()
+    def on_hover(self):
+        print('yo')
 
 if __name__ == '__main__':
     from pandaeditor import main
     from pandastuff import printvar, invoke
 
     app = main.PandaEditor()
-    # e = Entity()
-    # e.enabled = True
-    # e.model = 'quad'
-    # e.color = color.red
-    # e.collider = 'box'
-    # e.collider = None
 
 
-    print(lerp(0, 10, .5))
+    #
+    # e = Entity(model='quad', color=color.red, collider='box')
+    # printvar(e.world_position)
+    #
+    # e.world_x = 1
+    # e.world_y = 1
+    # e.world_z = 1
+    # printvar(e.world_x)
+    # printvar(e.world_y)
+    # printvar(e.world_z)
 
-    e = Entity(model='quad', color=color.red, collider='box')
-    printvar(e.world_position)
-
-    e.world_x = 1
-    e.world_y = 1
-    e.world_z = 1
-    printvar(e.world_x)
-    printvar(e.world_y)
-    printvar(e.world_z)
-
+    t = TestClass()
+    # t.parent = scene.ui
+    # import mouse
+    t.model = 'cube'
+    t.collider = 'box'
 
     # e.model = None
 

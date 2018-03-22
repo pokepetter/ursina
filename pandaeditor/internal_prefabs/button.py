@@ -19,6 +19,9 @@ class Button(Entity):
         # self.text = ''
         self.text_entity = None
 
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
 
     @property
     def text(self):
