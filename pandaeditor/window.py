@@ -40,6 +40,9 @@ class Window(WindowProperties):
             except:
                 print('no process xrandr to get screen resolution')
                 self.screen_resolution = (1366, 768)
+        else:
+            print('using default sceen resolution.', 'OS:', os.name)
+            self.screen_resolution = (1366, 768)
 
 
         self.fullscreen_size = (self.screen_resolution[0]+1, self.screen_resolution[1]+1)
