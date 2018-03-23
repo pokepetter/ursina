@@ -16,7 +16,7 @@ import uuid
 from os import path
 from panda3d.core import Filename
 from direct.interval.IntervalGlobal import Sequence, Func, Wait
-from undo import undoable
+from pandaeditor.undo import undoable
 from direct.showbase import Loader
 from pandaeditor.pandamath import lerp
 from pandaeditor import easing_types
