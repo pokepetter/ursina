@@ -12,7 +12,6 @@ from panda3d.core import TransparencyAttrib
 from panda3d.core import Texture
 from pandaeditor import application
 from pandaeditor.collider import Collider
-import uuid
 from os import path
 from panda3d.core import Filename
 from direct.interval.IntervalGlobal import Sequence, Func, Wait

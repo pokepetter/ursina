@@ -5,6 +5,7 @@ from panda3d.core import loadPrcFileData
 from pandaeditor.entity import Entity
 from pandaeditor import color
 from pandaeditor import application
+from screeninfo import get_monitors
 
 
 class Window(WindowProperties):
@@ -18,32 +19,16 @@ class Window(WindowProperties):
         loadPrcFileData('', 'notify-level-util error')
         # loadPrcFileData('', 'want-pstats True')
         self.setForeground(True)
+        self.screen_resolution = (1366, 768)
 
 
     def load_defaults(self):
         self.title = 'pandaeditor'
-
-        if os.name == 'nt':
-            try:
-                from win32api import GetSystemMetrics
-                self.screen_resolution = (GetSystemMetrics(0), GetSystemMetrics(1))
-            except:
-                print('please install pypiwin32')
-        elif os.name == 'posix':
-            try:
-                import subprocess
-                output = subprocess.Popen('xrandr | grep "\*" | cut -d" " -f4',shell=True, stdout=subprocess.PIPE).communicate()[0]
-                output = output.decode('utf-8').replace('\n', '').split('x')
-                output = (int(output[0]), int(output[1]))
-                print(output)
-                self.screen_resolution = output
-            except:
-                print('no process xrandr to get screen resolution')
-                self.screen_resolution = (1366, 768)
-        else:
+        try:
+            self.screen_resolution = (get_monitors()[0].width, get_monitors()[0].height)
+        except:
             print('using default sceen resolution.', 'OS:', os.name)
             self.screen_resolution = (1366, 768)
-
 
         self.fullscreen_size = (self.screen_resolution[0]+1, self.screen_resolution[1]+1)
         self.windowed_size = (self.fullscreen_size[0] / 1.25, self.fullscreen_size[1] / 1.25)

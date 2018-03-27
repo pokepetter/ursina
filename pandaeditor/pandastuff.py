@@ -1,6 +1,6 @@
 from direct.showbase.ShowBase import ShowBase
 from panda3d.core import Lens, LensNode, PerspectiveLens, OrthographicLens
-from direct.interval.IntervalGlobal import Sequence, Func, Wait
+from direct.interval.IntervalGlobal import Sequence, Func, Wait, SoundInterval
 from direct.task.Task import Task
 from panda3d.core import NodePath, PandaNode
 from panda3d.core import Vec2, Vec3, Point3

@@ -5,6 +5,7 @@ from panda3d.core import Filename
 from panda3d.core import getModelPath
 # from pandaeditor import main
 from os.path import dirname
+import inspect
 import glob
 import re
 
@@ -12,11 +13,14 @@ class Application():
 
     def __init__(self):
         self.base = None
-        import inspect
 
         # get path with correct casing
-        self.package_folder = glob.glob(re.sub(r'([^:])(?=[/\\]|$)', r'[\1]', dirname(__file__)))[0] + '/'
-        print('package_folder:', self.package_folder)
+        try:
+            self.package_folder = glob.glob(re.sub(r'([^:])(?=[/\\]|$)', r'[\1]', dirname(__file__)))[0] + '/'
+            print('package_folder:', self.package_folder)
+        except:
+            self.package_folder = ''
+            print('package_folder not found')
         self.asset_folder = (os.path.abspath(sys.path[0])).replace('\\', '/') + '/'
 
         self.internal_model_folder = self.package_folder + 'internal_models/'
