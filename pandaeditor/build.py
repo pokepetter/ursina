@@ -35,16 +35,31 @@ def copy_always_included():
         python_folder + '/Lib/ctypes/',
         python_folder + '/Lib/encodings/',
         python_folder + '/Lib/importlib/',
-        # python_folder + '/Lib/site-packages/panda3d/etc/',
-        python_folder + '/Lib/site-packages/panda3d/', #TODO: only import what's needed
+
+        python_folder + '/Lib/site-packages/panda3d/etc/',
+        python_folder + '/Lib/site-packages/panda3d/__init__.py',
+        python_folder + '/Lib/site-packages/panda3d/cg.dll',
+        python_folder + '/Lib/site-packages/panda3d/cgGL.dll',
+        python_folder + '/Lib/site-packages/panda3d/libp3direct.dll',
+        python_folder + '/Lib/site-packages/panda3d/libp3dtool.dll',
+        python_folder + '/Lib/site-packages/panda3d/libp3dtoolconfig.dll',
+        python_folder + '/Lib/site-packages/panda3d/libp3interrogatedb.dll',
+        python_folder + '/Lib/site-packages/panda3d/libp3openal_audio.dll',
+        python_folder + '/Lib/site-packages/panda3d/libp3windisplay.dll',
+        python_folder + '/Lib/site-packages/panda3d/libpanda.dll',
+        python_folder + '/Lib/site-packages/panda3d/libpandaegg.dll',
+        python_folder + '/Lib/site-packages/panda3d/libpandaexpress.dll',
+        python_folder + '/Lib/site-packages/panda3d/libpandagl.dll',
+
         )
     for path in always_include:
         try:
-            print('always include:', path)
             dest = build_folder + '/python' + path.split(python_folder)[1]
             os.makedirs(os.path.dirname(dest), exist_ok=True)
             if os.path.isfile(path):
-                print('TODO: copy file')
+                copy(path, dest)
+                size += os.stat(path).st_size
+                print('copied file:', path)
             elif os.path.isdir(path):
                 copytree(path, dest)
                 size += os.stat(path).st_size
@@ -68,12 +83,6 @@ def copy_found_modules():
     size = 0
     finder = ModuleFinder()
     finder.run_script(project_folder + '/main.py')
-    # import importlib
-    # spec = importlib.util.find_spec('pandaeditor')
-    # pandaeditor_path = os.path.dirname(spec.origin)
-    # finder.run_script(pandaeditor_path + '/pandastuff.py')
-    # print('Modules not imported:')
-    # print('\n'.join(finder.badmodules.keys()))
 
     moduleslist = {}
     for name, mod in finder.modules.items():
@@ -85,7 +94,6 @@ def copy_found_modules():
             print('ignore:', filename)
             continue
 
-        # if not has_parent_directory(mod.__file__, 'pandaeditor'):
         size += os.path.getsize(mod.__file__)
 
         if 'Python' in filename and 'DLLs' in filename:
@@ -96,7 +104,6 @@ def copy_found_modules():
             forward_slashed = filename.split('lib\\site-packages\\')[1].replace('\\', '/')
             os.makedirs(os.path.dirname(build_folder + '/python/lib/site-packages/' + forward_slashed), exist_ok=True)
             copy(filename, build_folder + '/python/lib/site-packages/' + forward_slashed)
-            # pass
             print('copied from package:', forward_slashed)
     return size
 
@@ -152,7 +159,23 @@ def copytree(src, dst, symlinks=False, ignore=None):
         else:
             shutil.copy2(s, d)
 
-project_folder = 'E:/UnityProjects/bokfall/'
+
+if len(sys.argv) == 1:
+    print('error: please provide project folder path')
+    sys.exit()
+
+if sys.argv[1] == 'help':
+    print(
+'''package pandaeditor application for windows10.
+provided with project folder path, creates a build folder where
+it copies python and project's dependent packages. requires a main.py file.
+copies game scripts and assets into 'build/scr' folder.
+creates a .bat file to start the game.'''
+    )
+    sys.exit()
+
+
+project_folder = sys.argv[1]
 build_folder = os.path.join(project_folder, 'build')
 print('building project:', project_folder)
 
