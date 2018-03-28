@@ -7,6 +7,7 @@ from panda3d.core import TransparencyAttrib
 from os import path
 from panda3d.core import Filename
 from panda3d.core import TextNode
+import textwrap
 
 from pandaeditor.entity import Entity
 
@@ -26,6 +27,7 @@ class Text(Entity):
         self._font = temp_text_node.getFont()
 
         self.line_height = 1
+        self.lines = 0
 
         self.text_colors = {
             '<default>' : color.text_color,
@@ -140,6 +142,9 @@ class Text(Entity):
 
             self.text_node.setTextColor(self.color)
 
+        if y+1 > self.lines:
+            self.lines = y+1
+
         return self.text_node
 
     @property
@@ -167,6 +172,35 @@ class Text(Entity):
         self._line_height = value
         self.text = self.raw_text
 
+    @property
+    def width(self):
+        longest_line = ''
+        for line in self.raw_text.split('\n'):
+            if len(line) > len(longest_line):
+                longest_line = line
+
+        temp_text_node = TextNode(longest_line)
+        temp_text_node.setFont(self.font)
+        return temp_text_node.calcWidth(longest_line)  * self.scale_x
+
+
+    @property
+    def height(self):
+        return self.lines * self.line_height * self.scale_y
+
+
+    @property
+    def wordwrap(self):
+        if hasattr(self, '_wordwrap'):
+            return self._wordwrap
+        else:
+            return 0
+
+    @wordwrap.setter
+    def wordwrap(self, value):
+        self._wordwrap = value
+        self.text = textwrap.fill(self.raw_text, value)
+
 
     def __setattr__(self, name, value):
         try:
@@ -187,11 +221,6 @@ class Text(Entity):
                     tn.node().setAlign(TextNode.ARight)
 
 
-        if name == 'wordwrap':
-            object.__setattr__(self, name, value)
-            print('set wordwrap to:', value)
-            self.text_node.setWordwrap(value)
-            print('yay')
 
 
 
