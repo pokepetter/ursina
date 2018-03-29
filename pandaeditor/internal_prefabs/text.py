@@ -54,6 +54,7 @@ class Text(Entity):
 
         self.tag = '<default>'
         self.color = self.text_colors['<default>']
+        self.scale_override = 1
 
         if text:
             self.text = text
@@ -68,6 +69,8 @@ class Text(Entity):
     @text.setter
     def text(self, text):
         self.raw_text = text
+        self.lines = 0
+
         text = str(text)
         for tn in self.text_nodes:
             tn.remove_node()
@@ -128,7 +131,7 @@ class Text(Entity):
             pass    # default font
         self.text_node.setText(text)
         self.text_node.setPreserveTrailingWhitespace(True)
-        self.text_node_path.setPos(x, 0, y * self.line_height)
+        self.text_node_path.setPos(x * self.scale_override, 0, y * self.line_height)
         self.text_nodes.append(self.text_node_path)
 
         if tag in self.text_colors:
@@ -142,8 +145,14 @@ class Text(Entity):
 
             self.text_node.setTextColor(self.color)
 
-        if y+1 > self.lines:
-            self.lines = y+1
+        elif tag.startswith('<scale:'):
+            scale = tag.split(':')[1]
+            self.scale_override = scale = float(scale[:-1])
+
+        self.text_node_path.setScale(self.scale_override)
+
+        if abs(y) + 1 > self.lines:
+            self.lines = abs(y) + 1
 
         return self.text_node
 
@@ -174,6 +183,8 @@ class Text(Entity):
 
     @property
     def width(self):
+        if not hasattr(self, 'raw_text'):
+            return 0
         longest_line = ''
         for line in self.raw_text.split('\n'):
             if len(line) > len(longest_line):
@@ -231,8 +242,9 @@ if __name__ == '__main__':
     origin.scale *= .01
 
     descr = '''
-Increase max health with 25% and
-raise attack with 100 for 2 turns.
+Increase max health with 25% <scale:1.5> and
+raise attack with
+<scale:1>100 for 2 turns.
 '''
     descr = descr.strip()
     replacements = {
@@ -244,14 +256,16 @@ raise attack with 100 for 2 turns.
     new_descr = ''
     for i, char in enumerate(descr):
         if char.isdigit():
-            if i > 0 and descr[i-1].isdigit() == False:     # start of number
-                if descr[i-1] == '-':   # negative number
-                    new_descr += '<red>'
-                else:                   # positive number
-                    new_descr += '<lime>'
             new_descr += char
-            if descr[i+1].isdigit() == False:   # end of number
-                new_descr += '<default>'
+            pass
+            # if i > 0 and descr[i-1].isdigit() == False:     # start of number
+            #     if descr[i-1] == '-':   # negative number
+            #         new_descr += '<red>'
+            #     else:                   # positive number
+            #         new_descr += '<lime>'
+            # new_descr += char
+            # if descr[i+1].isdigit() == False:   # end of number
+            #     new_descr += '<default>'
         else:
             new_descr += char
     test = Text(new_descr)
