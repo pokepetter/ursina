@@ -18,3 +18,4 @@ from pandaeditor.internal_prefabs.cursor import Cursor
 # from pandaeditor.internal_scripts.editor_draggable import EditorDraggable
 from pandaeditor.internal_prefabs.models import Quad, Circle, Cube
 from pandaeditor.internal_prefabs.panel import Panel
+from pandaeditor.internal_prefabs.tooltip import Tooltip
