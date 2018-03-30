@@ -67,6 +67,7 @@ class Text(Entity):
         for tn in self.text_nodes:
             if y != tn.getZ():
                 t += '\n'
+                y = tn.getZ()
             t += tn.node().text
 
         return t
@@ -188,19 +189,20 @@ class Text(Entity):
     def width(self):
         if not hasattr(self, 'text'):
             return 0
-        longest_line = ''
-        for line in self.text.split('\n'):
-            if len(line) > len(longest_line):
-                longest_line = line
 
-        temp_text_node = TextNode(longest_line)
+        temp_text_node = TextNode('temp')
         temp_text_node.setFont(self.font)
-        return temp_text_node.calcWidth(longest_line)  * self.scale_x
+
+        longest_line_length = 0
+        for line in self.text.split('\n'):
+            longest_line_length = max(longest_line_length, temp_text_node.calcWidth(line))
+
+        return longest_line_length  * self.scale_x
 
 
     @property
     def height(self):
-        return len(self.raw_text.split('\n')) * self.line_height * self.scale_y
+        return (len(self.raw_text.split('\n')) + .5) * self.line_height * self.scale_y
 
 
     @property
@@ -214,19 +216,40 @@ class Text(Entity):
     def wordwrap(self, value):
         self._wordwrap = value
 
-        newstring = ''
-        words = [w for w in self.raw_text.replace('>', '> ').split(' ')]
         linelength = 0
-        for i, w in enumerate(words):
-            if linelength + len(w) + 1 > value:
-                newstring += w + '\n'
-                linelength = 0
-            elif not w.startswith('<'): # don't count tags
-                newstring += w + ' '
-                linelength += len(w) + 1
-            else:
-                newstring += w
 
+        print('set ww')
+        newstring = ''
+        i = 0
+        while i < (len(self.raw_text)):
+            char = self.raw_text[i]
+
+            if char == '<':
+                for j in range(len(self.raw_text) - i):
+                    if self.raw_text[i+j] == '>':
+                        break
+                    newstring += self.raw_text[i+j]
+                i += j + 0  # don't count tags
+
+            else:
+                if char == '\n':
+                    linelength = 0
+
+                # find length of word
+                for l in range(min(100, len(self.raw_text) - i)):
+                    if self.raw_text[i+l] == ' ':
+                        break
+
+                if linelength + l > value:  # add linebreak
+                    newstring += '\n'
+                    linelength = 0
+
+                newstring += char
+                linelength += 1
+                i += 1
+
+        newstring = newstring.replace('\n>', '>\n')
+        # print('--------------------\n', newstring)
         self.text = newstring
 
 
@@ -258,16 +281,13 @@ if __name__ == '__main__':
     origin.model = 'quad'
     origin.scale *= .01
 
-    descr = '''
-Increase max health with 25% <scale:1.5> and
-raise attack with
-<scale:1>100 for 2 turns.
+    descr = '''Increase max health with 25% <yellow>and raise attack with <green>100 for 2 turns.
 '''
-    descr = descr.strip()
+    descr = descr.strip().replace('\n', ' ')
     replacements = {
-        'hp' : '<red>hp<default>',
-        'max health' : '<red>max health<default>',
-        'attack' : '<orange>attack<default>'
+        'hp' : '<red>hp <default>',
+        'max health ' : '<red>max health <default>',
+        'attack' : '<orange>attack <default>'
     }
     descr = multireplace(descr, replacements)
     test = Text(descr)
@@ -276,7 +296,8 @@ raise attack with
 #     test.text = '''
 # <lime>*If <default>target has more than <red>50% hp, <default>*burn the enemy for 5 * INT fire damage for 3 turns. <yellow>Else, deal 100 damage. <default>Unfreezes target. Costs <blue>10 mana.
 # '''.strip()
-    test.wordwrap = 30
+    test.wordwrap = 40
+    print('ooooooooooooooooooooooo\n', test.text)
     # test.text = '<red>yolo<green>'
     # test.line_height = 4
 
