@@ -27,7 +27,6 @@ class Text(Entity):
         self._font = temp_text_node.getFont()
 
         self.line_height = 1
-        self.lines = 0
 
         self.text_colors = {
             '<default>' : color.text_color,
@@ -63,14 +62,19 @@ class Text(Entity):
 
     @property
     def text(self):
-        return ''.join([tn.node().text for tn in self.text_nodes])
+        t = ''
+        y = 0
+        for tn in self.text_nodes:
+            if y != tn.getZ():
+                t += '\n'
+            t += tn.node().text
+
+        return t
 
 
     @text.setter
     def text(self, text):
         self.raw_text = text
-        self.lines = 0
-
         text = str(text)
         for tn in self.text_nodes:
             tn.remove_node()
@@ -98,6 +102,7 @@ class Text(Entity):
                 y -= 1
                 x = 0
                 i += 1
+
             elif char == '<': # find tag
                 if len(section) > 0:
                     sections.append([section, tag, x, y])
@@ -151,8 +156,6 @@ class Text(Entity):
 
         self.text_node_path.setScale(self.scale_override)
 
-        if abs(y) + 1 > self.lines:
-            self.lines = abs(y) + 1
 
         return self.text_node
 
@@ -183,10 +186,10 @@ class Text(Entity):
 
     @property
     def width(self):
-        if not hasattr(self, 'raw_text'):
+        if not hasattr(self, 'text'):
             return 0
         longest_line = ''
-        for line in self.raw_text.split('\n'):
+        for line in self.text.split('\n'):
             if len(line) > len(longest_line):
                 longest_line = line
 
@@ -197,7 +200,7 @@ class Text(Entity):
 
     @property
     def height(self):
-        return self.lines * self.line_height * self.scale_y
+        return len(self.raw_text.split('\n')) * self.line_height * self.scale_y
 
 
     @property
@@ -210,7 +213,22 @@ class Text(Entity):
     @wordwrap.setter
     def wordwrap(self, value):
         self._wordwrap = value
-        self.text = textwrap.fill(self.raw_text, value)
+
+        newstring = ''
+        words = [w for w in self.raw_text.replace('>', '> ').split(' ')]
+        linelength = 0
+        for i, w in enumerate(words):
+            if linelength + len(w) + 1 > value:
+                newstring += w + '\n'
+                linelength = 0
+            elif not w.startswith('<'): # don't count tags
+                newstring += w + ' '
+                linelength += len(w) + 1
+            else:
+                newstring += w
+
+        self.text = newstring
+
 
 
     def __setattr__(self, name, value):
@@ -234,7 +252,6 @@ class Text(Entity):
 
 
 
-
 if __name__ == '__main__':
     app = PandaEditor()
     origin = Entity()
@@ -253,31 +270,14 @@ raise attack with
         'attack' : '<orange>attack<default>'
     }
     descr = multireplace(descr, replacements)
-    new_descr = ''
-    for i, char in enumerate(descr):
-        if char.isdigit():
-            new_descr += char
-            pass
-            # if i > 0 and descr[i-1].isdigit() == False:     # start of number
-            #     if descr[i-1] == '-':   # negative number
-            #         new_descr += '<red>'
-            #     else:                   # positive number
-            #         new_descr += '<lime>'
-            # new_descr += char
-            # if descr[i+1].isdigit() == False:   # end of number
-            #     new_descr += '<default>'
-        else:
-            new_descr += char
-    test = Text(new_descr)
+    test = Text(descr)
+
     # test.font = 'VeraMono.ttf'
 #     test.text = '''
-# <lime>*If <default>target has more than <red>50% hp,
-# <default>*burn the enemy for 5 * INT fire damage
-# *for 3 turns. <yellow>Else, deal 100 damage.
-# *Unfreezes target. Costs <blue>10 mana.
+# <lime>*If <default>target has more than <red>50% hp, <default>*burn the enemy for 5 * INT fire damage for 3 turns. <yellow>Else, deal 100 damage. <default>Unfreezes target. Costs <blue>10 mana.
 # '''.strip()
+    test.wordwrap = 30
     # test.text = '<red>yolo<green>'
     # test.line_height = 4
 
-    # test.text = '452 <red>some random text'
     app.run()
