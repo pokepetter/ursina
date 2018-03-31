@@ -12,7 +12,7 @@ class Tooltip(Entity):
         self.min_width = 0
         self.min_height = 0
         self.max_width = 0
-        self.z = -1
+        self.z = -10
 
         self.text = Text('''description''')
         if text:
@@ -23,7 +23,7 @@ class Tooltip(Entity):
         self.background = Entity(
             parent = self,
             model = 'quad',
-            color = color.black66,
+            color = color.color(0, 0, 0, .7),
             z = .1,
             )
 
@@ -31,8 +31,6 @@ class Tooltip(Entity):
 
 
     def fit_to_text(self):
-        print('fit')
-
         # additional scale only accounts for the first line so I can have a title
         additional_scale = 0
         if self.text.raw_text.startswith('<scale:'):
@@ -43,7 +41,6 @@ class Tooltip(Entity):
 
         self.background.scale_x = max(self.min_width, self.text.width + additional_scale)
         self.background.scale_y = max(self.min_height, (self.text.height + additional_scale))
-        print(self.text.width, self.background.scale_x)
 
         #center
         self.background.x = self.background.scale_x / 2

@@ -217,8 +217,6 @@ class Text(Entity):
         self._wordwrap = value
 
         linelength = 0
-
-        print('set ww')
         newstring = ''
         i = 0
         while i < (len(self.raw_text)):
