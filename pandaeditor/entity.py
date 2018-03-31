@@ -4,7 +4,7 @@ import importlib
 import random
 from panda3d.core import PandaNode
 from panda3d.core import NodePath
-from panda3d.core import ModelNode
+from panda3d.core import GeomNode
 from panda3d.core import Vec3
 from panda3d.core import Point3
 from panda3d.core import SamplerState
@@ -97,15 +97,16 @@ class Entity(NodePath):
         if name == 'model':
             if value is None:
                 if hasattr(self, 'model') and self.model != None:
-                    print('romve model')
                     self.model.removeNode()
-                    print('romved node')
+                    print('removed model')
                 return None
 
-            if isinstance(value, str):
+            if isinstance(value, NodePath): # pass procedural model
+                object.__setattr__(self, name, value)
+
+            elif isinstance(value, str): # pass model asset name
                 try:
                     object.__setattr__(self, name, loader.loadModel(value))
-                # print('loaded model:', value)
                 except:
                     pass
                     return

@@ -48,8 +48,10 @@ pink =          color(330, 1, 1)
 
 clear =         Vec4(0, 0, 0, 0)
 white33 =       Vec4(1,1,1, 0.33)
+white50 =       Vec4(1,1,1, 0.50)
 white66 =       Vec4(1,1,1, 0.66)
 black33 =       Vec4(0,0,0, 0.33)
+black50 =       Vec4(0,0,0, 0.50)
 black66 =       Vec4(0,0,0, 0.66)
 
 text = smoke
