@@ -97,18 +97,16 @@ class Text(Entity):
         while i < len(text):
             char = text[i]
             if char == '\n':
-                if len(section) > 0:
-                    sections.append([section, tag, x, y])
-                    section = ''
+                sections.append([section, tag, x, y])
+                section = ''
                 y -= 1
                 x = 0
                 i += 1
 
             elif char == '<': # find tag
-                if len(section) > 0:
-                    sections.append([section, tag, x, y])
-                    x += temp_text_node.calcWidth(section)
-                    section = ''
+                sections.append([section, tag, x, y])
+                x += temp_text_node.calcWidth(section)
+                section = ''
 
                 tag = ''
                 for j in range(len(text)-i):
@@ -151,7 +149,7 @@ class Text(Entity):
 
             self.text_node.setTextColor(self.color)
 
-        elif tag.startswith('<scale:'):
+        if tag.startswith('<scale:'):
             scale = tag.split(':')[1]
             self.scale_override = scale = float(scale[:-1])
 
@@ -279,9 +277,9 @@ if __name__ == '__main__':
     origin.model = 'quad'
     origin.scale *= .01
 
-    descr = '''Increase max health with 25% <yellow>and raise attack with <green>100 for 2 turns.
+    descr = '''<scale:1.5><orange>Increase \n<scale:1>max health with 25% <yellow>and raise attack with <green>100 for 2 turns.
 '''
-    descr = descr.strip().replace('\n', ' ')
+    # descr = descr.strip().replace('\n', ' ')
     replacements = {
         'hp' : '<red>hp <default>',
         'max health ' : '<red>max health <default>',
@@ -294,7 +292,7 @@ if __name__ == '__main__':
 #     test.text = '''
 # <lime>*If <default>target has more than <red>50% hp, <default>*burn the enemy for 5 * INT fire damage for 3 turns. <yellow>Else, deal 100 damage. <default>Unfreezes target. Costs <blue>10 mana.
 # '''.strip()
-    test.wordwrap = 40
+    # test.wordwrap = 40
     print('ooooooooooooooooooooooo\n', test.text)
     # test.text = '<red>yolo<green>'
     # test.line_height = 4
