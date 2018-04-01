@@ -329,11 +329,11 @@ def compress_textures():
     for f in files:
         if f.endswith('.psd') or f.endswith('.png'):
             try:
-                print('f:', application.compressed_texture_folder + '/' + f)
+                print('f:', application.compressed_texture_folder + f)
 
                 image = Image.open(application.texture_folder + f)
                 # print(max(image.size))
-                if max(image.size) > 256:
+                if max(image.size) > 512:
                     image.save(
                         application.compressed_texture_folder + f[:-4] + '.jpg',
                         'JPEG',
@@ -348,6 +348,6 @@ def compress_textures():
                         'PNG'
                         )
                     print('compressing to png:', f)
-            except:
-                print('failed to compress:', f)
+            except Exception as e:
+                print(e)
         # elif f.endswith('.png'):
