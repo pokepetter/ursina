@@ -49,7 +49,8 @@ class Tooltip(Entity):
         self.text.y = self.text.height - .2
         self.margin = (.5, .5)
         # self.margin = (0,0)
-        self.scale = (0,0,0)
+        # self.scale = (0,0,0)
+        self.enabled = False
 
 
     @property
@@ -96,11 +97,11 @@ class Tooltip(Entity):
 
     def update(self, dt):
         self.position = (
-            (mouse.x * camera.aspect_ratio) + (self.margin_x * .05) + .01,
-            mouse.y + (self.margin_y * .05) + .01
+            (mouse.x * camera.aspect_ratio) + (self.margin_x * self.scale_x) + .01,
+            mouse.y + (self.margin_y * self.scale_y) + .01
             )
-        self.x = min(self.x, (.5 * window.aspect_ratio) - (self.background.scale_x * .1))
-        self.y = min(self.y, .5 - (self.background.scale_y * .1))
+        self.x = min(self.x, (.5 * window.aspect_ratio) - (self.background.scale_x * self.scale_x))
+        self.y = min(self.y, .5 - (self.background.scale_y * self.scale_y))
 
 
 if __name__ == '__main__':
@@ -113,9 +114,11 @@ storm <default>to deal 5 <blue>water
 damage <default>to <red>everyone, <default>including <orange>yourself. <default>
 Lasts for 4 rounds.'''.replace('\n', ' '))
 
+    # tooltip_test = Tooltip('test')
     # tooltip_test.text.line_height = .75
     tooltip_test.max_width = 40
     tooltip_test.enabled = True
-    tooltip_test.animate_scale(Vec3(.1, .1, 1))
+    # tooltip_test.animate_scale(Vec3(.1, .1, 1))
+    # tooltip_test.scale *= .5
     # origin = Entity(model='quad', color=color.red, scale=(.1,.1), parent=tooltip_test, position=(0,0))
     app.run()

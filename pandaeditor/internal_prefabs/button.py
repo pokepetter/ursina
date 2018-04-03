@@ -76,14 +76,14 @@ class Button(Entity):
     def on_mouse_enter(self):
         self.model.setColorScale(self.highlight_color)
         if hasattr(self, 'tooltip'):
-            self.tooltip_scaler = self.tooltip.animate_scale(Vec3(.1, .1, 1))
+            # self.tooltip.scale = (0,0,0)
+            self.tooltip.enabled = True
+            # self.tooltip_scaler = self.tooltip.animate_scale(self.tooltip.target_scale)
 
     def on_mouse_exit(self):
         self.model.setColorScale(self.color)
-        if hasattr(self, 'tooltip'):
-            if hasattr(self, 'tooltip_scaler'):
-                self.tooltip_scaler.pause()
-            self.tooltip.scale = (0,0,0)
+        self.tooltip.enabled = False
+
 
 
 if __name__ == '__main__':
