@@ -323,15 +323,19 @@ def printvar(var):
 def compress_textures():
     from PIL import Image
     from os.path import dirname
+    from psd_tools import PSDImage
     files = os.listdir(application.texture_folder)
     compressed_files = os.listdir(application.compressed_texture_folder)
 
     for f in files:
         if f.endswith('.psd') or f.endswith('.png'):
             try:
-                print('f:', application.compressed_texture_folder + f)
-
-                image = Image.open(application.texture_folder + f)
+                # print('f:', application.compressed_texture_folder + f)
+                if f.endswith('.psd'):
+                    image = PSDImage.load(application.texture_folder + f)
+                    image = image.as_PIL()
+                else:
+                    image = Image.open(application.texture_folder + f)
                 # print(max(image.size))
                 if max(image.size) > 512:
                     image.save(
