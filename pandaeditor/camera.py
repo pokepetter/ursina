@@ -98,6 +98,8 @@ class Camera(Entity):
             self.lens = self.perspective_lens
             self.lens_node = self.perspective_lens_node
             application.base.cam.node().set_lens(self.perspective_lens)
+            
+        self.fov = self.fov
 
 
 

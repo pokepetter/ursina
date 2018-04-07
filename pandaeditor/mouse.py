@@ -1,5 +1,6 @@
 from panda3d.core import *
 import sys
+import time
 from pandaeditor.entity import Entity
 from pandaeditor import camera
 from pandaeditor import scene
@@ -17,7 +18,11 @@ class Mouse(object):
         self.locked = False
         self.position = Vec2(0,0)
         self.delta = (0,0)
+        self.prev_x = 0
+        self.prev_y = 0
         self.velocity = (0,0)
+        self.prev_click_time = time.time()
+        self.double_click_distance = .5
 
         self.hovered_entity = None
         self.left = False
@@ -96,9 +101,14 @@ class Mouse(object):
                     if hasattr(s, 'on_click'):
                         s.on_click()
                     # try:
-                        s.on_click()
+                        # s.on_click()
                     # except:
                     #     pass
+            # double click
+            if time.time() - self.prev_click_time <= self.double_click_distance:
+                base.input('double click')
+            self.prev_click_time = time.time()
+
 
         if key == 'left mouse up':
             self.left = False
@@ -127,8 +137,8 @@ class Mouse(object):
         if self.locked:
             self.velocity = (self.x, self.y)
             application.base.win.move_pointer(0, round(window.size[0] / 2), round(window.size[1] / 2))
-        elif hasattr(self, 'prev_x'):
-            self.velocity = (self.x - self.prev_x, self.y - self.prev_y)
+        else:
+            self.velocity = (self.x - self.prev_x, (self.y - self.prev_y) / window.aspect_ratio)
 
 
         if self.left or self.right or self.middle:
