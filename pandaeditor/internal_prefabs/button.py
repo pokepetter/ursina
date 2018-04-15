@@ -36,10 +36,11 @@ class Button(Entity):
                 self.text_entity.parent = render
                 self.text_entity.is_editor = self.is_editor
                 self.text_entity.wrtReparentTo(self.model)
-                self.text_entity.position = (0, 0, 0)
-                self.text_entity.align = 'center'
+                self.text_entity.position = (0, 0, -.1)
+                self.text_entity.scale *= 2
 
             self.text_entity.text = value
+            self.text_entity.align = 'center'
 
 
     def __setattr__(self, name, value):
@@ -97,4 +98,6 @@ if __name__ == '__main__':
     b.scale *= .5
     b.color = color.azure
     b.origin = (-.5, -.5)
+    b.text = 'text'
+    # b.text_entity.scale *= 2
     app.run()

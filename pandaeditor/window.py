@@ -2,6 +2,7 @@ import sys
 import os
 from panda3d.core import WindowProperties
 from panda3d.core import loadPrcFileData
+from panda3d.core import Vec2
 from pandaeditor.entity import Entity
 from pandaeditor import color
 from pandaeditor import application
@@ -55,6 +56,12 @@ class Window(WindowProperties):
         self.vsync = True
 
 
+    def center_on_screen(self):
+        self.position = (
+            int((self.screen_resolution[0] - self.size[0]) / 2),
+            int((self.screen_resolution[1] - self.size[1]) / 2)
+            )
+
     def make_exit_button(self):     # called by main after setting up camera
         from pandaeditor.internal_prefabs.button import Button
         from pandaeditor import scene
@@ -71,6 +78,21 @@ class Window(WindowProperties):
         self.exit_button.add_script('exit_button')
         self.exit_button.enabled = True
 
+    @property
+    def size(self):
+        return Vec2(self.get_size()[0], self.get_size()[1])
+
+    @size.setter
+    def size(self, value):
+        self.set_size(int(value[0]), int(value[1]))
+        application.base.win.request_properties(self)
+        self.aspect_ratio = self.size[0] / self.size[1]
+        if hasattr(camera, 'perspective_lens'):
+            camera.perspective_lens.set_aspect_ratio(self.aspect_ratio)
+            camera.ui_lens.set_film_size(camera.ui_size * .5 * self.aspect_ratio, camera.ui_size * .5)
+        else:
+            print('no camera (yet)')
+
 
     def __setattr__(self, name, value):
         if not application.base:
@@ -79,16 +101,6 @@ class Window(WindowProperties):
             super().__setattr__(name, value)
         except:
             pass
-        if name == 'size':
-            self.set_size(int(value[0]), int(value[1]))
-            application.base.win.request_properties(self)
-            self.aspect_ratio = self.size[0] / self.size[1]
-            if hasattr(camera, 'perspective_lens'):
-                camera.perspective_lens.set_aspect_ratio(self.aspect_ratio)
-                camera.ui_lens.set_film_size(camera.ui_size * .5 * self.aspect_ratio, camera.ui_size * .5)
-            else:
-                print('no camera (yet)')
-            object.__setattr__(self, name, value)
 
         if name == 'position':
             self.set_origin((value[0], value[1]))
