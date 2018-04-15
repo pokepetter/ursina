@@ -482,25 +482,49 @@ class Entity(NodePath):
 # ANIMATIONS
 #------------
 
-    def move(self, value, duration=.1, delay=0, curve='linear'):
-        s = Sequence()
-        s.append(Wait(delay))
-        s.append(self.posInterval(duration, Point3(value[0], value[2], value[1])))
-        s.start()
-        return s
+    def move(self, value, duration=.1, delay=0, curve='linear', resolution=None):
+        if hasattr(self, 'mover') and self.mover:
+            self.mover.pause() #interrupt
+        self.mover = Sequence()
+        self.mover.append(Wait(delay))
+        if not resolution:
+            resolution = int(duration * 60)
 
-    def move_x(self, value, duration=.1, delay=0, curve='linear', resolution=5):
-        s = Sequence()
-        s.append(Wait(delay))
-        start_val = self.x
         for i in range(resolution+1):
             t = i / resolution
-            t = t*t
-            s.append(Wait(duration / resolution))
-            s.append(Func(self.setX, lerp(start_val, value, t)))
+            if hasattr(easing_types, curve):
+                t = getattr(easing_types, curve)(t)
+            else:
+                # print('''no easing type named ', curve, 'using default 'ease_in_expo''')
+                t = getattr(easing_types, 'ease_in_expo')(t)
+            self.mover.append(Wait(duration / resolution))
+            self.mover.append(Func(self.setX, lerp(self.x, value[0], t)))
+            self.mover.append(Func(self.setZ, lerp(self.y, value[1], t)))
+            self.mover.append(Func(self.setY, lerp(self.z, value[2], t)))
 
-        s.start()
-        return s
+        self.mover.start()
+        return self.mover
+
+    def move_x(self, value, duration=.1, delay=0, curve='linear', resolution=None):
+        if hasattr(self, 'mover') and self.mover_x:
+            self.mover_x.pause() #interrupt
+        self.mover_x = Sequence()
+        self.mover_x.append(Wait(delay))
+        if not resolution:
+            resolution = int(duration * 60)
+
+        for i in range(resolution+1):
+            t = i / resolution
+            if hasattr(easing_types, curve):
+                t = getattr(easing_types, curve)(t)
+            else:
+                # print('''no easing type named ', curve, 'using default 'ease_in_expo''')
+                t = getattr(easing_types, 'ease_in_expo')(t)
+            self.mover_x.append(Wait(duration / resolution))
+            self.mover_x.append(Func(self.setX, lerp(self.x, value, t)))
+
+        self.mover_x.start()
+        return self.mover_x
 
     def move_y(self, value, duration=.1, delay=0, curve='linear', resolution=None):
         if hasattr(self, 'mover_y') and self.mover_y:
@@ -508,7 +532,6 @@ class Entity(NodePath):
             # print('interrupt mover_y')
         self.mover_y = Sequence()
         self.mover_y.append(Wait(delay))
-        start_val = self.y
         if not resolution:
             resolution = int(duration * 60)
 
@@ -519,19 +542,31 @@ class Entity(NodePath):
             else:
                 t = getattr(easing_types, 'ease_in_expo')(t)
             self.mover_y.append(Wait(duration / resolution))
-            self.mover_y.append(Func(self.setZ, lerp(start_val, value, t)))
+            self.mover_y.append(Func(self.setZ, lerp(self.y, value, t)))
 
         self.mover_y.start()
         return self.mover_y
 
+    def move_z(self, value, duration=.1, delay=0, curve='linear', resolution=None):
+        if hasattr(self, 'mover_z') and self.mover_z:
+            self.mover_z.pause() #interrupt
+        self.mover_z = Sequence()
+        self.mover_z.append(Wait(delay))
+        if not resolution:
+            resolution = int(duration * 60)
 
+        for i in range(resolution+1):
+            t = i / resolution
+            if hasattr(easing_types, curve):
+                t = getattr(easing_types, curve)(t)
+            else:
+                # print('''no easing type named ', curve, 'using default 'ease_in_expo''')
+                t = getattr(easing_types, 'ease_in_expo')(t)
+            self.mover_z.append(Wait(duration / resolution))
+            self.mover_z.append(Func(self.setY, lerp(self.z, value, t)))
 
-    def move_z(self, value, duration=.1, delay=0, curve='linear'):
-        s = Sequence()
-        s.append(Wait(delay))
-        s.append(self.posInterval(duration, Point3(self.x, value, self.y)))
-        s.start()
-        return s
+        self.mover_z.start()
+        return self.mover_z
 
 
     def animate_scale(self, value, duration=.1, delay=0, curve='linear'):
@@ -647,7 +682,8 @@ if __name__ == '__main__':
 
 
     #
-    # e = Entity(model='quad', color=color.red, collider='box')
+    e = Entity(model='quad', color=color.red, collider='box')
+    e.move(e.position + e.up, duration=1, delay=1, curve='ease_in_expo')
     # printvar(e.world_position)
     #
     # e.world_x = 1
@@ -657,13 +693,13 @@ if __name__ == '__main__':
     # printvar(e.world_y)
     # printvar(e.world_z)
 
-    t = TestClass()
-    # t.parent = scene.ui
-    # import mouse
-    t.model = 'cube'
-    t.collider = 'box'
+    # t = TestClass()
+    # # t.parent = scene.ui
+    # # import mouse
+    # t.model = 'cube'
+    # t.collider = 'box'
 
     # e.model = None
 
-    shake_tester = ShakeTester()
+    # shake_tester = ShakeTester()
     app.run()

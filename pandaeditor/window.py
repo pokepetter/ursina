@@ -31,8 +31,8 @@ class Window(WindowProperties):
             print('using default sceen resolution.', 'OS:', os.name)
             self.screen_resolution = (1366, 768)
 
-        self.fullscreen_size = (self.screen_resolution[0]+1, self.screen_resolution[1]+1)
-        self.windowed_size = (self.fullscreen_size[0] / 1.25, self.fullscreen_size[1] / 1.25)
+        self.fullscreen_size = (self.screen_resolution[0]+1, self.screen_resolution[0]+1 * .5625)
+        self.windowed_size = (self.fullscreen_size[0] / 1.25, self.fullscreen_size[0] / 1.25 * .5625)
         self.size = self.windowed_size
         self.position = (
             int((self.screen_resolution[0] - self.size[0]) / 2),
@@ -126,6 +126,16 @@ class Window(WindowProperties):
 
         if name == 'fps_counter':
             application.base.set_frame_rate_meter(value)
+
+        if name == 'vsync':
+            if value == True:
+                loadPrcFileData('', 'sync-video True')
+            else:
+                loadPrcFileData('', 'sync-video False')
+                print('set vsync to false')
+            object.__setattr__(self, name, value)
+            application.base.win.request_properties(self)
+            # print(application.base.win.getRequestedProperties())
 
         # if name == 'exit_button':
         #     if not hasattr(self, 'exit_button_entity'):
