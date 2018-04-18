@@ -6,7 +6,7 @@ from panda3d.core import GeomLines, GeomLinestrips, GeomPoints
 
 class Mesh(NodePath):
 
-    def __init__(self, verts, tris=None, colors=None, uvs=None, normals=None, static=True, type='triangle'):
+    def __init__(self, verts, tris=None, colors=None, uvs=None, normals=None, static=True, mode='triangle'):
         super().__init__('mesh')
 
         static_mode = Geom.UHStatic if static else Geom.UHDynamic
@@ -37,16 +37,21 @@ class Mesh(NodePath):
                 colorwriter.addData4f(c)
         # normal.addData3f(0, 0, 1)
         # texcoord.addData2f(1, 0)
-        types = {
+        modes = {
             'triangle' : GeomTriangles(static_mode),
             'tristrip' : GeomTristrips(static_mode),
             'ngon' : GeomTrifans(static_mode),
             'line' : GeomLines(static_mode),
-            'linestrip' : GeomLinestrips(static_mode),
+            'lines' : GeomLinestrips(static_mode),
             'point' : GeomPoints(static_mode),
             }
+        if mode == 'line' and len(verts) % 2 > 0:
+            if len(verts) == 1:
+                mode = point
+            print('warning: number of verts must be even for line mode, ignoring last vert')
+            verts = verts[ : len(verts)-1]
 
-        prim = types[type]
+        prim = modes[mode]
 
         if tris:
             for t in triss:
@@ -79,7 +84,7 @@ if __name__  == '__main__':
     app = PandaEditor()
     verts = ((-2,0,0), (2,0,0), (1,4,0), (-1,4,0), (-2,0,0))
     colors = (color.red, color.blue, color.lime, color.black)
-    m = Mesh(verts, colors=colors, type='ngon')
+    m = Mesh(verts, colors=colors, mode='line')
     m.thickness = 50
     # nodePath = render.attachNewNode(m)
     e = Entity()
