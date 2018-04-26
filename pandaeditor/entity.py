@@ -121,6 +121,10 @@ class Entity(NodePath):
             else:
                 print('missing model:', value)
 
+        if name == 'color' and value is not None:
+            if hasattr(self, 'model') and self.model:
+                self.model.setColorScale(value)
+                object.__setattr__(self, name, value)
 
         if name == 'texture':
             if not hasattr(self, 'model') or hasattr(self, 'model') and not self.model:
@@ -374,23 +378,10 @@ class Entity(NodePath):
     def down(self):
         return -self.up
 
-    @property
-    def color(self):
-        if hasattr(self, 'model') and self.model:
-            return self.model.getColorScale()
-
-    @color.setter
-    def color(self, value):
-        if hasattr(self, 'model') and self.model:
-            self.model.setColorScale(Vec4(value[0], value[1], value[2], value[3]))
-
 
     def reparent_to(self, entity):
         self.wrtReparentTo(entity)
-        # pos = self.getPos(entity)
-        # self.position = (pos[0], pos[2], pos[1])
-        # self.__setattr__('scale', self.getScale(entity))
-        # print('parent:', self.parent.name, 'newpos:', self.position)
+
 
     def add_script(self, module_name):
         # instance given
