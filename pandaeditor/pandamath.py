@@ -9,7 +9,7 @@ def distance(a, b):
     except:
         return (a.getXy() - b.getXy()).length()
 
-def lerp(a, b, t) :
+def lerp(a, b, t):
     return a + (b - a) * t
 
 def inverselerp(a, b, t) :

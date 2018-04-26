@@ -65,18 +65,19 @@ class Window(WindowProperties):
     def make_exit_button(self):     # called by main after setting up camera
         from pandaeditor.internal_prefabs.button import Button
         from pandaeditor import scene
-        self.exit_button = Button()
-        self.exit_button.eternal = True
-        self.exit_button.is_editor = False
-        self.exit_button.parent = scene.ui
-        self.exit_button.name = 'exit_button_entity'
-        self.exit_button.origin = (.5, .5)
-        self.exit_button.position = self.top_right
-        self.exit_button.scale = (.025, .025)
-        self.exit_button.color = color.red
-        self.exit_button.text = 'X'
+        self.exit_button = Button(
+            eternal = True,
+            is_editor = False,
+            parent = scene.ui,
+            name = 'exit_button_entity',
+            origin = (.5, .5),
+            position = self.top_right,
+            scale = (.025, .025),
+            color = color.red,
+            text = 'X',
+            enabled = True,
+            )
         self.exit_button.add_script('exit_button')
-        self.exit_button.enabled = True
 
     @property
     def size(self):

@@ -10,13 +10,12 @@ class Button(Entity):
         self.parent = scene.ui
         self.is_editor = False
         self.model = 'quad'
-        if hasattr(self, 'model'):
-            self.color = color.panda_button
+        self.color = color.panda_button
         # self.texture = 'panda_button'
 
         self.collision = True
         self.collider = 'box'
-        # self.text = ''
+        # self.text = 'button'
         self.text_entity = None
 
         for key, value in kwargs.items():
@@ -44,12 +43,15 @@ class Button(Entity):
 
 
     def __setattr__(self, name, value):
-
         if name == 'color':
-            hsv = color.to_hsv(value)
-            step = .2 if hsv[2] < .2 else -.2
-            self.highlight_color = color.color(hsv[0], hsv[1], hsv[2] + step, clamp(hsv[3], .8, 1))
-            self.pressed_color = color.color(hsv[0], hsv[1], hsv[2] - step, clamp(hsv[3], .8, 1))
+            # ignore setting original color if the button is modifying its own color on enter, exit or click
+            if ('self' in inspect.currentframe().f_back.f_locals
+            and inspect.currentframe().f_back.f_locals['self'] != self
+            or inspect.stack()[1][3] == '__init__'):
+                self.original_color = value
+                self.highlight_color = color.tint(self.original_color, .2)
+                self.pressed_color = color.tint(self.original_color, -.2)
+
 
         if name == 'origin':
             super().__setattr__(name, value)
@@ -65,39 +67,43 @@ class Button(Entity):
     def input(self, key):
         if key == 'left mouse down':
             if self.hovered:
-                self.model.setColorScale(self.pressed_color)
+                self.color = self.pressed_color
 
         if key == 'left mouse up':
             if self.hovered:
-                self.model.setColorScale(self.highlight_color)
-            else:
-                self.model.setColorScale(self.color)
+                self.color = self.highlight_color
 
 
     def on_mouse_enter(self):
-        self.model.setColorScale(self.highlight_color)
+        self.color = self.highlight_color
+
         if hasattr(self, 'tooltip'):
             self.tooltip_scale = self.tooltip.scale
             self.tooltip.scale = (0,0,0)
             self.tooltip.enabled = True
             self.tooltip_scaler = self.tooltip.animate_scale(self.tooltip_scale)
 
+
     def on_mouse_exit(self):
-        self.model.setColorScale(self.color)
+        self.color = self.original_color
+
         if hasattr(self, 'tooltip'):
             if hasattr(self, 'tooltip_scaler'):
                 self.tooltip_scaler.finish()
             self.tooltip.enabled = False
 
 
+class Test():
+    def __init__(self):
+        self.b = Button(color = color.red)
+        self.b.scale *= .5
+        self.b.color = color.azure
+        self.b.origin = (-.5, -.5)
+        self.b.text = 'text'
+        self.b.text_entity.scale *= 2
 
 if __name__ == '__main__':
     app = PandaEditor()
-    b = Button()
-    b.tooltip = Tooltip()
-    b.scale *= .5
-    b.color = color.azure
-    b.origin = (-.5, -.5)
-    b.text = 'text'
-    # b.text_entity.scale *= 2
+    t = Test()
+    t.b.tooltip = Tooltip()
     app.run()

@@ -5,7 +5,7 @@ import random
 from panda3d.core import PandaNode
 from panda3d.core import NodePath
 from panda3d.core import GeomNode
-from panda3d.core import Vec3
+from panda3d.core import Vec3, Vec4
 from panda3d.core import Point3
 from panda3d.core import SamplerState
 from panda3d.core import TransparencyAttrib
@@ -27,7 +27,9 @@ from pandaeditor import scene
 
 class Entity(NodePath):
 
-    def __init__(self, name='entity', **kwargs):
+    def __init__(self, name=None, **kwargs):
+        if not name:
+            name = __class__.__name__
         super().__init__(name)
         self.name = name
         self.enabled = True
@@ -119,10 +121,6 @@ class Entity(NodePath):
             else:
                 print('missing model:', value)
 
-        if name == 'color' and value is not None:
-            if hasattr(self, 'model') and self.model:
-                self.model.setColorScale(value)
-                object.__setattr__(self, name, value)
 
         if name == 'texture':
             if not hasattr(self, 'model') or hasattr(self, 'model') and not self.model:
@@ -376,6 +374,15 @@ class Entity(NodePath):
     def down(self):
         return -self.up
 
+    @property
+    def color(self):
+        if hasattr(self, 'model') and self.model:
+            return self.model.getColorScale()
+
+    @color.setter
+    def color(self, value):
+        if hasattr(self, 'model') and self.model:
+            self.model.setColorScale(Vec4(value[0], value[1], value[2], value[3]))
 
 
     def reparent_to(self, entity):
@@ -482,7 +489,7 @@ class Entity(NodePath):
 # ANIMATIONS
 #------------
 
-    def move(self, value, duration=.1, delay=0, curve='linear', resolution=None):
+    def animate_position(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None):
         if hasattr(self, 'mover') and self.mover:
             self.mover.pause() #interrupt
         self.mover = Sequence()
@@ -505,7 +512,7 @@ class Entity(NodePath):
         self.mover.start()
         return self.mover
 
-    def move_x(self, value, duration=.1, delay=0, curve='linear', resolution=None):
+    def animate_x(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None):
         if hasattr(self, 'mover') and self.mover_x:
             self.mover_x.pause() #interrupt
         self.mover_x = Sequence()
@@ -526,7 +533,7 @@ class Entity(NodePath):
         self.mover_x.start()
         return self.mover_x
 
-    def move_y(self, value, duration=.1, delay=0, curve='linear', resolution=None):
+    def animate_y(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None):
         if hasattr(self, 'mover_y') and self.mover_y:
             self.mover_y.pause()
             # print('interrupt mover_y')
@@ -547,7 +554,7 @@ class Entity(NodePath):
         self.mover_y.start()
         return self.mover_y
 
-    def move_z(self, value, duration=.1, delay=0, curve='linear', resolution=None):
+    def animate_z(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None):
         if hasattr(self, 'mover_z') and self.mover_z:
             self.mover_z.pause() #interrupt
         self.mover_z = Sequence()
@@ -569,28 +576,28 @@ class Entity(NodePath):
         return self.mover_z
 
 
-    def animate_scale(self, value, duration=.1, delay=0, curve='linear'):
+    def animate_scale(self, value, duration=.1, delay=0, curve='ease_in_expo'):
         s = Sequence()
         s.append(Wait(delay))
         s.append(self.scaleInterval(duration, Vec3(value[0], value[2], value[1])))
         s.start()
         return s
 
-    def animate_scale_x(self, value, duration=.1, delay=0, curve='linear'):
+    def animate_scale_x(self, value, duration=.1, delay=0, curve='ease_in_expo'):
         s = Sequence()
         s.append(Wait(delay))
         s.append(self.scaleInterval(duration, Vec3(value, self.scale_z, self.scale_y)))
         s.start()
         return s
 
-    def animate_scale_y(self, value, duration=.1, delay=0, curve='linear'):
+    def animate_scale_y(self, value, duration=.1, delay=0, curve='ease_in_expo'):
         s = Sequence()
         s.append(Wait(delay))
         s.append(self.scaleInterval(duration, Vec3(self.scale_x, self.scale_z, value)))
         s.start()
         return s
 
-    def animate_scale_z(self, value, duration=.1, delay=0, curve='linear'):
+    def animate_scale_z(self, value, duration=.1, delay=0, curve='ease_in_expo'):
         s = Sequence()
         s.append(Wait(delay))
         s.append(self.scaleInterval(duration, Vec3(self.scale_x, value, self.scale_y)))
@@ -613,6 +620,32 @@ class Entity(NodePath):
             ))
         s.start()
 
+    def animate_color(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None):
+        if hasattr(self, 'color_animator') and self.color_animator:
+            self.color_animator.pause()
+            # print('interrupt color_animator')
+        self.color_animator = Sequence()
+        self.color_animator.append(Wait(delay))
+        if not resolution:
+            resolution = int(duration * 60)
+
+        for i in range(resolution+1):
+            t = i / resolution
+            if hasattr(easing_types, curve):
+                t = getattr(easing_types, curve)(t)
+            else:
+                t = getattr(easing_types, 'ease_in_expo')(t)
+            self.color_animator.append(Wait(duration / resolution))
+            new_color = Vec4(
+                lerp(self.color[0], value[0], t),
+                lerp(self.color[1], value[1], t),
+                lerp(self.color[2], value[2], t),
+                lerp(self.color[3], value[3], t)
+                )
+            self.color_animator.append(Func(self.model.setColorScale, new_color))
+
+        self.color_animator.start()
+        return self.color_animator
 
     # @property
     # def descendants(self):
@@ -631,7 +664,7 @@ class ShakeTester(Entity):
     def __init__(self):
         super().__init__()
         self.move = 1
-        self.move_y = 1
+        self.animate_y = 1
         self.frame = 0
         self.d = False
 
@@ -641,11 +674,11 @@ class ShakeTester(Entity):
 
         if key == 'x':
             self.move = -self.move
-            e.move_x(self.x + self.move)
+            e.animate_x(self.x + self.move)
 
         if key == 'y':
-            self.move_y = -self.move_y
-            e.move_y(self.y + self.move_y)
+            self.animate_y = -self.animate_y
+            e.animate_y(self.y + self.animate_y)
 
         if key == 'd':
             self.d = True
@@ -653,18 +686,18 @@ class ShakeTester(Entity):
             self.d = False
 
         if key == 'space':
-            e.move_y(e.y + 2.5, .7)
+            e.animate_y(e.y + 2.5, .7)
             invoke(self.fall, delay=.5)
 
     def fall(self):
         print('fall')
-        e.move_y(0, duration=.5)
+        e.animate_y(0, duration=.5)
 
     def update(self, dt):
         self.frame += 1
         if self.frame >= 4:
             if self.d:
-                e.move_x(self.x + 1, 1/60 * 4)
+                e.animate_x(self.x + 1, 1/60 * 4)
             self.frame = 0
 
 
@@ -683,7 +716,7 @@ if __name__ == '__main__':
 
     #
     e = Entity(model='quad', color=color.red, collider='box')
-    e.move(e.position + e.up, duration=1, delay=1, curve='ease_in_expo')
+    e.animate_position(e.position + e.up, duration=1, delay=1, curve='ease_in_expo')
     # printvar(e.world_position)
     #
     # e.world_x = 1
