@@ -13,7 +13,7 @@ from pandaeditor.entity import Entity
 
 class Text(Entity):
 
-    def __init__(self, text=None):
+    def __init__(self, text=None, **kwargs):
         super().__init__()
         self.name = 'text'
         self.scale *= 0.25 * scene.editor_font_size
@@ -57,7 +57,9 @@ class Text(Entity):
 
         if text:
             self.text = text
-            # self.line_height = 1
+        #     # self.line_height = 1
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
 
     @property
