@@ -31,7 +31,7 @@ class Window(WindowProperties):
             print('using default sceen resolution.', 'OS:', os.name)
             self.screen_resolution = (1366, 768)
 
-        self.fullscreen_size = (self.screen_resolution[0]+1, self.screen_resolution[0]+1 * .5625)
+        self.fullscreen_size = (self.screen_resolution[0]+1, (self.screen_resolution[0]+1) * .5625)
         self.windowed_size = (self.fullscreen_size[0] / 1.25, self.fullscreen_size[0] / 1.25 * .5625)
         self.size = self.windowed_size
         self.position = (

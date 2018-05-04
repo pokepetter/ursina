@@ -457,14 +457,38 @@ class Entity(NodePath):
         pass
 
 
-    def has_ancestor(self, ancestor):
+    def has_ancestor(self, possible_ancestor):
         p = self
-        for i in range(100):
-            if p.parent:
-                if p.parent == ancestor:
-                    return True
-                    break
-                p = p.parent
+        if isinstance(possible_ancestor, Entity):
+            # print('ENTITY')
+            for i in range(100):
+                if p.parent:
+                    if p.parent == possible_ancestor:
+                        return True
+                        break
+                    p = p.parent
+
+        if isinstance(possible_ancestor, list) or isinstance(possible_ancestor, tuple):
+            # print('LIST OR TUPLE')
+            for e in possible_ancestor:
+                for i in range(100):
+                    if p.parent:
+                        if p.parent == e:
+                            return True
+                            break
+                        p = p.parent
+
+        elif isinstance(possible_ancestor, str):
+            print('CLASS NAME', possible_ancestor)
+            for i in range(100):
+                if p.parent:
+                    if p.parent.__class__.__name__ == possible_ancestor:
+                        return True
+                        break
+                    p = p.parent
+
+        return False
+
 
     @property
     def children(self):
@@ -722,6 +746,18 @@ if __name__ == '__main__':
     # # import mouse
     # t.model = 'cube'
     # t.collider = 'box'
+    my_parent = Entity()
+    my_tuple = (Entity(), Entity())
+    my_class_name = 'TestClass'
+
+    t = Entity(parent = e)
+    # printvar(t.has_ancestor(e))
+    # printvar(t.has_ancestor(my_tuple))
+    # print('!!!!!!', type(Entity))
+    print('....', Entity.__class__)
+    printvar(isinstance(t.parent, Entity.__class__))
+    printvar(t.has_ancestor(Entity))
+
 
     # e.model = None
 

@@ -170,8 +170,7 @@ class Text(Entity):
         # _font.setRenderMode(TextFont.RMPolygon)
         self._font.setPixelsPerUnit(50)
         print('FONT FILE:', self._font)
-        for tn in self.text_nodes:
-            tn.setFont(self._font)
+        self.text = self.raw_text   # update text
 
     @property
     def line_height(self):
@@ -289,13 +288,14 @@ if __name__ == '__main__':
     }
     descr = multireplace(descr, replacements)
     test = Text(descr)
-
-    # test.font = 'VeraMono.ttf'
-#     test.text = '''
+    test.font = 'VeraMono.ttf'
+    test.font = 'Inconsolata-Regular.ttf'
+    # test.text = 'test text 0 a w'
+    # test.text = '''
 # <lime>*If <default>target has more than <red>50% hp, <default>*burn the enemy for 5 * INT fire damage for 3 turns. <yellow>Else, deal 100 damage. <default>Unfreezes target. Costs <blue>10 mana.
 # '''.strip()
     # test.wordwrap = 40
-    print('ooooooooooooooooooooooo\n', test.text)
+    # print('ooooooooooooooooooooooo\n', test.text)
     # test.text = '<red>yolo<green>'
     # test.line_height = 4
 
