@@ -19,8 +19,13 @@ class Paper(Entity):
         self.i = 0
         # self.pressure = .1
 
-        self.brush = Image.open("brush.png")
-        self.brush_color = (int(color.lime[0] * 255), int(color.lime[1] * 255), int(color.lime[2] * 255))
+        self.brush = Image.open("brush.png").transpose(Image.FLIP_TOP_BOTTOM)
+        self.brush_color = color.white
+        self.brush_color = (
+            int(self.brush_color[0] * 255),
+            int(self.brush_color[1] * 255),
+            int(self.brush_color[2] * 255)
+            )
         tint = Image.new("RGBA", (self.brush.width, self.brush.height), self.brush_color)
         self.brush = ImageChops.multiply(self.brush, tint)
 
@@ -46,6 +51,15 @@ class Paper(Entity):
         if key == 'left mouse up':
             self.prev_pos = None
 
+        if key == 'scroll up':
+            camera.fov -= 1
+            camera.fov = max(camera.fov, 0)
+
+        if key == 'scroll down':
+            camera.fov += 1
+            camera.fov = min(camera.fov, 200)
+
+
     def update(self, dt):
         # if mouse.left and self. pressure < 2:
         #     self.pressure += .1
@@ -70,31 +84,28 @@ class Paper(Entity):
 
             # if self.pressure < .01:
             #     return
-            self.img.paste(
-                self.brush,
-                (int(self.tex_x - (self.brush.size[0] / 2)),
-                int(self.tex_y - (self.brush.size[1] / 2))),
-                self.brush)
-
-            # if self.prev_pos:
-            #     # dist = distance(Vec3(self.tex_x, self.tex_y, 0), self.prev_pos)
-            #     # print('delta pos:', dist)
-            #     dx = self.tex_x - self.prev_pos[0]
-            #     # dy = self.tex_y - self.prev_pos[1]
-            #     # steps = max(dx, dy)
-            #     steps = int(dx/20)
-            #     print(steps)
-            #
-            #     for i in range(steps):
-            #         self.img.paste(
-            #             self.brush,
-            #             (int(self.tex_x - (self.brush.size[0] / 2) + (i*20)),
-            #             int(self.tex_y - (self.brush.size[1] / 2))),
-            #             self.brush)
 
 
-                # for i in range(distance):
-                #     paste_pos =
+            # draw line between points
+            if self.prev_pos:
+                # dist = distance(self.prev_pos, (self.tex_x, self.tex_y))
+                dist = distance(Vec3(self.prev_pos[0], self.prev_pos[1], 0), Vec3(self.tex_x, self.tex_y, 0))
+                printvar(dist)
+                steps = int(dist / 5)
+                for i in range(steps):
+                    pos_x = lerp(self.prev_pos[0], self.tex_x, i / steps)
+                    pos_y = lerp(self.prev_pos[1], self.tex_y, i / steps)
+                    self.img.paste(
+                        self.brush,
+                        (int(pos_x - (self.brush.size[0] / 2)),
+                        int(pos_y - (self.brush.size[1] / 2))),
+                        self.brush)
+            else:
+                self.img.paste(
+                    self.brush,
+                    (int(self.tex_x - (self.brush.size[0] / 2)),
+                    int(self.tex_y - (self.brush.size[1] / 2))),
+                    self.brush)
 
             self.prev_pos = Vec3(self.tex_x, self.tex_y, 0)
 
@@ -105,6 +116,8 @@ class Paper(Entity):
 
 
 app = PandaEditor()
+camera.orthographic = True
+camera.fov = 16
 cursor = Cursor()
 paper = Paper()
 app.run()

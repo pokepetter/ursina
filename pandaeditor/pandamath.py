@@ -7,7 +7,16 @@ def distance(a, b):
     try:
         return a.getDistance(b)
     except:
+        pass
+    try:
         return (a.getXy() - b.getXy()).length()
+    except:
+        pass
+    try:
+        return math.hypot(b[0] - a[0], b[1] - a[1])
+    except:
+        pass
+
 
 def lerp(a, b, t):
     return a + (b - a) * t
