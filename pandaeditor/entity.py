@@ -20,6 +20,7 @@ from direct.showbase import Loader
 from pandaeditor.pandamath import lerp
 from pandaeditor import easing_types
 from pandaeditor.easing_types import *
+from pandaeditor.useful import *
 
 from pandaeditor import color
 from pandaeditor import scene
@@ -285,6 +286,8 @@ class Entity(NodePath):
             pass
             # print('failed to sett attribiute:', name)
 
+    def set_color(self, value):
+        self.color = value
 
     @property
     def world_position(self):
@@ -386,8 +389,9 @@ class Entity(NodePath):
     def add_script(self, module_name):
         # instance given
         if isinstance(module_name, object) and type(module_name) is not str:
-            print('type', type(self))
+            # print('type', type(self))
             module_name.entity = self
+            setattr(self, camel_to_snake(module_name.__class__.__name__), module_name)
             self.scripts.append(module_name)
             # print('added script:', module_name)
             return module_name
@@ -636,11 +640,16 @@ class Entity(NodePath):
         s.start()
 
     def animate_color(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None):
+        from pandaeditor.pandastuff import invoke
+        invoke(self._animate_color, value, duration, curve, resolution, delay=delay)
+
+    def _animate_color(self, value, duration=.1, curve='ease_in_expo', resolution=None):
         if hasattr(self, 'color_animator') and self.color_animator:
+            print('pause color animator')
             self.color_animator.pause()
-            # print('interrupt color_animator')
+        print('anim color')
         self.color_animator = Sequence()
-        self.color_animator.append(Wait(delay))
+
         if not resolution:
             resolution = int(duration * 60)
 
@@ -657,7 +666,8 @@ class Entity(NodePath):
                 lerp(self.color[2], value[2], t),
                 lerp(self.color[3], value[3], t)
                 )
-            self.color_animator.append(Func(self.model.setColorScale, new_color))
+            # self.color_animator.append(Func(self.model.setColorScale, new_color))
+            self.color_animator.append(Func(self.set_color, new_color))
 
         self.color_animator.start()
         return self.color_animator
@@ -724,14 +734,15 @@ class TestClass(Entity):
 
 if __name__ == '__main__':
     from pandaeditor import main
-    from pandastuff import printvar, invoke
+    from pandastuff import invoke
 
     app = main.PandaEditor()
 
 
     #
     e = Entity(model='quad', color=color.red, collider='box')
-    e.animate_position(e.position + e.up, duration=1, delay=1, curve='ease_in_expo')
+    # e.animate_position(e.position + e.up, duration=1, delay=1, curve='ease_in_expo')
+    e.animate_color(color.yellow, duration=.5, delay=1)
     # printvar(e.world_position)
     #
     # e.world_x = 1
