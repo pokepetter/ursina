@@ -619,16 +619,16 @@ class Entity(NodePath):
         s.start()
         return s
 
-    def shake(self, duration=.2, magnitude=1):
+    def shake(self, duration=.2, magnitude=1, speed=.05):
         s = Sequence()
         self.original_position = self.position
-        for i in range(int(duration / .05)):
-            s.append(self.posInterval(.05, Point3(
+        for i in range(int(duration / speed)):
+            s.append(self.posInterval(speed, Point3(
                 self.x + (random.uniform(-.1, .1) * magnitude),
                 self.z,
                 self.y + (random.uniform(-.1, .1) * magnitude))
             ))
-            s.append(self.posInterval(.05, Point3(
+            s.append(self.posInterval(speed, Point3(
                 self.original_position[0],
                 self.original_position[2],
                 self.original_position[1])
