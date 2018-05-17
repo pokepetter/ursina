@@ -4,9 +4,11 @@ from pandaeditor import main
 from pandaeditor.main import PandaEditor
 from pandaeditor.pandamath import *
 from pandaeditor.pandastuff import *
+from pandaeditor.useful import *
 from pandaeditor.entity import Entity
 
 from pandaeditor.internal_prefabs.text import Text
+from pandaeditor.internal_prefabs.sprite import Sprite
 from pandaeditor.internal_prefabs.button import Button
 from pandaeditor.internal_prefabs.editor_button import EditorButton
 from pandaeditor.internal_prefabs.canvas import Canvas
