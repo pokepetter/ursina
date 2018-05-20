@@ -85,18 +85,6 @@ class Entity(NodePath):
                 if not self.is_singleton():
                     self.stash()
 
-        if name == 'parent':
-            if value is None:
-                try:
-                    self.reparentTo(scene.editor.trash)
-                except:
-                    print('no trash node')
-            else:
-                try:
-                    self.reparentTo(value)
-                except:
-                    print('invalid parent:', value)
-
         if name == 'model':
             if value is None:
                 if hasattr(self, 'model') and self.model != None:
@@ -288,6 +276,25 @@ class Entity(NodePath):
 
     def set_color(self, value):
         self.color = value
+
+    @property
+    def parent(self):
+        return self._parent
+
+    @parent.setter
+    def parent(self, value):
+        self._parent = entity
+        if value is None:
+            try:
+                self.reparentTo(scene.editor.trash)
+            except:
+                print('no trash node')
+        else:
+            try:
+                self.reparentTo(value)
+            except:
+                print('invalid parent:', value)
+
 
     @property
     def world_position(self):
