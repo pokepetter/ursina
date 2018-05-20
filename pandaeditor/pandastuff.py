@@ -63,18 +63,18 @@ from pandaeditor import main
         # if e.parent = parent_entity
 
 
-def save_prefab(target, path='prefabs'):
+def save_prefab(target, name=None, path='prefabs'):
+    if not name:
+        name = target.name
+
     prefab_path = os.path.join(
         path,
         target.name + '_' + str(target.get_key()) + '.py')
 
     with open(prefab_path, 'w') as file:
-
-        file.write('import sys\n')
-        file.write('sys.path.append("..")\n')
         file.write('from pandaeditor import *\n\n')
 
-        file.write('class ' + target.name.title() + '_' + str(target.get_key()) + '(Entity):\n\n')
+        file.write('class ' + name.title() + '_' + str(target.get_key()) + '(Entity):\n\n')
         file.write('    def __init__(self):\n')
         file.write('        super().__init__()\n')
 

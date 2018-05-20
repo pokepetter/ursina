@@ -9,7 +9,7 @@ from panda3d.core import Vec3, Vec4
 from panda3d.core import Point3
 from panda3d.core import SamplerState
 from panda3d.core import TransparencyAttrib
-from panda3d.core import Texture
+from panda3d.core import Texture, TextureStage
 from pandaeditor import application
 from pandaeditor.collider import Collider
 from os import path
@@ -144,6 +144,15 @@ class Entity(NodePath):
             if value == None:
                 self.model.set_texture_off(True)
 
+        if name == 'texture_scale':
+            if self.model and self.texture:
+                self.model.setTexScale(TextureStage.getDefault(), value[0], value[1])
+                self.texture = self.texture
+
+        if name == 'texture_offset':
+            if self.model and self.texture:
+                self.model.setTexOffset(TextureStage.getDefault(), value[0], value[1])
+                self.texture = self.texture
 
         if name == 'position':
             # automatically add position instead of extending the tuple
@@ -283,7 +292,7 @@ class Entity(NodePath):
 
     @parent.setter
     def parent(self, value):
-        self._parent = entity
+        self._parent = value
         if value is None:
             try:
                 self.reparentTo(scene.editor.trash)

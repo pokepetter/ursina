@@ -63,7 +63,7 @@ class EditorCamera(object):
 
 if __name__ == '__main__':
     app = main.PandaEditor()
-    scene.entity.sky = load_prefab('sky')
-    e = Entity()
+    sky = load_prefab('sky')
+    e = Entity(model='quad')
     e.add_script('editor_camera')
     app.run()

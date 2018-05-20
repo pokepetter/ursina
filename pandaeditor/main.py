@@ -16,8 +16,8 @@ class PandaEditor(ShowBase):
         # camera
         camera.cam = base.camera
         camera.cam.reparent_to(camera)
-        camera.parent = self.render
-        camera.render = self.render
+        camera.parent = base.render
+        camera.render = base.render
         camera.aspect_ratio = window.size[0] / window.size[1]
         camera.position = (0, 0, -20)
         scene.camera = camera
