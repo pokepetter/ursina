@@ -22,3 +22,6 @@ from pandaeditor.internal_prefabs.models import Quad, Circle, Cube
 from pandaeditor.internal_prefabs.plane import Plane
 from pandaeditor.internal_prefabs.panel import Panel
 from pandaeditor.internal_prefabs.tooltip import Tooltip
+from pandaeditor.internal_prefabs.draggable import Draggable
+
+from pandaeditor.internal_scripts.editor_camera import EditorCamera
