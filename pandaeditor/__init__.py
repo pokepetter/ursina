@@ -10,6 +10,7 @@ from pandaeditor.entity import Entity
 from pandaeditor.internal_prefabs.text import Text
 from pandaeditor.internal_prefabs.sprite import Sprite
 from pandaeditor.internal_prefabs.button import Button
+from pandaeditor.internal_prefabs.animation import Animation
 from pandaeditor.internal_prefabs.editor_button import EditorButton
 from pandaeditor.internal_prefabs.canvas import Canvas
 from pandaeditor.internal_prefabs.input_field import InputField

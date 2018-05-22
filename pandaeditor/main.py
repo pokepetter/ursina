@@ -96,21 +96,21 @@ class PandaEditor(ShowBase):
 
         self.update_task = taskMgr.add(self.update, "update")
 
-        if len(sys.argv) == 1:
-            print('warning: please provide path to project or scene\n')
-            return
-
-        if sys.argv[1].endswith('.py'):
-            print('opening scene:', sys.argv[1])
-        else:
-            print('opening project:', sys.argv[1])
-            if os.path.exists(sys.argv[1] + '/scenes/'):
-                print('loading first file in scenes folder')
-            else:
-                print('trying to load:', sys.argv[1] + '\\main.py')
-                if os.path.exists(sys.argv[1] + '\\main.py'):
-                    print('load main.py')
-                    exec(open(sys.argv[1] + '\\main.py').read())
+        # if len(sys.argv) == 1:
+        #     print('warning: please provide path to project or scene\n')
+        #     return
+        #
+        # if sys.argv[1].endswith('.py'):
+        #     print('opening scene:', sys.argv[1])
+        # else:
+        #     print('opening project:', sys.argv[1])
+        #     if os.path.exists(sys.argv[1] + '/scenes/'):
+        #         print('loading first file in scenes folder')
+        #     else:
+        #         print('trying to load:', sys.argv[1] + '\\main.py')
+        #         if os.path.exists(sys.argv[1] + '\\main.py'):
+        #             print('load main.py')
+        #             exec(open(sys.argv[1] + '\\main.py').read())
 
 
     def update(self, task):
