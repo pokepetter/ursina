@@ -56,7 +56,7 @@ class Inspector(Entity):
 
 # model_field
         self.model_field = self.create_button('model: ')
-        self.filebrowser = Filebrowser()
+        self.filebrowser = FileBrowser()
         self.filebrowser.parent = camera.ui
         self.filebrowser.position = (0,0)
         self.filebrowser.name = 'replace_model_filebrowser'
@@ -85,7 +85,7 @@ class Inspector(Entity):
 
 # texture_field
         self.texture_field = self.create_button('texture: ')
-        self.filebrowser = Filebrowser()
+        self.filebrowser = FileBrowser()
         self.filebrowser.parent = camera.ui
         self.filebrowser.name = 'replace_texture_filebrowser'
         self.filebrowser.file_types = ('.png', '.jpg')
@@ -105,7 +105,7 @@ class Inspector(Entity):
         self.menu_toggler = self.add_script_button.add_script('menu_toggler')
         self.menu_toggler_1 = self.add_script_button.add_script('menu_toggler')
 
-        self.internal_scripts_browser = Filebrowser()
+        self.internal_scripts_browser = FileBrowser()
         self.internal_scripts_browser.is_editor = True
         self.internal_scripts_browser.parent = scene.ui
         self.internal_scripts_browser.file_types = ('.py')
@@ -114,7 +114,7 @@ class Inspector(Entity):
         self.menu_toggler.target = self.internal_scripts_browser
         self.internal_scripts_browser.enabled = False
 
-        self.filebrowser = Filebrowser()
+        self.filebrowser = FileBrowser()
         self.filebrowser.is_editor = True
         self.filebrowser.parent = scene.ui
         self.filebrowser.file_types = ('.py')

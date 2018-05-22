@@ -125,7 +125,7 @@ class Editor(Entity):
             b.add_script('open_in_file_explorer')
             b.open_in_file_explorer.path = button_paths[i]
 
-            filebrowser = Filebrowser()
+            filebrowser = FileBrowser()
             filebrowser.parent = self
             filebrowser.close_button.enabled = False
             # filebrowser.enabled = False

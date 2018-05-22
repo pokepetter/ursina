@@ -3,7 +3,7 @@ sys.path.append("..")
 from pandaeditor import *
 import os
 
-class Filebrowser(Entity):
+class FileBrowser(Entity):
 
     def __init__(self):
         super().__init__()
@@ -141,8 +141,12 @@ class Filebrowser(Entity):
 
 if __name__ == '__main__':
     app = PandaEditor()
-    test = Filebrowser()
-    test.path = application.internal_texture_folder
-    test.file_types = (('.jpg'))
-    test.button_type = 'load_sprite_button'
+    test = FileBrowser(
+        path = application.internal_texture_folder,
+        file_types = ('.jpg'),
+
+        )
+    # test.path = application.internal_texture_folder
+    # test.file_types = (('.jpg'))
+    # test.button_type = 'load_sprite_button'
     app.run()
