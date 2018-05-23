@@ -84,8 +84,8 @@ if __name__  == '__main__':
     app = PandaEditor()
     verts = ((-2,0,0), (2,0,0), (1,4,0), (-1,4,0), (-2,0,0))
     colors = (color.red, color.blue, color.lime, color.black)
-    m = Mesh(verts, colors=colors, mode='line')
-    m.thickness = 50
+    m = Mesh(verts, mode='line')
+    # m.thickness = 50
     # nodePath = render.attachNewNode(m)
     e = Entity()
     e.model = m
