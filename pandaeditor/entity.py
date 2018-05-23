@@ -288,7 +288,10 @@ class Entity(NodePath):
 
     @property
     def parent(self):
-        return self._parent
+        try:
+            return self._parent
+        except:
+            return None
 
     @parent.setter
     def parent(self, value):

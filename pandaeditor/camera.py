@@ -12,6 +12,7 @@ class Camera(Entity):
 
     def __init__(self):
         super().__init__()
+        self.parent = scene
         self.name = 'camera'
         self.eternal = True
         self.is_editor = True
@@ -98,7 +99,7 @@ class Camera(Entity):
             self.lens = self.perspective_lens
             self.lens_node = self.perspective_lens_node
             application.base.cam.node().set_lens(self.perspective_lens)
-            
+
         self.fov = self.fov
 
 
