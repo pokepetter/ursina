@@ -30,7 +30,7 @@ class Entity(NodePath):
 
     def __init__(self, name=None, **kwargs):
         if not name:
-            name = __class__.__name__
+            name = self.__class__.__name__
         super().__init__(name)
         self.name = name
         self.enabled = True
@@ -307,6 +307,9 @@ class Entity(NodePath):
             except:
                 print('invalid parent:', value)
 
+    @property
+    def type(self):
+        return self.__class__.__name__
 
     @property
     def world_position(self):
@@ -363,6 +366,25 @@ class Entity(NodePath):
     @property
     def rotation_z(self):
         return self.getR()
+
+    # @property
+    # def world_scale(self):
+    #     scale = self.getScale(base.render)
+    #     return Vec3(scale[0], scale[2], scale[1])
+    #
+    # @property
+    # def world_scale_x(self):
+    #     return self.getScale(base.render)[0]
+    # @world_scale_x.setter
+    # def world_scale_x(self, value):
+    #     self.setScale(base.render, Vec3(value, self.world_scale_y, self.world_scale_z))
+    #
+    # @property
+    # def world_scale_y(self):
+    #     return self.getScale(base.render)[2]
+    # @property
+    # def world_scale_z(self):
+    #     return self.getScale(base.render)[1]
 
     @property
     def scale(self):

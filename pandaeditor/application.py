@@ -53,6 +53,7 @@ class Application():
         self.model_path.appendPath(self.texture_folder)
 
         self.model_path.appendPath(self.internal_font_folder)
+        self.model_path.appendPath(self.asset_folder)
         print(self.model_path)
 
     def append_path(self, path):
