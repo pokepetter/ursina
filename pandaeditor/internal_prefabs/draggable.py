@@ -2,15 +2,8 @@ from pandaeditor import *
 
 class Draggable(Button):
 
-    # drag_mode = False
-    # label = Text('drag mode', enabled=False, scale=(.25, .25))
-
     def __init__(self, **kwargs):
         super().__init__()
-        # Draggable.label.parent = camera.ui
-        # Draggable.label.enabled = Draggable.drag_mode
-        # Draggable.label.scale *= .1
-        # Draggable.label.position = (-.5 * window.aspect_ratio, .48)
         self.require_key = None
         self.dragging = False
         self.start_pos = self.position
@@ -23,10 +16,7 @@ class Draggable(Button):
 
 
     def input(self, key):
-        super().input(key)
-        # if key == 'tab':
-        #     Draggable.drag_mode = not Draggable.drag_mode
-        #     Draggable.label.enabled = not Draggable.label.enabled
+        # super().input(key)
 
         if self.hovered and key == 'left mouse down':
             if not self.require_key or held_keys[self.require_key]:
@@ -37,7 +27,7 @@ class Draggable(Button):
                 except:
                     pass
 
-        if key == 'left mouse up':
+        if self.dragging and key == 'left mouse up':
             self.dragging = False
             self.delta_drag = self.position - self.start_pos
             try:
@@ -46,8 +36,11 @@ class Draggable(Button):
                 print('no drop func')
                 pass
 
+    # def drag(self):
+    #     print('start drag test')
+    #
     # def drop(self):
-    #     print('yolo drop')
+    #     print('drop test')
 
     def update(self, dt):
         if self.dragging:

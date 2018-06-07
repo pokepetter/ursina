@@ -6,7 +6,7 @@ from panda3d.core import GeomLines, GeomLinestrips, GeomPoints
 
 class Mesh(NodePath):
 
-    def __init__(self, verts, tris=None, colors=None, uvs=None, normals=None, static=True, mode='triangle'):
+    def __init__(self, verts, tris=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1):
         super().__init__('mesh')
 
         static_mode = Geom.UHStatic if static else Geom.UHDynamic
@@ -68,6 +68,7 @@ class Mesh(NodePath):
         geomNode.addGeom(geom)
         self.attachNewNode(geomNode)
         # print('finished')
+        self.thickness = thickness
 
 
     @property
@@ -84,7 +85,7 @@ if __name__  == '__main__':
     app = PandaEditor()
     verts = ((-2,0,0), (2,0,0), (1,4,0), (-1,4,0), (-2,0,0))
     colors = (color.red, color.blue, color.lime, color.black)
-    m = Mesh(verts, mode='line')
+    m = Mesh(verts, mode='line', thickness=20)
     # m.thickness = 50
     # nodePath = render.attachNewNode(m)
     e = Entity()

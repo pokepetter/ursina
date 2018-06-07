@@ -425,6 +425,7 @@ class Entity(NodePath):
 
     def reparent_to(self, entity):
         self.wrtReparentTo(entity)
+        self._parent = entity
 
 
     def add_script(self, module_name):
@@ -537,13 +538,14 @@ class Entity(NodePath):
 
     @property
     def children(self):
-        children_entities = list()
-        for e in scene.entities:
-            if e.parent == self:
-                children_entities.append(e)
-
-
-        return children_entities
+        return [e for e in scene.entities if e.parent == self]
+        # children_entities = list()
+        # for e in scene.entities:
+        #     if e.parent == self:
+        #         children_entities.append(e)
+        #
+        #
+        # return children_entities
 
 #------------
 # ANIMATIONS
