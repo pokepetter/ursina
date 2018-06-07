@@ -43,6 +43,10 @@ class Entity(NodePath):
         self.model = None
         self.color = color.white
         self.texture = None
+        try:
+            self.texture = camel_to_snake(self.__class__.__name__)
+        except:
+            pass
         self.collision = False
         # self.collider = None
         self.editor_collider = None
