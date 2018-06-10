@@ -316,6 +316,10 @@ class Entity(NodePath):
         return self.__class__.__name__
 
     @property
+    def types(self):
+        return [c.__name__ for c in inspect.getmro(self.__class__)]
+
+    @property
     def world_position(self):
         world_position = self.getPos(render)
         world_position = Vec3(world_position[0], world_position[2], world_position[1])
