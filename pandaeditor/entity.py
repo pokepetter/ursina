@@ -93,14 +93,18 @@ class Entity(NodePath):
             if value is None:
                 if hasattr(self, 'model') and self.model != None:
                     self.model.removeNode()
-                    print('removed model')
+                    # print('removed model')
                 return None
 
             if isinstance(value, NodePath): # pass procedural model
+                if hasattr(self, 'model'):
+                    self.model.removeNode()
                 object.__setattr__(self, name, value)
 
             elif isinstance(value, str): # pass model asset name
                 try:
+                    if hasattr(self, 'model'):
+                        self.model.removeNode()
                     object.__setattr__(self, name, loader.loadModel(value))
                 except:
                     pass
