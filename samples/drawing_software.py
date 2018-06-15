@@ -2,6 +2,7 @@ from pandaeditor import *
 from PIL import Image, ImageChops
 # import opencv-python as ocv
 import numpy
+import time
 
 
 class Paper(Entity):
@@ -29,23 +30,31 @@ class Paper(Entity):
         tint = Image.new("RGBA", (self.brush.width, self.brush.height), self.brush_color)
         self.brush = ImageChops.multiply(self.brush, tint)
 
+        # self.slider = Slider()
 
     def start(self):
-        self.new()
+        self.new(2048*1, 1024*1)
 
-    def new(self, width=1024, height=1024):
+    def new(self, width=1920, height=1080):
         self.width = width
         self.height = height
+        self.scale_x *= width/height
 
         self.img = Image.new('RGBA', (width, height), (255, 255, 255))
 
-        texture = Texture()
-        texture.setup2dTexture(width, height, Texture.TUnsignedByte, Texture.FRgba)
-        texture.setRamImageAs(self.img.tobytes(), "RGBA")
-        self.texture = texture
+        self.texture_buffer = Texture()
+        self.texture_buffer.setup2dTexture(width, height, Texture.TUnsignedByte, Texture.FRgba)
+        self.texture_buffer.setRamImageAs(self.img.tobytes(), "RGBA")
+        self.texture = self.texture_buffer
 
         self.img.paste(self.brush, (0, 0), self.brush)
         self.texture.setRamImageAs(self.img.tobytes(), "RGBA")
+        self.brush = self.brush.resize(
+            (int(self.brush.width * 2),
+            int(self.brush.height * 2)),
+            Image.ANTIALIAS)
+
+        self.texture.setRenderToTexture(True)
 
     def input(self, key):
         if key == 'left mouse up':
@@ -74,23 +83,11 @@ class Paper(Entity):
             self.prev_point = (self.tex_x, self.tex_y)
 
 
-
-            # print(self.tex_x, self.tex_y)
-            # self.resized_brush = self.brush.thumbnail(
-            #     (int(8), int(8)),
-            #     Image.ANTIALIAS)
-
-            # self.resized_brush = self.brush.resize((int(self.brush.width * self.pressure), int(self.brush.height * self.pressure)), Image.ANTIALIAS)
-
-            # if self.pressure < .01:
-            #     return
-
-
             # draw line between points
             if self.prev_pos:
                 # dist = distance(self.prev_pos, (self.tex_x, self.tex_y))
                 dist = distance(Vec3(self.prev_pos[0], self.prev_pos[1], 0), Vec3(self.tex_x, self.tex_y, 0))
-                printvar(dist)
+                # printvar(dist)
                 steps = int(dist / 5)
                 for i in range(steps):
                     pos_x = lerp(self.prev_pos[0], self.tex_x, i / steps)
@@ -111,7 +108,9 @@ class Paper(Entity):
 
             self.i += 1
             if self.i > 2:  # update image less often to reduce lag.
-                self.texture.setRamImageAs(self.img.tobytes(), "RGBA")
+                b = self.img.tobytes()
+                self.texture_buffer.setRamImage(b)
+                self.texture = self.texture_buffer
                 self.i = 0
 
 
