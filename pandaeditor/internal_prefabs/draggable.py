@@ -10,6 +10,8 @@ class Draggable(Button):
 
         self.x_lock = False
         self.y_lock = False
+        self.min_x, self.min_y, self.min_z = -math.inf, -math.inf, -math.inf
+        self.max_x, self.max_y, self.max_z = math.inf, math.inf, math.inf
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -44,12 +46,23 @@ class Draggable(Button):
 
     def update(self, dt):
         if self.dragging:
+            # make drag work event when parented to scaled entity
+            # if self.parent and isinstance(self.parent, Entity):
+            #     if not self.x_lock:
+            #         self.world_x += mouse.velocity[0] * camera.fov * self.parent.world_scale_x
+            #     if not self.y_lock:
+            #         self.world_y += mouse.velocity[1] * camera.fov * self.parent.world_scale_y
+            # else:
             if not self.x_lock:
                 self.world_x += mouse.velocity[0] * camera.fov
             if not self.y_lock:
                 self.world_y += mouse.velocity[1] * camera.fov
 
-
+        self.position = (
+            clamp(self.x, self.min_x, self.max_x),
+            clamp(self.y, self.min_y, self.max_y),
+            clamp(self.z, self.min_z, self.max_z)
+            )
 
 if __name__ == '__main__':
     app = PandaEditor()

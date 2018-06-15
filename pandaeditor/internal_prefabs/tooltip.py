@@ -14,11 +14,11 @@ class Tooltip(Entity):
         self.max_width = 0
         self.z = -10
 
-        self.text = Text('''description''')
+        self.text_entity = Text('''description''')
         if text:
-            self.text.text = text
-        self.text.align = 'left'
-        self.text.parent = self
+            self.text_entity.text = text
+        self.text_entity.align = 'left'
+        self.text_entity.parent = self
 
         self.background = Entity(
             parent = self,
@@ -33,20 +33,20 @@ class Tooltip(Entity):
     def fit_to_text(self):
         # additional scale only accounts for the first line so I can have a title
         additional_scale = 0
-        if self.text.raw_text.startswith('<scale:'):
+        if self.text_entity.raw_text.startswith('<scale:'):
             additional_scale = (
-                self.text.scale[1]
-                * (float(self.text.raw_text.split('<scale:')[1].split('>')[0]) - 1)
+                self.text_entity.scale[1]
+                * (float(self.text_entity.raw_text.split('<scale:')[1].split('>')[0]) - 1)
                 )
 
-        self.background.scale_x = max(self.min_width, self.text.width + additional_scale)
-        self.background.scale_y = max(self.min_height, (self.text.height + additional_scale))
+        self.background.scale_x = max(self.min_width, self.text_entity.width + additional_scale)
+        self.background.scale_y = max(self.min_height, (self.text_entity.height + additional_scale))
 
         #center
         self.background.x = self.background.scale_x / 2
         self.background.y = self.background.scale_y / 2
         self.background_scale_without_margin = self.background.scale
-        self.text.y = self.text.height - .2
+        self.text_entity.y = self.text_entity.height - .2
         self.margin = (.5, .5)
         # self.margin = (0,0)
         # self.scale = (0,0,0)
@@ -91,7 +91,7 @@ class Tooltip(Entity):
         if value == 0:
             return
 
-        self.text.wordwrap = value
+        self.text_entity.wordwrap = value
         self.fit_to_text()
 
 
