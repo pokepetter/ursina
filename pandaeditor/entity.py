@@ -379,24 +379,31 @@ class Entity(NodePath):
     def rotation_z(self):
         return self.getR()
 
-    # @property
-    # def world_scale(self):
-    #     scale = self.getScale(base.render)
-    #     return Vec3(scale[0], scale[2], scale[1])
-    #
-    # @property
-    # def world_scale_x(self):
-    #     return self.getScale(base.render)[0]
-    # @world_scale_x.setter
-    # def world_scale_x(self, value):
-    #     self.setScale(base.render, Vec3(value, self.world_scale_y, self.world_scale_z))
-    #
-    # @property
-    # def world_scale_y(self):
-    #     return self.getScale(base.render)[2]
-    # @property
-    # def world_scale_z(self):
-    #     return self.getScale(base.render)[1]
+    @property
+    def world_scale(self):
+        scale = self.getScale(base.render)
+        return Vec3(scale[0], scale[2], scale[1])
+
+    @property
+    def world_scale_x(self):
+        return self.getScale(base.render)[0]
+    @world_scale_x.setter
+    def world_scale_x(self, value):
+        self.setScale(base.render, Vec3(value, self.world_scale_z, self.world_scale_y))
+
+    @property
+    def world_scale_y(self):
+        return self.getScale(base.render)[2]
+    @world_scale_y.setter
+    def world_scale_y(self, value):
+        self.setScale(base.render, Vec3(self.world_scale_x, self.world_scale_z, value))
+
+    @property
+    def world_scale_z(self):
+        return self.getScale(base.render)[1]
+    @world_scale_z.setter
+    def world_scale_z(self, value):
+        self.setScale(base.render, Vec3(self.world_scale_x, value, self.world_scale_y))
 
     @property
     def scale(self):
