@@ -271,6 +271,9 @@ def _destroy(entity):
     if entity in scene.entities:
         scene.entities.remove(entity)
 
+    if hasattr(entity, 'on_destroy'):
+        entity.on_destroy()
+
     if hasattr(entity, 'model') and entity.model != None:
         entity.model.removeNode()
 
@@ -291,7 +294,7 @@ def _destroy(entity):
 
 
 
-def compress_textures():
+def compress_textures(name=None):
     from PIL import Image
     from os.path import dirname
     from psd_tools import PSDImage
@@ -300,6 +303,9 @@ def compress_textures():
 
     for f in files:
         if f.endswith('.psd') or f.endswith('.png'):
+            if name:
+                if not name in f:
+                    continue
             try:
                 # print('f:', application.compressed_texture_folder + f)
                 if f.endswith('.psd'):
