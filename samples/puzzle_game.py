@@ -1,6 +1,6 @@
 import sys
 sys.path.append('..')
-from pandaeditor import *
+from ursina import *
 
 
 class PuzzleGame(Entity):
@@ -84,6 +84,6 @@ class FirstPersonController(Entity):
 
 
 if __name__ == '__main__':
-    app = main.PandaEditor()
+    app = main.ursina()
     scene = PuzzleGame()
     app.run()

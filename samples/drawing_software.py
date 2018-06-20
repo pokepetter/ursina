@@ -1,4 +1,4 @@
-from pandaeditor import *
+from ursina import *
 from PIL import Image, ImageChops
 # import opencv-python as ocv
 import numpy
@@ -114,7 +114,7 @@ class Paper(Entity):
                 self.i = 0
 
 
-app = PandaEditor()
+app = ursina()
 camera.orthographic = True
 camera.fov = 16
 cursor = Cursor()

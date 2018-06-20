@@ -1,6 +1,6 @@
-from pandaeditor import *
+from ursina import *
 
-app = PandaEditor()
+app = ursina()
 
 # p = Entity()
 # p.model = 'quad'

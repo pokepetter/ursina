@@ -1,4 +1,4 @@
-from pandaeditor import *
+from ursina import *
 
 
 class TextEditor(Entity):
@@ -163,7 +163,7 @@ class TextEditor(Entity):
 
 if __name__ == '__main__':
     loadPrcFileData('', 'win-size 256 512')
-    app = main.PandaEditor()
+    app = main.ursina()
     # window.size = (256, 512)
     camera.orthographic = True
     camera.fov = 60

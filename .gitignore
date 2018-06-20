@@ -1,5 +1,5 @@
 *.pyc
-pandaeditor.egg-info
+ursina.egg-info
 dist
 build
 webgl

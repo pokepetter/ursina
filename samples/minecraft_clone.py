@@ -1,4 +1,4 @@
-from pandaeditor import *
+from ursina import *
 
 
 class MinecraftClone(Entity):
@@ -126,7 +126,7 @@ class FirstPersonController(Entity):
         camera.rotation_x = clamp(camera.rotation_x, -90, 90)
 
 if __name__ == '__main__':
-    app = main.PandaEditor()
+    app = main.ursina()
     # destroy(scene)
     # app.scene = MinecraftClone()
     load_scene(MinecraftClone)

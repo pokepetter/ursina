@@ -1,9 +1,9 @@
-# pandaeditor
+# ursina
 A game engine built on panda3d and python.  
 
 To download and install:
 
-    $ pip install git+https://github.com/pokepetter/pandaeditor.git
+    $ pip install git+https://github.com/pokepetter/ursina.git
 
 If you want to easily edit the source, it's recommended to clone the git repo and  install as develop.
 
