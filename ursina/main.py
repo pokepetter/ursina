@@ -3,7 +3,7 @@ from os import walk
 import os
 
 
-class ursina(ShowBase):
+class Ursina(ShowBase):
 
     def __init__(self):
         ShowBase.__init__(self)
@@ -196,7 +196,7 @@ class ursina(ShowBase):
 
 
 if __name__ == '__main__':
-    app = ursina()
+    app = Ursina()
     # app.load_editor()
 
     # load_scene('minecraft_clone')

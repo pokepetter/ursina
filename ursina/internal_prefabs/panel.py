@@ -10,6 +10,6 @@ class Panel(Entity):
         self.color = color.panda_button
 
 if __name__ == '__main__':
-    app = ursina()
+    app = Ursina()
     p = Panel()
     app.run()

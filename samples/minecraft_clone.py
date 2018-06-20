@@ -126,7 +126,7 @@ class FirstPersonController(Entity):
         camera.rotation_x = clamp(camera.rotation_x, -90, 90)
 
 if __name__ == '__main__':
-    app = main.ursina()
+    app = main.Ursina()
     # destroy(scene)
     # app.scene = MinecraftClone()
     load_scene(MinecraftClone)

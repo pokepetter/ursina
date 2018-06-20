@@ -12,6 +12,6 @@ class Sky(Entity):
 
 
 if __name__  == '__main__':
-    app = ursina()
+    app = Ursina()
     test = load_prefab('sky')
     app.run()

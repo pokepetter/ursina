@@ -1,4 +1,4 @@
-from ursina import ursina, Entity
+from ursina import Ursina, Entity
 from panda3d.core import MeshDrawer, NodePath
 from panda3d.core import GeomVertexData, GeomVertexFormat, Geom, GeomVertexWriter, GeomNode
 from panda3d.core import GeomTriangles, GeomTristrips, GeomTrifans
@@ -82,7 +82,7 @@ class Mesh(NodePath):
 
 if __name__  == '__main__':
     from ursina import *
-    app = ursina()
+    app = Ursina()
     verts = ((-2,0,0), (2,0,0), (1,4,0), (-1,4,0), (-2,0,0))
     colors = (color.red, color.blue, color.lime, color.black)
     m = Mesh(verts, mode='line', thickness=20)

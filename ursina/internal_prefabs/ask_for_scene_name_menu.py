@@ -52,6 +52,6 @@ class AskForSceneNameMenu(Entity):
 
 # class Save():
 if __name__ == '__main__':
-    app = ursina()
+    app = Ursina()
     test = AskForSceneNameMenu()
     app.run()

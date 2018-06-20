@@ -65,7 +65,7 @@ class Draggable(Button):
             )
 
 if __name__ == '__main__':
-    app = ursina()
+    app = Ursina()
     camera.orthographic = True
 
     e = Draggable()

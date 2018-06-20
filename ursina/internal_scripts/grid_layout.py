@@ -73,7 +73,7 @@ class GridLayout():
     #         object.__setattr__(self, name, new_value)
 
 if __name__ == '__main__':
-    app = ursina()
+    app = Ursina()
 
     cl = Panel()
     cl.scale_x = .0025

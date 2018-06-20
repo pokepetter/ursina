@@ -128,7 +128,7 @@ class RaycasterTest(Entity):
 
 
 if __name__ == '__main__':
-    app = ursina()
+    app = Ursina()
 
 
 

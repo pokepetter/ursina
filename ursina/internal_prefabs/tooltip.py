@@ -105,7 +105,7 @@ class Tooltip(Entity):
 
 
 if __name__ == '__main__':
-    app = ursina()
+    app = Ursina()
 
     tooltip_test = Tooltip(
     '<scale:1.5>' + 'Rainstorm' + '<scale:1> \n\n' +

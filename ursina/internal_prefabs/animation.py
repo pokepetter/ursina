@@ -39,6 +39,6 @@ class Animation(Entity):
 
 
 if __name__ == '__main__':
-    app = ursina()
+    app = Ursina()
     animation = Animation('catlike_creature_run')
     app.run()

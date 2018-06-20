@@ -26,7 +26,7 @@ class EditorDraggable():
 
 
 if __name__ == '__main__':
-    app = ursina()
+    app = Ursina()
     e = Entity("test entity")
     e.model = 'quad'
     e.collision = True

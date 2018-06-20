@@ -154,5 +154,5 @@ sys.modules[__name__] = Window()
 
 if __name__ == '__main__':
     from ursina import *
-    app = ursina()
+    app = Ursina()
     app.run()

@@ -1,6 +1,6 @@
 from ursina import *
 
-app = ursina()
+app = Ursina()
 
 # p = Entity()
 # p.model = 'quad'

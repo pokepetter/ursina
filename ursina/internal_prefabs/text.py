@@ -273,7 +273,7 @@ class Text(Entity):
 
 
 if __name__ == '__main__':
-    app = ursina()
+    app = Ursina()
     origin = Entity()
     origin.model = 'quad'
     origin.scale *= .01

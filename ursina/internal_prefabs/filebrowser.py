@@ -140,7 +140,7 @@ class FileBrowser(Entity):
         self.x = 100
 
 if __name__ == '__main__':
-    app = ursina()
+    app = Ursina()
     test = FileBrowser(
         path = application.internal_texture_folder,
         file_types = ('.jpg'),

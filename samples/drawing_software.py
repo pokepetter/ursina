@@ -114,7 +114,7 @@ class Paper(Entity):
                 self.i = 0
 
 
-app = ursina()
+app = Ursina()
 camera.orthographic = True
 camera.fov = 16
 cursor = Cursor()

@@ -149,8 +149,8 @@ sys.modules[__name__] = Camera()
 
 
 if __name__ == '__main__':
-    from ursina.main import ursina
-    app = ursina()
+    from ursina.main import Ursina
+    app = Ursina()
     app.load_editor()
     e = Entity()
     e.model = 'quad'

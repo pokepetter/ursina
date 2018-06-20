@@ -40,7 +40,7 @@ class TransformField(Button):
 
 
 if __name__ == '__main__':
-    app = ursina()
+    app = Ursina()
     tf = TransformField()
     tf.target_entity = Entity('target')
     app.run()

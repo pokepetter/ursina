@@ -1,7 +1,7 @@
 # do imports here so I can do a single line import
 
 from ursina import main
-from ursina.main import ursina
+from ursina.main import Ursina
 from ursina.pandamath import *
 from ursina.pandastuff import *
 from ursina.useful import *

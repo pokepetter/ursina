@@ -68,7 +68,7 @@ def copy_always_included():
             print(e)
     return size
 
-def copy_ursina():
+def copy_Ursina():
     import importlib
     spec = importlib.util.find_spec('ursina')
     ursina_path = os.path.dirname(spec.origin)
@@ -194,7 +194,7 @@ python_folder = (os.path.dirname(sys.executable)).replace('\\', '/')
 python_size = copy_python()
 python_lib_size = copy_python_lib()
 always_included_size = copy_always_included()
-ursina_size = copy_ursina()
+ursina_size = copy_Ursina()
 found_modules_size = copy_found_modules()
 assets_size = copy_assets()
 create_bat()

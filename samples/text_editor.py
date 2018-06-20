@@ -163,7 +163,7 @@ class TextEditor(Entity):
 
 if __name__ == '__main__':
     loadPrcFileData('', 'win-size 256 512')
-    app = main.ursina()
+    app = main.Ursina()
     # window.size = (256, 512)
     camera.orthographic = True
     camera.fov = 60

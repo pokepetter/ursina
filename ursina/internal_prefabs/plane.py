@@ -18,7 +18,7 @@ class Plane(Entity):
 
 
 if __name__ == '__main__':
-    app = ursina()
+    app = Ursina()
     test = Plane((10, 5), texture='white_cube', color=color.yellow)
     camera.position = (10, 10, 10)
     camera.look_at(test)

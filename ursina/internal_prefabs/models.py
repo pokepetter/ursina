@@ -34,7 +34,7 @@ def circle(resolution=16, radius=.5):
     return Mesh(verts, mode='ngon')
 
 if __name__ == '__main__':
-    app = ursina()
+    app = Ursina()
     c = Circle()
     # e = Entity()
     # e.model = circle()

@@ -108,7 +108,7 @@ class ProjectBrowserButton():
             print('project not found at:', path)
 
 if __name__ == '__main__':
-    app = main.ursina()
+    app = main.Ursina()
     load_scene('project_browser')
     # t = ProjectBrowser()
     app.run()

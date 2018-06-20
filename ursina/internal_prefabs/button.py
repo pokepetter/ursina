@@ -103,7 +103,7 @@ class Test():
         self.b.text_entity.scale *= 2
 
 if __name__ == '__main__':
-    app = ursina()
+    app = Ursina()
     t = Test()
     t.b.tooltip = Tooltip()
     app.run()

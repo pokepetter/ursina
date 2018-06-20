@@ -15,6 +15,6 @@ class Sprite(Entity):
 
 
 if __name__ == '__main__':
-    app = ursina()
+    app = Ursina()
     s = Sprite('panda_buttons')
     app.run()

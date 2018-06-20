@@ -62,7 +62,7 @@ class EditorCamera(object):
 
 
 if __name__ == '__main__':
-    app = main.ursina()
+    app = main.Ursina()
     sky = load_prefab('sky')
     e = Entity(model='quad')
     e.add_script('editor_camera')

@@ -64,6 +64,6 @@ class Application():
 sys.modules[__name__] = Application()
 
 if __name__ == '__main__':
-    from ursina.main import ursina
-    app = ursina()
+    from ursina.main import Ursina
+    app = Ursina()
     app.run()

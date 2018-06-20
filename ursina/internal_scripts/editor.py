@@ -441,6 +441,6 @@ class Editor(Entity):
 
 
 if __name__ == '__main__':
-    app = main.ursina()
+    app = main.Ursina()
     scene.editor = Editor()
     app.run()

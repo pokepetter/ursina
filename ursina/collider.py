@@ -32,8 +32,8 @@ class Collider(NodePath):
         self.node_path.removeNode()
 
 if __name__ == '__main__':
-    from ursina import ursina, Entity, color
-    app = ursina()
+    from ursina import Ursina, Entity, color
+    app = Ursina()
     e = Entity()
     e.model = 'quad'
     e.color = color.red

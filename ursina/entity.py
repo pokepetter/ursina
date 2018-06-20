@@ -798,7 +798,7 @@ if __name__ == '__main__':
     from ursina import main
     from pandastuff import invoke
 
-    app = main.ursina()
+    app = main.Ursina()
 
 
     #

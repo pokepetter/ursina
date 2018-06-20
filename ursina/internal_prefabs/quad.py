@@ -13,7 +13,7 @@ def rectangle(rounded_size=0, corner_subdivision=0):
 
 if __name__ == '__main__':
     from ursina import *
-    app = ursina()
+    app = Ursina()
 
     e = Entity()
     e.model = rectangle()

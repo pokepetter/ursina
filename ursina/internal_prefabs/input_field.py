@@ -54,7 +54,7 @@ class InputField(Button):
                 self.text += '\n'
 
 if __name__ == '__main__':
-    app = ursina()
+    app = Ursina()
     window.size = (window.size[0] * .5, window.size[1] * .5)
     test = InputField()
     # test.

@@ -120,7 +120,7 @@ class FirstPersonController(Entity):
 
 
 if __name__ == '__main__':
-    app = main.ursina()
+    app = main.Ursina()
     # load_scene('minecraft_clone')
     s = RadiosityTest()
     app.run()
