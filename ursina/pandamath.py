@@ -1,21 +1,18 @@
 
 import operator
-
-
+# from math import cos, sin, sqrt, hypot
+from panda3d.core import NodePath, Point3
+# from ursina.entity import Entity
 
 def distance(a, b):
-    try:
-        return a.getDistance(b)
-    except:
-        pass
-    try:
-        return (a.getXy() - b.getXy()).length()
-    except:
-        pass
-    try:
-        return math.hypot(b[0] - a[0], b[1] - a[1])
-    except:
-        pass
+    p0 = NodePath('p0')
+    p1 = NodePath('p1')
+    # if str(type(a).__name__) == 'Entity':
+    p0.setPos(Point3(a.x, a.y, a.z))
+    p1.setPos(Point3(b.x, b.y, b.z))
+    dist = p0.getDistance(p1)
+    # print('DISTACNE:.....', dist)
+    return dist
 
 
 def lerp(a, b, t):
