@@ -28,16 +28,10 @@ from ursina.input import held_keys
 from ursina import camera
 from ursina import raycaster
 from ursina.raycaster import raycast
-from ursina import debug
 from ursina import color
 from ursina import undo
 from ursina.undo import *
 undo.setstack(undo.Stack())
-
-from ursina import main
-
-
-
 
 
 

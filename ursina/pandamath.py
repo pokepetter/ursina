@@ -45,10 +45,10 @@ def count_lines(file):
     print('used_lines:', all_lines - blank_lines - comment_lines)
     return all_lines
 
-def chunk_list(l, cunk_size):
+def chunk_list(l, chunk_size):
     # yield successive chunks from list
-    for i in range(0, len(l), cunk_size):
-        yield l[i:i + cunk_size]
+    for i in range(0, len(l), chunk_size):
+        yield l[i:i + chunk_size]
 
 def size_list():
     #return a list of current python objects sorted by size

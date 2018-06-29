@@ -278,7 +278,8 @@ if __name__ == '__main__':
     origin.model = 'quad'
     origin.scale *= .01
 
-    descr = '''<scale:1.5><orange>Increase \n<scale:1>max health with 25% <yellow>and raise attack with <green>100 for 2 turns.
+    descr = '''<scale:1.5><orange>Title \n<scale:1>Increase <red>max health
+                <default>with 25%. <yellow>and raise attack with <green>100 <default>for 2 turns.
 '''
     # descr = descr.strip().replace('\n', ' ')
     replacements = {
@@ -287,6 +288,7 @@ if __name__ == '__main__':
         'attack' : '<orange>attack <default>'
     }
     descr = multireplace(descr, replacements)
+    # descr = '<scale:1.5><orange>Title \n<scale:1>Increase <red>max health <default>with 25%.'
     test = Text(descr)
     test.font = 'VeraMono.ttf'
     test.font = 'Inconsolata-Regular.ttf'

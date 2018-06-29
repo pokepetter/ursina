@@ -3,7 +3,7 @@ from ursina import *
 class Draggable(Button):
 
     def __init__(self, **kwargs):
-        super().__init__()
+        super().__init__(**kwargs)
         self.require_key = None
         self.dragging = False
         self.start_pos = self.position
