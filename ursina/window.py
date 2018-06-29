@@ -24,7 +24,7 @@ class Window(WindowProperties):
 
 
     def load_defaults(self):
-        self.title = 'ursina'
+        self.title = os.path.basename(os.path.dirname(application.asset_folder))
         try:
             self.screen_resolution = (get_monitors()[0].width, get_monitors()[0].height)
         except:
