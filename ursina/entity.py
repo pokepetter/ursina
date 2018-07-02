@@ -24,6 +24,7 @@ from ursina.useful import *
 
 from ursina import color
 from ursina import scene
+from PIL import Image
 
 
 class Entity(NodePath):
@@ -123,34 +124,7 @@ class Entity(NodePath):
                 self.model.setColorScale(value)
                 object.__setattr__(self, name, value)
 
-        if name == 'texture':
-            if not hasattr(self, 'model') or hasattr(self, 'model') and not self.model:
-                return
 
-            if value.__class__ is Texture:
-                texture = value
-            elif isinstance(value, str):
-                try:
-                    texture = loader.loadTexture(value + '.png')
-                except:
-                    try:
-                        texture = loader.loadTexture(value + '.jpg')
-                    except:
-                        print('no texture:', value + '.png or', value + '.jpg')
-                        return None
-
-            try:
-                object.__setattr__(self, name, texture)
-                texture.setMagfilter(SamplerState.FT_nearest)
-                texture.setMinfilter(SamplerState.FT_nearest)
-                self.model.setTexture(texture, 1)
-                # print('set texture:', value)
-            except:
-                pass
-                print('no texture:', value)
-
-            if value == None:
-                self.model.set_texture_off(True)
 
         if name == 'texture_scale':
             if self.model and self.texture:
@@ -441,6 +415,74 @@ class Entity(NodePath):
     @property
     def down(self):
         return -self.up
+
+    # if name == 'texture':
+    @property
+    def texture(self):
+        return self.model.getTexture()
+
+    @texture.setter
+    def texture(self, value):
+        if not hasattr(self, 'model') or hasattr(self, 'model') and not self.model:
+            return
+
+        if value.__class__ is Texture:
+            texture = value
+
+        elif isinstance(value, str):
+            try:
+                texture = loader.loadTexture(value + '.png')
+            except:
+                try:
+                    texture = loader.loadTexture(value + '.jpg')
+                except:
+                    print('no texture:', value + '.png or', value + '.jpg')
+                    return None
+
+        try:
+            texture.setMagfilter(SamplerState.FT_nearest)
+            texture.setMinfilter(SamplerState.FT_nearest)
+            self.model.setTexture(texture, 1)
+            # print('set texture:', value)
+        except:
+            pass
+            print('no texture:', value)
+
+        if value == None:
+            self.model.set_texture_off(True)
+
+
+    @property
+    def texture_name(self):
+        return self.texture.getFilename()
+
+    @property
+    def texture_path(self):
+        return str(self.texture.getFullpath().toOsSpecific())
+
+
+    @property
+    def texture_size(self):
+        return (self.width, self.height)
+
+    @property
+    def texture_width(self):
+        return self.texture.getOrigFileXSize()
+
+    @property
+    def texture_height(self):
+        return self.texture.getOrigFileYSize()
+
+    @property
+    def pixels(self):
+        from numpy import asarray
+        return asarray(Image.open(self.texture_path))
+
+
+    def get_pixel(self, x, y):
+        image = Image.open(self.texture_path)
+        r, g, b, a = image.getpixel((x, y))
+        return (r/255, g/255, b/255, a/255)
 
 
     def reparent_to(self, entity):
