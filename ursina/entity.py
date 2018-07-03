@@ -481,8 +481,11 @@ class Entity(NodePath):
 
     def get_pixel(self, x, y):
         image = Image.open(self.texture_path)
-        r, g, b, a = image.getpixel((x, y))
-        return (r/255, g/255, b/255, a/255)
+        col = image.getpixel((x, self.texture_width - y -1))
+        if len(col) == 3:
+            return (col[0]/255, col[1]/255, col[2]/255, 1)
+        else:
+            return (col[0]/255, col[1]/255, col[2]/255, col[3]/255)
 
 
     def reparent_to(self, entity):
