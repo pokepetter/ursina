@@ -8,8 +8,8 @@ class Draggable(Button):
         self.dragging = False
         self.start_pos = self.position
 
-        self.x_lock = False
-        self.y_lock = False
+        self.lock_x = False
+        self.lock_y = False
         self.min_x, self.min_y, self.min_z = -math.inf, -math.inf, -math.inf
         self.max_x, self.max_y, self.max_z = math.inf, math.inf, math.inf
 
@@ -48,14 +48,14 @@ class Draggable(Button):
         if self.dragging:
             # make drag work event when parented to scaled entity
             # if self.parent and isinstance(self.parent, Entity):
-            #     if not self.x_lock:
+            #     if not self.lock_x:
             #         self.world_x += mouse.velocity[0] * camera.fov * self.parent.world_scale_x
-            #     if not self.y_lock:
+            #     if not self.lock_y:
             #         self.world_y += mouse.velocity[1] * camera.fov * self.parent.world_scale_y
             # else:
-            if not self.x_lock:
+            if not self.lock_x:
                 self.world_x += mouse.velocity[0] * camera.fov
-            if not self.y_lock:
+            if not self.lock_y:
                 self.world_y += mouse.velocity[1] * camera.fov
 
         self.position = (
