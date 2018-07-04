@@ -67,7 +67,10 @@ class Raycaster(Entity):
 
                 self.hit = Hit()
                 self.hit.hit = True
-                self.hit.entity = nP
+                for e in scene.entities:
+                    if e == nP:
+                        # print('cast nP to Entity')
+                        self.hit.entity = e
                 self.hit.distance = hit_dist
                 self.hit.point = self.point
                 return self.hit
