@@ -33,9 +33,33 @@ def circle(resolution=16, radius=.5):
 
     return Mesh(verts, mode='ngon')
 
+class Quad(Entity):
+    def __init__(self, bevel=.1, subdivisions=0, ignore_aspect=False, **kwargs):
+        super().__init__(**kwargs)
+        if subdivisions == 0:
+            self.model = 'quad'
+        else:
+            # verts = list()
+            verts = (Vec3(-.5,-.5,0), Vec3(.5,-.5,0), Vec3(.5,.5,0), Vec3(-.5,.5,0))
+
+            for j in range(subdivisions):
+                points = list()
+                for i, v in enumerate(verts):
+                    points.append(lerp(v, verts[i-1], bevel))
+                    next_index = i+1 if i+1 < len(verts) else 0
+                    points.append(lerp(v, verts[next_index], bevel))
+                verts = points
+
+            self.model = Mesh(verts, mode='ngon')
+
+
+
+
 if __name__ == '__main__':
     app = Ursina()
-    c = Circle()
+    # c = Circle()
+    quad = Quad(subdivisions=3)
+    # quad.scale_x = 3
     # e = Entity()
     # e.model = circle()
     # e.model = 'circle_16'
