@@ -17,7 +17,7 @@ from panda3d.core import Filename
 from direct.interval.IntervalGlobal import Sequence, Func, Wait
 from ursina.undo import undoable
 from direct.showbase import Loader
-from ursina.pandamath import lerp
+from ursina.ursinamath import lerp
 from ursina import easing_types
 from ursina.easing_types import *
 from ursina.useful import *
@@ -89,6 +89,9 @@ class Entity(NodePath):
             else:
                 if not self.is_singleton():
                     self.stash()
+
+        if name == 'world_parent':
+            self.reparent_to(value)
 
         if name == 'model':
             if value is None:
@@ -228,7 +231,7 @@ class Entity(NodePath):
             if value == None and self.collider:
                 print('ccccc', type(self.collider))
                 # if self.collider:
-                from ursina.pandastuff import destroy
+                from ursina.ursinastuff import destroy
                 destroy(self.collider)
                 print('__________', self.collider)
                 if type(self.collider) is Entity:
@@ -748,7 +751,7 @@ class Entity(NodePath):
         s.start()
 
     def animate_color(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None):
-        from ursina.pandastuff import invoke
+        from ursina.ursinastuff import invoke
         invoke(self._animate_color, value, duration, curve, resolution, delay=delay)
 
     def _animate_color(self, value, duration=.1, curve='ease_in_expo', resolution=None):
@@ -842,7 +845,7 @@ class TestClass(Entity):
 
 if __name__ == '__main__':
     from ursina import main
-    from pandastuff import invoke
+    from ursinastuff import invoke
 
     app = main.Ursina()
 

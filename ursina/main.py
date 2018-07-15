@@ -1,4 +1,4 @@
-from ursina.pandastuff import *
+from ursina.ursinastuff import *
 from os import walk
 import os
 
@@ -18,7 +18,6 @@ class Ursina(ShowBase):
         camera.cam.reparent_to(camera)
         camera.parent = base.render
         camera.render = base.render
-        camera.aspect_ratio = window.size[0] / window.size[1]
         camera.position = (0, 0, -20)
         scene.camera = camera
         camera.reparent_to(base.render)

@@ -67,7 +67,6 @@ class Window(WindowProperties):
         from ursina import scene
         self.exit_button = Button(
             eternal = True,
-            is_editor = False,
             parent = scene.ui,
             name = 'exit_button_entity',
             origin = (.5, .5),

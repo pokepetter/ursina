@@ -33,7 +33,10 @@ class Raycaster(Entity):
         return math.sqrt(sum( (a - b)**2 for a, b in zip(a, b)))
 
 
-    def raycast(self, origin, direction, dist=1000, traverse_target=None, debug=False):
+    def raycast(self, origin, direction, dist=1000, traverse_target=scene, ignore=list(), debug=False):
+        # if not traverse_target:
+        #     try:
+        #         traverse_target = scene
         self.position = origin
         self.look_at(self.position + direction)
         # need to do this for it to work for some reason
@@ -49,14 +52,24 @@ class Raycaster(Entity):
         else:
             self.pickerNP.hide()
 
-        if traverse_target is None:
-            traverse_target = scene
-
         self.picker.traverse(traverse_target)
 
         if self.pq.get_num_entries() > 0:
             self.pq.sort_entries()
-            self.collision = self.pq.get_entry(0)
+
+            # skip entities with collision == False
+            # for i in range(self.pq.get_num_entries()):
+            #     self.collision = self.pq.get_entry(i)
+            #     nP = self.collision.get_into_node_path().parent
+            #     if nP.name.endswith('.egg'):
+            #         nP = nP.parent
+            #     for e in scene.entities:
+            #         if e == nP:
+            #             if e.collision and e not in ignore:
+            #                 # print('oooooooooooooooo', i)
+            #                 break
+            i = 0
+            self.collision = self.pq.get_entry(i)
             nP = self.collision.get_into_node_path().parent
             self.point = self.collision.get_surface_point(render)
             self.point = Vec3(self.point[0], self.point[2], self.point[1])

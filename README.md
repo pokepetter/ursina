@@ -171,7 +171,7 @@ project oveview:
                 position
                 normal
 
-        pandamath
+        ursinamath
             distance(entity_a, entity_b)
             lerp(a, b, t)
             inverselerp(a, b, t)
@@ -180,7 +180,7 @@ project oveview:
 
 
 
-        pandastuff
+        ursinastuff
             invoke(function, *args, **kwargs)
             destroy(entity, delay=0)
             compress_textures(name=None)

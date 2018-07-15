@@ -197,7 +197,7 @@ def ease_in_out_bounce(t): #_bounce in and _bounce out
 
 
 if __name__  == '__main__':
-    from pandastuff import printvar
+    from ursinastuff import printvar
     import easing_types
     # test all the functions
     for i in dir(easing_types):

@@ -2,10 +2,12 @@
 
 from ursina import main
 from ursina.main import Ursina
-from ursina.pandamath import *
-from ursina.pandastuff import *
+from ursina.ursinamath import *
+from ursina.ursinastuff import *
 from ursina.useful import *
 from ursina.entity import Entity
+# from ursina import raycaster
+# from ursina.raycaster import
 
 from ursina.internal_prefabs.text import Text
 from ursina.internal_prefabs.sprite import Sprite
