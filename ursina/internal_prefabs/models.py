@@ -33,32 +33,62 @@ def circle(resolution=16, radius=.5):
 
     return Mesh(verts, mode='ngon')
 
-class Quad(Entity):
+
+class Quad(Mesh):
     def __init__(self, bevel=.1, subdivisions=0, ignore_aspect=False, **kwargs):
-        super().__init__(**kwargs)
         if subdivisions == 0:
-            self.model = 'quad'
+            super().__init__(verts=None)
+            self = Entity(model='quad').model
         else:
-            # verts = list()
-            verts = (Vec3(-.5,-.5,0), Vec3(.5,-.5,0), Vec3(.5,.5,0), Vec3(-.5,.5,0))
+            self.verts = (Vec3(-.5,-.5,0), Vec3(.5,-.5,0), Vec3(.5,.5,0), Vec3(-.5,.5,0))
 
             for j in range(subdivisions):
                 points = list()
-                for i, v in enumerate(verts):
-                    points.append(lerp(v, verts[i-1], bevel))
-                    next_index = i+1 if i+1 < len(verts) else 0
-                    points.append(lerp(v, verts[next_index], bevel))
-                verts = points
+                for i, v in enumerate(self.verts):
+                    points.append(lerp(v, self.verts[i-1], bevel))
+                    next_index = i+1 if i+1 < len(self.verts) else 0
+                    points.append(lerp(v, self.verts[next_index], bevel))
+                self.verts = points
 
-            self.model = Mesh(verts, mode='ngon')
+            uvs = list()
+            for v in self.verts:
+                uvs.append((v[0] + .5, v[1] + .5))
+
+            # printvar(uvs)
+            # if not ignore_aspect and self.parent:
+            # print('..................', )
+            aspect_x = 3
+            for v in self.verts:
+                if v[0] < 0:
+                    v[0] = lerp(v[0], -.5, 1 / aspect_x)
 
 
+            # mode = 'ngon'
+            # if 'mode' in kwargs:
+            #     print('yolo')
+            #     mode = kwargs['mode']
+
+            super().__init__(verts=self.verts, uvs=uvs, **kwargs)
+
+    def on_assign(self, assigned_to):
+        print('assign model', self.__class__.__name__, 'to:', assigned_to)
+        verts = self.verts
+        
 
 
 if __name__ == '__main__':
     app = Ursina()
-    # c = Circle()
-    quad = Quad(subdivisions=3)
+
+    e = Entity(
+        scale_x = 3,
+        model = Quad(subdivisions=2, thickness=10),
+        texture = 'brick',
+        texture_scale = (2,1),
+        color = color.yellow
+        )
+    e.scale *= 2
+
+
     # quad.scale_x = 3
     # e = Entity()
     # e.model = circle()

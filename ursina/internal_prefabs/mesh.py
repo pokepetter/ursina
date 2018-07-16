@@ -1,4 +1,3 @@
-from ursina import Ursina, Entity
 from panda3d.core import MeshDrawer, NodePath
 from panda3d.core import GeomVertexData, GeomVertexFormat, Geom, GeomVertexWriter, GeomNode
 from panda3d.core import GeomTriangles, GeomTristrips, GeomTrifans
@@ -6,14 +5,17 @@ from panda3d.core import GeomLines, GeomLinestrips, GeomPoints
 
 class Mesh(NodePath):
 
-    def __init__(self, verts, tris=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1):
+    def __init__(self, verts, tris=None, colors=None, uvs=None, normals=None, static=True, mode='ngon', thickness=1):
         super().__init__('mesh')
+        if not verts:
+            return
 
         static_mode = Geom.UHStatic if static else Geom.UHDynamic
 
         formats = {
             (0,0,0) : GeomVertexFormat.getV3(),
             (1,0,0) : GeomVertexFormat.getV3c4(),
+            (0,1,0) : GeomVertexFormat.getV3t2(),
             (1,0,1) : GeomVertexFormat.getV3n3c4(),
             (1,1,0) : GeomVertexFormat.getV3c4t2(),
             (0,1,1) : GeomVertexFormat.getV3n3t2(),
@@ -35,6 +37,11 @@ class Mesh(NodePath):
             colorwriter = GeomVertexWriter(vdata, 'color')
             for c in colors:
                 colorwriter.addData4f(c)
+
+        if uvs:
+            uvwriter = GeomVertexWriter(vdata, 'texcoord')
+            for uv in uvs:
+                uvwriter.addData2f(uv)
         # normal.addData3f(0, 0, 1)
         # texcoord.addData2f(1, 0)
         modes = {
@@ -84,11 +91,13 @@ if __name__  == '__main__':
     from ursina import *
     app = Ursina()
     verts = ((-2,0,0), (2,0,0), (1,4,0), (-1,4,0), (-2,0,0))
+    uvs = ((-2,0), (2,0), (1,4), (-1,4), (-2,0))
     colors = (color.red, color.blue, color.lime, color.black)
-    m = Mesh(verts, mode='line', thickness=20)
+    m = Mesh(verts, uvs=uvs, mode='ngon', thickness=20)
     # m.thickness = 50
     # nodePath = render.attachNewNode(m)
     e = Entity()
     e.model = m
+    # e.color = color.red
 
     app.run()

@@ -12,6 +12,7 @@ from panda3d.core import TransparencyAttrib
 from panda3d.core import Texture, TextureStage
 from ursina import application
 from ursina.collider import Collider
+from ursina.internal_prefabs.mesh import Mesh
 from os import path
 from panda3d.core import Filename
 from direct.interval.IntervalGlobal import Sequence, Func, Wait
@@ -45,7 +46,7 @@ class Entity(NodePath):
         self.color = color.white
         self.texture = None
         try:
-            self.texture = camel_to_snake(self.__class__.__name__)
+            self.texture = camel_to_snake(self.type)
         except:
             pass
         self.collision = False
@@ -118,6 +119,9 @@ class Entity(NodePath):
                 self.model.reparentTo(self)
                 self.model.setColorScaleOff()
                 self.model.setTransparency(TransparencyAttrib.MAlpha)
+                if isinstance(value, Mesh):
+                    if hasattr(value, 'on_assign'):
+                        value.on_assign(assigned_to=self)
                 return
             else:
                 print('missing model:', value)
