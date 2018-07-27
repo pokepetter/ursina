@@ -5,8 +5,13 @@ class Sprite(Entity):
         super().__init__(**kwargs)
         self.model = 'quad'
         self.texture = texture
-        if not hasattr(self, 'texture'): #self.texture:
-            print('tolo')
+
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+            if key == 'texture':
+                self.texture = value
+
+        if not self.texture:
             destroy(self)
             return None
 
@@ -16,7 +21,7 @@ class Sprite(Entity):
 
 if __name__ == '__main__':
     app = Ursina()
-    s = Sprite('panda_button')
+    s = Sprite(texture = 'panda_button')
     # print(s.texture_path)
     # print(s.get_pixel(0,0))
     # print(s.pixels)

@@ -624,55 +624,22 @@ class Entity(NodePath):
 #------------
 
     def animate_position(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None):
-        if hasattr(self, 'mover') and self.mover:
-            self.mover.pause() #interrupt
-        self.mover = Sequence()
-        self.mover.append(Wait(delay))
-        if not resolution:
-            resolution = int(duration * 60)
+        self.animate('position', value, duration=.1, delay=0, curve='ease_in_expo', resolution=None)
 
-        for i in range(resolution+1):
-            t = i / resolution
-            if hasattr(easing_types, curve):
-                t = getattr(easing_types, curve)(t)
-            else:
-                # print('''no easing type named ', curve, 'using default 'ease_in_expo''')
-                t = getattr(easing_types, 'ease_in_expo')(t)
-            self.mover.append(Wait(duration / resolution))
-            self.mover.append(Func(self.setX, lerp(self.x, value[0], t)))
-            self.mover.append(Func(self.setZ, lerp(self.y, value[1], t)))
-            self.mover.append(Func(self.setY, lerp(self.z, value[2], t)))
-
-        self.mover.start()
-        return self.mover
-
-    def animate_x(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None):
-        if hasattr(self, 'mover') and self.mover_x:
-            self.mover_x.pause() #interrupt
-        self.mover_x = Sequence()
-        self.mover_x.append(Wait(delay))
-        if not resolution:
-            resolution = int(duration * 60)
-
-        for i in range(resolution+1):
-            t = i / resolution
-            if hasattr(easing_types, curve):
-                t = getattr(easing_types, curve)(t)
-            else:
-                # print('''no easing type named ', curve, 'using default 'ease_in_expo''')
-                t = getattr(easing_types, 'ease_in_expo')(t)
-            self.mover_x.append(Wait(duration / resolution))
-            self.mover_x.append(Func(self.setX, lerp(self.x, value, t)))
-
-        self.mover_x.start()
-        return self.mover_x
-
-    def animate_y(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None):
-        if hasattr(self, 'mover_y') and self.mover_y:
-            self.mover_y.pause()
-            # print('interrupt mover_y')
-        self.mover_y = Sequence()
-        self.mover_y.append(Wait(delay))
+        
+    def animate(self, name, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+        print('start animating value:', name, animator_name )
+        animator_name = name + '_animator'
+        if interrupt and hasattr(self, animator_name):
+            try:
+                getattr(self, animator_name).pause()
+                print('interrupt', animator_name)
+            except:
+                pass
+        setattr(self, animator_name, Sequence())
+        sequence = getattr(self, animator_name)
+        print('...............', type(sequence))
+        sequence.append(Wait(delay))
         if not resolution:
             resolution = int(duration * 60)
 
@@ -682,61 +649,11 @@ class Entity(NodePath):
                 t = getattr(easing_types, curve)(t)
             else:
                 t = getattr(easing_types, 'ease_in_expo')(t)
-            self.mover_y.append(Wait(duration / resolution))
-            self.mover_y.append(Func(self.setZ, lerp(self.y, value, t)))
+            sequence.append(Wait(duration / resolution))
+            sequence.append(Func(setattr, self, name, lerp(getattr(self, name), value, t)))
 
-        self.mover_y.start()
-        return self.mover_y
-
-    def animate_z(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None):
-        if hasattr(self, 'mover_z') and self.mover_z:
-            self.mover_z.pause() #interrupt
-        self.mover_z = Sequence()
-        self.mover_z.append(Wait(delay))
-        if not resolution:
-            resolution = int(duration * 60)
-
-        for i in range(resolution+1):
-            t = i / resolution
-            if hasattr(easing_types, curve):
-                t = getattr(easing_types, curve)(t)
-            else:
-                # print('''no easing type named ', curve, 'using default 'ease_in_expo''')
-                t = getattr(easing_types, 'ease_in_expo')(t)
-            self.mover_z.append(Wait(duration / resolution))
-            self.mover_z.append(Func(self.setY, lerp(self.z, value, t)))
-
-        self.mover_z.start()
-        return self.mover_z
-
-
-    def animate_scale(self, value, duration=.1, delay=0, curve='ease_in_expo'):
-        s = Sequence()
-        s.append(Wait(delay))
-        s.append(self.scaleInterval(duration, Vec3(value[0], value[2], value[1])))
-        s.start()
-        return s
-
-    def animate_scale_x(self, value, duration=.1, delay=0, curve='ease_in_expo'):
-        s = Sequence()
-        s.append(Wait(delay))
-        s.append(self.scaleInterval(duration, Vec3(value, self.scale_z, self.scale_y)))
-        s.start()
-        return s
-
-    def animate_scale_y(self, value, duration=.1, delay=0, curve='ease_in_expo'):
-        s = Sequence()
-        s.append(Wait(delay))
-        s.append(self.scaleInterval(duration, Vec3(self.scale_x, self.scale_z, value)))
-        s.start()
-        return s
-
-    def animate_scale_z(self, value, duration=.1, delay=0, curve='ease_in_expo'):
-        s = Sequence()
-        s.append(Wait(delay))
-        s.append(self.scaleInterval(duration, Vec3(self.scale_x, value, self.scale_y)))
-        s.start()
-        return s
+        sequence.start()
+        return sequence
 
     def shake(self, duration=.2, magnitude=1, speed=.05):
         s = Sequence()
