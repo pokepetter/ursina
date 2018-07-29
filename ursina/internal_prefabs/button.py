@@ -1,5 +1,5 @@
 from ursina import *
-from panda3d.core import TextNode
+import textwrap
 
 
 class Button(Entity):
@@ -61,6 +61,10 @@ class Button(Entity):
             except:
                 pass
 
+        if name == 'on_click' and isinstance(value, str):
+            object.__setattr__(self, 'on_click_string', textwrap.dedent(value))
+            return
+
         super().__setattr__(name, value)
 
 
@@ -81,7 +85,7 @@ class Button(Entity):
             self.tooltip_scale = self.tooltip.scale
             self.tooltip.scale = (0,0,0)
             self.tooltip.enabled = True
-            self.tooltip_scaler = self.tooltip.animate_scale(self.tooltip_scale)
+            self.scale_animator = self.tooltip.animate_scale(self.tooltip_scale)
 
 
     def on_mouse_exit(self):
@@ -89,18 +93,31 @@ class Button(Entity):
 
         if hasattr(self, 'tooltip'):
             if hasattr(self, 'tooltip_scaler'):
-                self.tooltip_scaler.finish()
+                self.scale_animator.finish()
             self.tooltip.enabled = False
 
+    def on_click(self):
+        if hasattr(self, 'on_click_string'):
+            exec(self.on_click_string)
 
 class Test():
     def __init__(self):
         self.b = Button(color = color.red)
+        self.b.on_click = '''
+            self.text = 'on_click_string'
+            self.color = color.red
+            print('on_click defined with string works!')
+            '''
+        # self.b.on_click = self.test_method
         self.b.scale *= .5
         self.b.color = color.azure
         self.b.origin = (-.5, -.5)
         self.b.text = 'text'
         self.b.text_entity.scale *= 2
+
+    def test_method(self):
+        print('test method')
+        self.b.color = color.red
 
 if __name__ == '__main__':
     app = Ursina()

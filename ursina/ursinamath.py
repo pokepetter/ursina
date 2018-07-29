@@ -39,7 +39,11 @@ def distance(a, b):
 
 
 def lerp(a, b, t):
-    return a + (b - a) * t
+    if isinstance(a, (int, float, complex)):
+        return a + (b - a) * t
+    else:
+        return (lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t))
+
 
 def inverselerp(a, b, t) :
     return (a - b) / (t - b)

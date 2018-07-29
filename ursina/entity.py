@@ -647,9 +647,7 @@ class Entity(NodePath):
         self.animate('rotation_z', value, duration, delay, curve, resolution, interrupt)
 
     def animate_scale(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
-        self.animate('scale_x', value[0], duration, delay, curve, resolution, interrupt)
-        self.animate('scale_y', value[1], duration, delay, curve, resolution, interrupt)
-        self.animate('scale_z', value[2], duration, delay, curve, resolution, interrupt)
+        self.animate('scale', value, duration, delay, curve, resolution, interrupt)
     def animate_scale_x(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
         self.animate('scale_x', value, duration, delay, curve, resolution, interrupt)
     def animate_scale_y(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
@@ -658,15 +656,12 @@ class Entity(NodePath):
         self.animate('scale_z', value, duration, delay, curve, resolution, interrupt)
 
     def animate(self, name, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
-        if not isinstance(value, (int, float, complex)):
-            return
-
         animator_name = name + '_animator'
-        print('start animating value:', name, animator_name )
+        # print('start animating value:', name, animator_name )
         if interrupt and hasattr(self, animator_name):
             try:
                 getattr(self, animator_name).pause()
-                print('interrupt', animator_name)
+                # print('interrupt', animator_name)
             except:
                 pass
         setattr(self, animator_name, Sequence())
@@ -805,9 +800,10 @@ if __name__ == '__main__':
     #
     e = Entity(model='quad', color=color.red, collider='box')
     # e.animate_position(e.position + e.up, duration=1, delay=1, curve='ease_in_expo')
-    e.animate_color(color.yellow, duration=.5, delay=1)
+    # e.animate_color(color.yellow, duration=.5, delay=1)
     # e.animate('x', 2, 1)
-    e.animate_position((2,2,2), 1)
+    # e.animate_position((2,2,2), 1)
+    e.animate_scale((0,0,0), 1)
     # printvar(e.world_position)
     #
     # e.world_x = 1
