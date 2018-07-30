@@ -26,7 +26,7 @@ def circle(resolution=16, radius=.5):
     verts = list()
     for i in range(resolution):
         origin.rotation_z -= 360 / resolution
-        print(point.world_position)
+        # print(point.world_position)
         verts.append(point.world_position)
 
     destroy(origin)
@@ -73,7 +73,7 @@ class Quad(Mesh):
     def on_assign(self, assigned_to):
         print('assign model', self.__class__.__name__, 'to:', assigned_to)
         verts = self.verts
-        
+
 
 
 if __name__ == '__main__':

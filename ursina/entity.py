@@ -623,22 +623,49 @@ class Entity(NodePath):
 # ANIMATIONS
 #------------
 
-    def animate_position(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None):
-        self.animate('position', value, duration=.1, delay=0, curve='ease_in_expo', resolution=None)
+    def animate_position(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+        self.animate('x', value[0], duration, delay, curve, resolution, interrupt)
+        self.animate('y', value[1], duration, delay, curve, resolution, interrupt)
+        self.animate('z', value[2], duration, delay, curve, resolution, interrupt)
+    def animate_x(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+        self.animate('x', value, duration, delay, curve, resolution, interrupt)
+    def animate_y(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+        self.animate('y', value, duration, delay, curve, resolution, interrupt)
+    def animate_z(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+        self.animate('z', value, duration, delay, curve, resolution, interrupt)
 
-        
+
+    def animate_rotation(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+        self.animate('rotation_x', value[0], duration, delay, curve, resolution, interrupt)
+        self.animate('rotation_y', value[1], duration, delay, curve, resolution, interrupt)
+        self.animate('rotation_z', value[2], duration, delay, curve, resolution, interrupt)
+    def animate_rotation_x(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+        self.animate('rotation_x', value, duration, delay, curve, resolution, interrupt)
+    def animate_rotation_y(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+        self.animate('rotation_y', value, duration, delay, curve, resolution, interrupt)
+    def animate_rotation_z(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+        self.animate('rotation_z', value, duration, delay, curve, resolution, interrupt)
+
+    def animate_scale(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+        self.animate('scale', value, duration, delay, curve, resolution, interrupt)
+    def animate_scale_x(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+        self.animate('scale_x', value, duration, delay, curve, resolution, interrupt)
+    def animate_scale_y(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+        self.animate('scale_y', value, duration, delay, curve, resolution, interrupt)
+    def animate_scale_z(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+        self.animate('scale_z', value, duration, delay, curve, resolution, interrupt)
+
     def animate(self, name, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
-        print('start animating value:', name, animator_name )
         animator_name = name + '_animator'
+        # print('start animating value:', name, animator_name )
         if interrupt and hasattr(self, animator_name):
             try:
                 getattr(self, animator_name).pause()
-                print('interrupt', animator_name)
+                # print('interrupt', animator_name)
             except:
                 pass
         setattr(self, animator_name, Sequence())
         sequence = getattr(self, animator_name)
-        print('...............', type(sequence))
         sequence.append(Wait(delay))
         if not resolution:
             resolution = int(duration * 60)
@@ -734,8 +761,7 @@ class ShakeTester(Entity):
             e.animate_x(self.x + self.move)
 
         if key == 'y':
-            self.animate_y = -self.animate_y
-            e.animate_y(self.y + self.animate_y)
+            e.animate_y(self.y + 1)
 
         if key == 'd':
             self.d = True
@@ -774,7 +800,10 @@ if __name__ == '__main__':
     #
     e = Entity(model='quad', color=color.red, collider='box')
     # e.animate_position(e.position + e.up, duration=1, delay=1, curve='ease_in_expo')
-    e.animate_color(color.yellow, duration=.5, delay=1)
+    # e.animate_color(color.yellow, duration=.5, delay=1)
+    # e.animate('x', 2, 1)
+    # e.animate_position((2,2,2), 1)
+    e.animate_scale((0,0,0), 1)
     # printvar(e.world_position)
     #
     # e.world_x = 1
@@ -797,9 +826,9 @@ if __name__ == '__main__':
     # printvar(t.has_ancestor(e))
     # printvar(t.has_ancestor(my_tuple))
     # print('!!!!!!', type(Entity))
-    print('....', Entity.__class__)
-    printvar(isinstance(t.parent, Entity.__class__))
-    printvar(t.has_ancestor(Entity))
+    # print('....', Entity.__class__)
+    # printvar(isinstance(t.parent, Entity.__class__))
+    # printvar(t.has_ancestor(Entity))
 
 
     # e.model = None
