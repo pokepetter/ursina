@@ -11,17 +11,21 @@ import textwrap
 
 from ursina.entity import Entity
 
+# note:
+# <scale:n> tag doesn't work well in the middle of text.
+# only good for titles for now.
+
 class Text(Entity):
 
     def __init__(self, text=None, **kwargs):
         super().__init__()
         self.name = 'text'
         self.scale *= 0.25 * scene.editor_font_size
-        self.origin = (0, 0)
 
         self.setColorScaleOff()
         self.text_nodes = list()
-        self.align = 'left'
+        # self.align = 'left'
+        self.origin = (-.5, .5)
         # self.font = 'VeraMono.ttf'
         temp_text_node = TextNode('')
         self._font = temp_text_node.getFont()
@@ -126,6 +130,8 @@ class Text(Entity):
             # print('---', s)
             self.create_text_section(text=s[0], tag=s[1], x=s[2], y=s[3])
 
+        # self.origin = self.origin   # recalculate text alignment after assigning new text
+        self.align()
 
     def create_text_section(self, text, tag='<default>', x=0, y=0):
         self.text_node = TextNode('t')
@@ -137,7 +143,7 @@ class Text(Entity):
             pass    # default font
         self.text_node.setText(text)
         self.text_node.setPreserveTrailingWhitespace(True)
-        self.text_node_path.setPos(x * self.scale_override, 0, y * self.line_height)
+        self.text_node_path.setPos(x * self.scale_override, 0, (y * self.line_height) - .75)
         self.text_nodes.append(self.text_node_path)
 
         if tag in self.text_colors:
@@ -168,8 +174,8 @@ class Text(Entity):
     def font(self, value):
         self._font = loader.loadFont(value)
         # _font.setRenderMode(TextFont.RMPolygon)
-        self._font.setPixelsPerUnit(50)
-        print('FONT FILE:', self._font)
+        self._font.setPixelsPerUnit(100)
+        # print('FONT FILE:', self._font)
         self.text = self.raw_text   # update text
 
     @property
@@ -202,6 +208,10 @@ class Text(Entity):
     @property
     def height(self):
         return (len(self.raw_text.split('\n')) + .5) * self.line_height * self.scale_y
+
+    @property
+    def lines(self):
+        return [l for l in self.text.split('\n') if len(l) > 0]
 
 
     @property
@@ -250,25 +260,28 @@ class Text(Entity):
         self.text = newstring
 
 
+    @property
+    def origin(self):
+        return self._origin
 
-    def __setattr__(self, name, value):
-        try:
-            super().__setattr__(name, value)
-        except:
-            pass
+    @origin.setter
+    def origin(self, value):
+        self._origin = value
+        if self.text:
+            self.text = self.raw_text
 
-        if name == 'align':
-            object.__setattr__(self, name, value)
-            if value == 'left':
-                for tn in self.text_nodes:
-                    tn.node().setAlign(TextNode.ALeft)
-            elif value == 'center':
-                for tn in self.text_nodes:
-                    tn.node().setAlign(TextNode.ACenter)
-            elif value == 'right':
-                for tn in self.text_nodes:
-                    tn.node().setAlign(TextNode.ARight)
+    def align(self):
+        value = self.origin
+        linewidths = [self.text_nodes[0].node().calcWidth(line) for line in self.lines]
+        # center text on both axes
+        for tn in self.text_nodes:
+            linenumber = abs(int(tn.getZ() / self.line_height))
+            tn.setX(tn.getX() - linewidths[linenumber] / 2)
+            tn.setX(tn.getX() - linewidths[linenumber] / 2 * value[0] * 2)
 
+            halfheight = len(linewidths) * self.line_height / 2
+            tn.setZ(tn.getZ() + halfheight) # center vertically
+            tn.setZ(tn.getZ() - (halfheight * value[1] * 2))
 
 
 
@@ -276,29 +289,25 @@ if __name__ == '__main__':
     app = Ursina()
     origin = Entity()
     origin.model = 'quad'
-    origin.scale *= .01
+    origin.scale *= .05
 
-    descr = '''<scale:1.5><orange>Title \n<scale:1>Increase <red>max health
-                <default>with 25%. <yellow>and raise attack with <green>100 <default>for 2 turns.
-'''
+    descr = '''<scale:1.0><orange>Title\n<scale:1>Increase <red>max health
+<default>with 25% <yellow>and raise attack with\n<green>100 <default>for 2 turns.'''
     # descr = descr.strip().replace('\n', ' ')
     replacements = {
         'hp' : '<red>hp <default>',
         'max health ' : '<red>max health <default>',
-        'attack' : '<orange>attack <default>'
+        'attack ' : '<orange>attack <default>'
     }
-    descr = multireplace(descr, replacements)
+    # descr = multireplace(descr, replacements)
     # descr = '<scale:1.5><orange>Title \n<scale:1>Increase <red>max health <default>with 25%.'
+    # descr = 'test text'.upper()
     test = Text(descr)
-    test.font = 'VeraMono.ttf'
+    # test.font = 'VeraMono.ttf'
     test.font = 'Inconsolata-Regular.ttf'
-    # test.text = 'test text 0 a w'
-    # test.text = '''
-# <lime>*If <default>target has more than <red>50% hp, <default>*burn the enemy for 5 * INT fire damage for 3 turns. <yellow>Else, deal 100 damage. <default>Unfreezes target. Costs <blue>10 mana.
-# '''.strip()
-    # test.wordwrap = 40
-    # print('ooooooooooooooooooooooo\n', test.text)
-    # test.text = '<red>yolo<green>'
-    # test.line_height = 4
+    # test.model = 'quad'
+    test.origin = (0, 0)
+    # test.origin = (.5, .5)
+    # test.line_height = 2
 
     app.run()
