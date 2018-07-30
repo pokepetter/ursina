@@ -42,7 +42,10 @@ def lerp(a, b, t):
     if isinstance(a, (int, float, complex)):
         return a + (b - a) * t
     else:
-        return (lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t))
+        lerped = list()
+        for i in range(min(len(a), len(b))):
+            lerped.append(lerp(a[i], b[i], t))
+        return lerped
 
 
 def inverselerp(a, b, t) :
