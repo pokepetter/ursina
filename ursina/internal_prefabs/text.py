@@ -207,7 +207,7 @@ class Text(Entity):
 
     @property
     def height(self):
-        return (len(self.raw_text.split('\n')) + .5) * self.line_height * self.scale_y
+        return (len(self.lines) * self.line_height * self.scale_y)
 
     @property
     def lines(self):
@@ -283,7 +283,36 @@ class Text(Entity):
             tn.setZ(tn.getZ() + halfheight) # center vertically
             tn.setZ(tn.getZ() - (halfheight * value[1] * 2))
 
+        if hasattr(self, '_background'):
+            self._background.origin = value
 
+    @property
+    def background(self):
+        if hasattr(self, '_background'):
+            return self._background
+        return None
+
+    @background.setter
+    def background(self, value):
+        if value in (True, False, 1, 0):
+            print('enable/disable background')
+            if not hasattr(self, '_background'):
+                self.model = 'quad'
+                # self._background = Entity(
+                #     parent = self,
+                #     model = 'quad',
+                #     color = color.black,
+                #     # scale = (self.width, self.height)
+                #     scale_x = self.width * 4,
+                #     scale_y = self.height * 4,
+                #     origin = self.origin,
+                #     z = .01
+                #     )
+                # self._background.model.set_scale(1.25, 1, 3) # remember that y and z are swapped
+                # self._background.scale *= 1.6
+
+class TextBackground(Entity):
+    pass
 
 if __name__ == '__main__':
     app = Ursina()
@@ -306,8 +335,9 @@ if __name__ == '__main__':
     # test.font = 'VeraMono.ttf'
     test.font = 'Inconsolata-Regular.ttf'
     # test.model = 'quad'
-    test.origin = (0, 0)
+    # test.origin = (0, 0)
+    test.background = True
     # test.origin = (.5, .5)
     # test.line_height = 2
-
+    camera.add_script('editor_camera')
     app.run()
