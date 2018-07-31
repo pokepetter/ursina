@@ -8,13 +8,17 @@ class EditorCamera(object):
 
         self.camera_pivot = Entity()
         self.camera_pivot.name = 'camera_pivot'
-        self.camera_pivot.parent = render
         self.camera_pivot.is_editor = True
 
-        self.rotation_speed = .2
+        self.rotation_speed = 100
         self.pan_speed = (4, 4)
         self.zoom_speed = 1
 
+        self.original_camera_parent = camera.parent
+        self.camera_pivot.rotation_x
+        camera.reparent_to(self.camera_pivot)
+        self.camera_pivot.rotation_x += 45
+        camera.reparent_to(self.original_camera_parent)
 
     def input(self, key):
         if key == '+':
@@ -45,8 +49,8 @@ class EditorCamera(object):
 
     def update(self, dt):
         if mouse.right:
-            self.camera_pivot.rotation_x -= mouse.velocity[1] * 20
-            self.camera_pivot.rotation_y += mouse.velocity[0] * 20
+            self.camera_pivot.rotation_x -= mouse.velocity[1] * self.rotation_speed
+            self.camera_pivot.rotation_y += mouse.velocity[0] * self.rotation_speed
 
             self.camera_pivot.position += camera.right * held_keys['d'] * self.rotation_speed
             self.camera_pivot.position += camera.left * held_keys['a'] * self.rotation_speed
@@ -64,6 +68,7 @@ class EditorCamera(object):
 if __name__ == '__main__':
     app = main.Ursina()
     sky = load_prefab('sky')
-    e = Entity(model='quad')
-    e.add_script('editor_camera')
+    # e = Entity(model='quad')
+    ground = Plane(scale=(10,10), color=color.dark_gray)
+    camera.add_script('editor_camera')
     app.run()
