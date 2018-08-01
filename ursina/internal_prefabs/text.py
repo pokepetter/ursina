@@ -17,14 +17,15 @@ from ursina.entity import Entity
 
 class Text(Entity):
 
+    size = .25
+
     def __init__(self, text=None, **kwargs):
         super().__init__()
         self.name = 'text'
-        self.scale *= 0.25 * scene.editor_font_size
+        self.size = Text.size
 
         self.setColorScaleOff()
         self.text_nodes = list()
-        # self.align = 'left'
         self.origin = (-.5, .5)
         # self.font = 'VeraMono.ttf'
         temp_text_node = TextNode('')
@@ -133,6 +134,9 @@ class Text(Entity):
         # self.origin = self.origin   # recalculate text alignment after assigning new text
         self.align()
 
+    def update_text(self):
+        self.text = self.raw_text
+
     def create_text_section(self, text, tag='<default>', x=0, y=0):
         self.text_node = TextNode('t')
         self.text_node_path = self.attachNewNode(self.text_node)
@@ -143,8 +147,12 @@ class Text(Entity):
             pass    # default font
         self.text_node.setText(text)
         self.text_node.setPreserveTrailingWhitespace(True)
-        self.text_node_path.setPos(x * self.scale_override, 0, (y * self.line_height) - .75)
-        self.text_nodes.append(self.text_node_path)
+        self.text_node_path.setPos(
+            x * self.size * self.scale_override,
+            0,
+            (y * self.size * self.line_height) - .75 * self.size)
+        if not text == '':
+            self.text_nodes.append(self.text_node_path)
 
         if tag in self.text_colors:
             lightness = color.to_hsv(self.color)[2]
@@ -161,7 +169,7 @@ class Text(Entity):
             scale = tag.split(':')[1]
             self.scale_override = scale = float(scale[:-1])
 
-        self.text_node_path.setScale(self.scale_override)
+        self.text_node_path.setScale(self.scale_override * self.size)
 
 
         return self.text_node
@@ -202,12 +210,12 @@ class Text(Entity):
         for line in self.text.split('\n'):
             longest_line_length = max(longest_line_length, temp_text_node.calcWidth(line))
 
-        return longest_line_length  * self.scale_x
+        return longest_line_length  * self.scale_x * self.size
 
 
     @property
     def height(self):
-        return (len(self.lines) * self.line_height * self.scale_y)
+        return (len(self.lines) * self.line_height * self.scale_y * self.size)
 
     @property
     def lines(self):
@@ -273,15 +281,22 @@ class Text(Entity):
     def align(self):
         value = self.origin
         linewidths = [self.text_nodes[0].node().calcWidth(line) for line in self.lines]
-        # center text on both axes
         for tn in self.text_nodes:
-            linenumber = abs(int(tn.getZ() / self.line_height))
-            tn.setX(tn.getX() - linewidths[linenumber] / 2)
-            tn.setX(tn.getX() - linewidths[linenumber] / 2 * value[0] * 2)
-
+            # center text horizontally
+            linenumber = abs(int(tn.getZ() / self.size / self.line_height))
+            tn.setX(tn.getX() - (linewidths[linenumber] / 2 * self.size * tn.getScale()[0] / self.size))
+            # add offset based on origin/value
+            # x -= half line width * text node scale
+            tn.setX(
+                tn.getX()
+                - (linewidths[linenumber] / 2 * value[0] * 2 * self.size)
+                * tn.getScale()[0] / self.size
+                )
+            # center text vertically
             halfheight = len(linewidths) * self.line_height / 2
-            tn.setZ(tn.getZ() + halfheight) # center vertically
-            tn.setZ(tn.getZ() - (halfheight * value[1] * 2))
+            tn.setZ(tn.getZ() + (halfheight * self.size))
+            # add offset
+            tn.setZ(tn.getZ() - (halfheight * value[1] * 2 * self.size))
 
         if hasattr(self, '_background'):
             self._background.origin = value
@@ -294,25 +309,66 @@ class Text(Entity):
 
     @background.setter
     def background(self, value):
-        if value in (True, False, 1, 0):
-            print('enable/disable background')
+        if value:
+            # print('enable background')
             if not hasattr(self, '_background'):
-                self.model = 'quad'
-                # self._background = Entity(
-                #     parent = self,
-                #     model = 'quad',
-                #     color = color.black,
-                #     # scale = (self.width, self.height)
-                #     scale_x = self.width * 4,
-                #     scale_y = self.height * 4,
-                #     origin = self.origin,
-                #     z = .01
-                #     )
-                # self._background.model.set_scale(1.25, 1, 3) # remember that y and z are swapped
-                # self._background.scale *= 1.6
+                self._background = Entity(
+                    parent = self,
+                    scale = (self.width, self.height),
+                    # model = Quad(subdivisions=2),
+                    model = 'quad',
+                    color = color.black66,
+                    position = (-self.origin[0] * self.width, -self.origin[1] * self.height),
+                    z = .01
+                    )
+                # adjust for scaled text in first line
+                self._background.scale_y += (self.text_nodes[0].getScale()[2] - self.size) / 2
+                self._background.y += (self.text_nodes[0].getScale()[2] - self.size) * self.size
+        else:
+            if hasattr(self, '_background'):
+                destroy(self._background)
 
-class TextBackground(Entity):
-    pass
+    @property
+    def margin(self):
+        return self._margin
+
+    @margin.setter
+    def margin(self, value):
+    # only horizontal and vertical. set position as well if you need more control.
+    # 1 margin value is the same size as a character.
+        if not hasattr(self, '_background'):
+            print('''can't set margin without setting text.background = True first''')
+            return
+        # print('setting text backrgound margin')
+        if isinstance(value, (int, float, complex)):
+            value = (value, value)
+
+        self.background.scale_x += value[0] * self.size
+        self.background.scale_y += value[1] * self.size
+
+    def node_position(self, tn):
+        return tn.getZ()
+
+    def appear(self):
+        for i, tn in enumerate(self.text_nodes):
+            tn.setX(tn.getX()-999999)
+
+        speed = .025
+
+        x = 0
+        for i, tn in enumerate(self.text_nodes):
+            target_text = tn.node().getText()
+            print(target_text)
+            invoke(tn.setX, tn.getX()+999999, delay=(i+x)*speed)
+
+            new_text = ''
+            for j, char in enumerate(target_text):
+                # print(char)
+                new_text += char
+                invoke(tn.node().setText, new_text, delay=(i+x+j)*speed)
+
+            x += len(target_text)
+
 
 if __name__ == '__main__':
     app = Ursina()
@@ -320,7 +376,7 @@ if __name__ == '__main__':
     origin.model = 'quad'
     origin.scale *= .05
 
-    descr = '''<scale:1.0><orange>Title\n<scale:1>Increase <red>max health
+    descr = '''<scale:1.5><orange>Title\n<scale:1>Increase <red>max health
 <default>with 25% <yellow>and raise attack with\n<green>100 <default>for 2 turns.'''
     # descr = descr.strip().replace('\n', ' ')
     replacements = {
@@ -332,14 +388,20 @@ if __name__ == '__main__':
     # descr = '<scale:1.5><orange>Title \n<scale:1>Increase <red>max health <default>with 25%.'
     # descr = 'test text'.upper()
     # descr = 'o---{::::::::::::::::::::>'
+    # Text.size = .25
+    # descr = 'text example'
     test = Text(descr)
     # print('\n', test.text, '\n\n')
     # test.font = 'VeraMono.ttf'
     test.font = 'Inconsolata-Regular.ttf'
     # test.model = 'quad'
-    # test.origin = (0, 0)
+    test.origin = (0, 0)
+    test.origin = (-.5, -.5)
+    test.appear()
     test.background = True
-    # test.origin = (.5, .5)
+    test.margin = 2
+    # test.scale *= 0
+    # test.animate_scale((1,1), duration=1, delay=.5)
     # test.line_height = 2
-    camera.add_script('editor_camera')
+    # camera.add_script('editor_camera')
     app.run()
