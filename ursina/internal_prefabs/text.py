@@ -117,7 +117,7 @@ class Text(Entity):
                 tag = ''
                 for j in range(len(text)-i):
                     tag += text[i+j]
-                    if text[i+j] == '>':
+                    if text[i+j] == '>' and len(tag) > 0:
                         i += j+1
                         break
             else:
@@ -331,7 +331,9 @@ if __name__ == '__main__':
     # descr = multireplace(descr, replacements)
     # descr = '<scale:1.5><orange>Title \n<scale:1>Increase <red>max health <default>with 25%.'
     # descr = 'test text'.upper()
+    # descr = 'o---{::::::::::::::::::::>'
     test = Text(descr)
+    # print('\n', test.text, '\n\n')
     # test.font = 'VeraMono.ttf'
     test.font = 'Inconsolata-Regular.ttf'
     # test.model = 'quad'
