@@ -13,7 +13,8 @@ import math
 class Raycaster(Entity):
 
     def __init__(self):
-        super().__init__('raycaster')
+        super().__init__()
+        self.name = 'raycaster'
         self.eternal = True
 
         self.picker = CollisionTraverser()  # Make a traverser

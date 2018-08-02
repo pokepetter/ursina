@@ -13,40 +13,85 @@ from ursina import *
 # game = Ursina()
 # player = Player()
 # game.run()
+# def print_attributes(class):
+#     pass
+# def print_methods(class):
+#     pass
+#
+# def print_functions(module):
+#     pass
 
 import inspect
 import ursina
+
+def class_info(classes):
+    ignoremethods = (
+        'start', 'on_enable', 'on_disable',
+        'update', 'input', 'on_mouse_enter',
+        'on_mouse_exit', 'on_click', 'destroy'
+        )
+
+    info = ''
+
+    for c in classes:
+        # try:
+        #     print('instantiate:', c[0])
+        #     instance = c[1]()
+        #     print(vars(instance))
+        #     # continue
+        # except:
+        #     pass
+
+        info += '  * ' + c[0] + '\n'
+        allvars = [v for v in vars(c[1]) if not v.startswith('_') and not callable(getattr(c[1], v))]
+        for v in allvars:
+            info +='     - ' + v + '\n'
+
+        methods = [v for v in allvars
+            if not v.startswith('_')
+            and v not in ignoremethods
+            and callable(getattr(c[1], v))
+            ]
+        # if len(methods) > 0:
+        #     print('\n     methods:')
+
+        for m in methods:
+            info += '     - ' + m + '()\n'
+
+        if len(allvars) > 0:
+            info += '\n'
+    return info
+
+
 classes = inspect.getmembers(sys.modules['ursina'], inspect.isclass)
-classes = [c for c in classes if c[1].__module__.startswith('ursina')]
-ignoremethods = (
-    'start', 'on_enable', 'on_disable',
-    'update', 'input', 'on_mouse_enter',
-    'on_mouse_exit', 'on_click', 'destroy'
-    )
+prefab_classes = [c for c in classes if c[1].__module__.startswith('ursina.internal_prefabs')]
+core_classes = [
+    c for c in classes
+    if c[1].__module__.startswith('ursina')
+    and not c[1].__module__.startswith('ursina.internal_prefabs')
+    ]
+
 
 print('classes in ursina:\n')
-for c in classes:
-    print('  *', c[0])
-    allvars = vars(c[1])
-    for v in allvars:
-        if v.startswith('_'):
-            continue
-        if not callable(getattr(c[1], v)):
-            print('     -', v)
+# print(class_info(core_classes))
+# print(class_info(prefab_classes))
+# app = Ursina()
+# t = Text(class_info(core_classes))
+# t.wordwrap = 50
+# t.parent = camera.ui
+# t.scale *= .1
+# t.x = -.5
+# app.run()
 
-    methods = [v for v in allvars
-        if not v.startswith('_')
-        and v not in ignoremethods
-        and callable(getattr(c[1], v))
-        ]
-    if len(methods) > 0:
-        print('\n     methods:')
+# modules = [m for m in sys.modules if m.startswith('ursina')]
+# for m in modules:
+# m = 'ursina.ursinastuff'
+# print('\n*',m)
+# funcs = [f for f in dir(sys.modules[m]) if not f.startswith('__')]
+# for f in funcs:
+#     print('  -', f)
+    # modules = [m for m in sys.modules if 'ursina' in m)
 
-    for m in methods:
-        print('     -', m+'()')
-
-    if len(allvars) > 0:
-        print('')
 
 
 class HelpMenu(Entity):
@@ -95,50 +140,12 @@ class HelpMenu(Entity):
                 docstring += '\n'
 
 
-        self.t = Text(docstring)
+        self.t = Text(class_info(core_classes))
         self.t.wordwrap = 50
         self.t.parent = camera.ui
         self.t.scale *= .1
         self.t.x = -.5
-        # for c in classes:
-        #     b = Button(
-        #         parent = self,
-        #         text = c[0],
-        #         scale_x = 2
-        #         )
-        #     b.scale *= .1
-        #     b.text_entity.scale *= 10
-        #     b.text_entity.x = -.25
-        #
-        #     classinfo = ''
-        #     allvars = vars(c[1])
-        #     for v in allvars:
-        #         if v.startswith('_'):
-        #             continue
-        #         if not callable(getattr(c[1], v)):
-        #             print('     -', v)
-        #             classinfo += '\n     - ' + v
-        #
-        #     methods = [v for v in allvars
-        #         if not v.startswith('_')
-        #         and v not in ignoremethods
-        #         and callable(getattr(c[1], v))
-        #         ]
-        #     for m in methods:
-        #         print('     -', m+'()')
-        #         classinfo += '     -'+ m+'()\n'
-        #
-        #     b.tooltip = Text(text=classinfo, background=True, enabled=False)
-        #     b.tooltip.parent = b
-        #     b.tooltip.position = (0,0,-1)
-        #
-        # self.add_script('grid_layout')
-        # self.grid_layout.max_x = 4
-        # self.grid_layout.update_grid()
-        # self.x = -.25
-        # self.model = None
 
-        # self.origin = (-.5, .5)
 
     def input(self, key):
         if key == 'f1':

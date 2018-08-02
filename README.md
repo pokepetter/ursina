@@ -14,6 +14,19 @@ Dependencies:
   * pillow and psd-tools, if you want .psd compression.
 
 ----  
+example:
+
+ground = Entity(
+    model = 'cube',
+    color = color.magenta,
+    z = -.1,
+    y = -3,
+    origin = (0, .5),
+    scale = (50, 1, 10),
+    collider = 'box',
+    collision = True
+    )
+
 project oveview:
 
         application
@@ -68,54 +81,51 @@ project oveview:
             text_color = light_text
 
         Entity
-            name    # defaults to class name
-            type    # returns class name as string
-            enabled
-            parent
-            collision
-            collider    # only 'box' supported for now. automatically fits model bounds
-            hovered
+            name
+            enabled, visible
+            parent, world_parent
+            type, types
 
             model
             color
-            texture
+            texture, texture_name, texture_path, texture_size,
+            texture_width, texture_height, pixels,
             texture_scale, texture_offset
-            render_queue
 
-            position
             origin
-            x, y, z
-            world_position
-            world_x, world_y, world_z
-            rotation
-            rotation_x, rotation_y, rotation_z
-            scale
-            scale_x, scale_y, sale_z
-            world_scale
-            world_scale_x, world_scale_y, worl_scale_z
+            position, x, y, z
+            world_position, world_x, world_y, world_z
+            rotation, rotation_x, rotation_y, rotation_z
+            scale, scale_x, scale_y, scale_z
             forward, back, right, left, up, down
 
-            reparent_to(entity)     # keeps position, rotation and scale relative to world space
-            add_script('script_name')
-            remove_script('script_name')
+            collision, collider
+            hovered
+            scripts
+            children
 
-            look_at(Vec3 or Entity)
-            has_ansestor()
-            children()
+            get_pixel(x,y)
+            reparent_to()   # same as setting world_parent
+            add_script(module_name/class/instance)
+            remove_script(module_name)
+            look_at()
+            has_ancestor()
 
-            animate_position()
-            animate_scale()
+            animate(name, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True)
+            animate_position(), animate_x(), animate_y(), animate_z()
+            animate_rotation(), animate_rotation_x(), animate_rotation_y(), animate_rotation_z()
+            animate_scale(), animate_scale_x(), animate_scale_y(), animate_scale_z()
             shake(duration=.2, magnitude=1, speed=.05)
             animate_color()
 
             # these functions gets automatically called if they exsist:
-                start(self)
-                input(self, key)
-                update(self, dt)
-                on_mouse_enter(self)
-                on_mouse_exit(self)
-                on_click(self)
-                on_destroy(self)
+            start(self)
+            input(self, key)
+            update(self, dt)
+            on_mouse_enter(self)
+            on_mouse_exit(self)
+            on_click(self)
+            on_destroy(self)
 
         input
             held_keys   # dict that hold key states.

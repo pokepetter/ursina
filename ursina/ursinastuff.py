@@ -29,10 +29,6 @@ from ursina import camera
 from ursina import raycaster
 from ursina.raycaster import raycast
 from ursina import color
-from ursina import undo
-from ursina.undo import *
-undo.setstack(undo.Stack())
-
 
 
 # def save_scene():

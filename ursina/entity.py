@@ -16,7 +16,6 @@ from ursina.internal_prefabs.mesh import Mesh
 from os import path
 from panda3d.core import Filename
 from direct.interval.IntervalGlobal import Sequence, Func, Wait
-from ursina.undo import undoable
 from direct.showbase import Loader
 from ursina.ursinamath import lerp
 from ursina import easing_types
@@ -30,11 +29,9 @@ from PIL import Image
 
 class Entity(NodePath):
 
-    def __init__(self, name=None, **kwargs):
-        if not name:
-            name = self.__class__.__name__
-        super().__init__(name)
-        self.name = name
+    def __init__(self, **kwargs):
+        super().__init__(self.__class__.__name__)
+        self.name = self.type
         self.enabled = True
         self.visible = True
         self.is_editor = False
@@ -103,8 +100,6 @@ class Entity(NodePath):
                     pass
             object.__setattr__(self, name, value)
             return
-
-
 
         if name == 'world_parent':
             self.reparent_to(value)
@@ -287,8 +282,6 @@ class Entity(NodePath):
             pass
             # print('failed to sett attribiute:', name)
 
-    def set_color(self, value):
-        self.color = value
 
     @property
     def parent(self):
@@ -565,7 +558,6 @@ class Entity(NodePath):
 
         print("couldn't find script:", module_names)
 
-    @undoable
     def remove_script(self, module_name):
         for s in self.scripts:
             if s.__module__ == module_name:
@@ -573,10 +565,6 @@ class Entity(NodePath):
                 self.scripts.remove(s)
                 self.__setattr__(module_name, None)
                 print('removed:', module_name)
-        # undo
-        yield 'remove' + module_name
-        self.scripts.append(self.temp_script)
-        self.__setattr__(module_name, self.temp_script)
 
 
     def look_at(self, target):
@@ -637,6 +625,32 @@ class Entity(NodePath):
 #------------
 # ANIMATIONS
 #------------
+    def animate(self, name, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+        animator_name = name + '_animator'
+        # print('start animating value:', name, animator_name )
+        if interrupt and hasattr(self, animator_name):
+            try:
+                getattr(self, animator_name).pause()
+                # print('interrupt', animator_name)
+            except:
+                pass
+        setattr(self, animator_name, Sequence())
+        sequence = getattr(self, animator_name)
+        sequence.append(Wait(delay))
+        if not resolution:
+            resolution = int(duration * 60)
+
+        for i in range(resolution+1):
+            t = i / resolution
+            if hasattr(easing_types, curve):
+                t = getattr(easing_types, curve)(t)
+            else:
+                t = getattr(easing_types, 'ease_in_expo')(t)
+            sequence.append(Wait(duration / resolution))
+            sequence.append(Func(setattr, self, name, lerp(getattr(self, name), value, t)))
+
+        sequence.start()
+        return sequence
 
     def animate_position(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
         self.animate('x', value[0], duration, delay, curve, resolution, interrupt)
@@ -670,32 +684,6 @@ class Entity(NodePath):
     def animate_scale_z(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
         self.animate('scale_z', value, duration, delay, curve, resolution, interrupt)
 
-    def animate(self, name, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
-        animator_name = name + '_animator'
-        # print('start animating value:', name, animator_name )
-        if interrupt and hasattr(self, animator_name):
-            try:
-                getattr(self, animator_name).pause()
-                # print('interrupt', animator_name)
-            except:
-                pass
-        setattr(self, animator_name, Sequence())
-        sequence = getattr(self, animator_name)
-        sequence.append(Wait(delay))
-        if not resolution:
-            resolution = int(duration * 60)
-
-        for i in range(resolution+1):
-            t = i / resolution
-            if hasattr(easing_types, curve):
-                t = getattr(easing_types, curve)(t)
-            else:
-                t = getattr(easing_types, 'ease_in_expo')(t)
-            sequence.append(Wait(duration / resolution))
-            sequence.append(Func(setattr, self, name, lerp(getattr(self, name), value, t)))
-
-        sequence.start()
-        return sequence
 
     def shake(self, duration=.2, magnitude=1, speed=.05):
         s = Sequence()
