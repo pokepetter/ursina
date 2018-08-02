@@ -122,5 +122,5 @@ class Test():
 if __name__ == '__main__':
     app = Ursina()
     t = Test()
-    t.b.tooltip = Tooltip()
+    t.b.tooltip = Text(text='yoloy', background=True)
     app.run()

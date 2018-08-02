@@ -36,6 +36,7 @@ class Entity(NodePath):
         super().__init__(name)
         self.name = name
         self.enabled = True
+        self.visible = True
         self.is_editor = False
         try:
             self.parent = scene
@@ -90,6 +91,20 @@ class Entity(NodePath):
             else:
                 if not self.is_singleton():
                     self.stash()
+
+        if name == 'visible':
+            if value == False:
+                object.__setattr__(self, '_parent_before_hidden', self.parent)
+                self.reparent_to(scene.hidden)
+            else:
+                try:
+                    self.reparent_to(self._parent_before_hidden)
+                except:
+                    pass
+            object.__setattr__(self, name, value)
+            return
+
+
 
         if name == 'world_parent':
             self.reparent_to(value)

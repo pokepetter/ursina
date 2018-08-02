@@ -22,6 +22,7 @@ class Scene(NodePath):
         self.editor_font_size = 1
 
         self.entities = []
+        self.hidden = NodePath('hidden')
 
         self.has_changes = False
 
