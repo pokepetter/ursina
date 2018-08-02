@@ -346,8 +346,6 @@ class Text(Entity):
         self.background.scale_x += value[0] * self.size
         self.background.scale_y += value[1] * self.size
 
-    def node_position(self, tn):
-        return tn.getZ()
 
     def appear(self):
         for i, tn in enumerate(self.text_nodes):
