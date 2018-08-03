@@ -29,4 +29,4 @@ from ursina.internal_prefabs.draggable import Draggable
 from ursina.internal_prefabs.grid import Grid
 from ursina.internal_prefabs.debug_menu import DebugMenu
 
-from ursina.internal_prefabs.editor_camera import EditorCamera
+from ursina.internal_scripts.editor_camera import EditorCamera

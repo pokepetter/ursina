@@ -346,6 +346,8 @@ class Text(Entity):
         self.background.scale_x += value[0] * self.size
         self.background.scale_y += value[1] * self.size
 
+        self._margin = value
+
 
     def appear(self):
         for i, tn in enumerate(self.text_nodes):
@@ -388,6 +390,11 @@ if __name__ == '__main__':
     # descr = 'o---{::::::::::::::::::::>'
     # Text.size = .25
     # descr = 'text example'
+    descr = ('<scale:1.5>' + 'Rainstorm' + '<scale:1>\n' +
+'''Summon a <blue>rain
+storm <default>to deal 5 <blue>water
+damage <default>to <red>everyone, <default>including <orange>yourself. <default>
+Lasts for 4 rounds.''')
     test = Text(descr)
     # print('\n', test.text, '\n\n')
     # test.font = 'VeraMono.ttf'
@@ -397,7 +404,7 @@ if __name__ == '__main__':
     test.origin = (-.5, -.5)
     test.appear()
     test.background = True
-    test.margin = 2
+    test.margin = 4
     # test.scale *= 0
     # test.animate_scale((1,1), duration=1, delay=.5)
     # test.line_height = 2
