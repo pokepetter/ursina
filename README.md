@@ -1,6 +1,8 @@
 # ursina    ʕ •ᴥ•ʔゝ□
 An easy to use game engine/framework for python.  
 
+
+
 ## Getting Started
 1) Install Python 3.6 or newer
 2) Open cmd/terminal and type:
@@ -23,11 +25,13 @@ If you want to easily edit the source, it's recommended to clone the git repo an
        python setup.py develop       
         
 
+
 ## Dependencies
   * python 3.6+
   * panda3d
   * screeninfo
   * pillow and psd-tools, if you want .psd compression.
+
 
 
 ## Examples
@@ -49,9 +53,10 @@ ground = Entity(
 app.run()                       # opens a window and starts the game.
 ```
 
-[Minecraft Clone](/samples/minecraft_clone.py)
 
-[Platformer Game](/samples/platformer.py)
+* [Minecraft Clone](/samples/minecraft_clone.py)
+
+* [Platformer Game](/samples/platformer.py)
 
 
 ## How do I make a game?
@@ -81,11 +86,11 @@ app.run()                               # opens a window and starts the game.
 3) Type this in the terminal to start the game:
    
        python ursina_game.py
-If you use Atom, I recommend installing the package atom-python-run to tun your scripts with the press of a button.
+   If you use Atom, I recommend installing the package atom-python-run to tun your scripts with the press of a button.
 
 4) You can now move the orange box around with 'a' and 'd'!
 
-To close the window, you can by default, press shift+q or press the red x. to disable this, write 'window.exit_button.enabled = False' somewhere in your code.
+   To close the window, you can by default, press shift+q or press the red x. to disable this, write 'window.exit_button.enabled =   False' somewhere in your code.
 
 
 
