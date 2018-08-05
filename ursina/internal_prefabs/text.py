@@ -83,7 +83,7 @@ class Text(Entity):
     @text.setter
     def text(self, text):
         self.raw_text = text
-        text = str(text)
+        text = '<>' + str(text)
         for tn in self.text_nodes:
             tn.remove_node()
         self.text_nodes.clear()
@@ -400,13 +400,11 @@ Lasts for 4 rounds.''')
     # test.font = 'VeraMono.ttf'
     test.font = 'Inconsolata-Regular.ttf'
     # test.model = 'quad'
-    test.origin = (0, 0)
-    test.origin = (-.5, -.5)
+    # test.origin = (0, 0)
+    # test.origin = (.5, -.5)
     test.appear()
     test.background = True
     test.margin = 4
-    # test.scale *= 0
-    # test.animate_scale((1,1), duration=1, delay=.5)
-    # test.line_height = 2
-    # camera.add_script('editor_camera')
+
+
     app.run()

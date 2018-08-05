@@ -12,7 +12,7 @@ class Tooltip(Text):
         self.origin = (-.5, -.5)
         self.background = True
         self.margin = 2
-        self.enabled = True
+        self.enabled = False
 
         for key, value in kwargs.items():
             setattr(self, key, value)
