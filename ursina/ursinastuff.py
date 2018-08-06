@@ -324,3 +324,100 @@ def compress_textures(name=None):
             except Exception as e:
                 print(e)
         # elif f.endswith('.png'):
+
+
+def compress_models(model_name=None):
+    # subprocess.call(r'''"C:\Program Files\Blender Foundation\Blender\blender.exe" "D:\UnityProjects\ursina\ursina\internal_models\cube.blend" --background --python "D:\UnityProjects\ursina\ursina\internal_scripts\blend_export.py"''')
+    # return
+    print('find models')
+    from tinyblend import BlenderFile
+    from os.path import dirname
+    if not os.path.exists(application.compressed_model_folder):
+        os.makedirs(application.compressed_model_folder)
+
+    files = os.listdir(application.model_folder)
+    compressed_files = os.listdir(application.compressed_model_folder)
+    # print(files)
+    texture_dir = os.path.join(
+        dirname(dirname(dirname(os.path.abspath(__file__)))),
+        'textures'
+        )
+
+    for f in files:
+        if f.endswith('.blend'):
+            # print('f:', application.compressed_model_folder + '/' + f)
+            print('compress______', f)
+            blend = BlenderFile(application.model_folder + '/' + f)
+            # objects = blend.list('Object')
+            number_of_objects = len(blend.list('Object'))
+            # print(blend.list_structures())
+            # return
+
+            for o in blend.list('Object'):
+                if not o.data.mvert:
+                    continue
+                # print(o.id.name.decode("utf-8", "strict"))
+                object_name = o.id.name.decode( "utf-8").replace(".", "_")[2:]
+                object_name = object_name.split('\0', 1)[0]
+                print('name:', object_name)
+                file_name = ''.join([f.split('.')[0], '.egg'])
+                if number_of_objects > 1:
+                    file_name = ''.join([f.split('.')[0], '_', object_name, '.egg'])
+                file_path = os.path.join(application.compressed_model_folder, file_name)
+                print(file_path)
+                # print('data:', o.data.mloop)
+
+                # for v in o.data.mvert:
+                #     print('vertex:', v.co)
+                # for e in o.data.medge:
+                #     print('edge:', e.v1, e.v2)
+                # for i in range(0, len(o.data.mloop), 3):
+                #     print('triangle:',
+                #         o.data.mloop[i].v,
+                #         o.data.mloop[i+1].v,
+                #         o.data.mloop[i+2].v
+                #     )
+                with open(file_path, 'w') as file:
+                    file.write(
+                        '<CoordinateSystem> { Z-up }\n'
+                        + '<Group> ' + object_name + ' {\n'
+                        +
+'''<Transform> {
+<Matrix4> {
+  1.0 0.0 0.0 0.0
+  0.0 1.0 0.0 0.0
+  0.0 0.0 1.0 0.0
+  0.0 0.0 0.0 1.0
+}
+}'''
+
+                        + '  <VertexPool> ' + object_name + ' {\n'
+                    )
+                    for i in range(len(o.data.mvert)):
+                        file.write(
+                            '    <Vertex> '
+                            + str(i)
+                            + ' {' + str(o.data.mvert[i].co[0])
+                            + ' ' + str(o.data.mvert[i].co[1])
+                            + ' ' + str(o.data.mvert[i].co[2]) + '\n'
+                            + '      <UV> ORCO {' + '\n'
+                            + '        ' + '0.000000 0.000000' + '\n'
+                            + '      }\n'
+                            + '    }\n'
+                        )
+                    file.write('  }\n')
+
+                    for i in range(0, len(o.data.mloop)-2, 3):
+                        file.write(''.join([
+                            '  <Polygon> {\n',
+                            '    <Normal> {', '0 0 0',  '}\n',
+                            '    <VertexRef> { ',
+                            str(o.data.mloop[i].v), ' ',
+                            str(o.data.mloop[i+1].v), ' ',
+                            str(o.data.mloop[i+2].v), ' <Ref> { ',
+                            object_name, ' }}\n',
+                            '  }\n'
+                        ])
+                        )
+
+                    file.write('}')
