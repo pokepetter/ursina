@@ -5,6 +5,7 @@ import random
 from panda3d.core import PandaNode
 from panda3d.core import NodePath
 from panda3d.core import GeomNode
+from panda3d.core import GeomVertexReader
 from panda3d.core import Vec3, Vec4
 from panda3d.core import Point3
 from panda3d.core import SamplerState
@@ -127,8 +128,9 @@ class Entity(NodePath):
 
             if hasattr(self, 'model') and self.model:
                 self.model.reparentTo(self)
-                self.model.setColorScaleOff()
+                # self.model.setColorScaleOff()
                 self.model.setTransparency(TransparencyAttrib.MAlpha)
+                self._vert_cache = None
                 if isinstance(value, Mesh):
                     if hasattr(value, 'on_assign'):
                         value.on_assign(assigned_to=self)
@@ -138,7 +140,15 @@ class Entity(NodePath):
 
         if name == 'color' and value is not None:
             if hasattr(self, 'model') and self.model:
-                self.model.setColorScale(value)
+                vcolors = self.vertex_colors
+                if vcolors:
+                    for vc in vcolors:
+                        if vc != vcolors[0]:
+                            self.model.setColorScale(value)     # just tint vertex_colors, untested
+                            object.__setattr__(self, name, value)
+                            return
+
+                self.model.setColor(value)  # override vertex colors
                 object.__setattr__(self, name, value)
 
 
@@ -501,6 +511,51 @@ class Entity(NodePath):
             return (col[0]/255, col[1]/255, col[2]/255, 1)
         else:
             return (col[0]/255, col[1]/255, col[2]/255, col[3]/255)
+
+
+    @property
+    def vertex_data(self):
+        if self.model and not self._vert_cache:
+            geomNodeCollection = self.model.findAllMatches('**/+GeomNode')
+            geomNode = geomNodeCollection[0].node()
+            self._vert_cache = geomNode.getGeom(0).getVertexData()
+            return self._vert_cache
+
+    @property
+    def vertices(self):
+        vertex_reader = GeomVertexReader(self.vertex_data, 'vertex')
+        vertices = list()
+        while not vertex_reader.isAtEnd():
+            vertices.append([e for e in vertex_reader.getData3f()])
+        return vertices
+
+    @property
+    def normals(self):
+        vertex_reader = GeomVertexReader(self.vertex_data, 'normal')
+        vertices = list()
+        while not vertex_reader.isAtEnd():
+            vertices.append([e for e in vertex_reader.getData3f()])
+        return vertices
+
+    @property
+    def uvs(self):
+        vertex_reader = GeomVertexReader(self.vertex_data, 'texcoord')
+        vertices = list()
+        while not vertex_reader.isAtEnd():
+            vertices.append([e for e in vertex_reader.getData2f()])
+        return vertices
+
+    @property
+    def vertex_colors(self):
+        try:
+            vcol_reader = GeomVertexReader(self.model.findAllMatches('**/+GeomNode')[0].node().getGeom(0).getVertexData(), 'color')
+            vcols = list()
+            while not vcol_reader.isAtEnd():
+                vcols.append([e for e in vcol_reader.getData4f()])
+            return vcols
+        except:
+            print(self.name, '.model has no vertex colors')
+            return None
 
 
     def reparent_to(self, entity):
