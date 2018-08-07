@@ -468,6 +468,7 @@ class Entity(NodePath):
             texture.setMagfilter(SamplerState.FT_nearest)
             texture.setMinfilter(SamplerState.FT_nearest)
             self.model.setTexture(texture, 1)
+            self._cached_image = None   # for get_pixel() method
             # print('set texture:', value)
         except:
             pass
@@ -505,8 +506,10 @@ class Entity(NodePath):
 
 
     def get_pixel(self, x, y):
-        image = Image.open(self.texture_path)
-        col = image.getpixel((x, self.texture_width - y -1))
+        if not self._cached_image:
+            self._cached_image = Image.open(self.texture_path)
+
+        col = self._cached_image.getpixel((x, self.texture_height - y -1))
         if len(col) == 3:
             return (col[0]/255, col[1]/255, col[2]/255, 1)
         else:
