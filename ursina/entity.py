@@ -123,8 +123,21 @@ class Entity(NodePath):
                         self.model.removeNode()
                     object.__setattr__(self, name, loader.loadModel(value))
                 except:
-                    pass
-                    return
+                    import os
+                    import glob
+                    files = glob.glob(application.compressed_model_folder + '*.ursinamesh')
+                    print(files)
+                    # print(application.compressed_model_folder)
+                    for f in files:
+                        if f.endswith(value + '.ursinamesh'):
+                            print('-------------------found ursnamodel', f)
+                            with open(f) as f:
+                                m = eval(f.read())
+                                print(m)
+                                object.__setattr__(self, name, m)
+                                print('yasy!"!!!"')
+                    # pass
+                    # return
 
             if hasattr(self, 'model') and self.model:
                 self.model.reparentTo(self)

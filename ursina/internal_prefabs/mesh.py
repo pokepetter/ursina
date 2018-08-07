@@ -61,7 +61,7 @@ class Mesh(NodePath):
         prim = modes[mode]
 
         if tris:
-            for t in triss:
+            for i, t in enumerate(tris):
                 prim.addVertex(t)
         else:
             prim.addConsecutiveVertices(0, len(verts))
@@ -90,10 +90,11 @@ class Mesh(NodePath):
 if __name__  == '__main__':
     from ursina import *
     app = Ursina()
-    verts = ((-2,0,0), (2,0,0), (1,4,0), (-1,4,0), (-2,0,0))
+    verts = ((-2,0,0), (2,0,0), (1,4,0), (-1,4,0))
+    # tris = (0,1,2,3,0,1)
     uvs = ((-2,0), (2,0), (1,4), (-1,4), (-2,0))
     colors = (color.red, color.blue, color.lime, color.black)
-    m = Mesh(verts, uvs=uvs, mode='ngon', thickness=20)
+    m = Mesh(verts, uvs=uvs, mode='lines', thickness=20)
     # m.thickness = 50
     # nodePath = render.attachNewNode(m)
     e = Entity()
