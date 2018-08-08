@@ -90,11 +90,12 @@ class Mesh(NodePath):
 if __name__  == '__main__':
     from ursina import *
     app = Ursina()
-    verts = ((-2,0,0), (2,0,0), (1,4,0), (-1,4,0))
-    # tris = (0,1,2,3,0,1)
+    # verts = ((-2,0,0), (2,0,0), (1,4,0), (-1,4,0))
+    verts=((0,0,0), (1,0,0), (.5, 1, 0), (-.5,1,0))
+    tris = (0,1,2, 3,0,1)
     uvs = ((-2,0), (2,0), (1,4), (-1,4), (-2,0))
     colors = (color.red, color.blue, color.lime, color.black)
-    m = Mesh(verts, uvs=uvs, mode='lines', thickness=20)
+    m = Mesh(verts, mode='ngon', thickness=20)
     # m.thickness = 50
     # nodePath = render.attachNewNode(m)
     e = Entity()

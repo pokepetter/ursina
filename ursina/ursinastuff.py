@@ -367,22 +367,26 @@ def compress_models(model_name=None):
 
                 file_content = 'Mesh(' + str(verts)
 
-
                 file_name = ''.join([f.split('.')[0], '.ursinamesh'])
                 if number_of_objects > 1:
                     file_name = ''.join([f.split('.')[0], '_', object_name, '.ursinamesh'])
                 file_path = os.path.join(application.compressed_model_folder, file_name)
                 print(file_path)
 
+                tris = tuple([triindex.v for triindex in o.data.mloop])
+                flippedtris = list()
+                for i in range(0, len(tris)-3, 3):
+                    flippedtris.append(tris[i+2])
+                    flippedtris.append(tris[i+1])
+                    flippedtris.append(tris[i+0])
 
-                for i in range(0, len(o.data.mloop), 3):
-                    print('triangle:',
-                        o.data.mloop[i].v,
-                        o.data.mloop[i+1].v,
-                        o.data.mloop[i+2].v
-                    )
+                file_content += ', tris=' + str(flippedtris)
 
-                file_content += ''', mode='line')'''
+                if o.data.mloopuv:
+                    uvs = tuple([v.uv for v in o.data.mloopuv])
+                    file_content += ', uvs=' + str(uvs)
+
+                file_content += ''', mode='triangle')'''
 
                 with open(file_path, 'w') as file:
                     file.write(file_content)
