@@ -116,9 +116,10 @@ class Camera(Entity):
                 # self.z = value
                 application.base.cam.node().set_lens(self.perspective_lens)
             elif hasattr(self, 'orthographic_lens'):
-                self.orthographic_lens.set_film_size(value)
+                self.orthographic_lens.set_film_size(value * self.aspect_ratio, value)
                 application.base.cam.node().set_lens(self.orthographic_lens)
-
+                super().__setattr__(name, value)
+                return
 
         elif name == 'near_clip_plane':
             self.lens.set_near(value)
