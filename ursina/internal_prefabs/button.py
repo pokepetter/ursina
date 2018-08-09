@@ -32,14 +32,13 @@ class Button(Entity):
         if type(value) is str:
             if not self.text_entity:
                 self.text_entity = Text()
-                self.text_entity.parent = render
-                self.text_entity.is_editor = self.is_editor
-                self.text_entity.wrtReparentTo(self.model)
+                self.text_entity.parent = self
                 self.text_entity.position = (0, 0, -.1)
-                self.text_entity.scale *= 2
+                self.text_entity.origin = (0,0)
 
             self.text_entity.text = value
             self.text_entity.align = 'center'
+            self.text_entity.world_scale = (1,1,1)
 
 
     def __setattr__(self, name, value):
@@ -102,7 +101,7 @@ class Button(Entity):
 
 class Test():
     def __init__(self):
-        self.b = Button(color = color.red)
+        self.b = Button(color = color.red, text='button_text')
         self.b.on_click = '''
             self.text = 'on_click_string'
             self.color = color.red
@@ -111,9 +110,9 @@ class Test():
         # self.b.on_click = self.test_method
         self.b.scale *= .5
         self.b.color = color.azure
-        self.b.origin = (-.5, -.5)
+        # self.b.origin = (-.5, -.5)
         self.b.text = 'text'
-        self.b.text_entity.scale *= 2
+        # self.b.text_entity.scale *= 2
 
     def test_method(self):
         print('test method')
@@ -121,6 +120,8 @@ class Test():
 
 if __name__ == '__main__':
     app = Ursina()
-    t = Test()
-    t.b.tooltip = Text(text='yoloy', background=True)
+    # t = Test()
+    b = Button(parent=scene, text='test\ntest', scale=(4,1))
+    # b.text_entity.scale *= .5
+    # t.b.tooltip = Text(text='yolo', background=True)
     app.run()
