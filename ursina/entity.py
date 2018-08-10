@@ -132,10 +132,12 @@ class Entity(NodePath):
                         if f.endswith(value + '.ursinamesh'):
                             print('-------------------found ursnamodel', f)
                             with open(f) as f:
-                                m = eval(f.read())
-                                print(m)
-                                object.__setattr__(self, name, m)
-                                print('yasy!"!!!"')
+                                try:
+                                    m = eval(f.read())
+                                    print(m)
+                                    object.__setattr__(self, name, m)
+                                except:
+                                    print('invalid python ursinamesh file:', f)
                     # pass
                     # return
 

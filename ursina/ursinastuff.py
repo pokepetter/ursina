@@ -327,8 +327,31 @@ def compress_textures(name=None):
 
 
 def compress_models(model_name=None):
-    # subprocess.call(r'''"C:\Program Files\Blender Foundation\Blender\blender.exe" "D:\UnityProjects\ursina\ursina\internal_models\cube.blend" --background --python "D:\UnityProjects\ursina\ursina\internal_scripts\blend_export.py"''')
-    # return
+    from os.path import dirname
+    if not os.path.exists(application.compressed_model_folder):
+        os.makedirs(application.compressed_model_folder)
+
+    files = os.listdir(application.model_folder)
+    compressed_files = os.listdir(application.compressed_model_folder)
+
+    for f in files:
+        if f.endswith('.blend'):
+            # print('f:', application.compressed_model_folder + '/' + f)
+            blender_path = r"C:\Program Files\Blender Foundation\Blender\blender.exe"
+            fullpath = os.path.join(application.model_folder, f)
+            export_script_path = os.path.join(application.internal_script_folder, 'blend_export.py')
+            print('compress______', fullpath)
+            subprocess.call(
+                r'''{} {} --background --python {}'''.format(blender_path, fullpath, export_script_path))
+
+            obj_file = os.path.join(os.path.dirname(fullpath), os.path.splitext(f)[0]) + '.ursinamesh'
+            print('----------------:', obj_file)
+            with open(obj_file, 'r') as file:
+                obj_string = file.read()
+            
+
+    return
+
     print('find models')
     from tinyblend import BlenderFile
     from os.path import dirname
