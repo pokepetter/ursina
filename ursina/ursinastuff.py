@@ -290,6 +290,11 @@ def compress_textures(name=None):
     from PIL import Image
     from os.path import dirname
     from psd_tools import PSDImage
+
+    if not os.path.exists(application.compressed_texture_folder):
+        os.makedirs(application.compressed_texture_folder)
+
+
     files = os.listdir(application.texture_folder)
     compressed_files = os.listdir(application.compressed_texture_folder)
 
@@ -324,92 +329,3 @@ def compress_textures(name=None):
             except Exception as e:
                 print(e)
         # elif f.endswith('.png'):
-
-
-def compress_models(model_name=None):
-    from os.path import dirname
-    if not os.path.exists(application.compressed_model_folder):
-        os.makedirs(application.compressed_model_folder)
-
-    files = os.listdir(application.model_folder)
-    compressed_files = os.listdir(application.compressed_model_folder)
-
-    for f in files:
-        if f.endswith('.blend'):
-            # print('f:', application.compressed_model_folder + '/' + f)
-            blender_path = r"C:\Program Files\Blender Foundation\Blender\blender.exe"
-            fullpath = os.path.join(application.model_folder, f)
-            export_script_path = os.path.join(application.internal_script_folder, 'blend_export.py')
-            print('compress______', fullpath)
-            subprocess.call(
-                r'''{} {} --background --python {}'''.format(blender_path, fullpath, export_script_path))
-
-            obj_file = os.path.join(os.path.dirname(fullpath), os.path.splitext(f)[0]) + '.ursinamesh'
-            print('----------------:', obj_file)
-            with open(obj_file, 'r') as file:
-                obj_string = file.read()
-            
-
-    return
-
-    print('find models')
-    from tinyblend import BlenderFile
-    from os.path import dirname
-    if not os.path.exists(application.compressed_model_folder):
-        os.makedirs(application.compressed_model_folder)
-
-    files = os.listdir(application.model_folder)
-    compressed_files = os.listdir(application.compressed_model_folder)
-    # print(files)
-    # texture_dir = os.path.join(
-    #     dirname(dirname(dirname(os.path.abspath(__file__)))),
-    #     'textures'
-    #     )
-
-    for f in files:
-        if f.endswith('.blend'):
-            # print('f:', application.compressed_model_folder + '/' + f)
-            print('compress______', f)
-            blend = BlenderFile(application.model_folder + '/' + f)
-            # objects = blend.list('Object')
-            number_of_objects = len(blend.list('Object'))
-            # print(blend.list_structures())
-            # return
-
-            for o in blend.list('Object'):
-                if not o.data.mvert:
-                    continue
-                # print(o.id.name.decode("utf-8", "strict"))
-                object_name = o.id.name.decode( "utf-8").replace(".", "_")[2:]
-                object_name = object_name.split('\0', 1)[0]
-                print('name:', object_name)
-
-                verts= o.data.mvert
-                verts = [v.co for v in o.data.mvert]
-                verts = tuple(verts)
-
-                file_content = 'Mesh(' + str(verts)
-
-                file_name = ''.join([f.split('.')[0], '.ursinamesh'])
-                if number_of_objects > 1:
-                    file_name = ''.join([f.split('.')[0], '_', object_name, '.ursinamesh'])
-                file_path = os.path.join(application.compressed_model_folder, file_name)
-                print(file_path)
-
-                tris = tuple([triindex.v for triindex in o.data.mloop])
-                flippedtris = list()
-                for i in range(0, len(tris)-3, 3):
-                    flippedtris.append(tris[i+2])
-                    flippedtris.append(tris[i+1])
-                    flippedtris.append(tris[i+0])
-
-                file_content += ', tris=' + str(flippedtris)
-
-                if o.data.mloopuv:
-                    uvs = tuple([v.uv for v in o.data.mloopuv])
-                    file_content += ', uvs=' + str(uvs)
-
-                file_content += ''', mode='triangle')'''
-
-                with open(file_path, 'w') as file:
-                    file.write(file_content)

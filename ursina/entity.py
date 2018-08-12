@@ -22,6 +22,7 @@ from ursina.ursinamath import lerp
 from ursina import easing_types
 from ursina.easing_types import *
 from ursina.useful import *
+from ursina.mesh_importer import load_model
 
 from ursina import color
 from ursina import scene
@@ -118,28 +119,16 @@ class Entity(NodePath):
                 object.__setattr__(self, name, value)
 
             elif isinstance(value, str): # pass model asset name
-                try:
+                m = load_model(application.asset_folder, value)
+                if not m:
+                    m = load_model(application.internal_model_folder, value)
+                if m:
                     if hasattr(self, 'model'):
                         self.model.removeNode()
-                    object.__setattr__(self, name, loader.loadModel(value))
-                except:
-                    import os
-                    import glob
-                    files = glob.glob(application.compressed_model_folder + '*.ursinamesh')
-                    print(files)
-                    # print(application.compressed_model_folder)
-                    for f in files:
-                        if f.endswith(value + '.ursinamesh'):
-                            print('-------------------found ursnamodel', f)
-                            with open(f) as f:
-                                try:
-                                    m = eval(f.read())
-                                    print(m)
-                                    object.__setattr__(self, name, m)
-                                except:
-                                    print('invalid python ursinamesh file:', f)
-                    # pass
-                    # return
+                    object.__setattr__(self, name, m)
+                    print('loaded model successively')
+                else:
+                    print('ERRRRRRORRRR')
 
             if hasattr(self, 'model') and self.model:
                 self.model.reparentTo(self)

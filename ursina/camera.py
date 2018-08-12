@@ -78,7 +78,7 @@ class Camera(Entity):
         self.ui.scale = self.original_ui_scale
         # ui.color = color.white33
         if self.ui.model:
-            self.ui.model.hide()
+            self.ui.visible = False
         scene.ui = self.ui
 
 

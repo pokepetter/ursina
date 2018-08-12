@@ -41,7 +41,7 @@ class Mesh(NodePath):
         if uvs:
             uvwriter = GeomVertexWriter(vdata, 'texcoord')
             for uv in uvs:
-                uvwriter.addData2f(uv)
+                uvwriter.addData2f(uv[0], uv[1])
         # normal.addData3f(0, 0, 1)
         # texcoord.addData2f(1, 0)
         modes = {
@@ -61,7 +61,7 @@ class Mesh(NodePath):
         prim = modes[mode]
 
         if tris:
-            for i, t in enumerate(tris):
+            for t in tris:
                 prim.addVertex(t)
         else:
             prim.addConsecutiveVertices(0, len(verts))
@@ -92,14 +92,17 @@ if __name__  == '__main__':
     app = Ursina()
     # verts = ((-2,0,0), (2,0,0), (1,4,0), (-1,4,0))
     verts=((0,0,0), (1,0,0), (.5, 1, 0), (-.5,1,0))
-    tris = (0,1,2, 3,0,1)
-    uvs = ((-2,0), (2,0), (1,4), (-1,4), (-2,0))
+    tris = (1, 2, 0, 2, 3, 0)
+    uvs = ((1.0, 0.0), (0.0, 1.0), (0.0, 0.0), (1.0, 1.0))
     colors = (color.red, color.blue, color.lime, color.black)
-    m = Mesh(verts, mode='ngon', thickness=20)
+    m = Mesh(verts, tris=tris, uvs=uvs, mode='triangle', thickness=20)
+    # m = Mesh(verts=((1.000000,0.000000,-1.000000), (-1.000000,0.000000,-1.000000), (1.000000,0.000000,1.000000), (-1.000000,0.000000,1.000000), ), tris=((1, 2, 0), (1, 3, 2)), mode='triangle')
+
     # m.thickness = 50
     # nodePath = render.attachNewNode(m)
     e = Entity()
     e.model = m
+    e.texture = 'white_cube'
     # e.color = color.red
-
+    EditorCamera()
     app.run()

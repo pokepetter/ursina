@@ -6,7 +6,7 @@ directory = os.path.dirname(blend_file_path)
 file_name = os.path.splitext(os.path.basename(blend_file_path))[0]
 
 bpy.ops.export_scene.obj(
-    filepath=os.path.join(directory, 'compressed', file_name + '.ursinamesh'),
+    filepath=os.path.join(directory, 'compressed', file_name + '.obj'),
     check_existing=True,
     axis_forward='Z',
     axis_up='Y',
@@ -14,7 +14,7 @@ bpy.ops.export_scene.obj(
     use_selection=False,
     use_animation=False,
     use_mesh_modifiers=True,
-    use_edges=True,
+    use_edges=False,
     use_smooth_groups=False,
     use_smooth_groups_bitflags=False,
     use_normals=True,
