@@ -69,7 +69,7 @@ class Paper(Entity):
             camera.fov = min(camera.fov, 200)
 
 
-    def update(self, dt):
+    def update(self):
         # if mouse.left and self. pressure < 2:
         #     self.pressure += .1
 

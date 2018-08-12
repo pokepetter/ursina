@@ -12,5 +12,5 @@ class Cursor(Entity):
         self.scale *= .05
         self.render_queue = 1
 
-    def update(self, dt):
+    def update(self):
         self.position = (mouse.x * window.aspect_ratio, mouse.y)

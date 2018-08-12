@@ -4,7 +4,7 @@ from ursina import *
 class MinecraftClone(Entity):
 
     def __init__(self):
-        super().__init__('minecraft_clone')
+        super().__init__()
 
         for z in range(32):
             for x in range(32):
@@ -92,7 +92,7 @@ class FirstPersonController(Entity):
         mouse.locked = True
 
 
-    def update(self, dt):
+    def update(self):
         # camera.position = self.position + (0, 4, -4)
 
 

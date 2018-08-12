@@ -123,7 +123,7 @@ class Mouse(object):
 
 
 
-    def update(self, dt):
+    def update(self):
         self.i += 1
         if self.i < self.update_rate:
             return

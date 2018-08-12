@@ -29,6 +29,6 @@ class NewScene():
 
             # save_prefab
 
-    def update(self, dt):
+    def update(self):
         if self.waiting_for_reply:
             pass

@@ -1,6 +1,7 @@
 from ursina.ursinastuff import *
 from os import walk
 import os
+import time
 
 
 class Ursina(ShowBase):
@@ -115,19 +116,20 @@ class Ursina(ShowBase):
     def update(self, task):
         # time between frames
         dt = globalClock.getDt()
+        time.dt = dt
 
-        mouse.update(dt)
+        mouse.update()
         if scene.editor and scene.editor.enabled:
-            scene.editor.update(dt)
+            scene.editor.update()
 
         for entity in scene.entities:
             if entity.enabled:
                 if hasattr(entity, 'update'):
-                    entity.update(dt)
+                    entity.update()
 
                 for script in entity.scripts:
                     if hasattr(script, 'update'):
-                        script.update(dt)
+                        script.update()
 
         return Task.cont
 

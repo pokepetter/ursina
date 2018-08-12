@@ -22,7 +22,7 @@ class Player(Entity):
         self.y = raycast(self.world_position, self.down).point[1]
 
 
-    def update(self, dt):
+    def update(self):
         if held_keys['d']:
             self.x += self.walk_speed
         if held_keys['a']:

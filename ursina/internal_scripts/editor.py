@@ -235,7 +235,7 @@ class Editor(Entity):
         # self.compress_models()
 
 
-    def update(self, dt):
+    def update(self):
         for s in self.scripts:
             if hasattr(s, 'update'):
                 s.update(dt)

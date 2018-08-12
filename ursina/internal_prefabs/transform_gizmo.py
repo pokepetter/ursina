@@ -85,7 +85,7 @@ class TransformGizmo(Entity):
         scene.editor.hierarchy_panel.populate()
 
 
-    def update(self, dt):
+    def update(self):
         if not scene.editor.enabled:    # just to make sure
             return
         # if mouse.hovered_entity.is_editor:

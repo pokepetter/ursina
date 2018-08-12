@@ -41,7 +41,7 @@ class SelectionButton():
                 scene.editor.hierarchy_panel.populate()
             self.dragging = False
 
-    # def update(self, dt):
+    # def update(self):
     #     if self.dragging:
     #         # print('updateing slection button')
     #         print(self.entity.scale[1])

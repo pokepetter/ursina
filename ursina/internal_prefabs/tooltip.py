@@ -17,7 +17,7 @@ class Tooltip(Text):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-    def update(self, dt):
+    def update(self):
         self.position = mouse.position
         self.position = (
             (mouse.x * camera.aspect_ratio) + (self.margin[0] * self.size/2) + .01,

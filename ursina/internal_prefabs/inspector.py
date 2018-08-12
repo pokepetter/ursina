@@ -146,7 +146,7 @@ class Inspector(Entity):
         button.text_entity.x = -.475
         return button
 
-    def update(self, dt):
+    def update(self):
         self.t += 1
         if self.t > 10:
             # print('updating inspector')

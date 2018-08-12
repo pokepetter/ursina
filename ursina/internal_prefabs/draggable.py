@@ -44,7 +44,7 @@ class Draggable(Button):
     # def drop(self):
     #     print('drop test')
 
-    def update(self, dt):
+    def update(self):
         if self.dragging:
             # make drag work event when parented to scaled entity
             # if self.parent and isinstance(self.parent, Entity):

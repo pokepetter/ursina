@@ -29,7 +29,7 @@ class TransformField(Button):
                 print('enter number')
 
 
-    def update(self, dt):
+    def update(self):
         if self.move_entity:
             if self.transform_type == 0:
                 self.target_entity.position += self.axis * mouse.velocity[0]

@@ -8,7 +8,7 @@ An easy to use game engine/framework for python.
 2) Open cmd/terminal and type:
 
        pip install ursina
- 
+
 Alternatively:
 1) Make sure you have git installed.
 2) Open cmd/terminal and type:
@@ -17,13 +17,13 @@ Alternatively:
        pip install screeninfo
        pip install pillow
        pip install git+https://github.com/pokepetter/ursina.git
-        
-        
+
+
 If you want to easily edit the source, it's recommended to clone the git repo and install as develop like this:
-        
+
        git clone https://github.com/pokepetter/ursina.git
        python setup.py develop       
-        
+
 
 
 ## Dependencies
@@ -62,7 +62,7 @@ app.run()                       # opens a window and starts the game.
 ## How do I make a game?
 Ursina games are made by writing Python code. You can use any text editor you want, but personally I like to use Atom.
 1) Create an empty .py file called 'ursina_game.py'
-2) Copy this text into your new file: 
+2) Copy this text into your new file:
 ``` python
 from ursina import *                    # this will import everything we need from ursina with just one line.
 
@@ -73,7 +73,7 @@ class Player(Entity):                   # inherits Entity, ursina's 'god class'
         self.color = color.orange
         self.scale_y = 2
 
-    def update(self, dt):               # because Player is an Entity, update gets automatically called by the engine.
+    def update(self):               # because Player is an Entity, update gets automatically called by the engine.
         self.x += held_keys['d'] * .1
         self.x -= held_keys['a'] * .1
 
@@ -84,7 +84,7 @@ app.run()                               # opens a window and starts the game.
 ```
 
 3) Type this in the terminal to start the game:
-   
+
        python ursina_game.py
    If you use Atom, I recommend installing the package atom-python-run to tun your scripts with the press of a button.
 

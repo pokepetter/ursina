@@ -47,7 +47,7 @@ class EditorCamera(Entity):
 
 
 
-    def update(self, dt):
+    def update(self):
         if mouse.right:
             self.camera_pivot.rotation_x -= mouse.velocity[1] * self.rotation_speed
             self.camera_pivot.rotation_y += mouse.velocity[0] * self.rotation_speed

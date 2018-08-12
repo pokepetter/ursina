@@ -131,7 +131,7 @@ class RaycasterTest(Entity):
         # self.collider = 'box'
 
 
-    def update(self, dt):
+    def update(self):
         self.position += self.forward * held_keys['w'] * self.speed
         self.position += self.left * held_keys['a'] * self.speed
         self.position += self.back * held_keys['s'] * self.speed

@@ -103,7 +103,7 @@ class FirstPersonController(Entity):
         mouse.locked = True
 
 
-    def update(self, dt):
+    def update(self):
         # print(self.left)
         self.position += self.right * held_keys['d'] * self.speed
         self.position += self.forward * held_keys['w'] * self.speed

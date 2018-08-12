@@ -844,7 +844,7 @@ class ShakeTester(Entity):
         print('fall')
         e.animate_y(0, duration=.5)
 
-    def update(self, dt):
+    def update(self):
         self.frame += 1
         if self.frame >= 4:
             if self.d:
