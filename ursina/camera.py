@@ -32,16 +32,16 @@ class Camera(Entity):
 
 
         self.perspective_lens = PerspectiveLens()
-        self.perspective_lens.set_aspect_ratio(self.aspect_ratio)
+        self.lens = self.perspective_lens
+        self.perspective_lens.set_aspect_ratio(window.aspect_ratio)
         self.perspective_lens.set_focal_length(50)
         self.perspective_lens_node = LensNode('perspective_lens_node', self.perspective_lens)
+        self.lens_node = self.perspective_lens_node
 
         self.orthographic_lens = OrthographicLens()
-        self.orthographic_lens.set_film_size(self.fov * self.aspect_ratio, self.fov)
+        self.orthographic_lens.set_film_size(self.fov * window.aspect_ratio, self.fov)
         self.orthographic_lens_node = LensNode('orthographic_lens_node', self.orthographic_lens)
 
-        self.lens = self.perspective_lens
-        self.lens_node = self.perspective_lens_node
         application.base.cam.node().set_lens(self.lens)
         self.orthographic = False
 
@@ -73,24 +73,19 @@ class Camera(Entity):
         self.ui.name = 'ui'
         self.ui.is_editor = True
         self.ui.parent = self.ui_camera
-        self.ui.model = 'quad'
         self.original_ui_scale = (self.ui_size * .5, self.ui_size * .5)
         self.ui.scale = self.original_ui_scale
-        # ui.color = color.white33
-        if self.ui.model:
-            self.ui.visible = False
+        # self.ui.model = 'quad'
         scene.ui = self.ui
 
 
     @property
     def orthographic(self):
-        if hasattr(self, 'lens') and self.lens == self.orthographic_lens:
-            return True
-        else:
-            return False
+        return self._orthographic
 
     @orthographic.setter
     def orthographic(self, value):
+        self._orthographic = value
         if value == True:
             self.lens = self.orthographic_lens
             self.lens_node = self.orthographic_lens_node
@@ -108,7 +103,7 @@ class Camera(Entity):
 
         if name == 'fov':
             value = max(1, value)
-            if not self.orthographic and hasattr(self, 'perspective_lens'):
+            if hasattr(self, 'perspective_lens'):
                 self.perspective_lens.set_fov(value)
                 # print('from:', self.perspective_lens_node.getPos())
                 # self.perspective_lens_node.set_y(self.perspective_lens_node.get_y() + 10)
@@ -129,22 +124,25 @@ class Camera(Entity):
         if name == 'rect':
             self.ui_display_region = self.display_region = win.make_display_region(0, 1, 0, 1)
 
-        if name == 'stretch_ui':
-            if value == True:
-                self.ui.scale_x *= window.aspect_ratio
-            else:
-                self.ui.scale = self.original_ui_scale
-
-
-
         super().__setattr__(name, value)
 
     @property
     def aspect_ratio(self):
-        try:
-            return window.size[0] / window.size[1]
-        except:
-            return 16 / 9
+        # try:
+        # return window.size[0] / window.size[1]
+        return self.lens.get_aspect_ratio()
+        # except:
+        #     return 16 / 9
+
+    @aspect_ratio.setter
+    def aspect_ratio(self, value):
+        print('setting camera aspect ratio')
+        self.perspective_lens = PerspectiveLens()
+        self.perspective_lens.set_aspect_ratio(value)
+        application.base.cam.node().set_lens(self.perspective_lens)
+        # self.perspective_lens.set_aspect_ratio(value)
+        # self.orthographic_lens = OrthographicLens()
+        # self.orthographic_lens.set_film_size(self.fov * value, self.fov)
 
 sys.modules[__name__] = Camera()
 
@@ -152,7 +150,8 @@ sys.modules[__name__] = Camera()
 if __name__ == '__main__':
     from ursina.main import Ursina
     app = Ursina()
-    app.load_editor()
+    # app.load_editor()
+    scene.camera.orthographic = True
     e = Entity()
     e.model = 'quad'
     e.color = color.random_color()
@@ -167,5 +166,6 @@ if __name__ == '__main__':
     e.model = 'quad'
     e.color = color.random_color()
     e.position = (0, 0, 40)
-
+    # from ursina import *
+    # Button(text='test button')
     app.run()

@@ -16,11 +16,9 @@ class Window(WindowProperties):
         loadPrcFileData('', 'window-title ursina')
         loadPrcFileData('', 'undecorated True')
         loadPrcFileData('', 'sync-video True')
-        loadPrcFileData('', 'win-size 1536 864')
         loadPrcFileData('', 'notify-level-util error')
         # loadPrcFileData('', 'want-pstats True')
         self.setForeground(True)
-        self.screen_resolution = (1366, 768)
 
 
     def load_defaults(self):
@@ -31,29 +29,40 @@ class Window(WindowProperties):
             print('using default sceen resolution.', 'OS:', os.name)
             self.screen_resolution = (1366, 768)
 
+
         self.fullscreen_size = (self.screen_resolution[0]+1, (self.screen_resolution[0]+1) * .5625)
         self.windowed_size = (self.fullscreen_size[0] / 1.25, self.fullscreen_size[0] / 1.25 * .5625)
         self.size = self.windowed_size
-        self.position = (
-            int((self.screen_resolution[0] - self.size[0]) / 2),
-            int((self.screen_resolution[1] - self.size[1]) / 2)
-            )
 
-        self.left = (-self.aspect_ratio / 2, 0)
-        self.right = (self.aspect_ratio / 2, 0)
         self.top = (0, .5)
         self.bottom = (0, .5)
         self.center = (0, 0)
-        self.top_left = (-self.aspect_ratio / 2, .5)
-        self.top_right = (self.aspect_ratio / 2, .5)
-        self.bottom_left = (-self.aspect_ratio / 2, -.5)
-        self.bottom_right = (self.aspect_ratio / 2, -.5)
 
         self.fullscreen = False
         self.borderless = True
         self.cursor = True
         self.fps_counter = True
         self.vsync = True
+
+
+    @property
+    def left(self):
+        return (-self.aspect_ratio / 2, 0)
+    @property
+    def right(self):
+        return (self.aspect_ratio / 2, 0)
+    @property
+    def top_left(self):
+        return (-self.aspect_ratio / 2, .5)
+    @property
+    def top_right(self):
+        return (self.aspect_ratio / 2, .5)
+    @property
+    def bottom_left(self):
+        return (-self.aspect_ratio / 2, -.5)
+    @property
+    def bottom_right(self):
+        return (self.aspect_ratio / 2, -.5)
 
 
     def center_on_screen(self):
@@ -80,19 +89,16 @@ class Window(WindowProperties):
 
     @property
     def size(self):
-        return Vec2(self.get_size()[0], self.get_size()[1])
+        return (self.get_size()[0], self.get_size()[1])
 
     @size.setter
     def size(self, value):
         self.set_size(int(value[0]), int(value[1]))
-        application.base.win.request_properties(self)
-        self.aspect_ratio = self.size[0] / self.size[1]
-        if hasattr(camera, 'perspective_lens'):
-            camera.perspective_lens.set_aspect_ratio(self.aspect_ratio)
-            camera.ui_lens.set_film_size(camera.ui_size * .5 * self.aspect_ratio, camera.ui_size * .5)
-        else:
-            print('no camera (yet)')
-
+        self.aspect_ratio = value[0] / value[1]
+        # base.camera.set_aspect_ratio(self.aspect_ratio)
+        # camera.aspect_ratio = self.aspect_ratio
+        # ui.lens.setFilmSize(100 * self.aspect_ratio, 100)
+        base.win.requestProperties(self)
 
     def __setattr__(self, name, value):
         if not application.base:
@@ -109,17 +115,13 @@ class Window(WindowProperties):
 
         if name == 'fullscreen':
             if value == True:
-                print('FS')
                 self.size = self.fullscreen_size
-                self.position = (0, 0)
             else:
-                print('windowed')
                 self.size = self.windowed_size
-                self.position = (
-                    int((self.screen_resolution[0] - self.size[0]) / 2),
-                    int((self.screen_resolution[1] - self.size[1]) / 2)
-                    )
+
+            self.center_on_screen()
             object.__setattr__(self, name, value)
+            return
 
         if name == 'color':
             application.base.camNode.get_display_region(0).get_window().set_clear_color(value)
@@ -135,18 +137,6 @@ class Window(WindowProperties):
                 print('set vsync to false')
             object.__setattr__(self, name, value)
             application.base.win.request_properties(self)
-            # print(application.base.win.getRequestedProperties())
-
-        # if name == 'exit_button':
-        #     if not hasattr(self, 'exit_button_entity'):
-        #         self.make_exit_button()
-        #     self.exit_button_entity.enabled = value
-
-        # if name == 'borderless':
-        #     self.set_undecorated(value)
-        #     base.win.request_properties(self)
-            # base.open_main_window(props=self)
-            # self.load_defaults()
 
 
 sys.modules[__name__] = Window()
@@ -154,4 +144,12 @@ sys.modules[__name__] = Window()
 if __name__ == '__main__':
     from ursina import *
     app = Ursina()
+    # window.size = (1024, 1024)
+
+    # props = WindowProperties()
+    # props.setSize(1024, 1024)
+    # base.win.requestProperties(props)
+
+    Entity(model='cube')
+    # Button(text='test\ntest')
     app.run()

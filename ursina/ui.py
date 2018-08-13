@@ -9,10 +9,10 @@ class UI():
         dr.setSort(20)
 
         myCamera2d = NodePath(Camera('myCam2d'))
-        lens = OrthographicLens()
-        lens.setFilmSize(100 * camera.aspect_ratio, 100)
-        lens.setNearFar(-1000, 1000)
-        myCamera2d.node().setLens(lens)
+        self.lens = OrthographicLens()
+        self.lens.setFilmSize(100 * camera.aspect_ratio, 100)
+        self.lens.setNearFar(-1000, 1000)
+        myCamera2d.node().setLens(self.lens)
 
         myRender2d = NodePath('myRender2d')
         myRender2d.setDepthTest(False)
