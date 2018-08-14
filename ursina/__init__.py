@@ -6,6 +6,7 @@ from ursina.ursinamath import *
 from ursina.ursinastuff import *
 from ursina.useful import *
 from ursina.mesh_importer import *
+from ursina.texture_importer import *
 from ursina.entity import Entity
 from ursina.audio import Audio
 

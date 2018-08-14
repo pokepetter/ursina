@@ -23,6 +23,7 @@ from ursina import easing_types
 from ursina.easing_types import *
 from ursina.useful import *
 from ursina.mesh_importer import load_model
+from ursina.texture_importer import load_texture
 
 from ursina import color
 from ursina import scene
@@ -247,8 +248,8 @@ class Entity(NodePath):
                     new_value.add_x(value[i])
                     new_value.add_y(value[i+1])
                     new_value.add_z(value[i+2])
-            self.set_scale(new_value[0], new_value[2], new_value[1])
-
+            self.setScale(new_value[0], new_value[2], new_value[1])
+            return
 
         if name == 'scale_x': self.set_scale(value, self.scale_z, self.scale_y)
         if name == 'scale_y': self.set_scale(self.scale_x, self.scale_z, value)
@@ -462,14 +463,17 @@ class Entity(NodePath):
             texture = value
 
         elif isinstance(value, str):
-            try:
-                texture = loader.loadTexture(value + '.png')
-            except:
-                try:
-                    texture = loader.loadTexture(value + '.jpg')
-                except:
-                    print('no texture:', value + '.png or', value + '.jpg')
-                    return None
+            t = Filename.fromOsSpecific((load_texture(value)))
+            texture = loader.loadTexture(t)
+            print('--------------', t)
+            # try:
+            #     texture = loader.loadTexture(value + '.png')
+            # except:
+            #     try:
+            #         texture = loader.loadTexture(value + '.jpg')
+            #     except:
+            #         print('no texture:', value + '.png or', value + '.jpg')
+            #         return None
 
         try:
             texture.setMagfilter(SamplerState.FT_nearest)
@@ -866,7 +870,7 @@ if __name__ == '__main__':
 
 
     #
-    e = Entity(model='quad', color=color.red, collider='box')
+    e = Entity(model='quad', color=color.red, collider='box', texture='white_cube')
     # e.animate_position(e.position + e.up, duration=1, delay=1, curve='ease_in_expo')
     # e.animate_color(color.yellow, duration=.5, delay=1)
     # e.animate('x', 2, 1)
