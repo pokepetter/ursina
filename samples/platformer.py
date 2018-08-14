@@ -54,8 +54,8 @@ class Player(Entity):
     def jump(self):
         if raycast(self.world_position, self.down).distance < .01:
             # print('jump')
-            if hasattr(self, 'mover_y'):
-                self.mover_y.pause()
+            if hasattr(self, 'y_animator'):
+                self.y_animator.pause()
             self.jump_dust = Entity(
                 model = 'quad',
                 scale = (.8, .8),
@@ -64,7 +64,7 @@ class Player(Entity):
                 origin = (0, -.5)
                 )
             self.jump_dust.animate_scale((0,0,0), 2)
-            destroy(self.jump_dust, 2)
+            destroy(self.jump_dust, 2.1)
 
             self.jumping = True
             self.jumps_left -= 1
@@ -74,7 +74,7 @@ class Player(Entity):
 
 
     def fall(self):
-        self.mover_y.pause()
+        self.y_animator.pause()
         self.jumping = False
 
 

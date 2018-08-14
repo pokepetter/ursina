@@ -15,7 +15,6 @@ class MinecraftClone(Entity):
                     voxel.position = (x, y, z)
 
         sky = load_prefab('sky')
-        # load_prefab('button')
 
         player = FirstPersonController()
         player.parent = self
@@ -27,25 +26,19 @@ class Voxel(Entity):
         super().__init__()
         self.name = 'voxel'
         self.model = 'cube'
-        # self.origin = (0, .5, 0)
         self.collider = 'box'
         self.texture = 'white_cube'
         self.color = color.color(0, 0, random.uniform(.9, 1.0))
+        # self.origin = (0, .5, 0)
 
 
     def input(self, key):
-        # if not scene.editor or scene.editor.enabled:
-        #     return
         if self.hovered:
-            if key == 'left mouse down' and self.hovered:
-                voxel = Voxel()
-                voxel.parent = self.parent
-                voxel.position = self.position + mouse.normal
-                # test_model = loader.load('cube.egg')
-                # test_model.reparent_to(voxel.collider.node_path)
-                # test_model.setPos(Vec3(0,0,0))
-                # test_model.set_color_scale(color.red)
-                # test_model.set_scale(1.05)
+            if key == 'left mouse down':
+                voxel = Voxel(
+                    parent = self.parent,
+                    position = self.position+mouse.normal
+                    )
 
             if key == 'right mouse down':
                 destroy(self)
@@ -64,28 +57,25 @@ class FirstPersonController(Entity):
         cursor.color = color.light_gray
         cursor.scale *= .008
         cursor.rotation_z = 45
-        if not scene.editor:
-            self.start()
 
-        self.graphics = Entity('player_graphics')
-        self.graphics.parent = self
-        self.graphics.model = 'cube'
-        self.graphics.color = color.orange
-        self.graphics.origin = (0, -.5, 0)
-        self.graphics.scale = (1, 1.8, 1)
+        self.graphics = Entity(
+            name = 'player_graphics',
+            parent = self,
+            model = 'cube',
+            origin = (0, -.5, 0),
+            scale = (1, 1.8, 1),
+            )
 
-        self.arrow = Entity()
-        self.arrow.parent = self.graphics
-        self.arrow.model = 'cube'
-        self.arrow.color = color.blue
-        self.arrow.position = (0, .5, .5)
-        self.arrow.scale = (.1, .1, .5)
+        self.arrow = Entity(
+            parent = self.graphics,
+            model = 'cube',
+            color = color.blue,
+            position = (0, .5, .5),
+            scale = (.1, .1, .5)
+            )
 
-
-    def start(self):
         camera.parent = self
         self.position = (0, .5, 1)
-        # camera.position = (0, 4, -4)
         camera.rotation = (0,0,0)
         camera.position = (0,2,0)
         camera.fov = 90
@@ -93,42 +83,24 @@ class FirstPersonController(Entity):
 
 
     def update(self):
-        # camera.position = self.position + (0, 4, -4)
-
-
-        # raycast(self.world_position, camera.forward, 100, render, debug=True)
         if self.i < self.update_interval:
             self.i += 1
             return
 
-        # if held_keys['w'] or held_keys['a'] or held_keys['s'] or held_keys['d']:
-        #     self.moving = True
+        self.direction = (
+            self.forward * (held_keys['w'] - held_keys['s'])
+            + self.right * (held_keys['d'] - held_keys['a'])
+            )
 
-
-        if held_keys['w']:
-            if not raycast(self.world_position + self.up, self.forward, 1, scene):
-                self.position += self.forward * held_keys['w'] * self.speed
-        if held_keys['s']:
-            if not raycast(self.world_position + self.up, self.back, 1, scene):
-                self.position += self.back * held_keys['s'] * self.speed
-        if held_keys['d']:
-            if not raycast(self.world_position + self.up, self.right, 1, scene):
-                self.position += self.right * held_keys['d'] * self.speed
-        if held_keys['a']:
-            if not raycast(self.world_position + self.up, self.left, 1, scene):
-                self.position += self.left * held_keys['a'] * self.speed
-        # self.position += self.up * held_keys['e'] * self.speed
-        # self.position += self.down * held_keys['q'] * self.speed
-        # mag = max(x, z);
+        if not raycast(self.world_position + self.up, self.direction, 1).hit:
+            self.position += self.direction * self.speed
 
         self.rotation_y += mouse.velocity[0] * 20
         camera.rotation_x -= mouse.velocity[1] * 20
         camera.rotation_x = clamp(camera.rotation_x, -90, 90)
 
+
 if __name__ == '__main__':
-    app = main.Ursina()
-    # destroy(scene)
-    # app.scene = MinecraftClone()
-    load_scene(MinecraftClone)
-    # scene.name = 'minecraft_clone_scene'
+    app = Ursina()
+    MinecraftClone()
     app.run()
