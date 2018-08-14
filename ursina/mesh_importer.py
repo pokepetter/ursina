@@ -17,7 +17,6 @@ def load_model(path, name):
 
 
 def compress_models(path=application.model_folder, outpath=application.compressed_model_folder, name='*'):
-    print('compress models to .obj')
     from os.path import dirname
     if not os.path.exists(application.compressed_model_folder):
         os.makedirs(application.compressed_model_folder)

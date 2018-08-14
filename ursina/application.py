@@ -17,7 +17,7 @@ class Application():
         # get path with correct casing
         try:
             self.package_folder = glob.glob(re.sub(r'([^:])(?=[/\\]|$)', r'[\1]', dirname(__file__)))[0] + '/'
-            print('package_folder:', self.package_folder)
+            # print('package_folder:', self.package_folder)
         except:
             self.package_folder = ''
             print('package_folder not found')
@@ -40,23 +40,23 @@ class Application():
         self.compressed_model_folder = self.model_folder + 'compressed/'
 
         # loader takes the first it finds, reorder if needed.
-        self.model_path = getModelPath()
-
-        self.model_path.appendPath(self.internal_model_folder)
-        self.model_path.appendPath(self.compressed_model_folder)
-        self.model_path.appendPath(self.model_folder)
-
-        self.model_path.appendPath(self.internal_texture_folder)
-        self.model_path.appendPath(self.compressed_texture_folder)
-        self.model_path.appendPath(self.texture_folder)
-
-        self.model_path.appendPath(self.internal_font_folder)
-        self.model_path.appendPath(self.asset_folder)
-        print(self.model_path)
-
-    def append_path(self, path):
-        self.model_path.append_path(path)
-        print('added path:', path)
+    #     self.model_path = getModelPath()
+    #
+    #     self.model_path.appendPath(self.internal_model_folder)
+    #     self.model_path.appendPath(self.compressed_model_folder)
+    #     self.model_path.appendPath(self.model_folder)
+    #
+    #     self.model_path.appendPath(self.internal_texture_folder)
+    #     self.model_path.appendPath(self.compressed_texture_folder)
+    #     self.model_path.appendPath(self.texture_folder)
+    #
+    #     self.model_path.appendPath(self.internal_font_folder)
+    #     self.model_path.appendPath(self.asset_folder)
+    #
+    #
+    # def append_path(self, path):
+    #     self.model_path.append_path(path)
+    #     print('added path:', path)
 
 
 sys.modules[__name__] = Application()

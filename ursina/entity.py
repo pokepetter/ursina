@@ -127,9 +127,9 @@ class Entity(NodePath):
                     if hasattr(self, 'model'):
                         self.model.removeNode()
                     object.__setattr__(self, name, m)
-                    print('loaded model successively')
+                    # print('loaded model successively')
                 else:
-                    print('ERRRRRRORRRR')
+                    print('error loading model:', value)
 
             if hasattr(self, 'model') and self.model:
                 self.model.reparentTo(self)
@@ -465,16 +465,8 @@ class Entity(NodePath):
         elif isinstance(value, str):
             t = Filename.fromOsSpecific((load_texture(value)))
             texture = loader.loadTexture(t)
-            print('--------------', t)
-            # try:
-            #     texture = loader.loadTexture(value + '.png')
-            # except:
-            #     try:
-            #         texture = loader.loadTexture(value + '.jpg')
-            #     except:
-            #         print('no texture:', value + '.png or', value + '.jpg')
-            #         return None
-
+            # print('loaded texture:', t)
+            
         try:
             texture.setMagfilter(SamplerState.FT_nearest)
             texture.setMinfilter(SamplerState.FT_nearest)
