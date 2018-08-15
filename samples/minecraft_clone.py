@@ -35,10 +35,9 @@ class Voxel(Entity):
     def input(self, key):
         if self.hovered:
             if key == 'left mouse down':
-                voxel = Voxel(
-                    parent = self.parent,
-                    position = self.position+mouse.normal
-                    )
+                voxel = Voxel()
+                voxel.parent = self.parent
+                voxel.position = self.position + mouse.normal
 
             if key == 'right mouse down':
                 destroy(self)
@@ -54,7 +53,7 @@ class FirstPersonController(Entity):
         self.update_interval = 30
 
         cursor = Panel()
-        cursor.color = color.light_gray
+        cursor.color = color.pink
         cursor.scale *= .008
         cursor.rotation_z = 45
 

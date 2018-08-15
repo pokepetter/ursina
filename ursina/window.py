@@ -6,8 +6,10 @@ from panda3d.core import Vec2
 from ursina.entity import Entity
 from ursina import color
 from ursina import application
-from screeninfo import get_monitors
-
+try:
+    from screeninfo import get_monitors
+except:
+    pass
 
 class Window(WindowProperties):
 

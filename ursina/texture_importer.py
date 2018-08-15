@@ -28,9 +28,15 @@ if __name__ == '__main__':
 
 def compress_textures(name=None):
     import os
-    from PIL import Image
     from os.path import dirname
-    from psd_tools import PSDImage
+    try:
+        from PIL import Image
+    except Exception as e:
+        return e
+    try:
+        from psd_tools import PSDImage
+    except Exception as e:
+        return e
 
     if not os.path.exists(application.compressed_texture_folder):
         os.makedirs(application.compressed_texture_folder)

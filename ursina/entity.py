@@ -27,7 +27,6 @@ from ursina.texture_importer import load_texture
 
 from ursina import color
 from ursina import scene
-from PIL import Image
 
 
 class Entity(NodePath):
@@ -466,7 +465,7 @@ class Entity(NodePath):
             t = Filename.fromOsSpecific((load_texture(value)))
             texture = loader.loadTexture(t)
             # print('loaded texture:', t)
-            
+
         try:
             texture.setMagfilter(SamplerState.FT_nearest)
             texture.setMinfilter(SamplerState.FT_nearest)
@@ -504,6 +503,10 @@ class Entity(NodePath):
 
     @property
     def pixels(self):
+        try:
+            from PIL import Image
+        except Exception as e:
+            return e
         from numpy import asarray
         return asarray(Image.open(self.texture_path))
 
