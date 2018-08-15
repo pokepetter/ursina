@@ -96,27 +96,28 @@ class Camera(Entity):
             application.base.cam.node().set_lens(self.perspective_lens)
 
         self.fov = self.fov
+        # print(application.base.cam.node().get_lens())
 
+
+    @property
+    def fov(self):
+        return self._fov
+
+    @fov.setter
+    def fov(self, value):
+        value = max(1, value)
+        self._fov = value
+        if not self.orthographic and hasattr(self, 'perspective_lens'):
+            self.perspective_lens.set_fov(value)
+            application.base.cam.node().set_lens(self.perspective_lens)
+
+        elif self.orthographic and hasattr(self, 'orthographic_lens'):
+            self.orthographic_lens.set_film_size(value * self.aspect_ratio, value)
+            application.base.cam.node().set_lens(self.orthographic_lens)
 
 
     def __setattr__(self, name, value):
-
-        if name == 'fov':
-            value = max(1, value)
-            if hasattr(self, 'perspective_lens'):
-                self.perspective_lens.set_fov(value)
-                # print('from:', self.perspective_lens_node.getPos())
-                # self.perspective_lens_node.set_y(self.perspective_lens_node.get_y() + 10)
-                # print('to:', self.perspective_lens_node.get_y())
-                # self.z = value
-                application.base.cam.node().set_lens(self.perspective_lens)
-            elif hasattr(self, 'orthographic_lens'):
-                self.orthographic_lens.set_film_size(value * self.aspect_ratio, value)
-                application.base.cam.node().set_lens(self.orthographic_lens)
-                super().__setattr__(name, value)
-                return
-
-        elif name == 'near_clip_plane':
+        if name == 'near_clip_plane':
             self.lens.set_near(value)
         elif name == 'far_clip_plane':
             self.lens.set_far(value)

@@ -33,17 +33,10 @@ class Scene(NodePath):
 
 
     def clear(self):
-        self.to_keep = list()
-        self.to_destroy = list()
-        for e in self.entities:
-            if hasattr(e, 'eternal') and e.eternal:
-                self.to_keep.append(e)
-            else:
-                self.to_destroy.append(e)
-                print('dest:', e)
+        to_destroy = [e for e in self.entities if not e.eternal]
+        to_keep = [e for e in self.entities if e.eternal]
 
         for d in self.to_destroy:
-            print('destroy', e)
             self.entities.remove(d)
             d.remove_node()
 

@@ -495,11 +495,16 @@ class Entity(NodePath):
 
     @property
     def texture_width(self):
-        return self.texture.getOrigFileXSize()
-
+        try:
+            return self.texture.getOrigFileXSize()
+        except:
+            return 0
     @property
     def texture_height(self):
-        return self.texture.getOrigFileYSize()
+        try:
+            return self.texture.getOrigFileYSize()
+        except:
+            return 0
 
     @property
     def pixels(self):
@@ -870,7 +875,8 @@ if __name__ == '__main__':
     # e.animate_color(color.yellow, duration=.5, delay=1)
     # e.animate('x', 2, 1)
     # e.animate_position((2,2,2), 1)
-    e.animate_scale((0,0,0), 1)
+    # e.animate_scale((0,0,0), 1)
+    e.scale *= 10
     # printvar(e.world_position)
     #
     # e.world_x = 1

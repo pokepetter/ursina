@@ -22,9 +22,11 @@ class EditorCamera(Entity):
 
     def input(self, key):
         if key == '+':
-            camera.fov += 5
+            camera.fov += 1
+            printvar(camera.fov)
         elif key == '-':
-            camera.fov -= 5
+            camera.fov -= 1
+            printvar(camera.fov)
 
         if key == 'p':
             camera.orthographic = not camera.orthographic
