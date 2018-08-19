@@ -64,7 +64,10 @@ class Button(Entity):
             object.__setattr__(self, 'on_click_string', textwrap.dedent(value))
             return
 
-        super().__setattr__(name, value)
+        try:
+            super().__setattr__(name, value)
+        except Exception as e:
+            return e
 
 
     def input(self, key):

@@ -248,7 +248,6 @@ class Entity(NodePath):
                     new_value.add_y(value[i+1])
                     new_value.add_z(value[i+2])
             self.setScale(new_value[0], new_value[2], new_value[1])
-            return
 
         if name == 'scale_x': self.set_scale(value, self.scale_z, self.scale_y)
         if name == 'scale_y': self.set_scale(self.scale_x, self.scale_z, value)

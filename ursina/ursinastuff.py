@@ -14,6 +14,7 @@ import random
 import inspect
 import importlib
 import subprocess
+import time
 
 # from PIL import Image     # for texture compression, editor.py
 # from tinyblend import BlenderFile     # for .blend import, editor.py

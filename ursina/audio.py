@@ -1,8 +1,7 @@
-from ursina import *
 
 class Audio():
     def __init__(self, sound_file_name='', autoplay=True, **kwargs):
-        printvar(sound_file_name)
+        # printvar(sound_file_name)
         self.clip = None
         if sound_file_name != '':
             self.clip = sound_file_name
@@ -31,6 +30,7 @@ class Audio():
             if isinstance(value, str):
                 self.name = value
                 self.clip = loader.loadSfx(value + '.wav')
+                print('...loaded audio clip:', value)
 
         if self.clip:
             if name == 'volume':
@@ -104,8 +104,9 @@ class Audio():
 
 
 if __name__ == '__main__':
+    from ursina import Ursina, printvar
     app = Ursina()
 
     a = Audio('night_sky', pitch=.5, i = 0)
-    DebugMenu(a)
+    # DebugMenu(a)
     app.run()
