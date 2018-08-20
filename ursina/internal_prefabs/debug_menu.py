@@ -5,13 +5,13 @@ class DebugMenu(Draggable):
         super().__init__()
         self.target = target
         self.scale = (.2, .025)
-        self.text = '<orange>' + target.__class__.__name__
         self.draw_functions()
+        self.text = '<orange>' + target.type
 
     def draw_functions(self):
         for c in self.children:
             destroy(c)
-        for i, f in enumerate([func for func in dir(self.target.__class__)
+        for i, f in enumerate([func for func in self.target.__class__.__dict__
         if callable(getattr(self.target.__class__, func))
         and not func.startswith("__")]):
             # print('functions:', f)
@@ -21,3 +21,9 @@ class DebugMenu(Draggable):
                 y = -i - 1,
                 on_click = getattr(self.target, f)
                 )
+
+
+if __name__ == '__main__':
+    app = Ursina()
+    DebugMenu(Audio('night_sky'))
+    app.run()
