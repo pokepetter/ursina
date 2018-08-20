@@ -1,6 +1,8 @@
+from ursina import *
 
-class Audio():
+class Audio(Entity):
     def __init__(self, sound_file_name='', autoplay=True, **kwargs):
+        super().__init__(**kwargs)
         # printvar(sound_file_name)
         self.clip = None
         if sound_file_name != '':
@@ -24,15 +26,16 @@ class Audio():
         if autoplay:
             self.play()
 
+
     def __setattr__(self, name, value):
-        object.__setattr__(self, name, value)
         if name == 'clip':
             if isinstance(value, str):
                 self.name = value
                 self.clip = loader.loadSfx(value + '.wav')
                 print('...loaded audio clip:', value)
+                return
 
-        if self.clip:
+        if hasattr(self, 'clip') and self.clip:
             if name == 'volume':
                 self.clip.setVolume(value)
 
@@ -44,6 +47,12 @@ class Audio():
 
             if name == 'loops':
                 self.clip.setLoopCount(value)
+
+        try:
+            super().__setattr__(name, value)
+        except Exception as e:
+            return e
+
 
     @property
     def length(self):
@@ -70,8 +79,6 @@ class Audio():
     def time(self, value):
         self.clip.set_time(value)
 
-    def statu(self):
-        print(self.status)
 
     def play(self, start=0):
         if self.clip:
@@ -81,26 +88,43 @@ class Audio():
 
     def pause(self):
         if self.clip:
-            # self.paused_volume = self.volume
+            self.paused_volume = self.volume
             self.paused_pitch = self.pitch
-            # self.paused_balance = self.balance
+            self.paused_balance = self.balance
             self.temp_time = self.time
             self.pitch = 0
             self.stop(destroy=False)
 
     def resume(self):
         if self.clip and hasattr(self, 'temp_time'):
-            # self.clip = self.name
-            # self.volume = self.paused_volume
+            self.clip = self.name
+            self.volume = self.paused_volume
             self.pitch = self.paused_pitch
-            # self.balance = self.paused_balance
-            # self.play(self.temp_time)
+            self.balance = self.paused_balance
+            self.play(self.temp_time)
 
     def stop(self, destroy=True):
         if self.clip:
             self.clip.stop()
-            # if destroy:
-            #     destroy(self)
+            if destroy:
+                destroy(self)
+
+    def fade(self, value, duration=.5, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+        self.animate('volume', value, duration, delay, curve, resolution, interrupt)
+
+    def fade_in(self, value=1, duration=.5, delay=0, curve='ease_in_expo',
+    resolution=None, interrupt=True, destroy_on_ended=False):
+        self.animate('volume', value, duration, delay, curve, resolution, interrupt)
+        if destroy_on_ended:
+            destroy(self, delay=duration+.01)
+
+    def fade_out(self, value=0, duration=.5, delay=0, curve='ease_in_expo',
+    resolution=None, interrupt=True, destroy_on_ended=True):
+        self.animate('volume', value, duration, delay, curve, resolution, interrupt)
+        if destroy_on_ended:
+            destroy(self, delay=duration+.01)
+
+
 
 
 if __name__ == '__main__':
@@ -108,5 +132,6 @@ if __name__ == '__main__':
     app = Ursina()
 
     a = Audio('night_sky', pitch=.5, i = 0)
-    # DebugMenu(a)
+    # a.fade_out(delay=1)
+    DebugMenu(a)
     app.run()
