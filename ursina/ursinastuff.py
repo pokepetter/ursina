@@ -289,13 +289,13 @@ def _destroy(entity):
 def import_all_classes(path=application.asset_folder, debug=False):
     from ursina.useful import snake_to_camel
     from glob import iglob
-    for file_path in iglob(application.asset_folder + '**/*.py', recursive=True):
+    for file_path in iglob(path + '**/*.py', recursive=True):
         if '\\build\\' in file_path:
-            return
-        # print(file_path)
+            continue
         module_name = os.path.basename(file_path).split('.')[0]
         spec = importlib.util.spec_from_file_location(module_name, file_path)
         module = importlib.util.module_from_spec(spec)
+        print(module_name)
 
         class_name = snake_to_camel(module.__name__)
         module_name = module.__name__
