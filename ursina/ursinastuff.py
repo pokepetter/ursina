@@ -287,22 +287,31 @@ def _destroy(entity):
 
 
 def import_all_classes(path=application.asset_folder, debug=False):
+    sys.path.append(path)
     from ursina.useful import snake_to_camel
     from glob import iglob
-    for file_path in iglob(path + '**/*.py', recursive=True):
-        if '\\build\\' in file_path:
-            continue
-        module_name = os.path.basename(file_path).split('.')[0]
-        spec = importlib.util.spec_from_file_location(module_name, file_path)
-        module = importlib.util.module_from_spec(spec)
-        print(module_name)
+    imported_successfully = list()
 
-        class_name = snake_to_camel(module.__name__)
-        module_name = module.__name__
-        import_statement = 'from ' + module_name + ' import ' + class_name
+    for file_path in iglob(path + '**/*.py', recursive=True):
+        if '\\build\\' in file_path or '__' in file_path:
+            continue
+
+        rel_path = file_path[len(path):][:-3].replace('\\', '.')
+        if rel_path.startswith('.'):
+            rel_path = rel_path[1:]
+        module_name = os.path.basename(file_path).split('.')[0]
+        class_name = snake_to_camel(module_name)
+        module_name = module_name
+        import_statement = 'from ' + rel_path + ' import *'
+
         try:
             exec(import_statement, globals())
+            imported_successfully.append(module_name)
             if debug:
-                print('imported', class_name, 'from', module_name)
+                print(import_statement)
         except:
+            if debug:
+                print('     x', import_statement)
             pass
+
+    return imported_successfully

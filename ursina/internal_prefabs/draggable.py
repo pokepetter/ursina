@@ -14,6 +14,8 @@ class Draggable(Button):
         self.max_x, self.max_y, self.max_z = math.inf, math.inf, math.inf
 
         for key, value in kwargs.items():
+            if key == 'text':
+                continue
             setattr(self, key, value)
 
 
