@@ -206,7 +206,7 @@ def load_script(module_name):
 
 
 
-def load(paths, module_name):
+def load(paths, module_name, instantiate=True):
     if inspect.isclass(module_name):
         class_instance = module_name()
         # print('added script:', class_instance)
@@ -284,3 +284,25 @@ def _destroy(entity):
     #     entity.texture.releaseAll()
 
     del entity
+
+
+def import_all_classes(path=application.asset_folder, debug=False):
+    from ursina.useful import snake_to_camel
+    from glob import iglob
+    for file_path in iglob(application.asset_folder + '**/*.py', recursive=True):
+        if '\\build\\' in file_path:
+            return
+        # print(file_path)
+        module_name = os.path.basename(file_path).split('.')[0]
+        spec = importlib.util.spec_from_file_location(module_name, file_path)
+        module = importlib.util.module_from_spec(spec)
+
+        class_name = snake_to_camel(module.__name__)
+        module_name = module.__name__
+        import_statement = 'from ' + module_name + ' import ' + class_name
+        try:
+            exec(import_statement, globals())
+            if debug:
+                print('imported', class_name, 'from', module_name)
+        except:
+            pass
