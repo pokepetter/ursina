@@ -8,6 +8,7 @@ from panda3d.core import CollisionTraverser, CollisionNode
 from panda3d.core import CollisionHandlerQueue, CollisionRay
 from panda3d.core import Vec3
 import math
+from ursina.hit import Hit
 
 
 class Raycaster(Entity):
@@ -35,19 +36,12 @@ class Raycaster(Entity):
 
 
     def raycast(self, origin, direction, dist=1000, traverse_target=scene, ignore=list(), debug=False):
-        # if not traverse_target:
-        #     try:
-        #         traverse_target = scene
         self.position = origin
         self.look_at(self.position + direction)
         # need to do this for it to work for some reason
         self.collision_ray.set_origin(Vec3(0,0,0))
         self.collision_ray.set_direction(Vec3(0,1,0))
 
-        # print('np pos', self.pickerNP.get_pos(render))
-        # print('self pos', self.world_position)
-        # print('np rot:', (-self.pickerNP.getP(render), -self.pickerNP.getH(render), self.pickerNP.getR(render)))
-        # print('self rot', self.rotation)
         if debug:
             self.pickerNP.show()
         else:
@@ -58,17 +52,6 @@ class Raycaster(Entity):
         if self.pq.get_num_entries() > 0:
             self.pq.sort_entries()
 
-            # skip entities with collision == False
-            # for i in range(self.pq.get_num_entries()):
-            #     self.collision = self.pq.get_entry(i)
-            #     nP = self.collision.get_into_node_path().parent
-            #     if nP.name.endswith('.egg'):
-            #         nP = nP.parent
-            #     for e in scene.entities:
-            #         if e == nP:
-            #             if e.collision and e not in ignore:
-            #                 # print('oooooooooooooooo', i)
-            #                 break
             i = 0
             self.collision = self.pq.get_entry(i)
             nP = self.collision.get_into_node_path().parent
@@ -95,13 +78,6 @@ class Raycaster(Entity):
             self.hit = Hit()
             return self.hit
 
-class Hit():
-    def __init__(self):
-        self.hit = False
-        self.entity = None
-        self.distance = None
-        self.point = None
-
 
 sys.modules[__name__] = Raycaster()
 
@@ -115,20 +91,16 @@ class RaycasterTest(Entity):
         d.model = 'cube'
         d.color = color.red
         d.collider = 'box'
-        # d.scale *= .2
 
         camera.position = (0, 15, -15)
         camera.look_at(self)
         camera.reparent_to(self)
 
-        # e = Entity()
-        # e.position = (0, 0, 1)
         self.model = 'cube'
         self.color = color.lime
 
         self.speed = .01
         self.rotation_speed = .1
-        # self.collider = 'box'
 
 
     def update(self):
@@ -147,11 +119,9 @@ class RaycasterTest(Entity):
 if __name__ == '__main__':
     app = Ursina()
 
-
-
     from ursina.entity import Entity
     raycast((0,0,-2), (0,0,1), 5, render, debug=False)
     r = RaycasterTest()
 
-    cam = r.add_script('editor_camera')
+    EditorCamera()
     app.run()

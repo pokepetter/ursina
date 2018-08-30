@@ -1,7 +1,7 @@
 import os
 import psutil
 from hurry.filesize import size
-
+from ursina import * 
 
 class MemoryCounter(Text):
     def __init__(self):

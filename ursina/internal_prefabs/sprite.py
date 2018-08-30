@@ -24,7 +24,4 @@ if __name__ == '__main__':
     s = Sprite(texture = 'panda_button')
     print(s.scale * 2)
     s.scale *= 2
-    # print(s.texture_path)
-    # print(s.get_pixel(0,0))
-    # print(s.pixels)
     app.run()

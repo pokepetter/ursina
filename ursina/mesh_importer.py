@@ -1,7 +1,7 @@
 import os
 import glob
 import subprocess
-from ursina.internal_prefabs.mesh import Mesh
+from ursina.mesh import Mesh
 from ursina import application
 
 def load_model(path, name):

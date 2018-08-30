@@ -13,7 +13,7 @@ from panda3d.core import TransparencyAttrib
 from panda3d.core import Texture, TextureStage
 from ursina import application
 from ursina.collider import Collider
-from ursina.internal_prefabs.mesh import Mesh
+from ursina.mesh import Mesh
 from os import path
 from panda3d.core import Filename
 from direct.interval.IntervalGlobal import Sequence, Func, Wait

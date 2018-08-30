@@ -10,7 +10,8 @@ from ursina.texture_importer import *
 from ursina.entity import Entity
 from ursina.audio import Audio
 
-from ursina.internal_prefabs.text import Text
+from ursina.text import Text
+from ursina.mesh import Mesh
 from ursina.internal_prefabs.sprite import Sprite
 from ursina.internal_prefabs.button import Button
 from ursina.internal_prefabs.animation import Animation
@@ -21,7 +22,6 @@ from ursina.internal_prefabs.filebrowser import FileBrowser
 # from ursina.internal_prefabs.transform_field import TransformField
 from ursina.internal_prefabs.sky import Sky
 from ursina.internal_prefabs.cursor import Cursor
-from ursina.internal_prefabs.mesh import Mesh
 from ursina.internal_prefabs.models import *
 from ursina.internal_prefabs.plane import Plane
 from ursina.internal_prefabs.panel import Panel

@@ -8,6 +8,7 @@ from ursina import application
 from ursina import window
 from panda3d.core import CollisionTraverser, CollisionNode
 from panda3d.core import CollisionHandlerQueue, CollisionRay
+from ursina.hit import Hit
 
 
 class Mouse(object):
@@ -220,11 +221,14 @@ class Mouse(object):
             for entity in scene.entities:
                 if entry.getIntoNodePath().parent == entity:
                     if entity.collision:
-                        self.collisions.append(Collision(
-                            entry.collided(),
-                            entity,
-                            entry.getSurfacePoint(entity),
-                            entry.getSurfaceNormal(entity)
+                        self.collisions.append(Hit(
+                            hit = entry.collided(),
+                            entity = entity,
+                            distance = 0,
+                            point = entry.getSurfacePoint(entity),
+                            world_point = entry.getSurfacePoint(scene),
+                            normal = entry.getSurfaceNormal(entity),
+                            world_normal = entry.getSurfaceNormal(scene),
                             ))
                         break
 
@@ -254,12 +258,6 @@ class Mouse(object):
                             s.on_mouse_exit()
 
 
-class Collision(object):
-    def __init__(self, collided, entity, position, normal):
-        self.collided = collided
-        self.entity = entity
-        self.position = position
-        self.normal = normal
 
 
 sys.modules[__name__] = Mouse()
