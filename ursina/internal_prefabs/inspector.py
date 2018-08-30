@@ -61,7 +61,7 @@ class Inspector(Entity):
         self.filebrowser.position = (0,0)
         self.filebrowser.name = 'replace_model_filebrowser'
         self.filebrowser.file_types = ('.egg')
-        self.filebrowser.path = application.model_folder
+        self.filebrowser.path = application.models_folder
         self.filebrowser.button_type = 'replace_model_button'
         self.menu_toggler = self.model_field.add_script('menu_toggler')
         self.menu_toggler.target = self.filebrowser
@@ -89,7 +89,7 @@ class Inspector(Entity):
         self.filebrowser.parent = camera.ui
         self.filebrowser.name = 'replace_texture_filebrowser'
         self.filebrowser.file_types = ('.png', '.jpg')
-        self.filebrowser.path = application.texture_folder
+        self.filebrowser.path = application.textures_folder
         self.filebrowser.button_type = 'replace_texture_button'
         self.menu_toggler = self.texture_field.add_script('menu_toggler')
         self.menu_toggler.target = self.filebrowser

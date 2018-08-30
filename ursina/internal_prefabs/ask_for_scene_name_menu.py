@@ -46,7 +46,7 @@ class AskForSceneNameMenu(Entity):
             if self.input_field.text != '':
                 scene.name = self.input_field.text
                 scene.editor.hierarchy_panel_header.text = self.input_field.text
-                save_prefab(scene, application.scene_folder)
+                save_prefab(scene, application.scenes_folder)
                 self.enabled = False
                 print('saved scene:', 'scenes', scene_entity.name)
 

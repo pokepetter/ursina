@@ -165,7 +165,7 @@ def vec3_to_string(vec3):
 
 
 def load_prefab(module_name, add_to_caller=False):
-    paths = (application.internal_prefab_folder, application.prefab_folder)
+    paths = (application.internal_prefabs_folder, application.prefabs_folder)
     prefab = None
     try:
         prefab = load(paths, module_name)
@@ -182,14 +182,14 @@ def load_prefab(module_name, add_to_caller=False):
 
     return prefab
 
-def load_scene(module_name):
+def load_scene(module_name):    #broken for the time being
     if inspect.isclass(module_name):
         class_instance = module_name()
         # scene =
         return class_instance
 
 
-    paths = (application.internal_scene_folder, application.scene_folder)
+    paths = (application.internal_scenes_folder, application.scenes_folder)
     try:
         for e in scene.children:
             destroy(e)
@@ -201,7 +201,7 @@ def load_scene(module_name):
 
 
 def load_script(module_name):
-    paths = (application.internal_script_folder, application.script_folder)
+    paths = (application.internal_scripts_folder, application.scripts_folder)
     return load(paths, module_name)
 
 

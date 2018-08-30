@@ -16,13 +16,13 @@ def load_model(path, name):
     return None
 
 
-def compress_models(path=application.model_folder, outpath=application.compressed_model_folder, name='*'):
+def compress_models(path=application.models_folder, outpath=application.compressed_models_folder, name='*'):
     from os.path import dirname
-    if not os.path.exists(application.compressed_model_folder):
-        os.makedirs(application.compressed_model_folder)
+    if not os.path.exists(application.compressed_models_folder):
+        os.makedirs(application.compressed_models_folder)
 
     blender_path = r"C:\Program Files\Blender Foundation\Blender\blender.exe"
-    export_script_path = os.path.join(application.internal_script_folder, 'blend_export.py')
+    export_script_path = os.path.join(application.internal_scripts_folder, 'blend_export.py')
 
     for f in glob.iglob(path + '**/' + name + '.blend', recursive=True):
         outfile = os.path.join(outpath, f)
@@ -31,7 +31,7 @@ def compress_models(path=application.model_folder, outpath=application.compresse
             r'''{} {} --background --python {}'''.format(blender_path, outfile, export_script_path))
 
 
-def obj_to_ursinamesh(path=application.compressed_model_folder, outpath=application.compressed_model_folder, name='*', delete_obj=True):
+def obj_to_ursinamesh(path=application.compressed_models_folder, outpath=application.compressed_models_folder, name='*', delete_obj=True):
     for f in glob.iglob(path + '**/' + name + '.obj', recursive=True):
         filepath = os.path.join(path, os.path.splitext(f)[0] + '.obj')
         print('read obj at:', filepath)
@@ -96,17 +96,17 @@ def compress_models_fast(model_name=None):
     print('find models')
     from tinyblend import BlenderFile
     from os.path import dirname
-    if not os.path.exists(application.compressed_model_folder):
-        os.makedirs(application.compressed_model_folder)
+    if not os.path.exists(application.compressed_models_folder):
+        os.makedirs(application.compressed_models_folder)
 
-    files = os.listdir(application.model_folder)
-    compressed_files = os.listdir(application.compressed_model_folder)
+    files = os.listdir(application.models_folder)
+    compressed_files = os.listdir(application.compressed_models_folder)
 
     for f in files:
         if f.endswith('.blend'):
-            # print('f:', application.compressed_model_folder + '/' + f)
+            # print('f:', application.compressed_models_folder + '/' + f)
             print('compress______', f)
-            blend = BlenderFile(application.model_folder + '/' + f)
+            blend = BlenderFile(application.models_folder + '/' + f)
             number_of_objects = len(blend.list('Object'))
 
             for o in blend.list('Object'):
@@ -126,7 +126,7 @@ def compress_models_fast(model_name=None):
                 file_name = ''.join([f.split('.')[0], '.ursinamesh'])
                 if number_of_objects > 1:
                     file_name = ''.join([f.split('.')[0], '_', object_name, '.ursinamesh'])
-                file_path = os.path.join(application.compressed_model_folder, file_name)
+                file_path = os.path.join(application.compressed_models_folder, file_name)
                 print(file_path)
 
                 tris = tuple([triindex.v for triindex in o.data.mloop])
@@ -148,10 +148,10 @@ def compress_models_fast(model_name=None):
                     file.write(file_content)
 
 def compress_internal():
-    compress_models(application.internal_model_folder)
+    compress_models(application.internal_models_folder)
     obj_to_ursinamesh(
-        application.internal_model_folder + 'compressed/',
-        application.internal_model_folder + 'compressed/',
+        application.internal_models_folder + 'compressed/',
+        application.internal_models_folder + 'compressed/',
         )
 
 

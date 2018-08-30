@@ -121,7 +121,7 @@ class Entity(NodePath):
             elif isinstance(value, str): # pass model asset name
                 m = load_model(application.asset_folder, value)
                 if not m:
-                    m = load_model(application.internal_model_folder, value)
+                    m = load_model(application.internal_models_folder, value)
                 if m:
                     if hasattr(self, 'model'):
                         self.model.removeNode()
@@ -598,8 +598,8 @@ class Entity(NodePath):
         omn = module_name
         module_name += '.py'
         module_names = (path.join(path.dirname(__file__), module_name),
-                        path.join(application.internal_script_folder , module_name),
-                        path.join(application.script_folder, module_name))
+                        path.join(application.internal_scripts_folder , module_name),
+                        path.join(application.scripts_folder, module_name))
 
         for module_name in module_names:
             try:

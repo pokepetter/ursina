@@ -1,9 +1,7 @@
-# from ursina import *
 import os
 import sys
 from panda3d.core import Filename
 from panda3d.core import getModelPath
-# from ursina import main
 from os.path import dirname
 import inspect
 import glob
@@ -23,40 +21,20 @@ class Application():
             print('package_folder not found')
         self.asset_folder = (os.path.abspath(sys.path[0])).replace('\\', '/') + '/'
 
-        self.internal_model_folder = self.package_folder + 'internal_models/'
-        self.internal_prefab_folder = self.package_folder + 'internal_prefabs/'
-        self.internal_script_folder = self.package_folder + 'internal_scripts/'
-        self.internal_texture_folder = self.package_folder + 'internal_textures/'
-        self.internal_scene_folder = self.package_folder + 'internal_scenes/'
-        self.internal_font_folder = self.package_folder + 'font/'
+        self.internal_models_folder = self.package_folder + 'internal_models/'
+        self.internal_prefabs_folder = self.package_folder + 'internal_prefabs/'
+        self.internal_scripts_folder = self.package_folder + 'internal_scripts/'
+        self.internal_textures_folder = self.package_folder + 'internal_textures/'
+        self.internal_fonts_folder = self.package_folder + 'font/'
 
-        self.model_folder = self.asset_folder + 'models/'
-        self.prefab_folder = self.asset_folder + 'prefabs/'
-        self.scene_folder = self.asset_folder + 'scenes/'
-        self.script_folder = self.asset_folder + 'scripts/'
-        self.texture_folder = self.asset_folder + 'textures/'
+        self.models_folder = self.asset_folder + 'models/'
+        self.prefabs_folder = self.asset_folder + 'prefabs/'
+        self.scenes_folder = self.asset_folder + 'scenes/'
+        self.scripts_folder = self.asset_folder + 'scripts/'
+        self.textures_folder = self.asset_folder + 'textures/'
 
-        self.compressed_texture_folder = self.texture_folder + 'compressed/'
-        self.compressed_model_folder = self.model_folder + 'compressed/'
-
-        # loader takes the first it finds, reorder if needed.
-    #     self.model_path = getModelPath()
-    #
-    #     self.model_path.appendPath(self.internal_model_folder)
-    #     self.model_path.appendPath(self.compressed_model_folder)
-    #     self.model_path.appendPath(self.model_folder)
-    #
-    #     self.model_path.appendPath(self.internal_texture_folder)
-    #     self.model_path.appendPath(self.compressed_texture_folder)
-    #     self.model_path.appendPath(self.texture_folder)
-    #
-    #     self.model_path.appendPath(self.internal_font_folder)
-    #     self.model_path.appendPath(self.asset_folder)
-    #
-    #
-    # def append_path(self, path):
-    #     self.model_path.append_path(path)
-    #     print('added path:', path)
+        self.compressed_textures_folder = self.textures_folder + 'compressed/'
+        self.compressed_models_folder = self.models_folder + 'compressed/'
 
 
 sys.modules[__name__] = Application()

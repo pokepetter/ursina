@@ -142,11 +142,11 @@ class FileBrowser(Entity):
 if __name__ == '__main__':
     app = Ursina()
     test = FileBrowser(
-        path = application.internal_texture_folder,
+        path = application.internal_textures_folder,
         file_types = ('.jpg'),
 
         )
-    # test.path = application.internal_texture_folder
+    # test.path = application.internal_textures_folder
     # test.file_types = (('.jpg'))
     # test.button_type = 'load_sprite_button'
     app.run()

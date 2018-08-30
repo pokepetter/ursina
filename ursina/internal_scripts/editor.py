@@ -95,13 +95,13 @@ class Editor(Entity):
 
         button_names = ('internal\nscenes', 'scenes', 'internal\nprefabs', 'prefabs', 'models', 'primitives', 'sprites')
         button_paths = (
-            application.internal_scene_folder,
-            application.scene_folder,
-            application.internal_prefab_folder,
-            application.prefab_folder,
-            application.model_folder,
-            application.internal_model_folder,
-            application.compressed_texture_folder
+            application.internal_scenes_folder,
+            application.scenes_folder,
+            application.internal_prefabs_folder,
+            application.prefabs_folder,
+            application.models_folder,
+            application.internal_models_folder,
+            application.compressed_textures_folder
             )
         file_types = (('.py'), ('.py'), ('.py'), ('.py'), ('.egg'), ('.egg'), ('.png', '.jpg', '.gif'))
         button_types = (
@@ -357,8 +357,8 @@ class Editor(Entity):
         return
         from tinyblend import BlenderFile
         from os.path import dirname
-        files = os.listdir(application.model_folder)
-        compressed_files = os.listdir(application.compressed_model_folder)
+        files = os.listdir(application.models_folder)
+        compressed_files = os.listdir(application.compressed_models_folder)
         # print(files)
         texture_dir = os.path.join(
             dirname(dirname(dirname(os.path.abspath(__file__)))),
@@ -367,9 +367,9 @@ class Editor(Entity):
 
         for f in files:
             if f.endswith('.blend'):
-                # print('f:', application.compressed_model_folder + '/' + f)
+                # print('f:', application.compressed_models_folder + '/' + f)
                 print('______', f)
-                blend = BlenderFile(application.model_folder + '/' + f)
+                blend = BlenderFile(application.models_folder + '/' + f)
                 # objects = blend.list('Object')
                 for o in blend.list('Object'):
                     # print(o.id.name.decode("utf-8", "strict"))
@@ -378,7 +378,7 @@ class Editor(Entity):
                     print('name:', object_name)
                     file_name = ''.join([f.split('.')[0], '_', object_name, '.egg'])
                     file_path = os.path.join(
-                        str(Filename.toOsSpecific(application.compressed_model_folder)),
+                        str(Filename.toOsSpecific(application.compressed_models_folder)),
                         file_name
                     )
                     print(file_path)

@@ -14,7 +14,7 @@ class PuzzleGame(Entity):
 
     def load_level(self, name):
         from PIL import Image
-        im = Image.open(application.internal_texture_folder + name + '.png')
+        im = Image.open(application.internal_textures_folder + name + '.png')
         pix = im.load()
         print (im.size)
         for y in range(im.size[1]):
