@@ -1,45 +1,55 @@
-from panda3d.core import CollisionNode, CollisionBox
+from panda3d.core import CollisionNode, CollisionBox, CollisionSphere
 from panda3d.core import NodePath
 from panda3d.core import Vec3
 
-
 class Collider(NodePath):
     def __init__(self):
-        super().__init__('collider_node_path')
-        self.entity = None
-        self.node_path = None
+        super().__init__('box_collider')
 
+    def show(self):
+        self.visible = True
 
-    def make_collider(self):
-        pos = (0,0,0)
-        if hasattr(self.entity, 'model') and self.entity.model != None:
-            start, end = self.entity.model.getTightBounds()
-            size = (end - start) / 2
-            y = max(.01, size[1])
-            z = max(.01, size[2])
-            if self.entity.model:
-                pos = self.entity.model.getPos()
-            self.shape = CollisionBox(pos, size[0], y, z)
-        else:
-            self.shape = CollisionBox(pos, .01, .01, .01)
-
-        self.node_path = self.entity.attachNewNode(CollisionNode('CollisionNode'))
-        self.node_path.node().addSolid(self.shape)
-        self.entity.collision = True
-        # self.node_path.show()
+    def hide(self):
+        self.visible = False
 
     def remove(self):
         self.node_path.removeNode()
 
-if __name__ == '__main__':
-    from ursina import Ursina, Entity, color
-    app = Ursina()
-    e = Entity()
-    e.model = 'quad'
-    e.color = color.red
-    e.collider = 'box'
-    # e.origin = (-.5, -.5)
-    # e.collider.remove()
-    # e.collider = 'box'
+    @property
+    def visible(self):
+        return self._visible
 
+    def visible(self, value):
+        if value:
+            self.node_path.show()
+        else:
+            self.node_path.hide()
+
+
+class BoxCollider(Collider):
+    def __init__(self, entity, center=(0,0,0), size=(1,1,1)):
+        super().__init__()
+        size = [e/2 for e in size]
+        size = [max(0.01, e) for e in size] # collider needs to have thickness
+        self.shape = CollisionBox(Vec3(center[0], center[2], center[1]), size[0], size[2], size[1])
+        self.node_path = entity.attachNewNode(CollisionNode('CollisionNode'))
+        self.node_path.node().addSolid(self.shape)
+        self.visible = False
+
+
+class SphereCollider(Collider):
+    def __init__(self, entity, center=(0,0,0), radius=.5):
+        super().__init__()
+        self.shape = CollisionSphere(center[0], center[2], center[1], radius)
+        self.node_path = entity.attachNewNode(CollisionNode('CollisionNode'))
+        self.node_path.node().addSolid(self.shape)
+        self.visible = False
+
+
+if __name__ == '__main__':
+    from ursina import *
+    app = Ursina()
+    e = Button(parent=scene, model='cube', collider='box')
+    e.color = color.red
+    EditorCamera()
     app.run()

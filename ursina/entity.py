@@ -12,7 +12,7 @@ from panda3d.core import SamplerState
 from panda3d.core import TransparencyAttrib
 from panda3d.core import Texture, TextureStage
 from ursina import application
-from ursina.collider import Collider
+from ursina.collider import BoxCollider
 from ursina.mesh import Mesh
 from os import path
 from panda3d.core import Filename
@@ -255,33 +255,37 @@ class Entity(NodePath):
 
 
         if name == 'collider':
-            if value == None and self.collider:
-                print('ccccc', type(self.collider))
-                # if self.collider:
-                from ursina.ursinastuff import destroy
+            # destroy excisting collider
+            if hasattr(self, 'collider') and self.collider:
                 destroy(self.collider)
-                print('__________', self.collider)
-                if type(self.collider) is Entity:
-                    self.collider.remove_node()
-                del(self.collider)
-                object.__setattr__(self, name, None)
+                self.collider = None
+                # self.collider.remove_node()
+
+            if value == None:
                 return
-                # print(self.collider)
-            elif value == 'box' and hasattr(self, 'model'):
-                collider = Collider()
-                collider.entity = self
-                collider.make_collider()
+
+            elif type(value) is BoxCollider:
+                print('add defined collider')
+                return
+
+            elif value == 'box':
+                if hasattr(self, 'model'):
+                    collider = BoxCollider(
+                        entity = self,
+                        center = self.origin,
+                        size = self.bounds
+                        )
+                    object.__setattr__(self, name, collider)
+                else:
+                    collider = BoxCollider(entity=self)
+                    object.__setattr__(self, name, collider)
+                return
+
+            elif value == 'sphere':
+                collider = SphereCollider(entity=self)
                 object.__setattr__(self, name, collider)
                 return
 
-        if name == 'editor_collider':
-            if value is not None:
-                editor_collider = Collider()
-                editor_collider.entity = self
-                editor_collider.make_collider()
-                object.__setattr__(self, name, editor_collider)
-            elif hasattr(self, 'editor_collider') and self.editor_collider:
-                print('destroy collider')
 
         if name == 'render_queue':
             if self.model:
@@ -524,6 +528,19 @@ class Entity(NodePath):
             return (col[0]/255, col[1]/255, col[2]/255, 1)
         else:
             return (col[0]/255, col[1]/255, col[2]/255, col[3]/255)
+
+
+    @property
+    def bounds(self):
+        if self.model:
+            bounds = self.model.getTightBounds()
+            bounds = Vec3(
+                Vec3(bounds[1][0], bounds[1][2], bounds[1][1])  # max point
+                - Vec3(bounds[0][0], bounds[0][2], bounds[0][1])    # min point
+                )
+            return bounds
+        else:
+            return (0,0,0)
 
 
     @property
@@ -869,13 +886,15 @@ if __name__ == '__main__':
 
 
     #
-    e = Entity(model='quad', color=color.red, collider='box', texture='white_cube')
+    from ursina import *
+    e = Entity(parent=scene, model='cube', color=color.red, collider='box', texture='white_cube')
+    printvar(e.bounds)
     # e.animate_position(e.position + e.up, duration=1, delay=1, curve='ease_in_expo')
     # e.animate_color(color.yellow, duration=.5, delay=1)
     # e.animate('x', 2, 1)
     # e.animate_position((2,2,2), 1)
     # e.animate_scale((0,0,0), 1)
-    e.scale *= 10
+    # e.scale *= 10
     # printvar(e.world_position)
     #
     # e.world_x = 1
@@ -890,11 +909,11 @@ if __name__ == '__main__':
     # # import mouse
     # t.model = 'cube'
     # t.collider = 'box'
-    my_parent = Entity()
-    my_tuple = (Entity(), Entity())
-    my_class_name = 'TestClass'
+    # my_parent = Entity()
+    # my_tuple = (Entity(), Entity())
+    # my_class_name = 'TestClass'
 
-    t = Entity(parent = e)
+    # t = Entity(parent = e)
     # printvar(t.has_ancestor(e))
     # printvar(t.has_ancestor(my_tuple))
     # print('!!!!!!', type(Entity))
