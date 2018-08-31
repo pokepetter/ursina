@@ -62,8 +62,7 @@ class Raycaster(Entity):
                 if nP.name.endswith('.egg'):
                     nP = nP.parent
 
-                self.hit = Hit()
-                self.hit.hit = True
+                self.hit = Hit(hit=True)
                 for e in scene.entities:
                     if e == nP:
                         # print('cast nP to Entity')
@@ -72,10 +71,10 @@ class Raycaster(Entity):
                 self.hit.point = self.point
                 return self.hit
 
-            self.hit = Hit()
+            self.hit = Hit(hit=False)
             return self.hit
         else:
-            self.hit = Hit()
+            self.hit = Hit(hit=False)
             return self.hit
 
 
