@@ -96,22 +96,6 @@ class Ursina(ShowBase):
 
         self.update_task = taskMgr.add(self.update, "update")
 
-        # if len(sys.argv) == 1:
-        #     print('warning: please provide path to project or scene\n')
-        #     return
-        #
-        # if sys.argv[1].endswith('.py'):
-        #     print('opening scene:', sys.argv[1])
-        # else:
-        #     print('opening project:', sys.argv[1])
-        #     if os.path.exists(sys.argv[1] + '/scenes/'):
-        #         print('loading first file in scenes folder')
-        #     else:
-        #         print('trying to load:', sys.argv[1] + '\\main.py')
-        #         if os.path.exists(sys.argv[1] + '\\main.py'):
-        #             print('load main.py')
-        #             exec(open(sys.argv[1] + '\\main.py').read())
-
 
     def update(self, task):
         # time between frames
@@ -135,10 +119,14 @@ class Ursina(ShowBase):
 
     def input_up(self, key):
         if key is not 'wheel_up' and key is not 'wheel_down':
+            if key in rebinds:
+                key = rebinds[key]
             key += ' up'
             self.input(key)
 
     def input_hold(self, key):
+        if key in rebinds:
+            key = rebinds[key]
         key += ' hold'
         self.input(key)
 
@@ -163,6 +151,8 @@ class Ursina(ShowBase):
         except:
             pass
 
+        if key in rebinds:
+            key = rebinds[key]
 
         try:
             if scene.editor:

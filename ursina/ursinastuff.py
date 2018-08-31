@@ -26,6 +26,7 @@ from ursina import window
 from ursina import mouse
 from ursina import input
 from ursina.input import held_keys
+from ursina.input import rebinds
 from ursina import camera
 from ursina import raycaster
 from ursina.raycaster import raycast
