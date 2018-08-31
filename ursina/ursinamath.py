@@ -90,6 +90,16 @@ def size_list():
     globals_list.sort(key=operator.itemgetter(1), reverse=True)
     print('scene size:', globals_list)
 
+
+def average_position(l):
+    average = list()
+    for i in range(len(l[0])):
+        average.append(sum(e[i] for e in l) / len(l))
+
+    return average
+
+
+
 if __name__ == '__main__':
     from ursina import *
     app = Ursina()
