@@ -1,12 +1,6 @@
 from ursina import *
 
-class Quad(Entity):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.model = 'quad'
-        # super().__init__(**kwargs)
-# def Quad(self, **kwargs):
-#     e = Entity()
+
 
 class Circle(Entity):
     def __init__(self, resolution=16):
@@ -35,44 +29,44 @@ def circle(resolution=16, radius=.5):
 
 
 class Quad(Mesh):
-    def __init__(self, bevel=.1, subdivisions=0, ignore_aspect=False, **kwargs):
-        if subdivisions == 0:
-            super().__init__(verts=None)
-            self = Entity(model='quad').model
-        else:
-            self.verts = (Vec3(-.5,-.5,0), Vec3(.5,-.5,0), Vec3(.5,.5,0), Vec3(-.5,.5,0))
+    def __init__(self, size=(1,1), bevel=.1, subdivisions=0, ignore_aspect=False, **kwargs):
+        self.verts = (Vec3(0,0,0), Vec3(1,0,0), Vec3(1,1,0), Vec3(0,1,0))
 
-            for j in range(subdivisions):
-                points = list()
-                for i, v in enumerate(self.verts):
-                    points.append(lerp(v, self.verts[i-1], bevel))
-                    next_index = i+1 if i+1 < len(self.verts) else 0
-                    points.append(lerp(v, self.verts[next_index], bevel))
-                self.verts = points
+        for j in range(subdivisions):
+            points = list()
+            for i, v in enumerate(self.verts):
+                points.append(lerp(v, self.verts[i-1], bevel))
+                next_index = i+1 if i+1 < len(self.verts) else 0
+                points.append(lerp(v, self.verts[next_index], bevel))
+            self.verts = points
 
-            uvs = list()
-            for v in self.verts:
-                uvs.append((v[0] + .5, v[1] + .5))
+        uvs = list()
+        for v in self.verts:
+            uvs.append((v[0], v[1]))
 
-            # printvar(uvs)
-            # if not ignore_aspect and self.parent:
-            # print('..................', )
-            aspect_x = 3
-            for v in self.verts:
-                if v[0] < 0:
-                    v[0] = lerp(v[0], -.5, 1 / aspect_x)
+        # move edges out like a 9 slice
+        for v in self.verts:
+            if v[0] <= (1/3):
+                v[0] -= (size[0] - 1) / 4
+            if v[0] >= (2/3):
+                v[0] += (size[0] - 1) / 4
+
+            if v[1] <= (1/3):
+                v[1] -= (size[1] - 1) / 4
+            if v[1] >= (2/3):
+                v[1] += (size[1] - 1) / 4
 
 
-            # mode = 'ngon'
-            # if 'mode' in kwargs:
-            #     print('yolo')
-            #     mode = kwargs['mode']
+        # make the line connect back to start
+        if 'mode' in kwargs and kwargs['mode'] == 'lines':
+            self.verts.append(self.verts[0])
 
-            super().__init__(verts=self.verts, uvs=uvs, **kwargs)
+        # center mesh
+        offset = average_position(self.verts)
+        self.verts = [(v[0]-offset[0], v[1]-offset[1], v[2]-offset[2]) for v in self.verts]
 
-    def on_assign(self, assigned_to):
-        print('assign model', self.__class__.__name__, 'to:', assigned_to)
-        verts = self.verts
+        super().__init__(verts=self.verts, uvs=uvs, **kwargs)
+
 
 
 
@@ -80,13 +74,15 @@ if __name__ == '__main__':
     app = Ursina()
 
     e = Entity(
-        scale_x = 3,
-        model = Quad(subdivisions=2, thickness=10),
-        texture = 'brick',
+        # scale_x = 3,
+        model = Quad(size=(3,1), subdivisions=2, thickness=3, mode='lines'),
+        # texture = 'brick',
         texture_scale = (2,1),
         color = color.yellow
         )
     e.scale *= 2
+
+    Entity(model='quad', color=color.orange, scale=(.05, .05))
 
 
     # quad.scale_x = 3
