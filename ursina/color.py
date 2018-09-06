@@ -9,6 +9,9 @@ def color(h, s, v, a=1):
 def rgba(r, g, b, a=1):
     return Vec4(r, g, b, a)
 
+def rgb(r, g, b, a=1):
+    return Vec4(r, g, b, a)
+
 def to_hsv(color):
     return Vec4(colorsys.rgb_to_hsv(color[0], color[1], color[2]) + (color[3],))
 
@@ -46,6 +49,12 @@ violet =        color(270, 1, 1)
 magenta =       color(300, 1, 1)
 pink =          color(330, 1, 1)
 
+brown =         rgb(165, 42, 42)
+olive =         rgb(128, 128, 0)
+peach =         rgb(255, 218, 185)
+gold =          rgb(255, 215, 0)
+salmon =        rgb(250,128,114)
+
 clear =         Vec4(0, 0, 0, 0)
 white33 =       Vec4(1,1,1, 0.33)
 white50 =       Vec4(1,1,1, 0.50)
@@ -55,11 +64,6 @@ black50 =       Vec4(0,0,0, 0.50)
 black66 =       Vec4(0,0,0, 0.66)
 
 text = smoke
-
-panda_background = dark_gray
-panda_button = black66
-panda_text = smoke
-
 light_text = smoke
 dark_text = color(0, 0, .1)
 text_color = light_text

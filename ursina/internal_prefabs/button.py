@@ -10,7 +10,7 @@ class Button(Entity):
         self.parent = scene.ui
         self.is_editor = False
         self.model = 'quad'
-        self.color = color.panda_button
+        self.color = color.black66
         # self.texture = 'panda_button'
 
         self.collision = True
