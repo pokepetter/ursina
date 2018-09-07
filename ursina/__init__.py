@@ -30,6 +30,7 @@ from ursina.internal_prefabs.scrollable import Scrollable
 from ursina.internal_prefabs.grid import Grid
 
 from ursina.internal_scripts.smooth_follow import SmoothFollow
+from ursina.internal_scripts.grid_layout import grid_layout
 
 from ursina.internal_prefabs.debug_menu import DebugMenu
 from ursina.internal_prefabs.memory_counter import MemoryCounter
