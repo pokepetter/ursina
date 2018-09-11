@@ -24,6 +24,7 @@ from ursina.easing_types import *
 from ursina.useful import *
 from ursina.mesh_importer import load_model
 from ursina.texture_importer import load_texture
+from PIL import Image
 
 from ursina import color
 from ursina import scene
@@ -530,6 +531,18 @@ class Entity(NodePath):
             return (col[0]/255, col[1]/255, col[2]/255, col[3]/255)
 
 
+    def get_pixels(self, start, end):
+        start = (clamp(start[0], 0, self.texture_width), clamp(start[1], 0, self.texture_width))
+        end = (clamp(end[0], 0, self.texture_width), clamp(end[1], 0, self.texture_width))
+        pixels = list()
+
+        for y in range(start[1], end[1]):
+            for x in range(start[0], end[0]):
+                pixels.append(self.get_pixel(x,y))
+
+        return pixels
+
+
     @property
     def bounds(self):
         if self.model:
@@ -718,6 +731,7 @@ class Entity(NodePath):
                 getattr(self, animator_name).pause()
                 # print('interrupt', animator_name)
             except:
+                getattr(self, animator_name).finish()
                 pass
         setattr(self, animator_name, Sequence())
         sequence = getattr(self, animator_name)
