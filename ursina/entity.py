@@ -144,6 +144,9 @@ class Entity(NodePath):
                 print('missing model:', value)
 
         if name == 'color' and value is not None:
+            if not isinstance(value, Vec4):
+                value = Vec4(value[0], value[1], value[2], value[3])
+
             if hasattr(self, 'model') and self.model:
                 vcolors = self.vertex_colors
                 if vcolors:
@@ -664,6 +667,11 @@ class Entity(NodePath):
                 self.__setattr__(module_name, None)
                 print('removed:', module_name)
 
+    def combine(self, analyze=False):
+        self.flatten_strong()
+        if analyze:
+            render.analyze()
+
 
     def look_at(self, target):
         if type(target) is Vec3:
@@ -800,38 +808,14 @@ class Entity(NodePath):
             ))
         s.start()
 
-    def animate_color(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None):
-        from ursina.ursinastuff import invoke
-        invoke(self._animate_color, value, duration, curve, resolution, delay=delay)
+    def animate_color(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+        self.animate('color', value, duration, delay, curve, resolution, interrupt)
 
-    def _animate_color(self, value, duration=.1, curve='ease_in_expo', resolution=None):
-        if hasattr(self, 'color_animator') and self.color_animator:
-            print('pause color animator')
-            self.color_animator.pause()
-        print('anim color')
-        self.color_animator = Sequence()
+    def fade_out(self, duration=.5, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+        self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], 0), duration, delay, curve, resolution, interrupt)
 
-        if not resolution:
-            resolution = int(duration * 60)
-
-        for i in range(resolution+1):
-            t = i / resolution
-            if hasattr(easing_types, curve):
-                t = getattr(easing_types, curve)(t)
-            else:
-                t = getattr(easing_types, 'ease_in_expo')(t)
-            self.color_animator.append(Wait(duration / resolution))
-            new_color = Vec4(
-                lerp(self.color[0], value[0], t),
-                lerp(self.color[1], value[1], t),
-                lerp(self.color[2], value[2], t),
-                lerp(self.color[3], value[3], t)
-                )
-            # self.color_animator.append(Func(self.model.setColorScale, new_color))
-            self.color_animator.append(Func(self.set_color, new_color))
-
-        self.color_animator.start()
-        return self.color_animator
+    def fade_in(self, duration=.5, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+        self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], 1), duration, delay, curve, resolution, interrupt)
 
     # @property
     # def descendants(self):
@@ -846,51 +830,7 @@ class Entity(NodePath):
     #     #         print(c.__class__.__name__)
     #
     #     return children_entities
-class ShakeTester(Entity):
-    def __init__(self):
-        super().__init__()
-        self.move = 1
-        self.animate_y = 1
-        self.frame = 0
-        self.d = False
 
-    def input(self, key):
-        if key == '1':
-            e.shake()
-
-        if key == 'x':
-            self.move = -self.move
-            e.animate_x(self.x + self.move)
-
-        if key == 'y':
-            e.animate_y(self.y + 1)
-
-        if key == 'd':
-            self.d = True
-        if key == 'd up':
-            self.d = False
-
-        if key == 'space':
-            e.animate_y(e.y + 2.5, .7)
-            invoke(self.fall, delay=.5)
-
-    def fall(self):
-        print('fall')
-        e.animate_y(0, duration=.5)
-
-    def update(self):
-        self.frame += 1
-        if self.frame >= 4:
-            if self.d:
-                e.animate_x(self.x + 1, 1/60 * 4)
-            self.frame = 0
-
-
-class TestClass(Entity):
-    def __init__(self):
-        super().__init__()
-    def on_hover(self):
-        print('yo')
 
 if __name__ == '__main__':
     from ursina import main
@@ -902,9 +842,11 @@ if __name__ == '__main__':
     #
     from ursina import *
     e = Entity(parent=scene, model='cube', color=color.red, collider='box', texture='white_cube')
-    printvar(e.bounds)
+    # printvar(e.bounds)
     # e.animate_position(e.position + e.up, duration=1, delay=1, curve='ease_in_expo')
     # e.animate_color(color.yellow, duration=.5, delay=1)
+    # e.fade_in()
+    e.fade_out()
     # e.animate('x', 2, 1)
     # e.animate_position((2,2,2), 1)
     # e.animate_scale((0,0,0), 1)
