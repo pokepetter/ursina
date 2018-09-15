@@ -2,7 +2,7 @@ from ursina import *
 
 class EditorCamera(Entity):
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         super().__init__()
         self.name = 'editor_camera_controller'
 
@@ -15,10 +15,9 @@ class EditorCamera(Entity):
         self.move_speed = .1
         self.zoom_speed = 1
 
-        # self.original_camera_parent = camera.parent
-        # camera.reparent_to(self.camera_pivot)
-        # self.camera_pivot.rotation_x += 45
-        # camera.reparent_to(self.original_camera_parent)
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
 
     def input(self, key):
         if key == '+':

@@ -12,20 +12,19 @@ class Cube(Entity):
         super().__init__(**kwargs)
         self.model = 'cube'
 
-def circle(resolution=16, radius=.5):
-    origin = Entity()
-    point = Entity(parent=origin)
-    point.y = radius
+class Circle(Mesh):
+    def __init__(self, resolution=16, radius=.5, **kwargs):
+        origin = Entity()
+        point = Entity(parent=origin)
+        point.y = radius
 
-    verts = list()
-    for i in range(resolution):
-        origin.rotation_z -= 360 / resolution
-        # print(point.world_position)
-        verts.append(point.world_position)
+        self.verts = list()
+        for i in range(resolution):
+            origin.rotation_z -= 360 / resolution
+            verts.append(point.world_position)
 
-    destroy(origin)
-
-    return Mesh(verts, mode='ngon')
+        destroy(origin)
+        super().__init__(verts=self.verts, mode='ngon', **kwargs)
 
 
 class Quad(Mesh):
@@ -69,13 +68,36 @@ class Quad(Mesh):
 
 
 
+class Sphere(Mesh):
+    def __init__(self, radius=.5, subdivision=0, **kwargs):
+        # Make the base icosahedron
+        # Golden ratio
+        PHI = (1 + sqrt(5)) / 2
+
+        verts = [(-1,  PHI, 0), ( 1,  PHI, 0), (-1, -PHI, 0), ( 1, -PHI, 0),
+                 (0, -1, PHI), (0,  1, PHI), (0, -1, -PHI), (0,  1, -PHI),
+                 ( PHI, 0, -1), ( PHI, 0,  1), (-PHI, 0, -1), (-PHI, 0,  1),
+                ]
+
+        faces = [
+            [0, 11, 5],[0, 5, 1],[0, 1, 7],[0, 7, 10],[0, 10, 11],# 5 faces around point 0
+            [1, 5, 9],[5, 11, 4],[11, 10, 2],[10, 7, 6],[7, 1, 8],# Adjacent faces
+            [3, 9, 4],[3, 4, 2],[3, 2, 6],[3, 6, 8],[3, 8, 9],# 5 faces around 3
+            [4, 9, 5],[2, 4, 11],[6, 2, 10],[8, 6, 7],[9, 8, 1],# Adjacent faces
+            ]
+
+        super().__init__(verts=verts, mode='point', thickness=16, **kwargs)
+
+
+
 
 if __name__ == '__main__':
     app = Ursina()
 
     e = Entity(
         # scale_x = 3,
-        model = Quad(size=(3,1), subdivisions=2, thickness=3, mode='lines'),
+        # model = Quad(size=(3,1), subdivisions=2, thickness=3, mode='lines'),
+        model = Sphere(),
         # texture = 'brick',
         texture_scale = (2,1),
         color = color.yellow
@@ -83,7 +105,7 @@ if __name__ == '__main__':
     e.scale *= 2
 
     Entity(model='quad', color=color.orange, scale=(.05, .05))
-
+    EditorCamera()
 
     # quad.scale_x = 3
     # e = Entity()

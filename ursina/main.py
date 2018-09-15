@@ -36,6 +36,13 @@ class Ursina(ShowBase):
         #     falloff=0.000002
         # )
         window.make_exit_button()
+        window.overlay = Entity(
+            parent = camera.ui,
+            model = 'quad',
+            scale_x = window.aspect_ratio,
+            color = color.clear,
+            eternal = True
+            )
 
         # input
         base.buttonThrowers[0].node().setButtonDownEvent('buttonDown')

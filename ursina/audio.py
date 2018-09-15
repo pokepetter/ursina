@@ -8,8 +8,6 @@ class Audio(Entity):
         if sound_file_name != '':
             self.clip = sound_file_name
 
-        self.attack = 0
-        self.falloff = 0 # start fading out n seconds before the end
         self.loop = False
         # self.loops = 3
         self.volume = 1
@@ -32,7 +30,7 @@ class Audio(Entity):
             if isinstance(value, str):
                 self.name = value
                 self.clip = loader.loadSfx(value + '.wav')
-                print('...loaded audio clip:', value)
+                # print('...loaded audio clip:', value)
                 return
 
         if hasattr(self, 'clip') and self.clip:

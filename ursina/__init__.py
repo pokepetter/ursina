@@ -21,7 +21,7 @@ from ursina.internal_prefabs.input_field import InputField
 from ursina.internal_prefabs.filebrowser import FileBrowser
 from ursina.internal_prefabs.sky import Sky
 from ursina.internal_prefabs.cursor import Cursor
-from ursina.internal_prefabs.models import *
+from ursina.internal_prefabs.procedural_models import *
 from ursina.internal_prefabs.plane import Plane
 from ursina.internal_prefabs.panel import Panel
 from ursina.internal_prefabs.tooltip import Tooltip
@@ -30,6 +30,7 @@ from ursina.internal_prefabs.scrollable import Scrollable
 from ursina.internal_prefabs.grid import Grid
 
 from ursina.internal_scripts.smooth_follow import SmoothFollow
+from ursina.internal_scripts.position_limiter import PositionLimiter
 from ursina.internal_scripts.grid_layout import grid_layout
 
 from ursina.internal_prefabs.debug_menu import DebugMenu
