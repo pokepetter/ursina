@@ -1,7 +1,9 @@
 import colorsys
 import random
 import math
+import sys
 from panda3d.core import Vec4
+
 
 def color(h, s, v, a=1):
     return Vec4(colorsys.hsv_to_rgb((h / 360) - math.floor(h / 360), s, v) + (a,))
@@ -18,6 +20,9 @@ def rgb(r, g, b, a=255):
 
 def to_hsv(color):
     return Vec4(colorsys.rgb_to_hsv(color[0], color[1], color[2]) + (color[3],))
+
+def brightness(color):
+    return to_hsv(color)[2]
 
 def inverse(color):
     color = Vec4(tuple(1 - c for c in color))
@@ -75,20 +80,28 @@ dark_text = color(0, 0, .1)
 text_color = light_text
 
 
+color_names = ('white', 'smoke', 'light_gray', 'gray', 'dark_gray', 'black',
+    'red', 'orange', 'yellow', 'lime', 'green', 'turquoise', 'cyan', 'azure',
+    'blue', 'violet', 'magenta', 'pink', 'brown', 'olive', 'peach', 'gold', 'salmon')
+colors = dict()
+for cn in color_names:
+    colors[cn] = getattr(sys.modules[__name__], cn)
+
+
 if __name__ == '__main__':
     from ursina import *
     app = Ursina()
 
-    p = Entity()
-    colors = [(var, getattr(color, var)) for var in dir(color)] # (name, value)
-    colors = [col for col in colors if type(col[1]) is Vec4]
-
-    for col in colors:
-        print(col)
-        b = Button(parent=p, color=col[1], text=col[0])
-        b.text_entity.color = color.inverse(col[1])
-        b.text_entity.scale *= .75
-
-    grid_layout(p.children, max_x=8, origin=(0,0))
-
-    app.run()
+    # p = Entity()
+    print(color.brightness(color.blue))
+    # colors = [(var, getattr(color, var)) for var in dir(color)] # (name, value)
+    # colors = [col for col in colors if type(col[1]) is Vec4]
+    # for col in color.colors:
+    #     print(col)
+    #     b = Button(parent=p, color=col[1], text=col[0])
+    #     b.text_entity.color = color.inverse(col[1])
+    #     b.text_entity.scale *= .75
+    #
+    # grid_layout(p.children, max_x=8, origin=(0,0))
+    #
+    # app.run()

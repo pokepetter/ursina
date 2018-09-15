@@ -41,6 +41,11 @@ def distance(a, b):
 def lerp(a, b, t):
     if isinstance(a, (int, float, complex)):
         return a + (b - a) * t
+
+    elif isinstance(a, Vec4):
+        return [lerp(e[0], e[1], t) for e in zip(a,b)]
+
+
     else:
         lerped = list()
         for i in range(min(len(a), len(b))):

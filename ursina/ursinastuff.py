@@ -316,3 +316,14 @@ def import_all_classes(path=application.asset_folder, debug=False):
             pass
 
     return imported_successfully
+
+
+from ursina.text import Text
+def print_on_screen(text):
+    text_entity = Text(
+        parent = camera.ui,
+        text = str(text),
+        position = window.top_left,
+        scale = (.1, .1)
+        )
+    destroy(text_entity, 1)
