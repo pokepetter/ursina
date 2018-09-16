@@ -1,9 +1,8 @@
 from ursina import *
 
 
-class Grid(Entity):
+class Grid(Mesh):
     def __init__(self, w, h, thickness=1, **kwargs):
-        super().__init__(**kwargs)
 
         verts = list()
         for x in range(int(w) + 1):
@@ -13,16 +12,11 @@ class Grid(Entity):
             verts.append((0, y/h, 0))
             verts.append((1, y/h, 0))
 
-        if 'color' in kwargs:
-            self.model = Mesh(verts, colors=[kwargs['color'] for v in verts], mode='line', thickness=thickness)
-        else:
-            self.model = Mesh(verts, mode='line', thickness=thickness)
+        super().__init__(verts, mode='line', **kwargs)
 
-    @property
-    def thickness(self):
-        return self._thickness
 
-    @thickness.setter
-    def thickness(self, value):
-        self._thickness = value
-        self.model.thickness = value
+
+if __name__ == '__main__':
+    app = Ursina()
+    Entity(model=Grid(2, 6))
+    app.run()
