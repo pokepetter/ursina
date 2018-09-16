@@ -720,13 +720,6 @@ class Entity(NodePath):
     @property
     def children(self):
         return [e for e in scene.entities if e.parent == self]
-        # children_entities = list()
-        # for e in scene.entities:
-        #     if e.parent == self:
-        #         children_entities.append(e)
-        #
-        #
-        # return children_entities
 
 #------------
 # ANIMATIONS
@@ -817,68 +810,13 @@ class Entity(NodePath):
     def fade_in(self, duration=.5, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
         self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], 1), duration, delay, curve, resolution, interrupt)
 
-    # @property
-    # def descendants(self):
-    #     descendants = list()
-    #     for e in scene.entities:
-    #         if e.parent == self:
-    #             children_entities.append(e)
-    #
-    #     # for c in super().children:
-    #     #     if Entity in c.__class__.__subclasses__():
-    #     #         # children_entities.append(c)
-    #     #         print(c.__class__.__name__)
-    #
-    #     return children_entities
 
 
 if __name__ == '__main__':
-    from ursina import main
-    from ursinastuff import invoke
-
+    from ursina import *
     app = main.Ursina()
 
-
-    #
-    from ursina import *
     e = Entity(parent=scene, model='cube', color=color.red, collider='box', texture='white_cube')
-    # printvar(e.bounds)
-    # e.animate_position(e.position + e.up, duration=1, delay=1, curve='ease_in_expo')
-    # e.animate_color(color.yellow, duration=.5, delay=1)
-    # e.fade_in()
     e.fade_out()
-    # e.animate('x', 2, 1)
-    # e.animate_position((2,2,2), 1)
-    # e.animate_scale((0,0,0), 1)
-    # e.scale *= 10
-    # printvar(e.world_position)
-    #
-    # e.world_x = 1
-    # e.world_y = 1
-    # e.world_z = 1
-    # printvar(e.world_x)
-    # printvar(e.world_y)
-    # printvar(e.world_z)
 
-    # t = TestClass()
-    # # t.parent = scene.ui
-    # # import mouse
-    # t.model = 'cube'
-    # t.collider = 'box'
-    # my_parent = Entity()
-    # my_tuple = (Entity(), Entity())
-    # my_class_name = 'TestClass'
-
-    # t = Entity(parent = e)
-    # printvar(t.has_ancestor(e))
-    # printvar(t.has_ancestor(my_tuple))
-    # print('!!!!!!', type(Entity))
-    # print('....', Entity.__class__)
-    # printvar(isinstance(t.parent, Entity.__class__))
-    # printvar(t.has_ancestor(Entity))
-
-
-    # e.model = None
-
-    # shake_tester = ShakeTester()
     app.run()
