@@ -31,10 +31,12 @@ class Button(Entity):
     def text(self, value):
         if type(value) is str:
             if not self.text_entity:
-                self.text_entity = Text()
-                self.text_entity.parent = self
-                self.text_entity.position = (0, 0, -.1)
-                self.text_entity.origin = (0,0)
+                self.text_entity = Text(
+                    parent = self,
+                    size = .25,
+                    position = (0, 0, -.1),
+                    origin = (0,0)
+                    )
 
             self.text_entity.text = value
             self.text_entity.align = 'center'

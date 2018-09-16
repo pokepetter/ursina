@@ -64,7 +64,7 @@ brown =         rgb(165, 42, 42)
 olive =         rgb(128, 128, 0)
 peach =         rgb(255, 218, 185)
 gold =          rgb(255, 215, 0)
-salmon =        rgb(250,128,114)
+salmon =        rgb(250, 128, 114)
 
 clear =         Vec4(0, 0, 0, 0)
 white33 =       Vec4(1,1,1, 0.33)

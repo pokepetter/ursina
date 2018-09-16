@@ -17,12 +17,13 @@ from ursina.entity import Entity
 
 class Text(Entity):
 
-    size = .25
+    size = .025
 
     def __init__(self, text=None, **kwargs):
         super().__init__()
         self.name = 'text'
         self.size = Text.size
+        self.parent = camera.ui
 
         self.setColorScaleOff()
         self.text_nodes = list()
@@ -57,7 +58,7 @@ class Text(Entity):
             }
 
         self.tag = '<default>'
-        self.color = self.text_colors['<default>']
+        self.color_tag = self.text_colors['<default>']
         self.scale_override = 1
 
         if text:
@@ -155,15 +156,15 @@ class Text(Entity):
             self.text_nodes.append(self.text_node_path)
 
         if tag in self.text_colors:
-            lightness = color.to_hsv(self.color)[2]
-            self.color = self.text_colors[tag]
+            lightness = color.to_hsv(self.color_tag)[2]
+            self.color_tag = self.text_colors[tag]
             if not tag == '<default>':
                 if lightness > .8:
-                    self.color = color.tint(self.color, .2)
+                    self.color_tag = color.tint(self.color_tag, .2)
                 else:
-                    self.color = color.tint(self.color, -.3)
+                    self.color_tag = color.tint(self.color_tag, -.3)
 
-            self.text_node.setTextColor(self.color)
+            self.text_node.setTextColor(self.color_tag)
 
         if tag.startswith('<scale:'):
             scale = tag.split(':')[1]
@@ -185,6 +186,15 @@ class Text(Entity):
         self._font.setPixelsPerUnit(100)
         # print('FONT FILE:', self._font)
         self.text = self.raw_text   # update text
+
+    @property
+    def color(self):
+        return self._color
+
+    @color.setter
+    def color(self, value):
+        for tn in self.text_nodes:
+            tn.node().setTextColor(value)
 
     @property
     def line_height(self):
@@ -372,39 +382,42 @@ class Text(Entity):
 
 if __name__ == '__main__':
     app = Ursina()
-    origin = Entity()
-    origin.model = 'quad'
-    origin.scale *= .05
-
-    descr = '''<scale:1.5><orange>Title\n<scale:1>Increase <red>max health
-<default>with 25% <yellow>and raise attack with\n<green>100 <default>for 2 turns.'''
-    # descr = descr.strip().replace('\n', ' ')
-    replacements = {
-        'hp' : '<red>hp <default>',
-        'max health ' : '<red>max health <default>',
-        'attack ' : '<orange>attack <default>'
-    }
-    # descr = multireplace(descr, replacements)
-    # descr = '<scale:1.5><orange>Title \n<scale:1>Increase <red>max health <default>with 25%.'
-    # descr = 'test text'.upper()
-    # descr = 'o---{::::::::::::::::::::>'
-    # Text.size = .25
-    # descr = 'text example'
+#     origin = Entity()
+#     origin.model = 'quad'
+#     origin.scale *= .05
+#
+#     descr = '''<scale:1.5><orange>Title\n<scale:1>Increase <red>max health
+# <default>with 25% <yellow>and raise attack with\n<green>100 <default>for 2 turns.'''
+#     # descr = descr.strip().replace('\n', ' ')
+#     replacements = {
+#         'hp' : '<red>hp <default>',
+#         'max health ' : '<red>max health <default>',
+#         'attack ' : '<orange>attack <default>'
+#     }
+#     # descr = multireplace(descr, replacements)
+#     # descr = '<scale:1.5><orange>Title \n<scale:1>Increase <red>max health <default>with 25%.'
+#     # descr = 'test text'.upper()
+#     # descr = 'o---{::::::::::::::::::::>'
+#     # Text.size = .25
+#     # descr = 'text example'
     descr = ('<scale:1.5>' + 'Rainstorm' + '<scale:1>\n' +
 '''Summon a <blue>rain
 storm <default>to deal 5 <blue>water
 damage <default>to <red>everyone, <default>including <orange>yourself. <default>
 Lasts for 4 rounds.''')
     test = Text(descr)
-    # print('\n', test.text, '\n\n')
-    # test.font = 'VeraMono.ttf'
-    test.font = 'Inconsolata-Regular.ttf'
-    # test.model = 'quad'
-    # test.origin = (0, 0)
-    # test.origin = (.5, -.5)
-    test.appear()
-    test.background = True
-    test.margin = 4
-
+#     # print('\n', test.text, '\n\n')
+#     # test.font = 'VeraMono.ttf'
+#     test.font = 'Inconsolata-Regular.ttf'
+#     # test.model = 'quad'
+#     # test.origin = (0, 0)
+#     # test.origin = (.5, -.5)
+#     test.appear()
+#     test.background = True
+#     test.margin = 4
+    # Text(text='<red>red <default>text')
+    # test.color = color.red
+    # for tn in test.text_nodes:
+    #     tn.node().setTextColor(color.red)
 
     app.run()

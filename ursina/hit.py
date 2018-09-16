@@ -3,9 +3,8 @@ class Hit():
         super().__init__()
         self.hit = None
         self.entity = None
-        self.distance = None
         self.point = None
-        self.world_point = None
+        self.distance = None
         self.normal = None
         self.world_normal = None
 
