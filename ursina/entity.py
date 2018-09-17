@@ -378,8 +378,23 @@ class Entity(NodePath):
         return self.getY()
 
     @property
+    def world_rotation(self):
+        rotation = self.getHpr(base.render)
+        return Vec3(-rotation[1], -rotation[0], rotation[2])
+    @property
+    def world_rotation_x(self):
+        return -self.getP(base.render)
+    @property
+    def world_rotation_y(self):
+        return -self.getH(base.render)
+    @property
+    def world_rotation_z(self):
+        return self.getR(base.render)
+
+    @property
     def rotation(self):
-        return(-self.getP(), -self.getH(), self.getR())
+        rotation = self.getHpr()
+        return Vec3(-rotation[1], -rotation[0], rotation[2])
     @property
     def rotation_x(self):
         return -self.getP()
@@ -389,6 +404,7 @@ class Entity(NodePath):
     @property
     def rotation_z(self):
         return self.getR()
+
 
     @property
     def world_scale(self):
@@ -720,6 +736,13 @@ class Entity(NodePath):
     @property
     def children(self):
         return [e for e in scene.entities if e.parent == self]
+
+
+    @property
+    def attributes(self):
+        return ('name', 'enabled', 'eternal', 'visible', 'parent',
+            'origin', 'position', 'rotation', 'scale', 'model', 'color', 'texture', 'texture_scale', 'texture_offset',
+            'render_queue', 'collision', 'collider', 'scripts')
 
 #------------
 # ANIMATIONS

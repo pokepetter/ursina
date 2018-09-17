@@ -2,10 +2,13 @@ from ursina import *
 
 class SmoothFollow(object):
 
-    def __init__(self, target=None, offset=(0,0,0), speed=8):
+    def __init__(self, target=None, offset=(0,0,0), speed=8, rotation_speed=0, rotation_offset=(0,0,0)):
         self.target = target
         self.offset = offset
         self.speed = speed
+
+        self.rotation_speed = rotation_speed
+        self.rotation_offset = rotation_offset
 
 
     def update(self):
@@ -13,9 +16,16 @@ class SmoothFollow(object):
             return
 
         self.entity.position = lerp(
-            self.entity.position,
-            self.target.position + self.offset,
+            self.entity.world_position,
+            self.target.world_position + self.offset,
             time.dt * self.speed)
+
+        if self.rotation_speed > 0:
+            self.entity.rotation = lerp(
+            self.entity.world_rotation,
+            self.target.world_rotation + self.rotation_offset,
+            time.dt * self.rotation_speed)
+
 
 
 
