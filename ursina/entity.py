@@ -11,6 +11,7 @@ from panda3d.core import Point3
 from panda3d.core import SamplerState
 from panda3d.core import TransparencyAttrib
 from panda3d.core import Texture, TextureStage
+from panda3d.core import CullFaceAttrib
 from ursina import application
 from ursina.collider import BoxCollider
 from ursina.mesh import Mesh
@@ -127,6 +128,7 @@ class Entity(NodePath):
                     if hasattr(self, 'model'):
                         self.model.removeNode()
                     object.__setattr__(self, name, m)
+                    m.constructor = value # needed when duplicating entity
                     # print('loaded model successively')
                 else:
                     print('error loading model:', value)
@@ -290,12 +292,12 @@ class Entity(NodePath):
                 object.__setattr__(self, name, collider)
                 return
 
-
         if name == 'render_queue':
             if self.model:
                 self.model.setBin("fixed", value)
-            # model.setDepthTest(False)
-            # model.setDepthWrite(False)
+
+        if name == 'double_sided':
+            self.setTwoSided(value)
 
         try:
             super().__setattr__(name, value)
@@ -412,7 +414,7 @@ class Entity(NodePath):
         return Vec3(scale[0], scale[2], scale[1])
     @world_scale.setter
     def world_scale(self, value):
-        self.setScale(base.render, Vec3(value[0], value[1], value[2]))
+        self.setScale(base.render, Vec3(value[0], value[2], value[1]))
 
     @property
     def world_scale_x(self):
@@ -687,6 +689,17 @@ class Entity(NodePath):
         self.flatten_strong()
         if analyze:
             render.analyze()
+
+
+    def flip_faces(self):
+        if not hasattr(self, '_vertex_order'):
+            self._vertex_order = True
+
+        self._vertex_order = not self._vertex_order
+        if self._vertex_order:
+            self.setAttrib(CullFaceAttrib.make(CullFaceAttrib.MCullClockwise))
+        else:
+            self.setAttrib(CullFaceAttrib.make(CullFaceAttrib.MCullCounterClockwise))
 
 
     def look_at(self, target):
