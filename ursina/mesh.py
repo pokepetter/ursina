@@ -10,6 +10,7 @@ class Mesh(NodePath):
         if not verts:
             return
 
+        self.vertices = verts
         static_mode = Geom.UHStatic if static else Geom.UHDynamic
 
         formats = {
@@ -77,6 +78,11 @@ class Mesh(NodePath):
         # print('finished')
         self.thickness = thickness
 
+        self.constructor = '''
+            Mesh(verts={}, \ntris={}, \ncolors={}, \nuvs={}, \nnormals={}, \nstatic={}, \nmode='{}', \nthickness={})
+            '''.format(
+                str(tuple([(e[0],e[1],e[2]) for e in verts])), str(tris), str(colors), str(uvs),
+                str(normals), str(static), str(mode), str(thickness)).strip()
 
     @property
     def thickness(self):

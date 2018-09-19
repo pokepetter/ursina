@@ -321,9 +321,10 @@ def import_all_classes(path=application.asset_folder, debug=False):
 from ursina.text import Text
 def print_on_screen(text):
     text_entity = Text(
-        parent = camera.ui,
+        # parent = camera.ui,
         text = str(text),
         position = window.top_left,
-        scale = (.1, .1)
+        origin = (-.5, .5),
+        # scale = (.1, .1)
         )
     destroy(text_entity, 1)

@@ -36,3 +36,4 @@ from ursina.internal_scripts.grid_layout import grid_layout
 from ursina.internal_prefabs.debug_menu import DebugMenu
 from ursina.internal_prefabs.memory_counter import MemoryCounter
 from ursina.internal_prefabs.editor_camera import EditorCamera
+from ursina.duplicate import duplicate
