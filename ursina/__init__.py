@@ -28,6 +28,7 @@ from ursina.internal_prefabs.tooltip import Tooltip
 from ursina.internal_prefabs.draggable import Draggable
 from ursina.internal_prefabs.scrollable import Scrollable
 from ursina.internal_prefabs.grid import Grid
+from ursina.prismatoid import Prismatoid
 
 from ursina.internal_scripts.smooth_follow import SmoothFollow
 from ursina.internal_scripts.position_limiter import PositionLimiter

@@ -2,18 +2,13 @@ from ursina import *
 
 
 
-class Circle(Entity):
-    def __init__(self, resolution=16):
-        super().__init__()
-        self.model = circle(resolution)
-
 class Cube(Entity):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.model = 'cube'
 
 class Circle(Mesh):
-    def __init__(self, resolution=16, radius=.5, mode='ngon', **kwargs):
+    def __init__(self, resolution=16, radius=.5, rotate=True, mode='ngon', **kwargs):
         origin = Entity()
         point = Entity(parent=origin)
         point.y = radius
@@ -25,11 +20,13 @@ class Circle(Mesh):
 
         destroy(origin)
         super().__init__(verts=verts, mode=mode, **kwargs)
+        self.recipe = self.__class__.__name__ + '(resolution=' + str(resolution) + ', radius=' + str(radius) + ', mode=\'' + mode + '\')'
 
 
 class Quad(Mesh):
     def __init__(self, size=(1,1), bevel=.05, subdivisions=0, ignore_aspect=False, **kwargs):
         self.verts = (Vec3(0,0,0), Vec3(1,0,0), Vec3(1,1,0), Vec3(0,1,0))
+        self.bevel = bevel
 
         for j in range(subdivisions):
             points = list()
@@ -66,13 +63,20 @@ class Quad(Mesh):
         self.verts = [(v[0]-offset[0], v[1]-offset[1], v[2]-offset[2]) for v in self.verts]
 
         super().__init__(verts=self.verts, uvs=uvs, **kwargs)
-
+        args = 'size='+str(size)+', bevel='+str(self.bevel)+', subdivisions='+str(subdivisions)+', ignore_aspect='+str(ignore_aspect)
+        for k, v in kwargs.items():
+            args += ', ' + k + '='
+            if type(v) is str:
+                args += '\'' + v + '\''
+            else:
+                args += str(v)
+        self.recipe = self.__class__.__name__ + '('+args+')'
 
 
 class Sphere(Mesh):
-    def __init__(self, radius=.5, subdivision=0, **kwargs):
-        X=.525731112119133606
-        Z=.850650808352039932
+    def __init__(self, radius=.5, subdivision=0, mode='tristrip', **kwargs):
+        X=.525731112119133606 * radius
+        Z=.850650808352039932 * radius
         N=0
 
         verts = (
@@ -87,11 +91,19 @@ class Sphere(Mesh):
             7,10,3,7,6,10,7,11,6,11,0,6,0,1,6,
             6,1,10,9,0,11,9,11,2,9,2,5,7,2,11
         )
-        colors = [color.random_color() for f in faces]
+        # colors = [color.random_color() for f in faces]
+        colors = None
         # print(colors)
 
-        super().__init__(verts=verts, tris=faces, mode='tristrip', colors=colors, thickness=16, **kwargs)
-
+        super().__init__(verts=verts, tris=faces, colors=colors, mode=mode, **kwargs)
+        args = 'radius='+str(radius)+', subdivision='+str(subdivision)+', mode=\''+mode + '\''
+        for k, v in kwargs.items():
+            args += ', ' + k + '='
+            if type(v) is str:
+                args += '\'' + v + '\''
+            else:
+                args += str(v)
+        self.recipe = self.__class__.__name__ + '('+args+')'
 
 class Cone(Mesh):
     def __init__(self, resolution=4, radius=.5, height=1, mode='triangle', **kwargs):
@@ -114,7 +126,7 @@ class Cone(Mesh):
 
         super().__init__(verts=verts, mode=mode, **kwargs)
         args = 'resolution='+str(resolution)+', '+'radius='+str(radius)+', '+'height='+str(height)
-        self.constructor = self.__class__.__name__ + '('+args+')'
+        self.recipe = self.__class__.__name__ + '('+args+')'
 
 
 
@@ -123,8 +135,9 @@ if __name__ == '__main__':
 
     e = Entity(
         # scale_x = 3,
-        model = Quad(size=(3,1), subdivisions=4, thickness=3, mode='lines'),
+        # model = Quad(size=(3,1), subdivisions=4, thickness=3, mode='lines'),
         # model = Cone(),
+        model = Circle(),
         texture_scale = (2,1),
         color = color.color(60,1,1,.3)
         )

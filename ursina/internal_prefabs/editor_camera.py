@@ -6,24 +6,26 @@ class EditorCamera(Entity):
         super().__init__()
         self.name = 'editor_camera_controller'
 
-        self.camera_pivot = Entity(name='camera_pivot', is_editor=True)
+        self.camera_pivot = Entity(name='camera_pivot', is_editor=True, model='cube', color=color.green, scale=(.05,.05,.05))
+        # t = Entity(position=(1,1,1), model='cube', color=color.red, scale=(.1,.3,.1), origin=(0,-1))
+        t=camera
         self.dummy = Entity(
-            parent = self.camera_pivot,
             model = Sphere(),
             scale = (.2,.2,.2),
             color = color.yellow,
             is_editor = True,
-            position = (0,0,-5)
+            position = t.position
             )
-
-        # self.test = Entity(model='cube', color=color.red, scale=(.1,.1,.1))
-        self.test = camera
-        self.test.add_script(SmoothFollow(target=self.dummy, rotation_speed=10))
+        self.dummy.world_parent = self.camera_pivot
+        self.dummy.look_at(self.camera_pivot)
+        # t = camera
+        t.add_script(SmoothFollow(target=self.dummy, rotation_speed=10))
 
         self.rotation_speed = 100
         self.pan_speed = (4, 4)
         self.move_speed = .1
         self.zoom_speed = 1
+
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -85,8 +87,8 @@ if __name__ == '__main__':
     sky = Sky()
     # e = Entity(model='quad')
     # ground = Plane(scale=(10,10), color=color.dark_gray)
-    Entity(model='cube')
+    Entity(model='cube', color=color.white33)
+    camera.position=(20,20,-20)
     ec = EditorCamera(rotation_smoothing=2, rotation_speed=200)
-    camera.position=(0,20,-20)
     camera.look_at(ec)
     app.run()

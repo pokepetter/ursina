@@ -78,7 +78,7 @@ class Mesh(NodePath):
         # print('finished')
         self.thickness = thickness
 
-        self.constructor = '''
+        self.recipe = '''
             Mesh(verts={}, \ntris={}, \ncolors={}, \nuvs={}, \nnormals={}, \nstatic={}, \nmode='{}', \nthickness={})
             '''.format(
                 str(tuple([(e[0],e[1],e[2]) for e in verts])), str(tris), str(colors), str(uvs),
@@ -91,6 +91,10 @@ class Mesh(NodePath):
     @thickness.setter
     def thickness(self, value):
         self.setRenderModeThickness(value)
+
+    @property
+    def world_vertices(self):
+        print('wwwwwwwwwwwwwwwwwww', self.vertices[0])
 
 
 if __name__  == '__main__':
@@ -112,6 +116,7 @@ if __name__  == '__main__':
     e = Entity()
     e.model = m
     e.texture = 'white_cube'
+    e.show_vertices()
     # e.color = color.red
     EditorCamera()
     app.run()

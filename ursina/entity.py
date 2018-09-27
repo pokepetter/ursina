@@ -128,7 +128,7 @@ class Entity(NodePath):
                     if hasattr(self, 'model'):
                         self.model.removeNode()
                     object.__setattr__(self, name, m)
-                    m.constructor = value # needed when duplicating entity
+                    m.recipe = value # needed when duplicating entity
                     # print('loaded model successively')
                 else:
                     print('error loading model:', value)
@@ -499,7 +499,8 @@ class Entity(NodePath):
             # print('set texture:', value)
         except:
             pass
-            print('no texture:', value)
+            if value:
+                print('no texture:', value)
 
         if value == None:
             self.model.set_texture_off(True)
@@ -703,7 +704,7 @@ class Entity(NodePath):
 
 
     def look_at(self, target):
-        if type(target) is Vec3:
+        if type(target) is Vec3 or type(target) is tuple:
             super().look_at(Vec3(target[0], target[2], target[1]))
             return
         super().look_at(target)
