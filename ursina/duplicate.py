@@ -32,7 +32,7 @@ if __name__ == '__main__':
     # e = Entity(model=Quad(subdivisions=3, mode='lines'))
     # e = Entity(model=Sphere(mode='lines'))
     # e = Entity(model=Cone())
-    e = Entity(model=Prism())
+    e = Entity(model=Prismatoid())
 
     # test that children are duplicated
     # sphere = Entity(parent=e, model='cube', y=1)

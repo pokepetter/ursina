@@ -1,6 +1,6 @@
 from ursina import *
-from duplicate import duplicate
-from internal_prefabs.procedural_models import Quad, Circle
+from ursina.duplicate import duplicate
+from ursina.internal_prefabs.procedural_models import Quad, Circle
 
 
 class Prismatoid(Mesh):
@@ -87,7 +87,7 @@ class Prismatoid(Mesh):
 if __name__ == '__main__':
     app = Ursina()
     # e = Entity(model=Prism(mode='lines'))
-    e = Entity(model=Prism())
+    e = Entity(model=Prismatoid())
     # e2 = duplicate(e)
     # e2.x=2
     # e2.color=color.red
