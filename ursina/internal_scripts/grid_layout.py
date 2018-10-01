@@ -2,6 +2,10 @@ from ursina import *
 
 
 def grid_layout(l, direction=(1,1,1), max_x=8, max_y=8, spacing=(0,0,0), origin=(-.5,.5,0)):
+    if not isinstance(l, list):
+        print('error: grid_layout input must be a list or tuple, not', l.__class__.__name__)
+        return
+
     e_size = [s[0] * s[1] for s in zip(l[0].bounds, l[0].scale)]
 
     for i, e in enumerate(l):

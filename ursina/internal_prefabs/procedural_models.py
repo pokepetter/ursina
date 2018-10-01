@@ -135,10 +135,10 @@ if __name__ == '__main__':
 
     e = Entity(
         # scale_x = 3,
-        # model = Quad(size=(3,1), subdivisions=4, thickness=3, mode='lines'),
+        model = Quad(size=(3,1), subdivisions=4, thickness=3),
         # model = Cone(),
-        model = Circle(),
-        texture_scale = (2,1),
+        # model = Circle(),
+        # texture_scale = (2,1),
         color = color.color(60,1,1,.3)
         )
     # e.scale *= 2
