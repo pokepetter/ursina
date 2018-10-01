@@ -407,7 +407,7 @@ damage <default>to <red>everyone, <default>including <orange>yourself. <default>
 Lasts for 4 rounds.''')
     test = Text(descr)
 #     # print('\n', test.text, '\n\n')
-#     # test.font = 'VeraMono.ttf'
+    test.font = 'VeraMono.ttf'
 #     test.font = 'Inconsolata-Regular.ttf'
 #     # test.model = 'quad'
 #     # test.origin = (0, 0)

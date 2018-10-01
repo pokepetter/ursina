@@ -25,17 +25,22 @@ class Application():
         self.internal_prefabs_folder = self.package_folder + 'internal_prefabs/'
         self.internal_scripts_folder = self.package_folder + 'internal_scripts/'
         self.internal_textures_folder = self.package_folder + 'internal_textures/'
-        self.internal_fonts_folder = self.package_folder + 'font/'
+        self.internal_fonts_folder = self.package_folder + 'fonts/'
 
         self.models_folder = self.asset_folder + 'models/'
         self.prefabs_folder = self.asset_folder + 'prefabs/'
         self.scenes_folder = self.asset_folder + 'scenes/'
         self.scripts_folder = self.asset_folder + 'scripts/'
         self.textures_folder = self.asset_folder + 'textures/'
+        self.fonts_folder = self.asset_folder + 'fonts/'
 
         self.compressed_textures_folder = self.textures_folder + 'compressed/'
         self.compressed_models_folder = self.models_folder + 'compressed/'
 
+        # fonts are loaded py panda3d, so add paths here
+        self.model_path = getModelPath()
+        self.model_path.append_path(self.internal_fonts_folder)
+        self.model_path.append_path(self.asset_folder)
 
 sys.modules[__name__] = Application()
 

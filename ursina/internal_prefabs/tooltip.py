@@ -6,9 +6,8 @@ class Tooltip(Text):
     def __init__(self, text='', **kwargs):
         super().__init__(text, **kwargs)
 
-        self.size *= .1
         self.parent = camera.ui
-        self.wordwrap = 40
+        # self.wordwrap = 40
         self.origin = (-.5, -.5)
         self.background = True
         self.margin = 2

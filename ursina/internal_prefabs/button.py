@@ -4,13 +4,15 @@ import textwrap
 
 class Button(Entity):
 
+    color = color.black66
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.name = 'button'
         self.parent = scene.ui
         self.is_editor = False
         self.model = 'quad'
-        self.color = color.black66
+        self.color = Button.color
         # self.texture = 'panda_button'
 
         self.collision = True
@@ -33,13 +35,12 @@ class Button(Entity):
             if not self.text_entity:
                 self.text_entity = Text(
                     parent = self,
-                    size = .25,
+                    size = Text.size * 20,
                     position = (0, 0, -.1),
                     origin = (0,0)
                     )
 
             self.text_entity.text = value
-            self.text_entity.align = 'center'
             self.text_entity.world_scale = (1,1,1)
 
 
@@ -125,8 +126,8 @@ class Test():
 
 if __name__ == '__main__':
     app = Ursina()
-    # t = Test()
-    b = Button(parent=scene, text='test\ntest', scale=(4,1))
+    t = Test()
+    # b = Button(text='test\ntest', scale=(4,1), model='quad', collision=False)
     # b.text_entity.scale *= .5
     # t.b.tooltip = Text(text='yolo', background=True)
     app.run()
