@@ -38,7 +38,6 @@ class Entity(NodePath):
         self.name = self.type
         self.enabled = True
         self.visible = True
-        self.is_editor = False
         try:
             self.parent = scene
         except:
@@ -52,8 +51,7 @@ class Entity(NodePath):
         except:
             pass
         self.collision = False
-        # self.collider = None
-        self.editor_collider = None
+        self.collider = None
         self.scripts = list()
         self.prefab_name = None
         self.hovered = False
@@ -137,6 +135,7 @@ class Entity(NodePath):
                 self.model.reparentTo(self)
                 # self.model.setColorScaleOff()
                 self.model.setTransparency(TransparencyAttrib.MAlpha)
+                setattr(self, 'color', self.color) # reapply color after changing model
                 self._vert_cache = None
                 if isinstance(value, Mesh):
                     if hasattr(value, 'on_assign'):
@@ -268,6 +267,7 @@ class Entity(NodePath):
                 # self.collider.remove_node()
 
             if value == None:
+                object.__setattr__(self, name, value)
                 return
 
             elif type(value) is BoxCollider:
