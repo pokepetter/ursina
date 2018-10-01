@@ -80,7 +80,7 @@ class Window(WindowProperties):
 
     @property
     def size(self):
-        return (self.get_size()[0], self.get_size()[1])
+        return Vec2(self.get_size()[0], self.get_size()[1])
 
     @size.setter
     def size(self, value):
