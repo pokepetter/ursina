@@ -43,13 +43,12 @@ class Camera(Entity):
         self.orthographic_lens_node = LensNode('orthographic_lens_node', self.orthographic_lens)
 
         application.base.cam.node().set_lens(self.lens)
+        
         self.orthographic = False
-
         self.fov = 40
         self.clip_plane_near = 0.01
         self.clip_plane_far = 100
 
-        # win.setClearColor(color.dark_gray)
         self.ui_display_region = win.make_display_region()
         self.ui_display_region.set_sort(20)
 
@@ -71,10 +70,8 @@ class Camera(Entity):
         self.ui = Entity()
         self.ui.eternal = True
         self.ui.name = 'ui'
-        self.ui.is_editor = True
         self.ui.parent = self.ui_camera
-        self.original_ui_scale = (self.ui_size * .5, self.ui_size * .5)
-        self.ui.scale = self.original_ui_scale
+        self.ui.scale = (self.ui_size*.5, self.ui_size*.5)
         # self.ui.model = 'quad'
         scene.ui = self.ui
 
@@ -96,7 +93,6 @@ class Camera(Entity):
             application.base.cam.node().set_lens(self.perspective_lens)
 
         self.fov = self.fov
-        # print(application.base.cam.node().get_lens())
 
 
     @property
@@ -115,25 +111,25 @@ class Camera(Entity):
             self.orthographic_lens.set_film_size(value * self.aspect_ratio, value)
             application.base.cam.node().set_lens(self.orthographic_lens)
 
+    @property
+    def near_clip_plane(self):
+        return self.lens.getNear()
 
-    def __setattr__(self, name, value):
-        if name == 'near_clip_plane':
-            self.lens.set_near(value)
-        elif name == 'far_clip_plane':
-            self.lens.set_far(value)
+    @near_clip_plane.setter
+    def near_clip_plane(self, value):
+        self.lens.set_near(value)
 
-        if name == 'rect':
-            self.ui_display_region = self.display_region = win.make_display_region(0, 1, 0, 1)
+    @property
+    def far_clip_plane(self):
+        return self.lens.getFar()
 
-        super().__setattr__(name, value)
+    @far_clip_plane.setter
+    def far_clip_plane(self, value):
+        self.lens.set_far(value)
 
     @property
     def aspect_ratio(self):
-        # try:
-        # return window.size[0] / window.size[1]
         return self.lens.get_aspect_ratio()
-        # except:
-        #     return 16 / 9
 
     @aspect_ratio.setter
     def aspect_ratio(self, value):

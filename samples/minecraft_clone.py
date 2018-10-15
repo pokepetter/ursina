@@ -47,7 +47,7 @@ class FirstPersonController(Entity):
 
     def __init__(self):
         super().__init__()
-        self.speed = .1
+        self.speed = .25
 
         self.i = 0
         self.update_interval = 30
@@ -94,8 +94,8 @@ class FirstPersonController(Entity):
         if not raycast(self.world_position + self.up, self.direction, 1).hit:
             self.position += self.direction * self.speed
 
-        self.rotation_y += mouse.velocity[0] * 20
-        camera.rotation_x -= mouse.velocity[1] * 20
+        self.rotation_y += mouse.velocity[0] * 40
+        camera.rotation_x -= mouse.velocity[1] * 40
         camera.rotation_x = clamp(camera.rotation_x, -90, 90)
 
 

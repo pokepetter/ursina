@@ -21,6 +21,9 @@ class Player(Entity):
         self.air_time = 0
         self.y = raycast(self.world_position, self.down).point[1]
 
+        camera.z = -10
+        camera.add_script(SmoothFollow(target=self, offset=(0,4,-10), speed=4))
+
 
     def update(self):
         if held_keys['d']:
@@ -28,9 +31,9 @@ class Player(Entity):
         if held_keys['a']:
             self.x -= self.walk_speed
 
-        camera.x = lerp(camera.x, self.x, 1/60 * 5)
-        camera.y = lerp(camera.y, self.y, 1/60 * 5)
-        camera.x = clamp(camera.x, 0, 20)
+        # camera.x = lerp(camera.x, self.x, 1/60 * 5)
+        # camera.y = lerp(camera.y, self.y, 1/60 * 5)
+        # camera.x = clamp(camera.x, 0, 20)
 
 
         ray = raycast(self.world_position, self.down)
@@ -79,10 +82,11 @@ class Player(Entity):
 
 
 app = Ursina()
-compress_textures()
+# compress_textures()
 window.color = color.smoke
-camera.rotation_x = -5
-camera.z = -40
+# camera.rotation_x = -5
+# camera.z = -40
+camera.fov = 20
 camera.orthographic = True
 bg = Entity(
     model = 'quad',

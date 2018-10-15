@@ -36,7 +36,7 @@ class Button(Entity):
                 self.text_entity = Text(
                     parent = self,
                     size = Text.size * 20,
-                    position = (0, 0, -.1),
+                    position = (-self.origin[0], -self.origin[1], -.1),
                     origin = (0,0)
                     )
 
@@ -58,10 +58,10 @@ class Button(Entity):
         if name == 'origin':
             super().__setattr__(name, value)
             try:    # update collider position by making a new one
-                self.collider.remove()
                 self.collider = 'box'
-            except:
-                pass
+                # self.text_entity.position = (-self.origin[0], -self.origin[1], -.1),
+            except Exception as e:
+                return e
 
         if name == 'on_click' and isinstance(value, str):
             object.__setattr__(self, 'on_click_string', textwrap.dedent(value))
@@ -107,17 +107,18 @@ class Button(Entity):
 
 class Test():
     def __init__(self):
-        self.b = Button(color = color.red, text='button_text')
+        self.b = Button(color = color.red, text='button_text', origin=(-.5,-.5))
         self.b.on_click = '''
             self.text = 'on_click_string'
             self.color = color.red
             print('on_click defined with string works!')
+            print(mouse.point)
             '''
         # self.b.on_click = self.test_method
-        self.b.scale *= .5
+        # self.b.scale *= .5
         self.b.color = color.azure
         # self.b.origin = (-.5, -.5)
-        self.b.text = 'text'
+        # self.b.text = 'text'
         # self.b.text_entity.scale *= 2
 
     def test_method(self):
