@@ -13,7 +13,7 @@ from panda3d.core import TransparencyAttrib
 from panda3d.core import Texture, TextureStage
 from panda3d.core import CullFaceAttrib
 from ursina import application
-from ursina.collider import BoxCollider
+from ursina.collider import Collider, BoxCollider, SphereCollider
 from ursina.mesh import Mesh
 from os import path
 from panda3d.core import Filename
@@ -262,17 +262,10 @@ class Entity(NodePath):
         if name == 'collider':
             # destroy excisting collider
             if hasattr(self, 'collider') and self.collider:
-                destroy(self.collider)
-                self.collider = None
-                # self.collider.remove_node()
+                self.collider.remove()
 
-            if value == None:
+            if value == None or isinstance(value, Collider):
                 object.__setattr__(self, name, value)
-                return
-
-            elif type(value) is BoxCollider:
-                print('add defined collider')
-                return
 
             elif value == 'box':
                 if hasattr(self, 'model'):
@@ -281,16 +274,21 @@ class Entity(NodePath):
                         center = self.origin,
                         size = self.bounds
                         )
-                    object.__setattr__(self, name, collider)
                 else:
                     collider = BoxCollider(entity=self)
-                    object.__setattr__(self, name, collider)
+
+                self.collision = True
+                object.__setattr__(self, name, collider)
                 return
 
             elif value == 'sphere':
                 collider = SphereCollider(entity=self)
+                self.collision = True
                 object.__setattr__(self, name, collider)
                 return
+
+            else:
+                print('collider error:', value, 'is not a collider')
 
         if name == 'render_queue':
             if self.model:
@@ -317,10 +315,7 @@ class Entity(NodePath):
     def parent(self, value):
         self._parent = value
         if value is None:
-            try:
-                self.reparentTo(scene.editor.trash)
-            except:
-                print('no trash node')
+            destroy(self)
         else:
             try:
                 self.reparentTo(value)
