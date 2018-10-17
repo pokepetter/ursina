@@ -1,0 +1,26 @@
+title
+fullscreen_size
+windowed_size
+position
+size
+color   # background color
+
+fullscreen = False
+borderless = True
+
+cursor
+fps_counter = True
+vsync = True
+exit_button     #entity
+
+top
+bottom
+center
+left
+right
+top_left
+top_right
+bottom_left
+bottom_right
+
+center_on_screen()

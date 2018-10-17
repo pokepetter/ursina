@@ -1,0 +1,20 @@
+Mesh(verts, tris=None, colors=None, uvs=None, normals=None, static=True, mode='ngon', thickness=1)
+modes: 'triangle', 'tristrip', 'ngon', 'line', 'lines', 'point'
+thickness
+
+# vertices
+# triangles
+# uvs
+# colors
+# generate()
+
+# verts=((0,0,0), (1,0,0), (.5, 1, 0), (-.5,1,0))
+# tris = (1, 2, 0, 2, 3, 0)
+# uvs = ((1.0, 0.0), (0.0, 1.0), (0.0, 0.0), (1.0, 1.0))
+# colors = (color.red, color.blue, color.lime, color.black)
+# m = Mesh(
+#   verts=((0.5, 0.5, 0.0), (-0.5, 0.5, 0.0), (-0.5, -0.5, 0.0), (0.5, -0.5, 0.0), (0.5, 0.5, 0.0), (-0.5, -0.5, 0.0)),
+#   uvs=((0.9999, 0.9999), (0.0001, 0.9999), (0.0001, 0.0001), (0.9999, 0.0001), (0.9999, 0.9999), (0.0001, 0.0001)),
+#   mode='triangle'
+#   )
+# e = Entity(model = m)

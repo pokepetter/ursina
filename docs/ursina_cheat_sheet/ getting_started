@@ -1,0 +1,10 @@
+example:
+
+from ursina import *
+app = Ursina()
+
+b = Button('hello world!', color=color.azure)
+b.scale *= .2
+b.tooltip = Tooltip('click me')
+
+app.run()

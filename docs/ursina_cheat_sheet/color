@@ -1,0 +1,51 @@
+example: entity.color = color.orange
+
+color(h, s, v, a=1)
+rgba(r, g, b, a=1)
+to_hsv(color)
+inverse(color)
+random_color()
+tint(color, amount=.2)
+brightness(color)
+
+
+white =         color(0, 0, 1)
+smoke =         color(0, 0, 0.96)
+light_gray =    color(0, 0, 0.75)
+gray =          color(0, 0, 0.5)
+dark_gray =     color(0, 0, 0.25)
+black =         color(0, 0, 0)
+red =           color(0, 1, 1)
+orange =        color(30, 1, 1)
+yellow =        color(60, 1, 1)
+lime =          color(90, 1, 1)
+green =         color(120, 1, 1)
+turquoise =     color(150, 1, 1)
+cyan =          color(180, 1, 1)
+azure =         color(210, 1, 1)
+blue =          color(240, 1, 1)
+violet =        color(270, 1, 1)
+magenta =       color(300, 1, 1)
+pink =          color(330, 1, 1)
+
+brown =         rgb(165, 42, 42)
+olive =         rgb(128, 128, 0)
+peach =         rgb(255, 218, 185)
+gold =          rgb(255, 215, 0)
+salmon =        rgb(250, 128, 114)
+
+clear =         Vec4(0, 0, 0, 0)
+white33 =       Vec4(1,1,1, 0.33)
+white50 =       Vec4(1,1,1, 0.50)
+white66 =       Vec4(1,1,1, 0.66)
+black33 =       Vec4(0,0,0, 0.33)
+black50 =       Vec4(0,0,0, 0.50)
+black66 =       Vec4(0,0,0, 0.66)
+
+text = smoke
+light_text = smoke
+dark_text = color(0, 0, .1)
+text_color = light_text
+
+color_names
+colors

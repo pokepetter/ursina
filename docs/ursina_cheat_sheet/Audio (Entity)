@@ -1,0 +1,26 @@
+example: Audio(sound_file_name='jump_sfx')
+
+Audio(sound_file_name='', **kwargs):
+clip
+attack = 0
+falloff = 0
+loop = False
+loops = 0
+volume = 1
+pitch = 1
+balance = 0
+autoplay = True
+
+length
+status
+ready
+playing
+time
+
+play()
+pause()
+resume()
+stop(destroy=True)
+fade(value, duration=.5, delay=0, curve='ease_in_expo', resolution=None, interrupt=True)
+fade_in(value=1, duration=.5, delay=0, curve='ease_in_expo', resolution=None, interrupt=True, destroy_on_ended=False)
+fade_out(value=0, duration=.5, delay=0, curve='ease_in_expo', resolution=None, interrupt=True, destroy_on_ended=True):

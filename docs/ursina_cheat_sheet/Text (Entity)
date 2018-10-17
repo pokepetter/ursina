@@ -1,0 +1,27 @@
+example: Text('<scale:1.5>' + 'Rainstorm' + '<scale:1>\n' +
+'''Summon a <blue>rain
+storm <default>to deal 5 <blue>water
+damage <default>to <red>everyone, <default>including <orange>yourself. <default>
+Lasts for 4 rounds.''')
+
+Text(text=None)
+text
+Text.size
+size
+text_nodes = list()
+origin = (-.5, .5)  # set text alignement with this
+line_height = 1
+
+text_colors
+font
+width
+height
+lines
+wordwrap
+background = False/True
+margin
+
+update_text()
+create_text_section(text, tag='<default>', x=0, y=0)
+align()
+appear()

@@ -1,0 +1,157 @@
+
+# center, bold, arial, size 5
+ursina engine
+ʕ •ᴥ•ʔゝ□
+# size 1.25, bold
+--------------------------------------
+# normal
+pip install ursina
+# bold
+--------------------------------------
+# normal
+
+<a href="https://github.com/pokepetter/ursina">[GitHub]</a>    <a href="ursina_cheat_sheet/ursina_cheat_sheet_code_browser.html">[Documentation]</a>    <a href="https://twitter.com/petteramland">[Twitter]</a>
+
+
+# left, width 900, size 2, bold
+Make Games
+# normal, size 1
+
+# image north
+
+# size 2, bold
+Powered by Python
+# normal, size 1
+
+    Ursina makes it easier to develop games and other software. It tries to not
+    get in your way with overly complex API and instead keeps it simple so you
+    can focus on what you're making.
+
+
+
+# size 2, bold
+Open Source
+# normal, size 1
+
+    Ursina is completely free. Licenced under the permissive MIT license,
+    you can use it for whatever you want. No supscription fee, no revenue cut,
+    no logging in to be allowed to use it.
+
+
+
+# size 2, bold
+Getting Started
+# size 1, normal
+
+    1) Install Python 3.6 or newer. <a href="https://www.python.org/downloads/">[Download Python here]</a>
+    2) Open cmd/terminal and type:
+
+        # code
+        pip install ursina
+
+
+    Alternatively:
+    1) Make sure you have git installed.
+    2) Open cmd/terminal and type:
+
+        # code
+        pip install panda3d
+        pip install screeninfo
+        pip install pillow
+        pip install git+https://github.com/pokepetter/ursina.git
+
+
+    If you want to easily edit the source, it's recommended to clone the git
+    repo and install as develop like this:
+
+        # code
+        git clone https://github.com/pokepetter/ursina.git
+        python setup.py develop
+
+
+
+
+# size 2, bold
+Dependencies
+# size 1, normal
+
+    * python 3.6+
+    * panda3d
+    * screeninfo, for detecting screen resolution
+    * pillow, for texture manipulation
+    * psd-tools, for converting .psd files
+    * blender, for converting .blend files
+
+
+
+# size 2, bold
+Examples
+# size 1, normal
+
+    Entity Example:
+
+        # code
+        from ursina import *            # import everything we need with one line.
+
+        app = Ursina()
+        ground = Entity(
+            model = 'cube',
+            color = color.magenta,
+            z = -.1,
+            y = -3,
+            origin = (0, .5),
+            scale = (50, 1, 10),
+            collider = 'box',
+            collision = True
+            )
+
+        app.run()                       # opens a window and starts the game.
+
+
+    Minecraft Clone
+
+    Platformer Game
+
+
+
+# size 2, bold
+How do I make a game?
+# size 1, normal
+
+    Ursina games are made by writing Python code. You can use any text editor you want.
+
+        1) Create an empty .py file called 'ursina_game.py'
+        2) Copy this text into your new file:
+
+            # code
+            from ursina import *
+
+            class Player(Entity):   # inherits Entity, ursina's 'god class'
+                def __init__(self):
+                    super().__init__()
+                    self.model = 'cube' # finds a 3d model by name
+                    self.color = color.orange
+                    self.scale_y = 2
+
+                def update(self):   # update gets automatically called.
+                    self.x += held_keys['d'] * .1
+                    self.x -= held_keys['a'] * .1
+
+            app = Ursina()
+            player = Player()
+            app.run()   # opens a window and starts the game.
+
+
+
+        3) Type this in the terminal to start the game. I recommend setting a hotkey
+           for this in your text editor:
+
+            # code
+            python ursina_game.py
+
+
+    The game should start! You can now move the orange box around with 'a' and 'd'!
+    To close the window, you can by default, press shift+q or press the red x.
+
+
+# stop

@@ -1,0 +1,17 @@
+example: input.rebind('arrow up', 'w')
+
+control
+left_control
+right_control
+shift
+left_shift
+right_shift
+alt
+left_alt
+right_alt
+held_keys = defaultdict(lambda: 0)
+rebinds = dict()
+
+bind(alternative_key, original_key)
+unbind(key)
+rebind(from_key, to_key)

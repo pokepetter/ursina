@@ -1,0 +1,71 @@
+example: Entity(
+             model = 'cube',
+             color = color.orange,
+             texture = 'white_cube',
+             position = (1, 10, 4),
+             scale_y = 2,
+             )
+
+
+name = __class__.__name__
+enabled
+eternal   # eternal entities does not get destroyed when calling scene.clear()
+visible
+parent = scene
+world_parent
+
+origin
+position
+x, y, z
+world_position
+world_x, world_y, world_z
+rotation
+rotation_x, rotation_y, rotation_z
+world_rotation
+world_rotation_x, world_rotation_y, world_rotation_z
+scale
+scale_x, scale_y, scale_z
+world_scale
+world_scale_x, world_scale_y, world_scale_z
+
+model
+color
+texture
+texture_scale
+texture_offset
+render_queue
+double_sided
+collision
+collider
+scripts
+hovered
+type
+types
+texture_name
+texture_path
+texture_size
+texture_width
+texture_height
+pixels
+get_pixel(x,y)
+
+reparent_to(entity)   # same as setting world_parent
+add_script(name)
+remove_script(name)
+flip_faces()
+combine(analyze=False)
+look_at(entity/(x,y,z))
+has_ancestor(entity)
+children
+
+animate(name, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True)
+animate_position()
+animate_x(), animate_y(), animate_z()
+animate_rotation()
+animate_rotation_x(), animate_rotation_y(), animate_rotation_z()
+animate_scale()
+animate_scale_x(), animate_scale_y(), animate_scale_z()
+shake(duration=.2, magnitude=1, speed=.05)
+animate_color()
+fade_out()
+fade_in()

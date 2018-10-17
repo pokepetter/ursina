@@ -1,0 +1,17 @@
+example: entity.position = mouse.position
+
+enabled
+locked
+position = Vec2(0,0)
+delta = (0,0)
+delta_drag = (0,0)
+velocity = (0,0)
+double_click_distance = .5
+update_rate = 10
+raycast = False/True
+collision = None/Collision
+
+hovered_entity
+left = False/True
+right = False/True
+middle = False/True

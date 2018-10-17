@@ -1,0 +1,711 @@
+<div id="top" style="
+    max-width: 600px;
+    margin: auto;
+    # background-color: darkgray;
+    font-family: monospace;
+    position: absolute;
+    top:0;
+    left: 30%;
+    font-size: 1.25em;
+    font-weight: lighter;
+    "><div style="
+    font-size: 5em;
+    padding-top: 40px"
+    >ursina <br>cheat sheet</div><pre><font color="green">''</font><font color="green">''</font></font>
+
+
+--------------------------------
+<b id=""> getting_started</b>
+--------------------------------
+    <font color="red">example:</font>
+    
+    <font color="purple">from </font>ursina <font color="purple">import </font>*
+    app = Ursina()
+    
+    b = Button(<font color="green">'hello world!'</font>, color=color.azure)
+    b.scale *= .2
+    b.tooltip = Tooltip(<font color="green">'click me'</font>)
+    
+    app.run()
+    
+
+
+--------------------------------
+<b id="Audio">Audio (Entity)</b>
+--------------------------------
+    <font color="red">example:</font> Audio(sound_file_name=<font color="green">'jump_sfx'</font>)
+    
+    Audio(sound_file_name=<font color="green">''</font>, **kwargs):
+    clip
+    attack = 0
+    falloff = 0
+    loop = <font color="orange">False</font>
+    loops = 0
+    volume = 1
+    pitch = 1
+    balance = 0
+    autoplay = <font color="orange">True</font>
+    
+    length
+    status
+    ready
+    playing
+    time
+    
+    play()
+    pause()
+    resume()
+    stop(destroy=<font color="orange">True</font>)
+    fade(value, duration=.5, delay=0, curve=<font color="green">'ease_in_expo'</font>, resolution=<font color="orange">None</font>, interrupt=<font color="orange">True</font>)
+    fade_in(value=1, duration=.5, delay=0, curve=<font color="green">'ease_in_expo'</font>, resolution=<font color="orange">None</font>, interrupt=<font color="orange">True</font>, destroy_on_ended=<font color="orange">False</font>)
+    fade_out(value=0, duration=.5, delay=0, curve=<font color="green">'ease_in_expo'</font>, resolution=<font color="orange">None</font>, interrupt=<font color="orange">True</font>, destroy_on_ended=<font color="orange">True</font>):
+    
+
+
+--------------------------------
+<b id="Camera">Camera</b>
+--------------------------------
+    parent = scene
+    eternal = <font color="orange">True</font>
+    fov = 40
+    orthographic = <font color="orange">False</font>
+    near_clip_plane = 0.01
+    far_clip_plane = 100
+    rect
+    aspect_ratio
+    
+
+
+--------------------------------
+<b id="Entity">Entity</b>
+--------------------------------
+    <font color="red">example:</font> Entity(
+                 model = <font color="green">'cube'</font>,
+                 color = color.orange,
+                 texture = <font color="green">'white_cube'</font>,
+                 position = (1, 10, 4),
+                 scale_y = 2,
+                 )
+    
+    
+    name = __class__.__name__
+    enabled
+    eternal   <font color="gray"># eternal entities does not get destroyed when calling scene.clear()</font>
+    visible
+    parent = scene
+    world_parent
+    
+    origin
+    position
+    x, y, z
+    world_position
+    world_x, world_y, world_z
+    rotation
+    rotation_x, rotation_y, rotation_z
+    scale
+    scale_x, scale_y, scale_z
+    world_scale
+    world_scale_x, world_scale_y, world_scale_z
+    
+    model
+    color
+    texture
+    texture_scale
+    texture_offset
+    render_queue
+    collision
+    collider
+    scripts
+    hovered
+    type
+    types
+    texture_name
+    texture_path
+    texture_size
+    texture_width
+    texture_height
+    pixels
+    get_pixel(x,y)
+    
+    reparent_to(entity)   <font color="gray"># same as setting world_parent</font>
+    add_script(name)
+    remove_script(name)
+    combine(analyze=<font color="orange">False</font>)
+    look_at(entity/(x,y,z))
+    has_ancestor(entity)
+    children
+    
+    animate(name, value, duration=.1, delay=0, curve=<font color="green">'ease_in_expo'</font>, resolution=<font color="orange">None</font>, interrupt=<font color="orange">True</font>)
+    animate_position()
+    animate_x(), animate_y(), animate_z()
+    animate_rotation()
+    animate_rotation_x(), animate_rotation_y(), animate_rotation_z()
+    animate_scale()
+    animate_scale_x(), animate_scale_y(), animate_scale_z()
+    shake(duration=.2, magnitude=1, speed=.05)
+    animate_color()
+    fade_out()
+    fade_in()
+    
+
+
+--------------------------------
+<b id="Hit">Hit</b>
+--------------------------------
+    hit
+    entity
+    point
+    distance
+    normal
+    world_normal
+    
+
+
+--------------------------------
+<b id="Mesh">Mesh</b>
+--------------------------------
+    Mesh(verts, tris=<font color="orange">None</font>, colors=<font color="orange">None</font>, uvs=<font color="orange">None</font>, normals=<font color="orange">None</font>, static=<font color="orange">True</font>, mode=<font color="green">'ngon'</font>, thickness=1)
+    modes: <font color="green">'triangle'</font>, <font color="green">'tristrip'</font>, <font color="green">'ngon'</font>, <font color="green">'line'</font>, <font color="green">'lines'</font>, <font color="green">'point'</font>
+    thickness
+    
+    <font color="gray"># vertices</font>
+    <font color="gray"># triangles</font>
+    <font color="gray"># uvs</font>
+    <font color="gray"># colors</font>
+    <font color="gray"># generate()</font>
+    
+    <font color="gray"># verts=((0,0,0), (1,0,0), (.5, 1, 0), (-.5,1,0))</font>
+    <font color="gray"># tris = (1, 2, 0, 2, 3, 0)</font>
+    <font color="gray"># uvs = ((1.0, 0.0), (0.0, 1.0), (0.0, 0.0), (1.0, 1.0))</font>
+    <font color="gray"># colors = (color.red, color.blue, color.lime, color.black)</font>
+    <font color="gray"># m = Mesh(</font>
+    <font color="gray">#   verts=((0.5, 0.5, 0.0), (-0.5, 0.5, 0.0), (-0.5, -0.5, 0.0), (0.5, -0.5, 0.0), (0.5, 0.5, 0.0), (-0.5, -0.5, 0.0)),</font>
+    <font color="gray">#   uvs=((0.9999, 0.9999), (0.0001, 0.9999), (0.0001, 0.0001), (0.9999, 0.0001), (0.9999, 0.9999), (0.0001, 0.0001)),</font>
+    <font color="gray">#   mode=triangle</font>
+    <font color="gray">#   )</font>
+    <font color="gray"># e = Entity(model = m)</font>
+    
+
+
+--------------------------------
+<b id="Text">Text (Entity)</b>
+--------------------------------
+    <font color="red">example:</font> Text(<font color="green">'&lt;scale:1.5&gt;'</font> + <font color="green">'Rainstorm'</font> + <font color="green">'&lt;scale:1&gt;\n'</font> +
+    <font color="green"><font color="green">''</font><font color="green">'Summon a &lt;blue&gt;rain
+    storm &lt;default&gt;to deal 5 &lt;blue&gt;water
+    damage &lt;default&gt;to &lt;red&gt;everyone, &lt;default&gt;including &lt;orange&gt;yourself. &lt;default&gt;
+    Lasts<font color="purple"> for </font>4 rounds.'</font><font color="green">''</font></font>)
+    
+    Text(text=<font color="orange">None</font>)
+    text
+    Text.size
+    size
+    text_nodes = list()
+    origin = (-.5, .5)  <font color="gray"># set text alignement with this</font>
+    line_height = 1
+    
+    text_colors
+    font
+    width
+    height
+    lines
+    wordwrap
+    background = <font color="orange">False</font>/<font color="orange">True</font>
+    margin
+    
+    update_text()
+    create_text_section(text, tag=<font color="green">'&lt;default&gt;'</font>, x=0, y=0)
+    align()
+    appear()
+    
+
+
+--------------------------------
+<b id="application">application</b>
+--------------------------------
+    package_folder
+    asset_folder
+    internal_models_folder
+    internal_textures_folder
+    internal_fonts_folder
+    internal_prefabs_folder
+    models_folder
+    texture_Folder
+    prefabs_folder
+    compressed_textures_folder
+    compressed_models_folder
+    
+
+
+--------------------------------
+<b id="build">build</b>
+--------------------------------
+    python -m ursinabuild
+    
+
+
+--------------------------------
+<b id="colliders">colliders</b>
+--------------------------------
+    <font color="red">example:</font> entity.collider = <font color="green">'box'</font>
+    
+    <font color="gray"># to automatically fit mesh bounds</font>
+    <font color="green">'box'</font>
+    <font color="green">'sphere'</font>
+    <font color="gray">#todo mesh</font>
+    <font color="gray">#todo capsule</font>
+    <font color="gray">#todo plane</font>
+    
+    BoxCollider(entity, center, (width=1, height=1, depth=1))
+    SphereCollider(entity, center, radius=.5)
+    
+
+
+--------------------------------
+<b id="color">color</b>
+--------------------------------
+    <font color="red">example:</font> entity.color = color.orange
+    
+    color(h, s, v, a=1)
+    rgba(r, g, b, a=1)
+    to_hsv(color)
+    inverse(color)
+    random_color()
+    tint(color, amount=.2)
+    brightness(color)
+    
+    
+    white =         color(0, 0, 1)
+    smoke =         color(0, 0, 0.96)
+    light_gray =    color(0, 0, 0.75)
+    gray =          color(0, 0, 0.5)
+    dark_gray =     color(0, 0, 0.25)
+    black =         color(0, 0, 0)
+    red =           color(0, 1, 1)
+    orange =        color(30, 1, 1)
+    yellow =        color(60, 1, 1)
+    lime =          color(90, 1, 1)
+    green =         color(120, 1, 1)
+    turquoise =     color(150, 1, 1)
+    cyan =          color(180, 1, 1)
+    azure =         color(210, 1, 1)
+    blue =          color(240, 1, 1)
+    violet =        color(270, 1, 1)
+    magenta =       color(300, 1, 1)
+    pink =          color(330, 1, 1)
+    
+    brown =         rgb(165, 42, 42)
+    olive =         rgb(128, 128, 0)
+    peach =         rgb(255, 218, 185)
+    gold =          rgb(255, 215, 0)
+    salmon =        rgb(250, 128, 114)
+    
+    clear =         Vec4(0, 0, 0, 0)
+    white33 =       Vec4(1,1,1, 0.33)
+    white50 =       Vec4(1,1,1, 0.50)
+    white66 =       Vec4(1,1,1, 0.66)
+    black33 =       Vec4(0,0,0, 0.33)
+    black50 =       Vec4(0,0,0, 0.50)
+    black66 =       Vec4(0,0,0, 0.66)
+    
+    text = smoke
+    light_text = smoke
+    dark_text = color(0, 0, .1)
+    text_color = light_text
+    
+    color_names
+    colors
+    
+
+
+--------------------------------
+<b id="easing_types">easing_types</b>
+--------------------------------
+    <font color="red">example:</font> enitity.animate_y(entity.position + entity.up, .5, curve=<font color="green">'ease_in_sine'</font>)
+    
+    linear
+    
+    ease_in, ease_out, ease_in_out
+    sine, quad, cubic, quart, quint, expo, circ, back, elastic, bounce
+    <font color="gray"># combine like this: ease_in_expo, ease_in_out_elastic</font>
+    
+
+
+--------------------------------
+<b id="global_variables">global_variables</b>
+--------------------------------
+    base
+    held_keys[<font color="green">'key'</font>]
+    
+    raycast(origin, direction, dist=1000, traverse_target=scene, ignore=list(), debug=<font color="orange">False</font>)    <font color="gray"># returns hit</font>
+    <font color="red">example:</font> <font color="purple">print</font>(raycast(self.position, self.forward, 1).hit)
+    
+    invoke(function, *args, **kwargs)   <font color="gray"># example: invoke(func_name, arg1, arg2, delay=.5)</font>
+    <font color="red">example:</font> invoke(self.some_method, arg0, arg1, delay=1.5)
+    
+    destroy(entity, delay=0)
+    import_all_classes(path=application.asset_folder, debug=<font color="orange">False</font>)
+    camel_to_snake(string)  <font color="red">example:</font> <font color="green">'MyClass'</font> -&gt; <font color="green">'my_class'</font>
+    snake_to_camel(string)  <font color="red">example:</font> <font color="green">'my_class'</font> -&gt; <font color="green">'MyClass'</font>
+    
+    multireplace(string, replacements, ignore_case=<font color="orange">False</font>)
+    grid_layout(list, direction=(1,1,1), max_x=8, max_y=8, spacing=(0,0,0), origin=(-.5,.5,0)))
+    average_position(list)  <font color="red">example:</font> avarage = average_position([c.position<font color="purple"> for </font>c<font color="purple"> in </font>my_entity.children])
+    
+    <font color="purple">print</font>var(var)    <font color="gray"># prints variable name and variable value</font>
+    <font color="purple">print</font>_on_screen(string)
+    
+
+
+--------------------------------
+<b id="input">input</b>
+--------------------------------
+    <font color="red">example:</font> input.rebind(<font color="green">'arrow up'</font>, <font color="green">'w'</font>)
+    
+    control
+    left_control
+    right_control
+    shift
+    left_shift
+    right_shift
+    alt
+    left_alt
+    right_alt
+    held_keys = default<font color="blue">dict(</font>lambda: 0)
+    rebinds = <font color="blue">dict(</font>)
+    
+    bind(alternative_key, original_key)
+    unbind(key)
+    rebind(from_key, to_key)
+    
+
+
+--------------------------------
+<b id="models">models</b>
+--------------------------------
+    <font color="green">'quad'</font>
+    <font color="green">'quad_double_sided'</font>
+    <font color="green">'cube'</font>
+    <font color="green">'circle'</font>
+    <font color="green">'sphere'</font>
+    <font color="green">'sky_dome'</font>
+    
+    Circle(resolution=16)
+    Quad(bevel=.1, subdivisions=0, ignore_aspect=<font color="orange">False</font>)
+    Grid(with, height)
+    
+
+
+--------------------------------
+<b id="mouse">mouse</b>
+--------------------------------
+    <font color="red">example:</font> entity.position = mouse.position
+    
+    enabled
+    locked
+    position = Vec2(0,0)
+    delta = (0,0)
+    delta_drag = (0,0)
+    velocity = (0,0)
+    double_click_distance = .5
+    update_rate = 10
+    raycast = <font color="orange">False</font>/<font color="orange">True</font>
+    collision = <font color="orange">None</font>/Collision
+    
+    hovered_entity
+    left = <font color="orange">False</font>/<font color="orange">True</font>
+    right = <font color="orange">False</font>/<font color="orange">True</font>
+    middle = <font color="orange">False</font>/<font color="orange">True</font>
+    
+
+
+--------------------------------
+<b id="scene">scene</b>
+--------------------------------
+    <font color="red">example:</font> buttons = [e<font color="purple"> for </font>e<font color="purple"> in </font>scene.entities<font color="purple"> if</font> <font color="green">'Button'</font><font color="purple"> in </font>e.types]
+    
+    camera
+    ui_camera
+    ui
+    entities
+    has_changes
+    
+
+
+--------------------------------
+<b id="textures">textures</b>
+--------------------------------
+    <font color="green">'brick'</font>
+    <font color="green">'default_sky'</font>
+    <font color="green">'white_cube'</font>
+    
+
+
+--------------------------------
+<b id="window">window</b>
+--------------------------------
+    title
+    fullscreen_size
+    windowed_size
+    position
+    size
+    color   <font color="gray"># background color</font>
+    
+    fullscreen = <font color="orange">False</font>
+    borderless = <font color="orange">True</font>
+    
+    cursor
+    fps_counter = <font color="orange">True</font>
+    vsync = <font color="orange">True</font>
+    exit_button     <font color="gray">#entity</font>
+    
+    top
+    bottom
+    center
+    left
+    right
+    top_left
+    top_right
+    bottom_left
+    bottom_right
+    
+    center_on_screen()
+    
+
+
+--------------------------------
+<b id="Animation">Animation (Entity)</b>
+--------------------------------
+    <font color="red">example:</font> Animation(<font color="green">'player_run'</font>, fps=12, frame_times=<font color="orange">None</font>)
+    
+    <font color="gray"># frames must be prefixed with _0001 and so on to auto load</font>
+    Animation(texture, fps=12, frame_times=<font color="orange">None</font>)
+    frames = list()
+    autoplay = <font color="orange">True</font>
+    
+    play()
+    stop()
+    
+
+
+--------------------------------
+<b id="Button">Button (Entity)</b>
+--------------------------------
+    <font color="red">example:</font> b = Button(color = color.red, text=<font color="green">'button_text'</font>)
+    
+    name = <font color="green">'button'</font>
+    parent = scene.ui
+    model = <font color="green">'quad'</font>
+    color = color.ursina_button
+    collision = <font color="orange">True</font>
+    collider = <font color="green">'box'</font>
+    text_entity
+    text
+    tooltip
+    
+    original_color
+    highlight_color
+    pressed_color
+    
+    on_click
+    on_click_string
+    
+
+
+--------------------------------
+<b id="Cursor">Cursor (Entity)</b>
+--------------------------------
+    example = base.cursor = Cursor(texture=<font color="green">'custom_cursor'</font>)
+    
+    <font color="gray"># follows the mouse</font>
+    <font color="gray"># set texture for custom cursor</font>
+    
+
+
+--------------------------------
+<b id="DebugMenu">DebugMenu (Draggable)</b>
+--------------------------------
+    DebugMenu(target)
+    draw_functions()
+    
+    <font color="gray"># lists attributes and makes buttons class methods</font>
+    
+
+
+--------------------------------
+<b id="Draggable">Draggable (Button)</b>
+--------------------------------
+    require_key = <font color="orange">None</font>
+    dragging = <font color="orange">False</font>
+    lock_x = <font color="orange">False</font>
+    lock_y = <font color="orange">False</font>
+    min_x, min_y, min_z
+    max_x, max_y, max_z
+    
+    drag()  <font color="gray"># gets called if implemented</font>
+    drop()  <font color="gray"># gets called if implemented</font>
+    
+
+
+--------------------------------
+<b id="EditorCamera">EditorCamera (Entity)</b>
+--------------------------------
+    <font color="gray"># basic mouse controlled camera useful for editor</font>
+    EditorCamera()
+    camera_pivot
+    rotation_speed = 100
+    pan_speed = (4, 4)
+    move_speed = .1
+    zoom_speed = 1
+    
+    <font color="gray"># + to increase fov</font>
+    <font color="gray"># - to decrease fov</font>
+    <font color="gray"># p to toggle orthographic</font>
+    
+
+
+--------------------------------
+<b id="MemoryCounter">MemoryCounter (Text)</b>
+--------------------------------
+    
+
+
+--------------------------------
+<b id="Panel">Panel (Entity)</b>
+--------------------------------
+    name = <font color="green">'panel'</font>
+    parent = scene.ui
+    model = <font color="green">'quad'</font>
+    color = color.ursina_button
+    
+
+
+--------------------------------
+<b id="Sky">Sky (Entity)</b>
+--------------------------------
+    
+
+
+--------------------------------
+<b id="Sprite">Sprite (Entity)</b>
+--------------------------------
+    <font color="gray"># scales to fit texture aspect ratio</font>
+    Sprite(self, texture=<font color="orange">None</font>)
+    aspect_ratio
+    
+
+
+--------------------------------
+<b id="Tooltip">Tooltip (Text)</b>
+--------------------------------
+    <font color="gray"># follows the mouse and always stays within screen edges</font>
+    <font color="red">example:</font> Tooltip(<font color="green">'info text'</font>)
+    
+    Tooltip(text=<font color="green">''</font>)
+    size *= .1
+    parent = camera.ui
+    wordwrap = 40
+    origin = (-.5, -.5)
+    background = <font color="orange">True</font>
+    margin = 2
+    enabled = <font color="orange">False</font>
+    
+
+
+--------------------------------
+<b id="PositionLimiter">PositionLimiter</b>
+--------------------------------
+    PositionLimiter(min_x, max_x, min_y, max_y, min_z, max_z)
+    
+
+
+--------------------------------
+<b id="SmoothFollow">SmoothFollow</b>
+--------------------------------
+    <font color="red">example:</font> Entity(model=<font color="green">'cube'</font>).add_script(SmoothFollow(target=player, offset=(0,2,0)))
+    
+    SmoothFollow(target=<font color="orange">None</font>, offset=(0,0,0), speed=8)
+    
+
+
+--------------------------------
+<b id="about_scripts">about_scripts</b>
+--------------------------------
+    scripts can be added to Entities like this:
+        entity.add_script(MyClass())
+     or entity.add_script(MyClass) <font color="gray"># makes an instance of the class</font>
+     or entity.add_script("script_name") <font color="gray"># makes an instance of first class in script</font>
+    
+    scripts gets assigned a variable called <font color="green">'entity'</font>.
+    target entity gets assigned a variable<font color="purple"> with </font>the same name<font color="purple"> as </font>the script.
+    
+    <font color="red">example:</font>
+    camera.add_script(SmoothFollow(offset=(0,10,-10)))
+    <font color="purple">print</font>(camera.smooth_follow)
+    
+<div style="
+    font-size: 2em;
+    align: center;
+    ">
+
+
+(\(\
+(-.-)
+(")(") END
+
+</div><pre><div style="
+    left: 0px;
+    position: fixed;
+    top: 0px;
+    padding-top:40px;
+    padding-left:20px;
+    bottom: 0;
+    overflow-y: scroll;
+    width: 20%;
+    background-color: lightgray;
+    "><a href="#top">ursina_cheat_sheet</a>
+          <a href="#"></a>
+          <a href="#Audio">Audio</a>
+          <a href="#Camera">Camera</a>
+          <a href="#Entity">Entity</a>
+          <a href="#Hit">Hit</a>
+          <a href="#Mesh">Mesh</a>
+          <a href="#Text">Text</a>
+          <a href="#application">application</a>
+          <a href="#build">build</a>
+          <a href="#colliders">colliders</a>
+          <a href="#color">color</a>
+          <a href="#easing_types">easing_types</a>
+          <a href="#global_variables">global_variables</a>
+          <a href="#input">input</a>
+          <a href="#models">models</a>
+          <a href="#mouse">mouse</a>
+          <a href="#scene">scene</a>
+          <a href="#textures">textures</a>
+          <a href="#window">window</a>
+
+  
+  
+  
+  
+  prefabs
+            <a href="#Animation">Animation</a>
+            <a href="#Button">Button</a>
+            <a href="#Cursor">Cursor</a>
+            <a href="#DebugMenu">DebugMenu</a>
+            <a href="#Draggable">Draggable</a>
+            <a href="#EditorCamera">EditorCamera</a>
+            <a href="#MemoryCounter">MemoryCounter</a>
+            <a href="#Panel">Panel</a>
+            <a href="#Sky">Sky</a>
+            <a href="#Sprite">Sprite</a>
+            <a href="#Tooltip">Tooltip</a>
+
+  
+  
+  
+  
+  scripts
+            <a href="#PositionLimiter">PositionLimiter</a>
+            <a href="#SmoothFollow">SmoothFollow</a>
+            <a href="#about_scripts">about_scripts</a>
