@@ -119,7 +119,7 @@ class Ursina(ShowBase):
                     entity.update()
 
                 for script in entity.scripts:
-                    if hasattr(script, 'update'):
+                    if script.enabled and hasattr(script, 'update'):
                         script.update()
 
         return Task.cont
@@ -176,7 +176,7 @@ class Ursina(ShowBase):
                     entity.input(key)
 
                 for script in entity.scripts:
-                    if hasattr(script, 'input'):
+                    if script.enabled and hasattr(script, 'input'):
                         script.input(key)
 
     def load_editor(self):
