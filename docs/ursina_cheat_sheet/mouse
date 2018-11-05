@@ -12,6 +12,7 @@ raycast = False/True
 collision = None/Collision
 
 hovered_entity
+point
 left = False/True
 right = False/True
 middle = False/True

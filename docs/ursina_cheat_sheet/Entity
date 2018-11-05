@@ -1,44 +1,46 @@
-example: Entity(
-             model = 'cube',
-             color = color.orange,
-             texture = 'white_cube',
-             position = (1, 10, 4),
-             scale_y = 2,
-             )
+example:
+    Entity(
+        model = 'cube',
+        color = color.orange,
+        texture = 'white_cube',
+        position = (1, 10, 4),
+        scale_y = 2,
+        )
 
 
 name = __class__.__name__
-enabled
+enabled = True
 eternal   # eternal entities does not get destroyed when calling scene.clear()
 visible
 parent = scene
 world_parent
 
 origin
-position
+origin_x, origin_y, origin_z
+position = (0,0,0)
 x, y, z
-world_position
+world_position = (0,0,0)
 world_x, world_y, world_z
-rotation
+rotation = (0,0,0)
 rotation_x, rotation_y, rotation_z
-world_rotation
+world_rotation = (0,0,0)
 world_rotation_x, world_rotation_y, world_rotation_z
-scale
+scale = (1,1,1)
 scale_x, scale_y, scale_z
-world_scale
+world_scale = (1,1,1)
 world_scale_x, world_scale_y, world_scale_z
 
-model
-color
-texture
-texture_scale
-texture_offset
-render_queue
-double_sided
-collision
-collider
+model = 'model_name' / Mesh(verts=())
+color = color.white
+texture = 'texture_name'
+texture_scale = (1,1)
+texture_offset = (0,0)
+render_queue = 0
+double_sided = False
+collision = False
+collider = 'box' / BoxCollider()
 scripts
-hovered
+hovered = False
 type
 types
 texture_name
@@ -48,6 +50,8 @@ texture_width
 texture_height
 pixels
 get_pixel(x,y)
+get_pixels(start, end)
+bounds
 
 reparent_to(entity)   # same as setting world_parent
 add_script(name)

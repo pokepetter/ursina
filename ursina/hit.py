@@ -4,7 +4,7 @@ class Hit():
         self.hit = None
         self.entity = None
         self.point = None
-        self.distance = None
+        self.distance = 0
         self.normal = None
         self.world_normal = None
 

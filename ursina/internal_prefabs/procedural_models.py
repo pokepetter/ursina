@@ -74,7 +74,7 @@ class Quad(Mesh):
 
 
 class Sphere(Mesh):
-    def __init__(self, radius=.5, subdivision=0, mode='tristrip', **kwargs):
+    def __init__(self, radius=.5, subdivisions=0, mode='tristrip', **kwargs):
         X=.525731112119133606 * radius
         Z=.850650808352039932 * radius
         N=0
@@ -96,7 +96,7 @@ class Sphere(Mesh):
         # print(colors)
 
         super().__init__(verts=verts, tris=faces, colors=colors, mode=mode, **kwargs)
-        args = 'radius='+str(radius)+', subdivision='+str(subdivision)+', mode=\''+mode + '\''
+        args = 'radius='+str(radius)+', subdivisions='+str(subdivisions)+', mode=\''+mode + '\''
         for k, v in kwargs.items():
             args += ', ' + k + '='
             if type(v) is str:

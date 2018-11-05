@@ -100,23 +100,14 @@ class Mesh(NodePath):
 if __name__  == '__main__':
     from ursina import *
     app = Ursina()
-    # verts = ((-2,0,0), (2,0,0), (1,4,0), (-1,4,0))
     verts=((0,0,0), (1,0,0), (.5, 1, 0), (-.5,1,0))
     tris = (1, 2, 0, 2, 3, 0)
     uvs = ((1.0, 0.0), (0.0, 1.0), (0.0, 0.0), (1.0, 1.0))
     colors = (color.red, color.blue, color.lime, color.black)
-    m = Mesh(
-    verts=((0.5, 0.5, 0.0), (-0.5, 0.5, 0.0), (-0.5, -0.5, 0.0), (0.5, -0.5, 0.0), (0.5, 0.5, 0.0), (-0.5, -0.5, 0.0)),
-    uvs=((0.9999, 0.9999), (0.0001, 0.9999), (0.0001, 0.0001), (0.9999, 0.0001), (0.9999, 0.9999), (0.0001, 0.0001)),
-    mode='triangle')
-    # m = Mesh(verts=((1.000000,0.000000,-1.000000), (-1.000000,0.000000,-1.000000), (1.000000,0.000000,1.000000), (-1.000000,0.000000,1.000000), ), tris=((1, 2, 0), (1, 3, 2)), mode='triangle')
-
-    # m.thickness = 50
-    # nodePath = render.attachNewNode(m)
+    m = Mesh(verts=verts, tris=tris, uvs=uvs, colors=colors)
     e = Entity()
     e.model = m
     e.texture = 'white_cube'
-    e.show_vertices()
-    # e.color = color.red
+    # e.show_vertices()
     EditorCamera()
     app.run()
