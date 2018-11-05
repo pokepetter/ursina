@@ -1,9 +1,11 @@
+
 This document is good for looking up attribute names and classes
 you just can't remember the names of. Just press Ctrl+F and search away!
-The 'Entity' class is a useful place to start and is this engine's
-equivalent of a GameObject(Unity) or an Actor(Unreal).
+The 'Entity' class is a useful place to start and is kind of like
+a GameObject(Unity) or an Actor(Unreal).
 Also, don't forget to check out 'global_variables' for useful functions
 like raycast(), invoke(), duplicate(), and destroy().
+
 
 
 example:
