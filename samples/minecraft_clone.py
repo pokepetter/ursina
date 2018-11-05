@@ -52,10 +52,10 @@ class FirstPersonController(Entity):
         self.i = 0
         self.update_interval = 30
 
-        cursor = Panel()
-        cursor.color = color.pink
-        cursor.scale *= .008
-        cursor.rotation_z = 45
+        self.cursor = Panel()
+        self.cursor.color = color.pink
+        self.cursor.scale *= .008
+        self.cursor.rotation_z = 45
 
         self.graphics = Entity(
             name = 'player_graphics',
@@ -102,4 +102,6 @@ class FirstPersonController(Entity):
 if __name__ == '__main__':
     app = Ursina()
     MinecraftClone()
+    vr = VideoRecorder()
+    invoke(setattr, vr, 'recording', True, delay=1)
     app.run()
