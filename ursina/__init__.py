@@ -29,6 +29,7 @@ from ursina.internal_prefabs.draggable import Draggable
 from ursina.internal_prefabs.scrollable import Scrollable
 from ursina.internal_prefabs.grid import Grid
 from ursina.prismatoid import Prismatoid
+from ursina.internal_prefabs import primitives
 
 from ursina.internal_scripts.smooth_follow import SmoothFollow
 from ursina.internal_scripts.position_limiter import PositionLimiter
@@ -37,4 +38,5 @@ from ursina.internal_scripts.grid_layout import grid_layout
 from ursina.internal_prefabs.debug_menu import DebugMenu
 from ursina.internal_prefabs.memory_counter import MemoryCounter
 from ursina.internal_prefabs.editor_camera import EditorCamera
+from ursina.internal_prefabs.video_recorder import VideoRecorder
 from ursina.duplicate import duplicate
