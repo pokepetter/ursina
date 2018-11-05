@@ -17,25 +17,32 @@
 --------------------------------
 <b id=""> getting_started</b>
 --------------------------------
+    This document<font color="purple"> is </font>good<font color="purple"> for </font>looking up attribute names<font color="purple"> and </font>classes
+    you just can't remember the names of. Just press Ctrl+F<font color="purple"> and </font>search away!
+    The <font color="green">'Entity'</font> <font color="purple">class </font>is a useful place to start<font color="purple"> and </font>is this engine<font color="green">'s
+    equivalent of a GameObject(Unity) or an Actor(Unreal).
+    Also, don't forget to check out '</font>global_variables<font color="green">'<font color="purple"> for </font>useful functions
+    like raycast(), invoke(), duplicate(),<font color="purple"> and </font>destroy().
+    
+    
     <font color="red">example:</font>
+        <font color="purple">from </font>ursina <font color="purple">import </font>*
+        app = Ursina()
     
-    <font color="purple">from </font>ursina <font color="purple">import </font>*
-    app = Ursina()
+        b = Button('</font>hello world!<font color="green">', color=color.azure)
+        b.scale *= .2
+        b.tooltip = Tooltip('</font>click me<font color="green">')
     
-    b = Button(<font color="green">'hello world!'</font>, color=color.azure)
-    b.scale *= .2
-    b.tooltip = Tooltip(<font color="green">'click me'</font>)
-    
-    app.run()
+        app.run()
     
 
 
 --------------------------------
 <b id="Audio">Audio (Entity)</b>
 --------------------------------
-    <font color="red">example:</font> Audio(sound_file_name=<font color="green">'jump_sfx'</font>)
+    <font color="red">example:</font> Audio(sound_file_name='</font>jump_sfx<font color="green">')
     
-    Audio(sound_file_name=<font color="green">''</font>, **kwargs):
+    Audio(sound_file_name='</font><font color="green">', **kwargs):
     clip
     attack = 0
     falloff = 0
@@ -56,9 +63,9 @@
     pause()
     resume()
     stop(destroy=<font color="orange">True</font>)
-    fade(value, duration=.5, delay=0, curve=<font color="green">'ease_in_expo'</font>, resolution=<font color="orange">None</font>, interrupt=<font color="orange">True</font>)
-    fade_in(value=1, duration=.5, delay=0, curve=<font color="green">'ease_in_expo'</font>, resolution=<font color="orange">None</font>, interrupt=<font color="orange">True</font>, destroy_on_ended=<font color="orange">False</font>)
-    fade_out(value=0, duration=.5, delay=0, curve=<font color="green">'ease_in_expo'</font>, resolution=<font color="orange">None</font>, interrupt=<font color="orange">True</font>, destroy_on_ended=<font color="orange">True</font>):
+    fade(value, duration=.5, delay=0, curve='</font>ease_in_expo<font color="green">', resolution=<font color="orange">None</font>, interrupt=<font color="orange">True</font>)
+    fade_in(value=1, duration=.5, delay=0, curve='</font>ease_in_expo<font color="green">', resolution=<font color="orange">None</font>, interrupt=<font color="orange">True</font>, destroy_on_ended=<font color="orange">False</font>)
+    fade_out(value=0, duration=.5, delay=0, curve='</font>ease_in_expo<font color="green">', resolution=<font color="orange">None</font>, interrupt=<font color="orange">True</font>, destroy_on_ended=<font color="orange">True</font>):
     
 
 
@@ -81,9 +88,9 @@
 --------------------------------
     <font color="red">example:</font>
         Entity(
-            model = <font color="green">'cube'</font>,
+            model = '</font>cube<font color="green">',
             color = color.orange,
-            texture = <font color="green">'white_cube'</font>,
+            texture = '</font>white_cube<font color="green">',
             position = (1, 10, 4),
             scale_y = 2,
             )
@@ -111,15 +118,15 @@
     world_scale = (1,1,1)
     world_scale_x, world_scale_y, world_scale_z
     
-    model = <font color="green">'model_name'</font> / Mesh(verts=())
+    model = '</font>model_name<font color="green">' / Mesh(verts=())
     color = color.white
-    texture = <font color="green">'texture_name'</font>
+    texture = '</font>texture_name<font color="green">'
     texture_scale = (1,1)
     texture_offset = (0,0)
     render_queue = 0
     double_sided = <font color="orange">False</font>
     collision = <font color="orange">False</font>
-    collider = <font color="green">'box'</font> / BoxCollider()
+    collider = '</font>box<font color="green">' / BoxCollider()
     scripts
     hovered = <font color="orange">False</font>
     type
@@ -143,7 +150,7 @@
     has_ancestor(entity)
     children
     
-    animate(name, value, duration=.1, delay=0, curve=<font color="green">'ease_in_expo'</font>, resolution=<font color="orange">None</font>, interrupt=<font color="orange">True</font>)
+    animate(name, value, duration=.1, delay=0, curve='</font>ease_in_expo<font color="green">', resolution=<font color="orange">None</font>, interrupt=<font color="orange">True</font>)
     animate_position()
     animate_x(), animate_y(), animate_z()
     animate_rotation()
@@ -172,8 +179,8 @@
 --------------------------------
 <b id="Mesh">Mesh</b>
 --------------------------------
-    Mesh(verts, tris=<font color="orange">None</font>, colors=<font color="orange">None</font>, uvs=<font color="orange">None</font>, normals=<font color="orange">None</font>, static=<font color="orange">True</font>, mode=<font color="green">'ngon'</font>, thickness=1)
-    modes: <font color="green">'triangle'</font>, <font color="green">'tristrip'</font>, <font color="green">'ngon'</font>, <font color="green">'line'</font>, <font color="green">'lines'</font>, <font color="green">'point'</font>
+    Mesh(verts, tris=<font color="orange">None</font>, colors=<font color="orange">None</font>, uvs=<font color="orange">None</font>, normals=<font color="orange">None</font>, static=<font color="orange">True</font>, mode='</font>ngon<font color="green">', thickness=1)
+    modes: '</font>triangle<font color="green">', '</font>tristrip<font color="green">', '</font>ngon<font color="green">', '</font>line<font color="green">', '</font>lines<font color="green">', '</font>point<font color="green">'
     thickness
     
     <font color="gray"># vertices</font>
@@ -195,11 +202,11 @@
 --------------------------------
 <b id="Text">Text (Entity)</b>
 --------------------------------
-    <font color="red">example:</font> Text(<font color="green">'&lt;scale:1.5&gt;'</font> + <font color="green">'Rainstorm'</font> + <font color="green">'&lt;scale:1&gt;\n'</font> +
-    <font color="green"><font color="green">''</font><font color="green">'Summon a &lt;blue&gt;rain
+    <font color="red">example:</font> Text('</font>&lt;scale:1.5&gt;<font color="green">' + '</font>Rainstorm<font color="green">' + '</font>&lt;scale:1&gt;\n<font color="green">' +
+    <font color="green">'</font><font color="green">''</font>Summon a &lt;blue&gt;rain
     storm &lt;default&gt;to deal 5 &lt;blue&gt;water
     damage &lt;default&gt;to &lt;red&gt;everyone, &lt;default&gt;including &lt;orange&gt;yourself. &lt;default&gt;
-    Lasts<font color="purple"> for </font>4 rounds.'</font><font color="green">''</font></font>)
+    Lasts<font color="purple"> for </font>4 rounds.<font color="green">''</font><font color="green">'</font>)
     
     Text(text=<font color="orange">None</font>)
     text
@@ -219,7 +226,7 @@
     margin
     
     update_text()
-    create_text_section(text, tag=<font color="green">'&lt;default&gt;'</font>, x=0, y=0)
+    create_text_section(text, tag='</font>&lt;default&gt;<font color="green">', x=0, y=0)
     align()
     appear()
     
@@ -252,11 +259,11 @@
 --------------------------------
 <b id="colliders">colliders</b>
 --------------------------------
-    <font color="red">example:</font> entity.collider = <font color="green">'box'</font>
+    <font color="red">example:</font> entity.collider = '</font>box<font color="green">'
     
     <font color="gray"># to automatically fit mesh bounds</font>
-    <font color="green">'box'</font>
-    <font color="green">'sphere'</font>
+    '</font>box<font color="green">'
+    '</font>sphere<font color="green">'
     <font color="gray">#todo mesh</font>
     <font color="gray">#todo capsule</font>
     <font color="gray">#todo plane</font>
@@ -326,7 +333,7 @@
 --------------------------------
 <b id="easing_types">easing_types</b>
 --------------------------------
-    <font color="red">example:</font> enitity.animate_y(entity.position + entity.up, .5, curve=<font color="green">'ease_in_sine'</font>)
+    <font color="red">example:</font> enitity.animate_y(entity.position + entity.up, .5, curve='</font>ease_in_sine<font color="green">')
     
     linear
     
@@ -340,7 +347,7 @@
 <b id="global_variables">global_variables</b>
 --------------------------------
     base
-    held_keys[<font color="green">'key'</font>]
+    held_keys['</font>key<font color="green">']
     
     raycast(origin, direction, dist=1000, traverse_target=scene, ignore=list(), debug=<font color="orange">False</font>)    <font color="gray"># returns hit</font>
     <font color="red">example:</font> <font color="purple">print</font>(raycast(self.position, self.forward, 1).hit)
@@ -351,8 +358,8 @@
     duplicate(entity)
     destroy(entity, delay=0)
     import_all_classes(path=application.asset_folder, debug=<font color="orange">False</font>)
-    camel_to_snake(string)  <font color="red">example:</font> <font color="green">'MyClass'</font> -&gt; <font color="green">'my_class'</font>
-    snake_to_camel(string)  <font color="red">example:</font> <font color="green">'my_class'</font> -&gt; <font color="green">'MyClass'</font>
+    camel_to_snake(string)  <font color="red">example:</font> '</font>MyClass<font color="green">' -&gt; '</font>my_class<font color="green">'
+    snake_to_camel(string)  <font color="red">example:</font> '</font>my_class<font color="green">' -&gt; '</font>MyClass<font color="green">'
     
     multireplace(string, replacements, ignore_case=<font color="orange">False</font>)
     grid_layout(list, direction=(1,1,1), max_x=8, max_y=8, spacing=(0,0,0), origin=(-.5,.5,0)))
@@ -366,7 +373,7 @@
 --------------------------------
 <b id="input">input</b>
 --------------------------------
-    <font color="red">example:</font> input.rebind(<font color="green">'arrow up'</font>, <font color="green">'w'</font>)
+    <font color="red">example:</font> input.rebind('</font>arrow up<font color="green">', '</font>w<font color="green">')
     
     control
     left_control
@@ -389,13 +396,13 @@
 --------------------------------
 <b id="models">models</b>
 --------------------------------
-    <font color="green">'quad'</font>
-    <font color="green">'quad_double_sided'</font>
-    <font color="green">'plane'</font>
-    <font color="green">'cube'</font>
-    <font color="green">'circle'</font>
-    <font color="green">'sphere'</font>
-    <font color="green">'sky_dome'</font>
+    '</font>quad<font color="green">'
+    '</font>quad_double_sided<font color="green">'
+    '</font>plane<font color="green">'
+    '</font>cube<font color="green">'
+    '</font>circle<font color="green">'
+    '</font>sphere<font color="green">'
+    '</font>sky_dome<font color="green">'
     
     Circle(resolution=16, radius=.5)
     Quad(size=(1,1), bevel=.05, subdivisions=0, ignore_aspect=<font color="orange">False</font>)
@@ -445,7 +452,7 @@
 --------------------------------
 <b id="scene">scene</b>
 --------------------------------
-    <font color="red">example:</font> buttons = [e<font color="purple"> for </font>e<font color="purple"> in </font>scene.entities<font color="purple"> if</font> <font color="green">'Button'</font><font color="purple"> in </font>e.types]
+    <font color="red">example:</font> buttons = [e<font color="purple"> for </font>e<font color="purple"> in </font>scene.entities<font color="purple"> if</font> '</font>Button<font color="green">'<font color="purple"> in </font>e.types]
     
     camera
     ui_camera
@@ -458,9 +465,9 @@
 --------------------------------
 <b id="textures">textures</b>
 --------------------------------
-    <font color="green">'brick'</font>
-    <font color="green">'default_sky'</font>
-    <font color="green">'white_cube'</font>
+    '</font>brick<font color="green">'
+    '</font>default_sky<font color="green">'
+    '</font>white_cube<font color="green">'
     
 
 
@@ -499,7 +506,7 @@
 --------------------------------
 <b id="Animation">Animation (Entity)</b>
 --------------------------------
-    <font color="red">example:</font> Animation(<font color="green">'player_run'</font>, fps=12, frame_times=<font color="orange">None</font>)
+    <font color="red">example:</font> Animation('</font>player_run<font color="green">', fps=12, frame_times=<font color="orange">None</font>)
     
     <font color="gray"># frames must be prefixed with _0001 and so on to auto load</font>
     Animation(texture, fps=12, frame_times=<font color="orange">None</font>)
@@ -514,14 +521,14 @@
 --------------------------------
 <b id="Button">Button (Entity)</b>
 --------------------------------
-    <font color="red">example:</font> b = Button(color = color.red, text=<font color="green">'button_text'</font>)
+    <font color="red">example:</font> b = Button(color = color.red, text='</font>button_text<font color="green">')
     
-    name = <font color="green">'button'</font>
+    name = '</font>button<font color="green">'
     parent = scene.ui
-    model = <font color="green">'quad'</font>
+    model = '</font>quad<font color="green">'
     color = color.ursina_button
     collision = <font color="orange">True</font>
-    collider = <font color="green">'box'</font>
+    collider = '</font>box<font color="green">'
     text_entity
     text
     tooltip
@@ -538,7 +545,7 @@
 --------------------------------
 <b id="Cursor">Cursor (Entity)</b>
 --------------------------------
-    example = base.cursor = Cursor(texture=<font color="green">'custom_cursor'</font>)
+    example = base.cursor = Cursor(texture='</font>custom_cursor<font color="green">')
     
     <font color="gray"># follows the mouse</font>
     <font color="gray"># set texture for custom cursor</font>
@@ -596,9 +603,9 @@
 --------------------------------
 <b id="Panel">Panel (Entity)</b>
 --------------------------------
-    name = <font color="green">'panel'</font>
+    name = '</font>panel<font color="green">'
     parent = scene.ui
-    model = <font color="green">'quad'</font>
+    model = '</font>quad<font color="green">'
     color = color.ursina_button
     
 
@@ -622,9 +629,9 @@
 <b id="Tooltip">Tooltip (Text)</b>
 --------------------------------
     <font color="gray"># follows the mouse and always stays within screen edges</font>
-    <font color="red">example:</font> Tooltip(<font color="green">'info text'</font>)
+    <font color="red">example:</font> Tooltip('</font>info text<font color="green">')
     
-    Tooltip(text=<font color="green">''</font>)
+    Tooltip(text='</font><font color="green">')
     size *= .1
     parent = camera.ui
     wordwrap = 40
@@ -645,7 +652,7 @@
 --------------------------------
 <b id="SmoothFollow">SmoothFollow</b>
 --------------------------------
-    <font color="red">example:</font> Entity(model=<font color="green">'cube'</font>).add_script(SmoothFollow(target=player, offset=(0,2,0)))
+    <font color="red">example:</font> Entity(model='</font>cube<font color="green">').add_script(SmoothFollow(target=player, offset=(0,2,0)))
     
     SmoothFollow(target=<font color="orange">None</font>, offset=(0,0,0), speed=8)
     
@@ -659,7 +666,7 @@
      or entity.add_script(MyClass) <font color="gray"># makes an instance of the class</font>
      or entity.add_script("script_name") <font color="gray"># makes an instance of first class in script</font>
     
-    scripts gets assigned a variable called <font color="green">'entity'</font>.
+    scripts gets assigned a variable called '</font>entity<font color="green">'.
     target entity gets assigned a variable<font color="purple"> with </font>the same name<font color="purple"> as </font>the script.
     
     <font color="red">example:</font>
