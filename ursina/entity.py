@@ -2,6 +2,7 @@ import sys
 import inspect
 import importlib
 import random
+import glob
 from panda3d.core import PandaNode
 from panda3d.core import NodePath
 from panda3d.core import GeomNode
@@ -43,6 +44,7 @@ class Entity(NodePath):
         except:
             print('scene not yet initialized')
         scene.has_changes = True
+        self.eternal = False    # eternal entities does not get destroyed on scene.clear()
         self.model = None
         self.color = color.white
         self.texture = None
@@ -331,6 +333,27 @@ class Entity(NodePath):
         return [c.__name__ for c in inspect.getmro(self.__class__)]
 
     @property
+    def origin_x(self):
+        return self.origin[0]
+    @origin_x.setter
+    def origin_x(self, value):
+        self.origin = (value, self.origin_y, self.origin_z)
+
+    @property
+    def origin_y(self):
+        return self.origin[1]
+    @origin_x.setter
+    def origin_x(self, value):
+        self.origin = (self.origin_x, value, self.origin_z)
+
+    @property
+    def origin_z(self):
+        return self.origin[2]
+    @origin_x.setter
+    def origin_x(self, value):
+        self.origin = (self.origin_x, self.origin_y, value)
+
+    @property
     def world_position(self):
         world_position = self.getPos(render)
         world_position = Vec3(world_position[0], world_position[2], world_position[1])
@@ -538,14 +561,17 @@ class Entity(NodePath):
 
 
     def get_pixel(self, x, y):
-        if not self._cached_image:
-            self._cached_image = Image.open(self.texture_path)
+        try:
+            if not self._cached_image:
+                self._cached_image = Image.open(self.texture_path)
 
-        col = self._cached_image.getpixel((x, self.texture_height - y -1))
-        if len(col) == 3:
-            return (col[0]/255, col[1]/255, col[2]/255, 1)
-        else:
-            return (col[0]/255, col[1]/255, col[2]/255, col[3]/255)
+            col = self._cached_image.getpixel((x, self.texture_height - y -1))
+            if len(col) == 3:
+                return (col[0]/255, col[1]/255, col[2]/255, 1)
+            else:
+                return (col[0]/255, col[1]/255, col[2]/255, col[3]/255)
+        except:
+            return None
 
 
     def get_pixels(self, start, end):
@@ -623,55 +649,54 @@ class Entity(NodePath):
         self._parent = entity
 
 
-    def add_script(self, module_name):
+    def add_script(self, name, path=None):
         # instance given
-        if isinstance(module_name, object) and type(module_name) is not str:
+        if isinstance(name, object) and type(name) is not str:
             # print('type', type(self))
-            module_name.entity = self
-            setattr(self, camel_to_snake(module_name.__class__.__name__), module_name)
-            self.scripts.append(module_name)
+            name.entity = self
+            name.enabled = True
+            setattr(self, camel_to_snake(name.__class__.__name__), name)
+            self.scripts.append(name)
             # print('added script:', module_name)
-            return module_name
+            return name
 
         # class name given
-        if inspect.isclass(module_name):
-            class_instance = module_name()
+        if inspect.isclass(name):
+            class_instance = name()
             class_instance.entity = self
+            class_instance.enabled = True
             self.scripts.append(class_instance)
-            # print('added script:', module_name)
+            # print('added script:', name)
             return class_instance
 
-        # module name given
-        omn = module_name
-        module_name += '.py'
-        module_names = (path.join(path.dirname(__file__), module_name),
-                        path.join(application.internal_scripts_folder , module_name),
-                        path.join(application.scripts_folder, module_name))
+        # module name given as string
+        folders = (application.asset_folder, application.internal_scripts_folder) # search order
+        if path:
+            folders = (path)
 
-        for module_name in module_names:
-            try:
-                module = importlib.machinery.SourceFileLoader(omn, module_name).load_module()
-                class_names = inspect.getmembers(sys.modules[omn], inspect.isclass)
-                for cn in class_names:
-                    if cn[1].__module__ == module.__name__:
-                        class_name = cn[0]
+        for folder in folders:
+            for filename in glob.iglob(folder + '**/' + name + '.*', recursive=True):
+                for ft in ('.py',):
+                    if filename.endswith(ft):
+                        module = importlib.machinery.SourceFileLoader(filename, name+ft).load_module()
+                        class_names = inspect.getmembers(sys.modules[filename], inspect.isclass)
+                        for cn in class_names:
+                            if cn[1].__module__ == module.__name__:
+                                class_name = cn[0]
 
-                class_ = getattr(module, class_name)
-                class_instance = class_()
-                class_instance.entity = self
+                        class_ = getattr(module, class_name)
+                        class_instance = class_()
+                        class_instance.entity = self
+                        class_instance.enabled = True
 
-                name = module.__name__.split('.')
-                name = name[-1]
-                setattr(self, name, class_instance)
-                self.scripts.append(class_instance)
-                # print('added script:', module_name)
-                return class_instance
-                break
-            except Exception as e:
-                if e is FileNotFoundError == False:
-                    print(e)
+                        setattr(self, name, class_instance)
+                        self.scripts.append(class_instance)
+                        # print('added script:', name)
+                        return class_instance
 
-        print("couldn't find script:", module_names)
+        print("couldn't find script:", name)
+        return None
+
 
     def remove_script(self, module_name):
         for s in self.scripts:
@@ -817,14 +842,14 @@ class Entity(NodePath):
         self.animate('scale_z', value, duration, delay, curve, resolution, interrupt)
 
 
-    def shake(self, duration=.2, magnitude=1, speed=.05):
+    def shake(self, duration=.2, magnitude=1, speed=.05, direction=(1,1)):
         s = Sequence()
         self.original_position = self.position
         for i in range(int(duration / speed)):
             s.append(self.posInterval(speed, Point3(
-                self.x + (random.uniform(-.1, .1) * magnitude),
+                self.x + (random.uniform(-.1, .1) * magnitude * direction[0]),
                 self.z,
-                self.y + (random.uniform(-.1, .1) * magnitude))
+                self.y + (random.uniform(-.1, .1) * magnitude * direction[1]))
             ))
             s.append(self.posInterval(speed, Point3(
                 self.original_position[0],
