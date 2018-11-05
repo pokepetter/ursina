@@ -79,44 +79,49 @@
 --------------------------------
 <b id="Entity">Entity</b>
 --------------------------------
-    <font color="red">example:</font> Entity(
-                 model = <font color="green">'cube'</font>,
-                 color = color.orange,
-                 texture = <font color="green">'white_cube'</font>,
-                 position = (1, 10, 4),
-                 scale_y = 2,
-                 )
+    <font color="red">example:</font>
+        Entity(
+            model = <font color="green">'cube'</font>,
+            color = color.orange,
+            texture = <font color="green">'white_cube'</font>,
+            position = (1, 10, 4),
+            scale_y = 2,
+            )
     
     
     name = __class__.__name__
-    enabled
+    enabled = <font color="orange">True</font>
     eternal   <font color="gray"># eternal entities does not get destroyed when calling scene.clear()</font>
     visible
     parent = scene
     world_parent
     
     origin
-    position
+    origin_x, origin_y, origin_z
+    position = (0,0,0)
     x, y, z
-    world_position
+    world_position = (0,0,0)
     world_x, world_y, world_z
-    rotation
+    rotation = (0,0,0)
     rotation_x, rotation_y, rotation_z
-    scale
+    world_rotation = (0,0,0)
+    world_rotation_x, world_rotation_y, world_rotation_z
+    scale = (1,1,1)
     scale_x, scale_y, scale_z
-    world_scale
+    world_scale = (1,1,1)
     world_scale_x, world_scale_y, world_scale_z
     
-    model
-    color
-    texture
-    texture_scale
-    texture_offset
-    render_queue
-    collision
-    collider
+    model = <font color="green">'model_name'</font> / Mesh(verts=())
+    color = color.white
+    texture = <font color="green">'texture_name'</font>
+    texture_scale = (1,1)
+    texture_offset = (0,0)
+    render_queue = 0
+    double_sided = <font color="orange">False</font>
+    collision = <font color="orange">False</font>
+    collider = <font color="green">'box'</font> / BoxCollider()
     scripts
-    hovered
+    hovered = <font color="orange">False</font>
     type
     types
     texture_name
@@ -126,10 +131,13 @@
     texture_height
     pixels
     get_pixel(x,y)
+    get_pixels(start, end)
+    bounds
     
     reparent_to(entity)   <font color="gray"># same as setting world_parent</font>
     add_script(name)
     remove_script(name)
+    flip_faces()
     combine(analyze=<font color="orange">False</font>)
     look_at(entity/(x,y,z))
     has_ancestor(entity)
@@ -174,16 +182,13 @@
     <font color="gray"># colors</font>
     <font color="gray"># generate()</font>
     
-    <font color="gray"># verts=((0,0,0), (1,0,0), (.5, 1, 0), (-.5,1,0))</font>
-    <font color="gray"># tris = (1, 2, 0, 2, 3, 0)</font>
-    <font color="gray"># uvs = ((1.0, 0.0), (0.0, 1.0), (0.0, 0.0), (1.0, 1.0))</font>
-    <font color="gray"># colors = (color.red, color.blue, color.lime, color.black)</font>
-    <font color="gray"># m = Mesh(</font>
-    <font color="gray">#   verts=((0.5, 0.5, 0.0), (-0.5, 0.5, 0.0), (-0.5, -0.5, 0.0), (0.5, -0.5, 0.0), (0.5, 0.5, 0.0), (-0.5, -0.5, 0.0)),</font>
-    <font color="gray">#   uvs=((0.9999, 0.9999), (0.0001, 0.9999), (0.0001, 0.0001), (0.9999, 0.0001), (0.9999, 0.9999), (0.0001, 0.0001)),</font>
-    <font color="gray">#   mode=triangle</font>
-    <font color="gray">#   )</font>
-    <font color="gray"># e = Entity(model = m)</font>
+    <font color="red">example:</font>
+        verts = ((0,0,0), (1,0,0), (.5, 1, 0), (-.5,1,0))
+        tris = (1, 2, 0, 2, 3, 0)
+        uvs = ((1.0, 0.0), (0.0, 1.0), (0.0, 0.0), (1.0, 1.0))
+        colors = (color.red, color.blue, color.lime, color.black)
+        m = Mesh(verts=verts, tris=tris, uvs=uvs, colors=colors)
+        e = Entity(model = m)
     
 
 
@@ -343,6 +348,7 @@
     invoke(function, *args, **kwargs)   <font color="gray"># example: invoke(func_name, arg1, arg2, delay=.5)</font>
     <font color="red">example:</font> invoke(self.some_method, arg0, arg1, delay=1.5)
     
+    duplicate(entity)
     destroy(entity, delay=0)
     import_all_classes(path=application.asset_folder, debug=<font color="orange">False</font>)
     camel_to_snake(string)  <font color="red">example:</font> <font color="green">'MyClass'</font> -&gt; <font color="green">'my_class'</font>
@@ -385,14 +391,18 @@
 --------------------------------
     <font color="green">'quad'</font>
     <font color="green">'quad_double_sided'</font>
+    <font color="green">'plane'</font>
     <font color="green">'cube'</font>
     <font color="green">'circle'</font>
     <font color="green">'sphere'</font>
     <font color="green">'sky_dome'</font>
     
-    Circle(resolution=16)
-    Quad(bevel=.1, subdivisions=0, ignore_aspect=<font color="orange">False</font>)
-    Grid(with, height)
+    Circle(resolution=16, radius=.5)
+    Quad(size=(1,1), bevel=.05, subdivisions=0, ignore_aspect=<font color="orange">False</font>)
+    Sphere(radius=.5, subdivisions=0)
+    Cone(resolution=4, radius=.5, height=1)
+    Grid(width, height, thickness=1)
+    Prismatoid(base_shape=Quad(), origin=(0,0), path=((0,0,0),(1,1,1)), thicknesses=((1,1))
     
 
 
@@ -413,9 +423,22 @@
     collision = <font color="orange">None</font>/Collision
     
     hovered_entity
+    point
     left = <font color="orange">False</font>/<font color="orange">True</font>
     right = <font color="orange">False</font>/<font color="orange">True</font>
     middle = <font color="orange">False</font>/<font color="orange">True</font>
+    
+
+
+--------------------------------
+<b id="primitives">primitives</b>
+--------------------------------
+    <font color="gray"># generates a bunch of classes for easier prototyping like RedCube, YellowSphere and so on.</font>
+    
+    <font color="red">example:</font> cube = OrangeCube(), GreenPlane()
+    
+    Basically just combine a color name<font color="purple"> with </font>one of these:
+    Quad, Cube, Sphere, Plane
     
 
 
@@ -664,48 +687,53 @@
     width: 20%;
     background-color: lightgray;
     "><a href="#top">ursina_cheat_sheet</a>
-          <a href="#"></a>
-          <a href="#Audio">Audio</a>
-          <a href="#Camera">Camera</a>
-          <a href="#Entity">Entity</a>
-          <a href="#Hit">Hit</a>
-          <a href="#Mesh">Mesh</a>
-          <a href="#Text">Text</a>
-          <a href="#application">application</a>
-          <a href="#build">build</a>
-          <a href="#colliders">colliders</a>
-          <a href="#color">color</a>
-          <a href="#easing_types">easing_types</a>
-          <a href="#global_variables">global_variables</a>
-          <a href="#input">input</a>
-          <a href="#models">models</a>
-          <a href="#mouse">mouse</a>
-          <a href="#scene">scene</a>
-          <a href="#textures">textures</a>
-          <a href="#window">window</a>
+              <a href="#"></a>
+              <a href="#Audio">Audio</a>
+              <a href="#Camera">Camera</a>
+              <a href="#Entity">Entity</a>
+              <a href="#Hit">Hit</a>
+              <a href="#Mesh">Mesh</a>
+              <a href="#Text">Text</a>
+              <a href="#application">application</a>
+              <a href="#build">build</a>
+              <a href="#colliders">colliders</a>
+              <a href="#color">color</a>
+              <a href="#easing_types">easing_types</a>
+              <a href="#global_variables">global_variables</a>
+              <a href="#input">input</a>
+              <a href="#models">models</a>
+              <a href="#mouse">mouse</a>
+              <a href="#primitives">primitives</a>
+              <a href="#scene">scene</a>
+              <a href="#textures">textures</a>
+              <a href="#window">window</a>
 
+  
+  
   
   
   
   
   prefabs
-            <a href="#Animation">Animation</a>
-            <a href="#Button">Button</a>
-            <a href="#Cursor">Cursor</a>
-            <a href="#DebugMenu">DebugMenu</a>
-            <a href="#Draggable">Draggable</a>
-            <a href="#EditorCamera">EditorCamera</a>
-            <a href="#MemoryCounter">MemoryCounter</a>
-            <a href="#Panel">Panel</a>
-            <a href="#Sky">Sky</a>
-            <a href="#Sprite">Sprite</a>
-            <a href="#Tooltip">Tooltip</a>
+                <a href="#Animation">Animation</a>
+                <a href="#Button">Button</a>
+                <a href="#Cursor">Cursor</a>
+                <a href="#DebugMenu">DebugMenu</a>
+                <a href="#Draggable">Draggable</a>
+                <a href="#EditorCamera">EditorCamera</a>
+                <a href="#MemoryCounter">MemoryCounter</a>
+                <a href="#Panel">Panel</a>
+                <a href="#Sky">Sky</a>
+                <a href="#Sprite">Sprite</a>
+                <a href="#Tooltip">Tooltip</a>
 
   
   
   
   
+  
+  
   scripts
-            <a href="#PositionLimiter">PositionLimiter</a>
-            <a href="#SmoothFollow">SmoothFollow</a>
-            <a href="#about_scripts">about_scripts</a>
+                <a href="#PositionLimiter">PositionLimiter</a>
+                <a href="#SmoothFollow">SmoothFollow</a>
+                <a href="#about_scripts">about_scripts</a>
