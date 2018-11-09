@@ -101,9 +101,11 @@ if __name__  == '__main__':
     from ursina import *
     app = Ursina()
     verts=((0,0,0), (1,0,0), (.5, 1, 0), (-.5,1,0))
-    tris = (1, 2, 0, 2, 3, 0)
-    uvs = ((1.0, 0.0), (0.0, 1.0), (0.0, 0.0), (1.0, 1.0))
-    colors = (color.red, color.blue, color.lime, color.black)
+    # tris = (1, 2, 0, 2, 3, 0)
+    tris = (0,1,2, 0,2,3)
+    uvs = ((0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0))
+    # colors = (color.red, color.blue, color.lime, color.black)
+    colors = ()
     m = Mesh(verts=verts, tris=tris, uvs=uvs, colors=colors)
     e = Entity()
     e.model = m

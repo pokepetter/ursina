@@ -4,13 +4,14 @@ import imageio
 
 
 class VideoRecorder(Entity):
-    def __init__(self, **kwargs):
+    def __init__(self, duration=5, name='untitled_video', **kwargs):
         super().__init__()
         self.recording = False
-        self.file_path = os.path.join(application.asset_folder, 'video_temp')
+        self.file_path = Path(application.asset_folder) / 'video_temp'
         self.i = 0
-        self.duration = 5
-        self.frame_skip = 2
+        self.duration = duration
+        self.frame_skip = 2     # 30 fps
+        self.video_name = name
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -29,26 +30,13 @@ class VideoRecorder(Entity):
     @recording.setter
     def recording(self, value):
 
-        if value:
-            if os.path.exists(self.file_path):
+        if value == True:
+            if self.file_path.exists():
                 shutil.rmtree(self.file_path)   # delete temp folder
-            os.makedirs(self.file_path)
-            print('start recording, 5s', self.file_path)
+            self.file_path.mkdir()
+            print('start recording,', self.duration, self.file_path)
             window.fps_counter = False
             window.exit_button.visible = False
-            # base.movie(
-            #     namePrefix = '\\video_temp\\test_recording',
-            #     # namePrefix = '/video/test_recording',
-            #  	duration = 3,
-            #  	fps = 60,
-            #  	format = 'png',
-            #  	sd = 4,
-            #  	# source = None
-            #     )
-            # invoke(self.convert_to_gif, delay=3.1)
-
-
-
         else:
             window.fps_counter = False
             window.exit_button.enabled = False
@@ -56,21 +44,17 @@ class VideoRecorder(Entity):
         self._recording = value
 
     def update(self):
-        # self.duration += time.dt
         if self.i > 60/self.frame_skip * self.duration:
             if self.recording:
                 self.convert_to_gif()
                 self.recording = False
 
         if self.recording:
-            # print(self.i)
             if self.i % self.frame_skip == 0:
                 print(self.i / self.frame_skip)
                 base.screenshot	(
-                 	namePrefix = '\\video_temp\\test_recording' + '_' + str(self.i).zfill(4) + '.png',
+                 	namePrefix = '\\video_temp\\' + self.video_name + '_' + str(self.i).zfill(4) + '.png',
                  	defaultFilename = 0,
-                 	# source = None,
-                 	# imageComment = ""
                     )
             self.i += 1
 
@@ -82,18 +66,14 @@ class VideoRecorder(Entity):
 
         for filename in os.listdir(self.file_path):
             # print(filename)
-            images.append(imageio.imread(self.file_path + '/' + filename))
+            images.append(imageio.imread(self.file_path/filename))
 
-        imageio.mimsave(os.path.dirname(self.file_path)  + '/movie.gif', images)
+        imageio.mimsave(Path(f'{self.file_path.parent}/{self.video_name}.gif'), images)
         shutil.rmtree(self.file_path)   # delete temp folder
-        print('saved gif to:', os.path.dirname(self.file_path)  + '/movie.gif')
+        print('saved gif to:', Path(f'{self.file_path.parent}/{self.video_name}.gif'))
 
-# def screenshot	(
-#  	namePrefix = 'screenshot',
-#  	defaultFilename = 1,
-#  	source = None,
-#  	imageComment = ""
-# )
+
+
 if __name__ == '__main__':
     app = Ursina()
     window.size = (1600/3,900/3)

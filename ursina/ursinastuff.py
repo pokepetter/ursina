@@ -15,6 +15,7 @@ import inspect
 import importlib
 import subprocess
 import time
+from pathlib import Path
 
 # from PIL import Image     # for texture compression, editor.py
 # from tinyblend import BlenderFile     # for .blend import, editor.py
@@ -166,7 +167,7 @@ def vec3_to_string(vec3):
 
 
 def load_prefab(module_name, add_to_caller=False):
-    paths = (application.internal_prefabs_folder, application.prefabs_folder)
+    paths = (str(application.internal_prefabs_folder.resolve()), str(application.prefabs_folder.resolve()))
     prefab = None
     try:
         prefab = load(paths, module_name)
@@ -220,7 +221,8 @@ def load(paths, module_name, instantiate=True):
 
     for p in paths:
         # print('mod:', f + module_name)
-        # try:
+        p = str(p) + '\\'
+        print(p)
         if module_name + '.py' in os.listdir(p):
             spec = importlib.util.spec_from_file_location(module_name, p + module_name + '.py')
             module = importlib.util.module_from_spec(spec)
@@ -288,6 +290,7 @@ def _destroy(entity):
 
 
 def import_all_classes(path=application.asset_folder, debug=False):
+    path = str(path)
     sys.path.append(path)
     from ursina.useful import snake_to_camel
     from glob import iglob

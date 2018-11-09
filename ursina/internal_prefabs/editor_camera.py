@@ -53,9 +53,12 @@ class EditorCamera(Entity):
             # camera.reparent_to(self.original_camera_parent)
 
         # zooming, don't zoom if hovering an editor panel
-        if not mouse.hovered_entity or mouse.hovered_entity.is_editor == False:
-            if mouse.left or mouse.right or mouse.middle:
-                return
+        if (mouse.left or mouse.right or mouse.middle
+        and mouse.hovered_entity
+        and hasattr(mouse.hovered_entity, 'is_editor')
+        and mouse.hovered_entity.is_editor):     # hovering editor panel
+            pass
+        else:
             if key == 'scroll up':
                 self.dummy.position += self.dummy.forward * self.zoom_speed
             if key == 'scroll down':

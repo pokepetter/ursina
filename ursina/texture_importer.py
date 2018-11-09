@@ -1,5 +1,7 @@
 import glob
 from ursina import application
+from pathlib import Path
+
 
 file_types = ('.jpg', '.png', '.gif')
 
@@ -13,7 +15,7 @@ def load_texture(name, path=None):
         folders = (path)
 
     for folder in folders:
-        for filename in glob.iglob(folder + '**/' + name + '.*', recursive=True):
+        for filename in glob.iglob(str(folder.resolve()) + '/**/' + name + '.*', recursive=True):
             for ft in file_types:
                 if filename.endswith(ft):
                     return filename
@@ -23,12 +25,12 @@ def load_texture(name, path=None):
 if __name__ == '__main__':
     from ursina import *
     app = Ursina()
-    Entity(model='quad', texture = 'project_browser_bg')
+    Entity(model='quad', texture='white_cube')
     app.run()
+
 
 def compress_textures(name=None):
     import os
-    from os.path import dirname
     try:
         from PIL import Image
     except Exception as e:
@@ -38,8 +40,8 @@ def compress_textures(name=None):
     except Exception as e:
         return e
 
-    if not os.path.exists(application.compressed_textures_folder):
-        os.makedirs(application.compressed_textures_folder)
+    if not application.compressed_textures_folder.exists():
+        application.compressed_textures_folder.mkdir()
 
 
     files = os.listdir(application.textures_folder)
@@ -52,15 +54,15 @@ def compress_textures(name=None):
                     continue
             try:
                 # print('f:', application.compressed_textures_folder + f)
-                if f.endswith('.psd'):
-                    image = PSDImage.load(application.textures_folder + f)
+                if f.suffix == '.psd':
+                    image = PSDImage.load(application.textures_folder / f)
                     image = image.as_PIL()
                 else:
-                    image = Image.open(application.textures_folder + f)
+                    image = Image.open(application.textures_folder / f)
                 # print(max(image.size))
                 if max(image.size) > 512:
                     image.save(
-                        application.compressed_textures_folder + f[:-4] + '.jpg',
+                        application.compressed_textures_folder / (f[:-4] + '.jpg'),
                         'JPEG',
                         quality=80,
                         optimize=True,
@@ -69,7 +71,7 @@ def compress_textures(name=None):
                     print('compressing to jpg:', f)
                 else:
                     image.save(
-                        application.compressed_textures_folder + f[:-4] + '.png',
+                        application.compressed_textures_folder / (f[:-4] + '.png'),
                         'PNG'
                         )
                     print('compressing to png:', f)
