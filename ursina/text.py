@@ -1,6 +1,5 @@
 import sys
 import time
-sys.path.append("..")
 from ursina import *
 from panda3d.core import TransparencyAttrib
 

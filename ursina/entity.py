@@ -362,7 +362,7 @@ class Entity(NodePath):
     @world_position.setter
     def world_position(self, value):
         value = Vec3(value[0], value[2], value[1])
-        self.setPos(value, render)
+        self.setPos(render, value)
 
     @property
     def world_x(self):

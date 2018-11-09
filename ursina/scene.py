@@ -36,11 +36,11 @@ class Scene(NodePath):
         to_destroy = [e for e in self.entities if not e.eternal]
         to_keep = [e for e in self.entities if e.eternal]
 
-        for d in self.to_destroy:
+        for d in to_destroy:
             self.entities.remove(d)
             d.remove_node()
 
-        self.entities = self.to_keep
+        self.entities = to_keep
 
 
 

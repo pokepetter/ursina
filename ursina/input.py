@@ -36,6 +36,13 @@ class Input(object):
 
 
     def input(self, key):
+        if key == 'arrow up':
+            self.held_keys[key] = 1
+            return
+        elif key == 'arrow up up':
+            self.held_keys['arrow up'] = 0
+            return
+
         if key.endswith('up'):
             self.held_keys[key[:-3]] = 0
         else:

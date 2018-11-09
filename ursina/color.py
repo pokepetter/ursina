@@ -21,6 +21,7 @@ def rgb(r, g, b, a=255):
 def to_hsv(color):
     return Vec4(colorsys.rgb_to_hsv(color[0], color[1], color[2]) + (color[3],))
 
+
 def brightness(color):
     return to_hsv(color)[2]
 
