@@ -11,7 +11,9 @@ from panda3d.core import Vec3, Vec4
 from panda3d.core import Point3
 from panda3d.core import SamplerState
 from panda3d.core import TransparencyAttrib
-from panda3d.core import Texture, TextureStage
+# from panda3d.core import Texture as PandaTexture
+from ursina.texture import Texture
+from panda3d.core import TextureStage
 from panda3d.core import CullFaceAttrib
 from ursina import application
 from ursina.collider import Collider, BoxCollider, SphereCollider
@@ -26,7 +28,6 @@ from ursina.easing_types import *
 from ursina.useful import *
 from ursina.mesh_importer import load_model
 from ursina.texture_importer import load_texture
-from PIL import Image
 
 from ursina import color
 from ursina import scene
@@ -524,67 +525,6 @@ class Entity(NodePath):
             self.model.set_texture_off(True)
 
 
-    @property
-    def texture_name(self):
-        return self.texture.getFilename()
-
-    @property
-    def texture_path(self):
-        return str(self.texture.getFullpath().toOsSpecific())
-
-
-    @property
-    def texture_size(self):
-        return (self.width, self.height)
-
-    @property
-    def texture_width(self):
-        try:
-            return self.texture.getOrigFileXSize()
-        except:
-            return 0
-    @property
-    def texture_height(self):
-        try:
-            return self.texture.getOrigFileYSize()
-        except:
-            return 0
-
-    @property
-    def pixels(self):
-        try:
-            from PIL import Image
-        except Exception as e:
-            return e
-        from numpy import asarray
-        return asarray(Image.open(self.texture_path))
-
-
-    def get_pixel(self, x, y):
-        try:
-            if not self._cached_image:
-                self._cached_image = Image.open(self.texture_path)
-
-            col = self._cached_image.getpixel((x, self.texture_height - y -1))
-            if len(col) == 3:
-                return (col[0]/255, col[1]/255, col[2]/255, 1)
-            else:
-                return (col[0]/255, col[1]/255, col[2]/255, col[3]/255)
-        except:
-            return None
-
-
-    def get_pixels(self, start, end):
-        start = (clamp(start[0], 0, self.texture_width), clamp(start[1], 0, self.texture_width))
-        end = (clamp(end[0], 0, self.texture_width), clamp(end[1], 0, self.texture_width))
-        pixels = list()
-
-        for y in range(start[1], end[1]):
-            for x in range(start[0], end[0]):
-                pixels.append(self.get_pixel(x,y))
-
-        return pixels
-
 
     @property
     def bounds(self):
@@ -782,6 +722,12 @@ class Entity(NodePath):
 # ANIMATIONS
 #------------
     def animate(self, name, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+        Sequence(
+            Wait(delay),
+            Func(self._animate, name, value, duration, curve, resolution, interrupt)
+        ).start()
+
+    def _animate(self, name, value, duration=.1, curve='ease_in_expo', resolution=None, interrupt=True):
         animator_name = name + '_animator'
         # print('start animating value:', name, animator_name )
         if interrupt and hasattr(self, animator_name):
@@ -789,11 +735,15 @@ class Entity(NodePath):
                 getattr(self, animator_name).pause()
                 # print('interrupt', animator_name)
             except:
+                pass
+        else:
+            try:
                 getattr(self, animator_name).finish()
+            except:
                 pass
         setattr(self, animator_name, Sequence())
         sequence = getattr(self, animator_name)
-        sequence.append(Wait(delay))
+        # sequence.append(Wait(delay))
         if not resolution:
             resolution = int(duration * 60)
 

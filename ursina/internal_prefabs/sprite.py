@@ -15,7 +15,7 @@ class Sprite(Entity):
             destroy(self)
             return None
 
-        self.aspect_ratio = self.texture_width / self.texture_height
+        self.aspect_ratio = self.texture.width / self.texture.height
         self.scale_x = self.scale_y * self.aspect_ratio
 
 

@@ -26,6 +26,7 @@
     like raycast(), invoke(), duplicate(),<font color="purple"> and </font>destroy().
     
     
+    
     <font color="red">example:</font>
         <font color="purple">from </font>ursina <font color="purple">import </font>*
         app = Ursina()
@@ -119,7 +120,7 @@
     world_scale = (1,1,1)
     world_scale_x, world_scale_y, world_scale_z
     
-    model = <font color="green">'model_name'</font> / Mesh(verts=())
+    model = <font color="green">'model_name'</font> / Mesh(vertices=())
     color = color.white
     texture = <font color="green">'texture_name'</font>
     texture_scale = (1,1)
@@ -132,14 +133,6 @@
     hovered = <font color="orange">False</font>
     type
     types
-    texture_name
-    texture_path
-    texture_size
-    texture_width
-    texture_height
-    pixels
-    get_pixel(x,y)
-    get_pixels(start, end)
     bounds
     
     reparent_to(entity)   <font color="gray"># same as setting world_parent</font>
@@ -180,22 +173,22 @@
 --------------------------------
 <b id="Mesh">Mesh</b>
 --------------------------------
-    Mesh(verts, tris=<font color="orange">None</font>, colors=<font color="orange">None</font>, uvs=<font color="orange">None</font>, normals=<font color="orange">None</font>, static=<font color="orange">True</font>, mode=<font color="green">'ngon'</font>, thickness=1)
+    Mesh(vertices, triangles=<font color="orange">None</font>, colors=<font color="orange">None</font>, uvs=<font color="orange">None</font>, normals=<font color="orange">None</font>, static=<font color="orange">True</font>, mode=<font color="green">'ngon'</font>, thickness=1)
     modes: <font color="green">'triangle'</font>, <font color="green">'tristrip'</font>, <font color="green">'ngon'</font>, <font color="green">'line'</font>, <font color="green">'lines'</font>, <font color="green">'point'</font>
     thickness
     
-    <font color="gray"># vertices</font>
-    <font color="gray"># triangles</font>
-    <font color="gray"># uvs</font>
-    <font color="gray"># colors</font>
-    <font color="gray"># generate()</font>
+    vertices
+    triangles
+    uvs
+    colors
+    generate()
     
     <font color="red">example:</font>
         verts = ((0,0,0), (1,0,0), (.5, 1, 0), (-.5,1,0))
         tris = (1, 2, 0, 2, 3, 0)
         uvs = ((1.0, 0.0), (0.0, 1.0), (0.0, 0.0), (1.0, 1.0))
         colors = (color.red, color.blue, color.lime, color.black)
-        m = Mesh(verts=verts, tris=tris, uvs=uvs, colors=colors)
+        m = Mesh(vertices=verts, triangles=tris, uvs=uvs, colors=colors)
         e = Entity(model = m)
     
 
@@ -230,6 +223,30 @@
     create_text_section(text, tag=<font color="green">'&lt;default&gt;'</font>, x=0, y=0)
     align()
     appear()
+    
+
+
+--------------------------------
+<b id="Texture">Texture</b>
+--------------------------------
+    <font color="red">example:</font> <font color="purple">print</font>(entity.texture.width)
+    
+    name
+    path
+    size
+    width
+    height
+    pixels
+    get_pixel(x,y)
+    get_pixels(start, end)
+    
+    
+    Assign a texture to an entity like this:
+    <font color="red">example:</font> entity.texture = <font color="green">'name_of_the_texture'</font>
+    It will find the texture<font color="purple"> as </font>long<font color="purple"> as </font>it<font color="purple"> is </font>in the project folder.
+    
+    You can call compress_textures(name=<font color="orange">None</font>) to compress .psd files
+    Pass texture names<font color="purple"> in </font>name argument<font color="purple"> if</font> you don't want to compress all the textures.
     
 
 
@@ -447,6 +464,19 @@
     
     Basically just combine a color name<font color="purple"> with </font>one of these:
     Quad, Cube, Sphere, Plane
+    
+
+
+--------------------------------
+<b id="procedural">procedural models</b>
+--------------------------------
+    Circle(resolution=16, radius=.5, rotate=<font color="orange">True</font>)
+    Cone(resolution=4, radius=.5, height=1)
+    Cylinder(resolution=4, radius=.5, height=1)
+    Grid(width, height, thickness=1)
+    Prismatoid(base_shape=Quad(), origin=(0,0), path=((0,0,0),(0,1,0)), thicknesses=((1,1),))
+    Quad(size=(1,1), bevel=.05, subdivisions=0, ignore_aspect=<font color="orange">False</font>)
+    Sphere(radius=.5, subdivisions=0)
     
 
 
@@ -702,6 +732,7 @@
               <a href="#Hit">Hit</a>
               <a href="#Mesh">Mesh</a>
               <a href="#Text">Text</a>
+              <a href="#Texture">Texture</a>
               <a href="#application">application</a>
               <a href="#build">build</a>
               <a href="#colliders">colliders</a>
@@ -712,6 +743,7 @@
               <a href="#models">models</a>
               <a href="#mouse">mouse</a>
               <a href="#primitives">primitives</a>
+              <a href="#procedural">procedural</a>
               <a href="#scene">scene</a>
               <a href="#textures">textures</a>
               <a href="#window">window</a>

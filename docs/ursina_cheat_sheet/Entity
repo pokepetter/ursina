@@ -30,7 +30,7 @@ scale_x, scale_y, scale_z
 world_scale = (1,1,1)
 world_scale_x, world_scale_y, world_scale_z
 
-model = 'model_name' / Mesh(verts=())
+model = 'model_name' / Mesh(vertices=())
 color = color.white
 texture = 'texture_name'
 texture_scale = (1,1)
@@ -43,14 +43,6 @@ scripts
 hovered = False
 type
 types
-texture_name
-texture_path
-texture_size
-texture_width
-texture_height
-pixels
-get_pixel(x,y)
-get_pixels(start, end)
 bounds
 
 reparent_to(entity)   # same as setting world_parent
