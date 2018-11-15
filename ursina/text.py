@@ -323,19 +323,22 @@ class Text(Entity):
             if not hasattr(self, '_background'):
                 self._background = Entity(
                     parent = self,
-                    scale = (self.width, self.height),
+                    # scale = (self.width, self.height),
                     # model = Quad(subdivisions=2),
                     model = 'quad',
                     color = color.black66,
-                    position = (-self.origin[0] * self.width, -self.origin[1] * self.height),
+                    # position = (-self.origin[0] * self.width, -self.origin[1] * self.height),
                     z = .01
                     )
-                # adjust for scaled text in first line
-                self._background.scale_y += (self.text_nodes[0].getScale()[2] - self.size) / 2
-                self._background.y += (self.text_nodes[0].getScale()[2] - self.size) * self.size
+            # adjust for scaled text in first line
+            self._background.position = (-self.origin[0] * self.width, -self.origin[1] * self.height)
+            self._background.scale = (self.width, self.height)
+            self._background.scale_y += (self.text_nodes[0].getScale()[2] - self.size) / 2
+            self._background.y += (self.text_nodes[0].getScale()[2] - self.size) * self.size
         else:
             if hasattr(self, '_background'):
                 destroy(self._background)
+
 
     @property
     def margin(self):
@@ -407,6 +410,8 @@ Lasts for 4 rounds.''')
     test = Text(descr)
 #     # print('\n', test.text, '\n\n')
     test.font = 'VeraMono.ttf'
+    # test.wordwrap = 40
+    # test.background = True
 #     test.font = 'Inconsolata-Regular.ttf'
 #     # test.model = 'quad'
 #     # test.origin = (0, 0)
@@ -419,4 +424,4 @@ Lasts for 4 rounds.''')
     # for tn in test.text_nodes:
     #     tn.node().setTextColor(color.red)
 
-    app.run()
+    app.run
