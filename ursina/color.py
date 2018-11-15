@@ -23,6 +23,8 @@ def to_hsv(color):
 
 
 def brightness(color):
+    if color[0] > 1 or color[1] > 1 or color[2] > 1:
+        color = Vec4(tuple(c/255 for c in color))
     return to_hsv(color)[2]
 
 def inverse(color):
@@ -82,6 +84,9 @@ light_text = smoke
 dark_text = color(0, 0, .1)
 text_color = light_text
 
+# generate attributes for grayscale values. _0=black, _128=gray, 255=white
+for i in range(256):
+    setattr(sys.modules[__name__], '_' + str(i), color(0,0,i/255))
 
 color_names = ('white', 'smoke', 'light_gray', 'gray', 'dark_gray', 'black',
     'red', 'orange', 'yellow', 'lime', 'green', 'turquoise', 'cyan', 'azure',
@@ -97,6 +102,9 @@ if __name__ == '__main__':
 
     # p = Entity()
     print(color.brightness(color.blue))
+    print(_3)
+    for key, value in colors.items():
+        print(key, value)
     # colors = [(var, getattr(color, var)) for var in dir(color)] # (name, value)
     # colors = [col for col in colors if type(col[1]) is Vec4]
     # for col in color.colors:
