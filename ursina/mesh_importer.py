@@ -78,7 +78,7 @@ def obj_to_ursinamesh(path=application.compressed_models_folder, outpath=applica
                     pass
 
 
-        meshstring += '\nverts='
+        meshstring += '\nvertices='
         meshstring += str(tuple([verts[t] for t in tris]))
 
         if uv_indices:
@@ -116,7 +116,7 @@ def compress_models_fast(model_name=None):
                 object_name = object_name.split('\0', 1)[0]
                 print('name:', object_name)
 
-                verts= o.data.mvert
+                vertices= o.data.mvert
                 verts = [v.co for v in o.data.mvert]
                 verts = tuple(verts)
 
@@ -135,7 +135,7 @@ def compress_models_fast(model_name=None):
                     flippedtris.append(tris[i+1])
                     flippedtris.append(tris[i+0])
 
-                file_content += ', tris=' + str(flippedtris)
+                file_content += ', triangles=' + str(flippedtris)
 
                 if o.data.mloopuv:
                     uvs = tuple([v.uv for v in o.data.mloopuv])

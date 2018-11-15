@@ -21,14 +21,20 @@ from ursina.internal_prefabs.input_field import InputField
 from ursina.internal_prefabs.filebrowser import FileBrowser
 from ursina.internal_prefabs.sky import Sky
 from ursina.internal_prefabs.cursor import Cursor
-from ursina.internal_prefabs.procedural_models import *
+
+from ursina.internal_models.procedural.quad import Quad
+from ursina.internal_models.procedural.circle import Circle
+from ursina.internal_models.procedural.prismatoid import Prismatoid
+from ursina.internal_models.procedural.cone import Cone
+from ursina.internal_models.procedural.cylinder import Cylinder
+from ursina.internal_models.procedural.sphere import Sphere
+from ursina.internal_models.procedural.grid import Grid
+
 from ursina.internal_prefabs.plane import Plane
 from ursina.internal_prefabs.panel import Panel
 from ursina.internal_prefabs.tooltip import Tooltip
 from ursina.internal_prefabs.draggable import Draggable
 from ursina.internal_prefabs.scrollable import Scrollable
-from ursina.internal_prefabs.grid import Grid
-from ursina.prismatoid import Prismatoid
 from ursina.internal_prefabs import primitives
 
 from ursina.internal_scripts.smooth_follow import SmoothFollow

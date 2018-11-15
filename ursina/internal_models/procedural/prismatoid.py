@@ -1,18 +1,15 @@
 from ursina import *
 from ursina.duplicate import duplicate
-from ursina.internal_prefabs.procedural_models import Quad, Circle
 
 
 class Prismatoid(Mesh):
-    def __init__(self, base_shape=Quad(), origin=(0,0), path=((0,0,0),(1,1,1)), thicknesses=((1,1),), mode='triangle', **kwargs):
+    def __init__(self, base_shape=Quad(), origin=(0,0), path=((0,0,0),(0,1,0)), thicknesses=((1,1),), mode='triangle', **kwargs):
         self.base_shape = base_shape
-        # path = ((0,0,0), (.5,1,0), (1,3,0), (3,5,0))
-        # thicknesses = (Vec3(1,1,.25),)
-        shape = ((0,0,0), (1,0,0), (1,1,0), (0,1,0))
+        shape = base_shape.vertices
         # make the base shape and rotate it
         b = Entity(position=path[0], color=color.lime, scale=thicknesses[0], origin=origin)
         for p in shape:
-            Entity(parent=b, position=Vec3(p)-Vec3(.5,.5,0), model='cube', scale=(.05, .05, .05), color=color.yellow)
+            Entity(parent=b, position=Vec3(p), model='cube', scale=(.05, .05, .05), color=color.yellow)
 
         b.look_at(path[1])
         e = duplicate(b)
@@ -67,7 +64,7 @@ class Prismatoid(Mesh):
             verts.append(path[-1])
 
 
-        super().__init__(verts=verts, mode=mode, **kwargs)
+        super().__init__(vertices=verts, mode=mode, **kwargs)
         destroy(b)
         destroy(e)
 
