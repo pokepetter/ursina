@@ -129,7 +129,8 @@ class Entity(NodePath):
                     if hasattr(self, 'model'):
                         self.model.removeNode()
                     object.__setattr__(self, name, m)
-                    m.recipe = value # needed when duplicating entity
+                    if m is Mesh:
+                        m.recipe = value # needed when duplicating entity
                     # print('loaded model successively')
                 else:
                     print('error loading model:', value)
@@ -343,15 +344,15 @@ class Entity(NodePath):
     @property
     def origin_y(self):
         return self.origin[1]
-    @origin_x.setter
-    def origin_x(self, value):
+    @origin_y.setter
+    def origin_y(self, value):
         self.origin = (self.origin_x, value, self.origin_z)
 
     @property
     def origin_z(self):
         return self.origin[2]
-    @origin_x.setter
-    def origin_x(self, value):
+    @origin_z.setter
+    def origin_z(self, value):
         self.origin = (self.origin_x, self.origin_y, value)
 
     @property
