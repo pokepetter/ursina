@@ -6,13 +6,16 @@ from ursina import application
 import pathlib
 
 def load_model(path, name):
-    for filename in path.glob(f'**/{name}.ursinamesh'):
-        try:
-            with open(filename) as f:
-                m = eval(f.read())
-                return m
-        except:
-            print('invalid ursinamesh file:', filename)
+    for filetype in ('.bam', '.ursinamesh'):
+        for filename in path.glob(f'**/{name}{filetype}'):
+            if filetype == '.bam':
+                return loader.loadModel(filename)
+            try:
+                with open(filename) as f:
+                    m = eval(f.read())
+                    return m
+            except:
+                print('invalid ursinamesh file:', filename)
 
     return None
 

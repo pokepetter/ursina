@@ -4,7 +4,7 @@ import imageio
 
 
 class VideoRecorder(Entity):
-    def __init__(self, duration=5, name='untitled_video', **kwargs):
+    def __init__(self, duration=30, name='untitled_video', **kwargs):
         super().__init__()
         self.recording = False
         self.file_path = Path(application.asset_folder) / 'video_temp'
@@ -20,8 +20,8 @@ class VideoRecorder(Entity):
     def input(self, key):
         if key == 'f10':
             self.recording = not self.recording
-        if key == 'f':
-            self.convert_to_gif()
+        # if key == 'f':
+        #     self.convert_to_gif()
 
     @property
     def recording(self):
@@ -29,6 +29,7 @@ class VideoRecorder(Entity):
 
     @recording.setter
     def recording(self, value):
+        self._recording = value
 
         if value == True:
             if self.file_path.exists():
@@ -38,16 +39,17 @@ class VideoRecorder(Entity):
             window.fps_counter = False
             window.exit_button.visible = False
         else:
-            window.fps_counter = False
-            window.exit_button.enabled = False
+            window.fps_counter = True
+            window.exit_button.enabled = True
+            self.convert_to_gif()
 
-        self._recording = value
+
 
     def update(self):
         if self.i > 60/self.frame_skip * self.duration:
             if self.recording:
-                self.convert_to_gif()
                 self.recording = False
+                self.convert_to_gif()
 
         if self.recording:
             if self.i % self.frame_skip == 0:

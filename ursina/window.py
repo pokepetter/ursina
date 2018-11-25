@@ -91,9 +91,18 @@ class Window(WindowProperties):
         # ui.lens.setFilmSize(100 * self.aspect_ratio, 100)
         base.win.requestProperties(self)
 
+    @property
+    def borderless(self):
+        # return self._borderless
+        return self.getUndecorated()
+
+    @borderless.setter
+    def borderless(self, value):
+        self.setUndecorated(valuecolor)
+        # application.base.win.request_properties(self)
+        # base.openMainWindow(props=self)
+
     def __setattr__(self, name, value):
-        if not application.base:
-            return
         try:
             super().__setattr__(name, value)
         except:
