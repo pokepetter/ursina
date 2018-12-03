@@ -17,7 +17,7 @@ class Window(WindowProperties):
         super().__init__()
         loadPrcFileData('', 'window-title ursina')
         loadPrcFileData('', 'undecorated True')
-        loadPrcFileData('', 'sync-video True')
+        loadPrcFileData('', 'sync-video False')
         loadPrcFileData('', 'notify-level-util error')
         # loadPrcFileData('', 'want-pstats True')
         self.setForeground(True)
@@ -91,9 +91,18 @@ class Window(WindowProperties):
         # ui.lens.setFilmSize(100 * self.aspect_ratio, 100)
         base.win.requestProperties(self)
 
+    @property
+    def borderless(self):
+        # return self._borderless
+        return self.getUndecorated()
+
+    @borderless.setter
+    def borderless(self, value):
+        self.setUndecorated(value)
+        application.base.win.request_properties(self)
+        # base.openMainWindow(props=self)
+
     def __setattr__(self, name, value):
-        if not application.base:
-            return
         try:
             super().__setattr__(name, value)
         except:
