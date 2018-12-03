@@ -1,7 +1,8 @@
 from ursina import *
 
+
 class Cursor(Entity):
-    def __init__(self):
+    def __init__(self, **kwargs):
         super().__init__()
         self.parent = camera.ui
         # self.texture = 'cursor'
@@ -11,6 +12,9 @@ class Cursor(Entity):
         # self.origin = (-.49, .49)
         self.scale *= .05
         self.render_queue = 1
+
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     def update(self):
         self.position = (mouse.x * window.aspect_ratio, mouse.y)
