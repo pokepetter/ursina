@@ -1,5 +1,7 @@
 import re
 import traceback
+from textwrap import dedent
+
 
 def camel_to_snake(value):
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', value)

@@ -35,6 +35,7 @@ from ursina.internal_prefabs.panel import Panel
 from ursina.internal_prefabs.tooltip import Tooltip
 from ursina.internal_prefabs.draggable import Draggable
 from ursina.internal_prefabs.scrollable import Scrollable
+from ursina.internal_prefabs.slider import Slider
 from ursina.internal_prefabs import primitives
 
 from ursina.internal_scripts.smooth_follow import SmoothFollow
