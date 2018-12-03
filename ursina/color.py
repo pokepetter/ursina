@@ -100,19 +100,19 @@ if __name__ == '__main__':
     from ursina import *
     app = Ursina()
 
-    # p = Entity()
     print(color.brightness(color.blue))
     print(_3)
     for key, value in colors.items():
         print(key, value)
     # colors = [(var, getattr(color, var)) for var in dir(color)] # (name, value)
     # colors = [col for col in colors if type(col[1]) is Vec4]
-    # for col in color.colors:
-    #     print(col)
-    #     b = Button(parent=p, color=col[1], text=col[0])
-    #     b.text_entity.color = color.inverse(col[1])
-    #     b.text_entity.scale *= .75
-    #
-    # grid_layout(p.children, max_x=8, origin=(0,0))
-    #
-    # app.run()
+    p = Entity()
+    for key in color.colors:
+        # print(col)
+        b = Button(parent=p, model=Quad(subdivisions=2), color=color.colors[key], text=key)
+        # b.text_entity.color = color.inverse(color.colors[key])
+        # b.text_entity.scale *= .5
+
+    grid_layout(p.children, max_x=8)
+
+    app.run()

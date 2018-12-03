@@ -7,17 +7,15 @@ class Button(Entity):
     color = color.black66
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__()
         self.name = 'button'
         self.parent = scene.ui
         self.is_editor = False
         self.model = 'quad'
         self.color = Button.color
-        # self.texture = 'panda_button'
 
         self.collision = True
         self.collider = 'box'
-        # self.text = 'button'
         self.text_entity = None
 
         for key, value in kwargs.items():
@@ -107,7 +105,7 @@ class Button(Entity):
 
 class Test():
     def __init__(self):
-        self.b = Button(color = color.red, text='button_text', origin=(-.5,-.5))
+        self.b = Button(color=color.red, text='button_text', origin=(0,0))
         self.b.on_click = '''
             self.text = 'on_click_string'
             self.color = color.red
@@ -116,7 +114,8 @@ class Test():
             '''
         # self.b.on_click = self.test_method
         # self.b.scale *= .5
-        self.b.color = color.azure
+        # self.b.color = color.azure
+        self.b.model=Quad(subdivisions=3)
         # self.b.origin = (-.5, -.5)
         # self.b.text = 'text'
         # self.b.text_entity.scale *= 2
@@ -126,8 +125,11 @@ class Test():
         self.b.color = color.red
 
 if __name__ == '__main__':
+    from ursina import *
     app = Ursina()
     t = Test()
+    t.b.parent = scene
+    EditorCamera()
     # b = Button(text='test\ntest', scale=(4,1), model='quad', collision=False)
     # b.text_entity.scale *= .5
     # t.b.tooltip = Text(text='yolo', background=True)
