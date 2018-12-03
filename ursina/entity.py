@@ -9,8 +9,8 @@ from panda3d.core import GeomNode
 from panda3d.core import GeomVertexReader
 from panda3d.core import Vec3, Vec4
 from panda3d.core import Point3
-from panda3d.core import SamplerState
 from panda3d.core import TransparencyAttrib
+
 # from panda3d.core import Texture as PandaTexture
 from ursina.texture import Texture
 from panda3d.core import TextureStage
@@ -19,9 +19,9 @@ from ursina import application
 from ursina.collider import Collider, BoxCollider, SphereCollider
 from ursina.mesh import Mesh
 from os import path
-from panda3d.core import Filename
 from direct.interval.IntervalGlobal import Sequence, Func, Wait
-from direct.showbase import Loader
+
+# from direct.showbase import Loader
 from ursina.ursinamath import lerp
 from ursina import easing_types
 from ursina.easing_types import *
@@ -73,7 +73,6 @@ class Entity(NodePath):
 
         for key, value in kwargs.items():
             setattr(self, key, value)
-
 
     def __setattr__(self, name, value):
 
@@ -163,7 +162,6 @@ class Entity(NodePath):
 
                 self.model.setColor(value)  # override vertex colors
                 object.__setattr__(self, name, value)
-
 
 
         if name == 'texture_scale':
@@ -296,7 +294,7 @@ class Entity(NodePath):
 
         if name == 'render_queue':
             if self.model:
-                self.model.setBin("fixed", value)
+                self.model.setBin('fixed', value)
 
         if name == 'double_sided':
             self.setTwoSided(value)
@@ -493,10 +491,11 @@ class Entity(NodePath):
     def down(self):
         return -self.up
 
-    # if name == 'texture':
     @property
     def texture(self):
-        return self.model.getTexture()
+        if not hasattr(self, '_texture'):
+            return None
+        return self._texture
 
     @texture.setter
     def texture(self, value):
@@ -507,15 +506,12 @@ class Entity(NodePath):
             texture = value
 
         elif isinstance(value, str):
-            t = Filename.fromOsSpecific((load_texture(value)))
-            texture = loader.loadTexture(t)
-            # print('loaded texture:', t)
+            texture = load_texture(value)
+            # print('loaded texture:', texture)
 
         try:
-            texture.setMagfilter(SamplerState.FT_nearest)
-            texture.setMinfilter(SamplerState.FT_nearest)
-            self.model.setTexture(texture, 1)
-            self._cached_image = None   # for get_pixel() method
+            self._texture = texture
+            self.model.setTexture(texture._texture, 1)
             # print('set texture:', value)
         except:
             pass
@@ -524,7 +520,6 @@ class Entity(NodePath):
 
         if value == None:
             self.model.set_texture_off(True)
-
 
 
     @property
@@ -824,7 +819,7 @@ if __name__ == '__main__':
     from ursina import *
     app = main.Ursina()
 
-    e = Entity(parent=scene, model='cube', color=color.red, collider='box', texture='white_cube')
-    e.fade_out()
+    e = Entity(parent=scene, model='cube', color=color.white, collider='box', texture='brick')
+    # e.fade_out()
 
     app.run()
