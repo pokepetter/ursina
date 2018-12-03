@@ -1,27 +1,24 @@
 from ursina import *
 import os, shutil
-import imageio
 
 
 class VideoRecorder(Entity):
-    def __init__(self, duration=5, name='untitled_video', **kwargs):
+    def __init__(self, duration=30, name='untitled_video', **kwargs):
         super().__init__()
         self.recording = False
         self.file_path = Path(application.asset_folder) / 'video_temp'
         self.i = 0
         self.duration = duration
-        self.frame_skip = 2     # 30 fps
+        self.frame_skip = 2  # 30 fps
         self.video_name = name
 
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-
     def input(self, key):
         if key == 'f10':
             self.recording = not self.recording
-        if key == 'f':
-            self.convert_to_gif()
+
 
     @property
     def recording(self):
