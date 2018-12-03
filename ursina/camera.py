@@ -27,9 +27,8 @@ class Camera(Entity):
 
     def set_up(self):
         print('setting up')
-        win = base.camNode.get_display_region(0).get_window()
-        self.display_region = win.make_display_region(0, 1, 0, 1)
-
+        self.display_region = base.camNode.get_display_region(0)
+        win = self.display_region.get_window()
 
         self.perspective_lens = PerspectiveLens()
         self.lens = self.perspective_lens
@@ -43,7 +42,7 @@ class Camera(Entity):
         self.orthographic_lens_node = LensNode('orthographic_lens_node', self.orthographic_lens)
 
         application.base.cam.node().set_lens(self.lens)
-        
+
         self.orthographic = False
         self.fov = 40
         self.clip_plane_near = 0.01
@@ -66,6 +65,9 @@ class Camera(Entity):
         self.ui_display_region.set_camera(self.ui_camera)
         scene.ui_camera = self.ui_camera
         # ui_camera.hide()
+
+        # self.black_bars_display_region = win.make_display_region()
+        # self.black_bars_display_region.set_sort(-100)
 
         self.ui = Entity()
         self.ui.eternal = True
@@ -129,14 +131,18 @@ class Camera(Entity):
 
     @property
     def aspect_ratio(self):
-        return self.lens.get_aspect_ratio()
+        return self.perspective_lens.get_aspect_ratio()
 
     @aspect_ratio.setter
     def aspect_ratio(self, value):
-        print('setting camera aspect ratio')
         self.perspective_lens = PerspectiveLens()
         self.perspective_lens.set_aspect_ratio(value)
         application.base.cam.node().set_lens(self.perspective_lens)
+
+        self.ui_lens.set_film_size(self.ui_size * .5 * value, self.ui_size * .5)
+        self.ui_camera.node().set_lens(self.ui_lens)
+        self.ui_lens_node = LensNode('ui_lens_node', self.ui_lens)
+        print('setting camera aspect ratio')
         # self.perspective_lens.set_aspect_ratio(value)
         # self.orthographic_lens = OrthographicLens()
         # self.orthographic_lens.set_film_size(self.fov * value, self.fov)
