@@ -1,5 +1,6 @@
 import glob
 from ursina import application
+from ursina.texture import Texture
 from pathlib import Path
 
 
@@ -18,7 +19,7 @@ def load_texture(name, path=None):
         for filename in glob.iglob(str(folder.resolve()) + '/**/' + name + '.*', recursive=True):
             for ft in file_types:
                 if filename.endswith(ft):
-                    return filename
+                    return Texture(filename)
 
     return None
 
