@@ -160,22 +160,22 @@ def copytree(src, dst, symlinks=False, ignore=None):
             shutil.copy2(s, d)
 
 
-if len(sys.argv) == 1:
-    print('error: please provide project folder path')
-    sys.exit()
-
-if sys.argv[1] == 'help':
-    print(
-'''package ursina application for windows10.
-provided with project folder path, creates a build folder where
-it copies python and project's dependent packages. requires a main.py file.
-copies game scripts and assets into 'build/scr' folder.
-creates a .bat file to start the game.'''
-    )
-    sys.exit()
+if len(sys.argv) > 1:
+    if sys.argv[1] == 'help':
+        print(
+            '''package ursina application for windows10.
+            provided with project folder path, creates a build folder where
+            it copies python and project's dependent packages. requires a main.py file.
+            copies game scripts and assets into 'build/scr' folder.
+            creates a .bat file to start the game.'''
+        )
+        sys.exit()
 
 
-project_folder = sys.argv[1]
+    project_folder = sys.argv[1]
+else:
+    project_folder = sys.argv[0]
+
 build_folder = os.path.join(project_folder, 'build')
 print('building project:', project_folder)
 

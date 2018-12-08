@@ -820,6 +820,7 @@ if __name__ == '__main__':
     app = main.Ursina()
 
     e = Entity(parent=scene, model='cube', color=color.white, collider='box', texture='brick')
+    # e.texture.filtering = True
     # e.fade_out()
 
     app.run()

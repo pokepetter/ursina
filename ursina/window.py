@@ -17,7 +17,7 @@ class Window(WindowProperties):
         super().__init__()
         loadPrcFileData('', 'window-title ursina')
         loadPrcFileData('', 'undecorated True')
-        loadPrcFileData('', 'sync-video False')
+        loadPrcFileData('', 'sync-video True')
         loadPrcFileData('', 'notify-level-util error')
         # loadPrcFileData('', 'want-pstats True')
         self.setForeground(True)

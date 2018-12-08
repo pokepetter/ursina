@@ -37,7 +37,7 @@ class Draggable(Button):
             try:
                 self.drop()
             except:
-                print('no drop func')
+                # print('no drop func')
                 pass
 
     # def drag(self):
