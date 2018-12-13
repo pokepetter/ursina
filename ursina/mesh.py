@@ -26,7 +26,7 @@ class Mesh(NodePath):
             return
 
         if hasattr(self, 'geomNode'):
-            self.geomNode.removeNode()
+            self.geomNode.removeAllGeoms()
 
         static_mode = Geom.UHStatic if self.static else Geom.UHDynamic
 
@@ -122,13 +122,15 @@ if __name__  == '__main__':
     # tris = (1, 2, 0, 2, 3, 0)
     tris = (0,1,2, 0,2,3)
     uvs = ((0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0))
-    # colors = (color.red, color.blue, color.lime, color.black)
-    colors = ()
+    colors = (color.red, color.blue, color.lime, color.black)
+    # colors = ()
     # m = Mesh(vertices=verts, triangles=tris, uvs=uvs, colors=colors)
     m = Mesh()
     m.vertices = verts
     m.triangles = tris
     m.uvs = uvs
+    m.generate()
+    m.colors = colors
     m.generate()
     e = Entity()
     e.model = m
