@@ -128,7 +128,7 @@ class Entity(NodePath):
                     if hasattr(self, 'model'):
                         self.model.removeNode()
                     object.__setattr__(self, name, m)
-                    if m is Mesh:
+                    if isinstance(m, Mesh):
                         m.recipe = value # needed when duplicating entity
                     # print('loaded model successively')
                 else:
@@ -711,7 +711,7 @@ class Entity(NodePath):
     @property
     def attributes(self):
         return ('name', 'enabled', 'eternal', 'visible', 'parent',
-            'origin', 'position', 'rotation', 'scale', 'model', 'color', 'texture', 'texture_scale', 'texture_offset',
+            'origin', 'position', 'rotation', 'scale', 'model', 'color', 'texture_scale', 'texture_offset',
             'render_queue', 'collision', 'collider', 'scripts')
 
 #------------
@@ -819,7 +819,7 @@ if __name__ == '__main__':
     from ursina import *
     app = main.Ursina()
 
-    e = Entity(parent=scene, model='cube', color=color.white, collider='box', texture='brick')
+    e = Entity(parent=camera.ui_camera, model='cube', color=color.white, collider='box', texture='brick', z = 3)
     # e.texture.filtering = True
     # e.fade_out()
 
