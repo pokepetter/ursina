@@ -1,5 +1,4 @@
 from panda3d.core import Texture as PandaTexture
-# print('unsigned byte', PandaTexture.TUnsignedByte)
 from panda3d.core import SamplerState
 from panda3d.core import Vec2, Vec3, Vec4
 from panda3d.core import Filename
@@ -10,20 +9,30 @@ from PIL import Image
 
 class Texture():
 
-    def __init__(self, path=''):
-        if path == '':
+    def __init__(self, path):
+        if type(path) == Image.Image:
+            # print('passing pil image!')
+            image = path
             self._texture = PandaTexture()
+            self._texture.setup2dTexture(image.width, image.height, PandaTexture.TUnsignedByte, PandaTexture.FRgba)
+            self._texture.setRamImageAs(image.tobytes(), image.mode)
+            self._cached_image = image
+            self.path = None
         else:
             self.path = Path(path)
             self._texture = loader.loadTexture(Filename.fromOsSpecific(path))
 
+            self._cached_image = None   # for get_pixel() method
+
         self.filtering = None
-        self._cached_image = None   # for get_pixel() method
 
 
     @property
     def name(self):
-        return self.path.name
+        try:
+            return self.path.name
+        except:
+            return f'PIL_texture_{self.size}'
 
     @property
     def size(self):
@@ -31,20 +40,26 @@ class Texture():
 
     @property
     def width(self):
-        try:
+        if self._texture.getOrigFileXSize() > 0:
             return self._texture.getOrigFileXSize()
-        except:
-            return 0
+        elif self._cached_image:
+            return self._cached_image.size[0]
+        return 0
+
     @property
     def height(self):
-        try:
+        if self._texture.getOrigFileYSize() > 0:
             return self._texture.getOrigFileYSize()
-        except:
-            return 0
+        elif self._cached_image:
+            return self._cached_image.size[1]
+        return 0
 
     @property
     def pixels(self):
         from numpy import asarray
+        if self._cached_image:
+            return asarray(self._cached_image)
+
         return asarray(Image.open(self.path))
 
     @property
@@ -88,13 +103,25 @@ class Texture():
 
         return pixels
 
+    def set_pixel(self, x, y, color):
+        if not self._cached_image:
+            self._cached_image = Image.open(self.path)
+
+        self._cached_image.putpixel((x, y), tuple([int(e*255) for e in color]))
+
+    def apply(self):
+        self._texture.setRamImageAs(self._cached_image.tobytes(), self._cached_image.mode)
+
 
 if __name__ == '__main__':
     from ursina import *
-    Ursina()
+    app = Ursina()
     t = load_texture('brick')
+    # img = Image.new('RGB', (8,8), (255,128,0))
+    # t = Texture(img)
     print(t.size)
     printvar(t.filtering)
     printvar(t.name)
     printvar(t.path)
     printvar(len(t.pixels))
+    t.set_pixel(0,0, color.red)
