@@ -276,7 +276,11 @@ def _destroy(entity):
     if hasattr(entity, 'scripts'):
         for s in entity.scripts:
             del s
-    # entity.removeAllChildren()
+
+    # if hasattr(entity, 'animations'):
+    for anim in entity.animations:
+        anim.finish()
+
     try:
         entity.removeNode()
     except:

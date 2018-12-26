@@ -56,6 +56,7 @@ class Entity(NodePath):
         self.collision = False
         self.collider = None
         self.scripts = list()
+        self.animations = list()
         self.prefab_name = None
         self.hovered = False
 
@@ -611,7 +612,7 @@ class Entity(NodePath):
             folders = (path)
 
         for folder in folders:
-            for filename in glob.iglob(folder + '**/' + name + '.*', recursive=True):
+            for filename in glob.iglob(str(folder) + '**/' + name + '.*', recursive=True):
                 for ft in ('.py',):
                     if filename.endswith(ft):
                         module = importlib.machinery.SourceFileLoader(filename, name+ft).load_module()
@@ -739,6 +740,7 @@ class Entity(NodePath):
                 pass
         setattr(self, animator_name, Sequence())
         sequence = getattr(self, animator_name)
+        self.animations.append(sequence)
         # sequence.append(Wait(delay))
         if not resolution:
             resolution = int(duration * 60)

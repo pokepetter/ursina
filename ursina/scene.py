@@ -33,13 +33,14 @@ class Scene(NodePath):
 
 
     def clear(self):
+        from ursina.ursinastuff import destroy
         to_destroy = [e for e in self.entities if not e.eternal]
         to_keep = [e for e in self.entities if e.eternal]
 
         for d in to_destroy:
-            self.entities.remove(d)
-            d.remove_node()
-
+            # self.entities.remove(d)
+            # d.remove_node()
+            destroy(d)
         self.entities = to_keep
 
 

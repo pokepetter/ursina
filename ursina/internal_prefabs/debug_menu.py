@@ -1,12 +1,16 @@
 from ursina import *
 
 class DebugMenu(Draggable):
-    def __init__(self, target):
+    def __init__(self, target, **kwargs):
         super().__init__()
         self.target = target
         self.scale = (.2, .025)
         self.draw_functions()
-        self.text = '<orange>' + target.type
+        self.text = '<orange>' + target.__class__.__name__
+
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
 
     def draw_functions(self):
         for c in self.children:
