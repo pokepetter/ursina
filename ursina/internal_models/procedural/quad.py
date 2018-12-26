@@ -4,7 +4,7 @@ from ursina import *
 class Quad(Mesh):
     def __init__(self, size=(1,1), bevel=.05, subdivisions=0, ignore_aspect=False, **kwargs):
         super().__init__()
-        self.vertices = (Vec3(0,0,0), Vec3(1,0,0), Vec3(1,1,0), Vec3(0,1,0))
+        self.vertices = [Vec3(0,0,0), Vec3(1,0,0), Vec3(1,1,0), Vec3(0,1,0)]
         self.bevel = bevel
 
         for j in range(subdivisions):
@@ -34,12 +34,17 @@ class Quad(Mesh):
 
 
         # make the line connect back to start
-        if 'mode' in kwargs and kwargs['mode'] == 'lines':
-            self.vertices.append(self.vertices[0])
 
         # center mesh
         offset = average_position(self.vertices)
         self.vertices = [(v[0]-offset[0], v[1]-offset[1], v[2]-offset[2]) for v in self.vertices]
+
+
+        if 'mode' in kwargs and kwargs['mode'] == 'lines':
+            self.vertices.append(self.vertices[0])
+
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
         self.generate()
 
@@ -56,7 +61,7 @@ class Quad(Mesh):
 
 if __name__ == '__main__':
     app = Ursina()
-    Entity(model=Quad(size=(3,1), subdivisions=4, thickness=3), color = color.color(60,1,1,.3))
+    Entity(model=Quad(size=(3,1), subdivisions=4, thickness=3, mode='lines'), color = color.color(60,1,1,.3))
     origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
     ed = EditorCamera(rotation_speed = 200, panning_speed=200)
     app.run()
