@@ -41,18 +41,25 @@ class Slider(Entity):
 
     @property
     def value(self):
-        return self.knob.x * 2
+        return lerp(self.min, self.max, self.knob.x * 2)
 
     @value.setter
     def value(self, value):
         self.knob.x = value / (self.max - self.min) / 2
-        if hasattr(self, "on_value_changed"):
-            self.on_value_changed()
+        self._prev_value = self.knob.x / self.bg.scale_x
+
 
     def update(self):
         if self.knob.dragging:
             t = self.knob.x / self.bg.scale_x
             self.knob.text_entity.text = round(lerp(self.min, self.max, t), 2)
+
+            if hasattr(self, "on_value_changed") and self._prev_value != t:
+                self.on_value_changed()
+                self._prev_value = t
+
+    # def on_value_changed(self):
+    #     print('changed', self.value)
 
 
 if __name__ == "__main__":
