@@ -49,7 +49,7 @@ class VideoRecorder(Entity):
         if self.recording:
             if self.i % self.frame_skip == 0:
                 print(self.i / self.frame_skip)
-                base.screenshot	(
+                base.screenshot(
                  	namePrefix = '\\video_temp\\' + self.video_name + '_' + str(self.i).zfill(4) + '.png',
                  	defaultFilename = 0,
                     )

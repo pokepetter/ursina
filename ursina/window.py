@@ -19,6 +19,8 @@ class Window(WindowProperties):
         loadPrcFileData('', 'undecorated True')
         loadPrcFileData('', 'sync-video True')
         loadPrcFileData('', 'notify-level-util error')
+        # loadPrcFileData("", "old-alpha-blend True")
+        # loadPrcFileData('', 'notify-level-glgsg debug')
         # loadPrcFileData('', 'want-pstats True')
         self.setForeground(True)
 
@@ -91,16 +93,16 @@ class Window(WindowProperties):
         # ui.lens.setFilmSize(100 * self.aspect_ratio, 100)
         base.win.requestProperties(self)
 
-    @property
-    def borderless(self):
-        # return self._borderless
-        return self.getUndecorated()
-
-    @borderless.setter
-    def borderless(self, value):
-        self.setUndecorated(value)
-        application.base.win.request_properties(self)
-        # base.openMainWindow(props=self)
+    # @property
+    # def borderless(self):
+    #     # return self._borderless
+    #     return self.getUndecorated()
+    #
+    # @borderless.setter
+    # def borderless(self, value):
+    #     self.setUndecorated(value)
+    #     application.base.win.request_properties(self)
+    #     # base.openMainWindow(props=self)
 
     def __setattr__(self, name, value):
         try:

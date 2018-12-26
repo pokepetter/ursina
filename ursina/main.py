@@ -2,6 +2,7 @@ from ursina.ursinastuff import *
 from os import walk
 import os
 import time
+import __main__
 
 
 class Ursina(ShowBase):
@@ -101,10 +102,6 @@ class Ursina(ShowBase):
         # t = load_scene('minecraft_clone')
         # count_lines(inspect.getfile(t.__class__))
 
-
-
-
-
         self.update_task = taskMgr.add(self.update, "update")
 
 
@@ -116,6 +113,9 @@ class Ursina(ShowBase):
         mouse.update()
         if scene.editor and scene.editor.enabled:
             scene.editor.update()
+
+        if hasattr(__main__, 'update'):
+            __main__.update()
 
         for entity in scene.entities:
             if entity.enabled:
@@ -149,18 +149,9 @@ class Ursina(ShowBase):
         if key in self.dictionary:
             key = self.dictionary[key]
 
-        try:
-            key = key.replace('control-', '')
-        except:
-            pass
-        try:
-            key = key.replace('shift-', '')
-        except:
-            pass
-        try:
-            key = key.replace('alt-', '')
-        except:
-            pass
+        key = key.replace('control-', '')
+        key = key.replace('shift-', '')
+        key = key.replace('alt-', '')
 
         if key in rebinds:
             key = rebinds[key]
@@ -172,6 +163,8 @@ class Ursina(ShowBase):
         try: mouse.input(key)
         except: pass
         try: input.input(key)
+        except: pass
+        try: __main__.input(key)
         except: pass
 
         for entity in scene.entities:
