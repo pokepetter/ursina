@@ -1,6 +1,6 @@
 import os
 import psutil
-from hurry.filesize import size
+from ursina.thirdparty.hurry.filesize import size
 from ursina import *
 
 
