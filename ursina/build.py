@@ -1,7 +1,7 @@
 from modulefinder import ModuleFinder
 import os
 import sys
-from hurry.filesize import size
+from ursina.thirdparty.hurry.filesize import size
 import shutil
 from shutil import copy, copyfile
 
@@ -35,6 +35,8 @@ def copy_always_included():
         python_folder + '/Lib/ctypes/',
         python_folder + '/Lib/encodings/',
         python_folder + '/Lib/importlib/',
+        python_folder + '/Lib/urllib/',
+        python_folder + '/Lib/logging/',
 
         python_folder + '/Lib/site-packages/panda3d/etc/',
         python_folder + '/Lib/site-packages/panda3d/__init__.py',
@@ -110,7 +112,7 @@ def copy_found_modules():
 def copy_assets():
     size = 0
     for f in os.listdir(project_folder):
-        # print(f)
+        print('---------', f)
         if f == '.git' or f == '__pycache__' or f == 'build' or f == '.gitignore':
             print('ignore:', f)
             continue
@@ -121,7 +123,8 @@ def copy_assets():
             size += os.stat(project_folder + '/textures/compressed').st_size
         else:
             file_path = os.path.join(project_folder, f)
-            copy(file_path, build_folder + '/src/' + f)
+            copytree(file_path, build_folder + '/src/' + f)
+            #     copy(file_path, build_folder + '/src/' + f)
             size += os.stat(file_path).st_size
             print('copied asset:', f)
     return size
@@ -129,7 +132,7 @@ def copy_assets():
 
 def create_bat():
     with open(build_folder + '/run.bat', 'w') as f:
-        f.write('''start "" "%CD%\python\pythonw.exe" %CD%\src\main.py''')
+        f.write('''start "" "%CD%\python\python.exe" %CD%\src\main.py''')
     print('created .bat file')
 
 
@@ -161,7 +164,7 @@ def copytree(src, dst, symlinks=False, ignore=None):
 
 
 if len(sys.argv) > 1:
-    if sys.argv[1] == 'help':
+    if sys.argv[1] == 'help' or sys.argv[1] == '--help':
         print(
             '''package ursina application for windows10.
             provided with project folder path, creates a build folder where
@@ -191,27 +194,27 @@ if not os.path.exists(build_folder + '/src/'):
     os.makedirs(build_folder + '/src/')
 
 python_folder = (os.path.dirname(sys.executable)).replace('\\', '/')
-python_size = copy_python()
-python_lib_size = copy_python_lib()
-always_included_size = copy_always_included()
-ursina_size = copy_Ursina()
-found_modules_size = copy_found_modules()
+# python_size = copy_python()
+# python_lib_size = copy_python_lib()
+# always_included_size = copy_always_included()
+# ursina_size = copy_Ursina()
+# found_modules_size = copy_found_modules()
 assets_size = copy_assets()
 create_bat()
 
-print('python size:', size(python_size))
-print('python lib size:', size(python_lib_size))
-print('always included size:', size(always_included_size))
-print('ursina size:', size(ursina_size))
-print('found modules size:', size(found_modules_size))
+# print('python size:', size(python_size))
+# print('python lib size:', size(python_lib_size))
+# print('always included size:', size(always_included_size))
+# print('ursina size:', size(ursina_size))
+# print('found modules size:', size(found_modules_size))
 print('assets size:', size(assets_size))
-print(
-    'TOTAL SIZE:',
-    size(
-        python_size
-        + python_lib_size
-        + always_included_size
-        + ursina_size
-        + found_modules_size
-        )
-    )
+# print(
+#     'TOTAL SIZE:',
+#     size(
+#         python_size
+#         + python_lib_size
+#         + always_included_size
+#         + ursina_size
+#         + found_modules_size
+#         )
+#     )
