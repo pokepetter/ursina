@@ -2,7 +2,7 @@ import sys
 from collections import defaultdict
 
 
-class Input(object):
+class InputHandler():
 
     def __init__(self):
         self.control = False
@@ -50,4 +50,4 @@ class Input(object):
 
 
 
-sys.modules[__name__] = Input()
+sys.modules[__name__] = InputHandler()

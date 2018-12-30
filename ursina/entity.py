@@ -137,8 +137,6 @@ class Entity(NodePath):
 
             if hasattr(self, 'model') and self.model:
                 self.model.reparentTo(self)
-                # self.model.setColorScaleOff()
-                self.model.setTransparency(TransparencyAttrib.MAlpha)
                 setattr(self, 'color', self.color) # reapply color after changing model
                 self._vert_cache = None
                 if isinstance(value, Mesh):
@@ -161,6 +159,8 @@ class Entity(NodePath):
                             object.__setattr__(self, name, value)
                             return
 
+                if value[3] < 1:
+                    self.model.setTransparency(TransparencyAttrib.MAlpha)
                 self.model.setColor(value)  # override vertex colors
                 object.__setattr__(self, name, value)
 
@@ -236,12 +236,14 @@ class Entity(NodePath):
 
             self.setHpr(Vec3(-new_value[1], -new_value[0], new_value[2]))
 
-
         if name == 'rotation_x': self.setP(-value)
         if name == 'rotation_y': self.setH(-value)
         if name == 'rotation_z': self.setR(value)
 
         if name == 'scale':
+            if isinstance(value, (int, float, complex)):
+                value = (value, value, value)
+
             new_value = Vec3()
 
             if len(value) % 2 == 0:
@@ -822,7 +824,5 @@ if __name__ == '__main__':
     app = main.Ursina()
 
     e = Entity(parent=camera.ui_camera, model='cube', color=color.white, collider='box', texture='brick', z = 3)
-    # e.texture.filtering = True
-    # e.fade_out()
 
     app.run()

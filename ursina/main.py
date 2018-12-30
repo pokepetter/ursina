@@ -130,14 +130,14 @@ class Ursina(ShowBase):
 
     def input_up(self, key):
         if key is not 'wheel_up' and key is not 'wheel_down':
-            if key in rebinds:
-                key = rebinds[key]
+            if key in input_handler.rebinds:
+                key = input_handler.rebinds[key]
             key += ' up'
             self.input(key)
 
     def input_hold(self, key):
-        if key in rebinds:
-            key = rebinds[key]
+        if key in input_handler.rebinds:
+            key = input_handler.rebinds[key]
         key += ' hold'
         self.input(key)
 
@@ -153,8 +153,8 @@ class Ursina(ShowBase):
         key = key.replace('shift-', '')
         key = key.replace('alt-', '')
 
-        if key in rebinds:
-            key = rebinds[key]
+        if key in input_handler.rebinds:
+            key = input_handler.rebinds[key]
 
         try:
             if scene.editor:
@@ -162,7 +162,7 @@ class Ursina(ShowBase):
         except: pass
         try: mouse.input(key)
         except: pass
-        try: input.input(key)
+        try: input_handler.input(key)
         except: pass
         try: __main__.input(key)
         except: pass

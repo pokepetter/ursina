@@ -9,6 +9,7 @@ from ursina.mesh_importer import *
 from ursina.texture_importer import *
 from ursina.entity import Entity
 from ursina.audio import Audio
+from ursina import input_handler
 
 from ursina.text import Text
 from ursina.mesh import Mesh

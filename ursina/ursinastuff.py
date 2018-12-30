@@ -25,14 +25,12 @@ from ursina.entity import Entity
 from ursina import scene
 from ursina import window
 from ursina import mouse
-from ursina import input
-from ursina.input import held_keys
-from ursina.input import rebinds
 from ursina import camera
 from ursina import raycaster
 from ursina.raycaster import raycast
 from ursina import color
-
+from ursina.input_handler import held_keys
+from ursina import input_handler
 
 # def save_scene():
     # has_scene_entity = False
