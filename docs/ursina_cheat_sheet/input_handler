@@ -1,4 +1,4 @@
-example: input.rebind('arrow up', 'w')
+example: input_handler.rebind('arrow up', 'w')
 
 control
 left_control

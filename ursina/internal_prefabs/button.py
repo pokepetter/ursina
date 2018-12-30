@@ -127,8 +127,9 @@ class Test():
 if __name__ == '__main__':
     from ursina import *
     app = Ursina()
-    t = Test()
-    t.b.parent = scene
+    # t = Test()
+    # t.b.parent = scene
+    Button(text='hello world!', color=color.azure)
     EditorCamera()
     # b = Button(text='test\ntest', scale=(4,1), model='quad', collision=False)
     # b.text_entity.scale *= .5

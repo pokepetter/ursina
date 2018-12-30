@@ -1,0 +1,9 @@
+require_key = None
+dragging = False
+lock_x = False
+lock_y = False
+min_x, min_y, min_z
+max_x, max_y, max_z
+
+drag()  # gets called if implemented
+drop()  # gets called if implemented

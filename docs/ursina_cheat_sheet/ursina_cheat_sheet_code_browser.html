@@ -31,7 +31,7 @@
         <font color="purple">from </font>ursina <font color="purple">import </font>*
         app = Ursina()
     
-        b = Button(<font color="green">'hello world!'</font>, color=color.azure)
+        b = Button(text=<font color="green">'hello world!'</font>, color=color.azure)
         b.scale *= .2
         b.tooltip = Tooltip(<font color="green">'click me'</font>)
     
@@ -229,6 +229,8 @@
 --------------------------------
 <b id="Texture">Texture</b>
 --------------------------------
+    Texture(name, PIL.Image)
+    
     <font color="red">example:</font> <font color="purple">print</font>(entity.texture.width)
     
     name
@@ -237,8 +239,12 @@
     width
     height
     pixels
+    filtering = <font color="orange">False</font>
+    
     get_pixel(x,y)
     get_pixels(start, end)
+    set_pixel(x, y, color)
+    apply() <font color="gray">#call this to show changes after set_pixel()</font>
     
     
     Assign a texture to an entity like this:
@@ -270,7 +276,13 @@
 --------------------------------
 <b id="build">build</b>
 --------------------------------
-    python -m ursinabuild
+    python -m ursinabuild <font color="green">'project_path'</font>
+    
+    <font color="gray">#package ursina application for windows10.</font>
+    <font color="gray">#provided with project folder path, creates a build folder where</font>
+    <font color="gray">#it copies python and projects dependent packages. requires a main.py file.</font>
+    <font color="gray">#copies game scripts and assets into build/scr folder.</font>
+    <font color="gray">#creates a .bat file to start the game.</font>
     
 
 
@@ -349,6 +361,24 @@
 
 
 --------------------------------
+<b id="coordinate_system">coordinate_system</b>
+--------------------------------
+    x = right
+    y = up
+    z = forward
+    
+    <font color="gray"># you can change the coordinate with a simple loop</font>
+    <font color="gray"># and turn it into your preferred one:</font>
+    
+    <font color="red">example:</font>
+       <font color="purple"> for </font>e<font color="purple"> in </font>scene.entities:
+            e.y, e.z = e.z, e.y
+            e.y = -e.y
+            e.rotation_z += 90
+    
+
+
+--------------------------------
 <b id="easing_types">easing_types</b>
 --------------------------------
     <font color="red">example:</font> enitity.animate_y(entity.position + entity.up, .5, curve=<font color="green">'ease_in_sine'</font>)
@@ -358,6 +388,31 @@
     ease_in, ease_out, ease_in_out
     sine, quad, cubic, quart, quint, expo, circ, back, elastic, bounce
     <font color="gray"># combine like this: ease_in_expo, ease_in_out_elastic</font>
+    
+
+
+--------------------------------
+<b id="getting_started">getting_started</b>
+--------------------------------
+    
+    This document<font color="purple"> is </font>good<font color="purple"> for </font>looking up attribute names<font color="purple"> and </font>classes
+    you just can't remember the names of. Just press Ctrl+F<font color="purple"> and </font>search away!
+    The <font color="green">'Entity'</font> <font color="purple">class </font>is a useful place to start<font color="purple"> and </font>is kind of like
+    a GameObject(Unity) or an Actor(Unreal).
+    Also, don't forget to check out <font color="green">'global_variables'</font><font color="purple"> for </font>useful functions
+    like raycast(), invoke(), duplicate(),<font color="purple"> and </font>destroy().
+    
+    
+    
+    <font color="red">example:</font>
+        <font color="purple">from </font>ursina <font color="purple">import </font>*
+        app = Ursina()
+    
+        b = Button(<font color="green">'hello world!'</font>, color=color.azure)
+        b.scale *= .2
+        b.tooltip = Tooltip(<font color="green">'click me'</font>)
+    
+        app.run()
     
 
 
@@ -386,12 +441,15 @@
     <font color="purple">print</font>var(var)    <font color="gray"># prints variable name and variable value</font>
     <font color="purple">print</font>_on_screen(string)
     
+    methods called update() or input(key) will get automatically called,
+    whether they reside<font color="purple"> in </font>the main script, on an entity or<font color="purple"> in </font>a script.
+    
 
 
 --------------------------------
-<b id="input">input</b>
+<b id="input_handler">input_handler</b>
 --------------------------------
-    <font color="red">example:</font> input.rebind(<font color="green">'arrow up'</font>, <font color="green">'w'</font>)
+    <font color="red">example:</font> input_handler.rebind(<font color="green">'arrow up'</font>, <font color="green">'w'</font>)
     
     control
     left_control
@@ -552,7 +610,7 @@
 --------------------------------
 <b id="Button">Button (Entity)</b>
 --------------------------------
-    <font color="red">example:</font> b = Button(color = color.red, text=<font color="green">'button_text'</font>)
+    <font color="red">example:</font> b = Button(color=color.red, text=<font color="green">'button_text'</font>)
     
     name = <font color="green">'button'</font>
     parent = scene.ui
@@ -737,9 +795,11 @@
               <a href="#build">build</a>
               <a href="#colliders">colliders</a>
               <a href="#color">color</a>
+              <a href="#coordinate_system">coordinate_system</a>
               <a href="#easing_types">easing_types</a>
+              <a href="#getting_started">getting_started</a>
               <a href="#global_variables">global_variables</a>
-              <a href="#input">input</a>
+              <a href="#input_handler">input_handler</a>
               <a href="#models">models</a>
               <a href="#mouse">mouse</a>
               <a href="#primitives">primitives</a>

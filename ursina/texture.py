@@ -18,6 +18,10 @@ class Texture():
             self._texture.setRamImageAs(image.tobytes(), image.mode)
             self._cached_image = image
             self.path = None
+
+        elif type(path) == PandaTexture:
+            self._texture = path
+
         else:
             self.path = Path(path)
             self._texture = loader.loadTexture(Filename.fromOsSpecific(path))
@@ -116,12 +120,15 @@ class Texture():
 if __name__ == '__main__':
     from ursina import *
     app = Ursina()
-    t = load_texture('brick')
-    # img = Image.new('RGB', (8,8), (255,128,0))
-    # t = Texture(img)
-    print(t.size)
-    printvar(t.filtering)
-    printvar(t.name)
-    printvar(t.path)
-    printvar(len(t.pixels))
-    t.set_pixel(0,0, color.red)
+    # t = load_texture('brick')
+    # # img = Image.new('RGB', (8,8), (255,128,0))
+    # # t = Texture(img)
+    # print(t.size)
+    # printvar(t.filtering)
+    # printvar(t.name)
+    # printvar(t.path)
+    # printvar(len(t.pixels))
+    # t.set_pixel(0,0, color.red)
+    # Texture(str(application.internal_textures_folder) + '/white_cube.png')
+    Texture(Image.new('RGB', (8,8)))
+    Texture(PandaTexture())

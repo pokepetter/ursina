@@ -1,0 +1,9 @@
+example: Animation('player_run', fps=12, frame_times=None)
+
+# frames must be prefixed with _0001 and so on to auto load
+Animation(texture, fps=12, frame_times=None)
+frames = list()
+autoplay = True
+
+play()
+stop()

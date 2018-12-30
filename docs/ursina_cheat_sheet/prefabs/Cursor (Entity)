@@ -1,0 +1,4 @@
+example = base.cursor = Cursor(texture='custom_cursor')
+
+# follows the mouse
+# set texture for custom cursor

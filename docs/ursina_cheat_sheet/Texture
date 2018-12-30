@@ -1,3 +1,5 @@
+Texture(name, PIL.Image)
+
 example: print(entity.texture.width)
 
 name
@@ -6,8 +8,12 @@ size
 width
 height
 pixels
+filtering = False
+
 get_pixel(x,y)
 get_pixels(start, end)
+set_pixel(x, y, color)
+apply() #call this to show changes after set_pixel()
 
 
 Assign a texture to an entity like this:

@@ -1,0 +1,12 @@
+x = right
+y = up
+z = forward
+
+# you can change the coordinate with a simple loop
+# and turn it into your preferred one:
+
+example:
+    for e in scene.entities:
+        e.y, e.z = e.z, e.y
+        e.y = -e.y
+        e.rotation_z += 90

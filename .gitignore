@@ -2,12 +2,12 @@
 __pycache__
 ursina.egg-info
 dist
-build
+/build
 webgl
 todo
 
 scenes
-prefabs
+/prefabs
 scripts
 models
 textures
