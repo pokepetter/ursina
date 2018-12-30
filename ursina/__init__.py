@@ -9,6 +9,7 @@ from ursina.mesh_importer import *
 from ursina.texture_importer import *
 from ursina.entity import Entity
 from ursina.audio import Audio
+from ursina.duplicate import duplicate
 from ursina import input_handler
 
 from ursina.text import Text
@@ -44,7 +45,7 @@ from ursina.internal_scripts.position_limiter import PositionLimiter
 from ursina.internal_scripts.grid_layout import grid_layout
 
 from ursina.internal_prefabs.debug_menu import DebugMenu
-from ursina.internal_prefabs.memory_counter import MemoryCounter
 from ursina.internal_prefabs.editor_camera import EditorCamera
+from ursina.internal_prefabs.hot_loader import HotLoader
+from ursina.internal_prefabs.memory_counter import MemoryCounter
 from ursina.internal_prefabs.video_recorder import VideoRecorder
-from ursina.duplicate import duplicate
