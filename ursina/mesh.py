@@ -79,8 +79,23 @@ class Mesh(NodePath):
         prim = modes[self.mode]
 
         if self.triangles:
-            for t in self.triangles:
-                prim.addVertex(t)
+            if isinstance(self.triangles[0], int):
+                for t in self.triangles:
+                    prim.addVertex(t)
+
+            elif len(self.triangles[0]) >= 3: # if tris are tuples like this: ((0,1,2), (1,2,3))
+                for t in self.triangles:
+                    if len(t) == 3:
+                        for e in t:
+                            prim.addVertex(e)
+                    elif len(t) == 4: # turn quad into tris
+                        prim.addVertex(t[0])
+                        prim.addVertex(t[1])
+                        prim.addVertex(t[2])
+                        prim.addVertex(t[2])
+                        prim.addVertex(t[3])
+                        prim.addVertex(t[0])
+
         else:
             prim.addConsecutiveVertices(0, len(self.vertices))
 
@@ -120,15 +135,17 @@ if __name__  == '__main__':
     app = Ursina()
     verts = ((0,0,0), (1,0,0), (.5, 1, 0), (-.5,1,0))
     # tris = (1, 2, 0, 2, 3, 0)
-    tris = (0,1,2, 0,2,3)
+    # tris = ((0,1,2), (0,2,3))
+    tris = ((0,1,2,3),)
     uvs = ((0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0))
     colors = (color.red, color.blue, color.lime, color.black)
     # colors = ()
     # m = Mesh(vertices=verts, triangles=tris, uvs=uvs, colors=colors)
     m = Mesh()
+    m.mode = 'triangle'
     m.vertices = verts
     m.triangles = tris
-    m.uvs = uvs
+    # m.uvs = uvs
     m.generate()
     m.colors = colors
     m.generate()
