@@ -17,8 +17,8 @@ world_parent
 
 origin
 origin_x, origin_y, origin_z
-position = (0,0,0)
-x, y, z
+position = (0,0,0) # local position
+x, y, z   # right, up, forward
 world_position = (0,0,0)
 world_x, world_y, world_z
 rotation = (0,0,0)
@@ -32,6 +32,7 @@ world_scale_x, world_scale_y, world_scale_z
 
 model = 'model_name' / Mesh(vertices=())
 color = color.white
+shader = 'shader_name'
 texture = 'texture_name'
 texture_scale = (1,1)
 texture_offset = (0,0)
@@ -48,7 +49,12 @@ bounds
 reparent_to(entity)   # same as setting world_parent
 add_script(name)
 remove_script(name)
+
 flip_faces()
+get_shader()
+set_shader('shader.sha')
+set_shader_value('parameter_name', some_variable)
+
 combine(analyze=False)
 look_at(entity/(x,y,z))
 has_ancestor(entity)
