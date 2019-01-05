@@ -8,6 +8,7 @@ from ursina.useful import *
 from ursina.mesh_importer import *
 from ursina.texture_importer import *
 from ursina.entity import Entity
+from ursina.collider import *
 from ursina.audio import Audio
 from ursina.duplicate import duplicate
 from ursina import input_handler
