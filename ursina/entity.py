@@ -10,13 +10,14 @@ from panda3d.core import GeomVertexReader
 from panda3d.core import Vec3, Vec4
 from panda3d.core import Point3
 from panda3d.core import TransparencyAttrib
+from panda3d.core import Shader
 
 # from panda3d.core import Texture as PandaTexture
 from ursina.texture import Texture
 from panda3d.core import TextureStage
 from panda3d.core import CullFaceAttrib
 from ursina import application
-from ursina.collider import Collider, BoxCollider, SphereCollider
+from ursina.collider import *
 from ursina.mesh import Mesh
 from os import path
 from direct.interval.IntervalGlobal import Sequence, Func, Wait
@@ -137,6 +138,7 @@ class Entity(NodePath):
 
             if hasattr(self, 'model') and self.model:
                 self.model.reparentTo(self)
+                self.model.setTransparency(TransparencyAttrib.MAlpha)
                 setattr(self, 'color', self.color) # reapply color after changing model
                 self._vert_cache = None
                 if isinstance(value, Mesh):
@@ -159,8 +161,8 @@ class Entity(NodePath):
                             object.__setattr__(self, name, value)
                             return
 
-                if value[3] < 1:
-                    self.model.setTransparency(TransparencyAttrib.MAlpha)
+                # if value[3] < 1:
+                #     self.model.setTransparency(TransparencyAttrib.MAlpha)
                 self.model.setColor(value)  # override vertex colors
                 object.__setattr__(self, name, value)
 
@@ -270,13 +272,14 @@ class Entity(NodePath):
                 self.collider.remove()
 
             if value == None or isinstance(value, Collider):
+                self.collision = not value == None
                 object.__setattr__(self, name, value)
 
             elif value == 'box':
                 if hasattr(self, 'model'):
                     collider = BoxCollider(
                         entity = self,
-                        center = self.origin,
+                        center = -self.origin,
                         size = self.bounds
                         )
                 else:
@@ -288,6 +291,12 @@ class Entity(NodePath):
 
             elif value == 'sphere':
                 collider = SphereCollider(entity=self)
+                self.collision = True
+                object.__setattr__(self, name, collider)
+                return
+
+            elif value == 'mesh' and self.model:
+                collider = MeshCollider(entity=self, center=-self.origin)
                 self.collision = True
                 object.__setattr__(self, name, collider)
                 return
@@ -437,7 +446,7 @@ class Entity(NodePath):
     def world_scale(self, value):
         if isinstance(value, (int, float, complex)):
             value = (value, value, value)
-            
+
         self.setScale(base.render, Vec3(value[0], value[2], value[1]))
 
     @property
@@ -496,6 +505,14 @@ class Entity(NodePath):
     @property
     def down(self):
         return -self.up
+
+    @property
+    def shader(self):
+        return self.getShader()
+
+    @shader.setter
+    def material(self, value):
+        self.setShader(Shader.load(f'{value}.sha', Shader.SL_Cg))
 
     @property
     def texture(self):
@@ -825,7 +842,15 @@ class Entity(NodePath):
 if __name__ == '__main__':
     from ursina import *
     app = main.Ursina()
+    cols = list()
+    m=Cylinder(12)
+    print(m.normals)
+    for v in m.vertices:
+        cols.append(color.color(0,0,abs(v[2])))
 
-    e = Entity(parent=camera.ui_camera, model='cube', color=color.white, collider='box', texture='brick', z = 3)
-
+    m.colors = cols
+    m.generate()
+    e = Entity(parent=scene, model=Cylinder(12), collider='box', texture='brick')
+    e.model = m
+    EditorCamera()
     app.run()
