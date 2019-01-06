@@ -4,11 +4,14 @@
 
 from ursina import *
 
-class HotLoader(Entity):
-    def __init__(self):
+class HotReloader(Entity):
+    def __init__(self, **kwargs):
         super().__init__()
         self.eternal = True
         self.file_path = Path(__file__)
+
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
 
     def input(self, key):
@@ -18,6 +21,7 @@ class HotLoader(Entity):
 
     def reload(self):
         if not self.file_path.exists:
+            print('trying to reload, but path does not exist:', self.file_path)
             return
 
         scene.clear()
@@ -76,6 +80,6 @@ if __name__ == '__main__':
     # Entity(model='hexagon')
     # Entity(model=Circle())
     # ModelReloader()
-    app.hotloader = HotLoader()
-    app.hotloader.file_path = application.asset_folder / 'platformer.py'
+    app.hotreloader = HotReloader()
+    app.hotreloader.file_path = application.asset_folder / 'platformer.py'
     app.run()

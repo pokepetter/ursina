@@ -9,12 +9,12 @@ class Slider(Entity):
         self.max = max
         self.default = default
 
-        self.label = Text(parent=self, origin=(0.5, 0), x=-0.025, text="label")
-        self.bg = Button(parent=self, scale_y=0.01, scale_x=0.5, origin_x=-0.5)
-        self.bg.on_click = """
+        self.label = Text(parent=self, origin=(0.5, 0), x=-0.025, text='label')
+        self.bg = Button(parent=self, scale_y=0.01, scale_x=0.5, origin_x=-0.5, color=color.gray)
+        self.bg.on_click = '''
             self.parent.knob.x = mouse.point[0] * self.scale_x
             self.parent.knob.dragging = True
-            """
+            '''
 
         self.knob = Draggable(
             parent = self,
@@ -22,19 +22,20 @@ class Slider(Entity):
             min_x = 0,
             max_x = self.bg.scale_x,
             world_parent = self,
-            model = "sphere",
-            collider = "sphere",
+            model = 'sphere',
+            collider = 'sphere',
             color = color.light_gray,
-            world_scale = Vec3(1, 1, 1) * 0.5,
+            world_scale = .5,
             text = "0",
             )
         self.knob.text_entity.y = 1
         def drop():
             # print('yo', self.parent)
-            if hasattr(self, "on_value_changed"):
+            if hasattr(self, 'on_value_changed'):
                 self.on_value_changed()
         self.knob.drop = drop
         self.value = self.default
+        self.dynamic = True
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -54,7 +55,7 @@ class Slider(Entity):
             t = self.knob.x / self.bg.scale_x
             self.knob.text_entity.text = round(lerp(self.min, self.max, t), 2)
 
-            if hasattr(self, "on_value_changed") and self._prev_value != t:
+            if self.dynamic and hasattr(self, 'on_value_changed') and self._prev_value != t:
                 self.on_value_changed()
                 self._prev_value = t
 
@@ -62,7 +63,7 @@ class Slider(Entity):
     #     print('changed', self.value)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app = Ursina()
     slider = Slider(0, 3, default=1)
     # slider.value = 2

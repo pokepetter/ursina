@@ -47,6 +47,6 @@ from ursina.internal_scripts.grid_layout import grid_layout
 
 from ursina.internal_prefabs.debug_menu import DebugMenu
 from ursina.internal_prefabs.editor_camera import EditorCamera
-from ursina.internal_prefabs.hot_loader import HotLoader
+from ursina.internal_prefabs.hot_reloader import HotReloader
 from ursina.internal_prefabs.memory_counter import MemoryCounter
 from ursina.internal_prefabs.video_recorder import VideoRecorder

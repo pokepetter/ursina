@@ -1,7 +1,7 @@
-HotLoader(**kwargs)
+HotReloader(**kwargs)
 
 Reloads your code without having to open a new window.
 Press Ctrl+R to reload. It will then clear the scene and re-execute the script.
 
-By default it will try to reload __file__, where you created the HotLoader instance,
+By default it will try to reload __file__, where you created the HotReloader instance,
 but you can change the path by setting file_path attribute to a pathlib.Path.
