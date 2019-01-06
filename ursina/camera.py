@@ -45,8 +45,8 @@ class Camera(Entity):
 
         self.orthographic = False
         self.fov = 40
-        self.clip_plane_near = 0.01
-        self.clip_plane_far = 100
+        self.clip_plane_near = 0.00001
+        self.clip_plane_far = 10000
 
         self.ui_display_region = win.make_display_region()
         self.ui_display_region.set_sort(20)
@@ -114,19 +114,19 @@ class Camera(Entity):
             application.base.cam.node().set_lens(self.orthographic_lens)
 
     @property
-    def near_clip_plane(self):
+    def clip_plane_near(self):
         return self.lens.getNear()
 
-    @near_clip_plane.setter
+    @clip_plane_near.setter
     def near_clip_plane(self, value):
         self.lens.set_near(value)
 
     @property
-    def far_clip_plane(self):
+    def clip_plane_far(self):
         return self.lens.getFar()
 
-    @far_clip_plane.setter
-    def far_clip_plane(self, value):
+    @clip_plane_far.setter
+    def clip_plane_far(self, value):
         self.lens.set_far(value)
 
     @property
