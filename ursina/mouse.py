@@ -1,6 +1,7 @@
 from panda3d.core import *
 import sys
 import time
+import math
 from ursina.entity import Entity
 from ursina import camera
 from ursina import scene
@@ -125,22 +126,21 @@ class Mouse(object):
 
 
     def update(self):
-        self.i += 1
-        if self.i < self.update_rate:
-            return
-
         if not self.enabled or not self.mouse_watcher.has_mouse():
             self.velocity = (0,0)
             return
 
         self.position = Vec2(self.x, self.y)
+        self.moving = self.x + self.y != self.prev_x + self.prev_y
 
-        if self.locked:
-            self.velocity = (self.x, self.y)
-            application.base.win.move_pointer(0, round(window.size[0] / 2), round(window.size[1] / 2))
+        if self.moving:
+            if self.locked:
+                self.velocity = self.position
+                application.base.win.move_pointer(0, int(window.size[0] / 2), int(window.size[1] / 2))
+            else:
+                self.velocity = (self.x - self.prev_x, (self.y - self.prev_y) / window.aspect_ratio, 2)
         else:
-            self.velocity = (self.x - self.prev_x, (self.y - self.prev_y) / window.aspect_ratio)
-
+            self.velocity = (0,0)
 
         if self.left or self.right or self.middle:
             self.delta = (self.x - self.start_x, self.y - self.start_y)
@@ -148,6 +148,10 @@ class Mouse(object):
         self.prev_x = self.x
         self.prev_y = self.y
 
+
+        self.i += 1
+        if self.i < self.update_rate:
+            return
         # collide with ui
         self.pickerNP.reparent_to(scene.ui_camera)
         self.pickerRay.set_from_lens(camera.ui_lens_node, self.x * 2, self.y * 2)
