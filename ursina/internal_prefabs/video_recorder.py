@@ -1,5 +1,6 @@
 from ursina import *
 import os, shutil
+# import imageio    # gets imported in convert_to_gif
 
 
 class VideoRecorder(Entity):
@@ -57,6 +58,7 @@ class VideoRecorder(Entity):
 
 
     def convert_to_gif(self):
+        import imageio
         images = []
         if not os.path.exists(self.file_path):
             return
