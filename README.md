@@ -5,18 +5,15 @@ An easy to use game engine/framework for python.
 
 ## Getting Started
 1) Install Python 3.6 or newer
-2) Open cmd/terminal and type:
+2) Make sure you have git installed.
+3) Open cmd/terminal and type:
 
-       pip install ursina
+      pip install panda3d==1.10.0.dev1086
+      pip install pillow
+      pip install psd-tools
+      pip install imageio
+      pip install git+https://github.com/pokepetter/ursina.git@4b976dd1173b494ec1bb2077ff2783ea65aa2a46
 
-Alternatively:
-1) Make sure you have git installed.
-2) Open cmd/terminal and type:
-
-       pip install panda3d
-       pip install screeninfo
-       pip install pillow
-       pip install git+https://github.com/pokepetter/ursina.git
 
 
 If you want to easily edit the source, it's recommended to clone the git repo and install as develop like this:
@@ -29,8 +26,8 @@ If you want to easily edit the source, it's recommended to clone the git repo an
 ## Dependencies
   * python 3.6+
   * panda3d
-  
   * screeninfo, for detecting screen resolution
+  * hurry.size, for getting screen resolution
   * pillow, for texture manipulation
   * psd-tools, for converting .psd files
   * blender, for converting .blend files
@@ -93,4 +90,3 @@ app.run()                               # opens a window and starts the game.
 4) You can now move the orange box around with 'a' and 'd'!
 
    To close the window, you can by default, press shift+q or press the red x. to disable this, write 'window.exit_button.enabled =   False' somewhere in your code.
-

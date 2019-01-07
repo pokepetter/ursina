@@ -23,9 +23,19 @@ Make Games
 Powered by Python
 # normal, size 1
 
-    Ursina makes it easier to develop games and other software. It tries to not
-    get in your way with overly complex API and instead keeps it simple so you
-    can focus on what you're making.
+    Ursina makes it easier to develop games, visualizations and other kinds software.
+    The concise API combined with the power of the Python programming language,
+    makes life easier for the developer so they can focus on what they are making.
+
+    Things you won't miss:
+      * waiting for your code to compile
+      * the editor crashing and possibly losing your work
+      * not being able to fix engine bugs or add features
+      * overly verbose code
+      * uncustomizable workflow
+      * waiting for imports
+      * long build times
+      * revenue cut or subscription fee
 
 
 
@@ -44,21 +54,15 @@ Getting Started
 # size 1, normal
 
     1) Install Python 3.6 or newer. <a href="https://www.python.org/downloads/">[Download Python here]</a>
-    2) Open cmd/terminal and type:
+    2) Make sure you have git installed.
+    3) Open cmd/terminal and type:
 
         # code
-        pip install ursina
-
-
-    Alternatively:
-    1) Make sure you have git installed.
-    2) Open cmd/terminal and type:
-
-        # code
-        pip install panda3d
-        pip install screeninfo
+        pip install panda3d==1.10.0.dev1086
         pip install pillow
-        pip install git+https://github.com/pokepetter/ursina.git
+        pip install psd-tools
+        pip install imageio
+        pip install git+https://github.com/pokepetter/ursina.git@4b976dd1173b494ec1bb2077ff2783ea65aa2a46
 
 
     If you want to easily edit the source, it's recommended to clone the git
@@ -78,6 +82,7 @@ Dependencies
     * python 3.6+
     * panda3d
     * screeninfo, for detecting screen resolution
+    * hurry.size, for getting screen resolution
     * pillow, for texture manipulation
     * psd-tools, for converting .psd files
     * blender, for converting .blend files
@@ -107,10 +112,6 @@ Examples
 
         app.run()                       # opens a window and starts the game.
 
-
-    Minecraft Clone
-
-    Platformer Game
 
 
 
