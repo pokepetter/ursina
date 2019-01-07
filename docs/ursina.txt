@@ -5,7 +5,7 @@ ursina engine
 # size 1.25, bold
 --------------------------------------
 # normal
-pip install ursina
+developers first
 # bold
 --------------------------------------
 # normal
