@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>ursina</title>
 <br>
 
-<div style="margin-left:0em; white-space: pre-wrap;">
+<div style="margin-left:0em; white-space: pre-wrap;">﻿
 </div>
 <div align="center">
 <div style="font-weight: bold">
@@ -22,7 +22,7 @@
 <div style="margin-left:0em; white-space: pre-wrap;">--------------------------------------
 </div>
 <div style="font-weight: normal">
-<div style="margin-left:0em; white-space: pre-wrap;">pip install ursina
+<div style="margin-left:0em; white-space: pre-wrap;">developers first
 </div>
 <div style="font-weight: bold">
 <div style="margin-left:0em; white-space: pre-wrap;">--------------------------------------
@@ -40,29 +40,46 @@
 <div style="max-width: 900px; margin: auto;">
 <div style="font-size: 40.0px">
 <div style="font-weight: bold">
-<div style="margin-left:0em; white-space: pre-wrap;">Make Games
-</div>
-<a href="https://imgur.com/B8wedvM"><img src="https://i.imgur.com/B8wedvM.gif" title="source: imgur.com" /></a>
-<div style="font-weight: normal">
-<div style="font-size: 20.0px">
-<div style="margin-left:0em; white-space: pre-wrap;">
-</div>
+
+<img src="made_with_ursina.jpg"     width=100%> <br>
 
 <div style="margin-left:0em; white-space: pre-wrap;">
 </div>
 <div style="font-size: 40.0px">
-<div style="font-weight: bold">
+
 <div style="margin-left:0em; white-space: pre-wrap;">Powered by Python
 </div>
 <div style="font-weight: normal">
 <div style="font-size: 20.0px">
 <div style="margin-left:0em; white-space: pre-wrap;">
 </div>
-<div style="margin-left:1em; white-space: pre-wrap;">Ursina makes it easier to develop games and other software. It tries to not
+<div style="margin-left:1em; white-space: pre-wrap;">Ursina makes it easier to develop games, visualizations and other kinds software.
 </div>
-<div style="margin-left:1em; white-space: pre-wrap;">get in your way with overly complex API and instead keeps it simple so you
+<div style="margin-left:1em; white-space: pre-wrap;">The concise API combined with the power of the Python programming language,
 </div>
-<div style="margin-left:1em; white-space: pre-wrap;">can focus on what you're making.
+<div style="margin-left:1em; white-space: pre-wrap;">makes life easier for the developer so they can focus on what they are making.
+</div>
+<div style="margin-left:0em; white-space: pre-wrap;">
+</div>
+<div style="margin-left:1em; white-space: pre-wrap;">Things you won't miss:
+</div>
+<div style="margin-left:0em; white-space: pre-wrap;">
+</div>
+<div style="margin-left:2em; white-space: pre-wrap;">* waiting for your code to compile
+</div>
+<div style="margin-left:2em; white-space: pre-wrap;">* the editor crashing and possibly losing your work
+</div>
+<div style="margin-left:2em; white-space: pre-wrap;">* not being able to fix engine bugs or add features
+</div>
+<div style="margin-left:2em; white-space: pre-wrap;">* overly verbose code
+</div>
+<div style="margin-left:2em; white-space: pre-wrap;">* uncustomizable workflow
+</div>
+<div style="margin-left:2em; white-space: pre-wrap;">* waiting for imports
+</div>
+<div style="margin-left:2em; white-space: pre-wrap;">* long build times
+</div>
+<div style="margin-left:2em; white-space: pre-wrap;">* revenue cut or subscription fee
 </div>
 <div style="margin-left:0em; white-space: pre-wrap;">
 </div>
@@ -100,7 +117,9 @@
 </div>
 <div style="margin-left:1em; white-space: pre-wrap;">1) Install Python 3.6 or newer. <a href="https://www.python.org/downloads/">[Download Python here]</a>
 </div>
-<div style="margin-left:1em; white-space: pre-wrap;">2) Open cmd/terminal and type:
+<div style="margin-left:1em; white-space: pre-wrap;">2) Make sure you have git installed.
+</div>
+<div style="margin-left:1em; white-space: pre-wrap;">3) Open cmd/terminal and type:
 </div>
 <div style="margin-left:0em; white-space: pre-wrap;">
 </div>
@@ -112,31 +131,11 @@
                     font-family: monospace;
                     font-size: 20;
                     font-weight: normal;
-                    white-space: pre;">pip install ursina</div>
-<div style="margin-left:0em; white-space: pre-wrap;">
-</div>
-<div style="margin-left:0em; white-space: pre-wrap;">
-</div>
-<div style="margin-left:1em; white-space: pre-wrap;">Alternatively:
-</div>
-<div style="margin-left:1em; white-space: pre-wrap;">1) Make sure you have git installed.
-</div>
-<div style="margin-left:1em; white-space: pre-wrap;">2) Open cmd/terminal and type:
-</div>
-<div style="margin-left:0em; white-space: pre-wrap;">
-</div>
-<div style="
-                    background-color: whitesmoke;
-                    padding: 10px;
-                    margin: 0;
-                    margin-left: 60px;
-                    font-family: monospace;
-                    font-size: 20;
-                    font-weight: normal;
-                    white-space: pre;">pip install panda3d
-pip install screeninfo
+                    white-space: pre;">pip install panda3d==1.10.0.dev1086
 pip install pillow
-pip install git+https://github.com/pokepetter/ursina.git</div>
+pip install psd-tools
+pip install imageio
+pip install git+https://github.com/pokepetter/ursina.git@4b976dd1173b494ec1bb2077ff2783ea65aa2a46</div>
 <div style="margin-left:0em; white-space: pre-wrap;">
 </div>
 <div style="margin-left:0em; white-space: pre-wrap;">
@@ -178,6 +177,8 @@ python setup.py develop</div>
 <div style="margin-left:1em; white-space: pre-wrap;">* panda3d
 </div>
 <div style="margin-left:1em; white-space: pre-wrap;">* screeninfo, for detecting screen resolution
+</div>
+<div style="margin-left:1em; white-space: pre-wrap;">* hurry.size, for getting screen resolution
 </div>
 <div style="margin-left:1em; white-space: pre-wrap;">* pillow, for texture manipulation
 </div>
@@ -227,14 +228,6 @@ ground = Entity(
 
 app.run()                       # opens a window and starts the game.</div>
 <div style="margin-left:0em; white-space: pre-wrap;">
-</div>
-<div style="margin-left:0em; white-space: pre-wrap;">
-</div>
-<div style="margin-left:1em; white-space: pre-wrap;">Minecraft Clone
-</div>
-<div style="margin-left:0em; white-space: pre-wrap;">
-</div>
-<div style="margin-left:1em; white-space: pre-wrap;">Platformer Game
 </div>
 <div style="margin-left:0em; white-space: pre-wrap;">
 </div>

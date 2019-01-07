@@ -1,4 +1,4 @@
-
+﻿
 # center, bold, arial, size 5
 ursina engine
 ʕ •ᴥ•ʔゝ□
@@ -13,11 +13,8 @@ developers first
 <a href="https://github.com/pokepetter/ursina">[GitHub]</a>    <a href="ursina_cheat_sheet/ursina_cheat_sheet_code_browser.html">[Documentation]</a>    <a href="https://twitter.com/petteramland">[Twitter]</a>
 
 
-# left, width 900, size 2, bold
-Make Games
-# normal, size 1
-
-# image north
+# left, width 900, size 2, bold,
+#image made_with_ursina.jpg
 
 # size 2, bold
 Powered by Python
@@ -28,14 +25,15 @@ Powered by Python
     makes life easier for the developer so they can focus on what they are making.
 
     Things you won't miss:
-      * waiting for your code to compile
-      * the editor crashing and possibly losing your work
-      * not being able to fix engine bugs or add features
-      * overly verbose code
-      * uncustomizable workflow
-      * waiting for imports
-      * long build times
-      * revenue cut or subscription fee
+
+        * waiting for your code to compile
+        * the editor crashing and possibly losing your work
+        * not being able to fix engine bugs or add features
+        * overly verbose code
+        * uncustomizable workflow
+        * waiting for imports
+        * long build times
+        * revenue cut or subscription fee
 
 
 
