@@ -17,6 +17,7 @@ class Mesh(NodePath):
         self.mode = mode
         self.thickness = thickness
 
+        self.recipe = 'Mesh()'
         if self.vertices:
             self.generate()
 
@@ -113,11 +114,16 @@ class Mesh(NodePath):
         self.attachNewNode(self.geomNode)
         # print('finished')
 
-        self.recipe = '''
-            Mesh(vertices={}, \ntriangles={}, \ncolors={}, \nuvs={}, \nnormals={}, \nstatic={}, \nmode='{}', \nthickness={})
-            '''.format(
-                str(tuple([(e[0],e[1],e[2]) for e in self.vertices])), str(self.triangles), str(self.colors), str(self.uvs),
-                str(self.normals), str(self.static), str(self.mode), str(self.thickness)).strip()
+        self.recipe = f'''Mesh(
+            vertices={str(tuple([(e[0],e[1],e[2]) for e in self.vertices]))},
+            triangles={self.triangles},
+            colors={self.colors},
+            uvs={self.uvs},
+            normals={self.normals},
+            static={self.static},
+            mode='{self.mode}',
+            thickness={self.thickness}
+            )'''
 
     @property
     def thickness(self):
