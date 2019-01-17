@@ -2,7 +2,7 @@ from ursina import *
 
 
 class Cone(Mesh):
-    def __init__(self, resolution=4, radius=.5, height=1, mode='triangle', **kwargs):
+    def __init__(self, resolution=4, radius=.5, height=1, direction=(0,1,0), mode='triangle', **kwargs):
         origin = Entity()
         point = Entity(parent=origin)
         point.z = radius
@@ -27,7 +27,7 @@ class Cone(Mesh):
 
 if __name__ == '__main__':
     app = Ursina()
-    Entity(model=Cone(), color=color.color(60,1,1,.3), x=2)
+    Entity(model=Cone(8), color=color.color(60,1,1,.3), x=2)
     origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
     ed = EditorCamera(rotation_speed = 200, panning_speed=200)
     app.run()

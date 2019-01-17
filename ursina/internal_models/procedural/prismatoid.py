@@ -3,7 +3,10 @@ from ursina.duplicate import duplicate
 
 
 class Prismatoid(Mesh):
-    def __init__(self, base_shape=Quad(), origin=(0,0), path=((0,0,0),(0,1,0)), thicknesses=((1,1),), mode='triangle', **kwargs):
+    def __init__(self, base_shape=Quad, origin=(0,0), path=((0,0,0),(0,1,0)), thicknesses=((1,1),), mode='triangle', **kwargs):
+        if type(base_shape) == type:
+            base_shape = base_shape()
+
         self.base_shape = base_shape
         shape = base_shape.vertices
         # make the base shape and rotate it

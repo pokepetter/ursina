@@ -5,7 +5,7 @@ from panda3d.core import GeomLines, GeomLinestrips, GeomPoints
 
 class Mesh(NodePath):
 
-    def __init__(self, vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='ngon', thickness=1):
+    def __init__(self, vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1):
         super().__init__('mesh')
 
         self.vertices = vertices
@@ -61,7 +61,7 @@ class Mesh(NodePath):
             for uv in self.uvs:
                 uvwriter.addData2f(uv[0], uv[1])
 
-        if self.normals:
+        if self.normals != None:
             normalwriter = GeomVertexWriter(vdata, 'normal')
             for norm in self.normals:
                 normalwriter.addData3f((v[0], v[2], v[1]))
