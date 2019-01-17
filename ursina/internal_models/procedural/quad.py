@@ -2,19 +2,28 @@ from ursina import *
 
 
 class Quad(Mesh):
-    def __init__(self, size=(1,1), bevel=.05, subdivisions=0, ignore_aspect=False, **kwargs):
+    def __init__(self, size=(1,1), bevel=.1, subdivisions=0, ignore_aspect=False, mode='ngon', **kwargs):
         super().__init__()
         self.vertices = [Vec3(0,0,0), Vec3(1,0,0), Vec3(1,1,0), Vec3(0,1,0)]
         self.bevel = bevel
+        self.mode = mode
 
-        for j in range(subdivisions):
-            points = list()
-            for i, v in enumerate(self.vertices):
-                points.append(lerp(v, self.vertices[i-1], bevel))
-                next_index = i+1 if i+1 < len(self.vertices) else 0
-                points.append(lerp(v, self.vertices[next_index], bevel))
-                bevel += .005
-            self.vertices = points
+        subdivisions += 1
+        if subdivisions > 1:
+            new_verts = list()
+            corner_maker = Entity()
+            point_placer = Entity(parent=corner_maker, x=-bevel)
+            corner_maker.rotation_z -= 90/subdivisions/2
+
+            corner_corrections = (Vec3(bevel,bevel,0), Vec3(-bevel,bevel,0), Vec3(-bevel,-bevel,0), Vec3(bevel,-bevel,0))
+            for j in range(4):  # 4 corners
+                corner_maker.position = self.vertices[j] + corner_corrections[j]
+                for i in range(subdivisions):
+                    new_verts.append(point_placer.world_position)
+                    corner_maker.rotation_z -= 90/subdivisions
+
+            self.vertices = new_verts
+
 
         self.uvs = list()
         for v in self.vertices:
@@ -40,7 +49,7 @@ class Quad(Mesh):
         self.vertices = [(v[0]-offset[0], v[1]-offset[1], v[2]-offset[2]) for v in self.vertices]
 
 
-        if 'mode' in kwargs and kwargs['mode'] == 'lines':
+        if mode == 'lines':
             self.vertices.append(self.vertices[0])
 
         for key, value in kwargs.items():
@@ -61,7 +70,9 @@ class Quad(Mesh):
 
 if __name__ == '__main__':
     app = Ursina()
-    Entity(model=Quad(size=(3,1), subdivisions=4, thickness=3, mode='lines'), color = color.color(60,1,1,.3))
+    Entity(model=Quad(size=(3,1), thickness=3, subdivisions=3, mode='lines'), color = color.color(0,1,1,.7))
+    Entity(model=Quad(size=(3,1)), color = color.color(60,1,1,.3))
     origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
-    ed = EditorCamera(rotation_speed = 200, panning_speed=200)
+    # ed = EditorCamera(rotation_speed = 200, panning_speed=200)
+    camera.z = -5
     app.run()
