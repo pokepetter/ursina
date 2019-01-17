@@ -123,9 +123,9 @@ class Entity(NodePath):
                 object.__setattr__(self, name, value)
 
             elif isinstance(value, str): # pass model asset name
-                m = load_model(application.asset_folder, value)
+                m = load_model(value, application.asset_folder)
                 if not m:
-                    m = load_model(application.internal_models_folder, value)
+                    m = load_model(value, application.internal_models_folder)
                 if m:
                     if hasattr(self, 'model'):
                         self.model.removeNode()
@@ -511,7 +511,7 @@ class Entity(NodePath):
         return self.getShader()
 
     @shader.setter
-    def material(self, value):
+    def shader(self, value):
         self.setShader(Shader.load(f'{value}.sha', Shader.SL_Cg))
 
     @property
@@ -682,12 +682,19 @@ class Entity(NodePath):
             self.setAttrib(CullFaceAttrib.make(CullFaceAttrib.MCullCounterClockwise))
 
 
-    def look_at(self, target):
-        if type(target) is Vec3 or type(target) is tuple:
-            super().look_at(Vec3(target[0], target[2], target[1]))
-            return
-        super().look_at(target)
+    def look_at(self, target, axis='forward'):
+        if isinstance(target, Entity):
+            target = Vec3(target.world_position)
+        super().look_at(render, Vec3(target[0], target[2], target[1]))
 
+        self.rotation += {
+        'forward' : (0,0,0),
+        'back' :    (180,0,0),
+        'right' :   (0,-90,0),
+        'left' :    (0,90,0),
+        'up' :      (90,0,0),
+        'down' :    (-90,0,0),
+        }[axis]
 
     def get_scripts_of_type(self, type):
         pass
