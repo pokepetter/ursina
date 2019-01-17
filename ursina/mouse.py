@@ -2,7 +2,6 @@ from panda3d.core import *
 import sys
 import time
 import math
-from ursina.entity import Entity
 from ursina import camera
 from ursina import scene
 from ursina import application
