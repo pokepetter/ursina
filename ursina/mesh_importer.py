@@ -5,7 +5,7 @@ from ursina.mesh import Mesh
 from ursina import application
 import pathlib
 
-def load_model(path, name):
+def load_model(name, path=application.asset_folder):
     for filetype in ('.bam', '.ursinamesh'):
         for filename in path.glob(f'**/{name}{filetype}'):
             if filetype == '.bam':
