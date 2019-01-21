@@ -1,5 +1,6 @@
 import sys
 import time
+import ursina
 from ursina import *
 from panda3d.core import TransparencyAttrib
 
@@ -33,32 +34,15 @@ class Text(Entity):
 
         self.line_height = 1
 
-        self.text_colors = {
-            '<default>' : color.text_color,
-            '<white>' : color.white,
-            '<smoke>' : color.smoke,
-            '<light_gray>' : color.light_gray,
-            '<gray>' : color.gray,
-            '<dark_gray>' : color.dark_gray,
-            '<black>' : color.black,
+        self.text_colors = {'<default>' : color.text_color}
 
-            '<red>' : color.red,
-            '<orange>' : color.orange,
-            '<yellow>' : color.yellow,
-            '<lime>' : color.lime,
-            '<green>' : color.green,
-            '<turquoise>' : color.turquoise,
-            '<cyan>' : color.cyan,
-            '<azure>' : color.azure,
-            '<blue>' : color.blue,
-            '<violet>' : color.violet,
-            '<magenta>' : color.magenta,
-            '<pink>' : color.pink,
-            }
+        for color_name in color.color_names:
+            self.text_colors['<' + color_name + '>'] = color.colors[color_name]
 
         self.tag = '<default>'
         self.color_tag = self.text_colors['<default>']
         self.scale_override = 1
+        self.background = None
 
         if text:
             self.text = text
@@ -310,55 +294,24 @@ class Text(Entity):
         if hasattr(self, '_background'):
             self._background.origin = value
 
-    @property
-    def background(self):
-        if hasattr(self, '_background'):
-            return self._background
-        return None
 
-    @background.setter
-    def background(self, value):
-        if value:
-            # print('enable background')
-            if not hasattr(self, '_background'):
-                self._background = Entity(
-                    parent = self,
-                    # scale = (self.width, self.height),
-                    # model = Quad(subdivisions=2),
-                    model = 'quad',
-                    color = color.black66,
-                    # position = (-self.origin[0] * self.width, -self.origin[1] * self.height),
-                    z = .01
-                    )
-            # adjust for scaled text in first line
-            self._background.position = (-self.origin[0] * self.width, -self.origin[1] * self.height)
-            self._background.scale = (self.width, self.height)
-            self._background.scale_y += (self.text_nodes[0].getScale()[2] - self.size) / 2
-            self._background.y += (self.text_nodes[0].getScale()[2] - self.size) * self.size
-        else:
-            if hasattr(self, '_background'):
-                destroy(self._background)
+    def create_background(self, padding=size*2, radius=size, color=ursina.color.black66):
+        from ursina import Quad, destroy
 
+        if self.background:
+            destroy(self.background)
 
-    @property
-    def margin(self):
-        return self._margin
+        self.background = Entity(parent=self, z=.01)
 
-    @margin.setter
-    def margin(self, value):
-    # only horizontal and vertical. set position as well if you need more control.
-    # 1 margin value is the same size as a character.
-        if not hasattr(self, '_background'):
-            print('''can't set margin without setting text.background = True first''')
-            return
-        # print('setting text backrgound margin')
-        if isinstance(value, (int, float, complex)):
-            value = (value, value)
+        if isinstance(padding, (int, float, complex)):
+            padding = (padding, padding)
 
-        self.background.scale_x += value[0] * self.size
-        self.background.scale_y += value[1] * self.size
+        w, h = self.width + padding[0], self.height + padding[1]
+        self.background.x -= self.origin_x * self.width
+        self.background.y -= self.origin_y * self.height
 
-        self._margin = value
+        self.background.model = Quad(radius=radius, scale=(w, h))
+        self.background.color = color
 
 
     def appear(self):
@@ -384,44 +337,16 @@ class Text(Entity):
 
 if __name__ == '__main__':
     app = Ursina()
-#     origin = Entity()
-#     origin.model = 'quad'
-#     origin.scale *= .05
-#
-#     descr = '''<scale:1.5><orange>Title\n<scale:1>Increase <red>max health
-# <default>with 25% <yellow>and raise attack with\n<green>100 <default>for 2 turns.'''
-#     # descr = descr.strip().replace('\n', ' ')
-#     replacements = {
-#         'hp' : '<red>hp <default>',
-#         'max health ' : '<red>max health <default>',
-#         'attack ' : '<orange>attack <default>'
-#     }
-#     # descr = multireplace(descr, replacements)
-#     # descr = '<scale:1.5><orange>Title \n<scale:1>Increase <red>max health <default>with 25%.'
-#     # descr = 'test text'.upper()
-#     # descr = 'o---{::::::::::::::::::::>'
-#     # Text.size = .25
-#     # descr = 'text example'
-    descr = ('<scale:1.5>' + 'Rainstorm' + '<scale:1>\n' +
-'''Summon a <blue>rain
-storm <default>to deal 5 <blue>water
+    descr = ('<scale:1.5><orange>' + 'Rainstorm' + '<scale:1>\n' +
+'''Summon a <azure>rain storm <default>to deal 5 <azure>water
 damage <default>to <red>everyone, <default>including <orange>yourself. <default>
 Lasts for 4 rounds.''')
     test = Text(descr)
 #     # print('\n', test.text, '\n\n')
     test.font = 'VeraMono.ttf'
+    # test.origin = (.5, .5)
+    # test.origin = (0, 0)
     # test.wordwrap = 40
-    # test.background = True
-#     test.font = 'Inconsolata-Regular.ttf'
-#     # test.model = 'quad'
-#     # test.origin = (0, 0)
-#     # test.origin = (.5, -.5)
-#     test.appear()
-#     test.background = True
-#     test.margin = 4
-    # Text(text='<red>red <default>text')
-    # test.color = color.red
-    # for tn in test.text_nodes:
-    #     tn.node().setTextColor(color.red)
+    test.create_background()
 
-    app.run
+    app.run()
