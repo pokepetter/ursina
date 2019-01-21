@@ -10,7 +10,11 @@ class Slider(Entity):
         self.default = default
 
         self.label = Text(parent=self, origin=(0.5, 0), x=-0.025, text='label')
-        self.bg = Button(parent=self, scale_y=0.01, scale_x=0.5, origin_x=-0.5, color=color.gray)
+        self.bg = Button(
+            parent = self,
+            model = Quad(scale=(.525,.025), radius=.01, segments=3),
+            origin_x = -0.25
+            )
         self.bg.on_click = '''
             self.parent.knob.x = mouse.point[0] * self.scale_x
             self.parent.knob.dragging = True
@@ -20,7 +24,7 @@ class Slider(Entity):
             parent = self,
             lock_y = True,
             min_x = 0,
-            max_x = self.bg.scale_x,
+            max_x = .5,
             world_parent = self,
             model = 'sphere',
             collider = 'sphere',
@@ -37,6 +41,8 @@ class Slider(Entity):
         self.value = self.default
         self.dynamic = True
 
+        self.knob.text_entity.text = str(round(self.default, 2))
+
         for key, value in kwargs.items():
             setattr(self, key, value)
 
@@ -52,7 +58,7 @@ class Slider(Entity):
 
     def update(self):
         if self.knob.dragging:
-            t = self.knob.x / self.bg.scale_x
+            t = self.knob.x / .5
             self.knob.text_entity.text = round(lerp(self.min, self.max, t), 2)
 
             if self.dynamic and hasattr(self, 'on_value_changed') and self._prev_value != t:
@@ -65,6 +71,7 @@ class Slider(Entity):
 
 if __name__ == '__main__':
     app = Ursina()
-    slider = Slider(0, 3, default=1)
+    origin = Entity(model='cube', color=color.green, scale = .05)
+    slider = Slider(0, 3, default=1, scale=1)
     # slider.value = 2
     app.run()
