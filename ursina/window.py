@@ -43,8 +43,10 @@ class Window(WindowProperties):
         self.fullscreen = False
         self.borderless = True
         self.cursor = True
-        self.fps_counter = True
+        # self.fps_counter = True
         self.vsync = True
+
+
 
 
     @property
@@ -77,6 +79,25 @@ class Window(WindowProperties):
         from ursina.internal_prefabs.exit_button import ExitButton
         from ursina import scene
         self.exit_button = ExitButton()
+
+        from ursina import Text
+        import time
+        self.fps_counter = Text(
+            parent = scene.ui,
+            eternal = True,
+            position = (.4 * self.aspect_ratio, .5),
+            text = 'fps: 60',
+            background = True,
+            i = 0,
+            )
+        def update():
+            if self.fps_counter.i > 60:
+                self.fps_counter.text = 'fps: ' + str(int(1//time.dt))
+                self.fps_counter.i = 0
+
+            self.fps_counter.i += 1
+
+        self.fps_counter.update = update
 
     @property
     def size(self):
@@ -125,9 +146,6 @@ class Window(WindowProperties):
 
         if name == 'color':
             application.base.camNode.get_display_region(0).get_window().set_clear_color(value)
-
-        if name == 'fps_counter':
-            application.base.set_frame_rate_meter(value)
 
         if name == 'vsync':
             if value == True:
