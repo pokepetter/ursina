@@ -5,11 +5,11 @@ class ExitButton(Button):
         super().__init__(
             eternal = True,
             parent = scene.ui,
-            position = window.top_right,
             scale = (.025, .025),
+            position = Vec2(window.top_right) - Vec2(.0125, .0125),
+            model = 'quad',
             color = color.red,
             text = 'x',
-            origin = (.5, .5),
             **kwargs)
 
 

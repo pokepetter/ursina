@@ -9,9 +9,9 @@ class Tooltip(Text):
         self.parent = camera.ui
         self.wordwrap = 40
         self.origin = (-.5, -.5)
-        self.background = True
-        self.margin = 2
+        self.margin = (2, 2)
         self.enabled = False
+        self.create_background()
 
         for key, value in kwargs.items():
             setattr(self, key, value)

@@ -1,4 +1,5 @@
 from ursina import *
+from ursina.internal_models.procedural.quad import Quad
 import textwrap
 
 
@@ -11,12 +12,27 @@ class Button(Entity):
         self.name = 'button'
         self.parent = scene.ui
         self.is_editor = False
-        self.model = 'quad'
+
+        for key, value in kwargs.items():   # set the scale before model for correct corners
+            if key in ('scale', 'scale_x', 'scale_y', 'scale_z',
+            'world_scale', 'world_scale_x', 'world_scale_y', 'world_scale_z'):
+
+                setattr(self, key, value)
+
+        if not 'model' in kwargs:
+            self.model = Quad(size=(self.scale), subdivisions=4)
         self.color = Button.color
 
         self.collision = True
         self.collider = 'box'
         self.text_entity = None
+        self.disabled = False
+
+        if 'color' in kwargs:
+            setattr(self, 'color', kwargs['color'])
+        self.original_color = self.color
+        self.highlight_color = color.tint(self.original_color, .2)
+        self.pressed_color = color.tint(self.original_color, -.2)
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -44,10 +60,8 @@ class Button(Entity):
 
     def __setattr__(self, name, value):
         if name == 'color':
-            # ignore setting original color if the button is modifying its own color on enter, exit or click
-            if ('self' in inspect.currentframe().f_back.f_locals
-            and inspect.currentframe().f_back.f_locals['self'] != self
-            or inspect.stack()[1][3] == '__init__'):
+            # ignore setting original color if the button is modifying its own color on enter or on exit
+            if not inspect.stack()[1][3] in ('__init__', 'on_mouse_enter', 'on_mouse_exit'):
                 self.original_color = value
                 self.highlight_color = color.tint(self.original_color, .2)
                 self.pressed_color = color.tint(self.original_color, -.2)
@@ -72,6 +86,9 @@ class Button(Entity):
 
 
     def input(self, key):
+        if self.disabled:
+            return
+
         if key == 'left mouse down':
             if self.hovered:
                 self.color = self.pressed_color
@@ -82,7 +99,8 @@ class Button(Entity):
 
 
     def on_mouse_enter(self):
-        self.color = self.highlight_color
+        if not self.disabled:
+            self.color = self.highlight_color
 
         if hasattr(self, 'tooltip'):
             self.tooltip_scale = self.tooltip.scale
@@ -92,7 +110,8 @@ class Button(Entity):
 
 
     def on_mouse_exit(self):
-        self.color = self.original_color
+        if not self.disabled:
+            self.color = self.original_color
 
         if hasattr(self, 'tooltip'):
             if hasattr(self, 'tooltip_scaler'):
@@ -100,6 +119,9 @@ class Button(Entity):
             self.tooltip.enabled = False
 
     def on_click(self):
+        if self.disabled:
+            return
+
         if hasattr(self, 'on_click_string'):
             exec(self.on_click_string)
 
@@ -129,7 +151,8 @@ if __name__ == '__main__':
     app = Ursina()
     # t = Test()
     # t.b.parent = scene
-    Button(text='hello world!', color=color.azure)
+    # Button(scale=.3, text='hello world!', color=color.azure)
+    Button(scale=.3, text='hello world!', color=color.azure, model=Quad())
     EditorCamera()
     # b = Button(text='test\ntest', scale=(4,1), model='quad', collision=False)
     # b.text_entity.scale *= .5
