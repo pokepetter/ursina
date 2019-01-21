@@ -5,14 +5,15 @@
 from ursina import *
 
 class HotReloader(Entity):
-    def __init__(self, **kwargs):
+    def __init__(self, file_path=__file__, **kwargs):
         super().__init__()
         self.eternal = True
-        self.file_path = Path(__file__)
+        self.file_path = file_path
 
         for key, value in kwargs.items():
             setattr(self, key, value)
 
+        self.file_path = Path(self.file_path)
 
     def input(self, key):
         if held_keys['control'] and key == 'r':
@@ -26,16 +27,27 @@ class HotReloader(Entity):
 
         scene.clear()
 
+        newtext = ''
         with open(self.file_path, 'r') as file:
-            # print(file.read())
             text = file.read()
-            newtext = ''
-            for line in text.split('\n'):
-                if line.startswith('from ursina') or 'Ursina()' in line or 'app.run()' in line:
-                    continue
-                newtext += line + '\n'
+            dedent_next = False
 
-            exec(newtext)
+            for line in text.split('\n'):
+                if line.startswith('from ursina'):
+                    continue
+                if 'Ursina()' in line or 'app.run()' in line or 'HotReloader(' in line:
+                    continue
+                if line.startswith('''if __name__ == '__main__':'''):
+                    dedent_next = True
+                    continue
+
+                if dedent_next:
+                    newtext += dedent(line) + '\n'
+                else:
+                    newtext += line + '\n'
+
+        print(newtext)
+        exec(newtext)
 
 
 class ModelReloader(Entity):
