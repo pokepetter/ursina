@@ -19,6 +19,9 @@ class HotReloader(Entity):
         if held_keys['control'] and key == 'r':
             self.reload()
 
+        if held_keys['control'] and key == 't':
+            self.reload_texture()
+
 
     def reload(self):
         if not self.file_path.exists:
@@ -48,6 +51,16 @@ class HotReloader(Entity):
 
         print(newtext)
         exec(newtext)
+
+
+    def reload_texture(self):
+        textured_entities = [e for e in scene.entities if e.texture]
+        for e in textured_entities:
+            if e.texture.path.parent.name == 'compressed':
+                print('texture is made from .psd file', e.texture.path.name.split('.')[0] + '.psd')
+                compress_textures(e.texture.path.name.split('.')[0])
+            print('reloaded texture:', e.texture.path)
+            e.texture._texture.reload()
 
 
 class ModelReloader(Entity):
@@ -91,6 +104,7 @@ if __name__ == '__main__':
     app = Ursina()
     # Entity(model='hexagon')
     # Entity(model=Circle())
+    Sprite('brick')
     # ModelReloader()
     app.hotreloader = HotReloader()
     app.hotreloader.file_path = application.asset_folder / 'platformer.py'

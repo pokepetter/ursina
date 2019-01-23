@@ -21,6 +21,11 @@ def load_texture(name, path=None):
                 if filename.endswith(ft):
                     return Texture(filename)
 
+            if filename.endswith('.psd'):
+                print('found uncompressed psd, compressing it...')
+                compress_textures(name)
+                return load_texture(name)
+
     return None
 
 if __name__ == '__main__':
@@ -30,7 +35,7 @@ if __name__ == '__main__':
     app.run()
 
 
-def compress_textures(name=None):
+def compress_textures(name=''):
     import os
     try:
         from PIL import Image
@@ -45,37 +50,36 @@ def compress_textures(name=None):
         application.compressed_textures_folder.mkdir()
 
 
-    files = os.listdir(application.textures_folder)
-    compressed_files = os.listdir(application.compressed_textures_folder)
+    file_type = '.*'
+    if '.' in name:
+        file_type = ''
 
-    for f in files:
-        if f.endswith('.psd') or f.endswith('.png'):
-            if name:
-                if not name in f:
-                    continue
-            try:
-                # print('f:', application.compressed_textures_folder + f)
-                if f.suffix == '.psd':
-                    image = PSDImage.load(application.textures_folder / f)
-                    image = image.as_PIL()
-                else:
-                    image = Image.open(application.textures_folder / f)
-                # print(max(image.size))
-                if max(image.size) > 512:
-                    image.save(
-                        application.compressed_textures_folder / (f[:-4] + '.jpg'),
-                        'JPEG',
-                        quality=80,
-                        optimize=True,
-                        progressive=True
-                        )
-                    print('compressing to jpg:', f)
-                else:
-                    image.save(
-                        application.compressed_textures_folder / (f[:-4] + '.png'),
-                        'PNG'
-                        )
-                    print('compressing to png:', f)
-            except Exception as e:
-                print(e)
+    print('searching for texture:', name + file_type)
+    for f in glob.iglob(str(application.asset_folder) + '/**/' + name + file_type, recursive=True):
+        if f.split(name)[0].endswith('compressed\\'):
+            continue
+        print('  found:', f)
+
+        if f.endswith('.psd'):
+            image = PSDImage.load(f)
+            image = image.as_PIL()
+        elif f.endswith('.png'):
+            image = Image.open(f)
+        # print(max(image.size))
+        if max(image.size) > 512:
+            image.save(
+                application.compressed_textures_folder / (Path(f).stem + '.jpg'),
+                'JPEG',
+                quality=80,
+                optimize=True,
+                progressive=True
+                )
+            print('    compressing to jpg:', application.compressed_textures_folder / (Path(f).stem + '.jpg'))
+            continue
+        else:
+            image.save(
+                application.compressed_textures_folder / (Path(f).stem + '.png'),
+                'PNG'
+                )
+            print('    compressing to png:', application.compressed_textures_folder / (Path(f).stem + '.png'))
         # elif f.endswith('.png'):

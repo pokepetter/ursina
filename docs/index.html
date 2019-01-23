@@ -22,7 +22,7 @@
 <div style="margin-left:0em; white-space: pre-wrap;">--------------------------------------
 </div>
 <div style="font-weight: normal">
-<div style="margin-left:0em; white-space: pre-wrap;">developers first
+<div style="margin-left:0em; white-space: pre-wrap;">developer first
 </div>
 <div style="font-weight: bold">
 <div style="margin-left:0em; white-space: pre-wrap;">--------------------------------------
@@ -263,19 +263,14 @@ app.run()                       # opens a window and starts the game.</div>
                     font-weight: normal;
                     white-space: pre;">from ursina import *
 
-class Player(Entity):   # inherits Entity, ursina's 'god class'
-    def __init__(self):
-        super().__init__()
-        self.model = 'cube' # finds a 3d model by name
-        self.color = color.orange
-        self.scale_y = 2
-
-    def update(self):   # update gets automatically called.
-        self.x += held_keys['d'] * .1
-        self.x -= held_keys['a'] * .1
-
 app = Ursina()
-player = Player()
+
+player = Entity(model='cube', color=color.orange, scale_y=2)
+
+def update():   # update gets automatically called.
+    player.x += held_keys['d'] * .1
+    player.x -= held_keys['a'] * .1
+
 app.run()   # opens a window and starts the game.</div>
 <div style="margin-left:0em; white-space: pre-wrap;">
 </div>

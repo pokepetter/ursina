@@ -8,11 +8,11 @@ An easy to use game engine/framework for python.
 2) Make sure you have git installed.
 3) Open cmd/terminal and type:
 
-      pip install panda3d==1.10.0.dev1086
-      pip install pillow
-      pip install psd-tools
-      pip install imageio
-      pip install git+https://github.com/pokepetter/ursina.git@4b976dd1173b494ec1bb2077ff2783ea65aa2a46
+        pip install panda3d==1.10.0.dev1086
+        pip install pillow
+        pip install psd-tools
+        pip install imageio
+        pip install git+https://github.com/pokepetter/ursina.git@a28ae418e1d23f0247169a8aedcd92a35a1e2bd5
 
 
 

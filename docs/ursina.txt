@@ -5,7 +5,7 @@ ursina engine
 # size 1.25, bold
 --------------------------------------
 # normal
-developers first
+developer first
 # bold
 --------------------------------------
 # normal
@@ -60,7 +60,7 @@ Getting Started
         pip install pillow
         pip install psd-tools
         pip install imageio
-        pip install git+https://github.com/pokepetter/ursina.git@4b976dd1173b494ec1bb2077ff2783ea65aa2a46
+        pip install git+https://github.com/pokepetter/ursina.git@a28ae418e1d23f0247169a8aedcd92a35a1e2bd5
 
 
     If you want to easily edit the source, it's recommended to clone the git
@@ -125,19 +125,14 @@ How do I make a game?
             # code
             from ursina import *
 
-            class Player(Entity):   # inherits Entity, ursina's 'god class'
-                def __init__(self):
-                    super().__init__()
-                    self.model = 'cube' # finds a 3d model by name
-                    self.color = color.orange
-                    self.scale_y = 2
-
-                def update(self):   # update gets automatically called.
-                    self.x += held_keys['d'] * .1
-                    self.x -= held_keys['a'] * .1
-
             app = Ursina()
-            player = Player()
+
+            player = Entity(model='cube', color=color.orange, scale_y=2)
+
+            def update():   # update gets automatically called.
+                player.x += held_keys['d'] * .1
+                player.x -= held_keys['a'] * .1
+
             app.run()   # opens a window and starts the game.
 
 
