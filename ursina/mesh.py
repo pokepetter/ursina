@@ -2,6 +2,8 @@ from panda3d.core import MeshDrawer, NodePath
 from panda3d.core import GeomVertexData, GeomVertexFormat, Geom, GeomVertexWriter, GeomNode
 from panda3d.core import GeomTriangles, GeomTristrips, GeomTrifans
 from panda3d.core import GeomLines, GeomLinestrips, GeomPoints
+from ursina.internal_scripts.generate_normals import generate_normals
+
 
 class Mesh(NodePath):
 
@@ -9,7 +11,7 @@ class Mesh(NodePath):
         super().__init__('mesh')
 
         self.vertices = vertices
-        self.triangles = triangles
+        self._triangles = triangles
         self.colors = colors
         self.uvs = uvs
         self.normals = normals
@@ -83,13 +85,13 @@ class Mesh(NodePath):
 
         prim = modes[self.mode]
 
-        if self.triangles:
-            if isinstance(self.triangles[0], int):
-                for t in self.triangles:
+        if self._triangles:
+            if isinstance(self._triangles[0], int):
+                for t in self._triangles:
                     prim.addVertex(t)
 
-            elif len(self.triangles[0]) >= 3: # if tris are tuples like this: ((0,1,2), (1,2,3))
-                for t in self.triangles:
+            elif len(self._triangles[0]) >= 3: # if tris are tuples like this: ((0,1,2), (1,2,3))
+                for t in self._triangles:
                     if len(t) == 3:
                         for e in t:
                             prim.addVertex(e)
@@ -116,7 +118,7 @@ class Mesh(NodePath):
 
         self.recipe = f'''Mesh(
             vertices={str(tuple([(e[0],e[1],e[2]) for e in self.vertices]))},
-            triangles={self.triangles},
+            triangles={self._triangles},
             colors={self.colors},
             uvs={self.uvs},
             normals={self.normals},
@@ -132,6 +134,21 @@ class Mesh(NodePath):
     @thickness.setter
     def thickness(self, value):
         self.setRenderModeThickness(value)
+
+    @property
+    def triangles(self):
+        if self._triangles == None:
+            self._triangles = [(i, i+1, i+2) for i in range(0, len(self.vertices), 3)]
+
+        return self._triangles
+
+    @triangles.setter
+    def triangles(self, value):
+        self._triangles = value
+
+
+    def generate_normals(self):
+        self.normals = list(generate_normals(self.vertices, self.triangles))
 
 
 
