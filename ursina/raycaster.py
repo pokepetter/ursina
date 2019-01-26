@@ -49,38 +49,45 @@ class Raycaster(Entity):
 
         self.picker.traverse(traverse_target)
 
-        if self.pq.get_num_entries() > 0:
-            self.pq.sort_entries()
-
-            i = 0
-            self.collision = self.pq.get_entry(i)
-            nP = self.collision.get_into_node_path().parent
-            point = self.collision.get_surface_point(render)
-            point = Vec3(point[0], point[2], point[1])
-            hit_dist = self.distance(self.world_position, point)
-            if hit_dist <= dist:
-                if nP.name.endswith('.egg'):
-                    nP = nP.parent
-
-                self.hit = Hit(hit=True)
-                for e in scene.entities:
-                    if e == nP:
-                        # print('cast nP to Entity')
-                        self.hit.entity = e
-
-                self.hit.point = point
-                self.hit.distance = hit_dist
-                normal = self.collision.get_surface_normal(self.collision.get_into_node_path().parent)
-                self.hit.normal = (normal[0], normal[2], normal[1])
-                normal = self.collision.get_surface_normal(render)
-                self.hit.world_normal = (normal[0], normal[2], normal[1])
-                return self.hit
-
+        if self.pq.get_num_entries() == 0:
             self.hit = Hit(hit=False)
             return self.hit
-        else:
+
+        self.pq.sort_entries()
+        self.entries = [        # filter out ignored entities
+            e for e in self.pq.getEntries()
+            if e.get_into_node_path().parent not in ignore
+            ]
+
+        if len(self.entries) == 0:
             self.hit = Hit(hit=False)
             return self.hit
+
+        self.collision = self.entries[0]
+        nP = self.collision.get_into_node_path().parent
+        point = self.collision.get_surface_point(render)
+        point = Vec3(point[0], point[2], point[1])
+        hit_dist = self.distance(self.world_position, point)
+        if hit_dist <= dist:
+            if nP.name.endswith('.egg'):
+                nP = nP.parent
+
+            self.hit = Hit(hit=True)
+            for e in scene.entities:
+                if e == nP:
+                    # print('cast nP to Entity')
+                    self.hit.entity = e
+
+            self.hit.point = point
+            self.hit.distance = hit_dist
+            normal = self.collision.get_surface_normal(self.collision.get_into_node_path().parent)
+            self.hit.normal = (normal[0], normal[2], normal[1])
+            normal = self.collision.get_surface_normal(render)
+            self.hit.world_normal = (normal[0], normal[2], normal[1])
+            return self.hit
+
+        self.hit = Hit(hit=False)
+        return self.hit
 
 
 sys.modules[__name__] = Raycaster()
