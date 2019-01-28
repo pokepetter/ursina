@@ -3,6 +3,8 @@ from panda3d.core import GeomVertexData, GeomVertexFormat, Geom, GeomVertexWrite
 from panda3d.core import GeomTriangles, GeomTristrips, GeomTrifans
 from panda3d.core import GeomLines, GeomLinestrips, GeomPoints
 from ursina.internal_scripts.generate_normals import generate_normals
+from ursina.internal_scripts.colorize import colorize
+from ursina import color
 
 
 class Mesh(NodePath):
@@ -150,7 +152,12 @@ class Mesh(NodePath):
     def generate_normals(self):
         self.normals = list(generate_normals(self.vertices, self.triangles))
 
+    def colorize(self,
+        left=color.white, right=color.blue,
+        down=color.red, up=color.green,
+        back=color.white, forward=color.white):
 
+        colorize(self, left, right, down, up, back, forward)
 
 
 if __name__  == '__main__':
@@ -162,7 +169,8 @@ if __name__  == '__main__':
     # # tris = ((0,1,2,3),)
     # uvs = ((0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0))
     # colors = (color.red, color.blue, color.lime, color.black)
-    sphere = Sphere()
+    # sphere = Sphere()
+    sphere = load_model('sphere')
     # print(sphere.vertices, sphere.triangles)
     verts, tris = sphere.vertices, sphere.triangles
     # m = Mesh(vertices=verts, triangles=tris, uvs=uvs, colors=colors)
@@ -170,76 +178,12 @@ if __name__  == '__main__':
     m.mode = 'triangle'
     m.vertices = verts
     m.triangles = tris
-    # m.normals = ((0,1,0), ) * len(verts)
-    def surface_normal(poly):
-        n = [0.0, 0.0, 0.0]
-
-        for i, v_curr in enumerate(poly):
-            v_next = poly[(i+1) % len(poly)]
-            n[0] += (v_curr[1] - v_next[1]) * (v_curr[2] + v_next[2])
-            n[1] += (v_curr[2] - v_next[2]) * (v_curr[0] + v_next[0])
-            n[2] += (v_curr[0] - v_next[0]) * (v_curr[1] + v_next[1])
-
-        normalised = [i/sum(n) for i in n]
-
-        return normalised
-
-        # n[0] += (v_curr.y - v_next.y) * (v_curr.z + v_next.z)
-
-    # poly = (verts[tris[0][0]], verts[tris[0][1]], verts[tris[0][2]])
-    # print('.......', surface_normal(poly))
-    all_verts = list()
-    if isinstance(tris[0], int):
-        for t in tris:
-            all_verts.append(verts[t])
-    else:
-        for tup in tris:
-            length = len(tup)
-            if length == 3:
-                all_verts.append(verts[tup[0]])
-                all_verts.append(verts[tup[1]])
-                all_verts.append(verts[tup[2]])
-            elif length == 4:
-                all_verts.append(verts[tup[0]])
-                all_verts.append(verts[tup[1]])
-                all_verts.append(verts[tup[2]])
-                all_verts.append(verts[tup[2]])
-                all_verts.append(verts[tup[3]])
-                all_verts.append(verts[tup[0]])
-
-    # print(len(verts), len(all_verts))
-    norms = list()
-    for i in range(0, len(all_verts), 3):
-        # print((all_verts[i], all_verts[i+1], all_verts[i+2]))
-        face_normal = surface_normal((all_verts[i], all_verts[i+1], all_verts[i+2]))
-        norms.append(face_normal)
-        norms.append(face_normal)
-        norms.append(face_normal)
-
-    # m.uvs = uvs
-    m.normals = norms
-
-    # m.colors = [color.rgb(abs(n[0]), abs(n[1]), abs(n[2])) for n in norms]
-    # print(m.normals)
-    # m.colors = [color.random_color() for i in range(len(tris))]
-    cols = list()
-    for i in range(0, len(verts), 3):
-        # col = color.random_color()
-        col = color.colors[color.color_names[i]]
-        cols.append(col)
-        cols.append(col)
-        cols.append(col)
-
-    # colors = list()
-    # for i in range(0, len(verts), 3):
 
 
-    # print(colors)
-    m.colors = cols
-    m.generate()
+    e = Entity(name='mesh_test', model=m)
+    e.model.colorize()
     # m.generate()
     # e.model = m
-    e = Entity(model=m)
     # e.texture = 'white_cube'
     # e.show_vertices()
     # e.set_shader ('D:/Dropbox/programming/software/ursina/ursina/internal_shaders/normals.sha')

@@ -6,6 +6,7 @@ from panda3d.core import Vec2
 from ursina.entity import Entity
 from ursina import color
 from ursina import application
+from ursina import scene    # for toggling collider visibility
 from ursina.thirdparty.screeninfo import get_monitors
 
 
@@ -43,10 +44,18 @@ class Window(WindowProperties):
         self.fullscreen = False
         self.borderless = True
         self.cursor = True
-        # self.fps_counter = True
         self.vsync = True
 
-
+        self.display_modes = (
+            'default',
+            'wireframe',
+            'colliders',
+            'normals',
+            'vertices',
+            'textureless',
+            'cubes'
+            )
+        self.display_mode = self.display_modes[0]
 
 
     @property
@@ -112,6 +121,58 @@ class Window(WindowProperties):
         # ui.lens.setFilmSize(100 * self.aspect_ratio, 100)
         base.win.requestProperties(self)
 
+    @property
+    def display_mode(self):
+        return self._display_mode
+
+    @display_mode.setter
+    def display_mode(self, value):
+        self._display_mode = value
+        print('display mode:', value)
+        # print_on_screen('display mode:', value)
+        # if value == 'default':
+        # disable wireframe mode
+        base.wireframeOff()
+        # disable collision display mode
+        if hasattr(self, 'original_colors'):
+            for i, e in enumerate([e for e in scene.entities if hasattr(e, 'color')]):
+                e.color = self.original_colors[i]
+                if e.collider:
+                    e.collider.visible = False
+        if hasattr(self, 'original_vert_colors'):
+            for i, e in enumerate([e for e in scene.entities if hasattr(e, 'model') and e.model.colors]):
+                e.model.colors = self.original_vert_colors[i]
+                e.model.generate()
+
+
+        if value == 'wireframe':
+            base.wireframeOn()
+
+        if value == 'colliders':
+            self.original_colors = [e.color for e in scene.entities if hasattr(e, 'color')]
+            for e in scene.entities:
+                e.color = color.clear
+                if e.collider:
+                    e.collider.visible = True
+
+        if value == 'normals':
+            # todo: set shader instead
+            # self.original_colors = [e.color for e in scene.entities if hasattr(e, 'color')]
+            self.original_vert_colors = [e.model.colors for e in scene.entities if hasattr(e, 'model') and e.model != None]
+            # for e in scene.entities:
+            #     e.color = color.clear
+            #     if hasattr(e, 'model'):
+            for e in scene.entities:
+                if hasattr(e, 'model') and e.model != None:
+                    try:
+                        e.model.colorize()
+                    except:
+                        pass
+
+            # bake_vertex_shading(entity)
+
+
+
     # @property
     # def borderless(self):
     #     # return self._borderless
@@ -167,7 +228,12 @@ if __name__ == '__main__':
     # props = WindowProperties()
     # props.setSize(1024, 1024)
     # base.win.requestProperties(props)
-
-    Entity(model='cube')
+    EditorCamera()
+    Entity(name='cube', model='cube', collider='box', color=color.white)
+    Entity(name='sphere', model='sphere', color=color.white, x=1)
+    p = Entity(x=-2)
+    for i in range(10):
+        e = Entity(parent=p, model=Cylinder(16, direction=(0,0,1)), scale=.2, scale_z=3)
+        e.look_at((random.uniform(-1,1),random.uniform(-1,1),random.uniform(-1,1)))
     # Button(text='test\ntest')
     app.run()

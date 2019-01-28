@@ -146,6 +146,21 @@ class Ursina(ShowBase):
         if key == 'f11':
             window.fullscreen = not window.fullscreen
 
+        if key == 'f10':
+            i = window.display_modes.index(window.display_mode)
+            i += 1
+            if i >= len(window.display_modes):
+                i = 0
+
+            window.display_mode = window.display_modes[i]
+
+        if key == 'f9':
+            window.display_mode = 'default'
+        #     window.show_wireframe = not window.show_wireframe
+        # if key == 'f9':
+        #     window.show_colliders = not window.show_colliders
+
+
         if key in self.dictionary:
             key = self.dictionary[key]
 
@@ -195,6 +210,5 @@ if __name__ == '__main__':
     # app.load_editor()
 
     # load_scene('minecraft_clone')
-    window.fps_counter = True
     print('scene entity', scene)
     app.run()

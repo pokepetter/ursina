@@ -118,7 +118,7 @@ class Entity(NodePath):
                 return None
 
             if isinstance(value, NodePath): # pass procedural model
-                if hasattr(self, 'model'):
+                if hasattr(self, 'model') and value != self.model:
                     self.model.removeNode()
                 object.__setattr__(self, name, value)
 
@@ -153,17 +153,7 @@ class Entity(NodePath):
                 value = Vec4(value[0], value[1], value[2], value[3])
 
             if hasattr(self, 'model') and self.model:
-                vcolors = self.vertex_colors
-                if vcolors:
-                    for vc in vcolors:
-                        if vc != vcolors[0]:
-                            self.model.setColorScale(value)     # just tint vertex_colors, untested
-                            object.__setattr__(self, name, value)
-                            return
-
-                # if value[3] < 1:
-                #     self.model.setTransparency(TransparencyAttrib.MAlpha)
-                self.model.setColor(value)  # override vertex colors
+                self.model.setColorScale(value)
                 object.__setattr__(self, name, value)
 
 
@@ -599,7 +589,7 @@ class Entity(NodePath):
                 vcols.append([e for e in vcol_reader.getData4f()])
             return vcols
         except:
-            print(self.name, '.model has no vertex colors')
+            print(f'{self.name}.model has no vertex colors')
             return None
 
 
