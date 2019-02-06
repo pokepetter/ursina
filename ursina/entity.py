@@ -38,7 +38,7 @@ class Entity(NodePath):
 
     def __init__(self, **kwargs):
         super().__init__(self.__class__.__name__)
-        self.name = self.type
+        self.name = camel_to_snake(self.type)
         self.enabled = True
         self.visible = True
         try:

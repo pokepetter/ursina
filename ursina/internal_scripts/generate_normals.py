@@ -1,4 +1,7 @@
-import numpy
+try:
+    import numpy
+except:
+    print(sys.exc_info())
 
 
 def normalize_v3(arr):

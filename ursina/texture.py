@@ -4,7 +4,10 @@ from panda3d.core import Vec2, Vec3, Vec4
 from panda3d.core import Filename
 from pathlib import Path
 from direct.showbase import Loader
-from PIL import Image
+try:
+    from PIL import Image
+except:
+    print(sys.exc_info())
 
 
 class Texture():
@@ -61,6 +64,8 @@ class Texture():
     @property
     def pixels(self):
         from numpy import asarray
+        from PIL import Image
+
         if self._cached_image:
             return asarray(self._cached_image)
 
