@@ -6,35 +6,75 @@ from ursina import application
 import pathlib
 
 def load_model(name, path=application.asset_folder):
-    for filetype in ('.bam', '.ursinamesh'):
+    for filetype in ('.bam', '.ursinamesh', '.obj', '.blend'):
         for filename in path.glob(f'**/{name}{filetype}'):
             if filetype == '.bam':
                 return loader.loadModel(filename)
-            try:
-                with open(filename) as f:
-                    m = eval(f.read())
-                    return m
-            except:
-                print('invalid ursinamesh file:', filename)
+
+            if filetype == '.ursinamesh':
+                try:
+                    with open(filename) as f:
+                        m = eval(f.read())
+                        return m
+                except:
+                    print('invalid ursinamesh file:', filename)
+
+            if filetype == '.obj':
+                print('------found obj', filename)
+                m = obj_to_ursinamesh(path=path, name=name, save_to_file=False)
+                # print(m)
+                m = eval(m)
+                return m
+
+            if filetype == '.blend':
+                print('found blend file')
+                compress_models(path=path, name=name)
+                return load_model(name, path)
+    # for f in glob(f'**/{name}.blend'):
+    #     print('found blend file')
+    #     # compress_models(name=name + '.blend')
 
     return None
 
 
+# from glob import glob
+blender_path = ''
+if blender_path == '':
+    # blender_path = r"C:\Program Files\Blender Foundation\Blender\blender.exe"
+    blender_path = r"D:\Program Files (x86)\blender-2.80.0-git.cad1016c20b5-windows64\blender.exe"
+# command = ['locate', 'blender.exe']
+# output = subprocess.Popen(command, stdout=subprocess.PIPE).communicate()[0]
+# output = output.decode()
+# blender_path = output.split('\n')
+# print(blender_path)
+#
+
+#
+# print('blender path:', blender_path)
+
 def compress_models(path=application.models_folder, outpath=application.compressed_models_folder, name='*'):
+
     if not application.compressed_models_folder.exists():
         application.compressed_models_folder.mkdir()
 
-    blender_path = r"C:\Program Files\Blender Foundation\Blender\blender.exe"
     export_script_path = application.internal_scripts_folder / 'blend_export.py'
 
-    for f in path.glob(f'**/{name}.blend'):
+    for f in glob.glob(f'{path}/**/{name}.blend'):
+        # print(f)
         outfile = outpath / f
         print('compress______', outfile)
         subprocess.call(
             r'''{} {} --background --python {}'''.format(blender_path, str(outfile), export_script_path))
 
 
-def obj_to_ursinamesh(path=application.compressed_models_folder, outpath=application.compressed_models_folder, name='*', delete_obj=True):
+def obj_to_ursinamesh(
+    path=application.compressed_models_folder,
+    outpath=application.compressed_models_folder,
+    name='*',
+    save_to_file=True,
+    delete_obj=True
+    ):
+
     for f in path.glob(f'**/{name}.obj'):
         filepath = path / (os.path.splitext(f)[0] + '.obj')
         print('read obj at:', filepath)
@@ -44,8 +84,7 @@ def obj_to_ursinamesh(path=application.compressed_models_folder, outpath=applica
         with open(filepath, 'r') as file:
             lines = file.readlines()
 
-        if delete_obj:
-            os.remove(filepath)
+
 
         verts = list()
         tris = list()
@@ -89,13 +128,21 @@ def obj_to_ursinamesh(path=application.compressed_models_folder, outpath=applica
             meshstring += str(tuple([uvs[uid] for uid in uv_indices]))
 
         meshstring += ''', \nmode='triangle')'''
+
+        if not save_to_file:
+            return meshstring
+
         outfilepath = outpath / (os.path.splitext(f)[0] + '.ursinamesh')
         with open(outfilepath, 'w') as file:
             file.write(meshstring)
+
+        if delete_obj:
+            os.remove(filepath)
+
         print('saved ursinamesh to:', outfilepath)
 
 # faster, but does not apply modifiers
-def compress_models_fast(model_name=None):
+def compress_models_fast(model_name=None, write_to_disk=False):
     print('find models')
     from tinyblend import BlenderFile
     if not application.compressed_models_folder.exists():
@@ -146,8 +193,12 @@ def compress_models_fast(model_name=None):
 
                 file_content += ''', mode='triangle')'''
 
-                with open(file_path, 'w') as file:
-                    file.write(file_content)
+                if write_to_disk:
+                    with open(file_path, 'w') as file:
+                        file.write(file_content)
+
+                return file_content
+
 
 def compress_internal():
     compress_models(application.internal_models_folder)
@@ -157,5 +208,5 @@ def compress_internal():
         )
 
 
-if __name__ == '__main__':
-    compress_internal()
+# if __name__ == '__main__':
+#     compress_internal()
