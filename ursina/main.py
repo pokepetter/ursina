@@ -9,10 +9,8 @@ class Ursina(ShowBase):
 
     def __init__(self):
         ShowBase.__init__(self)
-
         render = base.render
         application.base = base
-
         window.load_defaults()
 
         # camera
@@ -86,7 +84,11 @@ class Ursina(ShowBase):
             'shift-mouse3' : 'right mouse down',
             'alt-mouse1' : 'left mouse down',
             'alt-mouse2' : 'middle mouse down',
-            'alt-mouse3' : 'right mouse down'
+            'alt-mouse3' : 'right mouse down',
+            'page_down' : 'page down',
+            'page_down up' : 'page down up',
+            'page_up' : 'page up',
+            'page_up up' : 'page up up',
             }
         self.accept('buttonDown', self.input)
         self.accept('buttonUp', self.input_up)
@@ -98,10 +100,6 @@ class Ursina(ShowBase):
         self.mouse = mouse
 
         scene.set_up()
-
-        # t = load_scene('minecraft_clone')
-        # count_lines(inspect.getfile(t.__class__))
-
         self.update_task = taskMgr.add(self.update, "update")
 
 
@@ -129,38 +127,27 @@ class Ursina(ShowBase):
         return Task.cont
 
     def input_up(self, key):
-        if key is not 'wheel_up' and key is not 'wheel_down':
-            if key in input_handler.rebinds:
-                key = input_handler.rebinds[key]
-            key += ' up'
-            self.input(key)
+        if key in  ('wheel_up', 'wheel_down'):
+            return
 
-    def input_hold(self, key):
         if key in input_handler.rebinds:
             key = input_handler.rebinds[key]
+
+        key += ' up'
+        self.input(key)
+
+
+    def input_hold(self, key):
+        if key in self.dictionary:
+            key = self.dictionary[key]
+        if key in input_handler.rebinds:
+            key = input_handler.rebinds[key]
+
         key += ' hold'
         self.input(key)
 
 
     def input(self, key):
-        if key == 'f11':
-            window.fullscreen = not window.fullscreen
-
-        if key == 'f10':
-            i = window.display_modes.index(window.display_mode)
-            i += 1
-            if i >= len(window.display_modes):
-                i = 0
-
-            window.display_mode = window.display_modes[i]
-
-        if key == 'f9':
-            window.display_mode = 'default'
-        #     window.show_wireframe = not window.show_wireframe
-        # if key == 'f9':
-        #     window.show_colliders = not window.show_colliders
-
-
         if key in self.dictionary:
             key = self.dictionary[key]
 
@@ -190,6 +177,21 @@ class Ursina(ShowBase):
                 for script in entity.scripts:
                     if script.enabled and hasattr(script, 'input'):
                         script.input(key)
+
+        if key == 'f11':
+            window.fullscreen = not window.fullscreen
+
+        if key == 'f10':
+            i = window.display_modes.index(window.display_mode)
+            i += 1
+            if i >= len(window.display_modes):
+                i = 0
+
+            window.display_mode = window.display_modes[i]
+
+        if key == 'f9':
+            window.display_mode = 'default'
+
 
     def load_editor(self):
         scene.editor = load_script('editor')
