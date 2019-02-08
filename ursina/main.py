@@ -130,9 +130,6 @@ class Ursina(ShowBase):
         if key in  ('wheel_up', 'wheel_down'):
             return
 
-        if key in input_handler.rebinds:
-            key = input_handler.rebinds[key]
-
         key += ' up'
         self.input(key)
 
@@ -140,8 +137,6 @@ class Ursina(ShowBase):
     def input_hold(self, key):
         if key in self.dictionary:
             key = self.dictionary[key]
-        if key in input_handler.rebinds:
-            key = input_handler.rebinds[key]
 
         key += ' hold'
         self.input(key)
@@ -158,10 +153,6 @@ class Ursina(ShowBase):
         if key in input_handler.rebinds:
             key = input_handler.rebinds[key]
 
-        try:
-            if scene.editor:
-                scene.editor.input(key)
-        except: pass
         try: mouse.input(key)
         except: pass
         try: input_handler.input(key)
