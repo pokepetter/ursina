@@ -4,6 +4,7 @@ from panda3d.core import Vec2, Vec3, Vec4
 from panda3d.core import Filename
 from pathlib import Path
 from direct.showbase import Loader
+import sys
 try:
     from PIL import Image
 except:
@@ -13,7 +14,7 @@ except:
 class Texture():
 
     def __init__(self, path):
-        if type(path) == Image.Image:
+        if str(type(path)) == 'Image':
             # print('passing pil image!')
             image = path
             self._texture = PandaTexture()
@@ -135,5 +136,5 @@ if __name__ == '__main__':
     # printvar(len(t.pixels))
     # t.set_pixel(0,0, color.red)
     # Texture(str(application.internal_textures_folder) + '/white_cube.png')
-    Texture(Image.new('RGB', (8,8)))
+    # Texture(Image.new('RGB', (8,8)))
     Texture(PandaTexture())
