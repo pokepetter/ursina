@@ -1,6 +1,7 @@
 try:
     import numpy
 except:
+    import sys
     print(sys.exc_info())
 
 

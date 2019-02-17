@@ -17,11 +17,11 @@ class Mouse(object):
         self.enabled = False
         self.mouse_watcher = None
         self.locked = False
-        self.position = Vec2(0,0)
-        self.delta = (0,0)
+        self.position = Vec3(0,0,0)
+        self.delta = Vec3(0,0,0)
         self.prev_x = 0
         self.prev_y = 0
-        self.velocity = (0,0)
+        self.velocity = Vec3(0,0,0)
         self.prev_click_time = time.time()
         self.double_click_distance = .5
 
@@ -29,7 +29,7 @@ class Mouse(object):
         self.left = False
         self.right = False
         self.middle = False
-        self.delta_drag = (0,0)
+        self.delta_drag = Vec3(0,0,0)
 
         self.i = 0
         self.update_rate = 10
@@ -87,9 +87,10 @@ class Mouse(object):
             self.start_y = self.y
 
         elif key.endswith('mouse up'):
-            self.delta_drag = (
+            self.delta_drag = Vec3(
                 self.x - self.start_x,
-                self.y - self.start_y
+                self.y - self.start_y,
+                0
                 )
 
 
@@ -126,10 +127,10 @@ class Mouse(object):
 
     def update(self):
         if not self.enabled or not self.mouse_watcher.has_mouse():
-            self.velocity = (0,0)
+            self.velocity = Vec3(0,0,0)
             return
 
-        self.position = Vec2(self.x, self.y)
+        self.position = Vec3(self.x, self.y, 0)
         self.moving = self.x + self.y != self.prev_x + self.prev_y
 
         if self.moving:
@@ -137,12 +138,12 @@ class Mouse(object):
                 self.velocity = self.position
                 application.base.win.move_pointer(0, int(window.size[0] / 2), int(window.size[1] / 2))
             else:
-                self.velocity = (self.x - self.prev_x, (self.y - self.prev_y) / window.aspect_ratio, 2)
+                self.velocity = Vec3(self.x - self.prev_x, (self.y - self.prev_y) / window.aspect_ratio ,0)
         else:
-            self.velocity = (0,0)
+            self.velocity = Vec3(0,0,0)
 
         if self.left or self.right or self.middle:
-            self.delta = (self.x - self.start_x, self.y - self.start_y)
+            self.delta = Vec3(self.x - self.start_x, self.y - self.start_y, 0)
 
         self.prev_x = self.x
         self.prev_y = self.y

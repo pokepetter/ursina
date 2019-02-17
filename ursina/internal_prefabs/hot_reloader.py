@@ -5,15 +5,15 @@
 from ursina import *
 
 class HotReloader(Entity):
-    def __init__(self, file_path=__file__, **kwargs):
+    def __init__(self, path=__file__, **kwargs):
         super().__init__()
         self.eternal = True
-        self.file_path = file_path
+        self.path = path
 
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-        self.file_path = Path(self.file_path)
+        self.path = Path(self.path)
 
     def input(self, key):
         if held_keys['control'] and key == 'r':
@@ -24,14 +24,14 @@ class HotReloader(Entity):
 
 
     def reload(self):
-        if not self.file_path.exists:
-            print('trying to reload, but path does not exist:', self.file_path)
+        if not self.path.exists:
+            print('trying to reload, but path does not exist:', self.path)
             return
 
         scene.clear()
 
         newtext = ''
-        with open(self.file_path, 'r') as file:
+        with open(self.path, 'r') as file:
             text = file.read()
             dedent_next = False
 
@@ -50,7 +50,10 @@ class HotReloader(Entity):
                     newtext += line + '\n'
 
         print(newtext)
-        exec(newtext)
+        try:
+            exec(newtext)
+        except Exception as e:
+            print(e)
 
 
     def reload_texture(self):
@@ -107,5 +110,5 @@ if __name__ == '__main__':
     Sprite('brick')
     # ModelReloader()
     app.hotreloader = HotReloader()
-    app.hotreloader.file_path = application.asset_folder / 'platformer.py'
+    app.hotreloader.path = application.asset_folder / 'platformer.py'
     app.run()

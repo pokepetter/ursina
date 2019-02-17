@@ -5,13 +5,60 @@ import sys
 from panda3d.core import Vec4
 
 
+class Color(Vec4):
+    def __init__(self,*p):
+        super().__init__(*p)
+
+    def __str__(self):
+        return f'Color({self[0]}, {self[1]}, {self[2]}, {self[3]})'
+        
+
+    @property
+    def r(self):
+        return self[0]
+    @property
+    def g(self):
+        return self[1]
+    @property
+    def b(self):
+        return self[2]
+    @property
+    def a(self):
+        return self[3]
+
+    @property
+    def hsv(self):
+        return to_hsv(self[0], self[1], self[2], self[3])
+    @property
+    def h(self):
+        return self.hsv[0]
+    @property
+    def s(self):
+        return self.hsv[1]
+    @property
+    def v(self):
+        return self.hsv[2]
+
+    @property
+    def brightness(self):
+        return brightness(self)
+
+    @property
+    def inverse(self):
+        return inverse(self)
+
+    def tint(self, abount):
+        return tint(self, amount)
+
+
+
 def color(h, s, v, a=1):
-    return Vec4(colorsys.hsv_to_rgb((h / 360) - math.floor(h / 360), s, v) + (a,))
+    return Color(colorsys.hsv_to_rgb((h / 360) - math.floor(h / 360), s, v) + (a,))
 
 def rgba(r, g, b, a=255):
-    color = Vec4(r, g, b, a)
+    color = Color(r, g, b, a)
     if color[0] > 1 or color[1] > 1 or color[2] > 1:
-        color = Vec4(tuple(c/255 for c in color))
+        color = Color(tuple(c/255 for c in color))
     color[3] = min(1, color[3])
     return color
 
@@ -19,24 +66,24 @@ def rgb(r, g, b, a=255):
     return rgba(r, g, b, a)
 
 def to_hsv(color):
-    return Vec4(colorsys.rgb_to_hsv(color[0], color[1], color[2]) + (color[3],))
+    return Color(colorsys.rgb_to_hsv(color[0], color[1], color[2]) + (color[3],))
 
 
 def brightness(color):
     if color[0] > 1 or color[1] > 1 or color[2] > 1:
-        color = Vec4(tuple(c/255 for c in color))
+        color = Color(tuple(c/255 for c in color))
     return to_hsv(color)[2]
 
 def inverse(color):
-    color = Vec4(tuple(1 - c for c in color))
+    color = Color(tuple(1 - c for c in color))
     color[3] = 1
     return color
 
 def random_color():
-    return Vec4(random.random(), random.random(), random.random(), 1)
+    return Color(random.random(), random.random(), random.random(), 1)
 
 def tint(color, amount=.2):
-    return Vec4(
+    return Color(
         max(min(color[0] + amount, 1), 0),
         max(min(color[1] + amount, 1), 0),
         max(min(color[2] + amount, 1), 0),
@@ -69,15 +116,15 @@ peach =         rgb(255, 218, 185)
 gold =          rgb(255, 215, 0)
 salmon =        rgb(250, 128, 114)
 
-clear =         Vec4(0, 0, 0, 0)
-white10 =       Vec4(1,1,1, 0.10)
-white33 =       Vec4(1,1,1, 0.33)
-white50 =       Vec4(1,1,1, 0.50)
-white66 =       Vec4(1,1,1, 0.66)
-black10 =       Vec4(0,0,0, 0.10)
-black33 =       Vec4(0,0,0, 0.33)
-black50 =       Vec4(0,0,0, 0.50)
-black66 =       Vec4(0,0,0, 0.66)
+clear =         Color(0, 0, 0, 0)
+white10 =       Color(1,1,1, 0.10)
+white33 =       Color(1,1,1, 0.33)
+white50 =       Color(1,1,1, 0.50)
+white66 =       Color(1,1,1, 0.66)
+black10 =       Color(0,0,0, 0.10)
+black33 =       Color(0,0,0, 0.33)
+black50 =       Color(0,0,0, 0.50)
+black66 =       Color(0,0,0, 0.66)
 
 text = smoke
 light_text = smoke

@@ -243,8 +243,7 @@ def invoke(function, *args, **kwargs):
     if 'delay' in kwargs:
         s.append(Wait(kwargs['delay']))
     s.append(Func(function, *args))
-    if not 'autoplay' in kwargs or kwargs['autoplay'] == True:
-        s.start()
+    s.start()
     return s
 
 
