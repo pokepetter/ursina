@@ -18,6 +18,7 @@ from ursina.entity import Entity
 class Text(Entity):
 
     size = .025
+    default_font = ''
 
     def __init__(self, text=None, **kwargs):
         super().__init__()
@@ -28,9 +29,11 @@ class Text(Entity):
         self.setColorScaleOff()
         self.text_nodes = list()
         self.origin = (-.5, .5)
-        # self.font = 'VeraMono.ttf'
         temp_text_node = TextNode('')
         self._font = temp_text_node.getFont()
+
+        if Text.default_font != '':
+            self.font = Text.default_font
 
         self.line_height = 1
 
@@ -164,11 +167,12 @@ class Text(Entity):
 
     @font.setter
     def font(self, value):
-        self._font = loader.loadFont(value)
-        # _font.setRenderMode(TextFont.RMPolygon)
-        self._font.setPixelsPerUnit(100)
-        # print('FONT FILE:', self._font)
-        self.text = self.raw_text   # update text
+        font = loader.loadFont(value)
+        if font:
+            self._font = font
+            # _font.setRenderMode(TextFont.RMPolygon)
+            self._font.setPixelsPerUnit(100)
+            self.text = self.raw_text   # update tex
 
     @property
     def color(self):
@@ -197,7 +201,7 @@ class Text(Entity):
             return 0
 
         temp_text_node = TextNode('temp')
-        temp_text_node.setFont(self.font)
+        temp_text_node.setFont(self._font)
 
         longest_line_length = 0
         for line in self.text.split('\n'):
@@ -335,18 +339,32 @@ class Text(Entity):
             x += len(target_text)
 
 
+    def get_width(string, font=None):
+        t = Text(string)
+        if font:
+            t.font = font
+        w = t.width
+        from ursina import destroy
+        destroy(t)
+        return w
+
+
 if __name__ == '__main__':
     app = Ursina()
+    # Text.size = .001
     descr = ('<scale:1.5><orange>' + 'Rainstorm' + '<scale:1>\n' +
 '''Summon a <azure>rain storm <default>to deal 5 <azure>water
 damage <default>to <red>everyone, <default>including <orange>yourself. <default>
 Lasts for 4 rounds.''')
+
+    Text.default_font = 'VeraMono.ttf'
     test = Text(descr)
 #     # print('\n', test.text, '\n\n')
-    test.font = 'VeraMono.ttf'
+    # test.font = 'VeraMono.ttf'
+    # Text.font = 'VeraMono.ttf'
     # test.origin = (.5, .5)
     # test.origin = (0, 0)
     # test.wordwrap = 40
     test.create_background()
-
+    print('....', Text.get_width('yolo'))
     app.run()
