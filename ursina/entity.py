@@ -31,8 +31,10 @@ from ursina.mesh_importer import load_model
 from ursina.texture_importer import load_texture
 
 from ursina import color
-from ursina import scene
-
+try:
+    from ursina import scene
+except:
+    pass
 
 class Entity(NodePath):
 
@@ -43,9 +45,10 @@ class Entity(NodePath):
         self.visible = True
         try:
             self.parent = scene
+            scene.has_changes = True
+            scene.entities.append(self)
         except:
             print('scene not yet initialized')
-        scene.has_changes = True
         self.eternal = False    # eternal entities does not get destroyed on scene.clear()
         self.model = None
         self.color = color.white
@@ -71,7 +74,6 @@ class Entity(NodePath):
         self.scale = Vec3(1,1,1)
         self.scale_x, self.scale_y, self.scale_z = 1, 1, 1
 
-        scene.entities.append(self)
 
         for key, value in kwargs.items():
             setattr(self, key, value)
