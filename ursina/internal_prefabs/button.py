@@ -20,7 +20,7 @@ class Button(Entity):
                 setattr(self, key, value)
 
         if not 'model' in kwargs:
-            self.model = Quad(size=(self.scale), subdivisions=4)
+            self.model = Quad(aspect=self.scale[0] / self.scale[1], subdivisions=4)
         self.color = Button.color
 
         self.collision = True
@@ -125,26 +125,21 @@ class Button(Entity):
         if hasattr(self, 'on_click_string'):
             exec(self.on_click_string)
 
-class Test():
-    def __init__(self):
-        self.b = Button(color=color.red, text='button_text', origin=(0,0))
-        self.b.on_click = '''
-            self.text = 'on_click_string'
-            self.color = color.red
-            print('on_click defined with string works!')
-            print(mouse.point)
-            '''
-        # self.b.on_click = self.test_method
-        # self.b.scale *= .5
-        # self.b.color = color.azure
-        self.b.model=Quad(subdivisions=3)
-        # self.b.origin = (-.5, -.5)
-        # self.b.text = 'text'
-        # self.b.text_entity.scale *= 2
 
-    def test_method(self):
-        print('test method')
-        self.b.color = color.red
+    def fit(self):
+        if not self.text_entity.text or self.text_entity.text == '':
+            return
+
+        self.text_entity.world_parent = scene
+        self.scale = (
+            (self.text_entity.width * Text.size * 2) + self.text_entity.height * Text.size * 2,
+            self.text_entity.height * Text.size * 2 * 2
+            )
+        self.model = Quad(aspect=self.scale_x/self.scale_y)
+        self.text_entity.world_parent = self
+        print('fit t o text', self.scale)
+
+
 
 if __name__ == '__main__':
     from ursina import *
@@ -152,8 +147,9 @@ if __name__ == '__main__':
     # t = Test()
     # t.b.parent = scene
     # Button(scale=.3, text='hello world!', color=color.azure)
-    Button(scale=.3, text='hello world!', color=color.azure, model=Quad())
-    EditorCamera()
+    b = Button(text='hello world!', color=color.azure)
+    b.fit()
+    # EditorCamera()
     # b = Button(text='test\ntest', scale=(4,1), model='quad', collision=False)
     # b.text_entity.scale *= .5
     # t.b.tooltip = Text(text='yolo', background=True)

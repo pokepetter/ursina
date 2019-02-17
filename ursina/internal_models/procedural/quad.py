@@ -2,7 +2,7 @@ from ursina import *
 
 
 class Quad(Mesh):
-    def __init__(self, radius=.1, segments=3, scale=(1,1), mode='ngon', **kwargs):
+    def __init__(self, radius=.1, segments=3, aspect=1, scale=(1,1), mode='ngon', **kwargs):
         super().__init__()
         self.vertices = [Vec3(0,0,0), Vec3(1,0,0), Vec3(1,1,0), Vec3(0,1,0)]
         self.radius = radius
@@ -29,12 +29,19 @@ class Quad(Mesh):
         for v in self.vertices:
             self.uvs.append((v[0], v[1]))
 
+        # scale corners horizontally with aspect
+        for v in self.vertices:
+            if v[0] < .5:
+                v[0] /= aspect
+            else:
+                v[0] = lerp(v[0], 1, 1-(1/aspect))
+
         # move edges out to keep nice corners
         for v in self.vertices:
             if v[0] > .5:
-                v[0] += scale[0]-1
+                v[0] += (scale[0]-1)
             if v[1] > .5:
-                v[1] += scale[1]-1
+                v[1] += (scale[1]-1)
 
 
         # center mesh
@@ -64,8 +71,8 @@ class Quad(Mesh):
 
 if __name__ == '__main__':
     app = Ursina()
-    Entity(model=Quad(scale=(3,1), thickness=3, segments=3, mode='lines'), color = color.color(0,1,1,.7))
-    Entity(model=Quad(scale=(3,1)), color = color.color(60,1,1,.3))
+    # Entity(model=Quad(scale=(3,1), thickness=3, segments=3, mode='lines'), color = color.color(0,1,1,.7))
+    Entity(scale=(3,1), model=Quad(aspect=3), color = color.color(60,1,1,.3))
     origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
     # ed = EditorCamera(rotation_speed = 200, panning_speed=200)
     camera.z = -5
