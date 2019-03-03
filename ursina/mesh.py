@@ -26,7 +26,7 @@ class Mesh(NodePath):
             self.generate()
 
 
-    def generate(self):
+    def generate(self):  # call this after setting some of the variables to update it
         if not self.vertices:
             return
 
@@ -152,11 +152,8 @@ class Mesh(NodePath):
     def generate_normals(self):
         self.normals = list(generate_normals(self.vertices, self.triangles))
 
-    def colorize(self,
-        left=color.white, right=color.blue,
-        down=color.red, up=color.green,
-        back=color.white, forward=color.white):
 
+    def colorize(self, left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white):
         colorize(self, left, right, down, up, back, forward)
 
 

@@ -11,7 +11,7 @@ from panda3d.core import CollisionHandlerQueue, CollisionRay
 from ursina.hit import Hit
 
 
-class Mouse(object):
+class Mouse():
 
     def __init__(self):
         self.enabled = False
@@ -154,7 +154,7 @@ class Mouse(object):
             return
         # collide with ui
         self.pickerNP.reparent_to(scene.ui_camera)
-        self.pickerRay.set_from_lens(camera.ui_lens_node, self.x * 2, self.y * 2)
+        self.pickerRay.set_from_lens(camera._ui_lens_node, self.x * 2, self.y * 2)
         self.picker.traverse(camera.ui)
         if self.pq.get_num_entries() > 0:
             # print('collided with ui', self.pq.getNumEntries())

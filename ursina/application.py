@@ -25,13 +25,6 @@ compressed_textures_folder = textures_folder / 'compressed/'
 compressed_models_folder = models_folder / 'compressed/'
 
 # fonts are loaded py panda3d, so add paths here
-model_path = getModelPath()
-model_path.append_path(str(internal_fonts_folder.resolve()))
-model_path.append_path(str(asset_folder.resolve()))
-
-
-
-if __name__ == '__main__':
-    from ursina.main import Ursina
-    app = Ursina()
-    app.run()
+_model_path = getModelPath()
+_model_path.append_path(str(internal_fonts_folder.resolve()))
+_model_path.append_path(str(asset_folder.resolve()))

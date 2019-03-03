@@ -11,7 +11,7 @@ class Color(Vec4):
 
     def __str__(self):
         return f'Color({self[0]}, {self[1]}, {self[2]}, {self[3]})'
-        
+
 
     @property
     def r(self):
@@ -149,16 +149,12 @@ if __name__ == '__main__':
 
     print(color.brightness(color.blue))
     print(_3)
-    for key, value in colors.items():
-        print(key, value)
-    # colors = [(var, getattr(color, var)) for var in dir(color)] # (name, value)
-    # colors = [col for col in colors if type(col[1]) is Vec4]
-    p = Entity()
+
+    p = Entity(x=-2)
     for key in color.colors:
-        # print(col)
+        print(key)
         b = Button(parent=p, model=Quad(subdivisions=2), color=color.colors[key], text=key)
-        # b.text_entity.color = color.inverse(color.colors[key])
-        # b.text_entity.scale *= .5
+        b.text_entity.scale *= .5
 
     grid_layout(p.children, max_x=8)
 

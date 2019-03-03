@@ -24,7 +24,7 @@ class Window(WindowProperties):
         self.setForeground(True)
 
 
-    def load_defaults(self):
+    def late_init(self):
         self.title = os.path.basename(os.path.dirname(application.asset_folder))
         try:
             self.screen_resolution = (get_monitors()[0].width, get_monitors()[0].height)
@@ -36,6 +36,7 @@ class Window(WindowProperties):
         self.fullscreen_size = (self.screen_resolution[0]+1, (self.screen_resolution[0]+1) * .5625)
         self.windowed_size = (self.fullscreen_size[0] / 1.25, self.fullscreen_size[0] / 1.25 * .5625)
         self.size = self.windowed_size
+        self.position = (0,0)
 
         self.top = (0, .5)
         self.bottom = (0, .5)
@@ -46,6 +47,7 @@ class Window(WindowProperties):
         self.cursor = True
         self.vsync = True
 
+        self.color = color.dark_gray
         self.display_modes = (
             'default',
             'wireframe',
@@ -55,7 +57,7 @@ class Window(WindowProperties):
             'textureless',
             'cubes'
             )
-        self.display_mode = self.display_modes[0]
+        self.display_mode = 'default'
 
 
     @property
@@ -223,17 +225,7 @@ sys.modules[__name__] = Window()
 if __name__ == '__main__':
     from ursina import *
     app = Ursina()
-    # window.size = (1024, 1024)
-
-    # props = WindowProperties()
-    # props.setSize(1024, 1024)
-    # base.win.requestProperties(props)
-    EditorCamera()
-    Entity(name='cube', model='cube', collider='box', color=color.white)
-    Entity(name='sphere', model='sphere', color=color.white, x=1)
-    p = Entity(x=-2)
-    for i in range(10):
-        e = Entity(parent=p, model=Cylinder(16, direction=(0,0,1)), scale=.2, scale_z=3)
-        e.look_at((random.uniform(-1,1),random.uniform(-1,1),random.uniform(-1,1)))
-    # Button(text='test\ntest')
+    window.title = 'Title'
+    window.color = color.black  # sets clear color
+    window.size *= .5
     app.run()

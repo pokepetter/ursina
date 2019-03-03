@@ -12,7 +12,7 @@ class ButtonGroup(Entity):
         self.selected = list()
         self.options = options
 
-        self.label = Text(parent=self, scale = 1/.04*.9, origin=(-.5, -.35))
+        self.label = Text(parent=self, scale=1/.04*.9, origin=(-.5, -.35))
         self.parent = camera.ui
         self.scale = Text.size * 2
 

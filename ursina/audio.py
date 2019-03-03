@@ -8,12 +8,13 @@ class Audio(Entity):
         if sound_file_name != '':
             self.clip = sound_file_name
 
-        self.loop = False
-        # self.loops = 3
         self.volume = 1
         self.pitch = 1
         self.balance = 0
-        self.autoplay = True
+
+        self.loop = False
+        self.loops = 1
+        self.autoplay = autoplay
 
         # self.volume_variation = 0
         # self.pitch_variation = 0
@@ -133,7 +134,7 @@ if __name__ == '__main__':
     from ursina import Ursina, printvar
     app = Ursina()
 
-    a = Audio('night_sky', pitch=.5, i = 0)
+    a = Audio('night_sky', pitch=.5)
     # a.fade_out(delay=1)
     DebugMenu(a)
     app.run()

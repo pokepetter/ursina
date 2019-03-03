@@ -1,0 +1,1411 @@
+<pre><div style="
+    left: 0px;
+    position: fixed;
+    top: 0px;
+    padding-top:40px;
+    padding-left:20px;
+    bottom: 0;
+    overflow-y: scroll;
+    width: 15em;
+    background-color: hsl(0, 0%, 10%);
+    color: hsl(0, 0%, 80%);
+    # overflow: hidden;
+    "><a style="color: hsl(90, 70%, 50%)" href="#application">application</a>
+<a style="color: hsl(90, 70%, 50%)" href="#build">build</a>
+<a style="color: hsl(90, 70%, 50%)" href="#camera">camera</a>
+<a style="color: hsl(90, 70%, 50%)" href="#color">color</a>
+<a style="color: hsl(90, 70%, 50%)" href="#duplicate">duplicate</a>
+<a style="color: hsl(90, 70%, 50%)" href="#easing_types">easing_types</a>
+<a style="color: hsl(90, 70%, 50%)" href="#input_handler">input_handler</a>
+<a style="color: hsl(90, 70%, 50%)" href="#mesh_importer">mesh_importer</a>
+<a style="color: hsl(90, 70%, 50%)" href="#mouse">mouse</a>
+<a style="color: hsl(90, 70%, 50%)" href="#raycaster">raycaster</a>
+<a style="color: hsl(90, 70%, 50%)" href="#scene">scene</a>
+<a style="color: hsl(90, 70%, 50%)" href="#text">text</a>
+<a style="color: hsl(90, 70%, 50%)" href="#texture_importer">texture_importer</a>
+<a style="color: hsl(90, 70%, 50%)" href="#ursinamath">ursinamath</a>
+<a style="color: hsl(90, 70%, 50%)" href="#ursinastuff">ursinastuff</a>
+<a style="color: hsl(90, 70%, 50%)" href="#useful">useful</a>
+<a style="color: hsl(90, 70%, 50%)" href="#window">window</a>
+<a style="color: hsl(60, 70%, 50%)" href="#Audio">Audio</a>
+<a style="color: hsl(60, 70%, 50%)" href="#Collider">Collider</a>
+<a style="color: hsl(60, 70%, 50%)" href="#BoxCollider">BoxCollider</a>
+<a style="color: hsl(60, 70%, 50%)" href="#SphereCollider">SphereCollider</a>
+<a style="color: hsl(60, 70%, 50%)" href="#MeshCollider">MeshCollider</a>
+<a style="color: hsl(60, 70%, 50%)" href="#Color">Color</a>
+<a style="color: hsl(60, 70%, 50%)" href="#Entity">Entity</a>
+<a style="color: hsl(60, 70%, 50%)" href="#Hit">Hit</a>
+<a style="color: hsl(60, 70%, 50%)" href="#Ursina">Ursina</a>
+<a style="color: hsl(60, 70%, 50%)" href="#Mesh">Mesh</a>
+<a style="color: hsl(60, 70%, 50%)" href="#Text">Text</a>
+<a style="color: hsl(60, 70%, 50%)" href="#Texture">Texture</a>
+<a style="color: hsl(30, 70%, 50%)" href="#Animation">Animation</a>
+<a style="color: hsl(30, 70%, 50%)" href="#Arrow">Arrow</a>
+<a style="color: hsl(30, 70%, 50%)" href="#AskForSceneNameMenu">AskForSceneNameMenu</a>
+<a style="color: hsl(30, 70%, 50%)" href="#AutoStairs">AutoStairs</a>
+<a style="color: hsl(30, 70%, 50%)" href="#Button">Button</a>
+<a style="color: hsl(30, 70%, 50%)" href="#ButtonGroup">ButtonGroup</a>
+<a style="color: hsl(30, 70%, 50%)" href="#Canvas">Canvas</a>
+<a style="color: hsl(30, 70%, 50%)" href="#Cursor">Cursor</a>
+<a style="color: hsl(30, 70%, 50%)" href="#DebugMenu">DebugMenu</a>
+<a style="color: hsl(30, 70%, 50%)" href="#Draggable">Draggable</a>
+<a style="color: hsl(30, 70%, 50%)" href="#EditorButton">EditorButton</a>
+<a style="color: hsl(30, 70%, 50%)" href="#EditorCamera">EditorCamera</a>
+<a style="color: hsl(30, 70%, 50%)" href="#ExitButton">ExitButton</a>
+<a style="color: hsl(30, 70%, 50%)" href="#FileBrowser">FileBrowser</a>
+<a style="color: hsl(30, 70%, 50%)" href="#HierarchyPanel">HierarchyPanel</a>
+<a style="color: hsl(30, 70%, 50%)" href="#HotReloader">HotReloader</a>
+<a style="color: hsl(30, 70%, 50%)" href="#ModelReloader">ModelReloader</a>
+<a style="color: hsl(30, 70%, 50%)" href="#InputField">InputField</a>
+<a style="color: hsl(30, 70%, 50%)" href="#Inspector">Inspector</a>
+<a style="color: hsl(30, 70%, 50%)" href="#MemoryCounter">MemoryCounter</a>
+<a style="color: hsl(30, 70%, 50%)" href="#Panel">Panel</a>
+<a style="color: hsl(30, 70%, 50%)" href="#Plane">Plane</a>
+<a style="color: hsl(30, 70%, 50%)" href="#PlayerController">PlayerController</a>
+<a style="color: hsl(30, 70%, 50%)" href="#Scrollable">Scrollable</a>
+<a style="color: hsl(30, 70%, 50%)" href="#Sky">Sky</a>
+<a style="color: hsl(30, 70%, 50%)" href="#Slider">Slider</a>
+<a style="color: hsl(30, 70%, 50%)" href="#Sprite">Sprite</a>
+<a style="color: hsl(30, 70%, 50%)" href="#Tooltip">Tooltip</a>
+<a style="color: hsl(30, 70%, 50%)" href="#TransformField">TransformField</a>
+<a style="color: hsl(30, 70%, 50%)" href="#TransformGizmo">TransformGizmo</a>
+<a style="color: hsl(30, 70%, 50%)" href="#VideoRecorder">VideoRecorder</a>
+</div>
+    <style>
+        html {
+          scrollbar-face-color: #646464;
+          scrollbar-base-color: #646464;
+          scrollbar-3dlight-color: #646464;
+          scrollbar-highlight-color: #646464;
+          scrollbar-track-color: #000;
+          scrollbar-arrow-color: #000;
+          scrollbar-shadow-color: #646464;
+          scrollbar-dark-shadow-color: #646464;
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 3px;}
+        ::-webkit-scrollbar-button {  background-color: #222; }
+        ::-webkit-scrollbar-track {  background-color: #646464;}
+        ::-webkit-scrollbar-track-piece { background-color: #111;}
+        ::-webkit-scrollbar-thumb { height: 50px; background-color: #222; border-radius: 3px;}
+        ::-webkit-scrollbar-corner { background-color: #646464;}}
+        ::-webkit-resizer { background-color: #666;}
+    </style>
+
+    <body style="
+        margin: auto;
+        background-color: hsl(0, 0%, 10%);
+        color: hsl(0, 0%, 80%);
+        font-family: monospace;
+        position: absolute;
+        top:0;
+        left: 24em;
+        font-size: 1.25em;
+        font-weight: lighter;>
+    
+<div id="application"><div id="header" style="color: hsl(90, 70%, 50%); font-size:1.5em;">application</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">package_folder<font color="gray"> = Path(__file__).parent</font> 
+models_folder<font color="gray"> = asset_folder / 'models/'</font> 
+prefabs_folder<font color="gray"> = asset_folder / 'prefabs/'</font> 
+scenes_folder<font color="gray"> = asset_folder / 'scenes/'</font> 
+scripts_folder<font color="gray"> = asset_folder / 'scripts/'</font> 
+textures_folder<font color="gray"> = asset_folder / 'textures/'</font> 
+fonts_folder<font color="gray"> = asset_folder / 'fonts/'</font> 
+compressed_textures_folder<font color="gray"> = textures_folder / 'compressed/'</font> 
+compressed_models_folder<font color="gray"> = models_folder / 'compressed/'</font> 
+
+
+</pre></div>
+<div id="build"><div id="header" style="color: hsl(90, 70%, 50%); font-size:1.5em;">build</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">ignore<font color="gray"> = list()</font> 
+build_folder<font color="gray"> = Path(project_folder / 'build')</font> 
+start_time<font color="gray"> = time.time()</font> 
+python_dest<font color="gray"> = Path(build_folder / 'python')</font> 
+python_dlls_dest<font color="gray"> = Path(build_folder / 'python/DLLs')</font> 
+python_lib_dest<font color="gray"> = Path(build_folder / 'python/Lib')</font> 
+src_dest<font color="gray"> = Path(build_folder / 'src')</font> 
+build_folder.mkdir()
+python_dest.mkdir()
+python_dlls_dest.mkdir()
+python_lib_dest.mkdir()
+src_dest.mkdir()
+python_folder<font color="gray"> = Path(sys.executable).parent</font> 
+[copy(str(f), str(python_dest / f.name)) for f in python_folder.iterdir() if f.is_file()]
+[copy(str(f), str(python_lib_dest / f.name)) for f in Path(python_folder / 'Lib').iterdir() if f.is_file()]
+always_include<font color="gray"> = (</font> 
+spec<font color="gray"> = importlib.util.find_spec('ursina')</font> 
+ursina_path<font color="gray"> = Path(spec.origin).parent</font> 
+dest<font color="gray"> = build_folder / 'python/Lib/site-packages/ursina'</font> 
+dest.mkdir(parents=True, exist_ok=True)
+copytree(ursina_path, dest)
+finder<font color="gray"> = ModuleFinder()</font> 
+finder.run_script(str(project_folder) + '/main.py')
+
+copytree(<font color="gray">src, dst, symlinks=False, ignore=None</font>)   <font color="gray"></font>
+
+</pre></div>
+<div id="camera"><div id="header" style="color: hsl(90, 70%, 50%); font-size:1.5em;">camera</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">parent<font color="gray"> = scene</font> 
+name<font color="gray"> = 'camera'</font> 
+eternal<font color="gray"> = True</font> 
+ui_size<font color="gray"> = 40</font> 
+ui<font color="gray"> = None</font> 
+fov<font color="gray"> = 40</font> 
+orthographic<font color="gray"> = False</font> 
+clip_plane_near
+clip_plane_far
+aspect_ratio
+
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">from ursina.main import Ursina
+scene.camera.orthographic = True
+e = Entity()
+e.model = 'quad'
+e.color = color.random_color()
+e.position = (-2, 0, 10)
+
+e = Entity()
+e.model = 'quad'
+e.color = color.random_color()
+e.position = (2, 0, 10)
+
+e = Entity()
+e.model = 'quad'
+e.color = color.random_color()
+e.position = (0, 0, 40)
+</div>
+</pre></div>
+<div id="color"><div id="header" style="color: hsl(90, 70%, 50%); font-size:1.5em;">color</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">white<font color="gray"> =         color(0, 0, 1)</font> 
+smoke<font color="gray"> =         color(0, 0, 0.96)</font> 
+light_gray<font color="gray"> =    color(0, 0, 0.75)</font> 
+gray<font color="gray"> =          color(0, 0, 0.5)</font> 
+dark_gray<font color="gray"> =     color(0, 0, 0.25)</font> 
+black<font color="gray"> =         color(0, 0, 0)</font> 
+red<font color="gray"> =           color(0, 1, 1)</font> 
+yellow<font color="gray"> =        color(60, 1, 1)</font> 
+lime<font color="gray"> =          color(90, 1, 1)</font> 
+green<font color="gray"> =         color(120, 1, 1)</font> 
+turquoise<font color="gray"> =     color(150, 1, 1)</font> 
+cyan<font color="gray"> =          color(180, 1, 1)</font> 
+azure<font color="gray"> =         color(210, 1, 1)</font> 
+blue<font color="gray"> =          color(240, 1, 1)</font> 
+violet<font color="gray"> =        color(270, 1, 1)</font> 
+magenta<font color="gray"> =       color(300, 1, 1)</font> 
+pink<font color="gray"> =          color(330, 1, 1)</font> 
+brown<font color="gray"> =         rgb(165, 42, 42)</font> 
+olive<font color="gray"> =         rgb(128, 128, 0)</font> 
+peach<font color="gray"> =         rgb(255, 218, 185)</font> 
+gold<font color="gray"> =          rgb(255, 215, 0)</font> 
+salmon<font color="gray"> =        rgb(250, 128, 114)</font> 
+clear<font color="gray"> =         Color(0, 0, 0, 0)</font> 
+white10<font color="gray"> =       Color(1,1,1, 0.10)</font> 
+white33<font color="gray"> =       Color(1,1,1, 0.33)</font> 
+white50<font color="gray"> =       Color(1,1,1, 0.50)</font> 
+white66<font color="gray"> =       Color(1,1,1, 0.66)</font> 
+black10<font color="gray"> =       Color(0,0,0, 0.10)</font> 
+black33<font color="gray"> =       Color(0,0,0, 0.33)</font> 
+black50<font color="gray"> =       Color(0,0,0, 0.50)</font> 
+black66<font color="gray"> =       Color(0,0,0, 0.66)</font> 
+text<font color="gray"> = smoke</font> 
+light_text<font color="gray"> = smoke</font> 
+dark_text<font color="gray"> = color(0, 0, .1)</font> 
+text_color<font color="gray"> = light_text</font> 
+color_names<font color="gray"> = ('white', 'smoke', 'light_gray', 'gray', 'dark_gray', 'black',</font> 
+colors<font color="gray"> = dict()</font> 
+
+color(<font color="gray">h, s, v, a=1</font>)   <font color="gray"></font>
+rgba(<font color="gray">r, g, b, a=255</font>)   <font color="gray"></font>
+rgb(<font color="gray">r, g, b, a=255</font>)   <font color="gray"></font>
+to_hsv(<font color="gray">color</font>)   <font color="gray"></font>
+brightness(<font color="gray">color</font>)   <font color="gray"></font>
+inverse(<font color="gray">color</font>)   <font color="gray"></font>
+random_color(<font color="gray"></font>)   <font color="gray"></font>
+tint(<font color="gray">color, amount=.2</font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">print(color.brightness(color.blue))
+print(_3)
+
+p = Entity(x=-2)
+for key in color.colors:
+    print(key)
+    b = Button(parent=p, model=Quad(subdivisions=2), color=color.colors[key], text=key)
+    b.text_entity.scale *= .5
+
+grid_layout(p.children, max_x=8)
+</div>
+</pre></div>
+<div id="duplicate"><div id="header" style="color: hsl(90, 70%, 50%); font-size:1.5em;">duplicate</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+duplicate(<font color="gray">entity</font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">e = Entity(model=Mesh(vertices=((0,0,0), (0,1,0), (1,1,0))))
+print(e.model.recipe)
+e2 = duplicate(e)
+e2.x = 1
+e2.color = color.red
+EditorCamera()
+</div>
+</pre></div>
+<div id="easing_types"><div id="header" style="color: hsl(90, 70%, 50%); font-size:1.5em;">easing_types</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+linear(<font color="gray">t</font>)   <font color="gray"></font>
+ease_in_sine(<font color="gray">t</font>)   <font color="gray"></font>
+ease_out_sine(<font color="gray">t</font>)   <font color="gray"></font>
+ease_in_out_sine(<font color="gray">t</font>)   <font color="gray"></font>
+ease_in_quad(<font color="gray">t</font>)   <font color="gray"></font>
+ease_out_quad(<font color="gray">t</font>)   <font color="gray"></font>
+ease_in_out_quad(<font color="gray">t</font>)   <font color="gray"></font>
+ease_in_cubic(<font color="gray">t</font>)   <font color="gray"></font>
+ease_out_cubic(<font color="gray">t</font>)   <font color="gray">#Decelerating to zero velocity</font>
+ease_in_out_cubic(<font color="gray">t</font>)   <font color="gray">#Acceleration until halfway, then deceleration</font>
+ease_in_quart(<font color="gray">t</font>)   <font color="gray">#Accelerating from zero velocity</font>
+ease_out_quart(<font color="gray">t</font>)   <font color="gray">#Decelerating to zero velocity</font>
+ease_in_out_quart(<font color="gray">t</font>)   <font color="gray">#Acceleration until halfway, then deceleration</font>
+ease_in_quint(<font color="gray">t</font>)   <font color="gray">#Accelerating from zero velocity</font>
+ease_out_quint(<font color="gray">t</font>)   <font color="gray">#Decelerating to zero velocity</font>
+ease_in_out_quint(<font color="gray">t</font>)   <font color="gray">#Acceleration until halfway, then deceleration</font>
+ease_in_expo(<font color="gray">t</font>)   <font color="gray">#Accelerate _exponentially until finish</font>
+ease_out_expo(<font color="gray">t</font>)   <font color="gray">#Initial _exponential acceleration slowing to stop</font>
+ease_in_out_expo(<font color="gray">t</font>)   <font color="gray">#_exponential acceleration and deceleration</font>
+ease_in_circ(<font color="gray">t</font>)   <font color="gray">#Increasing velocity until stop</font>
+ease_out_circ(<font color="gray">t</font>)   <font color="gray">#Start fast, decreasing velocity until stop</font>
+ease_in_out_circ(<font color="gray">t</font>)   <font color="gray">#Fast increase in velocity, fast decrease in velocity</font>
+ease_in_back(<font color="gray">t, magnitude=1.70158</font>)   <font color="gray">#Slow movement _backwards then fast snap to finish</font>
+ease_out_back(<font color="gray">t, magnitude=1.70158</font>)   <font color="gray">#Fast snap to _backwards point then slow resolve to finish</font>
+ease_in_out_back(<font color="gray">t, magnitude=1.70158</font>)   <font color="gray">#Slow movement _backwards, fast snap to past finish, slow resolve to finish</font>
+ease_in_elastic(<font color="gray">t, magnitude=.7</font>)   <font color="gray">#_bounces slowly then quickly to finish</font>
+ease_out_elastic(<font color="gray">t, magnitude=.7</font>)   <font color="gray">#Fast acceleration, _bounces to zero</font>
+ease_in_out_elastic(<font color="gray">t, magnitude=0.65</font>)   <font color="gray">#Slow start and end, two _bounces sandwich a fast motion</font>
+ease_out_bounce(<font color="gray">t</font>)   <font color="gray">#_bounce to completion</font>
+ease_in_bounce(<font color="gray">t</font>)   <font color="gray">#_bounce increasing in velocity until completion</font>
+ease_in_out_bounce(<font color="gray">t</font>)   <font color="gray">#_bounce in and _bounce out</font>
+
+</pre></div>
+<div id="input_handler"><div id="header" style="color: hsl(90, 70%, 50%); font-size:1.5em;">input_handler</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">control<font color="gray"> = False</font> 
+left_control<font color="gray"> = False</font> 
+right_control<font color="gray"> = False</font> 
+shift<font color="gray"> = False</font> 
+left_shift<font color="gray"> = False</font> 
+right_shift<font color="gray"> = False</font> 
+alt<font color="gray"> = False</font> 
+left_alt<font color="gray"> = False</font> 
+right_alt<font color="gray"> = False</font> 
+held_keys<font color="gray"> = defaultdict(lambda: 0)</font> 
+rebinds<font color="gray"> = dict()</font> 
+
+bind(<font color="gray">alternative_key, original_key</font>)   <font color="gray"></font>
+unbind(<font color="gray">key</font>)   <font color="gray"></font>
+rebind(<font color="gray">from_key, to_key</font>)   <font color="gray"></font>
+input(<font color="gray">key</font>)   <font color="gray"></font>
+input(<font color="gray">key</font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">input_handler.bind('s', 'arrow down')
+def input(key):
+    print(key)
+</div>
+</pre></div>
+<div id="mesh_importer"><div id="header" style="color: hsl(90, 70%, 50%); font-size:1.5em;">mesh_importer</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">blender_path<font color="gray"> = ''</font> 
+
+load_model(<font color="gray">name, path=application.asset_folder</font>)   <font color="gray"></font>
+compress_models(<font color="gray">path=application.models_folder, outpath=application.compressed_models_folder, name='*'</font>)   <font color="gray"></font>
+obj_to_ursinamesh(<font color="gray"></font>)   <font color="gray"></font>
+compress_models_fast(<font color="gray">model_name=None, write_to_disk=False</font>)   <font color="gray"></font>
+compress_internal(<font color="gray"></font>)   <font color="gray"></font>
+
+</pre></div>
+<div id="mouse"><div id="header" style="color: hsl(90, 70%, 50%); font-size:1.5em;">mouse</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">enabled<font color="gray"> = False</font> 
+mouse_watcher<font color="gray"> = None</font> 
+locked<font color="gray"> = False</font> 
+position<font color="gray"> = Vec3(0,0,0)</font> 
+delta<font color="gray"> = Vec3(0,0,0)</font> 
+prev_x<font color="gray"> = 0</font> 
+prev_y<font color="gray"> = 0</font> 
+velocity<font color="gray"> = Vec3(0,0,0)</font> 
+prev_click_time<font color="gray"> = time.time()</font> 
+double_click_distance<font color="gray"> = .5</font> 
+hovered_entity<font color="gray"> = None</font> 
+left<font color="gray"> = False</font> 
+right<font color="gray"> = False</font> 
+middle<font color="gray"> = False</font> 
+delta_drag<font color="gray"> = Vec3(0,0,0)</font> 
+i<font color="gray"> = 0</font> 
+update_rate<font color="gray"> = 10</font> 
+picker<font color="gray"> = CollisionTraverser()  # Make a traverser</font> 
+pq<font color="gray"> = CollisionHandlerQueue()  # Make a handler</font> 
+pickerNode<font color="gray"> = CollisionNode('mouseRay')</font> 
+pickerNP<font color="gray"> = camera.attach_new_node(self.pickerNode)</font> 
+pickerRay<font color="gray"> = CollisionRay()  # Make our ray</font> 
+raycast<font color="gray"> = True</font> 
+collision<font color="gray"> = None</font> 
+enabled<font color="gray"> = True</font> 
+x
+y
+normal
+global_normal
+point
+
+
+</pre></div>
+<div id="raycaster"><div id="header" style="color: hsl(90, 70%, 50%); font-size:1.5em;">raycaster</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">name<font color="gray"> = 'raycaster'</font> 
+eternal<font color="gray"> = True</font> 
+picker<font color="gray"> = CollisionTraverser()  # Make a traverser</font> 
+pq<font color="gray"> = CollisionHandlerQueue()  # Make a handler</font> 
+pickerNode<font color="gray"> = CollisionNode('raycaster')</font> 
+pickerNP<font color="gray"> = self.attach_new_node(self.pickerNode)</font> 
+collision_ray<font color="gray"> = CollisionRay()  # Make our ray</font> 
+
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">from ursina.entity import Entity
+
+d = Entity(parent=scene, position=(0,0,2), model='cube', color=color.red, collider='box')
+e = Entity(model='cube', color=color.lime)
+
+camera.position = (0, 15, -15)
+camera.look_at(e)
+speed = .01
+rotation_speed = .1
+
+
+def update():
+    e.position += e.forward * held_keys['w'] * speed
+    e.position += e.left * held_keys['a'] * speed
+    e.position += e.back * held_keys['s'] * speed
+    e.position += e.right * held_keys['d'] * speed
+
+    e.rotation_y -= held_keys['q'] * rotation_speed
+    e.rotation_y += held_keys['e'] * rotation_speed
+
+    raycast(e.world_position, e.forward, 3, render, debug=True)
+
+
+
+raycast((0,0,-2), (0,0,1), 5, render, debug=False)
+
+EditorCamera()
+</div>
+</pre></div>
+<div id="scene"><div id="header" style="color: hsl(90, 70%, 50%); font-size:1.5em;">scene</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">render<font color="gray"> = None</font> 
+world<font color="gray"> = None</font> 
+camera<font color="gray"> = None</font> 
+ui_camera<font color="gray"> = None</font> 
+canvas<font color="gray"> = None</font> 
+ui<font color="gray"> = None</font> 
+editor<font color="gray"> = None</font> 
+editor_size<font color="gray"> = 1</font> 
+editor_font_size<font color="gray"> = 1</font> 
+entities<font color="gray"> = []</font> 
+hidden<font color="gray"> = NodePath('hidden')</font> 
+has_changes<font color="gray"> = False</font> 
+
+
+</pre></div>
+<div id="text"><div id="header" style="color: hsl(90, 70%, 50%); font-size:1.5em;">text</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+get_width(<font color="gray">string, font=None</font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">app = Ursina()
+    # Text.size = .001
+    descr = dedent('<scale:1.5><orange>' + 'Rainstorm' + '<scale:1>\n' +
+        '''Summon a <azure>rain storm <default>to deal 5 <azure>water
+        damage <default>to <red>everyone, <default>including <orange>yourself. <default>
+        Lasts for 4 rounds.'''
+        )
+
+    Text.default_font = 'VeraMono.ttf'
+    test = Text(descr)
+    # test.font = 'VeraMono.ttf'
+    # Text.font = 'VeraMono.ttf'
+    # test.origin = (.5, .5)
+    # test.origin = (0, 0)
+    # test.wordwrap = 40
+    test.create_background()
+    print('....', Text.get_width('yolo'))
+    app.run()
+</div>
+</pre></div>
+<div id="texture_importer"><div id="header" style="color: hsl(90, 70%, 50%); font-size:1.5em;">texture_importer</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">file_types<font color="gray"> = ('.jpg', '.png', '.gif')</font> 
+
+load_texture(<font color="gray">name, path=None</font>)   <font color="gray"></font>
+compress_textures(<font color="gray">name=''</font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">Entity(model='quad', texture='white_cube')
+</div>
+</pre></div>
+<div id="ursinamath"><div id="header" style="color: hsl(90, 70%, 50%); font-size:1.5em;">ursinamath</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+distance(<font color="gray">a, b</font>)   <font color="gray"></font>
+lerp(<font color="gray">a, b, t</font>)   <font color="gray"></font>
+inverselerp(<font color="gray">a, b, t</font>)   <font color="gray"></font>
+clamp(<font color="gray">value, floor, ceiling</font>)   <font color="gray"></font>
+count_lines(<font color="gray">file</font>)   <font color="gray"></font>
+chunk_list(<font color="gray">l, chunk_size</font>)   <font color="gray"></font>
+size_list(<font color="gray"></font>)   <font color="gray"></font>
+average_position(<font color="gray">l</font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">e1 = Entity(position = (0,0,0))
+e2 = Entity(position = (0,1,1))
+distance(e1, e2)
+</div>
+</pre></div>
+<div id="ursinastuff"><div id="header" style="color: hsl(90, 70%, 50%); font-size:1.5em;">ursinastuff</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+save_prefab(<font color="gray">target, name=None, path='prefabs'</font>)   <font color="gray"></font>
+load_prefab(<font color="gray">module_name, add_to_caller=False</font>)   <font color="gray"></font>
+load_script(<font color="gray">module_name</font>)   <font color="gray"></font>
+load(<font color="gray">paths, module_name, instantiate=True</font>)   <font color="gray"></font>
+invoke(<font color="gray">function, *args, **kwargs</font>)   <font color="gray"></font>
+destroy(<font color="gray">entity, delay=0</font>)   <font color="gray"></font>
+import_all_classes(<font color="gray">path=application.asset_folder, debug=False</font>)   <font color="gray"></font>
+print_on_screen(<font color="gray">text</font>)   <font color="gray"></font>
+
+</pre></div>
+<div id="useful"><div id="header" style="color: hsl(90, 70%, 50%); font-size:1.5em;">useful</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+camel_to_snake(<font color="gray">value</font>)   <font color="gray"></font>
+snake_to_camel(<font color="gray">value</font>)   <font color="gray"></font>
+multireplace(<font color="gray">string, replacements, ignore_case=False</font>)   <font color="gray"></font>
+printvar(<font color="gray">var</font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">print(camel_to_snake('CamelToSnake'))
+print(snake_to_camel('snake_to_camel'))
+printvar('test')
+</div>
+</pre></div>
+<div id="window"><div id="header" style="color: hsl(90, 70%, 50%); font-size:1.5em;">window</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">title<font color="gray"> = os.path.basename(os.path.dirname(application.asset_folder))</font> 
+screen_resolution<font color="gray"> = (get_monitors()[0].width, get_monitors()[0].height)</font> 
+screen_resolution<font color="gray"> = (1366, 768)</font> 
+fullscreen_size<font color="gray"> = (self.screen_resolution[0]+1, (self.screen_resolution[0]+1) * .5625)</font> 
+windowed_size<font color="gray"> = (self.fullscreen_size[0] / 1.25, self.fullscreen_size[0] / 1.25 * .5625)</font> 
+size<font color="gray"> = self.windowed_size</font> 
+position<font color="gray"> = (0,0)</font> 
+top<font color="gray"> = (0, .5)</font> 
+bottom<font color="gray"> = (0, .5)</font> 
+center<font color="gray"> = (0, 0)</font> 
+fullscreen<font color="gray"> = False</font> 
+borderless<font color="gray"> = True</font> 
+cursor<font color="gray"> = True</font> 
+vsync<font color="gray"> = True</font> 
+color<font color="gray"> = color.dark_gray</font> 
+display_modes<font color="gray"> = (
+        'default',
+        'wireframe',
+        'colliders',
+        'normals',
+        'vertices',
+        'textureless',
+        'cubes'
+        )</font> 
+display_mode<font color="gray"> = 'default'</font> 
+left
+right
+top_left
+top_right
+bottom_left
+bottom_right
+
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">window.title = 'Title'
+window.color = color.black  # sets clear color
+window.size *= .5
+</div>
+</pre></div>
+<div id="Audio"><div id="header" style="color: hsl(60, 70%, 50%); font-size:1.5em;">Audio<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">Audio(sound_file_name='', autoplay=True, **kwargs)</params>
+
+clip<font color="gray"> = None</font> 
+clip<font color="gray"> = sound_file_name</font> 
+volume<font color="gray"> = 1</font> 
+pitch<font color="gray"> = 1</font> 
+balance<font color="gray"> = 0</font> 
+loop<font color="gray"> = False</font> 
+loops<font color="gray"> = 1</font> 
+autoplay<font color="gray"> = autoplay</font> 
+length
+status
+ready
+playing
+time
+
+play(<font color="gray">start=0</font>)   <font color="gray"></font>
+pause(<font color="gray"></font>)   <font color="gray"></font>
+resume(<font color="gray"></font>)   <font color="gray"></font>
+stop(<font color="gray">destroy=True</font>)   <font color="gray"></font>
+fade(<font color="gray">value, duration=.5, delay=0, curve='ease_in_expo', resolution=None, interrupt=True</font>)   <font color="gray"></font>
+fade_in(<font color="gray">value=1, duration=.5, delay=0, curve='ease_in_expo', resolution=None, interrupt=True, destroy_on_ended=False</font>)   <font color="gray"></font>
+fade_out(<font color="gray">value=0, duration=.5, delay=0, curve='ease_in_expo', resolution=None, interrupt=True, destroy_on_ended=True</font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">from ursina import Ursina, printvar
+
+a = Audio('night_sky', pitch=.5)
+DebugMenu(a)
+</div>
+</pre></div>
+<div id="Collider"><div id="header" style="color: hsl(60, 70%, 50%); font-size:1.5em;">Collider<font color="gray">()</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">Collider()</params>
+
+visible
+
+show(<font color="gray"></font>)   <font color="gray"></font>
+hide(<font color="gray"></font>)   <font color="gray"></font>
+remove(<font color="gray"></font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">c = Cylinder(6, height=1, start=-.5)
+c = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
+e = Button(parent=scene, model=c, collider='mesh')
+e.collider = MeshCollider(e)
+e.collider.visible = True
+e.color = color.red
+EditorCamera()
+</div>
+</pre></div>
+<div id="BoxCollider"><div id="header" style="color: hsl(60, 70%, 50%); font-size:1.5em;">BoxCollider<font color="gray">(<a style="color: gray ;" href="#Collider">Collider</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">BoxCollider(entity, center=(0,0,0), size=(1,1,1))</params>
+
+shape<font color="gray"> = CollisionBox(Vec3(center[0], center[2], center[1]), size[0], size[2], size[1])</font> 
+node_path<font color="gray"> = entity.attachNewNode(CollisionNode('CollisionNode'))</font> 
+visible<font color="gray"> = False</font> 
+
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">c = Cylinder(6, height=1, start=-.5)
+c = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
+e = Button(parent=scene, model=c, collider='mesh')
+e.collider = MeshCollider(e)
+e.collider.visible = True
+e.color = color.red
+EditorCamera()
+</div>
+</pre></div>
+<div id="SphereCollider"><div id="header" style="color: hsl(60, 70%, 50%); font-size:1.5em;">SphereCollider<font color="gray">(<a style="color: gray ;" href="#Collider">Collider</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">SphereCollider(entity, center=(0,0,0), radius=.5)</params>
+
+shape<font color="gray"> = CollisionSphere(center[0], center[2], center[1], radius)</font> 
+node_path<font color="gray"> = entity.attachNewNode(CollisionNode('CollisionNode'))</font> 
+visible<font color="gray"> = False</font> 
+
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">c = Cylinder(6, height=1, start=-.5)
+c = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
+e = Button(parent=scene, model=c, collider='mesh')
+e.collider = MeshCollider(e)
+e.collider.visible = True
+e.color = color.red
+EditorCamera()
+</div>
+</pre></div>
+<div id="MeshCollider"><div id="header" style="color: hsl(60, 70%, 50%); font-size:1.5em;">MeshCollider<font color="gray">(<a style="color: gray ;" href="#Collider">Collider</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">MeshCollider(entity, mesh=None, center=(0,0,0))</params>
+
+node_path<font color="gray"> = entity.attachNewNode(CollisionNode('CollisionNode'))</font> 
+visible<font color="gray"> = False</font> 
+
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">c = Cylinder(6, height=1, start=-.5)
+c = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
+e = Button(parent=scene, model=c, collider='mesh')
+e.collider = MeshCollider(e)
+e.collider.visible = True
+e.color = color.red
+EditorCamera()
+</div>
+</pre></div>
+<div id="Color"><div id="header" style="color: hsl(60, 70%, 50%); font-size:1.5em;">Color<font color="gray">(Vec4)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">Color(self,*p)</params>
+
+r
+g
+b
+a
+hsv
+h
+s
+v
+brightness
+inverse
+
+tint(<font color="gray">abount</font>)   <font color="gray"></font>
+color(<font color="gray">h, s, v, a=1</font>)   <font color="gray"></font>
+rgba(<font color="gray">r, g, b, a=255</font>)   <font color="gray"></font>
+rgb(<font color="gray">r, g, b, a=255</font>)   <font color="gray"></font>
+to_hsv(<font color="gray">color</font>)   <font color="gray"></font>
+brightness(<font color="gray">color</font>)   <font color="gray"></font>
+inverse(<font color="gray">color</font>)   <font color="gray"></font>
+random_color(<font color="gray"></font>)   <font color="gray"></font>
+tint(<font color="gray">color, amount=.2</font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">print(color.brightness(color.blue))
+print(_3)
+
+p = Entity(x=-2)
+for key in color.colors:
+    print(key)
+    b = Button(parent=p, model=Quad(subdivisions=2), color=color.colors[key], text=key)
+    b.text_entity.scale *= .5
+
+grid_layout(p.children, max_x=8)
+</div>
+</pre></div>
+<div id="Entity"><div id="header" style="color: hsl(60, 70%, 50%); font-size:1.5em;">Entity<font color="gray">()</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">Entity(**kwargs)</params>
+
+name<font color="gray"> = camel_to_snake(self.type)</font> 
+enabled<font color="gray"> = True</font> 
+visible<font color="gray"> = True</font> 
+parent<font color="gray"> = scene</font> 
+eternal<font color="gray"> = False    # eternal entities does not get destroyed on scene.clear()</font> 
+model<font color="gray"> = None</font> 
+color<font color="gray"> = color.white</font> 
+texture<font color="gray"> = None</font> 
+texture<font color="gray"> = camel_to_snake(self.type)</font> 
+collision<font color="gray"> = False</font> 
+collider<font color="gray"> = None</font> 
+scripts<font color="gray"> = list()</font> 
+animations<font color="gray"> = list()</font> 
+prefab_name<font color="gray"> = None</font> 
+hovered<font color="gray"> = False</font> 
+origin<font color="gray"> = Vec3(0,0,0)</font> 
+position<font color="gray"> = Vec3(0,0,0)</font> 
+x, self.y, self.z<font color="gray"> = 0, 0, 0</font> 
+rotation<font color="gray"> = Vec3(0,0,0)</font> 
+rotation_x, self.rotation_y, self.rotation_z<font color="gray"> = 0, 0, 0</font> 
+scale<font color="gray"> = Vec3(1,1,1)</font> 
+scale_x, self.scale_y, self.scale_z<font color="gray"> = 1, 1, 1</font> 
+type
+types
+origin_x
+origin_y
+origin_z
+world_position
+world_x
+world_y
+world_z
+x
+y
+z
+world_rotation
+world_rotation_x
+world_rotation_y
+world_rotation_z
+rotation_x
+rotation_y
+rotation_z
+world_scale
+world_scale_x
+world_scale_y
+world_scale_z
+scale_x
+scale_y
+scale_z
+forward
+back
+right
+left
+up
+down
+shader
+bounds
+vertex_data
+vertices
+normals
+uvs
+vertex_colors
+children
+attributes
+
+reparent_to(<font color="gray">entity</font>)   <font color="gray"></font>
+add_script(<font color="gray">name, path=None</font>)   <font color="gray"></font>
+remove_script(<font color="gray">module_name</font>)   <font color="gray"></font>
+combine(<font color="gray">analyze=False</font>)   <font color="gray"></font>
+flip_faces(<font color="gray"></font>)   <font color="gray"></font>
+look_at(<font color="gray">target, axis='forward'</font>)   <font color="gray"></font>
+get_scripts_of_type(<font color="gray">type</font>)   <font color="gray"></font>
+has_ancestor(<font color="gray">possible_ancestor</font>)   <font color="gray"></font>
+animate(<font color="gray">name, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True</font>)   <font color="gray"></font>
+animate_position(<font color="gray">value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True</font>)   <font color="gray"></font>
+animate_x(<font color="gray">value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True</font>)   <font color="gray"></font>
+animate_y(<font color="gray">value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True</font>)   <font color="gray"></font>
+animate_z(<font color="gray">value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True</font>)   <font color="gray"></font>
+animate_rotation(<font color="gray">value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True</font>)   <font color="gray"></font>
+animate_rotation_x(<font color="gray">value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True</font>)   <font color="gray"></font>
+animate_rotation_y(<font color="gray">value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True</font>)   <font color="gray"></font>
+animate_rotation_z(<font color="gray">value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True</font>)   <font color="gray"></font>
+animate_scale(<font color="gray">value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True</font>)   <font color="gray"></font>
+animate_scale_x(<font color="gray">value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True</font>)   <font color="gray"></font>
+animate_scale_y(<font color="gray">value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True</font>)   <font color="gray"></font>
+animate_scale_z(<font color="gray">value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True</font>)   <font color="gray"></font>
+shake(<font color="gray">duration=.2, magnitude=1, speed=.05, direction=</font>)   <font color="gray"></font>
+animate_color(<font color="gray">value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True</font>)   <font color="gray"></font>
+fade_out(<font color="gray">duration=.5, delay=0, curve='ease_in_expo', resolution=None, interrupt=True</font>)   <font color="gray"></font>
+fade_in(<font color="gray">duration=.5, delay=0, curve='ease_in_expo', resolution=None, interrupt=True</font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">app = main.Ursina()
+cols = list()
+m=Cylinder(12)
+print(m.normals)
+for v in m.vertices:
+    cols.append(color.color(0,0,abs(v[2])))
+
+m.colors = cols
+m.generate()
+e = Entity(parent=scene, model=Cylinder(12), collider='box', texture='brick')
+e.model = m
+EditorCamera()
+</div>
+</pre></div>
+<div id="Hit"><div id="header" style="color: hsl(60, 70%, 50%); font-size:1.5em;">Hit<font color="gray">()</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">Hit(**kwargs)</params>
+
+hit<font color="gray"> = None</font> 
+entity<font color="gray"> = None</font> 
+point<font color="gray"> = None</font> 
+distance<font color="gray"> = math.inf</font> 
+normal<font color="gray"> = None</font> 
+world_normal<font color="gray"> = None</font> 
+
+
+</pre></div>
+<div id="Ursina"><div id="header" style="color: hsl(60, 70%, 50%); font-size:1.5em;">Ursina<font color="gray">()</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">Ursina()</params>
+
+mouse<font color="gray"> = mouse</font> 
+
+input_up(<font color="gray">key</font>)   <font color="gray"></font>
+input_hold(<font color="gray">key</font>)   <font color="gray"></font>
+input(<font color="gray">key</font>)   <font color="gray"></font>
+run(<font color="gray"></font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">app = Ursina()
+app.run()
+</div>
+</pre></div>
+<div id="Mesh"><div id="header" style="color: hsl(60, 70%, 50%); font-size:1.5em;">Mesh<font color="gray">()</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">Mesh(vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1)</params>
+
+vertices<font color="gray"> = vertices</font> 
+colors<font color="gray"> = colors</font> 
+uvs<font color="gray"> = uvs</font> 
+normals<font color="gray"> = normals</font> 
+static<font color="gray"> = static</font> 
+mode<font color="gray"> = mode</font> 
+thickness<font color="gray"> = thickness</font> 
+recipe<font color="gray"> = 'Mesh()'</font> 
+triangles
+
+generate(<font color="gray"></font>)   <font color="gray"># call this after setting some of the variables to update it</font>
+generate_normals(<font color="gray"></font>)   <font color="gray"></font>
+colorize(<font color="gray">left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white</font>)   <font color="gray"></font>
+
+</pre></div>
+<div id="Text"><div id="header" style="color: hsl(60, 70%, 50%); font-size:1.5em;">Text<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">Text(text='', **kwargs)</params>
+
+name<font color="gray"> = 'text'</font> 
+size<font color="gray"> = Text.size</font> 
+parent<font color="gray"> = camera.ui</font> 
+text_nodes<font color="gray"> = list()</font> 
+origin<font color="gray"> = (-.5, .5)</font> 
+font<font color="gray"> = Text.default_font</font> 
+line_height<font color="gray"> = 1</font> 
+text_colors<font color="gray"> = {'<default>' : color.text_color}</font> 
+text_colors['<' + color_name + '>']<font color="gray"> = color.colors[color_name]</font> 
+tag<font color="gray"> = '<default>'</font> 
+color_tag<font color="gray"> = self.text_colors['<default>']</font> 
+scale_override<font color="gray"> = 1</font> 
+background<font color="gray"> = None</font> 
+text<font color="gray"> = text</font> 
+color
+width
+height
+lines
+wordwrap
+
+update_text(<font color="gray"></font>)   <font color="gray"></font>
+create_text_section(<font color="gray">text, tag='<default>', x=0, y=0</font>)   <font color="gray"></font>
+align(<font color="gray"></font>)   <font color="gray"></font>
+create_background(<font color="gray">padding=size*2, radius=size, color=ursina.color.black66</font>)   <font color="gray"></font>
+appear(<font color="gray">speed=.025, delay=0</font>)   <font color="gray"></font>
+get_width(<font color="gray">string, font=None</font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">app = Ursina()
+    # Text.size = .001
+    descr = dedent('<scale:1.5><orange>' + 'Rainstorm' + '<scale:1>\n' +
+        '''Summon a <azure>rain storm <default>to deal 5 <azure>water
+        damage <default>to <red>everyone, <default>including <orange>yourself. <default>
+        Lasts for 4 rounds.'''
+        )
+
+    Text.default_font = 'VeraMono.ttf'
+    test = Text(descr)
+    # test.font = 'VeraMono.ttf'
+    # Text.font = 'VeraMono.ttf'
+    # test.origin = (.5, .5)
+    # test.origin = (0, 0)
+    # test.wordwrap = 40
+    test.create_background()
+    print('....', Text.get_width('yolo'))
+    app.run()
+</div>
+</pre></div>
+<div id="Texture"><div id="header" style="color: hsl(60, 70%, 50%); font-size:1.5em;">Texture<font color="gray">()</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">Texture(path)</params>
+
+path<font color="gray"> = None</font> 
+path<font color="gray"> = Path(path)</font> 
+filtering<font color="gray"> = None</font> 
+name
+size
+width
+height
+pixels
+
+get_pixel(<font color="gray">x, y</font>)   <font color="gray"></font>
+get_pixels(<font color="gray">start, end</font>)   <font color="gray"></font>
+set_pixel(<font color="gray">x, y, color</font>)   <font color="gray"></font>
+apply(<font color="gray"></font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">Texture(PandaTexture())
+</div>
+</pre></div>
+<div id="Animation"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">Animation<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">Animation(texture, fps=12, frame_times=None)</params>
+
+frames<font color="gray"> = list()</font> 
+autoplay<font color="gray"> = True</font> 
+sequence<font color="gray"> = Sequence()</font> 
+
+play(<font color="gray"></font>)   <font color="gray"></font>
+stop(<font color="gray"></font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">animation = Animation('catlike_creature_run')
+</div>
+</pre></div>
+<div id="Arrow"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">Arrow<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">Arrow(**kwargs)</params>
+
+shaft<font color="gray"> = Entity(
+        parent</font> 
+tip<font color="gray"> = Entity(
+        parent</font> 
+length<font color="gray"> = 1</font> 
+end<font color="gray"> = (0,0,1)</font> 
+
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">a = Arrow()
+target = Entity(position=(1,1,1))
+a.end = target
+print(a.end)
+
+origin = Entity(model='quad', color=color.orange, scale=(5, .05))
+ed = EditorCamera(rotation_speed = 200, panning_speed=200)
+</div>
+</pre></div>
+<div id="AskForSceneNameMenu"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">AskForSceneNameMenu<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">AskForSceneNameMenu()</params>
+
+parent<font color="gray"> = scene.ui</font> 
+model<font color="gray"> = 'quad'</font> 
+scale<font color="gray"> = (.25, .025)</font> 
+window_title<font color="gray"> = EditorButton()</font> 
+input_field<font color="gray"> = InputField()</font> 
+save_button<font color="gray"> = EditorButton()</font> 
+close_button<font color="gray"> = EditorButton()</font> 
+
+input(<font color="gray">key</font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">test = AskForSceneNameMenu()
+</div>
+</pre></div>
+<div id="AutoStairs"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">AutoStairs<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">AutoStairs(height=1, **kwargs)</params>
+
+height<font color="gray"> = 1</font> 
+stair<font color="gray"> = AutoStairs(height=self.height)</font> 
+
+input(<font color="gray">key</font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">class AutoStairsTester(Entity):
+    def __init__(self):
+        super().__init__()
+        self.height = 1
+        self.stair = AutoStairs(height=self.height)
+
+    def input(self, key):
+        if key == 'e':
+            self.height += .1
+            destroy(self.stair)
+            self.stair = AutoStairs(height=self.height)
+        if key == 'q':
+            self.height -= .1
+            destroy(self.stair)
+            self.stair = AutoStairs(height=self.height)
+Sky()
+AutoStairsTester()
+EditorCamera()
+camera.orthographic = True
+camera.fov = 2
+camera.position = Vec3(10, 5, 5) * 1.5
+camera.look_at((0,0,0))
+origin = Entity(model=Sphere(), color=color.red, scale=(.01,.01,.01))
+</div>
+</pre></div>
+<div id="Button"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">Button<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">Button(**kwargs)</params>
+
+name<font color="gray"> = 'button'</font> 
+parent<font color="gray"> = scene.ui</font> 
+is_editor<font color="gray"> = False</font> 
+model<font color="gray"> = Quad(aspect=self.scale[0] / self.scale[1], subdivisions=4)</font> 
+color<font color="gray"> = Button.color</font> 
+collision<font color="gray"> = True</font> 
+collider<font color="gray"> = 'box'</font> 
+text_entity<font color="gray"> = None</font> 
+disabled<font color="gray"> = False</font> 
+original_color<font color="gray"> = self.color</font> 
+highlight_color<font color="gray"> = color.tint(self.original_color, .2)</font> 
+pressed_color<font color="gray"> = color.tint(self.original_color, -.2)</font> 
+text
+
+input(<font color="gray">key</font>)   <font color="gray"></font>
+on_mouse_enter(<font color="gray"></font>)   <font color="gray"></font>
+on_mouse_exit(<font color="gray"></font>)   <font color="gray"></font>
+on_click(<font color="gray"></font>)   <font color="gray"></font>
+fit(<font color="gray"></font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">b = Button(text='hello world!', color=color.azure)
+b.fit()
+</div>
+</pre></div>
+<div id="ButtonGroup"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">ButtonGroup<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">ButtonGroup(options=None, **kwargs)</params>
+
+deselected_color<font color="gray"> = Button.color</font> 
+selected_color<font color="gray"> = color.orange</font> 
+max_selection<font color="gray"> = 1</font> 
+buttons<font color="gray"> = list()</font> 
+selected<font color="gray"> = list()</font> 
+options<font color="gray"> = options</font> 
+label<font color="gray"> = Text(parent=self, scale=1/.04*.9, origin=(-.5, -.35))</font> 
+parent<font color="gray"> = camera.ui</font> 
+scale<font color="gray"> = Text.size * 2</font> 
+value
+title
+
+layout(<font color="gray"></font>)   <font color="gray"></font>
+input(<font color="gray">key</font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">Text.default_font = 'VeraMono.ttf'
+patterns = (
+        (2, 2, 1, 2, 2, 3),
+        (1,1,1,1,1,1,1,1,1,1,1,1),
+        (2,1,2,2,2,1,2),
+        )
+button_group = ButtonGroup([str(e).replace(',', '')[1:-1] for e in patterns])
+grid_layout(button_group.children, max_x=1)
+</div>
+</pre></div>
+<div id="Canvas"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">Canvas<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">Canvas()</params>
+
+name<font color="gray"> = 'canvas'</font> 
+model<font color="gray"> = 'canvas'</font> 
+origin<font color="gray"> = (0, 0, -.01)</font> 
+color<font color="gray"> = color.white33</font> 
+editor_collider<font color="gray"> = 'box'</font> 
+
+start(<font color="gray"></font>)   <font color="gray"></font>
+stop(<font color="gray"></font>)   <font color="gray"></font>
+
+</pre></div>
+<div id="Cursor"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">Cursor<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">Cursor(**kwargs)</params>
+
+parent<font color="gray"> = camera.ui</font> 
+model<font color="gray"> = 'quad'</font> 
+color<font color="gray"> = color.light_gray</font> 
+z<font color="gray"> = -.1</font> 
+render_queue<font color="gray"> = 1</font> 
+
+update(<font color="gray"></font>)   <font color="gray"></font>
+
+</pre></div>
+<div id="DebugMenu"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">DebugMenu<font color="gray">(Draggable)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">DebugMenu(target, **kwargs)</params>
+
+target<font color="gray"> = target</font> 
+scale<font color="gray"> = (.2, .025)</font> 
+text<font color="gray"> = '<orange>' + target.__class__.__name__</font> 
+
+draw_functions(<font color="gray"></font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">DebugMenu(Audio('night_sky'))
+</div>
+</pre></div>
+<div id="Draggable"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">Draggable<font color="gray">(<a style="color: gray ;" href="#Button">Button</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">Draggable(**kwargs)</params>
+
+require_key<font color="gray"> = None</font> 
+dragging<font color="gray"> = False</font> 
+start_pos<font color="gray"> = self.world_position</font> 
+step<font color="gray"> = 0</font> 
+lock_x<font color="gray"> = False</font> 
+lock_y<font color="gray"> = False</font> 
+min_x, self.min_y, self.min_z<font color="gray"> = -math.inf, -math.inf, -math.inf</font> 
+max_x, self.max_y, self.max_z<font color="gray"> = math.inf, math.inf, math.inf</font> 
+
+input(<font color="gray">key</font>)   <font color="gray"></font>
+update(<font color="gray"></font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">camera.orthographic = True
+
+e = Draggable()
+</div>
+</pre></div>
+<div id="EditorButton"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">EditorButton<font color="gray">(<a style="color: gray ;" href="#Button">Button</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">EditorButton()</params>
+
+name<font color="gray"> = 'editor_draggable'</font> 
+is_editor<font color="gray"> = True</font> 
+
+
+</pre></div>
+<div id="EditorCamera"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">EditorCamera<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">EditorCamera(**kwargs)</params>
+
+name<font color="gray"> = 'editor_camera_controller'</font> 
+camera_pivot<font color="gray"> = Entity(name='camera_pivot', is_editor=True, model='cube', color=color.green, scale=(.05,.05,.05))</font> 
+dummy<font color="gray"> = Entity(
+        model</font> 
+rotation_speed<font color="gray"> = 100</font> 
+pan_speed<font color="gray"> = (4, 4)</font> 
+move_speed<font color="gray"> = .1</font> 
+zoom_speed<font color="gray"> = 1</font> 
+
+input(<font color="gray">key</font>)   <font color="gray"></font>
+update(<font color="gray"></font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">app = main.Ursina()
+sky = Sky()
+Entity(model='cube', color=color.white33)
+camera.position=(20,20,-20)
+ec = EditorCamera(rotation_smoothing=2, rotation_speed=200)
+camera.look_at(ec)
+</div>
+</pre></div>
+<div id="ExitButton"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">ExitButton<font color="gray">(<a style="color: gray ;" href="#Button">Button</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">ExitButton(**kwargs)</params>
+
+
+on_click(<font color="gray"></font>)   <font color="gray"></font>
+input(<font color="gray">key</font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">app = Ursina().run()
+</div>
+</pre></div>
+<div id="FileBrowser"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">FileBrowser<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">FileBrowser()</params>
+
+enabled<font color="gray"> = False</font> 
+name<font color="gray"> = 'filebrowser'</font> 
+parent<font color="gray"> = camera.ui</font> 
+is_editor<font color="gray"> = True</font> 
+color<font color="gray"> = color.black33</font> 
+path<font color="gray"> = ''</font> 
+file_types<font color="gray"> = None</font> 
+buttons<font color="gray"> = list()</font> 
+files<font color="gray"> = None</font> 
+max_vertical<font color="gray"> = 10</font> 
+button_size<font color="gray"> = (.16, .025)</font> 
+button_type<font color="gray"> = ''</font> 
+close_button<font color="gray"> = EditorButton()</font> 
+
+populate(<font color="gray"></font>)   <font color="gray"></font>
+on_enable(<font color="gray"></font>)   <font color="gray"></font>
+on_disable(<font color="gray"></font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">test = FileBrowser(
+    path = application.internal_textures_folder,
+    file_types = ('.jpg'),
+
+    )
+</div>
+</pre></div>
+<div id="HierarchyPanel"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">HierarchyPanel<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">HierarchyPanel()</params>
+
+name<font color="gray"> = 'hierarchy_panel'</font> 
+parent<font color="gray"> = scene.ui</font> 
+is_editor<font color="gray"> = True</font> 
+size<font color="gray"> = 1</font> 
+origin<font color="gray"> = (-.5, .5)</font> 
+position<font color="gray"> = window.top_left</font> 
+scale<font color="gray"> = (.249, 1)</font> 
+editor_collider<font color="gray"> = 'box'</font> 
+button_parent<font color="gray"> = Entity()</font> 
+max_vertical<font color="gray"> = 1000</font> 
+button_size<font color="gray"> = (1, .025 * self.size)</font> 
+bg<font color="gray"> = Entity()</font> 
+temp_hierarchy_panel<font color="gray"> = list()</font> 
+buttons<font color="gray"> = list()</font> 
+t<font color="gray"> = 0</font> 
+i<font color="gray"> = 0</font> 
+
+populate(<font color="gray"></font>)   <font color="gray"></font>
+create_button(<font color="gray">entity, name</font>)   <font color="gray"></font>
+traverse_tree(<font color="gray">e, indent=''</font>)   <font color="gray"></font>
+input(<font color="gray">key</font>)   <font color="gray"></font>
+
+</pre></div>
+<div id="HotReloader"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">HotReloader<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">HotReloader(path=__file__, **kwargs)</params>
+
+eternal<font color="gray"> = True</font> 
+path<font color="gray"> = path</font> 
+path<font color="gray"> = Path(self.path)</font> 
+
+input(<font color="gray">key</font>)   <font color="gray"></font>
+reload(<font color="gray"></font>)   <font color="gray"></font>
+reload_texture(<font color="gray"></font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">Sprite('brick')
+app.hotreloader = HotReloader()
+app.hotreloader.path = application.asset_folder / 'platformer.py'
+</div>
+</pre></div>
+<div id="ModelReloader"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">ModelReloader<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">ModelReloader()</params>
+
+parent<font color="gray"> = camera.ui</font> 
+i<font color="gray"> = 0</font> 
+position<font color="gray"> = window.top_left</font> 
+title<font color="gray"> = Text(parent=self, text='<azure>models:', background=True)</font> 
+
+check_if_changed(<font color="gray"></font>)   <font color="gray"></font>
+update(<font color="gray"></font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">Sprite('brick')
+app.hotreloader = HotReloader()
+app.hotreloader.path = application.asset_folder / 'platformer.py'
+</div>
+</pre></div>
+<div id="InputField"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">InputField<font color="gray">(<a style="color: gray ;" href="#Button">Button</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">InputField()</params>
+
+name<font color="gray"> = 'input_field'</font> 
+is_editor<font color="gray"> = True</font> 
+editing<font color="gray"> = False</font> 
+text<font color="gray"> = '...'</font> 
+
+input(<font color="gray">key</font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">window.size = (window.size[0] * .5, window.size[1] * .5)
+test = InputField()
+</div>
+</pre></div>
+<div id="Inspector"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">Inspector<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">Inspector()</params>
+
+name<font color="gray"> = 'inspector'</font> 
+parent<font color="gray"> = scene.ui</font> 
+is_editor<font color="gray"> = True</font> 
+origin<font color="gray"> = (-.5, .5)</font> 
+position<font color="gray"> = window.top_left</font> 
+y<font color="gray"> = .5</font> 
+scale<font color="gray"> = (.25, 1)</font> 
+button_height<font color="gray"> = .025 * scene.editor_font_size</font> 
+script_amount<font color="gray"> = 0</font> 
+name_label<font color="gray"> = self.create_button('name_label')</font> 
+transform_labels<font color="gray"> = list()</font> 
+vec3_group<font color="gray"> = Entity()</font> 
+button<font color="gray"> = TransformField()</font> 
+space<font color="gray"> = Entity()</font> 
+model_field<font color="gray"> = self.create_button('model: ')</font> 
+filebrowser<font color="gray"> = FileBrowser()</font> 
+menu_toggler<font color="gray"> = self.model_field.add_script('menu_toggler')</font> 
+color_field<font color="gray"> = self.create_button('color: ')</font> 
+color_field_preview<font color="gray"> = Entity()</font> 
+color_select<font color="gray"> = Panel()</font> 
+menu_toggler<font color="gray"> = self.color_field.add_script('menu_toggler')</font> 
+texture_field<font color="gray"> = self.create_button('texture: ')</font> 
+filebrowser<font color="gray"> = FileBrowser()</font> 
+menu_toggler<font color="gray"> = self.texture_field.add_script('menu_toggler')</font> 
+scripts_label<font color="gray"> = self.create_button('editor_draggable')</font> 
+add_script_button<font color="gray"> = self.create_button('add script')</font> 
+menu_toggler<font color="gray"> = self.add_script_button.add_script('menu_toggler')</font> 
+menu_toggler_1<font color="gray"> = self.add_script_button.add_script('menu_toggler')</font> 
+internal_scripts_browser<font color="gray"> = FileBrowser()</font> 
+filebrowser<font color="gray"> = FileBrowser()</font> 
+new_y<font color="gray"> = 0</font> 
+script_labels<font color="gray"> = list()</font> 
+t<font color="gray"> = 0</font> 
+
+create_button(<font color="gray">name='', height=.025*scene.editor_size</font>)   <font color="gray"></font>
+update(<font color="gray"></font>)   <font color="gray"></font>
+update_inspector(<font color="gray"></font>)   <font color="gray"></font>
+
+</pre></div>
+<div id="MemoryCounter"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">MemoryCounter<font color="gray">(<a style="color: gray ;" href="#Text">Text</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">MemoryCounter(**kwargs)</params>
+
+parent<font color="gray"> = camera.ui</font> 
+position<font color="gray"> = window.bottom_right</font> 
+origin<font color="gray"> = (0.5, -0.5)</font> 
+process<font color="gray"> = psutil.Process(os.getpid())</font> 
+i<font color="gray"> = 0</font> 
+
+update(<font color="gray"></font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">MemoryCounter()
+</div>
+</pre></div>
+<div id="Panel"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">Panel<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">Panel(**kwargs)</params>
+
+parent<font color="gray"> = scene.ui</font> 
+model<font color="gray"> = 'quad'</font> 
+color<font color="gray"> = Button.color</font> 
+
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">p = Panel()
+</div>
+</pre></div>
+<div id="Plane"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">Plane<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">Plane(size=1, **kwargs)</params>
+
+name<font color="gray"> = 'plane'</font> 
+model<font color="gray"> = 'quad'</font> 
+rotation_x<font color="gray"> = 90</font> 
+scale<font color="gray"> = size</font> 
+
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">test = Plane((10, 5), texture='white_cube', color=color.yellow)
+camera.position = (10, 10, 10)
+camera.look_at(test)
+</div>
+</pre></div>
+<div id="PlayerController"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">PlayerController<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">PlayerController(**kwargs)</params>
+
+model<font color="gray"> = 'cube'</font> 
+origin_y<font color="gray"> = -.5</font> 
+scale_y<font color="gray"> = 2</font> 
+color<font color="gray"> = color.black</font> 
+collider<font color="gray"> = 'box'</font> 
+walk_speed<font color="gray"> = 8</font> 
+jump_height<font color="gray"> = 2</font> 
+jump_duration<font color="gray"> = .6</font> 
+jumping<font color="gray"> = False</font> 
+max_jumps<font color="gray"> = 1</font> 
+jumps_left<font color="gray"> = self.max_jumps</font> 
+air_time<font color="gray"> = 0</font> 
+y<font color="gray"> = raycast(self.world_position, self.down, ignore=(self, )).point[1]</font> 
+
+update(<font color="gray"></font>)   <font color="gray"></font>
+input(<font color="gray">key</font>)   <font color="gray"></font>
+jump(<font color="gray"></font>)   <font color="gray"></font>
+fall(<font color="gray"></font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">ground = Entity(model = 'cube', color = color.lime,
+    origin_y = .5, scale = (20, 10, 1), collider = 'box')
+
+wall = Entity(model='cube', color=color.azure, origin=(-.5,.5),
+            scale=(5,10), x=10, y=.5, collider='box')
+player_controller = PlayerController()
+</div>
+</pre></div>
+<div id="Scrollable"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">Scrollable<font color="gray">(<a style="color: gray ;" href="#Button">Button</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">Scrollable(**kwargs)</params>
+
+max<font color="gray"> = math.inf</font> 
+min<font color="gray"> = -math.inf</font> 
+scroll_speed<font color="gray"> = .1</font> 
+direction<font color="gray"> = (0,1,0)</font> 
+
+input(<font color="gray">key</font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">Scrollable()
+</div>
+</pre></div>
+<div id="Sky"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">Sky<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">Sky(**kwargs)</params>
+
+name<font color="gray"> = 'sky'</font> 
+model<font color="gray"> = 'sky_dome'</font> 
+texture<font color="gray"> = 'default_sky'</font> 
+
+
+</pre></div>
+<div id="Slider"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">Slider<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">Slider(min=0, max=1, default=0, **kwargs)</params>
+
+parent<font color="gray"> = camera.ui</font> 
+vertical<font color="gray"> = False</font> 
+min<font color="gray"> = min</font> 
+max<font color="gray"> = max</font> 
+default<font color="gray"> = default</font> 
+step<font color="gray"> = 0</font> 
+label<font color="gray"> = Text(parent=self, origin=(0.5, 0), x=-0.025, text='label')</font> 
+bg<font color="gray"> = Button(
+        parent</font> 
+knob<font color="gray"> = Draggable(
+        parent</font> 
+value<font color="gray"> = self.default</font> 
+dynamic<font color="gray"> = True</font> 
+rotation_z<font color="gray"> = -90</font> 
+
+drop(<font color="gray"></font>)   <font color="gray"></font>
+update(<font color="gray"></font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">origin = Entity(model='cube', color=color.green, scale = .05)
+slider = Slider(0, 12, default=1, scale=1, y=-.4, step=1, vertical=True)
+</div>
+</pre></div>
+<div id="Sprite"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">Sprite<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">Sprite(texture=None, **kwargs)</params>
+
+model<font color="gray"> = 'quad'</font> 
+texture<font color="gray"> = texture</font> 
+texture<font color="gray"> = value</font> 
+aspect_ratio<font color="gray"> = self.texture.width / self.texture.height</font> 
+scale_x<font color="gray"> = self.scale_y * self.aspect_ratio</font> 
+
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">s = Sprite(texture = 'panda_button')
+print(s.scale * 2)
+s.scale *= 2
+</div>
+</pre></div>
+<div id="Tooltip"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">Tooltip<font color="gray">(<a style="color: gray ;" href="#Text">Text</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">Tooltip(text='', **kwargs)</params>
+
+parent<font color="gray"> = camera.ui</font> 
+wordwrap<font color="gray"> = 40</font> 
+origin<font color="gray"> = (-.5, -.5)</font> 
+margin<font color="gray"> = (2, 2)</font> 
+enabled<font color="gray"> = False</font> 
+
+update(<font color="gray"></font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">app = Ursina()
+
+    tooltip_test = Tooltip(
+    '<scale:1.5><pink>' + 'Rainstorm' + '<scale:1> \n \n' +
+'''Summon a <blue>rain
+storm <default>to deal 5 <blue>water
+damage <default>to <red>everyone, <default>including <orange>yourself. <default>
+Lasts for 4 rounds.'''.replace('\n', ' '))
+
+    tooltip_test.enabled = True
+    app.run()
+</div>
+</pre></div>
+<div id="TransformField"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">TransformField<font color="gray">(<a style="color: gray ;" href="#Button">Button</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">TransformField()</params>
+
+name<font color="gray"> = 'transform_field'</font> 
+transform_type<font color="gray"> = 0</font> 
+axis<font color="gray"> = Vec3(1, 0, 0)</font> 
+target_entity<font color="gray"> = None</font> 
+move_entity<font color="gray"> = None</font> 
+direction
+
+input(<font color="gray">key</font>)   <font color="gray"></font>
+update(<font color="gray"></font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">tf = TransformField()
+tf.target_entity = Entity('target')
+</div>
+</pre></div>
+<div id="TransformGizmo"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">TransformGizmo<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">TransformGizmo()</params>
+
+name<font color="gray"> = 'transform_gizmo'</font> 
+model<font color="gray"> = 'cube'</font> 
+color<font color="gray"> = color.lime</font> 
+add_to_selection<font color="gray"> = False</font> 
+entity_to_scale<font color="gray"> = None</font> 
+dist_to_cam<font color="gray"> = 0</font> 
+tool<font color="gray"> = 'none'</font> 
+tools<font color="gray"> = {
+        'q' : 'none',
+        'w' : 'move',
+        'e' : 'rotate',
+        'r' : 'scale'
+        }</font> 
+button<font color="gray"> = None</font> 
+selection_buttons<font color="gray"> = list()</font> 
+prev_positions<font color="gray"> = list()</font> 
+original_parent<font color="gray"> = list()</font> 
+trash_list<font color="gray"> = list()</font> 
+
+update(<font color="gray"></font>)   <font color="gray"></font>
+input(<font color="gray">key</font>)   <font color="gray"></font>
+
+</pre></div>
+<div id="VideoRecorder"><div id="header" style="color: hsl(30, 70%, 50%); font-size:1.5em;">VideoRecorder<font color="gray">(<a style="color: gray ;" href="#Entity">Entity</a>)</font></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: white;">VideoRecorder(duration=30, name='untitled_video', **kwargs)</params>
+
+recording<font color="gray"> = False</font> 
+file_path<font color="gray"> = Path(application.asset_folder) / 'video_temp'</font> 
+i<font color="gray"> = 0</font> 
+duration<font color="gray"> = duration</font> 
+frame_skip<font color="gray"> = 2  # 30 fps</font> 
+video_name<font color="gray"> = name</font> 
+
+input(<font color="gray">key</font>)   <font color="gray"></font>
+update(<font color="gray"></font>)   <font color="gray"></font>
+convert_to_gif(<font color="gray"></font>)   <font color="gray"></font>
+
+<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">window.size = (1600/3,900/3)
+cube = primitives.RedCube()
+cube.animate_x(5, duration=5, curve='linear')
+vr = VideoRecorder()
+invoke(setattr, vr, 'recording', True, delay=1)
+</div>
+</pre></div></div></body>

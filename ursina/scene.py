@@ -23,7 +23,6 @@ class Scene(NodePath):
 
         self.entities = []
         self.hidden = NodePath('hidden')
-
         self.has_changes = False
 
 

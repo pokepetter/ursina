@@ -92,47 +92,37 @@ class Raycaster(Entity):
 
 sys.modules[__name__] = Raycaster()
 
-class RaycasterTest(Entity):
-
-    def __init__(self):
-        super().__init__()
-        d = Entity()
-        d.parent = scene
-        d.position = (0, 0, 2)
-        d.model = 'cube'
-        d.color = color.red
-        d.collider = 'box'
-
-        camera.position = (0, 15, -15)
-        camera.look_at(self)
-        camera.reparent_to(self)
-
-        self.model = 'cube'
-        self.color = color.lime
-
-        self.speed = .01
-        self.rotation_speed = .1
-
-
-    def update(self):
-        self.position += self.forward * held_keys['w'] * self.speed
-        self.position += self.left * held_keys['a'] * self.speed
-        self.position += self.back * held_keys['s'] * self.speed
-        self.position += self.right * held_keys['d'] * self.speed
-
-        self.rotation_y -= held_keys['q'] * self.rotation_speed
-        self.rotation_y += held_keys['e'] * self.rotation_speed
-
-        raycast(self.world_position, self.forward, 3, render, debug=True)
 
 
 
 if __name__ == '__main__':
     app = Ursina()
-
     from ursina.entity import Entity
+
+    d = Entity(parent=scene, position=(0,0,2), model='cube', color=color.red, collider='box')
+    e = Entity(model='cube', color=color.lime)
+
+    camera.position = (0, 15, -15)
+    camera.look_at(e)
+    # camera.reparent_to(e)
+    speed = .01
+    rotation_speed = .1
+
+
+    def update():
+        e.position += e.forward * held_keys['w'] * speed
+        e.position += e.left * held_keys['a'] * speed
+        e.position += e.back * held_keys['s'] * speed
+        e.position += e.right * held_keys['d'] * speed
+
+        e.rotation_y -= held_keys['q'] * rotation_speed
+        e.rotation_y += held_keys['e'] * rotation_speed
+
+        raycast(e.world_position, e.forward, 3, render, debug=True)
+
+
+
     raycast((0,0,-2), (0,0,1), 5, render, debug=False)
-    r = RaycasterTest()
 
     EditorCamera()
     app.run()

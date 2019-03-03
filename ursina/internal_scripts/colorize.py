@@ -3,11 +3,7 @@ from ursina import color
 
 
 
-def colorize(model,
-    left=color.white, right=color.blue,
-    down=color.red, up=color.green,
-    back=color.white, forward=color.white):
-
+def colorize(model, left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white):
     if model.normals == None:
         model.generate_normals()
 

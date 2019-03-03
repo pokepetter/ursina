@@ -33,11 +33,11 @@ class VideoRecorder(Entity):
                 shutil.rmtree(self.file_path)   # delete temp folder
             self.file_path.mkdir()
             print('start recording,', self.duration, self.file_path)
-            window.fps_counter = False
+            window.fps_counter.enabled = False
             window.exit_button.visible = False
         else:
-            window.fps_counter = False
-            window.exit_button.enabled = False
+            window.fps_counter.enabled = True
+            window.exit_button.visible = True
 
         self._recording = value
 

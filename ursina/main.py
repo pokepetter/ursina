@@ -11,11 +11,11 @@ class Ursina(ShowBase):
         ShowBase.__init__(self)
         render = base.render
         application.base = base
-        window.load_defaults()
+        window.late_init()
 
         # camera
-        camera.cam = base.camera
-        camera.cam.reparent_to(camera)
+        camera._cam = base.camera
+        camera._cam.reparent_to(camera)
         camera.parent = base.render
         camera.render = base.render
         camera.position = (0, 0, -20)
@@ -26,7 +26,7 @@ class Ursina(ShowBase):
         # reapply screen effect to make it work in new resolution
         # print('adfaaaaaa:', application.base.win)
         # from direct.filter.CommonFilters import CommonFilters
-        # filters = CommonFilters(application.base.win, application.base.cam)
+        # filters = CommonFilters(application.base.win, application.base._cam)
         # filters.setAmbientOcclusion(
         #     numsamples=64,
         #     radius=0.1,
@@ -47,7 +47,7 @@ class Ursina(ShowBase):
         base.buttonThrowers[0].node().setButtonDownEvent('buttonDown')
         base.buttonThrowers[0].node().setButtonUpEvent('buttonUp')
         base.buttonThrowers[0].node().setButtonRepeatEvent('buttonHold')
-        self.dictionary = {
+        self._input_name_changes = {
             'mouse1' : 'left mouse down',
             'mouse1 up' : 'left mouse up',
             'mouse2' : 'middle mouse down',
@@ -100,10 +100,10 @@ class Ursina(ShowBase):
         self.mouse = mouse
 
         scene.set_up()
-        self.update_task = taskMgr.add(self.update, "update")
+        self._update_task = taskMgr.add(self._update, "update")
 
 
-    def update(self, task):
+    def _update(self, task):
         # time between frames
         dt = globalClock.getDt()
         time.dt = dt
@@ -135,16 +135,16 @@ class Ursina(ShowBase):
 
 
     def input_hold(self, key):
-        if key in self.dictionary:
-            key = self.dictionary[key]
+        if key in self._input_name_changes:
+            key = self._input_name_changes[key]
 
         key += ' hold'
         self.input(key)
 
 
     def input(self, key):
-        if key in self.dictionary:
-            key = self.dictionary[key]
+        if key in self._input_name_changes:
+            key = self._input_name_changes[key]
 
         key = key.replace('control-', '')
         key = key.replace('shift-', '')
@@ -184,7 +184,7 @@ class Ursina(ShowBase):
             window.display_mode = 'default'
 
 
-    def load_editor(self):
+    def _load_editor(self):
         scene.editor = load_script('editor')
 
     def run(self):
@@ -200,8 +200,4 @@ class Ursina(ShowBase):
 
 if __name__ == '__main__':
     app = Ursina()
-    # app.load_editor()
-
-    # load_scene('minecraft_clone')
-    print('scene entity', scene)
     app.run()

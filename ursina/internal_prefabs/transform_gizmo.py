@@ -99,7 +99,7 @@ class TransformGizmo(Entity):
             if mouse.delta_drag[0] != 0 or mouse.delta_drag[1] != 0:
                 self.dist_to_cam = distance(
                     mouse.hovered_entity.get_pos(camera.render),
-                    camera.cam.get_pos(camera.render)) * .2
+                    camera._cam.get_pos(camera.render)) * .2
 
                 for i, e in enumerate(scene.editor.selection):
                     e.position = (

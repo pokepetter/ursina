@@ -28,11 +28,6 @@ def load_texture(name, path=None):
 
     return None
 
-if __name__ == '__main__':
-    from ursina import *
-    app = Ursina()
-    Entity(model='quad', texture='white_cube')
-    app.run()
 
 
 def compress_textures(name=''):
@@ -83,3 +78,11 @@ def compress_textures(name=''):
                 )
             print('    compressing to png:', application.compressed_textures_folder / (Path(f).stem + '.png'))
         # elif f.endswith('.png'):
+
+
+
+if __name__ == '__main__':
+    from ursina import *
+    app = Ursina()
+    Entity(model='quad', texture='white_cube')
+    app.run()

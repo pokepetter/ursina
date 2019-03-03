@@ -156,7 +156,7 @@ def save_prefab(target, name=None, path='prefabs'):
 
         print('saved prefab:', path, target.name)
 
-def vec3_to_string(vec3):
+def _vec3_to_string(vec3):
     string = '(' + str(round(vec3[0], 3)) + ', ' + str(round(vec3[1], 3))
     if vec3[2] is not 0:
         string += ', ' + str(round(vec3[2]), 3)
@@ -182,7 +182,7 @@ def load_prefab(module_name, add_to_caller=False):
 
     return prefab
 
-def load_scene(module_name):    #broken for the time being
+def _load_scene(module_name):    #broken for the time being
     if inspect.isclass(module_name):
         class_instance = module_name()
         # scene =
