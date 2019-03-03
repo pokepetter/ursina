@@ -20,7 +20,7 @@ class Text(Entity):
     size = .025
     default_font = ''
 
-    def __init__(self, text=None, **kwargs):
+    def __init__(self, text='', **kwargs):
         super().__init__()
         self.name = 'text'
         self.size = Text.size
@@ -47,7 +47,7 @@ class Text(Entity):
         self.scale_override = 1
         self.background = None
 
-        if text:
+        if text != '':
             self.text = text
         #     # self.line_height = 1
         for key, value in kwargs.items():
@@ -180,6 +180,7 @@ class Text(Entity):
 
     @color.setter
     def color(self, value):
+        self._color = value
         for tn in self.text_nodes:
             tn.node().setTextColor(value)
 
@@ -318,25 +319,27 @@ class Text(Entity):
         self.background.color = color
 
 
-    def appear(self):
+    def appear(self, speed=.025, delay=0):
+        from ursina.ursinastuff import invoke
+
         for i, tn in enumerate(self.text_nodes):
             tn.setX(tn.getX()-999999)
-
-        speed = .025
 
         x = 0
         for i, tn in enumerate(self.text_nodes):
             target_text = tn.node().getText()
             print(target_text)
-            invoke(tn.setX, tn.getX()+999999, delay=(i+x)*speed)
+            invoke(tn.setX, tn.getX()+999999, delay=((i+x)*speed) + delay)
 
             new_text = ''
             for j, char in enumerate(target_text):
                 # print(char)
                 new_text += char
-                invoke(tn.node().setText, new_text, delay=(i+x+j)*speed)
+                invoke(tn.node().setText, new_text, delay=((i+x+j)*speed) + delay)
 
             x += len(target_text)
+
+        return len(self.text) * speed   # duration
 
 
     def get_width(string, font=None):
@@ -349,13 +352,15 @@ class Text(Entity):
         return w
 
 
+
 if __name__ == '__main__':
     app = Ursina()
     # Text.size = .001
-    descr = ('<scale:1.5><orange>' + 'Rainstorm' + '<scale:1>\n' +
-'''Summon a <azure>rain storm <default>to deal 5 <azure>water
-damage <default>to <red>everyone, <default>including <orange>yourself. <default>
-Lasts for 4 rounds.''')
+    descr = dedent('<scale:1.5><orange>' + 'Rainstorm' + '<scale:1>\n' +
+        '''Summon a <azure>rain storm <default>to deal 5 <azure>water
+        damage <default>to <red>everyone, <default>including <orange>yourself. <default>
+        Lasts for 4 rounds.'''
+        )
 
     Text.default_font = 'VeraMono.ttf'
     test = Text(descr)
