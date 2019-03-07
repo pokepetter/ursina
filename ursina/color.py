@@ -28,7 +28,10 @@ class Color(Vec4):
 
     @property
     def hsv(self):
-        return to_hsv(self[0], self[1], self[2], self[3])
+        result = to_hsv((self[0], self[1], self[2], self[3]))
+        result[0] =  math.floor(result[0] * 360)
+        return result
+        
     @property
     def h(self):
         return self.hsv[0]
@@ -43,11 +46,11 @@ class Color(Vec4):
     def brightness(self):
         return brightness(self)
 
-    @property
+
     def inverse(self):
         return inverse(self)
 
-    def tint(self, abount):
+    def tint(self, amount):
         return tint(self, amount)
 
 
@@ -157,5 +160,8 @@ if __name__ == '__main__':
         b.text_entity.scale *= .5
 
     grid_layout(p.children, max_x=8)
+
+    for name in ('r', 'g', 'b', 'h', 's', 'v', 'brightness'):
+        print(name + ':', getattr(color.random_color(), name))
 
     app.run()

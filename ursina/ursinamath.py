@@ -1,6 +1,7 @@
 import operator
 from math import sqrt
 from panda3d.core import Vec4
+from ursina.color import Color
 
 
 def distance(a, b):
@@ -34,9 +35,9 @@ def lerp(a, b, t):
     if isinstance(a, (int, float, complex)):
         return a + (b - a) * t
 
-    elif isinstance(a, Vec4):
-        return [lerp(e[0], e[1], t) for e in zip(a,b)]
-
+    elif isinstance(a, Color) and isinstance(b, Color):
+        col = [lerp(e[0], e[1], t) for e in zip(a,b)]
+        return Color(col[0], col[1], col[2], col[3])
 
     else:
         lerped = list()
@@ -103,4 +104,7 @@ if __name__ == '__main__':
     e1 = Entity(position = (0,0,0))
     e2 = Entity(position = (0,1,1))
     distance(e1, e2)
+
+    between_color = lerp(color.lime, color.magenta, .5)
+    print(between_color)
     app.run()
