@@ -126,15 +126,18 @@ class Texture():
 if __name__ == '__main__':
     from ursina import *
     app = Ursina()
-    # t = load_texture('brick')
-    # # img = Image.new('RGB', (8,8), (255,128,0))
-    # # t = Texture(img)
-    # print(t.size)
-    # printvar(t.filtering)
-    # printvar(t.name)
-    # printvar(t.path)
-    # printvar(len(t.pixels))
-    # t.set_pixel(0,0, color.red)
-    # Texture(str(application.internal_textures_folder) + '/white_cube.png')
-    # Texture(Image.new('RGB', (8,8)))
-    Texture(PandaTexture())
+    '''
+        The Texture class rarely used manually but usually instantiated
+        when assigning a texture to an Entity
+        texture = Texture(path/PIL.Image/panda3d.core.Texture)
+
+        A texture file can be a .png, .jpg or .psd.
+        If it's a .psd it and no compressed version exists, it will compress it automatically.
+    '''
+
+    e = Entity(model='quad', texture='brick')
+
+    for y in range(e.texture.height):
+        for x in range(e.texture.width):
+            if e.texture.get_pixel(x,y) == color.blue:
+                print('found blue pixel at:', x, y)

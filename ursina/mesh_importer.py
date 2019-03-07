@@ -57,7 +57,7 @@ def compress_models(path=application.models_folder, outpath=application.compress
     if not application.compressed_models_folder.exists():
         application.compressed_models_folder.mkdir()
 
-    export_script_path = application.internal_scripts_folder / 'blend_export.py'
+    export_script_path = application.internal_scripts_folder / '_blend_export.py'
 
     for f in glob.glob(f'{path}/**/{name}.blend'):
         # print(f)

@@ -52,7 +52,7 @@ class Entity(NodePath):
         self.eternal = False    # eternal entities does not get destroyed on scene.clear()
         self.model = None
         self.color = color.white
-        self.texture = None
+        self.texture = None     # tries to set to camel_to_snake(self.type)
         try:
             self.texture = camel_to_snake(self.type)
         except:
@@ -61,18 +61,23 @@ class Entity(NodePath):
         self.collider = None
         self.scripts = list()
         self.animations = list()
-        self.prefab_name = None
         self.hovered = False
 
         self.origin = Vec3(0,0,0)
         self.position = Vec3(0,0,0)
-        self.x, self.y, self.z = 0, 0, 0
+        self.x = 0
+        self.y = 0
+        self.z = 0
 
         self.rotation = Vec3(0,0,0)
-        self.rotation_x, self.rotation_y, self.rotation_z = 0, 0, 0
+        self.rotation_x = 0
+        self.rotation_y = 0
+        self.rotation_z = 0
 
         self.scale = Vec3(1,1,1)
-        self.scale_x, self.scale_y, self.scale_z = 1, 1, 1
+        self.scale_x = 1
+        self.scale_y = 1
+        self.scale_z = 1
 
 
         for key, value in kwargs.items():
@@ -841,15 +846,26 @@ class Entity(NodePath):
 if __name__ == '__main__':
     from ursina import *
     app = main.Ursina()
-    cols = list()
-    m=Cylinder(12)
-    print(m.normals)
-    for v in m.vertices:
-        cols.append(color.color(0,0,abs(v[2])))
+    e = Entity(parent=scene, model='cube', collider='box', texture='brick')
 
-    m.colors = cols
-    m.generate()
-    e = Entity(parent=scene, model=Cylinder(12), collider='box', texture='brick')
-    e.model = m
-    EditorCamera()
+    # using Entity class with inheritance
+    class Player(Entity):
+        def __init__(self):
+            super().__init__()
+            self.model='cube'
+            self.color = color.orange
+            self.scale_y = 2
+
+        # input and update functions gets automatically called by the engine
+
+        # def input(self, key):
+        #     if key == 'space':
+        #         self.color = self.color.inverse
+        #
+        # def update(self):
+        #     self.x += held_keys['d'] * time.dt * 10
+        #     self.x -= held_keys['a'] * time.dt * 10
+
+    player = Player()
+
     app.run()

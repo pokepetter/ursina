@@ -44,7 +44,7 @@ class Camera(Entity):
 
         self.orthographic = False
         self.fov = 40
-        self.clip_plane_near = 0.00001
+        self.clip_plane_near = 0.0001
         self.clip_plane_far = 10000
 
         self.ui_display_region = win.make_display_region()

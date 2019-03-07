@@ -95,7 +95,7 @@ if __name__ == '__main__':
     c = Cylinder(6, height=1, start=-.5)
     c = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
     e = Button(parent=scene, model=c, collider='mesh')
-    e.collider = MeshCollider(e)
+    # e.collider = MeshCollider(e)
     # printvar(e.collider.node_path)
     e.collider.visible = True
     e.color = color.red

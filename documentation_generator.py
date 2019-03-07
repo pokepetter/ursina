@@ -3,6 +3,7 @@ from pprint import pprint
 import keyword
 import builtins
 import textwrap
+from ursina import color, lerp
 # def is_module(str):
 #     for line in str.split('\n'):
 #         if line.startswith('class '):
@@ -135,7 +136,7 @@ def get_functions(str, is_class=False):
 
             params = line.replace('(self, ', '(')
             params = params.replace('(self)', '()')
-            params = params.split('(')[1].split(')')[0]
+            params = params.split('(', 1)[1].rsplit(')', 1)[0]
 
             comment = ''
             if '#' in line:
@@ -189,7 +190,7 @@ module_info = dict()
 class_info = dict()
 
 for f in path.glob('*.py'):
-    if '__' in str(f):
+    if f.name.startswith('_'):
         continue
 
     with open(f) as t:
@@ -232,7 +233,7 @@ for f in path.glob('*.py'):
 
 prefab_info = dict()
 for f in path.glob('internal_prefabs/*.py'):
-    if '__' in str(f):
+    if f.name.startswith('_'):
         continue
 
     # if f.is_file() and f.name.endswith(('.py', )):
@@ -249,38 +250,119 @@ for f in path.glob('internal_prefabs/*.py'):
             prefab_info[class_name] = (params, attrs, methods, example)
 
 
-style = '''
-    <style>
-        html {
-          scrollbar-face-color: #646464;
-          scrollbar-base-color: #646464;
-          scrollbar-3dlight-color: #646464;
-          scrollbar-highlight-color: #646464;
-          scrollbar-track-color: #000;
-          scrollbar-arrow-color: #000;
-          scrollbar-shadow-color: #646464;
-          scrollbar-dark-shadow-color: #646464;
-        }
+script_info = dict()
+for f in path.glob('internal_scripts/*.py'):
+    if f.name.startswith('_'):
+        continue
 
-        ::-webkit-scrollbar { width: 8px; height: 3px;}
-        ::-webkit-scrollbar-button {  background-color: #222; }
-        ::-webkit-scrollbar-track {  background-color: #646464;}
-        ::-webkit-scrollbar-track-piece { background-color: #111;}
-        ::-webkit-scrollbar-thumb { height: 50px; background-color: #222; border-radius: 3px;}
-        ::-webkit-scrollbar-corner { background-color: #646464;}}
-        ::-webkit-resizer { background-color: #666;}
+    # if f.is_file() and f.name.endswith(('.py', )):
+    with open(f) as t:
+
+        code = t.read()
+        if not 'class ' in code:
+            name = f.name.split('.')[0]
+            attrs, funcs = list(), list()
+            attrs = get_module_attributes(code)
+            funcs = get_functions(code)
+            example = get_example(code)
+            if attrs or funcs:
+                script_info[name] = ('', attrs, funcs, example)
+
+        classes = get_classes(code)
+        for class_name, class_definition in classes.items():
+            if 'def __init__' in class_definition:
+                params =  '__init__('+ class_definition.split('def __init__(')[1].split('\n')[0][:-1]
+            attrs = get_class_attributes(class_definition)
+            methods = get_functions(class_definition, is_class=True)
+            example = get_example(code)
+
+            script_info[class_name] = (params, attrs, methods, example)
+
+asset_info = dict()
+model_names = [f'\'{f.stem}\'' for f in path.glob('internal_models/compressed/*.ursinamesh')]
+asset_info['models'] = ('', model_names, '', '''e = Entity(model='quad')''')
+
+texture_names = [f'\'{f.stem}\'' for f in path.glob('internal_textures/*.*')]
+asset_info['textures'] = ('', texture_names, '', '''e = Entity(model='cube', texture='brick')''')
+
+for f in path.glob('internal_models/procedural/*.py'):
+    if f.name.startswith('_'):
+        continue
+
+    with open(f) as t:
+        code = t.read()
+        classes = get_classes(code)
+        for class_name, class_definition in classes.items():
+            if 'def __init__' in class_definition:
+                params =  '__init__('+ class_definition.split('def __init__(')[1].split('\n')[0][:-1]
+            attrs = get_class_attributes(class_definition)
+            methods = get_functions(class_definition, is_class=True)
+            example = get_example(code)
+
+            asset_info[class_name] = (params, attrs, methods, example)
+
+def html_color(color):
+    return f'hsl({color.h}, {int(color.s*100)}%, {int(color.v*100)}%)'
+
+base_color = color.color(60, 1, .05)
+# background_color = color.color(0,0,.9)
+background_color = lerp(base_color, base_color.inverse(), .1)
+text_color = lerp(background_color, background_color.inverse(), .9)
+example_color = lerp(background_color, text_color, .1)
+scrollbar_color = html_color(lerp(background_color, text_color, .1))
+link_color = html_color(color.gray)
+init_color = html_color(base_color.inverse())
+
+style = f'''
+    <style>
+        html {{
+          scrollbar-face-color: {html_color(text_color)};
+          scrollbar-base-color: {html_color(text_color)};
+          scrollbar-3dlight-color: {html_color(text_color)}4;
+          scrollbar-highlight-color: {html_color(text_color)};
+          scrollbar-track-color: {html_color(background_color)};
+          scrollbar-arrow-color: {html_color(background_color)};
+          scrollbar-shadow-color: {html_color(text_color)};
+          scrollbar-dark-shadow-color: {html_color(text_color)};
+        }}
+
+        ::-webkit-scrollbar {{ width: 8px; height: 3px;}}
+        ::-webkit-scrollbar-button {{  background-color: {scrollbar_color}; }}
+        ::-webkit-scrollbar-track {{  background-color: {html_color(background_color)};}}
+        ::-webkit-scrollbar-track-piece {{ background-color: {html_color(background_color)};}}
+        ::-webkit-scrollbar-thumb {{ height: 50px; background-color: {scrollbar_color}; border-radius: 3px;}}
+        ::-webkit-scrollbar-corner {{ background-color: {html_color(background_color)};}}
+        ::-webkit-resizer {{ background-color: {html_color(background_color)};}}
+
+        a {{
+          color: {link_color};
+        }}
+
+        g {{
+            color: gray;
+        }}
+
+        .example {{
+            # font-color: red;
+            padding-left: 1em;
+            background-color: {html_color(example_color)};
+        }}
     </style>
 
     <body style="
         margin: auto;
-        background-color: hsl(0, 0%, 10%);
-        color: hsl(0, 0%, 80%);
+        # background-color: hsl(0, 0%, 10%);
+        # color: hsl(0, 0%, 80%);
+        background-color: {html_color(background_color)};
+        color: {html_color(text_color)};
         font-family: monospace;
         position: absolute;
         top:0;
         left: 24em;
         font-size: 1.25em;
-        font-weight: lighter;>
+        font-weight: lighter;
+        max-width: 1200px;
+        >
     '''
 html = ''
 sidebar = '''<pre><div style="
@@ -292,13 +374,9 @@ sidebar = '''<pre><div style="
     bottom: 0;
     overflow-y: scroll;
     width: 15em;
-    background-color: hsl(0, 0%, 10%);
-    color: hsl(0, 0%, 80%);
-    # overflow: hidden;
     ">'''
 
-
-for i, class_dictionary in enumerate((module_info, class_info, prefab_info)):
+for i, class_dictionary in enumerate((module_info, class_info, prefab_info, script_info, asset_info)):
     for name, attrs_and_functions in class_dictionary.items():
         params, attrs, funcs, example = attrs_and_functions[0], attrs_and_functions[1], attrs_and_functions[2], attrs_and_functions[3]
 
@@ -308,43 +386,48 @@ for i, class_dictionary in enumerate((module_info, class_info, prefab_info)):
 
         name = name.replace('ShowBase', '')
         name = name.replace('NodePath', '')
-        for parent_class in ('Entity', 'Button', 'Text', 'Collider'):
-            name = name.replace(f'({parent_class})', f'(<a style="color: gray ;" href="#{parent_class}">{parent_class}</a>)')
+        for parent_class in ('Entity', 'Button', 'Draggable', 'Text', 'Collider', 'Mesh', 'Prismatoid'):
+            name = name.replace(f'({parent_class})', f'(<a style="color: gray;" href="#{parent_class}">{parent_class}</a>)')
 
         base_name = name
         if '(' in base_name:
             base_name = base_name.split('(')[0]
             base_name = base_name.split(')')[0]
-        name = name.replace('(', '<font color="gray">(')
-        name = name.replace(')', ')</font>')
+        name = name.replace('(', '<g>(')
+        name = name.replace(')', ')</g>')
 
-        color = f'color: hsl({90-(i*30)}, 70%, 50%)'
-            # color = ('color: hsl(140, 70%, 50%)')
+        v = lerp(text_color.v, background_color.v, .2)
+        col = color.color(90-(i*30), 1, v)
+        col = html_color(col)
 
-        sidebar += f'''<a style="{color}" href="#{base_name}">{base_name}</a>\n'''
+        sidebar += f'''<a style="color:{col};" href="#{base_name}">{base_name}</a>\n'''
         html += '\n'
-        html += f'''<div id="{base_name}"><div id="header" style="{color}; font-size:1.5em;">{name}</div>'''
+        html += f'''<div id="{base_name}"><div id="header" style="color:{col}; font-size:1.5em;">{name}</div>'''
         html += '<pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">'
         if params:
-            params = f'<params id="params" style="color: white;">{params}</params>\n'
+            params = f'<params id="params" style="color: {init_color};">{params}</params>\n'
             html += params + '\n'
 
         for e in attrs:
             if ' = ' in e:
-                e = f'''{e.split(' = ')[0]}<font color="gray"> = {e.split(' = ')[1]}</font> '''
+                e = f'''{e.split(' = ')[0]}<g> = {e.split(' = ')[1]}</g> '''
 
             html += f'''{e}\n'''
 
         html += '\n'
         for e in funcs:
-            e = f'{e[0]}(<font color="gray">{e[1]}</font>)   <font color="gray">{e[2]}</font>'
+            e = f'{e[0]}(<g>{e[1]}</g>)   <g>{e[2]}</g>'
             html += e + '\n'
 
         if example:
-            html += '\n<div id="example" style="font-color: red; padding-left: 1em; background-color: hsl(0, 0%, 15%);">' + example +'\n</div>'
+            html += '\n<div class="example">' + example +'\n</div>'
 
 
         html += '\n</pre></div>'
+
+        html = html.replace('<g></g>', '')
+
+    sidebar += '\n'
 
 # print(html)
 sidebar += '</div>'
