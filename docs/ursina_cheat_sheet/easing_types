@@ -1,7 +1,7 @@
-example: enitity.animate_y(entity.position + entity.up, .5, curve='ease_in_sine')
+example: enitity.animate_y(entity.position + entity.up, .5, curve='curve_in_sine')
 
 linear
 
-ease_in, ease_out, ease_in_out
+curve_in, curve_out, curve_in_out
 sine, quad, cubic, quart, quint, expo, circ, back, elastic, bounce
-# combine like this: 'ease_in_expo', 'ease_in_out_elastic'
+# combine like this: 'curve_in_expo', 'curve_in_out_elastic'

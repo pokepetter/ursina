@@ -60,7 +60,7 @@ look_at(entity/(x,y,z))
 has_ancestor(entity)
 children
 
-animate(name, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True)
+animate(name, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True)
 animate_position()
 animate_x(), animate_y(), animate_z()
 animate_rotation()

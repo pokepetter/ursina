@@ -5,16 +5,16 @@ ursina engine
 # size 1.25, bold
 --------------------------------------
 # normal
-developer first
+open source game engine
 # bold
 --------------------------------------
 # normal
 
-<a href="https://github.com/pokepetter/ursina">[GitHub]</a>    <a href="ursina_cheat_sheet/ursina_cheat_sheet_code_browser.html">[Documentation]</a>    <a href="https://twitter.com/petteramland">[Twitter]</a>
+<a href="https://github.com/pokepetter/ursina">[GitHub]</a>    <a href="documentation.html">[Documentation]</a>    <a href="https://twitter.com/petteramland">[Twitter]</a>
 
 
 # left, width 900, size 2, bold,
-#image made_with_ursina.jpg
+# image made_with_ursina.jpg
 
 # size 2, bold
 Powered by Python
@@ -38,12 +38,22 @@ Powered by Python
 
 
 # size 2, bold
-Open Source
+Platforms
+# normal, size 1
+
+        * Windows
+        * Mac
+        * Linux
+
+    Web support coming soon.
+
+
+# size 2, bold
+License
 # normal, size 1
 
     Ursina is completely free. Licenced under the permissive MIT license,
-    you can use it for whatever you want. No supscription fee, no revenue cut,
-    no logging in to be allowed to use it.
+    you can use it for whatever you want. No supscription fee, no revenue cut.
 
 
 

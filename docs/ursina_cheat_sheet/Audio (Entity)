@@ -21,6 +21,6 @@ play()
 pause()
 resume()
 stop(destroy=True)
-fade(value, duration=.5, delay=0, curve='ease_in_expo', resolution=None, interrupt=True)
-fade_in(value=1, duration=.5, delay=0, curve='ease_in_expo', resolution=None, interrupt=True, destroy_on_ended=False)
-fade_out(value=0, duration=.5, delay=0, curve='ease_in_expo', resolution=None, interrupt=True, destroy_on_ended=True):
+fade(value, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True)
+fade_in(value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, destroy_on_ended=False)
+fade_out(value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, destroy_on_ended=True):

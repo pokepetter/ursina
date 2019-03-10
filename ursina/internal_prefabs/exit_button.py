@@ -22,4 +22,11 @@ class ExitButton(Button):
 
 
 if __name__ == '__main__':
-    app = Ursina().run()
+
+    '''
+    This is the button in the upper right corner.
+    You can click on it or press Shift+Q to close the program.
+    To disable it, set window.exit_button.enabled to False
+    '''
+    app = Ursina()
+    app.run()

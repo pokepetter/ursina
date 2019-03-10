@@ -24,8 +24,8 @@ from direct.interval.IntervalGlobal import Sequence, Func, Wait
 
 # from direct.showbase import Loader
 from ursina.ursinamath import lerp
-from ursina import easing_types
-from ursina.easing_types import *
+from ursina import curve
+from ursina.curve import *
 from ursina.useful import *
 from ursina.mesh_importer import load_model
 from ursina.texture_importer import load_texture
@@ -57,6 +57,9 @@ class Entity(NodePath):
             self.texture = camel_to_snake(self.type)
         except:
             pass
+        self.render_queue = 0
+        self.double_sided = False
+
         self.collision = False
         self.collider = None
         self.scripts = list()
@@ -302,7 +305,7 @@ class Entity(NodePath):
                 print('collider error:', value, 'is not a collider')
 
         if name == 'render_queue':
-            if self.model:
+            if hasattr(self, 'model') and self.model:
                 self.model.setBin('fixed', value)
 
         if name == 'double_sided':
@@ -744,13 +747,13 @@ class Entity(NodePath):
 #------------
 # ANIMATIONS
 #------------
-    def animate(self, name, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+    def animate(self, name, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
         Sequence(
             Wait(delay),
             Func(self._animate, name, value, duration, curve, resolution, interrupt)
         ).start()
 
-    def _animate(self, name, value, duration=.1, curve='ease_in_expo', resolution=None, interrupt=True):
+    def _animate(self, name, value, duration=.1, curve=curve.in_expo, resolution=None, interrupt=True):
         animator_name = name + '_animator'
         # print('start animating value:', name, animator_name )
         if interrupt and hasattr(self, animator_name):
@@ -773,46 +776,44 @@ class Entity(NodePath):
 
         for i in range(resolution+1):
             t = i / resolution
-            if hasattr(easing_types, curve):
-                t = getattr(easing_types, curve)(t)
-            else:
-                t = getattr(easing_types, 'ease_in_expo')(t)
+            t = curve(t)
+
             sequence.append(Wait(duration / resolution))
             sequence.append(Func(setattr, self, name, lerp(getattr(self, name), value, t)))
 
         sequence.start()
         return sequence
 
-    def animate_position(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+    def animate_position(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
         self.animate('x', value[0], duration, delay, curve, resolution, interrupt)
         self.animate('y', value[1], duration, delay, curve, resolution, interrupt)
         self.animate('z', value[2], duration, delay, curve, resolution, interrupt)
-    def animate_x(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+    def animate_x(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
         self.animate('x', value, duration, delay, curve, resolution, interrupt)
-    def animate_y(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+    def animate_y(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
         self.animate('y', value, duration, delay, curve, resolution, interrupt)
-    def animate_z(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+    def animate_z(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
         self.animate('z', value, duration, delay, curve, resolution, interrupt)
 
 
-    def animate_rotation(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+    def animate_rotation(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
         self.animate('rotation_x', value[0], duration, delay, curve, resolution, interrupt)
         self.animate('rotation_y', value[1], duration, delay, curve, resolution, interrupt)
         self.animate('rotation_z', value[2], duration, delay, curve, resolution, interrupt)
-    def animate_rotation_x(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+    def animate_rotation_x(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
         self.animate('rotation_x', value, duration, delay, curve, resolution, interrupt)
-    def animate_rotation_y(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+    def animate_rotation_y(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
         self.animate('rotation_y', value, duration, delay, curve, resolution, interrupt)
-    def animate_rotation_z(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+    def animate_rotation_z(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
         self.animate('rotation_z', value, duration, delay, curve, resolution, interrupt)
 
-    def animate_scale(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+    def animate_scale(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
         self.animate('scale', value, duration, delay, curve, resolution, interrupt)
-    def animate_scale_x(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+    def animate_scale_x(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
         self.animate('scale_x', value, duration, delay, curve, resolution, interrupt)
-    def animate_scale_y(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+    def animate_scale_y(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
         self.animate('scale_y', value, duration, delay, curve, resolution, interrupt)
-    def animate_scale_z(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+    def animate_scale_z(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
         self.animate('scale_z', value, duration, delay, curve, resolution, interrupt)
 
 
@@ -832,13 +833,13 @@ class Entity(NodePath):
             ))
         s.start()
 
-    def animate_color(self, value, duration=.1, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+    def animate_color(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
         self.animate('color', value, duration, delay, curve, resolution, interrupt)
 
-    def fade_out(self, duration=.5, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+    def fade_out(self, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
         self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], 0), duration, delay, curve, resolution, interrupt)
 
-    def fade_in(self, duration=.5, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+    def fade_in(self, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
         self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], 1), duration, delay, curve, resolution, interrupt)
 
 
@@ -858,13 +859,13 @@ if __name__ == '__main__':
 
         # input and update functions gets automatically called by the engine
 
-        # def input(self, key):
-        #     if key == 'space':
-        #         self.color = self.color.inverse
-        #
-        # def update(self):
-        #     self.x += held_keys['d'] * time.dt * 10
-        #     self.x -= held_keys['a'] * time.dt * 10
+        def input(self, key):
+            if key == 'space':
+                self.color = self.color.inverse
+
+        def update(self):
+            self.x += held_keys['d'] * time.dt * 10
+            self.x -= held_keys['a'] * time.dt * 10
 
     player = Player()
 

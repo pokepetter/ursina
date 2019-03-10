@@ -157,38 +157,18 @@ class Mesh(NodePath):
         colorize(self, left, right, down, up, back, forward)
 
 
-if __name__  == '__main__':
+if __name__ == '__main__':
     from ursina import *
     app = Ursina()
-    # verts = ((0,0,0), (1,0,0), (.5, 1, 0), (-.5,1,0))
-    # tris = (1, 2, 0, 2, 3, 0)
-    # tris = ((0,1,2), (0,2,3))
-    # # tris = ((0,1,2,3),)
-    # uvs = ((0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0))
-    # colors = (color.red, color.blue, color.lime, color.black)
-    # sphere = Sphere()
-    sphere = load_model('sphere')
-    # print(sphere.vertices, sphere.triangles)
-    verts, tris = sphere.vertices, sphere.triangles
-    # m = Mesh(vertices=verts, triangles=tris, uvs=uvs, colors=colors)
-    m = Mesh()
-    m.mode = 'triangle'
-    m.vertices = verts
-    m.triangles = tris
 
+    verts = ((0,0,0), (1,0,0), (.5, 1, 0), (-.5,1,0))
+    tris = (1, 2, 0, 2, 3, 0)
+    uvs = ((1.0, 0.0), (0.0, 1.0), (0.0, 0.0), (1.0, 1.0))
+    colors = (color.red, color.blue, color.lime, color.black)
 
-    e = Entity(name='mesh_test', model=m)
-    e.model.colorize()
-    # m.generate()
-    # e.model = m
-    # e.texture = 'white_cube'
-    # e.show_vertices()
-    # e.set_shader ('D:/Dropbox/programming/software/ursina/ursina/internal_shaders/normals.sha')
+    m = Mesh(vertices=verts, triangles=tris, uvs=uvs, colors=colors)
+    e = Entity(model = m)
 
-    # from panda3d.core import DirectionalLight
-    # light = render.attachNewNode(DirectionalLight('light'))
-    # render.setLight(light)
-    # print(e.shader)
 
     EditorCamera()
     app.run()

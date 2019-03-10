@@ -108,10 +108,10 @@ class Audio(Entity):
             if destroy:
                 destroy(self)
 
-    def fade(self, value, duration=.5, delay=0, curve='ease_in_expo', resolution=None, interrupt=True):
+    def fade(self, value, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
         self.animate('volume', value, duration, delay, curve, resolution, interrupt)
 
-    def fade_in(self, value=1, duration=.5, delay=0, curve='ease_in_expo', resolution=None, interrupt=True, destroy_on_ended=False):
+    def fade_in(self, value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, destroy_on_ended=False):
         if duration <= 0:
             self.volume = value
         else:
@@ -119,7 +119,7 @@ class Audio(Entity):
         if destroy_on_ended:
             destroy(self, delay=duration+.01)
 
-    def fade_out(self, value=0, duration=.5, delay=0, curve='ease_in_expo', resolution=None, interrupt=True, destroy_on_ended=True):
+    def fade_out(self, value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, destroy_on_ended=True):
         if duration <= 0:
             self.volume = value
         else:

@@ -26,7 +26,7 @@ class Ursina(ShowBase):
         # reapply screen effect to make it work in new resolution
         # print('adfaaaaaa:', application.base.win)
         # from direct.filter.CommonFilters import CommonFilters
-        # filters = CommonFilters(application.base.win, application.base._cam)
+        # filters = CommonFilters(application.base.win, application.base.cam)
         # filters.setAmbientOcclusion(
         #     numsamples=64,
         #     radius=0.1,

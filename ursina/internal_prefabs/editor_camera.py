@@ -86,12 +86,16 @@ class EditorCamera(Entity):
 
 
 if __name__ == '__main__':
-    app = main.Ursina()
+    app = Ursina()
+    '''
+    Simple camera for debugging.
+    Hold right click and move the mouse to rotate around point.
+    '''
+
     sky = Sky()
-    # e = Entity(model='quad')
-    # ground = Plane(scale=(10,10), color=color.dark_gray)
     Entity(model='cube', color=color.white33)
     camera.position=(20,20,-20)
     ec = EditorCamera(rotation_smoothing=2, rotation_speed=200)
     camera.look_at(ec)
+
     app.run()

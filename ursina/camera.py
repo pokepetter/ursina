@@ -87,11 +87,11 @@ class Camera(Entity):
         if value == True:
             self.lens = self.orthographic_lens
             self.lens_node = self.orthographic_lens_node
-            application.base._cam.node().set_lens(self.orthographic_lens)
+            application.base.cam.node().set_lens(self.orthographic_lens)
         else:
             self.lens = self.perspective_lens
             self.lens_node = self.perspective_lens_node
-            application.base._cam.node().set_lens(self.perspective_lens)
+            application.base.cam.node().set_lens(self.perspective_lens)
 
         self.fov = self.fov
 
@@ -106,11 +106,11 @@ class Camera(Entity):
         self._fov = value
         if not self.orthographic and hasattr(self, 'perspective_lens'):
             self.perspective_lens.set_fov(value)
-            application.base._cam.node().set_lens(self.perspective_lens)
+            application.base.cam.node().set_lens(self.perspective_lens)
 
         elif self.orthographic and hasattr(self, 'orthographic_lens'):
             self.orthographic_lens.set_film_size(value * self.aspect_ratio, value)
-            application.base._cam.node().set_lens(self.orthographic_lens)
+            application.base.cam.node().set_lens(self.orthographic_lens)
 
     @property
     def clip_plane_near(self):
@@ -136,7 +136,7 @@ class Camera(Entity):
     def aspect_ratio(self, value):
         self.perspective_lens = PerspectiveLens()
         self.perspective_lens.set_aspect_ratio(value)
-        application.base._cam.node().set_lens(self.perspective_lens)
+        application.base.cam.node().set_lens(self.perspective_lens)
 
         self.ui_lens.set_film_size(self.ui_size * .5 * value, self.ui_size * .5)
         self.ui_camera.node().set_lens(self.ui_lens)

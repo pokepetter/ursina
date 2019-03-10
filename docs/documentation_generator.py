@@ -3,29 +3,12 @@ from pprint import pprint
 import keyword
 import builtins
 import textwrap
-from ursina import color, lerp
-# def is_module(str):
-#     for line in str.split('\n'):
-#         if line.startswith('class '):
+from ursina import color, lerp, application
+
 '''
-list modules and singletons
-list classes in base folder
-
-prefabs     # all classes
-scripts
-
-models
-    procedural
-
-fonts
-textures
-
-
 samples
 tutorials
 '''
-
-
 
 
 def indentation(line):
@@ -63,8 +46,10 @@ def get_class_attributes(str):
     start = 0
     end = len(lines)
     for i, line in enumerate(lines):
+        if line == '''if __name__ == '__main__':''':
+            break
+
         found_init = False
-        # end = i
         if line.strip().startswith('def __init__'):
             if found_init:
                 break
@@ -126,6 +111,8 @@ def get_functions(str, is_class=False):
     lines = str.split('\n')
     for i, line in enumerate(lines):
 
+        if line == '''if __name__ == '__main__':''':
+            break
         if line.strip().startswith('def '):
             if not is_class and line.split('(')[1].startswith('self'):
                 continue
@@ -149,8 +136,6 @@ def get_functions(str, is_class=False):
 
 def get_example(str):
     key = '''if __name__ == '__main__':'''
-    # if not key in str:
-    #     return ''
     lines = list()
     example_started = False
     for l in str.split('\n'):
@@ -163,7 +148,7 @@ def get_example(str):
     example = '\n'.join(lines)
     example = textwrap.dedent(example)
     ignore = ('app = Ursina()', 'app.run()', 'from ursina import *')
-    if 'class Ursina' in str:
+    if 'class Ursina' in str:   # don't ignore in main.py
         ignore = ()
 
     lines = [e for e in example.split('\n') if not e in ignore and not e.startswith('#')]
@@ -179,10 +164,11 @@ def is_singleton(str):
     result = False
 
 
-path = Path('.') / 'ursina'
+path = application.package_folder
+print('path', path)
 
 init_file = ''
-with open(Path('./ursina/__init__.py')) as f:
+with open(path / '__init__.py') as f:
     init_file = f.read()
 
 # print(init_file)
@@ -190,7 +176,7 @@ module_info = dict()
 class_info = dict()
 
 for f in path.glob('*.py'):
-    if f.name.startswith('_'):
+    if f.name.startswith('_') or f.name == 'build.py':
         continue
 
     with open(f) as t:
@@ -304,9 +290,9 @@ for f in path.glob('internal_models/procedural/*.py'):
 def html_color(color):
     return f'hsl({color.h}, {int(color.s*100)}%, {int(color.v*100)}%)'
 
-base_color = color.color(60, 1, .05)
+base_color = color.color(60, 1, .00)
 # background_color = color.color(0,0,.9)
-background_color = lerp(base_color, base_color.inverse(), .1)
+background_color = lerp(base_color, base_color.inverse(), .125)
 text_color = lerp(background_color, background_color.inverse(), .9)
 example_color = lerp(background_color, text_color, .1)
 scrollbar_color = html_color(lerp(background_color, text_color, .1))
