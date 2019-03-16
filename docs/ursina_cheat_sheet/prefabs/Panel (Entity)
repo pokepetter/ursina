@@ -1,4 +1,0 @@
-name = 'panel'
-parent = scene.ui
-model = 'quad'
-color = color.ursina_button

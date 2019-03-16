@@ -1,7 +1,0 @@
-example: enitity.animate_y(entity.position + entity.up, .5, curve='curve_in_sine')
-
-linear
-
-curve_in, curve_out, curve_in_out
-sine, quad, cubic, quart, quint, expo, circ, back, elastic, bounce
-# combine like this: 'curve_in_expo', 'curve_in_out_elastic'

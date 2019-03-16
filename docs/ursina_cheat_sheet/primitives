@@ -1,6 +1,0 @@
-# generates a bunch of classes for easier prototyping like RedCube, YellowSphere and so on.
-
-example: cube = OrangeCube(), GreenPlane()
-
-Basically just combine a color name with one of these:
-Quad, Cube, Sphere, Plane

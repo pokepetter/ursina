@@ -1,7 +1,0 @@
-python -m ursinabuild 'project_path'
-
-#package ursina application for windows10.
-#provided with project folder path, creates a build folder where
-#it copies python and project's dependent packages. requires a main.py file.
-#copies game scripts and assets into 'build/scr' folder.
-#creates a .bat file to start the game.

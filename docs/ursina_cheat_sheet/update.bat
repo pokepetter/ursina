@@ -1,1 +1,0 @@
-python -m codebrowsergen --title "ursina <br>cheat sheet"

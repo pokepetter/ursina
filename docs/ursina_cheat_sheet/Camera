@@ -1,8 +1,0 @@
-parent = scene
-eternal = True
-fov = 40
-orthographic = False
-near_clip_plane = 0.01
-far_clip_plane = 100
-rect
-aspect_ratio

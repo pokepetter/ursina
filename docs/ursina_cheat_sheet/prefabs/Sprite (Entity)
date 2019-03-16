@@ -1,3 +1,0 @@
-# scales to fit texture aspect ratio
-Sprite(self, texture=None)
-aspect_ratio
