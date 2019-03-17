@@ -36,6 +36,7 @@ try:
 except:
     pass
 
+
 class Entity(NodePath):
 
     def __init__(self, **kwargs):
@@ -67,24 +68,14 @@ class Entity(NodePath):
         self.hovered = False
 
         self.origin = Vec3(0,0,0)
-        self.position = Vec3(0,0,0)
-        self.x = 0
-        self.y = 0
-        self.z = 0
-
-        self.rotation = Vec3(0,0,0)
-        self.rotation_x = 0
-        self.rotation_y = 0
-        self.rotation_z = 0
-
-        self.scale = Vec3(1,1,1)
-        self.scale_x = 1
-        self.scale_y = 1
-        self.scale_z = 1
+        self.position = Vec3(0,0,0) # can also set self.x, self.y, self.z
+        self.rotation = Vec3(0,0,0) # can also set self.rotation_x, self.rotation_y, self.rotation_z
+        self.scale = Vec3(1,1,1)    # can also set self.scale_x, self.scale_y, self.scale_z
 
 
         for key, value in kwargs.items():
             setattr(self, key, value)
+
 
     def __setattr__(self, name, value):
 

@@ -17,10 +17,6 @@ class Scene(NodePath):
         self.canvas = None
         self.ui = None
 
-        self.editor = None
-        self.editor_size = 1
-        self.editor_font_size = 1
-
         self.entities = []
         self.hidden = NodePath('hidden')
         self.has_changes = False

@@ -174,7 +174,7 @@ class Mouse():
 
         # unhover all if it didn't hit anything
         for entity in scene.entities:
-            if entity.hovered:
+            if hasattr(entity, 'hovered') and entity.hovered:
                 entity.hovered = False
                 self.hovered_entity = None
                 if hasattr(entity, 'on_mouse_exit'):

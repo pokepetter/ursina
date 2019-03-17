@@ -111,14 +111,12 @@ class Ursina(ShowBase):
         time.dt = dt
 
         mouse.update()
-        if scene.editor and scene.editor.enabled:
-            scene.editor.update()
 
         if hasattr(__main__, 'update'):
             __main__.update()
 
         for entity in scene.entities:
-            if entity.enabled:
+            if hasattr(entity, 'enabled') and entity.enabled:
                 if hasattr(entity, 'update'):
                     entity.update()
 
@@ -163,7 +161,7 @@ class Ursina(ShowBase):
         except: pass
 
         for entity in scene.entities:
-            if entity.enabled and entity is not scene.editor:
+            if hasattr(entity, 'enabled') and entity.enabled:
                 if hasattr(entity, 'input'):
                     entity.input(key)
 
