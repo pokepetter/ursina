@@ -70,14 +70,14 @@ class PlayerController(Entity):
                 color = color.white33,
                 position = self.position,
                 )
-            self.jump_dust.animate_scale((3,3,3), duration=.3, curve='linear')
+            self.jump_dust.animate_scale((3,3,3), duration=.3, curve=curve.linear)
             self.jump_dust.fade_out(duration=.2)
             destroy(self.jump_dust, 2.1)
 
             self.jumping = True
             self.jumps_left -= 1
             self.y += self.jump_height
-            self.animate_y(self.y + self.jump_height, self.jump_duration, resolution=60, curve='curve_out_expo')
+            self.animate_y(self.y + self.jump_height, self.jump_duration, resolution=60, curve=curve.out_expo)
             invoke(self.fall, delay=self.jump_duration - .2)
 
 

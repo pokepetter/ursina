@@ -150,7 +150,7 @@ aspect_ratio
 
 
 <div class="example">from ursina.main import Ursina
-scene.camera.orthographic = True
+application.camera.orthographic = True
 e = Entity()
 e.model = 'quad'
 e.color = color.random_color()
@@ -649,7 +649,7 @@ name<g> = camel_to_snake(self.type)</g>
 enabled<g> = True</g> 
 visible<g> = True</g> 
 parent<g> = scene</g> 
-eternal<g> = False    # eternal entities does not get destroyed on scene.clear()</g> 
+eternal<g> = False    # eternal entities does not get destroyed on application.clear()</g> 
 model<g> = None</g> 
 color<g> = color.white</g> 
 texture<g> = None     # tries to set to camel_to_snake(self.type)</g> 
@@ -905,7 +905,7 @@ stop()
 <div id="Button"><div id="header" style="color:hsl(30.0, 100%, 66%); font-size:1.5em;">Button<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color: hsl(0.0, 0%, 100%);">Button(**kwargs)</params>
 
 name<g> = 'button'</g> 
-parent<g> = scene.ui</g> 
+parent<g> = application.ui</g> 
 is_editor<g> = False</g> 
 model<g> = Quad(aspect=self.scale[0] / self.scale[1], subdivisions=4)</g> 
 color<g> = Button.color</g> 
@@ -1218,7 +1218,7 @@ convert_to_gif()
 
 <div class="example">window.size = (1600/3,900/3)
 cube = primitives.RedCube()
-cube.animate_x(5, duration=5, curve='linear')
+cube.animate_x(5, duration=5, curve=curve.linear)
 vr = VideoRecorder()
 invoke(setattr, vr, 'recording', True, delay=1)
 </div>

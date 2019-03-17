@@ -26,7 +26,7 @@ class Ursina(ShowBase):
         # reapply screen effect to make it work in new resolution
         # print('adfaaaaaa:', application.base.win)
         # from direct.filter.CommonFilters import CommonFilters
-        # filters = CommonFilters(application.base.win, application.base.cam)
+        # filters = CommonFilters(scene.base.win, scene.base.cam)
         # filters.setAmbientOcclusion(
         #     numsamples=64,
         #     radius=0.1,
@@ -99,7 +99,9 @@ class Ursina(ShowBase):
         mouse.enabled = True
         self.mouse = mouse
 
-        scene.set_up()
+        # scene.set_up()
+        # from ursina.entity import Entity
+        scene.reparent_to(render)
         self._update_task = taskMgr.add(self._update, "update")
 
 

@@ -14,7 +14,7 @@ except:
 class Texture():
 
     def __init__(self, path):
-        if str(type(path)) == 'Image':
+        if 'Image' in str(type(path)):
             # print('passing pil image!')
             image = path
             self._texture = PandaTexture()

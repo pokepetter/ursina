@@ -77,7 +77,7 @@ if __name__ == '__main__':
     app = Ursina()
     window.size = (1600/3,900/3)
     cube = primitives.RedCube()
-    cube.animate_x(5, duration=5, curve='linear')
+    cube.animate_x(5, duration=5, curve=curve.linear)
     vr = VideoRecorder()
     invoke(setattr, vr, 'recording', True, delay=1)
     # invoke(os._exit, 0, delay=6)

@@ -772,7 +772,7 @@ class Entity(NodePath):
         self.animations.append(sequence)
         # sequence.append(Wait(delay))
         if not resolution:
-            resolution = int(duration * 60)
+            resolution = max(int(duration * 60), 1)
 
         for i in range(resolution+1):
             t = i / resolution
@@ -861,7 +861,8 @@ if __name__ == '__main__':
 
         def input(self, key):
             if key == 'space':
-                self.color = self.color.inverse
+                # self.color = self.color.inverse()
+                self.animate_scale_y(0)
 
         def update(self):
             self.x += held_keys['d'] * time.dt * 10
