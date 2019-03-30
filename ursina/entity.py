@@ -271,7 +271,7 @@ class Entity(NodePath):
                     collider = BoxCollider(
                         entity = self,
                         center = -self.origin,
-                        size = self.bounds
+                        size = self.model_bounds
                         )
                 else:
                     collider = BoxCollider(entity=self)
@@ -537,7 +537,7 @@ class Entity(NodePath):
 
 
     @property
-    def bounds(self):
+    def model_bounds(self):
         if self.model:
             bounds = self.model.getTightBounds()
             bounds = Vec3(
@@ -547,6 +547,10 @@ class Entity(NodePath):
             return bounds
         else:
             return (0,0,0)
+
+    @property
+    def bounds(self):
+        return self.model_bounds * self.scale
 
 
     @property
