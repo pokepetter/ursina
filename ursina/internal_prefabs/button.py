@@ -12,6 +12,8 @@ class Button(Entity):
         self.name = 'button'
         self.parent = scene.ui
         self.is_editor = False
+        self.collision = True
+        self.collider = 'box'
 
         for key, value in kwargs.items():   # set the scale before model for correct corners
             if key in ('scale', 'scale_x', 'scale_y', 'scale_z',
@@ -23,8 +25,6 @@ class Button(Entity):
             self.model = Quad(aspect=self.scale[0] / self.scale[1], subdivisions=4)
         self.color = Button.color
 
-        self.collision = True
-        self.collider = 'box'
         self.text_entity = None
         self.disabled = False
 
@@ -147,8 +147,8 @@ if __name__ == '__main__':
     # t = Test()
     # t.b.parent = scene
     # Button(scale=.3, text='hello world!', color=color.azure)
-    b = Button(text='hello world!', color=color.azure)
-    b.fit()
+    b = Button(text='hello world!', color=color.azure, scale=.5)
+    # b.fit()
     # EditorCamera()
     # b = Button(text='test\ntest', scale=(4,1), model='quad', collision=False)
     # b.text_entity.scale *= .5
