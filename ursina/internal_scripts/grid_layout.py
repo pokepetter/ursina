@@ -1,43 +1,48 @@
 from ursina import *
 
 
-def grid_layout(l, direction=(1,1,1), max_x=8, max_y=8, spacing=(0,0,0), origin=(-.5,.5,0)):
+def grid_layout(l, max_x=8, max_y=8, spacing=(0,0,0), origin=(-.5,.5,0), offset=(0,0,0)):
+    if len(origin) == 2:
+        origin += (0,)
     if not isinstance(l, list):
         print('error: grid_layout input must be a list or tuple, not', l.__class__.__name__)
         return
+    x, y, z = 0, 0, 0
 
-    e_size = [s[0] * s[1] for s in zip(l[0].bounds, l[0].scale)]
+    slices = chunk_list(l, max_x * max_y)
+    for s in slices:
+        rows = [e for e in chunk_list(s, max_x)]
+        height = sum([max([e.bounds[1] for e in r]) for r in rows])
+        y = 0
+        for row in rows:
+            x = 0
+            width = sum([e.bounds[0] for e in row])
+            for e in row:
+                e.position = (
+                    x + l[0].bounds[0]/2 - width/2 - (width/2 * origin[0]*2),
+                    y + l[0].bounds[1]/2 - height/2 - (height/2 * origin[1]*2),
+                    z + l[0].bounds[2]/2)
 
-    for i, e in enumerate(l):
-        z = i // (max_x * max_y)
-        rest = i - z * (max_x * max_y)
-        y = rest // max_x
-        x = rest - (y * max_x)
+                x += e.bounds[0]
+            y += max([e.bounds[1] for e in row]) + spacing[1]
+        z += max([e.bounds[2] for e in s]) + spacing[2]
 
-        e.position = (
-            x * (e_size[0]+spacing[0]) * direction[0],
-            y * (e_size[1]+spacing[1]) * direction[1],
-            z * (e_size[2]+spacing[2]) * direction[2]
-            )
+    for e in l:
+        e.z -= z/2 - (z/2 * origin[2]*2)
 
-    # center it
-    width = max(len(l), max_x) * (e_size[0]+spacing[0])
-    height = max(len(l), max_x*max_y) * (e_size[1]+spacing[1])
-    for c in l:
-        c.x -= (width / 2) + (width * origin[0])
-        c.y += height / 2 + (height * -origin[1])
 
 
 if __name__ == '__main__':
     app = Ursina()
 
-    center = Entity(model='quad', scale=(.1,.1), color=color.red)
+    center = Entity(model='quad', scale=.1, color=color.red)
     p = Entity()
-    for i in range(16):
-        b = Button(parent=p, model='cube', scale=(.5, .5, .5), text=str(i), color=color.tint(color.random_color(),-.6))
+    for i in range(32):
+        b = Button(parent=p, model='cube', scale=.5, scale_x=1, text=str(i), color=color.tint(color.random_color(),-.6))
 
     t = time.time()
-    grid_layout(p.children, max_x=3, max_y=3)
+    grid_layout(p.children, max_x=4, max_y=3, origin=(-.5, .5))
+    center = Entity(parent=camera.ui, model=Circle(), scale=.005, color=color.lime)
     EditorCamera()
     print(time.time() - t)
 
