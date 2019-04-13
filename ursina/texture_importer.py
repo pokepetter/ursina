@@ -16,15 +16,17 @@ def load_texture(name, path=None):
         folders = (path)
 
     for folder in folders:
-        for filename in glob.iglob(str(folder.resolve()) + '/**/' + name + '.*', recursive=True):
-            for ft in file_types:
-                if filename.endswith(ft):
-                    return Texture(filename)
+        for filename in folder.glob('**/' + name + '.*'):
+            if filename.suffix in file_types:
+                print('found:', filename)
+                return Texture(str(filename.resolve()))
 
-            if filename.endswith('.psd'):
-                print('found uncompressed psd, compressing it...')
-                compress_textures(name)
-                return load_texture(name)
+
+    for folder in folders:
+        for filename in folder.glob('**/' + name + '.psd'):
+            print('found uncompressed psd, compressing it...')
+            compress_textures(name)
+            return load_texture(name)
 
     return None
 
@@ -50,15 +52,17 @@ def compress_textures(name=''):
         file_type = ''
 
     print('searching for texture:', name + file_type)
-    for f in glob.iglob(str(application.asset_folder) + '/**/' + name + file_type, recursive=True):
-        if f.split(name)[0].endswith('compressed\\'):
+    for f in application.asset_folder.glob('**/' + name + file_type):
+        # if f.parent == application.compressed_textures_folder:
+        # print('------------------', str(f.resolve()))
+        if '\\compressed\\' in str(f) or f.suffix not in ('.psd', '.png', '.jpg', '.jpeg', '.gif'):
             continue
-        print('  found:', f)
+        # print('  found:', f)
 
-        if f.endswith('.psd'):
+        if f.suffix == '.psd':
             image = PSDImage.load(f)
             image = image.as_PIL()
-        elif f.endswith('.png'):
+        elif f.suffix == '.png':
             image = Image.open(f)
         # print(max(image.size))
         if max(image.size) > 512:
@@ -69,15 +73,11 @@ def compress_textures(name=''):
                 optimize=True,
                 progressive=True
                 )
-            print('    compressing to jpg:', application.compressed_textures_folder / (Path(f).stem + '.jpg'))
+            print('    compressing to jpg:', application.compressed_textures_folder / (f.stem + '.jpg'))
             continue
         else:
-            image.save(
-                application.compressed_textures_folder / (Path(f).stem + '.png'),
-                'PNG'
-                )
-            print('    compressing to png:', application.compressed_textures_folder / (Path(f).stem + '.png'))
-        # elif f.endswith('.png'):
+            image.save(application.compressed_textures_folder / (f.stem + '.png'), 'PNG')
+            print('    compressing to png:', application.compressed_textures_folder / (f.stem + '.png'))
 
 
 
