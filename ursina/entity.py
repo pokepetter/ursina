@@ -159,9 +159,8 @@ class Entity(NodePath):
 
 
         if name == 'texture_scale':
-            if self.model and self.texture:
+            if hasattr(self, 'model') and self.model and self.texture:
                 self.model.setTexScale(TextureStage.getDefault(), value[0], value[1])
-                self.texture = self.texture
 
         if name == 'texture_offset':
             if self.model and self.texture:
@@ -550,8 +549,11 @@ class Entity(NodePath):
 
     @property
     def bounds(self):
-        return self.model_bounds * self.scale
-
+        return Vec3(
+            self.model_bounds[0] * self.scale_x,
+            self.model_bounds[1] * self.scale_y,
+            self.model_bounds[2] * self.scale_z
+            )
 
     @property
     def vertex_data(self):
@@ -803,12 +805,20 @@ class Entity(NodePath):
         self.animate('rotation_z', value, duration, delay, curve, resolution, interrupt)
 
     def animate_scale(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
+        if isinstance(value, (int, float, complex)):
+            value = Vec3(value, value, value)
         self.animate('scale', value, duration, delay, curve, resolution, interrupt)
     def animate_scale_x(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
+        if isinstance(value, (int, float, complex)):
+            value = Vec3(value, value, value)
         self.animate('scale_x', value, duration, delay, curve, resolution, interrupt)
     def animate_scale_y(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
+        if isinstance(value, (int, float, complex)):
+            value = Vec3(value, value, value)
         self.animate('scale_y', value, duration, delay, curve, resolution, interrupt)
     def animate_scale_z(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
+        if isinstance(value, (int, float, complex)):
+            value = Vec3(value, value, value)
         self.animate('scale_z', value, duration, delay, curve, resolution, interrupt)
 
 
