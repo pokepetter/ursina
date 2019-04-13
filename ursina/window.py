@@ -18,8 +18,8 @@ class Window(WindowProperties):
         loadPrcFileData('', 'undecorated True')
         loadPrcFileData('', 'sync-video True')
         loadPrcFileData('', 'notify-level-util error')
-        # loadPrcFileData("", "old-alpha-blend True")
-        # loadPrcFileData('', 'notify-level-glgsg debug')
+        # loadPrcFileData('', 'textures-power-2 pad')
+        loadPrcFileData('', 'textures-auto-power-2 #t')
         # loadPrcFileData('', 'want-pstats True')
         self.setForeground(True)
 
@@ -96,14 +96,15 @@ class Window(WindowProperties):
         self.fps_counter = Text(
             parent = scene.ui,
             eternal = True,
-            position = (.4 * self.aspect_ratio, .5),
-            text = 'fps: 60',
-            background = True,
+            position = (.5*self.aspect_ratio, .47),
+            origin = (.8,.5),
+            text = '60',
+            # background = True,
             i = 0,
             )
         def update():
             if self.fps_counter.i > 60:
-                self.fps_counter.text = 'fps: ' + str(int(1//time.dt))
+                self.fps_counter.text = str(int(1//time.dt))
                 self.fps_counter.i = 0
 
             self.fps_counter.i += 1
@@ -227,5 +228,5 @@ if __name__ == '__main__':
     app = Ursina()
     window.title = 'Title'
     window.color = color.black  # sets clear color
-    window.size *= .5
+    # window.size *= .5
     app.run()
