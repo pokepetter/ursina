@@ -12,7 +12,6 @@ class Button(Entity):
         self.name = 'button'
         self.parent = scene.ui
         self.is_editor = False
-        self.collision = True
         self.collider = 'box'
 
         for key, value in kwargs.items():   # set the scale before model for correct corners
@@ -21,7 +20,7 @@ class Button(Entity):
 
                 setattr(self, key, value)
 
-        if not 'model' in kwargs:
+        if not 'model' in kwargs and self.scale[0] != 0 and self.scale[1] != 0:
             self.model = Quad(aspect=self.scale[0] / self.scale[1], subdivisions=4)
         self.color = Button.color
 
@@ -33,9 +32,13 @@ class Button(Entity):
         self.original_color = self.color
         self.highlight_color = color.tint(self.original_color, .2)
         self.pressed_color = color.tint(self.original_color, -.2)
+        self.highlight_scale = 1    # multiplier
+        self.pressed_scale = .9     # multiplier
 
         for key, value in kwargs.items():
             setattr(self, key, value)
+
+        self.original_scale = self.scale
 
 
     @property
@@ -61,7 +64,7 @@ class Button(Entity):
     def __setattr__(self, name, value):
         if name == 'color':
             # ignore setting original color if the button is modifying its own color on enter or on exit
-            if not inspect.stack()[1][3] in ('__init__', 'on_mouse_enter', 'on_mouse_exit'):
+            if not inspect.stack()[1][3] in ('__init__', 'on_mouse_enter', 'on_mouse_exit', 'input'):
                 self.original_color = value
                 self.highlight_color = color.tint(self.original_color, .2)
                 self.pressed_color = color.tint(self.original_color, -.2)
@@ -92,15 +95,22 @@ class Button(Entity):
         if key == 'left mouse down':
             if self.hovered:
                 self.color = self.pressed_color
+                self.scale *= self.pressed_scale
 
         if key == 'left mouse up':
             if self.hovered:
                 self.color = self.highlight_color
+                self.scale = self.original_scale * self.highlight_scale
+            else:
+                self.color = self.original_color
+                self.scale = self.original_scale
 
 
     def on_mouse_enter(self):
         if not self.disabled:
             self.color = self.highlight_color
+            if self.highlight_scale != 1:
+                self.scale = self.original_scale * self.highlight_scale
 
         if hasattr(self, 'tooltip'):
             self.tooltip_scale = self.tooltip.scale
@@ -112,6 +122,8 @@ class Button(Entity):
     def on_mouse_exit(self):
         if not self.disabled:
             self.color = self.original_color
+            if not mouse.left:
+                self.scale = self.original_scale
 
         if hasattr(self, 'tooltip'):
             if hasattr(self, 'tooltip_scaler'):
@@ -125,7 +137,6 @@ class Button(Entity):
         if hasattr(self, 'on_click_string'):
             exec(self.on_click_string)
 
-
     def fit(self):
         if not self.text_entity.text or self.text_entity.text == '':
             return
@@ -137,7 +148,7 @@ class Button(Entity):
             )
         self.model = Quad(aspect=self.scale_x/self.scale_y)
         self.text_entity.world_parent = self
-        print('fit t o text', self.scale)
+        print('fit to text', self.scale)
 
 
 
@@ -147,7 +158,15 @@ if __name__ == '__main__':
     # t = Test()
     # t.b.parent = scene
     # Button(scale=.3, text='hello world!', color=color.azure)
-    b = Button(text='hello world!', color=color.azure, scale=.5)
+    # b = Button(text='hello world!', color=color.azure, scale=.05)
+    class Yolo(Button):
+        def __init__(self, **kwargs):
+            super().__init__(**kwargs)
+            self.text = 'yolo'
+
+
+    b = Yolo(scale=.1, origin_y=.5)
+
     # b.fit()
     # EditorCamera()
     # b = Button(text='test\ntest', scale=(4,1), model='quad', collision=False)
