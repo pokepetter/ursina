@@ -31,6 +31,7 @@ class Text(Entity):
         self.origin = (-.5, .5)
         temp_text_node = TextNode('')
         self._font = temp_text_node.getFont()
+        self.resolution = 100
 
         if Text.default_font != '':
             self.font = Text.default_font
@@ -45,7 +46,7 @@ class Text(Entity):
         self.tag = '<default>'
         self.color_tag = self.text_colors['<default>']
         self.scale_override = 1
-        self.background = None
+        self._background = None
 
         if text != '':
             self.text = text
@@ -171,7 +172,6 @@ class Text(Entity):
         if font:
             self._font = font
             # _font.setRenderMode(TextFont.RMPolygon)
-            self._font.setPixelsPerUnit(100)
             self.text = self.raw_text   # update tex
 
     @property
@@ -218,6 +218,14 @@ class Text(Entity):
     @property
     def lines(self):
         return [l for l in self.text.split('\n') if len(l) > 0]
+
+    @property
+    def resolution(self):
+        return self._font.getPixelsPerUnit()
+
+    @resolution.setter
+    def resolution(self, value):
+        self._font.setPixelsPerUnit(100)
 
 
     @property
@@ -276,6 +284,18 @@ class Text(Entity):
         if self.text:
             self.text = self.raw_text
 
+    @property
+    def background(self):
+        return self._background
+
+    @background.setter
+    def background(self, value):
+        if value == True:
+            self.create_background()
+        elif self._background:
+            destroy(self._background)
+
+
     def align(self):
         value = self.origin
         linewidths = [self.text_nodes[0].node().calcWidth(line) for line in self.lines]
@@ -303,20 +323,20 @@ class Text(Entity):
     def create_background(self, padding=size*2, radius=size, color=ursina.color.black66):
         from ursina import Quad, destroy
 
-        if self.background:
-            destroy(self.background)
+        if self._background:
+            destroy(self._background)
 
-        self.background = Entity(parent=self, z=.01)
+        self._background = Entity(parent=self, z=.01)
 
         if isinstance(padding, (int, float, complex)):
             padding = (padding, padding)
 
         w, h = self.width + padding[0], self.height + padding[1]
-        self.background.x -= self.origin_x * self.width
-        self.background.y -= self.origin_y * self.height
+        self._background.x -= self.origin_x * self.width
+        self._background.y -= self.origin_y * self.height
 
-        self.background.model = Quad(radius=radius, scale=(w, h))
-        self.background.color = color
+        self._background.model = Quad(radius=radius, scale=(w, h))
+        self._background.color = color
 
 
     def appear(self, speed=.025, delay=0):
