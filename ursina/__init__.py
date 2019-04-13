@@ -20,6 +20,7 @@ from ursina.text import Text
 from ursina.mesh import Mesh
 from ursina.internal_prefabs.sprite import Sprite
 from ursina.internal_prefabs.button import Button
+from ursina.internal_prefabs.panel import Panel
 from ursina.internal_prefabs.exit_button import ExitButton
 from ursina.internal_prefabs.animation import Animation
 from ursina.internal_prefabs.sky import Sky
