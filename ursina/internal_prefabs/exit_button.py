@@ -4,13 +4,14 @@ class ExitButton(Button):
     def __init__(self, **kwargs):
         super().__init__(
             eternal = True,
-            parent = scene.ui,
-            scale = (.025, .025),
-            position = Vec2(window.top_right) - Vec2(.0125, .0125),
-            model = 'quad',
-            color = color.red,
+            origin = (.5, .5),
+            position = window.top_right,
+            z = -999,
+            scale = (.05, .025),
+            color = color.red.tint(-.2),
             text = 'x',
             **kwargs)
+
 
 
     def on_click(self):

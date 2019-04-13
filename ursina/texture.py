@@ -32,7 +32,7 @@ class Texture():
 
             self._cached_image = None   # for get_pixel() method
 
-        self.filtering = None
+        self.filtering = 'bilinear'
 
 
     @property

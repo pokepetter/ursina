@@ -51,6 +51,13 @@ def input(key):
 
 
 if __name__ == '__main__':
+    '''
+    key names:
+    left mouse down, left mouse up, left mouse hold
+    scroll up, scroll down
+    arrow left, arrow right, arrow up, arrow down
+    space
+    '''
     from ursina import *
     app = Ursina()
     input_handler.bind('s', 'arrow down')

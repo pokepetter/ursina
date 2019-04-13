@@ -240,7 +240,7 @@ class Mouse():
         nP = self.collision.getIntoNodePath().parent
 
         for entity in scene.entities:
-            if not entity.collision or not entity.collider:
+            if not hasattr(entity, 'collision') or not entity.collision or not entity.collider:
                 continue
             # if hit entity is not hovered, call on_mouse_enter()
             if entity == nP:

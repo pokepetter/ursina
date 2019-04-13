@@ -116,10 +116,14 @@ class Ursina(ShowBase):
             __main__.update()
 
         for entity in scene.entities:
-            if hasattr(entity, 'enabled') and entity.enabled:
-                if hasattr(entity, 'update'):
-                    entity.update()
+            if hasattr(entity, 'enabled') and entity.enabled == False:
+                continue
 
+            if hasattr(entity, 'update'):
+                entity.update()
+
+
+            if hasattr(entity, 'scripts'):
                 for script in entity.scripts:
                     if script.enabled and hasattr(script, 'update'):
                         script.update()
@@ -161,13 +165,16 @@ class Ursina(ShowBase):
         except: pass
 
         for entity in scene.entities:
-            if hasattr(entity, 'enabled') and entity.enabled:
-                if hasattr(entity, 'input'):
-                    entity.input(key)
+            if hasattr(entity, 'enabled') and entity.enabled == False:
+                continue
 
+            if hasattr(entity, 'input'):
+                entity.input(key)
+
+            if hasattr(entity, 'scripts'):
                 for script in entity.scripts:
                     if script.enabled and hasattr(script, 'input'):
-                        script.input(key)
+                            script.input(key)
 
         if key == 'f11':
             window.fullscreen = not window.fullscreen
@@ -183,9 +190,6 @@ class Ursina(ShowBase):
         if key == 'f9':
             window.display_mode = 'default'
 
-
-    def _load_editor(self):
-        scene.editor = load_script('editor')
 
     def run(self):
         # start game if there is no editor

@@ -27,7 +27,7 @@ def load_model(name, path=application.asset_folder):
                 return m
 
             if filetype == '.blend':
-                print('found blend file')
+                print('found blend file:', filename)
                 compress_models(path=path, name=name)
                 return load_model(name, path)
     # for f in glob(f'**/{name}.blend'):

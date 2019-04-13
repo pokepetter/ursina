@@ -24,7 +24,7 @@ class Tooltip(Text):
             )
         self.x = min(self.x, (.5 * window.aspect_ratio) - self.width - self.size - .005)
         self.y = min(self.y, .5 - (self.height + self.size + .005))
-        self.z = -.1
+        self.z = -9
 
 if __name__ == '__main__':
     app = Ursina()
