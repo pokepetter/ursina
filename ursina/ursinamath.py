@@ -1,6 +1,6 @@
 import operator
 from math import sqrt
-from panda3d.core import Vec4
+from panda3d.core import Vec2, Vec3, Vec4
 from ursina.color import Color
 
 
@@ -39,11 +39,13 @@ def lerp(a, b, t):
         col = [lerp(e[0], e[1], t) for e in zip(a,b)]
         return Color(col[0], col[1], col[2], col[3])
 
-    else:
+    elif isinstance(a, (tuple, list, Vec2, Vec3, Vec4)) and isinstance(b, (tuple, list, Vec2, Vec3, Vec4)):
         lerped = list()
         for i in range(min(len(a), len(b))):
             lerped.append(lerp(a[i], b[i], t))
         return lerped
+    else:
+        print(f'''can't lerp types {type(a)} and {type(b)}''')
 
 
 def inverselerp(a, b, t) :
