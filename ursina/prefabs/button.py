@@ -60,6 +60,23 @@ class Button(Entity):
             self.text_entity.text = value
             self.text_entity.world_scale = (1,1,1)
 
+    @property
+    def text_origin(self):
+        if not self.text_entity:
+            return(0,0)
+
+        return self.text_entity.origin
+
+    @text_origin.setter
+    def text_origin(self, value):
+        if not self.text_entity:
+            return
+
+        self.text_entity.position = value
+        self.text_entity.x += self.model.radius * self.scale_y/self.scale_x * (-value[0]*2)
+        self.text_entity.y += self.model.radius * self.scale_y/self.scale_x * (-value[1]*2)
+        self.text_entity.origin = value
+
 
     def __setattr__(self, name, value):
         if name == 'color':
@@ -122,7 +139,7 @@ class Button(Entity):
     def on_mouse_exit(self):
         if not self.disabled:
             self.color = self.original_color
-            if not mouse.left:
+            if not mouse.left and self.highlight_scale != 1:
                 self.scale = self.original_scale
 
         if hasattr(self, 'tooltip'):
@@ -165,7 +182,7 @@ if __name__ == '__main__':
             self.text = 'yolo'
 
 
-    b = Yolo(scale=.1, origin_y=.5)
+    b = Button(text='button text', scale=(1.5,.1), text_origin=(-.5,0))
 
     # b.fit()
     # EditorCamera()

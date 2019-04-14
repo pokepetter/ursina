@@ -2,10 +2,10 @@ from ursina import *
 
 class DropdownMenuButton(Button):
     def __init__(self, text='', **kwargs):
-        super().__init__(scale=(.25,.025), pressed_scale=1, text=text, **kwargs)
+        super().__init__(scale=(.25,.025), origin=(-.5,.5), pressed_scale=1, text=text, **kwargs)
 
         if self.text_entity:
-            self.text_entity.x = -.45
+            self.text_entity.x = .05
             self.text_entity.origin = (-.5, 0)
             self.text_entity.scale *= .8
 
@@ -25,7 +25,7 @@ class DropdownMenu(DropdownMenuButton):
                     e.x = 1
                     e.y += 1
 
-        self.arrow_symbol = Text(world_parent=self, text='>', origin=(.5,0), x=.45, color=color.gray)
+        self.arrow_symbol = Text(world_parent=self, text='>', origin=(.5,.5), x=.95, color=color.gray)
         for key, value in kwargs.items():
             setattr(self, key, value)
 

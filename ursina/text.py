@@ -31,13 +31,12 @@ class Text(Entity):
         self.origin = (-.5, .5)
         temp_text_node = TextNode('')
         self._font = temp_text_node.getFont()
-        self.resolution = 100
+        # self.resolution = 100
 
         if Text.default_font != '':
             self.font = Text.default_font
 
         self.line_height = 1
-
         self.text_colors = {'<default>' : color.text_color}
 
         for color_name in color.color_names:
@@ -50,7 +49,7 @@ class Text(Entity):
 
         if text != '':
             self.text = text
-        #     # self.line_height = 1
+
         for key, value in kwargs.items():
             setattr(self, key, value)
 
@@ -225,7 +224,7 @@ class Text(Entity):
 
     @resolution.setter
     def resolution(self, value):
-        self._font.setPixelsPerUnit(100)
+        self._font.setPixelsPerUnit(value)
 
 
     @property
@@ -376,11 +375,11 @@ class Text(Entity):
 if __name__ == '__main__':
     app = Ursina()
     # Text.size = .001
-    descr = dedent('<scale:1.5><orange>' + 'Rainstorm' + '<scale:1>\n' +
-        '''Summon a <azure>rain storm <default>to deal 5 <azure>water
+    descr = dedent('''
+        <scale:1.5><orange>Rainstorm <scale:1>
+        Summon a <azure>rain storm <default>to deal 5 <azure>water
         damage <default>to <red>everyone, <default>including <orange>yourself. <default>
-        Lasts for 4 rounds.'''
-        )
+        Lasts for 4 rounds.''').strip()
 
     Text.default_font = 'VeraMono.ttf'
     test = Text(descr)
