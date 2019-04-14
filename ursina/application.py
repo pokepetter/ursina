@@ -8,10 +8,10 @@ from pathlib import Path
 package_folder = Path(__file__).parent
 asset_folder = Path().cwd()
 
-internal_models_folder = package_folder / 'internal_models/'
-internal_prefabs_folder = package_folder / 'internal_prefabs/'
-internal_scripts_folder = package_folder / 'internal_scripts/'
-internal_textures_folder = package_folder / 'internal_textures/'
+internal_models_folder = package_folder / 'models/'
+internal_prefabs_folder = package_folder / 'prefabs/'
+internal_scripts_folder = package_folder / 'scripts/'
+internal_textures_folder = package_folder / 'textures/'
 internal_fonts_folder = package_folder / 'fonts/'
 
 models_folder = asset_folder / 'models/'

@@ -18,37 +18,37 @@ from ursina import input_handler
 
 from ursina.text import Text
 from ursina.mesh import Mesh
-from ursina.internal_prefabs.sprite import Sprite
-from ursina.internal_prefabs.button import Button
-from ursina.internal_prefabs.panel import Panel
-from ursina.internal_prefabs.exit_button import ExitButton
-from ursina.internal_prefabs.animation import Animation
-from ursina.internal_prefabs.sky import Sky
-from ursina.internal_prefabs.cursor import Cursor
+from ursina.prefabs.sprite import Sprite
+from ursina.prefabs.button import Button
+from ursina.prefabs.panel import Panel
+from ursina.prefabs.exit_button import ExitButton
+from ursina.prefabs.animation import Animation
+from ursina.prefabs.sky import Sky
+from ursina.prefabs.cursor import Cursor
 
-from ursina.internal_models.procedural.quad import Quad
-from ursina.internal_models.procedural.circle import Circle
-from ursina.internal_models.procedural.prismatoid import Prismatoid
-from ursina.internal_models.procedural.cone import Cone
-from ursina.internal_models.procedural.cylinder import Cylinder
-from ursina.internal_models.procedural.sphere import Sphere
-from ursina.internal_models.procedural.grid import Grid
+from ursina.models.procedural.quad import Quad
+from ursina.models.procedural.circle import Circle
+from ursina.models.procedural.prismatoid import Prismatoid
+from ursina.models.procedural.cone import Cone
+from ursina.models.procedural.cylinder import Cylinder
+from ursina.models.procedural.sphere import Sphere
+from ursina.models.procedural.grid import Grid
 
-from ursina.internal_prefabs.plane import Plane
+from ursina.prefabs.plane import Plane
 
-from ursina.internal_scripts.smooth_follow import SmoothFollow
-from ursina.internal_scripts.position_limiter import PositionLimiter
-from ursina.internal_scripts.grid_layout import grid_layout
+from ursina.scripts.smooth_follow import SmoothFollow
+from ursina.scripts.position_limiter import PositionLimiter
+from ursina.scripts.grid_layout import grid_layout
 
-from ursina.internal_prefabs.tooltip import Tooltip
-from ursina.internal_prefabs.draggable import Draggable
-from ursina.internal_prefabs.scrollable import Scrollable
-from ursina.internal_prefabs.slider import Slider
-from ursina.internal_prefabs.button_group import ButtonGroup
-from ursina.internal_prefabs import primitives
+from ursina.prefabs.tooltip import Tooltip
+from ursina.prefabs.draggable import Draggable
+from ursina.prefabs.scrollable import Scrollable
+from ursina.prefabs.slider import Slider
+from ursina.prefabs.button_group import ButtonGroup
+from ursina.prefabs import primitives
 
-from ursina.internal_prefabs.debug_menu import DebugMenu
-from ursina.internal_prefabs.editor_camera import EditorCamera
-from ursina.internal_prefabs.hot_reloader import HotReloader
-from ursina.internal_prefabs.memory_counter import MemoryCounter
-from ursina.internal_prefabs.video_recorder import VideoRecorder
+from ursina.prefabs.debug_menu import DebugMenu
+from ursina.prefabs.editor_camera import EditorCamera
+from ursina.prefabs.hot_reloader import HotReloader
+from ursina.prefabs.memory_counter import MemoryCounter
+from ursina.prefabs.video_recorder import VideoRecorder

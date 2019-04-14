@@ -2,8 +2,8 @@ from panda3d.core import MeshDrawer, NodePath
 from panda3d.core import GeomVertexData, GeomVertexFormat, Geom, GeomVertexWriter, GeomNode
 from panda3d.core import GeomTriangles, GeomTristrips, GeomTrifans
 from panda3d.core import GeomLines, GeomLinestrips, GeomPoints
-from ursina.internal_scripts.generate_normals import generate_normals
-from ursina.internal_scripts.colorize import colorize
+from ursina.scripts.generate_normals import generate_normals
+from ursina.scripts.colorize import colorize
 from ursina import color
 
 

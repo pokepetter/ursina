@@ -87,7 +87,7 @@ class Window(WindowProperties):
             )
 
     def make_exit_button(self):     # called by main after setting up camera
-        from ursina.internal_prefabs.exit_button import ExitButton
+        from ursina.prefabs.exit_button import ExitButton
         from ursina import scene
         self.exit_button = ExitButton()
 

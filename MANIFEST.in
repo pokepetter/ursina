@@ -1,7 +1,7 @@
 include ursina/font/*
-include ursina/internal_models/*
-include ursina/internal_prefabs/*
-include ursina/internal_scenes/*
-include ursina/internal_scripts/*
-include ursina/internal_textures/*
+include ursina/models/*
+include ursina/prefabs/*
+include ursina/scenes/*
+include ursina/scripts/*
+include ursina/textures/*
 include ursina/samples/*

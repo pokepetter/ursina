@@ -218,7 +218,7 @@ for f in path.glob('*.py'):
 
 
 prefab_info = dict()
-for f in path.glob('internal_prefabs/*.py'):
+for f in path.glob('prefabs/*.py'):
     if f.name.startswith('_'):
         continue
 
@@ -237,7 +237,7 @@ for f in path.glob('internal_prefabs/*.py'):
 
 
 script_info = dict()
-for f in path.glob('internal_scripts/*.py'):
+for f in path.glob('scripts/*.py'):
     if f.name.startswith('_'):
         continue
 
@@ -265,13 +265,13 @@ for f in path.glob('internal_scripts/*.py'):
             script_info[class_name] = (params, attrs, methods, example)
 
 asset_info = dict()
-model_names = [f'\'{f.stem}\'' for f in path.glob('internal_models/compressed/*.ursinamesh')]
+model_names = [f'\'{f.stem}\'' for f in path.glob('models/compressed/*.ursinamesh')]
 asset_info['models'] = ('', model_names, '', '''e = Entity(model='quad')''')
 
-texture_names = [f'\'{f.stem}\'' for f in path.glob('internal_textures/*.*')]
+texture_names = [f'\'{f.stem}\'' for f in path.glob('textures/*.*')]
 asset_info['textures'] = ('', texture_names, '', '''e = Entity(model='cube', texture='brick')''')
 
-for f in path.glob('internal_models/procedural/*.py'):
+for f in path.glob('models/procedural/*.py'):
     if f.name.startswith('_'):
         continue
 

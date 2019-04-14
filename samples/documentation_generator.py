@@ -64,11 +64,11 @@ def class_info(classes):
 
 
 classes = inspect.getmembers(sys.modules['ursina'], inspect.isclass)
-prefab_classes = [c for c in classes if c[1].__module__.startswith('ursina.internal_prefabs')]
+prefab_classes = [c for c in classes if c[1].__module__.startswith('ursina.prefabs')]
 core_classes = [
     c for c in classes
     if c[1].__module__.startswith('ursina')
-    and not c[1].__module__.startswith('ursina.internal_prefabs')
+    and not c[1].__module__.startswith('ursina.prefabs')
     ]
 
 
