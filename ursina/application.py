@@ -28,3 +28,7 @@ compressed_models_folder = models_folder / 'compressed/'
 _model_path = getModelPath()
 _model_path.append_path(str(internal_fonts_folder.resolve()))
 _model_path.append_path(str(asset_folder.resolve()))
+
+
+def quit():
+    os._exit(0)

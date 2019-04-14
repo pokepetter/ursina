@@ -15,8 +15,8 @@ class DropdownMenu(DropdownMenuButton):
         super().__init__(text=text)
         self.buttons = buttons
         for i, b in enumerate(self.buttons):
-            b.parent = self
-            b.scale = 1
+            b.world_parent = self
+            b.original_scale = b.scale
             b.y = -i-1
             b.enabled = False
 
@@ -58,18 +58,18 @@ if __name__ == '__main__':
     app = Ursina()
     # DropdownMenu(text='File')
     DropdownMenu('File', buttons=(
-        DropdownMenuButton('New', on_click=new),
-        DropdownMenuButton('Open', onclick=open_project),
+        DropdownMenuButton('New'),
+        DropdownMenuButton('Open'),
         DropdownMenu('Reopen Project', buttons=(
             DropdownMenuButton('Project 1'),
             DropdownMenuButton('Project 2'),
             )),
-        DropdownMenuButton('Save', on_click=save_system.save),
+        DropdownMenuButton('Save'),
         DropdownMenu('Options', buttons=(
             DropdownMenuButton('Option a'),
             DropdownMenuButton('Option b'),
             )),
-        DropdownMenuButton('Exit', onclick=application.quit),
+        DropdownMenuButton('Exit'),
         ))
 
     app.run()
