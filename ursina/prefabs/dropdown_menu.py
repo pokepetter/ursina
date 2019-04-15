@@ -8,6 +8,7 @@ class DropdownMenuButton(Button):
             self.text_entity.x = .05
             self.text_entity.origin = (-.5, 0)
             self.text_entity.scale *= .8
+            
 
 class DropdownMenu(DropdownMenuButton):
 

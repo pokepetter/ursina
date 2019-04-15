@@ -54,7 +54,9 @@ class ButtonGroup(Entity):
         for e in self.options:
             b = Button(parent=self, text=e, name=e, scale_x=width, scale_y=.9)
             b.value = e
+            b.highlight_scale = 1
             b.highlight_color = color.orange
+            b.pressed_scale = 1
             self.buttons.append(b)
 
         grid_layout(self.buttons, spacing=(0.025,0,0), origin=(-.5, .5, 0))
@@ -85,16 +87,8 @@ class ButtonGroup(Entity):
 
 if __name__ == '__main__':
     app = Ursina()
-    # Text.size *= .75
+
     Text.default_font = 'VeraMono.ttf'
-    patterns = (
-            (2, 2, 1, 2, 2, 3),
-            (1,1,1,1,1,1,1,1,1,1,1,1),
-            (2,1,2,2,2,1,2),
-            )
-    # button_group = ButtonGroup(('man', 'woman', 'other'))
-    button_group = ButtonGroup([str(e).replace(',', '')[1:-1] for e in patterns])
-    grid_layout(button_group.children, max_x=1)
-    # Entity(model='quad', color=color.green, scale=.01, parent=camera.ui)
+    button_group = ButtonGroup(('man', 'woman', 'other'))
 
     app.run()

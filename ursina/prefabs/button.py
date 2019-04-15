@@ -81,10 +81,12 @@ class Button(Entity):
     def __setattr__(self, name, value):
         if name == 'color':
             # ignore setting original color if the button is modifying its own color on enter or on exit
-            if not inspect.stack()[1][3] in ('__init__', 'on_mouse_enter', 'on_mouse_exit', 'input'):
-                self.original_color = value
-                self.highlight_color = color.tint(self.original_color, .2)
-                self.pressed_color = color.tint(self.original_color, -.2)
+            if inspect.stack()[1].filename == __file__ and not inspect.stack()[1][3] == '__init__':
+                return
+
+            self.original_color = value
+            self.highlight_color = color.tint(self.original_color, .2)
+            self.pressed_color = color.tint(self.original_color, -.2)
 
 
         if name == 'origin':
@@ -112,15 +114,15 @@ class Button(Entity):
         if key == 'left mouse down':
             if self.hovered:
                 self.color = self.pressed_color
-                self.scale *= self.pressed_scale
+                self.model.setScale(Vec3(self.pressed_scale, 1, self.pressed_scale))
 
         if key == 'left mouse up':
             if self.hovered:
                 self.color = self.highlight_color
-                self.scale = self.original_scale * self.highlight_scale
+                self.model.setScale(Vec3(self.highlight_scale, 1, self.highlight_scale))
             else:
                 self.color = self.original_color
-                self.scale = self.original_scale
+                self.model.setScale(Vec3(1,1,1))
 
 
     def on_mouse_enter(self):
