@@ -58,10 +58,14 @@ class Text(Entity):
     def text(self):
         t = ''
         y = 0
+        if self.text_nodes:
+            y = self.text_nodes[0].getZ()
+
         for tn in self.text_nodes:
             if y != tn.getZ():
                 t += '\n'
                 y = tn.getZ()
+
             t += tn.node().text
 
         return t
@@ -138,8 +142,8 @@ class Text(Entity):
             x * self.size * self.scale_override,
             0,
             (y * self.size * self.line_height) - .75 * self.size)
-        if not text == '':
-            self.text_nodes.append(self.text_node_path)
+
+        self.text_nodes.append(self.text_node_path)
 
         if tag in self.text_colors:
             lightness = color.to_hsv(self.color_tag)[2]
