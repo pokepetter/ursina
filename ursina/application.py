@@ -5,6 +5,7 @@ from pathlib import Path
 
 
 
+
 package_folder = Path(__file__).parent
 asset_folder = Path().cwd()
 
@@ -29,6 +30,16 @@ _model_path = getModelPath()
 _model_path.append_path(str(internal_fonts_folder.resolve()))
 _model_path.append_path(str(asset_folder.resolve()))
 
+
+paused = False
+
+def pause():
+    global paused
+    paused = True
+
+def resume():
+    global paused
+    paused = False
 
 def quit():
     os._exit(0)

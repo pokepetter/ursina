@@ -112,11 +112,14 @@ class Ursina(ShowBase):
 
         mouse.update()
 
-        if hasattr(__main__, 'update'):
+        if hasattr(__main__, 'update') and not application.paused:
             __main__.update()
 
         for entity in scene.entities:
             if hasattr(entity, 'enabled') and entity.enabled == False:
+                continue
+
+            if application.paused and entity.ignore_paused == False:
                 continue
 
             if hasattr(entity, 'update'):
@@ -161,11 +164,15 @@ class Ursina(ShowBase):
         except: pass
         try: input_handler.input(key)
         except: pass
-        try: __main__.input(key)
-        except: pass
+        if not application.paused:
+            try: __main__.input(key)
+            except: pass
 
         for entity in scene.entities:
             if hasattr(entity, 'enabled') and entity.enabled == False:
+                continue
+
+            if application.paused and entity.ignore_paused == False:
                 continue
 
             if hasattr(entity, 'input'):
@@ -190,15 +197,22 @@ class Ursina(ShowBase):
         if key == 'f9':
             window.display_mode = 'default'
 
+        if key == 'escape':
+            if not application.paused:
+                application.pause()
+            else:
+                application.resume()
+            # application.paused = not application.paused
+
 
     def run(self):
         # start game if there is no editor
-        for e in scene.entities:
-            if hasattr(e, 'start'):
-                e.start()
-                for s in e.scripts:
-                    if hasattr(s, 'start'):
-                        s.start()
+        # for e in scene.entities:
+        #     if hasattr(e, 'start'):
+        #         e.start()
+        #         for s in e.scripts:
+        #             if hasattr(s, 'start'):
+        #                 s.start()
         super().run()
 
 

@@ -51,6 +51,7 @@ class Entity(NodePath):
         except:
             print('scene not yet initialized')
         self.eternal = False    # eternal entities does not get destroyed on scene.clear()
+        self.ignore_paused = False
         self.model = None
         self.color = color.white
         self.texture = None     # tries to set to camel_to_snake(self.type)
@@ -249,11 +250,28 @@ class Entity(NodePath):
                     new_value.add_x(value[i])
                     new_value.add_y(value[i+1])
                     new_value.add_z(value[i+2])
+
+            for e in new_value:
+                if e == 0:
+                    e = .001
+
             self.setScale(new_value[0], new_value[2], new_value[1])
 
-        if name == 'scale_x': self.set_scale(value, self.scale_z, self.scale_y)
-        if name == 'scale_y': self.set_scale(self.scale_x, self.scale_z, value)
-        if name == 'scale_z': self.set_scale(self.scale_x, value, self.scale_y)
+        if name == 'scale_x':
+            if value == 0:
+                value = .001
+            self.set_scale(value, self.scale_z, self.scale_y)
+
+        if name == 'scale_y':
+            if value == 0:
+                value = .001
+            self.set_scale(self.scale_x, self.scale_z, value)
+
+        if name == 'scale_z':
+            if value == 0:
+                value = .001
+            self.set_scale(self.scale_x, value, self.scale_y)
+
 
 
         if name == 'collider':
@@ -784,7 +802,8 @@ class Entity(NodePath):
     def animate_position(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
         self.animate('x', value[0], duration, delay, curve, resolution, interrupt)
         self.animate('y', value[1], duration, delay, curve, resolution, interrupt)
-        self.animate('z', value[2], duration, delay, curve, resolution, interrupt)
+        if len(value) > 2:
+            self.animate('z', value[2], duration, delay, curve, resolution, interrupt)
     def animate_x(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
         self.animate('x', value, duration, delay, curve, resolution, interrupt)
     def animate_y(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
@@ -809,16 +828,10 @@ class Entity(NodePath):
             value = Vec3(value, value, value)
         self.animate('scale', value, duration, delay, curve, resolution, interrupt)
     def animate_scale_x(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
-        if isinstance(value, (int, float, complex)):
-            value = Vec3(value, value, value)
         self.animate('scale_x', value, duration, delay, curve, resolution, interrupt)
     def animate_scale_y(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
-        if isinstance(value, (int, float, complex)):
-            value = Vec3(value, value, value)
         self.animate('scale_y', value, duration, delay, curve, resolution, interrupt)
     def animate_scale_z(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
-        if isinstance(value, (int, float, complex)):
-            value = Vec3(value, value, value)
         self.animate('scale_z', value, duration, delay, curve, resolution, interrupt)
 
 
