@@ -7,7 +7,6 @@ from pathlib import Path
 paused = False
 time_scale = 1
 sequences = list()
-print('............')
 
 def pause():
     global paused
