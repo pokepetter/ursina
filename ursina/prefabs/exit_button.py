@@ -5,6 +5,7 @@ class ExitButton(Button):
         super().__init__(
             eternal = True,
             origin = (.5, .5),
+            # text_origin = (-.5,-.5),
             position = window.top_right,
             z = -999,
             scale = (.05, .025),

@@ -20,9 +20,10 @@ from ursina import application
 from ursina.collider import *
 from ursina.mesh import Mesh
 from os import path
-from direct.interval.IntervalGlobal import Sequence, Func, Wait
+# from direct.interval.IntervalGlobal import Sequence, Func, Wait
 
 # from direct.showbase import Loader
+from ursina.sequence import Sequence, Func, Wait
 from ursina.ursinamath import lerp
 from ursina import curve
 from ursina.curve import *
@@ -35,6 +36,7 @@ try:
     from ursina import scene
 except:
     pass
+
 
 
 class Entity(NodePath):
@@ -880,7 +882,7 @@ if __name__ == '__main__':
         def input(self, key):
             if key == 'space':
                 # self.color = self.color.inverse()
-                self.animate_scale_y(0)
+                self.animate_x(2, duration=1)
 
         def update(self):
             self.x += held_keys['d'] * time.dt * 10

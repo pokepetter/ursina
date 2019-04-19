@@ -4,6 +4,25 @@ from panda3d.core import getModelPath
 from pathlib import Path
 
 
+paused = False
+time_scale = 1
+sequences = list()
+print('............')
+
+def pause():
+    global paused
+    paused = True
+    for seq in sequences:
+        seq.pause()
+
+def resume():
+    global paused
+    paused = False
+    for seq in sequences:
+        seq.resume()
+
+def quit():
+    os._exit(0)
 
 
 package_folder = Path(__file__).parent
@@ -29,17 +48,3 @@ compressed_models_folder = models_folder / 'compressed/'
 _model_path = getModelPath()
 _model_path.append_path(str(internal_fonts_folder.resolve()))
 _model_path.append_path(str(asset_folder.resolve()))
-
-
-paused = False
-
-def pause():
-    global paused
-    paused = True
-
-def resume():
-    global paused
-    paused = False
-
-def quit():
-    os._exit(0)

@@ -80,16 +80,25 @@ class Button(Entity):
 
     def __setattr__(self, name, value):
         if name == 'color':
-            self.highlight_color = value.tint(.2)
-            self.pressed_color = value.tint(-.2)
-
+            try:
+                self.highlight_color = value.tint(.2)
+                self.pressed_color = value.tint(-.2)
+            except:
+                pass
 
         if name == 'origin':
-            super().__setattr__(name, value)
+            if hasattr(self, 'text_entity') and self.text_entity:
+                self.text_entity.world_parent = self.model
+                super().__setattr__(name, value)
+                self.text_entity.world_parent = self
+            else:
+                super().__setattr__(name, value)
+
             try:    # update collider position by making a new one
                 self.collider = 'box'
             except Exception as e:
                 return e
+
 
         if name == 'on_click' and isinstance(value, str):
             object.__setattr__(self, 'on_click_string', textwrap.dedent(value))
@@ -171,8 +180,8 @@ if __name__ == '__main__':
     from ursina import *
     app = Ursina()
 
-    b = Button(text='hello world!', color=color.azure, scale=.05)
-    b.fit()
+    b = Button('hello world!', color=color.azure, scale=.05, origin=(.5,.5))
+    # b.fit()
     b.on_click = application.quit
     b.tooltip = Tooltip('exit')
 

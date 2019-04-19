@@ -99,21 +99,22 @@ class Ursina(ShowBase):
         mouse.enabled = True
         self.mouse = mouse
 
-        # scene.set_up()
-        # from ursina.entity import Entity
         scene.reparent_to(render)
         self._update_task = taskMgr.add(self._update, "update")
 
 
     def _update(self, task):
         # time between frames
-        dt = globalClock.getDt()
+        dt = globalClock.getDt() * application.time_scale
         time.dt = dt
 
         mouse.update()
 
         if hasattr(__main__, 'update') and not application.paused:
             __main__.update()
+
+        for seq in application.sequences:
+            seq.update()
 
         for entity in scene.entities:
             if hasattr(entity, 'enabled') and entity.enabled == False:
@@ -130,6 +131,8 @@ class Ursina(ShowBase):
                 for script in entity.scripts:
                     if script.enabled and hasattr(script, 'update'):
                         script.update()
+
+
 
         return Task.cont
 
@@ -202,17 +205,9 @@ class Ursina(ShowBase):
                 application.pause()
             else:
                 application.resume()
-            # application.paused = not application.paused
 
 
     def run(self):
-        # start game if there is no editor
-        # for e in scene.entities:
-        #     if hasattr(e, 'start'):
-        #         e.start()
-        #         for s in e.scripts:
-        #             if hasattr(s, 'start'):
-        #                 s.start()
         super().run()
 
 
