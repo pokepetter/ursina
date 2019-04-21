@@ -20,6 +20,7 @@ class Sequence():
         super().__init__()
         self.args = list(args)
         self.t = 0
+        self.duration = 0
         self.funcs = list()
         self.paused = True
         self.loop = False
@@ -34,20 +35,28 @@ class Sequence():
 
     def generate(self):
         self.funcs = list()
-        n = 0
+        # self.duration = 0
         for arg in self.args:
             if isinstance(arg, Wait):
-                n += arg.duration
+                self.duration += arg.duration
             elif isinstance(arg, (int, float)):
-                n += arg
+                self.duration += arg
 
             elif isinstance(arg, Func):
-                self.funcs.append([arg.func, arg.args, n])
+                self.funcs.append([arg.func, arg.args, self.duration])
 
 
-    def append(self, item):
-        self.args.append(item)
-        self.generate()
+    def append(self, arg):
+        self.args.append(arg)
+
+        if isinstance(arg, Wait):
+            self.duration += arg.duration
+        elif isinstance(arg, (int, float)):
+            self.duration += arg
+
+        elif isinstance(arg, Func):
+            self.funcs.append([arg.func, arg.args, self.duration])
+        # self.generate()
 
 
     def start(self):
@@ -104,6 +113,9 @@ if __name__ == '__main__':
         2,
         loop=True
     )
+    s.append(
+        Func(test, 'fffff')
+        )
     # application.sequences.append(s)
     def input(key):
         if key == 's':
