@@ -20,7 +20,7 @@ class PlayerController(Entity):
         # self.fall_speed = .002
         # self.fall_acceleration = 2.1 * 2
         self.air_time = 0
-        self.y = raycast(self.world_position, self.down, ignore=(self, )).point[1]
+        self.y = raycast(self.world_position, self.down, ignore=(self, )).world_point[1]
 
         camera.add_script(SmoothFollow(target=self, offset=(0,1,-30), speed=4))
 
@@ -39,8 +39,8 @@ class PlayerController(Entity):
         if not self.jumping and ray.distance > .01:
             self.y -= min(self.air_time, ray.distance)
             # make sure it doesn't overshoot into the collider
-            if ray.hit and self.y < ray.point[1]:
-                self.y = ray.point[1]
+            if ray.hit and self.y < ray.world_point[1]:
+                self.y = ray.world_point[1]
 
             self.air_time += 1/30
 

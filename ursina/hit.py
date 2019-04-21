@@ -7,6 +7,7 @@ class Hit():
         self.hit = None
         self.entity = None
         self.point = None
+        self.world_point = None
         self.distance = math.inf
         self.normal = None
         self.world_normal = None

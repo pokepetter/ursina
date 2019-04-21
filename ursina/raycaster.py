@@ -65,9 +65,11 @@ class Raycaster(Entity):
 
         self.collision = self.entries[0]
         nP = self.collision.get_into_node_path().parent
-        point = self.collision.get_surface_point(render)
+        point = self.collision.get_surface_point(nP)
         point = Vec3(point[0], point[2], point[1])
-        hit_dist = self.distance(self.world_position, point)
+        world_point = self.collision.get_surface_point(render)
+        world_point = Vec3(world_point[0], world_point[2], world_point[1])
+        hit_dist = self.distance(self.world_position, world_point)
         if hit_dist <= dist:
             if nP.name.endswith('.egg'):
                 nP = nP.parent
@@ -79,6 +81,7 @@ class Raycaster(Entity):
                     self.hit.entity = e
 
             self.hit.point = point
+            self.hit.world_point = world_point
             self.hit.distance = hit_dist
             normal = self.collision.get_surface_normal(self.collision.get_into_node_path().parent)
             self.hit.normal = (normal[0], normal[2], normal[1])
