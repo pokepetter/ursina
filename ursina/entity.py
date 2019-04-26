@@ -3,6 +3,7 @@ import inspect
 import importlib
 import random
 import glob
+from pathlib import Path
 from panda3d.core import PandaNode
 from panda3d.core import NodePath
 from panda3d.core import GeomNode
@@ -11,6 +12,7 @@ from panda3d.core import Vec3, Vec4
 from panda3d.core import Point3
 from panda3d.core import TransparencyAttrib
 from panda3d.core import Shader
+from panda3d.core import TextureStage, TexGenAttrib, GeomVertexReader
 
 # from panda3d.core import Texture as PandaTexture
 from ursina.texture import Texture
@@ -57,6 +59,8 @@ class Entity(NodePath):
         self.model = None
         self.color = color.white
         self.texture = None     # tries to set to camel_to_snake(self.type)
+        self.reflection_map = scene.reflection_map
+        self.reflectivity = 0
         try:
             self.texture = camel_to_snake(self.type)
         except:
@@ -554,6 +558,55 @@ class Entity(NodePath):
         if value == None:
             self.model.set_texture_off(True)
 
+    @property
+    def reflection_map(self):
+        return self._reflection_map
+
+    @reflection_map.setter
+    def reflection_map(self, value):
+        if value.__class__ is Texture:
+            texture = value
+
+        elif isinstance(value, str):
+            texture = load_texture(value)
+
+        self._reflection_map = texture
+
+
+    @property
+    def reflectivity(self):
+        return self._reflectivity
+
+    @reflectivity.setter
+    def reflectivity(self, value):
+        self._reflectivity = value
+
+        if value > 0:
+            # if self.reflection_map == None:
+            #     self.reflection_map = scene.reflection_map
+            #
+            # if not self.reflection_map:
+            #     print('error setting reflectivity. no reflection map')
+            #     return
+            if not self.normals:
+                self.model.generate_normals()
+
+            # ts = TextureStage('env')
+            # ts.setMode(TextureStage.MAdd)
+            # self.model.setTexGen(ts, TexGenAttrib.MEyeSphereMap)
+            # print('---------------set reflectivity', self.reflection_map)
+            # self.model.setTexture(ts, self.reflection_map)
+            self.model.setTexGen(TextureStage.getDefault(), TexGenAttrib.MEyeSphereMap)
+            self.texture = self._reflection_map
+            # print('set reflectivity')
+
+    def generate_reflection_map(self, size=512, name=f'sphere_map_{len(scene.entities)}'):
+        _name = 'textures/' + name + '.jpg'
+        base.saveSphereMap(_name, size=size)
+        print('saved relfection mapppppppppppppppppp', name)
+        self.reflection_map = name
+        self.reflectivity = self.reflectivity
+
 
     @property
     def model_bounds(self):
@@ -581,14 +634,17 @@ class Entity(NodePath):
             geomNodeCollection = self.model.findAllMatches('**/+GeomNode')
             geomNode = geomNodeCollection[0].node()
             self._vert_cache = geomNode.getGeom(0).getVertexData()
-            return self._vert_cache
+
+        return self._vert_cache
 
     @property
     def vertices(self):
         vertex_reader = GeomVertexReader(self.vertex_data, 'vertex')
         vertices = list()
         while not vertex_reader.isAtEnd():
-            vertices.append([e for e in vertex_reader.getData3f()])
+            v = vertex_reader.getData3f()
+            v = Vec3(v[0], v[2], v[1])
+            vertices.append(v)
         return vertices
 
     @property
@@ -596,7 +652,9 @@ class Entity(NodePath):
         vertex_reader = GeomVertexReader(self.vertex_data, 'normal')
         vertices = list()
         while not vertex_reader.isAtEnd():
-            vertices.append([e for e in vertex_reader.getData3f()])
+            v = vertex_reader.getData3f()
+            v = Vec3(v[0], v[2], v[1])
+            vertices.append(v)
         return vertices
 
     @property
@@ -889,5 +947,14 @@ if __name__ == '__main__':
             self.x -= held_keys['a'] * time.dt * 10
 
     player = Player()
+
+    Sky()
+    e = Entity(model='sphere', color=color.red, reflectivity=1, y=2.5)
+    e.generate_reflection_map()
+
+    player.reflection_map = e.reflection_map
+    player.reflectivity = 1
+
+    EditorCamera()
 
     app.run()

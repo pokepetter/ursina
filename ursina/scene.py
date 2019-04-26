@@ -1,6 +1,7 @@
 import sys
 from panda3d.core import NodePath
 from ursina import color
+from ursina.texture_importer import load_texture
 # from ursina.ursinastuff import destroy
 # from ursina.entity import Entity
 
@@ -20,11 +21,12 @@ class Scene(NodePath):
         self.entities = []
         self.hidden = NodePath('hidden')
         self.has_changes = False
-
+        self.reflection_map = 'reflection_map_3'
 
     def set_up(self):
         from ursina.entity import Entity
         self.reparent_to(render)
+        self.reflection_map = load_texture(self.reflection_map)
 
 
     def clear(self):

@@ -45,11 +45,11 @@ class Mesh(NodePath):
             (0,1,1) : GeomVertexFormat.getV3n3t2(),
             (1,1,1) : GeomVertexFormat.getV3n3c4t2(),
             }
-        vertex_format = formats[(self.colors != None, self.uvs != None, self.normals != None)]
+
+        vertex_format = formats[(bool(self.colors), bool(self.uvs), bool(self.normals))]
         vdata = GeomVertexData('name', vertex_format, static_mode)
         vdata.setNumRows(len(self.vertices)) # for speed
 
-        # texcoord = GeomVertexWriter(vdata, 'texcoord')
 
         vertexwriter = GeomVertexWriter(vdata, 'vertex')
         for v in self.vertices:
@@ -68,9 +68,9 @@ class Mesh(NodePath):
         if self.normals != None:
             normalwriter = GeomVertexWriter(vdata, 'normal')
             for norm in self.normals:
-                normalwriter.addData3f((v[0], v[2], v[1]))
-        # normal.addData3f(0, 0, 1)
-        # texcoord.addData2f(1, 0)
+                normalwriter.addData3f((norm[0], norm[2], norm[1]))
+
+
         modes = {
             'triangle' : GeomTriangles(static_mode),
             'tristrip' : GeomTristrips(static_mode),
@@ -151,6 +151,7 @@ class Mesh(NodePath):
 
     def generate_normals(self):
         self.normals = list(generate_normals(self.vertices, self.triangles))
+        self.generate()
 
 
     def colorize(self, left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white):
@@ -164,11 +165,22 @@ if __name__ == '__main__':
     verts = ((0,0,0), (1,0,0), (.5, 1, 0), (-.5,1,0))
     tris = (1, 2, 0, 2, 3, 0)
     uvs = ((1.0, 0.0), (0.0, 1.0), (0.0, 0.0), (1.0, 1.0))
+    norms = ((0,0,-1),) * len(verts)
     colors = (color.red, color.blue, color.lime, color.black)
 
-    m = Mesh(vertices=verts, triangles=tris, uvs=uvs, colors=colors)
-    e = Entity(model = m)
+    # m = Mesh(vertices=verts, triangles=tris, normals=norms)
+    # m = Sphere()
+    # e = Entity(model=m)
 
+    e = Entity(model='sphere', scale=2)
+    e.model.generate_normals()
+    for n in e.normals:
+        print(n)
+
+    from panda3d.core import TextureStage, TexGenAttrib, GeomVertexReader
+    e.setTexGen(TextureStage.getDefault(), TexGenAttrib.MEyeSphereMap)
+    e.texture = 'reflection_map_2'
+    # print(e.normals)
 
     EditorCamera()
     app.run()
