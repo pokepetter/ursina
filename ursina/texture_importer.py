@@ -18,7 +18,7 @@ def load_texture(name, path=None):
     for folder in folders:
         for filename in folder.glob('**/' + name + '.*'):
             if filename.suffix in file_types:
-                print('found:', filename)
+                # print('found:', filename)
                 return Texture(str(filename.resolve()))
 
 

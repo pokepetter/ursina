@@ -40,7 +40,8 @@ class Ursina(ShowBase):
             model = 'quad',
             scale_x = window.aspect_ratio,
             color = color.clear,
-            eternal = True
+            eternal = True,
+            z = -999
             )
 
         # input
@@ -99,7 +100,7 @@ class Ursina(ShowBase):
         mouse.enabled = True
         self.mouse = mouse
 
-        scene.reparent_to(render)
+        scene.set_up()
         self._update_task = taskMgr.add(self._update, "update")
 
 

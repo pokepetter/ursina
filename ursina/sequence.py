@@ -96,36 +96,26 @@ class Sequence():
             del self
 
 
-def test(arg=''):
-    print('yolo', arg)
 
 if __name__ == '__main__':
+
     app = Ursina()
     s = Sequence(
         1,
-        Func(test),
+        Func(print, 'one'),
         1,
-        Func(test),
-        1,
-        Func(test),
-        2,
-        Func(test, 'awdwkdmwd'),
-        2,
+        Func(print, 'two'),
         loop=True
-    )
-    s.append(
-        Func(test, 'fffff')
         )
-    # application.sequences.append(s)
+
+    s.append(
+        Func(print, 'appended to sequence')
+        )
+
     def input(key):
-        if key == 's':
-            s.start()
-        if key == 'f':
-            s.finish()
-        if key == 'p':
-            s.pause()
-        if key == 'r':
-            s.resume()
+        actions = {'s' : s.start, 'f' : s.finish, 'p' : s.pause, 'r' : s.resume}
+        if key in actions:
+            actions[key]()
 
 
     app.run()

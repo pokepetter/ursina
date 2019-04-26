@@ -80,7 +80,7 @@ class Texture():
 
     @filtering.setter
     def filtering(self, value):
-        print('setting filtering:', value)
+        # print('setting filtering:', value)
         if value in (None, False, 'nearest', 'nearest neighbor'):
             self._texture.setMagfilter(SamplerState.FT_nearest)
             self._texture.setMinfilter(SamplerState.FT_nearest)

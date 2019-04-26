@@ -4,6 +4,8 @@ from ursina import *
 def grid_layout(l, max_x=8, max_y=8, spacing=(0,0,0), origin=(-.5,.5,0), offset=(0,0,0)):
     if len(origin) == 2:
         origin += (0,)
+    if len(offset) == 2:
+        offset += (0,)
     if not isinstance(l, list):
         print('error: grid_layout input must be a list or tuple, not', l.__class__.__name__)
         return
@@ -28,8 +30,9 @@ def grid_layout(l, max_x=8, max_y=8, spacing=(0,0,0), origin=(-.5,.5,0), offset=
         z += max([e.bounds[2] for e in s]) + spacing[2]
 
     for e in l:
-        e.z -= z/2 - (z/2 * origin[2]*2)
-
+        e.z -= z/2 - (z/2 * origin[2]*2) + offset[2]
+        e.y += offset[1]
+        e.x += offset[0]
 
 
 if __name__ == '__main__':
