@@ -10,7 +10,7 @@ open source game engine
 --------------------------------------
 # normal
 
-<a href="https://github.com/pokepetter/ursina">[GitHub]</a>    <a href="documentation.html">[Documentation]</a>    <a href="https://twitter.com/petteramland">[Twitter]</a>
+<a href="https://github.com/pokepetter/ursina">GitHub</a>    	<a href="documentation.html">Documentation</a>    	<a href="https://twitter.com/petteramland">Twitter</a>
 
 
 # left, width 900, size 2, bold,
@@ -62,7 +62,7 @@ Getting Started
 # size 1, normal
 
     1) Install Python 3.6 or newer. <a href="https://www.python.org/downloads/">[Download Python here]</a>
-    2) Make sure you have git installed.
+    2) Make sure you have git installed. <a href="https://git-scm.com/">[git]</a>
     3) Open cmd/terminal and type:
 
         # code
@@ -89,8 +89,8 @@ Dependencies
 
     * python 3.6+
     * panda3d
-    * screeninfo, for detecting screen resolution
-    * hurry.size, for getting screen resolution
+    * screeninfo, for detecting screen resolution (included)
+    * hurry.size, for getting screen resolution (included)
     * pillow, for texture manipulation
     * psd-tools, for converting .psd files
     * blender, for converting .blend files

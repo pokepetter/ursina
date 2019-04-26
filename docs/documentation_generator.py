@@ -179,7 +179,7 @@ for f in path.glob('*.py'):
     if f.name.startswith('_') or f.name == 'build.py':
         continue
 
-    with open(f) as t:
+    with open(f, encoding='utf8') as t:
         code = t.read()
 
         if not is_singleton(code):
@@ -223,7 +223,7 @@ for f in path.glob('prefabs/*.py'):
         continue
 
     # if f.is_file() and f.name.endswith(('.py', )):
-    with open(f) as t:
+    with open(f, encoding='utf8') as t:
         code = t.read()
         classes = get_classes(code)
         for class_name, class_definition in classes.items():
@@ -242,7 +242,7 @@ for f in path.glob('scripts/*.py'):
         continue
 
     # if f.is_file() and f.name.endswith(('.py', )):
-    with open(f) as t:
+    with open(f, encoding='utf8') as t:
 
         code = t.read()
         if not 'class ' in code:
@@ -275,7 +275,7 @@ for f in path.glob('models/procedural/*.py'):
     if f.name.startswith('_'):
         continue
 
-    with open(f) as t:
+    with open(f, encoding='utf8') as t:
         code = t.read()
         classes = get_classes(code)
         for class_name, class_definition in classes.items():
@@ -290,7 +290,7 @@ for f in path.glob('models/procedural/*.py'):
 def html_color(color):
     return f'hsl({color.h}, {int(color.s*100)}%, {int(color.v*100)}%)'
 
-base_color = color.color(60, 1, .00)
+base_color = color.color(60, 1, .01)
 # background_color = color.color(0,0,.9)
 background_color = lerp(base_color, base_color.inverse(), .125)
 text_color = lerp(background_color, background_color.inverse(), .9)
@@ -383,12 +383,12 @@ for i, class_dictionary in enumerate((module_info, class_info, prefab_info, scri
         name = name.replace(')', ')</g>')
 
         v = lerp(text_color.v, background_color.v, .2)
-        col = color.color(90-(i*30), 1, v)
+        col = color.color(50-(i*30), .9, v)
         col = html_color(col)
 
         sidebar += f'''<a style="color:{col};" href="#{base_name}">{base_name}</a>\n'''
         html += '\n'
-        html += f'''<div id="{base_name}"><div id="header" style="color:{col}; font-size:1.5em;">{name}</div>'''
+        html += f'''<div id="{base_name}"><div id="{base_name}" style="color:{col}; font-size:1.5em;">{name}</div>'''
         html += '<pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">'
         if params:
             params = f'<params id="params" style="color: {init_color};">{params}</params>\n'
