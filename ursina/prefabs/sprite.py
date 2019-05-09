@@ -8,8 +8,6 @@ class Sprite(Entity):
 
         for key, value in kwargs.items():
             setattr(self, key, value)
-            if key == 'texture':
-                self.texture = value
 
         if not self.texture:
             destroy(self)

@@ -13,6 +13,8 @@ class Draggable(Button):
         self.min_x, self.min_y, self.min_z = -math.inf, -math.inf, -math.inf
         self.max_x, self.max_y, self.max_z = math.inf, math.inf, math.inf
 
+
+
         for key, value in kwargs.items():
             if key == 'text':
                 continue
@@ -24,6 +26,8 @@ class Draggable(Button):
             if not self.require_key or held_keys[self.require_key]:
                 self.dragging = True
                 self.start_pos = self.world_position
+                self.collision = False
+                self.z_plane = Entity(model='quad', collider='box', scale=99, world_position=self.world_position, color=color.clear)
                 try:
                     self.drag()
                 except:
@@ -32,6 +36,8 @@ class Draggable(Button):
         if self.dragging and key == 'left mouse up':
             self.dragging = False
             self.delta_drag = self.position - self.world_position
+            destroy(self.z_plane)
+            self.collision = True
             try:
                 self.drop()
             except:
@@ -46,10 +52,11 @@ class Draggable(Button):
 
     def update(self):
         if self.dragging:
-            if not self.lock_x:
-                self.world_x = self.start_pos[0] + (mouse.delta[0] * camera.fov * camera.aspect_ratio)
-            if not self.lock_y:
-                self.world_y = self.start_pos[1] + (mouse.delta[1] * camera.fov)
+            if mouse.world_point:
+                if not self.lock_x:
+                    self.world_x = mouse.world_point[0]
+                if not self.lock_y:
+                    self.world_y = mouse.world_point[1]
 
             if self.step > 0:
                 r = 1/self.step
@@ -68,7 +75,7 @@ if __name__ == '__main__':
     app = Ursina()
     camera.orthographic = True
 
-    e = Draggable()
+    e = Draggable(scale=.1)
     # e.parent = scene
     # e.require_key = 'shift'
     app.run()

@@ -35,7 +35,7 @@ class Raycaster(Entity):
         return math.sqrt(sum( (a - b)**2 for a, b in zip(a, b)))
 
 
-    def raycast(self, origin, direction, dist=math.inf, traverse_target=scene, ignore=list(), debug=False):
+    def raycast(self, origin, direction=(0,0,1), dist=math.inf, traverse_target=scene, ignore=list(), debug=False):
         self.position = origin
         self.look_at(self.position + direction)
         # need to do this for it to work for some reason

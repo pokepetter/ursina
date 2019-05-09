@@ -36,8 +36,8 @@ class HotReloader(Entity):
             dedent_next = False
 
             for line in text.split('\n'):
-                if line.startswith('from ursina'):
-                    continue
+                # if line.startswith('from ursina'):
+                #     continue
                 if 'Ursina()' in line or 'app.run()' in line or 'HotReloader(' in line:
                     continue
                 if line.startswith('''if __name__ == '__main__':'''):
