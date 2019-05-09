@@ -31,6 +31,19 @@ def distance(a, b):
     return dist
 
 
+def distance2d(a, b):
+    try:
+        a = a.position
+    except:
+        pass
+    try:
+        b = b.position
+    except:
+        pass
+        
+    return sqrt((b[0] - a[0])**2 + (b[1] - a[1])**2)
+
+
 def lerp(a, b, t):
     if isinstance(a, (int, float, complex)):
         return a + (b - a) * t
