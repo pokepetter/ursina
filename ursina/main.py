@@ -22,7 +22,7 @@ class Ursina(ShowBase):
         scene.camera = camera
         camera.reparent_to(base.render)
         camera.set_up()
-        render.set_antialias(AntialiasAttrib.MAuto)
+        render.set_antialias(AntialiasAttrib.MMultisample)
         # reapply screen effect to make it work in new resolution
         # print('adfaaaaaa:', application.base.win)
         # from direct.filter.CommonFilters import CommonFilters
@@ -35,14 +35,9 @@ class Ursina(ShowBase):
         #     falloff=0.000002
         # )
         window.make_exit_button()
-        window.overlay = Entity(
-            parent = camera.ui,
-            model = 'quad',
-            scale_x = window.aspect_ratio,
-            color = color.clear,
-            eternal = True,
-            z = -999
-            )
+
+        print('...........', window.overlay)
+        camera.overlay = window.overlay
 
         # input
         base.buttonThrowers[0].node().setButtonDownEvent('buttonDown')
@@ -102,6 +97,15 @@ class Ursina(ShowBase):
 
         scene.set_up()
         self._update_task = taskMgr.add(self._update, "update")
+
+        from ursina import HotReloader
+        application.hot_reloader = HotReloader(__main__.__file__)
+
+        def hot_reloader_input(key):
+            if key == 'f5':
+                application.hot_reloader.reload()
+
+        application.hot_reloader.input = hot_reloader_input
 
 
     def _update(self, task):
