@@ -102,13 +102,17 @@ class Mouse():
                 for s in self.hovered_entity.scripts:
                     if hasattr(s, 'on_click'):
                         s.on_click()
-                    # try:
-                        # s.on_click()
-                    # except:
-                    #     pass
             # double click
             if time.time() - self.prev_click_time <= self.double_click_distance:
                 base.input('double click')
+
+                if self.hovered_entity:
+                    if hasattr(self.hovered_entity, 'on_double_click'):
+                        self.hovered_entity.on_double_click()
+                    for s in self.hovered_entity.scripts:
+                        if hasattr(s, 'on_double_click'):
+                            s.on_double_click()
+                            
             self.prev_click_time = time.time()
 
 
@@ -194,7 +198,7 @@ class Mouse():
         return (n[0], n[2], n[1])
 
     @property
-    def global_normal(self):
+    def world_normal(self):
         if not self.collision:
             return None
         if not self.collision.has_surface_normal():
@@ -207,6 +211,14 @@ class Mouse():
     def point(self):
         if self.hovered_entity:
             p = self.collision.getSurfacePoint(self.hovered_entity)
+            return Point3(p[0], p[2], p[1])
+        else:
+            return None
+
+    @property
+    def world_point(self):
+        if self.hovered_entity:
+            p = self.collision.getSurfacePoint(render)
             return Point3(p[0], p[2], p[1])
         else:
             return None

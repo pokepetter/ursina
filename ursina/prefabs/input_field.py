@@ -49,7 +49,7 @@ class InputField(Button):
         super().input(key)
 
         if key == 'left mouse down':
-            print(self.hovered)
+            # print(self.hovered)
             self.editing = self.hovered
 
             if self.editing:

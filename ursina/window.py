@@ -111,6 +111,15 @@ class Window(WindowProperties):
 
         self.fps_counter.update = update
 
+        self.overlay = Entity(
+            parent = self.exit_button.parent,
+            model = 'quad',
+            scale_x = self.aspect_ratio,
+            color = color.clear,
+            eternal = True,
+            z = -99
+            )
+
     @property
     def size(self):
         return Vec2(self.get_size()[0], self.get_size()[1])
@@ -227,6 +236,7 @@ if __name__ == '__main__':
     from ursina import *
     app = Ursina()
     window.title = 'Title'
-    window.color = color.black  # sets clear color
+    # window.color = color.black  # sets clear color
+    camera.overlay.fade_in(.1)
     # window.size *= .5
     app.run()

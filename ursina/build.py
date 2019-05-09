@@ -44,9 +44,9 @@ for i, arg in enumerate(sys.argv):
             print('ignoring', sys.argv[j])
         break
 
-    project_folder = Path(sys.argv[1])
-else:
-    project_folder = Path(sys.argv[0])
+project_folder = Path(sys.argv[1])
+# else:
+#     project_folder = Path(sys.argv[0])
 
 build_folder = Path(project_folder / 'build')
 if build_folder.exists():

@@ -27,43 +27,44 @@ class WindowPanel(Draggable):
         if self.text_entity:
             self.text_entity.world_scale_y = 1
 
-        spacing = .5
-        height = 1 + spacing
+        if content:
+            spacing = .5
+            height = 1 + spacing
 
-        for c in content:
-            # print('........', c)
-            if isinstance(c, Entity):
-                c.world_parent = self
-                c.y = -height
-                c.z = 0
-
-                if isinstance(c, Space):
-                    height += c.height
-
-                elif isinstance(c, Text):
-                    c.origin = (-.5, .5)
-                    c.x = -.48
-                    height += len(c.lines)
-
-                elif isinstance(c, Button):
+            for c in content:
+                # print('........', c)
+                if isinstance(c, Entity):
                     c.world_parent = self
-                    c.scale = (.98, 1)
-                    if hasattr(c, 'height'):
-                        c.scale_y = height
+                    c.y = -height
+                    c.z = 0
 
-                    c.text_entity.world_scale = 1
-                    c.model = Quad(aspect=c.world_scale_x/c.world_scale_y)
-                    height += c.scale_y
-                    c.y -= c.scale_y/2
+                    if isinstance(c, Space):
+                        height += c.height
 
-                elif hasattr(c, 'scale_y'):
-                    height += c.scale_y
+                    elif isinstance(c, Text):
+                        c.origin = (-.5, .5)
+                        c.x = -.48
+                        height += len(c.lines)
 
-                height += spacing
+                    elif isinstance(c, Button):
+                        c.world_parent = self
+                        c.scale = (.98, 1)
+                        if hasattr(c, 'height'):
+                            c.scale_y = height
 
-        self.panel = Panel(parent=self, scale_y=height, model=Quad(), origin=(0, .5), z=.1, color=self.color.tint(.1))
-        self.panel.model = Quad(aspect=self.panel.world_scale_x/self.panel.world_scale_y, radius=.025)
-        self.panel.origin = (0, .5)
+                        c.text_entity.world_scale = 1
+                        c.model = Quad(aspect=c.world_scale_x/c.world_scale_y)
+                        height += c.scale_y
+                        c.y -= c.scale_y/2
+
+                    elif hasattr(c, 'scale_y'):
+                        height += c.scale_y
+
+                    height += spacing
+
+            self.panel = Panel(parent=self, scale_y=height, model=Quad(), origin=(0, .5), z=.1, color=self.color.tint(.1))
+            self.panel.model = Quad(aspect=self.panel.world_scale_x/self.panel.world_scale_y, radius=.025)
+            self.panel.origin = (0, .5)
 
 
         if self.popup:
@@ -79,7 +80,6 @@ class WindowPanel(Draggable):
                 )
 
             def close():
-                original_parent = self.bg.parent
                 self.bg.enabled = False
                 self.animate_scale_y(0, duration=.1)
                 invoke(setattr, self, 'enabled', False, delay=.2)

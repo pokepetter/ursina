@@ -28,7 +28,6 @@ from os import path
 from ursina.sequence import Sequence, Func, Wait
 from ursina.ursinamath import lerp
 from ursina import curve
-from ursina.curve import *
 from ursina.useful import *
 from ursina.mesh_importer import load_model
 from ursina.texture_importer import load_texture

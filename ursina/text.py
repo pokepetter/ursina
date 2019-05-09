@@ -3,6 +3,7 @@ import time
 import ursina
 from ursina import *
 from panda3d.core import TransparencyAttrib
+from direct.interval.IntervalGlobal import Sequence, Func, Wait, SoundInterval
 
 from os import path
 from panda3d.core import Filename
@@ -344,6 +345,8 @@ class Text(Entity):
 
     def appear(self, speed=.025, delay=0):
         from ursina.ursinastuff import invoke
+        self.enabled = True
+        self.visible = True
 
         for i, tn in enumerate(self.text_nodes):
             tn.setX(tn.getX()-999999)

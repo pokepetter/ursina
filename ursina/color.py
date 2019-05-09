@@ -6,6 +6,7 @@ from panda3d.core import Vec4
 
 
 class Color(Vec4):
+
     def __init__(self,*p):
         super().__init__(*p)
 
@@ -31,7 +32,7 @@ class Color(Vec4):
         result = to_hsv((self[0], self[1], self[2], self[3]))
         result[0] =  math.floor(result[0] * 360)
         return result
-        
+
     @property
     def h(self):
         return self.hsv[0]
