@@ -43,7 +43,7 @@ class Sequence():
                 self.duration += arg
 
             elif isinstance(arg, Func):
-                self.funcs.append([arg.func, arg.args, self.duration])
+                self.funcs.append([arg.func, arg.args, self.duration, False])
 
 
     def append(self, arg):
@@ -55,8 +55,7 @@ class Sequence():
             self.duration += arg
 
         elif isinstance(arg, Func):
-            self.funcs.append([arg.func, arg.args, self.duration])
-        # self.generate()
+            self.funcs.append([arg.func, arg.args, self.duration, False])
 
 
     def start(self):
@@ -81,14 +80,17 @@ class Sequence():
         self.t += time.dt * application.time_scale
 
         for f in self.funcs:
-            if f[2] > -.1 and f[2] <= self.t:
+            if f[3] == False and f[2] <= self.t:
                 # print('run:', f[0], 'after:', self.t)
                 f[0](*f[1])
-                f[2] = -1
+                f[3] = True
 
 
-        if self.t >= self.funcs[len(self.funcs)-1][2]:
+        if self.t >= self.duration:
             if self.loop:
+                for f in self.funcs:
+                    f[3] = False # set has run to False again
+
                 self.t = 0
                 return
             # print('finish')
