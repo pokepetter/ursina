@@ -146,6 +146,8 @@ class Camera(Entity):
         # self.orthographic_lens = OrthographicLens()
         # self.orthographic_lens.set_film_size(self.fov * value, self.fov)
 
+
+
 sys.modules[__name__] = Camera()
 
 

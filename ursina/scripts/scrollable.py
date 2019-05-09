@@ -1,6 +1,6 @@
 from ursina import *
 
-class Scrollable(Button):
+class Scrollable():
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -20,18 +20,22 @@ class Scrollable(Button):
 
 
     def input(self, key):
+        if not mouse.hovered_entity:
+            print('pass', mouse.hovered_entity)
+            return
 
-        if self.hovered:
-            print(key)
+        if self.entity.hovered or mouse.hovered_entity.has_ancestor(self.entity):
+            # print(key)
             if key == 'scroll up':
-                self.position -= self.direction * self.scroll_speed
+                self.entity.position -= self.direction * self.scroll_speed
             if key == 'scroll down':
-                self.position += self.direction * self.scroll_speed
+                self.entity.position += self.direction * self.scroll_speed
 
-            self.y = max(min(self.y, self.max), self.min)
+            self.entity.y = max(min(self.entity.y, self.max), self.min)
 
 
 if __name__ == '__main__':
     app = Ursina()
-    Scrollable()
+    p = Panel(scale=(.4, .8), collider='box')
+    p.add_script(Scrollable())
     app.run()

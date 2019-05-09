@@ -1,6 +1,6 @@
 # do imports here so I can do a single line import
 
-from ursina import main
+# from ursina import main
 from ursina.main import Ursina
 from ursina.ursinamath import *
 from ursina.ursinastuff import *
@@ -10,6 +10,7 @@ from ursina.mesh_importer import *
 from ursina.texture_importer import *
 from ursina import color
 from ursina.color import Color
+from ursina.sequence import Sequence, Func, Wait
 from ursina.entity import Entity
 from ursina.collider import *
 from ursina.audio import Audio
@@ -39,12 +40,14 @@ from ursina.prefabs.plane import Plane
 from ursina.scripts.smooth_follow import SmoothFollow
 from ursina.scripts.position_limiter import PositionLimiter
 from ursina.scripts.grid_layout import grid_layout
+from ursina.scripts.scrollable import Scrollable
 
 from ursina.prefabs.tooltip import Tooltip
+from ursina.prefabs.input_field import InputField
 from ursina.prefabs.draggable import Draggable
-from ursina.prefabs.scrollable import Scrollable
 from ursina.prefabs.slider import Slider
 from ursina.prefabs.button_group import ButtonGroup
+from ursina.prefabs.window_panel import WindowPanel, Space
 from ursina.prefabs import primitives
 
 from ursina.prefabs.debug_menu import DebugMenu
