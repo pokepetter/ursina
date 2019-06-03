@@ -1,8 +1,21 @@
-<html style="
-    max-width: 100%;
-    margin: auto;
-    color: #333333;
-    ">
+
+<style>
+    html {
+        max-width: 100%;
+        margin: auto;
+        color: #333333;
+    }
+    a.button {
+        padding: 15px 32px;
+        background-color: #4CAF50;
+        border-radius: 8px;
+        border-width: 0px;
+        text-decoration: none;
+        color: white;
+        font-size: 25.0px;
+    }
+</style>
+<html>
 <left>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>ursina</title>
 <br>
@@ -30,7 +43,7 @@
 <div style="font-weight: normal">
 <div style="margin-left:0em; white-space: pre-wrap;">
 </div>
-<div style="margin-left:0em; white-space: pre-wrap;"><a href="https://github.com/pokepetter/ursina">GitHub</a>    	<a href="documentation.html">Documentation</a>    	<a href="https://twitter.com/petteramland">Twitter</a>
+<div style="margin-left:0em; white-space: pre-wrap;"><a href=" https://github.com/pokepetter/ursina" class="button">GitHub</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" https://twitter.com/petteramland" class="button">Twitter</a>
 </div>
 <div style="margin-left:0em; white-space: pre-wrap;">
 </div>
@@ -135,9 +148,9 @@
 <div style="font-weight: normal">
 <div style="margin-left:0em; white-space: pre-wrap;">
 </div>
-<div style="margin-left:1em; white-space: pre-wrap;">1) Install Python 3.6 or newer. <a href="https://www.python.org/downloads/">[Download Python here]</a>
+<div style="margin-left:1em; white-space: pre-wrap;">1) Install Python 3.6 or newer. <a href="https://www.python.org/downloads/">Download Python here</a>
 </div>
-<div style="margin-left:1em; white-space: pre-wrap;">2) Make sure you have git installed. <a href="https://git-scm.com/">[git]</a>
+<div style="margin-left:1em; white-space: pre-wrap;">2) Make sure you have git installed. <a href="https://git-scm.com/">git</a>
 </div>
 <div style="margin-left:1em; white-space: pre-wrap;">3) Open cmd/terminal and type:
 </div>
@@ -151,11 +164,12 @@
                     font-family: monospace;
                     font-size: 20;
                     font-weight: normal;
-                    white-space: pre;">pip install panda3d==1.10.0.dev1086
+                    white-space: pre;">pip install panda3d
 pip install pillow
-pip install psd-tools
+pip install psd-tools2
 pip install imageio
-pip install git+https://github.com/pokepetter/ursina.git@a28ae418e1d23f0247169a8aedcd92a35a1e2bd5</div>
+pip install psutil
+pip install git+https://github.com/pokepetter/ursina.git</div>
 <div style="margin-left:0em; white-space: pre-wrap;">
 </div>
 <div style="margin-left:0em; white-space: pre-wrap;">
@@ -204,6 +218,8 @@ python setup.py develop</div>
 </div>
 <div style="margin-left:1em; white-space: pre-wrap;">* psd-tools, for converting .psd files
 </div>
+<div style="margin-left:1em; white-space: pre-wrap;">* psutil, for measuring memory usage
+</div>
 <div style="margin-left:1em; white-space: pre-wrap;">* blender, for converting .blend files
 </div>
 <div style="margin-left:0em; white-space: pre-wrap;">
@@ -242,8 +258,7 @@ ground = Entity(
     y = -3,
     origin = (0, .5),
     scale = (50, 1, 10),
-    collider = 'box',
-    collision = True
+    collider = 'box'
     )
 
 app.run()                       # opens a window and starts the game.</div>
@@ -288,8 +303,8 @@ app = Ursina()
 player = Entity(model='cube', color=color.orange, scale_y=2)
 
 def update():   # update gets automatically called.
-    player.x += held_keys['d'] * .1
-    player.x -= held_keys['a'] * .1
+    player.x += held_keys'd'</a> * .1
+    player.x -= held_keys'a'</a> * .1
 
 app.run()   # opens a window and starts the game.</div>
 <div style="margin-left:0em; white-space: pre-wrap;">

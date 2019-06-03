@@ -10,7 +10,7 @@ open source game engine
 --------------------------------------
 # normal
 
-<a href="https://github.com/pokepetter/ursina">GitHub</a>    	<a href="documentation.html">Documentation</a>    	<a href="https://twitter.com/petteramland">Twitter</a>
+[GitHub, https://github.com/pokepetter/ursina] [Documentation, documentation.html] [Twitter, https://twitter.com/petteramland]
 
 
 # left, width 900, size 2, bold,
@@ -61,16 +61,17 @@ License
 Getting Started
 # size 1, normal
 
-    1) Install Python 3.6 or newer. <a href="https://www.python.org/downloads/">[Download Python here]</a>
-    2) Make sure you have git installed. <a href="https://git-scm.com/">[git]</a>
+    1) Install Python 3.6 or newer. <a href="https://www.python.org/downloads/">Download Python here</a>
+    2) Make sure you have git installed. <a href="https://git-scm.com/">git</a>
     3) Open cmd/terminal and type:
 
         # code
-        pip install panda3d==1.10.0.dev1086
+        pip install panda3d
         pip install pillow
-        pip install psd-tools
+        pip install psd-tools2
         pip install imageio
-        pip install git+https://github.com/pokepetter/ursina.git@a28ae418e1d23f0247169a8aedcd92a35a1e2bd5
+        pip install psutil
+        pip install git+https://github.com/pokepetter/ursina.git
 
 
     If you want to easily edit the source, it's recommended to clone the git
@@ -93,6 +94,7 @@ Dependencies
     * hurry.size, for getting screen resolution (included)
     * pillow, for texture manipulation
     * psd-tools, for converting .psd files
+    * psutil, for measuring memory usage
     * blender, for converting .blend files
 
 
@@ -114,8 +116,7 @@ Examples
             y = -3,
             origin = (0, .5),
             scale = (50, 1, 10),
-            collider = 'box',
-            collision = True
+            collider = 'box'
             )
 
         app.run()                       # opens a window and starts the game.
