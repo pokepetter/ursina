@@ -48,6 +48,7 @@ from ursina.prefabs.draggable import Draggable
 from ursina.prefabs.slider import Slider
 from ursina.prefabs.button_group import ButtonGroup
 from ursina.prefabs.window_panel import WindowPanel, Space
+from ursina.prefabs.file_browser import FileBrowser
 from ursina.prefabs import primitives
 
 from ursina.prefabs.debug_menu import DebugMenu

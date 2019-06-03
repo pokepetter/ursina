@@ -25,6 +25,17 @@ def duplicate(entity):
         clone = duplicate(c)
         clone.parent = e
 
+    if 'Audio' in e.types:
+        e.volume = entity.volume
+        e.pitch = entity.pitch
+        e.balance = entity.balance
+        e.loop = entity.loop
+        e.loops = entity.loops
+        e.autoplay = entity.autoplay
+
+        e.clip = entity.clip
+
+
     return e
 
 

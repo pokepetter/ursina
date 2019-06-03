@@ -30,28 +30,42 @@ class Audio(Entity):
         if name == 'clip':
             if isinstance(value, str):
                 self.name = value
-                self.clip = loader.loadSfx(value + '.wav')
-                # print('...loaded audio clip:', value)
-                return
 
-        if hasattr(self, 'clip') and self.clip:
+                for suffix in ('.ogg', '.mp3', '.wav'):
+                    for f in application.asset_folder.glob(f'**/{value}{suffix}'):
+                        p = str(f.resolve())
+                        p = p[len(str(application.asset_folder.resolve())):]
+                        self._clip = loader.loadSfx(p)
+                        print('...loaded audio clip:', f)
+                        return
+                    # except:
+                    #     pass
+                print('no audio found with name:', value, 'supported formats: .ogg, .mp3, .wav')
+                return
+            else:
+                self._clip = value
+
+        if hasattr(self, 'clip') and self._clip:
             if name == 'volume':
-                self.clip.setVolume(value)
+                self._clip.setVolume(value)
 
             if name == 'pitch':
-                self.clip.setPlayRate(value)
+                self._clip.setPlayRate(value)
 
             if name == 'loop':
-                self.clip.setLoop(value)
+                self._clip.setLoop(value)
 
             if name == 'loops':
-                self.clip.setLoopCount(value)
+                self._clip.setLoopCount(value)
 
         try:
             super().__setattr__(name, value)
         except Exception as e:
             return e
 
+    @property
+    def clip(self):
+        return self._clip
 
     @property
     def length(self):
@@ -129,12 +143,19 @@ class Audio(Entity):
 
 
 
-
 if __name__ == '__main__':
     from ursina import Ursina, printvar
     app = Ursina()
 
-    a = Audio('night_sky', pitch=.5)
+    # a = Audio('life_is_currency_wav', pitch=1)
+    a = Audio('life_is_currency', pitch=1, loop=True, autoplay=False)
+    # print(a.recipe)
+    # a2 = Audio(clip=a.clip)
+    a2 = duplicate(a)
+    # a2.clip = a.clip
+    a2.play()
+    print(a.clip)
+    print(a2.clip)
     # a.fade_out(delay=1)
     DebugMenu(a)
     app.run()
