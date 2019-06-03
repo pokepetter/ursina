@@ -27,7 +27,7 @@ class DropdownMenu(DropdownMenuButton):
             b.world_parent = self
             b.original_scale = b.scale
             b.x = 0
-            b.y = -i-1 *.99
+            b.y = -i-1 *.98
             b.enabled = False
 
             if isinstance(b, DropdownMenu):

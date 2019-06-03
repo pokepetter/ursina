@@ -1,6 +1,6 @@
 from ursina import *
 from ursina import color
-
+import math
 
 
 def colorize(model, left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white):
@@ -8,6 +8,7 @@ def colorize(model, left=color.white, right=color.blue, down=color.red, up=color
         model.generate_normals()
 
     cols = list()
+    prev_col = color.white
     for i, n in enumerate(model.normals):
         c = color.rgb((n[0]/2)+.5, (n[1]/2)+.5, (n[2]/2)+.5)
         c = lerp(up, down, (n[1]/2 +.5))
@@ -17,7 +18,19 @@ def colorize(model, left=color.white, right=color.blue, down=color.red, up=color
         else:
             c = lerp(c, left, (n[0]/2))
         c = (c[0], c[1], c[2], c[3])
-        cols.append(c)
+
+        has_nan = False
+        for e in c:
+            if math.isnan(e):
+                has_nan = True
+                break
+
+        if not has_nan:
+            prev_col = c
+            cols.append(c)
+        else:
+            cols.append(prev_col)
+
 
     model.colors = cols
     model.generate()

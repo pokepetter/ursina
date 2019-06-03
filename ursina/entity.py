@@ -42,17 +42,18 @@ except:
 
 class Entity(NodePath):
 
-    def __init__(self, **kwargs):
+    def __init__(self, add_to_scene=True, **kwargs):
         super().__init__(self.__class__.__name__)
         self.name = camel_to_snake(self.type)
         self.enabled = True
         self.visible = True
-        try:
-            self.parent = scene
-            scene.has_changes = True
-            scene.entities.append(self)
-        except:
-            print('scene not yet initialized')
+        if add_to_scene:
+            try:
+                self.parent = scene
+                scene.has_changes = True
+                scene.entities.append(self)
+            except:
+                print('scene not yet initialized')
         self.eternal = False    # eternal entities does not get destroyed on scene.clear()
         self.ignore_paused = False
         self.model = None

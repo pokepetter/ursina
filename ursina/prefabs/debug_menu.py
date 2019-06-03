@@ -25,6 +25,7 @@ class DebugMenu(Draggable):
                 y = -i - 1,
                 on_click = getattr(self.target, f)
                 )
+            b.text_entity.world_scale = 1
 
 
 if __name__ == '__main__':

@@ -32,7 +32,7 @@ def multireplace(string, replacements, ignore_case=False):
     return pattern.sub(lambda match: replacements[match.group(0)], string)
 
 def printvar(var):
-     print(traceback.extract_stack(limit=2)[0][3][5:][:-1],"=", var)
+     print(traceback.extract_stack(limit=2)[0][3][9:][:-1],"=", var)
 
 
 if __name__ == '__main__':

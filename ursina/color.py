@@ -48,7 +48,7 @@ class Color(Vec4):
         return brightness(self)
 
 
-    def inverse(self):
+    def invert(self):
         return inverse(self)
 
     def tint(self, amount):

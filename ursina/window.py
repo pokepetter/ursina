@@ -16,12 +16,13 @@ class Window(WindowProperties):
         super().__init__()
         loadPrcFileData('', 'window-title ursina')
         loadPrcFileData('', 'undecorated True')
-        loadPrcFileData('', 'sync-video True')
         loadPrcFileData('', 'notify-level-util error')
         # loadPrcFileData('', 'textures-power-2 pad')
         loadPrcFileData('', 'textures-auto-power-2 #t')
         # loadPrcFileData('', 'want-pstats True')
         self.setForeground(True)
+
+        self.vsync = True   # can't be set during play
 
 
     def late_init(self):
@@ -227,7 +228,6 @@ class Window(WindowProperties):
                 loadPrcFileData('', 'sync-video False')
                 print('set vsync to false')
             object.__setattr__(self, name, value)
-            application.base.win.request_properties(self)
 
 
 sys.modules[__name__] = Window()
