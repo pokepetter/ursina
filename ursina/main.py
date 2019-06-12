@@ -158,12 +158,12 @@ class Ursina(ShowBase):
 
 
     def input(self, key):
-        if key in self._input_name_changes:
-            key = self._input_name_changes[key]
-
         key = key.replace('control-', '')
         key = key.replace('shift-', '')
         key = key.replace('alt-', '')
+
+        if key in self._input_name_changes:
+            key = self._input_name_changes[key]
 
         if key in input_handler.rebinds:
             key = input_handler.rebinds[key]
