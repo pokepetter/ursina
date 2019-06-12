@@ -98,7 +98,7 @@ class Texture():
 
             col = self._cached_image.getpixel((x, self.height-y-1))
             if len(col) == 3:
-                return (col[0], col[1], col[2], 1)
+                return (col[0], col[1], col[2], 255)
             else:
                 return (col[0], col[1], col[2], col[3])
         except:
