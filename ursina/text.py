@@ -19,7 +19,7 @@ from ursina.entity import Entity
 class Text(Entity):
 
     size = .025
-    default_font = ''
+    default_font = 'VeraMono.ttf'
 
     def __init__(self, text='', **kwargs):
         super().__init__()
@@ -31,11 +31,9 @@ class Text(Entity):
         self.text_nodes = list()
         self.origin = (-.5, .5)
         temp_text_node = TextNode('')
-        self._font = temp_text_node.getFont()
-        # self.resolution = 100
-
-        if Text.default_font != '':
-            self.font = Text.default_font
+        # self._font = temp_text_node.getFont()
+        self.font = Text.default_font
+        self.resolution = 100
 
         self.line_height = 1
         self.text_colors = {'<default>' : color.text_color}

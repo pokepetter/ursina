@@ -46,4 +46,5 @@ compressed_models_folder = models_folder / 'compressed/'
 # fonts are loaded py panda3d, so add paths here
 _model_path = getModelPath()
 _model_path.append_path(str(internal_fonts_folder.resolve()))
+_model_path.append_path(str(Path('C:/Windows/Fonts').resolve()))
 _model_path.append_path(str(asset_folder.resolve()))

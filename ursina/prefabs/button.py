@@ -39,6 +39,8 @@ class Button(Entity):
             setattr(self, key, value)
 
         self.original_scale = self.scale
+        if self.text_entity != None:
+            self.text_entity.world_scale = 1
 
 
     @property
@@ -172,7 +174,7 @@ class Button(Entity):
             )
         self.model = Quad(aspect=self.scale_x/self.scale_y)
         self.text_entity.world_parent = self
-        print('fit to text', self.scale)
+        # print('fit to text', self.scale)
 
 
 
@@ -180,7 +182,8 @@ if __name__ == '__main__':
     from ursina import *
     app = Ursina()
 
-    b = Button('hello world!', color=color.azure, scale=.05, origin=(.5,.5))
+    # e = Entity(parent=camera.ui, scale=.1)
+    b = Button(text='hello world!', color=color.azure, scale=.5)
     # b.fit()
     b.on_click = application.quit
     b.tooltip = Tooltip('exit')
