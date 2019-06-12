@@ -2,7 +2,7 @@ from ursina import *
 
 
 class Slider(Entity):
-    def __init__(self, min=0, max=1, default=0, **kwargs):
+    def __init__(self, min=0, max=1, default=0, height=Text.size, text='', **kwargs):
         super().__init__()
         self.parent = camera.ui
         self.vertical = False
@@ -11,11 +11,14 @@ class Slider(Entity):
         self.default = default
         self.step = 0
 
-        self.label = Text(parent=self, origin=(0.5, 0), x=-0.025, text='label')
+        self.label = Text(parent=self, origin=(0.5, 0), x=-0.025, text=text)
         self.bg = Button(
             parent = self,
-            model = Quad(scale=(.525,.025), radius=.01, segments=3),
-            origin_x = -0.25
+            model = Quad(scale=(.525, height), radius=Text.size/2, segments=3),
+            origin_x = -0.25,
+            pressed_scale = 1,
+            highlight_color = Button.color,
+            pressed_color = Button.color,
             )
 
 
@@ -23,7 +26,6 @@ class Slider(Entity):
             self.parent.knob.x = mouse.point[0] * self.scale_x
             self.parent.knob.dragging = True
             '''
-
         self.knob = Draggable(
             parent = self,
             min_x = 0,
@@ -31,12 +33,12 @@ class Slider(Entity):
             min_y = 0,
             max_y = .5,
             step = self.step,
-            world_parent = self,
-            model = 'sphere',
-            collider = 'sphere',
+            model = Quad(radius=Text.size/2, scale=(Text.size, height)),
+            collider = 'box',
             color = color.light_gray,
-            world_scale = .5,
             text = "0",
+            text_origin = (0, -.55),
+            z = -.1
             )
 
 
@@ -64,12 +66,16 @@ class Slider(Entity):
             self.knob.text_entity.y = -2
         else:
             self.knob.lock_y = True
-            self.knob.text_entity.y = 1
+            self.knob.text_entity.y = height/2
 
 
     @property
     def value(self):
-        return lerp(self.min, self.max, self.knob.x * 2)
+        val = lerp(self.min, self.max, self.knob.x * 2)
+        if self.step == 1:
+            val = round(val)
+
+        return val
 
     @value.setter
     def value(self, value):
@@ -82,13 +88,16 @@ class Slider(Entity):
 
     @step.setter
     def step(self, value):
-        self._step = value / (self.max-self.min) / 2
-        self.knob.step = self._step
+        self._step = value
+        self.knob.step = value / (self.max-self.min) / 2
 
     def update(self):
         if self.knob.dragging:
             t = self.knob.x / .5
             self.knob.text_entity.text = round(lerp(self.min, self.max, t), 2)
+
+            if isinstance(self.step, int) or self.step.is_integer():
+                self.knob.text_entity.text = str(self.value)
 
             if self.dynamic and hasattr(self, 'on_value_changed') and self._prev_value != t:
                 self.on_value_changed()
@@ -102,6 +111,6 @@ class Slider(Entity):
 if __name__ == '__main__':
     app = Ursina()
     origin = Entity(model='cube', color=color.green, scale = .05)
-    slider = Slider(0, 12, default=1, scale=1, y=-.4, step=1, vertical=True)
+    slider = Slider(0, 12, default=1, height=Text.size*3, y=-.4, step=1, vertical=False)
     # slider.value = 2
     app.run()
