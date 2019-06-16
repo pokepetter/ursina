@@ -91,7 +91,7 @@ class Ursina(ShowBase):
         self.accept('buttonHold', self.input_hold)
 
         base.disableMouse()
-        mouse.mouse_watcher = base.mouseWatcherNode
+        mouse._mouse_watcher = base.mouseWatcherNode
         mouse.enabled = True
         self.mouse = mouse
 
@@ -101,11 +101,11 @@ class Ursina(ShowBase):
         from ursina import HotReloader
         application.hot_reloader = HotReloader(__main__.__file__)
 
-        def hot_reloader_input(key):
+        def _hot_reloader_input(key):
             if key == 'f5':
                 application.hot_reloader.reload()
 
-        application.hot_reloader.input = hot_reloader_input
+        application.hot_reloader.input = _hot_reloader_input
 
 
     def _update(self, task):

@@ -66,49 +66,53 @@ class HotReloader(Entity):
             e.texture._texture.reload()
 
 
-class ModelReloader(Entity):
-    def __init__(self):
-        super().__init__()
-        self.parent = camera.ui
-        self.i = 0
-        self.position = window.top_left
-        self.title = Text(parent=self, text='<azure>models:', background=True)
-
-
-    def check_if_changed(self):
-        [destroy(e) for e in self.children if not e == self.title]
-
-        for filetype in ('.bam', '.ursinamesh'):
-            for filename in application.asset_folder.glob(f'**/*{filetype}'):
-                # b = Button(text='yolo')
-                t = Button(
-                    parent = self,
-                    origin = (-.5, .5),
-                    scale = (.3, .025),
-                    text = str(filename)[len(str(application.asset_folder))+1:],
-                    background = True,
-                    y = -len(self.children)*.025
-                    )
-                t.text_entity.origin = (-.5, 0)
-                t.text_entity.position = (0, 0)
-
-                # last_changed = os.stat(filename).st_mtime
-                # print(last_changed)
-                t.text_entity.text = ' <orange>' + t.text_entity.text
-                # t.background = True
-
-        # print(models)
-    def update(self):
-        if self.i > 60:
-            self.check_if_changed()
-            self.i = 0
+# class ModelReloader(Entity):
+#     def __init__(self):
+#         super().__init__()
+#         self.parent = camera.ui
+#         self.i = 0
+#         self.position = window.top_left
+#         self.title = Text(parent=self, text='<azure>models:', background=True)
+#
+#
+#     def check_if_changed(self):
+#         [destroy(e) for e in self.children if not e == self.title]
+#
+#         for filetype in ('.bam', '.ursinamesh'):
+#             for filename in application.asset_folder.glob(f'**/*{filetype}'):
+#                 # b = Button(text='yolo')
+#                 t = Button(
+#                     parent = self,
+#                     origin = (-.5, .5),
+#                     scale = (.3, .025),
+#                     text = str(filename)[len(str(application.asset_folder))+1:],
+#                     background = True,
+#                     y = -len(self.children)*.025
+#                     )
+#                 t.text_entity.origin = (-.5, 0)
+#                 t.text_entity.position = (0, 0)
+#
+#                 # last_changed = os.stat(filename).st_mtime
+#                 # print(last_changed)
+#                 t.text_entity.text = ' <orange>' + t.text_entity.text
+#                 # t.background = True
+#
+#         # print(models)
+#     def update(self):
+#         if self.i > 60:
+#             self.check_if_changed()
+#             self.i = 0
 
 if __name__ == '__main__':
     app = Ursina()
     # Entity(model='hexagon')
     # Entity(model=Circle())
-    Sprite('brick')
     # ModelReloader()
-    app.hotreloader = HotReloader()
-    app.hotreloader.path = application.asset_folder / 'platformer.py'
+    hotreloader = HotReloader()
+    hotreloader.path = application.asset_folder / 'platformer.py'
+
+    '''
+    By default you can press F5 to reload the starting script.
+    '''
+
     app.run()

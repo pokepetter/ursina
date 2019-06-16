@@ -209,12 +209,12 @@ for f in path.glob('*.py'):
             classes = get_classes(code)
             for class_name, class_definition in classes.items():
                 # print(module_name)
-                attrs, funcs = list(), list()
+                attrs, methods = list(), list()
                 attrs = get_class_attributes(class_definition)
                 methods = get_functions(class_definition, is_class=True)
                 example = get_example(code)
 
-                module_info[module_name] = ('', attrs, funcs, example)
+                module_info[module_name] = ('', attrs, methods, example)
 
 
 prefab_info = dict()
@@ -292,12 +292,12 @@ def html_color(color):
 
 base_color = color.color(60, 1, .01)
 # background_color = color.color(0,0,.9)
-background_color = lerp(base_color, base_color.inverse(), .125)
-text_color = lerp(background_color, background_color.inverse(), .9)
+background_color = lerp(base_color, base_color.invert(), .125)
+text_color = lerp(background_color, background_color.invert(), .9)
 example_color = lerp(background_color, text_color, .1)
 scrollbar_color = html_color(lerp(background_color, text_color, .1))
 link_color = html_color(color.gray)
-init_color = html_color(base_color.inverse())
+init_color = html_color(base_color.invert())
 
 style = f'''
     <style>

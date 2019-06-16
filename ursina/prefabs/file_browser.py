@@ -38,7 +38,7 @@ class FileButton(Button):
     def selected(self, value):
         self._selected = value
         if value == True:
-            self.color = color.yellow
+            self.color = color.azure
         else:
             self.color = Button.color
 
@@ -48,8 +48,8 @@ class FileBrowser(Entity):
     def __init__(self, **kwargs):
         super().__init__(parent=camera.ui, scale=(1,1), model='quad', color=color.clear, collider='box', y=.45)
 
-        self.title_bar = Button(parent=self, scale=(.75,.025), text='Open', color=color.amvol_color, collision=False)
-        self.folder_up_button = Button(parent=self, scale=(.035,.035), text='^', position=(-.4,-.03), on_click=self.folder_up)
+        self.title_bar = Button(parent=self, scale=(.75,.025), text='Open', color=color.dark_gray, collision=False)
+        self.folder_up_button = Button(parent=self, scale=(.035,.035), text='^', position=(-.4,-.03), color=color.dark_gray, on_click=self.folder_up)
         self.address_bar = InputField(parent=self, y=-.03, scale=(.75,.035), text_origin=(-.5,0))
         self.button_parent = Entity(parent=self)
         self.bg = Button(parent=self, z=1, scale=(999,999), color=color.black66, highlight_color=color.black66, pressed_color=color.black66)
@@ -60,7 +60,7 @@ class FileBrowser(Entity):
         self.max_buttons = 24
 
         self.cancel_buttn = Button(parent=self, scale=(.5*.24, .05), y=(-self.max_buttons*.025)-.15, origin_x=-.5, x=-.25, text='Cancel', on_click=self.close)
-        self.open_button = Button(parent=self, scale=(.5*.74, .05), y=(-self.max_buttons*.025)-.15, origin_x=.5, x=.25, text='Open', color=color.amvol_color, on_click=self.open)
+        self.open_button = Button(parent=self, scale=(.5*.74, .05), y=(-self.max_buttons*.025)-.15, origin_x=.5, x=.25, text='Open', color=color.dark_gray, on_click=self.open)
 
         self.file_types = ['.*', ]
         self.start_path = Path('.').resolve()
@@ -161,19 +161,15 @@ class FileBrowser(Entity):
 
 
 
-
 if __name__ == '__main__':
     app = Ursina()
-    panel_color =   color.color(32,.2,.25)
-    record_color =  color.color(0,.68,.62)
-    color.yellow =  color.color(31,.68,.62)
-    color.violet =  color.color(292,.68,.62)
-    Button.color =  color.color(22,.48,.42)
-    amvol_color =   color.color(56,.28,.38)
 
-    color.amvol_color = amvol_color
-    color.panel_color = panel_color
-    color.record_color = record_color
+    fb = FileBrowser(file_types=('.*'))
 
-    FileBrowser(file_types=('.*'))
+    def on_submit(value):
+        for button in value:
+            print('---', button.path)
+
+    fb.on_submit = on_submit
+
     app.run()

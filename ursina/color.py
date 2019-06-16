@@ -13,6 +13,13 @@ class Color(Vec4):
     def __str__(self):
         return f'Color({self[0]}, {self[1]}, {self[2]}, {self[3]})'
 
+    @property
+    def name(self):
+        for key, value in colors.items():
+            if value == self:
+                return key
+
+        return None
 
     @property
     def r(self):
@@ -165,4 +172,6 @@ if __name__ == '__main__':
     for name in ('r', 'g', 'b', 'h', 's', 'v', 'brightness'):
         print(name + ':', getattr(color.random_color(), name))
 
+    e = Entity(model='cube', color=color.lime)
+    print(e.color.name)
     app.run()

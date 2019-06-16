@@ -77,10 +77,10 @@ class InputField(Button):
         if key == 'shift--':
             self.text += '_'
 
-        if key == 'space':
+        if key in ('space', 'space hold'):
             self.text += ' '
 
-        if key == 'backspace':
+        if key in ('backspace', 'backspace hold'):
             if not held_keys['control']:
                 if len(self.text) == 1:
                     self.text = ''
@@ -93,7 +93,7 @@ class InputField(Button):
                 else:
                     self.text = ''
 
-        if key == 'enter':
+        if key in ('enter', 'enter hold'):
             if self.multiline:
                 self.text += '\n'
 
@@ -104,7 +104,11 @@ class InputField(Button):
 if __name__ == '__main__':
     app = Ursina()
 
-    test = InputField()
-    Entity(model='quad', scale=.02, color=color.red)
+    input_field = InputField()
+
+    def submit():
+        print(test.text)
+
+    Button('submit', scale=.1, color=color.azure, y=-.2, on_click=submit).fit()
 
     app.run()

@@ -28,4 +28,7 @@ class MemoryCounter(Text):
 if __name__ == '__main__':
     app = Ursina()
     MemoryCounter()
+    '''
+    Displays the amount of memory used in the bottom right corner
+    '''
     app.run()

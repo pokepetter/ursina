@@ -168,19 +168,8 @@ if __name__ == '__main__':
     norms = ((0,0,-1),) * len(verts)
     colors = (color.red, color.blue, color.lime, color.black)
 
-    # m = Mesh(vertices=verts, triangles=tris, normals=norms)
-    # m = Sphere()
-    # e = Entity(model=m)
-
     e = Entity(model='sphere', scale=2)
     e.model.generate_normals()
-    for n in e.normals:
-        print(n)
-
-    from panda3d.core import TextureStage, TexGenAttrib, GeomVertexReader
-    e.setTexGen(TextureStage.getDefault(), TexGenAttrib.MEyeSphereMap)
-    e.texture = 'reflection_map_2'
-    # print(e.normals)
 
     EditorCamera()
     app.run()

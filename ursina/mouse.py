@@ -15,7 +15,6 @@ class Mouse():
 
     def __init__(self):
         self.enabled = False
-        self.mouse_watcher = None
         self.locked = False
         self.position = Vec3(0,0,0)
         self.delta = Vec3(0,0,0)
@@ -33,28 +32,29 @@ class Mouse():
 
         self.i = 0
         self.update_rate = 10
-        self.picker = CollisionTraverser()  # Make a traverser
-        self.pq = CollisionHandlerQueue()  # Make a handler
-        self.pickerNode = CollisionNode('mouseRay')
-        self.pickerNP = camera.attach_new_node(self.pickerNode)
-        self.pickerRay = CollisionRay()  # Make our ray
-        self.pickerNode.addSolid(self.pickerRay)
-        self.picker.addCollider(self.pickerNP, self.pq)
+        self._mouse_watcher = None
+        self._picker = CollisionTraverser()  # Make a traverser
+        self._pq = CollisionHandlerQueue()  # Make a handler
+        self._pickerNode = CollisionNode('mouseRay')
+        self._pickerNP = camera.attach_new_node(self._pickerNode)
+        self._pickerRay = CollisionRay()  # Make our ray
+        self._pickerNode.addSolid(self._pickerRay)
+        self._picker.addCollider(self._pickerNP, self._pq)
         self.raycast = True
         self.collision = None
         self.enabled = True
 
     @property
     def x(self):
-        if not self.mouse_watcher.has_mouse():
+        if not self._mouse_watcher.has_mouse():
             return 0
-        return self.mouse_watcher.getMouseX() / 2   # same space as ui stuff
+        return self._mouse_watcher.getMouseX() / 2   # same space as ui stuff
 
     @property
     def y(self):
-        if not self.mouse_watcher.has_mouse():
+        if not self._mouse_watcher.has_mouse():
             return 0
-        return self.mouse_watcher.getMouseY() / 2
+        return self._mouse_watcher.getMouseY() / 2
 
 
     def __setattr__(self, name, value):
@@ -112,7 +112,7 @@ class Mouse():
                     for s in self.hovered_entity.scripts:
                         if hasattr(s, 'on_double_click'):
                             s.on_double_click()
-                            
+
             self.prev_click_time = time.time()
 
 
@@ -130,7 +130,7 @@ class Mouse():
 
 
     def update(self):
-        if not self.enabled or not self.mouse_watcher.has_mouse():
+        if not self.enabled or not self._mouse_watcher.has_mouse():
             self.velocity = Vec3(0,0,0)
             return
 
@@ -157,20 +157,20 @@ class Mouse():
         if self.i < self.update_rate:
             return
         # collide with ui
-        self.pickerNP.reparent_to(scene.ui_camera)
-        self.pickerRay.set_from_lens(camera._ui_lens_node, self.x * 2, self.y * 2)
-        self.picker.traverse(camera.ui)
-        if self.pq.get_num_entries() > 0:
-            # print('collided with ui', self.pq.getNumEntries())
+        self._pickerNP.reparent_to(scene.ui_camera)
+        self._pickerRay.set_from_lens(camera._ui_lens_node, self.x * 2, self.y * 2)
+        self._picker.traverse(camera.ui)
+        if self._pq.get_num_entries() > 0:
+            # print('collided with ui', self._pq.getNumEntries())
             self.find_collision()
             return
 
         # collide with world
-        self.pickerNP.reparent_to(camera)
-        self.pickerRay.set_from_lens(scene.camera.lens_node, self.x * 2, self.y * 2)
-        self.picker.traverse(base.render)
-        if self.pq.get_num_entries() > 0:
-            # print('collided with world', self.pq.getNumEntries())
+        self._pickerNP.reparent_to(camera)
+        self._pickerRay.set_from_lens(scene.camera.lens_node, self.x * 2, self.y * 2)
+        self._picker.traverse(base.render)
+        if self._pq.get_num_entries() > 0:
+            # print('collided with world', self._pq.getNumEntries())
             self.find_collision()
             return
         # else:
@@ -226,13 +226,13 @@ class Mouse():
     def find_collision(self):
         if not self.raycast:
             return
-        self.pq.sortEntries()
-        if len(self.pq.get_entries()) == 0:
+        self._pq.sortEntries()
+        if len(self._pq.get_entries()) == 0:
             self.collision = None
             return
 
         self.collisions = list()
-        for entry in self.pq.getEntries():
+        for entry in self._pq.getEntries():
             # print(entry.getIntoNodePath().parent)
             for entity in scene.entities:
                 if entry.getIntoNodePath().parent == entity:
@@ -248,7 +248,7 @@ class Mouse():
                             ))
                         break
 
-        self.collision = self.pq.getEntry(0)
+        self.collision = self._pq.getEntry(0)
         nP = self.collision.getIntoNodePath().parent
 
         for entity in scene.entities:
