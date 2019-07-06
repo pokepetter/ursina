@@ -20,29 +20,34 @@ class Text(Entity):
 
     size = .025
     default_font = 'VeraMono.ttf'
+    default_resolution = 100
+    start_tag = '<'
+    end_tag = '>'
 
-    def __init__(self, text='', **kwargs):
+    def __init__(self, text='', start_tag=start_tag, end_tag=end_tag, size=size, **kwargs):
         super().__init__()
         self.name = 'text'
-        self.size = Text.size
+        self.size = size
         self.parent = camera.ui
 
         self.setColorScaleOff()
         self.text_nodes = list()
+        self.images = list()
         self.origin = (-.5, .5)
-        temp_text_node = TextNode('')
-        # self._font = temp_text_node.getFont()
-        self.font = Text.default_font
-        self.resolution = 100
 
+        self.font = Text.default_font
+        self.resolution = Text.default_resolution
         self.line_height = 1
-        self.text_colors = {'<default>' : color.text_color}
+        self.use_tags = True
+        self.start_tag = start_tag
+        self.end_tag = end_tag
+        self.text_colors = {f'{self.start_tag}default{self.end_tag}' : color.text_color}
 
         for color_name in color.color_names:
-            self.text_colors['<' + color_name + '>'] = color.colors[color_name]
+            self.text_colors[self.start_tag + color_name + self.end_tag] = color.colors[color_name]
 
-        self.tag = '<default>'
-        self.color_tag = self.text_colors['<default>']
+        self.tag = Text.start_tag+'default'+Text.end_tag
+        self.color_tag = self.text_colors[self.start_tag+'default'+self.end_tag]
         self.scale_override = 1
         self._background = None
 
@@ -73,18 +78,21 @@ class Text(Entity):
     @text.setter
     def text(self, text):
         self.raw_text = text
-        text = '<>' + str(text)
+        text = self.start_tag + self.end_tag + str(text) # start with empty tag for alignemnt to work?
+
+        self.images.clear()
         for tn in self.text_nodes:
             tn.remove_node()
+
         self.text_nodes.clear()
 
-        if not '<' in text:
+        if not self.start_tag in text or not self.end_tag in text or self.use_tags == False:
             self.create_text_section(text)
             return
 
         sections = list()
         section = ''
-        tag = '<default>'
+        tag = self.start_tag+'default'+self.end_tag
         temp_text_node = TextNode('temp_text_node')
         temp_text_node.setFont(self.font)
         x = 0
@@ -100,7 +108,7 @@ class Text(Entity):
                 x = 0
                 i += 1
 
-            elif char == '<': # find tag
+            elif char == self.start_tag: # find tag
                 sections.append([section, tag, x, y])
                 x += temp_text_node.calcWidth(section)
                 section = ''
@@ -108,7 +116,7 @@ class Text(Entity):
                 tag = ''
                 for j in range(len(text)-i):
                     tag += text[i+j]
-                    if text[i+j] == '>' and len(tag) > 0:
+                    if text[i+j] == self.end_tag and len(tag) > 0:
                         i += j+1
                         break
             else:
@@ -117,17 +125,25 @@ class Text(Entity):
 
         sections.append([section, tag, x, y])
 
-        for s in sections:
-            # print('---', s)
+        for i, s in enumerate(sections):
+            tag = s[1]
+            # move the text after image one space right
+            if tag.startswith(self.start_tag+'image:'):
+                for f in sections:
+                    if f[3] == s[3] and f[2] > s[2]:
+                        f[2] += .5
+
+                s[2] += .5
+
             self.create_text_section(text=s[0], tag=s[1], x=s[2], y=s[3])
 
-        # self.origin = self.origin   # recalculate text alignment after assigning new text
         self.align()
 
     def update_text(self):
         self.text = self.raw_text
 
-    def create_text_section(self, text, tag='<default>', x=0, y=0):
+    def create_text_section(self, text, tag='', x=0, y=0):
+        # print(text, tag)
         self.text_node = TextNode('t')
         self.text_node_path = self.attachNewNode(self.text_node)
         try:
@@ -135,6 +151,47 @@ class Text(Entity):
         except:
             print('default font')
             pass    # default font
+
+        # tags
+        if not tag:
+            tag = self.tag
+        if tag in self.text_colors:
+            lightness = color.to_hsv(self.color_tag)[2]
+            self.color_tag = self.text_colors[tag]
+            if not tag == self.start_tag+'default'+self.end_tag:
+                if lightness > .8:
+                    self.color_tag = color.tint(self.color_tag, .2)
+                else:
+                    self.color_tag = color.tint(self.color_tag, -.3)
+
+            self.text_node.setTextColor(self.color_tag)
+
+        if tag.startswith(self.start_tag+'scale:'):
+            scale = tag.split(':')[1]
+            self.scale_override = scale = float(scale[:-1])
+
+        elif tag.startswith(self.start_tag+'image:'):
+            texture_name = tag.split(':')[1].replace(self.end_tag, '')
+            image = Entity(
+                parent=self.text_node_path,
+                name='inline_image',
+                model='quad',
+                texture=texture_name,
+                color=self.color_tag,
+                scale=1,
+                # position=(x*self.size*self.scale_override, y*self.size*self.line_height),
+                origin=(0, -.3),
+                add_to_scene=False,
+                )
+            if not image.texture:
+                destroy(image)
+            else:
+                self.images.append(image)
+
+        self.text_node_path.setScale(self.scale_override * self.size)
+
+        if not text:
+            return
         self.text_node.setText(text)
         self.text_node.setPreserveTrailingWhitespace(True)
         self.text_node_path.setPos(
@@ -143,24 +200,6 @@ class Text(Entity):
             (y * self.size * self.line_height) - .75 * self.size)
 
         self.text_nodes.append(self.text_node_path)
-
-        if tag in self.text_colors:
-            lightness = color.to_hsv(self.color_tag)[2]
-            self.color_tag = self.text_colors[tag]
-            if not tag == '<default>':
-                if lightness > .8:
-                    self.color_tag = color.tint(self.color_tag, .2)
-                else:
-                    self.color_tag = color.tint(self.color_tag, -.3)
-
-            self.text_node.setTextColor(self.color_tag)
-
-        if tag.startswith('<scale:'):
-            scale = tag.split(':')[1]
-            self.scale_override = scale = float(scale[:-1])
-
-        self.text_node_path.setScale(self.scale_override * self.size)
-
 
         return self.text_node
 
@@ -173,7 +212,7 @@ class Text(Entity):
         font = loader.loadFont(value)
         if font:
             self._font = font
-            # _font.setRenderMode(TextFont.RMPolygon)
+            self._font.setPixelsPerUnit(self.resolution)
             self.text = self.raw_text   # update tex
 
     @property
@@ -229,7 +268,6 @@ class Text(Entity):
     def resolution(self, value):
         self._font.setPixelsPerUnit(value)
 
-
     @property
     def wordwrap(self):
         if hasattr(self, '_wordwrap'):
@@ -247,9 +285,9 @@ class Text(Entity):
         while i < (len(self.raw_text)):
             char = self.raw_text[i]
 
-            if char == '<':
+            if char == self.start_tag:
                 for j in range(len(self.raw_text) - i):
-                    if self.raw_text[i+j] == '>':
+                    if self.raw_text[i+j] == self.end_tag:
                         break
                     newstring += self.raw_text[i+j]
                 i += j + 0  # don't count tags
@@ -271,7 +309,7 @@ class Text(Entity):
                 linelength += 1
                 i += 1
 
-        newstring = newstring.replace('\n>', '>\n')
+        newstring = newstring.replace(f'\n{Text.end_tag}', f'{Text.end_tag}\n')
         # print('--------------------\n', newstring)
         self.text = newstring
 
@@ -347,23 +385,32 @@ class Text(Entity):
         self.visible = True
 
         for i, tn in enumerate(self.text_nodes):
-            tn.setX(tn.getX()-999999)
+            tn.setX(tn.getX()-999)
 
         x = 0
+        seq = Sequence()
         for i, tn in enumerate(self.text_nodes):
             target_text = tn.node().getText()
+            tn.node().setText('')
             print(target_text)
-            invoke(tn.setX, tn.getX()+999999, delay=((i+x)*speed) + delay)
+            # invoke(tn.setX, tn.getX()+999, delay=((i+x)*speed) + delay)
+            seq.append(Wait(((i+x)*speed) + delay))
+            # seq.append(Func(tn.setX, tn.getX()+999))
 
             new_text = ''
             for j, char in enumerate(target_text):
                 # print(char)
                 new_text += char
-                invoke(tn.node().setText, new_text, delay=((i+x+j)*speed) + delay)
+                # invoke(tn.node().setText, new_text, delay=((i+x+j)*speed) + delay)
+                seq.append(Wait(((i+x+j)*speed) + delay))
+                seq.append(Func(tn.node().setText, new_text))
 
             x += len(target_text)
 
-        return len(self.text) * speed   # duration
+        seq.start()
+        print(seq)
+        # return len(self.text) * speed   # duration
+        return seq
 
 
     def get_width(string, font=None):
@@ -381,19 +428,29 @@ if __name__ == '__main__':
     app = Ursina()
     # Text.size = .001
     descr = dedent('''
-        <scale:1.5><orange>Rainstorm <scale:1>
+        <image:brick> <image:shore> <orange>Rainstorm
         Summon a <azure>rain storm <default>to deal 5 <azure>water
-        damage <default>to <red>everyone, <default>including <orange>yourself. <default>
+        damage <default>to <red>everyone,<default><image:brick> <image:brick> test <default>including <orange>yourself. <default>
         Lasts for 4 rounds.''').strip()
 
-    Text.default_font = 'VeraMono.ttf'
-    test = Text(descr)
-#     # print('\n', test.text, '\n\n')
+    # Text.default_font = 'VeraMono.ttf'
+    # Text.default_font = 'consola.ttf'
+    Text.default_resolution = 140
+    test = Text(font='consola.ttf', text=descr)
+    # test = Text(descr)
+
+    # test.text = ''
+    # print(test.images)
+  # print('\n', test.text, '\n\n')
     # test.font = 'VeraMono.ttf'
     # Text.font = 'VeraMono.ttf'
     # test.origin = (.5, .5)
     # test.origin = (0, 0)
     # test.wordwrap = 40
+    def input(key):
+        if key == 'a':
+            test.appear(speed=.001)
+
     test.create_background()
     print('....', Text.get_width('yolo'))
     app.run()
