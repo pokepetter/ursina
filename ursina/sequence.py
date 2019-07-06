@@ -24,6 +24,7 @@ class Sequence():
         self.funcs = list()
         self.paused = True
         self.loop = False
+        self.auto_destroy = True
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -59,7 +60,10 @@ class Sequence():
 
 
     def start(self):
-        self.t = 0
+        for f in self.funcs:
+            f[3] = False
+
+        self.t = 0        
         self.paused = False
 
     def pause(self):
@@ -94,8 +98,9 @@ class Sequence():
                 self.t = 0
                 return
             # print('finish')
-            application.sequences.remove(self)
-            del self
+            if self.auto_destroy:
+                application.sequences.remove(self)
+                del self
 
 
 
