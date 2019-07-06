@@ -17,4 +17,4 @@ class Cursor(Entity):
             setattr(self, key, value)
 
     def update(self):
-        self.position = (mouse.x * window.aspect_ratio, mouse.y)
+        self.position = mouse.position

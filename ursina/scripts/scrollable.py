@@ -21,7 +21,7 @@ class Scrollable():
 
     def input(self, key):
         if not mouse.hovered_entity:
-            print('pass', mouse.hovered_entity)
+            # print('pass', mouse.hovered_entity)
             return
 
         if self.entity.hovered or mouse.hovered_entity.has_ancestor(self.entity):

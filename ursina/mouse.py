@@ -48,7 +48,7 @@ class Mouse():
     def x(self):
         if not self._mouse_watcher.has_mouse():
             return 0
-        return self._mouse_watcher.getMouseX() / 2   # same space as ui stuff
+        return self._mouse_watcher.getMouseX() / 2 * window.aspect_ratio  # same space as ui stuff
 
     @property
     def y(self):
@@ -158,7 +158,7 @@ class Mouse():
             return
         # collide with ui
         self._pickerNP.reparent_to(scene.ui_camera)
-        self._pickerRay.set_from_lens(camera._ui_lens_node, self.x * 2, self.y * 2)
+        self._pickerRay.set_from_lens(camera._ui_lens_node, self.x * 2 / window.aspect_ratio, self.y * 2)
         self._picker.traverse(camera.ui)
         if self._pq.get_num_entries() > 0:
             # print('collided with ui', self._pq.getNumEntries())

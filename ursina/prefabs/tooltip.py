@@ -19,7 +19,7 @@ class Tooltip(Text):
     def update(self):
         self.position = mouse.position
         self.position = (
-            (mouse.x * camera.aspect_ratio) + (self.margin[0] * self.size/2) + .01,
+            mouse.x + (self.margin[0] * self.size/2) + .01,
             mouse.y + (self.margin[1] * self.size/2) + .01
             )
         self.x = min(self.x, (.5 * window.aspect_ratio) - self.width - self.size - .005)
