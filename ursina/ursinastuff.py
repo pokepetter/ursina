@@ -241,6 +241,11 @@ def load(paths, module_name, instantiate=True):
             return class_instance
 
 def invoke(function, *args, **kwargs):
+    if 'delay' in kwargs and kwargs['delay'] <= 0:
+        print('invoke delay is <= 0')
+        function(*args)
+        return function
+
     s = Sequence()
     if 'delay' in kwargs:
         s.append(Wait(kwargs['delay']))
@@ -276,7 +281,6 @@ def _destroy(entity):
         for s in entity.scripts:
             del s
 
-    # if hasattr(entity, 'animations'):
     for anim in entity.animations:
         anim.finish()
 
