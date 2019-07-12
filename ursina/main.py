@@ -122,7 +122,7 @@ class Ursina(ShowBase):
             seq.update()
 
         for entity in scene.entities:
-            if hasattr(entity, 'enabled') and entity.enabled == False:
+            if entity.enabled == False or entity.ignore:
                 continue
 
             if application.paused and entity.ignore_paused == False:
@@ -150,6 +150,10 @@ class Ursina(ShowBase):
 
 
     def input_hold(self, key):
+        key = key.replace('control-', '')
+        key = key.replace('shift-', '')
+        key = key.replace('alt-', '')
+
         if key in self._input_name_changes:
             key = self._input_name_changes[key]
 

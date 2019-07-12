@@ -35,11 +35,12 @@ class Scene(NodePath):
         to_keep = [e for e in self.entities if e.eternal]
 
         for d in to_destroy:
-            # self.entities.remove(d)
-            # d.remove_node()
             destroy(d)
+
         self.entities = to_keep
 
+        from ursina import application
+        application.sequences.clear()
 
 
 sys.modules[__name__] = Scene()

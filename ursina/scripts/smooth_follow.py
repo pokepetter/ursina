@@ -15,16 +15,16 @@ class SmoothFollow():
         if not self.target:
             return
 
-        self.entity.position = lerp(
+        self.entity.world_position = lerp(
             self.entity.world_position,
-            self.target.world_position + self.offset,
+            self.target.world_position + Vec3(*self.offset),
             time.dt * self.speed)
 
         if self.rotation_speed > 0:
-            self.entity.rotation = lerp(
-            self.entity.world_rotation,
-            self.target.world_rotation + self.rotation_offset,
-            time.dt * self.rotation_speed)
+            self.entity.world_rotation = lerp(
+                self.entity.world_rotation,
+                self.target.world_rotation + self.rotation_offset,
+                time.dt * self.rotation_speed)
 
 
 

@@ -167,7 +167,7 @@ class Mouse():
 
         # collide with world
         self._pickerNP.reparent_to(camera)
-        self._pickerRay.set_from_lens(scene.camera.lens_node, self.x * 2, self.y * 2)
+        self._pickerRay.set_from_lens(scene.camera.lens_node, self.x * 2 / window.aspect_ratio, self.y * 2)
         self._picker.traverse(base.render)
         if self._pq.get_num_entries() > 0:
             # print('collided with world', self._pq.getNumEntries())

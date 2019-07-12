@@ -3,6 +3,8 @@
 
 
 from ursina import *
+import time
+
 
 class HotReloader(Entity):
     def __init__(self, path=__file__, **kwargs):
@@ -29,6 +31,7 @@ class HotReloader(Entity):
             return
 
         scene.clear()
+        camera.position = (0, 0, -20)
 
         newtext = ''
         with open(self.path, 'r') as file:
@@ -50,8 +53,10 @@ class HotReloader(Entity):
                     newtext += line + '\n'
 
         print(newtext)
+        t = time.time()
         try:
             exec(newtext)
+            print('reloaded in:', time.time() - t)
         except Exception as e:
             print(e)
 

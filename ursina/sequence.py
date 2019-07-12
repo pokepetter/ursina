@@ -63,7 +63,7 @@ class Sequence():
         for f in self.funcs:
             f[3] = False
 
-        self.t = 0        
+        self.t = 0
         self.paused = False
 
     def pause(self):
@@ -75,7 +75,7 @@ class Sequence():
     def finish(self):
         self.t = math.inf
         self.paused = False
-
+        self.update()
 
     def update(self):
         if self.paused:
@@ -98,7 +98,7 @@ class Sequence():
                 self.t = 0
                 return
             # print('finish')
-            if self.auto_destroy:
+            if self.auto_destroy and self in application.sequences:
                 application.sequences.remove(self)
                 del self
 

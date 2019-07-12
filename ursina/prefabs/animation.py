@@ -12,7 +12,7 @@ class Animation(Entity):
                 texture + '_' + str(i).zfill(4),
                 parent=self,
                 name=str(i),
-                add_to_scene=False
+                ignore=True
                 )
             if not sprite:
                 break
