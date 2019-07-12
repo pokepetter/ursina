@@ -19,8 +19,8 @@ from ursina.entity import Entity
 class Text(Entity):
 
     size = .025
-    default_font = 'VeraMono.ttf'
-    default_resolution = 100
+    default_font = 'OpenSans-Regular.ttf'
+    default_resolution = 1080 * size * 2
     start_tag = '<'
     end_tag = '>'
 
@@ -181,7 +181,7 @@ class Text(Entity):
                 scale=1,
                 # position=(x*self.size*self.scale_override, y*self.size*self.line_height),
                 origin=(0, -.3),
-                add_to_scene=False,
+                ignore=True,
                 )
             if not image.texture:
                 destroy(image)
@@ -384,32 +384,19 @@ class Text(Entity):
         self.enabled = True
         self.visible = True
 
-        for i, tn in enumerate(self.text_nodes):
-            tn.setX(tn.getX()-999)
-
         x = 0
         seq = Sequence()
         for i, tn in enumerate(self.text_nodes):
             target_text = tn.node().getText()
             tn.node().setText('')
-            print(target_text)
-            # invoke(tn.setX, tn.getX()+999, delay=((i+x)*speed) + delay)
-            seq.append(Wait(((i+x)*speed) + delay))
-            # seq.append(Func(tn.setX, tn.getX()+999))
-
             new_text = ''
+
             for j, char in enumerate(target_text):
-                # print(char)
                 new_text += char
-                # invoke(tn.node().setText, new_text, delay=((i+x+j)*speed) + delay)
-                seq.append(Wait(((i+x+j)*speed) + delay))
+                seq.append(Wait(speed))
                 seq.append(Func(tn.node().setText, new_text))
 
-            x += len(target_text)
-
         seq.start()
-        print(seq)
-        # return len(self.text) * speed   # duration
         return seq
 
 
@@ -430,13 +417,13 @@ if __name__ == '__main__':
     descr = dedent('''
         <image:brick> <image:shore> <orange>Rainstorm
         Summon a <azure>rain storm <default>to deal 5 <azure>water
-        damage <default>to <red>everyone,<default><image:brick> <image:brick> test <default>including <orange>yourself. <default>
+        damage <default>to <red>everyone, <default><image:brick> <image:brick> test <default>including <orange>yourself. <default>
         Lasts for 4 rounds.''').strip()
 
     # Text.default_font = 'VeraMono.ttf'
     # Text.default_font = 'consola.ttf'
-    Text.default_resolution = 140
-    test = Text(font='consola.ttf', text=descr)
+    Text.default_resolution = 1080 * Text.size
+    test = Text(text=descr)
     # test = Text(descr)
 
     # test.text = ''
@@ -449,7 +436,7 @@ if __name__ == '__main__':
     # test.wordwrap = 40
     def input(key):
         if key == 'a':
-            test.appear(speed=.001)
+            test.appear(speed=.025)
 
     test.create_background()
     print('....', Text.get_width('yolo'))
