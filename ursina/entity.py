@@ -42,18 +42,17 @@ except:
 
 class Entity(NodePath):
 
-    def __init__(self, add_to_scene=True, **kwargs):
+
+    def __init__(self, **kwargs):
         super().__init__(self.__class__.__name__)
         self.name = camel_to_snake(self.type)
         self.enabled = True
         self.visible = True
-        if add_to_scene:
-            try:
-                self.parent = scene
-                scene.has_changes = True
-                scene.entities.append(self)
-            except:
-                print('scene not yet initialized')
+        self.ignore = False
+
+        self.parent = scene
+        scene.entities.append(self)
+
         self.eternal = False    # eternal entities does not get destroyed on scene.clear()
         self.ignore_paused = False
         self.model = None
@@ -61,10 +60,8 @@ class Entity(NodePath):
         self.texture = None     # tries to set to camel_to_snake(self.type)
         self.reflection_map = scene.reflection_map
         self.reflectivity = 0
-        try:
-            self.texture = camel_to_snake(self.type)
-        except:
-            pass
+
+        self.texture = camel_to_snake(self.type)
         self.render_queue = 0
         self.double_sided = False
 
@@ -73,7 +70,7 @@ class Entity(NodePath):
         self.scripts = list()
         self.animations = list()
         self.hovered = False
-
+        #
         self.origin = Vec3(0,0,0)
         self.position = Vec3(0,0,0) # can also set self.x, self.y, self.z
         self.rotation = Vec3(0,0,0) # can also set self.rotation_x, self.rotation_y, self.rotation_z
@@ -686,12 +683,11 @@ class Entity(NodePath):
     def add_script(self, name, path=None):
         # instance given
         if isinstance(name, object) and type(name) is not str:
-            # print('type', type(self))
             name.entity = self
             name.enabled = True
             setattr(self, camel_to_snake(name.__class__.__name__), name)
             self.scripts.append(name)
-            # print('added script:', module_name)
+            # print('added script:', camel_to_snake(name.__class__.__name__))
             return name
 
         # class name given
@@ -925,36 +921,39 @@ class Entity(NodePath):
 if __name__ == '__main__':
     from ursina import *
     app = main.Ursina()
-    e = Entity(parent=scene, model='cube', collider='box', texture='brick')
+    import time
+    t = time.time()
+    for i in range(100):
+        e = Entity(parent=scene, model='cube', collider='box', texture='brick')
+    #
+    # # using Entity class with inheritance
+    # class Player(Entity):
+    #     def __init__(self):
+    #         super().__init__()
+    #         self.model='cube'
+    #         self.color = color.orange
+    #         self.scale_y = 2
+    #
+    #     # input and update functions gets automatically called by the engine
+    #
+    #     def input(self, key):
+    #         if key == 'space':
+    #             # self.color = self.color.inverse()
+    #             self.animate_x(2, duration=1)
+    #
+    #     def update(self):
+    #         self.x += held_keys['d'] * time.dt * 10
+    #         self.x -= held_keys['a'] * time.dt * 10
+    #
+    # player = Player()
+    #
+    # Sky()
+    # e = Entity(model='sphere', color=color.red, reflectivity=1, y=2.5)
+    # e.generate_reflection_map()
+    #
+    # player.reflection_map = e.reflection_map
+    # player.reflectivity = 1
 
-    # using Entity class with inheritance
-    class Player(Entity):
-        def __init__(self):
-            super().__init__()
-            self.model='cube'
-            self.color = color.orange
-            self.scale_y = 2
-
-        # input and update functions gets automatically called by the engine
-
-        def input(self, key):
-            if key == 'space':
-                # self.color = self.color.inverse()
-                self.animate_x(2, duration=1)
-
-        def update(self):
-            self.x += held_keys['d'] * time.dt * 10
-            self.x -= held_keys['a'] * time.dt * 10
-
-    player = Player()
-
-    Sky()
-    e = Entity(model='sphere', color=color.red, reflectivity=1, y=2.5)
-    e.generate_reflection_map()
-
-    player.reflection_map = e.reflection_map
-    player.reflectivity = 1
-
-    EditorCamera()
-
+    # EditorCamera()
+    print(time.time() - t)
     app.run()

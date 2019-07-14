@@ -25,7 +25,8 @@ class Button(Entity):
         self.color = Button.color
 
         self.text_entity = None
-        self.text = text
+        if text:
+            self.text = text
         self.disabled = False
 
         if 'color' in kwargs:
