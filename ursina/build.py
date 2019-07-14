@@ -22,6 +22,8 @@ def copytree(src, dst, symlinks=False, ignore=None):
             except Exception as e:
                 print(e)
         else:
+            if s.endswith('.psd'):
+                continue
             shutil.copy2(s, d)
 
 
@@ -44,9 +46,11 @@ for i, arg in enumerate(sys.argv):
             print('ignoring', sys.argv[j])
         break
 
-project_folder = Path(sys.argv[1])
-# else:
-#     project_folder = Path(sys.argv[0])
+if len(sys.argv) > 1:
+    project_folder = Path(sys.argv[1])
+else:
+    project_folder = Path.cwd()
+
 
 build_folder = Path(project_folder / 'build')
 if build_folder.exists():
@@ -150,16 +154,16 @@ for name, mod in finder.modules.items():
 print('copying assets')
 for f in project_folder.iterdir():
     name = f.name
-    dest = Path(build_folder / 'src' / f.name)
+    dest = Path(src_dest / f.name)
     if name in ['.git', '__pycache__', 'build', '.gitignore'] + ignore:
         print('ignore:', f)
         continue
     elif f.is_dir():
         print('copying assetfolder:', f, 'to', dest)
         dest.mkdir(parents=True, exist_ok=True)
-        copytree(project_folder / f, dest)
+        copytree(project_folder / f, dest, ignore=shutil.ignore_patterns('*psd'))
     elif f.is_file():
-        print('copying asset:', f, 'to', build_folder / 'src' / f.name)
+        print('copying asset:', f, 'to', src_dest / f.name)
         copy(str(f), str(dest))
 
 
