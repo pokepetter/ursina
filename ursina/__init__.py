@@ -43,6 +43,7 @@ from ursina.scripts.grid_layout import grid_layout
 from ursina.scripts.scrollable import Scrollable
 
 from ursina.prefabs.tooltip import Tooltip
+from ursina.prefabs.text_field import TextField
 from ursina.prefabs.input_field import InputField
 from ursina.prefabs.draggable import Draggable
 from ursina.prefabs.slider import Slider
