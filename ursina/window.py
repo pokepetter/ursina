@@ -23,6 +23,7 @@ class Window(WindowProperties):
         self.setForeground(True)
 
         self.vsync = True   # can't be set during play
+        self.show_ursina_splash = False
 
 
     def late_init(self):
@@ -234,9 +235,26 @@ sys.modules[__name__] = Window()
 
 if __name__ == '__main__':
     from ursina import *
+    from ursina.prefabs.primitives import *
     app = Ursina()
     window.title = 'Title'
+    RedCube()
     # window.color = color.black  # sets clear color
-    camera.overlay.fade_in(.1)
+    # camera.overlay.fade_in(.1)
+    camera.overlay.fade_in(duration=0)
+    # Text(
+    #     # font='VeraMono.ttf',
+    #     # text='ursina engine\nʕ •ᴥ•ʔゝ□',
+    #     # font='Impact.ttf',
+    #     font='l_10646.ttf',
+    #     scale=5,
+    #     resolution=200,
+    #     origin=(0,0),
+    #     text='ursina engine\nʕ •ᴥ•ʔゝ□',
+    #     )
+    logo = Sprite(parent=camera.ui, texture='ursina_logo', world_z=camera.overlay.z-1, scale=.1, color=color.clear)
+    logo.animate_color(color.white, duration=1, delay=.0)
+    logo.fade_out(.5, delay=3, curve=curve.linear)
+    camera.overlay.fade_out(1, delay=3)
     # window.size *= .5
     app.run()
