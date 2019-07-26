@@ -5,7 +5,7 @@ class FileButton(Button):
     def __init__(self, **kwargs):
         super().__init__(
             hovered_color = color.orange,
-            scale = (.5,.025),
+            scale = (.75,.025),
             selected = False,
             )
 
@@ -50,7 +50,7 @@ class FileBrowser(Entity):
 
         self.title_bar = Button(parent=self, scale=(.75,.025), text='Open', color=color.dark_gray, collision=False)
         self.folder_up_button = Button(parent=self, scale=(.035,.035), text='^', position=(-.4,-.03), color=color.dark_gray, on_click=self.folder_up)
-        self.address_bar = InputField(parent=self, y=-.03, scale=(.75,.035), text_origin=(-.5,0))
+        self.address_bar = Button(parent=self, y=-.03, scale=(.75,.035), text='//', text_origin=(-.45,0))
         self.button_parent = Entity(parent=self)
         self.bg = Button(parent=self, z=1, scale=(999,999), color=color.black66, highlight_color=color.black66, pressed_color=color.black66)
 
@@ -59,8 +59,8 @@ class FileBrowser(Entity):
         self.selection_limit = 1
         self.max_buttons = 24
 
-        self.cancel_buttn = Button(parent=self, scale=(.5*.24, .05), y=(-self.max_buttons*.025)-.15, origin_x=-.5, x=-.25, text='Cancel', on_click=self.close)
-        self.open_button = Button(parent=self, scale=(.5*.74, .05), y=(-self.max_buttons*.025)-.15, origin_x=.5, x=.25, text='Open', color=color.dark_gray, on_click=self.open)
+        self.cancel_button = Button(parent=self, scale=(.75*.24, .05), y=(-self.max_buttons*.025)-.15, origin_x=-.5, x=-.75/2, text='Cancel', on_click=self.close)
+        self.open_button = Button(parent=self, scale=(.75*.74, .05), y=(-self.max_buttons*.025)-.15, origin_x=.5, x=.75/2, text='Open', color=color.dark_gray, on_click=self.open)
 
         self.file_types = ['.*', ]
         self.start_path = Path('.').resolve()
@@ -116,8 +116,10 @@ class FileBrowser(Entity):
 
         for i, f in enumerate(files):
             prefix = ' '
-            if f.is_dir():
-                prefix = ' [_] '
+            # if f.is_dir():
+            #     prefix = ' <orange> <image:folder>   <default>'
+            # else:
+            #     prefix = ' <light_gray> <image:file_icon>   <default>'
 
             b = FileButton(
                 parent = self.button_parent,
@@ -136,9 +138,10 @@ class FileBrowser(Entity):
         self.path = self.path
 
     def close(self):
-        self.bg.enabled = False
-        self.animate_scale_y(0, duration=.1)
-        invoke(setattr, self, 'enabled', False, delay=.2)
+        # self.bg.enabled = False
+        # self.animate_scale_y(0, duration=.1)
+        # invoke(setattr, self, 'enabled', False, delay=.2)
+        self.enabled = False
 
 
     def folder_up(self):
@@ -163,9 +166,9 @@ class FileBrowser(Entity):
 
 if __name__ == '__main__':
     app = Ursina()
-
+    t = time.time()
     fb = FileBrowser(file_types=('.*'))
-
+    print(time.time() - t)
     def on_submit(value):
         for button in value:
             print('---', button.path)
