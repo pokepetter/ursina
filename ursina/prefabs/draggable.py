@@ -49,11 +49,9 @@ class Draggable(Button):
         self.delta_drag = self.world_position - self.start_pos
         self._z_plane.enabled = False
         self.collision = True
-        try:
+
+        if hasattr(self, 'drop'):
             self.drop()
-        except:
-            # print('no drop func')
-            pass
 
     # def drag(self):
     #     print('start drag test')

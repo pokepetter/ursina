@@ -378,9 +378,7 @@ class Entity(NodePath):
 
     @property
     def world_position(self):
-        world_position = self.getPos(render)
-        world_position = Vec3(world_position[0], world_position[2], world_position[1])
-        return world_position
+        return self.get_position(render)
 
     @world_position.setter
     def world_position(self, value):
@@ -678,6 +676,13 @@ class Entity(NodePath):
     def reparent_to(self, entity):
         self.wrtReparentTo(entity)
         self._parent = entity
+
+
+    def get_position(self, entity=None):
+        if entity == None:
+            entity = render
+        world_position = self.getPos(entity)
+        return Vec3(world_position[0], world_position[2], world_position[1])
 
 
     def add_script(self, name, path=None):
