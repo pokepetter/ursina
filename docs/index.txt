@@ -1,4 +1,4 @@
-﻿
+# title ursina engine
 # center, bold, arial, size 5
 ursina engine
 ʕ •ᴥ•ʔゝ□
@@ -10,7 +10,7 @@ open source game engine
 --------------------------------------
 # normal
 
-[GitHub, https://github.com/pokepetter/ursina] [Documentation, documentation.html] [Twitter, https://twitter.com/petteramland]
+[GitHub, https://github.com/pokepetter/ursina] [Tutorials, tutorials.html] [Documentation, documentation.html] [Twitter, https://twitter.com/petteramland]
 
 
 # left, width 900, size 2, bold,
@@ -49,11 +49,11 @@ Platforms
 
 
 # size 2, bold
-License
+Free and Open Source
 # normal, size 1
 
-    Ursina is completely free. Licenced under the permissive MIT license,
-    you can use it for whatever you want. No supscription fee, no revenue cut.
+    Licenced under the permissive MIT license,
+    you can use Ursina for whatever you want. No supscription fee, no revenue cut.
 
 
 
@@ -72,7 +72,7 @@ Getting Started
         pip install imageio
         pip install psutil
         pip install git+https://github.com/pokepetter/ursina.git
-
+        # text
 
     If you want to easily edit the source, it's recommended to clone the git
     repo and install as develop like this:
@@ -80,6 +80,7 @@ Getting Started
         # code
         git clone https://github.com/pokepetter/ursina.git
         python setup.py develop
+        # text
 
 
 
@@ -121,7 +122,7 @@ Examples
 
         app.run()                       # opens a window and starts the game.
 
-
+        # text
 
 
 # size 2, bold
@@ -146,6 +147,7 @@ How do I make a game?
 
             app.run()   # opens a window and starts the game.
 
+            # text
 
 
         3) Type this in the terminal to start the game. I recommend setting a hotkey
@@ -153,10 +155,7 @@ How do I make a game?
 
             # code
             python ursina_game.py
-
+            # text
 
     The game should start! You can now move the orange box around with 'a' and 'd'!
     To close the window, you can by default, press shift+q or press the red x.
-
-
-# stop
