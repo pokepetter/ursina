@@ -51,8 +51,8 @@ class WindowPanel(Draggable):
                         c.scale = (.98, 1)
                         if hasattr(c, 'height'):
                             c.scale_y = height
-
-                        c.text_entity.world_scale = 1
+                        # if hasattr(c, 'text_entity'):
+                        #     c.text_entity.world_scale = 1
                         c.model = Quad(aspect=c.world_scale_x/c.world_scale_y)
                         height += c.scale_y
                         c.y -= c.scale_y/2
