@@ -8,12 +8,7 @@ An easy to use game engine/framework for python.
 2) Make sure you have git installed.
 3) Open cmd/terminal and type:
 
-        pip install panda3d==1.10.0.dev1086
-        pip install pillow
-        pip install psd-tools
-        pip install imageio
-        pip install git+https://github.com/pokepetter/ursina.git@a28ae418e1d23f0247169a8aedcd92a35a1e2bd5
-
+        pip install git+https://github.com/pokepetter/ursina.git
 
 
 If you want to easily edit the source, it's recommended to clone the git repo and install as develop like this:
@@ -46,7 +41,6 @@ ground = Entity(
     origin = (0, .5),
     scale = (50, 1, 10),
     collider = 'box',
-    collision = True
     )
 
 app.run()                       # opens a window and starts the game.

@@ -66,11 +66,6 @@ Getting Started
     3) Open cmd/terminal and type:
 
         # code
-        pip install panda3d
-        pip install pillow
-        pip install psd-tools2
-        pip install imageio
-        pip install psutil
         pip install git+https://github.com/pokepetter/ursina.git
         # text
 
@@ -97,6 +92,7 @@ Dependencies
     * psd-tools, for converting .psd files
     * psutil, for measuring memory usage
     * blender, for converting .blend files
+    
 
 
 
