@@ -11,7 +11,7 @@ class Inventory(Entity):
             scale = (.5, .8),
             origin = (-.5, .5),
             position = (-.3,.4),
-            color=color._40,
+            color=color.color(0,0,.1,.9),
             )
 
         for key, value in kwargs.items():
@@ -109,5 +109,8 @@ if __name__ == '__main__':
         tooltip=Tooltip('Add random item'),
         on_click=add_item
         )
-
+    bg = Entity(parent=camera.ui, model='quad', texture='shore', scale_x=camera.aspect_ratio, z=1)
+    Cursor(texture='cursor', scale=.1)
+    mouse.visible = False
+    window.size /= 2
     app.run()
