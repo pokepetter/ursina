@@ -3,11 +3,11 @@ import os
 from panda3d.core import WindowProperties
 from panda3d.core import loadPrcFileData
 from panda3d.core import Vec2
+from screeninfo import get_monitors
 from ursina.entity import Entity
 from ursina import color
 from ursina import application
 from ursina import scene    # for toggling collider visibility
-from ursina.thirdparty.screeninfo import get_monitors
 
 
 class Window(WindowProperties):
