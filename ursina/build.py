@@ -1,7 +1,6 @@
 from modulefinder import ModuleFinder
 import os
 import sys
-from ursina.thirdparty.hurry.filesize import size
 import shutil
 from shutil import copy, copyfile
 from distutils.dir_util import copy_tree
