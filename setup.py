@@ -11,5 +11,11 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     # packages=find_packages(['']),cmd
-    requires=['panda3d', ]
-    )
+    install_requires=[
+        'panda3d',
+        'pillow',
+        'psd-tools',
+        'imageio',
+        'psutil'
+    ]
+)
