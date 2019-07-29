@@ -76,6 +76,10 @@ class Entity(NodePath):
         self.rotation = Vec3(0,0,0) # can also set self.rotation_x, self.rotation_y, self.rotation_z
         self.scale = Vec3(1,1,1)    # can also set self.scale_x, self.scale_y, self.scale_z
 
+        if application.trace_entity_definition:
+            from inspect import getframeinfo, stack
+            caller = getframeinfo(stack()[1][0])
+            self.line_definition = f'{Path(caller.filename).name} ->  {caller.lineno} -> {caller.code_context}'
 
         for key, value in kwargs.items():
             setattr(self, key, value)

@@ -7,6 +7,8 @@ from pathlib import Path
 paused = False
 time_scale = 1
 sequences = list()
+trace_entity_definition = True # enable to set entity.line_definition
+
 
 def pause():
     global paused
@@ -48,3 +50,6 @@ _model_path = getModelPath()
 _model_path.append_path(str(internal_fonts_folder.resolve()))
 _model_path.append_path(str(Path('C:/Windows/Fonts').resolve()))
 _model_path.append_path(str(asset_folder.resolve()))
+
+print('package_folder:', package_folder)
+print('asset_folder:', asset_folder)
