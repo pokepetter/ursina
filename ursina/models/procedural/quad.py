@@ -22,6 +22,8 @@ class Quad(Mesh):
                     new_verts.append(point_placer.world_position)
                     corner_maker.rotation_z -= 90/segments
 
+            destroy(corner_maker)
+            destroy(point_placer)
             self.vertices = new_verts
 
 

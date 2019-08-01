@@ -3,6 +3,7 @@ from ursina import *
 class ExitButton(Button):
     def __init__(self, **kwargs):
         super().__init__(
+            name = 'exit_button',
             eternal = True,
             origin = (.5, .5),
             # text_origin = (-.5,-.5),
@@ -12,7 +13,6 @@ class ExitButton(Button):
             color = color.red.tint(-.2),
             text = 'x',
             **kwargs)
-
 
 
     def on_click(self):

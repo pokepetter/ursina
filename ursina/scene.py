@@ -35,6 +35,7 @@ class Scene(NodePath):
         to_keep = [e for e in self.entities if e.eternal]
 
         for d in to_destroy:
+            print('destroying:', d.name)
             destroy(d)
 
         self.entities = to_keep
@@ -44,3 +45,15 @@ class Scene(NodePath):
 
 
 sys.modules[__name__] = Scene()
+
+
+
+if __name__ == '__main__':
+    from ursina import *
+    app = Ursina()
+    yolo = Button(name='yolo', text='yolo')
+
+    def input(key):
+        if key == 'd':
+            scene.clear()
+    app.run()

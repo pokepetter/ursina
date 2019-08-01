@@ -43,7 +43,6 @@ class Button(Entity):
         if self.text_entity != None:
             self.text_entity.world_scale = 1
 
-
     @property
     def text(self):
         if self.text_entity:
@@ -107,6 +106,11 @@ class Button(Entity):
             object.__setattr__(self, 'on_click_string', textwrap.dedent(value))
             return
 
+        if name == 'eternal':
+            try:
+                self.text_entity.eternal = value
+            except:
+                pass
         try:
             super().__setattr__(name, value)
         except Exception as e:
@@ -185,6 +189,7 @@ if __name__ == '__main__':
 
     # e = Entity(parent=camera.ui, scale=.1)
     b = Button(text='hello world!', color=color.azure, scale=.5)
+    print('-----------------', b.eternal)
     # b.fit()
     b.on_click = application.quit
     b.tooltip = Tooltip('exit')

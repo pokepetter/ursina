@@ -2,7 +2,7 @@ from ursina import *
 
 
 class Slider(Entity):
-    def __init__(self, min=0, max=1, default=0, height=Text.size, text='', **kwargs):
+    def __init__(self, min=0, max=1, default=0, height=Text.size, text='', dynamic=False, **kwargs):
         super().__init__()
         self.parent = camera.ui
         self.vertical = False
@@ -49,7 +49,7 @@ class Slider(Entity):
 
         self.knob.drop = drop
         self.value = self.default
-        self.dynamic = True
+        self.dynamic = dynamic
 
 
         self.knob.text_entity.text = str(round(self.default, 2))
@@ -103,14 +103,28 @@ class Slider(Entity):
                 self.on_value_changed()
                 self._prev_value = t
 
-
-    # def on_value_changed(self):
-    #     print('changed', self.value)
+    def __setattr__(self, name, value):
+        if name == 'eternal':
+            try:
+                self.label.eternal = value
+                self.bg.eternal = value
+                self.knob.eternal = value
+            except:
+                pass
+        try:
+            super().__setattr__(name, value)
+        except Exception as e:
+            return e
 
 
 if __name__ == '__main__':
     app = Ursina()
     origin = Entity(model='cube', color=color.green, scale = .05)
-    slider = Slider(0, 12, default=1, height=Text.size*3, y=-.4, step=1, vertical=False)
-    # slider.value = 2
+    box = Entity(model='cube', origin_y=-.5, scale=1, color=color.orange)
+    slider = Slider(0, 12, default=1, height=Text.size*3, y=-.4, step=.1, vertical=False)
+
+    def scale_box():
+        box.scale_y = slider.value
+
+    slider.on_value_changed = scale_box
     app.run()

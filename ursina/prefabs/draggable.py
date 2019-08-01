@@ -16,7 +16,7 @@ class Draggable(Button):
         self.max_x, self.max_y, self.max_z = math.inf, math.inf, math.inf
 
         self._z_plane = Entity(model='quad', collider='box', scale=(999,999),
-            world_position=self.world_position, color=color.clear, enabled=False)
+            world_position=self.world_position, color=color.clear, enabled=False, eternal=True)
 
 
         for key, value in kwargs.items():

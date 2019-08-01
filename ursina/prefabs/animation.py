@@ -1,5 +1,5 @@
 from ursina import *
-# from direct.interval.IntervalGlobal import Sequence, Func, Wait, SoundInterval
+
 
 class Animation(Entity):
 

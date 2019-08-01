@@ -96,6 +96,7 @@ class Window(WindowProperties):
         from ursina import Text
         import time
         self.fps_counter = Text(
+            name = 'fps_counter',
             parent = scene.ui,
             eternal = True,
             position = (.5*self.aspect_ratio, .47),
@@ -114,6 +115,7 @@ class Window(WindowProperties):
         self.fps_counter.update = update
 
         self.overlay = Entity(
+            name = 'overlay',
             parent = self.exit_button.parent,
             model = 'quad',
             scale_x = self.aspect_ratio,

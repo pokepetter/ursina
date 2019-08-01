@@ -34,27 +34,6 @@ from ursina import color
 from ursina.input_handler import held_keys
 from ursina import input_handler
 
-# def save_scene():
-    # has_scene_entity = False
-    # for e in scene.entities:
-    #     if e.name.startswith('scene') and e.parent == render:
-    #         scene_entity = e
-    #         has_scene_entity = True
-    #         break
-    # if not has_scene_entity:
-    #     scene_entity = Entity()
-    #     scene_entity.name = name
-    #
-    # for e in scene.entities:
-    #     if not e.is_editor and e.parent == render and e is not scene_entity:
-    #         print(e)
-    #         e.parent = parent_entity
-
-    # save_prefab(scene_entity, name)
-
-    # for e in scene.entities:
-        # if e.parent = parent_entity
-
 
 def save_prefab(target, name=None, path='prefabs'):
     if not name:
@@ -166,80 +145,6 @@ def _vec3_to_string(vec3):
     return string
 
 
-def load_prefab(module_name, add_to_caller=False):
-    paths = (str(application.internal_prefabs_folder.resolve()), str(application.prefabs_folder.resolve()))
-    prefab = None
-    try:
-        prefab = load(paths, module_name)
-    except:
-        print('MISSING PREFAB:', module_name)
-    # if hasattr(caller, 'name') and caller.name == 'editor':
-    #     prefab.is_editor = True
-    if add_to_caller:
-        caller = inspect.currentframe().f_back.f_locals['self']
-        try: prefab.parent = caller.model
-        except:
-            try: prefab.parent = caller
-            except: pass
-
-    return prefab
-
-def _load_scene(module_name):    #broken for the time being
-    if inspect.isclass(module_name):
-        class_instance = module_name()
-        # scene =
-        return class_instance
-
-
-    paths = (application.internal_scenes_folder, application.scenes_folder)
-    try:
-        for e in scene.children:
-            destroy(e)
-    except:
-        print('scene not yet initialized')
-    prefab = load(paths, module_name)
-    print('found scene:', module_name, 'prefab:', prefab)
-    return prefab
-
-
-def load_script(module_name):
-    paths = (application.internal_scripts_folder, application.scripts_folder)
-    return load(paths, module_name)
-
-
-
-def load(paths, module_name, instantiate=True):
-    if inspect.isclass(module_name):
-        class_instance = module_name()
-        # print('added script:', class_instance)
-        return class_instance
-
-    # find the module
-    module = None
-    # module_name += '.py'
-    import importlib.util
-
-    for p in paths:
-        # print('mod:', f + module_name)
-        p = str(p) + '\\'
-        print(p)
-        if module_name + '.py' in os.listdir(p):
-            spec = importlib.util.spec_from_file_location(module_name, p + module_name + '.py')
-            module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(module)
-            # load its class
-            class_names = inspect.getmembers(module, inspect.isclass)
-            for cn in class_names:
-                if cn[1].__module__ == module.__name__:
-                    class_name = cn[0]
-                    break
-
-            class_ = getattr(module, class_name)
-            class_instance = class_()
-
-            print('added script:', class_instance)
-            return class_instance
-
 def invoke(function, *args, **kwargs):
     if 'delay' in kwargs and kwargs['delay'] <= 0:
         print('invoke delay is <= 0')
@@ -273,9 +178,6 @@ def _destroy(entity):
 
     if hasattr(entity, 'on_destroy'):
         entity.on_destroy()
-
-    if hasattr(entity, 'model') and entity.model != None:
-        entity.model.removeNode()
 
     if hasattr(entity, 'scripts'):
         for s in entity.scripts:
