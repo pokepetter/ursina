@@ -3,6 +3,7 @@ from panda3d.core import GeomVertexData, GeomVertexFormat, Geom, GeomVertexWrite
 from panda3d.core import GeomTriangles, GeomTristrips, GeomTrifans
 from panda3d.core import GeomLines, GeomLinestrips, GeomPoints
 from ursina.scripts.generate_normals import generate_normals
+from ursina.scripts.project_uvs import project_uvs
 from ursina.scripts.colorize import colorize
 from ursina import color
 
@@ -157,6 +158,8 @@ class Mesh(NodePath):
     def colorize(self, left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white):
         colorize(self, left, right, down, up, back, forward)
 
+    def project_uvs(self, aspect_ratio):
+        project_uvs(self, aspect_ratio)
 
 if __name__ == '__main__':
     from ursina import *
