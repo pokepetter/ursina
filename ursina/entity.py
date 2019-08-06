@@ -14,7 +14,6 @@ from panda3d.core import TransparencyAttrib
 from panda3d.core import Shader
 from panda3d.core import TextureStage, TexGenAttrib, GeomVertexReader
 
-# from panda3d.core import Texture as PandaTexture
 from ursina.texture import Texture
 from panda3d.core import TextureStage
 from panda3d.core import CullFaceAttrib
@@ -22,9 +21,6 @@ from ursina import application
 from ursina.collider import *
 from ursina.mesh import Mesh
 from os import path
-# from direct.interval.IntervalGlobal import Sequence, Func, Wait
-
-# from direct.showbase import Loader
 from ursina.sequence import Sequence, Func, Wait
 from ursina.ursinamath import lerp
 from ursina import curve
@@ -45,6 +41,7 @@ class Entity(NodePath):
 
     def __init__(self, **kwargs):
         super().__init__(self.__class__.__name__)
+
         self.name = camel_to_snake(self.type)
         self.enabled = True
         self.visible = True
@@ -76,6 +73,7 @@ class Entity(NodePath):
         self.rotation = Vec3(0,0,0) # can also set self.rotation_x, self.rotation_y, self.rotation_z
         self.scale = Vec3(1,1,1)    # can also set self.scale_x, self.scale_y, self.scale_z
 
+        self.line_definition = None
         if application.trace_entity_definition:
             from inspect import getframeinfo, stack
             caller = getframeinfo(stack()[1][0])
@@ -104,17 +102,6 @@ class Entity(NodePath):
                 if not self.is_singleton():
                     self.stash()
 
-        if name == 'visible':
-            if value == False:
-                object.__setattr__(self, '_parent_before_hidden', self.parent)
-                self.reparent_to(scene.hidden)
-            else:
-                try:
-                    self.reparent_to(self._parent_before_hidden)
-                except:
-                    pass
-            object.__setattr__(self, name, value)
-            return
 
         if name == 'world_parent':
             self.reparent_to(value)
@@ -360,6 +347,19 @@ class Entity(NodePath):
         return [c.__name__ for c in inspect.getmro(self.__class__)]
 
     @property
+    def visible(self):
+        return self._visible
+
+    @visible.setter
+    def visible(self, value):
+        self._visible = value
+        if hasattr(self, 'color'):
+            if value == True:
+                self.color = self.color
+            elif value == False:
+                self.model.setColorScale(color.clear)
+
+    @property
     def origin_x(self):
         return self.origin[0]
     @origin_x.setter
@@ -558,6 +558,16 @@ class Entity(NodePath):
             self.model.set_texture_off(True)
 
     @property
+    def alpha(self):
+        return self.color[3]
+
+    @alpha.setter
+    def alpha(self, value):
+        if value > 1:
+            value = value / 255
+        self.color = (self.color.h, self.color.s, self.color.v, value)
+
+    @property
     def reflection_map(self):
         return self._reflection_map
 
@@ -745,7 +755,6 @@ class Entity(NodePath):
                 self.__setattr__(module_name, None)
                 print('removed:', module_name)
 
-    def combine(self, analyze=False):
         self.flatten_strong()
         if analyze:
             render.analyze()
@@ -919,11 +928,11 @@ class Entity(NodePath):
     def animate_color(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
         self.animate('color', value, duration, delay, curve, resolution, interrupt)
 
-    def fade_out(self, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
-        self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], 0), duration, delay, curve, resolution, interrupt)
+    def fade_out(self, value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
+        self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration, delay, curve, resolution, interrupt)
 
-    def fade_in(self, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
-        self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], 1), duration, delay, curve, resolution, interrupt)
+    def fade_in(self, value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
+        self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration, delay, curve, resolution, interrupt)
 
 
 
