@@ -648,12 +648,25 @@ class Entity(NodePath):
 
     @property
     def vertices(self):
+        return get_vertices(relative_to=self)
+
+    def get_vertices(self, relative_to=None):
+        if relative_to == None:
+            relative_to = self
+            
         vertex_reader = GeomVertexReader(self.vertex_data, 'vertex')
         vertices = list()
+        temp_entity = Entity(parent=self, ignore=True)
+
         while not vertex_reader.isAtEnd():
             v = vertex_reader.getData3f()
             v = Vec3(v[0], v[2], v[1])
-            vertices.append(v)
+            temp_entity.position = v
+            vertices.append(temp_entity.get_position(relative_to))
+
+        from ursina import destroy
+        destroy(temp_entity)
+
         return vertices
 
     @property
@@ -692,11 +705,9 @@ class Entity(NodePath):
         self._parent = entity
 
 
-    def get_position(self, entity=None):
-        if entity == None:
-            entity = render
-        world_position = self.getPos(entity)
-        return Vec3(world_position[0], world_position[2], world_position[1])
+    def get_position(self, relative_to=scene):
+        pos = self.getPos(relative_to)
+        return Vec3(pos[0], pos[2], pos[1])
 
 
     def add_script(self, name, path=None):
@@ -755,9 +766,12 @@ class Entity(NodePath):
                 self.__setattr__(module_name, None)
                 print('removed:', module_name)
 
-        self.flatten_strong()
-        if analyze:
-            render.analyze()
+
+    def combine(self, analyze=False, auto_destroy=True):
+        from ursina.scripts.combine import combine
+
+        self.model = combine(self, analyze, auto_destroy)
+        return self.model
 
 
     def flip_faces(self):
@@ -941,8 +955,9 @@ if __name__ == '__main__':
     app = main.Ursina()
     import time
     t = time.time()
-    for i in range(100):
-        e = Entity(parent=scene, model='cube', collider='box', texture='brick')
+    # for i in range(1000):
+    #     e = Entity(model='quad')
+    # [Entity(model='quad') for i in range(1000)]
     #
     # # using Entity class with inheritance
     # class Player(Entity):
@@ -972,6 +987,12 @@ if __name__ == '__main__':
     # player.reflection_map = e.reflection_map
     # player.reflectivity = 1
 
-    # EditorCamera()
+    EditorCamera()
+    p = Entity(model=Cylinder(8), color=color.black)
+    e1 = Entity(parent=p, model='cube', color=color.pink)
+    e2 = Entity(parent=p, model='cube', color=color.lime, x=2, scale=2, rotation_z=45)
+    e3 = Entity(parent=e2, model='cube', color=color.yellow, y=2, scale=.5)
+    p.combine()
+
     print(time.time() - t)
     app.run()
