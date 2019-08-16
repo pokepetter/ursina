@@ -150,13 +150,15 @@ class Mesh(NodePath):
         self._triangles = value
 
 
-    def generate_normals(self):
-        self.normals = list(generate_normals(self.vertices, self.triangles))
+    def generate_normals(self, smooth=True):
+        self.normals = list(generate_normals(self.vertices, self.triangles, smooth))
         self.generate()
+        return self.normals
 
 
-    def colorize(self, left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white):
-        colorize(self, left, right, down, up, back, forward)
+    def colorize(self, left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white, smooth=True):
+        colorize(self, left, right, down, up, back, forward, smooth)
+
 
     def project_uvs(self, aspect_ratio):
         project_uvs(self, aspect_ratio)
@@ -172,7 +174,7 @@ if __name__ == '__main__':
     colors = (color.red, color.blue, color.lime, color.black)
 
     e = Entity(model='sphere', scale=2)
-    e.model.generate_normals()
+    e.model.colorize(False)
 
     EditorCamera()
     app.run()

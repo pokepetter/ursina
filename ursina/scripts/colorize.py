@@ -3,14 +3,15 @@ from ursina import color
 import math
 
 
-def colorize(model, left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white):
+def colorize(model, left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white, smooth=True):
+
     if model.normals == None:
-        model.generate_normals()
+        model.generate_normals(smooth=smooth)
 
     cols = list()
     prev_col = color.white
     for i, n in enumerate(model.normals):
-        c = color.rgb((n[0]/2)+.5, (n[1]/2)+.5, (n[2]/2)+.5)
+        # c = color.rgb((n[0]/2)+.5, (n[1]/2)+.5, (n[2]/2)+.5)
         c = lerp(up, down, (n[1]/2 +.5))
 
         if n[0] < 0:
@@ -47,7 +48,7 @@ def colorize(model, left=color.white, right=color.blue, down=color.red, up=color
 if __name__ == '__main__':
     app = Ursina()
     e = Entity(model='sphere')
-    colorize(e.model)
+    colorize(e.model, smooth=False)
     # e.shader = 'shader_normals'
     # # print(e.shader.get_text())
     EditorCamera()
