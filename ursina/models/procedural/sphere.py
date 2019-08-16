@@ -19,19 +19,9 @@ class Sphere(Mesh):
             7,10,3,7,6,10,7,11,6,11,0,6,0,1,6,
             6,1,10,9,0,11,9,11,2,9,2,5,7,2,11
         )
-        # colors = [color.random_color() for f in faces]
         colors = None
-        # print(colors)
 
         super().__init__(vertices=verts, triangles=faces, colors=colors, mode=mode, **kwargs)
-        args = 'radius='+str(radius)+', subdivisions='+str(subdivisions)+', mode=\''+mode + '\''
-        for k, v in kwargs.items():
-            args += ', ' + k + '='
-            if type(v) is str:
-                args += '\'' + v + '\''
-            else:
-                args += str(v)
-        self.recipe = self.__class__.__name__ + '('+args+')'
 
 
 if __name__ == '__main__':

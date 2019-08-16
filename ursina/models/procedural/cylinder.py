@@ -12,13 +12,6 @@ class Cylinder(Prismatoid):
             **kwargs
             )
 
-        self.recipe = f'''{self.__class__.__name__}(
-            resolution={resolution},
-            radius={radius},
-            start={start},
-            height={height},
-            direction={direction},
-            )'''
 
 if __name__ == '__main__':
     app = Ursina()

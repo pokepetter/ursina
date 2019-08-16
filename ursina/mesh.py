@@ -22,8 +22,8 @@ class Mesh(NodePath):
         self.mode = mode
         self.thickness = thickness
 
-        self.recipe = 'Mesh()'
         if self.vertices:
+            self.vertices = [tuple(v) for v in self.vertices]
             self.generate()
 
 
@@ -117,18 +117,11 @@ class Mesh(NodePath):
         self.geomNode = GeomNode('mesh')
         self.geomNode.addGeom(geom)
         self.attachNewNode(self.geomNode)
-        # print('finished')
 
-        self.recipe = f'''Mesh(
-            vertices={str(tuple([(e[0],e[1],e[2]) for e in self.vertices]))},
-            triangles={self._triangles},
-            colors={self.colors},
-            uvs={self.uvs},
-            normals={self.normals},
-            static={self.static},
-            mode='{self.mode}',
-            thickness={self.thickness}
-            )'''
+        if self.normals:
+            self.normals = [tuple(e) for e in self.normals]
+        self.recipe = f'Mesh({self.vertices}, {self._triangles}, {self.colors}, {self.uvs}, {self.normals}, {self.static}, "{self.mode}", {self.thickness})'
+        # print('finished')
 
     @property
     def thickness(self):

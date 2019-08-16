@@ -72,17 +72,6 @@ class Prismatoid(Mesh):
         destroy(e)
 
 
-        path = [(e[0], e[1], e[2]) for e in path]
-        args = 'base_shape='+'Quad()'+', path='+str(path)+', thicknesses='+str(thicknesses)+', mode=\''+mode+'\''
-        for k, v in kwargs.items():
-            args += ', ' + k + '='
-            if type(v) is str:
-                args += '\'' + v + '\''
-            else:
-                args += str(v)
-        self.recipe = self.__class__.__name__ + '('+args+')'
-
-
 
 if __name__ == '__main__':
     app = Ursina()

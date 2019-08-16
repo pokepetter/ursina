@@ -37,8 +37,6 @@ class Cone(Mesh):
         destroy(point)
 
         super().__init__(vertices=verts, mode=mode, **kwargs)
-        args = 'resolution='+str(resolution)+', '+'radius='+str(radius)+', '+'height='+str(height)
-        self.recipe = self.__class__.__name__ + '('+args+')'
 
 
 if __name__ == '__main__':

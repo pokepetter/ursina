@@ -4,13 +4,13 @@ def duplicate(entity):
     e = entity.__class__()
 
     if hasattr(entity, 'model') and entity.model:
-        try:
-            e.model = eval(entity.model.recipe) # procedural mesh
-        except:
-            try:
-                e.model = entity.model.recipe # loaded mesh
-            except:
-                print(f'error: model: {entity.model} has no recipe', entity.model.recipe)
+        recipe = entity.model.recipe
+
+        if not('(') in recipe:
+            e.model = recipe # loaded mesh
+        else:
+            e.model = eval(recipe) # procedural mesh
+
 
     for name in entity.attributes:
         if name == 'model':
@@ -41,19 +41,23 @@ def duplicate(entity):
 
 if __name__ == '__main__':
     app = Ursina()
-    # e = Entity(model='quad')
-    # e = Entity(model=Circle(6))
-    # e = Entity(model=Quad(subdivisions=3, mode='lines'))
-    # e = Entity(model=Sphere(mode='lines'))
-    # e = Entity(model=Cone())
-    # e = Entity(model=Prismatoid())
-    # e = Entity(model=Cylinder())
-    e = Entity(model=Mesh(vertices=((0,0,0), (0,1,0), (1,1,0))))
-    print(e.model.recipe)
-    # test that children are duplicated
-    # sphere = Entity(parent=e, model='cube', y=1)
-    e2 = duplicate(e)
-    e2.x = 1
-    e2.color = color.red
+    quad = Entity(model='quad')
+    circle = Entity(model=Circle(6))
+    rounded_quad = Entity(model=Quad(subdivisions=3, mode='lines'), x=1)
+    sphere = Entity(model=Sphere(mode='lines'), x=2)
+    cone = Entity(model=Cone(), x=3)
+    cone.model.colorize()
+    prismatoid = Entity(model=Prismatoid(), x=4)
+    cylinder = Entity(model=Cylinder(), x=5)
+    mesh = Entity(model=Mesh(vertices=((0,0,0), (0,1,0), (-1,1,0))), x=6)
+
+    names = ('quad', 'circle', 'rounded_quad', 'sphere', 'cone', 'prismatoid', 'cylinder', 'mesh')
+    for i, e in enumerate((quad, circle, rounded_quad, sphere, cone, prismatoid, cylinder, mesh)):
+        print(names[i], ':', e.model.recipe)
+        print()
+        print()
+        e2 = duplicate(e)
+        e2.y += 1.5
+        
     EditorCamera()
     app.run()

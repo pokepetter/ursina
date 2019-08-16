@@ -60,14 +60,6 @@ class Quad(Mesh):
 
         self.generate()
 
-        args = f'radius={str(radius)}, segments={str(segments)}, scale_ratio={str(scale)}'
-        for k, v in kwargs.items():
-            args += ', ' + k + '='
-            if type(v) is str:
-                args += '\'' + v + '\''
-            else:
-                args += str(v)
-        self.recipe = self.__class__.__name__ + '('+args+')'
 
 
 

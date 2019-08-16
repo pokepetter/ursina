@@ -14,13 +14,12 @@ class Circle(Mesh):
 
         destroy(origin)
         super().__init__(vertices=verts, mode=mode, **kwargs)
-        self.recipe = self.__class__.__name__ + '(resolution=' + str(resolution) + ', radius=' + str(radius) + ', mode=\'' + mode + '\')'
-
 
 
 if __name__ == '__main__':
     app = Ursina()
-    Entity(model=Circle(), color=color.color(60,1,1,.3), x=6)
+    e = Entity(model=Circle(8, mode='lines', thickness=10), color=color.color(60,1,1,.3), x=6)
+    print(e.model.recipe)
     origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
     ed = EditorCamera(rotation_speed = 200, panning_speed=200)
     app.run()
