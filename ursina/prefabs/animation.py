@@ -8,26 +8,30 @@ class Animation(Entity):
         self.frames = list()
 
         for i in range(999):
-            sprite = Sprite(
-                texture + '_' + str(i).zfill(4),
+            frame = Entity(
                 parent=self,
+                model='quad',
+                texture=texture + '_' + str(i).zfill(4),
                 name=str(i),
-                ignore=True
+                ignore=True,
                 )
-            if not sprite:
+            if not frame.texture:
+                destroy(frame)
                 break
 
-            if 'double_sided' in kwargs:
-                sprite.double_sided = kwargs['double_sided']
+            for key, value in kwargs.items():
+                if key.startswith('origin') or key in ('double_sided', 'color'):
+                    setattr(frame, key, value)
 
-            self.frames.append(sprite)
-            # print(sprite)
+            self.frames.append(frame)
+
+        self.scale = (frame.texture.width/100, frame.texture.height/100)
+        self.aspect_ratio = self.scale_x / self.scale_y
 
         self.stop()
         self.sequence = Sequence(loop=loop)
 
         for i in range(len(self.frames)):
-            # self.sequence.append(Func(print, self.frames[i]))
             self.sequence.append(Func(self.stop))
             self.sequence.append(Func(setattr, self.frames[i], 'enabled', True))
             self.sequence.append(Wait(1/fps))
