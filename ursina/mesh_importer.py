@@ -199,6 +199,61 @@ def compress_models_fast(model_name=None, write_to_disk=False):
 
                 return file_content
 
+def ursina_mesh_to_obj(mesh, name='', out_path=application.models_folder, max_decimals=3):
+    from ursina.useful import camel_to_snake
+
+    if not name:
+        name = camel_to_snake(mesh.__class__.__name__)
+    obj = 'o ' + name + '\n'
+
+
+    for v in mesh.vertices:
+        v = [round(e, max_decimals) for e in v]
+        obj += f'v {v[0]} {v[1]} {v[2]}\n'
+
+    if mesh.uvs:
+        for uv in mesh.uvs:
+            uv = [round(e, max_decimals) for e in uv]
+            obj += f'vt {uv[0]} {uv[1]}\n'
+
+    obj += 's off\n'
+
+    if mesh.triangles:
+        tris = mesh.triangles
+
+        if isinstance(tris[0], tuple): # convert from tuples to flat
+            new_tris = list()
+            for t in tris:
+                if len(t) == 3:
+                    new_tris.extend([t[0], t[1], t[2]])
+                elif len(t) == 4: # turn quad into tris
+                    new_tris.extend([t[0], t[1], t[2], t[2], t[3], t[0]])
+
+            tris = new_tris
+
+
+    if mesh.mode == 'ngon':
+        tris = list()
+        for i in range(1, len(mesh.vertices)-1):
+            tris.extend((i, i+1, 0))
+
+
+    # tris must be a list of indices
+    for i, t in enumerate(tris):
+        if i % 3 == 0:
+            obj += '\nf '
+        obj += str(t+1)
+        if mesh.uvs:
+            obj += '/'+str(t+1)
+        obj += ' '
+
+
+    # print(obj)
+    with open(out_path / (name + '.obj'), 'w') as f:
+        f.write(obj)
+        print('saved obj:', out_path / (name + '.obj'))
+
+
 
 def compress_internal():
     compress_models(application.internal_models_folder)
@@ -208,5 +263,9 @@ def compress_internal():
         )
 
 
-# if __name__ == '__main__':
-#     compress_internal()
+if __name__ == '__main__':
+    # compress_internal()
+    from ursina import *
+    app = Ursina()
+    e = Entity(model=Cylinder(16))
+    ursina_mesh_to_obj(e.model, name='quad_export_test')
