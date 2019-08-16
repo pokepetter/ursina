@@ -35,8 +35,8 @@ class Audio(Entity):
                     for f in application.asset_folder.glob(f'**/{value}{suffix}'):
                         p = str(f.resolve())
                         p = p[len(str(application.asset_folder.resolve())):]
-                        self._clip = loader.loadSfx(p)
-                        print('...loaded audio clip:', f)
+                        self._clip = loader.loadSfx(p[1:])
+                        print('...loaded audio clip:', f, p)
                         return
                     # except:
                     #     pass
@@ -145,17 +145,16 @@ class Audio(Entity):
 
 if __name__ == '__main__':
     from ursina import Ursina, printvar
-    app = Ursina()
-
+    base = Ursina()
     # a = Audio('life_is_currency_wav', pitch=1)
-    a = Audio('life_is_currency', pitch=1, loop=True, autoplay=False)
+    a = Audio('life_is_currency', pitch=1, loop=True, autoplay=True)
     # print(a.recipe)
     # a2 = Audio(clip=a.clip)
-    a2 = duplicate(a)
+    # a2 = duplicate(a)
     # a2.clip = a.clip
-    a2.play()
+    # a2.play()
     print(a.clip)
-    print(a2.clip)
+    # print(a2.clip)
     # a.fade_out(delay=1)
-    DebugMenu(a)
-    app.run()
+    # DebugMenu(a)
+    base.run()
