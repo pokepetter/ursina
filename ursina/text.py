@@ -212,6 +212,7 @@ class Text(Entity):
         font = loader.loadFont(value)
         if font:
             self._font = font
+            self._font.clear()  # remove assertion warning
             self._font.setPixelsPerUnit(self.resolution)
             self.text = self.raw_text   # update tex
 
