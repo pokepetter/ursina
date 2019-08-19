@@ -24,6 +24,7 @@ class Raycaster(Entity):
         self._pickerNP = self.attach_new_node(self._pickerNode)
         self._picker.addCollider(self._pickerNP, self._pq)
         self._pickerNP.show()
+        self.boxcast = self.raycast
 
 
     def distance(self, a, b):
@@ -107,8 +108,6 @@ class Raycaster(Entity):
         return self.hit
 
 
-    self.boxcast = self.raycast
-
 
 sys.modules[__name__] = Raycaster()
 
@@ -139,7 +138,6 @@ if __name__ == '__main__':
         e.rotation_y += held_keys['e'] * rotation_speed
 
         ray = raycast(e.world_position, e.forward, 3, thickness=(.1,.2), debug=True)
-        # print(ray.hit)
         if ray.hit:
             d.color = color.azure
         else:
