@@ -29,7 +29,7 @@ from ursina import window
 from ursina import mouse
 from ursina import camera
 from ursina import raycaster
-from ursina.raycaster import raycast
+from ursina.raycaster import raycast, boxcast
 from ursina import color
 from ursina.input_handler import held_keys
 from ursina import input_handler
