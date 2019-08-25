@@ -31,6 +31,7 @@ from ursina.models.procedural.quad import Quad
 from ursina.models.procedural.circle import Circle
 from ursina.models.procedural.prismatoid import Prismatoid
 from ursina.models.procedural.cone import Cone
+from ursina.models.procedural.cone import Cube
 from ursina.models.procedural.cylinder import Cylinder
 from ursina.models.procedural.sphere import Sphere
 from ursina.models.procedural.grid import Grid
