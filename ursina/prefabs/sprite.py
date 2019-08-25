@@ -1,6 +1,9 @@
 from ursina import *
 
 class Sprite(Entity):
+
+    ppu = 100
+
     def __init__(self, texture=None, **kwargs):
         super().__init__(**kwargs)
         self.model = 'quad'
@@ -13,7 +16,7 @@ class Sprite(Entity):
             destroy(self)
             return None
 
-        self.scale_y *= self.texture.height / 100
+        self.scale_y *= self.texture.height / Sprite.ppu
         self.aspect_ratio = self.texture.width / self.texture.height
         self.scale_x = self.scale_y * self.aspect_ratio
 
