@@ -252,18 +252,12 @@ class Entity(NodePath):
             self.setScale(new_value[0], new_value[2], new_value[1])
 
         if name == 'scale_x':
-            if value == 0:
-                value = .001
             self.set_scale(value, self.scale_z, self.scale_y)
 
         if name == 'scale_y':
-            if value == 0:
-                value = .001
             self.set_scale(self.scale_x, self.scale_z, value)
 
         if name == 'scale_z':
-            if value == 0:
-                value = .001
             self.set_scale(self.scale_x, value, self.scale_y)
 
 
@@ -653,7 +647,7 @@ class Entity(NodePath):
     def get_vertices(self, relative_to=None):
         if relative_to == None:
             relative_to = self
-            
+
         vertex_reader = GeomVertexReader(self.vertex_data, 'vertex')
         vertices = list()
         temp_entity = Entity(parent=self, ignore=True)

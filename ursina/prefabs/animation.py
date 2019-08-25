@@ -17,11 +17,14 @@ class Animation(Entity):
                 )
             if not frame.texture:
                 destroy(frame)
+                frame = self.frames[0]
                 break
 
             for key, value in kwargs.items():
                 if key.startswith('origin') or key in ('double_sided', 'color'):
                     setattr(frame, key, value)
+                if key == 'filtering':
+                    setattr(frame.texture, key, value)
 
             self.frames.append(frame)
 
@@ -68,5 +71,6 @@ class Animation(Entity):
 
 if __name__ == '__main__':
     app = Ursina()
-    animation = Animation('catlike_creature_run', fps=1/4)
+    animation = Animation('ursina_wink', fps=2, scale=(-5,5,1), filtering=None, double_sided=True)
+    # Entity(model='quad', scale_x=-1, double_sided=True)
     app.run()
