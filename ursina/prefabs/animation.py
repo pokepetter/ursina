@@ -71,6 +71,5 @@ class Animation(Entity):
 
 if __name__ == '__main__':
     app = Ursina()
-    animation = Animation('ursina_wink', fps=2, scale=(-5,5,1), filtering=None, double_sided=True)
-    # Entity(model='quad', scale_x=-1, double_sided=True)
+    animation = Animation('ursina_wink', fps=2, scale=5, filtering=None)
     app.run()
