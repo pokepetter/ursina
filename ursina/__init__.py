@@ -28,15 +28,14 @@ from ursina.prefabs.sky import Sky
 from ursina.prefabs.cursor import Cursor
 
 from ursina.models.procedural.quad import Quad
+from ursina.models.procedural.plane import Plane
 from ursina.models.procedural.circle import Circle
 from ursina.models.procedural.prismatoid import Prismatoid
 from ursina.models.procedural.cone import Cone
-from ursina.models.procedural.cone import Cube
+from ursina.models.procedural.cube import Cube
 from ursina.models.procedural.cylinder import Cylinder
 from ursina.models.procedural.sphere import Sphere
 from ursina.models.procedural.grid import Grid
-
-from ursina.prefabs.plane import Plane
 
 from ursina.scripts.smooth_follow import SmoothFollow
 from ursina.scripts.position_limiter import PositionLimiter
