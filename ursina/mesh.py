@@ -76,43 +76,47 @@ class Mesh(NodePath):
             'triangle' : GeomTriangles(static_mode),
             'tristrip' : GeomTristrips(static_mode),
             'ngon' : GeomTrifans(static_mode),
-            'line' : GeomLines(static_mode),
-            'lines' : GeomLinestrips(static_mode),
+            'line' : GeomLinestrips(static_mode),
             'point' : GeomPoints(static_mode),
             }
-        if self.mode == 'line' and len(self.vertices) % 2 > 0:
-            if len(self.vertices) == 1:
-                self.mode = point
-            print('warning: number of vertices must be even for line mode, ignoring last vert')
-            self.vertices = self.vertices[ : len(self.vertices)-1]
 
-        prim = modes[self.mode]
+        if self.mode != 'line' or not self._triangles:
+            prim = modes[self.mode]
 
-        if self._triangles:
-            if isinstance(self._triangles[0], int):
-                for t in self._triangles:
-                    prim.addVertex(t)
+            if self._triangles:
+                if isinstance(self._triangles[0], int):
+                    for t in self._triangles:
+                        prim.addVertex(t)
 
-            elif len(self._triangles[0]) >= 3: # if tris are tuples like this: ((0,1,2), (1,2,3))
-                for t in self._triangles:
-                    if len(t) == 3:
-                        for e in t:
-                            prim.addVertex(e)
-                    elif len(t) == 4: # turn quad into tris
-                        prim.addVertex(t[0])
-                        prim.addVertex(t[1])
-                        prim.addVertex(t[2])
-                        prim.addVertex(t[2])
-                        prim.addVertex(t[3])
-                        prim.addVertex(t[0])
+                elif len(self._triangles[0]) >= 3: # if tris are tuples like this: ((0,1,2), (1,2,3))
+                    for t in self._triangles:
+                        if len(t) == 3:
+                            for e in t:
+                                prim.addVertex(e)
+                        elif len(t) == 4: # turn quad into tris
+                            prim.addVertex(t[0])
+                            prim.addVertex(t[1])
+                            prim.addVertex(t[2])
+                            prim.addVertex(t[2])
+                            prim.addVertex(t[3])
+                            prim.addVertex(t[0])
 
-        else:
-            prim.addConsecutiveVertices(0, len(self.vertices))
+            else:
+                prim.addConsecutiveVertices(0, len(self.vertices))
 
-        prim.close_primitive()
+            prim.close_primitive()
+            geom = Geom(vdata)
+            geom.addPrimitive(prim)
 
-        geom = Geom(vdata)
-        geom.addPrimitive(prim)
+        else:   # line with segments defnined in triangles
+            for line in self._triangles:
+                prim = modes[self.mode]
+                for e in line:
+                    prim.addVertex(e)
+                prim.close_primitive()
+                geom = Geom(vdata)
+                geom.addPrimitive(prim)
+
 
         self.geomNode = GeomNode('mesh')
         self.geomNode.addGeom(geom)
@@ -166,8 +170,14 @@ if __name__ == '__main__':
     norms = ((0,0,-1),) * len(verts)
     colors = (color.red, color.blue, color.lime, color.black)
 
-    e = Entity(model='sphere', scale=2)
-    e.model.colorize(False)
+    e = Entity(model=Mesh(vertices=verts, triangles=tris, uvs=uvs, normals=norms, colors=colors), scale=2)
+
+    # line mesh test
+    verts = (Vec3(0,0,0), Vec3(0,1,0), Vec3(1,1,0), Vec3(2,2,0), Vec3(0,3,0), Vec3(-2,3,0))
+    tris = ((0,1), (3,4,5))
+
+    lines = Entity(model=Mesh(vertices=verts, triangles=tris, mode='line', thickness=4), color=color.cyan, z=-1)
+    points = Entity(model=Mesh(vertices=verts, mode='point', thickness=6), color=color.red, z=-1.01)
 
     EditorCamera()
     app.run()
