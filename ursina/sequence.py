@@ -10,9 +10,10 @@ class Wait():
 
 
 class Func():
-    def __init__(self, func, *args):
+    def __init__(self, func, *args, **kwargs):
         self.func = func
         self.args = args
+        self.kwargs = kwargs
 
 
 class Sequence():
@@ -36,7 +37,7 @@ class Sequence():
 
     def generate(self):
         self.funcs = list()
-        # self.duration = 0
+
         for arg in self.args:
             if isinstance(arg, Wait):
                 self.duration += arg.duration
@@ -44,7 +45,7 @@ class Sequence():
                 self.duration += arg
 
             elif isinstance(arg, Func):
-                self.funcs.append([arg.func, arg.args, self.duration, False])
+                self.funcs.append([arg.func, arg.args, arg.kwargs, self.duration, False])
 
 
     def append(self, arg):
@@ -56,12 +57,12 @@ class Sequence():
             self.duration += arg
 
         elif isinstance(arg, Func):
-            self.funcs.append([arg.func, arg.args, self.duration, False])
+            self.funcs.append([arg.func, arg.args, arg.kwargs, self.duration, False])
 
 
     def start(self):
         for f in self.funcs:
-            f[3] = False
+            f[4] = False
 
         self.t = 0
         self.paused = False
@@ -84,16 +85,16 @@ class Sequence():
         self.t += time.dt * application.time_scale
 
         for f in self.funcs:
-            if f[3] == False and f[2] <= self.t:
+            if f[4] == False and f[3] <= self.t:
                 # print('run:', f[0], 'after:', self.t)
-                f[0](*f[1])
-                f[3] = True
+                f[0](*f[1], **f[2])
+                f[4] = True
 
 
         if self.t >= self.duration:
             if self.loop:
                 for f in self.funcs:
-                    f[3] = False # set has run to False again
+                    f[4] = False # set has run to False again
 
                 self.t = 0
                 return
@@ -107,11 +108,14 @@ class Sequence():
 if __name__ == '__main__':
 
     app = Ursina()
+    e = Entity(model='quad')
     s = Sequence(
         1,
         Func(print, 'one'),
+        Func(e.fade_out, duration=1),
         1,
         Func(print, 'two'),
+        Func(e.fade_in, duration=1),
         loop=True
         )
 
