@@ -11,10 +11,12 @@ class Tooltip(Text):
         self.origin = (-.5, -.5)
         self.margin = (2, 2)
         self.enabled = False
-        self.create_background()
 
         for key, value in kwargs.items():
             setattr(self, key, value)
+
+        self.create_background()
+
 
     def update(self):
         self.position = mouse.position
