@@ -40,8 +40,10 @@ class Mouse():
         self._pickerRay = CollisionRay()  # Make our ray
         self._pickerNode.addSolid(self._pickerRay)
         self._picker.addCollider(self._pickerNP, self._pq)
+
         self.raycast = True
         self.collision = None
+        self.collisions = list()
         self.enabled = True
 
     @property
@@ -169,23 +171,21 @@ class Mouse():
         self._pickerNP.reparent_to(camera)
         self._pickerRay.set_from_lens(scene.camera.lens_node, self.x * 2 / window.aspect_ratio, self.y * 2)
         self._picker.traverse(base.render)
-        if self._pq.get_num_entries() > 0:
-            # print('collided with world', self._pq.getNumEntries())
-            self.find_collision()
-            return
-        # else:
-        #     print('mouse miss', base.render)
 
-        # unhover all if it didn't hit anything
-        for entity in scene.entities:
-            if hasattr(entity, 'hovered') and entity.hovered:
-                entity.hovered = False
-                self.hovered_entity = None
-                if hasattr(entity, 'on_mouse_exit'):
-                    entity.on_mouse_exit()
-                for s in entity.scripts:
-                    if hasattr(s, 'on_mouse_exit'):
-                        s.on_mouse_exit()
+        if self._pq.get_num_entries() > 0:
+            self.find_collision()
+        else:
+            # print('mouse miss', base.render)
+            # unhover all if it didn't hit anything
+            for entity in scene.entities:
+                if hasattr(entity, 'hovered') and entity.hovered:
+                    entity.hovered = False
+                    self.hovered_entity = None
+                    if hasattr(entity, 'on_mouse_exit'):
+                        entity.on_mouse_exit()
+                    for s in entity.scripts:
+                        if hasattr(s, 'on_mouse_exit'):
+                            s.on_mouse_exit()
 
     @property
     def normal(self):
@@ -224,18 +224,17 @@ class Mouse():
             return None
 
     def find_collision(self):
-        if not self.raycast:
-            return
-        self._pq.sortEntries()
-        if len(self._pq.get_entries()) == 0:
-            self.collision = None
-            return
-
         self.collisions = list()
+        self.collision = None
+        if not self.raycast or self._pq.get_num_entries() == 0:
+            self.unhover_everything_not_hit()
+            return False
+
+        self._pq.sortEntries()
+
         for entry in self._pq.getEntries():
-            # print(entry.getIntoNodePath().parent)
             for entity in scene.entities:
-                if entry.getIntoNodePath().parent == entity:
+                if entry.getIntoNodePath().parent == entity and entity.collision:
                     if entity.collision:
                         self.collisions.append(Hit(
                             hit = entry.collided(),
@@ -248,34 +247,51 @@ class Mouse():
                             ))
                         break
 
-        self.collision = self._pq.getEntry(0)
-        nP = self.collision.getIntoNodePath().parent
+        if self.collisions:
+            self.collision = self.collisions[0]
+            self.hovered_entity = self.collision.entity
+            if not self.hovered_entity.hovered:
+                self.hovered_entity.hovered = True
+                if hasattr(self.hovered_entity, 'on_mouse_enter'):
+                    self.hovered_entity.on_mouse_enter()
+                for s in self.hovered_entity.scripts:
+                    if hasattr(s, 'on_mouse_enter'):
+                        s.on_mouse_enter()
 
-        for entity in scene.entities:
-            if not hasattr(entity, 'collision') or not entity.collision or not entity.collider:
+
+        self.unhover_everything_not_hit()
+
+
+
+    def unhover_everything_not_hit(self):
+        for e in scene.entities:
+            if e == self.hovered_entity:
                 continue
-            # if hit entity is not hovered, call on_mouse_enter()
-            if entity == nP:
-                if not entity.hovered:
-                    entity.hovered = True
-                    self.hovered_entity = entity
-                    # print(entity.name)
-                    if hasattr(entity, 'on_mouse_enter'):
-                        entity.on_mouse_enter()
-                    for s in entity.scripts:
-                        if hasattr(s, 'on_mouse_enter'):
-                            s.on_mouse_enter()
-            # unhover the rest
-            else:
-                if entity.hovered:
-                    entity.hovered = False
-                    if hasattr(entity, 'on_mouse_exit'):
-                        entity.on_mouse_exit()
-                    for s in entity.scripts:
-                        if hasattr(s, 'on_mouse_exit'):
-                            s.on_mouse_exit()
 
+            if e.hovered:
+                e.hovered = False
+                if hasattr(e, 'on_mouse_exit'):
+                    e.on_mouse_exit()
+                for s in e.scripts:
+                    if hasattr(s, 'on_mouse_exit'):
+                        s.on_mouse_exit()
 
 
 
 sys.modules[__name__] = Mouse()
+
+if __name__ == '__main__':
+    from ursina import *
+    app = Ursina()
+    Button(parent=scene, text='a')
+    Button(parent=scene, text='b', x=.75)
+    Button(text='c', y=-.25, scale=.1)
+
+    def input(key):
+        if key == 'left mouse down':
+            mouse.hovered_entity.collision = False
+
+    def update():
+        print(mouse.hovered_entity)
+
+    app.run()
