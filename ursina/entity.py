@@ -300,6 +300,14 @@ class Entity(NodePath):
             else:
                 print('collider error:', value, 'is not a collider')
 
+        if name == 'collision' and hasattr(self, 'collider') and self.collider:
+            if value:
+                self.collider.note_path.unstash()
+            else:
+                self.collider.node_path.stash()
+
+
+
         if name == 'render_queue':
             if hasattr(self, 'model') and self.model:
                 self.model.setBin('fixed', value)
@@ -584,6 +592,9 @@ class Entity(NodePath):
     def reflectivity(self, value):
         self._reflectivity = value
 
+        if value == 0:
+            self.texture = None
+
         if value > 0:
             # if self.reflection_map == None:
             #     self.reflection_map = scene.reflection_map
@@ -599,16 +610,35 @@ class Entity(NodePath):
             # self.model.setTexGen(ts, TexGenAttrib.MEyeSphereMap)
             # print('---------------set reflectivity', self.reflection_map)
             # self.model.setTexture(ts, self.reflection_map)
-            self.model.setTexGen(TextureStage.getDefault(), TexGenAttrib.MEyeSphereMap)
+
             self.texture = self._reflection_map
             # print('set reflectivity')
 
-    def generate_reflection_map(self, size=512, name=f'sphere_map_{len(scene.entities)}'):
+    def generate_sphere_map(self, size=512, name=f'sphere_map_{len(scene.entities)}'):
+        from ursina import camera
         _name = 'textures/' + name + '.jpg'
+        org_pos = camera.position
+        camera.position = self.position
         base.saveSphereMap(_name, size=size)
-        print('saved relfection mapppppppppppppppppp', name)
+        camera.position = org_pos
+
+        print('saved sphere map:', name)
+        self.model.setTexGen(TextureStage.getDefault(), TexGenAttrib.MEyeSphereMap)
         self.reflection_map = name
-        self.reflectivity = self.reflectivity
+
+
+    def generate_cube_map(self, size=512, name=f'cube_map_{len(scene.entities)}'):
+        from ursina import camera
+        _name = 'textures/' + name
+        org_pos = camera.position
+        camera.position = self.position
+        base.saveCubeMap(_name+'.jpg', size=size)
+        camera.position = org_pos
+
+        print('saved cube map:', name + '.jpg')
+        self.model.setTexGen(TextureStage.getDefault(), TexGenAttrib.MWorldCubeMap)
+        self.reflection_map = _name + '#.jpg'
+        self.model.setTexture(loader.loadCubeMap(_name + '#.jpg'), 1)
 
 
     @property
