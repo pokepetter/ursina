@@ -65,7 +65,7 @@ class Quad(Mesh):
 
 if __name__ == '__main__':
     app = Ursina()
-    # Entity(model=Quad(scale=(3,1), thickness=3, segments=3, mode='lines'), color = color.color(0,1,1,.7))
+    Entity(model=Quad(scale=(3,1), thickness=3, segments=3, mode='line'), color = color.color(0,1,1,.7))
     Entity(scale=(3,1), model=Quad(aspect=3), color = color.color(60,1,1,.3))
     origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
     # ed = EditorCamera(rotation_speed = 200, panning_speed=200)

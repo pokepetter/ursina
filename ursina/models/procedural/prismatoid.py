@@ -75,7 +75,7 @@ class Prismatoid(Mesh):
 
 if __name__ == '__main__':
     app = Ursina()
-    # e = Entity(model=Prism(mode='lines'))
+    # e = Entity(model=Prism(mode='line'))
     e = Entity(model=Prismatoid())
     # e2 = duplicate(e)
     # e2.x=2
