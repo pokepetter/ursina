@@ -191,37 +191,25 @@ class Mouse():
     def normal(self):
         if not self.collision:
             return None
-        if not self.collision.has_surface_normal():
-            print('no surface normal')
-            return None
-        n = self.collision.get_surface_normal(self.collision.get_into_node_path().parent)
-        return (n[0], n[2], n[1])
+        return self.collision.normal
 
     @property
     def world_normal(self):
-        if not self.collision:
+        if  self.collision:
             return None
-        if not self.collision.has_surface_normal():
-            print('no surface normal')
-            return None
-        n = self.collision.get_surface_normal(render)
-        return (n[0], n[2], n[1])
+        return self.collision.world_normal
 
     @property
     def point(self):
         if self.hovered_entity:
-            p = self.collision.getSurfacePoint(self.hovered_entity)
-            return Point3(p[0], p[2], p[1])
-        else:
-            return None
+            return self.collision.point
+        return None
 
     @property
     def world_point(self):
         if self.hovered_entity:
-            p = self.collision.getSurfacePoint(render)
-            return Point3(p[0], p[2], p[1])
-        else:
-            return None
+            return self.collision.world_point
+        return None
 
     def find_collision(self):
         self.collisions = list()
@@ -236,7 +224,7 @@ class Mouse():
             for entity in scene.entities:
                 if entry.getIntoNodePath().parent == entity and entity.collision:
                     if entity.collision:
-                        self.collisions.append(Hit(
+                        hit = Hit(
                             hit = entry.collided(),
                             entity = entity,
                             distance = 0,
@@ -244,7 +232,12 @@ class Mouse():
                             world_point = entry.getSurfacePoint(scene),
                             normal = entry.getSurfaceNormal(entity),
                             world_normal = entry.getSurfaceNormal(scene),
-                            ))
+                            )
+                        hit.point = Vec3(hit.point[0], hit.point[2], hit.point[1])
+                        hit.world_point = Vec3(hit.world_point[0], hit.world_point[2], hit.world_point[1])
+                        hit.normal = Vec3(hit.normal[0], hit.normal[2], hit.normal[1])
+                        hit.world_normal = Vec3(hit.world_normal[0], hit.world_normal[2], hit.world_normal[1])
+                        self.collisions.append(hit)
                         break
 
         if self.collisions:
