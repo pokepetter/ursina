@@ -7,14 +7,19 @@ class Grid(Mesh):
         self.height = height
 
         verts = list()
+        tris = list()
+
         for x in range(int(width) + 1):
-            verts.append((x/width, 0, 0))
-            verts.append((x/width, 1, 0))
+            verts.append(Vec3(x/width, 0, 0))
+            verts.append(Vec3(x/width, 1, 0))
+
         for y in range(int(height) + 1):
             verts.append((0, y/height, 0))
             verts.append((1, y/height, 0))
 
-        super().__init__(verts, mode='line', **kwargs)
+        tris = [(i, i+1) for i in range(0, len(verts), 2)]
+
+        super().__init__(verts, triangles=tris, mode='line', **kwargs)
 
 
 
