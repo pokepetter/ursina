@@ -32,8 +32,6 @@ class Voxel(Entity):
 
 
     def input(self, key):
-        # if not scene.editor or scene.editor.enabled:
-        #     return
         if self.hovered:
             if key == 'left mouse down' and self.hovered:
                 voxel = Voxel()
@@ -61,11 +59,7 @@ class FirstPersonController(Entity):
         cursor.color = color.light_gray
         cursor.scale *= .008
         cursor.rotation_z = 45
-        if not scene.editor:
-            self.start()
 
-
-    def start(self):
         self.position = (0, 2, 1)
         camera.parent = self
         camera.position = (0,0,0)
@@ -75,7 +69,6 @@ class FirstPersonController(Entity):
 
 
     def update(self):
-        # print(self.left)
         self.position += self.right * held_keys['d'] * self.speed
         self.position += self.forward * held_keys['w'] * self.speed
         self.position += self.left * held_keys['a'] * self.speed
@@ -89,6 +82,5 @@ class FirstPersonController(Entity):
 
 if __name__ == '__main__':
     app = main.Ursina()
-    # load_scene('minecraft_clone')
     s = MinecraftClone()
     app.run()
