@@ -25,8 +25,6 @@ class Window(WindowProperties):
         self.vsync = True   # can't be set during play
         self.show_ursina_splash = False
 
-
-    def late_init(self):
         self.title = os.path.basename(os.path.dirname(application.asset_folder))
         try:
             self.screen_resolution = (get_monitors()[0].width, get_monitors()[0].height)
@@ -34,12 +32,13 @@ class Window(WindowProperties):
             print('using default sceen resolution.', 'OS:', os.name)
             self.screen_resolution = (1366, 768)
 
-
         self.fullscreen_size = (self.screen_resolution[0]+1, (self.screen_resolution[0]+1) * .5625)
         self.windowed_size = (self.fullscreen_size[0] / 1.25, self.fullscreen_size[0] / 1.25 * .5625)
         self.size = self.windowed_size
-        self.position = (0,0)
 
+
+    def late_init(self):
+        self.position = (0,0)
         self.top = (0, .5)
         self.bottom = (0, .5)
         self.center = (0, 0)
@@ -132,9 +131,6 @@ class Window(WindowProperties):
     def size(self, value):
         self.set_size(int(value[0]), int(value[1]))
         self.aspect_ratio = value[0] / value[1]
-        # base.camera.set_aspect_ratio(self.aspect_ratio)
-        # camera.aspect_ratio = self.aspect_ratio
-        # ui.lens.setFilmSize(100 * self.aspect_ratio, 100)
         base.win.requestProperties(self)
 
     @property
@@ -144,10 +140,6 @@ class Window(WindowProperties):
     @display_mode.setter
     def display_mode(self, value):
         self._display_mode = value
-        print('display mode:', value)
-        # print_on_screen('display mode:', value)
-        # if value == 'default':
-        # disable wireframe mode
         base.wireframeOff()
         # disable collision display mode
         if hasattr(self, 'original_colors'):
@@ -173,11 +165,7 @@ class Window(WindowProperties):
 
         if value == 'normals':
             # todo: set shader instead
-            # self.original_colors = [e.color for e in scene.entities if hasattr(e, 'color')]
             self.original_vert_colors = [e.model.colors for e in scene.entities if hasattr(e, 'model') and e.model != None]
-            # for e in scene.entities:
-            #     e.color = color.clear
-            #     if hasattr(e, 'model'):
             for e in scene.entities:
                 if hasattr(e, 'model') and e.model != None:
                     try:
@@ -185,20 +173,8 @@ class Window(WindowProperties):
                     except:
                         pass
 
-            # bake_vertex_shading(entity)
 
 
-
-    # @property
-    # def borderless(self):
-    #     # return self._borderless
-    #     return self.getUndecorated()
-    #
-    # @borderless.setter
-    # def borderless(self, value):
-    #     self.setUndecorated(value)
-    #     application.base.win.request_properties(self)
-    #     # base.openMainWindow(props=self)
 
     def __setattr__(self, name, value):
         try:
@@ -212,14 +188,18 @@ class Window(WindowProperties):
             object.__setattr__(self, name, value)
 
         if name == 'fullscreen':
-            if value == True:
-                self.size = self.fullscreen_size
-            else:
-                self.size = self.windowed_size
+            try:
+                if value == True:
+                    self.size = self.fullscreen_size
+                else:
+                    self.size = self.windowed_size
 
-            self.center_on_screen()
-            object.__setattr__(self, name, value)
-            return
+                self.center_on_screen()
+                object.__setattr__(self, name, value)
+                return
+            except:
+                print('failed to set fullscreen', value)
+                pass
 
         if name == 'color':
             application.base.camNode.get_display_region(0).get_window().set_clear_color(value)
