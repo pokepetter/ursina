@@ -151,7 +151,7 @@ def get_example(str):
     if 'class Ursina' in str:   # don't ignore in main.py
         ignore = ()
 
-    lines = [e for e in example.split('\n') if not e in ignore and not e.startswith('#')]
+    lines = [e for e in example.split('\n') if not e in ignore and not e.strip().startswith('#')]
     example = '\n'.join(lines)
     return example.strip()
 
@@ -291,8 +291,10 @@ def html_color(color):
     return f'hsl({color.h}, {int(color.s*100)}%, {int(color.v*100)}%)'
 
 base_color = color.color(60, 1, .01)
+base_color = color.color(60, 0, .99)
 # background_color = color.color(0,0,.9)
 background_color = lerp(base_color, base_color.invert(), .125)
+background_color = lerp(base_color, base_color.invert(), 0)
 text_color = lerp(background_color, background_color.invert(), .9)
 example_color = lerp(background_color, text_color, .1)
 scrollbar_color = html_color(lerp(background_color, text_color, .1))
@@ -388,10 +390,10 @@ for i, class_dictionary in enumerate((module_info, class_info, prefab_info, scri
 
         sidebar += f'''<a style="color:{col};" href="#{base_name}">{base_name}</a>\n'''
         html += '\n'
-        html += f'''<div id="{base_name}"><div id="{base_name}" style="color:{col}; font-size:1.5em;">{name}</div>'''
+        html += f'''<div id="{base_name}"><div id="{base_name}" style="color:{col}; font-size:1.75em; font-weight:normal;">{name}</div>'''
         html += '<pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">'
         if params:
-            params = f'<params id="params" style="color: {init_color};">{params}</params>\n'
+            params = f'<params id="params" style="color:{init_color}; font-weight:bold">{params}</params>\n'
             html += params + '\n'
 
         for e in attrs:
@@ -415,9 +417,9 @@ for i, class_dictionary in enumerate((module_info, class_info, prefab_info, scri
 
     sidebar += '\n'
 
-# print(html)
+print(html)
 sidebar += '</div>'
 html += '</div>'
 html = sidebar + style + html + '</body>'
-with open('documentation.html', 'w') as f:
+with open('documentation.html', 'w', encoding='utf-8') as f:
     f.write(html)
