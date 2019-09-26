@@ -6,6 +6,7 @@ from ursina.scripts.generate_normals import generate_normals
 from ursina.scripts.project_uvs import project_uvs
 from ursina.scripts.colorize import colorize
 from ursina import color
+from ursina import application
 
 
 class Mesh(NodePath):
@@ -28,9 +29,6 @@ class Mesh(NodePath):
 
 
     def generate(self):  # call this after setting some of the variables to update it
-        if not self.vertices:
-            return
-
         if hasattr(self, 'geomNode'):
             self.geomNode.removeAllGeoms()
 
@@ -157,8 +155,25 @@ class Mesh(NodePath):
         colorize(self, left, right, down, up, back, forward, smooth)
 
 
-    def project_uvs(self, aspect_ratio):
+    def project_uvs(self, aspect_ratio=1, direction='forward'):
         project_uvs(self, aspect_ratio)
+
+
+    def clear(self):
+        self.vertices, self.triangles, self.colors, self.uvs, self.normal = list(), None, None, None, None
+        self.generate()
+
+
+    def save(self, name, path=application.asset_folder):
+        if not '.' in name:
+            name += '.ursinamesh'
+
+        with open(path / name, 'w') as f:
+            recipe = self.recipe.replace('LVector3f', '')
+            f.write(recipe)
+
+
+
 
 if __name__ == '__main__':
     from ursina import *
