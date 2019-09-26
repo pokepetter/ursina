@@ -10,11 +10,6 @@ Introduction Tutorial
 3) Open Command Prompt/terminal and paste the commands below. This will install the dependencies you need.
 
     # code
-    pip install panda3d
-    pip install pillow
-    pip install psd-tools2
-    pip install imageio
-    pip install psutil
     pip install git+https://github.com/pokepetter/ursina.git
     # text
 
@@ -95,6 +90,6 @@ Introduction Tutorial
      # code
      python main.py
      # text
-     
+
    An alternative is to install the 'atom-python-run' package in Atom so you can start
    the game by pressing F5.

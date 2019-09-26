@@ -1,5 +1,5 @@
 # title ursina engine
-# center, bold, arial, size 5
+# center, bold, arial, size 5, width 900
 ursina engine
 ʕ •ᴥ•ʔゝ□
 # size 1.25, bold
@@ -10,13 +10,18 @@ open source game engine
 --------------------------------------
 # normal
 
-[GitHub, https://github.com/pokepetter/ursina] [Tutorials, tutorials.html] [Documentation, documentation.html] [Twitter, https://twitter.com/petteramland]
+[GitHub🡕, https://github.com/pokepetter/ursina] [Tutorials, tutorials.html] [Documentation, documentation.html] [Twitter🡕, https://twitter.com/petteramland]
 
 
-# left, width 900, size 2, bold,
+# left, size 2, bold,
 # image made_with_ursina.jpg
+# size .75, center, normal
 
-# size 2, bold
+A variety of games made with Ursina
+
+
+
+# size 2, bold, left
 Powered by Python
 # normal, size 1
 
@@ -92,7 +97,7 @@ Dependencies
     * psd-tools, for converting .psd files
     * psutil, for measuring memory usage
     * blender, for converting .blend files
-    
+
 
 
 
