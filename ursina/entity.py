@@ -302,10 +302,12 @@ class Entity(NodePath):
 
         if name == 'collision' and hasattr(self, 'collider') and self.collider:
             if value:
-                self.collider.note_path.unstash()
+                self.collider.node_path.unstash()
             else:
                 self.collider.node_path.stash()
 
+            object.__setattr__(self, name, value)
+            return
 
 
         if name == 'render_queue':
@@ -527,7 +529,10 @@ class Entity(NodePath):
 
     @shader.setter
     def shader(self, value):
-        self.setShader(Shader.load(f'{value}.sha', Shader.SL_Cg))
+        try:
+            self.setShader(Shader.load(f'{value}.sha', Shader.SL_Cg))
+        except:
+            self.setShader(Shader.load(Shader.SL_GLSL, vertex=f'{value}.vert', fragment=f'{value}.frag'))
 
     @property
     def texture(self):
@@ -1017,6 +1022,7 @@ if __name__ == '__main__':
     e2 = Entity(parent=p, model='cube', color=color.lime, x=2, scale=2, rotation_z=45)
     e3 = Entity(parent=e2, model='cube', color=color.yellow, y=2, scale=.5)
     p.combine()
+
 
     print(time.time() - t)
     app.run()
