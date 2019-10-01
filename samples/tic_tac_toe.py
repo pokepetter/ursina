@@ -13,12 +13,13 @@ Text.default_resolution *= 2
 #         b = Button(parent=scene, position=(x,y))
 
 # create a matrix of buttons
-board = [[Button(parent=scene, position=(x,y)) for x in range(3)] for y in range(3)]
+board = [[Button(parent=scene, position=(x,y), color=color.color(0,0,0,.8)) for x in range(3)] for y in range(3)]
 
 player_name = 'o'
 player_color = color.azure
 cursor = Tooltip(player_name, color=player_color, origin=(0,0), scale=1, enabled=True)
 cursor.background.color = player_color.tint(.2)
+bg = Entity(parent=scene, model='quad', texture='shore', scale=(16,8), z=10, color=color.light_gray)
 mouse.visible = False
 
 
