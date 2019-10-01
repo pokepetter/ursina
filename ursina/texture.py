@@ -66,13 +66,16 @@ class Texture():
 
     @property
     def pixels(self):
-        from numpy import asarray
+        from numpy import asarray, flip
         from PIL import Image
 
         if self._cached_image:
             return asarray(self._cached_image)
 
-        return asarray(Image.open(self.path))
+        pixels = asarray(Image.open(self.path))
+        pixels = flip(pixels, axis=0)
+        return(pixels)
+
 
     @property
     def filtering(self):
