@@ -164,14 +164,18 @@ class Mesh(NodePath):
         self.generate()
 
 
-    def save(self, name, path=application.asset_folder):
-        if not '.' in name:
-            name += '.ursinamesh'
+    def save(self, name, path=application.asset_folder, filetype='ursinamesh'):
+        if filetype == 'ursinamesh':
+            if not '.' in name:
+                name += '.ursinamesh'
 
-        with open(path / name, 'w') as f:
-            recipe = self.recipe.replace('LVector3f', '')
-            f.write(recipe)
+            with open(path / name, 'w') as f:
+                recipe = self.recipe.replace('LVector3f', '')
+                f.write(recipe)
 
+        elif filetype == 'obj':
+            from ursina.mesh_importer import ursina_mesh_to_obj
+            ursina_mesh_to_obj(self, name, path)
 
 
 
