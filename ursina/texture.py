@@ -5,6 +5,7 @@ from panda3d.core import Filename
 from pathlib import Path
 from direct.showbase import Loader
 import sys
+from ursina import color
 try:
     from PIL import Image
 except:
@@ -17,7 +18,6 @@ class Texture():
 
     def __init__(self, path):
         if 'Image' in str(type(path)):
-            # print('passing pil image!')
             image = path
             self._texture = PandaTexture()
             self._texture.setup2dTexture(image.width, image.height, PandaTexture.TUnsignedByte, PandaTexture.FRgba)
@@ -50,18 +50,18 @@ class Texture():
 
     @property
     def width(self):
-        if self._texture.getOrigFileXSize() > 0:
-            return self._texture.getOrigFileXSize()
-        elif self._cached_image:
+        if self._cached_image:
             return self._cached_image.size[0]
+        elif self._texture.getOrigFileXSize() > 0:
+            return self._texture.getOrigFileXSize()
         return 0
 
     @property
     def height(self):
-        if self._texture.getOrigFileYSize() > 0:
-            return self._texture.getOrigFileYSize()
-        elif self._cached_image:
+        if self._cached_image:
             return self._cached_image.size[1]
+        elif self._texture.getOrigFileYSize() > 0:
+            return self._texture.getOrigFileYSize()
         return 0
 
     @property
@@ -99,11 +99,15 @@ class Texture():
             if not self._cached_image:
                 self._cached_image = Image.open(self.path)
 
+
             col = self._cached_image.getpixel((x, self.height-y-1))
-            if len(col) == 3:
-                return (col[0], col[1], col[2], 255)
-            else:
-                return (col[0], col[1], col[2], col[3])
+            if self._cached_image.mode == 'LA':
+                col = (col[0], col[0], col[0], col[1])
+
+            if self._cached_image.mode == 'L':
+                col = (col[0], col[0], col[0])
+
+            return color.rgba(*col)
         except:
             return None
 
@@ -150,10 +154,13 @@ if __name__ == '__main__':
         If it's a .psd it and no compressed version exists, it will compress it automatically.
     '''
     e = Entity(model='quad', texture='brick')
+    e.texture.set_pixel(0, 2, color.blue)
+    e.texture.apply()
 
     for y in range(e.texture.height):
         for x in range(e.texture.width):
             if e.texture.get_pixel(x,y) == color.blue:
                 print('found blue pixel at:', x, y)
+
 
     app.run()
