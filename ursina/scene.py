@@ -1,5 +1,6 @@
 import sys
 from panda3d.core import NodePath
+from panda3d.core import Fog
 from ursina import color
 from ursina.texture_importer import load_texture
 # from ursina.ursinastuff import destroy
@@ -28,6 +29,10 @@ class Scene(NodePath):
         self.reparent_to(render)
         self.reflection_map = load_texture(self.reflection_map)
 
+        self.fog = Fog('fog')
+        self.setFog(self.fog)
+        self.fog_color = color.light_gray
+        self.fog_density = 0
 
     def clear(self):
         from ursina.ursinastuff import destroy
@@ -43,6 +48,27 @@ class Scene(NodePath):
         from ursina import application
         application.sequences.clear()
 
+    @property
+    def fog_color(self):
+        return self.fog.getColor()
+
+    @fog_color.setter
+    def fog_color(self, value):
+        self.fog.setColor(value)
+
+
+    @property
+    def fog_density(self):
+        return self._fog_density
+
+    @fog_density.setter
+    def fog_density(self, value):
+        self._fog_density = value
+        if isinstance(value, tuple):     # linear fog
+             self.fog.setLinearRange(value[0], value[1])
+        else:
+            self.fog.setExpDensity(value)
+
 
 sys.modules[__name__] = Scene()
 
@@ -51,7 +77,10 @@ sys.modules[__name__] = Scene()
 if __name__ == '__main__':
     from ursina import *
     app = Ursina()
-    yolo = Button(name='yolo', text='yolo')
+    # yolo = Button(name='yolo', text='yolo')
+    e = Entity(model='plane', color=color.black, scale=100)
+    EditorCamera()
+    s = Sky()
 
     def input(key):
         if key == 'd':
