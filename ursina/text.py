@@ -383,7 +383,7 @@ class Text(Entity):
     def appear(self, speed=.025, delay=0):
         from ursina.ursinastuff import invoke
         self.enabled = True
-        self.visible = True
+        # self.visible = True   # setting visible seems to reset the colors
 
         x = 0
         seq = Sequence()
