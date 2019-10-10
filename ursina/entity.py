@@ -108,13 +108,14 @@ class Entity(NodePath):
 
         if name == 'model':
             if value is None:
-                if hasattr(self, 'model') and self.model != None:
+                if hasattr(self, 'model') and self.model:
                     self.model.removeNode()
                     # print('removed model')
+                object.__setattr__(self, name, value)
                 return None
 
             if isinstance(value, NodePath): # pass procedural model
-                if hasattr(self, 'model') and value != self.model:
+                if self.model is not None and value != self.model:
                     self.model.removeNode()
                 object.__setattr__(self, name, value)
 
@@ -123,7 +124,7 @@ class Entity(NodePath):
                 if not m:
                     m = load_model(value, application.internal_models_folder)
                 if m:
-                    if hasattr(self, 'model'):
+                    if self.model is not None:
                         self.model.removeNode()
                     object.__setattr__(self, name, m)
                     if isinstance(m, Mesh):
@@ -132,7 +133,7 @@ class Entity(NodePath):
                 else:
                     print('error loading model:', value)
 
-            if hasattr(self, 'model') and self.model:
+            if self.model:
                 self.model.reparentTo(self)
                 self.model.setTransparency(TransparencyAttrib.MAlpha)
                 setattr(self, 'color', self.color) # reapply color after changing model
@@ -148,13 +149,13 @@ class Entity(NodePath):
             if not isinstance(value, Vec4):
                 value = Vec4(value[0], value[1], value[2], value[3])
 
-            if hasattr(self, 'model') and self.model:
+            if self.model:
                 self.model.setColorScale(value)
                 object.__setattr__(self, name, value)
 
 
         if name == 'texture_scale':
-            if hasattr(self, 'model') and self.model and self.texture:
+            if self.model and self.texture:
                 self.model.setTexScale(TextureStage.getDefault(), value[0], value[1])
 
         if name == 'texture_offset':
@@ -187,7 +188,7 @@ class Entity(NodePath):
         if name == 'y': self.setZ(value)
         if name == 'z': self.setY(value)
 
-        if name == 'origin' and hasattr(self, 'model') and self.model:
+        if name == 'origin' and self.model:
             new_value = Vec3()
 
             if len(value) % 2 == 0:
@@ -272,7 +273,7 @@ class Entity(NodePath):
                 object.__setattr__(self, name, value)
 
             elif value == 'box':
-                if hasattr(self, 'model'):
+                if self.model:
                     collider = BoxCollider(
                         entity = self,
                         center = -self.origin,
@@ -311,7 +312,7 @@ class Entity(NodePath):
 
 
         if name == 'render_queue':
-            if hasattr(self, 'model') and self.model:
+            if self.model:
                 self.model.setBin('fixed', value)
 
         if name == 'double_sided':
@@ -542,7 +543,7 @@ class Entity(NodePath):
 
     @texture.setter
     def texture(self, value):
-        if not hasattr(self, 'model') or hasattr(self, 'model') and not self.model:
+        if not self.model:
             return
 
         if value.__class__ is Texture:
@@ -730,7 +731,9 @@ class Entity(NodePath):
 
 
     def reparent_to(self, entity):
-        self.wrtReparentTo(entity)
+        if entity is not None:
+            self.wrtReparentTo(entity)
+
         self._parent = entity
 
 
