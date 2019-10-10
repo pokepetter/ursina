@@ -68,9 +68,9 @@ def color(h, s, v, a=1):
 
 def rgba(r, g, b, a=255):
     color = Color(r, g, b, a)
-    if color[0] > 1 or color[1] > 1 or color[2] > 1:
+    if color[0] > 1 or color[1] > 1 or color[2] > 1 or color[3] > 1:
         color = Color(tuple(c/255 for c in color))
-    color[3] = min(1, color[3])
+    # color[3] = min(1, color[3])
     return color
 
 def rgb(r, g, b, a=255):

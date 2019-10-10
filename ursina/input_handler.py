@@ -18,7 +18,7 @@ held_keys = defaultdict(lambda: 0)
 rebinds = dict()
 
 
-def bind(alternative_key, original_key):
+def bind(original_key, alternative_key):
     rebinds[original_key] = alternative_key
     rebinds[original_key + ' hold'] = alternative_key + ' hold'
     rebinds[original_key + ' up'] = alternative_key + ' up'
@@ -31,7 +31,7 @@ def unbind(key):
     else:
         rebinds[key] = 'none'
 
-def rebind(from_key, to_key):
+def rebind(to_key, from_key):
     unbind(to_key)
     bind(to_key, from_key)
 
@@ -61,6 +61,7 @@ if __name__ == '__main__':
     from ursina import *
     app = Ursina()
     input_handler.bind('s', 'arrow down')
+    # input_handler.rebind('a', 'f')
     def input(key):
         print(key)
     app.run()
