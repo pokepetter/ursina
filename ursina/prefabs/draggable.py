@@ -2,6 +2,9 @@ from ursina import *
 
 class Draggable(Button):
 
+    _z_plane = Entity(model='quad', collider='box', scale=(999,999),
+        color=color.clear, enabled=False, eternal=True)
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.require_key = None
@@ -15,8 +18,6 @@ class Draggable(Button):
         self.min_x, self.min_y, self.min_z = -math.inf, -math.inf, -math.inf
         self.max_x, self.max_y, self.max_z = math.inf, math.inf, math.inf
 
-        self._z_plane = Entity(model='quad', collider='box', scale=(999,999),
-            world_position=self.world_position, color=color.clear, enabled=False, eternal=True)
 
 
         for key, value in kwargs.items():
@@ -34,6 +35,12 @@ class Draggable(Button):
             self.stop_dragging()
 
     def start_dragging(self):
+        Draggable._z_plane.world_position = self.world_position
+        if self.has_ancestor(camera.ui):
+            Draggable._z_plane.world_parent = camera.ui
+        else:
+            Draggable._z_plane.world_parent = scene
+
         self.start_offset = mouse.world_point - self.world_position
         self.dragging = True
         self.start_pos = self.world_position
@@ -97,7 +104,7 @@ if __name__ == '__main__':
     app = Ursina()
     camera.orthographic = True
 
-    e = Draggable(scale=.1)
-    # e.parent = scene
+    e = Draggable(scale=10)
+    e.parent = scene
     # e.require_key = 'shift'
     app.run()
