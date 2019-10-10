@@ -4,6 +4,15 @@
 
 from ursina import *
 import time
+import ast
+
+
+def is_valid_python(code):
+   try:
+       ast.parse(code)
+   except SyntaxError:
+       return False
+   return True
 
 
 class HotReloader(Entity):
@@ -25,13 +34,11 @@ class HotReloader(Entity):
             self.reload_texture()
 
 
-    def reload(self):
+    def reload(self, reset_camera=True):
         if not self.path.exists:
             print('trying to reload, but path does not exist:', self.path)
             return
 
-        scene.clear()
-        camera.position = (0, 0, -20)
 
         newtext = ''
         with open(self.path, 'r') as file:
@@ -43,6 +50,8 @@ class HotReloader(Entity):
                 #     continue
                 if 'Ursina()' in line or 'app.run()' in line or 'HotReloader(' in line:
                     continue
+                if 'eternal=True' in line:
+                    continue
                 if line.startswith('''if __name__ == '__main__':'''):
                     dedent_next = True
                     continue
@@ -52,13 +61,25 @@ class HotReloader(Entity):
                 else:
                     newtext += line + '\n'
 
-        print(newtext)
+        # print(newtext)
+        if not is_valid_python(newtext):
+            print('invalid python code')
+            return
+
+        scene.clear()
+        if reset_camera:
+            camera.position = (0, 0, -20)
+
         t = time.time()
         try:
             exec(newtext)
-            print('reloaded in:', time.time() - t)
-        except Exception as e:
-            print(e)
+        except:
+            for l in newtext.split('\n'):
+                try:
+                    exec(l.strip())
+                except:
+                    pass
+        print('reloaded in:', time.time() - t)
 
 
     def reload_texture(self):
@@ -71,53 +92,30 @@ class HotReloader(Entity):
             e.texture._texture.reload()
 
 
-# class ModelReloader(Entity):
-#     def __init__(self):
-#         super().__init__()
-#         self.parent = camera.ui
-#         self.i = 0
-#         self.position = window.top_left
-#         self.title = Text(parent=self, text='<azure>models:', background=True)
-#
-#
-#     def check_if_changed(self):
-#         [destroy(e) for e in self.children if not e == self.title]
-#
-#         for filetype in ('.bam', '.ursinamesh'):
-#             for filename in application.asset_folder.glob(f'**/*{filetype}'):
-#                 # b = Button(text='yolo')
-#                 t = Button(
-#                     parent = self,
-#                     origin = (-.5, .5),
-#                     scale = (.3, .025),
-#                     text = str(filename)[len(str(application.asset_folder))+1:],
-#                     background = True,
-#                     y = -len(self.children)*.025
-#                     )
-#                 t.text_entity.origin = (-.5, 0)
-#                 t.text_entity.position = (0, 0)
-#
-#                 # last_changed = os.stat(filename).st_mtime
-#                 # print(last_changed)
-#                 t.text_entity.text = ' <orange>' + t.text_entity.text
-#                 # t.background = True
-#
-#         # print(models)
-#     def update(self):
-#         if self.i > 60:
-#             self.check_if_changed()
-#             self.i = 0
 
 if __name__ == '__main__':
+    from ursina import *
     app = Ursina()
-    # Entity(model='hexagon')
-    # Entity(model=Circle())
-    # ModelReloader()
     hotreloader = HotReloader()
-    hotreloader.path = application.asset_folder / 'platformer.py'
+    hotreloader.path = application.asset_folder.parent.parent / 'samples' / 'platformer.py'
 
     '''
-    By default you can press F5 to reload the starting script.
+    By default you can press Ctrl+R to reload the starting script and Ctrl+T to reimport textures.
     '''
+
+    def input(key):
+        if held_keys['control'] and key == 'r':
+            print('reload textures')
+            reload_texture()
+
+    def reload():
+        print(window.getZOrder())
+        # hotreloader.reload(reset_camera=False)
+        invoke(reload, delay=1)
+
+    reload()
+
+
+
 
     app.run()
