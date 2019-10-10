@@ -36,6 +36,7 @@ from ursina.models.procedural.cube import Cube
 from ursina.models.procedural.cylinder import Cylinder
 from ursina.models.procedural.sphere import Sphere
 from ursina.models.procedural.grid import Grid
+from ursina.models.procedural.terrain import Terrain
 
 from ursina.scripts.smooth_follow import SmoothFollow
 from ursina.scripts.position_limiter import PositionLimiter
