@@ -5,32 +5,30 @@ class Plane(Mesh):
     def __init__(self, subdivisions=(1,1), mode='triangle', **kwargs):
 
         self.vertices, self.triangles = list(), list()
-        i = 0
+        self.uvs = list()
 
         w, h = subdivisions
+        i = 0
 
-        for y in range(h):
-            for x in range(w):
-                self.vertices.extend((
-                    ((x/w) -.5,       0, (y/h) -.5),
-                    (((x+1)/w) -.5,   0, (y/h) -.5),
-                    (((x+1)/w) -.5,   0, ((y+1)/h) -.5),
-                    ((x/w) -.5,       0, ((y+1)/h) -.5)
-                ))
+        for z in range(h+1):
+            for x in range(w+1):
+                self.vertices.append(Vec3(x/w, 0, z/h))
+                self.uvs.append((x/w, z/h))
 
-                self.triangles.append([e+i for e in (0,1,2,3)])
-                i += 4
+                if x > 0 and z > 0:
+                    self.triangles.append((i, i-1, i-w-2, i-w-1))
 
+                i += 1
 
-        super().__init__(vertices=self.vertices, triangles=self.triangles, mode=mode, **kwargs)
-
+        super().__init__(vertices=self.vertices, triangles=self.triangles, uvs=self.uvs, mode=mode, **kwargs)
 
 
 
 if __name__ == '__main__':
     app = Ursina()
 
-    front =  Entity(model=Plane(subdivisions=(3,6)), z=-.5, rotation_x=-90)
+    front =  Entity(model=Plane(subdivisions=(3,6)), texture='brick')
+    # front =  Entity(model=Plane(subdivisions=(3,6), mode='point', thickness=5), texture='brick')
 
     _ed = EditorCamera()
     app.run()
