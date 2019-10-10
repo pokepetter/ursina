@@ -78,6 +78,11 @@ class Sequence():
         self.paused = False
         self.update()
 
+    def kill(self):
+        if self.auto_destroy and self in application.sequences:
+            application.sequences.remove(self)
+            del self
+
     def update(self):
         if self.paused:
             return
