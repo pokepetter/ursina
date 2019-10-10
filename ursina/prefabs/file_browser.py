@@ -153,7 +153,7 @@ class FileBrowser(Entity):
             return
 
         if hasattr(self, 'on_submit'):
-            self.on_submit(self.selection)
+            self.on_submit([e.path for e in self.selection])
 
         self.close()
 

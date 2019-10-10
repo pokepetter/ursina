@@ -23,7 +23,9 @@ class Sprite(Entity):
 
 if __name__ == '__main__':
     app = Ursina()
-    s = Sprite(texture = 'panda_button')
-    print(s.scale * 2)
-    s.scale *= 2
+    camera.orthographic = True
+    camera.fov = 1
+    Sprite.ppu = 16
+    Texture.default_filtering = None
+    s = Sprite('brick', filtering=False)
     app.run()

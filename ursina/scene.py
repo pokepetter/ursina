@@ -85,4 +85,8 @@ if __name__ == '__main__':
     def input(key):
         if key == 'd':
             scene.clear()
+
+    scene.fog_density = .1          # sets exponential density
+    scene.fog_density = (50, 200)   # sets linear densitiy start and end
+
     app.run()

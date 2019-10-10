@@ -23,20 +23,8 @@ class Ursina(ShowBase):
         camera.reparent_to(base.render)
         camera.set_up()
         render.set_antialias(AntialiasAttrib.MMultisample)
-        # reapply screen effect to make it work in new resolution
-        # print('adfaaaaaa:', application.base.win)
-        # from direct.filter.CommonFilters import CommonFilters
-        # filters = CommonFilters(scene.base.win, scene.base.cam)
-        # filters.setAmbientOcclusion(
-        #     numsamples=64,
-        #     radius=0.1,
-        #     amount=5.0,
-        #     strength=0.05,
-        #     falloff=0.000002
-        # )
         window.make_exit_button()
 
-        print('...........', window.overlay)
         camera.overlay = window.overlay
 
         # input
@@ -100,12 +88,6 @@ class Ursina(ShowBase):
 
         from ursina import HotReloader
         application.hot_reloader = HotReloader(__main__.__file__)
-
-        def _hot_reloader_input(key):
-            if key == 'f5':
-                application.hot_reloader.reload()
-
-        application.hot_reloader.input = _hot_reloader_input
 
 
     def _update(self, task):

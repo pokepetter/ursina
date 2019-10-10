@@ -37,9 +37,9 @@ class EditorCamera(Entity):
             pass
         else:
             if key == 'scroll up':
-                camera.position += camera.forward * self.zoom_speed
+                self.pivot.position += camera.forward * self.zoom_speed
             if key == 'scroll down':
-                camera.position += camera.back * self.zoom_speed
+                self.pivot.position += camera.back * self.zoom_speed
 
 
 

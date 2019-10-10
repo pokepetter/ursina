@@ -3,11 +3,13 @@ from ursina import *
 class Sky(Entity):
 
     def __init__(self, **kwargs):
-        super().__init__()
-        self.name = 'sky'
-        self.scale *= 9900
-        self.model = 'sky_dome'
-        self.texture = 'default_sky'
+        super().__init__(
+            parent = render,
+            name = 'sky',
+            model = 'sky_dome',
+            texture = 'default_sky',
+            scale = 9900
+            )
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -18,5 +20,5 @@ class Sky(Entity):
 
 if __name__  == '__main__':
     app = Ursina()
-    test = load_prefab('sky')
+    Sky()
     app.run()

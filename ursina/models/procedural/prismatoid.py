@@ -3,7 +3,7 @@ from ursina.duplicate import duplicate
 
 
 class Prismatoid(Mesh):
-    def __init__(self, base_shape=Quad, origin=(0,0), path=((0,0,0),(0,1,0)), thicknesses=((1,1),), mode='triangle', **kwargs):
+    def __init__(self, base_shape=Quad, origin=(0,0), path=((0,0,0),(0,1,0)), thicknesses=((1,1),), look_at=True, mode='triangle', **kwargs):
         if type(base_shape) == type:
             base_shape = base_shape()
 
@@ -30,9 +30,10 @@ class Prismatoid(Mesh):
 
         for i in range(1, len(path)):
             b.position = path[i-1]
-            b.look_at(path[i])
+            if look_at:
+                b.look_at(path[i])
             e.position = path[i]
-            if i+1 < len(path):
+            if i+1 < len(path) and look_at:
                 e.look_at(path[i+1])
 
             # for debugging sections
@@ -42,6 +43,7 @@ class Prismatoid(Mesh):
 
             try:
                 e.scale = thicknesses[i]
+                b.scale = thicknesses[i-1]
             except:
                 pass
 
@@ -76,7 +78,10 @@ class Prismatoid(Mesh):
 if __name__ == '__main__':
     app = Ursina()
     # e = Entity(model=Prism(mode='line'))
-    e = Entity(model=Prismatoid())
+    path = (Vec3(0,0,0), Vec3(0,1,0), Vec3(0,3,0), Vec3(0,4,0), Vec3(2,5,0))
+    thicknesses = ((1,1), (.5,.5), (.75,.75), (.5,.5), (1,1))
+    e = Entity(model=Prismatoid(path=path, thicknesses=thicknesses))
+    e.model.colorize()
     # e2 = duplicate(e)
     # e2.x=2
     # e2.color=color.red

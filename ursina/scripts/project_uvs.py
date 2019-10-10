@@ -1,7 +1,7 @@
 from ursina import *
 
 
-def project_uvs(model, aspect_ratio=1, direction='forward'):
+def project_uvs(model, aspect_ratio=1, direction='forward', regenerate=False):
     uvs = list()
     if direction == 'forward':
         for v in model.vertices:
@@ -13,7 +13,9 @@ def project_uvs(model, aspect_ratio=1, direction='forward'):
 
 
     model.uvs = uvs
-    model.generate()
+
+    if regenerate:
+        model.generate()
 
 
 
