@@ -17,20 +17,7 @@ s = Sprite(texture='beach_level_pattern')
 camera.orthographic = True
 camera.fov = 1
 
-# 1/128
-# window.exit_button.enabled = False
-# window.size = (160*4, 90*4)
-# window.fullscreen = True
-# window.set_size(800, 600)
-from panda3d.core import WindowProperties
 player = Player()
 player.scale *= 1/128 * 16
 camera.world_parent = player
 app.run()                               # opens a window and starts the game.
-# wp = WindowProperties()
-# wp.setFullscreen(1)
-# wp.setSize(800, 600)
-# base.openMainWindow()
-# base.win.requestProperties(wp)
-# base.graphicsEngine.openWindows()
-# base.run()

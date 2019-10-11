@@ -42,10 +42,12 @@ class LoadingWheel(Entity):
             )
         self.scale = .025
         self.text_entity = Text(
-            '  loading...',
+            world_parent = self,
+            text = '  loading...',
             origin = (0,1.5),
             color = color.light_gray,
             )
+        self.y = -.25
 
     def update(self):
         self.point.rotation_y += 5
