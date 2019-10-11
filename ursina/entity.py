@@ -876,7 +876,17 @@ class Entity(NodePath):
     @property
     def attributes(self):
         return ('name', 'enabled', 'eternal', 'visible', 'parent',
-            'origin', 'position', 'rotation', 'scale', 'model', 'color', 'texture_scale', 'texture_offset',
+            'origin', 'position', 'rotation', 'scale',
+            'model', 'color', 'texture', 'texture_scale', 'texture_offset',
+
+            # 'world_position', 'world_x', 'world_y', 'world_z',
+            # 'world_rotation', 'world_rotation_x', 'world_rotation_y', 'world_rotation_z',
+            # 'world_scale', 'world_scale_x', 'world_scale_y', 'world_scale_z',
+            # 'x', 'y', 'z',
+            # 'origin_x', 'origin_y', 'origin_z',
+            # 'rotation_x', 'rotation_y', 'rotation_z',
+            # 'scale_x', 'scale_y', 'scale_z',
+
             'render_queue', 'collision', 'collider', 'scripts')
 
 #------------

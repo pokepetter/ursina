@@ -41,13 +41,13 @@ class Text(Entity):
         self.use_tags = True
         self.start_tag = start_tag
         self.end_tag = end_tag
-        self.text_colors = {f'{self.start_tag}default{self.end_tag}' : color.text_color}
+        self.text_colors = {f'default' : color.text_color}
 
         for color_name in color.color_names:
-            self.text_colors[self.start_tag + color_name + self.end_tag] = color.colors[color_name]
+            self.text_colors[color_name] = color.colors[color_name]
 
         self.tag = Text.start_tag+'default'+Text.end_tag
-        self.color_tag = self.text_colors[self.start_tag+'default'+self.end_tag]
+        self.color_tag = self.text_colors['default']
         self.scale_override = 1
         self._background = None
 
@@ -155,38 +155,51 @@ class Text(Entity):
         # tags
         if not tag:
             tag = self.tag
-        if tag in self.text_colors:
-            lightness = color.to_hsv(self.color_tag)[2]
-            self.color_tag = self.text_colors[tag]
-            if not tag == self.start_tag+'default'+self.end_tag:
-                if lightness > .8:
-                    self.color_tag = color.tint(self.color_tag, .2)
+
+        if tag != '<>':
+            tag = tag[1:-1]
+
+            if tag in self.text_colors:
+                # lightness = color.to_hsv(self.color_tag)[2]
+                self.color_tag = self.text_colors[tag]
+                # if not tag == 'default':
+                #     if lightness > .8:
+                #         self.color_tag = color.tint(self.color_tag, .2)
+                #     else:
+                #         self.color_tag = color.tint(self.color_tag, -.3)
+
+                self.text_node.setTextColor(self.color_tag)
+
+            elif tag.startswith('hsb('):   # set color based on numbers
+                tag = tag[4:-1]
+                hsb_values = (float(e.strip()) for e in tag.split(','))
+                self.text_node.setTextColor(color.color(*hsb_values))
+            elif tag.startswith('rgb('):   # set color based on numbers
+                tag = tag[4:-1]
+                rgb_values = (float(e.strip()) for e in tag.split(','))
+                self.text_node.setTextColor(color.rgba(*rgb_values))
+
+            if tag.startswith('scale:'):
+                scale = tag.split(':')[1]
+                self.scale_override = scale = float(scale[:-1])
+
+            elif tag.startswith('image:'):
+                texture_name = tag.split(':')[1]
+                image = Entity(
+                    parent=self.text_node_path,
+                    name='inline_image',
+                    model='quad',
+                    texture=texture_name,
+                    color=self.color_tag,
+                    scale=1,
+                    # position=(x*self.size*self.scale_override, y*self.size*self.line_height),
+                    origin=(0, -.3),
+                    ignore=True,
+                    )
+                if not image.texture:
+                    destroy(image)
                 else:
-                    self.color_tag = color.tint(self.color_tag, -.3)
-
-            self.text_node.setTextColor(self.color_tag)
-
-        if tag.startswith(self.start_tag+'scale:'):
-            scale = tag.split(':')[1]
-            self.scale_override = scale = float(scale[:-1])
-
-        elif tag.startswith(self.start_tag+'image:'):
-            texture_name = tag.split(':')[1].replace(self.end_tag, '')
-            image = Entity(
-                parent=self.text_node_path,
-                name='inline_image',
-                model='quad',
-                texture=texture_name,
-                color=self.color_tag,
-                scale=1,
-                # position=(x*self.size*self.scale_override, y*self.size*self.line_height),
-                origin=(0, -.3),
-                ignore=True,
-                )
-            if not image.texture:
-                destroy(image)
-            else:
-                self.images.append(image)
+                    self.images.append(image)
 
         self.text_node_path.setScale(self.scale_override * self.size)
 
@@ -418,7 +431,7 @@ if __name__ == '__main__':
     descr = dedent('''
         <image:brick> <image:shore> <orange>Rainstorm
         Summon a <azure>rain storm <default>to deal 5 <azure>water
-        damage <default>to <red>everyone, <default><image:brick> <image:brick> test <default>including <orange>yourself. <default>
+        damage <default>to <hsb(0,1,.7)>everyone, <default><image:brick> <image:brick> test <default>including <orange>yourself. <default>
         Lasts for 4 rounds.''').strip()
 
     # Text.default_font = 'VeraMono.ttf'

@@ -62,7 +62,7 @@ class TextField(Entity):
         for name in color.color_names:
             if name == 'black':
                 continue
-            self.replacements[name] = f'☾{name}☽{name}☾default☽'
+            self.replacements[f' {name} '] = f'☾{name}☽ {name} ☾default☽'
 
         self.on_undo = list()
         self.on_redo = list()

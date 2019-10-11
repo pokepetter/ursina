@@ -2,7 +2,7 @@ from ursina import *
 
 
 class Grid(Mesh):
-    def __init__(self, width, height, thickness=1, **kwargs):
+    def __init__(self, width, height, mode='line', thickness=1, **kwargs):
         self.width = width
         self.height = height
 
@@ -19,7 +19,7 @@ class Grid(Mesh):
 
         tris = [(i, i+1) for i in range(0, len(verts), 2)]
 
-        super().__init__(verts, triangles=tris, mode='line', **kwargs)
+        super().__init__(verts, triangles=tris, mode=mode, **kwargs)
 
 
 
