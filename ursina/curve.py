@@ -195,15 +195,47 @@ def in_out_bounce(t):
     return (out_bounce((t * 2) - 1) * .5) + .5
 
 
+# generate boomeranged versions of all the functions
+import sys
+from textwrap import dedent
+
+for e in dir(sys.modules[__name__]):
+    item = getattr(sys.modules[__name__], e)
+    if callable(item):
+        exec(dedent(f'''
+            def {e}_boomerang(t):
+                if t < .5:
+                    return {e}(t*2)
+                else:
+                    return {e}(1-((t-.5)*2))
+        '''))
+
+
 
 if __name__ == '__main__':
-    from ursina import curve
+    '''Draws a sheet with every curve and it's name'''
+    from ursina import *
+    app = Ursina()
+    camera.orthographic = True
+    camera.fov = 16
+    camera.position = (9, 6)
+    window.color=color.black
 
-    '''Test all the functions:'''
-    for i in dir(curve):
-        item = getattr(curve, i)
-        if callable(item):
-            print(item.__name__, ':', item(.5))
+    i = 0
+    for e in dir(curve):
+        try:
+            item = getattr(curve, e)
+            print(item.__name__, ':', item(.75))
+            curve_renderer = Entity(model=Mesh(vertices=[Vec3(i/31, item(i/31), 0) for i in range(32)], mode='line', thickness=2), color=color.light_gray)
+            row = math.floor(i/8)
+            curve_renderer.x = (i % 8) * 2.5
+            curve_renderer.y = row * 1.75
+            label = Text(parent=curve_renderer, text=item.__name__, scale=8, color=color.gray, y=-.1)
+            i += 1
+        except:
+            pass
+
+    app.run()
 
     '''
     These are used by Entity when animating, like this:
