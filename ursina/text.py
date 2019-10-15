@@ -389,7 +389,7 @@ class Text(Entity):
         self._background.x -= self.origin_x * self.width
         self._background.y -= self.origin_y * self.height
 
-        self._background.model = Quad(radius=radius, scale=(w, h))
+        self._background.model = Quad(radius=radius, scale=(w/self.scale_x, h/self.scale_y))
         self._background.color = color
 
 
