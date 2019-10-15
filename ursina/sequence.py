@@ -17,10 +17,14 @@ class Func():
 
 
 class Sequence():
+
+    default_time_step = None
+
     def __init__(self, *args, **kwargs):
         super().__init__()
         self.args = list(args)
         self.t = 0
+        self.time_step = Sequence.default_time_step
         self.duration = 0
         self.funcs = list()
         self.paused = True
@@ -87,7 +91,10 @@ class Sequence():
         if self.paused:
             return
 
-        self.t += time.dt * application.time_scale
+        if self.time_step is None:
+            self.t += time.dt * application.time_scale
+        else:
+            self.t += self.time_step * application.time_scale
 
         for f in self.funcs:
             if f[4] == False and f[3] <= self.t:

@@ -45,7 +45,7 @@ class Entity(NodePath):
         self.name = camel_to_snake(self.type)
         self.enabled = True
         self.visible = True
-        self.ignore = False
+        self.ignore = False     # if True, will not try to run code or be added to scene.entities
 
         self.parent = scene
         scene.entities.append(self)
@@ -892,13 +892,15 @@ class Entity(NodePath):
 #------------
 # ANIMATIONS
 #------------
-    def animate(self, name, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
-        Sequence(
+    def animate(self, name, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
+        s = Sequence(
             Wait(delay),
-            Func(self._animate, name, value, duration, curve, resolution, interrupt)
-        ).start()
+            Func(self._animate, name, value, duration, curve, resolution, interrupt, time_step)
+        )
+        s.start()
+        return s
 
-    def _animate(self, name, value, duration=.1, curve=curve.in_expo, resolution=None, interrupt=True):
+    def _animate(self, name, value, duration=.1, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
         animator_name = name + '_animator'
         # print('start animating value:', name, animator_name )
         if interrupt and hasattr(self, animator_name):
@@ -912,7 +914,7 @@ class Entity(NodePath):
                 getattr(self, animator_name).finish()
             except:
                 pass
-        setattr(self, animator_name, Sequence())
+        setattr(self, animator_name, Sequence(time_step=time_step))
         sequence = getattr(self, animator_name)
         self.animations.append(sequence)
         # sequence.append(Wait(delay))
@@ -929,40 +931,44 @@ class Entity(NodePath):
         sequence.start()
         return sequence
 
-    def animate_position(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
-        self.animate('x', value[0], duration, delay, curve, resolution, interrupt)
-        self.animate('y', value[1], duration, delay, curve, resolution, interrupt)
+    def animate_position(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
+        x = self.animate('x', value[0], duration, delay, curve, resolution, interrupt, time_step)
+        y =self.animate('y', value[1], duration, delay, curve, resolution, interrupt, time_step)
+        z = None
         if len(value) > 2:
-            self.animate('z', value[2], duration, delay, curve, resolution, interrupt)
-    def animate_x(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
-        self.animate('x', value, duration, delay, curve, resolution, interrupt)
-    def animate_y(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
-        self.animate('y', value, duration, delay, curve, resolution, interrupt)
-    def animate_z(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
-        self.animate('z', value, duration, delay, curve, resolution, interrupt)
+            z = self.animate('z', value[2], duration, delay, curve, resolution, interrupt, time_step)
+        return x, y, z
+
+    def animate_x(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
+        return self.animate('x', value, duration, delay, curve, resolution, interrupt, time_step)
+    def animate_y(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
+        return self.animate('y', value, duration, delay, curve, resolution, interrupt, time_step)
+    def animate_z(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
+        return self.animate('z', value, duration, delay, curve, resolution, interrupt, time_step)
 
 
-    def animate_rotation(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
-        self.animate('rotation_x', value[0], duration, delay, curve, resolution, interrupt)
-        self.animate('rotation_y', value[1], duration, delay, curve, resolution, interrupt)
-        self.animate('rotation_z', value[2], duration, delay, curve, resolution, interrupt)
-    def animate_rotation_x(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
-        self.animate('rotation_x', value, duration, delay, curve, resolution, interrupt)
-    def animate_rotation_y(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
-        self.animate('rotation_y', value, duration, delay, curve, resolution, interrupt)
-    def animate_rotation_z(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
-        self.animate('rotation_z', value, duration, delay, curve, resolution, interrupt)
+    def animate_rotation(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
+        x = self.animate('rotation_x', value[0], duration, delay, curve, resolution, interrupt, time_step)
+        y = self.animate('rotation_y', value[1], duration, delay, curve, resolution, interrupt, time_step)
+        z = self.animate('rotation_z', value[2], duration, delay, curve, resolution, interrupt, time_step)
+        return x, y, z
+    def animate_rotation_x(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
+        return self.animate('rotation_x', value, duration, delay, curve, resolution, interrupt, time_step)
+    def animate_rotation_y(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
+        return self.animate('rotation_y', value, duration, delay, curve, resolution, interrupt, time_step)
+    def animate_rotation_z(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
+        return self.animate('rotation_z', value, duration, delay, curve, resolution, interrupt, time_step)
 
-    def animate_scale(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
+    def animate_scale(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
         if isinstance(value, (int, float, complex)):
             value = Vec3(value, value, value)
-        self.animate('scale', value, duration, delay, curve, resolution, interrupt)
-    def animate_scale_x(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
-        self.animate('scale_x', value, duration, delay, curve, resolution, interrupt)
-    def animate_scale_y(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
-        self.animate('scale_y', value, duration, delay, curve, resolution, interrupt)
-    def animate_scale_z(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
-        self.animate('scale_z', value, duration, delay, curve, resolution, interrupt)
+        return self.animate('scale', value, duration, delay, curve, resolution, interrupt, time_step)
+    def animate_scale_x(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
+        return self.animate('scale_x', value, duration, delay, curve, resolution, interrupt, time_step)
+    def animate_scale_y(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
+        return self.animate('scale_y', value, duration, delay, curve, resolution, interrupt, time_step)
+    def animate_scale_z(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
+        return self.animate('scale_z', value, duration, delay, curve, resolution, interrup, time_stept)
 
 
     def shake(self, duration=.2, magnitude=1, speed=.05, direction=(1,1)):
@@ -980,16 +986,31 @@ class Entity(NodePath):
                 self.original_position[1])
             ))
         s.start()
+        return s
 
-    def animate_color(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
-        self.animate('color', value, duration, delay, curve, resolution, interrupt)
+    def animate_color(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=False, time_step=None):
+        return self.animate('color', value, duration, delay, curve, resolution, interrupt, time_step)
 
-    def fade_out(self, value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
-        self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration, delay, curve, resolution, interrupt)
+    def fade_out(self, value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=False, time_step=None):
+        return self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration, delay, curve, resolution, interrupt, time_step)
 
-    def fade_in(self, value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
-        self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration, delay, curve, resolution, interrupt)
+    def fade_in(self, value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=False, time_step=None):
+        return self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration, delay, curve, resolution, interrupt, time_step)
 
+    def blink(self, value=color.clear, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=False, time_step=None):
+        _original_color = self.color
+        if hasattr(self, 'blink_animator'):
+            self.blink_animator.finish()
+            self.blink_animator.kill()
+            print('finish blink_animator')
+        self.blink_animator = Sequence(
+            Func(self.animate_color, value, duration*.4, 0, curve, resolution, interrupt),
+            Func(self.animate_color, _original_color, duration*.4, duration*.5, curve, resolution, interrupt, time_step)
+        )
+        self.blink_animator.start()
+        return self.blink_animator
+        # self.animate_color(value, duration*.4, 0, curve, resolution, interrupt)
+        # self.animate_color(_original_color, duration*.4, duration*.5, curve, resolution, interrupt)
 
 
 if __name__ == '__main__':
@@ -1030,11 +1051,20 @@ if __name__ == '__main__':
     # player.reflectivity = 1
 
     EditorCamera()
-    p = Entity(model=Cylinder(8), color=color.black)
-    e1 = Entity(parent=p, model='cube', color=color.pink)
-    e2 = Entity(parent=p, model='cube', color=color.lime, x=2, scale=2, rotation_z=45)
-    e3 = Entity(parent=e2, model='cube', color=color.yellow, y=2, scale=.5)
-    p.combine()
+    # p = Entity(model=Cylinder(8), color=color.black)
+    # e1 = Entity(parent=p, model='cube', color=color.pink)
+    # e2 = Entity(parent=p, model='cube', color=color.lime, x=2, scale=2, rotation_z=45)
+    # e3 = Entity(parent=e2, model='cube', color=color.yellow, y=2, scale=.5)
+    # p.combine()
+    e = Entity(model='quad', color=color.orange)
+
+    def input(key):
+        if key == 'space':
+            # e.blink(color.red,
+            #     resolution=10,
+            #     curve=curve.linear
+            #     )
+            camera.overlay.blink(color.black, 1)
 
 
     print(time.time() - t)
