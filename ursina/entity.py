@@ -351,6 +351,7 @@ class Entity(NodePath):
     def types(self):
         return [c.__name__ for c in inspect.getmro(self.__class__)]
 
+
     @property
     def visible(self):
         return self._visible
@@ -358,11 +359,10 @@ class Entity(NodePath):
     @visible.setter
     def visible(self, value):
         self._visible = value
-        if hasattr(self, 'color'):
-            if value == True:
-                self.color = self.color
-            elif value == False:
-                self.model.setColorScale(color.clear)
+        if value:
+            self.show()
+        else:
+            self.hide()
 
     @property
     def origin_x(self):
