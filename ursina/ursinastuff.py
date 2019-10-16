@@ -186,11 +186,13 @@ def _destroy(entity):
     if hasattr(entity, 'animations'):
         for anim in entity.animations:
             anim.finish()
+            anim.kill()
 
-    try:
-        entity.removeNode()
-    except:
-        pass
+    if hasattr(entity, 'tooltip'):
+        destroy(entity.tooltip)
+        # entity.tooltip.removeNode()
+
+    entity.removeNode()
 
     #unload texture
     # if hasattr(entity, 'texture') and entity.texture != None:
@@ -241,3 +243,18 @@ def print_on_screen(text):
         # scale = (.1, .1)
         )
     destroy(text_entity, 1)
+
+
+if __name__ == '__main__':
+
+    from ursina import *
+    app = Ursina()
+    def test_func(item, x=None, y=None):
+        print(item, x, y)
+
+    test_func('test')
+    invoke(test_func, 'test', delay=.1)
+    invoke(test_func, 'test', 1, 2, delay=.2)
+    invoke(test_func, 'test', x=1, y=2, delay=.3)
+
+    app.run()
