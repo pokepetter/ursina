@@ -15,6 +15,7 @@ from panda3d.core import Shader
 from panda3d.core import TextureStage, TexGenAttrib, GeomVertexReader
 
 from ursina.texture import Texture
+from panda3d.core import MovieTexture
 from panda3d.core import TextureStage
 from panda3d.core import CullFaceAttrib
 from ursina import application
@@ -551,7 +552,12 @@ class Entity(NodePath):
 
         elif isinstance(value, str):
             texture = load_texture(value)
-            # print('loaded texture:', texture)
+            print('loaded texture:', texture)
+
+        if texture.__class__ is MovieTexture:
+            self._texture = texture
+            self.model.setTexture(texture)
+            return
 
         try:
             self._texture = texture

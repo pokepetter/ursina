@@ -13,7 +13,14 @@ def load_texture(name, path=None):
         application.internal_textures_folder,
         )
     if path:
-        folders = (path)
+        folders = (path,)
+
+    if name.endswith('.mp4'):
+        for folder in folders:
+            for filename in folder.glob('**/' + name):
+                # print('loaded movie texture:', filename)
+                return loader.loadTexture(filename.resolve())
+
 
     for folder in folders:
         for filename in folder.glob('**/' + name + '.*'):
