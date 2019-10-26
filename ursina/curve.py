@@ -235,6 +235,8 @@ if __name__ == '__main__':
         except:
             pass
 
+    window.exit_button.visible = False
+    window.fps_counter.enabled = False
     app.run()
 
     '''

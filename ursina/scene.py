@@ -24,6 +24,7 @@ class Scene(NodePath):
         self.has_changes = False
         self.reflection_map = 'reflection_map_3'
 
+
     def set_up(self):
         from ursina.entity import Entity
         self.reparent_to(render)
@@ -33,6 +34,7 @@ class Scene(NodePath):
         self.setFog(self.fog)
         self.fog_color = color.light_gray
         self.fog_density = 0
+
 
     def clear(self):
         from ursina.ursinastuff import destroy
@@ -47,6 +49,7 @@ class Scene(NodePath):
 
         from ursina import application
         application.sequences.clear()
+
 
     @property
     def fog_color(self):

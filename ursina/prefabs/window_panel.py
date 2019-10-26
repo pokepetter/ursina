@@ -13,7 +13,6 @@ class WindowPanel(Draggable):
             origin = (-0, .5),
             scale = (.5, Text.size),
             color = color.black,
-            # text_origin = (0,0),
             )
 
         # print(content)

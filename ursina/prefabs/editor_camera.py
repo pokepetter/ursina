@@ -10,7 +10,7 @@ class EditorCamera(Entity):
 
         self.rotation_speed = 100
         self.pan_speed = (4, 4)
-        self.move_speed = 20
+        self.move_speed = 1
         self.zoom_speed = 20
 
         for key, value in kwargs.items():
@@ -37,9 +37,9 @@ class EditorCamera(Entity):
             pass
         else:
             if key == 'scroll up':
-                self.pivot.position += camera.forward * self.zoom_speed
+                camera.z += self.zoom_speed
             if key == 'scroll down':
-                self.pivot.position += camera.back * self.zoom_speed
+                camera.z -= self.zoom_speed
 
 
 
@@ -50,12 +50,12 @@ class EditorCamera(Entity):
             self.pivot.rotation_x -= mouse.velocity[1] * self.rotation_speed
             self.pivot.rotation_y += mouse.velocity[0] * self.rotation_speed
 
-            self.pivot.position += camera.right * held_keys['d'] * self.move_speed
-            self.pivot.position += camera.left * held_keys['a'] * self.move_speed
-            self.pivot.position += camera.forward * held_keys['w'] * self.move_speed
-            self.pivot.position += camera.back * held_keys['s'] * self.move_speed
-            self.pivot.position += camera.up * held_keys['e'] * self.move_speed
-            self.pivot.position += camera.down * held_keys['q'] * self.move_speed
+            self.pivot.position += camera.right * held_keys['d'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt']))
+            self.pivot.position += camera.left * held_keys['a'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt']))
+            self.pivot.position += camera.forward * held_keys['w'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt']))
+            self.pivot.position += camera.back * held_keys['s'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt']))
+            self.pivot.position += camera.up * held_keys['e'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt']))
+            self.pivot.position += camera.down * held_keys['q'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt']))
 
 
         if mouse.middle:

@@ -3,11 +3,15 @@ from ursina import *
 class Scrollable():
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__()
         self.max = math.inf
         self.min = -math.inf
         self.scroll_speed = .1
         self.direction = (0,1,0)
+
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
 
     @property
     def direction(self):
