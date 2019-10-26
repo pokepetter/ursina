@@ -40,19 +40,21 @@ except:
 class Entity(NodePath):
 
 
-    def __init__(self, **kwargs):
+    def __init__(self, add_to_scene_entities=True, **kwargs):
         super().__init__(self.__class__.__name__)
 
         self.name = camel_to_snake(self.type)
         self.enabled = True
         self.visible = True
-        self.ignore = False     # if True, will not try to run code or be added to scene.entities
-
-        self.parent = scene
-        scene.entities.append(self)
-
+        self.ignore = False     # if True, will not try to run code
         self.eternal = False    # eternal entities does not get destroyed on scene.clear()
         self.ignore_paused = False
+        self.ignore_input = False
+
+        self.parent = scene
+        if add_to_scene_entities:
+            scene.entities.append(self)
+
         self.model = None
         self.color = color.white
         self.texture = None     # tries to set to camel_to_snake(self.type)
@@ -102,6 +104,14 @@ class Entity(NodePath):
             else:
                 if not self.is_singleton():
                     self.stash()
+
+            for c in self.children:
+                c.enabled = value
+
+
+        if name == 'eternal':
+            for c in self.children:
+                c.eternal = value
 
 
         if name == 'world_parent':
@@ -945,36 +955,22 @@ class Entity(NodePath):
             z = self.animate('z', value[2], duration, delay, curve, resolution, interrupt, time_step)
         return x, y, z
 
-    def animate_x(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
-        return self.animate('x', value, duration, delay, curve, resolution, interrupt, time_step)
-    def animate_y(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
-        return self.animate('y', value, duration, delay, curve, resolution, interrupt, time_step)
-    def animate_z(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
-        return self.animate('z', value, duration, delay, curve, resolution, interrupt, time_step)
-
-
     def animate_rotation(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
         x = self.animate('rotation_x', value[0], duration, delay, curve, resolution, interrupt, time_step)
         y = self.animate('rotation_y', value[1], duration, delay, curve, resolution, interrupt, time_step)
         z = self.animate('rotation_z', value[2], duration, delay, curve, resolution, interrupt, time_step)
         return x, y, z
-    def animate_rotation_x(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
-        return self.animate('rotation_x', value, duration, delay, curve, resolution, interrupt, time_step)
-    def animate_rotation_y(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
-        return self.animate('rotation_y', value, duration, delay, curve, resolution, interrupt, time_step)
-    def animate_rotation_z(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
-        return self.animate('rotation_z', value, duration, delay, curve, resolution, interrupt, time_step)
 
     def animate_scale(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
         if isinstance(value, (int, float, complex)):
             value = Vec3(value, value, value)
         return self.animate('scale', value, duration, delay, curve, resolution, interrupt, time_step)
-    def animate_scale_x(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
-        return self.animate('scale_x', value, duration, delay, curve, resolution, interrupt, time_step)
-    def animate_scale_y(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
-        return self.animate('scale_y', value, duration, delay, curve, resolution, interrupt, time_step)
-    def animate_scale_z(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
-        return self.animate('scale_z', value, duration, delay, curve, resolution, interrup, time_stept)
+
+    for e in ('x', 'y', 'z', 'rotation_x', 'rotation_y', 'rotation_z', 'scale_x', 'scale_y', 'scale_z'):
+        exec(dedent(f'''
+            def animate_{e}(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
+                return self.animate('{e}', value, duration, delay, curve, resolution, interrupt, time_step)
+        '''))
 
 
     def shake(self, duration=.2, magnitude=1, speed=.05, direction=(1,1)):
