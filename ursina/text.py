@@ -78,7 +78,6 @@ class Text(Entity):
     @text.setter
     def text(self, text):
         self.raw_text = text
-        text = self.start_tag + self.end_tag + str(text) # start with empty tag for alignemnt to work?
 
         self.images.clear()
         for tn in self.text_nodes:
@@ -202,9 +201,6 @@ class Text(Entity):
                     self.images.append(image)
 
         self.text_node_path.setScale(self.scale_override * self.size)
-
-        if not text:
-            return
         self.text_node.setText(text)
         self.text_node.setPreserveTrailingWhitespace(True)
         self.text_node_path.setPos(
@@ -272,7 +268,7 @@ class Text(Entity):
 
     @property
     def lines(self):
-        return [l for l in self.text.split('\n') if len(l) > 0]
+        return self.text.splitlines()
 
     @property
     def resolution(self):
@@ -353,25 +349,22 @@ class Text(Entity):
     def align(self):
         value = self.origin
         linewidths = [self.text_nodes[0].node().calcWidth(line) for line in self.lines]
+        # print('.........', linewidths)
         for tn in self.text_nodes:
             # center text horizontally
             linenumber = abs(int(tn.getZ() / self.size / self.line_height))
             tn.setX(tn.getX() - (linewidths[linenumber] / 2 * self.size * tn.getScale()[0] / self.size))
+            # tn.setX(tn.getX() - (linewidths[linenumber] / 2 * self.size))
             # add offset based on origin/value
             # x -= half line width * text node scale
             tn.setX(
-                tn.getX()
-                - (linewidths[linenumber] / 2 * value[0] * 2 * self.size)
-                * tn.getScale()[0] / self.size
+                tn.getX() - (linewidths[linenumber] / 2 * value[0] * 2 * self.size) * tn.getScale()[0] / self.size
                 )
             # center text vertically
             halfheight = len(linewidths) * self.line_height / 2
             tn.setZ(tn.getZ() + (halfheight * self.size))
             # add offset
             tn.setZ(tn.getZ() - (halfheight * value[1] * 2 * self.size))
-
-        if hasattr(self, '_background'):
-            self._background.origin = value
 
 
     def create_background(self, padding=size*2, radius=size, color=ursina.color.black66):
@@ -429,8 +422,9 @@ if __name__ == '__main__':
     app = Ursina()
     # Text.size = .001
     descr = dedent('''
-        <image:brick> <image:shore> <orange>Rainstorm
+        <orange>Rainstorm
         Summon a <azure>rain storm <default>to deal 5 <azure>water
+
         damage <default>to <hsb(0,1,.7)>everyone, <default><image:brick> <image:brick> test <default>including <orange>yourself. <default>
         Lasts for 4 rounds.''').strip()
 
@@ -453,5 +447,6 @@ if __name__ == '__main__':
             test.appear(speed=.025)
 
     test.create_background()
+
     print('....', Text.get_width('yolo'))
     app.run()
