@@ -1,0 +1,64 @@
+from ursina import *
+
+
+class Animator():
+    def __init__(self, animations=None, start_state=''):
+
+        self.animations = animations    # dict
+
+        if not start_state and self.animations:
+            start_state = list(self.animations)[0]
+
+        self.start_state = start_state
+        self._state = None
+        self.state = start_state
+
+
+
+    @property
+    def state(self):
+        return self._state
+
+    @state.setter
+    def state(self, value):
+
+        if not value in self.animations:
+            print(self, 'has no animation:', value)
+
+        else:
+            if not self._state == value:
+                # only show set state and disable the rest
+                for key, anim in self.animations.items():
+                    if anim:
+                        anim.enabled = value == key
+                        if hasattr(anim, 'play') and callable(anim.play):
+                            anim.play()
+
+        self._state = value
+
+
+
+
+if __name__ == '__main__':
+    app = Ursina()
+
+    a = Animator(
+        animations = {
+            'lol' : Entity(model='cube', color=color.red),
+            'yo' : Entity(model='cube', color=color.green, x=1),
+            'help' : Entity(model='cube', color=color.violet, y=1),
+        }
+    )
+    a.state = 'yo'
+
+    Text('press <red>1<default>, <green>2<default> or <violet>3<default> to toggle different animator states', origin=(0,-.5), y=-.4)
+
+    def input(key):
+        if key == '1':
+            a.state = 'lol'
+        if key == '2':
+            a.state = 'yo'
+        if key == '3':
+            a.state = 'help'
+
+    app.run()

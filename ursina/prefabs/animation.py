@@ -13,7 +13,7 @@ class Animation(Entity):
                 model='quad',
                 texture=texture + '_' + str(i).zfill(4),
                 name=str(i),
-                ignore=True,
+                add_to_scene_entities=False,
                 )
             if not frame.texture:
                 destroy(frame)
@@ -41,19 +41,24 @@ class Animation(Entity):
 
         if autoplay:
             self.play()
+        self.is_playing = autoplay
 
         for key, value in kwargs.items():
             setattr(self, key, value)
 
 
     def play(self):
-        self.stop()
+        if self.is_playing:
+            self.stop()
         self.sequence.start()
+        self.is_playing = True
 
 
     def stop(self):
         for frame in self.frames:
             frame.enabled = False
+
+        self.is_playing = False
 
 
     def __setattr__(self, name, value):

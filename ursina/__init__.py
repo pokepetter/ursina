@@ -24,6 +24,7 @@ from ursina.prefabs.button import Button
 from ursina.prefabs.panel import Panel
 from ursina.prefabs.exit_button import ExitButton
 from ursina.prefabs.animation import Animation
+from ursina.prefabs.animator import Animator
 from ursina.prefabs.sky import Sky
 from ursina.prefabs.cursor import Cursor
 
