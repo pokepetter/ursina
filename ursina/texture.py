@@ -16,23 +16,28 @@ class Texture():
 
     default_filtering = 'bilinear'
 
-    def __init__(self, path):
-        if 'Image' in str(type(path)):
-            image = path
+    def __init__(self, value):
+
+        if isinstance(value, str):
+            value = Path(str)
+
+        if isinstance(value, Path):
+            self.path = Path(value)
+            self._texture = loader.loadTexture(Filename.fromOsSpecific(str(value)))
+            self._cached_image = None   # for get_pixel() method
+
+        elif isinstance(value, PandaTexture):
+            self._texture = value
+
+        else:
+            image = value
             self._texture = PandaTexture()
             self._texture.setup2dTexture(image.width, image.height, PandaTexture.TUnsignedByte, PandaTexture.FRgba)
             self._texture.setRamImageAs(image.transpose(Image.FLIP_TOP_BOTTOM).tobytes(), image.mode)
             self._cached_image = image.transpose(Image.FLIP_TOP_BOTTOM)
             self.path = None
 
-        elif type(path) == PandaTexture:
-            self._texture = path
 
-        else:
-            self.path = Path(path)
-            self._texture = loader.loadTexture(Filename.fromOsSpecific(path))
-
-            self._cached_image = None   # for get_pixel() method
 
         self.filtering = Texture.default_filtering
 
@@ -92,6 +97,10 @@ class Texture():
             self._texture.setMagfilter(SamplerState.FT_linear)
             self._texture.setMinfilter(SamplerState.FT_linear)
             self._filtering = True
+        elif value == 'mipmap':
+            self._texture.setMinfilter(SamplerState.FT_linear_mipmap_linear)
+            self._filtering = 'mipmap'
+
 
 
     def get_pixel(self, x, y):
@@ -148,7 +157,7 @@ if __name__ == '__main__':
     '''
         The Texture class rarely used manually but usually instantiated
         when assigning a texture to an Entity
-        texture = Texture(path/PIL.Image/panda3d.core.Texture)
+        texture = Texture(path / PIL.Image / panda3d.core.Texture)
 
         A texture file can be a .png, .jpg or .psd.
         If it's a .psd it and no compressed version exists, it will compress it automatically.
