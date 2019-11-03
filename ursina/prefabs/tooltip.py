@@ -10,12 +10,13 @@ class Tooltip(Text):
         self.wordwrap = 40
         self.origin = (-.5, -.5)
         self.margin = (2, 2)
+        self.background_color = color.color(0,0,0,.9)
         self.enabled = False
 
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-        self.create_background()
+        self.create_background(color=self.background_color)
 
 
     def update(self):

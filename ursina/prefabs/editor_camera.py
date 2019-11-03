@@ -5,7 +5,7 @@ class EditorCamera(Entity):
     def __init__(self, **kwargs):
         super().__init__(name='editor_camera', eternal=True)
 
-        self.pivot = Entity(name='pivot', eternal=True, model='cube', color=color.green, scale=(.05,.05,.05))
+        self.pivot = Entity(name='pivot', eternal=True)
         camera.world_parent = self.pivot
 
         self.rotation_speed = 100

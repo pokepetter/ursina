@@ -33,11 +33,4 @@ player.y = raycast(player.world_position, player.down).world_point[1]
 camera.smooth_follow.offset[1] = 5
 
 
-# def input(key):
-#     if key == 't':
-#         if application.time_scale == 1:
-#             application.time_scale = .5
-#         else:
-#             application.time_scale = 1
-
 app.run()

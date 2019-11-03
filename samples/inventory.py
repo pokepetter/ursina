@@ -4,14 +4,14 @@ from ursina import *
 class Inventory(Entity):
     def __init__(self, **kwargs):
         super().__init__(
-            parent=camera.ui,
-            model=Quad(radius=.015),
-            texture='white_cube',
+            parent = camera.ui,
+            model = Quad(radius=.015),
+            texture = 'white_cube',
             texture_scale = (5,8),
             scale = (.5, .8),
             origin = (-.5, .5),
             position = (-.3,.4),
-            color=color.color(0,0,.1,.9),
+            color = color.color(0,0,.1,.9),
             )
 
         for key, value in kwargs.items():
@@ -41,16 +41,16 @@ class Inventory(Entity):
         x, y = self.find_free_spot()
 
         icon = Draggable(
-            parent=self,
-            model='quad',
-            texture=item,
-            color=color.white,
-            scale_x=1/self.texture_scale[0],
-            scale_y=1/self.texture_scale[1],
-            origin=(-.5,.5),
-            x=x * 1/self.texture_scale[0],
-            y=-y * 1/self.texture_scale[1],
-            z=-.5,
+            parent = self,
+            model = 'quad',
+            texture = item,
+            color = color.white,
+            scale_x = 1/self.texture_scale[0],
+            scale_y = 1/self.texture_scale[1],
+            origin = (-.5,.5),
+            x = x * 1/self.texture_scale[0],
+            y = -y * 1/self.texture_scale[1],
+            z = -.5,
             )
         name = item.replace('_', ' ').title()
 
@@ -102,15 +102,16 @@ if __name__ == '__main__':
     add_item()
     add_item()
     add_item_button = Button(
-        scale=(.1,.1),
-        x=-.5,
-        color=color.lime.tint(-.25),
-        text='+',
-        tooltip=Tooltip('Add random item'),
-        on_click=add_item
+        scale = (.1,.1),
+        x = -.5,
+        color = color.lime.tint(-.25),
+        text = '+',
+        tooltip = Tooltip('Add random item'),
+        on_click = add_item
         )
     bg = Entity(parent=camera.ui, model='quad', texture='shore', scale_x=camera.aspect_ratio, z=1)
     Cursor(texture='cursor', scale=.1)
     mouse.visible = False
-    window.size /= 2
+    window.exit_button.visible = False
+    window.fps_counter.enabled = False
     app.run()

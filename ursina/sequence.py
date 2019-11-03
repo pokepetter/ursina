@@ -97,9 +97,10 @@ class Sequence():
             self.t += self.time_step * application.time_scale
 
         for f in self.funcs:
-            if f[4] == False and f[3] <= self.t:
+            func, args, kwargs, when, finished = f
+            if not finished and when <= self.t:
                 # print('run:', f[0], 'after:', self.t)
-                f[0](*f[1], **f[2])
+                func(*args, **kwargs)
                 f[4] = True
 
 

@@ -66,6 +66,6 @@ class FirstPersonController(Entity):
 if __name__ == '__main__':
     app = Ursina()
     Sky()
-    Plane(scale=100, color=color.yellow.tint(-.2), texture='white_cube', texture_scale=(100,100))
+    Entity(model='plane', scale=100, color=color.yellow.tint(-.2), texture='white_cube', texture_scale=(100,100))
     FirstPersonController()
     app.run()

@@ -98,7 +98,7 @@ class Window(WindowProperties):
             name = 'fps_counter',
             parent = scene.ui,
             eternal = True,
-            position = (.5*self.aspect_ratio, .47),
+            position = (.5*self.aspect_ratio, .47, -999),
             origin = (.8,.5),
             text = '60',
             # background = True,
