@@ -78,6 +78,7 @@ class Text(Entity):
     @text.setter
     def text(self, text):
         self.raw_text = text
+        text = self.start_tag + self.end_tag + str(text) # start with empty tag for alignemnt to work?
 
         self.images.clear()
         for tn in self.text_nodes:
