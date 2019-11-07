@@ -17,9 +17,7 @@ class Window(WindowProperties):
         loadPrcFileData('', 'window-title ursina')
         loadPrcFileData('', 'undecorated True')
         loadPrcFileData('', 'notify-level-util error')
-        # loadPrcFileData('', 'textures-power-2 pad')
         loadPrcFileData('', 'textures-auto-power-2 #t')
-        # loadPrcFileData('', 'want-pstats True')
         self.setForeground(True)
 
         self.vsync = True   # can't be set during play
@@ -34,6 +32,7 @@ class Window(WindowProperties):
 
         self.fullscreen_size = (self.screen_resolution[0]+1, (self.screen_resolution[0]+1) * .5625)
         self.windowed_size = (self.fullscreen_size[0] / 1.25, self.fullscreen_size[0] / 1.25 * .5625)
+        self.windowed_position = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode
         self.size = self.windowed_size
 
 
@@ -115,7 +114,7 @@ class Window(WindowProperties):
 
         self.overlay = Entity(
             name = 'overlay',
-            parent = self.exit_button.parent,
+            parent = scene.ui,
             model = 'quad',
             scale_x = self.aspect_ratio,
             color = color.clear,
@@ -190,11 +189,17 @@ class Window(WindowProperties):
         if name == 'fullscreen':
             try:
                 if value == True:
+                    self.windowed_size = self.size
+                    self.windowed_position = self.position
                     self.size = self.fullscreen_size
+                    self.center_on_screen()
                 else:
                     self.size = self.windowed_size
+                    if self.windowed_position is not None:
+                        self.position = self.windowed_position
+                    else:
+                        self.center_on_screen()
 
-                self.center_on_screen()
                 object.__setattr__(self, name, value)
                 return
             except:
