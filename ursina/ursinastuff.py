@@ -147,8 +147,8 @@ def _vec3_to_string(vec3):
 
 def invoke(function, *args, **kwargs):
     if 'delay' in kwargs and kwargs['delay'] <= 0:
-        print('invoke delay is <= 0')
-        function(*args)
+        # print('invoke delay is <= 0')
+        function(*args, **kwargs)
         return function
 
     s = Sequence()
