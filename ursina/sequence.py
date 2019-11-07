@@ -14,6 +14,8 @@ class Func():
         self.func = func
         self.args = args
         self.kwargs = kwargs
+        self.delay = 0
+        self.finished = False
 
 
 class Sequence():
@@ -49,7 +51,8 @@ class Sequence():
                 self.duration += arg
 
             elif isinstance(arg, Func):
-                self.funcs.append([arg.func, arg.args, arg.kwargs, self.duration, False])
+                arg.delay = self.duration
+                self.funcs.append(arg)
 
 
     def append(self, arg):
@@ -61,12 +64,13 @@ class Sequence():
             self.duration += arg
 
         elif isinstance(arg, Func):
-            self.funcs.append([arg.func, arg.args, arg.kwargs, self.duration, False])
+            arg.delay = self.duration
+            self.funcs.append(arg)
 
 
     def start(self):
         for f in self.funcs:
-            f[4] = False
+            f.finished = False
 
         self.t = 0
         self.paused = False
@@ -97,21 +101,19 @@ class Sequence():
             self.t += self.time_step * application.time_scale
 
         for f in self.funcs:
-            func, args, kwargs, when, finished = f
-            if not finished and when <= self.t:
-                # print('run:', f[0], 'after:', self.t)
-                func(*args, **kwargs)
-                f[4] = True
+            if not f.finished and f.delay <= self.t:
+                f.func(*f.args, **f.kwargs)
+                f.finished = True
 
 
         if self.t >= self.duration:
             if self.loop:
                 for f in self.funcs:
-                    f[4] = False # set has run to False again
+                    f.finished = False
 
                 self.t = 0
                 return
-            # print('finish')
+
             if self.auto_destroy and self in application.sequences:
                 application.sequences.remove(self)
                 del self
