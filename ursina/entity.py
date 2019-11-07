@@ -21,10 +21,10 @@ from panda3d.core import CullFaceAttrib
 from ursina import application
 from ursina.collider import *
 from ursina.mesh import Mesh
-from os import path
 from ursina.sequence import Sequence, Func, Wait
 from ursina.ursinamath import lerp
 from ursina import curve
+from ursina.curve import CubicBezier
 from ursina.useful import *
 from ursina.mesh_importer import load_model
 from ursina.texture_importer import load_texture
@@ -275,13 +275,13 @@ class Entity(NodePath):
 
 
         if name == 'collider':
-            # destroy excisting collider
-            if hasattr(self, 'collider') and self.collider:
+            # destroy existing collider
+            collider = None
+            if hasattr(self, 'collider') and self.collider is not None:
                 self.collider.remove()
 
             if value == None or isinstance(value, Collider):
                 self.collision = not value == None
-                object.__setattr__(self, name, value)
 
             elif value == 'box':
                 if self.model:
@@ -294,23 +294,18 @@ class Entity(NodePath):
                     collider = BoxCollider(entity=self)
 
                 self.collision = True
-                object.__setattr__(self, name, collider)
-                return
 
             elif value == 'sphere':
                 collider = SphereCollider(entity=self)
                 self.collision = True
                 object.__setattr__(self, name, collider)
-                return
 
             elif value == 'mesh' and self.model:
                 collider = MeshCollider(entity=self, center=-self.origin)
                 self.collision = True
-                object.__setattr__(self, name, collider)
-                return
 
-            else:
-                print('collider error:', value, 'is not a collider')
+            object.__setattr__(self, name, collider)
+            return
 
         if name == 'collision' and hasattr(self, 'collider') and self.collider:
             if value:
@@ -939,6 +934,9 @@ class Entity(NodePath):
 
         for i in range(resolution+1):
             t = i / resolution
+            # if isinstance(curve, CubicBezier):
+            #     t = curve.calculate(t)
+            # else:
             t = curve(t)
 
             sequence.append(Wait(duration / resolution))
@@ -1066,7 +1064,8 @@ if __name__ == '__main__':
             #     resolution=10,
             #     curve=curve.linear
             #     )
-            camera.overlay.blink(color.black, 1)
+            # camera.overlay.blink(color.black, 1)
+            e.animate('x', -3, curve=CubicBezier(0,.7,1,.3))
 
 
     print(time.time() - t)
