@@ -1,7 +1,8 @@
 # ursina    ʕ •ᴥ•ʔゝ□
 An easy to use game engine/framework for python.  
 
-
+![Banner](/docs/made_with_ursina.jpg)
+docs/made_with_ursina.jpg
 
 ## Getting Started
 1) Install Python 3.6 or newer
