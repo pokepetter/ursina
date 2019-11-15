@@ -41,13 +41,13 @@ class Text(Entity):
         self.use_tags = True
         self.start_tag = start_tag
         self.end_tag = end_tag
-        self.text_colors = {f'default' : color.text_color}
+        self.text_colors = {'default' : color.text_color}
 
         for color_name in color.color_names:
             self.text_colors[color_name] = color.colors[color_name]
 
         self.tag = Text.start_tag+'default'+Text.end_tag
-        self.color_tag = self.text_colors['default']
+        self.current_color = self.text_colors['default']
         self.scale_override = 1
         self._background = None
 
@@ -149,28 +149,13 @@ class Text(Entity):
         try:
             self.text_node.setFont(self._font)
         except:
-            print('default font')
             pass    # default font
 
-        # tags
-        if not tag:
-            tag = self.tag
 
         if tag != '<>':
             tag = tag[1:-1]
 
-            if tag in self.text_colors:
-                # lightness = color.to_hsv(self.color_tag)[2]
-                self.color_tag = self.text_colors[tag]
-                # if not tag == 'default':
-                #     if lightness > .8:
-                #         self.color_tag = color.tint(self.color_tag, .2)
-                #     else:
-                #         self.color_tag = color.tint(self.color_tag, -.3)
-
-                self.text_node.setTextColor(self.color_tag)
-
-            elif tag.startswith('hsb('):   # set color based on numbers
+            if tag.startswith('hsb('):   # set color based on numbers
                 tag = tag[4:-1]
                 hsb_values = (float(e.strip()) for e in tag.split(','))
                 self.text_node.setTextColor(color.color(*hsb_values))
@@ -190,7 +175,7 @@ class Text(Entity):
                     name='inline_image',
                     model='quad',
                     texture=texture_name,
-                    color=self.color_tag,
+                    color=self.current_color,
                     scale=1,
                     # position=(x*self.size*self.scale_override, y*self.size*self.line_height),
                     origin=(0, -.3),
@@ -200,9 +185,15 @@ class Text(Entity):
                     destroy(image)
                 else:
                     self.images.append(image)
+                    # self.text_node.remove_node()
+                    # self.text_node = image
+            else:
+                if tag in self.text_colors:
+                    self.current_color = self.text_colors[tag]
 
         self.text_node_path.setScale(self.scale_override * self.size)
         self.text_node.setText(text)
+        self.text_node.setTextColor(self.current_color)
         self.text_node.setPreserveTrailingWhitespace(True)
         self.text_node_path.setPos(
             x * self.size * self.scale_override,
@@ -423,7 +414,7 @@ if __name__ == '__main__':
     app = Ursina()
     # Text.size = .001
     descr = dedent('''
-        <orange>Rainstorm
+        <orange>Rainstorm<default>
         Summon a <azure>rain storm <default>to deal 5 <azure>water
 
         damage <default>to <hsb(0,1,.7)>everyone, <default><image:brick> <image:brick> test <default>including <orange>yourself. <default>
@@ -431,6 +422,7 @@ if __name__ == '__main__':
 
     # Text.default_font = 'VeraMono.ttf'
     # Text.default_font = 'consola.ttf'
+    # color.text_color = color.lime
     Text.default_resolution = 1080 * Text.size
     test = Text(text=descr)
     # test = Text(descr)
