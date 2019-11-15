@@ -281,7 +281,7 @@ class Entity(NodePath):
                 self.collider.remove()
 
             if value == None or isinstance(value, Collider):
-                self.collision = not value == None
+                object.__setattr__(self, 'collision', False)
 
             elif value == 'box':
                 if self.model:
@@ -293,16 +293,15 @@ class Entity(NodePath):
                 else:
                     collider = BoxCollider(entity=self)
 
-                self.collision = True
+                object.__setattr__(self, 'collision', True)
 
             elif value == 'sphere':
                 collider = SphereCollider(entity=self)
-                self.collision = True
-                object.__setattr__(self, name, collider)
+                object.__setattr__(self, 'collision', True)
 
             elif value == 'mesh' and self.model:
                 collider = MeshCollider(entity=self, center=-self.origin)
-                self.collision = True
+                object.__setattr__(self, 'collision', True)
 
             object.__setattr__(self, name, collider)
             return
