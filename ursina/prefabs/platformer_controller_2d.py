@@ -11,11 +11,17 @@ class PlatformerController2d(Entity):
         self.color = color.orange
         self.collider = 'box'
 
-        self.graphics = Entity(parent=self)
-        self.idle_animation = None
-        self.walk_animation = None
+        self.animator = Animator({'idle' : None, 'walk' : None, 'jump' : None})
+        # self.animation_state_machine.state = 'jump'
+        # self.idle_animation = None
+        # self.walk_animation = None
+        # self.jump_animation = None
+        # self.idle_animation = Entity(parent=self, model='cube', color=color.gray, origin_y=-.5, scale_z=2)
+        # self.walk_animation = Animation(parent=self, texture='ursina_wink', color=color.red, origin_y=-.5, scale=(2,2), double_sided=True)
+        # self.model = None
 
         self.walk_speed = 8
+        self.walking = False
         self.jump_height = 4
         self.jump_duration = .5
         self.jumping = False
@@ -35,13 +41,24 @@ class PlatformerController2d(Entity):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-        # self.test = Entity(model='cube', scale=.2, color=color.red)
+        self._original_scale_x = self.scale_x
+
 
     def update(self):
         if raycast(self.position+Vec3(0,.05,0), self.right, .5, ignore=(self, ), debug=True).hit == False:
             self.x += held_keys['d'] * time.dt * self.walk_speed
-        if raycast(self.position+Vec3(0,.05,0), self.left, .5, ignore=(self, ), debug=True).hit == False:
             self.x -= held_keys['a'] * time.dt * self.walk_speed
+
+        self.walking = held_keys['a'] + held_keys['d'] > 0 and self.grounded
+
+        # animations
+        if not self.grounded:
+            self.animator.state = 'jump'
+        else:
+            if self.walking:
+                self.animator.state = 'walk'
+            else:
+                self.animator.state = 'idle'
 
         ray = boxcast(self.world_position+(0,.05,0), self.down, ignore=(self, ), thickness=.9)
 
@@ -60,9 +77,16 @@ class PlatformerController2d(Entity):
             self.air_time += time.dt*7
 
 
+
     def input(self, key):
         if key == 'space':
             self.jump()
+
+        if key == 'd':
+            self.scale_x = self._original_scale_x
+        if key == 'a':
+            self.scale_x = -self._original_scale_x
+
 
     def jump(self):
         if not self.grounded:
@@ -95,7 +119,7 @@ class PlatformerController2d(Entity):
         self.jumping = False
 
     def land(self):
-        print('land')
+        # print('land')
         self.air_time = 0
         self.jumps_left = self.max_jumps
         self.grounded = True
