@@ -10,7 +10,7 @@ class Tooltip(Text):
         self.wordwrap = 40
         self.origin = (-.5, -.5)
         self.margin = (2, 2)
-        self.background_color = color.color(0,0,0,.9)
+        self.background_color = color.inverse(color.text_color)
         self.enabled = False
 
         for key, value in kwargs.items():
