@@ -43,6 +43,7 @@ from ursina.scripts.smooth_follow import SmoothFollow
 from ursina.scripts.position_limiter import PositionLimiter
 from ursina.scripts.grid_layout import grid_layout
 from ursina.scripts.scrollable import Scrollable
+from ursina.scripts.colorize import get_world_normals
 
 from ursina.prefabs.tooltip import Tooltip
 from ursina.prefabs.text_field import TextField

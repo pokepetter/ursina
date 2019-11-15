@@ -151,8 +151,8 @@ class Mesh(NodePath):
         return self.normals
 
 
-    def colorize(self, left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white, smooth=True):
-        colorize(self, left, right, down, up, back, forward, smooth)
+    def colorize(self, left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white, smooth=True, world_space=True):
+        colorize(self, left, right, down, up, back, forward, smooth, world_space)
 
 
     def project_uvs(self, aspect_ratio=1, direction='forward'):

@@ -12,7 +12,7 @@ class Plane(Mesh):
 
         for z in range(h+1):
             for x in range(w+1):
-                self.vertices.append(Vec3(x/w, 0, z/h))
+                self.vertices.append(Vec3((x/w)-.5, 0, (z/h)-.5))
                 self.uvs.append((x/w, z/h))
 
                 if x > 0 and z > 0:
@@ -31,4 +31,5 @@ if __name__ == '__main__':
     # front =  Entity(model=Plane(subdivisions=(3,6), mode='point', thickness=5), texture='brick')
 
     _ed = EditorCamera()
+    Entity(model='cube', color=color.green, scale=.05)
     app.run()
