@@ -20,9 +20,8 @@ def load_model(name, path=application.asset_folder):
                     print('invalid ursinamesh file:', filename)
 
             if filetype == '.obj':
-                print('------found obj', filename)
+                print('found obj', filename)
                 m = obj_to_ursinamesh(path=path, name=name, save_to_file=False)
-                # print(m)
                 m = eval(m)
                 return m
 
@@ -91,6 +90,8 @@ def obj_to_ursinamesh(
 
         uv_indices = list()
         uvs = list()
+        norm_indices = list()
+        norms = list()
 
         # parse the obj file to a Mesh
         for l in lines:
@@ -98,6 +99,10 @@ def obj_to_ursinamesh(
                 vert = [float(v) for v in l[2:].strip().split(' ')]
                 vert[0] = -vert[0]
                 verts.append(tuple(vert))
+
+            elif l.startswith('vn '):
+                n = l[3:].strip().split(' ')
+                norms.append(tuple([float(e) for e in n]))
 
             elif l.startswith('vt '):
                 uv = l[3:].strip()
@@ -107,6 +112,7 @@ def obj_to_ursinamesh(
             elif l.startswith('f '):
                 l = l[2:]
                 l = l.split(' ')
+
 
                 tri = tuple([int(t.split('/')[0]) for t in l])
                 for t in tri:
@@ -119,6 +125,12 @@ def obj_to_ursinamesh(
                 except: # if no uvs
                     pass
 
+                try:
+                    n = tuple([int(t.split('/')[2]) for t in l])
+                    for t in n:
+                        norm_indices.append(t-1)
+                except: # if no normals
+                    pass
 
         meshstring += '\nvertices='
         meshstring += str(tuple([verts[t] for t in tris]))
@@ -126,6 +138,10 @@ def obj_to_ursinamesh(
         if uv_indices:
             meshstring += ', \nuvs='
             meshstring += str(tuple([uvs[uid] for uid in uv_indices]))
+
+        if norm_indices:
+            meshstring += ', \nnormals='
+            meshstring += str(tuple([norms[nid] for nid in norm_indices]))
 
         meshstring += ''', \nmode='triangle')'''
 
