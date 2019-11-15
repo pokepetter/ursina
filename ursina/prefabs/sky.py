@@ -15,10 +15,11 @@ class Sky(Entity):
             setattr(self, key, value)
 
 
-        def update(self):
-            self.world_position = camera.world_position
+    def update(self):
+        self.world_position = camera.world_position
 
 if __name__  == '__main__':
     app = Ursina()
     Sky()
+    EditorCamera()
     app.run()
