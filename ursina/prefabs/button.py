@@ -11,8 +11,9 @@ class Button(Entity):
         super().__init__()
         self.name = 'button'
         self.parent = scene.ui
-        self.is_editor = False
         self.collider = 'box'
+        self.disabled = False
+        self._on_click = None
 
         for key, value in kwargs.items():   # set the scale before model for correct corners
             if key in ('scale', 'scale_x', 'scale_y', 'scale_z',
@@ -27,7 +28,6 @@ class Button(Entity):
         self.text_entity = None
         if text:
             self.text = text
-        self.disabled = False
 
         if 'color' in kwargs:
             setattr(self, 'color', kwargs['color'])
@@ -102,8 +102,8 @@ class Button(Entity):
                 return e
 
 
-        if name == 'on_click' and isinstance(value, str):
-            object.__setattr__(self, 'on_click_string', textwrap.dedent(value))
+        if name == 'on_click':
+            self._on_click = value
             return
 
         if name == 'eternal':
@@ -165,8 +165,20 @@ class Button(Entity):
         if self.disabled:
             return
 
-        if hasattr(self, 'on_click_string'):
-            exec(self.on_click_string)
+        action = self._on_click
+        if callable(action):
+            action()
+
+        elif isinstance(action, Func):
+            action.func(*action.args, **action.kwargs)
+            action.finished = True
+
+        elif isinstance(action, Sequence):
+            action.start()
+
+        elif isinstance(action, str):
+            exec(textwrap.dedent(action))
+
 
     def fit(self):
         if not self.text_entity.text or self.text_entity.text == '':
@@ -188,8 +200,8 @@ if __name__ == '__main__':
     app = Ursina()
 
     # e = Entity(parent=camera.ui, scale=.1)
-    b = Button(text='hello world!', color=color.azure, scale=.5)
-    print('-----------------', b.eternal)
+    b = Button(text='hello world!', color=color.azure, origin=(-.5,0))
+    # print('-----------------', b.eternal)
     # b.fit()
     b.on_click = application.quit
     b.tooltip = Tooltip('exit')
