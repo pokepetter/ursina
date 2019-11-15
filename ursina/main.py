@@ -120,8 +120,8 @@ class Ursina(ShowBase):
                         script.update()
 
 
-
         return Task.cont
+
 
     def input_up(self, key):
         if key in  ('wheel_up', 'wheel_down'):
@@ -162,8 +162,9 @@ class Ursina(ShowBase):
             try: __main__.input(key)
             except: pass
 
+
         for entity in scene.entities:
-            if entity.enabled == False or entity.ignore:
+            if entity.enabled == False or entity.ignore or entity.ignore_input:
                 continue
             if application.paused and entity.ignore_paused == False:
                 continue
@@ -175,6 +176,7 @@ class Ursina(ShowBase):
                 for script in entity.scripts:
                     if script.enabled and hasattr(script, 'input'):
                             script.input(key)
+
 
         if key == 'f11':
             window.fullscreen = not window.fullscreen

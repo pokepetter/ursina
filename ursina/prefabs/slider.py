@@ -12,13 +12,15 @@ class Slider(Entity):
         self.step = 0
 
         self.label = Text(parent=self, origin=(0.5, 0), x=-0.025, text=text)
+        bg_color = color.black66
         self.bg = Button(
             parent = self,
             model = Quad(scale=(.525, height), radius=Text.size/2, segments=3),
             origin_x = -0.25,
             pressed_scale = 1,
-            highlight_color = Button.color,
-            pressed_color = Button.color,
+            color = bg_color,
+            highlight_color = bg_color,
+            pressed_color = bg_color,
             )
 
 
@@ -63,7 +65,7 @@ class Slider(Entity):
             self.label.origin = (0,0)
             self.knob.lock_x = True
             self.knob.text_entity.rotation_z = 90
-            self.knob.text_entity.y = -2
+            self.knob.text_entity.position = (.015,0)
         else:
             self.knob.lock_y = True
             self.knob.text_entity.y = height/2
@@ -81,6 +83,7 @@ class Slider(Entity):
     def value(self, value):
         self.knob.x = value / (self.max - self.min) / 2
         self._prev_value = self.knob.x / self.bg.scale_x
+        self.slide()
 
     @property
     def step(self):
@@ -93,15 +96,19 @@ class Slider(Entity):
 
     def update(self):
         if self.knob.dragging:
-            t = self.knob.x / .5
-            self.knob.text_entity.text = round(lerp(self.min, self.max, t), 2)
+            self.slide()
 
-            if isinstance(self.step, int) or self.step.is_integer():
-                self.knob.text_entity.text = str(self.value)
+    def slide(self):
+        t = self.knob.x / .5
+        self.knob.text_entity.text = round(lerp(self.min, self.max, t), 2)
 
-            if self.dynamic and hasattr(self, 'on_value_changed') and self._prev_value != t:
-                self.on_value_changed()
-                self._prev_value = t
+        if isinstance(self.step, int) or self.step.is_integer():
+            self.knob.text_entity.text = str(self.value)
+
+        if self.dynamic and hasattr(self, 'on_value_changed') and self._prev_value != t:
+            self.on_value_changed()
+            self._prev_value = t
+
 
     def __setattr__(self, name, value):
         if name == 'eternal':
@@ -117,12 +124,26 @@ class Slider(Entity):
             return e
 
 
+class ThinSlider(Slider):
+    def __init__(self, *args, **kwargs):
+        kwargs['height'] = Text.size
+        super().__init__(*args, **kwargs)
+        self.bg.model = Quad(scale=(.525, Text.size/10), radius=Text.size/10, segments=3)
+        self.bg.origin_x = -0.25
+        self.bg.color = color.text_color
+        self.bg.highlight_color = color.text_color
+        self.knob.color = lerp(color.text_color, color.inverse(color.text_color), .1)
+        self.label.color = color.text_color
+
+
 if __name__ == '__main__':
     app = Ursina()
+    color.text_color = color.dark_text
     origin = Entity(model='cube', color=color.green, scale = .05)
     box = Entity(model='cube', origin_y=-.5, scale=1, color=color.orange)
-    slider = Slider(0, 12, default=1, height=Text.size*3, y=-.4, step=.1, vertical=False)
-
+    slider = Slider(0, 255, default=1, height=Text.size*3, y=-.4, step=1, vertical=False)
+    thin_slider = ThinSlider(0, 255, default=1, text='thin_slider', height=Text.size*3, y=-.4, step=1, vertical=False, x=-.7)
+    Text('debug text')
     def scale_box():
         box.scale_y = slider.value
 

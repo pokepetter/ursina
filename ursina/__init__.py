@@ -49,7 +49,7 @@ from ursina.prefabs.tooltip import Tooltip
 from ursina.prefabs.text_field import TextField
 from ursina.prefabs.input_field import InputField
 from ursina.prefabs.draggable import Draggable
-from ursina.prefabs.slider import Slider
+from ursina.prefabs.slider import Slider, ThinSlider
 from ursina.prefabs.button_group import ButtonGroup
 from ursina.prefabs.window_panel import WindowPanel, Space
 from ursina.prefabs.file_browser import FileBrowser
