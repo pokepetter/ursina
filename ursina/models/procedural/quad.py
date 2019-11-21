@@ -52,7 +52,7 @@ class Quad(Mesh):
 
 
         # make the line connect back to start
-        if mode == 'lines':
+        if mode == 'line':
             self.vertices.append(self.vertices[0])
 
         for key, value in kwargs.items():

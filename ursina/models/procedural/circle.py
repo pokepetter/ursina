@@ -12,6 +12,9 @@ class Circle(Mesh):
             origin.rotation_z -= 360 / resolution
             verts.append(point.world_position)
 
+        if mode == 'line':  # add the first point to make the circle whole
+            verts.append(verts[0])
+
         destroy(origin)
         super().__init__(vertices=verts, mode=mode, **kwargs)
 

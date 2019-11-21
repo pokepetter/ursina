@@ -17,7 +17,7 @@ def normalize_v3(arr):
 def generate_normals(vertices, triangles=None, smooth=True):
 
 
-    if triangles == None:
+    if not triangles:
         # print('generated triangles:', triangles)
         new_tris = [(i, i+1, i+2) for i in range(0, len(vertices), 3)]
     else:

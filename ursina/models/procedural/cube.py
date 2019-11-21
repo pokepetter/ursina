@@ -15,7 +15,7 @@ def Cube(bevel=0, subdivisions=(1,1,1), mode='triangle', **kwargs):
             (3,2,6,7), (4,5,1,0),   # up, down
             (1,5,6,2), (4,0,3,7)    # right, left
             )
-        cube = Mesh(verts, tris, mode, **kwargs)
+        cube = Mesh(verts, tris, mode=mode, **kwargs)
 
     else:
         w,h,d = subdivisions
@@ -29,6 +29,8 @@ def Cube(bevel=0, subdivisions=(1,1,1), mode='triangle', **kwargs):
         left =   Entity(parent=e, model=Plane((d,h)), x=-.5, rotation_z=-90)
 
         cube = e.combine()
+        cube.mode = mode
+        cube.generate()
         destroy(e)
 
     return cube
@@ -37,7 +39,8 @@ def Cube(bevel=0, subdivisions=(1,1,1), mode='triangle', **kwargs):
 if __name__ == '__main__':
     app = Ursina()
 
-    e = Entity(model=Cube(subdivisions=(3,3,3)))
+    e = Entity(model=Cube(subdivisions=(3,3,3), mode='line'), color=color.red)
+    e = Entity(model=Cube(subdivisions=(1,1,1), mode='line'), color=color.green, x=2)
 
     _ed = EditorCamera(rotation_speed = 200, panning_speed=200)
     app.run()

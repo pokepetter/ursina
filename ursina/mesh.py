@@ -2,6 +2,7 @@ from panda3d.core import MeshDrawer, NodePath
 from panda3d.core import GeomVertexData, GeomVertexFormat, Geom, GeomVertexWriter, GeomNode
 from panda3d.core import GeomTriangles, GeomTristrips, GeomTrifans
 from panda3d.core import GeomLines, GeomLinestrips, GeomPoints
+from panda3d.core import Vec3
 from ursina.scripts.generate_normals import generate_normals
 from ursina.scripts.project_uvs import project_uvs
 from ursina.scripts.colorize import colorize
@@ -15,13 +16,18 @@ class Mesh(NodePath):
         super().__init__('mesh')
 
         self.vertices = vertices
-        self._triangles = triangles
+        self.triangles = triangles
         self.colors = colors
         self.uvs = uvs
         self.normals = normals
         self.static = static
         self.mode = mode
         self.thickness = thickness
+
+        for var in (('vertices', vertices), ('triangles', triangles), ('colors', colors), ('uvs', uvs), ('normals', normals)):
+            name, value = var
+            if value is None:
+                setattr(self, name, list())
 
         if self.vertices:
             self.vertices = [tuple(v) for v in self.vertices]
@@ -120,10 +126,30 @@ class Mesh(NodePath):
         self.geomNode.addGeom(geom)
         self.attachNewNode(self.geomNode)
 
-        if self.normals:
-            self.normals = [tuple(e) for e in self.normals]
-        self.recipe = f'Mesh({self.vertices}, {self._triangles}, {self.colors}, {self.uvs}, {self.normals}, {self.static}, "{self.mode}", {self.thickness})'
+        # if self.normals:
+        #     self.normals = [tuple(e) for e in self.normals]
+        self.recipe = f'''Mesh(
+            vertices={[tuple(e) for e in self.vertices]},
+            triangles={self._triangles},
+            colors={[tuple(e) for e in self.colors]},
+            uvs={self.uvs},
+            normals={[tuple(e) for e in self.normals]},
+            static={self.static},
+            mode="{self.mode}",
+            thickness={self.thickness})
+            '''
         # print('finished')
+
+    def __add__(self, other):
+        self.vertices += other.vertices
+        self.triangles += other.triangles
+        if other.colors:
+            self.colors += other.colors
+        else:
+            self.colors += (color.white, ) * len(other.vertices)
+
+        self.normals += other.normals
+        self.uvs += other.uvs
 
     @property
     def thickness(self):
@@ -159,9 +185,10 @@ class Mesh(NodePath):
         project_uvs(self, aspect_ratio)
 
 
-    def clear(self):
-        self.vertices, self.triangles, self.colors, self.uvs, self.normal = list(), None, None, None, None
-        self.generate()
+    def clear(self, regenerate=True):
+        self.vertices, self.triangles, self.colors, self.uvs, self.normals = list(), list(), list(), list(), list()
+        if regenerate:
+            self.generate()
 
 
     def save(self, name, path=application.asset_folder, filetype='ursinamesh'):
@@ -176,6 +203,8 @@ class Mesh(NodePath):
         elif filetype == 'obj':
             from ursina.mesh_importer import ursina_mesh_to_obj
             ursina_mesh_to_obj(self, name, path)
+
+
 
 
 

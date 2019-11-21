@@ -27,8 +27,7 @@ class Plane(Mesh):
 if __name__ == '__main__':
     app = Ursina()
 
-    front =  Entity(model=Plane(subdivisions=(3,6)), texture='brick')
-    # front =  Entity(model=Plane(subdivisions=(3,6), mode='point', thickness=5), texture='brick')
+    front =  Entity(model=Plane(subdivisions=(3,6)), texture='brick', rotation_x=-90)
 
     _ed = EditorCamera()
     Entity(model='cube', color=color.green, scale=.05)
