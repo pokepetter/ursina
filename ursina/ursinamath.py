@@ -40,7 +40,7 @@ def distance2d(a, b):
         b = b.position
     except:
         pass
-        
+
     return sqrt((b[0] - a[0])**2 + (b[1] - a[1])**2)
 
 
@@ -56,7 +56,7 @@ def lerp(a, b, t):
         lerped = list()
         for i in range(min(len(a), len(b))):
             lerped.append(lerp(a[i], b[i], t))
-        return lerped
+        return type(a)(*lerped)
     else:
         print(f'''can't lerp types {type(a)} and {type(b)}''')
 
