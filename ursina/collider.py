@@ -97,7 +97,10 @@ if __name__ == '__main__':
     e = Button(parent=scene, model=c, collider='mesh')
     # e.collider = MeshCollider(e)
     # printvar(e.collider.node_path)
-    e.collider.visible = True
+    # e.collider.visible = True
     e.color = color.red
+    def update():
+        print(mouse.hovered_entity)
+
     EditorCamera()
     app.run()

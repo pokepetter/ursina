@@ -139,7 +139,7 @@ class Entity(NodePath):
                         self.model.removeNode()
                     object.__setattr__(self, name, m)
                     if isinstance(m, Mesh):
-                        m.recipe = value # needed when duplicating entity
+                        m.recipe = value
                     # print('loaded model successively')
                 else:
                     print('error loading model:', value)
@@ -273,39 +273,6 @@ class Entity(NodePath):
             self.set_scale(self.scale_x, value, self.scale_y)
 
 
-
-        if name == 'collider':
-            # destroy existing collider
-            collider = None
-            if hasattr(self, 'collider') and self.collider is not None:
-                self.collider.remove()
-
-            if value == None or isinstance(value, Collider):
-                object.__setattr__(self, 'collision', False)
-
-            elif value == 'box':
-                if self.model:
-                    collider = BoxCollider(
-                        entity = self,
-                        center = -self.origin,
-                        size = self.model_bounds
-                        )
-                else:
-                    collider = BoxCollider(entity=self)
-
-                object.__setattr__(self, 'collision', True)
-
-            elif value == 'sphere':
-                collider = SphereCollider(entity=self)
-                object.__setattr__(self, 'collision', True)
-
-            elif value == 'mesh' and self.model:
-                collider = MeshCollider(entity=self, center=-self.origin)
-                object.__setattr__(self, 'collision', True)
-
-            object.__setattr__(self, name, collider)
-            return
-
         if name == 'collision' and hasattr(self, 'collider') and self.collider:
             if value:
                 self.collider.node_path.unstash()
@@ -368,6 +335,39 @@ class Entity(NodePath):
             self.show()
         else:
             self.hide()
+
+
+    @property
+    def collider(self):
+        return self._collider
+
+    @collider.setter
+    def collider(self, value):
+        # destroy existing collider
+        if value and hasattr(self, 'collider') and self._collider:
+            self._collider.remove()
+
+        self._collider = value
+
+        if value == 'box':
+            if self.model:
+                self._collider = BoxCollider(entity=self, center=-self.origin, size=self.model_bounds)
+            else:
+                self._collider = BoxCollider(entity=self)
+
+        elif value == 'sphere':
+            self._collider = SphereCollider(entity=self)
+
+        elif value == 'mesh' and self.model:
+            self._collider = MeshCollider(entity=self, mesh=self.model, center=-self.origin)
+
+        elif isinstance(value, Mesh):
+            self._collider = MeshCollider(entity=self, mesh=value, center=-self.origin)
+
+
+        self.collision = bool(self.collider)
+        return
+
 
     @property
     def origin_x(self):
