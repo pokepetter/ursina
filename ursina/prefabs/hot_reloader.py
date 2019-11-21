@@ -10,28 +10,65 @@ import ast
 def is_valid_python(code):
    try:
        ast.parse(code)
-   except SyntaxError:
-       return False
+   except Exception as e:
+       return False, e
+
    return True
+
+
+def make_code_reload_safe(code):
+    newtext = ''
+    dedent_next = False
+
+    for line in code.split('\n'):
+        if line.strip().endswith('Ursina()') or line.strip().endswith('app.run()') or line.strip().endswith('HotReloader()'):
+            continue
+        if 'eternal=True' in line:
+            continue
+        if line.startswith('''if __name__ == '__main__':'''):
+            dedent_next = True
+            continue
+        if line.strip().startswith('#'):
+            continue
+
+        if dedent_next:
+            newtext += dedent(line) + '\n'
+        else:
+            newtext += line + '\n'
+
+    return newtext
+
 
 
 class HotReloader(Entity):
     def __init__(self, path=__file__, **kwargs):
         super().__init__()
         self.eternal = True
+        self.ignore_paused = True
         self.path = path
 
         for key, value in kwargs.items():
             setattr(self, key, value)
 
         self.path = Path(self.path)
+        # self.text_editor = InGameTextEditor(path=self.path, enabled=False)
+
 
     def input(self, key):
         if held_keys['control'] and key == 'r':
+            # if self.text_editor.enabled:
+            #     self.text_editor.reload()
+            # else:
             self.reload()
 
         if held_keys['control'] and key == 't':
             self.reload_texture()
+
+        # if key == '|':
+        #     if not self.text_editor.enabled:
+        #         invoke(setattr, self.text_editor, 'enabled', not self.text_editor.enabled, delay=.1)
+        #     else:
+        #         self.text_editor.enabled = not self.text_editor.enabled
 
 
     def reload(self, reset_camera=True):
@@ -40,29 +77,12 @@ class HotReloader(Entity):
             return
 
 
-        newtext = ''
         with open(self.path, 'r') as file:
             text = file.read()
-            dedent_next = False
+            text = make_code_reload_safe(text)
 
-            for line in text.split('\n'):
-                # if line.startswith('from ursina'):
-                #     continue
-                if 'Ursina()' in line or 'app.run()' in line or 'HotReloader(' in line:
-                    continue
-                if 'eternal=True' in line:
-                    continue
-                if line.startswith('''if __name__ == '__main__':'''):
-                    dedent_next = True
-                    continue
 
-                if dedent_next:
-                    newtext += dedent(line) + '\n'
-                else:
-                    newtext += line + '\n'
-
-        # print(newtext)
-        if not is_valid_python(newtext):
+        if not is_valid_python(text):
             print('invalid python code')
             return
 
@@ -71,14 +91,14 @@ class HotReloader(Entity):
             camera.position = (0, 0, -20)
 
         t = time.time()
-        try:
-            exec(newtext)
-        except:
-            for l in newtext.split('\n'):
-                try:
-                    exec(l.strip())
-                except:
-                    pass
+        # try:
+        exec(text)
+        # except:
+        #     for l in text.split('\n'):
+        #         try:
+        #             exec(l.strip())
+        #         except:
+        #             pass
         print('reloaded in:', time.time() - t)
 
 
@@ -92,29 +112,113 @@ class HotReloader(Entity):
             e.texture._texture.reload()
 
 
+# class InGameTextEditor(Entity):
+#     def __init__(self, path, **kwargs):
+#         super().__init__(parent=camera.ui, z=-10)
+#         self.file_path = path
+#
+#         self.add_script(Scrollable(min=0, max=10))
+#         self.bg = Entity(parent=self, model='quad', scale_x=camera.aspect_ratio, color=color.color(0,0,0,.9), z=1, collider='box', origin_y=.5, y=.5, scale_y=10, eternal=True)
+#         self.header = Text(parent=self, x=-.5, y=.475, text=self.file_path.name)
+#         self.text_editor = TextField(parent=self, font_size=14, max_lines=50)
+#         self.text_editor.text_entity.text_colors['default'] = color.color(219, .0, .95)
+#         self.text_editor.text_entity.text_colors['class_color'] = color.color(40, .61, .9)
+#         self.text_editor.text_entity.text_colors['kw_color'] = color.color(210, .59, .94)
+#         self.text_editor.text_entity.text_colors['func_color'] = color.color(250, .46, .87)
+#         self.text_editor.text_entity.text_colors['param_clor'] = color.color(30, .71, .92)
+#         self.text_editor.text_entity.text_colors['string_color'] = color.color(90, .48, .86)
+#
+#
+#         self.text_editor.replacements = {
+#
+#             'from ':    f'☾kw_color☽from ☾default☽',
+#             'import ':  f'☾kw_color☽import ☾default☽',
+#             'def ':     f'☾kw_color☽def ☾default☽',
+#             'for ':     f'☾kw_color☽for ☾default☽',
+#             'if ':      f'☾kw_color☽if ☾default☽',
+#             ' in ':     f'☾kw_color☽ in ☾default☽',
+#
+#             'print(':   f'☾func_color☽print☾default☽(',
+#             'range(':   f'☾func_color☽range☾default☽(',
+#             '__init__': f'☾func_color☽__init__☾default☽',
+#             'super':    f'☾func_color☽super☾default☽',
+#
+#             'class ':   f'☾class_color☽class ☾default☽',
+#             'Entity':   f'☾lime☽Entity☾default☽',
+#             'self.':    f'☾class_color☽self☾default☽.',
+#             '(self)':   f'(☾class_color☽self☾default☽)',
+#             'self,':    f'☾class_color☽self☾default☽,',
+#
+#             'highlight_color = ':    f'☾param_clor☽highlight_color☾default☽ = ',
+#
+#             '\',':    f'\',☾default☽',   # end quote
+#             '\':':    f'\':☾default☽',   # end quote
+#             '\')':    f'\')☾default☽',   # end quote
+#             '\'':    f'☾string_color☽\'', # start quote
+#             }
+#
+#         self.eternal = True
+#         self.ignore_paused = True
+#
+#         with self.file_path.open() as f:
+#             self.text_editor.text = f.read()
+#             self.text_editor.render()
+#
+#
+#         for key, value in kwargs.items():
+#             setattr(self, key, value)
+#
+#
+#     def on_enable(self):
+#         application.pause()
+#         self.ignore_input = False
+#
+#
+#     def on_disable(self):
+#         application.resume()
+#         self.ignore_input = True
+#
+#
+#     def input(self, key):
+#         if held_keys['control'] and key == 'enter':
+#             if self.reload():
+#                 if held_keys['shift']:
+#                     self.enabled = False
+#
+#
+#     def reload(self):
+#         cleaned_text = make_code_reload_safe(self.text_editor.text)
+#
+#         try:
+#             scene.clear()
+#             exec(cleaned_text)
+#             print('...............')
+#             print(cleaned_text)
+#             print('...............')
+#             return True
+#         except Exception as e:
+#             # exception = is_valid_python(cleaned_text)
+#             if type(e) == SyntaxError:
+#                 print('Error on line:', e)
+#             else:
+#                 import traceback
+#                 error_message = traceback.format_exc()
+#                 print(error_message)
+#
+#             return False
+#
+
 
 if __name__ == '__main__':
     from ursina import *
     app = Ursina()
-    hotreloader = HotReloader()
-    hotreloader.path = application.asset_folder.parent.parent / 'samples' / 'platformer.py'
+    # hot_reloader = HotReloader()
+    application.hot_reloader.path = application.asset_folder.parent.parent / 'samples' / 'platformer.py'
+    Sky()
 
     '''
     By default you can press Ctrl+R to reload the starting script and Ctrl+T to reimport textures.
     '''
-
-    def input(key):
-        if held_keys['control'] and key == 'r':
-            print('reload textures')
-            reload_texture()
-
-    def reload():
-        print(window.getZOrder())
-        # hotreloader.reload(reset_camera=False)
-        invoke(reload, delay=1)
-
-    reload()
-
 
 
 
