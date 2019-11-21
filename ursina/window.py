@@ -28,19 +28,19 @@ class Window(WindowProperties):
             self.screen_resolution = (get_monitors()[0].width, get_monitors()[0].height)
         except:
             print('using default sceen resolution.', 'OS:', os.name)
-            self.screen_resolution = (1366, 768)
+            self.screen_resolution = Vec2(1366, 768)
 
-        self.fullscreen_size = (self.screen_resolution[0]+1, (self.screen_resolution[0]+1) * .5625)
-        self.windowed_size = (self.fullscreen_size[0] / 1.25, self.fullscreen_size[0] / 1.25 * .5625)
+        self.fullscreen_size = Vec2(self.screen_resolution[0]+1, (self.screen_resolution[0]+1) * .5625)
+        self.windowed_size = Vec2(self.fullscreen_size[0] / 1.25, self.fullscreen_size[0] / 1.25 * .5625)
         self.windowed_position = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode
         self.size = self.windowed_size
 
 
     def late_init(self):
-        self.position = (0,0)
-        self.top = (0, .5)
-        self.bottom = (0, .5)
-        self.center = (0, 0)
+        self.position = Vec2(0,0)
+        self.top = Vec2(0, .5)
+        self.bottom = Vec2(0, .5)
+        self.center = Vec2(0, 0)
 
         self.fullscreen = False
         self.borderless = True
@@ -62,26 +62,26 @@ class Window(WindowProperties):
 
     @property
     def left(self):
-        return (-self.aspect_ratio / 2, 0)
+        return Vec2(-self.aspect_ratio/2, 0)
     @property
     def right(self):
-        return (self.aspect_ratio / 2, 0)
+        return Vec2(self.aspect_ratio/2, 0)
     @property
     def top_left(self):
-        return (-self.aspect_ratio / 2, .5)
+        return Vec2(-self.aspect_ratio/2, .5)
     @property
     def top_right(self):
-        return (self.aspect_ratio / 2, .5)
+        return Vec2(self.aspect_ratio/2, .5)
     @property
     def bottom_left(self):
-        return (-self.aspect_ratio / 2, -.5)
+        return Vec2(-self.aspect_ratio/2, -.5)
     @property
     def bottom_right(self):
-        return (self.aspect_ratio / 2, -.5)
+        return Vec2(self.aspect_ratio/2, -.5)
 
 
     def center_on_screen(self):
-        self.position = (
+        self.position = Vec2(
             int((self.screen_resolution[0] - self.size[0]) / 2),
             int((self.screen_resolution[1] - self.size[1]) / 2)
             )
@@ -182,7 +182,7 @@ class Window(WindowProperties):
             pass
 
         if name == 'position':
-            self.set_origin((value[0], value[1]))
+            self.setOrigin(int(value[0]), int(value[1]))
             application.base.win.request_properties(self)
             object.__setattr__(self, name, value)
 
