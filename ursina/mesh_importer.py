@@ -35,21 +35,21 @@ def load_model(name, path=application.asset_folder):
 
     return None
 
+blender_path = 'blender'
 
-# from glob import glob
-blender_path = ''
-if blender_path == '':
-    # blender_path = r"C:\Program Files\Blender Foundation\Blender\blender.exe"
-    blender_path = r"D:\Program Files (x86)\blender-2.80.0-git.cad1016c20b5-windows64\blender.exe"
-# command = ['locate', 'blender.exe']
-# output = subprocess.Popen(command, stdout=subprocess.PIPE).communicate()[0]
-# output = output.decode()
-# blender_path = output.split('\n')
-# print(blender_path)
-#
+import platform
+if platform.system() == 'Windows':
+    # get blender path by getting default program for '.blend' file extention
+    import shlex
+    import winreg
 
-#
-# print('blender path:', blender_path)
+    class_root = winreg.QueryValue(winreg.HKEY_CLASSES_ROOT, '.blend')
+    with winreg.OpenKey(winreg.HKEY_CLASSES_ROOT, r'{}\shell\open\command'.format(class_root)) as key:
+        command = winreg.QueryValueEx(key, '')[0]
+        blender_path = shlex.split(command)[0]
+
+print('blender_path:', blender_path)
+
 
 def compress_models(path=application.models_folder, outpath=application.compressed_models_folder, name='*'):
 
@@ -61,9 +61,8 @@ def compress_models(path=application.models_folder, outpath=application.compress
     for f in glob.glob(f'{path}/**/{name}.blend'):
         # print(f)
         outfile = outpath / f
-        print('compress______', outfile)
-        subprocess.call(
-            r'''{} {} --background --python {}'''.format(blender_path, str(outfile), export_script_path))
+        print('converting .blend file to .obj:', outfile)
+        subprocess.call(f'''{blender_path} {outfile} --background --python {export_script_path}''')
 
 
 def obj_to_ursinamesh(
@@ -280,8 +279,8 @@ def compress_internal():
 
 
 if __name__ == '__main__':
-    # compress_internal()
-    from ursina import *
-    app = Ursina()
-    e = Entity(model=Cylinder(16))
-    ursina_mesh_to_obj(e.model, name='quad_export_test')
+    compress_internal()
+    # from ursina import *
+    # app = Ursina()
+    # e = Entity(model=Cylinder(16))
+    # ursina_mesh_to_obj(e.model, name='quad_export_test')
