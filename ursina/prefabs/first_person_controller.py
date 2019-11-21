@@ -3,7 +3,7 @@ from ursina import *
 
 class FirstPersonController(Entity):
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         super().__init__()
         self.speed = 5
 
@@ -40,6 +40,10 @@ class FirstPersonController(Entity):
         camera.position = (0,1.5,0)
         camera.fov = 90
         mouse.locked = True
+
+
+        for key, value in kwargs.items():
+            setattr(self, key ,value)
 
 
     def update(self):

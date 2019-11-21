@@ -36,7 +36,7 @@ class Audio(Entity):
                         p = str(f.resolve())
                         p = p[len(str(application.asset_folder.resolve())):]
                         self._clip = loader.loadSfx(p[1:])
-                        print('...loaded audio clip:', f, p)
+                        # print('...loaded audio clip:', f, p)
                         return
                     # except:
                     #     pass

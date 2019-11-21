@@ -1,15 +1,12 @@
 from ursina import *
+from copy import copy, deepcopy
+
 
 def duplicate(entity):
     e = entity.__class__()
 
     if hasattr(entity, 'model') and entity.model:
-        recipe = entity.model.recipe
-
-        if not('(') in recipe:
-            e.model = recipe # loaded mesh
-        else:
-            e.model = eval(recipe) # procedural mesh
+        e.model = copy(entity.model)
 
 
     for name in entity.attributes:
@@ -41,7 +38,9 @@ def duplicate(entity):
 
 if __name__ == '__main__':
     app = Ursina()
-    quad = Entity(model='quad')
+    sprite = Sprite('brick', x=-2, scale=1.5)
+
+    quad = Entity(model='quad', texture='brick', x=-1)
     circle = Entity(model=Circle(6))
     rounded_quad = Entity(model=Quad(subdivisions=3, mode='line'), x=1)
     sphere = Entity(model=Sphere(mode='line'), x=2)
@@ -52,12 +51,12 @@ if __name__ == '__main__':
     mesh = Entity(model=Mesh(vertices=((0,0,0), (0,1,0), (-1,1,0))), x=6)
 
     names = ('quad', 'circle', 'rounded_quad', 'sphere', 'cone', 'prismatoid', 'cylinder', 'mesh')
-    for i, e in enumerate((quad, circle, rounded_quad, sphere, cone, prismatoid, cylinder, mesh)):
-        print(names[i], ':', e.model.recipe)
+    for i, e in enumerate((quad, sprite, circle, cone, prismatoid, cylinder, mesh)):
+        # print(names[i], ':', e.model.recipe)
         print()
         print()
         e2 = duplicate(e)
         e2.y += 1.5
-        
+
     EditorCamera()
     app.run()

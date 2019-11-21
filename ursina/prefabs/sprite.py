@@ -13,7 +13,7 @@ class Sprite(Entity):
             setattr(self, key, value)
 
         if not self.texture:
-            destroy(self)
+            # destroy(self)
             return None
 
         self.scale_y *= self.texture.height / Sprite.ppu

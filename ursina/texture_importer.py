@@ -58,7 +58,7 @@ def compress_textures(name=''):
     if '.' in name:
         file_type = ''
 
-    print('searching for texture:', name + file_type)
+    # print('searching for texture:', name + file_type)
     for f in application.asset_folder.glob('**/' + name + file_type):
         # if f.parent == application.compressed_textures_folder:
         # print('------------------', str(f.resolve()))
@@ -72,7 +72,7 @@ def compress_textures(name=''):
         elif f.suffix == '.png':
             image = Image.open(f)
         # print(max(image.size))
-        print('............', image.mode)
+        # print('............', image.mode)
         if image.mode != 'RGBA' and max(image.size) > 512:
             image.save(
                 application.compressed_textures_folder / (Path(f).stem + '.jpg'),

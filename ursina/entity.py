@@ -556,7 +556,7 @@ class Entity(NodePath):
 
         elif isinstance(value, str):
             texture = load_texture(value)
-            print('loaded texture:', texture)
+            # print('loaded texture:', texture)
 
         if texture.__class__ is MovieTexture:
             self._texture = texture
