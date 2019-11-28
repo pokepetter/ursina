@@ -22,6 +22,7 @@ class PlatformerController2d(Entity):
 
         self.walk_speed = 8
         self.walking = False
+        self.velocity = 0
         self.jump_height = 4
         self.jump_duration = .5
         self.jumping = False
@@ -46,8 +47,7 @@ class PlatformerController2d(Entity):
 
     def update(self):
         if raycast(self.position+Vec3(0,.05,0), self.right, .5, ignore=(self, ), debug=True).hit == False:
-            self.x += held_keys['d'] * time.dt * self.walk_speed
-            self.x -= held_keys['a'] * time.dt * self.walk_speed
+            self.x += self.velocity * time.dt * self.walk_speed
 
         self.walking = held_keys['a'] + held_keys['d'] > 0 and self.grounded
 
@@ -83,9 +83,18 @@ class PlatformerController2d(Entity):
             self.jump()
 
         if key == 'd':
+            self.velocity = 1
             self.scale_x = self._original_scale_x
+        if key == 'd up':
+            self.velocity = -held_keys['a']
+
         if key == 'a':
-            self.scale_x = -self._original_scale_x
+            self.velocity = -1
+        if key == 'a up':
+            self.velocity = held_keys['d']
+
+        if held_keys['d'] or held_keys['a']:
+            self.scale_x = self._original_scale_x * self.velocity
 
 
     def jump(self):

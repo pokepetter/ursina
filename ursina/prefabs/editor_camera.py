@@ -9,7 +9,7 @@ class EditorCamera(Entity):
         self.rotation_speed = 100
         self.pan_speed = (4, 4)
         self.move_speed = 1
-        self.zoom_speed = 20
+        self.zoom_speed = .05
         self.rotate_around_mouse_hit = True
 
         for key, value in kwargs.items():
@@ -30,13 +30,14 @@ class EditorCamera(Entity):
 
 
         elif key == 'scroll up':
+            target_position = Vec3(0,0,0)
             if mouse.hovered_entity and not mouse.hovered_entity.has_ancestor(camera):
-                camera.world_position = lerp(self.position, mouse.hovered_entity.world_position, .05)
-            else:
-                camera.world_position += camera.forward * self.zoom_speed
+                target_position = mouse.hovered_entity.world_position
+
+            camera.world_position = lerp(camera.world_position, target_position, self.zoom_speed)
 
         elif key == 'scroll down':
-            camera.world_position += camera.back * self.zoom_speed
+            camera.world_position += camera.back * self.zoom_speed * 100
 
 
         elif key == 'right mouse down' or key == 'middle mouse down':

@@ -200,7 +200,7 @@ if __name__ == '__main__':
     app = Ursina()
 
     # e = Entity(parent=camera.ui, scale=.1)
-    b = Button(text='hello world!', color=color.azure, origin=(-.5,0))
+    b = Button(text='hello world!', color=color.azure, origin=(0,0))
     # print('-----------------', b.eternal)
     # b.fit()
     b.on_click = application.quit
