@@ -64,6 +64,9 @@ class HotReloader(Entity):
         if held_keys['control'] and key == 't':
             self.reload_texture()
 
+        if held_keys['control'] and key == 'y':
+            self.reload_model()
+
         # if key == '|':
         #     if not self.text_editor.enabled:
         #         invoke(setattr, self.text_editor, 'enabled', not self.text_editor.enabled, delay=.1)
@@ -105,11 +108,32 @@ class HotReloader(Entity):
     def reload_texture(self):
         textured_entities = [e for e in scene.entities if e.texture]
         for e in textured_entities:
-            if e.texture.path.parent.name == 'compressed':
-                print('texture is made from .psd file', e.texture.path.name.split('.')[0] + '.psd')
-                compress_textures(e.texture.path.name.split('.')[0])
+            if e.texture.path.parent.name == application.compressed_textures_folder.name:
+                print('texture is made from .psd file', e.texture.path.stem + '.psd')
+                compress_textures(e.texture.path.stem)
             print('reloaded texture:', e.texture.path)
             e.texture._texture.reload()
+
+
+    def reload_model(self):
+        entities = [e for e in scene.entities if e.model and hasattr(e.model, 'path')]
+        unique_paths = list(set([e.model.path for e in entities]))
+        # ignore internal models
+        unique_paths = [e for e in unique_paths if not str(application.package_folder).lower() in str(e).lower()]
+        print(unique_paths)
+
+        for model_path in unique_paths:
+            if model_path.parent.name == application.compressed_models_folder.name:
+                # print('model is made from .blend file', model_path.stem + '.blend')
+                # print('try compres:', model_path.parent.parent, model_path.stem)
+                compress_models(path=model_path.parent.parent, name=model_path.stem)
+                print(f'compressed {model_path.stem} .blend sucessfully')
+
+        for e in entities:
+            if e.model.path.parent.parent == application.internal_models_folder:
+                continue
+            e.model = load_model(e.model.path.stem)
+            # print('reloaded model:', e.model.path)
 
 
 # class InGameTextEditor(Entity):

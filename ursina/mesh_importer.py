@@ -3,10 +3,12 @@ import glob
 import subprocess
 from ursina.mesh import Mesh
 from ursina import application
-import pathlib
+from pathlib import Path
+
 
 def load_model(name, path=application.asset_folder):
     for filetype in ('.bam', '.ursinamesh', '.obj', '.blend'):
+        # warning: glob is case-insensitive on windows, so m.path will be all lowercase
         for filename in path.glob(f'**/{name}{filetype}'):
             if filetype == '.bam':
                 return loader.loadModel(filename)
@@ -15,6 +17,8 @@ def load_model(name, path=application.asset_folder):
                 try:
                     with open(filename) as f:
                         m = eval(f.read())
+                        m.path = filename
+                        m.name = name
                         return m
                 except:
                     print('invalid ursinamesh file:', filename)
@@ -23,32 +27,50 @@ def load_model(name, path=application.asset_folder):
                 print('found obj', filename)
                 m = obj_to_ursinamesh(path=path, name=name, save_to_file=False)
                 m = eval(m)
+                m.path = filename
+                m.name = name
                 return m
 
             if filetype == '.blend':
                 print('found blend file:', filename)
-                compress_models(path=path, name=name)
-                return load_model(name, path)
+                if compress_models(path=path, name=name):
+                    return load_model(name, path)
     # for f in glob(f'**/{name}.blend'):
     #     print('found blend file')
     #     # compress_models(name=name + '.blend')
 
     return None
 
-blender_path = 'blender'
 
-import platform
-if platform.system() == 'Windows':
-    # get blender path by getting default program for '.blend' file extention
-    import shlex
-    import winreg
+# find blender installations
+if not hasattr(application, 'blender_paths'):
+    application.blender_paths = dict()
 
-    class_root = winreg.QueryValue(winreg.HKEY_CLASSES_ROOT, '.blend')
-    with winreg.OpenKey(winreg.HKEY_CLASSES_ROOT, r'{}\shell\open\command'.format(class_root)) as key:
-        command = winreg.QueryValueEx(key, '')[0]
-        blender_path = shlex.split(command)[0]
+    import platform
+    if platform.system() == 'Windows':
+        # get blender path by getting default program for '.blend' file extention
+        import shlex
+        import winreg
 
-print('blender_path:', blender_path)
+        class_root = winreg.QueryValue(winreg.HKEY_CLASSES_ROOT, '.blend')
+        with winreg.OpenKey(winreg.HKEY_CLASSES_ROOT, r'{}\shell\open\command'.format(class_root)) as key:
+            command = winreg.QueryValueEx(key, '')[0]
+            default_blender = shlex.split(command)[0]
+            default_blender = Path(default_blender)
+            application.blender_paths['default'] = default_blender
+
+            blender_foundation_directory = default_blender.parent.parent
+            blender_installations = blender_foundation_directory.glob('*blender*')
+
+            for p in blender_installations:
+                for folder in p.glob('*/'):
+                    if folder.is_dir():
+                        application.blender_paths[folder.name] = list(p.glob('blender.exe'))[0]
+
+    from pprint import pprint
+    print('blender_paths:')
+    pprint(application.blender_paths)
+
 
 
 def compress_models(path=application.models_folder, outpath=application.compressed_models_folder, name='*'):
@@ -57,12 +79,23 @@ def compress_models(path=application.models_folder, outpath=application.compress
         application.compressed_models_folder.mkdir()
 
     export_script_path = application.internal_scripts_folder / '_blend_export.py'
+    exported = list()
+    for f in glob.glob(f'{path}**/{name}.blend'):
+        with open(f, 'rb') as blend_file:
+            blender_version_number = (blend_file.read(12).decode("utf-8"))[-3:]   # get version from start of .blend file e.g. 'BLENDER-v280'
+            blender_version_number = blender_version_number[0] + '.' + blender_version_number[1:3]
+            print('blender_version:', blender_version_number)
+            if blender_version_number in application.blender_paths:
+                blender = application.blender_paths[blender_version_number]
+            else:
+                blender = application.blender_paths['default']
 
-    for f in glob.glob(f'{path}/**/{name}.blend'):
-        # print(f)
         outfile = outpath / f
-        print('converting .blend file to .obj:', outfile)
-        subprocess.call(f'''{blender_path} {outfile} --background --python {export_script_path}''')
+        print('converting .blend file to .obj:', outfile, 'using:', blender)
+        subprocess.call(f'''{blender} {outfile} --background --python {export_script_path}''')
+        exported.append(f)
+
+    return exported
 
 
 def obj_to_ursinamesh(

@@ -8,6 +8,7 @@ from ursina.scripts.project_uvs import project_uvs
 from ursina.scripts.colorize import colorize
 from ursina import color
 from ursina import application
+from textwrap import dedent
 
 
 class Mesh(NodePath):
@@ -128,16 +129,18 @@ class Mesh(NodePath):
 
         # if self.normals:
         #     self.normals = [tuple(e) for e in self.normals]
-        self.recipe = f'''Mesh(
-            vertices={[tuple(e) for e in self.vertices]},
-            triangles={self._triangles},
-            colors={[tuple(e) for e in self.colors]},
-            uvs={self.uvs},
-            normals={[tuple(e) for e in self.normals]},
-            static={self.static},
-            mode="{self.mode}",
-            thickness={self.thickness})
-            '''
+        self.recipe = dedent(f'''
+            Mesh(
+                vertices={[tuple(e) for e in self.vertices]},
+                triangles={self._triangles},
+                colors={[tuple(e) for e in self.colors]},
+                uvs={self.uvs},
+                normals={[tuple(e) for e in self.normals]},
+                static={self.static},
+                mode="{self.mode}",
+                thickness={self.thickness}
+            )
+        ''')
         # print('finished')
 
     def __add__(self, other):
@@ -226,6 +229,6 @@ if __name__ == '__main__':
 
     lines = Entity(model=Mesh(vertices=verts, triangles=tris, mode='line', thickness=4), color=color.cyan, z=-1)
     points = Entity(model=Mesh(vertices=verts, mode='point', thickness=6), color=color.red, z=-1.01)
-
+    print(e.model.recipe)
     EditorCamera()
     app.run()
