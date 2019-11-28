@@ -8,16 +8,7 @@ paused = False
 time_scale = 1
 sequences = list()
 trace_entity_definition = True # enable to set entity.line_definition
-settings = None     # will import settings.py from asset_folder if there is one
-try:
-    import settings
-    settings = sys.modules['settings']
-    print('\n-------- settings file start --------')
-    with open(settings.__file__) as f:
-        print(f.read())
-        print('-------- settings file end --------\n')
-except:
-    print('no settings.py file found')
+
 
 def pause():
     global paused
