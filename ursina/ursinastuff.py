@@ -146,15 +146,18 @@ def _vec3_to_string(vec3):
 
 
 def invoke(function, *args, **kwargs):
-    if 'delay' in kwargs and kwargs['delay'] <= 0:
-        # print('invoke delay is <= 0')
+    delay = 0
+    if 'delay' in kwargs:
+        delay = kwargs['delay']
+        del kwargs['delay']
+
+    if not delay:
         function(*args, **kwargs)
         return function
 
     s = Sequence()
-    if 'delay' in kwargs:
-        s.append(Wait(kwargs['delay']))
-    s.append(Func(function, *args))
+    s.append(Wait(delay))
+    s.append(Func(function, *args, **kwargs))
     s.start()
     return s
 
@@ -254,7 +257,7 @@ if __name__ == '__main__':
 
     test_func('test')
     invoke(test_func, 'test', delay=.1)
-    invoke(test_func, 'test', 1, 2, delay=.2)
-    invoke(test_func, 'test', x=1, y=2, delay=.3)
+    invoke(test_func, 'test1', 1, 2, delay=.2)
+    invoke(test_func, 'test2', x=1, y=2, delay=.3)
 
     app.run()
