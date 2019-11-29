@@ -60,8 +60,35 @@ if __name__ == '__main__':
     '''
     from ursina import *
     app = Ursina()
-    input_handler.bind('s', 'arrow down')
+    input_handler.bind('s', 'arrow down')   # 's'-key will now be registered as 'arrow down'-key
     # input_handler.rebind('a', 'f')
     def input(key):
         print(key)
+
+    # Is there a gamepad connected?
+    # from panda3d.core import InputDevice
+    # gamepad = None
+    # devices = app.devices.getDevices(InputDevice.DeviceClass.gamepad)
+    # print( app.devices.getDevices)
+    # if devices:
+    #     print('gamepads:', devices)
+    #     app.connect(devices[0])
+
+    # Accept device dis-/connection events
+    # app.accept("connect-device", self.connect)
+    # app.accept("disconnect-device", self.disconnect)
+
+    # base.accept("escape", exit)
+    #
+    # # Accept button events of the first connected gamepad
+    # base.accept("gamepad-back", exit)
+    # base.accept("gamepad-start", exit)
+    # base.accept("gamepad-face_x", self.reset)
+    # base.accept("gamepad-face_a", self.action, extraArgs=["face_a"])
+    # base.accept("gamepad-face_a-up", self.actionUp)
+    # base.accept("gamepad-face_b", self.action, extraArgs=["face_b"])
+    # base.accept("gamepad-face_b-up", self.actionUp)
+    # base.accept("gamepad-face_y", self.action, extraArgs=["face_y"])
+    # base.accept("gamepad-face_y-up", self.actionUp)
+
     app.run()

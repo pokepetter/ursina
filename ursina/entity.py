@@ -677,68 +677,6 @@ class Entity(NodePath):
             self.model_bounds[2] * self.scale_z
             )
 
-    @property
-    def vertex_data(self):
-        if self.model and not self._vert_cache:
-            geomNodeCollection = self.model.findAllMatches('**/+GeomNode')
-            geomNode = geomNodeCollection[0].node()
-            self._vert_cache = geomNode.getGeom(0).getVertexData()
-
-        return self._vert_cache
-
-    @property
-    def vertices(self):
-        return get_vertices(relative_to=self)
-
-    def get_vertices(self, relative_to=None):
-        if relative_to == None:
-            relative_to = self
-
-        vertex_reader = GeomVertexReader(self.vertex_data, 'vertex')
-        vertices = list()
-        temp_entity = Entity(parent=self, ignore=True)
-
-        while not vertex_reader.isAtEnd():
-            v = vertex_reader.getData3f()
-            v = Vec3(v[0], v[2], v[1])
-            temp_entity.position = v
-            vertices.append(temp_entity.get_position(relative_to))
-
-        from ursina import destroy
-        destroy(temp_entity)
-
-        return vertices
-
-    @property
-    def normals(self):
-        vertex_reader = GeomVertexReader(self.vertex_data, 'normal')
-        vertices = list()
-        while not vertex_reader.isAtEnd():
-            v = vertex_reader.getData3f()
-            v = Vec3(v[0], v[2], v[1])
-            vertices.append(v)
-        return vertices
-
-    @property
-    def uvs(self):
-        vertex_reader = GeomVertexReader(self.vertex_data, 'texcoord')
-        vertices = list()
-        while not vertex_reader.isAtEnd():
-            vertices.append([e for e in vertex_reader.getData2f()])
-        return vertices
-
-    @property
-    def vertex_colors(self):
-        try:
-            vcol_reader = GeomVertexReader(self.model.findAllMatches('**/+GeomNode')[0].node().getGeom(0).getVertexData(), 'color')
-            vcols = list()
-            while not vcol_reader.isAtEnd():
-                vcols.append([e for e in vcol_reader.getData4f()])
-            return vcols
-        except:
-            print(f'{self.name}.model has no vertex colors')
-            return None
-
 
     def reparent_to(self, entity):
         if entity is not None:
