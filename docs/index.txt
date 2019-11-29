@@ -41,6 +41,17 @@ Powered by Python
         * revenue cut or subscription fee
 
 
+# size 2, bold
+Useful Features
+# normal, size 1
+
+        * hotreload code/textures/models while in-game
+        * automatic import of .psd and .blend files
+        * play in fullscreen while developing
+        * easy to use mesh class for making procedural geometry
+        * lots of included procedural 3D primitives
+
+
 
 # size 2, bold
 Platforms
@@ -49,8 +60,6 @@ Platforms
         * Windows
         * Mac
         * Linux
-
-    Web support coming soon.
 
 
 # size 2, bold

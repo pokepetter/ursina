@@ -17,7 +17,6 @@
 <a style="color:hsl(50.0, 89%, 28%);" href="#mouse">mouse</a>
 <a style="color:hsl(50.0, 89%, 28%);" href="#raycaster">raycaster</a>
 <a style="color:hsl(50.0, 89%, 28%);" href="#scene">scene</a>
-<a style="color:hsl(50.0, 89%, 28%);" href="#settings">settings</a>
 <a style="color:hsl(50.0, 89%, 28%);" href="#text">text</a>
 <a style="color:hsl(50.0, 89%, 28%);" href="#texture_importer">texture_importer</a>
 <a style="color:hsl(50.0, 89%, 28%);" href="#ursinamath">ursinamath</a>
@@ -31,6 +30,7 @@
 <a style="color:hsl(20.0, 89%, 28%);" href="#SphereCollider">SphereCollider</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#MeshCollider">MeshCollider</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#Color">Color</a>
+<a style="color:hsl(20.0, 89%, 28%);" href="#CubicBezier">CubicBezier</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#Entity">Entity</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#Hit">Hit</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#Ursina">Ursina</a>
@@ -42,8 +42,12 @@
 <a style="color:hsl(20.0, 89%, 28%);" href="#Texture">Texture</a>
 
 <a style="color:hsl(349.0, 89%, 28%);" href="#Animation">Animation</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#Animator">Animator</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Button">Button</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#ButtonGroup">ButtonGroup</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#ButtonList">ButtonList</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#ColorPicker">ColorPicker</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#ColorField">ColorField</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Cursor">Cursor</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#DebugMenu">DebugMenu</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Draggable">Draggable</a>
@@ -64,10 +68,12 @@
 <a style="color:hsl(349.0, 89%, 28%);" href="#RadialMenuButton">RadialMenuButton</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Sky">Sky</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Slider">Slider</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#ThinSlider">ThinSlider</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Sprite">Sprite</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#TextField">TextField</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Tooltip">Tooltip</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#VideoRecorder">VideoRecorder</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#VideoRecorderUI">VideoRecorderUI</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Space">Space</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#WindowPanel">WindowPanel</a>
 
@@ -80,7 +86,6 @@
 <a style="color:hsl(320.0, 89%, 28%);" href="#project_uvs">project_uvs</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#Scrollable">Scrollable</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#SmoothFollow">SmoothFollow</a>
-<a style="color:hsl(320.0, 89%, 28%);" href="#uv_mapper">uv_mapper</a>
 
 <a style="color:hsl(290.0, 89%, 28%);" href="#models">models</a>
 <a style="color:hsl(290.0, 89%, 28%);" href="#textures">textures</a>
@@ -92,6 +97,7 @@
 <a style="color:hsl(290.0, 89%, 28%);" href="#Prismatoid">Prismatoid</a>
 <a style="color:hsl(290.0, 89%, 28%);" href="#Quad">Quad</a>
 <a style="color:hsl(290.0, 89%, 28%);" href="#Sphere">Sphere</a>
+<a style="color:hsl(290.0, 89%, 28%);" href="#Terrain">Terrain</a>
 
 </div>
     <style>
@@ -291,27 +297,51 @@ in_out_elastic(<g>t, magnitude=0.65</g>)
 out_bounce(<g>t</g>)   
 in_bounce(<g>t</g>)   
 in_out_bounce(<g>t</g>)   
+{e}_boomerang(<g>t</g>)   
 
-<div class="example">from ursina import curve
+<div class="example">'''Draws a sheet with every curve and it's name'''
+camera.orthographic = True
+camera.fov = 16
+camera.position = (9, 6)
+window.color=color.black
 
-'''Test all the functions:'''
-for i in dir(curve):
-    item = getattr(curve, i)
-    if callable(item):
-        print(item.__name__, ':', item(.5))
+i = 0
+for e in dir(curve):
+    try:
+        item = getattr(curve, e)
+        print(item.__name__, ':', item(.75))
+        curve_renderer = Entity(model=Mesh(vertices=[Vec3(i/31, item(i/31), 0) for i in range(32)], mode='line', thickness=2), color=color.light_gray)
+        row = math.floor(i/8)
+        curve_renderer.x = (i % 8) * 2.5
+        curve_renderer.y = row * 1.75
+        label = Text(parent=curve_renderer, text=item.__name__, scale=8, color=color.gray, y=-.1)
+        i += 1
+    except:
+        pass
+
+c = CubicBezier(0,.5,1,.5)
+print('-----------', c.calculate(.23))
+
+window.exit_button.visible = False
+window.fps_counter.enabled = False
 
 '''
 These are used by Entity when animating, like this:
 
 e = Entity()
 e.animate_y(1, curve=curve.in_expo)
+
+e2 = Entity(x=1.5)
+e2.animate_y(1, curve=curve.CubicBezier(0,.7,1,.3))
 '''
 </div>
 </pre></div>
 <div id="duplicate"><div id="duplicate" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">duplicate</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
 duplicate(<g>entity</g>)   
 
-<div class="example">quad = Entity(model='quad')
+<div class="example">sprite = Sprite('brick', x=-2, scale=1.5)
+
+quad = Entity(model='quad', texture='brick', x=-1)
 circle = Entity(model=Circle(6))
 rounded_quad = Entity(model=Quad(subdivisions=3, mode='line'), x=1)
 sphere = Entity(model=Sphere(mode='line'), x=2)
@@ -322,8 +352,7 @@ cylinder = Entity(model=Cylinder(), x=5)
 mesh = Entity(model=Mesh(vertices=((0,0,0), (0,1,0), (-1,1,0))), x=6)
 
 names = ('quad', 'circle', 'rounded_quad', 'sphere', 'cone', 'prismatoid', 'cylinder', 'mesh')
-for i, e in enumerate((quad, circle, rounded_quad, sphere, cone, prismatoid, cylinder, mesh)):
-    print(names[i], ':', e.model.recipe)
+for i, e in enumerate((quad, sprite, circle, cone, prismatoid, cylinder, mesh)):
     print()
     print()
     e2 = duplicate(e)
@@ -344,9 +373,9 @@ right_alt<g> = False</g>
 held_keys<g> = defaultdict(lambda: 0)</g> 
 rebinds<g> = dict()</g> 
 
-bind(<g>alternative_key, original_key</g>)   
+bind(<g>original_key, alternative_key</g>)   
 unbind(<g>key</g>)   
-rebind(<g>from_key, to_key</g>)   
+rebind(<g>to_key, from_key</g>)   
 input(<g>key</g>)   
 
 <div class="example">'''
@@ -356,13 +385,12 @@ scroll up, scroll down
 arrow left, arrow right, arrow up, arrow down
 space
 '''
-input_handler.bind('s', 'arrow down')
+input_handler.bind('s', 'arrow down')   # 's'-key will now be registered as 'arrow down'-key
 def input(key):
     print(key)
 </div>
 </pre></div>
-<div id="mesh_importer"><div id="mesh_importer" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">mesh_importer</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">blender_path<g> = ''</g> 
-
+<div id="mesh_importer"><div id="mesh_importer" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">mesh_importer</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
 load_model(<g>name, path=application.asset_folder</g>)   
 compress_models(<g>path=application.models_folder, outpath=application.compressed_models_folder, name='*'</g>)   
 obj_to_ursinamesh()   
@@ -370,8 +398,7 @@ compress_models_fast(<g>model_name=None, write_to_disk=False</g>)
 ursina_mesh_to_obj(<g>mesh, name='', out_path=application.models_folder, max_decimals=3</g>)   
 compress_internal()   
 
-<div class="example">e = Entity(model=Cylinder(16))
-ursina_mesh_to_obj(e.model, name='quad_export_test')
+<div class="example">compress_internal()
 </div>
 </pre></div>
 <div id="mouse"><div id="mouse" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">mouse</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">enabled<g> = False</g> 
@@ -469,29 +496,33 @@ entities<g> = []</g>
 hidden<g> = NodePath('hidden')</g> 
 has_changes<g> = False</g> 
 reflection_map<g> = 'reflection_map_3'</g> 
+fog_color
+fog_density
 
 set_up()   
 clear()   
 
-<div class="example">yolo = Button(name='yolo', text='yolo')
+<div class="example">e = Entity(model='plane', color=color.black, scale=100)
+EditorCamera()
+s = Sky()
 
 def input(key):
     if key == 'd':
         scene.clear()
+
+scene.fog_density = .1          # sets exponential density
+scene.fog_density = (50, 200)   # sets linear densitiy start and end
 </div>
-</pre></div>
-<div id="settings"><div id="settings" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">settings</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">window.fullscreen<g> = True</g> 
-
-
 </pre></div>
 <div id="text"><div id="text" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">text</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
 get_width(<g>string, font=None</g>)   
 
 <div class="example">app = Ursina()
   descr = dedent('''
-      <image:brick> <image:shore> <orange>Rainstorm
+      <orange>Rainstorm<default>
       Summon a <azure>rain storm <default>to deal 5 <azure>water
-      damage <default>to <red>everyone, <default><image:brick> <image:brick> test <default>including <orange>yourself. <default>
+
+      damage <default>to <hsb(0,1,.7)>everyone, <default><image:brick> <image:brick> test <default>including <orange>yourself. <default>
       Lasts for 4 rounds.''').strip()
 
   Text.default_resolution = 1080 * Text.size
@@ -502,6 +533,7 @@ get_width(<g>string, font=None</g>)
           test.appear(speed=.025)
 
   test.create_background()
+
   print('....', Text.get_width('yolo'))
   app.run()
 </div>
@@ -540,6 +572,14 @@ destroy(<g>entity, delay=0</g>)
 import_all_classes(<g>path=application.asset_folder, debug=False</g>)   
 print_on_screen(<g>text</g>)   
 
+<div class="example">def test_func(item, x=None, y=None):
+    print(item, x, y)
+
+test_func('test')
+invoke(test_func, 'test', delay=.1)
+invoke(test_func, 'test1', 1, 2, delay=.2)
+invoke(test_func, 'test2', x=1, y=2, delay=.3)
+</div>
 </pre></div>
 <div id="useful"><div id="useful" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">useful</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
 camel_to_snake(<g>value</g>)   
@@ -556,14 +596,15 @@ printvar('test')
 show_ursina_splash<g> = False</g> 
 title<g> = os.path.basename(os.path.dirname(application.asset_folder))</g> 
 screen_resolution<g> = (get_monitors()[0].width, get_monitors()[0].height)</g> 
-screen_resolution<g> = (1366, 768)</g> 
-fullscreen_size<g> = (self.screen_resolution[0]+1, (self.screen_resolution[0]+1) * .5625)</g> 
-windowed_size<g> = (self.fullscreen_size[0] / 1.25, self.fullscreen_size[0] / 1.25 * .5625)</g> 
+screen_resolution<g> = Vec2(1366, 768)</g> 
+fullscreen_size<g> = Vec2(self.screen_resolution[0]+1, (self.screen_resolution[0]+1) * .5625)</g> 
+windowed_size<g> = Vec2(self.fullscreen_size[0] / 1.25, self.fullscreen_size[0] / 1.25 * .5625)</g> 
+windowed_position<g> = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode</g> 
 size<g> = self.windowed_size</g> 
-position<g> = (0,0)</g> 
-top<g> = (0, .5)</g> 
-bottom<g> = (0, .5)</g> 
-center<g> = (0, 0)</g> 
+position<g> = Vec2(0,0)</g> 
+top<g> = Vec2(0, .5)</g> 
+bottom<g> = Vec2(0, .5)</g> 
+center<g> = Vec2(0, 0)</g> 
 fullscreen<g> = False</g> 
 borderless<g> = True</g> 
 cursor<g> = True</g> 
@@ -636,8 +677,8 @@ remove()
 <div class="example">c = Cylinder(6, height=1, start=-.5)
 c = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
 e = Button(parent=scene, model=c, collider='mesh')
-e.collider.visible = True
 e.color = color.red
+
 EditorCamera()
 </div>
 </pre></div>
@@ -651,8 +692,8 @@ visible<g> = False</g>
 <div class="example">c = Cylinder(6, height=1, start=-.5)
 c = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
 e = Button(parent=scene, model=c, collider='mesh')
-e.collider.visible = True
 e.color = color.red
+
 EditorCamera()
 </div>
 </pre></div>
@@ -666,8 +707,8 @@ visible<g> = False</g>
 <div class="example">c = Cylinder(6, height=1, start=-.5)
 c = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
 e = Button(parent=scene, model=c, collider='mesh')
-e.collider.visible = True
 e.color = color.red
+
 EditorCamera()
 </div>
 </pre></div>
@@ -680,8 +721,8 @@ visible<g> = False</g>
 <div class="example">c = Cylinder(6, height=1, start=-.5)
 c = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
 e = Button(parent=scene, model=c, collider='mesh')
-e.collider.visible = True
 e.color = color.red
+
 EditorCamera()
 </div>
 </pre></div>
@@ -727,15 +768,72 @@ e = Entity(model='cube', color=color.lime)
 print(e.color.name)
 </div>
 </pre></div>
-<div id="Entity"><div id="Entity" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Entity<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Entity(**kwargs)</params>
+<div id="CubicBezier"><div id="CubicBezier" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">CubicBezier<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">CubicBezier(a, b, c, d)</params>
+
+a<g> = a</g> 
+b<g> = b</g> 
+c<g> = c</g> 
+d<g> = d</g> 
+cx<g> = 3.0 * a</g> 
+bx<g> = 3.0 * (c - a) - self.cx</g> 
+ax<g> = 1.0 - self.cx -self.bx</g> 
+cy<g> = 3.0 * b</g> 
+by<g> = 3.0 * (d - b) - self.cy</g> 
+ay<g> = 1.0 - self.cy - self.by</g> 
+
+sample_curve_x(<g>t</g>)   
+sample_curve_y(<g>t</g>)   
+sample_curve_derivative_x(<g>t</g>)   
+calculate(<g>x, epsilon=.0001</g>)   
+solve_curve_x(<g>t, epsilon=.0001</g>)   
+
+<div class="example">'''Draws a sheet with every curve and it's name'''
+camera.orthographic = True
+camera.fov = 16
+camera.position = (9, 6)
+window.color=color.black
+
+i = 0
+for e in dir(curve):
+    try:
+        item = getattr(curve, e)
+        print(item.__name__, ':', item(.75))
+        curve_renderer = Entity(model=Mesh(vertices=[Vec3(i/31, item(i/31), 0) for i in range(32)], mode='line', thickness=2), color=color.light_gray)
+        row = math.floor(i/8)
+        curve_renderer.x = (i % 8) * 2.5
+        curve_renderer.y = row * 1.75
+        label = Text(parent=curve_renderer, text=item.__name__, scale=8, color=color.gray, y=-.1)
+        i += 1
+    except:
+        pass
+
+c = CubicBezier(0,.5,1,.5)
+print('-----------', c.calculate(.23))
+
+window.exit_button.visible = False
+window.fps_counter.enabled = False
+
+'''
+These are used by Entity when animating, like this:
+
+e = Entity()
+e.animate_y(1, curve=curve.in_expo)
+
+e2 = Entity(x=1.5)
+e2.animate_y(1, curve=curve.CubicBezier(0,.7,1,.3))
+'''
+</div>
+</pre></div>
+<div id="Entity"><div id="Entity" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Entity<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Entity(add_to_scene_entities=True, **kwargs)</params>
 
 name<g> = camel_to_snake(self.type)</g> 
 enabled<g> = True</g> 
 visible<g> = True</g> 
-ignore<g> = False</g> 
-parent<g> = scene</g> 
+ignore<g> = False     # if True, will not try to run code</g> 
 eternal<g> = False    # eternal entities does not get destroyed on scene.clear()</g> 
 ignore_paused<g> = False</g> 
+ignore_input<g> = False</g> 
+parent<g> = scene</g> 
 model<g> = None</g> 
 color<g> = color.white</g> 
 texture<g> = None     # tries to set to camel_to_snake(self.type)</g> 
@@ -791,17 +889,11 @@ shader
 alpha
 model_bounds
 bounds
-vertex_data
-vertices
-normals
-uvs
-vertex_colors
 children
 attributes
 
 generate_sphere_map(<g>size=512, name=f'sphere_map_{len(scene.entities)}'</g>)   
 generate_cube_map(<g>size=512, name=f'cube_map_{len(scene.entities)}'</g>)   
-get_vertices(<g>relative_to=None</g>)   
 reparent_to(<g>entity</g>)   
 get_position(<g>relative_to=scene</g>)   
 add_script(<g>name, path=None</g>)   
@@ -811,34 +903,28 @@ flip_faces()
 look_at(<g>target, axis='forward'</g>)   
 get_scripts_of_type(<g>type</g>)   
 has_ancestor(<g>possible_ancestor</g>)   
-animate(<g>name, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True</g>)   
-animate_position(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True</g>)   
-animate_x(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True</g>)   
-animate_y(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True</g>)   
-animate_z(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True</g>)   
-animate_rotation(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True</g>)   
-animate_rotation_x(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True</g>)   
-animate_rotation_y(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True</g>)   
-animate_rotation_z(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True</g>)   
-animate_scale(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True</g>)   
-animate_scale_x(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True</g>)   
-animate_scale_y(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True</g>)   
-animate_scale_z(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True</g>)   
+animate(<g>name, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None</g>)   
+animate_position(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None</g>)   
+animate_rotation(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None</g>)   
+animate_scale(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None</g>)   
+animate_{e}(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None</g>)   
 shake(<g>duration=.2, magnitude=1, speed=.05, direction=(1,1)</g>)   
-animate_color(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True</g>)   
-fade_out(<g>value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True</g>)   
-fade_in(<g>value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True</g>)   
+animate_color(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=False, time_step=None</g>)   
+fade_out(<g>value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=False, time_step=None</g>)   
+fade_in(<g>value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=False, time_step=None</g>)   
+blink(<g>value=color.clear, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=False, time_step=None</g>)   
 
 <div class="example">app = main.Ursina()
 import time
 t = time.time()
 
 EditorCamera()
-p = Entity(model=Cylinder(8), color=color.black)
-e1 = Entity(parent=p, model='cube', color=color.pink)
-e2 = Entity(parent=p, model='cube', color=color.lime, x=2, scale=2, rotation_z=45)
-e3 = Entity(parent=e2, model='cube', color=color.yellow, y=2, scale=.5)
-p.combine()
+e = Entity(model='quad', color=color.orange)
+
+def input(key):
+    if key == 'space':
+        e.animate('x', -3, curve=CubicBezier(0,.7,1,.3))
+
 
 print(time.time() - t)
 </div>
@@ -871,6 +957,7 @@ app.run()
 <div id="Mesh"><div id="Mesh" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Mesh<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Mesh(vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1)</params>
 
 vertices<g> = vertices</g> 
+triangles<g> = triangles</g> 
 colors<g> = colors</g> 
 uvs<g> = uvs</g> 
 normals<g> = normals</g> 
@@ -878,14 +965,13 @@ static<g> = static</g>
 mode<g> = mode</g> 
 thickness<g> = thickness</g> 
 vertices<g> = [tuple(v) for v in self.vertices]</g> 
-triangles
 
 generate()   <g># call this after setting some of the variables to update it</g>
 generate_normals(<g>smooth=True</g>)   
-colorize(<g>left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white, smooth=True</g>)   
+colorize(<g>left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white, smooth=True, world_space=True</g>)   
 project_uvs(<g>aspect_ratio=1, direction='forward'</g>)   
-clear()   
-save(<g>name, path=application.asset_folder</g>)   
+clear(<g>regenerate=True</g>)   
+save(<g>name, path=application.asset_folder, filetype='ursinamesh'</g>)   
 
 <div class="example">verts = ((0,0,0), (1,0,0), (.5, 1, 0), (-.5,1,0))
 tris = (1, 2, 0, 2, 3, 0)
@@ -900,7 +986,7 @@ tris = ((0,1), (3,4,5))
 
 lines = Entity(model=Mesh(vertices=verts, triangles=tris, mode='line', thickness=4), color=color.cyan, z=-1)
 points = Entity(model=Mesh(vertices=verts, mode='point', thickness=6), color=color.red, z=-1.01)
-
+print(e.model.recipe)
 EditorCamera()
 </div>
 </pre></div>
@@ -935,6 +1021,8 @@ def input(key):
 func<g> = func</g> 
 args<g> = args</g> 
 kwargs<g> = kwargs</g> 
+delay<g> = 0</g> 
+finished<g> = False</g> 
 
 
 <div class="example">e = Entity(model='quad')
@@ -962,6 +1050,7 @@ def input(key):
 
 args<g> = list(args)</g> 
 t<g> = 0</g> 
+time_step<g> = Sequence.default_time_step</g> 
 duration<g> = 0</g> 
 funcs<g> = list()</g> 
 paused<g> = True</g> 
@@ -974,6 +1063,7 @@ start()
 pause()   
 resume()   
 finish()   
+kill()   
 update()   
 
 <div class="example">e = Entity(model='quad')
@@ -997,10 +1087,10 @@ def input(key):
         actions[key]()
 </div>
 </pre></div>
-<div id="Text"><div id="Text" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Text<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Text(text='', start_tag=start_tag, end_tag=end_tag, size=size, **kwargs)</params>
+<div id="Text"><div id="Text" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Text<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Text(text='', start_tag=start_tag, end_tag=end_tag, **kwargs)</params>
 
 name<g> = 'text'</g> 
-size<g> = size</g> 
+size<g> = Text.size</g> 
 parent<g> = camera.ui</g> 
 text_nodes<g> = list()</g> 
 images<g> = list()</g> 
@@ -1011,9 +1101,10 @@ line_height<g> = 1</g>
 use_tags<g> = True</g> 
 start_tag<g> = start_tag</g> 
 end_tag<g> = end_tag</g> 
-text_colors<g> = {f'{self.start_tag}default{self.end_tag}' : color.text_color}</g> 
+text_colors<g> = {'default' : color.text_color}</g> 
+text_colors[color_name]<g> = color.colors[color_name]</g> 
 tag<g> = Text.start_tag+'default'+Text.end_tag</g> 
-color_tag<g> = self.text_colors[self.start_tag+'default'+self.end_tag]</g> 
+current_color<g> = self.text_colors['default']</g> 
 scale_override<g> = 1</g> 
 text<g> = text</g> 
 color
@@ -1032,9 +1123,10 @@ get_width(<g>string, font=None</g>)
 
 <div class="example">app = Ursina()
   descr = dedent('''
-      <image:brick> <image:shore> <orange>Rainstorm
+      <orange>Rainstorm<default>
       Summon a <azure>rain storm <default>to deal 5 <azure>water
-      damage <default>to <red>everyone, <default><image:brick> <image:brick> test <default>including <orange>yourself. <default>
+
+      damage <default>to <hsb(0,1,.7)>everyone, <default><image:brick> <image:brick> test <default>including <orange>yourself. <default>
       Lasts for 4 rounds.''').strip()
 
   Text.default_resolution = 1080 * Text.size
@@ -1045,14 +1137,15 @@ get_width(<g>string, font=None</g>)
           test.appear(speed=.025)
 
   test.create_background()
+
   print('....', Text.get_width('yolo'))
   app.run()
 </div>
 </pre></div>
-<div id="Texture"><div id="Texture" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Texture<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Texture(path)</params>
+<div id="Texture"><div id="Texture" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Texture<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Texture(value)</params>
 
+path<g> = Path(value)</g> 
 path<g> = None</g> 
-path<g> = Path(path)</g> 
 filtering<g> = Texture.default_filtering</g> 
 name
 size
@@ -1069,12 +1162,14 @@ save(<g>path</g>)
 <div class="example">'''
     The Texture class rarely used manually but usually instantiated
     when assigning a texture to an Entity
-    texture = Texture(path/PIL.Image/panda3d.core.Texture)
+    texture = Texture(path / PIL.Image / panda3d.core.Texture)
 
     A texture file can be a .png, .jpg or .psd.
     If it's a .psd it and no compressed version exists, it will compress it automatically.
 '''
 e = Entity(model='quad', texture='brick')
+e.texture.set_pixel(0, 2, color.blue)
+e.texture.apply()
 
 for y in range(e.texture.height):
     for x in range(e.texture.width):
@@ -1088,6 +1183,7 @@ frames<g> = list()</g>
 scale<g> = (frame.texture.width/100, frame.texture.height/100)</g> 
 aspect_ratio<g> = self.scale_x / self.scale_y</g> 
 sequence<g> = Sequence(loop=loop)</g> 
+is_playing<g> = autoplay</g> 
 
 play()   
 stop()   
@@ -1095,17 +1191,43 @@ stop()
 <div class="example">animation = Animation('ursina_wink', fps=2, scale=5, filtering=None)
 </div>
 </pre></div>
+<div id="Animator"><div id="Animator" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Animator<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Animator(animations=None, start_state='')</params>
+
+animations<g> = animations    # dict</g> 
+start_state<g> = start_state</g> 
+state<g> = start_state</g> 
+
+
+<div class="example">a = Animator(
+    animations = {
+        'lol' : Entity(model='cube', color=color.red),
+        'yo' : Entity(model='cube', color=color.green, x=1),
+        'help' : Entity(model='cube', color=color.violet, y=1),
+    }
+)
+a.state = 'yo'
+
+Text('press <red>1<default>, <green>2<default> or <violet>3<default> to toggle different animator states', origin=(0,-.5), y=-.4)
+
+def input(key):
+    if key == '1':
+        a.state = 'lol'
+    if key == '2':
+        a.state = 'yo'
+    if key == '3':
+        a.state = 'help'
+</div>
+</pre></div>
 <div id="Button"><div id="Button" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Button<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Button(text='', **kwargs)</params>
 
 name<g> = 'button'</g> 
 parent<g> = scene.ui</g> 
-is_editor<g> = False</g> 
 collider<g> = 'box'</g> 
+disabled<g> = False</g> 
 model<g> = Quad(aspect=self.scale[0] / self.scale[1], subdivisions=4)</g> 
 color<g> = Button.color</g> 
 text_entity<g> = None</g> 
 text<g> = text</g> 
-disabled<g> = False</g> 
 highlight_color<g> = self.color.tint(.2)</g> 
 pressed_color<g> = self.color.tint(-.2)</g> 
 highlight_scale<g> = 1    # multiplier</g> 
@@ -1119,8 +1241,7 @@ on_mouse_exit()
 on_click()   
 fit()   
 
-<div class="example">b = Button(text='hello world!', color=color.azure, scale=.5)
-print('-----------------', b.eternal)
+<div class="example">b = Button(text='hello world!', color=color.azure, origin=(0,0))
 b.on_click = application.quit
 b.tooltip = Tooltip('exit')
 </div>
@@ -1144,6 +1265,64 @@ input(<g>key</g>)
 
 <div class="example">Text.default_font = 'VeraMono.ttf'
 button_group = ButtonGroup(('man', 'woman', 'other'))
+</div>
+</pre></div>
+<div id="ButtonList"><div id="ButtonList" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ButtonList<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ButtonList(button_dict, **kwargs)</params>
+
+buttons<g> = button_dict</g> 
+actions<g> = [*self.buttons.values()]</g> 
+text_entity<g> = Text(parent=self, origin
+        # position=(-.5,.5,-.1)
+        )</g> 
+button_height<g> = self.text_entity.height</g> 
+highlight<g> = Entity(parent=self, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5))</g> 
+
+on_click()   
+update()   
+
+<div class="example">default = Func(print, 'not yet implemented')
+
+def test(a=1, b=2):
+    print('------:', a, b)
+
+button_dict = {
+    'one' :     None,
+    'two' :     default,
+    'tree' :    Func(test, 3, 4),
+    'four' :    Func(test, b=3, a=4),
+    'five':     Sequence(1, Func(print, 'lol'), loop=True),
+}
+for i in range(6, 20):
+    button_dict[f'button {i}'] = Func(print, i)
+
+ButtonList(button_dict)
+</div>
+</pre></div>
+<div id="ColorPicker"><div id="ColorPicker" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ColorPicker<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ColorPicker(**kwargs)</params>
+
+color_field<g> = None</g> 
+enabled<g> = True</g> 
+z<g> = -10</g> 
+bg<g> = Panel(parent=self, origin=(-.4,-.3), scale=(slider.scale_x*.6, 4*.125), color=color.gray)</g> 
+apply_button<g> = Button(parent=self, model=Quad(radius=.5, aspect=.25/.03/1), text='select', color=color.azure,
+        scale=(.235,.03), origin=(-.5,0), x=.02)</g> 
+cancel<g> = Button(parent=self, model=Quad(radius=.5), text='<gray>x', color=color.red,
+        scale=(.03,.03), x=slider.x, on_click=Func(setattr, self, 'enabled', False), highlight_color=color.blue)</g> 
+
+input(<g>key</g>)   
+
+<div class="example">ColorField(text='primary')
+ColorField(y=-Text.size*2.1, text='secondary_color', color=color.orange)
+</div>
+</pre></div>
+<div id="ColorField"><div id="ColorField" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ColorField<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ColorField(text='', **kwargs)</params>
+
+text<g> = text</g> 
+
+on_click()   
+
+<div class="example">ColorField(text='primary')
+ColorField(y=-Text.size*2.1, text='secondary_color', color=color.orange)
 </div>
 </pre></div>
 <div id="Cursor"><div id="Cursor" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Cursor<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Cursor(**kwargs)</params>
@@ -1188,7 +1367,8 @@ update()
 
 <div class="example">camera.orthographic = True
 
-e = Draggable(scale=.1)
+e = Draggable(scale=10)
+e.parent = scene
 </div>
 </pre></div>
 <div id="DropdownMenuButton"><div id="DropdownMenuButton" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">DropdownMenuButton<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">DropdownMenuButton(text='', **kwargs)</params>
@@ -1241,11 +1421,11 @@ update()
 </pre></div>
 <div id="EditorCamera"><div id="EditorCamera" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">EditorCamera<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">EditorCamera(**kwargs)</params>
 
-pivot<g> = Entity(name='pivot', eternal=True, model='cube', color=color.green, scale=(.05,.05,.05))</g> 
 rotation_speed<g> = 100</g> 
 pan_speed<g> = (4, 4)</g> 
-move_speed<g> = 20</g> 
-zoom_speed<g> = 20</g> 
+move_speed<g> = 1</g> 
+zoom_speed<g> = .05</g> 
+rotate_around_mouse_hit<g> = True</g> 
 
 input(<g>key</g>)   
 update()   
@@ -1263,7 +1443,7 @@ ec = EditorCamera(rotation_smoothing=2, rotation_speed=200)
 rotation_info = Text(position=window.top_left)
 
 def update():
-    rotation_info.text = str(int(ec.pivot.rotation_y)) + '\n' + str(int(ec.pivot.rotation_x))
+    rotation_info.text = str(int(ec.rotation_y)) + '\n' + str(int(ec.rotation_x))
 </div>
 </pre></div>
 <div id="ExitButton"><div id="ExitButton" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ExitButton<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ExitButton(**kwargs)</params>
@@ -1344,7 +1524,7 @@ save()
 <div class="example">FileBrowserSave(file_type = '.oto')
 </div>
 </pre></div>
-<div id="FirstPersonController"><div id="FirstPersonController" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FirstPersonController<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">FirstPersonController()</params>
+<div id="FirstPersonController"><div id="FirstPersonController" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FirstPersonController<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">FirstPersonController(**kwargs)</params>
 
 speed<g> = 5</g> 
 i<g> = 0</g> 
@@ -1360,48 +1540,42 @@ position<g> = (0, 1, 1)</g>
 update()   
 
 <div class="example">Sky()
-Plane(scale=100, color=color.yellow.tint(-.2), texture='white_cube', texture_scale=(100,100))
+Entity(model='plane', scale=100, color=color.yellow.tint(-.2), texture='white_cube', texture_scale=(100,100))
 FirstPersonController()
 </div>
 </pre></div>
 <div id="HotReloader"><div id="HotReloader" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">HotReloader<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">HotReloader(path=__file__, **kwargs)</params>
 
 eternal<g> = True</g> 
+ignore_paused<g> = True</g> 
 path<g> = path</g> 
 path<g> = Path(self.path)</g> 
 
 input(<g>key</g>)   
 reload(<g>reset_camera=True</g>)   
 reload_texture()   
+reload_model()   
 
-<div class="example">hotreloader = HotReloader()
-hotreloader.path = application.asset_folder.parent.parent / 'samples' / 'platformer.py'
+<div class="example">application.hot_reloader.path = application.asset_folder.parent.parent / 'samples' / 'platformer.py'
+Sky()
 
 '''
 By default you can press Ctrl+R to reload the starting script and Ctrl+T to reimport textures.
 '''
-
-def input(key):
-    if held_keys['control'] and key == 'r':
-        print('reload textures')
-        reload_texture()
-
-def reload():
-    print(window.getZOrder())
-    invoke(reload, delay=1)
-
-reload()
 </div>
 </pre></div>
-<div id="InputField"><div id="InputField" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">InputField<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">InputField(**kwargs)</params>
+<div id="InputField"><div id="InputField" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">InputField<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">InputField(default_value='', label='', **kwargs)</params>
 
+default_value<g> = default_value</g> 
 text_field<g> = TextField(world_parent=self, x=-.45, y=.3, z=-.1, max_lines=1)</g> 
 active<g> = False</g> 
+label<g> = Text('Label:')</g> 
 text
 
 input(<g>key</g>)   
 
-<div class="example">input_field = InputField()
+<div class="example">input_field = InputField(default_value='ælol')
+print(input_field.default_value)
 
 def submit():
     print(input_field.text)
@@ -1442,10 +1616,10 @@ origin_y<g> = -.5</g>
 scale_y<g> = 2</g> 
 color<g> = color.orange</g> 
 collider<g> = 'box'</g> 
-graphics<g> = Entity(parent=self)</g> 
-idle_animation<g> = None</g> 
-walk_animation<g> = None</g> 
+animator<g> = Animator({'idle' : None, 'walk' : None, 'jump' : None})</g> 
 walk_speed<g> = 8</g> 
+walking<g> = False</g> 
+velocity<g> = 0</g> 
 jump_height<g> = 4</g> 
 jump_duration<g> = .5</g> 
 jumping<g> = False</g> 
@@ -1540,10 +1714,6 @@ EditorCamera()
 </pre></div>
 <div id="Sky"><div id="Sky" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Sky<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Sky(**kwargs)</params>
 
-name<g> = 'sky'</g> 
-model<g> = 'sky_dome'</g> 
-texture<g> = 'default_sky'</g> 
-world_position<g> = camera.world_position</g> 
 
 update()   
 
@@ -1567,11 +1737,30 @@ rotation_z<g> = -90</g>
 
 drop()   
 update()   
+slide()   
 
-<div class="example">origin = Entity(model='cube', color=color.green, scale = .05)
+<div class="example">color.text_color = color.dark_text
+origin = Entity(model='cube', color=color.green, scale = .05)
 box = Entity(model='cube', origin_y=-.5, scale=1, color=color.orange)
-slider = Slider(0, 12, default=1, height=Text.size*3, y=-.4, step=.1, vertical=False)
+slider = Slider(0, 255, default=1, height=Text.size*3, y=-.4, step=1, vertical=False)
+thin_slider = ThinSlider(0, 255, default=1, text='thin_slider', height=Text.size*3, y=-.4, step=1, vertical=False, x=-.7)
+Text('debug text')
+def scale_box():
+    box.scale_y = slider.value
 
+slider.on_value_changed = scale_box
+</div>
+</pre></div>
+<div id="ThinSlider"><div id="ThinSlider" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ThinSlider<g>(Slider)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ThinSlider(*args, **kwargs)</params>
+
+
+
+<div class="example">color.text_color = color.dark_text
+origin = Entity(model='cube', color=color.green, scale = .05)
+box = Entity(model='cube', origin_y=-.5, scale=1, color=color.orange)
+slider = Slider(0, 255, default=1, height=Text.size*3, y=-.4, step=1, vertical=False)
+thin_slider = ThinSlider(0, 255, default=1, text='thin_slider', height=Text.size*3, y=-.4, step=1, vertical=False, x=-.7)
+Text('debug text')
 def scale_box():
     box.scale_y = slider.value
 
@@ -1598,7 +1787,7 @@ s = Sprite('brick', filtering=False)
 font<g> = 'VeraMono.ttf'</g> 
 font_size<g> = 20</g> 
 line_height<g> = 1</g> 
-max_lines<g> = math.inf</g> 
+max_lines<g> = 999999</g> 
 text_entity<g> = Text(
         parent</g> 
 line_numbers<g> = Text(
@@ -1608,9 +1797,9 @@ cursor_parent<g> = Entity(parent=self, scale=(self.character_width, -1*self.text
 cursor<g> = Entity(parent=self.cursor_parent, model='cube', color=color.white33, origin=(-.5, -.5), scale=(.2, 1))</g> 
 selection<g> = None</g> 
 selection_parent<g> = Entity(parent=self.cursor_parent)</g> 
+register_mouse_input<g> = True</g> 
 text<g> = ''</g> 
 replacements<g> = dict()</g> 
-replacements[name]<g> = f'☾{name}☽{name}☾default☽'</g> 
 on_undo<g> = list()</g> 
 on_redo<g> = list()</g> 
 shifted_keys<g> = {
@@ -1665,8 +1854,10 @@ add_text(<g>s, move_cursor=True</g>)
 move_line(<g>a, b</g>)   
 erase()   
 input(<g>key</g>)   
+render()   
 get_mouse_position()   
 update()   
+select_all()   
 draw_selection()   
 
 <div class="example">window.size = window.fullscreen_size
@@ -1680,16 +1871,9 @@ Text.size = 1/window.fullscreen_size[1]*16
 Text.default_font = 'consola.ttf'
 Text.default_resolution = 16*2
 te = TextField()
-te.replacements = {
-    'class ':    '☾orange☽class ☾default☽',
-    'def ':      '☾azure☽def ☾default☽',
-    '__init__':  '☾cyan☽__init__☾default☽',
-    'Entity':    '☾lime☽Entity☾default☽',
-    'self.':     '☾orange☽self☾default☽.',
-    '(self)':     '(☾orange☽self☾default☽)',
-    'self,':     '☾orange☽self☾default☽,',
-    '    ':      '☾dark_gray☽----☾default☽',
-    }
+te.line_numbers.enabled = True
+te.render()
+te.select_all()
 </div>
 </pre></div>
 <div id="Tooltip"><div id="Tooltip" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Tooltip<g>(<a style="color: gray;" href="#Text">Text</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Tooltip(text='', **kwargs)</params>
@@ -1698,6 +1882,7 @@ parent<g> = camera.ui</g>
 wordwrap<g> = 40</g> 
 origin<g> = (-.5, -.5)</g> 
 margin<g> = (2, 2)</g> 
+background_color<g> = color.inverse(color.text_color)</g> 
 enabled<g> = False</g> 
 
 update()   
@@ -1715,7 +1900,7 @@ Lasts for 4 rounds.'''.replace('\n', ' '))
     app.run()
 </div>
 </pre></div>
-<div id="VideoRecorder"><div id="VideoRecorder" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">VideoRecorder<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">VideoRecorder(duration=30, name='untitled_video', **kwargs)</params>
+<div id="VideoRecorder"><div id="VideoRecorder" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">VideoRecorder<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">VideoRecorder(duration=5, name='untitled_video', **kwargs)</params>
 
 recording<g> = False</g> 
 file_path<g> = Path(application.asset_folder) / 'video_temp'</g> 
@@ -1729,11 +1914,31 @@ update()
 renderToPNM()   
 convert_to_gif()   
 
-<div class="example">window.size = (1600/3,900/3)
-cube = primitives.RedCube()
+<div class="example">cube = primitives.RedCube()
 cube.animate_x(5, duration=5, curve=curve.linear)
-vr = VideoRecorder()
-invoke(setattr, vr, 'recording', True, delay=1)
+cube.animate_x(0, duration=5, curve=curve.linear, delay=5)
+Cursor()
+</div>
+</pre></div>
+<div id="VideoRecorderUI"><div id="VideoRecorderUI" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">VideoRecorderUI<g>(WindowPanel)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">VideoRecorderUI(**kwargs)</params>
+
+duration_label<g> = Text('duration:')</g> 
+duration_field<g> = InputField(default_value='5')</g> 
+fps_label<g> = Text('fps:')</g> 
+fps_field<g> = InputField(default_value='30')</g> 
+name_label<g> = Text('name:')</g> 
+name_field<g> = InputField(default_value='untitled_video')</g> 
+start_button<g> = Button(text='Start Recording [Shift+F12]', color=color.azure, on_click=self.start_recording)</g> 
+y<g> = .5</g> 
+visible<g> = False</g> 
+
+input(<g>key</g>)   
+start_recording()   
+
+<div class="example">cube = primitives.RedCube()
+cube.animate_x(5, duration=5, curve=curve.linear)
+cube.animate_x(0, duration=5, curve=curve.linear, delay=5)
+Cursor()
 </div>
 </pre></div>
 <div id="Space"><div id="Space" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Space<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Space(height=1)</params>
@@ -1785,10 +1990,20 @@ close()
 </div>
 </pre></div>
 <div id="colorize"><div id="colorize" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">colorize</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
-colorize(<g>model, left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white, smooth=True</g>)   
+get_world_normals(<g>model</g>)   
+colorize(<g>model, left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white, smooth=True, world_space=True</g>)   
 
-<div class="example">e = Entity(model='sphere')
-colorize(e.model, smooth=False)
+<div class="example">import random
+for i in range(10):
+    e = Entity(model='sphere')
+    e.position = (random.uniform(-3,3),random.uniform(-3,3),random.uniform(-3,3))
+    e.rotation = (random.uniform(0,360),random.uniform(0,360),random.uniform(0,360))
+    e.scale = random.uniform(1,3)
+    e.model.colorize(smooth=False)
+
+
+
+Sky(color=color.gray)
 EditorCamera()
 </div>
 </pre></div>
@@ -1796,19 +2011,12 @@ EditorCamera()
 combine(<g>entity, analyze=False, auto_destroy=True</g>)   
 
 <div class="example">p = Entity()
-from ursina.models.procedural.cube import Plane
-e = Entity()
+e1 = Entity(parent=p, model='sphere', y=1.5, color=color.pink)
+e2 = Entity(parent=p, model='cube', color=color.yellow, x=1, origin_y=-.5)
+e3 = Entity(parent=e2, model='cube', color=color.yellow, y=2, scale=.5)
+p.combine()
+p.model.colorize()
 
-w,h,d = 3,3,3
-front =  Entity(parent=e, model=Plane((w,h)), z=-.5, rotation_x=-90, name='front')
-back =   Entity(parent=e, model=Plane((w,h)), z=.5, rotation_x=90, name='back')
-top =    Entity(parent=e, model=Plane((w,d)), y=.5, name='top')
-bottom = Entity(parent=e, model=Plane((w,d)), y=-.5, rotation_x=-180, name='bottom')
-right =  Entity(parent=e, model=Plane((d,h)), x=.5, rotation_z=90, name='right')
-left =   Entity(parent=e, model=Plane((d,h)), x=-.5, rotation_z=-90, name='left')
-
-p.model = combine(e)
-destroy(e)
 
 
 EditorCamera()
@@ -1820,7 +2028,6 @@ generate_normals(<g>vertices, triangles=None, smooth=True</g>)
 
 <div class="example">vertices=((-0.0, -0.5, 0.0), (0.10159, -0.483975, -0.073809), (-0.038803, -0.483975, -0.119426), (0.361804, -0.22361, -0.262863), (0.304773, -0.328759, -0.221428), (0.406365, -0.25115, -0.147619), (-0.0, -0.5, 0.0), (-0.038803, -0.483975, -0.119426), (-0.125573, -0.483974, 0.0), (-0.0, -0.5, 0.0), (-0.125573, -0.483974, 0.0), (-0.038803, -0.483975, 0.119426), (-0.0, -0.5, 0.0), (-0.038803, -0.483975, 0.119426), (0.10159, -0.483975, 0.073809), (0.361804, -0.22361, -0.262863), (0.406365, -0.25115, -0.147619), (0.430349, -0.125575, -0.221429), (-0.138194, -0.22361, -0.425325), (-0.01482, -0.251151, -0.432092), (-0.077608, -0.125576, -0.477711), (-0.447213, -0.223608, 0.0), (-0.415525, -0.251149, -0.119427), (-0.478313, -0.125575, -0.073809), (-0.138194, -0.22361, 0.425325), (-0.241986, -0.251151, 0.358282), (-0.218003, -0.125576, 0.432094), (0.361804, -0.22361, 0.262863), (0.26597, -0.251151, 0.340856), (0.343579, -0.125576, 0.340858), (0.361804, -0.22361, -0.262863), (0.430349, -0.125575, -0.221429), (0.343579, -0.125576, -0.340858), (-0.138194, -0.22361, -0.425325), (-0.077608, -0.125576, -0.477711), (-0.218003, -0.125576, -0.432094), (-0.447213, -0.223608, 0.0), (-0.478313, -0.125575, -0.073809), (-0.478313, -0.125575, 0.073809), (-0.138194, -0.22361, 0.425325), (-0.218003, -0.125576, 0.432094), (-0.077608, -0.125576, 0.477711), (0.361804, -0.22361, 0.262863), (0.343579, -0.125576, 0.340858), (0.430349, -0.125575, 0.221429), (0.138194, 0.22361, -0.425325), (0.241986, 0.251151, -0.358282), (0.116411, 0.32876, -0.358282), (-0.361804, 0.22361, -0.262863), (-0.26597, 0.251151, -0.340856), (-0.304773, 0.328759, -0.221428), (-0.361804, 0.22361, 0.262863), (-0.406365, 0.25115, 0.147619), (-0.304773, 0.328759, 0.221428), (0.138194, 0.22361, 0.425325), (0.01482, 0.251151, 0.432092), (0.116411, 0.32876, 0.358282), (0.447213, 0.223608, 0.0), (0.415525, 0.251149, 0.119427), (0.376721, 0.328757, 0.0), (0.125573, 0.483974, 0.0), (0.038803, 0.483975, 0.119426), (-0.0, 0.5, 0.0), (0.262865, 0.425326, 0.0), (0.1809, 0.447215, 0.131431), (0.125573, 0.483974, 0.0), (0.376721, 0.328757, 0.0), (0.319097, 0.361805, 0.131432), (0.262865, 0.425326, 0.0), (0.125573, 0.483974, 0.0), (0.1809, 0.447215, 0.131431), (0.038803, 0.483975, 0.119426), (0.1809, 0.447215, 0.131431), (0.081228, 0.425327, 0.249998), (0.038803, 0.483975, 0.119426), (0.262865, 0.425326, 0.0), (0.319097, 0.361805, 0.131432), (0.1809, 0.447215, 0.131431), (0.319097, 0.361805, 0.131432), (0.223605, 0.361806, 0.262864), (0.1809, 0.447215, 0.131431), (0.1809, 0.447215, 0.131431), (0.223605, 0.361806, 0.262864), (0.081228, 0.425327, 0.249998), (0.223605, 0.361806, 0.262864), (0.116411, 0.32876, 0.358282), (0.081228, 0.425327, 0.249998), (0.376721, 0.328757, 0.0), (0.415525, 0.251149, 0.119427), (0.319097, 0.361805, 0.131432), (0.415525, 0.251149, 0.119427), (0.344095, 0.262868, 0.249998), (0.319097, 0.361805, 0.131432), (0.319097, 0.361805, 0.131432), (0.344095, 0.262868, 0.249998), (0.223605, 0.361806, 0.262864), (0.344095, 0.262868, 0.249998), (0.241986, 0.251151, 0.358282), (0.223605, 0.361806, 0.262864), (0.223605, 0.361806, 0.262864), (0.241986, 0.251151, 0.358282), (0.116411, 0.32876, 0.358282), (0.241986, 0.251151, 0.358282), (0.138194, 0.22361, 0.425325), (0.116411, 0.32876, 0.358282), (0.038803, 0.483975, 0.119426), (-0.10159, 0.483975, 0.073809), (-0.0, 0.5, 0.0), (0.081228, 0.425327, 0.249998), (-0.069099, 0.447215, 0.21266), (0.038803, 0.483975, 0.119426), (0.116411, 0.32876, 0.358282), (-0.026395, 0.361806, 0.344092), (0.081228, 0.425327, 0.249998), (0.038803, 0.483975, 0.119426), (-0.069099, 0.447215, 0.21266), (-0.10159, 0.483975, 0.073809), (-0.069099, 0.447215, 0.21266), (-0.212661, 0.425327, 0.154506), (-0.10159, 0.483975, 0.073809), (0.081228, 0.425327, 0.249998), (-0.026395, 0.361806, 0.344092), (-0.069099, 0.447215, 0.21266), (-0.026395, 0.361806, 0.344092), (-0.180902, 0.361806, 0.293889), (-0.069099, 0.447215, 0.21266), (-0.069099, 0.447215, 0.21266), (-0.180902, 0.361806, 0.293889), (-0.212661, 0.425327, 0.154506), (-0.180902, 0.361806, 0.293889), (-0.304773, 0.328759, 0.221428), (-0.212661, 0.425327, 0.154506), (0.116411, 0.32876, 0.358282), (0.01482, 0.251151, 0.432092), (-0.026395, 0.361806, 0.344092), (0.01482, 0.251151, 0.432092), (-0.131434, 0.262869, 0.404506), (-0.026395, 0.361806, 0.344092), (-0.026395, 0.361806, 0.344092), (-0.131434, 0.262869, 0.404506), (-0.180902, 0.361806, 0.293889), (-0.131434, 0.262869, 0.404506), (-0.26597, 0.251151, 0.340856), (-0.180902, 0.361806, 0.293889), (-0.180902, 0.361806, 0.293889), (-0.26597, 0.251151, 0.340856), (-0.304773, 0.328759, 0.221428), (-0.26597, 0.251151, 0.340856), (-0.361804, 0.22361, 0.262863), (-0.304773, 0.328759, 0.221428), (-0.10159, 0.483975, 0.073809), (-0.10159, 0.483975, -0.073809), (-0.0, 0.5, 0.0), (-0.212661, 0.425327, 0.154506), (-0.223605, 0.447215, 0.0), (-0.10159, 0.483975, 0.073809), (-0.304773, 0.328759, 0.221428), (-0.335408, 0.361805, 0.081229), (-0.212661, 0.425327, 0.154506), (-0.10159, 0.483975, 0.073809), (-0.223605, 0.447215, 0.0), (-0.10159, 0.483975, -0.073809), (-0.223605, 0.447215, 0.0), (-0.212661, 0.425327, -0.154506), (-0.10159, 0.483975, -0.073809), (-0.212661, 0.425327, 0.154506), (-0.335408, 0.361805, 0.081229), (-0.223605, 0.447215, 0.0), (-0.335408, 0.361805, 0.081229), (-0.335408, 0.361805, -0.081229), (-0.223605, 0.447215, 0.0), (-0.223605, 0.447215, 0.0), (-0.335408, 0.361805, -0.081229), (-0.212661, 0.425327, -0.154506), (-0.335408, 0.361805, -0.081229), (-0.304773, 0.328759, -0.221428), (-0.212661, 0.425327, -0.154506), (-0.304773, 0.328759, 0.221428), (-0.406365, 0.25115, 0.147619), (-0.335408, 0.361805, 0.081229), (-0.406365, 0.25115, 0.147619), (-0.425324, 0.262868, 0.0), (-0.335408, 0.361805, 0.081229), (-0.335408, 0.361805, 0.081229), (-0.425324, 0.262868, 0.0), (-0.335408, 0.361805, -0.081229), (-0.425324, 0.262868, 0.0), (-0.406365, 0.25115, -0.147619), (-0.335408, 0.361805, -0.081229), (-0.335408, 0.361805, -0.081229), (-0.406365, 0.25115, -0.147619), (-0.304773, 0.328759, -0.221428), (-0.406365, 0.25115, -0.147619), (-0.361804, 0.22361, -0.262863), (-0.304773, 0.328759, -0.221428), (-0.10159, 0.483975, -0.073809), (0.038803, 0.483975, -0.119426), (-0.0, 0.5, 0.0), (-0.212661, 0.425327, -0.154506), (-0.069099, 0.447215, -0.21266), (-0.10159, 0.483975, -0.073809), (-0.304773, 0.328759, -0.221428), (-0.180902, 0.361806, -0.293889), (-0.212661, 0.425327, -0.154506), (-0.10159, 0.483975, -0.073809), (-0.069099, 0.447215, -0.21266), (0.038803, 0.483975, -0.119426), (-0.069099, 0.447215, -0.21266), (0.081228, 0.425327, -0.249998), (0.038803, 0.483975, -0.119426), (-0.212661, 0.425327, -0.154506), (-0.180902, 0.361806, -0.293889), (-0.069099, 0.447215, -0.21266), (-0.180902, 0.361806, -0.293889), (-0.026395, 0.361806, -0.344092), (-0.069099, 0.447215, -0.21266), (-0.069099, 0.447215, -0.21266), (-0.026395, 0.361806, -0.344092), (0.081228, 0.425327, -0.249998), (-0.026395, 0.361806, -0.344092), (0.116411, 0.32876, -0.358282), (0.081228, 0.425327, -0.249998), (-0.304773, 0.328759, -0.221428), (-0.26597, 0.251151, -0.340856), (-0.180902, 0.361806, -0.293889), (-0.26597, 0.251151, -0.340856), (-0.131434, 0.262869, -0.404506), (-0.180902, 0.361806, -0.293889), (-0.180902, 0.361806, -0.293889), (-0.131434, 0.262869, -0.404506), (-0.026395, 0.361806, -0.344092), (-0.131434, 0.262869, -0.404506), (0.01482, 0.251151, -0.432092), (-0.026395, 0.361806, -0.344092), (-0.026395, 0.361806, -0.344092), (0.01482, 0.251151, -0.432092), (0.116411, 0.32876, -0.358282), (0.01482, 0.251151, -0.432092), (0.138194, 0.22361, -0.425325), (0.116411, 0.32876, -0.358282), (0.038803, 0.483975, -0.119426), (0.125573, 0.483974, 0.0), (-0.0, 0.5, 0.0), (0.081228, 0.425327, -0.249998), (0.1809, 0.447215, -0.131431), (0.038803, 0.483975, -0.119426), (0.116411, 0.32876, -0.358282), (0.223605, 0.361806, -0.262864), (0.081228, 0.425327, -0.249998), (0.038803, 0.483975, -0.119426), (0.1809, 0.447215, -0.131431), (0.125573, 0.483974, 0.0), (0.1809, 0.447215, -0.131431), (0.262865, 0.425326, 0.0), (0.125573, 0.483974, 0.0), (0.081228, 0.425327, -0.249998), (0.223605, 0.361806, -0.262864), (0.1809, 0.447215, -0.131431), (0.223605, 0.361806, -0.262864), (0.319097, 0.361805, -0.131432), (0.1809, 0.447215, -0.131431), (0.1809, 0.447215, -0.131431), (0.319097, 0.361805, -0.131432), (0.262865, 0.425326, 0.0), (0.319097, 0.361805, -0.131432), (0.376721, 0.328757, 0.0), (0.262865, 0.425326, 0.0), (0.116411, 0.32876, -0.358282), (0.241986, 0.251151, -0.358282), (0.223605, 0.361806, -0.262864), (0.241986, 0.251151, -0.358282), (0.344095, 0.262868, -0.249998), (0.223605, 0.361806, -0.262864), (0.223605, 0.361806, -0.262864), (0.344095, 0.262868, -0.249998), (0.319097, 0.361805, -0.131432), (0.344095, 0.262868, -0.249998), (0.415525, 0.251149, -0.119427), (0.319097, 0.361805, -0.131432), (0.319097, 0.361805, -0.131432), (0.415525, 0.251149, -0.119427), (0.376721, 0.328757, 0.0), (0.415525, 0.251149, -0.119427), (0.447213, 0.223608, 0.0), (0.376721, 0.328757, 0.0), (0.478313, 0.125575, 0.073809), (0.415525, 0.251149, 0.119427), (0.447213, 0.223608, 0.0), (0.475529, 0.0, 0.154506), (0.430902, 0.138198, 0.212661), (0.478313, 0.125575, 0.073809), (0.430349, -0.125575, 0.221429), (0.40451, 0.0, 0.293891), (0.475529, 0.0, 0.154506), (0.478313, 0.125575, 0.073809), (0.430902, 0.138198, 0.212661), (0.415525, 0.251149, 0.119427), (0.430902, 0.138198, 0.212661), (0.344095, 0.262868, 0.249998), (0.415525, 0.251149, 0.119427), (0.475529, 0.0, 0.154506), (0.40451, 0.0, 0.293891), (0.430902, 0.138198, 0.212661), (0.40451, 0.0, 0.293891), (0.33541, 0.138199, 0.344095), (0.430902, 0.138198, 0.212661), (0.430902, 0.138198, 0.212661), (0.33541, 0.138199, 0.344095), (0.344095, 0.262868, 0.249998), (0.33541, 0.138199, 0.344095), (0.241986, 0.251151, 0.358282), (0.344095, 0.262868, 0.249998), (0.430349, -0.125575, 0.221429), (0.343579, -0.125576, 0.340858), (0.40451, 0.0, 0.293891), (0.343579, -0.125576, 0.340858), (0.293893, -0.0, 0.404508), (0.40451, 0.0, 0.293891), (0.40451, 0.0, 0.293891), (0.293893, -0.0, 0.404508), (0.33541, 0.138199, 0.344095), (0.293893, -0.0, 0.404508), (0.218003, 0.125576, 0.432094), (0.33541, 0.138199, 0.344095), (0.33541, 0.138199, 0.344095), (0.218003, 0.125576, 0.432094), (0.241986, 0.251151, 0.358282), (0.218003, 0.125576, 0.432094), (0.138194, 0.22361, 0.425325), (0.241986, 0.251151, 0.358282), (0.077608, 0.125576, 0.477711), (0.01482, 0.251151, 0.432092), (0.138194, 0.22361, 0.425325), (-0.0, 0.0, 0.5), (-0.069099, 0.138199, 0.475528), (0.077608, 0.125576, 0.477711), (-0.077608, -0.125576, 0.477711), (-0.154508, -0.0, 0.475528), (-0.0, 0.0, 0.5), (0.077608, 0.125576, 0.477711), (-0.069099, 0.138199, 0.475528), (0.01482, 0.251151, 0.432092), (-0.069099, 0.138199, 0.475528), (-0.131434, 0.262869, 0.404506), (0.01482, 0.251151, 0.432092), (-0.0, 0.0, 0.5), (-0.154508, -0.0, 0.475528), (-0.069099, 0.138199, 0.475528), (-0.154508, -0.0, 0.475528), (-0.223608, 0.138199, 0.425324), (-0.069099, 0.138199, 0.475528), (-0.069099, 0.138199, 0.475528), (-0.223608, 0.138199, 0.425324), (-0.131434, 0.262869, 0.404506), (-0.223608, 0.138199, 0.425324), (-0.26597, 0.251151, 0.340856), (-0.131434, 0.262869, 0.404506), (-0.077608, -0.125576, 0.477711), (-0.218003, -0.125576, 0.432094), (-0.154508, -0.0, 0.475528), (-0.218003, -0.125576, 0.432094), (-0.293893, -0.0, 0.404508), (-0.154508, -0.0, 0.475528), (-0.154508, -0.0, 0.475528), (-0.293893, -0.0, 0.404508), (-0.223608, 0.138199, 0.425324), (-0.293893, -0.0, 0.404508), (-0.343579, 0.125576, 0.340858), (-0.223608, 0.138199, 0.425324), (-0.223608, 0.138199, 0.425324), (-0.343579, 0.125576, 0.340858), (-0.26597, 0.251151, 0.340856), (-0.343579, 0.125576, 0.340858), (-0.361804, 0.22361, 0.262863), (-0.26597, 0.251151, 0.340856), (-0.430349, 0.125575, 0.221429), (-0.406365, 0.25115, 0.147619), (-0.361804, 0.22361, 0.262863), (-0.475529, 0.0, 0.154506), (-0.473607, 0.138198, 0.081229), (-0.430349, 0.125575, 0.221429), (-0.478313, -0.125575, 0.073809), (-0.5, 0.0, -0.0), (-0.475529, 0.0, 0.154506), (-0.430349, 0.125575, 0.221429), (-0.473607, 0.138198, 0.081229), (-0.406365, 0.25115, 0.147619), (-0.473607, 0.138198, 0.081229), (-0.425324, 0.262868, 0.0), (-0.406365, 0.25115, 0.147619), (-0.475529, 0.0, 0.154506), (-0.5, 0.0, -0.0), (-0.473607, 0.138198, 0.081229), (-0.5, 0.0, -0.0), (-0.473606, 0.138198, -0.081229), (-0.473607, 0.138198, 0.081229), (-0.473607, 0.138198, 0.081229), (-0.473606, 0.138198, -0.081229), (-0.425324, 0.262868, 0.0), (-0.473606, 0.138198, -0.081229), (-0.406365, 0.25115, -0.147619), (-0.425324, 0.262868, 0.0), (-0.478313, -0.125575, 0.073809), (-0.478313, -0.125575, -0.073809), (-0.5, 0.0, -0.0), (-0.478313, -0.125575, -0.073809), (-0.475529, -0.0, -0.154506), (-0.5, 0.0, -0.0), (-0.5, 0.0, -0.0), (-0.475529, -0.0, -0.154506), (-0.473606, 0.138198, -0.081229), (-0.475529, -0.0, -0.154506), (-0.430349, 0.125575, -0.221429), (-0.473606, 0.138198, -0.081229), (-0.473606, 0.138198, -0.081229), (-0.430349, 0.125575, -0.221429), (-0.406365, 0.25115, -0.147619), (-0.430349, 0.125575, -0.221429), (-0.361804, 0.22361, -0.262863), (-0.406365, 0.25115, -0.147619), (-0.343579, 0.125576, -0.340858), (-0.26597, 0.251151, -0.340856), (-0.361804, 0.22361, -0.262863), (-0.293893, 0.0, -0.404508), (-0.223608, 0.138198, -0.425324), (-0.343579, 0.125576, -0.340858), (-0.218003, -0.125576, -0.432094), (-0.154509, -0.0, -0.475528), (-0.293893, 0.0, -0.404508), (-0.343579, 0.125576, -0.340858), (-0.223608, 0.138198, -0.425324), (-0.26597, 0.251151, -0.340856), (-0.223608, 0.138198, -0.425324), (-0.131434, 0.262869, -0.404506), (-0.26597, 0.251151, -0.340856), (-0.293893, 0.0, -0.404508), (-0.154509, -0.0, -0.475528), (-0.223608, 0.138198, -0.425324), (-0.154509, -0.0, -0.475528), (-0.0691, 0.138198, -0.475528), (-0.223608, 0.138198, -0.425324), (-0.223608, 0.138198, -0.425324), (-0.0691, 0.138198, -0.475528), (-0.131434, 0.262869, -0.404506), (-0.0691, 0.138198, -0.475528), (0.01482, 0.251151, -0.432092), (-0.131434, 0.262869, -0.404506), (-0.218003, -0.125576, -0.432094), (-0.077608, -0.125576, -0.477711), (-0.154509, -0.0, -0.475528), (-0.077608, -0.125576, -0.477711), (-0.0, -0.0, -0.5), (-0.154509, -0.0, -0.475528), (-0.154509, -0.0, -0.475528), (-0.0, -0.0, -0.5), (-0.0691, 0.138198, -0.475528), (-0.0, -0.0, -0.5), (0.077608, 0.125576, -0.477711), (-0.0691, 0.138198, -0.475528), (-0.0691, 0.138198, -0.475528), (0.077608, 0.125576, -0.477711), (0.01482, 0.251151, -0.432092), (0.077608, 0.125576, -0.477711), (0.138194, 0.22361, -0.425325), (0.01482, 0.251151, -0.432092), (0.218003, 0.125576, -0.432094), (0.241986, 0.251151, -0.358282), (0.138194, 0.22361, -0.425325), (0.293893, 0.0, -0.404508), (0.33541, 0.138198, -0.344095), (0.218003, 0.125576, -0.432094), (0.343579, -0.125576, -0.340858), (0.404509, -1e-06, -0.293891), (0.293893, 0.0, -0.404508), (0.218003, 0.125576, -0.432094), (0.33541, 0.138198, -0.344095), (0.241986, 0.251151, -0.358282), (0.33541, 0.138198, -0.344095), (0.344095, 0.262868, -0.249998), (0.241986, 0.251151, -0.358282), (0.293893, 0.0, -0.404508), (0.404509, -1e-06, -0.293891), (0.33541, 0.138198, -0.344095), (0.404509, -1e-06, -0.293891), (0.430902, 0.138197, -0.212662), (0.33541, 0.138198, -0.344095), (0.33541, 0.138198, -0.344095), (0.430902, 0.138197, -0.212662), (0.344095, 0.262868, -0.249998), (0.430902, 0.138197, -0.212662), (0.415525, 0.251149, -0.119427), (0.344095, 0.262868, -0.249998), (0.343579, -0.125576, -0.340858), (0.430349, -0.125575, -0.221429), (0.404509, -1e-06, -0.293891), (0.430349, -0.125575, -0.221429), (0.475529, -0.0, -0.154506), (0.404509, -1e-06, -0.293891), (0.404509, -1e-06, -0.293891), (0.475529, -0.0, -0.154506), (0.430902, 0.138197, -0.212662), (0.475529, -0.0, -0.154506), (0.478313, 0.125575, -0.073809), (0.430902, 0.138197, -0.212662), (0.430902, 0.138197, -0.212662), (0.478313, 0.125575, -0.073809), (0.415525, 0.251149, -0.119427), (0.478313, 0.125575, -0.073809), (0.447213, 0.223608, 0.0), (0.415525, 0.251149, -0.119427), (0.218003, 0.125576, 0.432094), (0.077608, 0.125576, 0.477711), (0.138194, 0.22361, 0.425325), (0.293893, -0.0, 0.404508), (0.154509, -0.0, 0.475528), (0.218003, 0.125576, 0.432094), (0.343579, -0.125576, 0.340858), (0.223608, -0.138199, 0.425324), (0.293893, -0.0, 0.404508), (0.218003, 0.125576, 0.432094), (0.154509, -0.0, 0.475528), (0.077608, 0.125576, 0.477711), (0.154509, -0.0, 0.475528), (-0.0, 0.0, 0.5), (0.077608, 0.125576, 0.477711), (0.293893, -0.0, 0.404508), (0.223608, -0.138199, 0.425324), (0.154509, -0.0, 0.475528), (0.223608, -0.138199, 0.425324), (0.0691, -0.138199, 0.475527), (0.154509, -0.0, 0.475528), (0.154509, -0.0, 0.475528), (0.0691, -0.138199, 0.475527), (-0.0, 0.0, 0.5), (0.0691, -0.138199, 0.475527), (-0.077608, -0.125576, 0.477711), (-0.0, 0.0, 0.5), (0.343579, -0.125576, 0.340858), (0.26597, -0.251151, 0.340856), (0.223608, -0.138199, 0.425324), (0.26597, -0.251151, 0.340856), (0.131434, -0.262869, 0.404506), (0.223608, -0.138199, 0.425324), (0.223608, -0.138199, 0.425324), (0.131434, -0.262869, 0.404506), (0.0691, -0.138199, 0.475527), (0.131434, -0.262869, 0.404506), (-0.01482, -0.251151, 0.432092), (0.0691, -0.138199, 0.475527), (0.0691, -0.138199, 0.475527), (-0.01482, -0.251151, 0.432092), (-0.077608, -0.125576, 0.477711), (-0.01482, -0.251151, 0.432092), (-0.138194, -0.22361, 0.425325), (-0.077608, -0.125576, 0.477711), (-0.343579, 0.125576, 0.340858), (-0.430349, 0.125575, 0.221429), (-0.361804, 0.22361, 0.262863), (-0.293893, -0.0, 0.404508), (-0.404509, -0.0, 0.293892), (-0.343579, 0.125576, 0.340858), (-0.218003, -0.125576, 0.432094), (-0.335409, -0.138199, 0.344095), (-0.293893, -0.0, 0.404508), (-0.343579, 0.125576, 0.340858), (-0.404509, -0.0, 0.293892), (-0.430349, 0.125575, 0.221429), (-0.404509, -0.0, 0.293892), (-0.475529, 0.0, 0.154506), (-0.430349, 0.125575, 0.221429), (-0.293893, -0.0, 0.404508), (-0.335409, -0.138199, 0.344095), (-0.404509, -0.0, 0.293892), (-0.335409, -0.138199, 0.344095), (-0.430902, -0.138198, 0.212662), (-0.404509, -0.0, 0.293892), (-0.404509, -0.0, 0.293892), (-0.430902, -0.138198, 0.212662), (-0.475529, 0.0, 0.154506), (-0.430902, -0.138198, 0.212662), (-0.478313, -0.125575, 0.073809), (-0.475529, 0.0, 0.154506), (-0.218003, -0.125576, 0.432094), (-0.241986, -0.251151, 0.358282), (-0.335409, -0.138199, 0.344095), (-0.241986, -0.251151, 0.358282), (-0.344095, -0.262868, 0.249998), (-0.335409, -0.138199, 0.344095), (-0.335409, -0.138199, 0.344095), (-0.344095, -0.262868, 0.249998), (-0.430902, -0.138198, 0.212662), (-0.344095, -0.262868, 0.249998), (-0.415525, -0.251149, 0.119427), (-0.430902, -0.138198, 0.212662), (-0.430902, -0.138198, 0.212662), (-0.415525, -0.251149, 0.119427), (-0.478313, -0.125575, 0.073809), (-0.415525, -0.251149, 0.119427), (-0.447213, -0.223608, 0.0), (-0.478313, -0.125575, 0.073809), (-0.430349, 0.125575, -0.221429), (-0.343579, 0.125576, -0.340858), (-0.361804, 0.22361, -0.262863), (-0.475529, -0.0, -0.154506), (-0.404509, 0.0, -0.293892), (-0.430349, 0.125575, -0.221429), (-0.478313, -0.125575, -0.073809), (-0.430902, -0.138198, -0.212662), (-0.475529, -0.0, -0.154506), (-0.430349, 0.125575, -0.221429), (-0.404509, 0.0, -0.293892), (-0.343579, 0.125576, -0.340858), (-0.404509, 0.0, -0.293892), (-0.293893, 0.0, -0.404508), (-0.343579, 0.125576, -0.340858), (-0.475529, -0.0, -0.154506), (-0.430902, -0.138198, -0.212662), (-0.404509, 0.0, -0.293892), (-0.430902, -0.138198, -0.212662), (-0.33541, -0.138199, -0.344095), (-0.404509, 0.0, -0.293892), (-0.404509, 0.0, -0.293892), (-0.33541, -0.138199, -0.344095), (-0.293893, 0.0, -0.404508), (-0.33541, -0.138199, -0.344095), (-0.218003, -0.125576, -0.432094), (-0.293893, 0.0, -0.404508), (-0.478313, -0.125575, -0.073809), (-0.415525, -0.251149, -0.119427), (-0.430902, -0.138198, -0.212662), (-0.415525, -0.251149, -0.119427), (-0.344095, -0.262868, -0.249998), (-0.430902, -0.138198, -0.212662), (-0.430902, -0.138198, -0.212662), (-0.344095, -0.262868, -0.249998), (-0.33541, -0.138199, -0.344095), (-0.344095, -0.262868, -0.249998), (-0.241986, -0.251151, -0.358282), (-0.33541, -0.138199, -0.344095), (-0.33541, -0.138199, -0.344095), (-0.241986, -0.251151, -0.358282), (-0.218003, -0.125576, -0.432094), (-0.241986, -0.251151, -0.358282), (-0.138194, -0.22361, -0.425325), (-0.218003, -0.125576, -0.432094), (0.077608, 0.125576, -0.477711), (0.218003, 0.125576, -0.432094), (0.138194, 0.22361, -0.425325), (-0.0, -0.0, -0.5), (0.154509, 0.0, -0.475528), (0.077608, 0.125576, -0.477711), (-0.077608, -0.125576, -0.477711), (0.0691, -0.138199, -0.475527), (-0.0, -0.0, -0.5), (0.077608, 0.125576, -0.477711), (0.154509, 0.0, -0.475528), (0.218003, 0.125576, -0.432094), (0.154509, 0.0, -0.475528), (0.293893, 0.0, -0.404508), (0.218003, 0.125576, -0.432094), (-0.0, -0.0, -0.5), (0.0691, -0.138199, -0.475527), (0.154509, 0.0, -0.475528), (0.0691, -0.138199, -0.475527), (0.223608, -0.138199, -0.425324), (0.154509, 0.0, -0.475528), (0.154509, 0.0, -0.475528), (0.223608, -0.138199, -0.425324), (0.293893, 0.0, -0.404508), (0.223608, -0.138199, -0.425324), (0.343579, -0.125576, -0.340858), (0.293893, 0.0, -0.404508), (-0.077608, -0.125576, -0.477711), (-0.01482, -0.251151, -0.432092), (0.0691, -0.138199, -0.475527), (-0.01482, -0.251151, -0.432092), (0.131434, -0.262869, -0.404506), (0.0691, -0.138199, -0.475527), (0.0691, -0.138199, -0.475527), (0.131434, -0.262869, -0.404506), (0.223608, -0.138199, -0.425324), (0.131434, -0.262869, -0.404506), (0.26597, -0.251151, -0.340856), (0.223608, -0.138199, -0.425324), (0.223608, -0.138199, -0.425324), (0.26597, -0.251151, -0.340856), (0.343579, -0.125576, -0.340858), (0.26597, -0.251151, -0.340856), (0.361804, -0.22361, -0.262863), (0.343579, -0.125576, -0.340858), (0.478313, 0.125575, -0.073809), (0.478313, 0.125575, 0.073809), (0.447213, 0.223608, 0.0), (0.475529, -0.0, -0.154506), (0.5, 0.0, 0.0), (0.478313, 0.125575, -0.073809), (0.430349, -0.125575, -0.221429), (0.473607, -0.138198, -0.081229), (0.475529, -0.0, -0.154506), (0.478313, 0.125575, -0.073809), (0.5, 0.0, 0.0), (0.478313, 0.125575, 0.073809), (0.5, 0.0, 0.0), (0.475529, 0.0, 0.154506), (0.478313, 0.125575, 0.073809), (0.475529, -0.0, -0.154506), (0.473607, -0.138198, -0.081229), (0.5, 0.0, 0.0), (0.473607, -0.138198, -0.081229), (0.473607, -0.138198, 0.081229), (0.5, 0.0, 0.0), (0.5, 0.0, 0.0), (0.473607, -0.138198, 0.081229), (0.475529, 0.0, 0.154506), (0.473607, -0.138198, 0.081229), (0.430349, -0.125575, 0.221429), (0.475529, 0.0, 0.154506), (0.430349, -0.125575, -0.221429), (0.406365, -0.25115, -0.147619), (0.473607, -0.138198, -0.081229), (0.406365, -0.25115, -0.147619), (0.425324, -0.262868, 0.0), (0.473607, -0.138198, -0.081229), (0.473607, -0.138198, -0.081229), (0.425324, -0.262868, 0.0), (0.473607, -0.138198, 0.081229), (0.425324, -0.262868, 0.0), (0.406365, -0.25115, 0.147619), (0.473607, -0.138198, 0.081229), (0.473607, -0.138198, 0.081229), (0.406365, -0.25115, 0.147619), (0.430349, -0.125575, 0.221429), (0.406365, -0.25115, 0.147619), (0.361804, -0.22361, 0.262863), (0.430349, -0.125575, 0.221429), (0.304773, -0.328759, 0.221428), (0.26597, -0.251151, 0.340856), (0.361804, -0.22361, 0.262863), (0.212661, -0.425327, 0.154506), (0.180902, -0.361806, 0.29389), (0.304773, -0.328759, 0.221428), (0.10159, -0.483975, 0.073809), (0.069098, -0.447215, 0.212661), (0.212661, -0.425327, 0.154506), (0.304773, -0.328759, 0.221428), (0.180902, -0.361806, 0.29389), (0.26597, -0.251151, 0.340856), (0.180902, -0.361806, 0.29389), (0.131434, -0.262869, 0.404506), (0.26597, -0.251151, 0.340856), (0.212661, -0.425327, 0.154506), (0.069098, -0.447215, 0.212661), (0.180902, -0.361806, 0.29389), (0.069098, -0.447215, 0.212661), (0.026395, -0.361805, 0.344093), (0.180902, -0.361806, 0.29389), (0.180902, -0.361806, 0.29389), (0.026395, -0.361805, 0.344093), (0.131434, -0.262869, 0.404506), (0.026395, -0.361805, 0.344093), (-0.01482, -0.251151, 0.432092), (0.131434, -0.262869, 0.404506), (0.10159, -0.483975, 0.073809), (-0.038803, -0.483975, 0.119426), (0.069098, -0.447215, 0.212661), (-0.038803, -0.483975, 0.119426), (-0.081228, -0.425327, 0.249998), (0.069098, -0.447215, 0.212661), (0.069098, -0.447215, 0.212661), (-0.081228, -0.425327, 0.249998), (0.026395, -0.361805, 0.344093), (-0.081228, -0.425327, 0.249998), (-0.116411, -0.32876, 0.358282), (0.026395, -0.361805, 0.344093), (0.026395, -0.361805, 0.344093), (-0.116411, -0.32876, 0.358282), (-0.01482, -0.251151, 0.432092), (-0.116411, -0.32876, 0.358282), (-0.138194, -0.22361, 0.425325), (-0.01482, -0.251151, 0.432092), (-0.116411, -0.32876, 0.358282), (-0.241986, -0.251151, 0.358282), (-0.138194, -0.22361, 0.425325), (-0.081228, -0.425327, 0.249998), (-0.223605, -0.361806, 0.262864), (-0.116411, -0.32876, 0.358282), (-0.038803, -0.483975, 0.119426), (-0.180901, -0.447214, 0.131431), (-0.081228, -0.425327, 0.249998), (-0.116411, -0.32876, 0.358282), (-0.223605, -0.361806, 0.262864), (-0.241986, -0.251151, 0.358282), (-0.223605, -0.361806, 0.262864), (-0.344095, -0.262868, 0.249998), (-0.241986, -0.251151, 0.358282), (-0.081228, -0.425327, 0.249998), (-0.180901, -0.447214, 0.131431), (-0.223605, -0.361806, 0.262864), (-0.180901, -0.447214, 0.131431), (-0.319097, -0.361805, 0.131431), (-0.223605, -0.361806, 0.262864), (-0.223605, -0.361806, 0.262864), (-0.319097, -0.361805, 0.131431), (-0.344095, -0.262868, 0.249998), (-0.319097, -0.361805, 0.131431), (-0.415525, -0.251149, 0.119427), (-0.344095, -0.262868, 0.249998), (-0.038803, -0.483975, 0.119426), (-0.125573, -0.483974, 0.0), (-0.180901, -0.447214, 0.131431), (-0.125573, -0.483974, 0.0), (-0.262865, -0.425326, 0.0), (-0.180901, -0.447214, 0.131431), (-0.180901, -0.447214, 0.131431), (-0.262865, -0.425326, 0.0), (-0.319097, -0.361805, 0.131431), (-0.262865, -0.425326, 0.0), (-0.376721, -0.328757, 0.0), (-0.319097, -0.361805, 0.131431), (-0.319097, -0.361805, 0.131431), (-0.376721, -0.328757, 0.0), (-0.415525, -0.251149, 0.119427), (-0.376721, -0.328757, 0.0), (-0.447213, -0.223608, 0.0), (-0.415525, -0.251149, 0.119427), (-0.376721, -0.328757, 0.0), (-0.415525, -0.251149, -0.119427), (-0.447213, -0.223608, 0.0), (-0.262865, -0.425326, 0.0), (-0.319097, -0.361805, -0.131432), (-0.376721, -0.328757, 0.0), (-0.125573, -0.483974, 0.0), (-0.180901, -0.447214, -0.131432), (-0.262865, -0.425326, 0.0), (-0.376721, -0.328757, 0.0), (-0.319097, -0.361805, -0.131432), (-0.415525, -0.251149, -0.119427), (-0.319097, -0.361805, -0.131432), (-0.344095, -0.262868, -0.249998), (-0.415525, -0.251149, -0.119427), (-0.262865, -0.425326, 0.0), (-0.180901, -0.447214, -0.131432), (-0.319097, -0.361805, -0.131432), (-0.180901, -0.447214, -0.131432), (-0.223605, -0.361805, -0.262864), (-0.319097, -0.361805, -0.131432), (-0.319097, -0.361805, -0.131432), (-0.223605, -0.361805, -0.262864), (-0.344095, -0.262868, -0.249998), (-0.223605, -0.361805, -0.262864), (-0.241986, -0.251151, -0.358282), (-0.344095, -0.262868, -0.249998), (-0.125573, -0.483974, 0.0), (-0.038803, -0.483975, -0.119426), (-0.180901, -0.447214, -0.131432), (-0.038803, -0.483975, -0.119426), (-0.081228, -0.425327, -0.249998), (-0.180901, -0.447214, -0.131432), (-0.180901, -0.447214, -0.131432), (-0.081228, -0.425327, -0.249998), (-0.223605, -0.361805, -0.262864), (-0.081228, -0.425327, -0.249998), (-0.116411, -0.32876, -0.358282), (-0.223605, -0.361805, -0.262864), (-0.223605, -0.361805, -0.262864), (-0.116411, -0.32876, -0.358282), (-0.241986, -0.251151, -0.358282), (-0.116411, -0.32876, -0.358282), (-0.138194, -0.22361, -0.425325), (-0.241986, -0.251151, -0.358282), (0.406365, -0.25115, 0.147619), (0.304773, -0.328759, 0.221428), (0.361804, -0.22361, 0.262863), (0.425324, -0.262868, 0.0), (0.335409, -0.361805, 0.081228), (0.406365, -0.25115, 0.147619), (0.406365, -0.25115, -0.147619), (0.335409, -0.361805, -0.081229), (0.425324, -0.262868, 0.0), (0.406365, -0.25115, 0.147619), (0.335409, -0.361805, 0.081228), (0.304773, -0.328759, 0.221428), (0.335409, -0.361805, 0.081228), (0.212661, -0.425327, 0.154506), (0.304773, -0.328759, 0.221428), (0.425324, -0.262868, 0.0), (0.335409, -0.361805, -0.081229), (0.335409, -0.361805, 0.081228), (0.335409, -0.361805, -0.081229), (0.223605, -0.447214, -0.0), (0.335409, -0.361805, 0.081228), (0.335409, -0.361805, 0.081228), (0.223605, -0.447214, -0.0), (0.212661, -0.425327, 0.154506), (0.223605, -0.447214, -0.0), (0.10159, -0.483975, 0.073809), (0.212661, -0.425327, 0.154506), (0.406365, -0.25115, -0.147619), (0.304773, -0.328759, -0.221428), (0.335409, -0.361805, -0.081229), (0.304773, -0.328759, -0.221428), (0.212661, -0.425327, -0.154506), (0.335409, -0.361805, -0.081229), (0.335409, -0.361805, -0.081229), (0.212661, -0.425327, -0.154506), (0.223605, -0.447214, -0.0), (0.212661, -0.425327, -0.154506), (0.10159, -0.483975, -0.073809), (0.223605, -0.447214, -0.0), (0.223605, -0.447214, -0.0), (0.10159, -0.483975, -0.073809), (0.10159, -0.483975, 0.073809), (0.10159, -0.483975, -0.073809), (-0.0, -0.5, 0.0), (0.10159, -0.483975, 0.073809), (-0.116411, -0.32876, -0.358282), (-0.01482, -0.251151, -0.432092), (-0.138194, -0.22361, -0.425325), (-0.081228, -0.425327, -0.249998), (0.026395, -0.361806, -0.344093), (-0.116411, -0.32876, -0.358282), (-0.038803, -0.483975, -0.119426), (0.069099, -0.447215, -0.21266), (-0.081228, -0.425327, -0.249998), (-0.116411, -0.32876, -0.358282), (0.026395, -0.361806, -0.344093), (-0.01482, -0.251151, -0.432092), (0.026395, -0.361806, -0.344093), (0.131434, -0.262869, -0.404506), (-0.01482, -0.251151, -0.432092), (-0.081228, -0.425327, -0.249998), (0.069099, -0.447215, -0.21266), (0.026395, -0.361806, -0.344093), (0.069099, -0.447215, -0.21266), (0.180902, -0.361805, -0.29389), (0.026395, -0.361806, -0.344093), (0.026395, -0.361806, -0.344093), (0.180902, -0.361805, -0.29389), (0.131434, -0.262869, -0.404506), (0.180902, -0.361805, -0.29389), (0.26597, -0.251151, -0.340856), (0.131434, -0.262869, -0.404506), (-0.038803, -0.483975, -0.119426), (0.10159, -0.483975, -0.073809), (0.069099, -0.447215, -0.21266), (0.10159, -0.483975, -0.073809), (0.212661, -0.425327, -0.154506), (0.069099, -0.447215, -0.21266), (0.069099, -0.447215, -0.21266), (0.212661, -0.425327, -0.154506), (0.180902, -0.361805, -0.29389), (0.212661, -0.425327, -0.154506), (0.304773, -0.328759, -0.221428), (0.180902, -0.361805, -0.29389), (0.180902, -0.361805, -0.29389), (0.304773, -0.328759, -0.221428), (0.26597, -0.251151, -0.340856), (0.304773, -0.328759, -0.221428), (0.361804, -0.22361, -0.262863), (0.26597, -0.251151, -0.340856))
 norms = generate_normals(vertices)
-print()
 </div>
 </pre></div>
 <div id="grid_layout"><div id="grid_layout" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">grid_layout</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
@@ -1867,7 +2074,7 @@ update()
 
 </pre></div>
 <div id="project_uvs"><div id="project_uvs" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">project_uvs</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
-project_uvs(<g>model, aspect_ratio=1, direction='forward'</g>)   
+project_uvs(<g>model, aspect_ratio=1, direction='forward', regenerate=False</g>)   
 
 <div class="example">e = Entity(model='sphere', texture='ursina_logo')
 project_uvs(e.model)
@@ -1906,14 +2113,6 @@ def update():
 Entity(model='cube').add_script(SmoothFollow(target=player, offset=(0,2,0)))
 </div>
 </pre></div>
-<div id="uv_mapper"><div id="uv_mapper" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">uv_mapper</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
-uv_map(<g>entity</g>)   
-
-<div class="example">e = Entity(model=Cylinder(), scale=4)
-uv_map(e)
-EditorCamera()
-</div>
-</pre></div>
 <div id="models"><div id="models" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">models</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">'cube'
 'cube_uv_top'
 'icosphere'
@@ -1931,14 +2130,11 @@ EditorCamera()
 'brick'
 'cursor'
 'default_sky'
-'desert_temple_low'
 'file_icon'
 'folder'
-'reflection_map'
-'reflection_map_2'
+'heightmap_1'
 'reflection_map_3'
 'shore'
-'sphere_map_0'
 'ursina_logo'
 'ursina_wink_0000'
 'ursina_wink_0001'
@@ -1976,7 +2172,7 @@ origin = Entity(model='quad', color=color.orange, scale=(5, .05))
 ed = EditorCamera(rotation_speed = 200, panning_speed=200)
 </div>
 </pre></div>
-<div id="Grid"><div id="Grid" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Grid<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Grid(width, height, thickness=1, **kwargs)</params>
+<div id="Grid"><div id="Grid" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Grid<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Grid(width, height, mode='line', thickness=1, **kwargs)</params>
 
 width<g> = width</g> 
 height<g> = height</g> 
@@ -1988,19 +2184,24 @@ height<g> = height</g>
 <div id="Plane"><div id="Plane" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Plane<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Plane(subdivisions=(1,1), mode='triangle', **kwargs)</params>
 
 vertices, self.triangles<g> = list(), list()</g> 
+uvs<g> = list()</g> 
 
 
-<div class="example">front =  Entity(model=Plane(subdivisions=(3,6)), z=-.5, rotation_x=-90)
+<div class="example">front =  Entity(model=Plane(subdivisions=(3,6)), texture='brick', rotation_x=-90)
 
 _ed = EditorCamera()
+Entity(model='cube', color=color.green, scale=.05)
 </div>
 </pre></div>
-<div id="Prismatoid"><div id="Prismatoid" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Prismatoid<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Prismatoid(base_shape=Quad, origin=(0,0), path=((0,0,0),(0,1,0)), thicknesses=((1,1),), mode='triangle', **kwargs)</params>
+<div id="Prismatoid"><div id="Prismatoid" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Prismatoid<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Prismatoid(base_shape=Quad, origin=(0,0), path=((0,0,0),(0,1,0)), thicknesses=((1,1),), look_at=True, mode='triangle', **kwargs)</params>
 
 base_shape<g> = base_shape</g> 
 
 
-<div class="example">e = Entity(model=Prismatoid())
+<div class="example">path = (Vec3(0,0,0), Vec3(0,1,0), Vec3(0,3,0), Vec3(0,4,0), Vec3(2,5,0))
+thicknesses = ((1,1), (.5,.5), (.75,.75), (.5,.5), (1,1))
+e = Entity(model=Prismatoid(path=path, thicknesses=thicknesses))
+e.model.colorize()
 
 EditorCamera()
 origin = Entity(model='cube', color=color.magenta)
@@ -2030,5 +2231,17 @@ camera.z = -5
 <div class="example">Entity(model=Sphere(), color=color.color(60,1,1,.3), x=4)
 origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
 ed = EditorCamera(rotation_speed = 200, panning_speed=200)
+</div>
+</pre></div>
+<div id="Terrain"><div id="Terrain" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Terrain<g>(Plane)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Terrain(heightmap, skip=1, **kwargs)</params>
+
+heightmap<g> = load_texture(heightmap)</g> 
+heightmap<g> = Texture(image)</g> 
+vertices[i]<g> = (self.vertices[i][0], h, self.vertices[i][2])</g> 
+
+
+<div class="example">e = Entity(model=Terrain('heightmap_1', skip=2), scale=5)
+e.texture='heightmap_1'
+EditorCamera()
 </div>
 </pre></div></div></body>
