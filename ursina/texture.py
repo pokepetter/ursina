@@ -19,7 +19,7 @@ class Texture():
     def __init__(self, value):
 
         if isinstance(value, str):
-            value = Path(str)
+            value = Path(value)
 
         if isinstance(value, Path):
             self.path = Path(value)
