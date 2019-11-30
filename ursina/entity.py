@@ -146,7 +146,7 @@ class Entity(NodePath):
 
             if self.model:
                 self.model.reparentTo(self)
-                self.model.setTransparency(TransparencyAttrib.MAlpha)
+                self.model.setTransparency(TransparencyAttrib.M_dual)
                 setattr(self, 'color', self.color) # reapply color after changing model
                 self._vert_cache = None
                 if isinstance(value, Mesh):
