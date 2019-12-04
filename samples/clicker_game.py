@@ -22,36 +22,43 @@ def button_click():
     gold += 1
     counter.text = str(gold)
 
-    if i > 19:
-        button.animate_scale(0, duration=.4)
-        destroy(button, delay=.5)
-
 button.on_click = button_click
 
-b = Button(cost=10, x=-.2, scale=.125, color=color.dark_gray, disabled=True)
-b.tooltip = Tooltip(f'<gold>Gold Generator\n<default>Earn 1 gold every second.\nCosts {b.cost} gold.')
 
-def button_click():
+
+button_2 = Button(cost=10, x=.2, scale=.125, color=color.dark_gray, disabled=True)
+button_2.tooltip = Tooltip(f'<gold>Gold Generator\n<default>Earn 1 gold every second.\nCosts {button_2.cost} gold.')
+
+def buy_auto_gold():
     global gold
-    if gold >= b.cost:
-        gold -= b.cost
+    if gold >= button_2.cost:
+        gold -= button_2.cost
         counter.text = str(gold)
-        b.disabled = False
-        b.color = color.green
-        invoke(generate_gold, 1, 1)
+        invoke(auto_generate_gold, 1, 1)
 
-def generate_gold(value=1, interval=1):
+button_2.on_click = buy_auto_gold
+
+
+
+def auto_generate_gold(value=1, interval=1):
     global gold
     gold += 1
     counter.text = str(gold)
-    b.animate_scale(.125 * 1.1, duration=.1)
-    b.animate_scale(.125, duration=.1, delay=.1)
-    invoke(generate_gold, value, delay=interval)
+    button_2.animate_scale(.125 * 1.1, duration=.1)
+    button_2.animate_scale(.125, duration=.1, delay=.1)
+    invoke(auto_generate_gold, value, delay=interval)
 
 
+def update():
+    global gold
+    for b in (button_2, ):
+        if gold >= b.cost:
+            b.disabled = False
+            b.color = color.green
+        else:
+            b.disabled = True
+            b.color = color.gray
 
-
-b.on_click = button_click
 
 
 app.run()

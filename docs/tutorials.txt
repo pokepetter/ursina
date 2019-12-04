@@ -4,5 +4,23 @@
 ʕ •ᴥ•ʔゝ□</a>
 # normal, size 3
 
+
+# size 2
+Tutorials
+# size 1
+
 [Introduction Tutorial, introduction_tutorial.html]
 [Inventory Tutorial, inventory_tutorial.html]
+
+
+
+# size 2
+Example Projects
+# size 1
+
+[Cookie Clicker, https://github.com/pokepetter/ursina/blob/master/samples/clicker_game.py]
+[Culumn Graph, https://github.com/pokepetter/ursina/blob/master/samples/culumn_graph.py]
+[Inventory, https://github.com/pokepetter/ursina/blob/master/samples/inventory.py]
+[Minecraft Clone, https://github.com/pokepetter/ursina/blob/master/samples/minecraft_clone.py]
+[Platformer, https://github.com/pokepetter/ursina/blob/master/samples/platformer.py]
+[Tic Tac Toe, https://github.com/pokepetter/ursina/blob/master/samples/tic_tac_toe.py]
