@@ -46,14 +46,14 @@ def load_model(name, path=application.asset_folder):
 if not hasattr(application, 'blender_paths'):
     application.blender_paths = dict()
 
-    try:
-        import platform
-        if platform.system() == 'Windows':
-            # get blender path by getting default program for '.blend' file extention
-            import shlex
-            import winreg
+    import platform
+    if platform.system() == 'Windows':
+        # get blender path by getting default program for '.blend' file extention
+        import shlex
+        import winreg
 
-            class_root = winreg.QueryValue(winreg.HKEY_CLASSES_ROOT, '.blend')
+        class_root = winreg.QueryValue(winreg.HKEY_CLASSES_ROOT, '.blend')
+        if class_root:
             with winreg.OpenKey(winreg.HKEY_CLASSES_ROOT, r'{}\shell\open\command'.format(class_root)) as key:
                 command = winreg.QueryValueEx(key, '')[0]
                 default_blender = shlex.split(command)[0]
@@ -68,11 +68,9 @@ if not hasattr(application, 'blender_paths'):
                         if folder.is_dir():
                             application.blender_paths[folder.name] = list(p.glob('blender.exe'))[0]
 
-        from pprint import pprint
-        print('blender_paths:')
-        pprint(application.blender_paths)
-    except:
-        print('finding default application for .blend failed. maybe not added to registry?')
+    from pprint import pprint
+    print('blender_paths:')
+    pprint(application.blender_paths)
 
 
 
@@ -314,8 +312,8 @@ def compress_internal():
         )
 
 
-if __name__ == '__main__':
-    compress_internal()
+# if __name__ == '__main__':
+    # compress_internal()
     # from ursina import *
     # app = Ursina()
     # e = Entity(model=Cylinder(16))
