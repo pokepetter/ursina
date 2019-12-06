@@ -46,30 +46,33 @@ def load_model(name, path=application.asset_folder):
 if not hasattr(application, 'blender_paths'):
     application.blender_paths = dict()
 
-    import platform
-    if platform.system() == 'Windows':
-        # get blender path by getting default program for '.blend' file extention
-        import shlex
-        import winreg
+    try:
+        import platform
+        if platform.system() == 'Windows':
+            # get blender path by getting default program for '.blend' file extention
+            import shlex
+            import winreg
 
-        class_root = winreg.QueryValue(winreg.HKEY_CLASSES_ROOT, '.blend')
-        with winreg.OpenKey(winreg.HKEY_CLASSES_ROOT, r'{}\shell\open\command'.format(class_root)) as key:
-            command = winreg.QueryValueEx(key, '')[0]
-            default_blender = shlex.split(command)[0]
-            default_blender = Path(default_blender)
-            application.blender_paths['default'] = default_blender
+            class_root = winreg.QueryValue(winreg.HKEY_CLASSES_ROOT, '.blend')
+            with winreg.OpenKey(winreg.HKEY_CLASSES_ROOT, r'{}\shell\open\command'.format(class_root)) as key:
+                command = winreg.QueryValueEx(key, '')[0]
+                default_blender = shlex.split(command)[0]
+                default_blender = Path(default_blender)
+                application.blender_paths['default'] = default_blender
 
-            blender_foundation_directory = default_blender.parent.parent
-            blender_installations = blender_foundation_directory.glob('*blender*')
+                blender_foundation_directory = default_blender.parent.parent
+                blender_installations = blender_foundation_directory.glob('*blender*')
 
-            for p in blender_installations:
-                for folder in p.glob('*/'):
-                    if folder.is_dir():
-                        application.blender_paths[folder.name] = list(p.glob('blender.exe'))[0]
+                for p in blender_installations:
+                    for folder in p.glob('*/'):
+                        if folder.is_dir():
+                            application.blender_paths[folder.name] = list(p.glob('blender.exe'))[0]
 
-    from pprint import pprint
-    print('blender_paths:')
-    pprint(application.blender_paths)
+        from pprint import pprint
+        print('blender_paths:')
+        pprint(application.blender_paths)
+    except:
+        print('finding default application for .blend failed. maybe not added to registry?')
 
 
 
