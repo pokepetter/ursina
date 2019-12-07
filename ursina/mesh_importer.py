@@ -312,9 +312,9 @@ def compress_internal():
         )
 
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
     # compress_internal()
-    # from ursina import *
-    # app = Ursina()
+    from ursina import *
+    app = Ursina()
     # e = Entity(model=Cylinder(16))
     # ursina_mesh_to_obj(e.model, name='quad_export_test')
