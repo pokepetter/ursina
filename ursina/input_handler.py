@@ -52,6 +52,9 @@ class InputEvents(Enum):
     page_down_up = 'page down up'
     page_up = 'page up'
     page_up_up = 'page up up'
+    
+    def __hash__(self):
+        return hash(self.value)
 
     def __eq__(self, other):
         """ Overriden __eq__ to allow for both str and InputEvent comparisions """
