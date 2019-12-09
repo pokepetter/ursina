@@ -56,7 +56,11 @@ def lerp(a, b, t):
         lerped = list()
         for i in range(min(len(a), len(b))):
             lerped.append(lerp(a[i], b[i], t))
-        return type(a)(*lerped)
+
+        if isinstance(a, (tuple, list)):
+            return type(a)(lerped)
+        else:
+            return type(a)(*lerped)
     else:
         print(f'''can't lerp types {type(a)} and {type(b)}''')
 
@@ -122,4 +126,8 @@ if __name__ == '__main__':
 
     between_color = lerp(color.lime, color.magenta, .5)
     print(between_color)
+    print(lerp((0,0), (0,1), .5))
+    print(lerp(Vec2(0,0), Vec2(0,1), .5))
+    print(lerp([0,0], [0,1], .5))
+    
     app.run()
