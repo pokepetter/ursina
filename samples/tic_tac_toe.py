@@ -17,8 +17,8 @@ board = [[Button(parent=scene, position=(x,y), color=color.color(0,0,0,.8)) for 
 
 player_name = 'o'
 player_color = color.azure
-cursor = Tooltip(player_name, color=player_color, origin=(0,0), scale=1, enabled=True)
-cursor.background.color = player_color.tint(.2)
+cursor = Tooltip(player_name, color=player_color, origin=(0,0), scale=4, enabled=True)
+cursor.background.color = color.clear
 bg = Entity(parent=scene, model='quad', texture='shore', scale=(16,8), z=10, color=color.light_gray)
 mouse.visible = False
 
@@ -41,7 +41,6 @@ def input(key):
             player_color = color.azure
 
         cursor.text = player_name
-        cursor.background.color = player_color.tint(.2)
 
 
 def check_for_victory():
@@ -62,7 +61,9 @@ def check_for_victory():
         print('winner is:', name)
         destroy(cursor)
         mouse.visible = True
-        t = Text(name+'\nwon!', scale=3, origin=(0,0), background=True)
+        Panel(z=1, scale=10, model='quad')
+        t = Text('player\n'+name+'\nwon!', scale=3, origin=(0,0), background=True)
+        t.create_background(padding=(.5,.25), radius=Text.size/2)
         t.background.color = player_color.tint(-.2)
 
 
