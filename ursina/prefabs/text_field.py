@@ -7,7 +7,8 @@ class TextField(Entity):
         super().__init__(
             parent=camera.ui,
             x=-.5,
-            y=.4
+            y=.4,
+            ignore_paused=True,
             )
 
         # for key, value in kwargs.items():
@@ -17,7 +18,7 @@ class TextField(Entity):
         self.font = 'VeraMono.ttf'
         self.font_size = 20
         self.line_height = 1
-        self.max_lines = math.inf
+        self.max_lines = 999999
 
         self.text_entity = Text(
             parent = self,
@@ -47,6 +48,7 @@ class TextField(Entity):
 
         self.selection = None
         self.selection_parent = Entity(parent=self.cursor_parent)
+        self.register_mouse_input = True
 
         def blink_cursor():
             if self.cursor.color == color.azure:
@@ -59,10 +61,6 @@ class TextField(Entity):
         self.text = ''
 
         self.replacements = dict()
-        for name in color.color_names:
-            if name == 'black':
-                continue
-            self.replacements[f' {name} '] = f'☾{name}☽ {name} ☾default☽'
 
         self.on_undo = list()
         self.on_redo = list()
@@ -107,8 +105,8 @@ class TextField(Entity):
             # 'save_as':          ('ctrl+shift+s',),
             'indent':           ('tab',),
             'dedent':           ('shift+tab',),
-            'move_line_down':   ('ctrl+arrow down', 'ctrl+arrow down hold'),
-            'move_line_up':     ('ctrl+arrow up', 'ctrl+arrow up hold'),
+            'move_line_down':   ('ctrl+down arrow', 'ctrl+down arrow hold'),
+            'move_line_up':     ('ctrl+up arrow', 'ctrl+up arrow hold'),
             # 'cut':              ('ctrl+x',),
             # 'copy':             ('ctrl+c',),
             # 'paste':            ('ctrl+v',),
@@ -116,11 +114,13 @@ class TextField(Entity):
             # 'toggle_comment':   ('ctrl+alt+c',),
             # 'find':             ('ctrl+f',),
 
-            'move_left':        ('arrow left', 'arrow left hold'),
-            'move_right':       ('arrow right', 'arrow right hold'),
-            'move_up':          ('arrow up', 'arrow up hold'),
-            'move_down':        ('arrow down', 'arrow down hold'),
+            'move_left':        ('left arrow', 'left arrow hold'),
+            'move_right':       ('right arrow', 'right arrow hold'),
+            'move_up':          ('up arrow', 'up arrow hold'),
+            'move_down':        ('down arrow', 'down arrow hold'),
         }
+
+        # self.debug_cursor = Entity(parent=self.cursor_parent, model='cube', origin=(-.5,-.5), color=color.white33)
 
 
         for key, value in kwargs.items():
@@ -203,7 +203,7 @@ class TextField(Entity):
             if y > 0:
                 cursor.y -= 1
                 cursor.x = min(x, len(lines[y-1]))
-        if key in self.shortcuts['move_down'] and len(lines) < self.max_lines:
+        if key in self.shortcuts['move_down']:
             if y < len(lines)-1:
                 cursor.y += 1
                 cursor.x = min(x, len(lines[y+1]))
@@ -234,6 +234,17 @@ class TextField(Entity):
                 if k in self.alted_keys:
                     k = self.alted_keys[k]
 
+            if self.selection:  # delete selected text
+                self.cursor.position = self.selection[1]
+                if self.selection[1][1] > self.selection[0][1]:
+                    for y in range(self.selection[0][1], self.selection[1][1]):
+                        lines.pop(y)
+
+                for x in range(self.selection[1][0] - self.selection[0][0]):
+                    erase()
+
+                self.selection = None
+
             add_text(k)
 
             if k == '(':
@@ -249,7 +260,7 @@ class TextField(Entity):
         if key in ('space', 'space hold'):
             add_text(' ')
 
-        if key in self.shortcuts['newline'] and len(lines) < self.max_lines:
+        if key in self.shortcuts['newline']:
             if l.startswith('class ') and not l.endswith(':'):
                 add_text(':')
             if l.startswith('def ') and not l.endswith(':'):
@@ -270,17 +281,18 @@ class TextField(Entity):
             # self.cursor.x = indent
 
         if key in self.shortcuts['indent']:
-            if self.selection == None:
-                lines[y] = (' '*4) + lines[y]
+            if self.selection == None or self.selection[0] == self.selection[1]:
+                add_text(' '*4, move_cursor=True)
 
             else:
                 for y in range(self.selection[0][1], self.selection[1][1]+1):
-                    print('indent', y)
+                    # print('indent', y)
                     lines[y] = (' '*4) + lines[y]
 
-            self.cursor.x += 4
-            self.on_undo.append((self.text, y, x))
-            self.text = '\n'.join(lines)
+                self.cursor.x += 4
+                self.on_undo.append((self.text, y, x))
+                self.text = '\n'.join(lines)
+
 
         if key in self.shortcuts['dedent']:
             if self.selection == None:
@@ -380,44 +392,68 @@ class TextField(Entity):
 
             self.text = '\n'.join(lines)
 
+        if self.register_mouse_input:
+            if key == 'left mouse down':
+                # if mouse.x < self.x:
+                #     return
 
-        if key == 'left mouse down':
-            # if mouse.x < self.x:
-            #     return
-
-            click_position = self.get_mouse_position()
-            cursor.position = click_position
-            self.selection = [click_position, click_position]
-
-
-        if key == 'left mouse up':
-            # if mouse.x < self.x:
-            #     return
-
-            click_position = self.get_mouse_position()
-            self.selection[1] = click_position
+                click_position = self.get_mouse_position()
+                cursor.position = click_position
+                self.selection = [click_position, click_position]
 
 
+            if key == 'left mouse up':
+                # if mouse.x < self.x:
+                #     return
 
-        self.text_entity.text = multireplace(text, self.replacements)
-        self.line_numbers.text = '\n'.join([str(e) for e in range(len(text.split('\n')))])
+                click_position = self.get_mouse_position()
+                self.selection[1] = click_position
+
+        self.render()
+
+
+    def render(self):
+        lines = self.text.split('\n')
+        text = '\n'.join(lines[0:self.max_lines])
+
+        if self.replacements:
+            self.text_entity.text = multireplace(text, self.replacements)
+        else:
+            self.text_entity.text = text
+        self.line_numbers.text = '\n'.join([str(e) for e in range(len(lines))])
         self.line_numbers.color = color.gray
+
 
     def get_mouse_position(self):
         lines = self.text.split('\n')
-        y = clamp(abs(math.ceil((mouse.y - self.get_position(camera.ui)[1]) / self.text_entity.size / self.world_scale_y/20)), 0, len(lines)-1)
+        y = clamp(abs(math.floor((-mouse.y  + self.get_position(camera.ui)[1]) / self.text_entity.size)), 0, len(lines)-1)
         x = clamp(round(((mouse.x) - self.get_position(camera.ui)[0]) / self.character_width / (self.world_scale_x/20)), 0, len(lines[y]))
         return (x,y)
 
 
     def update(self):
+        # self.debug_cursor.position = self.get_mouse_position()
+
         if mouse.left and mouse.x > self.x:
             click_position = self.get_mouse_position()
             self.draw_selection()
 
 
+    def select_all(self):
+        lines = self.text.split('\n')
+        lines = self.text.splitlines()
+        # print('|||||||||', len(lines), len(self.text.splitlines()), self.text.splitlines(), lines)
+        if lines:
+            self.selection = ((0,0), (len(lines[-1]), len(lines)))
+            print(self.selection)
+
+
     def draw_selection(self):
         [destroy(c) for c in self.selection_parent.children]
+
+        if self.selection == None:
+            return
+
 
         if self.selection[0] == self.selection[1]:
             return
@@ -455,22 +491,27 @@ if __name__ == '__main__':
     Text.default_resolution = 16*2
     # TreeView()
     te = TextField()
-    te.replacements = {
-        'class ':    '☾orange☽class ☾default☽',
-        'def ':      '☾azure☽def ☾default☽',
-        '__init__':  '☾cyan☽__init__☾default☽',
-        'Entity':    '☾lime☽Entity☾default☽',
-        'self.':     '☾orange☽self☾default☽.',
-        '(self)':     '(☾orange☽self☾default☽)',
-        'self,':     '☾orange☽self☾default☽,',
-        '    ':      '☾dark_gray☽----☾default☽',
-        }
-    #
+    te.line_numbers.enabled = True
     # for name in color.color_names:
-    #     te.text += name+'\n'
-    # te.text = 'test\nyolo\nlol'
-    # te.input('')
-    # te.selection = ((0,0),(2,3))
+    #     if name == 'black':
+    #         continue
+    #     te.replacements[f' {name}'] = f'☾{name}☽ {name}☾default☽'
+    # te.replacements = {
+    #     'class ':    '☾orange☽class ☾default☽',
+    #     'def ':      '☾azure☽def ☾default☽',
+    #     '__init__':  '☾cyan☽__init__☾default☽',
+    #     'Entity':    '☾lime☽Entity☾default☽',
+    #     'self.':     '☾orange☽self☾default☽.',
+    #     '(self)':     '(☾orange☽self☾default☽)',
+    #     'self,':     '☾orange☽self☾default☽,',
+    #     '    ':      '☾dark_gray☽----☾default☽',
+    #     }
+    #
+    # te.text = 'yolo\n'*99
+    # te.cursor.position = (4,0)
+    te.render()
+    # te.selection = ((0,0),(4,0))
+    te.select_all()
     # te.selection = ((1,0),(3,0))
     # te.selection = ((2,3),(0,0))
     # te.draw_selection()
