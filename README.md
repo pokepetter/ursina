@@ -23,7 +23,7 @@ If you want to easily edit the source, it's recommended to clone the git repo an
   * python 3.6+
   * panda3d
   * screeninfo, for detecting screen resolution
-  * hurry.size, for getting screen resolution
+  * hurry.size, for converting bytes to megabytes
   * pillow, for texture manipulation
   * psd-tools, for converting .psd files
   * blender, for converting .blend files
