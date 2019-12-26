@@ -10,7 +10,7 @@ open source game engine
 --------------------------------------
 # normal
 
-[GitHub🡕, https://github.com/pokepetter/ursina] [Tutorials, tutorials.html] [Documentation, documentation.html] [Twitter🡕, https://twitter.com/petteramland]
+[GitHub🡕, https://github.com/pokepetter/ursina] [Tutorials, tutorials.html] [Documentation, documentation.html] [Twitter🡕, https://twitter.com/ursinaengine]
 
 
 # left, size 2, bold,

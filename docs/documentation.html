@@ -33,6 +33,7 @@
 <a style="color:hsl(20.0, 89%, 28%);" href="#CubicBezier">CubicBezier</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#Entity">Entity</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#Hit">Hit</a>
+<a style="color:hsl(20.0, 89%, 28%);" href="#InputEvents">InputEvents</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#Ursina">Ursina</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#Mesh">Mesh</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#Wait">Wait</a>
@@ -59,6 +60,7 @@
 <a style="color:hsl(349.0, 89%, 28%);" href="#FileBrowser">FileBrowser</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#FileBrowserSave">FileBrowserSave</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#FirstPersonController">FirstPersonController</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#HealthBar">HealthBar</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#HotReloader">HotReloader</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#InputField">InputField</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#MemoryCounter">MemoryCounter</a>
@@ -300,18 +302,21 @@ in_out_bounce(<g>t</g>)
 {e}_boomerang(<g>t</g>)   
 
 <div class="example">'''Draws a sheet with every curve and it's name'''
+
 camera.orthographic = True
 camera.fov = 16
 camera.position = (9, 6)
-window.color=color.black
+window.color = color.black
 
 i = 0
 for e in dir(curve):
     try:
         item = getattr(curve, e)
         print(item.__name__, ':', item(.75))
-        curve_renderer = Entity(model=Mesh(vertices=[Vec3(i/31, item(i/31), 0) for i in range(32)], mode='line', thickness=2), color=color.light_gray)
-        row = math.floor(i/8)
+        curve_renderer = Entity(
+            model=Mesh(vertices=[Vec3(i / 31, item(i / 31), 0) for i in range(32)], mode='line', thickness=2),
+            color=color.light_gray)
+        row = floor(i / 8)
         curve_renderer.x = (i % 8) * 2.5
         curve_renderer.y = row * 1.75
         label = Text(parent=curve_renderer, text=item.__name__, scale=8, color=color.gray, y=-.1)
@@ -319,12 +324,11 @@ for e in dir(curve):
     except:
         pass
 
-c = CubicBezier(0,.5,1,.5)
+c = CubicBezier(0, .5, 1, .5)
 print('-----------', c.calculate(.23))
 
 window.exit_button.visible = False
 window.fps_counter.enabled = False
-
 '''
 These are used by Entity when animating, like this:
 
@@ -361,16 +365,7 @@ for i, e in enumerate((quad, sprite, circle, cone, prismatoid, cylinder, mesh)):
 EditorCamera()
 </div>
 </pre></div>
-<div id="input_handler"><div id="input_handler" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">input_handler</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">control<g> = False</g> 
-left_control<g> = False</g> 
-right_control<g> = False</g> 
-shift<g> = False</g> 
-left_shift<g> = False</g> 
-right_shift<g> = False</g> 
-alt<g> = False</g> 
-left_alt<g> = False</g> 
-right_alt<g> = False</g> 
-held_keys<g> = defaultdict(lambda: 0)</g> 
+<div id="input_handler"><div id="input_handler" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">input_handler</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">held_keys<g> = defaultdict(lambda: 0)</g> 
 rebinds<g> = dict()</g> 
 
 bind(<g>original_key, alternative_key</g>)   
@@ -378,16 +373,15 @@ unbind(<g>key</g>)
 rebind(<g>to_key, from_key</g>)   
 input(<g>key</g>)   
 
-<div class="example">'''
-key names:
-left mouse down, left mouse up, left mouse hold
-scroll up, scroll down
-arrow left, arrow right, arrow up, arrow down
-space
-'''
-input_handler.bind('s', 'arrow down')   # 's'-key will now be registered as 'arrow down'-key
+<div class="example">input_handler.bind('s', 'arrow down')  # 's'-key will now be registered as 'arrow down'-key
+
 def input(key):
     print(key)
+    if key == 'left mouse down':
+        print('pressed left mouse button')
+
+    if key == InputEvent.left_mouse_down:   # same as above, but with InputEvents enum.
+        print('pressed left mouse button')
 </div>
 </pre></div>
 <div id="mesh_importer"><div id="mesh_importer" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">mesh_importer</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
@@ -398,8 +392,6 @@ compress_models_fast(<g>model_name=None, write_to_disk=False</g>)
 ursina_mesh_to_obj(<g>mesh, name='', out_path=application.models_folder, max_decimals=3</g>)   
 compress_internal()   
 
-<div class="example">compress_internal()
-</div>
 </pre></div>
 <div id="mouse"><div id="mouse" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">mouse</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">enabled<g> = False</g> 
 locked<g> = False</g> 
@@ -563,6 +555,9 @@ distance(e1, e2)
 
 between_color = lerp(color.lime, color.magenta, .5)
 print(between_color)
+print(lerp((0,0), (0,1), .5))
+print(lerp(Vec2(0,0), Vec2(0,1), .5))
+print(lerp([0,0], [0,1], .5))
 </div>
 </pre></div>
 <div id="ursinastuff"><div id="ursinastuff" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ursinastuff</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
@@ -597,16 +592,16 @@ show_ursina_splash<g> = False</g>
 title<g> = os.path.basename(os.path.dirname(application.asset_folder))</g> 
 screen_resolution<g> = (get_monitors()[0].width, get_monitors()[0].height)</g> 
 screen_resolution<g> = Vec2(1366, 768)</g> 
-fullscreen_size<g> = Vec2(self.screen_resolution[0]+1, (self.screen_resolution[0]+1) * .5625)</g> 
+fullscreen_size<g> = Vec2(self.screen_resolution[0], (self.screen_resolution[0]) * .5625)</g> 
 windowed_size<g> = Vec2(self.fullscreen_size[0] / 1.25, self.fullscreen_size[0] / 1.25 * .5625)</g> 
 windowed_position<g> = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode</g> 
 size<g> = self.windowed_size</g> 
+borderless<g> = True</g> 
 position<g> = Vec2(0,0)</g> 
 top<g> = Vec2(0, .5)</g> 
 bottom<g> = Vec2(0, .5)</g> 
 center<g> = Vec2(0, 0)</g> 
 fullscreen<g> = False</g> 
-borderless<g> = True</g> 
 cursor<g> = True</g> 
 vsync<g> = True</g> 
 color<g> = color.dark_gray</g> 
@@ -633,6 +628,11 @@ make_exit_button()   <g># called by main after setting up camera</g>
 update()   
 
 <div class="example">window.title = 'Title'
+window.borderless = False
+window.fullscreen = False
+
+window.exit_button.visible = False
+window.fps_counter.enabled = False
 </div>
 </pre></div>
 <div id="Audio"><div id="Audio" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Audio<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Audio(sound_file_name='', autoplay=True, **kwargs)</params>
@@ -678,6 +678,8 @@ remove()
 c = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
 e = Button(parent=scene, model=c, collider='mesh')
 e.color = color.red
+def update():
+    print(mouse.hovered_entity)
 
 EditorCamera()
 </div>
@@ -693,6 +695,8 @@ visible<g> = False</g>
 c = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
 e = Button(parent=scene, model=c, collider='mesh')
 e.color = color.red
+def update():
+    print(mouse.hovered_entity)
 
 EditorCamera()
 </div>
@@ -708,6 +712,8 @@ visible<g> = False</g>
 c = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
 e = Button(parent=scene, model=c, collider='mesh')
 e.color = color.red
+def update():
+    print(mouse.hovered_entity)
 
 EditorCamera()
 </div>
@@ -722,6 +728,8 @@ visible<g> = False</g>
 c = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
 e = Button(parent=scene, model=c, collider='mesh')
 e.color = color.red
+def update():
+    print(mouse.hovered_entity)
 
 EditorCamera()
 </div>
@@ -768,7 +776,7 @@ e = Entity(model='cube', color=color.lime)
 print(e.color.name)
 </div>
 </pre></div>
-<div id="CubicBezier"><div id="CubicBezier" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">CubicBezier<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">CubicBezier(a, b, c, d)</params>
+<div id="CubicBezier"><div id="CubicBezier" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">CubicBezier</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">CubicBezier(a, b, c, d)</params>
 
 a<g> = a</g> 
 b<g> = b</g> 
@@ -776,7 +784,7 @@ c<g> = c</g>
 d<g> = d</g> 
 cx<g> = 3.0 * a</g> 
 bx<g> = 3.0 * (c - a) - self.cx</g> 
-ax<g> = 1.0 - self.cx -self.bx</g> 
+ax<g> = 1.0 - self.cx - self.bx</g> 
 cy<g> = 3.0 * b</g> 
 by<g> = 3.0 * (d - b) - self.cy</g> 
 ay<g> = 1.0 - self.cy - self.by</g> 
@@ -788,18 +796,21 @@ calculate(<g>x, epsilon=.0001</g>)
 solve_curve_x(<g>t, epsilon=.0001</g>)   
 
 <div class="example">'''Draws a sheet with every curve and it's name'''
+
 camera.orthographic = True
 camera.fov = 16
 camera.position = (9, 6)
-window.color=color.black
+window.color = color.black
 
 i = 0
 for e in dir(curve):
     try:
         item = getattr(curve, e)
         print(item.__name__, ':', item(.75))
-        curve_renderer = Entity(model=Mesh(vertices=[Vec3(i/31, item(i/31), 0) for i in range(32)], mode='line', thickness=2), color=color.light_gray)
-        row = math.floor(i/8)
+        curve_renderer = Entity(
+            model=Mesh(vertices=[Vec3(i / 31, item(i / 31), 0) for i in range(32)], mode='line', thickness=2),
+            color=color.light_gray)
+        row = floor(i / 8)
         curve_renderer.x = (i % 8) * 2.5
         curve_renderer.y = row * 1.75
         label = Text(parent=curve_renderer, text=item.__name__, scale=8, color=color.gray, y=-.1)
@@ -807,12 +818,11 @@ for e in dir(curve):
     except:
         pass
 
-c = CubicBezier(0,.5,1,.5)
+c = CubicBezier(0, .5, 1, .5)
 print('-----------', c.calculate(.23))
 
 window.exit_button.visible = False
 window.fps_counter.enabled = False
-
 '''
 These are used by Entity when animating, like this:
 
@@ -923,7 +933,8 @@ e = Entity(model='quad', color=color.orange)
 
 def input(key):
     if key == 'space':
-        e.animate('x', -3, curve=CubicBezier(0,.7,1,.3))
+        e.color = color.clear
+        window.overlay.fade_in(duration=.4)
 
 
 print(time.time() - t)
@@ -940,6 +951,25 @@ normal<g> = None</g>
 world_normal<g> = None</g> 
 
 
+</pre></div>
+<div id="InputEvents"><div id="InputEvents" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">InputEvents<g>(Enum)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">InputEvents(**kwargs)</params>
+
+
+bind(<g>original_key, alternative_key</g>)   
+unbind(<g>key</g>)   
+rebind(<g>to_key, from_key</g>)   
+input(<g>key</g>)   
+
+<div class="example">input_handler.bind('s', 'arrow down')  # 's'-key will now be registered as 'arrow down'-key
+
+def input(key):
+    print(key)
+    if key == 'left mouse down':
+        print('pressed left mouse button')
+
+    if key == InputEvent.left_mouse_down:   # same as above, but with InputEvents enum.
+        print('pressed left mouse button')
+</div>
 </pre></div>
 <div id="Ursina"><div id="Ursina" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Ursina<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Ursina()</params>
 
@@ -1335,6 +1365,9 @@ render_queue<g> = 1</g>
 
 update()   
 
+<div class="example">camera.orthographic = True
+Cursor()
+</div>
 </pre></div>
 <div id="DebugMenu"><div id="DebugMenu" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">DebugMenu<g>(<a style="color: gray;" href="#Draggable">Draggable</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">DebugMenu(target, **kwargs)</params>
 
@@ -1541,7 +1574,55 @@ update()
 
 <div class="example">Sky()
 Entity(model='plane', scale=100, color=color.yellow.tint(-.2), texture='white_cube', texture_scale=(100,100))
+Entity(
+    model='cube',
+    origin=(1, 0, 1),
+    scale=(1, 5, 1),
+    collider='box',
+    color=color.blue,
+)
 FirstPersonController()
+</div>
+</pre></div>
+<div id="HealthBar"><div id="HealthBar" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">HealthBar<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">HealthBar(show_text=True, show_lines=False, **kwargs)</params>
+
+bar<g> = Entity(parent=self, model='quad', origin=self.origin, z=-.01, color=color.red, ignore=True)</g> 
+lines<g> = Entity(parent=self.bar, origin=self.origin, y=-1, color=color.black33, ignore=True)</g> 
+roundness<g> = .25</g> 
+max_value<g> = 100</g> 
+value<g> = self.max_value</g> 
+clamp<g> = True</g> 
+show_lines<g> = show_lines</g> 
+show_text<g> = show_text</g> 
+scale_x<g> = self.scale_x # update rounded corners</g> 
+scale_y<g> = self.scale_y # update background's rounded corners</g> 
+
+
+<div class="example">health_bar_1 = HealthBar(bar_color=color.lime.tint(-.25), roundness=.5, value=50)
+
+health_bar_2 = HealthBar(scale_x=1)
+health_bar_2.roundness = .5
+health_bar_2.y-=.2
+health_bar_2.scale_y *= 2
+health_bar_2.value = 5
+
+health_bar_3 = HealthBar()
+health_bar_3.roundness = .5
+health_bar_3.scale_y = .1
+health_bar_3.y-=.4
+health_bar_3.value = 5
+
+def input(key):
+    if key == '+' or key == '+ hold':
+        health_bar_1.value += 10
+        health_bar_2.value += 10
+        health_bar_3.value += 10
+    if key == '-' or key == '- hold':
+        health_bar_1.value -= 10
+        health_bar_2.value -= 10
+        health_bar_3.value -= 10
+
+window.color = color.light_gray
 </div>
 </pre></div>
 <div id="HotReloader"><div id="HotReloader" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">HotReloader<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">HotReloader(path=__file__, **kwargs)</params>
@@ -1646,6 +1727,7 @@ def input(key):
     if key == 'c':
         wall.collision = not wall.collision
         print(wall.collision)
+
 
 player_controller = PlatformerController2d()
 </div>
@@ -1840,8 +1922,8 @@ shortcuts<g> = {
         # 'save_as':          ('ctrl+shift+s',),
         'indent':           ('tab',),
         'dedent':           ('shift+tab',),
-        'move_line_down':   ('ctrl+arrow down', 'ctrl+arrow down hold'),
-        'move_line_up':     ('ctrl+arrow up', 'ctrl+arrow up hold'),
+        'move_line_down':   ('ctrl+down arrow', 'ctrl+down arrow hold'),
+        'move_line_up':     ('ctrl+up arrow', 'ctrl+up arrow hold'),
         # 'cut':              ('ctrl+x',),
         # 'copy':             ('ctrl+c',),
         # 'paste':            ('ctrl+v',),
@@ -1870,7 +1952,7 @@ window.color = color._25
 Text.size = 1/window.fullscreen_size[1]*16
 Text.default_font = 'consola.ttf'
 Text.default_resolution = 16*2
-te = TextField()
+te = TextField(max_lines=3)
 te.line_numbers.enabled = True
 te.render()
 te.select_all()
