@@ -15,11 +15,9 @@ class Window(WindowProperties):
     def __init__(self):
         super().__init__()
         loadPrcFileData('', 'window-title ursina')
-        loadPrcFileData('', 'undecorated True')
         loadPrcFileData('', 'notify-level-util error')
         loadPrcFileData('', 'textures-auto-power-2 #t')
         self.setForeground(True)
-
         self.vsync = True   # can't be set during play
         self.show_ursina_splash = False
 
@@ -30,10 +28,11 @@ class Window(WindowProperties):
             print('using default sceen resolution.', 'OS:', os.name)
             self.screen_resolution = Vec2(1366, 768)
 
-        self.fullscreen_size = Vec2(self.screen_resolution[0]+1, (self.screen_resolution[0]+1) * .5625)
+        self.fullscreen_size = Vec2(self.screen_resolution[0], (self.screen_resolution[0]) * .5625)
         self.windowed_size = Vec2(self.fullscreen_size[0] / 1.25, self.fullscreen_size[0] / 1.25 * .5625)
         self.windowed_position = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode
         self.size = self.windowed_size
+        self.borderless = True
 
 
     def late_init(self):
@@ -41,9 +40,8 @@ class Window(WindowProperties):
         self.top = Vec2(0, .5)
         self.bottom = Vec2(0, .5)
         self.center = Vec2(0, 0)
-
         self.fullscreen = False
-        self.borderless = True
+
         self.cursor = True
         self.vsync = True
 
@@ -206,6 +204,9 @@ class Window(WindowProperties):
                 print('failed to set fullscreen', value)
                 pass
 
+        if name == 'borderless':
+            self.setUndecorated(value)
+
         if name == 'color':
             application.base.camNode.get_display_region(0).get_window().set_clear_color(value)
 
@@ -224,4 +225,10 @@ if __name__ == '__main__':
     from ursina import *
     app = Ursina()
     window.title = 'Title'
+    window.borderless = False
+    window.fullscreen = False
+
+    window.exit_button.visible = False
+    window.fps_counter.enabled = False
+
     app.run()
