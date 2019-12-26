@@ -21,6 +21,7 @@ class Raycaster(Entity):
         self._picker = CollisionTraverser()  # Make a traverser
         self._pq = CollisionHandlerQueue()  # Make a handler
         self._pickerNode = CollisionNode('raycaster')
+        self._pickerNode.set_into_collide_mask(0)
         self._pickerNP = self.attach_new_node(self._pickerNode)
         self._picker.addCollider(self._pickerNP, self._pq)
         self._pickerNP.show()

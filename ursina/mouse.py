@@ -40,6 +40,7 @@ class Mouse():
         self._pickerRay = CollisionRay()  # Make our ray
         self._pickerNode.addSolid(self._pickerRay)
         self._picker.addCollider(self._pickerNP, self._pq)
+        self._pickerNode.set_into_collide_mask(0)
 
         self.raycast = True
         self.collision = None
