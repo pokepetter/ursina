@@ -166,7 +166,7 @@ class Text(Entity):
 
             if tag.startswith('scale:'):
                 scale = tag.split(':')[1]
-                self.scale_override = scale = float(scale[:-1])
+                self.scale_override = float(scale)
 
             elif tag.startswith('image:'):
                 texture_name = tag.split(':')[1]
@@ -414,7 +414,7 @@ if __name__ == '__main__':
     app = Ursina()
     # Text.size = .001
     descr = dedent('''
-        <orange>Rainstorm<default>
+        <scale:1.5><orange>Rainstorm<default><scale:1>
         Summon a <azure>rain storm <default>to deal 5 <azure>water
 
         damage <default>to <hsb(0,1,.7)>everyone, <default><image:brick> <image:brick> test <default>including <orange>yourself. <default>
