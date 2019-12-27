@@ -3,7 +3,7 @@ from ursina import *
 
 class HealthBar(Button):
 
-    def __init__(self, show_text=True, show_lines=False, **kwargs):
+    def __init__(self, max_value=100, show_text=True, show_lines=False, **kwargs):
         super().__init__(
             position = (-.45 * window.aspect_ratio, .45),
             origin = (-.5, .5),
@@ -14,13 +14,12 @@ class HealthBar(Button):
             ignore = True,
             )
 
-        self.bar = Entity(parent=self, model='quad', origin=self.origin, z=-.01, color=color.red, ignore=True)
+        self.bar = Entity(parent=self, model='quad', origin=self.origin, z=-.01, color=color.red.tint(-.2), ignore=True)
         self.lines = Entity(parent=self.bar, origin=self.origin, y=-1, color=color.black33, ignore=True)
         self.text_entity.scale *= .7
         self.roundness = .25
 
-        self.max_value = 100
-        self.value = self.max_value
+        self.max_value = max_value
         self.clamp = True
         self.show_lines = show_lines
         self.show_text = show_text
@@ -30,6 +29,7 @@ class HealthBar(Button):
             setattr(self, key, value)
 
         self.scale_y = self.scale_y # update background's rounded corners
+        self.value = self.max_value
 
 
     @property
@@ -90,29 +90,30 @@ class HealthBar(Button):
 if __name__ == '__main__':
     app = Ursina()
 
-    health_bar_1 = HealthBar(bar_color=color.lime.tint(-.25), roundness=.5, value=50)
-
-    health_bar_2 = HealthBar(scale_x=1)
-    health_bar_2.roundness = .5
-    health_bar_2.y-=.2
-    health_bar_2.scale_y *= 2
-    health_bar_2.value = 5
-
-    health_bar_3 = HealthBar()
-    health_bar_3.roundness = .5
-    health_bar_3.scale_y = .1
-    health_bar_3.y-=.4
-    health_bar_3.value = 5
-
-    def input(key):
-        if key == '+' or key == '+ hold':
-            health_bar_1.value += 10
-            health_bar_2.value += 10
-            health_bar_3.value += 10
-        if key == '-' or key == '- hold':
-            health_bar_1.value -= 10
-            health_bar_2.value -= 10
-            health_bar_3.value -= 10
+    health_bar_1 = HealthBar(500)
+    # health_bar_1 = HealthBar(bar_color=color.lime.tint(-.25), roundness=.5, value=50)
+    #
+    # health_bar_2 = HealthBar(scale_x=1)
+    # health_bar_2.roundness = .5
+    # health_bar_2.y-=.2
+    # health_bar_2.scale_y *= 2
+    # health_bar_2.value = 5
+    #
+    # health_bar_3 = HealthBar()
+    # health_bar_3.roundness = .5
+    # health_bar_3.scale_y = .1
+    # health_bar_3.y-=.4
+    # health_bar_3.value = 5
+    #
+    # def input(key):
+    #     if key == '+' or key == '+ hold':
+    #         health_bar_1.value += 10
+    #         health_bar_2.value += 10
+    #         health_bar_3.value += 10
+    #     if key == '-' or key == '- hold':
+    #         health_bar_1.value -= 10
+    #         health_bar_2.value -= 10
+    #         health_bar_3.value -= 10
 
     window.color = color.light_gray
     app.run()
