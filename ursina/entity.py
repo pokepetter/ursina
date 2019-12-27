@@ -700,43 +700,6 @@ class Entity(NodePath):
             # print('added script:', camel_to_snake(name.__class__.__name__))
             return name
 
-        # class name given
-        if inspect.isclass(name):
-            class_instance = name()
-            class_instance.entity = self
-            class_instance.enabled = True
-            self.scripts.append(class_instance)
-            # print('added script:', name)
-            return class_instance
-
-        # module name given as string
-        folders = (application.asset_folder, application.internal_scripts_folder) # search order
-        if path:
-            folders = (path)
-
-        for folder in folders:
-            for filename in glob.iglob(str(folder) + '**/' + name + '.*', recursive=True):
-                for ft in ('.py',):
-                    if filename.endswith(ft):
-                        module = importlib.machinery.SourceFileLoader(filename, name+ft).load_module()
-                        class_names = inspect.getmembers(sys.modules[filename], inspect.isclass)
-                        for cn in class_names:
-                            if cn[1].__module__ == module.__name__:
-                                class_name = cn[0]
-
-                        class_ = getattr(module, class_name)
-                        class_instance = class_()
-                        class_instance.entity = self
-                        class_instance.enabled = True
-
-                        setattr(self, name, class_instance)
-                        self.scripts.append(class_instance)
-                        # print('added script:', name)
-                        return class_instance
-
-        print("couldn't find script:", name)
-        return None
-
 
     def remove_script(self, module_name):
         for s in self.scripts:
@@ -778,9 +741,6 @@ class Entity(NodePath):
         'up' :      (90,0,0),
         'down' :    (-90,0,0),
         }[axis]
-
-    def get_scripts_of_type(self, type):
-        pass
 
 
     def has_ancestor(self, possible_ancestor):
