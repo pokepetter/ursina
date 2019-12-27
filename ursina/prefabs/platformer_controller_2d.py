@@ -145,6 +145,7 @@ if __name__ == '__main__':
         if key == 'c':
             wall.collision = not wall.collision
             print(wall.collision)
+            
 
     player_controller = PlatformerController2d()
     # EditorCamera()

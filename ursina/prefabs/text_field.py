@@ -490,7 +490,7 @@ if __name__ == '__main__':
     Text.default_font = 'consola.ttf'
     Text.default_resolution = 16*2
     # TreeView()
-    te = TextField()
+    te = TextField(max_lines=3)
     te.line_numbers.enabled = True
     # for name in color.color_names:
     #     if name == 'black':

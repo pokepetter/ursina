@@ -12,8 +12,8 @@ mesh = Entity(parent=camera.ui, model=Mesh(mode='point', thickness=10), color=co
 # undo_cache = [color.random_color() for e in range(1)]
 undo_cache = list()
 undo_cache.append(color.random_color())
-# undo_index = 0
-undo_index = len(undo_cache)-1
+undo_index = 0
+# undo_index = len(undo_cache)-1
 help_text = Text(text='undo example\n\nspace: record action\na: undo\nd: redo', origin=(-.5,.5), position=window.top_left*.95)
 
 
