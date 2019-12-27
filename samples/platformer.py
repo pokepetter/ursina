@@ -39,5 +39,8 @@ window.position = (int(window.size[0]), int(window.size[1]-(window.size[1]/2)))
 window.borderless = False
 window.fullscreen = False
 
+input_handler.bind('right arrow', 'd')
+input_handler.bind('left arrow', 'a')
+input_handler.bind('up arrow', 'space')
 
 app.run()
