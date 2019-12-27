@@ -21,7 +21,7 @@ ground = Entity(
     )
 
 
-random.seed(4)
+random.seed(1)
 for i in range(10):
     Entity(
         model='cube', color=color.dark_gray, collider='box', ignore=True,
@@ -36,5 +36,8 @@ camera.smooth_follow.offset[1] = 5
 
 window.size = (window.fullscreen_size[0]//2, window.fullscreen_size[1]//2)
 window.position = (int(window.size[0]), int(window.size[1]-(window.size[1]/2)))
+window.borderless = False
+window.fullscreen = False
+
 
 app.run()

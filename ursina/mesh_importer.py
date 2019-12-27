@@ -1,9 +1,9 @@
 import os
 import glob
 import subprocess
+from pathlib import Path
 from ursina.mesh import Mesh
 from ursina import application
-from pathlib import Path
 
 
 def load_model(name, path=application.asset_folder):
@@ -251,7 +251,7 @@ def compress_models_fast(model_name=None, write_to_disk=False):
                 return file_content
 
 def ursina_mesh_to_obj(mesh, name='', out_path=application.models_folder, max_decimals=3):
-    from ursina.useful import camel_to_snake
+    from ursina.string_utilities import camel_to_snake
 
     if not name:
         name = camel_to_snake(mesh.__class__.__name__)

@@ -1,15 +1,10 @@
-import sys
-import time
-import ursina
-from ursina import *
 from panda3d.core import TransparencyAttrib
-from direct.interval.IntervalGlobal import Sequence, Func, Wait, SoundInterval
-
-from os import path
 from panda3d.core import Filename
 from panda3d.core import TextNode
-import textwrap
+from direct.interval.IntervalGlobal import Sequence, Func, Wait, SoundInterval
 
+import ursina
+from ursina import *
 from ursina.entity import Entity
 
 # note:

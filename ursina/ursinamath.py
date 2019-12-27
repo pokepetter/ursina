@@ -6,13 +6,13 @@ from ursina.color import Color
 
 def distance(a, b):
     try:
-            # dist = [abs(e) for e in (a - b)]
-            dist = abs(a[0] - b[0])
-            dist += abs(a[1] - b[1])
-            dist += abs(a[2] - b[2])
-            dist += abs(a[3] - b[3])
-            # print('color distance', a, b)
-            return dist
+        # dist = [abs(e) for e in (a - b)]
+        dist = abs(a[0] - b[0])
+        dist += abs(a[1] - b[1])
+        dist += abs(a[2] - b[2])
+        dist += abs(a[3] - b[3])
+        # print('color distance', a, b)
+        return dist
     except:
         pass
 
@@ -75,7 +75,6 @@ def count_lines(file):
     all_lines = 0
     blank_lines = 0
     comment_lines = 0
-    used_lines = 0
 
     with open(file) as f:
         for line in f:
@@ -129,5 +128,5 @@ if __name__ == '__main__':
     print(lerp((0,0), (0,1), .5))
     print(lerp(Vec2(0,0), Vec2(0,1), .5))
     print(lerp([0,0], [0,1], .5))
-    
+
     app.run()

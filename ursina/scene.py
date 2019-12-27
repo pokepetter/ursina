@@ -68,7 +68,7 @@ class Scene(NodePath):
     def fog_density(self, value):
         self._fog_density = value
         if isinstance(value, tuple):     # linear fog
-             self.fog.setLinearRange(value[0], value[1])
+            self.fog.setLinearRange(value[0], value[1])
         else:
             self.fog.setExpDensity(value)
 

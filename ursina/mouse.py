@@ -1,13 +1,13 @@
-from panda3d.core import *
 import sys
 import time
 import math
+from panda3d.core import *
+from panda3d.core import CollisionTraverser, CollisionNode
+from panda3d.core import CollisionHandlerQueue, CollisionRay
 from ursina import camera
 from ursina import scene
 from ursina import application
 from ursina import window
-from panda3d.core import CollisionTraverser, CollisionNode
-from panda3d.core import CollisionHandlerQueue, CollisionRay
 from ursina.hit import Hit
 
 

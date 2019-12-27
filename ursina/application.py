@@ -1,7 +1,6 @@
 import os
-import sys
-from panda3d.core import getModelPath
 from pathlib import Path
+from panda3d.core import getModelPath
 
 
 paused = False

@@ -79,7 +79,7 @@ class Texture():
 
         pixels = asarray(Image.open(self.path))
         pixels = flip(pixels, axis=0)
-        return(pixels)
+        return pixels
 
 
     @property

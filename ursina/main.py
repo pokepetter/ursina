@@ -1,7 +1,5 @@
-from ursina.ursinastuff import *
-from os import walk
-import os
 import time
+from ursina.ursinastuff import *
 import __main__
 
 
@@ -9,7 +7,6 @@ class Ursina(ShowBase):
 
     def __init__(self):
         ShowBase.__init__(self)
-        render = base.render
         application.base = base
         window.late_init()
 
@@ -22,7 +19,7 @@ class Ursina(ShowBase):
         scene.camera = camera
         camera.reparent_to(base.render)
         camera.set_up()
-        render.set_antialias(AntialiasAttrib.MMultisample)
+        base.render.set_antialias(AntialiasAttrib.MMultisample)
         window.make_exit_button()
 
         camera.overlay = window.overlay
@@ -185,7 +182,7 @@ class Ursina(ShowBase):
             if hasattr(entity, 'scripts'):
                 for script in entity.scripts:
                     if script.enabled and hasattr(script, 'input'):
-                            script.input(key)
+                        script.input(key)
 
 
         if key == 'f11':
@@ -227,7 +224,7 @@ class Ursina(ShowBase):
                     print('error in settings.py',)
 
         except:
-            print('no settings.py file')
+            print('info: no settings.py file found')
 
         super().run()
 

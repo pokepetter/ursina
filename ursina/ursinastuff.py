@@ -207,7 +207,7 @@ def _destroy(entity):
 def import_all_classes(path=application.asset_folder, debug=False):
     path = str(path)
     sys.path.append(path)
-    from ursina.useful import snake_to_camel
+    from ursina.string_utilities import snake_to_camel
     from glob import iglob
     imported_successfully = list()
 

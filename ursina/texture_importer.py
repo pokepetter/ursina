@@ -1,7 +1,6 @@
-import glob
+from pathlib import Path
 from ursina import application
 from ursina.texture import Texture
-from pathlib import Path
 
 
 file_types = ('.jpg', '.png', '.gif')

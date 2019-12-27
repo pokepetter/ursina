@@ -4,15 +4,13 @@ import importlib
 import random
 import glob
 from pathlib import Path
-from panda3d.core import PandaNode
 from panda3d.core import NodePath
 from panda3d.core import GeomNode
-from panda3d.core import GeomVertexReader
 from panda3d.core import Vec3, Vec4
 from panda3d.core import Point3
 from panda3d.core import TransparencyAttrib
 from panda3d.core import Shader
-from panda3d.core import TextureStage, TexGenAttrib, GeomVertexReader
+from panda3d.core import TextureStage, TexGenAttrib
 
 from ursina.texture import Texture
 from panda3d.core import MovieTexture
@@ -25,9 +23,10 @@ from ursina.sequence import Sequence, Func, Wait
 from ursina.ursinamath import lerp
 from ursina import curve
 from ursina.curve import CubicBezier
-from ursina.useful import *
 from ursina.mesh_importer import load_model
 from ursina.texture_importer import load_texture
+from ursina.string_utilities import camel_to_snake
+from textwrap import dedent
 
 from ursina import color
 try:
@@ -666,8 +665,8 @@ class Entity(NodePath):
                 - Vec3(bounds[0][0], bounds[0][2], bounds[0][1])    # min point
                 )
             return bounds
-        else:
-            return (0,0,0)
+
+        return (0,0,0)
 
     @property
     def bounds(self):
@@ -751,7 +750,7 @@ class Entity(NodePath):
                 if p.parent:
                     if p.parent == possible_ancestor:
                         return True
-                        break
+
                     p = p.parent
 
         if isinstance(possible_ancestor, list) or isinstance(possible_ancestor, tuple):
@@ -861,6 +860,7 @@ class Entity(NodePath):
             value = Vec3(value, value, value)
         return self.animate('scale', value, duration, delay, curve, resolution, interrupt, time_step)
 
+    # generate animation functions
     for e in ('x', 'y', 'z', 'rotation_x', 'rotation_y', 'rotation_z', 'scale_x', 'scale_y', 'scale_z'):
         exec(dedent(f'''
             def animate_{e}(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
