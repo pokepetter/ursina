@@ -68,9 +68,9 @@ class FirstPersonController(Entity):
 
 
         origin = self.world_position + self.up + (self.direction/2)
-        middle_ray = raycast(origin , self.forward, ignore=[self,], distance=1.3, debug=True)
-        left_ray =   raycast(origin, lerp(self.left, self.forward, .5), ignore=[self,], distance=1.4, debug=True)
-        right_ray =   raycast(origin, lerp(self.right, self.forward, .5), ignore=[self,], distance=1.4, debug=True)
+        middle_ray = raycast(origin , self.forward, ignore=[self,], distance=1.3, debug=False)
+        left_ray =   raycast(origin, lerp(self.left, self.forward, .5), ignore=[self,], distance=1.4, debug=False)
+        right_ray =   raycast(origin, lerp(self.right, self.forward, .5), ignore=[self,], distance=1.4, debug=False)
 
         self.smooth_camera = False
 
@@ -98,6 +98,7 @@ if __name__ == '__main__':
         scale=(1, 5, 10),
         x=2,
         y=.01,
+        rotation_y = 45,
         collider='box',
         texture='white_cube',
     )
