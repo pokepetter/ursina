@@ -68,7 +68,7 @@ class FirstPersonController(Entity):
 
 
         origin = self.world_position + self.up + (self.direction/2)
-        middle_ray = raycast(origin , self.forward, ignore=[self,], distance=1.3, debug=False)
+        middle_ray = raycast(origin , self.direction, ignore=[self,], distance=1.3, debug=False)
         left_ray =   raycast(origin, lerp(self.left, self.forward, .5), ignore=[self,], distance=1.4, debug=False)
         right_ray =   raycast(origin, lerp(self.right, self.forward, .5), ignore=[self,], distance=1.4, debug=False)
 
