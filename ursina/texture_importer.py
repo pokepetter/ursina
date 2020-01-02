@@ -12,7 +12,10 @@ def load_texture(name, path=None):
         application.internal_textures_folder,
         )
     if path:
-        folders = (path,)
+        if isinstance(path, str):
+            folders = (Path(path),)
+        else:
+            folders = (path,)
 
     if name.endswith('.mp4'):
         for folder in folders:
