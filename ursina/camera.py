@@ -2,6 +2,9 @@ import sys
 from ursina.entity import Entity
 from panda3d.core import PerspectiveLens, OrthographicLens, LensNode, NodePath
 from panda3d.core import Camera as PandaCamera
+from panda3d.core import Texture as PandaTexture
+from panda3d.core import Shader
+from direct.filter.FilterManager import FilterManager
 from ursina import application
 from ursina import scene
 from ursina import window
@@ -68,13 +71,12 @@ class Camera(Entity):
         # self.black_bars_display_region = win.make_display_region()
         # self.black_bars_display_region.set_sort(-100)
 
-        self.ui = Entity()
-        self.ui.eternal = True
-        self.ui.name = 'ui'
-        self.ui.parent = self.ui_camera
-        self.ui.scale = (self.ui_size*.5, self.ui_size*.5)
-        # self.ui.model = 'quad'
+        self.ui = Entity(eternal=True, name='ui', parent=self.ui_camera, scale=(self.ui_size*.5, self.ui_size*.5))
         scene.ui = self.ui
+
+        self.filter_manager = FilterManager(base.win, base.cam)
+        self.render_texture = PandaTexture()
+        self.filter_quad = None
 
 
     @property
@@ -145,6 +147,24 @@ class Camera(Entity):
         # self.perspective_lens.set_aspect_ratio(value)
         # self.orthographic_lens = OrthographicLens()
         # self.orthographic_lens.set_film_size(self.fov * value, self.fov)
+
+
+    @property
+    def shader(self):
+        return self.filter_quad.get_shader()
+
+    @shader.setter
+    def shader(self, value):
+        if value is None:
+            self.filter_quad.removeNode()
+        else:
+            print('set camera shader to:', value)
+            self.filter_quad = self.filter_manager.renderSceneInto(colortex=self.render_texture)
+            self.filter_quad.setShader(Shader.load(value))
+            self.filter_quad.setShaderInput("tex", self.render_texture)
+
+    def set_shader_input(self, name, value):
+        self.filter_quad.setShaderInput(name, value)
 
 
 
