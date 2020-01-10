@@ -1,13 +1,11 @@
 import sys
 import inspect
 import importlib
-import random
+# import random
 import glob
 from pathlib import Path
 from panda3d.core import NodePath
-from panda3d.core import GeomNode
 from panda3d.core import Vec3, Vec4
-from panda3d.core import Point3
 from panda3d.core import TransparencyAttrib
 from panda3d.core import Shader
 from panda3d.core import TextureStage, TexGenAttrib
@@ -104,8 +102,17 @@ class Entity(NodePath):
                 if not self.is_singleton():
                     self.stash()
 
-            for c in self.children:
-                c.enabled = value
+            if value == True:
+                for c in self.children:
+                    if hasattr(c, '_original_enabled_state'):
+                        c.enabled = c._original_enabled_state
+                    else:
+                        c.enabled = value
+            else:
+                for c in self.children:
+                    c._original_enabled_state = c.enabled
+                    c.enabled = value
+
 
 
         if name == 'eternal':
@@ -534,6 +541,9 @@ class Entity(NodePath):
 
     @shader.setter
     def shader(self, value):
+        if isinstance(value, Shader):
+            self.setShader(value)
+
         try:
             self.setShader(Shader.load(f'{value}.sha', Shader.SL_Cg))
         except:
@@ -840,7 +850,7 @@ class Entity(NodePath):
 
     def animate_position(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
         x = self.animate('x', value[0], duration, delay, curve, resolution, interrupt, time_step)
-        y =self.animate('y', value[1], duration, delay, curve, resolution, interrupt, time_step)
+        y = self.animate('y', value[1], duration, delay, curve, resolution, interrupt, time_step)
         z = None
         if len(value) > 2:
             z = self.animate('z', value[2], duration, delay, curve, resolution, interrupt, time_step)
@@ -869,12 +879,12 @@ class Entity(NodePath):
         s = Sequence()
         self.original_position = self.position
         for i in range(int(duration / speed)):
-            s.append(self.posInterval(speed, Point3(
+            s.append(self.posInterval(speed, Vec3(
                 self.x + (random.uniform(-.1, .1) * magnitude * direction[0]),
                 self.z,
                 self.y + (random.uniform(-.1, .1) * magnitude * direction[1]))
             ))
-            s.append(self.posInterval(speed, Point3(
+            s.append(self.posInterval(speed, Vec3(
                 self.original_position[0],
                 self.original_position[2],
                 self.original_position[1])
