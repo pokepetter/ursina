@@ -6,10 +6,7 @@ from pathlib import Path
 from direct.showbase import Loader
 import sys
 from ursina import color
-try:
-    from PIL import Image
-except:
-    print(sys.exc_info())
+# from PIL import Image
 
 
 class Texture():
@@ -30,6 +27,7 @@ class Texture():
             self._texture = value
 
         else:
+            from PIL import Image
             image = value
             self._texture = PandaTexture()
             self._texture.setup2dTexture(image.width, image.height, PandaTexture.TUnsignedByte, PandaTexture.FRgba)
@@ -106,6 +104,7 @@ class Texture():
     def get_pixel(self, x, y):
         try:
             if not self._cached_image:
+                from PIL import Image
                 self._cached_image = Image.open(self.path)
 
 
@@ -134,12 +133,14 @@ class Texture():
 
     def set_pixel(self, x, y, color):
         if not self._cached_image:
+            from PIL import Image
             self._cached_image = Image.open(self.path)
 
         self._cached_image.putpixel((x, self.height-y-1), tuple([int(e*255) for e in color]))
 
     def apply(self):
         if not self._cached_image:
+            from PIL import Image
             self._cached_image = Image.open(self.path)
 
         self._texture.setRamImageAs(self._cached_image.transpose(Image.FLIP_TOP_BOTTOM).tobytes(), self._cached_image.mode)
@@ -147,6 +148,7 @@ class Texture():
 
     def save(self, path):
         if not self._cached_image:
+            from PIL import Image
             self._cached_image = Image.open(self.path)
 
         self._cached_image.save(path)

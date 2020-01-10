@@ -1,8 +1,6 @@
-try:
-    import numpy
-except:
-    import sys
-    print(sys.exc_info())
+# import numpy
+
+
 
 
 def normalize_v3(arr):
@@ -15,7 +13,7 @@ def normalize_v3(arr):
 
 
 def generate_normals(vertices, triangles=None, smooth=True):
-
+    import numpy
 
     if not triangles:
         # print('generated triangles:', triangles)

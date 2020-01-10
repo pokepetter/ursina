@@ -1,11 +1,12 @@
 from ursina import *
 from ursina import color
 import math
-import numpy as np
 from panda3d.core import Vec3
+# import numpy as np
 
 
 def get_world_normals(model):
+    import numpy as np
     normals = [np.array((n[0], n[2], n[1])) for n in model.normals]
     object_matrix = model.getNetTransform().getMat()
     normals = [object_matrix.xformVec(Vec3(*n)) for n in normals]

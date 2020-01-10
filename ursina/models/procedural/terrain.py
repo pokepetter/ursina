@@ -1,11 +1,11 @@
 from ursina import *
-from PIL import Image
 
 
 class Terrain(Plane):
     def __init__(self, heightmap, skip=1, **kwargs):
         self.heightmap = load_texture(heightmap)
 
+        from PIL import Image
         image = Image.open(self.heightmap.path)
         image = image.transpose(Image.FLIP_TOP_BOTTOM)
         w, h = self.heightmap.width, self.heightmap.height

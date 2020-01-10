@@ -19,9 +19,6 @@ import subprocess
 import time
 from pathlib import Path
 
-# from PIL import Image     # for texture compression, editor.py
-# from tinyblend import BlenderFile     # for .blend import, editor.py
-
 from ursina import application
 from ursina.entity import Entity
 from ursina import scene

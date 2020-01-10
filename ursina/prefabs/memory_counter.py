@@ -1,12 +1,16 @@
 import os
-import psutil
-from hurry.filesize import size
 from ursina import *
+# import psutil
+# from hurry.filesize import size
 
 
 class MemoryCounter(Text):
     def __init__(self, **kwargs):
         super().__init__()
+
+        import psutil
+        from hurry.filesize import size
+
         self.parent = camera.ui
         self.position = window.bottom_right
         self.origin = (0.5, -0.5)

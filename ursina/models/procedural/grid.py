@@ -19,7 +19,7 @@ class Grid(Mesh):
 
         tris = [(i, i+1) for i in range(0, len(verts), 2)]
 
-        super().__init__(verts, triangles=tris, mode=mode, **kwargs)
+        super().__init__(verts, triangles=tris, mode=mode, thickness=thickness, **kwargs)
 
 
 
