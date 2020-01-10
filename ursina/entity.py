@@ -547,9 +547,6 @@ class Entity(NodePath):
 
     @texture.setter
     def texture(self, value):
-        if not self.model:
-            return
-
         if value.__class__ is Texture:
             texture = value
 
@@ -559,12 +556,12 @@ class Entity(NodePath):
 
         if texture.__class__ is MovieTexture:
             self._texture = texture
-            self.model.setTexture(texture)
+            self.setTexture(texture)
             return
 
         try:
             self._texture = texture
-            self.model.setTexture(texture._texture, 1)
+            self.setTexture(texture._texture, 1)
             # print('set texture:', value)
         except:
             pass
@@ -572,7 +569,7 @@ class Entity(NodePath):
                 print('no texture:', value)
 
         if value == None:
-            self.model.set_texture_off(True)
+            self.set_texture_off(True)
 
     @property
     def alpha(self):
