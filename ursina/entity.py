@@ -575,7 +575,7 @@ class Entity(NodePath):
             # print('set texture:', value)
         except:
             pass
-            if value:
+            if value and self.model:
                 print('no texture:', value)
 
         if value == None:
