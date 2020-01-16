@@ -157,11 +157,16 @@ class Camera(Entity):
     def shader(self, value):
         if value is None:
             self.filter_quad.removeNode()
-        else:
-            print('set camera shader to:', value)
-            self.filter_quad = self.filter_manager.renderSceneInto(colortex=self.render_texture)
-            self.filter_quad.setShader(Shader.load(value))
-            self.filter_quad.setShaderInput("tex", self.render_texture)
+            return None
+
+        if isinstance(value, str):
+            value = Shader.load(value)
+
+        print('set camera shader to:', value)
+        self.filter_quad = self.filter_manager.renderSceneInto(colortex=self.render_texture)
+        self.filter_quad.setShader(value)
+        self.filter_quad.setShaderInput("tex", self.render_texture)
+
 
     def set_shader_input(self, name, value):
         self.filter_quad.setShaderInput(name, value)
