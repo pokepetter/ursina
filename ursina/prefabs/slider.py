@@ -100,14 +100,17 @@ class Slider(Entity):
 
     def slide(self):
         t = self.knob.x / .5
-        self.knob.text_entity.text = round(lerp(self.min, self.max, t), 2)
+        # self.knob.text_entity.text = round(lerp(self.min, self.max, t), 2)
+        self.knob.text_entity.text = str(round(lerp(self.min, self.max, t), 2))
 
-        if isinstance(self.step, int) or self.step.is_integer():
-            self.knob.text_entity.text = str(self.value)
+        if self.step > 0:
+            if isinstance(self.step, int) or self.step.is_integer():
+                self.knob.text_entity.text = str(self.value)
 
         if self.dynamic and hasattr(self, 'on_value_changed') and self._prev_value != t:
             self.on_value_changed()
             self._prev_value = t
+
 
 
     def __setattr__(self, name, value):
@@ -124,6 +127,7 @@ class Slider(Entity):
             return e
 
 
+
 class ThinSlider(Slider):
     def __init__(self, *args, **kwargs):
         kwargs['height'] = Text.size
@@ -134,6 +138,8 @@ class ThinSlider(Slider):
         self.bg.highlight_color = color.text_color
         self.knob.color = lerp(color.text_color, color.inverse(color.text_color), .1)
         self.label.color = color.text_color
+
+
 
 
 if __name__ == '__main__':
