@@ -152,12 +152,13 @@ class Text(Entity):
 
             if tag.startswith('hsb('):   # set color based on numbers
                 tag = tag[4:-1]
-                hsb_values = (float(e.strip()) for e in tag.split(','))
-                self.text_node.setTextColor(color.color(*hsb_values))
+                hsb_values = tuple(float(e.strip()) for e in tag.split(','))
+                self.current_color = color.color(*hsb_values)
+
             elif tag.startswith('rgb('):   # set color based on numbers
                 tag = tag[4:-1]
                 rgb_values = (float(e.strip()) for e in tag.split(','))
-                self.text_node.setTextColor(color.rgba(*rgb_values))
+                self.current_color = color.rgba(*rgb_values)
 
             if tag.startswith('scale:'):
                 scale = tag.split(':')[1]
