@@ -18,7 +18,7 @@ class TextField(Entity):
         self.font = 'VeraMono.ttf'
         self.font_size = 20
         self.line_height = 1
-        self.max_lines = 999999
+        self.max_lines = 99999
 
         self.text_entity = Text(
             parent = self,
@@ -118,6 +118,8 @@ class TextField(Entity):
             'move_right':       ('right arrow', 'right arrow hold'),
             'move_up':          ('up arrow', 'up arrow hold'),
             'move_down':        ('down arrow', 'down arrow hold'),
+            'move_to_end_of_word' : ('ctrl+right arrow', 'ctrl+right arrow hold'),
+            'move_to_start_of_word' : ('ctrl+left arrow', 'ctrl+left arrow hold'),
         }
 
         # self.debug_cursor = Entity(parent=self.cursor_parent, model='cube', origin=(-.5,-.5), color=color.white33)
@@ -208,7 +210,7 @@ class TextField(Entity):
                 cursor.y += 1
                 cursor.x = min(x, len(lines[y+1]))
         if key in self.shortcuts['move_right']:
-            if x == len(l) and y < len(lines)-1: # end of line, move to beginning of next
+            if x == len(l) and y < len(lines)-1:        # end of line, move to beginning of next
                 cursor.y += 1
                 cursor.x = 0
             elif x < len(l):
@@ -216,10 +218,48 @@ class TextField(Entity):
         if key in self.shortcuts['move_left']:
             if x > 0:
                 cursor.x -= 1
-            elif y > 0: # move to end of line above
+            elif y > 0:                                 # move to end of line above
                 cursor.y -= 1
                 cursor.x = len(lines[y-1])
-                print('---', lines[y-1], len(lines[y-1]))
+
+        delimiters = (' ', '.')
+        if key in self.shortcuts['move_to_end_of_word']:
+            if x == len(l) and y < len(lines)-1:        # end of line, move to beginning of next
+                cursor.y += 1
+                cursor.x = 0
+                return
+
+            elif l[x] not in delimiters:                # move right to closest delimiter
+                for x in range(x, len(l)):
+                    if l[x] in delimiters:
+                        cursor.x = x
+                        return
+                cursor.x = len(l)
+            else:                                       # move right to closest word
+                for x in range(x, len(l)):
+                    if l[x] not in delimiters:
+                        cursor.x = x
+                        return
+                cursor.x = len(l)
+
+        if key in self.shortcuts['move_to_start_of_word']:
+            if x == 0 and y > 0:                        # move to end of line above
+                cursor.y -= 1
+                cursor.x = len(lines[y-1])
+                return
+
+            elif l[x-1] not in delimiters:              # move left to closest delimiter
+                for x in range(x-1, 0, -1):
+                    if l[x] in delimiters:
+                        cursor.x = x+1
+                        return
+                cursor.x = 0
+            else:                                       # move left to closest word
+                for x in range(x-1, 0, -1):
+                    if l[x] not in delimiters:
+                        cursor.x = x+1
+                        return
+                cursor.x = 0
 
 
         k = key.replace(' hold', '')
@@ -260,7 +300,7 @@ class TextField(Entity):
         if key in ('space', 'space hold'):
             add_text(' ')
 
-        if key in self.shortcuts['newline']:
+        if key in self.shortcuts['newline'] and self.cursor.y < self.max_lines:
             if l.startswith('class ') and not l.endswith(':'):
                 add_text(':')
             if l.startswith('def ') and not l.endswith(':'):
@@ -347,7 +387,7 @@ class TextField(Entity):
             self.text = '\n'.join(lines)
 
 
-        if key in self.shortcuts['move_line_down'] and len(lines) < self.max_lines:
+        if key in self.shortcuts['move_line_down'] and self.cursor.y < self.max_lines:
             # print('move down')
             if y+1 == len(lines): # if at last line
                 self.text += '\n'
@@ -414,13 +454,13 @@ class TextField(Entity):
 
     def render(self):
         lines = self.text.split('\n')
-        text = '\n'.join(lines[0:self.max_lines])
+        text = '\n'.join(lines[0:self.max_lines+1])
 
         if self.replacements:
             self.text_entity.text = multireplace(text, self.replacements)
         else:
             self.text_entity.text = text
-        self.line_numbers.text = '\n'.join([str(e) for e in range(len(lines))])
+        self.line_numbers.text = '\n'.join([str(e) for e in range(min(len(lines), self.max_lines))])
         self.line_numbers.color = color.gray
 
 
@@ -507,11 +547,11 @@ if __name__ == '__main__':
     #     '    ':      '☾dark_gray☽----☾default☽',
     #     }
     #
-    # te.text = 'yolo\n'*99
+    te.text = 'yolo test 123 yes no.\n'*10
     # te.cursor.position = (4,0)
     te.render()
     # te.selection = ((0,0),(4,0))
-    te.select_all()
+    # te.select_all()
     # te.selection = ((1,0),(3,0))
     # te.selection = ((2,3),(0,0))
     # te.draw_selection()
