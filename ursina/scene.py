@@ -42,8 +42,12 @@ class Scene(NodePath):
         to_keep = [e for e in self.entities if e.eternal]
 
         for d in to_destroy:
-            print('destroying:', d.name)
-            destroy(d)
+            try:
+                print('destroying:', d.name)
+                destroy(d)
+            except Exception as e:
+                print('failed to destroy entity', e)
+
 
         self.entities = to_keep
 

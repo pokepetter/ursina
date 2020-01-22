@@ -94,9 +94,10 @@ class HotReloader(Entity):
             camera.position = (0, 0, -20)
 
         t = time.time()
-        # try:
-        exec(text)
-        # except:
+        try:
+            exec(text)
+        except Exception as e:
+            print(e)
         #     for l in text.split('\n'):
         #         try:
         #             exec(l.strip())
