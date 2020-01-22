@@ -1,6 +1,5 @@
 import sys
 import time
-import math
 from panda3d.core import *
 from panda3d.core import CollisionTraverser, CollisionNode
 from panda3d.core import CollisionHandlerQueue, CollisionRay
@@ -53,11 +52,35 @@ class Mouse():
             return 0
         return self._mouse_watcher.getMouseX() / 2 * window.aspect_ratio  # same space as ui stuff
 
+    @x.setter
+    def x(self, value):
+        self.position = (value, self.y)
+
+
     @property
     def y(self):
         if not self._mouse_watcher.has_mouse():
             return 0
+
         return self._mouse_watcher.getMouseY() / 2
+
+    @y.setter
+    def y(self, value):
+        self.position = (self.x, value)
+
+
+    @property
+    def position(self):
+        return Vec3(self.x, self.y, 0)
+
+    @position.setter
+    def position(self, value):
+        base.win.move_pointer(
+            0,
+            int(value[0] + (window.size[0]/2) + (value[0]/2*window.size[0]) *1.123), # no idea why I have * with 1.123
+            int(value[1] + (window.size[1]/2) - (value[1]*window.size[1])),
+        )
+
 
 
     def __setattr__(self, name, value):
@@ -137,13 +160,12 @@ class Mouse():
             self.velocity = Vec3(0,0,0)
             return
 
-        self.position = Vec3(self.x, self.y, 0)
         self.moving = self.x + self.y != self.prev_x + self.prev_y
 
         if self.moving:
             if self.locked:
                 self.velocity = self.position
-                application.base.win.move_pointer(0, int(window.size[0] / 2), int(window.size[1] / 2))
+                self.position = (0,0)
             else:
                 self.velocity = Vec3(self.x - self.prev_x, (self.y - self.prev_y) / window.aspect_ratio ,0)
         else:
@@ -280,12 +302,35 @@ if __name__ == '__main__':
     Button(parent=scene, text='a')
     Button(parent=scene, text='b', x=.75)
     Button(text='c', y=-.25, scale=.1)
+    target = Button(text='d', position=(-.5*camera.aspect_ratio,-.3), scale=.1, color=color.blue)
 
     def input(key):
         if key == 'left mouse down':
             mouse.hovered_entity.collision = False
 
+        if key == 'space':
+            mouse.position = (.5*camera.aspect_ratio, .5)
+
+        if key == 'f':
+            print(target.position)
+            mouse.position = target.position
+
+        if key == 'a':
+            mouse.x -= .1
+        # if key == 'd':
+        #     mouse.x += .1
+            # mouse.position = (mouse.position[0]-.1, mouse.position[1])
+            # mouse.x = 0 * camera.aspect_ratio
+            # mouse.position = (.5, 0)
+
     def update():
-        print(mouse.hovered_entity)
+        print(mouse.position)
+        # mouse.x = mouse.x
+        # held_keys['d'] * .1 * time.dt
+        # mouse.position=mouse.position
+
+    Cursor()
+    mouse.visible = False
+
 
     app.run()
