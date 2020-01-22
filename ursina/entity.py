@@ -110,6 +110,9 @@ class Entity(NodePath):
                         c.enabled = value
             else:
                 for c in self.children:
+                    if hasattr(self, 'text_entity') and c == self.text_entity:
+                        continue
+                        
                     c._original_enabled_state = c.enabled
                     c.enabled = value
 
@@ -148,7 +151,8 @@ class Entity(NodePath):
                         m.recipe = value
                     # print('loaded model successively')
                 else:
-                    print('error loading model:', value)
+                    print('missing model:', value)
+                    return
 
             if self.model:
                 self.model.reparentTo(self)
@@ -159,8 +163,6 @@ class Entity(NodePath):
                     if hasattr(value, 'on_assign'):
                         value.on_assign(assigned_to=self)
                 return
-            else:
-                print('missing model:', value)
 
         if name == 'color' and value is not None:
             if not isinstance(value, Vec4):
