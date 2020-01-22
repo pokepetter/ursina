@@ -3,21 +3,43 @@ from ursina import *
 
 class Animation(Entity):
 
-    def __init__(self, texture, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs):
+    def __init__(self, name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs):
+        temp_frame = Entity(
+            model=name + '_' + str(0).zfill(6),
+            texture=name + '_' + str(0).zfill(4),
+            name='texture_search_frame',
+            add_to_scene_entities=False,
+            )
+        if not temp_frame.texture and not temp_frame.model:
+            destroy(temp_frame)
+            destroy(self)
+            return
+
+        found_texture = bool(temp_frame.texture)
+        found_model = bool(temp_frame.model)
+        # print('------------------', 'found_texture:', found_texture, 'found_model:', found_model, temp_frame.model)
+        destroy(temp_frame)
+
         super().__init__()
         self.frames = list()
 
         for i in range(999):
             frame = Entity(
                 parent=self,
-                model='quad',
-                texture=texture + '_' + str(i).zfill(4),
                 name=str(i),
                 add_to_scene_entities=False,
                 )
-            if not frame.texture:
+
+            frame.model = 'quad' if not found_model else name + '_' + str(i).zfill(6)
+            frame.texture = name + '_' + str(i).zfill(4)
+
+            if found_texture and not frame.texture:
                 destroy(frame)
                 frame = self.frames[0]
+                break
+
+            if found_model and not frame.model:
+                destroy(frame)
                 break
 
             for key, value in kwargs.items():
@@ -28,8 +50,9 @@ class Animation(Entity):
 
             self.frames.append(frame)
 
-        self.scale = (frame.texture.width/100, frame.texture.height/100)
-        self.aspect_ratio = self.scale_x / self.scale_y
+        if found_texture:
+            self.scale = (frame.texture.width/100, frame.texture.height/100)
+            self.aspect_ratio = self.scale_x / self.scale_y
 
         self.stop()
         self.sequence = Sequence(loop=loop)
@@ -74,7 +97,20 @@ class Animation(Entity):
 
 
 
+
 if __name__ == '__main__':
+    # window.vsync = False
     app = Ursina()
+    window.color = color.black
+    
     animation = Animation('ursina_wink', fps=2, scale=5, filtering=None)
+
+    # animation = Animation('blob_animation', fps=12, scale=5, y=20)
+    #
+    # from ursina.shaders import normals_shader
+    # for f in animation.frames:
+    #     f.shader = normals_shader
+    #     f.set_shader_input('object_matrix', animation.getNetTransform().getMat())
+
+    EditorCamera()
     app.run()
