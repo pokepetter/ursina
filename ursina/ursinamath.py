@@ -68,8 +68,19 @@ def lerp(a, b, t):
 def inverselerp(a, b, t) :
     return (a - b) / (t - b)
 
+
 def clamp(value, floor, ceiling):
     return max(min(value, ceiling), floor)
+
+
+builtin_round = round
+def round_to_closest(value, step=0):
+    if not step:
+        return value
+
+    step = 1/step
+    return round(value * step) / step
+
 
 def count_lines(file):
     all_lines = 0
@@ -91,10 +102,12 @@ def count_lines(file):
     print('used_lines:', all_lines - blank_lines - comment_lines)
     return all_lines
 
+
 def chunk_list(l, chunk_size):
     # yield successive chunks from list
     for i in range(0, len(l), chunk_size):
         yield l[i:i + chunk_size]
+
 
 def size_list():
     #return a list of current python objects sorted by size
@@ -128,5 +141,7 @@ if __name__ == '__main__':
     print(lerp((0,0), (0,1), .5))
     print(lerp(Vec2(0,0), Vec2(0,1), .5))
     print(lerp([0,0], [0,1], .5))
+
+    print(round(Vec3(.38, .1351, 353.26), 2))
 
     app.run()
