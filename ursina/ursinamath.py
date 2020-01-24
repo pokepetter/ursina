@@ -73,7 +73,6 @@ def clamp(value, floor, ceiling):
     return max(min(value, ceiling), floor)
 
 
-builtin_round = round
 def round_to_closest(value, step=0):
     if not step:
         return value
