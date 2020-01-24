@@ -2,10 +2,6 @@ from ursina import *
 
 
 class Quad(Mesh):
-
-    corner_maker = None
-    point_placer = None
-
     def __init__(self, radius=.1, segments=3, aspect=1, scale=(1,1), mode='ngon', **kwargs):
         super().__init__()
         self.vertices = [Vec3(0,0,0), Vec3(1,0,0), Vec3(1,1,0), Vec3(0,1,0)]
@@ -15,22 +11,19 @@ class Quad(Mesh):
         segments += 1
         if segments > 1:
             new_verts = list()
-            if not Quad.corner_maker:
-                Quad.corner_maker = Entity(add_to_scene_entities=False)
-            Quad.corner_maker.position = (0,0,0)
-            Quad.corner_maker.rotation_z = 0
-
-            if not Quad.point_placer:
-                Quad.point_placer = Entity(parent=Quad.corner_maker, x=-radius, add_to_scene_entities=False)
-            Quad.corner_maker.rotation_z -= 90/segments/2
+            corner_maker = Entity()
+            point_placer = Entity(parent=corner_maker, x=-radius)
+            corner_maker.rotation_z -= 90/segments/2
 
             corner_corrections = (Vec3(radius,radius,0), Vec3(-radius,radius,0), Vec3(-radius,-radius,0), Vec3(radius,-radius,0))
             for j in range(4):  # 4 corners
-                Quad.corner_maker.position = self.vertices[j] + corner_corrections[j]
+                corner_maker.position = self.vertices[j] + corner_corrections[j]
                 for i in range(segments):
-                    new_verts.append(Quad.point_placer.world_position)
-                    Quad.corner_maker.rotation_z -= 90/segments
+                    new_verts.append(point_placer.world_position)
+                    corner_maker.rotation_z -= 90/segments
 
+            destroy(corner_maker)
+            destroy(point_placer)
             self.vertices = new_verts
 
 
