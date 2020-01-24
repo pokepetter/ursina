@@ -5,7 +5,7 @@ class Cursor(Entity):
     def __init__(self, **kwargs):
         super().__init__()
         self.parent = camera.ui
-        # self.texture = 'cursor'
+        self.texture = 'cursor'
         self.model = 'quad'
         self.color = color.light_gray
         self.z = -.1
@@ -15,6 +15,7 @@ class Cursor(Entity):
 
         for key, value in kwargs.items():
             setattr(self, key, value)
+
 
     def update(self):
         self.position = mouse.position

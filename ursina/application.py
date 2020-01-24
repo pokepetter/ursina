@@ -7,6 +7,7 @@ paused = False
 time_scale = 1
 sequences = list()
 trace_entity_definition = True # enable to set entity.line_definition
+print_entity_definition = False
 
 
 def pause():

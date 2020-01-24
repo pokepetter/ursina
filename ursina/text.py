@@ -21,7 +21,6 @@ class Text(Entity):
 
     def __init__(self, text='', start_tag=start_tag, end_tag=end_tag, **kwargs):
         super().__init__()
-        self.name = 'text'
         self.size = Text.size
         self.parent = camera.ui
 

@@ -36,7 +36,6 @@ except:
 
 class Entity(NodePath):
 
-
     def __init__(self, add_to_scene_entities=True, **kwargs):
         super().__init__(self.__class__.__name__)
 
@@ -76,8 +75,24 @@ class Entity(NodePath):
         self.line_definition = None
         if application.trace_entity_definition:
             from inspect import getframeinfo, stack
-            caller = getframeinfo(stack()[1][0])
-            self.line_definition = f'{Path(caller.filename).name} ->  {caller.lineno} -> {caller.code_context}'
+            _stack = stack()
+            caller = getframeinfo(_stack[1][0])
+            if len(_stack)>2 and 'super().__init__()' in _stack[1].code_context[0]:
+                caller = getframeinfo(_stack[2][0])
+
+            self.line_definition = caller
+            self.code_context = caller.code_context[0]
+
+            if (self.code_context.count('(') == self.code_context.count(')') and
+            ' = ' in self.code_context and not 'name=' in self.code_context
+            and not 'Ursina()' in self.code_context):
+
+                self.name = self.code_context.split(' = ')[0].strip().replace('self.', '')
+                # print('set name to:', self.code_context.split(' = ')[0].strip().replace('self.', ''))
+
+            if application.print_entity_definition:
+                print(f'{Path(caller.filename).name} ->  {caller.lineno} -> {caller.code_context}')
+
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -112,7 +127,7 @@ class Entity(NodePath):
                 for c in self.children:
                     if hasattr(self, 'text_entity') and c == self.text_entity:
                         continue
-                        
+
                     c._original_enabled_state = c.enabled
                     c.enabled = value
 
@@ -545,6 +560,11 @@ class Entity(NodePath):
     def shader(self, value):
         if isinstance(value, Shader):
             self.setShader(value)
+            return
+
+        if value is None:
+            self.setShaderAuto()
+            return
 
         try:
             self.setShader(Shader.load(f'{value}.sha', Shader.SL_Cg))
@@ -696,6 +716,10 @@ class Entity(NodePath):
     def get_position(self, relative_to=scene):
         pos = self.getPos(relative_to)
         return Vec3(pos[0], pos[2], pos[1])
+
+
+    def set_position(self, value, relative_to=scene):
+        self.setPos(relative_to, Vec3(value[0], value[2], value[1]))
 
 
     def add_script(self, name, path=None):

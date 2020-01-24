@@ -9,7 +9,6 @@ class Button(Entity):
 
     def __init__(self, text='', **kwargs):
         super().__init__()
-        self.name = 'button'
         self.parent = scene.ui
         self.collider = 'box'
         self.disabled = False
@@ -56,7 +55,8 @@ class Button(Entity):
                     parent = self,
                     size = Text.size * 20,
                     position = (-self.origin[0], -self.origin[1], -.1),
-                    origin = (0,0)
+                    origin = (0,0),
+                    add_to_scene_entities = False,
                     )
 
             self.text_entity.text = value
