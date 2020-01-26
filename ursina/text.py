@@ -219,6 +219,8 @@ class Text(Entity):
     @color.setter
     def color(self, value):
         self._color = value
+        self.current_color = value
+        self.text_colors['default'] = value
         for tn in self.text_nodes:
             tn.node().setTextColor(value)
 
