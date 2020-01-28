@@ -28,7 +28,7 @@ class Window(WindowProperties):
             print('using default sceen resolution.', 'OS:', os.name)
             self.screen_resolution = Vec2(1366, 768)
 
-        self.fullscreen_size = Vec2(self.screen_resolution[0], (self.screen_resolution[0]) * .5625)
+        self.fullscreen_size = Vec2(self.screen_resolution[0]+1, ((self.screen_resolution[0]) * .5625)+1)
         self.windowed_size = Vec2(self.fullscreen_size[0] / 1.25, self.fullscreen_size[0] / 1.25 * .5625)
         self.windowed_position = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode
         self.size = self.windowed_size
@@ -86,7 +86,6 @@ class Window(WindowProperties):
 
     def make_exit_button(self):     # called by main after setting up camera
         from ursina.prefabs.exit_button import ExitButton
-        from ursina import scene
         self.exit_button = ExitButton()
 
         from ursina import Text
@@ -137,18 +136,18 @@ class Window(WindowProperties):
     @display_mode.setter
     def display_mode(self, value):
         self._display_mode = value
+        print('display mode:', value)
         base.wireframeOff()
+
         # disable collision display mode
         if hasattr(self, 'original_colors'):
             for i, e in enumerate([e for e in scene.entities if hasattr(e, 'color')]):
                 e.color = self.original_colors[i]
                 if e.collider:
                     e.collider.visible = False
-        if hasattr(self, 'original_vert_colors'):
-            for i, e in enumerate([e for e in scene.entities if hasattr(e, 'model') and e.model.colors]):
-                e.model.colors = self.original_vert_colors[i]
-                e.model.generate()
 
+        for e in [e for e in scene.entities if e.model and e.alpha]:
+            e.shader = None
 
         if value == 'wireframe':
             base.wireframeOn()
@@ -161,14 +160,10 @@ class Window(WindowProperties):
                     e.collider.visible = True
 
         if value == 'normals':
-            # todo: set shader instead
-            self.original_vert_colors = [e.model.colors for e in scene.entities if hasattr(e, 'model') and e.model != None]
-            for e in scene.entities:
-                if hasattr(e, 'model') and e.model != None:
-                    try:
-                        e.model.colorize()
-                    except:
-                        pass
+            from ursina.shaders import normals_shader
+            for e in [e for e in scene.entities if e.model and e.alpha]:
+                e.shader = normals_shader
+                e.set_shader_input('object_matrix', e.getNetTransform().getMat())
 
 
 
@@ -224,10 +219,10 @@ sys.modules[__name__] = Window()
 if __name__ == '__main__':
     from ursina import *
     app = Ursina()
+
     window.title = 'Title'
     window.borderless = False
     window.fullscreen = False
-
     window.exit_button.visible = False
     window.fps_counter.enabled = False
 
