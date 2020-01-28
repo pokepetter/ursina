@@ -77,21 +77,22 @@ class Entity(NodePath):
             from inspect import getframeinfo, stack
             _stack = stack()
             caller = getframeinfo(_stack[1][0])
-            if len(_stack)>2 and 'super().__init__()' in _stack[1].code_context[0]:
+            if len(_stack) > 2 and _stack[1].code_context and 'super().__init__()' in _stack[1].code_context[0]:
                 caller = getframeinfo(_stack[2][0])
 
             self.line_definition = caller
-            self.code_context = caller.code_context[0]
+            if caller.code_context:
+                self.code_context = caller.code_context[0]
 
-            if (self.code_context.count('(') == self.code_context.count(')') and
-            ' = ' in self.code_context and not 'name=' in self.code_context
-            and not 'Ursina()' in self.code_context):
+                if (self.code_context.count('(') == self.code_context.count(')') and
+                ' = ' in self.code_context and not 'name=' in self.code_context
+                and not 'Ursina()' in self.code_context):
 
-                self.name = self.code_context.split(' = ')[0].strip().replace('self.', '')
-                # print('set name to:', self.code_context.split(' = ')[0].strip().replace('self.', ''))
+                    self.name = self.code_context.split(' = ')[0].strip().replace('self.', '')
+                    # print('set name to:', self.code_context.split(' = ')[0].strip().replace('self.', ''))
 
-            if application.print_entity_definition:
-                print(f'{Path(caller.filename).name} ->  {caller.lineno} -> {caller.code_context}')
+                if application.print_entity_definition:
+                    print(f'{Path(caller.filename).name} ->  {caller.lineno} -> {caller.code_context}')
 
 
         for key, value in kwargs.items():
