@@ -8,7 +8,6 @@ class Cursor(Entity):
         self.texture = 'cursor'
         self.model = 'quad'
         self.color = color.light_gray
-        self.z = -.1
         # self.origin = (-.49, .49)
         self.scale *= .05
         self.render_queue = 1
@@ -18,4 +17,26 @@ class Cursor(Entity):
 
 
     def update(self):
-        self.position = mouse.position
+        self.position = (mouse.x, mouse.y, -100)
+
+
+
+
+if __name__ == '__main__':
+    app = Ursina()
+    Button('button').fit()
+    Panel()
+    camera.orthographic = True
+    camera.fov = 100
+    cursor =  Cursor(
+        texture=None,
+        model=Mesh(
+            vertices=[(-.5,0,0), (.5,0,0), (0,-.5,0), (0,.5,0)],
+            triangles=[(0,1), (2,3)],
+            mode='line',
+            thickness=2,
+            ),
+        scale=.02
+        )
+    mouse.visible = False
+    app.run()
