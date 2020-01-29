@@ -18,20 +18,13 @@ class FirstPersonController(Entity):
             rotation_z = 45
             )
 
-        self.graphics = Entity(
-            name = 'player_graphics',
-            parent = self,
-            model = 'cube',
-            origin = (0, -.5, 0),
-            scale = (1, 1.8, 1),
-            )
-
-
         self.position = (0, 1, 1)
+        camera.position = self.position
         camera.rotation = (0,0,0)
         camera.fov = 90
         mouse.locked = True
-        self.smooth_camera = False
+        self.target_smoothing = 100
+        self.smoothing = self.target_smoothing
 
 
         for key, value in kwargs.items():
@@ -39,10 +32,6 @@ class FirstPersonController(Entity):
 
 
     def update(self):
-        if self.i < self.update_interval:
-            self.i += 1
-            return
-
         self.rotation_y += mouse.velocity[0] * 40
         camera.rotation_x -= mouse.velocity[1] * 40
         camera.rotation_x = clamp(camera.rotation_x, -90, 90)
@@ -56,34 +45,28 @@ class FirstPersonController(Entity):
             ).normalized()
 
 
-        if not self.smooth_camera:
-            camera.position = self.position + self.up*1.5
-        else:
-            camera.position = lerp(
-                camera.position,
-                self.position + (self.up*1.5),
-                time.dt * 10)
+        self.smoothing = lerp(self.smoothing, self.target_smoothing, 4*time.dt)
+        camera.position = lerp(
+            camera.position,
+            self.position + (self.up*1.5),
+            time.dt * self.smoothing)
 
         camera.rotation_y = self.rotation_y
-
 
         origin = self.world_position + self.up + (self.direction/2)
         middle_ray = raycast(origin , self.direction, ignore=[self,], distance=1.3, debug=False)
         left_ray =   raycast(origin, lerp(self.left, self.forward, .5), ignore=[self,], distance=1.4, debug=False)
         right_ray =   raycast(origin, lerp(self.right, self.forward, .5), ignore=[self,], distance=1.4, debug=False)
 
-        self.smooth_camera = False
 
         # push away from the wall
         if left_ray.hit:
-            self.smooth_camera = True
-            self.position -= lerp(self.left, self.forward, .5) * (1.3-left_ray.distance)
+            self.smoothing = 2
+            self.position -= lerp(self.left, self.forward, .5) * (1.399-left_ray.distance)
 
         elif right_ray.hit:
-            self.smooth_camera = True
-            self.position -= lerp(self.right, self.forward, .5) * (1.3-right_ray.distance)
-
-
+            self.smoothing = 2
+            self.position -= lerp(self.right, self.forward, .5) * (1.399-right_ray.distance)
 
         if not middle_ray.hit:
             self.position += self.direction * self.speed * time.dt
