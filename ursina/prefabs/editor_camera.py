@@ -15,6 +15,7 @@ class EditorCamera(Entity):
             setattr(self, key, value)
 
         self.start_position = self.position
+        camera.editor_position = (0,0,-10)
 
 
     def on_enable(self):
@@ -23,11 +24,12 @@ class EditorCamera(Entity):
         camera.org_rotation = camera.rotation
 
         camera.parent = self
-        camera.position = (0,0,-10)
+        camera.position = camera.editor_position
         camera.rotation = (0,0,0)
 
 
     def on_disable(self):
+        camera.editor_position = camera.position
         camera.parent = camera.org_parent
         camera.position = camera.org_position
         camera.rotation = camera.org_rotation
@@ -90,11 +92,12 @@ if __name__ == '__main__':
     e.model.colorize()
 
     from ursina.prefabs.first_person_controller import FirstPersonController
+    from copy import copy
     player = FirstPersonController()
     Entity(parent=player, model='cube', color=color.orange, scale_y=2, origin_y=0)
-    ground = Entity(model='plane', scale=8, texture='white_cube', texture_scale=(8,8))
-
-    ec = EditorCamera(rotation_smoothing=2, rotation_speed=200, enabled=False)
+    ground = Entity(model='plane', scale=32, texture='white_cube', texture_scale=(32,32))
+    box = Entity(model='cube', collider='box', texture='white_cube', scale=(10,2,2), position=(2,1,5), color=color.light_gray)
+    ec = EditorCamera(rotation_smoothing=2, rotation_speed=200, enabled=False, rotation=(30,30,0))
 
     rotation_info = Text(position=window.top_left)
 
@@ -105,6 +108,5 @@ if __name__ == '__main__':
         if key == 'tab':    # press tab to toggle edit/play mode
             player.ignore = not player.ignore
             ec.enabled = not ec.enabled
-
 
     app.run()
