@@ -53,11 +53,9 @@ class Entity(NodePath):
 
         self.model = None
         self.color = color.white
-        self.texture = None     # tries to set to camel_to_snake(self.type)
+        self.texture = None
         self.reflection_map = scene.reflection_map
         self.reflectivity = 0
-
-        self.texture = camel_to_snake(self.type)
         self.render_queue = 0
         self.double_sided = False
 
@@ -580,29 +578,31 @@ class Entity(NodePath):
 
     @texture.setter
     def texture(self, value):
+        if value is None and self._texture:
+            # print('remove texture')
+            self._texture = None
+            self.setTextureOff(True)
+            return
+
         if value.__class__ is Texture:
             texture = value
 
         elif isinstance(value, str):
             texture = load_texture(value)
             # print('loaded texture:', texture)
+            if texture is None:
+                print('no texture:', value)
+                return
 
         if texture.__class__ is MovieTexture:
             self._texture = texture
             self.setTexture(texture)
             return
 
-        try:
-            self._texture = texture
-            self.setTexture(texture._texture, 1)
-            # print('set texture:', value)
-        except:
-            pass
-            if value and self.model:
-                print('no texture:', value)
+        self._texture = texture
+        self.setTexture(texture._texture, 1)
+        # print('set texture:', value)
 
-        if value == None:
-            self.set_texture_off(True)
 
     @property
     def alpha(self):
