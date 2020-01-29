@@ -116,21 +116,6 @@ class Entity(NodePath):
                 if not self.is_singleton():
                     self.stash()
 
-            if value == True:
-                for c in self.children:
-                    if hasattr(c, '_original_enabled_state'):
-                        c.enabled = c._original_enabled_state
-                    else:
-                        c.enabled = value
-            else:
-                for c in self.children:
-                    if hasattr(self, 'text_entity') and c == self.text_entity:
-                        continue
-
-                    c._original_enabled_state = c.enabled
-                    c.enabled = value
-
-
 
         if name == 'eternal':
             for c in self.children:

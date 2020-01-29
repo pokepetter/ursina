@@ -139,8 +139,8 @@ class Texture():
         self._cached_image.putpixel((x, self.height-y-1), tuple([int(e*255) for e in color]))
 
     def apply(self):
+        from PIL import Image
         if not self._cached_image:
-            from PIL import Image
             self._cached_image = Image.open(self.path)
 
         self._texture.setRamImageAs(self._cached_image.transpose(Image.FLIP_TOP_BOTTOM).tobytes(), self._cached_image.mode)
