@@ -5,7 +5,6 @@ class EditorCamera(Entity):
     def __init__(self, **kwargs):
         super().__init__(name='editor_camera', eternal=True)
 
-        camera.world_parent = self
         self.rotation_speed = 100
         self.pan_speed = (4, 4)
         self.move_speed = 1
@@ -15,19 +14,32 @@ class EditorCamera(Entity):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
+        self.start_position = self.position
+
+
+    def on_enable(self):
+        camera.org_parent = camera.parent
+        camera.org_position = camera.position
+        camera.org_rotation = camera.rotation
+
+        camera.parent = self
+        camera.position = (0,0,-10)
+        camera.rotation = (0,0,0)
+
+
+    def on_disable(self):
+        camera.parent = camera.org_parent
+        camera.position = camera.org_position
+        camera.rotation = camera.org_rotation
+
 
 
     def input(self, key):
-        if key == '+':
-            camera.fov += 1
-            printvar(camera.fov)
-        elif key == '-':
-            camera.fov -= 1
-            printvar(camera.fov)
-
-        elif key == 'p':
+        if key == 'p':
             camera.orthographic = not camera.orthographic
 
+        elif key == 'f':
+            self.position = self.start_position
 
         elif key == 'scroll up':
             target_position = Vec3(0,0,0)
@@ -76,13 +88,23 @@ if __name__ == '__main__':
     sky = Sky()
     e = Entity(model='cube', color=color.white)
     e.model.colorize()
-    # camera.position=(20,20,-20)
-    ec = EditorCamera(rotation_smoothing=2, rotation_speed=200)
-    # camera.look_at(ec)
+
+    from ursina.prefabs.first_person_controller import FirstPersonController
+    player = FirstPersonController()
+    Entity(parent=player, model='cube', color=color.orange, scale_y=2, origin_y=0)
+    ground = Entity(model='plane', scale=8, texture='white_cube', texture_scale=(8,8))
+
+    ec = EditorCamera(rotation_smoothing=2, rotation_speed=200, enabled=False)
 
     rotation_info = Text(position=window.top_left)
 
     def update():
         rotation_info.text = str(int(ec.rotation_y)) + '\n' + str(int(ec.rotation_x))
+
+    def input(key):
+        if key == 'tab':    # press tab to toggle edit/play mode
+            player.ignore = not player.ignore
+            ec.enabled = not ec.enabled
+
 
     app.run()
