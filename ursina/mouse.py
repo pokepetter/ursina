@@ -30,7 +30,7 @@ class Mouse():
         self.delta_drag = Vec3(0,0,0)
 
         self.i = 0
-        self.update_rate = 10
+        self.update_rate = 1
         self._mouse_watcher = None
         self._picker = CollisionTraverser()  # Make a traverser
         self._pq = CollisionHandlerQueue()  # Make a handler
