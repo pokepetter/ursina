@@ -218,19 +218,19 @@ class Mouse():
 
     @property
     def world_normal(self):
-        if  self.collision:
+        if self.collision:
             return None
         return self.collision.world_normal
 
     @property
     def point(self):
-        if self.hovered_entity:
+        if self.collision:
             return self.collision.point
         return None
 
     @property
     def world_point(self):
-        if self.hovered_entity:
+        if self.collision:
             return self.collision.world_point
         return None
 
