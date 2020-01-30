@@ -16,6 +16,8 @@ class EditorCamera(Entity):
 
         self.start_position = self.position
         camera.editor_position = (0,0,-10)
+        self.perspective_fov = camera.fov
+        self.orthographic_fov = camera.fov
 
 
     def on_enable(self):
@@ -38,21 +40,33 @@ class EditorCamera(Entity):
 
     def input(self, key):
         if key == 'p':
+            if not camera.orthographic:
+                self.orthographic_fov = camera.fov
+                camera.fov = self.perspective_fov
+            else:
+                self.perspective_fov = camera.fov
+                camera.fov = self.orthographic_fov
+
             camera.orthographic = not camera.orthographic
 
         elif key == 'f':
             self.position = self.start_position
 
         elif key == 'scroll up':
-            target_position = Vec3(0,0,0)
-            if mouse.hovered_entity and not mouse.hovered_entity.has_ancestor(camera):
-                target_position = mouse.hovered_entity.world_position
+            if not camera.orthographic:
+                target_position = Vec3(0,0,0)
+                if mouse.hovered_entity and not mouse.hovered_entity.has_ancestor(camera):
+                    target_position = mouse.hovered_entity.world_position
 
-            camera.world_position = lerp(camera.world_position, target_position, self.zoom_speed)
+                camera.world_position = lerp(camera.world_position, target_position, self.zoom_speed)
+            else:
+                camera.fov -= self.zoom_speed * 100
 
         elif key == 'scroll down':
-            camera.world_position += camera.back * self.zoom_speed * 100
-
+            if not camera.orthographic:
+                camera.world_position += camera.back * self.zoom_speed * 100
+            else:
+                camera.fov += self.zoom_speed * 100
 
         elif key == 'right mouse down' or key == 'middle mouse down':
             if mouse.hovered_entity and self.rotate_around_mouse_hit:
