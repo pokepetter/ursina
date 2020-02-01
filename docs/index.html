@@ -4,42 +4,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> ursina engine</title>
 
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="index_style.css">
 </head>
 
 <body>
 
     <div class="title">
-        ursina engine<br>ʕ •ᴥ•ʔゝ□<br>
+        ursina engine<br>ʕ •ᴥ•ʔゝ□
     </div>
     <div class="separator">
-        --------------------------------------<br>
+        --------------------------------------
     </div>
     <div class="subtitle">
-        open source game engine<br>
+        open source game engine
     </div>
     <div class="separator">
-        --------------------------------------<br>
+        --------------------------------------
     </div>
+
     <div class="buttons">
-        <br><a href=" https://github.com/pokepetter/ursina" class="button">GitHub🡕</a>
         <a href=" tutorials.html" class="button">Tutorials</a>
         <a href=" documentation.html" class="button">Documentation</a>
-        <a href=" https://twitter.com/ursinaengine" class="button">Twitter🡕</a>
-        <br><br><br>
     </div>
+
     <div class="image">
-        <img src="made_with_ursina.jpg"><br>
+        <img src="made_with_ursina.jpg">
     </div>
     <div class="description">
-        <br>A variety of made with Ursina<br>
-        <br><br>
+        A variety of made with Ursina
     </div>
 
     <div class="container">
 
         <div class="topic">
-            Powered by Python<br>
+            Powered by Python
         </div>
         <div class="text">
             <br>Ursina makes it easier to develop games, visualizations and other kinds software.
@@ -58,11 +56,10 @@
                 <li>long build times
                 <li>revenue cut or subscription fee
             </ul>
-            <br><br><br>
         </div>
 
         <div class="topic">
-            Useful Features<br>
+            Useful Features
         </div>
         <div class="text">
             <ul>
@@ -72,11 +69,10 @@
                 <li>easy to use mesh class for making procedural geometry
                 <li>lots of included procedural 3D primitives
             </ul>
-            <br><br><br><br>
         </div>
 
         <div class="topic">
-            Platforms<br>
+            Platforms
         </div>
         <div class="text">
             <ul>
@@ -84,20 +80,18 @@
                 <li>Mac
                 <li>Linux
             </ul>
-            <br><br><br>
         </div>
 
         <div class="topic">
-            Free and Open Source<br>
+            Free and Open Source
         </div>
         <div class="text">
             <br>Licenced under the permissive MIT license,
             <br>you can use Ursina for whatever you want. No supscription fee, no revenue cut.
-            <br><br><br>
         </div>
 
         <div class="topic">
-            Getting Started<br>
+            Getting Started
         </div>
         <div class="text">
             <ol>
@@ -105,24 +99,19 @@
                 <li>Make sure you have git installed. <a href="https://git-scm.com/">git</a>
                 <li>Open cmd/terminal and type:
             </ol>
-            <br><br>
             <div class="spoiler">
                 pip install git+https://github.com/pokepetter/ursina.git
-                <br>
             </div>
             <br>If you want to easily edit the source, it's recommended to clone the git
             <br>repo and install as develop like this:
-            <br><br>
             <div class="spoiler">
                 git clone https://github.com/pokepetter/ursina.git
                 <br>python setup.py develop
-                <br>
             </div>
-            <br><br><br>
         </div>
 
         <div class="topic">
-            Dependencies<br>
+            Dependencies
         </div>
         <div class="text">
             <ul>
@@ -135,15 +124,13 @@
                 <li>psutil, for measuring memory usage
                 <li>blender, for converting .blend files
             </ul>
-            <br><br><br>
         </div>
 
         <div class="topic">
             Examples<br>
         </div>
         <div class="text">
-            <br>Entity Example:
-            <br><br>
+            Entity Example:
             <div class="spoiler">
                 <font color="purple">from</font> ursina <font color="purple">import</font> * <font color="gray"># import everything we need with one line.</font><br><br>app = Ursina()<br>ground = <font color="olive">Entity</font>(
                 <br> model = <font color="green">'cube'</font>,
@@ -156,12 +143,11 @@
                 <br> )
                 <br>
                 <br>app.run() <font color="gray"># opens a window and starts the game.</font>
-                <br><br>
             </div>
         </div>
 
         <div class="topic">
-            How do I make a game?<br>
+            How do I make a game?
         </div>
         <div class="text">
             <br>Ursina games are made by writing Python code. You can use any text editor you want.
@@ -181,21 +167,28 @@
                         <br> player.x -= held_keys[<font color="green">'a'</font>] * .1
                         <br>
                         <br>app.run() <font color="gray"># opens a window and starts the game.</font>
-                        <br><br>
                     </div>
                     <br>
                 <li>Type this in the terminal to start the game. I recommend setting a hotkey
             </ol>
             <br>for this in your text editor:
-            <br><br>
             <div class="spoiler">
-                python ursina_game.py<br>
+                python ursina_game.py
             </div>
             <br>The game should start! You can now move the orange box around with 'a' and 'd'!
+            <br>
             <br>To close the window, you can by default, press shift+q or press the red x.
             <br><br>
         </div>
     </div>
 </body>
+
+<footer>
+    ursina engine:
+    <br>
+    <br>
+    <a href=" https://github.com/pokepetter/ursina" class="button">GitHub🡕</a>
+    <a href=" https://twitter.com/ursinaengine" class="button">Twitter🡕</a>
+</footer>
 
 </html>

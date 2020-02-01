@@ -1,0 +1,107 @@
+.{
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    background-color: #222;
+    color: #fff;
+}
+
+.buttons {
+    font-size: 25px;
+    margin-bottom: 5vh;
+}
+
+a.button {
+    padding: 1vh 1vw;
+    background-color: #222;
+    border-radius: 2vw;
+    text-decoration: none;
+    color: white;
+}
+
+a.button:hover {
+    padding: 1vh 1vw;
+    background-color: #111;
+    border-radius: 2vw;
+    text-decoration: none;
+    color: white;
+}
+
+a.button:active {
+    padding: 1vh 1vw;
+    background-color: #333;
+    border-radius: 2vw;
+    text-decoration: none;
+    color: white;
+}
+
+body {
+    text-align: center;
+    font-family: arial;
+}
+
+img {
+    border-radius: 2vw;
+    max-width: 90%;
+    margin-bottom: 2vh;
+}
+
+.title {
+    font-weight: bold;
+    font-size: 100px;
+}
+
+.subtitle {
+    font-size: 25px;
+}
+
+.separator {
+    font-weight: bold;
+    font-size: 25px;
+    margin: 1vh 0px 2vh 0px;
+}
+
+.description {
+    font-size: 15px;
+    margin-bottom: 5vh;
+}
+
+.container {
+    background-color: #333;
+    padding: 1vw;
+    border-radius: 1vw;
+    max-width: 68%;
+    margin: auto;
+}
+
+.topic {
+    font-size: 40px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.text {
+    padding-left: 30px;
+    text-align: left;
+    font-size: 20px;
+}
+
+.spoiler {
+    background-color: whitesmoke;
+    color: #333;
+    padding: 1vh 1vw;
+    font-family: monospace;
+    font-size: 20px;
+    border-radius: 1vw;
+}
+
+footer{
+    background-color: #000;
+    color: #aaa;
+    font-size: 20px;
+    padding: 3vw;
+    border-radius: 2vw 2vw 0.5vw 0.5vw;
+    margin: 10vh 0px 0px 0px;
+}
