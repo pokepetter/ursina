@@ -1,0 +1,106 @@
+html {
+    max-width: 99%;
+    margin: auto;
+    color: #333333;
+}
+
+a.button {
+    padding: 3vh 2vw;
+    background-color: #4CAF50;
+    border-radius: 5vw;
+    text-decoration: none;
+    color: white;
+    font-size: 25.0px;
+    line-height: 2.5em;
+    margin: auto;
+}
+
+a.button:hover {
+    padding: 3vh 2vw;
+    background-color: #197C20;
+    border-radius: 5vw;
+    text-decoration: none;
+    color: white;
+    font-size: 25.0px;
+    line-height: 2.5em;
+    margin: auto;
+}
+
+a.button:active {
+    padding: 3vh 2vw;
+    background-color: #6ECF72;
+    border-radius: 5vw;
+    text-decoration: none;
+    color: white;
+    font-size: 25.0px;
+    line-height: 2.5em;
+    margin: auto;
+}
+
+mark {
+    background: #ccff99;
+}
+
+body {
+    text-align: center;
+    font-family: arial;
+}
+
+img {
+    max-width: 90vw;
+}
+
+.container{
+    max-width: 70%;
+    margin: auto;
+}
+
+.title {
+    font-weight: bold;
+    font-size: 100px;
+    max-width: 900px;
+    margin: auto;
+}
+
+.subtitle {
+    font-size: 25px;
+    max-width: 900px;
+    margin: auto;
+}
+
+.separator {
+    font-weight: bold;
+    font-size: 25px;
+    max-width: 900px;
+    margin: auto;
+}
+
+.buttons {
+    font-size: 25px;
+    max-width: 900px;
+    margin: auto;
+}
+
+.description {
+    font-size: 15px;
+}
+
+.topic {
+    font-size: 40px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.text {
+    padding-left: 30px;
+    text-align: left;
+    font-size: 20px;
+}
+
+.spoiler {
+    background-color: whitesmoke;
+    padding: 1vh 1vw;
+    font-family: monospace;
+    font-size: 20px;
+    border-radius: 1vw;
+}
