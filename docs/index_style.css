@@ -80,12 +80,14 @@ img {
     font-size: 40px;
     font-weight: bold;
     text-align: left;
+    margin: 6vh 0px 2vh 0px;
 }
 
 .text {
     padding-left: 30px;
     text-align: left;
     font-size: 20px;
+    margin: 1vh 0px 2vh 0px;
 }
 
 .spoiler {
@@ -95,6 +97,7 @@ img {
     font-family: monospace;
     font-size: 20px;
     border-radius: 1vw;
+    margin: 1vh 0px 2vh 0px;
 }
 
 footer{
