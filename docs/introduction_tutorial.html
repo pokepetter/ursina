@@ -1,46 +1,97 @@
+<html>
 
-    <style>
-        html {
-            max-width: 100%;
-            margin: auto;
-            color: #333333;
-        }
-        a.button {
-            padding: 15px 32px;
-            background-color: #4CAF50;
-            border-radius: 8px;
-            border-width: 0px;
-            text-decoration: none;
-            color: white;
-            font-size: 25.0px;
-            line-height: 2.5em;
-        }
-        mark {
-            background: #ccff99;
-        }
-    </style>
-    <html>
-<left>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>introduction_tutorial</title>
-<br>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>introduction_tutorial</title>
+    <link rel="stylesheet" type="text/css" href="index_style.css">
+</head>
 
-<div style="font-family: arial;font-size: 20.0px;max-width: 1024px; margin: auto;">
-<div style="font-weight: bold;font-size: 60.0px;">
-Introduction Tutorial<br><div style="font-weight: normal;font-size: 20.0px;">
-<br>1) Install Python 3.6 or newer. Download Python here: <https://www.python.org/><br><br>2) Make sure you have git installed. <https://git-scm.com/><br><br>3) Open Command Prompt/terminal and paste the commands below. This will install the dependencies you need.<br><br><div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">pip install git+https://github.com/pokepetter/ursina.git<br></div><br>4) Open your preferred text editor. If you're new to programming, here are some suggestions:<br>&nbsp;&nbsp;&nbsp;&nbsp;* Atom<br>&nbsp;&nbsp;&nbsp;&nbsp;* Visual Studio Code<br>&nbsp;&nbsp;&nbsp;&nbsp;* Sublime Text<br><br>5) Create a new file called main.py. This will contain out little game.<br>&nbsp;&nbsp; Because it ends with '.py' you should get some syntax highlighting<br><br>6) At the top of the file, write:<br><div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;"><font color="purple">from</font> ursina <font color="purple">import</font> *<br></div>&nbsp;&nbsp;&nbsp;&nbsp;This will import all the necessary things we need from the engine in one line.<br>&nbsp;&nbsp;&nbsp;&nbsp;It means something like 'from ursina import all'. It's also possible to import parts of the engine<br>&nbsp;&nbsp;&nbsp;&nbsp;like this:<br><div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;"><font color="purple">from</font> ursina.prefabs <font color="purple">import</font> Button<br></div>&nbsp;&nbsp;&nbsp;&nbsp;Or import something that's not included by default:<br><div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;"><font color="purple">from</font> ursina.prefabs.first_person_controller <font color="purple">import</font> FirstPersonController<br></div><br>7) Here's a really basic example game with comments to explain what were doing.<br>&nbsp;&nbsp; We will simply make a orange box move right and left when we press 'd' or 'a'.<br><br><div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;"><font color="purple">from</font> ursina <font color="purple">import</font> *<br><br><font color="gray"># create a window</font>
-app = Ursina()<br><br><font color="gray"># most things in ursina are Entities. An Entity is a thing you place in the world.</font>
-<font color="gray"># you can think of them as GameObjects in Unity or Actors in Unreal.</font>
-<font color="gray"># the first paramenter tells us the Entity's model will be a 3d-model called 'cube'.</font>
-<font color="gray"># ursina includes some basic models like 'cube', 'sphere' and 'quad'.</font>
-<br><font color="gray"># the next parameter tells us the model's color should be orange.</font>
-<br><font color="gray"># 'scale_y=2' tells us how big the entity should be in the vertical axis, how tall it should be.</font>
-<font color="gray"># in ursina, positive x is right, positive y is up, and positive z is forward.</font>
-<br>player = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.orange, scale_y=2)<br><br><font color="gray"># create a function called 'update'.</font>
-<font color="gray"># this will automatically get called by the engine every frame.</font>
-<br><font color="purple">def</font> update():<br>    player.x += held_keys[<font color="green">'d'</font>] * time.dt<br>    player.x -= held_keys[<font color="green">'a'</font>] * time.dt<br><br><font color="gray"># this part will make the player move left or right based on our input.</font>
-<font color="gray"># to check which keys are held down, we can check the held_keys dictionary.</font>
-<font color="gray"># 0 means not pressed and 1 means pressed.</font>
-<font color="gray"># time.dt is simply the time since the last frame. by multiplying with this, the</font>
-<font color="gray"># player will move at the same speed regardless of how fast the game runs.</font>
-<br><br><font color="purple">def</font> input(key):<br>    if key == <font color="green">'space'</font>:<br>        player.y += 1<br>        invoke(setattr, player, <font color="green">'y'</font>, player.y-1, delay=.25)<br><br><br><font color="gray"># start running the game</font>
-app.run()<br><br><br></div><br>8) Now we have to tell Python to run the script. To do this, open the command line and<br>&nbsp;&nbsp; go to the current folder. An easy way to do this is to type 'cmd' in the address bar.<br>&nbsp;&nbsp; Run the command below.<br><br><div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">python main.py<br></div><br>&nbsp;&nbsp; An alternative is to install the 'atom-python-run' package in Atom so you can start<br>&nbsp;&nbsp; the game by pressing F5.<br><br>
+<body>
+    <div style="font-family: arial;font-size: 20.0px;max-width: 1024px; margin: auto;">
+        <div class="topic">
+            Introduction Tutorial
+        </div>
+        <div class="text">
+            <ol>
+                <li>Install Python 3.6 or newer. <a href="https://www.python.org/">Download Python.</a></li>
+                <li>Make sure you have git installed.<a href="https://git-scm.com/">Download Git.</a></li>
+                <li>Open Command Prompt/terminal and paste the commands below. This will install the dependencies you need.</li>
+                <div class="spoiler">
+                    pip install git+https://github.com/pokepetter/ursina.git
+                </div>
+                <li>Open your preferred text editor. If you're new to programming, here are some suggestions:</li>
+                <ul>
+                    <li>Atom</li>
+                    <li>Visual Studio Code</li>
+                    <li>Sublime Text</li>
+                </ul>
+                <li>Create a new file called main.py. This will contain out little game.
+                    <br>Because it ends with '.py' you should get some syntax highlighting.</li>
+                <li>At the top of the file, write:
+                    <div class="spoiler">
+                        <font color="purple">from</font> ursina <font color="purple">import</font> *
+                    </div>
+                    This will import all the necessary things we need from the engine in one line.
+                    <br>It means something like 'from ursina import all'. It's also possible to import parts of the engine
+                    <br>like this:
+                    <div class="spoiler">
+                        <font color="purple">from</font> ursina.prefabs <font color="purple">import</font> Button
+                    </div>
+                    Or import something that's not included by default:
+                    <div class="spoiler">
+                        <font color="purple">from</font> ursina.prefabs.first_person_controller <font color="purple">import</font> FirstPersonController
+                    </div>
+                </li>
+                <li>Here's a really basic example game with comments to explain what were doing.
+                    <br>We will simply make a orange box move right and left when we press 'd' or 'a'.
+                    <div class="spoiler">
+                        <font color="purple">from</font> ursina <font color="purple">import</font> *<br><br>
+                        <font color="gray"># create a window</font>
+                        app = Ursina()<br><br>
+                        <font color="gray"># most things in ursina are Entities. An Entity is a thing you place in the world.</font>
+                        <font color="gray"># you can think of them as GameObjects in Unity or Actors in Unreal.</font>
+                        <font color="gray"># the first paramenter tells us the Entity's model will be a 3d-model called 'cube'.</font>
+                        <font color="gray"># ursina includes some basic models like 'cube', 'sphere' and 'quad'.</font>
+                        <br>
+                        <font color="gray"># the next parameter tells us the model's color should be orange.</font>
+                        <br>
+                        <font color="gray"># 'scale_y=2' tells us how big the entity should be in the vertical axis, how tall it should be.</font>
+                        <font color="gray"># in ursina, positive x is right, positive y is up, and positive z is forward.</font>
+                        <br>player = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.orange, scale_y=2)<br><br>
+                        <font color="gray"># create a function called 'update'.</font>
+                        <font color="gray"># this will automatically get called by the engine every frame.</font>
+                        <br>
+                        <font color="purple">def</font> update():<br> player.x += held_keys[<font color="green">'d'</font>] * time.dt<br> player.x -= held_keys[<font color="green">'a'</font>] * time.dt<br><br>
+                        <font color="gray"># this part will make the player move left or right based on our input.</font>
+                        <font color="gray"># to check which keys are held down, we can check the held_keys dictionary.</font>
+                        <font color="gray"># 0 means not pressed and 1 means pressed.</font>
+                        <font color="gray"># time.dt is simply the time since the last frame. by multiplying with this, the</font>
+                        <font color="gray"># player will move at the same speed regardless of how fast the game runs.</font>
+                        <br><br>
+                        <font color="purple">def</font> input(key):<br> if key == <font color="green">'space'</font>:<br> player.y += 1<br> invoke(setattr, player, <font color="green">'y'</font>, player.y-1, delay=.25)<br><br><br>
+                        <font color="gray"># start running the game</font>
+                        app.run()<br><br><br>
+                    </div>
+                </li>
+                <li>Now we have to tell Python to run the script. To do this, open the command line and
+                    <br>go to the current folder. An easy way to do this is to type 'cmd' in the address bar.
+                    <br>Run the command below.
+                    <div class="spoiler">
+                        python main.py
+                    </div>
+                    An alternative is to install the 'atom-python-run' package in Atom so you can start
+                    the game by pressing F5.</li>
+            </ol>
+        </div>
+    </div>
+</body>
+
+<footer>
+    ursina engine:
+    <br>
+    <br>
+    <a href=" https://github.com/pokepetter/ursina" class="button">GitHub🡕</a>
+    <a href=" https://twitter.com/ursinaengine" class="button">Twitter🡕</a>
+</footer>
+
+</html>
