@@ -60,35 +60,36 @@ class MeshCollider(Collider):
             mesh = entity.model
 
         self.node_path = entity.attachNewNode(CollisionNode('CollisionNode'))
-        self.node_path.setP(90)
+        # self.node_path.setP(90)
+        # self.node_path.setR(-90)
         node = self.node_path.node()
 
         if mesh.triangles:
             for tri in mesh.triangles:
                 if len(tri) == 3:
                     shape = CollisionPolygon(
-                        Vec3(mesh.vertices[tri[0]]) + center,
-                        Vec3(mesh.vertices[tri[1]]) + center,
-                        Vec3(mesh.vertices[tri[2]]) + center)
+                        swap_y_z(Vec3(mesh.vertices[tri[0]])) + center,
+                        swap_y_z(Vec3(mesh.vertices[tri[1]])) + center,
+                        swap_y_z(Vec3(mesh.vertices[tri[2]])) + center)
                     node.addSolid(shape)
                 elif len(tri) == 4:
                     shape = CollisionPolygon(
-                        Vec3(mesh.vertices[tri[0]]) + center,
-                        Vec3(mesh.vertices[tri[1]]) + center,
-                        Vec3(mesh.vertices[tri[2]]) + center)
+                        swap_y_z(Vec3(mesh.vertices[tri[0]])) + center,
+                        swap_y_z(Vec3(mesh.vertices[tri[1]])) + center,
+                        swap_y_z(Vec3(mesh.vertices[tri[2]])) + center)
                     node.addSolid(shape)
                     shape = CollisionPolygon(
-                        Vec3(mesh.vertices[tri[2]]) + center,
-                        Vec3(mesh.vertices[tri[3]]) + center,
-                        Vec3(mesh.vertices[tri[0]]) + center)
+                        swap_y_z(Vec3(mesh.vertices[tri[2]])) + center,
+                        swap_y_z(Vec3(mesh.vertices[tri[3]])) + center,
+                        swap_y_z(Vec3(mesh.vertices[tri[0]])) + center)
                     node.addSolid(shape)
 
         elif mesh.mode == 'triangle':
             for i in range(0, len(mesh.vertices), 3):
                 shape = CollisionPolygon(
-                    Vec3(mesh.vertices[i]) + center,
-                    Vec3(mesh.vertices[i+1]) + center,
-                    Vec3(mesh.vertices[i+2]) + center
+                    swap_y_z(Vec3(mesh.vertices[i])) + center,
+                    swap_y_z(Vec3(mesh.vertices[i+1])) + center,
+                    swap_y_z(Vec3(mesh.vertices[i+2])) + center
                     )
                 node.addSolid(shape)
 
@@ -97,6 +98,10 @@ class MeshCollider(Collider):
 
 
         self.visible = False
+
+
+def swap_y_z(vec3):
+    return Vec3(vec3[0], vec3[2], vec3[1])
 
 
 if __name__ == '__main__':
