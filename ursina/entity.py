@@ -585,7 +585,7 @@ class Entity(NodePath):
             return
 
         self._texture = texture
-        self.setTexture(texture._texture, 1)
+        self.model.setTexture(texture._texture, 1)
         # print('set texture:', value)
 
 
