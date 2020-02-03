@@ -45,7 +45,7 @@ Powered by Python
 Useful Features
 # normal, size 1
 
-        * hotreload code/textures/models while in-game
+        * reload code/textures/models while in-game
         * automatic import of .psd and .blend files
         * play in fullscreen while developing
         * easy to use mesh class for making procedural geometry
