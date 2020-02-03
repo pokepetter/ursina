@@ -75,8 +75,8 @@ Free and Open Source
 Getting Started
 # size 1, normal
 
-    1) Install Python 3.6 or newer. <a href="https://www.python.org/downloads/">Download Python here</a>
-    2) Make sure you have git installed. <a href="https://git-scm.com/">git</a>
+    1) Install Python 3.6 or newer. https://www.python.org/downloads/
+    2) Make sure you have git installed. https://git-scm.com/
     3) Open cmd/terminal and type:
 
         # code
