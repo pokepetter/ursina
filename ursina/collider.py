@@ -60,8 +60,6 @@ class MeshCollider(Collider):
             mesh = entity.model
 
         self.node_path = entity.attachNewNode(CollisionNode('CollisionNode'))
-        # self.node_path.setP(90)
-        # self.node_path.setR(-90)
         node = self.node_path.node()
 
         if mesh.triangles:

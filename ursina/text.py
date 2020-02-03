@@ -20,7 +20,7 @@ class Text(Entity):
     end_tag = '>'
 
     def __init__(self, text='', start_tag=start_tag, end_tag=end_tag, **kwargs):
-        super().__init__()
+        super().__init__(**kwargs)
         self.size = Text.size
         self.parent = camera.ui
 
@@ -223,6 +223,15 @@ class Text(Entity):
         self.text_colors['default'] = value
         for tn in self.text_nodes:
             tn.node().setTextColor(value)
+
+    # do this to ensure you can't set texture on a Text
+    @property
+    def texture(self):
+        return None
+    @texture.setter
+    def texture(self, value):
+        pass
+
 
     @property
     def line_height(self):
