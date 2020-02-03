@@ -18,6 +18,7 @@ class EditorCamera(Entity):
         camera.editor_position = (0,0,-10)
         self.perspective_fov = camera.fov
         self.orthographic_fov = camera.fov
+        self.on_destroy = self.on_disable
 
 
     def on_enable(self):
@@ -35,7 +36,6 @@ class EditorCamera(Entity):
         camera.parent = camera.org_parent
         camera.position = camera.org_position
         camera.rotation = camera.org_rotation
-
 
 
     def input(self, key):

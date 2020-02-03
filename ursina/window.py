@@ -21,7 +21,7 @@ class Window(WindowProperties):
         self.vsync = True   # can't be set during play
         self.show_ursina_splash = False
 
-        self.title = os.path.basename(os.path.dirname(application.asset_folder))
+        self.title = application.asset_folder.name
         try:
             self.screen_resolution = (get_monitors()[0].width, get_monitors()[0].height)
         except:
