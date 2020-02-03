@@ -11,8 +11,8 @@ class Quad(Mesh):
         segments += 1
         if segments > 1:
             new_verts = list()
-            corner_maker = Entity()
-            point_placer = Entity(parent=corner_maker, x=-radius)
+            corner_maker = Entity(add_to_scene_entities=False)
+            point_placer = Entity(parent=corner_maker, x=-radius, add_to_scene_entities=False)
             corner_maker.rotation_z -= 90/segments/2
 
             corner_corrections = (Vec3(radius,radius,0), Vec3(-radius,radius,0), Vec3(-radius,-radius,0), Vec3(radius,-radius,0))
