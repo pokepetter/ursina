@@ -4,8 +4,12 @@ from ursina.texture import Texture
 
 
 file_types = ('.jpg', '.png', '.gif')
+textureless = False
 
 def load_texture(name, path=None):
+    if textureless:
+        return None
+
     folders = ( # folder search order
         application.compressed_textures_folder,
         application.asset_folder,
