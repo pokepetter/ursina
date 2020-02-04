@@ -158,6 +158,7 @@ class Entity(NodePath):
                 self.model.reparentTo(self)
                 self.model.setTransparency(TransparencyAttrib.M_dual)
                 setattr(self, 'color', self.color) # reapply color after changing model
+                setattr(self, 'texture', self.texture) # reapply texture after changing model
                 self._vert_cache = None
                 if isinstance(value, Mesh):
                     if hasattr(value, 'on_assign'):
@@ -586,7 +587,8 @@ class Entity(NodePath):
             return
 
         self._texture = texture
-        self.setTexture(texture._texture, 1)
+        if self.model:
+            self.model.setTexture(texture._texture, 1)
 
 
     @property
