@@ -45,7 +45,7 @@ Powered by Python
 Useful Features
 # normal, size 1
 
-        * hotreload code/textures/models while in-game
+        * reload code/textures/models while in-game
         * automatic import of .psd and .blend files
         * play in fullscreen while developing
         * easy to use mesh class for making procedural geometry
@@ -75,8 +75,8 @@ Free and Open Source
 Getting Started
 # size 1, normal
 
-    1) Install Python 3.6 or newer. <a href="https://www.python.org/downloads/">Download Python here</a>
-    2) Make sure you have git installed. <a href="https://git-scm.com/">git</a>
+    1) Install Python 3.6 or newer. https://www.python.org/downloads/
+    2) Make sure you have git installed. https://git-scm.com/
     3) Open cmd/terminal and type:
 
         # code

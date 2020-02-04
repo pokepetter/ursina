@@ -71,7 +71,7 @@ class Entity(NodePath):
         self.scale = Vec3(1,1,1)    # can also set self.scale_x, self.scale_y, self.scale_z
 
         self.line_definition = None
-        if application.trace_entity_definition:
+        if application.trace_entity_definition and add_to_scene_entities:
             from inspect import getframeinfo, stack
             _stack = stack()
             caller = getframeinfo(_stack[1][0])
@@ -95,6 +95,7 @@ class Entity(NodePath):
 
         for key, value in kwargs.items():
             setattr(self, key, value)
+
 
 
     def __setattr__(self, name, value):
@@ -157,6 +158,7 @@ class Entity(NodePath):
                 self.model.reparentTo(self)
                 self.model.setTransparency(TransparencyAttrib.M_dual)
                 setattr(self, 'color', self.color) # reapply color after changing model
+                setattr(self, 'texture', self.texture) # reapply texture after changing model
                 self._vert_cache = None
                 if isinstance(value, Mesh):
                     if hasattr(value, 'on_assign'):
@@ -585,8 +587,8 @@ class Entity(NodePath):
             return
 
         self._texture = texture
-        self.setTexture(texture._texture, 1)
-        # print('set texture:', value)
+        if self.model:
+            self.model.setTexture(texture._texture, 1)
 
 
     @property
@@ -918,7 +920,7 @@ class Entity(NodePath):
         if hasattr(self, 'blink_animator'):
             self.blink_animator.finish()
             self.blink_animator.kill()
-            print('finish blink_animator')
+            # print('finish blink_animator')
         self.blink_animator = Sequence(
             Func(self.animate_color, value, duration*.4, 0, curve, resolution, interrupt),
             Func(self.animate_color, _original_color, duration*.4, duration*.5, curve, resolution, interrupt, time_step)
@@ -932,57 +934,39 @@ class Entity(NodePath):
 if __name__ == '__main__':
     from ursina import *
     app = main.Ursina()
-    import time
-    t = time.time()
-    # for i in range(1000):
-    #     e = Entity(model='quad')
-    # [Entity(model='quad') for i in range(1000)]
-    #
-    # # using Entity class with inheritance
-    # class Player(Entity):
-    #     def __init__(self):
-    #         super().__init__()
-    #         self.model='cube'
-    #         self.color = color.orange
-    #         self.scale_y = 2
-    #
-    #     # input and update functions gets automatically called by the engine
-    #
-    #     def input(self, key):
-    #         if key == 'space':
-    #             # self.color = self.color.inverse()
-    #             self.animate_x(2, duration=1)
-    #
-    #     def update(self):
-    #         self.x += held_keys['d'] * time.dt * 10
-    #         self.x -= held_keys['a'] * time.dt * 10
-    #
-    # player = Player()
-    #
-    # Sky()
-    # e = Entity(model='sphere', color=color.red, reflectivity=1, y=2.5)
-    # e.generate_reflection_map()
-    #
-    # player.reflection_map = e.reflection_map
-    # player.reflectivity = 1
 
+    e = Entity(model='quad', color=color.orange, position=(0,0,1), scale=1.5, rotation=(0,0,45))
+
+
+    '''example of inheriting Entity'''
+    class Player(Entity):
+        def __init__(self, **kwargs):
+            super().__init__()
+            self.model='cube'
+            self.color = color.red
+            self.scale_y = 2
+
+            for key, value in kwargs.items():
+                setattr(self, key, value)
+
+        # input and update functions gets automatically called by the engine
+        def input(self, key):
+            if key == 'space':
+                # self.color = self.color.inverse()
+                self.animate_x(2, duration=1)
+
+        def update(self):
+            self.x += held_keys['d'] * time.dt * 10
+            self.x -= held_keys['a'] * time.dt * 10
+
+    player = Player(x=-1)
     EditorCamera()
-    # p = Entity(model=Cylinder(8), color=color.black)
-    # e1 = Entity(parent=p, model='cube', color=color.pink)
-    # e2 = Entity(parent=p, model='cube', color=color.lime, x=2, scale=2, rotation_z=45)
-    # e3 = Entity(parent=e2, model='cube', color=color.yellow, y=2, scale=.5)
-    # p.combine()
-    e = Entity(model='quad', color=color.orange)
+
 
     def input(key):
         if key == 'space':
-            # e.blink(color.red,
-            #     resolution=10,
-            #     curve=curve.linear
-            #     )
-            # camera.overlay.blink(color.black, 1)
-            e.animate('x', -3, curve=CubicBezier(0,.7,1,.3))
+            e.animate('x', -3)
 
+    Entity(add_to_scene_entities=False)
 
-    print(time.time() - t)
     app.run()

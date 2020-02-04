@@ -10,10 +10,6 @@ class Animation(Entity):
             name='texture_search_frame',
             add_to_scene_entities=False,
             )
-        if not temp_frame.texture and not temp_frame.model:
-            destroy(temp_frame)
-            destroy(self)
-            return
 
         found_texture = bool(temp_frame.texture)
         found_model = bool(temp_frame.model)
@@ -21,34 +17,37 @@ class Animation(Entity):
         destroy(temp_frame)
 
         super().__init__()
+
+
         self.frames = list()
 
-        for i in range(999):
-            frame = Entity(
-                parent=self,
-                name=str(i),
-                add_to_scene_entities=False,
-                )
+        if found_texture or found_model:
+            for i in range(9999):
+                frame = Entity(
+                    parent=self,
+                    name=str(i),
+                    add_to_scene_entities=False,
+                    )
 
-            frame.model = 'quad' if not found_model else name + '_' + str(i).zfill(6)
-            frame.texture = name + '_' + str(i).zfill(4)
+                frame.model = 'quad' if not found_model else name + '_' + str(i).zfill(6)
+                frame.texture = name + '_' + str(i).zfill(4)
 
-            if found_texture and not frame.texture:
-                destroy(frame)
-                frame = self.frames[0]
-                break
+                if found_texture and not frame.texture:
+                    destroy(frame)
+                    frame = self.frames[0]
+                    break
 
-            if found_model and not frame.model:
-                destroy(frame)
-                break
+                if found_model and not frame.model:
+                    destroy(frame)
+                    break
 
-            for key, value in kwargs.items():
-                if key.startswith('origin') or key in ('double_sided', 'color'):
-                    setattr(frame, key, value)
-                if key == 'filtering':
-                    setattr(frame.texture, key, value)
+                for key, value in kwargs.items():
+                    if key.startswith('origin') or key in ('double_sided', 'color'):
+                        setattr(frame, key, value)
+                    if key == 'filtering':
+                        setattr(frame.texture, key, value)
 
-            self.frames.append(frame)
+                self.frames.append(frame)
 
         if found_texture:
             self.scale = (frame.texture.width/100, frame.texture.height/100)
@@ -102,9 +101,10 @@ if __name__ == '__main__':
     # window.vsync = False
     app = Ursina()
     window.color = color.black
-    
-    animation = Animation('ursina_wink', fps=2, scale=5, filtering=None)
 
+    # texture_importer.textureless = True
+    animation = Animation('ursina_wink', fps=2, scale=5, filtering=None)
+    print(animation)
     # animation = Animation('blob_animation', fps=12, scale=5, y=20)
     #
     # from ursina.shaders import normals_shader
