@@ -25,14 +25,14 @@ class Animator():
         if not value in self.animations:
             print(self, 'has no animation:', value)
 
-        else:
-            if not self._state == value:
-                # only show set state and disable the rest
-                for key, anim in self.animations.items():
-                    if anim:
-                        anim.enabled = value == key
-                        if hasattr(anim, 'play') and callable(anim.play):
-                            anim.play()
+        elif not self._state == value:
+            # only show set state and disable the rest
+            for key, anim in self.animations.items():
+                if anim:
+                    anim.enabled = value == key
+                    if hasattr(anim, 'play') and callable(anim.play):
+                        anim.play()
+                        # print('play', anim)
 
         self._state = value
 
@@ -41,12 +41,13 @@ class Animator():
 
 if __name__ == '__main__':
     app = Ursina()
-
+    # texture_importer.textureless=True
+    anim = Animation('ursina_wink', loop=False)
     a = Animator(
         animations = {
             'lol' : Entity(model='cube', color=color.red),
             'yo' : Entity(model='cube', color=color.green, x=1),
-            'help' : Entity(model='cube', color=color.violet, y=1),
+            'help' : anim,
         }
     )
     a.state = 'yo'
@@ -60,5 +61,6 @@ if __name__ == '__main__':
             a.state = 'yo'
         if key == '3':
             a.state = 'help'
+            print(anim.enabled)
 
     app.run()

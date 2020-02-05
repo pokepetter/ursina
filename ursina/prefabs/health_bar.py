@@ -90,30 +90,12 @@ class HealthBar(Button):
 if __name__ == '__main__':
     app = Ursina()
 
-    health_bar_1 = HealthBar(500)
-    # health_bar_1 = HealthBar(bar_color=color.lime.tint(-.25), roundness=.5, value=50)
-    #
-    # health_bar_2 = HealthBar(scale_x=1)
-    # health_bar_2.roundness = .5
-    # health_bar_2.y-=.2
-    # health_bar_2.scale_y *= 2
-    # health_bar_2.value = 5
-    #
-    # health_bar_3 = HealthBar()
-    # health_bar_3.roundness = .5
-    # health_bar_3.scale_y = .1
-    # health_bar_3.y-=.4
-    # health_bar_3.value = 5
-    #
-    # def input(key):
-    #     if key == '+' or key == '+ hold':
-    #         health_bar_1.value += 10
-    #         health_bar_2.value += 10
-    #         health_bar_3.value += 10
-    #     if key == '-' or key == '- hold':
-    #         health_bar_1.value -= 10
-    #         health_bar_2.value -= 10
-    #         health_bar_3.value -= 10
+    health_bar_1 = HealthBar(bar_color=color.lime.tint(-.25), roundness=.5, value=50)
 
-    window.color = color.light_gray
+    def input(key):
+        if key == '+' or key == '+ hold':
+            health_bar_1.value += 10
+        if key == '-' or key == '- hold':
+            health_bar_1.value -= 10
+
     app.run()

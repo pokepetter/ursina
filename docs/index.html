@@ -97,7 +97,10 @@ Getting Started<br>
 &nbsp;&nbsp;&nbsp;&nbsp;repo and install as develop like this:<br>
 <br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 2em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">git clone <a href="https://github.com/pokepetter/ursina.git">https://github.com/pokepetter/ursina.git</a><br>python setup.py develop<br></div><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Also install any of the optional dependencies you want from the list below,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;or install them all with:<br>
 <br>
+<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 2em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">pip install git+https://github.com/pokepetter/ursina.git<font color="gray">#egg=ursina[extras]</font><br></div><br>
 <br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
@@ -111,6 +114,7 @@ Dependencies<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;• psutil, for measuring memory usage (optional)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;• hurry.size, for converting bytes to megabytes (optional)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;• imageio, for recording and converting to gifs (optional)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;• psd-tools, for converting .psd files (optional)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;• blender, for converting .blend files (optional)<br>
 <br>

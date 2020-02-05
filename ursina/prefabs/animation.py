@@ -103,8 +103,9 @@ if __name__ == '__main__':
     window.color = color.black
 
     # texture_importer.textureless = True
+    t = time.time()
     animation = Animation('ursina_wink', fps=2, scale=5, filtering=None)
-    print(animation)
+    print(time.time()-t)
     # animation = Animation('blob_animation', fps=12, scale=5, y=20)
     #
     # from ursina.shaders import normals_shader
