@@ -31,25 +31,25 @@ Powered by Python
 
     Things you won't miss:
 
-        * waiting for your code to compile
-        * the editor crashing and possibly losing your work
-        * not being able to fix engine bugs or add features
-        * overly verbose code
-        * uncustomizable workflow
-        * waiting for imports
-        * long build times
-        * revenue cut or subscription fee
+        • Waiting for your code to compile
+        • The editor crashing and possibly losing your work
+        • Not being able to fix engine bugs or add features
+        • Overly verbose code
+        • Uncustomizable workflow
+        • Waiting for imports
+        • Long build times
+        • Revenue cut or subscription fee
 
 
 # size 2, bold
 Useful Features
 # normal, size 1
 
-        * reload code/textures/models while in-game
-        * automatic import of .psd and .blend files
-        * play in fullscreen while developing
-        * easy to use mesh class for making procedural geometry
-        * lots of included procedural 3D primitives
+        • Reload code/textures/models while in-game
+        • Automatic import of .psd and .blend files
+        • Play in fullscreen while developing
+        • Easy to use mesh class for making procedural geometry
+        • Lots of included procedural 3D primitives
 
 
 
@@ -57,9 +57,9 @@ Useful Features
 Platforms
 # normal, size 1
 
-        * Windows
-        * Mac
-        * Linux
+        • Windows
+        • Mac
+        • Linux
 
 
 # size 2, bold
@@ -98,15 +98,17 @@ Getting Started
 Dependencies
 # size 1, normal
 
-    * python 3.6+
-    * panda3d
-    * screeninfo, for detecting screen resolution (included)
-    * hurry.size, for getting screen resolution (included)
-    * pillow, for texture manipulation
-    * psd-tools, for converting .psd files
-    * psutil, for measuring memory usage
-    * blender, for converting .blend files
+    • python 3.6+
+    • panda3d
+    • screeninfo, for detecting screen resolution
+    • pillow, for texture manipulation
 
+    • psutil, for measuring memory usage (optional)
+    • hurry.size, for converting bytes to megabytes (optional)
+    • psd-tools, for converting .psd files (optional)
+    • blender, for converting .blend files (optional)
+
+    Optional dependencies must be installed manually.
 
 
 

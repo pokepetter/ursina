@@ -48,8 +48,8 @@ In this tutorial we will make a drag and drop inventory like this.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;because it makes it easier to add items later. Let's also give it a texture and a color.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;If we have both, the color value will tint the texture.<br>
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;Now, this is nice and all, but wouldn't it be nice to show a grid as well.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;There multiple way tp do that, but for this ase, we'll simply make the texture repeat<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Now, this is nice and all, but wouldn't it be nice to show a grid as well?<br>
+&nbsp;&nbsp;&nbsp;&nbsp;There are multiple way to do that, but in this case, we'll simply make the texture repeat<br>
 &nbsp;&nbsp;&nbsp;&nbsp;by setting texture_scale to (5,6). That'll nicely fit the size of our inventory.<br>
 <br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 2em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;font-size: 16.0px;"><font color="purple">from</font> ursina <font color="purple">import</font> *<br><br>class Inventory(<font color="olive">Entity</font>):<br>    <font color="purple">def</font> __init__(self):<br>        super().__init__(<br>            parent = camera.ui,<br>            model = <font color="green">'quad'</font>,<br><mark>             scale = (.5, .8),                                           </mark><br><mark>             origin = (-.5, .5),                                         </mark><br><mark>             position = (-.3,.4),                                        </mark><br><mark>             texture = <font color="green">'white_cube'</font>,                                     </mark><br><mark>             texture_scale = (5,8),                                      </mark><br><mark>             color = color.dark_gray                                     </mark><br>            )<br><br><br><br>if __name__ == <font color="green">'__main__'</font>:<br>    app = Ursina()<br>    inventory = Inventory()<br>    app.run()<br></div><div style="font-size: 20.0px;">
@@ -64,13 +64,13 @@ In this tutorial we will make a drag and drop inventory like this.<br>
 <br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 2em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;font-size: 16.0px;"><font color="purple">from</font> ursina <font color="purple">import</font> *<br><br>class Inventory(<font color="olive">Entity</font>):<br>    <font color="purple">def</font> __init__(self):<br>        super().__init__(<br>            parent = camera.ui,<br>            model = <font color="green">'quad'</font>,<br>            scale = (.5, .8),<br>            origin = (-.5, .5),<br>            position = (-.3,.4),<br>            texture = <font color="green">'white_cube'</font>,<br>            texture_scale = (5,8),<br>            color = color.dark_gray<br>            )<br><br><br><br>if __name__ == <font color="green">'__main__'</font>:<br>    app = Ursina()<br>    inventory = Inventory()<br><mark>     item = Button(parent=inventory, color=color.red, position=(0,0))            </mark><br><mark>     item = Button(parent=inventory, color=color.green, position=(2,0))          </mark><br>    app.run()<br></div><div style="font-size: 20.0px;">
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;We'll, that didn't go as planned. The items cover the entire inventory and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Well, that didn't go as planned. The items cover the entire inventory and<br>
 &nbsp;&nbsp;&nbsp;&nbsp;the second item is way off to the left.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Let's fix this by making another object to put the items under.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Scale the object to the size of an item.<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;They also don't fit the grid. Fix that by setting origin to the upper left<br>
-&nbsp;&nbsp;&nbsp;&nbsp;corner, (-.5,.5) that is.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;corner, (-.5,.5).<br>
 <br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 2em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;font-size: 16.0px;"><font color="purple">from</font> ursina <font color="purple">import</font> *<br><br>class Inventory(<font color="olive">Entity</font>):<br>    <font color="purple">def</font> __init__(self):<br>        super().__init__(<br>            parent = camera.ui,<br>            model = <font color="green">'quad'</font>,<br>            scale = (.5, .8),<br>            origin = (-.5, .5),<br>            position = (-.3,.4),<br>            texture = <font color="green">'white_cube'</font>,<br>            texture_scale = (5,8),<br>            color = color.dark_gray<br>            )<br><br><mark>         self.item_parent = <font color="olive">Entity</font>(parent=self, scale=(1/5,1/8))         </mark><br><br><br><br>if __name__ == <font color="green">'__main__'</font>:<br>    app = Ursina()<br>    inventory = Inventory()<br><mark>     item = Button(parent=inventory.item_parent, origin=(-.5,.5), color=color.red, position=(0,0))      </mark><br><mark>     item = Button(parent=inventory.item_parent, origin=(-.5,.5), color=color.green, position=(2,0))    </mark><br>    app.run()<br></div><div style="font-size: 20.0px;">
 <br>
@@ -85,7 +85,7 @@ In this tutorial we will make a drag and drop inventory like this.<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;Let's start by making a function called 'append()' and make it spawn an item<br>
 &nbsp;&nbsp;&nbsp;&nbsp;when we send it a string. We'll also set the button's text to the string we<br>
-&nbsp;&nbsp;&nbsp;&nbsp;recieve so we can differentiate them.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;receive so we can differentiate them.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Let's give them a random color too, why not.<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;Lastly, let's call inventory.append('test item') a couple of times to make sure it works.<br>
@@ -112,7 +112,7 @@ In this tutorial we will make a drag and drop inventory like this.<br>
 <div style="font-size: 20.0px;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;Make a button to add a random item to the inventory. This is not part of the inventory itself,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;but it's useful to test it.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;but it's useful in order to test it.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Assign the button's 'on_click' to a function, and it will call that function when we click it.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;button.on_click = inventory<br>
 <br>
@@ -133,7 +133,7 @@ In this tutorial we will make a drag and drop inventory like this.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;if this tutorial, but feel free to add your own.<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;Let's also remove the random color and instead show the item's name when we hover it with the mouse.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;If a button has 'tooltip' set to something. It will show it when we hover the Button.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If a button has 'tooltip' set to something, it will show it when we hover the Button.<br>
 <br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 2em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;font-size: 16.0px;">    <font color="purple">def</font> append(self, item):<br><mark>         icon = Button(                                                  </mark><br>            parent = inventory.item_parent,<br>            model = <font color="green">'quad'</font>,<br><mark>             texture = item,                                             </mark><br><mark>             color = color.white,                                        </mark><br>            origin = (-.5,.5),<br>            position = self.find_free_spot(),<br>            z = -.1,<br>            )<br><mark>         name = item.replace(<font color="green">'_'</font>, <font color="green">' '</font>).title()                           </mark><br><mark>         icon.tooltip = Tooltip(name)                                    </mark><br><mark>         icon.tooltip.background.color = color.color(0,0,0,.8)           </mark><br><br></div><div style="font-size: 20.0px;">
 <br>
@@ -144,7 +144,7 @@ In this tutorial we will make a drag and drop inventory like this.<br>
 <div style="font-size: 20.0px;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;We can't move the items! That's not fun.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;However's that's easy to change, just spawn a Draggable instead of Button.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;However, that's easy to change. Just spawn a Draggable instead of Button.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Draggable inherits from Button, so the tooltips will still work!<br>
 <br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 2em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;font-size: 16.0px;">    <font color="purple">def</font> append(self, item):<br><mark>         icon = Draggable(                                                   </mark><br>            parent = inventory.item_parent,<br>            model = <font color="green">'quad'</font>,<br>            texture = item,<br>            color = color.white,<br>            origin = (-.5,.5),<br>            position = self.find_free_spot(),<br>            z = -.1,<br>            )<br>        name = item.replace(<font color="green">'_'</font>, <font color="green">' '</font>).title()<br>        icon.tooltip = Tooltip(name)<br>        icon.tooltip.background.color = color.color(0,0,0,.8)<br><br></div><div style="font-size: 20.0px;">
@@ -157,7 +157,7 @@ In this tutorial we will make a drag and drop inventory like this.<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;The items can be moved now, but they don't follow the grid.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Let's round the position when we drop it.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Draggable's will automatically call on_drag() and on_drop() if has them<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Draggable's will automatically call on_drag() and on_drop() if has them.<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;round the position on drop<br>
 <br>
@@ -193,7 +193,7 @@ for c in self.children:<br>    if c == icon:<br>        continue<br><br>    if c
 12 Make the dragged items render on top<br>
 <div style="font-size: 20.0px;">
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;All the item's are at the same depth, so it hard to say how they will overlap.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;All the items are at the same depth, so it hard to say how they will overlap.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;It feels natural that the item we're currently dragging stays on top,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;so we'll move it back a bit when we drag it and forward when we drop it.<br>
 <br>
