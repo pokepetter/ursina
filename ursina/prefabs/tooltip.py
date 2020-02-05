@@ -4,7 +4,7 @@ from ursina import *
 class Tooltip(Text):
 
     def __init__(self, text='', **kwargs):
-        super().__init__(text, **kwargs)
+        super().__init__(text, add_to_scene_entities=True, **kwargs)
 
         self.parent = camera.ui
         self.wordwrap = 40

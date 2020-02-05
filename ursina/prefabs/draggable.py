@@ -2,7 +2,7 @@ from ursina import *
 
 class Draggable(Button):
 
-    _z_plane = Entity(model='quad', collider='box', scale=(999,999),
+    _z_plane = Entity(name='_z_plane', model='quad', collider='box', scale=(999,999),
         color=color.clear, enabled=False, eternal=True)
 
     def __init__(self, **kwargs):

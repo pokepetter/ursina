@@ -93,14 +93,7 @@ print('copying always included')
 always_include = (
     'Lib/collections', 'Lib/ctypes', 'Lib/encodings',
     'Lib/importlib', 'Lib/urllib', 'Lib/logging',
-
-    'Lib/site-packages/panda3d/etc', 'Lib/site-packages/panda3d/__init__.py',
-    'Lib/site-packages/panda3d/cg.dll', 'Lib/site-packages/panda3d/cgGL.dll',
-    'Lib/site-packages/panda3d/libp3direct.dll', 'Lib/site-packages/panda3d/libp3dtool.dll',
-    'Lib/site-packages/panda3d/libp3dtoolconfig.dll', 'Lib/site-packages/panda3d/libp3interrogatedb.dll',
-    'Lib/site-packages/panda3d/libp3openal_audio.dll','Lib/site-packages/panda3d/libp3windisplay.dll',
-    'Lib/site-packages/panda3d/libpanda.dll','Lib/site-packages/panda3d/libpandaegg.dll',
-    'Lib/site-packages/panda3d/libpandaexpress.dll','Lib/site-packages/panda3d/libpandagl.dll',
+    'Lib/site-packages/panda3d/',
     )
 
 for path in always_include:
