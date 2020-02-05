@@ -3,6 +3,14 @@ from ursina import application
 from ursina.texture import Texture
 
 
+has_psd_tools_installed = False
+try:
+    from psd_tools import PSDImage
+    has_psd_tools_installed = true
+except Exception as e:
+    print('psd-tools not installed')
+
+
 file_types = ('.jpg', '.png', '.gif')
 textureless = False
 
@@ -35,11 +43,12 @@ def load_texture(name, path=None):
                 return Texture(filename.resolve())
 
 
-    for folder in folders:
-        for filename in folder.glob('**/' + name + '.psd'):
-            print('found uncompressed psd, compressing it...')
-            compress_textures(name)
-            return load_texture(name)
+    if has_psd_tools_installed:
+        for folder in folders:
+            for filename in folder.glob('**/' + name + '.psd'):
+                print('found uncompressed psd, compressing it...')
+                compress_textures(name)
+                return load_texture(name)
 
     return None
 
@@ -51,10 +60,7 @@ def compress_textures(name=''):
         from PIL import Image
     except Exception as e:
         return e
-    try:
-        from psd_tools import PSDImage
-    except Exception as e:
-        return e
+
 
     if not application.compressed_textures_folder.exists():
         application.compressed_textures_folder.mkdir()
@@ -72,7 +78,7 @@ def compress_textures(name=''):
             continue
         # print('  found:', f)
 
-        if f.suffix == '.psd':
+        if f.suffix == '.psd' and has_psd_tools_installed:
             image = PSDImage.load(f)
             image = image.as_PIL()
         elif f.suffix == '.png':
