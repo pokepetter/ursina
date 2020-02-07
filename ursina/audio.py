@@ -1,5 +1,6 @@
 from ursina import *
 
+
 class Audio(Entity):
     def __init__(self, sound_file_name='', autoplay=True, **kwargs):
         super().__init__(**kwargs)
@@ -25,26 +26,7 @@ class Audio(Entity):
         if autoplay:
             self.play()
 
-
     def __setattr__(self, name, value):
-        if name == 'clip':
-            if isinstance(value, str):
-                self.name = value
-
-                for suffix in ('.ogg', '.mp3', '.wav'):
-                    for f in application.asset_folder.glob(f'**/{value}{suffix}'):
-                        p = str(f.resolve())
-                        p = p[len(str(application.asset_folder.resolve())):]
-                        self._clip = loader.loadSfx(p[1:])
-                        # print('...loaded audio clip:', f, p)
-                        return
-                    # except:
-                    #     pass
-                print('no audio found with name:', value, 'supported formats: .ogg, .mp3, .wav')
-                return
-            else:
-                self._clip = value
-
         if hasattr(self, 'clip') and self._clip:
             if name == 'volume':
                 self._clip.setVolume(value)
@@ -66,6 +48,25 @@ class Audio(Entity):
     @property
     def clip(self):
         return self._clip
+
+    @clip.setter
+    def set_clip(self, value):
+        if isinstance(value, str):
+            self.name = value
+
+            for suffix in ('.ogg', '.mp3', '.wav'):
+                for f in application.asset_folder.glob(f'**/{value}{suffix}'):
+                    p = str(f.resolve())
+                    p = p[len(str(application.asset_folder.resolve())):]
+                    self._clip = loader.loadSfx(p[1:])
+                    # print('...loaded audio clip:', f, p)
+                    return
+                # except:
+                #     pass
+            print('no audio found with name:', value, 'supported formats: .ogg, .mp3, .wav')
+            return
+        else:
+            self._clip = value
 
     @property
     def length(self):
@@ -91,7 +92,6 @@ class Audio(Entity):
     @time.setter
     def time(self, value):
         self.clip.set_time(value)
-
 
     def play(self, start=0):
         if self.clip:
@@ -125,26 +125,28 @@ class Audio(Entity):
     def fade(self, value, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
         self.animate('volume', value, duration, delay, curve, resolution, interrupt)
 
-    def fade_in(self, value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, destroy_on_ended=False):
+    def fade_in(self, value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True,
+                destroy_on_ended=False):
         if duration <= 0:
             self.volume = value
         else:
             self.animate('volume', value, duration, delay, curve, resolution, interrupt)
         if destroy_on_ended:
-            destroy(self, delay=duration+.01)
+            destroy(self, delay=duration + .01)
 
-    def fade_out(self, value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, destroy_on_ended=True):
+    def fade_out(self, value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True,
+                 destroy_on_ended=True):
         if duration <= 0:
             self.volume = value
         else:
             self.animate('volume', value, duration, delay, curve, resolution, interrupt)
         if destroy_on_ended:
-            destroy(self, delay=duration+.01)
-
+            destroy(self, delay=duration + .01)
 
 
 if __name__ == '__main__':
     from ursina import Ursina, printvar
+
     base = Ursina()
     # a = Audio('life_is_currency_wav', pitch=1)
     a = Audio('life_is_currency', pitch=1, loop=True, autoplay=True)
