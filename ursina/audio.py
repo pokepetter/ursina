@@ -1,5 +1,7 @@
 from ursina import *
-from ursina import destroy as _destroy
+
+# Set to avoid name-space conflicts in the Audio class.
+_destroy = destroy
 
 
 class Audio(Entity):
