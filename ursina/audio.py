@@ -8,7 +8,7 @@ class Audio(Entity):
     def __init__(self, sound_file_name='', autoplay=True, **kwargs):
         super().__init__(**kwargs)
         # printvar(sound_file_name)
-        if sound_file_name != '':
+        if sound_file_name:
             self.clip = sound_file_name
         else:
             self.clip = None
