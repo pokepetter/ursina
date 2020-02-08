@@ -1,5 +1,7 @@
 from ursina import *
-from copy import copy, deepcopy
+from copy import copy
+
+from ursina.entity import EntityMode
 
 
 def duplicate(entity):
@@ -8,18 +10,15 @@ def duplicate(entity):
     if hasattr(entity, 'model') and entity.model:
         e.model = copy(entity.model)
 
-
     for name in entity.attributes:
-        if name == 'model':
+        if name in {'model', 'scripts'}:
             continue
-        elif name == 'scripts':
-            pass
-        else:
-            if hasattr(entity, name):
-                setattr(e, name, getattr(entity, name))
+        
+        if hasattr(entity, name):
+            setattr(e, name, getattr(entity, name))
 
-    for c in entity.children:
-        clone = duplicate(c)
+    for child in entity.children:
+        clone = duplicate(child)
         clone.parent = e
 
     if 'Audio' in e.types:
@@ -32,7 +31,6 @@ def duplicate(entity):
 
         e.clip = entity.clip
 
-
     return e
 
 
@@ -42,13 +40,13 @@ if __name__ == '__main__':
 
     quad = Entity(model='quad', texture='brick', x=-1)
     circle = Entity(model=Circle(6))
-    rounded_quad = Entity(model=Quad(subdivisions=3, mode='line'), x=1)
-    sphere = Entity(model=Sphere(mode='line'), x=2)
+    rounded_quad = Entity(model=Quad(subdivisions=3, mode=EntityMode.line), x=1)
+    sphere = Entity(model=Sphere(mode=EntityMode.line), x=2)
     cone = Entity(model=Cone(), x=3)
     cone.model.colorize()
     prismatoid = Entity(model=Prismatoid(), x=4)
     cylinder = Entity(model=Cylinder(), x=5)
-    mesh = Entity(model=Mesh(vertices=((0,0,0), (0,1,0), (-1,1,0))), x=6)
+    mesh = Entity(model=Mesh(vertices=((0, 0, 0), (0, 1, 0), (-1, 1, 0))), x=6)
 
     names = ('quad', 'circle', 'rounded_quad', 'sphere', 'cone', 'prismatoid', 'cylinder', 'mesh')
     for i, e in enumerate((quad, sprite, circle, cone, prismatoid, cylinder, mesh)):
