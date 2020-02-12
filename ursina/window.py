@@ -97,6 +97,7 @@ class Window(WindowProperties):
             position = (.5*self.aspect_ratio, .47, -999),
             origin = (.8,.5),
             text = '60',
+            add_to_scene_entities = True,
             # background = True,
             i = 0,
             )
