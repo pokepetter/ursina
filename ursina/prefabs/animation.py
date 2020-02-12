@@ -1,33 +1,31 @@
 from ursina import *
 
+model_folders = ( # folder search order
+    application.asset_folder,
+    application.package_folder,
+    )
+
+texture_folders = ( # folder search order
+    application.compressed_textures_folder,
+    application.asset_folder,
+    application.internal_textures_folder,
+    )
+
 
 class Animation(Entity):
 
     def __init__(self, name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs):
         super().__init__()
 
-        model_folders = ( # folder search order
-            application.asset_folder,
-            application.package_folder,
-            )
-
-        texture_folders = ( # folder search order
-            application.compressed_textures_folder,
-            application.asset_folder,
-            application.internal_textures_folder,
-            )
-
         models = list()
         for folder in model_folders:
-            models = folder.glob(f'**/{name}*.obj')
-            models = list(models)
+            models = list(folder.glob(f'**/{name}*.obj'))
             if models:
                 break
 
         textures = list()
         for folder in texture_folders:
-            textures = folder.glob(f'**/{name}*.png')
-            textures = list(textures)
+            textures = list(folder.glob(f'**/{name}*.png'))
             if textures:
                 break
 
@@ -59,9 +57,9 @@ class Animation(Entity):
         self.stop()
         self.sequence = Sequence(loop=loop)
 
-        for i in range(len(self.frames)):
+        for frame in self.frames:
             self.sequence.append(Func(self.stop))
-            self.sequence.append(Func(setattr, self.frames[i], 'enabled', True))
+            self.sequence.append(Func(setattr, frame, 'enabled', True))
             self.sequence.append(Wait(1/fps))
 
         if autoplay:
