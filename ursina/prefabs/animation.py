@@ -4,42 +4,45 @@ from ursina import *
 class Animation(Entity):
 
     def __init__(self, name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs):
-        temp_frame = Entity(
-            model=name + '_' + str(0).zfill(6),
-            texture=name + '_' + str(0).zfill(4),
-            name='texture_search_frame',
-            add_to_scene_entities=False,
-            )
-
-        found_texture = bool(temp_frame.texture)
-        found_model = bool(temp_frame.model)
-        # print('------------------', 'found_texture:', found_texture, 'found_model:', found_model, temp_frame.model)
-        destroy(temp_frame)
-
         super().__init__()
 
+        model_folders = ( # folder search order
+            application.asset_folder,
+            application.package_folder,
+            )
+
+        texture_folders = ( # folder search order
+            application.compressed_textures_folder,
+            application.asset_folder,
+            application.internal_textures_folder,
+            )
+
+        models = list()
+        for folder in model_folders:
+            models = folder.glob(f'**/{name}*.obj')
+            models = list(models)
+            if models:
+                break
+
+        textures = list()
+        for folder in texture_folders:
+            textures = folder.glob(f'**/{name}*.png')
+            textures = list(textures)
+            if textures:
+                break
 
         self.frames = list()
+        frame = None
 
-        if found_texture or found_model:
-            for i in range(9999):
-                frame = Entity(
-                    parent=self,
-                    name=str(i),
-                    add_to_scene_entities=False,
-                    )
+        for i in range(max(len(models), len(textures))):
+            model = 'quad'
+            if i < len(models):
+                model = models[i].stem
 
-                frame.model = 'quad' if not found_model else name + '_' + str(i).zfill(6)
-                frame.texture = name + '_' + str(i).zfill(4)
+            frame = Entity(parent=self, model=model, add_to_scene_entities=False)
 
-                if found_texture and not frame.texture:
-                    destroy(frame)
-                    frame = self.frames[0]
-                    break
-
-                if found_model and not frame.model:
-                    destroy(frame)
-                    break
+            if i < len(textures):
+                frame.texture = textures[i].stem
 
                 for key, value in kwargs.items():
                     if key.startswith('origin') or key in ('double_sided', 'color'):
@@ -47,9 +50,9 @@ class Animation(Entity):
                     if key == 'filtering':
                         setattr(frame.texture, key, value)
 
-                self.frames.append(frame)
+            self.frames.append(frame)
 
-        if found_texture:
+        if frame and frame.texture:
             self.scale = (frame.texture.width/100, frame.texture.height/100)
             self.aspect_ratio = self.scale_x / self.scale_y
 
@@ -102,10 +105,7 @@ if __name__ == '__main__':
     app = Ursina()
     window.color = color.black
 
-    # texture_importer.textureless = True
-    t = time.time()
     animation = Animation('ursina_wink', fps=2, scale=5, filtering=None)
-    print(time.time()-t)
     # animation = Animation('blob_animation', fps=12, scale=5, y=20)
     #
     # from ursina.shaders import normals_shader
