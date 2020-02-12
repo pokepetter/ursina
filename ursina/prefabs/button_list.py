@@ -25,7 +25,7 @@ class ButtonList(Entity):
         self.text_entity.text = 'eoifjaofijaoii'
         self.text_entity.line_height = button_height
         self.button_height = self.text_entity.height
-        self.highlight = Entity(parent=self, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5))
+        self.highlight = Entity(parent=self, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5), z=-.01)
 
         self.text_entity.text = '\n'.join(self.buttons.keys())
         for key, value in kwargs.items():
@@ -74,7 +74,7 @@ if __name__ == '__main__':
         'four' :    Func(test, b=3, a=4),
         'five':     Sequence(1, Func(print, 'lol'), loop=True),
     }
-    for i in range(6, 20):
+    for i in range(6, 25):
         button_dict[f'button {i}'] = Func(print, i)
 
     ButtonList(button_dict)

@@ -19,6 +19,8 @@ class Mouse():
         self.delta = Vec3(0,0,0)
         self.prev_x = 0
         self.prev_y = 0
+        self.start_x = 0
+        self.start_y = 0
         self.velocity = Vec3(0,0,0)
         self.prev_click_time = time.time()
         self.double_click_distance = .5
