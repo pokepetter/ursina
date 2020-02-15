@@ -16,7 +16,7 @@ from ursina.duplicate import duplicate
 from ursina import input_handler
 
 from ursina.text import Text
-from ursina.mesh import Mesh
+from ursina.mesh import Mesh, MeshModes
 from ursina.prefabs.sprite import Sprite
 from ursina.prefabs.button import Button
 from ursina.prefabs.panel import Panel

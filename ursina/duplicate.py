@@ -3,7 +3,7 @@ from copy import copy, deepcopy
 
 
 def duplicate(entity):
-    e = entity.__class__()
+    e = entity.__class__(add_to_scene_entities=entity in scene.entities)
 
     if hasattr(entity, 'model') and entity.model:
         e.model = copy(entity.model)
@@ -13,7 +13,8 @@ def duplicate(entity):
         if name == 'model':
             continue
         elif name == 'scripts':
-            pass
+            for script in entity.scripts:
+                e.add_script(copy(script))
         else:
             if hasattr(entity, name):
                 setattr(e, name, getattr(entity, name))
@@ -57,6 +58,7 @@ if __name__ == '__main__':
         print()
         e2 = duplicate(e)
         e2.y += 1.5
+
 
     EditorCamera()
     app.run()
