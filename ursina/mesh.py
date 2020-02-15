@@ -9,9 +9,49 @@ from ursina.scripts.colorize import colorize
 from ursina import color
 from ursina import application
 from textwrap import dedent
+from enum import Enum
+
+
+class MeshModes(Enum):
+    triangle = 'triangle'
+    ngon = 'ngon'
+    quad = 'quad'
+    line = 'line'
+    point = 'point'
+    tristrip = 'tristrip'
+
+    def __hash__(self):
+        return hash(self.value)
+
+    def __eq__(self, other):
+        """ Overriden __eq__ to allow for both str and MeshModes comparisions """
+        if isinstance(other, MeshModes):
+            return self.value == other.value
+        return self.value == other
+
+
 
 
 class Mesh(NodePath):
+
+    _formats = {
+        (0,0,0) : GeomVertexFormat.getV3(),
+        (1,0,0) : GeomVertexFormat.getV3c4(),
+        (0,1,0) : GeomVertexFormat.getV3t2(),
+        (0,0,1) : GeomVertexFormat.getV3n3(),
+        (1,0,1) : GeomVertexFormat.getV3n3c4(),
+        (1,1,0) : GeomVertexFormat.getV3c4t2(),
+        (0,1,1) : GeomVertexFormat.getV3n3t2(),
+        (1,1,1) : GeomVertexFormat.getV3n3c4t2(),
+        }
+
+    _modes = {
+        'triangle' : GeomTriangles,
+        'tristrip' : GeomTristrips,
+        'ngon' : GeomTrifans,
+        'line' : GeomLinestrips,
+        'point' : GeomPoints,
+        }
 
     def __init__(self, vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1):
         super().__init__('mesh')
@@ -40,22 +80,9 @@ class Mesh(NodePath):
             self.geomNode.removeAllGeoms()
 
         static_mode = Geom.UHStatic if self.static else Geom.UHDynamic
-
-        formats = {
-            (0,0,0) : GeomVertexFormat.getV3(),
-            (1,0,0) : GeomVertexFormat.getV3c4(),
-            (0,1,0) : GeomVertexFormat.getV3t2(),
-            (0,0,1) : GeomVertexFormat.getV3n3(),
-            (1,0,1) : GeomVertexFormat.getV3n3c4(),
-            (1,1,0) : GeomVertexFormat.getV3c4t2(),
-            (0,1,1) : GeomVertexFormat.getV3n3t2(),
-            (1,1,1) : GeomVertexFormat.getV3n3c4t2(),
-            }
-
-        vertex_format = formats[(bool(self.colors), bool(self.uvs), bool(self.normals))]
+        vertex_format = Mesh._formats[(bool(self.colors), bool(self.uvs), bool(self.normals))]
         vdata = GeomVertexData('name', vertex_format, static_mode)
         vdata.setNumRows(len(self.vertices)) # for speed
-
 
         vertexwriter = GeomVertexWriter(vdata, 'vertex')
         for v in self.vertices:
@@ -77,16 +104,8 @@ class Mesh(NodePath):
                 normalwriter.addData3f((norm[0], norm[2], norm[1]))
 
 
-        modes = {
-            'triangle' : GeomTriangles(static_mode),
-            'tristrip' : GeomTristrips(static_mode),
-            'ngon' : GeomTrifans(static_mode),
-            'line' : GeomLinestrips(static_mode),
-            'point' : GeomPoints(static_mode),
-            }
-
         if self.mode != 'line' or not self._triangles:
-            prim = modes[self.mode]
+            prim = Mesh._modes[self.mode](static_mode)
 
             if self._triangles:
                 if isinstance(self._triangles[0], int):
@@ -113,9 +132,9 @@ class Mesh(NodePath):
             geom = Geom(vdata)
             geom.addPrimitive(prim)
 
-        else:   # line with segments defnined in triangles
+        else:   # line with segments defined in triangles
             for line in self._triangles:
-                prim = modes[self.mode]
+                prim = Mesh._modes[self.mode](static_mode)
                 for e in line:
                     prim.addVertex(e)
                 prim.close_primitive()
@@ -229,6 +248,8 @@ if __name__ == '__main__':
 
     lines = Entity(model=Mesh(vertices=verts, triangles=tris, mode='line', thickness=4), color=color.cyan, z=-1)
     points = Entity(model=Mesh(vertices=verts, mode='point', thickness=6), color=color.red, z=-1.01)
+    points.model.mode = MeshModes.point     # can also use  the MeshMode enum
     print(e.model.recipe)
+    
     EditorCamera()
     app.run()
