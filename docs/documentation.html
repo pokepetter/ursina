@@ -9,7 +9,6 @@
     width: 15em;
     "><a style="color:hsl(50.0, 89%, 28%);" href="#application">application</a>
 <a style="color:hsl(50.0, 89%, 28%);" href="#camera">camera</a>
-<a style="color:hsl(50.0, 89%, 28%);" href="#collider">collider</a>
 <a style="color:hsl(50.0, 89%, 28%);" href="#color">color</a>
 <a style="color:hsl(50.0, 89%, 28%);" href="#curve">curve</a>
 <a style="color:hsl(50.0, 89%, 28%);" href="#duplicate">duplicate</a>
@@ -36,6 +35,7 @@
 <a style="color:hsl(20.0, 89%, 28%);" href="#Hit">Hit</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#InputEvents">InputEvents</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#Ursina">Ursina</a>
+<a style="color:hsl(20.0, 89%, 28%);" href="#MeshModes">MeshModes</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#Mesh">Mesh</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#Wait">Wait</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#Func">Func</a>
@@ -205,17 +205,8 @@ e.color = color.random_color()
 e.position = (0, 0, 40)
 </div>
 </pre></div>
-<div id="collider"><div id="collider" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">collider</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
-swap_y_z(<g>vec3</g>)   
-
-<div class="example">c = Cylinder(6, height=1, start=-.5)
-c = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
-e = Button(parent=scene, model=c, collider='mesh', color=color.red, highlight_color=color.yellow)
-
-EditorCamera()
-</div>
-</pre></div>
-<div id="color"><div id="color" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">color</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">white<g> =         color(0, 0, 1)</g> 
+<div id="color"><div id="color" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">color</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">color<g> = hsv</g> 
+white<g> =         color(0, 0, 1)</g> 
 smoke<g> =         color(0, 0, 0.96)</g> 
 light_gray<g> =    color(0, 0, 0.75)</g> 
 gray<g> =          color(0, 0, 0.5)</g> 
@@ -253,7 +244,7 @@ text_color<g> = light_text</g>
 color_names<g> = ('white', 'smoke', 'light_gray', 'gray', 'dark_gray', 'black',</g> 
 colors<g> = dict()</g> 
 
-color(<g>h, s, v, a=1</g>)   
+hsv(<g>h, s, v, a=1</g>)   
 rgba(<g>r, g, b, a=255</g>)   
 rgb(<g>r, g, b, a=255</g>)   
 to_hsv(<g>color</g>)   
@@ -412,6 +403,8 @@ position<g> = Vec3(0,0,0)</g>
 delta<g> = Vec3(0,0,0)</g> 
 prev_x<g> = 0</g> 
 prev_y<g> = 0</g> 
+start_x<g> = 0</g> 
+start_y<g> = 0</g> 
 velocity<g> = Vec3(0,0,0)</g> 
 prev_click_time<g> = time.time()</g> 
 double_click_distance<g> = .5</g> 
@@ -649,8 +642,8 @@ window.fps_counter.enabled = False
 </pre></div>
 <div id="Audio"><div id="Audio" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Audio<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Audio(sound_file_name='', autoplay=True, **kwargs)</params>
 
-clip<g> = None</g> 
 clip<g> = sound_file_name</g> 
+clip<g> = None</g> 
 volume<g> = 1</g> 
 pitch<g> = 1</g> 
 balance<g> = 0</g> 
@@ -668,10 +661,11 @@ pause()
 resume()   
 stop(<g>destroy=True</g>)   
 fade(<g>value, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True</g>)   
-fade_in(<g>value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, destroy_on_ended=False</g>)   
-fade_out(<g>value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, destroy_on_ended=True</g>)   
+fade_in(<g>value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True,</g>)   
+fade_out(<g>value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True,</g>)   
 
 <div class="example">from ursina import Ursina, printvar
+
 base = Ursina()
 a = Audio('life_is_currency', pitch=1, loop=True, autoplay=True)
 print(a.clip)
@@ -686,9 +680,17 @@ show()
 hide()   
 remove()   
 
-<div class="example">c = Cylinder(6, height=1, start=-.5)
-c = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
-e = Button(parent=scene, model=c, collider='mesh', color=color.red, highlight_color=color.yellow)
+<div class="example">e = Entity(model='sphere', x=2)
+e.collider = 'box'      # add BoxCollider based on entity's bounds.
+e.collider = 'sphere'   # add SphereCollider based on entity's bounds.
+e.collider = 'mesh'     # add MeshCollider based on entity's bounds.
+
+e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   # add BoxCollider at custom positions and size.
+e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      # add SphereCollider at custom positions and size.
+e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      # add MeshCollider with custom shape and center.
+
+m = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
+e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_color=color.yellow)
 
 EditorCamera()
 </div>
@@ -700,9 +702,17 @@ node_path<g> = entity.attachNewNode(CollisionNode('CollisionNode'))</g>
 visible<g> = False</g> 
 
 
-<div class="example">c = Cylinder(6, height=1, start=-.5)
-c = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
-e = Button(parent=scene, model=c, collider='mesh', color=color.red, highlight_color=color.yellow)
+<div class="example">e = Entity(model='sphere', x=2)
+e.collider = 'box'      # add BoxCollider based on entity's bounds.
+e.collider = 'sphere'   # add SphereCollider based on entity's bounds.
+e.collider = 'mesh'     # add MeshCollider based on entity's bounds.
+
+e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   # add BoxCollider at custom positions and size.
+e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      # add SphereCollider at custom positions and size.
+e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      # add MeshCollider with custom shape and center.
+
+m = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
+e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_color=color.yellow)
 
 EditorCamera()
 </div>
@@ -714,9 +724,17 @@ node_path<g> = entity.attachNewNode(CollisionNode('CollisionNode'))</g>
 visible<g> = False</g> 
 
 
-<div class="example">c = Cylinder(6, height=1, start=-.5)
-c = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
-e = Button(parent=scene, model=c, collider='mesh', color=color.red, highlight_color=color.yellow)
+<div class="example">e = Entity(model='sphere', x=2)
+e.collider = 'box'      # add BoxCollider based on entity's bounds.
+e.collider = 'sphere'   # add SphereCollider based on entity's bounds.
+e.collider = 'mesh'     # add MeshCollider based on entity's bounds.
+
+e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   # add BoxCollider at custom positions and size.
+e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      # add SphereCollider at custom positions and size.
+e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      # add MeshCollider with custom shape and center.
+
+m = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
+e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_color=color.yellow)
 
 EditorCamera()
 </div>
@@ -726,11 +744,18 @@ EditorCamera()
 node_path<g> = entity.attachNewNode(CollisionNode('CollisionNode'))</g> 
 visible<g> = False</g> 
 
-swap_y_z(<g>vec3</g>)   
 
-<div class="example">c = Cylinder(6, height=1, start=-.5)
-c = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
-e = Button(parent=scene, model=c, collider='mesh', color=color.red, highlight_color=color.yellow)
+<div class="example">e = Entity(model='sphere', x=2)
+e.collider = 'box'      # add BoxCollider based on entity's bounds.
+e.collider = 'sphere'   # add SphereCollider based on entity's bounds.
+e.collider = 'mesh'     # add MeshCollider based on entity's bounds.
+
+e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   # add BoxCollider at custom positions and size.
+e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      # add SphereCollider at custom positions and size.
+e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      # add MeshCollider with custom shape and center.
+
+m = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
+e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_color=color.yellow)
 
 EditorCamera()
 </div>
@@ -750,7 +775,7 @@ brightness
 
 invert()   
 tint(<g>amount</g>)   
-color(<g>h, s, v, a=1</g>)   
+hsv(<g>h, s, v, a=1</g>)   
 rgba(<g>r, g, b, a=255</g>)   
 rgb(<g>r, g, b, a=255</g>)   
 to_hsv(<g>color</g>)   
@@ -970,24 +995,44 @@ world_normal<g> = None</g>
 
 
 </pre></div>
-<div id="InputEvents"><div id="InputEvents" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">InputEvents<g>(Enum)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">InputEvents(**kwargs)</params>
+<div id="InputEvents"><div id="InputEvents" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">InputEvents<g>(Enum)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">left_mouse_down<g> = 'left mouse down'</g> 
+left_mouse_up<g> = 'left mouse up'</g> 
+middle_mouse_down<g> = 'middle mouse down'</g> 
+middle_mouse_up<g> = 'middle mouse up'</g> 
+right_mouse_down<g> = 'right mouse down'</g> 
+right_mouse_up<g> = 'right mouse up'</g> 
+scroll_up<g> = 'scroll up'</g> 
+scroll_down<g> = 'scroll down'</g> 
+arrow_left<g> = 'left arrow'</g> 
+arrow_left_up<g> = 'left arrow up'</g> 
+arrow_up<g> = 'up arrow'</g> 
+arrow_up_up<g> = 'up arrow up'</g> 
+arrow_down<g> = 'down arrow'</g> 
+arrow_down_up<g> = 'down arrow up'</g> 
+arrow_right<g> = 'right arrow'</g> 
+arrow_right_up<g> = 'right arrow up'</g> 
+left_control<g> = 'left control'</g> 
+right_control<g> = 'right control'</g> 
+left_shift<g> = 'left shift'</g> 
+right_shift<g> = 'right shift'</g> 
+left_alt<g> = 'left alt'</g> 
+right_alt<g> = 'right alt'</g> 
+left_control_up<g> = 'left control up'</g> 
+right_control_up<g> = 'right control up'</g> 
+left_shift_up<g> = 'left shift up'</g> 
+right_shift_up<g> = 'right shift up'</g> 
+left_alt_up<g> = 'left alt up'</g> 
+right_alt_up<g> = 'right alt up'</g> 
+page_down<g> = 'page down'</g> 
+page_down_up<g> = 'page down up'</g> 
+page_up<g> = 'page up'</g> 
+page_up_up<g> = 'page up up'</g> 
+enter<g> = 'enter'</g> 
+backspace<g> = 'backspace'</g> 
+escape<g> = 'enter'</g> 
+tab<g> = 'tab'</g> 
 
 
-bind(<g>original_key, alternative_key</g>)   
-unbind(<g>key</g>)   
-rebind(<g>to_key, from_key</g>)   
-input(<g>key</g>)   
-
-<div class="example">input_handler.bind('s', 'arrow down')  # 's'-key will now be registered as 'arrow down'-key
-
-def input(key):
-    print(key)
-    if key == 'left mouse down':
-        print('pressed left mouse button')
-
-    if key == InputEvent.left_mouse_down:   # same as above, but with InputEvents enum.
-        print('pressed left mouse button')
-</div>
 </pre></div>
 <div id="Ursina"><div id="Ursina" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Ursina<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Ursina()</params>
 
@@ -1001,6 +1046,15 @@ run()
 <div class="example">app = Ursina()
 app.run()
 </div>
+</pre></div>
+<div id="MeshModes"><div id="MeshModes" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">MeshModes<g>(Enum)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">triangle<g> = 'triangle'</g> 
+ngon<g> = 'ngon'</g> 
+quad<g> = 'quad'</g> 
+line<g> = 'line'</g> 
+point<g> = 'point'</g> 
+tristrip<g> = 'tristrip'</g> 
+
+
 </pre></div>
 <div id="Mesh"><div id="Mesh" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Mesh<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Mesh(vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1)</params>
 
@@ -1237,9 +1291,7 @@ stop()
 
 <div class="example">window.color = color.black
 
-t = time.time()
 animation = Animation('ursina_wink', fps=2, scale=5, filtering=None)
-print(time.time()-t)
 
 EditorCamera()
 </div>
@@ -1327,7 +1379,7 @@ buttons<g> = button_dict</g>
 actions<g> = [*self.buttons.values()]</g> 
 text_entity<g> = Text(parent=self, origin</g> 
 button_height<g> = self.text_entity.height</g> 
-highlight<g> = Entity(parent=self, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5))</g> 
+highlight<g> = Entity(parent=self, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5), z=-.01)</g> 
 
 on_click()   
 update()   
@@ -1344,7 +1396,7 @@ button_dict = {
     'four' :    Func(test, b=3, a=4),
     'five':     Sequence(1, Func(print, 'lol'), loop=True),
 }
-for i in range(6, 20):
+for i in range(6, 25):
     button_dict[f'button {i}'] = Func(print, i)
 
 ButtonList(button_dict)
@@ -1670,7 +1722,7 @@ eternal<g> = True</g>
 ignore_paused<g> = True</g> 
 path<g> = path</g> 
 path<g> = Path(self.path)</g> 
-realtime_editing<g> = False</g> 
+realtime_editing<g> = False   # toggle with f8</g> 
 
 input(<g>key</g>)   
 update()   
@@ -1683,7 +1735,7 @@ reload_model()
 application.hot_reloader.path = application.asset_folder.parent.parent / 'samples' / 'platformer.py'
 
 '''
-By default you can press Ctrl+R to reload the starting script and Ctrl+T to reimport textures.
+By default you can press F5 to reload the starting script, F6 to reimport textures and F7 to reload models.
 '''
 </div>
 </pre></div>
@@ -2251,6 +2303,7 @@ Entity(model='cube').add_script(SmoothFollow(target=player, offset=(0,2,0)))
 <div id="textures"><div id="textures" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">textures</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">'arrow_down'
 'arrow_right'
 'brick'
+'circle'
 'cursor'
 'default_sky'
 'file_icon'
@@ -2350,22 +2403,53 @@ camera.z = -5
 <div id="Sphere"><div id="Sphere" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Sphere<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Sphere(radius=.5, subdivisions=0, mode='tristrip', **kwargs)</params>
 
 
+sub_divide(<g>v_0, v_1, v_2, sub_divisions, vertices, faces</g>)   
 
-<div class="example">Entity(model=Sphere(), color=color.color(60,1,1,.3), x=4)
+<div class="example">Entity(model=Sphere(subdivisions=5), color=color.color(60, 1, 1, .5), x=0)
+Entity(model=Sphere(radius=0.15, subdivisions=6), color=color.color(1, 60, 1, .5), x=4)
 origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
-ed = EditorCamera(rotation_speed = 200, panning_speed=200)
+ed = EditorCamera(rotation_speed=200, panning_speed=200)
 </div>
 </pre></div>
-<div id="Terrain"><div id="Terrain" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Terrain<g>(Plane)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Terrain(heightmap, skip=1, **kwargs)</params>
+<div id="Terrain"><div id="Terrain" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Terrain<g>(Plane)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Terrain(heightmap, skip=1, store_height_values=False, **kwargs)</params>
 
 heightmap<g> = load_texture(heightmap)</g> 
+width, self.depth<g> = self.heightmap.width//skip, self.heightmap.height//skip</g> 
 heightmap<g> = Texture(img)</g> 
-vertices[i]<g> = Vec3(x/w -.5, y, z/d -.5)</g> 
+height_values<g> = [[0 for x in range(self.width)] for z in range(self.depth)]</g> 
+height_values[x][z]<g> = y</g> 
+vertices[i]<g> = Vec3(x/self.width -.5, y, z/self.depth -.5)</g> 
 
 
-<div class="example">e = Entity(model=Terrain('heightmap_1', skip=8), scale=5)
-e.texture='heightmap_1'
-Entity(model=Plane(), scale=5, color=color.blue)
+<div class="example">terrains = list()
+for i in (1,2,4,8):
+    e = Entity(model=Terrain('heightmap_1', skip=i), scale=(20,5,20))
+    e.texture='heightmap_1'
+    e.enabled = False
+    terrains.append(e)
 EditorCamera()
+terrains[0].enabled = True
+lod_level = 0
+def set_lod_level(n):
+    global lod_level
+    print(n)
+    for e in terrains:
+        e.enabled = False
+    terrains[n].enabled = True
+
+    lod_level = n
+
+
+def update():
+    global lod_level
+    dist = distance(camera.world_position, terrains[0].world_position)
+    if lod_level != 0 and dist < 20:
+        set_lod_level(0)
+    if lod_level != 1 and dist > 20 and dist < 40:
+        set_lod_level(1)
+    if lod_level != 2 and dist > 40 and dist < 80:
+        set_lod_level(2)
+    if lod_level != 3 and dist > 80 and dist < 160:
+        set_lod_level(3)
 </div>
 </pre></div></div></body>
