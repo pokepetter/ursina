@@ -10,18 +10,18 @@ from ursina import window
 from ursina.hit import Hit
 
 
-class Mouse():
-
+class Mouse:
     def __init__(self):
         self.enabled = False
         self.locked = False
-        self.position = Vec3(0,0,0)
-        self.delta = Vec3(0,0,0)
+        self.position = Vec3(0, 0, 0)
+        self.delta = Vec3(0, 0, 0)
         self.prev_x = 0
         self.prev_y = 0
         self.start_x = 0
         self.start_y = 0
-        self.velocity = Vec3(0,0,0)
+
+        self.velocity = Vec3(0, 0, 0)
         self.prev_click_time = time.time()
         self.double_click_distance = .5
 
@@ -29,7 +29,7 @@ class Mouse():
         self.left = False
         self.right = False
         self.middle = False
-        self.delta_drag = Vec3(0,0,0)
+        self.delta_drag = Vec3(0, 0, 0)
 
         self.update_step = 1
         self._i = 0
@@ -45,24 +45,23 @@ class Mouse():
 
         self.raycast = True
         self.collision = None
-        self.collisions = list()
+        self.collisions = []
         self.enabled = True
 
     @property
     def x(self):
         if not self._mouse_watcher.has_mouse():
-            return 0
+            return self.prev_x
         return self._mouse_watcher.getMouseX() / 2 * window.aspect_ratio  # same space as ui stuff
 
     @x.setter
     def x(self, value):
         self.position = (value, self.y)
 
-
     @property
     def y(self):
         if not self._mouse_watcher.has_mouse():
-            return 0
+            return self.prev_y
 
         return self._mouse_watcher.getMouseY() / 2
 
@@ -70,20 +69,21 @@ class Mouse():
     def y(self, value):
         self.position = (self.x, value)
 
-
     @property
     def position(self):
         return Vec3(self.x, self.y, 0)
 
     @position.setter
     def position(self, value):
-        base.win.move_pointer(
-            0,
-            int(value[0] + (window.size[0]/2) + (value[0]/2*window.size[0]) *1.123), # no idea why I have * with 1.123
-            int(value[1] + (window.size[1]/2) - (value[1]*window.size[1])),
-        )
-
-
+        try:
+            base.win.move_pointer(
+                0,
+                int(value[0] + (window.size[0] / 2) + (value[0] / 2 * window.size[0]) * 1.123),
+                # no idea why I have * with 1.123
+                int(value[1] + (window.size[1] / 2) - (value[1] * window.size[1])),
+            )
+        except NameError:
+            pass
 
     def __setattr__(self, name, value):
 
@@ -99,12 +99,8 @@ class Mouse():
             except:
                 pass
 
-        try:
-            super().__setattr__(name, value)
-            # return
-        except:
-            pass
-
+        super().__setattr__(name, value)
+        # return
 
     def input(self, key):
         if not self.enabled:
@@ -119,8 +115,7 @@ class Mouse():
                 self.x - self.start_x,
                 self.y - self.start_y,
                 0
-                )
-
+            )
 
         if key == 'left mouse down':
             self.left = True
@@ -143,7 +138,6 @@ class Mouse():
 
             self.prev_click_time = time.time()
 
-
         if key == 'left mouse up':
             self.left = False
         if key == 'right mouse down':
@@ -155,30 +149,27 @@ class Mouse():
         if key == 'middle mouse up':
             self.middle = False
 
-
-
     def update(self):
         if not self.enabled or not self._mouse_watcher.has_mouse():
-            self.velocity = Vec3(0,0,0)
+            self.velocity = Vec3(0, 0, 0)
             return
 
-        self.moving = self.x + self.y != self.prev_x + self.prev_y
+        self.moving = self.x != self.prev_x and self.y != self.prev_y
 
         if self.moving:
             if self.locked:
                 self.velocity = self.position
-                self.position = (0,0)
+                self.position = (self.x, self.y)
             else:
-                self.velocity = Vec3(self.x - self.prev_x, (self.y - self.prev_y) / window.aspect_ratio ,0)
+                self.velocity = Vec3(self.x - self.prev_x, (self.y - self.prev_y) / window.aspect_ratio, 0)
         else:
-            self.velocity = Vec3(0,0,0)
+            self.velocity = Vec3(0, 0, 0)
 
         if self.left or self.right or self.middle:
             self.delta = Vec3(self.x - self.start_x, self.y - self.start_y, 0)
 
         self.prev_x = self.x
         self.prev_y = self.y
-
 
         self._i += 1
         if self._i < self.update_step:
@@ -237,7 +228,7 @@ class Mouse():
         return None
 
     def find_collision(self):
-        self.collisions = list()
+        self.collisions = []
         self.collision = None
         if not self.raycast or self._pq.get_num_entries() == 0:
             self.unhover_everything_not_hit()
@@ -250,14 +241,14 @@ class Mouse():
                 if entry.getIntoNodePath().parent == entity and entity.collision:
                     if entity.collision:
                         hit = Hit(
-                            hit = entry.collided(),
-                            entity = entity,
-                            distance = 0,
-                            point = entry.getSurfacePoint(entity),
-                            world_point = entry.getSurfacePoint(scene),
-                            normal = entry.getSurfaceNormal(entity),
-                            world_normal = entry.getSurfaceNormal(scene),
-                            )
+                            hit=entry.collided(),
+                            entity=entity,
+                            distance=0,
+                            point=entry.getSurfacePoint(entity),
+                            world_point=entry.getSurfacePoint(scene),
+                            normal=entry.getSurfaceNormal(entity),
+                            world_normal=entry.getSurfaceNormal(scene),
+                        )
                         hit.point = Vec3(hit.point[0], hit.point[2], hit.point[1])
                         hit.world_point = Vec3(hit.world_point[0], hit.world_point[2], hit.world_point[1])
                         hit.normal = Vec3(hit.normal[0], hit.normal[2], hit.normal[1])
@@ -276,10 +267,7 @@ class Mouse():
                     if hasattr(s, 'on_mouse_enter'):
                         s.on_mouse_enter()
 
-
         self.unhover_everything_not_hit()
-
-
 
     def unhover_everything_not_hit(self):
         for e in scene.entities:
@@ -295,19 +283,19 @@ class Mouse():
                         s.on_mouse_exit()
 
 
-
 sys.modules[__name__] = Mouse()
 
 if __name__ == '__main__':
     from ursina import *
+
     app = Ursina()
     Button(parent=scene, text='a')
+
 
     def update():
         print(mouse.position, mouse.point)
 
     Cursor()
     mouse.visible = False
-
 
     app.run()
