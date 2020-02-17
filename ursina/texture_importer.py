@@ -6,8 +6,8 @@ from ursina.texture import Texture
 has_psd_tools_installed = False
 try:
     from psd_tools import PSDImage
-    has_psd_tools_installed = true
-except Exception as e:
+    has_psd_tools_installed = True
+except (ModuleNotFoundError, ImportError) as e:
     print('psd-tools not installed')
 
 
