@@ -83,6 +83,8 @@ class Mesh(NodePath):
         vertex_format = Mesh._formats[(bool(self.colors), bool(self.uvs), bool(self.normals))]
         vdata = GeomVertexData('name', vertex_format, static_mode)
         vdata.setNumRows(len(self.vertices)) # for speed
+        self.geomNode = GeomNode('mesh')
+        self.attachNewNode(self.geomNode)
 
         vertexwriter = GeomVertexWriter(vdata, 'vertex')
         for v in self.vertices:
@@ -131,6 +133,7 @@ class Mesh(NodePath):
             prim.close_primitive()
             geom = Geom(vdata)
             geom.addPrimitive(prim)
+            self.geomNode.addGeom(geom)
 
         else:   # line with segments defined in triangles
             for line in self._triangles:
@@ -140,14 +143,9 @@ class Mesh(NodePath):
                 prim.close_primitive()
                 geom = Geom(vdata)
                 geom.addPrimitive(prim)
+                self.geomNode.addGeom(geom)
 
 
-        self.geomNode = GeomNode('mesh')
-        self.geomNode.addGeom(geom)
-        self.attachNewNode(self.geomNode)
-
-        # if self.normals:
-        #     self.normals = [tuple(e) for e in self.normals]
         self.recipe = dedent(f'''
             Mesh(
                 vertices={[tuple(e) for e in self.vertices]},
@@ -248,8 +246,8 @@ if __name__ == '__main__':
 
     lines = Entity(model=Mesh(vertices=verts, triangles=tris, mode='line', thickness=4), color=color.cyan, z=-1)
     points = Entity(model=Mesh(vertices=verts, mode='point', thickness=6), color=color.red, z=-1.01)
-    points.model.mode = MeshModes.point     # can also use  the MeshMode enum
+    # points.model.mode = MeshModes.point     # can also use  the MeshMode enum
     print(e.model.recipe)
-    
+
     EditorCamera()
     app.run()
