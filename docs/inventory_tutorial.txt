@@ -63,8 +63,8 @@ In this tutorial we will make a drag and drop inventory like this.
     because it makes it easier to add items later. Let's also give it a texture and a color.
     If we have both, the color value will tint the texture.
 
-    Now, this is nice and all, but wouldn't it be nice to show a grid as well.
-    There multiple way tp do that, but for this ase, we'll simply make the texture repeat
+    Now, this is nice and all, but wouldn't it be nice to show a grid as well?
+    There are multiple way to do that, but in this case, we'll simply make the texture repeat
     by setting texture_scale to (5,6). That'll nicely fit the size of our inventory.
 
         # code, size .8
@@ -125,13 +125,13 @@ In this tutorial we will make a drag and drop inventory like this.
             app.run()
         # text, size 1
 
-    We'll, that didn't go as planned. The items cover the entire inventory and
+    Well, that didn't go as planned. The items cover the entire inventory and
     the second item is way off to the left.
     Let's fix this by making another object to put the items under.
     Scale the object to the size of an item.
 
     They also don't fit the grid. Fix that by setting origin to the upper left
-    corner, (-.5,.5) that is.
+    corner, (-.5,.5).
 
         # code, size .8
         from ursina import *
@@ -172,7 +172,7 @@ In this tutorial we will make a drag and drop inventory like this.
 
     Let's start by making a function called 'append()' and make it spawn an item
     when we send it a string. We'll also set the button's text to the string we
-    recieve so we can differentiate them.
+    receive so we can differentiate them.
     Let's give them a random color too, why not.
 
     Lastly, let's call inventory.append('test item') a couple of times to make sure it works.
@@ -278,7 +278,7 @@ In this tutorial we will make a drag and drop inventory like this.
 # size 1
 
     Make a button to add a random item to the inventory. This is not part of the inventory itself,
-    but it's useful to test it.
+    but it's useful in order to test it.
     Assign the button's 'on_click' to a function, and it will call that function when we click it.
     button.on_click = inventory
 
@@ -321,7 +321,7 @@ In this tutorial we will make a drag and drop inventory like this.
     if this tutorial, but feel free to add your own.
 
     Let's also remove the random color and instead show the item's name when we hover it with the mouse.
-    If a button has 'tooltip' set to something. It will show it when we hover the Button.
+    If a button has 'tooltip' set to something, it will show it when we hover the Button.
 
         # code, size .8
             def append(self, item):
@@ -347,7 +347,7 @@ In this tutorial we will make a drag and drop inventory like this.
 # size 1
 
     We can't move the items! That's not fun.
-    However's that's easy to change, just spawn a Draggable instead of Button.
+    However, that's easy to change. Just spawn a Draggable instead of Button.
     Draggable inherits from Button, so the tooltips will still work!
 
         # code, size .8
@@ -375,7 +375,7 @@ In this tutorial we will make a drag and drop inventory like this.
 
     The items can be moved now, but they don't follow the grid.
     Let's round the position when we drop it.
-    Draggable's will automatically call on_drag() and on_drop() if has them
+    Draggable's will automatically call on_drag() and on_drop() if has them.
 
     round the position on drop
 
@@ -471,6 +471,6 @@ In this tutorial we will make a drag and drop inventory like this.
 12 Make the dragged items render on top
 # size 1
 
-    All the item's are at the same depth, so it hard to say how they will overlap.
+    All the items are at the same depth, so it hard to say how they will overlap.
     It feels natural that the item we're currently dragging stays on top,
     so we'll move it back a bit when we drag it and forward when we drop it.

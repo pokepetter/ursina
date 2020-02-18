@@ -204,17 +204,13 @@ class FileBrowser(Entity):
 
 if __name__ == '__main__':
     app = Ursina()
-    t = time.time()
-    fb = FileBrowser(file_types=('.*'), enabled=False)
-    print('--------', time.time() - t)
+
+    fb = FileBrowser(file_types=('.*'), enabled=True)
+
     def on_submit(value):
         for button in value:
             print('---', button.path)
 
     fb.on_submit = on_submit
-
-    def input(key):
-        if key == 'space':
-            fb.enabled = True
 
     app.run()

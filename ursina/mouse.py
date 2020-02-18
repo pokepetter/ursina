@@ -19,6 +19,8 @@ class Mouse():
         self.delta = Vec3(0,0,0)
         self.prev_x = 0
         self.prev_y = 0
+        self.start_x = 0
+        self.start_y = 0
         self.velocity = Vec3(0,0,0)
         self.prev_click_time = time.time()
         self.double_click_distance = .5
@@ -29,8 +31,8 @@ class Mouse():
         self.middle = False
         self.delta_drag = Vec3(0,0,0)
 
-        self.i = 0
-        self.update_rate = 1
+        self.update_step = 1
+        self._i = 0
         self._mouse_watcher = None
         self._picker = CollisionTraverser()  # Make a traverser
         self._pq = CollisionHandlerQueue()  # Make a handler
@@ -178,8 +180,8 @@ class Mouse():
         self.prev_y = self.y
 
 
-        self.i += 1
-        if self.i < self.update_rate:
+        self._i += 1
+        if self._i < self.update_step:
             return
         # collide with ui
         self._pickerNP.reparent_to(scene.ui_camera)
@@ -300,34 +302,9 @@ if __name__ == '__main__':
     from ursina import *
     app = Ursina()
     Button(parent=scene, text='a')
-    Button(parent=scene, text='b', x=.75)
-    Button(text='c', y=-.25, scale=.1)
-    target = Button(text='d', position=(-.5*camera.aspect_ratio,-.3), scale=.1, color=color.blue)
-
-    def input(key):
-        if key == 'left mouse down':
-            mouse.hovered_entity.collision = False
-
-        if key == 'space':
-            mouse.position = (.5*camera.aspect_ratio, .5)
-
-        if key == 'f':
-            print(target.position)
-            mouse.position = target.position
-
-        if key == 'a':
-            mouse.x -= .1
-        # if key == 'd':
-        #     mouse.x += .1
-            # mouse.position = (mouse.position[0]-.1, mouse.position[1])
-            # mouse.x = 0 * camera.aspect_ratio
-            # mouse.position = (.5, 0)
 
     def update():
-        print(mouse.position)
-        # mouse.x = mouse.x
-        # held_keys['d'] * .1 * time.dt
-        # mouse.position=mouse.position
+        print(mouse.position, mouse.point)
 
     Cursor()
     mouse.visible = False

@@ -2,7 +2,7 @@ from ursina import *
 
 
 class ButtonList(Entity):
-    def __init__(self, button_dict, **kwargs):
+    def __init__(self, button_dict, button_height=1.5, **kwargs):
         super().__init__(
         parent=camera.ui,
         model='quad',
@@ -18,15 +18,14 @@ class ButtonList(Entity):
 
         self.actions = [*self.buttons.values()]
 
-        lh = 1.5
+        self.text_entity = Text(parent=self, origin = (-.5,.5), world_scale=20, z=-.1, y=-.25*Text.size, x=.01)
+        if button_height < 1.5:
+            self.text_entity.y += .005
 
-        self.text_entity = Text(parent=self, origin = (-.5,.5), world_scale=20, z=-.1, y=-.25*Text.size, x=.01
-            # position=(-.5,.5,-.1)
-            )
         self.text_entity.text = 'eoifjaofijaoii'
-        self.text_entity.line_height = lh
+        self.text_entity.line_height = button_height
         self.button_height = self.text_entity.height
-        self.highlight = Entity(parent=self, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5))
+        self.highlight = Entity(parent=self, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5), z=-.01)
 
         self.text_entity.text = '\n'.join(self.buttons.keys())
         for key, value in kwargs.items():
@@ -75,7 +74,7 @@ if __name__ == '__main__':
         'four' :    Func(test, b=3, a=4),
         'five':     Sequence(1, Func(print, 'lol'), loop=True),
     }
-    for i in range(6, 20):
+    for i in range(6, 25):
         button_dict[f'button {i}'] = Func(print, i)
 
     ButtonList(button_dict)

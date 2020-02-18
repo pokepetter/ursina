@@ -17,11 +17,11 @@
 <a style="color:hsl(50.0, 89%, 28%);" href="#mouse">mouse</a>
 <a style="color:hsl(50.0, 89%, 28%);" href="#raycaster">raycaster</a>
 <a style="color:hsl(50.0, 89%, 28%);" href="#scene">scene</a>
+<a style="color:hsl(50.0, 89%, 28%);" href="#string_utilities">string_utilities</a>
 <a style="color:hsl(50.0, 89%, 28%);" href="#text">text</a>
 <a style="color:hsl(50.0, 89%, 28%);" href="#texture_importer">texture_importer</a>
 <a style="color:hsl(50.0, 89%, 28%);" href="#ursinamath">ursinamath</a>
 <a style="color:hsl(50.0, 89%, 28%);" href="#ursinastuff">ursinastuff</a>
-<a style="color:hsl(50.0, 89%, 28%);" href="#useful">useful</a>
 <a style="color:hsl(50.0, 89%, 28%);" href="#window">window</a>
 
 <a style="color:hsl(20.0, 89%, 28%);" href="#Audio">Audio</a>
@@ -35,6 +35,7 @@
 <a style="color:hsl(20.0, 89%, 28%);" href="#Hit">Hit</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#InputEvents">InputEvents</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#Ursina">Ursina</a>
+<a style="color:hsl(20.0, 89%, 28%);" href="#MeshModes">MeshModes</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#Mesh">Mesh</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#Wait">Wait</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#Func">Func</a>
@@ -181,8 +182,10 @@ orthographic<g> = False</g>
 clip_plane_near
 clip_plane_far
 aspect_ratio
+shader
 
 set_up()   
+set_shader_input(<g>name, value</g>)   
 
 <div class="example">from ursina.main import Ursina
 scene.camera.orthographic = True
@@ -202,7 +205,8 @@ e.color = color.random_color()
 e.position = (0, 0, 40)
 </div>
 </pre></div>
-<div id="color"><div id="color" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">color</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">white<g> =         color(0, 0, 1)</g> 
+<div id="color"><div id="color" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">color</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">color<g> = hsv</g> 
+white<g> =         color(0, 0, 1)</g> 
 smoke<g> =         color(0, 0, 0.96)</g> 
 light_gray<g> =    color(0, 0, 0.75)</g> 
 gray<g> =          color(0, 0, 0.5)</g> 
@@ -240,7 +244,7 @@ text_color<g> = light_text</g>
 color_names<g> = ('white', 'smoke', 'light_gray', 'gray', 'dark_gray', 'black',</g> 
 colors<g> = dict()</g> 
 
-color(<g>h, s, v, a=1</g>)   
+hsv(<g>h, s, v, a=1</g>)   
 rgba(<g>r, g, b, a=255</g>)   
 rgb(<g>r, g, b, a=255</g>)   
 to_hsv(<g>color</g>)   
@@ -399,6 +403,8 @@ position<g> = Vec3(0,0,0)</g>
 delta<g> = Vec3(0,0,0)</g> 
 prev_x<g> = 0</g> 
 prev_y<g> = 0</g> 
+start_x<g> = 0</g> 
+start_y<g> = 0</g> 
 velocity<g> = Vec3(0,0,0)</g> 
 prev_click_time<g> = time.time()</g> 
 double_click_distance<g> = .5</g> 
@@ -407,8 +413,7 @@ left<g> = False</g>
 right<g> = False</g> 
 middle<g> = False</g> 
 delta_drag<g> = Vec3(0,0,0)</g> 
-i<g> = 0</g> 
-update_rate<g> = 10</g> 
+update_step<g> = 1</g> 
 raycast<g> = True</g> 
 collision<g> = None</g> 
 collisions<g> = list()</g> 
@@ -426,15 +431,12 @@ find_collision()
 unhover_everything_not_hit()   
 
 <div class="example">Button(parent=scene, text='a')
-Button(parent=scene, text='b', x=.75)
-Button(text='c', y=-.25, scale=.1)
-
-def input(key):
-    if key == 'left mouse down':
-        mouse.hovered_entity.collision = False
 
 def update():
-    print(mouse.hovered_entity)
+    print(mouse.position, mouse.point)
+
+Cursor()
+mouse.visible = False
 </div>
 </pre></div>
 <div id="raycaster"><div id="raycaster" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">raycaster</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
@@ -486,7 +488,6 @@ canvas<g> = None</g>
 ui<g> = None</g> 
 entities<g> = []</g> 
 hidden<g> = NodePath('hidden')</g> 
-has_changes<g> = False</g> 
 reflection_map<g> = 'reflection_map_3'</g> 
 fog_color
 fog_density
@@ -506,12 +507,23 @@ scene.fog_density = .1          # sets exponential density
 scene.fog_density = (50, 200)   # sets linear densitiy start and end
 </div>
 </pre></div>
+<div id="string_utilities"><div id="string_utilities" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">string_utilities</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+camel_to_snake(<g>value</g>)   
+snake_to_camel(<g>value</g>)   
+multireplace(<g>string, replacements, ignore_case=False</g>)   
+printvar(<g>var</g>)   
+
+<div class="example">print(camel_to_snake('CamelToSnake'))
+print(snake_to_camel('snake_to_camel'))
+printvar('test')
+</div>
+</pre></div>
 <div id="text"><div id="text" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">text</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
 get_width(<g>string, font=None</g>)   
 
 <div class="example">app = Ursina()
   descr = dedent('''
-      <orange>Rainstorm<default>
+      <scale:1.5><orange>Rainstorm<default><scale:1>
       Summon a <azure>rain storm <default>to deal 5 <azure>water
 
       damage <default>to <hsb(0,1,.7)>everyone, <default><image:brick> <image:brick> test <default>including <orange>yourself. <default>
@@ -530,7 +542,9 @@ get_width(<g>string, font=None</g>)
   app.run()
 </div>
 </pre></div>
-<div id="texture_importer"><div id="texture_importer" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">texture_importer</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">file_types<g> = ('.jpg', '.png', '.gif')</g> 
+<div id="texture_importer"><div id="texture_importer" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">texture_importer</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">has_psd_tools_installed<g> = False</g> 
+file_types<g> = ('.jpg', '.png', '.gif')</g> 
+textureless<g> = False</g> 
 
 load_texture(<g>name, path=None</g>)   
 compress_textures(<g>name=''</g>)   
@@ -544,6 +558,7 @@ distance2d(<g>a, b</g>)
 lerp(<g>a, b, t</g>)   
 inverselerp(<g>a, b, t</g>)   
 clamp(<g>value, floor, ceiling</g>)   
+round_to_closest(<g>value, step=0</g>)   
 count_lines(<g>file</g>)   
 chunk_list(<g>l, chunk_size</g>)   
 size_list()   
@@ -558,6 +573,8 @@ print(between_color)
 print(lerp((0,0), (0,1), .5))
 print(lerp(Vec2(0,0), Vec2(0,1), .5))
 print(lerp([0,0], [0,1], .5))
+
+print(round(Vec3(.38, .1351, 353.26), 2))
 </div>
 </pre></div>
 <div id="ursinastuff"><div id="ursinastuff" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ursinastuff</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
@@ -576,23 +593,12 @@ invoke(test_func, 'test1', 1, 2, delay=.2)
 invoke(test_func, 'test2', x=1, y=2, delay=.3)
 </div>
 </pre></div>
-<div id="useful"><div id="useful" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">useful</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
-camel_to_snake(<g>value</g>)   
-snake_to_camel(<g>value</g>)   
-multireplace(<g>string, replacements, ignore_case=False</g>)   
-printvar(<g>var</g>)   
-
-<div class="example">print(camel_to_snake('CamelToSnake'))
-print(snake_to_camel('snake_to_camel'))
-printvar('test')
-</div>
-</pre></div>
 <div id="window"><div id="window" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">window</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">vsync<g> = True   # can't be set during play</g> 
 show_ursina_splash<g> = False</g> 
-title<g> = os.path.basename(os.path.dirname(application.asset_folder))</g> 
+title<g> = application.asset_folder.name</g> 
 screen_resolution<g> = (get_monitors()[0].width, get_monitors()[0].height)</g> 
 screen_resolution<g> = Vec2(1366, 768)</g> 
-fullscreen_size<g> = Vec2(self.screen_resolution[0], (self.screen_resolution[0]) * .5625)</g> 
+fullscreen_size<g> = Vec2(self.screen_resolution[0]+1, ((self.screen_resolution[0]) * .5625)+1)</g> 
 windowed_size<g> = Vec2(self.fullscreen_size[0] / 1.25, self.fullscreen_size[0] / 1.25 * .5625)</g> 
 windowed_position<g> = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode</g> 
 size<g> = self.windowed_size</g> 
@@ -630,15 +636,14 @@ update()
 <div class="example">window.title = 'Title'
 window.borderless = False
 window.fullscreen = False
-
 window.exit_button.visible = False
 window.fps_counter.enabled = False
 </div>
 </pre></div>
 <div id="Audio"><div id="Audio" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Audio<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Audio(sound_file_name='', autoplay=True, **kwargs)</params>
 
-clip<g> = None</g> 
 clip<g> = sound_file_name</g> 
+clip<g> = None</g> 
 volume<g> = 1</g> 
 pitch<g> = 1</g> 
 balance<g> = 0</g> 
@@ -656,10 +661,11 @@ pause()
 resume()   
 stop(<g>destroy=True</g>)   
 fade(<g>value, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True</g>)   
-fade_in(<g>value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, destroy_on_ended=False</g>)   
-fade_out(<g>value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, destroy_on_ended=True</g>)   
+fade_in(<g>value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True,</g>)   
+fade_out(<g>value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True,</g>)   
 
 <div class="example">from ursina import Ursina, printvar
+
 base = Ursina()
 a = Audio('life_is_currency', pitch=1, loop=True, autoplay=True)
 print(a.clip)
@@ -674,12 +680,17 @@ show()
 hide()   
 remove()   
 
-<div class="example">c = Cylinder(6, height=1, start=-.5)
-c = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
-e = Button(parent=scene, model=c, collider='mesh')
-e.color = color.red
-def update():
-    print(mouse.hovered_entity)
+<div class="example">e = Entity(model='sphere', x=2)
+e.collider = 'box'      # add BoxCollider based on entity's bounds.
+e.collider = 'sphere'   # add SphereCollider based on entity's bounds.
+e.collider = 'mesh'     # add MeshCollider based on entity's bounds.
+
+e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   # add BoxCollider at custom positions and size.
+e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      # add SphereCollider at custom positions and size.
+e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      # add MeshCollider with custom shape and center.
+
+m = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
+e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_color=color.yellow)
 
 EditorCamera()
 </div>
@@ -691,12 +702,17 @@ node_path<g> = entity.attachNewNode(CollisionNode('CollisionNode'))</g>
 visible<g> = False</g> 
 
 
-<div class="example">c = Cylinder(6, height=1, start=-.5)
-c = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
-e = Button(parent=scene, model=c, collider='mesh')
-e.color = color.red
-def update():
-    print(mouse.hovered_entity)
+<div class="example">e = Entity(model='sphere', x=2)
+e.collider = 'box'      # add BoxCollider based on entity's bounds.
+e.collider = 'sphere'   # add SphereCollider based on entity's bounds.
+e.collider = 'mesh'     # add MeshCollider based on entity's bounds.
+
+e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   # add BoxCollider at custom positions and size.
+e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      # add SphereCollider at custom positions and size.
+e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      # add MeshCollider with custom shape and center.
+
+m = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
+e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_color=color.yellow)
 
 EditorCamera()
 </div>
@@ -708,12 +724,17 @@ node_path<g> = entity.attachNewNode(CollisionNode('CollisionNode'))</g>
 visible<g> = False</g> 
 
 
-<div class="example">c = Cylinder(6, height=1, start=-.5)
-c = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
-e = Button(parent=scene, model=c, collider='mesh')
-e.color = color.red
-def update():
-    print(mouse.hovered_entity)
+<div class="example">e = Entity(model='sphere', x=2)
+e.collider = 'box'      # add BoxCollider based on entity's bounds.
+e.collider = 'sphere'   # add SphereCollider based on entity's bounds.
+e.collider = 'mesh'     # add MeshCollider based on entity's bounds.
+
+e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   # add BoxCollider at custom positions and size.
+e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      # add SphereCollider at custom positions and size.
+e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      # add MeshCollider with custom shape and center.
+
+m = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
+e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_color=color.yellow)
 
 EditorCamera()
 </div>
@@ -724,12 +745,17 @@ node_path<g> = entity.attachNewNode(CollisionNode('CollisionNode'))</g>
 visible<g> = False</g> 
 
 
-<div class="example">c = Cylinder(6, height=1, start=-.5)
-c = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
-e = Button(parent=scene, model=c, collider='mesh')
-e.color = color.red
-def update():
-    print(mouse.hovered_entity)
+<div class="example">e = Entity(model='sphere', x=2)
+e.collider = 'box'      # add BoxCollider based on entity's bounds.
+e.collider = 'sphere'   # add SphereCollider based on entity's bounds.
+e.collider = 'mesh'     # add MeshCollider based on entity's bounds.
+
+e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   # add BoxCollider at custom positions and size.
+e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      # add SphereCollider at custom positions and size.
+e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      # add MeshCollider with custom shape and center.
+
+m = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
+e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_color=color.yellow)
 
 EditorCamera()
 </div>
@@ -749,7 +775,7 @@ brightness
 
 invert()   
 tint(<g>amount</g>)   
-color(<g>h, s, v, a=1</g>)   
+hsv(<g>h, s, v, a=1</g>)   
 rgba(<g>r, g, b, a=255</g>)   
 rgb(<g>r, g, b, a=255</g>)   
 to_hsv(<g>color</g>)   
@@ -846,10 +872,9 @@ ignore_input<g> = False</g>
 parent<g> = scene</g> 
 model<g> = None</g> 
 color<g> = color.white</g> 
-texture<g> = None     # tries to set to camel_to_snake(self.type)</g> 
+texture<g> = None</g> 
 reflection_map<g> = scene.reflection_map</g> 
 reflectivity<g> = 0</g> 
-texture<g> = camel_to_snake(self.type)</g> 
 render_queue<g> = 0</g> 
 double_sided<g> = False</g> 
 collision<g> = False</g> 
@@ -862,7 +887,9 @@ position<g> = Vec3(0,0,0) # can also set self.x, self.y, self.z</g>
 rotation<g> = Vec3(0,0,0) # can also set self.rotation_x, self.rotation_y, self.rotation_z</g> 
 scale<g> = Vec3(1,1,1)    # can also set self.scale_x, self.scale_y, self.scale_z</g> 
 line_definition<g> = None</g> 
-line_definition<g> = f'{Path(caller.filename).name} ->  {caller.lineno} -> {caller.code_context}'</g> 
+line_definition<g> = caller</g> 
+code_context<g> = caller.code_context[0]</g> 
+name<g> = self.code_context.split('</g> 
 type
 types
 origin_x
@@ -906,12 +933,12 @@ generate_sphere_map(<g>size=512, name=f'sphere_map_{len(scene.entities)}'</g>)
 generate_cube_map(<g>size=512, name=f'cube_map_{len(scene.entities)}'</g>)   
 reparent_to(<g>entity</g>)   
 get_position(<g>relative_to=scene</g>)   
+set_position(<g>value, relative_to=scene</g>)   
 add_script(<g>name, path=None</g>)   
 remove_script(<g>module_name</g>)   
 combine(<g>analyze=False, auto_destroy=True</g>)   
 flip_faces()   
 look_at(<g>target, axis='forward'</g>)   
-get_scripts_of_type(<g>type</g>)   
 has_ancestor(<g>possible_ancestor</g>)   
 animate(<g>name, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None</g>)   
 animate_position(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None</g>)   
@@ -925,19 +952,35 @@ fade_in(<g>value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, 
 blink(<g>value=color.clear, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=False, time_step=None</g>)   
 
 <div class="example">app = main.Ursina()
-import time
-t = time.time()
 
+e = Entity(model='quad', color=color.orange, position=(0,0,1), scale=1.5, rotation=(0,0,45))
+
+'''example of inheriting Entity'''
+class Player(Entity):
+    def __init__(self, **kwargs):
+        super().__init__()
+        self.model='cube'
+        self.color = color.red
+        self.scale_y = 2
+
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+    def input(self, key):
+        if key == 'space':
+            self.animate_x(2, duration=1)
+
+    def update(self):
+        self.x += held_keys['d'] * time.dt * 10
+        self.x -= held_keys['a'] * time.dt * 10
+
+player = Player(x=-1)
 EditorCamera()
-e = Entity(model='quad', color=color.orange)
+
 
 def input(key):
     if key == 'space':
-        e.color = color.clear
-        window.overlay.fade_in(duration=.4)
-
-
-print(time.time() - t)
+        e.animate('x', -3)
 </div>
 </pre></div>
 <div id="Hit"><div id="Hit" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Hit<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Hit(**kwargs)</params>
@@ -952,24 +995,44 @@ world_normal<g> = None</g>
 
 
 </pre></div>
-<div id="InputEvents"><div id="InputEvents" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">InputEvents<g>(Enum)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">InputEvents(**kwargs)</params>
+<div id="InputEvents"><div id="InputEvents" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">InputEvents<g>(Enum)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">left_mouse_down<g> = 'left mouse down'</g> 
+left_mouse_up<g> = 'left mouse up'</g> 
+middle_mouse_down<g> = 'middle mouse down'</g> 
+middle_mouse_up<g> = 'middle mouse up'</g> 
+right_mouse_down<g> = 'right mouse down'</g> 
+right_mouse_up<g> = 'right mouse up'</g> 
+scroll_up<g> = 'scroll up'</g> 
+scroll_down<g> = 'scroll down'</g> 
+arrow_left<g> = 'left arrow'</g> 
+arrow_left_up<g> = 'left arrow up'</g> 
+arrow_up<g> = 'up arrow'</g> 
+arrow_up_up<g> = 'up arrow up'</g> 
+arrow_down<g> = 'down arrow'</g> 
+arrow_down_up<g> = 'down arrow up'</g> 
+arrow_right<g> = 'right arrow'</g> 
+arrow_right_up<g> = 'right arrow up'</g> 
+left_control<g> = 'left control'</g> 
+right_control<g> = 'right control'</g> 
+left_shift<g> = 'left shift'</g> 
+right_shift<g> = 'right shift'</g> 
+left_alt<g> = 'left alt'</g> 
+right_alt<g> = 'right alt'</g> 
+left_control_up<g> = 'left control up'</g> 
+right_control_up<g> = 'right control up'</g> 
+left_shift_up<g> = 'left shift up'</g> 
+right_shift_up<g> = 'right shift up'</g> 
+left_alt_up<g> = 'left alt up'</g> 
+right_alt_up<g> = 'right alt up'</g> 
+page_down<g> = 'page down'</g> 
+page_down_up<g> = 'page down up'</g> 
+page_up<g> = 'page up'</g> 
+page_up_up<g> = 'page up up'</g> 
+enter<g> = 'enter'</g> 
+backspace<g> = 'backspace'</g> 
+escape<g> = 'enter'</g> 
+tab<g> = 'tab'</g> 
 
 
-bind(<g>original_key, alternative_key</g>)   
-unbind(<g>key</g>)   
-rebind(<g>to_key, from_key</g>)   
-input(<g>key</g>)   
-
-<div class="example">input_handler.bind('s', 'arrow down')  # 's'-key will now be registered as 'arrow down'-key
-
-def input(key):
-    print(key)
-    if key == 'left mouse down':
-        print('pressed left mouse button')
-
-    if key == InputEvent.left_mouse_down:   # same as above, but with InputEvents enum.
-        print('pressed left mouse button')
-</div>
 </pre></div>
 <div id="Ursina"><div id="Ursina" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Ursina<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Ursina()</params>
 
@@ -983,6 +1046,15 @@ run()
 <div class="example">app = Ursina()
 app.run()
 </div>
+</pre></div>
+<div id="MeshModes"><div id="MeshModes" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">MeshModes<g>(Enum)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">triangle<g> = 'triangle'</g> 
+ngon<g> = 'ngon'</g> 
+quad<g> = 'quad'</g> 
+line<g> = 'line'</g> 
+point<g> = 'point'</g> 
+tristrip<g> = 'tristrip'</g> 
+
+
 </pre></div>
 <div id="Mesh"><div id="Mesh" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Mesh<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Mesh(vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1)</params>
 
@@ -1117,9 +1189,8 @@ def input(key):
         actions[key]()
 </div>
 </pre></div>
-<div id="Text"><div id="Text" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Text<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Text(text='', start_tag=start_tag, end_tag=end_tag, **kwargs)</params>
+<div id="Text"><div id="Text" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Text<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Text(text='', start_tag=start_tag, end_tag=end_tag, add_to_scene_entities=False, **kwargs)</params>
 
-name<g> = 'text'</g> 
 size<g> = Text.size</g> 
 parent<g> = camera.ui</g> 
 text_nodes<g> = list()</g> 
@@ -1153,7 +1224,7 @@ get_width(<g>string, font=None</g>)
 
 <div class="example">app = Ursina()
   descr = dedent('''
-      <orange>Rainstorm<default>
+      <scale:1.5><orange>Rainstorm<default><scale:1>
       Summon a <azure>rain storm <default>to deal 5 <azure>water
 
       damage <default>to <hsb(0,1,.7)>everyone, <default><image:brick> <image:brick> test <default>including <orange>yourself. <default>
@@ -1207,7 +1278,7 @@ for y in range(e.texture.height):
             print('found blue pixel at:', x, y)
 </div>
 </pre></div>
-<div id="Animation"><div id="Animation" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Animation<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Animation(texture, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs)</params>
+<div id="Animation"><div id="Animation" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Animation<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Animation(name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs)</params>
 
 frames<g> = list()</g> 
 scale<g> = (frame.texture.width/100, frame.texture.height/100)</g> 
@@ -1218,7 +1289,11 @@ is_playing<g> = autoplay</g>
 play()   
 stop()   
 
-<div class="example">animation = Animation('ursina_wink', fps=2, scale=5, filtering=None)
+<div class="example">window.color = color.black
+
+animation = Animation('ursina_wink', fps=2, scale=5, filtering=None)
+
+EditorCamera()
 </div>
 </pre></div>
 <div id="Animator"><div id="Animator" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Animator<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Animator(animations=None, start_state='')</params>
@@ -1228,11 +1303,12 @@ start_state<g> = start_state</g>
 state<g> = start_state</g> 
 
 
-<div class="example">a = Animator(
+<div class="example">anim = Animation('ursina_wink', loop=False)
+a = Animator(
     animations = {
         'lol' : Entity(model='cube', color=color.red),
         'yo' : Entity(model='cube', color=color.green, x=1),
-        'help' : Entity(model='cube', color=color.violet, y=1),
+        'help' : anim,
     }
 )
 a.state = 'yo'
@@ -1246,11 +1322,11 @@ def input(key):
         a.state = 'yo'
     if key == '3':
         a.state = 'help'
+        print(anim.enabled)
 </div>
 </pre></div>
 <div id="Button"><div id="Button" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Button<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Button(text='', **kwargs)</params>
 
-name<g> = 'button'</g> 
 parent<g> = scene.ui</g> 
 collider<g> = 'box'</g> 
 disabled<g> = False</g> 
@@ -1297,15 +1373,13 @@ input(<g>key</g>)
 button_group = ButtonGroup(('man', 'woman', 'other'))
 </div>
 </pre></div>
-<div id="ButtonList"><div id="ButtonList" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ButtonList<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ButtonList(button_dict, **kwargs)</params>
+<div id="ButtonList"><div id="ButtonList" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ButtonList<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ButtonList(button_dict, button_height=1.5, **kwargs)</params>
 
 buttons<g> = button_dict</g> 
 actions<g> = [*self.buttons.values()]</g> 
-text_entity<g> = Text(parent=self, origin
-        # position=(-.5,.5,-.1)
-        )</g> 
+text_entity<g> = Text(parent=self, origin</g> 
 button_height<g> = self.text_entity.height</g> 
-highlight<g> = Entity(parent=self, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5))</g> 
+highlight<g> = Entity(parent=self, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5), z=-.01)</g> 
 
 on_click()   
 update()   
@@ -1322,7 +1396,7 @@ button_dict = {
     'four' :    Func(test, b=3, a=4),
     'five':     Sequence(1, Func(print, 'lol'), loop=True),
 }
-for i in range(6, 20):
+for i in range(6, 25):
     button_dict[f'button {i}'] = Func(print, i)
 
 ButtonList(button_dict)
@@ -1358,15 +1432,20 @@ ColorField(y=-Text.size*2.1, text='secondary_color', color=color.orange)
 <div id="Cursor"><div id="Cursor" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Cursor<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Cursor(**kwargs)</params>
 
 parent<g> = camera.ui</g> 
+texture<g> = 'cursor'</g> 
 model<g> = 'quad'</g> 
 color<g> = color.light_gray</g> 
-z<g> = -.1</g> 
 render_queue<g> = 1</g> 
 
 update()   
 
-<div class="example">camera.orthographic = True
-Cursor()
+<div class="example">Button('button').fit()
+Panel()
+camera.orthographic = True
+camera.fov = 100
+e = Entity(model='cube')
+mouse._mouse_watcher.setGeometry(e.model.node())
+mouse.visible = False
 </div>
 </pre></div>
 <div id="DebugMenu"><div id="DebugMenu" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">DebugMenu<g>(<a style="color: gray;" href="#Draggable">Draggable</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">DebugMenu(target, **kwargs)</params>
@@ -1459,7 +1538,13 @@ pan_speed<g> = (4, 4)</g>
 move_speed<g> = 1</g> 
 zoom_speed<g> = .05</g> 
 rotate_around_mouse_hit<g> = True</g> 
+start_position<g> = self.position</g> 
+perspective_fov<g> = camera.fov</g> 
+orthographic_fov<g> = camera.fov</g> 
+on_destroy<g> = self.on_disable</g> 
 
+on_enable()   
+on_disable()   
 input(<g>key</g>)   
 update()   
 
@@ -1471,12 +1556,24 @@ Hold right click and move the mouse to rotate around point.
 sky = Sky()
 e = Entity(model='cube', color=color.white)
 e.model.colorize()
-ec = EditorCamera(rotation_smoothing=2, rotation_speed=200)
+
+from ursina.prefabs.first_person_controller import FirstPersonController
+from copy import copy
+player = FirstPersonController()
+Entity(parent=player, model='cube', color=color.orange, scale_y=2, origin_y=0)
+ground = Entity(model='plane', scale=32, texture='white_cube', texture_scale=(32,32))
+box = Entity(model='cube', collider='box', texture='white_cube', scale=(10,2,2), position=(2,1,5), color=color.light_gray)
+ec = EditorCamera(rotation_smoothing=2, rotation_speed=200, enabled=False, rotation=(30,30,0))
 
 rotation_info = Text(position=window.top_left)
 
 def update():
     rotation_info.text = str(int(ec.rotation_y)) + '\n' + str(int(ec.rotation_x))
+
+def input(key):
+    if key == 'tab':    # press tab to toggle edit/play mode
+        player.ignore = not player.ignore
+        ec.enabled = not ec.enabled
 </div>
 </pre></div>
 <div id="ExitButton"><div id="ExitButton" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ExitButton<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ExitButton(**kwargs)</params>
@@ -1492,16 +1589,16 @@ To disable it, set window.exit_button.enabled to False
 '''
 </div>
 </pre></div>
-<div id="FileButton"><div id="FileButton" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FileButton<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">FileButton(**kwargs)</params>
+<div id="FileButton"><div id="FileButton" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FileButton<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">FileButton(load_menu, **kwargs)</params>
 
+load_menu<g> = load_menu</g> 
 selected
 
 on_click()   
 on_double_click()   
 
-<div class="example">t = time.time()
-fb = FileBrowser(file_types=('.*'))
-print(time.time() - t)
+<div class="example">fb = FileBrowser(file_types=('.*'), enabled=True)
+
 def on_submit(value):
     for button in value:
         print('---', button.path)
@@ -1511,17 +1608,20 @@ fb.on_submit = on_submit
 </pre></div>
 <div id="FileBrowser"><div id="FileBrowser" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FileBrowser<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">FileBrowser(**kwargs)</params>
 
-title_bar<g> = Button(parent=self, scale=(.75,.025), text='Open', color=color.dark_gray, collision=False)</g> 
-folder_up_button<g> = Button(parent=self, scale=(.035,.035), text='^', position=(-.4,-.03), color=color.dark_gray, on_click=self.folder_up)</g> 
-address_bar<g> = Button(parent=self, y=-.03, scale=(.75,.035), text='//', text_origin=(-.45,0))</g> 
-button_parent<g> = Entity(parent=self)</g> 
-bg<g> = Button(parent=self, z=1, scale=(999,999), color=color.black66, highlight_color=color.black66, pressed_color=color.black66)</g> 
 return_files<g> = True</g> 
 return_directories<g> = False</g> 
 selection_limit<g> = 1</g> 
 max_buttons<g> = 24</g> 
-cancel_button<g> = Button(parent=self, scale=(.75*.24, .05), y=(-self.max_buttons*.025)-.15, origin_x=-.5, x=-.75/2, text='Cancel', on_click=self.close)</g> 
-open_button<g> = Button(parent=self, scale=(.75*.74, .05), y=(-self.max_buttons*.025)-.15, origin_x=.5, x=.75/2, text='Open', color=color.dark_gray, on_click=self.open)</g> 
+title_bar<g> = Button(parent=self, scale=(.9,.025), text='Open', color=color.dark_gray, collision=False, y=-.01)</g> 
+address_bar<g> = Button(parent=self, scale=(.8,.035), text='//', text_origin=(-.5,0), y=-.05, highlight_color=color.black)</g> 
+folder_up_button<g> = Button(parent=self, scale=(.035,.035), texture='arrow_down', rotation_z=180, position=(-.42,-.05), color=color.white, highlight_color=color.azure, on_click=self.folder_up)</g> 
+button_parent<g> = Entity(parent=self)</g> 
+back_panel<g> = Entity(parent=self, model='quad', collider='box', origin_y=.5, scale=(.9,(self.max_buttons*.025)+.19), color=color._32, z=.1)</g> 
+bg<g> = Button(parent=self, z=1, scale=(999,999), color=color.black66, highlight_color=color.black66, pressed_color=color.black66)</g> 
+cancel_button<g> = Button(parent=self, scale=(.875*.24, .05), y=(-self.max_buttons*.025)-.15, origin_x=-.5, x=-.875/2, text='Cancel', on_click=self.close)</g> 
+open_button<g> = Button(parent=self, scale=(.875*.74, .05), y=(-self.max_buttons*.025)-.15, origin_x=.5, x=.875/2, text='Open', color=color.dark_gray, on_click=self.open)</g> 
+can_scroll_up_indicator<g> = Entity(parent=self, model='quad', texture='arrow_down', rotation_z=180, scale=(.05,.05), y=-.0765, z=-.1, color=color.dark_gray, enabled=False, add_to_scene_entities=False)</g> 
+can_scroll_down_indicator<g> = Entity(parent=self, model='quad', texture='arrow_down', scale=(.05,.05), y=(-self.max_buttons*.025)-.104, z=-.1, color=color.dark_gray, enabled=False, add_to_scene_entities=False)</g> 
 file_types<g> = ['.*', ]</g> 
 start_path<g> = Path('.').resolve()</g> 
 path<g> = self.start_path     # this will populate the list</g> 
@@ -1534,9 +1634,8 @@ close()
 folder_up()   
 open()   
 
-<div class="example">t = time.time()
-fb = FileBrowser(file_types=('.*'))
-print(time.time() - t)
+<div class="example">fb = FileBrowser(file_types=('.*'), enabled=True)
+
 def on_submit(value):
     for button in value:
         print('---', button.path)
@@ -1564,65 +1663,57 @@ i<g> = 0</g>
 update_interval<g> = 30</g> 
 cursor<g> = Entity(
         parent</g> 
-graphics<g> = Entity(
-        name</g> 
-arrow<g> = Entity(
-        parent</g> 
 position<g> = (0, 1, 1)</g> 
+target_smoothing<g> = 100</g> 
+smoothing<g> = self.target_smoothing</g> 
 
 update()   
 
-<div class="example">Sky()
+<div class="example">Sky(color=color.gray)
 Entity(model='plane', scale=100, color=color.yellow.tint(-.2), texture='white_cube', texture_scale=(100,100))
-Entity(
+e = Entity(
     model='cube',
-    origin=(1, 0, 1),
-    scale=(1, 5, 1),
+    scale=(1, 5, 10),
+    x=2,
+    y=.01,
+    rotation_y = 45,
     collider='box',
-    color=color.blue,
+    texture='white_cube',
 )
+e.texture_scale = (e.scale_z, e.scale_y)
+e = Entity(
+    model='cube',
+    scale=(1, 5, 10),
+    x=-2,
+    y=.01,
+    collider='box',
+    texture='white_cube',
+)
+e.texture_scale = (e.scale_z, e.scale_y)
 FirstPersonController()
 </div>
 </pre></div>
-<div id="HealthBar"><div id="HealthBar" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">HealthBar<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">HealthBar(show_text=True, show_lines=False, **kwargs)</params>
+<div id="HealthBar"><div id="HealthBar" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">HealthBar<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">HealthBar(max_value=100, show_text=True, show_lines=False, **kwargs)</params>
 
-bar<g> = Entity(parent=self, model='quad', origin=self.origin, z=-.01, color=color.red, ignore=True)</g> 
+bar<g> = Entity(parent=self, model='quad', origin=self.origin, z=-.01, color=color.red.tint(-.2), ignore=True)</g> 
 lines<g> = Entity(parent=self.bar, origin=self.origin, y=-1, color=color.black33, ignore=True)</g> 
 roundness<g> = .25</g> 
-max_value<g> = 100</g> 
-value<g> = self.max_value</g> 
+max_value<g> = max_value</g> 
 clamp<g> = True</g> 
 show_lines<g> = show_lines</g> 
 show_text<g> = show_text</g> 
 scale_x<g> = self.scale_x # update rounded corners</g> 
 scale_y<g> = self.scale_y # update background's rounded corners</g> 
+value<g> = self.max_value</g> 
 
 
 <div class="example">health_bar_1 = HealthBar(bar_color=color.lime.tint(-.25), roundness=.5, value=50)
 
-health_bar_2 = HealthBar(scale_x=1)
-health_bar_2.roundness = .5
-health_bar_2.y-=.2
-health_bar_2.scale_y *= 2
-health_bar_2.value = 5
-
-health_bar_3 = HealthBar()
-health_bar_3.roundness = .5
-health_bar_3.scale_y = .1
-health_bar_3.y-=.4
-health_bar_3.value = 5
-
 def input(key):
     if key == '+' or key == '+ hold':
         health_bar_1.value += 10
-        health_bar_2.value += 10
-        health_bar_3.value += 10
     if key == '-' or key == '- hold':
         health_bar_1.value -= 10
-        health_bar_2.value -= 10
-        health_bar_3.value -= 10
-
-window.color = color.light_gray
 </div>
 </pre></div>
 <div id="HotReloader"><div id="HotReloader" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">HotReloader<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">HotReloader(path=__file__, **kwargs)</params>
@@ -1631,24 +1722,28 @@ eternal<g> = True</g>
 ignore_paused<g> = True</g> 
 path<g> = path</g> 
 path<g> = Path(self.path)</g> 
+realtime_editing<g> = False   # toggle with f8</g> 
 
 input(<g>key</g>)   
+update()   
+hot_reload()   
 reload(<g>reset_camera=True</g>)   
 reload_texture()   
 reload_model()   
 
-<div class="example">application.hot_reloader.path = application.asset_folder.parent.parent / 'samples' / 'platformer.py'
-Sky()
+<div class="example">window.set_z_order(window.Z_top)
+application.hot_reloader.path = application.asset_folder.parent.parent / 'samples' / 'platformer.py'
 
 '''
-By default you can press Ctrl+R to reload the starting script and Ctrl+T to reimport textures.
+By default you can press F5 to reload the starting script, F6 to reimport textures and F7 to reload models.
 '''
 </div>
 </pre></div>
-<div id="InputField"><div id="InputField" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">InputField<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">InputField(default_value='', label='', **kwargs)</params>
+<div id="InputField"><div id="InputField" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">InputField<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">InputField(default_value='', label='', max_lines=1, **kwargs)</params>
 
 default_value<g> = default_value</g> 
-text_field<g> = TextField(world_parent=self, x=-.45, y=.3, z=-.1, max_lines=1)</g> 
+next_field<g> = None</g> 
+text_field<g> = TextField(world_parent=self, x=-.45, y=.3, z=-.1, max_lines=max_lines)</g> 
 active<g> = False</g> 
 label<g> = Text('Label:')</g> 
 text
@@ -1718,10 +1813,9 @@ jump()
 start_fall()   
 land()   
 
-<div class="example">window.vsync = False
-ground = Entity(model='cube', color=color.white33, origin_y=.5, scale=(20, 10, 1), collider='box')
+<div class="example">ground = Entity(model='cube', color=color.white33, origin_y=.5, scale=(20, 10, 1), collider='box')
 wall = Entity(model='cube', color=color.azure, origin=(-.5,.5), scale=(5,10), x=10, y=.5, collider='box')
-ceiling = Entity(model='cube', color=color.white33, origin_y=.5, scale=(10, 1, 1), y=5, collider='box')
+ceiling = Entity(model='cube', color=color.white33, origin_y=.5, scale=(10, 1, 1), y=4, collider='box')
 
 def input(key):
     if key == 'c':
@@ -1869,7 +1963,7 @@ s = Sprite('brick', filtering=False)
 font<g> = 'VeraMono.ttf'</g> 
 font_size<g> = 20</g> 
 line_height<g> = 1</g> 
-max_lines<g> = 999999</g> 
+max_lines<g> = 99999</g> 
 text_entity<g> = Text(
         parent</g> 
 line_numbers<g> = Text(
@@ -1954,8 +2048,8 @@ Text.default_font = 'consola.ttf'
 Text.default_resolution = 16*2
 te = TextField(max_lines=3)
 te.line_numbers.enabled = True
+te.text = 'yolo test 123 yes no.\n'*10
 te.render()
-te.select_all()
 </div>
 </pre></div>
 <div id="Tooltip"><div id="Tooltip" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Tooltip<g>(<a style="color: gray;" href="#Text">Text</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Tooltip(text='', **kwargs)</params>
@@ -2031,11 +2125,11 @@ height<g> = height</g>
 <div class="example">WindowPanel(
     title='Custom Window',
     content=(
-        Text('leflaijfae\njofeoijfw'),
-        Button(text='test', color=color.green),
-        Space(height=1),
-        Text('leflaijfae\njofeoijfw'),
-        InputField()
+        Text('Name:'),
+        InputField(name='name_field'),
+        Text('Age:'),
+        InputField(name='age_field'),
+        Button(text='Submit', color=color.green),
         )
     )
 </div>
@@ -2062,11 +2156,11 @@ close()
 <div class="example">WindowPanel(
     title='Custom Window',
     content=(
-        Text('leflaijfae\njofeoijfw'),
-        Button(text='test', color=color.green),
-        Space(height=1),
-        Text('leflaijfae\njofeoijfw'),
-        InputField()
+        Text('Name:'),
+        InputField(name='name_field'),
+        Text('Age:'),
+        InputField(name='age_field'),
+        Button(text='Submit', color=color.green),
         )
     )
 </div>
@@ -2091,14 +2185,13 @@ EditorCamera()
 </pre></div>
 <div id="combine"><div id="combine" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">combine</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
 combine(<g>entity, analyze=False, auto_destroy=True</g>)   
+get_vertices(<g>entity, relative_to=None</g>)   
 
 <div class="example">p = Entity()
 e1 = Entity(parent=p, model='sphere', y=1.5, color=color.pink)
 e2 = Entity(parent=p, model='cube', color=color.yellow, x=1, origin_y=-.5)
 e3 = Entity(parent=e2, model='cube', color=color.yellow, y=2, scale=.5)
 p.combine()
-p.model.colorize()
-
 
 
 EditorCamera()
@@ -2210,6 +2303,7 @@ Entity(model='cube').add_script(SmoothFollow(target=player, offset=(0,2,0)))
 <div id="textures"><div id="textures" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">textures</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">'arrow_down'
 'arrow_right'
 'brick'
+'circle'
 'cursor'
 'default_sky'
 'file_icon'
@@ -2309,21 +2403,53 @@ camera.z = -5
 <div id="Sphere"><div id="Sphere" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Sphere<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Sphere(radius=.5, subdivisions=0, mode='tristrip', **kwargs)</params>
 
 
+sub_divide(<g>v_0, v_1, v_2, sub_divisions, vertices, faces</g>)   
 
-<div class="example">Entity(model=Sphere(), color=color.color(60,1,1,.3), x=4)
+<div class="example">Entity(model=Sphere(subdivisions=5), color=color.color(60, 1, 1, .5), x=0)
+Entity(model=Sphere(radius=0.15, subdivisions=6), color=color.color(1, 60, 1, .5), x=4)
 origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
-ed = EditorCamera(rotation_speed = 200, panning_speed=200)
+ed = EditorCamera(rotation_speed=200, panning_speed=200)
 </div>
 </pre></div>
-<div id="Terrain"><div id="Terrain" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Terrain<g>(Plane)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Terrain(heightmap, skip=1, **kwargs)</params>
+<div id="Terrain"><div id="Terrain" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Terrain<g>(Plane)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Terrain(heightmap, skip=1, store_height_values=False, **kwargs)</params>
 
 heightmap<g> = load_texture(heightmap)</g> 
-heightmap<g> = Texture(image)</g> 
-vertices[i]<g> = (self.vertices[i][0], h, self.vertices[i][2])</g> 
+width, self.depth<g> = self.heightmap.width//skip, self.heightmap.height//skip</g> 
+heightmap<g> = Texture(img)</g> 
+height_values<g> = [[0 for x in range(self.width)] for z in range(self.depth)]</g> 
+height_values[x][z]<g> = y</g> 
+vertices[i]<g> = Vec3(x/self.width -.5, y, z/self.depth -.5)</g> 
 
 
-<div class="example">e = Entity(model=Terrain('heightmap_1', skip=2), scale=5)
-e.texture='heightmap_1'
+<div class="example">terrains = list()
+for i in (1,2,4,8):
+    e = Entity(model=Terrain('heightmap_1', skip=i), scale=(20,5,20))
+    e.texture='heightmap_1'
+    e.enabled = False
+    terrains.append(e)
 EditorCamera()
+terrains[0].enabled = True
+lod_level = 0
+def set_lod_level(n):
+    global lod_level
+    print(n)
+    for e in terrains:
+        e.enabled = False
+    terrains[n].enabled = True
+
+    lod_level = n
+
+
+def update():
+    global lod_level
+    dist = distance(camera.world_position, terrains[0].world_position)
+    if lod_level != 0 and dist < 20:
+        set_lod_level(0)
+    if lod_level != 1 and dist > 20 and dist < 40:
+        set_lod_level(1)
+    if lod_level != 2 and dist > 40 and dist < 80:
+        set_lod_level(2)
+    if lod_level != 3 and dist > 80 and dist < 160:
+        set_lod_level(3)
 </div>
 </pre></div></div></body>

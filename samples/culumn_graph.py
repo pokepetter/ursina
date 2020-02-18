@@ -39,15 +39,13 @@ for i, (name, value) in enumerate(data.items()):
     s.column = e
     sliders.append(s)
 
-    exec(dedent(f'''
-        def on_{name}changed():
-            sliders[{i}].column.scale_y = sliders[{i}].value/50
-            sliders[{i}].column.tooltip.text = str(sliders[{i}].value)
-            c = sliders[{i}].column.color
-            # sliders[{i}].column.color = color.color(c.h, sliders[{i}].value/100, c.v)
+    def on_slider_changed(i=i):
+        sliders[i].column.scale_y = sliders[i].value/50
+        sliders[i].column.tooltip.text = str(sliders[i].value)
+        c = sliders[i].column.color
 
-        s.on_value_changed = on_{name}changed
-        '''))
+    s.on_value_changed = on_slider_changed
+
 
 randomize_button = Button(position=(-.66,-.45), origin=(-.5,.5), color=color.dark_gray, text='<white>Randomize!', scale=(.25, .05))
 randomize_button.scale *= .75

@@ -157,8 +157,8 @@ class Entity(NodePath):
             if self.model:
                 self.model.reparentTo(self)
                 self.model.setTransparency(TransparencyAttrib.M_dual)
-                setattr(self, 'color', self.color) # reapply color after changing model
-                setattr(self, 'texture', self.texture) # reapply texture after changing model
+                self.color = self.color # reapply color after changing model
+                self.texture = self.texture # reapply texture after changing model
                 self._vert_cache = None
                 if isinstance(value, Mesh):
                     if hasattr(value, 'on_assign'):
@@ -937,7 +937,6 @@ if __name__ == '__main__':
 
     e = Entity(model='quad', color=color.orange, position=(0,0,1), scale=1.5, rotation=(0,0,45))
 
-
     '''example of inheriting Entity'''
     class Player(Entity):
         def __init__(self, **kwargs):
@@ -966,7 +965,5 @@ if __name__ == '__main__':
     def input(key):
         if key == 'space':
             e.animate('x', -3)
-
-    Entity(add_to_scene_entities=False)
 
     app.run()

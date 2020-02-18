@@ -11,12 +11,12 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'hurry.filesize',
-        'imageio',
         'panda3d',
         'pillow',
-        'psd-tools',
-        'psutil',
         'screeninfo',
-    ]
+    ],
+
+    extras_require={
+        'extras':  ['psd-tools', 'imageio', 'psutil', 'hurry.filesize'],
+    }
 )

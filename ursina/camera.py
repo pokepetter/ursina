@@ -86,7 +86,7 @@ class Camera(Entity):
     @orthographic.setter
     def orthographic(self, value):
         self._orthographic = value
-        if value == True:
+        if value:
             self.lens = self.orthographic_lens
             self.lens_node = self.orthographic_lens_node
             application.base.cam.node().set_lens(self.orthographic_lens)

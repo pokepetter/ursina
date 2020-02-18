@@ -66,28 +66,28 @@ class MeshCollider(Collider):
             for tri in mesh.triangles:
                 if len(tri) == 3:
                     shape = CollisionPolygon(
-                        swap_y_z(Vec3(mesh.vertices[tri[0]])) + center,
-                        swap_y_z(Vec3(mesh.vertices[tri[1]])) + center,
-                        swap_y_z(Vec3(mesh.vertices[tri[2]])) + center)
+                        _swap_y_z(Vec3(mesh.vertices[tri[0]])) + center,
+                        _swap_y_z(Vec3(mesh.vertices[tri[1]])) + center,
+                        _swap_y_z(Vec3(mesh.vertices[tri[2]])) + center)
                     node.addSolid(shape)
                 elif len(tri) == 4:
                     shape = CollisionPolygon(
-                        swap_y_z(Vec3(mesh.vertices[tri[0]])) + center,
-                        swap_y_z(Vec3(mesh.vertices[tri[1]])) + center,
-                        swap_y_z(Vec3(mesh.vertices[tri[2]])) + center)
+                        _swap_y_z(Vec3(mesh.vertices[tri[0]])) + center,
+                        _swap_y_z(Vec3(mesh.vertices[tri[1]])) + center,
+                        _swap_y_z(Vec3(mesh.vertices[tri[2]])) + center)
                     node.addSolid(shape)
                     shape = CollisionPolygon(
-                        swap_y_z(Vec3(mesh.vertices[tri[2]])) + center,
-                        swap_y_z(Vec3(mesh.vertices[tri[3]])) + center,
-                        swap_y_z(Vec3(mesh.vertices[tri[0]])) + center)
+                        _swap_y_z(Vec3(mesh.vertices[tri[2]])) + center,
+                        _swap_y_z(Vec3(mesh.vertices[tri[3]])) + center,
+                        _swap_y_z(Vec3(mesh.vertices[tri[0]])) + center)
                     node.addSolid(shape)
 
         elif mesh.mode == 'triangle':
             for i in range(0, len(mesh.vertices), 3):
                 shape = CollisionPolygon(
-                    swap_y_z(Vec3(mesh.vertices[i])) + center,
-                    swap_y_z(Vec3(mesh.vertices[i+1])) + center,
-                    swap_y_z(Vec3(mesh.vertices[i+2])) + center
+                    _swap_y_z(Vec3(mesh.vertices[i])) + center,
+                    _swap_y_z(Vec3(mesh.vertices[i+1])) + center,
+                    _swap_y_z(Vec3(mesh.vertices[i+2])) + center
                     )
                 node.addSolid(shape)
 
@@ -98,21 +98,26 @@ class MeshCollider(Collider):
         self.visible = False
 
 
-def swap_y_z(vec3):
+def _swap_y_z(vec3):
     return Vec3(vec3[0], vec3[2], vec3[1])
+
 
 
 if __name__ == '__main__':
     from ursina import *
     app = Ursina()
-    c = Cylinder(6, height=1, start=-.5)
-    c = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
-    e = Button(parent=scene, model=c, collider='mesh', color=color.red, highlight_color=color.yellow)
-    # e.collider = MeshCollider(e)
-    # printvar(e.collider.node_path)
-    # e.collider.visible = True
-    # def update():
-    #     print(mouse.hovered_entity)
+
+    e = Entity(model='sphere', x=2)
+    e.collider = 'box'      # add BoxCollider based on entity's bounds.
+    e.collider = 'sphere'   # add SphereCollider based on entity's bounds.
+    e.collider = 'mesh'     # add MeshCollider based on entity's bounds.
+
+    e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   # add BoxCollider at custom positions and size.
+    e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      # add SphereCollider at custom positions and size.
+    e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      # add MeshCollider with custom shape and center.
+
+    m = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
+    e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_color=color.yellow)
 
     EditorCamera()
     app.run()

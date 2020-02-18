@@ -111,7 +111,7 @@ def get_functions(str, is_class=False):
     lines = str.split('\n')
     for i, line in enumerate(lines):
 
-        if line == '''if __name__ == '__main__':''':
+        if line == '''if __name__ == '__main__':''' or 'docignore' in line:
             break
         if line.strip().startswith('def '):
             if not is_class and line.split('(')[1].startswith('self'):
@@ -165,7 +165,7 @@ def is_singleton(str):
 
 
 path = application.package_folder
-print('path', path)
+# print('path', path)
 
 init_file = ''
 with open(path / '__init__.py') as f:
@@ -194,7 +194,12 @@ for f in path.glob('*.py'):
             # continue
             classes = get_classes(code)
             for class_name, class_definition in classes.items():
-                # print(class_name)
+                if 'Enum' in class_name:
+                    class_definition = class_definition.split('def ')[0]
+                    attrs = [l.strip() for l in class_definition.split('\n') if ' = ' in l]
+                    class_info[class_name] = ('', attrs, '', '')
+                    continue
+
                 if 'def __init__' in class_definition:
                     # init line
                     params =  '__init__('+ class_definition.split('def __init__(')[1].split('\n')[0][:-1]
@@ -417,7 +422,7 @@ for i, class_dictionary in enumerate((module_info, class_info, prefab_info, scri
 
     sidebar += '\n'
 
-print(html)
+# print(html)
 sidebar += '</div>'
 html += '</div>'
 html = sidebar + style + html + '</body>'

@@ -63,8 +63,10 @@ class Color(Vec4):
 
 
 
-def color(h, s, v, a=1):
+def hsv(h, s, v, a=1):
     return Color(colorsys.hsv_to_rgb((h / 360) - math.floor(h / 360), s, v) + (a,))
+
+color = hsv
 
 def rgba(r, g, b, a=255):
     color = Color(r, g, b, a)

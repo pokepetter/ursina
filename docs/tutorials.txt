@@ -24,3 +24,4 @@ Example Projects
 [Minecraft Clone, https://github.com/pokepetter/ursina/blob/master/samples/minecraft_clone.py]
 [Platformer, https://github.com/pokepetter/ursina/blob/master/samples/platformer.py]
 [Tic Tac Toe, https://github.com/pokepetter/ursina/blob/master/samples/tic_tac_toe.py]
+[Value of Life, https://github.com/pokepetter/ld44_life_is_currency]

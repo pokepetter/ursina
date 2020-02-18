@@ -51,27 +51,69 @@ class HotReloader(Entity):
             setattr(self, key, value)
 
         self.path = Path(self.path)
+        self.realtime_editing = False   # toggle with f8
         # self.text_editor = InGameTextEditor(path=self.path, enabled=False)
 
 
     def input(self, key):
-        if held_keys['control'] and key == 'r':
+        if key == 'f5':
             # if self.text_editor.enabled:
             #     self.text_editor.reload()
             # else:
             self.reload()
 
-        if held_keys['control'] and key == 't':
+        if key == 'f6':
             self.reload_texture()
 
-        if held_keys['control'] and key == 'y':
+        if key == 'f7':
             self.reload_model()
+
+        if key == 'f8':
+            self.realtime_editing = not self.realtime_editing
+
+
+                # overwrite specific line
+                # with open(info.filename, 'r') as f:
+                #     lines = f.readlines()
+                # lines[info.lineno] = 'OVERWRITTEN!'
+                # with open(info.filename, 'w') as f:
+                #     f.writelines(lines)
 
         # if key == '|':
         #     if not self.text_editor.enabled:
         #         invoke(setattr, self.text_editor, 'enabled', not self.text_editor.enabled, delay=.1)
         #     else:
         #         self.text_editor.enabled = not self.text_editor.enabled
+
+    def update(self):
+        if self.realtime_editing:
+            self.hot_reload()
+
+
+
+    def hot_reload(self):
+        for e in [e for e in scene.entities if not e.eternal]:
+            try:
+                with open(e.line_definition.filename, 'r') as f:
+                    # print(f.readlines())
+                    code = f.readlines()[e.line_definition.lineno-1]
+
+                # code = e.line_definition.code_context[0]
+                # print(e,
+                #     Path(info.filename).name,
+                #     info.lineno, info.code_context)
+                    print('---', code)
+                    if '(' in code and ')' in code and code.count('(') == code.count(')'):
+                        code = code.split('(', 1)[1][:-2]
+                        code = code.split(',')
+                        for arg in code:
+                            name, value = arg.split('=')
+                            name = name.strip()
+                            value = value.strip()
+                            print(name, eval(value))
+                            setattr(e, name, eval(value))
+            except:
+                pass
 
 
     def reload(self, reset_camera=True):
@@ -236,15 +278,17 @@ class HotReloader(Entity):
 
 if __name__ == '__main__':
     from ursina import *
+    window.set_z_order(window.Z_top)
     app = Ursina()
     # hot_reloader = HotReloader()
     application.hot_reloader.path = application.asset_folder.parent.parent / 'samples' / 'platformer.py'
-    Sky()
+    # Sky()
 
     '''
-    By default you can press Ctrl+R to reload the starting script and Ctrl+T to reimport textures.
+    By default you can press F5 to reload the starting script, F6 to reimport textures and F7 to reload models.
     '''
-
-
+    # window.size *= .5
+    # window.position += Vec2(1000,400)
+    # butttt = Button(text='test_buttonsss', x=.0, y=.0, color=color.red)
 
     app.run()
