@@ -1,5 +1,5 @@
 # ursina    ʕ •ᴥ•ʔゝ□
-An easy to use game engine/framework for python.  
+An easy to use game engine/framework for python.
 
 ![Banner](/docs/made_with_ursina.jpg)
 
@@ -15,7 +15,7 @@ An easy to use game engine/framework for python.
 If you want to easily edit the source, it's recommended to clone the git repo and install as develop like this:
 
        git clone https://github.com/pokepetter/ursina.git
-       python setup.py develop       
+       python setup.py develop
 
 
 
@@ -23,7 +23,7 @@ If you want to easily edit the source, it's recommended to clone the git repo an
   * python 3.6+
   * panda3d
   * screeninfo, for detecting screen resolution
-  * hurry.size, for converting bytes to megabytes
+  * hurry.filesize, for converting bytes to megabytes
   * pillow, for texture manipulation
   * psd-tools, for converting .psd files
   * blender, for converting .blend files
