@@ -51,7 +51,7 @@ class Mouse:
     @property
     def x(self):
         if not self._mouse_watcher.has_mouse():
-            return self.prev_x
+            return 0
         return self._mouse_watcher.getMouseX() / 2 * window.aspect_ratio  # same space as ui stuff
 
     @x.setter
@@ -61,7 +61,7 @@ class Mouse:
     @property
     def y(self):
         if not self._mouse_watcher.has_mouse():
-            return self.prev_y
+            return 0
 
         return self._mouse_watcher.getMouseY() / 2
 
