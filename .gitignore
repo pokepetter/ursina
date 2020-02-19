@@ -1,5 +1,6 @@
 *.pyc
 __pycache__
+.pytest_cache
 ursina.egg-info
 dist
 /build
