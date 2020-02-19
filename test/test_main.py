@@ -9,12 +9,17 @@ import ursina
 class TestUrsina(unittest.TestCase):
 
     @patch("direct.showbase.ShowBase.ShowBase.run")
-    def test_basic_ursina_window_creation(self, mock_showbase_run):
-        """Ensure instantiating an Ursina object creates a window.
+    def test_ursina_window_creation(self, mock_showbase_run):
+        """Test Ursina window creation.
+
+        Because we are unable to easily identify windows on the screen,
+        capturing the number of calls to the library method which creates
+        them is a good approximation. Unfortunately this means that we're
+        testing implementation instead of behaviour.
 
         Given an Ursina object
         When the run() method is called on that object
-        Then a window is created
+        Then ShowBase.run is called at least once.
         """
 
         # Given
