@@ -5,7 +5,8 @@ import importlib
 import glob
 from pathlib import Path
 from panda3d.core import NodePath
-from panda3d.core import Vec3, Vec4
+from ursina.vec3 import Vec3
+from panda3d.core import Vec4
 from panda3d.core import TransparencyAttrib
 from panda3d.core import Shader
 from panda3d.core import TextureStage, TexGenAttrib
@@ -117,11 +118,9 @@ class Entity(NodePath):
                 if not self.is_singleton():
                     self.stash()
 
-
         if name == 'eternal':
             for c in self.children:
                 c.eternal = value
-
 
         if name == 'world_parent':
             self.reparent_to(value)
@@ -186,7 +185,6 @@ class Entity(NodePath):
         if name == 'position':
             # automatically add position instead of extending the tuple
             new_value = Vec3()
-
             if len(value) % 2 == 0:
                 for i in range(0, len(value), 2):
                     new_value.add_x(value[i])
@@ -299,11 +297,16 @@ class Entity(NodePath):
         if name == 'double_sided':
             self.setTwoSided(value)
 
+        if name == 'always_on_top':
+            self.set_bin("fixed", 0)
+            self.set_depth_write(False)
+            self.set_depth_test(False)
+
         try:
             super().__setattr__(name, value)
         except:
             pass
-            # print('failed to sett attribiute:', name)
+            # print('failed to set attribiute:', name)
 
 
     @property
@@ -401,7 +404,7 @@ class Entity(NodePath):
 
     @property
     def world_position(self):
-        return self.get_position(render)
+        return Vec3(self.get_position(render))
 
     @world_position.setter
     def world_position(self, value):
