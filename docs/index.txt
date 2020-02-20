@@ -110,7 +110,7 @@ Dependencies
     • pillow, for texture manipulation
 
     • psutil, for measuring memory usage (optional)
-    • hurry.size, for converting bytes to megabytes (optional)
+    • hurry.filesize, for converting bytes to megabytes (optional)
     • imageio, for recording and converting to gifs (optional)
     • psd-tools, for converting .psd files (optional)
     • blender, for converting .blend files (optional)

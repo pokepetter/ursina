@@ -9,3 +9,7 @@ todo
 video_temp
 ursina/unused
 samples/wip
+
+**/*~
+**/*.swp
+**/.vscode
