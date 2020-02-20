@@ -195,7 +195,11 @@ class Mouse():
         # collide with world
         self._pickerNP.reparent_to(camera)
         self._pickerRay.set_from_lens(scene.camera.lens_node, self.x * 2 / window.aspect_ratio, self.y * 2)
-        self._picker.traverse(base.render)
+        try:
+            self._picker.traverse(base.render)
+        except:
+            print('error: mouse._picker could not traverse base.render')
+            return
 
         if self._pq.get_num_entries() > 0:
             self.find_collision()
