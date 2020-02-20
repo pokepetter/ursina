@@ -58,6 +58,8 @@ if __name__ == '__main__':
         print()
         e2 = duplicate(e)
         e2.y += 1.5
+        # e2.model.mode='line'
+        # e2.model.generate()
 
 
     EditorCamera()

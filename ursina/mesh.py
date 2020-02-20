@@ -24,7 +24,7 @@ class MeshModes(Enum):
         return hash(self.value)
 
     def __eq__(self, other):
-        """ Overriden __eq__ to allow for both str and MeshModes comparisions """
+        # overriden __eq__ to allow for both str and InputEvent comparisons
         if isinstance(other, MeshModes):
             return self.value == other.value
         return self.value == other
@@ -170,6 +170,11 @@ class Mesh(NodePath):
 
         self.normals += other.normals
         self.uvs += other.uvs
+
+
+    def __copy__(self):
+        return Mesh(self.vertices, self.triangles, self.colors, self.uvs, self.normals, self.static, self.mode, self.thickness)
+
 
     @property
     def thickness(self):
