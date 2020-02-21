@@ -5,7 +5,8 @@ from ursina.sequence import Sequence, Func, Wait
 from direct.interval.IntervalGlobal import SoundInterval
 from direct.task.Task import Task
 from panda3d.core import NodePath, PandaNode
-from panda3d.core import Vec2, Vec3, Point3
+from panda3d.core import Vec2
+from ursina.vec3 import Vec3
 from panda3d.core import loadPrcFileData, Filename, AntialiasAttrib
 from panda3d.core import PNMImage, Texture
 

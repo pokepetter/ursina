@@ -6,7 +6,7 @@ from ursina import scene
 # from ursina import render
 from panda3d.core import CollisionTraverser, CollisionNode, CollisionHandlerQueue
 from panda3d.core import CollisionRay, CollisionSegment, CollisionBox
-from panda3d.core import Vec3
+from ursina.vec3 import Vec3
 import math
 from ursina.hit import Hit
 

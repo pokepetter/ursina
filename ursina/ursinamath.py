@@ -1,6 +1,7 @@
 import operator
 from math import sqrt
-from panda3d.core import Vec2, Vec3, Vec4
+from panda3d.core import Vec2, Vec4, LVector3f
+from ursina.vec3 import Vec3
 from ursina.color import Color
 
 
@@ -52,7 +53,7 @@ def lerp(a, b, t):
         col = [lerp(e[0], e[1], t) for e in zip(a,b)]
         return Color(col[0], col[1], col[2], col[3])
 
-    elif isinstance(a, (tuple, list, Vec2, Vec3, Vec4)) and isinstance(b, (tuple, list, Vec2, Vec3, Vec4)):
+    elif isinstance(a, (tuple, list, Vec2, Vec3, Vec4, LVector3f)) and isinstance(b, (tuple, list, Vec2, Vec3, Vec4, LVector3f)):
         lerped = list()
         for i in range(min(len(a), len(b))):
             lerped.append(lerp(a[i], b[i], t))

@@ -1,6 +1,6 @@
 from panda3d.core import CollisionNode, CollisionBox, CollisionSphere, CollisionPolygon
 from panda3d.core import NodePath
-from panda3d.core import Vec3
+from ursina.vec3 import Vec3
 
 
 class Collider(NodePath):

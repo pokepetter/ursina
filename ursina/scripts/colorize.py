@@ -1,7 +1,7 @@
 from ursina import *
 from ursina import color
 import math
-from panda3d.core import Vec3
+from ursina.vec3 import Vec3
 # import numpy as np
 
 

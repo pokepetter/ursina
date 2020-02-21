@@ -14,6 +14,7 @@ from ursina.collider import *
 from ursina.audio import Audio
 from ursina.duplicate import duplicate
 from ursina import input_handler
+from ursina.vec3 import Vec3
 
 from ursina.text import Text
 from ursina.mesh import Mesh, MeshModes
