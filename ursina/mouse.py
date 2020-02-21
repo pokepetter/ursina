@@ -95,6 +95,8 @@ class Mouse():
             try:
                 object.__setattr__(self, name, value)
                 window.set_cursor_hidden(value)
+                if value:
+                    window.set_mouse_mode(window.M_relative)
                 application.base.win.requestProperties(window)
             except:
                 pass
