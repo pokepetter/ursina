@@ -143,10 +143,9 @@ class Button(Entity):
                 self.scale = self.original_scale * self.highlight_scale
 
         if hasattr(self, 'tooltip'):
-            self.tooltip_scale = self.tooltip.scale
             self.tooltip.scale = (0,0,0)
             self.tooltip.enabled = True
-            self.scale_animator = self.tooltip.animate_scale(self.tooltip_scale)
+            self.tooltip.animate_scale(self.tooltip.original_scale)
 
 
     def on_mouse_exit(self):
@@ -157,8 +156,6 @@ class Button(Entity):
                 self.scale = self.original_scale
 
         if hasattr(self, 'tooltip'):
-            if hasattr(self, 'tooltip_scaler'):
-                self.scale_animator.finish()
             self.tooltip.enabled = False
 
     def on_click(self):

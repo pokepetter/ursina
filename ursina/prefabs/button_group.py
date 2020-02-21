@@ -62,7 +62,6 @@ class ButtonGroup(Entity):
         grid_layout(self.buttons, spacing=(0.025,0,0), origin=(-.5, .5, 0))
         for b in self.buttons:
             b.x += width / 2
-            b.y = -.5
 
 
     def input(self, key):

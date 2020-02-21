@@ -16,6 +16,7 @@ class Tooltip(Text):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
+        self.original_scale = self.scale
         self.create_background(color=self.background_color)
 
 

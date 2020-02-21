@@ -2,12 +2,14 @@ from ursina import *
 
 
 class Slider(Entity):
-    def __init__(self, min=0, max=1, default=0, height=Text.size, text='', dynamic=False, **kwargs):
+    def __init__(self, min=0, max=1, default=None, height=Text.size, text='', dynamic=False, **kwargs):
         super().__init__()
         self.parent = camera.ui
         self.vertical = False
         self.min = min
         self.max = max
+        if default is None:
+            default = min
         self.default = default
         self.step = 0
 
@@ -45,11 +47,11 @@ class Slider(Entity):
 
 
         def drop():
-            # print('yo', self.parent)
             if hasattr(self, 'on_value_changed'):
                 self.on_value_changed()
 
         self.knob.drop = drop
+        self._prev_value = self.default
         self.value = self.default
         self.dynamic = dynamic
 
@@ -75,14 +77,13 @@ class Slider(Entity):
     def value(self):
         val = lerp(self.min, self.max, self.knob.x * 2)
         if self.step == 1:
-            val = round(val)
+            val = round(val, 2)
 
         return val
 
     @value.setter
     def value(self, value):
-        self.knob.x = value / (self.max - self.min) / 2
-        self._prev_value = self.knob.x / self.bg.scale_x
+        self.knob.x = (value - self.min) / (self.max - self.min) / 2
         self.slide()
 
     @property
@@ -100,7 +101,6 @@ class Slider(Entity):
 
     def slide(self):
         t = self.knob.x / .5
-        # self.knob.text_entity.text = round(lerp(self.min, self.max, t), 2)
         self.knob.text_entity.text = str(round(lerp(self.min, self.max, t), 2))
 
         if self.step > 0:
@@ -144,14 +144,15 @@ class ThinSlider(Slider):
 
 if __name__ == '__main__':
     app = Ursina()
-    color.text_color = color.dark_text
-    origin = Entity(model='cube', color=color.green, scale = .05)
-    box = Entity(model='cube', origin_y=-.5, scale=1, color=color.orange)
-    slider = Slider(0, 255, default=1, height=Text.size*3, y=-.4, step=1, vertical=False)
-    thin_slider = ThinSlider(0, 255, default=1, text='thin_slider', height=Text.size*3, y=-.4, step=1, vertical=False, x=-.7)
-    Text('debug text')
-    def scale_box():
-        box.scale_y = slider.value
-
-    slider.on_value_changed = scale_box
+    # color.text_color = color.dark_text
+    # origin = Entity(model='cube', color=color.green, scale = .05)
+    # box = Entity(model='cube', origin_y=-.5, scale=1, color=color.orange)
+    slider = Slider(0, 255, default=10, height=Text.size*3, y=-.4, step=1   )
+    slider = Slider(1, 2, default=1.2, x=-.4, y=-.47, text='contrast', dynamic=True)
+    # thin_slider = ThinSlider(0, 255, default=1, text='thin_slider', height=Text.size*3, y=-.4, step=1, vertical=False, x=-.7)
+    # Text('debug text')
+    # def scale_box():
+    #     box.scale_y = slider.value
+    #
+    # slider.on_value_changed = scale_box
     app.run()
