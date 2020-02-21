@@ -93,6 +93,6 @@ if __name__ == '__main__':
             scene.clear()
 
     scene.fog_density = .1          # sets exponential density
-    scene.fog_density = (50, 200)   # sets linear densitiy start and end
+    scene.fog_density = (50, 200)   # sets linear density start and end
 
     app.run()

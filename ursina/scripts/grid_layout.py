@@ -23,6 +23,7 @@ def grid_layout(l, max_x=8, max_y=8, spacing=(0,0,0), origin=(-.5,.5,0), offset=
             y * dimensions[1] * direction[1],
             z * dimensions[2] * direction[2]
         )
+        e.position += offset
         e.origin = origin
         row.append(e)
 

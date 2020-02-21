@@ -25,16 +25,11 @@ void fshader(float2 l_texcoord0 : TEXCOORD0,
 {
     float4 c = tex2D(k_tex, l_texcoord0);
     half3 d = half3(c);
-    // To have a useless filter that outputs the original view
-    // without changing anything, just use :
-    //o_color  = c;
     d = AdjustContrast(d, k_contrast);
     c.rgb = d.rgb;
     o_color  = c;
-    // basic black and white effet
-    // float moyenne = (c.x + c.y + c.z)/3;
-    // o_color = float4(moyenne, moyenne, moyenne, 1);
 }
+
 
 ''', Shader.SL_Cg)
 
@@ -48,6 +43,12 @@ if __name__ == '__main__':
     e = Entity(model='cube', y=-1)
     camera.shader = camera_contrast_shader
     camera.set_shader_input('contrast', 1)
+
+    slider = ThinSlider(max=1, dynamic=True, position=(-.25, -.45))
+    def set_blur():
+        camera.set_shader_input("contrast", slider.value)
+    slider.on_value_changed = set_blur
+
     EditorCamera()
 
     app.run()

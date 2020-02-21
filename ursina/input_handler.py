@@ -45,7 +45,7 @@ class InputEvents(Enum):
         return hash(self.value)
 
     def __eq__(self, other):
-        """ Overriden __eq__ to allow for both str and InputEvent comparisions """
+        # overriden __eq__ to allow for both str and InputEvent comparisons
         if isinstance(other, InputEvents):
             return self.value == other.value
         return self.value == other

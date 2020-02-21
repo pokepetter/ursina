@@ -51,9 +51,6 @@ class Window(WindowProperties):
             'wireframe',
             'colliders',
             'normals',
-            'vertices',
-            'textureless',
-            'cubes'
             )
         self.display_mode = 'default'
 

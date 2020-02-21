@@ -25,7 +25,7 @@ A variety of games made with Ursina
 Powered by Python
 # normal, size 1
 
-    Ursina makes it easier to develop games, visualizations and other kinds software.
+    Ursina makes it easier to develop games, visualizations and other kinds of software.
     The concise API combined with the power of the Python programming language,
     makes life easier for the developer so they can focus on what they are making.
 
