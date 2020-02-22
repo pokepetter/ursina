@@ -542,6 +542,16 @@ class Entity(NodePath):
         return -self.up
 
     @property
+    def screen_position(self):
+        from ursina import camera
+        p3 = camera.getRelativePoint(self, Vec3.zero())
+        full = camera.perspective_lens.getProjectionMat().xform(Vec4(*p3, 1))
+        recip_full3 = 1 / full[3]
+        p2 = Vec3(full[0], full[1], full[2]) * recip_full3
+        screen_pos = Vec3(p2[0]*camera.aspect_ratio/2, p2[1]/2, 0)
+        return screen_pos
+
+    @property
     def shader(self):
         return self.getShader()
 
