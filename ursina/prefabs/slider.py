@@ -77,7 +77,7 @@ class Slider(Entity):
     def value(self):
         val = lerp(self.min, self.max, self.knob.x * 2)
         if self.step == 1:
-            val = round(val, 2)
+            val = int(val)
 
         return val
 
