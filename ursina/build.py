@@ -159,9 +159,17 @@ for f in project_folder.iterdir():
         copy(str(f), str(dest))
 
 
-print('creating .bat file')
+print('creating .exe file')
 with Path(build_folder / 'run.bat').open('w') as f:
     f.write('''start "" "%CD%\python\python.exe" %CD%\src\main.py''')
 
+import subprocess
+subprocess.call([
+    f'{ursina_path}\\scripts\\_bat_to_exe.bat',
+    f'{build_folder}\\run.bat',
+    f'\\build\\{project_folder.stem}.exe'
+    ])
+
+os.remove(Path(build_folder / 'run.bat'))
 
 print('build complete! time elapsed:', time.time() - start_time)
