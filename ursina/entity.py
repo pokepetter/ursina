@@ -303,20 +303,19 @@ class Entity(NodePath):
 
     @property
     def origin(self):
-        if not self.model:
-            return Vec3(0,0,0)
-        model_pos = self.model.getPos()
-        return Vec3(-model_pos[0], -model_pos[2], -model_pos[1])
+        return self._origin
 
     @origin.setter
     def origin(self, value):
         if not self.model:
+            self._origin = Vec3(0,0,0)
             return
         if not isinstance(value, (Vec2, Vec3)):
             value = self._list_to_vec(value)
         if isinstance(value, Vec2):
-            value = Vec3(*value, self.z)
+            value = Vec3(*value, self.origin_z)
 
+        self._origin = value
         self.model.setPos(-value[0], -value[2], -value[1])
 
 
