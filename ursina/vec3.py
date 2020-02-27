@@ -5,15 +5,13 @@ from panda3d.core import Vec3 as PandaVec3
 
 class Vec3(PandaVec3):
 
-    def __round__(self, n=3):
-        return Vec3(*(round(e,n) for e in self))
+    def __round__(self, decimals=4):
+        return Vec3(*(round(e,decimals) for e in self))
 
 
     def __str__(self):
-        return f'{self.__class__.__name__}({self[0]}, {self[1]}, {self[2]})'
+        return super().__str__().replace('LVector3f', 'Vec3')
 
-    # def __len__(self):
-    #     return 3
 
     @property
     def x(self):
