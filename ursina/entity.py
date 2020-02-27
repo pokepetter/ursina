@@ -6,7 +6,7 @@ import glob
 from pathlib import Path
 from panda3d.core import NodePath
 from ursina.vec3 import Vec3
-from panda3d.core import Vec4
+from panda3d.core import Vec4, Vec2
 from panda3d.core import TransparencyAttrib
 from panda3d.core import Shader
 from panda3d.core import TextureStage, TexGenAttrib
@@ -49,6 +49,7 @@ class Entity(NodePath):
         self.ignore_input = False
 
         self.parent = scene
+        self.add_to_scene_entities = add_to_scene_entities
         if add_to_scene_entities:
             scene.entities.append(self)
 
@@ -59,13 +60,14 @@ class Entity(NodePath):
         self.reflectivity = 0
         self.render_queue = 0
         self.double_sided = False
+        self.always_on_top = False
 
         self.collision = False
         self.collider = None
         self.scripts = list()
         self.animations = list()
         self.hovered = False
-        #
+
         self.origin = Vec3(0,0,0)
         self.position = Vec3(0,0,0) # can also set self.x, self.y, self.z
         self.rotation = Vec3(0,0,0) # can also set self.rotation_x, self.rotation_y, self.rotation_z
@@ -96,7 +98,24 @@ class Entity(NodePath):
 
         for key, value in kwargs.items():
             setattr(self, key, value)
+    def _list_to_vec(self, value):
+        if isinstance(value, (int, float, complex)):
+            return Vec3(value, value, value)
 
+        if len(value) % 2 == 0:
+            new_value = Vec2()
+            for i in range(0, len(value), 2):
+                new_value.add_x(value[i])
+                new_value.add_y(value[i+1])
+
+        if len(value) % 3 == 0:
+            new_value = Vec3()
+            for i in range(0, len(value), 3):
+                new_value.add_x(value[i])
+                new_value.add_y(value[i+1])
+                new_value.add_z(value[i+2])
+
+        return new_value
 
 
     def __setattr__(self, name, value):
@@ -182,103 +201,6 @@ class Entity(NodePath):
                 self.model.setTexOffset(TextureStage.getDefault(), value[0], value[1])
                 self.texture = self.texture
 
-        if name == 'position':
-            # automatically add position instead of extending the tuple
-            new_value = Vec3()
-            if len(value) % 2 == 0:
-                for i in range(0, len(value), 2):
-                    new_value.add_x(value[i])
-                    new_value.add_y(value[i+1])
-                new_value.add_z(self.getY())
-
-            if len(value) % 3 == 0:
-                for i in range(0, len(value), 3):
-                    new_value.add_x(value[i])
-                    new_value.add_y(value[i+1])
-                    new_value.add_z(value[i+2])
-
-            try:
-                self.setPos(new_value[0], new_value[2], new_value[1])
-            except:
-                pass    # can't set position
-
-        if name == 'x': self.setX(value)
-        if name == 'y': self.setZ(value)
-        if name == 'z': self.setY(value)
-
-        if name == 'origin' and self.model:
-            new_value = Vec3()
-
-            if len(value) % 2 == 0:
-                for i in range(0, len(value), 2):
-                    new_value.add_x(value[i])
-                    new_value.add_y(value[i+1])
-                new_value.add_z(self.model.getY())
-
-            if len(value) % 3 == 0:
-                for i in range(0, len(value), 3):
-                    new_value.add_x(value[i])
-                    new_value.add_y(value[i+1])
-                    new_value.add_z(value[i+2])
-
-            self.model.setPos(-new_value[0], -new_value[2], -new_value[1])
-            object.__setattr__(self, name, new_value)
-            return
-
-        if name == 'rotation':
-            new_value = Vec3()
-
-            if len(value) % 2 == 0:
-                for i in range(0, len(value), 2):
-                    new_value.add_x(value[i])
-                    new_value.add_y(value[i+1])
-                new_value.add_z(self.getR())
-
-            if len(value) % 3 == 0:
-                for i in range(0, len(value), 3):
-                    new_value.add_x(value[i])
-                    new_value.add_y(value[i+1])
-                    new_value.add_z(value[i+2])
-
-            self.setHpr(Vec3(-new_value[1], -new_value[0], new_value[2]))
-
-        if name == 'rotation_x': self.setP(-value)
-        if name == 'rotation_y': self.setH(-value)
-        if name == 'rotation_z': self.setR(value)
-
-        if name == 'scale':
-            if isinstance(value, (int, float, complex)):
-                value = (value, value, value)
-
-            new_value = Vec3()
-
-            if len(value) % 2 == 0:
-                for i in range(0, len(value), 2):
-                    new_value.add_x(value[i])
-                    new_value.add_y(value[i+1])
-                new_value.add_z(self.getSy())
-
-            if len(value) % 3 == 0:
-                for i in range(0, len(value), 3):
-                    new_value.add_x(value[i])
-                    new_value.add_y(value[i+1])
-                    new_value.add_z(value[i+2])
-
-            for e in new_value:
-                if e == 0:
-                    e = .001
-
-            self.setScale(new_value[0], new_value[2], new_value[1])
-
-        if name == 'scale_x':
-            self.set_scale(value, self.scale_z, self.scale_y)
-
-        if name == 'scale_y':
-            self.set_scale(self.scale_x, self.scale_z, value)
-
-        if name == 'scale_z':
-            self.set_scale(self.scale_x, value, self.scale_y)
-
 
         if name == 'collision' and hasattr(self, 'collider') and self.collider:
             if value:
@@ -289,7 +211,6 @@ class Entity(NodePath):
             object.__setattr__(self, name, value)
             return
 
-
         if name == 'render_queue':
             if self.model:
                 self.model.setBin('fixed', value)
@@ -297,7 +218,7 @@ class Entity(NodePath):
         if name == 'double_sided':
             self.setTwoSided(value)
 
-        if name == 'always_on_top':
+        if name == 'always_on_top' and value:
             self.set_bin("fixed", 0)
             self.set_depth_write(False)
             self.set_depth_test(False)
@@ -380,6 +301,24 @@ class Entity(NodePath):
         self.collision = bool(self.collider)
         return
 
+    @property
+    def origin(self):
+        if not self.model:
+            return Vec3(0,0,0)
+        model_pos = self.model.getPos()
+        return Vec3(-model_pos[0], -model_pos[2], -model_pos[1])
+
+    @origin.setter
+    def origin(self, value):
+        if not self.model:
+            return
+        if not isinstance(value, (Vec2, Vec3)):
+            value = self._list_to_vec(value)
+        if isinstance(value, Vec2):
+            value = Vec3(*value, self.z)
+
+        self.model.setPos(-value[0], -value[2], -value[1])
+
 
     @property
     def origin_x(self):
@@ -408,8 +347,12 @@ class Entity(NodePath):
 
     @world_position.setter
     def world_position(self, value):
-        value = Vec3(value[0], value[2], value[1])
-        self.setPos(render, value)
+        if not isinstance(value, (Vec2, Vec3)):
+            value = self._list_to_vec(value)
+        if isinstance(value, Vec2):
+            value = Vec3(*value, self.z)
+
+        self.setPos(render, Vec3(value[0], value[2], value[1]))
 
     @property
     def world_x(self):
@@ -434,15 +377,36 @@ class Entity(NodePath):
     @property
     def position(self):
         return Vec3(self.getX(), self.getZ(), self.getY())
+
+    @position.setter
+    def position(self, value):
+        if not isinstance(value, (Vec2, Vec3)):
+            value = self._list_to_vec(value)
+        if isinstance(value, Vec2):
+            value = Vec3(*value, self.z)
+
+        self.setPos(value[0], value[2], value[1])
+
     @property
     def x(self):
         return self.getX()
+    @x.setter
+    def x(self, value):
+        self.setX(value)
+
     @property
     def y(self):
         return self.getZ()
+    @y.setter
+    def y(self, value):
+        self.setZ(value)
+
     @property
     def z(self):
         return self.getY()
+    @z.setter
+    def z(self, value):
+        self.setY(value)
 
     @property
     def world_rotation(self):
@@ -462,15 +426,36 @@ class Entity(NodePath):
     def rotation(self):
         rotation = self.getHpr()
         return Vec3(-rotation[1], -rotation[0], rotation[2])
+
+    @rotation.setter
+    def rotation(self, value):
+        if not isinstance(value, (Vec2, Vec3)):
+            value = self._list_to_vec(value)
+        if isinstance(value, Vec2):
+            value = Vec3(*value, self.rotation_z)
+
+        self.setHpr(Vec3(-value[1], -value[0], value[2]))
+
     @property
     def rotation_x(self):
         return -self.getP()
+    @rotation_x.setter
+    def rotation_x(self, value):
+        self.setP(-value)
+
     @property
     def rotation_y(self):
         return -self.getH()
+    @rotation_y.setter
+    def rotation_y(self, value):
+        self.setH(-value)
+
     @property
     def rotation_z(self):
         return self.getR()
+    @rotation_z.setter
+    def rotation_z(self, value):
+        self.setR(value)
 
 
     @property
@@ -509,15 +494,37 @@ class Entity(NodePath):
     def scale(self):
         scale = self.getScale()
         return Vec3(scale[0], scale[2], scale[1])
+
+    @scale.setter
+    def scale(self, value):
+        if not isinstance(value, (Vec2, Vec3)):
+            value = self._list_to_vec(value)
+        if isinstance(value, Vec2):
+            value = Vec3(*value, self.scale_z)
+
+        value = [e if e!=0 else .001 for e in value]
+        self.setScale(value[0], value[2], value[1])
+
     @property
     def scale_x(self):
         return self.getScale()[0]
+    @scale_x.setter
+    def scale_x(self, value):
+        self.setScale(value, self.scale_z, self.scale_y)
+
     @property
     def scale_y(self):
         return self.getScale()[2]
+    @scale_y.setter
+    def scale_y(self, value):
+        self.setScale(self.scale_x, self.scale_z, value)
+
     @property
     def scale_z(self):
         return self.getScale()[1]
+    @scale_z.setter
+    def scale_z(self, value):
+        self.setScale(self.scale_x, value, self.scale_y)
 
     @property
     def forward(self):
@@ -545,7 +552,7 @@ class Entity(NodePath):
     def screen_position(self):
         from ursina import camera
         p3 = camera.getRelativePoint(self, Vec3.zero())
-        full = camera.perspective_lens.getProjectionMat().xform(Vec4(*p3, 1))
+        full = camera.lens.getProjectionMat().xform(Vec4(*p3, 1))
         recip_full3 = 1 / full[3]
         p2 = Vec3(full[0], full[1], full[2]) * recip_full3
         screen_pos = Vec3(p2[0]*camera.aspect_ratio/2, p2[1]/2, 0)
@@ -828,7 +835,7 @@ class Entity(NodePath):
             # 'rotation_x', 'rotation_y', 'rotation_z',
             # 'scale_x', 'scale_y', 'scale_z',
 
-            'render_queue', 'collision', 'collider', 'scripts')
+            'render_queue', 'always_on_top', 'collision', 'collider', 'scripts')
 
 #------------
 # ANIMATIONS
@@ -940,8 +947,6 @@ class Entity(NodePath):
         )
         self.blink_animator.start()
         return self.blink_animator
-        # self.animate_color(value, duration*.4, 0, curve, resolution, interrupt)
-        # self.animate_color(_original_color, duration*.4, duration*.5, curve, resolution, interrupt)
 
 
 if __name__ == '__main__':
