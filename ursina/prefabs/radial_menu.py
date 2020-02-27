@@ -5,6 +5,7 @@ class RadialMenu(Entity):
     def __init__(self, buttons=list(), **kwargs):
         super().__init__()
         self.parent = camera.ui
+        self.buttons = buttons
         origin = Entity(parent=self)
         self.open_at_cursor = True
         self.open_duration = .25
@@ -19,11 +20,11 @@ class RadialMenu(Entity):
             enabled=False)
         self.z = -99
 
-        offset = lerp(.5, 2, len(buttons)/8)
-        for i, b in enumerate(buttons):
+        offset = lerp(.5, 2, len(self.buttons)/8)
+        for i, b in enumerate(self.buttons):
             b.parent = origin
             b.y = offset
-            origin.rotation_z = i/len(buttons) * 360
+            origin.rotation_z = i/len(self.buttons) * 360
             b.world_parent = self
             b.rotation_z = 0
             if hasattr(b, 'text_entity') and b.text_entity:
