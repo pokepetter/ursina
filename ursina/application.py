@@ -1,4 +1,4 @@
-import os
+import sys
 from pathlib import Path
 from panda3d.core import getModelPath
 
@@ -23,7 +23,7 @@ def resume():
         seq.resume()
 
 def quit():
-    os._exit(0)
+    sys.exit()
 
 
 package_folder = Path(__file__).parent
