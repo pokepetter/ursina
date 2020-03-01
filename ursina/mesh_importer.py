@@ -149,21 +149,37 @@ def obj_to_ursinamesh(
                 l = l.split(' ')
 
 
-                tri = tuple([int(t.split('/')[0]) for t in l])
-                for t in tri:
-                    tris.append(t-1)
+                tri = tuple([int(t.split('/')[0])-1 for t in l])
+                if len(tri) == 3:
+                    tris.extend(tri)
+                elif len(tri) == 4:
+                    tris.extend((tri[0], tri[1], tri[2], tri[2], tri[3], tri[0]))
+                else: # ngon
+                    for i in range(1, len(tri)-1):
+                        tris.extend((tri[i], tri[i+1], tri[0]))
+
 
                 try:
-                    uv = tuple([int(t.split('/')[1]) for t in l])
-                    for t in uv:
-                        uv_indices.append(t-1)
+                    uv = tuple([int(t.split('/')[1])-1 for t in l])
+                    if len(uv) == 3:
+                        uv_indices.extend(uv)
+                    elif len(uv) == 4:
+                        uv_indices.extend((uv[0], uv[1], uv[2], uv[2], uv[3], uv[0]))
+                    else: # ngon
+                        for i in range(1, len(uv)-1):
+                            uv_indices.extend((uv[i], uv[i+1], uv[0]))
                 except: # if no uvs
                     pass
 
                 try:
-                    n = tuple([int(t.split('/')[2]) for t in l])
-                    for t in n:
-                        norm_indices.append(t-1)
+                    n = tuple([int(t.split('/')[2])-1 for t in l])
+                    if len(n) == 3:
+                        norm_indices.extend(n)
+                    elif len(uv) == 4:
+                        norm_indices.extend((n[0], n[1], n[2], n[2], n[3], n[0]))
+                    else: # ngon
+                        for i in range(1, len(n)-1):
+                            norm_indices.extend((n[i], n[i+1], n[0]))
                 except: # if no normals
                     pass
 
