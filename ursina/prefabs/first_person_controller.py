@@ -49,7 +49,7 @@ class FirstPersonController(Entity):
         camera.position = lerp(
             camera.position,
             self.position + (self.up*1.5),
-            time.dt * self.smoothing)
+            self.smoothing / 100)
 
         camera.rotation_y = self.rotation_y
 
@@ -75,7 +75,7 @@ class FirstPersonController(Entity):
 if __name__ == '__main__':
     app = Ursina()
     Sky(color=color.gray)
-    Entity(model='plane', scale=100, color=color.yellow.tint(-.2), texture='white_cube', texture_scale=(100,100))
+    ground = Entity(model='plane', scale=(100,1,100), color=color.yellow.tint(-.2), texture='white_cube', texture_scale=(100,100), collider='box')
     e = Entity(
         model='cube',
         scale=(1, 5, 10),
@@ -95,6 +95,14 @@ if __name__ == '__main__':
         texture='white_cube',
     )
     e.texture_scale = (e.scale_z, e.scale_y)
-    FirstPersonController()
+    player = FirstPersonController(y=1)
 
+    def update():
+        player.y -= 1* time.dt
+
+        ray = raycast(player.position+player.up, player.down)
+        if ray.hit:
+            player.y = max(player.y, raycast(player.position+player.up, player.down).world_point[1])
+
+    mouse.visible = True
     app.run()
