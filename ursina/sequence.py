@@ -19,7 +19,7 @@ class Func():
 
     def run(self):
         self.func(*self.args, **self.kwargs)
-        f.finished = True
+        self.finished = True
 
 
 class Sequence():
