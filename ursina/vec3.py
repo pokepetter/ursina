@@ -13,6 +13,36 @@ class Vec3(PandaVec3):
         return super().__str__().replace('LVector3f', 'Vec3')
 
 
+    def __iadd__(self, value):
+        if len(value) % 2 == 0:
+            for i in range(0, len(value), 2):
+                self.add_x(value[i])
+                self.add_y(value[i+1])
+            return self
+
+        if len(value) % 3 == 0:
+            for i in range(0, len(value), 3):
+                self.add_x(value[i])
+                self.add_y(value[i+1])
+                self.add_z(value[i+2])
+            return self
+
+
+    def __add__(self, value):
+        if len(value) % 2 == 0:
+            for i in range(0, len(value), 2):
+                self.add_x(value[i])
+                self.add_y(value[i+1])
+            return self
+
+        if len(value) % 3 == 0:
+            for i in range(0, len(value), 3):
+                self.add_x(value[i])
+                self.add_y(value[i+1])
+                self.add_z(value[i+2])
+            return self
+
+
     @property
     def x(self):
         return self[0]
@@ -39,8 +69,9 @@ class Vec3(PandaVec3):
 if __name__ == '__main__':
     a = Vec3(0,0,0)
     b = Vec3(1.252352324,0,1)
-
-    print(b.x)
-    b.x += 2
-    print(b.x)
-    print(round(b))
+    b += (0,1)
+    print(type(b))
+    print(b)
+    # b.x += 2
+    # print(b.x)
+    # print(round(b))
