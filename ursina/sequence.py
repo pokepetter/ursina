@@ -17,6 +17,10 @@ class Func():
         self.delay = 0
         self.finished = False
 
+    def run(self):
+        self.func(*self.args, **self.kwargs)
+        f.finished = True
+
 
 class Sequence():
 
@@ -102,8 +106,7 @@ class Sequence():
 
         for f in self.funcs:
             if not f.finished and f.delay <= self.t:
-                f.func(*f.args, **f.kwargs)
-                f.finished = True
+                f.run()
 
 
         if self.t >= self.duration:

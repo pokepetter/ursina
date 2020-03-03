@@ -41,7 +41,7 @@ class Entity(NodePath):
         super().__init__(self.__class__.__name__)
 
         self.name = camel_to_snake(self.type)
-        self.enabled = True
+        self.enabled = True     # disabled entities wil not be visible nor run code
         self.visible = True
         self.ignore = False     # if True, will not try to run code
         self.eternal = False    # eternal entities does not get destroyed on scene.clear()
@@ -53,20 +53,20 @@ class Entity(NodePath):
         if add_to_scene_entities:
             scene.entities.append(self)
 
-        self.model = None
+        self.model = None       # set model with model='model_name' (without file type extention)
         self.color = color.white
-        self.texture = None
+        self.texture = None     # set model with texture='texture_name'. requires a model to be set beforehand.
         self.reflection_map = scene.reflection_map
         self.reflectivity = 0
         self.render_queue = 0
         self.double_sided = False
         self.always_on_top = False
 
-        self.collision = False
-        self.collider = None
-        self.scripts = list()
+        self.collision = False  # toggle collision without changing collider.
+        self.collider = None    # set to 'box'/'sphere'/'mesh' for auto fitted collider.
+        self.scripts = list()   # add with add_script(class_instance). will assign an 'entity' variable to the script.
         self.animations = list()
-        self.hovered = False
+        self.hovered = False    # will return True if mouse hovers entity.
 
         self.origin = Vec3(0,0,0)
         self.position = Vec3(0,0,0) # can also set self.x, self.y, self.z
@@ -98,6 +98,8 @@ class Entity(NodePath):
 
         for key, value in kwargs.items():
             setattr(self, key, value)
+
+
     def _list_to_vec(self, value):
         if isinstance(value, (int, float, complex)):
             return Vec3(value, value, value)
@@ -729,24 +731,15 @@ class Entity(NodePath):
         self.setPos(relative_to, Vec3(value[0], value[2], value[1]))
 
 
-    def add_script(self, name, path=None):
+    def add_script(self, class_instance):
         # instance given
-        if isinstance(name, object) and type(name) is not str:
+        if isinstance(class_instance, object) and type(class_instance) is not str:
             name.entity = self
             name.enabled = True
             setattr(self, camel_to_snake(name.__class__.__name__), name)
             self.scripts.append(name)
             # print('added script:', camel_to_snake(name.__class__.__name__))
             return name
-
-
-    def remove_script(self, module_name):
-        for s in self.scripts:
-            if s.__module__ == module_name:
-                self.temp_script = s
-                self.scripts.remove(s)
-                self.__setattr__(module_name, None)
-                print('removed:', module_name)
 
 
     def combine(self, analyze=False, auto_destroy=True):

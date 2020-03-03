@@ -167,8 +167,7 @@ class Button(Entity):
             action()
 
         elif isinstance(action, Func):
-            action.func(*action.args, **action.kwargs)
-            action.finished = True
+            action.run()
 
         elif isinstance(action, Sequence):
             action.start()
@@ -196,9 +195,7 @@ if __name__ == '__main__':
     from ursina import *
     app = Ursina()
 
-    # e = Entity(parent=camera.ui, scale=.1)
-    b = Button(text='hello world!', color=color.azure, origin=(0,0))
-    # print('-----------------', b.eternal)
+    b = Button(text='hello world!', color=color.azure, origin=(-.5,.5))
     # b.fit()
     b.on_click = application.quit
     b.tooltip = Tooltip('exit')

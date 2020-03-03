@@ -100,7 +100,7 @@ def tint(color, amount=.2):
         max(min(color[0] + amount, 1), 0),
         max(min(color[1] + amount, 1), 0),
         max(min(color[2] + amount, 1), 0),
-        1
+        color[3]
         )
 
 
