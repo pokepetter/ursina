@@ -189,7 +189,9 @@ class Entity(NodePath):
             if not isinstance(value, Vec4):
                 value = Vec4(value[0], value[1], value[2], value[3])
 
+
             if self.model:
+                self.setColorScaleOff() # prevent inheriting color from parent
                 self.model.setColorScale(value)
                 object.__setattr__(self, name, value)
 
@@ -732,14 +734,13 @@ class Entity(NodePath):
 
 
     def add_script(self, class_instance):
-        # instance given
         if isinstance(class_instance, object) and type(class_instance) is not str:
-            name.entity = self
-            name.enabled = True
-            setattr(self, camel_to_snake(name.__class__.__name__), name)
-            self.scripts.append(name)
+            class_instance.entity = self
+            class_instance.enabled = True
+            setattr(self, camel_to_snake(class_instance.__class__.__name__), class_instance)
+            self.scripts.append(class_instance)
             # print('added script:', camel_to_snake(name.__class__.__name__))
-            return name
+            return class_instance
 
 
     def combine(self, analyze=False, auto_destroy=True):
