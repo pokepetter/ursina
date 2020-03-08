@@ -172,11 +172,18 @@ with open(path / '__init__.py') as f:
     init_file = f.read()
 
 # print(init_file)
+most_used_info = dict()
 module_info = dict()
 class_info = dict()
 
 for f in path.glob('*.py'):
     if f.name.startswith('_') or f.name == 'build.py':
+        module_info['build'] = (
+            'python -m ursina.build',
+            {},
+            '',
+            '''open cmd at your project folder and run 'python -m ursina.build' to package your app for windows.'''
+            )
         continue
 
     with open(f, encoding='utf8') as t:
@@ -292,6 +299,16 @@ for f in path.glob('models/procedural/*.py'):
 
             asset_info[class_name] = (params, attrs, methods, example)
 
+
+most_used_info = dict()
+for name in ('Entity(NodePath)', 'Text(Entity)', 'Button(Entity)', 'mouse', 'raycaster',):
+    for d in (module_info, class_info, prefab_info):
+        if name in d:
+            most_used_info[name] = d[name]
+            del d[name]
+
+
+
 def html_color(color):
     return f'hsl({color.h}, {int(color.s*100)}%, {int(color.v*100)}%)'
 
@@ -357,7 +374,7 @@ style = f'''
         max-width: 1200px;
         >
     '''
-html = ''
+html = '<title> ursina documentation</title>'
 sidebar = '''<pre><div style="
     left: 0px;
     position: fixed;
@@ -369,7 +386,7 @@ sidebar = '''<pre><div style="
     width: 15em;
     ">'''
 
-for i, class_dictionary in enumerate((module_info, class_info, prefab_info, script_info, asset_info)):
+for i, class_dictionary in enumerate((most_used_info, module_info, class_info, prefab_info, script_info, asset_info)):
     for name, attrs_and_functions in class_dictionary.items():
         params, attrs, funcs, example = attrs_and_functions[0], attrs_and_functions[1], attrs_and_functions[2], attrs_and_functions[3]
 
