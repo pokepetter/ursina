@@ -37,7 +37,7 @@ class Animation(Entity):
             if i < len(models):
                 model = models[i].stem
 
-            frame = Entity(parent=self, model=model, add_to_scene_entities=False)
+            frame = Entity(parent=self, model=model, enabled=False, add_to_scene_entities=False)
 
             if i < len(textures):
                 frame.texture = textures[i].stem
@@ -54,40 +54,53 @@ class Animation(Entity):
             self.scale = (frame.texture.width/100, frame.texture.height/100)
             self.aspect_ratio = self.scale_x / self.scale_y
 
-        self.stop()
-        self.sequence = Sequence(loop=loop)
-
-        for frame in self.frames:
-            self.sequence.append(Func(self.stop))
+        self.sequence = Sequence(loop=loop, auto_destroy=False)
+        self.loop = loop
+        for i, frame in enumerate(self.frames):
+            self.sequence.append(Func(setattr, self.frames[i-1], 'enabled', False))
             self.sequence.append(Func(setattr, frame, 'enabled', True))
             self.sequence.append(Wait(1/fps))
 
-        if autoplay:
-            self.play()
-        self.is_playing = autoplay
+        self.is_playing = False
+        self.autoplay = autoplay
 
         for key, value in kwargs.items():
             setattr(self, key, value)
 
+        if self.autoplay:
+            self.start()
 
-    def play(self):
+    def start(self):
         if self.is_playing:
-            self.stop()
+            self.finish()
         self.sequence.start()
         self.is_playing = True
 
+    def pause(self):
+        self.sequence.pause()
 
-    def stop(self):
-        for frame in self.frames:
-            frame.enabled = False
+    def resume(self):
+        self.sequence.resume()
+
+    def finish(self):
+        self.sequence.finish()
+        self.sequence.pause()
 
         self.is_playing = False
+
+
+    @property
+    def duration(self):
+        return self.sequence.duration
 
 
     def __setattr__(self, name, value):
         if hasattr(self, 'frames') and name in ('color', 'origin'):
             for f in self.frames:
                 setattr(f, name, value)
+
+        if name == 'loop':
+            self.sequence.loop = value
 
         try:
             super().__setattr__(name, value)
@@ -103,13 +116,15 @@ if __name__ == '__main__':
     app = Ursina()
     window.color = color.black
 
-    animation = Animation('ursina_wink', fps=2, scale=5, filtering=None)
+    animation = Animation('ursina_wink', fps=2, scale=5, filtering=None, autoplay=False)
+    # print(animation.sequence.duration)
     # animation = Animation('blob_animation', fps=12, scale=5, y=20)
     #
     # from ursina.shaders import normals_shader
     # for f in animation.frames:
     #     f.shader = normals_shader
     #     f.set_shader_input('object_matrix', animation.getNetTransform().getMat())
+
 
     EditorCamera()
     app.run()

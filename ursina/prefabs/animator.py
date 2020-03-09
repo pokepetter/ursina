@@ -30,9 +30,11 @@ class Animator():
             for key, anim in self.animations.items():
                 if anim:
                     anim.enabled = value == key
-                    if hasattr(anim, 'play') and callable(anim.play):
-                        anim.play()
-                        # print('play', anim)
+
+            anim = self.animations[value]
+            if hasattr(anim, 'start') and callable(anim.start):
+                print('start', anim)
+                anim.start()
 
         self._state = value
 
@@ -42,7 +44,7 @@ class Animator():
 if __name__ == '__main__':
     app = Ursina()
     # texture_importer.textureless=True
-    anim = Animation('ursina_wink', loop=False)
+    anim = Animation('ursina_wink', loop=True, autoplay=False)
     a = Animator(
         animations = {
             'lol' : Entity(model='cube', color=color.red),
