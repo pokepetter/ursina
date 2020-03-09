@@ -374,7 +374,7 @@ style = f'''
         max-width: 1200px;
         >
     '''
-html = '<title> ursina documentation</title>'
+html = '<title> ursina cheat sheet</title>'
 sidebar = '''<pre><div style="
     left: 0px;
     position: fixed;
@@ -443,5 +443,5 @@ for i, class_dictionary in enumerate((most_used_info, module_info, class_info, p
 sidebar += '</div>'
 html += '</div>'
 html = sidebar + style + html + '</body>'
-with open('documentation.html', 'w', encoding='utf-8') as f:
+with open('cheat_sheet.html', 'w', encoding='utf-8') as f:
     f.write(html)

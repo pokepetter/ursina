@@ -1,3 +1,4 @@
+# style a.button {background-color: #4CAF50;} a.button:hover {background-color: #777}
 # title ursina engine
 # center, bold, arial, size 5, width 900
 ursina engine
@@ -10,10 +11,10 @@ open source game engine
 --------------------------------------
 # normal
 
-[GitHub🡕, https://github.com/pokepetter/ursina] [Tutorials, tutorials.html] [Documentation, documentation.html] [Twitter🡕, https://twitter.com/ursinaengine]
+[Github🡕, https://github.com/pokepetter/ursina] [Documentation, documentation.html] [Twitter🡕, https://twitter.com/ursinaengine] [Discord🡕, https://discord.gg/ydXfhyb]
 
 
-# left, size 2, bold,
+# left, size 2, bold
 # image made_with_ursina.jpg
 # size .75, center, normal
 

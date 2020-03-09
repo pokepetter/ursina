@@ -9,6 +9,11 @@ todo
 video_temp
 ursina/unused
 samples/wip
+ursina/shaders/wip
+promo/
+samples/Models*
+*blob_animation*
+
 
 **/*~
 **/*.swp

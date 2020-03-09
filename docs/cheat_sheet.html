@@ -1,0 +1,2467 @@
+<pre><div style="
+    left: 0px;
+    position: fixed;
+    top: 0px;
+    padding-top:40px;
+    padding-left:20px;
+    bottom: 0;
+    overflow-y: scroll;
+    width: 15em;
+    "><a style="color:hsl(50.0, 89%, 28%);" href="#Entity">Entity</a>
+<a style="color:hsl(50.0, 89%, 28%);" href="#Text">Text</a>
+<a style="color:hsl(50.0, 89%, 28%);" href="#Button">Button</a>
+<a style="color:hsl(50.0, 89%, 28%);" href="#mouse">mouse</a>
+<a style="color:hsl(50.0, 89%, 28%);" href="#raycaster">raycaster</a>
+
+<a style="color:hsl(20.0, 89%, 28%);" href="#application">application</a>
+<a style="color:hsl(20.0, 89%, 28%);" href="#build">build</a>
+<a style="color:hsl(20.0, 89%, 28%);" href="#camera">camera</a>
+<a style="color:hsl(20.0, 89%, 28%);" href="#color">color</a>
+<a style="color:hsl(20.0, 89%, 28%);" href="#curve">curve</a>
+<a style="color:hsl(20.0, 89%, 28%);" href="#duplicate">duplicate</a>
+<a style="color:hsl(20.0, 89%, 28%);" href="#input_handler">input_handler</a>
+<a style="color:hsl(20.0, 89%, 28%);" href="#mesh_importer">mesh_importer</a>
+<a style="color:hsl(20.0, 89%, 28%);" href="#scene">scene</a>
+<a style="color:hsl(20.0, 89%, 28%);" href="#string_utilities">string_utilities</a>
+<a style="color:hsl(20.0, 89%, 28%);" href="#text">text</a>
+<a style="color:hsl(20.0, 89%, 28%);" href="#texture_importer">texture_importer</a>
+<a style="color:hsl(20.0, 89%, 28%);" href="#ursinamath">ursinamath</a>
+<a style="color:hsl(20.0, 89%, 28%);" href="#ursinastuff">ursinastuff</a>
+<a style="color:hsl(20.0, 89%, 28%);" href="#window">window</a>
+
+<a style="color:hsl(349.0, 89%, 28%);" href="#Audio">Audio</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#Collider">Collider</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#BoxCollider">BoxCollider</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#SphereCollider">SphereCollider</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#MeshCollider">MeshCollider</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#Color">Color</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#CubicBezier">CubicBezier</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#Hit">Hit</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#InputEvents">InputEvents</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#Ursina">Ursina</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#MeshModes">MeshModes</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#Mesh">Mesh</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#Wait">Wait</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#Func">Func</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#Sequence">Sequence</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#Texture">Texture</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#Vec3">Vec3</a>
+
+<a style="color:hsl(320.0, 89%, 28%);" href="#Animation">Animation</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#Animator">Animator</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#ButtonGroup">ButtonGroup</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#ButtonList">ButtonList</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#ColorPicker">ColorPicker</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#ColorField">ColorField</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#Cursor">Cursor</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#DebugMenu">DebugMenu</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#Draggable">Draggable</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#DropdownMenuButton">DropdownMenuButton</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#DropdownMenu">DropdownMenu</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#EditorCamera">EditorCamera</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#ExitButton">ExitButton</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#FileButton">FileButton</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#FileBrowser">FileBrowser</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#FileBrowserSave">FileBrowserSave</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#FirstPersonController">FirstPersonController</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#HealthBar">HealthBar</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#HotReloader">HotReloader</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#InputField">InputField</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#MemoryCounter">MemoryCounter</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#Panel">Panel</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#PlatformerController2d">PlatformerController2d</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#RadialMenu">RadialMenu</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#RadialMenuButton">RadialMenuButton</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#Sky">Sky</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#Slider">Slider</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#ThinSlider">ThinSlider</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#Sprite">Sprite</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#TextField">TextField</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#Tooltip">Tooltip</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#VideoRecorder">VideoRecorder</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#VideoRecorderUI">VideoRecorderUI</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#Space">Space</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#WindowPanel">WindowPanel</a>
+
+<a style="color:hsl(290.0, 89%, 28%);" href="#colorize">colorize</a>
+<a style="color:hsl(290.0, 89%, 28%);" href="#combine">combine</a>
+<a style="color:hsl(290.0, 89%, 28%);" href="#generate_normals">generate_normals</a>
+<a style="color:hsl(290.0, 89%, 28%);" href="#grid_layout">grid_layout</a>
+<a style="color:hsl(290.0, 89%, 28%);" href="#merge_vertices">merge_vertices</a>
+<a style="color:hsl(290.0, 89%, 28%);" href="#PositionLimiter">PositionLimiter</a>
+<a style="color:hsl(290.0, 89%, 28%);" href="#project_uvs">project_uvs</a>
+<a style="color:hsl(290.0, 89%, 28%);" href="#Scrollable">Scrollable</a>
+<a style="color:hsl(290.0, 89%, 28%);" href="#SmoothFollow">SmoothFollow</a>
+
+<a style="color:hsl(259.0, 89%, 28%);" href="#models">models</a>
+<a style="color:hsl(259.0, 89%, 28%);" href="#textures">textures</a>
+<a style="color:hsl(259.0, 89%, 28%);" href="#Circle">Circle</a>
+<a style="color:hsl(259.0, 89%, 28%);" href="#Cone">Cone</a>
+<a style="color:hsl(259.0, 89%, 28%);" href="#Cylinder">Cylinder</a>
+<a style="color:hsl(259.0, 89%, 28%);" href="#Grid">Grid</a>
+<a style="color:hsl(259.0, 89%, 28%);" href="#Plane">Plane</a>
+<a style="color:hsl(259.0, 89%, 28%);" href="#Prismatoid">Prismatoid</a>
+<a style="color:hsl(259.0, 89%, 28%);" href="#Quad">Quad</a>
+<a style="color:hsl(259.0, 89%, 28%);" href="#Sphere">Sphere</a>
+<a style="color:hsl(259.0, 89%, 28%);" href="#Terrain">Terrain</a>
+
+</div>
+    <style>
+        html {
+          scrollbar-face-color: hsl(0.0, 0%, 10%);
+          scrollbar-base-color: hsl(0.0, 0%, 10%);
+          scrollbar-3dlight-color: hsl(0.0, 0%, 10%)4;
+          scrollbar-highlight-color: hsl(0.0, 0%, 10%);
+          scrollbar-track-color: hsl(0.0, 0%, 99%);
+          scrollbar-arrow-color: hsl(0.0, 0%, 99%);
+          scrollbar-shadow-color: hsl(0.0, 0%, 10%);
+          scrollbar-dark-shadow-color: hsl(0.0, 0%, 10%);
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 3px;}
+        ::-webkit-scrollbar-button {  background-color: hsl(0.0, 0%, 90%); }
+        ::-webkit-scrollbar-track {  background-color: hsl(0.0, 0%, 99%);}
+        ::-webkit-scrollbar-track-piece { background-color: hsl(0.0, 0%, 99%);}
+        ::-webkit-scrollbar-thumb { height: 50px; background-color: hsl(0.0, 0%, 90%); border-radius: 3px;}
+        ::-webkit-scrollbar-corner { background-color: hsl(0.0, 0%, 99%);}
+        ::-webkit-resizer { background-color: hsl(0.0, 0%, 99%);}
+
+        a {
+          color: hsl(0.0, 0%, 50%);
+        }
+
+        g {
+            color: gray;
+        }
+
+        .example {
+            # font-color: red;
+            padding-left: 1em;
+            background-color: hsl(0.0, 0%, 90%);
+        }
+    </style>
+
+    <body style="
+        margin: auto;
+        # background-color: hsl(0, 0%, 10%);
+        # color: hsl(0, 0%, 80%);
+        background-color: hsl(0.0, 0%, 99%);
+        color: hsl(0.0, 0%, 10%);
+        font-family: monospace;
+        position: absolute;
+        top:0;
+        left: 24em;
+        font-size: 1.25em;
+        font-weight: lighter;
+        max-width: 1200px;
+        >
+    <title> ursina cheat sheet</title>
+<div id="Entity"><div id="Entity" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Entity<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Entity(add_to_scene_entities=True, **kwargs)</params>
+
+name<g> = camel_to_snake(self.type)</g> 
+enabled<g> = True     # disabled entities wil not be visible nor run code</g> 
+visible<g> = True</g> 
+ignore<g> = False     # if True, will not try to run code</g> 
+eternal<g> = False    # eternal entities does not get destroyed on scene.clear()</g> 
+ignore_paused<g> = False</g> 
+ignore_input<g> = False</g> 
+parent<g> = scene</g> 
+add_to_scene_entities<g> = add_to_scene_entities</g> 
+model<g> = None       # set model with model='model_name' (without file type extention)</g> 
+color<g> = color.white</g> 
+texture<g> = None     # set model with texture='texture_name'. requires a model to be set beforehand.</g> 
+reflection_map<g> = scene.reflection_map</g> 
+reflectivity<g> = 0</g> 
+render_queue<g> = 0</g> 
+double_sided<g> = False</g> 
+always_on_top<g> = False</g> 
+collision<g> = False  # toggle collision without changing collider.</g> 
+collider<g> = None    # set to 'box'/'sphere'/'mesh' for auto fitted collider.</g> 
+scripts<g> = list()   # add with add_script(class_instance). will assign an 'entity' variable to the script.</g> 
+animations<g> = list()</g> 
+hovered<g> = False    # will return True if mouse hovers entity.</g> 
+origin<g> = Vec3(0,0,0)</g> 
+position<g> = Vec3(0,0,0) # can also set self.x, self.y, self.z</g> 
+rotation<g> = Vec3(0,0,0) # can also set self.rotation_x, self.rotation_y, self.rotation_z</g> 
+scale<g> = Vec3(1,1,1)    # can also set self.scale_x, self.scale_y, self.scale_z</g> 
+line_definition<g> = None</g> 
+line_definition<g> = caller</g> 
+code_context<g> = caller.code_context[0]</g> 
+name<g> = self.code_context.split('</g> 
+type
+types
+origin_x
+origin_y
+origin_z
+world_position
+world_x
+world_y
+world_z
+x
+y
+z
+world_rotation
+world_rotation_x
+world_rotation_y
+world_rotation_z
+rotation_x
+rotation_y
+rotation_z
+world_scale
+world_scale_x
+world_scale_y
+world_scale_z
+scale_x
+scale_y
+scale_z
+forward
+back
+right
+left
+up
+down
+screen_position
+shader
+alpha
+model_bounds
+bounds
+children
+attributes
+
+generate_sphere_map(<g>size=512, name=f'sphere_map_{len(scene.entities)}'</g>)   
+generate_cube_map(<g>size=512, name=f'cube_map_{len(scene.entities)}'</g>)   
+reparent_to(<g>entity</g>)   
+get_position(<g>relative_to=scene</g>)   
+set_position(<g>value, relative_to=scene</g>)   
+add_script(<g>class_instance</g>)   
+combine(<g>analyze=False, auto_destroy=True</g>)   
+flip_faces()   
+look_at(<g>target, axis='forward'</g>)   
+has_ancestor(<g>possible_ancestor</g>)   
+animate(<g>name, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None</g>)   
+animate_position(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None</g>)   
+animate_rotation(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None</g>)   
+animate_scale(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None</g>)   
+animate_{e}(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None</g>)   
+shake(<g>duration=.2, magnitude=1, speed=.05, direction=(1,1)</g>)   
+animate_color(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=False, time_step=None</g>)   
+fade_out(<g>value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=False, time_step=None</g>)   
+fade_in(<g>value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=False, time_step=None</g>)   
+blink(<g>value=color.clear, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=False, time_step=None</g>)   
+
+<div class="example">app = main.Ursina()
+
+e = Entity(model='quad', color=color.orange, position=(0,0,1), scale=1.5, rotation=(0,0,45))
+
+'''example of inheriting Entity'''
+class Player(Entity):
+    def __init__(self, **kwargs):
+        super().__init__()
+        self.model='cube'
+        self.color = color.red
+        self.scale_y = 2
+
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+    def input(self, key):
+        if key == 'space':
+            self.animate_x(2, duration=1)
+
+    def update(self):
+        self.x += held_keys['d'] * time.dt * 10
+        self.x -= held_keys['a'] * time.dt * 10
+
+player = Player(x=-1)
+EditorCamera()
+
+
+def input(key):
+    if key == 'space':
+        e.animate('x', -3)
+</div>
+</pre></div>
+<div id="Text"><div id="Text" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Text<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Text(text='', start_tag=start_tag, end_tag=end_tag, add_to_scene_entities=False, **kwargs)</params>
+
+size<g> = Text.size</g> 
+parent<g> = camera.ui</g> 
+text_nodes<g> = list()</g> 
+images<g> = list()</g> 
+origin<g> = (-.5, .5)</g> 
+font<g> = Text.default_font</g> 
+resolution<g> = Text.default_resolution</g> 
+line_height<g> = 1</g> 
+use_tags<g> = True</g> 
+start_tag<g> = start_tag</g> 
+end_tag<g> = end_tag</g> 
+text_colors<g> = {'default' : color.text_color}</g> 
+text_colors[color_name]<g> = color.colors[color_name]</g> 
+tag<g> = Text.start_tag+'default'+Text.end_tag</g> 
+current_color<g> = self.text_colors['default']</g> 
+scale_override<g> = 1</g> 
+text<g> = text</g> 
+color
+width
+height
+lines
+wordwrap
+background
+
+update_text()   
+create_text_section(<g>text, tag='', x=0, y=0</g>)   
+align()   
+create_background(<g>padding=size*2, radius=size, color=ursina.color.black66</g>)   
+appear(<g>speed=.025, delay=0</g>)   
+get_width(<g>string, font=None</g>)   
+
+<div class="example">app = Ursina()
+  descr = dedent('''
+      <scale:1.5><orange>Rainstorm<default><scale:1>
+      Summon a <azure>rain storm <default>to deal 5 <azure>water
+
+      damage <default>to <hsb(0,1,.7)>everyone, <default><image:brick> <image:brick> test <default>including <orange>yourself. <default>
+      Lasts for 4 rounds.''').strip()
+
+  Text.default_resolution = 1080 * Text.size
+  test = Text(text=descr)
+
+  def input(key):
+      if key == 'a':
+          test.appear(speed=.025)
+
+  test.create_background()
+
+  print('....', Text.get_width('yolo'))
+  app.run()
+</div>
+</pre></div>
+<div id="Button"><div id="Button" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Button<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Button(text='', **kwargs)</params>
+
+parent<g> = scene.ui</g> 
+collider<g> = 'box'</g> 
+disabled<g> = False</g> 
+model<g> = Quad(aspect=self.scale[0] / self.scale[1], subdivisions=4)</g> 
+color<g> = Button.color</g> 
+text_entity<g> = None</g> 
+text<g> = text</g> 
+highlight_color<g> = self.color.tint(.2)</g> 
+pressed_color<g> = self.color.tint(-.2)</g> 
+highlight_scale<g> = 1    # multiplier</g> 
+pressed_scale<g> = .9     # multiplier</g> 
+original_scale<g> = self.scale</g> 
+text_origin
+
+input(<g>key</g>)   
+on_mouse_enter()   
+on_mouse_exit()   
+on_click()   
+fit()   
+
+<div class="example">b = Button(text='hello world!', color=color.azure, origin=(-.5,.5))
+b.on_click = application.quit
+b.tooltip = Tooltip('exit')
+</div>
+</pre></div>
+<div id="mouse"><div id="mouse" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">mouse</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">enabled<g> = False</g> 
+locked<g> = False</g> 
+position<g> = Vec3(0,0,0)</g> 
+delta<g> = Vec3(0,0,0)</g> 
+prev_x<g> = 0</g> 
+prev_y<g> = 0</g> 
+start_x<g> = 0</g> 
+start_y<g> = 0</g> 
+velocity<g> = Vec3(0,0,0)</g> 
+prev_click_time<g> = time.time()</g> 
+double_click_distance<g> = .5</g> 
+hovered_entity<g> = None</g> 
+left<g> = False</g> 
+right<g> = False</g> 
+middle<g> = False</g> 
+delta_drag<g> = Vec3(0,0,0)</g> 
+update_step<g> = 1</g> 
+raycast<g> = True</g> 
+collision<g> = None</g> 
+collisions<g> = list()</g> 
+enabled<g> = True</g> 
+x
+y
+normal
+world_normal
+point
+world_point
+
+input(<g>key</g>)   
+update()   
+find_collision()   
+unhover_everything_not_hit()   
+
+<div class="example">Button(parent=scene, text='a')
+
+def update():
+    print(mouse.position, mouse.point)
+
+Cursor()
+mouse.visible = False
+</div>
+</pre></div>
+<div id="raycaster"><div id="raycaster" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">raycaster</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+distance(<g>a, b</g>)   
+raycast(<g>origin, direction=(0,0,1), distance=math.inf, traverse_target=scene, ignore=list(), debug=False</g>)   
+boxcast(<g>origin, direction=(0,0,1), distance=math.inf, thickness=(1,1), traverse_target=scene, ignore=list(), debug=False</g>)   
+
+<div class="example">from ursina.entity import Entity
+
+d = Entity(parent=scene, position=(0,0,2), model='cube', color=color.orange, collider='box', scale=2)
+e = Entity(model='cube', color=color.lime)
+
+camera.position = (0, 15, -15)
+camera.look_at(e)
+speed = .01
+rotation_speed = .1
+intersection_marker = Entity(model='cube', scale=.2, color=color.red)
+
+def update():
+    e.position += e.forward * held_keys['w'] * speed
+    e.position += e.left * held_keys['a'] * speed
+    e.position += e.back * held_keys['s'] * speed
+    e.position += e.right * held_keys['d'] * speed
+
+    e.rotation_y -= held_keys['q'] * rotation_speed
+    e.rotation_y += held_keys['e'] * rotation_speed
+
+    ray = boxcast(e.world_position, e.forward, 3, thickness=.3, debug=False)
+    intersection_marker.world_position = ray.world_point
+    intersection_marker.visible = ray.hit
+    if ray.hit:
+        d.color = color.azure
+    else:
+        d.color = color.orange
+
+t = time.time()
+ray = boxcast(e.world_position, e.forward, 3, thickness=.3, debug=False)
+print(time.time() - t)
+raycast((0,0,-2), (0,0,1), 5, debug=False)
+
+EditorCamera()
+</div>
+</pre></div>
+<div id="application"><div id="application" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">application</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">paused<g> = False</g> 
+time_scale<g> = 1</g> 
+sequences<g> = list()</g> 
+trace_entity_definition<g> = True # enable to set entity.line_definition</g> 
+package_folder<g> = Path(__file__).parent</g> 
+models_folder<g> = asset_folder / 'models/'</g> 
+prefabs_folder<g> = asset_folder / 'prefabs/'</g> 
+scenes_folder<g> = asset_folder / 'scenes/'</g> 
+scripts_folder<g> = asset_folder / 'scripts/'</g> 
+textures_folder<g> = asset_folder / 'textures/'</g> 
+fonts_folder<g> = asset_folder / 'fonts/'</g> 
+compressed_textures_folder<g> = textures_folder / 'compressed/'</g> 
+compressed_models_folder<g> = models_folder / 'compressed/'</g> 
+
+pause()   
+resume()   
+quit()   
+
+</pre></div>
+<div id="build"><div id="build" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">build</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">python -m ursina.build</params>
+
+
+
+<div class="example">open cmd at your project folder and run 'python -m ursina.build' to package your app for windows.
+</div>
+</pre></div>
+<div id="camera"><div id="camera" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">camera</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">parent<g> = scene</g> 
+name<g> = 'camera'</g> 
+eternal<g> = True</g> 
+ui_size<g> = 40</g> 
+ui<g> = None</g> 
+fov<g> = 40</g> 
+orthographic<g> = False</g> 
+clip_plane_near
+clip_plane_far
+aspect_ratio
+shader
+
+set_up()   
+set_shader_input(<g>name, value</g>)   
+
+<div class="example">from ursina.main import Ursina
+scene.camera.orthographic = True
+e = Entity()
+e.model = 'quad'
+e.color = color.random_color()
+e.position = (-2, 0, 10)
+
+e = Entity()
+e.model = 'quad'
+e.color = color.random_color()
+e.position = (2, 0, 10)
+
+e = Entity()
+e.model = 'quad'
+e.color = color.random_color()
+e.position = (0, 0, 40)
+</div>
+</pre></div>
+<div id="color"><div id="color" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">color</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">color<g> = hsv</g> 
+white<g> =         color(0, 0, 1)</g> 
+smoke<g> =         color(0, 0, 0.96)</g> 
+light_gray<g> =    color(0, 0, 0.75)</g> 
+gray<g> =          color(0, 0, 0.5)</g> 
+dark_gray<g> =     color(0, 0, 0.25)</g> 
+black<g> =         color(0, 0, 0)</g> 
+red<g> =           color(0, 1, 1)</g> 
+yellow<g> =        color(60, 1, 1)</g> 
+lime<g> =          color(90, 1, 1)</g> 
+green<g> =         color(120, 1, 1)</g> 
+turquoise<g> =     color(150, 1, 1)</g> 
+cyan<g> =          color(180, 1, 1)</g> 
+azure<g> =         color(210, 1, 1)</g> 
+blue<g> =          color(240, 1, 1)</g> 
+violet<g> =        color(270, 1, 1)</g> 
+magenta<g> =       color(300, 1, 1)</g> 
+pink<g> =          color(330, 1, 1)</g> 
+brown<g> =         rgb(165, 42, 42)</g> 
+olive<g> =         rgb(128, 128, 0)</g> 
+peach<g> =         rgb(255, 218, 185)</g> 
+gold<g> =          rgb(255, 215, 0)</g> 
+salmon<g> =        rgb(250, 128, 114)</g> 
+clear<g> =         Color(0, 0, 0, 0)</g> 
+white10<g> =       Color(1,1,1, 0.10)</g> 
+white33<g> =       Color(1,1,1, 0.33)</g> 
+white50<g> =       Color(1,1,1, 0.50)</g> 
+white66<g> =       Color(1,1,1, 0.66)</g> 
+black10<g> =       Color(0,0,0, 0.10)</g> 
+black33<g> =       Color(0,0,0, 0.33)</g> 
+black50<g> =       Color(0,0,0, 0.50)</g> 
+black66<g> =       Color(0,0,0, 0.66)</g> 
+text<g> = smoke</g> 
+light_text<g> = smoke</g> 
+dark_text<g> = color(0, 0, .1)</g> 
+text_color<g> = light_text</g> 
+color_names<g> = ('white', 'smoke', 'light_gray', 'gray', 'dark_gray', 'black',</g> 
+colors<g> = dict()</g> 
+
+hsv(<g>h, s, v, a=1</g>)   
+rgba(<g>r, g, b, a=255</g>)   
+rgb(<g>r, g, b, a=255</g>)   
+to_hsv(<g>color</g>)   
+brightness(<g>color</g>)   
+inverse(<g>color</g>)   
+random_color()   
+tint(<g>color, amount=.2</g>)   
+
+<div class="example">print(color.brightness(color.blue))
+print(_3)
+
+p = Entity(x=-2)
+for key in color.colors:
+    print(key)
+    b = Button(parent=p, model=Quad(subdivisions=2), color=color.colors[key], text=key)
+    b.text_entity.scale *= .5
+
+grid_layout(p.children, max_x=8)
+
+for name in ('r', 'g', 'b', 'h', 's', 'v', 'brightness'):
+    print(name + ':', getattr(color.random_color(), name))
+
+e = Entity(model='cube', color=color.lime)
+print(e.color.name)
+</div>
+</pre></div>
+<div id="curve"><div id="curve" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">curve</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+linear(<g>t</g>)   
+in_sine(<g>t</g>)   
+out_sine(<g>t</g>)   
+in_out_sine(<g>t</g>)   
+in_quad(<g>t</g>)   
+out_quad(<g>t</g>)   
+in_out_quad(<g>t</g>)   
+in_cubic(<g>t</g>)   
+out_cubic(<g>t</g>)   
+in_out_cubic(<g>t</g>)   
+in_quart(<g>t</g>)   
+out_quart(<g>t</g>)   
+in_out_quart(<g>t</g>)   
+in_quint(<g>t</g>)   
+out_quint(<g>t</g>)   
+in_out_quint(<g>t</g>)   
+in_expo(<g>t</g>)   
+out_expo(<g>t</g>)   
+in_out_expo(<g>t</g>)   
+in_circ(<g>t</g>)   
+out_circ(<g>t</g>)   
+in_out_circ(<g>t</g>)   
+in_back(<g>t, magnitude=1.70158</g>)   
+out_back(<g>t, magnitude=1.70158</g>)   
+in_out_back(<g>t, magnitude=1.70158</g>)   
+in_elastic(<g>t, magnitude=.7</g>)   
+out_elastic(<g>t, magnitude=.7</g>)   
+in_out_elastic(<g>t, magnitude=0.65</g>)   
+out_bounce(<g>t</g>)   
+in_bounce(<g>t</g>)   
+in_out_bounce(<g>t</g>)   
+{e}_boomerang(<g>t</g>)   
+
+<div class="example">'''Draws a sheet with every curve and it's name'''
+
+camera.orthographic = True
+camera.fov = 16
+camera.position = (9, 6)
+window.color = color.black
+
+i = 0
+for e in dir(curve):
+    try:
+        item = getattr(curve, e)
+        print(item.__name__, ':', item(.75))
+        curve_renderer = Entity(
+            model=Mesh(vertices=[Vec3(i / 31, item(i / 31), 0) for i in range(32)], mode='line', thickness=2),
+            color=color.light_gray)
+        row = floor(i / 8)
+        curve_renderer.x = (i % 8) * 2.5
+        curve_renderer.y = row * 1.75
+        label = Text(parent=curve_renderer, text=item.__name__, scale=8, color=color.gray, y=-.1)
+        i += 1
+    except:
+        pass
+
+c = CubicBezier(0, .5, 1, .5)
+print('-----------', c.calculate(.23))
+
+window.exit_button.visible = False
+window.fps_counter.enabled = False
+'''
+These are used by Entity when animating, like this:
+
+e = Entity()
+e.animate_y(1, curve=curve.in_expo)
+
+e2 = Entity(x=1.5)
+e2.animate_y(1, curve=curve.CubicBezier(0,.7,1,.3))
+'''
+</div>
+</pre></div>
+<div id="duplicate"><div id="duplicate" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">duplicate</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+duplicate(<g>entity</g>)   
+
+<div class="example">sprite = Sprite('brick', x=-2, scale=1.5)
+
+quad = Entity(model='quad', texture='brick', x=-1)
+circle = Entity(model=Circle(6))
+rounded_quad = Entity(model=Quad(subdivisions=3, mode='line'), x=1)
+sphere = Entity(model=Sphere(mode='line'), x=2)
+cone = Entity(model=Cone(), x=3)
+cone.model.colorize()
+prismatoid = Entity(model=Prismatoid(), x=4)
+cylinder = Entity(model=Cylinder(), x=5)
+mesh = Entity(model=Mesh(vertices=((0,0,0), (0,1,0), (-1,1,0))), x=6)
+
+names = ('quad', 'circle', 'rounded_quad', 'sphere', 'cone', 'prismatoid', 'cylinder', 'mesh')
+for i, e in enumerate((quad, sprite, circle, cone, prismatoid, cylinder, mesh)):
+    print()
+    print()
+    e2 = duplicate(e)
+    e2.y += 1.5
+
+
+EditorCamera()
+</div>
+</pre></div>
+<div id="input_handler"><div id="input_handler" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">input_handler</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">held_keys<g> = defaultdict(lambda: 0)</g> 
+rebinds<g> = dict()</g> 
+
+bind(<g>original_key, alternative_key</g>)   
+unbind(<g>key</g>)   
+rebind(<g>to_key, from_key</g>)   
+input(<g>key</g>)   
+
+<div class="example">input_handler.bind('s', 'arrow down')  # 's'-key will now be registered as 'arrow down'-key
+
+def input(key):
+    print(key)
+    if key == 'left mouse down':
+        print('pressed left mouse button')
+
+    if key == InputEvent.left_mouse_down:   # same as above, but with InputEvents enum.
+        print('pressed left mouse button')
+</div>
+</pre></div>
+<div id="mesh_importer"><div id="mesh_importer" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">mesh_importer</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+load_model(<g>name, path=application.asset_folder</g>)   
+compress_models(<g>path=application.models_folder, outpath=application.compressed_models_folder, name='*'</g>)   
+obj_to_ursinamesh()   
+compress_models_fast(<g>model_name=None, write_to_disk=False</g>)   
+ursina_mesh_to_obj(<g>mesh, name='', out_path=application.models_folder, max_decimals=3</g>)   
+compress_internal()   
+
+</pre></div>
+<div id="scene"><div id="scene" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">scene</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">render<g> = None</g> 
+world<g> = None</g> 
+camera<g> = None</g> 
+ui_camera<g> = None</g> 
+canvas<g> = None</g> 
+ui<g> = None</g> 
+entities<g> = []</g> 
+hidden<g> = NodePath('hidden')</g> 
+reflection_map<g> = 'reflection_map_3'</g> 
+fog_color
+fog_density
+
+set_up()   
+clear()   
+
+<div class="example">e = Entity(model='plane', color=color.black, scale=100)
+EditorCamera()
+s = Sky()
+
+def input(key):
+    if key == 'l':
+        for e in scene.entities:
+            print(e.name)
+
+    if key == 'd':
+        scene.clear()
+
+scene.fog_density = .1          # sets exponential density
+scene.fog_density = (50, 200)   # sets linear density start and end
+</div>
+</pre></div>
+<div id="string_utilities"><div id="string_utilities" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">string_utilities</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+camel_to_snake(<g>value</g>)   
+snake_to_camel(<g>value</g>)   
+multireplace(<g>string, replacements, ignore_case=False</g>)   
+printvar(<g>var</g>)   
+
+<div class="example">print(camel_to_snake('CamelToSnake'))
+print(snake_to_camel('snake_to_camel'))
+printvar('test')
+</div>
+</pre></div>
+<div id="text"><div id="text" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">text</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+get_width(<g>string, font=None</g>)   
+
+<div class="example">app = Ursina()
+  descr = dedent('''
+      <scale:1.5><orange>Rainstorm<default><scale:1>
+      Summon a <azure>rain storm <default>to deal 5 <azure>water
+
+      damage <default>to <hsb(0,1,.7)>everyone, <default><image:brick> <image:brick> test <default>including <orange>yourself. <default>
+      Lasts for 4 rounds.''').strip()
+
+  Text.default_resolution = 1080 * Text.size
+  test = Text(text=descr)
+
+  def input(key):
+      if key == 'a':
+          test.appear(speed=.025)
+
+  test.create_background()
+
+  print('....', Text.get_width('yolo'))
+  app.run()
+</div>
+</pre></div>
+<div id="texture_importer"><div id="texture_importer" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">texture_importer</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">has_psd_tools_installed<g> = False</g> 
+file_types<g> = ('.jpg', '.png', '.gif')</g> 
+textureless<g> = False</g> 
+
+load_texture(<g>name, path=None</g>)   
+compress_textures(<g>name=''</g>)   
+
+<div class="example">Entity(model='quad', texture='white_cube')
+</div>
+</pre></div>
+<div id="ursinamath"><div id="ursinamath" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ursinamath</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+distance(<g>a, b</g>)   
+distance2d(<g>a, b</g>)   
+lerp(<g>a, b, t</g>)   
+inverselerp(<g>a, b, t</g>)   
+clamp(<g>value, floor, ceiling</g>)   
+round_to_closest(<g>value, step=0</g>)   
+count_lines(<g>file</g>)   
+chunk_list(<g>l, chunk_size</g>)   
+size_list()   
+average_position(<g>l</g>)   
+
+<div class="example">e1 = Entity(position = (0,0,0))
+e2 = Entity(position = (0,1,1))
+distance(e1, e2)
+
+between_color = lerp(color.lime, color.magenta, .5)
+print(between_color)
+print(lerp((0,0), (0,1), .5))
+print(lerp(Vec2(0,0), Vec2(0,1), .5))
+print(lerp([0,0], [0,1], .5))
+
+print(round(Vec3(.38, .1351, 353.26), 2))
+</div>
+</pre></div>
+<div id="ursinastuff"><div id="ursinastuff" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ursinastuff</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+invoke(<g>function, *args, **kwargs</g>)   
+destroy(<g>entity, delay=0</g>)   
+import_all_classes(<g>path=application.asset_folder, debug=False</g>)   
+print_on_screen(<g>text, position=window.top_left, origin=(-.5,.5), scale=1, duration=1</g>)   
+
+<div class="example">def test_func(item, x=None, y=None):
+    print(item, x, y)
+
+test_func('test')
+invoke(test_func, 'test', delay=.1)
+invoke(test_func, 'test1', 1, 2, delay=.2)
+invoke(test_func, 'test2', x=1, y=2, delay=.3)
+
+def input(key):
+    if key == 'space':
+        print_on_screen('debug message', position=(0,0), origin=(0,0), scale=2)
+</div>
+</pre></div>
+<div id="window"><div id="window" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">window</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">vsync<g> = True   # can't be set during play</g> 
+show_ursina_splash<g> = False</g> 
+title<g> = application.asset_folder.name</g> 
+screen_resolution<g> = (get_monitors()[0].width, get_monitors()[0].height)</g> 
+screen_resolution<g> = Vec2(1366, 768)</g> 
+fullscreen_size<g> = Vec2(self.screen_resolution[0]+1, ((self.screen_resolution[0]) * .5625)+1)</g> 
+windowed_size<g> = Vec2(self.fullscreen_size[0] / 1.25, self.fullscreen_size[0] / 1.25 * .5625)</g> 
+windowed_position<g> = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode</g> 
+size<g> = self.windowed_size</g> 
+borderless<g> = True</g> 
+position<g> = Vec2(0,0)</g> 
+top<g> = Vec2(0, .5)</g> 
+bottom<g> = Vec2(0, .5)</g> 
+center<g> = Vec2(0, 0)</g> 
+fullscreen<g> = False</g> 
+cursor<g> = True</g> 
+vsync<g> = True</g> 
+color<g> = color.dark_gray</g> 
+display_modes<g> = (
+        'default',
+        'wireframe',
+        'colliders',
+        'normals',
+        )</g> 
+display_mode<g> = 'default'</g> 
+left
+right
+top_left
+top_right
+bottom_left
+bottom_right
+
+late_init()   
+center_on_screen()   
+make_exit_button()   <g># called by main after setting up camera</g>
+update()   
+
+<div class="example">window.title = 'Title'
+window.borderless = False
+window.fullscreen = False
+window.exit_button.visible = False
+window.fps_counter.enabled = False
+</div>
+</pre></div>
+<div id="Audio"><div id="Audio" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Audio<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Audio(sound_file_name='', autoplay=True, **kwargs)</params>
+
+clip<g> = sound_file_name</g> 
+clip<g> = None</g> 
+volume<g> = 1</g> 
+pitch<g> = 1</g> 
+balance<g> = 0</g> 
+loop<g> = False</g> 
+loops<g> = 1</g> 
+autoplay<g> = autoplay</g> 
+length
+status
+ready
+playing
+time
+
+play(<g>start=0</g>)   
+pause()   
+resume()   
+stop(<g>destroy=True</g>)   
+fade(<g>value, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True</g>)   
+fade_in(<g>value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True,</g>)   
+fade_out(<g>value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True,</g>)   
+
+<div class="example">from ursina import Ursina, printvar
+
+base = Ursina()
+a = Audio('life_is_currency', pitch=1, loop=True, autoplay=True)
+print(a.clip)
+base.run()
+</div>
+</pre></div>
+<div id="Collider"><div id="Collider" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Collider<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Collider()</params>
+
+visible
+
+show()   
+hide()   
+remove()   
+
+<div class="example">e = Entity(model='sphere', x=2)
+e.collider = 'box'      # add BoxCollider based on entity's bounds.
+e.collider = 'sphere'   # add SphereCollider based on entity's bounds.
+e.collider = 'mesh'     # add MeshCollider based on entity's bounds.
+
+e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   # add BoxCollider at custom positions and size.
+e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      # add SphereCollider at custom positions and size.
+e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      # add MeshCollider with custom shape and center.
+
+m = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
+e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_color=color.yellow)
+
+EditorCamera()
+</div>
+</pre></div>
+<div id="BoxCollider"><div id="BoxCollider" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">BoxCollider<g>(<a style="color: gray;" href="#Collider">Collider</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">BoxCollider(entity, center=(0,0,0), size=(1,1,1))</params>
+
+shape<g> = CollisionBox(Vec3(center[0], center[2], center[1]), size[0], size[2], size[1])</g> 
+node_path<g> = entity.attachNewNode(CollisionNode('CollisionNode'))</g> 
+visible<g> = False</g> 
+
+
+<div class="example">e = Entity(model='sphere', x=2)
+e.collider = 'box'      # add BoxCollider based on entity's bounds.
+e.collider = 'sphere'   # add SphereCollider based on entity's bounds.
+e.collider = 'mesh'     # add MeshCollider based on entity's bounds.
+
+e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   # add BoxCollider at custom positions and size.
+e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      # add SphereCollider at custom positions and size.
+e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      # add MeshCollider with custom shape and center.
+
+m = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
+e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_color=color.yellow)
+
+EditorCamera()
+</div>
+</pre></div>
+<div id="SphereCollider"><div id="SphereCollider" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">SphereCollider<g>(<a style="color: gray;" href="#Collider">Collider</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">SphereCollider(entity, center=(0,0,0), radius=.5)</params>
+
+shape<g> = CollisionSphere(center[0], center[2], center[1], radius)</g> 
+node_path<g> = entity.attachNewNode(CollisionNode('CollisionNode'))</g> 
+visible<g> = False</g> 
+
+
+<div class="example">e = Entity(model='sphere', x=2)
+e.collider = 'box'      # add BoxCollider based on entity's bounds.
+e.collider = 'sphere'   # add SphereCollider based on entity's bounds.
+e.collider = 'mesh'     # add MeshCollider based on entity's bounds.
+
+e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   # add BoxCollider at custom positions and size.
+e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      # add SphereCollider at custom positions and size.
+e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      # add MeshCollider with custom shape and center.
+
+m = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
+e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_color=color.yellow)
+
+EditorCamera()
+</div>
+</pre></div>
+<div id="MeshCollider"><div id="MeshCollider" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">MeshCollider<g>(<a style="color: gray;" href="#Collider">Collider</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">MeshCollider(entity, mesh=None, center=(0,0,0))</params>
+
+node_path<g> = entity.attachNewNode(CollisionNode('CollisionNode'))</g> 
+visible<g> = False</g> 
+
+
+<div class="example">e = Entity(model='sphere', x=2)
+e.collider = 'box'      # add BoxCollider based on entity's bounds.
+e.collider = 'sphere'   # add SphereCollider based on entity's bounds.
+e.collider = 'mesh'     # add MeshCollider based on entity's bounds.
+
+e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   # add BoxCollider at custom positions and size.
+e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      # add SphereCollider at custom positions and size.
+e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      # add MeshCollider with custom shape and center.
+
+m = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
+e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_color=color.yellow)
+
+EditorCamera()
+</div>
+</pre></div>
+<div id="Color"><div id="Color" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Color<g>(Vec4)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Color(self,*p)</params>
+
+name
+r
+g
+b
+a
+hsv
+h
+s
+v
+brightness
+
+invert()   
+tint(<g>amount</g>)   
+hsv(<g>h, s, v, a=1</g>)   
+rgba(<g>r, g, b, a=255</g>)   
+rgb(<g>r, g, b, a=255</g>)   
+to_hsv(<g>color</g>)   
+brightness(<g>color</g>)   
+inverse(<g>color</g>)   
+random_color()   
+tint(<g>color, amount=.2</g>)   
+
+<div class="example">print(color.brightness(color.blue))
+print(_3)
+
+p = Entity(x=-2)
+for key in color.colors:
+    print(key)
+    b = Button(parent=p, model=Quad(subdivisions=2), color=color.colors[key], text=key)
+    b.text_entity.scale *= .5
+
+grid_layout(p.children, max_x=8)
+
+for name in ('r', 'g', 'b', 'h', 's', 'v', 'brightness'):
+    print(name + ':', getattr(color.random_color(), name))
+
+e = Entity(model='cube', color=color.lime)
+print(e.color.name)
+</div>
+</pre></div>
+<div id="CubicBezier"><div id="CubicBezier" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">CubicBezier</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">CubicBezier(a, b, c, d)</params>
+
+a<g> = a</g> 
+b<g> = b</g> 
+c<g> = c</g> 
+d<g> = d</g> 
+cx<g> = 3.0 * a</g> 
+bx<g> = 3.0 * (c - a) - self.cx</g> 
+ax<g> = 1.0 - self.cx - self.bx</g> 
+cy<g> = 3.0 * b</g> 
+by<g> = 3.0 * (d - b) - self.cy</g> 
+ay<g> = 1.0 - self.cy - self.by</g> 
+
+sample_curve_x(<g>t</g>)   
+sample_curve_y(<g>t</g>)   
+sample_curve_derivative_x(<g>t</g>)   
+calculate(<g>x, epsilon=.0001</g>)   
+solve_curve_x(<g>t, epsilon=.0001</g>)   
+
+<div class="example">'''Draws a sheet with every curve and it's name'''
+
+camera.orthographic = True
+camera.fov = 16
+camera.position = (9, 6)
+window.color = color.black
+
+i = 0
+for e in dir(curve):
+    try:
+        item = getattr(curve, e)
+        print(item.__name__, ':', item(.75))
+        curve_renderer = Entity(
+            model=Mesh(vertices=[Vec3(i / 31, item(i / 31), 0) for i in range(32)], mode='line', thickness=2),
+            color=color.light_gray)
+        row = floor(i / 8)
+        curve_renderer.x = (i % 8) * 2.5
+        curve_renderer.y = row * 1.75
+        label = Text(parent=curve_renderer, text=item.__name__, scale=8, color=color.gray, y=-.1)
+        i += 1
+    except:
+        pass
+
+c = CubicBezier(0, .5, 1, .5)
+print('-----------', c.calculate(.23))
+
+window.exit_button.visible = False
+window.fps_counter.enabled = False
+'''
+These are used by Entity when animating, like this:
+
+e = Entity()
+e.animate_y(1, curve=curve.in_expo)
+
+e2 = Entity(x=1.5)
+e2.animate_y(1, curve=curve.CubicBezier(0,.7,1,.3))
+'''
+</div>
+</pre></div>
+<div id="Hit"><div id="Hit" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Hit</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Hit(**kwargs)</params>
+
+hit<g> = None</g> 
+entity<g> = None</g> 
+point<g> = None</g> 
+world_point<g> = None</g> 
+distance<g> = math.inf</g> 
+normal<g> = None</g> 
+world_normal<g> = None</g> 
+
+
+</pre></div>
+<div id="InputEvents"><div id="InputEvents" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">InputEvents<g>(Enum)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">left_mouse_down<g> = 'left mouse down'</g> 
+left_mouse_up<g> = 'left mouse up'</g> 
+middle_mouse_down<g> = 'middle mouse down'</g> 
+middle_mouse_up<g> = 'middle mouse up'</g> 
+right_mouse_down<g> = 'right mouse down'</g> 
+right_mouse_up<g> = 'right mouse up'</g> 
+scroll_up<g> = 'scroll up'</g> 
+scroll_down<g> = 'scroll down'</g> 
+arrow_left<g> = 'left arrow'</g> 
+arrow_left_up<g> = 'left arrow up'</g> 
+arrow_up<g> = 'up arrow'</g> 
+arrow_up_up<g> = 'up arrow up'</g> 
+arrow_down<g> = 'down arrow'</g> 
+arrow_down_up<g> = 'down arrow up'</g> 
+arrow_right<g> = 'right arrow'</g> 
+arrow_right_up<g> = 'right arrow up'</g> 
+left_control<g> = 'left control'</g> 
+right_control<g> = 'right control'</g> 
+left_shift<g> = 'left shift'</g> 
+right_shift<g> = 'right shift'</g> 
+left_alt<g> = 'left alt'</g> 
+right_alt<g> = 'right alt'</g> 
+left_control_up<g> = 'left control up'</g> 
+right_control_up<g> = 'right control up'</g> 
+left_shift_up<g> = 'left shift up'</g> 
+right_shift_up<g> = 'right shift up'</g> 
+left_alt_up<g> = 'left alt up'</g> 
+right_alt_up<g> = 'right alt up'</g> 
+page_down<g> = 'page down'</g> 
+page_down_up<g> = 'page down up'</g> 
+page_up<g> = 'page up'</g> 
+page_up_up<g> = 'page up up'</g> 
+enter<g> = 'enter'</g> 
+backspace<g> = 'backspace'</g> 
+escape<g> = 'enter'</g> 
+tab<g> = 'tab'</g> 
+
+
+</pre></div>
+<div id="Ursina"><div id="Ursina" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Ursina<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Ursina()</params>
+
+mouse<g> = mouse</g> 
+
+input_up(<g>key</g>)   
+input_hold(<g>key</g>)   
+input(<g>key</g>)   
+run()   
+
+<div class="example">app = Ursina()
+app.run()
+</div>
+</pre></div>
+<div id="MeshModes"><div id="MeshModes" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">MeshModes<g>(Enum)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">triangle<g> = 'triangle'</g> 
+ngon<g> = 'ngon'</g> 
+quad<g> = 'quad'</g> 
+line<g> = 'line'</g> 
+point<g> = 'point'</g> 
+tristrip<g> = 'tristrip'</g> 
+
+
+</pre></div>
+<div id="Mesh"><div id="Mesh" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Mesh<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Mesh(vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=.025)</params>
+
+vertices<g> = vertices</g> 
+triangles<g> = triangles</g> 
+colors<g> = colors</g> 
+uvs<g> = uvs</g> 
+normals<g> = normals</g> 
+static<g> = static</g> 
+mode<g> = mode</g> 
+thickness<g> = thickness</g> 
+vertices<g> = [tuple(v) for v in self.vertices]</g> 
+
+generate()   <g># call this after setting some of the variables to update it</g>
+generate_normals(<g>smooth=True</g>)   
+colorize(<g>left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white, smooth=True, world_space=True</g>)   
+project_uvs(<g>aspect_ratio=1, direction='forward'</g>)   
+clear(<g>regenerate=True</g>)   
+save(<g>name='', path=application.compressed_models_folder, filetype='ursinamesh'</g>)   
+
+<div class="example">verts = ((0,0,0), (1,0,0), (.5, 1, 0), (-.5,1,0))
+tris = (1, 2, 0, 2, 3, 0)
+uvs = ((1.0, 0.0), (0.0, 1.0), (0.0, 0.0), (1.0, 1.0))
+norms = ((0,0,-1),) * len(verts)
+colors = (color.red, color.blue, color.lime, color.black)
+
+e = Entity(model=Mesh(vertices=verts, triangles=tris, uvs=uvs, normals=norms, colors=colors), scale=2)
+
+verts = (Vec3(0,0,0), Vec3(0,1,0), Vec3(1,1,0), Vec3(2,2,0), Vec3(0,3,0), Vec3(-2,3,0))
+tris = ((0,1), (3,4,5))
+
+lines = Entity(model=Mesh(vertices=verts, triangles=tris, mode='line', thickness=4), color=color.cyan, z=-1)
+points = Entity(model=Mesh(vertices=verts, mode='point', thickness=.05), color=color.red, z=-1.01)
+print(e.model.recipe)
+EditorCamera()
+</div>
+</pre></div>
+<div id="Wait"><div id="Wait" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Wait<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Wait(duration)</params>
+
+duration<g> = duration</g> 
+
+
+<div class="example">e = Entity(model='quad')
+s = Sequence(
+    1,
+    Func(print, 'one'),
+    Func(e.fade_out, duration=1),
+    1,
+    Func(print, 'two'),
+    Func(e.fade_in, duration=1),
+    loop=True
+    )
+
+s.append(
+    Func(print, 'appended to sequence')
+    )
+
+def input(key):
+    actions = {'s' : s.start, 'f' : s.finish, 'p' : s.pause, 'r' : s.resume}
+    if key in actions:
+        actions[key]()
+</div>
+</pre></div>
+<div id="Func"><div id="Func" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Func<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Func(func, *args, **kwargs)</params>
+
+func<g> = func</g> 
+args<g> = args</g> 
+kwargs<g> = kwargs</g> 
+delay<g> = 0</g> 
+finished<g> = False</g> 
+
+run()   
+
+<div class="example">e = Entity(model='quad')
+s = Sequence(
+    1,
+    Func(print, 'one'),
+    Func(e.fade_out, duration=1),
+    1,
+    Func(print, 'two'),
+    Func(e.fade_in, duration=1),
+    loop=True
+    )
+
+s.append(
+    Func(print, 'appended to sequence')
+    )
+
+def input(key):
+    actions = {'s' : s.start, 'f' : s.finish, 'p' : s.pause, 'r' : s.resume}
+    if key in actions:
+        actions[key]()
+</div>
+</pre></div>
+<div id="Sequence"><div id="Sequence" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Sequence<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Sequence(*args, **kwargs)</params>
+
+args<g> = list(args)</g> 
+t<g> = 0</g> 
+time_step<g> = Sequence.default_time_step</g> 
+duration<g> = 0</g> 
+funcs<g> = list()</g> 
+paused<g> = True</g> 
+loop<g> = False</g> 
+auto_destroy<g> = True</g> 
+
+generate()   
+append(<g>arg</g>)   
+start()   
+pause()   
+resume()   
+finish()   
+kill()   
+update()   
+
+<div class="example">e = Entity(model='quad')
+s = Sequence(
+    1,
+    Func(print, 'one'),
+    Func(e.fade_out, duration=1),
+    1,
+    Func(print, 'two'),
+    Func(e.fade_in, duration=1),
+    loop=True
+    )
+
+s.append(
+    Func(print, 'appended to sequence')
+    )
+
+def input(key):
+    actions = {'s' : s.start, 'f' : s.finish, 'p' : s.pause, 'r' : s.resume}
+    if key in actions:
+        actions[key]()
+</div>
+</pre></div>
+<div id="Texture"><div id="Texture" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Texture<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Texture(value)</params>
+
+path<g> = Path(value)</g> 
+path<g> = None</g> 
+filtering<g> = Texture.default_filtering</g> 
+name
+size
+width
+height
+pixels
+
+get_pixel(<g>x, y</g>)   
+get_pixels(<g>start, end</g>)   
+set_pixel(<g>x, y, color</g>)   
+apply()   
+save(<g>path</g>)   
+
+<div class="example">'''
+    The Texture class rarely used manually but usually instantiated
+    when assigning a texture to an Entity
+    texture = Texture(path / PIL.Image / panda3d.core.Texture)
+
+    A texture file can be a .png, .jpg or .psd.
+    If it's a .psd it and no compressed version exists, it will compress it automatically.
+'''
+e = Entity(model='quad', texture='brick')
+e.texture.set_pixel(0, 2, color.blue)
+e.texture.apply()
+
+for y in range(e.texture.height):
+    for x in range(e.texture.width):
+        if e.texture.get_pixel(x,y) == color.blue:
+            print('found blue pixel at:', x, y)
+</div>
+</pre></div>
+<div id="Vec3"><div id="Vec3" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Vec3<g>(PandaVec3)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Vec3(value)</params>
+
+x
+y
+z
+
+
+<div class="example">a = Vec3(0,0,0)
+b = Vec3(1.252352324,0,1)
+b += (0,1)
+print(type(b))
+print(b)
+</div>
+</pre></div>
+<div id="Animation"><div id="Animation" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Animation<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Animation(name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs)</params>
+
+frames<g> = list()</g> 
+scale<g> = (frame.texture.width/100, frame.texture.height/100)</g> 
+aspect_ratio<g> = self.scale_x / self.scale_y</g> 
+sequence<g> = Sequence(loop=loop, auto_destroy=False)</g> 
+loop<g> = loop</g> 
+is_playing<g> = False</g> 
+
+start()   
+pause()   
+resume()   
+finish()   
+
+<div class="example">window.color = color.black
+
+animation = Animation('ursina_wink', fps=2, scale=5, filtering=None, autoplay=False)
+
+
+EditorCamera()
+</div>
+</pre></div>
+<div id="Animator"><div id="Animator" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Animator<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Animator(animations=None, start_state='')</params>
+
+animations<g> = animations    # dict</g> 
+start_state<g> = start_state</g> 
+state<g> = start_state</g> 
+
+
+<div class="example">anim = Animation('ursina_wink', loop=False)
+a = Animator(
+    animations = {
+        'lol' : Entity(model='cube', color=color.red),
+        'yo' : Entity(model='cube', color=color.green, x=1),
+        'help' : anim,
+    }
+)
+a.state = 'yo'
+
+Text('press <red>1<default>, <green>2<default> or <violet>3<default> to toggle different animator states', origin=(0,-.5), y=-.4)
+
+def input(key):
+    if key == '1':
+        a.state = 'lol'
+    if key == '2':
+        a.state = 'yo'
+    if key == '3':
+        a.state = 'help'
+        print(anim.enabled)
+</div>
+</pre></div>
+<div id="ButtonGroup"><div id="ButtonGroup" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ButtonGroup<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ButtonGroup(options=None, **kwargs)</params>
+
+deselected_color<g> = Button.color</g> 
+selected_color<g> = color.orange</g> 
+max_selection<g> = 1</g> 
+buttons<g> = list()</g> 
+selected<g> = list()</g> 
+options<g> = options</g> 
+label<g> = Text(parent=self, scale=1/.04*.9, origin=(-.5, -.35))</g> 
+parent<g> = camera.ui</g> 
+scale<g> = Text.size * 2</g> 
+value
+title
+
+layout()   
+input(<g>key</g>)   
+
+<div class="example">Text.default_font = 'VeraMono.ttf'
+button_group = ButtonGroup(('man', 'woman', 'other'))
+</div>
+</pre></div>
+<div id="ButtonList"><div id="ButtonList" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ButtonList<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ButtonList(button_dict, button_height=1.5, **kwargs)</params>
+
+text_entity<g> = Text(parent=self, origin=(-.5,.5), text='empty', world_scale=20, z=-.1, y=-.25*Text.size, x=.01)</g> 
+button_height<g> = self.text_entity.height</g> 
+button_dict<g> = button_dict</g> 
+highlight<g> = Entity(parent=self, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5), z=-.01)</g> 
+
+on_click()   
+update()   
+
+<div class="example">default = Func(print, 'not yet implemented')
+
+def test(a=1, b=2):
+    print('------:', a, b)
+
+button_dict = {
+    'one' :     None,
+    'two' :     default,
+    'tree' :    Func(test, 3, 4),
+    'four' :    Func(test, b=3, a=4),
+    'five':     Sequence(1, Func(print, 'lol'), loop=True),
+}
+for i in range(6, 25):
+    button_dict[f'button {i}'] = Func(print, i)
+
+bl = ButtonList(button_dict)
+</div>
+</pre></div>
+<div id="ColorPicker"><div id="ColorPicker" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ColorPicker<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ColorPicker(**kwargs)</params>
+
+color_field<g> = None</g> 
+enabled<g> = True</g> 
+z<g> = -10</g> 
+bg<g> = Panel(parent=self, origin=(-.4,-.3), scale=(slider.scale_x*.6, 4*.125), color=color.gray)</g> 
+apply_button<g> = Button(parent=self, model=Quad(radius=.5, aspect=.25/.03/1), text='select', color=color.azure,
+        scale=(.235,.03), origin=(-.5,0), x=.02)</g> 
+cancel<g> = Button(parent=self, model=Quad(radius=.5), text='<gray>x', color=color.red,
+        scale=(.03,.03), x=slider.x, on_click=Func(setattr, self, 'enabled', False), highlight_color=color.blue)</g> 
+
+input(<g>key</g>)   
+
+<div class="example">ColorField(text='primary')
+ColorField(y=-Text.size*2.1, text='secondary_color', color=color.orange)
+</div>
+</pre></div>
+<div id="ColorField"><div id="ColorField" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ColorField<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ColorField(text='', **kwargs)</params>
+
+text<g> = text</g> 
+
+on_click()   
+
+<div class="example">ColorField(text='primary')
+ColorField(y=-Text.size*2.1, text='secondary_color', color=color.orange)
+</div>
+</pre></div>
+<div id="Cursor"><div id="Cursor" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Cursor<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Cursor(**kwargs)</params>
+
+parent<g> = camera.ui</g> 
+texture<g> = 'cursor'</g> 
+model<g> = 'quad'</g> 
+color<g> = color.light_gray</g> 
+render_queue<g> = 1</g> 
+
+update()   
+
+<div class="example">Button('button').fit()
+Panel()
+camera.orthographic = True
+camera.fov = 100
+e = Entity(model='cube')
+mouse._mouse_watcher.setGeometry(e.model.node())
+mouse.visible = False
+</div>
+</pre></div>
+<div id="DebugMenu"><div id="DebugMenu" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">DebugMenu<g>(<a style="color: gray;" href="#Draggable">Draggable</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">DebugMenu(target, **kwargs)</params>
+
+target<g> = target</g> 
+scale<g> = (.2, .025)</g> 
+text<g> = '<orange>' + target.__class__.__name__</g> 
+
+draw_functions()   
+
+<div class="example">DebugMenu(Audio('night_sky'))
+</div>
+</pre></div>
+<div id="Draggable"><div id="Draggable" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Draggable<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Draggable(**kwargs)</params>
+
+require_key<g> = None</g> 
+dragging<g> = False</g> 
+delta_drag<g> = 0</g> 
+start_pos<g> = self.world_position</g> 
+start_offset<g> = (0,0)</g> 
+step<g> = (0,0)</g> 
+lock_x<g> = False</g> 
+lock_y<g> = False</g> 
+min_x, self.min_y, self.min_z<g> = -math.inf, -math.inf, -math.inf</g> 
+max_x, self.max_y, self.max_z<g> = math.inf, math.inf, math.inf</g> 
+
+input(<g>key</g>)   
+start_dragging()   
+stop_dragging()   
+update()   
+
+<div class="example">camera.orthographic = True
+
+e = Draggable(scale=10)
+e.parent = scene
+</div>
+</pre></div>
+<div id="DropdownMenuButton"><div id="DropdownMenuButton" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">DropdownMenuButton<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">DropdownMenuButton(text='', **kwargs)</params>
+
+
+
+<div class="example">DropdownMenu('File', buttons=(
+    DropdownMenuButton('New'),
+    DropdownMenuButton('Open'),
+    DropdownMenu('Reopen Project', buttons=(
+        DropdownMenuButton('Project 1'),
+        DropdownMenuButton('Project 2'),
+        )),
+    DropdownMenuButton('Save'),
+    DropdownMenu('Options', buttons=(
+        DropdownMenuButton('Option a'),
+        DropdownMenuButton('Option b'),
+        )),
+    DropdownMenuButton('Exit'),
+    ))
+</div>
+</pre></div>
+<div id="DropdownMenu"><div id="DropdownMenu" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">DropdownMenu<g>(DropdownMenuButton)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">DropdownMenu(text='', buttons=list(), **kwargs)</params>
+
+position<g> = window.top_left</g> 
+buttons<g> = buttons</g> 
+arrow_symbol<g> = Text(world_parent=self, text='>', origin=(.5,.5), position=(.95, 0), color=color.gray)</g> 
+
+open()   
+close()   
+on_mouse_enter()   
+input(<g>key</g>)   
+update()   
+
+<div class="example">DropdownMenu('File', buttons=(
+    DropdownMenuButton('New'),
+    DropdownMenuButton('Open'),
+    DropdownMenu('Reopen Project', buttons=(
+        DropdownMenuButton('Project 1'),
+        DropdownMenuButton('Project 2'),
+        )),
+    DropdownMenuButton('Save'),
+    DropdownMenu('Options', buttons=(
+        DropdownMenuButton('Option a'),
+        DropdownMenuButton('Option b'),
+        )),
+    DropdownMenuButton('Exit'),
+    ))
+</div>
+</pre></div>
+<div id="EditorCamera"><div id="EditorCamera" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">EditorCamera<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">EditorCamera(**kwargs)</params>
+
+rotation_speed<g> = 100</g> 
+pan_speed<g> = (4, 4)</g> 
+move_speed<g> = 1</g> 
+zoom_speed<g> = .05</g> 
+rotate_around_mouse_hit<g> = True</g> 
+start_position<g> = self.position</g> 
+perspective_fov<g> = camera.fov</g> 
+orthographic_fov<g> = camera.fov</g> 
+on_destroy<g> = self.on_disable</g> 
+
+on_enable()   
+on_disable()   
+input(<g>key</g>)   
+update()   
+
+<div class="example">'''
+Simple camera for debugging.
+Hold right click and move the mouse to rotate around point.
+'''
+
+sky = Sky()
+e = Entity(model='cube', color=color.white)
+e.model.colorize()
+
+from ursina.prefabs.first_person_controller import FirstPersonController
+from copy import copy
+player = FirstPersonController()
+Entity(parent=player, model='cube', color=color.orange, scale_y=2, origin_y=0)
+ground = Entity(model='plane', scale=32, texture='white_cube', texture_scale=(32,32))
+box = Entity(model='cube', collider='box', texture='white_cube', scale=(10,2,2), position=(2,1,5), color=color.light_gray)
+ec = EditorCamera(rotation_smoothing=2, rotation_speed=200, enabled=False, rotation=(30,30,0))
+
+rotation_info = Text(position=window.top_left)
+
+def update():
+    rotation_info.text = str(int(ec.rotation_y)) + '\n' + str(int(ec.rotation_x))
+
+def input(key):
+    if key == 'tab':    # press tab to toggle edit/play mode
+        player.ignore = not player.ignore
+        ec.enabled = not ec.enabled
+</div>
+</pre></div>
+<div id="ExitButton"><div id="ExitButton" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ExitButton<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ExitButton(**kwargs)</params>
+
+
+on_click()   
+input(<g>key</g>)   
+
+<div class="example">'''
+This is the button in the upper right corner.
+You can click on it or press Shift+Q to close the program.
+To disable it, set window.exit_button.enabled to False
+'''
+</div>
+</pre></div>
+<div id="FileButton"><div id="FileButton" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FileButton<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">FileButton(load_menu, **kwargs)</params>
+
+load_menu<g> = load_menu</g> 
+selected
+
+on_click()   
+on_double_click()   
+
+<div class="example">fb = FileBrowser(file_types=('.*'), enabled=True)
+
+def on_submit(value):
+    for button in value:
+        print('---', button.path)
+
+fb.on_submit = on_submit
+</div>
+</pre></div>
+<div id="FileBrowser"><div id="FileBrowser" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FileBrowser<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">FileBrowser(**kwargs)</params>
+
+return_files<g> = True</g> 
+return_directories<g> = False</g> 
+selection_limit<g> = 1</g> 
+max_buttons<g> = 24</g> 
+title_bar<g> = Button(parent=self, scale=(.9,.025), text='Open', color=color.dark_gray, collision=False, y=-.01)</g> 
+address_bar<g> = Button(parent=self, scale=(.8,.035), text='//', text_origin=(-.5,0), y=-.05, highlight_color=color.black)</g> 
+folder_up_button<g> = Button(parent=self, scale=(.035,.035), texture='arrow_down', rotation_z=180, position=(-.42,-.05), color=color.white, highlight_color=color.azure, on_click=self.folder_up)</g> 
+button_parent<g> = Entity(parent=self)</g> 
+back_panel<g> = Entity(parent=self, model='quad', collider='box', origin_y=.5, scale=(.9,(self.max_buttons*.025)+.19), color=color._32, z=.1)</g> 
+bg<g> = Button(parent=self, z=1, scale=(999,999), color=color.black66, highlight_color=color.black66, pressed_color=color.black66)</g> 
+cancel_button<g> = Button(parent=self, scale=(.875*.24, .05), y=(-self.max_buttons*.025)-.15, origin_x=-.5, x=-.875/2, text='Cancel', on_click=self.close)</g> 
+open_button<g> = Button(parent=self, scale=(.875*.74, .05), y=(-self.max_buttons*.025)-.15, origin_x=.5, x=.875/2, text='Open', color=color.dark_gray, on_click=self.open)</g> 
+can_scroll_up_indicator<g> = Entity(parent=self, model='quad', texture='arrow_down', rotation_z=180, scale=(.05,.05), y=-.0765, z=-.1, color=color.dark_gray, enabled=False, add_to_scene_entities=False)</g> 
+can_scroll_down_indicator<g> = Entity(parent=self, model='quad', texture='arrow_down', scale=(.05,.05), y=(-self.max_buttons*.025)-.104, z=-.1, color=color.dark_gray, enabled=False, add_to_scene_entities=False)</g> 
+file_types<g> = ['.*', ]</g> 
+start_path<g> = Path('.').resolve()</g> 
+path<g> = self.start_path     # this will populate the list</g> 
+scroll<g> = 0</g> 
+selection
+
+input(<g>key</g>)   
+on_enable()   
+close()   
+folder_up()   
+open()   
+
+<div class="example">fb = FileBrowser(file_types=('.*'), enabled=True)
+
+def on_submit(value):
+    for button in value:
+        print('---', button.path)
+
+fb.on_submit = on_submit
+</div>
+</pre></div>
+<div id="FileBrowserSave"><div id="FileBrowserSave" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FileBrowserSave<g>(FileBrowser)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">FileBrowserSave(**kwargs)</params>
+
+save_button<g> = self.open_button</g> 
+file_name_field<g> = InputField(
+        parent</g> 
+file_type<g> = '' # to save as</g> 
+data<g> = ''</g> 
+
+save()   
+
+<div class="example">FileBrowserSave(file_type = '.oto')
+</div>
+</pre></div>
+<div id="FirstPersonController"><div id="FirstPersonController" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FirstPersonController<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">FirstPersonController(**kwargs)</params>
+
+speed<g> = 5</g> 
+i<g> = 0</g> 
+update_interval<g> = 30</g> 
+cursor<g> = Entity(
+        parent</g> 
+position<g> = (0, 1, 1)</g> 
+target_smoothing<g> = 100</g> 
+smoothing<g> = self.target_smoothing</g> 
+
+update()   
+
+<div class="example">Sky(color=color.gray)
+ground = Entity(model='plane', scale=(100,1,100), color=color.yellow.tint(-.2), texture='white_cube', texture_scale=(100,100), collider='box')
+e = Entity(
+    model='cube',
+    scale=(1, 5, 10),
+    x=2,
+    y=.01,
+    rotation_y = 45,
+    collider='box',
+    texture='white_cube',
+)
+e.texture_scale = (e.scale_z, e.scale_y)
+e = Entity(
+    model='cube',
+    scale=(1, 5, 10),
+    x=-2,
+    y=.01,
+    collider='box',
+    texture='white_cube',
+)
+e.texture_scale = (e.scale_z, e.scale_y)
+player = FirstPersonController(y=1)
+
+def update():
+    player.y -= 1* time.dt
+
+    ray = raycast(player.position+player.up, player.down)
+    if ray.hit:
+        player.y = max(player.y, raycast(player.position+player.up, player.down).world_point[1])
+
+mouse.visible = True
+</div>
+</pre></div>
+<div id="HealthBar"><div id="HealthBar" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">HealthBar<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">HealthBar(max_value=100, show_text=True, show_lines=False, **kwargs)</params>
+
+bar<g> = Entity(parent=self, model='quad', origin=self.origin, z=-.01, color=color.red.tint(-.2), ignore=True)</g> 
+lines<g> = Entity(parent=self.bar, origin=self.origin, y=-1, color=color.black33, ignore=True)</g> 
+roundness<g> = .25</g> 
+max_value<g> = max_value</g> 
+clamp<g> = True</g> 
+show_lines<g> = show_lines</g> 
+show_text<g> = show_text</g> 
+scale_x<g> = self.scale_x # update rounded corners</g> 
+scale_y<g> = self.scale_y # update background's rounded corners</g> 
+value<g> = self.max_value</g> 
+
+
+<div class="example">health_bar_1 = HealthBar(bar_color=color.lime.tint(-.25), roundness=.5, value=50)
+
+def input(key):
+    if key == '+' or key == '+ hold':
+        health_bar_1.value += 10
+    if key == '-' or key == '- hold':
+        health_bar_1.value -= 10
+</div>
+</pre></div>
+<div id="HotReloader"><div id="HotReloader" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">HotReloader<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">HotReloader(path=__file__, **kwargs)</params>
+
+eternal<g> = True</g> 
+ignore_paused<g> = True</g> 
+path<g> = path</g> 
+path<g> = Path(self.path)</g> 
+realtime_editing<g> = False   # toggle with f8</g> 
+hotkeys<g> = {
+        'ctrl+r' : self.reload_code,
+        'f5'     : self.reload_code,
+        'f6'     : self.reload_textures,
+        'f6'     : self.reload_models,
+        'f6'     : self.toggle_hotreloading,
+        }</g> 
+
+input(<g>key</g>)   
+update()   
+toggle_hotreloading()   
+hot_reload()   
+reload_code(<g>reset_camera=True</g>)   
+reload_textures()   
+reload_models()   
+
+<div class="example">window.set_z_order(window.Z_top)
+application.hot_reloader.path = application.asset_folder.parent.parent / 'samples' / 'platformer.py'
+
+'''
+By default you can press F5 to reload the starting script, F6 to reimport textures and F7 to reload models.
+'''
+</div>
+</pre></div>
+<div id="InputField"><div id="InputField" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">InputField<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">InputField(default_value='', label='', max_lines=1, **kwargs)</params>
+
+default_value<g> = default_value</g> 
+next_field<g> = None</g> 
+text_field<g> = TextField(world_parent=self, x=-.45, y=.3, z=-.1, max_lines=max_lines)</g> 
+active<g> = False</g> 
+label<g> = Text('Label:')</g> 
+text
+
+input(<g>key</g>)   
+
+<div class="example">input_field = InputField(default_value='ælol')
+print(input_field.default_value)
+
+def submit():
+    print(input_field.text)
+
+Button('submit', scale=.1, color=color.azure, y=-.2, on_click=submit).fit()
+</div>
+</pre></div>
+<div id="MemoryCounter"><div id="MemoryCounter" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">MemoryCounter<g>(<a style="color: gray;" href="#Text">Text</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">MemoryCounter(**kwargs)</params>
+
+parent<g> = camera.ui</g> 
+position<g> = window.bottom_right</g> 
+origin<g> = (0.5, -0.5)</g> 
+process<g> = psutil.Process(os.getpid())</g> 
+i<g> = 0</g> 
+
+update()   
+
+<div class="example">MemoryCounter()
+'''
+Displays the amount of memory used in the bottom right corner
+'''
+</div>
+</pre></div>
+<div id="Panel"><div id="Panel" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Panel<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Panel(**kwargs)</params>
+
+parent<g> = camera.ui</g> 
+model<g> = Quad()</g> 
+color<g> = Button.color</g> 
+
+
+<div class="example">p = Panel()
+</div>
+</pre></div>
+<div id="PlatformerController2d"><div id="PlatformerController2d" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">PlatformerController2d<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">PlatformerController2d(**kwargs)</params>
+
+model<g> = 'cube'</g> 
+origin_y<g> = -.5</g> 
+scale_y<g> = 2</g> 
+color<g> = color.orange</g> 
+collider<g> = 'box'</g> 
+animator<g> = Animator({'idle' : None, 'walk' : None, 'jump' : None})</g> 
+walk_speed<g> = 8</g> 
+walking<g> = False</g> 
+velocity<g> = 0</g> 
+jump_height<g> = 4</g> 
+jump_duration<g> = .5</g> 
+jumping<g> = False</g> 
+max_jumps<g> = 1</g> 
+jumps_left<g> = self.max_jumps</g> 
+gravity<g> = 1</g> 
+grounded<g> = True</g> 
+air_time<g> = 0</g> 
+y<g> = 2</g> 
+y<g> = ray.world_point[1] + .01</g> 
+
+update()   
+input(<g>key</g>)   
+jump()   
+start_fall()   
+land()   
+
+<div class="example">ground = Entity(model='cube', color=color.white33, origin_y=.5, scale=(20, 10, 1), collider='box')
+wall = Entity(model='cube', color=color.azure, origin=(-.5,.5), scale=(5,10), x=10, y=.5, collider='box')
+ceiling = Entity(model='cube', color=color.white33, origin_y=.5, scale=(10, 1, 1), y=4, collider='box')
+
+def input(key):
+    if key == 'c':
+        wall.collision = not wall.collision
+        print(wall.collision)
+
+
+player_controller = PlatformerController2d()
+</div>
+</pre></div>
+<div id="RadialMenu"><div id="RadialMenu" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">RadialMenu<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">RadialMenu(buttons=list(), **kwargs)</params>
+
+parent<g> = camera.ui</g> 
+buttons<g> = buttons</g> 
+open_at_cursor<g> = True</g> 
+open_duration<g> = .25</g> 
+bg<g> = Panel(
+        parent=self,
+        model='quad',
+        z=99,
+        scale=999,
+        collider='box',
+        color=color.color(0,0,0,.1),
+        enabled=False)</g> 
+z<g> = -99</g> 
+scale<g> = .075</g> 
+
+on_enable()   
+input(<g>key</g>)   
+
+<div class="example">rm = RadialMenu(
+    buttons = (
+        RadialMenuButton(text='1'),
+        RadialMenuButton(text='2'),
+        RadialMenuButton(text='3'),
+        RadialMenuButton(text='4'),
+        RadialMenuButton(text='5', scale=.5),
+        RadialMenuButton(text='6', color=color.red),
+        ),
+    enabled = False
+    )
+RadialMenuButton(text='6', color=color.red,x =-.5, scale=.1),
+def enable_radial_menu():
+    rm.enabled = True
+cube = Button(parent=scene, model='cube', color=color.orange, highlight_color=color.azure, on_click=enable_radial_menu)
+EditorCamera()
+</div>
+</pre></div>
+<div id="RadialMenuButton"><div id="RadialMenuButton" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">RadialMenuButton<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">RadialMenuButton(**kwargs)</params>
+
+model<g> = Circle(resolution=32, radius=.6)</g> 
+highlight_scale<g> = 1.2</g> 
+pressed_color<g> = color.azure</g> 
+
+
+<div class="example">rm = RadialMenu(
+    buttons = (
+        RadialMenuButton(text='1'),
+        RadialMenuButton(text='2'),
+        RadialMenuButton(text='3'),
+        RadialMenuButton(text='4'),
+        RadialMenuButton(text='5', scale=.5),
+        RadialMenuButton(text='6', color=color.red),
+        ),
+    enabled = False
+    )
+RadialMenuButton(text='6', color=color.red,x =-.5, scale=.1),
+def enable_radial_menu():
+    rm.enabled = True
+cube = Button(parent=scene, model='cube', color=color.orange, highlight_color=color.azure, on_click=enable_radial_menu)
+EditorCamera()
+</div>
+</pre></div>
+<div id="Sky"><div id="Sky" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Sky<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Sky(**kwargs)</params>
+
+
+update()   
+
+</pre></div>
+<div id="Slider"><div id="Slider" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Slider<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Slider(min=0, max=1, default=None, height=Text.size, text='', dynamic=False, **kwargs)</params>
+
+parent<g> = camera.ui</g> 
+vertical<g> = False</g> 
+min<g> = min</g> 
+max<g> = max</g> 
+default<g> = default</g> 
+step<g> = 0</g> 
+label<g> = Text(parent=self, origin=(0.5, 0), x=-0.025, text=text)</g> 
+bg<g> = Button(
+        parent</g> 
+knob<g> = Draggable(
+        parent</g> 
+value<g> = self.default</g> 
+dynamic<g> = dynamic</g> 
+rotation_z<g> = -90</g> 
+
+drop()   
+update()   
+slide()   
+
+<div class="example">slider = Slider(0, 255, default=10, height=Text.size*3, y=-.4, step=1   )
+slider = Slider(1, 2, default=1.2, x=-.4, y=-.47, text='contrast', dynamic=True)
+</div>
+</pre></div>
+<div id="ThinSlider"><div id="ThinSlider" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ThinSlider<g>(Slider)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ThinSlider(*args, **kwargs)</params>
+
+
+
+<div class="example">slider = Slider(0, 255, default=10, height=Text.size*3, y=-.4, step=1   )
+slider = Slider(1, 2, default=1.2, x=-.4, y=-.47, text='contrast', dynamic=True)
+</div>
+</pre></div>
+<div id="Sprite"><div id="Sprite" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Sprite<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Sprite(texture=None, **kwargs)</params>
+
+model<g> = 'quad'</g> 
+texture<g> = texture</g> 
+aspect_ratio<g> = self.texture.width / self.texture.height</g> 
+scale_x<g> = self.scale_y * self.aspect_ratio</g> 
+
+
+<div class="example">camera.orthographic = True
+camera.fov = 1
+Sprite.ppu = 16
+Texture.default_filtering = None
+s = Sprite('brick', filtering=False)
+</div>
+</pre></div>
+<div id="TextField"><div id="TextField" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">TextField<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">TextField(**kwargs)</params>
+
+font<g> = 'VeraMono.ttf'</g> 
+font_size<g> = 20</g> 
+line_height<g> = 1</g> 
+max_lines<g> = 99999</g> 
+text_entity<g> = Text(
+        parent</g> 
+line_numbers<g> = Text(
+        parent</g> 
+character_width<g> = .0111</g> 
+cursor_parent<g> = Entity(parent=self, scale=(self.character_width, -1*self.text_entity.size))</g> 
+cursor<g> = Entity(parent=self.cursor_parent, model='cube', color=color.white33, origin=(-.5, -.5), scale=(.2, 1))</g> 
+selection<g> = None</g> 
+selection_parent<g> = Entity(parent=self.cursor_parent)</g> 
+register_mouse_input<g> = True</g> 
+text<g> = ''</g> 
+replacements<g> = dict()</g> 
+on_undo<g> = list()</g> 
+on_redo<g> = list()</g> 
+shifted_keys<g> = {
+        '-' : '_',
+        '.' : ':',
+        ',' : ';',
+        '\'' : '*',
+        '<' : '>',
+        '+' : '?',
+        '0' : '=',
+        '1' : '!',
+        '2' : '"',
+        '3' : '#',
+        # '4' : '¤',
+        '5' : '%',
+        '6' : '&',
+        '7' : '/',
+        '8' : '(',
+        '9' : ')',</g> 
+alted_keys<g> = {
+        '\'' : '´',
+        '0' : '}',
+        '2' : '@',
+        '3' : '£',
+        '4' : '¤',
+        '5' : '€',
+        '7' : '{',
+        '8' : '[',
+        '9' : ']',</g> 
+shortcuts<g> = {
+        'newline':          ('enter', 'enter hold'),
+        'erase':            ('backspace', 'backspace hold'),
+        'erase_word':       ('ctrl+backspace', 'ctrl+backspace hold'),
+        'delete_line':      ('ctrl+shift+k',),
+        'undo':             ('ctrl+z', 'ctrl+z hold'),
+        'redo':             ('ctrl+y', 'ctrl+y hold', 'ctrl+shift+z', 'ctrl+shift+z hold'),
+        # 'save':             ('ctrl+s',),
+        # 'save_as':          ('ctrl+shift+s',),
+        'indent':           ('tab',),
+        'dedent':           ('shift+tab',),
+        'move_line_down':   ('ctrl+down arrow', 'ctrl+down arrow hold'),
+        'move_line_up':     ('ctrl+up arrow', 'ctrl+up arrow hold'),
+        # 'cut':              ('ctrl+x',),
+        # 'copy':             ('ctrl+c',),
+        # 'paste':            ('ctrl+v',),
+        # 'select_all':       ('ctrl+a',),
+        # 'toggle_comment':   ('ctrl+alt+c',),
+        # 'find':             ('ctrl+f',),</g> 
+
+blink_cursor()   
+add_text(<g>s, move_cursor=True</g>)   
+move_line(<g>a, b</g>)   
+erase()   
+input(<g>key</g>)   
+render()   
+get_mouse_position()   
+update()   
+select_all()   
+draw_selection()   
+
+<div class="example">window.size = window.fullscreen_size
+window.x = 200
+
+window.color = color.color(0, 0, .1)
+Button.color = color._20
+window.color = color._25
+
+Text.size = 1/window.fullscreen_size[1]*16
+Text.default_font = 'consola.ttf'
+Text.default_resolution = 16*2
+te = TextField(max_lines=300)
+te.line_numbers.enabled = True
+te.render()
+</div>
+</pre></div>
+<div id="Tooltip"><div id="Tooltip" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Tooltip<g>(<a style="color: gray;" href="#Text">Text</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Tooltip(text='', **kwargs)</params>
+
+parent<g> = camera.ui</g> 
+wordwrap<g> = 40</g> 
+origin<g> = (-.5, -.5)</g> 
+margin<g> = (2, 2)</g> 
+background_color<g> = color.inverse(color.text_color)</g> 
+enabled<g> = False</g> 
+original_scale<g> = self.scale</g> 
+
+update()   
+
+<div class="example">app = Ursina()
+
+    tooltip_test = Tooltip(
+    '<scale:1.5><pink>' + 'Rainstorm' + '<scale:1> \n \n' +
+'''Summon a <blue>rain
+storm <default>to deal 5 <blue>water
+damage <default>to <red>everyone, <default>including <orange>yourself. <default>
+Lasts for 4 rounds.'''.replace('\n', ' '))
+
+    tooltip_test.enabled = True
+    app.run()
+</div>
+</pre></div>
+<div id="VideoRecorder"><div id="VideoRecorder" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">VideoRecorder<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">VideoRecorder(duration=5, name='untitled_video', **kwargs)</params>
+
+recording<g> = False</g> 
+file_path<g> = Path(application.asset_folder) / 'video_temp'</g> 
+i<g> = 0</g> 
+duration<g> = duration</g> 
+frame_skip<g> = 2  # 30 fps</g> 
+video_name<g> = name</g> 
+
+input(<g>key</g>)   
+update()   
+renderToPNM()   
+convert_to_gif()   
+
+<div class="example">cube = primitives.RedCube()
+cube.animate_x(5, duration=5, curve=curve.linear)
+cube.animate_x(0, duration=5, curve=curve.linear, delay=5)
+Cursor()
+</div>
+</pre></div>
+<div id="VideoRecorderUI"><div id="VideoRecorderUI" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">VideoRecorderUI<g>(WindowPanel)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">VideoRecorderUI(**kwargs)</params>
+
+duration_label<g> = Text('duration:')</g> 
+duration_field<g> = InputField(default_value='5')</g> 
+fps_label<g> = Text('fps:')</g> 
+fps_field<g> = InputField(default_value='30')</g> 
+name_label<g> = Text('name:')</g> 
+name_field<g> = InputField(default_value='untitled_video')</g> 
+start_button<g> = Button(text='Start Recording [Shift+F12]', color=color.azure, on_click=self.start_recording)</g> 
+y<g> = .5</g> 
+visible<g> = False</g> 
+
+input(<g>key</g>)   
+start_recording()   
+
+<div class="example">cube = primitives.RedCube()
+cube.animate_x(5, duration=5, curve=curve.linear)
+cube.animate_x(0, duration=5, curve=curve.linear, delay=5)
+Cursor()
+</div>
+</pre></div>
+<div id="Space"><div id="Space" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Space<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Space(height=1)</params>
+
+height<g> = height</g> 
+
+
+<div class="example">WindowPanel(
+    title='Custom Window',
+    content=(
+        Text('Name:'),
+        InputField(name='name_field'),
+        Text('Age:'),
+        InputField(name='age_field'),
+        Button(text='Submit', color=color.green),
+        )
+    )
+</div>
+</pre></div>
+<div id="WindowPanel"><div id="WindowPanel" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">WindowPanel<g>(<a style="color: gray;" href="#Draggable">Draggable</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">WindowPanel(title='', content=[], **kwargs)</params>
+
+content<g> = content</g> 
+text<g> = title</g> 
+popup<g> = False</g> 
+panel<g> = Panel(parent=self, scale_y=height, model=Quad(), origin=(0, .5), z=.1, color=self.color.tint(.1))</g> 
+lock_x<g> = True</g> 
+lock_y<g> = True</g> 
+bg<g> = Button(
+            parent=self,
+            z=.1,
+            scale=(999, 999),
+            color=color.black66,
+            highlight_color=color.black66,
+            pressed_color=color.black66,
+            )</g> 
+
+close()   
+
+<div class="example">WindowPanel(
+    title='Custom Window',
+    content=(
+        Text('Name:'),
+        InputField(name='name_field'),
+        Text('Age:'),
+        InputField(name='age_field'),
+        Button(text='Submit', color=color.green),
+        )
+    )
+</div>
+</pre></div>
+<div id="colorize"><div id="colorize" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">colorize</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+get_world_normals(<g>model</g>)   
+colorize(<g>model, left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white, smooth=True, world_space=True</g>)   
+
+<div class="example">import random
+for i in range(10):
+    e = Entity(model='sphere')
+    e.position = (random.uniform(-3,3),random.uniform(-3,3),random.uniform(-3,3))
+    e.rotation = (random.uniform(0,360),random.uniform(0,360),random.uniform(0,360))
+    e.scale = random.uniform(1,3)
+    e.model.colorize(smooth=False)
+
+
+
+Sky(color=color.gray)
+EditorCamera()
+</div>
+</pre></div>
+<div id="combine"><div id="combine" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">combine</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+combine(<g>entity, analyze=False, auto_destroy=True</g>)   
+get_vertices(<g>entity, relative_to=None</g>)   
+
+<div class="example">p = Entity()
+e1 = Entity(parent=p, model='sphere', y=1.5, color=color.pink)
+e2 = Entity(parent=p, model='cube', color=color.yellow, x=1, origin_y=-.5)
+e3 = Entity(parent=e2, model='cube', color=color.yellow, y=2, scale=.5)
+p.combine()
+
+
+EditorCamera()
+</div>
+</pre></div>
+<div id="generate_normals"><div id="generate_normals" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">generate_normals</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+normalize_v3(<g>arr</g>)   
+generate_normals(<g>vertices, triangles=None, smooth=True</g>)   
+
+<div class="example">vertices=((-0.0, -0.5, 0.0), (0.10159, -0.483975, -0.073809), (-0.038803, -0.483975, -0.119426), (0.361804, -0.22361, -0.262863), (0.304773, -0.328759, -0.221428), (0.406365, -0.25115, -0.147619), (-0.0, -0.5, 0.0), (-0.038803, -0.483975, -0.119426), (-0.125573, -0.483974, 0.0), (-0.0, -0.5, 0.0), (-0.125573, -0.483974, 0.0), (-0.038803, -0.483975, 0.119426), (-0.0, -0.5, 0.0), (-0.038803, -0.483975, 0.119426), (0.10159, -0.483975, 0.073809), (0.361804, -0.22361, -0.262863), (0.406365, -0.25115, -0.147619), (0.430349, -0.125575, -0.221429), (-0.138194, -0.22361, -0.425325), (-0.01482, -0.251151, -0.432092), (-0.077608, -0.125576, -0.477711), (-0.447213, -0.223608, 0.0), (-0.415525, -0.251149, -0.119427), (-0.478313, -0.125575, -0.073809), (-0.138194, -0.22361, 0.425325), (-0.241986, -0.251151, 0.358282), (-0.218003, -0.125576, 0.432094), (0.361804, -0.22361, 0.262863), (0.26597, -0.251151, 0.340856), (0.343579, -0.125576, 0.340858), (0.361804, -0.22361, -0.262863), (0.430349, -0.125575, -0.221429), (0.343579, -0.125576, -0.340858), (-0.138194, -0.22361, -0.425325), (-0.077608, -0.125576, -0.477711), (-0.218003, -0.125576, -0.432094), (-0.447213, -0.223608, 0.0), (-0.478313, -0.125575, -0.073809), (-0.478313, -0.125575, 0.073809), (-0.138194, -0.22361, 0.425325), (-0.218003, -0.125576, 0.432094), (-0.077608, -0.125576, 0.477711), (0.361804, -0.22361, 0.262863), (0.343579, -0.125576, 0.340858), (0.430349, -0.125575, 0.221429), (0.138194, 0.22361, -0.425325), (0.241986, 0.251151, -0.358282), (0.116411, 0.32876, -0.358282), (-0.361804, 0.22361, -0.262863), (-0.26597, 0.251151, -0.340856), (-0.304773, 0.328759, -0.221428), (-0.361804, 0.22361, 0.262863), (-0.406365, 0.25115, 0.147619), (-0.304773, 0.328759, 0.221428), (0.138194, 0.22361, 0.425325), (0.01482, 0.251151, 0.432092), (0.116411, 0.32876, 0.358282), (0.447213, 0.223608, 0.0), (0.415525, 0.251149, 0.119427), (0.376721, 0.328757, 0.0), (0.125573, 0.483974, 0.0), (0.038803, 0.483975, 0.119426), (-0.0, 0.5, 0.0), (0.262865, 0.425326, 0.0), (0.1809, 0.447215, 0.131431), (0.125573, 0.483974, 0.0), (0.376721, 0.328757, 0.0), (0.319097, 0.361805, 0.131432), (0.262865, 0.425326, 0.0), (0.125573, 0.483974, 0.0), (0.1809, 0.447215, 0.131431), (0.038803, 0.483975, 0.119426), (0.1809, 0.447215, 0.131431), (0.081228, 0.425327, 0.249998), (0.038803, 0.483975, 0.119426), (0.262865, 0.425326, 0.0), (0.319097, 0.361805, 0.131432), (0.1809, 0.447215, 0.131431), (0.319097, 0.361805, 0.131432), (0.223605, 0.361806, 0.262864), (0.1809, 0.447215, 0.131431), (0.1809, 0.447215, 0.131431), (0.223605, 0.361806, 0.262864), (0.081228, 0.425327, 0.249998), (0.223605, 0.361806, 0.262864), (0.116411, 0.32876, 0.358282), (0.081228, 0.425327, 0.249998), (0.376721, 0.328757, 0.0), (0.415525, 0.251149, 0.119427), (0.319097, 0.361805, 0.131432), (0.415525, 0.251149, 0.119427), (0.344095, 0.262868, 0.249998), (0.319097, 0.361805, 0.131432), (0.319097, 0.361805, 0.131432), (0.344095, 0.262868, 0.249998), (0.223605, 0.361806, 0.262864), (0.344095, 0.262868, 0.249998), (0.241986, 0.251151, 0.358282), (0.223605, 0.361806, 0.262864), (0.223605, 0.361806, 0.262864), (0.241986, 0.251151, 0.358282), (0.116411, 0.32876, 0.358282), (0.241986, 0.251151, 0.358282), (0.138194, 0.22361, 0.425325), (0.116411, 0.32876, 0.358282), (0.038803, 0.483975, 0.119426), (-0.10159, 0.483975, 0.073809), (-0.0, 0.5, 0.0), (0.081228, 0.425327, 0.249998), (-0.069099, 0.447215, 0.21266), (0.038803, 0.483975, 0.119426), (0.116411, 0.32876, 0.358282), (-0.026395, 0.361806, 0.344092), (0.081228, 0.425327, 0.249998), (0.038803, 0.483975, 0.119426), (-0.069099, 0.447215, 0.21266), (-0.10159, 0.483975, 0.073809), (-0.069099, 0.447215, 0.21266), (-0.212661, 0.425327, 0.154506), (-0.10159, 0.483975, 0.073809), (0.081228, 0.425327, 0.249998), (-0.026395, 0.361806, 0.344092), (-0.069099, 0.447215, 0.21266), (-0.026395, 0.361806, 0.344092), (-0.180902, 0.361806, 0.293889), (-0.069099, 0.447215, 0.21266), (-0.069099, 0.447215, 0.21266), (-0.180902, 0.361806, 0.293889), (-0.212661, 0.425327, 0.154506), (-0.180902, 0.361806, 0.293889), (-0.304773, 0.328759, 0.221428), (-0.212661, 0.425327, 0.154506), (0.116411, 0.32876, 0.358282), (0.01482, 0.251151, 0.432092), (-0.026395, 0.361806, 0.344092), (0.01482, 0.251151, 0.432092), (-0.131434, 0.262869, 0.404506), (-0.026395, 0.361806, 0.344092), (-0.026395, 0.361806, 0.344092), (-0.131434, 0.262869, 0.404506), (-0.180902, 0.361806, 0.293889), (-0.131434, 0.262869, 0.404506), (-0.26597, 0.251151, 0.340856), (-0.180902, 0.361806, 0.293889), (-0.180902, 0.361806, 0.293889), (-0.26597, 0.251151, 0.340856), (-0.304773, 0.328759, 0.221428), (-0.26597, 0.251151, 0.340856), (-0.361804, 0.22361, 0.262863), (-0.304773, 0.328759, 0.221428), (-0.10159, 0.483975, 0.073809), (-0.10159, 0.483975, -0.073809), (-0.0, 0.5, 0.0), (-0.212661, 0.425327, 0.154506), (-0.223605, 0.447215, 0.0), (-0.10159, 0.483975, 0.073809), (-0.304773, 0.328759, 0.221428), (-0.335408, 0.361805, 0.081229), (-0.212661, 0.425327, 0.154506), (-0.10159, 0.483975, 0.073809), (-0.223605, 0.447215, 0.0), (-0.10159, 0.483975, -0.073809), (-0.223605, 0.447215, 0.0), (-0.212661, 0.425327, -0.154506), (-0.10159, 0.483975, -0.073809), (-0.212661, 0.425327, 0.154506), (-0.335408, 0.361805, 0.081229), (-0.223605, 0.447215, 0.0), (-0.335408, 0.361805, 0.081229), (-0.335408, 0.361805, -0.081229), (-0.223605, 0.447215, 0.0), (-0.223605, 0.447215, 0.0), (-0.335408, 0.361805, -0.081229), (-0.212661, 0.425327, -0.154506), (-0.335408, 0.361805, -0.081229), (-0.304773, 0.328759, -0.221428), (-0.212661, 0.425327, -0.154506), (-0.304773, 0.328759, 0.221428), (-0.406365, 0.25115, 0.147619), (-0.335408, 0.361805, 0.081229), (-0.406365, 0.25115, 0.147619), (-0.425324, 0.262868, 0.0), (-0.335408, 0.361805, 0.081229), (-0.335408, 0.361805, 0.081229), (-0.425324, 0.262868, 0.0), (-0.335408, 0.361805, -0.081229), (-0.425324, 0.262868, 0.0), (-0.406365, 0.25115, -0.147619), (-0.335408, 0.361805, -0.081229), (-0.335408, 0.361805, -0.081229), (-0.406365, 0.25115, -0.147619), (-0.304773, 0.328759, -0.221428), (-0.406365, 0.25115, -0.147619), (-0.361804, 0.22361, -0.262863), (-0.304773, 0.328759, -0.221428), (-0.10159, 0.483975, -0.073809), (0.038803, 0.483975, -0.119426), (-0.0, 0.5, 0.0), (-0.212661, 0.425327, -0.154506), (-0.069099, 0.447215, -0.21266), (-0.10159, 0.483975, -0.073809), (-0.304773, 0.328759, -0.221428), (-0.180902, 0.361806, -0.293889), (-0.212661, 0.425327, -0.154506), (-0.10159, 0.483975, -0.073809), (-0.069099, 0.447215, -0.21266), (0.038803, 0.483975, -0.119426), (-0.069099, 0.447215, -0.21266), (0.081228, 0.425327, -0.249998), (0.038803, 0.483975, -0.119426), (-0.212661, 0.425327, -0.154506), (-0.180902, 0.361806, -0.293889), (-0.069099, 0.447215, -0.21266), (-0.180902, 0.361806, -0.293889), (-0.026395, 0.361806, -0.344092), (-0.069099, 0.447215, -0.21266), (-0.069099, 0.447215, -0.21266), (-0.026395, 0.361806, -0.344092), (0.081228, 0.425327, -0.249998), (-0.026395, 0.361806, -0.344092), (0.116411, 0.32876, -0.358282), (0.081228, 0.425327, -0.249998), (-0.304773, 0.328759, -0.221428), (-0.26597, 0.251151, -0.340856), (-0.180902, 0.361806, -0.293889), (-0.26597, 0.251151, -0.340856), (-0.131434, 0.262869, -0.404506), (-0.180902, 0.361806, -0.293889), (-0.180902, 0.361806, -0.293889), (-0.131434, 0.262869, -0.404506), (-0.026395, 0.361806, -0.344092), (-0.131434, 0.262869, -0.404506), (0.01482, 0.251151, -0.432092), (-0.026395, 0.361806, -0.344092), (-0.026395, 0.361806, -0.344092), (0.01482, 0.251151, -0.432092), (0.116411, 0.32876, -0.358282), (0.01482, 0.251151, -0.432092), (0.138194, 0.22361, -0.425325), (0.116411, 0.32876, -0.358282), (0.038803, 0.483975, -0.119426), (0.125573, 0.483974, 0.0), (-0.0, 0.5, 0.0), (0.081228, 0.425327, -0.249998), (0.1809, 0.447215, -0.131431), (0.038803, 0.483975, -0.119426), (0.116411, 0.32876, -0.358282), (0.223605, 0.361806, -0.262864), (0.081228, 0.425327, -0.249998), (0.038803, 0.483975, -0.119426), (0.1809, 0.447215, -0.131431), (0.125573, 0.483974, 0.0), (0.1809, 0.447215, -0.131431), (0.262865, 0.425326, 0.0), (0.125573, 0.483974, 0.0), (0.081228, 0.425327, -0.249998), (0.223605, 0.361806, -0.262864), (0.1809, 0.447215, -0.131431), (0.223605, 0.361806, -0.262864), (0.319097, 0.361805, -0.131432), (0.1809, 0.447215, -0.131431), (0.1809, 0.447215, -0.131431), (0.319097, 0.361805, -0.131432), (0.262865, 0.425326, 0.0), (0.319097, 0.361805, -0.131432), (0.376721, 0.328757, 0.0), (0.262865, 0.425326, 0.0), (0.116411, 0.32876, -0.358282), (0.241986, 0.251151, -0.358282), (0.223605, 0.361806, -0.262864), (0.241986, 0.251151, -0.358282), (0.344095, 0.262868, -0.249998), (0.223605, 0.361806, -0.262864), (0.223605, 0.361806, -0.262864), (0.344095, 0.262868, -0.249998), (0.319097, 0.361805, -0.131432), (0.344095, 0.262868, -0.249998), (0.415525, 0.251149, -0.119427), (0.319097, 0.361805, -0.131432), (0.319097, 0.361805, -0.131432), (0.415525, 0.251149, -0.119427), (0.376721, 0.328757, 0.0), (0.415525, 0.251149, -0.119427), (0.447213, 0.223608, 0.0), (0.376721, 0.328757, 0.0), (0.478313, 0.125575, 0.073809), (0.415525, 0.251149, 0.119427), (0.447213, 0.223608, 0.0), (0.475529, 0.0, 0.154506), (0.430902, 0.138198, 0.212661), (0.478313, 0.125575, 0.073809), (0.430349, -0.125575, 0.221429), (0.40451, 0.0, 0.293891), (0.475529, 0.0, 0.154506), (0.478313, 0.125575, 0.073809), (0.430902, 0.138198, 0.212661), (0.415525, 0.251149, 0.119427), (0.430902, 0.138198, 0.212661), (0.344095, 0.262868, 0.249998), (0.415525, 0.251149, 0.119427), (0.475529, 0.0, 0.154506), (0.40451, 0.0, 0.293891), (0.430902, 0.138198, 0.212661), (0.40451, 0.0, 0.293891), (0.33541, 0.138199, 0.344095), (0.430902, 0.138198, 0.212661), (0.430902, 0.138198, 0.212661), (0.33541, 0.138199, 0.344095), (0.344095, 0.262868, 0.249998), (0.33541, 0.138199, 0.344095), (0.241986, 0.251151, 0.358282), (0.344095, 0.262868, 0.249998), (0.430349, -0.125575, 0.221429), (0.343579, -0.125576, 0.340858), (0.40451, 0.0, 0.293891), (0.343579, -0.125576, 0.340858), (0.293893, -0.0, 0.404508), (0.40451, 0.0, 0.293891), (0.40451, 0.0, 0.293891), (0.293893, -0.0, 0.404508), (0.33541, 0.138199, 0.344095), (0.293893, -0.0, 0.404508), (0.218003, 0.125576, 0.432094), (0.33541, 0.138199, 0.344095), (0.33541, 0.138199, 0.344095), (0.218003, 0.125576, 0.432094), (0.241986, 0.251151, 0.358282), (0.218003, 0.125576, 0.432094), (0.138194, 0.22361, 0.425325), (0.241986, 0.251151, 0.358282), (0.077608, 0.125576, 0.477711), (0.01482, 0.251151, 0.432092), (0.138194, 0.22361, 0.425325), (-0.0, 0.0, 0.5), (-0.069099, 0.138199, 0.475528), (0.077608, 0.125576, 0.477711), (-0.077608, -0.125576, 0.477711), (-0.154508, -0.0, 0.475528), (-0.0, 0.0, 0.5), (0.077608, 0.125576, 0.477711), (-0.069099, 0.138199, 0.475528), (0.01482, 0.251151, 0.432092), (-0.069099, 0.138199, 0.475528), (-0.131434, 0.262869, 0.404506), (0.01482, 0.251151, 0.432092), (-0.0, 0.0, 0.5), (-0.154508, -0.0, 0.475528), (-0.069099, 0.138199, 0.475528), (-0.154508, -0.0, 0.475528), (-0.223608, 0.138199, 0.425324), (-0.069099, 0.138199, 0.475528), (-0.069099, 0.138199, 0.475528), (-0.223608, 0.138199, 0.425324), (-0.131434, 0.262869, 0.404506), (-0.223608, 0.138199, 0.425324), (-0.26597, 0.251151, 0.340856), (-0.131434, 0.262869, 0.404506), (-0.077608, -0.125576, 0.477711), (-0.218003, -0.125576, 0.432094), (-0.154508, -0.0, 0.475528), (-0.218003, -0.125576, 0.432094), (-0.293893, -0.0, 0.404508), (-0.154508, -0.0, 0.475528), (-0.154508, -0.0, 0.475528), (-0.293893, -0.0, 0.404508), (-0.223608, 0.138199, 0.425324), (-0.293893, -0.0, 0.404508), (-0.343579, 0.125576, 0.340858), (-0.223608, 0.138199, 0.425324), (-0.223608, 0.138199, 0.425324), (-0.343579, 0.125576, 0.340858), (-0.26597, 0.251151, 0.340856), (-0.343579, 0.125576, 0.340858), (-0.361804, 0.22361, 0.262863), (-0.26597, 0.251151, 0.340856), (-0.430349, 0.125575, 0.221429), (-0.406365, 0.25115, 0.147619), (-0.361804, 0.22361, 0.262863), (-0.475529, 0.0, 0.154506), (-0.473607, 0.138198, 0.081229), (-0.430349, 0.125575, 0.221429), (-0.478313, -0.125575, 0.073809), (-0.5, 0.0, -0.0), (-0.475529, 0.0, 0.154506), (-0.430349, 0.125575, 0.221429), (-0.473607, 0.138198, 0.081229), (-0.406365, 0.25115, 0.147619), (-0.473607, 0.138198, 0.081229), (-0.425324, 0.262868, 0.0), (-0.406365, 0.25115, 0.147619), (-0.475529, 0.0, 0.154506), (-0.5, 0.0, -0.0), (-0.473607, 0.138198, 0.081229), (-0.5, 0.0, -0.0), (-0.473606, 0.138198, -0.081229), (-0.473607, 0.138198, 0.081229), (-0.473607, 0.138198, 0.081229), (-0.473606, 0.138198, -0.081229), (-0.425324, 0.262868, 0.0), (-0.473606, 0.138198, -0.081229), (-0.406365, 0.25115, -0.147619), (-0.425324, 0.262868, 0.0), (-0.478313, -0.125575, 0.073809), (-0.478313, -0.125575, -0.073809), (-0.5, 0.0, -0.0), (-0.478313, -0.125575, -0.073809), (-0.475529, -0.0, -0.154506), (-0.5, 0.0, -0.0), (-0.5, 0.0, -0.0), (-0.475529, -0.0, -0.154506), (-0.473606, 0.138198, -0.081229), (-0.475529, -0.0, -0.154506), (-0.430349, 0.125575, -0.221429), (-0.473606, 0.138198, -0.081229), (-0.473606, 0.138198, -0.081229), (-0.430349, 0.125575, -0.221429), (-0.406365, 0.25115, -0.147619), (-0.430349, 0.125575, -0.221429), (-0.361804, 0.22361, -0.262863), (-0.406365, 0.25115, -0.147619), (-0.343579, 0.125576, -0.340858), (-0.26597, 0.251151, -0.340856), (-0.361804, 0.22361, -0.262863), (-0.293893, 0.0, -0.404508), (-0.223608, 0.138198, -0.425324), (-0.343579, 0.125576, -0.340858), (-0.218003, -0.125576, -0.432094), (-0.154509, -0.0, -0.475528), (-0.293893, 0.0, -0.404508), (-0.343579, 0.125576, -0.340858), (-0.223608, 0.138198, -0.425324), (-0.26597, 0.251151, -0.340856), (-0.223608, 0.138198, -0.425324), (-0.131434, 0.262869, -0.404506), (-0.26597, 0.251151, -0.340856), (-0.293893, 0.0, -0.404508), (-0.154509, -0.0, -0.475528), (-0.223608, 0.138198, -0.425324), (-0.154509, -0.0, -0.475528), (-0.0691, 0.138198, -0.475528), (-0.223608, 0.138198, -0.425324), (-0.223608, 0.138198, -0.425324), (-0.0691, 0.138198, -0.475528), (-0.131434, 0.262869, -0.404506), (-0.0691, 0.138198, -0.475528), (0.01482, 0.251151, -0.432092), (-0.131434, 0.262869, -0.404506), (-0.218003, -0.125576, -0.432094), (-0.077608, -0.125576, -0.477711), (-0.154509, -0.0, -0.475528), (-0.077608, -0.125576, -0.477711), (-0.0, -0.0, -0.5), (-0.154509, -0.0, -0.475528), (-0.154509, -0.0, -0.475528), (-0.0, -0.0, -0.5), (-0.0691, 0.138198, -0.475528), (-0.0, -0.0, -0.5), (0.077608, 0.125576, -0.477711), (-0.0691, 0.138198, -0.475528), (-0.0691, 0.138198, -0.475528), (0.077608, 0.125576, -0.477711), (0.01482, 0.251151, -0.432092), (0.077608, 0.125576, -0.477711), (0.138194, 0.22361, -0.425325), (0.01482, 0.251151, -0.432092), (0.218003, 0.125576, -0.432094), (0.241986, 0.251151, -0.358282), (0.138194, 0.22361, -0.425325), (0.293893, 0.0, -0.404508), (0.33541, 0.138198, -0.344095), (0.218003, 0.125576, -0.432094), (0.343579, -0.125576, -0.340858), (0.404509, -1e-06, -0.293891), (0.293893, 0.0, -0.404508), (0.218003, 0.125576, -0.432094), (0.33541, 0.138198, -0.344095), (0.241986, 0.251151, -0.358282), (0.33541, 0.138198, -0.344095), (0.344095, 0.262868, -0.249998), (0.241986, 0.251151, -0.358282), (0.293893, 0.0, -0.404508), (0.404509, -1e-06, -0.293891), (0.33541, 0.138198, -0.344095), (0.404509, -1e-06, -0.293891), (0.430902, 0.138197, -0.212662), (0.33541, 0.138198, -0.344095), (0.33541, 0.138198, -0.344095), (0.430902, 0.138197, -0.212662), (0.344095, 0.262868, -0.249998), (0.430902, 0.138197, -0.212662), (0.415525, 0.251149, -0.119427), (0.344095, 0.262868, -0.249998), (0.343579, -0.125576, -0.340858), (0.430349, -0.125575, -0.221429), (0.404509, -1e-06, -0.293891), (0.430349, -0.125575, -0.221429), (0.475529, -0.0, -0.154506), (0.404509, -1e-06, -0.293891), (0.404509, -1e-06, -0.293891), (0.475529, -0.0, -0.154506), (0.430902, 0.138197, -0.212662), (0.475529, -0.0, -0.154506), (0.478313, 0.125575, -0.073809), (0.430902, 0.138197, -0.212662), (0.430902, 0.138197, -0.212662), (0.478313, 0.125575, -0.073809), (0.415525, 0.251149, -0.119427), (0.478313, 0.125575, -0.073809), (0.447213, 0.223608, 0.0), (0.415525, 0.251149, -0.119427), (0.218003, 0.125576, 0.432094), (0.077608, 0.125576, 0.477711), (0.138194, 0.22361, 0.425325), (0.293893, -0.0, 0.404508), (0.154509, -0.0, 0.475528), (0.218003, 0.125576, 0.432094), (0.343579, -0.125576, 0.340858), (0.223608, -0.138199, 0.425324), (0.293893, -0.0, 0.404508), (0.218003, 0.125576, 0.432094), (0.154509, -0.0, 0.475528), (0.077608, 0.125576, 0.477711), (0.154509, -0.0, 0.475528), (-0.0, 0.0, 0.5), (0.077608, 0.125576, 0.477711), (0.293893, -0.0, 0.404508), (0.223608, -0.138199, 0.425324), (0.154509, -0.0, 0.475528), (0.223608, -0.138199, 0.425324), (0.0691, -0.138199, 0.475527), (0.154509, -0.0, 0.475528), (0.154509, -0.0, 0.475528), (0.0691, -0.138199, 0.475527), (-0.0, 0.0, 0.5), (0.0691, -0.138199, 0.475527), (-0.077608, -0.125576, 0.477711), (-0.0, 0.0, 0.5), (0.343579, -0.125576, 0.340858), (0.26597, -0.251151, 0.340856), (0.223608, -0.138199, 0.425324), (0.26597, -0.251151, 0.340856), (0.131434, -0.262869, 0.404506), (0.223608, -0.138199, 0.425324), (0.223608, -0.138199, 0.425324), (0.131434, -0.262869, 0.404506), (0.0691, -0.138199, 0.475527), (0.131434, -0.262869, 0.404506), (-0.01482, -0.251151, 0.432092), (0.0691, -0.138199, 0.475527), (0.0691, -0.138199, 0.475527), (-0.01482, -0.251151, 0.432092), (-0.077608, -0.125576, 0.477711), (-0.01482, -0.251151, 0.432092), (-0.138194, -0.22361, 0.425325), (-0.077608, -0.125576, 0.477711), (-0.343579, 0.125576, 0.340858), (-0.430349, 0.125575, 0.221429), (-0.361804, 0.22361, 0.262863), (-0.293893, -0.0, 0.404508), (-0.404509, -0.0, 0.293892), (-0.343579, 0.125576, 0.340858), (-0.218003, -0.125576, 0.432094), (-0.335409, -0.138199, 0.344095), (-0.293893, -0.0, 0.404508), (-0.343579, 0.125576, 0.340858), (-0.404509, -0.0, 0.293892), (-0.430349, 0.125575, 0.221429), (-0.404509, -0.0, 0.293892), (-0.475529, 0.0, 0.154506), (-0.430349, 0.125575, 0.221429), (-0.293893, -0.0, 0.404508), (-0.335409, -0.138199, 0.344095), (-0.404509, -0.0, 0.293892), (-0.335409, -0.138199, 0.344095), (-0.430902, -0.138198, 0.212662), (-0.404509, -0.0, 0.293892), (-0.404509, -0.0, 0.293892), (-0.430902, -0.138198, 0.212662), (-0.475529, 0.0, 0.154506), (-0.430902, -0.138198, 0.212662), (-0.478313, -0.125575, 0.073809), (-0.475529, 0.0, 0.154506), (-0.218003, -0.125576, 0.432094), (-0.241986, -0.251151, 0.358282), (-0.335409, -0.138199, 0.344095), (-0.241986, -0.251151, 0.358282), (-0.344095, -0.262868, 0.249998), (-0.335409, -0.138199, 0.344095), (-0.335409, -0.138199, 0.344095), (-0.344095, -0.262868, 0.249998), (-0.430902, -0.138198, 0.212662), (-0.344095, -0.262868, 0.249998), (-0.415525, -0.251149, 0.119427), (-0.430902, -0.138198, 0.212662), (-0.430902, -0.138198, 0.212662), (-0.415525, -0.251149, 0.119427), (-0.478313, -0.125575, 0.073809), (-0.415525, -0.251149, 0.119427), (-0.447213, -0.223608, 0.0), (-0.478313, -0.125575, 0.073809), (-0.430349, 0.125575, -0.221429), (-0.343579, 0.125576, -0.340858), (-0.361804, 0.22361, -0.262863), (-0.475529, -0.0, -0.154506), (-0.404509, 0.0, -0.293892), (-0.430349, 0.125575, -0.221429), (-0.478313, -0.125575, -0.073809), (-0.430902, -0.138198, -0.212662), (-0.475529, -0.0, -0.154506), (-0.430349, 0.125575, -0.221429), (-0.404509, 0.0, -0.293892), (-0.343579, 0.125576, -0.340858), (-0.404509, 0.0, -0.293892), (-0.293893, 0.0, -0.404508), (-0.343579, 0.125576, -0.340858), (-0.475529, -0.0, -0.154506), (-0.430902, -0.138198, -0.212662), (-0.404509, 0.0, -0.293892), (-0.430902, -0.138198, -0.212662), (-0.33541, -0.138199, -0.344095), (-0.404509, 0.0, -0.293892), (-0.404509, 0.0, -0.293892), (-0.33541, -0.138199, -0.344095), (-0.293893, 0.0, -0.404508), (-0.33541, -0.138199, -0.344095), (-0.218003, -0.125576, -0.432094), (-0.293893, 0.0, -0.404508), (-0.478313, -0.125575, -0.073809), (-0.415525, -0.251149, -0.119427), (-0.430902, -0.138198, -0.212662), (-0.415525, -0.251149, -0.119427), (-0.344095, -0.262868, -0.249998), (-0.430902, -0.138198, -0.212662), (-0.430902, -0.138198, -0.212662), (-0.344095, -0.262868, -0.249998), (-0.33541, -0.138199, -0.344095), (-0.344095, -0.262868, -0.249998), (-0.241986, -0.251151, -0.358282), (-0.33541, -0.138199, -0.344095), (-0.33541, -0.138199, -0.344095), (-0.241986, -0.251151, -0.358282), (-0.218003, -0.125576, -0.432094), (-0.241986, -0.251151, -0.358282), (-0.138194, -0.22361, -0.425325), (-0.218003, -0.125576, -0.432094), (0.077608, 0.125576, -0.477711), (0.218003, 0.125576, -0.432094), (0.138194, 0.22361, -0.425325), (-0.0, -0.0, -0.5), (0.154509, 0.0, -0.475528), (0.077608, 0.125576, -0.477711), (-0.077608, -0.125576, -0.477711), (0.0691, -0.138199, -0.475527), (-0.0, -0.0, -0.5), (0.077608, 0.125576, -0.477711), (0.154509, 0.0, -0.475528), (0.218003, 0.125576, -0.432094), (0.154509, 0.0, -0.475528), (0.293893, 0.0, -0.404508), (0.218003, 0.125576, -0.432094), (-0.0, -0.0, -0.5), (0.0691, -0.138199, -0.475527), (0.154509, 0.0, -0.475528), (0.0691, -0.138199, -0.475527), (0.223608, -0.138199, -0.425324), (0.154509, 0.0, -0.475528), (0.154509, 0.0, -0.475528), (0.223608, -0.138199, -0.425324), (0.293893, 0.0, -0.404508), (0.223608, -0.138199, -0.425324), (0.343579, -0.125576, -0.340858), (0.293893, 0.0, -0.404508), (-0.077608, -0.125576, -0.477711), (-0.01482, -0.251151, -0.432092), (0.0691, -0.138199, -0.475527), (-0.01482, -0.251151, -0.432092), (0.131434, -0.262869, -0.404506), (0.0691, -0.138199, -0.475527), (0.0691, -0.138199, -0.475527), (0.131434, -0.262869, -0.404506), (0.223608, -0.138199, -0.425324), (0.131434, -0.262869, -0.404506), (0.26597, -0.251151, -0.340856), (0.223608, -0.138199, -0.425324), (0.223608, -0.138199, -0.425324), (0.26597, -0.251151, -0.340856), (0.343579, -0.125576, -0.340858), (0.26597, -0.251151, -0.340856), (0.361804, -0.22361, -0.262863), (0.343579, -0.125576, -0.340858), (0.478313, 0.125575, -0.073809), (0.478313, 0.125575, 0.073809), (0.447213, 0.223608, 0.0), (0.475529, -0.0, -0.154506), (0.5, 0.0, 0.0), (0.478313, 0.125575, -0.073809), (0.430349, -0.125575, -0.221429), (0.473607, -0.138198, -0.081229), (0.475529, -0.0, -0.154506), (0.478313, 0.125575, -0.073809), (0.5, 0.0, 0.0), (0.478313, 0.125575, 0.073809), (0.5, 0.0, 0.0), (0.475529, 0.0, 0.154506), (0.478313, 0.125575, 0.073809), (0.475529, -0.0, -0.154506), (0.473607, -0.138198, -0.081229), (0.5, 0.0, 0.0), (0.473607, -0.138198, -0.081229), (0.473607, -0.138198, 0.081229), (0.5, 0.0, 0.0), (0.5, 0.0, 0.0), (0.473607, -0.138198, 0.081229), (0.475529, 0.0, 0.154506), (0.473607, -0.138198, 0.081229), (0.430349, -0.125575, 0.221429), (0.475529, 0.0, 0.154506), (0.430349, -0.125575, -0.221429), (0.406365, -0.25115, -0.147619), (0.473607, -0.138198, -0.081229), (0.406365, -0.25115, -0.147619), (0.425324, -0.262868, 0.0), (0.473607, -0.138198, -0.081229), (0.473607, -0.138198, -0.081229), (0.425324, -0.262868, 0.0), (0.473607, -0.138198, 0.081229), (0.425324, -0.262868, 0.0), (0.406365, -0.25115, 0.147619), (0.473607, -0.138198, 0.081229), (0.473607, -0.138198, 0.081229), (0.406365, -0.25115, 0.147619), (0.430349, -0.125575, 0.221429), (0.406365, -0.25115, 0.147619), (0.361804, -0.22361, 0.262863), (0.430349, -0.125575, 0.221429), (0.304773, -0.328759, 0.221428), (0.26597, -0.251151, 0.340856), (0.361804, -0.22361, 0.262863), (0.212661, -0.425327, 0.154506), (0.180902, -0.361806, 0.29389), (0.304773, -0.328759, 0.221428), (0.10159, -0.483975, 0.073809), (0.069098, -0.447215, 0.212661), (0.212661, -0.425327, 0.154506), (0.304773, -0.328759, 0.221428), (0.180902, -0.361806, 0.29389), (0.26597, -0.251151, 0.340856), (0.180902, -0.361806, 0.29389), (0.131434, -0.262869, 0.404506), (0.26597, -0.251151, 0.340856), (0.212661, -0.425327, 0.154506), (0.069098, -0.447215, 0.212661), (0.180902, -0.361806, 0.29389), (0.069098, -0.447215, 0.212661), (0.026395, -0.361805, 0.344093), (0.180902, -0.361806, 0.29389), (0.180902, -0.361806, 0.29389), (0.026395, -0.361805, 0.344093), (0.131434, -0.262869, 0.404506), (0.026395, -0.361805, 0.344093), (-0.01482, -0.251151, 0.432092), (0.131434, -0.262869, 0.404506), (0.10159, -0.483975, 0.073809), (-0.038803, -0.483975, 0.119426), (0.069098, -0.447215, 0.212661), (-0.038803, -0.483975, 0.119426), (-0.081228, -0.425327, 0.249998), (0.069098, -0.447215, 0.212661), (0.069098, -0.447215, 0.212661), (-0.081228, -0.425327, 0.249998), (0.026395, -0.361805, 0.344093), (-0.081228, -0.425327, 0.249998), (-0.116411, -0.32876, 0.358282), (0.026395, -0.361805, 0.344093), (0.026395, -0.361805, 0.344093), (-0.116411, -0.32876, 0.358282), (-0.01482, -0.251151, 0.432092), (-0.116411, -0.32876, 0.358282), (-0.138194, -0.22361, 0.425325), (-0.01482, -0.251151, 0.432092), (-0.116411, -0.32876, 0.358282), (-0.241986, -0.251151, 0.358282), (-0.138194, -0.22361, 0.425325), (-0.081228, -0.425327, 0.249998), (-0.223605, -0.361806, 0.262864), (-0.116411, -0.32876, 0.358282), (-0.038803, -0.483975, 0.119426), (-0.180901, -0.447214, 0.131431), (-0.081228, -0.425327, 0.249998), (-0.116411, -0.32876, 0.358282), (-0.223605, -0.361806, 0.262864), (-0.241986, -0.251151, 0.358282), (-0.223605, -0.361806, 0.262864), (-0.344095, -0.262868, 0.249998), (-0.241986, -0.251151, 0.358282), (-0.081228, -0.425327, 0.249998), (-0.180901, -0.447214, 0.131431), (-0.223605, -0.361806, 0.262864), (-0.180901, -0.447214, 0.131431), (-0.319097, -0.361805, 0.131431), (-0.223605, -0.361806, 0.262864), (-0.223605, -0.361806, 0.262864), (-0.319097, -0.361805, 0.131431), (-0.344095, -0.262868, 0.249998), (-0.319097, -0.361805, 0.131431), (-0.415525, -0.251149, 0.119427), (-0.344095, -0.262868, 0.249998), (-0.038803, -0.483975, 0.119426), (-0.125573, -0.483974, 0.0), (-0.180901, -0.447214, 0.131431), (-0.125573, -0.483974, 0.0), (-0.262865, -0.425326, 0.0), (-0.180901, -0.447214, 0.131431), (-0.180901, -0.447214, 0.131431), (-0.262865, -0.425326, 0.0), (-0.319097, -0.361805, 0.131431), (-0.262865, -0.425326, 0.0), (-0.376721, -0.328757, 0.0), (-0.319097, -0.361805, 0.131431), (-0.319097, -0.361805, 0.131431), (-0.376721, -0.328757, 0.0), (-0.415525, -0.251149, 0.119427), (-0.376721, -0.328757, 0.0), (-0.447213, -0.223608, 0.0), (-0.415525, -0.251149, 0.119427), (-0.376721, -0.328757, 0.0), (-0.415525, -0.251149, -0.119427), (-0.447213, -0.223608, 0.0), (-0.262865, -0.425326, 0.0), (-0.319097, -0.361805, -0.131432), (-0.376721, -0.328757, 0.0), (-0.125573, -0.483974, 0.0), (-0.180901, -0.447214, -0.131432), (-0.262865, -0.425326, 0.0), (-0.376721, -0.328757, 0.0), (-0.319097, -0.361805, -0.131432), (-0.415525, -0.251149, -0.119427), (-0.319097, -0.361805, -0.131432), (-0.344095, -0.262868, -0.249998), (-0.415525, -0.251149, -0.119427), (-0.262865, -0.425326, 0.0), (-0.180901, -0.447214, -0.131432), (-0.319097, -0.361805, -0.131432), (-0.180901, -0.447214, -0.131432), (-0.223605, -0.361805, -0.262864), (-0.319097, -0.361805, -0.131432), (-0.319097, -0.361805, -0.131432), (-0.223605, -0.361805, -0.262864), (-0.344095, -0.262868, -0.249998), (-0.223605, -0.361805, -0.262864), (-0.241986, -0.251151, -0.358282), (-0.344095, -0.262868, -0.249998), (-0.125573, -0.483974, 0.0), (-0.038803, -0.483975, -0.119426), (-0.180901, -0.447214, -0.131432), (-0.038803, -0.483975, -0.119426), (-0.081228, -0.425327, -0.249998), (-0.180901, -0.447214, -0.131432), (-0.180901, -0.447214, -0.131432), (-0.081228, -0.425327, -0.249998), (-0.223605, -0.361805, -0.262864), (-0.081228, -0.425327, -0.249998), (-0.116411, -0.32876, -0.358282), (-0.223605, -0.361805, -0.262864), (-0.223605, -0.361805, -0.262864), (-0.116411, -0.32876, -0.358282), (-0.241986, -0.251151, -0.358282), (-0.116411, -0.32876, -0.358282), (-0.138194, -0.22361, -0.425325), (-0.241986, -0.251151, -0.358282), (0.406365, -0.25115, 0.147619), (0.304773, -0.328759, 0.221428), (0.361804, -0.22361, 0.262863), (0.425324, -0.262868, 0.0), (0.335409, -0.361805, 0.081228), (0.406365, -0.25115, 0.147619), (0.406365, -0.25115, -0.147619), (0.335409, -0.361805, -0.081229), (0.425324, -0.262868, 0.0), (0.406365, -0.25115, 0.147619), (0.335409, -0.361805, 0.081228), (0.304773, -0.328759, 0.221428), (0.335409, -0.361805, 0.081228), (0.212661, -0.425327, 0.154506), (0.304773, -0.328759, 0.221428), (0.425324, -0.262868, 0.0), (0.335409, -0.361805, -0.081229), (0.335409, -0.361805, 0.081228), (0.335409, -0.361805, -0.081229), (0.223605, -0.447214, -0.0), (0.335409, -0.361805, 0.081228), (0.335409, -0.361805, 0.081228), (0.223605, -0.447214, -0.0), (0.212661, -0.425327, 0.154506), (0.223605, -0.447214, -0.0), (0.10159, -0.483975, 0.073809), (0.212661, -0.425327, 0.154506), (0.406365, -0.25115, -0.147619), (0.304773, -0.328759, -0.221428), (0.335409, -0.361805, -0.081229), (0.304773, -0.328759, -0.221428), (0.212661, -0.425327, -0.154506), (0.335409, -0.361805, -0.081229), (0.335409, -0.361805, -0.081229), (0.212661, -0.425327, -0.154506), (0.223605, -0.447214, -0.0), (0.212661, -0.425327, -0.154506), (0.10159, -0.483975, -0.073809), (0.223605, -0.447214, -0.0), (0.223605, -0.447214, -0.0), (0.10159, -0.483975, -0.073809), (0.10159, -0.483975, 0.073809), (0.10159, -0.483975, -0.073809), (-0.0, -0.5, 0.0), (0.10159, -0.483975, 0.073809), (-0.116411, -0.32876, -0.358282), (-0.01482, -0.251151, -0.432092), (-0.138194, -0.22361, -0.425325), (-0.081228, -0.425327, -0.249998), (0.026395, -0.361806, -0.344093), (-0.116411, -0.32876, -0.358282), (-0.038803, -0.483975, -0.119426), (0.069099, -0.447215, -0.21266), (-0.081228, -0.425327, -0.249998), (-0.116411, -0.32876, -0.358282), (0.026395, -0.361806, -0.344093), (-0.01482, -0.251151, -0.432092), (0.026395, -0.361806, -0.344093), (0.131434, -0.262869, -0.404506), (-0.01482, -0.251151, -0.432092), (-0.081228, -0.425327, -0.249998), (0.069099, -0.447215, -0.21266), (0.026395, -0.361806, -0.344093), (0.069099, -0.447215, -0.21266), (0.180902, -0.361805, -0.29389), (0.026395, -0.361806, -0.344093), (0.026395, -0.361806, -0.344093), (0.180902, -0.361805, -0.29389), (0.131434, -0.262869, -0.404506), (0.180902, -0.361805, -0.29389), (0.26597, -0.251151, -0.340856), (0.131434, -0.262869, -0.404506), (-0.038803, -0.483975, -0.119426), (0.10159, -0.483975, -0.073809), (0.069099, -0.447215, -0.21266), (0.10159, -0.483975, -0.073809), (0.212661, -0.425327, -0.154506), (0.069099, -0.447215, -0.21266), (0.069099, -0.447215, -0.21266), (0.212661, -0.425327, -0.154506), (0.180902, -0.361805, -0.29389), (0.212661, -0.425327, -0.154506), (0.304773, -0.328759, -0.221428), (0.180902, -0.361805, -0.29389), (0.180902, -0.361805, -0.29389), (0.304773, -0.328759, -0.221428), (0.26597, -0.251151, -0.340856), (0.304773, -0.328759, -0.221428), (0.361804, -0.22361, -0.262863), (0.26597, -0.251151, -0.340856))
+norms = generate_normals(vertices)
+</div>
+</pre></div>
+<div id="grid_layout"><div id="grid_layout" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">grid_layout</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+grid_layout(<g>l, max_x=8, max_y=8, spacing=(0,0,0), origin=(-.5,.5,0), offset=(0,0,0)</g>)   
+
+<div class="example">center = Entity(model='quad', scale=.1, color=color.red)
+p = Entity()
+for i in range(4*5):
+    b = Button(parent=p, model='quad', scale=.5, scale_x=1, text=str(i), color=color.tint(color.random_color(),-.6))
+    b.text_entity.world_scale = 1
+t = time.time()
+grid_layout(p.children, max_x=7, max_y=10, origin=(0, .5))
+center = Entity(parent=camera.ui, model=Circle(), scale=.005, color=color.lime)
+EditorCamera()
+print(time.time() - t)
+</div>
+</pre></div>
+<div id="merge_vertices"><div id="merge_vertices" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">merge_vertices</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+distance(<g>a, b</g>)   
+merge_overlapping_vertices(<g>vertices, triangles=None, max_distance=.1</g>)   
+
+<div class="example">verts = ((0,0,0), (1,0,0), (1,1,0), (0,0,0), (1,1,0), (0,1,0))
+tris = (0,1,2,3,4,5)
+
+new_verts, new_tris = merge_overlapping_vertices(verts, tris)
+print('verts:', (verts), (new_verts))
+print('tris:', (tris), (new_tris))
+
+
+e = Entity(model=Mesh(new_verts, new_tris, mode='triangle'))
+EditorCamera()
+</div>
+</pre></div>
+<div id="PositionLimiter"><div id="PositionLimiter" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">PositionLimiter<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">PositionLimiter(min_x=-math.inf, max_x=math.inf, min_y=-math.inf, max_y=math.inf, min_z=-math.inf, max_z=math.inf)</params>
+
+min_x<g> = min_x</g> 
+max_x<g> = max_x</g> 
+min_y<g> = min_y</g> 
+max_y<g> = max_y</g> 
+min_z<g> = min_z</g> 
+max_z<g> = max_z</g> 
+
+update()   
+
+</pre></div>
+<div id="project_uvs"><div id="project_uvs" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">project_uvs</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+project_uvs(<g>model, aspect_ratio=1, direction='forward', regenerate=False</g>)   
+
+<div class="example">e = Entity(model='sphere', texture='ursina_logo')
+project_uvs(e.model)
+EditorCamera()
+</div>
+</pre></div>
+<div id="Scrollable"><div id="Scrollable" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Scrollable<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Scrollable(**kwargs)</params>
+
+max<g> = math.inf</g> 
+min<g> = -math.inf</g> 
+scroll_speed<g> = .1</g> 
+direction<g> = (0,1,0)</g> 
+
+input(<g>key</g>)   
+
+<div class="example">p = Panel(scale=(.4, .8), collider='box')
+p.add_script(Scrollable())
+</div>
+</pre></div>
+<div id="SmoothFollow"><div id="SmoothFollow" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">SmoothFollow<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">SmoothFollow(target=None, offset=(0,0,0), speed=8, rotation_speed=0, rotation_offset=(0,0,0))</params>
+
+target<g> = target</g> 
+offset<g> = offset</g> 
+speed<g> = speed</g> 
+rotation_speed<g> = rotation_speed</g> 
+rotation_offset<g> = rotation_offset</g> 
+
+update()   
+
+<div class="example">player = Entity(model='cube', color=color.orange)
+
+def update():
+    player.x += held_keys['d'] * .1
+    player.x -= held_keys['a'] * .1
+
+Entity(model='cube').add_script(SmoothFollow(target=player, offset=(0,2,0)))
+</div>
+</pre></div>
+<div id="models"><div id="models" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">models</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">'cube'
+'cube_uv_top'
+'icosphere'
+'plane'
+'quad'
+'sky_dome'
+'sphere'
+
+
+<div class="example">e = Entity(model='quad')
+</div>
+</pre></div>
+<div id="textures"><div id="textures" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">textures</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">'arrow_down'
+'arrow_right'
+'brick'
+'circle'
+'cursor'
+'default_sky'
+'earth_map'
+'file_icon'
+'folder'
+'heightmap_1'
+'reflection_map_3'
+'shore'
+'ursina_logo'
+'ursina_wink_0000'
+'ursina_wink_0001'
+'white_cube'
+
+
+<div class="example">e = Entity(model='cube', texture='brick')
+</div>
+</pre></div>
+<div id="Circle"><div id="Circle" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Circle<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Circle(resolution=16, radius=.5, rotate=True, mode='ngon', **kwargs)</params>
+
+
+
+<div class="example">e = Entity(model=Circle(8, mode='line', thickness=10), color=color.color(60,1,1,.3), x=6)
+print(e.model.recipe)
+origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
+ed = EditorCamera(rotation_speed = 200, panning_speed=200)
+</div>
+</pre></div>
+<div id="Cone"><div id="Cone" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Cone<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Cone(resolution=4, radius=.5, height=1, direction=(0,1,0), add_bottom=True, mode='triangle', **kwargs)</params>
+
+
+
+<div class="example">Entity(model=Cone(8, direction=(0,0,1)), color=color.color(60,1,1,.3))
+origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
+ed = EditorCamera(rotation_speed = 200, panning_speed=200)
+</div>
+</pre></div>
+<div id="Cylinder"><div id="Cylinder" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Cylinder<g>(<a style="color: gray;" href="#Prismatoid">Prismatoid</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Cylinder(resolution=8, radius=.5, start=0, height=1, direction=(0,1,0), mode='triangle', **kwargs)</params>
+
+
+
+<div class="example">Entity(model=Cylinder(6, start=-.5), color=color.color(60,1,1,.3))
+origin = Entity(model='quad', color=color.orange, scale=(5, .05))
+ed = EditorCamera(rotation_speed = 200, panning_speed=200)
+</div>
+</pre></div>
+<div id="Grid"><div id="Grid" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Grid<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Grid(width, height, mode='line', thickness=1, **kwargs)</params>
+
+width<g> = width</g> 
+height<g> = height</g> 
+
+
+<div class="example">Entity(model=Grid(2, 6))
+</div>
+</pre></div>
+<div id="Plane"><div id="Plane" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Plane<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Plane(subdivisions=(1,1), mode='triangle', **kwargs)</params>
+
+vertices, self.triangles<g> = list(), list()</g> 
+uvs<g> = list()</g> 
+
+
+<div class="example">front =  Entity(model=Plane(subdivisions=(3,6)), texture='brick', rotation_x=-90)
+
+_ed = EditorCamera()
+Entity(model='cube', color=color.green, scale=.05)
+</div>
+</pre></div>
+<div id="Prismatoid"><div id="Prismatoid" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Prismatoid<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Prismatoid(base_shape=Quad, origin=(0,0), path=((0,0,0),(0,1,0)), thicknesses=((1,1),), look_at=True, mode='triangle', **kwargs)</params>
+
+base_shape<g> = base_shape</g> 
+
+
+<div class="example">path = (Vec3(0,0,0), Vec3(0,1,0), Vec3(0,3,0), Vec3(0,4,0), Vec3(2,5,0))
+thicknesses = ((1,1), (.5,.5), (.75,.75), (.5,.5), (1,1))
+e = Entity(model=Prismatoid(path=path, thicknesses=thicknesses))
+e.model.colorize()
+
+EditorCamera()
+origin = Entity(model='cube', color=color.magenta)
+origin.scale *= .25
+</div>
+</pre></div>
+<div id="Quad"><div id="Quad" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Quad<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Quad(radius=.1, segments=3, aspect=1, scale=(1,1), mode='ngon', **kwargs)</params>
+
+vertices<g> = [Vec3(0,0,0), Vec3(1,0,0), Vec3(1,1,0), Vec3(0,1,0)]</g> 
+radius<g> = radius</g> 
+mode<g> = mode</g> 
+vertices<g> = new_verts</g> 
+uvs<g> = list()</g> 
+vertices<g> = [(v[0]-offset[0], v[1]-offset[1], v[2]-offset[2]) for v in self.vertices]</g> 
+
+
+<div class="example">Entity(model=Quad(scale=(3,1), thickness=3, segments=3, mode='line'), color = color.color(0,1,1,.7))
+Entity(scale=(3,1), model=Quad(aspect=3), color = color.color(60,1,1,.3))
+origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
+camera.z = -5
+</div>
+</pre></div>
+<div id="Sphere"><div id="Sphere" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Sphere<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Sphere(radius=.5, subdivisions=0, mode='tristrip', **kwargs)</params>
+
+
+sub_divide(<g>v_0, v_1, v_2, sub_divisions, vertices, faces</g>)   
+
+<div class="example">Entity(model=Sphere(subdivisions=5), color=color.color(60, 1, 1, .5), x=0)
+Entity(model=Sphere(radius=0.15, subdivisions=6), color=color.color(1, 60, 1, .5), x=4)
+origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
+ed = EditorCamera(rotation_speed=200, panning_speed=200)
+</div>
+</pre></div>
+<div id="Terrain"><div id="Terrain" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Terrain<g>(Plane)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Terrain(heightmap, skip=1, store_height_values=False, **kwargs)</params>
+
+heightmap<g> = load_texture(heightmap)</g> 
+skip<g> = skip</g> 
+width, self.depth<g> = self.heightmap.width//skip, self.heightmap.height//skip</g> 
+heightmap<g> = Texture(img)</g> 
+height_values<g> = [[0 for z in range(self.depth)] for x in range(self.width)]</g> 
+height_values[x][z]<g> = y</g> 
+vertices[i]<g> = Vec3(x/self.width -.5, y, z/self.depth -.5)</g> 
+
+
+<div class="example">e = Entity(model=Terrain('heightmap_1', skip=8, store_height_values=True), scale=(20,5,20))
+EditorCamera()
+Sky()
+</div>
+</pre></div></div></body>

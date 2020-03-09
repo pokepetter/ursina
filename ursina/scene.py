@@ -89,6 +89,10 @@ if __name__ == '__main__':
     s = Sky()
 
     def input(key):
+        if key == 'l':
+            for e in scene.entities:
+                print(e.name)
+
         if key == 'd':
             scene.clear()
 

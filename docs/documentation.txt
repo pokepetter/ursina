@@ -1,14 +1,17 @@
-# title ursina engine
+# style a.button {background-color: #4CAF50;} a.button:hover {background-color: #777}
+# title ursina engine documentation
 # center, bold, arial, size 5
 <a href="index.html" style="text-decoration: none; color:inherit">ursina engine
 ʕ •ᴥ•ʔゝ□</a>
-# normal, size 3
+# normal, size 3, left, width 650
 
+[API Reference, cheat_sheet.html]
 
 # size 2
 Tutorials
 # size 1
 
+# [How to Install, installing.html]
 [Introduction Tutorial, introduction_tutorial.html]
 [Inventory Tutorial, inventory_tutorial.html]
 
