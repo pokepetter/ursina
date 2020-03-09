@@ -17,16 +17,16 @@ void vshader(float4 vtx_position : POSITION,
              uniform float4x4 inv_projection,
 
              // uniform float rot_y
-             uniform float4x4 object_matrix
+             uniform float4x4 transform_matrix
          )
 {
     l_position = mul(mat_modelproj, vtx_position);
     // l_norm0 = float4(vtx_normal[0], vtx_normal[1], vtx_normal[2], 1);
 
-    float4 invcamx = object_matrix[0];
-    float4 invcamy = object_matrix[1];
-    float4 invcamz = object_matrix[2];
-    float4 invcamw = object_matrix[3];
+    float4 invcamx = transform_matrix[0];
+    float4 invcamy = transform_matrix[1];
+    float4 invcamz = transform_matrix[2];
+    float4 invcamw = transform_matrix[3];
 
     float3x3 invcam = float3x3(
                             invcamx[0], invcamx[1], invcamx[2],
@@ -68,14 +68,14 @@ if __name__ == '__main__':
     window.color=color.black
 
     # e = Entity(model='sphere', shader=normals_shader)
-    # e.setShaderInput('object_matrix', e.getNetTransform().getMat())
+    # e.setShaderInput('transform_matrix', e.getNetTransform().getMat())
     shader = normals_shader
 
     a = WhiteCube(shader=shader)
-    a.setShaderInput('object_matrix', a.getNetTransform().getMat())
+    a.setShaderInput('transform_matrix', a.getNetTransform().getMat())
 
     b = AzureSphere(shader=shader, rotation_y=180, x=3)
-    b.set_shader_input('object_matrix', b.getNetTransform().getMat())
+    b.set_shader_input('transform_matrix', b.getNetTransform().getMat())
     # AzureSphere(shader=a.shader, y=2)
     GrayPlane(scale=10, y=-2, texture='shore')
 
@@ -84,7 +84,12 @@ if __name__ == '__main__':
 
     def update():
         b.rotation_y += 1
-        b.set_shader_input('object_matrix', b.getNetTransform().getMat())
+        b.set_shader_input('transform_matrix', b.getNetTransform().getMat())
+        b.set_shader_input('test', 1)
     # EditorCamera()
 
     app.run()
+
+
+    def shader_update(self):
+        self.set_shader_input('transform_matrix', self.getNetTransform().getMat(), continuous=True)

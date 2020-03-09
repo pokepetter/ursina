@@ -161,7 +161,7 @@ class Window(WindowProperties):
             from ursina.shaders import normals_shader
             for e in [e for e in scene.entities if e.model and e.alpha]:
                 e.shader = normals_shader
-                e.set_shader_input('object_matrix', e.getNetTransform().getMat())
+                e.set_shader_input('transform_matrix', e.getNetTransform().getMat())
 
 
 
