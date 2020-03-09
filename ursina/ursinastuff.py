@@ -126,16 +126,9 @@ def import_all_classes(path=application.asset_folder, debug=False):
 
 
 from ursina.text import Text
-def print_on_screen(text):
-    text_entity = Text(
-        # parent = camera.ui,
-        text = str(text),
-        position = window.top_left,
-        origin = (-.5, .5),
-        # scale = (.1, .1)
-        )
-    destroy(text_entity, 1)
-
+def print_on_screen(text, position=window.top_left, origin=(-.5,.5), scale=1, duration=1):
+    text_entity = Text(text=text, position=position, origin=origin, scale=scale)
+    destroy(text_entity, delay=duration)
 
 if __name__ == '__main__':
 
@@ -148,5 +141,10 @@ if __name__ == '__main__':
     invoke(test_func, 'test', delay=.1)
     invoke(test_func, 'test1', 1, 2, delay=.2)
     invoke(test_func, 'test2', x=1, y=2, delay=.3)
+
+    def input(key):
+        if key == 'space':
+            print_on_screen('debug message', position=(0,0), origin=(0,0), scale=2)
+
 
     app.run()
