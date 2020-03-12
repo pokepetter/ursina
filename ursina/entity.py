@@ -1,7 +1,6 @@
 import sys
 import inspect
 import importlib
-# import random
 import glob
 from pathlib import Path
 from panda3d.core import NodePath
@@ -191,7 +190,7 @@ class Entity(NodePath):
 
 
             if self.model:
-                self.setColorScaleOff() # prevent inheriting color from parent
+                self.model.setColorScaleOff() # prevent inheriting color from parent
                 self.model.setColorScale(value)
                 object.__setattr__(self, name, value)
 
@@ -903,19 +902,19 @@ class Entity(NodePath):
 
 
     def shake(self, duration=.2, magnitude=1, speed=.05, direction=(1,1)):
+        import random
         s = Sequence()
-        self.original_position = self.position
+        original_position = self.position
         for i in range(int(duration / speed)):
-            s.append(self.posInterval(speed, Vec3(
-                self.x + (random.uniform(-.1, .1) * magnitude * direction[0]),
-                self.z,
-                self.y + (random.uniform(-.1, .1) * magnitude * direction[1]))
-            ))
-            s.append(self.posInterval(speed, Vec3(
-                self.original_position[0],
-                self.original_position[2],
-                self.original_position[1])
-            ))
+            s.append(Func(self.set_position,
+                Vec3(
+                    original_position[0] + (random.uniform(-.1, .1) * magnitude * direction[0]),
+                    original_position[1] + (random.uniform(-.1, .1) * magnitude * direction[1]),
+                    original_position[2],
+                )))
+            s.append(Wait(speed))
+            s.append(Func(self.set_position, original_position))
+
         s.start()
         return s
 
@@ -948,33 +947,33 @@ if __name__ == '__main__':
 
     e = Entity(model='quad', color=color.orange, position=(0,0,1), scale=1.5, rotation=(0,0,45))
 
-    '''example of inheriting Entity'''
-    class Player(Entity):
-        def __init__(self, **kwargs):
-            super().__init__()
-            self.model='cube'
-            self.color = color.red
-            self.scale_y = 2
-
-            for key, value in kwargs.items():
-                setattr(self, key, value)
-
-        # input and update functions gets automatically called by the engine
-        def input(self, key):
-            if key == 'space':
-                # self.color = self.color.inverse()
-                self.animate_x(2, duration=1)
-
-        def update(self):
-            self.x += held_keys['d'] * time.dt * 10
-            self.x -= held_keys['a'] * time.dt * 10
-
-    player = Player(x=-1)
-    EditorCamera()
+    # '''example of inheriting Entity'''
+    # class Player(Entity):
+    #     def __init__(self, **kwargs):
+    #         super().__init__()
+    #         self.model='cube'
+    #         self.color = color.red
+    #         self.scale_y = 2
+    #
+    #         for key, value in kwargs.items():
+    #             setattr(self, key, value)
+    #
+    #     # input and update functions gets automatically called by the engine
+    #     def input(self, key):
+    #         if key == 'space':
+    #             # self.color = self.color.inverse()
+    #             self.animate_x(2, duration=1)
+    #
+    #     def update(self):
+    #         self.x += held_keys['d'] * time.dt * 10
+    #         self.x -= held_keys['a'] * time.dt * 10
+    #
+    # player = Player(x=-1)
+    # EditorCamera()
 
 
     def input(key):
         if key == 'space':
-            e.animate('x', -3)
+            e.shake()
 
     app.run()
