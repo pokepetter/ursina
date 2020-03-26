@@ -1,0 +1,57 @@
+
+<!--generated with sswg-->
+<style>
+    html {max-width: 100%; margin: auto; color: #333333;}
+    a.button {padding: 15px 32px; background-color: #555; border-radius: 2em; border-width: 0px; text-decoration: none; color: white; font-size: 25.0px; line-height: 2.5em;}
+    a.button:hover {background-color: #777}
+    mark {background: #ccff99;}
+    img {max-width: 100%;}
+
+</style>
+<html>
+<left>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> ursina engine documentation</title>
+<br>
+
+<div style="text-align: center;font-weight: bold;font-family: arial;font-size: 100.0px;">
+<a href="index.html" style="text-decoration: none; color:inherit">ursina engine<br>
+ʕ •ᴥ•ʔゝ□</a><br>
+<div style="font-weight: normal;font-size: 60.0px;text-align: left;max-width: 650px; margin: auto;">
+<br>
+<div style="font-size: 40.0px;">
+Entity Coordinate System<br>
+<div style="font-size: 20.0px;">
+<br>
+<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 0em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;"><br>            y (up)<br>            |<br>            |<br>(forward) z |<br>          \ |<br>           \|<br>            *---------- x (right)<br><br></div><br>
+<br>
+<br>
+<br>
+<div style="font-size: 40.0px;">
+UI Coordinate System<br>
+<div style="font-size: 20.0px;">
+<br>
+<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 0em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;"><br>_______________________(.5, .5)____(window.top_right)<br>|       <font color="green">'                  '</font>       |<br>|       <font color="green">'                  '</font>       |<br>|       <font color="green">'                  '</font>       |<br>|       <font color="green">'                  '</font>       |<br>|       <font color="green">'      (0, 0)      '</font>       |(.5*window.aspect_ratio, 0)<br>|       <font color="green">'                  '</font>       |<br>|       <font color="green">'                  '</font>       |<br>|       <font color="green">'                  '</font>       |<br>|_______<font color="green">'__________________'</font>_______|<br>    (-.5, -.5)<br><br></div><br>
+<br>
+<br>
+<div style="font-size: 40.0px;">
+Rotation<br>
+<div style="font-size: 20.0px;">
+<br>
+Positive value is clock-wise around axis.<br>
+Imagine looking from a positive point on the axis and turing the entity left.<br>
+<br>
+<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 0em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;"><br>           _______<br>          /<br>          \-><br>    __<br>   /  \     y<br>  |   v     |<br>  |      z  |                __<br>          \ |               /  \<br>           \|               v   |<br>            *---------- x       |<br>                                |<br></div><br>
+<br>
+<br>
+<br>
+<div style="font-size: 40.0px;">
+Origin<br>
+<div style="font-size: 20.0px;">
+<br>
+Setting the origin will move the origin point of the model.<br>
+This can especially useful when working with ui.<br>
+<br>
+<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 0em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">            (-.5,.5)<br>+--------+      *--------+<br>|        |      |        |<br>|  (0,0) |      |        |<br>|        |      |        |<br>+--------+      +--------+<br><br>  (0,.5)<br>+----*---+      +--------+<br>|        |      |        |<br>|        |      |        * (.5,0)<br>|        |      |        |<br>+--------+      +--------+<br><br></div><br>
+
+</html>

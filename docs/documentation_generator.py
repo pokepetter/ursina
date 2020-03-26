@@ -68,7 +68,7 @@ def get_class_attributes(str):
     # print('init_section:', start, end, init_section)
 
     for i, line in enumerate(init_section):
-        if line.strip().startswith('self.') and ' = ' in line:
+        if line.strip().startswith('self.') and ' = ' in line and line.startswith(' '*8) and not line.startswith(' '*9):
             stripped_line = line.split('self.', 1)[1]
             if '.' in stripped_line.split(' ')[0] or stripped_line.startswith('_'):
                 continue

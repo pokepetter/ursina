@@ -181,13 +181,10 @@ scripts<g> = list()   # add with add_script(class_instance). will assign an 'ent
 animations<g> = list()</g> 
 hovered<g> = False    # will return True if mouse hovers entity.</g> 
 origin<g> = Vec3(0,0,0)</g> 
-position<g> = Vec3(0,0,0) # can also set self.x, self.y, self.z</g> 
+position<g> = Vec3(0,0,0) # right, up, forward. can also set self.x, self.y, self.z</g> 
 rotation<g> = Vec3(0,0,0) # can also set self.rotation_x, self.rotation_y, self.rotation_z</g> 
 scale<g> = Vec3(1,1,1)    # can also set self.scale_x, self.scale_y, self.scale_z</g> 
-line_definition<g> = None</g> 
-line_definition<g> = caller</g> 
-code_context<g> = caller.code_context[0]</g> 
-name<g> = self.code_context.split('</g> 
+line_definition<g> = None # returns a Traceback(filename, lineno, function, code_context, index).</g> 
 type
 types
 origin_x
@@ -253,32 +250,11 @@ blink(<g>value=color.clear, duration=.1, delay=0, curve=curve.in_expo, resolutio
 
 e = Entity(model='quad', color=color.orange, position=(0,0,1), scale=1.5, rotation=(0,0,45))
 
-'''example of inheriting Entity'''
-class Player(Entity):
-    def __init__(self, **kwargs):
-        super().__init__()
-        self.model='cube'
-        self.color = color.red
-        self.scale_y = 2
-
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-
-    def input(self, key):
-        if key == 'space':
-            self.animate_x(2, duration=1)
-
-    def update(self):
-        self.x += held_keys['d'] * time.dt * 10
-        self.x -= held_keys['a'] * time.dt * 10
-
-player = Player(x=-1)
-EditorCamera()
 
 
 def input(key):
     if key == 'space':
-        e.animate('x', -3)
+        e.shake()
 </div>
 </pre></div>
 <div id="Text"><div id="Text" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Text<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Text(text='', start_tag=start_tag, end_tag=end_tag, add_to_scene_entities=False, **kwargs)</params>
@@ -295,11 +271,10 @@ use_tags<g> = True</g>
 start_tag<g> = start_tag</g> 
 end_tag<g> = end_tag</g> 
 text_colors<g> = {'default' : color.text_color}</g> 
-text_colors[color_name]<g> = color.colors[color_name]</g> 
 tag<g> = Text.start_tag+'default'+Text.end_tag</g> 
 current_color<g> = self.text_colors['default']</g> 
 scale_override<g> = 1</g> 
-text<g> = text</g> 
+text
 color
 width
 height
@@ -340,15 +315,14 @@ get_width(<g>string, font=None</g>)
 parent<g> = scene.ui</g> 
 collider<g> = 'box'</g> 
 disabled<g> = False</g> 
-model<g> = Quad(aspect=self.scale[0] / self.scale[1], subdivisions=4)</g> 
 color<g> = Button.color</g> 
 text_entity<g> = None</g> 
-text<g> = text</g> 
 highlight_color<g> = self.color.tint(.2)</g> 
 pressed_color<g> = self.color.tint(-.2)</g> 
 highlight_scale<g> = 1    # multiplier</g> 
 pressed_scale<g> = .9     # multiplier</g> 
 original_scale<g> = self.scale</g> 
+text
 text_origin
 
 input(<g>key</g>)   
@@ -487,21 +461,16 @@ set_up()
 set_shader_input(<g>name, value</g>)   
 
 <div class="example">from ursina.main import Ursina
-scene.camera.orthographic = True
-e = Entity()
-e.model = 'quad'
-e.color = color.random_color()
-e.position = (-2, 0, 10)
 
-e = Entity()
-e.model = 'quad'
-e.color = color.random_color()
-e.position = (2, 0, 10)
+e = Entity(model='quad', color=color.random_color(), position=(-2, 0, 10))
+e = Entity(model='quad', color=color.random_color(), position=(2, 0, 10))
+e = Entity(model='quad', color=color.random_color(), position=(0, 0, 40))
 
-e = Entity()
-e.model = 'quad'
-e.color = color.random_color()
-e.position = (0, 0, 40)
+'''camera is also an Entity, so you can move and rotate it like normally.'''
+camera.position = (0, 0, -10)
+camera.rotiation = (0,0,0)
+
+camera.orthographic = True
 </div>
 </pre></div>
 <div id="color"><div id="color" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">color</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">color<g> = hsv</g> 
@@ -820,8 +789,6 @@ def input(key):
 <div id="window"><div id="window" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">window</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">vsync<g> = True   # can't be set during play</g> 
 show_ursina_splash<g> = False</g> 
 title<g> = application.asset_folder.name</g> 
-screen_resolution<g> = (get_monitors()[0].width, get_monitors()[0].height)</g> 
-screen_resolution<g> = Vec2(1366, 768)</g> 
 fullscreen_size<g> = Vec2(self.screen_resolution[0]+1, ((self.screen_resolution[0]) * .5625)+1)</g> 
 windowed_size<g> = Vec2(self.fullscreen_size[0] / 1.25, self.fullscreen_size[0] / 1.25 * .5625)</g> 
 windowed_position<g> = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode</g> 
@@ -863,14 +830,13 @@ window.fps_counter.enabled = False
 </pre></div>
 <div id="Audio"><div id="Audio" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Audio<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Audio(sound_file_name='', autoplay=True, **kwargs)</params>
 
-clip<g> = sound_file_name</g> 
-clip<g> = None</g> 
 volume<g> = 1</g> 
 pitch<g> = 1</g> 
 balance<g> = 0</g> 
 loop<g> = False</g> 
 loops<g> = 1</g> 
 autoplay<g> = autoplay</g> 
+clip
 length
 status
 ready
@@ -1154,7 +1120,7 @@ tristrip<g> = 'tristrip'</g>
 
 
 </pre></div>
-<div id="Mesh"><div id="Mesh" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Mesh<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Mesh(vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=.025)</params>
+<div id="Mesh"><div id="Mesh" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Mesh<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Mesh(vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1)</params>
 
 vertices<g> = vertices</g> 
 triangles<g> = triangles</g> 
@@ -1164,14 +1130,13 @@ normals<g> = normals</g>
 static<g> = static</g> 
 mode<g> = mode</g> 
 thickness<g> = thickness</g> 
-vertices<g> = [tuple(v) for v in self.vertices]</g> 
 
 generate()   <g># call this after setting some of the variables to update it</g>
 generate_normals(<g>smooth=True</g>)   
 colorize(<g>left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white, smooth=True, world_space=True</g>)   
 project_uvs(<g>aspect_ratio=1, direction='forward'</g>)   
 clear(<g>regenerate=True</g>)   
-save(<g>name='', path=application.compressed_models_folder, filetype='ursinamesh'</g>)   
+save(<g>name='', path=application.compressed_models_folder</g>)   
 
 <div class="example">verts = ((0,0,0), (1,0,0), (.5, 1, 0), (-.5,1,0))
 tris = (1, 2, 0, 2, 3, 0)
@@ -1290,8 +1255,6 @@ def input(key):
 </pre></div>
 <div id="Texture"><div id="Texture" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Texture<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Texture(value)</params>
 
-path<g> = Path(value)</g> 
-path<g> = None</g> 
 filtering<g> = Texture.default_filtering</g> 
 name
 size
@@ -1340,11 +1303,11 @@ print(b)
 <div id="Animation"><div id="Animation" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Animation<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Animation(name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs)</params>
 
 frames<g> = list()</g> 
-scale<g> = (frame.texture.width/100, frame.texture.height/100)</g> 
-aspect_ratio<g> = self.scale_x / self.scale_y</g> 
 sequence<g> = Sequence(loop=loop, auto_destroy=False)</g> 
 loop<g> = loop</g> 
 is_playing<g> = False</g> 
+autoplay<g> = autoplay</g> 
+duration
 
 start()   
 pause()   
@@ -1366,7 +1329,7 @@ start_state<g> = start_state</g>
 state<g> = start_state</g> 
 
 
-<div class="example">anim = Animation('ursina_wink', loop=False)
+<div class="example">anim = Animation('ursina_wink', loop=True, autoplay=False)
 a = Animator(
     animations = {
         'lol' : Entity(model='cube', color=color.red),
@@ -1456,7 +1419,6 @@ ColorField(y=-Text.size*2.1, text='secondary_color', color=color.orange)
 </pre></div>
 <div id="ColorField"><div id="ColorField" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ColorField<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ColorField(text='', **kwargs)</params>
 
-text<g> = text</g> 
 
 on_click()   
 
@@ -1659,8 +1621,8 @@ can_scroll_up_indicator<g> = Entity(parent=self, model='quad', texture='arrow_do
 can_scroll_down_indicator<g> = Entity(parent=self, model='quad', texture='arrow_down', scale=(.05,.05), y=(-self.max_buttons*.025)-.104, z=-.1, color=color.dark_gray, enabled=False, add_to_scene_entities=False)</g> 
 file_types<g> = ['.*', ]</g> 
 start_path<g> = Path('.').resolve()</g> 
-path<g> = self.start_path     # this will populate the list</g> 
-scroll<g> = 0</g> 
+scroll
+path
 selection
 
 input(<g>key</g>)   
@@ -1797,7 +1759,6 @@ default_value<g> = default_value</g>
 next_field<g> = None</g> 
 text_field<g> = TextField(world_parent=self, x=-.45, y=.3, z=-.1, max_lines=max_lines)</g> 
 active<g> = False</g> 
-label<g> = Text('Label:')</g> 
 text
 
 input(<g>key</g>)   
@@ -1857,7 +1818,6 @@ gravity<g> = 1</g>
 grounded<g> = True</g> 
 air_time<g> = 0</g> 
 y<g> = 2</g> 
-y<g> = ray.world_point[1] + .01</g> 
 
 update()   
 input(<g>key</g>)   
@@ -1962,7 +1922,6 @@ knob<g> = Draggable(
         parent</g> 
 value<g> = self.default</g> 
 dynamic<g> = dynamic</g> 
-rotation_z<g> = -90</g> 
 
 drop()   
 update()   
@@ -2176,17 +2135,6 @@ height<g> = height</g>
 content<g> = content</g> 
 text<g> = title</g> 
 popup<g> = False</g> 
-panel<g> = Panel(parent=self, scale_y=height, model=Quad(), origin=(0, .5), z=.1, color=self.color.tint(.1))</g> 
-lock_x<g> = True</g> 
-lock_y<g> = True</g> 
-bg<g> = Button(
-            parent=self,
-            z=.1,
-            scale=(999, 999),
-            color=color.black66,
-            highlight_color=color.black66,
-            pressed_color=color.black66,
-            )</g> 
 
 close()   
 
@@ -2347,11 +2295,15 @@ Entity(model='cube').add_script(SmoothFollow(target=player, offset=(0,2,0)))
 'file_icon'
 'folder'
 'heightmap_1'
+'horizontal_gradient'
+'radial_gradient'
 'reflection_map_3'
 'shore'
+'sky_sunset'
 'ursina_logo'
 'ursina_wink_0000'
 'ursina_wink_0001'
+'vertical_gradient'
 'white_cube'
 
 
@@ -2427,7 +2379,6 @@ origin.scale *= .25
 vertices<g> = [Vec3(0,0,0), Vec3(1,0,0), Vec3(1,1,0), Vec3(0,1,0)]</g> 
 radius<g> = radius</g> 
 mode<g> = mode</g> 
-vertices<g> = new_verts</g> 
 uvs<g> = list()</g> 
 vertices<g> = [(v[0]-offset[0], v[1]-offset[1], v[2]-offset[2]) for v in self.vertices]</g> 
 
@@ -2454,13 +2405,11 @@ ed = EditorCamera(rotation_speed=200, panning_speed=200)
 heightmap<g> = load_texture(heightmap)</g> 
 skip<g> = skip</g> 
 width, self.depth<g> = self.heightmap.width//skip, self.heightmap.height//skip</g> 
-heightmap<g> = Texture(img)</g> 
-height_values<g> = [[0 for z in range(self.depth)] for x in range(self.width)]</g> 
-height_values[x][z]<g> = y</g> 
-vertices[i]<g> = Vec3(x/self.width -.5, y, z/self.depth -.5)</g> 
 
 
-<div class="example">e = Entity(model=Terrain('heightmap_1', skip=8, store_height_values=True), scale=(20,5,20))
+<div class="example">t = time.time()
+e = Entity(model='terrain_1', scale=(20,5,20), texture='heightmap_1')
+print('-----', time.time() - t)
 EditorCamera()
 Sky()
 </div>

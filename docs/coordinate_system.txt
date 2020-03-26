@@ -1,0 +1,87 @@
+# title ursina engine documentation
+# center, bold, arial, size 5
+<a href="index.html" style="text-decoration: none; color:inherit">ursina engine
+ʕ •ᴥ•ʔゝ□</a>
+# normal, size 3, left, width 650
+
+## Entity Coordinate System
+
+# code
+
+            y (up)
+            |
+            |
+(forward) z |
+          \ |
+           \|
+            *---------- x (right)
+
+# text
+
+
+
+
+## UI Coordinate System
+
+# code
+
+_______________________(.5, .5)____(window.top_right)
+|       '                  '       |
+|       '                  '       |
+|       '                  '       |
+|       '                  '       |
+|       '      (0, 0)      '       |(.5*window.aspect_ratio, 0)
+|       '                  '       |
+|       '                  '       |
+|       '                  '       |
+|_______'__________________'_______|
+    (-.5, -.5)
+
+# text
+
+
+
+## Rotation
+
+Positive value is clock-wise around axis.
+Imagine looking from a positive point on the axis and turing the entity left.
+
+# code
+
+           _______
+          /
+          \->
+    __
+   /  \     y
+  |   v     |
+  |      z  |                __
+          \ |               /  \
+           \|               v   |
+            *---------- x       |
+                                |
+# text
+
+
+
+
+## Origin
+
+Setting the origin will move the origin point of the model.
+This can especially useful when working with ui.
+
+# code
+            (-.5,.5)
++--------+      *--------+
+|        |      |        |
+|  (0,0) |      |        |
+|        |      |        |
++--------+      +--------+
+
+  (0,.5)
++----*---+      +--------+
+|        |      |        |
+|        |      |        * (.5,0)
+|        |      |        |
++--------+      +--------+
+
+# text

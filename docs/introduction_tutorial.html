@@ -19,20 +19,26 @@
 Introduction Tutorial<br>
 <div style="font-weight: normal;font-size: 20.0px;">
 <br>
+<br>
 1) Install Python 3.6 or newer. Download Python here: <a href="https://www.python.org/">https://www.python.org/</a><br>
 <br>
+<br>
 2) Make sure you have git installed. <a href="https://git-scm.com/">https://git-scm.com/</a><br>
+<br>
 <br>
 3) Open Command Prompt/terminal and paste the commands below. This will download and install the dependencies you need.<br>
 <br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">pip install git+https://github.com/pokepetter/ursina.git<br></div><br>
+<br>
 4) Open your preferred text editor. If you're new to programming, here are some suggestions:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;* Atom<br>
 &nbsp;&nbsp;&nbsp;&nbsp;* Visual Studio Code<br>
 &nbsp;&nbsp;&nbsp;&nbsp;* Sublime Text<br>
 <br>
+<br>
 5) Create a new file called main.py. This will contain out little game.<br>
 &nbsp;&nbsp; Because it ends with '.py' you should get some syntax highlighting<br>
+<br>
 <br>
 6) At the top of the file, write:<br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;"><font color="purple">from</font> ursina <font color="purple">import</font> *<br></div>&nbsp;&nbsp;&nbsp;&nbsp;This will import all the necessary things we need from the engine in one line.<br>
@@ -40,6 +46,7 @@ Introduction Tutorial<br>
 &nbsp;&nbsp;&nbsp;&nbsp;like this:<br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;"><font color="purple">from</font> ursina.prefabs <font color="purple">import</font> Button<br></div>&nbsp;&nbsp;&nbsp;&nbsp;Or import something that's not included by default:<br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;"><font color="purple">from</font> ursina.prefabs.first_person_controller <font color="purple">import</font> FirstPersonController<br></div><br>
+<br>
 7) Here's a really basic example game with comments to explain what were doing.<br>
 &nbsp;&nbsp; We will simply make a orange box move right and left when we press 'd' or 'a'.<br>
 <br>
@@ -60,6 +67,7 @@ app = Ursina()<br><br><font color="gray"># most things in ursina are Entities. A
 <font color="gray"># player will move at the same speed regardless of how fast the game runs.</font>
 <br><br><font color="purple">def</font> input(key):<br>    if key == <font color="green">'space'</font>:<br>        player.y += 1<br>        invoke(setattr, player, <font color="green">'y'</font>, player.y-1, delay=.25)<br><br><br><font color="gray"># start running the game</font>
 app.run()<br><br><br></div><br>
+<br>
 8) Now we have to tell Python to run the script. To do this, open the command line and<br>
 &nbsp;&nbsp; go to the current folder. An easy way to do this is to type 'cmd' in the address bar.<br>
 &nbsp;&nbsp; Run the command below.<br>

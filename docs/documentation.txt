@@ -6,6 +6,7 @@
 # normal, size 3, left, width 650
 
 [API Reference, cheat_sheet.html]
+[Coordinate System, coordinate_system.html]
 
 # size 2
 Tutorials

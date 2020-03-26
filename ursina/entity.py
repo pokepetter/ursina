@@ -68,11 +68,11 @@ class Entity(NodePath):
         self.hovered = False    # will return True if mouse hovers entity.
 
         self.origin = Vec3(0,0,0)
-        self.position = Vec3(0,0,0) # can also set self.x, self.y, self.z
+        self.position = Vec3(0,0,0) # right, up, forward. can also set self.x, self.y, self.z
         self.rotation = Vec3(0,0,0) # can also set self.rotation_x, self.rotation_y, self.rotation_z
         self.scale = Vec3(1,1,1)    # can also set self.scale_x, self.scale_y, self.scale_z
 
-        self.line_definition = None
+        self.line_definition = None # returns a Traceback(filename, lineno, function, code_context, index).
         if application.trace_entity_definition and add_to_scene_entities:
             from inspect import getframeinfo, stack
             _stack = stack()
