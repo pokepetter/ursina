@@ -18,6 +18,7 @@ class TextField(Entity):
         self.font = 'VeraMono.ttf'
         self.font_size = 20
         self.line_height = 1
+        # self.max_width = 80
         self.max_lines = 99999
 
         self.text_entity = Text(
@@ -44,6 +45,9 @@ class TextField(Entity):
             )
         self.character_width = .0111
         self.cursor_parent = Entity(parent=self, scale=(self.character_width, -1*self.text_entity.size))
+        # self.max_line_indicatior = Entity(parent=self.cursor_parent, model='quad', origin=(-.5,.5), scale=(100,.05), rotation_x=180, color=color.red)
+        # self.max_width_indicatior = Entity(
+        #     parent=self.cursor_parent, model='quad', origin=(-.5,.5), scale=(100,.05), rotation_x=180, rotation_z=90, color=color.color(0,0,1,.05), x=80)
         self.cursor = Entity(parent=self.cursor_parent, model='cube', color=color.white33, origin=(-.5, -.5), scale=(.2, 1))
 
         self.selection = None
@@ -162,7 +166,7 @@ class TextField(Entity):
         if x == 0 and y > 0:
             new_x = len(lines[y-1])
             lines[y-1] += l
-            lines.remove(l)
+            lines.pop(y)
             self.cursor.x = new_x
             self.cursor.y -= 1
         # delete tab
@@ -300,7 +304,7 @@ class TextField(Entity):
         if key in ('space', 'space hold'):
             add_text(' ')
 
-        if key in self.shortcuts['newline'] and self.cursor.y < self.max_lines:
+        if key in self.shortcuts['newline'] and self.cursor.y < self.max_lines-1:
             if l.startswith('class ') and not l.endswith(':'):
                 add_text(':')
             if l.startswith('def ') and not l.endswith(':'):
@@ -372,7 +376,7 @@ class TextField(Entity):
                     beginning = beginning.rstrip()
                     removed = ' ' * (x-len(beginning))
 
-                for delimiter in ('.', '\'', '\"'):
+                for delimiter in ('.', '\'', '\"', '(', '"', '\''):
                     beginning = beginning.replace(delimiter, ' ')
 
                 beginning = beginning.rstrip().rsplit(' ', 1)[0]
@@ -530,7 +534,7 @@ if __name__ == '__main__':
     Text.default_font = 'consola.ttf'
     Text.default_resolution = 16*2
     # TreeView()
-    te = TextField(max_lines=3)
+    te = TextField(max_lines=300)
     te.line_numbers.enabled = True
     # for name in color.color_names:
     #     if name == 'black':
@@ -547,7 +551,7 @@ if __name__ == '__main__':
     #     '    ':      '☾dark_gray☽----☾default☽',
     #     }
     #
-    te.text = 'yolo test 123 yes no.\n'*10
+    # te.text = 'yolo test 123 yes no.\n'*10
     # te.cursor.position = (4,0)
     te.render()
     # te.selection = ((0,0),(4,0))
