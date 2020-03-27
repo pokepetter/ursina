@@ -33,7 +33,7 @@ class Animator():
 
             anim = self.animations[value]
             if hasattr(anim, 'start') and callable(anim.start):
-                print('start', anim)
+                # print('start', anim)
                 anim.start()
 
         self._state = value
