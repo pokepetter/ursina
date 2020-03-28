@@ -1,4 +1,11 @@
 from ursina import *
+from ursina.prefabs.radial_menu import RadialMenu, RadialMenuButton
+from select_tool import SelectTool
+from move_tool import MoveTool
+from move_to_point_tool import MoveToPointTool
+from scale_tool import ScaleTool
+from color_menu import ColorMenu
+
 
 
 class SceneEditor(Entity):
@@ -11,12 +18,8 @@ class SceneEditor(Entity):
         self.editor_camera = EditorCamera(rotate_around_mouse_hit=False, enabled=False)
         self.ui_parent = Entity(parent=camera.ui)
         self.gizmo_parent = Entity()
-        self.gizmo = Entity(parent=self.gizmo_parent, model=Cube(mode='line'), add_to_scene_entities=False)
-        self.cursor = Entity(parent=self.gizmo, scale=.1, model='sphere', always_on_top=True, color=color.magenta)
-
-        self.x_ruler = Entity(parent=self.gizmo_parent, model='cube', scale=(.025,.025,9999), color=color.magenta, enabled=False, rotation_y=90, add_to_scene_entities=False)
-        self.y_ruler = Entity(parent=self.gizmo_parent, model='cube', scale=(.025,.025,9999), color=color.yellow, enabled=False, rotation_x=90, add_to_scene_entities=False)
-        self.z_ruler = Entity(parent=self.gizmo_parent, model='cube', scale=(.025,.025,9999), color=color.cyan, enabled=False, add_to_scene_entities=False)
+        self.gizmo = Entity(parent=self.gizmo_parent, model=Cube(mode='line'), color=color.orange, add_to_scene_entities=False)
+        # self.cursor = Entity(parent=self.gizmo, scale=.1, model='sphere', always_on_top=True, color=color.magenta)
         self.world_plane = Entity(parent=self.gizmo_parent, model=Grid(64, 64), rotation_x=90, collider='box', origin=(.5,.5), scale=64, color=color.color(0,0,.5,.25), enabled=False)
 
         self.scene_folder = application.asset_folder / 'scenes'
@@ -40,9 +43,11 @@ class SceneEditor(Entity):
         self.toolbar = Entity(parent=self.ui_parent, position=window.top_left + Vec2(.2, 0))
         self.tools = [
             SelectTool(parent=self),
-            MoveTool(parent=self)
+            MoveTool(parent=self),
+            MoveToPointTool(parent=self),
+            ScaleTool(parent=self),
             ]
-        self.tool = self.tools[0]
+        self.tool = self.tools[1]
 
         self.hovered_entity = None
         self.hovered_entity_info = Text(parent=self.ui_parent, position=(0,-.45))
@@ -72,7 +77,6 @@ class SceneEditor(Entity):
             # highlight_color=color.black33,
             # pressed_color=color.black33,
             on_click=Func(setattr, self.prefab_menu, 'enabled', False)
-            # on_click=Func(print, 'ffffffffffff')
             )
 
         for i, p in enumerate(self.prefabs):
@@ -96,19 +100,19 @@ class SceneEditor(Entity):
                 )
 
 
-        self.color_menu = Panel(parent=self.ui_parent, model='quad', origin=(-.5,.5), scale=.5, color=color._32, enabled=False)
-        self.color_menu.target_entity = None
-        for i, (key, value) in enumerate(color.colors.items()):
-            b = Button(parent=self.color_menu, scale=.1, z=-.1, color=value)
-            b.on_click = f'self.parent.target_entity.color = color.{key}'
+        self.color_menu = ColorMenu(self)
 
-        grid_layout(self.color_menu.children, max_x=10, offset=(0,0,-.1))
-
-        def color_menu_input(key):
-            if (key == 'left mouse down' and mouse.hovered_entity is not None and not mouse.hovered_entity.has_ancestor(self.ui_parent)
-            or key == 'escape'):
-                self.color_menu.enabled = False
-        self.color_menu.input = color_menu_input
+        self.radial_menu = RadialMenu(
+            buttons = (
+                RadialMenuButton(text='rename'),
+                RadialMenuButton(text='model'),
+                RadialMenuButton(text='color', on_click=self.color_menu.open),
+                RadialMenuButton(text='delete', color=color.red, on_click=self.delete_selected),
+                RadialMenuButton(text='duplicate'),
+                RadialMenuButton(text='replace'),
+                ),
+            enabled = False
+            )
 
 
         for key, value in kwargs.items():
@@ -125,10 +129,10 @@ class SceneEditor(Entity):
         self._edit_mode = value
         self.ui_parent.enabled = value
         self.editor_camera.enabled = value
-        # self.world_plane.enabled = value
+        self.world_plane.enabled = value
         self.gizmo.enabled = value
         self.editor_toggle_button.color = (color.orange, Button.color)[value]
-        self.editor_toggle_button.icon.animate('rotation_z', self.editor_toggle_button.icon.rotation_z+180)
+        self.editor_toggle_button.icon.rotation_z += 180
         self.toolbar.y += .05
         self.toolbar.animate('y', self.toolbar.y -.05, duration=.1, curve=curve.linear)
 
@@ -204,6 +208,15 @@ class SceneEditor(Entity):
 
             self.scene_menu.button_dict = scenes_dict
 
+    def delete_selected(self):
+        print('dlete', self.selection)
+        if not self.selection:
+            return
+
+        self.entities.remove(self.selection)
+        destroy(self.selection)
+        print('dleteeeddddd')
+
 
     def update(self):
         if not self.edit_mode:
@@ -212,7 +225,7 @@ class SceneEditor(Entity):
         if self.hovered_entity == mouse.hovered_entity:
             return
 
-        if mouse.hovered_entity and mouse.hovered_entity in self.entities and not self.color_menu.enabled:
+        if mouse.hovered_entity and mouse.hovered_entity in self.entities:
         #     self.hovered_entity_info.text = mouse.hovered_entity.name
             self.gizmo.enabled = True
             self.gizmo.world_position = mouse.hovered_entity.world_position
@@ -265,15 +278,13 @@ class SceneEditor(Entity):
 
 
     def input(self, key):
-        key = ''.join((e+'+' for e in ('control', 'shift', 'alt') if held_keys[e] and not e == key)).replace('control', 'ctrl') + key
+        combined_key = ''.join((e+'+' for e in ('control', 'shift', 'alt') if held_keys[e] and not e == key)).replace('control', 'ctrl') + key
 
         if key == 'tab':
             self.edit_mode = not self.edit_mode
 
         if not self.edit_mode:
             return
-
-
 
 
         # if key == 'left mouse down' and mouse.hovered_entity in self.entities and not self.move_target and not self.color_menu.enabled:   # place new prefab instance
@@ -283,7 +294,7 @@ class SceneEditor(Entity):
         #     # undo_cache.append(Func(setattr, self.move_target, 'world_position', self.move_target.original_position))
 
 
-        if key == 'ctrl+s':
+        if combined_key == 'ctrl+s':
             self.save()
             return
 
@@ -293,8 +304,15 @@ class SceneEditor(Entity):
                 print('.-----', e)
                 self.tool = e
 
-        if key == 'n' or key == 'right mouse up' and abs(sum(mouse.delta_drag)) < .01:
-            self.world_plane.enabled = True
+        if combined_key == 'right mouse up' and mouse.hovered_entity in self.entities and abs(sum(mouse.delta_drag)) < .01:
+            self.radial_menu.position = mouse.hovered_entity.screen_position
+            self.radial_menu.enabled = True
+            if not self.selection:
+                self.selection = mouse.hovered_entity
+        else:
+            self.radial_menu.enabled = False
+
+        if key == 'n' or key == 'right mouse up' and mouse.hovered_entity == self.world_plane and abs(sum(mouse.delta_drag)) < .01:
             self.prefab_menu.new_instance_target_position = mouse.world_point
             self.prefab_menu.enabled = True
             self.prefab_menu.position = mouse.position + Vec3(.05,.05,0)
@@ -310,12 +328,16 @@ class SceneEditor(Entity):
             print('open model menu for:', mouse.hovered_entity.name)
 
 
-        if key == 'ctrl+d' and mouse.hovered_entity in self.entities: # duplicate
+        if combined_key == 'ctrl+d' and mouse.hovered_entity in self.entities: # duplicate
             instance = duplicate(mouse.hovered_entity)
             self.entities.append(instance)
             self.tool = 'move_to_point'
             self.input('left mouse down')
             # self.move_target = instance
+
+        if key == 'delete':
+            self.delete_selected()
+
 
 
     def save(self, save_new=False):
@@ -394,66 +416,6 @@ class SceneEditor(Entity):
                 print('error in scene:', name)
 
 
-class MoveTool(Entity):
-    def __init__(self, parent, **kwargs):
-        super().__init__(parent=parent, **kwargs)
-        self.name = 'move tool'
-        self.description = 'move_x_z'
-        self.target = None
-        self.offset = Vec3(0,0,0)
-        self.hotkeys = ['w', ]
-
-
-    def input(self, key):
-        if key == 'left mouse down' and mouse.hovered_entity:
-            self.target = mouse.hovered_entity
-
-            self.parent.world_plane.enabled = True
-            self.parent.world_plane.rotation = (90,0,0)
-            self.parent.world_plane.y = mouse.hovered_entity.world_y
-            for e in self.parent.entities:
-                e.collision = False
-
-            if not self.offset:
-                self.offset = self.target.world_position - Vec3(mouse.world_point[0], self.target.y, mouse.world_point[2])
-
-        if key == 'left mouse up' and self.target:
-            for e in self.parent.entities:
-                e.collision = True
-
-            # undo_cache.append(Func(setattr, self.move_target, 'world_position', self.move_target.original_position))
-            self.target = None
-            self.parent.world_plane.enabled = False
-            self.offset = Vec3(0,0,0)
-
-
-    def update(self):
-        if not self.target:
-            return
-        # if self.tool == 'move_x_z':
-
-        self.target.world_position = Vec3(mouse.world_point[0], self.target.y, mouse.world_point[2]) + self.offset
-        if held_keys['control']:
-            self.target.world_position = round(self.target.world_position, 1)
-
-
-class SelectTool(Entity):
-    def __init__(self, parent, **kwargs):
-        super().__init__(parent=parent, **kwargs)
-        self.name = 'select tool'
-        self.description = 'SelectTool'
-        self.hotkeys = ['q', ]
-
-    def input(self, key):
-        if key == 'left mouse down':
-            if not mouse.hovered_entity:
-                self.parent.selection = []
-            elif not held_keys['control']:
-                self.parent.selection = [mouse.hovered_entity, ]
-            else:
-                self.parent.selection.append(mouse.hovered_entity)
-
-
 
 
 class CreatePrefabButton(Button):
@@ -481,7 +443,7 @@ if __name__ == '__main__':
     # create scene
     from ursina.prefabs.primitives import *
 
-    player = OrangeCube(scale_y=2, origin_y=-.5, x=1)
+    # player = OrangeCube(scale_y=2, origin_y=-.5, x=1)
     # FirstPersonController()
     # def player_update():
     #     player.x += held_keys['d'] * time.dt
@@ -490,11 +452,6 @@ if __name__ == '__main__':
 
 
     scene_editor = SceneEditor(prefabs=[Entity, RedCube, PinkCube, LimeCube])
-    scene_editor.entities = [
-        RedCube(z=4),
-        GreenPlane(scale=16),
-        player
-        ]
 
     Sky()
 
