@@ -86,7 +86,7 @@ class Sequence():
         self.paused = False
 
     def finish(self):
-        self.t = math.inf
+        self.t = self.duration
         self.paused = False
         self.update()
 
@@ -94,6 +94,11 @@ class Sequence():
         if self.auto_destroy and self in application.sequences:
             application.sequences.remove(self)
             del self
+
+    @property
+    def finished(self):
+        return self.t >= self.duration
+
 
     def update(self):
         if self.paused:
