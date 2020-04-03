@@ -1,7 +1,6 @@
 # this will clear the scene and try to execute the main.py code without
 # restarting the program
 
-
 from ursina import *
 import time
 import ast
@@ -53,31 +52,18 @@ class HotReloader(Entity):
         self.path = Path(self.path)
         self.realtime_editing = False   # toggle with f8
         # self.text_editor = InGameTextEditor(path=self.path, enabled=False)
-
+        self._i = 0
+        self.hotkeys = {
+            'ctrl+r' : self.reload_code,
+            'f5'     : self.reload_code,
+            'f6'     : self.reload_textures,
+            'f7'     : self.reload_models,
+            'f8'     : self.toggle_hotreloading,
+            }
 
     def input(self, key):
-        if key == 'f5':
-            # if self.text_editor.enabled:
-            #     self.text_editor.reload()
-            # else:
-            self.reload()
-
-        if key == 'f6':
-            self.reload_texture()
-
-        if key == 'f7':
-            self.reload_model()
-
-        if key == 'f8':
-            self.realtime_editing = not self.realtime_editing
-
-
-                # overwrite specific line
-                # with open(info.filename, 'r') as f:
-                #     lines = f.readlines()
-                # lines[info.lineno] = 'OVERWRITTEN!'
-                # with open(info.filename, 'w') as f:
-                #     f.writelines(lines)
+        if key in self.hotkeys:
+            self.hotkeys[key]()
 
         # if key == '|':
         #     if not self.text_editor.enabled:
@@ -87,8 +73,15 @@ class HotReloader(Entity):
 
     def update(self):
         if self.realtime_editing:
-            self.hot_reload()
+            self._i += time.dt
+            if self._i > .5:
+                self.hot_reload()
+                self._i = 0
 
+
+    def toggle_hotreloading(self):
+        self.realtime_editing = not self.realtime_editing
+        print_on_screen(f'<azure>hotreloading: {self.realtime_editing}')
 
 
     def hot_reload(self):
@@ -102,7 +95,7 @@ class HotReloader(Entity):
                 # print(e,
                 #     Path(info.filename).name,
                 #     info.lineno, info.code_context)
-                    print('---', code)
+                    # print('---', code)
                     if '(' in code and ')' in code and code.count('(') == code.count(')'):
                         code = code.split('(', 1)[1][:-2]
                         code = code.split(',')
@@ -110,13 +103,13 @@ class HotReloader(Entity):
                             name, value = arg.split('=')
                             name = name.strip()
                             value = value.strip()
-                            print(name, eval(value))
+                            # print(name, eval(value))
                             setattr(e, name, eval(value))
             except:
                 pass
 
 
-    def reload(self, reset_camera=True):
+    def reload_code(self, reset_camera=True):
         if not self.path.exists:
             print('trying to reload, but path does not exist:', self.path)
             return
@@ -148,17 +141,17 @@ class HotReloader(Entity):
         print('reloaded in:', time.time() - t)
 
 
-    def reload_texture(self):
+    def reload_textures(self):
         textured_entities = [e for e in scene.entities if e.texture]
         for e in textured_entities:
             if e.texture.path.parent.name == application.compressed_textures_folder.name:
                 print('texture is made from .psd file', e.texture.path.stem + '.psd')
                 compress_textures(e.texture.path.stem)
             print('reloaded texture:', e.texture.path)
-            e.texture._texture.reload()
+            e.texture._texture.reload_code()
 
 
-    def reload_model(self):
+    def reload_models(self):
         entities = [e for e in scene.entities if e.model and hasattr(e.model, 'path')]
         unique_paths = list(set([e.model.path for e in entities]))
         # ignore internal models
@@ -248,7 +241,7 @@ class HotReloader(Entity):
 #
 #     def input(self, key):
 #         if held_keys['control'] and key == 'enter':
-#             if self.reload():
+#             if self.reload_code():
 #                 if held_keys['shift']:
 #                     self.enabled = False
 #
@@ -288,7 +281,12 @@ if __name__ == '__main__':
     By default you can press F5 to reload the starting script, F6 to reimport textures and F7 to reload models.
     '''
     # window.size *= .5
-    # window.position += Vec2(1000,400)
-    # butttt = Button(text='test_buttonsss', x=.0, y=.0, color=color.red)
+    # window.position += Vec2(100,300)
+    # bg = Sprite('shore')
+    #
+    # button = Button(text='test button', scale=.75, model=Circle(32), color=color.red)
+
+
+
 
     app.run()
