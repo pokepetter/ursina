@@ -1,9 +1,12 @@
 import math
 
 
-class Hit():
+class Hit:
+    __slots__ = ['hit', 'entity', 'point', 'world_point', 'distance', 'normal', 'world_normal']
+
+
     def __init__(self, **kwargs):
-        super().__init__()
+
         self.hit = None
         self.entity = None
         self.point = None
