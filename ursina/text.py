@@ -1,11 +1,12 @@
 from panda3d.core import TransparencyAttrib
 from panda3d.core import Filename
 from panda3d.core import TextNode
-from direct.interval.IntervalGlobal import Sequence, Func, Wait, SoundInterval
+# from direct.interval.IntervalGlobal import Sequence, Func, Wait, SoundInterval
 
 import ursina
 from ursina import *
 from ursina.entity import Entity
+from ursina.sequence import Sequence, Func, Wait
 
 # note:
 # <scale:n> tag doesn't work well in the middle of text.
@@ -44,6 +45,7 @@ class Text(Entity):
         self.current_color = self.text_colors['default']
         self.scale_override = 1
         self._background = None
+        self.appear_sequence = None # gets created when calling appear()
 
         if text != '':
             self.text = text
@@ -380,9 +382,11 @@ class Text(Entity):
         from ursina.ursinastuff import invoke
         self.enabled = True
         # self.visible = True   # setting visible seems to reset the colors
+        if self.appear_sequence:
+            self.appear_sequence.finish()
 
         x = 0
-        seq = Sequence()
+        self.appear_sequence = Sequence()
         for i, tn in enumerate(self.text_nodes):
             target_text = tn.node().getText()
             tn.node().setText('')
@@ -390,11 +394,11 @@ class Text(Entity):
 
             for j, char in enumerate(target_text):
                 new_text += char
-                seq.append(Wait(speed))
-                seq.append(Func(tn.node().setText, new_text))
+                self.appear_sequence.append(Wait(speed))
+                self.appear_sequence.append(Func(tn.node().setText, new_text))
 
-        seq.start()
-        return seq
+        self.appear_sequence.start()
+        return self.appear_sequence
 
 
     def get_width(string, font=None):
