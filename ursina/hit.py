@@ -2,7 +2,7 @@ import math
 
 
 class Hit:
-    __slots__ = ['hit', 'entity', 'point', 'world_point', 'distance', 'normal', 'world_normal']
+    __slots__ = ['hit', 'entity', 'point', 'world_point', 'distance', 'normal', 'world_normal', 'hits', 'entities']
 
 
     def __init__(self, **kwargs):
@@ -14,6 +14,8 @@ class Hit:
         self.distance = math.inf
         self.normal = None
         self.world_normal = None
+        self.hits = None
+        self.entities = None
 
         for key, value in kwargs.items():
             setattr(self, key, value)

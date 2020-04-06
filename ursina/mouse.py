@@ -8,6 +8,7 @@ from ursina import scene
 from ursina import application
 from ursina import window
 from ursina.hit import Hit
+from ursina.ursinamath import distance
 
 
 class Mouse():
@@ -224,7 +225,7 @@ class Mouse():
 
     @property
     def world_normal(self):
-        if self.collision:
+        if not self.collision:
             return None
         return self.collision.world_normal
 
@@ -256,7 +257,7 @@ class Mouse():
                         hit = Hit(
                             hit = entry.collided(),
                             entity = entity,
-                            distance = 0,
+                            distance = distance(entry.getSurfacePoint(scene), camera.getPos()),
                             point = entry.getSurfacePoint(entity),
                             world_point = entry.getSurfacePoint(scene),
                             normal = entry.getSurfaceNormal(entity),
