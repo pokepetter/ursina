@@ -410,26 +410,31 @@ In this tutorial we will make a drag and drop inventory like this.
 10 Swap items
 # size 1
 
-
-        # code, size .8
-                def drop():
-                    icon.x = int(icon.x)
-                    icon.y = int(icon.y)
-
-                    '''if the spot is taken, swap positions'''
-                    for c in self.children:                                     # +
-                        if c == icon:                                           # +
-                            continue                                            # +
-
-                        if c.x == icon.x and c.y == icon.y:                     # +
-                            print('swap positions')                             # +
-                            c.position = icon.org_pos                           # +
+    Add a drag function to remember the start position as org_pos.
 
 
-                icon.drop = drop
-                # icon.drag = drag
+    # code, size .8
+            def drag():                                                     # +
+                icon.org_pos = (icon.x, icon.y)                             # +
 
-        # text, size 1
+            def drop():
+                icon.x = int(icon.x)
+                icon.y = int(icon.y)
+
+                '''if the spot is taken, swap positions'''
+                for c in self.children:                                     # +
+                    if c == icon:                                           # +
+                        continue                                            # +
+
+                    if c.x == icon.x and c.y == icon.y:                     # +
+                        print('swap positions')                             # +
+                        c.position = icon.org_pos                           # +
+
+
+            icon.drag = drag                                                # +
+            icon.drop = drop
+
+    # text, size 1
 
 
 
@@ -439,38 +444,65 @@ In this tutorial we will make a drag and drop inventory like this.
 
     We shouldn't be able to drop the items outside of the inventory.
 
-        # code, size .8
-                def drop():
-                    icon.x = int(icon.x)
-                    icon.y = int(icon.y)
-                    # icon.z += .01
+    # code, size .8
+            def drop():
+                icon.x = int(icon.x)
+                icon.y = int(icon.y)
 
-                    # if outside, return to original position                   # +
-                    if icon.x < 0 or icon.x >= 1 or icon.y > 0 or icon.y <= -1: # +
-                        icon.position = (icon.org_pos)                          # +
-                        return                                                  # +
+                '''if outside, return to original position'''               # +
+                if icon.x < 0 or icon.x >= 1 or icon.y > 0 or icon.y <= -1: # +
+                    icon.position = (icon.org_pos)                          # +
+                    return                                                  # +
 
-                    # if the spot is taken, swap positions
-                    for c in self.children:
-                        if c == icon:
-                            continue
+                '''if the spot is taken, swap positions'''
+                for c in self.children:
+                    if c == icon:
+                        continue
 
-                        if c.x == icon.x and c.y == icon.y:
-                            print('swap positions')
-                            c.position = icon.org_pos
+                    if c.x == icon.x and c.y == icon.y:
+                        print('swap positions')
+                        c.position = icon.org_pos
 
+            icon.drop = drop
 
-                icon.drop = drop
-                # icon.drag = drag
-
-        # text, size 1
+    # text, size 1
 
 
 
 # size 2
-12 Make the dragged items render on top
+12 Bugfix: Make the dragged items render on top
 # size 1
 
     All the items are at the same depth, so it hard to say how they will overlap.
     It feels natural that the item we're currently dragging stays on top,
     so we'll move it back a bit when we drag it and forward when we drop it.
+
+    # code, size .8
+            def drag():
+                icon.org_pos = (icon.x, icon.y)
+                icon.z -= .01   # ensure the dragged item overlaps the rest # +
+
+            def drop():
+                icon.x = int(icon.x)
+                icon.y = int(icon.y)
+                icon.z += .01                                                # +
+
+                '''if outside, return to original position'''
+                if icon.x < 0 or icon.x >= 1 or icon.y > 0 or icon.y <= -1:
+                    icon.position = (icon.org_pos)
+                    return
+
+                '''if the spot is taken, swap positions'''
+                for c in self.children:
+                    if c == icon:
+                        continue
+
+                    if c.x == icon.x and c.y == icon.y:
+                        print('swap positions')
+                        c.position = icon.org_pos
+
+            icon.drag = drag
+            icon.drop = drop
+
+
+    # text, size 1
