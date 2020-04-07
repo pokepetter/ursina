@@ -2,6 +2,7 @@ from panda3d.core import MeshDrawer, NodePath
 from panda3d.core import GeomVertexData, GeomVertexFormat, Geom, GeomVertexWriter, GeomNode
 from panda3d.core import GeomTriangles, GeomTristrips, GeomTrifans
 from panda3d.core import GeomLines, GeomLinestrips, GeomPoints
+from panda3d.core import TexGenAttrib, TextureStage
 from panda3d.core import Vec3
 from ursina.scripts.generate_normals import generate_normals
 from ursina.scripts.project_uvs import project_uvs
@@ -10,6 +11,7 @@ from ursina import color
 from ursina import application
 from textwrap import dedent
 from enum import Enum
+from pathlib import Path
 
 
 class MeshModes(Enum):
@@ -145,6 +147,10 @@ class Mesh(NodePath):
                 geom.addPrimitive(prim)
                 self.geomNode.addGeom(geom)
 
+        if self.mode == 'point':
+            self.setTexGen(TextureStage.getDefault(), TexGenAttrib.MPointSprite)
+            # self.set_render_mode_perspective(True)
+
 
         self.recipe = dedent(f'''
             Mesh(
@@ -216,19 +222,25 @@ class Mesh(NodePath):
             self.generate()
 
 
-    def save(self, name, path=application.asset_folder, filetype='ursinamesh'):
-        if filetype == 'ursinamesh':
+    def save(self, name='', path=application.compressed_models_folder):
+        if not name and hasattr(self, 'path'):
+            name = self.path.stem
+
             if not '.' in name:
                 name += '.ursinamesh'
 
             with open(path / name, 'w') as f:
                 recipe = self.recipe.replace('LVector3f', '')
                 f.write(recipe)
+            print('saved .ursinamesh to:', path / name)
 
-        elif filetype == 'obj':
+        elif name.endswith('.obj'):
             from ursina.mesh_importer import ursina_mesh_to_obj
             ursina_mesh_to_obj(self, name, path)
 
+        elif name.endswith('.bam'):
+            success = self.writeBamFile(path / name)
+            print('saved .bam to:', path / name)
 
 
 
@@ -250,9 +262,9 @@ if __name__ == '__main__':
     tris = ((0,1), (3,4,5))
 
     lines = Entity(model=Mesh(vertices=verts, triangles=tris, mode='line', thickness=4), color=color.cyan, z=-1)
-    points = Entity(model=Mesh(vertices=verts, mode='point', thickness=6), color=color.red, z=-1.01)
+    points = Entity(model=Mesh(vertices=verts, mode='point', thickness=.05), color=color.red, z=-1.01)
     # points.model.mode = MeshModes.point     # can also use  the MeshMode enum
     print(e.model.recipe)
-
+    # e.model.save('bam_test', application.compressed_models_folder, 'bam')
     EditorCamera()
     app.run()
