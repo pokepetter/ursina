@@ -1,16 +1,23 @@
 import os
 import glob
 import subprocess
+from copy import copy
 from pathlib import Path
 from ursina.mesh import Mesh
 from ursina import application
 
+imported_meshes = dict()
 
 def load_model(name, path=application.asset_folder):
+    if name in imported_meshes:
+        # print('load cached model', name)
+        return copy(imported_meshes[name])
+
     for filetype in ('.bam', '.ursinamesh', '.obj', '.blend'):
         # warning: glob is case-insensitive on windows, so m.path will be all lowercase
         for filename in path.glob(f'**/{name}{filetype}'):
             if filetype == '.bam':
+                print('loading bam')
                 return loader.loadModel(filename)
 
             if filetype == '.ursinamesh':
@@ -19,6 +26,7 @@ def load_model(name, path=application.asset_folder):
                         m = eval(f.read())
                         m.path = filename
                         m.name = name
+                        imported_meshes[name] = m
                         return m
                 except:
                     print('invalid ursinamesh file:', filename)
@@ -29,6 +37,7 @@ def load_model(name, path=application.asset_folder):
                 m = eval(m)
                 m.path = filename
                 m.name = name
+                imported_meshes[name] = m
                 return m
 
             if filetype == '.blend':
@@ -73,7 +82,6 @@ if not hasattr(application, 'blender_paths'):
     from pprint import pprint
     print('blender_paths:')
     pprint(application.blender_paths)
-
 
 
 def compress_models(path=application.models_folder, outpath=application.compressed_models_folder, name='*'):
@@ -334,5 +342,8 @@ if __name__ == '__main__':
     # compress_internal()
     from ursina import *
     app = Ursina()
+    print('imported_meshes:\n', imported_meshes)
+    # Entity(model='quad').model.save('quad.bam')
+    app.run()
     # e = Entity(model=Cylinder(16))
     # ursina_mesh_to_obj(e.model, name='quad_export_test')
