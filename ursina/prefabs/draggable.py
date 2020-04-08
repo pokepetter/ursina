@@ -2,8 +2,7 @@ from ursina import *
 
 class Draggable(Button):
 
-    _z_plane = Entity(name='_z_plane', model='quad', collider='box', scale=(999,999),
-        color=color.clear, enabled=False, eternal=True)
+    _z_plane = Entity(name='_z_plane', scale=(999,999), enabled=False, eternal=True)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -18,6 +17,10 @@ class Draggable(Button):
         self.min_x, self.min_y, self.min_z = -math.inf, -math.inf, -math.inf
         self.max_x, self.max_y, self.max_z = math.inf, math.inf, math.inf
 
+        if not Draggable._z_plane.model: # set these after game start so it can load the model
+            Draggable._z_plane.model = 'quad'
+            Draggable._z_plane.collider = 'box'
+            Draggable._z_plane.color = color.clear
 
 
         for key, value in kwargs.items():
