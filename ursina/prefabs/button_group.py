@@ -2,17 +2,17 @@ from ursina import *
 
 
 class ButtonGroup(Entity):
-    def __init__(self, options=None, **kwargs):
+    def __init__(self, options=None, min_selection=0, max_selection=1, **kwargs):
         super().__init__()
         self.deselected_color = Button.color
-        self.selected_color = color.orange
-        self.max_selection = 1
+        self.selected_color = color.azure
+        self.min_selection = min_selection
+        self.max_selection = max(min_selection, max_selection)
 
         self.buttons = list()
         self.selected = list()
         self.options = options
 
-        self.label = Text(parent=self, scale=1/.04*.9, origin=(-.5, -.35))
         self.parent = camera.ui
         self.scale = Text.size * 2
 
@@ -32,16 +32,7 @@ class ButtonGroup(Entity):
 
     @property
     def value(self):
-        return
-
-
-    @property
-    def title(self):
-        return self.label.text
-
-    @title.setter
-    def title(self, value):
-        self.label.text = value
+        return [b.value for b in self.selected]
 
 
     def layout(self):
@@ -55,18 +46,18 @@ class ButtonGroup(Entity):
             b = Button(parent=self, text=e, name=e, scale_x=width, scale_y=.9)
             b.value = e
             b.highlight_scale = 1
-            b.highlight_color = color.orange
             b.pressed_scale = 1
             self.buttons.append(b)
 
         grid_layout(self.buttons, spacing=(0.025,0,0), origin=(-.5, .5, 0))
-        for b in self.buttons:
-            b.x += width / 2
 
 
     def input(self, key):
         if key == 'left mouse down' and mouse.hovered_entity in self.buttons:
             b = mouse.hovered_entity
+
+            if b in self.selected and self.min_selection > 0 and len(self.selected) >= self.min_selection:
+                return
 
             # add
             if not b in self.selected:
@@ -82,12 +73,28 @@ class ButtonGroup(Entity):
                 b.color = self.deselected_color
                 self.selected.remove(b)
 
+            self.on_value_changed()
+
+
+    def on_value_changed(self):
+        pass
+
 
 
 if __name__ == '__main__':
     app = Ursina()
 
-    Text.default_font = 'VeraMono.ttf'
-    button_group = ButtonGroup(('man', 'woman', 'other'))
+    # Text.default_font = 'VeraMono.ttf'
+    gender_selection = ButtonGroup(('man', 'woman', 'other'))
+    on_off_switch = ButtonGroup(('on', 'off'), min_selection=2, y=-.1)
 
+    def on_value_changed():
+        print('set gender:', gender_selection.value)
+    gender_selection.on_value_changed = on_value_changed
+
+    def on_value_changed():
+        print('turn:', on_off_switch.value)
+    on_off_switch.on_value_changed = on_value_changed
+
+    window.color = color._32
     app.run()
