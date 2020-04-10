@@ -2,7 +2,7 @@ from ursina import *
 
 
 class ButtonGroup(Entity):
-    def __init__(self, options=None, min_selection=0, max_selection=1, **kwargs):
+    def __init__(self, options=None, default='', min_selection=0, max_selection=1, **kwargs):
         super().__init__()
         self.deselected_color = Button.color
         self.selected_color = color.azure
@@ -12,6 +12,9 @@ class ButtonGroup(Entity):
         self.buttons = list()
         self.selected = list()
         self.options = options
+        if default:
+            for b in [e for e in self.buttons if e.value == default]:
+                self.select(b)
 
         self.parent = camera.ui
         self.scale = Text.size * 2
@@ -54,26 +57,29 @@ class ButtonGroup(Entity):
 
     def input(self, key):
         if key == 'left mouse down' and mouse.hovered_entity in self.buttons:
-            b = mouse.hovered_entity
+            self.select(mouse.hovered_entity)
 
-            if b in self.selected and self.min_selection > 0 and len(self.selected) >= self.min_selection:
-                return
 
-            # add
-            if not b in self.selected:
-                b.color = self.selected_color
-                self.selected.append(b)
+    def select(self, b):
+        if b in self.selected and self.min_selection > 0 and len(self.selected) >= self.min_selection:
+            return
 
-                if len(self.selected) > self.max_selection:
-                    # remove oldest addition
-                    self.selected[0].color = self.deselected_color
-                    self.selected.pop(0)
-            # remove
-            else:
-                b.color = self.deselected_color
-                self.selected.remove(b)
+        # add
+        if not b in self.selected:
+            b.color = self.selected_color
+            self.selected.append(b)
 
-            self.on_value_changed()
+            if len(self.selected) > self.max_selection:
+                # remove oldest addition
+                self.selected[0].color = self.deselected_color
+                self.selected.pop(0)
+        # remove
+        else:
+            b.color = self.deselected_color
+            self.selected.remove(b)
+
+        self.on_value_changed()
+
 
 
     def on_value_changed(self):
@@ -86,7 +92,7 @@ if __name__ == '__main__':
 
     # Text.default_font = 'VeraMono.ttf'
     gender_selection = ButtonGroup(('man', 'woman', 'other'))
-    on_off_switch = ButtonGroup(('on', 'off'), min_selection=2, y=-.1)
+    on_off_switch = ButtonGroup(('off', 'on'), min_selection=1, y=-.1, default='on')
 
     def on_value_changed():
         print('set gender:', gender_selection.value)
