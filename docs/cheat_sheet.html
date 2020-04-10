@@ -274,6 +274,7 @@ text_colors<g> = {'default' : color.text_color}</g>
 tag<g> = Text.start_tag+'default'+Text.end_tag</g> 
 current_color<g> = self.text_colors['default']</g> 
 scale_override<g> = 1</g> 
+appear_sequence<g> = None # gets created when calling appear()</g> 
 text
 color
 width
@@ -665,6 +666,8 @@ compress_models_fast(<g>model_name=None, write_to_disk=False</g>)
 ursina_mesh_to_obj(<g>mesh, name='', out_path=application.models_folder, max_decimals=3</g>)   
 compress_internal()   
 
+<div class="example">print('imported_meshes:\n', imported_meshes)
+</div>
 </pre></div>
 <div id="scene"><div id="scene" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">scene</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">render<g> = None</g> 
 world<g> = None</g> 
@@ -732,8 +735,7 @@ get_width(<g>string, font=None</g>)
   app.run()
 </div>
 </pre></div>
-<div id="texture_importer"><div id="texture_importer" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">texture_importer</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">has_psd_tools_installed<g> = False</g> 
-file_types<g> = ('.jpg', '.png', '.gif')</g> 
+<div id="texture_importer"><div id="texture_importer" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">texture_importer</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">file_types<g> = ('.jpg', '.png', '.gif')</g> 
 textureless<g> = False</g> 
 
 load_texture(<g>name, path=None</g>)   
@@ -1056,6 +1058,8 @@ world_point<g> = None</g>
 distance<g> = math.inf</g> 
 normal<g> = None</g> 
 world_normal<g> = None</g> 
+hits<g> = None</g> 
+entities<g> = None</g> 
 
 
 </pre></div>
@@ -1222,6 +1226,7 @@ funcs<g> = list()</g>
 paused<g> = True</g> 
 loop<g> = False</g> 
 auto_destroy<g> = True</g> 
+finished
 
 generate()   
 append(<g>arg</g>)   
@@ -1351,25 +1356,36 @@ def input(key):
         print(anim.enabled)
 </div>
 </pre></div>
-<div id="ButtonGroup"><div id="ButtonGroup" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ButtonGroup<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ButtonGroup(options=None, **kwargs)</params>
+<div id="ButtonGroup"><div id="ButtonGroup" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ButtonGroup<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ButtonGroup(options=None, default='', min_selection=0, max_selection=1, **kwargs)</params>
 
 deselected_color<g> = Button.color</g> 
-selected_color<g> = color.orange</g> 
-max_selection<g> = 1</g> 
+selected_color<g> = color.azure</g> 
+min_selection<g> = min_selection</g> 
+max_selection<g> = max(min_selection, max_selection)</g> 
 buttons<g> = list()</g> 
 selected<g> = list()</g> 
 options<g> = options</g> 
-label<g> = Text(parent=self, scale=1/.04*.9, origin=(-.5, -.35))</g> 
 parent<g> = camera.ui</g> 
 scale<g> = Text.size * 2</g> 
 value
-title
 
 layout()   
 input(<g>key</g>)   
+select(<g>b</g>)   
+on_value_changed()   
 
-<div class="example">Text.default_font = 'VeraMono.ttf'
-button_group = ButtonGroup(('man', 'woman', 'other'))
+<div class="example">gender_selection = ButtonGroup(('man', 'woman', 'other'))
+on_off_switch = ButtonGroup(('off', 'on'), min_selection=1, y=-.1, default='on')
+
+def on_value_changed():
+    print('set gender:', gender_selection.value)
+gender_selection.on_value_changed = on_value_changed
+
+def on_value_changed():
+    print('turn:', on_off_switch.value)
+on_off_switch.on_value_changed = on_value_changed
+
+window.color = color._32
 </div>
 </pre></div>
 <div id="ButtonList"><div id="ButtonList" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ButtonList<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ButtonList(button_dict, button_height=1.5, **kwargs)</params>
@@ -1733,8 +1749,8 @@ hotkeys<g> = {
         'ctrl+r' : self.reload_code,
         'f5'     : self.reload_code,
         'f6'     : self.reload_textures,
-        'f6'     : self.reload_models,
-        'f6'     : self.toggle_hotreloading,
+        'f7'     : self.reload_models,
+        'f8'     : self.toggle_hotreloading,
         }</g> 
 
 input(<g>key</g>)   
