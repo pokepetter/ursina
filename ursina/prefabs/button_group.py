@@ -12,9 +12,6 @@ class ButtonGroup(Entity):
         self.buttons = list()
         self.selected = list()
         self.options = options
-        if default:
-            for b in [e for e in self.buttons if e.value == default]:
-                self.select(b)
 
         self.parent = camera.ui
         self.scale = Text.size * 2
@@ -22,6 +19,9 @@ class ButtonGroup(Entity):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
+        if default:
+            for b in [e for e in self.buttons if e.value == default]:
+                self.select(b)
 
     @property
     def options(self):
@@ -92,7 +92,7 @@ if __name__ == '__main__':
 
     # Text.default_font = 'VeraMono.ttf'
     gender_selection = ButtonGroup(('man', 'woman', 'other'))
-    on_off_switch = ButtonGroup(('off', 'on'), min_selection=1, y=-.1, default='on')
+    on_off_switch = ButtonGroup(('off', 'on'), min_selection=1, y=-.1, default='on', selected_color=color.red)
 
     def on_value_changed():
         print('set gender:', gender_selection.value)
