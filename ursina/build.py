@@ -94,12 +94,13 @@ always_include = (
     'Lib/collections', 'Lib/ctypes', 'Lib/encodings',
     'Lib/importlib', 'Lib/urllib', 'Lib/logging',
     'Lib/site-packages/panda3d/',
+    'Lib/site-packages/screeninfo/'
     )
 
 for path in always_include:
     source = python_folder / path
     dest = python_dest / path
-    print('copying:', source)
+    print('copying always include:', source)
 
     if source.is_file():
         dest.parent.mkdir(parents=True, exist_ok=True)
@@ -115,7 +116,7 @@ spec = importlib.util.find_spec('ursina')
 ursina_path = Path(spec.origin).parent
 dest = build_folder / 'python/Lib/site-packages/ursina'
 dest.mkdir(parents=True, exist_ok=True)
-copytree(ursina_path, dest)
+copytree(ursina_path, dest, ignore=shutil.ignore_patterns('samples', 'unused'))
 
 
 print('copying found modules')
@@ -136,7 +137,7 @@ for name, mod in finder.modules.items():
         copy(filename, str(build_folder / 'python/DLLs'))
 
     elif 'lib\\site-packages\\' in filename:
-        print('copying:', filename)
+        print('copying module:', filename)
         forward_slashed = filename.split('lib\\site-packages\\')[1].replace('\\', '/')
         dir = build_folder / 'python/lib/site-packages' / forward_slashed
         dir.parent.mkdir(parents=True, exist_ok=True)
@@ -163,6 +164,7 @@ print('creating .exe file')
 with Path(build_folder / 'run.bat').open('w') as f:
     f.write('''start "" "%CD%\python\python.exe" %CD%\src\main.py''')
 
+
 import subprocess
 subprocess.call([
     f'{ursina_path}\\scripts\\_bat_to_exe.bat',
@@ -170,6 +172,5 @@ subprocess.call([
     f'\\build\\{project_folder.stem}.exe'
     ])
 
-os.remove(Path(build_folder / 'run.bat'))
 
 print('build complete! time elapsed:', time.time() - start_time)
