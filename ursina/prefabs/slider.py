@@ -77,7 +77,7 @@ class Slider(Entity):
     def value(self):
         val = lerp(self.min, self.max, self.knob.x * 2)
         if self.step == 1:
-            val = int(val)
+            val = int(round(val, 0))
 
         return val
 
@@ -147,7 +147,7 @@ if __name__ == '__main__':
     # color.text_color = color.dark_text
     # origin = Entity(model='cube', color=color.green, scale = .05)
     # box = Entity(model='cube', origin_y=-.5, scale=1, color=color.orange)
-    slider = Slider(0, 255, default=10, height=Text.size*3, y=-.4, step=1   )
+    slider = Slider(0, 20, default=10, height=Text.size*3, y=-.4, step=1   )
     slider = Slider(1, 2, default=1.2, x=-.4, y=-.47, text='contrast', dynamic=True)
     # thin_slider = ThinSlider(0, 255, default=1, text='thin_slider', height=Text.size*3, y=-.4, step=1, vertical=False, x=-.7)
     # Text('debug text')
