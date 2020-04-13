@@ -63,7 +63,7 @@ class FileBrowser(Entity):
         self.selection_limit = 1
         self.max_buttons = 24
 
-        self.title_bar = Button(parent=self, scale=(.9,.025), text='Open', color=color.dark_gray, collision=False, y=-.01)
+        self.title_bar = Button(parent=self, scale=(.9,.035), text='<gray>Open', color=color.dark_gray, collision=False)
         self.address_bar = Button(parent=self, scale=(.8,.035), text='//', text_origin=(-.5,0), y=-.05, highlight_color=color.black)
         self.address_bar.text_entity.scale *= .75
         self.address_bar.text_entity.x = -.5 + Text.get_width(' ')
@@ -76,6 +76,9 @@ class FileBrowser(Entity):
 
         self.cancel_button = Button(parent=self, scale=(.875*.24, .05), y=(-self.max_buttons*.025)-.15, origin_x=-.5, x=-.875/2, text='Cancel', on_click=self.close)
         self.open_button = Button(parent=self, scale=(.875*.74, .05), y=(-self.max_buttons*.025)-.15, origin_x=.5, x=.875/2, text='Open', color=color.dark_gray, on_click=self.open)
+
+        self.cancel_button_2 = Button(parent=self.title_bar, model=Circle(), world_scale=self.title_bar.world_scale_y*.75, origin_x=.5, x=.495, z=-.1, text='<gray>x', on_click=self.close)
+        self.cancel_button_2.text_entity.scale *= .75
 
         self.can_scroll_up_indicator = Entity(parent=self, model='quad', texture='arrow_down', rotation_z=180, scale=(.05,.05), y=-.0765, z=-.1, color=color.dark_gray, enabled=False, add_to_scene_entities=False)
         self.can_scroll_down_indicator = Entity(parent=self, model='quad', texture='arrow_down', scale=(.05,.05), y=(-self.max_buttons*.025)-.104, z=-.1, color=color.dark_gray, enabled=False, add_to_scene_entities=False)
