@@ -62,10 +62,13 @@ class RadialMenu(Entity):
 
 class RadialMenuButton(Button):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.model = Circle(resolution=32, radius=.6)
-        self.highlight_scale = 1.2
-        self.pressed_color = color.azure
+        super().__init__(
+            model='sphere',
+            scale=1.3,
+            highlight_scale=1.2,
+            pressed_color=color.azure
+            )
+
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -86,7 +89,7 @@ if __name__ == '__main__':
             ),
         enabled = False
         )
-    RadialMenuButton(text='6', color=color.red,x =-.5, scale=.1),
+    RadialMenuButton(text='6', color=color.red,x =-.5, scale=.06),
     def enable_radial_menu():
         rm.enabled = True
     cube = Button(parent=scene, model='cube', color=color.orange, highlight_color=color.azure, on_click=enable_radial_menu)
