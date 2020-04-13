@@ -144,7 +144,7 @@ class Button(Entity):
             self.model.setColorScale(self.highlight_color)
 
             if self.highlight_scale != 1:
-                self.scale = self.original_scale * self.highlight_scale
+                self.model.setScale(Vec3(self.highlight_scale, 1, self.highlight_scale))
 
         if hasattr(self, 'tooltip'):
             self.tooltip.scale = (0,0,0)
@@ -157,7 +157,7 @@ class Button(Entity):
             self.model.setColorScale(self.color)
 
             if not mouse.left and self.highlight_scale != 1:
-                self.scale = self.original_scale
+                self.model.setScale(Vec3(1,1,1))
 
         if hasattr(self, 'tooltip'):
             self.tooltip.enabled = False
