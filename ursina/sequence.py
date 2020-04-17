@@ -17,7 +17,7 @@ class Func():
         self.delay = 0
         self.finished = False
 
-    def run(self):
+    def __call__ (self):
         self.func(*self.args, **self.kwargs)
         self.finished = True
 
@@ -111,7 +111,7 @@ class Sequence():
 
         for f in self.funcs:
             if not f.finished and f.delay <= self.t:
-                f.run()
+                f()
 
 
         if self.t >= self.duration:
@@ -150,6 +150,5 @@ if __name__ == '__main__':
         actions = {'s' : s.start, 'f' : s.finish, 'p' : s.pause, 'r' : s.resume}
         if key in actions:
             actions[key]()
-
 
     app.run()

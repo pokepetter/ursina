@@ -170,9 +170,6 @@ class Button(Entity):
         if callable(action):
             action()
 
-        elif isinstance(action, Func):
-            action.run()
-
         elif isinstance(action, Sequence):
             action.start()
 
