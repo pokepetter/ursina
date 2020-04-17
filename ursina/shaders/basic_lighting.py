@@ -1,10 +1,11 @@
 from panda3d.core import Shader
 
 
-empty_shader = Shader.make(Shader.SL_GLSL,
+basic_lighting_shader = Shader.make(Shader.SL_GLSL,
 vertex='''
 #version 130
 uniform mat4 p3d_ModelViewProjectionMatrix;
+uniform mat4 p3d_ModelMatrixInverseTranspose;
 uniform mat4 transform_matrix;
 in vec4 p3d_Vertex;
 in vec2 p3d_MultiTexCoord0;
@@ -63,7 +64,7 @@ if __name__ == '__main__':
 
     # e = Entity(model='sphere', shader=empty_shader)
     # e.setShaderInput('transform_matrix', e.getNetTransform().getMat())
-    shader = empty_shader
+    shader = basic_lighting_shader
 
     a = WhiteCube(shader=shader)
     a.setShaderInput('transform_matrix', a.getNetTransform().getMat())
