@@ -1,22 +1,19 @@
 from pathlib import Path
+from copy import copy
 from ursina import application
 from ursina.texture import Texture
 
 
-has_psd_tools_installed = False
-try:
-    from psd_tools import PSDImage
-    has_psd_tools_installed = True
-except (ModuleNotFoundError, ImportError) as e:
-    print('psd-tools not installed')
-
-
+imported_textures = dict()
 file_types = ('.jpg', '.png', '.gif')
 textureless = False
 
 def load_texture(name, path=None):
     if textureless:
         return None
+
+    if name in imported_textures:
+        return copy(imported_textures[name])
 
     folders = ( # folder search order
         application.compressed_textures_folder,
@@ -40,8 +37,9 @@ def load_texture(name, path=None):
         for filename in folder.glob('**/' + name + '.*'):
             if filename.suffix in file_types:
                 # print('found:', filename)
-                return Texture(filename.resolve())
-
+                t =  Texture(filename.resolve())
+                imported_textures[name] = t
+                return t
 
     if has_psd_tools_installed:
         for folder in folders:
@@ -78,7 +76,11 @@ def compress_textures(name=''):
             continue
         # print('  found:', f)
 
-        if f.suffix == '.psd' and has_psd_tools_installed:
+        if f.suffix == '.psd':
+            try:
+                from psd_tools import PSDImage
+            except (ModuleNotFoundError, ImportError) as e:
+                print('psd-tools not installed')
             image = PSDImage.load(f)
             image = image.as_PIL()
         elif f.suffix == '.png':
