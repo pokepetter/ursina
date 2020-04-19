@@ -199,11 +199,11 @@ class Ursina(ShowBase):
         if key == 'f9':
             window.display_mode = 'default'
 
-        if key == 'escape':
-            if not application.paused:
-                application.pause()
-            else:
-                application.resume()
+        # if key == 'escape':
+        #     if not application.paused:
+        #         application.pause()
+        #     else:
+        #         application.resume()
 
 
     def run(self):

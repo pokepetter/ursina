@@ -24,7 +24,7 @@ class Cursor(Entity):
 
 if __name__ == '__main__':
     app = Ursina()
-    Button('button').fit()
+    Button('button').fit_to_text()
     Panel()
     camera.orthographic = True
     camera.fov = 100

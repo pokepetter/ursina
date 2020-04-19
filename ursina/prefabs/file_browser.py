@@ -211,8 +211,8 @@ if __name__ == '__main__':
     fb = FileBrowser(file_types=('.*'), enabled=True)
 
     def on_submit(value):
-        for button in value:
-            print('---', button.path)
+        for path in value:
+            print('---', path)
 
     fb.on_submit = on_submit
 
