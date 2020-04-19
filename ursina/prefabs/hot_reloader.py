@@ -148,7 +148,7 @@ class HotReloader(Entity):
                 print('texture is made from .psd file', e.texture.path.stem + '.psd')
                 compress_textures(e.texture.path.stem)
             print('reloaded texture:', e.texture.path)
-            e.texture._texture.reload_code()
+            e.texture._texture.reload()
 
 
     def reload_models(self):
