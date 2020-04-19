@@ -37,7 +37,7 @@ class Button(Entity):
         self.highlight_color = self.color.tint(.2)
         self.pressed_color = self.color.tint(-.2)
         self.highlight_scale = 1    # multiplier
-        self.pressed_scale = .9     # multiplier
+        self.pressed_scale = 1     # multiplier
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -177,7 +177,7 @@ class Button(Entity):
             exec(textwrap.dedent(action))
 
 
-    def fit(self):
+    def fit_to_text(self):
         if not self.text_entity.text or self.text_entity.text == '':
             return
 
@@ -197,7 +197,7 @@ if __name__ == '__main__':
     app = Ursina()
 
     b = Button(text='hello world!', color=color.azure, origin=(-.5,.5))
-    # b.fit()
+    # b.fit_to_text()
     b.on_click = application.quit
     b.tooltip = Tooltip('exit')
 
