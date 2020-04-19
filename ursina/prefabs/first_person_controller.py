@@ -23,6 +23,7 @@ class FirstPersonController(Entity):
         camera.rotation = (0,0,0)
         camera.fov = 90
         mouse.locked = True
+        self.mouse_sensitivity = Vec2(40, 40)
         self.target_smoothing = 100
         self.smoothing = self.target_smoothing
 
@@ -32,8 +33,8 @@ class FirstPersonController(Entity):
 
 
     def update(self):
-        self.rotation_y += mouse.velocity[0] * 40
-        camera.rotation_x -= mouse.velocity[1] * 40
+        self.rotation_y += mouse.velocity[0] * self.mouse_sensitivity[1]
+        camera.rotation_x -= mouse.velocity[1] * self.mouse_sensitivity[0]
         camera.rotation_x = clamp(camera.rotation_x, -90, 90)
 
         self.y += held_keys['e']
@@ -73,6 +74,7 @@ class FirstPersonController(Entity):
 
 
 if __name__ == '__main__':
+    from ursina.prefabs.first_person_controller import FirstPersonController
     app = Ursina()
     Sky(color=color.gray)
     ground = Entity(model='plane', scale=(100,1,100), color=color.yellow.tint(-.2), texture='white_cube', texture_scale=(100,100), collider='box')
@@ -104,5 +106,4 @@ if __name__ == '__main__':
         if ray.hit:
             player.y = max(player.y, raycast(player.position+player.up, player.down).world_point[1])
 
-    mouse.visible = True
     app.run()

@@ -166,7 +166,7 @@ eternal<g> = False    # eternal entities does not get destroyed on scene.clear()
 ignore_paused<g> = False</g> 
 ignore_input<g> = False</g> 
 parent<g> = scene</g> 
-add_to_scene_entities<g> = add_to_scene_entities</g> 
+add_to_scene_entities<g> = add_to_scene_entities # set to False to be ignored by the engine, but still get rendered.</g> 
 model<g> = None       # set model with model='model_name' (without file type extention)</g> 
 color<g> = color.white</g> 
 texture<g> = None     # set model with texture='texture_name'. requires a model to be set beforehand.</g> 
@@ -295,11 +295,11 @@ get_width(<g>string, font=None</g>)
       <scale:1.5><orange>Rainstorm<default><scale:1>
       Summon a <azure>rain storm <default>to deal 5 <azure>water
 
-      damage <default>to <hsb(0,1,.7)>everyone, <default><image:brick> <image:brick> test <default>including <orange>yourself. <default>
+      damage <default>to <hsb(0,1,.7)>everyone, <default><image:file_icon> <image:file_icon> test <default>including <orange>yourself. <default>
       Lasts for 4 rounds.''').strip()
 
   Text.default_resolution = 1080 * Text.size
-  test = Text(text=descr)
+  test = Text(origin=(.5,.5), text=descr)
 
   def input(key):
       if key == 'a':
@@ -321,7 +321,7 @@ text_entity<g> = None</g>
 highlight_color<g> = self.color.tint(.2)</g> 
 pressed_color<g> = self.color.tint(-.2)</g> 
 highlight_scale<g> = 1    # multiplier</g> 
-pressed_scale<g> = .9     # multiplier</g> 
+pressed_scale<g> = 1     # multiplier</g> 
 original_scale<g> = self.scale</g> 
 text
 text_origin
@@ -330,7 +330,7 @@ input(<g>key</g>)
 on_mouse_enter()   
 on_mouse_exit()   
 on_click()   
-fit()   
+fit_to_text()   
 
 <div class="example">b = Button(text='hello world!', color=color.azure, origin=(-.5,.5))
 b.on_click = application.quit
@@ -425,6 +425,7 @@ time_scale<g> = 1</g>
 sequences<g> = list()</g> 
 trace_entity_definition<g> = True # enable to set entity.line_definition</g> 
 package_folder<g> = Path(__file__).parent</g> 
+development_mode<g> = True</g> 
 models_folder<g> = asset_folder / 'models/'</g> 
 prefabs_folder<g> = asset_folder / 'prefabs/'</g> 
 scenes_folder<g> = asset_folder / 'scenes/'</g> 
@@ -719,11 +720,11 @@ get_width(<g>string, font=None</g>)
       <scale:1.5><orange>Rainstorm<default><scale:1>
       Summon a <azure>rain storm <default>to deal 5 <azure>water
 
-      damage <default>to <hsb(0,1,.7)>everyone, <default><image:brick> <image:brick> test <default>including <orange>yourself. <default>
+      damage <default>to <hsb(0,1,.7)>everyone, <default><image:file_icon> <image:file_icon> test <default>including <orange>yourself. <default>
       Lasts for 4 rounds.''').strip()
 
   Text.default_resolution = 1080 * Text.size
-  test = Text(text=descr)
+  test = Text(origin=(.5,.5), text=descr)
 
   def input(key):
       if key == 'a':
@@ -737,6 +738,7 @@ get_width(<g>string, font=None</g>)
 </pre></div>
 <div id="texture_importer"><div id="texture_importer" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">texture_importer</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">file_types<g> = ('.jpg', '.png', '.gif')</g> 
 textureless<g> = False</g> 
+has_psd_tools_installed<g> = False</g> 
 
 load_texture(<g>name, path=None</g>)   
 compress_textures(<g>name=''</g>)   
@@ -828,6 +830,8 @@ window.borderless = False
 window.fullscreen = False
 window.exit_button.visible = False
 window.fps_counter.enabled = False
+
+Entity(model='cube', color=color.green, collider='box', texture='shore')
 </div>
 </pre></div>
 <div id="Audio"><div id="Audio" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Audio<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Audio(sound_file_name='', autoplay=True, **kwargs)</params>
@@ -1193,7 +1197,6 @@ kwargs<g> = kwargs</g>
 delay<g> = 0</g> 
 finished<g> = False</g> 
 
-run()   
 
 <div class="example">e = Entity(model='quad')
 s = Sequence(
@@ -1300,7 +1303,10 @@ z
 
 <div class="example">a = Vec3(0,0,0)
 b = Vec3(1.252352324,0,1)
-b += (0,1)
+b += Vec3(0,1)
+for i in range(10):
+    print(a + Vec3(i,0,0))
+
 print(type(b))
 print(b)
 </div>
@@ -1375,7 +1381,7 @@ select(<g>b</g>)
 on_value_changed()   
 
 <div class="example">gender_selection = ButtonGroup(('man', 'woman', 'other'))
-on_off_switch = ButtonGroup(('off', 'on'), min_selection=1, y=-.1, default='on')
+on_off_switch = ButtonGroup(('off', 'on'), min_selection=1, y=-.1, default='on', selected_color=color.red)
 
 def on_value_changed():
     print('set gender:', gender_selection.value)
@@ -1452,7 +1458,7 @@ render_queue<g> = 1</g>
 
 update()   
 
-<div class="example">Button('button').fit()
+<div class="example">Button('button').fit_to_text()
 Panel()
 camera.orthographic = True
 camera.fov = 100
@@ -1478,10 +1484,12 @@ require_key<g> = None</g>
 dragging<g> = False</g> 
 delta_drag<g> = 0</g> 
 start_pos<g> = self.world_position</g> 
-start_offset<g> = (0,0)</g> 
-step<g> = (0,0)</g> 
+start_offset<g> = (0,0,0)</g> 
+step<g> = (0,0,0)</g> 
+plane_direction<g> = (0,0,1)</g> 
 lock_x<g> = False</g> 
 lock_y<g> = False</g> 
+lock_z<g> = False</g> 
 min_x, self.min_y, self.min_z<g> = -math.inf, -math.inf, -math.inf</g> 
 max_x, self.max_y, self.max_z<g> = math.inf, math.inf, math.inf</g> 
 
@@ -1491,9 +1499,10 @@ stop_dragging()
 update()   
 
 <div class="example">camera.orthographic = True
-
-e = Draggable(scale=10)
-e.parent = scene
+Entity(model='plane', scale=8, texture='white_cube', texture_scale=(8,8))
+e = Draggable(parent=scene, model='cube', color=color.azure, scale=1, plane_direction=(0,1,0))
+EditorCamera()
+e.drop = Func(print, 'awoijdoaiwjdaoiwjdoi')
 </div>
 </pre></div>
 <div id="DropdownMenuButton"><div id="DropdownMenuButton" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">DropdownMenuButton<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">DropdownMenuButton(text='', **kwargs)</params>
@@ -1613,8 +1622,8 @@ on_double_click()
 <div class="example">fb = FileBrowser(file_types=('.*'), enabled=True)
 
 def on_submit(value):
-    for button in value:
-        print('---', button.path)
+    for path in value:
+        print('---', path)
 
 fb.on_submit = on_submit
 </div>
@@ -1625,7 +1634,7 @@ return_files<g> = True</g>
 return_directories<g> = False</g> 
 selection_limit<g> = 1</g> 
 max_buttons<g> = 24</g> 
-title_bar<g> = Button(parent=self, scale=(.9,.025), text='Open', color=color.dark_gray, collision=False, y=-.01)</g> 
+title_bar<g> = Button(parent=self, scale=(.9,.035), text='<gray>Open', color=color.dark_gray, collision=False)</g> 
 address_bar<g> = Button(parent=self, scale=(.8,.035), text='//', text_origin=(-.5,0), y=-.05, highlight_color=color.black)</g> 
 folder_up_button<g> = Button(parent=self, scale=(.035,.035), texture='arrow_down', rotation_z=180, position=(-.42,-.05), color=color.white, highlight_color=color.azure, on_click=self.folder_up)</g> 
 button_parent<g> = Entity(parent=self)</g> 
@@ -1633,6 +1642,7 @@ back_panel<g> = Entity(parent=self, model='quad', collider='box', origin_y=.5, s
 bg<g> = Button(parent=self, z=1, scale=(999,999), color=color.black66, highlight_color=color.black66, pressed_color=color.black66)</g> 
 cancel_button<g> = Button(parent=self, scale=(.875*.24, .05), y=(-self.max_buttons*.025)-.15, origin_x=-.5, x=-.875/2, text='Cancel', on_click=self.close)</g> 
 open_button<g> = Button(parent=self, scale=(.875*.74, .05), y=(-self.max_buttons*.025)-.15, origin_x=.5, x=.875/2, text='Open', color=color.dark_gray, on_click=self.open)</g> 
+cancel_button_2<g> = Button(parent=self.title_bar, model=Circle(), world_scale=self.title_bar.world_scale_y*.75, origin_x=.5, x=.495, z=-.1, text='<gray>x', on_click=self.close)</g> 
 can_scroll_up_indicator<g> = Entity(parent=self, model='quad', texture='arrow_down', rotation_z=180, scale=(.05,.05), y=-.0765, z=-.1, color=color.dark_gray, enabled=False, add_to_scene_entities=False)</g> 
 can_scroll_down_indicator<g> = Entity(parent=self, model='quad', texture='arrow_down', scale=(.05,.05), y=(-self.max_buttons*.025)-.104, z=-.1, color=color.dark_gray, enabled=False, add_to_scene_entities=False)</g> 
 file_types<g> = ['.*', ]</g> 
@@ -1650,8 +1660,8 @@ open()
 <div class="example">fb = FileBrowser(file_types=('.*'), enabled=True)
 
 def on_submit(value):
-    for button in value:
-        print('---', button.path)
+    for path in value:
+        print('---', path)
 
 fb.on_submit = on_submit
 </div>
@@ -1677,12 +1687,14 @@ update_interval<g> = 30</g>
 cursor<g> = Entity(
         parent</g> 
 position<g> = (0, 1, 1)</g> 
+mouse_sensitivity<g> = Vec2(40, 40)</g> 
 target_smoothing<g> = 100</g> 
 smoothing<g> = self.target_smoothing</g> 
 
 update()   
 
-<div class="example">Sky(color=color.gray)
+<div class="example">from ursina.prefabs.first_person_controller import FirstPersonController
+Sky(color=color.gray)
 ground = Entity(model='plane', scale=(100,1,100), color=color.yellow.tint(-.2), texture='white_cube', texture_scale=(100,100), collider='box')
 e = Entity(
     model='cube',
@@ -1711,8 +1723,6 @@ def update():
     ray = raycast(player.position+player.up, player.down)
     if ray.hit:
         player.y = max(player.y, raycast(player.position+player.up, player.down).world_point[1])
-
-mouse.visible = True
 </div>
 </pre></div>
 <div id="HealthBar"><div id="HealthBar" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">HealthBar<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">HealthBar(max_value=100, show_text=True, show_lines=False, **kwargs)</params>
@@ -1785,7 +1795,7 @@ print(input_field.default_value)
 def submit():
     print(input_field.text)
 
-Button('submit', scale=.1, color=color.azure, y=-.2, on_click=submit).fit()
+Button('submit', scale=.1, color=color.azure, y=-.2, on_click=submit).fit_to_text()
 </div>
 </pre></div>
 <div id="MemoryCounter"><div id="MemoryCounter" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">MemoryCounter<g>(<a style="color: gray;" href="#Text">Text</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">MemoryCounter(**kwargs)</params>
@@ -1885,7 +1895,7 @@ input(<g>key</g>)
         ),
     enabled = False
     )
-RadialMenuButton(text='6', color=color.red,x =-.5, scale=.1),
+RadialMenuButton(text='6', color=color.red,x =-.5, scale=.06),
 def enable_radial_menu():
     rm.enabled = True
 cube = Button(parent=scene, model='cube', color=color.orange, highlight_color=color.azure, on_click=enable_radial_menu)
@@ -1894,9 +1904,6 @@ EditorCamera()
 </pre></div>
 <div id="RadialMenuButton"><div id="RadialMenuButton" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">RadialMenuButton<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">RadialMenuButton(**kwargs)</params>
 
-model<g> = Circle(resolution=32, radius=.6)</g> 
-highlight_scale<g> = 1.2</g> 
-pressed_color<g> = color.azure</g> 
 
 
 <div class="example">rm = RadialMenu(
@@ -1910,7 +1917,7 @@ pressed_color<g> = color.azure</g>
         ),
     enabled = False
     )
-RadialMenuButton(text='6', color=color.red,x =-.5, scale=.1),
+RadialMenuButton(text='6', color=color.red,x =-.5, scale=.06),
 def enable_radial_menu():
     rm.enabled = True
 cube = Button(parent=scene, model='cube', color=color.orange, highlight_color=color.azure, on_click=enable_radial_menu)
@@ -1943,7 +1950,7 @@ drop()
 update()   
 slide()   
 
-<div class="example">slider = Slider(0, 255, default=10, height=Text.size*3, y=-.4, step=1   )
+<div class="example">slider = Slider(0, 20, default=10, height=Text.size*3, y=-.4, step=1   )
 slider = Slider(1, 2, default=1.2, x=-.4, y=-.47, text='contrast', dynamic=True)
 </div>
 </pre></div>
@@ -1951,7 +1958,7 @@ slider = Slider(1, 2, default=1.2, x=-.4, y=-.47, text='contrast', dynamic=True)
 
 
 
-<div class="example">slider = Slider(0, 255, default=10, height=Text.size*3, y=-.4, step=1   )
+<div class="example">slider = Slider(0, 20, default=10, height=Text.size*3, y=-.4, step=1   )
 slider = Slider(1, 2, default=1.2, x=-.4, y=-.47, text='contrast', dynamic=True)
 </div>
 </pre></div>
@@ -2212,13 +2219,12 @@ grid_layout(<g>l, max_x=8, max_y=8, spacing=(0,0,0), origin=(-.5,.5,0), offset=(
 <div class="example">center = Entity(model='quad', scale=.1, color=color.red)
 p = Entity()
 for i in range(4*5):
-    b = Button(parent=p, model='quad', scale=.5, scale_x=1, text=str(i), color=color.tint(color.random_color(),-.6))
+    b = Button(parent=p, scale=1, text=str(i), color=color.tint(color.random_color(),-.6))
     b.text_entity.world_scale = 1
-t = time.time()
-grid_layout(p.children, max_x=7, max_y=10, origin=(0, .5))
+
+grid_layout(p.children, max_x=7, max_y=10, offset=(-.5,-.5))
 center = Entity(parent=camera.ui, model=Circle(), scale=.005, color=color.lime)
 EditorCamera()
-print(time.time() - t)
 </div>
 </pre></div>
 <div id="merge_vertices"><div id="merge_vertices" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">merge_vertices</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
@@ -2289,7 +2295,8 @@ def update():
 Entity(model='cube').add_script(SmoothFollow(target=player, offset=(0,2,0)))
 </div>
 </pre></div>
-<div id="models"><div id="models" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">models</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">'cube'
+<div id="models"><div id="models" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">models</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">'circle'
+'cube'
 'cube_uv_top'
 'icosphere'
 'plane'

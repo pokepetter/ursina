@@ -175,8 +175,8 @@ class Text(Entity):
                     color=self.current_color,
                     scale=1,
                     # position=(x*self.size*self.scale_override, y*self.size*self.line_height),
-                    origin=(0, -.3),
-                    ignore=True,
+                    origin=(.125, -.25),
+                    add_to_scene_entities=False,
                     )
                 if not image.texture:
                     destroy(image)
@@ -196,7 +196,6 @@ class Text(Entity):
             x * self.size * self.scale_override,
             0,
             (y * self.size * self.line_height) - .75 * self.size)
-
         self.text_nodes.append(self.text_node_path)
 
         return self.text_node
@@ -419,14 +418,14 @@ if __name__ == '__main__':
         <scale:1.5><orange>Rainstorm<default><scale:1>
         Summon a <azure>rain storm <default>to deal 5 <azure>water
 
-        damage <default>to <hsb(0,1,.7)>everyone, <default><image:brick> <image:brick> test <default>including <orange>yourself. <default>
+        damage <default>to <hsb(0,1,.7)>everyone, <default><image:file_icon> <image:file_icon> test <default>including <orange>yourself. <default>
         Lasts for 4 rounds.''').strip()
 
     # Text.default_font = 'VeraMono.ttf'
     # Text.default_font = 'consola.ttf'
     # color.text_color = color.lime
     Text.default_resolution = 1080 * Text.size
-    test = Text(text=descr)
+    test = Text(origin=(.5,.5), text=descr)
     # test = Text(descr)
 
     # test.text = ''

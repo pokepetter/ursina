@@ -145,7 +145,7 @@ class Window(WindowProperties):
                     e.collider.visible = False
 
         for e in [e for e in scene.entities if e.model and e.alpha]:
-            e.shader = None
+            e.setShaderAuto()
 
         if value == 'wireframe':
             base.wireframeOn()
@@ -155,6 +155,7 @@ class Window(WindowProperties):
             for e in scene.entities:
                 e.color = color.clear
                 if e.collider:
+                    # e.visible = False
                     e.collider.visible = True
 
         if value == 'normals':
@@ -223,5 +224,7 @@ if __name__ == '__main__':
     window.fullscreen = False
     window.exit_button.visible = False
     window.fps_counter.enabled = False
+
+    Entity(model='cube', color=color.green, collider='box', texture='shore')
 
     app.run()
