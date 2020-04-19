@@ -48,7 +48,7 @@ class Entity(NodePath):
         self.ignore_input = False
 
         self.parent = scene
-        self.add_to_scene_entities = add_to_scene_entities
+        self.add_to_scene_entities = add_to_scene_entities # set to False to be ignored by the engine, but still get rendered.
         if add_to_scene_entities:
             scene.entities.append(self)
 

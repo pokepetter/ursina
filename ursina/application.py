@@ -29,6 +29,12 @@ def quit():
 package_folder = Path(__file__).parent
 asset_folder = Path().cwd()
 
+development_mode = True
+dirs = [e.stem for e in asset_folder.iterdir() if e.is_dir()]
+if 'src' in dirs and 'python' in dirs:
+    development_mode = False
+
+
 internal_models_folder = package_folder / 'models/'
 internal_prefabs_folder = package_folder / 'prefabs/'
 internal_scripts_folder = package_folder / 'scripts/'
@@ -53,3 +59,4 @@ _model_path.append_path(str(asset_folder.resolve()))
 
 print('package_folder:', package_folder)
 print('asset_folder:', asset_folder)
+print('dev mode:', development_mode)
