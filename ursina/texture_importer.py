@@ -8,6 +8,15 @@ imported_textures = dict()
 file_types = ('.jpg', '.png', '.gif')
 textureless = False
 
+has_psd_tools_installed = False
+try:
+    from psd_tools import PSDImage
+    has_psd_tools_installed = True
+except (ModuleNotFoundError, ImportError) as e:
+    print('psd-tools not installed')
+
+
+
 def load_texture(name, path=None):
     if textureless:
         return None
@@ -76,11 +85,7 @@ def compress_textures(name=''):
             continue
         # print('  found:', f)
 
-        if f.suffix == '.psd':
-            try:
-                from psd_tools import PSDImage
-            except (ModuleNotFoundError, ImportError) as e:
-                print('psd-tools not installed')
+        if f.suffix == '.psd' and has_psd_tools_installed:
             image = PSDImage.load(f)
             image = image.as_PIL()
         elif f.suffix == '.png':
