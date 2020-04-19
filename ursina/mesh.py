@@ -3,7 +3,7 @@ from panda3d.core import GeomVertexData, GeomVertexFormat, Geom, GeomVertexWrite
 from panda3d.core import GeomTriangles, GeomTristrips, GeomTrifans
 from panda3d.core import GeomLines, GeomLinestrips, GeomPoints
 from panda3d.core import TexGenAttrib, TextureStage
-from panda3d.core import Vec3
+from ursina.vec3 import Vec3
 from ursina.scripts.generate_normals import generate_normals
 from ursina.scripts.project_uvs import project_uvs
 from ursina.scripts.colorize import colorize
@@ -73,7 +73,7 @@ class Mesh(NodePath):
                 setattr(self, name, list())
 
         if self.vertices:
-            self.vertices = [tuple(v) for v in self.vertices]
+            self.vertices = [Vec3(v) for v in self.vertices]
             self.generate()
 
 
@@ -179,7 +179,9 @@ class Mesh(NodePath):
 
 
     def __copy__(self):
-        return Mesh(self.vertices, self.triangles, self.colors, self.uvs, self.normals, self.static, self.mode, self.thickness)
+        m = Mesh(self.vertices, self.triangles, self.colors, self.uvs, self.normals, self.static, self.mode, self.thickness)
+        m.name = self.name
+        return m
 
 
     @property
@@ -225,10 +227,10 @@ class Mesh(NodePath):
     def save(self, name='', path=application.compressed_models_folder):
         if not name and hasattr(self, 'path'):
             name = self.path.stem
-
             if not '.' in name:
                 name += '.ursinamesh'
 
+        if name.endswith('ursinamesh'):
             with open(path / name, 'w') as f:
                 recipe = self.recipe.replace('LVector3f', '')
                 f.write(recipe)

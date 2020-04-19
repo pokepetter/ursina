@@ -52,7 +52,7 @@ def load_model(name, path=application.asset_folder):
 
 
 # find blender installations
-if not hasattr(application, 'blender_paths'):
+if not hasattr(application, 'blender_paths') and application.development_mode:
     application.blender_paths = dict()
 
     import platform

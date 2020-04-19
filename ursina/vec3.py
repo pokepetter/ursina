@@ -69,7 +69,10 @@ class Vec3(PandaVec3):
 if __name__ == '__main__':
     a = Vec3(0,0,0)
     b = Vec3(1.252352324,0,1)
-    b += (0,1)
+    b += Vec3(0,1)
+    for i in range(10):
+        print(a + Vec3(i,0,0))
+
     print(type(b))
     print(b)
     # b.x += 2
