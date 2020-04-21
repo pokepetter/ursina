@@ -14,11 +14,7 @@ open source game engine
 [Github🡕, https://github.com/pokepetter/ursina] [Documentation, documentation.html] [Twitter🡕, https://twitter.com/ursinaengine] [Discord🡕, https://discord.gg/ydXfhyb]
 
 
-# left, size 2, bold
-# image made_with_ursina.jpg
-# size .75, center, normal
-
-A variety of games made with Ursina
+<iframe width="900" height="505" src="https://www.youtube-nocookie.com/embed/j71j88oCTNo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
 
@@ -179,3 +175,12 @@ How do I make a game?
 
     The game should start! You can now move the orange box around with 'a' and 'd'!
     To close the window, you can by default, press shift+q or press the red x.
+
+
+
+
+# left, size 2, bold
+# image made_with_ursina.jpg
+# size .75, center, normal
+
+A variety of games made with Ursina
