@@ -2,7 +2,7 @@ from ursina import *
 
 class Draggable(Button):
 
-    _z_plane = Entity(name='_z_plane', scale=(999,999), enabled=False, eternal=True)
+    _z_plane = Entity(name='_z_plane', scale=(9999,9999), enabled=False, eternal=True)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -10,10 +10,12 @@ class Draggable(Button):
         self.dragging = False
         self.delta_drag = 0
         self.start_pos = self.world_position
-        self.start_offset = (0,0)
-        self.step = (0,0)
+        self.start_offset = (0,0,0)
+        self.step = (0,0,0)
+        self.plane_direction = (0,0,1)
         self.lock_x = False
         self.lock_y = False
+        self.lock_z = False
         self.min_x, self.min_y, self.min_z = -math.inf, -math.inf, -math.inf
         self.max_x, self.max_y, self.max_z = math.inf, math.inf, math.inf
 
@@ -37,8 +39,10 @@ class Draggable(Button):
         if self.dragging and key == 'left mouse up':
             self.stop_dragging()
 
+
     def start_dragging(self):
-        Draggable._z_plane.world_position = self.world_position
+        Draggable._z_plane.world_position = mouse.world_point
+        Draggable._z_plane.look_at(Draggable._z_plane.position - Vec3(*self.plane_direction))
         if self.has_ancestor(camera.ui):
             Draggable._z_plane.world_parent = camera.ui
         else:
@@ -48,16 +52,17 @@ class Draggable(Button):
         self.dragging = True
         self.start_pos = self.world_position
         self.collision = False
-        self._z_plane.enabled = True
+        Draggable._z_plane.enabled = True
         try:
             self.drag()
         except:
             pass
 
+
     def stop_dragging(self):
         self.dragging = False
         self.delta_drag = self.world_position - self.start_pos
-        self._z_plane.enabled = False
+        Draggable._z_plane.enabled = False
         self.collision = True
 
         if hasattr(self, 'drop'):
@@ -76,12 +81,16 @@ class Draggable(Button):
                     self.world_x = mouse.world_point[0] - self.start_offset[0]
                 if not self.lock_y:
                     self.world_y = mouse.world_point[1] - self.start_offset[1]
+                if not self.lock_z:
+                    self.world_z = mouse.world_point[2] - self.start_offset[2]
 
-            if self.step[0] > 0 or self.step[1] > 0:
+            if self.step[0] > 0 or self.step[1] > 0 or self.step[2] > 0:
                 hor_step = 1/self.step[0]
                 ver_step = 1/self.step[1]
+                dep_step = 1/self.step[2]
                 self.x = round(self.x * hor_step) /hor_step
                 self.y = round(self.y * ver_step) /ver_step
+                self.z = round(self.z * dep_step) /dep_step
 
         self.position = (
             clamp(self.x, self.min_x, self.max_x),
@@ -97,7 +106,7 @@ class Draggable(Button):
     @step.setter
     def step(self, value):
         if isinstance(value, (int, float, complex)):
-            value = (value, value)
+            value = (value, value, value)
 
         self._step = value
 
@@ -106,8 +115,10 @@ class Draggable(Button):
 if __name__ == '__main__':
     app = Ursina()
     camera.orthographic = True
-
-    e = Draggable(scale=10)
-    e.parent = scene
+    Entity(model='plane', scale=8, texture='white_cube', texture_scale=(8,8))
+    e = Draggable(parent=scene, model='cube', color=color.azure, scale=1, plane_direction=(0,1,0))
+    # e.parent = scene
+    EditorCamera()
+    e.drop = Func(print, 'awoijdoaiwjdaoiwjdoi')
     # e.require_key = 'shift'
     app.run()
