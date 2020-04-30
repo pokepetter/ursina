@@ -130,7 +130,8 @@ class HotReloader(Entity):
 
         t = time.time()
         try:
-            exec(text)
+            d = dict(locals(), **globals())
+            exec(text, d, d)
         except Exception as e:
             print(e)
         #     for l in text.split('\n'):
