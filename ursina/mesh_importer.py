@@ -136,8 +136,7 @@ def obj_to_ursinamesh(
         uvs = list()
         norm_indices = list()
         norms = list()
-        import time
-        t = time.time()
+
         # parse the obj file to a Mesh
         for i, l in enumerate(lines):
             if l.startswith('v '):
@@ -195,8 +194,6 @@ def obj_to_ursinamesh(
                             norm_indices.extend((n[i], n[i+1], n[0]))
                 except: # if no normals
                     pass
-
-        print('----', 'finished parsing', t-time.time())
 
         meshstring += '\nvertices='
         meshstring += str(tuple([verts[t] for t in tris]))
