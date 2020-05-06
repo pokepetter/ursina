@@ -91,7 +91,8 @@ def compress_models(path=application.models_folder, outpath=application.compress
 
     export_script_path = application.internal_scripts_folder / '_blend_export.py'
     exported = list()
-    for f in glob.glob(f'{path}**/{name}.blend'):
+    # print('ttttttttttttttttttttttttttttttttttttt', f'{path}**\\{name}.blend')
+    for f in path.glob(f'**/{name}.blend'):
         with open(f, 'rb') as blend_file:
             blender_version_number = (blend_file.read(12).decode("utf-8"))[-3:]   # get version from start of .blend file e.g. 'BLENDER-v280'
             blender_version_number = blender_version_number[0] + '.' + blender_version_number[1:3]
@@ -135,9 +136,10 @@ def obj_to_ursinamesh(
         uvs = list()
         norm_indices = list()
         norms = list()
-
+        import time
+        t = time.time()
         # parse the obj file to a Mesh
-        for l in lines:
+        for i, l in enumerate(lines):
             if l.startswith('v '):
                 vert = [float(v) for v in l[2:].strip().split(' ')]
                 vert[0] = -vert[0]
@@ -156,8 +158,11 @@ def obj_to_ursinamesh(
                 l = l[2:]
                 l = l.split(' ')
 
-
-                tri = tuple([int(t.split('/')[0])-1 for t in l])
+                try:
+                    tri = tuple([int(t.split('/')[0])-1 for t in l if t is not '\n'])
+                except:
+                    print('error in obj file line:', i, ':', l)
+                    return
                 if len(tri) == 3:
                     tris.extend(tri)
                 elif len(tri) == 4:
@@ -190,6 +195,8 @@ def obj_to_ursinamesh(
                             norm_indices.extend((n[i], n[i+1], n[0]))
                 except: # if no normals
                     pass
+
+        print('----', 'finished parsing', t-time.time())
 
         meshstring += '\nvertices='
         meshstring += str(tuple([verts[t] for t in tris]))
@@ -346,4 +353,4 @@ if __name__ == '__main__':
     # Entity(model='quad').model.save('quad.bam')
     app.run()
     # e = Entity(model=Cylinder(16))
-    # ursina_mesh_to_obj(e.model, name='quad_export_test')
+    # ursina_mesh_to_obj(e.model, name='quad_export_test')
