@@ -182,7 +182,7 @@ class Entity(NodePath):
                 if isinstance(value, Mesh):
                     if hasattr(value, 'on_assign'):
                         value.on_assign(assigned_to=self)
-                return
+            return
 
         if name == 'color' and value is not None:
             if not isinstance(value, Vec4):
@@ -290,12 +290,15 @@ class Entity(NodePath):
                 self._collider = BoxCollider(entity=self, center=-self.origin, size=self.model_bounds)
             else:
                 self._collider = BoxCollider(entity=self)
+            self._collider.name = value
 
         elif value == 'sphere':
             self._collider = SphereCollider(entity=self)
+            self._collider.name = value
 
         elif value == 'mesh' and self.model:
             self._collider = MeshCollider(entity=self, mesh=self.model, center=-self.origin)
+            self._collider.name = value
 
         elif isinstance(value, Mesh):
             self._collider = MeshCollider(entity=self, mesh=value, center=-self.origin)
@@ -562,22 +565,33 @@ class Entity(NodePath):
 
     @property
     def shader(self):
-        return self.getShader()
+        return self._shader
 
     @shader.setter
     def shader(self, value):
-        if isinstance(value, Shader):
-            self.setShader(value)
-            return
-
+        self._shader = value
         if value is None:
             self.setShaderAuto()
             return
 
-        try:
-            self.setShader(Shader.load(f'{value}.sha', Shader.SL_Cg))
-        except:
-            self.setShader(Shader.load(Shader.SL_GLSL, vertex=f'{value}.vert', fragment=f'{value}.frag'))
+        if not hasattr(value, '_shader'):
+            self.setShader(value)
+        else:
+            self.setShader(value._shader)
+            if value:
+                value.entity = self
+
+                for key, value in value.default_input.items():
+                    self.set_shader_input(key, value)
+
+
+        # try:
+        #     self.setShader(Shader.load(f'{value}.sha', Shader.SL_Cg))
+        # except:
+        #     self.setShader(Shader.load(Shader.SL_GLSL, vertex=f'{value}.vert', fragment=f'{value}.frag'))
+
+
+
 
     @property
     def texture(self):

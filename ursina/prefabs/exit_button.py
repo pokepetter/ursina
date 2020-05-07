@@ -16,8 +16,8 @@ class ExitButton(Button):
 
 
     def on_click(self):
-        invoke(application.quit, delay=.01)
-        
+        application.quit()
+
 
     def input(self, key):
         if held_keys['shift'] and key == 'q' and not mouse.right:

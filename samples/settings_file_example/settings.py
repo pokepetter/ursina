@@ -1,3 +1,5 @@
+from ursina import *
+
 window.fullscreen = True
 window.color=color.black
 Text.size *= 2

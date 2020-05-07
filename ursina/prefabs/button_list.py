@@ -23,6 +23,7 @@ class ButtonList(Entity):
         self.button_dict = button_dict
         # self.actions = [*self.button_dict.values()] # gets set when setting button_dict
         self.highlight = Entity(parent=self, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5), z=-.01)
+        self.selection_marker = Entity(parent=self, model='quad', color=color.azure, scale=(1,self.button_height), origin=(-.5,.5), z=-.02, enabled=False)
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -53,7 +54,13 @@ class ButtonList(Entity):
             action.start()
 
         self.highlight.blink(color.black, .1)
-        self.enabled = False
+        self.selection_marker.enabled = True
+        self.selection_marker.y = self.highlight.y
+
+    def input(self, key):
+        if key == 'left mouse down' and not self.hovered:
+            self.selection_marker.enabled = False
+
 
 
     def update(self):

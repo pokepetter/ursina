@@ -1,5 +1,7 @@
 from ursina import *
 
+# print('--------', application.asset_folder)
+application.asset_folder = Path(application.asset_folder / 'test')
 app = Ursina()
 
 Button('Here is some text').fit_to_text()

@@ -122,7 +122,7 @@ class Button(Entity):
 
 
     def input(self, key):
-        if self.disabled:
+        if self.disabled or not self.model:
             return
 
         if key == 'left mouse down':
@@ -140,7 +140,7 @@ class Button(Entity):
 
 
     def on_mouse_enter(self):
-        if not self.disabled:
+        if not self.disabled and self.model:
             self.model.setColorScale(self.highlight_color)
 
             if self.highlight_scale != 1:
@@ -153,7 +153,7 @@ class Button(Entity):
 
 
     def on_mouse_exit(self):
-        if not self.disabled:
+        if not self.disabled and self.model:
             self.model.setColorScale(self.color)
 
             if not mouse.left and self.highlight_scale != 1:

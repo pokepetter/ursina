@@ -33,6 +33,7 @@ class Mouse():
         self.delta_drag = Vec3(0,0,0)
 
         self.update_step = 1
+        self.traverse_target = scene
         self._i = 0
         self._mouse_watcher = None
         self._picker = CollisionTraverser()  # Make a traverser
@@ -197,9 +198,9 @@ class Mouse():
         self._pickerNP.reparent_to(camera)
         self._pickerRay.set_from_lens(scene.camera.lens_node, self.x * 2 / window.aspect_ratio, self.y * 2)
         try:
-            self._picker.traverse(base.render)
+            self._picker.traverse(self.traverse_target)
         except:
-            print('error: mouse._picker could not traverse base.render')
+            print('error: mouse._picker could not traverse', self.traverse_target)
             return
 
         if self._pq.get_num_entries() > 0:

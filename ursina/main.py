@@ -87,14 +87,7 @@ class Ursina(ShowBase):
         application.hot_reloader = HotReloader(__main__.__file__)
 
         # try to load settings that need to be applied before entity creation
-        try:
-            with open(application.asset_folder / 'settings.py') as f:
-                try:
-                    exec(f.read())
-                except:
-                    pass
-        except:
-            print('no settings.py file')
+        application.load_settings()
 
 
     def _update(self, task):
@@ -210,21 +203,7 @@ class Ursina(ShowBase):
         if window.show_ursina_splash:
             from ursina.prefabs import ursina_splash
 
-        try:
-            with open(application.asset_folder / 'settings.py') as f:
-                try:
-                    exec(f.read())
-                except:
-                    # error somewhere, try every line on its own
-                    for l in f.readlines():
-                        try:
-                            exec(l)
-                        except:
-                            pass
-                    print('error in settings.py',)
-
-        except:
-            print('info: no settings.py file found')
+        application.load_settings()
 
         super().run()
 

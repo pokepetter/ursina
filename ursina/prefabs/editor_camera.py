@@ -6,10 +6,10 @@ class EditorCamera(Entity):
         super().__init__(name='editor_camera', eternal=True)
 
         self.rotation_speed = 100
-        self.pan_speed = (4, 4)
+        self.pan_speed = Vec2(4, 4)
         self.move_speed = 1
         self.zoom_speed = .05
-        self.rotate_around_mouse_hit = True
+        self.rotate_around_mouse_hit = False
 
         for key, value in kwargs.items():
             setattr(self, key, value)
