@@ -84,7 +84,7 @@ if not hasattr(application, 'blender_paths') and application.development_mode:
     pprint(application.blender_paths)
 
 
-def compress_models(path=application.models_folder, outpath=application.compressed_models_folder, name='*'):
+def compress_models(path=None, outpath=application.compressed_models_folder, name='*'):
 
     if not application.compressed_models_folder.exists():
         application.compressed_models_folder.mkdir()
@@ -92,9 +92,9 @@ def compress_models(path=application.models_folder, outpath=application.compress
     export_script_path = application.internal_scripts_folder / '_blend_export.py'
     exported = list()
     # print('ttttttttttttttttttttttttttttttttttttt', f'{path}**\\{name}.blend')
-    for f in path.glob(f'**/{name}.blend'):
-        with open(f, 'rb') as blend_file:
-            blender_version_number = (blend_file.read(12).decode("utf-8"))[-3:]   # get version from start of .blend file e.g. 'BLENDER-v280'
+    for blend_file in path.glob(f'**/{name}.blend'):
+        with open(blend_file, 'rb') as f:
+            blender_version_number = (f.read(12).decode("utf-8"))[-3:]   # get version from start of .blend file e.g. 'BLENDER-v280'
             blender_version_number = blender_version_number[0] + '.' + blender_version_number[1:3]
             print('blender_version:', blender_version_number)
             if blender_version_number in application.blender_paths:
@@ -102,10 +102,10 @@ def compress_models(path=application.models_folder, outpath=application.compress
             else:
                 blender = application.blender_paths['default']
 
-        outfile = outpath / f
-        print('converting .blend file to .obj:', outfile, 'using:', blender)
-        subprocess.call(f'''{blender} {outfile} --background --python {export_script_path}''')
-        exported.append(f)
+        out_file_path = outpath / (blend_file.stem + '.obj')
+        print('converting .blend file to .obj:', blend_file, '-->', out_file_path, 'using:', blender)
+        subprocess.call(f'''{blender} {blend_file} --background --python {export_script_path} {out_file_path}''')
+        exported.append(blend_file)
 
     return exported
 
@@ -224,8 +224,7 @@ def obj_to_ursinamesh(
 def compress_models_fast(model_name=None, write_to_disk=False):
     print('find models')
     from tinyblend import BlenderFile
-    if not application.compressed_models_folder.exists():
-        application.compressed_models_folder.mkdir()
+    application.compressed_models_folder.mkdir(parents=True, exist_ok=True)
 
     files = os.listdir(application.models_folder)
     compressed_files = os.listdir(application.compressed_models_folder)

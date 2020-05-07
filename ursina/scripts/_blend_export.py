@@ -1,12 +1,14 @@
 import bpy
 import os
+import sys
+
 
 blend_file_path = bpy.data.filepath
-directory = os.path.dirname(blend_file_path)
-file_name = os.path.splitext(os.path.basename(blend_file_path))[0]
+filepath = sys.argv[-1]
+
 
 bpy.ops.export_scene.obj(
-    filepath=os.path.join(directory, 'compressed', file_name + '.obj'),
+    filepath=filepath,
     check_existing=True,
     axis_forward='Z',
     axis_up='Y',
