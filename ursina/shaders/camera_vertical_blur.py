@@ -33,7 +33,7 @@ void fshader(float2 l_texcoord0 : TEXCOORD0,
     float g = 1-((1-col[1])*(1-c[1]));
     float b = 1-((1-col[2])*(1-c[2]));
     // 1-((1-c)*(1-col))
-    o_color = float4(r,g,b,1);
+    o_color = lerp(c, float4(r,g,b,1), k_blur_size*10);
     // basic black and white effet
     // float moyenne = (c.x + c.y + c.z)/3;
     // o_color = float4(moyenne, moyenne, moyenne, 1);

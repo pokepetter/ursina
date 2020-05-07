@@ -1,11 +1,11 @@
 from ursina import *
+from panda3d.core import Shader as Panda3dShader
 
-
-basic_lighting_shader = Shader(language=Shader.GLSL,
+# basic_lighting_shader = Panda3dShader.make(Panda3dShader.SL_GLSL,
+basic_lighting_shader = Shader(
 vertex='''
 #version 130
 uniform mat4 p3d_ModelViewProjectionMatrix;
-uniform mat4 p3d_ModelMatrixInverseTranspose;
 uniform mat4 transform_matrix;
 in vec4 p3d_Vertex;
 in vec2 p3d_MultiTexCoord0;
@@ -39,24 +39,43 @@ uniform sampler2D p3d_Texture0;
 uniform vec4 p3d_ColorScale;
 in vec2 texcoord;
 in vec3 world_space_normal;
+
+uniform vec4 top_color;
+uniform vec4 bottom_color;
+uniform vec4 left_color;
+uniform vec4 right_color;
+uniform vec4 front_color;
+uniform vec4 back_color;
+
 out vec4 fragColor;
 
 
 void main() {
     vec4 norm = vec4(world_space_normal*0.5+0.5, 1);
-    float grey = 0.21 * norm.r + 0.71 * norm.g + 0.07 * norm.b;
-    norm = vec4(grey, grey, grey, 1);
-    vec4 color = texture(p3d_Texture0, texcoord) * p3d_ColorScale * norm;
-    // float m = (color.r + color.g + color.b) / 3;
-    // color = vec4(grey, grey, grey, 1);
-    fragColor = color.rgba;
+    // float grey = 0.21 * norm.r + 0.71 * norm.g + 0.07 * norm.b;
+    // norm = vec4(grey, grey, grey, 1);
+    vec4 color = texture(p3d_Texture0, texcoord) * p3d_ColorScale;
+    // vec4 color = vec4(0.0, 0.0, 0.0, 0.0);
+    float normal_y = world_space_normal.y + .5;
+    color += mix(bottom_color, top_color, norm.z) / 3.;
+    color += mix(right_color, left_color, norm.x) / 3.;
+    color += mix(front_color, back_color, norm.y) / 3.;
+
+    fragColor = vec4(color.rgb, 1);
 }
 
 
-''', geometry='',
-default_input={
-    'transform_matrix': Mat4(),
-}
+''',
+geometry='',
+default_input = {
+    'transform_matrix' : Mat4(),
+    'top_color': color.red,
+    'bottom_color': color.green,
+    'left_color': color.black,
+    'right_color': color.black,
+    'front_color': color.black,
+    'back_color': color.black,
+    }
 )
 
 
@@ -66,24 +85,23 @@ if __name__ == '__main__':
     app = Ursina()
     window.color=color.black
 
-    # e = Entity(model='sphere', shader=empty_shader)
+    # e = Entity(model='sphere', shader=basic_lighting_shader)
     # e.setShaderInput('transform_matrix', e.getNetTransform().getMat())
     shader = basic_lighting_shader
 
-    a = WhiteCube(shader=shader)
-    # a.setShaderInput('transform_matrix', a.getNetTransform().getMat())
-
-    b = AzureSphere(shader=shader, rotation_y=180, x=3)
-    # b.set_shader_input('transform_matrix', b.getNetTransform().getMat())
+    a = BlackCube(shader=shader)
+    b = GraySphere(shader=shader, rotation_y=180, x=3)
     # AzureSphere(shader=a.shader, y=2)
     GrayPlane(scale=10, y=-2, texture='shore')
 
     Sky(color=color.light_gray)
-    EditorCamera()
+    EditorCamera(rotate_around_mouse_hit=False)
+
 
     def update():
         b.rotation_y += 1
         b.set_shader_input('transform_matrix', b.getNetTransform().getMat())
-    # EditorCamera()
+
+    EditorCamera()
 
     app.run()

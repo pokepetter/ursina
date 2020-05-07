@@ -1,6 +1,6 @@
 import operator
 from math import sqrt
-from panda3d.core import Vec2, Vec4, LVector3f
+from panda3d.core import Vec2, Vec4, LVector3f, Mat3, Mat4
 from ursina.vec3 import Vec3
 from ursina.color import Color
 
