@@ -22,6 +22,7 @@
 <a style="color:hsl(20.0, 89%, 28%);" href="#input_handler">input_handler</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#mesh_importer">mesh_importer</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#scene">scene</a>
+<a style="color:hsl(20.0, 89%, 28%);" href="#shader">shader</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#string_utilities">string_utilities</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#text">text</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#texture_importer">texture_importer</a>
@@ -44,6 +45,7 @@
 <a style="color:hsl(349.0, 89%, 28%);" href="#Wait">Wait</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Func">Func</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Sequence">Sequence</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#Shader">Shader</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Texture">Texture</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Vec3">Vec3</a>
 
@@ -53,6 +55,8 @@
 <a style="color:hsl(320.0, 89%, 28%);" href="#ButtonList">ButtonList</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#ColorPicker">ColorPicker</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#ColorField">ColorField</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#Node">Node</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#Conversation">Conversation</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#Cursor">Cursor</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#DebugMenu">DebugMenu</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#Draggable">Draggable</a>
@@ -354,6 +358,7 @@ right<g> = False</g>
 middle<g> = False</g> 
 delta_drag<g> = Vec3(0,0,0)</g> 
 update_step<g> = 1</g> 
+traverse_target<g> = scene</g> 
 raycast<g> = True</g> 
 collision<g> = None</g> 
 collisions<g> = list()</g> 
@@ -426,18 +431,18 @@ sequences<g> = list()</g>
 trace_entity_definition<g> = True # enable to set entity.line_definition</g> 
 package_folder<g> = Path(__file__).parent</g> 
 development_mode<g> = True</g> 
-models_folder<g> = asset_folder / 'models/'</g> 
 prefabs_folder<g> = asset_folder / 'prefabs/'</g> 
 scenes_folder<g> = asset_folder / 'scenes/'</g> 
 scripts_folder<g> = asset_folder / 'scripts/'</g> 
 textures_folder<g> = asset_folder / 'textures/'</g> 
 fonts_folder<g> = asset_folder / 'fonts/'</g> 
-compressed_textures_folder<g> = textures_folder / 'compressed/'</g> 
-compressed_models_folder<g> = models_folder / 'compressed/'</g> 
+compressed_textures_folder<g> = asset_folder / 'textures_compressed/'</g> 
+compressed_models_folder<g> = asset_folder / 'models_compressed/'</g> 
 
 pause()   
 resume()   
 quit()   
+load_settings(<g>path=asset_folder / 'settings.py'</g>)   
 
 </pre></div>
 <div id="build"><div id="build" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">build</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">python -m ursina.build</params>
@@ -462,17 +467,27 @@ shader
 set_up()   
 set_shader_input(<g>name, value</g>)   
 
-<div class="example">from ursina.main import Ursina
+<div class="example">scene.camera.orthographic = True
+e = Entity()
+e.model = 'quad'
+e.color = color.random_color()
+e.position = (-2, 0, 10)
 
-e = Entity(model='quad', color=color.random_color(), position=(-2, 0, 10))
-e = Entity(model='quad', color=color.random_color(), position=(2, 0, 10))
-e = Entity(model='quad', color=color.random_color(), position=(0, 0, 40))
+e = Entity()
+e.model = 'quad'
+e.color = color.random_color()
+e.position = (2, 0, 10)
 
-'''camera is also an Entity, so you can move and rotate it like normally.'''
-camera.position = (0, 0, -10)
-camera.rotiation = (0,0,0)
+e = Entity()
+e.model = 'quad'
+e.color = color.random_color()
+e.position = (0, 0, 40)
+from ursina.shaders import camera_grayscale_shader
+camera.shader = camera_grayscale_shader
 
-camera.orthographic = True
+def update():
+    t = Texture(camera.render_texture)
+    print(t.pixels)
 </div>
 </pre></div>
 <div id="color"><div id="color" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">color</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">color<g> = hsv</g> 
@@ -619,7 +634,7 @@ duplicate(<g>entity</g>)
 
 <div class="example">sprite = Sprite('brick', x=-2, scale=1.5)
 
-quad = Entity(model='quad', texture='brick', x=-1)
+quad = Button(parent=scene, model='quad', texture='brick', x=-1, collider='box')
 circle = Entity(model=Circle(6))
 rounded_quad = Entity(model=Quad(subdivisions=3, mode='line'), x=1)
 sphere = Entity(model=Sphere(mode='line'), x=2)
@@ -635,7 +650,6 @@ for i, e in enumerate((quad, sprite, circle, cone, prismatoid, cylinder, mesh)):
     print()
     e2 = duplicate(e)
     e2.y += 1.5
-
 
 EditorCamera()
 </div>
@@ -661,10 +675,10 @@ def input(key):
 </pre></div>
 <div id="mesh_importer"><div id="mesh_importer" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">mesh_importer</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
 load_model(<g>name, path=application.asset_folder</g>)   
-compress_models(<g>path=application.models_folder, outpath=application.compressed_models_folder, name='*'</g>)   
+compress_models(<g>path=None, outpath=application.compressed_models_folder, name='*'</g>)   
 obj_to_ursinamesh()   
 compress_models_fast(<g>model_name=None, write_to_disk=False</g>)   
-ursina_mesh_to_obj(<g>mesh, name='', out_path=application.models_folder, max_decimals=3</g>)   
+ursina_mesh_to_obj(<g>mesh, name='', out_path=application.compressed_models_folder, max_decimals=3</g>)   
 compress_internal()   
 
 <div class="example">print('imported_meshes:\n', imported_meshes)
@@ -700,6 +714,11 @@ def input(key):
 scene.fog_density = .1          # sets exponential density
 scene.fog_density = (50, 200)   # sets linear density start and end
 </div>
+</pre></div>
+<div id="shader"><div id="shader" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">shader</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">uniform mat4 p3d_ModelViewProjectionMatrix;
+void main() {
+
+
 </pre></div>
 <div id="string_utilities"><div id="string_utilities" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">string_utilities</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
 camel_to_snake(<g>value</g>)   
@@ -891,7 +910,8 @@ EditorCamera()
 <div id="BoxCollider"><div id="BoxCollider" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">BoxCollider<g>(<a style="color: gray;" href="#Collider">Collider</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">BoxCollider(entity, center=(0,0,0), size=(1,1,1))</params>
 
 shape<g> = CollisionBox(Vec3(center[0], center[2], center[1]), size[0], size[2], size[1])</g> 
-node_path<g> = entity.attachNewNode(CollisionNode('CollisionNode'))</g> 
+collision_node<g> = CollisionNode('CollisionNode')</g> 
+node_path<g> = entity.attachNewNode(self.collision_node)</g> 
 visible<g> = False</g> 
 
 
@@ -1261,6 +1281,13 @@ def input(key):
         actions[key]()
 </div>
 </pre></div>
+<div id="Shader"><div id="Shader" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Shader</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Shader(language=Panda3dShader.SL_GLSL, vertex=default_vertex_shader, fragment='', geometry='', **kwargs)</params>
+
+entity<g> = None</g> 
+default_input<g> = dict()</g> 
+
+
+</pre></div>
 <div id="Texture"><div id="Texture" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Texture<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Texture(value)</params>
 
 filtering<g> = Texture.default_filtering</g> 
@@ -1400,8 +1427,10 @@ text_entity<g> = Text(parent=self, origin=(-.5,.5), text='empty', world_scale=20
 button_height<g> = self.text_entity.height</g> 
 button_dict<g> = button_dict</g> 
 highlight<g> = Entity(parent=self, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5), z=-.01)</g> 
+selection_marker<g> = Entity(parent=self, model='quad', color=color.azure, scale=(1,self.button_height), origin=(-.5,.5), z=-.02, enabled=False)</g> 
 
 on_click()   
+input(<g>key</g>)   
 update()   
 
 <div class="example">default = Func(print, 'not yet implemented')
@@ -1446,6 +1475,96 @@ on_click()
 
 <div class="example">ColorField(text='primary')
 ColorField(y=-Text.size*2.1, text='secondary_color', color=color.orange)
+</div>
+</pre></div>
+<div id="Node"><div id="Node" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Node</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Node(text='', **kwargs)</params>
+
+
+
+<div class="example">app = Ursina()
+    conversation = Conversation()
+    bar_mission_solved = False
+    convo = '''
+I'm looking for my sister. Can you help me find her, please? I haven't seen her in days! Who know what could've happened!?
+I'm worried. Will you help me?
+    * Yes, of course. This can be a dangerous city.
+        Oh no! Do you think something happened to her?
+        What should I do?!
+            * She's probably fine. She can handle herself.
+                You're right. I'm still worried though.
+                    * Don't worry, I'll look for her.
+            * Maybe. (chaos += 1)
+                Help me look for her, please! *runs off*
+    * I'm sorry, but I don't have time right now.
+        A true friend wouldn't say that. (evil += 1)
+    * I know where she is! (if bar_mission_solved)
+        Really? Where?
+            * I saw her on a ship by the docks, it looked like they were ready to set off.
+                Thank you! *runs off*
+'''
+    conversation.start_conversation(convo)
+
+    window.size = window.fullscreen_size * .5
+    Sprite('shore', z=1)
+    app.run()
+</div>
+</pre></div>
+<div id="Conversation"><div id="Conversation" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Conversation<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Conversation(**kwargs)</params>
+
+question<g> = Button(
+        parent=self,
+        text_origin=(-.5,0),
+        scale_x=1,
+        scale_y=.1,
+        model=Quad(radius=.5, aspect=1/.1),
+        text='What do you want\nWhat do you want?'
+        )</g> 
+more_indicator<g> = Entity(parent=self.question, model=Circle(3), position=(.45,-.4,-.1), rotation_z=180, color=color.azure, world_scale=.5, z=-1, enabled=False)</g> 
+spacing<g> = 4 * .02</g> 
+wordwrap<g> = 80</g> 
+button_model<g> = Quad(radius=.5, aspect=1/.075)</g> 
+answer_0<g> = Button(parent=self, text='answer_0', y=self.question.y-self.spacing-.025, scale=(1,.075), text_origin=(-.5,0), model=copy(self.button_model))</g> 
+answer_1<g> = Button(parent=self, text='answer_1', y=self.answer_0.y-self.spacing, scale=(1,.075), text_origin=(-.5,0), model=copy(self.button_model))</g> 
+answer_2<g> = Button(parent=self, text='answer_2', y=self.answer_1.y-self.spacing, scale=(1,.075), text_origin=(-.5,0), model=copy(self.button_model))</g> 
+buttons<g> = (self.answer_0, self.answer_1, self.answer_2)</g> 
+question_appear_sequence<g> = None</g> 
+button_appear_sequence<g> = None</g> 
+started<g> = False</g> 
+
+toggle()   
+ask(<g>node, question_part=0</g>)   
+on_click(<g>node=child</g>)   
+input(<g>key</g>)   
+next()   
+start_conversation(<g>conversation</g>)   
+parse_conversation(<g>convo</g>)   
+
+<div class="example">app = Ursina()
+    conversation = Conversation()
+    bar_mission_solved = False
+    convo = '''
+I'm looking for my sister. Can you help me find her, please? I haven't seen her in days! Who know what could've happened!?
+I'm worried. Will you help me?
+    * Yes, of course. This can be a dangerous city.
+        Oh no! Do you think something happened to her?
+        What should I do?!
+            * She's probably fine. She can handle herself.
+                You're right. I'm still worried though.
+                    * Don't worry, I'll look for her.
+            * Maybe. (chaos += 1)
+                Help me look for her, please! *runs off*
+    * I'm sorry, but I don't have time right now.
+        A true friend wouldn't say that. (evil += 1)
+    * I know where she is! (if bar_mission_solved)
+        Really? Where?
+            * I saw her on a ship by the docks, it looked like they were ready to set off.
+                Thank you! *runs off*
+'''
+    conversation.start_conversation(convo)
+
+    window.size = window.fullscreen_size * .5
+    Sprite('shore', z=1)
+    app.run()
 </div>
 </pre></div>
 <div id="Cursor"><div id="Cursor" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Cursor<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Cursor(**kwargs)</params>
@@ -1556,10 +1675,10 @@ update()
 <div id="EditorCamera"><div id="EditorCamera" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">EditorCamera<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">EditorCamera(**kwargs)</params>
 
 rotation_speed<g> = 100</g> 
-pan_speed<g> = (4, 4)</g> 
+pan_speed<g> = Vec2(4, 4)</g> 
 move_speed<g> = 1</g> 
 zoom_speed<g> = .05</g> 
-rotate_around_mouse_hit<g> = True</g> 
+rotate_around_mouse_hit<g> = False</g> 
 start_position<g> = self.position</g> 
 perspective_fov<g> = camera.fov</g> 
 orthographic_fov<g> = camera.fov</g> 
@@ -1723,6 +1842,8 @@ def update():
     ray = raycast(player.position+player.up, player.down)
     if ray.hit:
         player.y = max(player.y, raycast(player.position+player.up, player.down).world_point[1])
+
+Entity(model='cube', color=color.dark_gray, scale=(9,4,9), y=-.5, collider='box')
 </div>
 </pre></div>
 <div id="HealthBar"><div id="HealthBar" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">HealthBar<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">HealthBar(max_value=100, show_text=True, show_lines=False, **kwargs)</params>
@@ -1750,8 +1871,6 @@ def input(key):
 </pre></div>
 <div id="HotReloader"><div id="HotReloader" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">HotReloader<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">HotReloader(path=__file__, **kwargs)</params>
 
-eternal<g> = True</g> 
-ignore_paused<g> = True</g> 
 path<g> = path</g> 
 path<g> = Path(self.path)</g> 
 realtime_editing<g> = False   # toggle with f8</g> 
@@ -1950,16 +2069,24 @@ drop()
 update()   
 slide()   
 
-<div class="example">slider = Slider(0, 20, default=10, height=Text.size*3, y=-.4, step=1   )
-slider = Slider(1, 2, default=1.2, x=-.4, y=-.47, text='contrast', dynamic=True)
+<div class="example">box = Entity(model='cube', origin_y=-.5, scale=1, color=color.orange)
+slider = Slider(0, 20, default=10, height=Text.size*3, y=-.4, step=1   )
+slider = ThinSlider(x=-.4, y=-.47, text='contrast', dynamic=True)
+def scale_box():
+    box.scale_y = slider.value
+slider.on_value_changed = scale_box
 </div>
 </pre></div>
 <div id="ThinSlider"><div id="ThinSlider" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ThinSlider<g>(Slider)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ThinSlider(*args, **kwargs)</params>
 
 
 
-<div class="example">slider = Slider(0, 20, default=10, height=Text.size*3, y=-.4, step=1   )
-slider = Slider(1, 2, default=1.2, x=-.4, y=-.47, text='contrast', dynamic=True)
+<div class="example">box = Entity(model='cube', origin_y=-.5, scale=1, color=color.orange)
+slider = Slider(0, 20, default=10, height=Text.size*3, y=-.4, step=1   )
+slider = ThinSlider(x=-.4, y=-.47, text='contrast', dynamic=True)
+def scale_box():
+    box.scale_y = slider.value
+slider.on_value_changed = scale_box
 </div>
 </pre></div>
 <div id="Sprite"><div id="Sprite" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Sprite<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Sprite(texture=None, **kwargs)</params>
@@ -2219,12 +2346,13 @@ grid_layout(<g>l, max_x=8, max_y=8, spacing=(0,0,0), origin=(-.5,.5,0), offset=(
 <div class="example">center = Entity(model='quad', scale=.1, color=color.red)
 p = Entity()
 for i in range(4*5):
-    b = Button(parent=p, scale=1, text=str(i), color=color.tint(color.random_color(),-.6))
+    b = Button(parent=p, model='quad', scale=.5, scale_x=1, text=str(i), color=color.tint(color.random_color(),-.6))
     b.text_entity.world_scale = 1
-
-grid_layout(p.children, max_x=7, max_y=10, offset=(-.5,-.5))
+t = time.time()
+grid_layout(p.children, max_x=7, max_y=10, origin=(0, .5))
 center = Entity(parent=camera.ui, model=Circle(), scale=.005, color=color.lime)
 EditorCamera()
+print(time.time() - t)
 </div>
 </pre></div>
 <div id="merge_vertices"><div id="merge_vertices" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">merge_vertices</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
@@ -2313,7 +2441,6 @@ Entity(model='cube').add_script(SmoothFollow(target=player, offset=(0,2,0)))
 'brick'
 'circle'
 'cursor'
-'default_sky'
 'earth_map'
 'file_icon'
 'folder'
@@ -2322,6 +2449,7 @@ Entity(model='cube').add_script(SmoothFollow(target=player, offset=(0,2,0)))
 'radial_gradient'
 'reflection_map_3'
 'shore'
+'sky_default'
 'sky_sunset'
 'ursina_logo'
 'ursina_wink_0000'
@@ -2431,7 +2559,7 @@ width, self.depth<g> = self.heightmap.width//skip, self.heightmap.height//skip</
 
 
 <div class="example">t = time.time()
-e = Entity(model='terrain_1', scale=(20,5,20), texture='heightmap_1')
+e = Entity(model='terrain_1', scale=(20,5,40), texture='heightmap_1')
 print('-----', time.time() - t)
 EditorCamera()
 Sky()

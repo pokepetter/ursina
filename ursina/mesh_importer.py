@@ -277,7 +277,7 @@ def compress_models_fast(model_name=None, write_to_disk=False):
 
                 return file_content
 
-def ursina_mesh_to_obj(mesh, name='', out_path=application.models_folder, max_decimals=3):
+def ursina_mesh_to_obj(mesh, name='', out_path=application.compressed_models_folder, max_decimals=3):
     from ursina.string_utilities import camel_to_snake
 
     if not name:

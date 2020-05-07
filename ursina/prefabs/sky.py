@@ -7,7 +7,7 @@ class Sky(Entity):
             parent = render,
             name = 'sky',
             model = 'sky_dome',
-            texture = 'default_sky',
+            texture = 'sky_default',
             scale = 9900
             )
 
