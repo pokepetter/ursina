@@ -16,7 +16,7 @@ for name in names:
 sliders = list()
 
 for i, (name, value) in enumerate(data.items()):
-    e = Button(
+    column = Button(
         parent = scene,
         name = name,
         model = 'cube',
@@ -27,24 +27,22 @@ for i, (name, value) in enumerate(data.items()):
         text = name,
         tooltip = Tooltip('00') # to ensure uniform with
     )
-    e.tooltip.text = value
-    e.text_entity.scale *= .4
-    e.text_entity.world_y = e.world_y - .2
-    e.text_entity.z = -.5
-    e.text_entity.world_parent = scene
-    e.text_entity.color = e.color.tint(-.5)
+    column.tooltip.text = value
+    column.text_entity.scale *= .4
+    column.text_entity.world_y = column.world_y - .2
+    column.text_entity.z = -.5
+    column.text_entity.world_parent = scene
+    column.text_entity.color = column.color.tint(-.5)
 
-    s = ThinSlider(text=name, min=0, max=100, default=value, x=-.65, y=(-i*.04*.75) - .15, step=1, dynamic=True)
-    s.scale *= .75
-    s.column = e
-    sliders.append(s)
+    slider = ThinSlider(text=name, min=0, max=100, default=value, x=-.65, y=(-i*.04*.75) - .15, step=1, dynamic=True)
+    slider.scale *= .75
+    sliders.append(slider)
 
-    def on_slider_changed(i=i):
-        sliders[i].column.scale_y = sliders[i].value/50
-        sliders[i].column.tooltip.text = str(sliders[i].value)
-        c = sliders[i].column.color
+    def on_slider_changed(slider=slider, column=column):
+        column.scale_y = slider.value/50
+        column.tooltip.text = str(slider.value)
 
-    s.on_value_changed = on_slider_changed
+    slider.on_value_changed = on_slider_changed
 
 
 randomize_button = Button(position=(-.66,-.45), origin=(-.5,.5), color=color.dark_gray, text='<white>Randomize!', scale=(.25, .05))
