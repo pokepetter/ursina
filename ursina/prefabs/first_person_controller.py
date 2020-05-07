@@ -55,9 +55,9 @@ class FirstPersonController(Entity):
         camera.rotation_y = self.rotation_y
 
         origin = self.world_position + self.up + (self.direction/2)
-        middle_ray = raycast(origin , self.direction, ignore=[self,], distance=1.3, debug=False)
-        left_ray =   raycast(origin, lerp(self.left, self.forward, .5), ignore=[self,], distance=1.4, debug=False)
-        right_ray =   raycast(origin, lerp(self.right, self.forward, .5), ignore=[self,], distance=1.4, debug=False)
+        middle_ray = raycast(origin , self.direction, ignore=[self,], distance=.25, debug=False)
+        left_ray =   raycast(origin, lerp(self.left, self.forward, .125), ignore=[self,], distance=1.4, debug=False)
+        right_ray =   raycast(origin, lerp(self.right, self.forward, .125), ignore=[self,], distance=1.4, debug=False)
 
 
         # push away from the wall
@@ -106,4 +106,5 @@ if __name__ == '__main__':
         if ray.hit:
             player.y = max(player.y, raycast(player.position+player.up, player.down).world_point[1])
 
+    Entity(model='cube', color=color.dark_gray, scale=(9,4,9), y=-.5, collider='box')
     app.run()

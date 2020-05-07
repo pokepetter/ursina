@@ -47,7 +47,7 @@ class Camera(Entity):
 
         self.orthographic = False
         self.fov = 40
-        self.clip_plane_near = 0.0001
+        self.clip_plane_near = 0.1
         self.clip_plane_far = 10000
 
         self.ui_display_region = win.make_display_region()
@@ -119,7 +119,7 @@ class Camera(Entity):
         return self.lens.getNear()
 
     @clip_plane_near.setter
-    def near_clip_plane(self, value):
+    def clip_plane_near(self, value):
         self.lens.set_near(value)
 
     @property
@@ -177,7 +177,7 @@ sys.modules[__name__] = Camera()
 
 
 if __name__ == '__main__':
-    from ursina.main import Ursina
+    from ursina import *
     app = Ursina()
     # app.load_editor()
     scene.camera.orthographic = True
@@ -197,4 +197,10 @@ if __name__ == '__main__':
     e.position = (0, 0, 40)
     # from ursina import *
     # Button(text='test button')
+    from ursina.shaders import camera_grayscale_shader
+    camera.shader = camera_grayscale_shader
+
+    def update():
+        t = Texture(camera.render_texture)
+        print(t.pixels)
     app.run()
