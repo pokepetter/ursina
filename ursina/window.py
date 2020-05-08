@@ -118,6 +118,13 @@ class Window(WindowProperties):
             z = -99
             )
 
+    def update_aspect_ratio(self):
+        from ursina import camera
+        camera.ui_lens.set_film_size(camera.ui_size * .5 * self.aspect_ratio, camera.ui_size * .5)
+        # camera.perspective_lens.set_aspect_ratio(self.aspect_ratio)
+        print('updated camera lens aspect ratio after changing window size')
+
+
     @property
     def size(self):
         return Vec2(self.get_size()[0], self.get_size()[1])
@@ -126,7 +133,10 @@ class Window(WindowProperties):
     def size(self, value):
         self.set_size(int(value[0]), int(value[1]))
         self.aspect_ratio = value[0] / value[1]
+        print('aaa', self.aspect_ratio)
         base.win.requestProperties(self)
+        self.update_aspect_ratio()
+
 
     @property
     def display_mode(self):

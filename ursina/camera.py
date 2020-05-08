@@ -33,9 +33,10 @@ class Camera(Entity):
         win = self.display_region.get_window()
 
         self.perspective_lens = PerspectiveLens()
+        self.perspective_lens = base.camLens # use panda3d's default for automatic aspect ratio on window resize
         self.lens = self.perspective_lens
-        self.perspective_lens.set_aspect_ratio(window.aspect_ratio)
-        self.perspective_lens.set_focal_length(50)
+        self.perspective_lens.set_aspect_ratio(window.aspect_ratio) # call in window instead
+        # self.perspective_lens.set_focal_length(50)
         self.perspective_lens_node = LensNode('perspective_lens_node', self.perspective_lens)
         self.lens_node = self.perspective_lens_node
 
@@ -55,7 +56,7 @@ class Camera(Entity):
 
         self.ui_camera = NodePath(PandaCamera('ui_camera'))
         self.ui_lens = OrthographicLens()
-        self.ui_lens.set_film_size(self.ui_size * .5 * self.aspect_ratio, self.ui_size * .5)
+        # moved set_film_size() to window module for correct aspect ratio after setting window size
         self.ui_lens.set_near_far(-1000, 1000)
         self.ui_camera.node().set_lens(self.ui_lens)
         self._ui_lens_node = LensNode('_ui_lens_node', self.ui_lens)
@@ -133,21 +134,6 @@ class Camera(Entity):
     @property
     def aspect_ratio(self):
         return self.perspective_lens.get_aspect_ratio()
-
-    @aspect_ratio.setter
-    def aspect_ratio(self, value):
-        self.perspective_lens = PerspectiveLens()
-        self.perspective_lens.set_aspect_ratio(value)
-        application.base.cam.node().set_lens(self.perspective_lens)
-
-        self.ui_lens.set_film_size(self.ui_size * .5 * value, self.ui_size * .5)
-        self.ui_camera.node().set_lens(self.ui_lens)
-        self._ui_lens_node = LensNode('_ui_lens_node', self.ui_lens)
-        print('setting camera aspect ratio')
-        # self.perspective_lens.set_aspect_ratio(value)
-        # self.orthographic_lens = OrthographicLens()
-        # self.orthographic_lens.set_film_size(self.fov * value, self.fov)
-
 
     @property
     def shader(self):

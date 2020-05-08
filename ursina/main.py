@@ -20,6 +20,7 @@ class Ursina(ShowBase):
         camera.reparent_to(base.render)
         camera.set_up()
         base.render.set_antialias(AntialiasAttrib.MMultisample)
+        self.accept('aspectRatioChanged', window.update_aspect_ratio)
         window.make_exit_button()
 
         camera.overlay = window.overlay
