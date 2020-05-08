@@ -28,8 +28,9 @@ class Window(WindowProperties):
             print('using default sceen resolution.', 'OS:', os.name)
             self.screen_resolution = Vec2(1366, 768)
 
-        self.fullscreen_size = Vec2(self.screen_resolution[0]+1, ((self.screen_resolution[0]) * .5625)+1)
-        self.windowed_size = Vec2(self.fullscreen_size[0] / 1.25, self.fullscreen_size[0] / 1.25 * .5625)
+        print('screen resolution:', self.screen_resolution)
+        self.fullscreen_size = Vec2(self.screen_resolution[0]+1, self.screen_resolution[1]+1)
+        self.windowed_size = self.fullscreen_size / 1.25
         self.windowed_position = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode
         self.size = self.windowed_size
         self.borderless = True
@@ -200,6 +201,11 @@ class Window(WindowProperties):
 
         if name == 'borderless':
             self.setUndecorated(value)
+            try:
+                application.base.win.request_properties(self)
+            except:
+                pass
+            object.__setattr__(self, name, value)
 
         if name == 'color':
             application.base.camNode.get_display_region(0).get_window().set_clear_color(value)
@@ -220,8 +226,8 @@ if __name__ == '__main__':
     app = Ursina()
 
     window.title = 'Title'
-    window.borderless = False
-    window.fullscreen = False
+    # window.borderless = False
+    # window.fullscreen = False
     window.exit_button.visible = False
     window.fps_counter.enabled = False
 
