@@ -338,7 +338,8 @@ class Text(Entity):
 
 
     def align(self):
-        value = self.origin
+        half_origin_x = self.origin[0] / 2
+        half_origin_y = self.origin[1] / 2
         linewidths = [self.text_nodes[0].node().calcWidth(line) for line in self.lines]
         # print('.........', linewidths)
         for tn in self.text_nodes:
@@ -349,13 +350,13 @@ class Text(Entity):
             # add offset based on origin/value
             # x -= half line width * text node scale
             tn.setX(
-                tn.getX() - (linewidths[linenumber] / 2 * value[0] * 2 * self.size) * tn.getScale()[0] / self.size
+                tn.getX() - (linewidths[linenumber] / 2 * half_origin_x * 2 * self.size) * tn.getScale()[0] / self.size
                 )
             # center text vertically
             halfheight = len(linewidths) * self.line_height / 2
             tn.setZ(tn.getZ() + (halfheight * self.size))
             # add offset
-            tn.setZ(tn.getZ() - (halfheight * value[1] * 2 * self.size))
+            tn.setZ(tn.getZ() - (halfheight * half_origin_y * 2 * self.size))
 
 
     def create_background(self, padding=size*2, radius=size, color=ursina.color.black66):
@@ -370,8 +371,8 @@ class Text(Entity):
             padding = (padding, padding)
 
         w, h = self.width + padding[0], self.height + padding[1]
-        self._background.x -= self.origin_x * self.width
-        self._background.y -= self.origin_y * self.height
+        self._background.x -= self.origin_x / 2 * self.width
+        self._background.y -= self.origin_y / 2 * self.height
 
         self._background.model = Quad(radius=radius, scale=(w/self.scale_x, h/self.scale_y))
         self._background.color = color
