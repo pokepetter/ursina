@@ -158,7 +158,7 @@ def obj_to_ursinamesh(
                 l = l.split(' ')
 
                 try:
-                    tri = tuple([int(t.split('/')[0])-1 for t in l if t is not '\n'])
+                    tri = tuple([int(t.split('/')[0])-1 for t in l if t != '\n'])
                 except:
                     print('error in obj file line:', i, ':', l)
                     return
@@ -349,4 +349,5 @@ if __name__ == '__main__':
     # Entity(model='quad').model.save('quad.bam')
     app.run()
     # e = Entity(model=Cylinder(16))
-    # ursina_mesh_to_obj(e.model, name='quad_export_test')
+    # ursina_mesh_to_obj(e.model, name='quad_export_test')
+
