@@ -17,16 +17,16 @@
 ## Tutorials
 
 [Ursina for Dummies, ursina_for_dummies.html, ]
-[Inventory Tutorial, inventory_tutorial.html, inventory_screenshot.jpg]
+[Inventory Tutorial, inventory_tutorial.html, icons/inventory_icon.jpg]
 
 
 
 ## Example Projects
 
 [Cookie Clicker, https://github.com/pokepetter/ursina/blob/master/samples/clicker_game.py, ]
-[Culumn Graph, https://github.com/pokepetter/ursina/blob/master/samples/culumn_graph.py, ]
-[Inventory, https://github.com/pokepetter/ursina/blob/master/samples/inventory.py, inventory_screenshot.jpg]
-[Minecraft Clone, https://github.com/pokepetter/ursina/blob/master/samples/minecraft_clone.py, ]
+[Culumn Graph, https://github.com/pokepetter/ursina/blob/master/samples/culumn_graph.py, icons/column_graph_icon.jpg]
+[Inventory, https://github.com/pokepetter/ursina/blob/master/samples/inventory.py, icons/inventory_icon.jpg]
+[Minecraft Clone, https://github.com/pokepetter/ursina/blob/master/samples/minecraft_clone.py, icons/minecraft_clone_icon.jpg]
 [Platformer, https://github.com/pokepetter/ursina/blob/master/samples/platformer.py, ]
-[Tic Tac Toe, https://github.com/pokepetter/ursina/blob/master/samples/tic_tac_toe.py, tic_tac_toe_screenshot.jpg]
-[Value of Life, https://github.com/pokepetter/ld44_life_is_currency, ]
+[Tic Tac Toe, https://github.com/pokepetter/ursina/blob/master/samples/tic_tac_toe.py, icons/tic_tac_toe_icon.jpg]
+[Value of Life, https://github.com/pokepetter/ld44_life_is_currency, icons/value_of_life_icon.jpg]
