@@ -78,6 +78,12 @@ if not hasattr(application, 'blender_paths') and application.development_mode:
                             application.blender_paths[folder.name] = list(p.glob('blender.exe'))[0]
         except:
             pass
+    elif platform.system() == 'Linux':
+        # Use "which" command to find blender
+        which_process = subprocess.run(('which', 'blender'), stdout=subprocess.PIPE)
+        if which_process.returncode == 0:
+            blender_exec = which_process.stdout.decode().strip()
+            application.blender_paths['default'] = blender_exec
 
     from pprint import pprint
     print('blender_paths:')
