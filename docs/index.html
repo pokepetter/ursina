@@ -4,7 +4,10 @@
     html {max-width: 100%; margin: auto; color: #333333;}
     a.button {padding: 15px 32px; background-color: #555; border-radius: 2em; border-width: 0px; text-decoration: none; color: white; font-size: 25.0px; line-height: 2.5em;}
     a.button:hover {background-color: #777}
+    a.button_big {padding: 0.5em; background-image: linear-gradient(to top, #427b0e, #9ba97d); background-color: lightgray; background-blend-mode: multiply; border-radius: .75em; border-width: 0px; text-decoration: none; min-width: 150px; max-width: 150px; min-height: 150px; max-height: 150px; display: inline-block; vertical-align: top; margin: 4px 4px 10px 4px; color: white; font-size: 25.0px; background-size: auto 100%; background-position-x: center;}
+    a.button_big:hover {background-color: white; color: #e6d23f; text-decoration: underline;}
     mark {background: #ccff99;}
+    span {background-color: rgba(0, 0, 0, 0.55); padding: .1em; line-height: 1.35em;}
     img {max-width: 100%;}
 a.button {background-color: #4CAF50;} a.button:hover {background-color: #777}
 </style>
@@ -98,7 +101,7 @@ Getting Started<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Also install any of the optional dependencies you want from the list below,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;or install them all with:<br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 2em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">pip install git+https://github.com/pokepetter/ursina.git<font color="gray">#egg=ursina[extras]</font><br></div><br>
+<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 2em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">pip install git+https://github.com/pokepetter/ursina.git#egg=ursina[extras]<br></div><br>
 <br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
@@ -126,7 +129,7 @@ Examples<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;Entity Example:<br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 2em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;"><font color="purple">from</font> ursina <font color="purple">import</font> *            <font color="gray"># import everything we need with one line.</font><br><br>app = Ursina()<br>ground = <font color="olive">Entity</font>(<br>    model = <font color="green">'cube'</font>,<br>    color = color.magenta,<br>    z = -.1,<br>    y = -3,<br>    origin = (0, .5),<br>    scale = (50, 1, 10),<br>    collider = <font color="green">'box'</font><br>    )<br><br>app.run()                       <font color="gray"># opens a window and starts the game.</font><br><br></div><br>
+<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 2em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;"><font color="purple">from</font> ursina <font color="purple">import</font> *            <font color="gray"># <font color="purple">import</font> everything we need with one line.</font><br><br>app = Ursina()<br>ground = <font color="olive">Entity</font>(<br>    model = <font color="green">'cube'</font>,<br>    color = color.magenta,<br>    z = -.1,<br>    y = -3,<br>    origin = (0, .5),<br>    scale = (50, 1, 10),<br>    collider = <font color="green">'box'</font><br>    )<br><br>app.run()                       <font color="gray"># opens a window and starts the game.</font><br><br></div><br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
 How do I make a game?<br>

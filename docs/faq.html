@@ -1,0 +1,72 @@
+
+<!--generated with sswg-->
+<style>
+    html {max-width: 100%; margin: auto; color: #333333;}
+    a.button {padding: 15px 32px; background-color: #555; border-radius: 2em; border-width: 0px; text-decoration: none; color: white; font-size: 25.0px; line-height: 2.5em;}
+    a.button:hover {background-color: #777}
+    a.button_big {padding: 0.5em; background-image: linear-gradient(to top, #427b0e, #9ba97d); background-color: lightgray; background-blend-mode: multiply; border-radius: .75em; border-width: 0px; text-decoration: none; min-width: 150px; max-width: 150px; min-height: 150px; max-height: 150px; display: inline-block; vertical-align: top; margin: 4px 4px 10px 4px; color: white; font-size: 25.0px; background-size: auto 100%; background-position-x: center;}
+    a.button_big:hover {background-color: white; color: #e6d23f; text-decoration: underline;}
+    mark {background: #ccff99;}
+    span {background-color: rgba(0, 0, 0, 0.55); padding: .1em; line-height: 1.35em;}
+    img {max-width: 100%;}
+
+</style>
+<html>
+<left>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>faq</title>
+<br>
+
+<div style="text-align: center;max-width: 1000px; margin: auto;font-family: arial;">
+<div style="font-size: 100.0px;font-weight: bold;">
+Frequently Asked Questions<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<br>
+<br>
+<div style="text-align: left;">
+<br>
+<b>How can I update ursina?</b><br>
+<br>
+pip install git+https://github.com/pokepetter/ursina.git --upgrade<br>
+<br>
+<br>
+<br>
+<br>
+<b>How can I move the camera?</b><br>
+<br>
+The camera is an Entity, so you can move and rotate it just like everything else:<br>
+camera.position = Vec3(1,1,0)<br>
+<br>
+<br>
+<br>
+<br>
+<b>How can I build and distribute my game?</b><br>
+<br>
+Open cmd in the project folder and run<br>
+pyhton -m ursina.build<br>
+It will then move the necessary files to a 'build' directory.<br>
+<br>
+<br>
+<br>
+<br>
+<b>Why should I use Python for game development. Isn't it slow?</b><br>
+<br>
+Not really. The most performance critical part are written in C++ or shader code.<br>
+Python can make you more productive as a developer and thus make it easier<br>
+to structure your project in a good way, rather than micro-optimize.<br>
+<br>
+<br>
+<br>
+<br>
+<b>How can I call a function with a delay?</b><br>
+<br>
+<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 0em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">    invoke(some_function, arg1, kwarg1=<font color="green">'some kwarg'</font>, delay=2)<br></div><br>
+<br>
+<br>
+<br>
+<b>How can I add lights?</b><br>
+<br>
+You can't. Bake it.<br>
+<br>
+
+</html>

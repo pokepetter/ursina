@@ -53,10 +53,6 @@
 <a style="color:hsl(320.0, 89%, 28%);" href="#Animator">Animator</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#ButtonGroup">ButtonGroup</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#ButtonList">ButtonList</a>
-<a style="color:hsl(320.0, 89%, 28%);" href="#ColorPicker">ColorPicker</a>
-<a style="color:hsl(320.0, 89%, 28%);" href="#ColorField">ColorField</a>
-<a style="color:hsl(320.0, 89%, 28%);" href="#Node">Node</a>
-<a style="color:hsl(320.0, 89%, 28%);" href="#Conversation">Conversation</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#Cursor">Cursor</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#DebugMenu">DebugMenu</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#Draggable">Draggable</a>
@@ -160,7 +156,7 @@
         max-width: 1200px;
         >
     <title> ursina cheat sheet</title>
-<div id="Entity"><div id="Entity" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Entity<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Entity(add_to_scene_entities=True, **kwargs)</params>
+<div id="Entity"><div id="Entity" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Entity<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.entity</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Entity(add_to_scene_entities=True, **kwargs)</params>
 
 name<g> = camel_to_snake(self.type)</g> 
 enabled<g> = True     # disabled entities wil not be visible nor run code</g> 
@@ -261,7 +257,7 @@ def input(key):
         e.shake()
 </div>
 </pre></div>
-<div id="Text"><div id="Text" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Text<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Text(text='', start_tag=start_tag, end_tag=end_tag, add_to_scene_entities=False, **kwargs)</params>
+<div id="Text"><div id="Text" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Text<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.text</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Text(text='', start_tag=start_tag, end_tag=end_tag, add_to_scene_entities=False, **kwargs)</params>
 
 size<g> = Text.size</g> 
 parent<g> = camera.ui</g> 
@@ -315,7 +311,7 @@ get_width(<g>string, font=None</g>)
   app.run()
 </div>
 </pre></div>
-<div id="Button"><div id="Button" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Button<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Button(text='', **kwargs)</params>
+<div id="Button"><div id="Button" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Button<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.button</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Button(text='', **kwargs)</params>
 
 parent<g> = scene.ui</g> 
 collider<g> = 'box'</g> 
@@ -337,11 +333,11 @@ on_click()
 fit_to_text()   
 
 <div class="example">b = Button(text='hello world!', color=color.azure, origin=(-.5,.5))
-b.on_click = application.quit
+b.on_click = application.quit # assign a function to the button.
 b.tooltip = Tooltip('exit')
 </div>
 </pre></div>
-<div id="mouse"><div id="mouse" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">mouse</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">enabled<g> = False</g> 
+<div id="mouse"><div id="mouse" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">mouse</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.mouse</g><br><br>enabled<g> = False</g> 
 locked<g> = False</g> 
 position<g> = Vec3(0,0,0)</g> 
 delta<g> = Vec3(0,0,0)</g> 
@@ -384,7 +380,7 @@ Cursor()
 mouse.visible = False
 </div>
 </pre></div>
-<div id="raycaster"><div id="raycaster" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">raycaster</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+<div id="raycaster"><div id="raycaster" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">raycaster</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.raycaster</g><br><br>
 distance(<g>a, b</g>)   
 raycast(<g>origin, direction=(0,0,1), distance=math.inf, traverse_target=scene, ignore=list(), debug=False</g>)   
 boxcast(<g>origin, direction=(0,0,1), distance=math.inf, thickness=(1,1), traverse_target=scene, ignore=list(), debug=False</g>)   
@@ -425,7 +421,7 @@ raycast((0,0,-2), (0,0,1), 5, debug=False)
 EditorCamera()
 </div>
 </pre></div>
-<div id="application"><div id="application" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">application</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">paused<g> = False</g> 
+<div id="application"><div id="application" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">application</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.application</g><br><br>paused<g> = False</g> 
 time_scale<g> = 1</g> 
 sequences<g> = list()</g> 
 trace_entity_definition<g> = True # enable to set entity.line_definition</g> 
@@ -445,14 +441,14 @@ quit()
 load_settings(<g>path=asset_folder / 'settings.py'</g>)   
 
 </pre></div>
-<div id="build"><div id="build" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">build</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">python -m ursina.build</params>
+<div id="build"><div id="build" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">build</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.__init__</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">python -m ursina.build</params>
 
 
 
 <div class="example">open cmd at your project folder and run 'python -m ursina.build' to package your app for windows.
 </div>
 </pre></div>
-<div id="camera"><div id="camera" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">camera</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">parent<g> = scene</g> 
+<div id="camera"><div id="camera" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">camera</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.camera</g><br><br>parent<g> = scene</g> 
 name<g> = 'camera'</g> 
 eternal<g> = True</g> 
 ui_size<g> = 40</g> 
@@ -490,7 +486,7 @@ def update():
     print(t.pixels)
 </div>
 </pre></div>
-<div id="color"><div id="color" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">color</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">color<g> = hsv</g> 
+<div id="color"><div id="color" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">color</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.color</g><br><br>color<g> = hsv</g> 
 white<g> =         color(0, 0, 1)</g> 
 smoke<g> =         color(0, 0, 0.96)</g> 
 light_gray<g> =    color(0, 0, 0.75)</g> 
@@ -556,7 +552,7 @@ e = Entity(model='cube', color=color.lime)
 print(e.color.name)
 </div>
 </pre></div>
-<div id="curve"><div id="curve" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">curve</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+<div id="curve"><div id="curve" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">curve</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.curve</g><br><br>
 linear(<g>t</g>)   
 in_sine(<g>t</g>)   
 out_sine(<g>t</g>)   
@@ -629,7 +625,7 @@ e2.animate_y(1, curve=curve.CubicBezier(0,.7,1,.3))
 '''
 </div>
 </pre></div>
-<div id="duplicate"><div id="duplicate" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">duplicate</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+<div id="duplicate"><div id="duplicate" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">duplicate</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.duplicate</g><br><br>
 duplicate(<g>entity</g>)   
 
 <div class="example">sprite = Sprite('brick', x=-2, scale=1.5)
@@ -654,7 +650,7 @@ for i, e in enumerate((quad, sprite, circle, cone, prismatoid, cylinder, mesh)):
 EditorCamera()
 </div>
 </pre></div>
-<div id="input_handler"><div id="input_handler" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">input_handler</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">held_keys<g> = defaultdict(lambda: 0)</g> 
+<div id="input_handler"><div id="input_handler" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">input_handler</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.input_handler</g><br><br>held_keys<g> = defaultdict(lambda: 0)</g> 
 rebinds<g> = dict()</g> 
 
 bind(<g>original_key, alternative_key</g>)   
@@ -673,7 +669,7 @@ def input(key):
         print('pressed left mouse button')
 </div>
 </pre></div>
-<div id="mesh_importer"><div id="mesh_importer" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">mesh_importer</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+<div id="mesh_importer"><div id="mesh_importer" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">mesh_importer</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.mesh_importer</g><br><br>
 load_model(<g>name, path=application.asset_folder</g>)   
 compress_models(<g>path=None, outpath=application.compressed_models_folder, name='*'</g>)   
 obj_to_ursinamesh()   
@@ -684,7 +680,7 @@ compress_internal()
 <div class="example">print('imported_meshes:\n', imported_meshes)
 </div>
 </pre></div>
-<div id="scene"><div id="scene" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">scene</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">render<g> = None</g> 
+<div id="scene"><div id="scene" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">scene</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.scene</g><br><br>render<g> = None</g> 
 world<g> = None</g> 
 camera<g> = None</g> 
 ui_camera<g> = None</g> 
@@ -715,12 +711,12 @@ scene.fog_density = .1          # sets exponential density
 scene.fog_density = (50, 200)   # sets linear density start and end
 </div>
 </pre></div>
-<div id="shader"><div id="shader" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">shader</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">uniform mat4 p3d_ModelViewProjectionMatrix;
+<div id="shader"><div id="shader" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">shader</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.shader</g><br><br>uniform mat4 p3d_ModelViewProjectionMatrix;
 void main() {
 
 
 </pre></div>
-<div id="string_utilities"><div id="string_utilities" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">string_utilities</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+<div id="string_utilities"><div id="string_utilities" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">string_utilities</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.string_utilities</g><br><br>
 camel_to_snake(<g>value</g>)   
 snake_to_camel(<g>value</g>)   
 multireplace(<g>string, replacements, ignore_case=False</g>)   
@@ -731,7 +727,7 @@ print(snake_to_camel('snake_to_camel'))
 printvar('test')
 </div>
 </pre></div>
-<div id="text"><div id="text" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">text</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+<div id="text"><div id="text" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">text</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.text</g><br><br>
 get_width(<g>string, font=None</g>)   
 
 <div class="example">app = Ursina()
@@ -755,7 +751,7 @@ get_width(<g>string, font=None</g>)
   app.run()
 </div>
 </pre></div>
-<div id="texture_importer"><div id="texture_importer" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">texture_importer</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">file_types<g> = ('.jpg', '.png', '.gif')</g> 
+<div id="texture_importer"><div id="texture_importer" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">texture_importer</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.texture_importer</g><br><br>file_types<g> = ('.jpg', '.png', '.gif')</g> 
 textureless<g> = False</g> 
 has_psd_tools_installed<g> = False</g> 
 
@@ -765,7 +761,7 @@ compress_textures(<g>name=''</g>)
 <div class="example">Entity(model='quad', texture='white_cube')
 </div>
 </pre></div>
-<div id="ursinamath"><div id="ursinamath" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ursinamath</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+<div id="ursinamath"><div id="ursinamath" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ursinamath</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursinamath</g><br><br>
 distance(<g>a, b</g>)   
 distance2d(<g>a, b</g>)   
 lerp(<g>a, b, t</g>)   
@@ -790,7 +786,7 @@ print(lerp([0,0], [0,1], .5))
 print(round(Vec3(.38, .1351, 353.26), 2))
 </div>
 </pre></div>
-<div id="ursinastuff"><div id="ursinastuff" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ursinastuff</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+<div id="ursinastuff"><div id="ursinastuff" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ursinastuff</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursinastuff</g><br><br>
 invoke(<g>function, *args, **kwargs</g>)   
 destroy(<g>entity, delay=0</g>)   
 import_all_classes(<g>path=application.asset_folder, debug=False</g>)   
@@ -809,11 +805,11 @@ def input(key):
         print_on_screen('debug message', position=(0,0), origin=(0,0), scale=2)
 </div>
 </pre></div>
-<div id="window"><div id="window" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">window</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">vsync<g> = True   # can't be set during play</g> 
+<div id="window"><div id="window" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">window</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.window</g><br><br>vsync<g> = True   # can't be set during play</g> 
 show_ursina_splash<g> = False</g> 
 title<g> = application.asset_folder.name</g> 
-fullscreen_size<g> = Vec2(self.screen_resolution[0]+1, ((self.screen_resolution[0]) * .5625)+1)</g> 
-windowed_size<g> = Vec2(self.fullscreen_size[0] / 1.25, self.fullscreen_size[0] / 1.25 * .5625)</g> 
+fullscreen_size<g> = Vec2(self.screen_resolution[0]+1, self.screen_resolution[1]+1)</g> 
+windowed_size<g> = self.fullscreen_size / 1.25</g> 
 windowed_position<g> = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode</g> 
 size<g> = self.windowed_size</g> 
 borderless<g> = True</g> 
@@ -843,17 +839,16 @@ late_init()
 center_on_screen()   
 make_exit_button()   <g># called by main after setting up camera</g>
 update()   
+update_aspect_ratio()   
 
 <div class="example">window.title = 'Title'
-window.borderless = False
-window.fullscreen = False
 window.exit_button.visible = False
 window.fps_counter.enabled = False
 
 Entity(model='cube', color=color.green, collider='box', texture='shore')
 </div>
 </pre></div>
-<div id="Audio"><div id="Audio" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Audio<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Audio(sound_file_name='', autoplay=True, **kwargs)</params>
+<div id="Audio"><div id="Audio" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Audio<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.audio</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Audio(sound_file_name='', autoplay=True, **kwargs)</params>
 
 volume<g> = 1</g> 
 pitch<g> = 1</g> 
@@ -884,7 +879,7 @@ print(a.clip)
 base.run()
 </div>
 </pre></div>
-<div id="Collider"><div id="Collider" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Collider<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Collider()</params>
+<div id="Collider"><div id="Collider" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Collider<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.collider</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Collider()</params>
 
 visible
 
@@ -907,7 +902,7 @@ e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_co
 EditorCamera()
 </div>
 </pre></div>
-<div id="BoxCollider"><div id="BoxCollider" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">BoxCollider<g>(<a style="color: gray;" href="#Collider">Collider</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">BoxCollider(entity, center=(0,0,0), size=(1,1,1))</params>
+<div id="BoxCollider"><div id="BoxCollider" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">BoxCollider<g>(<a style="color: gray;" href="#Collider">Collider</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.collider</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">BoxCollider(entity, center=(0,0,0), size=(1,1,1))</params>
 
 shape<g> = CollisionBox(Vec3(center[0], center[2], center[1]), size[0], size[2], size[1])</g> 
 collision_node<g> = CollisionNode('CollisionNode')</g> 
@@ -930,7 +925,7 @@ e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_co
 EditorCamera()
 </div>
 </pre></div>
-<div id="SphereCollider"><div id="SphereCollider" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">SphereCollider<g>(<a style="color: gray;" href="#Collider">Collider</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">SphereCollider(entity, center=(0,0,0), radius=.5)</params>
+<div id="SphereCollider"><div id="SphereCollider" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">SphereCollider<g>(<a style="color: gray;" href="#Collider">Collider</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.collider</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">SphereCollider(entity, center=(0,0,0), radius=.5)</params>
 
 shape<g> = CollisionSphere(center[0], center[2], center[1], radius)</g> 
 node_path<g> = entity.attachNewNode(CollisionNode('CollisionNode'))</g> 
@@ -952,7 +947,7 @@ e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_co
 EditorCamera()
 </div>
 </pre></div>
-<div id="MeshCollider"><div id="MeshCollider" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">MeshCollider<g>(<a style="color: gray;" href="#Collider">Collider</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">MeshCollider(entity, mesh=None, center=(0,0,0))</params>
+<div id="MeshCollider"><div id="MeshCollider" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">MeshCollider<g>(<a style="color: gray;" href="#Collider">Collider</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.collider</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">MeshCollider(entity, mesh=None, center=(0,0,0))</params>
 
 node_path<g> = entity.attachNewNode(CollisionNode('CollisionNode'))</g> 
 visible<g> = False</g> 
@@ -973,7 +968,7 @@ e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_co
 EditorCamera()
 </div>
 </pre></div>
-<div id="Color"><div id="Color" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Color<g>(Vec4)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Color(self,*p)</params>
+<div id="Color"><div id="Color" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Color<g>(Vec4)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.color</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Color(self,*p)</params>
 
 name
 r
@@ -1015,7 +1010,7 @@ e = Entity(model='cube', color=color.lime)
 print(e.color.name)
 </div>
 </pre></div>
-<div id="CubicBezier"><div id="CubicBezier" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">CubicBezier</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">CubicBezier(a, b, c, d)</params>
+<div id="CubicBezier"><div id="CubicBezier" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">CubicBezier</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.curve</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">CubicBezier(a, b, c, d)</params>
 
 a<g> = a</g> 
 b<g> = b</g> 
@@ -1073,7 +1068,7 @@ e2.animate_y(1, curve=curve.CubicBezier(0,.7,1,.3))
 '''
 </div>
 </pre></div>
-<div id="Hit"><div id="Hit" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Hit</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Hit(**kwargs)</params>
+<div id="Hit"><div id="Hit" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Hit</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.hit</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Hit(**kwargs)</params>
 
 hit<g> = None</g> 
 entity<g> = None</g> 
@@ -1087,7 +1082,7 @@ entities<g> = None</g>
 
 
 </pre></div>
-<div id="InputEvents"><div id="InputEvents" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">InputEvents<g>(Enum)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">left_mouse_down<g> = 'left mouse down'</g> 
+<div id="InputEvents"><div id="InputEvents" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">InputEvents<g>(Enum)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.input_handler</g><br><br>left_mouse_down<g> = 'left mouse down'</g> 
 left_mouse_up<g> = 'left mouse up'</g> 
 middle_mouse_down<g> = 'middle mouse down'</g> 
 middle_mouse_up<g> = 'middle mouse up'</g> 
@@ -1126,7 +1121,7 @@ tab<g> = 'tab'</g>
 
 
 </pre></div>
-<div id="Ursina"><div id="Ursina" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Ursina<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Ursina()</params>
+<div id="Ursina"><div id="Ursina" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Ursina<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.main</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Ursina()</params>
 
 mouse<g> = mouse</g> 
 
@@ -1139,7 +1134,7 @@ run()
 app.run()
 </div>
 </pre></div>
-<div id="MeshModes"><div id="MeshModes" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">MeshModes<g>(Enum)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">triangle<g> = 'triangle'</g> 
+<div id="MeshModes"><div id="MeshModes" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">MeshModes<g>(Enum)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.mesh</g><br><br>triangle<g> = 'triangle'</g> 
 ngon<g> = 'ngon'</g> 
 quad<g> = 'quad'</g> 
 line<g> = 'line'</g> 
@@ -1148,7 +1143,7 @@ tristrip<g> = 'tristrip'</g>
 
 
 </pre></div>
-<div id="Mesh"><div id="Mesh" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Mesh<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Mesh(vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1)</params>
+<div id="Mesh"><div id="Mesh" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Mesh<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.mesh</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Mesh(vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1)</params>
 
 vertices<g> = vertices</g> 
 triangles<g> = triangles</g> 
@@ -1183,7 +1178,7 @@ print(e.model.recipe)
 EditorCamera()
 </div>
 </pre></div>
-<div id="Wait"><div id="Wait" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Wait<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Wait(duration)</params>
+<div id="Wait"><div id="Wait" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Wait<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.sequence</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Wait(duration)</params>
 
 duration<g> = duration</g> 
 
@@ -1209,7 +1204,7 @@ def input(key):
         actions[key]()
 </div>
 </pre></div>
-<div id="Func"><div id="Func" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Func<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Func(func, *args, **kwargs)</params>
+<div id="Func"><div id="Func" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Func<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.sequence</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Func(func, *args, **kwargs)</params>
 
 func<g> = func</g> 
 args<g> = args</g> 
@@ -1239,7 +1234,7 @@ def input(key):
         actions[key]()
 </div>
 </pre></div>
-<div id="Sequence"><div id="Sequence" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Sequence<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Sequence(*args, **kwargs)</params>
+<div id="Sequence"><div id="Sequence" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Sequence<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.sequence</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Sequence(*args, **kwargs)</params>
 
 args<g> = list(args)</g> 
 t<g> = 0</g> 
@@ -1281,14 +1276,14 @@ def input(key):
         actions[key]()
 </div>
 </pre></div>
-<div id="Shader"><div id="Shader" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Shader</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Shader(language=Panda3dShader.SL_GLSL, vertex=default_vertex_shader, fragment='', geometry='', **kwargs)</params>
+<div id="Shader"><div id="Shader" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Shader</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.shader</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Shader(language=Panda3dShader.SL_GLSL, vertex=default_vertex_shader, fragment='', geometry='', **kwargs)</params>
 
 entity<g> = None</g> 
 default_input<g> = dict()</g> 
 
 
 </pre></div>
-<div id="Texture"><div id="Texture" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Texture<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Texture(value)</params>
+<div id="Texture"><div id="Texture" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Texture<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.texture</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Texture(value)</params>
 
 filtering<g> = Texture.default_filtering</g> 
 name
@@ -1321,7 +1316,7 @@ for y in range(e.texture.height):
             print('found blue pixel at:', x, y)
 </div>
 </pre></div>
-<div id="Vec3"><div id="Vec3" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Vec3<g>(PandaVec3)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Vec3(value)</params>
+<div id="Vec3"><div id="Vec3" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Vec3<g>(PandaVec3)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.vec3</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Vec3(value)</params>
 
 x
 y
@@ -1338,7 +1333,7 @@ print(type(b))
 print(b)
 </div>
 </pre></div>
-<div id="Animation"><div id="Animation" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Animation<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Animation(name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs)</params>
+<div id="Animation"><div id="Animation" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Animation<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.animation</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Animation(name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs)</params>
 
 frames<g> = list()</g> 
 sequence<g> = Sequence(loop=loop, auto_destroy=False)</g> 
@@ -1360,7 +1355,7 @@ animation = Animation('ursina_wink', fps=2, scale=5, filtering=None, autoplay=Fa
 EditorCamera()
 </div>
 </pre></div>
-<div id="Animator"><div id="Animator" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Animator<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Animator(animations=None, start_state='')</params>
+<div id="Animator"><div id="Animator" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Animator<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.animator</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Animator(animations=None, start_state='')</params>
 
 animations<g> = animations    # dict</g> 
 start_state<g> = start_state</g> 
@@ -1389,7 +1384,7 @@ def input(key):
         print(anim.enabled)
 </div>
 </pre></div>
-<div id="ButtonGroup"><div id="ButtonGroup" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ButtonGroup<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ButtonGroup(options=None, default='', min_selection=0, max_selection=1, **kwargs)</params>
+<div id="ButtonGroup"><div id="ButtonGroup" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ButtonGroup<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.button_group</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ButtonGroup(options=None, default='', min_selection=0, max_selection=1, **kwargs)</params>
 
 deselected_color<g> = Button.color</g> 
 selected_color<g> = color.azure</g> 
@@ -1421,7 +1416,7 @@ on_off_switch.on_value_changed = on_value_changed
 window.color = color._32
 </div>
 </pre></div>
-<div id="ButtonList"><div id="ButtonList" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ButtonList<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ButtonList(button_dict, button_height=1.5, **kwargs)</params>
+<div id="ButtonList"><div id="ButtonList" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ButtonList<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.button_list</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ButtonList(button_dict, button_height=1.5, **kwargs)</params>
 
 text_entity<g> = Text(parent=self, origin=(-.5,.5), text='empty', world_scale=20, z=-.1, y=-.25*Text.size, x=.01)</g> 
 button_height<g> = self.text_entity.height</g> 
@@ -1451,123 +1446,7 @@ for i in range(6, 25):
 bl = ButtonList(button_dict)
 </div>
 </pre></div>
-<div id="ColorPicker"><div id="ColorPicker" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ColorPicker<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ColorPicker(**kwargs)</params>
-
-color_field<g> = None</g> 
-enabled<g> = True</g> 
-z<g> = -10</g> 
-bg<g> = Panel(parent=self, origin=(-.4,-.3), scale=(slider.scale_x*.6, 4*.125), color=color.gray)</g> 
-apply_button<g> = Button(parent=self, model=Quad(radius=.5, aspect=.25/.03/1), text='select', color=color.azure,
-        scale=(.235,.03), origin=(-.5,0), x=.02)</g> 
-cancel<g> = Button(parent=self, model=Quad(radius=.5), text='<gray>x', color=color.red,
-        scale=(.03,.03), x=slider.x, on_click=Func(setattr, self, 'enabled', False), highlight_color=color.blue)</g> 
-
-input(<g>key</g>)   
-
-<div class="example">ColorField(text='primary')
-ColorField(y=-Text.size*2.1, text='secondary_color', color=color.orange)
-</div>
-</pre></div>
-<div id="ColorField"><div id="ColorField" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ColorField<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ColorField(text='', **kwargs)</params>
-
-
-on_click()   
-
-<div class="example">ColorField(text='primary')
-ColorField(y=-Text.size*2.1, text='secondary_color', color=color.orange)
-</div>
-</pre></div>
-<div id="Node"><div id="Node" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Node</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Node(text='', **kwargs)</params>
-
-
-
-<div class="example">app = Ursina()
-    conversation = Conversation()
-    bar_mission_solved = False
-    convo = '''
-I'm looking for my sister. Can you help me find her, please? I haven't seen her in days! Who know what could've happened!?
-I'm worried. Will you help me?
-    * Yes, of course. This can be a dangerous city.
-        Oh no! Do you think something happened to her?
-        What should I do?!
-            * She's probably fine. She can handle herself.
-                You're right. I'm still worried though.
-                    * Don't worry, I'll look for her.
-            * Maybe. (chaos += 1)
-                Help me look for her, please! *runs off*
-    * I'm sorry, but I don't have time right now.
-        A true friend wouldn't say that. (evil += 1)
-    * I know where she is! (if bar_mission_solved)
-        Really? Where?
-            * I saw her on a ship by the docks, it looked like they were ready to set off.
-                Thank you! *runs off*
-'''
-    conversation.start_conversation(convo)
-
-    window.size = window.fullscreen_size * .5
-    Sprite('shore', z=1)
-    app.run()
-</div>
-</pre></div>
-<div id="Conversation"><div id="Conversation" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Conversation<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Conversation(**kwargs)</params>
-
-question<g> = Button(
-        parent=self,
-        text_origin=(-.5,0),
-        scale_x=1,
-        scale_y=.1,
-        model=Quad(radius=.5, aspect=1/.1),
-        text='What do you want\nWhat do you want?'
-        )</g> 
-more_indicator<g> = Entity(parent=self.question, model=Circle(3), position=(.45,-.4,-.1), rotation_z=180, color=color.azure, world_scale=.5, z=-1, enabled=False)</g> 
-spacing<g> = 4 * .02</g> 
-wordwrap<g> = 80</g> 
-button_model<g> = Quad(radius=.5, aspect=1/.075)</g> 
-answer_0<g> = Button(parent=self, text='answer_0', y=self.question.y-self.spacing-.025, scale=(1,.075), text_origin=(-.5,0), model=copy(self.button_model))</g> 
-answer_1<g> = Button(parent=self, text='answer_1', y=self.answer_0.y-self.spacing, scale=(1,.075), text_origin=(-.5,0), model=copy(self.button_model))</g> 
-answer_2<g> = Button(parent=self, text='answer_2', y=self.answer_1.y-self.spacing, scale=(1,.075), text_origin=(-.5,0), model=copy(self.button_model))</g> 
-buttons<g> = (self.answer_0, self.answer_1, self.answer_2)</g> 
-question_appear_sequence<g> = None</g> 
-button_appear_sequence<g> = None</g> 
-started<g> = False</g> 
-
-toggle()   
-ask(<g>node, question_part=0</g>)   
-on_click(<g>node=child</g>)   
-input(<g>key</g>)   
-next()   
-start_conversation(<g>conversation</g>)   
-parse_conversation(<g>convo</g>)   
-
-<div class="example">app = Ursina()
-    conversation = Conversation()
-    bar_mission_solved = False
-    convo = '''
-I'm looking for my sister. Can you help me find her, please? I haven't seen her in days! Who know what could've happened!?
-I'm worried. Will you help me?
-    * Yes, of course. This can be a dangerous city.
-        Oh no! Do you think something happened to her?
-        What should I do?!
-            * She's probably fine. She can handle herself.
-                You're right. I'm still worried though.
-                    * Don't worry, I'll look for her.
-            * Maybe. (chaos += 1)
-                Help me look for her, please! *runs off*
-    * I'm sorry, but I don't have time right now.
-        A true friend wouldn't say that. (evil += 1)
-    * I know where she is! (if bar_mission_solved)
-        Really? Where?
-            * I saw her on a ship by the docks, it looked like they were ready to set off.
-                Thank you! *runs off*
-'''
-    conversation.start_conversation(convo)
-
-    window.size = window.fullscreen_size * .5
-    Sprite('shore', z=1)
-    app.run()
-</div>
-</pre></div>
-<div id="Cursor"><div id="Cursor" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Cursor<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Cursor(**kwargs)</params>
+<div id="Cursor"><div id="Cursor" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Cursor<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.cursor</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Cursor(**kwargs)</params>
 
 parent<g> = camera.ui</g> 
 texture<g> = 'cursor'</g> 
@@ -1586,7 +1465,7 @@ mouse._mouse_watcher.setGeometry(e.model.node())
 mouse.visible = False
 </div>
 </pre></div>
-<div id="DebugMenu"><div id="DebugMenu" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">DebugMenu<g>(<a style="color: gray;" href="#Draggable">Draggable</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">DebugMenu(target, **kwargs)</params>
+<div id="DebugMenu"><div id="DebugMenu" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">DebugMenu<g>(<a style="color: gray;" href="#Draggable">Draggable</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.debug_menu</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">DebugMenu(target, **kwargs)</params>
 
 target<g> = target</g> 
 scale<g> = (.2, .025)</g> 
@@ -1597,7 +1476,7 @@ draw_functions()
 <div class="example">DebugMenu(Audio('night_sky'))
 </div>
 </pre></div>
-<div id="Draggable"><div id="Draggable" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Draggable<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Draggable(**kwargs)</params>
+<div id="Draggable"><div id="Draggable" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Draggable<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.draggable</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Draggable(**kwargs)</params>
 
 require_key<g> = None</g> 
 dragging<g> = False</g> 
@@ -1624,11 +1503,13 @@ EditorCamera()
 e.drop = Func(print, 'awoijdoaiwjdaoiwjdoi')
 </div>
 </pre></div>
-<div id="DropdownMenuButton"><div id="DropdownMenuButton" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">DropdownMenuButton<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">DropdownMenuButton(text='', **kwargs)</params>
+<div id="DropdownMenuButton"><div id="DropdownMenuButton" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">DropdownMenuButton<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.dropdown_menu</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">DropdownMenuButton(text='', **kwargs)</params>
 
 
 
-<div class="example">DropdownMenu('File', buttons=(
+<div class="example">from ursina.prefabs.dropdown_menu import DropdownMenu, DropdownMenuButton
+
+DropdownMenu('File', buttons=(
     DropdownMenuButton('New'),
     DropdownMenuButton('Open'),
     DropdownMenu('Reopen Project', buttons=(
@@ -1644,7 +1525,7 @@ e.drop = Func(print, 'awoijdoaiwjdaoiwjdoi')
     ))
 </div>
 </pre></div>
-<div id="DropdownMenu"><div id="DropdownMenu" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">DropdownMenu<g>(DropdownMenuButton)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">DropdownMenu(text='', buttons=list(), **kwargs)</params>
+<div id="DropdownMenu"><div id="DropdownMenu" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">DropdownMenu<g>(DropdownMenuButton)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.dropdown_menu</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">DropdownMenu(text='', buttons=list(), **kwargs)</params>
 
 position<g> = window.top_left</g> 
 buttons<g> = buttons</g> 
@@ -1656,7 +1537,9 @@ on_mouse_enter()
 input(<g>key</g>)   
 update()   
 
-<div class="example">DropdownMenu('File', buttons=(
+<div class="example">from ursina.prefabs.dropdown_menu import DropdownMenu, DropdownMenuButton
+
+DropdownMenu('File', buttons=(
     DropdownMenuButton('New'),
     DropdownMenuButton('Open'),
     DropdownMenu('Reopen Project', buttons=(
@@ -1672,7 +1555,7 @@ update()
     ))
 </div>
 </pre></div>
-<div id="EditorCamera"><div id="EditorCamera" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">EditorCamera<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">EditorCamera(**kwargs)</params>
+<div id="EditorCamera"><div id="EditorCamera" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">EditorCamera<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.editor_camera</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">EditorCamera(**kwargs)</params>
 
 rotation_speed<g> = 100</g> 
 pan_speed<g> = Vec2(4, 4)</g> 
@@ -1717,7 +1600,7 @@ def input(key):
         ec.enabled = not ec.enabled
 </div>
 </pre></div>
-<div id="ExitButton"><div id="ExitButton" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ExitButton<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ExitButton(**kwargs)</params>
+<div id="ExitButton"><div id="ExitButton" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ExitButton<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.exit_button</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ExitButton(**kwargs)</params>
 
 
 on_click()   
@@ -1730,7 +1613,7 @@ To disable it, set window.exit_button.enabled to False
 '''
 </div>
 </pre></div>
-<div id="FileButton"><div id="FileButton" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FileButton<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">FileButton(load_menu, **kwargs)</params>
+<div id="FileButton"><div id="FileButton" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FileButton<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.file_browser</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">FileButton(load_menu, **kwargs)</params>
 
 load_menu<g> = load_menu</g> 
 selected
@@ -1747,7 +1630,7 @@ def on_submit(value):
 fb.on_submit = on_submit
 </div>
 </pre></div>
-<div id="FileBrowser"><div id="FileBrowser" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FileBrowser<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">FileBrowser(**kwargs)</params>
+<div id="FileBrowser"><div id="FileBrowser" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FileBrowser<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.file_browser</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">FileBrowser(**kwargs)</params>
 
 return_files<g> = True</g> 
 return_directories<g> = False</g> 
@@ -1785,7 +1668,7 @@ def on_submit(value):
 fb.on_submit = on_submit
 </div>
 </pre></div>
-<div id="FileBrowserSave"><div id="FileBrowserSave" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FileBrowserSave<g>(FileBrowser)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">FileBrowserSave(**kwargs)</params>
+<div id="FileBrowserSave"><div id="FileBrowserSave" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FileBrowserSave<g>(FileBrowser)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.file_browser_save</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">FileBrowserSave(**kwargs)</params>
 
 save_button<g> = self.open_button</g> 
 file_name_field<g> = InputField(
@@ -1798,7 +1681,7 @@ save()
 <div class="example">FileBrowserSave(file_type = '.oto')
 </div>
 </pre></div>
-<div id="FirstPersonController"><div id="FirstPersonController" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FirstPersonController<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">FirstPersonController(**kwargs)</params>
+<div id="FirstPersonController"><div id="FirstPersonController" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FirstPersonController<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.first_person_controller</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">FirstPersonController(**kwargs)</params>
 
 speed<g> = 5</g> 
 i<g> = 0</g> 
@@ -1846,7 +1729,7 @@ def update():
 Entity(model='cube', color=color.dark_gray, scale=(9,4,9), y=-.5, collider='box')
 </div>
 </pre></div>
-<div id="HealthBar"><div id="HealthBar" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">HealthBar<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">HealthBar(max_value=100, show_text=True, show_lines=False, **kwargs)</params>
+<div id="HealthBar"><div id="HealthBar" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">HealthBar<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.health_bar</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">HealthBar(max_value=100, show_text=True, show_lines=False, **kwargs)</params>
 
 bar<g> = Entity(parent=self, model='quad', origin=self.origin, z=-.01, color=color.red.tint(-.2), ignore=True)</g> 
 lines<g> = Entity(parent=self.bar, origin=self.origin, y=-1, color=color.black33, ignore=True)</g> 
@@ -1869,7 +1752,7 @@ def input(key):
         health_bar_1.value -= 10
 </div>
 </pre></div>
-<div id="HotReloader"><div id="HotReloader" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">HotReloader<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">HotReloader(path=__file__, **kwargs)</params>
+<div id="HotReloader"><div id="HotReloader" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">HotReloader<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.hot_reloader</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">HotReloader(path=__file__, **kwargs)</params>
 
 path<g> = path</g> 
 path<g> = Path(self.path)</g> 
@@ -1898,7 +1781,7 @@ By default you can press F5 to reload the starting script, F6 to reimport textur
 '''
 </div>
 </pre></div>
-<div id="InputField"><div id="InputField" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">InputField<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">InputField(default_value='', label='', max_lines=1, **kwargs)</params>
+<div id="InputField"><div id="InputField" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">InputField<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.input_field</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">InputField(default_value='', label='', max_lines=1, **kwargs)</params>
 
 default_value<g> = default_value</g> 
 next_field<g> = None</g> 
@@ -1917,7 +1800,7 @@ def submit():
 Button('submit', scale=.1, color=color.azure, y=-.2, on_click=submit).fit_to_text()
 </div>
 </pre></div>
-<div id="MemoryCounter"><div id="MemoryCounter" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">MemoryCounter<g>(<a style="color: gray;" href="#Text">Text</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">MemoryCounter(**kwargs)</params>
+<div id="MemoryCounter"><div id="MemoryCounter" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">MemoryCounter<g>(<a style="color: gray;" href="#Text">Text</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.memory_counter</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">MemoryCounter(**kwargs)</params>
 
 parent<g> = camera.ui</g> 
 position<g> = window.bottom_right</g> 
@@ -1933,7 +1816,7 @@ Displays the amount of memory used in the bottom right corner
 '''
 </div>
 </pre></div>
-<div id="Panel"><div id="Panel" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Panel<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Panel(**kwargs)</params>
+<div id="Panel"><div id="Panel" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Panel<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.panel</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Panel(**kwargs)</params>
 
 parent<g> = camera.ui</g> 
 model<g> = Quad()</g> 
@@ -1943,7 +1826,7 @@ color<g> = Button.color</g>
 <div class="example">p = Panel()
 </div>
 </pre></div>
-<div id="PlatformerController2d"><div id="PlatformerController2d" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">PlatformerController2d<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">PlatformerController2d(**kwargs)</params>
+<div id="PlatformerController2d"><div id="PlatformerController2d" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">PlatformerController2d<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.platformer_controller_2d</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">PlatformerController2d(**kwargs)</params>
 
 model<g> = 'cube'</g> 
 origin_y<g> = -.5</g> 
@@ -1983,7 +1866,7 @@ def input(key):
 player_controller = PlatformerController2d()
 </div>
 </pre></div>
-<div id="RadialMenu"><div id="RadialMenu" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">RadialMenu<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">RadialMenu(buttons=list(), **kwargs)</params>
+<div id="RadialMenu"><div id="RadialMenu" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">RadialMenu<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.radial_menu</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">RadialMenu(buttons=list(), **kwargs)</params>
 
 parent<g> = camera.ui</g> 
 buttons<g> = buttons</g> 
@@ -2021,7 +1904,7 @@ cube = Button(parent=scene, model='cube', color=color.orange, highlight_color=co
 EditorCamera()
 </div>
 </pre></div>
-<div id="RadialMenuButton"><div id="RadialMenuButton" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">RadialMenuButton<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">RadialMenuButton(**kwargs)</params>
+<div id="RadialMenuButton"><div id="RadialMenuButton" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">RadialMenuButton<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.radial_menu</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">RadialMenuButton(**kwargs)</params>
 
 
 
@@ -2043,13 +1926,13 @@ cube = Button(parent=scene, model='cube', color=color.orange, highlight_color=co
 EditorCamera()
 </div>
 </pre></div>
-<div id="Sky"><div id="Sky" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Sky<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Sky(**kwargs)</params>
+<div id="Sky"><div id="Sky" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Sky<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.sky</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Sky(**kwargs)</params>
 
 
 update()   
 
 </pre></div>
-<div id="Slider"><div id="Slider" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Slider<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Slider(min=0, max=1, default=None, height=Text.size, text='', dynamic=False, **kwargs)</params>
+<div id="Slider"><div id="Slider" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Slider<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.slider</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Slider(min=0, max=1, default=None, height=Text.size, text='', dynamic=False, **kwargs)</params>
 
 parent<g> = camera.ui</g> 
 vertical<g> = False</g> 
@@ -2077,7 +1960,7 @@ def scale_box():
 slider.on_value_changed = scale_box
 </div>
 </pre></div>
-<div id="ThinSlider"><div id="ThinSlider" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ThinSlider<g>(Slider)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ThinSlider(*args, **kwargs)</params>
+<div id="ThinSlider"><div id="ThinSlider" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ThinSlider<g>(Slider)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.slider</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ThinSlider(*args, **kwargs)</params>
 
 
 
@@ -2089,7 +1972,7 @@ def scale_box():
 slider.on_value_changed = scale_box
 </div>
 </pre></div>
-<div id="Sprite"><div id="Sprite" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Sprite<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Sprite(texture=None, **kwargs)</params>
+<div id="Sprite"><div id="Sprite" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Sprite<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.sprite</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Sprite(texture=None, **kwargs)</params>
 
 model<g> = 'quad'</g> 
 texture<g> = texture</g> 
@@ -2104,7 +1987,7 @@ Texture.default_filtering = None
 s = Sprite('brick', filtering=False)
 </div>
 </pre></div>
-<div id="TextField"><div id="TextField" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">TextField<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">TextField(**kwargs)</params>
+<div id="TextField"><div id="TextField" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">TextField<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.text_field</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">TextField(**kwargs)</params>
 
 font<g> = 'VeraMono.ttf'</g> 
 font_size<g> = 20</g> 
@@ -2197,7 +2080,7 @@ te.line_numbers.enabled = True
 te.render()
 </div>
 </pre></div>
-<div id="Tooltip"><div id="Tooltip" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Tooltip<g>(<a style="color: gray;" href="#Text">Text</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Tooltip(text='', **kwargs)</params>
+<div id="Tooltip"><div id="Tooltip" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Tooltip<g>(<a style="color: gray;" href="#Text">Text</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.tooltip</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Tooltip(text='', **kwargs)</params>
 
 parent<g> = camera.ui</g> 
 wordwrap<g> = 40</g> 
@@ -2222,7 +2105,7 @@ Lasts for 4 rounds.'''.replace('\n', ' '))
     app.run()
 </div>
 </pre></div>
-<div id="VideoRecorder"><div id="VideoRecorder" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">VideoRecorder<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">VideoRecorder(duration=5, name='untitled_video', **kwargs)</params>
+<div id="VideoRecorder"><div id="VideoRecorder" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">VideoRecorder<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.video_recorder</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">VideoRecorder(duration=5, name='untitled_video', **kwargs)</params>
 
 recording<g> = False</g> 
 file_path<g> = Path(application.asset_folder) / 'video_temp'</g> 
@@ -2242,7 +2125,7 @@ cube.animate_x(0, duration=5, curve=curve.linear, delay=5)
 Cursor()
 </div>
 </pre></div>
-<div id="VideoRecorderUI"><div id="VideoRecorderUI" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">VideoRecorderUI<g>(WindowPanel)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">VideoRecorderUI(**kwargs)</params>
+<div id="VideoRecorderUI"><div id="VideoRecorderUI" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">VideoRecorderUI<g>(WindowPanel)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.video_recorder</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">VideoRecorderUI(**kwargs)</params>
 
 duration_label<g> = Text('duration:')</g> 
 duration_field<g> = InputField(default_value='5')</g> 
@@ -2263,7 +2146,7 @@ cube.animate_x(0, duration=5, curve=curve.linear, delay=5)
 Cursor()
 </div>
 </pre></div>
-<div id="Space"><div id="Space" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Space<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Space(height=1)</params>
+<div id="Space"><div id="Space" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Space<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.window_panel</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Space(height=1)</params>
 
 height<g> = height</g> 
 
@@ -2280,7 +2163,7 @@ height<g> = height</g>
     )
 </div>
 </pre></div>
-<div id="WindowPanel"><div id="WindowPanel" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">WindowPanel<g>(<a style="color: gray;" href="#Draggable">Draggable</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">WindowPanel(title='', content=[], **kwargs)</params>
+<div id="WindowPanel"><div id="WindowPanel" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">WindowPanel<g>(<a style="color: gray;" href="#Draggable">Draggable</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.window_panel</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">WindowPanel(title='', content=[], **kwargs)</params>
 
 content<g> = content</g> 
 text<g> = title</g> 
@@ -2300,7 +2183,7 @@ close()
     )
 </div>
 </pre></div>
-<div id="colorize"><div id="colorize" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">colorize</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+<div id="colorize"><div id="colorize" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">colorize</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.scripts.colorize</g><br><br>
 get_world_normals(<g>model</g>)   
 colorize(<g>model, left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white, smooth=True, world_space=True</g>)   
 
@@ -2318,7 +2201,7 @@ Sky(color=color.gray)
 EditorCamera()
 </div>
 </pre></div>
-<div id="combine"><div id="combine" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">combine</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+<div id="combine"><div id="combine" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">combine</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.scripts.combine</g><br><br>
 combine(<g>entity, analyze=False, auto_destroy=True</g>)   
 get_vertices(<g>entity, relative_to=None</g>)   
 
@@ -2332,7 +2215,7 @@ p.combine()
 EditorCamera()
 </div>
 </pre></div>
-<div id="generate_normals"><div id="generate_normals" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">generate_normals</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+<div id="generate_normals"><div id="generate_normals" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">generate_normals</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.scripts.generate_normals</g><br><br>
 normalize_v3(<g>arr</g>)   
 generate_normals(<g>vertices, triangles=None, smooth=True</g>)   
 
@@ -2340,7 +2223,7 @@ generate_normals(<g>vertices, triangles=None, smooth=True</g>)
 norms = generate_normals(vertices)
 </div>
 </pre></div>
-<div id="grid_layout"><div id="grid_layout" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">grid_layout</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+<div id="grid_layout"><div id="grid_layout" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">grid_layout</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.scripts.grid_layout</g><br><br>
 grid_layout(<g>l, max_x=8, max_y=8, spacing=(0,0,0), origin=(-.5,.5,0), offset=(0,0,0)</g>)   
 
 <div class="example">center = Entity(model='quad', scale=.1, color=color.red)
@@ -2355,7 +2238,7 @@ EditorCamera()
 print(time.time() - t)
 </div>
 </pre></div>
-<div id="merge_vertices"><div id="merge_vertices" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">merge_vertices</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+<div id="merge_vertices"><div id="merge_vertices" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">merge_vertices</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.scripts.merge_vertices</g><br><br>
 distance(<g>a, b</g>)   
 merge_overlapping_vertices(<g>vertices, triangles=None, max_distance=.1</g>)   
 
@@ -2371,7 +2254,7 @@ e = Entity(model=Mesh(new_verts, new_tris, mode='triangle'))
 EditorCamera()
 </div>
 </pre></div>
-<div id="PositionLimiter"><div id="PositionLimiter" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">PositionLimiter<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">PositionLimiter(min_x=-math.inf, max_x=math.inf, min_y=-math.inf, max_y=math.inf, min_z=-math.inf, max_z=math.inf)</params>
+<div id="PositionLimiter"><div id="PositionLimiter" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">PositionLimiter<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.scripts.position_limiter</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">PositionLimiter(min_x=-math.inf, max_x=math.inf, min_y=-math.inf, max_y=math.inf, min_z=-math.inf, max_z=math.inf)</params>
 
 min_x<g> = min_x</g> 
 max_x<g> = max_x</g> 
@@ -2383,7 +2266,7 @@ max_z<g> = max_z</g>
 update()   
 
 </pre></div>
-<div id="project_uvs"><div id="project_uvs" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">project_uvs</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
+<div id="project_uvs"><div id="project_uvs" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">project_uvs</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.scripts.project_uvs</g><br><br>
 project_uvs(<g>model, aspect_ratio=1, direction='forward', regenerate=False</g>)   
 
 <div class="example">e = Entity(model='sphere', texture='ursina_logo')
@@ -2391,7 +2274,7 @@ project_uvs(e.model)
 EditorCamera()
 </div>
 </pre></div>
-<div id="Scrollable"><div id="Scrollable" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Scrollable<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Scrollable(**kwargs)</params>
+<div id="Scrollable"><div id="Scrollable" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Scrollable<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.scripts.scrollable</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Scrollable(**kwargs)</params>
 
 max<g> = math.inf</g> 
 min<g> = -math.inf</g> 
@@ -2400,11 +2283,16 @@ direction<g> = (0,1,0)</g>
 
 input(<g>key</g>)   
 
-<div class="example">p = Panel(scale=(.4, .8), collider='box')
+<div class="example">'''
+This will make target entity move up or down when you hover the entity/its children 
+while scrolling the scroll wheel.
+'''
+
+p = Panel(scale=(.4, .8), collider='box')
 p.add_script(Scrollable())
 </div>
 </pre></div>
-<div id="SmoothFollow"><div id="SmoothFollow" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">SmoothFollow<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">SmoothFollow(target=None, offset=(0,0,0), speed=8, rotation_speed=0, rotation_offset=(0,0,0))</params>
+<div id="SmoothFollow"><div id="SmoothFollow" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">SmoothFollow<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.scripts.smooth_follow</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">SmoothFollow(target=None, offset=(0,0,0), speed=8, rotation_speed=0, rotation_offset=(0,0,0))</params>
 
 target<g> = target</g> 
 offset<g> = offset</g> 
@@ -2461,7 +2349,7 @@ Entity(model='cube').add_script(SmoothFollow(target=player, offset=(0,2,0)))
 <div class="example">e = Entity(model='cube', texture='brick')
 </div>
 </pre></div>
-<div id="Circle"><div id="Circle" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Circle<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Circle(resolution=16, radius=.5, rotate=True, mode='ngon', **kwargs)</params>
+<div id="Circle"><div id="Circle" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Circle<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.models.procedural.circle</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Circle(resolution=16, radius=.5, rotate=True, mode='ngon', **kwargs)</params>
 
 
 
@@ -2471,7 +2359,7 @@ origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
 ed = EditorCamera(rotation_speed = 200, panning_speed=200)
 </div>
 </pre></div>
-<div id="Cone"><div id="Cone" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Cone<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Cone(resolution=4, radius=.5, height=1, direction=(0,1,0), add_bottom=True, mode='triangle', **kwargs)</params>
+<div id="Cone"><div id="Cone" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Cone<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.models.procedural.cone</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Cone(resolution=4, radius=.5, height=1, direction=(0,1,0), add_bottom=True, mode='triangle', **kwargs)</params>
 
 
 
@@ -2480,7 +2368,7 @@ origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
 ed = EditorCamera(rotation_speed = 200, panning_speed=200)
 </div>
 </pre></div>
-<div id="Cylinder"><div id="Cylinder" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Cylinder<g>(<a style="color: gray;" href="#Prismatoid">Prismatoid</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Cylinder(resolution=8, radius=.5, start=0, height=1, direction=(0,1,0), mode='triangle', **kwargs)</params>
+<div id="Cylinder"><div id="Cylinder" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Cylinder<g>(<a style="color: gray;" href="#Prismatoid">Prismatoid</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.models.procedural.cylinder</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Cylinder(resolution=8, radius=.5, start=0, height=1, direction=(0,1,0), mode='triangle', **kwargs)</params>
 
 
 
@@ -2489,7 +2377,7 @@ origin = Entity(model='quad', color=color.orange, scale=(5, .05))
 ed = EditorCamera(rotation_speed = 200, panning_speed=200)
 </div>
 </pre></div>
-<div id="Grid"><div id="Grid" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Grid<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Grid(width, height, mode='line', thickness=1, **kwargs)</params>
+<div id="Grid"><div id="Grid" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Grid<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.models.procedural.grid</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Grid(width, height, mode='line', thickness=1, **kwargs)</params>
 
 width<g> = width</g> 
 height<g> = height</g> 
@@ -2498,7 +2386,7 @@ height<g> = height</g>
 <div class="example">Entity(model=Grid(2, 6))
 </div>
 </pre></div>
-<div id="Plane"><div id="Plane" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Plane<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Plane(subdivisions=(1,1), mode='triangle', **kwargs)</params>
+<div id="Plane"><div id="Plane" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Plane<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.models.procedural.plane</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Plane(subdivisions=(1,1), mode='triangle', **kwargs)</params>
 
 vertices, self.triangles<g> = list(), list()</g> 
 uvs<g> = list()</g> 
@@ -2510,7 +2398,7 @@ _ed = EditorCamera()
 Entity(model='cube', color=color.green, scale=.05)
 </div>
 </pre></div>
-<div id="Prismatoid"><div id="Prismatoid" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Prismatoid<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Prismatoid(base_shape=Quad, origin=(0,0), path=((0,0,0),(0,1,0)), thicknesses=((1,1),), look_at=True, mode='triangle', **kwargs)</params>
+<div id="Prismatoid"><div id="Prismatoid" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Prismatoid<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.models.procedural.prismatoid</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Prismatoid(base_shape=Quad, origin=(0,0), path=((0,0,0),(0,1,0)), thicknesses=((1,1),), look_at=True, mode='triangle', **kwargs)</params>
 
 base_shape<g> = base_shape</g> 
 
@@ -2525,7 +2413,7 @@ origin = Entity(model='cube', color=color.magenta)
 origin.scale *= .25
 </div>
 </pre></div>
-<div id="Quad"><div id="Quad" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Quad<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Quad(radius=.1, segments=3, aspect=1, scale=(1,1), mode='ngon', **kwargs)</params>
+<div id="Quad"><div id="Quad" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Quad<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.models.procedural.quad</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Quad(radius=.1, segments=3, aspect=1, scale=(1,1), mode='ngon', **kwargs)</params>
 
 vertices<g> = [Vec3(0,0,0), Vec3(1,0,0), Vec3(1,1,0), Vec3(0,1,0)]</g> 
 radius<g> = radius</g> 
@@ -2540,7 +2428,7 @@ origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
 camera.z = -5
 </div>
 </pre></div>
-<div id="Sphere"><div id="Sphere" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Sphere<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Sphere(radius=.5, subdivisions=0, mode='tristrip', **kwargs)</params>
+<div id="Sphere"><div id="Sphere" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Sphere<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.models.procedural.sphere</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Sphere(radius=.5, subdivisions=0, mode='tristrip', **kwargs)</params>
 
 
 sub_divide(<g>v_0, v_1, v_2, sub_divisions, vertices, faces</g>)   
@@ -2551,7 +2439,7 @@ origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
 ed = EditorCamera(rotation_speed=200, panning_speed=200)
 </div>
 </pre></div>
-<div id="Terrain"><div id="Terrain" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Terrain<g>(Plane)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Terrain(heightmap, skip=1, store_height_values=False, **kwargs)</params>
+<div id="Terrain"><div id="Terrain" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Terrain<g>(Plane)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.models.procedural.terrain</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Terrain(heightmap, skip=1, store_height_values=False, **kwargs)</params>
 
 heightmap<g> = load_texture(heightmap)</g> 
 skip<g> = skip</g> 

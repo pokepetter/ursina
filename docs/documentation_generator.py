@@ -165,20 +165,26 @@ def is_singleton(str):
 
 
 path = application.package_folder
-# print('path', path)
-
-init_file = ''
-with open(path / '__init__.py') as f:
-    init_file = f.read()
-
-# print(init_file)
 most_used_info = dict()
 module_info = dict()
 class_info = dict()
 
+# ignore files that are not commited
+ignored_files = list()
+from git import Repo
+repo = Repo(path.parent)
+ignored_files =  repo.untracked_files
+ignored_files = [Path(path.parent / e) for e in ignored_files]
+for f in ignored_files:
+    print('ignoring:', f)
+
+
 for f in path.glob('*.py'):
+    if f in ignored_files:
+        continue
     if f.name.startswith('_') or f.name == 'build.py':
         module_info['build'] = (
+            f,
             'python -m ursina.build',
             {},
             '',
@@ -190,13 +196,13 @@ for f in path.glob('*.py'):
         code = t.read()
 
         if not is_singleton(code):
-            name = f.name.split('.')[0]
+            name = f.stem
             attrs, funcs = list(), list()
             attrs = get_module_attributes(code)
             funcs = get_functions(code)
             example = get_example(code)
             if attrs or funcs:
-                module_info[name] = ('', attrs, funcs, example)
+                module_info[name] = (f, '', attrs, funcs, example)
 
             # continue
             classes = get_classes(code)
@@ -204,7 +210,7 @@ for f in path.glob('*.py'):
                 if 'Enum' in class_name:
                     class_definition = class_definition.split('def ')[0]
                     attrs = [l.strip() for l in class_definition.split('\n') if ' = ' in l]
-                    class_info[class_name] = ('', attrs, '', '')
+                    class_info[class_name] = (f, '', attrs, '', '')
                     continue
 
                 if 'def __init__' in class_definition:
@@ -214,7 +220,7 @@ for f in path.glob('*.py'):
                 methods = get_functions(class_definition, is_class=True)
                 example = get_example(code)
 
-                class_info[class_name] = (params, attrs, methods, example)
+                class_info[class_name] = (f, params, attrs, methods, example)
         # singletons
         else:
             module_name = f.name.split('.')[0]
@@ -226,15 +232,14 @@ for f in path.glob('*.py'):
                 methods = get_functions(class_definition, is_class=True)
                 example = get_example(code)
 
-                module_info[module_name] = ('', attrs, methods, example)
+                module_info[module_name] = (f, '', attrs, methods, example)
 
 
 prefab_info = dict()
 for f in path.glob('prefabs/*.py'):
-    if f.name.startswith('_'):
+    if f.name.startswith('_') or f in ignored_files:
         continue
 
-    # if f.is_file() and f.name.endswith(('.py', )):
     with open(f, encoding='utf8') as t:
         code = t.read()
         classes = get_classes(code)
@@ -245,12 +250,12 @@ for f in path.glob('prefabs/*.py'):
             methods = get_functions(class_definition, is_class=True)
             example = get_example(code)
 
-            prefab_info[class_name] = (params, attrs, methods, example)
+            prefab_info[class_name] = (f, params, attrs, methods, example)
 
 
 script_info = dict()
 for f in path.glob('scripts/*.py'):
-    if f.name.startswith('_'):
+    if f.name.startswith('_') or f in ignored_files:
         continue
 
     # if f.is_file() and f.name.endswith(('.py', )):
@@ -264,7 +269,7 @@ for f in path.glob('scripts/*.py'):
             funcs = get_functions(code)
             example = get_example(code)
             if attrs or funcs:
-                script_info[name] = ('', attrs, funcs, example)
+                script_info[name] = (f, '', attrs, funcs, example)
 
         classes = get_classes(code)
         for class_name, class_definition in classes.items():
@@ -274,17 +279,17 @@ for f in path.glob('scripts/*.py'):
             methods = get_functions(class_definition, is_class=True)
             example = get_example(code)
 
-            script_info[class_name] = (params, attrs, methods, example)
+            script_info[class_name] = (f, params, attrs, methods, example)
 
 asset_info = dict()
 model_names = [f'\'{f.stem}\'' for f in path.glob('models/compressed/*.ursinamesh')]
-asset_info['models'] = ('', model_names, '', '''e = Entity(model='quad')''')
+asset_info['models'] = ('', '', model_names, '', '''e = Entity(model='quad')''')
 
 texture_names = [f'\'{f.stem}\'' for f in path.glob('textures/*.*')]
-asset_info['textures'] = ('', texture_names, '', '''e = Entity(model='cube', texture='brick')''')
+asset_info['textures'] = ('', '', texture_names, '', '''e = Entity(model='cube', texture='brick')''')
 
 for f in path.glob('models/procedural/*.py'):
-    if f.name.startswith('_'):
+    if f.name.startswith('_') or f in ignored_files:
         continue
 
     with open(f, encoding='utf8') as t:
@@ -297,7 +302,7 @@ for f in path.glob('models/procedural/*.py'):
             methods = get_functions(class_definition, is_class=True)
             example = get_example(code)
 
-            asset_info[class_name] = (params, attrs, methods, example)
+            asset_info[class_name] = (f, params, attrs, methods, example)
 
 
 most_used_info = dict()
@@ -388,7 +393,8 @@ sidebar = '''<pre><div style="
 
 for i, class_dictionary in enumerate((most_used_info, module_info, class_info, prefab_info, script_info, asset_info)):
     for name, attrs_and_functions in class_dictionary.items():
-        params, attrs, funcs, example = attrs_and_functions[0], attrs_and_functions[1], attrs_and_functions[2], attrs_and_functions[3]
+        print('generating docs for', name)
+        location, params, attrs, funcs, example = attrs_and_functions
 
         params = params.replace('__init__', name.split('(')[0])
         params = params.replace('(self, ', '(')
@@ -414,6 +420,11 @@ for i, class_dictionary in enumerate((most_used_info, module_info, class_info, p
         html += '\n'
         html += f'''<div id="{base_name}"><div id="{base_name}" style="color:{col}; font-size:1.75em; font-weight:normal;">{name}</div>'''
         html += '<pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">'
+        # location
+        location = str(location)
+        if 'ursina' in location:
+            location = location.split('ursina')[-1].replace('\\', '.')[:-3]
+            html += f'''<g>ursina{location}</g><br><br>'''
         if params:
             params = f'<params id="params" style="color:{init_color}; font-weight:bold">{params}</params>\n'
             html += params + '\n'

@@ -168,3 +168,20 @@ Entity Basics
             if key == 'a':
                 self.animate('rotation_y', self.rotation_y - 90, duration=.1)
     # text
+
+
+## 10 Mouse Input
+
+    Entities can react to the mouse as long as they have collider.
+    Buttons will have one by default, but you can also assign one.
+
+
+
+    To get the entity currently under the mouse:
+        mouse.entity
+
+    To check if enity(self) is hovered:
+        self.hovered
+
+    Assign on_click() to make it get called when you click on the entity
+    Assign on_double_click() to make it get called when you double click on the entity.

@@ -17,6 +17,8 @@ for colorname in color.color_names:
 
 
 if __name__ == '__main__':
+    '''procedurally generate classes like RedCube, GreenCube, BlueSphere and so on.'''
+    from primitives import *
     app = Ursina()
     RedCube()
     VioletSphere(x=1)

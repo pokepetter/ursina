@@ -198,7 +198,7 @@ if __name__ == '__main__':
 
     b = Button(text='hello world!', color=color.azure, origin=(-.5,.5))
     # b.fit_to_text()
-    b.on_click = application.quit
+    b.on_click = application.quit # assign a function to the button.
     b.tooltip = Tooltip('exit')
 
     app.run()

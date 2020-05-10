@@ -4,7 +4,10 @@
     html {max-width: 100%; margin: auto; color: #333333;}
     a.button {padding: 15px 32px; background-color: #555; border-radius: 2em; border-width: 0px; text-decoration: none; color: white; font-size: 25.0px; line-height: 2.5em;}
     a.button:hover {background-color: #777}
+    a.button_big {padding: 0.5em; background-image: linear-gradient(to top, #427b0e, #9ba97d); background-color: lightgray; background-blend-mode: multiply; border-radius: .75em; border-width: 0px; text-decoration: none; min-width: 150px; max-width: 150px; min-height: 150px; max-height: 150px; display: inline-block; vertical-align: top; margin: 4px 4px 10px 4px; color: white; font-size: 25.0px; background-size: auto 100%; background-position-x: center;}
+    a.button_big:hover {background-color: white; color: #e6d23f; text-decoration: underline;}
     mark {background: #ccff99;}
+    span {background-color: rgba(0, 0, 0, 0.55); padding: .1em; line-height: 1.35em;}
     img {max-width: 100%;}
 
 </style>
@@ -129,5 +132,24 @@ e.x = 0<br>e.y = 0<br>e.z = 0<br><br><font color="gray"># set position relative 
 &nbsp;&nbsp;&nbsp;&nbsp;The same goes for the input method:<br>
 <br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">class Player(<font color="olive">Entity</font>):<br>    <font color="purple">def</font> input(self, key):<br>        if key == <font color="green">'w'</font>:<br>            self.position += self.forward<br><br>        if key == <font color="green">'d'</font>:<br>            self.animate(<font color="green">'rotation_y'</font>, self.rotation_y + 90, duration=.1)<br><br>        if key == <font color="green">'a'</font>:<br>            self.animate(<font color="green">'rotation_y'</font>, self.rotation_y - 90, duration=.1)<br></div><br>
+<br>
+<div style="font-size: 40.0px;">
+10 Mouse Input<br>
+<div style="font-size: 20.0px;">
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Entities can react to the mouse as long as they have collider.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Buttons will have one by default, but you can also assign one.<br>
+<br>
+<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;To get the entity currently under the mouse:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mouse.entity<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;To check if enity(self) is hovered:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.hovered<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Assign on_click() to make it get called when you click on the entity<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Assign on_double_click() to make it get called when you double click on the entity.<br>
+<br>
 
 </html>

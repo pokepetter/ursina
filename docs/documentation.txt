@@ -5,29 +5,28 @@
 ʕ •ᴥ•ʔゝ□</a>
 # normal, size 3, left, width 650
 
-[API Reference, cheat_sheet.html]
-[Entity Basics, entity_basics.html]
-[Coordinate System, coordinate_system.html]
-
-# size 2
-Tutorials
 # size 1
+[API Reference, cheat_sheet.html, icons/api_reference_icon.jpg]
+[Installation, introduction_tutorial.html, icons/installation_guide_icon.jpg]
+[FAQ, introduction_tutorial.html, ]
 
-# [How to Install, installing.html]
-[Ursina for Dummies, ursina_for_dummies.html]
-[Introduction Tutorial, introduction_tutorial.html]
-[Inventory Tutorial, inventory_tutorial.html]
+[Entity Basics, entity_basics.html, icons/entity_basics_icon.jpg]
+[Coordinate System, coordinate_system.html, icons/coordinate_system_icon.jpg]
+
+
+## Tutorials
+
+[Ursina for Dummies, ursina_for_dummies.html, ]
+[Inventory Tutorial, inventory_tutorial.html, inventory_screenshot.jpg]
 
 
 
-# size 2
-Example Projects
-# size 1
+## Example Projects
 
-[Cookie Clicker, https://github.com/pokepetter/ursina/blob/master/samples/clicker_game.py]
-[Culumn Graph, https://github.com/pokepetter/ursina/blob/master/samples/culumn_graph.py]
-[Inventory, https://github.com/pokepetter/ursina/blob/master/samples/inventory.py]
-[Minecraft Clone, https://github.com/pokepetter/ursina/blob/master/samples/minecraft_clone.py]
-[Platformer, https://github.com/pokepetter/ursina/blob/master/samples/platformer.py]
-[Tic Tac Toe, https://github.com/pokepetter/ursina/blob/master/samples/tic_tac_toe.py]
-[Value of Life, https://github.com/pokepetter/ld44_life_is_currency]
+[Cookie Clicker, https://github.com/pokepetter/ursina/blob/master/samples/clicker_game.py, ]
+[Culumn Graph, https://github.com/pokepetter/ursina/blob/master/samples/culumn_graph.py, ]
+[Inventory, https://github.com/pokepetter/ursina/blob/master/samples/inventory.py, inventory_screenshot.jpg]
+[Minecraft Clone, https://github.com/pokepetter/ursina/blob/master/samples/minecraft_clone.py, ]
+[Platformer, https://github.com/pokepetter/ursina/blob/master/samples/platformer.py, ]
+[Tic Tac Toe, https://github.com/pokepetter/ursina/blob/master/samples/tic_tac_toe.py, tic_tac_toe_screenshot.jpg]
+[Value of Life, https://github.com/pokepetter/ld44_life_is_currency, ]

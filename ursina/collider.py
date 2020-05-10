@@ -36,7 +36,8 @@ class BoxCollider(Collider):
         size = [max(0.001, e) for e in size] # collider needs to have thickness
         self.shape = CollisionBox(Vec3(center[0], center[2], center[1]), size[0], size[2], size[1])
         # self.remove()
-        self.node_path = entity.attachNewNode(CollisionNode('CollisionNode'))
+        self.collision_node = CollisionNode('CollisionNode')
+        self.node_path = entity.attachNewNode(self.collision_node)
         self.node_path.node().addSolid(self.shape)
         self.visible = False
         # self.node_path.show()

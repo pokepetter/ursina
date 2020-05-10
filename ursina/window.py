@@ -133,7 +133,6 @@ class Window(WindowProperties):
     def size(self, value):
         self.set_size(int(value[0]), int(value[1]))
         self.aspect_ratio = value[0] / value[1]
-        print('aaa', self.aspect_ratio)
         base.win.requestProperties(self)
         self.update_aspect_ratio()
 

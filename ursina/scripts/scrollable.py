@@ -39,6 +39,11 @@ class Scrollable():
 
 
 if __name__ == '__main__':
+    '''
+    This will make target entity move up or down when you hover the entity/its children 
+    while scrolling the scroll wheel.
+    '''
+
     app = Ursina()
     p = Panel(scale=(.4, .8), collider='box')
     p.add_script(Scrollable())
