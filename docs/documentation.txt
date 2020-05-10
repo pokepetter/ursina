@@ -8,7 +8,7 @@
 # size 1
 [API Reference, cheat_sheet.html, icons/api_reference_icon.jpg]
 [Installation, introduction_tutorial.html, icons/installation_guide_icon.jpg]
-[FAQ, introduction_tutorial.html, ]
+[FAQ, faq.html, ]
 
 [Entity Basics, entity_basics.html, icons/entity_basics_icon.jpg]
 [Coordinate System, coordinate_system.html, icons/coordinate_system_icon.jpg]
