@@ -65,14 +65,12 @@ if not hasattr(application, 'blender_paths') and application.development_mode:
                 default_blender = shlex.split(command)[0]
                 default_blender = Path(default_blender)
                 application.blender_paths['default'] = default_blender
-
                 blender_foundation_directory = default_blender.parent.parent
-                blender_installations = blender_foundation_directory.glob('*blender*')
 
-                for p in blender_installations:
-                    for folder in p.glob('*/'):
-                        if folder.is_dir():
-                            application.blender_paths[folder.name] = list(p.glob('blender.exe'))[0]
+                for blender_installation in blender_foundation_directory.glob('*'):
+                    first_folder = tuple(blender_installation.glob('*'))[0] # version
+                    version_name = first_folder.name[:3]
+                    application.blender_paths[version_name] = list(blender_installation.glob('blender.exe'))[0]
         except:
             pass
     elif platform.system() == 'Linux':
@@ -98,11 +96,12 @@ def compress_models(path=None, outpath=application.compressed_models_folder, nam
     for blend_file in path.glob(f'**/{name}.blend'):
         with open(blend_file, 'rb') as f:
             blender_version_number = (f.read(12).decode("utf-8"))[-3:]   # get version from start of .blend file e.g. 'BLENDER-v280'
-            blender_version_number = blender_version_number[0] + '.' + blender_version_number[1:3]
+            blender_version_number = blender_version_number[0] + '.' + blender_version_number[1:2]
             print('blender_version:', blender_version_number)
             if blender_version_number in application.blender_paths:
                 blender = application.blender_paths[blender_version_number]
             else:
+                print('using default blender version')
                 blender = application.blender_paths['default']
 
         out_file_path = outpath / (blend_file.stem + '.obj')
