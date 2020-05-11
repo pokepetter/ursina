@@ -19,6 +19,7 @@ if 'src' in dirs and 'python' in dirs:
 
 
 internal_models_folder = package_folder / 'models/'
+internal_models_compressed_folder = package_folder / 'models_compressed/'
 internal_prefabs_folder = package_folder / 'prefabs/'
 internal_scripts_folder = package_folder / 'scripts/'
 internal_textures_folder = package_folder / 'textures/'

@@ -1,5 +1,6 @@
 import os
 import glob
+import platform
 import subprocess
 from copy import copy
 from pathlib import Path
@@ -44,9 +45,6 @@ def load_model(name, path=application.asset_folder):
                 print('found blend file:', filename)
                 if compress_models(path=path, name=name):
                     return load_model(name, path)
-    # for f in glob(f'**/{name}.blend'):
-    #     print('found blend file')
-    #     # compress_models(name=name + '.blend')
 
     return None
 
@@ -55,7 +53,6 @@ def load_model(name, path=application.asset_folder):
 if not hasattr(application, 'blender_paths') and application.development_mode:
     application.blender_paths = dict()
 
-    import platform
     if platform.system() == 'Windows':
         # get blender path by getting default program for '.blend' file extention
         import shlex
@@ -110,7 +107,12 @@ def compress_models(path=None, outpath=application.compressed_models_folder, nam
 
         out_file_path = outpath / (blend_file.stem + '.obj')
         print('converting .blend file to .obj:', blend_file, '-->', out_file_path, 'using:', blender)
-        subprocess.run((blender, blend_file, '--background', '--python', export_script_path, out_file_path))
+
+        if platform.system() == 'Windows':
+            subprocess.call(f'''{blender} {blend_file} --background --python {export_script_path} {out_file_path}''')
+        else:
+            subprocess.run((blender, blend_file, '--background', '--python', export_script_path, out_file_path))
+
         exported.append(blend_file)
 
     return exported
@@ -342,13 +344,13 @@ def ursina_mesh_to_obj(mesh, name='', out_path=application.compressed_models_fol
 def compress_internal():
     compress_models(application.internal_models_folder)
     obj_to_ursinamesh(
-        application.internal_models_folder / 'compressed',
-        application.internal_models_folder / 'compressed',
+        application.internal_models_compressed_folder,
+        application.internal_models_compressed_folder,
         )
 
 
 if __name__ == '__main__':
-    # compress_internal()
+    compress_internal()
     from ursina import *
     app = Ursina()
     print('imported_meshes:\n', imported_meshes)
@@ -356,4 +358,3 @@ if __name__ == '__main__':
     app.run()
     # e = Entity(model=Cylinder(16))
     # ursina_mesh_to_obj(e.model, name='quad_export_test')
-
