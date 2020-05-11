@@ -161,7 +161,7 @@ class Entity(NodePath):
             elif isinstance(value, str): # pass model asset name
                 m = load_model(value, application.asset_folder)
                 if not m:
-                    m = load_model(value, application.internal_models_folder)
+                    m = load_model(value, application.internal_models_compressed_folder)
                 if m:
                     if self.model is not None:
                         self.model.removeNode()

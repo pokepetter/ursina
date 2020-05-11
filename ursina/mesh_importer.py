@@ -350,7 +350,7 @@ def compress_internal():
 
 
 if __name__ == '__main__':
-    compress_internal()
+    # compress_internal()
     from ursina import *
     app = Ursina()
     print('imported_meshes:\n', imported_meshes)
