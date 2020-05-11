@@ -1496,11 +1496,12 @@ start_dragging()
 stop_dragging()   
 update()   
 
-<div class="example">camera.orthographic = True
-Entity(model='plane', scale=8, texture='white_cube', texture_scale=(8,8))
-e = Draggable(parent=scene, model='cube', color=color.azure, scale=1, plane_direction=(0,1,0))
-EditorCamera()
-e.drop = Func(print, 'awoijdoaiwjdaoiwjdoi')
+<div class="example">Entity(model='plane', scale=8, texture='white_cube', texture_scale=(8,8))
+draggable_button = Draggable(scale=.1, text='drag me', position=(-.5, 0))
+world_space_draggable = Draggable(parent=scene, model='cube', color=color.azure, plane_direction=(0,1,0))
+
+EditorCamera(rotation=(30,10,0))
+world_space_draggable.drop = Func(print, 'dropped cube')
 </div>
 </pre></div>
 <div id="DropdownMenuButton"><div id="DropdownMenuButton" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">DropdownMenuButton<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.dropdown_menu</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">DropdownMenuButton(text='', **kwargs)</params>
