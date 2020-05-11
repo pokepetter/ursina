@@ -104,7 +104,7 @@ def compress_models(path=None, outpath=application.compressed_models_folder, nam
 
         out_file_path = outpath / (blend_file.stem + '.obj')
         print('converting .blend file to .obj:', blend_file, '-->', out_file_path, 'using:', blender)
-        subprocess.call(f'''{blender} {blend_file} --background --python {export_script_path} {out_file_path}''')
+        subprocess.run((blender, blend_file, '--background', '--python', export_script_path, out_file_path))
         exported.append(blend_file)
 
     return exported
