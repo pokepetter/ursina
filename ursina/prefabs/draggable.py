@@ -26,8 +26,12 @@ class Draggable(Button):
 
 
         for key, value in kwargs.items():
-            if key == 'text':
+            if key == 'collider' and value == 'sphere' and self.has_ancestor(camera.ui):
+                print('error: sphere colliders are not supported on Draggables in ui space.')
+
+            if key == 'text' or key in self.attributes:
                 continue
+
             setattr(self, key, value)
 
 
@@ -116,11 +120,12 @@ class Draggable(Button):
 
 if __name__ == '__main__':
     app = Ursina()
-    camera.orthographic = True
+    
     Entity(model='plane', scale=8, texture='white_cube', texture_scale=(8,8))
-    e = Draggable(parent=scene, model='cube', color=color.azure, scale=1, plane_direction=(0,1,0))
-    # e.parent = scene
-    EditorCamera()
-    e.drop = Func(print, 'awoijdoaiwjdaoiwjdoi')
-    # e.require_key = 'shift'
+    draggable_button = Draggable(scale=.1, text='drag me', position=(-.5, 0))
+    world_space_draggable = Draggable(parent=scene, model='cube', color=color.azure, plane_direction=(0,1,0))
+
+    EditorCamera(rotation=(30,10,0))
+    world_space_draggable.drop = Func(print, 'dropped cube')
+
     app.run()
