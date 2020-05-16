@@ -20,8 +20,8 @@ class Text(Entity):
     start_tag = '<'
     end_tag = '>'
 
-    def __init__(self, text='', start_tag=start_tag, end_tag=end_tag, add_to_scene_entities=False, **kwargs):
-        super().__init__(add_to_scene_entities=add_to_scene_entities)
+    def __init__(self, text='', start_tag=start_tag, end_tag=end_tag, ignore=True, **kwargs):
+        super().__init__(ignore=ignore)
         self.size = Text.size
         self.parent = camera.ui
 
