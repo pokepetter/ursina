@@ -257,7 +257,7 @@ def input(key):
         e.shake()
 </div>
 </pre></div>
-<div id="Text"><div id="Text" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Text<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.text</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Text(text='', start_tag=start_tag, end_tag=end_tag, add_to_scene_entities=False, **kwargs)</params>
+<div id="Text"><div id="Text" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Text<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.text</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Text(text='', start_tag=start_tag, end_tag=end_tag, ignore=True, **kwargs)</params>
 
 size<g> = Text.size</g> 
 parent<g> = camera.ui</g> 
@@ -313,7 +313,7 @@ get_width(<g>string, font=None</g>)
 </pre></div>
 <div id="Button"><div id="Button" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Button<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.button</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Button(text='', **kwargs)</params>
 
-parent<g> = scene.ui</g> 
+parent<g> = camera.ui</g> 
 collider<g> = 'box'</g> 
 disabled<g> = False</g> 
 color<g> = Button.color</g> 
@@ -434,6 +434,7 @@ textures_folder<g> = asset_folder / 'textures/'</g>
 fonts_folder<g> = asset_folder / 'fonts/'</g> 
 compressed_textures_folder<g> = asset_folder / 'textures_compressed/'</g> 
 compressed_models_folder<g> = asset_folder / 'models_compressed/'</g> 
+hot_reloader<g> = None     # will be set my main if development_mode</g> 
 
 pause()   
 resume()   
@@ -684,8 +685,6 @@ compress_internal()
 world<g> = None</g> 
 camera<g> = None</g> 
 ui_camera<g> = None</g> 
-canvas<g> = None</g> 
-ui<g> = None</g> 
 entities<g> = []</g> 
 hidden<g> = NodePath('hidden')</g> 
 reflection_map<g> = 'reflection_map_3'</g> 
@@ -819,7 +818,6 @@ bottom<g> = Vec2(0, .5)</g>
 center<g> = Vec2(0, 0)</g> 
 fullscreen<g> = False</g> 
 cursor<g> = True</g> 
-vsync<g> = True</g> 
 color<g> = color.dark_gray</g> 
 display_modes<g> = (
         'default',
@@ -828,6 +826,7 @@ display_modes<g> = (
         'normals',
         )</g> 
 display_mode<g> = 'default'</g> 
+editor_ui<g> = None</g> 
 left
 right
 top_left
@@ -837,11 +836,12 @@ bottom_right
 
 late_init()   
 center_on_screen()   
-make_exit_button()   <g># called by main after setting up camera</g>
-update()   
+make_editor_gui()   <g># called by main after setting up camera and application.development_mode</g>
 update_aspect_ratio()   
 
 <div class="example">window.title = 'Title'
+window.borderless = False
+window.fullscreen = False
 window.exit_button.visible = False
 window.fps_counter.enabled = False
 
@@ -1416,17 +1416,19 @@ on_off_switch.on_value_changed = on_value_changed
 window.color = color._32
 </div>
 </pre></div>
-<div id="ButtonList"><div id="ButtonList" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ButtonList<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.button_list</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ButtonList(button_dict, button_height=1.5, **kwargs)</params>
+<div id="ButtonList"><div id="ButtonList" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ButtonList<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.button_list</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ButtonList(button_dict, button_height=1.5, fit_height=True, width=.5, **kwargs)</params>
 
-text_entity<g> = Text(parent=self, origin=(-.5,.5), text='empty', world_scale=20, z=-.1, y=-.25*Text.size, x=.01)</g> 
+fit_height<g> = True</g> 
+button_height<g> = button_height</g> 
+text_entity<g> = Text(parent=self, origin=(-.5,.5), text='empty', world_scale=20, z=-.1, y=-1.5*Text.size, x=.01)</g> 
 button_height<g> = self.text_entity.height</g> 
 button_dict<g> = button_dict</g> 
 highlight<g> = Entity(parent=self, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5), z=-.01)</g> 
 selection_marker<g> = Entity(parent=self, model='quad', color=color.azure, scale=(1,self.button_height), origin=(-.5,.5), z=-.02, enabled=False)</g> 
 
-on_click()   
 input(<g>key</g>)   
 update()   
+on_disable()   
 
 <div class="example">default = Func(print, 'not yet implemented')
 
@@ -1440,10 +1442,9 @@ button_dict = {
     'four' :    Func(test, b=3, a=4),
     'five':     Sequence(1, Func(print, 'lol'), loop=True),
 }
-for i in range(6, 25):
-    button_dict[f'button {i}'] = Func(print, i)
 
-bl = ButtonList(button_dict)
+bl = ButtonList(button_dict, fit_height=True)
+bl.on_click = Func(setattr, bl, 'enabled', False)
 </div>
 </pre></div>
 <div id="Cursor"><div id="Cursor" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Cursor<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.cursor</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Cursor(**kwargs)</params>
@@ -2312,15 +2313,7 @@ def update():
 Entity(model='cube').add_script(SmoothFollow(target=player, offset=(0,2,0)))
 </div>
 </pre></div>
-<div id="models"><div id="models" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">models</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">'circle'
-'cube'
-'cube_uv_top'
-'icosphere'
-'plane'
-'quad'
-'sky_dome'
-'sphere'
-
+<div id="models"><div id="models" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">models</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">
 
 <div class="example">e = Entity(model='quad')
 </div>
