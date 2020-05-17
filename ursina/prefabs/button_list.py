@@ -2,18 +2,22 @@ from ursina import *
 
 
 class ButtonList(Entity):
-    def __init__(self, button_dict, button_height=1.5, **kwargs):
+    def __init__(self, button_dict, button_height=1.5, fit_height=True, width=.5, **kwargs):
         super().__init__(
         parent=camera.ui,
         model='quad',
-        scale=(.5,.9),
+        scale=(width,.9),
         color=Button.color,
         origin=(-.5,.5),
         position=(-.25, .45),
         collider='box',
         )
+        self.fit_height = True
+        self.button_height = button_height
+        if fit_height:
+            self.scale_y = button_height * len(button_dict) * Text.size
 
-        self.text_entity = Text(parent=self, origin=(-.5,.5), text='empty', world_scale=20, z=-.1, y=-.25*Text.size, x=.01)
+        self.text_entity = Text(parent=self, origin=(-.5,.5), text='empty', world_scale=20, z=-.1, y=-1.5*Text.size, x=.01)
         self.text_entity.line_height = button_height
         if button_height < 1.5:
             self.text_entity.y += .005
@@ -40,27 +44,25 @@ class ButtonList(Entity):
         self.text_entity.text = '\n'.join(self.button_dict.keys())
 
 
-    def on_click(self):
-        y = abs(int(self.highlight.y // self.button_height))
-        action = self.actions[y]
-
-        if callable(action):
-            action()
-
-        elif isinstance(action, Func):
-            action.run()
-
-        elif isinstance(action, Sequence):
-            action.start()
-
-        self.highlight.blink(color.black, .1)
-        self.selection_marker.enabled = True
-        self.selection_marker.y = self.highlight.y
-
     def input(self, key):
+        # handle click here instead of in on_click so you can assign a custom on_click function
+        if key == 'left mouse down' and self.hovered:
+            y = abs(int(self.highlight.y // self.button_height))
+            action = self.actions[y]
+
+            if callable(action):
+                action()
+
+            elif isinstance(action, Sequence):
+                action.start()
+
+            self.highlight.blink(color.black, .1)
+            self.selection_marker.enabled = True
+            self.selection_marker.y = self.highlight.y
+
+
         if key == 'left mouse down' and not self.hovered:
             self.selection_marker.enabled = False
-
 
 
     def update(self):
@@ -70,6 +72,10 @@ class ButtonList(Entity):
                 self.highlight.enabled = False
 
             self.highlight.y = math.ceil(mouse.point[1] / self.button_height) * self.button_height
+
+
+    def on_disable(self):
+        self.selection_marker.enabled = False
 
 
 
@@ -88,8 +94,11 @@ if __name__ == '__main__':
         'four' :    Func(test, b=3, a=4),
         'five':     Sequence(1, Func(print, 'lol'), loop=True),
     }
-    for i in range(6, 25):
-        button_dict[f'button {i}'] = Func(print, i)
+    # for i in range(6, 25):
+    #     button_dict[f'button {i}'] = Func(print, i)
 
-    bl = ButtonList(button_dict)
+    bl = ButtonList(button_dict, fit_height=True)
+    bl.on_click = Func(setattr, bl, 'enabled', False)
+
+    bl.button_dict = {'a':Func(print,'lodlw'), 'b':1, 'c':1}
     app.run()
