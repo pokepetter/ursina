@@ -41,9 +41,7 @@ def make_code_reload_safe(code):
 
 class HotReloader(Entity):
     def __init__(self, path=__file__, **kwargs):
-        super().__init__()
-        self.eternal = True
-        self.ignore_paused = True
+        super().__init__(parent=camera.ui, eternal=True, ignore_paused=True)
         self.path = path
 
         for key, value in kwargs.items():
@@ -60,6 +58,7 @@ class HotReloader(Entity):
             'f7'     : self.reload_models,
             'f8'     : self.toggle_hotreloading,
             }
+
 
     def input(self, key):
         if key in self.hotkeys:
@@ -170,6 +169,7 @@ class HotReloader(Entity):
             if e.model.path.parent.parent == application.internal_models_folder:
                 continue
             e.model = load_model(e.model.path.stem)
+            e.origin = e.origin
             # print('reloaded model:', e.model.path)
 
 

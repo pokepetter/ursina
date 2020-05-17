@@ -10,7 +10,7 @@ class Button(Entity):
 
     def __init__(self, text='', **kwargs):
         super().__init__()
-        self.parent = scene.ui
+        self.parent = camera.ui
         self.collider = 'box'
         self.disabled = False
         self._on_click = None

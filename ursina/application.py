@@ -44,6 +44,8 @@ print('package_folder:', package_folder)
 print('asset_folder:', asset_folder)
 print('dev mode:', development_mode)
 
+hot_reloader = None     # will be set my main if development_mode
+
 def pause():
     global paused
     paused = True

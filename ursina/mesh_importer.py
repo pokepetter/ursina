@@ -44,6 +44,7 @@ def load_model(name, path=application.asset_folder):
             if filetype == '.blend':
                 print('found blend file:', filename)
                 if compress_models(path=path, name=name):
+                    # obj_to_ursinamesh(name=name)
                     return load_model(name, path)
 
     return None

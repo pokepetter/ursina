@@ -81,41 +81,52 @@ class Window(WindowProperties):
             int((self.screen_resolution[1] - self.size[1]) / 2)
             )
 
-    def make_exit_button(self):     # called by main after setting up camera
-        from ursina.prefabs.exit_button import ExitButton
-        self.exit_button = ExitButton()
-
-        from ursina import Text
+    def make_editor_gui(self):     # called by main after setting up camera
+        from ursina import camera, Text, Button, ButtonList, Func
+        import webbrowser
         import time
-        self.fps_counter = Text(
-            name = 'fps_counter',
-            parent = scene.ui,
-            eternal = True,
-            position = (.5*self.aspect_ratio, .47, -999),
-            origin = (.8,.5),
-            text = '60',
-            ignore = False,
-            # background = True,
-            i = 0,
-            )
-        def update():
+
+        self.editor_ui = Entity(parent=camera.ui, eternal=True)
+        self.exit_button = Button(parent=self.editor_ui, eternal=True, origin=(.5, .5), position=self.top_right, z=-999, scale=(.05, .025), color=color.red.tint(-.2), text='x', on_click=application.quit)
+
+        def exit_button_input(key):
+            from ursina import held_keys, mouse
+            if held_keys['shift'] and key == 'q' and not mouse.right:
+                self.exit_button.on_click()
+        self.exit_button.input = exit_button_input
+
+        self.fps_counter = Text(parent=self.editor_ui, eternal=True, position=(.5*self.aspect_ratio, .47, -999), origin=(.8,.5), text='60', ignore=False, i=0)
+
+        def fps_counter_update():
             if self.fps_counter.i > 60:
                 self.fps_counter.text = str(int(1//time.dt))
                 self.fps_counter.i = 0
-
             self.fps_counter.i += 1
+        self.fps_counter.update = fps_counter_update
 
-        self.fps_counter.update = update
+        self.cog_menu = ButtonList({
+            # 'Build' : Func(print, ' '),
+            'Asset Store' : Func(webbrowser.open, "https://itch.io/tools/tag-ursina"),
+            # 'Open Scene Editor' : Func(print, ' '),
+            'Reload Textures [F6]' : application.hot_reloader.reload_textures,
+            'Reload Models [F7]' : application.hot_reloader.reload_models,
+            'Reload Code [F5]' : application.hot_reloader.reload_code,
+        },
+            width=.3,
+            x=.64,
+            enabled=False,
+            eternal=True
+        )
+        self.cog_menu.on_click = Func(setattr, self.cog_menu, 'enabled', False)
+        self.cog_menu.y = -.5 + self.cog_menu.scale_y
+        self.cog_menu.scale *= .75
+        self.cog_menu.text_entity.x += .025
 
-        self.overlay = Entity(
-            name = 'overlay',
-            parent = scene.ui,
-            model = 'quad',
-            scale_x = self.aspect_ratio,
-            color = color.clear,
-            eternal = True,
-            z = -99
-            )
+        self.cog = Button(parent=self.editor_ui, eternal=True, model='circle', scale=.015, origin=(1,-1), position=self.bottom_right)
+        def toggle_cog_menu():
+            self.cog_menu.enabled = not self.cog_menu.enabled
+        self.cog.on_click = toggle_cog_menu
+
 
     def update_aspect_ratio(self):
         from ursina import camera
@@ -234,8 +245,8 @@ if __name__ == '__main__':
     app = Ursina()
 
     window.title = 'Title'
-    # window.borderless = False
-    # window.fullscreen = False
+    window.borderless = False
+    window.fullscreen = False
     window.exit_button.visible = False
     window.fps_counter.enabled = False
 

@@ -67,13 +67,9 @@ class Camera(Entity):
         self.ui_camera.reparent_to(self.ui_render)
         self.ui_display_region.set_camera(self.ui_camera)
         scene.ui_camera = self.ui_camera
-        # ui_camera.hide()
-
-        # self.black_bars_display_region = win.make_display_region()
-        # self.black_bars_display_region.set_sort(-100)
 
         self.ui = Entity(eternal=True, name='ui', parent=self.ui_camera, scale=(self.ui_size*.5, self.ui_size*.5))
-        scene.ui = self.ui
+        self.overlay = Entity(parent=self.ui, model='quad', scale_x=self.aspect_ratio, color=color.clear, eternal=True, z=-99)
 
         self.filter_manager = FilterManager(base.win, base.cam)
         self.render_texture = PandaTexture()

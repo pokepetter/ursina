@@ -21,9 +21,6 @@ class Ursina(ShowBase):
         camera.set_up()
         base.render.set_antialias(AntialiasAttrib.MMultisample)
         self.accept('aspectRatioChanged', window.update_aspect_ratio)
-        window.make_exit_button()
-
-        camera.overlay = window.overlay
 
         # input
         base.buttonThrowers[0].node().setButtonDownEvent('buttonDown')
@@ -84,11 +81,14 @@ class Ursina(ShowBase):
         scene.set_up()
         self._update_task = taskMgr.add(self._update, "update")
 
-        from ursina import HotReloader
-        application.hot_reloader = HotReloader(__main__.__file__)
-
         # try to load settings that need to be applied before entity creation
         application.load_settings()
+
+        if application.development_mode:
+            from ursina import HotReloader
+            application.hot_reloader = HotReloader(__main__.__file__)
+
+            window.make_editor_gui()
 
 
     def _update(self, task):
@@ -155,8 +155,6 @@ class Ursina(ShowBase):
         if key in input_handler.rebinds:
             key = input_handler.rebinds[key]
 
-        try: mouse.input(key)
-        except: pass
         try: input_handler.input(key)
         except: pass
         if not application.paused:
@@ -178,6 +176,13 @@ class Ursina(ShowBase):
                     if script.enabled and hasattr(script, 'input'):
                         script.input(key)
 
+
+        try: mouse.input(key)
+        except: pass
+
+
+        if key == 'f12':
+            window.ui_parent.enabled = not window.ui_parent.enabled
 
         if key == 'f11':
             window.fullscreen = not window.fullscreen
