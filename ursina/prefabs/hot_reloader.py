@@ -31,7 +31,7 @@ def make_code_reload_safe(code):
             continue
 
         if dedent_next:
-            newtext += dedent(line) + '\n'
+            newtext += line[4:] + '\n'
         else:
             newtext += line + '\n'
 
@@ -129,6 +129,7 @@ class HotReloader(Entity):
 
         t = time.time()
         try:
+            # print(text)
             d = dict(locals(), **globals())
             exec(text, d, d)
         except Exception as e:

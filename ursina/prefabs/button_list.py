@@ -26,8 +26,8 @@ class ButtonList(Entity):
 
         self.button_dict = button_dict
         # self.actions = [*self.button_dict.values()] # gets set when setting button_dict
-        self.highlight = Entity(parent=self, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5), z=-.01)
-        self.selection_marker = Entity(parent=self, model='quad', color=color.azure, scale=(1,self.button_height), origin=(-.5,.5), z=-.02, enabled=False)
+        self.highlight = Entity(parent=self, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5), z=-.01, add_to_scene_entities=False)
+        self.selection_marker = Entity(parent=self, model='quad', color=color.azure, scale=(1,self.button_height), origin=(-.5,.5), z=-.02, enabled=False, add_to_scene_entities=False)
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -48,18 +48,19 @@ class ButtonList(Entity):
         # handle click here instead of in on_click so you can assign a custom on_click function
         if key == 'left mouse down' and self.hovered:
             y = abs(int(self.highlight.y // self.button_height))
+            if y >= len(self.actions):
+                return
+
             action = self.actions[y]
+            self.highlight.blink(color.black, .1)
+            self.selection_marker.enabled = True
+            self.selection_marker.y = self.highlight.y
 
             if callable(action):
                 action()
 
             elif isinstance(action, Sequence):
                 action.start()
-
-            self.highlight.blink(color.black, .1)
-            self.selection_marker.enabled = True
-            self.selection_marker.y = self.highlight.y
-
 
         if key == 'left mouse down' and not self.hovered:
             self.selection_marker.enabled = False
@@ -76,6 +77,7 @@ class ButtonList(Entity):
 
     def on_disable(self):
         self.selection_marker.enabled = False
+
 
 
 
@@ -100,5 +102,5 @@ if __name__ == '__main__':
     bl = ButtonList(button_dict, fit_height=True)
     bl.on_click = Func(setattr, bl, 'enabled', False)
 
-    bl.button_dict = {'a':Func(print,'lodlw'), 'b':1, 'c':1}
+    # bl.button_dict = {'a':Func(print,'lodlw'), 'b':1, 'c':1}
     app.run()
