@@ -1,4 +1,4 @@
-# style a.button {background-color: #4CAF50;} a.button:hover {background-color: #777}
+# style a.button {background-color: #6b943a;} a.button:hover {background-color: #a9a33a}
 # title ursina engine
 # center, bold, arial, size 5, width 900
 ursina engine
@@ -11,8 +11,9 @@ open source game engine
 --------------------------------------
 # normal
 
-[Github🡕, https://github.com/pokepetter/ursina] [Documentation, documentation.html] [Twitter🡕, https://twitter.com/ursinaengine] [Discord🡕, https://discord.gg/ydXfhyb]
+[Documentation, documentation.html]
 
+<a href="https://github.com/pokepetter/ursina"><img src="icons/github_icon.png"></img></a>  <a href="https://twitter.com/ursinaengine"><img src="icons/twitter_icon.png"></img></a>  <a href="https://discord.gg/ydXfhyb"><img src="icons/discord_icon.png"></img></a>  <a href="https://www.patreon.com/ursinaengine"><img src="icons/patreon_icon.png"></img></a>
 
 <iframe width="900" height="505" src="https://www.youtube-nocookie.com/embed/j71j88oCTNo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
