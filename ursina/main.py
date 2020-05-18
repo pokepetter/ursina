@@ -88,7 +88,7 @@ class Ursina(ShowBase):
             from ursina import HotReloader
             application.hot_reloader = HotReloader(__main__.__file__)
 
-            window.make_editor_gui()
+        window.make_editor_gui()
 
 
     def _update(self, task):

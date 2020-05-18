@@ -44,9 +44,10 @@ def invoke(function, *args, **kwargs):
         function(*args, **kwargs)
         return function
 
-    s = Sequence()
-    s.append(Wait(delay))
-    s.append(Func(function, *args, **kwargs))
+    s = Sequence(
+        Wait(delay),
+        Func(function, *args, **kwargs)
+    )
     s.start()
     return s
 
@@ -56,9 +57,10 @@ def destroy(entity, delay=0):
         _destroy(entity)
         return
 
-    s = Sequence()
-    s.append(Wait(delay))
-    s.append(Func(_destroy, entity))
+    s = Sequence(
+        Wait(delay),
+        Func(_destroy, entity)
+    )
     s.start()
 
 def _destroy(entity):
