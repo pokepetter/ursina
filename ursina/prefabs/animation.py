@@ -25,9 +25,10 @@ class Animation(Entity):
 
         textures = list()
         for folder in texture_folders:
-            textures = list(folder.glob(f'**/{name}*.png'))
-            if textures:
-                break
+            for file_type in ('png', 'jpg'):
+                textures = list(folder.glob(f'**/{name}*.{file_type}'))
+                if textures:
+                    break
 
         self.frames = list()
         frame = None
@@ -116,7 +117,7 @@ if __name__ == '__main__':
     app = Ursina()
     window.color = color.black
 
-    animation = Animation('ursina_wink', fps=2, scale=5, filtering=None, autoplay=False)
+    animation = Animation('ursina_wink', fps=2, scale=5, filtering=None, autoplay=True)
     # print(animation.sequence.duration)
     # animation = Animation('blob_animation', fps=12, scale=5, y=20)
     #
