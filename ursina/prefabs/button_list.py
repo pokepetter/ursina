@@ -47,9 +47,7 @@ class ButtonList(Entity):
     def input(self, key):
         # handle click here instead of in on_click so you can assign a custom on_click function
         if key == 'left mouse down' and self.hovered:
-            y = abs(int(self.highlight.y // self.button_height))
-            if y >= len(self.actions):
-                return
+            y = int(abs(self.highlight.y / self.button_height))
 
             action = self.actions[y]
             self.highlight.blink(color.black, .1)
@@ -94,7 +92,7 @@ if __name__ == '__main__':
         'two' :     default,
         'tree' :    Func(test, 3, 4),
         'four' :    Func(test, b=3, a=4),
-        'five':     Sequence(1, Func(print, 'lol'), loop=True),
+        # 'five':     Sequence(1, Func(print, 'lol'), loop=True),
     }
     # for i in range(6, 25):
     #     button_dict[f'button {i}'] = Func(print, i)

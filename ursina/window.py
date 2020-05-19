@@ -125,6 +125,7 @@ class Window(WindowProperties):
         self.cog_menu.y = -.5 + self.cog_menu.scale_y
         self.cog_menu.scale *= .75
         self.cog_menu.text_entity.x += .025
+        self.cog_menu.highlight.color = color.azure
         self.cog = Button(parent=self.editor_ui, eternal=True, model='circle', scale=.015, origin=(1,-1), position=self.bottom_right)
         def _toggle_cog_menu():
             self.cog_menu.enabled = not self.cog_menu.enabled
