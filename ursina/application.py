@@ -65,7 +65,6 @@ def quit():
 
 def load_settings(path=asset_folder / 'settings.py'):
     try:
-        print('----------', path)
         from ursina import window
         with open(path) as f:
             try:
