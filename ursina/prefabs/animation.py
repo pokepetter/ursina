@@ -23,11 +23,16 @@ class Animation(Entity):
             if models:
                 break
 
+        found_textures = False
         textures = list()
         for folder in texture_folders:
+            if found_textures:
+                break
+
             for file_type in ('png', 'jpg'):
                 textures = list(folder.glob(f'**/{name}*.{file_type}'))
                 if textures:
+                    found_textures = True
                     break
 
         self.frames = list()
