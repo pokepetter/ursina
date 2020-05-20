@@ -1,11 +1,13 @@
 from ursina import *
-from PIL import Image
-from numpy import asarray, flip
 
 
 
 class Terrain(Mesh):
     def __init__(self, heightmap, skip=1, store_height_values=False, **kwargs):
+        from PIL import Image
+        from numpy import asarray, flip
+
+
         self.heightmap = load_texture(heightmap)
         if not self.heightmap:
             print('failed to load heightmap:', heightmap)
