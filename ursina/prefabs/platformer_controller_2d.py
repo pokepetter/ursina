@@ -114,14 +114,13 @@ class PlatformerController2d(Entity):
 
         max_height = self.y + self.jump_height
         duration = self.jump_duration
-        hit_above = boxcast(self.position+(0,.99,0), self.up, ignore=(self,), thickness=.9)
+        hit_above = raycast(self.position+(0,.99,0), self.up, ignore=(self,))
         if hit_above.hit:
             max_height = min(hit_above.distance-.5, max_height)
             duration *=  max_height / (self.y+self.jump_height)
 
         self.animate_y(max_height, duration, resolution=30, curve=curve.out_expo)
         invoke(self.start_fall, delay=duration)
-
 
     def start_fall(self):
         self.y_animator.pause()
@@ -135,17 +134,17 @@ class PlatformerController2d(Entity):
 
 
 if __name__ == '__main__':
-    window.vsync = False
+    # window.vsync = False
     app = Ursina()
     ground = Entity(model='cube', color=color.white33, origin_y=.5, scale=(20, 10, 1), collider='box')
     wall = Entity(model='cube', color=color.azure, origin=(-.5,.5), scale=(5,10), x=10, y=.5, collider='box')
-    ceiling = Entity(model='cube', color=color.white33, origin_y=.5, scale=(10, 1, 1), y=5, collider='box')
+    ceiling = Entity(model='cube', color=color.white33, origin_y=.5, scale=(10, 1, 1), y=4, collider='box')
 
     def input(key):
         if key == 'c':
             wall.collision = not wall.collision
             print(wall.collision)
-            
+
 
     player_controller = PlatformerController2d()
     # EditorCamera()
