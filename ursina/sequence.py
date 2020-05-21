@@ -91,7 +91,7 @@ class Sequence():
         self.update()
 
     def kill(self):
-        if self.auto_destroy and self in application.sequences:
+        if self in application.sequences:
             application.sequences.remove(self)
             del self
 
