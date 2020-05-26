@@ -1,5 +1,6 @@
 include ursina/audio/*
 include ursina/fonts/*
+include ursina/models/procedural/*
 include ursina/models_compressed/*
 include ursina/prefabs/*
 include ursina/scripts/*
