@@ -108,7 +108,9 @@ class Button(Entity):
 
         if name == 'on_click':
             self._on_click = value
-            value.auto_destroy = False
+            
+            if isinstance(value, Sequence):
+                value.auto_destroy = False
             return
 
         if name == 'eternal':
