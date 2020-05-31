@@ -119,6 +119,13 @@ class Entity(NodePath):
         return new_value
 
 
+    def enable(self):
+        self.enabled = True
+
+    def disable(self):
+        self.enabled = False
+
+
     def __setattr__(self, name, value):
 
         if name == 'enabled':
@@ -774,19 +781,19 @@ class Entity(NodePath):
             self.setAttrib(CullFaceAttrib.make(CullFaceAttrib.MCullCounterClockwise))
 
 
-    def look_at(self, target, axis='forward'):
+    def look_at(self, target):
         if isinstance(target, Entity):
             target = Vec3(target.world_position)
         super().look_at(render, Vec3(target[0], target[2], target[1]))
 
-        self.rotation += {
-        'forward' : (0,0,0),
-        'back' :    (180,0,0),
-        'right' :   (0,-90,0),
-        'left' :    (0,90,0),
-        'up' :      (90,0,0),
-        'down' :    (-90,0,0),
-        }[axis]
+
+    def look_at_2d(self, target, axis=0):
+        from math import degrees, atan2
+        if isinstance(target, Entity):
+            target = Vec3(target.world_position)
+
+        pos = target - self.world_position
+        self.rotation_z = degrees(atan2(pos[0], pos[1]))
 
 
     def has_ancestor(self, possible_ancestor):
