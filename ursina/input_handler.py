@@ -77,6 +77,11 @@ def rebind(to_key, from_key):
 
 
 def input(key):
+    if key.endswith('hold'):
+        return
+
+    key = key.replace(' down', '')
+
     if key.endswith('up'):
         held_keys[key[:-3]] = 0
     else:
