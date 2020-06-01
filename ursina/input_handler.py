@@ -80,7 +80,7 @@ def input(key):
     if key.endswith('hold'):
         return
 
-    key = key.replace(' down', '')
+    key = key.replace('mouse down', 'mouse')
 
     if key.endswith('up'):
         held_keys[key[:-3]] = 0
