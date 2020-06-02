@@ -20,7 +20,9 @@ def combine(entity, analyze=False, auto_destroy=True):
             if not e.model.vertices:
                 continue
 
-            print('combining:', e)
+            if analyze:
+                print('combining:', e)
+
             verts += get_vertices(e, entity)
 
             if not e.model.triangles:
@@ -65,8 +67,8 @@ def combine(entity, analyze=False, auto_destroy=True):
     print('combined')
     # entity.model = Mesh(vertices=verts,  mode='triangle')
     # entity.flatten_strong()
-    # if analyze:
-    #     render.analyze()
+    if analyze:
+        render.analyze()
     return entity.model
 
 
