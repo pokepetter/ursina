@@ -108,7 +108,7 @@ class Button(Entity):
 
         if name == 'on_click':
             self._on_click = value
-            
+
             if isinstance(value, Sequence):
                 value.auto_destroy = False
             return
@@ -180,7 +180,7 @@ class Button(Entity):
             exec(textwrap.dedent(action))
 
 
-    def fit_to_text(self):
+    def fit_to_text(self, radius=.1):
         if not self.text_entity.text or self.text_entity.text == '':
             return
 
@@ -189,7 +189,7 @@ class Button(Entity):
             (self.text_entity.width * Text.size * 2) + self.text_entity.height * Text.size * 2,
             self.text_entity.height * Text.size * 2 * 2
             )
-        self.model = Quad(aspect=self.scale_x/self.scale_y)
+        self.model = Quad(aspect=self.scale_x/self.scale_y, radius=radius)
         self.text_entity.world_parent = self
         # print('fit to text', self.scale)
 
@@ -199,7 +199,7 @@ if __name__ == '__main__':
     from ursina import *
     app = Ursina()
 
-    b = Button(text='hello world!', color=color.azure, origin=(-.5,.5))
+    b = Button(text='hello world!', color=color.azure, origin=(-.5,0))
     # b.fit_to_text()
     b.on_click = application.quit # assign a function to the button.
     b.tooltip = Tooltip('exit')

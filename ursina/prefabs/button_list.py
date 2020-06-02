@@ -12,7 +12,7 @@ class ButtonList(Entity):
         position=(-.25, .45),
         collider='box',
         )
-        self.fit_height = True
+        self.fit_height = fit_height
         self.button_height = button_height
         if fit_height:
             self.scale_y = button_height * len(button_dict) * Text.size
@@ -47,7 +47,7 @@ class ButtonList(Entity):
     def input(self, key):
         # handle click here instead of in on_click so you can assign a custom on_click function
         if key == 'left mouse down' and self.hovered:
-            y = int(abs(self.highlight.y / self.button_height))
+            y = round(abs(self.highlight.y / self.button_height))
 
             action = self.actions[y]
             self.highlight.blink(color.black, .1)

@@ -225,6 +225,9 @@ class Mesh(NodePath):
 
 
     def save(self, name='', path=application.compressed_models_folder):
+        if not application.compressed_models_folder.exists():
+            application.compressed_models_folder.mkdir()
+            
         if not name and hasattr(self, 'path'):
             name = self.path.stem
             if not '.' in name:
