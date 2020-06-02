@@ -25,11 +25,6 @@ class Slider(Entity):
             pressed_color = bg_color,
             )
 
-
-        self.bg.on_click = '''
-            self.parent.knob.x = mouse.point[0] * self.scale_x
-            self.parent.knob.dragging = True
-            '''
         self.knob = Draggable(
             parent = self,
             min_x = 0,
@@ -45,8 +40,13 @@ class Slider(Entity):
             z = -.1
             )
 
+        def bg_click():
+            self.knob.x = mouse.point[0] * self.scale_x
+            self.knob.start_dragging()
+        self.bg.on_click = bg_click
 
         def drop():
+            self.knob.z = -.1
             if hasattr(self, 'on_value_changed'):
                 self.on_value_changed()
 
@@ -132,8 +132,8 @@ class ThinSlider(Slider):
     def __init__(self, *args, **kwargs):
         kwargs['height'] = Text.size
         super().__init__(*args, **kwargs)
-        self.bg.model = Quad(scale=(.525, Text.size/10), radius=Text.size/10, segments=3)
-        self.bg.origin_x = -0.25
+        self.bg.model = Quad(scale=(.525, Text.size/5), radius=Text.size/10, segments=3)
+        self.bg.origin = self.bg.origin
         self.bg.color = color.text_color
         self.bg.highlight_color = color.text_color
         self.knob.color = lerp(color.text_color, color.inverse(color.text_color), .1)
@@ -146,13 +146,13 @@ if __name__ == '__main__':
     app = Ursina()
     # color.text_color = color.dark_text
     # origin = Entity(model='cube', color=color.green, scale = .05)
-    # box = Entity(model='cube', origin_y=-.5, scale=1, color=color.orange)
+    box = Entity(model='cube', origin_y=-.5, scale=1, color=color.orange)
     slider = Slider(0, 20, default=10, height=Text.size*3, y=-.4, step=1   )
-    slider = Slider(1, 2, default=1.2, x=-.4, y=-.47, text='contrast', dynamic=True)
+    slider = ThinSlider(x=-.4, y=-.47, text='contrast', dynamic=True)
     # thin_slider = ThinSlider(0, 255, default=1, text='thin_slider', height=Text.size*3, y=-.4, step=1, vertical=False, x=-.7)
     # Text('debug text')
-    # def scale_box():
-    #     box.scale_y = slider.value
+    def scale_box():
+        box.scale_y = slider.value
     #
-    # slider.on_value_changed = scale_box
+    slider.on_value_changed = scale_box
     app.run()
