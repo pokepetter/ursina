@@ -46,6 +46,9 @@ class Button(Entity):
         if self.text_entity != None:
             self.text_entity.world_scale = 1
 
+        self.icon = None
+
+
     @property
     def text(self):
         if self.text_entity:
@@ -83,6 +86,15 @@ class Button(Entity):
         # self.text_entity.y += self.model.radius * self.scale_y/self.scale_x * (-value[1]*2)
         self.text_entity.origin = value
 
+    @property
+    def icon(self):
+        return self._icon
+
+    @icon.setter
+    def icon(self, value):
+        if value:
+            self._icon = Entity(parent=self.model, name=f'button_icon_{value}', model='quad', texture=value, z=-.1, add_to_scene_entities=False)
+            print('----------', self._icon)
 
     def __setattr__(self, name, value):
         if name == 'color':
@@ -199,7 +211,7 @@ if __name__ == '__main__':
     from ursina import *
     app = Ursina()
 
-    b = Button(text='hello world!', color=color.azure, origin=(-.5,0))
+    b = Button(text='hello world!', color=color.azure, origin=(-.5,0), icon='sword', scale=.25)
     # b.fit_to_text()
     b.on_click = application.quit # assign a function to the button.
     b.tooltip = Tooltip('exit')
