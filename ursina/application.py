@@ -6,7 +6,7 @@ from panda3d.core import getModelPath
 paused = False
 time_scale = 1
 sequences = list()
-trace_entity_definition = True # enable to set entity.line_definition
+trace_entity_definition = False # enable to set entity.line_definition
 print_entity_definition = False
 
 package_folder = Path(__file__).parent
@@ -25,10 +25,8 @@ internal_scripts_folder = package_folder / 'scripts/'
 internal_textures_folder = package_folder / 'textures/'
 internal_fonts_folder = package_folder / 'fonts/'
 
-prefabs_folder = asset_folder / 'prefabs/'
 scenes_folder = asset_folder / 'scenes/'
 scripts_folder = asset_folder / 'scripts/'
-textures_folder = asset_folder / 'textures/'
 fonts_folder = asset_folder / 'fonts/'
 
 compressed_textures_folder = asset_folder / 'textures_compressed/'
