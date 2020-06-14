@@ -77,7 +77,7 @@ def rebind(to_key, from_key):
 
 
 def input(key):
-    if key.endswith('hold'):
+    if key.endswith('hold') or key == InputEvents.scroll_down or key == InputEvents.scroll_up:
         return
 
     key = key.replace('mouse down', 'mouse')
