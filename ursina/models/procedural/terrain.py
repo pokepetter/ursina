@@ -3,7 +3,7 @@ from ursina import *
 
 
 class Terrain(Mesh):
-    def __init__(self, heightmap, skip=1, store_height_values=False, **kwargs):
+    def __init__(self, heightmap, skip=1, **kwargs):
         from PIL import Image
         from numpy import asarray, flip
 
@@ -83,13 +83,13 @@ class Terrain(Mesh):
 
 if __name__ == '__main__':
     app = Ursina()
-    e = Entity(model=Terrain('heightmap_1', skip=4, store_height_values=True), scale=(20,5,20), texture='heightmap_1')
+    e = Entity(model=Terrain('heightmap_1', skip=4), scale=(20,5,20), texture='heightmap_1')
     EditorCamera()
     Sky()
 
     # terrains = list()
     # for i in (1,2,4,8):
-    #     e = Entity(model=Terrain('heightmap_1', skip=i, store_height_values=True), scale=(20,5,20))
+    #     e = Entity(model=Terrain('heightmap_1', skip=i), scale=(20,5,20))
     #     e.texture='heightmap_1'
     #     e.enabled = False
     #     terrains.append(e)
