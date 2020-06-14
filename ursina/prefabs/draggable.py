@@ -90,12 +90,14 @@ class Draggable(Button):
                 if not self.lock_z:
                     self.world_z = mouse.world_point[2] - self.start_offset[2]
 
-            if self.step[0] > 0 or self.step[1] > 0 or self.step[2] > 0:
+            if self.step[0] > 0:
                 hor_step = 1/self.step[0]
-                ver_step = 1/self.step[1]
-                dep_step = 1/self.step[2]
                 self.x = round(self.x * hor_step) /hor_step
+            if self.step[1] > 0:
+                ver_step = 1/self.step[1]
                 self.y = round(self.y * ver_step) /ver_step
+            if self.step[2] > 0:
+                dep_step = 1/self.step[2]
                 self.z = round(self.z * dep_step) /dep_step
 
         self.position = (
@@ -120,7 +122,7 @@ class Draggable(Button):
 
 if __name__ == '__main__':
     app = Ursina()
-    
+
     Entity(model='plane', scale=8, texture='white_cube', texture_scale=(8,8))
     draggable_button = Draggable(scale=.1, text='drag me', position=(-.5, 0))
     world_space_draggable = Draggable(parent=scene, model='cube', color=color.azure, plane_direction=(0,1,0))
