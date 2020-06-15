@@ -781,19 +781,31 @@ class Entity(NodePath):
             self.setAttrib(CullFaceAttrib.make(CullFaceAttrib.MCullCounterClockwise))
 
 
-    def look_at(self, target):
-        if isinstance(target, Entity):
-            target = Vec3(target.world_position)
-        super().look_at(render, Vec3(target[0], target[2], target[1]))
+
+    def look_at(self, target, axis='forward'):
+        from panda3d.core import Quat
+        
+        self.lookAt(target)
+        rotation_offset = {
+            'forward' : Quat(0,0,0,-1),
+            'back'    : Quat(0,0,0,1),
+            'down'    : Quat(0,0,.707,.707),
+            'up'      : Quat(0,0,-.707,.707),
+            'right'   : Quat(-.707,0,0,.707),
+            'left'    : Quat(.707,0,0,.707),
+            }[axis]
+
+        self.setQuat(rotation_offset * self.getQuat())
 
 
-    def look_at_2d(self, target, axis=0):
+    def look_at_2d(self, target, axis='z'):
         from math import degrees, atan2
         if isinstance(target, Entity):
             target = Vec3(target.world_position)
 
         pos = target - self.world_position
-        self.rotation_z = degrees(atan2(pos[0], pos[1]))
+        if axis == 'z':
+            self.rotation_z = degrees(atan2(pos[0], pos[1]))
 
 
     def has_ancestor(self, possible_ancestor):
