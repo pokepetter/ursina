@@ -107,29 +107,31 @@ class Window(WindowProperties):
         if not application.development_mode:
             return
 
-        import webbrowser
-        self.cog_menu = ButtonList({
-            # 'Build' : Func(print, ' '),
-            'Asset Store' : Func(webbrowser.open, "https://itch.io/tools/tag-ursina"),
-            # 'Open Scene Editor' : Func(print, ' '),
-            'Reload Textures [F6]' : application.hot_reloader.reload_textures,
-            'Reload Models [F7]' : application.hot_reloader.reload_models,
-            'Reload Code [F5]' : application.hot_reloader.reload_code,
-        },
-            width=.3,
-            x=.64,
-            enabled=False,
-            eternal=True
-        )
-        self.cog_menu.on_click = Func(setattr, self.cog_menu, 'enabled', False)
-        self.cog_menu.y = -.5 + self.cog_menu.scale_y
-        self.cog_menu.scale *= .75
-        self.cog_menu.text_entity.x += .025
-        self.cog_menu.highlight.color = color.azure
-        self.cog = Button(parent=self.editor_ui, eternal=True, model='circle', scale=.015, origin=(1,-1), position=self.bottom_right)
-        def _toggle_cog_menu():
-            self.cog_menu.enabled = not self.cog_menu.enabled
-        self.cog.on_click = _toggle_cog_menu
+        if not self.isJupyter():  # don't try a hot reload in Jupyter notebook
+
+            import webbrowser
+            self.cog_menu = ButtonList({
+                # 'Build' : Func(print, ' '),
+                'Asset Store' : Func(webbrowser.open, "https://itch.io/tools/tag-ursina"),
+                # 'Open Scene Editor' : Func(print, ' '),
+                'Reload Textures [F6]' : application.hot_reloader.reload_textures,
+                'Reload Models [F7]' : application.hot_reloader.reload_models,
+                'Reload Code [F5]' : application.hot_reloader.reload_code,
+            },
+                width=.3,
+                x=.64,
+                enabled=False,
+                eternal=True
+            )
+            self.cog_menu.on_click = Func(setattr, self.cog_menu, 'enabled', False)
+            self.cog_menu.y = -.5 + self.cog_menu.scale_y
+            self.cog_menu.scale *= .75
+            self.cog_menu.text_entity.x += .025
+            self.cog_menu.highlight.color = color.azure
+            self.cog = Button(parent=self.editor_ui, eternal=True, model='circle', scale=.015, origin=(1,-1), position=self.bottom_right)
+            def _toggle_cog_menu():
+                self.cog_menu.enabled = not self.cog_menu.enabled
+            self.cog.on_click = _toggle_cog_menu
 
 
     def update_aspect_ratio(self):
@@ -240,6 +242,23 @@ class Window(WindowProperties):
                 loadPrcFileData('', 'sync-video False')
                 print('set vsync to false')
             object.__setattr__(self, name, value)
+
+
+    def isJupyter(self):        # from https://stackoverflow.com/questions/15411967/how-can-i-check-if-code-is-executed-in-the-ipython-notebook/24937408
+        try:
+            shell = get_ipython().__class__.__name__
+            if shell == 'ZMQInteractiveShell':
+                return True   # Jupyter notebook or qtconsole
+            elif shell == 'TerminalInteractiveShell':
+                return False  # Terminal running IPython
+            else:
+                return False  # Other type (?)
+        except NameError:
+            return False      # Probably standard Python interprete
+
+
+
+
 
 
 sys.modules[__name__] = Window()

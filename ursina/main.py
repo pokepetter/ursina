@@ -2,7 +2,6 @@ import time
 from ursina.ursinastuff import *
 import __main__
 
-
 class Ursina(ShowBase):
 
     def __init__(self):
@@ -84,7 +83,7 @@ class Ursina(ShowBase):
         # try to load settings that need to be applied before entity creation
         application.load_settings()
 
-        if application.development_mode:
+        if application.development_mode and hasattr(__main__, '__file__'):
             from ursina import HotReloader
             application.hot_reloader = HotReloader(__main__.__file__)
 
@@ -198,6 +197,13 @@ class Ursina(ShowBase):
         if key == 'f9':
             window.display_mode = 'default'
 
+
+
+        if key == 'escape':
+            self.destroy()  # must firmly close app for Jupyter
+            import os
+            os._exit(0)
+
         # if key == 'escape':
         #     if not application.paused:
         #         application.pause()
@@ -212,6 +218,21 @@ class Ursina(ShowBase):
         application.load_settings()
 
         super().run()
+
+
+    def isJupyter():        # from https://stackoverflow.com/questions/15411967/how-can-i-check-if-code-is-executed-in-the-ipython-notebook/24937408
+        try:
+            shell = get_ipython().__class__.__name__
+            if shell == 'ZMQInteractiveShell':
+                return True   # Jupyter notebook or qtconsole
+            elif shell == 'TerminalInteractiveShell':
+                return False  # Terminal running IPython
+            else:
+                return False  # Other type (?)
+        except NameError:
+            return False      # Probably standard Python interprete
+
+
 
 
 if __name__ == '__main__':

@@ -15,8 +15,12 @@ class ExitButton(Button):
             **kwargs)
 
 
-    def on_click(self):
-        application.quit()
+    def on_click(self):  # this does NOT work under Jupyter
+        # application.quit()
+        self.destroy()  # must firmly close app for Jupyter
+        import os
+        os._exit(0)  # may kill the iPython kernal, the user will be prompted to restart
+
 
 
     def input(self, key):
