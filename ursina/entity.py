@@ -784,10 +784,14 @@ class Entity(NodePath):
 
     def look_at(self, target, axis='forward'):
         from panda3d.core import Quat
-        
+        if not isinstance(target, Entity):
+            target = Vec3(target[0], target[2], target[1])
+
         self.lookAt(target)
+        if axis == 'forward':
+            return
+
         rotation_offset = {
-            'forward' : Quat(0,0,0,-1),
             'back'    : Quat(0,0,0,1),
             'down'    : Quat(0,0,.707,.707),
             'up'      : Quat(0,0,-.707,.707),
