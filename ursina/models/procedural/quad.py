@@ -2,7 +2,7 @@ from ursina import *
 
 
 class Quad(Mesh):
-    def __init__(self, radius=.1, segments=3, aspect=1, scale=(1,1), mode='ngon', **kwargs):
+    def __init__(self, radius=.1, segments=8, aspect=1, scale=(1,1), mode='ngon', **kwargs):
         super().__init__()
         self.vertices = [Vec3(0,0,0), Vec3(1,0,0), Vec3(1,1,0), Vec3(0,1,0)]
         self.radius = radius

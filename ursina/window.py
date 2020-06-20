@@ -17,6 +17,13 @@ class Window(WindowProperties):
         loadPrcFileData('', 'window-title ursina')
         loadPrcFileData('', 'notify-level-util error')
         loadPrcFileData('', 'textures-auto-power-2 #t')
+        loadPrcFileData('', 'load-file-type p3assimp')
+        loadPrcFileData('', 'framebuffer-multisample 1')
+        loadPrcFileData('', 'multisamples 4')
+
+        # loadPrcFileData('', 'cursor-filename mycursor.ico')
+        # loadPrcFileData('', 'threading-model Cull/Draw')
+        # loadPrcFileData('', 'coordinate-system y-up-left')
         self.setForeground(True)
         self.vsync = True   # can't be set during play
         self.show_ursina_splash = False
@@ -86,6 +93,8 @@ class Window(WindowProperties):
         from ursina import camera, Text, Button, ButtonList, Func
         import time
 
+        if not application.development_mode:
+            return
         self.editor_ui = Entity(parent=camera.ui, eternal=True)
         self.exit_button = Button(parent=self.editor_ui, eternal=True, origin=(.5, .5), position=self.top_right, z=-999, scale=(.05, .025), color=color.red.tint(-.2), text='x', on_click=application.quit)
 
@@ -104,8 +113,6 @@ class Window(WindowProperties):
             self.fps_counter.i += 1
         self.fps_counter.update = _fps_counter_update
 
-        if not application.development_mode:
-            return
 
         import webbrowser
         self.cog_menu = ButtonList({
@@ -126,10 +133,10 @@ class Window(WindowProperties):
         self.cog_menu.scale *= .75
         self.cog_menu.text_entity.x += .025
         self.cog_menu.highlight.color = color.azure
-        self.cog = Button(parent=self.editor_ui, eternal=True, model='circle', scale=.015, origin=(1,-1), position=self.bottom_right)
+        self.cog_button = Button(parent=self.editor_ui, eternal=True, model='circle', scale=.015, origin=(1,-1), position=self.bottom_right)
         def _toggle_cog_menu():
             self.cog_menu.enabled = not self.cog_menu.enabled
-        self.cog.on_click = _toggle_cog_menu
+        self.cog_button.on_click = _toggle_cog_menu
 
 
     def update_aspect_ratio(self):
@@ -246,13 +253,15 @@ sys.modules[__name__] = Window()
 
 if __name__ == '__main__':
     from ursina import *
+    # application.development_mode = False
     app = Ursina()
 
     window.title = 'Title'
     window.borderless = False
     window.fullscreen = False
-    window.exit_button.visible = False
     window.fps_counter.enabled = False
+    window.exit_button.visible = False
+    # window.cog.enabled = False
 
     Entity(model='cube', color=color.green, collider='box', texture='shore')
 
