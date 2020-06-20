@@ -1,8 +1,8 @@
 from ursina import *
 from panda3d.core import Shader as Panda3dShader
 
-# basic_lighting_shader = Panda3dShader.make(Panda3dShader.SL_GLSL,
-basic_lighting_shader = Shader(
+
+colored_lights_shader = Shader(
 vertex='''
 #version 130
 uniform mat4 p3d_ModelViewProjectionMatrix;
@@ -87,9 +87,9 @@ if __name__ == '__main__':
 
     # e = Entity(model='sphere', shader=basic_lighting_shader)
     # e.setShaderInput('transform_matrix', e.getNetTransform().getMat())
-    shader = basic_lighting_shader
+    shader = colored_lights_shader
 
-    a = BlackCube(shader=shader)
+    a = GrayCube(shader=shader)
     b = GraySphere(shader=shader, rotation_y=180, x=3)
     # AzureSphere(shader=a.shader, y=2)
     GrayPlane(scale=10, y=-2, texture='shore')
