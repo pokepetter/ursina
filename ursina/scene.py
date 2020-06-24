@@ -21,6 +21,7 @@ class Scene(NodePath):
         self.hidden = NodePath('hidden')
         self.reflection_map = 'reflection_map_3'
 
+        self.lights = []
 
     def set_up(self):
         from ursina.entity import Entity
