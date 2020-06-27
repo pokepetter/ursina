@@ -11,7 +11,7 @@ void vshader(float4 vtx_position : POSITION,
             uniform float4x4 mat_modelproj)
 {
     l_position=mul(mat_modelproj, vtx_position);
-    l_texcoord0 = vtx_position.xz * texpad_tex.xy + texpad_tex.xy;
+    l_texcoord0 = vtx_position.xy * texpad_tex.xy + texpad_tex.xy;
 }
 
 half3 AdjustContrast(half3 color, half contrast) {

@@ -18,12 +18,14 @@ class Window(WindowProperties):
         loadPrcFileData('', 'notify-level-util error')
         loadPrcFileData('', 'textures-auto-power-2 #t')
         loadPrcFileData('', 'load-file-type p3assimp')
+        loadPrcFileData("", "framebuffer-multisample 1")
         # loadPrcFileData('', 'framebuffer-multisample 1')
-        # loadPrcFileData('', 'multisamples 1')
+        loadPrcFileData('', 'multisamples 2')
+        # loadPrcFileData('', 'textures-power-2 none')
 
         # loadPrcFileData('', 'cursor-filename mycursor.ico')
         # loadPrcFileData('', 'threading-model Cull/Draw')
-        # loadPrcFileData('', 'coordinate-system y-up-left')
+        loadPrcFileData('', 'coordinate-system y-up-left')
         self.setForeground(True)
         self.vsync = True   # can't be set during play
         self.show_ursina_splash = False

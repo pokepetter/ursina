@@ -19,7 +19,7 @@ class Ursina(ShowBase):
         scene.camera = camera
         camera.reparent_to(base.render)
         camera.set_up()
-        base.render.set_antialias(AntialiasAttrib.MMultisample)
+        # base.render.set_antialias(AntialiasAttrib.MMultisample)
         self.accept('aspectRatioChanged', window.update_aspect_ratio)
 
         # input

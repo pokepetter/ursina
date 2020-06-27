@@ -59,12 +59,15 @@ class Text(Entity):
         t = ''
         y = 0
         if self.text_nodes:
-            y = self.text_nodes[0].getZ()
+            # y = self.text_nodes[0].getZ()
+            y = self.text_nodes[0].getY()
 
         for tn in self.text_nodes:
-            if y != tn.getZ():
+            # if y != tn.getZ():
+            if y != tn.getY():
                 t += '\n'
-                y = tn.getZ()
+                # y = tn.getZ()
+                y = tn.getY()
 
             t += tn.node().text
 
@@ -175,7 +178,7 @@ class Text(Entity):
                     color=self.current_color,
                     scale=1,
                     # position=(x*self.size*self.scale_override, y*self.size*self.line_height),
-                    origin=(.125, -.25),
+                    origin=(.0, -.25),
                     add_to_scene_entities=False,
                     )
                 if not image.texture:
@@ -192,10 +195,14 @@ class Text(Entity):
         self.text_node.setText(text)
         self.text_node.setTextColor(self.current_color)
         self.text_node.setPreserveTrailingWhitespace(True)
+        # self.text_node_path.setPos(
+        #     x * self.size * self.scale_override,
+        #     0,
+        #     (y * self.size * self.line_height) - .75 * self.size)
         self.text_node_path.setPos(
             x * self.size * self.scale_override,
-            0,
-            (y * self.size * self.line_height) - .75 * self.size)
+            (y * self.size * self.line_height) - .75 * self.size,
+            0)
         self.text_nodes.append(self.text_node_path)
 
         return self.text_node
@@ -279,40 +286,25 @@ class Text(Entity):
     @wordwrap.setter
     def wordwrap(self, value):
         self._wordwrap = value
-
-        linelength = 0
-        newstring = ''
+        new_text = ''
+        is_in_tag = False
         i = 0
-        while i < (len(self.raw_text)):
-            char = self.raw_text[i]
+        for word in self.raw_text.replace('\n', ' ').replace(self.end_tag, self.end_tag+' ').split(' '):
 
-            if char == self.start_tag:
-                for j in range(len(self.raw_text) - i):
-                    if self.raw_text[i+j] == self.end_tag:
-                        break
-                    newstring += self.raw_text[i+j]
-                i += j + 0  # don't count tags
+            if word.startswith(self.start_tag) and new_text:
+                new_text = new_text[:-1]
 
-            else:
-                if char == '\n':
-                    linelength = 0
+            if not word.startswith(self.start_tag):
+                i += len(word)
 
-                # find length of word
-                for l in range(min(100, len(self.raw_text) - i)):
-                    if self.raw_text[i+l] == ' ':
-                        break
+            if i >= value:
+                new_text += '\n'
+                i = 0
 
-                if linelength + l > value:  # add linebreak
-                    newstring += '\n'
-                    linelength = 0
+            new_text += word + ' '
 
-                newstring += char
-                linelength += 1
-                i += 1
-
-        newstring = newstring.replace(f'\n{Text.end_tag}', f'{Text.end_tag}\n')
-        # print('--------------------\n', newstring)
-        self.text = newstring
+        # print('--------------------\n', new_text)
+        self.text = new_text
 
 
     @property
@@ -343,7 +335,8 @@ class Text(Entity):
         # print('.........', linewidths)
         for tn in self.text_nodes:
             # center text horizontally
-            linenumber = abs(int(tn.getZ() / self.size / self.line_height))
+            # linenumber = abs(int(tn.getZ() / self.size / self.line_height))
+            linenumber = abs(int(tn.getY() / self.size / self.line_height))
             tn.setX(tn.getX() - (linewidths[linenumber] / 2 * self.size * tn.getScale()[0] / self.size))
             # tn.setX(tn.getX() - (linewidths[linenumber] / 2 * self.size))
             # add offset based on origin/value
@@ -353,9 +346,11 @@ class Text(Entity):
                 )
             # center text vertically
             halfheight = len(linewidths) * self.line_height / 2
-            tn.setZ(tn.getZ() + (halfheight * self.size))
+            # tn.setZ(tn.getZ() + (halfheight * self.size))
+            tn.setY(tn.getY() + (halfheight * self.size))
             # add offset
-            tn.setZ(tn.getZ() - (halfheight * value[1] * 2 * self.size))
+            # tn.setZ(tn.getZ() - (halfheight * value[1] * 2 * self.size))
+            tn.setY(tn.getY() - (halfheight * value[1] * 2 * self.size))
 
 
     def create_background(self, padding=size*2, radius=size, color=ursina.color.black66):
@@ -436,6 +431,9 @@ if __name__ == '__main__':
     # test.origin = (.5, .5)
     # test.origin = (0, 0)
     # test.wordwrap = 40
+
+    text = Text(text=descr, wordwrap=10, y=.25, background=True)
+
     def input(key):
         if key == 'a':
             test.appear(speed=.025)

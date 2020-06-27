@@ -36,6 +36,8 @@ except:
 
 class Entity(NodePath):
 
+    rotation_directions = (-1,-1,1)
+
     def __init__(self, add_to_scene_entities=True, **kwargs):
         super().__init__(self.__class__.__name__)
 
@@ -192,6 +194,9 @@ class Entity(NodePath):
             return
 
         if name == 'color' and value is not None:
+            if isinstance(value, str):
+                value = color.hex(value)
+
             if not isinstance(value, Vec4):
                 value = Vec4(value[0], value[1], value[2], value[3])
 
@@ -329,7 +334,7 @@ class Entity(NodePath):
             value = Vec3(*value, self.origin_z)
 
         self._origin = value
-        self.model.setPos(-value[0], -value[2], -value[1])
+        self.model.setPos(-value[0], -value[1], -value[2])
 
 
     @property
@@ -364,31 +369,31 @@ class Entity(NodePath):
         if isinstance(value, Vec2):
             value = Vec3(*value, self.z)
 
-        self.setPos(render, Vec3(value[0], value[2], value[1]))
+        self.setPos(render, Vec3(value[0], value[1], value[2]))
 
     @property
     def world_x(self):
         return self.getX(render)
     @property
     def world_y(self):
-        return self.getZ(render)
+        return self.getY(render)
     @property
     def world_z(self):
-        return self.getY(render)
+        return self.getZ(render)
 
     @world_x.setter
     def world_x(self, value):
         self.setX(render, value)
     @world_y.setter
     def world_y(self, value):
-        self.setZ(render, value)
+        self.setY(render, value)
     @world_z.setter
     def world_z(self, value):
-        self.setY(render, value)
+        self.setZ(render, value)
 
     @property
     def position(self):
-        return Vec3(self.getX(), self.getZ(), self.getY())
+        return Vec3(*self.getPos())
 
     @position.setter
     def position(self, value):
@@ -397,7 +402,7 @@ class Entity(NodePath):
         if isinstance(value, Vec2):
             value = Vec3(*value, self.z)
 
-        self.setPos(value[0], value[2], value[1])
+        self.setPos(value[0], value[1], value[2])
 
     @property
     def x(self):
@@ -408,36 +413,54 @@ class Entity(NodePath):
 
     @property
     def y(self):
-        return self.getZ()
+        return self.getY()
     @y.setter
     def y(self, value):
-        self.setZ(value)
+        self.setY(value)
 
     @property
     def z(self):
-        return self.getY()
+        return self.getZ()
     @z.setter
     def z(self, value):
-        self.setY(value)
+        self.setZ(value)
 
     @property
     def world_rotation(self):
         rotation = self.getHpr(base.render)
-        return Vec3(-rotation[1], -rotation[0], rotation[2])
+        return Vec3(rotation[1], rotation[0], rotation[2]) * Entity.rotation_directions
+    @world_rotation.setter
+    def world_rotation(self, value):
+        rotation = self.setHpr(Vec3(value[1], value[0], value[2]) * Entity.rotation_directions, base.render)
+
     @property
     def world_rotation_x(self):
-        return -self.getP(base.render)
+        return self.world_rotation[0]
+
+    @world_rotation_x.setter
+    def world_rotation_x(self, value):
+        self.world_rotation = Vec3(value, self.world_rotation[1], self.world_rotation[2])
+
     @property
     def world_rotation_y(self):
-        return -self.getH(base.render)
+        return self.world_rotation[1]
+
+    @world_rotation_y.setter
+    def world_rotation_y(self, value):
+        self.world_rotation = Vec3(self.world_rotation[0], value, self.world_rotation[2])
+
     @property
     def world_rotation_z(self):
-        return self.getR(base.render)
+        return self.world_rotation[2]
+
+    @world_rotation_z.setter
+    def world_rotation_z(self, value):
+        self.world_rotation = Vec3(self.world_rotation[0], self.world_rotation[1], value)
 
     @property
     def rotation(self):
         rotation = self.getHpr()
-        return Vec3(-rotation[1], -rotation[0], rotation[2])
+        return Vec3(rotation[1], rotation[0], rotation[2]) * Entity.rotation_directions
 
     @rotation.setter
     def rotation(self, value):
@@ -446,66 +469,65 @@ class Entity(NodePath):
         if isinstance(value, Vec2):
             value = Vec3(*value, self.rotation_z)
 
-        self.setHpr(Vec3(-value[1], -value[0], value[2]))
+        self.setHpr(Vec3(value[1], value[0], value[2]) * Entity.rotation_directions)
 
     @property
     def rotation_x(self):
-        return -self.getP()
+        return self.rotation.x
     @rotation_x.setter
     def rotation_x(self, value):
-        self.setP(-value)
+        self.rotation = Vec3(value, self.rotation[1], self.rotation[2])
 
     @property
     def rotation_y(self):
-        return -self.getH()
+        return self.rotation.y
     @rotation_y.setter
     def rotation_y(self, value):
-        self.setH(-value)
+        self.rotation = Vec3(self.rotation[0], value, self.rotation[2])
 
     @property
     def rotation_z(self):
-        return self.getR()
+        return self.rotation.z
     @rotation_z.setter
     def rotation_z(self, value):
-        self.setR(value)
-
+        self.rotation = Vec3(self.rotation[0], self.rotation[1], value)
 
     @property
     def world_scale(self):
         scale = self.getScale(base.render)
-        return Vec3(scale[0], scale[2], scale[1])
+        return Vec3(scale[0], scale[1], scale[2])
     @world_scale.setter
     def world_scale(self, value):
         if isinstance(value, (int, float, complex)):
-            value = (value, value, value)
+            value = Vec3(value, value, value)
 
-        self.setScale(base.render, Vec3(value[0], value[2], value[1]))
+        self.setScale(base.render, value)
 
     @property
     def world_scale_x(self):
         return self.getScale(base.render)[0]
     @world_scale_x.setter
     def world_scale_x(self, value):
-        self.setScale(base.render, Vec3(value, self.world_scale_z, self.world_scale_y))
+        self.setScale(base.render, Vec3(value, self.world_scale_y, self.world_scale_z))
 
     @property
     def world_scale_y(self):
-        return self.getScale(base.render)[2]
+        return self.getScale(base.render)[1]
     @world_scale_y.setter
     def world_scale_y(self, value):
-        self.setScale(base.render, Vec3(self.world_scale_x, self.world_scale_z, value))
+        self.setScale(base.render, Vec3(self.world_scale_x, value, self.world_scale_z))
 
     @property
     def world_scale_z(self):
-        return self.getScale(base.render)[1]
+        return self.getScale(base.render)[2]
     @world_scale_z.setter
     def world_scale_z(self, value):
-        self.setScale(base.render, Vec3(self.world_scale_x, value, self.world_scale_y))
+        self.setScale(base.render, Vec3(self.world_scale_x, value, self.world_scale_z))
 
     @property
     def scale(self):
         scale = self.getScale()
-        return Vec3(scale[0], scale[2], scale[1])
+        return Vec3(scale[0], scale[1], scale[2])
 
     @scale.setter
     def scale(self, value):
@@ -515,47 +537,44 @@ class Entity(NodePath):
             value = Vec3(*value, self.scale_z)
 
         value = [e if e!=0 else .001 for e in value]
-        self.setScale(value[0], value[2], value[1])
+        self.setScale(value[0], value[1], value[2])
 
     @property
     def scale_x(self):
         return self.getScale()[0]
     @scale_x.setter
     def scale_x(self, value):
-        self.setScale(value, self.scale_z, self.scale_y)
+        self.setScale(value, self.scale_y, self.scale_z)
 
     @property
     def scale_y(self):
-        return self.getScale()[2]
+        return self.getScale()[1]
     @scale_y.setter
     def scale_y(self, value):
-        self.setScale(self.scale_x, self.scale_z, value)
+        self.setScale(self.scale_x, value, self.scale_z)
 
     @property
     def scale_z(self):
-        return self.getScale()[1]
+        return self.getScale()[2]
     @scale_z.setter
     def scale_z(self, value):
-        self.setScale(self.scale_x, value, self.scale_y)
+        self.setScale(self.scale_x, self.scale_y, value)
 
     @property
     def forward(self):
-        vec =  render.getRelativeVector(self, (0, 1, 0))
-        return Vec3(vec[0], vec[2], vec[1])
+        return render.getRelativeVector(self, (0, 0, 1))
     @property
     def back(self):
         return -self.forward
     @property
     def right(self):
-        vec =  render.getRelativeVector(self, (1, 0, 0))
-        return Vec3(vec[0], vec[2], vec[1])
+        return render.getRelativeVector(self, (1, 0, 0))
     @property
     def left(self):
         return -self.right
     @property
     def up(self):
-        vec = render.getRelativeVector(self, (0, 0, 1))
-        return Vec3(vec[0], vec[2], vec[1])
+        return render.getRelativeVector(self, (0, 1, 0))
     @property
     def down(self):
         return -self.up
@@ -721,8 +740,8 @@ class Entity(NodePath):
         if self.model:
             bounds = self.model.getTightBounds()
             bounds = Vec3(
-                Vec3(bounds[1][0], bounds[1][2], bounds[1][1])  # max point
-                - Vec3(bounds[0][0], bounds[0][2], bounds[0][1])    # min point
+                Vec3(bounds[1][0], bounds[1][1], bounds[1][2])  # max point
+                - Vec3(bounds[0][0], bounds[0][1], bounds[0][2])    # min point
                 )
             return bounds
 
@@ -745,12 +764,11 @@ class Entity(NodePath):
 
 
     def get_position(self, relative_to=scene):
-        pos = self.getPos(relative_to)
-        return Vec3(pos[0], pos[2], pos[1])
+        return self.getPos(relative_to)
 
 
     def set_position(self, value, relative_to=scene):
-        self.setPos(relative_to, Vec3(value[0], value[2], value[1]))
+        self.setPos(relative_to, Vec3(value[0], value[1], value[2]))
 
 
     def add_script(self, class_instance):
@@ -785,18 +803,18 @@ class Entity(NodePath):
     def look_at(self, target, axis='forward'):
         from panda3d.core import Quat
         if not isinstance(target, Entity):
-            target = Vec3(target[0], target[2], target[1])
+            target = Vec3(*target)
 
         self.lookAt(target)
         if axis == 'forward':
             return
 
         rotation_offset = {
-            'back'    : Quat(0,0,0,1),
-            'down'    : Quat(0,0,.707,.707),
-            'up'      : Quat(0,0,-.707,.707),
-            'right'   : Quat(-.707,0,0,.707),
-            'left'    : Quat(.707,0,0,.707),
+            'back'    : Quat(0,0,1,0),
+            'down'    : Quat(-.707,.707,0,0),
+            'up'      : Quat(-.707,-.707,0,0),
+            'right'   : Quat(-.707,0,.707,0),
+            'left'    : Quat(-.707,0,-.707,0),
             }[axis]
 
         self.setQuat(rotation_offset * self.getQuat())
@@ -982,7 +1000,7 @@ if __name__ == '__main__':
     from ursina import *
     app = main.Ursina()
 
-    e = Entity(model='quad', color=color.orange, position=(0,0,1), scale=1.5, rotation=(0,0,45))
+    # e = Entity(model='quad', color=color.orange, position=(0,0,1), scale=1.5, rotation=(0,0,45))
 
     # '''example of inheriting Entity'''
     # class Player(Entity):
@@ -1006,11 +1024,49 @@ if __name__ == '__main__':
     #         self.x -= held_keys['a'] * time.dt * 10
     #
     # player = Player(x=-1)
-    # EditorCamera()
+    application.trace_entity_definition = False
+    t = time.time()
+    for i in range(100):
+        # e = Entity()
+        e = Entity(add_to_scene_entities=False)
+    print('----------', time.time() - t)
 
+    # .14
+    # .014
+    # .03, .013
+
+    EditorCamera()
+    e = Entity(model='quad', color=color.lime)
+    # e.flip_faces()
+    target = Entity(model='cube', x=4, y=3)
+
+    print(e.look_at)
+
+    def update():
+        e.look_at_2d(target)
 
     def input(key):
-        if key == 'space':
-            e.shake()
+        # if key == 'w':
+        #     e.look_at(target, axis='forward')
+        # if key == 's':
+        #     e.look_at(target, axis='back')
+        # if key == 'd':
+        #     e.look_at(target, axis='right')
+        # if key == 'a':
+        #     e.look_at(target, axis='left')
+        # if key == 'e':
+        #     e.look_at(target, axis='up')
+        # if key == 'q':
+        #     e.look_at(target, axis='down')
+
+        if key == 'up arrow':
+            target.y += 1
+        if key == 'down arrow':
+            target.y -= 1
+        if key == 'right arrow':
+            target.x += 1
+        if key == 'left arrow':
+            target.x -= 1
+
 
     app.run()

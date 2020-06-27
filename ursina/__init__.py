@@ -11,14 +11,15 @@ from ursina.color import Color
 from ursina.sequence import Sequence, Func, Wait
 from ursina.entity import Entity
 from ursina.collider import *
+from ursina.trigger import Trigger
 from ursina.audio import Audio
 from ursina.duplicate import duplicate
 from ursina import input_handler
 from ursina.vec3 import Vec3
 from ursina.shader import Shader
-
 from ursina.text import Text
 from ursina.mesh import Mesh, MeshModes
+
 from ursina.prefabs.sprite import Sprite
 from ursina.prefabs.button import Button
 from ursina.prefabs.panel import Panel
