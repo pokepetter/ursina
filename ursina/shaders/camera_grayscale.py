@@ -1,31 +1,36 @@
-from panda3d.core import Shader
+from ursina import Shader
 
 
-camera_grayscale_shader = Shader.make('''
+camera_grayscale_shader = Shader(
+vertex='''
+#version 430
 
-void vshader(float4 vtx_position : POSITION,
-            float2 vtx_texcoord0 : TEXCOORD0,
-            out float4 l_position : POSITION,
-            out float2 l_texcoord0 : TEXCOORD0,
-            uniform float4 texpad_tex,
-            uniform float4x4 mat_modelproj)
-{
-    l_position=mul(mat_modelproj, vtx_position);
-    l_texcoord0 = vtx_position.xz * texpad_tex.xy + texpad_tex.xy;
+uniform mat4 p3d_ViewMatrixInverse;
+in vec4 p3d_Vertex;
+in vec2 p3d_MultiTexCoord0;
+out vec2 uv;
+
+void main() {
+  gl_Position = p3d_ViewMatrixInverse  * p3d_Vertex;
+  uv = p3d_MultiTexCoord0;
+}
+''',
+
+fragment='''
+#version 430
+
+uniform sampler2D tex;
+in vec2 uv;
+out vec4 color;
+
+void main() {
+    vec3 rgb = texture(tex, uv).rgb;
+    float gray = (rgb.x + rgb.y + rgb.z)/3;
+    color = vec4(gray, gray, gray, 1.0);
 }
 
-
-void fshader(float2 l_texcoord0 : TEXCOORD0,
-             out float4 o_color : COLOR,
-             uniform sampler2D k_tex : TEXUNIT0)
-{
-    float4 c = tex2D(k_tex, l_texcoord0);
-
-    float gray = (c.x + c.y + c.z)/3;
-    o_color = float4(gray, gray, gray, 1);
-}
-
-''', Shader.SL_Cg)
+''',
+geometry='')
 
 
 

@@ -35,8 +35,7 @@ class Camera(Entity):
         self.perspective_lens = PerspectiveLens()
         self.perspective_lens = base.camLens # use panda3d's default for automatic aspect ratio on window resize
         self.lens = self.perspective_lens
-        self.perspective_lens.set_aspect_ratio(window.aspect_ratio) # call in window instead
-        # self.perspective_lens.set_focal_length(50)
+        self.perspective_lens.set_aspect_ratio(16/9)
         self.perspective_lens_node = LensNode('perspective_lens_node', self.perspective_lens)
         self.lens_node = self.perspective_lens_node
 
@@ -71,9 +70,12 @@ class Camera(Entity):
         self.ui = Entity(eternal=True, name='ui', parent=self.ui_camera, scale=(self.ui_size*.5, self.ui_size*.5))
         self.overlay = Entity(parent=self.ui, model='quad', scale_x=self.aspect_ratio, color=color.clear, eternal=True, z=-99)
 
-        self.filter_manager = FilterManager(base.win, base.cam)
-        self.render_texture = PandaTexture()
+        # these get created when setting a shader
+        self.filter_manager = None
         self.filter_quad = None
+        self.render_texture = None
+        self.filter_quad = None
+        self.depth_texture = None
 
 
     @property
@@ -133,26 +135,42 @@ class Camera(Entity):
 
     @property
     def shader(self):
-        return self.filter_quad.get_shader()
+        return self._shader
 
     @shader.setter
     def shader(self, value):
         if value is None:
-            self.filter_quad.removeNode()
+            if self.filter_quad:
+                self.filter_quad.removeNode()
             return None
 
-        if isinstance(value, str):
-            value = Shader.load(value)
+        self._shader = value
+        shader = value
+        if hasattr(value, '_shader'):
+            shader = value._shader
 
-        print('set camera shader to:', value)
-        self.filter_quad = self.filter_manager.renderSceneInto(colortex=self.render_texture)
-        self.filter_quad.setShader(value)
-        self.filter_quad.setShaderInput("tex", self.render_texture)
+        if not self.filter_manager:
+            self.filter_manager = FilterManager(base.win, base.cam)
+            self.render_texture = PandaTexture()
+            self.depth_texture = PandaTexture()
+            self.filter_quad = self.filter_manager.renderSceneInto(colortex=self.render_texture, depthtex=self.depth_texture)
+            self.filter_quad.setShaderInput("tex", self.render_texture)
+            self.filter_quad.setShaderInput("dtex", self.depth_texture)
+
+        self.filter_quad.setShader(shader)
+
+        if hasattr(value,'default_input'):
+            for key, value in value.default_input.items():
+                self.set_shader_input(key, value)
+
+        print('set camera shader to:', shader)
 
 
     def set_shader_input(self, name, value):
-        self.filter_quad.setShaderInput(name, value)
-
+        if self.filter_quad:
+            self.filter_quad.setShaderInput(name, value)
+        else:
+            print('no filter quad')
 
 
 sys.modules[__name__] = Camera()
@@ -182,7 +200,7 @@ if __name__ == '__main__':
     from ursina.shaders import camera_grayscale_shader
     camera.shader = camera_grayscale_shader
 
-    def update():
-        t = Texture(camera.render_texture)
-        print(t.pixels)
+    # def update():
+    #     t = Texture(camera.render_texture)
+    #     print(t.pixels)
     app.run()
