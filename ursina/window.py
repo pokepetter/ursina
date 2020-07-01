@@ -55,13 +55,13 @@ class Window(WindowProperties):
         self.cursor = True
 
         self.color = color.dark_gray
-        self.display_modes = (
+        self.render_modes = (
             'default',
             'wireframe',
             'colliders',
             'normals',
             )
-        self.display_mode = 'default'
+        self.render_mode = 'default'
         self.editor_ui = None
 
 
@@ -95,9 +95,7 @@ class Window(WindowProperties):
         from ursina import camera, Text, Button, ButtonList, Func
         import time
 
-        if not application.development_mode:
-            return
-        self.editor_ui = Entity(parent=camera.ui, eternal=True)
+        self.editor_ui = Entity(parent=camera.ui, eternal=True, enabled=bool(application.development_mode))
         self.exit_button = Button(parent=self.editor_ui, eternal=True, origin=(.5, .5), position=self.top_right, z=-999, scale=(.05, .025), color=color.red.tint(-.2), text='x', on_click=application.quit)
 
         def _exit_button_input(key):
@@ -121,12 +119,14 @@ class Window(WindowProperties):
             # 'Build' : Func(print, ' '),
             'Asset Store' : Func(webbrowser.open, "https://itch.io/tools/tag-ursina"),
             # 'Open Scene Editor' : Func(print, ' '),
-            'Reload Textures [F6]' : application.hot_reloader.reload_textures,
-            'Reload Models [F7]' : application.hot_reloader.reload_models,
-            'Reload Code [F5]' : application.hot_reloader.reload_code,
+            'Change Render Mode <gray>[F10]<default>' : self.next_render_mode,
+            'Reset Render Mode <gray>[F9]<default>' : Func(setattr, self, 'render_mode', 'default'),
+            'Reload Models <gray>[F7]<default>' : application.hot_reloader.reload_models,
+            'Reload Textures <gray>[F6]<default>' : application.hot_reloader.reload_textures,
+            'Reload Code <gray>[F5]<default>' : application.hot_reloader.reload_code,
         },
-            width=.3,
-            x=.64,
+            width=.35,
+            x=.62,
             enabled=False,
             eternal=True
         )
@@ -139,13 +139,11 @@ class Window(WindowProperties):
         def _toggle_cog_menu():
             self.cog_menu.enabled = not self.cog_menu.enabled
         self.cog_button.on_click = _toggle_cog_menu
-
+        # print('-----------', time.time() - t) # 0.04
 
     def update_aspect_ratio(self):
         from ursina import camera
         camera.ui_lens.set_film_size(camera.ui_size * .5 * self.aspect_ratio, camera.ui_size * .5)
-        # camera.perspective_lens.set_aspect_ratio(self.aspect_ratio)
-        print('updated camera lens aspect ratio after changing window size')
 
 
     @property
@@ -161,13 +159,13 @@ class Window(WindowProperties):
 
 
     @property
-    def display_mode(self):
-        return self._display_mode
+    def render_mode(self):
+        return self._render_mode
 
-    @display_mode.setter
-    def display_mode(self, value):
-        self._display_mode = value
-        print('display mode:', value)
+    @render_mode.setter
+    def render_mode(self, value):
+        self._render_mode = value
+        print('render mode:', value)
         base.wireframeOff()
 
         # disable collision display mode
@@ -198,6 +196,12 @@ class Window(WindowProperties):
                 e.set_shader_input('transform_matrix', e.getNetTransform().getMat())
 
 
+    def next_render_mode(self):
+        i = self.render_modes.index(self.render_mode) + 1
+        if i >= len(self.render_modes):
+            i = 0
+
+        self.render_mode = self.render_modes[i]
 
 
     def __setattr__(self, name, value):
@@ -263,7 +267,7 @@ if __name__ == '__main__':
     window.fullscreen = False
     window.fps_counter.enabled = False
     window.exit_button.visible = False
-    # window.cog.enabled = False
+    window.cog_button.enabled = False
 
     Entity(model='cube', color=color.green, collider='box', texture='shore')
 

@@ -84,9 +84,8 @@ class Ursina(ShowBase):
         # try to load settings that need to be applied before entity creation
         application.load_settings()
 
-        if application.development_mode:
-            from ursina import HotReloader
-            application.hot_reloader = HotReloader(__main__.__file__)
+        from ursina import HotReloader
+        application.hot_reloader = HotReloader(__main__.__file__)
 
         window.make_editor_gui()
 
@@ -188,15 +187,15 @@ class Ursina(ShowBase):
             window.fullscreen = not window.fullscreen
 
         if key == 'f10':
-            i = window.display_modes.index(window.display_mode)
+            i = window.render_modes.index(window.render_mode)
             i += 1
-            if i >= len(window.display_modes):
+            if i >= len(window.render_modes):
                 i = 0
 
-            window.display_mode = window.display_modes[i]
+            window.render_mode = window.render_modes[i]
 
         if key == 'f9':
-            window.display_mode = 'default'
+            window.render_mode = 'default'
 
         # if key == 'escape':
         #     if not application.paused:
@@ -210,6 +209,7 @@ class Ursina(ShowBase):
             from ursina.prefabs import ursina_splash
 
         application.load_settings()
+        print('application sucessfully started ʕ •ᴥ•ʔゝ□')
 
         super().run()
 

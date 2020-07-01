@@ -47,6 +47,7 @@
 <a style="color:hsl(349.0, 89%, 28%);" href="#Sequence">Sequence</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Shader">Shader</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Texture">Texture</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#Trigger">Trigger</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Vec3">Vec3</a>
 
 <a style="color:hsl(320.0, 89%, 28%);" href="#Animation">Animation</a>
@@ -819,13 +820,13 @@ center<g> = Vec2(0, 0)</g>
 fullscreen<g> = False</g> 
 cursor<g> = True</g> 
 color<g> = color.dark_gray</g> 
-display_modes<g> = (
+render_modes<g> = (
         'default',
         'wireframe',
         'colliders',
         'normals',
         )</g> 
-display_mode<g> = 'default'</g> 
+render_mode<g> = 'default'</g> 
 editor_ui<g> = None</g> 
 left
 right
@@ -1316,7 +1317,27 @@ for y in range(e.texture.height):
             print('found blue pixel at:', x, y)
 </div>
 </pre></div>
-<div id="Vec3"><div id="Vec3" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Vec3<g>(PandaVec3)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.vec3</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Vec3(value)</params>
+<div id="Trigger"><div id="Trigger" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Trigger<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.trigger</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Trigger(**kwargs)</params>
+
+trigger_targets<g> = None</g> 
+radius<g> = .5</g> 
+triggerers<g> = list()</g> 
+update_rate<g> = 4</g> 
+
+update()   
+
+<div class="example">player = Entity(model='cube', color=color.azure, scale=.05)
+def update():
+    player.x += held_keys['d'] * time.dt * 2
+    player.x -= held_keys['a'] * time.dt * 2
+
+t = Trigger(trigger_targets=scene.entities, x=1, model='sphere', color=color.color(0,1,1,.5))
+t.on_trigger_enter = Func(print, 'enter')
+t.on_trigger_exit =  Func(print, 'exit')
+t.on_trigger_stay =  Func(print, 'stay')
+</div>
+</pre></div>
+<div id="Vec3"><div id="Vec3" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Vec3<g>(PandaVec3)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.vec3</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Vec3(**kwargs)</params>
 
 x
 y
@@ -1349,7 +1370,7 @@ finish()
 
 <div class="example">window.color = color.black
 
-animation = Animation('ursina_wink', fps=2, scale=5, filtering=None, autoplay=False)
+animation = Animation('ursina_wink', fps=2, scale=5, filtering=None, autoplay=True)
 
 
 EditorCamera()
@@ -1423,8 +1444,8 @@ button_height<g> = button_height</g>
 text_entity<g> = Text(parent=self, origin=(-.5,.5), text='empty', world_scale=20, z=-.1, y=-1.5*Text.size, x=.01)</g> 
 button_height<g> = self.text_entity.height</g> 
 button_dict<g> = button_dict</g> 
-highlight<g> = Entity(parent=self, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5), z=-.01)</g> 
-selection_marker<g> = Entity(parent=self, model='quad', color=color.azure, scale=(1,self.button_height), origin=(-.5,.5), z=-.02, enabled=False)</g> 
+highlight<g> = Entity(parent=self, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5), z=-.01, add_to_scene_entities=False)</g> 
+selection_marker<g> = Entity(parent=self, model='quad', color=color.azure, scale=(1,self.button_height), origin=(-.5,.5), z=-.02, enabled=False, add_to_scene_entities=False)</g> 
 
 input(<g>key</g>)   
 update()   
@@ -1440,7 +1461,6 @@ button_dict = {
     'two' :     default,
     'tree' :    Func(test, 3, 4),
     'four' :    Func(test, b=3, a=4),
-    'five':     Sequence(1, Func(print, 'lol'), loop=True),
 }
 
 bl = ButtonList(button_dict, fit_height=True)
@@ -2433,16 +2453,20 @@ origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
 ed = EditorCamera(rotation_speed=200, panning_speed=200)
 </div>
 </pre></div>
-<div id="Terrain"><div id="Terrain" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Terrain<g>(Plane)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.models.procedural.terrain</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Terrain(heightmap, skip=1, store_height_values=False, **kwargs)</params>
+<div id="Terrain"><div id="Terrain" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Terrain<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.models.procedural.terrain</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Terrain(heightmap, skip=1, store_height_values=False, **kwargs)</params>
 
 heightmap<g> = load_texture(heightmap)</g> 
 skip<g> = skip</g> 
 width, self.depth<g> = self.heightmap.width//skip, self.heightmap.height//skip</g> 
+height_values<g> = asarray(img)</g> 
+height_values<g> = flip(self.height_values, axis=0)</g> 
+vertices, self.triangles<g> = list(), list()</g> 
+uvs<g> = list()</g> 
+normals<g> = list()</g> 
+height_values<g> = [[j[0]/255 for j in i] for i in self.height_values]</g> 
 
 
-<div class="example">t = time.time()
-e = Entity(model='terrain_1', scale=(20,5,40), texture='heightmap_1')
-print('-----', time.time() - t)
+<div class="example">e = Entity(model=Terrain('heightmap_1', skip=4, store_height_values=True), scale=(20,5,20), texture='heightmap_1')
 EditorCamera()
 Sky()
 </div>
