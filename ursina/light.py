@@ -1,6 +1,8 @@
 from panda3d.core import NodePath
 from panda3d.core import DirectionalLight, AmbientLight
+from ursina.vec3 import Vec3
 from ursina import scene
+from ursina import color
 
 
 class Light():
@@ -8,7 +10,7 @@ class Light():
     def __init__(self, **kwargs):
 
         self.type = 'ambient'              # ambient or directional for now
-        self.color = Vec4(0.3,0.3,0.3,1)        # a modest amount of full-spectrum light
+        self.color = color.rgb(0.3,0.3,0.3,1)        # a modest amount of full-spectrum light
         self.direction = Vec3(-1,-1,-1)         # shining down from top-right corner, behind camera
         self.node = None
 
@@ -48,7 +50,6 @@ class Light():
 
 if __name__ == '__main__':
     from ursina import *
-    from panda3d.core import DirectionalLight, AmbientLight
 
     app = Ursina()  # create the game
 
