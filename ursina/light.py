@@ -1,6 +1,5 @@
 from panda3d.core import NodePath
 from panda3d.core import DirectionalLight, AmbientLight
-from panda3d.core import Vec3,Vec4
 from ursina import scene
 
 
@@ -87,5 +86,3 @@ if __name__ == '__main__':
 
 
     app.run()   # opens a window and starts the game.
-
-
