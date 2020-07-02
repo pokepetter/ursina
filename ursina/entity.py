@@ -179,6 +179,8 @@ class Entity(NodePath):
                         m.recipe = value
                     # print('loaded model successively')
                 else:
+                    if '.' in value:
+                        print(f'''trying to load model with specific filename extention. please omit it. '{value}' -> '{value.split('.')[0]}' ''')
                     print('missing model:', value)
                     return
 
@@ -541,21 +543,21 @@ class Entity(NodePath):
 
     @property
     def scale_x(self):
-        return self.getScale()[0]
+        return self.scale[0]
     @scale_x.setter
     def scale_x(self, value):
         self.setScale(value, self.scale_y, self.scale_z)
 
     @property
     def scale_y(self):
-        return self.getScale()[1]
+        return self.scale[1]
     @scale_y.setter
     def scale_y(self, value):
         self.setScale(self.scale_x, value, self.scale_z)
 
     @property
     def scale_z(self):
-        return self.getScale()[2]
+        return self.scale[2]
     @scale_z.setter
     def scale_z(self, value):
         self.setScale(self.scale_x, self.scale_y, value)
@@ -1000,73 +1002,44 @@ if __name__ == '__main__':
     from ursina import *
     app = main.Ursina()
 
-    # e = Entity(model='quad', color=color.orange, position=(0,0,1), scale=1.5, rotation=(0,0,45))
+    e = Entity(model='quad', color=color.orange, position=(0,0,1), scale=1.5, rotation=(0,0,45))
 
-    # '''example of inheriting Entity'''
-    # class Player(Entity):
-    #     def __init__(self, **kwargs):
-    #         super().__init__()
-    #         self.model='cube'
-    #         self.color = color.red
-    #         self.scale_y = 2
-    #
-    #         for key, value in kwargs.items():
-    #             setattr(self, key, value)
-    #
-    #     # input and update functions gets automatically called by the engine
-    #     def input(self, key):
-    #         if key == 'space':
-    #             # self.color = self.color.inverse()
-    #             self.animate_x(2, duration=1)
-    #
-    #     def update(self):
-    #         self.x += held_keys['d'] * time.dt * 10
-    #         self.x -= held_keys['a'] * time.dt * 10
-    #
-    # player = Player(x=-1)
-    application.trace_entity_definition = False
-    t = time.time()
-    for i in range(100):
-        # e = Entity()
-        e = Entity(add_to_scene_entities=False)
-    print('----------', time.time() - t)
+    '''example of inheriting Entity'''
+    class Player(Entity):
+        def __init__(self, **kwargs):
+            super().__init__()
+            self.model='cube'
+            self.color = color.red
+            self.scale_y = 2
+
+            for key, value in kwargs.items():
+                setattr(self, key, value)
+
+        # input and update functions gets automatically called by the engine
+        def input(self, key):
+            if key == 'space':
+                # self.color = self.color.inverse()
+                self.animate_x(2, duration=1)
+
+        def update(self):
+            self.x += held_keys['d'] * time.dt * 10
+            self.x -= held_keys['a'] * time.dt * 10
+
+    player = Player(x=-1)
+    # application.trace_entity_definition = False
+    # t = time.time()
+    # for i in range(100):
+    #     # e = Entity()
+    #     e = Entity(add_to_scene_entities=False)
+    # print('----------', time.time() - t)
 
     # .14
     # .014
     # .03, .013
 
-    EditorCamera()
-    e = Entity(model='quad', color=color.lime)
+    # EditorCamera()
+    # e = Entity(model='quad', color=color.lime, scale_y=2)
     # e.flip_faces()
-    target = Entity(model='cube', x=4, y=3)
-
-    print(e.look_at)
-
-    def update():
-        e.look_at_2d(target)
-
-    def input(key):
-        # if key == 'w':
-        #     e.look_at(target, axis='forward')
-        # if key == 's':
-        #     e.look_at(target, axis='back')
-        # if key == 'd':
-        #     e.look_at(target, axis='right')
-        # if key == 'a':
-        #     e.look_at(target, axis='left')
-        # if key == 'e':
-        #     e.look_at(target, axis='up')
-        # if key == 'q':
-        #     e.look_at(target, axis='down')
-
-        if key == 'up arrow':
-            target.y += 1
-        if key == 'down arrow':
-            target.y -= 1
-        if key == 'right arrow':
-            target.x += 1
-        if key == 'left arrow':
-            target.x -= 1
 
 
     app.run()

@@ -3,6 +3,7 @@ from ursina import *
 class EditorCamera(Entity):
 
     def __init__(self, **kwargs):
+        camera.editor_position = (0,0,-10)
         super().__init__(name='editor_camera', eternal=True)
 
         self.rotation_speed = 100
@@ -15,7 +16,6 @@ class EditorCamera(Entity):
             setattr(self, key, value)
 
         self.start_position = self.position
-        camera.editor_position = (0,0,-10)
         self.perspective_fov = camera.fov
         self.orthographic_fov = camera.fov
         self.on_destroy = self.on_disable

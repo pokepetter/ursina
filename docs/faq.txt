@@ -51,4 +51,6 @@ to structure your project in a good way, rather than micro-optimize.
 
 <b>How can I add lights?</b>
 
-You can't. Bake it.
+If all you want are some simple lights to make 3D shapes look more interesting,
+look at the program 'lights.py' in the samples folder.  For anything more complicated,
+you are on your own.
