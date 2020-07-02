@@ -25,6 +25,7 @@ from ursina.mesh_importer import load_model
 from ursina.texture_importer import load_texture
 from ursina.string_utilities import camel_to_snake
 from textwrap import dedent
+from ursina.light import *
 
 from ursina import color
 try:
@@ -99,6 +100,12 @@ class Entity(NodePath):
 
         for key, value in kwargs.items():
             setattr(self, key, value)
+
+        # if any lights defined, then apply them to this entity (otherwise use default lighting)
+        for light in scene.lights:
+            self.setLight(light.node)
+
+
 
 
     def _list_to_vec(self, value):
