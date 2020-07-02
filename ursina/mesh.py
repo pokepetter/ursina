@@ -90,7 +90,7 @@ class Mesh(NodePath):
 
         vertexwriter = GeomVertexWriter(vdata, 'vertex')
         for v in self.vertices:
-            vertexwriter.addData3f((v[0], v[2], v[1])) # swap y and z
+            vertexwriter.addData3f(*v)
 
         if self.colors:
             colorwriter = GeomVertexWriter(vdata, 'color')
@@ -105,7 +105,7 @@ class Mesh(NodePath):
         if self.normals != None:
             normalwriter = GeomVertexWriter(vdata, 'normal')
             for norm in self.normals:
-                normalwriter.addData3f((norm[0], norm[2], norm[1]))
+                normalwriter.addData3f(*norm)
 
 
         if self.mode != 'line' or not self._triangles:
@@ -227,7 +227,7 @@ class Mesh(NodePath):
     def save(self, name='', path=application.compressed_models_folder):
         if not application.compressed_models_folder.exists():
             application.compressed_models_folder.mkdir()
-            
+
         if not name and hasattr(self, 'path'):
             name = self.path.stem
             if not '.' in name:

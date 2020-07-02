@@ -64,17 +64,28 @@ class Vec3(PandaVec3):
     def z(self, value):
         self[2] = value
 
+    def __mul__(self, value):
+        if isinstance(value, (int, float, complex)):
+            return Vec3(*(e*value for e in self))
 
+        return Vec3(self[0]*value[0], self[1]*value[1], self[2]*value[2])
+
+    def __truediv__(self, value):
+        if isinstance(value, (int, float, complex)):
+            return Vec3(*(e/value for e in self))
+
+        return Vec3(self[0]/value[0], self[1]/value[1], self[2]/value[2])
 
 if __name__ == '__main__':
-    a = Vec3(0,0,0)
+    a = Vec3(1,0,0) * 2
+    a = Vec3(1,0,1) * Vec3(2,1,2)
     b = Vec3(1.252352324,0,1)
     b += Vec3(0,1)
-    for i in range(10):
-        print(a + Vec3(i,0,0))
+    # for i in range(10):
+    #     print(a + Vec3(i,0,0))
 
-    print(type(b))
-    print(b)
+    # print(type(b))
+    print(a)
     # b.x += 2
     # print(b.x)
     # print(round(b))

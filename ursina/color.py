@@ -81,6 +81,10 @@ def rgb(r, g, b, a=255):
 def to_hsv(color):
     return Color(colorsys.rgb_to_hsv(color[0], color[1], color[2]) + (color[3],))
 
+def hex(value):
+    if value.startswith('#'):
+        value = value[1:]
+    return rgb(*tuple(int(value[i:i+2], 16) for i in (0, 2, 4)))
 
 def brightness(color):
     if color[0] > 1 or color[1] > 1 or color[2] > 1:
@@ -176,4 +180,7 @@ if __name__ == '__main__':
 
     e = Entity(model='cube', color=color.lime)
     print(e.color.name)
+
+    # e.color = hex('ced9a9')
+
     app.run()

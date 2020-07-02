@@ -41,7 +41,7 @@ class Slider(Entity):
             )
 
         def bg_click():
-            self.knob.x = mouse.point[0] * self.scale_x
+            self.knob.x = mouse.point[0]
             self.knob.start_dragging()
         self.bg.on_click = bg_click
 

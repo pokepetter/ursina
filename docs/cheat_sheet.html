@@ -47,6 +47,7 @@
 <a style="color:hsl(349.0, 89%, 28%);" href="#Sequence">Sequence</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Shader">Shader</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Texture">Texture</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#Trigger">Trigger</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Vec3">Vec3</a>
 
 <a style="color:hsl(320.0, 89%, 28%);" href="#Animation">Animation</a>
@@ -225,6 +226,8 @@ bounds
 children
 attributes
 
+enable()   
+disable()   
 generate_sphere_map(<g>size=512, name=f'sphere_map_{len(scene.entities)}'</g>)   
 generate_cube_map(<g>size=512, name=f'cube_map_{len(scene.entities)}'</g>)   
 reparent_to(<g>entity</g>)   
@@ -234,6 +237,7 @@ add_script(<g>class_instance</g>)
 combine(<g>analyze=False, auto_destroy=True</g>)   
 flip_faces()   
 look_at(<g>target, axis='forward'</g>)   
+look_at_2d(<g>target, axis='z'</g>)   
 has_ancestor(<g>possible_ancestor</g>)   
 animate(<g>name, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None</g>)   
 animate_position(<g>value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None</g>)   
@@ -250,11 +254,26 @@ blink(<g>value=color.clear, duration=.1, delay=0, curve=curve.in_expo, resolutio
 
 e = Entity(model='quad', color=color.orange, position=(0,0,1), scale=1.5, rotation=(0,0,45))
 
+'''example of inheriting Entity'''
+class Player(Entity):
+    def __init__(self, **kwargs):
+        super().__init__()
+        self.model='cube'
+        self.color = color.red
+        self.scale_y = 2
 
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
-def input(key):
-    if key == 'space':
-        e.shake()
+    def input(self, key):
+        if key == 'space':
+            self.animate_x(2, duration=1)
+
+    def update(self):
+        self.x += held_keys['d'] * time.dt * 10
+        self.x -= held_keys['a'] * time.dt * 10
+
+player = Player(x=-1)
 </div>
 </pre></div>
 <div id="Text"><div id="Text" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Text<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.text</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Text(text='', start_tag=start_tag, end_tag=end_tag, ignore=True, **kwargs)</params>
@@ -301,6 +320,9 @@ get_width(<g>string, font=None</g>)
   Text.default_resolution = 1080 * Text.size
   test = Text(origin=(.5,.5), text=descr)
 
+
+  text = Text(text=descr, wordwrap=10, y=.25, background=True)
+
   def input(key):
       if key == 'a':
           test.appear(speed=.025)
@@ -323,6 +345,7 @@ pressed_color<g> = self.color.tint(-.2)</g>
 highlight_scale<g> = 1    # multiplier</g> 
 pressed_scale<g> = 1     # multiplier</g> 
 original_scale<g> = self.scale</g> 
+icon<g> = None</g> 
 text
 text_origin
 
@@ -330,9 +353,9 @@ input(<g>key</g>)
 on_mouse_enter()   
 on_mouse_exit()   
 on_click()   
-fit_to_text()   
+fit_to_text(<g>radius=.1</g>)   
 
-<div class="example">b = Button(text='hello world!', color=color.azure, origin=(-.5,.5))
+<div class="example">b = Button(text='hello world!', color=color.azure, origin=(-.5,0), icon='sword', scale=.25)
 b.on_click = application.quit # assign a function to the button.
 b.tooltip = Tooltip('exit')
 </div>
@@ -424,13 +447,11 @@ EditorCamera()
 <div id="application"><div id="application" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">application</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.application</g><br><br>paused<g> = False</g> 
 time_scale<g> = 1</g> 
 sequences<g> = list()</g> 
-trace_entity_definition<g> = True # enable to set entity.line_definition</g> 
+trace_entity_definition<g> = False # enable to set entity.line_definition</g> 
 package_folder<g> = Path(__file__).parent</g> 
 development_mode<g> = True</g> 
-prefabs_folder<g> = asset_folder / 'prefabs/'</g> 
 scenes_folder<g> = asset_folder / 'scenes/'</g> 
 scripts_folder<g> = asset_folder / 'scripts/'</g> 
-textures_folder<g> = asset_folder / 'textures/'</g> 
 fonts_folder<g> = asset_folder / 'fonts/'</g> 
 compressed_textures_folder<g> = asset_folder / 'textures_compressed/'</g> 
 compressed_models_folder<g> = asset_folder / 'models_compressed/'</g> 
@@ -481,10 +502,6 @@ e.color = color.random_color()
 e.position = (0, 0, 40)
 from ursina.shaders import camera_grayscale_shader
 camera.shader = camera_grayscale_shader
-
-def update():
-    t = Texture(camera.render_texture)
-    print(t.pixels)
 </div>
 </pre></div>
 <div id="color"><div id="color" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">color</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.color</g><br><br>color<g> = hsv</g> 
@@ -530,6 +547,7 @@ hsv(<g>h, s, v, a=1</g>)
 rgba(<g>r, g, b, a=255</g>)   
 rgb(<g>r, g, b, a=255</g>)   
 to_hsv(<g>color</g>)   
+hex(<g>value</g>)   
 brightness(<g>color</g>)   
 inverse(<g>color</g>)   
 random_color()   
@@ -629,9 +647,8 @@ e2.animate_y(1, curve=curve.CubicBezier(0,.7,1,.3))
 <div id="duplicate"><div id="duplicate" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">duplicate</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.duplicate</g><br><br>
 duplicate(<g>entity</g>)   
 
-<div class="example">sprite = Sprite('brick', x=-2, scale=1.5)
-
-quad = Button(parent=scene, model='quad', texture='brick', x=-1, collider='box')
+<div class="example">quad = Button(parent=scene, model='quad', texture='brick', x=-1, collider='box')
+sprite = Sprite('brick', x=-2, scale=1.5)
 circle = Entity(model=Circle(6))
 rounded_quad = Entity(model=Quad(subdivisions=3, mode='line'), x=1)
 sphere = Entity(model=Sphere(mode='line'), x=2)
@@ -641,10 +658,7 @@ prismatoid = Entity(model=Prismatoid(), x=4)
 cylinder = Entity(model=Cylinder(), x=5)
 mesh = Entity(model=Mesh(vertices=((0,0,0), (0,1,0), (-1,1,0))), x=6)
 
-names = ('quad', 'circle', 'rounded_quad', 'sphere', 'cone', 'prismatoid', 'cylinder', 'mesh')
-for i, e in enumerate((quad, sprite, circle, cone, prismatoid, cylinder, mesh)):
-    print()
-    print()
+for i, e in enumerate((quad, sprite, circle, rounded_quad, sphere, cone, prismatoid, cylinder, mesh)):
     e2 = duplicate(e)
     e2.y += 1.5
 
@@ -740,6 +754,9 @@ get_width(<g>string, font=None</g>)
   Text.default_resolution = 1080 * Text.size
   test = Text(origin=(.5,.5), text=descr)
 
+
+  text = Text(text=descr, wordwrap=10, y=.25, background=True)
+
   def input(key):
       if key == 'a':
           test.appear(speed=.025)
@@ -819,13 +836,13 @@ center<g> = Vec2(0, 0)</g>
 fullscreen<g> = False</g> 
 cursor<g> = True</g> 
 color<g> = color.dark_gray</g> 
-display_modes<g> = (
+render_modes<g> = (
         'default',
         'wireframe',
         'colliders',
         'normals',
         )</g> 
-display_mode<g> = 'default'</g> 
+render_mode<g> = 'default'</g> 
 editor_ui<g> = None</g> 
 left
 right
@@ -838,12 +855,14 @@ late_init()
 center_on_screen()   
 make_editor_gui()   <g># called by main after setting up camera and application.development_mode</g>
 update_aspect_ratio()   
+next_render_mode()   
 
 <div class="example">window.title = 'Title'
 window.borderless = False
 window.fullscreen = False
-window.exit_button.visible = False
 window.fps_counter.enabled = False
+window.exit_button.visible = False
+window.cog_button.enabled = False
 
 Entity(model='cube', color=color.green, collider='box', texture='shore')
 </div>
@@ -904,7 +923,7 @@ EditorCamera()
 </pre></div>
 <div id="BoxCollider"><div id="BoxCollider" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">BoxCollider<g>(<a style="color: gray;" href="#Collider">Collider</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.collider</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">BoxCollider(entity, center=(0,0,0), size=(1,1,1))</params>
 
-shape<g> = CollisionBox(Vec3(center[0], center[2], center[1]), size[0], size[2], size[1])</g> 
+shape<g> = CollisionBox(Vec3(center[0], center[1], center[2]), size[0], size[1], size[2])</g> 
 collision_node<g> = CollisionNode('CollisionNode')</g> 
 node_path<g> = entity.attachNewNode(self.collision_node)</g> 
 visible<g> = False</g> 
@@ -927,7 +946,7 @@ EditorCamera()
 </pre></div>
 <div id="SphereCollider"><div id="SphereCollider" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">SphereCollider<g>(<a style="color: gray;" href="#Collider">Collider</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.collider</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">SphereCollider(entity, center=(0,0,0), radius=.5)</params>
 
-shape<g> = CollisionSphere(center[0], center[2], center[1], radius)</g> 
+shape<g> = CollisionSphere(center[0], center[1], center[2], radius)</g> 
 node_path<g> = entity.attachNewNode(CollisionNode('CollisionNode'))</g> 
 visible<g> = False</g> 
 
@@ -987,6 +1006,7 @@ hsv(<g>h, s, v, a=1</g>)
 rgba(<g>r, g, b, a=255</g>)   
 rgb(<g>r, g, b, a=255</g>)   
 to_hsv(<g>color</g>)   
+hex(<g>value</g>)   
 brightness(<g>color</g>)   
 inverse(<g>color</g>)   
 random_color()   
@@ -1316,21 +1336,39 @@ for y in range(e.texture.height):
             print('found blue pixel at:', x, y)
 </div>
 </pre></div>
-<div id="Vec3"><div id="Vec3" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Vec3<g>(PandaVec3)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.vec3</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Vec3(value)</params>
+<div id="Trigger"><div id="Trigger" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Trigger<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.trigger</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Trigger(**kwargs)</params>
+
+trigger_targets<g> = None</g> 
+radius<g> = .5</g> 
+triggerers<g> = list()</g> 
+update_rate<g> = 4</g> 
+
+update()   
+
+<div class="example">player = Entity(model='cube', color=color.azure, scale=.05)
+def update():
+    player.x += held_keys['d'] * time.dt * 2
+    player.x -= held_keys['a'] * time.dt * 2
+
+t = Trigger(trigger_targets=scene.entities, x=1, model='sphere', color=color.color(0,1,1,.5))
+t.on_trigger_enter = Func(print, 'enter')
+t.on_trigger_exit =  Func(print, 'exit')
+t.on_trigger_stay =  Func(print, 'stay')
+</div>
+</pre></div>
+<div id="Vec3"><div id="Vec3" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Vec3<g>(PandaVec3)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.vec3</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Vec3(**kwargs)</params>
 
 x
 y
 z
 
 
-<div class="example">a = Vec3(0,0,0)
+<div class="example">a = Vec3(1,0,0) * 2
+a = Vec3(1,0,1) * Vec3(2,1,2)
 b = Vec3(1.252352324,0,1)
 b += Vec3(0,1)
-for i in range(10):
-    print(a + Vec3(i,0,0))
 
-print(type(b))
-print(b)
+print(a)
 </div>
 </pre></div>
 <div id="Animation"><div id="Animation" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Animation<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.animation</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Animation(name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs)</params>
@@ -1349,7 +1387,7 @@ finish()
 
 <div class="example">window.color = color.black
 
-animation = Animation('ursina_wink', fps=2, scale=5, filtering=None, autoplay=False)
+animation = Animation('ursina_wink', fps=2, scale=1, filtering=None, autoplay=True)
 
 
 EditorCamera()
@@ -1418,13 +1456,13 @@ window.color = color._32
 </pre></div>
 <div id="ButtonList"><div id="ButtonList" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ButtonList<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.button_list</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ButtonList(button_dict, button_height=1.5, fit_height=True, width=.5, **kwargs)</params>
 
-fit_height<g> = True</g> 
+fit_height<g> = fit_height</g> 
 button_height<g> = button_height</g> 
 text_entity<g> = Text(parent=self, origin=(-.5,.5), text='empty', world_scale=20, z=-.1, y=-1.5*Text.size, x=.01)</g> 
 button_height<g> = self.text_entity.height</g> 
 button_dict<g> = button_dict</g> 
-highlight<g> = Entity(parent=self, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5), z=-.01)</g> 
-selection_marker<g> = Entity(parent=self, model='quad', color=color.azure, scale=(1,self.button_height), origin=(-.5,.5), z=-.02, enabled=False)</g> 
+highlight<g> = Entity(parent=self, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5), z=-.01, add_to_scene_entities=False)</g> 
+selection_marker<g> = Entity(parent=self, model='quad', color=color.azure, scale=(1,self.button_height), origin=(-.5,.5), z=-.02, enabled=False, add_to_scene_entities=False)</g> 
 
 input(<g>key</g>)   
 update()   
@@ -1440,7 +1478,6 @@ button_dict = {
     'two' :     default,
     'tree' :    Func(test, 3, 4),
     'four' :    Func(test, b=3, a=4),
-    'five':     Sequence(1, Func(print, 'lol'), loop=True),
 }
 
 bl = ButtonList(button_dict, fit_height=True)
@@ -1686,8 +1723,6 @@ save()
 <div id="FirstPersonController"><div id="FirstPersonController" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FirstPersonController<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.first_person_controller</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">FirstPersonController(**kwargs)</params>
 
 speed<g> = 5</g> 
-i<g> = 0</g> 
-update_interval<g> = 30</g> 
 cursor<g> = Entity(
         parent</g> 
 position<g> = (0, 1, 1)</g> 
@@ -1720,15 +1755,18 @@ e = Entity(
 )
 e.texture_scale = (e.scale_z, e.scale_y)
 player = FirstPersonController(y=1)
+player.gun = None
 
-def update():
-    player.y -= 1* time.dt
+gun = Button(parent=scene, model='cube', color=color.blue, origin_y=-.5, position=(3,0,3), collider='box')
+gun.on_click = Sequence(Func(setattr, gun, 'parent', camera), Func(setattr, player, 'gun', gun))
 
-    ray = raycast(player.position+player.up, player.down)
-    if ray.hit:
-        player.y = max(player.y, raycast(player.position+player.up, player.down).world_point[1])
-
-Entity(model='cube', color=color.dark_gray, scale=(9,4,9), y=-.5, collider='box')
+def input(key):
+    if key == 'left mouse down' and player.gun:
+        gun.blink(color.orange)
+        bullet = Entity(parent=gun, model='cube', scale=.1, color=color.black)
+        bullet.world_parent = scene
+        bullet.animate_position(bullet.position+(bullet.forward*50), curve=curve.linear, duration=1)
+        destroy(bullet, delay=1)
 </div>
 </pre></div>
 <div id="HealthBar"><div id="HealthBar" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">HealthBar<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.health_bar</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">HealthBar(max_value=100, show_text=True, show_lines=False, **kwargs)</params>
@@ -1793,7 +1831,7 @@ text
 
 input(<g>key</g>)   
 
-<div class="example">input_field = InputField(default_value='ælol')
+<div class="example">input_field = InputField(default_value='ælol', max_lines=100)
 print(input_field.default_value)
 
 def submit():
@@ -1844,7 +1882,6 @@ jump_duration<g> = .5</g>
 jumping<g> = False</g> 
 max_jumps<g> = 1</g> 
 jumps_left<g> = self.max_jumps</g> 
-gravity<g> = 1</g> 
 grounded<g> = True</g> 
 air_time<g> = 0</g> 
 y<g> = 2</g> 
@@ -1950,6 +1987,7 @@ knob<g> = Draggable(
 value<g> = self.default</g> 
 dynamic<g> = dynamic</g> 
 
+bg_click()   
 drop()   
 update()   
 slide()   
@@ -2078,7 +2116,6 @@ Text.size = 1/window.fullscreen_size[1]*16
 Text.default_font = 'consola.ttf'
 Text.default_resolution = 16*2
 te = TextField(max_lines=300)
-te.line_numbers.enabled = True
 te.render()
 </div>
 </pre></div>
@@ -2407,7 +2444,7 @@ origin = Entity(model='cube', color=color.magenta)
 origin.scale *= .25
 </div>
 </pre></div>
-<div id="Quad"><div id="Quad" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Quad<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.models.procedural.quad</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Quad(radius=.1, segments=3, aspect=1, scale=(1,1), mode='ngon', **kwargs)</params>
+<div id="Quad"><div id="Quad" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Quad<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.models.procedural.quad</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Quad(radius=.1, segments=8, aspect=1, scale=(1,1), mode='ngon', **kwargs)</params>
 
 vertices<g> = [Vec3(0,0,0), Vec3(1,0,0), Vec3(1,1,0), Vec3(0,1,0)]</g> 
 radius<g> = radius</g> 
@@ -2433,16 +2470,20 @@ origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
 ed = EditorCamera(rotation_speed=200, panning_speed=200)
 </div>
 </pre></div>
-<div id="Terrain"><div id="Terrain" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Terrain<g>(Plane)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.models.procedural.terrain</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Terrain(heightmap, skip=1, store_height_values=False, **kwargs)</params>
+<div id="Terrain"><div id="Terrain" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Terrain<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.models.procedural.terrain</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Terrain(heightmap, skip=1, **kwargs)</params>
 
 heightmap<g> = load_texture(heightmap)</g> 
 skip<g> = skip</g> 
 width, self.depth<g> = self.heightmap.width//skip, self.heightmap.height//skip</g> 
+height_values<g> = asarray(img)</g> 
+height_values<g> = flip(self.height_values, axis=0)</g> 
+vertices, self.triangles<g> = list(), list()</g> 
+uvs<g> = list()</g> 
+normals<g> = list()</g> 
+height_values<g> = [[j[0]/255 for j in i] for i in self.height_values]</g> 
 
 
-<div class="example">t = time.time()
-e = Entity(model='terrain_1', scale=(20,5,40), texture='heightmap_1')
-print('-----', time.time() - t)
+<div class="example">e = Entity(model=Terrain('heightmap_1', skip=4), scale=(20,5,20), texture='heightmap_1')
 EditorCamera()
 Sky()
 </div>

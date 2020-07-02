@@ -6,6 +6,7 @@ from copy import copy
 from pathlib import Path
 from ursina.mesh import Mesh
 from ursina import application
+from panda3d.core import CullFaceAttrib
 
 imported_meshes = dict()
 
@@ -17,7 +18,7 @@ def load_model(name, path=application.asset_folder):
     for filetype in ('.bam', '.ursinamesh', '.obj', '.blend'):
         # warning: glob is case-insensitive on windows, so m.path will be all lowercase
         for filename in path.glob(f'**/{name}{filetype}'):
-            if filetype == '.bam':
+            if filetype in '.bam':
                 print('loading bam')
                 return loader.loadModel(filename)
 
@@ -32,20 +33,25 @@ def load_model(name, path=application.asset_folder):
                 except:
                     print('invalid ursinamesh file:', filename)
 
+
             if filetype == '.obj':
                 print('found obj', filename)
-                m = obj_to_ursinamesh(path=path, name=name, save_to_file=False)
-                m = eval(m)
-                m.path = filename
-                m.name = name
+                m = loader.loadModel(filename)
+                m.setAttrib(CullFaceAttrib.make(CullFaceAttrib.MCullCounterClockwise))
+                # m = obj_to_ursinamesh(path=path, name=name, save_to_file=False)
+                # m = eval(m)
+                # m.path = filename
+                # m.name = name
                 imported_meshes[name] = m
                 return m
 
-            if filetype == '.blend':
+            elif filetype == '.blend':
                 print('found blend file:', filename)
                 if compress_models(path=path, name=name):
                     # obj_to_ursinamesh(name=name)
                     return load_model(name, path)
+
+            # else:
 
     return None
 

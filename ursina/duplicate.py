@@ -12,6 +12,10 @@ def duplicate(entity):
     for name in entity.attributes:
         if name == 'model':
             continue
+        elif name == 'collider' and entity.collider and entity.collider.name:
+            # TODO: currently only copies colliders set with strings, not custom colliders.
+            e.collider = entity.collider.name
+
         elif name == 'scripts':
             for script in entity.scripts:
                 e.add_script(copy(script))
@@ -39,9 +43,9 @@ def duplicate(entity):
 
 if __name__ == '__main__':
     app = Ursina()
-    sprite = Sprite('brick', x=-2, scale=1.5)
 
-    quad = Entity(model='quad', texture='brick', x=-1)
+    quad = Button(parent=scene, model='quad', texture='brick', x=-1, collider='box')
+    sprite = Sprite('brick', x=-2, scale=1.5)
     circle = Entity(model=Circle(6))
     rounded_quad = Entity(model=Quad(subdivisions=3, mode='line'), x=1)
     sphere = Entity(model=Sphere(mode='line'), x=2)
@@ -51,16 +55,9 @@ if __name__ == '__main__':
     cylinder = Entity(model=Cylinder(), x=5)
     mesh = Entity(model=Mesh(vertices=((0,0,0), (0,1,0), (-1,1,0))), x=6)
 
-    names = ('quad', 'circle', 'rounded_quad', 'sphere', 'cone', 'prismatoid', 'cylinder', 'mesh')
-    for i, e in enumerate((quad, sprite, circle, cone, prismatoid, cylinder, mesh)):
-        # print(names[i], ':', e.model.recipe)
-        print()
-        print()
+    for i, e in enumerate((quad, sprite, circle, rounded_quad, sphere, cone, prismatoid, cylinder, mesh)):
         e2 = duplicate(e)
         e2.y += 1.5
-        # e2.model.mode='line'
-        # e2.model.generate()
-
 
     EditorCamera()
     app.run()

@@ -39,9 +39,11 @@ class Raycaster(Entity):
         if distance == math.inf:
             ray = CollisionRay()
             ray.setOrigin(Vec3(0,0,0))
-            ray.setDirection(Vec3(0,1,0))
+            # ray.setDirection(Vec3(0,1,0))
+            ray.setDirection(Vec3(0,0,1))
         else:
-            ray = CollisionSegment(Vec3(0,0,0), Vec3(0,distance,0))
+            # ray = CollisionSegment(Vec3(0,0,0), Vec3(0,distance,0))
+            ray = CollisionSegment(Vec3(0,0,0), Vec3(0,0,distance))
 
         self._pickerNode.addSolid(ray)
 
@@ -72,9 +74,11 @@ class Raycaster(Entity):
         self.collision = self.entries[0]
         nP = self.collision.get_into_node_path().parent
         point = self.collision.get_surface_point(nP)
-        point = Vec3(point[0], point[2], point[1])
+        # point = Vec3(point[0], point[2], point[1])
+        point = Vec3(point[0], point[1], point[2])
         world_point = self.collision.get_surface_point(render)
-        world_point = Vec3(world_point[0], world_point[2], world_point[1])
+        # world_point = Vec3(world_point[0], world_point[2], world_point[1])
+        world_point = Vec3(world_point[0], world_point[1], world_point[2])
         hit_dist = self.distance(self.world_position, world_point)
 
         if nP.name.endswith('.egg'):
@@ -91,10 +95,12 @@ class Raycaster(Entity):
         self.hit.distance = hit_dist
 
         normal = self.collision.get_surface_normal(self.collision.get_into_node_path().parent)
-        self.hit.normal = (normal[0], normal[2], normal[1])
+        # self.hit.normal = (normal[0], normal[2], normal[1])
+        self.hit.normal = (normal[0], normal[1], normal[2])
 
         normal = self.collision.get_surface_normal(render)
-        self.hit.world_normal = (normal[0], normal[2], normal[1])
+        # self.hit.world_normal = (normal[0], normal[2], normal[1])
+        self.hit.world_normal = (normal[0], normal[1], normal[2])
         return self.hit
 
         self.hit = Hit(hit=False)

@@ -264,10 +264,6 @@ class Mouse():
                             normal = entry.getSurfaceNormal(entity),
                             world_normal = entry.getSurfaceNormal(scene),
                             )
-                        hit.point = Vec3(hit.point[0], hit.point[2], hit.point[1])
-                        hit.world_point = Vec3(hit.world_point[0], hit.world_point[2], hit.world_point[1])
-                        hit.normal = Vec3(hit.normal[0], hit.normal[2], hit.normal[1])
-                        hit.world_normal = Vec3(hit.world_normal[0], hit.world_normal[2], hit.world_normal[1])
                         self.collisions.append(hit)
                         break
 
