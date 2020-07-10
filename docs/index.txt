@@ -74,15 +74,14 @@ Getting Started
 # size 1, normal
 
     1) Install Python 3.6 or newer. https://www.python.org/downloads/
-    2) Make sure you have git installed. https://git-scm.com/
-    3) Open cmd/terminal and type:
+    2) Open cmd/terminal and type:
 
         # code
-        pip install git+https://github.com/pokepetter/ursina.git
+        pip install ursina
         # text
 
     If you want to easily edit the source, it's recommended to clone the git
-    repo and install as develop like this:
+    repo and install as develop like this. Make sure you have git installed. https://git-scm.com/
 
         # code
         git clone https://github.com/pokepetter/ursina.git
@@ -93,8 +92,10 @@ Getting Started
     or install them all with:
 
         # code
-        pip install git+https://github.com/pokepetter/ursina.git#egg=ursina[extras]
+        pip install ursina[extras]
         # text
+
+    On some systems you might have to use pip3 instead of pip in order to use Python 3 and not the old Python 2.
 
 
 
@@ -110,7 +111,7 @@ Dependencies
     • psutil, for measuring memory usage (optional)
     • hurry.filesize, for converting bytes to megabytes (optional)
     • imageio, for recording and converting to gifs (optional)
-    • psd-tools, for converting .psd files (optional)
+    • psd-tools3, for converting .psd files (optional)
     • blender, for converting .blend files (optional)
 
     Optional dependencies must be installed manually.

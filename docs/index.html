@@ -91,18 +91,19 @@ Getting Started<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;1) Install Python 3.6 or newer. <a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;2) Make sure you have git installed. <a href="https://git-scm.com/">https://git-scm.com/</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;3) Open cmd/terminal and type:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2) Open cmd/terminal and type:<br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 2em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">pip install git+https://github.com/pokepetter/ursina.git<br></div><br>
+<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 2em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">pip install ursina<br></div><br>
 &nbsp;&nbsp;&nbsp;&nbsp;If you want to easily edit the source, it's recommended to clone the git<br>
-&nbsp;&nbsp;&nbsp;&nbsp;repo and install as develop like this:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;repo and install as develop like this. Make sure you have git installed. <a href="https://git-scm.com/">https://git-scm.com/</a><br>
 <br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 2em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">git clone <a href="https://github.com/pokepetter/ursina.git">https://github.com/pokepetter/ursina.git</a><br>python setup.py develop<br></div><br>
 &nbsp;&nbsp;&nbsp;&nbsp;Also install any of the optional dependencies you want from the list below,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;or install them all with:<br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 2em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">pip install git+https://github.com/pokepetter/ursina.git#egg=ursina[extras]<br></div><br>
+<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 2em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">pip install ursina[extras]<br></div><br>
+&nbsp;&nbsp;&nbsp;&nbsp;On some systems you might have to use pip3 instead of pip in order to use Python 3 and not the old Python 2.<br>
+<br>
 <br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
@@ -117,7 +118,7 @@ Dependencies<br>
 &nbsp;&nbsp;&nbsp;&nbsp;• psutil, for measuring memory usage (optional)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;• hurry.filesize, for converting bytes to megabytes (optional)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;• imageio, for recording and converting to gifs (optional)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;• psd-tools, for converting .psd files (optional)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;• psd-tools3, for converting .psd files (optional)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;• blender, for converting .blend files (optional)<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;Optional dependencies must be installed manually.<br>

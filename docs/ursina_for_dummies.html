@@ -78,7 +78,7 @@ Once done, you should be able to run:<br>
 <br>
 <br>
 <div style="font-size: 40.0px;">
-Setup a virtual environment (venv)<br>
+Setup a virtual environment (venv) (optional)<br>
 <div style="font-size: 20.0px;">
 <br>
 A Python virtual environment or venv is the way Python maintains a private space for the libraries you need for a project. You can have any number of virtual environments in your computer and be sure all libraries installed in one venv does not mix with libraries in the other venv so for example you may create a "gamedev" venv and install all your game development libraries, then create a "science" venv and install libraries for number crunching, then create another called "music" and install all your libraries you need to work with sound files. You may even install multiple versions of the same libraries on each venv and be sure they don't mix. Once you are done with a venv (or maybe it becomes too large because you have been installing too many things) you can delete the venv and recreate it from scratch.<br>
@@ -110,8 +110,8 @@ To install Ursina we need to use pip, the Python package manager.<br>
 Jump into your venv:<br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 0em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">source gamedev/bin/activate<br></div><br>
 Now install the engine:<br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 0em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">pip install git+https://github.com/pokepetter/ursina.git<br></div><br>
-That command will install the engine from the latest git repo. Note this will download and setup other libraries required by the engine. If you want to see which libraries are installed in your venv run:<br>
+<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 0em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">pip install ursina<br></div><br>
+This will download and setup ursina and other libraries required by the engine. If you want to see which libraries are installed run:<br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 0em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">pip list<br></div><br>
 You will see some libraries like Panda3d in there.<br>
 <br>
@@ -121,6 +121,7 @@ Or maybe you need to read a YAML file (yaml), or machine learning (ml), or cover
 <br>
 So lets say you want the "playsound" library installed. Run:<br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 0em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">pip install playsound<br></div><br>
+Of course, we don't rally need this library because ursina can play sound as well. This is just an example.<br>
 Once you are done with this library run:<br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 0em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">pip uninstall playsound<br></div><br>
 <br>

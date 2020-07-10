@@ -56,7 +56,7 @@ Python 3.7.4
 
 
 
-## Setup a virtual environment (venv)
+## Setup a virtual environment (venv) (optional)
 
 A Python virtual environment or venv is the way Python maintains a private space for the libraries you need for a project. You can have any number of virtual environments in your computer and be sure all libraries installed in one venv does not mix with libraries in the other venv so for example you may create a "gamedev" venv and install all your game development libraries, then create a "science" venv and install libraries for number crunching, then create another called "music" and install all your libraries you need to work with sound files. You may even install multiple versions of the same libraries on each venv and be sure they don't mix. Once you are done with a venv (or maybe it becomes too large because you have been installing too many things) you can delete the venv and recreate it from scratch.
 
@@ -98,10 +98,10 @@ source gamedev/bin/activate
 
 Now install the engine:
 # code
-pip install git+https://github.com/pokepetter/ursina.git
+pip install ursina
 # text
 
-That command will install the engine from the latest git repo. Note this will download and setup other libraries required by the engine. If you want to see which libraries are installed in your venv run:
+This will download and setup ursina and other libraries required by the engine. If you want to see which libraries are installed run:
 # code
 pip list
 # text
@@ -120,6 +120,7 @@ So lets say you want the "playsound" library installed. Run:
 pip install playsound
 # text
 
+Of course, we don't rally need this library because ursina can play sound as well. This is just an example.
 Once you are done with this library run:
 # code
 pip uninstall playsound

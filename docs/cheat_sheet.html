@@ -37,8 +37,9 @@
 <a style="color:hsl(349.0, 89%, 28%);" href="#MeshCollider">MeshCollider</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Color">Color</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#CubicBezier">CubicBezier</a>
-<a style="color:hsl(349.0, 89%, 28%);" href="#Hit">Hit</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#HitInfo">HitInfo</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#InputEvents">InputEvents</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#Light">Light</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Ursina">Ursina</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#MeshModes">MeshModes</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Mesh">Mesh</a>
@@ -321,7 +322,9 @@ get_width(<g>string, font=None</g>)
   test = Text(origin=(.5,.5), text=descr)
 
 
-  text = Text(text=descr, wordwrap=10, y=.25, background=True)
+  text = Text(text=descr, wordwrap=10, origin=(-.5,.5), y=.25, background=True)
+  Entity(parent=camera.ui, model='circle', scale=.05, color=color.yellow, y=text.y, z=-1)
+
 
   def input(key):
       if key == 'a':
@@ -702,6 +705,7 @@ ui_camera<g> = None</g>
 entities<g> = []</g> 
 hidden<g> = NodePath('hidden')</g> 
 reflection_map<g> = 'reflection_map_3'</g> 
+lights<g> = []</g> 
 fog_color
 fog_density
 
@@ -755,7 +759,9 @@ get_width(<g>string, font=None</g>)
   test = Text(origin=(.5,.5), text=descr)
 
 
-  text = Text(text=descr, wordwrap=10, y=.25, background=True)
+  text = Text(text=descr, wordwrap=10, origin=(-.5,.5), y=.25, background=True)
+  Entity(parent=camera.ui, model='circle', scale=.05, color=color.yellow, y=text.y, z=-1)
+
 
   def input(key):
       if key == 'a':
@@ -1088,7 +1094,7 @@ e2.animate_y(1, curve=curve.CubicBezier(0,.7,1,.3))
 '''
 </div>
 </pre></div>
-<div id="Hit"><div id="Hit" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Hit</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.hit</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Hit(**kwargs)</params>
+<div id="HitInfo"><div id="HitInfo" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">HitInfo</div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.hit_info</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">HitInfo(**kwargs)</params>
 
 hit<g> = None</g> 
 entity<g> = None</g> 
@@ -1140,6 +1146,49 @@ escape<g> = 'enter'</g>
 tab<g> = 'tab'</g> 
 
 
+</pre></div>
+<div id="Light"><div id="Light" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Light<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.light</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Light(**kwargs)</params>
+
+type<g> = 'ambient'              # ambient or directional for now</g> 
+color<g> = color.rgb(0.3,0.3,0.3,1)        # a modest amount of full-spectrum light</g> 
+direction<g> = Vec3(-1,-1,-1)         # shining down from top-right corner, behind camera</g> 
+node<g> = None</g> 
+
+
+<div class="example">app = Ursina()  # create the game
+
+cubes = []
+
+Text(origin=(4,-18), text="default lighting")
+Text(origin=(.8,-4), text="replace with dimmer ambient for these three cubes")
+Text(origin=(.9,11), text="also add a bit of directional for these three cubes")
+
+cubes.append(Entity(model='cube', color=color.red, position=(-4,3,0)))
+cubes.append(Entity(model='cube', color=color.green, position=(0,3,0)))
+cubes.append(Entity(model='cube', color=color.blue, position=(4,3,0)))
+
+Light(type='ambient', color=(0.3,0.3,0.3,1))  # full spectrum
+
+cubes.append(Entity(model='cube', color=color.red, position=(-4,0,0)))
+cubes.append(Entity(model='cube', color=color.green, position=(0,0,0)))
+cubes.append(Entity(model='cube', color=color.blue, position=(4,0,0)))
+
+Light(type='directional', color=(0.3,0.3,0.3,1), direction=(1,1,1))  # dim full spectrum
+
+cubes.append(Entity(model='cube', color=color.red, position=(-4,-3,0)))
+cubes.append(Entity(model='cube', color=color.green, position=(0,-3,0)))
+cubes.append(Entity(model='cube', color=color.blue, position=(4,-3,0)))
+
+
+def update():
+    for i in cubes:
+        i.rotation_x += .3
+        i.rotation_y += .3
+        i.rotation_z += .2
+
+
+app.run()   # opens a window and starts the game.
+</div>
 </pre></div>
 <div id="Ursina"><div id="Ursina" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Ursina<g>()</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.main</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Ursina()</params>
 
@@ -1458,7 +1507,7 @@ window.color = color._32
 
 fit_height<g> = fit_height</g> 
 button_height<g> = button_height</g> 
-text_entity<g> = Text(parent=self, origin=(-.5,.5), text='empty', world_scale=20, z=-.1, y=-1.5*Text.size, x=.01)</g> 
+text_entity<g> = Text(parent=self, origin=(-.5,.5), text='empty', world_scale=20, z=-.1, x=.01)</g> 
 button_height<g> = self.text_entity.height</g> 
 button_dict<g> = button_dict</g> 
 highlight<g> = Entity(parent=self, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5), z=-.01, add_to_scene_entities=False)</g> 
@@ -2359,6 +2408,7 @@ Entity(model='cube').add_script(SmoothFollow(target=player, offset=(0,2,0)))
 'arrow_right'
 'brick'
 'circle'
+'circle_outlined'
 'cursor'
 'earth_map'
 'file_icon'

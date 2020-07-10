@@ -13,7 +13,7 @@ Introduction Tutorial
 3) Open Command Prompt/terminal and paste the commands below. This will download and install the dependencies you need.
 
     # code
-    pip install git+https://github.com/pokepetter/ursina.git
+    pip install ursina
     # text
 
 

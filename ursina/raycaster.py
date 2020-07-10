@@ -8,7 +8,7 @@ from panda3d.core import CollisionTraverser, CollisionNode, CollisionHandlerQueu
 from panda3d.core import CollisionRay, CollisionSegment, CollisionBox
 from ursina.vec3 import Vec3
 import math
-from ursina.hit import HitInfo
+from ursina.hit_info import HitInfo
 
 
 class Raycaster(Entity):
