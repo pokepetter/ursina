@@ -9,6 +9,7 @@ class Ursina(ShowBase):
         ShowBase.__init__(self)
         application.base = base
         window.late_init()
+        time.dt = 0
 
         # camera
         camera._cam = base.camera
@@ -157,8 +158,8 @@ class Ursina(ShowBase):
         try: input_handler.input(key)
         except: pass
         if not application.paused:
-            try: __main__.input(key)
-            except: pass
+            if hasattr(__main__, 'input'):
+                __main__.input(key)
 
 
         for entity in scene.entities:

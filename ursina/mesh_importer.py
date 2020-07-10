@@ -13,7 +13,10 @@ imported_meshes = dict()
 def load_model(name, path=application.asset_folder):
     if name in imported_meshes:
         # print('load cached model', name)
-        return copy(imported_meshes[name])
+        try:
+            return copy(imported_meshes[name])
+        except:
+            pass
 
     for filetype in ('.bam', '.ursinamesh', '.obj', '.blend'):
         # warning: glob is case-insensitive on windows, so m.path will be all lowercase
