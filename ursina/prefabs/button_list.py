@@ -17,10 +17,9 @@ class ButtonList(Entity):
         if fit_height:
             self.scale_y = button_height * len(button_dict) * Text.size
 
-        self.text_entity = Text(parent=self, origin=(-.5,.5), text='empty', world_scale=20, z=-.1, y=-1.5*Text.size, x=.01)
+        self.text_entity = Text(parent=self, origin=(-.5,.5), text='empty', world_scale=20, z=-.1, x=.01)
         self.text_entity.line_height = button_height
-        if button_height < 1.5:
-            self.text_entity.y += .005
+        self.text_entity.world_y -= .15
 
         self.button_height = self.text_entity.height
 
