@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='ursina',
-    version='0.2',
+    version='3.0.0',
     url='https://github.com/pokepetter/ursina',
     author='Petter Amland',
     author_email='pokepetter@gmail.com',
@@ -17,6 +17,6 @@ setup(
     ],
 
     extras_require={
-        'extras':  ['psd-tools', 'imageio', 'psutil', 'hurry.filesize'],
+        'extras':  ['psd-tools3', 'imageio', 'psutil', 'hurry.filesize'],
     }
 )
