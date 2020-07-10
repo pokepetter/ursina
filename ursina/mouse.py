@@ -7,7 +7,7 @@ from ursina import camera
 from ursina import scene
 from ursina import application
 from ursina import window
-from ursina.hit import Hit
+from ursina.hit_info import HitInfo
 from ursina.ursinamath import distance
 
 
@@ -255,7 +255,7 @@ class Mouse():
             for entity in scene.entities:
                 if entry.getIntoNodePath().parent == entity and entity.collision:
                     if entity.collision:
-                        hit = Hit(
+                        hit = HitInfo(
                             hit = entry.collided(),
                             entity = entity,
                             distance = distance(entry.getSurfacePoint(scene), camera.getPos()),

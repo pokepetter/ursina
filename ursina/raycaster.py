@@ -8,7 +8,7 @@ from panda3d.core import CollisionTraverser, CollisionNode, CollisionHandlerQueu
 from panda3d.core import CollisionRay, CollisionSegment, CollisionBox
 from ursina.vec3 import Vec3
 import math
-from ursina.hit import Hit
+from ursina.hit import HitInfo
 
 
 class Raycaster(Entity):
@@ -56,7 +56,7 @@ class Raycaster(Entity):
         self._picker.traverse(traverse_target)
 
         if self._pq.get_num_entries() == 0:
-            self.hit = Hit(hit=False)
+            self.hit = HitInfo(hit=False)
             return self.hit
 
         ignore += tuple([e for e in scene.entities if not e.collision])
@@ -68,7 +68,7 @@ class Raycaster(Entity):
             ]
 
         if len(self.entries) == 0:
-            self.hit = Hit(hit=False)
+            self.hit = HitInfo(hit=False)
             return self.hit
 
         self.collision = self.entries[0]
@@ -84,7 +84,7 @@ class Raycaster(Entity):
         if nP.name.endswith('.egg'):
             nP = nP.parent
 
-        self.hit = Hit(hit=True)
+        self.hit = HitInfo(hit=True)
         for e in scene.entities:
             if e == nP:
                 # print('cast nP to Entity')
@@ -103,7 +103,7 @@ class Raycaster(Entity):
         self.hit.world_normal = (normal[0], normal[1], normal[2])
         return self.hit
 
-        self.hit = Hit(hit=False)
+        self.hit = HitInfo(hit=False)
         return self.hit
 
 
@@ -135,7 +135,7 @@ class Raycaster(Entity):
         rays.sort(key=lambda x : x.distance)
         closest = rays[0]
 
-        return Hit(
+        return HitInfo(
             hit = sum([int(e.hit) for e in rays]) > 0,
             entity = closest.entity,
             point = closest.point,

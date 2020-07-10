@@ -1,7 +1,7 @@
 import math
 
 
-class Hit:
+class HitInfo:
     __slots__ = ['hit', 'entity', 'point', 'world_point', 'distance', 'normal', 'world_normal', 'hits', 'entities']
 
 
