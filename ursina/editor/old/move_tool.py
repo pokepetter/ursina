@@ -14,7 +14,7 @@ class MoveTool(Entity):
         self.lock_axis = None
         self.ruler = Entity(parent=self, model='cube', scale=(.025,.025,9999), enabled=False, add_to_scene_entities=False)
 
-        self.hotkeys = ['w', ]
+        self.hotkeys = ['g', ]
 
 
 

@@ -5,6 +5,7 @@ from move_tool import MoveTool
 from move_to_point_tool import MoveToPointTool
 from scale_tool import ScaleTool
 from color_menu import ColorMenu
+from move_gizmo import MoveGizmo
 
 
 
@@ -29,7 +30,7 @@ class SceneEditor(Entity):
         self.scene_menu_button.down_arrow = Entity(parent=self.scene_menu_button.model, model='quad', texture='arrow_down', position=(.5-.05,0,-1), origin_x=.5, scale_y=.5)
         self.scene_menu_button.down_arrow.world_scale_x = self.scene_menu_button.down_arrow.world_scale_y
         self.scene_name = 'untitled_scene'
-        self.scene_menu = ButtonList({}, parent=self.ui_parent, position=window.top_left - Vec2(0,.05), close_on_click_outside=True, enabled=False)
+        self.scene_menu = ButtonList({'???', '???'}, parent=self.ui_parent, position=window.top_left - Vec2(0,.05), fit_height=False, enabled=False)
         self.ask_for_scene_name_window = WindowPanel(
             title='Enter scene name',
             content=(
@@ -43,6 +44,7 @@ class SceneEditor(Entity):
         self.toolbar = Entity(parent=self.ui_parent, position=window.top_left + Vec2(.2, 0))
         self.tools = [
             SelectTool(parent=self),
+            MoveGizmo(),
             MoveTool(parent=self),
             MoveToPointTool(parent=self),
             ScaleTool(parent=self),
@@ -109,11 +111,15 @@ class SceneEditor(Entity):
                 RadialMenuButton(text='color', on_click=self.color_menu.open),
                 RadialMenuButton(text='delete', color=color.red, on_click=self.delete_selected),
                 RadialMenuButton(text='duplicate'),
-                RadialMenuButton(text='replace'),
+                RadialMenuButton(text='replace')
                 ),
             enabled = False
             )
 
+        for c in self.children:
+            c.eternal=True
+        for c in self.radial_menu.children:
+            c.eteral=True
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -199,11 +205,13 @@ class SceneEditor(Entity):
 
 
     def toggle_scene_menu(self):
+        print(self.scene_menu)
         self.scene_menu.enabled = not self.scene_menu.enabled
         if self.scene_menu.enabled:
             scenes_dict = dict()
             for e in self.scene_folder.iterdir():
                 if e.is_file() and not '__' in e.stem:
+                    print('e.stem', e.stem)
                     scenes_dict[e.stem] = Func(self.load, e.stem)
 
             self.scene_menu.button_dict = scenes_dict
@@ -449,9 +457,12 @@ if __name__ == '__main__':
     #     player.x += held_keys['d'] * time.dt
     #     player.x -= held_keys['a'] * time.dt
     # player.update = player_update
+    def DefaultCube(**kwargs): return Entity(name='default_cube', model='cube', origin_y=-.5, color=color.gray, **kwargs)
+    # def House(**kwargs): return Entity(model='cube', origin_y=-.5, scale_y=2, color=color.red, **kwargs)
+    def House(**kwargs): return Entity(name='house', model='cube', origin_y=-.5, scale_y=2, color=color.red, **kwargs)
 
 
-    scene_editor = SceneEditor(prefabs=[Entity, RedCube, PinkCube, LimeCube])
+    scene_editor = SceneEditor(prefabs=[Entity, DefaultCube])
 
     Sky()
 
