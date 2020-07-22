@@ -62,7 +62,7 @@ class Entity(NodePath):
         self.reflectivity = 0
         self.render_queue = 0
         self.double_sided = False
-        self.always_on_top = False
+        # self.always_on_top = False
 
         self.collision = False  # toggle collision without changing collider.
         self.collider = None    # set to 'box'/'sphere'/'mesh' for auto fitted collider.
@@ -242,10 +242,6 @@ class Entity(NodePath):
         if name == 'double_sided':
             self.setTwoSided(value)
 
-        if name == 'always_on_top' and value:
-            self.set_bin("fixed", 0)
-            self.set_depth_write(False)
-            self.set_depth_test(False)
 
         try:
             super().__setattr__(name, value)
@@ -671,6 +667,18 @@ class Entity(NodePath):
         if value > 1:
             value = value / 255
         self.color = (self.color.h, self.color.s, self.color.v, value)
+
+
+    @property
+    def always_on_top(self):
+        return self._always_on_top
+    @always_on_top.setter
+    def always_on_top(self, value):
+        self._always_on_top = value
+        self.set_bin("fixed", 0)
+        self.set_depth_write(not value)
+        self.set_depth_test(not value)
+
 
     @property
     def reflection_map(self):
