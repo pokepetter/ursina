@@ -98,7 +98,7 @@ def compress_textures(name=''):
             image = Image.open(f)
         # print(max(image.size))
         # print('............', image.mode)
-        if image.mode != 'RGBA' and max(image.size) > 512:
+        if image and image.mode != 'RGBA' and max(image.size) > 512:
             image.save(
                 application.compressed_textures_folder / (Path(f).stem + '.jpg'),
                 'JPEG',
