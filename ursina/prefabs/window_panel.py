@@ -43,7 +43,6 @@ class WindowPanel(Draggable):
                     c.y = -height
                     c.z = 0
 
-
                     if isinstance(c, Text):
                         c.origin = (-.5, .5)
                         c.x = -.48
@@ -70,7 +69,6 @@ class WindowPanel(Draggable):
             self.panel.model = Quad(aspect=self.panel.world_scale_x/self.panel.world_scale_y, radius=.025)
             self.panel.origin = (0, .5)
 
-
         if self.popup:
             self.lock_x = True
             self.lock_y = True
@@ -83,15 +81,15 @@ class WindowPanel(Draggable):
                 pressed_color=color.black66,
                 )
 
-            def close():
-                self.bg.enabled = False
-                self.animate_scale_y(0, duration=.1)
-                invoke(setattr, self, 'enabled', False, delay=.2)
+            self.bg.on_click = self.close
 
-                if hasattr(self, 'close'):
-                    self.close()
+    def close(self):
+        self.bg.enabled = False
+        self.animate_scale_y(0, duration=.1)
+        invoke(setattr, self, 'enabled', False, delay=.2)
 
-            self.bg.on_click = close
+        if hasattr(self, 'close'):
+            self.close()
 
 
 if __name__ == '__main__':
