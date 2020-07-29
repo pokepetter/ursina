@@ -93,8 +93,11 @@ class Button(Entity):
     @icon.setter
     def icon(self, value):
         if value:
-            self._icon = Entity(parent=self.model, name=f'button_icon_{value}', model='quad', texture=value, z=-.1, add_to_scene_entities=False)
-            print('----------', self._icon)
+            if not hasattr(self, '_icon'):
+                self._icon = Entity(parent=self.model, name=f'button_icon_{value}', model='quad', texture=value, z=-.1, add_to_scene_entities=False)
+            else:
+                self._icon.texture = value
+
 
     def __setattr__(self, name, value):
         if name == 'color':
