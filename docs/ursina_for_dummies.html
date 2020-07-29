@@ -22,9 +22,10 @@
 Ursina Game Engine Tutorial for Dummies<br>
 <div style="font-size: 20.0px;font-weight: normal;text-align: left;">
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Summary"/><br>
 Summary<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 This is a tutorial that explains you how to setup your environment, create a window and render a coloured cube with really simple controls.<br>
 <br>
@@ -48,9 +49,10 @@ Once you finish this tutorial you are expected to know:<br>
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Introduction"/><br>
 Introduction<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 So you want to write your own game, sell it by tons and get rich and famous? Then you are on the right track, but let me be straight and tell you this is not going to happen anytime soon. Many people writing games in big companies started somewhere and to get to the top you need to understand the basics and that is exactly why you are here, so consider this tutorial as the stepping stone into the game development industry.<br>
 <br>
@@ -62,9 +64,10 @@ Before we start, keep in mind the engine has a reference page here <a href="http
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Install Python3"/><br>
 Install Python3<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 If you are ready to start writing your game, you need to get your computer ready and the first step is to install Python3.6. Python is an universal language so it is available for most operating systems. Please follow these instructions to install it in your computer.<br>
 <br>
@@ -77,9 +80,10 @@ Once done, you should be able to run:<br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 0em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">python3 --version<br>Python 3.7.4<br></div><br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Setup a virtual environment (venv) (optional)"/><br>
 Setup a virtual environment (venv) (optional)<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 A Python virtual environment or venv is the way Python maintains a private space for the libraries you need for a project. You can have any number of virtual environments in your computer and be sure all libraries installed in one venv does not mix with libraries in the other venv so for example you may create a "gamedev" venv and install all your game development libraries, then create a "science" venv and install libraries for number crunching, then create another called "music" and install all your libraries you need to work with sound files. You may even install multiple versions of the same libraries on each venv and be sure they don't mix. Once you are done with a venv (or maybe it becomes too large because you have been installing too many things) you can delete the venv and recreate it from scratch.<br>
 <br>
@@ -101,9 +105,10 @@ Another benefit is that a venv configures as the default python the one you used
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Installing the Ursina game engine"/><br>
 Installing the Ursina game engine<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 To install Ursina we need to use pip, the Python package manager.<br>
 <br>
@@ -126,9 +131,10 @@ Once you are done with this library run:<br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 0em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">pip uninstall playsound<br></div><br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Installing an IDE"/><br>
 Installing an IDE<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 This is a tricky one. There are plenty programming IDEs available and its all a matter of choice. Essentially you may code in command line but installing a nice IDE will help you be more effective. Some options:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;- Sublime Text<br>
@@ -142,9 +148,10 @@ Sublime is a good choice for a beginner as it is very lightweight (and I'm writi
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Creating your first program"/><br>
 Creating your first program<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 Probably the most intimidating step into writing games is to initialise the window. There are so many concepts that goes with this initialisation like selcting a screen size, setting the color modes, creating the back buffers, setting up the video card, and writing down the most basic graphics switching system and all that even before we can even see anything.<br>
 <br>
@@ -163,9 +170,10 @@ Congratulations, you have created your first window and you are a step closer to
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Improving your window"/><br>
 Improving your window<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 So the window looks good, but it might improve with some work, edit your window.py program so it<br>
 <br>
@@ -193,9 +201,10 @@ Now try pip installing the playsound library, then import it into the window pro
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Drawing some cubes"/><br>
 Drawing some cubes<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 Right now the engine is running on empty. An engine is supposed to update an scene, then draw some graphics in the background then flip to the foreground but we are not doing anything so we only see a black screen. Lets do something about this but before starting you need to understand how an engine is presente.<br>
 <br>
@@ -223,9 +232,10 @@ Ursina also allows setting a colour using Red Green Blue (RGB) components with v
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Random values"/><br>
 Random values<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 Random values are extremely useful when building games. They can be used to generate enemies or just to calculate probabilities like rolling dice. Lets add some randomness to this cube.<br>
 <br>
@@ -246,9 +256,10 @@ Now try using Random to change the scale and position of the cube. Try to keep b
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Moving the camera"/><br>
 Moving the camera<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 So, the cube is moving, now lets work out the camera. The camera is an Entity which is part of the scene and it has a variable reference called "camera". As an Entity, the camera can be moved using its position and rotation, imagine you are a cameraman moving it around the scene.<br>
 <br>
@@ -261,9 +272,10 @@ The camera has other options that are useful depending on what you are trying to
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Adding more cubes"/><br>
 Adding more cubes<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 So we have been playing with one cube only. Let's up this a bit and learn how to work with multiple entities. To do that we need to learn something called a data structure. Data structures are probably the most important pieces of any system, there are mmany data structures and learning how and when to use each one makes you a master.<br>
 <br>
@@ -280,9 +292,10 @@ Now we have many cubes but in the same dull orange colour. use some code similar
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Rotating more cubes"/><br>
 Rotating more cubes<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 So now all the entities are in the scene but they are not moving. Lets go througn all entities in the scene and move them all not just the cube. Update your update() function as:<br>
 <br>
@@ -291,9 +304,10 @@ So instead of just updating the rotation for one cube, we now go through all the
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Hierarchies (The knee bone connected to the tight bone, the tight bone connected to the hip bone...)"/><br>
 Hierarchies (The knee bone connected to the tight bone, the tight bone connected to the hip bone...)<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 So we have discussed how objects are added to an scene but how about more complex hierarchies like the sun and planets and moons. These are more complicated scenes where some objects depend on the movement of their parents.<br>
 <br>
@@ -310,9 +324,10 @@ Now, when an object is in hierarchy with another object, its position is relativ
 childcube = <font color="olive">Entity</font>(parent=newcube, model=<font color="green">'cube'</font>, color=color.rgb(red, green, blue), position=(1, 0, 0), scale=(s/2, s/2, s/2))<br>cubes.append(childcube)<br>...<br></div><br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Adding some texture"/><br>
 Adding some texture<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 So you are seeing a lot of things that look like cubes but don't really feel like cubes. That is because a lot of the 3D feeling is really provided by the object texture so lets explore them.<br>
 <br>
@@ -335,9 +350,10 @@ Now run your program again and you should see the real texture colour. You may s
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Texture UVs"/><br>
 Texture UVs<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 You might notice in this example, the texture is nicely applied to each side of the cube. However sometimes you want the texture to map in a different way or alter how a texture is applied so we will work a bit on this.<br>
 <br>
@@ -347,9 +363,10 @@ But then what will heppen if we change the model but not the texture? Ursina eng
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Animating UVs (Advanced stuff)"/><br>
 Animating UVs (Advanced stuff)<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 In a normal scenario, the artists will provide models with their textures and UV coordinates set as they have to, as a developer you just have to load and render everything in the engine.<br>
 However, not all the textures are static and there are many cases where textures need to be animated, this is specially true to simulate fluids like water or lave, for example to create a river or a waterfall.<br>
@@ -381,9 +398,10 @@ But you know what the problem is with effects... you can always make it better! 
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Transparency"/><br>
 Transparency<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 So we have always talked about solid colour like red, white, blue, orange, etc. And we have used a function called color.rgb() to set the colour, however in computer graphics colours are as solid as you want them to be.<br>
 <br>
@@ -402,9 +420,10 @@ Finally, move the texture in the second cube but a bit faster than the first cub
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 0em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">...<br><font color="purple">def</font> update():<br>    for entity in cubes:<br>        entity.rotation_y += time.dt * 5                <font color="gray"># Rotate all the cubes every time update is called</font><br>    if held_keys[<font color="green">'q'</font>]:                               <font color="gray"># If q is pressed</font><br>        camera.position += (0, time.dt, 0)                 <font color="gray"># move up vertically</font><br>    if held_keys[<font color="green">'a'</font>]:                               <font color="gray"># If a is pressed</font><br>        camera.position -= (0, time.dt, 0)                 <font color="gray"># move down vertically</font><br><br>    global texoffset                                 <font color="gray"># Inform we are going to use the variable defined outside</font><br>    global texoffset2                                 <font color="gray"># Inform we are going to use the variable defined outside</font><br>    texoffset += time.dt * 0.2                       <font color="gray"># Add a small number to this variable</font><br>    setattr(cube, "texture_offset", (0, texoffset))  <font color="gray"># Assign as a texture offset</font><br>    texoffset2 += time.dt * 0.3                       <font color="gray"># Add a value to this variable, but different to the first one</font><br>    setattr(cube2, "texture_offset", (0, texoffset2))  <font color="gray"># Assign as a texture offset of the second cube</font><br>...<br></div><br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Adding text and buttons."/><br>
 Adding text and buttons.<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 So the final work is to add some text to our demo. Before continuing you need to be aware that in most games there is a layer on top of the scene called the UI layer ot front layer. This is very similar to what you see during a sports game or during news whare there are letters on top of the scene you are watching.<br>
 <br>
@@ -424,9 +443,10 @@ Now try using the mouse docs <a href="https://www.ursinaengine.org/cheat_sheet.h
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="The end"/><br>
 The end<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 So if you got to this point, cheers, a big hooray and kudos to you! In this time you have learned so many things that you really deserve a treat! Your final program should look like this:<br>
 <br>

@@ -6,7 +6,7 @@ Entity Basics
 
 
 # left
-## 1 What is an Entity?
+## What is an Entity?
 
     An entity is a thing in the world, and is the "god class" in ursina.
     It's like a GameObject in Unity or an Actor in Unreal.
@@ -18,7 +18,7 @@ Entity Basics
 
 
 
-## 2 Setting a model
+## Setting a model
 
     There are several included models like 'quad', 'plane', 'cube' and 'sphere',
     but you can also use your own.
@@ -37,7 +37,7 @@ Entity Basics
 
 
 
-## 3 Texture
+## Texture
 
     Setting a texture is similar to setting a model. Just give it a name in this case as well:
 
@@ -60,7 +60,7 @@ Entity Basics
 
 
 
-## 4 Setting the color
+## Setting the color
 
     # code
     e.color = color.red # set it to a color in the color module
@@ -74,7 +74,7 @@ Entity Basics
 
 
 
-## 5 Moving
+## Moving
 
     You can move an entity by setting the attributes:
     'position', 'x', 'y', 'z', 'world_position', 'world_x', 'world_y', 'world_z'
@@ -102,7 +102,7 @@ Entity Basics
 
 
 
-## 6 Rotating
+## Rotating
 
     #code
     e.rotation = (0,0,0)
@@ -120,7 +120,7 @@ Entity Basics
 
 
 
-## 7 Scaling
+## Scaling
 
     Change the size of the entity by setting the scale attribute:
 
@@ -130,7 +130,7 @@ Entity Basics
 
 
 
-## 8 Update
+## Update
 
     An Entity's update method will be called automatically:
 
@@ -152,7 +152,7 @@ Entity Basics
 
 
 
-## 9 Input
+## Input
 
     The same goes for the input method:
 
@@ -170,7 +170,7 @@ Entity Basics
     # text
 
 
-## 10 Mouse Input
+## Mouse Input
 
     Entities can react to the mouse as long as they have collider.
     Buttons will have one by default, but you can also assign one.

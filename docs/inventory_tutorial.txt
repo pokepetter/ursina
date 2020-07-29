@@ -10,9 +10,7 @@ In this tutorial we will make a drag and drop inventory like this.
 
 
 # left
-# size 2
-1 Setting up the class
-# size 1
+## 1 Setting up the class
 
     Let's begin by making an Inventory class
 
@@ -33,9 +31,7 @@ In this tutorial we will make a drag and drop inventory like this.
 
 
 
-# size 2
-2 Adding graphics
-# size 1
+## 2 Adding graphics
 
     However, if we run the code, we'll see that there's nothing visible.
     Let's parent it to the ui and set the model to 'quad', an included model.
@@ -93,9 +89,7 @@ In this tutorial we will make a drag and drop inventory like this.
 
 
 
-# size 2
-3 Adding placeholder items
-# size 1
+## 3 Adding placeholder items
 
     Let's try to add some items to the inventory.
 
@@ -163,9 +157,7 @@ In this tutorial we will make a drag and drop inventory like this.
 
 
 
-# size 2
-4 Adding items
-# size 1
+## 4 Adding items
 
     We've added some items manually to make sure they get the right scale and position,
     but we should make an append() function so it's easy to add items.
@@ -217,9 +209,7 @@ In this tutorial we will make a drag and drop inventory like this.
 
 
 
-# size 2
-5 Find a free slot in the inventory
-# size 1
+## 5 Find a free slot in the inventory
 
     The items gets added, but they overlap. We need to find the first open slot in the inventory
     and place the item there. We can to this by checking each grid position and see if any
@@ -273,9 +263,7 @@ In this tutorial we will make a drag and drop inventory like this.
 
 
 
-# size 2
-6 Add random item button
-# size 1
+## 6 Add random item button
 
     Make a button to add a random item to the inventory. This is not part of the inventory itself,
     but it's useful in order to test it.
@@ -311,9 +299,7 @@ In this tutorial we will make a drag and drop inventory like this.
 
 
 
-# size 2
-7 Adding textures and hover text
-# size 1
+## 7 Adding textures and hover text
 
     To add textures, just set texture=item and it will try to find a
     texture with that name. It searches first in the project's assets and then
@@ -342,9 +328,7 @@ In this tutorial we will make a drag and drop inventory like this.
 
 
 
-# size 2
-8 Drag n' drop
-# size 1
+## 8 Drag n' drop
 
     We can't move the items! That's not fun.
     However, that's easy to change. Just spawn a Draggable instead of Button.
@@ -369,9 +353,7 @@ In this tutorial we will make a drag and drop inventory like this.
 
 
 
-# size 2
-9 Snap to grid on_drop
-# size 1
+## 9 Snap to grid on_drop
 
     The items can be moved now, but they don't follow the grid.
     Let's round the position when we drop it.
@@ -406,9 +388,7 @@ In this tutorial we will make a drag and drop inventory like this.
 
 
 
-# size 2
-10 Swap items
-# size 1
+## 10 Swap items
 
     Add a drag function to remember the start position as org_pos.
 
@@ -438,9 +418,7 @@ In this tutorial we will make a drag and drop inventory like this.
 
 
 
-# size 2
-11 Stay inside the inventory, please
-# size 1
+## 11 Stay inside the inventory, please
 
     We shouldn't be able to drop the items outside of the inventory.
 
@@ -469,9 +447,7 @@ In this tutorial we will make a drag and drop inventory like this.
 
 
 
-# size 2
-12 Bugfix: Make the dragged items render on top
-# size 1
+## 12 Bugfix: Make the dragged items render on top
 
     All the items are at the same depth, so it hard to say how they will overlap.
     It feels natural that the item we're currently dragging stays on top,

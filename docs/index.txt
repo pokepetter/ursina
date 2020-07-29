@@ -11,17 +11,15 @@ open source game engine
 --------------------------------------
 # normal
 
-[Documentation, documentation.html]
+[Download, #Getting Started]  [Documentation, documentation.html]
 
 <a href="https://github.com/pokepetter/ursina"><img src="icons/github_icon.png"></img></a>  <a href="https://twitter.com/ursinaengine"><img src="icons/twitter_icon.png"></img></a>  <a href="https://discord.gg/ydXfhyb"><img src="icons/discord_icon.png"></img></a>  <a href="https://www.patreon.com/ursinaengine"><img src="icons/patreon_icon.png"></img></a>
 
 <iframe width="900" height="505" src="https://www.youtube-nocookie.com/embed/j71j88oCTNo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
-
-# size 2, bold, left
-Powered by Python
-# normal, size 1
+# left
+## Powered by Python
 
     Ursina makes it easier to develop games, visualizations and other kinds of software.
     The concise API combined with the power of the Python programming language,
@@ -39,9 +37,7 @@ Powered by Python
         • Revenue cut or subscription fee
 
 
-# size 2, bold
-Useful Features
-# normal, size 1
+## Useful Features
 
         • Reload code/textures/models while in-game
         • Automatic import of .psd and .blend files
@@ -51,27 +47,21 @@ Useful Features
 
 
 
-# size 2, bold
-Platforms
-# normal, size 1
+## Platforms
 
         • Windows
         • Mac
         • Linux
 
 
-# size 2, bold
-Free and Open Source
-# normal, size 1
+## Free and Open Source
 
     Licenced under the permissive MIT license,
     you can use Ursina for whatever you want. No supscription fee, no revenue cut.
 
 
 
-# size 2, bold
-Getting Started
-# size 1, normal
+## Getting Started
 
     1) Install Python 3.6 or newer. https://www.python.org/downloads/
     2) Open cmd/terminal and type:
@@ -99,9 +89,7 @@ Getting Started
 
 
 
-# size 2, bold
-Dependencies
-# size 1, normal
+## Dependencies
 
     • python 3.6+
     • panda3d
@@ -118,9 +106,7 @@ Dependencies
 
 
 
-# size 2, bold
-Examples
-# size 1, normal
+## Examples
 
     Entity Example:
 
@@ -143,9 +129,7 @@ Examples
         # text
 
 
-# size 2, bold
-How do I make a game?
-# size 1, normal
+## How do I make a game?
 
     Ursina games are made by writing Python code. You can use any text editor you want.
 

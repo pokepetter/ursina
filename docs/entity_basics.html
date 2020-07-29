@@ -24,9 +24,10 @@ Entity Basics<br>
 <br>
 <br>
 <div style="text-align: left;">
-<div style="font-size: 40.0px;">
-1 What is an Entity?<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="What is an Entity?"/><br>
+What is an Entity?<br>
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;An entity is a thing in the world, and is the "god class" in ursina.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;It's like a GameObject in Unity or an Actor in Unreal.<br>
@@ -38,9 +39,10 @@ Entity Basics<br>
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
-2 Setting a model<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Setting a model"/><br>
+Setting a model<br>
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;There are several included models like 'quad', 'plane', 'cube' and 'sphere',<br>
 &nbsp;&nbsp;&nbsp;&nbsp;but you can also use your own.<br>
@@ -56,9 +58,10 @@ Entity Basics<br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;"><font color="olive">Entity</font>(model=<font color="green">'name_of_your_model'</font>)<br></div><br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
-3 Texture<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Texture"/><br>
+Texture<br>
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;Setting a texture is similar to setting a model. Just give it a name in this case as well:<br>
 <br>
@@ -70,16 +73,18 @@ e2 = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, 
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">s = Sprite(<font color="green">'texture_name'</font>)<br>print(s.aspect_ratio)<br></div><br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
-4 Setting the color<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Setting the color"/><br>
+Setting the color<br>
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">e.color = color.red <font color="gray"># set it to a color in the color module</font><br><br>e.color = color.color(120, .5, .5) <font color="gray"># hsv color</font><br>e.color = color.rgb(.8, .1, 0) <font color="gray"># rgb color</font><br>e.color = e.color.tint(.1) <font color="gray"># tint the color</font><br>e.color = color.random_color() <font color="gray"># set it to a random color</font><br>e.color = lerp(color.red, color.green, .5) <font color="gray"># set it to a color half way between red and green</font><br></div><br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
-5 Moving<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Moving"/><br>
+Moving<br>
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;You can move an entity by setting the attributes:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;'position', 'x', 'y', 'z', 'world_position', 'world_x', 'world_y', 'world_z'<br>
@@ -94,9 +99,10 @@ e.x = 0<br>e.y = 0<br>e.z = 0<br><br><font color="gray"># set position relative 
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
-6 Rotating<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Rotating"/><br>
+Rotating<br>
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">e.rotation = (0,0,0)<br>e.rotation_y = 90<br></div><br>
 &nbsp;&nbsp;&nbsp;&nbsp;The look_at() method can also be for pointing an entity at something:<br>
@@ -104,18 +110,20 @@ e.x = 0<br>e.y = 0<br>e.z = 0<br><br><font color="gray"># set position relative 
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">other entity = <font color="olive">Entity</font>(position=(10,1,8))<br><br>e.look_at(other_entity) <font color="gray"># make z-axis(forward) point at other_entity</font><br>e.look_at(other_entity, axis=<font color="green">'up'</font>) <font color="gray"># optinally define which axis</font><br></div><br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
-7 Scaling<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Scaling"/><br>
+Scaling<br>
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;Change the size of the entity by setting the scale attribute:<br>
 <br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">e = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, scale=(3,1,1))<br></div><br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
-8 Update<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Update"/><br>
+Update<br>
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;An Entity's update method will be called automatically:<br>
 <br>
@@ -125,17 +133,19 @@ e.x = 0<br>e.y = 0<br>e.z = 0<br><br><font color="gray"># set position relative 
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">class Player(<font color="olive">Entity</font>):<br>    <font color="purple">def</font> update(self):<br>        self.x += 1 * time.dt<br></div><br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
-9 Input<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Input"/><br>
+Input<br>
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;The same goes for the input method:<br>
 <br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">class Player(<font color="olive">Entity</font>):<br>    <font color="purple">def</font> input(self, key):<br>        if key == <font color="green">'w'</font>:<br>            self.position += self.forward<br><br>        if key == <font color="green">'d'</font>:<br>            self.animate(<font color="green">'rotation_y'</font>, self.rotation_y + 90, duration=.1)<br><br>        if key == <font color="green">'a'</font>:<br>            self.animate(<font color="green">'rotation_y'</font>, self.rotation_y - 90, duration=.1)<br></div><br>
 <br>
-<div style="font-size: 40.0px;">
-10 Mouse Input<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Mouse Input"/><br>
+Mouse Input<br>
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;Entities can react to the mouse as long as they have collider.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Buttons will have one by default, but you can also assign one.<br>

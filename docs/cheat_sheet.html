@@ -176,7 +176,6 @@ reflection_map<g> = scene.reflection_map</g>
 reflectivity<g> = 0</g> 
 render_queue<g> = 0</g> 
 double_sided<g> = False</g> 
-always_on_top<g> = False</g> 
 collision<g> = False  # toggle collision without changing collider.</g> 
 collider<g> = None    # set to 'box'/'sphere'/'mesh' for auto fitted collider.</g> 
 scripts<g> = list()   # add with add_script(class_instance). will assign an 'entity' variable to the script.</g> 
@@ -222,6 +221,7 @@ down
 screen_position
 shader
 alpha
+always_on_top
 model_bounds
 bounds
 children
@@ -1416,8 +1416,6 @@ z
 a = Vec3(1,0,1) * Vec3(2,1,2)
 b = Vec3(1.252352324,0,1)
 b += Vec3(0,1)
-
-print(a)
 </div>
 </pre></div>
 <div id="Animation"><div id="Animation" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Animation<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.animation</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Animation(name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs)</params>
@@ -1772,37 +1770,31 @@ save()
 <div id="FirstPersonController"><div id="FirstPersonController" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FirstPersonController<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><pre style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.first_person_controller</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">FirstPersonController(**kwargs)</params>
 
 speed<g> = 5</g> 
-cursor<g> = Entity(
-        parent</g> 
+cursor<g> = Entity(parent=camera.ui, model='quad', color=color.pink, scale=.008, rotation_z=45)</g> 
 position<g> = (0, 1, 1)</g> 
 mouse_sensitivity<g> = Vec2(40, 40)</g> 
 target_smoothing<g> = 100</g> 
 smoothing<g> = self.target_smoothing</g> 
+grounded<g> = False</g> 
+jump_height<g> = 2</g> 
+jump_duration<g> = .5</g> 
+jumping<g> = False</g> 
+air_time<g> = 0</g> 
 
 update()   
+input(<g>key</g>)   
+jump()   
+start_fall()   
+land()   
 
 <div class="example">from ursina.prefabs.first_person_controller import FirstPersonController
 Sky(color=color.gray)
 ground = Entity(model='plane', scale=(100,1,100), color=color.yellow.tint(-.2), texture='white_cube', texture_scale=(100,100), collider='box')
-e = Entity(
-    model='cube',
-    scale=(1, 5, 10),
-    x=2,
-    y=.01,
-    rotation_y = 45,
-    collider='box',
-    texture='white_cube',
-)
+e = Entity(model='cube', scale=(1,5,10), x=2, y=.01, rotation_y=45, collider='box', texture='white_cube')
 e.texture_scale = (e.scale_z, e.scale_y)
-e = Entity(
-    model='cube',
-    scale=(1, 5, 10),
-    x=-2,
-    y=.01,
-    collider='box',
-    texture='white_cube',
-)
+e = Entity(model='cube', scale=(1,5,10), x=-2, y=.01, collider='box', texture='white_cube')
 e.texture_scale = (e.scale_z, e.scale_y)
+
 player = FirstPersonController(y=1)
 player.gun = None
 
@@ -2247,7 +2239,7 @@ height<g> = height</g>
         Text('Age:'),
         InputField(name='age_field'),
         Button(text='Submit', color=color.green),
-        )
+        ),
     )
 </div>
 </pre></div>
@@ -2257,6 +2249,7 @@ content<g> = content</g>
 text<g> = title</g> 
 popup<g> = False</g> 
 
+on_enable()   
 close()   
 
 <div class="example">WindowPanel(
@@ -2267,7 +2260,7 @@ close()
         Text('Age:'),
         InputField(name='age_field'),
         Button(text='Submit', color=color.green),
-        )
+        ),
     )
 </div>
 </pre></div>
@@ -2514,7 +2507,7 @@ camera.z = -5
 
 sub_divide(<g>v_0, v_1, v_2, sub_divisions, vertices, faces</g>)   
 
-<div class="example">Entity(model=Sphere(subdivisions=5), color=color.color(60, 1, 1, .5), x=0)
+<div class="example">Entity(model=Sphere(), color=color.color(60, 1, 1, .5), x=0)
 Entity(model=Sphere(radius=0.15, subdivisions=6), color=color.color(1, 60, 1, .5), x=4)
 origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
 ed = EditorCamera(rotation_speed=200, panning_speed=200)
@@ -2533,7 +2526,7 @@ normals<g> = list()</g>
 height_values<g> = [[j[0]/255 for j in i] for i in self.height_values]</g> 
 
 
-<div class="example">e = Entity(model=Terrain('heightmap_1', skip=4), scale=(20,5,20), texture='heightmap_1')
+<div class="example">e = Entity(model=Terrain('heightmap_1', skip=2), scale=(20,5,20), texture='heightmap_1')
 EditorCamera()
 Sky()
 </div>

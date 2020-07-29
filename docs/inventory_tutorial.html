@@ -29,9 +29,10 @@ In this tutorial we will make a drag and drop inventory like this.<br>
 <br>
 <br>
 <div style="text-align: left;">
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="1 Setting up the class"/><br>
 1 Setting up the class<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;Let's begin by making an Inventory class<br>
 <br>
@@ -39,9 +40,10 @@ In this tutorial we will make a drag and drop inventory like this.<br>
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="2 Adding graphics"/><br>
 2 Adding graphics<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;However, if we run the code, we'll see that there's nothing visible.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Let's parent it to the ui and set the model to 'quad', an included model.<br>
@@ -61,9 +63,10 @@ In this tutorial we will make a drag and drop inventory like this.<br>
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="3 Adding placeholder items"/><br>
 3 Adding placeholder items<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;Let's try to add some items to the inventory.<br>
 <br>
@@ -81,9 +84,10 @@ In this tutorial we will make a drag and drop inventory like this.<br>
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="4 Adding items"/><br>
 4 Adding items<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;We've added some items manually to make sure they get the right scale and position,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;but we should make an append() function so it's easy to add items.<br>
@@ -100,9 +104,10 @@ In this tutorial we will make a drag and drop inventory like this.<br>
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="5 Find a free slot in the inventory"/><br>
 5 Find a free slot in the inventory<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;The items gets added, but they overlap. We need to find the first open slot in the inventory<br>
 &nbsp;&nbsp;&nbsp;&nbsp;and place the item there. We can to this by checking each grid position and see if any<br>
@@ -112,9 +117,10 @@ In this tutorial we will make a drag and drop inventory like this.<br>
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="6 Add random item button"/><br>
 6 Add random item button<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;Make a button to add a random item to the inventory. This is not part of the inventory itself,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;but it's useful in order to test it.<br>
@@ -128,9 +134,10 @@ In this tutorial we will make a drag and drop inventory like this.<br>
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="7 Adding textures and hover text"/><br>
 7 Adding textures and hover text<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;To add textures, just set texture=item and it will try to find a<br>
 &nbsp;&nbsp;&nbsp;&nbsp;texture with that name. It searches first in the project's assets and then<br>
@@ -144,9 +151,10 @@ In this tutorial we will make a drag and drop inventory like this.<br>
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="8 Drag n' drop"/><br>
 8 Drag n' drop<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;We can't move the items! That's not fun.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;However, that's easy to change. Just spawn a Draggable instead of Button.<br>
@@ -156,9 +164,10 @@ In this tutorial we will make a drag and drop inventory like this.<br>
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="9 Snap to grid on_drop"/><br>
 9 Snap to grid on_drop<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;The items can be moved now, but they don't follow the grid.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Let's round the position when we drop it.<br>
@@ -170,9 +179,10 @@ In this tutorial we will make a drag and drop inventory like this.<br>
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="10 Swap items"/><br>
 10 Swap items<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;Add a drag function to remember the start position as org_pos.<br>
 <br>
@@ -181,9 +191,10 @@ In this tutorial we will make a drag and drop inventory like this.<br>
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="11 Stay inside the inventory, please"/><br>
 11 Stay inside the inventory, please<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;We shouldn't be able to drop the items outside of the inventory.<br>
 <br>
@@ -191,9 +202,10 @@ In this tutorial we will make a drag and drop inventory like this.<br>
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;">
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="12 Bugfix: Make the dragged items render on top"/><br>
 12 Bugfix: Make the dragged items render on top<br>
-<div style="font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;All the items are at the same depth, so it hard to say how they will overlap.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;It feels natural that the item we're currently dragging stays on top,<br>

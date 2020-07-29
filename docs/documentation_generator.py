@@ -147,9 +147,11 @@ def get_example(str):
 
     example = '\n'.join(lines)
     example = textwrap.dedent(example)
+    example = example.split('# test\n')[0]
     ignore = ('app = Ursina()', 'app.run()', 'from ursina import *')
     if 'class Ursina' in str:   # don't ignore in main.py
         ignore = ()
+
 
     lines = [e for e in example.split('\n') if not e in ignore and not e.strip().startswith('#')]
     example = '\n'.join(lines)
