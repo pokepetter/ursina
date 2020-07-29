@@ -7,10 +7,11 @@ class EditorIcon(Draggable):
             parent=scene,
             world_scale=.25,
             always_on_top=True,
-            model='sphere',
-            color=color.black,
+            model=None,
+            # color=color.black,
             plane_direction=(0,1,0),
             require_key='g',
+            add_to_scene_entities=False,
             )
         for key, value in kwargs.items():
             setattr(self, key ,value)
@@ -18,10 +19,9 @@ class EditorIcon(Draggable):
         self.text = 'entity'
         self.text_entity.y = 1
         self.text_entity.ignore = True
-        self.text_entity.scale *= .5
+        self.text_entity.scale = 2
         self.text_entity.enabled = self.scene_editor.show_names
-        self.dot = Entity(parent=self, ignore=True, model='sphere', scale=.85, color=color.white)
-        self.help_text = Text(x=-.5*camera.aspect_ratio, text='[g]:move\n[e]:scale\n[y]move up/down\n[F2]:rename selected')
+        self.sprite = Entity(parent=self, add_to_scene_entities=False, model='quad', scale=.85, color=color.white)
 
 
     def drag(self):
@@ -105,7 +105,7 @@ class SelectionBox(Entity):
         if mouse.left:
             if mouse.x == mouse.start_x and mouse.y == mouse.start_y:
                 return
-            # if self.dragging:
+
             self.scale_x = mouse.x - self.x
             self.scale_y = mouse.y - self.y
 
@@ -113,8 +113,9 @@ class SelectionBox(Entity):
 class SceneEditor(Entity):
     def __init__(self):
         super().__init__()
-        self.world_grid = Entity(parent=self, model=Plane((32,32), mode='line'), scale=32, color=color.white33, collider='box', collision=False)
+        self.world_grid = Entity(parent=self, model=Grid(32,32), scale=32, rotation_x=90, color=color.white33, collider='box', collision=False)
 
+        self.help_text = Text(x=-.5*camera.aspect_ratio, text='[g]:move\n[e]:scale\n[y]move up/down\n[F2]:rename selected')
         self.cursor_3d = Entity(parent=self, model=Mesh(vertices=(0,0,0), mode='point', thickness=10), color=color.pink, visible=False)
         line_model = Mesh(vertices=((-1,0,0), (1,0,0)), mode='line', thickness=2)
         self.cursor_3d.rulers = (
@@ -151,6 +152,7 @@ class SceneEditor(Entity):
             # self.textures += [e.stem for e in application.internal_textures_folder.glob(f'**/*{file_type}') if not e.stem in self.textures]
             self.textures += [e for e in ('white_cube', 'brick') if not e in self.textures]
         self.texture_menu = AssetMenu(button_dict={key : Func(self.set_attr_for_selected, 'texture', key) for key in self.textures}, scene_editor=self, enabled=False)
+
         self.rename_window = WindowPanel(
             title='Rename',
             content=(
@@ -160,34 +162,47 @@ class SceneEditor(Entity):
             enabled=False,
             popup=True,
         )
-        self.menus = [self.model_menu, self.texture_menu, self.rename_window]
+        self.scene_name = 'untitled'
+        self.scene_folder = application.asset_folder / 'scenes'
+        self.ask_for_scene_name_window = WindowPanel(
+            title='Enter scene name',
+            content=(
+                InputField(name='scene name'),
+                Button(text='Save', color=color.azure, on_click=self.save),
+            ),
+            enabled=False,
+            popup=True,
+        )
+        self.menus = [self.model_menu, self.texture_menu, self.rename_window, self.ask_for_scene_name_window]
         self.show_names = False
 
-        self.load('test')
+        self.load('test2')
 
 
 
     def load(self, name, folder=application.asset_folder / 'scenes'):
-        for e in self.entities:
+        t = time.time()
+        for e in self.editor_icons:
             destroy(e)
-        self.entities.clear()
+        self.editor_icons.clear()
         scene_instance = None
 
         with open(folder / f'{name}.py') as f:
             try:
                 exec(f.read())
                 scene_instance = eval(f'Scene()')
-                self.entities = [e for e in scene.entities if e.has_ancestor(scene_instance)]
+                # entities = [e for e in scene.entities if e.has_ancestor(scene_instance)]
             except:
                 print('error in scene:', name)
 
         # make icons
-        for e in self.entities:
+        for e in scene_instance.children:
             e.editor_icon = EditorIcon(parent=self.editor_icon_parent, scene_editor=self, entity=e)
             self.editor_icons.append(e.editor_icon)
             e.collision = False
 
         if scene_instance:
+            print(f'loaded scene: "{name}" in {time.time()-t}')
             return scene_instance
         else:
             return False
@@ -209,9 +224,15 @@ class SceneEditor(Entity):
         for icon in self.selection:
             icon.text = name
             icon.entity.name = name
-            icon.text_entity.scale = 1
+            icon.text_entity.scale = 2
 
         self.rename_window.close()
+
+
+    def save(self):
+        from save import save
+        save(self)
+
 
     @property
     def show_names(self):
@@ -249,7 +270,7 @@ class SceneEditor(Entity):
     def update(self):
         for icon in self.editor_icons:
             icon.position = icon.entity.world_position
-            icon.text_entity.look_at(camera, 'back')
+            icon.sprite.look_at(camera, 'back')
 
         if self.rename_window.enabled:
             return
@@ -441,6 +462,9 @@ class SceneEditor(Entity):
         if held_keys['control'] and key == 'y':
             self.redo()
 
+        if held_keys['control'] and key == 's':
+            self.save()
+
 
     def clear_selection(self):
         # print('clear selection')
@@ -451,19 +475,23 @@ class SceneEditor(Entity):
 
     def render_selection(self):
         for icon in self.editor_icons:
-            icon.dot.color=color.white
+            icon.sprite.color=color.white
+            icon.color=color.white
 
         if self.selection:
             for icon in self.selection:
-                icon.dot.color = color.azure
+                icon.sprite.color = color.azure
+                icon.color = color.azure
 
-            self.selection[-1].dot.color = color.cyan
+            self.selection[-1].sprite.color = color.cyan
+            self.selection[-1].color = color.cyan
 
         self.selection_text.text = 'Selection:\n' + '\n'.join([icon.entity.name for icon in self.selection])
 
 
 
 if __name__ == '__main__':
+    window.vsync = False
     app = Ursina()
     SceneEditor()
     # Sky()
