@@ -122,7 +122,7 @@ if __name__ == '__main__':
     app = Ursina()
     window.color = color.black
 
-    animation = Animation('ursina_wink', fps=2, scale=5, filtering=None, autoplay=True)
+    animation = Animation('ursina_wink', fps=2, scale=1, filtering=None, autoplay=True)
     # print(animation.sequence.duration)
     # animation = Animation('blob_animation', fps=12, scale=5, y=20)
     #

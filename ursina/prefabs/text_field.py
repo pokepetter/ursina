@@ -228,9 +228,10 @@ class TextField(Entity):
 
         delimiters = (' ', '.')
         if key in self.shortcuts['move_to_end_of_word']:
-            if x == len(l) and y < len(lines)-1:        # end of line, move to beginning of next
-                cursor.y += 1
-                cursor.x = 0
+            if x == len(l):
+                if y < len(lines)-1:        # end of line, move to beginning of next
+                    cursor.y += 1
+                    cursor.x = 0
                 return
 
             elif l[x] not in delimiters:                # move right to closest delimiter
@@ -247,6 +248,9 @@ class TextField(Entity):
                 cursor.x = len(l)
 
         if key in self.shortcuts['move_to_start_of_word']:
+            if x == 0 and y == 0:
+                return
+
             if x == 0 and y > 0:                        # move to end of line above
                 cursor.y -= 1
                 cursor.x = len(lines[y-1])
@@ -535,7 +539,7 @@ if __name__ == '__main__':
     Text.default_resolution = 16*2
     # TreeView()
     te = TextField(max_lines=300)
-    te.line_numbers.enabled = True
+    # te.line_numbers.enabled = True
     # for name in color.color_names:
     #     if name == 'black':
     #         continue

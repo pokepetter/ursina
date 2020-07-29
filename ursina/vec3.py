@@ -77,6 +77,8 @@ if __name__ == '__main__':
     a = Vec3(1,0,1) * Vec3(2,1,2)
     b = Vec3(1.252352324,0,1)
     b += Vec3(0,1)
+
+    # test
     print(a)
     b.x += 2
     print(b.x)

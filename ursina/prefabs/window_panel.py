@@ -9,16 +9,13 @@ class Space():
 
 class WindowPanel(Draggable):
     def __init__(self, title='', content=[], **kwargs):
-        super().__init__(
-            origin = (-0, .5),
-            scale = (.5, Text.size),
-            color = color.black,
-            )
+        super().__init__(origin=(-0,.5), scale=(.5, Text.size*2), color=color.black)
 
-        # print(content)
         self.content = content
         self.text = title
         self.popup = False
+        self._prev_input_field = None
+        self._original_scale = self.scale
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
@@ -27,7 +24,7 @@ class WindowPanel(Draggable):
             self.text_entity.world_scale_y = 1
 
         if content:
-            spacing = .5
+            spacing = .25
             height = 1 + spacing
 
             if isinstance(content, dict):
@@ -43,6 +40,10 @@ class WindowPanel(Draggable):
                     c.y = -height
                     c.z = 0
 
+                    if isinstance(c, InputField):
+                        if self._prev_input_field:
+                            self._prev_input_field.next_field = c
+                        self._prev_input_field = c
 
                     if isinstance(c, Text):
                         c.origin = (-.5, .5)
@@ -51,12 +52,12 @@ class WindowPanel(Draggable):
 
                     elif isinstance(c, Button):
                         c.world_parent = self
-                        c.scale = (.98, 2)
+                        c.scale = (.9, 1)
                         if hasattr(c, 'height'):
                             c.scale_y = height
                         c.model = Quad(aspect=c.world_scale_x/c.world_scale_y)
                         height += c.scale_y
-                        c.y -= c.scale_y/2
+                        # c.y -= c.scale_y/2
 
                     elif hasattr(c, 'scale_y'):
                         height += c.scale_y
@@ -70,7 +71,6 @@ class WindowPanel(Draggable):
             self.panel.model = Quad(aspect=self.panel.world_scale_x/self.panel.world_scale_y, radius=.025)
             self.panel.origin = (0, .5)
 
-
         if self.popup:
             self.lock_x = True
             self.lock_y = True
@@ -83,15 +83,19 @@ class WindowPanel(Draggable):
                 pressed_color=color.black66,
                 )
 
-            def close():
-                self.bg.enabled = False
-                self.animate_scale_y(0, duration=.1)
-                invoke(setattr, self, 'enabled', False, delay=.2)
+            self.bg.on_click = self.close
 
-                if hasattr(self, 'close'):
-                    self.close()
 
-            self.bg.on_click = close
+    def on_enable(self):
+        if self.popup:
+            self.bg.enabled = True
+            self.animate_scale(self._original_scale, duration=.1)
+
+
+    def close(self):
+        self.bg.enabled = False
+        self.animate_scale_y(0, duration=.1)
+        invoke(setattr, self, 'enabled', False, delay=.2)
 
 
 if __name__ == '__main__':
@@ -99,13 +103,18 @@ if __name__ == '__main__':
     WindowPanel(
         title='Custom Window',
         content=(
-            Text('leflaijfae\njofeoijfw'),
-            Button(text='test', color=color.green),
-            Space(height=1),
-            Text('leflaijfae\njofeoijfw'),
-            InputField()
+            Text('Name:'),
+            InputField(name='name_field'),
+            Text('Age:'),
+            InputField(name='age_field'),
+            Text('Phone Number:'),
+            InputField(name='phone_number_field'),
+            # Space(height=1),
+            # Text('Send:'),
+            Button(text='Submit', color=color.green),
             # ButtonGroup(('test', 'eslk', 'skffk'))
-            )
+            ),
+            # popup=True
         )
     # Text(dedent('''
     # [        My Window            [x]]
