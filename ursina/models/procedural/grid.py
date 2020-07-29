@@ -10,12 +10,12 @@ class Grid(Mesh):
         tris = list()
 
         for x in range(int(width) + 1):
-            verts.append(Vec3(x/width, 0, 0))
-            verts.append(Vec3(x/width, 1, 0))
+            verts.append(Vec3(-.5 + (x/width), -.5, 0))
+            verts.append(Vec3(-.5 + (x/width), .5, 0))
 
         for y in range(int(height) + 1):
-            verts.append((0, y/height, 0))
-            verts.append((1, y/height, 0))
+            verts.append((-.5, -.5 + (y/height), 0))
+            verts.append((.5, -.5 + (y/height), 0))
 
         tris = [(i, i+1) for i in range(0, len(verts), 2)]
 
