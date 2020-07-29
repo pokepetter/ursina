@@ -40,7 +40,7 @@ class MinecraftClone(Entity):
                     # colors += (lerp(color.yellow, color.random_color(), .2).tint(-.2), ) * len(verts)
                     #
                     # i += 1
-                    voxel = Entity(
+                    voxel = Button(
                         parent = self,
                         name = 'voxel',
                         model = copy(c),
@@ -48,9 +48,11 @@ class MinecraftClone(Entity):
                         double_sided = True,
                         color = lerp(lerp(color.brown, color.dark_gray, .5), color.random_color(), .1),
                         index = (x,y,z),
-                        position=(x*.8660025,y,z*.75)
+                        position=(x*.8660025,y,z*.75),
+                        collision=False,
+                        add_to_scene_entities=False
                         )
-                    voxel.collider = MeshCollider(voxel, mesh=c, center=-voxel.origin)
+                    # voxel.collider = MeshCollider(voxel, mesh=c, center=-voxel.origin)
                     top = Entity(parent=voxel, model=copy(c), y=1.01, scale_y=.01)
                     top.color = lerp(color.lime, color.random_color(), .2)
 
@@ -69,12 +71,12 @@ class MinecraftClone(Entity):
 
 
 class Magician(Entity):
-    def update(self):
+    def input(self, key):
         # print(mo)
         if mouse.left and mouse.hovered_entity:
-            mouse.hovered_entity.scale_y += 1.5 * time.dt
+            mouse.hovered_entity.y += 1
         if mouse.right and mouse.hovered_entity:
-            mouse.hovered_entity.scale_y -= 1.5 * time.dt
+            mouse.hovered_entity.y -= 1
 Magician()
 
 class FirstPersonController(Entity):
@@ -140,6 +142,7 @@ class FirstPersonController(Entity):
 
 
 if __name__ == '__main__':
+    window.vsync = False
     app = Ursina()
     # window.size = (450, (450/window.aspect_ratio))
     # window.center_on_screen()

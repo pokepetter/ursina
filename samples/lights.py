@@ -36,5 +36,3 @@ def update():
 
 
 app.run()   # opens a window and starts the game.
-
-

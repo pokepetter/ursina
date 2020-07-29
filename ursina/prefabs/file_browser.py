@@ -199,7 +199,7 @@ class FileBrowser(Entity):
 
     @property
     def selection(self):
-        return [c for c in self.button_parent.children if c.selected == True]
+        return [c.path for c in self.button_parent.children if c.selected == True]
 
 
 

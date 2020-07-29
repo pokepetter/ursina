@@ -432,7 +432,9 @@ if __name__ == '__main__':
     # test.origin = (0, 0)
     # test.wordwrap = 40
 
-    text = Text(text=descr, wordwrap=10, y=.25, background=True)
+    text = Text(text=descr, wordwrap=10, origin=(-.5,.5), y=.25, background=True)
+    Entity(parent=camera.ui, model='circle', scale=.05, color=color.yellow, y=text.y, z=-1)
+
 
     def input(key):
         if key == 'a':

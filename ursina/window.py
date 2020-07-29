@@ -18,8 +18,7 @@ class Window(WindowProperties):
         loadPrcFileData('', 'notify-level-util error')
         loadPrcFileData('', 'textures-auto-power-2 #t')
         loadPrcFileData('', 'load-file-type p3assimp')
-        loadPrcFileData("", "framebuffer-multisample 1")
-        # loadPrcFileData('', 'framebuffer-multisample 1')
+        # loadPrcFileData("", "framebuffer-multisample 1")
         loadPrcFileData('', 'multisamples 2')
         # loadPrcFileData('', 'textures-power-2 none')
 

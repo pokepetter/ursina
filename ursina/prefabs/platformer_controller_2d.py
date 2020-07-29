@@ -28,7 +28,7 @@ class PlatformerController2d(Entity):
         self.jumping = False
         self.max_jumps = 1
         self.jumps_left = self.max_jumps
-        self.gravity = 1
+        # self.gravity = 1
         self.grounded = True
         self.air_time = 0
 
@@ -37,7 +37,7 @@ class PlatformerController2d(Entity):
         if ray.hit:
             self.y = ray.world_point[1] + .01
 
-        camera.add_script(SmoothFollow(target=self, offset=[0,1,-30], speed=4))
+        # camera.add_script(SmoothFollow(target=self, offset=[0,1,-30], speed=4))
 
         for key, value in kwargs.items():
             setattr(self, key, value)

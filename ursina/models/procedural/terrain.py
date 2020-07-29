@@ -83,10 +83,18 @@ class Terrain(Mesh):
 
 if __name__ == '__main__':
     app = Ursina()
-    e = Entity(model=Terrain('heightmap_1', skip=4), scale=(20,5,20), texture='heightmap_1')
+    e = Entity(model=Terrain('heightmap_1', skip=2), scale=(20,5,20), texture='heightmap_1')
     EditorCamera()
     Sky()
 
+    # test
+    t = time.time()
+    e.collider = 'mesh'
+    print(time.time() - t)
+
+
+
+    # e.collider = 'mesh'
     # terrains = list()
     # for i in (1,2,4,8):
     #     e = Entity(model=Terrain('heightmap_1', skip=i), scale=(20,5,20))

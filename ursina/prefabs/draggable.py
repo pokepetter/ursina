@@ -46,6 +46,7 @@ class Draggable(Button):
 
     def start_dragging(self):
         Draggable._z_plane.world_position = mouse.world_point
+        # Draggable._z_plane.world_position = self.world_position
         Draggable._z_plane.look_at(Draggable._z_plane.position - Vec3(*self.plane_direction))
         if self.has_ancestor(camera.ui):
             Draggable._z_plane.world_parent = camera.ui
@@ -58,10 +59,8 @@ class Draggable(Button):
         self.collision = False
         Draggable._z_plane.enabled = True
         mouse.traverse_target = Draggable._z_plane
-        try:
+        if hasattr(self, 'drag'):
             self.drag()
-        except:
-            pass
 
 
     def stop_dragging(self):

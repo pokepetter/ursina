@@ -17,7 +17,7 @@ class Cursor(Entity):
 
 
     def update(self):
-        self.position = (mouse.x, mouse.y, -100)
+        self.position = Vec3(mouse.x, mouse.y, -100)
 
 
 

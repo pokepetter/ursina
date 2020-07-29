@@ -1,6 +1,12 @@
 from ursina import Entity
 
+# TODO:
+# circle
+# AArectangle
+# AAbox
+# box
 
+# sphere
 
 class Trigger(Entity):
     def __init__(self, **kwargs):
@@ -26,7 +32,7 @@ class Trigger(Entity):
         for other in self.trigger_targets:
             if other == self:
                 continue
-                
+
             dist = distance(other, self)
             if not other in self.triggerers and dist <= self.radius:
                 self.triggerers.append(other)

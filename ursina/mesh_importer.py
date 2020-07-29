@@ -261,7 +261,6 @@ def compress_models_fast(model_name=None, write_to_disk=False):
                 object_name = object_name.split('\0', 1)[0]
                 print('name:', object_name)
 
-                vertices= o.data.mvert
                 verts = [v.co for v in o.data.mvert]
                 verts = tuple(verts)
 

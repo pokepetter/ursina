@@ -499,8 +499,7 @@ class Entity(NodePath):
 
     @property
     def world_scale(self):
-        scale = self.getScale(base.render)
-        return Vec3(scale[0], scale[1], scale[2])
+        return Vec3(*self.getScale(base.render))
     @world_scale.setter
     def world_scale(self, value):
         if isinstance(value, (int, float, complex)):

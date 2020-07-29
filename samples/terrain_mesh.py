@@ -5,13 +5,13 @@ app = Ursina()
 
 e = Entity(model=Terrain('loddefjord_height_map', skip=8), texture='loddefjord_color', scale=100, scale_y=50)
 Sky(rotation_y=125)
-
+e.model.save('loddefjord_terrain')
 scene.fog_color = color.gray
 scene.fog_density = .01
 
 from ursina.prefabs.first_person_controller import FirstPersonController
-fpc = FirstPersonController(speed=10)
-
+# fpc = FirstPersonController(speed=10)
+EditorCamera()
 window.exit_button.visible = False
 window.fps_counter.enabled = False
 mouse.visible = False

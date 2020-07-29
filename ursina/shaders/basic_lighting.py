@@ -3,9 +3,12 @@ from ursina import *
 
 basic_lighting_shader = Shader(language=Shader.GLSL,
 vertex='''
-#version 130
+#version 150
 uniform mat4 p3d_ModelViewProjectionMatrix;
 uniform mat4 p3d_ModelMatrixInverseTranspose;
+uniform mat3 p3d_NormalMatrix;
+uniform mat4 p3d_ModelMatrix;
+uniform mat4 p3d_ViewMatrix;
 uniform mat4 transform_matrix;
 in vec4 p3d_Vertex;
 in vec2 p3d_MultiTexCoord0;
@@ -28,12 +31,30 @@ void main() {
                           invcamz[0], invcamz[1], invcamz[2]
                       );
 
-  world_space_normal = normalize(p3d_Normal * invcam);
+  // mat3 normal_mat  = inverse(transpose(upper33(p3d_ModelMatrix)));
+  // vec3 world_space_normal = vec3(normal_mat * vec4(p3d_Normal, 0.0));
+  // vec3 world_space_normal = vec3(p3d_ModelMatrix * vec4(p3d_Normal, 0.0));
+  // vec3 world_space_normal = vec3(p3d_ViewMatrix * p3d_ModelMatrix * vec4(p3d_Normal, 0.0));
+  // world_space_normal = normalize(transpose( inverse(mat3(p3d_ModelViewProjectionMatrix)) ) * p3d_Normal.xyz);
+  world_space_normal = p3d_Normal * invcam;
+  // world_space_normal = invcam * p3d_Normal;
+  // world_space_normal = p3d_NormalMatrix * p3d_Normal;
+  // world_space_normal = mat3(p3d_ModelMatrixInverseTranspose) * p3d_Normal.xyz;
+  // world_space_normal = p3d_Normal;
 }
+// void main(void)
+// {
+//     vec3 p = vec3 ( gl_ModelViewMatrix * gl_Vertex );           // transformed point to world space
+//
+//     l = normalize ( vec3 ( lightPos ) - p );                    // vector to light source
+//     n = normalize ( gl_NormalMatrix * gl_Normal );              // transformed n
+//
+//     gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+// }
 ''',
 
 fragment='''
-#version 130
+#version 140
 
 uniform sampler2D p3d_Texture0;
 uniform vec4 p3d_ColorScale;
@@ -44,6 +65,7 @@ out vec4 fragColor;
 
 void main() {
     vec4 norm = vec4(world_space_normal*0.5+0.5, 1);
+    // vec4 norm = vec4(world_space_normal, 1);
     float grey = 0.21 * norm.r + 0.71 * norm.g + 0.07 * norm.b;
     norm = vec4(grey, grey, grey, 1);
     vec4 color = texture(p3d_Texture0, texcoord) * p3d_ColorScale * norm;
@@ -66,14 +88,14 @@ if __name__ == '__main__':
     app = Ursina()
     window.color=color.black
 
-    # e = Entity(model='sphere', shader=empty_shader)
+    # e = Entity(model='sphere', shader=basic_lighting_shader)
     # e.setShaderInput('transform_matrix', e.getNetTransform().getMat())
     shader = basic_lighting_shader
 
-    a = WhiteCube(shader=shader)
+    a = WhiteCube(shader=basic_lighting_shader)
     # a.setShaderInput('transform_matrix', a.getNetTransform().getMat())
 
-    b = AzureSphere(shader=shader, rotation_y=180, x=3)
+    b = WhiteSphere(shader=basic_lighting_shader, x=3)
     # b.set_shader_input('transform_matrix', b.getNetTransform().getMat())
     # AzureSphere(shader=a.shader, y=2)
     GrayPlane(scale=10, y=-2, texture='shore')
@@ -83,6 +105,8 @@ if __name__ == '__main__':
 
     def update():
         b.rotation_y += 1
+        #b.rotation_z += 1
+        b.rotation_x += 1
         b.set_shader_input('transform_matrix', b.getNetTransform().getMat())
     # EditorCamera()
 

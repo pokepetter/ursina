@@ -8,14 +8,14 @@ vertex='''
 uniform mat4 p3d_ModelViewProjectionMatrix;
 uniform mat4 transform_matrix;
 in vec4 p3d_Vertex;
-in vec2 p3d_MultiTexCoord0;
 in vec3 p3d_Normal;
+in vec2 p3d_MultiTexCoord0;
 out vec2 texcoord;
 out vec3 world_space_normal;
 
 void main() {
   gl_Position = p3d_ModelViewProjectionMatrix * p3d_Vertex;
-  texcoord = p3d_MultiTexCoord0;
+  // texcoord = p3d_MultiTexCoord0;
 
   vec4 invcamx = transform_matrix[0];
   vec4 invcamy = transform_matrix[1];
@@ -89,7 +89,7 @@ if __name__ == '__main__':
     # e.setShaderInput('transform_matrix', e.getNetTransform().getMat())
     shader = colored_lights_shader
 
-    a = GrayCube(shader=shader)
+    a = GrayCube(shader=shader, texture='shore')
     b = GraySphere(shader=shader, rotation_y=180, x=3)
     # AzureSphere(shader=a.shader, y=2)
     GrayPlane(scale=10, y=-2, texture='shore')
@@ -99,7 +99,7 @@ if __name__ == '__main__':
 
 
     def update():
-        b.rotation_y += 1
+        b.rotation_z += 1
         b.set_shader_input('transform_matrix', b.getNetTransform().getMat())
 
     EditorCamera()
