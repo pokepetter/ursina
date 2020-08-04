@@ -89,6 +89,7 @@ def get_class_attributes(str):
                 for l in init_section[start+1:end]:
                     value += '\n' + l[4:]
 
+            value = textwrap.shorten(value, width=140-len(key))
             attributes.append(key + ' = ' + value)
 
 
@@ -378,7 +379,7 @@ style = f'''
         left: 24em;
         font-size: 1.25em;
         font-weight: lighter;
-        max-width: 1200px;
+        max-width: 1400px;
         >
     '''
 html = '<title> ursina cheat sheet</title>'
@@ -391,6 +392,8 @@ sidebar = '''<pre><div style="
     bottom: 0;
     overflow-y: scroll;
     width: 15em;
+    z-index: 1;
+    background-color: hsl(0, 0%, 99%);
     ">'''
 
 for i, class_dictionary in enumerate((most_used_info, module_info, class_info, prefab_info, script_info, asset_info)):
