@@ -176,31 +176,32 @@ class GridEditor(Entity):
 
 
 
-def PixelEditor(texture, palette=(color.black, color.white, color.light_gray, color.gray, color.red, color.orange, color.yellow, color.lime,
-        color.green, color.turquoise, color.cyan,       color.azure,
-        color.blue,  color.violet,    color.magenta,    color.pink
-        )):
-    grid_editor = GridEditor(texture=texture, size=texture.size, palette=palette)
-    grid_editor.texture.filtering = False
-    def render_grid_as_image():
-        for y in range(grid_editor.h):
-            for x in range(grid_editor.w):
-                t.set_pixel(x, y, grid_editor.grid[y][x])
 
-        texture.apply()
-
-    grid_editor.render = render_grid_as_image
-    grid_editor.render()
-    return grid_editor
+class PixelEditor(GridEditor):
+    def __init__(self, texture, palette=(color.black, color.white, color.light_gray, color.gray, color.red, color.orange, color.yellow, color.lime, color.green, color.turquoise, color.cyan, color.azure, color.blue, color.violet, color.magenta, color.pink), **kwargs):
+        super().__init__(texture=texture, size=texture.size, palette=palette, **kwargs)
+        self.texture.filtering = False
+        self.render()
 
 
-def ASCIIEditor(size=(61,28), palette=(' ', '#', '|', 'A', '/', '\\', 'o', '_', '-', 'i', 'M', '.'), font='VeraMono.ttf'):
-    grid_editor = GridEditor(size=size, palette=palette, color=color.black)
-    grid_editor.text_entity = Text(text='', position=(-.45,-.45,-2), line_height=1.1, origin=(-.5,-.5), font=font)
-    grid_editor.scale = (Text.get_width(' '*grid_editor.w), grid_editor.h*Text.size*grid_editor.text_entity.line_height)
+    def render(self):
+        for y in range(self.h):
+            for x in range(self.w):
+                t.set_pixel(x, y, self.grid[y][x])
 
-    def render_grid_as_text():
-        grid_editor.text_entity.text = '\n'.join([''.join(line) for line in reversed(grid_editor.grid)])
+        self.texture.apply()
+
+
+
+class ASCIIEditor(GridEditor):
+    def __init__(self, size=(61,28), palette=(' ', '#', '|', 'A', '/', '\\', 'o', '_', '-', 'i', 'M', '.'), font='VeraMono.ttf', **kwargs):
+        super().__init__(size=size, palette=palette, color=color.black, **kwargs)
+        self.text_entity = Text(text='', position=(-.45,-.45,-2), line_height=1.1, origin=(-.5,-.5), font=font)
+        self.scale = (Text.get_width(' '*self.w), self.h*Text.size*self.text_entity.line_height)
+        # grid_editor.render()
+
+    def render(self):
+        self.text_entity.text = '\n'.join([''.join(line) for line in reversed(self.grid)])
 
     # if held_keys['control'] and key == 'c':
     #     pyperclip.copy(t.text)
@@ -211,27 +212,27 @@ def ASCIIEditor(size=(61,28), palette=(' ', '#', '|', 'A', '/', '\\', 'o', '_', 
     #     undo_cache = undo_cache[:undo_index]
     #     undo_cache.append(deepcopy(grid))
 
-    grid_editor.render = render_grid_as_text
-    grid_editor.render()
-    return grid_editor
 
 
 
 if __name__ == '__main__':
     app = Ursina()
-    # window.color = color.black
-    Text.default_font = 'VeraMono.ttf'
 
 
-
+    '''
+    pixel editor example, it's basically a drawing tool.
+    can be useful for level editors and such
+    here we create a new texture, but can also give it an exisitng texture to modify.
+    '''
     from PIL import Image
     t = Texture(Image.new(mode='RGBA', size=(32,32), color=(0,0,0,1)))
     PixelEditor(t)
 
-    # ASCIIEditor()
 
-    def input(key):
-        if key == '-':
-            grid_editor.scale *= .95
+    '''
+    same as the pixel editor, but with text.
+    '''
+    ASCIIEditor(size=(32,32))
+
 
     app.run()

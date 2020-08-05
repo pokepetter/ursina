@@ -68,6 +68,9 @@
 <a style="color:hsl(320.0, 89%, 28%);" href="#FileBrowser">FileBrowser</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#FileBrowserSave">FileBrowserSave</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#FirstPersonController">FirstPersonController</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#GridEditor">GridEditor</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#PixelEditor">PixelEditor</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#ASCIIEditor">ASCIIEditor</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#HealthBar">HealthBar</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#HotReloader">HotReloader</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#InputField">InputField</a>
@@ -1813,6 +1816,95 @@ def input(key):
         bullet.world_parent = scene
         bullet.animate_position(bullet.position+(bullet.forward*50), curve=curve.linear, duration=1)
         destroy(bullet, delay=1)
+</div>
+</div></div>
+<div id="GridEditor"><div id="GridEditor" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">GridEditor<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.grid_editor</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">GridEditor(size=(32,32), palette=(' ', '#', '|', 'o'), **kwargs)</params>
+
+w, self.h<g> = int(size[0]), int(size[1])</g> 
+grid<g> = [[palette[0] for x in range(self.w)] for y in range(self.h)]</g> 
+brush_size<g> = 1</g> 
+cursor<g> = Entity(parent=self, model=Quad(segments=0, mode='line'), origin=(-.5,-.5), scale=(1/self.w, 1/self.h), color=color.color(0,1,1,.2), z=-.1)</g> 
+selected_char<g> = palette[1]</g> 
+palette<g> = palette</g> 
+prev_draw<g> = None</g> 
+start_pos<g> = (0,0)</g> 
+undo_cache<g> = list()</g> 
+undo_index<g> = 0</g> 
+help_text<g> = Text(
+        text=dedent('''
+            left mouse:    draw
+            control(hold): draw lines
+            alt(hold):     select character
+            ctrl + z:      undo
+            ctrl + y:      redo
+        '''),
+        position=window.top_left,
+        scale=.75
+        )</g> 
+
+update()   
+draw(<g>x, y</g>)   
+input(<g>key</g>)   
+floodfill(<g>matrix, x, y, first=True</g>)   
+
+<div class="example">'''
+pixel editor example, it's basically a drawing tool.
+can be useful for level editors and such
+here we create a new texture, but can also give it an exisitng texture to modify.
+'''
+from PIL import Image
+t = Texture(Image.new(mode='RGBA', size=(32,32), color=(0,0,0,1)))
+PixelEditor(t)
+
+
+'''
+same as the pixel editor, but with text.
+'''
+ASCIIEditor(size=(32,32))
+</div>
+</div></div>
+<div id="PixelEditor"><div id="PixelEditor" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">PixelEditor<g>(GridEditor)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.grid_editor</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">PixelEditor(texture, palette=(color.black, color.white, color.light_gray, color.gray, color.red, color.orange, color.yellow, color.lime, color.green, color.turquoise, color.cyan, color.azure, color.blue, color.violet, color.magenta, color.pink), **kwargs)</params>
+
+
+render()   
+
+<div class="example">'''
+pixel editor example, it's basically a drawing tool.
+can be useful for level editors and such
+here we create a new texture, but can also give it an exisitng texture to modify.
+'''
+from PIL import Image
+t = Texture(Image.new(mode='RGBA', size=(32,32), color=(0,0,0,1)))
+PixelEditor(t)
+
+
+'''
+same as the pixel editor, but with text.
+'''
+ASCIIEditor(size=(32,32))
+</div>
+</div></div>
+<div id="ASCIIEditor"><div id="ASCIIEditor" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ASCIIEditor<g>(GridEditor)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.grid_editor</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ASCIIEditor(size=(61,28), palette=(' ', '#', '|', 'A', '/', '\\', 'o', '_', '-', 'i', 'M', '.'), font='VeraMono.ttf', **kwargs)</params>
+
+text_entity<g> = Text(text='', position=(-.45,-.45,-2), line_height=1.1, origin=(-.5,-.5), font=font)</g> 
+scale<g> = (Text.get_width(' '*self.w), self.h*Text.size*self.text_entity.line_height)</g> 
+
+render()   
+
+<div class="example">'''
+pixel editor example, it's basically a drawing tool.
+can be useful for level editors and such
+here we create a new texture, but can also give it an exisitng texture to modify.
+'''
+from PIL import Image
+t = Texture(Image.new(mode='RGBA', size=(32,32), color=(0,0,0,1)))
+PixelEditor(t)
+
+
+'''
+same as the pixel editor, but with text.
+'''
+ASCIIEditor(size=(32,32))
 </div>
 </div></div>
 <div id="HealthBar"><div id="HealthBar" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">HealthBar<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.health_bar</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">HealthBar(max_value=100, show_text=True, show_lines=False, **kwargs)</params>
