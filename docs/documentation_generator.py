@@ -5,10 +5,6 @@ import builtins
 import textwrap
 from ursina import color, lerp, application
 
-'''
-samples
-tutorials
-'''
 
 
 def indentation(line):
@@ -89,7 +85,7 @@ def get_class_attributes(str):
                 for l in init_section[start+1:end]:
                     value += '\n' + l[4:]
 
-            value = textwrap.shorten(value, width=140-len(key))
+            # value = textwrap.shorten(value, width=140-len(key))
             attributes.append(key + ' = ' + value)
 
 
@@ -379,11 +375,13 @@ style = f'''
         left: 24em;
         font-size: 1.25em;
         font-weight: lighter;
-        max-width: 1400px;
+        max-width: 100%;
+        overflow-x: hidden;
+        white-space: pre-wrap;
         >
     '''
 html = '<title> ursina cheat sheet</title>'
-sidebar = '''<pre><div style="
+sidebar = '''<div style="
     left: 0px;
     position: fixed;
     top: 0px;
@@ -424,7 +422,7 @@ for i, class_dictionary in enumerate((most_used_info, module_info, class_info, p
         sidebar += f'''<a style="color:{col};" href="#{base_name}">{base_name}</a>\n'''
         html += '\n'
         html += f'''<div id="{base_name}"><div id="{base_name}" style="color:{col}; font-size:1.75em; font-weight:normal;">{name}</div>'''
-        html += '<pre style="position:relative; padding:0em 0em 2em 1em; margin:0;">'
+        html += '<div style="position:relative; padding:0em 0em 2em 1em; margin:0;">'
         # location
         location = str(location)
         if 'ursina' in location:
@@ -449,7 +447,7 @@ for i, class_dictionary in enumerate((most_used_info, module_info, class_info, p
             html += '\n<div class="example">' + example +'\n</div>'
 
 
-        html += '\n</pre></div>'
+        html += '\n</div></div>'
 
         html = html.replace('<g></g>', '')
 
@@ -458,6 +456,6 @@ for i, class_dictionary in enumerate((most_used_info, module_info, class_info, p
 # print(html)
 sidebar += '</div>'
 html += '</div>'
-html = sidebar + style + html + '</body>'
+html = sidebar + style + '<div id="content">' + html + '</div>' + '</body>'
 with open('cheat_sheet.html', 'w', encoding='utf-8') as f:
     f.write(html)
