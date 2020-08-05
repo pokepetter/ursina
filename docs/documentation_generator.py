@@ -281,7 +281,7 @@ for f in path.glob('scripts/*.py'):
             script_info[class_name] = (f, params, attrs, methods, example)
 
 asset_info = dict()
-model_names = [f'\'{f.stem}\'' for f in path.glob('models/compressed/*.ursinamesh')]
+model_names = [f'\'{f.stem}\'' for f in path.glob('models_compressed/*.ursinamesh')]
 asset_info['models'] = ('', '', model_names, '', '''e = Entity(model='quad')''')
 
 texture_names = [f'\'{f.stem}\'' for f in path.glob('textures/*.*')]
