@@ -14,12 +14,13 @@ class GridEditor(Entity):
         sys.setrecursionlimit(self.w * self.h)
         self.grid = [[palette[0] for x in range(self.w)] for y in range(self.h)]
         self.brush_size = 1
-        self.cursor = Entity(parent=self, model=Quad(segments=0, mode='line'), origin=(-.5,-.5), scale=(1/self.w, 1/self.h), color=color.color(0,1,1,.2), z=-.1)
+        self.cursor = Entity(parent=self, model=Quad(segments=0, mode='line'), origin=(-.5,-.5), scale=(1/self.w, 1/self.h), color=color.color(0,1,1,.5), z=-.1)
 
         self.selected_char = palette[1]
         self.palette = palette
         self.prev_draw = None
         self.start_pos = (0,0)
+        self.auto_render = True
 
         self.undo_cache = list()
         self.undo_cache.append(deepcopy(self.grid))
@@ -106,7 +107,8 @@ class GridEditor(Entity):
             for _x in range(x, min(x+self.brush_size, self.w)):
                 self.grid[_y][_x] = self.selected_char
 
-        self.render()
+        if self.auto_render:
+            self.render()
 
 
     def input(self, key):
@@ -122,6 +124,7 @@ class GridEditor(Entity):
             self.undo_index += 1
             self.undo_cache = self.undo_cache[:self.undo_index]
             self.undo_cache.append(deepcopy(self.grid))
+            self.render()
 
 
         if held_keys['control'] and key == 'z':
@@ -187,7 +190,7 @@ class PixelEditor(GridEditor):
     def render(self):
         for y in range(self.h):
             for x in range(self.w):
-                t.set_pixel(x, y, self.grid[y][x])
+                self.texture.set_pixel(x, y, self.grid[y][x])
 
         self.texture.apply()
 
@@ -196,8 +199,8 @@ class PixelEditor(GridEditor):
 class ASCIIEditor(GridEditor):
     def __init__(self, size=(61,28), palette=(' ', '#', '|', 'A', '/', '\\', 'o', '_', '-', 'i', 'M', '.'), font='VeraMono.ttf', **kwargs):
         super().__init__(size=size, palette=palette, color=color.black, **kwargs)
-        self.text_entity = Text(text='', position=(-.45,-.45,-2), line_height=1.1, origin=(-.5,-.5), font=font)
-        self.scale = (Text.get_width(' '*self.w), self.h*Text.size*self.text_entity.line_height)
+        self.text_entity = Text(text=' '*size[0], position=(-.45,-.45,-2), line_height=1.1, origin=(-.5,-.5), font=font)
+        self.scale = (self.text_entity.width, self.h*Text.size*self.text_entity.line_height)
         # grid_editor.render()
 
     def render(self):
@@ -228,11 +231,10 @@ if __name__ == '__main__':
     t = Texture(Image.new(mode='RGBA', size=(32,32), color=(0,0,0,1)))
     PixelEditor(t)
 
-
     '''
     same as the pixel editor, but with text.
     '''
-    ASCIIEditor(size=(32,32))
+    ASCIIEditor()
 
 
     app.run()

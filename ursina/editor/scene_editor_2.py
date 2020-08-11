@@ -10,7 +10,7 @@ class EditorIcon(Draggable):
             model=None,
             # color=color.black,
             plane_direction=(0,1,0),
-            require_key='g',
+            require_key='w',
             add_to_scene_entities=False,
             )
         for key, value in kwargs.items():
@@ -21,7 +21,7 @@ class EditorIcon(Draggable):
         self.text_entity.ignore = True
         self.text_entity.scale = 2
         self.text_entity.enabled = self.scene_editor.show_names
-        self.sprite = Entity(parent=self, add_to_scene_entities=False, model='quad', scale=.85, color=color.white)
+        self.sprite = Entity(parent=self, add_to_scene_entities=False, model='quad', texture='circle', scale=.85, color=color.white)
 
 
     def drag(self):
@@ -62,7 +62,7 @@ class AssetMenu(ButtonList):
 
 class SelectionBox(Entity):
     def input(self, key):
-        if key == 'left mouse down' and not held_keys['g']:
+        if key == 'left mouse down' and not held_keys['w']:
             self.position = mouse.position
             self.scale = .001
             self.visible = True
@@ -82,7 +82,7 @@ class SelectionBox(Entity):
                 self.y += self.scale_y
                 self.scale_y = abs(self.scale_y)
 
-            if self.scale_x < .1 or self.scale_y < .1 or held_keys['g']:
+            if self.scale_x < .01 or self.scale_y < .01 or held_keys['w']:
                 return
 
             if self.mode == 'new':
@@ -115,7 +115,7 @@ class SceneEditor(Entity):
         super().__init__()
         self.world_grid = Entity(parent=self, model=Grid(32,32), scale=32, rotation_x=90, color=color.white33, collider='box', collision=False)
 
-        self.help_text = Text(x=-.5*camera.aspect_ratio, text='[g]:move\n[e]:scale\n[y]move up/down\n[F2]:rename selected')
+        self.help_text = Text(x=-.5*camera.aspect_ratio, text='[w hold]:move\n[e hold]:scale selected\n[y]move selected up/down\n[F2]:rename selected')
         self.cursor_3d = Entity(parent=self, model=Mesh(vertices=(0,0,0), mode='point', thickness=10), color=color.pink, visible=False)
         line_model = Mesh(vertices=((-1,0,0), (1,0,0)), mode='line', thickness=2)
         self.cursor_3d.rulers = (
@@ -176,6 +176,8 @@ class SceneEditor(Entity):
         self.menus = [self.model_menu, self.texture_menu, self.rename_window, self.ask_for_scene_name_window]
         self.show_names = False
 
+        self.tool = 'move'
+
         self.load('test2')
 
 
@@ -227,6 +229,7 @@ class SceneEditor(Entity):
             icon.text_entity.scale = 2
 
         self.rename_window.close()
+        self.render_selection()
 
 
     def save(self):
@@ -285,11 +288,11 @@ class SceneEditor(Entity):
         if held_keys['z']:
             self.cursor_3d.z += sum(mouse.velocity) * 8
 
-        if held_keys['s'] or held_keys['c']:
-            _added_scale = sum(mouse.velocity) * 8
-            self.cursor_3d.scale += Vec3(_added_scale, _added_scale, _added_scale)
+        # if held_keys['s'] or held_keys['c']:  # scale from center
+        #     _added_scale = sum(mouse.velocity) * 8
+        #     self.cursor_3d.scale += Vec3(_added_scale, _added_scale, _added_scale)
 
-        if held_keys['e']:
+        if held_keys['e'] + held_keys['s'] > 0:     # scale from individual origin
             for icon in self.selection:
                 _added_scale = sum(mouse.velocity) * 8
                 icon.entity.scale += Vec3(_added_scale, _added_scale, _added_scale)
@@ -376,7 +379,7 @@ class SceneEditor(Entity):
             e = self.add_entity('entity')
             e.position = self.average_position_of_selection()
 
-        if held_keys['control'] and key == 'g':
+        if held_keys['control'] and key == 'w':
             group = self.add_entity('group')
             for icon in self.selection:
                 icon.entity.world_parent = group

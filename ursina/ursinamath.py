@@ -45,6 +45,10 @@ def distance2d(a, b):
     return sqrt((b[0] - a[0])**2 + (b[1] - a[1])**2)
 
 
+def distance_xz(a, b):
+    return sqrt((b[0] - a[0])**2 + (b[2] - a[2])**2)
+
+
 def lerp(a, b, t):
     if isinstance(a, (int, float, complex)):
         return a + (b - a) * t
