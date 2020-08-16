@@ -86,25 +86,6 @@ Setup a virtual environment (venv) (optional)<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
 A Python virtual environment or venv is the way Python maintains a private space for the libraries you need for a project. You can have any number of virtual environments in your computer and be sure all libraries installed in one venv does not mix with libraries in the other venv so for example you may create a "gamedev" venv and install all your game development libraries, then create a "science" venv and install libraries for number crunching, then create another called "music" and install all your libraries you need to work with sound files. You may even install multiple versions of the same libraries on each venv and be sure they don't mix. Once you are done with a venv (or maybe it becomes too large because you have been installing too many things) you can delete the venv and recreate it from scratch.<br>
-<br>
-A venv is a folder in your computer, use the command line to go to a folder where you want your venv created and run:<br>
-<br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 0em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">python3 -m venv gamedev<br></div><br>
-This will create a "gamedev" folder in where you are located, but you may also specify an absolute path in your computer if you prefer.<br>
-<br>
-Once the venv is created you may activate the venv as:<br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 0em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">source gamedev/bin/activate<br></div><br>
-You can see a venv is active because the name of the venv will be prefixed to your command line like:<br>
-(gamedev) myuser$<br>
-<br>
-When you want to leave a venv just run:<br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 0em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">deactivate<br></div><br>
-You may create other venvs and jump around, get into one or the other.<br>
-<br>
-Another benefit is that a venv configures as the default python the one you used to create the venv, so if you used "python3" to create the venv, when the venv is active anytime you type "python" it will default to "python3".<br>
-<br>
-<br>
-<br>
 <div style="font-size: 40.0px;font-weight: bold;">
 <div id="Installing the Ursina game engine"/><br>
 Installing the Ursina game engine<br>
@@ -126,7 +107,7 @@ Or maybe you need to read a YAML file (yaml), or machine learning (ml), or cover
 <br>
 So lets say you want the "playsound" library installed. Run:<br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 0em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">pip install playsound<br></div><br>
-Of course, we don't rally need this library because ursina can play sound as well. This is just an example.<br>
+Of course, we don't really need this library because ursina can play sound as well. This is just an example.<br>
 Once you are done with this library run:<br>
 <div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 0em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">pip uninstall playsound<br></div><br>
 <br>
@@ -196,8 +177,6 @@ The update function is what is called a global function. As long as it is define
 The engine also has an array that checks which keyboard key is pressed, this array has one entry for each key available in the keyboard and by default its values are set to 0. When a key its pressed its value is set to 1, when its released it is set to 0 again.<br>
 <br>
 The Pythin "if" instruction will execute the commands inside its block only if the expression evaluates to anything that is not 0 (or null or empty)m, so when it finds a 1 in the corresponding key it prints the value, when the key is released it becomes 0 again so the "if" block is no longer executed.<br>
-<br>
-Now try pip installing the playsound library, then import it into the window program and play some sound when the key s is pressed. Read some instructions from here <a href="https://pythonbasics.org/python-play-sound/">https://pythonbasics.org/python-play-sound/</a><br>
 <br>
 <br>
 <br>
