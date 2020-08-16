@@ -44,4 +44,12 @@ if __name__ == '__main__':
     # camera.set_shader_input('contrast', 1)
     EditorCamera()
 
+    def input(key):
+        if key == 'space':
+            if camera.shader:
+                camera.shader = None
+            else:
+                camera.shader = camera_grayscale_shader
+
+
     app.run()

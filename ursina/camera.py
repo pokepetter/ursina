@@ -76,6 +76,7 @@ class Camera(Entity):
         self.render_texture = None
         self.filter_quad = None
         self.depth_texture = None
+        # self.normals_texture = None
 
 
     @property
@@ -139,12 +140,15 @@ class Camera(Entity):
 
     @shader.setter
     def shader(self, value):
+        self._shader = value
         if value is None:
+            self.filter_manager.cleanup()
+            self.filter_manager = None
             if self.filter_quad:
                 self.filter_quad.removeNode()
+                # print('removed shader')
             return None
 
-        self._shader = value
         shader = value
         if hasattr(value, '_shader'):
             shader = value._shader
@@ -153,9 +157,13 @@ class Camera(Entity):
             self.filter_manager = FilterManager(base.win, base.cam)
             self.render_texture = PandaTexture()
             self.depth_texture = PandaTexture()
+            self.normals_texture = PandaTexture()
             self.filter_quad = self.filter_manager.renderSceneInto(colortex=self.render_texture, depthtex=self.depth_texture)
+            # from panda3d.core import AuxBitplaneAttrib
+            # self.filter_quad = self.filter_manager.renderSceneInto(colortex=self.render_texture, depthtex=self.depth_texture, auxtex=self.normal_texture, auxbits=AuxBitplaneAttrib.ABOAuxNormal)
             self.filter_quad.setShaderInput("tex", self.render_texture)
             self.filter_quad.setShaderInput("dtex", self.depth_texture)
+            # self.filter_quad.setShaderInput("ntex", self.normals_texture)
 
         self.filter_quad.setShader(shader)
 
