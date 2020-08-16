@@ -155,6 +155,8 @@ class Window(WindowProperties):
         self.aspect_ratio = value[0] / value[1]
         base.win.requestProperties(self)
         self.update_aspect_ratio()
+        from ursina import camera
+        camera.set_shader_input('window_size', value)
 
 
     @property
