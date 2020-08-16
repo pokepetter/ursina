@@ -12,7 +12,8 @@ class GridEditor(Entity):
 
         self.w, self.h = int(size[0]), int(size[1])
         sys.setrecursionlimit(self.w * self.h)
-        self.grid = [[palette[0] for x in range(self.w)] for y in range(self.h)]
+        # self.grid = [[palette[0] for x in range(self.w)] for y in range(self.h)]
+        self.grid = [[palette[0] for y in range(self.h)] for x in range(self.w)]
         self.brush_size = 1
         self.cursor = Entity(parent=self, model=Quad(segments=0, mode='line'), origin=(-.5,-.5), scale=(1/self.w, 1/self.h), color=color.color(0,1,1,.5), z=-.1)
 
@@ -86,7 +87,7 @@ class GridEditor(Entity):
                         dist = distance2d(self.prev_draw, (x,y))
 
                         if dist > 1: # draw line
-                            for i in range(int(dist)):
+                            for i in range(int(dist)+1):
                                 inbetween_pos = lerp(self.prev_draw, (x,y), i/dist)
                                 self.draw(int(inbetween_pos[0]), int(inbetween_pos[1]))
 
@@ -98,14 +99,14 @@ class GridEditor(Entity):
                         self.prev_draw = (x,y)
 
                 else:
-                    self.selected_char = self.grid[y][x]
+                    self.selected_char = self.grid[x][y]
 
 
 
     def draw(self, x, y):
         for _y in range(y, min(y+self.brush_size, self.h)):
             for _x in range(x, min(x+self.brush_size, self.w)):
-                self.grid[_y][_x] = self.selected_char
+                self.grid[_x][_y] = self.selected_char
 
         if self.auto_render:
             self.render()
@@ -120,11 +121,13 @@ class GridEditor(Entity):
             if not held_keys['control']:
                 self.prev_draw = None
 
-        if key == 'left mouse up' and not held_keys['control']:
-            self.undo_index += 1
-            self.undo_cache = self.undo_cache[:self.undo_index]
-            self.undo_cache.append(deepcopy(self.grid))
+        if key == 'left mouse up':
             self.render()
+
+            if not held_keys['control']:
+                self.undo_index += 1
+                self.undo_cache = self.undo_cache[:self.undo_index]
+                self.undo_cache.append(deepcopy(self.grid))
 
 
         if held_keys['control'] and key == 'z':
@@ -159,14 +162,14 @@ class GridEditor(Entity):
 
 
     def floodfill(self, matrix, x, y, first=True):
-        if matrix[y][x] == self.selected_char:
+        if matrix[x][y] == self.selected_char:
             return
 
         if first:
-            self.fill_target = matrix[y][x]
+            self.fill_target = matrix[x][y]
 
-        if matrix[y][x] == self.fill_target:
-            matrix[y][x] = self.selected_char
+        if matrix[x][y] == self.fill_target:
+            matrix[x][y] = self.selected_char
             # recursively invoke flood fill on all surrounding cells
             if x > 0:
                 self.floodfill(matrix, x-1, y, first=False)
@@ -190,7 +193,7 @@ class PixelEditor(GridEditor):
     def render(self):
         for y in range(self.h):
             for x in range(self.w):
-                self.texture.set_pixel(x, y, self.grid[y][x])
+                self.texture.set_pixel(x, y, self.grid[x][y])
 
         self.texture.apply()
 
@@ -204,7 +207,8 @@ class ASCIIEditor(GridEditor):
         # grid_editor.render()
 
     def render(self):
-        self.text_entity.text = '\n'.join([''.join(line) for line in reversed(self.grid)])
+        rotated_grid = list(zip(*self.grid[::-1]))
+        self.text_entity.text = '\n'.join([''.join(reversed(line)) for line in reversed(rotated_grid)])
 
     # if held_keys['control'] and key == 'c':
     #     pyperclip.copy(t.text)
