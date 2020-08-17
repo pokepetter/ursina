@@ -56,8 +56,8 @@ open source game engine
 
 ## Free and Open Source
 
-    Licenced under the permissive MIT license,
-    you can use Ursina for whatever you want. No supscription fee, no revenue cut.
+    Licensed under the permissive MIT license,
+    you can use Ursina for whatever you want. No subscription fee, no revenue cut.
 
 
 
