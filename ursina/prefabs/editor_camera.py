@@ -6,10 +6,10 @@ class EditorCamera(Entity):
         camera.editor_position = (0,0,-10)
         super().__init__(name='editor_camera', eternal=True)
 
-        self.rotation_speed = 100
-        self.pan_speed = Vec2(4, 4)
-        self.move_speed = 1
-        self.zoom_speed = .05
+        self.rotation_speed = 1000
+        self.pan_speed = Vec2(250, 250)
+        self.move_speed = 10
+        self.zoom_speed = .75
         self.rotate_around_mouse_hit = False
 
         for key, value in kwargs.items():
@@ -58,15 +58,15 @@ class EditorCamera(Entity):
                 if mouse.hovered_entity and not mouse.hovered_entity.has_ancestor(camera):
                     target_position = mouse.hovered_entity.world_position
 
-                camera.world_position = lerp(camera.world_position, target_position, self.zoom_speed)
+                camera.world_position = lerp(camera.world_position, target_position, self.zoom_speed * time.dt * 10)
             else:
-                camera.fov -= self.zoom_speed * 100
+                camera.fov -= self.zoom_speed * 100 * time.dt
 
         elif key == 'scroll down':
             if not camera.orthographic:
-                camera.world_position += camera.back * self.zoom_speed * 100
+                camera.world_position += camera.back * self.zoom_speed * 100 * time.dt
             else:
-                camera.fov += self.zoom_speed * 100
+                camera.fov += self.zoom_speed * 100 * time.dt
 
         elif key == 'right mouse down' or key == 'middle mouse down':
             if mouse.hovered_entity and self.rotate_around_mouse_hit:
@@ -77,20 +77,20 @@ class EditorCamera(Entity):
 
     def update(self):
         if mouse.right:
-            self.rotation_x -= mouse.velocity[1] * self.rotation_speed
-            self.rotation_y += mouse.velocity[0] * self.rotation_speed
+            self.rotation_x -= mouse.velocity[1] * self.rotation_speed * time.dt
+            self.rotation_y += mouse.velocity[0] * self.rotation_speed * time.dt
 
-            self.position += camera.right * held_keys['d'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt']))
-            self.position += camera.left * held_keys['a'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt']))
-            self.position += camera.forward * held_keys['w'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt']))
-            self.position += camera.back * held_keys['s'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt']))
-            self.position += camera.up * held_keys['e'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt']))
-            self.position += camera.down * held_keys['q'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt']))
+            self.position += camera.right * held_keys['d'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt'])) * time.dt
+            self.position += camera.left * held_keys['a'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt'])) * time.dt
+            self.position += camera.forward * held_keys['w'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt'])) * time.dt
+            self.position += camera.back * held_keys['s'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt'])) * time.dt
+            self.position += camera.up * held_keys['e'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt'])) * time.dt
+            self.position += camera.down * held_keys['q'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt'])) * time.dt
 
 
         if mouse.middle:
-            self.position -= camera.right * mouse.velocity[0] * self.pan_speed[0]
-            self.position -= camera.up * mouse.velocity[1] * self.pan_speed[1]
+            self.position -= camera.right * mouse.velocity[0] * self.pan_speed[0] * time.dt
+            self.position -= camera.up * mouse.velocity[1] * self.pan_speed[1] * time.dt
 
 
 
@@ -107,11 +107,11 @@ if __name__ == '__main__':
 
     from ursina.prefabs.first_person_controller import FirstPersonController
     from copy import copy
-    player = FirstPersonController()
-    Entity(parent=player, model='cube', color=color.orange, scale_y=2, origin_y=0)
+    # player = FirstPersonController()
+    # Entity(parent=player, model='cube', color=color.orange, scale_y=2, origin_y=0)
     ground = Entity(model='plane', scale=32, texture='white_cube', texture_scale=(32,32))
     box = Entity(model='cube', collider='box', texture='white_cube', scale=(10,2,2), position=(2,1,5), color=color.light_gray)
-    ec = EditorCamera(rotation_smoothing=2, rotation_speed=200, enabled=False, rotation=(30,30,0))
+    ec = EditorCamera(rotation_smoothing=2, enabled=False, rotation=(30,30,0))
 
     rotation_info = Text(position=window.top_left)
 
@@ -120,7 +120,7 @@ if __name__ == '__main__':
 
     def input(key):
         if key == 'tab':    # press tab to toggle edit/play mode
-            player.ignore = not player.ignore
+            # player.ignore = not player.ignore
             ec.enabled = not ec.enabled
 
     app.run()
