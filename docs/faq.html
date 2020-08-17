@@ -70,5 +70,29 @@ If all you want are some simple lights to make 3D shapes look more interesting,<
 look at the program 'lights.py' in the samples folder.&nbsp;&nbsp;For anything more complicated,<br>
 you are on your own.<br>
 <br>
+<br>
+<br>
+<br>
+<b>How can I use panda3d alongside ursina?</b><br>
+<br>
+What you need to know is that Entity is a NodePath and Ursina is a ShowBase.<br>
+You can also write custom shaders, see panda3d's shader documentatation for that.<br>
+<br>
+<br>
+<br>
+<br>
+<b>How can I detect collisions?</b><br>
+<br>
+That main way right now is with raycasts. They can hit anything with a collider.<br>
+<br>
+<a href="https://www.ursinaengine.org/cheat_sheet.html#raycaster">https://www.ursinaengine.org/cheat_sheet.html#raycaster</a><br>
+<a href="https://www.ursinaengine.org/cheat_sheet.html#HitInfo">https://www.ursinaengine.org/cheat_sheet.html#HitInfo</a><br>
+<a href="https://www.ursinaengine.org/cheat_sheet.html#Collider">https://www.ursinaengine.org/cheat_sheet.html#Collider</a><br>
+<br>
+Example from the FirstPersonController:<br>
+<br>
+<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 0em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;"><font color="gray"># cast a ray from the player position in the walk direction.</font>
+<font color="gray"># only move forward if it doesn't hit anything.</font>
+origin = self.world_position + (self.up*.5) + (self.direction/2)<br>ray = raycast(origin , self.direction, ignore=[self,], distance=.25, debug=False)<br><br>if not ray.hit:<br>   self.position += self.direction * self.speed * time.dt<br><br></div><br>
 
 </html>

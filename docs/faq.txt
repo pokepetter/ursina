@@ -54,3 +54,35 @@ to structure your project in a good way, rather than micro-optimize.
 If all you want are some simple lights to make 3D shapes look more interesting,
 look at the program 'lights.py' in the samples folder.  For anything more complicated,
 you are on your own.
+
+
+
+
+<b>How can I use panda3d alongside ursina?</b>
+
+What you need to know is that Entity is a NodePath and Ursina is a ShowBase.
+You can also write custom shaders, see panda3d's shader documentatation for that.
+
+
+
+
+<b>How can I detect collisions?</b>
+
+That main way right now is with raycasts. They can hit anything with a collider.
+
+https://www.ursinaengine.org/cheat_sheet.html#raycaster
+https://www.ursinaengine.org/cheat_sheet.html#HitInfo
+https://www.ursinaengine.org/cheat_sheet.html#Collider
+
+Example from the FirstPersonController:
+
+# code
+    # cast a ray from the player position in the walk direction.
+    # only move forward if it doesn't hit anything.
+    origin = self.world_position + (self.up*.5) + (self.direction/2)
+    ray = raycast(origin , self.direction, ignore=[self,], distance=.25, debug=False)
+
+    if not ray.hit:
+       self.position += self.direction * self.speed * time.dt
+
+# text
