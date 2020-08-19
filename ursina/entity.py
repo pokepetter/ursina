@@ -186,8 +186,8 @@ class Entity(NodePath):
                         m.recipe = value
                     # print('loaded model successively')
                 else:
-                    if '.' in value:
-                        print(f'''trying to load model with specific filename extention. please omit it. '{value}' -> '{value.split('.')[0]}' ''')
+                    # if '.' in value:
+                    #     print(f'''trying to load model with specific filename extention. please omit it. '{value}' -> '{value.split('.')[0]}' ''')
                     print('missing model:', value)
                     return
 
@@ -323,6 +323,7 @@ class Entity(NodePath):
 
         self.collision = bool(self.collider)
         return
+
 
     @property
     def origin(self):
@@ -1010,6 +1011,81 @@ class Entity(NodePath):
         )
         self.blink_animator.start()
         return self.blink_animator
+
+
+
+    def intersects(self, traverse_target=scene, ignore=(), debug=False):
+        if not self.collision or not self.collider:
+            return False
+
+        from ursina.hit_info import HitInfo
+        from ursina import distance
+        if not hasattr(self, '_picker'):
+            from panda3d.core import CollisionTraverser, CollisionNode, CollisionHandlerQueue
+            from panda3d.core import CollisionRay, CollisionSegment, CollisionBox
+
+            self._picker = CollisionTraverser()  # Make a traverser
+            self._pq = CollisionHandlerQueue()  # Make a handler
+            self._pickerNode = CollisionNode('raycaster')
+            self._pickerNode.set_into_collide_mask(0)
+            self._pickerNP = self.attach_new_node(self._pickerNode)
+            self._picker.addCollider(self._pickerNP, self._pq)
+            self._pickerNP.show()
+            self._pickerNode.addSolid(self._collider.shape)
+
+        if debug:
+            self._pickerNP.show()
+        else:
+            self._pickerNP.hide()
+
+        self._picker.traverse(traverse_target)
+
+        if self._pq.get_num_entries() == 0:
+            self.hit = HitInfo(hit=False)
+            return self.hit
+
+        ignore = (self,)
+        ignore += tuple([e for e in scene.entities if not e.collision])
+
+        self._pq.sort_entries()
+        self.entries = [        # filter out ignored entities
+            e for e in self._pq.getEntries()
+            if e.get_into_node_path().parent not in ignore
+            ]
+
+        if len(self.entries) == 0:
+            self.hit = HitInfo(hit=False)
+            return self.hit
+
+        collision = self.entries[0]
+        nP = collision.get_into_node_path().parent
+        point = collision.get_surface_point(nP)
+        point = Vec3(*point)
+        world_point = collision.get_surface_point(render)
+        world_point = Vec3(*world_point)
+        hit_dist = distance(self.world_position, world_point)
+
+        if nP.name.endswith('.egg'):
+            nP = nP.parent
+
+        self.hit = HitInfo(hit=True)
+        for e in scene.entities:
+            if e == nP:
+                self.hit.entity = e
+
+        self.hit.point = point
+        self.hit.world_point = world_point
+        self.hit.distance = hit_dist
+
+        normal = collision.get_surface_normal(collision.get_into_node_path().parent)
+        self.hit.normal = Vec3(*normal)
+
+        normal = collision.get_surface_normal(render)
+        self.hit.world_normal = Vec3(*normal)
+        return self.hit
+
+        self.hit = HitInfo(hit=False)
+        return self.hit
 
 
 if __name__ == '__main__':
