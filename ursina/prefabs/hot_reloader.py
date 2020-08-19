@@ -144,12 +144,20 @@ class HotReloader(Entity):
 
     def reload_textures(self):
         textured_entities = [e for e in scene.entities if e.texture]
+        reloaded_textures = list()
+
         for e in textured_entities:
+            if e.texture.name in reloaded_textures:
+                continue
+
             if e.texture.path.parent.name == application.compressed_textures_folder.name:
                 print('texture is made from .psd file', e.texture.path.stem + '.psd')
                 compress_textures(e.texture.path.stem)
             print('reloaded texture:', e.texture.path)
             e.texture._texture.reload()
+            reloaded_textures.append(e.texture.name)
+
+        return reloaded_textures
 
 
     def reload_models(self):

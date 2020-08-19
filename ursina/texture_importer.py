@@ -87,15 +87,18 @@ def compress_textures(name=''):
     for f in application.asset_folder.glob('**/' + name + file_type):
         # if f.parent == application.compressed_textures_folder:
         # print('------------------', str(f.resolve()))
-        if '\\compressed\\' in str(f) or f.suffix not in ('.psd', '.png', '.jpg', '.jpeg', '.gif'):
+        if '\\textures_compressed\\' in str(f) or f.suffix not in ('.psd', '.png', '.jpg', '.jpeg', '.gif'):
             continue
         # print('  found:', f)
-
+        image = None
         if f.suffix == '.psd' and has_psd_tools_installed:
             image = PSDImage.load(f)
             image = image.as_PIL()
-        elif f.suffix == '.png':
-            image = Image.open(f)
+        # elif f.suffix == '.png':
+        #     image = Image.open(f)
+
+        if not image:
+            return False
         # print(max(image.size))
         # print('............', image.mode)
         if image and image.mode != 'RGBA' and max(image.size) > 512:
