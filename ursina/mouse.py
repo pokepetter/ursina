@@ -205,7 +205,7 @@ class Mouse():
         try:
             self._picker.traverse(self.traverse_target)
         except:
-            print('error: mouse._picker could not traverse', self.traverse_target)
+            # print('error: mouse._picker could not traverse', self.traverse_target)
             return
 
         if self._pq.get_num_entries() > 0:

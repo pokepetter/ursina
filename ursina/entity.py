@@ -186,8 +186,8 @@ class Entity(NodePath):
                         m.recipe = value
                     # print('loaded model successively')
                 else:
-                    if '.' in value:
-                        print(f'''trying to load model with specific filename extention. please omit it. '{value}' -> '{value.split('.')[0]}' ''')
+                    # if '.' in value:
+                    #     print(f'''trying to load model with specific filename extention. please omit it. '{value}' -> '{value.split('.')[0]}' ''')
                     print('missing model:', value)
                     return
 
