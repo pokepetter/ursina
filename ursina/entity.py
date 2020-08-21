@@ -216,16 +216,6 @@ class Entity(NodePath):
                 object.__setattr__(self, name, value)
 
 
-        if name == 'texture_scale':
-            if self.model and self.texture:
-                self.model.setTexScale(TextureStage.getDefault(), value[0], value[1])
-
-        if name == 'texture_offset':
-            if self.model and self.texture:
-                self.model.setTexOffset(TextureStage.getDefault(), value[0], value[1])
-                self.texture = self.texture
-
-
         if name == 'collision' and hasattr(self, 'collider') and self.collider:
             if value:
                 self.collider.node_path.unstash()
@@ -621,6 +611,12 @@ class Entity(NodePath):
         # except:
         #     self.setShader(Shader.load(Shader.SL_GLSL, vertex=f'{value}.vert', fragment=f'{value}.frag'))
 
+    def set_shader_input(self, name, value):
+        if isinstance(value, Texture):
+            value = value._texture    # make sure to send the panda3d texture to the shader
+
+        super().set_shader_input(name, value)
+
 
 
 
@@ -656,6 +652,27 @@ class Entity(NodePath):
         self._texture = texture
         if self.model:
             self.model.setTexture(texture._texture, 1)
+
+
+    @property
+    def texture_scale(self):
+        return self._texture_scale
+    @texture_scale.setter
+    def texture_scale(self, value):
+        self._texture_scale = value
+        if self.model and self.texture:
+            self.model.setTexScale(TextureStage.getDefault(), value[0], value[1])
+
+    @property
+    def texture_offset(self):
+        return self._texture_offset
+
+    @texture_offset.setter
+    def texture_offset(self, value):
+        if self.model and self.texture:
+            self.model.setTexOffset(TextureStage.getDefault(), value[0], value[1])
+            self.texture = self.texture
+        self._texture_offset = value
 
 
     @property
@@ -1092,7 +1109,7 @@ if __name__ == '__main__':
     from ursina import *
     app = main.Ursina()
 
-    e = Entity(model='quad', color=color.orange, position=(0,0,1), scale=1.5, rotation=(0,0,45))
+    e = Entity(model='quad', color=color.orange, position=(0,0,1), scale=1.5, rotation=(0,0,45), texture='brick')
 
     '''example of inheriting Entity'''
     class Player(Entity):
@@ -1116,20 +1133,6 @@ if __name__ == '__main__':
             self.x -= held_keys['a'] * time.dt * 10
 
     player = Player(x=-1)
-    # application.trace_entity_definition = False
-    # t = time.time()
-    # for i in range(100):
-    #     # e = Entity()
-    #     e = Entity(add_to_scene_entities=False)
-    # print('----------', time.time() - t)
-
-    # .14
-    # .014
-    # .03, .013
-
-    # EditorCamera()
-    # e = Entity(model='quad', color=color.lime, scale_y=2)
-    # e.flip_faces()
 
 
     app.run()
