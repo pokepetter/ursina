@@ -6,7 +6,7 @@ class EditorCamera(Entity):
         camera.editor_position = (0,0,-10)
         super().__init__(name='editor_camera', eternal=True)
 
-        self.rotation_speed = 1000
+        self.rotation_speed = 2500
         self.pan_speed = Vec2(250, 250)
         self.move_speed = 10
         self.zoom_speed = .75
