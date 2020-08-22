@@ -921,29 +921,26 @@ class Entity(NodePath):
 #------------
 # ANIMATIONS
 #------------
-    def animate(self, name, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
+    def animate(self, name, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt=True, time_step=None, auto_destroy=True):
         s = Sequence(
             Wait(delay),
-            Func(self._animate, name, value, duration, curve, resolution, interrupt, time_step)
+            Func(self._animate, name, value, duration, curve, loop, resolution, interrupt, time_step, auto_destroy)
         )
         s.start()
         return s
 
-    def _animate(self, name, value, duration=.1, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
+    def _animate(self, name, value, duration=.1, curve=curve.in_expo, loop=False, resolution=None, interrupt=True, time_step=None, auto_destroy=True):
         animator_name = name + '_animator'
         # print('start animating value:', name, animator_name )
         if interrupt and hasattr(self, animator_name):
-            try:
-                getattr(self, animator_name).pause()
-                # print('interrupt', animator_name)
-            except:
-                pass
+            getattr(self, animator_name).pause()
+            # print('interrupt', animator_name)
         else:
             try:
                 getattr(self, animator_name).finish()
             except:
                 pass
-        setattr(self, animator_name, Sequence(time_step=time_step))
+        setattr(self, animator_name, Sequence(loop=loop, time_step=time_step, auto_destroy=auto_destroy))
         sequence = getattr(self, animator_name)
         self.animations.append(sequence)
         # sequence.append(Wait(delay))
@@ -963,29 +960,29 @@ class Entity(NodePath):
         sequence.start()
         return sequence
 
-    def animate_position(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
-        x = self.animate('x', value[0], duration, delay, curve, resolution, interrupt, time_step)
-        y = self.animate('y', value[1], duration, delay, curve, resolution, interrupt, time_step)
+    def animate_position(self, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt=True, time_step=None, auto_destroy=True):
+        x = self.animate('x', value[0], duration, delay, curve, loop, resolution, interrupt, time_step, auto_destroy)
+        y = self.animate('y', value[1], duration, delay, curve, loop, resolution, interrupt, time_step, auto_destroy)
         z = None
         if len(value) > 2:
-            z = self.animate('z', value[2], duration, delay, curve, resolution, interrupt, time_step)
+            z = self.animate('z', value[2], duration, delay, curve, loop, resolution, interrupt, time_step, auto_destroy)
         return x, y, z
 
-    def animate_rotation(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
-        x = self.animate('rotation_x', value[0], duration, delay, curve, resolution, interrupt, time_step)
-        y = self.animate('rotation_y', value[1], duration, delay, curve, resolution, interrupt, time_step)
-        z = self.animate('rotation_z', value[2], duration, delay, curve, resolution, interrupt, time_step)
+    def animate_rotation(self, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt=True, time_step=None, auto_destroy=True):
+        x = self.animate('rotation_x', value[0], duration, delay, curve, loop, resolution, interrupt, time_step, auto_destroy)
+        y = self.animate('rotation_y', value[1], duration, delay, curve, loop, resolution, interrupt, time_step, auto_destroy)
+        z = self.animate('rotation_z', value[2], duration, delay, curve, loop, resolution, interrupt, time_step, auto_destroy)
         return x, y, z
 
-    def animate_scale(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
+    def animate_scale(self, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt=True, time_step=None, auto_destroy=True):
         if isinstance(value, (int, float, complex)):
             value = Vec3(value, value, value)
-        return self.animate('scale', value, duration, delay, curve, resolution, interrupt, time_step)
+        return self.animate('scale', value, duration, delay, curve, loop, resolution, interrupt, time_step, auto_destroy)
 
     # generate animation functions
     for e in ('x', 'y', 'z', 'rotation_x', 'rotation_y', 'rotation_z', 'scale_x', 'scale_y', 'scale_z'):
         exec(dedent(f'''
-            def animate_{e}(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, time_step=None):
+            def animate_{e}(self, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt=True, time_step=None, auto_destroy=True):
                 return self.animate('{e}', value, duration, delay, curve, resolution, interrupt, time_step)
         '''))
 
@@ -1007,27 +1004,17 @@ class Entity(NodePath):
         s.start()
         return s
 
-    def animate_color(self, value, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=False, time_step=None):
-        return self.animate('color', value, duration, delay, curve, resolution, interrupt, time_step)
+    def animate_color(self, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt=False, time_step=None, auto_destroy=True):
+        return self.animate('color', value, duration, delay, curve, loop, resolution, interrupt, time_step, auto_destroy)
 
-    def fade_out(self, value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=False, time_step=None):
-        return self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration, delay, curve, resolution, interrupt, time_step)
+    def fade_out(self, value=0, duration=.5, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt=False, time_step=None, auto_destroy=True):
+        return self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration, delay, curve, loop, resolution, interrupt, time_step, auto_destroy)
 
-    def fade_in(self, value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=False, time_step=None):
-        return self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration, delay, curve, resolution, interrupt, time_step)
+    def fade_in(self, value=1, duration=.5, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt=False, time_step=None, auto_destroy=True):
+        return self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration, delay, curve, loop, resolution, interrupt, time_step, auto_destroy)
 
-    def blink(self, value=color.clear, duration=.1, delay=0, curve=curve.in_expo, resolution=None, interrupt=False, time_step=None):
-        _original_color = self.color
-        if hasattr(self, 'blink_animator'):
-            self.blink_animator.finish()
-            self.blink_animator.kill()
-            # print('finish blink_animator')
-        self.blink_animator = Sequence(
-            Func(self.animate_color, value, duration*.4, 0, curve, resolution, interrupt),
-            Func(self.animate_color, _original_color, duration*.4, duration*.5, curve, resolution, interrupt, time_step)
-        )
-        self.blink_animator.start()
-        return self.blink_animator
+    def blink(self, value=color.clear, duration=.1, delay=0, curve=curve.in_expo_boomerang, loop=False, resolution=None, interrupt=False, time_step=None, auto_destroy=True):
+        return self.animate_color(value, duration, delay, curve, loop, resolution, interrupt, time_step, auto_destroy)
 
 
 
@@ -1134,5 +1121,17 @@ if __name__ == '__main__':
 
     player = Player(x=-1)
 
+
+    # test
+    e = Entity(model='cube')
+    # e.animate_x(3, duration=2, delay=.5)
+    # e.animate_position(Vec3(1,1,1), duration=1, loop=True)
+    # e.animate_rotation(Vec3(45,45,45))
+    e.animate_scale(2, duration=1, curve=curve.out_expo_boomerang, loop=True)
+    # e.animate_color(color.green, loop=True)
+    # e.shake()
+    # e.fade_out(delay=.5)
+    # e.fade_in(delay=2.5)
+    # e.blink(color.red, loop=True)
 
     app.run()
