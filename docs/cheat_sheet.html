@@ -227,6 +227,8 @@ up
 down
 screen_position
 shader
+texture_scale
+texture_offset
 alpha
 always_on_top
 model_bounds
@@ -236,6 +238,7 @@ attributes
 
 enable()   
 disable()   
+set_shader_input(<g>name, value</g>)   
 generate_sphere_map(<g>size=512, name=f'sphere_map_{len(scene.entities)}'</g>)   
 generate_cube_map(<g>size=512, name=f'cube_map_{len(scene.entities)}'</g>)   
 reparent_to(<g>entity</g>)   
@@ -260,7 +263,7 @@ blink(<g>value=color.clear, duration=.1, delay=0, curve=curve.in_expo, resolutio
 
 <div class="example">app = main.Ursina()
 
-e = Entity(model='quad', color=color.orange, position=(0,0,1), scale=1.5, rotation=(0,0,45))
+e = Entity(model='quad', color=color.orange, position=(0,0,1), scale=1.5, rotation=(0,0,45), texture='brick')
 
 '''example of inheriting Entity'''
 class Player(Entity):
@@ -736,9 +739,18 @@ scene.fog_density = (50, 200)   # sets linear density start and end
 </div>
 </div></div>
 <div id="shader"><div id="shader" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">shader</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.shader</g><br><br>uniform mat4 p3d_ModelViewProjectionMatrix;
+out vec2 uv;
 void main() {
+}
+uniform sampler2D tex;
+out vec4 color;
+void main() {
+}
 
 
+<div class="example">Entity(model='cube', shader=Shader())
+EditorCamera()
+</div>
 </div></div>
 <div id="string_utilities"><div id="string_utilities" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">string_utilities</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.string_utilities</g><br><br>
 camel_to_snake(<g>value</g>)   
@@ -780,7 +792,7 @@ get_width(<g>string, font=None</g>)
   app.run()
 </div>
 </div></div>
-<div id="texture_importer"><div id="texture_importer" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">texture_importer</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.texture_importer</g><br><br>file_types<g> = ('.jpg', '.png', '.gif')</g> 
+<div id="texture_importer"><div id="texture_importer" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">texture_importer</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.texture_importer</g><br><br>file_types<g> = ('.tif', '.jpg', '.png', '.gif')</g> 
 textureless<g> = False</g> 
 has_psd_tools_installed<g> = False</g> 
 
@@ -1353,12 +1365,15 @@ def input(key):
         actions[key]()
 </div>
 </div></div>
-<div id="Shader"><div id="Shader" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Shader</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.shader</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Shader(language=Panda3dShader.SL_GLSL, vertex=default_vertex_shader, fragment='', geometry='', **kwargs)</params>
+<div id="Shader"><div id="Shader" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Shader</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.shader</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Shader(language=Panda3dShader.SL_GLSL, vertex=default_vertex_shader, fragment=default_fragment_shader, geometry='', **kwargs)</params>
 
 entity<g> = None</g> 
 default_input<g> = dict()</g> 
 
 
+<div class="example">Entity(model='cube', shader=Shader())
+EditorCamera()
+</div>
 </div></div>
 <div id="Texture"><div id="Texture" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Texture<g>()</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.texture</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Texture(value)</params>
 
@@ -1651,10 +1666,10 @@ DropdownMenu('File', buttons=(
 </div></div>
 <div id="EditorCamera"><div id="EditorCamera" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">EditorCamera<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.editor_camera</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">EditorCamera(**kwargs)</params>
 
-rotation_speed<g> = 100</g> 
-pan_speed<g> = Vec2(4, 4)</g> 
-move_speed<g> = 1</g> 
-zoom_speed<g> = .05</g> 
+rotation_speed<g> = 2500</g> 
+pan_speed<g> = Vec2(250, 250)</g> 
+move_speed<g> = 10</g> 
+zoom_speed<g> = .75</g> 
 rotate_around_mouse_hit<g> = False</g> 
 start_position<g> = self.position</g> 
 perspective_fov<g> = camera.fov</g> 
@@ -1677,11 +1692,9 @@ e.model.colorize()
 
 from ursina.prefabs.first_person_controller import FirstPersonController
 from copy import copy
-player = FirstPersonController()
-Entity(parent=player, model='cube', color=color.orange, scale_y=2, origin_y=0)
 ground = Entity(model='plane', scale=32, texture='white_cube', texture_scale=(32,32))
 box = Entity(model='cube', collider='box', texture='white_cube', scale=(10,2,2), position=(2,1,5), color=color.light_gray)
-ec = EditorCamera(rotation_smoothing=2, rotation_speed=200, enabled=False, rotation=(30,30,0))
+ec = EditorCamera(rotation_smoothing=2, enabled=False, rotation=(30,30,0))
 
 rotation_info = Text(position=window.top_left)
 
@@ -1690,7 +1703,6 @@ def update():
 
 def input(key):
     if key == 'tab':    # press tab to toggle edit/play mode
-        player.ignore = not player.ignore
         ec.enabled = not ec.enabled
 </div>
 </div></div>
@@ -1821,13 +1833,15 @@ def input(key):
 <div id="GridEditor"><div id="GridEditor" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">GridEditor<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.grid_editor</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">GridEditor(size=(32,32), palette=(' ', '#', '|', 'o'), **kwargs)</params>
 
 w, self.h<g> = int(size[0]), int(size[1])</g> 
-grid<g> = [[palette[0] for x in range(self.w)] for y in range(self.h)]</g> 
 brush_size<g> = 1</g> 
-cursor<g> = Entity(parent=self, model=Quad(segments=0, mode='line'), origin=(-.5,-.5), scale=(1/self.w, 1/self.h), color=color.color(0,1,1,.2), z=-.1)</g> 
+edit_mode<g> = False</g> 
+auto_render<g> = True</g> 
+cursor<g> = Entity(parent=self, model=Quad(segments=0, mode='line'), origin=(-.5,-.5), scale=(1/self.w, 1/self.h), color=color.color(0,1,1,.5), z=-.1, enabled=self.edit_mode)</g> 
 selected_char<g> = palette[1]</g> 
 palette<g> = palette</g> 
 prev_draw<g> = None</g> 
 start_pos<g> = (0,0)</g> 
+outline<g> = Entity(parent=self, model=Quad(segments=0, mode='line', thickness=1), color=color.cyan, z=.01, origin=(-.5,-.5), enabled=self.edit_mode)</g> 
 undo_cache<g> = list()</g> 
 undo_index<g> = 0</g> 
 help_text<g> = Text(
@@ -1852,42 +1866,36 @@ pixel editor example, it's basically a drawing tool.
 can be useful for level editors and such
 here we create a new texture, but can also give it an exisitng texture to modify.
 '''
-from PIL import Image
-t = Texture(Image.new(mode='RGBA', size=(32,32), color=(0,0,0,1)))
-PixelEditor(t)
-
+PixelEditor(texture=load_texture('brick'))
 
 '''
 same as the pixel editor, but with text.
 '''
-ASCIIEditor(size=(32,32))
 </div>
 </div></div>
 <div id="PixelEditor"><div id="PixelEditor" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">PixelEditor<g>(GridEditor)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.grid_editor</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">PixelEditor(texture, palette=(color.black, color.white, color.light_gray, color.gray, color.red, color.orange, color.yellow, color.lime, color.green, color.turquoise, color.cyan, color.azure, color.blue, color.violet, color.magenta, color.pink), **kwargs)</params>
 
+grid<g> = [[texture.get_pixel(x,y) for y in range(texture.height)] for x in range(texture.width)]</g> 
 
 render()   
+save()   
 
 <div class="example">'''
 pixel editor example, it's basically a drawing tool.
 can be useful for level editors and such
 here we create a new texture, but can also give it an exisitng texture to modify.
 '''
-from PIL import Image
-t = Texture(Image.new(mode='RGBA', size=(32,32), color=(0,0,0,1)))
-PixelEditor(t)
-
+PixelEditor(texture=load_texture('brick'))
 
 '''
 same as the pixel editor, but with text.
 '''
-ASCIIEditor(size=(32,32))
 </div>
 </div></div>
 <div id="ASCIIEditor"><div id="ASCIIEditor" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ASCIIEditor<g>(GridEditor)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.grid_editor</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ASCIIEditor(size=(61,28), palette=(' ', '#', '|', 'A', '/', '\\', 'o', '_', '-', 'i', 'M', '.'), font='VeraMono.ttf', **kwargs)</params>
 
-text_entity<g> = Text(text='', position=(-.45,-.45,-2), line_height=1.1, origin=(-.5,-.5), font=font)</g> 
-scale<g> = (Text.get_width(' '*self.w), self.h*Text.size*self.text_entity.line_height)</g> 
+text_entity<g> = Text(text=' '*size[0], position=(-.45,-.45,-2), line_height=1.1, origin=(-.5,-.5), font=font)</g> 
+scale<g> = (self.text_entity.width, self.h*Text.size*self.text_entity.line_height)</g> 
 
 render()   
 
@@ -1896,15 +1904,11 @@ pixel editor example, it's basically a drawing tool.
 can be useful for level editors and such
 here we create a new texture, but can also give it an exisitng texture to modify.
 '''
-from PIL import Image
-t = Texture(Image.new(mode='RGBA', size=(32,32), color=(0,0,0,1)))
-PixelEditor(t)
-
+PixelEditor(texture=load_texture('brick'))
 
 '''
 same as the pixel editor, but with text.
 '''
-ASCIIEditor(size=(32,32))
 </div>
 </div></div>
 <div id="HealthBar"><div id="HealthBar" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">HealthBar<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.health_bar</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">HealthBar(max_value=100, show_text=True, show_lines=False, **kwargs)</params>
@@ -2515,10 +2519,12 @@ Entity(model='cube').add_script(SmoothFollow(target=player, offset=(0,2,0)))
 'brick'
 'circle'
 'circle_outlined'
+'cobblestone'
 'cursor'
 'earth_map'
 'file_icon'
 'folder'
+'grass'
 'heightmap_1'
 'horizontal_gradient'
 'radial_gradient'
@@ -2526,6 +2532,7 @@ Entity(model='cube').add_script(SmoothFollow(target=player, offset=(0,2,0)))
 'shore'
 'sky_default'
 'sky_sunset'
+'texture_blend_map_example'
 'ursina_logo'
 'ursina_wink_0000'
 'ursina_wink_0001'
