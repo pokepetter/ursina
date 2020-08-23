@@ -696,6 +696,15 @@ class Entity(NodePath):
         self.set_depth_write(not value)
         self.set_depth_test(not value)
 
+    @property
+    def billboard(self):
+        return self._billboard
+
+    @billboard.setter
+    def billboard(self, value):
+        self._billboard = value
+        self.setBillboardPointEye(value)
+
 
     @property
     def reflection_map(self):
