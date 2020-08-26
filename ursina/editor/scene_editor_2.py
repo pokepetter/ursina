@@ -1,6 +1,6 @@
 from ursina import *
 from webbrowser import open as browse
-from dropdown_menu import DropdownMenuSeparator, DropdownMenuButton, DropdownMenu
+from ursina.prefabs.dropdown_menu import DropdownMenuSeparator, DropdownMenuButton, DropdownMenu
 
 
 class EditorIcon(Draggable):
