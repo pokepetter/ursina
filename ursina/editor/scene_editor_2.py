@@ -1,4 +1,6 @@
 from ursina import *
+from webbrowser import open as browse
+from dropdown_menu import DropdownMenuSeparator, DropdownMenuButton, DropdownMenu
 
 
 class EditorIcon(Draggable):
@@ -22,6 +24,7 @@ class EditorIcon(Draggable):
         self.text_entity.scale = 2
         self.text_entity.enabled = self.scene_editor.show_names
         self.sprite = Entity(parent=self, add_to_scene_entities=False, model='quad', texture='circle', scale=.85, color=color.white)
+
 
 
     def drag(self):
@@ -173,14 +176,66 @@ class SceneEditor(Entity):
             enabled=False,
             popup=True,
         )
-        self.menus = [self.model_menu, self.texture_menu, self.rename_window, self.ask_for_scene_name_window]
         self.show_names = False
 
         self.tool = 'move'
 
-        self.load('test2')
+        self.textures_buttons = [
+            DropdownMenuButton(text=str(i), on_click=Func(self.set_attr_for_selected, 'texture', i)) for i in
+            self.textures]
+        self.models_buttons = [DropdownMenuButton(text=str(i), on_click=Func(self.set_attr_for_selected, 'model', i))
+                               for i in self.models]
+        self.view_modes = [DropdownMenuButton(text=str(i), on_click=Func(self.changeRenderMode, str(i))) for i in window.render_modes]
 
+        self.top_menu = DropdownMenu('Menu', buttons=(
+            DropdownMenuSeparator(),
+            DropdownMenu('Entity', buttons=(
+                DropdownMenuButton('New', on_click=Func(self.add_entity, 'entity')),
+                DropdownMenuSeparator(),
+                DropdownMenu('Texture', buttons=self.textures_buttons),
+                DropdownMenu('Model', buttons=self.models_buttons),
+                DropdownMenu('Shader', buttons=(
+                    DropdownMenuButton('Custom'), # add FileBrowser
+                    DropdownMenuButton('None')
+                )),
+                DropdownMenu('Animation', buttons=(
+                    DropdownMenuButton('Custom'), # add FileBrowser
+                    DropdownMenuButton('None')
+                )),
+                DropdownMenuSeparator(),
+                # DropdownMenuButton('Scale', on_click=self.scale),
+                # DropdownMenu('Reposition Axis', buttons=(
+                #     DropdownMenuButton('X', on_click=Func(self.xPositionInput, 'selection', self.selection)),
+                #     DropdownMenuButton('Y', on_click=Func(self.yPositionInput, 'selection', self.selection)),
+                #     DropdownMenuButton('Z', on_click=Func(self.zPositionInput, 'selection', self.selection)),
+                # )),
+                # DropdownMenuButton('Duplicate', on_click=self.duplicateSelection),
+                # DropdownMenuButton('Destroy', on_click=self.deleteSelection),
+                DropdownMenuSeparator(),
+                DropdownMenu('Help', buttons=(
+                    DropdownMenuButton('Tutorial', on_click=Func(browse, 'https://www.ursinaengine.org/ursina_for_dummies.html')),
+                    DropdownMenuButton('API Reference', on_click=Func(browse, 'https://www.ursinaengine.org/cheat_sheet.html')),
+                )),
+            )),
+            DropdownMenu('Settings', buttons=(
+                DropdownMenuSeparator(),
+                DropdownMenu('View Mode', buttons=self.view_modes),
+                DropdownMenu('VSYNC', buttons=(
+                    DropdownMenuButton('On', on_click=Func(self.changeVsync, True)),
+                    DropdownMenuButton('Off', on_click=Func(self.changeVsync, False)),
+                )),
+                DropdownMenu('Fullscreen', buttons=(
+                    DropdownMenuButton('On', on_click=Func(self.changeFullscreen, True)),
+                    DropdownMenuButton('Off', on_click=Func(self.changeFullscreen, False)),
+                )),
+                DropdownMenu('Borderless', buttons=(
+                    DropdownMenuButton('On', on_click=Func(self.changeBorderless, True)),
+                    DropdownMenuButton('Off', on_click=Func(self.changeBorderless, False))
+                ))
+            ))
+        ))
 
+        self.menus = [self.model_menu, self.texture_menu, self.rename_window, self.top_menu]
 
     def load(self, name, folder=application.asset_folder / 'scenes'):
         t = time.time()
@@ -216,8 +271,7 @@ class SceneEditor(Entity):
             setattr(icon.entity, name, value)
 
         for menu in self.menus:
-            menu.enabled = False
-
+            menu.enabled = True if type(menu) == DropdownMenu else False
 
     def rename_selected(self, name=''):
         if not name:
@@ -269,6 +323,26 @@ class SceneEditor(Entity):
         _pos /= len(self.selection)
         return _pos
 
+    def changeVsync(self, mode): # Not working for now
+        window.vsync = mode
+
+    def changeFullscreen(self, mode):
+        window.fullscreen = mode
+
+    def changeBorderless(self, mode):
+        window.borderless = mode
+
+    def changeRenderMode(self, mode):
+        window.render_mode = mode
+
+    def deleteSelection(self):
+        for i in self.selection:
+            destroy(i)
+
+    def duplicateSelection(self):
+        print(self.selection)
+        for i in self.selection:
+            duplicate(i)
 
     def update(self):
         for icon in self.editor_icons:
@@ -372,8 +446,6 @@ class SceneEditor(Entity):
                     icon.entity.shader = basic_lighting_shader
                 # else:
                 #     icon.entity.shader = None
-
-
 
         if key == 'n':
             e = self.add_entity('entity')
