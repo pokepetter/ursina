@@ -15,6 +15,7 @@ setup(
         'panda3d',
         'pillow',
         'screeninfo',
+        'pyperclip',
     ],
 
     extras_require={
