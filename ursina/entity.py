@@ -279,6 +279,22 @@ class Entity(NodePath):
         else:
             self.hide()
 
+    @property
+    def visible_self(self):
+        if not hasattr(self, '_visible_self'):
+            return True
+        return self._visible_self
+
+    @visible_self.setter
+    def visible_self(self, value):
+        self._visible_self = value
+        if not self.model:
+            return
+        if value:
+            self.model.show()
+        else:
+            self.model.hide()
+
 
     @property
     def collider(self):
@@ -1141,6 +1157,8 @@ if __name__ == '__main__':
     # e.shake()
     # e.fade_out(delay=.5)
     # e.fade_in(delay=2.5)
-    e.blink(color.red, duration=1, curve=curve.linear_boomerang, loop=True)
+    # e.blink(color.red, duration=1, curve=curve.linear_boomerang, loop=True)
+
+
 
     app.run()
