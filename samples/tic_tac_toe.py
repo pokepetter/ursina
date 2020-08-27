@@ -8,44 +8,40 @@ camera.fov = 4
 camera.position = (1, 1)
 Text.default_resolution *= 2
 
-# for y in range(3):
-#     for x in range(3):
-#         b = Button(parent=scene, position=(x,y))
-
-# create a matrix of buttons
-board = [[Button(parent=scene, position=(x,y), color=color.color(0,0,0,.8)) for x in range(3)] for y in range(3)]
-
-player_name = 'o'
-player_color = color.azure
-cursor = Tooltip(player_name, color=player_color, origin=(0,0), scale=4, enabled=True)
+player = Entity(name='o', color=color.azure)
+cursor = Tooltip(player.name, color=player.color, origin=(0,0), scale=4, enabled=True)
 cursor.background.color = color.clear
 bg = Entity(parent=scene, model='quad', texture='shore', scale=(16,8), z=10, color=color.light_gray)
 mouse.visible = False
 
+# create a matrix to store the buttons in. makes it easier to check for victory
+board = [[None for x in range(3)] for y in range(3)]
 
-def input(key):
-    global player_name, player_color, cursor
+for y in range(3):
+    for x in range(3):
+        b = Button(parent=scene, position=(x,y))
+        board[x][y] = b
 
-    if key == 'left mouse down' and mouse.hovered_entity:
-        b = mouse.hovered_entity
-        b.text = player_name
-        b.color = player_color
-        b.collision = False
-        check_for_victory()
+        def on_click(b=b):
+            b.text = player.name
+            b.color = player.color
+            b.collision = False
+            check_for_victory()
 
-        if player_name == 'o':
-            player_name = 'x'
-            player_color = color.orange
-        else:
-            player_name = 'o'
-            player_color = color.azure
+            if player.name == 'o':
+                player.name = 'x'
+                player.color = color.orange
+            else:
+                player.name = 'o'
+                player.color = color.azure
 
-        cursor.text = player_name
+            cursor.text = player.name
+
+        b.on_click = on_click
 
 
 def check_for_victory():
-    global board, cursor, player_name, player_color
-    name = player_name
+    name = player.name
 
     won = (
     (board[0][0].text == name and board[1][0].text == name and board[2][0].text == name) or # across the bottom
@@ -62,9 +58,9 @@ def check_for_victory():
         destroy(cursor)
         mouse.visible = True
         Panel(z=1, scale=10, model='quad')
-        t = Text('player\n'+name+'\nwon!', scale=3, origin=(0,0), background=True)
+        t = Text(f'player\n{name}\nwon!', scale=3, origin=(0,0), background=True)
         t.create_background(padding=(.5,.25), radius=Text.size/2)
-        t.background.color = player_color.tint(-.2)
+        t.background.color = player.color.tint(-.2)
 
 
 app.run()
