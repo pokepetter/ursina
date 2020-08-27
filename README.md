@@ -32,7 +32,6 @@ or install them all with:
 On some systems you might have to use pip3 instead of pip in order to use Python 3 and not the old Python 2.
 
 
-
 ## Dependencies
   * python 3.6+
   * panda3d
@@ -41,7 +40,8 @@ On some systems you might have to use pip3 instead of pip in order to use Python
   * pillow, for texture manipulation
   * psd-tools, for converting .psd files
   * blender, for converting .blend files
-
+  * pyperclip, for copy/pasting
+  
 
 ## Examples
 ``` python
