@@ -33,6 +33,12 @@ from ursina.input_handler import held_keys
 from ursina import input_handler
 
 
+class Empty():
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key ,value)
+
+
 
 def invoke(function, *args, **kwargs):
     delay = 0
@@ -65,7 +71,7 @@ def destroy(entity, delay=0):
 
 def _destroy(entity):
     if not entity:
-        print('entity is None')
+        # print('entity is None')
         return
     if entity in scene.entities:
         scene.entities.remove(entity)
