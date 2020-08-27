@@ -38,7 +38,7 @@ class InputEvents(Enum):
     page_up_up = 'page up up'
     enter = 'enter'
     backspace = 'backspace'
-    escape = 'enter'
+    escape = 'escape'
     tab = 'tab'
 
     def __hash__(self):
