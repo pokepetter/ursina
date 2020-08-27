@@ -1050,8 +1050,7 @@ class Entity(NodePath):
         from ursina.hit_info import HitInfo
         from ursina import distance
         if not hasattr(self, '_picker'):
-            from panda3d.core import CollisionTraverser, CollisionNode, CollisionHandlerQueue
-            from panda3d.core import CollisionRay, CollisionSegment, CollisionBox
+            from panda3d.core import CollisionTraverser, CollisionNode, CollisionHandlerQueue, CollisionRay, CollisionSegment, CollisionBox
 
             self._picker = CollisionTraverser()  # Make a traverser
             self._pq = CollisionHandlerQueue()  # Make a handler
