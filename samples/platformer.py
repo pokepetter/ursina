@@ -34,7 +34,7 @@ for i in range(10):
 player = PlatformerController2d()
 player.x=1
 player.y = raycast(player.world_position, player.down).world_point[1] + .01
-# camera.smooth_follow.offset[1] = 5
+camera.add_script(SmoothFollow(target=player, offset=[0,5,-30], speed=4))
 
 
 # def update():
