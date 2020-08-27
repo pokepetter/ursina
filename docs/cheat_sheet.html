@@ -51,6 +51,7 @@
 <a style="color:hsl(349.0, 89%, 28%);" href="#Shader">Shader</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Texture">Texture</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Trigger">Trigger</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#Empty">Empty</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Vec3">Vec3</a>
 
 <a style="color:hsl(320.0, 89%, 28%);" href="#Animation">Animation</a>
@@ -195,6 +196,7 @@ scale<g> = Vec3(1,1,1)    # can also set self.scale_x, self.scale_y, self.scale_
 line_definition<g> = None # returns a Traceback(filename, lineno, function, code_context, index).</g> 
 type
 types
+visible_self
 origin_x
 origin_y
 origin_z
@@ -231,6 +233,7 @@ texture_scale
 texture_offset
 alpha
 always_on_top
+billboard
 model_bounds
 bounds
 children
@@ -659,23 +662,11 @@ e2.animate_y(1, curve=curve.CubicBezier(0,.7,1,.3))
 </div>
 </div></div>
 <div id="duplicate"><div id="duplicate" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">duplicate</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.duplicate</g><br><br>
-duplicate(<g>entity</g>)   
+duplicate(<g>entity, copy_children=True, **kwargs</g>)   
 
-<div class="example">quad = Button(parent=scene, model='quad', texture='brick', x=-1, collider='box')
-sprite = Sprite('brick', x=-2, scale=1.5)
-circle = Entity(model=Circle(6))
-rounded_quad = Entity(model=Quad(subdivisions=3, mode='line'), x=1)
-sphere = Entity(model=Sphere(mode='line'), x=2)
-cone = Entity(model=Cone(), x=3)
-cone.model.colorize()
-prismatoid = Entity(model=Prismatoid(), x=4)
-cylinder = Entity(model=Cylinder(), x=5)
-mesh = Entity(model=Mesh(vertices=((0,0,0), (0,1,0), (-1,1,0))), x=6)
-
-for i, e in enumerate((quad, sprite, circle, rounded_quad, sphere, cone, prismatoid, cylinder, mesh)):
-    e2 = duplicate(e)
-    e2.y += 1.5
-
+<div class="example">e = Entity(model='cube', collider='box')
+e.c = Entity(parent=e, model='cube', scale=.5, y=.5, color=color.azure)
+e2 = duplicate(e, True, x=1.1)
 EditorCamera()
 </div>
 </div></div>
@@ -1163,7 +1154,7 @@ page_up<g> = 'page up'</g>
 page_up_up<g> = 'page up up'</g> 
 enter<g> = 'enter'</g> 
 backspace<g> = 'backspace'</g> 
-escape<g> = 'enter'</g> 
+escape<g> = 'escape'</g> 
 tab<g> = 'tab'</g> 
 
 
@@ -1427,6 +1418,27 @@ t = Trigger(trigger_targets=scene.entities, x=1, model='sphere', color=color.col
 t.on_trigger_enter = Func(print, 'enter')
 t.on_trigger_exit =  Func(print, 'exit')
 t.on_trigger_stay =  Func(print, 'stay')
+</div>
+</div></div>
+<div id="Empty"><div id="Empty" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Empty<g>()</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursinastuff</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Empty(**kwargs)</params>
+
+
+invoke(<g>function, *args, **kwargs</g>)   
+destroy(<g>entity, delay=0</g>)   
+import_all_classes(<g>path=application.asset_folder, debug=False</g>)   
+print_on_screen(<g>text, position=window.top_left, origin=(-.5,.5), scale=1, duration=1</g>)   
+
+<div class="example">def test_func(item, x=None, y=None):
+    print(item, x, y)
+
+test_func('test')
+invoke(test_func, 'test', delay=.1)
+invoke(test_func, 'test1', 1, 2, delay=.2)
+invoke(test_func, 'test2', x=1, y=2, delay=.3)
+
+def input(key):
+    if key == 'space':
+        print_on_screen('debug message', position=(0,0), origin=(0,0), scale=2)
 </div>
 </div></div>
 <div id="Vec3"><div id="Vec3" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Vec3<g>(PandaVec3)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.vec3</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Vec3(**kwargs)</params>
@@ -2505,6 +2517,7 @@ Entity(model='cube').add_script(SmoothFollow(target=player, offset=(0,2,0)))
 <div id="models"><div id="models" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">models</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;">'circle'
 'cube'
 'cube_uv_top'
+'diamond'
 'icosphere'
 'plane'
 'quad'
@@ -2558,7 +2571,7 @@ ed = EditorCamera(rotation_speed = 200, panning_speed=200)
 
 
 
-<div class="example">Entity(model=Cone(8, direction=(0,0,1)), color=color.color(60,1,1,.3))
+<div class="example">Entity(model=Cone(8, direction=(0,1,0)), color=color.color(60,1,1,.3))
 origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
 ed = EditorCamera(rotation_speed = 200, panning_speed=200)
 </div>
