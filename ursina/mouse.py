@@ -81,8 +81,8 @@ class Mouse():
     def position(self, value):
         base.win.move_pointer(
             0,
-            int(value[0] + (window.size[0]/2) + (value[0]/2*window.size[0]) *1.123), # no idea why I have * with 1.123
-            int(value[1] + (window.size[1]/2) - (value[1]*window.size[1])),
+            round(value[0] + (window.size[0]/2) + (value[0]/2*window.size[0]) *1.124), # no idea why I have * with 1.124
+            round(value[1] + (window.size[1]/2) - (value[1]*window.size[1])),
         )
 
 
