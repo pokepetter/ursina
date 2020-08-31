@@ -35,7 +35,7 @@ ignore = list()
 
 
 for i, arg in enumerate(sys.argv):
-    if sys.argv[1] == 'help' or arg == '--help':
+    if arg == '--help':
         print(dedent('''
             package ursina application for windows10.
             provided with project folder path, creates a build folder where
@@ -180,7 +180,7 @@ with Path(build_folder / f'{project_name}.bat').open('w') as f:
         chcp 65001
         set PYTHONIOENCODING=utf-8
 
-        call "%CD%\python\python.exe" %CD%\src\main.py > "log.txt" 2>&1'''
+        call "%CD%\python\python.exe" "%CD%\src\main.py" > "log.txt" 2>&1'''
     ))
 #
 # # # make exe
