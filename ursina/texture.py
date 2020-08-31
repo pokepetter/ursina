@@ -116,7 +116,8 @@ class Texture():
                 col = (col[0], col[0], col[0])
 
             return color.rgba(*col)
-        except:
+        except Exception as e:
+            print(e)
             return None
 
 

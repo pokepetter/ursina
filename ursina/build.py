@@ -6,6 +6,7 @@ from shutil import copy, copyfile
 from distutils.dir_util import copy_tree
 from pathlib import Path
 import time
+from textwrap import dedent
 
 
 def copytree(src, dst, symlinks=False, ignore=None):
@@ -26,38 +27,44 @@ def copytree(src, dst, symlinks=False, ignore=None):
             shutil.copy2(s, d)
 
 
-if len(sys.argv) > 1:
-    if sys.argv[1] == 'help' or sys.argv[1] == '--help':
-        print(
-            '''package ursina application for windows10.
+
+project_folder = Path.cwd()
+project_name = project_folder.stem
+build_folder = Path(project_folder / 'build')
+ignore = list()
+
+
+for i, arg in enumerate(sys.argv):
+    if sys.argv[1] == 'help' or arg == '--help':
+        print(dedent('''
+            package ursina application for windows10.
             provided with project folder path, creates a build folder where
             it copies python and project's dependent packages. requires a main.py file.
             copies game scripts and assets into 'build/scr' folder.
             creates a .bat file to start the game.'''
+            )
         )
         sys.exit()
 
-ignore = list()
-for i, arg in enumerate(sys.argv):
-    if arg == '--ignore':
+    elif arg == '--ignore':
         for j in range(i, len(sys.argv)):
+            if sys.argv[j].startswith('-'):
+                break
             ignore.append(sys.argv[j])
             print('ignoring', sys.argv[j])
-        break
 
-if len(sys.argv) > 1:
-    project_folder = Path(sys.argv[1])
-else:
-    project_folder = Path.cwd()
+    elif arg == '--name':
+        project_name = sys.argv[i+1]
 
 
-build_folder = Path(project_folder / 'build')
+
 if build_folder.exists():
-    msg = f'Build folder {build_folder} already exists. \nProceed to delete and overwrite?'
-    overwrite = input("%s (y/N) " % msg).lower() == 'y'
-    if not overwrite:
-        print('stopped building')
-        exit()
+    if not '--overwrite' in sys.argv:
+        msg = f'Build folder {build_folder} already exists. \nProceed to delete and overwrite?'
+        overwrite = input("%s (y/N) " % msg).lower() == 'y'
+        if not overwrite:
+            print('stopped building')
+            exit()
 
     print('deleting existing build folder')
     shutil.rmtree(str(build_folder))
@@ -91,16 +98,23 @@ print('copying python Lib files')
 # def copy_always_included():
 print('copying always included')
 always_include = (
-    'Lib/collections', 'Lib/ctypes', 'Lib/encodings',
-    'Lib/importlib', 'Lib/urllib', 'Lib/logging',
+    'Lib/collections',
+    'Lib/ctypes',
+    'Lib/encodings',
+    'Lib/importlib',
+    'Lib/urllib',
+    'Lib/logging',
+    'Lib/xml',
     'Lib/site-packages/panda3d/',
-    'Lib/site-packages/screeninfo/'
+    'Lib/site-packages/screeninfo/',
+    'DLLs/libffi-7.dll',
+    'DLLs/_ctypes.pyd',
     )
 
 for path in always_include:
     source = python_folder / path
     dest = python_dest / path
-    print('copying always include:', source)
+    print('copying always include:', source, '-->', dest)
 
     if source.is_file():
         dest.parent.mkdir(parents=True, exist_ok=True)
@@ -160,17 +174,22 @@ for f in project_folder.iterdir():
         copy(str(f), str(dest))
 
 
-print('creating .exe file')
-with Path(build_folder / 'run.bat').open('w') as f:
-    f.write('''start "" "%CD%\python\python.exe" %CD%\src\main.py''')
+print('creating .bat file')
+with Path(build_folder / f'{project_name}.bat').open('w') as f:
+    f.write(dedent(f'''
+        chcp 65001
+        set PYTHONIOENCODING=utf-8
 
-
-import subprocess
-subprocess.call([
-    f'{ursina_path}\\scripts\\_bat_to_exe.bat',
-    f'{build_folder}\\run.bat',
-    f'\\build\\{project_folder.stem}.exe'
-    ])
-
+        call "%CD%\python\python.exe" %CD%\src\main.py > "log.txt" 2>&1'''
+    ))
+#
+# # # make exe
+# # import subprocess
+# # subprocess.call([
+# #     f'{ursina_path}\\scripts\\_bat_to_exe.bat',
+# #     f'{build_folder}\\f'{project_name}.bat',
+# #     f'\\build\\{project_folder.stem}.exe'
+# #     ])
+#
 
 print('build complete! time elapsed:', time.time() - start_time)

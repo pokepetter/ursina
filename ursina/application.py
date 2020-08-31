@@ -40,7 +40,7 @@ _model_path.append_path(str(asset_folder.resolve()))
 
 print('package_folder:', package_folder)
 print('asset_folder:', asset_folder)
-print('dev mode:', development_mode)
+print('development mode:', development_mode)
 
 hot_reloader = None     # will be set my main if development_mode
 
@@ -63,12 +63,11 @@ def quit():
 
 def load_settings(path=asset_folder / 'settings.py'):
     try:
-        from ursina import window
         with open(path) as f:
             try:
                 # d = dict(locals(), **globals())
                 # exec(f.read(), d, d)
-                exec(f.read())
+                exec('from ursina import *\n' + f.read())
             except Exception as e:
                 print('settings.py error:', e)
                 pass

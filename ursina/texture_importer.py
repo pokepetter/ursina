@@ -9,11 +9,12 @@ file_types = ('.tif', '.jpg', '.png', '.gif')
 textureless = False
 
 has_psd_tools_installed = False
-try:
-    from psd_tools import PSDImage
-    has_psd_tools_installed = True
-except (ModuleNotFoundError, ImportError) as e:
-    print('psd-tools not installed')
+if application.development_mode:
+    try:
+        from psd_tools import PSDImage
+        has_psd_tools_installed = True
+    except (ModuleNotFoundError, ImportError) as e:
+        print('psd-tools not installed')
 
 
 

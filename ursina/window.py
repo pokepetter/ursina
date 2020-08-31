@@ -30,11 +30,18 @@ class Window(WindowProperties):
         self.show_ursina_splash = False
 
         self.title = application.asset_folder.name
-        try:
-            self.screen_resolution = (get_monitors()[0].width, get_monitors()[0].height)
-        except:
-            print('using default sceen resolution.', 'OS:', os.name)
-            self.screen_resolution = Vec2(1366, 768)
+        if os.name == 'nt':     # windows
+            import ctypes
+            user32 = ctypes.windll.user32
+            self.screen_resolution = (user32.GetSystemMetrics(0), user32.GetSystemMetrics(1))
+
+        else:
+            try:
+                self.screen_resolution = (get_monitors()[0].width, get_monitors()[0].height)
+                print('OS:', os.name)
+            except:
+                print('using default sceen resolution.', 'OS:', os.name)
+                self.screen_resolution = Vec2(1366, 768)
 
         print('screen resolution:', self.screen_resolution)
         self.fullscreen_size = Vec2(self.screen_resolution[0]+1, self.screen_resolution[1]+1)
