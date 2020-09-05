@@ -365,6 +365,7 @@ original_scale<g> = self.scale</g>
 icon<g> = None</g> 
 text
 text_origin
+text_color
 
 input(<g>key</g>)   
 on_mouse_enter()   
@@ -1414,7 +1415,7 @@ def update():
     player.x += held_keys['d'] * time.dt * 2
     player.x -= held_keys['a'] * time.dt * 2
 
-t = Trigger(trigger_targets=scene.entities, x=1, model='sphere', color=color.color(0,1,1,.5))
+t = Trigger(trigger_targets=(player,), x=1, model='sphere', color=color.color(0,1,1,.5))
 t.on_trigger_enter = Func(print, 'enter')
 t.on_trigger_exit =  Func(print, 'exit')
 t.on_trigger_stay =  Func(print, 'stay')
@@ -2571,7 +2572,7 @@ ed = EditorCamera(rotation_speed = 200, panning_speed=200)
 
 
 
-<div class="example">Entity(model=Cone(8, direction=(0,1,0)), color=color.color(60,1,1,.3))
+<div class="example">Entity(model=Cone(8, direction=(0,0,1)), color=color.color(60,1,1,.3))
 origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
 ed = EditorCamera(rotation_speed = 200, panning_speed=200)
 </div>

@@ -1,4 +1,5 @@
-from ursina import Entity
+from ursina.entity import Entity
+from ursina.ursinamath import distance
 
 # TODO:
 # circle
@@ -61,7 +62,7 @@ if __name__ == '__main__':
         player.x += held_keys['d'] * time.dt * 2
         player.x -= held_keys['a'] * time.dt * 2
 
-    t = Trigger(trigger_targets=scene.entities, x=1, model='sphere', color=color.color(0,1,1,.5))
+    t = Trigger(trigger_targets=(player,), x=1, model='sphere', color=color.color(0,1,1,.5))
     t.on_trigger_enter = Func(print, 'enter')
     t.on_trigger_exit =  Func(print, 'exit')
     t.on_trigger_stay =  Func(print, 'stay')

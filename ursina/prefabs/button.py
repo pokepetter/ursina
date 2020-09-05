@@ -87,6 +87,15 @@ class Button(Entity):
         self.text_entity.origin = value
 
     @property
+    def text_color(self):
+        return self.text_entity.color
+
+    @text_color.setter
+    def text_color(self, value):
+        self.text_entity.color = value
+
+
+    @property
     def icon(self):
         return self._icon
 
