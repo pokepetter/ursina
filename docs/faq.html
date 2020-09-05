@@ -40,15 +40,6 @@ camera.position = Vec3(1,1,0)<br>
 <br>
 <br>
 <br>
-<b>How can I build and distribute my game?</b><br>
-<br>
-Open cmd in the project folder and run<br>
-pyhton -m ursina.build<br>
-It will then move the necessary files to a 'build' directory.<br>
-<br>
-<br>
-<br>
-<br>
 <b>Why should I use Python for game development. Isn't it slow?</b><br>
 <br>
 Not really. The most performance critical part are written in C++ or shader code.<br>
@@ -83,11 +74,16 @@ You can also write custom shaders, see panda3d's shader documentatation for that
 <br>
 <b>How can I detect collisions?</b><br>
 <br>
-That main way right now is with raycasts. They can hit anything with a collider.<br>
+One way is with raycasts. They can hit anything with a collider.<br>
 <br>
 <a href="https://www.ursinaengine.org/cheat_sheet.html#raycaster">https://www.ursinaengine.org/cheat_sheet.html#raycaster</a><br>
 <a href="https://www.ursinaengine.org/cheat_sheet.html#HitInfo">https://www.ursinaengine.org/cheat_sheet.html#HitInfo</a><br>
 <a href="https://www.ursinaengine.org/cheat_sheet.html#Collider">https://www.ursinaengine.org/cheat_sheet.html#Collider</a><br>
+<br>
+There's also intersects(), which use the entity's collider and check if it intersects other colliders.<br>
+Like raycast(), it also returns a HitInfo.<br>
+<br>
+<br>
 <br>
 Example from the FirstPersonController:<br>
 <br>

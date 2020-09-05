@@ -1,0 +1,39 @@
+# title building your app
+# center, width 1000, arial
+# size 5, bold
+Building
+# size 1, normal
+
+
+# left
+
+
+## Building Your App with ursina.build
+
+Open cmd in the project folder and run
+# code
+python -m ursina.build
+# text
+
+It will then move the necessary files to a 'build' directory which you can then distribute.
+
+
+
+## Building Your App with auto-py-to-exe (singlefile)
+
+1. pip install auto-py-to-exe
+2. go to cmd and type auto-py-to-exe to open the gui
+3. enter script location
+4. select onefile
+5. select either console based or window based
+6. icon (optional)
+7. under additional files, click add folder and add
+    panda3d-1.10.6.dist-info,
+    panda3d,
+    panda3d_tools,
+    ursina-3.1.0.dist-info,
+    ursina,
+    and any other files included for your app/game
+8. advanced (optional)
+9. settings to set an output location (optional)
+10. finally select "convert .py to .exe"
