@@ -6,8 +6,8 @@ class EditorCamera(Entity):
         camera.editor_position = (0,0,-10)
         super().__init__(name='editor_camera', eternal=True)
 
-        self.rotation_speed = 2500
-        self.pan_speed = Vec2(250, 250)
+        self.rotation_speed = 200
+        self.pan_speed = Vec2(5, 5)
         self.move_speed = 10
         self.zoom_speed = .75
         self.rotate_around_mouse_hit = False
@@ -52,7 +52,7 @@ class EditorCamera(Entity):
         elif key == 'f':
             self.position = self.start_position
 
-        elif key == 'scroll up':
+        elif key == 'scroll up' and not held_keys['control']:
             if not camera.orthographic:
                 target_position = Vec3(0,0,0)
                 if mouse.hovered_entity and not mouse.hovered_entity.has_ancestor(camera):
@@ -62,7 +62,7 @@ class EditorCamera(Entity):
             else:
                 camera.fov -= self.zoom_speed * 100 * time.dt
 
-        elif key == 'scroll down':
+        elif key == 'scroll down' and not held_keys['control']:
             if not camera.orthographic:
                 camera.world_position += camera.back * self.zoom_speed * 100 * time.dt
             else:
@@ -77,8 +77,8 @@ class EditorCamera(Entity):
 
     def update(self):
         if mouse.right:
-            self.rotation_x -= mouse.velocity[1] * self.rotation_speed * time.dt
-            self.rotation_y += mouse.velocity[0] * self.rotation_speed * time.dt
+            self.rotation_x -= mouse.velocity[1] * self.rotation_speed
+            self.rotation_y += mouse.velocity[0] * self.rotation_speed
 
             self.position += camera.right * held_keys['d'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt'])) * time.dt
             self.position += camera.left * held_keys['a'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt'])) * time.dt
@@ -89,12 +89,13 @@ class EditorCamera(Entity):
 
 
         if mouse.middle:
-            self.position -= camera.right * mouse.velocity[0] * self.pan_speed[0] * time.dt
-            self.position -= camera.up * mouse.velocity[1] * self.pan_speed[1] * time.dt
+            self.position -= camera.right * mouse.velocity[0] * self.pan_speed[0]
+            self.position -= camera.up * mouse.velocity[1] * self.pan_speed[1]
 
 
 
 if __name__ == '__main__':
+    # window.vsync = False
     app = Ursina()
     '''
     Simple camera for debugging.
