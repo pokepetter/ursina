@@ -135,6 +135,9 @@ def obj_to_ursinamesh(
     delete_obj=True
     ):
 
+    if name.endswith('.obj'):
+        name = name[:-4]
+
     for f in path.glob(f'**/{name}.obj'):
         filepath = path / (os.path.splitext(f)[0] + '.obj')
         print('read obj at:', filepath)

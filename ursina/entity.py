@@ -148,10 +148,10 @@ class Entity(NodePath):
                 pass
 
             if value == True:
-                if not self.is_singleton():
+                if hasattr(self, 'is_singleton') and not self.is_singleton():
                     self.unstash()
             else:
-                if not self.is_singleton():
+                if hasattr(self, 'is_singleton') and not self.is_singleton():
                     self.stash()
 
         if name == 'eternal':
@@ -320,10 +320,10 @@ class Entity(NodePath):
             self._collider.name = value
 
         elif value == 'mesh' and self.model:
-            self._collider = MeshCollider(entity=self, mesh=self.model, center=-self.origin)
+            self._collider = MeshCollider(entity=self, mesh=None, center=-self.origin)
             self._collider.name = value
 
-        elif isinstance(value, Mesh):
+        else:
             self._collider = MeshCollider(entity=self, mesh=value, center=-self.origin)
 
 

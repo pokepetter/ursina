@@ -57,8 +57,15 @@ class MeshCollider(Collider):
         super().__init__()
         center = Vec3(center)
         if mesh == None and entity.model:
-            print('auto gen mesh colider from entity mesh')
+            print('''auto generating mesh collider from entity's mesh''')
             mesh = entity.model
+
+        from ursina import Mesh
+        if not isinstance(mesh, Mesh):
+            from ursina import mesh_importer
+            mesh = eval(mesh_importer.obj_to_ursinamesh(name=mesh.name, save_to_file=False))
+            flipped_verts = [v*Vec3(-1,1,1) for v in mesh.vertices] # have to flip it on x axis for some reason
+            mesh.vertices = flipped_verts
 
         self.node_path = entity.attachNewNode(CollisionNode('CollisionNode'))
         node = self.node_path.node()
