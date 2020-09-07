@@ -260,12 +260,14 @@ if __name__ == '__main__':
     '''
     # from PIL import Image
     # t = Texture(Image.new(mode='RGBA', size=(32,32), color=(0,0,0,1)))
+    from ursina.prefabs.grid_editor import PixelEditor
     PixelEditor(texture=load_texture('brick'))
 
     '''
     same as the pixel editor, but with text.
     '''
-    # ASCIIEditor()
+    from ursina.prefabs.grid_editor import ASCIIEditor
+    ASCIIEditor()
 
 
     app.run()
