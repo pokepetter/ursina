@@ -72,6 +72,11 @@ class Sequence():
             self.funcs.append(arg)
 
 
+    def extend(self, list):
+        for e in list:
+            self.append(e)
+
+
     def start(self):
         for f in self.funcs:
             f.finished = False
