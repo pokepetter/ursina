@@ -69,13 +69,14 @@ class FirstPersonController(Entity):
 
 
         # gravity
-        ray = boxcast(self.world_position+(0,.05,0), self.down, ignore=(self, ), thickness=.9)
+        ray = boxcast(self.world_position+(0,2,0), self.down, ignore=(self, ), thickness=.9)
 
-        if ray.distance <= .1:
+        if ray.distance <= 2:
             if not self.grounded:
                 self.land()
             self.grounded = True
-            # self.y = ray.world_point[1]
+            if not middle_ray.hit or middle_ray.distance > .05: # walk up slope
+                self.y = ray.world_point[1]
             return
         else:
             self.grounded = False
@@ -126,6 +127,8 @@ if __name__ == '__main__':
 
     gun = Button(parent=scene, model='cube', color=color.blue, origin_y=-.5, position=(3,0,3), collider='box')
     gun.on_click = Sequence(Func(setattr, gun, 'parent', camera), Func(setattr, player, 'gun', gun))
+
+    slope = Entity(model='cube', collider='box', position=(0,0,8), scale=6, rotation=(45,0,45), texture='brick', texture_scale=(8,8))
 
     def input(key):
         if key == 'left mouse down' and player.gun:
