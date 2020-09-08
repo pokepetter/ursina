@@ -662,7 +662,7 @@ class Entity(NodePath):
 
         if texture.__class__ is MovieTexture:
             self._texture = texture
-            self.setTexture(texture)
+            self.model.setTexture(texture, 1)
             return
 
         self._texture = texture
