@@ -12,7 +12,7 @@ imported_meshes = dict()
 
 def load_model(name, path=application.asset_folder):
     if name in imported_meshes:
-        # print('load cached model', name)
+        print('load cached model', name)
         try:
             return copy(imported_meshes[name])
         except:
@@ -41,10 +41,10 @@ def load_model(name, path=application.asset_folder):
                 print('found obj', filename)
                 m = loader.loadModel(filename)
                 m.setAttrib(CullFaceAttrib.make(CullFaceAttrib.MCullCounterClockwise))
-                # m = obj_to_ursinamesh(path=path, name=name, save_to_file=False)
-                # m = eval(m)
-                # m.path = filename
-                # m.name = name
+                m = obj_to_ursinamesh(path=path, name=name, save_to_file=False)
+                m = eval(m)
+                m.path = filename
+                m.name = name
                 imported_meshes[name] = m
                 return m
 

@@ -161,25 +161,39 @@ class HotReloader(Entity):
 
 
     def reload_models(self):
-        entities = [e for e in scene.entities if e.model and hasattr(e.model, 'path')]
-        unique_paths = list(set([e.model.path for e in entities]))
-        # ignore internal models
-        unique_paths = [e for e in unique_paths if not str(application.package_folder).lower() in str(e).lower()]
-        print(unique_paths)
+        entities = [e for e in scene.entities if e.model]
+        unique_names = list(set([e.model.name.split('.')[0] for e in entities]))
+        # print(unique_names)
+        changed_models = list()
 
-        for model_path in unique_paths:
-            if model_path.parent.name == application.compressed_models_folder.name:
-                # print('model is made from .blend file', model_path.stem + '.blend')
-                # print('try compres:', model_path.parent.parent, model_path.stem)
-                compress_models(path=model_path.parent.parent, name=model_path.stem)
-                print(f'compressed {model_path.stem} .blend sucessfully')
+        for name in unique_names:
+            matches = [e for e in application.asset_folder.glob(f'**/{name}.blend')]
+            if not matches:
+                continue
+
+            blend_path = matches[0]
+            # ignore internal models
+            if blend_path.parent == application.internal_models_folder or '/build/' in str(blend_path):
+                continue
+
+            if name in mesh_importer.imported_meshes:
+                mesh_importer.imported_meshes.pop(name, None)
+
+            # print('model is made from .blend file:', blend_path)
+            compress_models(path=blend_path.parent, name=name)
+            # print(f'compressed {name}.blend sucessfully')
+            changed_models.append(name)
+
 
         for e in entities:
-            if e.model.path.parent.parent == application.internal_models_folder:
-                continue
-            e.model = load_model(e.model.path.stem)
-            e.origin = e.origin
-            # print('reloaded model:', e.model.path)
+            if e.model:
+                name = e.model.name.split('.')[0]
+                print(name, changed_models, name in changed_models)
+                if name in changed_models:
+                    e.model = None
+                    e.model = name
+                    e.origin = e.origin
+                    print('reloaded model:', name, e.model)
 
 
 # class InGameTextEditor(Entity):
