@@ -37,6 +37,7 @@
 <a style="color:hsl(349.0, 89%, 28%);" href="#BoxCollider">BoxCollider</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#SphereCollider">SphereCollider</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#MeshCollider">MeshCollider</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#CollisionZone">CollisionZone</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Color">Color</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#CubicBezier">CubicBezier</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#HitInfo">HitInfo</a>
@@ -699,6 +700,9 @@ ursina_mesh_to_obj(<g>mesh, name='', out_path=application.compressed_models_fold
 compress_internal()   
 
 <div class="example">print('imported_meshes:\n', imported_meshes)
+m = obj_to_ursinamesh(path=application.asset_folder.parent / 'samples', name='procedural_rock_0')
+Entity(model=m)
+EditorCamera()
 </div>
 </div></div>
 <div id="scene"><div id="scene" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">scene</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.scene</g><br><br>render<g> = None</g> 
@@ -988,6 +992,8 @@ EditorCamera()
 <div id="MeshCollider"><div id="MeshCollider" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">MeshCollider<g>(<a style="color: gray;" href="#Collider">Collider</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.collider</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">MeshCollider(entity, mesh=None, center=(0,0,0))</params>
 
 node_path<g> = entity.attachNewNode(CollisionNode('CollisionNode'))</g> 
+node<g> = self.node_path.node()</g> 
+collision_polygons<g> = list()</g> 
 visible<g> = False</g> 
 
 
@@ -1004,6 +1010,43 @@ m = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
 e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_color=color.yellow)
 
 EditorCamera()
+</div>
+</div></div>
+<div id="CollisionZone"><div id="CollisionZone" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">CollisionZone<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.collision_zone</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">CollisionZone(radius=2, target_entities=None, **kwargs)</params>
+
+radius<g> = radius</g> 
+entities_with_mesh_colliders<g> = target_entities</g> 
+
+update()   
+
+<div class="example">'''
+This will only enable mesh colliders' collision polygons within a certain range,
+in order to improve performance. 
+'''
+
+from ursina.shaders import basic_lighting_shader
+window.vsync = False
+
+application.asset_folder = application.asset_folder.parent
+terrain = Entity(model='heightmap_test', scale=1, texture='grass', collider='mesh', shader=basic_lighting_shader)
+collision_zone = CollisionZone(model='cube', scale=.1)
+
+
+def input(key):
+    if key == 'c':
+        terrain.collision = not terrain.collision
+
+
+def update():
+    collision_zone.x += (held_keys['d'] - held_keys['a']) * time.dt * 2
+    collision_zone.z += (held_keys['w'] - held_keys['s']) * time.dt * 2
+
+    hit_info = raycast(collision_zone.world_position+Vec3(0,2,0), Vec3(0,-1,0))
+    if hit_info.hit:
+        collision_zone.y = hit_info.world_point.y
+
+Sky()
+EditorCamera(position=(0,0,0))
 </div>
 </div></div>
 <div id="Color"><div id="Color" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Color<g>(Vec4)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.color</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">Color(self,*p)</params>
@@ -1330,6 +1373,7 @@ finished
 
 generate()   
 append(<g>arg</g>)   
+extend(<g>list</g>)   
 start()   
 pause()   
 resume()   
@@ -1680,8 +1724,8 @@ DropdownMenu('File', buttons=(
 </div></div>
 <div id="EditorCamera"><div id="EditorCamera" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">EditorCamera<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.editor_camera</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">EditorCamera(**kwargs)</params>
 
-rotation_speed<g> = 2500</g> 
-pan_speed<g> = Vec2(250, 250)</g> 
+rotation_speed<g> = 200</g> 
+pan_speed<g> = Vec2(5, 5)</g> 
 move_speed<g> = 10</g> 
 zoom_speed<g> = .75</g> 
 rotate_around_mouse_hit<g> = False</g> 
@@ -1835,6 +1879,8 @@ player.gun = None
 gun = Button(parent=scene, model='cube', color=color.blue, origin_y=-.5, position=(3,0,3), collider='box')
 gun.on_click = Sequence(Func(setattr, gun, 'parent', camera), Func(setattr, player, 'gun', gun))
 
+slope = Entity(model='cube', collider='box', position=(0,0,8), scale=6, rotation=(45,0,45), texture='brick', texture_scale=(8,8))
+
 def input(key):
     if key == 'left mouse down' and player.gun:
         gun.blink(color.orange)
@@ -1880,11 +1926,14 @@ pixel editor example, it's basically a drawing tool.
 can be useful for level editors and such
 here we create a new texture, but can also give it an exisitng texture to modify.
 '''
+from ursina.prefabs.grid_editor import PixelEditor
 PixelEditor(texture=load_texture('brick'))
 
 '''
 same as the pixel editor, but with text.
 '''
+from ursina.prefabs.grid_editor import ASCIIEditor
+ASCIIEditor()
 </div>
 </div></div>
 <div id="PixelEditor"><div id="PixelEditor" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">PixelEditor<g>(GridEditor)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.grid_editor</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">PixelEditor(texture, palette=(color.black, color.white, color.light_gray, color.gray, color.red, color.orange, color.yellow, color.lime, color.green, color.turquoise, color.cyan, color.azure, color.blue, color.violet, color.magenta, color.pink), **kwargs)</params>
@@ -1899,11 +1948,14 @@ pixel editor example, it's basically a drawing tool.
 can be useful for level editors and such
 here we create a new texture, but can also give it an exisitng texture to modify.
 '''
+from ursina.prefabs.grid_editor import PixelEditor
 PixelEditor(texture=load_texture('brick'))
 
 '''
 same as the pixel editor, but with text.
 '''
+from ursina.prefabs.grid_editor import ASCIIEditor
+ASCIIEditor()
 </div>
 </div></div>
 <div id="ASCIIEditor"><div id="ASCIIEditor" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ASCIIEditor<g>(GridEditor)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.grid_editor</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">ASCIIEditor(size=(61,28), palette=(' ', '#', '|', 'A', '/', '\\', 'o', '_', '-', 'i', 'M', '.'), font='VeraMono.ttf', **kwargs)</params>
@@ -1918,11 +1970,14 @@ pixel editor example, it's basically a drawing tool.
 can be useful for level editors and such
 here we create a new texture, but can also give it an exisitng texture to modify.
 '''
+from ursina.prefabs.grid_editor import PixelEditor
 PixelEditor(texture=load_texture('brick'))
 
 '''
 same as the pixel editor, but with text.
 '''
+from ursina.prefabs.grid_editor import ASCIIEditor
+ASCIIEditor()
 </div>
 </div></div>
 <div id="HealthBar"><div id="HealthBar" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">HealthBar<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.health_bar</g><br><br><params id="params" style="color:hsl(0.0, 0%, 0%); font-weight:bold">HealthBar(max_value=100, show_text=True, show_lines=False, **kwargs)</params>
@@ -2195,7 +2250,8 @@ line_numbers<g> = Text(
         parent</g> 
 character_width<g> = .0111</g> 
 cursor_parent<g> = Entity(parent=self, scale=(self.character_width, -1*self.text_entity.size))</g> 
-cursor<g> = Entity(parent=self.cursor_parent, model='cube', color=color.white33, origin=(-.5, -.5), scale=(.2, 1))</g> 
+cursor<g> = Entity(parent=self.cursor_parent, model='cube', color=color.white33, origin=(-.5, -.5), scale=(.1, 1))</g> 
+bg<g> = Entity(parent=self.cursor_parent, model='cube', color=color.dark_gray, origin=(-.5,-.5), z=1, scale=(120, 20), collider='box')</g> 
 selection<g> = None</g> 
 selection_parent<g> = Entity(parent=self.cursor_parent)</g> 
 register_mouse_input<g> = True</g> 
@@ -2244,8 +2300,8 @@ shortcuts<g> = {
         'move_line_down':   ('ctrl+down arrow', 'ctrl+down arrow hold'),
         'move_line_up':     ('ctrl+up arrow', 'ctrl+up arrow hold'),
         # 'cut':              ('ctrl+x',),
-        # 'copy':             ('ctrl+c',),
-        # 'paste':            ('ctrl+v',),
+        'copy':             ('ctrl+c',),
+        'paste':            ('ctrl+v',),
         # 'select_all':       ('ctrl+a',),
         # 'toggle_comment':   ('ctrl+alt+c',),
         # 'find':             ('ctrl+f',),</g> 
@@ -2254,10 +2310,9 @@ blink_cursor()
 add_text(<g>s, move_cursor=True</g>)   
 move_line(<g>a, b</g>)   
 erase()   
+delete_selected()   
 input(<g>key</g>)   
 render()   
-get_mouse_position()   
-update()   
 select_all()   
 draw_selection()   
 
@@ -2271,7 +2326,16 @@ window.color = color._25
 Text.size = 1/window.fullscreen_size[1]*16
 Text.default_font = 'consola.ttf'
 Text.default_resolution = 16*2
-te = TextField(max_lines=300)
+te = TextField(max_lines=300, scale=1)
+te.text = dedent('''
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    Aliquam sapien tellus, venenatis sit amet ante et, malesuada porta risus.
+    Etiam et mi luctus, viverra urna at, maximus eros. Sed dictum faucibus purus,
+    nec rutrum ipsum condimentum in. Mauris iaculis arcu nec justo rutrum euismod.
+    Suspendisse dolor tortor, congue id erat sit amet, sollicitudin facilisis velit.'''
+    )[1:]
+te.selection = [(25,0), (10,3)]
+te.draw_selection()
 te.render()
 </div>
 </div></div>
