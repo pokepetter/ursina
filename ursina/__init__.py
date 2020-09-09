@@ -11,6 +11,7 @@ from ursina.color import Color
 from ursina.sequence import Sequence, Func, Wait
 from ursina.entity import Entity
 from ursina.collider import *
+from ursina.collision_zone import CollisionZone
 from ursina.trigger import Trigger
 from ursina.audio import Audio
 from ursina.duplicate import duplicate
