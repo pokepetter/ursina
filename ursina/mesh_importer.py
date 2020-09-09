@@ -38,11 +38,10 @@ def load_model(name, path=application.asset_folder):
 
 
             if filetype == '.obj':
-                print('found obj', filename)
-                m = loader.loadModel(filename)
-                m.setAttrib(CullFaceAttrib.make(CullFaceAttrib.MCullCounterClockwise))
-                m = obj_to_ursinamesh(path=path, name=name, save_to_file=False)
-                m = eval(m)
+                # print('found obj', filename)
+                # m = loader.loadModel(filename)
+                # m.setAttrib(CullFaceAttrib.make(CullFaceAttrib.MCullCounterClockwise))
+                m = obj_to_ursinamesh(path=path, name=name, return_mesh=True)
                 m.path = filename
                 m.name = name
                 imported_meshes[name] = m
@@ -131,8 +130,9 @@ def obj_to_ursinamesh(
     path=application.compressed_models_folder,
     outpath=application.compressed_models_folder,
     name='*',
-    save_to_file=True,
-    delete_obj=True
+    return_mesh=True,
+    save_to_file=False,
+    delete_obj=False
     ):
 
     if name.endswith('.obj'):
@@ -141,13 +141,10 @@ def obj_to_ursinamesh(
     for f in path.glob(f'**/{name}.obj'):
         filepath = path / (os.path.splitext(f)[0] + '.obj')
         print('read obj at:', filepath)
-        meshstring = ''
-        meshstring += 'Mesh('
+
 
         with open(filepath, 'r') as file:
             lines = file.readlines()
-
-
 
         verts = list()
         tris = list()
@@ -214,6 +211,12 @@ def obj_to_ursinamesh(
                             norm_indices.extend((n[i], n[i+1], n[0]))
                 except: # if no normals
                     pass
+
+        if return_mesh:
+            return Mesh(vertices=verts, triangles=tris, normals=norms, uvs=uvs)
+
+        meshstring = ''
+        meshstring += 'Mesh('
 
         meshstring += '\nvertices='
         meshstring += str(tuple([verts[t] for t in tris]))
@@ -357,6 +360,7 @@ def compress_internal():
     obj_to_ursinamesh(
         application.internal_models_compressed_folder,
         application.internal_models_compressed_folder,
+        save_to_file=True, delete_obj=True
         )
 
 
@@ -366,6 +370,9 @@ if __name__ == '__main__':
     app = Ursina()
     print('imported_meshes:\n', imported_meshes)
     # Entity(model='quad').model.save('quad.bam')
+    m = obj_to_ursinamesh(path=application.asset_folder.parent / 'samples', name='procedural_rock_0')
+    Entity(model=m)
+    EditorCamera()
     app.run()
     # e = Entity(model=Cylinder(16))
     # ursina_mesh_to_obj(e.model, name='quad_export_test')
