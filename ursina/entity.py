@@ -323,8 +323,14 @@ class Entity(NodePath):
             self._collider = MeshCollider(entity=self, mesh=None, center=-self.origin)
             self._collider.name = value
 
-        else:
+        elif isinstance(value, Mesh):
             self._collider = MeshCollider(entity=self, mesh=value, center=-self.origin)
+        else:
+            m = load_model(value)
+            if not m:
+                return
+            self._collider = MeshCollider(entity=self, mesh=m, center=-self.origin)
+            self._collider.name = value
 
 
         self.collision = bool(self.collider)

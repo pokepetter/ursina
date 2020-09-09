@@ -213,7 +213,11 @@ def obj_to_ursinamesh(
                     pass
 
         if return_mesh:
-            return Mesh(vertices=verts, triangles=tris, normals=norms, uvs=uvs)
+            return Mesh(
+                vertices=[verts[t] for t in tris],
+                normals=[norms[nid] for nid in norm_indices],
+                uvs=[uvs[uid] for uid in uv_indices]
+            )
 
         meshstring = ''
         meshstring += 'Mesh('
