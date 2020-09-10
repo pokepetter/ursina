@@ -6,10 +6,11 @@ class FirstPersonController(Entity):
         super().__init__()
         self.speed = 5
 
+        self.camera_pivot = Entity(parent=self, y=2)
         self.cursor = Entity(parent=camera.ui, model='quad', color=color.pink, scale=.008, rotation_z=45)
 
-        self.position = (0, 1, 1)
-        camera.position = self.position
+        camera.parent = self.camera_pivot
+        camera.position = (0,0,0)
         camera.rotation = (0,0,0)
         camera.fov = 90
         mouse.locked = True
@@ -23,14 +24,18 @@ class FirstPersonController(Entity):
         self.jumping = False
         self.air_time = 0
 
+        # self.sphere = Entity(parent=self, collider='sphere', scale=.5, y=.5, model='sphere')
+
+
         for key, value in kwargs.items():
             setattr(self, key ,value)
 
 
     def update(self):
         self.rotation_y += mouse.velocity[0] * self.mouse_sensitivity[1]
-        camera.rotation_x -= mouse.velocity[1] * self.mouse_sensitivity[0]
-        camera.rotation_x = clamp(camera.rotation_x, -90, 90)
+
+        self.camera_pivot.rotation_x -= mouse.velocity[1] * self.mouse_sensitivity[0]
+        self.camera_pivot.rotation_x= clamp(self.camera_pivot.rotation_x, -90, 90)
 
         self.y += held_keys['e']
         self.y -= held_keys['q']
@@ -40,51 +45,34 @@ class FirstPersonController(Entity):
             + self.right * (held_keys['d'] - held_keys['a'])
             ).normalized()
 
-
-        self.smoothing = lerp(self.smoothing, self.target_smoothing, 4*time.dt)
-        camera.position = lerp(
-            camera.position,
-            self.position + (self.up*1.5),
-            self.smoothing / 100)
-
-        camera.rotation_y = self.rotation_y
-
+        # self.sphere.x = (held_keys['d'] - held_keys['a']) * self.speed * time.dt
+        # self.sphere.z = (held_keys['w'] - held_keys['s']) * self.speed * time.dt
         origin = self.world_position + (self.up*.5) + (self.direction/2)
-        middle_ray = raycast(origin , self.direction, ignore=[self,], distance=.25, debug=False)
-        left_ray =   raycast(origin, lerp(self.left, self.forward, .125), ignore=[self,], distance=1.4, debug=False)
-        right_ray =   raycast(origin, lerp(self.right, self.forward, .125), ignore=[self,], distance=1.4, debug=False)
-
-
-        # push away from the wall
-        # if left_ray.hit:
-        #     self.smoothing = 2
-        #     self.position -= lerp(self.left, self.forward, .5) * (1.399-left_ray.distance)
-        #
-        # elif right_ray.hit:
-        #     self.smoothing = 2
-        #     self.position -= lerp(self.right, self.forward, .5) * (1.399-right_ray.distance)
-
-        if not middle_ray.hit:
+        hit_info = raycast(origin , self.direction, ignore=[self,], distance=.25, debug=False)
+        # hit_info = self.sphere.intersects()
+        if not hit_info.hit:
             self.position += self.direction * self.speed * time.dt
+        else:
+            # print(hit_info.world_point)
+            if hit_info.world_normal.y > .7:
+                self.world_position = lerp(self.world_position, hit_info.world_point, time.dt*4)
+                return
 
 
-        # gravity
-        ray = boxcast(self.world_position+(0,2,0), self.down, ignore=(self, ), thickness=.9)
+        # # gravity
+        ray = boxcast(self.world_position+(0,2,0), self.down, ignore=(self,), thickness=.9)
 
         if ray.distance <= 2:
             if not self.grounded:
                 self.land()
             self.grounded = True
-            if not middle_ray.hit or middle_ray.distance > .05: # walk up slope
-                self.y = ray.world_point[1]
             return
         else:
             self.grounded = False
 
         # if not on ground and not on way up in jump, fall
-        if not self.grounded:
-            self.y -= min(self.air_time, ray.distance-.05)
-            self.air_time += time.dt*.25
+        self.y -= min(self.air_time, ray.distance-.05)
+        self.air_time += time.dt*.25
 
 
     def input(self, key):
@@ -123,12 +111,20 @@ if __name__ == '__main__':
     e.texture_scale = (e.scale_z, e.scale_y)
 
     player = FirstPersonController(y=1)
+    # camera.z = -10
     player.gun = None
 
     gun = Button(parent=scene, model='cube', color=color.blue, origin_y=-.5, position=(3,0,3), collider='box')
     gun.on_click = Sequence(Func(setattr, gun, 'parent', camera), Func(setattr, player, 'gun', gun))
 
-    slope = Entity(model='cube', collider='box', position=(0,0,8), scale=6, rotation=(45,0,45), texture='brick', texture_scale=(8,8))
+    gun_2 = duplicate(gun, z=7, x=8)
+    slope = Entity(model='cube', collider='box', position=(0,0,8), scale=6, rotation=(45,0,0), texture='brick', texture_scale=(8,8))
+    slope = Entity(model='cube', collider='box', position=(5,0,10), scale=6, rotation=(80,0,0), texture='brick', texture_scale=(8,8))
+    # hill = Entity(model='sphere', position=(20,-10,10), scale=(25,25,25), collider='sphere', color=color.green)
+    hill = Entity(model='sphere', position=(20,-10,10), scale=(25,25,25), collider='mesh', color=color.green)
+    from ursina.shaders import basic_lighting_shader
+    for e in scene.entities:
+        e.shader = basic_lighting_shader
 
     def input(key):
         if key == 'left mouse down' and player.gun:

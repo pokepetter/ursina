@@ -94,13 +94,8 @@ class Raycaster(Entity):
         self.hit.world_point = world_point
         self.hit.distance = hit_dist
 
-        normal = self.collision.get_surface_normal(self.collision.get_into_node_path().parent)
-        # self.hit.normal = (normal[0], normal[2], normal[1])
-        self.hit.normal = (normal[0], normal[1], normal[2])
-
-        normal = self.collision.get_surface_normal(render)
-        # self.hit.world_normal = (normal[0], normal[2], normal[1])
-        self.hit.world_normal = (normal[0], normal[1], normal[2])
+        self.hit.normal = Vec3(*self.collision.get_surface_normal(self.collision.get_into_node_path().parent).normalized())
+        self.hit.world_normal = Vec3(*self.collision.get_surface_normal(render).normalized())
         return self.hit
 
         self.hit = HitInfo(hit=False)
@@ -177,7 +172,7 @@ if __name__ == '__main__':
         e.rotation_y += held_keys['e'] * rotation_speed
 
         # ray = raycast(e.world_position, e.forward, 3, debug=True)
-        ray = boxcast(e.world_position, e.forward, 3, thickness=.3, debug=False)
+        ray = raycast(e.world_position, e.forward, 3, debug=True)
         # print(ray.distance, ray2.distance)
         intersection_marker.world_position = ray.world_point
         intersection_marker.visible = ray.hit
@@ -187,9 +182,9 @@ if __name__ == '__main__':
             d.color = color.orange
 
     t = time.time()
-    ray = boxcast(e.world_position, e.forward, 3, thickness=.3, debug=False)
+    ray = raycast(e.world_position, e.forward, 3, debug=True)
     print(time.time() - t)
-    raycast((0,0,-2), (0,0,1), 5, debug=False)
+    # raycast((0,0,-2), (0,0,1), 5, debug=False)
 
     EditorCamera()
     app.run()
