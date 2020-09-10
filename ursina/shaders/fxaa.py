@@ -1,19 +1,6 @@
 from ursina import *
 
 fxaa_shader = Shader(language=Shader.GLSL,
-vertex = '''
-//vertex shader, nothing special here...
-#version 400
-in vec4 p3d_Vertex;
-uniform mat4 p3d_ViewMatrixInverse;
-in vec2 p3d_MultiTexCoord0;
-out vec2 uv;
-
-void main () {
-	gl_Position = p3d_ViewMatrixInverse  * p3d_Vertex;
-    uv = p3d_MultiTexCoord0;
-}
-''',
 fragment='''
 //fragment shader, the interesting part!
 #version 400
