@@ -180,7 +180,7 @@ def get_example(str, name=None):    # use name to highlight the relevant class
         quotes = re.findall('\'(.*?)\'', line)
         quotes = ['\'' + q + '\'' for q in quotes]
         for q in quotes:
-            line = line.replace(q, '<font color="green">' + q + '</font>')
+            line = line.replace(q, '<font color="seagreen">' + q + '</font>')
 
         if ' #' in line:
             line = line.replace(' #', ' <font color="gray">#')

@@ -272,13 +272,13 @@ intersects(<g>traverse_target=scene, ignore=(), debug=False</g>)
 
 <div class="example">app = main.Ursina()
 
-e = <font color="olive">Entity</font>(model=<font color="green">'quad'</font>, color=color.orange, position=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>), scale=<font color="darkgoldenrod">1</font>.<font color="darkgoldenrod">5</font>, rotation=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">4</font><font color="darkgoldenrod">5</font>), texture=<font color="green">'brick'</font>)
+e = <font color="olive">Entity</font>(model=<font color="seagreen">'quad'</font>, color=color.orange, position=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>), scale=<font color="darkgoldenrod">1</font>.<font color="darkgoldenrod">5</font>, rotation=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">4</font><font color="darkgoldenrod">5</font>), texture=<font color="seagreen">'brick'</font>)
 
-<font color="green"><font color="green">''</font></font>'example of inheriting <font color="olive">Entity</font><font color="green"><font color="green">''</font></font>'
+<font color="seagreen"><font color="seagreen">''</font></font>'example of inheriting <font color="olive">Entity</font><font color="seagreen"><font color="seagreen">''</font></font>'
 class Player(<font color="olive">Entity</font>):
     <font color="purple">def</font> __init__(self, **kwargs):
         super().__init__()
-        self.model=<font color="green">'cube'</font>
+        self.model=<font color="seagreen">'cube'</font>
         self.color = color.red
         self.scale_y = <font color="darkgoldenrod">2</font>
 
@@ -286,12 +286,12 @@ class Player(<font color="olive">Entity</font>):
             setattr(self, key, value)
 
     <font color="purple">def</font> input(self, key):
-        if key == <font color="green">'space'</font>:
+        if key == <font color="seagreen">'space'</font>:
             self.animate_x(<font color="darkgoldenrod">2</font>, duration=<font color="darkgoldenrod">1</font>)
 
     <font color="purple">def</font> update(self):
-        self.x += held_keys[<font color="green">'d'</font>] * time.dt * <font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>
-        self.x -= held_keys[<font color="green">'a'</font>] * time.dt * <font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>
+        self.x += held_keys[<font color="seagreen">'d'</font>] * time.dt * <font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>
+        self.x -= held_keys[<font color="seagreen">'a'</font>] * time.dt * <font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>
 
 player = Player(x=-<font color="darkgoldenrod">1</font>)
 </div>
@@ -330,28 +330,28 @@ appear(<g>speed=.025, delay=0</g>)
 get_width(<g>string, font=None</g>)   
 
 <div class="example">app = Ursina()
-  descr = dedent(<font color="green">''</font>'
+  descr = dedent(<font color="seagreen">''</font>'
       <scale:<font color="darkgoldenrod">1</font>.<font color="darkgoldenrod">5</font>><orange>Rainstorm<default><scale:<font color="darkgoldenrod">1</font>>
       Summon a <azure>rain storm <default>to deal <font color="darkgoldenrod">5</font> <azure>water
 
       damage <default>to <hsb(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>,.<font color="darkgoldenrod">7</font>)>everyone, <default><image:file_icon> <image:file_icon> test <default>including <orange>yourself. <default>
-      Lasts for <font color="darkgoldenrod">4</font> rounds.<font color="green">''</font>').strip()
+      Lasts for <font color="darkgoldenrod">4</font> rounds.<font color="seagreen">''</font>').strip()
 
   Text.default_resolution = <font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">8</font><font color="darkgoldenrod">0</font> * Text.size
   test = <font color="purple"><b>Text</b></font>(origin=(.<font color="darkgoldenrod">5</font>,.<font color="darkgoldenrod">5</font>), text=descr)
 
 
   text = <font color="purple"><b>Text</b></font>(text=descr, wordwrap=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>, origin=(-.<font color="darkgoldenrod">5</font>,.<font color="darkgoldenrod">5</font>), y=.<font color="darkgoldenrod">2</font><font color="darkgoldenrod">5</font>, background=True)
-  <font color="olive">Entity</font>(parent=camera.ui, model=<font color="green">'circle'</font>, scale=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>, color=color.yellow, y=text.y, z=-<font color="darkgoldenrod">1</font>)
+  <font color="olive">Entity</font>(parent=camera.ui, model=<font color="seagreen">'circle'</font>, scale=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>, color=color.yellow, y=text.y, z=-<font color="darkgoldenrod">1</font>)
 
 
   <font color="purple">def</font> input(key):
-      if key == <font color="green">'a'</font>:
+      if key == <font color="seagreen">'a'</font>:
           test.appear(speed=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">2</font><font color="darkgoldenrod">5</font>)
 
   test.create_background()
 
-  print(<font color="green">'....'</font>, Text.get_width(<font color="green">'yolo'</font>))
+  print(<font color="seagreen">'....'</font>, Text.get_width(<font color="seagreen">'yolo'</font>))
   app.run()
 </div>
 </div></div>
@@ -378,9 +378,9 @@ on_mouse_exit()
 on_click()   
 fit_to_text(<g>radius=.1</g>)   
 
-<div class="example">b = <font color="purple"><b>Button</b></font>(text=<font color="green">'hello world!'</font>, color=color.azure, origin=(-.<font color="darkgoldenrod">5</font>,<font color="darkgoldenrod">0</font>), icon=<font color="green">'sword'</font>, scale=.<font color="darkgoldenrod">2</font><font color="darkgoldenrod">5</font>)
+<div class="example">b = <font color="purple"><b>Button</b></font>(text=<font color="seagreen">'hello world!'</font>, color=color.azure, origin=(-.<font color="darkgoldenrod">5</font>,<font color="darkgoldenrod">0</font>), icon=<font color="seagreen">'sword'</font>, scale=.<font color="darkgoldenrod">2</font><font color="darkgoldenrod">5</font>)
 b.on_click = application.quit <font color="gray"># assign a function to the button.</font>
-b.tooltip = Tooltip(<font color="green">'exit'</font>)
+b.tooltip = Tooltip(<font color="seagreen">'exit'</font>)
 </div>
 </div></div>
 <div id="mouse"><div id="mouse" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">mouse</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.mouse</g><br><br>enabled<g> = False</g> 
@@ -417,7 +417,7 @@ update()
 find_collision()   
 unhover_everything_not_hit()   
 
-<div class="example">Button(parent=scene, text=<font color="green">'a'</font>)
+<div class="example">Button(parent=scene, text=<font color="seagreen">'a'</font>)
 
 <font color="purple">def</font> update():
     print(mouse.position, mouse.point)
@@ -433,23 +433,23 @@ boxcast(<g>origin, direction=(0,0,1), distance=math.inf, thickness=(1,1), traver
 
 <div class="example"><font color="purple">from</font> ursina.entity <font color="purple">import</font> <font color="olive">Entity</font>
 
-d = <font color="olive">Entity</font>(parent=scene, position=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">2</font>), model=<font color="green">'cube'</font>, color=color.orange, collider=<font color="green">'box'</font>, scale=<font color="darkgoldenrod">2</font>)
-e = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.lime)
+d = <font color="olive">Entity</font>(parent=scene, position=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">2</font>), model=<font color="seagreen">'cube'</font>, color=color.orange, collider=<font color="seagreen">'box'</font>, scale=<font color="darkgoldenrod">2</font>)
+e = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, color=color.lime)
 
 camera.position = (<font color="darkgoldenrod">0</font>, <font color="darkgoldenrod">1</font><font color="darkgoldenrod">5</font>, -<font color="darkgoldenrod">1</font><font color="darkgoldenrod">5</font>)
 camera.look_at(e)
 speed = .<font color="darkgoldenrod">0</font><font color="darkgoldenrod">1</font>
 rotation_speed = .<font color="darkgoldenrod">1</font>
-intersection_marker = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, scale=.<font color="darkgoldenrod">2</font>, color=color.red)
+intersection_marker = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, scale=.<font color="darkgoldenrod">2</font>, color=color.red)
 
 <font color="purple">def</font> update():
-    e.position += e.forward * held_keys[<font color="green">'w'</font>] * speed
-    e.position += e.left * held_keys[<font color="green">'a'</font>] * speed
-    e.position += e.back * held_keys[<font color="green">'s'</font>] * speed
-    e.position += e.right * held_keys[<font color="green">'d'</font>] * speed
+    e.position += e.forward * held_keys[<font color="seagreen">'w'</font>] * speed
+    e.position += e.left * held_keys[<font color="seagreen">'a'</font>] * speed
+    e.position += e.back * held_keys[<font color="seagreen">'s'</font>] * speed
+    e.position += e.right * held_keys[<font color="seagreen">'d'</font>] * speed
 
-    e.rotation_y -= held_keys[<font color="green">'q'</font>] * rotation_speed
-    e.rotation_y += held_keys[<font color="green">'e'</font>] * rotation_speed
+    e.rotation_y -= held_keys[<font color="seagreen">'q'</font>] * rotation_speed
+    e.rotation_y += held_keys[<font color="seagreen">'e'</font>] * rotation_speed
 
     ray = raycast(e.world_position, e.forward, <font color="darkgoldenrod">3</font>, debug=True)
     intersection_marker.world_position = ray.world_point
@@ -509,17 +509,17 @@ set_shader_input(<g>name, value</g>)
 
 <div class="example">scene.camera.orthographic = True
 e = <font color="olive">Entity</font>()
-e.model = <font color="green">'quad'</font>
+e.model = <font color="seagreen">'quad'</font>
 e.color = color.random_color()
 e.position = (-<font color="darkgoldenrod">2</font>, <font color="darkgoldenrod">0</font>, <font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>)
 
 e = <font color="olive">Entity</font>()
-e.model = <font color="green">'quad'</font>
+e.model = <font color="seagreen">'quad'</font>
 e.color = color.random_color()
 e.position = (<font color="darkgoldenrod">2</font>, <font color="darkgoldenrod">0</font>, <font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>)
 
 e = <font color="olive">Entity</font>()
-e.model = <font color="green">'quad'</font>
+e.model = <font color="seagreen">'quad'</font>
 e.color = color.random_color()
 e.position = (<font color="darkgoldenrod">0</font>, <font color="darkgoldenrod">0</font>, <font color="darkgoldenrod">4</font><font color="darkgoldenrod">0</font>)
 <font color="purple">from</font> ursina.shaders <font color="purple">import</font> camera_grayscale_shader
@@ -586,10 +586,10 @@ for key in color.colors:
 
 grid_layout(p.children, max_x=<font color="darkgoldenrod">8</font>)
 
-for name in (<font color="green">'r'</font>, <font color="green">'g'</font>, <font color="green">'b'</font>, <font color="green">'h'</font>, <font color="green">'s'</font>, <font color="green">'v'</font>, <font color="green">'brightness'</font>):
-    print(name + <font color="green">':'</font>, getattr(color.random_<font color="purple"><b>color</b></font>(), name))
+for name in (<font color="seagreen">'r'</font>, <font color="seagreen">'g'</font>, <font color="seagreen">'b'</font>, <font color="seagreen">'h'</font>, <font color="seagreen">'s'</font>, <font color="seagreen">'v'</font>, <font color="seagreen">'brightness'</font>):
+    print(name + <font color="seagreen">':'</font>, getattr(color.random_<font color="purple"><b>color</b></font>(), name))
 
-e = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.lime)
+e = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, color=color.lime)
 print(e.color.name)
 </div>
 </div></div>
@@ -627,7 +627,7 @@ in_bounce(<g>t</g>)
 in_out_bounce(<g>t</g>)   
 {e}_boomerang(<g>t</g>)   
 
-<div class="example"><font color="green"><font color="green">''</font></font><font color="green">'Draws a sheet with every curve and it'</font>s name<font color="green"><font color="green">''</font></font>'
+<div class="example"><font color="seagreen"><font color="seagreen">''</font></font><font color="seagreen">'Draws a sheet with every curve and it'</font>s name<font color="seagreen"><font color="seagreen">''</font></font>'
 
 camera.orthographic = True
 camera.fov = <font color="darkgoldenrod">1</font><font color="darkgoldenrod">6</font>
@@ -638,9 +638,9 @@ i = <font color="darkgoldenrod">0</font>
 for e in dir(curve):
     try:
         item = getattr(curve, e)
-        print(item.__name__, <font color="green">':'</font>, item(.<font color="darkgoldenrod">7</font><font color="darkgoldenrod">5</font>))
+        print(item.__name__, <font color="seagreen">':'</font>, item(.<font color="darkgoldenrod">7</font><font color="darkgoldenrod">5</font>))
         curve_renderer = <font color="olive">Entity</font>(
-            model=Mesh(vertices=[Vec3(i / <font color="darkgoldenrod">3</font><font color="darkgoldenrod">1</font>, item(i / <font color="darkgoldenrod">3</font><font color="darkgoldenrod">1</font>), <font color="darkgoldenrod">0</font>) for i in range(<font color="darkgoldenrod">3</font><font color="darkgoldenrod">2</font>)], mode=<font color="green">'line'</font>, thickness=<font color="darkgoldenrod">2</font>),
+            model=Mesh(vertices=[Vec3(i / <font color="darkgoldenrod">3</font><font color="darkgoldenrod">1</font>, item(i / <font color="darkgoldenrod">3</font><font color="darkgoldenrod">1</font>), <font color="darkgoldenrod">0</font>) for i in range(<font color="darkgoldenrod">3</font><font color="darkgoldenrod">2</font>)], mode=<font color="seagreen">'line'</font>, thickness=<font color="darkgoldenrod">2</font>),
             color=color.light_gray)
         row = floor(i / <font color="darkgoldenrod">8</font>)
         curve_renderer.x = (i % <font color="darkgoldenrod">8</font>) * <font color="darkgoldenrod">2</font>.<font color="darkgoldenrod">5</font>
@@ -651,11 +651,11 @@ for e in dir(curve):
         pass
 
 c = CubicBezier(<font color="darkgoldenrod">0</font>, .<font color="darkgoldenrod">5</font>, <font color="darkgoldenrod">1</font>, .<font color="darkgoldenrod">5</font>)
-print(<font color="green">'-----------'</font>, c.calculate(.<font color="darkgoldenrod">2</font><font color="darkgoldenrod">3</font>))
+print(<font color="seagreen">'-----------'</font>, c.calculate(.<font color="darkgoldenrod">2</font><font color="darkgoldenrod">3</font>))
 
 window.exit_button.visible = False
 window.fps_counter.enabled = False
-<font color="green">''</font>'
+<font color="seagreen">''</font>'
 These are used by <font color="olive">Entity</font> when animating, like this:
 
 e = <font color="olive">Entity</font>()
@@ -663,14 +663,14 @@ e.animate_y(<font color="darkgoldenrod">1</font>, curve=curve.in_expo)
 
 e<font color="darkgoldenrod">2</font> = <font color="olive">Entity</font>(x=<font color="darkgoldenrod">1</font>.<font color="darkgoldenrod">5</font>)
 e<font color="darkgoldenrod">2</font>.animate_y(<font color="darkgoldenrod">1</font>, curve=curve.CubicBezier(<font color="darkgoldenrod">0</font>,.<font color="darkgoldenrod">7</font>,<font color="darkgoldenrod">1</font>,.<font color="darkgoldenrod">3</font>))
-<font color="green">''</font>'
+<font color="seagreen">''</font>'
 </div>
 </div></div>
 <div id="duplicate"><div id="duplicate" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">duplicate</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.duplicate</g><br><br>
 duplicate(<g>entity, copy_children=True, **kwargs</g>)   
 
-<div class="example">e = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, collider=<font color="green">'box'</font>)
-e.c = <font color="olive">Entity</font>(parent=e, model=<font color="green">'cube'</font>, scale=.<font color="darkgoldenrod">5</font>, y=.<font color="darkgoldenrod">5</font>, color=color.azure)
+<div class="example">e = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, collider=<font color="seagreen">'box'</font>)
+e.c = <font color="olive">Entity</font>(parent=e, model=<font color="seagreen">'cube'</font>, scale=.<font color="darkgoldenrod">5</font>, y=.<font color="darkgoldenrod">5</font>, color=color.azure)
 e<font color="darkgoldenrod">2</font> = <font color="purple"><b>duplicate</b></font>(e, True, x=<font color="darkgoldenrod">1</font>.<font color="darkgoldenrod">1</font>)
 EditorCamera()
 </div>
@@ -683,15 +683,15 @@ unbind(<g>key</g>)
 rebind(<g>to_key, from_key</g>)   
 input(<g>key</g>)   
 
-<div class="example">input_handler.bind(<font color="green"><font color="green">'s'</font></font>, <font color="green"><font color="green">'arrow down'</font></font>)  <font color="gray"># <font color="green"><font color="green">'s'</font></font>-key will now be registered as <font color="green"><font color="green">'arrow down'</font></font>-key</font>
+<div class="example">input_handler.bind(<font color="seagreen"><font color="seagreen">'s'</font></font>, <font color="seagreen"><font color="seagreen">'arrow down'</font></font>)  <font color="gray"># <font color="seagreen"><font color="seagreen">'s'</font></font>-key will now be registered as <font color="seagreen"><font color="seagreen">'arrow down'</font></font>-key</font>
 
 <font color="purple">def</font> input(key):
     print(key)
-    if key == <font color="green">'left mouse down'</font>:
-        print(<font color="green">'pressed left mouse button'</font>)
+    if key == <font color="seagreen">'left mouse down'</font>:
+        print(<font color="seagreen">'pressed left mouse button'</font>)
 
     if key == InputEvent.left_mouse_down:   <font color="gray"># same as above, but with InputEvents enum.</font>
-        print(<font color="green">'pressed left mouse button'</font>)
+        print(<font color="seagreen">'pressed left mouse button'</font>)
 </div>
 </div></div>
 <div id="mesh_importer"><div id="mesh_importer" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">mesh_importer</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.mesh_importer</g><br><br>
@@ -702,8 +702,8 @@ compress_models_fast(<g>model_name=None, write_to_disk=False</g>)
 ursina_mesh_to_obj(<g>mesh, name='', out_path=application.compressed_models_folder, max_decimals=3</g>)   
 compress_internal()   
 
-<div class="example">print(<font color="green">'imported_meshes:\n'</font>, imported_meshes)
-m = obj_to_ursinamesh(path=application.asset_folder.parent / <font color="green">'samples'</font>, name=<font color="green">'procedural_rock_<font color="darkgoldenrod">0</font>'</font>)
+<div class="example">print(<font color="seagreen">'imported_meshes:\n'</font>, imported_meshes)
+m = obj_to_ursinamesh(path=application.asset_folder.parent / <font color="seagreen">'samples'</font>, name=<font color="seagreen">'procedural_rock_<font color="darkgoldenrod">0</font>'</font>)
 <font color="olive">Entity</font>(model=m)
 EditorCamera()
 </div>
@@ -722,16 +722,16 @@ fog_density
 set_up()   
 clear()   
 
-<div class="example">e = <font color="olive">Entity</font>(model=<font color="green">'plane'</font>, color=color.black, scale=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>)
+<div class="example">e = <font color="olive">Entity</font>(model=<font color="seagreen">'plane'</font>, color=color.black, scale=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>)
 EditorCamera()
 s = Sky()
 
 <font color="purple">def</font> input(key):
-    if key == <font color="green">'l'</font>:
+    if key == <font color="seagreen">'l'</font>:
         for e in scene.entities:
             print(e.name)
 
-    if key == <font color="green">'d'</font>:
+    if key == <font color="seagreen">'d'</font>:
         scene.clear()
 
 scene.fog_density = .<font color="darkgoldenrod">1</font>          <font color="gray"># sets exponential density</font>
@@ -748,7 +748,7 @@ void main() {
 }
 
 
-<div class="example"><font color="olive">Entity</font>(model=<font color="green">'cube'</font>, shader=Shader())
+<div class="example"><font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, shader=Shader())
 EditorCamera()
 </div>
 </div></div>
@@ -758,37 +758,37 @@ snake_to_camel(<g>value</g>)
 multireplace(<g>string, replacements, ignore_case=False</g>)   
 printvar(<g>var</g>)   
 
-<div class="example">print(camel_to_snake(<font color="green">'CamelToSnake'</font>))
-print(snake_to_camel(<font color="green">'snake_to_camel'</font>))
-printvar(<font color="green">'test'</font>)
+<div class="example">print(camel_to_snake(<font color="seagreen">'CamelToSnake'</font>))
+print(snake_to_camel(<font color="seagreen">'snake_to_camel'</font>))
+printvar(<font color="seagreen">'test'</font>)
 </div>
 </div></div>
 <div id="text"><div id="text" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">text</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.text</g><br><br>
 get_width(<g>string, font=None</g>)   
 
 <div class="example">app = Ursina()
-  descr = dedent(<font color="green">''</font>'
+  descr = dedent(<font color="seagreen">''</font>'
       <scale:<font color="darkgoldenrod">1</font>.<font color="darkgoldenrod">5</font>><orange>Rainstorm<default><scale:<font color="darkgoldenrod">1</font>>
       Summon a <azure>rain storm <default>to deal <font color="darkgoldenrod">5</font> <azure>water
 
       damage <default>to <hsb(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>,.<font color="darkgoldenrod">7</font>)>everyone, <default><image:file_icon> <image:file_icon> test <default>including <orange>yourself. <default>
-      Lasts for <font color="darkgoldenrod">4</font> rounds.<font color="green">''</font>').strip()
+      Lasts for <font color="darkgoldenrod">4</font> rounds.<font color="seagreen">''</font>').strip()
 
   Text.default_resolution = <font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">8</font><font color="darkgoldenrod">0</font> * Text.size
   test = Text(origin=(.<font color="darkgoldenrod">5</font>,.<font color="darkgoldenrod">5</font>), text=descr)
 
 
   text = Text(text=descr, wordwrap=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>, origin=(-.<font color="darkgoldenrod">5</font>,.<font color="darkgoldenrod">5</font>), y=.<font color="darkgoldenrod">2</font><font color="darkgoldenrod">5</font>, background=True)
-  <font color="olive">Entity</font>(parent=camera.ui, model=<font color="green">'circle'</font>, scale=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>, color=color.yellow, y=text.y, z=-<font color="darkgoldenrod">1</font>)
+  <font color="olive">Entity</font>(parent=camera.ui, model=<font color="seagreen">'circle'</font>, scale=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>, color=color.yellow, y=text.y, z=-<font color="darkgoldenrod">1</font>)
 
 
   <font color="purple">def</font> input(key):
-      if key == <font color="green">'a'</font>:
+      if key == <font color="seagreen">'a'</font>:
           test.appear(speed=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">2</font><font color="darkgoldenrod">5</font>)
 
   test.create_background()
 
-  print(<font color="green">'....'</font>, Text.get_width(<font color="green">'yolo'</font>))
+  print(<font color="seagreen">'....'</font>, Text.get_width(<font color="seagreen">'yolo'</font>))
   app.run()
 </div>
 </div></div>
@@ -799,7 +799,7 @@ has_psd_tools_installed<g> = False</g>
 load_texture(<g>name, path=None</g>)   
 compress_textures(<g>name=''</g>)   
 
-<div class="example"><font color="olive">Entity</font>(model=<font color="green">'quad'</font>, texture=<font color="green">'white_cube'</font>)
+<div class="example"><font color="olive">Entity</font>(model=<font color="seagreen">'quad'</font>, texture=<font color="seagreen">'white_cube'</font>)
 </div>
 </div></div>
 <div id="ursinamath"><div id="ursinamath" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ursinamath</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursinamath</g><br><br>
@@ -837,14 +837,14 @@ print_on_screen(<g>text, position=window.top_left, origin=(-.5,.5), scale=1, dur
 <div class="example"><font color="purple">def</font> test_func(item, x=None, y=None):
     print(item, x, y)
 
-test_func(<font color="green">'test'</font>)
-invoke(test_func, <font color="green">'test'</font>, delay=.<font color="darkgoldenrod">1</font>)
-invoke(test_func, <font color="green">'test<font color="darkgoldenrod">1</font>'</font>, <font color="darkgoldenrod">1</font>, <font color="darkgoldenrod">2</font>, delay=.<font color="darkgoldenrod">2</font>)
-invoke(test_func, <font color="green">'test<font color="darkgoldenrod">2</font>'</font>, x=<font color="darkgoldenrod">1</font>, y=<font color="darkgoldenrod">2</font>, delay=.<font color="darkgoldenrod">3</font>)
+test_func(<font color="seagreen">'test'</font>)
+invoke(test_func, <font color="seagreen">'test'</font>, delay=.<font color="darkgoldenrod">1</font>)
+invoke(test_func, <font color="seagreen">'test<font color="darkgoldenrod">1</font>'</font>, <font color="darkgoldenrod">1</font>, <font color="darkgoldenrod">2</font>, delay=.<font color="darkgoldenrod">2</font>)
+invoke(test_func, <font color="seagreen">'test<font color="darkgoldenrod">2</font>'</font>, x=<font color="darkgoldenrod">1</font>, y=<font color="darkgoldenrod">2</font>, delay=.<font color="darkgoldenrod">3</font>)
 
 <font color="purple">def</font> input(key):
-    if key == <font color="green">'space'</font>:
-        print_on_screen(<font color="green">'debug message'</font>, position=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), origin=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), scale=<font color="darkgoldenrod">2</font>)
+    if key == <font color="seagreen">'space'</font>:
+        print_on_screen(<font color="seagreen">'debug message'</font>, position=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), origin=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), scale=<font color="darkgoldenrod">2</font>)
 </div>
 </div></div>
 <div id="window"><div id="window" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">window</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.window</g><br><br>vsync<g> = True   # can't be set during play</g> 
@@ -883,14 +883,14 @@ make_editor_gui()   <g># called by main after setting up camera and application.
 update_aspect_ratio()   
 next_render_mode()   
 
-<div class="example">window.title = <font color="green">'Title'</font>
+<div class="example">window.title = <font color="seagreen">'Title'</font>
 window.borderless = False
 window.fullscreen = False
 window.fps_counter.enabled = False
 window.exit_button.visible = False
 window.cog_button.enabled = False
 
-<font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.green, collider=<font color="green">'box'</font>, texture=<font color="green">'shore'</font>)
+<font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, color=color.green, collider=<font color="seagreen">'box'</font>, texture=<font color="seagreen">'shore'</font>)
 </div>
 </div></div>
 <div id="Audio"><div id="Audio" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Audio<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.audio</g><br><br><params class="params">Audio(sound_file_name='', autoplay=True, **kwargs)</params>
@@ -919,7 +919,7 @@ fade_out(<g>value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None,
 <div class="example"><font color="purple">from</font> ursina <font color="purple">import</font> Ursina, printvar
 
 base = Ursina()
-a = <font color="purple"><b>Audio</b></font>(<font color="green">'life_is_currency'</font>, pitch=<font color="darkgoldenrod">1</font>, loop=True, autoplay=True)
+a = <font color="purple"><b>Audio</b></font>(<font color="seagreen">'life_is_currency'</font>, pitch=<font color="darkgoldenrod">1</font>, loop=True, autoplay=True)
 print(a.clip)
 base.run()
 </div>
@@ -932,17 +932,17 @@ show()
 hide()   
 remove()   
 
-<div class="example">e = <font color="olive">Entity</font>(model=<font color="green">'sphere'</font>, x=<font color="darkgoldenrod">2</font>)
-e.collider = <font color="green">'box'</font>      <font color="gray"># add BoxCollider based on entity's bounds.</font>
-e.collider = <font color="green">'sphere'</font>   <font color="gray"># add SphereCollider based on entity's bounds.</font>
-e.collider = <font color="green">'mesh'</font>     <font color="gray"># add MeshCollider based on entity's bounds.</font>
+<div class="example">e = <font color="olive">Entity</font>(model=<font color="seagreen">'sphere'</font>, x=<font color="darkgoldenrod">2</font>)
+e.collider = <font color="seagreen">'box'</font>      <font color="gray"># add BoxCollider based on entity's bounds.</font>
+e.collider = <font color="seagreen">'sphere'</font>   <font color="gray"># add SphereCollider based on entity's bounds.</font>
+e.collider = <font color="seagreen">'mesh'</font>     <font color="gray"># add MeshCollider based on entity's bounds.</font>
 
 e.collider = Box<font color="purple"><b>Collider</b></font>(e, center=Vec3(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), size=Vec3(<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>))   <font color="gray"># add BoxCollider at custom positions and size.</font>
 e.collider = Sphere<font color="purple"><b>Collider</b></font>(e, center=Vec3(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), radius=.<font color="darkgoldenrod">7</font><font color="darkgoldenrod">5</font>)      <font color="gray"># add SphereCollider at custom positions and size.</font>
 e.collider = Mesh<font color="purple"><b>Collider</b></font>(e, mesh=e.model, center=Vec3(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>))      <font color="gray"># add MeshCollider with custom shape and center.</font>
 
 m = Prismatoid(base_shape=Circle(<font color="darkgoldenrod">6</font>), thicknesses=(<font color="darkgoldenrod">1</font>, .<font color="darkgoldenrod">5</font>))
-e = Button(parent=scene, model=m, collider=<font color="green">'mesh'</font>, color=color.red, highlight_color=color.yellow)
+e = Button(parent=scene, model=m, collider=<font color="seagreen">'mesh'</font>, color=color.red, highlight_color=color.yellow)
 
 EditorCamera()
 </div>
@@ -955,17 +955,17 @@ node_path<g> = entity.attachNewNode(self.collision_node)</g>
 visible<g> = False</g> 
 
 
-<div class="example">e = <font color="olive">Entity</font>(model=<font color="green">'sphere'</font>, x=<font color="darkgoldenrod">2</font>)
-e.collider = <font color="green">'box'</font>      <font color="gray"># add BoxCollider based on entity's bounds.</font>
-e.collider = <font color="green">'sphere'</font>   <font color="gray"># add SphereCollider based on entity's bounds.</font>
-e.collider = <font color="green">'mesh'</font>     <font color="gray"># add MeshCollider based on entity's bounds.</font>
+<div class="example">e = <font color="olive">Entity</font>(model=<font color="seagreen">'sphere'</font>, x=<font color="darkgoldenrod">2</font>)
+e.collider = <font color="seagreen">'box'</font>      <font color="gray"># add BoxCollider based on entity's bounds.</font>
+e.collider = <font color="seagreen">'sphere'</font>   <font color="gray"># add SphereCollider based on entity's bounds.</font>
+e.collider = <font color="seagreen">'mesh'</font>     <font color="gray"># add MeshCollider based on entity's bounds.</font>
 
 e.collider = <font color="purple"><b>BoxCollider</b></font>(e, center=Vec3(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), size=Vec3(<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>))   <font color="gray"># add BoxCollider at custom positions and size.</font>
 e.collider = SphereCollider(e, center=Vec3(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), radius=.<font color="darkgoldenrod">7</font><font color="darkgoldenrod">5</font>)      <font color="gray"># add SphereCollider at custom positions and size.</font>
 e.collider = MeshCollider(e, mesh=e.model, center=Vec3(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>))      <font color="gray"># add MeshCollider with custom shape and center.</font>
 
 m = Prismatoid(base_shape=Circle(<font color="darkgoldenrod">6</font>), thicknesses=(<font color="darkgoldenrod">1</font>, .<font color="darkgoldenrod">5</font>))
-e = Button(parent=scene, model=m, collider=<font color="green">'mesh'</font>, color=color.red, highlight_color=color.yellow)
+e = Button(parent=scene, model=m, collider=<font color="seagreen">'mesh'</font>, color=color.red, highlight_color=color.yellow)
 
 EditorCamera()
 </div>
@@ -977,17 +977,17 @@ node_path<g> = entity.attachNewNode(CollisionNode('CollisionNode'))</g>
 visible<g> = False</g> 
 
 
-<div class="example">e = <font color="olive">Entity</font>(model=<font color="green">'sphere'</font>, x=<font color="darkgoldenrod">2</font>)
-e.collider = <font color="green">'box'</font>      <font color="gray"># add BoxCollider based on entity's bounds.</font>
-e.collider = <font color="green">'sphere'</font>   <font color="gray"># add SphereCollider based on entity's bounds.</font>
-e.collider = <font color="green">'mesh'</font>     <font color="gray"># add MeshCollider based on entity's bounds.</font>
+<div class="example">e = <font color="olive">Entity</font>(model=<font color="seagreen">'sphere'</font>, x=<font color="darkgoldenrod">2</font>)
+e.collider = <font color="seagreen">'box'</font>      <font color="gray"># add BoxCollider based on entity's bounds.</font>
+e.collider = <font color="seagreen">'sphere'</font>   <font color="gray"># add SphereCollider based on entity's bounds.</font>
+e.collider = <font color="seagreen">'mesh'</font>     <font color="gray"># add MeshCollider based on entity's bounds.</font>
 
 e.collider = BoxCollider(e, center=Vec3(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), size=Vec3(<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>))   <font color="gray"># add BoxCollider at custom positions and size.</font>
 e.collider = <font color="purple"><b>SphereCollider</b></font>(e, center=Vec3(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), radius=.<font color="darkgoldenrod">7</font><font color="darkgoldenrod">5</font>)      <font color="gray"># add SphereCollider at custom positions and size.</font>
 e.collider = MeshCollider(e, mesh=e.model, center=Vec3(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>))      <font color="gray"># add MeshCollider with custom shape and center.</font>
 
 m = Prismatoid(base_shape=Circle(<font color="darkgoldenrod">6</font>), thicknesses=(<font color="darkgoldenrod">1</font>, .<font color="darkgoldenrod">5</font>))
-e = Button(parent=scene, model=m, collider=<font color="green">'mesh'</font>, color=color.red, highlight_color=color.yellow)
+e = Button(parent=scene, model=m, collider=<font color="seagreen">'mesh'</font>, color=color.red, highlight_color=color.yellow)
 
 EditorCamera()
 </div>
@@ -1000,17 +1000,17 @@ collision_polygons<g> = list()</g>
 visible<g> = False</g> 
 
 
-<div class="example">e = <font color="olive">Entity</font>(model=<font color="green">'sphere'</font>, x=<font color="darkgoldenrod">2</font>)
-e.collider = <font color="green">'box'</font>      <font color="gray"># add BoxCollider based on entity's bounds.</font>
-e.collider = <font color="green">'sphere'</font>   <font color="gray"># add SphereCollider based on entity's bounds.</font>
-e.collider = <font color="green">'mesh'</font>     <font color="gray"># add MeshCollider based on entity's bounds.</font>
+<div class="example">e = <font color="olive">Entity</font>(model=<font color="seagreen">'sphere'</font>, x=<font color="darkgoldenrod">2</font>)
+e.collider = <font color="seagreen">'box'</font>      <font color="gray"># add BoxCollider based on entity's bounds.</font>
+e.collider = <font color="seagreen">'sphere'</font>   <font color="gray"># add SphereCollider based on entity's bounds.</font>
+e.collider = <font color="seagreen">'mesh'</font>     <font color="gray"># add MeshCollider based on entity's bounds.</font>
 
 e.collider = BoxCollider(e, center=Vec3(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), size=Vec3(<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>))   <font color="gray"># add BoxCollider at custom positions and size.</font>
 e.collider = SphereCollider(e, center=Vec3(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), radius=.<font color="darkgoldenrod">7</font><font color="darkgoldenrod">5</font>)      <font color="gray"># add SphereCollider at custom positions and size.</font>
 e.collider = <font color="purple"><b>MeshCollider</b></font>(e, mesh=e.model, center=Vec3(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>))      <font color="gray"># add MeshCollider with custom shape and center.</font>
 
 m = Prismatoid(base_shape=Circle(<font color="darkgoldenrod">6</font>), thicknesses=(<font color="darkgoldenrod">1</font>, .<font color="darkgoldenrod">5</font>))
-e = Button(parent=scene, model=m, collider=<font color="green">'mesh'</font>, color=color.red, highlight_color=color.yellow)
+e = Button(parent=scene, model=m, collider=<font color="seagreen">'mesh'</font>, color=color.red, highlight_color=color.yellow)
 
 EditorCamera()
 </div>
@@ -1022,27 +1022,27 @@ entities_with_mesh_colliders<g> = target_entities # defaiults to all entities wi
 
 update()   
 
-<div class="example"><font color="green">''</font>'
+<div class="example"><font color="seagreen">''</font>'
 This will only enable mesh colliders' collision polygons within a certain range,
 in order to improve performance.
-<font color="green">''</font>'
+<font color="seagreen">''</font>'
 
 <font color="purple">from</font> ursina.shaders <font color="purple">import</font> basic_lighting_shader
 window.vsync = False
 
 application.asset_folder = application.asset_folder.parent
-terrain = <font color="olive">Entity</font>(model=<font color="green">'heightmap_test'</font>, scale=<font color="darkgoldenrod">1</font>, texture=<font color="green">'grass'</font>, collider=<font color="green">'mesh'</font>, shader=basic_lighting_shader)
-collision_zone = <font color="purple"><b>CollisionZone</b></font>(model=<font color="green">'cube'</font>, scale=.<font color="darkgoldenrod">1</font>)
+terrain = <font color="olive">Entity</font>(model=<font color="seagreen">'heightmap_test'</font>, scale=<font color="darkgoldenrod">1</font>, texture=<font color="seagreen">'grass'</font>, collider=<font color="seagreen">'mesh'</font>, shader=basic_lighting_shader)
+collision_zone = <font color="purple"><b>CollisionZone</b></font>(model=<font color="seagreen">'cube'</font>, scale=.<font color="darkgoldenrod">1</font>)
 
 
 <font color="purple">def</font> input(key):
-    if key == <font color="green">'c'</font>:
+    if key == <font color="seagreen">'c'</font>:
         terrain.collision = not terrain.collision
 
 
 <font color="purple">def</font> update():
-    collision_zone.x += (held_keys[<font color="green">'d'</font>] - held_keys[<font color="green">'a'</font>]) * time.dt * <font color="darkgoldenrod">2</font>
-    collision_zone.z += (held_keys[<font color="green">'w'</font>] - held_keys[<font color="green">'s'</font>]) * time.dt * <font color="darkgoldenrod">2</font>
+    collision_zone.x += (held_keys[<font color="seagreen">'d'</font>] - held_keys[<font color="seagreen">'a'</font>]) * time.dt * <font color="darkgoldenrod">2</font>
+    collision_zone.z += (held_keys[<font color="seagreen">'w'</font>] - held_keys[<font color="seagreen">'s'</font>]) * time.dt * <font color="darkgoldenrod">2</font>
 
     hit_info = raycast(collision_zone.world_position+Vec3(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">2</font>,<font color="darkgoldenrod">0</font>), Vec3(<font color="darkgoldenrod">0</font>,-<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">0</font>))
     if hit_info.hit:
@@ -1088,10 +1088,10 @@ for key in color.colors:
 
 grid_layout(p.children, max_x=<font color="darkgoldenrod">8</font>)
 
-for name in (<font color="green">'r'</font>, <font color="green">'g'</font>, <font color="green">'b'</font>, <font color="green">'h'</font>, <font color="green">'s'</font>, <font color="green">'v'</font>, <font color="green">'brightness'</font>):
-    print(name + <font color="green">':'</font>, getattr(color.random_color(), name))
+for name in (<font color="seagreen">'r'</font>, <font color="seagreen">'g'</font>, <font color="seagreen">'b'</font>, <font color="seagreen">'h'</font>, <font color="seagreen">'s'</font>, <font color="seagreen">'v'</font>, <font color="seagreen">'brightness'</font>):
+    print(name + <font color="seagreen">':'</font>, getattr(color.random_color(), name))
 
-e = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.lime)
+e = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, color=color.lime)
 print(e.color.name)
 </div>
 </div></div>
@@ -1114,7 +1114,7 @@ sample_curve_derivative_x(<g>t</g>)
 calculate(<g>x, epsilon=.0001</g>)   
 solve_curve_x(<g>t, epsilon=.0001</g>)   
 
-<div class="example"><font color="green"><font color="green">''</font></font><font color="green">'Draws a sheet with every curve and it'</font>s name<font color="green"><font color="green">''</font></font>'
+<div class="example"><font color="seagreen"><font color="seagreen">''</font></font><font color="seagreen">'Draws a sheet with every curve and it'</font>s name<font color="seagreen"><font color="seagreen">''</font></font>'
 
 camera.orthographic = True
 camera.fov = <font color="darkgoldenrod">1</font><font color="darkgoldenrod">6</font>
@@ -1125,9 +1125,9 @@ i = <font color="darkgoldenrod">0</font>
 for e in dir(curve):
     try:
         item = getattr(curve, e)
-        print(item.__name__, <font color="green">':'</font>, item(.<font color="darkgoldenrod">7</font><font color="darkgoldenrod">5</font>))
+        print(item.__name__, <font color="seagreen">':'</font>, item(.<font color="darkgoldenrod">7</font><font color="darkgoldenrod">5</font>))
         curve_renderer = <font color="olive">Entity</font>(
-            model=Mesh(vertices=[Vec3(i / <font color="darkgoldenrod">3</font><font color="darkgoldenrod">1</font>, item(i / <font color="darkgoldenrod">3</font><font color="darkgoldenrod">1</font>), <font color="darkgoldenrod">0</font>) for i in range(<font color="darkgoldenrod">3</font><font color="darkgoldenrod">2</font>)], mode=<font color="green">'line'</font>, thickness=<font color="darkgoldenrod">2</font>),
+            model=Mesh(vertices=[Vec3(i / <font color="darkgoldenrod">3</font><font color="darkgoldenrod">1</font>, item(i / <font color="darkgoldenrod">3</font><font color="darkgoldenrod">1</font>), <font color="darkgoldenrod">0</font>) for i in range(<font color="darkgoldenrod">3</font><font color="darkgoldenrod">2</font>)], mode=<font color="seagreen">'line'</font>, thickness=<font color="darkgoldenrod">2</font>),
             color=color.light_gray)
         row = floor(i / <font color="darkgoldenrod">8</font>)
         curve_renderer.x = (i % <font color="darkgoldenrod">8</font>) * <font color="darkgoldenrod">2</font>.<font color="darkgoldenrod">5</font>
@@ -1138,11 +1138,11 @@ for e in dir(curve):
         pass
 
 c = <font color="purple"><b>CubicBezier</b></font>(<font color="darkgoldenrod">0</font>, .<font color="darkgoldenrod">5</font>, <font color="darkgoldenrod">1</font>, .<font color="darkgoldenrod">5</font>)
-print(<font color="green">'-----------'</font>, c.calculate(.<font color="darkgoldenrod">2</font><font color="darkgoldenrod">3</font>))
+print(<font color="seagreen">'-----------'</font>, c.calculate(.<font color="darkgoldenrod">2</font><font color="darkgoldenrod">3</font>))
 
 window.exit_button.visible = False
 window.fps_counter.enabled = False
-<font color="green">''</font>'
+<font color="seagreen">''</font>'
 These are used by <font color="olive">Entity</font> when animating, like this:
 
 e = <font color="olive">Entity</font>()
@@ -1150,7 +1150,7 @@ e.animate_y(<font color="darkgoldenrod">1</font>, curve=curve.in_expo)
 
 e<font color="darkgoldenrod">2</font> = <font color="olive">Entity</font>(x=<font color="darkgoldenrod">1</font>.<font color="darkgoldenrod">5</font>)
 e<font color="darkgoldenrod">2</font>.animate_y(<font color="darkgoldenrod">1</font>, curve=curve.<font color="purple"><b>CubicBezier</b></font>(<font color="darkgoldenrod">0</font>,.<font color="darkgoldenrod">7</font>,<font color="darkgoldenrod">1</font>,.<font color="darkgoldenrod">3</font>))
-<font color="green">''</font>'
+<font color="seagreen">''</font>'
 </div>
 </div></div>
 <div id="HitInfo"><div id="HitInfo" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">HitInfo</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.hit_info</g><br><br><params class="params">HitInfo(**kwargs)</params>
@@ -1222,21 +1222,21 @@ Text(origin=(<font color="darkgoldenrod">4</font>,-<font color="darkgoldenrod">1
 Text(origin=(.<font color="darkgoldenrod">8</font>,-<font color="darkgoldenrod">4</font>), text="replace with dimmer ambient for these three cubes")
 Text(origin=(.<font color="darkgoldenrod">9</font>,<font color="darkgoldenrod">1</font><font color="darkgoldenrod">1</font>), text="also add a bit of directional for these three cubes")
 
-cubes.append(<font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.red, position=(-<font color="darkgoldenrod">4</font>,<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>)))
-cubes.append(<font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.green, position=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>)))
-cubes.append(<font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.blue, position=(<font color="darkgoldenrod">4</font>,<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>)))
+cubes.append(<font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, color=color.red, position=(-<font color="darkgoldenrod">4</font>,<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>)))
+cubes.append(<font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, color=color.green, position=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>)))
+cubes.append(<font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, color=color.blue, position=(<font color="darkgoldenrod">4</font>,<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>)))
 
-<font color="purple"><b>Light</b></font>(type=<font color="green">'ambient'</font>, color=(<font color="darkgoldenrod">0</font>.<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>.<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>.<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">1</font>))  <font color="gray"># full spectrum</font>
+<font color="purple"><b>Light</b></font>(type=<font color="seagreen">'ambient'</font>, color=(<font color="darkgoldenrod">0</font>.<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>.<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>.<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">1</font>))  <font color="gray"># full spectrum</font>
 
-cubes.append(<font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.red, position=(-<font color="darkgoldenrod">4</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>)))
-cubes.append(<font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.green, position=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>)))
-cubes.append(<font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.blue, position=(<font color="darkgoldenrod">4</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>)))
+cubes.append(<font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, color=color.red, position=(-<font color="darkgoldenrod">4</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>)))
+cubes.append(<font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, color=color.green, position=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>)))
+cubes.append(<font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, color=color.blue, position=(<font color="darkgoldenrod">4</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>)))
 
-<font color="purple"><b>Light</b></font>(type=<font color="green">'directional'</font>, color=(<font color="darkgoldenrod">0</font>.<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>.<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>.<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">1</font>), direction=(<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>))  <font color="gray"># dim full spectrum</font>
+<font color="purple"><b>Light</b></font>(type=<font color="seagreen">'directional'</font>, color=(<font color="darkgoldenrod">0</font>.<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>.<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>.<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">1</font>), direction=(<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>))  <font color="gray"># dim full spectrum</font>
 
-cubes.append(<font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.red, position=(-<font color="darkgoldenrod">4</font>,-<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>)))
-cubes.append(<font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.green, position=(<font color="darkgoldenrod">0</font>,-<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>)))
-cubes.append(<font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.blue, position=(<font color="darkgoldenrod">4</font>,-<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>)))
+cubes.append(<font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, color=color.red, position=(-<font color="darkgoldenrod">4</font>,-<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>)))
+cubes.append(<font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, color=color.green, position=(<font color="darkgoldenrod">0</font>,-<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>)))
+cubes.append(<font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, color=color.blue, position=(<font color="darkgoldenrod">4</font>,-<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>)))
 
 
 <font color="purple">def</font> update():
@@ -1300,8 +1300,8 @@ e = <font color="olive">Entity</font>(model=<font color="purple"><b>Mesh</b></fo
 verts = (Vec3(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), Vec3(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">0</font>), Vec3(<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">0</font>), Vec3(<font color="darkgoldenrod">2</font>,<font color="darkgoldenrod">2</font>,<font color="darkgoldenrod">0</font>), Vec3(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>), Vec3(-<font color="darkgoldenrod">2</font>,<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>))
 tris = ((<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>), (<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">4</font>,<font color="darkgoldenrod">5</font>))
 
-lines = <font color="olive">Entity</font>(model=<font color="purple"><b>Mesh</b></font>(vertices=verts, triangles=tris, mode=<font color="green">'line'</font>, thickness=<font color="darkgoldenrod">4</font>), color=color.cyan, z=-<font color="darkgoldenrod">1</font>)
-points = <font color="olive">Entity</font>(model=<font color="purple"><b>Mesh</b></font>(vertices=verts, mode=<font color="green">'point'</font>, thickness=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>), color=color.red, z=-<font color="darkgoldenrod">1</font>.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">1</font>)
+lines = <font color="olive">Entity</font>(model=<font color="purple"><b>Mesh</b></font>(vertices=verts, triangles=tris, mode=<font color="seagreen">'line'</font>, thickness=<font color="darkgoldenrod">4</font>), color=color.cyan, z=-<font color="darkgoldenrod">1</font>)
+points = <font color="olive">Entity</font>(model=<font color="purple"><b>Mesh</b></font>(vertices=verts, mode=<font color="seagreen">'point'</font>, thickness=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>), color=color.red, z=-<font color="darkgoldenrod">1</font>.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">1</font>)
 print(e.model.recipe)
 EditorCamera()
 </div>
@@ -1311,23 +1311,23 @@ EditorCamera()
 duration<g> = duration</g> 
 
 
-<div class="example">e = <font color="olive">Entity</font>(model=<font color="green">'quad'</font>)
+<div class="example">e = <font color="olive">Entity</font>(model=<font color="seagreen">'quad'</font>)
 s = Sequence(
     <font color="darkgoldenrod">1</font>,
-    Func(print, <font color="green">'one'</font>),
+    Func(print, <font color="seagreen">'one'</font>),
     Func(e.fade_out, duration=<font color="darkgoldenrod">1</font>),
     <font color="darkgoldenrod">1</font>,
-    Func(print, <font color="green">'two'</font>),
+    Func(print, <font color="seagreen">'two'</font>),
     Func(e.fade_in, duration=<font color="darkgoldenrod">1</font>),
     loop=True
     )
 
 s.append(
-    Func(print, <font color="green">'appended to sequence'</font>)
+    Func(print, <font color="seagreen">'appended to sequence'</font>)
     )
 
 <font color="purple">def</font> input(key):
-    actions = {<font color="green">'s'</font> : s.start, <font color="green">'f'</font> : s.finish, <font color="green">'p'</font> : s.pause, <font color="green">'r'</font> : s.resume}
+    actions = {<font color="seagreen">'s'</font> : s.start, <font color="seagreen">'f'</font> : s.finish, <font color="seagreen">'p'</font> : s.pause, <font color="seagreen">'r'</font> : s.resume}
     if key in actions:
         actions[key]()
 </div>
@@ -1341,23 +1341,23 @@ delay<g> = 0</g>
 finished<g> = False</g> 
 
 
-<div class="example">e = <font color="olive">Entity</font>(model=<font color="green">'quad'</font>)
+<div class="example">e = <font color="olive">Entity</font>(model=<font color="seagreen">'quad'</font>)
 s = Sequence(
     <font color="darkgoldenrod">1</font>,
-    <font color="purple"><b>Func</b></font>(print, <font color="green">'one'</font>),
+    <font color="purple"><b>Func</b></font>(print, <font color="seagreen">'one'</font>),
     <font color="purple"><b>Func</b></font>(e.fade_out, duration=<font color="darkgoldenrod">1</font>),
     <font color="darkgoldenrod">1</font>,
-    <font color="purple"><b>Func</b></font>(print, <font color="green">'two'</font>),
+    <font color="purple"><b>Func</b></font>(print, <font color="seagreen">'two'</font>),
     <font color="purple"><b>Func</b></font>(e.fade_in, duration=<font color="darkgoldenrod">1</font>),
     loop=True
     )
 
 s.append(
-    <font color="purple"><b>Func</b></font>(print, <font color="green">'appended to sequence'</font>)
+    <font color="purple"><b>Func</b></font>(print, <font color="seagreen">'appended to sequence'</font>)
     )
 
 <font color="purple">def</font> input(key):
-    actions = {<font color="green">'s'</font> : s.start, <font color="green">'f'</font> : s.finish, <font color="green">'p'</font> : s.pause, <font color="green">'r'</font> : s.resume}
+    actions = {<font color="seagreen">'s'</font> : s.start, <font color="seagreen">'f'</font> : s.finish, <font color="seagreen">'p'</font> : s.pause, <font color="seagreen">'r'</font> : s.resume}
     if key in actions:
         actions[key]()
 </div>
@@ -1384,23 +1384,23 @@ finish()
 kill()   
 update()   
 
-<div class="example">e = <font color="olive">Entity</font>(model=<font color="green">'quad'</font>)
+<div class="example">e = <font color="olive">Entity</font>(model=<font color="seagreen">'quad'</font>)
 s = <font color="purple"><b>Sequence</b></font>(
     <font color="darkgoldenrod">1</font>,
-    Func(print, <font color="green">'one'</font>),
+    Func(print, <font color="seagreen">'one'</font>),
     Func(e.fade_out, duration=<font color="darkgoldenrod">1</font>),
     <font color="darkgoldenrod">1</font>,
-    Func(print, <font color="green">'two'</font>),
+    Func(print, <font color="seagreen">'two'</font>),
     Func(e.fade_in, duration=<font color="darkgoldenrod">1</font>),
     loop=True
     )
 
 s.append(
-    Func(print, <font color="green">'appended to sequence'</font>)
+    Func(print, <font color="seagreen">'appended to sequence'</font>)
     )
 
 <font color="purple">def</font> input(key):
-    actions = {<font color="green">'s'</font> : s.start, <font color="green">'f'</font> : s.finish, <font color="green">'p'</font> : s.pause, <font color="green">'r'</font> : s.resume}
+    actions = {<font color="seagreen">'s'</font> : s.start, <font color="seagreen">'f'</font> : s.finish, <font color="seagreen">'p'</font> : s.pause, <font color="seagreen">'r'</font> : s.resume}
     if key in actions:
         actions[key]()
 </div>
@@ -1411,7 +1411,7 @@ entity<g> = None</g>
 default_input<g> = dict()</g> 
 
 
-<div class="example"><font color="olive">Entity</font>(model=<font color="green">'cube'</font>, shader=<font color="purple"><b>Shader</b></font>())
+<div class="example"><font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, shader=<font color="purple"><b>Shader</b></font>())
 EditorCamera()
 </div>
 </div></div>
@@ -1430,22 +1430,22 @@ set_pixel(<g>x, y, color</g>)
 apply()   
 save(<g>path</g>)   
 
-<div class="example"><font color="green">''</font>'
+<div class="example"><font color="seagreen">''</font>'
     The Texture class rarely used manually but usually instantiated
     when assigning a texture to an <font color="olive">Entity</font>
     texture = <font color="purple"><b>Texture</b></font>(path / PIL.Image / panda<font color="darkgoldenrod">3</font>d.core.Texture)
 
     A texture file can be a .png, .jpg or .psd.
     If it's a .psd it and no compressed version exists, it will compress it automatically.
-<font color="green">''</font>'
-e = <font color="olive">Entity</font>(model=<font color="green">'quad'</font>, texture=<font color="green">'brick'</font>)
+<font color="seagreen">''</font>'
+e = <font color="olive">Entity</font>(model=<font color="seagreen">'quad'</font>, texture=<font color="seagreen">'brick'</font>)
 e.texture.set_pixel(<font color="darkgoldenrod">0</font>, <font color="darkgoldenrod">2</font>, color.blue)
 e.texture.apply()
 
 for y in range(e.texture.height):
     for x in range(e.texture.width):
         if e.texture.get_pixel(x,y) == color.blue:
-            print(<font color="green">'found blue pixel at:'</font>, x, y)
+            print(<font color="seagreen">'found blue pixel at:'</font>, x, y)
 </div>
 </div></div>
 <div id="Trigger"><div id="Trigger" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Trigger<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.trigger</g><br><br><params class="params">Trigger(**kwargs)</params>
@@ -1457,15 +1457,15 @@ update_rate<g> = 4</g>
 
 update()   
 
-<div class="example">player = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.azure, scale=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>)
+<div class="example">player = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, color=color.azure, scale=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>)
 <font color="purple">def</font> update():
-    player.x += held_keys[<font color="green">'d'</font>] * time.dt * <font color="darkgoldenrod">2</font>
-    player.x -= held_keys[<font color="green">'a'</font>] * time.dt * <font color="darkgoldenrod">2</font>
+    player.x += held_keys[<font color="seagreen">'d'</font>] * time.dt * <font color="darkgoldenrod">2</font>
+    player.x -= held_keys[<font color="seagreen">'a'</font>] * time.dt * <font color="darkgoldenrod">2</font>
 
-t = <font color="purple"><b>Trigger</b></font>(trigger_targets=(player,), x=<font color="darkgoldenrod">1</font>, model=<font color="green">'sphere'</font>, color=color.color(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>,.<font color="darkgoldenrod">5</font>))
-t.on_trigger_enter = Func(print, <font color="green">'enter'</font>)
-t.on_trigger_exit =  Func(print, <font color="green">'exit'</font>)
-t.on_trigger_stay =  Func(print, <font color="green">'stay'</font>)
+t = <font color="purple"><b>Trigger</b></font>(trigger_targets=(player,), x=<font color="darkgoldenrod">1</font>, model=<font color="seagreen">'sphere'</font>, color=color.color(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>,.<font color="darkgoldenrod">5</font>))
+t.on_trigger_enter = Func(print, <font color="seagreen">'enter'</font>)
+t.on_trigger_exit =  Func(print, <font color="seagreen">'exit'</font>)
+t.on_trigger_stay =  Func(print, <font color="seagreen">'stay'</font>)
 </div>
 </div></div>
 <div id="Empty"><div id="Empty" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Empty<g>()</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursinastuff</g><br><br><params class="params">Empty(**kwargs)</params>
@@ -1479,14 +1479,14 @@ print_on_screen(<g>text, position=window.top_left, origin=(-.5,.5), scale=1, dur
 <div class="example"><font color="purple">def</font> test_func(item, x=None, y=None):
     print(item, x, y)
 
-test_func(<font color="green">'test'</font>)
-invoke(test_func, <font color="green">'test'</font>, delay=.<font color="darkgoldenrod">1</font>)
-invoke(test_func, <font color="green">'test<font color="darkgoldenrod">1</font>'</font>, <font color="darkgoldenrod">1</font>, <font color="darkgoldenrod">2</font>, delay=.<font color="darkgoldenrod">2</font>)
-invoke(test_func, <font color="green">'test<font color="darkgoldenrod">2</font>'</font>, x=<font color="darkgoldenrod">1</font>, y=<font color="darkgoldenrod">2</font>, delay=.<font color="darkgoldenrod">3</font>)
+test_func(<font color="seagreen">'test'</font>)
+invoke(test_func, <font color="seagreen">'test'</font>, delay=.<font color="darkgoldenrod">1</font>)
+invoke(test_func, <font color="seagreen">'test<font color="darkgoldenrod">1</font>'</font>, <font color="darkgoldenrod">1</font>, <font color="darkgoldenrod">2</font>, delay=.<font color="darkgoldenrod">2</font>)
+invoke(test_func, <font color="seagreen">'test<font color="darkgoldenrod">2</font>'</font>, x=<font color="darkgoldenrod">1</font>, y=<font color="darkgoldenrod">2</font>, delay=.<font color="darkgoldenrod">3</font>)
 
 <font color="purple">def</font> input(key):
-    if key == <font color="green">'space'</font>:
-        print_on_screen(<font color="green">'debug message'</font>, position=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), origin=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), scale=<font color="darkgoldenrod">2</font>)
+    if key == <font color="seagreen">'space'</font>:
+        print_on_screen(<font color="seagreen">'debug message'</font>, position=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), origin=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), scale=<font color="darkgoldenrod">2</font>)
 </div>
 </div></div>
 <div id="Vec3"><div id="Vec3" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Vec3<g>(PandaVec3)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.vec3</g><br><br><params class="params">Vec3(**kwargs)</params>
@@ -1518,7 +1518,7 @@ finish()
 
 <div class="example">window.color = color.black
 
-animation = <font color="purple"><b>Animation</b></font>(<font color="green">'ursina_wink'</font>, fps=<font color="darkgoldenrod">2</font>, scale=<font color="darkgoldenrod">1</font>, filtering=None, autoplay=True)
+animation = <font color="purple"><b>Animation</b></font>(<font color="seagreen">'ursina_wink'</font>, fps=<font color="darkgoldenrod">2</font>, scale=<font color="darkgoldenrod">1</font>, filtering=None, autoplay=True)
 
 
 EditorCamera()
@@ -1531,25 +1531,25 @@ start_state<g> = start_state</g>
 state<g> = start_state</g> 
 
 
-<div class="example">anim = Animation(<font color="green">'ursina_wink'</font>, loop=True, autoplay=False)
+<div class="example">anim = Animation(<font color="seagreen">'ursina_wink'</font>, loop=True, autoplay=False)
 a = <font color="purple"><b>Animator</b></font>(
     animations = {
-        <font color="green">'lol'</font> : <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.red),
-        <font color="green">'yo'</font> : <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.green, x=<font color="darkgoldenrod">1</font>),
-        <font color="green">'help'</font> : anim,
+        <font color="seagreen">'lol'</font> : <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, color=color.red),
+        <font color="seagreen">'yo'</font> : <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, color=color.green, x=<font color="darkgoldenrod">1</font>),
+        <font color="seagreen">'help'</font> : anim,
     }
 )
-a.state = <font color="green">'yo'</font>
+a.state = <font color="seagreen">'yo'</font>
 
-Text(<font color="green">'press <red><font color="darkgoldenrod">1</font><default>, <green><font color="darkgoldenrod">2</font><default> or <violet><font color="darkgoldenrod">3</font><default> to toggle different animator states'</font>, origin=(<font color="darkgoldenrod">0</font>,-.<font color="darkgoldenrod">5</font>), y=-.<font color="darkgoldenrod">4</font>)
+Text(<font color="seagreen">'press <red><font color="darkgoldenrod">1</font><default>, <green><font color="darkgoldenrod">2</font><default> or <violet><font color="darkgoldenrod">3</font><default> to toggle different animator states'</font>, origin=(<font color="darkgoldenrod">0</font>,-.<font color="darkgoldenrod">5</font>), y=-.<font color="darkgoldenrod">4</font>)
 
 <font color="purple">def</font> input(key):
-    if key == <font color="green">'<font color="darkgoldenrod">1</font>'</font>:
-        a.state = <font color="green">'lol'</font>
-    if key == <font color="green">'<font color="darkgoldenrod">2</font>'</font>:
-        a.state = <font color="green">'yo'</font>
-    if key == <font color="green">'<font color="darkgoldenrod">3</font>'</font>:
-        a.state = <font color="green">'help'</font>
+    if key == <font color="seagreen">'<font color="darkgoldenrod">1</font>'</font>:
+        a.state = <font color="seagreen">'lol'</font>
+    if key == <font color="seagreen">'<font color="darkgoldenrod">2</font>'</font>:
+        a.state = <font color="seagreen">'yo'</font>
+    if key == <font color="seagreen">'<font color="darkgoldenrod">3</font>'</font>:
+        a.state = <font color="seagreen">'help'</font>
         print(anim.enabled)
 </div>
 </div></div>
@@ -1571,15 +1571,15 @@ input(<g>key</g>)
 select(<g>b</g>)   
 on_value_changed()   
 
-<div class="example">gender_selection = <font color="purple"><b>ButtonGroup</b></font>((<font color="green">'man'</font>, <font color="green">'woman'</font>, <font color="green">'other'</font>))
-on_off_switch = <font color="purple"><b>ButtonGroup</b></font>((<font color="green">'off'</font>, <font color="green"><font color="green">'on'</font></font>), min_selection=<font color="darkgoldenrod">1</font>, y=-.<font color="darkgoldenrod">1</font>, default=<font color="green"><font color="green">'on'</font></font>, selected_color=color.red)
+<div class="example">gender_selection = <font color="purple"><b>ButtonGroup</b></font>((<font color="seagreen">'man'</font>, <font color="seagreen">'woman'</font>, <font color="seagreen">'other'</font>))
+on_off_switch = <font color="purple"><b>ButtonGroup</b></font>((<font color="seagreen">'off'</font>, <font color="seagreen"><font color="seagreen">'on'</font></font>), min_selection=<font color="darkgoldenrod">1</font>, y=-.<font color="darkgoldenrod">1</font>, default=<font color="seagreen"><font color="seagreen">'on'</font></font>, selected_color=color.red)
 
 <font color="purple">def</font> on_value_changed():
-    print(<font color="green">'set gender:'</font>, gender_selection.value)
+    print(<font color="seagreen">'set gender:'</font>, gender_selection.value)
 gender_selection.on_value_changed = on_value_changed
 
 <font color="purple">def</font> on_value_changed():
-    print(<font color="green">'turn:'</font>, on_off_switch.value)
+    print(<font color="seagreen">'turn:'</font>, on_off_switch.value)
 on_off_switch.on_value_changed = on_value_changed
 
 window.color = color._<font color="darkgoldenrod">3</font><font color="darkgoldenrod">2</font>
@@ -1599,20 +1599,20 @@ input(<g>key</g>)
 update()   
 on_disable()   
 
-<div class="example">default = Func(print, <font color="green">'not yet implemented'</font>)
+<div class="example">default = Func(print, <font color="seagreen">'not yet implemented'</font>)
 
 <font color="purple">def</font> test(a=<font color="darkgoldenrod">1</font>, b=<font color="darkgoldenrod">2</font>):
-    print(<font color="green">'------:'</font>, a, b)
+    print(<font color="seagreen">'------:'</font>, a, b)
 
 button_dict = {
-    <font color="green">'one'</font> :     None,
-    <font color="green">'two'</font> :     default,
-    <font color="green">'tree'</font> :    Func(test, <font color="darkgoldenrod">3</font>, <font color="darkgoldenrod">4</font>),
-    <font color="green">'four'</font> :    Func(test, b=<font color="darkgoldenrod">3</font>, a=<font color="darkgoldenrod">4</font>),
+    <font color="seagreen">'one'</font> :     None,
+    <font color="seagreen">'two'</font> :     default,
+    <font color="seagreen">'tree'</font> :    Func(test, <font color="darkgoldenrod">3</font>, <font color="darkgoldenrod">4</font>),
+    <font color="seagreen">'four'</font> :    Func(test, b=<font color="darkgoldenrod">3</font>, a=<font color="darkgoldenrod">4</font>),
 }
 
 bl = <font color="purple"><b>ButtonList</b></font>(button_dict, fit_height=True)
-bl.on_click = Func(setattr, bl, <font color="green">'enabled'</font>, False)
+bl.on_click = Func(setattr, bl, <font color="seagreen">'enabled'</font>, False)
 </div>
 </div></div>
 <div id="Cursor"><div id="Cursor" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Cursor<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.cursor</g><br><br><params class="params">Cursor(**kwargs)</params>
@@ -1625,11 +1625,11 @@ render_queue<g> = 1</g>
 
 update()   
 
-<div class="example">Button(<font color="green">'button'</font>).fit_to_text()
+<div class="example">Button(<font color="seagreen">'button'</font>).fit_to_text()
 Panel()
 camera.orthographic = True
 camera.fov = <font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>
-e = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>)
+e = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>)
 mouse._mouse_watcher.setGeometry(e.model.node())
 mouse.visible = False
 </div>
@@ -1642,7 +1642,7 @@ text<g> = '<orange>' + target.__class__.__name__</g>
 
 draw_functions()   
 
-<div class="example"><font color="purple"><b>DebugMenu</b></font>(Audio(<font color="green">'night_sky'</font>))
+<div class="example"><font color="purple"><b>DebugMenu</b></font>(Audio(<font color="seagreen">'night_sky'</font>))
 </div>
 </div></div>
 <div id="Draggable"><div id="Draggable" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Draggable<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.draggable</g><br><br><params class="params">Draggable(**kwargs)</params>
@@ -1665,12 +1665,12 @@ start_dragging()
 stop_dragging()   
 update()   
 
-<div class="example"><font color="olive">Entity</font>(model=<font color="green">'plane'</font>, scale=<font color="darkgoldenrod">8</font>, texture=<font color="green">'white_cube'</font>, texture_scale=(<font color="darkgoldenrod">8</font>,<font color="darkgoldenrod">8</font>))
-draggable_button = <font color="purple"><b>Draggable</b></font>(scale=.<font color="darkgoldenrod">1</font>, text=<font color="green">'drag me'</font>, position=(-.<font color="darkgoldenrod">5</font>, <font color="darkgoldenrod">0</font>))
-world_space_draggable = <font color="purple"><b>Draggable</b></font>(parent=scene, model=<font color="green">'cube'</font>, color=color.azure, plane_direction=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">0</font>))
+<div class="example"><font color="olive">Entity</font>(model=<font color="seagreen">'plane'</font>, scale=<font color="darkgoldenrod">8</font>, texture=<font color="seagreen">'white_cube'</font>, texture_scale=(<font color="darkgoldenrod">8</font>,<font color="darkgoldenrod">8</font>))
+draggable_button = <font color="purple"><b>Draggable</b></font>(scale=.<font color="darkgoldenrod">1</font>, text=<font color="seagreen">'drag me'</font>, position=(-.<font color="darkgoldenrod">5</font>, <font color="darkgoldenrod">0</font>))
+world_space_draggable = <font color="purple"><b>Draggable</b></font>(parent=scene, model=<font color="seagreen">'cube'</font>, color=color.azure, plane_direction=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">0</font>))
 
 EditorCamera(rotation=(<font color="darkgoldenrod">3</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>))
-world_space_draggable.drop = Func(print, <font color="green">'dropped cube'</font>)
+world_space_draggable.drop = Func(print, <font color="seagreen">'dropped cube'</font>)
 </div>
 </div></div>
 <div id="DropdownMenuButton"><div id="DropdownMenuButton" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">DropdownMenuButton<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.dropdown_menu</g><br><br><params class="params">DropdownMenuButton(text='', **kwargs)</params>
@@ -1679,19 +1679,19 @@ world_space_draggable.drop = Func(print, <font color="green">'dropped cube'</fon
 
 <div class="example"><font color="purple">from</font> ursina.prefabs.dropdown_menu <font color="purple">import</font> DropdownMenu, DropdownMenuButton
 
-DropdownMenu(<font color="green">'File'</font>, buttons=(
-    <font color="purple"><b>DropdownMenuButton</b></font>(<font color="green">'New'</font>),
-    <font color="purple"><b>DropdownMenuButton</b></font>(<font color="green">'Open'</font>),
-    DropdownMenu(<font color="green">'Reopen Project'</font>, buttons=(
-        <font color="purple"><b>DropdownMenuButton</b></font>(<font color="green">'Project <font color="darkgoldenrod">1</font>'</font>),
-        <font color="purple"><b>DropdownMenuButton</b></font>(<font color="green">'Project <font color="darkgoldenrod">2</font>'</font>),
+DropdownMenu(<font color="seagreen">'File'</font>, buttons=(
+    <font color="purple"><b>DropdownMenuButton</b></font>(<font color="seagreen">'New'</font>),
+    <font color="purple"><b>DropdownMenuButton</b></font>(<font color="seagreen">'Open'</font>),
+    DropdownMenu(<font color="seagreen">'Reopen Project'</font>, buttons=(
+        <font color="purple"><b>DropdownMenuButton</b></font>(<font color="seagreen">'Project <font color="darkgoldenrod">1</font>'</font>),
+        <font color="purple"><b>DropdownMenuButton</b></font>(<font color="seagreen">'Project <font color="darkgoldenrod">2</font>'</font>),
         )),
-    <font color="purple"><b>DropdownMenuButton</b></font>(<font color="green">'Save'</font>),
-    DropdownMenu(<font color="green">'Options'</font>, buttons=(
-        <font color="purple"><b>DropdownMenuButton</b></font>(<font color="green">'Option a'</font>),
-        <font color="purple"><b>DropdownMenuButton</b></font>(<font color="green">'Option b'</font>),
+    <font color="purple"><b>DropdownMenuButton</b></font>(<font color="seagreen">'Save'</font>),
+    DropdownMenu(<font color="seagreen">'Options'</font>, buttons=(
+        <font color="purple"><b>DropdownMenuButton</b></font>(<font color="seagreen">'Option a'</font>),
+        <font color="purple"><b>DropdownMenuButton</b></font>(<font color="seagreen">'Option b'</font>),
         )),
-    <font color="purple"><b>DropdownMenuButton</b></font>(<font color="green">'Exit'</font>),
+    <font color="purple"><b>DropdownMenuButton</b></font>(<font color="seagreen">'Exit'</font>),
     ))
 </div>
 </div></div>
@@ -1709,19 +1709,19 @@ update()
 
 <div class="example"><font color="purple">from</font> ursina.prefabs.dropdown_menu <font color="purple">import</font> DropdownMenu, DropdownMenuButton
 
-<font color="purple"><b>DropdownMenu</b></font>(<font color="green">'File'</font>, buttons=(
-    DropdownMenuButton(<font color="green">'New'</font>),
-    DropdownMenuButton(<font color="green">'Open'</font>),
-    <font color="purple"><b>DropdownMenu</b></font>(<font color="green">'Reopen Project'</font>, buttons=(
-        DropdownMenuButton(<font color="green">'Project <font color="darkgoldenrod">1</font>'</font>),
-        DropdownMenuButton(<font color="green">'Project <font color="darkgoldenrod">2</font>'</font>),
+<font color="purple"><b>DropdownMenu</b></font>(<font color="seagreen">'File'</font>, buttons=(
+    DropdownMenuButton(<font color="seagreen">'New'</font>),
+    DropdownMenuButton(<font color="seagreen">'Open'</font>),
+    <font color="purple"><b>DropdownMenu</b></font>(<font color="seagreen">'Reopen Project'</font>, buttons=(
+        DropdownMenuButton(<font color="seagreen">'Project <font color="darkgoldenrod">1</font>'</font>),
+        DropdownMenuButton(<font color="seagreen">'Project <font color="darkgoldenrod">2</font>'</font>),
         )),
-    DropdownMenuButton(<font color="green">'Save'</font>),
-    <font color="purple"><b>DropdownMenu</b></font>(<font color="green">'Options'</font>, buttons=(
-        DropdownMenuButton(<font color="green">'Option a'</font>),
-        DropdownMenuButton(<font color="green">'Option b'</font>),
+    DropdownMenuButton(<font color="seagreen">'Save'</font>),
+    <font color="purple"><b>DropdownMenu</b></font>(<font color="seagreen">'Options'</font>, buttons=(
+        DropdownMenuButton(<font color="seagreen">'Option a'</font>),
+        DropdownMenuButton(<font color="seagreen">'Option b'</font>),
         )),
-    DropdownMenuButton(<font color="green">'Exit'</font>),
+    DropdownMenuButton(<font color="seagreen">'Exit'</font>),
     ))
 </div>
 </div></div>
@@ -1742,28 +1742,28 @@ on_disable()
 input(<g>key</g>)   
 update()   
 
-<div class="example"><font color="green">''</font>'
+<div class="example"><font color="seagreen">''</font>'
 Simple camera for debugging.
 Hold right click and move the mouse to rotate around point.
-<font color="green">''</font>'
+<font color="seagreen">''</font>'
 
 sky = Sky()
-e = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.white)
+e = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, color=color.white)
 e.model.colorize()
 
 <font color="purple">from</font> ursina.prefabs.first_person_controller <font color="purple">import</font> FirstPersonController
 <font color="purple">from</font> copy <font color="purple">import</font> copy
-ground = <font color="olive">Entity</font>(model=<font color="green">'plane'</font>, scale=<font color="darkgoldenrod">3</font><font color="darkgoldenrod">2</font>, texture=<font color="green">'white_cube'</font>, texture_scale=(<font color="darkgoldenrod">3</font><font color="darkgoldenrod">2</font>,<font color="darkgoldenrod">3</font><font color="darkgoldenrod">2</font>))
-box = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, collider=<font color="green">'box'</font>, texture=<font color="green">'white_cube'</font>, scale=(<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">2</font>,<font color="darkgoldenrod">2</font>), position=(<font color="darkgoldenrod">2</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">5</font>), color=color.light_gray)
+ground = <font color="olive">Entity</font>(model=<font color="seagreen">'plane'</font>, scale=<font color="darkgoldenrod">3</font><font color="darkgoldenrod">2</font>, texture=<font color="seagreen">'white_cube'</font>, texture_scale=(<font color="darkgoldenrod">3</font><font color="darkgoldenrod">2</font>,<font color="darkgoldenrod">3</font><font color="darkgoldenrod">2</font>))
+box = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, collider=<font color="seagreen">'box'</font>, texture=<font color="seagreen">'white_cube'</font>, scale=(<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">2</font>,<font color="darkgoldenrod">2</font>), position=(<font color="darkgoldenrod">2</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">5</font>), color=color.light_gray)
 ec = <font color="purple"><b>EditorCamera</b></font>(rotation_smoothing=<font color="darkgoldenrod">2</font>, enabled=False, rotation=(<font color="darkgoldenrod">3</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">3</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>))
 
 rotation_info = Text(position=window.top_left)
 
 <font color="purple">def</font> update():
-    rotation_info.text = str(int(ec.rotation_y)) + <font color="green">'\n'</font> + str(int(ec.rotation_x))
+    rotation_info.text = str(int(ec.rotation_y)) + <font color="seagreen">'\n'</font> + str(int(ec.rotation_x))
 
 <font color="purple">def</font> input(key):
-    if key == <font color="green">'tab'</font>:    <font color="gray"># press tab to toggle edit/play mode</font>
+    if key == <font color="seagreen">'tab'</font>:    <font color="gray"># press tab to toggle edit/play mode</font>
         ec.enabled = not ec.enabled
 </div>
 </div></div>
@@ -1773,11 +1773,11 @@ rotation_info = Text(position=window.top_left)
 on_click()   
 input(<g>key</g>)   
 
-<div class="example"><font color="green">''</font>'
+<div class="example"><font color="seagreen">''</font>'
 This is the button in the upper right corner.
 You can click on it or press Shift+Q to close the program.
 To disable it, set window.exit_button.enabled to False
-<font color="green">''</font>'
+<font color="seagreen">''</font>'
 </div>
 </div></div>
 <div id="FileButton"><div id="FileButton" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FileButton<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.file_browser</g><br><br><params class="params">FileButton(load_menu, **kwargs)</params>
@@ -1788,11 +1788,11 @@ selected
 on_click()   
 on_double_click()   
 
-<div class="example">fb = FileBrowser(file_types=(<font color="green">'.*'</font>), enabled=True)
+<div class="example">fb = FileBrowser(file_types=(<font color="seagreen">'.*'</font>), enabled=True)
 
 <font color="purple">def</font> on_submit(value):
     for path in value:
-        print(<font color="green">'---'</font>, path)
+        print(<font color="seagreen">'---'</font>, path)
 
 fb.on_submit = on_submit
 </div>
@@ -1826,11 +1826,11 @@ close()
 folder_up()   
 open()   
 
-<div class="example">fb = <font color="purple"><b>FileBrowser</b></font>(file_types=(<font color="green">'.*'</font>), enabled=True)
+<div class="example">fb = <font color="purple"><b>FileBrowser</b></font>(file_types=(<font color="seagreen">'.*'</font>), enabled=True)
 
 <font color="purple">def</font> on_submit(value):
     for path in value:
-        print(<font color="green">'---'</font>, path)
+        print(<font color="seagreen">'---'</font>, path)
 
 fb.on_submit = on_submit
 </div>
@@ -1845,7 +1845,7 @@ data<g> = ''</g>
 
 save()   
 
-<div class="example"><font color="purple"><b>FileBrowserSave</b></font>(file_type = <font color="green">'.oto'</font>)
+<div class="example"><font color="purple"><b>FileBrowserSave</b></font>(file_type = <font color="seagreen">'.oto'</font>)
 </div>
 </div></div>
 <div id="FirstPersonController"><div id="FirstPersonController" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FirstPersonController<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.first_person_controller</g><br><br><params class="params">FirstPersonController(**kwargs)</params>
@@ -1870,30 +1870,30 @@ land()
 
 <div class="example"><font color="purple">from</font> ursina.prefabs.first_person_controller <font color="purple">import</font> FirstPersonController
 Sky(color=color.gray)
-ground = <font color="olive">Entity</font>(model=<font color="green">'plane'</font>, scale=(<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>), color=color.yellow.tint(-.<font color="darkgoldenrod">2</font>), texture=<font color="green">'white_cube'</font>, texture_scale=(<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>), collider=<font color="green">'box'</font>)
-e = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, scale=(<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">5</font>,<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>), x=<font color="darkgoldenrod">2</font>, y=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">1</font>, rotation_y=<font color="darkgoldenrod">4</font><font color="darkgoldenrod">5</font>, collider=<font color="green">'box'</font>, texture=<font color="green">'white_cube'</font>)
+ground = <font color="olive">Entity</font>(model=<font color="seagreen">'plane'</font>, scale=(<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>), color=color.yellow.tint(-.<font color="darkgoldenrod">2</font>), texture=<font color="seagreen">'white_cube'</font>, texture_scale=(<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>), collider=<font color="seagreen">'box'</font>)
+e = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, scale=(<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">5</font>,<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>), x=<font color="darkgoldenrod">2</font>, y=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">1</font>, rotation_y=<font color="darkgoldenrod">4</font><font color="darkgoldenrod">5</font>, collider=<font color="seagreen">'box'</font>, texture=<font color="seagreen">'white_cube'</font>)
 e.texture_scale = (e.scale_z, e.scale_y)
-e = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, scale=(<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">5</font>,<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>), x=-<font color="darkgoldenrod">2</font>, y=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">1</font>, collider=<font color="green">'box'</font>, texture=<font color="green">'white_cube'</font>)
+e = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, scale=(<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">5</font>,<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>), x=-<font color="darkgoldenrod">2</font>, y=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">1</font>, collider=<font color="seagreen">'box'</font>, texture=<font color="seagreen">'white_cube'</font>)
 e.texture_scale = (e.scale_z, e.scale_y)
 
 player = <font color="purple"><b>FirstPersonController</b></font>(y=<font color="darkgoldenrod">1</font>)
 player.gun = None
 
-gun = Button(parent=scene, model=<font color="green">'cube'</font>, color=color.blue, origin_y=-.<font color="darkgoldenrod">5</font>, position=(<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">3</font>), collider=<font color="green">'box'</font>)
-gun.on_click = Sequence(Func(setattr, gun, <font color="green">'parent'</font>, camera), Func(setattr, player, <font color="green">'gun'</font>, gun))
+gun = Button(parent=scene, model=<font color="seagreen">'cube'</font>, color=color.blue, origin_y=-.<font color="darkgoldenrod">5</font>, position=(<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">3</font>), collider=<font color="seagreen">'box'</font>)
+gun.on_click = Sequence(Func(setattr, gun, <font color="seagreen">'parent'</font>, camera), Func(setattr, player, <font color="seagreen">'gun'</font>, gun))
 
 gun_<font color="darkgoldenrod">2</font> = duplicate(gun, z=<font color="darkgoldenrod">7</font>, x=<font color="darkgoldenrod">8</font>)
-slope = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, collider=<font color="green">'box'</font>, position=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">8</font>), scale=<font color="darkgoldenrod">6</font>, rotation=(<font color="darkgoldenrod">4</font><font color="darkgoldenrod">5</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">3</font><font color="darkgoldenrod">0</font>), texture=<font color="green">'brick'</font>, texture_scale=(<font color="darkgoldenrod">8</font>,<font color="darkgoldenrod">8</font>))
-slope = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, collider=<font color="green">'box'</font>, position=(<font color="darkgoldenrod">5</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>), scale=<font color="darkgoldenrod">6</font>, rotation=(<font color="darkgoldenrod">8</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), texture=<font color="green">'brick'</font>, texture_scale=(<font color="darkgoldenrod">8</font>,<font color="darkgoldenrod">8</font>))
-hill = <font color="olive">Entity</font>(model=<font color="green">'sphere'</font>, position=(<font color="darkgoldenrod">2</font><font color="darkgoldenrod">0</font>,-<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>), scale=(<font color="darkgoldenrod">2</font><font color="darkgoldenrod">5</font>,<font color="darkgoldenrod">2</font><font color="darkgoldenrod">5</font>,<font color="darkgoldenrod">2</font><font color="darkgoldenrod">5</font>), collider=<font color="green">'mesh'</font>, color=color.green)
+slope = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, collider=<font color="seagreen">'box'</font>, position=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">8</font>), scale=<font color="darkgoldenrod">6</font>, rotation=(<font color="darkgoldenrod">4</font><font color="darkgoldenrod">5</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">3</font><font color="darkgoldenrod">0</font>), texture=<font color="seagreen">'brick'</font>, texture_scale=(<font color="darkgoldenrod">8</font>,<font color="darkgoldenrod">8</font>))
+slope = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, collider=<font color="seagreen">'box'</font>, position=(<font color="darkgoldenrod">5</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>), scale=<font color="darkgoldenrod">6</font>, rotation=(<font color="darkgoldenrod">8</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), texture=<font color="seagreen">'brick'</font>, texture_scale=(<font color="darkgoldenrod">8</font>,<font color="darkgoldenrod">8</font>))
+hill = <font color="olive">Entity</font>(model=<font color="seagreen">'sphere'</font>, position=(<font color="darkgoldenrod">2</font><font color="darkgoldenrod">0</font>,-<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>), scale=(<font color="darkgoldenrod">2</font><font color="darkgoldenrod">5</font>,<font color="darkgoldenrod">2</font><font color="darkgoldenrod">5</font>,<font color="darkgoldenrod">2</font><font color="darkgoldenrod">5</font>), collider=<font color="seagreen">'mesh'</font>, color=color.green)
 <font color="purple">from</font> ursina.shaders <font color="purple">import</font> basic_lighting_shader
 for e in scene.entities:
     e.shader = basic_lighting_shader
 
 <font color="purple">def</font> input(key):
-    if key == <font color="green">'left mouse down'</font> and player.gun:
+    if key == <font color="seagreen">'left mouse down'</font> and player.gun:
         gun.blink(color.orange)
-        bullet = <font color="olive">Entity</font>(parent=gun, model=<font color="green">'cube'</font>, scale=.<font color="darkgoldenrod">1</font>, color=color.black)
+        bullet = <font color="olive">Entity</font>(parent=gun, model=<font color="seagreen">'cube'</font>, scale=.<font color="darkgoldenrod">1</font>, color=color.black)
         bullet.world_parent = scene
         bullet.animate_position(bullet.position+(bullet.forward*<font color="darkgoldenrod">5</font><font color="darkgoldenrod">0</font>), curve=curve.linear, duration=<font color="darkgoldenrod">1</font>)
         destroy(bullet, delay=<font color="darkgoldenrod">1</font>)
@@ -1930,17 +1930,17 @@ draw(<g>x, y</g>)
 input(<g>key</g>)   
 floodfill(<g>matrix, x, y, first=True</g>)   
 
-<div class="example"><font color="green">''</font>'
+<div class="example"><font color="seagreen">''</font>'
 pixel editor example, it's basically a drawing tool.
 can be useful for level editors and such
 here we create a new texture, but can also give it an exisitng texture to modify.
-<font color="green">''</font>'
+<font color="seagreen">''</font>'
 <font color="purple">from</font> ursina.prefabs.grid_editor <font color="purple">import</font> PixelEditor
-PixelEditor(texture=load_texture(<font color="green">'brick'</font>))
+PixelEditor(texture=load_texture(<font color="seagreen">'brick'</font>))
 
-<font color="green">''</font>'
+<font color="seagreen">''</font>'
 same as the pixel editor, but with text.
-<font color="green">''</font>'
+<font color="seagreen">''</font>'
 <font color="purple">from</font> ursina.prefabs.grid_editor <font color="purple">import</font> ASCIIEditor
 ASCIIEditor()
 </div>
@@ -1952,17 +1952,17 @@ grid<g> = [[texture.get_pixel(x,y) for y in range(texture.height)] for x in rang
 render()   
 save()   
 
-<div class="example"><font color="green">''</font>'
+<div class="example"><font color="seagreen">''</font>'
 pixel editor example, it's basically a drawing tool.
 can be useful for level editors and such
 here we create a new texture, but can also give it an exisitng texture to modify.
-<font color="green">''</font>'
+<font color="seagreen">''</font>'
 <font color="purple">from</font> ursina.prefabs.grid_editor <font color="purple">import</font> PixelEditor
-<font color="purple"><b>PixelEditor</b></font>(texture=load_texture(<font color="green">'brick'</font>))
+<font color="purple"><b>PixelEditor</b></font>(texture=load_texture(<font color="seagreen">'brick'</font>))
 
-<font color="green">''</font>'
+<font color="seagreen">''</font>'
 same as the pixel editor, but with text.
-<font color="green">''</font>'
+<font color="seagreen">''</font>'
 <font color="purple">from</font> ursina.prefabs.grid_editor <font color="purple">import</font> ASCIIEditor
 ASCIIEditor()
 </div>
@@ -1974,17 +1974,17 @@ scale<g> = (self.text_entity.width, self.h*Text.size*self.text_entity.line_heigh
 
 render()   
 
-<div class="example"><font color="green">''</font>'
+<div class="example"><font color="seagreen">''</font>'
 pixel editor example, it's basically a drawing tool.
 can be useful for level editors and such
 here we create a new texture, but can also give it an exisitng texture to modify.
-<font color="green">''</font>'
+<font color="seagreen">''</font>'
 <font color="purple">from</font> ursina.prefabs.grid_editor <font color="purple">import</font> PixelEditor
-PixelEditor(texture=load_texture(<font color="green">'brick'</font>))
+PixelEditor(texture=load_texture(<font color="seagreen">'brick'</font>))
 
-<font color="green">''</font>'
+<font color="seagreen">''</font>'
 same as the pixel editor, but with text.
-<font color="green">''</font>'
+<font color="seagreen">''</font>'
 <font color="purple">from</font> ursina.prefabs.grid_editor <font color="purple">import</font> ASCIIEditor
 <font color="purple"><b>ASCIIEditor</b></font>()
 </div>
@@ -2006,9 +2006,9 @@ value<g> = self.max_value</g>
 <div class="example">health_bar_<font color="darkgoldenrod">1</font> = <font color="purple"><b>HealthBar</b></font>(bar_color=color.lime.tint(-.<font color="darkgoldenrod">2</font><font color="darkgoldenrod">5</font>), roundness=.<font color="darkgoldenrod">5</font>, value=<font color="darkgoldenrod">5</font><font color="darkgoldenrod">0</font>)
 
 <font color="purple">def</font> input(key):
-    if key == <font color="green">'+'</font> or key == <font color="green">'+ hold'</font>:
+    if key == <font color="seagreen">'+'</font> or key == <font color="seagreen">'+ hold'</font>:
         health_bar_<font color="darkgoldenrod">1</font>.value += <font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>
-    if key == <font color="green">'-'</font> or key == <font color="green">'- hold'</font>:
+    if key == <font color="seagreen">'-'</font> or key == <font color="seagreen">'- hold'</font>:
         health_bar_<font color="darkgoldenrod">1</font>.value -= <font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>
 </div>
 </div></div>
@@ -2034,11 +2034,11 @@ reload_textures()
 reload_models()   
 
 <div class="example">window.set_z_order(window.Z_top)
-application.hot_reloader.path = application.asset_folder.parent.parent / <font color="green">'samples'</font> / <font color="green">'platformer.py'</font>
+application.hot_reloader.path = application.asset_folder.parent.parent / <font color="seagreen">'samples'</font> / <font color="seagreen">'platformer.py'</font>
 
-<font color="green">''</font>'
+<font color="seagreen">''</font>'
 By default you can press F<font color="darkgoldenrod">5</font> to reload the starting script, F<font color="darkgoldenrod">6</font> to re<font color="purple">import</font> textures and F<font color="darkgoldenrod">7</font> to reload models.
-<font color="green">''</font>'
+<font color="seagreen">''</font>'
 </div>
 </div></div>
 <div id="InputField"><div id="InputField" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">InputField<g>(<a style="color: gray;" href="#Button">Button</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.input_field</g><br><br><params class="params">InputField(default_value='', label='', max_lines=1, **kwargs)</params>
@@ -2051,13 +2051,13 @@ text
 
 input(<g>key</g>)   
 
-<div class="example">input_field = <font color="purple"><b>InputField</b></font>(default_value=<font color="green">'ælol'</font>, max_lines=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>)
+<div class="example">input_field = <font color="purple"><b>InputField</b></font>(default_value=<font color="seagreen">'ælol'</font>, max_lines=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>)
 print(input_field.default_value)
 
 <font color="purple">def</font> submit():
     print(input_field.text)
 
-Button(<font color="green">'submit'</font>, scale=.<font color="darkgoldenrod">1</font>, color=color.azure, y=-.<font color="darkgoldenrod">2</font>, on_click=submit).fit_to_text()
+Button(<font color="seagreen">'submit'</font>, scale=.<font color="darkgoldenrod">1</font>, color=color.azure, y=-.<font color="darkgoldenrod">2</font>, on_click=submit).fit_to_text()
 </div>
 </div></div>
 <div id="MemoryCounter"><div id="MemoryCounter" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">MemoryCounter<g>(<a style="color: gray;" href="#Text">Text</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.memory_counter</g><br><br><params class="params">MemoryCounter(**kwargs)</params>
@@ -2071,9 +2071,9 @@ i<g> = 0</g>
 update()   
 
 <div class="example"><font color="purple"><b>MemoryCounter</b></font>()
-<font color="green">''</font>'
+<font color="seagreen">''</font>'
 Displays the amount of memory used in the bottom right corner
-<font color="green">''</font>'
+<font color="seagreen">''</font>'
 </div>
 </div></div>
 <div id="Panel"><div id="Panel" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Panel<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.panel</g><br><br><params class="params">Panel(**kwargs)</params>
@@ -2112,12 +2112,12 @@ jump()
 start_fall()   
 land()   
 
-<div class="example">ground = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.white<font color="darkgoldenrod">3</font><font color="darkgoldenrod">3</font>, origin_y=.<font color="darkgoldenrod">5</font>, scale=(<font color="darkgoldenrod">2</font><font color="darkgoldenrod">0</font>, <font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>, <font color="darkgoldenrod">1</font>), collider=<font color="green">'box'</font>)
-wall = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.azure, origin=(-.<font color="darkgoldenrod">5</font>,.<font color="darkgoldenrod">5</font>), scale=(<font color="darkgoldenrod">5</font>,<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>), x=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>, y=.<font color="darkgoldenrod">5</font>, collider=<font color="green">'box'</font>)
-ceiling = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.white<font color="darkgoldenrod">3</font><font color="darkgoldenrod">3</font>, origin_y=.<font color="darkgoldenrod">5</font>, scale=(<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>, <font color="darkgoldenrod">1</font>, <font color="darkgoldenrod">1</font>), y=<font color="darkgoldenrod">4</font>, collider=<font color="green">'box'</font>)
+<div class="example">ground = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, color=color.white<font color="darkgoldenrod">3</font><font color="darkgoldenrod">3</font>, origin_y=.<font color="darkgoldenrod">5</font>, scale=(<font color="darkgoldenrod">2</font><font color="darkgoldenrod">0</font>, <font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>, <font color="darkgoldenrod">1</font>), collider=<font color="seagreen">'box'</font>)
+wall = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, color=color.azure, origin=(-.<font color="darkgoldenrod">5</font>,.<font color="darkgoldenrod">5</font>), scale=(<font color="darkgoldenrod">5</font>,<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>), x=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>, y=.<font color="darkgoldenrod">5</font>, collider=<font color="seagreen">'box'</font>)
+ceiling = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, color=color.white<font color="darkgoldenrod">3</font><font color="darkgoldenrod">3</font>, origin_y=.<font color="darkgoldenrod">5</font>, scale=(<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>, <font color="darkgoldenrod">1</font>, <font color="darkgoldenrod">1</font>), y=<font color="darkgoldenrod">4</font>, collider=<font color="seagreen">'box'</font>)
 
 <font color="purple">def</font> input(key):
-    if key == <font color="green">'c'</font>:
+    if key == <font color="seagreen">'c'</font>:
         wall.collision = not wall.collision
         print(wall.collision)
 
@@ -2147,19 +2147,19 @@ input(<g>key</g>)
 
 <div class="example">rm = <font color="purple"><b>RadialMenu</b></font>(
     buttons = (
-        RadialMenuButton(text=<font color="green">'<font color="darkgoldenrod">1</font>'</font>),
-        RadialMenuButton(text=<font color="green">'<font color="darkgoldenrod">2</font>'</font>),
-        RadialMenuButton(text=<font color="green">'<font color="darkgoldenrod">3</font>'</font>),
-        RadialMenuButton(text=<font color="green">'<font color="darkgoldenrod">4</font>'</font>),
-        RadialMenuButton(text=<font color="green">'<font color="darkgoldenrod">5</font>'</font>, scale=.<font color="darkgoldenrod">5</font>),
-        RadialMenuButton(text=<font color="green">'<font color="darkgoldenrod">6</font>'</font>, color=color.red),
+        RadialMenuButton(text=<font color="seagreen">'<font color="darkgoldenrod">1</font>'</font>),
+        RadialMenuButton(text=<font color="seagreen">'<font color="darkgoldenrod">2</font>'</font>),
+        RadialMenuButton(text=<font color="seagreen">'<font color="darkgoldenrod">3</font>'</font>),
+        RadialMenuButton(text=<font color="seagreen">'<font color="darkgoldenrod">4</font>'</font>),
+        RadialMenuButton(text=<font color="seagreen">'<font color="darkgoldenrod">5</font>'</font>, scale=.<font color="darkgoldenrod">5</font>),
+        RadialMenuButton(text=<font color="seagreen">'<font color="darkgoldenrod">6</font>'</font>, color=color.red),
         ),
     enabled = False
     )
-RadialMenuButton(text=<font color="green">'<font color="darkgoldenrod">6</font>'</font>, color=color.red,x =-.<font color="darkgoldenrod">5</font>, scale=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">6</font>),
+RadialMenuButton(text=<font color="seagreen">'<font color="darkgoldenrod">6</font>'</font>, color=color.red,x =-.<font color="darkgoldenrod">5</font>, scale=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">6</font>),
 <font color="purple">def</font> enable_radial_menu():
     rm.enabled = True
-cube = Button(parent=scene, model=<font color="green">'cube'</font>, color=color.orange, highlight_color=color.azure, on_click=enable_radial_menu)
+cube = Button(parent=scene, model=<font color="seagreen">'cube'</font>, color=color.orange, highlight_color=color.azure, on_click=enable_radial_menu)
 EditorCamera()
 </div>
 </div></div>
@@ -2169,19 +2169,19 @@ EditorCamera()
 
 <div class="example">rm = RadialMenu(
     buttons = (
-        <font color="purple"><b>RadialMenuButton</b></font>(text=<font color="green">'<font color="darkgoldenrod">1</font>'</font>),
-        <font color="purple"><b>RadialMenuButton</b></font>(text=<font color="green">'<font color="darkgoldenrod">2</font>'</font>),
-        <font color="purple"><b>RadialMenuButton</b></font>(text=<font color="green">'<font color="darkgoldenrod">3</font>'</font>),
-        <font color="purple"><b>RadialMenuButton</b></font>(text=<font color="green">'<font color="darkgoldenrod">4</font>'</font>),
-        <font color="purple"><b>RadialMenuButton</b></font>(text=<font color="green">'<font color="darkgoldenrod">5</font>'</font>, scale=.<font color="darkgoldenrod">5</font>),
-        <font color="purple"><b>RadialMenuButton</b></font>(text=<font color="green">'<font color="darkgoldenrod">6</font>'</font>, color=color.red),
+        <font color="purple"><b>RadialMenuButton</b></font>(text=<font color="seagreen">'<font color="darkgoldenrod">1</font>'</font>),
+        <font color="purple"><b>RadialMenuButton</b></font>(text=<font color="seagreen">'<font color="darkgoldenrod">2</font>'</font>),
+        <font color="purple"><b>RadialMenuButton</b></font>(text=<font color="seagreen">'<font color="darkgoldenrod">3</font>'</font>),
+        <font color="purple"><b>RadialMenuButton</b></font>(text=<font color="seagreen">'<font color="darkgoldenrod">4</font>'</font>),
+        <font color="purple"><b>RadialMenuButton</b></font>(text=<font color="seagreen">'<font color="darkgoldenrod">5</font>'</font>, scale=.<font color="darkgoldenrod">5</font>),
+        <font color="purple"><b>RadialMenuButton</b></font>(text=<font color="seagreen">'<font color="darkgoldenrod">6</font>'</font>, color=color.red),
         ),
     enabled = False
     )
-<font color="purple"><b>RadialMenuButton</b></font>(text=<font color="green">'<font color="darkgoldenrod">6</font>'</font>, color=color.red,x =-.<font color="darkgoldenrod">5</font>, scale=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">6</font>),
+<font color="purple"><b>RadialMenuButton</b></font>(text=<font color="seagreen">'<font color="darkgoldenrod">6</font>'</font>, color=color.red,x =-.<font color="darkgoldenrod">5</font>, scale=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">6</font>),
 <font color="purple">def</font> enable_radial_menu():
     rm.enabled = True
-cube = Button(parent=scene, model=<font color="green">'cube'</font>, color=color.orange, highlight_color=color.azure, on_click=enable_radial_menu)
+cube = Button(parent=scene, model=<font color="seagreen">'cube'</font>, color=color.orange, highlight_color=color.azure, on_click=enable_radial_menu)
 EditorCamera()
 </div>
 </div></div>
@@ -2212,9 +2212,9 @@ drop()
 update()   
 slide()   
 
-<div class="example">box = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, origin_y=-.<font color="darkgoldenrod">5</font>, scale=<font color="darkgoldenrod">1</font>, color=color.orange)
+<div class="example">box = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, origin_y=-.<font color="darkgoldenrod">5</font>, scale=<font color="darkgoldenrod">1</font>, color=color.orange)
 slider = <font color="purple"><b>Slider</b></font>(<font color="darkgoldenrod">0</font>, <font color="darkgoldenrod">2</font><font color="darkgoldenrod">0</font>, default=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>, height=Text.size*<font color="darkgoldenrod">3</font>, y=-.<font color="darkgoldenrod">4</font>, step=<font color="darkgoldenrod">1</font>   )
-slider = Thin<font color="purple"><b>Slider</b></font>(x=-.<font color="darkgoldenrod">4</font>, y=-.<font color="darkgoldenrod">4</font><font color="darkgoldenrod">7</font>, text=<font color="green">'contrast'</font>, dynamic=True)
+slider = Thin<font color="purple"><b>Slider</b></font>(x=-.<font color="darkgoldenrod">4</font>, y=-.<font color="darkgoldenrod">4</font><font color="darkgoldenrod">7</font>, text=<font color="seagreen">'contrast'</font>, dynamic=True)
 <font color="purple">def</font> scale_box():
     box.scale_y = slider.value
 slider.on_value_changed = scale_box
@@ -2224,9 +2224,9 @@ slider.on_value_changed = scale_box
 
 
 
-<div class="example">box = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, origin_y=-.<font color="darkgoldenrod">5</font>, scale=<font color="darkgoldenrod">1</font>, color=color.orange)
+<div class="example">box = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, origin_y=-.<font color="darkgoldenrod">5</font>, scale=<font color="darkgoldenrod">1</font>, color=color.orange)
 slider = Slider(<font color="darkgoldenrod">0</font>, <font color="darkgoldenrod">2</font><font color="darkgoldenrod">0</font>, default=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>, height=Text.size*<font color="darkgoldenrod">3</font>, y=-.<font color="darkgoldenrod">4</font>, step=<font color="darkgoldenrod">1</font>   )
-slider = <font color="purple"><b>ThinSlider</b></font>(x=-.<font color="darkgoldenrod">4</font>, y=-.<font color="darkgoldenrod">4</font><font color="darkgoldenrod">7</font>, text=<font color="green">'contrast'</font>, dynamic=True)
+slider = <font color="purple"><b>ThinSlider</b></font>(x=-.<font color="darkgoldenrod">4</font>, y=-.<font color="darkgoldenrod">4</font><font color="darkgoldenrod">7</font>, text=<font color="seagreen">'contrast'</font>, dynamic=True)
 <font color="purple">def</font> scale_box():
     box.scale_y = slider.value
 slider.on_value_changed = scale_box
@@ -2244,7 +2244,7 @@ scale_x<g> = self.scale_y * self.aspect_ratio</g>
 camera.fov = <font color="darkgoldenrod">1</font>
 Sprite.ppu = <font color="darkgoldenrod">1</font><font color="darkgoldenrod">6</font>
 Texture.default_filtering = None
-s = <font color="purple"><b>Sprite</b></font>(<font color="green">'brick'</font>, filtering=False)
+s = <font color="purple"><b>Sprite</b></font>(<font color="seagreen">'brick'</font>, filtering=False)
 </div>
 </div></div>
 <div id="TextField"><div id="TextField" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">TextField<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.text_field</g><br><br><params class="params">TextField(**kwargs)</params>
@@ -2333,15 +2333,15 @@ Button.color = color._<font color="darkgoldenrod">2</font><font color="darkgolde
 window.color = color._<font color="darkgoldenrod">2</font><font color="darkgoldenrod">5</font>
 
 Text.size = <font color="darkgoldenrod">1</font>/window.fullscreen_size[<font color="darkgoldenrod">1</font>]*<font color="darkgoldenrod">1</font><font color="darkgoldenrod">6</font>
-Text.default_font = <font color="green">'consola.ttf'</font>
+Text.default_font = <font color="seagreen">'consola.ttf'</font>
 Text.default_resolution = <font color="darkgoldenrod">1</font><font color="darkgoldenrod">6</font>*<font color="darkgoldenrod">2</font>
 te = <font color="purple"><b>TextField</b></font>(max_lines=<font color="darkgoldenrod">3</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>, scale=<font color="darkgoldenrod">1</font>)
-te.text = dedent(<font color="green">''</font>'
+te.text = dedent(<font color="seagreen">''</font>'
     Lorem ipsum dolor sit amet, consectetur adipiscing elit.
     Aliquam sapien tellus, venenatis sit amet ante et, malesuada porta risus.
     Etiam et mi luctus, viverra urna at, maximus eros. Sed dictum faucibus purus,
     nec rutrum ipsum condimentum in. Mauris iaculis arcu nec justo rutrum euismod.
-    Suspendisse dolor tortor, congue id erat sit amet, sollicitudin facilisis velit.<font color="green">''</font>'
+    Suspendisse dolor tortor, congue id erat sit amet, sollicitudin facilisis velit.<font color="seagreen">''</font>'
     )[<font color="darkgoldenrod">1</font>:]
 te.selection = [(<font color="darkgoldenrod">2</font><font color="darkgoldenrod">5</font>,<font color="darkgoldenrod">0</font>), (<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">3</font>)]
 te.draw_selection()
@@ -2363,11 +2363,11 @@ update()
 <div class="example">app = Ursina()
 
     tooltip_test = <font color="purple"><b>Tooltip</b></font>(
-    <font color="green">'<scale:<font color="darkgoldenrod">1</font>.<font color="darkgoldenrod">5</font>><pink>'</font> + <font color="green">'Rainstorm'</font> + <font color="green">'<scale:<font color="darkgoldenrod">1</font>> \n \n'</font> +
-<font color="green">''</font>'Summon a <blue>rain
+    <font color="seagreen">'<scale:<font color="darkgoldenrod">1</font>.<font color="darkgoldenrod">5</font>><pink>'</font> + <font color="seagreen">'Rainstorm'</font> + <font color="seagreen">'<scale:<font color="darkgoldenrod">1</font>> \n \n'</font> +
+<font color="seagreen">''</font>'Summon a <blue>rain
 storm <default>to deal <font color="darkgoldenrod">5</font> <blue>water
 damage <default>to <red>everyone, <default>including <orange>yourself. <default>
-Lasts for <font color="darkgoldenrod">4</font> rounds.<font color="green">''</font><font color="green">'.replace('</font>\n<font color="green">', '</font> '))
+Lasts for <font color="darkgoldenrod">4</font> rounds.<font color="seagreen">''</font><font color="seagreen">'.replace('</font>\n<font color="seagreen">', '</font> '))
 
     tooltip_test.enabled = True
     app.run()
@@ -2420,15 +2420,15 @@ height<g> = height</g>
 
 
 <div class="example">WindowPanel(
-    title=<font color="green">'Custom Window'</font>,
+    title=<font color="seagreen">'Custom Window'</font>,
     content=(
-        Text(<font color="green">'Name:'</font>),
-        InputField(name=<font color="green">'name_field'</font>),
-        Text(<font color="green">'Age:'</font>),
-        InputField(name=<font color="green">'age_field'</font>),
-        Text(<font color="green">'Phone Number:'</font>),
-        InputField(name=<font color="green">'phone_number_field'</font>),
-        Button(text=<font color="green">'Submit'</font>, color=color.green),
+        Text(<font color="seagreen">'Name:'</font>),
+        InputField(name=<font color="seagreen">'name_field'</font>),
+        Text(<font color="seagreen">'Age:'</font>),
+        InputField(name=<font color="seagreen">'age_field'</font>),
+        Text(<font color="seagreen">'Phone Number:'</font>),
+        InputField(name=<font color="seagreen">'phone_number_field'</font>),
+        Button(text=<font color="seagreen">'Submit'</font>, color=color.green),
         ),
     )
 </div>
@@ -2443,15 +2443,15 @@ on_enable()
 close()   
 
 <div class="example"><font color="purple"><b>WindowPanel</b></font>(
-    title=<font color="green">'Custom Window'</font>,
+    title=<font color="seagreen">'Custom Window'</font>,
     content=(
-        Text(<font color="green">'Name:'</font>),
-        InputField(name=<font color="green">'name_field'</font>),
-        Text(<font color="green">'Age:'</font>),
-        InputField(name=<font color="green">'age_field'</font>),
-        Text(<font color="green">'Phone Number:'</font>),
-        InputField(name=<font color="green">'phone_number_field'</font>),
-        Button(text=<font color="green">'Submit'</font>, color=color.green),
+        Text(<font color="seagreen">'Name:'</font>),
+        InputField(name=<font color="seagreen">'name_field'</font>),
+        Text(<font color="seagreen">'Age:'</font>),
+        InputField(name=<font color="seagreen">'age_field'</font>),
+        Text(<font color="seagreen">'Phone Number:'</font>),
+        InputField(name=<font color="seagreen">'phone_number_field'</font>),
+        Button(text=<font color="seagreen">'Submit'</font>, color=color.green),
         ),
     )
 </div>
@@ -2462,7 +2462,7 @@ colorize(<g>model, left=color.white, right=color.blue, down=color.red, up=color.
 
 <div class="example"><font color="purple">import</font> random
 for i in range(<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>):
-    e = <font color="olive">Entity</font>(model=<font color="green">'sphere'</font>)
+    e = <font color="olive">Entity</font>(model=<font color="seagreen">'sphere'</font>)
     e.position = (random.uniform(-<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">3</font>),random.uniform(-<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">3</font>),random.uniform(-<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">3</font>))
     e.rotation = (random.uniform(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">3</font><font color="darkgoldenrod">6</font><font color="darkgoldenrod">0</font>),random.uniform(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">3</font><font color="darkgoldenrod">6</font><font color="darkgoldenrod">0</font>),random.uniform(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">3</font><font color="darkgoldenrod">6</font><font color="darkgoldenrod">0</font>))
     e.scale = random.uniform(<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">3</font>)
@@ -2479,9 +2479,9 @@ combine(<g>entity, analyze=False, auto_destroy=True</g>)
 get_vertices(<g>entity, relative_to=None</g>)   
 
 <div class="example">p = <font color="olive">Entity</font>()
-e<font color="darkgoldenrod">1</font> = <font color="olive">Entity</font>(parent=p, model=<font color="green">'sphere'</font>, y=<font color="darkgoldenrod">1</font>.<font color="darkgoldenrod">5</font>, color=color.pink)
-e<font color="darkgoldenrod">2</font> = <font color="olive">Entity</font>(parent=p, model=<font color="green">'cube'</font>, color=color.yellow, x=<font color="darkgoldenrod">1</font>, origin_y=-.<font color="darkgoldenrod">5</font>)
-e<font color="darkgoldenrod">3</font> = <font color="olive">Entity</font>(parent=e<font color="darkgoldenrod">2</font>, model=<font color="green">'cube'</font>, color=color.yellow, y=<font color="darkgoldenrod">2</font>, scale=.<font color="darkgoldenrod">5</font>)
+e<font color="darkgoldenrod">1</font> = <font color="olive">Entity</font>(parent=p, model=<font color="seagreen">'sphere'</font>, y=<font color="darkgoldenrod">1</font>.<font color="darkgoldenrod">5</font>, color=color.pink)
+e<font color="darkgoldenrod">2</font> = <font color="olive">Entity</font>(parent=p, model=<font color="seagreen">'cube'</font>, color=color.yellow, x=<font color="darkgoldenrod">1</font>, origin_y=-.<font color="darkgoldenrod">5</font>)
+e<font color="darkgoldenrod">3</font> = <font color="olive">Entity</font>(parent=e<font color="darkgoldenrod">2</font>, model=<font color="seagreen">'cube'</font>, color=color.yellow, y=<font color="darkgoldenrod">2</font>, scale=.<font color="darkgoldenrod">5</font>)
 p.combine()
 
 
@@ -2503,10 +2503,10 @@ norms = generate_normals(vertices)
 <div id="grid_layout"><div id="grid_layout" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">grid_layout</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.scripts.grid_layout</g><br><br>
 grid_layout(<g>l, max_x=8, max_y=8, spacing=(0,0,0), origin=(-.5,.5,0), offset=(0,0,0)</g>)   
 
-<div class="example">center = <font color="olive">Entity</font>(model=<font color="green">'quad'</font>, scale=.<font color="darkgoldenrod">1</font>, color=color.red)
+<div class="example">center = <font color="olive">Entity</font>(model=<font color="seagreen">'quad'</font>, scale=.<font color="darkgoldenrod">1</font>, color=color.red)
 p = <font color="olive">Entity</font>()
 for i in range(<font color="darkgoldenrod">4</font>*<font color="darkgoldenrod">5</font>):
-    b = Button(parent=p, model=<font color="green">'quad'</font>, scale=.<font color="darkgoldenrod">5</font>, scale_x=<font color="darkgoldenrod">1</font>, text=str(i), color=color.tint(color.random_color(),-.<font color="darkgoldenrod">6</font>))
+    b = Button(parent=p, model=<font color="seagreen">'quad'</font>, scale=.<font color="darkgoldenrod">5</font>, scale_x=<font color="darkgoldenrod">1</font>, text=str(i), color=color.tint(color.random_color(),-.<font color="darkgoldenrod">6</font>))
     b.text_entity.world_scale = <font color="darkgoldenrod">1</font>
 t = time.time()
 grid_layout(p.children, max_x=<font color="darkgoldenrod">7</font>, max_y=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>, origin=(<font color="darkgoldenrod">0</font>, .<font color="darkgoldenrod">5</font>))
@@ -2523,11 +2523,11 @@ merge_overlapping_vertices(<g>vertices, triangles=None, max_distance=.1</g>)
 tris = (<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">2</font>,<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">4</font>,<font color="darkgoldenrod">5</font>)
 
 new_verts, new_tris = merge_overlapping_vertices(verts, tris)
-print(<font color="green">'verts:'</font>, (verts), (new_verts))
-print(<font color="green">'tris:'</font>, (tris), (new_tris))
+print(<font color="seagreen">'verts:'</font>, (verts), (new_verts))
+print(<font color="seagreen">'tris:'</font>, (tris), (new_tris))
 
 
-e = <font color="olive">Entity</font>(model=Mesh(new_verts, new_tris, mode=<font color="green">'triangle'</font>))
+e = <font color="olive">Entity</font>(model=Mesh(new_verts, new_tris, mode=<font color="seagreen">'triangle'</font>))
 EditorCamera()
 </div>
 </div></div>
@@ -2546,7 +2546,7 @@ update()
 <div id="project_uvs"><div id="project_uvs" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">project_uvs</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.scripts.project_uvs</g><br><br>
 project_uvs(<g>model, aspect_ratio=1, direction='forward', regenerate=False</g>)   
 
-<div class="example">e = <font color="olive">Entity</font>(model=<font color="green">'sphere'</font>, texture=<font color="green">'ursina_logo'</font>)
+<div class="example">e = <font color="olive">Entity</font>(model=<font color="seagreen">'sphere'</font>, texture=<font color="seagreen">'ursina_logo'</font>)
 project_uvs(e.model)
 EditorCamera()
 </div>
@@ -2560,12 +2560,12 @@ direction<g> = (0,1,0)</g>
 
 input(<g>key</g>)   
 
-<div class="example"><font color="green">''</font>'
+<div class="example"><font color="seagreen">''</font>'
 This will make target entity move up or down when you hover the entity/its children 
 while scrolling the scroll wheel.
-<font color="green">''</font>'
+<font color="seagreen">''</font>'
 
-p = Panel(scale=(.<font color="darkgoldenrod">4</font>, .<font color="darkgoldenrod">8</font>), collider=<font color="green">'box'</font>)
+p = Panel(scale=(.<font color="darkgoldenrod">4</font>, .<font color="darkgoldenrod">8</font>), collider=<font color="seagreen">'box'</font>)
 p.add_script(<font color="purple"><b>Scrollable</b></font>())
 </div>
 </div></div>
@@ -2579,13 +2579,13 @@ rotation_offset<g> = rotation_offset</g>
 
 update()   
 
-<div class="example">player = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.orange)
+<div class="example">player = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, color=color.orange)
 
 <font color="purple">def</font> update():
-    player.x += held_keys[<font color="green">'d'</font>] * .<font color="darkgoldenrod">1</font>
-    player.x -= held_keys[<font color="green">'a'</font>] * .<font color="darkgoldenrod">1</font>
+    player.x += held_keys[<font color="seagreen">'d'</font>] * .<font color="darkgoldenrod">1</font>
+    player.x -= held_keys[<font color="seagreen">'a'</font>] * .<font color="darkgoldenrod">1</font>
 
-<font color="olive">Entity</font>(model=<font color="green">'cube'</font>).add_script(<font color="purple"><b>SmoothFollow</b></font>(target=player, offset=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">2</font>,<font color="darkgoldenrod">0</font>)))
+<font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>).add_script(<font color="purple"><b>SmoothFollow</b></font>(target=player, offset=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">2</font>,<font color="darkgoldenrod">0</font>)))
 </div>
 </div></div>
 <div id="models"><div id="models" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">models</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;">'circle'
@@ -2635,9 +2635,9 @@ update()
 
 
 
-<div class="example">e = <font color="olive">Entity</font>(model=<font color="purple"><b>Circle</b></font>(<font color="darkgoldenrod">8</font>, mode=<font color="green">'line'</font>, thickness=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>), color=color.color(<font color="darkgoldenrod">6</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>,.<font color="darkgoldenrod">3</font>), x=<font color="darkgoldenrod">6</font>)
+<div class="example">e = <font color="olive">Entity</font>(model=<font color="purple"><b>Circle</b></font>(<font color="darkgoldenrod">8</font>, mode=<font color="seagreen">'line'</font>, thickness=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>), color=color.color(<font color="darkgoldenrod">6</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>,.<font color="darkgoldenrod">3</font>), x=<font color="darkgoldenrod">6</font>)
 print(e.model.recipe)
-origin = <font color="olive">Entity</font>(model=<font color="green">'quad'</font>, color=color.orange, scale=(.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>, .<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>))
+origin = <font color="olive">Entity</font>(model=<font color="seagreen">'quad'</font>, color=color.orange, scale=(.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>, .<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>))
 ed = EditorCamera(rotation_speed = <font color="darkgoldenrod">2</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>, panning_speed=<font color="darkgoldenrod">2</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>)
 </div>
 </div></div>
@@ -2646,7 +2646,7 @@ ed = EditorCamera(rotation_speed = <font color="darkgoldenrod">2</font><font col
 
 
 <div class="example"><font color="olive">Entity</font>(model=<font color="purple"><b>Cone</b></font>(<font color="darkgoldenrod">8</font>, direction=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>)), color=color.color(<font color="darkgoldenrod">6</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>,.<font color="darkgoldenrod">3</font>))
-origin = <font color="olive">Entity</font>(model=<font color="green">'quad'</font>, color=color.orange, scale=(.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>, .<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>))
+origin = <font color="olive">Entity</font>(model=<font color="seagreen">'quad'</font>, color=color.orange, scale=(.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>, .<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>))
 ed = EditorCamera(rotation_speed = <font color="darkgoldenrod">2</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>, panning_speed=<font color="darkgoldenrod">2</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>)
 </div>
 </div></div>
@@ -2655,7 +2655,7 @@ ed = EditorCamera(rotation_speed = <font color="darkgoldenrod">2</font><font col
 
 
 <div class="example"><font color="olive">Entity</font>(model=<font color="purple"><b>Cylinder</b></font>(<font color="darkgoldenrod">6</font>, start=-.<font color="darkgoldenrod">5</font>), color=color.color(<font color="darkgoldenrod">6</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>,.<font color="darkgoldenrod">3</font>))
-origin = <font color="olive">Entity</font>(model=<font color="green">'quad'</font>, color=color.orange, scale=(<font color="darkgoldenrod">5</font>, .<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>))
+origin = <font color="olive">Entity</font>(model=<font color="seagreen">'quad'</font>, color=color.orange, scale=(<font color="darkgoldenrod">5</font>, .<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>))
 ed = EditorCamera(rotation_speed = <font color="darkgoldenrod">2</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>, panning_speed=<font color="darkgoldenrod">2</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>)
 </div>
 </div></div>
@@ -2674,10 +2674,10 @@ vertices, self.triangles<g> = list(), list()</g>
 uvs<g> = list()</g> 
 
 
-<div class="example">front =  <font color="olive">Entity</font>(model=<font color="purple"><b>Plane</b></font>(subdivisions=(<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">6</font>)), texture=<font color="green">'brick'</font>, rotation_x=-<font color="darkgoldenrod">9</font><font color="darkgoldenrod">0</font>)
+<div class="example">front =  <font color="olive">Entity</font>(model=<font color="purple"><b>Plane</b></font>(subdivisions=(<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">6</font>)), texture=<font color="seagreen">'brick'</font>, rotation_x=-<font color="darkgoldenrod">9</font><font color="darkgoldenrod">0</font>)
 
 _ed = EditorCamera()
-<font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.green, scale=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>)
+<font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, color=color.green, scale=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>)
 </div>
 </div></div>
 <div id="Prismatoid"><div id="Prismatoid" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Prismatoid<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.models.procedural.prismatoid</g><br><br><params class="params">Prismatoid(base_shape=Quad, origin=(0,0), path=((0,0,0),(0,1,0)), thicknesses=((1,1),), look_at=True, mode='triangle', **kwargs)</params>
@@ -2691,7 +2691,7 @@ e = <font color="olive">Entity</font>(model=<font color="purple"><b>Prismatoid</
 e.model.colorize()
 
 EditorCamera()
-origin = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.magenta)
+origin = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, color=color.magenta)
 origin.scale *= .<font color="darkgoldenrod">2</font><font color="darkgoldenrod">5</font>
 </div>
 </div></div>
@@ -2704,9 +2704,9 @@ uvs<g> = list()</g>
 vertices<g> = [(v[0]-offset[0], v[1]-offset[1], v[2]-offset[2]) for v in self.vertices]</g> 
 
 
-<div class="example"><font color="olive">Entity</font>(model=<font color="purple"><b>Quad</b></font>(scale=(<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">1</font>), thickness=<font color="darkgoldenrod">3</font>, segments=<font color="darkgoldenrod">3</font>, mode=<font color="green">'line'</font>), color = color.color(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>,.<font color="darkgoldenrod">7</font>))
+<div class="example"><font color="olive">Entity</font>(model=<font color="purple"><b>Quad</b></font>(scale=(<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">1</font>), thickness=<font color="darkgoldenrod">3</font>, segments=<font color="darkgoldenrod">3</font>, mode=<font color="seagreen">'line'</font>), color = color.color(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>,.<font color="darkgoldenrod">7</font>))
 <font color="olive">Entity</font>(scale=(<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">1</font>), model=<font color="purple"><b>Quad</b></font>(aspect=<font color="darkgoldenrod">3</font>), color = color.color(<font color="darkgoldenrod">6</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>,.<font color="darkgoldenrod">3</font>))
-origin = <font color="olive">Entity</font>(model=<font color="green">'quad'</font>, color=color.orange, scale=(.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>, .<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>))
+origin = <font color="olive">Entity</font>(model=<font color="seagreen">'quad'</font>, color=color.orange, scale=(.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>, .<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>))
 camera.z = -<font color="darkgoldenrod">5</font>
 </div>
 </div></div>
@@ -2717,7 +2717,7 @@ sub_divide(<g>v_0, v_1, v_2, sub_divisions, vertices, faces</g>)
 
 <div class="example"><font color="olive">Entity</font>(model=<font color="purple"><b>Sphere</b></font>(), color=color.color(<font color="darkgoldenrod">6</font><font color="darkgoldenrod">0</font>, <font color="darkgoldenrod">1</font>, <font color="darkgoldenrod">1</font>, .<font color="darkgoldenrod">5</font>), x=<font color="darkgoldenrod">0</font>)
 <font color="olive">Entity</font>(model=<font color="purple"><b>Sphere</b></font>(radius=<font color="darkgoldenrod">0</font>.<font color="darkgoldenrod">1</font><font color="darkgoldenrod">5</font>, subdivisions=<font color="darkgoldenrod">6</font>), color=color.color(<font color="darkgoldenrod">1</font>, <font color="darkgoldenrod">6</font><font color="darkgoldenrod">0</font>, <font color="darkgoldenrod">1</font>, .<font color="darkgoldenrod">5</font>), x=<font color="darkgoldenrod">4</font>)
-origin = <font color="olive">Entity</font>(model=<font color="green">'quad'</font>, color=color.orange, scale=(.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>, .<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>))
+origin = <font color="olive">Entity</font>(model=<font color="seagreen">'quad'</font>, color=color.orange, scale=(.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>, .<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>))
 ed = EditorCamera(rotation_speed=<font color="darkgoldenrod">2</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>, panning_speed=<font color="darkgoldenrod">2</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>)
 </div>
 </div></div>
@@ -2734,7 +2734,7 @@ normals<g> = list()</g>
 height_values<g> = [[j[0]/255 for j in i] for i in self.height_values]</g> 
 
 
-<div class="example">e = <font color="olive">Entity</font>(model=<font color="purple"><b>Terrain</b></font>(<font color="green"><font color="green">'heightmap_<font color="darkgoldenrod">1</font>'</font></font>, skip=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">6</font>), scale=(<font color="darkgoldenrod">2</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">5</font>,<font color="darkgoldenrod">2</font><font color="darkgoldenrod">0</font>), texture=<font color="green"><font color="green">'heightmap_<font color="darkgoldenrod">1</font>'</font></font>)
+<div class="example">e = <font color="olive">Entity</font>(model=<font color="purple"><b>Terrain</b></font>(<font color="seagreen"><font color="seagreen">'heightmap_<font color="darkgoldenrod">1</font>'</font></font>, skip=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">6</font>), scale=(<font color="darkgoldenrod">2</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">5</font>,<font color="darkgoldenrod">2</font><font color="darkgoldenrod">0</font>), texture=<font color="seagreen"><font color="seagreen">'heightmap_<font color="darkgoldenrod">1</font>'</font></font>)
 EditorCamera()
 Sky()
 </div>
