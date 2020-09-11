@@ -5,12 +5,12 @@ class CollisionZone(Entity):
     def __init__(self, radius=2, target_entities=None, **kwargs):
         super().__init__(**kwargs)
         self.radius = radius
-        self.entities_with_mesh_colliders = target_entities
+        self.entities_with_mesh_colliders = target_entities # defaults to all entities with a mesh collider
         if not self.entities_with_mesh_colliders:
             self.entities_with_mesh_colliders = [e for e in scene.entities if isinstance(e.collider, MeshCollider)]
 
-        self._t = 0
         self._update_rate = .25
+        self._t = self._update_rate
         self._prev_pos = self.world_position
 
 
@@ -41,7 +41,7 @@ class CollisionZone(Entity):
 if __name__ == '__main__':
     '''
     This will only enable mesh colliders' collision polygons within a certain range,
-    in order to improve performance. 
+    in order to improve performance.
     '''
 
     from ursina.shaders import basic_lighting_shader
