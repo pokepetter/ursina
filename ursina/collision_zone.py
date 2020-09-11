@@ -21,12 +21,6 @@ class CollisionZone(Entity):
 
         self._t = 0
 
-        # only update after we've moved a certain distance
-        if distance_xz(self.world_position, self._prev_pos) < self.radius/2:
-            return
-        else:
-            self._prev_pos = self.world_position
-
 
         for e in self.entities_with_mesh_colliders:
             e.collider.node.clearSolids()
