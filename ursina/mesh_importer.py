@@ -12,7 +12,7 @@ imported_meshes = dict()
 
 def load_model(name, path=application.asset_folder):
     if name in imported_meshes:
-        print('load cached model', name)
+        # print('load cached model', name)
         try:
             return copy(imported_meshes[name])
         except:
