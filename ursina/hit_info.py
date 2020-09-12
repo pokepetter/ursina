@@ -19,3 +19,7 @@ class HitInfo:
 
         for key, value in kwargs.items():
             setattr(self, key, value)
+
+
+    def __bool__(self):
+        return self.hit

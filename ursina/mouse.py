@@ -26,7 +26,7 @@ class Mouse():
         self.prev_click_time = time.time()
         self.double_click_distance = .5
 
-        self.hovered_entity = None
+        self.hovered_entity = None # returns the closest hovered entity with a collider.
         self.left = False
         self.right = False
         self.middle = False
@@ -236,7 +236,7 @@ class Mouse():
         return self.collision.world_normal
 
     @property
-    def point(self):
+    def point(self): # returns the point hit in local space
         if self.collision:
             return self.collision.point
         return None

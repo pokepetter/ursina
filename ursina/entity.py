@@ -1050,10 +1050,12 @@ class Entity(NodePath):
 
 
     def intersects(self, traverse_target=scene, ignore=(), debug=False):
-        if not self.collision or not self.collider:
-            return False
-
         from ursina.hit_info import HitInfo
+        
+        if not self.collision or not self.collider:
+            self.hit = HitInfo(hit=False)
+            return self.hit
+
         from ursina import distance
         if not hasattr(self, '_picker'):
             from panda3d.core import CollisionTraverser, CollisionNode, CollisionHandlerQueue
@@ -1112,10 +1114,10 @@ class Entity(NodePath):
         self.hit.world_point = world_point
         self.hit.distance = hit_dist
 
-        normal = collision.get_surface_normal(collision.get_into_node_path().parent)
+        normal = collision.get_surface_normal(collision.get_into_node_path().parent).normalized()
         self.hit.normal = Vec3(*normal)
 
-        normal = collision.get_surface_normal(render)
+        normal = collision.get_surface_normal(render).normalized()
         self.hit.world_normal = Vec3(*normal)
         return self.hit
 

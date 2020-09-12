@@ -36,6 +36,7 @@ for y in range(3):
                 player.color = color.azure
 
             cursor.text = player.name
+            cursor.color = player.color
 
         b.on_click = on_click
 
