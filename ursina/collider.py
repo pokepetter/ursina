@@ -74,28 +74,29 @@ class MeshCollider(Collider):
             for tri in mesh.triangles:
                 if len(tri) == 3:
                     poly = CollisionPolygon(
-                        Vec3(mesh.vertices[tri[0]]) + center,
-                        Vec3(mesh.vertices[tri[1]]) + center,
-                        Vec3(mesh.vertices[tri[2]]) + center)
+                        Vec3(mesh.vertices[tri[2]]),
+                        Vec3(mesh.vertices[tri[1]]),
+                        Vec3(mesh.vertices[tri[0]]),
+                        )
                     self.collision_polygons.append(poly)
                 elif len(tri) == 4:
                     poly = CollisionPolygon(
-                        Vec3(mesh.vertices[tri[0]]) + center,
-                        Vec3(mesh.vertices[tri[1]]) + center,
-                        Vec3(mesh.vertices[tri[2]]) + center)
+                        Vec3(mesh.vertices[tri[2]]),
+                        Vec3(mesh.vertices[tri[1]]),
+                        Vec3(mesh.vertices[tri[0]]))
                     self.collision_polygons.append(poly)
                     poly = CollisionPolygon(
-                        Vec3(mesh.vertices[tri[2]]) + center,
-                        Vec3(mesh.vertices[tri[3]]) + center,
-                        Vec3(mesh.vertices[tri[0]]) + center)
+                        Vec3(mesh.vertices[tri[0]]),
+                        Vec3(mesh.vertices[tri[3]]),
+                        Vec3(mesh.vertices[tri[2]]))
                     self.collision_polygons.append(poly)
 
         elif mesh.mode == 'triangle':
             for i in range(0, len(mesh.vertices), 3):
                 poly = CollisionPolygon(
-                    Vec3(mesh.vertices[i]) + center,
-                    Vec3(mesh.vertices[i+1]) + center,
-                    Vec3(mesh.vertices[i+2]) + center
+                    Vec3(mesh.vertices[i+2]),
+                    Vec3(mesh.vertices[i+1]),
+                    Vec3(mesh.vertices[i]),
                     )
                 self.collision_polygons.append(poly)
 
@@ -123,26 +124,10 @@ if __name__ == '__main__':
 
     e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   # add BoxCollider at custom positions and size.
     e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      # add SphereCollider at custom positions and size.
-    # e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      # add MeshCollider with custom shape and center.
+    e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      # add MeshCollider with custom shape and center.
 
     m = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
     e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_color=color.yellow)
-
-    interactor = Entity(model='cube', scale=.1, collider='box')
-
-    # def update():
-    #     interactor.x += (held_keys['d'] - held_keys['a']) * time.dt * 2
-    #     interactor.z += (held_keys['w'] - held_keys['s']) * time.dt * 2
-    #     interactor.y += (held_keys['e'] - held_keys['q']) * time.dt * 2
-    #
-    #     e.collider.node.clearSolids()
-    #     for tri in e.collider.collision_polygons:
-    #         # print(tri.getPoint(0))
-    #         # e.collider.node_path.node().removeSolid(0)
-    #         if distance_xz(interactor.position, tri.getPoint(0)) < .5:
-    #             # node.addSolid(cp)
-    #             e.collider.node.addSolid(tri)
-
 
     EditorCamera()
     app.run()
