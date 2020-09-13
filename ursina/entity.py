@@ -1049,7 +1049,7 @@ class Entity(NodePath):
 
 
 
-    def intersects(self, traverse_target=scene, ignore=None, debug=False):
+    def intersects(self, traverse_target=scene, ignore=[], debug=False):
         from ursina.hit_info import HitInfo
 
         if not self.collision or not self.collider:
