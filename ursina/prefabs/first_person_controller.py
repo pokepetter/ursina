@@ -24,8 +24,6 @@ class FirstPersonController(Entity):
         self.jumping = False
         self.air_time = 0
 
-        # self.sphere = Entity(parent=self, collider='sphere', scale=.5, y=.5, model='sphere')
-
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
@@ -45,18 +43,10 @@ class FirstPersonController(Entity):
             + self.right * (held_keys['d'] - held_keys['a'])
             ).normalized()
 
-        # self.sphere.x = (held_keys['d'] - held_keys['a']) * self.speed * time.dt
-        # self.sphere.z = (held_keys['w'] - held_keys['s']) * self.speed * time.dt
-        origin = self.world_position + (self.up*.5) + (self.direction/2)
-        hit_info = raycast(origin , self.direction, ignore=[self,], distance=.25, debug=False)
-        # hit_info = self.sphere.intersects()
+        origin = self.world_position + (self.up*.5)
+        hit_info = raycast(origin , self.direction, ignore=[self,], distance=.5, debug=False)
         if not hit_info.hit:
             self.position += self.direction * self.speed * time.dt
-        else:
-            # print(hit_info.world_point)
-            if hit_info.world_normal.y > .7:
-                self.world_position = lerp(self.world_position, hit_info.world_point, time.dt*4)
-                return
 
 
         # # gravity
@@ -66,6 +56,9 @@ class FirstPersonController(Entity):
             if not self.grounded:
                 self.land()
             self.grounded = True
+            # make sure it's not a wall and that the point is not too far up
+            if ray.world_normal.y > .7 and ray.world_point.y - self.world_y < .5: # walk up slope
+                self.y = ray.world_point[1]
             return
         else:
             self.grounded = False
@@ -121,7 +114,7 @@ if __name__ == '__main__':
     slope = Entity(model='cube', collider='box', position=(0,0,8), scale=6, rotation=(45,0,0), texture='brick', texture_scale=(8,8))
     slope = Entity(model='cube', collider='box', position=(5,0,10), scale=6, rotation=(80,0,0), texture='brick', texture_scale=(8,8))
     # hill = Entity(model='sphere', position=(20,-10,10), scale=(25,25,25), collider='sphere', color=color.green)
-    hill = Entity(model='sphere', position=(20,-10,10), scale=(25,25,25), collider='mesh', color=color.green)
+    hill = Entity(model='sphere', position=(20,-0,10), scale=(25,25,25), collider='mesh', color=color.green)
     from ursina.shaders import basic_lighting_shader
     for e in scene.entities:
         e.shader = basic_lighting_shader
