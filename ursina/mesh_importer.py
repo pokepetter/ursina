@@ -94,27 +94,31 @@ if not hasattr(application, 'blender_paths') and application.development_mode:
     pprint(application.blender_paths)
 
 
-def load_blender_scene(name, path=application.asset_folder, load=True):
-    blend_file = tuple(path.glob(f'**/{name}.blend'))
-    if not blend_file:
-        raise ValueError('no blender file found at:', path / name)
-
-    blend_file = blend_file[0]
-    print('bbbbbbbbbbbb', blend_file)
-
+def load_blender_scene(name, path=application.asset_folder, load=True, reload=False):
     scenes_folder = Path(application.asset_folder / 'scenes')
     if not scenes_folder.exists():
         scenes_folder.mkdir()
 
-    out_file_path = scenes_folder / f'{blend_file.stem}.py'
-    blender = get_blender(blend_file)
-    print('loading blender scene:', blend_file, '-->', out_file_path, 'using:', blender)
+    out_file_path = scenes_folder / f'{name}.py'
 
-    script_path = application.internal_scripts_folder / '_blender_scene_to_ursina.py'
-    if platform.system() == 'Windows':
-        subprocess.call(f'''{blender} {blend_file} --background --python {script_path} {out_file_path}''')
-    else:
-        subprocess.run((blender, blend_file, '--background', '--python', script_path, out_file_path))
+
+    if reload or not out_file_path.exists():
+        blend_file = tuple(path.glob(f'**/{name}.blend'))
+        if not blend_file:
+            raise ValueError('no blender file found at:', path / name)
+
+        blend_file = blend_file[0]
+        print('bbbbbbbbbbbb', blend_file)
+
+
+        blender = get_blender(blend_file)
+        print('loading blender scene:', blend_file, '-->', out_file_path, 'using:', blender)
+
+        script_path = application.internal_scripts_folder / '_blender_scene_to_ursina.py'
+        if platform.system() == 'Windows':
+            subprocess.call(f'''{blender} {blend_file} --background --python {script_path} {out_file_path}''')
+        else:
+            subprocess.run((blender, blend_file, '--background', '--python', script_path, out_file_path))
 
 
     with open(out_file_path) as f:
@@ -247,10 +251,12 @@ def obj_to_ursinamesh(
                 except: # if no normals
                     pass
 
+        normals = [(-norms[nid][0], norms[nid][1], norms[nid][2]) for nid in norm_indices]
+
         if return_mesh:
             return Mesh(
                 vertices=[verts[t] for t in tris],
-                normals=[norms[nid] for nid in norm_indices],
+                normals=normals,
                 uvs=[uvs[uid] for uid in uv_indices]
             )
 
@@ -266,7 +272,7 @@ def obj_to_ursinamesh(
 
         if norm_indices:
             meshstring += ', \nnormals='
-            meshstring += str(tuple([norms[nid] for nid in norm_indices]))
+            meshstring += str(normals)
 
         meshstring += ''', \nmode='triangle')'''
 
@@ -404,38 +410,40 @@ def compress_internal():
 
 
 if __name__ == '__main__':
-    compress_internal()
-    # from ursina import *
-    # app = Ursina()
-    # print('imported_meshes:\n', imported_meshes)
-    # # Entity(model='quad').model.save('quad.bam')
-    # # m = obj_to_ursinamesh(path=application.asset_folder.parent / 'samples', name='procedural_rock_0')
-    # # Entity(model=m)
-    # # EditorCamera()
-    #
-    # application.asset_folder = application.asset_folder.parent / 'samples'
-    # from ursina.shaders import rim_shader
-    # from ursina.shaders import basic_lighting_shader
-    # from ursina.shaders import normals_shader as rim_shader
-    #
-    # blender_scene = load_blender_scene(path=application.asset_folder, name='blender_level_editor_test_scene_2')
-    # blender_scene.Cube.ignore=False
-    # blender_scene.Cube.color=color.lime
-    # # blender_scene.Cube.model.generate_normals()
-    # # blender_scene.Cube_001.model.generate_normals()
-    # blender_scene.Cube.shader = rim_shader
-    # blender_scene.Cube_001.shader = rim_shader
-    # blender_scene.Cube_003.shader = rim_shader
-    # blender_scene.Cube_004.shader = rim_shader
-    # blender_scene.Sphere.shader = rim_shader
-    # e = Entity(model='cube')
-    # e.model.generate_normals(False)
-    # e.shader = rim_shader
+    # compress_internal()
+    from ursina import *
+    app = Ursina()
+    print('imported_meshes:\n', imported_meshes)
+    # Entity(model='quad').model.save('quad.bam')
+    # m = obj_to_ursinamesh(path=application.asset_folder.parent / 'samples', name='procedural_rock_0')
+    # Entity(model=m)
     # EditorCamera()
-    # # def update():
-    # #     blender_scene.Cube.x += (held_keys['d'] - held_keys['a']) * time.dt * 10
-    #
-    #
-    # app.run()
+
+    application.asset_folder = application.asset_folder.parent / 'samples'
+    from ursina.shaders import rim_shader
+    from ursina.shaders import basic_lighting_shader
+    from ursina.shaders import normals_shader as rim_shader
+    t = time.time()
+    blender_scene = load_blender_scene(path=application.asset_folder, name='blender_level_editor_test_scene_2', reload=False)
+    print('-------', time.time() - t)
+
+    blender_scene.Cube.ignore=False
+    blender_scene.Cube.color=color.lime
+    # blender_scene.Cube.model.generate_normals()
+    # blender_scene.Cube_001.model.generate_normals()
+    blender_scene.Cube.shader = rim_shader
+    blender_scene.Cube_001.shader = rim_shader
+    blender_scene.Cube_003.shader = rim_shader
+    blender_scene.Cube_004.shader = rim_shader
+    blender_scene.Sphere.shader = rim_shader
+    e = Entity(model='cube')
+    e.model.generate_normals(False)
+    e.shader = rim_shader
+    EditorCamera()
+    def update():
+        blender_scene.Cube.x += (held_keys['d'] - held_keys['a']) * time.dt * 10
+
+
+    app.run()
     # e = Entity(model=Cylinder(16))
     # ursina_mesh_to_obj(e.model, name='quad_export_test')
