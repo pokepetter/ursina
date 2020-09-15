@@ -1,4 +1,6 @@
+from pathlib import Path
 from panda3d.core import Shader as Panda3dShader
+from ursina import application
 
 default_vertex_shader = '''
 #version 430
@@ -41,6 +43,24 @@ class Shader:
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
+
+    @classmethod
+    def load(cls, language=Panda3dShader.SL_GLSL, vertex=None, fragment=None, geometry=None, **kwargs):
+        parts = {"vertex": vertex, "fragment": fragment, "geometry": geometry}
+        parts = {k: v for k, v in parts.items() if v}
+
+        folders = (  # folder search order
+            application.asset_folder,
+        )
+
+        for sh, name in parts.items():
+            for folder in folders:
+                for filename in folder.glob('**/' + name):
+                    with filename.open("rt") as f:
+                        parts[sh] = f.read()
+
+        parts.update(kwargs)
+        return cls(language, **parts)
 
 
 if __name__ == '__main__':
