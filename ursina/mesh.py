@@ -109,28 +109,29 @@ class Mesh(NodePath):
 
 
         if self.mode != 'line' or not self._triangles:
-            prim = Mesh._modes[self.mode](static_mode)
+            self.indices = list()
 
             if self._triangles:
                 if isinstance(self._triangles[0], int):
                     for t in self._triangles:
-                        prim.addVertex(t)
+                        self.indices.append(t)
 
                 elif len(self._triangles[0]) >= 3: # if tris are tuples like this: ((0,1,2), (1,2,3))
                     for t in self._triangles:
                         if len(t) == 3:
-                            for e in t:
-                                prim.addVertex(e)
+                            self.indices.extend(t)
+
                         elif len(t) == 4: # turn quad into tris
-                            prim.addVertex(t[0])
-                            prim.addVertex(t[1])
-                            prim.addVertex(t[2])
-                            prim.addVertex(t[2])
-                            prim.addVertex(t[3])
-                            prim.addVertex(t[0])
+                            self.indices.extend([t[i]for i in (0,1,2,2,3,0)])
 
             else:
-                prim.addConsecutiveVertices(0, len(self.vertices))
+                self.indices = [i for i in range(len(self.vertices))]
+
+            prim = Mesh._modes[self.mode](static_mode)
+
+            self.generated_vertices = [self.vertices[i] for i in self.indices]
+            for v in self.indices:
+                prim.addVertex(v)
 
             prim.close_primitive()
             geom = Geom(vdata)

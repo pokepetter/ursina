@@ -94,6 +94,49 @@ if not hasattr(application, 'blender_paths') and application.development_mode:
     pprint(application.blender_paths)
 
 
+def load_blender_scene(name, path=application.asset_folder, load=True):
+    blend_file = tuple(path.glob(f'**/{name}.blend'))
+    if not blend_file:
+        raise ValueError('no blender file found at:', path / name)
+
+    blend_file = blend_file[0]
+    print('bbbbbbbbbbbb', blend_file)
+
+    scenes_folder = Path(application.asset_folder / 'scenes')
+    if not scenes_folder.exists():
+        scenes_folder.mkdir()
+
+    out_file_path = scenes_folder / f'{blend_file.stem}.py'
+    blender = get_blender(blend_file)
+    print('loading blender scene:', blend_file, '-->', out_file_path, 'using:', blender)
+
+    script_path = application.internal_scripts_folder / '_blender_scene_to_ursina.py'
+    if platform.system() == 'Windows':
+        subprocess.call(f'''{blender} {blend_file} --background --python {script_path} {out_file_path}''')
+    else:
+        subprocess.run((blender, blend_file, '--background', '--python', script_path, out_file_path))
+
+
+    with open(out_file_path) as f:
+        # print(f.read())
+        loc = {}
+        exec('from ursina import *\n' + f.read(), globals(), loc)
+        return loc['scene_parent']
+        # exec(f.read())
+
+    # return eval()
+def get_blender(blend_file):    # try to get a matching blender version in case we have multiple blender version installed
+    with open(blend_file, 'rb') as f:
+        blender_version_number = (f.read(12).decode("utf-8"))[-3:]   # get version from start of .blend file e.g. 'BLENDER-v280'
+        blender_version_number = blender_version_number[0] + '.' + blender_version_number[1:2]
+        print('blender_version:', blender_version_number)
+        if blender_version_number in application.blender_paths:
+            return application.blender_paths[blender_version_number]
+        else:
+            print('using default blender version')
+            return application.blender_paths['default']
+
+
 def compress_models(path=None, outpath=application.compressed_models_folder, name='*'):
 
     if not application.compressed_models_folder.exists():
@@ -103,15 +146,7 @@ def compress_models(path=None, outpath=application.compressed_models_folder, nam
     exported = list()
     # print('ttttttttttttttttttttttttttttttttttttt', f'{path}**\\{name}.blend')
     for blend_file in path.glob(f'**/{name}.blend'):
-        with open(blend_file, 'rb') as f:
-            blender_version_number = (f.read(12).decode("utf-8"))[-3:]   # get version from start of .blend file e.g. 'BLENDER-v280'
-            blender_version_number = blender_version_number[0] + '.' + blender_version_number[1:2]
-            print('blender_version:', blender_version_number)
-            if blender_version_number in application.blender_paths:
-                blender = application.blender_paths[blender_version_number]
-            else:
-                print('using default blender version')
-                blender = application.blender_paths['default']
+        blender = get_blender(blend_file)
 
         out_file_path = outpath / (blend_file.stem + '.obj')
         print('converting .blend file to .obj:', blend_file, '-->', out_file_path, 'using:', blender)
@@ -364,19 +399,43 @@ def compress_internal():
     obj_to_ursinamesh(
         application.internal_models_compressed_folder,
         application.internal_models_compressed_folder,
-        save_to_file=True, delete_obj=True
+        return_mesh=False, save_to_file=True, delete_obj=True
         )
 
 
 if __name__ == '__main__':
-    # compress_internal()
-    from ursina import *
-    app = Ursina()
-    print('imported_meshes:\n', imported_meshes)
-    # Entity(model='quad').model.save('quad.bam')
-    m = obj_to_ursinamesh(path=application.asset_folder.parent / 'samples', name='procedural_rock_0')
-    Entity(model=m)
-    EditorCamera()
-    app.run()
+    compress_internal()
+    # from ursina import *
+    # app = Ursina()
+    # print('imported_meshes:\n', imported_meshes)
+    # # Entity(model='quad').model.save('quad.bam')
+    # # m = obj_to_ursinamesh(path=application.asset_folder.parent / 'samples', name='procedural_rock_0')
+    # # Entity(model=m)
+    # # EditorCamera()
+    #
+    # application.asset_folder = application.asset_folder.parent / 'samples'
+    # from ursina.shaders import rim_shader
+    # from ursina.shaders import basic_lighting_shader
+    # from ursina.shaders import normals_shader as rim_shader
+    #
+    # blender_scene = load_blender_scene(path=application.asset_folder, name='blender_level_editor_test_scene_2')
+    # blender_scene.Cube.ignore=False
+    # blender_scene.Cube.color=color.lime
+    # # blender_scene.Cube.model.generate_normals()
+    # # blender_scene.Cube_001.model.generate_normals()
+    # blender_scene.Cube.shader = rim_shader
+    # blender_scene.Cube_001.shader = rim_shader
+    # blender_scene.Cube_003.shader = rim_shader
+    # blender_scene.Cube_004.shader = rim_shader
+    # blender_scene.Sphere.shader = rim_shader
+    # e = Entity(model='cube')
+    # e.model.generate_normals(False)
+    # e.shader = rim_shader
+    # EditorCamera()
+    # # def update():
+    # #     blender_scene.Cube.x += (held_keys['d'] - held_keys['a']) * time.dt * 10
+    #
+    #
+    # app.run()
     # e = Entity(model=Cylinder(16))
     # ursina_mesh_to_obj(e.model, name='quad_export_test')
