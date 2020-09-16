@@ -13,7 +13,7 @@ class GridEditor(Entity):
         self.w, self.h = int(size[0]), int(size[1])
         sys.setrecursionlimit(self.w * self.h)
         # self.grid = [[palette[0] for x in range(self.w)] for y in range(self.h)]
-        if not self.grid:
+        if not hasattr(self, 'grid'):
             self.grid = [[palette[0] for y in range(self.h)] for x in range(self.w)]
         self.brush_size = 1
         self.edit_mode = False
@@ -260,8 +260,8 @@ if __name__ == '__main__':
     '''
     # from PIL import Image
     # t = Texture(Image.new(mode='RGBA', size=(32,32), color=(0,0,0,1)))
-    from ursina.prefabs.grid_editor import PixelEditor
-    PixelEditor(texture=load_texture('brick'))
+    # from ursina.prefabs.grid_editor import PixelEditor
+    # PixelEditor(texture=load_texture('brick'))
 
     '''
     same as the pixel editor, but with text.

@@ -1049,7 +1049,7 @@ class Entity(NodePath):
 
 
 
-    def intersects(self, traverse_target=scene, ignore=[], debug=False):
+    def intersects(self, traverse_target=scene, ignore=(), debug=False):
         from ursina.hit_info import HitInfo
 
         if not self.collision or not self.collider:
@@ -1081,8 +1081,8 @@ class Entity(NodePath):
             self.hit = HitInfo(hit=False)
             return self.hit
 
-        ignore.append(self)
-        ignore.extend([e for e in scene.entities if not e.collision])
+        ignore += (self, )
+        ignore += tuple([e for e in scene.entities if not e.collision])
 
         self._pq.sort_entries()
         self.entries = [        # filter out ignored entities
