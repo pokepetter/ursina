@@ -2,7 +2,7 @@ from ursina import *
 from copy import copy, deepcopy
 
 
-def duplicate(entity, copy_children=True, **kwargs):
+def duplicate(entity, copy_children=True, **kwargs): # use a for loop instead of duplicate() if you can.
     e = entity.__class__(entity.add_to_scene_entities)
 
 
@@ -20,6 +20,7 @@ def duplicate(entity, copy_children=True, **kwargs):
         elif name == 'scripts':
             for script in entity.scripts:
                 e.add_script(copy(script))
+
         else:
             if hasattr(entity, name):
                 setattr(e, name, getattr(entity, name))
@@ -28,7 +29,7 @@ def duplicate(entity, copy_children=True, **kwargs):
         clone = duplicate(c, copy_children=False)
         clone.world_parent = e
 
-    if 'Audio' in e.types:
+    if isinstance(e, Audio):
         e.volume = entity.volume
         e.pitch = entity.pitch
         e.balance = entity.balance
@@ -37,6 +38,10 @@ def duplicate(entity, copy_children=True, **kwargs):
         e.autoplay = entity.autoplay
 
         e.clip = entity.clip
+
+
+    if hasattr(entity, 'text'):
+        e.text = entity.text
 
 
     for key, value in kwargs.items():
@@ -63,9 +68,10 @@ if __name__ == '__main__':
     #     e2 = duplicate(e)
     #     e2.y += 1.5
 
-    e = Entity(model='cube', collider='box')
-    e.c = Entity(parent=e, model='cube', scale=.5, y=.5, color=color.azure)
-    e2 = duplicate(e, True, x=1.1)
+    e = Button(parent=scene, scale=1, text='yolo')
+    # e.c = Entity(parent=e, model='cube', scale=.5, y=.5, color=color.azure)
+    e2 = duplicate(e, x=1.25)
+    # print(e.text_entity.z, e2.text_entity.z)
     # e2.x +=1.1
     EditorCamera()
     app.run()
