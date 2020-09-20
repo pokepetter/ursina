@@ -129,9 +129,14 @@ class HotReloader(Entity):
 
         t = time.time()
         try:
-            # print(text)
             d = dict(locals(), **globals())
             exec(text, d, d)
+
+            import __main__
+            for key, value in d.items():
+                if key in dir(__main__):
+                    setattr(__main__, key, value)
+
         except Exception as e:
             print(e)
         #     for l in text.split('\n'):
