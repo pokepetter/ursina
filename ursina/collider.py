@@ -58,7 +58,7 @@ class MeshCollider(Collider):
         center = Vec3(center)
         if mesh == None and entity.model:
             mesh = entity.model
-            print('''auto generating mesh collider from entity's mesh''')
+            # print('''auto generating mesh collider from entity's mesh''')
 
         # from ursina import Mesh     # this part is obsolete if I use the old obj loading
         # if not isinstance(mesh, Mesh):

@@ -49,6 +49,9 @@ class Window(WindowProperties):
         self.windowed_size = self.fullscreen_size / 1.25
         self.windowed_position = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode
         self.size = self.windowed_size
+        if not application.development_mode:
+            self.size = self.fullscreen_size
+
         self.borderless = True
 
 

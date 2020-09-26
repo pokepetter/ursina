@@ -10,10 +10,10 @@ trace_entity_definition = False # enable to set entity.line_definition
 print_entity_definition = False
 
 package_folder = Path(__file__).parent
-asset_folder = Path().cwd()
+asset_folder = Path(sys.argv[0]).parent
 
 development_mode = True
-dirs = [e.stem for e in asset_folder.iterdir() if e.is_dir()]
+dirs = [e.stem for e in asset_folder.parent.iterdir() if e.is_dir()]
 if 'src' in dirs and 'python' in dirs:
     development_mode = False
 
