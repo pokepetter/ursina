@@ -1,7 +1,10 @@
-from ursina.shaders.normals import normals_shader
+from ursina.shaders.normals_shader import normals_shader
 from ursina.shaders.basic_lighting import basic_lighting_shader
 from ursina.shaders.triplanar import triplanar_shader
+from ursina.shaders.matcap_shader import matcap_shader
+from ursina.shaders.height_shader import height_shader
 from ursina.shaders.colored_lights import colored_lights_shader
+from ursina.shaders.rim_shader import rim_shader
 
 
 

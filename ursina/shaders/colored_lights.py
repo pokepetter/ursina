@@ -6,29 +6,21 @@ colored_lights_shader = Shader(
 vertex='''
 #version 130
 uniform mat4 p3d_ModelViewProjectionMatrix;
-uniform mat4 transform_matrix;
+uniform mat4 p3d_ModelMatrix;
 in vec4 p3d_Vertex;
 in vec3 p3d_Normal;
+in vec4 p3d_Color;
 in vec2 p3d_MultiTexCoord0;
+
 out vec2 texcoord;
-out vec3 world_space_normal;
+out vec3 world_normal;
+out vec4 vertex_color;
+
 
 void main() {
   gl_Position = p3d_ModelViewProjectionMatrix * p3d_Vertex;
-  // texcoord = p3d_MultiTexCoord0;
-
-  vec4 invcamx = transform_matrix[0];
-  vec4 invcamy = transform_matrix[1];
-  vec4 invcamz = transform_matrix[2];
-  vec4 invcamw = transform_matrix[3];
-
-  mat3 invcam = mat3(
-                          invcamx[0], invcamx[1], invcamx[2],
-                          invcamy[0], invcamy[1], invcamy[2],
-                          invcamz[0], invcamz[1], invcamz[2]
-                      );
-
-  world_space_normal = normalize(p3d_Normal * invcam);
+  world_normal = normalize(mat3(p3d_ModelMatrix) * p3d_Normal);
+  vertex_color = p3d_Color;
 }
 ''',
 
@@ -38,7 +30,8 @@ fragment='''
 uniform sampler2D p3d_Texture0;
 uniform vec4 p3d_ColorScale;
 in vec2 texcoord;
-in vec3 world_space_normal;
+in vec3 world_normal;
+in vec4 vertex_color;
 
 uniform vec4 top_color;
 uniform vec4 bottom_color;
@@ -51,30 +44,38 @@ out vec4 fragColor;
 
 
 void main() {
-    vec4 norm = vec4(world_space_normal*0.5+0.5, 1);
-    // float grey = 0.21 * norm.r + 0.71 * norm.g + 0.07 * norm.b;
-    // norm = vec4(grey, grey, grey, 1);
-    vec4 color = texture(p3d_Texture0, texcoord) * p3d_ColorScale;
-    // vec4 color = vec4(0.0, 0.0, 0.0, 0.0);
-    float normal_y = world_space_normal.y + .5;
-    color += mix(bottom_color, top_color, norm.z) / 3.;
-    color += mix(right_color, left_color, norm.x) / 3.;
-    color += mix(front_color, back_color, norm.y) / 3.;
+    vec4 norm = vec4(world_normal*0.5+0.5, 1);
+    vec4 color = texture(p3d_Texture0, texcoord) * vertex_color * p3d_ColorScale;
+    // color += mix(bottom_color, top_color, norm.y) / 3.;
+    // color += mix(right_color, left_color, norm.x) / 3.;
+    // color += mix(front_color, back_color, norm.z) / 3.;
+    color *= mix(bottom_color, top_color, norm.y);
+    color *= mix(left_color, right_color, norm.x) * 1.5;
+    color *= mix(front_color, back_color, norm.z) * 2.;
+    // vec3 target_col = vec3(
+    //     mix(right_color, left_color, norm.x),
+    //     mix(bottom_color, top_color, norm.y),
+    //     mix(front_color, back_color, norm.z)
+    // );
 
-    fragColor = vec4(color.rgb, 1);
+    // color.rgb -= vec3(.5,.5,.5);
+    // color.rgb = mix(color, target_col, .5);
+    color = mix(color, vec4(1), 0.1);
+    color *= 1.25;
+    fragColor = vec4(color.rgb, 1.);
+    // fragColor = vec4(vcol.rgb, 1.);
 }
 
 
 ''',
 geometry='',
 default_input = {
-    'transform_matrix' : Mat4(),
-    'top_color': color.red,
-    'bottom_color': color.green,
-    'left_color': color.black,
-    'right_color': color.black,
-    'front_color': color.black,
-    'back_color': color.black,
+    'top_color': color.color(220, .12, .82),
+    'bottom_color': color.color(285, .13, .47),
+    'left_color': color.color(217, .3, .68),
+    'right_color': color.color(0, .25, .93),
+    'front_color': color.color(231, .08, .69),
+    'back_color': color.color(240, .05, .76),
     }
 )
 
@@ -86,21 +87,18 @@ if __name__ == '__main__':
     window.color=color.black
 
     # e = Entity(model='sphere', shader=basic_lighting_shader)
-    # e.setShaderInput('transform_matrix', e.getNetTransform().getMat())
     shader = colored_lights_shader
 
-    a = GrayCube(shader=shader, texture='shore')
-    b = GraySphere(shader=shader, rotation_y=180, x=3)
+    Entity(model='cube', color=color.white, shader=colored_lights_shader)
+    e = Entity(model='cube', x=1.2, shader=colored_lights_shader)
+    e.model.colors = len(e.model.vertices) * (color.red, )
+    e.model.generate()
     # AzureSphere(shader=a.shader, y=2)
     GrayPlane(scale=10, y=-2, texture='shore')
 
     Sky(color=color.light_gray)
     EditorCamera(rotate_around_mouse_hit=False)
 
-
-    def update():
-        b.rotation_z += 1
-        b.set_shader_input('transform_matrix', b.getNetTransform().getMat())
 
     EditorCamera()
 

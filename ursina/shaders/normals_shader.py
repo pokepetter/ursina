@@ -4,14 +4,14 @@ normals_shader = Shader(language=Shader.GLSL,
 vertex = '''
 #version 140
 uniform mat4 p3d_ModelViewProjectionMatrix;
-uniform mat4 transform_matrix;
+uniform mat4 p3d_ModelMatrix;
 in vec4 p3d_Vertex;
 in vec3 p3d_Normal;
-out vec3 world_space_normal;
+out vec3 world_normal;
 
 void main() {
     gl_Position = p3d_ModelViewProjectionMatrix * p3d_Vertex;
-    world_space_normal = normalize(transpose( inverse(mat3(transform_matrix)) ) * p3d_Normal.xyz);
+    world_normal = normalize(mat3(p3d_ModelMatrix) * p3d_Normal);
 }
 ''',
 
@@ -21,20 +21,15 @@ fragment='''
 uniform vec4 p3d_ColorScale;
 in vec2 texcoord;
 out vec4 fragColor;
-in vec3 world_space_normal;
+in vec3 world_normal;
 
 
 void main() {
-    fragColor = vec4(world_space_normal*0.5+0.5, 1);
-    // o_color = float4(l_norm0*0.5+0.5, 1);
-    // c.rgb = i.worldNormal*0.5+0.5;
+    fragColor = vec4(world_normal*0.5+0.5, 1);
 }
 
 ''',
 geometry='',
-default_input={
-    'transform_matrix': Mat4    (),
-}
 )
 
 
@@ -61,9 +56,7 @@ if __name__ == '__main__':
         b.rotation_z += 1
         b.rotation_y += 1
         b.rotation_x += 1
-        b.set_shader_input('transform_matrix', b.getNetTransform().getMat())
         # a.rotation_x += 1
-        a.set_shader_input('transform_matrix', a.getNetTransform().getMat())
     # EditorCamera()
 
     app.run()
