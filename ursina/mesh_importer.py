@@ -7,6 +7,7 @@ from pathlib import Path
 from ursina.mesh import Mesh
 from ursina import application
 from panda3d.core import CullFaceAttrib
+from time import perf_counter
 
 imported_meshes = dict()
 
@@ -94,7 +95,7 @@ if not hasattr(application, 'blender_paths') and application.development_mode:
     pprint(application.blender_paths)
 
 
-def load_blender_scene(name, path=application.asset_folder, load=True, reload=False):
+def load_blender_scene(name, path=application.asset_folder, load=True, reload=False, skip_hidden=True):
     scenes_folder = Path(application.asset_folder / 'scenes')
     if not scenes_folder.exists():
         scenes_folder.mkdir()
@@ -103,14 +104,13 @@ def load_blender_scene(name, path=application.asset_folder, load=True, reload=Fa
 
 
     if reload or not out_file_path.exists():
+        print('reload:')
+        t = perf_counter()
         blend_file = tuple(path.glob(f'**/{name}.blend'))
         if not blend_file:
             raise ValueError('no blender file found at:', path / name)
 
         blend_file = blend_file[0]
-        print('bbbbbbbbbbbb', blend_file)
-
-
         blender = get_blender(blend_file)
         print('loading blender scene:', blend_file, '-->', out_file_path, 'using:', blender)
 
@@ -120,15 +120,25 @@ def load_blender_scene(name, path=application.asset_folder, load=True, reload=Fa
         else:
             subprocess.run((blender, blend_file, '--background', '--python', script_path, out_file_path))
 
+        print('exported from blender:', perf_counter() - t)
 
+    t = perf_counter()
     with open(out_file_path) as f:
-        # print(f.read())
-        loc = {}
-        exec('from ursina import *\n' + f.read(), globals(), loc)
-        return loc['scene_parent']
-        # exec(f.read())
+        t2 = perf_counter()
+        file_content = f.read()
+        print('file read time:', perf_counter() - t2)
 
-    # return eval()
+        loc = {}
+        first_part, rest = file_content.split('# unique meshes')
+        exec(first_part, globals(), loc)
+
+        exec(rest, globals(), loc)
+        print('exec total:', perf_counter() - t)
+
+        return loc['scene_parent']
+
+
+
 def get_blender(blend_file):    # try to get a matching blender version in case we have multiple blender version installed
     with open(blend_file, 'rb') as f:
         blender_version_number = (f.read(12).decode("utf-8"))[-3:]   # get version from start of .blend file e.g. 'BLENDER-v280'
@@ -148,7 +158,7 @@ def compress_models(path=None, outpath=application.compressed_models_folder, nam
 
     export_script_path = application.internal_scripts_folder / '_blend_export.py'
     exported = list()
-    # print('ttttttttttttttttttttttttttttttttttttt', f'{path}**\\{name}.blend')
+
     for blend_file in path.glob(f'**/{name}.blend'):
         blender = get_blender(blend_file)
 
@@ -156,7 +166,7 @@ def compress_models(path=None, outpath=application.compressed_models_folder, nam
         print('converting .blend file to .obj:', blend_file, '-->', out_file_path, 'using:', blender)
 
         if platform.system() == 'Windows':
-            subprocess.call(f'''{blender} {blend_file} --background --python {export_script_path} {out_file_path}''')
+            subprocess.call(f'''"{blender}" "{blend_file}" --background --python "{export_script_path}" "{out_file_path}"''')
         else:
             subprocess.run((blender, blend_file, '--background', '--python', export_script_path, out_file_path))
 
@@ -420,28 +430,41 @@ if __name__ == '__main__':
     # EditorCamera()
 
     application.asset_folder = application.asset_folder.parent / 'samples'
-    from ursina.shaders import rim_shader
-    from ursina.shaders import basic_lighting_shader
+    # from ursina.shaders import basic_lighting_shader
     from ursina.shaders import normals_shader as rim_shader
+    from ursina.shaders import matcap_shader as rim_shader
+    # from ursina.shaders import height_shader as rim_shader
+
+
     t = time.time()
-    blender_scene = load_blender_scene(path=application.asset_folder, name='blender_level_editor_test_scene_2', reload=False)
+    # blender_scene = load_blender_scene(path=application.asset_folder, name='desert', reload=True)
+    blender_scene = load_blender_scene(path=application.asset_folder, name='blender_level_editor_test_scene_2', reload=True)
     print('-------', time.time() - t)
 
-    blender_scene.Cube.ignore=False
-    blender_scene.Cube.color=color.lime
-    # blender_scene.Cube.model.generate_normals()
-    # blender_scene.Cube_001.model.generate_normals()
-    blender_scene.Cube.shader = rim_shader
-    blender_scene.Cube_001.shader = rim_shader
-    blender_scene.Cube_003.shader = rim_shader
-    blender_scene.Cube_004.shader = rim_shader
-    blender_scene.Sphere.shader = rim_shader
-    e = Entity(model='cube')
-    e.model.generate_normals(False)
-    e.shader = rim_shader
+    # print('--------', blender_scene.children)
+    # for e in blender_scene.children:
+    #     # e.color = color.random_color()
+    #     e.shader = rim_shader
+    #     e.texture='matcap_4'
+    #
+    #
+    # blender_scene.Plane_002.collider = 'mesh'
+    # from ursina.prefabs.first_person_controller import FirstPersonController
+    # player = FirstPersonController()
+
+    # def input(key):
+    #     if key == '+':
+    #         for e in blender_scene.children:
+    #             e.texture_scale = Vec2(e.texture_scale[0], e.texture_scale[1]+.1)
+    #     if key == '-':
+    #         for e in blender_scene.children:
+    #             e.texture_scale = Vec2(e.texture_scale[0], e.texture_scale[1]-.1)
+    #         print(blender_scene.children[0].texture_scale)
+    #
     EditorCamera()
-    def update():
-        blender_scene.Cube.x += (held_keys['d'] - held_keys['a']) * time.dt * 10
+    Sky(texture='sky_sunset')
+    # def update():
+    #     blender_scene.Cube.x += (held_keys['d'] - held_keys['a']) * time.dt * 10
 
 
     app.run()
