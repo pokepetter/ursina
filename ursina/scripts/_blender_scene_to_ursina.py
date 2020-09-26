@@ -2,108 +2,208 @@ import bpy
 import os
 import sys
 from pathlib import Path
+from math import degrees
+import bmesh
+
+
 
 print(sys.argv)
 filepath = sys.argv[-1]
 scene_name = Path(bpy.data.filepath).stem
 print('file_name:', scene_name)
 code = f'''from ursina import *
+from time import perf_counter
 
-scene_parent = Entity()\n
+scene_parent = Entity()
+
+if __name__ == '__main__':
+    app = Ursina()
+
+t = perf_counter()
+
+# unique meshes
 '''
+
 dg = bpy.context.evaluated_depsgraph_get() #getting the dependency graph
+bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
+objects = [ob for ob in bpy.data.objects if ob.type == 'MESH']
+unique_objects = {}
+# print('meshes:', meshes)
+for ob in objects:
+    unique_objects[ob.data.name] = ob
 
 
-for collection in bpy.data.collections:
-    print(collection.name)
-    for ob in collection.all_objects:
-        if not ob.type == 'MESH':
-            continue
+for key, ob in unique_objects.items():
+    mesh = ob.evaluated_get(dg).data
 
-        #deselect all but just one object and make it active
-        bpy.ops.object.select_all(action='DESELECT')
+    # triangulate mesh
+    bm = bmesh.new()
+    bm.from_mesh(mesh)
+    bmesh.ops.triangulate(bm, faces=bm.faces[:], quad_method='BEAUTY', ngon_method='BEAUTY')
+    bm.normal_update()
+    bm.to_mesh(mesh)
+    bm.free()
+
+    verts = []
+    normals = []
+    vertex_colors = []
+    uvs = []
+
+    for poly in mesh.polygons:
+        face_normal_x, face_normal_y, face_normal_z = 0, 0, 0
+
+        for idx in poly.vertices:
+            v = mesh.vertices[idx]
+            verts.append((round(v.co[0],4),round(v.co[2],4),round(v.co[1],4)))
+            normals.append((v.normal[0], v.normal[2], v.normal[1]))
+
+    # average the vertex normals ot get face normals
+    sharp_normals = []
+    for i in range(0, len(normals), 3):
+        averaged_normal = (
+            round(sum((normals[i][0], normals[i+1][0], normals[i+2][0])) / 3, 5),
+            round(sum((normals[i][1], normals[i+1][1], normals[i+2][1])) / 3, 5),
+            round(sum((normals[i][2], normals[i+1][2], normals[i+2][2])) / 3, 5),
+            )
+        for j in range(3):
+            sharp_normals.append(averaged_normal)
+
+    normals = sharp_normals
+
+    color_layer = mesh.vertex_colors.active
+    if color_layer and len(color_layer.data) > 0:
+        vertex_colors = [tuple(round(e, 4) for e in data.color) for data in color_layer.data]
 
 
-        code += f'''
+    uv_layer = mesh.uv_layers.active
+    if uv_layer and len(uv_layer.data) > 0:
+        uvs = [tuple(round(e, 4) for e in data.uv) for data in uv_layer.data]
+
+
+
+    code += f'''
+{mesh.name.replace('.', '_')}_mesh = Mesh(
+    vertices={verts},
+    normals={normals},
+    colors={vertex_colors},
+    uvs={uvs},
+)
+'''
+
+code += '''print('loaded models:', perf_counter() - t)\n'''
+code += '''t = perf_counter()\n'''
+
+
+for ob in objects:
+    if '--skip-hidden' in sys.argv and ob.hide_get() == True:
+        continue
+
+    #deselect all but just one object and make it active
+    bpy.ops.object.select_all(action='DESELECT')
+    rotation = [degrees(e) for e in ob.matrix_world.to_euler()]
+
+    code += f'''
 scene_parent.{ob.name.replace('.', '_')} = Entity(
     name=\'{ob.name}\',
-    position=Vec3({ob.location.x}, {ob.location.z}, {ob.location.y}),
-    rotation=({ob.rotation_euler.x}, {ob.rotation_euler.y}, {ob.rotation_euler.z}),
-    scale=Vec3({ob.scale.x}, {ob.scale.z}, {ob.scale.y}),
-    ignore=True,
+    parent=scene_parent,
+    position=Vec3({round(ob.location.x,5)}, {round(ob.location.z,5)}, {round(ob.location.y,5)}),
+    rotation=({round(-rotation[0],5)}, {round(-rotation[2],5)}, {round(rotation[1],5)}),
+    scale=Vec3({round(ob.scale.x,5)}, {round(ob.scale.z,5)}, {round(ob.scale.y,5)}),
     '''
 
-        if ob.active_material:
-            color = ob.active_material.diffuse_color
-            code += f'color=color.Color({color[0]}, {color[1]}, {color[2]}, 1),'
+    code += f'''model=copy({ob.data.name.replace('.', '_')}_mesh),'''
+    # code += f'''model='cube','''
 
+    if ob.active_material:
+        color = ob.active_material.diffuse_color
+        code += f'''
+    color=({round(color[0],5)}, {round(color[1],5)}, {round(color[2],5)}, {round(color[3],5)}),'''
+
+    code += f'''
+    ignore=True,
+    )
+    '''
+
+code += '''\nprint('created entities:', perf_counter() - t)'''
 #        if ob.parent:
 #            code += f'''parent=self.{ob.name.replace('.', '_')}'''
 
 
 
-        #This has to be done every time the object updates:
-        ob = ob.evaluated_get(dg) #this gives us the evaluated version of the object. Aka with all modifiers and deformations applied.
-        mesh = ob.to_mesh() #turn it into the mesh data block we want.
-        tris = []
-        uvs = []
-        vertex_colors = []
+    #This has to be done every time the object updates:
+    # ob = ob.evaluated_get(dg) #this gives us the evaluated version of the object. Aka with all modifiers and deformations applied.
+    # mesh = ob.to_mesh() #turn it into the mesh data block we want.
+    # verts = []
+    # tris = []
+    # uvs = []
+    # normals = []
+    # vertex_colors = []
 
-        for poly in mesh.polygons:
-            tris.append(tuple(e for e in poly.vertices))
-
-            uv_layer = mesh.uv_layers.active
-            if uv_layer:
-                for idx in poly.loop_indices:
-                    uvs.append(tuple(uv_layer.data[idx].uv))
-
-            color_layer = mesh.vertex_colors.active
-            if color_layer:
-                for idx in poly.loop_indices:
-                    vertex_colors.append(tuple(color_layer.data[idx].color))
-
-        code += f'''
-    model=Mesh(
-        vertices=[{', '.join([f'Vec3({v.co[0]}, {v.co[2]}, {v.co[1]})' for v in mesh.vertices])}],
-        triangles={tris},'''
-
-        code += f'''
-        normals=({' ,'.join([f'Vec3({v.normal[0]}, {v.normal[2]}, {v.normal[1]})' for v in mesh.vertices])}),'''
-
-        if uvs:
-            code += f'''
-        uvs={uvs},'''
-
-        if vertex_colors:
-            code += f'''
-        colors={vertex_colors},'''
-
-        code += '\n    )'
-        code += '\n)'
-
-
-        continue
+    # for poly in mesh.polygons:
+    #     tris.append(tuple(e for e in poly.vertices))
+    # # for poly in mesh.polygons:
+    # #     for idx in poly.vertices:
+    # #         verts.append(mesh.vertices[idx])
+    # #         normal = mesh.vertices[idx].normal
+    # #         n = (normal[0], normal[1], normal[2])
+    # #         normals.append(n)
+    #
+    #
+    # color_layer = mesh.vertex_colors.active
+    # if color_layer and len(color_layer.data) > 0:
+    #     if not vertex_colors:
+    #         vertex_colors = [(1,1,1,1) for e in mesh.vertices]
+    #
+    #     i = 0
+    #     for poly in mesh.polygons:
+    #         for idx in poly.vertices:
+    #             vertex_colors[idx] = tuple(round(e, 4) for e in color_layer.data[i].color)
+    #             i += 1
+    #
+    # uv_layer = mesh.uv_layers.active
+    # if uv_layer and len(uv_layer.data) > 0:
+    #     if not uvs:
+    #         uvs = [(0,0) for e in mesh.vertices]
+    #
+    #     i = 0
+    #     for poly in mesh.polygons:
+    #         for idx in poly.vertices:
+    #             uvs[idx] = tuple(round(e, 4) for e in uv_layer.data[i].uv)
+    #             i += 1
 
 
-        ob.select_set(state=True)
-        bpy.context.view_layer.objects.active = ob
-        #store object location then zero it out
-        location = ob.location.copy()
-        bpy.ops.object.location_clear()
+#     code += f'''
+# model=Mesh('''
+#     # code += f'''
+#     # vertices=[{', '.join([f'Vec3({v.co[0]}, {v.co[2]}, {v.co[1]})' for v in verts])}],'''
+#
+#     code += f'''
+#     vertices=[{', '.join([f'Vec3({round(v.co[0], 4)}, {round(v.co[2], 4)}, {round(v.co[1], 4)})' for v in mesh.vertices])}],
+#     triangles={tris},'''
+#
+#     code += f'''
+#     normals=({' ,'.join([f'Vec3({round(v.normal[0], 4)}, {round(v.normal[2], 4)}, {round(v.normal[1], 4)})' for v in mesh.vertices])}),'''
+#     # code += f'''
+#     # normals=({' ,'.join([f'Vec3({str(n[0])[5:]}, {n[2]}, {n[1]})' for v in normals])}),'''
+#
+#     if uvs:
+#         code += f'''
+#     uvs={uvs},'''
+#
+#     if vertex_colors:
+#         code += f'''
+#     colors={vertex_colors},'''
+#
+#     code += '\n    )'
+#     code += '\n)'
 
-        #export obj
-        filename = path + scene_name+'.' + ob.name + '.obj'
-        bpy.ops.export_scene.obj(filepath=filename, use_selection=True)
 
-        #restore location
-        ob.location = location
 
 code += '''
 if __name__ == '__main__':
-    app = Ursina()
     EditorCamera()
     app.run()
 '''
-print(code)
+print('sucessfully exported blender scene')
 with open(filepath, 'w') as f:
     f.write(code)
