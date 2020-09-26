@@ -49,28 +49,21 @@ class Window(WindowProperties):
         self.windowed_size = self.fullscreen_size / 1.25
         self.windowed_position = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode
         self.size = self.windowed_size
-        if not application.development_mode:
-            self.size = self.fullscreen_size
-
         self.borderless = True
 
-
-    def late_init(self):
-        self.position = Vec2(0,0)
         self.top = Vec2(0, .5)
         self.bottom = Vec2(0, .5)
         self.center = Vec2(0, 0)
-        self.fullscreen = False
+
+
+    def late_init(self):
+        self.center_on_screen()
+        if not application.development_mode:
+            self.fullscreen = True
 
         self.cursor = True
-
         self.color = color.dark_gray
-        self.render_modes = (
-            'default',
-            'wireframe',
-            'colliders',
-            'normals',
-            )
+        self.render_modes = ('default', 'wireframe', 'colliders', 'normals')
         self.render_mode = 'default'
         self.editor_ui = None
 

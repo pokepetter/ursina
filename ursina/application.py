@@ -40,7 +40,6 @@ _model_path.append_path(str(asset_folder.resolve()))
 
 print('package_folder:', package_folder)
 print('asset_folder:', asset_folder)
-print('development mode:', development_mode)
 
 hot_reloader = None     # will be set my main if development_mode
 

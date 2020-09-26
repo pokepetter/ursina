@@ -210,6 +210,7 @@ class Ursina(ShowBase):
             from ursina.prefabs import ursina_splash
 
         application.load_settings()
+        print('development mode:', application.development_mode)
         print('application sucessfully started ʕ •ᴥ•ʔゝ□')
 
         super().run()

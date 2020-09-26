@@ -101,6 +101,7 @@ def load_blender_scene(name, path=application.asset_folder, load=True, reload=Fa
         scenes_folder.mkdir()
 
     out_file_path = scenes_folder / f'{name}.py'
+    print('loading:', out_file_path)
 
 
     if reload or not out_file_path.exists():
