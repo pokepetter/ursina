@@ -6,7 +6,7 @@ import __main__
 class Ursina(ShowBase):
 
     def __init__(self):
-        ShowBase.__init__(self)
+        super().__init__()
         application.base = base
         window.late_init()
         time.dt = 0

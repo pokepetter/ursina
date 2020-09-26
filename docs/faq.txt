@@ -52,7 +52,7 @@ you are on your own.
 <b>How can I use panda3d alongside ursina?</b>
 
 What you need to know is that Entity is a NodePath and Ursina is a ShowBase.
-You can also write custom shaders, see panda3d's shader documentatation for that.
+You can also write custom shaders, see panda3d's shader documentation for that.
 
 
 
