@@ -182,8 +182,8 @@ class Entity(NodePath):
                     if self.model is not None:
                         self.model.removeNode()
                     object.__setattr__(self, name, m)
-                    if isinstance(m, Mesh):
-                        m.recipe = value
+                    # if isinstance(m, Mesh):
+                    #     m.recipe = value
                     # print('loaded model successively')
                 else:
                     # if '.' in value:
@@ -678,6 +678,8 @@ class Entity(NodePath):
 
     @property
     def texture_scale(self):
+        if not hasattr(self, '_texture_scale'):
+            return Vec2(1,1)
         return self._texture_scale
     @texture_scale.setter
     def texture_scale(self, value):

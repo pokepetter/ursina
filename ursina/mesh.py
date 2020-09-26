@@ -73,9 +73,8 @@ class Mesh(NodePath):
                 setattr(self, name, list())
 
         if self.vertices:
-            self.vertices = [Vec3(v) for v in self.vertices]
+            # self.vertices = [Vec3(v) for v in self.vertices]
             self.generate()
-
 
     def generate(self):  # call this after setting some of the variables to update it
         if hasattr(self, 'geomNode'):
@@ -153,7 +152,11 @@ class Mesh(NodePath):
             # self.set_render_mode_perspective(True)
 
 
-        self.recipe = dedent(f'''
+        # print('finished')
+
+    @property
+    def recipe(self):
+        return dedent(f'''
             Mesh(
                 vertices={[tuple(e) for e in self.vertices]},
                 triangles={self._triangles},
@@ -165,7 +168,6 @@ class Mesh(NodePath):
                 thickness={self.thickness}
             )
         ''')
-        # print('finished')
 
     def __add__(self, other):
         self.vertices += other.vertices
@@ -260,17 +262,24 @@ if __name__ == '__main__':
     uvs = ((1.0, 0.0), (0.0, 1.0), (0.0, 0.0), (1.0, 1.0))
     norms = ((0,0,-1),) * len(verts)
     colors = (color.red, color.blue, color.lime, color.black)
+    verts = [Vec3(0,0,0) for i in range(9999)]
 
-    e = Entity(model=Mesh(vertices=verts, triangles=tris, uvs=uvs, normals=norms, colors=colors), scale=2)
+    from time import perf_counter
+    t = perf_counter()
 
-    # line mesh test
-    verts = (Vec3(0,0,0), Vec3(0,1,0), Vec3(1,1,0), Vec3(2,2,0), Vec3(0,3,0), Vec3(-2,3,0))
-    tris = ((0,1), (3,4,5))
+    for i in range(10):
+        model=Mesh(vertices=verts)
 
-    lines = Entity(model=Mesh(vertices=verts, triangles=tris, mode='line', thickness=4), color=color.cyan, z=-1)
-    points = Entity(model=Mesh(vertices=verts, mode='point', thickness=.05), color=color.red, z=-1.01)
-    # points.model.mode = MeshModes.point     # can also use  the MeshMode enum
-    print(e.model.recipe)
-    # e.model.save('bam_test', application.compressed_models_folder, 'bam')
-    EditorCamera()
-    app.run()
+    print('-----', perf_counter() - t) #1.37
+     # e = Entity(model=Mesh(vertices=verts, triangles=tris, uvs=uvs, normals=norms, colors=colors), scale=2)
+    # # line mesh test
+    # verts = (Vec3(0,0,0), Vec3(0,1,0), Vec3(1,1,0), Vec3(2,2,0), Vec3(0,3,0), Vec3(-2,3,0))
+    # tris = ((0,1), (3,4,5))
+    #
+    # lines = Entity(model=Mesh(vertices=verts, triangles=tris, mode='line', thickness=4), color=color.cyan, z=-1)
+    # points = Entity(model=Mesh(vertices=verts, mode='point', thickness=.05), color=color.red, z=-1.01)
+    # # points.model.mode = MeshModes.point     # can also use  the MeshMode enum
+    # print(e.model.recipe)
+    # # e.model.save('bam_test', application.compressed_models_folder, 'bam')
+    # EditorCamera()
+    # app.run()
