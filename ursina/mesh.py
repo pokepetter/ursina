@@ -156,6 +156,9 @@ class Mesh(NodePath):
 
     @property
     def recipe(self):
+        if hasattr(self, '_recipe'):
+            return self._recipe
+
         return dedent(f'''
             Mesh(
                 vertices={[tuple(e) for e in self.vertices]},
@@ -168,6 +171,10 @@ class Mesh(NodePath):
                 thickness={self.thickness}
             )
         ''')
+    @recipe.setter
+    def recipe(self, value):
+        self._recipe = value
+
 
     def __add__(self, other):
         self.vertices += other.vertices
@@ -238,8 +245,8 @@ class Mesh(NodePath):
 
         if name.endswith('ursinamesh'):
             with open(path / name, 'w') as f:
-                recipe = self.recipe.replace('LVector3f', '')
-                f.write(recipe)
+                # recipe = self.recipe.replace('LVector3f', '')
+                f.write(self.recipe)
             print('saved .ursinamesh to:', path / name)
 
         elif name.endswith('.obj'):
@@ -262,24 +269,17 @@ if __name__ == '__main__':
     uvs = ((1.0, 0.0), (0.0, 1.0), (0.0, 0.0), (1.0, 1.0))
     norms = ((0,0,-1),) * len(verts)
     colors = (color.red, color.blue, color.lime, color.black)
-    verts = [Vec3(0,0,0) for i in range(9999)]
 
-    from time import perf_counter
-    t = perf_counter()
 
-    for i in range(10):
-        model=Mesh(vertices=verts)
+    e = Entity(model=Mesh(vertices=verts, triangles=tris, uvs=uvs, normals=norms, colors=colors), scale=2)
+    # line mesh test
+    verts = (Vec3(0,0,0), Vec3(0,1,0), Vec3(1,1,0), Vec3(2,2,0), Vec3(0,3,0), Vec3(-2,3,0))
+    tris = ((0,1), (3,4,5))
 
-    print('-----', perf_counter() - t) #1.37
-     # e = Entity(model=Mesh(vertices=verts, triangles=tris, uvs=uvs, normals=norms, colors=colors), scale=2)
-    # # line mesh test
-    # verts = (Vec3(0,0,0), Vec3(0,1,0), Vec3(1,1,0), Vec3(2,2,0), Vec3(0,3,0), Vec3(-2,3,0))
-    # tris = ((0,1), (3,4,5))
-    #
-    # lines = Entity(model=Mesh(vertices=verts, triangles=tris, mode='line', thickness=4), color=color.cyan, z=-1)
-    # points = Entity(model=Mesh(vertices=verts, mode='point', thickness=.05), color=color.red, z=-1.01)
-    # # points.model.mode = MeshModes.point     # can also use  the MeshMode enum
+    lines = Entity(model=Mesh(vertices=verts, triangles=tris, mode='line', thickness=4), color=color.cyan, z=-1)
+    points = Entity(model=Mesh(vertices=verts, mode='point', thickness=.05), color=color.red, z=-1.01)
+    # points.model.mode = MeshModes.point     # can also use  the MeshMode enum
     # print(e.model.recipe)
-    # # e.model.save('bam_test', application.compressed_models_folder, 'bam')
-    # EditorCamera()
-    # app.run()
+    # e.model.save('bam_test', application.compressed_models_folder, 'bam')
+    EditorCamera()
+    app.run()
