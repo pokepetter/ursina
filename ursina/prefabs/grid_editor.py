@@ -133,16 +133,14 @@ class GridEditor(Entity):
                 int(self.cursor.x * (self.w+1)),
                 -int(self.cursor.y * self.h)
             )
-            if not held_keys['control']:
+            if not held_keys['shift']:
                 self.prev_draw = None
 
         if key == 'left mouse up':
             self.render()
 
             if not held_keys['control']:
-                self.undo_index += 1
-                self.undo_cache = self.undo_cache[:self.undo_index]
-                self.undo_cache.append(deepcopy(self.grid))
+                self.record_undo()
 
 
         if held_keys['control'] and key == 'z':
@@ -163,9 +161,7 @@ class GridEditor(Entity):
             x = int(self.cursor.x * self.w)
             self.floodfill(self.grid, x, y)
             self.render()
-            self.undo_index += 1
-            self.undo_cache = self.undo_cache[:self.undo_index]
-            self.undo_cache.append(deepcopy(self.grid))
+            self.record_undo()
 
         if key == 'x' and self.brush_size > 1:
             self.brush_size -= 1
@@ -178,6 +174,12 @@ class GridEditor(Entity):
         if held_keys['control'] and key == 's':
             if hasattr(self, 'save'):
                 self.save()
+
+
+    def record_undo(self):
+        self.undo_index += 1
+        self.undo_cache = self.undo_cache[:self.undo_index]
+        self.undo_cache.append(deepcopy(self.grid))
 
 
 
@@ -227,11 +229,12 @@ class PixelEditor(GridEditor):
 
 
 class ASCIIEditor(GridEditor):
-    def __init__(self, size=(61,28), palette=(' ', '#', '|', 'A', '/', '\\', 'o', '_', '-', 'i', 'M', '.'), font='VeraMono.ttf', **kwargs):
-        super().__init__(size=size, palette=palette, color=color.black, **kwargs)
-        self.text_entity = Text(text=' '*size[0], position=(-.45,-.45,-2), line_height=1.1, origin=(-.5,-.5), font=font)
+    def __init__(self, size=(61,28), palette=(' ', '#', '|', 'A', '/', '\\', 'o', '_', '-', 'i', 'M', '.'), font='VeraMono.ttf', color=color.black, line_height=1.1, **kwargs):
+        super().__init__(size=size, palette=palette, color=color, **kwargs)
+        self.text_entity = Text(text=' '*size[0], position=(-.45,-.45,-2), line_height=line_height, origin=(-.5,-.5), font=font)
         self.scale = (self.text_entity.width, self.h*Text.size*self.text_entity.line_height)
-        # grid_editor.render()
+        self.text_entity.world_parent = self
+
 
     def render(self):
         rotated_grid = list(zip(*self.grid[::-1]))
@@ -258,10 +261,10 @@ if __name__ == '__main__':
     can be useful for level editors and such
     here we create a new texture, but can also give it an exisitng texture to modify.
     '''
-    # from PIL import Image
-    # t = Texture(Image.new(mode='RGBA', size=(32,32), color=(0,0,0,1)))
-    # from ursina.prefabs.grid_editor import PixelEditor
-    # PixelEditor(texture=load_texture('brick'))
+    from PIL import Image
+    t = Texture(Image.new(mode='RGBA', size=(32,32), color=(0,0,0,1)))
+    from ursina.prefabs.grid_editor import PixelEditor
+    PixelEditor(texture=load_texture('brick'))
 
     '''
     same as the pixel editor, but with text.
