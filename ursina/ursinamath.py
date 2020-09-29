@@ -3,6 +3,7 @@ from math import sqrt
 from panda3d.core import Vec2, Vec4, LVector3f, Mat3, Mat4
 from ursina.vec3 import Vec3
 from ursina.color import Color
+internal_sum = sum
 
 
 def distance(a, b):
@@ -86,27 +87,6 @@ def round_to_closest(value, step=0):
     return round(value * step) / step
 
 
-def count_lines(file):
-    all_lines = 0
-    blank_lines = 0
-    comment_lines = 0
-
-    with open(file) as f:
-        for line in f:
-            all_lines += 1
-
-            if len(line.strip()) == 0:
-                blank_lines += 1
-
-            if line.strip().startswith('#'):
-                comment_lines += 1
-    print('all_lines:', all_lines)
-    print('blank_lines:', blank_lines)
-    print('comment_lines:', comment_lines)
-    print('used_lines:', all_lines - blank_lines - comment_lines)
-    return all_lines
-
-
 def chunk_list(l, chunk_size):
     # yield successive chunks from list
     for i in range(0, len(l), chunk_size):
@@ -124,13 +104,17 @@ def size_list():
     print('scene size:', globals_list)
 
 
-def average_position(l):
-    average = list()
-    for i in range(len(l[0])):
-        average.append(sum(e[i] for e in l) / len(l))
+def sum(l):
+    try:
+        return internal_sum(l)
+    except:
+        pass
 
-    return average
+    total = l[0].__class__()
+    for e in l:
+        total += e
 
+    return total
 
 
 if __name__ == '__main__':

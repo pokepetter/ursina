@@ -4,8 +4,8 @@ class Scrollable():
 
     def __init__(self, **kwargs):
         super().__init__()
-        self.max = math.inf
-        self.min = -math.inf
+        self.max = inf
+        self.min = -inf
         self.scroll_speed = .1
         self.direction = (0,1,0)
 
@@ -40,7 +40,7 @@ class Scrollable():
 
 if __name__ == '__main__':
     '''
-    This will make target entity move up or down when you hover the entity/its children 
+    This will make target entity move up or down when you hover the entity/its children
     while scrolling the scroll wheel.
     '''
 

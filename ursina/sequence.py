@@ -1,4 +1,3 @@
-from ursina import *
 import math
 from ursina import application
 import time
@@ -134,7 +133,7 @@ class Sequence():
 
 
 if __name__ == '__main__':
-
+    from ursina import *
     app = Ursina()
     e = Entity(model='quad')
     s = Sequence(

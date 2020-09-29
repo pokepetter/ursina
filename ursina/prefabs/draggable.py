@@ -16,8 +16,8 @@ class Draggable(Button):
         self.lock_x = False
         self.lock_y = False
         self.lock_z = False
-        self.min_x, self.min_y, self.min_z = -math.inf, -math.inf, -math.inf
-        self.max_x, self.max_y, self.max_z = math.inf, math.inf, math.inf
+        self.min_x, self.min_y, self.min_z = -inf, -inf, -inf
+        self.max_x, self.max_y, self.max_z = inf, inf, inf
 
         if not Draggable._z_plane.model: # set these after game start so it can load the model
             Draggable._z_plane.model = 'quad'

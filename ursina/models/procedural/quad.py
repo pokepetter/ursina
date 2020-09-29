@@ -47,7 +47,7 @@ class Quad(Mesh):
 
 
         # center mesh
-        offset = average_position(self.vertices)
+        offset = sum(self.vertices) / len(self.vertices)
         self.vertices = [(v[0]-offset[0], v[1]-offset[1], v[2]-offset[2]) for v in self.vertices]
 
 

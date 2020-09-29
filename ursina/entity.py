@@ -1129,7 +1129,7 @@ class Entity(NodePath):
 
 if __name__ == '__main__':
     from ursina import *
-    app = main.Ursina()
+    app = Ursina()
 
     e = Entity(model='quad', color=color.orange, position=(0,0,1), scale=1.5, rotation=(0,0,45), texture='brick')
 

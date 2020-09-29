@@ -1,7 +1,7 @@
 import colorsys
 import random
-import math
 import sys
+from math import floor, inf
 from panda3d.core import Vec4
 
 
@@ -37,7 +37,7 @@ class Color(Vec4):
     @property
     def hsv(self):
         result = to_hsv((self[0], self[1], self[2], self[3]))
-        result[0] =  math.floor(result[0] * 360)
+        result[0] =  floor(result[0] * 360)
         return result
 
     @property
@@ -64,7 +64,7 @@ class Color(Vec4):
 
 
 def hsv(h, s, v, a=1):
-    return Color(colorsys.hsv_to_rgb((h / 360) - math.floor(h / 360), s, v) + (a,))
+    return Color(colorsys.hsv_to_rgb((h / 360) - floor(h / 360), s, v) + (a,))
 
 color = hsv
 

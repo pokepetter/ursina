@@ -1,5 +1,15 @@
 import time
-from ursina.ursinastuff import *
+
+from direct.showbase.ShowBase import ShowBase
+from direct.task.Task import Task
+
+from ursina import application
+from ursina import scene
+from ursina import camera
+from ursina import window
+from ursina import mouse
+from ursina import input_handler
+
 import __main__
 
 

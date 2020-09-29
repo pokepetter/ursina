@@ -4,10 +4,11 @@ from panda3d.core import TextNode
 # from direct.interval.IntervalGlobal import Sequence, Func, Wait, SoundInterval
 
 import ursina
-from ursina import *
+# from ursina import *
+from ursina import camera
 from ursina.entity import Entity
 from ursina.sequence import Sequence, Func, Wait
-
+from ursina import color
 # note:
 # <scale:n> tag doesn't work well in the middle of text.
 # only good for titles for now.
@@ -407,6 +408,7 @@ class Text(Entity):
 
 
 if __name__ == '__main__':
+    from ursina import *
     app = Ursina()
     # Text.size = .001
     descr = dedent('''

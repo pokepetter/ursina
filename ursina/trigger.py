@@ -1,5 +1,6 @@
 from ursina.entity import Entity
 from ursina.ursinamath import distance
+import time
 
 # TODO:
 # circle

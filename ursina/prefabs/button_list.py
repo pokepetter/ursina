@@ -69,7 +69,7 @@ class ButtonList(Entity):
             if abs(mouse.point[1] // self.button_height) > len(self.button_dict):
                 self.highlight.enabled = False
 
-            self.highlight.y = math.ceil(mouse.point[1] / self.button_height) * self.button_height
+            self.highlight.y = ceil(mouse.point[1] / self.button_height) * self.button_height
 
 
     def on_disable(self):

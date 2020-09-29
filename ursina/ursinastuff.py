@@ -1,15 +1,3 @@
-from direct.showbase.ShowBase import ShowBase
-from panda3d.core import Lens, LensNode, PerspectiveLens, OrthographicLens
-# from direct.interval.IntervalGlobal import Sequence, Func, Wait, SoundInterval
-from ursina.sequence import Sequence, Func, Wait
-from direct.interval.IntervalGlobal import SoundInterval
-from direct.task.Task import Task
-from panda3d.core import NodePath, PandaNode
-from panda3d.core import Vec2
-from ursina.vec3 import Vec3
-from panda3d.core import loadPrcFileData, Filename, AntialiasAttrib
-from panda3d.core import PNMImage, Texture
-
 import sys
 import os
 import math
@@ -21,16 +9,10 @@ import time
 from pathlib import Path
 
 from ursina import application
-from ursina.entity import Entity
-from ursina import scene
+from ursina.text import Text
 from ursina import window
-from ursina import mouse
-from ursina import camera
-from ursina import raycaster
-from ursina.raycaster import raycast, boxcast
-from ursina import color
-from ursina.input_handler import held_keys
-from ursina import input_handler
+from ursina import scene
+from ursina.sequence import Sequence, Func, Wait
 
 
 class Empty():
@@ -136,10 +118,12 @@ def import_all_classes(path=application.asset_folder, debug=False):
     return imported_successfully
 
 
-from ursina.text import Text
 def print_on_screen(text, position=window.top_left, origin=(-.5,.5), scale=1, duration=1):
     text_entity = Text(text=text, position=position, origin=origin, scale=scale)
     destroy(text_entity, delay=duration)
+
+
+
 
 if __name__ == '__main__':
 

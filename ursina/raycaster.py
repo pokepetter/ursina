@@ -7,7 +7,7 @@ from ursina import scene
 from panda3d.core import CollisionTraverser, CollisionNode, CollisionHandlerQueue
 from panda3d.core import CollisionRay, CollisionSegment, CollisionBox
 from ursina.vec3 import Vec3
-import math
+from math import sqrt, inf
 from ursina.hit_info import HitInfo
 
 
@@ -28,15 +28,15 @@ class Raycaster(Entity):
 
 
     def distance(self, a, b):
-        return math.sqrt(sum( (a - b)**2 for a, b in zip(a, b)))
+        return sqrt(sum( (a - b)**2 for a, b in zip(a, b)))
 
 
-    def raycast(self, origin, direction=(0,0,1), distance=math.inf, traverse_target=scene, ignore=list(), debug=False):
+    def raycast(self, origin, direction=(0,0,1), distance=inf, traverse_target=scene, ignore=list(), debug=False):
         self.position = origin
         self.look_at(self.position + direction)
         self._pickerNode.clearSolids()
         # if thickness == (0,0):
-        if distance == math.inf:
+        if distance == inf:
             ray = CollisionRay()
             ray.setOrigin(Vec3(0,0,0))
             # ray.setDirection(Vec3(0,1,0))
@@ -102,7 +102,7 @@ class Raycaster(Entity):
         return self.hit
 
 
-    def boxcast(self, origin, direction=(0,0,1), distance=math.inf, thickness=(1,1), traverse_target=scene, ignore=list(), debug=False):
+    def boxcast(self, origin, direction=(0,0,1), distance=inf, thickness=(1,1), traverse_target=scene, ignore=list(), debug=False):
         if isinstance(thickness, (int, float, complex)):
             thickness = (thickness, thickness)
         resolution = 3
