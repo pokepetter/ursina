@@ -73,8 +73,8 @@ class Mesh(NodePath):
                 setattr(self, name, list())
 
         if self.vertices:
-            # self.vertices = [Vec3(v) for v in self.vertices]
             self.generate()
+
 
     def generate(self):  # call this after setting some of the variables to update it
         if hasattr(self, 'geomNode'):
@@ -84,8 +84,9 @@ class Mesh(NodePath):
         vertex_format = Mesh._formats[(bool(self.colors), bool(self.uvs), bool(self.normals))]
         vdata = GeomVertexData('name', vertex_format, static_mode)
         vdata.setNumRows(len(self.vertices)) # for speed
-        self.geomNode = GeomNode('mesh')
-        self.attachNewNode(self.geomNode)
+        if not hasattr(self, 'geomNode'):
+            self.geomNode = GeomNode('mesh')
+            self.attachNewNode(self.geomNode)
 
         vertexwriter = GeomVertexWriter(vdata, 'vertex')
         for v in self.vertices:
@@ -188,10 +189,11 @@ class Mesh(NodePath):
         self.uvs += other.uvs
 
 
-    def __copy__(self):
+    def __deepcopy__(self, memo):
         m = Mesh(self.vertices, self.triangles, self.colors, self.uvs, self.normals, self.static, self.mode, self.thickness)
         m.name = self.name
         return m
+
 
 
     @property
@@ -262,24 +264,38 @@ class Mesh(NodePath):
 
 if __name__ == '__main__':
     from ursina import *
+
     app = Ursina()
 
-    verts = ((0,0,0), (1,0,0), (.5, 1, 0), (-.5,1,0))
-    tris = (1, 2, 0, 2, 3, 0)
-    uvs = ((1.0, 0.0), (0.0, 1.0), (0.0, 0.0), (1.0, 1.0))
-    norms = ((0,0,-1),) * len(verts)
-    colors = (color.red, color.blue, color.lime, color.black)
+    # verts = ((0,0,0), (1,0,0), (.5, 1, 0), (-.5,1,0))
+    # tris = (1, 2, 0, 2, 3, 0)
+    # uvs = ((1.0, 0.0), (0.0, 1.0), (0.0, 0.0), (1.0, 1.0))
+    # norms = ((0,0,-1),) * len(verts)
+    # colors = (color.red, color.blue, color.lime, color.black)
+    #
+    #
+    # e = Entity(model=Mesh(vertices=verts, triangles=tris, uvs=uvs, normals=norms, colors=colors), scale=2)
+    # # line mesh test
+    # verts = (Vec3(0,0,0), Vec3(0,1,0), Vec3(1,1,0), Vec3(2,2,0), Vec3(0,3,0), Vec3(-2,3,0))
+    # tris = ((0,1), (3,4,5))
+    #
+    # lines = Entity(model=Mesh(vertices=verts, triangles=tris, mode='line', thickness=4), color=color.cyan, z=-1)
+    # points = Entity(model=Mesh(vertices=verts, mode='point', thickness=.05), color=color.red, z=-1.01)
+    # # points.model.mode = MeshModes.point     # can also use  the MeshMode enum
+    # # print(e.model.recipe)
+    # # e.model.save('bam_test', application.compressed_models_folder, 'bam')
 
 
-    e = Entity(model=Mesh(vertices=verts, triangles=tris, uvs=uvs, normals=norms, colors=colors), scale=2)
-    # line mesh test
-    verts = (Vec3(0,0,0), Vec3(0,1,0), Vec3(1,1,0), Vec3(2,2,0), Vec3(0,3,0), Vec3(-2,3,0))
-    tris = ((0,1), (3,4,5))
+    from time import perf_counter
+    e = Entity(model=Mesh(vertices=[Vec3(0,0,0), Vec3(1,0,0), Vec3(.5,1,0)]))
+    for i in range(3):
+        clone = Entity(model=deepcopy(e.model),x=i)
 
-    lines = Entity(model=Mesh(vertices=verts, triangles=tris, mode='line', thickness=4), color=color.cyan, z=-1)
-    points = Entity(model=Mesh(vertices=verts, mode='point', thickness=.05), color=color.red, z=-1.01)
-    # points.model.mode = MeshModes.point     # can also use  the MeshMode enum
-    # print(e.model.recipe)
-    # e.model.save('bam_test', application.compressed_models_folder, 'bam')
+    clone.model.vertices = [v+Vec3(0,-2,0) for v in clone.model.vertices]
+    t = perf_counter()
+    clone.model.generate()
+    print('-------', (perf_counter() - t) * 1000)
+    # print(clonde.mode)
+
     EditorCamera()
     app.run()

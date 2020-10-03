@@ -12,6 +12,9 @@ from time import perf_counter
 imported_meshes = dict()
 
 def load_model(name, path=application.asset_folder):
+    if not isinstance(name, str):
+        raise TypeError(f"Argument save must be of type str, not {type(str)}")
+
     if name in imported_meshes:
         # print('load cached model', name)
         try:
