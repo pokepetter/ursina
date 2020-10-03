@@ -1,9 +1,10 @@
 # do imports here so I can do a single line import
+import sys
 from pathlib import Path
 from textwrap import dedent
 import time
 import random
-from copy import copy
+from copy import copy, deepcopy
 from math import floor, ceil, inf
 
 from ursina.main import Ursina
