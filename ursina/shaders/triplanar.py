@@ -5,20 +5,20 @@ triplanar_shader = Shader(
 vertex='''
 #version 140
 uniform mat4 p3d_ModelViewProjectionMatrix;
-uniform mat4 transform_matrix;
-in vec4 p3d_Vertex;
+uniform mat4 p3d_ModelMatrix;
 in vec2 p3d_MultiTexCoord0;
+in vec4 p3d_Vertex;
 in vec3 p3d_Normal;
-out vec2 texcoord;
-out vec3 world_space_normal;
+out vec3 world_normal;
 out vec3 vertex_position;
+out vec2 texcoord;
 
 
 void main() {
   gl_Position = p3d_ModelViewProjectionMatrix * p3d_Vertex;
   texcoord = p3d_MultiTexCoord0;
 
-  world_space_normal = normalize(transpose( inverse(mat3(transform_matrix)) ) * p3d_Normal.xyz);
+  world_normal = normalize(mat3(p3d_ModelMatrix) * p3d_Normal);
   vertex_position = p3d_Vertex.xyz;
 }
 ''',
@@ -32,7 +32,7 @@ out vec4 fragColor;
 
 uniform sampler2D p3d_Texture0;
 uniform sampler2D top_texture;
-in vec3 world_space_normal;
+in vec3 world_normal;
 in vec3 vertex_position;
 
 in vec2 normalRepeat;
@@ -66,16 +66,14 @@ vec3 TriPlanarBlendWeightsConstantOverlap(vec3 normal) {
 }
 
 void main(){
-    // vec3 world_space_normal = vec3(world_space_normal.x, world_space_normal.z, world_space_normal.y);
-    // vec3 vertex_position = vec3(vertex_position.x, vertex_position.z, vertex_position.y);
-    vec3 blendFast = TriPlanarBlendWeightsConstantOverlap(world_space_normal);
+    vec3 blendFast = TriPlanarBlendWeightsConstantOverlap(world_normal);
     vec3 blend = blendFast;
 
     vec3 albedoX = texture(p3d_Texture0, vertex_position.yz).rgb*blend.x;
 	vec3 albedoY = texture(p3d_Texture0, vertex_position.xz).rgb*blend.y;
 	vec3 albedoZ = texture(p3d_Texture0, vertex_position.xy).rgb*blend.z;
 
-    if (world_space_normal.z > .0) {
+    if (world_normal.z > .0) {
 		albedoZ = texture(top_texture, vertex_position.xy).rgb*blend.z;
     }
 
@@ -87,7 +85,6 @@ void main(){
 ''',
 geometry='',
 default_input = {
-    'transform_matrix' : Mat4(),
     'normalRepeat' : Vec2(10,10),
     'normalScale' : Vec2(1,1),
     'top_texture' : None
@@ -125,6 +122,5 @@ if __name__ == '__main__':
     def update():
         b.rotation_y += 1
         b.rotation_x += 1
-        b.set_shader_input('transform_matrix', b.getNetTransform().getMat())
 
     app.run()
