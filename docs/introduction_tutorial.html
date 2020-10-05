@@ -9,6 +9,7 @@
     mark {background: #ccff99;}
     span {background-color: rgba(0, 0, 0, 0.55); padding: .1em; line-height: 1.35em;}
     img {max-width: 100%; vertical-align: top;}
+    .code_block {background-color: whitesmoke; padding: 10px; margin: 0; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;}
 
 </style>
 <html>
@@ -31,7 +32,7 @@ Introduction Tutorial<br>
 <br>
 3) Open Command Prompt/terminal and paste the commands below. This will download and install the dependencies you need.<br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">pip install ursina<br></div><br>
+<div class="code_block" style="margin-left: 1em;">pip install ursina<br></div><br>
 <br>
 4) Open your preferred text editor. If you're new to programming, here are some suggestions:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;* Atom<br>
@@ -44,16 +45,16 @@ Introduction Tutorial<br>
 <br>
 <br>
 6) At the top of the file, write:<br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;"><font color="purple">from</font> ursina <font color="purple">import</font> *<br></div>&nbsp;&nbsp;&nbsp;&nbsp;This will import all the necessary things we need from the engine in one line.<br>
+<div class="code_block" style="margin-left: 1em;"><font color="purple">from</font> ursina <font color="purple">import</font> *<br></div>&nbsp;&nbsp;&nbsp;&nbsp;This will import all the necessary things we need from the engine in one line.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;It means something like 'from ursina import all'. It's also possible to import parts of the engine<br>
 &nbsp;&nbsp;&nbsp;&nbsp;like this:<br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;"><font color="purple">from</font> ursina.prefabs <font color="purple">import</font> Button<br></div>&nbsp;&nbsp;&nbsp;&nbsp;Or import something that's not included by default:<br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;"><font color="purple">from</font> ursina.prefabs.first_person_controller <font color="purple">import</font> FirstPersonController<br></div><br>
+<div class="code_block" style="margin-left: 1em;"><font color="purple">from</font> ursina.prefabs <font color="purple">import</font> Button<br></div>&nbsp;&nbsp;&nbsp;&nbsp;Or import something that's not included by default:<br>
+<div class="code_block" style="margin-left: 1em;"><font color="purple">from</font> ursina.prefabs.first_person_controller <font color="purple">import</font> FirstPersonController<br></div><br>
 <br>
 7) Here's a really basic example game with comments to explain what were doing.<br>
 &nbsp;&nbsp; We will simply make a orange box move right and left when we press 'd' or 'a'.<br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;"><font color="purple">from</font> ursina <font color="purple">import</font> *<br><br><font color="gray"># create a window</font>
+<div class="code_block" style="margin-left: 1em;"><font color="purple">from</font> ursina <font color="purple">import</font> *<br><br><font color="gray"># create a window</font>
 app = Ursina()<br><br><font color="gray"># most things in ursina are Entities. An Entity is a thing you place in the world.</font>
 <font color="gray"># you can think of them as GameObjects in Unity or Actors in Unreal.</font>
 <font color="gray"># the first paramenter tells us the Entity's model will be a 3d-model called 'cube'.</font>
@@ -75,7 +76,7 @@ app.run()<br><br><br></div><br>
 &nbsp;&nbsp; go to the current folder. An easy way to do this is to type 'cmd' in the address bar.<br>
 &nbsp;&nbsp; Run the command below.<br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">python main.py<br></div><br>
+<div class="code_block" style="margin-left: 1em;">python main.py<br></div><br>
 &nbsp;&nbsp; An alternative is to install the 'atom-python-run' package in Atom so you can start<br>
 &nbsp;&nbsp; the game by pressing F5.<br>
 <br>

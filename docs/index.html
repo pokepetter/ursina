@@ -9,6 +9,7 @@
     mark {background: #ccff99;}
     span {background-color: rgba(0, 0, 0, 0.55); padding: .1em; line-height: 1.35em;}
     img {max-width: 100%; vertical-align: top;}
+    .code_block {background-color: whitesmoke; padding: 10px; margin: 0; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;}
 a.button {background-color: #6b943a;} a.button:hover {background-color: #a9a33a}
 </style>
 <html>
@@ -97,15 +98,15 @@ Getting Started<br>
 &nbsp;&nbsp;&nbsp;&nbsp;1) Install Python 3.6 or newer. <a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;2) Open cmd/terminal and type:<br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 2em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">pip install ursina<br></div><br>
+<div class="code_block" style="margin-left: 2em;">pip install ursina<br></div><br>
 &nbsp;&nbsp;&nbsp;&nbsp;If you want to easily edit the source, it's recommended to clone the git<br>
 &nbsp;&nbsp;&nbsp;&nbsp;repo and install as develop like this. Make sure you have git installed. <a href="https://git-scm.com/">https://git-scm.com/</a><br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 2em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">git clone <a href="https://github.com/pokepetter/ursina.git">https://github.com/pokepetter/ursina.git</a><br>python setup.py develop<br></div><br>
+<div class="code_block" style="margin-left: 2em;">git clone <a href="https://github.com/pokepetter/ursina.git">https://github.com/pokepetter/ursina.git</a><br>python setup.py develop<br></div><br>
 &nbsp;&nbsp;&nbsp;&nbsp;Also install any of the optional dependencies you want from the list below,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;or install them all with:<br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 2em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">pip install ursina[extras]<br></div><br>
+<div class="code_block" style="margin-left: 2em;">pip install ursina[extras]<br></div><br>
 &nbsp;&nbsp;&nbsp;&nbsp;On some systems you might have to use pip3 instead of pip in order to use Python 3 and not the old Python 2.<br>
 <br>
 <br>
@@ -137,7 +138,7 @@ Examples<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;Entity Example:<br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 2em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;"><font color="purple">from</font> ursina <font color="purple">import</font> *            <font color="gray"># <font color="purple">import</font> everything we need with one line.</font><br><br>app = Ursina()<br>ground = <font color="olive">Entity</font>(<br>    model = <font color="green">'cube'</font>,<br>    color = color.magenta,<br>    z = -.1,<br>    y = -3,<br>    origin = (0, .5),<br>    scale = (50, 1, 10),<br>    collider = <font color="green">'box'</font><br>    )<br><br>app.run()                       <font color="gray"># opens a window and starts the game.</font><br><br></div><br>
+<div class="code_block" style="margin-left: 2em;"><font color="purple">from</font> ursina <font color="purple">import</font> *            <font color="gray"># <font color="purple">import</font> everything we need with one line.</font><br><br>app = Ursina()<br>ground = <font color="olive">Entity</font>(<br>    model = <font color="green">'cube'</font>,<br>    color = color.magenta,<br>    z = -.1,<br>    y = -3,<br>    origin = (0, .5),<br>    scale = (50, 1, 10),<br>    collider = <font color="green">'box'</font><br>    )<br><br>app.run()                       <font color="gray"># opens a window and starts the game.</font><br><br></div><br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
 <div id="How do I make a game?"/><br>
@@ -149,12 +150,12 @@ How do I make a game?<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) Create an empty .py file called 'ursina_game.py'<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) Copy this text into your new file:<br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 3em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;"><font color="purple">from</font> ursina <font color="purple">import</font> *<br><br>app = Ursina()<br><br>player = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.orange, scale_y=2)<br><br><font color="purple">def</font> update():   <font color="gray"># update gets automatically called.</font><br>    player.x += held_keys[<font color="green">'d'</font>] * .1<br>    player.x -= held_keys[<font color="green">'a'</font>] * .1<br><br>app.run()   <font color="gray"># opens a window and starts the game.</font><br><br></div><br>
+<div class="code_block" style="margin-left: 3em;"><font color="purple">from</font> ursina <font color="purple">import</font> *<br><br>app = Ursina()<br><br>player = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.orange, scale_y=2)<br><br><font color="purple">def</font> update():   <font color="gray"># update gets automatically called.</font><br>    player.x += held_keys[<font color="green">'d'</font>] * .1<br>    player.x -= held_keys[<font color="green">'a'</font>] * .1<br><br>app.run()   <font color="gray"># opens a window and starts the game.</font><br><br></div><br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3) Type this in the terminal to start the game. I recommend setting a hotkey<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for this in your text editor:<br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 3em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">python ursina_game.py<br></div><br>
+<div class="code_block" style="margin-left: 3em;">python ursina_game.py<br></div><br>
 &nbsp;&nbsp;&nbsp;&nbsp;The game should start! You can now move the orange box around with 'a' and 'd'!<br>
 &nbsp;&nbsp;&nbsp;&nbsp;To close the window, you can by default, press shift+q or press the red x.<br>
 <br>

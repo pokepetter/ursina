@@ -9,6 +9,7 @@
     mark {background: #ccff99;}
     span {background-color: rgba(0, 0, 0, 0.55); padding: .1em; line-height: 1.35em;}
     img {max-width: 100%; vertical-align: top;}
+    .code_block {background-color: whitesmoke; padding: 10px; margin: 0; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;}
 
 </style>
 <html>
@@ -55,7 +56,7 @@ Setting a model<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* blend (gets auto converted to an obj)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* ursinamesh (custom human readable format identical to how you'd make a Mesh in code)<br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;"><font color="olive">Entity</font>(model=<font color="green">'name_of_your_model'</font>)<br></div><br>
+<div class="code_block" style="margin-left: 1em;"><font color="olive">Entity</font>(model=<font color="green">'name_of_your_model'</font>)<br></div><br>
 <br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
@@ -65,12 +66,12 @@ Texture<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;Setting a texture is similar to setting a model. Just give it a name in this case as well:<br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">e1 = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, texture=<font color="green">'texture_name'</font>)<br><br><font color="gray"># other ways are:</font>
+<div class="code_block" style="margin-left: 1em;">e1 = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, texture=<font color="green">'texture_name'</font>)<br><br><font color="gray"># other ways are:</font>
 e2 = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, texture=e1.texture) <font color="gray"># or set it to another Texture</font><br>e3 = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, texture=PIL.Image.new(mode="RGBA", size=(854,480))) <font color="gray"># set a PIL texture</font><br>e4 = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, texture=<font color="green">'movie_name.mp4'</font>) <font color="gray"># set video texture</font><br></div><br>
 &nbsp;&nbsp;&nbsp;&nbsp;For 2d graphics there's also the Sprite class, which is simply an Entity with a<br>
 &nbsp;&nbsp;&nbsp;&nbsp;'quad' model and scale&nbsp;&nbsp;set to automatically fit the size and aspect ratio of the texture.<br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">s = Sprite(<font color="green">'texture_name'</font>)<br>print(s.aspect_ratio)<br></div><br>
+<div class="code_block" style="margin-left: 1em;">s = Sprite(<font color="green">'texture_name'</font>)<br>print(s.aspect_ratio)<br></div><br>
 <br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
@@ -78,7 +79,7 @@ e2 = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, 
 Setting the color<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">e.color = color.red <font color="gray"># set it to a color in the color module</font><br><br>e.color = color.color(120, .5, .5) <font color="gray"># hsv color</font><br>e.color = color.rgb(.8, .1, 0) <font color="gray"># rgb color</font><br>e.color = e.color.tint(.1) <font color="gray"># tint the color</font><br>e.color = color.random_color() <font color="gray"># set it to a random color</font><br>e.color = lerp(color.red, color.green, .5) <font color="gray"># set it to a color half way between red and green</font><br></div><br>
+<div class="code_block" style="margin-left: 1em;">e.color = color.red <font color="gray"># set it to a color in the color module</font><br><br>e.color = color.color(120, .5, .5) <font color="gray"># hsv color</font><br>e.color = color.rgb(.8, .1, 0) <font color="gray"># rgb color</font><br>e.color = e.color.tint(.1) <font color="gray"># tint the color</font><br>e.color = color.random_color() <font color="gray"># set it to a random color</font><br>e.color = lerp(color.red, color.green, .5) <font color="gray"># set it to a color half way between red and green</font><br></div><br>
 <br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
@@ -89,7 +90,7 @@ Moving<br>
 &nbsp;&nbsp;&nbsp;&nbsp;You can move an entity by setting the attributes:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;'position', 'x', 'y', 'z', 'world_position', 'world_x', 'world_y', 'world_z'<br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;"><font color="gray"># you can give it a position when you create i, or you can omit it and set it later</font>
+<div class="code_block" style="margin-left: 1em;"><font color="gray"># you can give it a position when you create i, or you can omit it and set it later</font>
 e = <font color="olive">Entity</font>(position=(0,0,0))<br><font color="gray"># set position relative to parent entity:</font>
 e.position = Vec3(0,0,0)<br>e.position = Vec2(0,0)<br>e.position = (0,0,0)<br>e.position = (0,0)<br><br><font color="gray"># shortcuts for individual axes:</font>
 e.x = 0<br>e.y = 0<br>e.z = 0<br><br><font color="gray"># set position relative to the world:</font>
@@ -104,10 +105,10 @@ e.x = 0<br>e.y = 0<br>e.z = 0<br><br><font color="gray"># set position relative 
 Rotating<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">e.rotation = (0,0,0)<br>e.rotation_y = 90<br></div><br>
+<div class="code_block" style="margin-left: 1em;">e.rotation = (0,0,0)<br>e.rotation_y = 90<br></div><br>
 &nbsp;&nbsp;&nbsp;&nbsp;The look_at() method can also be for pointing an entity at something:<br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">other entity = <font color="olive">Entity</font>(position=(10,1,8))<br><br>e.look_at(other_entity) <font color="gray"># make z-axis(forward) point at other_entity</font><br>e.look_at(other_entity, axis=<font color="green">'up'</font>) <font color="gray"># optinally define which axis</font><br></div><br>
+<div class="code_block" style="margin-left: 1em;">other entity = <font color="olive">Entity</font>(position=(10,1,8))<br><br>e.look_at(other_entity) <font color="gray"># make z-axis(forward) point at other_entity</font><br>e.look_at(other_entity, axis=<font color="green">'up'</font>) <font color="gray"># optinally define which axis</font><br></div><br>
 <br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
@@ -117,7 +118,7 @@ Scaling<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;Change the size of the entity by setting the scale attribute:<br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">e = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, scale=(3,1,1))<br></div><br>
+<div class="code_block" style="margin-left: 1em;">e = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, scale=(3,1,1))<br></div><br>
 <br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
@@ -127,10 +128,10 @@ Update<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;An Entity's update method will be called automatically:<br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">e = <font color="olive">Entity</font>()<br><font color="purple">def</font> my_update():<br>    e.x += 1 * time.dt <font color="gray"># dt is short for delta time, the duration since the last frame.</font><br><br>e.update = my_update<br></div><br>
+<div class="code_block" style="margin-left: 1em;">e = <font color="olive">Entity</font>()<br><font color="purple">def</font> my_update():<br>    e.x += 1 * time.dt <font color="gray"># dt is short for delta time, the duration since the last frame.</font><br><br>e.update = my_update<br></div><br>
 &nbsp;&nbsp;&nbsp;&nbsp;Or you can implement it by inheriting the Entity class:<br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">class Player(<font color="olive">Entity</font>):<br>    <font color="purple">def</font> update(self):<br>        self.x += 1 * time.dt<br></div><br>
+<div class="code_block" style="margin-left: 1em;">class Player(<font color="olive">Entity</font>):<br>    <font color="purple">def</font> update(self):<br>        self.x += 1 * time.dt<br></div><br>
 <br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
@@ -140,7 +141,7 @@ Input<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;The same goes for the input method:<br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 1em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">class Player(<font color="olive">Entity</font>):<br>    <font color="purple">def</font> input(self, key):<br>        if key == <font color="green">'w'</font>:<br>            self.position += self.forward<br><br>        if key == <font color="green">'d'</font>:<br>            self.animate(<font color="green">'rotation_y'</font>, self.rotation_y + 90, duration=.1)<br><br>        if key == <font color="green">'a'</font>:<br>            self.animate(<font color="green">'rotation_y'</font>, self.rotation_y - 90, duration=.1)<br></div><br>
+<div class="code_block" style="margin-left: 1em;">class Player(<font color="olive">Entity</font>):<br>    <font color="purple">def</font> input(self, key):<br>        if key == <font color="green">'w'</font>:<br>            self.position += self.forward<br><br>        if key == <font color="green">'d'</font>:<br>            self.animate(<font color="green">'rotation_y'</font>, self.rotation_y + 90, duration=.1)<br><br>        if key == <font color="green">'a'</font>:<br>            self.animate(<font color="green">'rotation_y'</font>, self.rotation_y - 90, duration=.1)<br></div><br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
 <div id="Mouse Input"/><br>

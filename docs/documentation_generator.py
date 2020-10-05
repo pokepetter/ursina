@@ -88,14 +88,18 @@ def get_class_attributes(str):
             # value = textwrap.shorten(value, width=140-len(key))
             attributes.append(key + ' = ' + value)
 
-
     if '@property' in code:
-        # attributes.append('properties:\n')
         for i, line in enumerate(lines):
             if line.strip().startswith('@property'):
                 name = lines[i+1].split('def ')[1].split('(')[0]
                 if not name in [e.split(' = ')[0] for e in attributes]:
                     attributes.append(name)
+
+    if 'generate_properties(' in str:
+        get_funcs = [l.split('def get_', 1)[1].split('(')[0] for l in lines if l.strip().startswith('def get_')]
+        set_funcs = [l.split('def set_', 1)[1].split('(')[0] for l in lines if l.strip().startswith('def set_')]
+        attributes.extend(set(get_funcs + set_funcs))
+
 
     return attributes
 
@@ -106,6 +110,8 @@ def get_functions(str, is_class=False):
 
     functions = list()
     lines = str.split('\n')
+    ignore_functions_for_property_generation = 'generate_properties(' in str
+
     for i, line in enumerate(lines):
 
         if line == '''if __name__ == '__main__':''' or 'docignore' in line:
@@ -117,6 +123,11 @@ def get_functions(str, is_class=False):
             name = line.split('def ')[1].split('(')[0]
             if name.startswith('_') or lines[i-1].strip().startswith('@'):
                 continue
+
+            if ignore_functions_for_property_generation:
+                if name.startswith('get_') or name.startswith('set_'):
+                    continue
+
 
             params = line.replace('(self, ', '(')
             params = params.replace('(self)', '()')

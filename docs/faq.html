@@ -9,6 +9,7 @@
     mark {background: #ccff99;}
     span {background-color: rgba(0, 0, 0, 0.55); padding: .1em; line-height: 1.35em;}
     img {max-width: 100%; vertical-align: top;}
+    .code_block {background-color: whitesmoke; padding: 10px; margin: 0; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;}
 
 </style>
 <html>
@@ -51,7 +52,7 @@ to structure your project in a good way, rather than micro-optimize.<br>
 <br>
 <b>How can I call a function with a delay?</b><br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 0em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;">    invoke(some_function, arg1, kwarg1=<font color="green">'some kwarg'</font>, delay=2)<br></div><br>
+<div class="code_block" style="margin-left: 0em;">    invoke(some_function, arg1, kwarg1=<font color="green">'some kwarg'</font>, delay=2)<br></div><br>
 <br>
 <br>
 <br>
@@ -67,7 +68,7 @@ you are on your own.<br>
 <b>How can I use panda3d alongside ursina?</b><br>
 <br>
 What you need to know is that Entity is a NodePath and Ursina is a ShowBase.<br>
-You can also write custom shaders, see panda3d's shader documentatation for that.<br>
+You can also write custom shaders, see panda3d's shader documentation for that.<br>
 <br>
 <br>
 <br>
@@ -87,7 +88,7 @@ Like raycast(), it also returns a HitInfo.<br>
 <br>
 Example from the FirstPersonController:<br>
 <br>
-<div style=" background-color: whitesmoke; padding: 10px; margin: 0; margin-left: 0em; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;"><font color="gray"># cast a ray from the player position in the walk direction.</font>
+<div class="code_block" style="margin-left: 0em;"><font color="gray"># cast a ray from the player position in the walk direction.</font>
 <font color="gray"># only move forward if it doesn't hit anything.</font>
 origin = self.world_position + (self.up*.5) + (self.direction/2)<br>ray = raycast(origin , self.direction, ignore=[self,], distance=.25, debug=False)<br><br>if not ray.hit:<br>   self.position += self.direction * self.speed * time.dt<br><br></div><br>
 
