@@ -221,7 +221,7 @@ class Ursina(ShowBase):
 
         application.load_settings()
         print('development mode:', application.development_mode)
-        print('application sucessfully started ʕ •ᴥ•ʔゝ□')
+        print('application sucessfully started')
 
         super().run()
 
