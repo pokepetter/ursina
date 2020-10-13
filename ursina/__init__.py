@@ -8,10 +8,10 @@ from copy import copy, deepcopy
 from math import floor, ceil, inf
 
 from ursina.main import Ursina
-from ursina.ursinamath import distance, distance2d, distance_xz, sum, lerp, inverselerp, clamp, round_to_closest, chunk_list
-from ursina.ursinastuff import invoke, destroy, import_all_classes, print_on_screen, Empty
+from ursina.ursinamath import *
+from ursina.ursinastuff import *
 from ursina.input_handler import held_keys
-from ursina.string_utilities import camel_to_snake, snake_to_camel, multireplace, printvar
+from ursina.string_utilities import *
 from ursina.mesh_importer import load_model, load_blender_scene
 from ursina.texture import Texture
 from ursina.texture_importer import load_texture

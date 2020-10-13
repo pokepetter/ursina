@@ -2,7 +2,7 @@ import os
 import glob
 import platform
 import subprocess
-from copy import copy
+from copy import copy, deepcopy
 from pathlib import Path
 from ursina.mesh import Mesh
 from ursina import application
@@ -18,7 +18,7 @@ def load_model(name, path=application.asset_folder):
     if name in imported_meshes:
         # print('load cached model', name)
         try:
-            return copy(imported_meshes[name])
+            return deepcopy(imported_meshes[name])
         except:
             pass
 
