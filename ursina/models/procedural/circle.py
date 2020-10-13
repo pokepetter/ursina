@@ -21,7 +21,7 @@ class Circle(Mesh):
 
 if __name__ == '__main__':
     app = Ursina()
-    e = Entity(model=Circle(8, mode='line', thickness=10), color=color.color(60,1,1,.3), x=6)
+    e = Entity(model=Circle(8, mode='line', thickness=10), color=color.color(60,1,1,.3))
     print(e.model.recipe)
     origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
     ed = EditorCamera(rotation_speed = 200, panning_speed=200)

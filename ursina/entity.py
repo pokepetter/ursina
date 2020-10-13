@@ -316,7 +316,7 @@ class Entity(NodePath):
             self._collider.name = value
 
         elif value == 'sphere':
-            self._collider = SphereCollider(entity=self)
+            self._collider = SphereCollider(entity=self, center=-self.origin)
             self._collider.name = value
 
         elif value == 'mesh' and self.model:
@@ -325,7 +325,7 @@ class Entity(NodePath):
 
         elif isinstance(value, Mesh):
             self._collider = MeshCollider(entity=self, mesh=value, center=-self.origin)
-            
+
         elif isinstance(value, str):
             m = load_model(value)
             if not m:
@@ -955,37 +955,23 @@ class Entity(NodePath):
 #------------
 # ANIMATIONS
 #------------
-    def animate(self, name, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt=True, time_step=None, auto_destroy=True):
-        s = Sequence(
-            Wait(delay),
-            Func(self._animate, name, value, duration, curve, loop, resolution, interrupt, time_step, auto_destroy)
-        )
-        s.start()
-        return s
-
-    def _animate(self, name, value, duration=.1, curve=curve.in_expo, loop=False, resolution=None, interrupt=True, time_step=None, auto_destroy=True):
+    def animate(self, name, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt='kill', time_step=None, auto_destroy=True):
         animator_name = name + '_animator'
         # print('start animating value:', name, animator_name )
         if interrupt and hasattr(self, animator_name):
-            getattr(self, animator_name).pause()
-            # print('interrupt', animator_name)
-        else:
-            try:
-                getattr(self, animator_name).finish()
-            except:
-                pass
-        setattr(self, animator_name, Sequence(loop=loop, time_step=time_step, auto_destroy=auto_destroy))
-        sequence = getattr(self, animator_name)
+            getattr(getattr(self, animator_name), interrupt)() # call kill() or finish() depending on what the interrupt value is.
+            print('interrupt', interrupt, animator_name)
+
+        sequence = Sequence(loop=loop, time_step=time_step, auto_destroy=auto_destroy)
+        setattr(self, animator_name, sequence)
         self.animations.append(sequence)
-        # sequence.append(Wait(delay))
+
+        sequence.append(Wait(delay))
         if not resolution:
             resolution = max(int(duration * 60), 1)
 
         for i in range(resolution+1):
             t = i / resolution
-            # if isinstance(curve, CubicBezier):
-            #     t = curve.calculate(t)
-            # else:
             t = curve(t)
 
             sequence.append(Wait(duration / resolution))
@@ -1039,7 +1025,7 @@ class Entity(NodePath):
         return s
 
     def animate_color(self, value, duration=.1,  **kwargs):
-        return self.animate('color', value, duration,  **kwargs)
+        return self.animate('color', value, duration, interrupt='finish', **kwargs)
 
     def fade_out(self, value=0, duration=.5, **kwargs):
         return self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration,  **kwargs)
@@ -1047,8 +1033,8 @@ class Entity(NodePath):
     def fade_in(self, value=1, duration=.5, **kwargs):
         return self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration,  **kwargs)
 
-    def blink(self, value=color.clear, duration=.1, delay=0, curve=curve.in_expo_boomerang, **kwargs):
-        return self.animate_color(value, duration=duration, delay=delay, curve=curve, **kwargs)
+    def blink(self, value=color.clear, duration=.1, delay=0, curve=curve.in_expo_boomerang, interrupt='finish', **kwargs):
+        return self.animate_color(value, duration=duration, delay=delay, curve=curve, interrupt=interrupt, **kwargs)
 
 
 
