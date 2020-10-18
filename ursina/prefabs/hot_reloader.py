@@ -3,6 +3,7 @@
 
 from ursina import *
 from ursina import texture_importer
+from ursina import mesh_importer
 import time
 import ast
 
@@ -186,7 +187,7 @@ class HotReloader(Entity):
                 mesh_importer.imported_meshes.pop(name, None)
 
             # print('model is made from .blend file:', blend_path)
-            compress_models(path=blend_path.parent, name=name)
+            mesh_importer.compress_models(path=blend_path.parent, name=name)
             # print(f'compressed {name}.blend sucessfully')
             changed_models.append(name)
 
