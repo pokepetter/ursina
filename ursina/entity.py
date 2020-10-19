@@ -1024,8 +1024,8 @@ class Entity(NodePath):
         s.start()
         return s
 
-    def animate_color(self, value, duration=.1,  **kwargs):
-        return self.animate('color', value, duration, interrupt='finish', **kwargs)
+    def animate_color(self, value, duration=.1, interrupt='finish', **kwargs):
+        return self.animate('color', value, duration, interrupt=interrupt, **kwargs)
 
     def fade_out(self, value=0, duration=.5, **kwargs):
         return self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration,  **kwargs)
