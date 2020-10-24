@@ -960,7 +960,7 @@ class Entity(NodePath):
         # print('start animating value:', name, animator_name )
         if interrupt and hasattr(self, animator_name):
             getattr(getattr(self, animator_name), interrupt)() # call kill() or finish() depending on what the interrupt value is.
-            print('interrupt', interrupt, animator_name)
+            # print('interrupt', interrupt, animator_name)
 
         sequence = Sequence(loop=loop, time_step=time_step, auto_destroy=auto_destroy)
         setattr(self, animator_name, sequence)

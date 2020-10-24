@@ -26,7 +26,8 @@ from ursina.trigger import Trigger
 from ursina.audio import Audio
 from ursina.duplicate import duplicate
 from ursina import input_handler
-from panda3d.core import Vec2, Vec4
+from panda3d.core import Vec4
+from ursina.vec2 import Vec2
 from ursina.vec3 import Vec3
 from ursina.shader import Shader
 from ursina.light import Light

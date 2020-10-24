@@ -1,5 +1,5 @@
 from panda3d.core import Vec3 as PandaVec3
-
+from ursina.vec2 import Vec2
 
 
 
@@ -57,6 +57,32 @@ class Vec3(PandaVec3):
     def z(self, value):
         self[2] = value
 
+    @property
+    def xy(self):
+        return Vec2(self.x, self.y)
+    @xy.setter
+    def xy(self, value):
+        self[0] = value[0]
+        self[1] = value[1]
+
+    @property
+    def xz(self):
+        return Vec2(self.x, self.z)
+    @xy.setter
+    def xz(self, value):
+        self[0] = value[0]
+        self[2] = value[1]
+
+    @property
+    def yz(self):
+        return Vec2(self.y, self.z)
+    @yz.setter
+    def yz(self, value):
+        self[1] = value[0]
+        self[2] = value[1]
+
+
+
 
     def __mul__(self, value):
         if isinstance(value, (int, float, complex)):
@@ -82,4 +108,6 @@ if __name__ == '__main__':
     print(a)
     b.x += 2
     print(b.x)
+    print('xy:', b.xy)
     print(round(b))
+    print(round(b.xy))
