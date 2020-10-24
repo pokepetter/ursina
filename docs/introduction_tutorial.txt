@@ -1,6 +1,6 @@
 # arial, normal, size 1, width 1024
 # bold, size 3
-Introduction Tutorial
+Installing ursina
 # normal, size 1
 
 
@@ -16,6 +16,11 @@ Introduction Tutorial
     pip install ursina
     # text
 
+    If you're already familiar with Python, you can stop here.
+    The next part will cover how to create a basic program and how to run it.
+
+
+## Creating and running a game (optional)
 
 4) Open your preferred text editor. If you're new to programming, here are some suggestions:
     * Atom

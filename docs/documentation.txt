@@ -1,4 +1,4 @@
-# style a.button {background-color: #4CAF50;} a.button:hover {background-color: #777}
+# style a.button:hover {background-color: #4CAF50}
 # title ursina engine documentation
 # center, bold, arial, size 5
 <a href="index.html" style="text-decoration: none; color:inherit">ursina engine
@@ -6,31 +6,32 @@
 # normal, size 3, left, width 650
 
 # size 1
-[API Reference, cheat_sheet.html, icons/api_reference_icon.jpg]
-[Installation, introduction_tutorial.html, icons/installation_guide_icon.jpg]
-[FAQ, faq.html, ]
+[API Reference, cheat_sheet.html]
 
-[Entity Basics, entity_basics.html, icons/entity_basics_icon.jpg]
-[Coordinate System, coordinate_system.html, icons/coordinate_system_icon.jpg]
-[Building, building.html, icons/installation_guide_icon.jpg]
+## Guides
+
+    [Installation, introduction_tutorial.html]
+    [Entity Basics, entity_basics.html]
+    [Coordinate System, coordinate_system.html]
+    [F.A.Q., faq.html]
+    [Building, building.html]
 
 
 ## Tutorials
 
-[Ursina for Dummies, ursina_for_dummies.html, icons/installation_guide_icon.jpg]
-[Inventory Tutorial, inventory_tutorial.html, icons/inventory_icon.jpg]
+    [Inventory Tutorial, inventory_tutorial.html, icons/inventory_icon.jpg]
 
 
 
 ## Example Projects
 
-[Tic Tac Toe, https://github.com/pokepetter/ursina/blob/master/samples/tic_tac_toe.py, icons/tic_tac_toe_icon.jpg]
-[Inventory, https://github.com/pokepetter/ursina/blob/master/samples/inventory.py, icons/inventory_icon.jpg]
-[Pong, https://github.com/pokepetter/ursina/blob/master/samples/pong.py, icons/installation_guide_icon.jpg]
+    [Tic Tac Toe, https://github.com/pokepetter/ursina/blob/master/samples/tic_tac_toe.py, icons/tic_tac_toe_icon.jpg]
+    [Inventory, https://github.com/pokepetter/ursina/blob/master/samples/inventory.py, icons/inventory_icon.jpg]
+    [Pong, https://github.com/pokepetter/ursina/blob/master/samples/pong.py, icons/installation_guide_icon.jpg]
 
-[Minecraft Clone, https://github.com/pokepetter/ursina/blob/master/samples/minecraft_clone.py, icons/minecraft_clone_icon.jpg]
-[Cookie Clicker, https://github.com/pokepetter/ursina/blob/master/samples/clicker_game.py, icons/installation_guide_icon.jpg]
-[Culumn Graph, https://github.com/pokepetter/ursina/blob/master/samples/culumn_graph.py, icons/column_graph_icon.jpg]
+    [Minecraft Clone, https://github.com/pokepetter/ursina/blob/master/samples/minecraft_clone.py, icons/minecraft_clone_icon.jpg]
+    [Cookie Clicker, https://github.com/pokepetter/ursina/blob/master/samples/clicker_game.py, icons/installation_guide_icon.jpg]
+    [Culumn Graph, https://github.com/pokepetter/ursina/blob/master/samples/culumn_graph.py, icons/column_graph_icon.jpg]
 
-[Platformer, https://github.com/pokepetter/ursina/blob/master/samples/platformer.py, icons/installation_guide_icon.jpg]
-[Value of Life, https://github.com/pokepetter/ld44_life_is_currency, icons/value_of_life_icon.jpg]
+    [Platformer, https://github.com/pokepetter/ursina/blob/master/samples/platformer.py, icons/installation_guide_icon.jpg]
+    [Value of Life, https://github.com/pokepetter/ld44_life_is_currency, icons/value_of_life_icon.jpg]

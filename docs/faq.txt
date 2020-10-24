@@ -7,14 +7,14 @@ Frequently Asked Questions
 
 # left
 
-<b>How can I update ursina?</b>
+<b>How do I update ursina?</b>
 
 pip install git+https://github.com/pokepetter/ursina.git --upgrade
 
 
 
 
-<b>How can I move the camera?</b>
+<b>How do I move the camera?</b>
 
 The camera is an Entity, so you can move and rotate it just like everything else:
 camera.position = Vec3(1,1,0)
@@ -31,7 +31,7 @@ to structure your project in a good way, rather than micro-optimize.
 
 
 
-<b>How can I call a function with a delay?</b>
+<b>How do I call a function with a delay?</b>
 
 # code
     invoke(some_function, arg1, kwarg1='some kwarg', delay=2)
@@ -40,7 +40,7 @@ to structure your project in a good way, rather than micro-optimize.
 
 
 
-<b>How can I add lights?</b>
+<b>How do I add lights?</b>
 
 If all you want are some simple lights to make 3D shapes look more interesting,
 look at the program 'lights.py' in the samples folder.  For anything more complicated,
@@ -57,7 +57,7 @@ You can also write custom shaders, see panda3d's shader documentation for that.
 
 
 
-<b>How can I detect collisions?</b>
+<b>How do I detect collisions?</b>
 
 One way is with raycasts. They can hit anything with a collider.
 
@@ -70,7 +70,7 @@ Like raycast(), it also returns a HitInfo.
 
 
 
-Example from the FirstPersonController:
+Here's an example from the FirstPersonController:
 
 # code
     # cast a ray from the player position in the walk direction.
