@@ -129,21 +129,21 @@ class Audio(Entity):
     def fade(self, value, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
         self.animate('volume', value, duration, delay, curve, resolution, interrupt)
 
-    def fade_in(self, value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True,
+    def fade_in(self, value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt='finish',
                 destroy_on_ended=False):
         if duration <= 0:
             self.volume = value
         else:
-            self.animate('volume', value, duration, delay, curve, resolution, interrupt)
+            self.animate('volume', value, duration=duration, delay=delay, curve=curve, resolution=resolution, interrupt=interrupt)
         if destroy_on_ended:
             _destroy(self, delay=duration + .01)
 
-    def fade_out(self, value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True,
+    def fade_out(self, value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt='finish',
                  destroy_on_ended=True):
         if duration <= 0:
             self.volume = value
         else:
-            self.animate('volume', value, duration, delay, curve, resolution, interrupt)
+            self.animate('volume', value, duration=duration, delay=delay, curve=curve, resolution=resolution, interrupt=interrupt)
         if destroy_on_ended:
             _destroy(self, delay=duration + .01)
 
@@ -163,4 +163,10 @@ if __name__ == '__main__':
     # print(a2.clip)
     # a.fade_out(delay=1)
     # DebugMenu(a)
+
+    def input(key):
+        if key == 'f':
+            a.fade_out(duration=4, curve=curve.linear)
+
+
     base.run()
