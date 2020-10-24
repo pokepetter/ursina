@@ -112,14 +112,15 @@ class PlatformerController2d(Entity):
         self.jumps_left -= 1
         self.grounded = False
 
-        max_height = self.y + self.jump_height
+        target_y = self.y + self.jump_height
         duration = self.jump_duration
-        hit_above = raycast(self.position+(0,.99,0), self.up, ignore=(self,))
+        # check if we hit a ceiling and adjust the jump height accordingly
+        hit_above = boxcast(self.position+(0,self.scale_y,0), self.up, distance=self.jump_height, ignore=(self,), debug=True)
         if hit_above.hit:
-            max_height = min(hit_above.distance-.5, max_height)
-            duration *=  max_height / (self.y+self.jump_height)
+            target_y = min(hit_above.world_point.y-self.scale_y, target_y)
+            duration *=  target_y / (self.y+self.jump_height)
 
-        self.animate_y(max_height, duration, resolution=30, curve=curve.out_expo)
+        self.animate_y(target_y, duration, resolution=30, curve=curve.out_expo)
         invoke(self.start_fall, delay=duration)
 
     def start_fall(self):

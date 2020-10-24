@@ -25,7 +25,7 @@ for i in range(10):
     Entity(
         model='cube', color=color.dark_gray, collider='box', ignore=True,
         position=(random.randint(-20,20), random.randint(0,10)),
-        scale=(random.randint(1,20), random.randint(1,5), 10)
+        scale=(random.randint(1,20), random.randint(2,5), 10)
         )
 # ground = Entity(model='cube', color=color.white33, origin_y=.5, scale=(20, 10, 1), collider='box')
 # wall = Entity(model='cube', color=color.azure, origin=(-.5,.5), scale=(5,10), x=10, y=.5, collider='box')
