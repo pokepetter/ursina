@@ -96,7 +96,8 @@ class Ursina(ShowBase):
         application.load_settings()
 
         from ursina import HotReloader
-        application.hot_reloader = HotReloader(__main__.__file__)
+        # make sure it's running from a file and not an interactive session.
+        application.hot_reloader = HotReloader(__main__.__file__ if hasattr(__main__, '__file__') else 'None')
 
         window.make_editor_gui()
 
