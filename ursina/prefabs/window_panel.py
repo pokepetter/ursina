@@ -59,6 +59,12 @@ class WindowPanel(Draggable):
                         height += c.scale_y
                         # c.y -= c.scale_y/2
 
+                    elif isinstance(c, Slider):
+                        c.world_parent = self
+                        c.x = -.5 * .9
+                        c.scale = (.9*2, 20)
+                        height += c.scale_y
+
                     elif hasattr(c, 'scale_y'):
                         height += c.scale_y
 
@@ -99,6 +105,9 @@ class WindowPanel(Draggable):
 
 
 if __name__ == '__main__':
+    '''
+    WindowPanel is an easy way to create UI. It will automatically layout the content.
+    '''
     app = Ursina()
     WindowPanel(
         title='Custom Window',
@@ -111,7 +120,8 @@ if __name__ == '__main__':
             InputField(name='phone_number_field'),
             # Space(height=1),
             # Text('Send:'),
-            Button(text='Submit', color=color.green),
+            Button(text='Submit', color=color.azure),
+            Slider()
             # ButtonGroup(('test', 'eslk', 'skffk'))
             ),
             # popup=True
