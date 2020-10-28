@@ -5,14 +5,15 @@ class EditorIcon(Draggable):
     def __init__(self, **kwargs):
         super().__init__(
             parent=scene,
-            world_scale=.25,
+            world_scale=.125,
             always_on_top=True,
-            model=None,
-            # color=color.black,
             plane_direction=(0,1,0),
             require_key='w',
             add_to_scene_entities=False,
+            model='cube',
+            color=color.white,
             )
+
         for key, value in kwargs.items():
             setattr(self, key ,value)
 
@@ -21,8 +22,6 @@ class EditorIcon(Draggable):
         self.text_entity.ignore = True
         self.text_entity.scale = 2
         self.text_entity.enabled = self.scene_editor.show_names
-        self.sprite = Entity(parent=self, add_to_scene_entities=False, model='quad', texture='circle', scale=.85, color=color.white)
-
 
     def drag(self):
         self.always_on_top = False
@@ -30,14 +29,21 @@ class EditorIcon(Draggable):
             self.scene_editor.selection.append(self)
 
         for icon in self.scene_editor.selection:
-            icon.entity.original_parent = icon.entity.parent
+            # icon.entity.original_parent = icon.entity.parent
+            icon.entity._start_position = icon.entity.position
             icon.entity.world_parent = self
+
 
 
     def drop(self):
         self.always_on_top = True
         for icon in self.scene_editor.selection:
-            icon.entity.world_parent = icon.entity.original_parent
+            # icon.entity.world_parent = icon.entity.original_parent
+            icon.entity.world_parent = scene
+
+        # self.scene_editor.record_undo()
+        s = Sequence(*[Func(setattr, icon.entity, 'world_position', icon.entity._start_position) for icon in self.scene_editor.selection])
+        self.scene_editor.record_undo(s)
 
 
 class AssetMenu(ButtonList):
@@ -116,7 +122,7 @@ class SceneEditor(Entity):
         self.world_grid = Entity(parent=self, model=Grid(32,32), scale=32, rotation_x=90, color=color.white33, collider='box', collision=False)
 
         self.help_text = Text(x=-.5*camera.aspect_ratio, text='[w hold]:move\n[e hold]:scale selected\n[y]move selected up/down\n[F2]:rename selected')
-        self.cursor_3d = Entity(parent=self, model=Mesh(vertices=(0,0,0), mode='point', thickness=10), color=color.pink, visible=False)
+        self.cursor_3d = Entity(parent=self, model=Mesh(vertices=[(0,0,0)], mode='point', thickness=10), color=color.pink, visible=True)
         line_model = Mesh(vertices=((-1,0,0), (1,0,0)), mode='line', thickness=2)
         self.cursor_3d.rulers = (
             Entity(parent=self.cursor_3d, model=copy(line_model), scale_x=999, color=color.magenta, enabled=False, add_to_scene_entities=False),
@@ -124,8 +130,6 @@ class SceneEditor(Entity):
             Entity(parent=self.cursor_3d, model=copy(line_model), scale_x=999, color=color.cyan, rotation_y=90, enabled=False, add_to_scene_entities=False),
         )
         self.editor_camera = EditorCamera()
-        # self.cursor = Cursor()
-        # mouse.visible = False
 
         self.entities = list()
         self.editor_icon_parent = Entity()
@@ -137,7 +141,8 @@ class SceneEditor(Entity):
         self.duplicate_dragger = Draggable(parent=scene, model='plane', plane_direction=(0,1,0), enabled=False)
         def drop(self=self):
             for e in self.duplicate_dragger.children:
-                e.world_parent = e.original_parent
+                # e.world_parent = e.original_parent
+                e.world_parent = scene
             self.duplicate_dragger.enabled = False
         self.duplicate_dragger.drop = drop
 
@@ -176,10 +181,33 @@ class SceneEditor(Entity):
         self.menus = [self.model_menu, self.texture_menu, self.rename_window, self.ask_for_scene_name_window]
         self.show_names = False
 
-        self.tool = 'move'
+        # self.tool = 'move'
 
-        self.load('test2')
+        self.load('test3')
 
+        self.undo_cache = list()
+
+        self.undo_index = 0
+        self.record_undo()
+        self.undo_index = 0
+
+
+    def record_undo(self, undo_data=None):
+        # record undo
+        self.undo_index += 1
+        print(self.undo_index)
+        self.undo_cache = self.undo_cache[:self.undo_index]
+
+
+        if undo_data is None:
+            undo_data = dict()
+            for name in ('name', 'world_position', 'rotation', 'scale', 'model', 'color', 'texture'):
+                undo_data[name] = [getattr(icon.entity, name) for icon in self.editor_icons]
+
+            undo_data['cursor_3d_position'] = self.cursor_3d.position
+
+        self.undo_cache.append(undo_data)
+        print('appened', undo_data)
 
 
     def load(self, name, folder=application.asset_folder / 'scenes'):
@@ -248,8 +276,8 @@ class SceneEditor(Entity):
             icon.text_entity.enabled = value
 
 
-    def add_entity(self, name):
-        e = Entity(name=name, model='cube')
+    def add_entity(self, name, position=Vec3(0,0,0), rotation=Vec3(0,0,0), scale=1, model='cube', color=color.light_gray, texture=''):
+        e = Entity(name=name, position=position, rotation=rotation, scale=scale, model=model, color=color, texture=texture)
         e.editor_icon = EditorIcon(parent=self.editor_icon_parent, scene_editor=self, entity=e)
         e.editor_icon.text_entity.text = name
         self.editor_icons.append(e.editor_icon)
@@ -273,7 +301,6 @@ class SceneEditor(Entity):
     def update(self):
         for icon in self.editor_icons:
             icon.position = icon.entity.world_position
-            icon.sprite.look_at(camera, 'back')
 
         if self.rename_window.enabled:
             return
@@ -288,9 +315,9 @@ class SceneEditor(Entity):
         if held_keys['z']:
             self.cursor_3d.z += sum(mouse.velocity) * 8
 
-        # if held_keys['s'] or held_keys['c']:  # scale from center
-        #     _added_scale = sum(mouse.velocity) * 8
-        #     self.cursor_3d.scale += Vec3(_added_scale, _added_scale, _added_scale)
+        if held_keys['s'] or held_keys['c']:  # scale from center
+            _added_scale = sum(mouse.velocity) * 8
+            self.cursor_3d.scale += Vec3(_added_scale, _added_scale, _added_scale)
 
         if held_keys['e'] + held_keys['s'] > 0:     # scale from individual origin
             for icon in self.selection:
@@ -300,6 +327,7 @@ class SceneEditor(Entity):
 
 
     def input(self, key):
+
         if key == 'escape':
             self.rename_window.enabled = False
 
@@ -319,7 +347,7 @@ class SceneEditor(Entity):
                 e.ignore = False
 
 
-        if key in ('x', 'y', 'z', 's', 'e', 'c') and self.selection and not held_keys['shift']:
+        if key in ('x', 'y', 'z', 's', 'e', 'c') and self.selection and not held_keys['control']:
             self.cursor_3d.visible = True
             self.cursor_3d.position = self.selection[-1].world_position
 
@@ -327,17 +355,26 @@ class SceneEditor(Entity):
                 self.cursor_3d.position = self.average_position_of_selection()
 
             for icon in self.selection:
-                icon.entity.original_parent = icon.entity.parent
+                # icon.entity.original_parent = icon.entity.parent
+                icon.entity._start_position = icon.entity.position
+                icon.entity._start_scale = icon.entity.scale
+
                 icon.entity.world_parent = self.cursor_3d
 
-            if key in ('x', 'y', 'z'):
+            if key in ('x', 'y', 'z') and not held_keys['control']:
                 self.cursor_3d.rulers[('x', 'y', 'z').index(key)].enabled = True
 
 
-        if key in ('x up', 'y up', 'z up', 's up', 'e up', 'c up'):
+        if key in ('x up', 'y up', 'z up', 's up', 'e up', 'c up') and not held_keys['control']:
             for icon in self.selection:
-                # if hasattr(icon, 'original_parent'):
-                icon.entity.world_parent = icon.entity.original_parent
+                icon.entity.world_parent = scene
+
+            s = Sequence()
+            s.extend([Func(setattr, icon.entity, 'position', icon.entity._start_position) for icon in self.selection])
+            if key in ('s up', 'e up', 'c up'):
+                s.extend([Func(setattr, icon.entity, 'scale', icon.entity._start_scale) for icon in self.selection])
+
+            self.record_undo(s)
 
             self.cursor_3d.visible = False
             for ruler in self.cursor_3d.rulers:
@@ -368,16 +405,14 @@ class SceneEditor(Entity):
         if key == 'l':
             from ursina.shaders import basic_lighting_shader
             for icon in self.editor_icons:
-                # if not icon.entity.shader or not icon.entity.shader == basic_lighting_shader:
-                    icon.entity.shader = basic_lighting_shader
-                # else:
-                #     icon.entity.shader = None
+                icon.entity.shader = basic_lighting_shader
 
 
 
         if key == 'n':
-            e = self.add_entity('entity')
-            e.position = self.average_position_of_selection()
+            e = self.add_entity('entity', position=self.average_position_of_selection())
+            self.record_undo(Func(self.delete_entity, e))
+
 
         if held_keys['control'] and key == 'w':
             group = self.add_entity('group')
@@ -437,7 +472,7 @@ class SceneEditor(Entity):
             for icon in self.selection:
                 e = icon.entity
                 clone = self.add_entity(name=icon.entity.name)
-                clone.original_parent = e.parent
+                # clone.original_parent = e.parent
                 clone.world_position = e.world_position
                 clone.world_scale = e.world_scale
                 clone.world_rotation = e.world_rotation
@@ -455,18 +490,76 @@ class SceneEditor(Entity):
 
 
         if key == 'delete':
+            if len(self.selection) == 1:
+                icon = self.selection[0]
+                self.record_undo(
+                    Func(
+                        self.add_entity,
+                            name=icon.entity.name,
+                            position=icon.entity.position, rotation=icon.entity.rotation, scale=icon.entity.scale,
+                            model=icon.entity.model, color=icon.entity.color, texture=icon.entity.texture
+                        )
+                    )
+            else:
+                s = Sequence()
+                for icon in self.selection:
+                    s.append(
+                        Func(
+                            self.add_entity,
+                                name=icon.entity.name,
+                                position=icon.entity.position, rotation=icon.entity.rotation, scale=icon.entity.scale,
+                                model=icon.entity.model, color=icon.entity.color, texture=icon.entity.texture
+                            )
+                        )
+                # print('------------recorded undo', s)
+
+            self.record_undo(s)
+
             for icon in self.selection:
-                # print('delete:', icon.entity.name)
                 self.delete_entity(icon.entity)
+
             self.clear_selection()
 
-        if held_keys['control'] and key == 'z':
-            self.undo()
-        if held_keys['control'] and key == 'y':
-            self.redo()
 
         if held_keys['control'] and key == 's':
             self.save()
+
+
+        if held_keys['control'] and key == 'z':
+            data = self.undo_cache[self.undo_index]
+
+            if isinstance(data, Sequence):
+                print('----', data)
+                data.start()
+
+            if callable(data):
+                print('----', data)
+                data()
+
+            self.undo_index -= 1
+            # print(self.undo_index)
+            self.undo_index = clamp(self.undo_index, 0, len(self.undo_cache)-1)
+            # self.grid = deepcopy(self.undo_cache[self.undo_index])
+            # for i, data in enumerate(self.undo_cache[self.undo_index]):
+            if isinstance(data, dict):
+                for i, icon in enumerate(self.editor_icons):
+                    if i >= len(data['world_position']):
+                        continue
+                    for name in ('name', 'world_position', 'rotation', 'scale', 'model', 'color', 'texture'):
+                        setattr(icon.entity, name, data[name][i])
+
+                self.cursor_3d.position = data['cursor_3d_position']
+                    # self.editor_icons[i].entity.world_position = pos
+
+                # print('-------------', self.undo_index)
+                # print([icon.entity.world_position for icon in self.editor_icons])
+
+
+        # if held_keys['control'] and key == 'y':
+        #     self.undo_index += 1
+        #     self.undo_index = clamp(self.undo_index, 0, len(self.undo_cache)-1)
+        #     self.grid = deepcopy(self.undo_cache[self.undo_index])
+        #     self.render()
 
 
     def clear_selection(self):
@@ -478,15 +571,15 @@ class SceneEditor(Entity):
 
     def render_selection(self):
         for icon in self.editor_icons:
-            icon.sprite.color=color.white
+            # icon.sprite.color=color.white
             icon.color=color.white
 
         if self.selection:
             for icon in self.selection:
-                icon.sprite.color = color.azure
+                # icon.sprite.color = color.azure
                 icon.color = color.azure
 
-            self.selection[-1].sprite.color = color.cyan
+            # self.selection[-1].sprite.color = color.cyan
             self.selection[-1].color = color.cyan
 
         self.selection_text.text = 'Selection:\n' + '\n'.join([icon.entity.name for icon in self.selection])
@@ -494,9 +587,11 @@ class SceneEditor(Entity):
 
 
 if __name__ == '__main__':
-    window.vsync = False
+    # window.vsync = False
     app = Ursina()
     SceneEditor()
+    # from ursina.shaders import fxaa
+    # camera.shader = fxaa
     # Sky()
 
     app.run()

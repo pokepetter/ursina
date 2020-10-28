@@ -57,7 +57,6 @@ if __name__ == '__main__':
     # sprite = Sprite('brick', x=-2, scale=1.5)
     # circle = Entity(model=Circle(6))
     # rounded_quad = Entity(model=Quad(subdivisions=3, mode='line'), x=1)
-    # sphere = Entity(model=Sphere(mode='line'), x=2)
     # cone = Entity(model=Cone(), x=3)
     # cone.model.colorize()
     # prismatoid = Entity(model=Prismatoid(), x=4)

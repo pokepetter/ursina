@@ -55,7 +55,7 @@ def save(scene_editor, save_new=False):
                     value = str(round(value)).replace(' ', '')
                 scene_file_content += f", {name}={value}"
 
-        scene_file_content += ', add_to_scene_entities=False)\n' # TODO: add if it has a custom name
+        scene_file_content += ', ignore=True)\n' # TODO: add if it has a custom name
 
     print('scene_file_content:\n', scene_file_content)
     with open(f'{scene_editor.scene_folder/scene_editor.scene_name}.py', 'w', encoding='utf-8') as f:
