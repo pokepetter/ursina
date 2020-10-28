@@ -10,7 +10,7 @@
 
 ## Guides
 
-    [Installation, introduction_tutorial.html]
+    [Installation, installation.html]
     [Entity Basics, entity_basics.html]
     [Coordinate System, coordinate_system.html]
     [F.A.Q., faq.html]
@@ -19,6 +19,7 @@
 
 ## Tutorials
 
+    [Introduction, introduction_tutorial.html, icons/entity_basics_icon.jpg]
     [Inventory Tutorial, inventory_tutorial.html, icons/inventory_icon.jpg]
 
 

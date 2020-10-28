@@ -1,0 +1,68 @@
+
+<!--generated with sswg-->
+<style>
+    html {max-width: 100%; margin: auto; color: #333333;}
+    a.button {padding: 15px 32px; background-color: #555; border-radius: 2em; border-width: 0px; text-decoration: none; color: white; font-size: 25.0px; line-height: 2.5em;}
+    a.button:hover {background-color: #777}
+    a.button_big {padding: 0.5em; background-image: linear-gradient(to top, #427b0e, #9ba97d); background-color: lightgray; background-blend-mode: multiply; border-radius: .75em; border-width: 0px; text-decoration: none; min-width: 150px; max-width: 150px; min-height: 150px; max-height: 150px; display: inline-block; vertical-align: top; margin: 4px 4px 10px 4px; color: white; font-size: 25.0px; background-size: auto 100%; background-position-x: center;}
+    a.button_big:hover {background-color: white; color: #e6d23f; text-decoration: underline;}
+    mark {background: #ccff99;}
+    span {background-color: rgba(0, 0, 0, 0.55); padding: .1em; line-height: 1.35em;}
+    img {max-width: 100%; vertical-align: top;}
+    .code_block {background-color: whitesmoke; padding: 10px; margin: 0; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;}
+
+</style>
+<html>
+<left>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>installation</title>
+<br>
+
+<div style="font-family: arial;font-size: 20.0px;max-width: 1024px; margin: auto;">
+<div style="font-weight: bold;font-size: 60.0px;">
+Installing ursina<br>
+<div style="font-weight: normal;font-size: 20.0px;">
+<br>
+<br>
+1) Install Python 3.6 or newer. <a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a><br>
+<br>
+2) Open cmd/terminal and type:<br>
+<div class="code_block" style="margin-left: 0em;">    pip install ursina<br></div><br>
+<br>
+If you want to install the newest version from GitHub, you can install like this:<br>
+<div class="code_block" style="margin-left: 0em;">    pip install <a href="https://github.com/pokepetter/ursina/archive/master.zip">https://github.com/pokepetter/ursina/archive/master.zip</a><br></div><br>
+or<br>
+<br>
+<div class="code_block" style="margin-left: 0em;">    pip install git+https://github.com/pokepetter/ursina.git<br></div><br>
+Keep in mind that things *could* break.<br>
+<br>
+<br>
+If you want to easily edit the source, it's recommended to clone the git<br>
+repo and install as develop like this. Make sure you have git installed. <a href="https://git-scm.com/">https://git-scm.com/</a><br>
+<div class="code_block" style="margin-left: 0em;">    git clone <a href="https://github.com/pokepetter/ursina.git">https://github.com/pokepetter/ursina.git</a><br>    python setup.py develop<br></div><br>
+Also install any of the optional dependencies you want from the list below,<br>
+or install them all with:<br>
+<div class="code_block" style="margin-left: 0em;">    pip install ursina[extras]<br></div><br>
+<br>
+On some systems you might have to use pip3 instead of pip in order to use Python 3 and not the old Python 2.<br>
+If the pip command is not found, you can use:<br>
+<div class="code_block" style="margin-left: 0em;">python -m pip install ursina<br></div><br>
+<br>
+3) If everything went well, you can go to the introduction tutorial where<br>
+&nbsp;&nbsp; we'll cover how to create a basic program and how to run it.<br>
+<br>
+&nbsp;&nbsp; <a href=" introduction_tutorial.html" class="button">Introduction Tutorial</a><br>
+<br>
+<br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Troubleshooting"/><br>
+Troubleshooting<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<br>
+<b>ursina installed sucessfully, but python can't find it when I try to run a script</b><br>
+<br>
+If you're using a venv, make sure you're installing it to the venv and not to the default location.<br>
+Alternatively you can just not use a venv.<br>
+<br>
+
+</html>

@@ -56,6 +56,7 @@ z-index: 1;
 <a style="color:hsl(349.0, 89%, 66%);" href="#Texture">Texture</a>
 <a style="color:hsl(349.0, 89%, 66%);" href="#Trigger">Trigger</a>
 <a style="color:hsl(349.0, 89%, 66%);" href="#Empty">Empty</a>
+<a style="color:hsl(349.0, 89%, 66%);" href="#Vec2">Vec2</a>
 <a style="color:hsl(349.0, 89%, 66%);" href="#Vec3">Vec3</a>
 
 <a style="color:hsl(320.0, 89%, 66%);" href="#Animation">Animation</a>
@@ -114,7 +115,6 @@ z-index: 1;
 <a style="color:hsl(259.0, 89%, 66%);" href="#Plane">Plane</a>
 <a style="color:hsl(259.0, 89%, 66%);" href="#Prismatoid">Prismatoid</a>
 <a style="color:hsl(259.0, 89%, 66%);" href="#Quad">Quad</a>
-<a style="color:hsl(259.0, 89%, 66%);" href="#Sphere">Sphere</a>
 <a style="color:hsl(259.0, 89%, 66%);" href="#Terrain">Terrain</a>
 
 </div>
@@ -258,16 +258,16 @@ flip_faces()
 look_at(<g>target, axis='forward'</g>)   
 look_at_2d(<g>target, axis='z'</g>)   
 has_ancestor(<g>possible_ancestor</g>)   
-animate(<g>name, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt=True, time_step=None, auto_destroy=True</g>)   
+animate(<g>name, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt='kill', time_step=None, auto_destroy=True</g>)   
 animate_position(<g>value, duration=.1, **kwargs</g>)   
 animate_rotation(<g>value, duration=.1,  **kwargs</g>)   
 animate_scale(<g>value, duration=.1, **kwargs</g>)   
 animate_{e}(<g>value, duration=.1, delay=0, **kwargs</g>)   
 shake(<g>duration=.2, magnitude=1, speed=.05, direction=(1,1)</g>)   
-animate_color(<g>value, duration=.1,  **kwargs</g>)   
+animate_color(<g>value, duration=.1, interrupt='finish', **kwargs</g>)   
 fade_out(<g>value=0, duration=.5, **kwargs</g>)   
 fade_in(<g>value=1, duration=.5, **kwargs</g>)   
-blink(<g>value=color.clear, duration=.1, delay=0, curve=curve.in_expo_boomerang, **kwargs</g>)   
+blink(<g>value=color.clear, duration=.1, delay=0, curve=curve.in_expo_boomerang, interrupt='finish', **kwargs</g>)   
 intersects(<g>traverse_target=scene, ignore=(), debug=False</g>)   
 
 <div class="example">e = <font color="olive">Entity</font>(model=<font color="seagreen">'quad'</font>, color=color.orange, position=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>), scale=<font color="darkgoldenrod">1</font>.<font color="darkgoldenrod">5</font>, rotation=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">4</font><font color="darkgoldenrod">5</font>), texture=<font color="seagreen">'brick'</font>)
@@ -688,8 +688,24 @@ input(<g>key</g>)
     if key == <font color="seagreen">'left mouse down'</font>:
         print(<font color="seagreen">'pressed left mouse button'</font>)
 
-    if key == InputEvent.left_mouse_down:   <font color="gray"># same as above, but with InputEvents enum.</font>
+    if key == InputEvents.left_mouse_down:   <font color="gray"># same as above, but with InputEvents enum.</font>
         print(<font color="seagreen">'pressed left mouse button'</font>)
+
+<font color="purple">from</font> panda<font color="darkgoldenrod">3</font>d.core <font color="purple">import</font> InputDevice
+gamepads = app.devices.getDevices(InputDevice.DeviceClass.gamepad)
+if gamepads:
+    gamepad = gamepads[<font color="darkgoldenrod">0</font>]
+
+<font color="purple">def</font> test():
+    print(<font color="seagreen">'----'</font>)
+
+<font color="purple">def</font> update():
+    for gamepad in gamepads:
+        left_x = gamepad.findAxis(InputDevice.Axis.left_x)
+        print(left_x.value)
+app.accept("gamepad-face_a", test)
+
+app.accept("gamepad-face_a", app.input, extraArgs=["face_a"])
 </div>
 </div></div>
 <div id="mesh_importer"><div id="mesh_importer" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">mesh_importer</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.mesh_importer</g><br><br>
@@ -916,14 +932,20 @@ pause()
 resume()   
 stop(<g>destroy=True</g>)   
 fade(<g>value, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True</g>)   
-fade_in(<g>value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True,</g>)   
-fade_out(<g>value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True,</g>)   
+fade_in(<g>value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt='finish',</g>)   
+fade_out(<g>value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt='finish',</g>)   
 
 <div class="example"><font color="purple">from</font> ursina <font color="purple">import</font> Ursina, printvar
 
 base = Ursina()
 a = <font color="purple"><b>Audio</b></font>(<font color="seagreen">'life_is_currency'</font>, pitch=<font color="darkgoldenrod">1</font>, loop=True, autoplay=True)
 print(a.clip)
+
+<font color="purple">def</font> input(key):
+    if key == <font color="seagreen">'f'</font>:
+        a.fade_out(duration=<font color="darkgoldenrod">4</font>, curve=curve.linear)
+
+
 base.run()
 </div>
 </div></div>
@@ -1289,19 +1311,16 @@ project_uvs(<g>aspect_ratio=1, direction='forward'</g>)
 clear(<g>regenerate=True</g>)   
 save(<g>name='', path=application.compressed_models_folder</g>)   
 
-<div class="example">verts = ((<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), (<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), (.<font color="darkgoldenrod">5</font>, <font color="darkgoldenrod">1</font>, <font color="darkgoldenrod">0</font>), (-.<font color="darkgoldenrod">5</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">0</font>))
-tris = (<font color="darkgoldenrod">1</font>, <font color="darkgoldenrod">2</font>, <font color="darkgoldenrod">0</font>, <font color="darkgoldenrod">2</font>, <font color="darkgoldenrod">3</font>, <font color="darkgoldenrod">0</font>)
-uvs = ((<font color="darkgoldenrod">1</font>.<font color="darkgoldenrod">0</font>, <font color="darkgoldenrod">0</font>.<font color="darkgoldenrod">0</font>), (<font color="darkgoldenrod">0</font>.<font color="darkgoldenrod">0</font>, <font color="darkgoldenrod">1</font>.<font color="darkgoldenrod">0</font>), (<font color="darkgoldenrod">0</font>.<font color="darkgoldenrod">0</font>, <font color="darkgoldenrod">0</font>.<font color="darkgoldenrod">0</font>), (<font color="darkgoldenrod">1</font>.<font color="darkgoldenrod">0</font>, <font color="darkgoldenrod">1</font>.<font color="darkgoldenrod">0</font>))
-norms = ((<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,-<font color="darkgoldenrod">1</font>),) * len(verts)
-colors = (color.red, color.blue, color.lime, color.black)
+<div class="example"><font color="purple">from</font> time <font color="purple">import</font> perf_counter
+e = <font color="olive">Entity</font>(model=<font color="purple"><b>Mesh</b></font>(vertices=[Vec3(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), Vec3(<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), Vec3(.<font color="darkgoldenrod">5</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">0</font>)]))
+for i in range(<font color="darkgoldenrod">3</font>):
+    clone = <font color="olive">Entity</font>(model=deepcopy(e.model),x=i)
 
+clone.model.vertices = [v+Vec3(<font color="darkgoldenrod">0</font>,-<font color="darkgoldenrod">2</font>,<font color="darkgoldenrod">0</font>) for v in clone.model.vertices]
+t = perf_counter()
+clone.model.generate()
+print(<font color="seagreen">'-------'</font>, (perf_counter() - t) * <font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>)
 
-e = <font color="olive">Entity</font>(model=<font color="purple"><b>Mesh</b></font>(vertices=verts, triangles=tris, uvs=uvs, normals=norms, colors=colors), scale=<font color="darkgoldenrod">2</font>)
-verts = (Vec3(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), Vec3(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">0</font>), Vec3(<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">0</font>), Vec3(<font color="darkgoldenrod">2</font>,<font color="darkgoldenrod">2</font>,<font color="darkgoldenrod">0</font>), Vec3(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>), Vec3(-<font color="darkgoldenrod">2</font>,<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>))
-tris = ((<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>), (<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">4</font>,<font color="darkgoldenrod">5</font>))
-
-lines = <font color="olive">Entity</font>(model=<font color="purple"><b>Mesh</b></font>(vertices=verts, triangles=tris, mode=<font color="seagreen">'line'</font>, thickness=<font color="darkgoldenrod">4</font>), color=color.cyan, z=-<font color="darkgoldenrod">1</font>)
-points = <font color="olive">Entity</font>(model=<font color="purple"><b>Mesh</b></font>(vertices=verts, mode=<font color="seagreen">'point'</font>, thickness=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>), color=color.red, z=-<font color="darkgoldenrod">1</font>.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">1</font>)
 EditorCamera()
 </div>
 </div></div>
@@ -1488,11 +1507,25 @@ invoke(test_func, <font color="seagreen">'test<font color="darkgoldenrod">2</fon
         print_on_screen(<font color="seagreen">'debug message'</font>, position=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), origin=(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>), scale=<font color="darkgoldenrod">2</font>)
 </div>
 </div></div>
+<div id="Vec2"><div id="Vec2" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Vec2<g>(PandaVec2)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.vec2</g><br><br><params class="params">Vec2(**kwargs)</params>
+
+x
+y
+
+
+<div class="example">a = <font color="purple"><b>Vec2</b></font>(<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>)
+print(a)
+print(round(a))
+</div>
+</div></div>
 <div id="Vec3"><div id="Vec3" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Vec3<g>(PandaVec3)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.vec3</g><br><br><params class="params">Vec3(**kwargs)</params>
 
 x
 y
 z
+xy
+xz
+yz
 
 
 <div class="example">a = <font color="purple"><b>Vec3</b></font>(<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">0</font>) * <font color="darkgoldenrod">2</font>
@@ -2425,7 +2458,10 @@ Cursor()
 height<g> = height</g> 
 
 
-<div class="example">WindowPanel(
+<div class="example"><font color="seagreen">''</font>'
+WindowPanel is an easy way to create UI. It will automatically layout the content.
+<font color="seagreen">''</font>'
+WindowPanel(
     title=<font color="seagreen">'Custom Window'</font>,
     content=(
         Text(<font color="seagreen">'Name:'</font>),
@@ -2434,7 +2470,8 @@ height<g> = height</g>
         InputField(name=<font color="seagreen">'age_field'</font>),
         Text(<font color="seagreen">'Phone Number:'</font>),
         InputField(name=<font color="seagreen">'phone_number_field'</font>),
-        Button(text=<font color="seagreen">'Submit'</font>, color=color.green),
+        Button(text=<font color="seagreen">'Submit'</font>, color=color.azure),
+        Slider()
         ),
     )
 </div>
@@ -2448,7 +2485,10 @@ popup<g> = False</g>
 on_enable()   
 close()   
 
-<div class="example"><font color="purple"><b>WindowPanel</b></font>(
+<div class="example"><font color="seagreen">''</font>'
+WindowPanel is an easy way to create UI. It will automatically layout the content.
+<font color="seagreen">''</font>'
+<font color="purple"><b>WindowPanel</b></font>(
     title=<font color="seagreen">'Custom Window'</font>,
     content=(
         Text(<font color="seagreen">'Name:'</font>),
@@ -2457,7 +2497,8 @@ close()
         InputField(name=<font color="seagreen">'age_field'</font>),
         Text(<font color="seagreen">'Phone Number:'</font>),
         InputField(name=<font color="seagreen">'phone_number_field'</font>),
-        Button(text=<font color="seagreen">'Submit'</font>, color=color.green),
+        Button(text=<font color="seagreen">'Submit'</font>, color=color.azure),
+        Slider()
         ),
     )
 </div>
@@ -2515,7 +2556,7 @@ for i in range(<font color="darkgoldenrod">4</font>*<font color="darkgoldenrod">
     b = Button(parent=p, model=<font color="seagreen">'quad'</font>, scale=.<font color="darkgoldenrod">5</font>, scale_x=<font color="darkgoldenrod">1</font>, text=str(i), color=color.tint(color.random_color(),-.<font color="darkgoldenrod">6</font>))
     b.text_entity.world_scale = <font color="darkgoldenrod">1</font>
 t = time.time()
-grid_layout(p.children, max_x=<font color="darkgoldenrod">7</font>, max_y=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>, origin=(<font color="darkgoldenrod">0</font>, .<font color="darkgoldenrod">5</font>))
+grid_layout(p.children, max_x=<font color="darkgoldenrod">7</font>, max_y=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>, origin=(<font color="darkgoldenrod">0</font>, .<font color="darkgoldenrod">5</font>), spacing=(.<font color="darkgoldenrod">1</font><font color="darkgoldenrod">5</font>, <font color="darkgoldenrod">0</font>))
 center = <font color="olive">Entity</font>(parent=camera.ui, model=Circle(), scale=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>, color=color.lime)
 EditorCamera()
 print(time.time() - t)
@@ -2537,7 +2578,7 @@ e = <font color="olive">Entity</font>(model=Mesh(new_verts, new_tris, mode=<font
 EditorCamera()
 </div>
 </div></div>
-<div id="PositionLimiter"><div id="PositionLimiter" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">PositionLimiter<g>()</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.scripts.position_limiter</g><br><br><params class="params">PositionLimiter(min_x=-inf, max_x=inf, min_y=-inf, max_y=inf, min_z=-inf, max_z=inf)</params>
+<div id="PositionLimiter"><div id="PositionLimiter" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">PositionLimiter<g>()</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.scripts.position_limiter</g><br><br><params class="params">PositionLimiter(min_x=-math.inf, max_x=math.inf, min_y=-math.inf, max_y=math.inf, min_z=-math.inf, max_z=math.inf)</params>
 
 min_x<g> = min_x</g> 
 max_x<g> = max_x</g> 
@@ -2615,7 +2656,6 @@ update()
 'circle_outlined'
 'cobblestone'
 'cursor'
-'earth_map'
 'file_icon'
 'folder'
 'grass'
@@ -2642,7 +2682,7 @@ update()
 
 
 
-<div class="example">e = <font color="olive">Entity</font>(model=<font color="purple"><b>Circle</b></font>(<font color="darkgoldenrod">8</font>, mode=<font color="seagreen">'line'</font>, thickness=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>), color=color.color(<font color="darkgoldenrod">6</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>,.<font color="darkgoldenrod">3</font>), x=<font color="darkgoldenrod">6</font>)
+<div class="example">e = <font color="olive">Entity</font>(model=<font color="purple"><b>Circle</b></font>(<font color="darkgoldenrod">8</font>, mode=<font color="seagreen">'line'</font>, thickness=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>), color=color.color(<font color="darkgoldenrod">6</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>,.<font color="darkgoldenrod">3</font>))
 print(e.model.recipe)
 origin = <font color="olive">Entity</font>(model=<font color="seagreen">'quad'</font>, color=color.orange, scale=(.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>, .<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>))
 ed = EditorCamera(rotation_speed = <font color="darkgoldenrod">2</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>, panning_speed=<font color="darkgoldenrod">2</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>)
@@ -2715,17 +2755,6 @@ vertices<g> = [(v[0]-offset[0], v[1]-offset[1], v[2]-offset[2]) for v in self.ve
 <font color="olive">Entity</font>(scale=(<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">1</font>), model=<font color="purple"><b>Quad</b></font>(aspect=<font color="darkgoldenrod">3</font>), color = color.color(<font color="darkgoldenrod">6</font><font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">1</font>,.<font color="darkgoldenrod">3</font>))
 origin = <font color="olive">Entity</font>(model=<font color="seagreen">'quad'</font>, color=color.orange, scale=(.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>, .<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>))
 camera.z = -<font color="darkgoldenrod">5</font>
-</div>
-</div></div>
-<div id="Sphere"><div id="Sphere" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Sphere<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.models.procedural.sphere</g><br><br><params class="params">Sphere(radius=.5, subdivisions=0, mode='tristrip', **kwargs)</params>
-
-
-sub_divide(<g>v_0, v_1, v_2, sub_divisions, vertices, faces</g>)   
-
-<div class="example"><font color="olive">Entity</font>(model=<font color="purple"><b>Sphere</b></font>(), color=color.color(<font color="darkgoldenrod">6</font><font color="darkgoldenrod">0</font>, <font color="darkgoldenrod">1</font>, <font color="darkgoldenrod">1</font>, .<font color="darkgoldenrod">5</font>), x=<font color="darkgoldenrod">0</font>)
-<font color="olive">Entity</font>(model=<font color="purple"><b>Sphere</b></font>(radius=<font color="darkgoldenrod">0</font>.<font color="darkgoldenrod">1</font><font color="darkgoldenrod">5</font>, subdivisions=<font color="darkgoldenrod">6</font>), color=color.color(<font color="darkgoldenrod">1</font>, <font color="darkgoldenrod">6</font><font color="darkgoldenrod">0</font>, <font color="darkgoldenrod">1</font>, .<font color="darkgoldenrod">5</font>), x=<font color="darkgoldenrod">4</font>)
-origin = <font color="olive">Entity</font>(model=<font color="seagreen">'quad'</font>, color=color.orange, scale=(.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>, .<font color="darkgoldenrod">0</font><font color="darkgoldenrod">5</font>))
-ed = EditorCamera(rotation_speed=<font color="darkgoldenrod">2</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>, panning_speed=<font color="darkgoldenrod">2</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>)
 </div>
 </div></div>
 <div id="Terrain"><div id="Terrain" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Terrain<g>(<a style="color: gray;" href="#Mesh">Mesh</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.models.procedural.terrain</g><br><br><params class="params">Terrain(heightmap, skip=1, **kwargs)</params>
