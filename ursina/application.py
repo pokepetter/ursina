@@ -1,7 +1,12 @@
 import sys
 from pathlib import Path
-from importlib.metadata import version
 from panda3d.core import getModelPath
+
+try:
+    from importlib.metadata import version
+    print('ursina version:', version('ursina'))
+except:
+    pass #python 3.8 or older
 
 
 paused = False
@@ -39,7 +44,6 @@ _model_path.append_path(str(internal_fonts_folder.resolve()))
 _model_path.append_path(str(Path('C:/Windows/Fonts').resolve()))
 _model_path.append_path(str(asset_folder.resolve()))
 
-print('ursina version:', version('ursina'))
 print('package_folder:', package_folder)
 print('asset_folder:', asset_folder)
 
