@@ -50,7 +50,6 @@ from ursina.models.procedural.prismatoid import Prismatoid
 from ursina.models.procedural.cone import Cone
 from ursina.models.procedural.cube import Cube
 from ursina.models.procedural.cylinder import Cylinder
-from ursina.models.procedural.sphere import Sphere
 from ursina.models.procedural.grid import Grid
 from ursina.models.procedural.terrain import Terrain
 
