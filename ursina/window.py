@@ -18,6 +18,7 @@ class Window(WindowProperties):
         loadPrcFileData('', 'notify-level-util error')
         loadPrcFileData('', 'textures-auto-power-2 #t')
         loadPrcFileData('', 'load-file-type p3assimp')
+        # loadPrcFileData('', 'allow-portal-cull #t')
         # loadPrcFileData("", "framebuffer-multisample 1")
         # loadPrcFileData('', 'multisamples 2')
         # loadPrcFileData('', 'textures-power-2 none')
@@ -66,6 +67,9 @@ class Window(WindowProperties):
         self.render_modes = ('default', 'wireframe', 'colliders', 'normals')
         self.render_mode = 'default'
         self.editor_ui = None
+
+        from ursina import invoke
+        invoke(base.accept, 'aspectRatioChanged', self.update_aspect_ratio, delay=1/60)
 
 
     @property
@@ -144,9 +148,34 @@ class Window(WindowProperties):
         self.cog_button.on_click = _toggle_cog_menu
         # print('-----------', time.time() - t) # 0.04
 
+
     def update_aspect_ratio(self):
-        from ursina import camera
+        prev_aspect = self.aspect_ratio
+        self.size = base.win.get_size()
+        print('changed aspect ratio:', round(prev_aspect, 3), '->', round(self.aspect_ratio, 3))
+
+        from ursina import camera, window, application
         camera.ui_lens.set_film_size(camera.ui_size * .5 * self.aspect_ratio, camera.ui_size * .5)
+        for e in [e for e in scene.entities if e.parent == camera.ui] + self.editor_ui.children:
+            e.x /= prev_aspect / self.aspect_ratio
+
+        if camera.orthographic:
+            camera.orthographic_lens.set_film_size(camera.fov * window.aspect_ratio, camera.fov)
+            application.base.cam.node().set_lens(camera.orthographic_lens)
+
+
+    @property
+    def position(self):
+        try:
+            return self.getOrigin()
+        except:
+            return self._position
+
+    @position.setter
+    def position(self, value):
+        self._position = value
+        self.setOrigin(int(value[0]), int(value[1]))
+        base.win.request_properties(self)
 
 
     @property
@@ -158,7 +187,6 @@ class Window(WindowProperties):
         self.set_size(int(value[0]), int(value[1]))
         self.aspect_ratio = value[0] / value[1]
         base.win.requestProperties(self)
-        self.update_aspect_ratio()
         from ursina import camera
         camera.set_shader_input('window_size', value)
 
@@ -215,11 +243,6 @@ class Window(WindowProperties):
         except:
             pass
 
-        if name == 'position':
-            self.setOrigin(int(value[0]), int(value[1]))
-            application.base.win.request_properties(self)
-            object.__setattr__(self, name, value)
-
         if name == 'fullscreen':
             try:
                 if value == True:
@@ -269,11 +292,14 @@ if __name__ == '__main__':
 
     window.title = 'Title'
     window.borderless = False
-    window.fullscreen = False
+    # window.fullscreen = False
     window.fps_counter.enabled = False
-    window.exit_button.visible = False
-    window.cog_button.enabled = False
+    # window.exit_button.visible = False
+    # window.cog_button.enabled = False
+    camera.orthographic = True
+
+    camera.fov = 2
 
     Entity(model='cube', color=color.green, collider='box', texture='shore')
-
+    Button(scale=.5, text='test', position=window.right)
     app.run()

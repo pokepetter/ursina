@@ -35,7 +35,7 @@ class Camera(Entity):
         self.perspective_lens = PerspectiveLens()
         self.perspective_lens = base.camLens # use panda3d's default for automatic aspect ratio on window resize
         self.lens = self.perspective_lens
-        self.perspective_lens.set_aspect_ratio(16/9)
+        self.perspective_lens.set_aspect_ratio(window.aspect_ratio)
         self.perspective_lens_node = LensNode('perspective_lens_node', self.perspective_lens)
         self.lens_node = self.perspective_lens_node
 
@@ -86,17 +86,8 @@ class Camera(Entity):
     @orthographic.setter
     def orthographic(self, value):
         self._orthographic = value
-        if value:
-            self.lens = self.orthographic_lens
-            self.lens_node = self.orthographic_lens_node
-            application.base.cam.node().set_lens(self.orthographic_lens)
-        else:
-            self.lens = self.perspective_lens
-            self.lens_node = self.perspective_lens_node
-            application.base.cam.node().set_lens(self.perspective_lens)
-
+        application.base.cam.node().set_lens((self.perspective_lens, self.orthographic_lens)[value])
         self.fov = self.fov
-
 
     @property
     def fov(self):
@@ -108,11 +99,11 @@ class Camera(Entity):
         self._fov = value
         if not self.orthographic and hasattr(self, 'perspective_lens'):
             self.perspective_lens.set_fov(value)
-            application.base.cam.node().set_lens(self.perspective_lens)
 
         elif self.orthographic and hasattr(self, 'orthographic_lens'):
             self.orthographic_lens.set_film_size(value * self.aspect_ratio, value)
-            application.base.cam.node().set_lens(self.orthographic_lens)
+
+        application.base.cam.node().set_lens((self.perspective_lens, self.orthographic_lens)[value])
 
     @property
     def clip_plane_near(self):
@@ -157,10 +148,10 @@ class Camera(Entity):
             self.filter_manager = FilterManager(base.win, base.cam)
             self.render_texture = PandaTexture()
             self.depth_texture = PandaTexture()
-            self.normals_texture = PandaTexture()
+            # self.normals_texture = PandaTexture()
             self.filter_quad = self.filter_manager.renderSceneInto(colortex=self.render_texture, depthtex=self.depth_texture)
             # from panda3d.core import AuxBitplaneAttrib
-            # self.filter_quad = self.filter_manager.renderSceneInto(colortex=self.render_texture, depthtex=self.depth_texture, auxtex=self.normal_texture, auxbits=AuxBitplaneAttrib.ABOAuxNormal)
+            # self.filter_quad = self.filter_manager.renderSceneInto(colortex=self.render_texture, depthtex=self.depth_texture, auxtex=self.normals_texture, auxbits=AuxBitplaneAttrib.ABOAuxNormal)
             self.filter_quad.setShaderInput("tex", self.render_texture)
             self.filter_quad.setShaderInput("dtex", self.depth_texture)
             # self.filter_quad.setShaderInput("ntex", self.normals_texture)
@@ -177,6 +168,7 @@ class Camera(Entity):
     def set_shader_input(self, name, value):
         if self.filter_quad:
             self.filter_quad.setShaderInput(name, value)
+            print('yay')
         else:
             print('no filter quad')
 
@@ -186,9 +178,11 @@ sys.modules[__name__] = Camera()
 
 if __name__ == '__main__':
     from ursina import *
+    window.borderless = False
     app = Ursina()
-    # app.load_editor()
-    scene.camera.orthographic = True
+
+    camera.orthographic = True
+
     e = Entity()
     e.model = 'quad'
     e.color = color.random_color()
@@ -203,10 +197,12 @@ if __name__ == '__main__':
     e.model = 'quad'
     e.color = color.random_color()
     e.position = (0, 0, 40)
+
+    EditorCamera()
     # from ursina import *
     # Button(text='test button')
-    from ursina.shaders import camera_grayscale_shader
-    camera.shader = camera_grayscale_shader
+    # from ursina.shaders import camera_grayscale_shader
+    # camera.shader = camera_grayscale_shader
 
     # def update():
     #     t = Texture(camera.render_texture)

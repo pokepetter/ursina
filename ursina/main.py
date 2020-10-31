@@ -18,6 +18,9 @@ class Ursina(ShowBase):
     def __init__(self):
         super().__init__()
         application.base = base
+        base.win.requestProperties(window)
+        # base.win.setUnexposedDraw(False)
+
         window.late_init()
         time.dt = 0
 
@@ -31,7 +34,6 @@ class Ursina(ShowBase):
         camera.reparent_to(base.render)
         camera.set_up()
         # base.render.set_antialias(AntialiasAttrib.MMultisample)
-        self.accept('aspectRatioChanged', window.update_aspect_ratio)
 
         # input
         base.buttonThrowers[0].node().setButtonDownEvent('buttonDown')
