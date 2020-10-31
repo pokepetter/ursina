@@ -35,7 +35,7 @@ class Camera(Entity):
         self.perspective_lens = PerspectiveLens()
         self.perspective_lens = base.camLens # use panda3d's default for automatic aspect ratio on window resize
         self.lens = self.perspective_lens
-        self.perspective_lens.set_aspect_ratio(16/9)
+        self.perspective_lens.set_aspect_ratio(window.screen_resolution[0] / window.screen_resolution[1])
         self.perspective_lens_node = LensNode('perspective_lens_node', self.perspective_lens)
         self.lens_node = self.perspective_lens_node
 
