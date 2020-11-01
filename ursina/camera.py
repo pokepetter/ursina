@@ -86,6 +86,7 @@ class Camera(Entity):
     @orthographic.setter
     def orthographic(self, value):
         self._orthographic = value
+        self.lens_node = (self.perspective_lens_node, self.orthographic_lens_node)[value] # this need to be set for the mouse raycasting
         application.base.cam.node().set_lens((self.perspective_lens, self.orthographic_lens)[value])
         self.fov = self.fov
 
