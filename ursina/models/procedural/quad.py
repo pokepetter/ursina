@@ -23,6 +23,7 @@ class Quad(Mesh):
 
         segments += 1
         if segments > 1:
+            self.vertices = [Vec2(radius,radius), Vec2(1-radius,radius), Vec2(1-radius,1-radius), Vec2(radius,1-radius)]
             offsets = [Vec2(-radius,0), Vec2(0,-radius), Vec2(radius,0), Vec2(0,radius)]
             new_verts = []
 
