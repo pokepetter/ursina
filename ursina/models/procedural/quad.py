@@ -17,7 +17,7 @@ def rotate_point(point, origin, deg):
 class Quad(Mesh):
     def __init__(self, radius=.1, segments=8, aspect=1, scale=(1,1), mode='ngon', **kwargs):
         super().__init__()
-        self.vertices = [Vec2(0,0), Vec2(1,0), Vec2(1,1), Vec2(0,1)]
+        self.vertices = [Vec2(radius,radius), Vec2(1-radius,radius), Vec2(1-radius,1-radius), Vec2(radius,1-radius)]
         self.radius = radius
         self.mode = mode
 
@@ -76,6 +76,7 @@ if __name__ == '__main__':
     app = Ursina()
     Entity(model=Quad(scale=(3,1), thickness=3, segments=3, mode='line'), color = color.color(0,1,1,.7))
     Entity(scale=(3,1), model=Quad(aspect=3), color = color.color(60,1,1,.3))
+    Entity(scale=(3,1), model='quad', color = color.color(60,1,1,.3))
     origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
     # ed = EditorCamera(rotation_speed = 200, panning_speed=200)
     camera.z = -5
