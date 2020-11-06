@@ -41,6 +41,38 @@ class InputEvents(Enum):
     escape = 'escape'
     tab = 'tab'
 
+    gamepad_a = 'gamepad a'
+    gamepad_a_up = 'gamepad a up'
+    gamepad_b = 'gamepad b'
+    gamepad_b_up = 'gamepad b up'
+    gamepad_x = 'gamepad x'
+    gamepad_x_up = 'gamepad x up'
+    gamepad_y = 'gamepad y'
+    gamepad_y_up = 'gamepad y up'
+    gamepad_left_stick = 'gamepad left stick'
+    gamepad_left_stick_up = 'gamepad left stick up'
+    gamepad_right_stick = 'gamepad right stick'
+    gamepad_right_stick_up = 'gamepad right stick up'
+    gamepad_back = 'gamepad back'
+    gamepad_back_up = 'gamepad back up'
+    gamepad_start = 'gamepad start'
+    gamepad_dpad_down = 'gamepad dpad down'
+    gamepad_dpad_down_up = 'gamepad dpad down up'
+    gamepad_dpad_up = 'gamepad dpad up'
+    gamepad_dpad_up_up = 'gamepad dpad up up'
+    gamepad_dpad_left = 'gamepad dpad left'
+    gamepad_dpad_left_up = 'gamepad dpad left up'
+    gamepad_dpad_right = 'gamepad dpad right'
+    gamepad_dpad_right_up = 'gamepad dpad right up'
+    gamepad_dpad_left_shoulder = 'gamepad left shoulder'
+    gamepad_dpad_left_shoulder_up = 'gamepad left shoulder up'
+    gamepad_dpad_right_shoulder = 'gamepad right shoulder'
+    gamepad_dpad_right_shoulder_up = 'gamepad right shoulder up'
+
+
+
+
+
     def __hash__(self):
         return hash(self.value)
 
@@ -95,39 +127,23 @@ if __name__ == '__main__':
     app = Ursina()
     input_handler.bind('s', 'arrow down')  # 's'-key will now be registered as 'arrow down'-key
 
+    def test():
+        print('----')
     # input_handler.rebind('a', 'f')
     def input(key):
         print(key)
         if key == 'left mouse down':
             print('pressed left mouse button')
 
-        if key == InputEvent.left_mouse_down:   # same as above, but with InputEvents enum.
+        if key == InputEvents.left_mouse_down:   # same as above, but with InputEvents enum.
             print('pressed left mouse button')
 
-    # Is there a gamepad connected?
-    # from panda3d.core import InputDevice
-    # gamepad = None
-    # devices = app.devices.getDevices(InputDevice.DeviceClass.gamepad)
-    # print( app.devices.getDevices)
-    # if devices:
-    #     print('gamepads:', devices)
-    #     app.connect(devices[0])
 
-    # Accept device dis-/connection events
-    # app.accept("connect-device", self.connect)
-    # app.accept("disconnect-device", self.disconnect)
+    def update():
+        for key, value in held_keys.items():
+            if value != 0:
+                print(key, value)
 
-    # base.accept("escape", exit)
-    #
-    # # Accept button events of the first connected gamepad
-    # base.accept("gamepad-back", exit)
-    # base.accept("gamepad-start", exit)
-    # base.accept("gamepad-face_x", self.reset)
-    # base.accept("gamepad-face_a", self.action, extraArgs=["face_a"])
-    # base.accept("gamepad-face_a-up", self.actionUp)
-    # base.accept("gamepad-face_b", self.action, extraArgs=["face_b"])
-    # base.accept("gamepad-face_b-up", self.actionUp)
-    # base.accept("gamepad-face_y", self.action, extraArgs=["face_y"])
-    # base.accept("gamepad-face_y-up", self.actionUp)
+
 
     app.run()

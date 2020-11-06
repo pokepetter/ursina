@@ -91,6 +91,8 @@ class Ursina(ShowBase):
         mouse.enabled = True
         self.mouse = mouse
 
+        from ursina import gamepad
+
         scene.set_up()
         self._update_task = taskMgr.add(self._update, "update")
 
