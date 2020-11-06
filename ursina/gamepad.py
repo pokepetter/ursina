@@ -3,6 +3,18 @@ from panda3d.core import InputDevice
 
 if __name__ == '__main__':
     app = Ursina()
+    text_entity = Text()
+    player = Entity(model='cube', color=color.azure)
+
+    def update():
+        player.x += held_keys['gamepad left stick x'] * time.dt * 5
+        player.y += held_keys['gamepad left stick y'] * time.dt * 5
+        text_entity.text = '\n'.join([f'{key}: {held_keys[key]}' for key in ('gamepad left trigger', 'gamepad right trigger', 'gamepad right stick x', 'gamepad right stick y')])
+
+    def input(key):
+        print('key:', key)
+
+    app.run()
 
 
 
@@ -72,24 +84,3 @@ def update():
         held_keys[f'{gamepad_name} right trigger'] = gamepad.findAxis(InputDevice.Axis.right_trigger).value
 
 Entity(name='gamepad_handler', update=update) # connect update() to an entity so it runs
-
-
-if __name__ == '__main__':
-    # app = Ursina()
-    text_entity = Text()
-    player = Entity(model='cube', color=color.azure)
-
-    def update():
-
-        player.x += held_keys['gamepad left stick x'] * time.dt * 5
-        player.x += held_keys['d'] * time.dt * 5
-        player.y += held_keys['gamepad left stick y'] * time.dt * 5
-
-        text_entity.text = '\n'.join([f'{key}: {held_keys[key]}' for key in ('gamepad left trigger', 'gamepad right trigger', 'gamepad right stick x', 'gamepad right stick y')])
-        print(held_keys['gamepad right stick y'])
-        # print(controller.left_stick.x)
-
-    def input(key):
-        print('key:', key)
-
-    app.run()
