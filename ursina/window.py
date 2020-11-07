@@ -57,6 +57,7 @@ class Window(WindowProperties):
         self.center = Vec2(0, 0)
 
 
+
     def late_init(self):
         self.center_on_screen()
         if not application.development_mode:
@@ -70,7 +71,6 @@ class Window(WindowProperties):
 
         from ursina import invoke
         invoke(base.accept, 'aspectRatioChanged', self.update_aspect_ratio, delay=1/60)
-
 
     @property
     def left(self):
@@ -93,6 +93,7 @@ class Window(WindowProperties):
 
 
     def center_on_screen(self):
+        print('size;', self.size)
         self.position = Vec2(
             int((self.screen_resolution[0] - self.size[0]) / 2),
             int((self.screen_resolution[1] - self.size[1]) / 2)
@@ -166,13 +167,11 @@ class Window(WindowProperties):
 
     @property
     def position(self):
-        try:
-            return self.getOrigin()
-        except:
-            return self._position
+        return self._position
 
     @position.setter
     def position(self, value):
+        # print('set window position:', value)
         self._position = value
         self.setOrigin(int(value[0]), int(value[1]))
         base.win.request_properties(self)
@@ -186,7 +185,6 @@ class Window(WindowProperties):
     def size(self, value):
         self.set_size(int(value[0]), int(value[1]))
         self.aspect_ratio = value[0] / value[1]
-        base.win.requestProperties(self)
         from ursina import camera
         camera.set_shader_input('window_size', value)
 
@@ -246,8 +244,8 @@ class Window(WindowProperties):
         if name == 'fullscreen':
             try:
                 if value == True:
-                    self.windowed_size = self.size
                     self.windowed_position = self.position
+                    self.windowed_size = self.size
                     self.size = self.fullscreen_size
                     self.center_on_screen()
                 else:
