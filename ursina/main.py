@@ -197,7 +197,7 @@ class Ursina(ShowBase):
 
 
         if key == 'f12':
-            window.ui_parent.enabled = not window.ui_parent.enabled
+            window.editor_ui.enabled = not window.editor_ui.enabled
 
         if key == 'f11':
             window.fullscreen = not window.fullscreen
