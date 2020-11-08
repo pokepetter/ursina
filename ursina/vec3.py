@@ -68,7 +68,7 @@ class Vec3(PandaVec3):
     @property
     def xz(self):
         return Vec2(self.x, self.z)
-    @xy.setter
+    @xz.setter
     def xz(self, value):
         self[0] = value[0]
         self[2] = value[1]
