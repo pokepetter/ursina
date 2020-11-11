@@ -18,6 +18,7 @@ class FirstPersonController(Entity):
         self.target_smoothing = 100
         self.smoothing = self.target_smoothing
 
+        self.gravity = 1
         self.grounded = False
         self.jump_height = 2
         self.jump_duration = .5
@@ -50,23 +51,24 @@ class FirstPersonController(Entity):
             self.position += self.direction * self.speed * time.dt
 
 
-        # # gravity
-        ray = boxcast(self.world_position+(0,2,0), self.down, ignore=(self,), thickness=.9)
+        if self.gravity:
+            # # gravity
+            ray = boxcast(self.world_position+(0,2,0), self.down, ignore=(self,), thickness=.9)
 
-        if ray.distance <= 2:
-            if not self.grounded:
-                self.land()
-            self.grounded = True
-            # make sure it's not a wall and that the point is not too far up
-            if ray.world_normal.y > .7 and ray.world_point.y - self.world_y < .5: # walk up slope
-                self.y = ray.world_point[1]
-            return
-        else:
-            self.grounded = False
+            if ray.distance <= 2:
+                if not self.grounded:
+                    self.land()
+                self.grounded = True
+                # make sure it's not a wall and that the point is not too far up
+                if ray.world_normal.y > .7 and ray.world_point.y - self.world_y < .5: # walk up slope
+                    self.y = ray.world_point[1]
+                return
+            else:
+                self.grounded = False
 
-        # if not on ground and not on way up in jump, fall
-        self.y -= min(self.air_time, ray.distance-.05)
-        self.air_time += time.dt*.25
+            # if not on ground and not on way up in jump, fall
+            self.y -= min(self.air_time, ray.distance-.05)
+            self.air_time += time.dt * .25 * self.gravity
 
 
     def input(self, key):
@@ -97,7 +99,7 @@ if __name__ == '__main__':
     from ursina.prefabs.first_person_controller import FirstPersonController
     # window.vsync = False
     app = Ursina()
-    Sky(color=color.gray)
+    # Sky(color=color.gray)
     ground = Entity(model='plane', scale=(100,1,100), color=color.yellow.tint(-.2), texture='white_cube', texture_scale=(100,100), collider='box')
     e = Entity(model='cube', scale=(1,5,10), x=2, y=.01, rotation_y=45, collider='box', texture='white_cube')
     e.texture_scale = (e.scale_z, e.scale_y)
@@ -115,10 +117,10 @@ if __name__ == '__main__':
     slope = Entity(model='cube', collider='box', position=(0,0,8), scale=6, rotation=(45,0,0), texture='brick', texture_scale=(8,8))
     slope = Entity(model='cube', collider='box', position=(5,0,10), scale=6, rotation=(80,0,0), texture='brick', texture_scale=(8,8))
     # hill = Entity(model='sphere', position=(20,-10,10), scale=(25,25,25), collider='sphere', color=color.green)
-    hill = Entity(model='sphere', position=(20,-0,10), scale=(25,25,25), collider='mesh', color=color.green)
-    from ursina.shaders import basic_lighting_shader
-    for e in scene.entities:
-        e.shader = basic_lighting_shader
+    # hill = Entity(model='sphere', position=(20,-0,10), scale=(25,25,25), collider='mesh', color=color.green)
+    # from ursina.shaders import basic_lighting_shader
+    # for e in scene.entities:
+    #     e.shader = basic_lighting_shader
 
     def input(key):
         if key == 'left mouse down' and player.gun:
