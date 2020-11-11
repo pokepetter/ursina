@@ -58,7 +58,12 @@ class Audio(Entity):
         if isinstance(value, str):
             self.name = value
 
-            for suffix in ('.ogg', '.mp3', '.wav'):
+            if '.' in value:
+                file_types = ('',)
+            else:
+                file_types = ('.ogg', '.mp3', '.wav')
+
+            for suffix in file_types:
                 for f in application.asset_folder.glob(f'**/{value}{suffix}'):
                     p = str(f.resolve())
                     p = p[len(str(application.asset_folder.resolve())):]
