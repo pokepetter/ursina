@@ -708,7 +708,7 @@ class Entity(NodePath):
     def alpha(self, value):
         if value > 1:
             value = value / 255
-        self.color = (self.color.h, self.color.s, self.color.v, value)
+        self.color = color.color(self.color.h, self.color.s, self.color.v, value)
 
 
     @property
