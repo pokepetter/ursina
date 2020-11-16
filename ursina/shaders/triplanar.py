@@ -69,12 +69,12 @@ void main(){
     vec3 blendFast = TriPlanarBlendWeightsConstantOverlap(world_normal);
     vec3 blend = blendFast;
 
-    vec3 albedoX = texture(p3d_Texture0, vertex_position.yz).rgb*blend.x;
+    vec3 albedoX = texture(p3d_Texture0, vertex_position.zy).rgb*blend.x;
 	vec3 albedoY = texture(p3d_Texture0, vertex_position.xz).rgb*blend.y;
 	vec3 albedoZ = texture(p3d_Texture0, vertex_position.xy).rgb*blend.z;
 
-    if (world_normal.z > .0) {
-		albedoZ = texture(top_texture, vertex_position.xy).rgb*blend.z;
+    if (world_normal.y > .0) {
+		albedoY = texture(top_texture, vertex_position.xz).rgb*blend.y;
     }
 
 	vec3 triPlanar = (albedoX + albedoY + albedoZ);
