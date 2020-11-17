@@ -227,24 +227,24 @@ class Mouse():
     def normal(self):
         if not self.collision:
             return None
-        return self.collision.normal
+        return Vec3(*self.collision.normal)
 
     @property
     def world_normal(self):
         if not self.collision:
             return None
-        return self.collision.world_normal
+        return Vec3(*self.collision.world_normal)
 
     @property
     def point(self): # returns the point hit in local space
         if self.collision:
-            return self.collision.point
+            return Vec3(*self.collision.point)
         return None
 
     @property
     def world_point(self):
         if self.collision:
-            return self.collision.world_point
+            return Vec3(*self.collision.world_point)
         return None
 
     def find_collision(self):
