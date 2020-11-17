@@ -5,14 +5,12 @@ class FirstPersonController(Entity):
     def __init__(self, **kwargs):
         super().__init__()
         self.speed = 5
-        self.model='cube'
-        self.color = color.red
         self.origin_y = -.5
         self.camera_pivot = Entity(parent=self, y=2)
         self.cursor = Entity(parent=camera.ui, model='quad', color=color.pink, scale=.008, rotation_z=45)
 
         camera.parent = self.camera_pivot
-        camera.position = (0,0,-8)
+        camera.position = (0,0,0)
         camera.rotation = (0,0,0)
         camera.fov = 90
         mouse.locked = True
@@ -126,8 +124,6 @@ if __name__ == '__main__':
             bullet.animate_position(bullet.position+(bullet.forward*50), curve=curve.linear, duration=1)
             destroy(bullet, delay=1)
 
-
-    # Entity(model='cube', color=color.dark_gray, scale=(9,4,9), y=-.5, collider='box')
-    player.add_script(NoclipMode())
+    # player.add_script(NoclipMode())
 
     app.run()
