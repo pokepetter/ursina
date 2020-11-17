@@ -124,10 +124,8 @@ class Button(Entity):
             else:
                 super().__setattr__(name, value)
 
-            try:    # update collider position by making a new one
+            if isinstance(self.collider, BoxCollider):    # update collider position by making a new one
                 self.collider = 'box'
-            except Exception as e:
-                return e
 
 
         if name == 'on_click':
