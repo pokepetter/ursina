@@ -55,6 +55,7 @@ from ursina.models.procedural.terrain import Terrain
 
 from ursina.scripts.smooth_follow import SmoothFollow
 from ursina.scripts.position_limiter import PositionLimiter
+from ursina.scripts.noclip_mode import NoclipMode
 from ursina.scripts.grid_layout import grid_layout
 from ursina.scripts.scrollable import Scrollable
 from ursina.scripts.colorize import get_world_normals
