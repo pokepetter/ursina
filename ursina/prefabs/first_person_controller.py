@@ -5,18 +5,18 @@ class FirstPersonController(Entity):
     def __init__(self, **kwargs):
         super().__init__()
         self.speed = 5
-
+        self.model='cube'
+        self.color = color.red
+        self.origin_y = -.5
         self.camera_pivot = Entity(parent=self, y=2)
         self.cursor = Entity(parent=camera.ui, model='quad', color=color.pink, scale=.008, rotation_z=45)
 
         camera.parent = self.camera_pivot
-        camera.position = (0,0,0)
+        camera.position = (0,0,-8)
         camera.rotation = (0,0,0)
         camera.fov = 90
         mouse.locked = True
         self.mouse_sensitivity = Vec2(40, 40)
-        self.target_smoothing = 100
-        self.smoothing = self.target_smoothing
 
         self.gravity = 1
         self.grounded = False
@@ -35,10 +35,6 @@ class FirstPersonController(Entity):
 
         self.camera_pivot.rotation_x -= mouse.velocity[1] * self.mouse_sensitivity[0]
         self.camera_pivot.rotation_x= clamp(self.camera_pivot.rotation_x, -90, 90)
-
-        if application.development_mode:
-            self.y += held_keys['e']
-            self.y -= held_keys['q']
 
         self.direction = Vec3(
             self.forward * (held_keys['w'] - held_keys['s'])
@@ -132,4 +128,6 @@ if __name__ == '__main__':
 
 
     # Entity(model='cube', color=color.dark_gray, scale=(9,4,9), y=-.5, collider='box')
+    player.add_script(NoclipMode())
+
     app.run()

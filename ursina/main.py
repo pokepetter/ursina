@@ -126,13 +126,13 @@ class Ursina(ShowBase):
             if application.paused and entity.ignore_paused == False:
                 continue
 
-            if hasattr(entity, 'update'):
+            if hasattr(entity, 'update') and callable(entity.update):
                 entity.update()
 
 
             if hasattr(entity, 'scripts'):
                 for script in entity.scripts:
-                    if script.enabled and hasattr(script, 'update'):
+                    if script.enabled and hasattr(script, 'update') and callable(script.update):
                         script.update()
 
 
@@ -183,12 +183,12 @@ class Ursina(ShowBase):
             if application.paused and entity.ignore_paused == False:
                 continue
 
-            if hasattr(entity, 'input'):
+            if hasattr(entity, 'input') and callable(entity.input):
                 entity.input(key)
 
             if hasattr(entity, 'scripts'):
                 for script in entity.scripts:
-                    if script.enabled and hasattr(script, 'input'):
+                    if script.enabled and hasattr(script, 'input') and callable(script.input):
                         script.input(key)
 
 
