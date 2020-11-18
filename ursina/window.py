@@ -105,6 +105,8 @@ class Window(WindowProperties):
 
         self.editor_ui = Entity(parent=camera.ui, eternal=True, enabled=bool(application.development_mode))
         self.exit_button = Button(parent=self.editor_ui, eternal=True, origin=(.5, .5), position=self.top_right, z=-999, scale=(.05, .025), color=color.red.tint(-.2), text='x', on_click=application.quit)
+        self.exit_button.enabled = self.borderless
+
 
         def _exit_button_input(key):
             from ursina import held_keys, mouse
@@ -263,11 +265,14 @@ class Window(WindowProperties):
 
         if name == 'borderless':
             self.setUndecorated(value)
+            if hasattr(self, 'exit_button'):
+                self.exit_button.enabled = not value
             try:
                 application.base.win.request_properties(self)
             except:
                 pass
             object.__setattr__(self, name, value)
+
 
         if name == 'color':
             application.base.camNode.get_display_region(0).get_window().set_clear_color(value)
