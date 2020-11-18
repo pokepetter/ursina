@@ -161,7 +161,11 @@ class Camera(Entity):
 
         if hasattr(value,'default_input'):
             for key, value in value.default_input.items():
-                self.set_shader_input(key, value)
+                if not callable(value):
+                    self.set_shader_input(key, value)
+                else:
+                    self.set_shader_input(key, value())
+
 
         print('set camera shader to:', shader)
 
