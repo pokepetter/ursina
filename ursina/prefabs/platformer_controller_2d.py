@@ -6,6 +6,8 @@ class PlatformerController2d(Entity):
         super().__init__()
 
         self.model = 'cube'
+        # self.model.mode = 'line'
+        # self.model.generate()
         self.origin_y = -.5
         self.scale_y = 2
         self.color = color.orange
@@ -46,7 +48,15 @@ class PlatformerController2d(Entity):
 
 
     def update(self):
-        if raycast(self.position+Vec3(0,.05,0), self.right, .5, ignore=(self, ), debug=False).hit == False:
+        if boxcast(
+            self.position+Vec3(0,self.scale_y/2,0),
+            direction=Vec3(self.velocity,0,0),
+            distance=abs(self.scale_x/2),
+            ignore=(self, ),
+            thickness=.9,
+            debug=False
+            ).hit == False:
+
             self.x += self.velocity * time.dt * self.walk_speed
 
         self.walking = held_keys['a'] + held_keys['d'] > 0 and self.grounded
@@ -60,9 +70,11 @@ class PlatformerController2d(Entity):
             else:
                 self.animator.state = 'idle'
 
-        ray = boxcast(self.world_position+(0,.05,0), self.down, ignore=(self, ), thickness=.9)
+        # ray = boxcast(self.world_position+Vec3(0,.05,0), self.down, distance=100, ignore=(self, ), thickness=.9)
+        ray = boxcast(self.world_position+Vec3(0,.1,0), self.down, distance=.1, ignore=(self, ), thickness=.9)
 
-        if ray.distance <= .1:
+        # if ray.distance <= .1:
+        if ray.hit:
             if not self.grounded:
                 self.land()
             self.grounded = True
@@ -115,7 +127,7 @@ class PlatformerController2d(Entity):
         target_y = self.y + self.jump_height
         duration = self.jump_duration
         # check if we hit a ceiling and adjust the jump height accordingly
-        hit_above = boxcast(self.position+(0,self.scale_y,0), self.up, distance=self.jump_height, ignore=(self,), debug=False)
+        hit_above = raycast(self.position+(0,self.scale_y*.5,0), self.up, distance=self.jump_height, ignore=(self,), debug=False)
         if hit_above.hit:
             target_y = min(hit_above.world_point.y-self.scale_y, target_y)
             duration *=  target_y / (self.y+self.jump_height)
@@ -137,8 +149,12 @@ class PlatformerController2d(Entity):
 if __name__ == '__main__':
     # window.vsync = False
     app = Ursina()
+    camera.orthographic = True
+    camera.fov = 10
+
     ground = Entity(model='cube', color=color.white33, origin_y=.5, scale=(20, 10, 1), collider='box')
     wall = Entity(model='cube', color=color.azure, origin=(-.5,.5), scale=(5,10), x=10, y=.5, collider='box')
+    wall_2 = Entity(model='cube', color=color.white33, origin=(-.5,.5), scale=(5,10), x=10, y=5, collider='box')
     ceiling = Entity(model='cube', color=color.white33, origin_y=.5, scale=(10, 1, 1), y=4, collider='box')
 
     def input(key):
@@ -148,5 +164,7 @@ if __name__ == '__main__':
 
 
     player_controller = PlatformerController2d()
-    # EditorCamera()
+    camera.add_script(SmoothFollow(target=player_controller, offset=[0,1,-30], speed=4))
+
+    EditorCamera()
     app.run()

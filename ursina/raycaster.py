@@ -102,46 +102,16 @@ class Raycaster(Entity):
         return self.hit
 
 
-    def boxcast(self, origin, direction=(0,0,1), distance=inf, thickness=(1,1), traverse_target=scene, ignore=list(), debug=False):
+    def boxcast(self, origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_target=scene, ignore=list(), debug=False):
         if isinstance(thickness, (int, float, complex)):
             thickness = (thickness, thickness)
-        resolution = 3
-        rays = list()
-        debugs = list()
 
-        for y in range(3):
-            for x in range(3):
-                pos = origin + Vec3(lerp(-(thickness[0]/2), thickness[0]/2, x/(3-1)), lerp(-(thickness[1]/2), thickness[1]/2, y/(3-1)), 0)
-                ray = self.raycast(pos, direction, distance, traverse_target, ignore, False)
-                rays.append(ray)
-
-                if debug and ray.hit:
-                    d = Entity(model='cube', origin_z=-.5, position=pos, scale=(.02, .02, distance), ignore=True)
-                    d.look_at(pos + Vec3(direction))
-                    debugs.append(d)
-                    # print(pos, hit.point)
-                    if ray.hit and ray.distance > 0:
-                        d.scale_z = ray.distance
-                        d.color = color.green
-
-        from ursina import destroy
-        # [destroy(e, 1/60) for e in debugs]
-
-        rays.sort(key=lambda x : x.distance)
-        closest = rays[0]
-
-        return HitInfo(
-            hit = sum([int(e.hit) for e in rays]) > 0,
-            entity = closest.entity,
-            point = closest.point,
-            world_point = closest.world_point,
-            distance = closest.distance,
-            normal = closest.normal,
-            world_normal = closest.world_normal,
-
-            hits = [e.hit for e in rays],
-            entities = list(set([e.entity for e in rays])), # get unique entities hit
-            )
+        temp = Entity(position=origin, model='cube', origin_z=-.5, scale=Vec3(abs(thickness[0]), abs(thickness[1]), abs(distance)), collider='box', color=color.white33, visible=debug)
+        temp.look_at(origin + direction)
+        hit_info = temp.intersects(traverse_target=traverse_target, ignore=ignore)
+        destroy(temp)
+        return hit_info
+        
 
 sys.modules[__name__] = Raycaster()
 
@@ -159,7 +129,7 @@ if __name__ == '__main__':
     camera.look_at(e)
     # camera.reparent_to(e)
     speed = .01
-    rotation_speed = .1
+    rotation_speed = 1
     intersection_marker = Entity(model='cube', scale=.2, color=color.red)
 
     def update():
@@ -172,7 +142,8 @@ if __name__ == '__main__':
         e.rotation_y += held_keys['e'] * rotation_speed
 
         # ray = raycast(e.world_position, e.forward, 3, debug=True)
-        ray = raycast(e.world_position, e.forward, 3, debug=True)
+        # ray = raycast(e.world_position, e.forward, 3, debug=True)
+        ray = boxcast(e.world_position, e.right, 3, debug=True)
         # print(ray.distance, ray2.distance)
         intersection_marker.world_position = ray.world_point
         intersection_marker.visible = ray.hit
@@ -182,7 +153,7 @@ if __name__ == '__main__':
             d.color = color.orange
 
     t = time.time()
-    ray = raycast(e.world_position, e.forward, 3, debug=True)
+    # ray = raycast(e.world_position, e.forward, 3, debug=True)
     print(time.time() - t)
     # raycast((0,0,-2), (0,0,1), 5, debug=False)
 
