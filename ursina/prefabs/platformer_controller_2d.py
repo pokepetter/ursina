@@ -46,7 +46,7 @@ class PlatformerController2d(Entity):
 
 
     def update(self):
-        if raycast(self.position+Vec3(0,.05,0), self.right, .5, ignore=(self, ), debug=True).hit == False:
+        if raycast(self.position+Vec3(0,.05,0), self.right, .5, ignore=(self, ), debug=False).hit == False:
             self.x += self.velocity * time.dt * self.walk_speed
 
         self.walking = held_keys['a'] + held_keys['d'] > 0 and self.grounded
@@ -115,7 +115,7 @@ class PlatformerController2d(Entity):
         target_y = self.y + self.jump_height
         duration = self.jump_duration
         # check if we hit a ceiling and adjust the jump height accordingly
-        hit_above = boxcast(self.position+(0,self.scale_y,0), self.up, distance=self.jump_height, ignore=(self,), debug=True)
+        hit_above = boxcast(self.position+(0,self.scale_y,0), self.up, distance=self.jump_height, ignore=(self,), debug=False)
         if hit_above.hit:
             target_y = min(hit_above.world_point.y-self.scale_y, target_y)
             duration *=  target_y / (self.y+self.jump_height)

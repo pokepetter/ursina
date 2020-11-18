@@ -5,6 +5,7 @@ from ursina import *
 from ursina.prefabs.platformer_controller_2d import PlatformerController2d
 
 # window.vsync = False
+window.borderless = False
 app = Ursina()
 window.color = color.light_gray
 camera.orthographic = True
@@ -48,6 +49,9 @@ camera.add_script(SmoothFollow(target=player, offset=[0,5,-30], speed=4))
 input_handler.bind('right arrow', 'd')
 input_handler.bind('left arrow', 'a')
 input_handler.bind('up arrow', 'space')
+input_handler.bind('gamepad dpad right', 'd')
+input_handler.bind('gamepad dpad left', 'a')
+input_handler.bind('gamepad a', 'space')
 # print('---------', time.time() - t)
 # print(Path(sys.executable).parent)
 app.run()
