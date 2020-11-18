@@ -3,7 +3,7 @@ from ursina import *
 
 
 
-def combine(entity, analyze=False, auto_destroy=True):
+def combine(entity, analyze=False, auto_destroy=True, ignore=[]):
     verts = list()
     tris = list()
     norms = list()
@@ -14,6 +14,9 @@ def combine(entity, analyze=False, auto_destroy=True):
 
 
     for e in scene.entities:
+        if e in ignore:
+            continue
+            
         if e.has_ancestor(entity) or e == entity:
             if not hasattr(e, 'model') or e.model == None or e.scripts or e.eternal:
                 continue

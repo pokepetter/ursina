@@ -849,10 +849,10 @@ class Entity(NodePath):
             return class_instance
 
 
-    def combine(self, analyze=False, auto_destroy=True):
+    def combine(self, analyze=False, auto_destroy=True, ignore=[]):
         from ursina.scripts.combine import combine
 
-        self.model = combine(self, analyze, auto_destroy)
+        self.model = combine(self, analyze, auto_destroy, ignore)
         return self.model
 
 
