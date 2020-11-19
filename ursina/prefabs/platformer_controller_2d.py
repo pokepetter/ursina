@@ -6,8 +6,6 @@ class PlatformerController2d(Entity):
         super().__init__()
 
         self.model = 'cube'
-        # self.model.mode = 'line'
-        # self.model.generate()
         self.origin_y = -.5
         self.scale_y = 2
         self.color = color.orange
@@ -30,31 +28,33 @@ class PlatformerController2d(Entity):
         self.jumping = False
         self.max_jumps = 1
         self.jumps_left = self.max_jumps
-        # self.gravity = 1
+        self.gravity = 1
         self.grounded = True
         self.air_time = 0
 
-        self.y = 2
-        ray = boxcast(self.world_position, self.down, distance=10, ignore=(self, ), thickness=1)
+        ray = boxcast(self.world_position, self.down, distance=10, ignore=(self, ), thickness=.9)
         if ray.hit:
             self.y = ray.world_point[1] + .01
-
         # camera.add_script(SmoothFollow(target=self, offset=[0,1,-30], speed=4))
 
         for key, value in kwargs.items():
             setattr(self, key, value)
 
+        # delay_gravity one frame
+        target_gravity = self.gravity
+        self.gravity = 0
+        invoke(setattr, self, 'gravity', target_gravity, delay=1/60)
         self._original_scale_x = self.scale_x
 
 
     def update(self):
         if boxcast(
-            self.position+Vec3(0,self.scale_y/2,0),
+            self.position+Vec3(self.velocity * time.dt * self.walk_speed,self.scale_y/2,0),
+            # self.position+Vec3(sefl,self.scale_y/2,0),
             direction=Vec3(self.velocity,0,0),
             distance=abs(self.scale_x/2),
             ignore=(self, ),
             thickness=.9,
-            debug=False
             ).hit == False:
 
             self.x += self.velocity * time.dt * self.walk_speed
@@ -70,10 +70,8 @@ class PlatformerController2d(Entity):
             else:
                 self.animator.state = 'idle'
 
-        # ray = boxcast(self.world_position+Vec3(0,.05,0), self.down, distance=100, ignore=(self, ), thickness=.9)
-        ray = boxcast(self.world_position+Vec3(0,.1,0), self.down, distance=.1, ignore=(self, ), thickness=.9)
+        ray = boxcast(self.world_position+Vec3(0,.1,0), self.down, distance=max(.1, self.air_time * self.gravity), ignore=(self, ), thickness=self.scale_x*.9)
 
-        # if ray.distance <= .1:
         if ray.hit:
             if not self.grounded:
                 self.land()
@@ -85,8 +83,8 @@ class PlatformerController2d(Entity):
 
         # if not on ground and not on way up in jump, fall
         if not self.grounded and not self.jumping:
-            self.y -= min(self.air_time, ray.distance-.05)
-            self.air_time += time.dt*7
+            self.y -= min(min(self.air_time, 1) * self.gravity, ray.distance-.05)
+            self.air_time += time.dt*7 * self.gravity
 
 
 
@@ -112,6 +110,9 @@ class PlatformerController2d(Entity):
     def jump(self):
         if not self.grounded:
             return
+        # don't jump if there's a ceiling right above us
+        if boxcast(self.position+(0,self.scale_y-.1,0), self.up, distance=.2, thickness=.95, ignore=(self,)).hit:
+            return
 
         if hasattr(self, 'y_animator'):
             self.y_animator.pause()
@@ -127,10 +128,13 @@ class PlatformerController2d(Entity):
         target_y = self.y + self.jump_height
         duration = self.jump_duration
         # check if we hit a ceiling and adjust the jump height accordingly
-        hit_above = raycast(self.position+(0,self.scale_y*.5,0), self.up, distance=self.jump_height, ignore=(self,), debug=False)
+        hit_above = boxcast(self.position+(0,self.scale_y/2,0), self.up, distance=self.jump_height-(self.scale_y/2), thickness=.9, ignore=(self,))
         if hit_above.hit:
             target_y = min(hit_above.world_point.y-self.scale_y, target_y)
-            duration *=  target_y / (self.y+self.jump_height)
+            try:
+                duration *= target_y / (self.y+self.jump_height)
+            except ZeroDivisionError as e:
+                return
 
         self.animate_y(target_y, duration, resolution=30, curve=curve.out_expo)
         invoke(self.start_fall, delay=duration)
@@ -155,7 +159,7 @@ if __name__ == '__main__':
     ground = Entity(model='cube', color=color.white33, origin_y=.5, scale=(20, 10, 1), collider='box')
     wall = Entity(model='cube', color=color.azure, origin=(-.5,.5), scale=(5,10), x=10, y=.5, collider='box')
     wall_2 = Entity(model='cube', color=color.white33, origin=(-.5,.5), scale=(5,10), x=10, y=5, collider='box')
-    ceiling = Entity(model='cube', color=color.white33, origin_y=.5, scale=(10, 1, 1), y=4, collider='box')
+    ceiling = Entity(model='cube', color=color.white33, origin_y=-.5, scale=(1, 1, 1), y=1, collider='box')
 
     def input(key):
         if key == 'c':
@@ -163,7 +167,7 @@ if __name__ == '__main__':
             print(wall.collision)
 
 
-    player_controller = PlatformerController2d()
+    player_controller = PlatformerController2d(scale_y=1, jump_height=4)
     camera.add_script(SmoothFollow(target=player_controller, offset=[0,1,-30], speed=4))
 
     EditorCamera()

@@ -106,12 +106,25 @@ class Raycaster(Entity):
         if isinstance(thickness, (int, float, complex)):
             thickness = (thickness, thickness)
 
-        temp = Entity(position=origin, model='cube', origin_z=-.5, scale=Vec3(abs(thickness[0]), abs(thickness[1]), abs(distance)), collider='box', color=color.white33, visible=debug)
+        temp = Entity(
+            position=origin,
+            model='cube',
+            origin_z=-.5,
+            scale=Vec3(abs(thickness[0]), abs(thickness[1]), abs(distance)),
+            collider='box',
+            color=color.white33,
+            always_on_top=debug,
+            visible=debug
+            )
         temp.look_at(origin + direction)
         hit_info = temp.intersects(traverse_target=traverse_target, ignore=ignore)
-        destroy(temp)
+        if debug:
+            temp.collision = False
+            destroy(temp, delay=.1)
+        else:
+            destroy(temp)
         return hit_info
-        
+
 
 sys.modules[__name__] = Raycaster()
 
