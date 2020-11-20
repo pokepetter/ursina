@@ -224,7 +224,7 @@ ignored_files =  repo.untracked_files
 ignored_files = [Path(path.parent / e) for e in ignored_files]
 for f in ignored_files:
     print('ignoring:', f)
-
+ignored_files.append(path / 'gamepad.py')
 
 for f in path.glob('*.py'):
     if f in ignored_files:
