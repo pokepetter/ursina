@@ -1083,6 +1083,7 @@ class Entity(NodePath):
             self.hit = HitInfo(hit=False)
             return self.hit
 
+        # for collision in self.entries:
         collision = self.entries[0]
         nP = collision.get_into_node_path().parent
         point = collision.get_surface_point(nP)
@@ -1091,13 +1092,9 @@ class Entity(NodePath):
         world_point = Vec3(*world_point)
         hit_dist = distance(self.world_position, world_point)
 
-        if nP.name.endswith('.egg'):
-            nP = nP.parent
 
         self.hit = HitInfo(hit=True)
-        for e in scene.entities:
-            if e == nP:
-                self.hit.entity = e
+        self.hit.entity = next(e for e in scene.entities if e == nP)
 
         self.hit.point = point
         self.hit.world_point = world_point
@@ -1108,10 +1105,13 @@ class Entity(NodePath):
 
         normal = collision.get_surface_normal(render).normalized()
         self.hit.world_normal = Vec3(*normal)
+
+        self.hit.entities = []
+        for collision in self.entries:
+            self.hit.entities.append(next(e for e in scene.entities if e == collision.get_into_node_path().parent))
+
         return self.hit
 
-        self.hit = HitInfo(hit=False)
-        return self.hit
 
 
 if __name__ == '__main__':
