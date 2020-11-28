@@ -9,6 +9,8 @@ from ursina import application
 from ursina import scene
 from ursina import window
 from ursina import color
+from ursina.texture import Texture
+
 
 
 class Camera(Entity):
@@ -159,12 +161,12 @@ class Camera(Entity):
 
         self.filter_quad.setShader(shader)
 
-        if hasattr(value,'default_input'):
+        if hasattr(value, 'default_input'):
             for key, value in value.default_input.items():
-                if not callable(value):
-                    self.set_shader_input(key, value)
-                else:
-                    self.set_shader_input(key, value())
+                if callable(value):
+                    value = value()
+
+                self.set_shader_input(key, value)
 
 
         print('set camera shader to:', shader)
@@ -172,8 +174,11 @@ class Camera(Entity):
 
     def set_shader_input(self, name, value):
         if self.filter_quad:
+
+            if isinstance(value, Texture):
+                value = value._texture    # make sure to send the panda3d texture to the shader
+
             self.filter_quad.setShaderInput(name, value)
-            print('yay')
         else:
             print('no filter quad')
 

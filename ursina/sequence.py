@@ -17,8 +17,8 @@ class Func():
         self.finished = False
 
     def __call__ (self):
-        self.func(*self.args, **self.kwargs)
         self.finished = True
+        return self.func(*self.args, **self.kwargs)
 
 
 class Sequence():

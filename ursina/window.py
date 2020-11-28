@@ -237,6 +237,16 @@ class Window(WindowProperties):
         self.render_mode = self.render_modes[i]
 
 
+    @property
+    def icon(self):
+        return self._icon
+
+    @icon.setter
+    def icon(self, value):
+        self._icon = value
+        self.setIconFilename(value)
+
+
     def __setattr__(self, name, value):
         try:
             super().__setattr__(name, value)
