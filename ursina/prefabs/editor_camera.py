@@ -107,8 +107,13 @@ class EditorCamera(Entity):
             camera.z -= held_keys['s'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt'])) * time.dt
 
         if mouse.middle:
-            self.position -= camera.right * mouse.velocity[0] * self.pan_speed[0] * (-camera.z*.1)
-            self.position -= camera.up * mouse.velocity[1] * self.pan_speed[1] * (-camera.z*.1)
+            if not camera.orthographic:
+                zoom_compensation = -camera.z * .1
+            else:
+                zoom_compensation = camera.orthographic * camera.fov * .2
+
+            self.position -= camera.right * mouse.velocity[0] * self.pan_speed[0] * zoom_compensation
+            self.position -= camera.up * mouse.velocity[1] * self.pan_speed[1] * zoom_compensation
 
 
         # self.gizmo.position = self.position
