@@ -47,7 +47,7 @@ class FirstPersonController(Entity):
 
         if self.gravity:
             # # gravity
-            ray = boxcast(self.world_position+(0,2,0), self.down, ignore=(self,), thickness=.9)
+            ray = raycast(self.world_position+(0,2,0), self.down, ignore=(self,))
 
             if ray.distance <= 2:
                 if not self.grounded:
@@ -100,8 +100,7 @@ if __name__ == '__main__':
     e = Entity(model='cube', scale=(1,5,10), x=-2, y=.01, collider='box', texture='white_cube')
     e.texture_scale = (e.scale_z, e.scale_y)
 
-    player = FirstPersonController(y=1)
-    # camera.z = -10
+    player = FirstPersonController(model='cube', y=1, origin_y=-.5)
     player.gun = None
 
     gun = Button(parent=scene, model='cube', color=color.blue, origin_y=-.5, position=(3,0,3), collider='box')
@@ -125,5 +124,4 @@ if __name__ == '__main__':
             destroy(bullet, delay=1)
 
     # player.add_script(NoclipMode())
-
     app.run()

@@ -1083,7 +1083,6 @@ class Entity(NodePath):
             self.hit = HitInfo(hit=False)
             return self.hit
 
-        # for collision in self.entries:
         collision = self.entries[0]
         nP = collision.get_into_node_path().parent
         point = collision.get_surface_point(nP)
@@ -1091,7 +1090,6 @@ class Entity(NodePath):
         world_point = collision.get_surface_point(render)
         world_point = Vec3(*world_point)
         hit_dist = distance(self.world_position, world_point)
-
 
         self.hit = HitInfo(hit=True)
         self.hit.entity = next(e for e in scene.entities if e == nP)
