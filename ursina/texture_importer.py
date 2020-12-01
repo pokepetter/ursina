@@ -5,7 +5,7 @@ from ursina.texture import Texture
 
 
 imported_textures = dict()
-file_types = ('.tif', '.jpg', '.png', '.gif')
+file_types = ('.tif', '.jpg', '.jpeg', '.png', '.gif')
 textureless = False
 
 has_psd_tools_installed = False
