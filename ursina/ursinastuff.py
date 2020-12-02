@@ -86,6 +86,14 @@ def _destroy(entity):
     del entity
 
 
+def find_sequence(name, file_types, folders): # find frame_0, frame_1, frame_2 and so on
+    for folder in folders:
+        for file_type in file_types:
+            files = list(folder.glob(f'**/{name}*.{file_type}'))
+            if files:
+                return files
+
+
 def import_all_classes(path=application.asset_folder, debug=False):
     path = str(path)
     sys.path.append(path)

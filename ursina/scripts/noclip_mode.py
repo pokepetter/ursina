@@ -42,7 +42,7 @@ class NoclipMode:
         self.entity.position += direction * time.dt * self.speed
 
 
-class NoclipMode2D:
+class NoclipMode2d:
     def __init__(self, speed=10, require_key='shift'):
         self.speed = speed
         self.require_key = require_key
@@ -91,5 +91,5 @@ if __name__ == '__main__':
     #     player.x -= held_keys['a'] * .1
 
 
-    player.add_script(NoclipMode2D())
+    player.add_script(NoclipMode2d())
     app.run()

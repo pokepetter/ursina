@@ -39,6 +39,7 @@ from ursina.prefabs.sprite import Sprite
 from ursina.prefabs.button import Button
 from ursina.prefabs.panel import Panel
 from ursina.prefabs.animation import Animation
+from ursina.prefabs.frame_animation_3d import FrameAnimation3d
 from ursina.prefabs.animator import Animator
 from ursina.prefabs.sky import Sky
 from ursina.prefabs.cursor import Cursor
@@ -55,7 +56,7 @@ from ursina.models.procedural.terrain import Terrain
 
 from ursina.scripts.smooth_follow import SmoothFollow
 from ursina.scripts.position_limiter import PositionLimiter
-from ursina.scripts.noclip_mode import NoclipMode, NoclipMode2D
+from ursina.scripts.noclip_mode import NoclipMode, NoclipMode2d
 from ursina.scripts.grid_layout import grid_layout
 from ursina.scripts.scrollable import Scrollable
 from ursina.scripts.colorize import get_world_normals

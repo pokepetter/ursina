@@ -54,4 +54,8 @@ input_handler.bind('gamepad dpad left', 'a')
 input_handler.bind('gamepad a', 'space')
 # print('---------', time.time() - t)
 # print(Path(sys.executable).parent)
+
+# test
+player.add_script(NoclipMode2d())
+
 app.run()

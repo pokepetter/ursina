@@ -50,7 +50,7 @@ for i, gamepad in enumerate(input_handler.gamepads):
     for original_name, new_name in buttons.items():
         base.accept(f'{gamepad_name}-{original_name}', base.input, extraArgs=[f'{gamepad_name} {new_name}'])
         base.accept(f'{gamepad_name}-{original_name}-up', base.input, extraArgs=[f'{gamepad_name} {new_name} up'])
-        print(original_name, new_name)
+        # print(original_name, new_name)
 
 def update():
     for i, gamepad in enumerate(input_handler.gamepads):
