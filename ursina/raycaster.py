@@ -56,7 +56,7 @@ class Raycaster(Entity):
         self._picker.traverse(traverse_target)
 
         if self._pq.get_num_entries() == 0:
-            self.hit = HitInfo(hit=False)
+            self.hit = HitInfo(hit=False, distance=distance)
             return self.hit
 
         ignore += tuple([e for e in scene.entities if not e.collision])
@@ -68,7 +68,7 @@ class Raycaster(Entity):
             ]
 
         if len(self.entries) == 0:
-            self.hit = HitInfo(hit=False)
+            self.hit = HitInfo(hit=False, distance=distance)
             return self.hit
 
         self.collision = self.entries[0]
@@ -84,7 +84,7 @@ class Raycaster(Entity):
         if nP.name.endswith('.egg'):
             nP = nP.parent
 
-        self.hit = HitInfo(hit=True)
+        self.hit = HitInfo(hit=True, distance=distance)
         for e in scene.entities:
             if e == nP:
                 # print('cast nP to Entity')
@@ -98,7 +98,7 @@ class Raycaster(Entity):
         self.hit.world_normal = Vec3(*self.collision.get_surface_normal(render).normalized())
         return self.hit
 
-        self.hit = HitInfo(hit=False)
+        self.hit = HitInfo(hit=False, distance=distance)
         return self.hit
 
 
