@@ -14,6 +14,7 @@ from ursina.hit_info import HitInfo
 class Raycaster(Entity):
     line_model = Mesh(vertices=[Vec3(0,0,0), Vec3(0,0,1)], mode='line')
 
+
     def __init__(self):
         super().__init__(
             name = 'raycaster',
@@ -32,24 +33,22 @@ class Raycaster(Entity):
         return sqrt(sum( (a - b)**2 for a, b in zip(a, b)))
 
 
-    def raycast(self, origin, direction=(0,0,1), distance=9999, traverse_target=scene, ignore=list(), debug=False):
+    def raycast(self, origin, direction=(0,0,1), distance=inf, traverse_target=scene, ignore=list(), debug=False):
         self.position = origin
         self.look_at(self.position + direction)
+
         self._pickerNode.clearSolids()
-        # if thickness == (0,0):
         if distance == inf:
             ray = CollisionRay()
             ray.setOrigin(Vec3(0,0,0))
-            # ray.setDirection(Vec3(0,1,0))
             ray.setDirection(Vec3(0,0,1))
         else:
             ray = CollisionSegment(Vec3(0,0,0), Vec3(0,0,distance))
 
         self._pickerNode.addSolid(ray)
 
-
         if debug:
-            temp = Entity(position=origin, model=Raycaster.line_model, scale=Vec3(1,1,distance), add_to_scene_entities=False)
+            temp = Entity(position=origin, model=Raycaster.line_model, scale=Vec3(1,1,min(distance,9999)), add_to_scene_entities=False)
             temp.look_at(self.position + direction)
             destroy(temp, 1/30)
 
@@ -74,8 +73,10 @@ class Raycaster(Entity):
         self.collision = self.entries[0]
         nP = self.collision.get_into_node_path().parent
         point = self.collision.get_surface_point(nP)
+        # point = Vec3(point[0], point[2], point[1])
         point = Vec3(point[0], point[1], point[2])
         world_point = self.collision.get_surface_point(render)
+        # world_point = Vec3(world_point[0], world_point[2], world_point[1])
         world_point = Vec3(world_point[0], world_point[1], world_point[2])
         hit_dist = self.distance(self.world_position, world_point)
 
@@ -100,7 +101,7 @@ class Raycaster(Entity):
         return self.hit
 
 
-    def boxcast(self, origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_target=scene, ignore=[], debug=False):
+    def boxcast(self, origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_target=scene, ignore=list(), debug=False):
         if isinstance(thickness, (int, float, complex)):
             thickness = (thickness, thickness)
 
@@ -124,6 +125,7 @@ class Raycaster(Entity):
             destroy(temp, delay=.2)
         else:
             destroy(temp)
+
         return hit_info
 
 

@@ -40,7 +40,7 @@ class FirstPersonController(Entity):
             ).normalized()
 
         origin = self.world_position + (self.up*.5)
-        hit_info = raycast(origin , self.direction, ignore=[self,], distance=.5, debug=False)
+        hit_info = raycast(origin , self.direction, ignore=(self,), distance=.5, debug=False)
         if not hit_info.hit:
             self.position += self.direction * self.speed * time.dt
 
