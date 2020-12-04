@@ -1080,7 +1080,7 @@ class Entity(NodePath):
             ]
 
         if len(self.entries) == 0:
-            self.hit = HitInfo(hit=False)
+            self.hit = HitInfo(hit=False, distance=0)
             return self.hit
 
         collision = self.entries[0]

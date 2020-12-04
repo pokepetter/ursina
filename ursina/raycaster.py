@@ -2,8 +2,8 @@ import sys
 
 from ursina import *
 from ursina.entity import Entity
+from ursina.mesh import Mesh
 from ursina import scene
-# from ursina import render
 from panda3d.core import CollisionTraverser, CollisionNode, CollisionHandlerQueue
 from panda3d.core import CollisionRay, CollisionSegment, CollisionBox
 from ursina.vec3 import Vec3
@@ -12,6 +12,7 @@ from ursina.hit_info import HitInfo
 
 
 class Raycaster(Entity):
+    line_model = Mesh(vertices=[Vec3(0,0,0), Vec3(0,0,1)], mode='line')
 
     def __init__(self):
         super().__init__(
@@ -31,7 +32,7 @@ class Raycaster(Entity):
         return sqrt(sum( (a - b)**2 for a, b in zip(a, b)))
 
 
-    def raycast(self, origin, direction=(0,0,1), distance=inf, traverse_target=scene, ignore=list(), debug=False):
+    def raycast(self, origin, direction=(0,0,1), distance=9999, traverse_target=scene, ignore=list(), debug=False):
         self.position = origin
         self.look_at(self.position + direction)
         self._pickerNode.clearSolids()
@@ -42,16 +43,15 @@ class Raycaster(Entity):
             # ray.setDirection(Vec3(0,1,0))
             ray.setDirection(Vec3(0,0,1))
         else:
-            # ray = CollisionSegment(Vec3(0,0,0), Vec3(0,distance,0))
             ray = CollisionSegment(Vec3(0,0,0), Vec3(0,0,distance))
 
         self._pickerNode.addSolid(ray)
 
 
         if debug:
-            self._pickerNP.show()
-        else:
-            self._pickerNP.hide()
+            temp = Entity(position=origin, model=Raycaster.line_model, scale=Vec3(1,1,distance), add_to_scene_entities=False)
+            temp.look_at(self.position + direction)
+            destroy(temp, 1/30)
 
         self._picker.traverse(traverse_target)
 
@@ -74,10 +74,8 @@ class Raycaster(Entity):
         self.collision = self.entries[0]
         nP = self.collision.get_into_node_path().parent
         point = self.collision.get_surface_point(nP)
-        # point = Vec3(point[0], point[2], point[1])
         point = Vec3(point[0], point[1], point[2])
         world_point = self.collision.get_surface_point(render)
-        # world_point = Vec3(world_point[0], world_point[2], world_point[1])
         world_point = Vec3(world_point[0], world_point[1], world_point[2])
         hit_dist = self.distance(self.world_position, world_point)
 
@@ -102,7 +100,7 @@ class Raycaster(Entity):
         return self.hit
 
 
-    def boxcast(self, origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_target=scene, ignore=list(), debug=False):
+    def boxcast(self, origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_target=scene, ignore=[], debug=False):
         if isinstance(thickness, (int, float, complex)):
             thickness = (thickness, thickness)
 
@@ -118,9 +116,12 @@ class Raycaster(Entity):
             )
         temp.look_at(origin + direction)
         hit_info = temp.intersects(traverse_target=traverse_target, ignore=ignore)
+        if not hit_info.hit:
+            hit_info.distance = distance
         if debug:
             temp.collision = False
-            destroy(temp, delay=.1)
+            temp.scale_z = hit_info.distance
+            destroy(temp, delay=.2)
         else:
             destroy(temp)
         return hit_info
