@@ -26,6 +26,12 @@ class Window(WindowProperties):
         # loadPrcFileData('', 'cursor-filename mycursor.ico')
         # loadPrcFileData('', 'threading-model Cull/Draw')
         loadPrcFileData('', 'coordinate-system y-up-left')
+
+        # fallback to one of these if opengl is not supported
+        loadPrcFileData('', 'aux-display pandadx9')
+        loadPrcFileData('', 'aux-display pandadx8')
+        loadPrcFileData('', 'aux-display tinydisplay')
+
         self.setForeground(True)
         self.vsync = True   # can't be set during play
         self.show_ursina_splash = False
