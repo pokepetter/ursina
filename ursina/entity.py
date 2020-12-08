@@ -259,11 +259,11 @@ class Entity(NodePath):
                 print('invalid parent:', value)
 
     @property
-    def type(self):
+    def type(self): # get class name.
         return self.__class__.__name__
 
     @property
-    def types(self):
+    def types(self): # get all class names including those this inhertits from.
         return [c.__name__ for c in inspect.getmro(self.__class__)]
 
 
@@ -280,7 +280,7 @@ class Entity(NodePath):
             self.hide()
 
     @property
-    def visible_self(self):
+    def visible_self(self): # set visibility of self, without affecting children.
         if not hasattr(self, '_visible_self'):
             return True
         return self._visible_self
@@ -579,26 +579,26 @@ class Entity(NodePath):
         self.setScale(self.scale_x, self.scale_y, value)
 
     @property
-    def forward(self):
+    def forward(self): # get forward direction.
         return render.getRelativeVector(self, (0, 0, 1))
     @property
-    def back(self):
+    def back(self): # get backwards direction.
         return -self.forward
     @property
-    def right(self):
+    def right(self): # get right direction.
         return render.getRelativeVector(self, (1, 0, 0))
     @property
-    def left(self):
+    def left(self): # get left direction.
         return -self.right
     @property
-    def up(self):
+    def up(self): # get up direction.
         return render.getRelativeVector(self, (0, 1, 0))
     @property
-    def down(self):
+    def down(self): # get down direction.
         return -self.up
 
     @property
-    def screen_position(self):
+    def screen_position(self): # get screen position(ui space) from world space.
         from ursina import camera
         p3 = camera.getRelativePoint(self, Vec3.zero())
         full = camera.lens.getProjectionMat().xform(Vec4(*p3, 1))
@@ -722,13 +722,14 @@ class Entity(NodePath):
         self.set_depth_test(not value)
 
     @property
-    def billboard(self):
+    def billboard(self): # set to True to make this Entity always face the camera.
         return self._billboard
 
     @billboard.setter
     def billboard(self, value):
         self._billboard = value
-        self.setBillboardPointEye(value)
+        if value:
+            self.setBillboardPointEye(value)
 
 
     @property
@@ -937,7 +938,7 @@ class Entity(NodePath):
 
 
     @property
-    def attributes(self):
+    def attributes(self): # attribute names. used by duplicate() for instance.
         return ('name', 'enabled', 'eternal', 'visible', 'parent',
             'origin', 'position', 'rotation', 'scale',
             'model', 'color', 'texture', 'texture_scale', 'texture_offset',

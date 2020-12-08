@@ -26,7 +26,6 @@ out vec4 color;
 void main() {
     vec3 rgb = texture(tex, uv).rgb;
     color = vec4(rgb, 1.0);
-    color = vec4(gl_FragDepth);
 }
 
 ''')

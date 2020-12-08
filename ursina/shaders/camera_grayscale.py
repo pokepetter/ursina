@@ -11,7 +11,7 @@ out vec4 color;
 
 void main() {
     vec3 rgb = texture(tex, uv).rgb;
-    float gray = (rgb.x + rgb.y + rgb.z)/3;
+    float gray = rgb.r*.3 + rgb.g*.59 + rgb.b*.11;
     color = vec4(gray, gray, gray, 1.0);
 }
 

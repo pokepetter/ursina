@@ -83,4 +83,4 @@ def update():
         held_keys[f'{gamepad_name} left trigger'] = gamepad.findAxis(InputDevice.Axis.left_trigger).value
         held_keys[f'{gamepad_name} right trigger'] = gamepad.findAxis(InputDevice.Axis.right_trigger).value
 
-Entity(name='gamepad_handler', update=update) # connect update() to an entity so it runs
+Entity(name='gamepad_handler', update=update, eternal=True) # connect update() to an entity so it runs

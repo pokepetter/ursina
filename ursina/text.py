@@ -56,7 +56,7 @@ class Text(Entity):
 
 
     @property
-    def text(self):
+    def text(self): # set this to update the text.
         t = ''
         y = 0
         if self.text_nodes:
@@ -222,7 +222,7 @@ class Text(Entity):
             self.text = self.raw_text   # update tex
 
     @property
-    def color(self):
+    def color(self): # sets the default color.
         return self._color
 
     @color.setter
@@ -247,7 +247,7 @@ class Text(Entity):
         self.text = self.raw_text
 
     @property
-    def width(self):
+    def width(self): # gets the width of the widest line.
         if not hasattr(self, 'text'):
             return 0
 
@@ -262,7 +262,7 @@ class Text(Entity):
 
 
     @property
-    def height(self):
+    def height(self): # gets the height of the text
         return (len(self.lines) * self.line_height * self.scale_y * self.size)
 
     @property
@@ -278,7 +278,7 @@ class Text(Entity):
         self._font.setPixelsPerUnit(value)
 
     @property
-    def wordwrap(self):
+    def wordwrap(self): # set this to make the text wrap after a certain number of characters.
         if hasattr(self, '_wordwrap'):
             return self._wordwrap
         else:

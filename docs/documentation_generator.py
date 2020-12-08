@@ -85,21 +85,19 @@ def get_class_attributes(str):
                 for l in init_section[start+1:end]:
                     value += '\n' + l[4:]
 
-            # value = textwrap.shorten(value, width=140-len(key))
             attributes.append(key + ' = ' + value)
 
     if '@property' in code:
         for i, line in enumerate(lines):
             if line.strip().startswith('@property'):
                 name = lines[i+1].split('def ')[1].split('(')[0]
+
+                # include comments for properties
+                if '#' in lines[i+1]:
+                    name += ((20-len(name)) * ' ') + '<g>#' + lines[i+1].split('#',1)[1] + '</g>'
+
                 if not name in [e.split(' = ')[0] for e in attributes]:
                     attributes.append(name)
-
-    if 'generate_properties(' in str:
-        get_funcs = [l.split('def get_', 1)[1].split('(')[0] for l in lines if l.strip().startswith('def get_')]
-        set_funcs = [l.split('def set_', 1)[1].split('(')[0] for l in lines if l.strip().startswith('def set_')]
-        attributes.extend(set(get_funcs + set_funcs))
-
 
     return attributes
 

@@ -117,8 +117,11 @@ class Raycaster(Entity):
             )
         temp.look_at(origin + direction)
         hit_info = temp.intersects(traverse_target=traverse_target, ignore=ignore)
-        if not hit_info.hit:
+        if hit_info.world_point:
+            hit_info.distance = ursinamath.distance(origin, hit_info.world_point)
+        else:
             hit_info.distance = distance
+
         if debug:
             temp.collision = False
             temp.scale_z = hit_info.distance

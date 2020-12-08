@@ -224,25 +224,25 @@ class Mouse():
                             s.on_mouse_exit()
 
     @property
-    def normal(self):
+    def normal(self): # returns the normal of the polygon, in local space.
         if not self.collision:
             return None
         return Vec3(*self.collision.normal)
 
     @property
-    def world_normal(self):
+    def world_normal(self): # returns the normal of the polygon, in world space.
         if not self.collision:
             return None
         return Vec3(*self.collision.world_normal)
 
     @property
-    def point(self): # returns the point hit in local space
+    def point(self): # returns the point hit, in local space
         if self.collision:
             return Vec3(*self.collision.point)
         return None
 
     @property
-    def world_point(self):
+    def world_point(self): # returns the point hit, in world space
         if self.collision:
             return Vec3(*self.collision.world_point)
         return None

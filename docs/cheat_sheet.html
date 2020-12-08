@@ -74,6 +74,7 @@ z-index: 1;
 <a style="color:hsl(320.0, 89%, 28%);" href="#FileBrowser">FileBrowser</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#FileBrowserSave">FileBrowserSave</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#FirstPersonController">FirstPersonController</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#FrameAnimation3d">FrameAnimation3d</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#GridEditor">GridEditor</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#PixelEditor">PixelEditor</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#ASCIIEditor">ASCIIEditor</a>
@@ -102,7 +103,7 @@ z-index: 1;
 <a style="color:hsl(290.0, 89%, 28%);" href="#grid_layout">grid_layout</a>
 <a style="color:hsl(290.0, 89%, 28%);" href="#merge_vertices">merge_vertices</a>
 <a style="color:hsl(290.0, 89%, 28%);" href="#NoclipMode">NoclipMode</a>
-<a style="color:hsl(290.0, 89%, 28%);" href="#NoclipMode2D">NoclipMode2D</a>
+<a style="color:hsl(290.0, 89%, 28%);" href="#NoclipMode2d">NoclipMode2d</a>
 <a style="color:hsl(290.0, 89%, 28%);" href="#PositionLimiter">PositionLimiter</a>
 <a style="color:hsl(290.0, 89%, 28%);" href="#project_uvs">project_uvs</a>
 <a style="color:hsl(290.0, 89%, 28%);" href="#Scrollable">Scrollable</a>
@@ -201,9 +202,9 @@ position<g> = Vec3(0,0,0) # right, up, forward. can also set self.x, self.y, sel
 rotation<g> = Vec3(0,0,0) # can also set self.rotation_x, self.rotation_y, self.rotation_z</g> 
 scale<g> = Vec3(1,1,1)    # can also set self.scale_x, self.scale_y, self.scale_z</g> 
 line_definition<g> = None # returns a Traceback(filename, lineno, function, code_context, index).</g> 
-type
-types
-visible_self
+type                <g># get class name.</g>
+types               <g># get all class names including those this inhertits from.</g>
+visible_self        <g># set visibility of self, without affecting children.</g>
 origin_x
 origin_y
 origin_z
@@ -228,23 +229,23 @@ world_scale_z
 scale_x
 scale_y
 scale_z
-forward
-back
-right
-left
-up
-down
-screen_position
+forward             <g># get forward direction.</g>
+back                <g># get backwards direction.</g>
+right               <g># get right direction.</g>
+left                <g># get left direction.</g>
+up                  <g># get up direction.</g>
+down                <g># get down direction.</g>
+screen_position     <g># get screen position(ui space) from world space.</g>
 shader
 texture_scale
 texture_offset
 alpha
 always_on_top
-billboard
+billboard           <g># set to True to make this Entity always face the camera.</g>
 model_bounds
 bounds
 children
-attributes
+attributes          <g># attribute names. used by duplicate() for instance.</g>
 
 enable()   
 disable()   
@@ -314,12 +315,12 @@ tag<g> = Text.start_tag+'default'+Text.end_tag</g>
 current_color<g> = self.text_colors['default']</g> 
 scale_override<g> = 1</g> 
 appear_sequence<g> = None # gets created when calling appear()</g> 
-text
-color
-width
-height
+text                <g># set this to update the text.</g>
+color               <g># sets the default color.</g>
+width               <g># gets the width of the widest line.</g>
+height              <g># gets the height of the text</g>
 lines
-wordwrap
+wordwrap            <g># set this to make the text wrap after a certain number of characters.</g>
 background
 
 update_text()   
@@ -408,10 +409,10 @@ collisions<g> = list()</g>
 enabled<g> = True</g> 
 x
 y
-normal
-world_normal
-point
-world_point
+normal              <g># returns the normal of the polygon, in local space.</g>
+world_normal        <g># returns the normal of the polygon, in world space.</g>
+point               <g># returns the point hit, in local space</g>
+world_point         <g># returns the point hit, in world space</g>
 
 input(<g>key</g>)   
 update()   
@@ -706,7 +707,7 @@ input(<g>key</g>)
 </div></div>
 <div id="mesh_importer"><div id="mesh_importer" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">mesh_importer</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.mesh_importer</g><br><br>blender_scenes<g> = dict()</g> 
 
-load_model(<g>name, path=application.asset_folder</g>)   
+load_model(<g>name, path=application.asset_folder, file_types=('.bam', '.ursinamesh', '.obj', '.blend')</g>)   
 load_blender_scene(<g>name, path=application.asset_folder, load=True, reload=False, skip_hidden=True, models_only=False</g>)   
 get_blender(<g>blend_file</g>)   <g># try to get a matching blender version in case we have multiple blender version installed</g>
 compress_models(<g>path=None, outpath=application.compressed_models_folder, name='*'</g>)   
@@ -816,7 +817,7 @@ get_width(<g>string, font=None</g>)
   app.run()
 </div>
 </div></div>
-<div id="texture_importer"><div id="texture_importer" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">texture_importer</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.texture_importer</g><br><br>file_types<g> = ('.tif', '.jpg', '.png', '.gif')</g> 
+<div id="texture_importer"><div id="texture_importer" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">texture_importer</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.texture_importer</g><br><br>file_types<g> = ('.tif', '.jpg', '.jpeg', '.png', '.gif')</g> 
 textureless<g> = False</g> 
 has_psd_tools_installed<g> = False</g> 
 
@@ -854,6 +855,7 @@ print(round(Vec3(.<font color="darkgoldenrod">3</font><font color="darkgoldenrod
 <div id="ursinastuff"><div id="ursinastuff" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ursinastuff</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursinastuff</g><br><br>
 invoke(<g>function, *args, **kwargs</g>)   
 destroy(<g>entity, delay=0</g>)   
+find_sequence(<g>name, file_types, folders</g>)   <g># find frame_0, frame_1, frame_2 and so on</g>
 import_all_classes(<g>path=application.asset_folder, debug=False</g>)   
 print_on_screen(<g>text, position=window.top_left, origin=(-.5,.5), scale=1, duration=1</g>)   
 
@@ -893,6 +895,7 @@ top_right
 bottom_left
 bottom_right
 position
+icon
 
 late_init()   
 center_on_screen()   
@@ -1519,6 +1522,7 @@ t.on_trigger_stay =  Func(print, <font color="seagreen">'stay'</font>)
 
 invoke(<g>function, *args, **kwargs</g>)   
 destroy(<g>entity, delay=0</g>)   
+find_sequence(<g>name, file_types, folders</g>)   <g># find frame_0, frame_1, frame_2 and so on</g>
 import_all_classes(<g>path=application.asset_folder, debug=False</g>)   
 print_on_screen(<g>text, position=window.top_left, origin=(-.5,.5), scale=1, duration=1</g>)   
 
@@ -1562,11 +1566,10 @@ b = <font color="purple"><b>Vec3</b></font>(<font color="darkgoldenrod">1</font>
 b += <font color="purple"><b>Vec3</b></font>(<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">1</font>)
 </div>
 </div></div>
-<div id="Animation"><div id="Animation" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Animation<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.animation</g><br><br><params class="params">Animation(name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs)</params>
+<div id="Animation"><div id="Animation" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Animation<g>(Sprite)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.animation</g><br><br><params class="params">Animation(name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs)</params>
 
-frames<g> = list()</g> 
+frames<g> = [Texture(e) for e in find_sequence(name, ('png', 'jpg'), texture_folders)]</g> 
 sequence<g> = Sequence(loop=loop, auto_destroy=False)</g> 
-loop<g> = loop</g> 
 is_playing<g> = False</g> 
 autoplay<g> = autoplay</g> 
 duration
@@ -1576,12 +1579,15 @@ pause()
 resume()   
 finish()   
 
-<div class="example">window.color = color.black
+<div class="example">application.asset_folder = application.asset_folder.parent.parent / <font color="seagreen">'samples'</font>
 
-animation = <font color="purple"><b>Animation</b></font>(<font color="seagreen">'ursina_wink'</font>, fps=<font color="darkgoldenrod">2</font>, scale=<font color="darkgoldenrod">1</font>, filtering=None, autoplay=True)
+<font color="seagreen">''</font>'
+Loads an image sequence as a frame animation.
+So if you have some frames named image_<font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>.png, image_<font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">1</font>.png, image_<font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">2</font>.png and so on,
+you can load it like this: <font color="purple"><b>Animation</b></font>(<font color="seagreen">'image'</font>)
+<font color="seagreen">''</font>'
 
-
-EditorCamera()
+<font color="purple"><b>Animation</b></font>(<font color="seagreen">'ursina_wink'</font>)
 </div>
 </div></div>
 <div id="Animator"><div id="Animator" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Animator<g>()</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.animator</g><br><br><params class="params">Animator(animations=None, start_state='')</params>
@@ -1937,7 +1943,7 @@ e.texture_scale = (e.scale_z, e.scale_y)
 e = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, scale=(<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">5</font>,<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>), x=-<font color="darkgoldenrod">2</font>, y=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">1</font>, collider=<font color="seagreen">'box'</font>, texture=<font color="seagreen">'white_cube'</font>)
 e.texture_scale = (e.scale_z, e.scale_y)
 
-player = <font color="purple"><b>FirstPersonController</b></font>(y=<font color="darkgoldenrod">1</font>)
+player = <font color="purple"><b>FirstPersonController</b></font>(model=<font color="seagreen">'cube'</font>, y=<font color="darkgoldenrod">1</font>, origin_y=-.<font color="darkgoldenrod">5</font>)
 player.gun = None
 
 gun = Button(parent=scene, model=<font color="seagreen">'cube'</font>, color=color.blue, origin_y=-.<font color="darkgoldenrod">5</font>, position=(<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">3</font>), collider=<font color="seagreen">'box'</font>)
@@ -1956,18 +1962,41 @@ slope = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</f
         destroy(bullet, delay=<font color="darkgoldenrod">1</font>)
 </div>
 </div></div>
+<div id="FrameAnimation3d"><div id="FrameAnimation3d" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FrameAnimation3d<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.frame_animation_3d</g><br><br><params class="params">FrameAnimation3d(name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs)</params>
+
+frames<g> = [Entity(model=e.stem, enabled=False, add_to_scene_entities=False) for e in model_names]</g> 
+sequence<g> = Sequence(loop=loop, auto_destroy=False)</g> 
+is_playing<g> = False</g> 
+autoplay<g> = autoplay</g> 
+duration
+
+start()   
+pause()   
+resume()   
+finish()   
+
+<div class="example">application.asset_folder = application.asset_folder.parent.parent / <font color="seagreen">'samples'</font>
+
+<font color="seagreen">''</font>'
+Loads an obj sequence as a frame animation.
+So if you have some frames named run_cycle_<font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>.obj, run_cycle_<font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>.obj, run_cycle_<font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font><font color="darkgoldenrod">0</font>.obj and so on,
+you can load it like this: FrameAnimation<font color="darkgoldenrod">3</font>d(<font color="seagreen">'run_cycle_'</font>)
+<font color="seagreen">''</font>'
+
+FrameAnimation<font color="darkgoldenrod">3</font>d(<font color="seagreen">'blob_animation_'</font>)
+</div>
+</div></div>
 <div id="GridEditor"><div id="GridEditor" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">GridEditor<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.grid_editor</g><br><br><params class="params">GridEditor(size=(32,32), palette=(' ', '#', '|', 'o'), **kwargs)</params>
 
 w, self.h<g> = int(size[0]), int(size[1])</g> 
 brush_size<g> = 1</g> 
-edit_mode<g> = True</g> 
 auto_render<g> = True</g> 
-cursor<g> = Entity(parent=self, model=Quad(segments=0, mode='line'), origin=(-.5,-.5), scale=(1/self.w, 1/self.h), color=color.color(0,1,1,.5), z=-.1, enabled=self.edit_mode)</g> 
+cursor<g> = Entity(parent=self, model=Quad(segments=0, mode='line'), origin=(-.5,-.5), scale=(1/self.w, 1/self.h), color=color.color(0,1,1,.5), z=-.1)</g> 
 selected_char<g> = palette[1]</g> 
 palette<g> = palette</g> 
 prev_draw<g> = None</g> 
 start_pos<g> = (0,0)</g> 
-outline<g> = Entity(parent=self, model=Quad(segments=0, mode='line', thickness=1), color=color.cyan, z=.01, origin=(-.5,-.5), enabled=self.edit_mode)</g> 
+outline<g> = Entity(parent=self, model=Quad(segments=0, mode='line', thickness=1), color=color.cyan, z=.01, origin=(-.5,-.5))</g> 
 undo_cache<g> = list()</g> 
 undo_index<g> = 0</g> 
 help_text<g> = Text(
@@ -1981,6 +2010,7 @@ help_text<g> = Text(
         position=window.top_left,
         scale=.75
         )</g> 
+edit_mode<g> = True</g> 
 
 update()   
 draw(<g>x, y</g>)   
@@ -2623,10 +2653,10 @@ update()
 EditorCamera()
 
 
-player.add_script(NoclipMode<font color="darkgoldenrod">2</font>D())
+player.add_script(NoclipMode<font color="darkgoldenrod">2</font>d())
 </div>
 </div></div>
-<div id="NoclipMode2D"><div id="NoclipMode2D" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">NoclipMode2D</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.scripts.noclip_mode</g><br><br><params class="params">NoclipMode2D(speed=10, require_key='shift')</params>
+<div id="NoclipMode2d"><div id="NoclipMode2d" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">NoclipMode2d</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.scripts.noclip_mode</g><br><br><params class="params">NoclipMode2d(speed=10, require_key='shift')</params>
 
 speed<g> = speed</g> 
 require_key<g> = require_key</g> 
@@ -2640,7 +2670,7 @@ update()
 EditorCamera()
 
 
-player.add_script(NoclipMode<font color="darkgoldenrod">2</font>D())
+player.add_script(NoclipMode<font color="darkgoldenrod">2</font>d())
 </div>
 </div></div>
 <div id="PositionLimiter"><div id="PositionLimiter" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">PositionLimiter<g>()</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.scripts.position_limiter</g><br><br><params class="params">PositionLimiter(min_x=-math.inf, max_x=math.inf, min_y=-math.inf, max_y=math.inf, min_z=-math.inf, max_z=math.inf)</params>

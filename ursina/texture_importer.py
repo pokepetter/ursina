@@ -14,7 +14,7 @@ if application.development_mode:
         from psd_tools import PSDImage
         has_psd_tools_installed = True
     except (ModuleNotFoundError, ImportError) as e:
-        print('psd-tools not installed')
+        print('info: psd-tools3 not installed')
 
 
 
