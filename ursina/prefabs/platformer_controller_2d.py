@@ -1,6 +1,7 @@
 from ursina import *
 
 
+
 class PlatformerController2d(Entity):
     def __init__(self, **kwargs):
         super().__init__()
@@ -31,6 +32,7 @@ class PlatformerController2d(Entity):
         self.gravity = 1
         self.grounded = True
         self.air_time = 0
+        self._start_fall_sequence = None
 
         ray = boxcast(self.world_position, self.down, distance=10, ignore=(self, ), thickness=.9)
         if ray.hit:
@@ -108,8 +110,12 @@ class PlatformerController2d(Entity):
 
 
     def jump(self):
-        if not self.grounded:
+        if not self.grounded and self.jumps_left <= 1:
             return
+
+        if self._start_fall_sequence:
+            self._start_fall_sequence.kill()
+
         # don't jump if there's a ceiling right above us
         if boxcast(self.position+(0,self.scale_y-.1,0), self.up, distance=.2, thickness=.95, ignore=(self,)).hit:
             return
@@ -137,17 +143,20 @@ class PlatformerController2d(Entity):
                 return
 
         self.animate_y(target_y, duration, resolution=30, curve=curve.out_expo)
-        invoke(self.start_fall, delay=duration)
+        self._start_fall_sequence = invoke(self.start_fall, delay=duration)
+
 
     def start_fall(self):
         self.y_animator.pause()
         self.jumping = False
+
 
     def land(self):
         # print('land')
         self.air_time = 0
         self.jumps_left = self.max_jumps
         self.grounded = True
+
 
 
 if __name__ == '__main__':
