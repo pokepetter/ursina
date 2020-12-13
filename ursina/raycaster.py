@@ -38,12 +38,9 @@ class Raycaster(Entity):
         self.look_at(self.position + direction)
 
         self._pickerNode.clearSolids()
-        if distance == inf:
-            ray = CollisionRay()
-            ray.setOrigin(Vec3(0,0,0))
-            ray.setDirection(Vec3(0,0,1))
-        else:
-            ray = CollisionSegment(Vec3(0,0,0), Vec3(0,0,distance))
+        ray = CollisionRay()
+        ray.setOrigin(Vec3(0,0,0))
+        ray.setDirection(Vec3(0,0,1))
 
         self._pickerNode.addSolid(ray)
 
@@ -64,6 +61,7 @@ class Raycaster(Entity):
         self.entries = [        # filter out ignored entities
             e for e in self._pq.getEntries()
             if e.get_into_node_path().parent not in ignore
+            and self.distance(self.world_position, Vec3(*e.get_surface_point(render))) <= distance
             ]
 
         if len(self.entries) == 0:
@@ -72,16 +70,10 @@ class Raycaster(Entity):
 
         self.collision = self.entries[0]
         nP = self.collision.get_into_node_path().parent
-        point = self.collision.get_surface_point(nP)
-        # point = Vec3(point[0], point[2], point[1])
-        point = Vec3(point[0], point[1], point[2])
-        world_point = self.collision.get_surface_point(render)
-        # world_point = Vec3(world_point[0], world_point[2], world_point[1])
-        world_point = Vec3(world_point[0], world_point[1], world_point[2])
+        point = Vec3(*self.collision.get_surface_point(nP))
+        world_point = Vec3(*self.collision.get_surface_point(render))
         hit_dist = self.distance(self.world_position, world_point)
 
-        if nP.name.endswith('.egg'):
-            nP = nP.parent
 
         self.hit = HitInfo(hit=True, distance=distance)
         for e in scene.entities:
