@@ -41,10 +41,13 @@ class Voxel(Button):
                 destroy(self)
 
 
-for z in range(8):
-    for x in range(8):
+for z in range(30):
+    for x in range(30):
         voxel = Voxel(position=(x,0,z))
 
 
-player = FirstPersonController()
+player = FirstPersonController(jump_duration = 0.3,
+                               jump_height = 1.2,
+                               speed=10)
+
 app.run()
