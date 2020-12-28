@@ -4,16 +4,37 @@ from ursina import *
 class Animation(Sprite):
     def __init__(self, name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs):
         super().__init__()
+        if not name.endswith('.gif'):   # load image sequence
+            texture_folders = (application.compressed_textures_folder, application.asset_folder, application.internal_textures_folder)
+            self.frames = [Texture(e) for e in find_sequence(name, ('png', 'jpg'), texture_folders)]
+            if self.frames:
+                self.texture = self.frames[0]
 
-        texture_folders = (application.compressed_textures_folder, application.asset_folder, application.internal_textures_folder)
-        self.frames = [Texture(e) for e in find_sequence(name, ('png', 'jpg'), texture_folders)]
-        if self.frames:
-            self.texture = self.frames[0]
+        else:   # load gif
+            import imageio
+            from PIL import Image
+            path = load_texture(name).path
+            gif = imageio.get_reader(path)
+            img = Image.open(path)
+            img.seek(0)
+            frames = 0
+            frame_times = []
+            for i in range(len(gif)):
+                img.seek(i)
+                frame_times.append(img.info['duration'] / 1000)
+
+            self.frames = [Texture(Image.fromarray(frame)) for frame in gif]
+
 
         self.sequence = Sequence(loop=loop, auto_destroy=False)
+
+        self.frame_times = frame_times
+        if not self.frame_times:
+            self.frame_times = [1/fps for i in range(len(self.frames))]
+
         for i, frame in enumerate(self.frames):
             self.sequence.append(Func(setattr, self, 'texture', self.frames[i]))
-            self.sequence.append(Wait(1/fps))
+            self.sequence.append(Wait(self.frame_times[i]))
 
         self.is_playing = False
         self.autoplay = autoplay
@@ -66,7 +87,6 @@ class Animation(Sprite):
 
 
 
-
 if __name__ == '__main__':
     application.asset_folder = application.asset_folder.parent.parent / 'samples'
     app = Ursina()
@@ -75,8 +95,11 @@ if __name__ == '__main__':
     Loads an image sequence as a frame animation.
     So if you have some frames named image_000.png, image_001.png, image_002.png and so on,
     you can load it like this: Animation('image')
+
+    You can also load a .gif by including the file type: Animation('image.gif')
     '''
 
     Animation('ursina_wink')
+    # Animation('city_in_desert_valley_water.gif')
 
     app.run()
