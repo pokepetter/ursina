@@ -16,15 +16,14 @@ class GridEditor(Entity):
         if not hasattr(self, 'grid'):
             self.grid = [[palette[0] for y in range(self.h)] for x in range(self.w)]
         self.brush_size = 1
-        self.edit_mode = False
         self.auto_render = True
-        self.cursor = Entity(parent=self, model=Quad(segments=0, mode='line'), origin=(-.5,-.5), scale=(1/self.w, 1/self.h), color=color.color(0,1,1,.5), z=-.1, enabled=self.edit_mode)
+        self.cursor = Entity(parent=self, model=Quad(segments=0, mode='line'), origin=(-.5,-.5), scale=(1/self.w, 1/self.h), color=color.color(0,1,1,.5), z=-.1)
 
         self.selected_char = palette[1]
         self.palette = palette
         self.prev_draw = None
         self.start_pos = (0,0)
-        self.outline = Entity(parent=self, model=Quad(segments=0, mode='line', thickness=1), color=color.cyan, z=.01, origin=(-.5,-.5), enabled=self.edit_mode)
+        self.outline = Entity(parent=self, model=Quad(segments=0, mode='line', thickness=1), color=color.cyan, z=.01, origin=(-.5,-.5))
 
         self.undo_cache = list()
         self.undo_cache.append(deepcopy(self.grid))
@@ -42,6 +41,8 @@ class GridEditor(Entity):
             scale=.75
             )
 
+        self.edit_mode = True
+
         for key, value in kwargs.items():
             setattr(self, key ,value)
 
@@ -57,7 +58,7 @@ class GridEditor(Entity):
         if hasattr(self, 'palette_parent'):
             destroy(self.palette_parent)
 
-        self.palette_parent = Entity(parent=camera.ui, position=(-.75,-.05), enabled=self.edit_mode)
+        self.palette_parent = Entity(parent=camera.ui, position=(-.75,-.05))
         for i, e in enumerate(value):
             if isinstance(e, str):
                 i = e
@@ -72,6 +73,17 @@ class GridEditor(Entity):
         grid_layout(self.palette_parent.children, max_x=4)
 
 
+    @property
+    def edit_mode(self):
+        return self._edit_mode
+
+    @edit_mode.setter
+    def edit_mode(self, value):
+        self._edit_mode = value
+        self.cursor.enabled = value
+        self.outline.enabled = value
+        self.palette_parent.enabled = value
+        self.help_text.enabled = value
 
 
     def update(self):
@@ -121,12 +133,10 @@ class GridEditor(Entity):
     def input(self, key):
         if key == 'tab':
             self.edit_mode = not self.edit_mode
-            self.outline.enabled = self.edit_mode
-            self.cursor.enabled = self.edit_mode
-            self.palette_parent.enabled = self.edit_mode
 
-        if not self.edit_mode:
-            return
+
+        # if not self.edit_mode:
+        #     return
 
         if key == 'left mouse down':
             self.start_pos = (
@@ -240,14 +250,17 @@ class ASCIIEditor(GridEditor):
         rotated_grid = list(zip(*self.grid[::-1]))
         self.text_entity.text = '\n'.join([''.join(reversed(line)) for line in reversed(rotated_grid)])
 
-    # if held_keys['control'] and key == 'c':
-    #     pyperclip.copy(t.text)
-    #
-    # if held_keys['control'] and key == 'v' and pyperclip.paste().count('\n') == (h-1):
-    #     t.text = pyperclip.paste()
-    #     undo_index += 1
-    #     undo_cache = undo_cache[:undo_index]
-    #     undo_cache.append(deepcopy(grid))
+    def input(self, key):
+        super().input(key)
+        if held_keys['control'] and key == 'c':
+            print(self.text_entity.text)
+            pyperclip.copy(self.text_entity.text)
+        #
+        # if held_keys['control'] and key == 'v' and pyperclip.paste().count('\n') == (h-1):
+        #     t.text = pyperclip.paste()
+        #     undo_index += 1
+        #     undo_cache = undo_cache[:undo_index]
+        #     undo_cache.append(deepcopy(grid))
 
 
 
@@ -264,7 +277,7 @@ if __name__ == '__main__':
     from PIL import Image
     t = Texture(Image.new(mode='RGBA', size=(32,32), color=(0,0,0,1)))
     from ursina.prefabs.grid_editor import PixelEditor
-    PixelEditor(texture=load_texture('brick'))
+    # PixelEditor(texture=load_texture('brick'))
 
     '''
     same as the pixel editor, but with text.
