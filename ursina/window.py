@@ -106,7 +106,7 @@ class Window(WindowProperties):
             )
 
     def make_editor_gui(self):     # called by main after setting up camera and application.development_mode
-        from ursina import camera, Text, Button, ButtonList, Func
+        from ursina import camera, Text, Button, ButtonList, Func, Tooltip
         import time
 
         self.editor_ui = Entity(parent=camera.ui, eternal=True, enabled=bool(application.development_mode))
@@ -133,7 +133,8 @@ class Window(WindowProperties):
         import webbrowser
         self.cog_menu = ButtonList({
             # 'Build' : Func(print, ' '),
-            'Asset Store' : Func(webbrowser.open, "https://itch.io/tools/tag-ursina"),
+            'API Reference' : Func(webbrowser.open, 'https://www.ursinaengine.org/cheat_sheet_dark.html'),
+            'Asset Store' : Func(webbrowser.open, 'https://itch.io/tools/tag-ursina'),
             # 'Open Scene Editor' : Func(print, ' '),
             'Change Render Mode <gray>[F10]<default>' : self.next_render_mode,
             'Reset Render Mode <gray>[F9]<default>' : Func(setattr, self, 'render_mode', 'default'),
@@ -152,6 +153,9 @@ class Window(WindowProperties):
         self.cog_menu.text_entity.x += .025
         self.cog_menu.highlight.color = color.azure
         self.cog_button = Button(parent=self.editor_ui, eternal=True, model='circle', scale=.015, origin=(1,-1), position=self.bottom_right)
+        info_text ='''This menu is not enabled in builds <gray>(unless you set application.development to be not False).'''
+        self.cog_menu.info = Button(parent=self.cog_menu, model='quad', text='<gray>?', scale=.1, x=1, y=.01, origin=(.5,-.5), tooltip=Tooltip(info_text, scale=.75, origin=(-.5,-.5)))
+        self.cog_menu.info.text_entity.scale *= .75
         def _toggle_cog_menu():
             self.cog_menu.enabled = not self.cog_menu.enabled
         self.cog_button.on_click = _toggle_cog_menu
@@ -320,5 +324,4 @@ if __name__ == '__main__':
     camera.fov = 2
 
     Entity(model='cube', color=color.green, collider='box', texture='shore')
-    Button(scale=.5, text='test', position=window.right)
     app.run()
