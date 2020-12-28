@@ -4,26 +4,27 @@ from ursina import *
 class Animation(Sprite):
     def __init__(self, name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs):
         super().__init__()
-        if not name.endswith('.gif'):   # load image sequence
-            texture_folders = (application.compressed_textures_folder, application.asset_folder, application.internal_textures_folder)
-            self.frames = [Texture(e) for e in find_sequence(name, ('png', 'jpg'), texture_folders)]
-            if self.frames:
-                self.texture = self.frames[0]
 
-        else:   # load gif
+        texture = load_texture(name)
+        if texture and texture.path.suffix == '.gif':   # load gif
             import imageio
             from PIL import Image
             path = load_texture(name).path
             gif = imageio.get_reader(path)
             img = Image.open(path)
             img.seek(0)
-            frames = 0
             frame_times = []
             for i in range(len(gif)):
                 img.seek(i)
                 frame_times.append(img.info['duration'] / 1000)
 
             self.frames = [Texture(Image.fromarray(frame)) for frame in gif]
+
+        else:   # load image sequence
+            texture_folders = (application.compressed_textures_folder, application.asset_folder, application.internal_textures_folder)
+            self.frames = [Texture(e) for e in find_sequence(name, ('png', 'jpg'), texture_folders)]
+            if self.frames:
+                self.texture = self.frames[0]
 
 
         self.sequence = Sequence(loop=loop, auto_destroy=False)
@@ -99,7 +100,7 @@ if __name__ == '__main__':
     You can also load a .gif by including the file type: Animation('image.gif')
     '''
 
-    Animation('ursina_wink')
-    # Animation('city_in_desert_valley_water.gif')
+    # Animation('ursina_wink')
+    Animation('city_in_desert_valley_water.gif')
 
     app.run()
