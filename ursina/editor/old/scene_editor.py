@@ -133,7 +133,7 @@ class SceneEditor(Entity):
     @edit_mode.setter
     def edit_mode(self, value):
         self._edit_mode = value
-        self.ui_parent.enabled = value
+        self.editor_ui.enabled = value
         self.editor_camera.enabled = value
         self.world_plane.enabled = value
         self.gizmo.enabled = value

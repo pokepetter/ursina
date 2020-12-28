@@ -4,20 +4,22 @@ from ursina import *
 class Tooltip(Text):
 
     def __init__(self, text='', **kwargs):
-        super().__init__(text, ignore=False, **kwargs)
-
-        self.parent = camera.ui
-        self.wordwrap = 40
-        self.origin = (-.5, -.5)
-        self.margin = (2, 2)
-        self.background_color = color.inverse(color.text_color)
-        self.enabled = False
+        super().__init__(
+            text=text,
+            ignore=False,
+            parent = camera.ui,
+            wordwrap = 40,
+            origin = (-.5, -.5),
+            margin = (2, 2),
+            background_color = color.inverse(color.text_color),
+            enabled = False,
+            background = True
+            )
 
         for key, value in kwargs.items():
             setattr(self, key, value)
 
         self.original_scale = self.scale
-        self.create_background(color=self.background_color)
 
 
     def update(self):

@@ -26,7 +26,6 @@ class Raycaster(Entity):
         self._pickerNode.set_into_collide_mask(0)
         self._pickerNP = self.attach_new_node(self._pickerNode)
         self._picker.addCollider(self._pickerNP, self._pq)
-        self._pickerNP.show()
 
 
     def distance(self, a, b):

@@ -319,7 +319,7 @@ class CubicBezier:
 
 
 if __name__ == '__main__':
-    '''Draws a sheet with every curve and it's name'''
+    '''Draws a sheet with every curve and its name'''
     from ursina import *
 
     app = Ursina()

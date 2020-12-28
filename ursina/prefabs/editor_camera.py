@@ -3,7 +3,7 @@ from ursina import *
 class EditorCamera(Entity):
 
     def __init__(self, **kwargs):
-        camera.editor_position = (0,0,-10)
+        camera.editor_position = camera.position
         super().__init__(name='editor_camera', eternal=True)
 
         self.gizmo = Entity(parent=self, model='sphere', color=color.orange, scale=.025, add_to_scene_entities=False)

@@ -66,7 +66,7 @@ class Scene(NodePath):
     def fog_density(self):
         return self._fog_density
 
-    @fog_density.setter
+    @fog_density.setter     # set to a number for exponential density or (start, end) for linear.
     def fog_density(self, value):
         self._fog_density = value
         if isinstance(value, tuple):     # linear fog

@@ -23,7 +23,7 @@ class PlatformerController2d(Entity):
 
         self.walk_speed = 8
         self.walking = False
-        self.velocity = 0
+        self.velocity = 0 # the walk diection is stored here. -1 for left and 1 for right.
         self.jump_height = 4
         self.jump_duration = .5
         self.jumping = False
@@ -31,8 +31,8 @@ class PlatformerController2d(Entity):
         self.jumps_left = self.max_jumps
         self.gravity = 1
         self.grounded = True
-        self.air_time = 0
-        self._start_fall_sequence = None
+        self.air_time = 0   # this increase while we're falling and used when calculating the distance we fall so we fall faster and faster instead of linearly.
+        self._start_fall_sequence = None # we need to store this so we can interrupt the fall call if we try to double jump.
 
         ray = boxcast(self.world_position, self.down, distance=10, ignore=(self, ), thickness=.9)
         if ray.hit:
@@ -50,6 +50,7 @@ class PlatformerController2d(Entity):
 
 
     def update(self):
+        # check in the direction we're walking to see if there's a wall. If it does not hit, move.
         if boxcast(
             self.position+Vec3(self.velocity * time.dt * self.walk_speed,self.scale_y/2,0),
             # self.position+Vec3(sefl,self.scale_y/2,0),
@@ -72,6 +73,8 @@ class PlatformerController2d(Entity):
             else:
                 self.animator.state = 'idle'
 
+
+        # check if we're on the ground or not.
         ray = boxcast(self.world_position+Vec3(0,.1,0), self.down, distance=max(.1, self.air_time * self.gravity), ignore=(self, ), thickness=self.scale_x*.9)
 
         if ray.hit:
@@ -117,11 +120,11 @@ class PlatformerController2d(Entity):
             self._start_fall_sequence.kill()
 
         # don't jump if there's a ceiling right above us
-        if boxcast(self.position+(0,self.scale_y-.1,0), self.up, distance=.2, thickness=.95, ignore=(self,)).hit:
+        if boxcast(self.position+(0,.1,0), self.up, distance=self.scale_y, thickness=.95, ignore=(self,)).hit:
             return
 
         if hasattr(self, 'y_animator'):
-            self.y_animator.pause()
+            self.y_animator.kill()
         self.jump_dust = Entity(model=Circle(), scale=.5, color=color.white33, position=self.position)
         self.jump_dust.animate_scale(3, duration=.3, curve=curve.linear)
         self.jump_dust.fade_out(duration=.2)
@@ -137,10 +140,11 @@ class PlatformerController2d(Entity):
         hit_above = boxcast(self.position+(0,self.scale_y/2,0), self.up, distance=self.jump_height-(self.scale_y/2), thickness=.9, ignore=(self,))
         if hit_above.hit:
             target_y = min(hit_above.world_point.y-self.scale_y, target_y)
+            print('------', target_y)
             try:
                 duration *= target_y / (self.y+self.jump_height)
             except ZeroDivisionError as e:
-                return
+                return e
 
         self.animate_y(target_y, duration, resolution=30, curve=curve.out_expo)
         self._start_fall_sequence = invoke(self.start_fall, delay=duration)

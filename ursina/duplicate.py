@@ -3,7 +3,10 @@ from copy import copy, deepcopy
 
 
 def duplicate(entity, copy_children=True, **kwargs): # use a for loop instead of duplicate() if you can.
-    e = entity.__class__(entity.add_to_scene_entities)
+    if entity.__class__ == Entity:
+        e = entity.__class__(entity.add_to_scene_entities)
+    else:
+        e = entity.__class__()
 
 
     if hasattr(entity, 'model') and entity.model:

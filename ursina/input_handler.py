@@ -88,6 +88,10 @@ rebinds = dict()
 
 def bind(original_key, alternative_key):
     rebinds[original_key] = alternative_key
+    if ' mouse ' in alternative_key:
+        rebinds[original_key + ' up'] = alternative_key[:-5] + ' up'
+        return
+
     rebinds[original_key + ' hold'] = alternative_key + ' hold'
     rebinds[original_key + ' up'] = alternative_key + ' up'
 
