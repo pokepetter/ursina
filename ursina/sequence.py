@@ -109,9 +109,9 @@ class Sequence():
             return
 
         if self.time_step is None:
-            self.t += time.dt * application.time_scale
+            self.t += time.dt
         else:
-            self.t += self.time_step * application.time_scale
+            self.t += self.time_step
 
         for f in self.funcs:
             if not f.finished and f.delay <= self.t:
