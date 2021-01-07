@@ -187,12 +187,12 @@ class FileBrowser(Entity):
 
 
     def open(self):
-        if len(self.selection) == 1 and self.selection[0].path.is_dir():
-            self.path = self.selection[0].path
+        if len(self.selection) == 1 and self.selection[0].is_dir():
+            self.path = self.selection[0]
             return
 
         if hasattr(self, 'on_submit'):
-            self.on_submit([e.path for e in self.selection])
+            self.on_submit(self.selection)
 
         self.close()
 
