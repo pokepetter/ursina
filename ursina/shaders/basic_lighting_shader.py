@@ -6,12 +6,17 @@ vertex = '''
 #version 140
 uniform mat4 p3d_ModelViewProjectionMatrix;
 uniform mat4 p3d_ModelMatrix;
+
 in vec4 p3d_Vertex;
+in vec2 p3d_MultiTexCoord0;
+out vec2 texcoord;
+
 in vec3 p3d_Normal;
 out vec3 world_normal;
 
 void main() {
     gl_Position = p3d_ModelViewProjectionMatrix * p3d_Vertex;
+    texcoord = p3d_MultiTexCoord0;
     world_normal = normalize(mat3(p3d_ModelMatrix) * p3d_Normal);
 }
 ''',
@@ -55,7 +60,7 @@ if __name__ == '__main__':
     b = WhiteSphere(shader=basic_lighting_shader, x=3)
     # b.set_shader_input('transform_matrix', b.getNetTransform().getMat())
     # AzureSphere(shader=a.shader, y=2)
-    GrayPlane(scale=10, y=-2, texture='shore')
+    GrayPlane(scale=10, y=-2, texture='shore', shader=basic_lighting_shader)
 
     Sky(color=color.light_gray)
     EditorCamera()

@@ -45,7 +45,8 @@ if __name__ == '__main__':
     shader = normals_shader
 
     a = WhiteCube(shader=shader)
-    b = AzureSphere(shader=shader, rotation_y=180, x=3)
+    b = AzureSphere(rotation_y=180, x=3)
+    b.shader = shader
     # AzureSphere(shader=a.shader, y=2)
     GrayPlane(scale=10, y=-2, texture='shore')
 
