@@ -58,7 +58,8 @@ class HotReloader(Entity):
             'f5'     : self.reload_code,
             'f6'     : self.reload_textures,
             'f7'     : self.reload_models,
-            'f8'     : self.toggle_hotreloading,
+            'f8'     : self.reload_shaders,
+            # 'f9'     : self.toggle_hotreloading,
             }
 
 
@@ -203,6 +204,34 @@ class HotReloader(Entity):
                     print('reloaded model:', name, e.model)
 
 
+    def reload_shaders(self):
+        import ursina
+
+        for shader in ursina.shader.imported_shaders:
+            print(shader, shader.path)
+            # TODO: check if file has changed
+
+            with open(shader.path, 'r') as f:
+                try:
+                    # print('trying to reload:', shader.path.name)
+                    text = f.read()
+                    vert = text.split(r"vertex = '''", 1)[1].split("'''", 1)[0]
+                    frag = text.split(r"fragment='''", 1)[1].split("'''", 1)[0]
+
+                    shader.vertex = vert
+                    shader.fragment = frag
+                    shader.compile()
+
+                    for e in scene.entities:
+                        if hasattr(e, '_shader') and e.shader == shader:
+                            e.clearShader()
+                            e.shader = e.shader
+
+                    print('reloaded shader:', shader.path.name)
+                except:
+                    print('failed to reload shader:', shader.path.name)
+                    pass
+
 # class InGameTextEditor(Entity):
 #     def __init__(self, path, **kwargs):
 #         super().__init__(parent=camera.ui, z=-10)
@@ -302,7 +331,6 @@ class HotReloader(Entity):
 
 if __name__ == '__main__':
     from ursina import *
-    window.set_z_order(window.Z_top)
     app = Ursina()
     # hot_reloader = HotReloader()
     application.hot_reloader.path = application.asset_folder.parent.parent / 'samples' / 'platformer.py'
@@ -317,7 +345,31 @@ if __name__ == '__main__':
     #
     # button = Button(text='test button', scale=.75, model=Circle(32), color=color.red)
 
+    # test
+    from ursina.shaders import lit_with_shadows_shader
+    from ursina.prefabs.primitives import *
 
+    shader = lit_with_shadows_shader
+
+    a = AzureCube(shader=shader, texture='shore')
+    b = WhiteSphere(shader=shader, rotation_y=180, x=3, texture='brick')
+    b.texture.filtering = None
+    GrayPlane(scale=10, y=-2, texture='shore', shader=shader)
+
+
+    # Enable shadows; we need to set a frustum for that.
+    from ursina.lights import DirectionalLight
+    sun = DirectionalLight(y=10, rotation=(90+30,90,0))
+    sun._light.show_frustum()
+
+
+    Sky(color=color.light_gray)
+    EditorCamera()
+
+    def update():
+        a.x += (held_keys['d'] - held_keys['a']) * time.dt * 5
+        a.y += (held_keys['e'] - held_keys['q']) * time.dt * 5
+        a.z += (held_keys['w'] - held_keys['s']) * time.dt * 5
 
 
     app.run()

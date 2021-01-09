@@ -28,6 +28,7 @@ void main() {
 }
 
 '''
+imported_shaders = []
 
 class Shader:
     CG = Panda3dShader.SL_Cg
@@ -37,12 +38,31 @@ class Shader:
 
     def __init__(self, language=Panda3dShader.SL_GLSL, vertex=default_vertex_shader, fragment=default_fragment_shader, geometry='', **kwargs):
 
-        self._shader = Panda3dShader.make(language, vertex, fragment, geometry)
+        from inspect import getframeinfo, stack
+        _stack = stack()
+        _caller = getframeinfo(_stack[1][0])
+        self.path = Path(_caller.filename)
+
+        self.language = language
+        self.vertex = vertex
+        self.fragment = fragment
+        self.geometry = geometry
+
         self.entity = None
         self.default_input = dict()
+        self.compiled = False
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
+
+
+    def compile(self):
+        self._shader = Panda3dShader.make(self.language, self.vertex, self.fragment, self.geometry)
+        self.compiled = True
+
+        if not self in imported_shaders:
+            imported_shaders.append(self)
+
 
     @classmethod
     def load(cls, language=Panda3dShader.SL_GLSL, vertex=None, fragment=None, geometry=None, **kwargs):
@@ -64,8 +84,21 @@ class Shader:
 
 
 if __name__ == '__main__':
+    from time import perf_counter
+    t = perf_counter()
     from ursina import *
     app = Ursina()
     Entity(model='cube', shader=Shader())
     EditorCamera()
+    print('ttttttttttttt', perf_counter() - t)
+    def input(key):
+        if held_keys['control'] and key == 'r':
+            reload_shaders()
+
+    def reload_shaders():
+        for e in scene.entities:
+            if hasattr(e, '_shader'):
+                print('-------', e.shader)
+                # e._shader = Panda3dShader.make(language, vertex, fragment, geometry)
+
     app.run()

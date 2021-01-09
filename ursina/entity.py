@@ -1,5 +1,4 @@
 import sys
-import inspect
 import importlib
 import glob
 from pathlib import Path
@@ -25,7 +24,8 @@ from ursina.mesh_importer import load_model
 from ursina.texture_importer import load_texture
 from ursina.string_utilities import camel_to_snake
 from textwrap import dedent
-from ursina.light import *
+from panda3d.core import Shader as Panda3dShader
+from ursina.shader import Shader
 
 from ursina import color
 try:
@@ -100,10 +100,6 @@ class Entity(NodePath):
 
         for key, value in kwargs.items():
             setattr(self, key, value)
-
-        # if any lights defined, then apply them to this entity (otherwise use default lighting)
-        for light in scene.lights:
-            self.setLight(light.node)
 
 
 
@@ -264,7 +260,8 @@ class Entity(NodePath):
 
     @property
     def types(self): # get all class names including those this inhertits from.
-        return [c.__name__ for c in inspect.getmro(self.__class__)]
+        from inspect import getmro
+        return [c.__name__ for c in getmro(self.__class__)]
 
 
     @property
@@ -618,21 +615,21 @@ class Entity(NodePath):
             self.setShaderAuto()
             return
 
-        if not hasattr(value, '_shader'):
+        if isinstance(value, Panda3dShader): #panda3d shader
             self.setShader(value)
-        else:
+            return
+
+        if isinstance(value, Shader):
+            if not value.compiled:
+                value.compile()
+
             self.setShader(value._shader)
-            if value:
-                value.entity = self
+            value.entity = self
 
-                for key, value in value.default_input.items():
-                    self.set_shader_input(key, value)
+            for key, value in value.default_input.items():
+                self.set_shader_input(key, value)
 
 
-        # try:
-        #     self.setShader(Shader.load(f'{value}.sha', Shader.SL_Cg))
-        # except:
-        #     self.setShader(Shader.load(Shader.SL_GLSL, vertex=f'{value}.vert', fragment=f'{value}.frag'))
 
     def set_shader_input(self, name, value):
         if isinstance(value, Texture):
