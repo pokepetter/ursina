@@ -8,15 +8,6 @@ imported_textures = dict()
 file_types = ('.tif', '.jpg', '.jpeg', '.png', '.gif')
 textureless = False
 
-has_psd_tools_installed = False
-if application.development_mode:
-    try:
-        from psd_tools import PSDImage
-        has_psd_tools_installed = True
-    except (ModuleNotFoundError, ImportError) as e:
-        print('info: psd-tools3 not installed')
-
-
 
 def load_texture(name, path=None):
     if textureless:
@@ -57,7 +48,12 @@ def load_texture(name, path=None):
                 imported_textures[name] = t
                 return t
 
-    if has_psd_tools_installed:
+    if application.development_mode:
+        try:
+                from psd_tools import PSDImage
+        except (ModuleNotFoundError, ImportError) as e:
+            print('info: psd-tools3 not installed')
+
         for folder in folders:
             for filename in folder.glob('**/' + name + '.psd'):
                 print('found uncompressed psd, compressing it...')
@@ -86,13 +82,18 @@ def compress_textures(name=''):
 
     # print('searching for texture:', name + file_type)
     for f in application.asset_folder.glob('**/' + name + file_type):
-        # if f.parent == application.compressed_textures_folder:
-        # print('------------------', str(f.resolve()))
+
         if '\\textures_compressed\\' in str(f) or f.suffix not in ('.psd', '.png', '.jpg', '.jpeg', '.gif'):
             continue
         # print('  found:', f)
         image = None
-        if f.suffix == '.psd' and has_psd_tools_installed:
+        if f.suffix == '.psd':
+            try:
+                from psd_tools import PSDImage
+            except (ModuleNotFoundError, ImportError) as e:
+                print('info: psd-tools3 not installed')
+                return None
+
             image = PSDImage.load(f)
             image = image.as_PIL()
         # elif f.suffix == '.png':
