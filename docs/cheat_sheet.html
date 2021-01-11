@@ -708,7 +708,7 @@ input(<g>key</g>)
 <div id="mesh_importer"><div id="mesh_importer" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">mesh_importer</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.mesh_importer</g><br><br>blender_scenes<g> = dict()</g> 
 
 load_model(<g>name, path=application.asset_folder, file_types=('.bam', '.ursinamesh', '.obj', '.blend')</g>)   
-load_blender_scene(<g>name, path=application.asset_folder, load=True, reload=False, skip_hidden=True, models_only=False</g>)   
+load_blender_scene(<g>name, path=application.asset_folder, load=True, reload=False, skip_hidden=True</g>)   
 get_blender(<g>blend_file</g>)   <g># try to get a matching blender version in case we have multiple blender version installed</g>
 compress_models(<g>path=None, outpath=application.compressed_models_folder, name='*'</g>)   
 obj_to_ursinamesh()   
