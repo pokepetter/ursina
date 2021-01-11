@@ -10,10 +10,16 @@ from panda3d.core import CullFaceAttrib
 from time import perf_counter
 
 imported_meshes = dict()
+blender_scenes = dict()
 
-def load_model(name, path=application.asset_folder):
+def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursinamesh', '.obj', '.blend')):
     if not isinstance(name, str):
         raise TypeError(f"Argument save must be of type str, not {type(str)}")
+
+    if '.' in name:
+        full_name = name
+        name = full_name.split('.')[0]
+        file_types = ('.' + full_name.split('.',1)[1],)
 
     if name in imported_meshes:
         # print('load cached model', name)
@@ -22,7 +28,7 @@ def load_model(name, path=application.asset_folder):
         except:
             pass
 
-    for filetype in ('.bam', '.ursinamesh', '.obj', '.blend'):
+    for filetype in file_types:
         # warning: glob is case-insensitive on windows, so m.path will be all lowercase
         for filename in path.glob(f'**/{name}{filetype}'):
             if filetype in '.bam':
@@ -98,15 +104,13 @@ if not hasattr(application, 'blender_paths') and application.development_mode:
     pprint(application.blender_paths)
 
 
-def load_blender_scene(name, path=application.asset_folder, load=True, reload=False, skip_hidden=True):
+def load_blender_scene(name, path=application.asset_folder, load=True, reload=False, skip_hidden=True, models_only=False):
     scenes_folder = Path(application.asset_folder / 'scenes')
     if not scenes_folder.exists():
         scenes_folder.mkdir()
 
     out_file_path = scenes_folder / f'{name}.py'
-    print('loading:', out_file_path)
-
-
+    # print('loading:', out_file_path)
     if reload or not out_file_path.exists():
         print('reload:')
         t = perf_counter()
@@ -115,30 +119,34 @@ def load_blender_scene(name, path=application.asset_folder, load=True, reload=Fa
             raise ValueError('no blender file found at:', path / name)
 
         blend_file = blend_file[0]
+        print('loading blender scene:', blend_file, '-->', out_file_path)
         blender = get_blender(blend_file)
-        print('loading blender scene:', blend_file, '-->', out_file_path, 'using:', blender)
-
         script_path = application.internal_scripts_folder / '_blender_scene_to_ursina.py'
-        if platform.system() == 'Windows':
-            subprocess.call(f'''{blender} {blend_file} --background --python {script_path} {out_file_path}''')
-        else:
-            subprocess.run((blender, blend_file, '--background', '--python', script_path, out_file_path))
 
-        print('exported from blender:', perf_counter() - t)
+        args = [
+            get_blender(blend_file),
+            blend_file,
+            '--background',
+            '--python',
+            application.internal_scripts_folder / '_blender_scene_to_ursina.py',
+            out_file_path,
+            '--skip_hidden' if skip_hidden else '',
+            '--models_only' if models_only else '',
+        ]
 
-    t = perf_counter()
+        subprocess.run(args)
+
+
     with open(out_file_path) as f:
-        t2 = perf_counter()
         file_content = f.read()
-        print('file read time:', perf_counter() - t2)
-
         loc = {}
-        first_part, rest = file_content.split('# unique meshes')
-        exec(first_part, globals(), loc)
+        exec(file_content, globals(), loc)
 
-        exec(rest, globals(), loc)
-        print('exec total:', perf_counter() - t)
+        if models_only:
+            blender_scenes[name] = loc['meshes']
+            return loc['meshes']
 
+        blender_scenes[name] = loc['scene_parent']
         return loc['scene_parent']
 
 
@@ -442,7 +450,7 @@ if __name__ == '__main__':
 
     t = time.time()
     # blender_scene = load_blender_scene(path=application.asset_folder, name='desert', reload=True)
-    blender_scene = load_blender_scene(path=application.asset_folder, name='blender_level_editor_test_scene_2', reload=True)
+    blender_scene = load_blender_scene(path=application.asset_folder, name='blender_level_editor_test_scene_2')
     print('-------', time.time() - t)
 
     # print('--------', blender_scene.children)
