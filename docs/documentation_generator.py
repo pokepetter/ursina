@@ -165,9 +165,9 @@ def get_example(str, name=None):    # use name to highlight the relevant class
     styled_lines = list()
 
     for line in lines:
-        line = line.replace('def ', '<font color="purple">def</font> ')
-        line = line.replace('from ', '<font color="purple">from</font> ')
-        line = line.replace('import ', '<font color="purple">import</font> ')
+        line = line.replace('def ', '<purple>def</purple> ')
+        line = line.replace('from ', '<purple>from</purple> ')
+        line = line.replace('import ', '<purple>import</purple> ')
         line = line.replace('Entity', '<font color="olive">Entity</font>')
 
         # volorize numbers
@@ -182,8 +182,8 @@ def get_example(str, name=None):    # use name to highlight the relevant class
         if name:
             if '(' in name:
                 name = name.split('(')[0]
-            line = line.replace(f'{name}(', f'<font color="purple"><b>{name}</b></font>(')
-            line = line.replace(f'={name}(', f'=<font color="purple"><b>{name}</b></font>(')
+            line = line.replace(f'{name}(', f'<purple><b>{name}</b></purple>(')
+            line = line.replace(f'={name}(', f'=<purple><b>{name}</b></purple>(')
             # line = line.replace(f'.{name}', f'.<font colorK
 
         quotes = re.findall('\'(.*?)\'', line)
@@ -333,6 +333,9 @@ asset_info['models'] = ('', '', model_names, '', '''e = Entity(model='quad')''')
 texture_names = [f'\'{f.stem}\'' for f in path.glob('textures/*.*')]
 asset_info['textures'] = ('', '', texture_names, '', '''e = Entity(model='cube', texture='brick')''')
 
+shaders = [f'{f.stem}' for f in path.glob('shaders/*.*')]
+asset_info['shaders'] = ('', '', shaders, '', '''from ursina.shaders import normals_shader\ne = Entity(shader=normals_shader)''')
+
 for f in path.glob('models/procedural/*.py'):
     if f.name.startswith('_') or f in ignored_files:
         continue
@@ -419,6 +422,9 @@ def make_html(style, file_name):
 
             g {{
                 color: gray;
+            }}
+            purple {{
+                color: hsl(289.0, 50%, 50%);
             }}
 
             .example {{

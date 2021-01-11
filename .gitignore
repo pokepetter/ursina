@@ -13,7 +13,7 @@ ursina/shaders/wip
 promo/
 samples/models*
 *blob_animation*
-
+program.prof
 
 **/*~
 **/*.swp

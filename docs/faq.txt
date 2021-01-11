@@ -40,6 +40,20 @@ to structure your project in a good way, rather than micro-optimize.
 
 
 
+<b>How do I make pixel art not blurry?</b>
+
+# code
+    Texture.default_filtering = None
+# text
+
+or for a single texture:
+# code
+    some_texture.filtering = None
+# text
+
+
+
+
 <b>How do I add lights?</b>
 
 If all you want are some simple lights to make 3D shapes look more interesting,
