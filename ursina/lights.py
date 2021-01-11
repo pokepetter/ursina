@@ -44,13 +44,9 @@ class DirectionalLight(Light):
             self._light.set_shadow_caster(True, int(self.shadow_map_resolution[0]), int(self.shadow_map_resolution[1]))
             bmin, bmax = scene.get_tight_bounds(self)
             lens = self._light.get_lens()
-            # lens.set_film_offset(bmin.xy + bmax.xy)
-            # lens.set_film_size((bmax.xy - bmin.xy) * 2)
-            # lens.set_near_far(bmin.z*2, bmax.z*2)
+            lens.set_near_far(bmin.z*2, bmax.z*2)
             lens.set_film_offset((bmin.xy + bmax.xy) * .5)
             lens.set_film_size((bmax.xy - bmin.xy))
-            lens.set_near_far(0,20)
-            print('------------------shadows on')
         else:
             self._light.set_shadow_caster(False)
 
@@ -65,6 +61,7 @@ class PointLight(Light):
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
+
 
 
 class AmbientLight(Light):

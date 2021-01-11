@@ -30,7 +30,7 @@ from panda3d.core import Vec4
 from ursina.vec2 import Vec2
 from ursina.vec3 import Vec3
 from ursina.shader import Shader
-from ursina.light import Light
+from ursina.lights import *
 
 from ursina.text import Text
 from ursina.mesh import Mesh, MeshModes
