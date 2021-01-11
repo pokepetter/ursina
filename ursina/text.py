@@ -139,8 +139,6 @@ class Text(Entity):
 
         self.align()
 
-    def update_text(self):
-        self.text = self.raw_text
 
     def create_text_section(self, text, tag='', x=0, y=0):
         # print(text, tag)
