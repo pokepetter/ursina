@@ -88,8 +88,16 @@ class PlatformerController2d(Entity):
 
         # if not on ground and not on way up in jump, fall
         if not self.grounded and not self.jumping:
-            self.y -= min(min(self.air_time, 1) * self.gravity, ray.distance-.05)
-            self.air_time += time.dt*7 * self.gravity
+            self.y -= min(self.air_time * self.gravity, ray.distance-.05)
+            self.air_time += time.dt*4 * self.gravity
+
+
+        # if in jump and hit the ceiling, fall
+        if self.jumping:
+            if boxcast(self.position+(0,.1,0), self.up, distance=self.scale_y, thickness=.95, ignore=(self,)).hit:
+                self.y_animator.kill()
+                self.air_time = 0
+                self.start_fall()
 
 
 
@@ -140,7 +148,7 @@ class PlatformerController2d(Entity):
         hit_above = boxcast(self.position+(0,self.scale_y/2,0), self.up, distance=self.jump_height-(self.scale_y/2), thickness=.9, ignore=(self,))
         if hit_above.hit:
             target_y = min(hit_above.world_point.y-self.scale_y, target_y)
-            print('------', target_y)
+            # print('------', target_y)
             try:
                 duration *= target_y / (self.y+self.jump_height)
             except ZeroDivisionError as e:
