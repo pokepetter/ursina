@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='ursina',
-    version='3.2.2',
+    version='3.3.0',
     url='https://github.com/pokepetter/ursina',
     author='Petter Amland',
     author_email='pokepetter@gmail.com',
