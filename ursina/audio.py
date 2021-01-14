@@ -70,12 +70,16 @@ class Audio(Entity):
                     self._clip = loader.loadSfx(p[1:])
                     # print('...loaded audio clip:', f, p)
                     return
-                # except:
-                #     pass
+
+            self._clip = None
             print('no audio found with name:', value, 'supported formats: .ogg, .mp3, .wav')
             return
         else:
-            self._clip = value
+            try:
+                self._clip = value
+            except Exception as e:
+                print('no audio found with name:', value, 'supported formats: .ogg, .mp3, .wav', e)
+
 
     @property
     def length(self):
@@ -103,10 +107,12 @@ class Audio(Entity):
         self.clip.set_time(value)
 
     def play(self, start=0):
-        if self.clip:
+        if hasattr(self, 'clip') and self.clip:
             # print('play from:', start)
             self.time = start
             self.clip.play()
+        else:
+            print(self, 'has no audio clip')
 
     def pause(self):
         if self.clip:
@@ -164,7 +170,6 @@ if __name__ == '__main__':
     # a2 = duplicate(a)
     # a2.clip = a.clip
     # a2.play()
-    print(a.clip)
     # print(a2.clip)
     # a.fade_out(delay=1)
     # DebugMenu(a)
