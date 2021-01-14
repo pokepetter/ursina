@@ -46,6 +46,10 @@ class Vec2(PandaVec2):
         return Vec2(self[0]*value[0], self[1]*value[1])
 
 
+    __rmul__ = __mul__
+
+
+
     def __truediv__(self, value):
         if isinstance(value, (int, float, complex)):
             return Vec2(*(e/value for e in self))

@@ -91,6 +91,9 @@ class Vec3(PandaVec3):
         return Vec3(self[0]*value[0], self[1]*value[1], self[2]*value[2])
 
 
+    __rmul__ = __mul__
+
+
     def __truediv__(self, value):
         if isinstance(value, (int, float, complex)):
             return Vec3(*(e/value for e in self))
@@ -111,3 +114,5 @@ if __name__ == '__main__':
     print('xy:', b.xy)
     print(round(b))
     print(round(b.xy))
+    print('-----------', a * 2)
+    print('-----------', 2 * a)
