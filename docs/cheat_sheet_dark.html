@@ -1280,14 +1280,10 @@ gamepad_dpad_right_shoulder_up<g> = 'gamepad right shoulder up'</g>
 color
 
 
-<div class="example"><purple>from</purple> ursina.shaders <purple>import</purple> lit_with_shadows_shader
+<div class="example"><purple>from</purple> ursina.shaders <purple>import</purple> lit_with_shadows_shader <font color="gray"># you have to apply this shader to enties for them to recieve shadows.</font>
 EditorCamera()
-<font color="olive">Entity</font>(model=<font color="seagreen">'plane'</font>, scale=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>, color=color.gray,
-    shader=lit_with_shadows_shader
-    )
-<font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, y=<font color="darkgoldenrod">1</font>,
-    shader=lit_with_shadows_shader
-    )
+<font color="olive">Entity</font>(model=<font color="seagreen">'plane'</font>, scale=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>, color=color.gray, shader=lit_with_shadows_shader)
+<font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, y=<font color="darkgoldenrod">1</font>, shader=lit_with_shadows_shader)
 pivot = <font color="olive">Entity</font>()
 Directional<purple><b>Light</b></purple>(parent=pivot, y=<font color="darkgoldenrod">2</font>, z=<font color="darkgoldenrod">3</font>, shadows=True)
 </div>
@@ -1298,14 +1294,10 @@ shadow_map_resolution<g> = Vec2(1024, 1024)</g>
 shadows
 
 
-<div class="example"><purple>from</purple> ursina.shaders <purple>import</purple> lit_with_shadows_shader
+<div class="example"><purple>from</purple> ursina.shaders <purple>import</purple> lit_with_shadows_shader <font color="gray"># you have to apply this shader to enties for them to recieve shadows.</font>
 EditorCamera()
-<font color="olive">Entity</font>(model=<font color="seagreen">'plane'</font>, scale=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>, color=color.gray,
-    shader=lit_with_shadows_shader
-    )
-<font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, y=<font color="darkgoldenrod">1</font>,
-    shader=lit_with_shadows_shader
-    )
+<font color="olive">Entity</font>(model=<font color="seagreen">'plane'</font>, scale=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>, color=color.gray, shader=lit_with_shadows_shader)
+<font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, y=<font color="darkgoldenrod">1</font>, shader=lit_with_shadows_shader)
 pivot = <font color="olive">Entity</font>()
 <purple><b>DirectionalLight</b></purple>(parent=pivot, y=<font color="darkgoldenrod">2</font>, z=<font color="darkgoldenrod">3</font>, shadows=True)
 </div>
@@ -1314,14 +1306,10 @@ pivot = <font color="olive">Entity</font>()
 
 
 
-<div class="example"><purple>from</purple> ursina.shaders <purple>import</purple> lit_with_shadows_shader
+<div class="example"><purple>from</purple> ursina.shaders <purple>import</purple> lit_with_shadows_shader <font color="gray"># you have to apply this shader to enties for them to recieve shadows.</font>
 EditorCamera()
-<font color="olive">Entity</font>(model=<font color="seagreen">'plane'</font>, scale=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>, color=color.gray,
-    shader=lit_with_shadows_shader
-    )
-<font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, y=<font color="darkgoldenrod">1</font>,
-    shader=lit_with_shadows_shader
-    )
+<font color="olive">Entity</font>(model=<font color="seagreen">'plane'</font>, scale=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>, color=color.gray, shader=lit_with_shadows_shader)
+<font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, y=<font color="darkgoldenrod">1</font>, shader=lit_with_shadows_shader)
 pivot = <font color="olive">Entity</font>()
 DirectionalLight(parent=pivot, y=<font color="darkgoldenrod">2</font>, z=<font color="darkgoldenrod">3</font>, shadows=True)
 </div>
@@ -1330,14 +1318,10 @@ DirectionalLight(parent=pivot, y=<font color="darkgoldenrod">2</font>, z=<font c
 
 
 
-<div class="example"><purple>from</purple> ursina.shaders <purple>import</purple> lit_with_shadows_shader
+<div class="example"><purple>from</purple> ursina.shaders <purple>import</purple> lit_with_shadows_shader <font color="gray"># you have to apply this shader to enties for them to recieve shadows.</font>
 EditorCamera()
-<font color="olive">Entity</font>(model=<font color="seagreen">'plane'</font>, scale=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>, color=color.gray,
-    shader=lit_with_shadows_shader
-    )
-<font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, y=<font color="darkgoldenrod">1</font>,
-    shader=lit_with_shadows_shader
-    )
+<font color="olive">Entity</font>(model=<font color="seagreen">'plane'</font>, scale=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>, color=color.gray, shader=lit_with_shadows_shader)
+<font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, y=<font color="darkgoldenrod">1</font>, shader=lit_with_shadows_shader)
 pivot = <font color="olive">Entity</font>()
 DirectionalLight(parent=pivot, y=<font color="darkgoldenrod">2</font>, z=<font color="darkgoldenrod">3</font>, shadows=True)
 </div>
@@ -1346,14 +1330,10 @@ DirectionalLight(parent=pivot, y=<font color="darkgoldenrod">2</font>, z=<font c
 
 
 
-<div class="example"><purple>from</purple> ursina.shaders <purple>import</purple> lit_with_shadows_shader
+<div class="example"><purple>from</purple> ursina.shaders <purple>import</purple> lit_with_shadows_shader <font color="gray"># you have to apply this shader to enties for them to recieve shadows.</font>
 EditorCamera()
-<font color="olive">Entity</font>(model=<font color="seagreen">'plane'</font>, scale=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>, color=color.gray,
-    shader=lit_with_shadows_shader
-    )
-<font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, y=<font color="darkgoldenrod">1</font>,
-    shader=lit_with_shadows_shader
-    )
+<font color="olive">Entity</font>(model=<font color="seagreen">'plane'</font>, scale=<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>, color=color.gray, shader=lit_with_shadows_shader)
+<font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, y=<font color="darkgoldenrod">1</font>, shader=lit_with_shadows_shader)
 pivot = <font color="olive">Entity</font>()
 DirectionalLight(parent=pivot, y=<font color="darkgoldenrod">2</font>, z=<font color="darkgoldenrod">3</font>, shadows=True)
 </div>
@@ -1543,7 +1523,7 @@ print(<font color="seagreen">'ttttttttttttt'</font>, perf_counter() - t)
 </div></div>
 <div id="Texture"><div id="Texture" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Texture<g>()</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.texture</g><br><br><params class="params">Texture(value)</params>
 
-filtering<g> = Texture.default_filtering</g> 
+filtering<g> = Texture.default_filtering      # None/'bilinear'/'mipmap' default: 'bilinear'</g> 
 name
 size
 width
@@ -2022,7 +2002,7 @@ e.texture_scale = (e.scale_z, e.scale_y)
 e = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</font>, scale=(<font color="darkgoldenrod">1</font>,<font color="darkgoldenrod">5</font>,<font color="darkgoldenrod">1</font><font color="darkgoldenrod">0</font>), x=-<font color="darkgoldenrod">2</font>, y=.<font color="darkgoldenrod">0</font><font color="darkgoldenrod">1</font>, collider=<font color="seagreen">'box'</font>, texture=<font color="seagreen">'white_cube'</font>)
 e.texture_scale = (e.scale_z, e.scale_y)
 
-player = <purple><b>FirstPersonController</b></purple>(model=<font color="seagreen">'cube'</font>, y=<font color="darkgoldenrod">1</font>, origin_y=-.<font color="darkgoldenrod">5</font>)
+player = <purple><b>FirstPersonController</b></purple>(model=<font color="seagreen">'cube'</font>, y=<font color="darkgoldenrod">0</font>, origin_y=-.<font color="darkgoldenrod">5</font>)
 player.gun = None
 
 gun = Button(parent=scene, model=<font color="seagreen">'cube'</font>, color=color.blue, origin_y=-.<font color="darkgoldenrod">5</font>, position=(<font color="darkgoldenrod">3</font>,<font color="darkgoldenrod">0</font>,<font color="darkgoldenrod">3</font>), collider=<font color="seagreen">'box'</font>)
@@ -2039,25 +2019,6 @@ slope = <font color="olive">Entity</font>(model=<font color="seagreen">'cube'</f
         bullet.world_parent = scene
         bullet.animate_position(bullet.position+(bullet.forward*<font color="darkgoldenrod">5</font><font color="darkgoldenrod">0</font>), curve=curve.linear, duration=<font color="darkgoldenrod">1</font>)
         destroy(bullet, delay=<font color="darkgoldenrod">1</font>)
-
-
-class Test(<font color="olive">Entity</font>):
-    <purple>def</purple> __init__(self, **kwargs):
-        super().__init__(ignore_paused=True)
-
-    <purple>def</purple> input(self, key):
-        if key == <font color="seagreen">'escape'</font>:
-            if application.time_scale == <font color="darkgoldenrod">1</font>:
-                application.time_scale = .<font color="darkgoldenrod">3</font>
-            else:
-                application.time_scale = <font color="darkgoldenrod">1</font>
-
-            print(<font color="seagreen">'------'</font>, application.paused)
-Test()
-
-
-scene.fog_color = color.black
-scene.fog_density= .<font color="darkgoldenrod">3</font>
 </div>
 </div></div>
 <div id="FrameAnimation3d"><div id="FrameAnimation3d" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">FrameAnimation3d<g>(<a style="color: gray;" href="#Entity">Entity</a>)</g></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><g>ursina.prefabs.frame_animation_3d</g><br><br><params class="params">FrameAnimation3d(name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs)</params>

@@ -11,7 +11,7 @@ from ursina import color
 
 class Texture():
 
-    default_filtering = 'bilinear'
+    default_filtering = 'bilinear'      # None/'bilinear'/'mipmap' default: 'bilinear'
 
     def __init__(self, value):
 
@@ -37,7 +37,7 @@ class Texture():
 
 
 
-        self.filtering = Texture.default_filtering
+        self.filtering = Texture.default_filtering      # None/'bilinear'/'mipmap' default: 'bilinear'
 
 
     @property
