@@ -1,30 +1,46 @@
 from ursina import *
 
 class TrailRenderer(Entity):
-    def __init__(self, target=None, **kwargs):
+    def __init__(self, target=None,thickness=5,length=6, **kwargs):
         super().__init__()
-        self.model = Mesh(
-            vertices=[Vec3(0,0,0) for i in range(6)],
-            colors=[lerp(color.clear, color.white, i/6*2) for i in range(6)],
-            mode='line',
-            thickness=5,
-            static=False
-        )
+        self.thickness=thickness
+        self.length=length
         self.target = target
         if not target:
             self.target = self
+        self.model = Mesh(
+            vertices=[self.target.world_position for i in range(self.length)],
+            colors=[lerp(color.clear, color.white, i/self.length*2) for i in range(self.length)],
+            mode='line',
+            thickness=self.thickness,
+            static=False,
+            
+        )
+
+
 
         self._t = 0
         self.update_step = .025
+        self.lifetime=0
+
 
 
     def update(self):
+
+        
         self._t += time.dt
-        if self._t >= self.update_step:
+        if self._t >= self.update_step and self.lifetime==self.length:
             self._t = 0
-            self.model.vertices.pop(0)
+
+            self.model.vertices.pop(0)                
             self.model.vertices.append(self.target.world_position)
             self.model.generate()
+        elif self.lifetime < self.length:
+            self.model.vertices.pop(0)                
+            self.model.vertices.append(self.target.world_position)
+
+            self.lifetime+=1
+            
 
 
 if __name__ == '__main__':
