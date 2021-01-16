@@ -20,14 +20,8 @@ def distance(a, b):
         pass
 
     # if input is Entity, convert to positions
-    try:
-        a = a.position
-    except:
-        pass
-    try:
-        b = b.position
-    except:
-        pass
+    if hasattr(a, 'position'): a = a.position
+    if hasattr(b, 'position'): b = b.position
 
     dist = sqrt((b[0] - a[0])**2 + (b[1] - a[1])**2 + (b[2] - a[2])**2)
     # print('------------DIST:', dist)
@@ -35,19 +29,16 @@ def distance(a, b):
 
 
 def distance2d(a, b):
-    try:
-        a = a.position
-    except:
-        pass
-    try:
-        b = b.position
-    except:
-        pass
+    if hasattr(a, 'position'): a = a.position
+    if hasattr(b, 'position'): b = b.position
 
     return sqrt((b[0] - a[0])**2 + (b[1] - a[1])**2)
 
 
 def distance_xz(a, b):
+    if hasattr(a, 'position'): a = a.position
+    if hasattr(b, 'position'): b = b.position
+
     return sqrt((b[0] - a[0])**2 + (b[2] - a[2])**2)
 
 
@@ -124,6 +115,7 @@ if __name__ == '__main__':
     e1 = Entity(position = (0,0,0))
     e2 = Entity(position = (0,1,1))
     distance(e1, e2)
+    distance_xz(e1, e2.position)
 
     between_color = lerp(color.lime, color.magenta, .5)
     print(between_color)
