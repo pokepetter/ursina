@@ -78,18 +78,27 @@ class Text(Entity):
     @text.setter
     def text(self, text):
         self.raw_text = text
-        text = self.start_tag + self.end_tag + str(text) # start with empty tag for alignemnt to work?
 
+        # clear stuff
+        for img in self.images:
+            destroy(img)
         self.images.clear()
+
         for tn in self.text_nodes:
             tn.remove_node()
-
         self.text_nodes.clear()
 
-        if not self.start_tag in text or not self.end_tag in text or self.use_tags == False:
+        # check if using tags
+        if (not self.use_tags
+            or self.text == self.start_tag or self.text == self.end_tag
+            or not self.start_tag in text or not self.end_tag in text
+            ):
+
             self.create_text_section(text)
             return
 
+        # parse tags
+        text = self.start_tag + self.end_tag + str(text) # start with empty tag for alignemnt to work?
         sections = list()
         section = ''
         tag = self.start_tag+'default'+self.end_tag
