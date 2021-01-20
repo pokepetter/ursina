@@ -95,6 +95,7 @@ class Text(Entity):
             ):
 
             self.create_text_section(text)
+            self.align()
             return
 
         # parse tags
