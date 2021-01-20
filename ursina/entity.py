@@ -38,6 +38,7 @@ except:
 class Entity(NodePath):
 
     rotation_directions = (-1,-1,1)
+    default_shader = None
 
     def __init__(self, add_to_scene_entities=True, **kwargs):
         super().__init__(self.__class__.__name__)
@@ -62,6 +63,7 @@ class Entity(NodePath):
         self.reflectivity = 0
         self.render_queue = 0
         self.double_sided = False
+        self.shader = Entity.default_shader
         # self.always_on_top = False
 
         self.collision = False  # toggle collision without changing collider.
