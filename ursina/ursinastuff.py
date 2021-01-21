@@ -72,10 +72,12 @@ def _destroy(entity):
 
     if hasattr(entity, 'tooltip'):
         destroy(entity.tooltip)
-        # entity.tooltip.removeNode()
+        
+    if hasattr(entity, 'text_entity'):
+        destroy(entity.text_entity)
+
     if hasattr(entity, '_on_click') and isinstance(entity._on_click, Sequence):
         entity._on_click.kill()
-
 
     entity.removeNode()
 
