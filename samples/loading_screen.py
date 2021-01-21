@@ -47,6 +47,7 @@ if __name__ == '__main__':
     from ursina.prefabs.health_bar import HealthBar
 
     def load_textures():
+        global loading_screen
         for i in range(9999):
             print('lolo'+'lol')
         # window.color=color.white
@@ -58,21 +59,21 @@ if __name__ == '__main__':
             load_texture(t)
             print(i)
             bar.value = i+1
-            print('loaded textturres')
+            print('loaded textures')
         # destroy(bar, delay=.01)
+        loading_screen.enabled = False
 
     def input(key):
         if key == 'space':
             loading_screen.enabled = True
-            # window.color=color.black
-            # t = time.time()
-            # try:
-            #     thread.start_new_thread(target=load_textures)
-            # except:
-            #     print('error starting thread')
+            t = time.time()
+            window.color=color.black
+            try:
+                thread.start_new_thread(function=load_textures, args='')
+            except:
+                print('error starting thread')
 
-            load_textures()
-            loading_screen.enabled = False
+            # load_textures()
             print('---', time.time()-t)
     # load_textures()
     # invoke(load_textures, delay=0)
