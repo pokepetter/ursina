@@ -290,16 +290,19 @@ class Mouse():
 
     def unhover_everything_not_hit(self):
         for e in scene.entities:
-            if e == self.hovered_entity:
-                continue
+            try:
+                if e == self.hovered_entity:
+                    continue
 
-            if e.hovered:
-                e.hovered = False
-                if hasattr(e, 'on_mouse_exit'):
-                    e.on_mouse_exit()
-                for s in e.scripts:
-                    if hasattr(s, 'on_mouse_exit'):
-                        s.on_mouse_exit()
+                if e.hovered:
+                    e.hovered = False
+                    if hasattr(e, 'on_mouse_exit'):
+                        e.on_mouse_exit()
+                    for s in e.scripts:
+                        if hasattr(s, 'on_mouse_exit'):
+                            s.on_mouse_exit()
+            except:
+                pass
 
 
 
@@ -318,3 +321,4 @@ if __name__ == '__main__':
 
 
     app.run()
+
