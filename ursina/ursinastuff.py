@@ -50,10 +50,13 @@ def destroy(entity, delay=0):
         Func(_destroy, entity)
     )
     s.start()
+    return s
 
-def _destroy(entity):
+def _destroy(entity, force_destroy=False):
     if not entity:
-        # print('entity is None')
+        return
+
+    if entity.eternal and not force_destroy:
         return
 
     for c in entity.children:
