@@ -55,6 +55,10 @@ def _destroy(entity):
     if not entity:
         # print('entity is None')
         return
+
+    for c in entity.children:
+        destroy(c)
+
     if entity in scene.entities:
         scene.entities.remove(entity)
 
@@ -72,9 +76,6 @@ def _destroy(entity):
 
     if hasattr(entity, 'tooltip'):
         destroy(entity.tooltip)
-        
-    if hasattr(entity, 'text_entity'):
-        destroy(entity.text_entity)
 
     if hasattr(entity, '_on_click') and isinstance(entity._on_click, Sequence):
         entity._on_click.kill()
