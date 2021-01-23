@@ -292,14 +292,14 @@ class Mouse():
         for e in scene.entities:
             if e == self.hovered_entity:
                 continue
-            if hasattr(e,"hovered"):
-                if e.hovered:
-                    e.hovered = False
-                    if hasattr(e, 'on_mouse_exit'):
-                        e.on_mouse_exit()
-                    for s in e.scripts:
-                        if hasattr(s, 'on_mouse_exit'):
-                            s.on_mouse_exit()
+
+            if hasattr(e, 'hovered') and e.hovered:
+                e.hovered = False
+                if hasattr(e, 'on_mouse_exit'):
+                    e.on_mouse_exit()
+                for s in e.scripts:
+                    if hasattr(s, 'on_mouse_exit'):
+                        s.on_mouse_exit()
 
 
 
