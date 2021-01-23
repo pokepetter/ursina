@@ -77,8 +77,10 @@ class Raycaster(Entity):
         self.hit = HitInfo(hit=True, distance=distance)
         for e in scene.entities:
             if e == nP:
-                # print('cast nP to Entity')
                 self.hit.entity = e
+
+        nPs = [e.get_into_node_path().parent for e in self.entries]
+        self.hit.entities = [e for e in scene.entities if e in nPs]
 
         self.hit.point = point
         self.hit.world_point = world_point
