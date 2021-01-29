@@ -14,8 +14,8 @@ class HitInfo:
         self.distance = math.inf
         self.normal = None
         self.world_normal = None
-        self.hits = None
-        self.entities = None
+        self.hits = []
+        self.entities = []
 
         for key, value in kwargs.items():
             setattr(self, key, value)
