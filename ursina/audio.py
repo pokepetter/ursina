@@ -5,6 +5,9 @@ _destroy = destroy
 
 
 class Audio(Entity):
+
+    volume_multiplier = .5  #
+
     def __init__(self, sound_file_name='', autoplay=True, **kwargs):
         super().__init__(**kwargs)
         # printvar(sound_file_name)
@@ -33,7 +36,7 @@ class Audio(Entity):
     def __setattr__(self, name, value):
         if hasattr(self, 'clip') and self._clip:
             if name == 'volume':
-                self._clip.setVolume(value)
+                self._clip.setVolume(value * Audio.volume_multiplier)
 
             if name == 'pitch':
                 self._clip.setPlayRate(value)
@@ -165,7 +168,9 @@ if __name__ == '__main__':
     base = Ursina()
     # a = Audio('life_is_currency_wav', pitch=1)
     a = Audio('life_is_currency', pitch=1, loop=True, autoplay=True)
-    # print(a.recipe)
+    print(a.clip)
+    a.volume=0
+    b = Audio(a.clip)
     # a2 = Audio(clip=a.clip)
     # a2 = duplicate(a)
     # a2.clip = a.clip
