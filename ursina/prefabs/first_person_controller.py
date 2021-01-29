@@ -62,7 +62,7 @@ class FirstPersonController(Entity):
                 self.grounded = False
 
             # if not on ground and not on way up in jump, fall
-            self.y -= min(self.air_time, ray.distance-.05)
+            self.y -= min(self.air_time, ray.distance-.05) * time.dt * 100
             self.air_time += time.dt * .25 * self.gravity
 
 
@@ -76,7 +76,7 @@ class FirstPersonController(Entity):
             return
 
         self.grounded = False
-        self.animate_y(self.y+self.jump_height, self.jump_duration, resolution=120, curve=curve.out_expo)
+        self.animate_y(self.y+self.jump_height, self.jump_duration, resolution=int(1//time.dt), curve=curve.out_expo)
         invoke(self.start_fall, delay=self.jump_duration)
 
 
