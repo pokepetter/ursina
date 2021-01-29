@@ -8,17 +8,18 @@ Frequently Asked Questions
 # left
 
 <b>How do I update ursina?</b>
-
-pip install git+https://github.com/pokepetter/ursina.git --upgrade
-
+    # code
+    pip install git+https://github.com/pokepetter/ursina.git --upgrade
+    # text
 
 
 
 <b>How do I move the camera?</b>
 
 The camera is an Entity, so you can move and rotate it just like everything else:
-camera.position = Vec3(1,1,0)
-
+    # code
+    camera.position = Vec3(1,1,0)
+    # text
 
 
 
@@ -33,23 +34,23 @@ to structure your project in a good way, rather than micro-optimize.
 
 <b>How do I call a function with a delay?</b>
 
-# code
+    # code
     invoke(some_function, arg1, kwarg1='some kwarg', delay=2)
-# text
+    # text
 
 
 
 
 <b>How do I make pixel art not blurry?</b>
 
-# code
+    # code
     Texture.default_filtering = None
-# text
+    # text
 
 or for a single texture:
-# code
+    # code
     some_texture.filtering = None
-# text
+    # text
 
 
 
@@ -86,7 +87,7 @@ Like raycast(), it also returns a HitInfo.
 
 Here's an example from the FirstPersonController:
 
-# code
+    # code
     # cast a ray from the player position in the walk direction.
     # only move forward if it doesn't hit anything.
     origin = self.world_position + (self.up*.5) + (self.direction/2)
@@ -95,4 +96,4 @@ Here's an example from the FirstPersonController:
     if not ray.hit:
        self.position += self.direction * self.speed * time.dt
 
-# text
+    # text

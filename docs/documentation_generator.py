@@ -94,7 +94,7 @@ def get_class_attributes(str):
 
                 # include comments for properties
                 if '#' in lines[i+1]:
-                    name += ((20-len(name)) * ' ') + '<g>#' + lines[i+1].split('#',1)[1] + '</g>'
+                    name += ((20-len(name)) * ' ') + '<gray>#' + lines[i+1].split('#',1)[1] + '</gray>'
 
                 if not name in [e.split(' = ')[0] for e in attributes]:
                     attributes.append(name)
@@ -168,15 +168,37 @@ def get_example(str, name=None):    # use name to highlight the relevant class
         line = line.replace('def ', '<purple>def</purple> ')
         line = line.replace('from ', '<purple>from</purple> ')
         line = line.replace('import ', '<purple>import</purple> ')
-        line = line.replace('Entity', '<font color="olive">Entity</font>')
+        line = line.replace('for ', '<purple>for</purple> ')
 
-        # volorize numbers
+        line = line.replace('elif ', '<purple>elif</purple> ')
+        line = line.replace('if ', '<purple>if</purple> ')
+        line = line.replace(' not ', ' <purple>not</purple> ')
+        line = line.replace('else:', '<purple>else</purple>:')
+
+        line = line.replace('Entity', '<olive>Entity</olive>')
+        for e in ('print', 'range', 'hasattr', 'getattr', 'setattr'):
+            line = line.replace(f'{e}(' , f'<blue>{e}</blue>(')
+
+        # colorize ursina specific params
+        for e in ('enabled', 'parent', 'world_parent', 'model', 'highlight_color', 'color',
+            'texture_scale', 'texture', 'visible',
+            'position', 'z', 'y', 'z',
+            'rotation', 'rotation_x', 'rotation_y', 'rotation_z',
+            'scale', 'scale_x', 'scale_y', 'scale_z',
+            'origin', 'origin_x', 'origin_y', 'origin_z',
+            'text', 'on_click', 'icon', 'collider', 'shader', 'curve', 'ignore',
+            'vertices', 'triangles', 'uvs', 'normals', 'colors', 'mode', 'thickness'
+            ):
+            line = line.replace(f'{e}=' , f'<olive>{e}</olive>=')
+
+
+        # colorize numbers
         for i in range(10):
-            line = line.replace(f'{i}', f'<font color="darkgoldenrod">{i}</font>')
+            line = line.replace(f'{i}', f'<yellow>{i}</yellow>')
 
         # destyle Vec2 and Vec3
-        line = line.replace(f'<font color="darkgoldenrod">3</font>(', '3(')
-        line = line.replace(f'<font color="darkgoldenrod">2</font>(', '2(')
+        line = line.replace(f'<yellow>3</yellow>(', '3(')
+        line = line.replace(f'<yellow>2</yellow>(', '2(')
 
         # highlight class name
         if name:
@@ -189,11 +211,11 @@ def get_example(str, name=None):    # use name to highlight the relevant class
         quotes = re.findall('\'(.*?)\'', line)
         quotes = ['\'' + q + '\'' for q in quotes]
         for q in quotes:
-            line = line.replace(q, '<font color="seagreen">' + q + '</font>')
+            line = line.replace(q, '<green>' + q + '</green>')
 
         if ' #' in line:
-            line = line.replace(' #', ' <font color="gray">#')
-            line += '</font>'
+            line = line.replace(' #', ' <gray>#')
+            line += '</gray>'
         styled_lines.append(line)
     lines = styled_lines
 
@@ -239,6 +261,7 @@ for f in path.glob('*.py'):
 
     with open(f, encoding='utf8') as t:
         code = t.read()
+        code = code.replace('<', '&lt').replace('>', '&gt')
 
         if not is_singleton(code):
             name = f.stem
@@ -287,6 +310,8 @@ for f in path.glob('prefabs/*.py'):
 
     with open(f, encoding='utf8') as t:
         code = t.read()
+        code = code.replace('<', '&lt').replace('>', '&gt')
+
         classes = get_classes(code)
         for class_name, class_definition in classes.items():
             if 'def __init__' in class_definition:
@@ -420,12 +445,12 @@ def make_html(style, file_name):
               color: {link_color};
             }}
 
-            g {{
-                color: gray;
-            }}
-            purple {{
-                color: hsl(289.0, 50%, 50%);
-            }}
+            purple {{color: hsl(289.0, 50%, 50%);}}
+            gray {{color: gray;}}
+            olive {{color: olive;}}
+            yellow {{color: darkgoldenrod;}}
+            green {{color: seagreen;}}
+            blue {{color: hsl(210, 50%, 50%);}}
 
             .example {{
                 padding-left: 1em;
@@ -476,8 +501,8 @@ z-index: 1;
             if '(' in base_name:
                 base_name = base_name.split('(')[0]
                 base_name = base_name.split(')')[0]
-            name = name.replace('(', '<g>(')
-            name = name.replace(')', ')</g>')
+            name = name.replace('(', '<gray>(')
+            name = name.replace(')', ')</gray>')
 
             v = lerp(text_color.v, background_color.v, .2)
             # v = .5
@@ -492,20 +517,20 @@ z-index: 1;
             location = str(location)
             if 'ursina' in location:
                 location = location.split('ursina')[-1].replace('\\', '.')[:-3]
-                html += f'''<g>ursina{location}</g><br><br>'''
+                html += f'''<gray>ursina{location}</gray><br><br>'''
             if params:
                 params = f'<params class="params">{params}</params>\n'
                 html += params + '\n'
 
             for e in attrs:
                 if ' = ' in e:
-                    e = f'''{e.split(' = ')[0]}<g> = {e.split(' = ')[1]}</g> '''
+                    e = f'''{e.split(' = ')[0]}<gray> = {e.split(' = ')[1]}</gray> '''
 
                 html += f'''{e}\n'''
 
             html += '\n'
             for e in funcs:
-                e = f'{e[0]}(<g>{e[1]}</g>)   <g>{e[2]}</g>'
+                e = f'{e[0]}(<gray>{e[1]}</gray>)   <gray>{e[2]}</gray>'
                 html += e + '\n'
 
             if example:
@@ -514,7 +539,7 @@ z-index: 1;
 
             html += '\n</div></div>'
 
-            html = html.replace('<g></g>', '')
+            html = html.replace('<gray></gray>', '')
 
         sidebar += '\n'
 

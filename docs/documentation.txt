@@ -12,16 +12,22 @@
 
     [Installation, installation.html]
     [Entity Basics, entity_basics.html]
-    [Coordinate System, coordinate_system.html]
+    [Ursina's Coordinate System, coordinate_system.html]
     [F.A.Q., faq.html]
-    [Building, building.html]
+    [Build and Release, building.html]
 
 
 ## Tutorials
 
     [Introduction, introduction_tutorial.html, icons/entity_basics_icon.jpg]
     [Inventory Tutorial, inventory_tutorial.html, icons/inventory_icon.jpg]
+    [Platformer Tutorial, platformer_tutorial.html, icons/installation_guide_icon.jpg]
 
+
+## Video Tutorials
+
+    [Introduction to Ursina (Breakout) ↗, https://www.youtube.com/watch?v=P8J6K6p-JzY&t=1273s&ab_channel=SanjinDedic]
+    [Creating Minecraft in Python ↗, https://www.youtube.com/watch?v=DHSRaVeQxIk&t=415s&ab_channel=ClearCode]
 
 
 ## Example Projects
@@ -36,3 +42,11 @@
 
     [Platformer, https://github.com/pokepetter/ursina/blob/master/samples/platformer.py, icons/installation_guide_icon.jpg]
     [Value of Life, https://github.com/pokepetter/ld44_life_is_currency, icons/value_of_life_icon.jpg]
+    [Castaway, https://github.com/pokepetter/pyweek_30_castaway, icons/castaway_icon.jpg]
+
+
+
+
+
+
+.

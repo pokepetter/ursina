@@ -10,6 +10,13 @@
     span {background-color: rgba(0, 0, 0, 0.55); padding: .1em; line-height: 1.35em;}
     img {max-width: 100%; vertical-align: top;}
     .code_block {background-color: whitesmoke; padding: 10px; margin: 0; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;}
+
+    purple {color: hsl(289.0, 50%, 50%);}
+    gray {color: gray;}
+    olive {color: olive;}
+    yellow {color: darkgoldenrod;}
+    green {color: seagreen;}
+    blue {color: hsl(210, 50%, 50%);}
 a.button {background-color: #6b943a;} a.button:hover {background-color: #a9a33a}
 </style>
 <html>
@@ -22,11 +29,10 @@ a.button {background-color: #6b943a;} a.button:hover {background-color: #a9a33a}
 ursina engine<br>
 ʕ •ᴥ•ʔゝ□<br>
 <div style="font-size: 25.0px;">
---------------------------------------<br>
 <div style="font-weight: normal;">
 open source game engine<br>
+<br>
 <div style="font-weight: bold;">
---------------------------------------<br>
 <div style="font-weight: normal;">
 <br>
 <a href=" #Getting Started" class="button">Download</a>&nbsp;&nbsp;<a href=" documentation.html" class="button">Documentation</a><br>
@@ -103,7 +109,8 @@ Getting Started<br>
 2) Open cmd/terminal and type:
 <br>
 <div class="code_block" style="margin-left: 1em;">pip install ursina
-<br></div>
+
+</div>
 <br>
 
 <br>
@@ -111,14 +118,16 @@ If you want to install the newest version from GitHub, you can install like this
 <br>
 <div class="code_block" style="margin-left: 1em;">pip install <a href="https://github.com/pokepetter/ursina/archive/master.zip
 ">https://github.com/pokepetter/ursina/archive/master.zip
-</a><br></div>
+</a>
+</div>
 <br>
 or
 <br>
 
 <br>
 <div class="code_block" style="margin-left: 1em;">pip install git+https://github.com/pokepetter/ursina.git
-<br></div>
+
+</div>
 <br>
 Keep in mind that things *could* break.
 <br>
@@ -133,15 +142,18 @@ repo and install as develop like this. Make sure you have git installed. <a href
 </a><br>
 <div class="code_block" style="margin-left: 1em;">git clone <a href="https://github.com/pokepetter/ursina.git
 ">https://github.com/pokepetter/ursina.git
-</a><br>python setup.py develop
-<br></div>
+</a>
+python setup.py develop
+
+</div>
 <br>
 Also install any of the optional dependencies you want from the list below,
 <br>
 or install them all with:
 <br>
 <div class="code_block" style="margin-left: 1em;">pip install ursina[extras]
-<br></div>
+
+</div>
 <br>
 
 <br>
@@ -150,7 +162,8 @@ On some systems you might have to use pip3 instead of pip in order to use Python
 If the pip command is not found, you can use:
 <br>
 <div class="code_block" style="margin-left: 0em;">python -m pip install ursina
-<br></div><br>
+
+</div><br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
 <div id="Dependencies"/><br>
@@ -179,7 +192,22 @@ Examples<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;Entity Example:<br>
 <br>
-<div class="code_block" style="margin-left: 2em;"><font color="purple">from</font> ursina <font color="purple">import</font> *            <font color="gray"># <font color="purple">import</font> everything we need with one line.</font><br><br>app = Ursina()<br>ground = <font color="olive">Entity</font>(<br>    model = <font color="green">'cube'</font>,<br>    color = color.magenta,<br>    z = -.1,<br>    y = -3,<br>    origin = (0, .5),<br>    scale = (50, 1, 10),<br>    collider = <font color="green">'box'</font><br>    )<br><br>app.run()                       <font color="gray"># opens a window and starts the game.</font><br><br></div><br>
+<div class="code_block" style="margin-left: 2em;"><purple>from</purple> ursina <purple>import</purple> *            <gray># <purple>import</purple> everything we need with one line.</gray>
+
+app = Ursina()
+ground = <olive>Entity</olive>(
+    model = <green>'cube'</green>,
+    color = color.magenta,
+    z = -.<yellow>1</yellow>,
+    y = -<yellow>3</yellow>,
+    origin = (<yellow>0</yellow>, .<yellow>5</yellow>),
+    scale = (<yellow>5</yellow><yellow>0</yellow>, <yellow>1</yellow>, <yellow>1</yellow><yellow>0</yellow>),
+    collider = <green>'box'</green>
+    )
+
+app.run()                       <gray># opens a window and starts the game.</gray>
+
+</div><br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
 <div id="How do I make a game?"/><br>
@@ -191,12 +219,25 @@ How do I make a game?<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) Create an empty .py file called 'ursina_game.py'<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) Copy this text into your new file:<br>
 <br>
-<div class="code_block" style="margin-left: 3em;"><font color="purple">from</font> ursina <font color="purple">import</font> *<br><br>app = Ursina()<br><br>player = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.orange, scale_y=2)<br><br><font color="purple">def</font> update():   <font color="gray"># update gets automatically called.</font><br>    player.x += held_keys[<font color="green">'d'</font>] * .1<br>    player.x -= held_keys[<font color="green">'a'</font>] * .1<br><br>app.run()   <font color="gray"># opens a window and starts the game.</font><br><br></div><br>
+<div class="code_block" style="margin-left: 3em;"><purple>from</purple> ursina <purple>import</purple> *
+
+app = Ursina()
+
+player = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.orange, scale_<olive>y</olive>=<yellow>2</yellow>)
+
+<purple>def</purple> update():   <gray># update gets automatically called.</gray>
+    player.x += held_keys[<green>'d'</green>] * .<yellow>1</yellow>
+    player.x -= held_keys[<green>'a'</green>] * .<yellow>1</yellow>
+
+app.run()   <gray># opens a window and starts the game.</gray>
+
+</div><br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3) Type this in the terminal to start the game. I recommend setting a hotkey<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for this in your text editor:<br>
 <br>
-<div class="code_block" style="margin-left: 3em;">python ursina_game.py<br></div><br>
+<div class="code_block" style="margin-left: 3em;">python ursina_game.py
+</div><br>
 &nbsp;&nbsp;&nbsp;&nbsp;The game should start! You can now move the orange box around with 'a' and 'd'!<br>
 &nbsp;&nbsp;&nbsp;&nbsp;To close the window, you can by default, press shift+q or press the red x.<br>
 <br>

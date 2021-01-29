@@ -45,7 +45,7 @@ for path in files:
     print('converted:', path)
     text = f'''
 [← Back, documentation.html]
-# arial, normal, size 1, width 1024
+# arial, normal, size 1, width 1250
 # center, bold, size 4
 {path.stem.title().replace('_',' ')}
 # left, size 1, normal\n\n\n

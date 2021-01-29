@@ -17,7 +17,7 @@ player = PlatformerController2d(y=1, z=.01, scale_y=1, max_jumps=2)
 # If we try to play the game right now, you'll fall for all infinity, so let's add a ground:
 ground = Entity(model='quad', scale_x=10, collider='box', color=color.black)
 
-# ## Making a level editor
+# ## Making a "level editor"
 #
 # Now, it works, but it's a pretty boring game, so let's make a more interesting level.
 # There are many ways to go about making a level, but for this we'll make an image
@@ -27,8 +27,9 @@ ground = Entity(model='quad', scale_x=10, collider='box', color=color.black)
 #
 #
 #
-# To generate the level we'll loop thrugh all the pixels in the image and do
-# something based on the color of the pixel.
+# To generate the level we'll loop through all the pixels in the image above and do
+# something based on the color of the pixel. Make sure to save this image to same
+# folder or below as your script.
 #
 # If it's white, it's air, so we'll skip it.
 level_parent = Entity()
@@ -49,30 +50,52 @@ def make_level(texture):
                 if not collider:
                     collider = Entity(parent=level_parent, position=(x,y), model='cube', origin=(-.5,-.5), collider='box', visible=False)
                 else:
+                    # instead of creating a new collider per tile, stretch the previous collider right.
                     collider.scale_x += 1
             else:
                 collider = None
 
-            # If it's green, we'll place the player there
+            # If it's green, we'll place the player there.
             if col == color.green:
                 player.position = (x, y)
 
+
+make_level(load_texture('platformer_tutorial_level'))   # generate the level
+pass
+
 # ## Positioning the camera
 #
-# Set the camera to orthographic so there's no perspective
+# Set the camera to orthographic so there's no perspective.
 # Move the camera to the middle of the level and set the fov so the level fits nicely.
 # Setting the fov on an orthigraphic camera means setting hoe many units vetically the camera can see.
 camera.orthographic = True
 camera.position = (30/2,8)
 camera.fov = 16
 
-# generate the level
-make_level(load_texture('platformer_tutorial_level'))
-
-# start the game
-app.run()
 
 
-# Optimizing colliders
-# Adding playter graphics and animations
-# Adding level graphics
+app.run()   # start the game
+
+
+# ## Adding player graphics and animations
+#
+# Loads an image sequence as a frame animation.
+# So if you have some frames named image_000.png, image_001.png, image_002.png and so on,
+# you can load it like this: Animation('image')
+# You can also load a .gif by including the file type: Animation('image.gif')
+#
+player.walk_animation = Animation('player_walk')
+
+# the platofrmer controller has an Animator and will toggle the state based on
+# whether it's standing still, is walking or is jumping.
+# All the Animator does is to make sure only Animation is enabled at the same time.
+# Otherwise they would overlap.
+self.animator = Animator({'idle' : None, 'walk' : None, 'jump' : None})
+
+
+
+# ## Adding level graphics
+#
+# Coming later
+camera.orthographic = True
+camera.position = (30/2,8)

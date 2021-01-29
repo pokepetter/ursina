@@ -4,11 +4,10 @@
 ursina engine
 ʕ •ᴥ•ʔゝ□
 # size 1.25, bold
---------------------------------------
 # normal
 open source game engine
+
 # bold
---------------------------------------
 # normal
 
 [Download, #Getting Started]  [Documentation, documentation.html]
@@ -87,20 +86,20 @@ open source game engine
     Entity Example:
 
         # code
-        from ursina import *            # import everything we need with one line.
+from ursina import *            # import everything we need with one line.
 
-        app = Ursina()
-        ground = Entity(
-            model = 'cube',
-            color = color.magenta,
-            z = -.1,
-            y = -3,
-            origin = (0, .5),
-            scale = (50, 1, 10),
-            collider = 'box'
-            )
+app = Ursina()
+ground = Entity(
+    model = 'cube',
+    color = color.magenta,
+    z = -.1,
+    y = -3,
+    origin = (0, .5),
+    scale = (50, 1, 10),
+    collider = 'box'
+    )
 
-        app.run()                       # opens a window and starts the game.
+app.run()                       # opens a window and starts the game.
 
         # text
 
@@ -113,17 +112,17 @@ open source game engine
         2) Copy this text into your new file:
 
             # code
-            from ursina import *
+from ursina import *
 
-            app = Ursina()
+app = Ursina()
 
-            player = Entity(model='cube', color=color.orange, scale_y=2)
+player = Entity(model='cube', color=color.orange, scale_y=2)
 
-            def update():   # update gets automatically called.
-                player.x += held_keys['d'] * .1
-                player.x -= held_keys['a'] * .1
+def update():   # update gets automatically called.
+    player.x += held_keys['d'] * .1
+    player.x -= held_keys['a'] * .1
 
-            app.run()   # opens a window and starts the game.
+app.run()   # opens a window and starts the game.
 
             # text
 
@@ -132,7 +131,7 @@ open source game engine
            for this in your text editor:
 
             # code
-            python ursina_game.py
+python ursina_game.py
             # text
 
     The game should start! You can now move the orange box around with 'a' and 'd'!

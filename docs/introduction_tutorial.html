@@ -11,6 +11,13 @@
     img {max-width: 100%; vertical-align: top;}
     .code_block {background-color: whitesmoke; padding: 10px; margin: 0; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;}
 
+    purple {color: hsl(289.0, 50%, 50%);}
+    gray {color: gray;}
+    olive {color: olive;}
+    yellow {color: darkgoldenrod;}
+    green {color: seagreen;}
+    blue {color: hsl(210, 50%, 50%);}
+
 </style>
 <html>
 <left>
@@ -40,38 +47,69 @@ Creating and running a game<br>
 <br>
 <br>
 3) At the top of the file, write:<br>
-<div class="code_block" style="margin-left: 1em;"><font color="purple">from</font> ursina <font color="purple">import</font> *<br></div>&nbsp;&nbsp;&nbsp;&nbsp;This will import all the necessary things we need from the engine in one line.<br>
+<div class="code_block" style="margin-left: 2em;"><purple>from</purple> ursina <purple>import</purple> *
+</div><br>
+&nbsp;&nbsp;&nbsp;&nbsp;This will import all the necessary things we need from the engine in one line.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;It means something like 'from ursina import all'. It's also possible to import parts of the engine<br>
 &nbsp;&nbsp;&nbsp;&nbsp;like this:<br>
-<div class="code_block" style="margin-left: 1em;"><font color="purple">from</font> ursina.prefabs <font color="purple">import</font> Button<br></div>&nbsp;&nbsp;&nbsp;&nbsp;Or import something that's not included by default:<br>
-<div class="code_block" style="margin-left: 1em;"><font color="purple">from</font> ursina.prefabs.first_person_controller <font color="purple">import</font> FirstPersonController<br></div><br>
+<div class="code_block" style="margin-left: 2em;"><purple>from</purple> ursina.prefabs <purple>import</purple> Button
+</div><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Or import something that's not included by default:<br>
+<div class="code_block" style="margin-left: 2em;"><purple>from</purple> ursina.prefabs.first_person_controller <purple>import</purple> FirstPersonController
+</div><br>
 <br>
 4) Here's a really basic example game with comments to explain what were doing.<br>
 &nbsp;&nbsp; We will simply make a orange box move right and left when we press 'd' or 'a'.<br>
 <br>
-<div class="code_block" style="margin-left: 1em;"><font color="purple">from</font> ursina <font color="purple">import</font> *<br><br><font color="gray"># create a window</font>
-app = Ursina()<br><br><font color="gray"># most things in ursina are Entities. An Entity is a thing you place in the world.</font>
-<font color="gray"># you can think of them as GameObjects in Unity or Actors in Unreal.</font>
-<font color="gray"># the first paramenter tells us the Entity's model will be a 3d-model called 'cube'.</font>
-<font color="gray"># ursina includes some basic models like 'cube', 'sphere' and 'quad'.</font>
-<br><font color="gray"># the next parameter tells us the model's color should be orange.</font>
-<br><font color="gray"># 'scale_y=2' tells us how big the entity should be in the vertical axis, how tall it should be.</font>
-<font color="gray"># in ursina, positive x is right, positive y is up, and positive z is forward.</font>
-<br>player = <font color="olive">Entity</font>(model=<font color="green">'cube'</font>, color=color.orange, scale_y=2)<br><br><font color="gray"># create a function called 'update'.</font>
-<font color="gray"># this will automatically get called by the engine every frame.</font>
-<br><font color="purple">def</font> update():<br>    player.x += held_keys[<font color="green">'d'</font>] * time.dt<br>    player.x -= held_keys[<font color="green">'a'</font>] * time.dt<br><br><font color="gray"># this part will make the player move left or right based on our input.</font>
-<font color="gray"># to check which keys are held down, we can check the held_keys dictionary.</font>
-<font color="gray"># 0 means not pressed and 1 means pressed.</font>
-<font color="gray"># time.dt is simply the time since the last frame. by multiplying with this, the</font>
-<font color="gray"># player will move at the same speed regardless of how fast the game runs.</font>
-<br><br><font color="purple">def</font> input(key):<br>    if key == <font color="green">'space'</font>:<br>        player.y += 1<br>        invoke(setattr, player, <font color="green">'y'</font>, player.y-1, delay=.25)<br><br><br><font color="gray"># start running the game</font>
-app.run()<br><br><br></div><br>
+<div class="code_block" style="margin-left: 1em;"><purple>from</purple> ursina <purple>import</purple> *
+
+<gray># create a window</gray>
+app = Ursina()
+
+<gray># most things in ursina are Entities. An <olive>Entity</olive> is a thing you place in the world.</gray>
+<gray># you can think of them as GameObjects in Unity or Actors in Unreal.</gray>
+<gray># the first paramenter tells us the <olive>Entity</olive><green>'s model will be a <yellow>3</yellow>d-model called '</green>cube'.</gray>
+<gray># ursina includes some basic models like <green>'cube'</green>, <green>'sphere'</green> and <green>'quad'</green>.</gray>
+
+<gray># the next parameter tells us the model's color should be orange.</gray>
+
+<gray># <green>'scale_<olive>y</olive>=<yellow>2</yellow>'</green> tells us how big the entity should be in the vertical axis, how tall it should be.</gray>
+<gray># in ursina, positive x is right, positive y is up, and positive z is forward.</gray>
+
+player = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.orange, scale_<olive>y</olive>=<yellow>2</yellow>)
+
+<gray># create a function called <green>'update'</green>.</gray>
+<gray># this will automatically get called by the engine every frame.</gray>
+
+<purple>def</purple> update():
+    player.x += held_keys[<green>'d'</green>] * time.dt
+    player.x -= held_keys[<green>'a'</green>] * time.dt
+
+<gray># this part will make the player move left or right based on our input.</gray>
+<gray># to check which keys are held down, we can check the held_keys dictionary.</gray>
+<gray># <yellow>0</yellow> means <purple>not</purple> pressed and <yellow>1</yellow> means pressed.</gray>
+<gray># time.dt is simply the time since the last frame. by multiplying with this, the</gray>
+<gray># player will move at the same speed regardless of how fast the game runs.</gray>
+
+
+<purple>def</purple> input(key):
+    <purple>if</purple> key == <green>'space'</green>:
+        player.y += <yellow>1</yellow>
+        invoke(setattr, player, <green>'y'</green>, player.y-<yellow>1</yellow>, dela<olive>y</olive>=.<yellow>2</yellow><yellow>5</yellow>)
+
+
+<gray># start running the game</gray>
+app.run()
+
+
+</div><br>
 <br>
 5) Now we have to tell Python to run the script. To do this, open the command line and<br>
 &nbsp;&nbsp; go to the current folder. An easy way to do this is to type 'cmd' in the address bar.<br>
 &nbsp;&nbsp; Run the command below.<br>
 <br>
-<div class="code_block" style="margin-left: 1em;">python main.py<br></div><br>
+<div class="code_block" style="margin-left: 1em;">python main.py
+</div><br>
 &nbsp;&nbsp; An alternative is to install the 'atom-python-run' package in Atom so you can start<br>
 &nbsp;&nbsp; the game by pressing F5.<br>
 <br>

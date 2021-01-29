@@ -17,19 +17,21 @@ Introduction Tutorial
 
 
 3) At the top of the file, write:
-    # code
-    from ursina import *
-    # text
+        # code
+        from ursina import *
+        # text
+
     This will import all the necessary things we need from the engine in one line.
     It means something like 'from ursina import all'. It's also possible to import parts of the engine
     like this:
-    # code
-    from ursina.prefabs import Button
-    # text
+        # code
+        from ursina.prefabs import Button
+        # text
+
     Or import something that's not included by default:
-    # code
-    from ursina.prefabs.first_person_controller import FirstPersonController
-    # text
+        # code
+        from ursina.prefabs.first_person_controller import FirstPersonController
+        # text
 
 
 4) Here's a really basic example game with comments to explain what were doing.
