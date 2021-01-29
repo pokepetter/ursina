@@ -63,7 +63,8 @@ class WindowPanel(Draggable):
                         c.world_parent = self
                         c.x = -.5 * .9
                         c.scale = (.9*2, 20)
-                        height += c.scale_y
+                        print('-------------', c.scale_y * c.height)
+                        height += 1
 
                     elif hasattr(c, 'scale_y'):
                         height += c.scale_y
@@ -114,14 +115,15 @@ if __name__ == '__main__':
         content=(
             Text('Name:'),
             InputField(name='name_field'),
-            Text('Age:'),
-            InputField(name='age_field'),
-            Text('Phone Number:'),
-            InputField(name='phone_number_field'),
+            # Text('Age:'),
+            # InputField(name='age_field'),
+            # Text('Phone Number:'),
+            # InputField(name='phone_number_field'),
             # Space(height=1),
             # Text('Send:'),
             Button(text='Submit', color=color.azure),
-            Slider()
+            Slider(),
+            Slider(),
             # ButtonGroup(('test', 'eslk', 'skffk'))
             ),
             # popup=True

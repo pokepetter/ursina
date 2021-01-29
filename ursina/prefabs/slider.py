@@ -12,6 +12,7 @@ class Slider(Entity):
             default = min
         self.default = default
         self.step = 0
+        self.height = height
 
         self.label = Text(parent=self, origin=(0.5, 0), x=-0.025, text=text)
         bg_color = color.black66
@@ -148,7 +149,9 @@ if __name__ == '__main__':
     # origin = Entity(model='cube', color=color.green, scale = .05)
     box = Entity(model='cube', origin_y=-.5, scale=1, color=color.orange)
     slider = Slider(0, 20, default=10, height=Text.size*3, y=-.4, step=1   )
-    slider = ThinSlider(x=-.4, y=-.47, text='contrast', dynamic=True)
+    slider = ThinSlider(x=-.4, y=-.37, text='contrast', dynamic=True)
+    slider.label.origin = (0,0)
+    slider.label.position = (.25, -.1)
     # thin_slider = ThinSlider(0, 255, default=1, text='thin_slider', height=Text.size*3, y=-.4, step=1, vertical=False, x=-.7)
     # Text('debug text')
     def scale_box():
