@@ -59,6 +59,10 @@ def _destroy(entity, force_destroy=False):
     if entity.eternal and not force_destroy:
         return
 
+    if hasattr(entity, 'stop'):
+        entity.stop(False)
+        # return
+
     for c in entity.children:
         destroy(c)
 
