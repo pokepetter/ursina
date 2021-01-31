@@ -69,8 +69,7 @@ def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursina
 
 
 # find blender installations
-if not hasattr(application, 'blender_paths') and application.development_mode:
-    application.blender_paths = dict()
+if application.development_mode:
 
     if platform.system() == 'Windows':
         # get blender path by getting default program for '.blend' file extention
@@ -92,6 +91,7 @@ if not hasattr(application, 'blender_paths') and application.development_mode:
                     application.blender_paths[version_name] = list(blender_installation.glob('blender.exe'))[0]
         except:
             pass
+
     elif platform.system() == 'Linux':
         # Use "which" command to find blender
         which_process = subprocess.run(('which', 'blender'), stdout=subprocess.PIPE)
@@ -152,6 +152,12 @@ def load_blender_scene(name, path=application.asset_folder, load=True, reload=Fa
 
 
 def get_blender(blend_file):    # try to get a matching blender version in case we have multiple blender version installed
+    if not application.blender_paths:
+        raise Exception('error: trying to load .blend file, but no blender installation was found.')
+
+    if len(application.blender_paths) == 1:
+        return application.blender_paths['default']
+
     with open(blend_file, 'rb') as f:
         blender_version_number = (f.read(12).decode("utf-8"))[-3:]   # get version from start of .blend file e.g. 'BLENDER-v280'
         blender_version_number = blender_version_number[0] + '.' + blender_version_number[1:2]

@@ -17,6 +17,7 @@ print_entity_definition = False
 
 package_folder = Path(__file__).parent
 asset_folder = Path(sys.argv[0]).parent
+blender_paths = dict()
 
 development_mode = True
 dirs = [e.stem for e in asset_folder.parent.iterdir() if e.is_dir()]
