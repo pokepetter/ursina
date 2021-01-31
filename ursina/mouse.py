@@ -3,10 +3,10 @@ import time
 from panda3d.core import *
 from panda3d.core import CollisionTraverser, CollisionNode
 from panda3d.core import CollisionHandlerQueue, CollisionRay
-from ursina import camera
-from ursina import scene
 from ursina import application
-from ursina import window
+from ursina.window import instance as window
+from ursina.scene import instance as scene
+from ursina.camera import instance as camera
 from ursina.hit_info import HitInfo
 from ursina.ursinamath import distance
 
@@ -303,7 +303,8 @@ class Mouse():
 
 
 
-sys.modules[__name__] = Mouse()
+instance = Mouse()
+
 
 if __name__ == '__main__':
     from ursina import *

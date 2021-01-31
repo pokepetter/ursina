@@ -225,7 +225,8 @@ def get_example(str, name=None):    # use name to highlight the relevant class
 
 def is_singleton(str):
     for l in str.split('\n'):
-        if l.startswith('sys.modules['):
+        # if l.startswith('sys.modules['):
+        if l.startswith('instance = '):
             return True
 
     result = False

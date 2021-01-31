@@ -3,7 +3,7 @@ import sys
 from ursina import *
 from ursina.entity import Entity
 from ursina.mesh import Mesh
-from ursina import scene
+from ursina.scene import instance as scene
 from panda3d.core import CollisionTraverser, CollisionNode, CollisionHandlerQueue
 from panda3d.core import CollisionRay, CollisionSegment, CollisionBox
 from ursina.vec3 import Vec3
@@ -94,7 +94,7 @@ class Raycaster(Entity):
         return self.hit
 
 
-    def boxcast(self, origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_target=scene, ignore=list(), debug=False):
+    def boxcast(self, origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_target=scene, ignore=list(), debug=False): # similar to raycast, but with width and height
         if isinstance(thickness, (int, float, complex)):
             thickness = (thickness, thickness)
 
@@ -125,15 +125,48 @@ class Raycaster(Entity):
         return hit_info
 
 
-sys.modules[__name__] = Raycaster()
+instance = Raycaster()
+sys.modules[__name__] = instance
 
 
 
 
 if __name__ == '__main__':
     app = Ursina()
-    from ursina.entity import Entity
 
+    '''
+    Casts a ray from *origin*, in *direction*, with length *distance* and returns
+    a HitInfo containing information about what it hit. This ray will only hit entities with a collider.
+
+    Use optional *traverse_target* to only be able to hit a specific entity and its children/descendants.
+    Use optional *ignore* list to ignore certain entities.
+    Setting debug to True will draw the line on screen.
+
+    Example where we only move if a wall is not hit:
+    '''
+
+
+    class Player(Entity):
+
+        def update(self):
+            self.direction = Vec3(
+                self.forward * (held_keys['w'] - held_keys['s'])
+                + self.right * (held_keys['d'] - held_keys['a'])
+                ).normalized()  # get the direction we're trying to walk in.
+
+            origin = self.world_position + (self.up*.5) # the ray should start slightly up from the ground so we can walk up slopes or walk over small objects.
+            hit_info = raycast(origin , self.direction, ignore=(self,), distance=.5, debug=False)
+            if not hit_info.hit:
+                self.position += self.direction * 5 * time.dt
+
+    Player(model='cube', origin_y=-.5, color=color.orange)
+    wall_left = Entity(model='cube', collider='box', scale_y=3, origin_y=-.5, color=color.azure, x=-4)
+    wall_right = duplicate(wall_left, x=4)
+    camera.y = 2
+    app.run()
+
+    # test
+    breakpoint()
     d = Entity(parent=scene, position=(0,0,2), model='cube', color=color.orange, collider='box', scale=2)
     e = Entity(model='cube', color=color.lime)
 

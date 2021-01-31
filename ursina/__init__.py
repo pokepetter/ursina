@@ -7,6 +7,9 @@ import random
 from copy import copy, deepcopy
 from math import floor, ceil, inf
 
+from ursina.window import instance as window
+from ursina.camera import instance as camera
+from ursina.mouse import instance as mouse
 from ursina.main import Ursina
 from ursina.ursinamath import *
 from ursina.ursinastuff import *

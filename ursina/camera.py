@@ -5,8 +5,8 @@ from panda3d.core import Camera as PandaCamera
 from panda3d.core import Texture as PandaTexture
 from direct.filter.FilterManager import FilterManager
 from ursina import application
-from ursina import scene
-from ursina import window
+from ursina.scene import instance as scene
+from ursina.window import instance as window
 from ursina import color
 from ursina.texture import Texture
 from ursina.shader import Shader
@@ -187,7 +187,7 @@ class Camera(Entity):
             print('no filter quad')
 
 
-sys.modules[__name__] = Camera()
+instance = Camera()
 
 
 if __name__ == '__main__':

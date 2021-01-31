@@ -10,8 +10,8 @@ from pathlib import Path
 
 from ursina import application
 from ursina.text import Text
-from ursina import window
-from ursina import scene
+from ursina.window import instance as window
+from ursina.scene import instance as scene
 from ursina.sequence import Sequence, Func, Wait
 
 

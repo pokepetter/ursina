@@ -4,11 +4,11 @@ from direct.showbase.ShowBase import ShowBase
 from direct.task.Task import Task
 
 from ursina import application
-from ursina import scene
-from ursina import camera
-from ursina import window
-from ursina import mouse
 from ursina import input_handler
+from ursina.window import instance as window
+from ursina.scene import instance as scene
+from ursina.camera import instance as camera
+from ursina.mouse import instance as mouse
 
 import __main__
 

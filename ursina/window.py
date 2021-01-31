@@ -7,7 +7,7 @@ from screeninfo import get_monitors
 from ursina.entity import Entity
 from ursina import color
 from ursina import application
-from ursina import scene    # for toggling collider visibility
+from ursina.scene import instance as scene    # for toggling collider visibility
 
 
 class Window(WindowProperties):
@@ -306,7 +306,8 @@ class Window(WindowProperties):
             object.__setattr__(self, name, value)
 
 
-sys.modules[__name__] = Window()
+instance = Window()
+
 
 if __name__ == '__main__':
     from ursina import *

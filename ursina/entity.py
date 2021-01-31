@@ -29,7 +29,7 @@ from ursina.shader import Shader
 
 from ursina import color
 try:
-    from ursina import scene
+    from ursina.scene import instance as scene
 except:
     pass
 

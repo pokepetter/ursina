@@ -74,7 +74,7 @@ class Scene(NodePath):
             self.fog.setExpDensity(value)
 
 
-sys.modules[__name__] = Scene()
+instance = Scene()
 
 
 
