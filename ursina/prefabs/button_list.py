@@ -2,15 +2,15 @@ from ursina import *
 
 
 class ButtonList(Entity):
-    def __init__(self, button_dict, button_height=1.5, fit_height=True, width=.5, **kwargs):
+    def __init__(self, button_dict, button_height=1.365, fit_height=True, width=.5, **kwargs):
         super().__init__(
-        parent=camera.ui,
-        model='quad',
-        scale=(width,.9),
-        color=Button.color,
-        origin=(-.5,.5),
-        position=(-.25, .45),
-        collider='box',
+            parent=camera.ui,
+            model='quad',
+            scale=(width,.9),
+            color=Button.color,
+            origin=(-.5,.5),
+            position=(-.25, .45),
+            collider='box',
         )
         self.fit_height = fit_height
         self.button_height = button_height
@@ -93,10 +93,11 @@ if __name__ == '__main__':
         'four' :    Func(test, b=3, a=4),
         # 'five':     Sequence(1, Func(print, 'lol'), loop=True),
     }
-    # for i in range(6, 25):
-    #     button_dict[f'button {i}'] = Func(print, i)
+    for i in range(6, 12):
+        button_dict[f'button {i}'] = Func(print, i)
 
     bl = ButtonList(button_dict, fit_height=True)
+    # bl.scale *= .2
     bl.on_click = Func(setattr, bl, 'enabled', False)
 
     # bl.button_dict = {'a':Func(print,'lodlw'), 'b':1, 'c':1}
