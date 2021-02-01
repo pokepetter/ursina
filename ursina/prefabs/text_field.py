@@ -49,7 +49,7 @@ class TextField(Entity):
         # self.max_width_indicatior = Entity(
         #     parent=self.cursor_parent, model='quad', origin=(-.5,.5), scale=(100,.05), rotation_x=180, rotation_z=90, color=color.color(0,0,1,.05), x=80)
         self.cursor = Entity(parent=self.cursor_parent, model='cube', color=color.white33, origin=(-.5, -.5), scale=(.1, 1))
-        self.bg = Entity(parent=self.cursor_parent, model='cube', color=color.dark_gray, origin=(-.5,-.5), z=1, scale=(120, 20), collider='box')
+        self.bg = Entity(parent=self.cursor_parent, model='cube', color=color.dark_gray, origin=(-.5,-.5), z=1, scale=(120, 20), collider='box', visible=False)
 
         self.selection = None
         self.selection_parent = Entity(parent=self.cursor_parent)
@@ -550,21 +550,21 @@ class TextField(Entity):
 
 
 
-    # def update(self):
-    #     # self.debug_cursor.position = self.get_mouse_position()
-    #
-    #     if mouse.left:
-    #         x = round(mouse.point[0] * self.bg.scale_x)
-    #         y = floor(mouse.point[1] * self.bg.scale_y)
-    #
-    #         self.cursor.position = (x, y)
-    #         click_position = self.cursor.position
-    #         self.selection[1] = click_position
-    #
-    #         # if self.selection[1][1] < self.selection[0][1]:
-    #         #     self.selection = [self.selection[1], self.selection[0]]
-    #
-    #         self.draw_selection()
+    def update(self):
+        # self.debug_cursor.position = self.get_mouse_position()
+
+        if mouse.left:
+            x = round(mouse.point[0] * self.bg.scale_x)
+            y = floor(mouse.point[1] * self.bg.scale_y)
+
+            self.cursor.position = (x, y)
+            click_position = self.cursor.position
+            self.selection[1] = click_position
+
+            # if self.selection[1][1] < self.selection[0][1]:
+            #     self.selection = [self.selection[1], self.selection[0]]
+
+            self.draw_selection()
 
 
     def select_all(self):
@@ -593,13 +593,13 @@ class TextField(Entity):
         # draw selection
         for y in range(int(self.selection[0][1]), int(self.selection[1][1])):
             e = Entity(parent=self.selection_parent, model='cube', origin=(-.5, -.5),
-                color=color.color(120,1,1,.1), double_sided=True, position=(0,y), ignore=True, scale_x=len(lines[y]))
+                color=color.color(120,1,1,.1), double_sided=True, position=(0,y*1.15), ignore=True, scale_x=len(lines[y]))
             if y == self.selection[0][1]:
                 e.x = self.selection[0][0]
                 e.scale_x -= self.selection[0][0]
 
         e = Entity(parent=self.selection_parent, model='cube', origin=(-.5, -.5),
-            color=color.color(120,1,1,.1), double_sided=True, position=(0,end_y),
+            color=color.color(120,1,1,.1), double_sided=True, position=(0,end_y*1.15),
             ignore=True, scale_x=self.selection[1][0])
         if self.selection[0][1] == self.selection[1][1]:
             e.x = self.selection[0][0]
