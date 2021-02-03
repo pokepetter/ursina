@@ -15,6 +15,7 @@ class HealthBar(Button):
             )
 
         self.bar = Entity(parent=self, model='quad', origin=self.origin, z=-.01, color=color.red.tint(-.2), ignore=True)
+        self.animation_duration = .1
         self.lines = Entity(parent=self.bar, origin=self.origin, y=-1, color=color.black33, ignore=True)
         self.text_entity.scale *= .7
         self.roundness = .25
@@ -45,7 +46,7 @@ class HealthBar(Button):
         self._value = n
 
         self.lines.enabled = False
-        self.bar.animate_scale_x(n/self.max_value, duration=.1, curve=curve.in_out_bounce)
+        self.bar.animate_scale_x(n/self.max_value, duration=self.animation_duration, curve=curve.in_out_bounce)
         invoke(setattr, self.lines, 'enabled', True, delay=.1)
 
         self.text_entity.text = f'{n} / {self.max_value}'

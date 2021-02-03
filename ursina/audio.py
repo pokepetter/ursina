@@ -165,7 +165,7 @@ class Audio(Entity):
 if __name__ == '__main__':
     from ursina import Ursina, printvar
 
-    base = Ursina()
+    app = Ursina()
     # a = Audio('life_is_currency_wav', pitch=1)
     a = Audio('life_is_currency', pitch=1, loop=True, autoplay=True)
     print(a.clip)
@@ -184,4 +184,4 @@ if __name__ == '__main__':
             a.fade_out(duration=4, curve=curve.linear)
 
 
-    base.run()
+    app.run()
