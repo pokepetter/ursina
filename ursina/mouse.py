@@ -1,5 +1,6 @@
 import sys
 import time
+import traceback
 from panda3d.core import *
 from panda3d.core import CollisionTraverser, CollisionNode
 from panda3d.core import CollisionHandlerQueue, CollisionRay
@@ -133,17 +134,28 @@ class Mouse():
             self.left = True
             if self.hovered_entity:
                 if hasattr(self.hovered_entity, 'on_click'):
-                    self.hovered_entity.on_click()
+                    try:
+                        self.hovered_entity.on_click()
+                    except Exception as e:
+                        print(traceback.format_exc())
+                        application.quit()
+
                 for s in self.hovered_entity.scripts:
                     if hasattr(s, 'on_click'):
                         s.on_click()
+
             # double click
             if time.time() - self.prev_click_time <= self.double_click_distance:
                 base.input('double click')
 
                 if self.hovered_entity:
                     if hasattr(self.hovered_entity, 'on_double_click'):
-                        self.hovered_entity.on_double_click()
+                        try:
+                            self.hovered_entity.on_double_click()
+                        except Exception as e:
+                            print(traceback.format_exc())
+                            application.quit()
+
                     for s in self.hovered_entity.scripts:
                         if hasattr(s, 'on_double_click'):
                             s.on_double_click()
