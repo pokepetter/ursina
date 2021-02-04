@@ -53,7 +53,7 @@ class TextField(Entity):
 
         self.selection = None
         self.selection_parent = Entity(parent=self.cursor_parent)
-        self.register_mouse_input = True
+        self.register_mouse_input = False
 
         def blink_cursor():
             if self.cursor.color == color.cyan:
@@ -553,7 +553,7 @@ class TextField(Entity):
     def update(self):
         # self.debug_cursor.position = self.get_mouse_position()
 
-        if mouse.left:
+        if self.register_mouse_input and mouse.left:
             x = round(mouse.point[0] * self.bg.scale_x)
             y = floor(mouse.point[1] * self.bg.scale_y)
 
