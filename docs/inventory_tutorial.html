@@ -44,7 +44,7 @@ In this tutorial we will make a drag and drop inventory like this.<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;Let's begin by making an Inventory class<br>
 <br>
-<div class="code_block" style="margin-left: 2em;font-size: 16.0px;"><purple>from</purple> ursina <purple>import</purple> *
+<div class="code_block" style="margin-left: 2em;"><purple>from</purple> ursina <purple>import</purple> *
 
 class Inventory(<olive>Entity</olive>):
     <purple>def</purple> __init__(self):
@@ -56,26 +56,24 @@ class Inventory(<olive>Entity</olive>):
     app = Ursina()
     inventory = Inventory()
     app.run()
-<gray># text, size <yellow>1</yellow></gray>
-
-
-
-<gray># size <yellow>2</yellow>, bold</gray>
-<div id="<yellow>2</yellow> Adding graphics"/>
-<yellow>2</yellow> Adding graphics
-<gray># size <yellow>1</yellow>, normal</gray>
-
-    However, <purple>if</purple> we run the code, we<green>'ll see that there'</green>s nothing visible.
-    Let<green>'s parent it to the ui and set the model to '</green>quad', an included model.
-
-<gray># code, size .<yellow>8</yellow></gray>
-<purple>from</purple> ursina <purple>import</purple> *
+</div><br>
+<br>
+<br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="2 Adding graphics"/><br>
+2 Adding graphics<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;However, if we run the code, we'll see that there's nothing visible.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Let's parent it to the ui and set the model to 'quad', an included model.<br>
+<br>
+<div class="code_block" style="margin-left: 2em;"><purple>from</purple> ursina <purple>import</purple> *
 
 class Inventory(<olive>Entity</olive>):
     <purple>def</purple> __init__(self):
         super().__init__(
-            parent = camera.ui,                                         <gray># +</gray>
-            model = <green>'quad'</green>                                              <gray># +</gray>
+<mark>            parent = camera.ui,                                         </mark>
+<mark>            model = <green>'quad'</green>                                              </mark>
             )
 
 
@@ -84,31 +82,29 @@ class Inventory(<olive>Entity</olive>):
     app = Ursina()
     inventory = Inventory()
     app.run()
-<gray># text, size <yellow>1</yellow></gray>
-
-    If we look at it now, we see it's a white square in the middle of the screen.
-    Let's set it to a nicer shape. We also want (<yellow>0</yellow>,<yellow>0</yellow>) to be in the upper left corner
-    because it makes it easier to add items later. Let's also give it a texture and a color.
-    If we have both, the color value will tint the texture.
-
-    Now, this is nice and all, but wouldn't it be nice to show a grid as well?
-    There are multiple way to do that, but in this case, we'll simply make the texture repeat
-    by setting texture_scale to (<yellow>5</yellow>,<yellow>6</yellow>). That'll nicely fit the size of our inventory.
-
-<gray># code, size .<yellow>8</yellow></gray>
-<purple>from</purple> ursina <purple>import</purple> *
+</div><br>
+&nbsp;&nbsp;&nbsp;&nbsp;If we look at it now, we see it's a white square in the middle of the screen.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Let's set it to a nicer shape. We also want (0,0) to be in the upper left corner<br>
+&nbsp;&nbsp;&nbsp;&nbsp;because it makes it easier to add items later. Let's also give it a texture and a color.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If we have both, the color value will tint the texture.<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Now, this is nice and all, but wouldn't it be nice to show a grid as well?<br>
+&nbsp;&nbsp;&nbsp;&nbsp;There are multiple way to do that, but in this case, we'll simply make the texture repeat<br>
+&nbsp;&nbsp;&nbsp;&nbsp;by setting texture_scale to (5,6). That'll nicely fit the size of our inventory.<br>
+<br>
+<div class="code_block" style="margin-left: 2em;"><purple>from</purple> ursina <purple>import</purple> *
 
 class Inventory(<olive>Entity</olive>):
     <purple>def</purple> __init__(self):
         super().__init__(
             parent = camera.ui,
             model = <green>'quad'</green>,
-            scale = (.<yellow>5</yellow>, .<yellow>8</yellow>),                                           <gray># +</gray>
-            origin = (-.<yellow>5</yellow>, .<yellow>5</yellow>),                                         <gray># +</gray>
-            position = (-.<yellow>3</yellow>,.<yellow>4</yellow>),                                        <gray># +</gray>
-            texture = <green>'white_cube'</green>,                                     <gray># +</gray>
-            texture_scale = (<yellow>5</yellow>,<yellow>8</yellow>),                                      <gray># +</gray>
-            color = color.dark_gray                                     <gray># +</gray>
+<mark>            scale = (.<yellow>5</yellow>, .<yellow>8</yellow>),                                           </mark>
+<mark>            origin = (-.<yellow>5</yellow>, .<yellow>5</yellow>),                                         </mark>
+<mark>            position = (-.<yellow>3</yellow>,.<yellow>4</yellow>),                                        </mark>
+<mark>            texture = <green>'white_cube'</green>,                                     </mark>
+<mark>            texture_scale = (<yellow>5</yellow>,<yellow>8</yellow>),                                      </mark>
+<mark>            color = color.dark_gray                                     </mark>
             )
 
 
@@ -117,19 +113,17 @@ class Inventory(<olive>Entity</olive>):
     app = Ursina()
     inventory = Inventory()
     app.run()
-<gray># text, size <yellow>1</yellow></gray>
-
-
-
-<gray># size <yellow>2</yellow>, bold</gray>
-<div id="<yellow>3</yellow> Adding placeholder items"/>
-<yellow>3</yellow> Adding placeholder items
-<gray># size <yellow>1</yellow>, normal</gray>
-
-    Let's try to add some items to the inventory.
-
-<gray># code, size .<yellow>8</yellow></gray>
-<purple>from</purple> ursina <purple>import</purple> *
+</div><br>
+<br>
+<br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="3 Adding placeholder items"/><br>
+3 Adding placeholder items<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Let's try to add some items to the inventory.<br>
+<br>
+<div class="code_block" style="margin-left: 2em;"><purple>from</purple> ursina <purple>import</purple> *
 
 class Inventory(<olive>Entity</olive>):
     <purple>def</purple> __init__(self):
@@ -149,21 +143,19 @@ class Inventory(<olive>Entity</olive>):
 <purple>if</purple> __name__ == <green>'__main__'</green>:
     app = Ursina()
     inventory = Inventory()
-    item = Button(<olive>parent</olive>=inventory, <olive>color</olive>=color.red, <olive>position</olive>=(<yellow>0</yellow>,<yellow>0</yellow>))            <gray># +</gray>
-    item = Button(<olive>parent</olive>=inventory, <olive>color</olive>=color.green, <olive>position</olive>=(<yellow>2</yellow>,<yellow>0</yellow>))          <gray># +</gray>
+<mark>    item = Button(<olive>parent</olive>=inventory, <olive>color</olive>=color.red, <olive>position</olive>=(<yellow>0</yellow>,<yellow>0</yellow>))            </mark>
+<mark>    item = Button(<olive>parent</olive>=inventory, <olive>color</olive>=color.green, <olive>position</olive>=(<yellow>2</yellow>,<yellow>0</yellow>))          </mark>
     app.run()
-<gray># text, size <yellow>1</yellow></gray>
-
-    Well, that didn't go as planned. The items cover the entire inventory and
-    the second item is way off to the left.
-    Let's fix this by making another object to put the items under.
-    Scale the object to the size of an item.
-
-    They also don't fit the grid. Fix that by setting origin to the upper left
-    corner, (-.<yellow>5</yellow>,.<yellow>5</yellow>).
-
-<gray># code, size .<yellow>8</yellow></gray>
-<purple>from</purple> ursina <purple>import</purple> *
+</div><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Well, that didn't go as planned. The items cover the entire inventory and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the second item is way off to the left.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Let's fix this by making another object to put the items under.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Scale the object to the size of an item.<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;They also don't fit the grid. Fix that by setting origin to the upper left<br>
+&nbsp;&nbsp;&nbsp;&nbsp;corner, (-.5,.5).<br>
+<br>
+<div class="code_block" style="margin-left: 2em;"><purple>from</purple> ursina <purple>import</purple> *
 
 class Inventory(<olive>Entity</olive>):
     <purple>def</purple> __init__(self):
@@ -178,38 +170,36 @@ class Inventory(<olive>Entity</olive>):
             color = color.dark_gray
             )
 
-        self.item_parent = <olive>Entity</olive>(<olive>parent</olive>=self, <olive>scale</olive>=(<yellow>1</yellow>/<yellow>5</yellow>,<yellow>1</yellow>/<yellow>8</yellow>))         <gray># +</gray>
+<mark>        self.item_parent = <olive>Entity</olive>(<olive>parent</olive>=self, <olive>scale</olive>=(<yellow>1</yellow>/<yellow>5</yellow>,<yellow>1</yellow>/<yellow>8</yellow>))         </mark>
 
 
 
 <purple>if</purple> __name__ == <green>'__main__'</green>:
     app = Ursina()
     inventory = Inventory()
-    item = Button(<olive>parent</olive>=inventory.item_parent, <olive>origin</olive>=(-.<yellow>5</yellow>,.<yellow>5</yellow>), <olive>color</olive>=color.red, <olive>position</olive>=(<yellow>0</yellow>,<yellow>0</yellow>))      <gray># +</gray>
-    item = Button(<olive>parent</olive>=inventory.item_parent, <olive>origin</olive>=(-.<yellow>5</yellow>,.<yellow>5</yellow>), <olive>color</olive>=color.green, <olive>position</olive>=(<yellow>2</yellow>,<yellow>0</yellow>))    <gray># +</gray>
+<mark>    item = Button(<olive>parent</olive>=inventory.item_parent, <olive>origin</olive>=(-.<yellow>5</yellow>,.<yellow>5</yellow>), <olive>color</olive>=color.red, <olive>position</olive>=(<yellow>0</yellow>,<yellow>0</yellow>))      </mark>
+<mark>    item = Button(<olive>parent</olive>=inventory.item_parent, <olive>origin</olive>=(-.<yellow>5</yellow>,.<yellow>5</yellow>), <olive>color</olive>=color.green, <olive>position</olive>=(<yellow>2</yellow>,<yellow>0</yellow>))    </mark>
     app.run()
-<gray># text, size <yellow>1</yellow></gray>
-
-
-
-<gray># size <yellow>2</yellow>, bold</gray>
-<div id="<yellow>4</yellow> Adding items"/>
-<yellow>4</yellow> Adding items
-<gray># size <yellow>1</yellow>, normal</gray>
-
-    We've added some items manually to make sure they get the right scale and position,
-    but we should make an append() function so it's easy to add items.
-
-    Let<green>'s start by making a function called '</green>append()' and make it spawn an item
-    when we send it a string. We<green>'ll also set the button'</green>s text to the string we
-    receive so we can differentiate them.
-    Let's give them a random color too, why not.
-
-    Lastly, let<green>'s call inventory.append('</green>test item') a couple of times to make sure it works.
-
-
-<gray># code, size .<yellow>8</yellow></gray>
-<purple>from</purple> ursina <purple>import</purple> *
+</div><br>
+<br>
+<br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="4 Adding items"/><br>
+4 Adding items<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;We've added some items manually to make sure they get the right scale and position,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;but we should make an append() function so it's easy to add items.<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Let's start by making a function called 'append()' and make it spawn an item<br>
+&nbsp;&nbsp;&nbsp;&nbsp;when we send it a string. We'll also set the button's text to the string we<br>
+&nbsp;&nbsp;&nbsp;&nbsp;receive so we can differentiate them.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Let's give them a random color too, why not.<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Lastly, let's call inventory.append('test item') a couple of times to make sure it works.<br>
+<br>
+<br>
+<div class="code_block" style="margin-left: 2em;"><purple>from</purple> ursina <purple>import</purple> *
 
 class Inventory(<olive>Entity</olive>):
     <purple>def</purple> __init__(self):
@@ -227,37 +217,35 @@ class Inventory(<olive>Entity</olive>):
         self.item_parent = <olive>Entity</olive>(<olive>parent</olive>=self, <olive>scale</olive>=(<yellow>1</yellow>/<yellow>5</yellow>,<yellow>1</yellow>/<yellow>8</yellow>))
 
 
-    <purple>def</purple> append(self, item):                                             <gray># +</gray>
-        Button(                                                         <gray># +</gray>
-            parent = inventory.item_parent,                             <gray># +</gray>
-            model = <green>'quad'</green>,                                             <gray># +</gray>
-            origin = (-.<yellow>5</yellow>,.<yellow>5</yellow>),                                          <gray># +</gray>
-            color = color.random_color(),                               <gray># +</gray>
-            z = -.<yellow>1</yellow>                                                     <gray># +</gray>
+<mark>    <purple>def</purple> append(self, item):                                             </mark>
+<mark>        Button(                                                         </mark>
+<mark>            parent = inventory.item_parent,                             </mark>
+<mark>            model = <green>'quad'</green>,                                             </mark>
+<mark>            origin = (-.<yellow>5</yellow>,.<yellow>5</yellow>),                                          </mark>
+<mark>            color = color.random_color(),                               </mark>
+<mark>            z = -.<yellow>1</yellow>                                                     </mark>
             )
 
 
 <purple>if</purple> __name__ == <green>'__main__'</green>:
     app = Ursina()
     inventory = Inventory()
-    inventory.append(<green>'test item'</green>)                                       <gray># +</gray>
-    inventory.append(<green>'test item'</green>)                                       <gray># +</gray>
+<mark>    inventory.append(<green>'test item'</green>)                                       </mark>
+<mark>    inventory.append(<green>'test item'</green>)                                       </mark>
     app.run()
-<gray># text, size <yellow>1</yellow></gray>
-
-
-
-<gray># size <yellow>2</yellow>, bold</gray>
-<div id="<yellow>5</yellow> Find a free slot in the inventory"/>
-<yellow>5</yellow> Find a free slot in the inventory
-<gray># size <yellow>1</yellow>, normal</gray>
-
-    The items gets added, but they overlap. We need to find the first open slot in the inventory
-    and place the item there. We can to this by checking each grid position and see <purple>if</purple> any
-    <purple>if</purple> the items occupy that position already.
-
-<gray># code, size .<yellow>8</yellow></gray>
-<purple>from</purple> ursina <purple>import</purple> *
+</div><br>
+<br>
+<br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="5 Find a free slot in the inventory"/><br>
+5 Find a free slot in the inventory<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The items gets added, but they overlap. We need to find the first open slot in the inventory<br>
+&nbsp;&nbsp;&nbsp;&nbsp;and place the item there. We can to this by checking each grid position and see if any<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if the items occupy that position already.<br>
+<br>
+<div class="code_block" style="margin-left: 2em;"><purple>from</purple> ursina <purple>import</purple> *
 
 class Inventory(<olive>Entity</olive>):
     <purple>def</purple> __init__(self):
@@ -275,12 +263,12 @@ class Inventory(<olive>Entity</olive>):
         self.item_parent = <olive>Entity</olive>(<olive>parent</olive>=self, <olive>scale</olive>=(<yellow>1</yellow>/<yellow>5</yellow>,<yellow>1</yellow>/<yellow>8</yellow>))
 
 
-    <purple>def</purple> find_free_spot(self):                                                      <gray># +</gray>
-        taken_spots = [(int(e.x), int(e.y)) <purple>for</purple> e in self.item_parent.children]    <gray># +</gray>
-        <purple>for</purple> y in <blue>range</blue>(<yellow>8</yellow>):                                                         <gray># +</gray>
-            <purple>for</purple> x in <blue>range</blue>(<yellow>5</yellow>):                                                     <gray># +</gray>
-                <purple>if</purple> <purple>not</purple> (x,-y) in taken_spots:                                      <gray># +</gray>
-                    return (x,-y)                                                  <gray># +</gray>
+<mark>    <purple>def</purple> find_free_spot(self):                                                      </mark>
+<mark>        taken_spots = [(int(e.x), int(e.y)) <purple>for</purple> e in self.item_parent.children]    </mark>
+<mark>        <purple>for</purple> y in <blue>range</blue>(<yellow>8</yellow>):                                                         </mark>
+<mark>            <purple>for</purple> x in <blue>range</blue>(<yellow>5</yellow>):                                                     </mark>
+<mark>                <purple>if</purple> <purple>not</purple> (x,-y) in taken_spots:                                      </mark>
+<mark>                    return (x,-y)                                                  </mark>
 
 
     <purple>def</purple> append(self, item):
@@ -289,7 +277,7 @@ class Inventory(<olive>Entity</olive>):
             model = <green>'quad'</green>,
             origin = (-.<yellow>5</yellow>,.<yellow>5</yellow>),
             color = color.random_color(),
-            position = self.find_free_spot(),                                       <gray># +</gray>
+<mark>            position = self.find_free_spot(),                                       </mark>
             z = -.<yellow>1</yellow>
             )
 
@@ -297,96 +285,90 @@ class Inventory(<olive>Entity</olive>):
 <purple>if</purple> __name__ == <green>'__main__'</green>:
     app = Ursina()
     inventory = Inventory()
-    <purple>for</purple> i in <blue>range</blue>(<yellow>7</yellow>):                                                  <gray># +</gray>
-        inventory.append(<green>'test item'</green>)                                   <gray># +</gray>
+<mark>    <purple>for</purple> i in <blue>range</blue>(<yellow>7</yellow>):                                                  </mark>
+<mark>        inventory.append(<green>'test item'</green>)                                   </mark>
     app.run()
-<gray># text, size <yellow>1</yellow></gray>
-
-
-
-<gray># size <yellow>2</yellow>, bold</gray>
-<div id="<yellow>6</yellow> Add random item button"/>
-<yellow>6</yellow> Add random item button
-<gray># size <yellow>1</yellow>, normal</gray>
-
-    Make a button to add a random item to the inventory. This is <purple>not</purple> part of the inventory itself,
-    but it's useful in order to test it.
-    Assign the button<green>'s '</green>on_click' to a function, and it will call that function when we click it.
-    button.on_click = inventory
-
-    Let's make an tuple with those and make the button choose a random item <purple>from</purple> the tuple
-    using random.choice(items)
-
-<gray># code, size .<yellow>8</yellow></gray>
-
+</div><br>
+<br>
+<br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="6 Add random item button"/><br>
+6 Add random item button<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Make a button to add a random item to the inventory. This is not part of the inventory itself,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;but it's useful in order to test it.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Assign the button's 'on_click' to a function, and it will call that function when we click it.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;button.on_click = inventory<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Let's make an tuple with those and make the button choose a random item from the tuple<br>
+&nbsp;&nbsp;&nbsp;&nbsp;using random.choice(items)<br>
+<br>
+<div class="code_block" style="margin-left: 2em;">
 <purple>if</purple> __name__ == <green>'__main__'</green>:
     app = Ursina()
     inventory = Inventory()
 
-    <purple>def</purple> add_item():                                                                  <gray># +</gray>
-        inventory.append(random.choice((<green>'bag'</green>, <green>'bow_arrow'</green>, <green>'gem'</green>, <green>'orb'</green>, <green>'sword'</green>))) <gray># +</gray>
+<mark>    <purple>def</purple> add_item():                                                                  </mark>
+<mark>        inventory.append(random.choice((<green>'bag'</green>, <green>'bow_arrow'</green>, <green>'gem'</green>, <green>'orb'</green>, <green>'sword'</green>))) </mark>
 
-    <purple>for</purple> i in <blue>range</blue>(<yellow>7</yellow>):                                                  <gray># +</gray>
-        add_item()                                                      <gray># +</gray>
+<mark>    <purple>for</purple> i in <blue>range</blue>(<yellow>7</yellow>):                                                  </mark>
+<mark>        add_item()                                                      </mark>
 
-    add_item_button = Button(                                           <gray># +</gray>
-        scale = (.<yellow>1</yellow>,.<yellow>1</yellow>),                                                <gray># +</gray>
-        x = -.<yellow>5</yellow>,                                                        <gray># +</gray>
-        color = color.lime.tint(-.<yellow>2</yellow><yellow>5</yellow>),                                  <gray># +</gray>
-        text = <green>'+'</green>,                                                     <gray># +</gray>
-        tooltip = Tooltip(<green>'Add random item'</green>),                           <gray># +</gray>
-        on_click = add_item                                             <gray># +</gray>
-        )                                                               <gray># +</gray>
+<mark>    add_item_button = Button(                                           </mark>
+<mark>        scale = (.<yellow>1</yellow>,.<yellow>1</yellow>),                                                </mark>
+<mark>        x = -.<yellow>5</yellow>,                                                        </mark>
+<mark>        color = color.lime.tint(-.<yellow>2</yellow><yellow>5</yellow>),                                  </mark>
+<mark>        text = <green>'+'</green>,                                                     </mark>
+<mark>        tooltip = Tooltip(<green>'Add random item'</green>),                           </mark>
+<mark>        on_click = add_item                                             </mark>
+<mark>        )                                                               </mark>
 
     app.run()
-<gray># text, size <yellow>1</yellow></gray>
-
-
-
-<gray># size <yellow>2</yellow>, bold</gray>
-<div id="<yellow>7</yellow> Adding textures and hover text"/>
-<yellow>7</yellow> Adding textures and hover text
-<gray># size <yellow>1</yellow>, normal</gray>
-
-    To add textures, just set <olive>texture</olive>=item and it will try to find a
-    texture with that name. It searches first in the project's assets and then
-    in the assets included with ursina. I've included some icons <purple>for</purple> the purpose
-    <purple>if</purple> this tutorial, but feel free to add your own.
-
-    Let<green>'s also remove the random color and instead show the item'</green>s name when we hover it with the mouse.
-    If a button has <green>'tooltip'</green> set to something, it will show it when we hover the Button.
-
-<gray># code, size .<yellow>8</yellow></gray>
-    <purple>def</purple> append(self, item):
-        icon = Button(                                                  <gray># +</gray>
+</div><br>
+<br>
+<br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="7 Adding textures and hover text"/><br>
+7 Adding textures and hover text<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;To add textures, just set texture=item and it will try to find a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;texture with that name. It searches first in the project's assets and then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in the assets included with ursina. I've included some icons for the purpose<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if this tutorial, but feel free to add your own.<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Let's also remove the random color and instead show the item's name when we hover it with the mouse.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If a button has 'tooltip' set to something, it will show it when we hover the Button.<br>
+<br>
+<div class="code_block" style="margin-left: 2em;">    <purple>def</purple> append(self, item):
+<mark>        icon = Button(                                                  </mark>
             parent = inventory.item_parent,
             model = <green>'quad'</green>,
-            texture = item,                                             <gray># +</gray>
-            color = color.white,                                        <gray># +</gray>
+<mark>            texture = item,                                             </mark>
+<mark>            color = color.white,                                        </mark>
             origin = (-.<yellow>5</yellow>,.<yellow>5</yellow>),
             position = self.find_free_spot(),
             z = -.<yellow>1</yellow>,
             )
-        name = item.replace(<green>'_'</green>, <green>' '</green>).title()                           <gray># +</gray>
-        icon.tooltip = Tooltip(name)                                    <gray># +</gray>
-        icon.tooltip.background.color = color.color(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,.<yellow>8</yellow>)           <gray># +</gray>
+<mark>        name = item.replace(<green>'_'</green>, <green>' '</green>).title()                           </mark>
+<mark>        icon.tooltip = Tooltip(name)                                    </mark>
+<mark>        icon.tooltip.background.color = color.color(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,.<yellow>8</yellow>)           </mark>
 
-<gray># text, size <yellow>1</yellow></gray>
-
-
-
-<gray># size <yellow>2</yellow>, bold</gray>
-<div id="<yellow>8</yellow> Drag n' drop"/>
-<yellow>8</yellow> Drag n' drop
-<gray># size <yellow>1</yellow>, normal</gray>
-
-    We can<green>'t move the items! That'</green>s <purple>not</purple> fun.
-    However, that's easy to change. Just spawn a Draggable instead of Button.
-    Draggable inherits <purple>from</purple> Button, so the tooltips will still work!
-
-<gray># code, size .<yellow>8</yellow></gray>
-    <purple>def</purple> append(self, item):
-        icon = Draggable(                                                   <gray># +</gray>
+</div><br>
+<br>
+<br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="8 Drag n' drop"/><br>
+8 Drag n' drop<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;We can't move the items! That's not fun.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;However, that's easy to change. Just spawn a Draggable instead of Button.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Draggable inherits from Button, so the tooltips will still work!<br>
+<br>
+<div class="code_block" style="margin-left: 2em;">    <purple>def</purple> append(self, item):
+<mark>        icon = Draggable(                                                   </mark>
             parent = inventory.item_parent,
             model = <green>'quad'</green>,
             texture = item,
@@ -399,151 +381,142 @@ class Inventory(<olive>Entity</olive>):
         icon.tooltip = Tooltip(name)
         icon.tooltip.background.color = color.color(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,.<yellow>8</yellow>)
 
-<gray># text, size <yellow>1</yellow></gray>
+</div><br>
+<br>
+<br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="9 Snap to grid on_drop"/><br>
+9 Snap to grid on_drop<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The items can be moved now, but they don't follow the grid.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Let's round the position when we drop it.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Draggable's will automatically call on_drag() and on_drop() if has them.<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;round the position on drop<br>
+<br>
+<div class="code_block" style="margin-left: 1em;">    <purple>def</purple> append(self, item):
+        icon = Draggable(
+            parent = inventory.item_parent,
+            model = <green>'quad'</green>,
+            texture = item,
+            color = color.white,
+            origin = (-.<yellow>5</yellow>,.<yellow>5</yellow>),
+            position = self.find_free_spot(),
+            z = -.<yellow>1</yellow>,
+            )
+        name = item.replace(<green>'_'</green>, <green>' '</green>).title()
+        icon.tooltip = Tooltip(name)
+        icon.tooltip.background.color = color.color(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,.<yellow>8</yellow>)
 
 
-
-<gray># size <yellow>2</yellow>, bold</gray>
-<div id="<yellow>9</yellow> Snap to grid on_drop"/>
-<yellow>9</yellow> Snap to grid on_drop
-<gray># size <yellow>1</yellow>, normal</gray>
-
-    The items can be moved now, but they don't follow the grid.
-    Let's round the position when we drop it.
-    Draggable's will automatically call on_drag() and on_drop() <purple>if</purple> has them.
-
-    round the position on drop
-
-    <gray># code, size .<yellow>8</yellow></gray>
-<purple>def</purple> append(self, item):
-    icon = Draggable(
-        parent = inventory.item_parent,
-        model = <green>'quad'</green>,
-        texture = item,
-        color = color.white,
-        origin = (-.<yellow>5</yellow>,.<yellow>5</yellow>),
-        position = self.find_free_spot(),
-        z = -.<yellow>1</yellow>,
-        )
-    name = item.replace(<green>'_'</green>, <green>' '</green>).title()
-    icon.tooltip = Tooltip(name)
-    icon.tooltip.background.color = color.color(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,.<yellow>8</yellow>)
+<mark>        <purple>def</purple> drop():                                                         </mark>
+<mark>            icon.x = int(icon.x)                                            </mark>
+<mark>            icon.y = int(icon.y)                                            </mark>
 
 
-    <purple>def</purple> drop():                                                         <gray># +</gray>
-        icon.x = int(icon.x)                                            <gray># +</gray>
-        icon.y = int(icon.y)                                            <gray># +</gray>
+<mark>        icon.drop = drop                                                    </mark>
+
+</div><br>
+<br>
+<br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="10 Swap items"/><br>
+10 Swap items<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Add a drag function to remember the start position as org_pos.<br>
+<br>
+<br>
+<div class="code_block" style="margin-left: 1em;"><mark>        <purple>def</purple> drag():                                                     </mark>
+<mark>            icon.org_pos = (icon.x, icon.y)                             </mark>
+
+        <purple>def</purple> drop():
+            icon.x = int(icon.x)
+            icon.y = int(icon.y)
+
+            <green><green>''</green></green>'<purple>if</purple> the spot is taken, swap positions<green><green>''</green></green>'
+<mark>            <purple>for</purple> c in self.children:                                     </mark>
+<mark>                <purple>if</purple> c == icon:                                           </mark>
+<mark>                    continue                                            </mark>
+
+<mark>                <purple>if</purple> c.x == icon.x and c.y == icon.y:                     </mark>
+<mark>                    <blue>print</blue>(<green>'swap positions'</green>)                             </mark>
+<mark>                    c.position = icon.org_pos                           </mark>
 
 
-    icon.drop = drop                                                    <gray># +</gray>
+<mark>        icon.drag = drag                                                </mark>
+        icon.drop = drop
 
-    <gray># text, size <yellow>1</yellow></gray>
+</div><br>
+<br>
+<br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="11 Stay inside the inventory, please"/><br>
+11 Stay inside the inventory, please<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;We shouldn't be able to drop the items outside of the inventory.<br>
+<br>
+<div class="code_block" style="margin-left: 1em;">        <purple>def</purple> drop():
+            icon.x = int(icon.x)
+            icon.y = int(icon.y)
 
+<mark>            <green><green>''</green></green>'<purple>if</purple> outside, return to original position<green><green>''</green></green>'               </mark>
+<mark>            <purple>if</purple> icon.x < <yellow>0</yellow> or icon.x >= <yellow>1</yellow> or icon.y > <yellow>0</yellow> or icon.y <= -<yellow>1</yellow>: </mark>
+<mark>                icon.position = (icon.org_pos)                          </mark>
+<mark>                return                                                  </mark>
 
+            <green><green>''</green></green>'<purple>if</purple> the spot is taken, swap positions<green><green>''</green></green>'
+            <purple>for</purple> c in self.children:
+                <purple>if</purple> c == icon:
+                    continue
 
-<gray># size <yellow>2</yellow>, bold</gray>
-<div id="<yellow>1</yellow><yellow>0</yellow> Swap items"/>
-<yellow>1</yellow><yellow>0</yellow> Swap items
-<gray># size <yellow>1</yellow>, normal</gray>
+                <purple>if</purple> c.x == icon.x and c.y == icon.y:
+                    <blue>print</blue>(<green>'swap positions'</green>)
+                    c.position = icon.org_pos
 
-    Add a drag function to remember the start position as org_pos.
+        icon.drop = drop
 
+</div><br>
+<br>
+<br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="12 Bugfix: Make the dragged items render on top"/><br>
+12 Bugfix: Make the dragged items render on top<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;All the items are at the same depth, so it hard to say how they will overlap.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;It feels natural that the item we're currently dragging stays on top,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;so we'll move it back a bit when we drag it and forward when we drop it.<br>
+<br>
+<div class="code_block" style="margin-left: 1em;">        <purple>def</purple> drag():
+            icon.org_pos = (icon.x, icon.y)
+<mark>            icon.z -= .<yellow>0</yellow><yellow>1</yellow>   <gray># ensure the dragged item overlaps the rest </mark></gray>
 
-    <gray># code, size .<yellow>8</yellow></gray>
-    <purple>def</purple> drag():                                                     <gray># +</gray>
-        icon.org_pos = (icon.x, icon.y)                             <gray># +</gray>
+        <purple>def</purple> drop():
+            icon.x = int(icon.x)
+            icon.y = int(icon.y)
+<mark>            icon.z += .<yellow>0</yellow><yellow>1</yellow>                                                </mark>
 
-    <purple>def</purple> drop():
-        icon.x = int(icon.x)
-        icon.y = int(icon.y)
+            <green><green>''</green></green>'<purple>if</purple> outside, return to original position<green><green>''</green></green>'
+            <purple>if</purple> icon.x < <yellow>0</yellow> or icon.x >= <yellow>1</yellow> or icon.y > <yellow>0</yellow> or icon.y <= -<yellow>1</yellow>:
+                icon.position = (icon.org_pos)
+                return
 
-        <green><green>''</green></green>'<purple>if</purple> the spot is taken, swap positions<green><green>''</green></green>'
-        <purple>for</purple> c in self.children:                                     <gray># +</gray>
-            <purple>if</purple> c == icon:                                           <gray># +</gray>
-                continue                                            <gray># +</gray>
+            <green><green>''</green></green>'<purple>if</purple> the spot is taken, swap positions<green><green>''</green></green>'
+            <purple>for</purple> c in self.children:
+                <purple>if</purple> c == icon:
+                    continue
 
-            <purple>if</purple> c.x == icon.x and c.y == icon.y:                     <gray># +</gray>
-                <blue>print</blue>(<green>'swap positions'</green>)                             <gray># +</gray>
-                c.position = icon.org_pos                           <gray># +</gray>
+                <purple>if</purple> c.x == icon.x and c.y == icon.y:
+                    <blue>print</blue>(<green>'swap positions'</green>)
+                    c.position = icon.org_pos
 
-
-    icon.drag = drag                                                <gray># +</gray>
-    icon.drop = drop
-
-    <gray># text, size <yellow>1</yellow></gray>
-
-
-
-<gray># size <yellow>2</yellow>, bold</gray>
-<div id="<yellow>1</yellow><yellow>1</yellow> Stay inside the inventory, please"/>
-<yellow>1</yellow><yellow>1</yellow> Stay inside the inventory, please
-<gray># size <yellow>1</yellow>, normal</gray>
-
-    We shouldn't be able to drop the items outside of the inventory.
-
-    <gray># code, size .<yellow>8</yellow></gray>
-    <purple>def</purple> drop():
-        icon.x = int(icon.x)
-        icon.y = int(icon.y)
-
-        <green><green>''</green></green>'<purple>if</purple> outside, return to original position<green><green>''</green></green>'               <gray># +</gray>
-        <purple>if</purple> icon.x < <yellow>0</yellow> or icon.x >= <yellow>1</yellow> or icon.y > <yellow>0</yellow> or icon.y <= -<yellow>1</yellow>: <gray># +</gray>
-            icon.position = (icon.org_pos)                          <gray># +</gray>
-            return                                                  <gray># +</gray>
-
-        <green><green>''</green></green>'<purple>if</purple> the spot is taken, swap positions<green><green>''</green></green>'
-        <purple>for</purple> c in self.children:
-            <purple>if</purple> c == icon:
-                continue
-
-            <purple>if</purple> c.x == icon.x and c.y == icon.y:
-                <blue>print</blue>(<green>'swap positions'</green>)
-                c.position = icon.org_pos
-
-    icon.drop = drop
-
-    <gray># text, size <yellow>1</yellow></gray>
-
-
-
-<gray># size <yellow>2</yellow>, bold</gray>
-<div id="<yellow>1</yellow><yellow>2</yellow> Bugfix: Make the dragged items render on top"/>
-<yellow>1</yellow><yellow>2</yellow> Bugfix: Make the dragged items render on top
-<gray># size <yellow>1</yellow>, normal</gray>
-
-    All the items are at the same depth, so it hard to say how they will overlap.
-    It feels natural that the item we're currently dragging stays on top,
-    so we'll move it back a bit when we drag it and forward when we drop it.
-
-    <gray># code, size .<yellow>8</yellow></gray>
-    <purple>def</purple> drag():
-        icon.org_pos = (icon.x, icon.y)
-        icon.z -= .<yellow>0</yellow><yellow>1</yellow>   <gray># ensure the dragged item overlaps the rest <gray># +</gray>
-
-    <purple>def</purple> drop():
-        icon.x = int(icon.x)
-        icon.y = int(icon.y)
-        icon.z += .<yellow>0</yellow><yellow>1</yellow>                                                <gray># +</gray>
-
-        <green><green>''</green></green>'<purple>if</purple> outside, return to original position<green><green>''</green></green>'
-        <purple>if</purple> icon.x < <yellow>0</yellow> or icon.x >= <yellow>1</yellow> or icon.y > <yellow>0</yellow> or icon.y <= -<yellow>1</yellow>:
-            icon.position = (icon.org_pos)
-            return
-
-        <green><green>''</green></green>'<purple>if</purple> the spot is taken, swap positions<green><green>''</green></green>'
-        <purple>for</purple> c in self.children:
-            <purple>if</purple> c == icon:
-                continue
-
-            <purple>if</purple> c.x == icon.x and c.y == icon.y:
-                <blue>print</blue>(<green>'swap positions'</green>)
-                c.position = icon.org_pos
-
-    icon.drag = drag
-    icon.drop = drop
+        icon.drag = drag
+        icon.drop = drop
 
 
-    <gray># text, size <yellow>1</yellow></gray>
-
+</div><br>
 
 </html>

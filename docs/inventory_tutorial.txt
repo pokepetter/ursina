@@ -5,7 +5,7 @@ Inventory Tutorial
 
 In this tutorial we will make a drag and drop inventory like this.
 
-    # image inventory_2.gif
+# image inventory_2.gif
 
 
 
@@ -14,7 +14,7 @@ In this tutorial we will make a drag and drop inventory like this.
 
     Let's begin by making an Inventory class
 
-        # code, size .8
+        # code
         from ursina import *
 
         class Inventory(Entity):
@@ -27,7 +27,7 @@ In this tutorial we will make a drag and drop inventory like this.
             app = Ursina()
             inventory = Inventory()
             app.run()
-        # text, size 1
+        # text
 
 
 
@@ -36,7 +36,7 @@ In this tutorial we will make a drag and drop inventory like this.
     However, if we run the code, we'll see that there's nothing visible.
     Let's parent it to the ui and set the model to 'quad', an included model.
 
-        # code, size .8
+        # code
         from ursina import *
 
         class Inventory(Entity):
@@ -52,7 +52,7 @@ In this tutorial we will make a drag and drop inventory like this.
             app = Ursina()
             inventory = Inventory()
             app.run()
-        # text, size 1
+        # text
 
     If we look at it now, we see it's a white square in the middle of the screen.
     Let's set it to a nicer shape. We also want (0,0) to be in the upper left corner
@@ -63,7 +63,7 @@ In this tutorial we will make a drag and drop inventory like this.
     There are multiple way to do that, but in this case, we'll simply make the texture repeat
     by setting texture_scale to (5,6). That'll nicely fit the size of our inventory.
 
-        # code, size .8
+        # code
         from ursina import *
 
         class Inventory(Entity):
@@ -85,7 +85,7 @@ In this tutorial we will make a drag and drop inventory like this.
             app = Ursina()
             inventory = Inventory()
             app.run()
-        # text, size 1
+        # text
 
 
 
@@ -93,7 +93,7 @@ In this tutorial we will make a drag and drop inventory like this.
 
     Let's try to add some items to the inventory.
 
-        # code, size .8
+        # code
         from ursina import *
 
         class Inventory(Entity):
@@ -117,7 +117,7 @@ In this tutorial we will make a drag and drop inventory like this.
             item = Button(parent=inventory, color=color.red, position=(0,0))            # +
             item = Button(parent=inventory, color=color.green, position=(2,0))          # +
             app.run()
-        # text, size 1
+        # text
 
     Well, that didn't go as planned. The items cover the entire inventory and
     the second item is way off to the left.
@@ -127,7 +127,7 @@ In this tutorial we will make a drag and drop inventory like this.
     They also don't fit the grid. Fix that by setting origin to the upper left
     corner, (-.5,.5).
 
-        # code, size .8
+        # code
         from ursina import *
 
         class Inventory(Entity):
@@ -153,7 +153,7 @@ In this tutorial we will make a drag and drop inventory like this.
             item = Button(parent=inventory.item_parent, origin=(-.5,.5), color=color.red, position=(0,0))      # +
             item = Button(parent=inventory.item_parent, origin=(-.5,.5), color=color.green, position=(2,0))    # +
             app.run()
-        # text, size 1
+        # text
 
 
 
@@ -170,7 +170,7 @@ In this tutorial we will make a drag and drop inventory like this.
     Lastly, let's call inventory.append('test item') a couple of times to make sure it works.
 
 
-        # code, size .8
+        # code
         from ursina import *
 
         class Inventory(Entity):
@@ -205,7 +205,7 @@ In this tutorial we will make a drag and drop inventory like this.
             inventory.append('test item')                                       # +
             inventory.append('test item')                                       # +
             app.run()
-        # text, size 1
+        # text
 
 
 
@@ -215,7 +215,7 @@ In this tutorial we will make a drag and drop inventory like this.
     and place the item there. We can to this by checking each grid position and see if any
     if the items occupy that position already.
 
-        # code, size .8
+        # code
         from ursina import *
 
         class Inventory(Entity):
@@ -259,7 +259,7 @@ In this tutorial we will make a drag and drop inventory like this.
             for i in range(7):                                                  # +
                 inventory.append('test item')                                   # +
             app.run()
-        # text, size 1
+        # text
 
 
 
@@ -273,7 +273,7 @@ In this tutorial we will make a drag and drop inventory like this.
     Let's make an tuple with those and make the button choose a random item from the tuple
     using random.choice(items)
 
-        # code, size .8
+        # code
 
         if __name__ == '__main__':
             app = Ursina()
@@ -295,7 +295,7 @@ In this tutorial we will make a drag and drop inventory like this.
                 )                                                               # +
 
             app.run()
-        # text, size 1
+        # text
 
 
 
@@ -309,7 +309,7 @@ In this tutorial we will make a drag and drop inventory like this.
     Let's also remove the random color and instead show the item's name when we hover it with the mouse.
     If a button has 'tooltip' set to something, it will show it when we hover the Button.
 
-        # code, size .8
+        # code
             def append(self, item):
                 icon = Button(                                                  # +
                     parent = inventory.item_parent,
@@ -324,7 +324,7 @@ In this tutorial we will make a drag and drop inventory like this.
                 icon.tooltip = Tooltip(name)                                    # +
                 icon.tooltip.background.color = color.color(0,0,0,.8)           # +
 
-        # text, size 1
+        # text
 
 
 
@@ -334,7 +334,7 @@ In this tutorial we will make a drag and drop inventory like this.
     However, that's easy to change. Just spawn a Draggable instead of Button.
     Draggable inherits from Button, so the tooltips will still work!
 
-        # code, size .8
+        # code
             def append(self, item):
                 icon = Draggable(                                                   # +
                     parent = inventory.item_parent,
@@ -349,7 +349,7 @@ In this tutorial we will make a drag and drop inventory like this.
                 icon.tooltip = Tooltip(name)
                 icon.tooltip.background.color = color.color(0,0,0,.8)
 
-        # text, size 1
+        # text
 
 
 
@@ -361,7 +361,7 @@ In this tutorial we will make a drag and drop inventory like this.
 
     round the position on drop
 
-    # code, size .8
+    # code
         def append(self, item):
             icon = Draggable(
                 parent = inventory.item_parent,
@@ -384,7 +384,7 @@ In this tutorial we will make a drag and drop inventory like this.
 
             icon.drop = drop                                                    # +
 
-    # text, size 1
+    # text
 
 
 
@@ -393,7 +393,7 @@ In this tutorial we will make a drag and drop inventory like this.
     Add a drag function to remember the start position as org_pos.
 
 
-    # code, size .8
+    # code
             def drag():                                                     # +
                 icon.org_pos = (icon.x, icon.y)                             # +
 
@@ -414,7 +414,7 @@ In this tutorial we will make a drag and drop inventory like this.
             icon.drag = drag                                                # +
             icon.drop = drop
 
-    # text, size 1
+    # text
 
 
 
@@ -422,7 +422,7 @@ In this tutorial we will make a drag and drop inventory like this.
 
     We shouldn't be able to drop the items outside of the inventory.
 
-    # code, size .8
+    # code
             def drop():
                 icon.x = int(icon.x)
                 icon.y = int(icon.y)
@@ -443,7 +443,7 @@ In this tutorial we will make a drag and drop inventory like this.
 
             icon.drop = drop
 
-    # text, size 1
+    # text
 
 
 
@@ -453,7 +453,7 @@ In this tutorial we will make a drag and drop inventory like this.
     It feels natural that the item we're currently dragging stays on top,
     so we'll move it back a bit when we drag it and forward when we drop it.
 
-    # code, size .8
+    # code
             def drag():
                 icon.org_pos = (icon.x, icon.y)
                 icon.z -= .01   # ensure the dragged item overlaps the rest # +
@@ -481,4 +481,4 @@ In this tutorial we will make a drag and drop inventory like this.
             icon.drop = drop
 
 
-    # text, size 1
+    # text
