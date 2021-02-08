@@ -175,13 +175,51 @@ Entity Basics
     Entities can react to the mouse as long as they have collider.
     Buttons will have one by default, but you can also assign one.
 
-
-
     To get the entity currently under the mouse:
-        mouse.entity
+    #code
+    print(mouse.entity)
+    # text
 
-    To check if enity(self) is hovered:
-        self.hovered
+    To check if and entity with a collider is hovered by the mouse:
+    # code
+    print(my_entity.hovered)
+    # text
 
-    Assign on_click() to make it get called when you click on the entity
-    Assign on_double_click() to make it get called when you double click on the entity.
+    There are also functions for handling mouse clicks and hover/unhover.
+    These only works if the Entity has a collider and the function/callable is assigned.
+
+    # code
+    on_click()
+    on_double_click()
+    on_mouse_enter()
+    on_mouse_exit()
+    # text
+
+    Example:
+    # code
+    def action():
+        print('Ow! That hurt!')
+
+    Entity(model='quad', parent=camera.ui, scale=.1, collider='box', on_click=action) # on_click should be a function/callable/Func/Sequence
+    # text
+
+    on_mouse_enter and on_mouse_exit example:
+    # code
+    b = Button(scale=(.5, .25), text='zzz')
+    b.on_mouse_enter = Func(setattr, b, 'text', 'Hi, friend :D')
+    b.on_mouse_exit = Func(setattr, b, 'text', '''No! Don't leave me ;-;''')
+    # text
+
+
+## Other Magic Functions
+
+    Sometimes you want side effects when you enable/diable and entity, like play an animation or something.
+
+    # code
+    on_enable()
+    on_disable()
+    # text
+
+
+
+.

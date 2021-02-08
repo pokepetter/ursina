@@ -209,16 +209,45 @@ Mouse Input<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Entities can react to the mouse as long as they have collider.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Buttons will have one by default, but you can also assign one.<br>
 <br>
-<br>
-<br>
 &nbsp;&nbsp;&nbsp;&nbsp;To get the entity currently under the mouse:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mouse.entity<br>
+<div class="code_block" style="margin-left: 1em;"><blue>print</blue>(mouse.entity)
+</div><br>
+&nbsp;&nbsp;&nbsp;&nbsp;To check if and entity with a collider is hovered by the mouse:<br>
+<div class="code_block" style="margin-left: 1em;"><blue>print</blue>(my_entity.hovered)
+</div><br>
+&nbsp;&nbsp;&nbsp;&nbsp;There are also functions for handling mouse clicks and hover/unhover.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;These only works if the Entity has a collider and the function/callable is assigned.<br>
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;To check if enity(self) is hovered:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.hovered<br>
+<div class="code_block" style="margin-left: 1em;">on_click()
+on_double_click()
+on_mouse_enter()
+on_mouse_exit()
+</div><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Example:<br>
+<div class="code_block" style="margin-left: 1em;"><purple>def</purple> action():
+    <blue>print</blue>(<green>'Ow! That hurt!'</green>)
+
+<olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>parent</olive>=camera.ui, <olive>scale</olive>=.<yellow>1</yellow>, <olive>collider</olive>=<green>'box'</green>, <olive>on_click</olive>=action) <gray># on_click should be a function/callable/Func/Sequence</gray>
+</div><br>
+&nbsp;&nbsp;&nbsp;&nbsp;on_mouse_enter and on_mouse_exit example:<br>
+<div class="code_block" style="margin-left: 1em;">b = Button(<olive>scale</olive>=(.<yellow>5</yellow>, .<yellow>2</yellow><yellow>5</yellow>), <olive>text</olive>=<green>'zzz'</green>)
+b.on_mouse_enter = Func(setattr, b, <green>'text'</green>, <green>'Hi, friend :D'</green>)
+b.on_mouse_exit = Func(setattr, b, <green>'text'</green>, <green><green>''</green></green><green>'No! Don'</green>t leave me ;-;<green><green>''</green></green>')
+</div><br>
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;Assign on_click() to make it get called when you click on the entity<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Assign on_double_click() to make it get called when you double click on the entity.<br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Other Magic Functions"/><br>
+Other Magic Functions<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Sometimes you want side effects when you enable/diable and entity, like play an animation or something.<br>
+<br>
+<div class="code_block" style="margin-left: 1em;">on_enable()
+on_disable()
+</div><br>
+<br>
+<br>
+.<br>
 <br>
 
 </html>
