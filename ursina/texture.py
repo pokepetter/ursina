@@ -11,7 +11,7 @@ from ursina import color
 
 class Texture():
 
-    default_filtering = 'bilinear'      # None/'bilinear'/'mipmap' default: 'bilinear'
+    default_filtering = None      # options: None / 'bilinear' / 'mipmap'
 
     def __init__(self, value):
 
@@ -87,7 +87,7 @@ class Texture():
     @filtering.setter
     def filtering(self, value):
         # print('setting filtering:', value)
-        if value in (None, False, 'nearest', 'nearest neighbor'):
+        if value in (None, False, 'nearest', 'nearest neighbor', 'point'):
             self._texture.setMagfilter(SamplerState.FT_nearest)
             self._texture.setMinfilter(SamplerState.FT_nearest)
             self._filtering = False
