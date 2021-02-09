@@ -5,7 +5,7 @@ from ursina import *
 class Terrain(Mesh):
     def __init__(self, heightmap, skip=1, **kwargs):
         from PIL import Image
-        from numpy import asarray, flip
+        from numpy import asarray, flip, swapaxes
 
 
         self.heightmap = load_texture(heightmap)
@@ -13,15 +13,15 @@ class Terrain(Mesh):
             print('failed to load heightmap:', heightmap)
             return
 
-        self.skip = skip
+        self.skip = skip    # should be power of two.
         self.width, self.depth = self.heightmap.width//skip, self.heightmap.height//skip
         img = Image.open(self.heightmap.path)
-        img = img.transpose(Image.FLIP_TOP_BOTTOM)
-        img = img.transpose(Image.ROTATE_90)
         if self.skip > 1:
             img = img.resize([self.width, self.depth], Image.ANTIALIAS)
+
         self.height_values = asarray(img)
         self.height_values = flip(self.height_values, axis=0)
+        self.height_values = swapaxes(self.height_values, 0, 1)
 
         # copy this from Plane to avoid unecessary init
         self.vertices, self.triangles = list(), list()
@@ -38,7 +38,6 @@ class Terrain(Mesh):
 
                 i += 1
 
-        # super().__init__(subdivisions=(self.width, self.depth), **kwargs)
 
         i = 0
         t = time.time()
@@ -83,7 +82,7 @@ class Terrain(Mesh):
 
 if __name__ == '__main__':
     app = Ursina()
-    e = Entity(model=Terrain('heightmap_1', skip=2), scale=(20,5,20), texture='heightmap_1')
+    e = Entity(model=Terrain('heightmap_1', skip=4), scale=(20,5,20), texture='heightmap_1')
     EditorCamera()
     Sky()
 
