@@ -12,8 +12,12 @@ Introduction Tutorial
     * Sublime Text
 
 
-2) Create a new file called main.py. This will contain out little game.
-   Because it ends with '.py' you should get some syntax highlighting
+2)
+    Create a new folder for your project. This will contain scripts and assets.
+    For ursina to find 3d models and textures, they should be in the same folder or in
+    a folder below the starting script.
+
+    In this folder, create a new file called main.py. This will contain out little game.
 
 
 3) At the top of the file, write:
