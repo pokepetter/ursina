@@ -467,6 +467,37 @@ def make_html(style, file_name):
 
 
     html = '<title> ursina cheat sheet</title>'
+    html += '''
+        <b>Ursina cheat sheet</b>
+
+        This document lists most modules and classes in ursina. Each section is structured as follows:
+
+        ClassName(BaseClass)
+            module location
+
+            parameters
+                How instantiate the class, ie. Button(text='', **kwargs).
+                '**kwargs' in this case, means you can give it optional keyword arguments.
+                For example, Button('Start', scale=.25, color=color.blue, position=(-.1,.25)) also incldues
+                information on how big the button should be, its color and its position.
+
+            attributes
+                Names of values we can get/set, sometimes followed by its starting value and a short explanation.
+                For example, 'scale', 'color' and 'position' are
+                attributes we gave the Button above. These are members of Entity, which Button class
+                inherits from, so the Button class can also access these.
+
+            methods/functions
+                these ends with (), which means they are functions that can be called.
+                Also lists their parameters and default arguments.
+                For example, Entity has a method called 'look_at()'. You need to give it a
+                'target' (an Entity or position) to look at and optionally say
+                which axis will be facing the target.
+
+            example
+
+        You can search the document with Ctrl+F for instant search results.
+    '''
 
     sidebar = '''
 <div class="sidebar" style="
