@@ -31,7 +31,8 @@ def copytree(src, dst, symlinks=False, ignore=None):
 project_folder = Path.cwd()
 project_name = project_folder.stem
 build_folder = Path(project_folder / 'build')
-ignore = list()
+ignore = []
+include_modules = []
 
 
 for i, arg in enumerate(sys.argv):
@@ -41,7 +42,9 @@ for i, arg in enumerate(sys.argv):
             provided with project folder path, creates a build folder where
             it copies python and project's dependent packages. requires a main.py file.
             copies game scripts and assets into 'build/scr' folder.
-            creates a .bat file to start the game.'''
+            creates a .bat file to start the game.
+            include extra modules like this: --include_modules module_one,module_two,module_tree
+            '''
             )
         )
         sys.exit()
@@ -56,6 +59,8 @@ for i, arg in enumerate(sys.argv):
     elif arg == '--name':
         project_name = sys.argv[i+1]
 
+    elif arg == '--include_modules':
+        include_modules = sys.argv[i+1].split(',')
 
 
 if build_folder.exists():
@@ -96,8 +101,10 @@ print('copying python Lib files')
 
 
 # def copy_always_included():
-print('copying always included')
-always_include = (
+print('copying always included modules and extra modules')
+include_modules = [f'Lib/site-packages/{e}' for e in include_modules]
+
+always_include = [
     'Lib/collections',
     'Lib/ctypes',
     'Lib/encodings',
@@ -107,11 +114,12 @@ always_include = (
     'Lib/xml',
     'Lib/site-packages/panda3d/',
     'Lib/site-packages/screeninfo/',
+    'Lib/site-packages/direct/',
     'DLLs/libffi-7.dll',
     'DLLs/_ctypes.pyd',
-    )
+    ]
 
-for path in always_include:
+for path in always_include + include_modules:
     source = python_folder / path
     dest = python_dest / path
     print('copying always include:', source, '-->', dest)
@@ -123,6 +131,8 @@ for path in always_include:
         dest.mkdir(parents=True, exist_ok=True)
         copytree(source, dest)
 
+
+
 # def copy_ursina():
 print('copying ursina')
 import importlib
@@ -133,29 +143,29 @@ dest.mkdir(parents=True, exist_ok=True)
 copytree(ursina_path, dest, ignore=shutil.ignore_patterns('samples', 'unused'))
 
 
-print('copying found modules')
-finder = ModuleFinder()
-finder.run_script(str(project_folder) + '/main.py')
+# print('copying found modules')
+# finder = ModuleFinder()
+# finder.run_script(str(project_folder) + '/main.py')
 
-for name, mod in finder.modules.items():
-    filename = mod.__file__
-
-    if filename is None:
-        continue
-    if '__' in name:
-        print('ignore:', filename)
-        continue
-
-    if 'Python' in filename and 'DLLs' in filename:
-        print('copying:', filename)
-        copy(filename, str(build_folder / 'python/DLLs'))
-
-    elif 'lib\\site-packages\\' in filename:
-        print('copying module:', filename)
-        forward_slashed = filename.split('lib\\site-packages\\')[1].replace('\\', '/')
-        dir = build_folder / 'python/lib/site-packages' / forward_slashed
-        dir.parent.mkdir(parents=True, exist_ok=True)
-        copy(filename, dir)
+# for name, mod in finder.modules.items():
+#     filename = mod.__file__
+#
+#     if filename is None:
+#         continue
+#     if '__' in name:
+#         print('ignore:', filename)
+#         continue
+#
+#     if 'Python' in filename and 'DLLs' in filename:
+#         print('copying:', filename)
+#         copy(filename, str(build_folder / 'python/DLLs'))
+#
+#     elif 'lib\\site-packages\\' in filename:
+#         print('copying module:', filename)
+#         forward_slashed = filename.split('lib\\site-packages\\')[1].replace('\\', '/')
+#         dir = build_folder / 'python/lib/site-packages' / forward_slashed
+#         dir.parent.mkdir(parents=True, exist_ok=True)
+#         copy(filename, dir)
 
 
 print('copying assets')
