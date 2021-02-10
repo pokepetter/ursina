@@ -3,7 +3,6 @@ from ursina import *
 
 class Animation(Sprite):
     def __init__(self, name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs):
-        super().__init__()
 
         texture = load_texture(name)
         if texture and texture.path.suffix == '.gif':   # load gif
@@ -23,9 +22,10 @@ class Animation(Sprite):
         else:   # load image sequence
             texture_folders = (application.compressed_textures_folder, application.asset_folder, application.internal_textures_folder)
             self.frames = [Texture(e) for e in find_sequence(name, ('png', 'jpg'), texture_folders)]
-            if self.frames:
-                self.texture = self.frames[0]
 
+
+        if self.frames:
+            super().__init__(texture=self.frames[0])
 
         self.sequence = Sequence(loop=loop, auto_destroy=False)
 
@@ -100,7 +100,7 @@ if __name__ == '__main__':
     You can also load a .gif by including the file type: Animation('image.gif')
     '''
 
-    # Animation('ursina_wink')
-    Animation('city_in_desert_valley_water.gif')
+    Animation('ursina_wink')
+    # Animation('city_in_desert_valley_water.gif')
 
     app.run()
