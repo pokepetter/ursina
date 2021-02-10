@@ -3,7 +3,6 @@ import os
 from panda3d.core import WindowProperties
 from panda3d.core import loadPrcFileData
 from panda3d.core import Vec2
-from screeninfo import get_monitors
 from ursina.entity import Entity
 from ursina import color
 from ursina import application
@@ -45,6 +44,7 @@ class Window(WindowProperties):
 
         else:
             try:
+                from screeninfo import get_monitors
                 self.screen_resolution = (get_monitors()[0].width, get_monitors()[0].height)
                 print('OS:', os.name)
             except:
