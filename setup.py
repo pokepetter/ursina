@@ -1,7 +1,13 @@
 from setuptools import find_packages, setup
 
+with open("README.md", "r", encoding="UTF-8") as f:
+    long_desc = f.read()
+
 setup(
     name='ursina',
+    description='An easy to use game engine/framework for python.',
+    long_description=long_desc,
+    long_description_content_type="text/markdown",
     version='3.3.1',
     url='https://github.com/pokepetter/ursina',
     author='Petter Amland',
