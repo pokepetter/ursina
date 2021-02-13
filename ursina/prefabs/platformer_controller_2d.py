@@ -57,7 +57,7 @@ class PlatformerController2d(Entity):
             direction=Vec3(self.velocity,0,0),
             distance=abs(self.scale_x/2),
             ignore=(self, ),
-            thickness=.9,
+            thickness=(self.scale_x*.9, self.scale_y*.9),
             ).hit == False:
 
             self.x += self.velocity * time.dt * self.walk_speed
@@ -188,7 +188,7 @@ if __name__ == '__main__':
             print(wall.collision)
 
 
-    player_controller = PlatformerController2d(scale_y=1, jump_height=4)
+    player_controller = PlatformerController2d(scale_y=2, jump_height=4, x=3)
     camera.add_script(SmoothFollow(target=player_controller, offset=[0,1,-30], speed=4))
 
     EditorCamera()
