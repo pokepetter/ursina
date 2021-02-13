@@ -81,10 +81,12 @@ class Button(Entity):
         if not self.text_entity:
             return
 
+        self.text_entity.world_parent = self.model
         self.text_entity.position = value
         # self.text_entity.x += self.model.radius * self.scale_y/self.scale_x * (-value[0]*2)
         # self.text_entity.y += self.model.radius * self.scale_y/self.scale_x * (-value[1]*2)
         self.text_entity.origin = value
+        self.text_entity.world_parent = self
 
     @property
     def text_color(self):
@@ -221,7 +223,7 @@ if __name__ == '__main__':
     from ursina import *
     app = Ursina()
 
-    b = Button(text='hello world!', color=color.azure, origin=(-.5,0), icon='sword', scale=.25)
+    b = Button(text='hello world!', color=color.azure, icon='sword', scale=.25, text_origin=(-.5,0))
     # b.fit_to_text()
     b.on_click = application.quit # assign a function to the button.
     b.tooltip = Tooltip('exit')
