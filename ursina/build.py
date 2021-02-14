@@ -44,6 +44,10 @@ for i, arg in enumerate(sys.argv):
             copies game scripts and assets into 'build/scr' folder.
             creates a .bat file to start the game.
             include extra modules like this: --include_modules module_one,module_two,module_tree
+            --ignore            # add assets to ignore
+            --name              # change project name
+            --include_modules   # inlude extra modules
+            --overwrite         # don't ask to overwrite existing build, just overwrite
             '''
             )
         )
