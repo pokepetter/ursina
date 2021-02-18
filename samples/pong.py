@@ -29,7 +29,7 @@ def update():
 
     if ball.collision_cooldown > 0:
         # after a collision, wait a little while before another collision can occour.
-        # this is to prevent the ball from collidin multiple times with the same wall because
+        # this is to prevent the ball from colliding multiple times with the same wall because
         # it hasn't got time to be moved away from it yet.
         return
 
