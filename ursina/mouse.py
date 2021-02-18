@@ -133,7 +133,7 @@ class Mouse():
         if key == 'left mouse down':
             self.left = True
             if self.hovered_entity:
-                if hasattr(self.hovered_entity, 'on_click'):
+                if hasattr(self.hovered_entity, 'on_click') and callable(self.hovered_entity.on_click):
                     try:
                         self.hovered_entity.on_click()
                     except Exception as e:
@@ -141,7 +141,7 @@ class Mouse():
                         application.quit()
 
                 for s in self.hovered_entity.scripts:
-                    if hasattr(s, 'on_click'):
+                    if hasattr(s, 'on_click') and callable(s.on_click):
                         s.on_click()
 
             # double click
