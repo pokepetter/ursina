@@ -1047,6 +1047,10 @@ class Entity(NodePath):
 
         from ursina import distance
         if not hasattr(self, '_picker'):
+            if isinstance(self.collider, MeshCollider):
+                raise ValueError('''intersects() can't be used with MeshCollider. use a simpler collider type''')
+
+
             from panda3d.core import CollisionTraverser, CollisionNode, CollisionHandlerQueue
             from panda3d.core import CollisionRay, CollisionSegment, CollisionBox
 
