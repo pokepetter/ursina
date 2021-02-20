@@ -15,7 +15,7 @@ class Terrain(Mesh):
 
         self.skip = skip    # should be power of two.
         self.width, self.depth = self.heightmap.width//skip, self.heightmap.height//skip
-        img = Image.open(self.heightmap.path)
+        img = Image.open(self.heightmap.path).convert('RGB')
         if self.skip > 1:
             img = img.resize([self.width, self.depth], Image.ANTIALIAS)
 
