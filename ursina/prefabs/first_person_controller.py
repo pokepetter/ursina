@@ -8,6 +8,7 @@ class FirstPersonController(Entity):
         self.origin_y = -.5
         self.camera_pivot = Entity(parent=self, y=2)
         self.cursor = Entity(parent=camera.ui, model='quad', color=color.pink, scale=.008, rotation_z=45)
+        self.terrain=None
 
         camera.parent = self.camera_pivot
         camera.position = (0,0,0)
@@ -48,6 +49,14 @@ class FirstPersonController(Entity):
         if self.gravity:
             # # gravity
             ray = raycast(self.world_position+(0,2,0), self.down, ignore=(self,))
+            if self.terrain != None:
+                terrainRay=terrainCast(origin=self.world_position+(0,2,0),terrain=self.terrain)
+                if ray.hit:     
+                    if terrainRay.hit and ray.world_point[1] <= terrainRay.world_point[1] and terrainRay.world_point[1] <= self.y:
+                        ray=terrainRay
+                else:
+                    ray=terrainRay
+                
             # ray = boxcast(self.world_position+(0,2,0), self.down, ignore=(self,))
 
             if ray.distance <= 2.1:
@@ -62,9 +71,9 @@ class FirstPersonController(Entity):
                 self.grounded = False
 
             # if not on ground and not on way up in jump, fall
-            self.y -= min(self.air_time, ray.distance-.05) * time.dt * 100
+            self.y -= min(self.air_time, ray.distance-.05)
             self.air_time += time.dt * .25 * self.gravity
-
+ 
 
     def input(self, key):
         if key == 'space':
@@ -76,7 +85,7 @@ class FirstPersonController(Entity):
             return
 
         self.grounded = False
-        self.animate_y(self.y+self.jump_height, self.jump_duration, resolution=int(1//time.dt), curve=curve.out_expo)
+        self.animate_y(self.y+self.jump_height, self.jump_duration, resolution=120, curve=curve.out_expo)
         invoke(self.start_fall, delay=self.jump_duration)
 
 
