@@ -31,7 +31,7 @@ class Terrain(Mesh):
         i = 0
         for z in range(h+1):
             for x in range(w+1):
-                self.vertices.append(Vec3((x/w)-.5, 0, (z/h)-.5))
+                self.vertices.append(Vec3((x/w)-.5, 0, (z/w)-.5))
                 self.uvs.append((x/w, z/h))
                 if x > 0 and z > 0:
                     self.triangles.append((i, i-1, i-w-2, i-w-1))
@@ -49,9 +49,9 @@ class Terrain(Mesh):
                 if x < self.width and z < self.depth:
                     y = self.height_values[x][z]
 
-                self.vertices[i] = Vec3(x/self.width -.5, y, z/self.depth -.5)
+                self.vertices[i] = Vec3(x/self.width -.5, y, z/self.width -.5)
 
-                if x > 0 and z > 0 and x < self.width-1 and z < self.width-1:
+                if x > 0 and z > 0 and x < self.width-1 and z < self.depth-1:
                     rl =  self.height_values[x+1][z] - self.height_values[x-1][z]
                     fb =  self.height_values[x][z+1] - self.height_values[x][z-1]
                     self.normals.append(Vec3(rl, 1, fb).normalized())
