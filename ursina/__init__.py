@@ -24,7 +24,7 @@ from ursina.sequence import Sequence, Func, Wait
 from ursina.entity import Entity
 from ursina.collider import *
 from ursina.collision_zone import CollisionZone
-from ursina.raycaster import raycast, boxcast
+from ursina.raycaster import raycast, boxcast, terrainCast
 from ursina.trigger import Trigger
 from ursina.audio import Audio
 from ursina.duplicate import duplicate
