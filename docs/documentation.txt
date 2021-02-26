@@ -26,8 +26,8 @@
 
 ## Video Tutorials
 
-    [Introduction to Ursina (Breakout) ↗, https://www.youtube.com/watch?v=P8J6K6p-JzY&t=1273s&ab_channel=SanjinDedic]
-    [Creating Minecraft in Python ↗, https://www.youtube.com/watch?v=DHSRaVeQxIk&t=415s&ab_channel=ClearCode]
+    [Introduction to Ursina (Breakout) ↗, https://youtu.be/P8J6K6p-JzY]
+    [Creating Minecraft in Python ↗, https://youtu.be/DHSRaVeQxIk]
 
 
 ## Example Projects
