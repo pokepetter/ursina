@@ -88,7 +88,7 @@ class PlatformerController2d(Entity):
 
         # if not on ground and not on way up in jump, fall
         if not self.grounded and not self.jumping:
-            self.y -= min(self.air_time * self.gravity, ray.distance-.05)
+            self.y -= min(self.air_time * self.gravity, ray.distance-.1)
             self.air_time += time.dt*4 * self.gravity
 
 
