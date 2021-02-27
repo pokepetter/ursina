@@ -44,14 +44,14 @@ class Entity(NodePath):
         super().__init__(self.__class__.__name__)
 
         self.name = camel_to_snake(self.type)
-        self.enabled = True     # disabled entities wil not be visible nor run code
+        self.enabled = True     # disabled entities wil not be visible nor run code.
         self.visible = True
-        self.ignore = False     # if True, will not try to run code
+        self.ignore = False     # if True, will not try to run code.
         self.eternal = False    # eternal entities does not get destroyed on scene.clear()
-        self.ignore_paused = False
+        self.ignore_paused = False      # if True, will still run when application is paused. useful when making a pause menu for example.
         self.ignore_input = False
 
-        self.parent = scene
+        self.parent = scene     # default parent is scene, which means it's in 3d space. to use UI space, set the parent to camera.ui instead.
         self.add_to_scene_entities = add_to_scene_entities # set to False to be ignored by the engine, but still get rendered.
         if add_to_scene_entities:
             scene.entities.append(self)
@@ -59,12 +59,10 @@ class Entity(NodePath):
         self.model = None       # set model with model='model_name' (without file type extention)
         self.color = color.white
         self.texture = None     # set model with texture='texture_name'. requires a model to be set beforehand.
-        self.reflection_map = scene.reflection_map
-        self.reflectivity = 0
         self.render_queue = 0
         self.double_sided = False
-        self.shader = Entity.default_shader
-        # self.always_on_top = False
+        if Entity.default_shader:
+            self.shader = Entity.default_shader
 
         self.collision = False  # toggle collision without changing collider.
         self.collider = None    # set to 'box'/'sphere'/'mesh' for auto fitted collider.
@@ -613,6 +611,7 @@ class Entity(NodePath):
     @shader.setter
     def shader(self, value):
         self._shader = value
+        
         if value is None:
             self.setShaderAuto()
             return
@@ -630,6 +629,10 @@ class Entity(NodePath):
 
             for key, value in value.default_input.items():
                 self.set_shader_input(key, value)
+
+            return
+
+        print(value, 'is not a Shader')
 
 
 
@@ -730,51 +733,6 @@ class Entity(NodePath):
         if value:
             self.setBillboardPointEye(value)
 
-
-    @property
-    def reflection_map(self):
-        return self._reflection_map
-
-    @reflection_map.setter
-    def reflection_map(self, value):
-        if value.__class__ is Texture:
-            texture = value
-
-        elif isinstance(value, str):
-            texture = load_texture(value)
-
-        self._reflection_map = texture
-
-
-    @property
-    def reflectivity(self):
-        return self._reflectivity
-
-    @reflectivity.setter
-    def reflectivity(self, value):
-        self._reflectivity = value
-
-        if value == 0:
-            self.texture = None
-
-        if value > 0:
-            # if self.reflection_map == None:
-            #     self.reflection_map = scene.reflection_map
-            #
-            # if not self.reflection_map:
-            #     print('error setting reflectivity. no reflection map')
-            #     return
-            if not self.normals:
-                self.model.generate_normals()
-
-            # ts = TextureStage('env')
-            # ts.setMode(TextureStage.MAdd)
-            # self.model.setTexGen(ts, TexGenAttrib.MEyeSphereMap)
-            # print('---------------set reflectivity', self.reflection_map)
-            # self.model.setTexture(ts, self.reflection_map)
-
-            self.texture = self._reflection_map
-            # print('set reflectivity')
 
     def generate_sphere_map(self, size=512, name=f'sphere_map_{len(scene.entities)}'):
         from ursina import camera
@@ -1047,10 +1005,6 @@ class Entity(NodePath):
 
         from ursina import distance
         if not hasattr(self, '_picker'):
-            if isinstance(self.collider, MeshCollider):
-                raise ValueError('''intersects() can't be used with MeshCollider. use a simpler collider type''')
-
-
             from panda3d.core import CollisionTraverser, CollisionNode, CollisionHandlerQueue
             from panda3d.core import CollisionRay, CollisionSegment, CollisionBox
 
