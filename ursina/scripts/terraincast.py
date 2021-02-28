@@ -2,8 +2,9 @@ from ursina import *
 from math import radians, sin, cos
 from ursina.hit_info import HitInfo
 
+# # BUG: doesn't work correctly when the terrain entity is rotated on the y axis
 
-def terraincast(origin, terrain):
+def terraincast(origin, terrain): # mainly used for getting the y position on a terrain. returns a HitInfo like raycast()
     from numpy import cross, dot
 
     origin = Vec3(*origin)
@@ -77,14 +78,14 @@ def terraincast(origin, terrain):
 if __name__ == '__main__':
     app = Ursina()
     application.asset_folder = Path('.').parent.parent / 'samples'
-    terrain = Entity(model = Terrain('heightmap_1', skip=16), scale=(20,5,20), texture='heightmap_1', rotation_y=45)
+    terrain = Entity(model = Terrain('heightmap_1', skip=16), scale=(20,5,20), texture='heightmap_1')
     player = Entity(model='cube', origin_y=-.5, color=color.orange)
 
     def update():
         player.x += (held_keys['d'] - held_keys['a']) * time.dt * 5
         player.z += (held_keys['w'] - held_keys['s']) * time.dt * 5
 
-        hit_info = terraincast(tuple(player.world_position), terrain)
+        hit_info = terraincast(player.world_position, terrain)
         if hit_info.hit:
             player.y = hit_info.world_point.y
 
