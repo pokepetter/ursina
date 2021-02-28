@@ -20,7 +20,7 @@ class Cone(Mesh):
             if add_bottom:
                 verts.append((0,0,0)) #center point
 
-            setattr(origin, rot_axis, getattr(origin, rot_axis) + 360/resolution)
+            setattr(origin, rot_axis, getattr(origin, rot_axis) - 360/resolution)
             verts.append(point.world_position) # next outer point
 
             if add_bottom:
@@ -30,7 +30,7 @@ class Cone(Mesh):
 
             if add_bottom:
                 verts.append(point.world_position)
-                setattr(origin, rot_axis, getattr(origin, rot_axis) + 360/resolution)
+                setattr(origin, rot_axis, getattr(origin, rot_axis) - 360/resolution)
                 verts.append(point.world_position)
 
         destroy(origin)
@@ -42,7 +42,7 @@ class Cone(Mesh):
 if __name__ == '__main__':
     app = Ursina()
     # Entity(model=Cone(8), color=color.color(60,1,1,.3))
-    Entity(model=Cone(8, direction=(0,0,1)), color=color.color(60,1,1,.3))
+    Entity(model=Cone(8, direction=(0,1,0)), color=color.color(60,1,1,.3))
     origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
     ed = EditorCamera(rotation_speed = 200, panning_speed=200)
     app.run()
