@@ -54,7 +54,7 @@ class Slider(Entity):
         self.knob.drop = drop
         self._prev_value = self.default
         self.value = self.default
-        self.dynamic = dynamic
+        self.dynamic = dynamic    # if set to True, will call on_value_changed() while dragging. if set to False, will only call on_value_changed() after dragging.
 
 
         self.knob.text_entity.text = str(round(self.default, 2))

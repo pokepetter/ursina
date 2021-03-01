@@ -139,6 +139,13 @@ def get_functions(str, is_class=False):
 
     return functions
 
+def clear_tags(str):
+    for tag in ('purple', 'olive', 'yellow', 'blue'):
+        str = str.replace(f'<{tag}>', '')
+        str = str.replace(f'</{tag}>', '')
+
+    return str
+
 
 def get_example(str, name=None):    # use name to highlight the relevant class
     key = '''if __name__ == '__main__':'''
@@ -208,18 +215,44 @@ def get_example(str, name=None):    # use name to highlight the relevant class
             line = line.replace(f'={name}(', f'=<purple><b>{name}</b></purple>(')
             # line = line.replace(f'.{name}', f'.<font colorK
 
+        if ' #' in line:
+            # remove colored words inside strings
+            line = clear_tags(line)
+            line = line.replace(' #', ' <gray>#')
+            line += '</gray>'
+
+
+        styled_lines.append(line)
+
+    lines = styled_lines
+    example = '\n'.join(lines)
+
+
+    # find triple qutoted strings
+    if example.count("'''") % 2 == 0 and example.count("'''") > 1:
+        parts = example.strip().split("'''")
+        parts = [e for e in parts if e]
+        is_quote = example.strip().startswith("'''")
+
+        for i in range(not is_quote, len(parts), 2):
+            parts[i] = clear_tags(parts[i])
+
+            parts[i] = "<green>'''" + parts[i] + "'''</green>"
+
+        example = ''.join(parts)
+
+    # find single quoted words
+    styled_lines = []
+    for line in example.split('\n'):
         quotes = re.findall('\'(.*?)\'', line)
         quotes = ['\'' + q + '\'' for q in quotes]
         for q in quotes:
-            line = line.replace(q, '<green>' + q + '</green>')
-
-        if ' #' in line:
-            line = line.replace(' #', ' <gray>#')
-            line += '</gray>'
+            line = line.replace(q, '<green>' + clear_tags(q) + '</green>')
         styled_lines.append(line)
-    lines = styled_lines
 
-    example = '\n'.join(lines)
+    example = '\n'.join(styled_lines)
+
+
     return example.strip()
 
 
@@ -416,7 +449,7 @@ def make_html(style, file_name):
               scrollbar-track-color: {html_color(background_color)};
               scrollbar-arrow-color: {html_color(background_color)};
               scrollbar-shadow-color: {html_color(text_color)};
-              scrollbar-dark-shadow-color: {html_color(text_color)};
+              scrollbar-darkshadow-color: {html_color(text_color)};
             }}
 
             ::-webkit-scrollbar {{ width: 8px; height: 3px;}}

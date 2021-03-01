@@ -48,7 +48,7 @@ def make_level(texture):
             if col == color.black:
                 Entity(parent=level_parent, position=(x,y), model='cube', origin=(-.5,-.5), color=color.gray, texture='white_cube', visible=True)
                 if not collider:
-                    collider = Entity(parent=level_parent, position=(x,y), model='cube', origin=(-.5,-.5), collider='box', visible=False)
+                    collider = Entity(parent=level_parent, position=(x,y), model='quad', origin=(-.5,-.5), collider='box', visible=False)
                 else:
                     # instead of creating a new collider per tile, stretch the previous collider right.
                     collider.scale_x += 1
@@ -61,7 +61,6 @@ def make_level(texture):
 
 
 make_level(load_texture('platformer_tutorial_level'))   # generate the level
-pass
 
 # ## Positioning the camera
 #
@@ -73,29 +72,27 @@ camera.position = (30/2,8)
 camera.fov = 16
 
 
-
-app.run()   # start the game
-
-
 # ## Adding player graphics and animations
 #
 # Loads an image sequence as a frame animation.
 # So if you have some frames named image_000.png, image_001.png, image_002.png and so on,
 # you can load it like this: Animation('image')
 # You can also load a .gif by including the file type: Animation('image.gif')
-#
-player.walk_animation = Animation('player_walk')
+# player.walk_animation = Animation('player_walk')
 
-# the platofrmer controller has an Animator and will toggle the state based on
+# the platformer controller has an Animator and will toggle the state based on
 # whether it's standing still, is walking or is jumping.
 # All the Animator does is to make sure only Animation is enabled at the same time.
 # Otherwise they would overlap.
-self.animator = Animator({'idle' : None, 'walk' : None, 'jump' : None})
+# self.animator = Animator({'idle' : None, 'walk' : None, 'jump' : None})
 
 
+
+# ## Start the game
+#
+app.run()
 
 # ## Adding level graphics
 #
 # Coming later
-camera.orthographic = True
-camera.position = (30/2,8)
+pass

@@ -114,6 +114,7 @@ z-index: 1;
 <a style="color:hsl(290.0, 89%, 28%);" href="#project_uvs">project_uvs</a>
 <a style="color:hsl(290.0, 89%, 28%);" href="#Scrollable">Scrollable</a>
 <a style="color:hsl(290.0, 89%, 28%);" href="#SmoothFollow">SmoothFollow</a>
+<a style="color:hsl(290.0, 89%, 28%);" href="#terraincast">terraincast</a>
 
 <a style="color:hsl(259.0, 89%, 28%);" href="#models">models</a>
 <a style="color:hsl(259.0, 89%, 28%);" href="#textures">textures</a>
@@ -137,7 +138,7 @@ z-index: 1;
               scrollbar-track-color: hsl(0.0, 0%, 99%);
               scrollbar-arrow-color: hsl(0.0, 0%, 99%);
               scrollbar-shadow-color: hsl(0.0, 0%, 10%);
-              scrollbar-dark-shadow-color: hsl(0.0, 0%, 10%);
+              scrollbar-darkshadow-color: hsl(0.0, 0%, 10%);
             }
 
             ::-webkit-scrollbar { width: 8px; height: 3px;}
@@ -217,22 +218,19 @@ z-index: 1;
 <div id="Entity"><div id="Entity" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Entity<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><gray>ursina.entity</gray><br><br><params class="params">Entity(add_to_scene_entities=True, **kwargs)</params>
 
 name<gray> = camel_to_snake(self.type)</gray> 
-enabled<gray> = True     # disabled entities wil not be visible nor run code</gray> 
+enabled<gray> = True     # disabled entities wil not be visible nor run code.</gray> 
 visible<gray> = True</gray> 
-ignore<gray> = False     # if True, will not try to run code</gray> 
+ignore<gray> = False     # if True, will not try to run code.</gray> 
 eternal<gray> = False    # eternal entities does not get destroyed on scene.clear()</gray> 
-ignore_paused<gray> = False</gray> 
+ignore_paused<gray> = False      # if True, will still run when application is paused. useful when making a pause menu for example.</gray> 
 ignore_input<gray> = False</gray> 
-parent<gray> = scene</gray> 
+parent<gray> = scene     # default parent is scene, which means it's in 3d space. to use UI space, set the parent to camera.ui instead.</gray> 
 add_to_scene_entities<gray> = add_to_scene_entities # set to False to be ignored by the engine, but still get rendered.</gray> 
 model<gray> = None       # set model with model='model_name' (without file type extention)</gray> 
 color<gray> = color.white</gray> 
 texture<gray> = None     # set model with texture='texture_name'. requires a model to be set beforehand.</gray> 
-reflection_map<gray> = scene.reflection_map</gray> 
-reflectivity<gray> = 0</gray> 
 render_queue<gray> = 0</gray> 
 double_sided<gray> = False</gray> 
-shader<gray> = Entity.default_shader</gray> 
 collision<gray> = False  # toggle collision without changing collider.</gray> 
 collider<gray> = None    # set to 'box'/'sphere'/'mesh' for auto fitted collider.</gray> 
 scripts<gray> = list()   # add with add_script(class_instance). will assign an 'entity' variable to the script.</gray> 
@@ -277,6 +275,7 @@ left                <gray># get left direction.</gray>
 up                  <gray># get up direction.</gray>
 down                <gray># get down direction.</gray>
 screen_position     <gray># get screen position(ui space) from world space.</gray>
+shader
 texture_scale
 texture_offset
 alpha
@@ -315,7 +314,7 @@ intersects(<gray>traverse_target=scene, ignore=(), debug=False</gray>)
 
 <div class="example">e = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>color</olive>=color.orange, <olive>position</olive>=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>), <olive>scale</olive>=<yellow>1</yellow>.<yellow>5</yellow>, <olive>rotation</olive>=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>4</yellow><yellow>5</yellow>), <olive>texture</olive>=<green>'brick'</green>)
 
-<green><green>''</green></green>'example of inheriting <olive>Entity</olive><green><green>''</green></green>'
+<green><green><green>''</green></green>'example of inheriting Entity<green><green>''</green></green>'</green>
 class Player(<olive>Entity</olive>):
     <purple>def</purple> __init__(self, **kwargs):
         super().__init__()
@@ -371,12 +370,12 @@ get_width(<gray>string, font=None</gray>)
 
 <div class="example"><purple>from</purple> ursina <purple>import</purple> *
   app = Ursina()
-  descr = dedent(<green>''</green>'
-      &ltscale:<yellow>1</yellow>.<yellow>5</yellow>&gt&ltorange&gtRainstorm&ltdefault&gt&ltscale:<yellow>1</yellow>&gt
-      Summon a &ltazure&gtrain storm &ltdefault&gtto deal <yellow>5</yellow> &ltazure&gtwater
+  descr = dedent(<green><green>''</green>'
+      &ltscale:1.5&gt&ltorange&gtRainstorm&ltdefault&gt&ltscale:1&gt
+      Summon a &ltazure&gtrain storm &ltdefault&gtto deal 5 &ltazure&gtwater
 
-      damage &ltdefault&gtto &lthsb(<yellow>0</yellow>,<yellow>1</yellow>,.<yellow>7</yellow>)&gteveryone, &ltdefault&gt&ltimage:file_icon&gt &ltimage:file_icon&gt test &ltdefault&gtincluding &ltorange&gtyourself. &ltdefault&gt
-      Lasts <purple>for</purple> <yellow>4</yellow> rounds.<green>''</green>').strip()
+      damage &ltdefault&gtto &lthsb(0,1,.7)&gteveryone, &ltdefault&gt&ltimage:file_icon&gt &ltimage:file_icon&gt test &ltdefault&gtincluding &ltorange&gtyourself. &ltdefault&gt
+      Lasts for 4 rounds.<green>''</green>'</green>).strip()
 
   Text.default_resolution = <yellow>1</yellow><yellow>0</yellow><yellow>8</yellow><yellow>0</yellow> * Text.size
   test = <purple><b>Text</b></purple>(<olive>origin</olive>=(.<yellow>5</yellow>,.<yellow>5</yellow>), <olive>text</olive>=descr)
@@ -419,7 +418,7 @@ on_mouse_exit()
 on_click()   
 fit_to_text(<gray>radius=.1</gray>)   
 
-<div class="example">b = <purple><b>Button</b></purple>(<olive>text</olive>=<green>'hello world!'</green>, <olive>color</olive>=color.azure, <olive>origin</olive>=(-.<yellow>5</yellow>,<yellow>0</yellow>), <olive>icon</olive>=<green>'sword'</green>, <olive>scale</olive>=.<yellow>2</yellow><yellow>5</yellow>)
+<div class="example">b = <purple><b>Button</b></purple>(<olive>text</olive>=<green>'hello world!'</green>, <olive>color</olive>=color.azure, <olive>icon</olive>=<green>'sword'</green>, <olive>scale</olive>=.<yellow>2</yellow><yellow>5</yellow>, text_<olive>origin</olive>=(-.<yellow>5</yellow>,<yellow>0</yellow>))
 b.on_click = application.quit <gray># assign a function to the button.</gray>
 b.tooltip = Tooltip(<green>'exit'</green>)
 </div>
@@ -472,16 +471,16 @@ distance(<gray>a, b</gray>)
 raycast(<gray>origin, direction=(0,0,1), distance=inf, traverse_target=scene, ignore=list(), debug=False</gray>)   
 boxcast(<gray>origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_target=scene, ignore=list(), debug=False</gray>)   <gray># similar to raycast, but with width and height</gray>
 
-<div class="example"><green>''</green>'
-Casts a ray <purple>from</purple> *origin*, in *direction*, with length *distance* and returns
+<div class="example"><green><green>''</green>'
+Casts a ray from *origin*, in *direction*, with length *distance* and returns
 a HitInfo containing information about what it hit. This ray will only hit entities with a collider.
 
 Use optional *traverse_target* to only be able to hit a specific entity and its children/descendants.
 Use optional *ignore* list to ignore certain entities.
 Setting debug to True will draw the line on screen.
 
-Example where we only move <purple>if</purple> a wall is <purple>not</purple> hit:
-<green>''</green>'
+Example where we only move if a wall is not hit:
+<green>''</green>'</green>
 
 
 class Player(<olive>Entity</olive>):
@@ -492,7 +491,7 @@ class Player(<olive>Entity</olive>):
             + self.right * (held_keys[<green>'d'</green>] - held_keys[<green>'a'</green>])
             ).normalized()  <gray># get the direction we're trying to walk in.</gray>
 
-        origin = self.world_position + (self.up*.<yellow>5</yellow>) <gray># the ray should start slightly up <purple>from</purple> the ground so we can walk up slopes or walk over small objects.</gray>
+        origin = self.world_position + (self.up*.5) <gray># the ray should start slightly up from the ground so we can walk up slopes or walk over small objects.</gray>
         hit_info = raycast(origin , self.direction, <olive>ignore</olive>=(self,), distance=.<yellow>5</yellow>, debug=False)
         <purple>if</purple> <purple>not</purple> hit_info.hit:
             self.position += self.direction * <yellow>5</yellow> * time.dt
@@ -670,7 +669,7 @@ in_bounce(<gray>t</gray>)
 in_out_bounce(<gray>t</gray>)   
 {e}_boomerang(<gray>t</gray>)   
 
-<div class="example"><green><green>''</green></green>'Draws a sheet with every curve and its name<green><green>''</green></green>'
+<div class="example"><green><green><green>''</green></green>'Draws a sheet with every curve and its name<green><green>''</green></green>'</green>
 
 camera.orthographic = True
 camera.fov = <yellow>1</yellow><yellow>6</yellow>
@@ -698,15 +697,15 @@ c = CubicBezier(<yellow>0</yellow>, .<yellow>5</yellow>, <yellow>1</yellow>, .<y
 
 window.exit_button.visible = False
 window.fps_counter.enabled = False
-<green>''</green>'
-These are used by <olive>Entity</olive> when animating, like this:
+<green><green>''</green>'
+These are used by Entity when animating, like this:
 
-e = <olive>Entity</olive>()
-e.animate_y(<yellow>1</yellow>, <olive>curve</olive>=curve.in_expo)
+e = Entity()
+e.animate_y(1, curve=curve.in_expo)
 
-e<yellow>2</yellow> = <olive>Entity</olive>(x=<yellow>1</yellow>.<yellow>5</yellow>)
-e<yellow>2</yellow>.animate_y(<yellow>1</yellow>, <olive>curve</olive>=curve.CubicBezier(<yellow>0</yellow>,.<yellow>7</yellow>,<yellow>1</yellow>,.<yellow>3</yellow>))
-<green>''</green>'
+e2 = Entity(x=1.5)
+e2.animate_y(1, curve=curve.CubicBezier(0,.7,1,.3))
+<green>''</green>'</green>
 </div>
 </div></div>
 <div id="duplicate"><div id="duplicate" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">duplicate</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><gray>ursina.duplicate</gray><br><br>
@@ -734,7 +733,7 @@ input(<gray>key</gray>)
     <purple>if</purple> key == <green>'left mouse down'</green>:
         <blue>print</blue>(<green>'pressed left mouse button'</green>)
 
-    <purple>if</purple> key == InputEvents.left_mouse_down:   <gray># same as above, but with InputEvents enum.</gray>
+    if key == InputEvents.left_mouse_down:   <gray># same as above, but with InputEvents enum.</gray>
         <blue>print</blue>(<green>'pressed left mouse button'</green>)
 
 
@@ -763,7 +762,7 @@ application.asset_folder = application.asset_folder.parent / <green>'samples'</g
 
 
 t = time.time()
-blender_scene = load_blender_scene(path=application.asset_folder, name=<green>'blender_level_editor_test_scene_<yellow>2</yellow>'</green>)
+blender_scene = load_blender_scene(path=application.asset_folder, name=<green>'blender_level_editor_test_scene_2'</green>)
 <blue>print</blue>(<green>'-------'</green>, time.time() - t)
 
 
@@ -796,8 +795,8 @@ s = Sky()
     <purple>if</purple> key == <green>'d'</green>:
         scene.clear()
 
-scene.fog_density = .<yellow>1</yellow>          <gray># sets exponential density</gray>
-scene.fog_density = (<yellow>5</yellow><yellow>0</yellow>, <yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>)   <gray># sets linear density start and end</gray>
+scene.fog_density = .1          <gray># sets exponential density</gray>
+scene.fog_density = (50, 200)   <gray># sets linear density start and end</gray>
 </div>
 </div></div>
 <div id="shader"><div id="shader" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">shader</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><gray>ursina.shader</gray><br><br>uniform mat4 p3d_ModelViewProjectionMatrix;
@@ -841,12 +840,12 @@ get_width(<gray>string, font=None</gray>)
 
 <div class="example"><purple>from</purple> ursina <purple>import</purple> *
   app = Ursina()
-  descr = dedent(<green>''</green>'
-      &ltscale:<yellow>1</yellow>.<yellow>5</yellow>&gt&ltorange&gtRainstorm&ltdefault&gt&ltscale:<yellow>1</yellow>&gt
-      Summon a &ltazure&gtrain storm &ltdefault&gtto deal <yellow>5</yellow> &ltazure&gtwater
+  descr = dedent(<green><green>''</green>'
+      &ltscale:1.5&gt&ltorange&gtRainstorm&ltdefault&gt&ltscale:1&gt
+      Summon a &ltazure&gtrain storm &ltdefault&gtto deal 5 &ltazure&gtwater
 
-      damage &ltdefault&gtto &lthsb(<yellow>0</yellow>,<yellow>1</yellow>,.<yellow>7</yellow>)&gteveryone, &ltdefault&gt&ltimage:file_icon&gt &ltimage:file_icon&gt test &ltdefault&gtincluding &ltorange&gtyourself. &ltdefault&gt
-      Lasts <purple>for</purple> <yellow>4</yellow> rounds.<green>''</green>').strip()
+      damage &ltdefault&gtto &lthsb(0,1,.7)&gteveryone, &ltdefault&gt&ltimage:file_icon&gt &ltimage:file_icon&gt test &ltdefault&gtincluding &ltorange&gtyourself. &ltdefault&gt
+      Lasts for 4 rounds.<green>''</green>'</green>).strip()
 
   Text.default_resolution = <yellow>1</yellow><yellow>0</yellow><yellow>8</yellow><yellow>0</yellow> * Text.size
   test = Text(<olive>origin</olive>=(.<yellow>5</yellow>,.<yellow>5</yellow>), <olive>text</olive>=descr)
@@ -913,8 +912,8 @@ print_on_screen(<gray>text, position=window.top_left, origin=(-.5,.5), scale=1, 
 
 test_func(<green>'test'</green>)
 invoke(test_func, <green>'test'</green>, dela<olive>y</olive>=.<yellow>1</yellow>)
-invoke(test_func, <green>'test<yellow>1</yellow>'</green>, <yellow>1</yellow>, <yellow>2</yellow>, dela<olive>y</olive>=.<yellow>2</yellow>)
-invoke(test_func, <green>'test<yellow>2</yellow>'</green>, x=<yellow>1</yellow>, <olive>y</olive>=<yellow>2</yellow>, dela<olive>y</olive>=.<yellow>3</yellow>)
+invoke(test_func, <green>'test1'</green>, <yellow>1</yellow>, <yellow>2</yellow>, dela<olive>y</olive>=.<yellow>2</yellow>)
+invoke(test_func, <green>'test2'</green>, x=<yellow>1</yellow>, <olive>y</olive>=<yellow>2</yellow>, dela<olive>y</olive>=.<yellow>3</yellow>)
 
 <purple>def</purple> input(key):
     <purple>if</purple> key == <green>'space'</green>:
@@ -1010,12 +1009,13 @@ e.collider = <green>'box'</green>      <gray># add BoxCollider based on entity's
 e.collider = <green>'sphere'</green>   <gray># add SphereCollider based on entity's bounds.</gray>
 e.collider = <green>'mesh'</green>     <gray># add MeshCollider based on entity's bounds.</gray>
 
-e.collider = Box<purple><b>Collider</b></purple>(e, center=Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>), size=Vec3(<yellow>1</yellow>,<yellow>1</yellow>,<yellow>1</yellow>))   <gray># add BoxCollider at custom positions and size.</gray>
-e.collider = Sphere<purple><b>Collider</b></purple>(e, center=Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>), radius=.<yellow>7</yellow><yellow>5</yellow>)      <gray># add SphereCollider at custom positions and size.</gray>
-e.collider = Mesh<purple><b>Collider</b></purple>(e, mesh=e.model, center=Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>))      <gray># add MeshCollider with custom shape and center.</gray>
+e.collider = Box<b>Collider</b>(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   <gray># add BoxCollider at custom positions and size.</gray>
+e.collider = Sphere<b>Collider</b>(e, center=Vec3(0,0,0), radius=.75)      <gray># add SphereCollider at custom positions and size.</gray>
+e.collider = Mesh<b>Collider</b>(e, mesh=e.model, center=Vec3(0,0,0))      <gray># add MeshCollider with custom shape and center.</gray>
 
 m = Prismatoid(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
 e = Button(<olive>parent</olive>=scene, <olive>model</olive>=m, <olive>collider</olive>=<green>'mesh'</green>, <olive>color</olive>=color.red, <olive>highlight_color</olive>=color.yellow)
+c = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>, x=<yellow>4</yellow>, <olive>color</olive>=color.gray)
 
 EditorCamera()
 </div>
@@ -1033,12 +1033,13 @@ e.collider = <green>'box'</green>      <gray># add BoxCollider based on entity's
 e.collider = <green>'sphere'</green>   <gray># add SphereCollider based on entity's bounds.</gray>
 e.collider = <green>'mesh'</green>     <gray># add MeshCollider based on entity's bounds.</gray>
 
-e.collider = <purple><b>BoxCollider</b></purple>(e, center=Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>), size=Vec3(<yellow>1</yellow>,<yellow>1</yellow>,<yellow>1</yellow>))   <gray># add BoxCollider at custom positions and size.</gray>
-e.collider = SphereCollider(e, center=Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>), radius=.<yellow>7</yellow><yellow>5</yellow>)      <gray># add SphereCollider at custom positions and size.</gray>
-e.collider = MeshCollider(e, mesh=e.model, center=Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>))      <gray># add MeshCollider with custom shape and center.</gray>
+e.collider = <b>BoxCollider</b>(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   <gray># add BoxCollider at custom positions and size.</gray>
+e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      <gray># add SphereCollider at custom positions and size.</gray>
+e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      <gray># add MeshCollider with custom shape and center.</gray>
 
 m = Prismatoid(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
 e = Button(<olive>parent</olive>=scene, <olive>model</olive>=m, <olive>collider</olive>=<green>'mesh'</green>, <olive>color</olive>=color.red, <olive>highlight_color</olive>=color.yellow)
+c = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>, x=<yellow>4</yellow>, <olive>color</olive>=color.gray)
 
 EditorCamera()
 </div>
@@ -1055,12 +1056,13 @@ e.collider = <green>'box'</green>      <gray># add BoxCollider based on entity's
 e.collider = <green>'sphere'</green>   <gray># add SphereCollider based on entity's bounds.</gray>
 e.collider = <green>'mesh'</green>     <gray># add MeshCollider based on entity's bounds.</gray>
 
-e.collider = BoxCollider(e, center=Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>), size=Vec3(<yellow>1</yellow>,<yellow>1</yellow>,<yellow>1</yellow>))   <gray># add BoxCollider at custom positions and size.</gray>
-e.collider = <purple><b>SphereCollider</b></purple>(e, center=Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>), radius=.<yellow>7</yellow><yellow>5</yellow>)      <gray># add SphereCollider at custom positions and size.</gray>
-e.collider = MeshCollider(e, mesh=e.model, center=Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>))      <gray># add MeshCollider with custom shape and center.</gray>
+e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   <gray># add BoxCollider at custom positions and size.</gray>
+e.collider = <b>SphereCollider</b>(e, center=Vec3(0,0,0), radius=.75)      <gray># add SphereCollider at custom positions and size.</gray>
+e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      <gray># add MeshCollider with custom shape and center.</gray>
 
 m = Prismatoid(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
 e = Button(<olive>parent</olive>=scene, <olive>model</olive>=m, <olive>collider</olive>=<green>'mesh'</green>, <olive>color</olive>=color.red, <olive>highlight_color</olive>=color.yellow)
+c = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>, x=<yellow>4</yellow>, <olive>color</olive>=color.gray)
 
 EditorCamera()
 </div>
@@ -1070,7 +1072,6 @@ EditorCamera()
 node_path<gray> = entity.attachNewNode(CollisionNode('CollisionNode'))</gray> 
 node<gray> = self.node_path.node()</gray> 
 collision_polygons<gray> = list()</gray> 
-visible<gray> = False</gray> 
 
 
 <div class="example">e = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, x=<yellow>2</yellow>)
@@ -1078,12 +1079,13 @@ e.collider = <green>'box'</green>      <gray># add BoxCollider based on entity's
 e.collider = <green>'sphere'</green>   <gray># add SphereCollider based on entity's bounds.</gray>
 e.collider = <green>'mesh'</green>     <gray># add MeshCollider based on entity's bounds.</gray>
 
-e.collider = BoxCollider(e, center=Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>), size=Vec3(<yellow>1</yellow>,<yellow>1</yellow>,<yellow>1</yellow>))   <gray># add BoxCollider at custom positions and size.</gray>
-e.collider = SphereCollider(e, center=Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>), radius=.<yellow>7</yellow><yellow>5</yellow>)      <gray># add SphereCollider at custom positions and size.</gray>
-e.collider = <purple><b>MeshCollider</b></purple>(e, mesh=e.model, center=Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>))      <gray># add MeshCollider with custom shape and center.</gray>
+e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   <gray># add BoxCollider at custom positions and size.</gray>
+e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      <gray># add SphereCollider at custom positions and size.</gray>
+e.collider = <b>MeshCollider</b>(e, mesh=e.model, center=Vec3(0,0,0))      <gray># add MeshCollider with custom shape and center.</gray>
 
 m = Prismatoid(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
 e = Button(<olive>parent</olive>=scene, <olive>model</olive>=m, <olive>collider</olive>=<green>'mesh'</green>, <olive>color</olive>=color.red, <olive>highlight_color</olive>=color.yellow)
+c = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>, x=<yellow>4</yellow>, <olive>color</olive>=color.gray)
 
 EditorCamera()
 </div>
@@ -1096,10 +1098,10 @@ entities_with_mesh_colliders<gray> = target_entities # defaults to all entities 
 update()   
 update_colliders()   
 
-<div class="example"><green>''</green>'
+<div class="example"><green><green>''</green>'
 This will only enable mesh colliders' collision polygons within a certain range,
 in order to improve performance.
-<green>''</green>'
+<green>''</green>'</green>
 
 <purple>from</purple> ursina.shaders <purple>import</purple> basic_lighting_shader
 window.vsync = False
@@ -1183,7 +1185,7 @@ sample_curve_derivative_x(<gray>t</gray>)
 calculate(<gray>x, epsilon=.0001</gray>)   
 solve_curve_x(<gray>t, epsilon=.0001</gray>)   
 
-<div class="example"><green><green>''</green></green>'Draws a sheet with every curve and its name<green><green>''</green></green>'
+<div class="example"><green><green><green>''</green></green>'Draws a sheet with every curve and its name<green><green>''</green></green>'</green>
 
 camera.orthographic = True
 camera.fov = <yellow>1</yellow><yellow>6</yellow>
@@ -1211,15 +1213,15 @@ c = <purple><b>CubicBezier</b></purple>(<yellow>0</yellow>, .<yellow>5</yellow>,
 
 window.exit_button.visible = False
 window.fps_counter.enabled = False
-<green>''</green>'
-These are used by <olive>Entity</olive> when animating, like this:
+<green><green>''</green>'
+These are used by Entity when animating, like this:
 
-e = <olive>Entity</olive>()
-e.animate_y(<yellow>1</yellow>, <olive>curve</olive>=curve.in_expo)
+e = Entity()
+e.animate_y(1, curve=curve.in_expo)
 
-e<yellow>2</yellow> = <olive>Entity</olive>(x=<yellow>1</yellow>.<yellow>5</yellow>)
-e<yellow>2</yellow>.animate_y(<yellow>1</yellow>, <olive>curve</olive>=curve.<purple><b>CubicBezier</b></purple>(<yellow>0</yellow>,.<yellow>7</yellow>,<yellow>1</yellow>,.<yellow>3</yellow>))
-<green>''</green>'
+e2 = Entity(x=1.5)
+e2.animate_y(1, curve=curve.<b>CubicBezier</b>(0,.7,1,.3))
+<green>''</green>'</green>
 </div>
 </div></div>
 <div id="HitInfo"><div id="HitInfo" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">HitInfo</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><gray>ursina.hit_info</gray><br><br><params class="params">HitInfo(**kwargs)</params>
@@ -1307,7 +1309,7 @@ gamepad_dpad_right_shoulder_up<gray> = 'gamepad right shoulder up'</gray>
 color
 
 
-<div class="example"><purple>from</purple> ursina.shaders <purple>import</purple> lit_with_shadows_shader <gray># you have to apply this shader to enties <purple>for</purple> them to recieve shadows.</gray>
+<div class="example">from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to recieve shadows.</gray>
 EditorCamera()
 <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>color</olive>=color.gray, <olive>shader</olive>=lit_with_shadows_shader)
 <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=<yellow>1</yellow>, <olive>shader</olive>=lit_with_shadows_shader)
@@ -1321,7 +1323,7 @@ shadow_map_resolution<gray> = Vec2(1024, 1024)</gray>
 shadows
 
 
-<div class="example"><purple>from</purple> ursina.shaders <purple>import</purple> lit_with_shadows_shader <gray># you have to apply this shader to enties <purple>for</purple> them to recieve shadows.</gray>
+<div class="example">from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to recieve shadows.</gray>
 EditorCamera()
 <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>color</olive>=color.gray, <olive>shader</olive>=lit_with_shadows_shader)
 <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=<yellow>1</yellow>, <olive>shader</olive>=lit_with_shadows_shader)
@@ -1333,7 +1335,7 @@ pivot = <olive>Entity</olive>()
 
 
 
-<div class="example"><purple>from</purple> ursina.shaders <purple>import</purple> lit_with_shadows_shader <gray># you have to apply this shader to enties <purple>for</purple> them to recieve shadows.</gray>
+<div class="example">from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to recieve shadows.</gray>
 EditorCamera()
 <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>color</olive>=color.gray, <olive>shader</olive>=lit_with_shadows_shader)
 <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=<yellow>1</yellow>, <olive>shader</olive>=lit_with_shadows_shader)
@@ -1345,7 +1347,7 @@ DirectionalLight(<olive>parent</olive>=pivot, <olive>y</olive>=<yellow>2</yellow
 
 
 
-<div class="example"><purple>from</purple> ursina.shaders <purple>import</purple> lit_with_shadows_shader <gray># you have to apply this shader to enties <purple>for</purple> them to recieve shadows.</gray>
+<div class="example">from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to recieve shadows.</gray>
 EditorCamera()
 <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>color</olive>=color.gray, <olive>shader</olive>=lit_with_shadows_shader)
 <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=<yellow>1</yellow>, <olive>shader</olive>=lit_with_shadows_shader)
@@ -1357,7 +1359,7 @@ DirectionalLight(<olive>parent</olive>=pivot, <olive>y</olive>=<yellow>2</yellow
 
 
 
-<div class="example"><purple>from</purple> ursina.shaders <purple>import</purple> lit_with_shadows_shader <gray># you have to apply this shader to enties <purple>for</purple> them to recieve shadows.</gray>
+<div class="example">from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to recieve shadows.</gray>
 EditorCamera()
 <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>color</olive>=color.gray, <olive>shader</olive>=lit_with_shadows_shader)
 <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=<yellow>1</yellow>, <olive>shader</olive>=lit_with_shadows_shader)
@@ -1563,14 +1565,14 @@ set_pixel(<gray>x, y, color</gray>)
 apply()   
 save(<gray>path</gray>)   
 
-<div class="example"><green>''</green>'
+<div class="example"><green><green>''</green>'
     The Texture class rarely used manually but usually instantiated
-    when assigning a texture to an <olive>Entity</olive>
-    texture = <purple><b>Texture</b></purple>(path / PIL.Image / panda<yellow>3</yellow>d.core.Texture)
+    when assigning a texture to an Entity
+    texture = <b>Texture</b>(path / PIL.Image / panda3d.core.Texture)
 
     A texture file can be a .png, .jpg or .psd.
     If it's a .psd it and no compressed version exists, it will compress it automatically.
-<green>''</green>'
+<green>''</green>'</green>
 e = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'brick'</green>)
 e.texture.set_pixel(<yellow>0</yellow>, <yellow>2</yellow>, color.blue)
 e.texture.apply()
@@ -1615,8 +1617,8 @@ print_on_screen(<gray>text, position=window.top_left, origin=(-.5,.5), scale=1, 
 
 test_func(<green>'test'</green>)
 invoke(test_func, <green>'test'</green>, dela<olive>y</olive>=.<yellow>1</yellow>)
-invoke(test_func, <green>'test<yellow>1</yellow>'</green>, <yellow>1</yellow>, <yellow>2</yellow>, dela<olive>y</olive>=.<yellow>2</yellow>)
-invoke(test_func, <green>'test<yellow>2</yellow>'</green>, x=<yellow>1</yellow>, <olive>y</olive>=<yellow>2</yellow>, dela<olive>y</olive>=.<yellow>3</yellow>)
+invoke(test_func, <green>'test1'</green>, <yellow>1</yellow>, <yellow>2</yellow>, dela<olive>y</olive>=.<yellow>2</yellow>)
+invoke(test_func, <green>'test2'</green>, x=<yellow>1</yellow>, <olive>y</olive>=<yellow>2</yellow>, dela<olive>y</olive>=.<yellow>3</yellow>)
 
 <purple>def</purple> input(key):
     <purple>if</purple> key == <green>'space'</green>:
@@ -1656,24 +1658,23 @@ sequence<gray> = Sequence(loop=loop, auto_destroy=False)</gray>
 frame_times<gray> = frame_times</gray> 
 is_playing<gray> = False</gray> 
 autoplay<gray> = autoplay</gray> 
-duration
+duration            <gray># get the duration of the animation. you can't set it. to do so, change the fps instead.</gray>
 
 start()   
 pause()   
 resume()   
 finish()   
 
-<div class="example">application.asset_folder = application.asset_folder.parent.parent / <green>'samples'</green>
-
-<green>''</green>'
+<div class="example"><green><green>''</green>'
 Loads an image sequence as a frame animation.
-So <purple>if</purple> you have some frames named image_<yellow>0</yellow><yellow>0</yellow><yellow>0</yellow>.png, image_<yellow>0</yellow><yellow>0</yellow><yellow>1</yellow>.png, image_<yellow>0</yellow><yellow>0</yellow><yellow>2</yellow>.png and so on,
-you can load it like this: <purple><b>Animation</b></purple>(<green>'image'</green>)
+So if you have some frames named image_000.png, image_001.png, image_002.png and so on,
+you can load it like this: <b>Animation</b>(<green>'image'</green>)
 
-You can also load a .g<purple>if</purple> by including the file type: <purple><b>Animation</b></purple>(<green>'image.gif'</green>)
-<green>''</green>'
+You can also load a .gif by including the file type: <b>Animation</b>(<green>'image.gif'</green>)
+<green>''</green>'</green>
 
 <purple><b>Animation</b></purple>(<green>'ursina_wink'</green>)
+<purple><b>Animation</b></purple>( application.asset_folder.parent.parent / <green>'samples'</green> / <green>'city_in_desert_valley_water.gif'</green>)
 </div>
 </div></div>
 <div id="Animator"><div id="Animator" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Animator<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><gray>ursina.prefabs.animator</gray><br><br><params class="params">Animator(animations=None, start_state='')</params>
@@ -1693,14 +1694,14 @@ a = <purple><b>Animator</b></purple>(
 )
 a.state = <green>'yo'</green>
 
-Text(<green>'press &ltred&gt<yellow>1</yellow>&ltdefault&gt, &ltgreen&gt<yellow>2</yellow>&ltdefault&gt or &ltviolet&gt<yellow>3</yellow>&ltdefault&gt to toggle different animator states'</green>, <olive>origin</olive>=(<yellow>0</yellow>,-.<yellow>5</yellow>), <olive>y</olive>=-.<yellow>4</yellow>)
+Text(<green>'press &ltred&gt1&ltdefault&gt, &ltgreen&gt2&ltdefault&gt or &ltviolet&gt3&ltdefault&gt to toggle different animator states'</green>, <olive>origin</olive>=(<yellow>0</yellow>,-.<yellow>5</yellow>), <olive>y</olive>=-.<yellow>4</yellow>)
 
 <purple>def</purple> input(key):
-    <purple>if</purple> key == <green>'<yellow>1</yellow>'</green>:
+    <purple>if</purple> key == <green>'1'</green>:
         a.state = <green>'lol'</green>
-    <purple>if</purple> key == <green>'<yellow>2</yellow>'</green>:
+    <purple>if</purple> key == <green>'2'</green>:
         a.state = <green>'yo'</green>
-    <purple>if</purple> key == <green>'<yellow>3</yellow>'</green>:
+    <purple>if</purple> key == <green>'3'</green>:
         a.state = <green>'help'</green>
         <blue>print</blue>(anim.enabled)
 </div>
@@ -1837,8 +1838,8 @@ DropdownMenu(<green>'File'</green>, buttons=(
     <purple><b>DropdownMenuButton</b></purple>(<green>'New'</green>),
     <purple><b>DropdownMenuButton</b></purple>(<green>'Open'</green>),
     DropdownMenu(<green>'Reopen Project'</green>, buttons=(
-        <purple><b>DropdownMenuButton</b></purple>(<green>'Project <yellow>1</yellow>'</green>),
-        <purple><b>DropdownMenuButton</b></purple>(<green>'Project <yellow>2</yellow>'</green>),
+        <purple><b>DropdownMenuButton</b></purple>(<green>'Project 1'</green>),
+        <purple><b>DropdownMenuButton</b></purple>(<green>'Project 2'</green>),
         )),
     <purple><b>DropdownMenuButton</b></purple>(<green>'Save'</green>),
     DropdownMenu(<green>'Options'</green>, buttons=(
@@ -1867,8 +1868,8 @@ update()
     DropdownMenuButton(<green>'New'</green>),
     DropdownMenuButton(<green>'Open'</green>),
     <purple><b>DropdownMenu</b></purple>(<green>'Reopen Project'</green>, buttons=(
-        DropdownMenuButton(<green>'Project <yellow>1</yellow>'</green>),
-        DropdownMenuButton(<green>'Project <yellow>2</yellow>'</green>),
+        DropdownMenuButton(<green>'Project 1'</green>),
+        DropdownMenuButton(<green>'Project 2'</green>),
         )),
     DropdownMenuButton(<green>'Save'</green>),
     <purple><b>DropdownMenu</b></purple>(<green>'Options'</green>, buttons=(
@@ -1898,10 +1899,10 @@ on_disable()
 input(<gray>key</gray>)   
 update()   
 
-<div class="example"><green>''</green>'
-Simple camera <purple>for</purple> debugging.
+<div class="example"><green><green>''</green>'
+Simple camera for debugging.
 Hold right click and move the mouse to rotate around point.
-<green>''</green>'
+<green>''</green>'</green>
 
 sky = Sky()
 e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.white, <olive>collider</olive>=<green>'box'</green>)
@@ -1919,7 +1920,7 @@ rotation_info = Text(<olive>position</olive>=window.top_left)
     rotation_info.text = str(int(ec.rotation_y)) + <green>'\n'</green> + str(int(ec.rotation_x))
 
 <purple>def</purple> input(key):
-    <purple>if</purple> key == <green>'tab'</green>:    <gray># press tab to toggle edit/play mode</gray>
+    if key == <green>'tab'</green>:    <gray># press tab to toggle edit/play mode</gray>
         ec.enabled = <purple>not</purple> ec.enabled
 </div>
 </div></div>
@@ -1929,11 +1930,11 @@ rotation_info = Text(<olive>position</olive>=window.top_left)
 on_click()   
 input(<gray>key</gray>)   
 
-<div class="example"><green>''</green>'
+<div class="example"><green><green>''</green>'
 This is the button in the upper right corner.
 You can click on it or press Shift+Q to close the program.
 To disable it, set window.exit_button.enabled to False
-<green>''</green>'
+<green>''</green>'</green>
 </div>
 </div></div>
 <div id="FileButton"><div id="FileButton" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FileButton<gray>(<a style="color: gray;" href="#Button">Button</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><gray>ursina.prefabs.file_browser</gray><br><br><params class="params">FileButton(load_menu, **kwargs)</params>
@@ -2065,11 +2066,11 @@ finish()
 
 <div class="example">application.asset_folder = application.asset_folder.parent.parent / <green>'samples'</green>
 
-<green>''</green>'
+<green><green>''</green>'
 Loads an obj sequence as a frame animation.
-So <purple>if</purple> you have some frames named run_cycle_<yellow>0</yellow><yellow>0</yellow><yellow>0</yellow>.obj, run_cycle_<yellow>0</yellow><yellow>0</yellow><yellow>0</yellow>.obj, run_cycle_<yellow>0</yellow><yellow>0</yellow><yellow>0</yellow>.obj and so on,
-you can load it like this: FrameAnimation<yellow>3</yellow>d(<green>'run_cycle_'</green>)
-<green>''</green>'
+So if you have some frames named run_cycle_000.obj, run_cycle_000.obj, run_cycle_000.obj and so on,
+you can load it like this: FrameAnimation3d(<green>'run_cycle_'</green>)
+<green>''</green>'</green>
 
 FrameAnimation<yellow>3</yellow>d(<green>'blob_animation_'</green>)
 </div>
@@ -2106,18 +2107,18 @@ input(<gray>key</gray>)
 record_undo()   
 floodfill(<gray>matrix, x, y, first=True</gray>)   
 
-<div class="example"><green>''</green>'
+<div class="example"><green><green>''</green>'
 pixel editor example, it's basically a drawing tool.
-can be useful <purple>for</purple> level editors and such
+can be useful for level editors and such
 here we create a new texture, but can also give it an exisitng texture to modify.
-<green>''</green>'
+<green>''</green>'</green>
 <purple>from</purple> PIL <purple>import</purple> Image
 t = Texture(Image.new(<olive>mode</olive>=<green>'RGBA'</green>, size=(<yellow>3</yellow><yellow>2</yellow>,<yellow>3</yellow><yellow>2</yellow>), <olive>color</olive>=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>)))
 <purple>from</purple> ursina.prefabs.grid_editor <purple>import</purple> PixelEditor
 
-<green>''</green>'
+<green><green>''</green>'
 same as the pixel editor, but with text.
-<green>''</green>'
+<green>''</green>'</green>
 <purple>from</purple> ursina.prefabs.grid_editor <purple>import</purple> ASCIIEditor
 ASCIIEditor()
 </div>
@@ -2129,18 +2130,18 @@ grid<gray> = [[texture.get_pixel(x,y) for y in range(texture.height)] for x in r
 render()   
 save()   
 
-<div class="example"><green>''</green>'
+<div class="example"><green><green>''</green>'
 pixel editor example, it's basically a drawing tool.
-can be useful <purple>for</purple> level editors and such
+can be useful for level editors and such
 here we create a new texture, but can also give it an exisitng texture to modify.
-<green>''</green>'
+<green>''</green>'</green>
 <purple>from</purple> PIL <purple>import</purple> Image
 t = Texture(Image.new(<olive>mode</olive>=<green>'RGBA'</green>, size=(<yellow>3</yellow><yellow>2</yellow>,<yellow>3</yellow><yellow>2</yellow>), <olive>color</olive>=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>)))
 <purple>from</purple> ursina.prefabs.grid_editor <purple>import</purple> PixelEditor
 
-<green>''</green>'
+<green><green>''</green>'
 same as the pixel editor, but with text.
-<green>''</green>'
+<green>''</green>'</green>
 <purple>from</purple> ursina.prefabs.grid_editor <purple>import</purple> ASCIIEditor
 ASCIIEditor()
 </div>
@@ -2153,18 +2154,18 @@ scale<gray> = (self.text_entity.width, self.h*Text.size*self.text_entity.line_he
 render()   
 input(<gray>key</gray>)   
 
-<div class="example"><green>''</green>'
+<div class="example"><green><green>''</green>'
 pixel editor example, it's basically a drawing tool.
-can be useful <purple>for</purple> level editors and such
+can be useful for level editors and such
 here we create a new texture, but can also give it an exisitng texture to modify.
-<green>''</green>'
+<green>''</green>'</green>
 <purple>from</purple> PIL <purple>import</purple> Image
 t = Texture(Image.new(<olive>mode</olive>=<green>'RGBA'</green>, size=(<yellow>3</yellow><yellow>2</yellow>,<yellow>3</yellow><yellow>2</yellow>), <olive>color</olive>=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>)))
 <purple>from</purple> ursina.prefabs.grid_editor <purple>import</purple> PixelEditor
 
-<green>''</green>'
+<green><green>''</green>'
 same as the pixel editor, but with text.
-<green>''</green>'
+<green>''</green>'</green>
 <purple>from</purple> ursina.prefabs.grid_editor <purple>import</purple> ASCIIEditor
 <purple><b>ASCIIEditor</b></purple>()
 </div>
@@ -2218,9 +2219,9 @@ reload_shaders()
 
 <div class="example">application.hot_reloader.path = application.asset_folder.parent.parent / <green>'samples'</green> / <green>'platformer.py'</green>
 
-<green>''</green>'
-By default you can press F<yellow>5</yellow> to reload the starting script, F<yellow>6</yellow> to re<purple>import</purple> textures and F<yellow>7</yellow> to reload models.
-<green>''</green>'
+<green><green>''</green>'
+By default you can press F5 to reload the starting script, F6 to reimport textures and F7 to reload models.
+<green>''</green>'</green>
 </div>
 </div></div>
 <div id="InputField"><div id="InputField" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">InputField<gray>(<a style="color: gray;" href="#Button">Button</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><gray>ursina.prefabs.input_field</gray><br><br><params class="params">InputField(default_value='', label='', max_lines=1, **kwargs)</params>
@@ -2249,13 +2250,16 @@ position<gray> = window.bottom_right</gray>
 origin<gray> = (0.5, -0.5)</gray> 
 process<gray> = psutil.Process(os.getpid())</gray> 
 i<gray> = 0</gray> 
+text<gray> = 'eofiwjeofiwejf'</gray> 
 
 update()   
 
 <div class="example"><purple><b>MemoryCounter</b></purple>()
-<green>''</green>'
+<green><green>''</green>'
 Displays the amount of memory used in the bottom right corner
-<green>''</green>'
+<green>''</green>'</green>
+e = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>)
+e.texture = <green>'shore'</green>
 </div>
 </div></div>
 <div id="Panel"><div id="Panel" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Panel<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><gray>ursina.prefabs.panel</gray><br><br><params class="params">Panel(**kwargs)</params>
@@ -2309,7 +2313,7 @@ ceiling = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <oli
         <blue>print</blue>(wall.collision)
 
 
-player_controller = PlatformerController<yellow>2</yellow>d(scale_<olive>y</olive>=<yellow>1</yellow>, jump_height=<yellow>4</yellow>)
+player_controller = PlatformerController<yellow>2</yellow>d(scale_<olive>y</olive>=<yellow>2</yellow>, jump_height=<yellow>4</yellow>, x=<yellow>3</yellow>)
 camera.add_script(SmoothFollow(target=player_controller, offset=[<yellow>0</yellow>,<yellow>1</yellow>,-<yellow>3</yellow><yellow>0</yellow>], speed=<yellow>4</yellow>))
 
 EditorCamera()
@@ -2337,16 +2341,16 @@ input(<gray>key</gray>)
 
 <div class="example">rm = <purple><b>RadialMenu</b></purple>(
     buttons = (
-        RadialMenuButton(<olive>text</olive>=<green>'<yellow>1</yellow>'</green>),
-        RadialMenuButton(<olive>text</olive>=<green>'<yellow>2</yellow>'</green>),
-        RadialMenuButton(<olive>text</olive>=<green>'<yellow>3</yellow>'</green>),
-        RadialMenuButton(<olive>text</olive>=<green>'<yellow>4</yellow>'</green>),
-        RadialMenuButton(<olive>text</olive>=<green>'<yellow>5</yellow>'</green>, <olive>scale</olive>=.<yellow>5</yellow>),
-        RadialMenuButton(<olive>text</olive>=<green>'<yellow>6</yellow>'</green>, <olive>color</olive>=color.red),
+        RadialMenuButton(<olive>text</olive>=<green>'1'</green>),
+        RadialMenuButton(<olive>text</olive>=<green>'2'</green>),
+        RadialMenuButton(<olive>text</olive>=<green>'3'</green>),
+        RadialMenuButton(<olive>text</olive>=<green>'4'</green>),
+        RadialMenuButton(<olive>text</olive>=<green>'5'</green>, <olive>scale</olive>=.<yellow>5</yellow>),
+        RadialMenuButton(<olive>text</olive>=<green>'6'</green>, <olive>color</olive>=color.red),
         ),
     enabled = False
     )
-RadialMenuButton(<olive>text</olive>=<green>'<yellow>6</yellow>'</green>, <olive>color</olive>=color.red,x =-.<yellow>5</yellow>, <olive>scale</olive>=.<yellow>0</yellow><yellow>6</yellow>),
+RadialMenuButton(<olive>text</olive>=<green>'6'</green>, <olive>color</olive>=color.red,x =-.<yellow>5</yellow>, <olive>scale</olive>=.<yellow>0</yellow><yellow>6</yellow>),
 <purple>def</purple> enable_radial_menu():
     rm.enabled = True
 cube = Button(<olive>parent</olive>=scene, <olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.orange, <olive>highlight_color</olive>=color.azure, <olive>on_click</olive>=enable_radial_menu)
@@ -2359,16 +2363,16 @@ EditorCamera()
 
 <div class="example">rm = RadialMenu(
     buttons = (
-        <purple><b>RadialMenuButton</b></purple>(<olive>text</olive>=<green>'<yellow>1</yellow>'</green>),
-        <purple><b>RadialMenuButton</b></purple>(<olive>text</olive>=<green>'<yellow>2</yellow>'</green>),
-        <purple><b>RadialMenuButton</b></purple>(<olive>text</olive>=<green>'<yellow>3</yellow>'</green>),
-        <purple><b>RadialMenuButton</b></purple>(<olive>text</olive>=<green>'<yellow>4</yellow>'</green>),
-        <purple><b>RadialMenuButton</b></purple>(<olive>text</olive>=<green>'<yellow>5</yellow>'</green>, <olive>scale</olive>=.<yellow>5</yellow>),
-        <purple><b>RadialMenuButton</b></purple>(<olive>text</olive>=<green>'<yellow>6</yellow>'</green>, <olive>color</olive>=color.red),
+        <purple><b>RadialMenuButton</b></purple>(<olive>text</olive>=<green>'1'</green>),
+        <purple><b>RadialMenuButton</b></purple>(<olive>text</olive>=<green>'2'</green>),
+        <purple><b>RadialMenuButton</b></purple>(<olive>text</olive>=<green>'3'</green>),
+        <purple><b>RadialMenuButton</b></purple>(<olive>text</olive>=<green>'4'</green>),
+        <purple><b>RadialMenuButton</b></purple>(<olive>text</olive>=<green>'5'</green>, <olive>scale</olive>=.<yellow>5</yellow>),
+        <purple><b>RadialMenuButton</b></purple>(<olive>text</olive>=<green>'6'</green>, <olive>color</olive>=color.red),
         ),
     enabled = False
     )
-<purple><b>RadialMenuButton</b></purple>(<olive>text</olive>=<green>'<yellow>6</yellow>'</green>, <olive>color</olive>=color.red,x =-.<yellow>5</yellow>, <olive>scale</olive>=.<yellow>0</yellow><yellow>6</yellow>),
+<purple><b>RadialMenuButton</b></purple>(<olive>text</olive>=<green>'6'</green>, <olive>color</olive>=color.red,x =-.<yellow>5</yellow>, <olive>scale</olive>=.<yellow>0</yellow><yellow>6</yellow>),
 <purple>def</purple> enable_radial_menu():
     rm.enabled = True
 cube = Button(<olive>parent</olive>=scene, <olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.orange, <olive>highlight_color</olive>=color.azure, <olive>on_click</olive>=enable_radial_menu)
@@ -2532,12 +2536,12 @@ Text.size = <yellow>1</yellow>/window.fullscreen_size[<yellow>1</yellow>]*<yello
 Text.default_font = <green>'consola.ttf'</green>
 Text.default_resolution = <yellow>1</yellow><yellow>6</yellow>*<yellow>2</yellow>
 te = <purple><b>TextField</b></purple>(max_lines=<yellow>3</yellow><yellow>0</yellow><yellow>0</yellow>, <olive>scale</olive>=<yellow>1</yellow>)
-te.text = dedent(<green>''</green>'
+te.text = dedent(<green><green>''</green>'
     Lorem ipsum dolor sit amet, consectetur adipiscing elit.
     Aliquam sapien tellus, venenatis sit amet ante et, malesuada porta risus.
     Etiam et mi luctus, viverra urna at, maximus eros. Sed dictum faucibus purus,
     nec rutrum ipsum condimentum in. Mauris iaculis arcu nec justo rutrum euismod.
-    Suspendisse dolor tortor, congue id erat sit amet, sollicitudin facilisis velit.<green>''</green>'
+    Suspendisse dolor tortor, congue id erat sit amet, sollicitudin facilisis velit.<green>''</green>'</green>
     )[<yellow>1</yellow>:]
 te.selection = [(<yellow>2</yellow><yellow>5</yellow>,<yellow>0</yellow>), (<yellow>1</yellow><yellow>0</yellow>,<yellow>3</yellow>)]
 te.draw_selection()
@@ -2553,11 +2557,11 @@ update()
 <div class="example">app = Ursina()
 
     tooltip_test = <purple><b>Tooltip</b></purple>(
-    <green>'&ltscale:<yellow>1</yellow>.<yellow>5</yellow>&gt&ltpink&gt'</green> + <green>'Rainstorm'</green> + <green>'&ltscale:<yellow>1</yellow>&gt \n \n'</green> +
-<green>''</green>'Summon a &ltblue&gtrain
-storm &ltdefault&gtto deal <yellow>5</yellow> &ltblue&gtwater
+    <green>'&ltscale:1.5&gt&ltpink&gt'</green> + <green>'Rainstorm'</green> + <green>'&ltscale:1&gt \n \n'</green> +
+<green><green>''</green>'Summon a &ltblue&gtrain
+storm &ltdefault&gtto deal 5 &ltblue&gtwater
 damage &ltdefault&gtto &ltred&gteveryone, &ltdefault&gtincluding &ltorange&gtyourself. &ltdefault&gt
-Lasts <purple>for</purple> <yellow>4</yellow> rounds.<green>''</green><green>'.replace('</green>\n<green>', '</green> '))
+Lasts for 4 rounds.<green>''</green><green>'</green>.replace('</green>\n<green>', '</green> '))
 
     tooltip_test.enabled = True
     app.run()
@@ -2630,9 +2634,9 @@ Cursor()
 height<gray> = height</gray> 
 
 
-<div class="example"><green>''</green>'
+<div class="example"><green><green>''</green>'
 WindowPanel is an easy way to create UI. It will automatically layout the content.
-<green>''</green>'
+<green>''</green>'</green>
 WindowPanel(
     title=<green>'Custom Window'</green>,
     content=(
@@ -2654,9 +2658,9 @@ popup<gray> = False</gray>
 on_enable()   
 close()   
 
-<div class="example"><green>''</green>'
+<div class="example"><green><green>''</green>'
 WindowPanel is an easy way to create UI. It will automatically layout the content.
-<green>''</green>'
+<green>''</green>'</green>
 <purple><b>WindowPanel</b></purple>(
     title=<green>'Custom Window'</green>,
     content=(
@@ -2825,10 +2829,10 @@ target_value<gray> = None</gray>
 update()   
 input(<gray>key</gray>)   
 
-<div class="example"><green>''</green>'
+<div class="example"><green><green>''</green>'
 This will make target entity move up or down when you hover the entity/its children
 while scrolling the scroll wheel.
-<green>''</green>'
+<green>''</green>'</green>
 
 zone = <olive>Entity</olive>(<olive>parent</olive>=camera.ui)
 zone.set_scissor(Vec3(-.<yellow>5</yellow>,-.<yellow>2</yellow><yellow>5</yellow>,<yellow>0</yellow>), Vec3(.<yellow>5</yellow>,.<yellow>2</yellow><yellow>5</yellow>,<yellow>0</yellow>))
@@ -2860,6 +2864,27 @@ update()
 <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>).add_script(<purple><b>SmoothFollow</b></purple>(target=player, offset=(<yellow>0</yellow>,<yellow>2</yellow>,<yellow>0</yellow>)))
 </div>
 </div></div>
+<div id="terraincast"><div id="terraincast" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">terraincast</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><gray>ursina.scripts.terraincast</gray><br><br>
+terraincast(<gray>origin, terrain): # mainly used for getting the y position on a terrain. returns a HitInfo like raycast(</gray>)   <gray># mainly used for getting the y position on a terrain. returns a HitInfo like raycast()</gray>
+
+<div class="example">application.asset_folder = Path(<green>'.'</green>).parent.parent / <green>'samples'</green>
+terrain = <olive>Entity</olive>(model = Terrain(<green>'heightmap_1'</green>, skip=<yellow>1</yellow><yellow>6</yellow>), <olive>scale</olive>=(<yellow>2</yellow><yellow>0</yellow>,<yellow>5</yellow>,<yellow>2</yellow><yellow>0</yellow>), <olive>texture</olive>=<green>'heightmap_1'</green>)
+player = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>color</olive>=color.orange)
+
+<purple>def</purple> update():
+    player.x += (held_keys[<green>'d'</green>] - held_keys[<green>'a'</green>]) * time.dt * <yellow>5</yellow>
+    player.z += (held_keys[<green>'w'</green>] - held_keys[<green>'s'</green>]) * time.dt * <yellow>5</yellow>
+
+    hit_info = terraincast(player.world_position, terrain)
+    <purple>if</purple> hit_info.hit:
+        player.y = hit_info.world_point.y
+
+
+
+EditorCamera()
+Sky()
+</div>
+</div></div>
 <div id="models"><div id="models" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">models</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;">'circle'
 'cube'
 'cube_uv_top'
@@ -2870,6 +2895,7 @@ update()
 'quad'
 'sky_dome'
 'sphere'
+'wireframe_cube'
 
 
 <div class="example">e = Entity(model='quad')
@@ -2906,6 +2932,7 @@ update()
 <div id="shaders"><div id="shaders" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">shaders</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;">basic_lighting_shader
 colored_lights_shader
 fading_shadows_shader
+fresnel_shader
 lit_with_shadows_shader
 matcap_shader
 normals_shader
@@ -2933,7 +2960,7 @@ ed = EditorCamera(rotation_speed = <yellow>2</yellow><yellow>0</yellow><yellow>0
 
 
 
-<div class="example"><olive>Entity</olive>(<olive>model</olive>=<purple><b>Cone</b></purple>(<yellow>8</yellow>, direction=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>)), <olive>color</olive>=color.color(<yellow>6</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>3</yellow>))
+<div class="example"><olive>Entity</olive>(<olive>model</olive>=<purple><b>Cone</b></purple>(<yellow>8</yellow>, direction=(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>0</yellow>)), <olive>color</olive>=color.color(<yellow>6</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>3</yellow>))
 origin = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>color</olive>=color.orange, <olive>scale</olive>=(.<yellow>0</yellow><yellow>5</yellow>, .<yellow>0</yellow><yellow>5</yellow>))
 ed = EditorCamera(rotation_speed = <yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>, panning_speed=<yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>)
 </div>
@@ -3000,9 +3027,10 @@ camera.z = -<yellow>5</yellow>
 </div></div>
 <div id="Terrain"><div id="Terrain" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Terrain<gray>(<a style="color: gray;" href="#Mesh">Mesh</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><gray>ursina.models.procedural.terrain</gray><br><br><params class="params">Terrain(heightmap, skip=1, **kwargs)</params>
 
-heightmap<gray> = load_texture(heightmap)</gray> 
+heightmap<gray> = heightmap</gray> 
 skip<gray> = skip    # should be power of two.</gray> 
 width, self.depth<gray> = self.heightmap.width//skip, self.heightmap.height//skip</gray> 
+aspect_ratio<gray> = self.width / self.depth</gray> 
 height_values<gray> = asarray(img)</gray> 
 height_values<gray> = flip(self.height_values, axis=0)</gray> 
 height_values<gray> = swapaxes(self.height_values, 0, 1)</gray> 
@@ -3012,7 +3040,8 @@ normals<gray> = list()</gray>
 height_values<gray> = [[j[0]/255 for j in i] for i in self.height_values]</gray> 
 
 
-<div class="example">e = <olive>Entity</olive>(<olive>model</olive>=<purple><b>Terrain</b></purple>(<green><green>'heightmap_<yellow>1</yellow>'</green></green>, skip=<yellow>4</yellow>), <olive>scale</olive>=(<yellow>2</yellow><yellow>0</yellow>,<yellow>5</yellow>,<yellow>2</yellow><yellow>0</yellow>), <olive>texture</olive>=<green><green>'heightmap_<yellow>1</yellow>'</green></green>)
+<div class="example">e = <olive>Entity</olive>(<olive>model</olive>=<purple><b>Terrain</b></purple>(<green>'heightmap_1'</green>, skip=<yellow>1</yellow><yellow>6</yellow>), <olive>scale</olive>=(<yellow>2</yellow><yellow>0</yellow>,<yellow>5</yellow>,<yellow>2</yellow><yellow>0</yellow>), <olive>texture</olive>=<green>'heightmap_1'</green>)
+<olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=e.scale, <olive>color</olive>=color.red)
 EditorCamera()
 Sky()
 </div>

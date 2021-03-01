@@ -4,7 +4,11 @@ from ursina import *
 class Animation(Sprite):
     def __init__(self, name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs):
 
-        texture = load_texture(name)
+        if isinstance(name, Path):
+            texture = load_texture(name.name, name.parent)
+        else:
+            texture = load_texture(name)
+
         if texture and texture.path.suffix == '.gif':   # load gif
             import imageio
             from PIL import Image
@@ -67,7 +71,7 @@ class Animation(Sprite):
 
 
     @property
-    def duration(self):
+    def duration(self):     # get the duration of the animation. you can't set it. to do so, change the fps instead.
         return self.sequence.duration
 
 
@@ -89,7 +93,7 @@ class Animation(Sprite):
 
 
 if __name__ == '__main__':
-    application.asset_folder = application.asset_folder.parent.parent / 'samples'
+    # application.asset_folder = application.asset_folder.parent.parent / 'samples'
     app = Ursina()
 
     '''
