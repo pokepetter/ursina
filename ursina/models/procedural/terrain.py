@@ -47,8 +47,7 @@ class Terrain(Mesh):
         for z in range(h+1):
             for x in range(w+1):
 
-                if x < w and z < h:
-                    y = self.height_values[x][z]
+                y = self.height_values[x-(x == w)][z-(z==h)]
 
                 self.vertices.append(Vec3((x/min_dim)+(centering_offset.x), y, (z/min_dim)+centering_offset.y))
                 self.uvs.append((x/w, z/h))
