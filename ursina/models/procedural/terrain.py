@@ -15,6 +15,8 @@ class Terrain(Mesh):
 
         self.skip = skip    # should be power of two.
         self.width, self.depth = self.heightmap.width//skip, self.heightmap.height//skip
+        self.aspect_ratio = self.width / self.depth
+
         img = Image.open(self.heightmap.path).convert('RGB')
         if self.skip > 1:
             img = img.resize([self.width, self.depth], Image.ANTIALIAS)
@@ -28,30 +30,34 @@ class Terrain(Mesh):
         self.uvs = list()
         self.normals = list()
         w, h = self.width, self.depth
+        self.height_values = [[j[0]/255 for j in i] for i in self.height_values]
+
+
+        centering_offset = Vec2(-.5, -.5)
+        if self.aspect_ratio > 1: # offset should be different if the terrain is not 1:1
+            centering_offset.x *= self.aspect_ratio
+        else:
+            centering_offset.y /= self.aspect_ratio
+
+        min_dim = min(w, h)
+
+
+        # create the plane
         i = 0
         for z in range(h+1):
             for x in range(w+1):
-                self.vertices.append(Vec3((x/w)-.5, 0, (z/h)-.5))
+
+                if x < w and z < h:
+                    y = self.height_values[x][z]
+
+                self.vertices.append(Vec3((x/min_dim)+(centering_offset.x), y, (z/min_dim)+centering_offset.y))
                 self.uvs.append((x/w, z/h))
+
                 if x > 0 and z > 0:
                     self.triangles.append((i, i-1, i-w-2, i-w-1))
 
-                i += 1
-
-
-        i = 0
-        t = time.time()
-        self.height_values = [[j[0]/255 for j in i] for i in self.height_values]
-        # return
-        for z in range(self.depth+1):
-            for x in range(self.width+1):
-
-                if x < self.width and z < self.depth:
-                    y = self.height_values[x][z]
-
-                self.vertices[i] = Vec3(x/self.width -.5, y, z/self.depth -.5)
-
-                if x > 0 and z > 0 and x < self.width-1 and z < self.width-1:
+                # normals
+                if x > 0 and z > 0 and x < w-1 and z < h-1:
                     rl =  self.height_values[x+1][z] - self.height_values[x-1][z]
                     fb =  self.height_values[x][z+1] - self.height_values[x][z-1]
                     self.normals.append(Vec3(rl, 1, fb).normalized())
@@ -59,21 +65,6 @@ class Terrain(Mesh):
                     self.normals.append(Vec3(0,1,0))
 
                 i += 1
-                #
-                # slope_limit = .1
-                # if x > 0 and z > 0 and x < self.width-1 and z < self.depth-1:
-                #     C = self.heightmap.get_pixel(x, z).r
-                #     R = self.heightmap.get_pixel(x+1, z).r
-                #     L = self.heightmap.get_pixel(x-1, z).r
-                #     T = self.heightmap.get_pixel(x, z+1).r
-                #     B = self.heightmap.get_pixel(x, z-1).r
-                #     if abs(C-R) < slope_limit and abs(C-L) < slope_limit and abs(C-T) < slope_limit and abs(C-B) < slope_limit:
-                #         self.colors.append(color.yellow)
-                #     else:
-                #         self.colors.append(color.dark_gray)
-                # #     self.normals.append(Vec3(2*(R-L), -4, 2*(B-T)).normalized())
-                # else:
-                #     self.colors.append(color.dark_gray)
 
         super().__init__(vertices=self.vertices, triangles=self.triangles, uvs=self.uvs, normals=self.normals, **kwargs)
 
@@ -82,7 +73,8 @@ class Terrain(Mesh):
 
 if __name__ == '__main__':
     app = Ursina()
-    e = Entity(model=Terrain('heightmap_1', skip=4), scale=(20,5,20), texture='heightmap_1')
+    e = Entity(model=Terrain('heightmap_1', skip=16), scale=(20,5,20), texture='heightmap_1')
+    Entity(model='plane', scale=e.scale, color=color.red)
     EditorCamera()
     Sky()
 
@@ -91,6 +83,9 @@ if __name__ == '__main__':
     e.collider = 'mesh'
     print(time.time() - t)
 
+    def input(key):
+        if key == '-':
+            e.scale *= .9
 
 
     # e.collider = 'mesh'
