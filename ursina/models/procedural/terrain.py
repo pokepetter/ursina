@@ -7,11 +7,13 @@ class Terrain(Mesh):
         from PIL import Image
         from numpy import asarray, flip, swapaxes
 
+        self.heightmap = heightmap
 
-        self.heightmap = load_texture(heightmap)
-        if not self.heightmap:
-            print('failed to load heightmap:', heightmap)
-            return
+        if not isinstance(heightmap, Texture):
+            self.heightmap = load_texture(heightmap)
+            if not self.heightmap:
+                print('failed to load heightmap:', heightmap)
+                return
 
         self.skip = skip    # should be power of two.
         self.width, self.depth = self.heightmap.width//skip, self.heightmap.height//skip
@@ -47,7 +49,7 @@ class Terrain(Mesh):
         for z in range(h+1):
             for x in range(w+1):
 
-                y = self.height_values[x-(x == w)][z-(z==h)]
+                y = self.height_values[x-(x==w)][z-(z==h)] # do -1 if the coordinate is not in range
 
                 self.vertices.append(Vec3((x/min_dim)+(centering_offset.x), y, (z/min_dim)+centering_offset.y))
                 self.uvs.append((x/w, z/h))
