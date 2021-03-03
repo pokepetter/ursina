@@ -67,7 +67,7 @@ from ursina.scripts.colorize import get_world_normals
 
 from ursina.prefabs.tooltip import Tooltip
 from ursina.prefabs.text_field import TextField
-from ursina.prefabs.input_field import InputField
+from ursina.prefabs.input_field import InputField, ContentTypes
 from ursina.prefabs.draggable import Draggable
 from ursina.prefabs.slider import Slider, ThinSlider
 from ursina.prefabs.button_group import ButtonGroup

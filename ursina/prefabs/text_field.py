@@ -1,4 +1,5 @@
 from ursina import *
+import pyperclip
 # from tree_view import TreeView
 
 
@@ -503,6 +504,9 @@ class TextField(Entity):
 
         if key in self.shortcuts['copy']:
             print('-----copy:', self.selection)
+
+        if key in self.shortcuts['paste']:
+            self.add_text(pyperclip.paste())
 
 
         if self.register_mouse_input:
