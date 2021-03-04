@@ -12,12 +12,8 @@ class TextField(Entity):
             ignore_paused=True,
             )
 
-        # for key, value in kwargs.items():
-        #     if key in ('font', 'font_size', 'line_height'):
-        #         setattr(self, key, value)
 
         self.font = 'VeraMono.ttf'
-        self.font_size = 20
         self.line_height = 1
         # self.max_width = 80
         self.max_lines = 99999
@@ -27,8 +23,6 @@ class TextField(Entity):
             start_tag='☾',
             end_tag = '☽',
             font = self.font,
-            resolution = self.font_size * 2,
-            size =  1/window.fullscreen_size[1] * self.font_size,
             text='',
             line_height=self.line_height,
             origin=(-.5, .5),
@@ -36,16 +30,14 @@ class TextField(Entity):
         self.line_numbers = Text(
             parent = self,
             font = self.font,
-            resolution = self.font_size * 2,
-            size = 1/window.fullscreen_size[1] * self.font_size,
             text='0',
             origin=(.5,.5),
             x=-.04,
             color=color.gray,
             enabled = False,
             )
-        self.character_width = .0111
-        self.cursor_parent = Entity(parent=self, scale=(self.character_width, -1*self.text_entity.size))
+        self.character_width = Text.get_width('a', font=self.font)
+        self.cursor_parent = Entity(parent=self, scale=(self.character_width, -1*Text.size))
         # self.max_line_indicatior = Entity(parent=self.cursor_parent, model='quad', origin=(-.5,.5), scale=(100,.05), rotation_x=180, color=color.red)
         # self.max_width_indicatior = Entity(
         #     parent=self.cursor_parent, model='quad', origin=(-.5,.5), scale=(100,.05), rotation_x=180, rotation_z=90, color=color.color(0,0,1,.05), x=80)
@@ -614,14 +606,14 @@ if __name__ == '__main__':
     app = Ursina()
     # camera.orthographic = True
     # camera.fov = 1
-    window.size = window.fullscreen_size
+    # window.size = window.fullscreen_size
     window.x = 200
 
     window.color = color.color(0, 0, .1)
     Button.color = color._20
     window.color = color._25
 
-    Text.size = 1/window.fullscreen_size[1]*16
+    # Text.size = 1/window.fullscreen_size[1]*16
     Text.default_font = 'consola.ttf'
     Text.default_resolution = 16*2
     # TreeView()
@@ -650,8 +642,8 @@ if __name__ == '__main__':
         Suspendisse dolor tortor, congue id erat sit amet, sollicitudin facilisis velit.'''
         )[1:]
     # te.cursor.position = (4,0)
-    te.selection = [(25,0), (10,3)]
-    te.draw_selection()
+    # te.selection = [(25,0), (10,3)]
+    # te.draw_selection()
     te.render()
     # te.selection = ((0,0),(4,0))
     # te.select_all()

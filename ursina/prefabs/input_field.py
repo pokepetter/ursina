@@ -45,7 +45,7 @@ class InputField(Button):
 
         self.text_field.render = render
 
-        self.text_field.scale *= 1.5
+        self.text_field.scale *= 1.25
         self.text_field.text = default_value
         self.text_field.render()
 
@@ -100,12 +100,16 @@ class InputField(Button):
 
 if __name__ == '__main__':
     app = Ursina()
-    input_field = InputField()
-    print(input_field.default_value)
+    # window.fullscreen_size = (1366, 768)
+    background = Sprite('shore', color=color.dark_gray)
+    username_field = InputField()
+    password_field = InputField(y=-.06, hide_content=True)
+    username_field.next_field = password_field
 
     def submit():
-        print(input_field.text)
+        print('ursername:', username_field.text)
+        print('password:',  password_field.text)
 
-    Button('submit', scale=.1, color=color.azure, y=-.2, on_click=submit).fit_to_text()
+    Button('Login', scale=.1, color=color.azure, y=-.14, on_click=submit).fit_to_text()
 
     app.run()
