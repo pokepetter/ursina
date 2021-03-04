@@ -31,6 +31,7 @@ class InputField(Button):
                 org_length = len(self.text_field.text)
                 self.text_field.text = ''.join([e for e in self.text_field.text if e in self.limit_content_to])
                 self.text_field.cursor.x -= org_length - len(self.text_field.text)
+                self.text_field.cursor.x = max(0, self.text_field.cursor.x)
 
             if self.hide_content:
                 replacement_char = '*'
@@ -45,7 +46,7 @@ class InputField(Button):
         self.text_field.render = render
 
         self.text_field.scale *= 1.5
-        self.text_field.text = ''.join([e for e in self.text_field.text if e in self.limit_content_to])
+        self.text_field.text = default_value
         self.text_field.render()
 
         self.text_field.register_mouse_input = False
@@ -99,7 +100,7 @@ class InputField(Button):
 
 if __name__ == '__main__':
     app = Ursina()
-    input_field = InputField(default_value='ælol', max_lines=100)
+    input_field = InputField()
     print(input_field.default_value)
 
     def submit():
