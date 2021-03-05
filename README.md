@@ -93,7 +93,7 @@ app.run()                     # opens a window and starts the game.
 3) Type this in the terminal to start the game:
 
        python ursina_game.py
-   If you use Atom, I recommend installing the package atom-python-run to tun your scripts with the press of a button.
+   If you use Atom, I recommend installing the package atom-python-run to run your scripts with the press of a button.
 
 4) You can now move the orange box around with 'a' and 'd'!
 
