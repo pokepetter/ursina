@@ -49,7 +49,7 @@ class MinecraftClone(Entity):
                         color = lerp(lerp(color.brown, color.dark_gray, .5), color.random_color(), .1),
                         index = (x,y,z),
                         position=(x*.8660025,y,z*.75),
-                        collision=False,
+                        collision=True,
                         add_to_scene_entities=False
                         )
                     # voxel.collider = MeshCollider(voxel, mesh=c, center=-voxel.origin)
