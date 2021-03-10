@@ -112,6 +112,7 @@ class Window(WindowProperties):
         self.editor_ui = Entity(parent=camera.ui, eternal=True, enabled=bool(application.development_mode))
         self.exit_button = Button(parent=self.editor_ui, eternal=True, origin=(.5, .5), position=self.top_right, z=-999, scale=(.05, .025), color=color.red.tint(-.2), text='x', on_click=application.quit)
         self.exit_button.enabled = self.borderless
+        self.exit_button.visible = self.borderless
 
 
         def _exit_button_input(key):
@@ -121,6 +122,8 @@ class Window(WindowProperties):
         self.exit_button.input = _exit_button_input
 
         self.fps_counter = Text(parent=self.editor_ui, eternal=True, position=(.5*self.aspect_ratio, .47, -999), origin=(.8,.5), text='60', ignore=False, i=0)
+        if not self.exit_button.visible and not self.exit_button.enabled:
+            self.fps_counter.position = (.5*self.aspect_ratio, .49, -999)
 
         def _fps_counter_update():
             if self.fps_counter.i > 60:
