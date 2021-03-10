@@ -59,7 +59,7 @@ class Window(WindowProperties):
         self.borderless = True
 
         self.top = Vec2(0, .5)
-        self.bottom = Vec2(0, .5)
+        self.bottom = Vec2(0, -.5)
         self.center = Vec2(0, 0)
 
 
