@@ -92,6 +92,7 @@ class Ursina(ShowBase):
         self.mouse = mouse
 
         from ursina import gamepad
+        from ursina import joystick
 
         scene.set_up()
         self._update_task = taskMgr.add(self._update, "update")

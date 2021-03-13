@@ -16,7 +16,8 @@ if __name__ == '__main__':
 
     app.run()
 
-
+button_name = lambda button: button.handle.name.replace('_', ' ').replace('joystick', '')
+JITTER = .01
 
 input_handler.joystick = None
 input_handler.joysticks = base.devices.getDevices(InputDevice.DeviceClass.flight_stick)
@@ -30,25 +31,12 @@ for i, joystick in enumerate(input_handler.joysticks):
         joystick_name += f'_{i}'
 
     base.attachInputDevice(joystick, prefix=joystick_name)
-    buttons = {
-        'face_a' : 'a',
-        'face_b' : 'b',
-        'face_x' : 'x',
-        'face_y' : 'y',
-        'back' : 'back',
-        'start' : 'start',
-        'dpad_up' : 'dpad up',
-        'dpad_down' : 'dpad down',
-        'dpad_left' : 'dpad left',
-        'dpad_right' : 'dpad right',
-        'rshoulder' : 'right shoulder',
-        'lshoulder' : 'left shoulder',
-    }
-
-    for original_name, new_name in buttons.items():
-        base.accept(f'{joystick_name}-{original_name}', base.input, extraArgs=[f'{joystick_name} {new_name}'])
-        base.accept(f'{joystick_name}-{original_name}-up', base.input, extraArgs=[f'{joystick_name} {new_name} up'])
-        # print(original_name, new_name)
+    
+    for button in joystick.buttons:
+        name = button_name(button)
+        original_name = button.handle.name
+        base.accept(f'{joystick_name}-{original_name}', base.input, extraArgs=[f'{joystick_name} {name}'])
+        base.accept(f'{joystick_name}-{original_name}-up', base.input, extraArgs=[f'{joystick_name} {name} up'])
 
 def update():
     for i, joystick in enumerate(input_handler.joysticks):
@@ -56,12 +44,16 @@ def update():
         if i > 0:
             joystick_name += f'_{i}'
 
-        # Pole the axes
+        # Poll the axes
         for axis in joystick.axes:
             axis_name = axis.axis.name.lower()
             value = axis.value
-            if abs(value) < .01:
+            if abs(value) < JITTER:
                 value = 0
             held_keys[f'{joystick_name} {axis_name}'] = value
+        for button in joystick.buttons:
+            name = button_name(button)
+            pressed = button.pressed
+            held_keys[f'{joystick_name} {name}'] = int(pressed)
 
 Entity(name='joystick_handler', update=update, eternal=True) # connect update() to an entity so it runs
