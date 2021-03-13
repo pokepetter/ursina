@@ -100,7 +100,8 @@ class WindowPanel(Draggable):
 
 
     def close(self):
-        self.bg.enabled = False
+        if self.popup:
+            self.bg.enabled = False
         self.animate_scale_y(0, duration=.1)
         invoke(setattr, self, 'enabled', False, delay=.2)
 
