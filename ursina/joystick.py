@@ -7,9 +7,9 @@ if __name__ == '__main__':
     player = Entity(model='cube', color=color.azure)
 
     def update():
-        player.x += held_keys['joystick x'] * time.dt * 5
-        player.y += held_keys['joystick y'] * time.dt * 5
-        text_entity.text = '\n'.join([f'{key}: {held_keys[key]}' for key in ('gamepad left trigger', 'gamepad right trigger', 'gamepad right stick x', 'gamepad right stick y')])
+        player.x += held_keys['joystick yaw'] * time.dt * 5
+        player.y += held_keys['joystick pitch'] * time.dt * 5
+        text_entity.text = '\n'.join([f'{key}: {held_keys[key]}' for key in ('joystick trigger', 'joystick 2', )])
 
     def input(key):
         print('key:', key)
