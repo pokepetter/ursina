@@ -34,8 +34,24 @@ Frequently Asked Questions<br>
 <div style="text-align: left;">
 <br>
 <b>How do I update ursina?</b><br>
-<div class="code_block" style="margin-left: 1em;">pip install git+https://github.com/pokepetter/ursina.git --upgrade
+<br>
+<div class="code_block" style="margin-left: 1em;">pip install <a href="https://github.com/pokepetter/ursina/archive/master.zip">https://github.com/pokepetter/ursina/archive/master.zip</a>
 </div><br>
+<br>
+<b>How should I structure my project?</b><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Like this:<br>
+<div class="code_block" style="margin-left: 1em;">project_folder/         <gray># create a new folder <purple>for</purple> each project</gray>
+    enemies.py
+    level.py
+    main.py             <gray># the starting script</gray>
+    player.py
+    player_sprite.png
+    textures/           <gray># assets can be placed alongside the scripts or in a folder below</gray>
+        enemy_<yellow>1</yellow>.png
+        enemy_<yellow>2</yellow>.png
+</div><br>
+<br>
 <br>
 <br>
 <b>How do I move the camera?</b><br>
@@ -60,22 +76,13 @@ to structure your project in a good way, rather than micro-optimize.<br>
 </div><br>
 <br>
 <br>
-<br>
-<b>How do I make pixel art not blurry?</b><br>
-<br>
-<div class="code_block" style="margin-left: 1em;">Texture.default_filtering = None
-</div><br>
-or for a single texture:<br>
-<div class="code_block" style="margin-left: 1em;">some_texture.filtering = None
-</div><br>
-<br>
-<br>
-<br>
 <b>How do I add lights?</b><br>
 <br>
 If all you want are some simple lights to make 3D shapes look more interesting,<br>
 look at the program 'lights.py' in the samples folder.&nbsp;&nbsp;For anything more complicated,<br>
-you are on your own.<br>
+you are on your own. The DirectionalLight has shadows too, but it's recommended to use the<br>
+lit_with_shadows_shader on entities. The shadow area will be calcualted based on the scene bounds,<br>
+so keep that in mind when isinstanciation the light.<br>
 <br>
 <br>
 <br>

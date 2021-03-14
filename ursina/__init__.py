@@ -13,7 +13,8 @@ from ursina.mouse import instance as mouse
 from ursina.main import Ursina
 from ursina.ursinamath import *
 from ursina.ursinastuff import *
-from ursina.input_handler import held_keys
+from ursina import input_handler
+from ursina.input_handler import held_keys, Keys
 from ursina.string_utilities import *
 from ursina.mesh_importer import load_model, load_blender_scene
 from ursina.texture import Texture
@@ -28,7 +29,6 @@ from ursina.raycaster import raycast, boxcast
 from ursina.trigger import Trigger
 from ursina.audio import Audio
 from ursina.duplicate import duplicate
-from ursina import input_handler
 from panda3d.core import Vec4
 from ursina.vec2 import Vec2
 from ursina.vec3 import Vec3

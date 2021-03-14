@@ -8,9 +8,27 @@ Frequently Asked Questions
 # left
 
 <b>How do I update ursina?</b>
+
     # code
-    pip install git+https://github.com/pokepetter/ursina.git --upgrade
+    pip install https://github.com/pokepetter/ursina/archive/master.zip
     # text
+
+
+<b>How should I structure my project?</b>
+
+    Like this:
+    # code
+    project_folder/         # create a new folder for each project
+        enemies.py
+        level.py
+        main.py             # the starting script
+        player.py
+        player_sprite.png
+        textures/           # assets can be placed alongside the scripts or in a folder below
+            enemy_1.png
+            enemy_2.png
+    # text
+
 
 
 
@@ -40,26 +58,13 @@ to structure your project in a good way, rather than micro-optimize.
 
 
 
-
-<b>How do I make pixel art not blurry?</b>
-
-    # code
-    Texture.default_filtering = None
-    # text
-
-or for a single texture:
-    # code
-    some_texture.filtering = None
-    # text
-
-
-
-
 <b>How do I add lights?</b>
 
 If all you want are some simple lights to make 3D shapes look more interesting,
 look at the program 'lights.py' in the samples folder.  For anything more complicated,
-you are on your own.
+you are on your own. The DirectionalLight has shadows too, but it's recommended to use the
+lit_with_shadows_shader on entities. The shadow area will be calcualted based on the scene bounds,
+so keep that in mind when isinstanciation the light.
 
 
 

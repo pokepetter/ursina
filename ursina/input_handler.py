@@ -3,7 +3,7 @@ from enum import Enum
 
 
 
-class InputEvents(Enum):
+class Keys(Enum):
     left_mouse_down = 'left mouse down'
     left_mouse_up = 'left mouse up'
     middle_mouse_down = 'middle mouse down'
@@ -76,7 +76,7 @@ class InputEvents(Enum):
 
     def __eq__(self, other):
         # overriden __eq__ to allow for both str and InputEvent comparisons
-        if isinstance(other, InputEvents):
+        if isinstance(other, Keys):
             return self.value == other.value
         return self.value == other
 
@@ -111,7 +111,7 @@ def rebind(to_key, from_key):
 
 
 def input(key):
-    if key.endswith('hold') or key == InputEvents.scroll_down or key == InputEvents.scroll_up:
+    if key.endswith('hold') or key == Keys.scroll_down or key == Keys.scroll_up:
         return
 
     key = key.replace('mouse down', 'mouse')
@@ -137,7 +137,7 @@ if __name__ == '__main__':
         if key == 'left mouse down':
             print('pressed left mouse button')
 
-        if key == InputEvents.left_mouse_down:   # same as above, but with InputEvents enum.
+        if key == Keys.left_mouse_down:   # same as above, but with Keys enum.
             print('pressed left mouse button')
 
 
