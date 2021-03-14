@@ -6,13 +6,14 @@ from hurry.filesize import size
 
 class MemoryCounter(Text):
     def __init__(self, **kwargs):
-        super().__init__()
+        super().__init__(ignore=False)
         self.parent = camera.ui
         self.position = window.bottom_right
         self.origin = (0.5, -0.5)
 
         self.process = psutil.Process(os.getpid())
         self.i = 0
+        self.text = 'eofiwjeofiwejf'
 
         for key, value in kwargs.items():
             setattr(self, key, value)
