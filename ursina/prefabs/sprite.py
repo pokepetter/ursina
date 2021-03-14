@@ -4,10 +4,11 @@ class Sprite(Entity):
 
     ppu = 100
 
-    def __init__(self, texture=None, **kwargs):
+    def __init__(self, texture=None, ppu=ppu, **kwargs):
         super().__init__(**kwargs)
         self.model = 'quad'
         self.texture = texture
+        self.ppu = ppu
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -16,7 +17,7 @@ class Sprite(Entity):
             # destroy(self)
             return None
 
-        self.scale_y *= self.texture.height / Sprite.ppu
+        self.scale_y *= self.texture.height / self.ppu
         self.aspect_ratio = self.texture.width / self.texture.height
         self.scale_x = self.scale_y * self.aspect_ratio
 
