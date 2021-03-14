@@ -228,8 +228,8 @@ class HotReloader(Entity):
                             e.shader = e.shader
 
                     print('reloaded shader:', shader.path.name)
-                except:
-                    print('failed to reload shader:', shader.path.name)
+                except Exception as e:
+                    print('failed to reload shader:', shader.path.name, 'error:', e)
                     pass
 
 # class InGameTextEditor(Entity):
