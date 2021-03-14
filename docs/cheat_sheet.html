@@ -84,6 +84,7 @@ z-index: 1;
 <a style="color:hsl(320.0, 89%, 28%);" href="#ASCIIEditor">ASCIIEditor</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#HealthBar">HealthBar</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#HotReloader">HotReloader</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#ContentTypes">ContentTypes</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#InputField">InputField</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#MemoryCounter">MemoryCounter</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#Panel">Panel</a>
@@ -929,7 +930,7 @@ windowed_position<gray> = None   # gets set when entering fullscreen so position
 size<gray> = self.windowed_size</gray> 
 borderless<gray> = True</gray> 
 top<gray> = Vec2(0, .5)</gray> 
-bottom<gray> = Vec2(0, .5)</gray> 
+bottom<gray> = Vec2(0, -.5)</gray> 
 center<gray> = Vec2(0, 0)</gray> 
 cursor<gray> = True</gray> 
 color<gray> = color.dark_gray</gray> 
@@ -1015,7 +1016,6 @@ e.collider = Mesh<b>Collider</b>(e, mesh=e.model, center=Vec3(0,0,0))      <gray
 
 m = Prismatoid(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
 e = Button(<olive>parent</olive>=scene, <olive>model</olive>=m, <olive>collider</olive>=<green>'mesh'</green>, <olive>color</olive>=color.red, <olive>highlight_color</olive>=color.yellow)
-c = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>, x=<yellow>4</yellow>, <olive>color</olive>=color.gray)
 
 EditorCamera()
 </div>
@@ -1039,7 +1039,6 @@ e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      <gray># add 
 
 m = Prismatoid(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
 e = Button(<olive>parent</olive>=scene, <olive>model</olive>=m, <olive>collider</olive>=<green>'mesh'</green>, <olive>color</olive>=color.red, <olive>highlight_color</olive>=color.yellow)
-c = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>, x=<yellow>4</yellow>, <olive>color</olive>=color.gray)
 
 EditorCamera()
 </div>
@@ -1062,7 +1061,6 @@ e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      <gray># add 
 
 m = Prismatoid(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
 e = Button(<olive>parent</olive>=scene, <olive>model</olive>=m, <olive>collider</olive>=<green>'mesh'</green>, <olive>color</olive>=color.red, <olive>highlight_color</olive>=color.yellow)
-c = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>, x=<yellow>4</yellow>, <olive>color</olive>=color.gray)
 
 EditorCamera()
 </div>
@@ -1072,6 +1070,7 @@ EditorCamera()
 node_path<gray> = entity.attachNewNode(CollisionNode('CollisionNode'))</gray> 
 node<gray> = self.node_path.node()</gray> 
 collision_polygons<gray> = list()</gray> 
+visible<gray> = False</gray> 
 
 
 <div class="example">e = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, x=<yellow>2</yellow>)
@@ -1085,7 +1084,6 @@ e.collider = <b>MeshCollider</b>(e, mesh=e.model, center=Vec3(0,0,0))      <gray
 
 m = Prismatoid(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
 e = Button(<olive>parent</olive>=scene, <olive>model</olive>=m, <olive>collider</olive>=<green>'mesh'</green>, <olive>color</olive>=color.red, <olive>highlight_color</olive>=color.yellow)
-c = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>, x=<yellow>4</yellow>, <olive>color</olive>=color.gray)
 
 EditorCamera()
 </div>
@@ -1297,10 +1295,10 @@ gamepad_dpad_left<gray> = 'gamepad dpad left'</gray>
 gamepad_dpad_left_up<gray> = 'gamepad dpad left up'</gray> 
 gamepad_dpad_right<gray> = 'gamepad dpad right'</gray> 
 gamepad_dpad_right_up<gray> = 'gamepad dpad right up'</gray> 
-gamepad_dpad_left_shoulder<gray> = 'gamepad left shoulder'</gray> 
-gamepad_dpad_left_shoulder_up<gray> = 'gamepad left shoulder up'</gray> 
-gamepad_dpad_right_shoulder<gray> = 'gamepad right shoulder'</gray> 
-gamepad_dpad_right_shoulder_up<gray> = 'gamepad right shoulder up'</gray> 
+gamepad_left_shoulder<gray> = 'gamepad left shoulder'</gray> 
+gamepad_left_shoulder_up<gray> = 'gamepad left shoulder up'</gray> 
+gamepad_right_shoulder<gray> = 'gamepad right shoulder'</gray> 
+gamepad_right_shoulder_up<gray> = 'gamepad right shoulder up'</gray> 
 
 
 </div></div>
@@ -1674,7 +1672,6 @@ You can also load a .gif by including the file type: <b>Animation</b>(<green>'im
 <green>''</green>'</green>
 
 <purple><b>Animation</b></purple>(<green>'ursina_wink'</green>)
-<purple><b>Animation</b></purple>( application.asset_folder.parent.parent / <green>'samples'</green> / <green>'city_in_desert_valley_water.gif'</green>)
 </div>
 </div></div>
 <div id="Animator"><div id="Animator" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Animator<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><gray>ursina.prefabs.animator</gray><br><br><params class="params">Animator(animations=None, start_state='')</params>
@@ -2224,23 +2221,50 @@ By default you can press F5 to reload the starting script, F6 to reimport textur
 <green>''</green>'</green>
 </div>
 </div></div>
-<div id="InputField"><div id="InputField" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">InputField<gray>(<a style="color: gray;" href="#Button">Button</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><gray>ursina.prefabs.input_field</gray><br><br><params class="params">InputField(default_value='', label='', max_lines=1, **kwargs)</params>
+<div id="ContentTypes"><div id="ContentTypes" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ContentTypes</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><gray>ursina.prefabs.input_field</gray><br><br><params class="params">ContentTypes(path=__file__, **kwargs)</params>
+
+
+
+<div class="example">background = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'pixelscape_combo'</green>, <olive>parent</olive>=camera.ui, <olive>scale</olive>=(camera.aspect_ratio,<yellow>1</yellow>), <olive>color</olive>=color.white)
+gradient = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'vertical_gradient'</green>, <olive>parent</olive>=camera.ui, <olive>scale</olive>=(camera.aspect_ratio,<yellow>1</yellow>), <olive>color</olive>=color.hsv(<yellow>2</yellow><yellow>4</yellow><yellow>0</yellow>,.<yellow>6</yellow>,.<yellow>1</yellow>,.<yellow>7</yellow><yellow>5</yellow>))
+
+username_field = InputField(<olive>y</olive>=-.<yellow>1</yellow><yellow>2</yellow>)
+password_field = InputField(<olive>y</olive>=-.<yellow>1</yellow><yellow>8</yellow>, hide_content=True)
+username_field.next_field = password_field
+
+<purple>def</purple> submit():
+    <blue>print</blue>(<green>'ursername:'</green>, username_field.text)
+    <blue>print</blue>(<green>'password:'</green>,  password_field.text)
+
+Button(<green>'Login'</green>, <olive>scale</olive>=.<yellow>1</yellow>, <olive>color</olive>=color.cyan.tint(-.<yellow>4</yellow>), <olive>y</olive>=-.<yellow>2</yellow><yellow>6</yellow>, <olive>on_click</olive>=submit).fit_to_text()
+</div>
+</div></div>
+<div id="InputField"><div id="InputField" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">InputField<gray>(<a style="color: gray;" href="#Button">Button</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><gray>ursina.prefabs.input_field</gray><br><br><params class="params">InputField(default_value='', label='', max_lines=1, max_width=24, **kwargs)</params>
 
 default_value<gray> = default_value</gray> 
+limit_content_to<gray> = None</gray> 
+hide_content<gray> = False   # if set to True, will display content as '*'. can also be set to character instead of True.</gray> 
 next_field<gray> = None</gray> 
 text_field<gray> = TextField(world_parent=self, x=-.45, y=.3, z=-.1, max_lines=max_lines)</gray> 
 active<gray> = False</gray> 
 text
+text_color
 
+render()   
 input(<gray>key</gray>)   
 
-<div class="example">input_field = <purple><b>InputField</b></purple>(default_value=<green>'ælol'</green>, max_lines=<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>)
-<blue>print</blue>(input_field.default_value)
+<div class="example">background = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'pixelscape_combo'</green>, <olive>parent</olive>=camera.ui, <olive>scale</olive>=(camera.aspect_ratio,<yellow>1</yellow>), <olive>color</olive>=color.white)
+gradient = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'vertical_gradient'</green>, <olive>parent</olive>=camera.ui, <olive>scale</olive>=(camera.aspect_ratio,<yellow>1</yellow>), <olive>color</olive>=color.hsv(<yellow>2</yellow><yellow>4</yellow><yellow>0</yellow>,.<yellow>6</yellow>,.<yellow>1</yellow>,.<yellow>7</yellow><yellow>5</yellow>))
+
+username_field = <purple><b>InputField</b></purple>(<olive>y</olive>=-.<yellow>1</yellow><yellow>2</yellow>)
+password_field = <purple><b>InputField</b></purple>(<olive>y</olive>=-.<yellow>1</yellow><yellow>8</yellow>, hide_content=True)
+username_field.next_field = password_field
 
 <purple>def</purple> submit():
-    <blue>print</blue>(input_field.text)
+    <blue>print</blue>(<green>'ursername:'</green>, username_field.text)
+    <blue>print</blue>(<green>'password:'</green>,  password_field.text)
 
-Button(<green>'submit'</green>, <olive>scale</olive>=.<yellow>1</yellow>, <olive>color</olive>=color.azure, <olive>y</olive>=-.<yellow>2</yellow>, <olive>on_click</olive>=submit).fit_to_text()
+Button(<green>'Login'</green>, <olive>scale</olive>=.<yellow>1</yellow>, <olive>color</olive>=color.cyan.tint(-.<yellow>4</yellow>), <olive>y</olive>=-.<yellow>2</yellow><yellow>6</yellow>, <olive>on_click</olive>=submit).fit_to_text()
 </div>
 </div></div>
 <div id="MemoryCounter"><div id="MemoryCounter" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">MemoryCounter<gray>(<a style="color: gray;" href="#Text">Text</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><gray>ursina.prefabs.memory_counter</gray><br><br><params class="params">MemoryCounter(**kwargs)</params>
@@ -2431,10 +2455,11 @@ slider.label.position = (.<yellow>2</yellow><yellow>5</yellow>, -.<yellow>1</yel
 slider.on_value_changed = scale_box
 </div>
 </div></div>
-<div id="Sprite"><div id="Sprite" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Sprite<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><gray>ursina.prefabs.sprite</gray><br><br><params class="params">Sprite(texture=None, **kwargs)</params>
+<div id="Sprite"><div id="Sprite" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Sprite<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><gray>ursina.prefabs.sprite</gray><br><br><params class="params">Sprite(texture=None, ppu=ppu, **kwargs)</params>
 
 model<gray> = 'quad'</gray> 
 texture<gray> = texture</gray> 
+ppu<gray> = ppu</gray> 
 aspect_ratio<gray> = self.texture.width / self.texture.height</gray> 
 scale_x<gray> = self.scale_y * self.aspect_ratio</gray> 
 
@@ -2449,20 +2474,19 @@ s = <purple><b>Sprite</b></purple>(<green>'brick'</green>, filtering=False)
 <div id="TextField"><div id="TextField" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">TextField<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><gray>ursina.prefabs.text_field</gray><br><br><params class="params">TextField(**kwargs)</params>
 
 font<gray> = 'VeraMono.ttf'</gray> 
-font_size<gray> = 20</gray> 
 line_height<gray> = 1</gray> 
 max_lines<gray> = 99999</gray> 
 text_entity<gray> = Text(
         parent</gray> 
 line_numbers<gray> = Text(
         parent</gray> 
-character_width<gray> = .0111</gray> 
-cursor_parent<gray> = Entity(parent=self, scale=(self.character_width, -1*self.text_entity.size))</gray> 
+character_width<gray> = Text.get_width('a', font=self.font)</gray> 
+cursor_parent<gray> = Entity(parent=self, scale=(self.character_width, -1*Text.size*self.line_height*1.16))</gray> 
 cursor<gray> = Entity(parent=self.cursor_parent, model='cube', color=color.white33, origin=(-.5, -.5), scale=(.1, 1))</gray> 
 bg<gray> = Entity(parent=self.cursor_parent, model='cube', color=color.dark_gray, origin=(-.5,-.5), z=1, scale=(120, 20), collider='box', visible=False)</gray> 
 selection<gray> = None</gray> 
 selection_parent<gray> = Entity(parent=self.cursor_parent)</gray> 
-register_mouse_input<gray> = False</gray> 
+register_mouse_input<gray> = True</gray> 
 text<gray> = ''</gray> 
 replacements<gray> = dict()</gray> 
 on_undo<gray> = list()</gray> 
@@ -2525,14 +2549,12 @@ update()
 select_all()   
 draw_selection()   
 
-<div class="example">window.size = window.fullscreen_size
-window.x = <yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>
+<div class="example">window.x = <yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>
 
 window.color = color.color(<yellow>0</yellow>, <yellow>0</yellow>, .<yellow>1</yellow>)
 Button.color = color._<yellow>2</yellow><yellow>0</yellow>
 window.color = color._<yellow>2</yellow><yellow>5</yellow>
 
-Text.size = <yellow>1</yellow>/window.fullscreen_size[<yellow>1</yellow>]*<yellow>1</yellow><yellow>6</yellow>
 Text.default_font = <green>'consola.ttf'</green>
 Text.default_resolution = <yellow>1</yellow><yellow>6</yellow>*<yellow>2</yellow>
 te = <purple><b>TextField</b></purple>(max_lines=<yellow>3</yellow><yellow>0</yellow><yellow>0</yellow>, <olive>scale</olive>=<yellow>1</yellow>)
@@ -2543,8 +2565,6 @@ te.text = dedent(<green><green>''</green>'
     nec rutrum ipsum condimentum in. Mauris iaculis arcu nec justo rutrum euismod.
     Suspendisse dolor tortor, congue id erat sit amet, sollicitudin facilisis velit.<green>''</green>'</green>
     )[<yellow>1</yellow>:]
-te.selection = [(<yellow>2</yellow><yellow>5</yellow>,<yellow>0</yellow>), (<yellow>1</yellow><yellow>0</yellow>,<yellow>3</yellow>)]
-te.draw_selection()
 te.render()
 </div>
 </div></div>
