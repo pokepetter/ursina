@@ -64,10 +64,10 @@ class InputEvents(Enum):
     gamepad_dpad_left_up = 'gamepad dpad left up'
     gamepad_dpad_right = 'gamepad dpad right'
     gamepad_dpad_right_up = 'gamepad dpad right up'
-    gamepad_dpad_left_shoulder = 'gamepad left shoulder'
-    gamepad_dpad_left_shoulder_up = 'gamepad left shoulder up'
-    gamepad_dpad_right_shoulder = 'gamepad right shoulder'
-    gamepad_dpad_right_shoulder_up = 'gamepad right shoulder up'
+    gamepad_left_shoulder = 'gamepad left shoulder'
+    gamepad_left_shoulder_up = 'gamepad left shoulder up'
+    gamepad_right_shoulder = 'gamepad right shoulder'
+    gamepad_right_shoulder_up = 'gamepad right shoulder up'
 
 
 
