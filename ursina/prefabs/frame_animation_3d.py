@@ -8,7 +8,7 @@ class FrameAnimation3d(Entity):
         model_folders = [application.compressed_models_folder, application.asset_folder]
         model_names = find_sequence(name, ('*',), folders=model_folders)
 
-        self.frames = [Entity(model=e.stem, enabled=False, add_to_scene_entities=False) for e in model_names]
+        self.frames = [Entity(parent=self, model=e.stem, enabled=False, add_to_scene_entities=False) for e in model_names]
         self.frames[0].enabled = True
 
         self.sequence = Sequence(loop=loop, auto_destroy=False)
@@ -52,7 +52,7 @@ class FrameAnimation3d(Entity):
 
 
     def __setattr__(self, name, value):
-        if hasattr(self, 'frames') and name in ('color', 'origin'):
+        if hasattr(self, 'frames') and name in ('color', 'origin', 'texture'):
             for f in self.frames:
                 setattr(f, name, value)
 
