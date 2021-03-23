@@ -8,8 +8,8 @@ class Space():
 
 
 class WindowPanel(Draggable):
-    def __init__(self, title='', content=[], **kwargs):
-        super().__init__(origin=(-0,.5), scale=(.5, Text.size*2), color=color.black)
+    def __init__(self, title='', content=[], position=(0, 0), **kwargs):
+        super().__init__(origin=(0, 0), position=position, scale=(.5, Text.size*2), color=color.black)
 
         self.content = content
         self.text = title
@@ -37,6 +37,7 @@ class WindowPanel(Draggable):
 
                 if isinstance(c, Entity):
                     c.world_parent = self
+                    c.x = -self.origin_x
                     c.y = -height
                     c.z = 0
 
@@ -46,8 +47,6 @@ class WindowPanel(Draggable):
                         self._prev_input_field = c
 
                     if isinstance(c, Text):
-                        c.origin = (-.5, .5)
-                        c.x = -.48
                         height += len(c.lines)
 
                     elif isinstance(c, Button):
@@ -74,9 +73,9 @@ class WindowPanel(Draggable):
 
                     height += spacing
 
-            self.panel = Panel(parent=self, scale_y=height, model=Quad(), origin=(0, .5), z=.1, color=self.color.tint(.1))
+            self.panel = Panel(parent=self, scale_y=height, model=Quad(), origin=(0,.5), z=.1, color=self.color.tint(.1))
             self.panel.model = Quad(aspect=self.panel.world_scale_x/self.panel.world_scale_y, radius=.025)
-            self.panel.origin = (0, .5)
+            self.panel.origin = (0,.5)
 
         if self.popup:
             self.lock_x = True
