@@ -12,15 +12,15 @@ Entity Basics
     It's like a GameObject in Unity or an Actor in Unreal.
 
     It can have a position, rotation, and scale.
-    It can have a model, texture and color.
-    It can have an update function, input function and scripts.
+    It can have a model, texture, and color.
+    It can have an update function, input function, and scripts.
     For an overview of all its attributes and functions, see https://www.ursinaengine.org/cheat_sheet.html#Entity
 
 
 
 ## Setting a model
 
-    There are several included models like 'quad', 'plane', 'cube' and 'sphere',
+    There are several included models like 'quad', 'plane', 'cube', and 'sphere',
     but you can also use your own.
     To do that simply give the base name of your model and it will glob/search for
     the model and take the first one it finds.
@@ -51,7 +51,7 @@ Entity Basics
     # text
 
     For 2d graphics there's also the Sprite class, which is simply an Entity with a
-    'quad' model and scale  set to automatically fit the size and aspect ratio of the texture.
+    'quad' model and scale set to automatically fit the size and aspect ratio of the texture.
 
     # code
     s = Sprite('texture_name')

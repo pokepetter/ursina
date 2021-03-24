@@ -67,7 +67,7 @@ Imagine looking from a positive point on the axis and turing the entity left.
 ## Origin
 
 Setting the origin will move the origin point of the model.
-This can be especially useful when working with ui.
+This can be especially useful when working with the UI.
 
 # code
             (-.5,.5)

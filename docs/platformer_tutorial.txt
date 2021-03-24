@@ -79,7 +79,7 @@ pass
 ## Positioning the camera
 Set the camera to orthographic so there's no perspective.
 Move the camera to the middle of the level and set the fov so the level fits nicely.
-Setting the fov on an orthigraphic camera means setting hoe many units vetically the camera can see.
+Setting the fov on an orthographic camera means setting how many units vertically the camera can see.
 
 # code
 camera.orthographic = True
@@ -101,9 +101,9 @@ You can also load a .gif by including the file type: Animation('image.gif')
 player.walk_animation = Animation('player_walk')
 # text
 
-the platofrmer controller has an Animator and will toggle the state based on
+The platformer controller has an Animator and will toggle the state based on
 whether it's standing still, is walking or is jumping.
-All the Animator does is to make sure only Animation is enabled at the same time.
+All the Animator does is to make sure only one Animation is enabled at the same time.
 Otherwise they would overlap.
 
 # code
