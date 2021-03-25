@@ -32,9 +32,10 @@ class PlatformerController2d(Entity):
         self.gravity = 1
         self.grounded = True
         self.air_time = 0   # this increase while we're falling and used when calculating the distance we fall so we fall faster and faster instead of linearly.
+        self.traverse_target = scene     # by default, it wil collide with everything except itself. you can chage this to change the boxcast traverse target.
         self._start_fall_sequence = None # we need to store this so we can interrupt the fall call if we try to double jump.
 
-        ray = boxcast(self.world_position, self.down, distance=10, ignore=(self, ), thickness=.9)
+        ray = boxcast(self.world_position, self.down, distance=10, ignore=(self, ), traverse_target=self.traverse_target, thickness=.9)
         if ray.hit:
             self.y = ray.world_point[1] + .01
         # camera.add_script(SmoothFollow(target=self, offset=[0,1,-30], speed=4))
@@ -57,6 +58,7 @@ class PlatformerController2d(Entity):
             direction=Vec3(self.velocity,0,0),
             distance=abs(self.scale_x/2),
             ignore=(self, ),
+            traverse_target=self.traverse_target,
             thickness=(self.scale_x*.9, self.scale_y*.9),
             ).hit == False:
 
@@ -75,7 +77,14 @@ class PlatformerController2d(Entity):
 
 
         # check if we're on the ground or not.
-        ray = boxcast(self.world_position+Vec3(0,.1,0), self.down, distance=max(.1, self.air_time * self.gravity), ignore=(self, ), thickness=self.scale_x*.9)
+        ray = boxcast(
+            self.world_position+Vec3(0,.1,0),
+            self.down,
+            distance=max(.1, self.air_time * self.gravity),
+            ignore=(self, ),
+            traverse_target=self.traverse_target,
+            thickness=self.scale_x*.9
+            )
 
         if ray.hit:
             if not self.grounded:
@@ -94,7 +103,7 @@ class PlatformerController2d(Entity):
 
         # if in jump and hit the ceiling, fall
         if self.jumping:
-            if boxcast(self.position+(0,.1,0), self.up, distance=self.scale_y, thickness=.95, ignore=(self,)).hit:
+            if boxcast(self.position+(0,.1,0), self.up, distance=self.scale_y, thickness=.95, ignore=(self,), traverse_target=self.traverse_target).hit:
                 self.y_animator.kill()
                 self.air_time = 0
                 self.start_fall()
@@ -128,7 +137,7 @@ class PlatformerController2d(Entity):
             self._start_fall_sequence.kill()
 
         # don't jump if there's a ceiling right above us
-        if boxcast(self.position+(0,.1,0), self.up, distance=self.scale_y, thickness=.95, ignore=(self,)).hit:
+        if boxcast(self.position+(0,.1,0), self.up, distance=self.scale_y, thickness=.95, ignore=(self,), traverse_target=self.traverse_target).hit:
             return
 
         if hasattr(self, 'y_animator'):
