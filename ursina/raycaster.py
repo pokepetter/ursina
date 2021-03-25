@@ -13,7 +13,7 @@ from ursina.hit_info import HitInfo
 
 class Raycaster(Entity):
     line_model = Mesh(vertices=[Vec3(0,0,0), Vec3(0,0,1)], mode='line')
-
+    _boxcast_box = Entity(model='cube', origin_z=-.5, collider='box', color=color.white33, enabled=False)
 
     def __init__(self):
         super().__init__(
@@ -98,32 +98,29 @@ class Raycaster(Entity):
         if isinstance(thickness, (int, float, complex)):
             thickness = (thickness, thickness)
 
-        temp = Entity(
-            position=origin,
-            model='cube',
-            origin_z=-.5,
-            scale=Vec3(abs(thickness[0]), abs(thickness[1]), abs(distance)),
-            collider='box',
-            color=color.white33,
-            always_on_top=debug,
-            visible=debug
-            )
-        temp.look_at(origin + direction)
-        hit_info = temp.intersects(traverse_target=traverse_target, ignore=ignore)
+        Raycaster._boxcast_box.enabled = True
+        Raycaster._boxcast_box.collision = True
+        Raycaster._boxcast_box.position = origin
+        Raycaster._boxcast_box.scale = Vec3(abs(thickness[0]), abs(thickness[1]), abs(distance))
+        Raycaster._boxcast_box.always_on_top = debug
+        Raycaster._boxcast_box.visible = debug
+
+        Raycaster._boxcast_box.look_at(origin + direction)
+        hit_info = Raycaster._boxcast_box.intersects(traverse_target=traverse_target, ignore=ignore)
         if hit_info.world_point:
             hit_info.distance = ursinamath.distance(origin, hit_info.world_point)
         else:
             hit_info.distance = distance
 
         if debug:
-            temp.collision = False
-            temp.scale_z = hit_info.distance
-            destroy(temp, delay=.2)
+            Raycaster._boxcast_box.collision = False
+            Raycaster._boxcast_box.scale_z = hit_info.distance
+            invoke(setattr, Raycaster._boxcast_box, 'enabled', False, delay=.2)
         else:
-            destroy(temp)
+            Raycaster._boxcast_box.enabled = False
 
         return hit_info
-    
+
 
 instance = Raycaster()
 sys.modules[__name__] = instance
