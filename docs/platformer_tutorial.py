@@ -55,10 +55,10 @@ def make_level(texture):
             else:
                 collider = None
 
-            # If it's green, we'll place the player there.
+            # If it's green, we'll place the player there. Store this in player.start_position so we can reset the plater position later.
             if col == color.green:
-                player.position = (x, y)
-
+                player.start_position = (x, y)
+                player.position = player.start_position
 
 make_level(load_texture('platformer_tutorial_level'))   # generate the level
 
@@ -66,7 +66,7 @@ make_level(load_texture('platformer_tutorial_level'))   # generate the level
 #
 # Set the camera to orthographic so there's no perspective.
 # Move the camera to the middle of the level and set the fov so the level fits nicely.
-# Setting the fov on an orthigraphic camera means setting hoe many units vetically the camera can see.
+# Setting the fov on an orthographic camera means setting how many units vertically the camera can see.
 camera.orthographic = True
 camera.position = (30/2,8)
 camera.fov = 16
@@ -82,10 +82,15 @@ camera.fov = 16
 
 # the platformer controller has an Animator and will toggle the state based on
 # whether it's standing still, is walking or is jumping.
-# All the Animator does is to make sure only Animation is enabled at the same time.
+# All the Animator does is to make sure only one Animation is enabled at the same time.
 # Otherwise they would overlap.
 # self.animator = Animator({'idle' : None, 'walk' : None, 'jump' : None})
-
+player.traverse_target = level_parent
+enemy = Entity(model='cube', collider='box', color=color.red, position=(16,5,-.1))
+def update():
+    if player.intersects(enemy).hit:
+        print('die')
+        player.position = player.start_position
 
 
 # ## Start the game
