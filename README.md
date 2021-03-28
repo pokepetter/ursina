@@ -8,25 +8,33 @@ An easy to use game engine/framework for python.
 1) Install Python 3.6 or newer. https://www.python.org/downloads/
 2) Open cmd/terminal and type:
 
-        pip install ursina
+```
+pip install ursina
+```
 
 
 If you want to install the newest version from git, you can install like this:
 
-        pip install git+https://github.com/pokepetter/ursina.git
+```
+pip install git+https://github.com/pokepetter/ursina.git
+```
 
 
 If you want to easily edit the source, it's recommended to clone the git
 repo and install as develop like this. Make sure you have git installed. https://git-scm.com/
 
-        git clone https://github.com/pokepetter/ursina.git
-        python setup.py develop
+```
+git clone https://github.com/pokepetter/ursina.git
+python setup.py develop
+```
 
 
 Also install any of the optional dependencies you want from the list below,
 or install them all with:
 
-        pip install ursina[extras]
+```
+pip install ursina[extras]
+```
 
 
 On some systems you might have to use pip3 instead of pip in order to use Python 3 and not the old Python 2.
@@ -69,7 +77,7 @@ app.run()                       # opens a window and starts the game.
 
 ## How do I make a game?
 Ursina games are made by writing Python code. You can use any text editor you want, but personally I like to use Atom.
-1) Create an empty .py file called 'ursina_game.py'
+1) Create an empty .py file called `ursina_game.py`
 2) Copy this text into your new file:
 ``` python
 from ursina import *           # this will import everything we need from ursina with just one line.
@@ -97,4 +105,4 @@ app.run()                     # opens a window and starts the game.
 
 4) You can now move the orange box around with 'a' and 'd'!
 
-   To close the window, you can by default, press shift+q or press the red x. to disable this, write 'window.exit_button.enabled =   False' somewhere in your code.
+   To close the window, you can by default, press shift+q or press the red x. to disable this, write `window.exit_button.enabled = False` somewhere in your code.

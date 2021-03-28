@@ -134,14 +134,17 @@ class Entity(NodePath):
     def __setattr__(self, name, value):
 
         if name == 'enabled':
-            try:
-                # try calling on_enable() on classes inheriting from Entity
-                if value == True:
+            if value and hasattr(self, 'on_enable'):
+                if callable(self.on_enable):
                     self.on_enable()
-                else:
+                if isinstance(self.on_enable, Sequence):
+                    self.on_enable.start()
+                # try calling on_enable() on classes inheriting from Entity
+            if not value and hasattr(self, 'on_disable'):
+                if callable(self.on_disable):
                     self.on_disable()
-            except:
-                pass
+                if isinstance(self.on_disable, Sequence):
+                    self.on_disable.start()
 
             if value == True:
                 if hasattr(self, 'is_singleton') and not self.is_singleton():

@@ -219,7 +219,3 @@ Entity Basics
     on_enable()
     on_disable()
     # text
-
-
-
-.
