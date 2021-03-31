@@ -25,7 +25,9 @@ class Mouse():
         self.start_y = 0
         self.velocity = Vec3(0,0,0)
         self.prev_click_time = time.time()
+        self.prev_click_pos = None
         self.double_click_distance = .5
+        self.double_click_movement_limit = .01
 
         self.hovered_entity = None # returns the closest hovered entity with a collider.
         self.left = False
@@ -146,8 +148,10 @@ class Mouse():
 
             # double click
             if time.time() - self.prev_click_time <= self.double_click_distance:
-                base.input('double click')
+                if abs(self.x-self.prev_click_pos[0]) > self.double_click_movement_limit or abs(self.y-self.prev_click_pos[1]) > self.double_click_movement_limit:
+                    return # moused moved too much since previous click, so don't register double click.
 
+                base.input('double click')
                 if self.hovered_entity:
                     if hasattr(self.hovered_entity, 'on_double_click'):
                         try:
@@ -161,6 +165,7 @@ class Mouse():
                             s.on_double_click()
 
             self.prev_click_time = time.time()
+            self.prev_click_pos = (self.x, self.y)
 
 
         if key == 'left mouse up':
