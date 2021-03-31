@@ -55,6 +55,8 @@ class FileBrowserSave(FileBrowser):
 
 if __name__ == '__main__':
     from ursina import *
+    from ursina.prefabs.file_browser_save import FileBrowserSave
+
     app = Ursina()
     FileBrowserSave(file_type = '.oto')
     app.run()

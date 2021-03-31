@@ -20,7 +20,7 @@ class FileButton(Button):
 
     def on_click(self):
         if len(self.load_menu.selection) >= self.load_menu.selection_limit and not self.selected:
-            for e in self.load_menu.selection:
+            for e in self.parent.children:
                 e.selected = False
 
         self.selected = not self.selected
@@ -34,7 +34,8 @@ class FileButton(Button):
         if self.path.is_dir():
             self.load_menu.path = self.path
         else:
-            self.load_menu.open(self.path)
+            self.selected = True
+            self.load_menu.open()
 
 
     @property
@@ -56,10 +57,13 @@ class FileButton(Button):
 
 class FileBrowser(Entity):
     def __init__(self, **kwargs):
+
+        self.file_types = ['.*', ]
+        self.start_path = Path('.').resolve()
         super().__init__(parent=camera.ui, scale=(1,1), model='quad', color=color.clear, collider='box', y=.45)
 
         self.return_files = True
-        self.return_directories = False
+        self.return_folders = False
         self.selection_limit = 1
         self.max_buttons = 24
 
@@ -82,9 +86,6 @@ class FileBrowser(Entity):
 
         self.can_scroll_up_indicator = Entity(parent=self, model='quad', texture='arrow_down', rotation_z=180, scale=(.05,.05), y=-.0765, z=-.1, color=color.dark_gray, enabled=False, add_to_scene_entities=False)
         self.can_scroll_down_indicator = Entity(parent=self, model='quad', texture='arrow_down', scale=(.05,.05), y=(-self.max_buttons*.025)-.104, z=-.1, color=color.dark_gray, enabled=False, add_to_scene_entities=False)
-
-        self.file_types = ['.*', ]
-        self.start_path = Path('.').resolve()
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
@@ -142,8 +143,8 @@ class FileBrowser(Entity):
 
         for i, f in enumerate(files):
             prefix = ' <light_gray>'
-            if f.is_dir():
-                prefix = '<gray> <image:folder>   <light_gray>'
+            # if f.is_dir():
+            #     prefix = '<gray> <image:folder>   <light_gray>'
             # else:
             #     prefix = ' <light_gray> <image:file_icon>   <default>'
             if i < len(self.button_parent.children):
@@ -186,8 +187,11 @@ class FileBrowser(Entity):
         self.path = self.path.parent
 
 
-    def open(self):
-        if len(self.selection) == 1 and self.selection[0].is_dir():
+    def open(self, path=None):
+        if not self.selection:
+            return
+
+        if not self.return_folders and self.selection[0].is_dir():
             self.path = self.selection[0]
             return
 
@@ -210,9 +214,10 @@ if __name__ == '__main__':
 
     fb = FileBrowser(file_types=('.*'), enabled=True)
 
-    def on_submit(value):
-        for path in value:
-            print('---', path)
+    def on_submit(paths):
+        print('--------', paths)
+        for p in paths:
+            print('---', p)
 
     fb.on_submit = on_submit
 
