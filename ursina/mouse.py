@@ -16,6 +16,7 @@ class Mouse():
 
     def __init__(self):
         self.enabled = False
+        self.visible = True
         self.locked = False
         self.position = Vec3(0,0,0)
         self.delta = Vec3(0,0,0)
@@ -94,7 +95,8 @@ class Mouse():
 
         if name == 'visible':
             window.set_cursor_hidden(not value)
-            application.base.win.requestProperties(window)
+            if hasattr(application, 'base'):
+                application.base.win.requestProperties(window)
 
         if name == 'locked':
             try:
