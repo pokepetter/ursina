@@ -44,6 +44,7 @@ class Entity(NodePath):
         super().__init__(self.__class__.__name__)
 
         self.name = camel_to_snake(self.type)
+        self._enabled = True
         self.enabled = True     # disabled entities wil not be visible nor run code.
         self.visible = True
         self.ignore = False     # if True, will not try to run code.
@@ -131,36 +132,43 @@ class Entity(NodePath):
         self.enabled = False
 
 
+    @property
+    def enabled(self):
+        return self._enabled
+
+    @enabled.setter
+    def enabled(self, value):
+        if value and hasattr(self, 'on_enable') and not self._enabled:
+            if callable(self.on_enable):
+                self.on_enable()
+            elif isinstance(self.on_enable, Sequence):
+                self.on_enable.start()
+            # try calling on_enable() on classes inheriting from Entity
+        if not value and hasattr(self, 'on_disable') and self._enabled:
+            if callable(self.on_disable):
+                self.on_disable()
+            elif isinstance(self.on_disable, Sequence):
+                self.on_disable.start()
+
+        if value == True:
+            if hasattr(self, 'is_singleton') and not self.is_singleton():
+                self.unstash()
+        else:
+            if hasattr(self, 'is_singleton') and not self.is_singleton():
+                self.stash()
+
+        self._enabled = value
+
+
     def __setattr__(self, name, value):
-
-        if name == 'enabled':
-            if value and hasattr(self, 'on_enable'):
-                if callable(self.on_enable):
-                    self.on_enable()
-                if isinstance(self.on_enable, Sequence):
-                    self.on_enable.start()
-                # try calling on_enable() on classes inheriting from Entity
-            if not value and hasattr(self, 'on_disable'):
-                if callable(self.on_disable):
-                    self.on_disable()
-                if isinstance(self.on_disable, Sequence):
-                    self.on_disable.start()
-
-            if value == True:
-                if hasattr(self, 'is_singleton') and not self.is_singleton():
-                    self.unstash()
-            else:
-                if hasattr(self, 'is_singleton') and not self.is_singleton():
-                    self.stash()
-
         if name == 'eternal':
             for c in self.children:
                 c.eternal = value
 
-        if name == 'world_parent':
+        elif name == 'world_parent':
             self.reparent_to(value)
 
-        if name == 'model':
+        elif name == 'model':
             if value is None:
                 if hasattr(self, 'model') and self.model:
                     self.model.removeNode()
@@ -201,7 +209,7 @@ class Entity(NodePath):
                         value.on_assign(assigned_to=self)
             return
 
-        if name == 'color' and value is not None:
+        elif name == 'color' and value is not None:
             if isinstance(value, str):
                 value = color.hex(value)
 
@@ -215,7 +223,7 @@ class Entity(NodePath):
                 object.__setattr__(self, name, value)
 
 
-        if name == 'collision' and hasattr(self, 'collider') and self.collider:
+        elif name == 'collision' and hasattr(self, 'collider') and self.collider:
             if value:
                 self.collider.node_path.unstash()
             else:
@@ -224,11 +232,11 @@ class Entity(NodePath):
             object.__setattr__(self, name, value)
             return
 
-        if name == 'render_queue':
+        elif name == 'render_queue':
             if self.model:
                 self.model.setBin('fixed', value)
 
-        if name == 'double_sided':
+        elif name == 'double_sided':
             self.setTwoSided(value)
 
 
@@ -614,7 +622,7 @@ class Entity(NodePath):
     @shader.setter
     def shader(self, value):
         self._shader = value
-        
+
         if value is None:
             self.setShaderAuto()
             return
