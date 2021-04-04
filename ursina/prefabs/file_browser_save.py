@@ -24,6 +24,16 @@ class FileBrowserSave(FileBrowser):
         self.file_type = '' # to save as
 
         self.data = ''
+        self.last_saved_file = None     # gets set when you save a file
+        self.overwrite_prompt = WindowPanel(
+            content=(
+                Text('Overwrite?'),
+                Button('Yes', color=color.azure, on_click=self.save),
+                Button('Cancel')
+            ),
+            z=-1,
+            popup=True,
+            enabled=False)
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
@@ -35,19 +45,21 @@ class FileBrowserSave(FileBrowser):
         if not file_name.endswith(self.file_type):
             file_name += self.file_type
 
-        p = self.path / file_name
-        print('save:', p)
-        if p.exists():
-            print('overwrite file?')
-            return
+        path = self.path / file_name
+        # print('save:', path)
+        if path.exists() and not self.overwrite_prompt.enabled:
+            # print('overwrite file?')
+            self.overwrite_prompt.enabled = True
 
         else:
             if isinstance(self.data, str):
-                p.write_text(self.data)
+                path.write_text(self.data)
             else:
-                print('write bytes')
-                p.write_bytes(self.data)
+                # print('write bytes')
+                path.write_bytes(self.data)
 
+            self.last_saved_file = path
+            self.overwrite_prompt.enabled = False
             self.close()
 
 
@@ -58,5 +70,11 @@ if __name__ == '__main__':
     from ursina.prefabs.file_browser_save import FileBrowserSave
 
     app = Ursina()
-    FileBrowserSave(file_type = '.oto')
+    wp = FileBrowserSave(file_type = '.oto')
+
+
+    import json
+    save_data = {'level': 4, 'name':'Link'}
+    wp.data = json.dumps(save_data)
+
     app.run()
