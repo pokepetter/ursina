@@ -69,7 +69,6 @@ class Window(WindowProperties):
         if not application.development_mode:
             self.fullscreen = True
 
-        self.cursor = True
         self.color = color.dark_gray
         self.render_modes = ('default', 'wireframe', 'colliders', 'normals')
         self.render_mode = 'default'
@@ -299,11 +298,23 @@ class Window(WindowProperties):
             application.base.camNode.get_display_region(0).get_window().set_clear_color(value)
 
         if name == 'vsync':
-            if value == True:
-                loadPrcFileData('', 'sync-video True')
+            if not application.base:     # set vsync/framerate before window opened
+                if value == True or value == False:
+                    loadPrcFileData('', f'sync-video {value}')
+                elif isinstance(value, int):
+                    loadPrcFileData('', 'clock-mode limited')
+                    loadPrcFileData('', f'clock-frame-rate {value}')
             else:
-                loadPrcFileData('', 'sync-video False')
-                print('set vsync to false')
+                from panda3d.core import ClockObject                      # set vsync/framerate in runtime
+                if value == True:
+                    globalClock.setMode(ClockObject.MNormal)
+                elif value == False:
+                    print('error: disabling vsync during runtime is not yet implemented')
+
+                elif isinstance(value, int):
+                    globalClock.setMode(ClockObject.MLimited)
+                    globalClock.setFrameRate(30)
+
             object.__setattr__(self, name, value)
 
 
@@ -313,16 +324,18 @@ instance = Window()
 if __name__ == '__main__':
     from ursina import *
     # application.development_mode = False
+    window.vsync = 30
     app = Ursina()
+    # window.vsync = False # doesn't work
+    # window.vsync = True
 
     window.title = 'Title'
     window.borderless = False
     # window.fullscreen = False
-    window.fps_counter.enabled = False
+    # window.fps_counter.enabled = False
     # window.exit_button.visible = False
     # window.cog_button.enabled = False
     camera.orthographic = True
-
     camera.fov = 2
 
     Entity(model='cube', color=color.green, collider='box', texture='shore')

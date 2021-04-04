@@ -11,18 +11,26 @@ from ursina.camera import instance as camera
 from ursina.mouse import instance as mouse
 
 import __main__
+time.dt = 0
 
 
 class Ursina(ShowBase):
 
-    def __init__(self):
+    def __init__(self, **kwargs): # optional arguments: title, fullscreen, size, position, vsync, borderless, show_ursina_splash, render_mode, development_mode, editor_ui_enabled.
+        for name in ('size', 'vsync'):
+            if name in kwargs and hasattr(window, name):
+                setattr(window, name, kwargs[name])
+
+        if 'development_mode' in kwargs:
+            application.development_mode = kwargs['development_mode']
+
         super().__init__()
         application.base = base
-        base.win.requestProperties(window)
-        # base.win.setUnexposedDraw(False)
 
         window.late_init()
-        time.dt = 0
+        for name in ('title', 'fullscreen', 'position', 'show_ursina_splash', 'borderless', 'render_mode'):
+            if name in kwargs and hasattr(window, name):
+                setattr(window, name, kwargs[name])
 
         # camera
         camera._cam = base.camera
@@ -33,7 +41,6 @@ class Ursina(ShowBase):
         scene.camera = camera
         camera.reparent_to(base.render)
         camera.set_up()
-        # base.render.set_antialias(AntialiasAttrib.MMultisample)
 
         # input
         base.buttonThrowers[0].node().setButtonDownEvent('buttonDown')
@@ -104,6 +111,8 @@ class Ursina(ShowBase):
         application.hot_reloader = HotReloader(__main__.__file__ if hasattr(__main__, '__file__') else 'None')
 
         window.make_editor_gui()
+        if 'editor_ui_enabled' in kwargs:
+            window.editor_ui.enabled = kwargs['editor_ui_enabled']
 
 
     def _update(self, task):
@@ -212,12 +221,6 @@ class Ursina(ShowBase):
 
         if key == 'f9':
             window.render_mode = 'default'
-
-        # if key == 'escape':
-        #     if not application.paused:
-        #         application.pause()
-        #     else:
-        #         application.resume()
 
 
     def run(self):

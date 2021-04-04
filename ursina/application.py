@@ -48,6 +48,7 @@ _model_path.append_path(str(asset_folder.resolve()))
 print('package_folder:', package_folder)
 print('asset_folder:', asset_folder)
 
+base = None             # this will be set once the Ursina() is created
 hot_reloader = None     # will be set my main if development_mode
 
 def pause():

@@ -457,7 +457,7 @@ if __name__ == '__main__':
     t = time.time()
     # blender_scene = load_blender_scene(path=application.asset_folder, name='desert', reload=True)
     blender_scene = load_blender_scene(path=application.asset_folder, name='blender_level_editor_test_scene_2')
-    print('-------', time.time() - t)
+    # print('-------', time.time() - t)
 
     # print('--------', blender_scene.children)
     # for e in blender_scene.children:

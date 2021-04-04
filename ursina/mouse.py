@@ -95,7 +95,7 @@ class Mouse():
 
         if name == 'visible':
             window.set_cursor_hidden(not value)
-            if hasattr(application, 'base'):
+            if application.base:
                 application.base.win.requestProperties(window)
 
         if name == 'locked':
