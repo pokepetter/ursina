@@ -25,6 +25,7 @@ z-index: 1;
 <a style="color:hsl(20.0, 89%, 28%);" href="#curve">curve</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#duplicate">duplicate</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#input_handler">input_handler</a>
+<a style="color:hsl(20.0, 89%, 28%);" href="#main">main</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#mesh_importer">mesh_importer</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#scene">scene</a>
 <a style="color:hsl(20.0, 89%, 28%);" href="#shader">shader</a>
@@ -425,6 +426,7 @@ b.tooltip = Tooltip(<green>'exit'</green>)
 </div>
 </div></div>
 <div id="mouse"><div id="mouse" style="color:hsl(50.0, 89%, 28%); font-size:1.75em; font-weight:normal;">mouse</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/mouse.py"><gray>ursina.mouse</gray></a><br><br>enabled<gray> = False</gray> 
+visible<gray> = True</gray> 
 locked<gray> = False</gray> 
 position<gray> = Vec3(0,0,0)</gray> 
 delta<gray> = Vec3(0,0,0)</gray> 
@@ -434,7 +436,9 @@ start_x<gray> = 0</gray>
 start_y<gray> = 0</gray> 
 velocity<gray> = Vec3(0,0,0)</gray> 
 prev_click_time<gray> = time.time()</gray> 
+prev_click_pos<gray> = None</gray> 
 double_click_distance<gray> = .5</gray> 
+double_click_movement_limit<gray> = .01</gray> 
 hovered_entity<gray> = None # returns the closest hovered entity with a collider.</gray> 
 left<gray> = False</gray> 
 right<gray> = False</gray> 
@@ -515,6 +519,7 @@ scripts_folder<gray> = asset_folder / 'scripts/'</gray>
 fonts_folder<gray> = asset_folder / 'fonts/'</gray> 
 compressed_textures_folder<gray> = asset_folder / 'textures_compressed/'</gray> 
 compressed_models_folder<gray> = asset_folder / 'models_compressed/'</gray> 
+base<gray> = None             # this will be set once the Ursina() is created</gray> 
 hot_reloader<gray> = None     # will be set my main if development_mode</gray> 
 
 pause()   
@@ -744,6 +749,13 @@ input(<gray>key</gray>)
             <blue>print</blue>(key, value)
 </div>
 </div></div>
+<div id="main"><div id="main" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">main</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/main.py"><gray>ursina.main</gray></a><br><br>time.dt<gray> = 0</gray> 
+
+
+<div class="example">app = Ursina()
+app.run()
+</div>
+</div></div>
 <div id="mesh_importer"><div id="mesh_importer" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">mesh_importer</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/mesh_importer.py"><gray>ursina.mesh_importer</gray></a><br><br>blender_scenes<gray> = dict()</gray> 
 
 load_model(<gray>name, path=application.asset_folder, file_types=('.bam', '.ursinamesh', '.obj', '.blend')</gray>)   
@@ -764,7 +776,6 @@ application.asset_folder = application.asset_folder.parent / <green>'samples'</g
 
 t = time.time()
 blender_scene = load_blender_scene(path=application.asset_folder, name=<green>'blender_level_editor_test_scene_2'</green>)
-<blue>print</blue>(<green>'-------'</green>, time.time() - t)
 
 
 EditorCamera()
@@ -932,7 +943,6 @@ borderless<gray> = True</gray>
 top<gray> = Vec2(0, .5)</gray> 
 bottom<gray> = Vec2(0, -.5)</gray> 
 center<gray> = Vec2(0, 0)</gray> 
-cursor<gray> = True</gray> 
 color<gray> = color.dark_gray</gray> 
 render_modes<gray> = ('default', 'wireframe', 'colliders', 'normals')</gray> 
 render_mode<gray> = 'default'</gray> 
@@ -952,11 +962,11 @@ make_editor_gui()   <gray># called by main after setting up camera and applicati
 update_aspect_ratio()   
 next_render_mode()   
 
-<div class="example">window.title = <green>'Title'</green>
-window.borderless = False
-window.fps_counter.enabled = False
-camera.orthographic = True
+<div class="example">window.vsync = <yellow>3</yellow><yellow>0</yellow>
 
+window.title = <green>'Title'</green>
+window.borderless = False
+camera.orthographic = True
 camera.fov = <yellow>2</yellow>
 
 <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.green, <olive>collider</olive>=<green>'box'</green>, <olive>texture</olive>=<green>'shore'</green>)
@@ -1365,7 +1375,7 @@ pivot = <olive>Entity</olive>()
 DirectionalLight(<olive>parent</olive>=pivot, <olive>y</olive>=<yellow>2</yellow>, <olive>z</olive>=<yellow>3</yellow>, shadows=True)
 </div>
 </div></div>
-<div id="Ursina"><div id="Ursina" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Ursina<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/main.py"><gray>ursina.main</gray></a><br><br><params class="params">Ursina()</params>
+<div id="Ursina"><div id="Ursina" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Ursina<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/main.py"><gray>ursina.main</gray></a><br><br><params class="params">Ursina(**kwargs): # optional arguments: title, fullscreen, size, position, vsync, borderless, show_ursina_splash, render_mode, development_mode, editor_ui_enabled</params>
 
 mouse<gray> = mouse</gray> 
 
@@ -1910,15 +1920,18 @@ e.model.colorize()
 ground = <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>3</yellow><yellow>2</yellow>, <olive>texture</olive>=<green>'white_cube'</green>, <olive>texture_scale</olive>=(<yellow>3</yellow><yellow>2</yellow>,<yellow>3</yellow><yellow>2</yellow>), <olive>collider</olive>=<green>'box'</green>)
 box = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>, <olive>texture</olive>=<green>'white_cube'</green>, <olive>scale</olive>=(<yellow>1</yellow><yellow>0</yellow>,<yellow>2</yellow>,<yellow>2</yellow>), <olive>position</olive>=(<yellow>2</yellow>,<yellow>1</yellow>,<yellow>5</yellow>), <olive>color</olive>=color.light_gray)
 ec = <purple><b>EditorCamera</b></purple>(rotation_smoothing=<yellow>2</yellow>, <olive>enabled</olive>=False, <olive>rotation</olive>=(<yellow>3</yellow><yellow>0</yellow>,<yellow>3</yellow><yellow>0</yellow>,<yellow>0</yellow>))
+player = FirstPersonController()
 
 rotation_info = Text(<olive>position</olive>=window.top_left)
 
 <purple>def</purple> update():
     rotation_info.text = str(int(ec.rotation_y)) + <green>'\n'</green> + str(int(ec.rotation_x))
 
+
 <purple>def</purple> input(key):
     if key == <green>'tab'</green>:    <gray># press tab to toggle edit/play mode</gray>
         ec.enabled = <purple>not</purple> ec.enabled
+        player.enabled = <purple>not</purple> player.enabled
 </div>
 </div></div>
 <div id="ExitButton"><div id="ExitButton" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">ExitButton<gray>(<a style="color: gray;" href="#Button">Button</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/exit_button.py"><gray>ursina.prefabs.exit_button</gray></a><br><br><params class="params">ExitButton(**kwargs)</params>
@@ -1944,9 +1957,10 @@ on_double_click()
 
 <div class="example">fb = FileBrowser(file_types=(<green>'.*'</green>), <olive>enabled</olive>=True)
 
-<purple>def</purple> on_submit(value):
-    <purple>for</purple> path in value:
-        <blue>print</blue>(<green>'---'</green>, path)
+<purple>def</purple> on_submit(paths):
+    <blue>print</blue>(<green>'--------'</green>, paths)
+    <purple>for</purple> p in paths:
+        <blue>print</blue>(<green>'---'</green>, p)
 
 fb.on_submit = on_submit
 </div>
@@ -1956,7 +1970,7 @@ fb.on_submit = on_submit
 file_types<gray> = ['.*', ]</gray> 
 start_path<gray> = Path('.').resolve()</gray> 
 return_files<gray> = True</gray> 
-return_directories<gray> = False</gray> 
+return_folders<gray> = False</gray> 
 selection_limit<gray> = 1</gray> 
 max_buttons<gray> = 24</gray> 
 title_bar<gray> = Button(parent=self, scale=(.9,.035), text='&ltgray&gtOpen', color=color.dark_gray, collision=False)</gray> 
@@ -1978,13 +1992,14 @@ input(<gray>key</gray>)
 on_enable()   
 close()   
 folder_up()   
-open()   
+open(<gray>path=None</gray>)   
 
 <div class="example">fb = <purple><b>FileBrowser</b></purple>(file_types=(<green>'.*'</green>), <olive>enabled</olive>=True)
 
-<purple>def</purple> on_submit(value):
-    <purple>for</purple> path in value:
-        <blue>print</blue>(<green>'---'</green>, path)
+<purple>def</purple> on_submit(paths):
+    <blue>print</blue>(<green>'--------'</green>, paths)
+    <purple>for</purple> p in paths:
+        <blue>print</blue>(<green>'---'</green>, p)
 
 fb.on_submit = on_submit
 </div>
@@ -1996,12 +2011,27 @@ file_name_field<gray> = InputField(
         parent</gray> 
 file_type<gray> = '' # to save as</gray> 
 data<gray> = ''</gray> 
+last_saved_file<gray> = None     # gets set when you save a file</gray> 
+overwrite_prompt<gray> = WindowPanel(
+        content=(
+            Text('Overwrite?'),
+            Button('Yes', color=color.azure, on_click=self.save),
+            Button('Cancel')
+        ),
+        z=-1,
+        popup=True,
+        enabled=False)</gray> 
 
 save()   
 
 <div class="example"><purple>from</purple> ursina.prefabs.file_browser_save <purple>import</purple> FileBrowserSave
 
-<purple><b>FileBrowserSave</b></purple>(file_type = <green>'.oto'</green>)
+wp = <purple><b>FileBrowserSave</b></purple>(file_type = <green>'.oto'</green>)
+
+
+<purple>import</purple> json
+save_data = {<green>'level'</green>: <yellow>4</yellow>, <green>'name'</green>:<green>'Link'</green>}
+wp.data = json.dumps(save_data)
 </div>
 </div></div>
 <div id="FirstPersonController"><div id="FirstPersonController" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">FirstPersonController<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/first_person_controller.py"><gray>ursina.prefabs.first_person_controller</gray></a><br><br><params class="params">FirstPersonController(**kwargs)</params>
@@ -2023,6 +2053,8 @@ input(<gray>key</gray>)
 jump()   
 start_fall()   
 land()   
+on_enable()   
+on_disable()   
 
 <div class="example"><purple>from</purple> ursina.prefabs.first_person_controller <purple>import</purple> FirstPersonController
 ground = <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=(<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>), <olive>color</olive>=color.yellow.tint(-.<yellow>2</yellow>), <olive>texture</olive>=<green>'white_cube'</green>, <olive>texture_scale</olive>=(<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>,<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>), <olive>collider</olive>=<green>'box'</green>)
@@ -2660,7 +2692,7 @@ height<gray> = height</gray>
 <div class="example"><green><green>''</green>'
 WindowPanel is an easy way to create UI. It will automatically layout the content.
 <green>''</green>'</green>
-WindowPanel(
+wp = WindowPanel(
     title=<green>'Custom Window'</green>,
     content=(
         Text(<green>'Name:'</green>),
@@ -2669,7 +2701,13 @@ WindowPanel(
         Slider(),
         Slider(),
         ),
+        popup=True,
+        <olive>enabled</olive>=False
     )
+
+<purple>def</purple> input(key):
+    <purple>if</purple> key == <green>'space'</green>:
+        wp.enabled = True
 </div>
 </div></div>
 <div id="WindowPanel"><div id="WindowPanel" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">WindowPanel<gray>(<a style="color: gray;" href="#Draggable">Draggable</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/window_panel.py"><gray>ursina.prefabs.window_panel</gray></a><br><br><params class="params">WindowPanel(title='', content=[], **kwargs)</params>
@@ -2677,14 +2715,16 @@ WindowPanel(
 content<gray> = content</gray> 
 text<gray> = title</gray> 
 popup<gray> = False</gray> 
+panel<gray> = Panel(parent=self, origin=(0, .5), z=.1, color=self.color.tint(.1))</gray> 
 
+layout()   
 on_enable()   
 close()   
 
 <div class="example"><green><green>''</green>'
 WindowPanel is an easy way to create UI. It will automatically layout the content.
 <green>''</green>'</green>
-<purple><b>WindowPanel</b></purple>(
+wp = <purple><b>WindowPanel</b></purple>(
     title=<green>'Custom Window'</green>,
     content=(
         Text(<green>'Name:'</green>),
@@ -2693,7 +2733,13 @@ WindowPanel is an easy way to create UI. It will automatically layout the conten
         Slider(),
         Slider(),
         ),
+        popup=True,
+        <olive>enabled</olive>=False
     )
+
+<purple>def</purple> input(key):
+    <purple>if</purple> key == <green>'space'</green>:
+        wp.enabled = True
 </div>
 </div></div>
 <div id="chunk_mesh"><div id="chunk_mesh" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">chunk_mesh</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/scripts/chunk_mesh.py"><gray>ursina.scripts.chunk_mesh</gray></a><br><br>app<gray> = Ursina()</gray> 
@@ -2929,7 +2975,6 @@ Sky()
 'brick'
 'circle'
 'circle_outlined'
-'cobblestone'
 'cursor'
 'file_icon'
 'folder'
@@ -2937,8 +2982,6 @@ Sky()
 'heightmap_1'
 'horizontal_gradient'
 'noise'
-'pixelscape'
-'pixelscape_combo'
 'radial_gradient'
 'reflection_map_3'
 'shore'
