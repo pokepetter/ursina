@@ -335,6 +335,7 @@ class Text(Entity):
         if value == True:
             self.create_background()
         elif self._background:
+            from ursina.ursinastuff import destroy
             destroy(self._background)
 
 
