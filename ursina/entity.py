@@ -44,7 +44,6 @@ class Entity(NodePath):
         super().__init__(self.__class__.__name__)
 
         self.name = camel_to_snake(self.type)
-        self._enabled = True
         self.enabled = True     # disabled entities wil not be visible nor run code.
         self.visible = True
         self.ignore = False     # if True, will not try to run code.
@@ -102,7 +101,17 @@ class Entity(NodePath):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
+        if self.enabled and hasattr(self, 'on_enable'):
+            if callable(self.on_enable):
+                self.on_enable()
+            elif isinstance(self.on_enable, Sequence):
+                self.on_enable.start()
 
+        elif not self.enabled and hasattr(self, 'on_disable'):
+            if callable(self.on_disable):
+                self.on_disable()
+            elif isinstance(self.on_disable, Sequence):
+                self.on_disable.start()
 
 
     def _list_to_vec(self, value):
@@ -134,21 +143,24 @@ class Entity(NodePath):
 
     @property
     def enabled(self):
+        if not hasattr(self, '_enabled'):
+            return True
         return self._enabled
 
     @enabled.setter
     def enabled(self, value):
-        if value and hasattr(self, 'on_enable') and not self._enabled:
+        if value and hasattr(self, 'on_enable') and not self.enabled:
             if callable(self.on_enable):
                 self.on_enable()
-            elif isinstance(self.on_enable, Sequence):
+            elif isinstance(self.on_disable, Sequence):
                 self.on_enable.start()
-            # try calling on_enable() on classes inheriting from Entity
-        if not value and hasattr(self, 'on_disable') and self._enabled:
+
+        elif value == False and hasattr(self, 'on_disable') and self.enabled:
             if callable(self.on_disable):
                 self.on_disable()
             elif isinstance(self.on_disable, Sequence):
                 self.on_disable.start()
+
 
         if value == True:
             if hasattr(self, 'is_singleton') and not self.is_singleton():
@@ -164,9 +176,6 @@ class Entity(NodePath):
         if name == 'eternal':
             for c in self.children:
                 c.eternal = value
-
-        elif name == 'world_parent':
-            self.reparent_to(value)
 
         elif name == 'model':
             if value is None:
@@ -264,6 +273,15 @@ class Entity(NodePath):
                 self.reparentTo(value)
             except:
                 print('invalid parent:', value)
+
+    @property
+    def world_parent(self):
+        return self.parent
+
+    @world_parent.setter
+    def world_parent(self, value):  # change the parent, but keep position, rotation and scale
+        self.reparent_to(value)
+
 
     @property
     def type(self): # get class name.
@@ -451,6 +469,16 @@ class Entity(NodePath):
     @z.setter
     def z(self, value):
         self.setZ(value)
+
+    @property
+    def X(self):    # shortcut for int(entity.x)
+        return int(self.x)
+    @property
+    def Y(self):    # shortcut for int(entity.y)
+        return int(self.y)
+    @property
+    def Z(self):    # shortcut for int(entity.z)
+        return int(self.z)
 
     @property
     def world_rotation(self):

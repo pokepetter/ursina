@@ -90,6 +90,18 @@ class FirstPersonController(Entity):
         self.grounded = True
 
 
+    def on_enable(self):
+        mouse.locked = True
+        self.cursor.enabled = True
+
+
+    def on_disable(self):
+        mouse.locked = False
+        self.cursor.enabled = False
+
+
+
+
 if __name__ == '__main__':
     from ursina.prefabs.first_person_controller import FirstPersonController
     # window.vsync = False

@@ -28,7 +28,6 @@ class EditorCamera(Entity):
         camera.org_parent = camera.parent
         camera.org_position = camera.position
         camera.org_rotation = camera.rotation
-
         camera.parent = self
         camera.position = camera.editor_position
         camera.rotation = (0,0,0)
@@ -66,8 +65,8 @@ class EditorCamera(Entity):
         elif key == 'scroll up' and not held_keys['control']:
             if not camera.orthographic:
                 target_position = self.world_position
-                if mouse.hovered_entity and not mouse.hovered_entity.has_ancestor(camera):
-                    target_position = mouse.world_point
+                # if mouse.hovered_entity and not mouse.hovered_entity.has_ancestor(camera):
+                #     target_position = mouse.world_point
 
                 self.world_position = lerp(self.world_position, target_position, self.zoom_speed * time.dt * 10)
                 camera.z += self.zoom_speed * time.dt * (abs(camera.z)*.1) * 100
@@ -94,10 +93,12 @@ class EditorCamera(Entity):
             self.rotation_x -= mouse.velocity[1] * self.rotation_speed
             self.rotation_y += mouse.velocity[0] * self.rotation_speed
 
-            self.position += camera.right * held_keys['d'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt'])) * time.dt
-            self.position += camera.left * held_keys['a'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt'])) * time.dt
-            self.position += camera.up * held_keys['e'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt'])) * time.dt
-            self.position += camera.down * held_keys['q'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt'])) * time.dt
+            self.direction = Vec3(
+                self.forward * (held_keys['w'] - held_keys['s'])
+                + self.right * (held_keys['d'] - held_keys['a'])
+                ).normalized()
+
+            self.position += self.direction * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt'])) * time.dt
 
             if camera.z < 0:
                 camera.z += held_keys['w'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt'])) * time.dt
@@ -132,21 +133,21 @@ if __name__ == '__main__':
     e.model.colorize()
 
     from ursina.prefabs.first_person_controller import FirstPersonController
-    from copy import copy
-    # player = FirstPersonController()
-    # Entity(parent=player, model='cube', color=color.orange, scale_y=2, origin_y=0)
+
     ground = Entity(model='plane', scale=32, texture='white_cube', texture_scale=(32,32), collider='box')
     box = Entity(model='cube', collider='box', texture='white_cube', scale=(10,2,2), position=(2,1,5), color=color.light_gray)
     ec = EditorCamera(rotation_smoothing=2, enabled=False, rotation=(30,30,0))
+    player = FirstPersonController()
 
     rotation_info = Text(position=window.top_left)
 
     def update():
         rotation_info.text = str(int(ec.rotation_y)) + '\n' + str(int(ec.rotation_x))
 
+
     def input(key):
         if key == 'tab':    # press tab to toggle edit/play mode
-            # player.ignore = not player.ignore
             ec.enabled = not ec.enabled
+            player.enabled = not player.enabled
 
     app.run()
