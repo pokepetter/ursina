@@ -615,6 +615,21 @@ class Entity(NodePath):
         self.setScale(self.scale_x, self.scale_y, value)
 
     @property
+    def transform(self): # get/set position, rotation and scale
+        return (self.position, self.rotation, self.scale)
+    @transform.setter
+    def transform(self, value):
+        self.position, self.rotation, self.scale = value
+
+    @property
+    def world_transform(self): # get/set world_position, world_rotation and world_scale
+        return (self.world_position, self.world_rotation, self.world_scale)
+    @transform.setter
+    def world_transform(self, value):
+        self.world_position, self.world_rotation, self.world_scale = value
+
+
+    @property
     def forward(self): # get forward direction.
         return render.getRelativeVector(self, (0, 0, 1))
     @property
