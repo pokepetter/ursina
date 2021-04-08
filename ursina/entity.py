@@ -1022,7 +1022,7 @@ class Entity(NodePath):
     def shake(self, duration=.2, magnitude=1, speed=.05, direction=(1,1)):
         import random
         s = Sequence()
-        original_position = self.position
+        original_position = self.world_position
         for i in range(int(duration / speed)):
             s.append(Func(self.set_position,
                 Vec3(
@@ -1031,7 +1031,7 @@ class Entity(NodePath):
                     original_position[2],
                 )))
             s.append(Wait(speed))
-            s.append(Func(self.set_position, original_position))
+            s.append(Func(setattr, self, 'world_position', original_position))
 
         s.start()
         return s
