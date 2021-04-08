@@ -12,12 +12,11 @@ Introduction Tutorial
     * Sublime Text
 
 
-2)
-    Create a new folder for your project. This will contain scripts and assets.
+2) Create a new folder for your project. This will contain scripts and assets.
     For ursina to find 3d models and textures, they should be in the same folder or in
     a folder below the starting script.
 
-    In this folder, create a new file called main.py. This will contain out little game.
+    In this folder, create a new file called main.py. This will contain our little game.
 
 
 3) At the top of the file, write:
@@ -38,8 +37,8 @@ Introduction Tutorial
         # text
 
 
-4) Here's a really basic example game with comments to explain what were doing.
-   We will simply make a orange box move right and left when we press 'd' or 'a'.
+4) Here's a really basic example game with comments to explain what we're doing.
+    We will simply make an orange box move right and left when we press 'd' or 'a'.
 
     # code
     from ursina import *
@@ -87,12 +86,12 @@ Introduction Tutorial
 
 
 5) Now we have to tell Python to run the script. To do this, open the command line and
-   go to the current folder. An easy way to do this is to type 'cmd' in the address bar.
-   Run the command below.
+    go to the current folder. An easy way to do this is to type 'cmd' in the address bar.
+    Run the command below.
 
      # code
      python main.py
      # text
 
-   An alternative is to install the 'atom-python-run' package in Atom so you can start
-   the game by pressing F5.
+    An alternative is to install the 'atom-python-run' package in Atom so you can start
+    the game by pressing F5.
