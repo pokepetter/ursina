@@ -22,16 +22,16 @@ Once you finish this tutorial you are expected to know:
     - Texturing
     - Texture animations
     - Alpha blending
-    - Mouse collisons
+    - Mouse collisions
     - Text and UI
 
 
 
 ## Introduction
 
-So you want to write your own game, sell it by tons and get rich and famous? Then you are on the right track, but let me be straight and tell you this is not going to happen anytime soon. Many people writing games in big companies started somewhere and to get to the top you need to understand the basics and that is exactly why you are here, so consider this tutorial as the stepping stone into the game development industry.
+So you want to write your own game, sell it by tons, and get rich and famous? Then you are on the right track, but let me be straight and tell you this is not going to happen anytime soon. Many people writing games in big companies started somewhere and to get to the top you need to understand the basics and that is exactly why you are here, so consider this tutorial as the stepping stone into the game development industry.
 
-Ursina is a Python wrapper around the Panda3D game engine, as such Python is used to control every aspect of the engine from the initialisation, rendering, game control, playing sounds and shutdown, therefore you will need to build up your Python skills. Python has become one of the most used and well respected scripting languages and plenty of companies and game development studios use Python to automate many functions so this is a fantastic tool to have in your belt.
+Ursina is a Python wrapper around the Panda3D game engine, as such Python is used to control every aspect of the engine from the initialisation, rendering, game control, playing sounds, and shutdown, therefore you will need to build up your Python skills. Python has become one of the most used and well respected scripting languages and plenty of companies and game development studios use Python to automate many functions so this is a fantastic tool to have in your belt.
 
 Panda3D is an Open Source game engine created by Disney and still used for production development. Panda3D already has a Python wrapper, but Ursina enhances the engine making it seamless to work across platforms and providing tools that make the development experience much more comfortable.
 
@@ -58,7 +58,7 @@ Python 3.7.4
 
 ## Setup a virtual environment (venv) (optional)
 
-A Python virtual environment or venv is the way Python maintains a private space for the libraries you need for a project. You can have any number of virtual environments in your computer and be sure all libraries installed in one venv does not mix with libraries in the other venv so for example you may create a "gamedev" venv and install all your game development libraries, then create a "science" venv and install libraries for number crunching, then create another called "music" and install all your libraries you need to work with sound files. You may even install multiple versions of the same libraries on each venv and be sure they don't mix. Once you are done with a venv (or maybe it becomes too large because you have been installing too many things) you can delete the venv and recreate it from scratch.
+A Python virtual environment or venv is the way Python maintains a private space for the libraries you need for a project. You can have any number of virtual environments in your computer and be sure all libraries installed in one venv do not mix with libraries in the other venv so for example you may create a "gamedev" venv and install all your game development libraries, then create a "science" venv and install libraries for number crunching, then create another called "music" and install all your libraries you need to work with sound files. You may even install multiple versions of the same libraries on each venv and be sure they don't mix. Once you are done with a venv (or maybe it becomes too large because you have been installing too many things) you can delete the venv and recreate it from scratch.
 ## Installing the Ursina game engine
 
 To install Ursina we need to use pip, the Python package manager.
@@ -87,7 +87,7 @@ pip search sound
 
 Or maybe you need to read a YAML file (yaml), or machine learning (ml), or cover image formats. Just run a pip search and you will get something.
 
-So lets say you want the "playsound" library installed. Run:
+So  say you want the "playsound" library installed. Run:
 # code
 pip install playsound
 # text
@@ -116,7 +116,7 @@ Sublime is a good choice for a beginner as it is very lightweight (and I'm writi
 
 ## Creating your first program
 
-Probably the most intimidating step into writing games is to initialise the window. There are so many concepts that goes with this initialisation like selcting a screen size, setting the color modes, creating the back buffers, setting up the video card, and writing down the most basic graphics switching system and all that even before we can even see anything.
+Probably the most intimidating step into writing games is to initialise the window. There are so many concepts that go with this initialisation like selecting a screen size, setting the color modes, creating the back buffers, setting up the video card, and writing down the most basic graphics switching system and all that even before we can even see anything.
 
 Fortunately Ursina makes it so easy that you get all that in three lines. Python is a scripting language, which in essence means you write a text file and the Python interpreter will run it straight, no need to compile or anything.
 
@@ -144,7 +144,7 @@ Congratulations, you have created your first window and you are a step closer to
 
 ## Improving your window
 
-So the window looks good, but it might improve with some work, edit your window.py program so it
+So the window looks good, but it might improve with some work, edit your window.py program to match the code below.
 
 # code
 from ursina import *                    # Import the ursina engine
@@ -160,16 +160,17 @@ window.fps_counter.enabled = True       # Show the FPS (Frames per second) count
 app.run()                               # Run the app
 # text
 
-The "window" object is part of the application and you can access it directly. Some elements of the window can be accessed after the game is running but some not. Play with those values setting them to True or False and check the effect. Go to the documentation at https://www.ursinaengine.org/cheat_sheet.html#window to see even more options for the window.
+The "window" object is part of the application and you can access it directly. Some elements of the window can be accessed after the game is running but some can not. Play with those values setting them to True or False and check the effect. Go to the documentation at https://www.ursinaengine.org/cheat_sheet.html#window to see even more options for the window.
 
-Responding to events
-So now you have a window running, lets try to see how to control things from the game.
+## Responding to events
+
+So now you have a window running,  try to see how to control things from the game.
 
 Game engines work in "passes". On each pass it will check input conditions, check sound buffers, compute the AI, update the internal game state and logic, then renders the current scene to the background then does the "flipping" which updates the contents of the screen.
 
-The Ursina engine simplifies all this process so no need to do the rendering by yourself, but you are allowed to use the "update" function to test and update your internal logic need, then let the engine so the rendering.
+The Ursina engine simplifies all this process so no need to do the rendering by yourself, but you are allowed to use the "update" function to test and update your internal logic need, then let the engine do the rendering.
 
-To use the update() function, add it to your window program as this:
+To use the update() function, add it to your window program like this:
 
 # code
 from ursina import *                    # Import the ursina engine
@@ -186,17 +187,17 @@ app = Ursina()                          # Initialise your Ursina app
 
 The update function is what is called a global function. As long as it is defined somewhere, Ursina will run it. What is going here is that the program will print "Update!" to the console (not to the window) every time it is called.
 
-The engine also has an array that checks which keyboard key is pressed, this array has one entry for each key available in the keyboard and by default its values are set to 0. When a key its pressed its value is set to 1, when its released it is set to 0 again.
+The engine also has an array that checks which keyboard key is pressed, this array has one entry for each key available in the keyboard and by default its values are set to 0. When a key its pressed its value is set to 1, when it's released it is set to 0 again.
 
-The Pythin "if" instruction will execute the commands inside its block only if the expression evaluates to anything that is not 0 (or null or empty)m, so when it finds a 1 in the corresponding key it prints the value, when the key is released it becomes 0 again so the "if" block is no longer executed.
+The Python "if" instruction will execute the commands inside its block only if the expression evaluates to anything that is not 0 (or null or empty), so when it finds a 1 in the corresponding key it prints the value, when the key is released it becomes 0 again so the "if" block is no longer executed.
 
 
 
 ## Drawing some cubes
 
-Right now the engine is running on empty. An engine is supposed to update an scene, then draw some graphics in the background then flip to the foreground but we are not doing anything so we only see a black screen. Lets do something about this but before starting you need to understand how an engine is presente.
+Right now the engine is running on empty. An engine is supposed to update a scene, then draw some graphics in the background, then flip to the foreground, but we are not doing anything so we only see a black screen. Let's do something about this but before starting you need to understand how an engine is presente.
 
-Game engines are pretty much like filming a video. What you see in the screen is an scene that you film through some camera lens. So the idea is you put objects in the scene which Ursina calls Entities but other engines refer to them in similar ways like actors or game objects. The camera is pointing to the center of the scene which in coordinates is the 0,0,0.
+Game engines are pretty much like filming a video. What you see in the screen is a scene that you film through some camera lens. So the idea is you put objects in the scene which Ursina calls Entities but other engines refer to them in similar ways like actors or game objects. The camera is pointing to the center of the scene which in coordinates is the 0,0,0.
 
 So you just need to put your objects in your scene and they appear in the screen. Really neat right?
 
@@ -212,7 +213,7 @@ Here we are creating a cube and we set the colour to orange and a size of 2. So 
 
 And now I will read your mind... "Wait a minute... we are supposed to see a cube!!!!!"
 
-Yeah of course, but that depends from where you see the cube, or better said, from where the camera is looking at the cube. Let's add some rotation to the cube so lets do some work on the update function:
+Yeah of course, but that depends from where you see the cube, or better said, from where the camera is looking at the cube. Let's add some rotation to the cube so let's do some work on the update function:
 
 # code
 def update():
@@ -221,7 +222,7 @@ def update():
         print(held_keys['t'])           # Print the value
 # text
 
-So what we are doing now is rotating the cube around it's Y axis (imagine an arrow going up). The engine has a global variable called time.dt which has the time elapsed since the last frame. The += instruction is like saying add to the current value of the Y rotation the new time difference so it is accumulated.
+So what we are doing now is rotating the cube around its Y axis (imagine an arrow going up). The engine has a global variable called time.dt which has the time elapsed since the last frame. The += instruction is like saying add to the current value of the Y rotation the new time difference so it is accumulated.
 
 If you run this program and squint a little you may start noticing the figure is indeed a cube.
 
@@ -233,7 +234,7 @@ Ursina also allows setting a colour using Red Green Blue (RGB) components with v
 
 ## Random values
 
-Random values are extremely useful when building games. They can be used to generate enemies or just to calculate probabilities like rolling dice. Lets add some randomness to this cube.
+Random values are extremely useful when building games. They can be used to generate enemies or just to calculate probabilities like rolling dice.  add some randomness to this cube.
 
 To create a new random number generator use the Python random library. This is part of Python so no need to install anything else. Try updating your window.py file like this:
 
@@ -245,7 +246,7 @@ random_generator = random.Random()      # Create a random number generator
 ....
 # text
 
-Now lets paint this cube randomly. Each time random() is called a number from 0 to 1 is created, so lets do that when the R key is pressed the cube is painted in some random colour.
+Now  paint this cube randomly. Each time random() is called a number from 0 to 1 is created, so  do that when the R key is pressed the cube is painted in some random colour.
 
 # code
 def update():
@@ -258,7 +259,7 @@ def update():
 
 # text
 
-Now run and press the r key a few times and you should see the cube changin colours.
+Now run and press the r key a few times and you should see the cube changing colours.
 
 While this looks cool, you might notice that if you leave the r key pressed, the cube will flash changing colous multiple times. This happens because the change is evaluated every time the update function is invoked so while the key is pressed it will keep changing colours.
 
@@ -279,9 +280,9 @@ Now try using Random to change the scale and position of the cube. Try to keep b
 
 ## Moving the camera
 
-So, the cube is moving, now lets work out the camera. The camera is an Entity which is part of the scene and it has a variable reference called "camera". As an Entity, the camera can be moved using its position and rotation, imagine you are a cameraman moving it around the scene.
+So, the cube is moving, now  work out the camera. The camera is an Entity which is part of the scene and it has a variable reference called "camera". As an Entity, the camera can be moved using its position and rotation, imagine you are a cameraman moving it around the scene.
 
-For simplicity, lets try moving it up and sown when we press the q and a keys:
+For simplicity,  try moving it up and down when we press the q and a keys:
 
 # code
 def update():
@@ -293,7 +294,7 @@ def update():
 
 # text
 
-Now try moving the camera left and right. Try rotating the camera on the Z azis.
+Now try moving the camera left and right. Try rotating the camera on the Z axis.
 
 The camera has other options that are useful depending on what you are trying to render and how you want to display the scene. If you have seen a camera you know it has a lot of knobs and dials, this is quite similar and same as a real cameraman you need experience to learn how to use every option. Some options you may play with are here: https://www.ursinaengine.org/cheat_sheet.html#camera
 
@@ -301,11 +302,11 @@ The camera has other options that are useful depending on what you are trying to
 
 ## Adding more cubes
 
-So we have been playing with one cube only. Let's up this a bit and learn how to work with multiple entities. To do that we need to learn something called a data structure. Data structures are probably the most important pieces of any system, there are mmany data structures and learning how and when to use each one makes you a master.
+So we have been playing with one cube only. Let's up this a bit and learn how to work with multiple entities. To do that we need to learn something called a data structure. Data structures are probably the most important pieces of any system, there are many data structures and learning how and when to use each one makes you a master.
 
 The most basic data structure is the list. Think about it as string where you just put beads one after the other. When you want to work with things inside, you go through the list and operate on each one, one by one.
 
-So lets create a list and add our cube to it. So surround the cube creation with this:
+So let's create a list and add our cube to it. So surround the cube creation with this:
 
 # code
 cubes = []                                          # Create the list
@@ -313,7 +314,7 @@ cube = Entity(model='cube', color=color.orange, scale=(2,2,2))
 cubes.append(cube)                                  # Add the cube to the list
 # text
 
-So lets do it so that every time we press 'c' a cube is added to the list in a random space coordinates between -5 and 5 in x y and z axis.
+So let's do it so that every time we press 'c' a cube is added to the list in a random space coordinates between -5 and 5 in x, y, and z axis.
 
 # code
 def input(key):
@@ -334,13 +335,13 @@ def input(key):
 
 # text
 
-Now we have many cubes but in the same dull orange colour. use some code similar to what we do when the "space" key is pressed and use color.rgb() instead of color.orange to get a random colour when you create a cube.
+Now we have many cubes but in the same dull orange colour. Use some code similar to what we do when the "space" key is pressed and use color.rgb() instead of color.orange to get a random colour when you create a cube.
 
 
 
 ## Rotating more cubes
 
-So now all the entities are in the scene but they are not moving. Lets go througn all entities in the scene and move them all not just the cube. Update your update() function as:
+So now all the entities are in the scene but they are not moving.  go througn all entities in the scene and move them all, not just the cube. Update your update() function as:
 
 # code
 def update():
@@ -352,13 +353,13 @@ def update():
         camera.position -= (0, time.dt, 0)           # move down vertically
 # text
 
-So instead of just updating the rotation for one cube, we now go through all the entities in the list and update each one. The "for" instruction in python allows us iterating through lists.
+So instead of just updating the rotation for one cube, we now go through all the entities in the list and update each one. The "for" instruction in Python allows us iterating through lists.
 
 
 
-## Hierarchies (The knee bone connected to the tight bone, the tight bone connected to the hip bone...)
+## Hierarchies (The knee bone's connected to the thigh bone, the thigh bone's connected to the hip bone...)
 
-So we have discussed how objects are added to an scene but how about more complex hierarchies like the sun and planets and moons. These are more complicated scenes where some objects depend on the movement of their parents.
+So far we have discussed how objects are added to an scene, but how about more complex hierarchies like the sun and planets and moons. These are more complicated scenes where some objects depend on the movement of their parents.
 
 In game engines are usually organised in hierarchies and there is usually a way to define the parent relationship during creation. In the Ursina engine when an object is created it is automatically assigned to the scene but you can alter that. Remember when you added a new cube when the letter c is pressed? Change that a bit as:
 
@@ -371,11 +372,11 @@ In game engines are usually organised in hierarchies and there is usually a way 
         ...
 # text
 
-So we are telling the newly creared Entity that the parent is not the main scene but our beloved cube. Try and run this and press "c" to create new cubes.
+So we are telling the newly created Entity that the parent is not the main scene but our beloved cube. Try and run this and press "c" to create new cubes.
 
 So now when the cube rotates, all objects rotate with it. In fact as we are still rotating all the cubes in the list, if you notice the cubes are also rotating independently.
 
-Now, when an object is in hierarchy with another object, its position is relative to the other object no longer to the center of the scene. In fact its parent is now considered the starting coordinate. Want to try this, lets do so than when a cube is added, another cube is added with the new cube as its parent, something like this:
+Now, when an object is in hierarchy with another object, its position is relative to the other object, no longer to the center of the scene. In fact its parent is now considered the starting coordinate. Let's change this so that when a cube is added, another cube is added with the new cube as its parent, something like this:
 
 # code
         ...
@@ -395,21 +396,23 @@ Now, when an object is in hierarchy with another object, its position is relativ
 
 ## Adding some texture
 
-So you are seeing a lot of things that look like cubes but don't really feel like cubes. That is because a lot of the 3D feeling is really provided by the object texture so lets explore them.
+So you are seeing a lot of things that look like cubes but don't really feel like cubes. That is because a lot of the 3D feeling is really provided by the object texture so  explore them.
 
-Textures are (usually) square images loaded into the video card memory. As with any image, a small image is fast to load into memory and fast to render, but provides less detail, a large image uses more memory and is slower to render, but provides more detail. You may tend to think that with larger textures your game will look neater but it may lead to slow rendering times. It all depends on your game and what you want to show. If it is a model that will be seen only from far away, why do you need high detail? If its too close the texture will look bad. It's something you need to agree with your graphics artist.
+Textures are (usually) square images loaded into the video card memory. As with any image, a small image is fast to load into memory and fast to render, but provides less detail, a large image uses more memory and is slower to render, but provides more detail. You may tend to think that with larger textures your game will look neater but it may lead to slow rendering times. It all depends on your game and what you want to show. If it is a model that will be seen only from far away, why do you need high detail? If its too close the texture will look bad. It's something you need to agree on with your graphics artist.
 
 Anyway, get a texture from somewhere, for example get https://www.google.com/search?q=texture+3d+square+crate and save it next to your program file as a JPG. For this tutorial name it crate.jpg and make sure it is square like 128x128 or 256x256 or 512x512 pixels.
 
-Now, when creating an entity, add the texture parameter like for example:
+Now, when creating an entity, add the texture parameter, for example:
 
+# code
 cube = Entity(model='cube', color=color.orange, scale=(2,2,2), texture="crate")
+# text
 
-Notice you while the file is called "crate.jpg", you only name it "crate". The engine will look for JPG, PNG or even PSD files automatically. Feel free to add the parameter to all places where you create a cube.
+Notice while the file is called "crate.jpg", you only name it "crate". The engine will look for JPG, PNG or even PSD files automatically. Feel free to add the parameter to all places where you create a cube.
 
 Now, something you will notice is that while the texture is applied to all cubes, each one has a different colour. This is because the colour of the texture is affected by the colour of the cube itself, so if the cube is red the whole object will look reddish, this operation is called a colour multiplication.
 
-This is pretty much the same problem you have when trying to paint a wall when there is another colur behind. Colours mix and you don't get what you want. This is exactly why painters start with a white canvas and why you prime a wall white before painting it with the colour you want. The way to get the right texture colour is to provide a full white colour to the cube, so in every entity creation relace the cube colour for "colour.white" or color.rgb(255,255,255) like:
+This is pretty much the same problem you have when trying to paint a wall when there is another colur behind. Colours mix and you don't get what you want. This is exactly why painters start with a white canvas and why you prime a wall white before painting it with the colour you want. The way to get the right texture colour is to provide a full white colour to the cube, so in every entity creation replace the cube colour for "colour.white" or color.rgb(255,255,255) like:
 
 # code
 cube = Entity(model='cube', color=color.white, scale=(2,2,2), texture="crate")
@@ -432,24 +435,30 @@ But then what will heppen if we change the model but not the texture? Ursina eng
 ## Animating UVs (Advanced stuff)
 
 In a normal scenario, the artists will provide models with their textures and UV coordinates set as they have to, as a developer you just have to load and render everything in the engine.
-However, not all the textures are static and there are many cases where textures need to be animated, this is specially true to simulate fluids like water or lave, for example to create a river or a waterfall.
+However, not all the textures are static and there are many cases where textures need to be animated, this is specially true to simulate fluids like water or lava, for example to create a river or a waterfall.
 
-So lets get a texture first, in this case we want a waterfall so lets searche the internet for someting useful, in this case I want a waterfall texture that is seamless, meaning I can move it around and we shouldn't notice the borders.
+So let's get a texture first, in this case we want a waterfall so  search the internet for something useful, in this case I want a waterfall texture that is seamless, meaning I can move it around and we shouldn't notice the borders.
 https://www.google.com/search?q=game+water+texture+seamless
 
 There are so many of them, many are free but many are paid. I decided to go for this one. Download it (click the ... icon next to the image) and save it next to your window.py program as water.jpg
 https://www.pinterest.com.au/pin/210050770099370255/
 
 Now change the texture in the central cube, and also make the cube larger so we notice the effect like this:
+
+# code
 cube = Entity(model='cube', color=color.white, scale=(2,6,2), texture="waterfall")
+# text
 
 Also make it slower to rotate so it is more visible, instead of multiplying the rotation by 100 make it by 5.
+
+# code
     for entity in cubes:
         entity.rotation_y += time.dt * 5                # Rotate all the cubes every time update is called
+# text
 
-Run this to see how are we doing. You should be able to see a texture on the cube, looks like water but its not moving so it looks dull. Lets do some animation.
+Run this to see how are we doing. You should be able to see a texture on the cube, looks like water but it's not moving so it looks dull. Let's do some animation.
 
-Lets start buy creating a global variable to keep the texture movement, add it after the line where we initialise the random generator. Call it texoffset.
+Let's start by creating a global variable to keep the texture movement, add it after the line where we initialise the random generator. Call it texoffset.
 # code
 ....
 random_generator = random.Random()      # Create a random number generator
@@ -486,7 +495,7 @@ But you know what the problem is with effects... you can always make it better! 
 
 So we have always talked about solid colour like red, white, blue, orange, etc. And we have used a function called color.rgb() to set the colour, however in computer graphics colours are as solid as you want them to be.
 
-There is a fourth component to the colour that is called "alpha" which is the term for "transparency" and is a component of a colour the same as red, green or blue and it also goes from 0 to 255 where 0 means completely transparent and 255 means completely opaque so you can't see through. To set this transparency you can use the function color.rgba() which allous setting the alpha level.
+There is a fourth component to the colour that is called "alpha" which is the term for "transparency" and is a component of a colour the same as red, green or blue and it also goes from 0 to 255 where 0 means completely transparent and 255 means completely opaque so you can't see through. To set this transparency you can use the function color.rgba() which allows setting the alpha level.
 
 To test this, we are going to create a second cube on top of the first cube, but in this case we will set the colour to a semi transparent (128) alpha. We also make this second box larger wider and deeper than the other box (but the same height) so it surrounds it.
 
@@ -536,11 +545,11 @@ def update():
 
 ## Adding text and buttons.
 
-So the final work is to add some text to our demo. Before continuing you need to be aware that in most games there is a layer on top of the scene called the UI layer ot front layer. This is very similar to what you see during a sports game or during news whare there are letters on top of the scene you are watching.
+So the final work is to add some text to our demo. Before continuing you need to be aware that in most games there is a layer on top of the scene called the UI layer or front layer. This is very similar to what you see during a sports game or during news where there are letters on top of the scene you are watching.
 
-In the same way, the scene object in the Ursina engine has something called the ui and you can create text and bitmaps and buttons on top of it so you create an interface your players can use. In that UI you can display your compass, character health, timers, etc.
+In the same way, the scene object in the Ursina engine has something called the UI and you can create text and bitmaps and buttons on top of it so you create an interface your players can use. In that UI you can display your compass, character health, timers, etc.
 
-So lets start by adding some text. Lets create it just before starting the app, after we create the cubes:
+So  start by adding some text.  create it just before starting the app, after we create the cubes:
 
 # code
 ...
@@ -557,7 +566,7 @@ app.run()                               # opens a window and starts the game.
 
 The coordinate systems x and y of the UI are a bit complicated, (0,0) refers to the center of the screen. To understand the coordinate system refer to this document. https://www.ursinaengine.org/coordinate_system.html
 
-If you run the code above you will probably see nothing because we intentionally started with the info.visible property set to False, now we want to show it. We are going to use a function of the mouse cursor which gets you which entity it is hovering at. Lets update the update() function to this:
+If you run the code above you will probably see nothing because we intentionally started with the info.visible property set to False, now we want to show it. We are going to use a function of the mouse cursor which gets you which entity it is hovering at. Let's update the update() function to this:
 
 # code
 ...
