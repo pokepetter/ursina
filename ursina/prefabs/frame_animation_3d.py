@@ -71,7 +71,7 @@ if __name__ == '__main__':
 
     '''
     Loads an obj sequence as a frame animation.
-    So if you have some frames named run_cycle_000.obj, run_cycle_000.obj, run_cycle_000.obj and so on,
+    So if you have some frames named run_cycle_000.obj, run_cycle_001.obj, run_cycle_002.obj and so on,
     you can load it like this: FrameAnimation3d('run_cycle_')
     '''
 

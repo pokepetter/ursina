@@ -243,6 +243,7 @@ position<gray> = Vec3(0,0,0) # right, up, forward. can also set self.x, self.y, 
 rotation<gray> = Vec3(0,0,0) # can also set self.rotation_x, self.rotation_y, self.rotation_z</gray> 
 scale<gray> = Vec3(1,1,1)    # can also set self.scale_x, self.scale_y, self.scale_z</gray> 
 line_definition<gray> = None # returns a Traceback(filename, lineno, function, code_context, index).</gray> 
+world_parent
 type                <gray># get class name.</gray>
 types               <gray># get all class names including those this inhertits from.</gray>
 visible_self        <gray># set visibility of self, without affecting children.</gray>
@@ -256,6 +257,9 @@ world_z
 x
 y
 z
+X                   <gray># shortcut for int(entity.x)</gray>
+Y                   <gray># shortcut for int(entity.y)</gray>
+Z                   <gray># shortcut for int(entity.z)</gray>
 world_rotation
 world_rotation_x
 world_rotation_y
@@ -270,6 +274,8 @@ world_scale_z
 scale_x
 scale_y
 scale_z
+transform           <gray># get/set position, rotation and scale</gray>
+world_transform     <gray># get/set world_position, world_rotation and world_scale</gray>
 forward             <gray># get forward direction.</gray>
 back                <gray># get backwards direction.</gray>
 right               <gray># get right direction.</gray>
@@ -1916,7 +1922,7 @@ e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>col
 e.model.colorize()
 
 <purple>from</purple> ursina.prefabs.first_person_controller <purple>import</purple> FirstPersonController
-<purple>from</purple> copy <purple>import</purple> copy
+
 ground = <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>3</yellow><yellow>2</yellow>, <olive>texture</olive>=<green>'white_cube'</green>, <olive>texture_scale</olive>=(<yellow>3</yellow><yellow>2</yellow>,<yellow>3</yellow><yellow>2</yellow>), <olive>collider</olive>=<green>'box'</green>)
 box = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>, <olive>texture</olive>=<green>'white_cube'</green>, <olive>scale</olive>=(<yellow>1</yellow><yellow>0</yellow>,<yellow>2</yellow>,<yellow>2</yellow>), <olive>position</olive>=(<yellow>2</yellow>,<yellow>1</yellow>,<yellow>5</yellow>), <olive>color</olive>=color.light_gray)
 ec = <purple><b>EditorCamera</b></purple>(rotation_smoothing=<yellow>2</yellow>, <olive>enabled</olive>=False, <olive>rotation</olive>=(<yellow>3</yellow><yellow>0</yellow>,<yellow>3</yellow><yellow>0</yellow>,<yellow>0</yellow>))
@@ -2099,7 +2105,7 @@ finish()
 
 <green><green>''</green>'
 Loads an obj sequence as a frame animation.
-So if you have some frames named run_cycle_000.obj, run_cycle_000.obj, run_cycle_000.obj and so on,
+So if you have some frames named run_cycle_000.obj, run_cycle_001.obj, run_cycle_002.obj and so on,
 you can load it like this: FrameAnimation3d(<green>'run_cycle_'</green>)
 <green>''</green>'</green>
 
