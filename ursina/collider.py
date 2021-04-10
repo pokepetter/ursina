@@ -117,9 +117,18 @@ class MeshCollider(Collider):
                 for i in range(geomNode.getNumGeoms()):
                     geom = geomNode.getGeom(i)
                     vdata = geom.getVertexData()
-                    vertex = GeomVertexReader(vdata, 'vertex')
-                    while not vertex.isAtEnd():
-                        verts.append(vertex.getData3())
+                    for i in range(geom.getNumPrimitives()):
+                        prim = geom.getPrimitive(i)
+                        vertex_reader = GeomVertexReader(vdata, 'vertex')
+                        prim = prim.decompose()
+
+                        for p in range(prim.getNumPrimitives()):
+                            s = prim.getPrimitiveStart(p)
+                            e = prim.getPrimitiveEnd(p)
+                            for i in range(s, e):
+                                vi = prim.getVertex(i)
+                                vertex_reader.setRow(vi)
+                                verts.append(vertex_reader.getData3())
 
             for i in range(0, len(verts)-3, 3):
                 p = CollisionPolygon(Vec3(verts[i+2]), Vec3(verts[i+1]), Vec3(verts[i]))
@@ -153,17 +162,6 @@ if __name__ == '__main__':
     pandafile = Filename.fromOsSpecific(winfile)
     model = loader.loadModel(pandafile)
     e = Entity(model=model, collider='mesh')
-    # from panda3d.core import GeomVertexReader
-    # geomNodeCollection = model.findAllMatches('**/+GeomNode')
-    # for nodePath in geomNodeCollection:
-    #     geomNode = nodePath.node()
-    #     for i in range(geomNode.getNumGeoms()):
-    #         geom = geomNode.getGeom(i)
-    #         vdata = geom.getVertexData()
-    #         vertex = GeomVertexReader(vdata, 'vertex')
-    #         verts = []
-    #         while not vertex.isAtEnd():
-    #             verts.append(vertex.getData3())
     c = Entity(model='sphere', scale=.1, color=color.red)
     def update():
         if mouse.world_point:
