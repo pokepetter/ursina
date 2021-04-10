@@ -109,10 +109,8 @@ class Window(WindowProperties):
         import time
 
         self.editor_ui = Entity(parent=camera.ui, eternal=True, enabled=bool(application.development_mode))
-        self.exit_button = Button(parent=self.editor_ui, eternal=True, ignore_paused=True, origin=(.5, .5),
+        self.exit_button = Button(parent=self.editor_ui, eternal=True, ignore_paused=True, origin=(.5, .5), enabled=self.borderless,
             position=self.top_right, z=-999, scale=(.05, .025), color=color.red.tint(-.2), text='x', on_click=application.quit)
-        self.exit_button.enabled = self.borderless
-
 
         def _exit_button_input(key):
             from ursina import held_keys, mouse
@@ -120,7 +118,8 @@ class Window(WindowProperties):
                 self.exit_button.on_click()
         self.exit_button.input = _exit_button_input
 
-        self.fps_counter = Text(parent=self.editor_ui, eternal=True, position=(.5*self.aspect_ratio, .47, -999), origin=(.8,.5), text='60', ignore=False, i=0)
+        self.fps_counter = Text(parent=self.editor_ui, eternal=True, origin=(.8,.5), text='60', ignore=False, i=0,
+            position=(.5*self.aspect_ratio, .47+(.02*(not self.exit_button.enabled)), -999))
 
         def _fps_counter_update():
             if self.fps_counter.i > 60:
