@@ -3,11 +3,11 @@ from ursina import *
 
 class FirstPersonController(Entity):
     def __init__(self, **kwargs):
+        self.cursor = Entity(parent=camera.ui, model='quad', color=color.pink, scale=.008, rotation_z=45)
         super().__init__()
         self.speed = 5
         self.origin_y = -.5
         self.camera_pivot = Entity(parent=self, y=2)
-        self.cursor = Entity(parent=camera.ui, model='quad', color=color.pink, scale=.008, rotation_z=45)
 
         camera.parent = self.camera_pivot
         camera.position = (0,0,0)
@@ -22,7 +22,6 @@ class FirstPersonController(Entity):
         self.jump_duration = .5
         self.jumping = False
         self.air_time = 0
-
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
@@ -113,7 +112,7 @@ if __name__ == '__main__':
     e = Entity(model='cube', scale=(1,5,10), x=-2, y=.01, collider='box', texture='white_cube')
     e.texture_scale = (e.scale_z, e.scale_y)
 
-    player = FirstPersonController(model='cube', y=1, origin_y=-.5)
+    player = FirstPersonController(model='cube', y=2, origin_y=-.5)
     player.gun = None
 
     gun = Button(parent=scene, model='cube', color=color.blue, origin_y=-.5, position=(3,0,3), collider='box')
