@@ -2,6 +2,7 @@ import time
 
 from direct.showbase.ShowBase import ShowBase
 from direct.task.Task import Task
+import gltf
 
 from ursina import application
 from ursina import input_handler
@@ -26,6 +27,7 @@ class Ursina(ShowBase):
 
         super().__init__()
         application.base = base
+        gltf.patch_loader(self.loader)
 
         window.late_init()
         for name in ('title', 'fullscreen', 'position', 'show_ursina_splash', 'borderless', 'render_mode'):

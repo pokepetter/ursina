@@ -1,6 +1,7 @@
 from panda3d.core import CollisionNode, CollisionBox, CollisionSphere, CollisionPolygon
 from panda3d.core import NodePath
 from ursina.vec3 import Vec3
+from ursina.mesh import Mesh
 
 
 class Collider(NodePath):
@@ -70,40 +71,59 @@ class MeshCollider(Collider):
         self.node = self.node_path.node()
         self.collision_polygons = list()
 
-        if mesh.triangles:
-            for tri in mesh.triangles:
-                if len(tri) == 3:
+        if isinstance(mesh, Mesh):
+            if mesh.triangles:
+                for tri in mesh.triangles:
+                    if len(tri) == 3:
+                        poly = CollisionPolygon(
+                            Vec3(mesh.vertices[tri[2]]),
+                            Vec3(mesh.vertices[tri[1]]),
+                            Vec3(mesh.vertices[tri[0]]),
+                            )
+                        self.collision_polygons.append(poly)
+                    elif len(tri) == 4:
+                        poly = CollisionPolygon(
+                            Vec3(mesh.vertices[tri[2]]),
+                            Vec3(mesh.vertices[tri[1]]),
+                            Vec3(mesh.vertices[tri[0]]))
+                        self.collision_polygons.append(poly)
+                        poly = CollisionPolygon(
+                            Vec3(mesh.vertices[tri[0]]),
+                            Vec3(mesh.vertices[tri[3]]),
+                            Vec3(mesh.vertices[tri[2]]))
+                        self.collision_polygons.append(poly)
+
+            elif mesh.mode == 'triangle':
+                for i in range(0, len(mesh.vertices), 3):
                     poly = CollisionPolygon(
-                        Vec3(mesh.vertices[tri[2]]),
-                        Vec3(mesh.vertices[tri[1]]),
-                        Vec3(mesh.vertices[tri[0]]),
+                        Vec3(mesh.vertices[i+2]),
+                        Vec3(mesh.vertices[i+1]),
+                        Vec3(mesh.vertices[i]),
                         )
                     self.collision_polygons.append(poly)
-                elif len(tri) == 4:
-                    poly = CollisionPolygon(
-                        Vec3(mesh.vertices[tri[2]]),
-                        Vec3(mesh.vertices[tri[1]]),
-                        Vec3(mesh.vertices[tri[0]]))
-                    self.collision_polygons.append(poly)
-                    poly = CollisionPolygon(
-                        Vec3(mesh.vertices[tri[0]]),
-                        Vec3(mesh.vertices[tri[3]]),
-                        Vec3(mesh.vertices[tri[2]]))
-                    self.collision_polygons.append(poly)
-
-        elif mesh.mode == 'triangle':
-            for i in range(0, len(mesh.vertices), 3):
-                poly = CollisionPolygon(
-                    Vec3(mesh.vertices[i+2]),
-                    Vec3(mesh.vertices[i+1]),
-                    Vec3(mesh.vertices[i]),
-                    )
-                self.collision_polygons.append(poly)
 
 
-        else:
-            print('error: mesh collider does not support', mesh.mode, 'mode')
-            return None
+            else:
+                print('error: mesh collider does not support', mesh.mode, 'mode')
+                return None
+
+
+        elif isinstance(mesh, NodePath):
+            from panda3d.core import GeomVertexReader
+            verts = []
+            geomNodeCollection = mesh.findAllMatches('**/+GeomNode')
+            for nodePath in geomNodeCollection:
+                geomNode = nodePath.node()
+                for i in range(geomNode.getNumGeoms()):
+                    geom = geomNode.getGeom(i)
+                    vdata = geom.getVertexData()
+                    vertex = GeomVertexReader(vdata, 'vertex')
+                    while not vertex.isAtEnd():
+                        verts.append(vertex.getData3())
+
+            for i in range(0, len(verts)-3, 3):
+                p = CollisionPolygon(Vec3(verts[i+2]), Vec3(verts[i+1]), Vec3(verts[i]))
+                self.collision_polygons.append(p)
 
 
         for poly in self.collision_polygons:
@@ -117,17 +137,38 @@ if __name__ == '__main__':
     from ursina import *
     app = Ursina()
 
-    e = Entity(model='sphere', x=2)
-    e.collider = 'box'      # add BoxCollider based on entity's bounds.
-    e.collider = 'sphere'   # add SphereCollider based on entity's bounds.
-    e.collider = 'mesh'     # add MeshCollider based on entity's bounds.
+    # e = Entity(model='sphere', x=2)
+    # e.collider = 'box'      # add BoxCollider based on entity's bounds.
+    # e.collider = 'sphere'   # add SphereCollider based on entity's bounds.
+    # e.collider = 'mesh'     # add MeshCollider based on entity's bounds.
+    #
+    # e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   # add BoxCollider at custom positions and size.
+    # e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      # add SphereCollider at custom positions and size.
+    # e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      # add MeshCollider with custom shape and center.
+    #
+    # m = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
+    # e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_color=color.yellow)
+    from panda3d.core import Filename
+    winfile = r"C:\sync\3d\rock_scene.glb"
+    pandafile = Filename.fromOsSpecific(winfile)
+    model = loader.loadModel(pandafile)
+    e = Entity(model=model, collider='mesh')
+    # from panda3d.core import GeomVertexReader
+    # geomNodeCollection = model.findAllMatches('**/+GeomNode')
+    # for nodePath in geomNodeCollection:
+    #     geomNode = nodePath.node()
+    #     for i in range(geomNode.getNumGeoms()):
+    #         geom = geomNode.getGeom(i)
+    #         vdata = geom.getVertexData()
+    #         vertex = GeomVertexReader(vdata, 'vertex')
+    #         verts = []
+    #         while not vertex.isAtEnd():
+    #             verts.append(vertex.getData3())
+    c = Entity(model='sphere', scale=.1, color=color.red)
+    def update():
+        if mouse.world_point:
+            c.position = mouse.world_point
 
-    e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   # add BoxCollider at custom positions and size.
-    e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      # add SphereCollider at custom positions and size.
-    e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      # add MeshCollider with custom shape and center.
-
-    m = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
-    e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_color=color.yellow)
-
+    # print('--------', model)
     EditorCamera()
     app.run()
