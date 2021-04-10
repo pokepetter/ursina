@@ -12,7 +12,7 @@ from time import perf_counter
 imported_meshes = dict()
 blender_scenes = dict()
 
-def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursinamesh', '.obj', '.blend')):
+def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursinamesh', '.glb', '.obj', '.blend')):
     if not isinstance(name, str):
         raise TypeError(f"Argument save must be of type str, not {type(str)}")
 
@@ -31,7 +31,7 @@ def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursina
     for filetype in file_types:
         # warning: glob is case-insensitive on windows, so m.path will be all lowercase
         for filename in path.glob(f'**/{name}{filetype}'):
-            if filetype in '.bam':
+            if filetype == '.bam':
                 print('loading bam')
                 return loader.loadModel(filename)
 
@@ -63,7 +63,11 @@ def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursina
                     # obj_to_ursinamesh(name=name)
                     return load_model(name, path)
 
-            # else:
+            else:
+                try:
+                    return loader.loadModel(filename)
+                except:
+                    pass
 
     return None
 
