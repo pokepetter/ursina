@@ -37,11 +37,9 @@ class Ursina(ShowBase):
         # camera
         camera._cam = base.camera
         camera._cam.reparent_to(camera)
-        camera.parent = base.render
         camera.render = base.render
         camera.position = (0, 0, -20)
         scene.camera = camera
-        camera.reparent_to(base.render)
         camera.set_up()
 
         # input
