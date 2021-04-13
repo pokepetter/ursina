@@ -2,7 +2,7 @@ from ursina import *
 
 
 class ButtonGroup(Entity):
-    def __init__(self, options=None, default='', min_selection=0, max_selection=1, **kwargs):
+    def __init__(self, options=None, default='', min_selection=1, max_selection=1, **kwargs):
         super().__init__()
         self.deselected_color = Button.color
         self.selected_color = color.azure
@@ -22,6 +22,10 @@ class ButtonGroup(Entity):
         if default:
             for b in [e for e in self.buttons if e.value == default]:
                 self.select(b)
+        else:
+            for i in range(min_selection):
+                self.select(self.buttons[i])
+
 
     @property
     def options(self):
