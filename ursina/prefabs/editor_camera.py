@@ -6,12 +6,13 @@ class EditorCamera(Entity):
         camera.editor_position = camera.position
         super().__init__(name='editor_camera', eternal=True)
 
-        self.gizmo = Entity(parent=self, model='sphere', color=color.orange, scale=.025, add_to_scene_entities=False)
+        self.gizmo = Entity(parent=self, model='sphere', color=color.orange, scale=.025, add_to_scene_entities=False, enabled=False)
 
         self.rotation_speed = 200
         self.pan_speed = Vec2(5, 5)
         self.move_speed = 10
         self.zoom_speed = .75
+        self.zoom_smoothing = 8
         self.rotate_around_mouse_hit = False
 
         for key, value in kwargs.items():
@@ -31,6 +32,7 @@ class EditorCamera(Entity):
         camera.parent = self
         camera.position = camera.editor_position
         camera.rotation = (0,0,0)
+        self.target_z = camera.z
 
 
     def on_disable(self):
@@ -69,13 +71,14 @@ class EditorCamera(Entity):
                 #     target_position = mouse.world_point
 
                 self.world_position = lerp(self.world_position, target_position, self.zoom_speed * time.dt * 10)
-                camera.z += self.zoom_speed * time.dt * (abs(camera.z)*.1) * 100
+                self.target_z += self.zoom_speed * time.dt * (abs(self.target_z)*.1) * 100
             else:
-                camera.fov -= self.zoom_speed * 100 * time.dt * (abs(camera.z)*.1)
+                camera.fov -= self.zoom_speed * 100 * time.dt * (abs(self.target_z)*.1)
 
         elif key == 'scroll down' and not held_keys['control']:
             if not camera.orthographic:
-                camera.world_position += camera.back * self.zoom_speed * 100 * time.dt * (abs(camera.z)*.1)
+                # camera.world_position += camera.back * self.zoom_speed * 100 * time.dt * (abs(camera.z)*.1)
+                self.target_z -= self.zoom_speed * 100 * time.dt * (abs(camera.z)*.1)
             else:
                 camera.fov += self.zoom_speed * 100 * time.dt * (abs(camera.z)*.1)
 
@@ -87,7 +90,6 @@ class EditorCamera(Entity):
 
 
 
-
     def update(self):
         if mouse.right:
             self.rotation_x -= mouse.velocity[1] * self.rotation_speed
@@ -96,28 +98,28 @@ class EditorCamera(Entity):
             self.direction = Vec3(
                 self.forward * (held_keys['w'] - held_keys['s'])
                 + self.right * (held_keys['d'] - held_keys['a'])
+                + self.up    * (held_keys['e'] - held_keys['q'])
                 ).normalized()
 
             self.position += self.direction * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt'])) * time.dt
 
-            if camera.z < 0:
-                camera.z += held_keys['w'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt'])) * time.dt
+            if self.target_z < 0:
+                self.target_z += held_keys['w'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt'])) * time.dt
             else:
                 self.position += camera.forward * held_keys['w'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt'])) * time.dt
 
-            camera.z -= held_keys['s'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt'])) * time.dt
+            self.target_z -= held_keys['s'] * (self.move_speed + (self.move_speed * held_keys['shift']) - (self.move_speed*.9 * held_keys['alt'])) * time.dt
 
         if mouse.middle:
             if not camera.orthographic:
-                zoom_compensation = -camera.z * .1
+                zoom_compensation = -self.target_z * .1
             else:
                 zoom_compensation = camera.orthographic * camera.fov * .2
 
             self.position -= camera.right * mouse.velocity[0] * self.pan_speed[0] * zoom_compensation
             self.position -= camera.up * mouse.velocity[1] * self.pan_speed[1] * zoom_compensation
 
-
-        # self.gizmo.position = self.position
+        camera.z = lerp(camera.z, self.target_z, time.dt*self.zoom_smoothing)
 
 
 if __name__ == '__main__':
