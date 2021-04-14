@@ -61,19 +61,17 @@ class MeshCollider(Collider):
             mesh = entity.model
             # print('''auto generating mesh collider from entity's mesh''')
 
-        # from ursina import Mesh     # this part is obsolete if I use the old obj loading
-        # if not isinstance(mesh, Mesh):
-        #     from ursina import mesh_importer
-        #     mesh = eval(mesh_importer.obj_to_ursinamesh(name=mesh.name, save_to_file=False))
-        #     flipped_verts = [v*Vec3(-1,1,1) for v in mesh.vertices] # have to flip it on x axis for some reason
-        #     mesh.vertices = flipped_verts
         self.node_path = entity.attachNewNode(CollisionNode('CollisionNode'))
         self.node = self.node_path.node()
         self.collision_polygons = list()
 
         if isinstance(mesh, Mesh):
             if mesh.triangles:
-                for tri in mesh.triangles:
+                triangles = mesh.triangles
+                if not isinstance(mesh.triangles[0], tuple):
+                    triangles = [triangles[i:i + 3] for i in range(0, len(triangles), 3)] # group into groups of three
+
+                for tri in triangles:
                     if len(tri) == 3:
                         poly = CollisionPolygon(
                             Vec3(mesh.vertices[tri[2]]),
@@ -92,6 +90,7 @@ class MeshCollider(Collider):
                             Vec3(mesh.vertices[tri[3]]),
                             Vec3(mesh.vertices[tri[2]]))
                         self.collision_polygons.append(poly)
+
 
             elif mesh.mode == 'triangle':
                 for i in range(0, len(mesh.vertices), 3):
@@ -146,27 +145,17 @@ if __name__ == '__main__':
     from ursina import *
     app = Ursina()
 
-    # e = Entity(model='sphere', x=2)
-    # e.collider = 'box'      # add BoxCollider based on entity's bounds.
-    # e.collider = 'sphere'   # add SphereCollider based on entity's bounds.
-    # e.collider = 'mesh'     # add MeshCollider based on entity's bounds.
-    #
-    # e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   # add BoxCollider at custom positions and size.
-    # e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      # add SphereCollider at custom positions and size.
-    # e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      # add MeshCollider with custom shape and center.
-    #
-    # m = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
-    # e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_color=color.yellow)
-    from panda3d.core import Filename
-    winfile = r"C:\sync\3d\rock_scene.glb"
-    pandafile = Filename.fromOsSpecific(winfile)
-    model = loader.loadModel(pandafile)
-    e = Entity(model=model, collider='mesh')
-    c = Entity(model='sphere', scale=.1, color=color.red)
-    def update():
-        if mouse.world_point:
-            c.position = mouse.world_point
+    e = Entity(model='sphere', x=2)
+    e.collider = 'box'      # add BoxCollider based on entity's bounds.
+    e.collider = 'sphere'   # add SphereCollider based on entity's bounds.
+    e.collider = 'mesh'     # add MeshCollider based on entity's bounds.
 
-    # print('--------', model)
+    e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   # add BoxCollider at custom positions and size.
+    e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      # add SphereCollider at custom positions and size.
+    e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      # add MeshCollider with custom shape and center.
+
+    m = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
+    e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_color=color.yellow)
+    
     EditorCamera()
     app.run()
