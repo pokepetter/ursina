@@ -23,12 +23,12 @@ class WindowPanel(Draggable):
         if self.text_entity:
             self.text_entity.world_scale_y = 1
 
-        self.panel = Panel(parent=self, origin=(0, .5), z=.1, color=self.color.tint(.1))
+        self.panel = Entity(parent=self, model='quad', origin=(0,.5), z=.1, color=self.color.tint(.1), collider='box')
 
         if self.popup:
             self.lock_x = True
             self.lock_y = True
-            self.bg = Button(parent=self, z=.1, scale=(999, 999), color=color.black66, highlight_color=color.black66, pressed_color=color.black66)
+            self.bg = Button(parent=self, z=1, scale=(999, 999), color=color.black66, highlight_color=color.black66, pressed_color=color.black66)
             self.bg.on_click = self.close
 
         self.layout()
@@ -51,8 +51,7 @@ class WindowPanel(Draggable):
 
             if isinstance(c, Entity):
                 c.world_parent = self
-                c.y = -height
-                c.z = 0
+                c.position = (0, -height, 0)
 
                 if isinstance(c, InputField):
                     if self._prev_input_field:
