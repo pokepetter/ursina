@@ -8,38 +8,24 @@ class Slider(Entity):
         self.vertical = False
         self.min = min
         self.max = max
+
         if default is None:
             default = min
         self.default = default
         self.step = 0
         self.height = height
 
-        self.label = Text(parent=self, origin=(0.5, 0), x=-0.025, text=text)
-        bg_color = color.black66
-        self.bg = Button(
-            parent = self,
-            model = Quad(scale=(.525, height), radius=Text.size/2, segments=3),
-            origin_x = -0.25,
-            pressed_scale = 1,
-            color = bg_color,
-            highlight_color = bg_color,
-            pressed_color = bg_color,
-            )
+        self.on_value_changed = None    # set this to a function you wnat to be called when the slider changes
+        self.setattr = None             # set this to (object, 'attrname') to set that value when the slider changes
 
-        self.knob = Draggable(
-            parent = self,
-            min_x = 0,
-            max_x = .5,
-            min_y = 0,
-            max_y = .5,
-            step = self.step,
-            model = Quad(radius=Text.size/2, scale=(Text.size, height)),
-            collider = 'box',
-            color = color.light_gray,
-            text = "0",
-            text_origin = (0, -.55),
-            z = -.1
-            )
+        self.label = Text(parent=self, origin=(0.5, 0), x=-0.025, text=text)
+
+        self.bg = Entity(parent=self, model=Quad(scale=(.525, height), radius=Text.size/2, segments=3),
+            collider='box', origin_x=-0.25, color=color.black66)
+
+        self.knob = Draggable(parent=self, min_x=0, max_x=.5, min_y=0, max_y=.5, step=self.step,
+            model=Quad(radius=Text.size/2, scale=(Text.size, height)), collider='box', color=color.light_gray,
+            text='0', text_origin=(0, -.55), z=-.1)
 
         def bg_click():
             self.knob.x = mouse.point[0]
@@ -48,8 +34,11 @@ class Slider(Entity):
 
         def drop():
             self.knob.z = -.1
-            if hasattr(self, 'on_value_changed'):
+            if self.on_value_changed:
                 self.on_value_changed()
+
+            if self.setattr:
+                setattr(self.setattr[0], self.setattr[1], self.value)
 
         self.knob.drop = drop
         self._prev_value = self.default
@@ -108,10 +97,15 @@ class Slider(Entity):
             if isinstance(self.step, int) or self.step.is_integer():
                 self.knob.text_entity.text = str(self.value)
 
-        if self.dynamic and hasattr(self, 'on_value_changed') and self._prev_value != t:
-            self.on_value_changed()
-            self._prev_value = t
+        if self.dynamic and self._prev_value != t:
+            if self.on_value_changed:
+                self.on_value_changed()
 
+            if self.setattr:
+                target_object, attr = self.setattr
+                setattr(target_object, attr, self.value)
+
+            self._prev_value = t
 
 
     def __setattr__(self, name, value):
@@ -145,17 +139,17 @@ class ThinSlider(Slider):
 
 if __name__ == '__main__':
     app = Ursina()
-    # color.text_color = color.dark_text
-    # origin = Entity(model='cube', color=color.green, scale = .05)
+
     box = Entity(model='cube', origin_y=-.5, scale=1, color=color.orange)
-    slider = Slider(0, 20, default=10, height=Text.size*3, y=-.4, step=1   )
-    slider = ThinSlider(x=-.4, y=-.37, text='contrast', dynamic=True)
-    slider.label.origin = (0,0)
-    slider.label.position = (.25, -.1)
-    # thin_slider = ThinSlider(0, 255, default=1, text='thin_slider', height=Text.size*3, y=-.4, step=1, vertical=False, x=-.7)
-    # Text('debug text')
+
     def scale_box():
         box.scale_y = slider.value
-    #
-    slider.on_value_changed = scale_box
+
+    slider = Slider(0, 20, default=10, height=Text.size*3, y=-.4, step=1, on_value_changed=scale_box)
+
+    thin_slider = ThinSlider(text='height', dynamic=True, setattr=(box,'scale_y'))
+
+    thin_slider.label.origin = (0,0)
+    thin_slider.label.position = (.25, -.1)
+
     app.run()
