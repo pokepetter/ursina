@@ -21,7 +21,7 @@ class Slider(Entity):
         self.label = Text(parent=self, origin=(0.5, 0), x=-0.025, text=text)
 
         self.bg = Entity(parent=self, model=Quad(scale=(.525, height), radius=Text.size/2, segments=3),
-            collider='box', origin_x=-0.25, color=color.black66)
+            origin_x=-0.25, collider='box', color=color.black66)
 
         self.knob = Draggable(parent=self, min_x=0, max_x=.5, min_y=0, max_y=.5, step=self.step,
             model=Quad(radius=Text.size/2, scale=(Text.size, height)), collider='box', color=color.light_gray,
