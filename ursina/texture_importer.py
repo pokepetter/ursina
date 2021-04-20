@@ -37,20 +37,20 @@ def load_texture(name, path=None):
     for folder in folders:
         if '.' in name: # got name with file extention
             for filename in folder.glob('**/' + name):
-                t =  Texture(filename.resolve())
+                t = Texture(filename.resolve())
                 imported_textures[name] = t
                 return t
 
         for filename in folder.glob('**/' + name + '.*'): # no file extention given, so try all supported
             if filename.suffix in file_types:
                 # print('found:', filename)
-                t =  Texture(filename.resolve())
+                t = Texture(filename.resolve())
                 imported_textures[name] = t
                 return t
 
     if application.development_mode:
         try:
-                from psd_tools import PSDImage
+            from psd_tools import PSDImage
         except (ModuleNotFoundError, ImportError) as e:
             print('info: psd-tools3 not installed')
 
