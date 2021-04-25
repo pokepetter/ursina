@@ -71,10 +71,12 @@ in vec3 vpos;
 in vec3 norm;
 in vec4 shad[1];
 
+uniform vec2 texture_scale;
+
 out vec4 p3d_FragColor;
 
 void main() {
-  p3d_FragColor = texture(p3d_Texture0, texcoords) * p3d_ColorScale;
+  p3d_FragColor = texture(p3d_Texture0, texcoords * texture_scale.xy) * p3d_ColorScale;
 
   // float alpha = p3d_Material.roughness * p3d_Material.roughness;
   vec3 N = norm;
@@ -126,13 +128,13 @@ void main() {
 
     p3d_FragColor.rgb += textureProj(p3d_LightSource[i].shadowMap, shadowcoord) * shadow_color;
     p3d_FragColor.rgb += color - (shadow_color);
-
   }
-
-  p3d_FragColor.a = 1;
 }
 
 ''',
+default_input = {
+    'texture_scale': (1, 1),
+    }
 )
 
 
@@ -144,9 +146,10 @@ if __name__ == '__main__':
     app = Ursina()
     shader = lit_with_shadows_shader
 
-    a = AzureCube(shader=shader, texture='shore')
-    b = WhiteSphere(shader=shader, rotation_y=180, x=3, texture='brick')
-    b.texture.filtering = None
+    a = Entity(model='cube', shader=shader, texture='radial_gradient', color=color.red)
+    # a.set_shader_input('texture_scale', 2)
+    # b = WhiteSphere(shader=shader, rotation_y=180, x=3, texture='brick')
+    # b.texture.filtering = None
     GrayPlane(scale=10, y=-2, texture='shore', shader=shader)
 
 
