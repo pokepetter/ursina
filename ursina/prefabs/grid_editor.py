@@ -99,6 +99,8 @@ class GridEditor(Entity):
             if mouse.left:
                 y = int(round(self.cursor.y * self.h))
                 x = int(round(self.cursor.x * self.w))
+                # if (x, y) == self.prev_draw:
+                #     return
 
                 if not held_keys['alt']:
                     if self.prev_draw is not None and distance2d(self.prev_draw, (x,y)) > 1:
@@ -176,10 +178,12 @@ class GridEditor(Entity):
         if key == 'x' and self.brush_size > 1:
             self.brush_size -= 1
             self.cursor.scale = Vec2(self.brush_size / self.w, self.brush_size / self.h)
+            self.prev_draw = None
 
         if key == 'd' and self.brush_size <  8:
             self.brush_size += 1
             self.cursor.scale = Vec2(self.brush_size / self.w, self.brush_size / self.h)
+            self.prev_draw = None
 
         if held_keys['control'] and key == 's':
             if hasattr(self, 'save'):
@@ -241,14 +245,20 @@ class PixelEditor(GridEditor):
 class ASCIIEditor(GridEditor):
     def __init__(self, size=(61,28), palette=(' ', '#', '|', 'A', '/', '\\', 'o', '_', '-', 'i', 'M', '.'), font='VeraMono.ttf', color=color.black, line_height=1.1, **kwargs):
         super().__init__(size=size, palette=palette, color=color, **kwargs)
-        self.text_entity = Text(text=' '*size[0], position=(-.45,-.45,-2), line_height=line_height, origin=(-.5,-.5), font=font)
-        self.scale = (self.text_entity.width, self.h*Text.size*self.text_entity.line_height)
-        self.text_entity.world_parent = self
+        rotated_grid = list(zip(*self.grid[::-1]))
+        text = '\n'.join([''.join(reversed(line)) for line in reversed(rotated_grid)])
 
+        self.text_entity = Text(parent=self.parent, text=text, x=self.x, line_height=line_height, font=font)
+
+        self.scale = (self.text_entity.width, self.text_entity.height*1.05)
+        self.text_entity.world_parent = self
+        self.text_entity.y = 1
+        self.text_entity.z = -.001
 
     def render(self):
         rotated_grid = list(zip(*self.grid[::-1]))
         self.text_entity.text = '\n'.join([''.join(reversed(line)) for line in reversed(rotated_grid)])
+
 
     def input(self, key):
         super().input(key)
@@ -277,7 +287,7 @@ if __name__ == '__main__':
     from PIL import Image
     t = Texture(Image.new(mode='RGBA', size=(32,32), color=(0,0,0,1)))
     from ursina.prefabs.grid_editor import PixelEditor
-    # PixelEditor(texture=load_texture('brick'))
+    PixelEditor(texture=load_texture('brick'))
 
     '''
     same as the pixel editor, but with text.
