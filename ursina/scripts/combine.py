@@ -16,7 +16,7 @@ def combine(entity, analyze=False, auto_destroy=True, ignore=[]):
     for e in scene.entities:
         if e in ignore:
             continue
-            
+
         if e.has_ancestor(entity) or e == entity:
             if not hasattr(e, 'model') or e.model == None or e.scripts or e.eternal:
                 continue
@@ -81,7 +81,7 @@ def get_vertices(entity, relative_to=None):
         return entity.model.vertices
 
     vertices = list()
-    temp_entity = Entity(parent=entity, ignore=True)
+    temp_entity = Entity(parent=entity.model, ignore=True)
 
     for v in entity.model.vertices:
         temp_entity.position = v
@@ -101,7 +101,10 @@ if __name__ == '__main__':
     e1 = Entity(parent=p, model='sphere', y=1.5, color=color.pink)
     e2 = Entity(parent=p, model='cube', color=color.yellow, x=1, origin_y=-.5)
     e3 = Entity(parent=e2, model='cube', color=color.yellow, y=2, scale=.5)
-    p.combine()
+
+    def input(key):
+        if key == 'space':
+            p.combine()
     # p.y=2
     # p.model.save()
     # ursina_mesh_to_obj(p.model, name='combined_model_test', out_path=application.asset_folder)
