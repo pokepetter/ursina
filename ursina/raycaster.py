@@ -13,7 +13,7 @@ from ursina.hit_info import HitInfo
 
 class Raycaster(Entity):
     line_model = Mesh(vertices=[Vec3(0,0,0), Vec3(0,0,1)], mode='line')
-    _boxcast_box = Entity(model='cube', origin_z=-.5, collider='box', color=color.white33, enabled=False)
+    _boxcast_box = Entity(model='cube', origin_z=-.5, collider='box', color=color.white33, enabled=False, eternal=True)
 
     def __init__(self):
         super().__init__(
