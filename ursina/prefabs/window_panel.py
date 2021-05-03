@@ -26,8 +26,7 @@ class WindowPanel(Draggable):
         self.panel = Entity(parent=self, model='quad', origin=(0,.5), z=.1, color=self.color.tint(.1), collider='box')
 
         if self.popup:
-            self.lock_x = True
-            self.lock_y = True
+            self.lock = Vec3(1,1,1)
             self.bg = Button(parent=self, z=1, scale=(999, 999), color=color.black66, highlight_color=color.black66, pressed_color=color.black66)
             self.bg.on_click = self.close
 

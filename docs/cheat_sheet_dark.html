@@ -764,7 +764,7 @@ app.run()
 </div></div>
 <div id="mesh_importer"><div id="mesh_importer" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">mesh_importer</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/mesh_importer.py"><gray>ursina.mesh_importer</gray></a><br><br>blender_scenes<gray> = dict()</gray> 
 
-load_model(<gray>name, path=application.asset_folder, file_types=('.bam', '.ursinamesh', '.obj', '.blend')</gray>)   
+load_model(<gray>name, path=application.asset_folder, file_types=('.bam', '.ursinamesh', '.glb', '.obj', '.blend')</gray>)   
 load_blender_scene(<gray>name, path=application.asset_folder, load=True, reload=False, skip_hidden=True, models_only=False</gray>)   
 get_blender(<gray>blend_file</gray>)   <gray># try to get a matching blender version in case we have multiple blender version installed</gray>
 compress_models(<gray>path=None, outpath=application.compressed_models_folder, name='*'</gray>)   
@@ -1822,9 +1822,7 @@ start_pos<gray> = self.world_position</gray>
 start_offset<gray> = (0,0,0)</gray> 
 step<gray> = (0,0,0)</gray> 
 plane_direction<gray> = (0,0,1)</gray> 
-lock_x<gray> = False</gray> 
-lock_y<gray> = False</gray> 
-lock_z<gray> = False</gray> 
+lock<gray> = Vec3(0,0,0)     # set to 1 to lock movement to any of x, y and z axes</gray> 
 min_x, self.min_y, self.min_z<gray> = -inf, -inf, -inf</gray> 
 max_x, self.max_y, self.max_z<gray> = inf, inf, inf</gray> 
 
@@ -2042,10 +2040,10 @@ wp.data = json.dumps(save_data)
 </div></div>
 <div id="FirstPersonController"><div id="FirstPersonController" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">FirstPersonController<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/first_person_controller.py"><gray>ursina.prefabs.first_person_controller</gray></a><br><br><params class="params">FirstPersonController(**kwargs)</params>
 
+cursor<gray> = Entity(parent=camera.ui, model='quad', color=color.pink, scale=.008, rotation_z=45)</gray> 
 speed<gray> = 5</gray> 
 origin_y<gray> = -.5</gray> 
 camera_pivot<gray> = Entity(parent=self, y=2)</gray> 
-cursor<gray> = Entity(parent=camera.ui, model='quad', color=color.pink, scale=.008, rotation_z=45)</gray> 
 mouse_sensitivity<gray> = Vec2(40, 40)</gray> 
 gravity<gray> = 1</gray> 
 grounded<gray> = False</gray> 
@@ -2459,11 +2457,14 @@ max<gray> = max</gray>
 default<gray> = default</gray> 
 step<gray> = 0</gray> 
 height<gray> = height</gray> 
+on_value_changed<gray> = None    # set this to a function you wnat to be called when the slider changes</gray> 
+setattr<gray> = None             # set this to (object, 'attrname') to set that value when the slider changes</gray> 
 label<gray> = Text(parent=self, origin=(0.5, 0), x=-0.025, text=text)</gray> 
-bg<gray> = Button(
-        parent</gray> 
-knob<gray> = Draggable(
-        parent</gray> 
+bg<gray> = Entity(parent=self, model=Quad(scale=(.525, height), radius=Text.size/2, segments=3),
+        origin_x=-0.25, collider='box', color=color.black66)</gray> 
+knob<gray> = Draggable(parent=self, min_x=0, max_x=.5, min_y=0, max_y=.5, step=self.step,
+        model=Quad(radius=Text.size/2, scale=(Text.size, height)), collider='box', color=color.light_gray,
+        text='0', text_origin=(0, -.55), z=-.1)</gray> 
 value<gray> = self.default</gray> 
 dynamic<gray> = dynamic    # if set to True, will call on_value_changed() while dragging. if set to False, will only call on_value_changed() after dragging.</gray> 
 
@@ -2473,13 +2474,17 @@ update()
 slide()   
 
 <div class="example">box = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>scale</olive>=<yellow>1</yellow>, <olive>color</olive>=color.orange)
-slider = <purple><b>Slider</b></purple>(<yellow>0</yellow>, <yellow>2</yellow><yellow>0</yellow>, default=<yellow>1</yellow><yellow>0</yellow>, height=Text.size*<yellow>3</yellow>, <olive>y</olive>=-.<yellow>4</yellow>, step=<yellow>1</yellow>   )
-slider = Thin<purple><b>Slider</b></purple>(x=-.<yellow>4</yellow>, <olive>y</olive>=-.<yellow>3</yellow><yellow>7</yellow>, <olive>text</olive>=<green>'contrast'</green>, dynamic=True)
-slider.label.origin = (<yellow>0</yellow>,<yellow>0</yellow>)
-slider.label.position = (.<yellow>2</yellow><yellow>5</yellow>, -.<yellow>1</yellow>)
+
 <purple>def</purple> scale_box():
     box.scale_y = slider.value
-slider.on_value_changed = scale_box
+    <blue>print</blue>(thin_slider.value)
+
+slider = <purple><b>Slider</b></purple>(<yellow>0</yellow>, <yellow>2</yellow><yellow>0</yellow>, default=<yellow>1</yellow><yellow>0</yellow>, height=Text.size*<yellow>3</yellow>, <olive>y</olive>=-.<yellow>4</yellow>, step=<yellow>1</yellow>, on_value_changed=scale_box)
+
+thin_slider = Thin<purple><b>Slider</b></purple>(<olive>text</olive>=<green>'height'</green>, dynamic=True, on_value_changed=scale_box)
+
+thin_slider.label.origin = (<yellow>0</yellow>,<yellow>0</yellow>)
+thin_slider.label.position = (.<yellow>2</yellow><yellow>5</yellow>, -.<yellow>1</yellow>)
 </div>
 </div></div>
 <div id="ThinSlider"><div id="ThinSlider" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">ThinSlider<gray>(Slider)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/slider.py"><gray>ursina.prefabs.slider</gray></a><br><br><params class="params">ThinSlider(*args, **kwargs)</params>
@@ -2487,13 +2492,17 @@ slider.on_value_changed = scale_box
 
 
 <div class="example">box = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>scale</olive>=<yellow>1</yellow>, <olive>color</olive>=color.orange)
-slider = Slider(<yellow>0</yellow>, <yellow>2</yellow><yellow>0</yellow>, default=<yellow>1</yellow><yellow>0</yellow>, height=Text.size*<yellow>3</yellow>, <olive>y</olive>=-.<yellow>4</yellow>, step=<yellow>1</yellow>   )
-slider = <purple><b>ThinSlider</b></purple>(x=-.<yellow>4</yellow>, <olive>y</olive>=-.<yellow>3</yellow><yellow>7</yellow>, <olive>text</olive>=<green>'contrast'</green>, dynamic=True)
-slider.label.origin = (<yellow>0</yellow>,<yellow>0</yellow>)
-slider.label.position = (.<yellow>2</yellow><yellow>5</yellow>, -.<yellow>1</yellow>)
+
 <purple>def</purple> scale_box():
     box.scale_y = slider.value
-slider.on_value_changed = scale_box
+    <blue>print</blue>(thin_slider.value)
+
+slider = Slider(<yellow>0</yellow>, <yellow>2</yellow><yellow>0</yellow>, default=<yellow>1</yellow><yellow>0</yellow>, height=Text.size*<yellow>3</yellow>, <olive>y</olive>=-.<yellow>4</yellow>, step=<yellow>1</yellow>, on_value_changed=scale_box)
+
+thin_slider = <purple><b>ThinSlider</b></purple>(<olive>text</olive>=<green>'height'</green>, dynamic=True, on_value_changed=scale_box)
+
+thin_slider.label.origin = (<yellow>0</yellow>,<yellow>0</yellow>)
+thin_slider.label.position = (.<yellow>2</yellow><yellow>5</yellow>, -.<yellow>1</yellow>)
 </div>
 </div></div>
 <div id="Sprite"><div id="Sprite" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Sprite<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/sprite.py"><gray>ursina.prefabs.sprite</gray></a><br><br><params class="params">Sprite(texture=None, ppu=ppu, **kwargs)</params>
@@ -2721,7 +2730,7 @@ wp = WindowPanel(
 content<gray> = content</gray> 
 text<gray> = title</gray> 
 popup<gray> = False</gray> 
-panel<gray> = Panel(parent=self, origin=(0, .5), z=.1, color=self.color.tint(.1))</gray> 
+panel<gray> = Entity(parent=self, model='quad', origin=(0,.5), z=.1, color=self.color.tint(.1), collider='box')</gray> 
 
 layout()   
 on_enable()   

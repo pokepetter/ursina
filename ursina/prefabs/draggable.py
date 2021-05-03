@@ -13,9 +13,7 @@ class Draggable(Button):
         self.start_offset = (0,0,0)
         self.step = (0,0,0)
         self.plane_direction = (0,0,1)
-        self.lock_x = False
-        self.lock_y = False
-        self.lock_z = False
+        self.lock = Vec3(0,0,0)     # set to 1 to lock movement to any of x, y and z axes
         self.min_x, self.min_y, self.min_z = -inf, -inf, -inf
         self.max_x, self.max_y, self.max_z = inf, inf, inf
 
@@ -82,11 +80,11 @@ class Draggable(Button):
     def update(self):
         if self.dragging:
             if mouse.world_point:
-                if not self.lock_x:
+                if not self.lock[0]:
                     self.world_x = mouse.world_point[0] - self.start_offset[0]
-                if not self.lock_y:
+                if not self.lock[1]:
                     self.world_y = mouse.world_point[1] - self.start_offset[1]
-                if not self.lock_z:
+                if not self.lock[2]:
                     self.world_z = mouse.world_point[2] - self.start_offset[2]
 
             if self.step[0] > 0:
