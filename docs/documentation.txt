@@ -13,6 +13,7 @@
     [Installation, installation.html]
     [Entity Basics, entity_basics.html]
     [Ursina's Coordinate System, coordinate_system.html]
+    [Collision, collision.html]
     [F.A.Q., faq.html]
     [Build and Release, building.html]
 

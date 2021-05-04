@@ -1,3 +1,4 @@
+[← Back, documentation.html]
 # ursina FAQ
 # center, width 1000, arial
 # size 5, bold

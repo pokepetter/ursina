@@ -68,6 +68,8 @@ z-index: 1;
 <a style="color:hsl(320.0, 89%, 66%);" href="#Animator">Animator</a>
 <a style="color:hsl(320.0, 89%, 66%);" href="#ButtonGroup">ButtonGroup</a>
 <a style="color:hsl(320.0, 89%, 66%);" href="#ButtonList">ButtonList</a>
+<a style="color:hsl(320.0, 89%, 66%);" href="#Node">Node</a>
+<a style="color:hsl(320.0, 89%, 66%);" href="#Conversation">Conversation</a>
 <a style="color:hsl(320.0, 89%, 66%);" href="#Cursor">Cursor</a>
 <a style="color:hsl(320.0, 89%, 66%);" href="#DebugMenu">DebugMenu</a>
 <a style="color:hsl(320.0, 89%, 66%);" href="#Draggable">Draggable</a>
@@ -290,6 +292,7 @@ alpha
 always_on_top
 billboard           <gray># set to True to make this Entity always face the camera.</gray>
 model_bounds
+model_center
 bounds
 children
 attributes          <gray># attribute names. used by duplicate() for instance.</gray>
@@ -386,20 +389,11 @@ get_width(<gray>string, font=None</gray>)
       Lasts for 4 rounds.<green>''</green>'</green>).strip()
 
   Text.default_resolution = <yellow>1</yellow><yellow>0</yellow><yellow>8</yellow><yellow>0</yellow> * Text.size
-  test = <purple><b>Text</b></purple>(<olive>origin</olive>=(.<yellow>5</yellow>,.<yellow>5</yellow>), <olive>text</olive>=descr)
 
 
-  text = <purple><b>Text</b></purple>(<olive>text</olive>=descr, wordwrap=<yellow>1</yellow><yellow>0</yellow>, <olive>origin</olive>=(-.<yellow>5</yellow>,.<yellow>5</yellow>), <olive>y</olive>=.<yellow>2</yellow><yellow>5</yellow>, background=True)
-  <olive>Entity</olive>(<olive>parent</olive>=camera.ui, <olive>model</olive>=<green>'circle'</green>, <olive>scale</olive>=.<yellow>0</yellow><yellow>5</yellow>, <olive>color</olive>=color.yellow, <olive>y</olive>=text.y, <olive>z</olive>=-<yellow>1</yellow>)
 
-
-  <purple>def</purple> input(key):
-      <purple>if</purple> key == <green>'a'</green>:
-          test.appear(speed=.<yellow>0</yellow><yellow>2</yellow><yellow>5</yellow>)
-
-  test.create_background()
-
-  <blue>print</blue>(<green>'....'</green>, Text.get_width(<green>'yolo'</green>))
+  text = <purple><b>Text</b></purple>(<green>'1234\wefw\nwefwef\n wjfoi'</green>)
+  text.create_background(radius=<yellow>0</yellow>, padding=<yellow>0</yellow>)
   app.run()
 </div>
 </div></div>
@@ -866,20 +860,11 @@ get_width(<gray>string, font=None</gray>)
       Lasts for 4 rounds.<green>''</green>'</green>).strip()
 
   Text.default_resolution = <yellow>1</yellow><yellow>0</yellow><yellow>8</yellow><yellow>0</yellow> * Text.size
-  test = Text(<olive>origin</olive>=(.<yellow>5</yellow>,.<yellow>5</yellow>), <olive>text</olive>=descr)
 
 
-  text = Text(<olive>text</olive>=descr, wordwrap=<yellow>1</yellow><yellow>0</yellow>, <olive>origin</olive>=(-.<yellow>5</yellow>,.<yellow>5</yellow>), <olive>y</olive>=.<yellow>2</yellow><yellow>5</yellow>, background=True)
-  <olive>Entity</olive>(<olive>parent</olive>=camera.ui, <olive>model</olive>=<green>'circle'</green>, <olive>scale</olive>=.<yellow>0</yellow><yellow>5</yellow>, <olive>color</olive>=color.yellow, <olive>y</olive>=text.y, <olive>z</olive>=-<yellow>1</yellow>)
 
-
-  <purple>def</purple> input(key):
-      <purple>if</purple> key == <green>'a'</green>:
-          test.appear(speed=.<yellow>0</yellow><yellow>2</yellow><yellow>5</yellow>)
-
-  test.create_background()
-
-  <blue>print</blue>(<green>'....'</green>, Text.get_width(<green>'yolo'</green>))
+  text = Text(<green>'1234\wefw\nwefwef\n wjfoi'</green>)
+  text.create_background(radius=<yellow>0</yellow>, padding=<yellow>0</yellow>)
   app.run()
 </div>
 </div></div>
@@ -1587,14 +1572,6 @@ save(<gray>path</gray>)
     A texture file can be a .png, .jpg or .psd.
     If it's a .psd it and no compressed version exists, it will compress it automatically.
 <green>''</green>'</green>
-e = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'brick'</green>)
-e.texture.set_pixel(<yellow>0</yellow>, <yellow>2</yellow>, color.blue)
-e.texture.apply()
-
-<purple>for</purple> y in <blue>range</blue>(e.texture.height):
-    <purple>for</purple> x in <blue>range</blue>(e.texture.width):
-        <purple>if</purple> e.texture.get_pixel(x,y) == color.blue:
-            <blue>print</blue>(<green>'found blue pixel at:'</green>, x, y)
 </div>
 </div></div>
 <div id="Trigger"><div id="Trigger" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Trigger<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/trigger.py"><gray>ursina.trigger</gray></a><br><br><params class="params">Trigger(**kwargs)</params>
@@ -1687,7 +1664,19 @@ you can load it like this: <b>Animation</b>(<green>'image'</green>)
 You can also load a .gif by including the file type: <b>Animation</b>(<green>'image.gif'</green>)
 <green>''</green>'</green>
 
-<purple><b>Animation</b></purple>(<green>'ursina_wink'</green>)
+application.asset_folder = Path(r<green>'C:\sync\gifs'</green>)
+a = <purple><b>Animation</b></purple>(<green>'teslagrad_2_water_test.gif'</green>)
+<purple>from</purple> ursina.prefabs.memory_counter <purple>import</purple> MemoryCounter
+MemoryCounter()
+
+<purple>def</purple> input(key):
+    <blue>print</blue>(<green>'unload textures'</green>)
+    <purple>if</purple> key == <green>'space'</green>:
+        destroy(a)
+        <purple>for</purple> tex in a.frames:
+            tex._texture = None
+        <purple>for</purple> tex in a.frames:
+            <blue>print</blue>(tex, tex._texture)
 </div>
 </div></div>
 <div id="Animator"><div id="Animator" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Animator<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/animator.py"><gray>ursina.prefabs.animator</gray></a><br><br><params class="params">Animator(animations=None, start_state='')</params>
@@ -1719,7 +1708,7 @@ Text(<green>'press &ltred&gt1&ltdefault&gt, &ltgreen&gt2&ltdefault&gt or &ltviol
         <blue>print</blue>(anim.enabled)
 </div>
 </div></div>
-<div id="ButtonGroup"><div id="ButtonGroup" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">ButtonGroup<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/button_group.py"><gray>ursina.prefabs.button_group</gray></a><br><br><params class="params">ButtonGroup(options=None, default='', min_selection=0, max_selection=1, **kwargs)</params>
+<div id="ButtonGroup"><div id="ButtonGroup" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">ButtonGroup<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/button_group.py"><gray>ursina.prefabs.button_group</gray></a><br><br><params class="params">ButtonGroup(options=None, default='', min_selection=1, max_selection=1, **kwargs)</params>
 
 deselected_color<gray> = Button.color</gray> 
 selected_color<gray> = color.azure</gray> 
@@ -1781,6 +1770,96 @@ button_dict = {
 
 bl = <purple><b>ButtonList</b></purple>(button_dict, fit_height=True)
 bl.on_click = Func(setattr, bl, <green>'enabled'</green>, False)
+</div>
+</div></div>
+<div id="Node"><div id="Node" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Node</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/conversation.py"><gray>ursina.prefabs.conversation</gray></a><br><br><params class="params">Node(button_dict, button_height=1.365, fit_height=True, width=.5, **kwargs)</params>
+
+
+
+<div class="example">app = Ursina()
+    conversation = Conversation()
+    bar_mission_solved = False
+    convo = <green><green>''</green>'
+I<green>'m looking for my sister. Can you help me find her, please? I haven'</green>t seen her in days! Who know what could've happened!?
+I'm worried. Will you help me?
+    * Yes, of course. This can be a dangerous city.
+        Oh no! Do you think something happened to her?
+        What should I do?!
+            * She's probably fine. She can handle herself.
+                You<green>'re right. I'</green>m still worried though.
+                    * Don<green>'t worry, I'</green>ll look for her.
+            * Maybe. (chaos += 1)
+                Help me look for her, please! *runs off*
+    * I<green>'m sorry, but I don'</green>t have time right now.
+        A true friend wouldn't say that. (evil += 1)
+    * I know where she is! (if bar_mission_solved)
+        Really? Where?
+            * I saw her on a ship by the docks, it looked like they were ready to set off.
+                Thank you! *runs off*
+<green>''</green>'</green>
+    conversation.start_conversation(convo)
+
+    window.size = window.fullscreen_size * .<yellow>5</yellow>
+    Sprite(<green>'shore'</green>, <olive>z</olive>=<yellow>1</yellow>)
+    app.run()
+</div>
+</div></div>
+<div id="Conversation"><div id="Conversation" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Conversation<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/conversation.py"><gray>ursina.prefabs.conversation</gray></a><br><br><params class="params">Conversation(**kwargs)</params>
+
+question<gray> = Button(
+        parent=self,
+        text_origin=(-.5,0),
+        scale_x=1,
+        scale_y=.1,
+        model=Quad(radius=.5, aspect=1/.1),
+        text='What do you want\nWhat do you want?'
+        )</gray> 
+more_indicator<gray> = Entity(parent=self.question, model=Circle(3), position=(.45,-.4,-.1), rotation_z=180, color=color.azure, world_scale=.5, z=-1, enabled=False)</gray> 
+spacing<gray> = 4 * .02</gray> 
+wordwrap<gray> = 65</gray> 
+button_model<gray> = Quad(radius=.5, aspect=1/.075)</gray> 
+answer_0<gray> = Button(parent=self, text='answer_0', y=self.question.y-self.spacing-.025, scale=(1,.075), text_origin=(-.5,0), model=copy(self.button_model))</gray> 
+answer_1<gray> = Button(parent=self, text='answer_1', y=self.answer_0.y-self.spacing, scale=(1,.075), text_origin=(-.5,0), model=copy(self.button_model))</gray> 
+answer_2<gray> = Button(parent=self, text='answer_2', y=self.answer_1.y-self.spacing, scale=(1,.075), text_origin=(-.5,0), model=copy(self.button_model))</gray> 
+buttons<gray> = (self.answer_0, self.answer_1, self.answer_2)</gray> 
+question_appear_sequence<gray> = None</gray> 
+button_appear_sequence<gray> = None</gray> 
+started<gray> = False</gray> 
+
+toggle()   
+ask(<gray>node, question_part=0</gray>)   
+on_click(<gray>node=child</gray>)   
+input(<gray>key</gray>)   
+next()   
+start_conversation(<gray>conversation</gray>)   
+parse_conversation(<gray>convo</gray>)   
+
+<div class="example">app = Ursina()
+    conversation = <purple><b>Conversation</b></purple>()
+    bar_mission_solved = False
+    convo = <green><green>''</green>'
+I<green>'m looking for my sister. Can you help me find her, please? I haven'</green>t seen her in days! Who know what could've happened!?
+I'm worried. Will you help me?
+    * Yes, of course. This can be a dangerous city.
+        Oh no! Do you think something happened to her?
+        What should I do?!
+            * She's probably fine. She can handle herself.
+                You<green>'re right. I'</green>m still worried though.
+                    * Don<green>'t worry, I'</green>ll look for her.
+            * Maybe. (chaos += 1)
+                Help me look for her, please! *runs off*
+    * I<green>'m sorry, but I don'</green>t have time right now.
+        A true friend wouldn't say that. (evil += 1)
+    * I know where she is! (if bar_mission_solved)
+        Really? Where?
+            * I saw her on a ship by the docks, it looked like they were ready to set off.
+                Thank you! *runs off*
+<green>''</green>'</green>
+    conversation.start_conversation(convo)
+
+    window.size = window.fullscreen_size * .<yellow>5</yellow>
+    Sprite(<green>'shore'</green>, <olive>z</olive>=<yellow>1</yellow>)
+    app.run()
 </div>
 </div></div>
 <div id="Cursor"><div id="Cursor" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Cursor<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/cursor.py"><gray>ursina.prefabs.cursor</gray></a><br><br><params class="params">Cursor(**kwargs)</params>
@@ -1893,11 +1972,12 @@ update()
 </div></div>
 <div id="EditorCamera"><div id="EditorCamera" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">EditorCamera<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/editor_camera.py"><gray>ursina.prefabs.editor_camera</gray></a><br><br><params class="params">EditorCamera(**kwargs)</params>
 
-gizmo<gray> = Entity(parent=self, model='sphere', color=color.orange, scale=.025, add_to_scene_entities=False)</gray> 
+gizmo<gray> = Entity(parent=self, model='sphere', color=color.orange, scale=.025, add_to_scene_entities=False, enabled=False)</gray> 
 rotation_speed<gray> = 200</gray> 
 pan_speed<gray> = Vec2(5, 5)</gray> 
 move_speed<gray> = 10</gray> 
 zoom_speed<gray> = .75</gray> 
+zoom_smoothing<gray> = 8</gray> 
 rotate_around_mouse_hit<gray> = False</gray> 
 start_position<gray> = self.position</gray> 
 perspective_fov<gray> = camera.fov</gray> 
@@ -2067,7 +2147,7 @@ e.texture_scale = (e.scale_z, e.scale_y)
 e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>scale</olive>=(<yellow>1</yellow>,<yellow>5</yellow>,<yellow>1</yellow><yellow>0</yellow>), x=-<yellow>2</yellow>, <olive>y</olive>=.<yellow>0</yellow><yellow>1</yellow>, <olive>collider</olive>=<green>'box'</green>, <olive>texture</olive>=<green>'white_cube'</green>)
 e.texture_scale = (e.scale_z, e.scale_y)
 
-player = <purple><b>FirstPersonController</b></purple>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=<yellow>1</yellow>, origin_<olive>y</olive>=-.<yellow>5</yellow>)
+player = <purple><b>FirstPersonController</b></purple>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=<yellow>2</yellow>, origin_<olive>y</olive>=-.<yellow>5</yellow>)
 player.gun = None
 
 gun = Button(<olive>parent</olive>=scene, <olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.blue, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>position</olive>=(<yellow>3</yellow>,<yellow>0</yellow>,<yellow>3</yellow>), <olive>collider</olive>=<green>'box'</green>)
@@ -2150,6 +2230,7 @@ here we create a new texture, but can also give it an exisitng texture to modify
 <purple>from</purple> PIL <purple>import</purple> Image
 t = Texture(Image.new(<olive>mode</olive>=<green>'RGBA'</green>, size=(<yellow>3</yellow><yellow>2</yellow>,<yellow>3</yellow><yellow>2</yellow>), <olive>color</olive>=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>)))
 <purple>from</purple> ursina.prefabs.grid_editor <purple>import</purple> PixelEditor
+PixelEditor(<olive>texture</olive>=load_texture(<green>'brick'</green>))
 
 <green><green>''</green>'
 same as the pixel editor, but with text.
@@ -2173,6 +2254,7 @@ here we create a new texture, but can also give it an exisitng texture to modify
 <purple>from</purple> PIL <purple>import</purple> Image
 t = Texture(Image.new(<olive>mode</olive>=<green>'RGBA'</green>, size=(<yellow>3</yellow><yellow>2</yellow>,<yellow>3</yellow><yellow>2</yellow>), <olive>color</olive>=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>)))
 <purple>from</purple> ursina.prefabs.grid_editor <purple>import</purple> PixelEditor
+<purple><b>PixelEditor</b></purple>(<olive>texture</olive>=load_texture(<green>'brick'</green>))
 
 <green><green>''</green>'
 same as the pixel editor, but with text.
@@ -2183,8 +2265,8 @@ ASCIIEditor()
 </div></div>
 <div id="ASCIIEditor"><div id="ASCIIEditor" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">ASCIIEditor<gray>(GridEditor)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/grid_editor.py"><gray>ursina.prefabs.grid_editor</gray></a><br><br><params class="params">ASCIIEditor(size=(61,28), palette=(' ', '#', '|', 'A', '/', '\\', 'o', '_', '-', 'i', 'M', '.'), font='VeraMono.ttf', color=color.black, line_height=1.1, **kwargs)</params>
 
-text_entity<gray> = Text(text=' '*size[0], position=(-.45,-.45,-2), line_height=line_height, origin=(-.5,-.5), font=font)</gray> 
-scale<gray> = (self.text_entity.width, self.h*Text.size*self.text_entity.line_height)</gray> 
+text_entity<gray> = Text(parent=self.parent, text=text, x=self.x, line_height=line_height, font=font)</gray> 
+scale<gray> = (self.text_entity.width, self.text_entity.height*1.05)</gray> 
 
 render()   
 input(<gray>key</gray>)   
@@ -2197,6 +2279,7 @@ here we create a new texture, but can also give it an exisitng texture to modify
 <purple>from</purple> PIL <purple>import</purple> Image
 t = Texture(Image.new(<olive>mode</olive>=<green>'RGBA'</green>, size=(<yellow>3</yellow><yellow>2</yellow>,<yellow>3</yellow><yellow>2</yellow>), <olive>color</olive>=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>)))
 <purple>from</purple> ursina.prefabs.grid_editor <purple>import</purple> PixelEditor
+PixelEditor(<olive>texture</olive>=load_texture(<green>'brick'</green>))
 
 <green><green>''</green>'
 same as the pixel editor, but with text.
@@ -2320,8 +2403,6 @@ update()
 <green><green>''</green>'
 Displays the amount of memory used in the bottom right corner
 <green>''</green>'</green>
-e = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>)
-e.texture = <green>'shore'</green>
 </div>
 </div></div>
 <div id="Panel"><div id="Panel" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Panel<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/panel.py"><gray>ursina.prefabs.panel</gray></a><br><br><params class="params">Panel(**kwargs)</params>
@@ -2798,7 +2879,10 @@ get_vertices(<gray>entity, relative_to=None</gray>)
 e<yellow>1</yellow> = <olive>Entity</olive>(<olive>parent</olive>=p, <olive>model</olive>=<green>'sphere'</green>, <olive>y</olive>=<yellow>1</yellow>.<yellow>5</yellow>, <olive>color</olive>=color.pink)
 e<yellow>2</yellow> = <olive>Entity</olive>(<olive>parent</olive>=p, <olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.yellow, x=<yellow>1</yellow>, origin_<olive>y</olive>=-.<yellow>5</yellow>)
 e<yellow>3</yellow> = <olive>Entity</olive>(<olive>parent</olive>=e<yellow>2</yellow>, <olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.yellow, <olive>y</olive>=<yellow>2</yellow>, <olive>scale</olive>=.<yellow>5</yellow>)
-p.combine()
+
+<purple>def</purple> input(key):
+    <purple>if</purple> key == <green>'space'</green>:
+        p.combine()
 
 
 EditorCamera()
@@ -2945,7 +3029,13 @@ update()
     player.x += held_keys[<green>'d'</green>] * .<yellow>1</yellow>
     player.x -= held_keys[<green>'a'</green>] * .<yellow>1</yellow>
 
-<olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>).add_script(<purple><b>SmoothFollow</b></purple>(target=player, offset=(<yellow>0</yellow>,<yellow>2</yellow>,<yellow>0</yellow>)))
+e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>)
+sf = e.add_script(<purple><b>SmoothFollow</b></purple>(target=player, offset=(<yellow>0</yellow>,<yellow>2</yellow>,<yellow>0</yellow>)))
+
+<purple>def</purple> input(key):
+    global sf
+    <purple>if</purple> key == <green>'1'</green> and sf in e.scripts:
+        e.scripts.remove(sf)
 </div>
 </div></div>
 <div id="terraincast"><div id="terraincast" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">terraincast</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/scripts/terraincast.py"><gray>ursina.scripts.terraincast</gray></a><br><br>
@@ -2985,7 +3075,8 @@ Sky()
 <div class="example">e = Entity(model='quad')
 </div>
 </div></div>
-<div id="textures"><div id="textures" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">textures</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;">'arrow_down'
+<div id="textures"><div id="textures" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">textures</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;">'acorn_font_tileset'
+'arrow_down'
 'arrow_right'
 'brick'
 'circle'
@@ -2994,14 +3085,19 @@ Sky()
 'file_icon'
 'folder'
 'grass'
+'Hack_square_64x64'
 'heightmap_1'
 'horizontal_gradient'
+'level_1'
 'noise'
 'radial_gradient'
 'reflection_map_3'
 'shore'
 'sky_default'
 'sky_sunset'
+'tileset_cave'
+'tileset_cave_blue_min'
+'ursina'
 'ursina_logo'
 'ursina_wink_0000'
 'ursina_wink_0001'
@@ -3020,6 +3116,7 @@ lit_with_shadows_shader
 matcap_shader
 normals_shader
 texture_blend_shader
+transition_shader
 triplanar_shader
 unlit_shader
 __init__

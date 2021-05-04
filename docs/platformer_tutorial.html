@@ -1,27 +1,8 @@
-
 <!--generated with sswg-->
-<style>
-    html {max-width: 100%; margin: auto; color: #333333;}
-    a.button {padding: 15px 32px; background-color: #555; border-radius: 2em; border-width: 0px; text-decoration: none; color: white; font-size: 25.0px; line-height: 2.5em;}
-    a.button:hover {background-color: #777}
-    a.button_big {padding: 0.5em; background-image: linear-gradient(to top, #427b0e, #9ba97d); background-color: lightgray; background-blend-mode: multiply; border-radius: .75em; border-width: 0px; text-decoration: none; min-width: 150px; max-width: 150px; min-height: 150px; max-height: 150px; display: inline-block; vertical-align: top; margin: 4px 4px 10px 4px; color: white; font-size: 25.0px; background-size: auto 100%; background-position-x: center;}
-    a.button_big:hover {background-color: white; color: #e6d23f; text-decoration: underline;}
-    mark {background: #ccff99;}
-    span {background-color: rgba(0, 0, 0, 0.55); padding: .1em; line-height: 1.35em;}
-    img {max-width: 100%; vertical-align: top;}
-    .code_block {background-color: whitesmoke; padding: 10px; margin: 0; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;}
-
-    purple {color: hsl(289.0, 50%, 50%);}
-    gray {color: gray;}
-    olive {color: olive;}
-    yellow {color: darkgoldenrod;}
-    green {color: seagreen;}
-    blue {color: hsl(210, 50%, 50%);}
-
-</style>
 <html>
 <left>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head> <link rel="stylesheet" href="sswg.css"> </head>
 <title>platformer_tutorial</title>
 <br>
 
@@ -65,12 +46,22 @@ Now, it works, but it's a pretty boring game, so let's make a more interesting l
 There are many ways to go about making a level, but for this we'll make an image<br>
 where we can simply draw the level and then generate a level based on that.<br>
 <img src="platformer_tutorial_level.png"></img> <br>
+↑<br>
+Make sure to save this image to same folder or below as your script.<br>
 To generate the level we'll loop through all the pixels in the image above and do<br>
-something based on the color of the pixel. Make sure to save this image to same<br>
-folder or below as your script.<br>
-If it's white, it's air, so we'll skip it.<br>
+something based on the color of the pixel. If it's white, it's air, so we'll skip it.<br>
+Now, we *could* create an Entity for each tile, but that's slower to render than one Entity with a custom model.<br>
+To make the model, we'll use the Mesh class. You'll have to be somewhat familiar with<br>
+what meshes are to do this, and know what vertices and uvs are. However, we'll just be<br>
+copying the quad model and offset the vertices. If we wanted to use a tileset with different<br>
+graphics for each tile, we'd scale and offset the uvs as well.<br>
 <br>
-<div class="code_block" style="margin-left: 0em;">level_parent = <olive>Entity</olive>()
+<div class="code_block" style="margin-left: 0em;">
+quad = load_model(<green>'quad'</green>)
+<blue>print</blue>(<green>'--------------'</green>, quad)
+
+
+level_parent = <olive>Entity</olive>(<olive>model</olive>=Mesh(<olive>vertices</olive>=[], <olive>uvs</olive>=[]), <olive>texture</olive>=<green>'white_cube'</green>)
 <purple>def</purple> make_level(texture):
     <gray># destroy every child of the level parent.</gray>
     <gray># This doesn't do anything the first time the level is generated, but <purple>if</purple> we want to update it several times</gray>
@@ -84,7 +75,9 @@ If it's white, it's air, so we'll skip it.<br>
 
             <gray># If it<green>'s black, it'</green>s solid, so we'll place a tile there.</gray>
             <purple>if</purple> col == color.black:
-                <olive>Entity</olive>(<olive>parent</olive>=level_parent, <olive>position</olive>=(x,y), <olive>model</olive>=<green>'cube'</green>, <olive>origin</olive>=(-.<yellow>5</yellow>,-.<yellow>5</yellow>), <olive>color</olive>=color.gray, <olive>texture</olive>=<green>'white_cube'</green>, <olive>visible</olive>=True)
+                level_parent.model.vertices += [Vec3(*e) + Vec3(x+.<yellow>5</yellow>,y+.<yellow>5</yellow>,<yellow>0</yellow>) <purple>for</purple> e in quad.vertices] <gray># copy the quad model, but offset it with Vec3(x+.<yellow>5</yellow>,y+.<yellow>5</yellow>,<yellow>0</yellow>)</gray>
+                level_parent.model.uvs += quad.uvs
+                <gray># <olive>Entity</olive>(<olive>parent</olive>=level_parent, <olive>position</olive>=(x,y), <olive>model</olive>=<green>'cube'</green>, <olive>origin</olive>=(-.<yellow>5</yellow>,-.<yellow>5</yellow>), <olive>color</olive>=color.gray, <olive>texture</olive>=<green>'white_cube'</green>, <olive>visible</olive>=True)</gray>
                 <purple>if</purple> <purple>not</purple> collider:
                     collider = <olive>Entity</olive>(<olive>parent</olive>=level_parent, <olive>position</olive>=(x,y), <olive>model</olive>=<green>'quad'</green>, <olive>origin</olive>=(-.<yellow>5</yellow>,-.<yellow>5</yellow>), <olive>collider</olive>=<green>'box'</green>, <olive>visible</olive>=False)
                 <purple>else</purple>:
@@ -97,6 +90,8 @@ If it's white, it's air, so we'll skip it.<br>
             <purple>if</purple> col == color.green:
                 player.start_position = (x, y)
                 player.position = player.start_position
+
+    level_parent.model.generate()
 
 make_level(load_texture(<green>'platformer_tutorial_level'</green>))   <gray># generate the level</gray>
 </div><br>
@@ -156,7 +151,12 @@ player = PlatformerController<yellow>2</yellow>d(<olive>y</olive>=<yellow>1</yel
 
 ground = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>scale_x</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>collider</olive>=<green>'box'</green>, <olive>color</olive>=color.black)
 
-level_parent = <olive>Entity</olive>()
+
+quad = load_model(<green>'quad'</green>)
+<blue>print</blue>(<green>'--------------'</green>, quad)
+
+
+level_parent = <olive>Entity</olive>(<olive>model</olive>=Mesh(<olive>vertices</olive>=[], <olive>uvs</olive>=[]), <olive>texture</olive>=<green>'white_cube'</green>)
 <purple>def</purple> make_level(texture):
     <gray># destroy every child of the level parent.</gray>
     <gray># This doesn't do anything the first time the level is generated, but <purple>if</purple> we want to update it several times</gray>
@@ -170,7 +170,9 @@ level_parent = <olive>Entity</olive>()
 
             <gray># If it<green>'s black, it'</green>s solid, so we'll place a tile there.</gray>
             <purple>if</purple> col == color.black:
-                <olive>Entity</olive>(<olive>parent</olive>=level_parent, <olive>position</olive>=(x,y), <olive>model</olive>=<green>'cube'</green>, <olive>origin</olive>=(-.<yellow>5</yellow>,-.<yellow>5</yellow>), <olive>color</olive>=color.gray, <olive>texture</olive>=<green>'white_cube'</green>, <olive>visible</olive>=True)
+                level_parent.model.vertices += [Vec3(*e) + Vec3(x+.<yellow>5</yellow>,y+.<yellow>5</yellow>,<yellow>0</yellow>) <purple>for</purple> e in quad.vertices] <gray># copy the quad model, but offset it with Vec3(x+.<yellow>5</yellow>,y+.<yellow>5</yellow>,<yellow>0</yellow>)</gray>
+                level_parent.model.uvs += quad.uvs
+                <gray># <olive>Entity</olive>(<olive>parent</olive>=level_parent, <olive>position</olive>=(x,y), <olive>model</olive>=<green>'cube'</green>, <olive>origin</olive>=(-.<yellow>5</yellow>,-.<yellow>5</yellow>), <olive>color</olive>=color.gray, <olive>texture</olive>=<green>'white_cube'</green>, <olive>visible</olive>=True)</gray>
                 <purple>if</purple> <purple>not</purple> collider:
                     collider = <olive>Entity</olive>(<olive>parent</olive>=level_parent, <olive>position</olive>=(x,y), <olive>model</olive>=<green>'quad'</green>, <olive>origin</olive>=(-.<yellow>5</yellow>,-.<yellow>5</yellow>), <olive>collider</olive>=<green>'box'</green>, <olive>visible</olive>=False)
                 <purple>else</purple>:
@@ -183,6 +185,8 @@ level_parent = <olive>Entity</olive>()
             <purple>if</purple> col == color.green:
                 player.start_position = (x, y)
                 player.position = player.start_position
+
+    level_parent.model.generate()
 
 make_level(load_texture(<green>'platformer_tutorial_level'</green>))   <gray># generate the level</gray>
 

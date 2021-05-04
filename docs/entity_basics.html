@@ -1,27 +1,8 @@
-
 <!--generated with sswg-->
-<style>
-    html {max-width: 100%; margin: auto; color: #333333;}
-    a.button {padding: 15px 32px; background-color: #555; border-radius: 2em; border-width: 0px; text-decoration: none; color: white; font-size: 25.0px; line-height: 2.5em;}
-    a.button:hover {background-color: #777}
-    a.button_big {padding: 0.5em; background-image: linear-gradient(to top, #427b0e, #9ba97d); background-color: lightgray; background-blend-mode: multiply; border-radius: .75em; border-width: 0px; text-decoration: none; min-width: 150px; max-width: 150px; min-height: 150px; max-height: 150px; display: inline-block; vertical-align: top; margin: 4px 4px 10px 4px; color: white; font-size: 25.0px; background-size: auto 100%; background-position-x: center;}
-    a.button_big:hover {background-color: white; color: #e6d23f; text-decoration: underline;}
-    mark {background: #ccff99;}
-    span {background-color: rgba(0, 0, 0, 0.55); padding: .1em; line-height: 1.35em;}
-    img {max-width: 100%; vertical-align: top;}
-    .code_block {background-color: whitesmoke; padding: 10px; margin: 0; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;}
-
-    purple {color: hsl(289.0, 50%, 50%);}
-    gray {color: gray;}
-    olive {color: olive;}
-    yellow {color: darkgoldenrod;}
-    green {color: seagreen;}
-    blue {color: hsl(210, 50%, 50%);}
-
-</style>
 <html>
 <left>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head> <link rel="stylesheet" href="sswg.css"> </head>
 <title> entity basics</title>
 <br>
 
@@ -41,8 +22,8 @@ What is an Entity?<br>
 &nbsp;&nbsp;&nbsp;&nbsp;It's like a GameObject in Unity or an Actor in Unreal.<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;It can have a position, rotation, and scale.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;It can have a model, texture and color.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;It can have an update function, input function and scripts.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;It can have a model, texture, and color.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;It can have an update function, input function, and scripts.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;For an overview of all its attributes and functions, see <a href="https://www.ursinaengine.org/cheat_sheet.html#Entity">https://www.ursinaengine.org/cheat_sheet.html#Entity</a><br>
 <br>
 <br>
@@ -52,7 +33,7 @@ What is an Entity?<br>
 Setting a model<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;There are several included models like 'quad', 'plane', 'cube' and 'sphere',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;There are several included models like 'quad', 'plane', 'cube', and 'sphere',<br>
 &nbsp;&nbsp;&nbsp;&nbsp;but you can also use your own.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;To do that simply give the base name of your model and it will glob/search for<br>
 &nbsp;&nbsp;&nbsp;&nbsp;the model and take the first one it finds.<br>
@@ -82,7 +63,7 @@ e<yellow>3</yellow> = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</
 e<yellow>4</yellow> = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>texture</olive>=<green>'movie_name.mp<yellow>4</yellow>'</green>) <gray># set video texture</gray>
 </div><br>
 &nbsp;&nbsp;&nbsp;&nbsp;For 2d graphics there's also the Sprite class, which is simply an Entity with a<br>
-&nbsp;&nbsp;&nbsp;&nbsp;'quad' model and scale&nbsp;&nbsp;set to automatically fit the size and aspect ratio of the texture.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'quad' model and scale set to automatically fit the size and aspect ratio of the texture.<br>
 <br>
 <div class="code_block" style="margin-left: 1em;">s = Sprite(<green>'texture_name'</green>)
 <blue>print</blue>(s.aspect_ratio)
@@ -245,9 +226,5 @@ Other Magic Functions<br>
 <div class="code_block" style="margin-left: 1em;">on_enable()
 on_disable()
 </div><br>
-<br>
-<br>
-<br>
-<br>
 
 </html>
