@@ -20,7 +20,7 @@ Usually you add the collider when you create the Entity, but make sure you set t
 before setting the collider if you want it to fit its bounds.
 
 # code
-e = Entity(model='cube', model='cube')
+e = Entity(model='cube', collider='box')
 # text
 
 ## raycast()
