@@ -1,14 +1,14 @@
 from ursina import *
 
 class TrailRenderer(Entity):
-    def __init__(self, color1, color2, target=None, length=5, destroy_on_stop=False, **kwargs):
+    def __init__(self, color1, color2, thickness=5, target=None, length=5, destroy_on_stop=False, **kwargs):
         super().__init__()
         self.target = target
         self.model = Mesh(
             vertices=[(target.world_position) for i in range(length)],
             colors=[lerp(color1, color2, i/length) for i in range(10)],
             mode='line',
-            thickness=5,
+            thickness=thickness,
             static=False
         )
         if not target:
