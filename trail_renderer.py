@@ -1,7 +1,7 @@
 from ursina import *
 
 class TrailRenderer(Entity):
-    def __init__(self, color1, color2, target=None, length=5, **kwargs):
+    def __init__(self, color1, color2, target=None, length=5, destroy_on_stop=False, **kwargs):
         super().__init__()
         self.target = target
         self.model = Mesh(
@@ -28,7 +28,7 @@ class TrailRenderer(Entity):
             self.model.vertices.pop(0)
             self.model.vertices.append(self.target.world_position)
             self.model.generate()
-        if all(elem == self.model.vertices[0] for elem in self.model.vertices):
+        if all(elem == self.model.vertices[0] for elem in self.model.vertices) and destroy_on_stop:
           destroy(self)
 
 
