@@ -482,11 +482,12 @@ class Entity(NodePath):
 
     @property
     def world_rotation(self):
-        rotation = self.getHpr(base.render)
+        rotation = self.getHpr(scene)
         return Vec3(rotation[1], rotation[0], rotation[2]) * Entity.rotation_directions
+
     @world_rotation.setter
     def world_rotation(self, value):
-        rotation = self.setHpr(Vec3(value[1], value[0], value[2]) * Entity.rotation_directions, base.render)
+        self.setHpr(scene, Vec3(value[1], value[0], value[2]) * Entity.rotation_directions)
 
     @property
     def world_rotation_x(self):
@@ -709,8 +710,10 @@ class Entity(NodePath):
     def texture(self, value):
         if value is None and self._texture:
             # print('remove texture')
-            self._texture = None
-            self.setTextureOff(True)
+            # self._texture = None
+            self.model.clearTexture()
+            # del self.texture
+            # self.setTextureOff(True)
             return
 
         if value.__class__ is Texture:
@@ -723,6 +726,7 @@ class Entity(NodePath):
                 print('no texture:', value)
                 return
 
+        self.model.setTextureOff(False)
         if texture.__class__ is MovieTexture:
             self._texture = texture
             self.model.setTexture(texture, 1)
@@ -825,7 +829,13 @@ class Entity(NodePath):
                 )
             return bounds
 
-        return (0,0,0)
+        return Vec3(0,0,0)
+
+    @property
+    def model_center(self):
+        if not self.model:
+            return Vec3(0,0,0)
+        return self.model.getTightBounds.getCenter()
 
     @property
     def bounds(self):
@@ -1051,6 +1061,9 @@ class Entity(NodePath):
 
 
     def intersects(self, traverse_target=scene, ignore=(), debug=False):
+        if isinstance(self.collider, MeshCollider):
+            raise Exception('''error: mesh colliders can't intersect other shapes, only primitive shapes can. Mesh colliders can "recieve" collisions though.''')
+
         from ursina.hit_info import HitInfo
 
         if not self.collision or not self.collider:
