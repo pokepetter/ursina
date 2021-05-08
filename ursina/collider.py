@@ -15,6 +15,7 @@ class Collider(NodePath):
         self.visible = False
 
     def remove(self):
+        self.node.clearSolids()
         self.node_path.removeNode()
 
     @property
@@ -156,6 +157,6 @@ if __name__ == '__main__':
 
     m = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
     e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_color=color.yellow)
-    
+
     EditorCamera()
     app.run()
