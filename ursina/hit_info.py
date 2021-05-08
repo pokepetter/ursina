@@ -21,5 +21,5 @@ class HitInfo:
             setattr(self, key, value)
 
 
-    # def __bool__(self):
-    #     return self.hit
+    def __bool__(self):
+        return self.hit

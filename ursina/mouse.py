@@ -37,7 +37,7 @@ class Mouse():
         self.delta_drag = Vec3(0,0,0)
 
         self.update_step = 1
-        self.traverse_target = scene
+        self.traverse_target = scene  # set this to None to disable collision with scene, which might be a good idea if you have lots of colliders.
         self._i = 0
         self._mouse_watcher = None
         self._picker = CollisionTraverser()  # Make a traverser
@@ -221,11 +221,8 @@ class Mouse():
         # collide with world
         self._pickerNP.reparent_to(camera)
         self._pickerRay.set_from_lens(scene.camera.lens_node, self.x * 2 / window.aspect_ratio, self.y * 2)
-        try:
+        if self.traverse_target:
             self._picker.traverse(self.traverse_target)
-        except:
-            # print('error: mouse._picker could not traverse', self.traverse_target)
-            return
 
         if self._pq.get_num_entries() > 0:
             self.find_collision()
@@ -244,25 +241,25 @@ class Mouse():
 
     @property
     def normal(self): # returns the normal of the polygon, in local space.
-        if not self.collision:
+        if not self.collision is not None:
             return None
         return Vec3(*self.collision.normal)
 
     @property
     def world_normal(self): # returns the normal of the polygon, in world space.
-        if not self.collision:
+        if not self.collision is not None:
             return None
         return Vec3(*self.collision.world_normal)
 
     @property
     def point(self): # returns the point hit, in local space
-        if self.collision:
+        if self.collision is not None:
             return Vec3(*self.collision.point)
         return None
 
     @property
     def world_point(self): # returns the point hit, in world space
-        if self.collision:
+        if self.collision is not None:
             return Vec3(*self.collision.world_point)
         return None
 
