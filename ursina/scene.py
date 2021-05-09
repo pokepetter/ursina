@@ -19,14 +19,13 @@ class Scene(NodePath):
 
         self.entities = []
         self.hidden = NodePath('hidden')
-        self.reflection_map = 'reflection_map_3'
+        self.reflection_map_name = 'reflection_map_3'
 
 
     def set_up(self):
         from ursina.entity import Entity
         self.reparent_to(render)
-        self.reflection_map = load_texture(self.reflection_map)
-
+        self.reflection_map = load_texture(self.reflection_map_name)
         self.fog = Fog('fog')
         self.setFog(self.fog)
         self.fog_color = color.light_gray
