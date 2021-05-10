@@ -683,7 +683,10 @@ class Entity(NodePath):
             value.entity = self
 
             for key, value in value.default_input.items():
-                self.set_shader_input(key, value)
+                if not hasattr(self, key):
+                    self.set_shader_input(key, value)
+                else:
+                    self.set_shader_input(key, getattr(self, key))
 
             return
 
