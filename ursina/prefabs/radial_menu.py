@@ -39,6 +39,9 @@ class RadialMenu(Entity):
 
 
     def on_enable(self):
+        if not hasattr(self, 'bg'):
+            return
+
         self.bg.enabled = True
         if self.open_at_cursor:
             self.position = mouse.position
