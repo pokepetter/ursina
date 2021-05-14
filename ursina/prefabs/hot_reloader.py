@@ -208,17 +208,21 @@ class HotReloader(Entity):
         import ursina
 
         for shader in ursina.shader.imported_shaders:
-            print(shader, shader.path)
+            # print(shader, shader.path)
             # TODO: check if file has changed
 
             with open(shader.path, 'r', encoding='utf8') as f:
                 try:
-                    # print('trying to reload:', shader.path.name)
+                    print('trying to reload:', shader.path.name)
                     text = f.read()
-                    vert = text.split(r"vertex = '''", 1)[1].split("'''", 1)[0]
+                    vert = ''
+                    if r"vertex = '''" in text:
+                        vert = text.split(r"vertex = '''", 1)[1].split("'''", 1)[0]
+
                     frag = text.split(r"fragment='''", 1)[1].split("'''", 1)[0]
 
-                    shader.vertex = vert
+                    if vert:
+                        shader.vertex = vert
                     shader.fragment = frag
                     shader.compile()
 
