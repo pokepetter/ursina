@@ -13,3 +13,4 @@ from ursina.shaders.screenspace_shaders.camera_vertical_blur import camera_verti
 from ursina.shaders.screenspace_shaders.camera_contrast import camera_contrast_shader
 from ursina.shaders.screenspace_shaders.camera_grayscale import camera_grayscale_shader
 from ursina.shaders.screenspace_shaders.fxaa import fxaa_shader
+from ursina.shaders.screenspace_shaders.ssao import ssao_shader
