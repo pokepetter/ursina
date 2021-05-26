@@ -15,7 +15,7 @@ class Collider(NodePath):
         self.visible = False
 
     def remove(self):
-        self.node.clearSolids()
+        self.node_path.node().clearSolids()
         self.node_path.removeNode()
 
     @property
