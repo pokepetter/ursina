@@ -177,7 +177,7 @@ Entity Basics
 
     To get the entity currently under the mouse:
     #code
-    print(mouse.entity)
+    print(mouse.hovered_entity)
     # text
 
     To check if and entity with a collider is hovered by the mouse:
