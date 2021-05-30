@@ -60,8 +60,7 @@ class ScrollableText(Entity):
     count = 0
     
     for i in text: # Length Catch
-      for x in self.split_word(i):
-        count += 1
+      count+=len(self.split_word(i))+1
       if count > length:
         out.append(temp)
         temp = ''
@@ -103,6 +102,6 @@ if __name__ == '__main__':
 
   dsr = '''Your Text Here'''
   
-  st = ScrollableText(text=dsr, length=50, background=True, position=(-3, 0, 0))
+  st = ScrollableText(text=dsr, length=10, background=True, position=(-3, 0, 0))
   st.scale = 5
   e.run()
