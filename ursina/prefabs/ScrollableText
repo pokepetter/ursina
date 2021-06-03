@@ -30,7 +30,7 @@ class ScrollableText(Entity):
       self.background(lines, length)
 
   def background(self, lines, length):
-    self.background = Entity(model=Quad(radius=0), color=color.white, origin=(-0.48, 0.48, 0), parent=self, scale=(0.025*length+0.025, 0.025*lines+0.025))
+    self.background = Entity(model=Quad(radius=0), color=color.white, origin=(-0.48, 0.48, 0), parent=self, scale=(0.025+length*Text.size/2+0.025, 0.025*lines+0.025))
 
   def sample(self, content):
     for i in content:
