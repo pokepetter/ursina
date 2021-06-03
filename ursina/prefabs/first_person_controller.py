@@ -112,7 +112,7 @@ if __name__ == '__main__':
     e = Entity(model='cube', scale=(1,5,10), x=-2, y=.01, collider='box', texture='white_cube')
     e.texture_scale = (e.scale_z, e.scale_y)
 
-    player = FirstPersonController(model='cube', y=2, origin_y=-.5)
+    player = FirstPersonController(y=2, origin_y=-.5)
     player.gun = None
 
 
