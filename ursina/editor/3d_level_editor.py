@@ -1,5 +1,5 @@
 from ursina import *
-from ursina.shaders import lit_with_shadows_shader
+from ursina.shaders import lit_with_shadows_shader, unlit_shader
 
 
 app = Ursina()
@@ -16,6 +16,7 @@ class LevelEditor(Entity):
 
 level_editor = LevelEditor()
 
+DirectionalLight(parent=level_editor).look_at(Vec3(-1,-1,-1))
 
 class Undo(Entity):
     def __init__(self, **kwargs):
@@ -34,6 +35,7 @@ class Undo(Entity):
             target, attr, original, new = data
             setattr(target, attr, original)
 
+        selector.render_selection() # make sure the gizmo position updates
         self.undo_index -= 1
 
     def redo(self):
@@ -43,6 +45,7 @@ class Undo(Entity):
             target, attr, original, new = data
             setattr(target, attr, new)
 
+        selector.render_selection() # make sure the gizmo position updates
         self.undo_index += 1
 
     def input(self, key):
@@ -71,15 +74,15 @@ if not load_model('arrow'):
 
 # if not load_model('scale_gizmo'):
 p = Entity(enabled=False)
-Entity(parent=p, model='cube', scale=(.05,.05,1), origin_z=-.5)
-Entity(parent=p, model='cube', z=1, scale=.2)
+Entity(parent=p, model='cube', scale=(.05,.05,1))
+Entity(parent=p, model='cube', z=.5, scale=.2)
 arrow_model = p.combine()
 arrow_model.save('scale_gizmo.ursinamesh')
 
 
 class GizmoArrow(Draggable):
     def __init__(self, model='arrow', collider='box', **kwargs):
-        super().__init__(model=model, origin_x=-.55, always_on_top=True, render_queue=1, is_gizmo=True, **kwargs)
+        super().__init__(model=model, origin_x=-.55, always_on_top=True, render_queue=1, is_gizmo=True, shader=unlit_shader, **kwargs)
         for key, value in kwargs.items():
             setattr(self, key, value)
 
@@ -122,35 +125,24 @@ gizmo = Gizmo()
 
 class ScaleGizmo(Draggable):
     def __init__(self, **kwargs):
-        super().__init__(parent=gizmo, model='cube', scale=.25, color=color.orange, visible=True, always_on_top=True, render_queue=1, is_gizmo=True, dragging=False)
+        super().__init__(parent=gizmo, model='cube', scale=.25, color=color.orange, visible=True, always_on_top=True, render_queue=1, is_gizmo=True, dragging=False, shader=unlit_shader)
         self.scaler = Entity(parent=gizmo)
         self.axis = Vec3(1,1,1)
         self.on_click = Func(setattr, self, 'axis', Vec3(1,1,1))
 
-        # self.scale_arrow_x = Button(parent=self, model='scale_gizmo', collider='box', color=color.red, is_gizmo=True, on_click=Func(setattr, self, 'axis', Vec3(1,0,0)))
-        # self.scale_arrow_y = Button(parent=self, model='scale_gizmo', collider='box', color=color.red, is_gizmo=True, on_click=Func(setattr, self, 'axis', Vec3(1,0,0)))
+        for i, dir in enumerate((Vec3(1,0,0), Vec3(0,1,0), Vec3(0,0,1))):
+            b = Button(parent=self, model='scale_gizmo', origin_z=-.5, scale=4, collider='box',
+                color=axis_colors[('x','y','z')[i]], is_gizmo=True, always_on_top=True, render_queue=1, shader=unlit_shader,
+                on_click=Sequence(Func(setattr, self, 'axis', dir), Func(self.drag)))
+            b.look_at(dir)
 
-        # for i, dir in enumerate((Vec3(1,0,0), Vec3(0,1,0), Vec3(0,0,1))):
-        #     b = Button(parent=self, model='scale_gizmo', scale=4, collider='box',
-        #         color=axis_colors[('x','y','z')[i]], is_gizmo=True, always_on_top=True, render_queue=1,
-        #         on_click=Func(setattr, self, 'axis', dir))
-        #     # # b.
-        #     b.look_at(dir)
-        #     b.collider.visible = True
-
-            # p = Entity(parent=self, world_scale=1)
-            # Entity(parent=p, model='cube', scale=(.05,.05,1), origin_z=-.5)
-            # Entity(parent=p, model='cube', z=1, scale=.2)
-            # Entity(parent=b, scale=(1,.05,.05,))
 
     def drag(self):
-        # if self.hovered or mouse.hovered_entity in self.children:
             for e in level_editor.selection:
                 e.world_parent = self.scaler
             self.dragging = True
 
     def drop(self):
-        # if key == 'left mouse up':
         for e in level_editor.selection:
             e.world_parent = level_editor
 
@@ -200,7 +192,8 @@ class QuickGrabber(Entity):
                 'y' : gizmo.arrows['y'],
                 'z' : gizmo.arrows['z'],
                 's' : scale_gizmo,
-            }
+            },
+            clear_selection = False
             )
 
     def input(self, key):
@@ -368,7 +361,15 @@ class Spawner(Entity):
         if key == 'n':
             if not mouse.hovered_entity in level_editor.entities:
                 level_editor.grid.collision = True
-            self.target = Entity(model='cube', collider='box', color=color.gray, position=mouse.world_point, collision=False)
+            self.target = Entity(
+                model='cube',
+                collider='box',
+                shader=lit_with_shadows_shader,
+                texture='white_cube',
+                color=color.white,
+                position=mouse.world_point,
+                collision=False,
+                )
             level_editor.entities.append(self.target)
 
         elif key == 'n up':
@@ -413,6 +414,7 @@ class PointOfViewSelector(Entity):
 
 
 PointOfViewSelector()
+
 
 
 app.run()
