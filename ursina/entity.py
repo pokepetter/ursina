@@ -549,6 +549,13 @@ class Entity(NodePath):
         self.rotation = Vec3(self.rotation[0], self.rotation[1], value)
 
     @property
+    def quat(self):
+        return self.get_quat()
+    @quat.setter
+    def quat(self, value):
+        self.set_quat(value)
+
+    @property
     def world_scale(self):
         return Vec3(*self.getScale(base.render))
     @world_scale.setter
