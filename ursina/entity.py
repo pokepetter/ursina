@@ -985,6 +985,10 @@ class Entity(NodePath):
 # ANIMATIONS
 #------------
     def animate(self, name, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt='kill', time_step=None, auto_destroy=True):
+        if delay:
+            from ursina.ursinastuff import invoke
+            return invoke(self.animate, name, value, duration=duration, curve=curve, loop=loop, resolution=resolution, time_step=time_step, auto_destroy=auto_destroy, delay=delay)
+
         animator_name = name + '_animator'
         # print('start animating value:', name, animator_name )
         if interrupt and hasattr(self, animator_name):
@@ -995,7 +999,6 @@ class Entity(NodePath):
         setattr(self, animator_name, sequence)
         self.animations.append(sequence)
 
-        sequence.append(Wait(delay))
         if not resolution:
             resolution = max(int(duration * 60), 1)
 
