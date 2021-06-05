@@ -336,6 +336,8 @@ class Entity(NodePath):
 
         if value == 'box':
             if self.model:
+                # start, end = self.model.getTightBounds()
+                # model_center = (start + end) / 2
                 self._collider = BoxCollider(entity=self, center=-self.origin, size=self.model_bounds)
             else:
                 self._collider = BoxCollider(entity=self)
@@ -754,6 +756,7 @@ class Entity(NodePath):
         self._texture_scale = value
         if self.model and self.texture:
             self.model.setTexScale(TextureStage.getDefault(), value[0], value[1])
+        self.set_shader_input('texture_scale', value)
 
     @property
     def texture_offset(self):
@@ -765,6 +768,16 @@ class Entity(NodePath):
             self.model.setTexOffset(TextureStage.getDefault(), value[0], value[1])
             self.texture = self.texture
         self._texture_offset = value
+
+    @property
+    def tileset_size(self):
+        return self._tileset_size
+    @tileset_size.setter
+    def tilemap_size(self, value):
+        self._tileset_size = value
+        if self.model and self.texture:
+            self.model.setTexScale(TextureStage.getDefault(), 1/value[0], 1/value[1])
+
 
 
     @property
@@ -842,7 +855,7 @@ class Entity(NodePath):
     def model_center(self):
         if not self.model:
             return Vec3(0,0,0)
-        return self.model.getTightBounds.getCenter()
+        return self.model.getTightBounds().getCenter()
 
     @property
     def bounds(self):

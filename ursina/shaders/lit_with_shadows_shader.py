@@ -21,7 +21,9 @@ in vec4 vertex;
 in vec3 normal;
 
 in vec2 p3d_MultiTexCoord0;
+uniform vec2 texture_scale;
 out vec2 texcoords;
+
 
 out vec3 vpos;
 out vec3 norm;
@@ -32,7 +34,7 @@ void main() {
   vpos = vec3(p3d_ModelViewMatrix * vertex);
   norm = normalize(p3d_NormalMatrix * normal);
   shad[0] = p3d_LightSource[0].shadowViewMatrix * vec4(vpos, 1);
-  texcoords = p3d_MultiTexCoord0;
+  texcoords = p3d_MultiTexCoord0 * texture_scale;
 }
 
 ''',
@@ -71,12 +73,11 @@ in vec3 vpos;
 in vec3 norm;
 in vec4 shad[1];
 
-uniform vec2 texture_scale;
-
 out vec4 p3d_FragColor;
+uniform vec4 shadow_color;
 
 void main() {
-  p3d_FragColor = texture(p3d_Texture0, texcoords * texture_scale.xy) * p3d_ColorScale;
+  p3d_FragColor = texture(p3d_Texture0, texcoords) * p3d_ColorScale;
 
   // float alpha = p3d_Material.roughness * p3d_Material.roughness;
   vec3 N = norm;
@@ -123,17 +124,17 @@ void main() {
     vec4 shadowcoord = shad[i];
     shadowcoord.z += bias;
 
-    float shadow_strength = .25;
-    vec3 shadow_color = (vec3(1.,1.,1.) - vec3(0.0, .5, 1.0)) * shadow_strength;
+    vec3 converted_shadow_color = (vec3(1.,1.,1.) - shadow_color.rgb) * shadow_color.a;
 
-    p3d_FragColor.rgb += textureProj(p3d_LightSource[i].shadowMap, shadowcoord) * shadow_color;
-    p3d_FragColor.rgb += color - (shadow_color);
+    p3d_FragColor.rgb += textureProj(p3d_LightSource[i].shadowMap, shadowcoord) * converted_shadow_color;
+    p3d_FragColor.rgb += color - (converted_shadow_color);
   }
 }
 
 ''',
 default_input = {
-    'texture_scale': (1, 1),
+    'texture_scale': Vec2(1,1),
+    'shadow_color' : Vec4(0, .5, 1, .25),
     }
 )
 
@@ -146,10 +147,7 @@ if __name__ == '__main__':
     app = Ursina()
     shader = lit_with_shadows_shader
 
-    a = Entity(model='cube', shader=shader, texture='radial_gradient', color=color.red)
-    # a.set_shader_input('texture_scale', 2)
-    # b = WhiteSphere(shader=shader, rotation_y=180, x=3, texture='brick')
-    # b.texture.filtering = None
+    a = Entity(model='cube', shader=shader, color=color.red)
     GrayPlane(scale=10, y=-2, texture='shore', shader=shader)
 
 
@@ -157,7 +155,6 @@ if __name__ == '__main__':
     from ursina.lights import DirectionalLight
     sun = DirectionalLight(y=10, rotation=(90+30,90,0))
     sun._light.show_frustum()
-
 
     Sky(color=color.light_gray)
     EditorCamera()
