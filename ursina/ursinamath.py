@@ -1,10 +1,24 @@
 import operator
-from math import sqrt
 from panda3d.core import Vec4, LVector3f, Mat3, Mat4
+from ctypes import c_float, c_int32, cast, byref, POINTER
 from ursina.vec2 import Vec2
 from ursina.vec3 import Vec3
 from ursina.color import Color
 internal_sum = sum
+
+def sqrt(number):
+    threehalfs = 1.5
+    x2 = number * 0.5
+    y = c_float(number)
+
+    i = cast(byref(y), POINTER(c_int32)).contents.value
+    i = c_int32(0x5f3759df - (i >> 1))
+    y = cast(byref(i), POINTER(c_float)).contents.value
+
+    y = y * (1.5 - (x2 * y * y))
+    return y
+
+
 
 
 def distance(a, b):
@@ -23,7 +37,8 @@ def distance(a, b):
     if hasattr(a, 'position'): a = a.position
     if hasattr(b, 'position'): b = b.position
 
-    dist = sqrt((b[0] - a[0])**2 + (b[1] - a[1])**2 + (b[2] - a[2])**2)
+    dist = 
+    ((b[0] - a[0])**2 + (b[1] - a[1])**2 + (b[2] - a[2])**2)
     # print('------------DIST:', dist)
     return dist
 
