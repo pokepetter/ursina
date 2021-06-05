@@ -48,10 +48,16 @@ class Text(Entity):
         self._background = None
         self.appear_sequence = None # gets created when calling appear()
 
+        if 'origin' in kwargs:   # set the scale before model for correct corners
+            setattr(self, 'origin', kwargs['origin'])
+
+
         if text != '':
             self.text = text
 
         for key, value in kwargs.items():
+            if key == 'origin':
+                continue
             setattr(self, key, value)
 
 
@@ -60,14 +66,11 @@ class Text(Entity):
         t = ''
         y = 0
         if self.text_nodes:
-            # y = self.text_nodes[0].getZ()
             y = self.text_nodes[0].getY()
 
         for tn in self.text_nodes:
-            # if y != tn.getZ():
             if y != tn.getY():
                 t += '\n'
-                # y = tn.getZ()
                 y = tn.getY()
 
             t += tn.node().text
@@ -80,13 +83,14 @@ class Text(Entity):
         self.raw_text = text
 
         # clear stuff
+        from ursina.ursinastuff import destroy  # needed to destroy inline images
         for img in self.images:
             destroy(img)
-        self.images.clear()
+        self.images = []
 
         for tn in self.text_nodes:
             tn.remove_node()
-        self.text_nodes.clear()
+        self.text_nodes = []
 
         # check if using tags
         if (not self.use_tags
@@ -185,7 +189,7 @@ class Text(Entity):
                     model='quad',
                     texture=texture_name,
                     color=self.current_color,
-                    scale=1,
+                    # scale=self.scale_override,
                     # position=(x*self.size*self.scale_override, y*self.size*self.line_height),
                     origin=(.0, -.25),
                     add_to_scene_entities=False,
@@ -194,8 +198,7 @@ class Text(Entity):
                     destroy(image)
                 else:
                     self.images.append(image)
-                    # self.text_node.remove_node()
-                    # self.text_node = image
+
             else:
                 if tag in self.text_colors:
                     self.current_color = self.text_colors[tag]
@@ -240,6 +243,8 @@ class Text(Entity):
         self.text_colors['default'] = value
         for tn in self.text_nodes:
             tn.node().setTextColor(value)
+        for img in self.images:
+            img.color = value
 
 
     @property
@@ -298,7 +303,7 @@ class Text(Entity):
         new_text = ''
         is_in_tag = False
         i = 0
-        for word in self.raw_text.replace('\n', ' ').replace(self.end_tag, self.end_tag+' ').split(' '):
+        for word in self.raw_text.replace(self.end_tag, self.end_tag+' ').split(' '):
 
             if word.startswith(self.start_tag) and new_text:
                 new_text = new_text[:-1]
@@ -341,6 +346,7 @@ class Text(Entity):
 
     def align(self):
         value = self.origin
+
         linewidths = [self.text_nodes[0].node().calcWidth(line) for line in self.lines]
         # print('.........', linewidths)
         for tn in self.text_nodes:
@@ -376,6 +382,8 @@ class Text(Entity):
 
         w, h = self.width + padding[0], self.height + padding[1]
         self._background.x -= self.origin_x * self.width
+        # if self.origin_x == .5:
+        #     self._background.x += self.origin_x * self.width * 2
         self._background.y -= self.origin_y * self.height
 
         self._background.model = Quad(radius=radius, scale=(w/self.scale_x, h/self.scale_y))
@@ -424,14 +432,15 @@ if __name__ == '__main__':
         <scale:1.5><orange>Rainstorm<default><scale:1>
         Summon a <azure>rain storm <default>to deal 5 <azure>water
 
-        damage <default>to <hsb(0,1,.7)>everyone, <default><image:file_icon> <image:file_icon> test <default>including <orange>yourself. <default>
+        damage <default>to <hsb(0,1,.7)>everyone, <default><image:file_icon> <red><image:file_icon> test <default>including <orange>yourself. <default>
         Lasts for 4 rounds.''').strip()
 
     # Text.default_font = 'VeraMono.ttf'
     # Text.default_font = 'consola.ttf'
     # color.text_color = color.lime
     Text.default_resolution = 1080 * Text.size
-    test = Text(origin=(.5,.5), text=descr)
+    test = Text(text=descr, origin=(0,0), background=True)
+    # test.align()
     # test = Text(descr)
 
     # test.text = ''
@@ -443,15 +452,18 @@ if __name__ == '__main__':
     # test.origin = (0, 0)
     # test.wordwrap = 40
 
-    text = Text(text=descr, wordwrap=10, origin=(-.5,.5), y=.25, background=True)
-    Entity(parent=camera.ui, model='circle', scale=.05, color=color.yellow, y=text.y, z=-1)
+    # text = Text(text=descr, wordwrap=10, origin=(-.5,.5), y=.25, background=True)
+    # Entity(parent=camera.ui, model='circle', scale=.05, color=color.yellow, y=text.y, z=-1)
 
 
     def input(key):
         if key == 'a':
-            test.appear(speed=.025)
+            # test.appear(speed=.025)
+            print('a')
+            test.text = '<default><image:file_icon> <red><image:file_icon> test '
+            print('by', test.text)
 
-    test.create_background()
-
+    # test.create_background()
+    window.fps_counter.enabled = False
     print('....', Text.get_width('yolo'))
     app.run()
