@@ -22,6 +22,7 @@ in vec3 normal;
 
 in vec2 p3d_MultiTexCoord0;
 uniform vec2 texture_scale;
+uniform vec2 texture_offset;
 out vec2 texcoords;
 
 
@@ -34,7 +35,7 @@ void main() {
   vpos = vec3(p3d_ModelViewMatrix * vertex);
   norm = normalize(p3d_NormalMatrix * normal);
   shad[0] = p3d_LightSource[0].shadowViewMatrix * vec4(vpos, 1);
-  texcoords = p3d_MultiTexCoord0 * texture_scale;
+  texcoords = (p3d_MultiTexCoord0 * texture_scale) + texture_offset;
 }
 
 ''',
@@ -134,6 +135,7 @@ void main() {
 ''',
 default_input = {
     'texture_scale': Vec2(1,1),
+    'texture_offset': Vec2(0,0),
     'shadow_color' : Vec4(0, .5, 1, .25),
     }
 )

@@ -756,7 +756,7 @@ class Entity(NodePath):
         self._texture_scale = value
         if self.model and self.texture:
             self.model.setTexScale(TextureStage.getDefault(), value[0], value[1])
-        self.set_shader_input('texture_scale', value)
+            self.set_shader_input('texture_scale', value)
 
     @property
     def texture_offset(self):
@@ -767,6 +767,7 @@ class Entity(NodePath):
         if self.model and self.texture:
             self.model.setTexOffset(TextureStage.getDefault(), value[0], value[1])
             self.texture = self.texture
+            self.set_shader_input('texture_offset', value)
         self._texture_offset = value
 
     @property

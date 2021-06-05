@@ -6,11 +6,11 @@ in vec4 p3d_Vertex;
 in vec2 p3d_MultiTexCoord0;
 out vec2 texcoords;
 uniform vec2 texture_scale;
+uniform vec2 texture_offset;
 
 void main() {
     gl_Position = p3d_ModelViewProjectionMatrix * p3d_Vertex;
-    texcoords = p3d_MultiTexCoord0;
-    texcoords *= texture_scale;
+    texcoords = (p3d_MultiTexCoord0 * texture_scale) + texture_offset;
 }
 ''',
 
@@ -29,7 +29,9 @@ void main() {
 
 ''',
 default_input={
-    'texture_scale' : Vec2(1,1)}
+    'texture_scale' : Vec2(1,1),
+    'texture_offset' : Vec2(.5,0),
+}
 )
 
 
