@@ -103,7 +103,7 @@ app.run()
 
 
 ## HitInfo
-All of these functions will return a HitInfo. This contains information about what it hit
+All of these functions will return a HitInfo. This contains information about what it hit.
 
 # code
 hit = None

@@ -11,7 +11,7 @@ Frequently Asked Questions
 <b>How do I update ursina?</b>
 
     # code
-    pip install https://github.com/pokepetter/ursina/archive/master.zip
+    pip install https://github.com/pokepetter/ursina/archive/master.zip --upgrade
     # text
 
 
