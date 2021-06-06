@@ -147,14 +147,19 @@ class ScaleGizmo(Draggable):
     def drag(self):
             for e in level_editor.selection:
                 e.world_parent = self.scaler
+                e._original_world_scale = e.world_scale
             self.dragging = True
 
     def drop(self):
+        changes = []
         for e in level_editor.selection:
             e.world_parent = level_editor
+            changes.append([e, 'world_scale', e._original_world_scale, e.world_scale])
 
+        undo.record_undo(changes)
         self.dragging = False
         self.scaler.scale = 1
+
 
 
     def update(self):
@@ -387,6 +392,7 @@ class Spawner(Entity):
                 level_editor.grid.collision = True
             self.target = Entity(
                 model='cube',
+                origin_y=-.5,
                 collider='box',
                 shader=lit_with_shadows_shader,
                 texture='white_cube',
