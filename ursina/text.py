@@ -62,7 +62,7 @@ class Text(Entity):
 
 
     @property
-    def text(self): # set this to update the text.
+    def text(self):
         t = ''
         y = 0
         if self.text_nodes:
@@ -78,7 +78,7 @@ class Text(Entity):
         return t
 
 
-    @text.setter
+    @text.setter     # set this to update the text.
     def text(self, text):
         self.raw_text = text
 
@@ -230,6 +230,7 @@ class Text(Entity):
             self._font = font
             self._font.clear()  # remove assertion warning
             self._font.setPixelsPerUnit(self.resolution)
+            self._font.setLineHeight(self.line_height)
             self.text = self.raw_text   # update tex
 
     @property
@@ -257,7 +258,9 @@ class Text(Entity):
     @line_height.setter
     def line_height(self, value):
         self._line_height = value
-        self.text = self.raw_text
+        self._font.setLineHeight(value)
+        if self.use_tags:
+            self.text = self.raw_text
 
     @property
     def width(self): # gets the width of the widest line.
