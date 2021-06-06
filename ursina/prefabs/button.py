@@ -176,6 +176,9 @@ class Button(Entity):
         if hasattr(self, 'tooltip'):
             self.tooltip.scale = (0,0,0)
             self.tooltip.enabled = True
+            if not hasattr(self.tooltip, 'original_scale'):
+                self.tooltip.original_scale = 1
+
             self.tooltip.animate_scale(self.tooltip.original_scale)
 
 

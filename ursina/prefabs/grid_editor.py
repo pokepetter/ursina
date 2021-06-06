@@ -250,7 +250,7 @@ class ASCIIEditor(GridEditor):
 
         self.text_entity = Text(parent=self.parent, text=text, x=self.x, line_height=line_height, font=font)
 
-        self.scale = (self.text_entity.width, self.text_entity.height*1.05)
+        self.scale = (self.text_entity.width, self.text_entity.height)
         self.text_entity.world_parent = self
         self.text_entity.y = 1
         self.text_entity.z = -.001
