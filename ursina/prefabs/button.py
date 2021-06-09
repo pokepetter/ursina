@@ -23,7 +23,7 @@ class Button(Entity):
 
         if Button.default_model is None:
             if not 'model' in kwargs and self.scale[0] != 0 and self.scale[1] != 0:
-                self.model = Quad(aspect=self.scale[0] / self.scale[1], subdivisions=4)
+                self.model = Quad(aspect=self.scale[0] / self.scale[1])
         else:
             self.model = Button.default_model
         self.color = Button.color
