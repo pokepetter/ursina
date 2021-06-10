@@ -2,113 +2,40 @@ from ursina import *
 from ursina.shaders import lit_with_shadows_shader, unlit_shader
 from time import perf_counter
 
-app = Ursina(vsync=False)
 
-# class Scene(Entity):
-#     def __init__(self, name, **kwargs):
-#         super().__init__()
-#
-#         # name, coordinates, entities, selection, undo_handler, path, is_loaded
-#
-#     def save(self):
-#         pass
-#
-#     def load(self):
-#         pass
-#
-#     def unload(self):
-#         pass
-
-
-class LevelEditor(Entity):
-    def __init__(self, **kwargs):
-        super().__init__(eternal=True)
-        self.scenes = [[None for x in range(8)] for y in range(8)]
-        # self.undo_handlers = [[Undo() for x in range(8)] for y in range(8)]
-        self.current_scene = None
-        self.current_scene_coordinate = [0,0]
-
-        self.scene_folder = application.asset_folder / 'scenes'
-        # print('scene_folder:', self.scene_folder)
-
-        #
-        # for y in range(8):
-        #     if self.current_scene_coordinate:
-        #         break
-        #     for x in range(8):
-        #         if self.scenes[x][y]:
-        #             self.current_scene = self.scenes[x][y]
-        #             self.current_scene_coordinate = [x][y]
-        #             break
-        #
-        # if not self.current_scene:
-        #     self.current_scene = Entity(has_changed=True)
-
-
+class Scene(Entity):
+    def __init__(self, x, y, name, **kwargs):
+        super().__init__()
+        self.coordinates = [x,y]
+        self.name = name
+        self.path = None    # must be assigned to be able to load
         self.entities = []
         self.selection = []
-        self.grid = Entity(parent=self, model=Grid(16,16), rotation_x=90, scale=32, collider='box', color=color.white33, collision=False)
-        self.origin_mode = 'center'
-        self.origin_mode_menu = ButtonGroup(['last', 'center', 'individual'], min_selection=1, position=window.top)
-        self.editor_camera = EditorCamera(parent=self)
-        self.ui = Entity(parent=camera.ui)
-        self.on_enable = Func(self.ui.enable)
-        self.on_disable = Func(self.ui.disable)
+        self.scene_parent = None
+        # self.undo_handler     # gets assigned later
 
-
-        self.current_scene = None
-        # self.current_scene = self.load_scene('test3')
-
-    @property
-    def current_undo_handler(self):
-        return self.undo_handlers[self.current_scene_coordinate[0]][self.current_scene_coordinate[1]]
-
-
-    def load_scene(self, scene_name, folder=application.asset_folder / 'scenes', add=False):     #todo: set_active=False
-        scene_instance = None
-
-        t = perf_counter()
-        with open(folder / f'{scene_name}.py') as f:
-            try:
-                exec(f.read())
-                scene_instance = eval(f'Scene()')
-                scene_instance.name = scene_name
-                self.entities = [e for e in scene.entities if e.has_ancestor(scene_instance)]
-                for e in self.entities:
-                    e.collider = 'box'
-                    e.collision = False
-                    e.shader = lit_with_shadows_shader
-                    e.ignore = True
-            except Exception as e:
-                print('error in scene:', scene_name, e)
-
-        if scene_instance:
-            print(f'loaded scene: "{scene_name}" in {perf_counter()-t}')
-            return scene_instance
-        else:
-            return False
-
-    def save(self, scene_name):
-        print('-------------------', self.current_scene)
-        if not self.current_scene or not self.entities:
-            print('error: cant save, no current scene', self.current_scene)
+    def save(self):
+        if not self.path and not self.entities:
+            print('cant save scene with not path and no entities')
             return
 
-        self.scene_folder.mkdir(parents=True, exist_ok=True)
+        level_editor.scene_folder.mkdir(parents=True, exist_ok=True)
         # create __init__ file in scene folder so we can import it during self.load()
-        if not Path(self.scene_folder / '__init__.py').is_file():
+        if not Path(level_editor.scene_folder / '__init__.py').is_file():
             print('creating an __init__.py in the scene folder')
-            with open(self.scene_folder / '__init__.py', 'w', encoding='utf-8') as f:
+            with open(level_editor.scene_folder / '__init__.py', 'w', encoding='utf-8') as f:
                 pass
 
-        print('saving:', self.current_scene.name)
+        print('saving:', self.name)
         scene_file_content = dedent(f'''
             class Scene(Entity):
                 def __init__(self, **kwargs):
                     super().__init__(**kwargs)
         ''')
         temp_entity= Entity()
-        attrs_to_save = ('position', 'rotation', 'scale', 'model', 'origin', 'color', 'texture')
+        attrs_to_save = ('position', 'rotation', 'scale', 'model', 'origin', 'color',
+            # 'texture'
+            )
 
         for e in self.entities:
             scene_file_content += '        ' + e.__class__.__name__ + '(parent=self'
@@ -132,33 +59,90 @@ class LevelEditor(Entity):
             scene_file_content += ', ignore=True)\n' # TODO: add if it has a custom name
 
         # print('scene_file_content:\n', scene_file_content)
-        with open(f'{self.scene_folder/scene_name}.py', 'w', encoding='utf-8') as f:
+        self.path = level_editor.scene_folder/(self.name+'.py')
+        with open(self.path, 'w', encoding='utf-8') as f:
             f.write(scene_file_content)
-        print('saved:', f'{self.scene_folder/scene_name}.py')
+        print('saved:', self.path)
 
+
+    def load(self):
+        if not self.path:
+            print('cant load scene, no path')
+            return
+        if self.scene_parent:
+            print('error, scene already loaded')
+            return
+
+        t = perf_counter()
+        with open(self.path) as f:
+            try:
+                exec(f.read())
+                self.scene_parent = eval(f'Scene()')
+                self.scene_parent.name = self.name
+                self.entities = [e for e in scene.entities if e.has_ancestor(self.scene_parent)]
+                for e in self.entities:
+                    e.collider = 'box'
+                    e.collision = False
+                    e.shader = lit_with_shadows_shader
+                    e.ignore = True
+            except Exception as e:
+                print('error in scene:', self.name, e)
+
+        if self.scene_parent:
+            print(f'loaded scene: "{self.name}" in {perf_counter()-t}')
+            return self.scene_parent
+
+
+    def unload(self):
+        [destroy(e) for e in self.entities]
+        # if not self.scene_parent:
+        #     # print('cant unload scene, its already empty')
+        #     return
+
+        self.selection = []
+        self.entities = []
+        destroy(self.scene_parent)
+
+
+class LevelEditor(Entity):
+    def __init__(self, **kwargs):
+        super().__init__(eternal=True)
+        self.scene_folder = application.asset_folder / 'scenes'
+        self.scenes = [[Scene(x, y, f'untitled_scene[{x},{y}]') for y in range(8)] for x in range(8)]
+        # self.current_scene = self.scenes[0][0]
+        # self.current_scene.load()
+        # print('scene_folder:', self.scene_folder)
+
+        self.grid = Entity(parent=self, model=Grid(16,16), rotation_x=90, scale=32, collider='box', color=color.white33, collision=False)
+        self.origin_mode = 'center'
+        self.origin_mode_menu = ButtonGroup(['last', 'center', 'individual'], min_selection=1, position=window.top)
+        self.editor_camera = EditorCamera(parent=self, rotation_x=20)
+        self.ui = Entity(parent=camera.ui)
+        self.on_enable = Func(self.ui.enable)
+        self.on_disable = Func(self.ui.disable)
+
+
+    @property
+    def entities(self):
+        return self.current_scene.entities
+
+    @property
+    def selection(self):
+        return self.current_scene.selection
+
+    @selection.setter
+    def selection(self, value):
+        self.current_scene.selection = value
 
 
     def input(self, key):
-        if held_keys['control'] and key == 'l':
-            self.current_scene = self.load_scene('test3')
-
-
-        if held_keys['control'] and key == 's':
+        if held_keys['control'] and not held_keys['shift'] and not held_keys['alt'] and key == 's':
             if not self.current_scene:
                 print('no current_scene, cant save')
                 return
 
-            self.save(self.current_scene.name)
-            # if self.current_scene.has_changed:
-            #     pass
+            self.current_scene.save()
 
-
-
-
-
-level_editor = LevelEditor()
-
-DirectionalLight(parent=level_editor).look_at(Vec3(-1,-1,-1))
 
 class Undo(Entity):
     def __init__(self, **kwargs):
@@ -197,7 +181,6 @@ class Undo(Entity):
             elif key == 'y':
                 self.redo()
 
-level_editor.undo_handlers = [[Undo() for x in range(8)] for y in range(8)]
 
 
 
@@ -214,12 +197,12 @@ if not load_model('arrow'):
     arrow_model = p.combine()
     arrow_model.save('arrow.ursinamesh')
 
-# if not load_model('scale_gizmo'):
-p = Entity(enabled=False)
-Entity(parent=p, model='cube', scale=(.05,.05,1))
-Entity(parent=p, model='cube', z=.5, scale=.2)
-arrow_model = p.combine()
-arrow_model.save('scale_gizmo.ursinamesh')
+if not load_model('scale_gizmo'):
+    p = Entity(enabled=False)
+    Entity(parent=p, model='cube', scale=(.05,.05,1))
+    Entity(parent=p, model='cube', z=.5, scale=.2)
+    arrow_model = p.combine()
+    arrow_model.save('scale_gizmo.ursinamesh')
 
 
 class GizmoArrow(Draggable):
@@ -245,7 +228,7 @@ class GizmoArrow(Draggable):
 
         self.parent = self.gizmo.arrow_parent
         self.position = (0,0,0)
-        level_editor.current_undo_handler.record_undo(changes)
+        level_editor.current_scene.undo.record_undo(changes)
 
 
 class Gizmo(Entity):
@@ -260,9 +243,6 @@ class Gizmo(Entity):
         }
         for e in self.arrow_parent.children:
             e.highlight_color = color.white
-
-
-gizmo = Gizmo()
 
 
 class ScaleGizmo(Draggable):
@@ -293,7 +273,7 @@ class ScaleGizmo(Draggable):
             e.world_parent = level_editor
             changes.append([e, 'world_scale', e._original_world_scale, e.world_scale])
 
-        level_editor.current_undo_handler.record_undo(changes)
+        level_editor.current_scene.undo.record_undo(changes)
         self.dragging = False
         self.scaler.scale = 1
 
@@ -306,12 +286,6 @@ class ScaleGizmo(Draggable):
             else:
                 for e in level_editor.selection:
                     e.scale += Vec3(sum(mouse.velocity), sum(mouse.velocity), sum(mouse.velocity)) * 100 * time.dt * self.axis
-
-scale_gizmo = ScaleGizmo()
-
-
-# class RotationGizmo(Entity):
-
 
 
 class GizmoToggler(Entity):
@@ -326,9 +300,6 @@ class GizmoToggler(Entity):
     def input(self, key):
         if key in self.animator.animations:
             self.animator.state = key
-
-gizmo_toggler = GizmoToggler(parent=level_editor)
-
 
 
 class QuickGrabber(Entity):
@@ -350,6 +321,9 @@ class QuickGrabber(Entity):
             )
 
     def input(self, key):
+        if held_keys['control'] or held_keys['shift'] or held_keys['alt']:
+            return
+
         if held_keys['s'] and not key == 's':
             key = 's' + key
 
@@ -367,7 +341,7 @@ class QuickGrabber(Entity):
         # elif key == 'r':
         #     gizmo_toggler.state = 'r'
 
-        if key in self.gizmos_to_toggle.keys() and not held_keys['control']:
+        if key in self.gizmos_to_toggle.keys():
             gizmo.arrow_parent.visible = False
             scale_gizmo.visible = False
             self.gizmos_to_toggle[key].visible_self = False
@@ -396,12 +370,6 @@ class QuickGrabber(Entity):
             gizmo_toggler.animator.state = self.original_gizmo_state
 
 
-
-QuickGrabber(parent=level_editor)
-
-
-
-
 class Selector(Entity):
     def input(self, key):
         if key == 'left mouse down':
@@ -418,6 +386,10 @@ class Selector(Entity):
         elif key == 'left mouse up':
             for e in level_editor.entities:
                 e.collision = False
+
+        if held_keys['control'] and key == 'a':
+            level_editor.selection = [e for e in level_editor.entities]
+            self.render_selection()
 
 
     def select_hovered_entity(self, enable_gizmo=True):
@@ -453,18 +425,6 @@ class Selector(Entity):
                 gizmo.position = level_editor.selection[-1].position
             else: # center
                 gizmo.position = sum([e.position for e in level_editor.selection]) / len(level_editor.selection)
-        # level_editor.selection = []
-        # gizmo.enabled = False
-
-
-t = Text(position=window.top_left + Vec2(.01,-.06))
-def update():
-    t.text = 'selection:\n' + '\n'.join([str(e) for e in level_editor.selection])
-
-    # t.text += '\n\ngizmo arrow parent:' + str(gizmo.arrows[0].parent)
-
-
-selector = Selector(parent=level_editor)
 
 
 class SelectionBox(Entity):
@@ -518,8 +478,6 @@ class SelectionBox(Entity):
             self.scale_x = mouse.x - self.x
             self.scale_y = mouse.y - self.y
 
-SelectionBox(parent=level_editor.ui, model=Quad(0, mode='line'), origin=(-.5,-.5,0), scale=(0,0,1), color=color.white33, mode='new')
-
 
 class Spawner(Entity):
     def input(self, key):
@@ -536,7 +494,7 @@ class Spawner(Entity):
                 position=mouse.world_point,
                 collision=False,
                 )
-            level_editor.entities.append(self.target)
+            level_editor.current_scene.entities.append(self.target)
 
         elif key == 'n up':
             # self.target.collision = True
@@ -546,7 +504,6 @@ class Spawner(Entity):
     def update(self):
         if held_keys['n'] and mouse.world_point and self.target:
             self.target.position = mouse.world_point
-Spawner(parent=level_editor)
 
 
 class PointOfViewSelector(Entity):
@@ -577,11 +534,6 @@ class PointOfViewSelector(Entity):
         elif key == '5': camera.orthographic = not camera.orthographic
 
 
-# camera.clip_plane_near = 2
-# camera.clip_plane_far = 200
-# from ursina.shaders import ssao_shader
-# camera.shader = ssao_shader
-
 # class PaintBucket(Entity):
 #     def input(self, key):
 #         if held_keys['alt'] and key == 'c' and mouse.hovered_entity:
@@ -590,17 +542,32 @@ class PointOfViewSelector(Entity):
 
 
 
-# PointOfViewSelector()
+
 
 class LevelMenu(Entity):
     def __init__(self, **kwargs):
         super().__init__(parent=level_editor)
         self.menu = Entity(parent=level_editor.ui, model=Quad(radius=.05), color=color.black, scale=.2, origin=(.5,0), x=camera.aspect_ratio*.495, collider='box')
         self.menu.grid = Entity(parent=self.menu, model=Grid(8,8), z=-1, origin=self.menu.origin, color=color.dark_gray)
-        self.content_parent = Entity(parent=self.menu, scale=1/8, position=(-1,-.5,-1)) # scales the content so I can set the position as (x,y) instead of (-1+(x/8),-.5+(y/8))
-        self.cursor = Entity(parent=self.menu, scale=1/8, model='quad', color=color.lime, origin=(-.5,-.5), z=-2, alpha=.2)
-        self.tabs = [Button(parent=self.menu, scale=(1/4,1/8), position=(-1+(i/4),.5), origin=(-.5,-.5), color=color.hsv(90*i,.5,.3)) for i in range(4)]
+        self.content_renderer = Entity(parent=self.menu, scale=1/8, position=(-1,-.5,-1), model=Mesh(), color='#333333') # scales the content so I can set the position as (x,y) instead of (-1+(x/8),-.5+(y/8))
+        self.cursor = Entity(parent=self.content_renderer, model='quad', color=color.lime, origin=(-.5,-.5), z=-2, alpha=.5)
+        self.current_scene_idicator = Entity(parent=self.content_renderer, model='circle', color=color.azure, origin=(-.5,-.5), z=-1)
+        # self.tabs = [Button(parent=self.menu, scale=(1/4,1/8), position=(-1+(i/4),.5), origin=(-.5,-.5), color=color.hsv(90*i,.5,.3)) for i in range(4)]
 
+
+        self.current_scene_label = Text(parent=self.menu, x=-1, y=-.5, text='current scene:', z=-10, scale=4)
+        self.right_click_menu = ButtonList({
+            'goto scene': Func(print, 'goto scene:'),
+
+
+            })
+        self.load_scenes()
+        level_editor.current_scene = level_editor.scenes[0][0]
+        self.goto_scene(0, 0)
+        self.draw()
+
+
+    def load_scenes(self):
         for scene_file in level_editor.scene_folder.glob('*.py'):
             if '__' in scene_file.name:
                 continue
@@ -610,13 +577,24 @@ class LevelMenu(Entity):
             if '[' in name and ']' in name:
                 x, y = [int(e) for e in name.split('[')[1].split(']')[0].split(',')]
                 print('scene is at coordinate:', x, y)
-                e = Entity(parent=self.content_parent, model='quad', color='#222222', origin=(-.5,-.5), position=(x,y))
-                level_editor.scenes[x][y] = name
+                level_editor.scenes[x][y].path = scene_file
+
+
+
+    def draw(self):
+        self.content_renderer.model.clear()
+        for x in range(8):
+            for y in range(8):
+                if level_editor.scenes[x][y].path:
+                    self.content_renderer.model.vertices += [Vec3(*v)+Vec3(x+.5,y+.5,0) for v in load_model('quad').vertices]
+
+        self.content_renderer.model.generate()
+
 
     def update(self):
         self.cursor.enabled = self.menu.hovered
         if self.menu.hovered:
-            grid_pos = [floor(mouse.point.x * 8) / 8, floor(mouse.point.y * 8) / 8]
+            grid_pos = [floor((mouse.point.x+1) * 8), floor((mouse.point.y+.5) * 8)]
             self.cursor.position = grid_pos
 
 
@@ -624,51 +602,72 @@ class LevelMenu(Entity):
         if held_keys['shift'] and key == 'm':
             self.menu.enabled = not self.menu.enabled
 
-        if key == 'left mouse down' and self.menu.hovered:
+        # if key == 'left mouse down' and self.menu.hovered:
+        #     self.click_start_pos = [int((mouse.point.x+1) * 8), int((mouse.point.y+.5) * 8)]
+
+        if key == 'left mouse up' and self.menu.hovered:
             x, y = [int((mouse.point.x+1) * 8), int((mouse.point.y+.5) * 8)]
+            # start_x, start_y = self.click_start_pos
+            #
+            # if x != start_x or y != start_y: # move scene
+            #     print(f'move scene at {start_x},{start_y} to {x},{y}')
+            #     scene_a = level_editor.scenes[start_x][start_y]
+            #     scene_a.coordinates = (x,y)
+            #     scene_a.name = scene_a.name.split('[')[0] + f'[{x},{y}]'
+            #     if scene_a.path:
+            #         scene_a.path = scene_a.path.parent / (scene_a.name + '.py')
+            #
+            #     scene_b = level_editor.scenes[x][y]
+            #     scene_b.coordinates = (start_x, start_y)
+            #     scene_b.name = scene_a.name.split('[')[0] + f'[{start_x},{start_y}]'
+            #     if scene_b.path:
+            #         scene_b.path = scene_b.path.parent / (scene_b.name + '.py')
+            #
+            #     # swap scenes
+            #     level_editor.scenes[self.click_start_pos[0]][self.click_start_pos[1]], level_editor.scenes[x][y] = level_editor.scenes[x][y], level_editor.scenes[self.click_start_pos[0]][self.click_start_pos[1]]
+            #
+            #     self.draw()
+            #     return
             # print(x, y)
-
             if not held_keys['shift'] and not held_keys['alt']:
-                print(level_editor.scenes[x][y])
-                level_editor.selection = []
-                [destroy(e) for e in level_editor.entities]
-                level_editor.current_scene_coordinate = [x, y]
+                self.goto_scene(x, y)
 
-                if level_editor.scenes[x][y]:
-                    level_editor.current_scene = level_editor.load_scene(level_editor.scenes[x][y])
-                    # print('go to level')
+            elif held_keys['shift'] and not held_keys['alt']: # append
+                level_editor.scenes[x][y].load()
 
-            if held_keys['shift'] and not held_keys['alt']:
-                print('add level')
+            elif held_keys['alt'] and not held_keys['shift']: # remove
+                level_editor.scenes[x][y].unload()
 
-            if held_keys['alt'] and not held_keys['shift']:
-                print('unload level')
 
         # hotkeys for loading neightbour levels
         if held_keys['shift'] and held_keys['alt'] and key in 'wasd':
-            if key == 'd': level_editor.current_scene_coordinate[0] += 1
-            if key == 'a': level_editor.current_scene_coordinate[0] -= 1
-            if key == 'w': level_editor.current_scene_coordinate[1] += 1
-            if key == 's': level_editor.current_scene_coordinate[1] -= 1
+            coords = copy(level_editor.current_scene.coordinates)
 
-            level_editor.selection = []
-            [destroy(e) for e in level_editor.entities]
-            if level_editor.scenes[level_editor.current_scene_coordinate[0]][level_editor.current_scene_coordinate[1]]:
-                level_editor.current_scene = level_editor.load_scene(level_editor.scenes[level_editor.current_scene_coordinate[0]][level_editor.current_scene_coordinate[1]])
+            if key == 'd': coords[0] += 1
+            if key == 'a': coords[0] -= 1
+            if key == 'w': coords[1] += 1
+            if key == 's': coords[1] -= 1
 
-    def load_scene(self, name):
-        pass
-
+            # print(level_editor.current_scene.coordinates, '-->', coords)
+            coords[0] = clamp(coords[0], 0, 8)
+            coords[1] = clamp(coords[1], 0, 8)
+            self.goto_scene(coords[0], coords[1])
 
 
-level_menu = LevelMenu()
-
-# class Saver(Entity):
-#     def input(self, key):
-#         if held_keys['control'] and key == 's':
-#             self.save()
+        elif key == 'right mouse down' and self.hovered:
+            x, y = [int((mouse.point.x+1) * 8), int((mouse.point.y+.5) * 8)]
+            self.right_click_menu.enabled = True
+            self.right_click_menu.position = (x,y)
 
 
+
+    def goto_scene(self, x, y):
+        self.current_scene_idicator.position = (x,y)
+        [[level_editor.scenes[_x][_y].unload() for _x in range(8)] for _y in range(8)]
+        level_editor.current_scene = level_editor.scenes[x][y]
+        level_editor.current_scene.load()
+        self.current_scene_label.text = level_editor.current_scene.name
+        self.draw()
 
 
 # class AssetBrowser(Entity()):
@@ -704,9 +703,6 @@ class ModelChanger(Entity):
             for e in level_editor.selection:
                 e.model = self.model_names[current_model_index+1]
 
-ModelChanger()
-
-
 class Help(Button):
     def __init__(self, **kwargs):
         super().__init__(parent=level_editor.ui, text='?', scale=.025, model='circle', origin=(-.5,.5), position=window.top_left)
@@ -731,10 +727,6 @@ class Help(Button):
             background=True
         )
 
-Help()
-
-
-
 class Duplicator(Entity):
     def __init__(self, **kwargs):
         super().__init__()
@@ -753,7 +745,7 @@ class Duplicator(Entity):
             self.dragger.position = level_editor.selection[-1].world_position
 
             for e in level_editor.selection:
-                clone = duplicate(e, original_parent=e.parent, color=e.color, shader=e.shader, world_parent=self.dragger)
+                clone = duplicate(e, original_parent=e.parent, color=e.color, shader=e.shader, origin=e.origin, world_parent=self.dragger)
                 level_editor.entities.append(clone)
 
             level_editor.selection.clear()
@@ -764,5 +756,39 @@ class Duplicator(Entity):
             gizmo.enabled = False
 
 
+
+if __name__ == '__main__':
+    app = Ursina(vsync=False)
+
+level_editor = LevelEditor()
+
+DirectionalLight(parent=level_editor).look_at(Vec3(-1,-1,-1))
+
+for x in range(8):
+    for y in range(8):
+        level_editor.scenes[x][y].undo = Undo()
+
+gizmo = Gizmo()
+scale_gizmo = ScaleGizmo()
+gizmo_toggler = GizmoToggler(parent=level_editor)
+
+QuickGrabber(parent=level_editor)
+selector = Selector(parent=level_editor)
+SelectionBox(parent=level_editor.ui, model=Quad(0, mode='line'), origin=(-.5,-.5,0), scale=(0,0,1), color=color.white33, mode='new')
+Spawner(parent=level_editor)
+PointOfViewSelector()
+LevelMenu()
+ModelChanger()
+Help()
 Duplicator()
-app.run()
+
+def input(key):
+    if key == 'q':
+        print(level_editor.entities)
+
+t = Text(position=window.top_left + Vec2(.01,-.06))
+def update():
+    t.text = 'selection:\n' + '\n'.join([str(e) for e in level_editor.selection])
+
+if __name__ == '__main__':
+    app.run()
