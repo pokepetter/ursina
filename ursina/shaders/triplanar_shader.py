@@ -10,7 +10,7 @@ in vec2 p3d_MultiTexCoord0;
 in vec4 p3d_Vertex;
 in vec3 p3d_Normal;
 out vec3 world_normal;
-out vec3 vertex_position;
+out vec3 vertex_world_position;
 out vec2 texcoord;
 
 
@@ -19,7 +19,7 @@ void main() {
   texcoord = p3d_MultiTexCoord0;
 
   world_normal = normalize(mat3(p3d_ModelMatrix) * p3d_Normal);
-  vertex_position = p3d_Vertex.xyz;
+  vertex_world_position = (p3d_ModelMatrix * p3d_Vertex).xyz;
 }
 ''',
 
@@ -33,7 +33,7 @@ out vec4 fragColor;
 uniform sampler2D p3d_Texture0;
 uniform sampler2D top_texture;
 in vec3 world_normal;
-in vec3 vertex_position;
+in vec3 vertex_world_position;
 
 in vec2 normalRepeat;
 in vec2 normalScale;
@@ -69,12 +69,12 @@ void main(){
     vec3 blendFast = TriPlanarBlendWeightsConstantOverlap(world_normal);
     vec3 blend = blendFast;
 
-    vec3 albedoX = texture(p3d_Texture0, vertex_position.zy).rgb*blend.x;
-	vec3 albedoY = texture(p3d_Texture0, vertex_position.xz).rgb*blend.y;
-	vec3 albedoZ = texture(p3d_Texture0, vertex_position.xy).rgb*blend.z;
+    vec3 albedoX = texture(p3d_Texture0, vertex_world_position.zy).rgb*blend.x;
+	vec3 albedoY = texture(p3d_Texture0, vertex_world_position.xz).rgb*blend.y;
+	vec3 albedoZ = texture(p3d_Texture0, vertex_world_position.xy).rgb*blend.z;
 
     if (world_normal.y > .0) {
-		albedoY = texture(top_texture, vertex_position.xz).rgb*blend.y;
+		albedoY = texture(top_texture, vertex_world_position.xz).rgb*blend.y;
     }
 
 	vec3 triPlanar = (albedoX + albedoY + albedoZ);
@@ -102,7 +102,7 @@ if __name__ == '__main__':
     # e.setShaderInput('transform_matrix', e.getNetTransform().getMat())
     shader = triplanar_shader
 
-    a = WhiteCube(shader=shader, texture=load_texture('brick'))
+    a = Draggable(parent=scene, model='cube', shader=shader, texture=load_texture('brick'), plane_direction=Vec3(0,1,0))
     a.model.uvs= []
     a.model.generate()
     # a.model.setTexture(a.texture._texture, 1)
