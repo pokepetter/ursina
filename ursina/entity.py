@@ -803,6 +803,15 @@ class Entity(NodePath):
         self.set_depth_test(not value)
 
     @property
+    def unlit(self):
+        return self._unlit
+
+    @unlit.setter
+    def unlit(self, value):
+        self._unlit = value
+        self.setLightOff(value)
+
+    @property
     def billboard(self): # set to True to make this Entity always face the camera.
         return self._billboard
 
