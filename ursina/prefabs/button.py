@@ -111,13 +111,6 @@ class Button(Entity):
 
 
     def __setattr__(self, name, value):
-        if name == 'color':
-            try:
-                self.highlight_color = value.tint(.2)
-                self.pressed_color = value.tint(-.2)
-            except:
-                pass
-
         if name == 'origin':
             if hasattr(self, 'text_entity') and self.text_entity:
                 self.text_entity.world_parent = self.model
