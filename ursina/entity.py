@@ -336,6 +336,8 @@ class Entity(NodePath):
 
         if value == 'box':
             if self.model:
+                # start, end = self.model.getTightBounds()
+                # model_center = (start + end) / 2
                 self._collider = BoxCollider(entity=self, center=-self.origin, size=self.model_bounds)
             else:
                 self._collider = BoxCollider(entity=self)
@@ -549,6 +551,13 @@ class Entity(NodePath):
         self.rotation = Vec3(self.rotation[0], self.rotation[1], value)
 
     @property
+    def quat(self):
+        return self.get_quat()
+    @quat.setter
+    def quat(self, value):
+        self.set_quat(value)
+
+    @property
     def world_scale(self):
         return Vec3(*self.getScale(base.render))
     @world_scale.setter
@@ -747,6 +756,7 @@ class Entity(NodePath):
         self._texture_scale = value
         if self.model and self.texture:
             self.model.setTexScale(TextureStage.getDefault(), value[0], value[1])
+            self.set_shader_input('texture_scale', value)
 
     @property
     def texture_offset(self):
@@ -757,7 +767,18 @@ class Entity(NodePath):
         if self.model and self.texture:
             self.model.setTexOffset(TextureStage.getDefault(), value[0], value[1])
             self.texture = self.texture
+            self.set_shader_input('texture_offset', value)
         self._texture_offset = value
+
+    @property
+    def tileset_size(self):
+        return self._tileset_size
+    @tileset_size.setter
+    def tilemap_size(self, value):
+        self._tileset_size = value
+        if self.model and self.texture:
+            self.model.setTexScale(TextureStage.getDefault(), 1/value[0], 1/value[1])
+
 
 
     @property
@@ -835,7 +856,7 @@ class Entity(NodePath):
     def model_center(self):
         if not self.model:
             return Vec3(0,0,0)
-        return self.model.getTightBounds.getCenter()
+        return self.model.getTightBounds().getCenter()
 
     @property
     def bounds(self):
@@ -978,6 +999,10 @@ class Entity(NodePath):
 # ANIMATIONS
 #------------
     def animate(self, name, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt='kill', time_step=None, auto_destroy=True):
+        if delay:
+            from ursina.ursinastuff import invoke
+            return invoke(self.animate, name, value, duration=duration, curve=curve, loop=loop, resolution=resolution, time_step=time_step, auto_destroy=auto_destroy, delay=delay)
+
         animator_name = name + '_animator'
         # print('start animating value:', name, animator_name )
         if interrupt and hasattr(self, animator_name):
@@ -988,7 +1013,6 @@ class Entity(NodePath):
         setattr(self, animator_name, sequence)
         self.animations.append(sequence)
 
-        sequence.append(Wait(delay))
         if not resolution:
             resolution = max(int(duration * 60), 1)
 

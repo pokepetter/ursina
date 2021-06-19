@@ -269,6 +269,7 @@ world_rotation_z
 rotation_x
 rotation_y
 rotation_z
+quat
 world_scale
 world_scale_x
 world_scale_y
@@ -445,7 +446,7 @@ right<gray> = False</gray>
 middle<gray> = False</gray> 
 delta_drag<gray> = Vec3(0,0,0)</gray> 
 update_step<gray> = 1</gray> 
-traverse_target<gray> = scene</gray> 
+traverse_target<gray> = scene  # set this to None to disable collision with scene, which might be a good idea if you have lots of colliders.</gray> 
 raycast<gray> = True</gray> 
 collision<gray> = None</gray> 
 collisions<gray> = list()</gray> 
@@ -758,7 +759,7 @@ app.run()
 </div></div>
 <div id="mesh_importer"><div id="mesh_importer" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">mesh_importer</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/mesh_importer.py"><gray>ursina.mesh_importer</gray></a><br><br>blender_scenes<gray> = dict()</gray> 
 
-load_model(<gray>name, path=application.asset_folder, file_types=('.bam', '.ursinamesh', '.glb', '.obj', '.blend')</gray>)   
+load_model(<gray>name, path=application.asset_folder, file_types=('.bam', '.ursinamesh', '.obj', '.glb', '.gltf', '.blend')</gray>)   
 load_blender_scene(<gray>name, path=application.asset_folder, load=True, reload=False, skip_hidden=True, models_only=False</gray>)   
 get_blender(<gray>blend_file</gray>)   <gray># try to get a matching blender version in case we have multiple blender version installed</gray>
 compress_models(<gray>path=None, outpath=application.compressed_models_folder, name='*'</gray>)   
@@ -788,7 +789,7 @@ camera<gray> = None</gray>
 ui_camera<gray> = None</gray> 
 entities<gray> = []</gray> 
 hidden<gray> = NodePath('hidden')</gray> 
-reflection_map<gray> = 'reflection_map_3'</gray> 
+reflection_map_name<gray> = 'reflection_map_3'</gray> 
 fog_color
 fog_density
 
@@ -883,6 +884,7 @@ distance2d(<gray>a, b</gray>)
 distance_xz(<gray>a, b</gray>)   
 lerp(<gray>a, b, t</gray>)   
 inverselerp(<gray>a, b, t</gray>)   
+slerp(<gray>q1, q2, t</gray>)   
 clamp(<gray>value, floor, ceiling</gray>)   
 round_to_closest(<gray>value, step=0</gray>)   
 chunk_list(<gray>l, chunk_size</gray>)   
@@ -1901,7 +1903,7 @@ start_pos<gray> = self.world_position</gray>
 start_offset<gray> = (0,0,0)</gray> 
 step<gray> = (0,0,0)</gray> 
 plane_direction<gray> = (0,0,1)</gray> 
-lock<gray> = Vec3(0,0,0)     # set to 1 to lock movement to any of x, y and z axes</gray> 
+lock<gray> = Vec3(0,0,0)     # set to 1 to lock movement on any of x, y and z axes</gray> 
 min_x, self.min_y, self.min_z<gray> = -inf, -inf, -inf</gray> 
 max_x, self.max_y, self.max_z<gray> = inf, inf, inf</gray> 
 

@@ -1,11 +1,14 @@
 import operator
 from math import sqrt
+from math import sqrt, sin, acos
+from panda3d.core import Vec4, LVector3f, Mat3, Mat4
 from ursina.vec2 import Vec2
 from ursina.vec3 import Vec3
 from ursina.color import Color
 internal_sum = sum
 
-
+def is_sqrt(a):
+  return a * -0.5
 
 def distance(a, b):
     try:
@@ -23,6 +26,7 @@ def distance(a, b):
     if hasattr(a, 'position'): a = a.position
     if hasattr(b, 'position'): b = b.position
 
+    dist = ((b[0] - a[0])**2 + (b[1] - a[1])**2 + (b[2] - a[2])**2)
     dist = ((b[0] - a[0])**2 + (b[1] - a[1])**2 + (b[2] - a[2])**2)
     # print('------------DIST:', dist)
     return dist
@@ -65,6 +69,27 @@ def lerp(a, b, t):
 
 def inverselerp(a, b, t) :
     return (a - b) / (t - b)
+
+
+def slerp(q1, q2, t):
+    costheta = q1.dot(q2)
+    if costheta < 0.0:
+        costheta = -costheta
+        q1 = q1.conjugate()
+    elif costheta > 1.0:
+        costheta = 1.0
+
+    theta = acos(costheta)
+    if abs(theta) < 0.01:
+        return q2
+
+    sintheta = sqrt(1.0 - costheta * costheta)
+    if abs(sintheta) < 0.01:
+        return (q1+q2)*0.5
+
+    r1 = sin((1.0 - t) * theta) / sintheta
+    r2 = sin(t * theta) / sintheta
+    return (q1*r1) + (q2*r2)
 
 
 def clamp(value, floor, ceiling):

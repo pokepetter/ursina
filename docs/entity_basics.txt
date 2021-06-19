@@ -213,7 +213,7 @@ Entity Basics
 
 ## Other Magic Functions
 
-    Sometimes you want side effects when you enable/diable and entity, like play an animation or something.
+    Sometimes you want side effects when you enable/disable and entity, like play an animation or something.
 
     # code
     on_enable()

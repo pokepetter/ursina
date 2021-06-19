@@ -6,8 +6,8 @@ class FirstPersonController(Entity):
         self.cursor = Entity(parent=camera.ui, model='quad', color=color.pink, scale=.008, rotation_z=45)
         super().__init__()
         self.speed = 5
-        self.origin_y = -.5
-        self.camera_pivot = Entity(parent=self, y=2)
+        self.height = 2
+        self.camera_pivot = Entity(parent=self, y=self.height)
 
         camera.parent = self.camera_pivot
         camera.position = (0,0,0)
@@ -38,18 +38,18 @@ class FirstPersonController(Entity):
             + self.right * (held_keys['d'] - held_keys['a'])
             ).normalized()
 
-        origin = self.world_position + (self.up*.5)
-        hit_info = raycast(origin , self.direction, ignore=(self,), distance=.5, debug=False)
-        if not hit_info.hit:
+        feet_ray = raycast(self.position+Vec3(0,0.5,0), self.direction, ignore=(self,), distance=.5, debug=False)
+        head_ray = raycast(self.position+Vec3(0,self.height-.1,0), self.direction, ignore=(self,), distance=.5, debug=False)
+        if not feet_ray.hit and not head_ray.hit:
             self.position += self.direction * self.speed * time.dt
 
 
         if self.gravity:
-            # # gravity
-            ray = raycast(self.world_position+(0,2,0), self.down, ignore=(self,))
+            # gravity
+            ray = raycast(self.world_position+(0,self.height,0), self.down, ignore=(self,))
             # ray = boxcast(self.world_position+(0,2,0), self.down, ignore=(self,))
 
-            if ray.distance <= 2.1:
+            if ray.distance <= self.height+.1:
                 if not self.grounded:
                     self.land()
                 self.grounded = True
@@ -112,8 +112,9 @@ if __name__ == '__main__':
     e = Entity(model='cube', scale=(1,5,10), x=-2, y=.01, collider='box', texture='white_cube')
     e.texture_scale = (e.scale_z, e.scale_y)
 
-    player = FirstPersonController(model='cube', y=2, origin_y=-.5)
+    player = FirstPersonController(y=2, origin_y=-.5)
     player.gun = None
+
 
     gun = Button(parent=scene, model='cube', color=color.blue, origin_y=-.5, position=(3,0,3), collider='box')
     gun.on_click = Sequence(Func(setattr, gun, 'parent', camera), Func(setattr, player, 'gun', gun))
