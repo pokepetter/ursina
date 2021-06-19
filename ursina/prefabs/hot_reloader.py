@@ -22,7 +22,7 @@ def make_code_reload_safe(code):
     dedent_next = False
 
     for line in code.split('\n'):
-        if line.strip().endswith('Ursina()') or line.strip().endswith('app.run()') or line.strip().endswith('HotReloader()'):
+        if 'Ursina(' in line or line.strip().endswith('app.run()') or line.strip().endswith('HotReloader()'):
             continue
         if 'eternal=True' in line:
             continue
@@ -221,9 +221,16 @@ class HotReloader(Entity):
 
                     frag = text.split(r"fragment='''", 1)[1].split("'''", 1)[0]
 
+                    geom = ''
+                    if r"geometry = '''" in text:
+                        geom = text.split(r"geometry='''", 1)[1].split("'''", 1)[0]
+
                     if vert:
                         shader.vertex = vert
+                    # if geom:
+                    #     shader.geometry = geom
                     shader.fragment = frag
+
                     shader.compile()
 
                     for e in scene.entities:
