@@ -55,7 +55,7 @@ class Mesh(NodePath):
         'point' : GeomPoints,
         }
 
-    def __init__(self, vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1):
+    def __init__(self, vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1, render_points_in_3d=True):
         super().__init__('mesh')
 
         self.vertices = vertices
@@ -66,13 +66,14 @@ class Mesh(NodePath):
         self.static = static
         self.mode = mode
         self.thickness = thickness
+        self.render_points_in_3d = render_points_in_3d
 
         for var in (('vertices', vertices), ('triangles', triangles), ('colors', colors), ('uvs', uvs), ('normals', normals)):
             name, value = var
             if value is None:
                 setattr(self, name, list())
 
-        if self.vertices:
+        if self.vertices is not None:
             self.generate()
 
 
@@ -175,6 +176,16 @@ class Mesh(NodePath):
     @recipe.setter
     def recipe(self, value):
         self._recipe = value
+
+    @property
+    def render_points_in_3d(self):
+        return self._render_points_in_3d
+
+    @render_points_in_3d.setter
+    def render_points_in_3d(self, value):
+        self._render_points_in_3d = value
+        self.set_render_mode_perspective(value)
+
 
 
     def __add__(self, other):
