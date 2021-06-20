@@ -8,9 +8,9 @@ class ContentTypes:
 
 
 class InputField(Button):
-    def __init__(self, default_value='', label='', max_lines=1, **kwargs):
+    def __init__(self, default_value='', label='', max_lines=1, max_width=24, **kwargs):
         super().__init__(
-            scale=(.5, Text.size * 2),
+            scale=(.5, Text.size * 2 * max_lines),
             highlight_scale = 1,
             pressed_scale = 1,
             highlight_color = color.black
@@ -81,6 +81,15 @@ class InputField(Button):
         self.text_field.add_text(value, move_cursor=True)
 
     @property
+    def text_color(self):
+        return self.text_field.text_entity.color
+
+    @text_color.setter
+    def text_color(self, value):
+        self.text_field.text_entity.color = value
+
+
+    @property
     def active(self):
         return self._active
 
@@ -101,15 +110,17 @@ class InputField(Button):
 if __name__ == '__main__':
     app = Ursina()
     # window.fullscreen_size = (1366, 768)
-    background = Sprite('shore', color=color.dark_gray)
-    username_field = InputField()
-    password_field = InputField(y=-.06, hide_content=True)
+    background = Entity(model='quad', texture='pixelscape_combo', parent=camera.ui, scale=(camera.aspect_ratio,1), color=color.white)
+    gradient = Entity(model='quad', texture='vertical_gradient', parent=camera.ui, scale=(camera.aspect_ratio,1), color=color.hsv(240,.6,.1,.75))
+
+    username_field = InputField(y=-.12, limit_content_to='0123456789')
+    password_field = InputField(y=-.18, hide_content=True)
     username_field.next_field = password_field
 
     def submit():
         print('ursername:', username_field.text)
         print('password:',  password_field.text)
 
-    Button('Login', scale=.1, color=color.azure, y=-.14, on_click=submit).fit_to_text()
+    Button('Login', scale=.1, color=color.cyan.tint(-.4), y=-.26, on_click=submit).fit_to_text()
 
     app.run()
