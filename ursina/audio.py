@@ -1,4 +1,5 @@
 from ursina import *
+from panda3d.core import Filename
 
 # Set to avoid name-space conflicts in the Audio class.
 _destroy = destroy
@@ -64,24 +65,25 @@ class Audio(Entity):
             if '.' in value:
                 file_types = ('',)
             else:
-                file_types = ('.ogg', '.mp3', '.wav')
+                file_types = ('.ogg', '.wav')
 
-            for suffix in file_types:
-                for f in application.asset_folder.glob(f'**/{value}{suffix}'):
-                    p = str(f.resolve())
-                    p = p[len(str(application.asset_folder.resolve())):]
-                    self._clip = loader.loadSfx(p[1:])
-                    # print('...loaded audio clip:', f, p)
-                    return
+            for folder in (application.asset_folder, application.internal_audio_folder):
+                for suffix in file_types:
+                    for f in folder.glob(f'**/{value}{suffix}'):
+                        p = str(f.resolve())
+                        p = Filename.fromOsSpecific(p)
+                        self._clip = loader.loadSfx(p)
+                        # print('...loaded audio clip:', f, p)
+                        return
 
             self._clip = None
-            print('no audio found with name:', value, 'supported formats: .ogg, .mp3, .wav')
+            print('no audio found with name:', value, 'supported formats: .ogg, .wav')
             return
         else:
             try:
                 self._clip = value
             except Exception as e:
-                print('no audio found with name:', value, 'supported formats: .ogg, .mp3, .wav', e)
+                print('no audio found with name:', value, 'supported formats: .ogg, .wav', e)
 
 
     @property
@@ -159,7 +161,7 @@ class Audio(Entity):
         else:
             self.animate('volume', value, duration=duration, delay=delay, curve=curve, resolution=resolution, interrupt=interrupt)
         if destroy_on_ended:
-            _destroy(self, delay=duration + .01)
+            _destroy(self, delay=duration + .05)
 
 
 if __name__ == '__main__':
