@@ -1,127 +1,92 @@
 from ursina import *
 
-# Main Menu Example, or it can be any kind of menu, like Inventory, Quest journal, etc.
-# Created by Doctor
-# 09 Feb 21
-
-# Class of game menu
-class MenuMenu(Entity):
-    def __init__(self, **kwargs):
-        super().__init__(parent=camera.ui, ignore_paused=True)
-
-        # Create empty entities that will be parents of our menus content
-        self.main_menu = Entity(parent=self, enabled=True)
-        self.options_menu = Entity(parent=self, enabled=False)
-        self.help_menu = Entity(parent=self, enabled=False)
-
-        # Add a background. You can change 'shore' to a different texture of you'd like.
-        self.background = Sprite('shore', color=color.dark_gray, z=1)
-
-        # [MAIN MENU] WINDOW START
-        # Titile of our menu
-        Text("MAIN MENU", parent=self.main_menu, y=0.4, x=0, origin=(0,0))
-
-        # Reference of our action function for quit button
-        def quit_game():
-            application.quit()
-
-        # Reference of our action function for options button
-        def options_menu_btn():
-            self.options_menu.enable()
-            self.main_menu.disable()
-
-        # Reference of our action function for help button
-        def help_menu_btn():
-            self.help_menu.enable()
-            self.main_menu.disable()
-
-        # Button list
-        ButtonList(button_dict={
-            "Start": Func(print_on_screen,"You clicked on Start button!", position=(0,.1), origin=(0,0)),
-            "Options": Func(options_menu_btn),
-            "Help": Func(help_menu_btn),
-            "Exit": Func(quit_game)
-        },y=0,parent=self.main_menu)
-        # [MAIN MENU] WINDOW END
-
-        # [OPTIONS MENU] WINDOW START
-        # Titile of our menu
-        Text ("OPTIONS MENU", parent=self.options_menu, y=0.4, x=0, origin=(0, 0))
-
-        # Reference of our action function for back button
-        def options_back_btn_action():
-            self.main_menu.enable()
-            self.options_menu.disable()
-
-        # Button
-        Button("Back",parent=self.options_menu,y=-0.3,scale=(0.1,0.05),color=rgb(50,50,50),
-               on_click=options_back_btn_action)
-
-        # [OPTIONS MENU] WINDOW END
-
-        # [HELP MENU] WINDOW START
-        # Titile of our menu
-        Text ("HELP MENU", parent=self.help_menu, y=0.4, x=0, origin=(0, 0))
-
-        # Reference of our action function for back button
-        def help_back_btn_action():
-            self.main_menu.enable()
-            self.help_menu.disable()
-
-        # Button list
-        ButtonList (button_dict={
-            "Gameplay": Func(print_on_screen,"You clicked on Gameplay help button!", position=(0,.1), origin=(0,0)),
-            "Battle": Func(print_on_screen,"You clicked on Battle help button!", position=(0,.1), origin=(0,0)),
-            "Control": Func(print_on_screen,"You clicked on Control help button!", position=(0,.1), origin=(0,0)),
-            "Back": Func (help_back_btn_action)
-        }, y=0, parent=self.help_menu)
-        # [HELP MENU] WINDOW END
-
-        # Here we can change attributes of this class when call this class
-        for key, value in kwargs.items ():
-            setattr (self, key, value)
-
-    # Input function that check if key pressed on keyboard
-    def input(self, key):
-        # And if you want use same keys on different windows
-        # Like [Escape] or [Enter] or [Arrows]
-        # Just write like that:
-
-        # If our main menu enabled and we press [Escape]
-        if self.main_menu.enabled:
-            if key == "escape":
-                # Close app
-                application.quit()
-
-        # If our options menu enabled and we press [Escape]
-        if self.options_menu.enabled:
-            if key == "escape":
-                # Close options window and show main menu
-                self.main_menu.enable()
-                self.options_menu.disable()
-
-        # If our help menu enabled and we press [Escape]
-        if self.help_menu.enabled:
-            if key == "escape":
-                # Close help window and show main menu
-                self.main_menu.enable()
-                self.help_menu.disable()
-
-    # Update function that check something every frame
-    # You can use it similar to input with checking
-    # what menu is currently enabled
-    def update(self):
-        pass
-
-
-# Setup window title
-window.title = "Main Menu Tutorial"
-
-# Init application
 app = Ursina()
+class MenuButton(Button):
+    def __init__(self, text='', **kwargs):
+        super().__init__(text, scale=(.25, .075), highlight_color=color.azure, **kwargs)
 
-# Call our menu
-main_menu = MenuMenu()
+        for key, value in kwargs.items():
+            setattr(self, key ,value)
 
-# Run application
+
+# button_size = (.25, .075)
+button_spacing = .075 * 1.25
+menu_parent = Entity(parent=camera.ui, y=.15)
+main_menu = Entity(parent=menu_parent)
+load_menu = Entity(parent=menu_parent)
+options_menu = Entity(parent=menu_parent)
+
+state_handler = Animator({
+    'main_menu' : main_menu,
+    'load_menu' : load_menu,
+    'options_menu' : options_menu,
+    }
+)
+
+
+# main menu content
+main_menu.buttons = [
+    MenuButton('resume'),
+    MenuButton('new game'),
+    MenuButton('load game', on_click=Func(setattr, state_handler, 'state', 'load_menu')),
+    MenuButton('options', on_click=Func(setattr, state_handler, 'state', 'options_menu')),
+    MenuButton('quit', on_click=Sequence(Wait(.01), Func(sys.exit))),
+]
+for i, e in enumerate(main_menu.buttons):
+    e.parent = main_menu
+    e.y = -i * button_spacing
+
+
+
+# load menu content
+for i in range(3):
+    MenuButton(parent=load_menu, text=f'Empty Slot {i}', y=-i * button_spacing)
+load_menu.back_button = MenuButton(parent=load_menu, text='back', y=((-i-2) * button_spacing), on_click=Func(setattr, state_handler, 'state', 'main_menu'))
+
+
+
+# options menu content
+review_text = Text(parent=options_menu, x=.275, y=.25, text='Preview text', origin=(-.5,0))
+for t in [e for e in scene.entities if isinstance(e, Text)]:
+    t.original_scale = t.scale
+
+text_scale_slider = Slider(0, 2, default=1, step=.1, dynamic=True, text='Text Size:', parent=options_menu, x=-.25)
+def set_text_scale():
+    for t in [e for e in scene.entities if isinstance(e, Text) and hasattr(e, 'original_scale')]:
+        t.scale = t.original_scale * text_scale_slider.value
+text_scale_slider.on_value_changed = set_text_scale
+
+
+
+volume_slider = Slider(0, 1, default=Audio.volume_multiplier, step=.1, text='Master Volume:', parent=options_menu, x=-.25)
+def set_volume_multiplier():
+    Audio.volume_multiplier = volume_slider.value
+volume_slider.on_value_changed = set_volume_multiplier
+
+options_back = MenuButton(parent=options_menu, text='Back', x=-.25, origin_x=-.5, on_click=Func(setattr, state_handler, 'state', 'main_menu'))
+
+for i, e in enumerate((text_scale_slider, volume_slider, options_back)):
+    e.y = -i * button_spacing
+
+
+# animate the buttons in nicely when changing menu
+for menu in (main_menu, load_menu, options_menu):
+    def animate_in_menu(menu=menu):
+        for i, e in enumerate(menu.children):
+            e.original_x = e.x
+            e.x += .1
+            e.animate_x(e.original_x, delay=i*.05, duration=.1, curve=curve.out_quad)
+
+            e.alpha = 0
+            e.animate('alpha', .7, delay=i*.05, duration=.1, curve=curve.out_quad)
+
+            if hasattr(e, 'text_entity'):
+                e.text_entity.alpha = 0
+                e.text_entity.animate('alpha', 1, delay=i*.05, duration=.1)
+
+    menu.on_enable = animate_in_menu
+
+
+background = Entity(model='quad', texture='shore', parent=camera.ui, scale=(camera.aspect_ratio,1), color=color.white, z=1)
+
 app.run()
