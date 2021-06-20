@@ -11,7 +11,7 @@ class EditorCamera(Entity):
         self.rotation_speed = 200
         self.pan_speed = Vec2(5, 5)
         self.move_speed = 10
-        self.zoom_speed = .75
+        self.zoom_speed = 1.25
         self.zoom_smoothing = 8
         self.rotate_around_mouse_hit = False
 
@@ -22,7 +22,7 @@ class EditorCamera(Entity):
         self.perspective_fov = camera.fov
         self.orthographic_fov = camera.fov
         self.on_destroy = self.on_disable
-        self.hotkeys = {'toggle_orthographic':'p', 'center':'f'}
+        self.hotkeys = {'toggle_orthographic':'shift+p', 'focus':'f', 'reset_center':'shift+f'}
 
 
     def on_enable(self):
@@ -43,7 +43,9 @@ class EditorCamera(Entity):
 
 
     def input(self, key):
-        if key == self.hotkeys['toggle_orthographic']:
+        combined_key = ''.join((e+'+' for e in ('control', 'shift', 'alt') if held_keys[e] and not e == key)) + key
+
+        if combined_key == self.hotkeys['toggle_orthographic']:
             if not camera.orthographic:
                 self.orthographic_fov = camera.fov
                 camera.fov = self.perspective_fov
@@ -54,33 +56,30 @@ class EditorCamera(Entity):
             camera.orthographic = not camera.orthographic
 
 
-        elif key == self.hotkeys['center']:
-            if held_keys['shift']:
-                # self.position = self.start_position
-                self.animate_position(self.start_position, duration=.1, curve=curve.linear)
+        elif combined_key == self.hotkeys['reset_center']:
+            self.animate_position(self.start_position, duration=.1, curve=curve.linear)
 
-            elif mouse.world_point:
-                self.animate_position(mouse.world_point, duration=.1, curve=curve.linear)
-                # self.position = mouse.world_point
+        elif combined_key == self.hotkeys['focus'] and mouse.world_point:
+            self.animate_position(mouse.world_point, duration=.1, curve=curve.linear)
 
 
-        elif key == 'scroll up' and not held_keys['control']:
+        elif key == 'scroll up':
             if not camera.orthographic:
                 target_position = self.world_position
                 # if mouse.hovered_entity and not mouse.hovered_entity.has_ancestor(camera):
                 #     target_position = mouse.world_point
 
                 self.world_position = lerp(self.world_position, target_position, self.zoom_speed * time.dt * 10)
-                self.target_z += self.zoom_speed * time.dt * (abs(self.target_z)*.1) * 100
+                self.target_z += self.zoom_speed * (abs(self.target_z)*.1)
             else:
-                camera.fov -= self.zoom_speed * 100 * time.dt * (abs(self.target_z)*.1)
+                camera.fov -= self.zoom_speed * (abs(self.target_z)*.1)
 
-        elif key == 'scroll down' and not held_keys['control']:
+        elif key == 'scroll down':
             if not camera.orthographic:
                 # camera.world_position += camera.back * self.zoom_speed * 100 * time.dt * (abs(camera.z)*.1)
-                self.target_z -= self.zoom_speed * 100 * time.dt * (abs(camera.z)*.1)
+                self.target_z -= self.zoom_speed * (abs(camera.z)*.1)
             else:
-                camera.fov += self.zoom_speed * 100 * time.dt * (abs(camera.z)*.1)
+                camera.fov += self.zoom_speed * (abs(camera.z)*.1)
 
         elif key == 'right mouse down' or key == 'middle mouse down':
             if mouse.hovered_entity and self.rotate_around_mouse_hit:
@@ -124,7 +123,7 @@ class EditorCamera(Entity):
 
 if __name__ == '__main__':
     # window.vsync = False
-    app = Ursina()
+    app = Ursina(vsync=False)
     '''
     Simple camera for debugging.
     Hold right click and move the mouse to rotate around point.
@@ -138,8 +137,8 @@ if __name__ == '__main__':
 
     ground = Entity(model='plane', scale=32, texture='white_cube', texture_scale=(32,32), collider='box')
     box = Entity(model='cube', collider='box', texture='white_cube', scale=(10,2,2), position=(2,1,5), color=color.light_gray)
-    ec = EditorCamera(rotation_smoothing=2, enabled=False, rotation=(30,30,0))
-    player = FirstPersonController()
+    ec = EditorCamera(rotation_smoothing=2, enabled=1, rotation=(30,30,0))
+    # player = FirstPersonController()
 
     rotation_info = Text(position=window.top_left)
 
@@ -151,5 +150,6 @@ if __name__ == '__main__':
         if key == 'tab':    # press tab to toggle edit/play mode
             ec.enabled = not ec.enabled
             player.enabled = not player.enabled
+
 
     app.run()
