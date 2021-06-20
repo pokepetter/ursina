@@ -5,12 +5,12 @@ class EditorIcon(Draggable):
     def __init__(self, **kwargs):
         super().__init__(
             parent=scene,
-            world_scale=.125,
+            world_scale=.25,
             always_on_top=True,
             plane_direction=(0,1,0),
             require_key='w',
             add_to_scene_entities=False,
-            model='cube',
+            model='diamond',
             color=color.white,
             )
 
@@ -19,7 +19,6 @@ class EditorIcon(Draggable):
 
         self.text = 'entity'
         self.text_entity.y = 1
-        self.text_entity.ignore = True
         self.text_entity.scale = 2
         self.text_entity.enabled = self.scene_editor.show_names
 
@@ -29,7 +28,7 @@ class EditorIcon(Draggable):
             self.scene_editor.selection.append(self)
 
         for icon in self.scene_editor.selection:
-            # icon.entity.original_parent = icon.entity.parent
+            icon.entity.original_parent = icon.entity.parent
             icon.entity._start_position = icon.entity.position
             icon.entity.world_parent = self
 
@@ -38,10 +37,8 @@ class EditorIcon(Draggable):
     def drop(self):
         self.always_on_top = True
         for icon in self.scene_editor.selection:
-            # icon.entity.world_parent = icon.entity.original_parent
-            icon.entity.world_parent = scene
+            icon.entity.world_parent = icon.entity.original_parent
 
-        # self.scene_editor.record_undo()
         s = Sequence(*[Func(setattr, icon.entity, 'world_position', icon.entity._start_position) for icon in self.scene_editor.selection])
         self.scene_editor.record_undo(s)
 
@@ -121,7 +118,19 @@ class SceneEditor(Entity):
         super().__init__()
         self.world_grid = Entity(parent=self, model=Grid(32,32), scale=32, rotation_x=90, color=color.white33, collider='box', collision=False)
 
-        self.help_text = Text(x=-.5*camera.aspect_ratio, text='[w hold]:move\n[e hold]:scale selected\n[y]move selected up/down\n[F2]:rename selected')
+        self.help_text = Text(x=-.5*camera.aspect_ratio, text=dedent('''
+            w : move
+            e : scale individual
+            s : scale from pivot
+            c : scale from center
+            x/y/z : move on axis
+            ctrl + g : group selection
+            F2 : rename
+            m : select model
+            t : select texture
+            '''),
+            origin=(-.5,0)
+            )
         self.cursor_3d = Entity(parent=self, model=Mesh(vertices=[(0,0,0)], mode='point', thickness=10), color=color.pink, visible=True)
         line_model = Mesh(vertices=((-1,0,0), (1,0,0)), mode='line', thickness=2)
         self.cursor_3d.rulers = (
@@ -141,8 +150,8 @@ class SceneEditor(Entity):
         self.duplicate_dragger = Draggable(parent=scene, model='plane', plane_direction=(0,1,0), enabled=False)
         def drop(self=self):
             for e in self.duplicate_dragger.children:
-                # e.world_parent = e.original_parent
-                e.world_parent = scene
+                e.world_parent = e.original_parent
+                # e.world_parent = scene
             self.duplicate_dragger.enabled = False
         self.duplicate_dragger.drop = drop
 
@@ -158,25 +167,19 @@ class SceneEditor(Entity):
             self.textures += [e for e in ('white_cube', 'brick') if not e in self.textures]
         self.texture_menu = AssetMenu(button_dict={key : Func(self.set_attr_for_selected, 'texture', key) for key in self.textures}, scene_editor=self, enabled=False)
 
-        self.rename_window = WindowPanel(
-            title='Rename',
+        self.rename_window = WindowPanel(title='Rename', enabled=False, popup=True,
             content=(
                 InputField(name='name'),
                 Button(text='Rename', color=color.azure, on_click=self.rename_selected),
             ),
-            enabled=False,
-            popup=True,
         )
         self.scene_name = 'untitled'
         self.scene_folder = application.asset_folder / 'scenes'
-        self.ask_for_scene_name_window = WindowPanel(
-            title='Enter scene name',
+        self.ask_for_scene_name_window = WindowPanel(title='Enter scene name', enabled=False, popup=True,
             content=(
                 InputField(name='scene name'),
                 Button(text='Save', color=color.azure, on_click=self.save),
             ),
-            enabled=False,
-            popup=True,
         )
         self.menus = [self.model_menu, self.texture_menu, self.rename_window, self.ask_for_scene_name_window]
         self.show_names = False
@@ -327,7 +330,6 @@ class SceneEditor(Entity):
 
 
     def input(self, key):
-
         if key == 'escape':
             self.rename_window.enabled = False
 
@@ -355,7 +357,7 @@ class SceneEditor(Entity):
                 self.cursor_3d.position = self.average_position_of_selection()
 
             for icon in self.selection:
-                # icon.entity.original_parent = icon.entity.parent
+                icon.entity.original_parent = icon.entity.parent
                 icon.entity._start_position = icon.entity.position
                 icon.entity._start_scale = icon.entity.scale
 
@@ -414,8 +416,9 @@ class SceneEditor(Entity):
             self.record_undo(Func(self.delete_entity, e))
 
 
-        if held_keys['control'] and key == 'w':
-            group = self.add_entity('group')
+        if held_keys['control'] and key == 'g':
+            group = self.add_entity('group', model=None, position=self.average_position_of_selection())
+            group.editor_icon.text_entity.enabled = True
             for icon in self.selection:
                 icon.entity.world_parent = group
 
@@ -580,7 +583,7 @@ class SceneEditor(Entity):
                 icon.color = color.azure
 
             # self.selection[-1].sprite.color = color.cyan
-            self.selection[-1].color = color.cyan
+            self.selection[-1].color = color.orange
 
         self.selection_text.text = 'Selection:\n' + '\n'.join([icon.entity.name for icon in self.selection])
 

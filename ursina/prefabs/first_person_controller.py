@@ -128,6 +128,9 @@ if __name__ == '__main__':
     # for e in scene.entities:
     #     e.shader = basic_lighting_shader
 
+    hookshot_target = Button(parent=scene, model='cube', color=color.brown, position=(4,5,5))
+    hookshot_target.on_click = Func(player.animate_position, hookshot_target.position, duration=.5, curve=curve.linear)
+
     def input(key):
         if key == 'left mouse down' and player.gun:
             gun.blink(color.orange)

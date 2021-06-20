@@ -128,7 +128,7 @@ void main() {
     vec3 converted_shadow_color = (vec3(1.,1.,1.) - shadow_color.rgb) * shadow_color.a;
 
     p3d_FragColor.rgb += textureProj(p3d_LightSource[i].shadowMap, shadowcoord) * converted_shadow_color;
-    p3d_FragColor.rgb += color - (converted_shadow_color);
+    p3d_FragColor.rgb += color - converted_shadow_color;
   }
 }
 
@@ -149,14 +149,17 @@ if __name__ == '__main__':
     app = Ursina()
     shader = lit_with_shadows_shader
 
-    a = Entity(model='cube', shader=shader, color=color.red)
-    GrayPlane(scale=10, y=-2, texture='shore', shader=shader)
+    a = Entity(model='cube', shader=shader, color=color.light_gray)
+    Entity(model='cube', color=color.white, scale=(10,1,10), y=-2, shader=shader, texture='white_cube')
+    Entity(model='cube', color=color.gray, scale=(5,1,10), x=-3.5, y=-1, shader=shader)
 
 
     # Enable shadows; we need to set a frustum for that.
     from ursina.lights import DirectionalLight
-    sun = DirectionalLight(y=10, rotation=(90+30,90,0))
-    sun._light.show_frustum()
+    # sun = DirectionalLight(y=10, rotation=(90+30,90,0))
+    sun = DirectionalLight()
+    sun.look_at(Vec3(-1,-1,-1))
+    # sun._light.show_frustum()
 
     Sky(color=color.light_gray)
     EditorCamera()
