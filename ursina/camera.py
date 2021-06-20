@@ -156,12 +156,16 @@ class Camera(Entity):
             self.render_texture = PandaTexture()
             self.depth_texture = PandaTexture()
             # self.normals_texture = PandaTexture()
-            self.filter_quad = self.filter_manager.renderSceneInto(colortex=self.render_texture, depthtex=self.depth_texture)
             # from panda3d.core import AuxBitplaneAttrib
-            # self.filter_quad = self.filter_manager.renderSceneInto(colortex=self.render_texture, depthtex=self.depth_texture, auxtex=self.normals_texture, auxbits=AuxBitplaneAttrib.ABOAuxNormal)
-            self.filter_quad.setShaderInput("tex", self.render_texture)
-            self.filter_quad.setShaderInput("dtex", self.depth_texture)
-            # self.filter_quad.setShaderInput("ntex", self.normals_texture)
+            self.filter_quad = self.filter_manager.renderSceneInto(
+                colortex=self.render_texture,
+                depthtex=self.depth_texture,
+                # auxtex=self.normals_texture,
+                # auxbits=AuxBitplaneAttrib.ABOAuxNormal
+                )
+            self.filter_quad.set_shader_input("tex", self.render_texture)
+            self.filter_quad.set_shader_input("dtex", self.depth_texture)
+            # self.filter_quad.set_shader_input("ntex", self.normals_texture)
 
         self.filter_quad.setShader(shader)
 

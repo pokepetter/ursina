@@ -31,6 +31,7 @@ internal_prefabs_folder = package_folder / 'prefabs/'
 internal_scripts_folder = package_folder / 'scripts/'
 internal_textures_folder = package_folder / 'textures/'
 internal_fonts_folder = package_folder / 'fonts/'
+internal_audio_folder = package_folder / 'audio/'
 
 scenes_folder = asset_folder / 'scenes/'
 scripts_folder = asset_folder / 'scripts/'

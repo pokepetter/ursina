@@ -53,8 +53,6 @@ class Slider(Entity):
 
         if self.vertical:
             self.rotation_z = -90
-            self.label.rotation_z = 90
-            self.label.origin = (0,0)
             self.knob.lock = (1,0,0)
             self.knob.text_entity.rotation_z = 90
             self.knob.text_entity.position = (.015,0)
@@ -146,7 +144,7 @@ if __name__ == '__main__':
         box.scale_y = slider.value
         print(thin_slider.value)
 
-    slider = Slider(0, 20, default=10, height=Text.size*3, y=-.4, step=1, on_value_changed=scale_box)
+    slider = Slider(0, 20, default=10, height=Text.size*3, y=-.4, step=1, on_value_changed=scale_box, vertical=True)
 
     thin_slider = ThinSlider(text='height', dynamic=True, on_value_changed=scale_box)
 

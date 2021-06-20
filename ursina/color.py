@@ -142,6 +142,7 @@ black10 =       Color(0,0,0, 0.10)
 black33 =       Color(0,0,0, 0.33)
 black50 =       Color(0,0,0, 0.50)
 black66 =       Color(0,0,0, 0.66)
+black90 =       Color(0,0,0, 0.90)
 
 text = smoke
 light_text = smoke

@@ -13,7 +13,7 @@ class Draggable(Button):
         self.start_offset = (0,0,0)
         self.step = (0,0,0)
         self.plane_direction = (0,0,1)
-        self.lock = Vec3(0,0,0)     # set to 1 to lock movement to any of x, y and z axes
+        self.lock = Vec3(0,0,0)     # set to 1 to lock movement on any of x, y and z axes
         self.min_x, self.min_y, self.min_z = -inf, -inf, -inf
         self.max_x, self.max_y, self.max_z = inf, inf, inf
 
@@ -122,7 +122,7 @@ if __name__ == '__main__':
 
     Entity(model='plane', scale=8, texture='white_cube', texture_scale=(8,8))
     draggable_button = Draggable(scale=.1, text='drag me', position=(-.5, 0))
-    world_space_draggable = Draggable(parent=scene, model='cube', color=color.azure, plane_direction=(0,1,0))
+    world_space_draggable = Draggable(parent=scene, model='cube', color=color.azure, plane_direction=(0,1,0), lock=(1,0,0))
 
     EditorCamera(rotation=(30,10,0))
     world_space_draggable.drop = Func(print, 'dropped cube')

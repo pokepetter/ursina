@@ -36,6 +36,8 @@ class Window(WindowProperties):
         self.show_ursina_splash = False
 
         self.title = application.asset_folder.name
+        # self.icon = 'textures/ursina.ico'
+
         if os.name == 'nt':     # windows
             import ctypes
             user32 = ctypes.windll.user32

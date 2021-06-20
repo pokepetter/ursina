@@ -3,7 +3,7 @@ from ursina import *
 
 class Tooltip(Text):
 
-    def __init__(self, text='', **kwargs):
+    def __init__(self, text='', background_color=color.black66, **kwargs):
         super().__init__(
             text=text,
             ignore=False,
@@ -15,6 +15,7 @@ class Tooltip(Text):
             enabled = False,
             background = True
             )
+        self.background.color = background_color
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -40,7 +41,9 @@ if __name__ == '__main__':
 '''Summon a <blue>rain
 storm <default>to deal 5 <blue>water
 damage <default>to <red>everyone, <default>including <orange>yourself. <default>
-Lasts for 4 rounds.'''.replace('\n', ' '))
+Lasts for 4 rounds.'''.replace('\n', ' '),
+        background_color=color.red
+)
 
     tooltip_test.enabled = True
     app.run()
