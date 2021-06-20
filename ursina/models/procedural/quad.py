@@ -6,7 +6,7 @@ def Quad(radius=.1, segments=8, aspect=1, scale=(1,1), mode='ngon', thickness=1)
     quad_identifier = f'QuadMesh({radius}, {segments}, {aspect}, {scale}, {mode}, {thickness})'
     if quad_identifier in cached_quads and cached_quads[quad_identifier]:
         # print('load cached')
-        return copy(cached_quads[quad_identifier])
+        return deepcopy(cached_quads[quad_identifier])
 
     return QuadMesh(radius, segments, aspect, scale, mode, thickness)
 
