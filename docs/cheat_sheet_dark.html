@@ -129,7 +129,7 @@ z-index: 1;
 <a style="color:hsl(259.0, 89%, 66%);" href="#Grid">Grid</a>
 <a style="color:hsl(259.0, 89%, 66%);" href="#Plane">Plane</a>
 <a style="color:hsl(259.0, 89%, 66%);" href="#Prismatoid">Prismatoid</a>
-<a style="color:hsl(259.0, 89%, 66%);" href="#Quad">Quad</a>
+<a style="color:hsl(259.0, 89%, 66%);" href="#QuadMesh">QuadMesh</a>
 <a style="color:hsl(259.0, 89%, 66%);" href="#Terrain">Terrain</a>
 
 </div>
@@ -289,8 +289,10 @@ screen_position     <gray># get screen position(ui space) from world space.</gra
 shader
 texture_scale
 texture_offset
+tileset_size
 alpha
 always_on_top
+unlit
 billboard           <gray># set to True to make this Entity always face the camera.</gray>
 model_bounds
 model_center
@@ -366,7 +368,7 @@ tag<gray> = Text.start_tag+'default'+Text.end_tag</gray>
 current_color<gray> = self.text_colors['default']</gray> 
 scale_override<gray> = 1</gray> 
 appear_sequence<gray> = None # gets created when calling appear()</gray> 
-text                <gray># set this to update the text.</gray>
+text
 color               <gray># sets the default color.</gray>
 width               <gray># gets the width of the widest line.</gray>
 height              <gray># gets the height of the text</gray>
@@ -390,11 +392,19 @@ get_width(<gray>string, font=None</gray>)
       Lasts for 4 rounds.<green>''</green>'</green>).strip()
 
   Text.default_resolution = <yellow>1</yellow><yellow>0</yellow><yellow>8</yellow><yellow>0</yellow> * Text.size
+  test = <purple><b>Text</b></purple>(<olive>text</olive>=descr, <olive>origin</olive>=(<yellow>0</yellow>,<yellow>0</yellow>), background=True)
 
 
 
-  text = <purple><b>Text</b></purple>(<green>'1234\wefw\nwefwef\n wjfoi'</green>)
-  text.create_background(radius=<yellow>0</yellow>, padding=<yellow>0</yellow>)
+
+  <purple>def</purple> input(key):
+      <purple>if</purple> key == <green>'a'</green>:
+          <blue>print</blue>(<green>'a'</green>)
+          test.text = <green>'&ltdefault&gt&ltimage:file_icon&gt &ltred&gt&ltimage:file_icon&gt test '</green>
+          <blue>print</blue>(<green>'by'</green>, test.text)
+
+  window.fps_counter.enabled = False
+  <blue>print</blue>(<green>'....'</green>, Text.get_width(<green>'yolo'</green>))
   app.run()
 </div>
 </div></div>
@@ -607,6 +617,7 @@ black10<gray> =       Color(0,0,0, 0.10)</gray>
 black33<gray> =       Color(0,0,0, 0.33)</gray> 
 black50<gray> =       Color(0,0,0, 0.50)</gray> 
 black66<gray> =       Color(0,0,0, 0.66)</gray> 
+black90<gray> =       Color(0,0,0, 0.90)</gray> 
 text<gray> = smoke</gray> 
 light_text<gray> = smoke</gray> 
 dark_text<gray> = color(0, 0, .1)</gray> 
@@ -861,11 +872,19 @@ get_width(<gray>string, font=None</gray>)
       Lasts for 4 rounds.<green>''</green>'</green>).strip()
 
   Text.default_resolution = <yellow>1</yellow><yellow>0</yellow><yellow>8</yellow><yellow>0</yellow> * Text.size
+  test = Text(<olive>text</olive>=descr, <olive>origin</olive>=(<yellow>0</yellow>,<yellow>0</yellow>), background=True)
 
 
 
-  text = Text(<green>'1234\wefw\nwefwef\n wjfoi'</green>)
-  text.create_background(radius=<yellow>0</yellow>, padding=<yellow>0</yellow>)
+
+  <purple>def</purple> input(key):
+      <purple>if</purple> key == <green>'a'</green>:
+          <blue>print</blue>(<green>'a'</green>)
+          test.text = <green>'&ltdefault&gt&ltimage:file_icon&gt &ltred&gt&ltimage:file_icon&gt test '</green>
+          <blue>print</blue>(<green>'by'</green>, test.text)
+
+  window.fps_counter.enabled = False
+  <blue>print</blue>(<green>'....'</green>, Text.get_width(<green>'yolo'</green>))
   app.run()
 </div>
 </div></div>
@@ -956,9 +975,12 @@ update_aspect_ratio()
 next_render_mode()   
 
 <div class="example">window.vsync = <yellow>3</yellow><yellow>0</yellow>
+app = Ursina(borderless = False)
 
-window.title = <green>'Title'</green>
-window.borderless = False
+window.title = <green>'ursina'</green>
+window.fps_counter.enabled = False
+window.cog_button.enabled = False
+
 camera.orthographic = True
 camera.fov = <yellow>2</yellow>
 
@@ -1390,7 +1412,7 @@ tristrip<gray> = 'tristrip'</gray>
 
 
 </div></div>
-<div id="Mesh"><div id="Mesh" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Mesh<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/mesh.py"><gray>ursina.mesh</gray></a><br><br><params class="params">Mesh(vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1)</params>
+<div id="Mesh"><div id="Mesh" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Mesh<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/mesh.py"><gray>ursina.mesh</gray></a><br><br><params class="params">Mesh(vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1, render_points_in_3d=True)</params>
 
 vertices<gray> = vertices</gray> 
 triangles<gray> = triangles</gray> 
@@ -1400,6 +1422,7 @@ normals<gray> = normals</gray>
 static<gray> = static</gray> 
 mode<gray> = mode</gray> 
 thickness<gray> = thickness</gray> 
+render_points_in_3d<gray> = render_points_in_3d</gray> 
 recipe
 
 generate()   <gray># call this after setting some of the variables to update it</gray>
@@ -1666,6 +1689,10 @@ you can load it like this: <b>Animation</b>(<green>'image'</green>)
 You can also load a .gif by including the file type: <b>Animation</b>(<green>'image.gif'</green>)
 <green>''</green>'</green>
 
+<purple><b>Animation</b></purple>(<green>'ursina_wink'</green>)
+
+
+
 application.asset_folder = Path(r<green>'C:\sync\gifs'</green>)
 a = <purple><b>Animation</b></purple>(<green>'teslagrad_2_water_test.gif'</green>)
 <purple>from</purple> ursina.prefabs.memory_counter <purple>import</purple> MemoryCounter
@@ -1742,11 +1769,11 @@ on_off_switch.on_value_changed = on_value_changed
 window.color = color._<yellow>3</yellow><yellow>2</yellow>
 </div>
 </div></div>
-<div id="ButtonList"><div id="ButtonList" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">ButtonList<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/button_list.py"><gray>ursina.prefabs.button_list</gray></a><br><br><params class="params">ButtonList(button_dict, button_height=1.365, fit_height=True, width=.5, **kwargs)</params>
+<div id="ButtonList"><div id="ButtonList" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">ButtonList<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/button_list.py"><gray>ursina.prefabs.button_list</gray></a><br><br><params class="params">ButtonList(button_dict, button_height=1.1, fit_height=True, width=.5, **kwargs)</params>
 
 fit_height<gray> = fit_height</gray> 
 button_height<gray> = button_height</gray> 
-text_entity<gray> = Text(parent=self, origin=(-.5,.5), text='empty', world_scale=20, z=-.1, x=.01)</gray> 
+text_entity<gray> = Text(parent=self, origin=(-.5,.5), text='empty', world_scale=20, z=-.1, x=.01, line_height=button_height)</gray> 
 button_height<gray> = self.text_entity.height</gray> 
 button_dict<gray> = button_dict</gray> 
 highlight<gray> = Entity(parent=self, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5), z=-.01, add_to_scene_entities=False)</gray> 
@@ -1767,14 +1794,22 @@ button_dict = {
     <green>'tree'</green> :    Func(test, <yellow>3</yellow>, <yellow>4</yellow>),
     <green>'four'</green> :    Func(test, b=<yellow>3</yellow>, a=<yellow>4</yellow>),
 }
-<purple>for</purple> i in <blue>range</blue>(<yellow>6</yellow>, <yellow>1</yellow><yellow>2</yellow>):
+<purple>for</purple> i in <blue>range</blue>(<yellow>6</yellow>, <yellow>2</yellow><yellow>0</yellow>):
     button_dict[f<green>'button {i}'</green>] = Func(print, i)
 
-bl = <purple><b>ButtonList</b></purple>(button_dict, fit_height=True)
-bl.on_click = Func(setattr, bl, <green>'enabled'</green>, False)
+sound_effects = {}
+current_sound = None
+
+<purple>for</purple> name in (<green>'blip'</green>, <green>'boom'</green>, <green>'coin'</green>, <green>'hurt'</green>, <green>'jump'</green>, <green>'lose'</green>, <green>'powerup'</green>, <green>'teleport'</green>):
+    <purple>for</purple> i in <blue>range</blue>(<yellow>1</yellow>,<yellow>4</yellow>):
+        a = Audio(f<green>'{name}_{i}'</green>, autopla<olive>y</olive>=False)
+        <purple>if</purple> a.clip:
+            sound_effects[f<green>'{name}_{i}'</green>] = Func(print, <green>'a'</green>)
+
+bl = <purple><b>ButtonList</b></purple>(sound_effects)
 </div>
 </div></div>
-<div id="Node"><div id="Node" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Node</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/conversation.py"><gray>ursina.prefabs.conversation</gray></a><br><br><params class="params">Node(button_dict, button_height=1.365, fit_height=True, width=.5, **kwargs)</params>
+<div id="Node"><div id="Node" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Node</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/conversation.py"><gray>ursina.prefabs.conversation</gray></a><br><br><params class="params">Node(button_dict, button_height=1.1, fit_height=True, width=.5, **kwargs)</params>
 
 
 
@@ -1978,21 +2013,22 @@ gizmo<gray> = Entity(parent=self, model='sphere', color=color.orange, scale=.025
 rotation_speed<gray> = 200</gray> 
 pan_speed<gray> = Vec2(5, 5)</gray> 
 move_speed<gray> = 10</gray> 
-zoom_speed<gray> = .75</gray> 
+zoom_speed<gray> = 1.25</gray> 
 zoom_smoothing<gray> = 8</gray> 
 rotate_around_mouse_hit<gray> = False</gray> 
 start_position<gray> = self.position</gray> 
 perspective_fov<gray> = camera.fov</gray> 
 orthographic_fov<gray> = camera.fov</gray> 
 on_destroy<gray> = self.on_disable</gray> 
-hotkeys<gray> = {'toggle_orthographic':'p', 'center':'f'}</gray> 
+hotkeys<gray> = {'toggle_orthographic':'shift+p', 'focus':'f', 'reset_center':'shift+f'}</gray> 
 
 on_enable()   
 on_disable()   
 input(<gray>key</gray>)   
 update()   
 
-<div class="example"><green><green>''</green>'
+<div class="example">app = Ursina(vsync=False)
+<green><green>''</green>'
 Simple camera for debugging.
 Hold right click and move the mouse to rotate around point.
 <green>''</green>'</green>
@@ -2005,8 +2041,7 @@ e.model.colorize()
 
 ground = <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>3</yellow><yellow>2</yellow>, <olive>texture</olive>=<green>'white_cube'</green>, <olive>texture_scale</olive>=(<yellow>3</yellow><yellow>2</yellow>,<yellow>3</yellow><yellow>2</yellow>), <olive>collider</olive>=<green>'box'</green>)
 box = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>, <olive>texture</olive>=<green>'white_cube'</green>, <olive>scale</olive>=(<yellow>1</yellow><yellow>0</yellow>,<yellow>2</yellow>,<yellow>2</yellow>), <olive>position</olive>=(<yellow>2</yellow>,<yellow>1</yellow>,<yellow>5</yellow>), <olive>color</olive>=color.light_gray)
-ec = <purple><b>EditorCamera</b></purple>(rotation_smoothing=<yellow>2</yellow>, <olive>enabled</olive>=False, <olive>rotation</olive>=(<yellow>3</yellow><yellow>0</yellow>,<yellow>3</yellow><yellow>0</yellow>,<yellow>0</yellow>))
-player = FirstPersonController()
+ec = <purple><b>EditorCamera</b></purple>(rotation_smoothing=<yellow>2</yellow>, <olive>enabled</olive>=<yellow>1</yellow>, <olive>rotation</olive>=(<yellow>3</yellow><yellow>0</yellow>,<yellow>3</yellow><yellow>0</yellow>,<yellow>0</yellow>))
 
 rotation_info = Text(<olive>position</olive>=window.top_left)
 
@@ -2124,8 +2159,8 @@ wp.data = json.dumps(save_data)
 
 cursor<gray> = Entity(parent=camera.ui, model='quad', color=color.pink, scale=.008, rotation_z=45)</gray> 
 speed<gray> = 5</gray> 
-origin_y<gray> = -.5</gray> 
-camera_pivot<gray> = Entity(parent=self, y=2)</gray> 
+height<gray> = 2</gray> 
+camera_pivot<gray> = Entity(parent=self, y=self.height)</gray> 
 mouse_sensitivity<gray> = Vec2(40, 40)</gray> 
 gravity<gray> = 1</gray> 
 grounded<gray> = False</gray> 
@@ -2149,8 +2184,9 @@ e.texture_scale = (e.scale_z, e.scale_y)
 e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>scale</olive>=(<yellow>1</yellow>,<yellow>5</yellow>,<yellow>1</yellow><yellow>0</yellow>), x=-<yellow>2</yellow>, <olive>y</olive>=.<yellow>0</yellow><yellow>1</yellow>, <olive>collider</olive>=<green>'box'</green>, <olive>texture</olive>=<green>'white_cube'</green>)
 e.texture_scale = (e.scale_z, e.scale_y)
 
-player = <purple><b>FirstPersonController</b></purple>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=<yellow>2</yellow>, origin_<olive>y</olive>=-.<yellow>5</yellow>)
+player = <purple><b>FirstPersonController</b></purple>(<olive>y</olive>=<yellow>2</yellow>, origin_<olive>y</olive>=-.<yellow>5</yellow>)
 player.gun = None
+
 
 gun = Button(<olive>parent</olive>=scene, <olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.blue, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>position</olive>=(<yellow>3</yellow>,<yellow>0</yellow>,<yellow>3</yellow>), <olive>collider</olive>=<green>'box'</green>)
 gun.on_click = Sequence(Func(setattr, gun, <green>'parent'</green>, camera), Func(setattr, player, <green>'gun'</green>, gun))
@@ -2158,6 +2194,9 @@ gun.on_click = Sequence(Func(setattr, gun, <green>'parent'</green>, camera), Fun
 gun_<yellow>2</yellow> = duplicate(gun, <olive>z</olive>=<yellow>7</yellow>, x=<yellow>8</yellow>)
 slope = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>, <olive>position</olive>=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>8</yellow>), <olive>scale</olive>=<yellow>6</yellow>, <olive>rotation</olive>=(<yellow>4</yellow><yellow>5</yellow>,<yellow>0</yellow>,<yellow>0</yellow>), <olive>texture</olive>=<green>'brick'</green>, <olive>texture_scale</olive>=(<yellow>8</yellow>,<yellow>8</yellow>))
 slope = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>, <olive>position</olive>=(<yellow>5</yellow>,<yellow>0</yellow>,<yellow>1</yellow><yellow>0</yellow>), <olive>scale</olive>=<yellow>6</yellow>, <olive>rotation</olive>=(<yellow>8</yellow><yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>), <olive>texture</olive>=<green>'brick'</green>, <olive>texture_scale</olive>=(<yellow>8</yellow>,<yellow>8</yellow>))
+
+hookshot_target = Button(<olive>parent</olive>=scene, <olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.brown, <olive>position</olive>=(<yellow>4</yellow>,<yellow>5</yellow>,<yellow>5</yellow>))
+hookshot_target.on_click = Func(player.animate_position, hookshot_target.position, duration=.<yellow>5</yellow>, <olive>curve</olive>=curve.linear)
 
 <purple>def</purple> input(key):
     <purple>if</purple> key == <green>'left mouse down'</green> and player.gun:
@@ -2268,7 +2307,7 @@ ASCIIEditor()
 <div id="ASCIIEditor"><div id="ASCIIEditor" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">ASCIIEditor<gray>(GridEditor)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/grid_editor.py"><gray>ursina.prefabs.grid_editor</gray></a><br><br><params class="params">ASCIIEditor(size=(61,28), palette=(' ', '#', '|', 'A', '/', '\\', 'o', '_', '-', 'i', 'M', '.'), font='VeraMono.ttf', color=color.black, line_height=1.1, **kwargs)</params>
 
 text_entity<gray> = Text(parent=self.parent, text=text, x=self.x, line_height=line_height, font=font)</gray> 
-scale<gray> = (self.text_entity.width, self.text_entity.height*1.05)</gray> 
+scale<gray> = (self.text_entity.width, self.text_entity.height)</gray> 
 
 render()   
 input(<gray>key</gray>)   
@@ -2351,7 +2390,7 @@ By default you can press F5 to reload the starting script, F6 to reimport textur
 <div class="example">background = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'pixelscape_combo'</green>, <olive>parent</olive>=camera.ui, <olive>scale</olive>=(camera.aspect_ratio,<yellow>1</yellow>), <olive>color</olive>=color.white)
 gradient = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'vertical_gradient'</green>, <olive>parent</olive>=camera.ui, <olive>scale</olive>=(camera.aspect_ratio,<yellow>1</yellow>), <olive>color</olive>=color.hsv(<yellow>2</yellow><yellow>4</yellow><yellow>0</yellow>,.<yellow>6</yellow>,.<yellow>1</yellow>,.<yellow>7</yellow><yellow>5</yellow>))
 
-username_field = InputField(<olive>y</olive>=-.<yellow>1</yellow><yellow>2</yellow>)
+username_field = InputField(<olive>y</olive>=-.<yellow>1</yellow><yellow>2</yellow>, limit_content_to=<green>'0123456789'</green>)
 password_field = InputField(<olive>y</olive>=-.<yellow>1</yellow><yellow>8</yellow>, hide_content=True)
 username_field.next_field = password_field
 
@@ -2379,7 +2418,7 @@ input(<gray>key</gray>)
 <div class="example">background = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'pixelscape_combo'</green>, <olive>parent</olive>=camera.ui, <olive>scale</olive>=(camera.aspect_ratio,<yellow>1</yellow>), <olive>color</olive>=color.white)
 gradient = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'vertical_gradient'</green>, <olive>parent</olive>=camera.ui, <olive>scale</olive>=(camera.aspect_ratio,<yellow>1</yellow>), <olive>color</olive>=color.hsv(<yellow>2</yellow><yellow>4</yellow><yellow>0</yellow>,.<yellow>6</yellow>,.<yellow>1</yellow>,.<yellow>7</yellow><yellow>5</yellow>))
 
-username_field = <purple><b>InputField</b></purple>(<olive>y</olive>=-.<yellow>1</yellow><yellow>2</yellow>)
+username_field = <purple><b>InputField</b></purple>(<olive>y</olive>=-.<yellow>1</yellow><yellow>2</yellow>, limit_content_to=<green>'0123456789'</green>)
 password_field = <purple><b>InputField</b></purple>(<olive>y</olive>=-.<yellow>1</yellow><yellow>8</yellow>, hide_content=True)
 username_field.next_field = password_field
 
@@ -2562,7 +2601,7 @@ slide()
     box.scale_y = slider.value
     <blue>print</blue>(thin_slider.value)
 
-slider = <purple><b>Slider</b></purple>(<yellow>0</yellow>, <yellow>2</yellow><yellow>0</yellow>, default=<yellow>1</yellow><yellow>0</yellow>, height=Text.size*<yellow>3</yellow>, <olive>y</olive>=-.<yellow>4</yellow>, step=<yellow>1</yellow>, on_value_changed=scale_box)
+slider = <purple><b>Slider</b></purple>(<yellow>0</yellow>, <yellow>2</yellow><yellow>0</yellow>, default=<yellow>1</yellow><yellow>0</yellow>, height=Text.size*<yellow>3</yellow>, <olive>y</olive>=-.<yellow>4</yellow>, step=<yellow>1</yellow>, on_value_changed=scale_box, vertical=True)
 
 thin_slider = Thin<purple><b>Slider</b></purple>(<olive>text</olive>=<green>'height'</green>, dynamic=True, on_value_changed=scale_box)
 
@@ -2580,7 +2619,7 @@ thin_slider.label.position = (.<yellow>2</yellow><yellow>5</yellow>, -.<yellow>1
     box.scale_y = slider.value
     <blue>print</blue>(thin_slider.value)
 
-slider = Slider(<yellow>0</yellow>, <yellow>2</yellow><yellow>0</yellow>, default=<yellow>1</yellow><yellow>0</yellow>, height=Text.size*<yellow>3</yellow>, <olive>y</olive>=-.<yellow>4</yellow>, step=<yellow>1</yellow>, on_value_changed=scale_box)
+slider = Slider(<yellow>0</yellow>, <yellow>2</yellow><yellow>0</yellow>, default=<yellow>1</yellow><yellow>0</yellow>, height=Text.size*<yellow>3</yellow>, <olive>y</olive>=-.<yellow>4</yellow>, step=<yellow>1</yellow>, on_value_changed=scale_box, vertical=True)
 
 thin_slider = <purple><b>ThinSlider</b></purple>(<olive>text</olive>=<green>'height'</green>, dynamic=True, on_value_changed=scale_box)
 
@@ -2701,7 +2740,7 @@ te.text = dedent(<green><green>''</green>'
 te.render()
 </div>
 </div></div>
-<div id="Tooltip"><div id="Tooltip" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Tooltip<gray>(<a style="color: gray;" href="#Text">Text</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/tooltip.py"><gray>ursina.prefabs.tooltip</gray></a><br><br><params class="params">Tooltip(text='', **kwargs)</params>
+<div id="Tooltip"><div id="Tooltip" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Tooltip<gray>(<a style="color: gray;" href="#Text">Text</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/tooltip.py"><gray>ursina.prefabs.tooltip</gray></a><br><br><params class="params">Tooltip(text='', background_color=color.black66, **kwargs)</params>
 
 original_scale<gray> = self.scale</gray> 
 
@@ -2714,7 +2753,9 @@ update()
 <green><green>''</green>'Summon a &ltblue&gtrain
 storm &ltdefault&gtto deal 5 &ltblue&gtwater
 damage &ltdefault&gtto &ltred&gteveryone, &ltdefault&gtincluding &ltorange&gtyourself. &ltdefault&gt
-Lasts for 4 rounds.<green>''</green><green>'</green>.replace('</green>\n<green>', '</green> '))
+Lasts for 4 rounds.<green>''</green><green>'</green>.replace('</green>\n<green>', '</green> '),
+        background_<olive>color</olive>=color.red
+)
 
     tooltip_test.enabled = True
     app.run()
@@ -3038,26 +3079,31 @@ sf = e.add_script(<purple><b>SmoothFollow</b></purple>(target=player, offset=(<y
     global sf
     <purple>if</purple> key == <green>'1'</green> and sf in e.scripts:
         e.scripts.remove(sf)
+
+EditorCamera()
 </div>
 </div></div>
 <div id="terraincast"><div id="terraincast" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">terraincast</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/scripts/terraincast.py"><gray>ursina.scripts.terraincast</gray></a><br><br>
-terraincast(<gray>origin, terrain): # mainly used for getting the y position on a terrain. returns a HitInfo like raycast(</gray>)   <gray># mainly used for getting the y position on a terrain. returns a HitInfo like raycast()</gray>
+prepare_terrain(<gray>terrain, debug=False, calculate_normals=True</gray>)   
+terraincast(<gray>origin,</gray>)   
 
-<div class="example">application.asset_folder = Path(<green>'.'</green>).parent.parent / <green>'samples'</green>
-terrain = <olive>Entity</olive>(model = Terrain(<green>'heightmap_1'</green>, skip=<yellow>1</yellow><yellow>6</yellow>), <olive>scale</olive>=(<yellow>2</yellow><yellow>0</yellow>,<yellow>5</yellow>,<yellow>2</yellow><yellow>0</yellow>), <olive>rotation</olive>=(<yellow>0</yellow>,<yellow>4</yellow><yellow>5</yellow>,<yellow>0</yellow>), <olive>origin</olive>=( - <yellow>0</yellow>.<yellow>1</yellow>, - <yellow>0</yellow>.<yellow>1</yellow>, - <yellow>0</yellow>.<yellow>1</yellow>), <olive>texture</olive>=<green>'heightmap_1'</green>)
-player = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, origin_<olive>y</olive>= - <yellow>0</yellow>.<yellow>5</yellow>, <olive>scale</olive>=<yellow>0</yellow>.<yellow>1</yellow>, <olive>color</olive>=color.orange)
+<div class="example">terrain<olive>Entity</olive> = <olive>Entity</olive>(<olive>model</olive>=Terrain(<green>'heightmap_1'</green>, skip=<yellow>8</yellow>),
+                       <olive>scale</olive>=(<yellow>2</yellow><yellow>0</yellow>, <yellow>5</yellow>, <yellow>2</yellow><yellow>0</yellow>),
+                       <olive>rotation</olive>=(<yellow>3</yellow><yellow>0</yellow>, <yellow>4</yellow><yellow>0</yellow>, <yellow>5</yellow><yellow>0</yellow>),
+                       <olive>origin</olive>=(<yellow>1</yellow>, <yellow>1</yellow>, <yellow>1</yellow>),
+                       <olive>texture</olive>=<green>'heightmap_1'</green>)
+
+hit_entity = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, <olive>scale</olive>=<yellow>0</yellow>.<yellow>1</yellow>)
+EditorCamera()
+
 
 <purple>def</purple> update():
-    player.x += (held_keys[<green>'d'</green>] - held_keys[<green>'a'</green>]) * time.dt * <yellow>5</yellow>
-    player.z += (held_keys[<green>'w'</green>] - held_keys[<green>'s'</green>]) * time.dt * <yellow>5</yellow>
+    hit = terraincast(camera.world_position, terrain<olive>Entity</olive>, direction=camera.forward, debug=True)
+    <purple>if</purple> hit:
+        hit_entity.position = hit.world_point + hit.world_normal
 
-    hit_info = terraincast(player.world_position, terrain)
-    <purple>if</purple> hit_info.hit:
-        player.y = hit_info.world_point.y
+        hit.entity.rotation_y += <yellow>2</yellow>*time.dt
 
-
-
-EditorCamera()
 Sky()
 </div>
 </div></div>
@@ -3080,8 +3126,10 @@ Sky()
 <div id="textures"><div id="textures" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">textures</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;">'acorn_font_tileset'
 'arrow_down'
 'arrow_right'
+'blender_matcap'
 'brick'
 'circle'
+'circle_hollow'
 'circle_outlined'
 'cursor'
 'file_icon'
@@ -3114,14 +3162,38 @@ Sky()
 colored_lights_shader
 fading_shadows_shader
 fresnel_shader
+geom_shader
 lit_with_shadows_shader
 matcap_shader
 normals_shader
+point_shader
 texture_blend_shader
 transition_shader
 triplanar_shader
 unlit_shader
 __init__
+bw_glitch_shader
+camera_contrast
+camera_empty
+camera_grayscale
+camera_outline_shader
+camera_vertical_blur
+curvature_shader
+fxaa
+global_fog_shader
+main
+mix
+normals
+pixelation_shader
+screen_reflection_2d
+screen_space_normals_shader
+ssao
+ssao_2
+ssao_4
+ssao_cg
+ssao_old
+ssr_base
+ssr_zfar
 
 
 <div class="example">from ursina.shaders import normals_shader
@@ -3192,17 +3264,22 @@ origin = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <oliv
 origin.scale *= .<yellow>2</yellow><yellow>5</yellow>
 </div>
 </div></div>
-<div id="Quad"><div id="Quad" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Quad<gray>(<a style="color: gray;" href="#Mesh">Mesh</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/models/procedural/quad.py"><gray>ursina.models.procedural.quad</gray></a><br><br><params class="params">Quad(radius=.1, segments=8, aspect=1, scale=(1,1), mode='ngon', **kwargs)</params>
+<div id="QuadMesh"><div id="QuadMesh" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">QuadMesh<gray>(<a style="color: gray;" href="#Mesh">Mesh</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/models/procedural/quad.py"><gray>ursina.models.procedural.quad</gray></a><br><br><params class="params">QuadMesh(radius=.1, segments=8, aspect=1, scale=(1,1), mode='ngon', thickness=1)</params>
 
 vertices<gray> = [Vec3(0,0,0), Vec3(1,0,0), Vec3(1,1,0), Vec3(0,1,0)]</gray> 
 radius<gray> = radius</gray> 
 mode<gray> = mode</gray> 
+thickness<gray> = thickness</gray> 
 uvs<gray> = list()</gray> 
 vertices<gray> = [(v[0]-offset[0], v[1]-offset[1], v[2]-offset[2]) for v in self.vertices]</gray> 
 
 
-<div class="example"><olive>Entity</olive>(<olive>model</olive>=<purple><b>Quad</b></purple>(<olive>scale</olive>=(<yellow>3</yellow>,<yellow>1</yellow>), <olive>thickness</olive>=<yellow>3</yellow>, segments=<yellow>3</yellow>, <olive>mode</olive>=<green>'line'</green>), color = color.color(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>7</yellow>))
-<olive>Entity</olive>(<olive>scale</olive>=(<yellow>3</yellow>,<yellow>1</yellow>), <olive>model</olive>=<purple><b>Quad</b></purple>(aspect=<yellow>3</yellow>), color = color.color(<yellow>6</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>3</yellow>))
+<div class="example"><purple>from</purple> time <purple>import</purple> perf_counter
+t = perf_counter()
+<purple>for</purple> i in <blue>range</blue>(<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>):
+    <olive>Entity</olive>(<olive>model</olive>=Quad(<olive>scale</olive>=(<yellow>3</yellow>,<yellow>1</yellow>), <olive>thickness</olive>=<yellow>3</yellow>, segments=<yellow>3</yellow>, <olive>mode</olive>=<green>'line'</green>), color = color.color(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>7</yellow>))
+<blue>print</blue>(<green>'-------'</green>, (perf_counter() - t))
+
 origin = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>color</olive>=color.orange, <olive>scale</olive>=(.<yellow>0</yellow><yellow>5</yellow>, .<yellow>0</yellow><yellow>5</yellow>))
 camera.z = -<yellow>5</yellow>
 </div>
