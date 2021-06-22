@@ -357,7 +357,7 @@ class QuickGrabber(Entity):
             elif gizmo_toggler.animator.state == 'w':
                 mouse.position = self.gizmos_to_toggle[key].screen_position
 
-            self.gizmos_to_toggle[key].input('left mouse down')
+            invoke(self.gizmos_to_toggle[key].input, 'left mouse down', delay=1/60)
             invoke(self.gizmos_to_toggle[key].start_dragging, delay=1/60)
 
         if key.endswith(' up') and key[:-3] in self.gizmos_to_toggle.keys():
@@ -388,7 +388,7 @@ class Selector(Entity):
 
     def input(self, key):
         if key == 'left mouse down':
-            if hasattr(mouse.hovered_entity, 'is_gizmo'):
+            if mouse.hovered_entity:    # this means you clicked on ui or a gizmo since entities don't actually have colliders.
                 return
 
             entities_in_range = [(distance(e.screen_position, mouse.position), e) for e in level_editor.entities]
