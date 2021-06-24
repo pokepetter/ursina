@@ -8,8 +8,16 @@ from pathlib import Path
 import time
 from textwrap import dedent
 
+project_folder = Path.cwd()
+project_name = project_folder.stem
+build_folder = Path(project_folder / 'build')
+build_folder.mkdir(exist_ok=True)
 
-def copytree(src, dst, symlinks=False, ignore=None):
+ignore = []
+
+compressed_textures = Path(project_folder/'textures_compressed').iterdir()
+
+def copytree(src, dst, symlinks=False, ignore_filetypes=[]):
     src = str(src)
     dst = str(dst)
 
@@ -18,22 +26,23 @@ def copytree(src, dst, symlinks=False, ignore=None):
         d = os.path.join(dst, item)
         if os.path.isdir(s):
             try:
-                shutil.copytree(s, d, symlinks, ignore)
+                ignore_pattern = shutil.ignore_patterns(*ignore_filetypes)
+                shutil.copytree(s, d, symlinks, ignore_pattern)
             except Exception as e:
                 print(e)
         else:
-            if s.endswith('.psd'):
+            if Path(s).suffix in ignore_filetypes:
+                print('ignore:', Path(s).suffix)
+                continue
+            if Path(s).stem in compressed_textures:
                 continue
             shutil.copy2(s, d)
 
 
 
-project_folder = Path.cwd()
-project_name = project_folder.stem
-build_folder = Path(project_folder / 'build')
-build_folder.mkdir(exist_ok=True)
 
-ignore = []
+
+
 include_modules = []
 
 python_dest = Path(build_folder / 'python')
@@ -56,6 +65,8 @@ for i, arg in enumerate(sys.argv):
             --name              # change project name
             --include_modules   # inlude extra modules
             --overwrite         # don't ask to overwrite existing build, just overwrite
+            --skip_engine
+            --skip_game
             '''
             )
         )
@@ -73,6 +84,11 @@ for i, arg in enumerate(sys.argv):
 
     elif arg == '--include_modules':
         include_modules = sys.argv[i+1].split(',')
+
+    elif arg == '--skip_engine':
+        build_engine = False
+    elif arg == '--skip_game':
+        build_game = False
 
 
 if (build_engine and python_dest.exists() or (build_game and src_dest.exists())):
@@ -123,10 +139,11 @@ if build_engine:
         'Lib/urllib',
         'Lib/logging',
         'Lib/xml',
-        'Lib/site-packages/panda3d/',
+        # 'Lib/site-packages/panda3d/',
         'Lib/site-packages/screeninfo/',
         'Lib/site-packages/direct/',
         'Lib/site-packages/pyperclip/',
+        'Lib/site-packages/PIL/',
         'DLLs/libffi-7.dll',
         'DLLs/_ctypes.pyd',
         ]
@@ -144,6 +161,25 @@ if build_engine:
             copytree(source, dest)
 
 
+    print('copying panda3d')
+    (python_dest / 'Lib/site-packages/panda3d/').mkdir(parents=True, exist_ok=True)
+
+    for f in (python_folder / 'Lib/site-packages/panda3d/').iterdir():
+        if f.name in (
+            'avcodec-55.dll',
+            'fmodex64.dll',
+            'egg.cp39-win_amd64.pyd',
+            'libpandaode.dll',
+            'ode.cp39-win_amd64.pyd',
+            'models'
+            ):
+            continue
+        print('copying:', f, '-->', str((python_dest / 'Lib/site-packages/panda3d/' / f.name)))
+        if f.is_file():
+            copy(str(f), str((python_dest / 'Lib/site-packages/panda3d/' / f.name)))
+        else:
+            (python_dest / 'Lib/site-packages/panda3d/' / f.name).mkdir(parents=True, exist_ok=True)
+            copytree(f, (python_dest / 'Lib/site-packages/panda3d/' / f.name))
 
     # def copy_ursina():
     print('copying ursina')
@@ -152,7 +188,7 @@ if build_engine:
     ursina_path = Path(spec.origin).parent
     dest = build_folder / 'python/Lib/site-packages/ursina'
     dest.mkdir(parents=True, exist_ok=True)
-    copytree(ursina_path, dest, ignore=shutil.ignore_patterns('samples', 'unused'))
+    copytree(ursina_path, dest, ignore_filetypes=('samples', 'unused'))
 
 
     # print('copying found modules')
@@ -180,41 +216,66 @@ if build_engine:
     #         copy(filename, dir)
 
 
+
 if build_game:
     shutil.rmtree(str(src_dest))
     src_dest.mkdir()
 
-    print('copying assets')
+    ignore.extend(['.git', 'build', '.gitignore', 'build.bat'])
+    ignore_patterns = ['.psd', '.zip']
+    compile_to_pyc = True
+    ignore.append('__pycache__')
 
+    if compile_to_pyc:
+        import py_compile
+        for f in project_folder.glob('**/*.py'):
+            if '\\build\\' in str(f):
+                continue
+
+            print('compiling:', f, src_dest / str(f)[len(str(project_folder))+1:])
+            py_compile.compile(f, src_dest / (str(f)[len(str(project_folder))+1:]+'c'))
+
+        ignore_patterns.append('.py')
+
+
+    print('copying assets')
     for f in project_folder.iterdir():
         name = f.name
         dest = Path(src_dest / f.name)
-        if name in ['.git', '__pycache__', 'build', '.gitignore', 'build.bat'] + ignore:
+        if name in ignore:
             print('ignore:', f)
             continue
         elif f.is_dir():
             print('copying assetfolder:', f, 'to', dest)
             dest.mkdir(parents=True, exist_ok=True)
-            copytree(project_folder / f, dest, ignore=shutil.ignore_patterns('*psd'))
+            copytree(project_folder / f, dest, ignore_filetypes=ignore_patterns)
         elif f.is_file():
+            if f.suffix in ignore_patterns:
+                continue
             print('copying asset:', f, 'to', src_dest / f.name)
             copy(str(f), str(dest))
 
 
     print('creating .bat file')
+    c = ''
+    if compile:
+        c = 'c'
     with Path(build_folder / f'{project_name}.bat').open('w') as f:
         f.write(dedent(f'''
             chcp 65001
             set PYTHONIOENCODING=utf-8
 
-            call "%CD%\python\python.exe" "%CD%\src\main.py" > "log.txt" 2>&1'''
+            call "python\python.exe" "src\main.py{c}" > "log.txt" 2>&1'''
         ))
 
 # make exe
 # import subprocess
+# import importlib
+# spec = importlib.util.find_spec('ursina')
+# ursina_path = Path(spec.origin).parent
 # subprocess.call([
 #     f'{ursina_path}\\scripts\\_bat_to_exe.bat',
-#     f'{build_folder}\\f'{project_name}.bat',
+#     f'{build_folder}\\{project_name}.bat',
 #     f'\\build\\{project_folder.stem}.exe'
 #     ])
 
