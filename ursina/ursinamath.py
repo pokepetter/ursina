@@ -28,7 +28,7 @@ def distance(a, b):
     return dist
 
 
-def distance2d(a, b):
+def distance_2d(a, b):
     if hasattr(a, 'position'): a = a.position
     if hasattr(b, 'position'): b = b.position
 

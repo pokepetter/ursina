@@ -103,8 +103,8 @@ class GridEditor(Entity):
                 #     return
 
                 if not held_keys['alt']:
-                    if self.prev_draw is not None and distance2d(self.prev_draw, (x,y)) > 1:
-                        dist = distance2d(self.prev_draw, (x,y))
+                    if self.prev_draw is not None and distance_2d(self.prev_draw, (x,y)) > 1:
+                        dist = distance_2d(self.prev_draw, (x,y))
 
                         if dist > 1: # draw line
                             for i in range(int(dist)+1):
