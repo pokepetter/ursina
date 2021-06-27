@@ -148,12 +148,12 @@ class Button(Entity):
         if key == 'left mouse down':
             if self.hovered:
                 self.model.setColorScale(self.pressed_color)
-                self.model.setScale(Vec3(self.pressed_scale, 1, self.pressed_scale))
+                self.model.setScale(Vec3(self.pressed_scale, self.pressed_scale, 1))
 
         if key == 'left mouse up':
             if self.hovered:
                 self.model.setColorScale(self.highlight_color)
-                self.model.setScale(Vec3(self.highlight_scale, 1, self.highlight_scale))
+                self.model.setScale(Vec3(self.highlight_scale, self.highlight_scale, 1))
             else:
                 self.model.setColorScale(self.color)
                 self.model.setScale(Vec3(1,1,1))
@@ -164,7 +164,7 @@ class Button(Entity):
             self.model.setColorScale(self.highlight_color)
 
             if self.highlight_scale != 1:
-                self.model.setScale(Vec3(self.highlight_scale, 1, self.highlight_scale))
+                self.model.setScale(Vec3(self.highlight_scale, self.highlight_scale, 1))
 
         if hasattr(self, 'tooltip'):
             self.tooltip.scale = (0,0,0)
