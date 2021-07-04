@@ -9,7 +9,7 @@ class Audio(Entity):
 
     volume_multiplier = .5  #
 
-    def __init__(self, sound_file_name='', autoplay=True, **kwargs):
+    def __init__(self, sound_file_name='', autoplay=True, auto_destroy=False, **kwargs):
         super().__init__(**kwargs)
         # printvar(sound_file_name)
         if sound_file_name:
@@ -24,6 +24,7 @@ class Audio(Entity):
         self.loop = False
         self.loops = 1
         self.autoplay = autoplay
+        self.auto_destroy = auto_destroy
 
         # self.volume_variation = 0
         # self.pitch_variation = 0
@@ -33,6 +34,10 @@ class Audio(Entity):
 
         if autoplay:
             self.play()
+
+        if auto_destroy:
+            invoke(self.stop, destroy=True, delay=self.length)
+
 
     def __setattr__(self, name, value):
         if hasattr(self, 'clip') and self._clip:
@@ -185,5 +190,7 @@ if __name__ == '__main__':
         if key == 'f':
             a.fade_out(duration=4, curve=curve.linear)
 
+    def update():
+        print(a.time)
 
     app.run()
