@@ -6,8 +6,8 @@ class LoadingWheel(Entity):
     def __init__(self, **kwargs):
         super().__init__()
         self.parent = camera.ui
-        self.point = Entity(parent=self, model=Circle(24, mode='point', thickness=3), color=color.light_gray, y=.75, scale=2)
-        self.point2 = Entity(parent=self, model=Circle(12, mode='point', thickness=3), color=color.light_gray, y=.75, scale=1)
+        self.point = Entity(parent=self, model=Circle(24, mode='point', thickness=.03), color=color.light_gray, y=.75, scale=2, texture='circle')
+        self.point2 = Entity(parent=self, model=Circle(12, mode='point', thickness=.03), color=color.light_gray, y=.75, scale=1, texture='circle')
 
         self.scale = .025
         self.text_entity = Text(world_parent=self, text='loading...', origin=(0,1.5), color=color.light_gray)
