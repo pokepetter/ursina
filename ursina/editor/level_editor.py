@@ -157,21 +157,39 @@ class Undo(Entity):
     def undo(self):
         if self.undo_index < 0:
             return
-        for data in self.undo_data[self.undo_index]:
-            target, attr, original, new = data
-            setattr(target, attr, original)
 
-        selector.render_selection() # make sure the gizmo position updates
+        current_undo_data = self.undo_data[self.undo_index]
+
+        if len(current_undo_data) == 2:     # destroy/create entity with id
+            id = current_undo_data[0]
+            target_entity = level_editor.current_scene.entities.pop(id)
+            if target_entity in level_editor.selection:
+                level_editor.selection.remove(target_entity)
+            destroy(target_entity)
+
+        else:
+            for data in current_undo_data:
+                target, attr, original, new = data
+                setattr(target, attr, original)
+
+        selector.render_selection()     # make sure the gizmo position updates
         self.undo_index -= 1
 
     def redo(self):
         if self.undo_index+2 > len(self.undo_data):
             return
-        for data in self.undo_data[self.undo_index+1]:
-            target, attr, original, new = data
-            setattr(target, attr, new)
 
-        selector.render_selection() # make sure the gizmo position updates
+        current_undo_data = self.undo_data[self.undo_index+1]
+
+        if len(current_undo_data) == 2:     # destroy/create entity with id
+            level_editor.current_scene.entities.append(current_undo_data[1]())
+
+        else:
+            for data in current_undo_data:
+                target, attr, original, new = data
+                setattr(target, attr, new)
+
+        selector.render_selection()     # make sure the gizmo position updates
         self.undo_index += 1
 
     def input(self, key):
@@ -190,19 +208,19 @@ axis_colors = {
     'z' : color.cyan
 }
 
-if not load_model('arrow'):
-    p = Entity(enabled=False)
-    Entity(parent=p, model='cube', scale=(1,.05,.05))
-    Entity(parent=p, model=Cone(4, direction=(1,0,0)), x=.5, scale=.2)
-    arrow_model = p.combine()
-    arrow_model.save('arrow.ursinamesh')
-
-if not load_model('scale_gizmo'):
-    p = Entity(enabled=False)
-    Entity(parent=p, model='cube', scale=(.05,.05,1))
-    Entity(parent=p, model='cube', z=.5, scale=.2)
-    arrow_model = p.combine()
-    arrow_model.save('scale_gizmo.ursinamesh')
+# if not load_model('arrow'):
+#     p = Entity(enabled=False)
+#     Entity(parent=p, model='cube', scale=(1,.05,.05))
+#     Entity(parent=p, model=Cone(4, direction=(1,0,0)), x=.5, scale=.2)
+#     arrow_model = p.combine()
+#     arrow_model.save('arrow.ursinamesh')
+#
+# if not load_model('scale_gizmo'):
+#     p = Entity(enabled=False)
+#     Entity(parent=p, model='cube', scale=(.05,.05,1))
+#     Entity(parent=p, model='cube', z=.5, scale=.2)
+#     arrow_model = p.combine()
+#     arrow_model.save('scale_gizmo.ursinamesh')
 
 
 class GizmoArrow(Draggable):
@@ -255,6 +273,7 @@ class ScaleGizmo(Draggable):
         self.axis = Vec3(1,1,1)
         self.on_click = Func(setattr, self, 'axis', Vec3(1,1,1))
         self.arrows = {}
+        self.scale_sensitivity = 300
 
         for i, dir in enumerate((Vec3(1,0,0), Vec3(0,1,0), Vec3(0,0,1))):
             b = Button(parent=self, model='scale_gizmo', origin_z=-.5, scale=4, collider='box',
@@ -286,10 +305,10 @@ class ScaleGizmo(Draggable):
     def update(self):
         if self.dragging:
             if not level_editor.origin_mode_menu.value[0] == 'individual':
-                self.scaler.scale += Vec3(sum(mouse.velocity), sum(mouse.velocity), sum(mouse.velocity)) * 100 * time.dt * self.axis
+                self.scaler.scale += Vec3(sum(mouse.velocity), sum(mouse.velocity), sum(mouse.velocity)) * self.scale_sensitivity * time.dt * self.axis
             else:
                 for e in level_editor.selection:
-                    e.scale += Vec3(sum(mouse.velocity), sum(mouse.velocity), sum(mouse.velocity)) * 100 * time.dt * self.axis
+                    e.scale += Vec3(sum(mouse.velocity), sum(mouse.velocity), sum(mouse.velocity)) * self.scale_sensitivity * time.dt * self.axis
 
 
 class GizmoToggler(Entity):
@@ -525,20 +544,13 @@ class Spawner(Entity):
         if key == 'n':
             if not mouse.hovered_entity in level_editor.entities:
                 level_editor.grid.collision = True
-            self.target = Entity(
-                model='cube',
-                origin_y=-.5,
-                collider='box',
-                shader=lit_with_shadows_shader,
-                texture='white_cube',
-                # color=color.white,
-                position=mouse.world_point,
-                collision=False,
-                )
+            self.target = Entity(model='cube', origin_y=-.5, shader=lit_with_shadows_shader, texture='white_cube', position=mouse.world_point)
             level_editor.current_scene.entities.append(self.target)
+
 
         elif key == 'n up':
             # self.target.collision = True
+            level_editor.current_scene.undo.record_undo([level_editor.current_scene.entities.index(self.target), Func(Entity, model='cube', origin_y=-.5, shader=lit_with_shadows_shader, texture='white_cube', position=self.target.position)])
             self.target = None
             level_editor.grid.collision = False
 
@@ -642,7 +654,7 @@ class LevelMenu(Entity):
         # if key == 'left mouse down' and self.menu.hovered:
         #     self.click_start_pos = [int((mouse.point.x+1) * 8), int((mouse.point.y+.5) * 8)]
 
-        if key == 'left mouse up' and self.menu.hovered:
+        if key == 'left mouse down' and self.menu.hovered:
             x, y = [int((mouse.point.x+1) * 8), int((mouse.point.y+.5) * 8)]
             # start_x, start_y = self.click_start_pos
             #
@@ -726,20 +738,41 @@ class LevelMenu(Entity):
 #             level_editor.enabled = not level_editor.enabled
 #             self.asset_scene.enabled = not self.asset_scene.enabled
 
-class ModelChanger(Entity):
+def set_model_for_selection(model):
+    for e in selector.selection:
+        e.model = model
+
+
+
+class ModelMenu(Entity):
     def __init__(self, **kwargs):
         super().__init__(parent=level_editor)
+        self.button_list = None     # gets created on self.open()
+
+
+    def open(self):
         self.model_names = [e.stem for e in application.internal_models_compressed_folder.glob('**/*.ursinamesh')]
         for file_type in ('.bam', '.obj', '.ursinamesh'):
             self.model_names += [e.stem for e in application.asset_folder.glob(f'**/*.{file_type}') if not 'animation' in e]
 
 
+        model_dict = {name : Func(self.set_models_for_selection, name) for name in self.model_names}
+        if not self.button_list:
+            self.button_list = ButtonList(model_dict, font='VeraMono.ttf')
+        else:
+            self.button_list.enabled = True
+
     def input(self, key):
         if key == 'm' and level_editor.selection:
-            current_model_index = self.model_names.index(level_editor.selection[-1].model.name)
-            print('current model:', self.model_names[current_model_index])
-            for e in level_editor.selection:
-                e.model = self.model_names[current_model_index+1]
+            self.open()
+
+    def set_models_for_selection(self, name):
+        for e in level_editor.selection:
+            e.model = name
+
+        self.button_list.enabled = False
+
+
 
 class Help(Button):
     def __init__(self, **kwargs):
@@ -747,7 +780,7 @@ class Help(Button):
         self.tooltip = Text(
             position=self.position + Vec3(.05,-.05,-1),
             # wordwrap=0,
-            font='VeraMono.ttf',
+            # font='VeraMono.ttf',
             enabled=False,
             text=dedent('''
                 Hotkeys:
@@ -809,7 +842,7 @@ class PrimitiveMenu(Entity):
                     selector.render_selection()
             b.on_click = set_model
 
-        grid_layout(self.menu_parent.children, max_x=2)
+        grid_layout(self.menu_parent.children, max_x=2, origin=(0,0))
 
 
     def input(self, key):
@@ -846,16 +879,18 @@ Duplicator()
 LevelMenu()
 # ModelChanger()
 PrimitiveMenu()
+ModelMenu()
+
 # PointOfViewSelector()
 Help()
 
-def input(key):
-    if key == 'q':
-        print(level_editor.entities)
-
-t = Text(position=window.top_left + Vec2(.01,-.06))
-def update():
-    t.text = 'selection:\n' + '\n'.join([str(e) for e in level_editor.selection])
+# def input(key):
+#     if key == 'q':
+#         print(level_editor.entities)
+#
+# t = Text(position=window.top_left + Vec2(.01,-.06))
+# def update():
+#     t.text = 'selection:\n' + '\n'.join([str(e) for e in level_editor.selection])
 
 if __name__ == '__main__':
     app.run()
