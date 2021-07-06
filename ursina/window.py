@@ -54,9 +54,10 @@ class Window(WindowProperties):
                 self.screen_resolution = Vec2(1366, 768)
 
         print('screen resolution:', self.screen_resolution)
-        self.fullscreen_size = Vec2(self.screen_resolution[0]+1, self.screen_resolution[1]+1)
+        self.fullscreen_size = Vec2(*self.screen_resolution)
         self.windowed_size = self.fullscreen_size / 1.25
         self.windowed_position = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode
+        self.forced_aspect_ratio = None # example: window.forced_aspect_ratio = 16/9
         self.size = self.windowed_size
         self.borderless = True
 
@@ -153,7 +154,7 @@ class Window(WindowProperties):
         self.cog_menu.scale *= .75
         self.cog_menu.text_entity.x += .025
         self.cog_menu.highlight.color = color.azure
-        self.cog_button = Button(parent=self.editor_ui, eternal=True, model='circle', scale=.015, origin=(1,-1), position=self.bottom_right)
+        self.cog_button = Button(parent=self.editor_ui, eternal=True, model='quad', texture='cog', scale=.015, origin=(1,-1), position=self.bottom_right)
         info_text ='''This menu is not enabled in builds <gray>(unless you set application.development to be not False).'''
         self.cog_menu.info = Button(parent=self.cog_menu, model='quad', text='<gray>?', scale=.1, x=1, y=.01, origin=(.5,-.5), tooltip=Tooltip(info_text, scale=.75, origin=(-.5,-.5)))
         self.cog_menu.info.text_entity.scale *= .75
@@ -196,11 +197,14 @@ class Window(WindowProperties):
 
     @size.setter
     def size(self, value):
+        if self.forced_aspect_ratio:
+            value = (value[1]*self.forced_aspect_ratio, value[1])
+
         self.set_size(int(value[0]), int(value[1]))
         self.aspect_ratio = value[0] / value[1]
         from ursina import camera
         camera.set_shader_input('window_size', value)
-
+        base.win.request_properties(self)
 
     @property
     def render_mode(self):
@@ -326,16 +330,14 @@ if __name__ == '__main__':
     from ursina import *
     # application.development_mode = False
     window.vsync = 30
-    app = Ursina()
-    # window.vsync = False # doesn't work
-    # window.vsync = True
+    app = Ursina(borderless = False)
 
-    window.title = 'Title'
-    window.borderless = False
+    window.title = 'ursina'
+    # window.borderless = False
     # window.fullscreen = False
-    # window.fps_counter.enabled = False
-    # window.exit_button.visible = False
+    window.fps_counter.enabled = False
     # window.cog_button.enabled = False
+
     camera.orthographic = True
     camera.fov = 2
 

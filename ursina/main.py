@@ -16,7 +16,7 @@ time.dt = 0
 
 class Ursina(ShowBase):
 
-    def __init__(self, **kwargs): # optional arguments: title, fullscreen, size, position, vsync, borderless, show_ursina_splash, render_mode, development_mode, editor_ui_enabled.
+    def __init__(self, **kwargs): # optional arguments: title, fullscreen, size, forced_aspect_ratio, position, vsync, borderless, show_ursina_splash, render_mode, development_mode, editor_ui_enabled.
         for name in ('size', 'vsync'):
             if name in kwargs and hasattr(window, name):
                 setattr(window, name, kwargs[name])
@@ -34,7 +34,7 @@ class Ursina(ShowBase):
             pass
 
         window.late_init()
-        for name in ('title', 'fullscreen', 'position', 'show_ursina_splash', 'borderless', 'render_mode'):
+        for name in ('title', 'fullscreen', 'position', 'show_ursina_splash', 'borderless', 'render_mode', 'forced_aspect_ratio'):
             if name in kwargs and hasattr(window, name):
                 setattr(window, name, kwargs[name])
 
