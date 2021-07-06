@@ -2,13 +2,6 @@ import sys
 from pathlib import Path
 from panda3d.core import getModelPath
 
-try:
-    from importlib.metadata import version
-    print('ursina version:', version('ursina'))
-except:
-    pass #python 3.8 or older
-
-
 paused = False
 time_scale = 1
 sequences = list()
