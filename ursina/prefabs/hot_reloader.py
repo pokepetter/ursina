@@ -31,6 +31,8 @@ def make_code_reload_safe(code):
             continue
         if line.strip().startswith('#'):
             continue
+        if line.strip().startswith('EditorCamera('): # EditorCamera is eternal, so don't create multiple ones
+            continue
 
         if dedent_next:
             newtext += line[4:] + '\n'
