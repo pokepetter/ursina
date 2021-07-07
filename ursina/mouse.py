@@ -227,6 +227,7 @@ class Mouse():
         if self._pq.get_num_entries() > 0:
             self.find_collision()
         else:
+            self.collision = None
             # print('mouse miss', base.render)
             # unhover all if it didn't hit anything
             for entity in scene.entities:
