@@ -39,7 +39,16 @@ class ButtonGroup(Entity):
 
     @property
     def value(self):
+        if self.max_selection == 1:
+            return self.selected[0].value
+
         return [b.value for b in self.selected]
+
+    @value.setter
+    def value(self, value):
+        print('set buttongroup value to:', value)
+        [self.select(b) for b in self.buttons if b.value in value]
+
 
 
     def layout(self):
