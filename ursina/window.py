@@ -113,7 +113,7 @@ class Window(WindowProperties):
 
         self.editor_ui = Entity(parent=camera.ui, eternal=True, enabled=bool(application.development_mode))
         self.exit_button = Button(parent=self.editor_ui, eternal=True, ignore_paused=True, origin=(.5, .5), enabled=self.borderless,
-            position=self.top_right, z=-999, scale=(.05, .025), color=color.red.tint(-.2), text='x', on_click=application.quit)
+            position=self.top_right, z=-999, scale=(.05, .025), color=color.red.tint(-.2), text='x', on_click=application.quit, name='exit_button')
 
         def _exit_button_input(key):
             from ursina import held_keys, mouse
@@ -136,7 +136,8 @@ class Window(WindowProperties):
         self.cog_menu = ButtonList({
             # 'Build' : Func(print, ' '),
             'API Reference' : Func(webbrowser.open, 'https://www.ursinaengine.org/cheat_sheet_dark.html'),
-            'Asset Store' : Func(webbrowser.open, 'https://itch.io/tools/tag-ursina'),
+            # 'Asset Store' : Func(webbrowser.open, 'https://itch.io/tools/tag-ursina'),
+            'ursfx (Sound Effect Maker)' : lambda: exec('from ursina.prefabs.synth import instance'),
             # 'Open Scene Editor' : Func(print, ' '),
             'Change Render Mode <gray>[F10]<default>' : self.next_render_mode,
             'Reset Render Mode <gray>[F9]<default>' : Func(setattr, self, 'render_mode', 'default'),
@@ -147,16 +148,17 @@ class Window(WindowProperties):
             width=.35,
             x=.62,
             enabled=False,
-            eternal=True
+            eternal=True,
+            name='cog_menu',
         )
         self.cog_menu.on_click = Func(setattr, self.cog_menu, 'enabled', False)
         self.cog_menu.y = -.5 + self.cog_menu.scale_y
         self.cog_menu.scale *= .75
         self.cog_menu.text_entity.x += .025
         self.cog_menu.highlight.color = color.azure
-        self.cog_button = Button(parent=self.editor_ui, eternal=True, model='quad', texture='cog', scale=.015, origin=(1,-1), position=self.bottom_right)
+        self.cog_button = Button(parent=self.editor_ui, eternal=True, model='quad', texture='cog', scale=.015, origin=(1,-1), position=self.bottom_right, name='cog_button')
         info_text ='''This menu is not enabled in builds <gray>(unless you set application.development to be not False).'''
-        self.cog_menu.info = Button(parent=self.cog_menu, model='quad', text='<gray>?', scale=.1, x=1, y=.01, origin=(.5,-.5), tooltip=Tooltip(info_text, scale=.75, origin=(-.5,-.5)))
+        self.cog_menu.info = Button(parent=self.cog_menu, model='quad', text='<gray>?', scale=.1, x=1, y=.01, origin=(.5,-.5), tooltip=Tooltip(info_text, scale=.75, origin=(-.5,-.5), eternal=True), eternal=True, name='cog_menu_info')
         self.cog_menu.info.text_entity.scale *= .75
         def _toggle_cog_menu():
             self.cog_menu.enabled = not self.cog_menu.enabled

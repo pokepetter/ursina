@@ -121,8 +121,7 @@ class Ursina(ShowBase):
 
     def _update(self, task):
         # time between frames
-        dt = globalClock.getDt() * application.time_scale
-        time.dt = dt
+        time.dt = globalClock.getDt() * application.time_scale
 
         mouse.update()
 
@@ -150,6 +149,7 @@ class Ursina(ShowBase):
 
 
         return Task.cont
+
 
 
     def input_up(self, key):
