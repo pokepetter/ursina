@@ -320,7 +320,7 @@ class RotationGizmo(Entity):
         changes = []
         for e in level_editor.selection:
             e.world_parent = level_editor
-            changes.append([e, 'world_rotation', e._original_world_rotation, e.world_rotation])
+            changes.append([e, 'world_transform', e._original_world_transform, e.world_transform])
 
         level_editor.current_scene.undo.record_undo(changes)
         self.dragging = False
@@ -371,7 +371,7 @@ class ScaleGizmo(Draggable):
         changes = []
         for e in level_editor.selection:
             e.world_parent = level_editor
-            changes.append([e, 'world_scale', e._original_world_scale, e.world_scale])
+            changes.append([e, 'world_transform', e._original_world_transform, e.world_transform])
 
         level_editor.current_scene.undo.record_undo(changes)
         self.dragging = False
