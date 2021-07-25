@@ -634,7 +634,7 @@ class Entity(NodePath):
     @property
     def world_transform(self): # get/set world_position, world_rotation and world_scale
         return (self.world_position, self.world_rotation, self.world_scale)
-    @transform.setter
+    @world_transform.setter
     def world_transform(self, value):
         self.world_position, self.world_rotation, self.world_scale = value
 
