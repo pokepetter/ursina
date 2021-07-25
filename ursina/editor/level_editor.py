@@ -109,18 +109,16 @@ class LevelEditor(Entity):
         super().__init__(eternal=True)
         self.scene_folder = application.asset_folder / 'scenes'
         self.scenes = [[Scene(x, y, f'untitled_scene[{x},{y}]') for y in range(8)] for x in range(8)]
-        # self.current_scene = self.scenes[0][0]
-        # self.current_scene.load()
-        # print('scene_folder:', self.scene_folder)
 
         self.grid = Entity(parent=self, model=Grid(16,16), rotation_x=90, scale=32, collider='box', color=color.white33, collision=False)
         self.origin_mode = 'center'
-        self.origin_mode_menu = ButtonGroup(['last', 'center', 'individual'], min_selection=1, position=window.top)
         self.editor_camera = EditorCamera(parent=self, rotation_x=20)
         self.ui = Entity(parent=camera.ui)
+        self.point_renderer = Entity(parent=self, model=Mesh([], mode='point', thickness=20, render_points_in_3d=False), texture='circle', always_on_top=True, unlit=True, render_queue=1)
         self.on_enable = Func(self.ui.enable)
         self.on_disable = Func(self.ui.disable)
-
+        self.origin_mode_menu = ButtonGroup(['last', 'center', 'individual'], min_selection=1, position=window.top)
+        self.origin_mode_menu.on_value_changed = self.render_selection
 
     @property
     def entities(self):
@@ -143,6 +141,20 @@ class LevelEditor(Entity):
 
             self.current_scene.save()
 
+    def render_selection(self, update_gizmo_position=True):
+        self.point_renderer.model.vertices = [e.world_position for e in self.entities]
+        self.point_renderer.model.colors = [color.azure if e in self.selection else color.white66 for e in self.entities]
+        self.point_renderer.model.generate()
+
+        gizmo.enabled = bool(self.selection)
+
+        if update_gizmo_position and self.selection:
+            if self.origin_mode_menu.value in ('last', 'individual'):
+                gizmo.position = self.selection[-1].position
+            else: # center
+                gizmo.position = sum([e.position for e in self.selection]) / len(self.selection)
+
+        print('---------- rendered selection')
 
 class Undo(Entity):
     def __init__(self, **kwargs):
@@ -172,7 +184,7 @@ class Undo(Entity):
                 target, attr, original, new = data
                 setattr(target, attr, original)
 
-        selector.render_selection()     # make sure the gizmo position updates
+        level_editor.render_selection()     # make sure the gizmo position updates
         self.undo_index -= 1
 
     def redo(self):
@@ -189,7 +201,7 @@ class Undo(Entity):
                 target, attr, original, new = data
                 setattr(target, attr, new)
 
-        selector.render_selection()     # make sure the gizmo position updates
+        level_editor.render_selection()     # make sure the gizmo position updates
         self.undo_index += 1
 
     def input(self, key):
@@ -213,14 +225,14 @@ axis_colors = {
 #     Entity(parent=p, model='cube', scale=(1,.05,.05))
 #     Entity(parent=p, model=Cone(4, direction=(1,0,0)), x=.5, scale=.2)
 #     arrow_model = p.combine()
-#     arrow_model.save('arrow.ursinamesh')
+#     arrow_model.save('arrow.ursinamesh', path=internal_models_compressed_folder)
 #
 # if not load_model('scale_gizmo'):
 #     p = Entity(enabled=False)
 #     Entity(parent=p, model='cube', scale=(.05,.05,1))
 #     Entity(parent=p, model='cube', z=.5, scale=.2)
 #     arrow_model = p.combine()
-#     arrow_model.save('scale_gizmo.ursinamesh')
+#     arrow_model.save('scale_gizmo.ursinamesh', path=internal_models_compressed_folder)
 
 
 class GizmoArrow(Draggable):
@@ -235,19 +247,19 @@ class GizmoArrow(Draggable):
         for e in level_editor.selection:
             e.world_parent = self
             e.always_on_top = False
-            e._original_world_position = e.world_position
+            e._original_world_transform = e.world_transform
 
     def drop(self):
         self.gizmo.world_parent = level_editor
         changes = []
         for e in level_editor.selection:
             e.world_parent = level_editor
-            changes.append([e, 'world_position', e._original_world_position, e.position])
+            changes.append([e, 'world_transform', e._original_world_transform, e.world_transform])
 
         self.parent = self.gizmo.arrow_parent
         self.position = (0,0,0)
         level_editor.current_scene.undo.record_undo(changes)
-        selector.render_selection()
+        level_editor.render_selection()
 
 
 
@@ -255,7 +267,7 @@ class Gizmo(Entity):
     def __init__(self, **kwargs):
         super().__init__(parent=level_editor, enabled=False)
         self.arrow_parent = Entity(parent=self)
-        self.arrows = {
+        self.subgizmos = {
             'xz' : GizmoArrow(parent=self.arrow_parent, gizmo=self, model='cube', scale=.6, scale_y=.05, origin=(-.75,0,-.75), color=lerp(color.magenta, color.cyan, .5), plane_direction=(0,1,0)),
             'x'  : GizmoArrow(parent=self.arrow_parent, gizmo=self, color=axis_colors['x'], lock=(0,1,1)),
             'y'  : GizmoArrow(parent=self.arrow_parent, gizmo=self, rotation=(0,0,-90), color=axis_colors['y'], lock=(1,0,1)),
@@ -265,6 +277,72 @@ class Gizmo(Entity):
             e.highlight_color = color.white
 
 
+class RotationGizmo(Entity):
+    def __init__(self, **kwargs):
+        super().__init__(parent=gizmo)
+
+        self.rotator = Entity(parent=gizmo)
+        self.axis = Vec3(0,1,0)
+        self.subgizmos = {}
+        self.sensitivity = 36000
+        self.dragging = False
+
+        path = Circle(24).vertices
+        path.append(path[0])
+        rotation_gizmo_model = Prismatoid(base_shape=Quad(radius=0), path=[Vec3(e)*32 for e in path])
+
+        for i, dir in enumerate((Vec3(-1,0,0), Vec3(0,1,0), Vec3(0,0,-1))):
+            b = Button(parent=self, model=copy(rotation_gizmo_model), collider='mesh',
+                color=axis_colors[('x','y','z')[i]], is_gizmo=True, always_on_top=True, render_queue=1, unlit=True, double_sided=True,
+                on_click=Sequence(Func(setattr, self, 'axis', dir), Func(self.drag)),
+                drop=self.drop,
+                name=f'rotation_gizmo_{"xyz"[i]}',
+                scale=1/32
+                )
+            b.look_at(dir)
+            b.original_color = b.color
+            b.start_dragging = b.on_click   # for the quick rotate
+            b.on_mouse_enter = Func(setattr, b, 'color', color.white)
+            b.on_mouse_exit = Func(setattr, b, 'color', b.original_color)
+
+            self.subgizmos['xyz'[i]] = b
+
+
+    def drag(self):
+        print('drag')
+        for e in level_editor.selection:
+            e.world_parent = self.rotator
+            e._original_world_rotation = e.world_rotation
+        self.dragging = True
+
+    def drop(self):
+        print('drop')
+        changes = []
+        for e in level_editor.selection:
+            e.world_parent = level_editor
+            changes.append([e, 'world_rotation', e._original_world_rotation, e.world_rotation])
+
+        level_editor.current_scene.undo.record_undo(changes)
+        self.dragging = False
+        self.rotator.rotation = (0,0,0)
+        level_editor.render_selection()
+
+    def input(self, key):
+        if key == 'left mouse up' and self.dragging:
+            self.dragging = False
+            self.drop()
+
+
+    def update(self):
+        if self.dragging:
+            if not level_editor.origin_mode_menu.value == 'individual':
+                self.rotator.rotation -= Vec3(sum(mouse.velocity), sum(mouse.velocity), sum(mouse.velocity)) * self.sensitivity * time.dt * self.axis
+            else:
+                for e in level_editor.selection:
+                    e.rotation += Vec3(sum(mouse.velocity), sum(mouse.velocity), sum(mouse.velocity)) * self.sensitivity * time.dt * self.axis
+
+
+
 
 class ScaleGizmo(Draggable):
     def __init__(self, **kwargs):
@@ -272,22 +350,22 @@ class ScaleGizmo(Draggable):
         self.scaler = Entity(parent=gizmo)
         self.axis = Vec3(1,1,1)
         self.on_click = Func(setattr, self, 'axis', Vec3(1,1,1))
-        self.arrows = {}
-        self.scale_sensitivity = 300
+        self.subgizmos = {}
+        self.sensitivity = 300
 
         for i, dir in enumerate((Vec3(1,0,0), Vec3(0,1,0), Vec3(0,0,1))):
             b = Button(parent=self, model='scale_gizmo', origin_z=-.5, scale=4, collider='box',
                 color=axis_colors[('x','y','z')[i]], is_gizmo=True, always_on_top=True, render_queue=1, shader=unlit_shader,
-                on_click=Sequence(Func(setattr, self, 'axis', dir), Func(self.drag)))
+                on_click=Sequence(Func(setattr, self, 'axis', dir), Func(self.drag)), name=f'scale_gizmo_{"xyz"[i]}')
             b.look_at(dir)
-            self.arrows['xyz'[i]] = b
+            self.subgizmos['xyz'[i]] = b
 
 
     def drag(self):
-            for e in level_editor.selection:
-                e.world_parent = self.scaler
-                e._original_world_scale = e.world_scale
-            self.dragging = True
+        for e in level_editor.selection:
+            e.world_parent = self.scaler
+            e._original_world_scale = e.world_scale
+        self.dragging = True
 
     def drop(self):
         changes = []
@@ -298,17 +376,17 @@ class ScaleGizmo(Draggable):
         level_editor.current_scene.undo.record_undo(changes)
         self.dragging = False
         self.scaler.scale = 1
-        selector.render_selection()
+        level_editor.render_selection()
 
 
 
     def update(self):
         if self.dragging:
-            if not level_editor.origin_mode_menu.value[0] == 'individual':
-                self.scaler.scale += Vec3(sum(mouse.velocity), sum(mouse.velocity), sum(mouse.velocity)) * self.scale_sensitivity * time.dt * self.axis
+            if not level_editor.origin_mode_menu.value == 'individual':
+                self.scaler.scale += Vec3(sum(mouse.velocity), sum(mouse.velocity), sum(mouse.velocity)) * self.sensitivity * time.dt * self.axis
             else:
                 for e in level_editor.selection:
-                    e.scale += Vec3(sum(mouse.velocity), sum(mouse.velocity), sum(mouse.velocity)) * self.scale_sensitivity * time.dt * self.axis
+                    e.scale += Vec3(sum(mouse.velocity), sum(mouse.velocity), sum(mouse.velocity)) * self.sensitivity * time.dt * self.axis
 
 
 class GizmoToggler(Entity):
@@ -317,7 +395,7 @@ class GizmoToggler(Entity):
         self.animator = Animator({
             'w' : gizmo.arrow_parent,
             'e' : scale_gizmo,
-            # 'r' :
+            'r' : rotation_gizmo,
         })
 
     def input(self, key):
@@ -330,15 +408,15 @@ class QuickGrabber(Entity):
         super().__init__(
             parent=level_editor,
             gizmos_to_toggle={
-                'g' : gizmo.arrows['xz'],
-                'x' : gizmo.arrows['x'],
-                'y' : gizmo.arrows['y'],
-                'z' : gizmo.arrows['z'],
+                'g' : gizmo.subgizmos['xz'],
+                'x' : gizmo.subgizmos['x'],
+                'y' : gizmo.subgizmos['y'],
+                'z' : gizmo.subgizmos['z'],
                 's' : scale_gizmo,
                 'sx' : scale_gizmo,
                 'sy' : scale_gizmo,
                 'sz' : scale_gizmo,
-
+                'c' : rotation_gizmo.subgizmos['y'],
             },
             clear_selection = False
             )
@@ -354,6 +432,10 @@ class QuickGrabber(Entity):
             self.original_gizmo_state = gizmo_toggler.animator.state
             gizmo_toggler.animator.state = 'w'
 
+        if key in ('c',):
+            self.original_gizmo_state = gizmo_toggler.animator.state
+            gizmo_toggler.animator.state = 'r'
+
         elif key in ('s', 'sx', 'sy', 'sz'):
             self.original_gizmo_state = gizmo_toggler.animator.state
             gizmo_toggler.animator.state = 'e'
@@ -361,8 +443,6 @@ class QuickGrabber(Entity):
             if not key == 's':
                 scale_gizmo.axis = (Vec3(1,0,0), Vec3(0,1,0), Vec3(0,0,1))[('sx', 'sy', 'sz').index(key)]
 
-        # elif key == 'r':
-        #     gizmo_toggler.state = 'r'
 
         if key in self.gizmos_to_toggle.keys():
             gizmo.arrow_parent.visible = False
@@ -382,9 +462,10 @@ class QuickGrabber(Entity):
         if key.endswith(' up') and key[:-3] in self.gizmos_to_toggle.keys():
             key = key[:-3]
             self.gizmos_to_toggle[key].input('left mouse up')
+            self.gizmos_to_toggle[key].drop()
             if self.clear_selection:
                 level_editor.selection.clear()
-                selector.render_selection()
+                level_editor.render_selection()
 
             gizmo.arrow_parent.visible = True
             scale_gizmo.visible = True
@@ -392,19 +473,16 @@ class QuickGrabber(Entity):
             self.gizmos_to_toggle[key].visible_self = True
             gizmo_toggler.animator.state = self.original_gizmo_state
 
+
+    def update(self):
+        for key in self.gizmos_to_toggle.keys():
+            if held_keys[key] and not held_keys['control'] and not held_keys['shift'] and mouse.velocity != Vec3(0,0,0):
+                level_editor.render_selection(update_gizmo_position=False)
+                return
+
+
+
 class Selector(Entity):
-    def __init__(self, **kwargs):
-        super().__init__()
-        self.point_renderer = Entity(parent=self, model=Mesh([], mode='point', thickness=20, render_points_in_3d=0),
-            texture='circle', always_on_top=True, unlit=True, render_queue=1,
-            # states=LoopingList(['2d','3d',None])
-            )
-
-
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-
-
     def input(self, key):
         if key == 'left mouse down':
             if mouse.hovered_entity:    # this means you clicked on ui or a gizmo since entities don't actually have colliders.
@@ -430,7 +508,7 @@ class Selector(Entity):
             if not clicked_entity and not held_keys['shift'] and not held_keys['alt']: # clear
                 level_editor.selection.clear()
 
-            self.render_selection()
+            level_editor.render_selection()
 
             # clicked_entity = mouse.hovered_entity
         #     for e in level_editor.entities:
@@ -449,10 +527,10 @@ class Selector(Entity):
 
         if held_keys['control'] and key == 'a':
             level_editor.selection = [e for e in level_editor.entities]
-            self.render_selection()
+            level_editor.render_selection()
 
         elif key == 'h':
-            self.point_renderer.enabled = not self.point_renderer.enabled
+            level_editor.point_renderer.enabled = not level_editor.point_renderer.enabled
 
 
     def select_hovered_entity(self):
@@ -469,21 +547,10 @@ class Selector(Entity):
         if not clicked_entity and not held_keys['shift'] and not held_keys['alt']: # clear
             level_editor.selection.clear()
 
-        self.render_selection()
+        level_editor.render_selection()
 
 
-    def render_selection(self):
-        self.point_renderer.model.vertices = [e.world_position for e in level_editor.entities]
-        self.point_renderer.model.colors = [color.azure if e in level_editor.selection else color.white66 for e in level_editor.entities]
-        self.point_renderer.model.generate()
 
-        gizmo.enabled = bool(level_editor.selection)
-
-        if level_editor.selection:
-            if level_editor.origin_mode_menu.value[0] in ('last', 'individual'):
-                gizmo.position = level_editor.selection[-1].position
-            else: # center
-                gizmo.position = sum([e.position for e in level_editor.selection]) / len(level_editor.selection)
 
 
 
@@ -527,7 +594,7 @@ class SelectionBox(Entity):
                     elif self.mode == 'subtract' and e in level_editor.selection:
                         level_editor.selection.remove(e)
 
-            selector.render_selection()
+            level_editor.render_selection()
             self.mode = 'new'
 
     def update(self):
@@ -717,7 +784,7 @@ class LevelMenu(Entity):
         level_editor.current_scene.load()
         self.current_scene_label.text = level_editor.current_scene.name
         self.draw()
-        selector.render_selection()
+        level_editor.render_selection()
 
 
 # class AssetBrowser(Entity()):
@@ -780,7 +847,7 @@ class Help(Button):
         self.tooltip = Text(
             position=self.position + Vec3(.05,-.05,-1),
             # wordwrap=0,
-            # font='VeraMono.ttf',
+            font='VeraMono.ttf',
             enabled=False,
             text=dedent('''
                 Hotkeys:
@@ -788,6 +855,7 @@ class Help(Button):
                 w:          move tool
                 g:          quick move
                 x/y/z:      hold to quick move on axis
+                c:          quick rotaste
                 e:          scale tool
                 s:          quick scale
                 s + x/y/z:  quick scale on axis
@@ -808,7 +876,7 @@ class Duplicator(Entity):
                 e.world_parent = e.original_parent
 
             self.dragger.enabled = False
-            selector.render_selection()
+            level_editor.render_selection()
 
         self.dragger.drop = drop
 
@@ -822,7 +890,7 @@ class Duplicator(Entity):
 
             level_editor.selection.clear()
             level_editor.selection = self.dragger.children
-            selector.render_selection()
+            level_editor.render_selection()
             self.dragger.enabled = True
             self.dragger.start_dragging()
             gizmo.enabled = False
@@ -839,7 +907,7 @@ class PrimitiveMenu(Entity):
                     e.model = name
                     e.origin = e.origin
                     self.menu_parent.enabled = False
-                    selector.render_selection()
+                    level_editor.render_selection()
             b.on_click = set_model
 
         grid_layout(self.menu_parent.children, max_x=2, origin=(0,0))
@@ -868,6 +936,7 @@ for x in range(8):
         level_editor.scenes[x][y].undo = Undo()
 
 gizmo = Gizmo()
+rotation_gizmo = RotationGizmo()
 scale_gizmo = ScaleGizmo()
 gizmo_toggler = GizmoToggler(parent=level_editor)
 
@@ -884,13 +953,12 @@ ModelMenu()
 # PointOfViewSelector()
 Help()
 
-# def input(key):
-#     if key == 'q':
-#         print(level_editor.entities)
-#
-# t = Text(position=window.top_left + Vec2(.01,-.06))
-# def update():
-#     t.text = 'selection:\n' + '\n'.join([str(e) for e in level_editor.selection])
+def input(key):
+    if key == 'q':
+        print(level_editor.entities)
 
+t = Text(position=window.top_left + Vec2(.01,-.06))
+def update():
+    t.text = 'selection:\n' + '\n'.join([str(e) for e in level_editor.selection])
 if __name__ == '__main__':
     app.run()

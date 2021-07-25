@@ -48,7 +48,8 @@ class Camera(Entity):
         application.base.cam.node().set_lens(self.lens)
 
         self.orthographic = False
-        self.fov = 40
+        self.fov = 40   # horizontal fov
+        # self.fov = 22.5
         self.clip_plane_near = 0.1
         self.clip_plane_far = 10000
 
@@ -102,6 +103,7 @@ class Camera(Entity):
         self._fov = value
         if not self.orthographic and hasattr(self, 'perspective_lens'):
             self.perspective_lens.set_fov(value)
+            # self.perspective_lens.set_fov(value*window.aspect_ratio, value)
 
         elif self.orthographic and hasattr(self, 'orthographic_lens'):
             self.orthographic_lens.set_film_size(value * self.aspect_ratio, value)

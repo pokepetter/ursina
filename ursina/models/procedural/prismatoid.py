@@ -3,7 +3,7 @@ from ursina.duplicate import duplicate
 
 
 class Prismatoid(Mesh):
-    def __init__(self, base_shape=Quad, origin=(0,0), path=((0,0,0),(0,1,0)), thicknesses=((1,1),), look_at=True, mode='triangle', **kwargs):
+    def __init__(self, base_shape=Quad, origin=(0,0), path=((0,0,0),(0,1,0)), thicknesses=((1,1),), look_at=True, cap_ends=True, mode='triangle', **kwargs):
         if type(base_shape) == type:
             base_shape = base_shape()
 
@@ -20,13 +20,14 @@ class Prismatoid(Mesh):
         verts = list()
 
         # cap start
-        for i in range(len(b.children)):
-            verts.append(path[0])
-            verts.append(b.children[i].world_position)
-            if i >= len(b.children)-1:
-                verts.append(b.children[0].world_position)
-            else:
-                verts.append(b.children[i+1].world_position)
+        if cap_ends:
+            for i in range(len(b.children)):
+                verts.append(path[0])
+                verts.append(b.children[i].world_position)
+                if i >= len(b.children)-1:
+                    verts.append(b.children[0].world_position)
+                else:
+                    verts.append(b.children[i+1].world_position)
 
         for i in range(1, len(path)):
             b.position = path[i-1]
@@ -60,13 +61,14 @@ class Prismatoid(Mesh):
                 verts.append(e.children[j].world_position)
 
         # cap end
-        for i in range(len(e.children)):
-            if i >= len(e.children)-1:
-                verts.append(e.children[0].world_position)
-            else:
-                verts.append(e.children[i+1].world_position)
-            verts.append(e.children[i].world_position)
-            verts.append(path[-1])
+        if cap_ends:
+            for i in range(len(e.children)):
+                if i >= len(e.children)-1:
+                    verts.append(e.children[0].world_position)
+                else:
+                    verts.append(e.children[i+1].world_position)
+                verts.append(e.children[i].world_position)
+                verts.append(path[-1])
 
 
         super().__init__(vertices=verts, mode=mode, **kwargs)

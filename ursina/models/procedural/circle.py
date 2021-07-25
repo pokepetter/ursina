@@ -7,16 +7,16 @@ class Circle(Mesh):
         point = Entity(parent=origin)
         point.y = radius
 
-        verts = list()
+        self.vertices = list()
         for i in range(resolution):
             origin.rotation_z -= 360 / resolution
-            verts.append(point.world_position)
+            self.vertices.append(point.world_position)
 
         if mode == 'line':  # add the first point to make the circle whole
-            verts.append(verts[0])
+            self.vertices.append(verts[0])
 
         destroy(origin)
-        super().__init__(vertices=verts, mode=mode, **kwargs)
+        super().__init__(vertices=self.vertices, mode=mode, **kwargs)
 
 
 if __name__ == '__main__':
