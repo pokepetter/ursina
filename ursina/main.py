@@ -125,7 +125,7 @@ class Ursina(ShowBase):
 
         mouse.update()
 
-        if hasattr(__main__, 'update') and not application.paused:
+        if hasattr(__main__, 'update') and __main__.update and not application.paused:
             __main__.update()
 
         for seq in application.sequences:

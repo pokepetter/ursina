@@ -29,9 +29,14 @@ def make_code_reload_safe(code):
         if line.startswith('''if __name__ == '__main__':'''):
             dedent_next = True
             continue
+        if line and line[0] != ' ':
+            dedent_next = False
+
         if line.strip().startswith('#'):
+            newtext += '\n'
             continue
         if line.strip().startswith('EditorCamera('): # EditorCamera is eternal, so don't create multiple ones
+            newtext += '\n'
             continue
 
         if dedent_next:
@@ -135,6 +140,7 @@ class HotReloader(Entity):
         t = time.time()
         try:
             d = dict(locals(), **globals())
+            application.paused = True
             exec(text, d, d)
 
             import __main__
@@ -142,7 +148,10 @@ class HotReloader(Entity):
                 if key in dir(__main__):
                     setattr(__main__, key, value)
 
+            application.paused = False
+
         except Exception as e:
+            print('\n'.join([f'{i}: {e}' for i, e in enumerate(text.split('\n'))]))
             print(e)
         #     for l in text.split('\n'):
         #         try:
