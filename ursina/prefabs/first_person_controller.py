@@ -8,7 +8,7 @@ class FirstPersonController(Entity):
         self.speed = 5
         self.height = 2
         self.camera_pivot = Entity(parent=self, y=self.height)
-
+        self.clavier = "qwerty" # ["qwerty","azerty","arrow"]
         camera.parent = self.camera_pivot
         camera.position = (0,0,0)
         camera.rotation = (0,0,0)
@@ -33,10 +33,21 @@ class FirstPersonController(Entity):
         self.camera_pivot.rotation_x -= mouse.velocity[1] * self.mouse_sensitivity[0]
         self.camera_pivot.rotation_x= clamp(self.camera_pivot.rotation_x, -90, 90)
 
-        self.direction = Vec3(
-            self.forward * (held_keys['w'] - held_keys['s'])
-            + self.right * (held_keys['d'] - held_keys['a'])
-            ).normalized()
+        if self.clavier == "qwerty":
+            self.direction = Vec3(
+                self.forward * (held_keys['w'] - held_keys['s'])
+                + self.right * (held_keys['d'] - held_keys['a'])
+                ).normalized()
+        elif self.clavier == "azerty":
+            self.direction = Vec3(
+                self.forward * (held_keys['z'] - held_keys['s'])
+                + self.right * (held_keys['d'] - held_keys['q'])
+                ).normalized()
+        elif self.clavier == "arrow" :
+                self.direction = Vec3(
+                self.forward * (held_keys['up arrow'] - held_keys['down arrow'])
+                + self.right * (held_keys['right arrow'] - held_keys['left arrow'])
+                ).normalized()
 
         feet_ray = raycast(self.position+Vec3(0,0.5,0), self.direction, ignore=(self,), distance=.5, debug=False)
         head_ray = raycast(self.position+Vec3(0,self.height-.1,0), self.direction, ignore=(self,), distance=.5, debug=False)
