@@ -109,7 +109,8 @@ print('building project:', project_folder)
 start_time = time.time()
 
 if build_engine:
-    shutil.rmtree(str(python_dest))
+    if python_dest.exists():
+        shutil.rmtree(str(python_dest))
     python_dest.mkdir()
     python_dlls_dest.mkdir()
     python_lib_dest.mkdir()
