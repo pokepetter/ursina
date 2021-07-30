@@ -15,7 +15,10 @@ build_folder.mkdir(exist_ok=True)
 
 ignore = []
 
-compressed_textures = Path(project_folder/'textures_compressed').iterdir()
+compressed_textures = []
+compressed_textures_folder = Path(project_folder/'textures_compressed')
+if compressed_textures_folder.exists():
+    compressed_textures = compressed_textures_folder.iterdir()
 
 def copytree(src, dst, symlinks=False, ignore_filetypes=[]):
     src = str(src)
@@ -219,7 +222,8 @@ if build_engine:
 
 
 if build_game:
-    shutil.rmtree(str(src_dest))
+    if src_dest.exists():
+        shutil.rmtree(str(src_dest))
     src_dest.mkdir()
 
     ignore.extend(['.git', 'build', '.gitignore', 'build.bat'])
