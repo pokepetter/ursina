@@ -34,11 +34,16 @@ class Slider(Entity):
 
         def drop():
             self.knob.z = -.1
+            if self.setattr:
+                if isinstance(self.setattr[0], dict):   # set value of dict
+                    self.setattr[0][self.setattr[1]] = self.value
+                    print(self.setattr)
+                else:                                   # set value of Entity
+                    setattr(self.setattr[0], self.setattr[1], self.value)
+
             if self.on_value_changed:
                 self.on_value_changed()
 
-            if self.setattr:
-                setattr(self.setattr[0], self.setattr[1], self.value)
 
         self.knob.drop = drop
         self._prev_value = self.default
