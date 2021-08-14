@@ -141,6 +141,10 @@ def print_on_screen(text, position=window.top_left, origin=(-.5,.5), scale=1, du
     destroy(text_entity, delay=duration)
 
 
+class LoopingList(list):
+    def __getitem__(self, i):
+        return super().__getitem__(i % len(self))
+
 
 
 if __name__ == '__main__':
