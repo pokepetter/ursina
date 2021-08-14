@@ -63,14 +63,12 @@ def quit():
 
 
 def load_settings(path=asset_folder / 'settings.py'):
-    try:
+    if path.exists():
         with open(path) as f:
             try:
                 # d = dict(locals(), **globals())
                 # exec(f.read(), d, d)
                 exec('from ursina import *\n' + f.read())
+                print('loaded settings from settings.py')
             except Exception as e:
                 print('settings.py error:', e)
-                pass
-    except:
-        print('no settings.py file')
