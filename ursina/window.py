@@ -137,7 +137,7 @@ class Window(WindowProperties):
             # 'Build' : Func(print, ' '),
             'API Reference' : Func(webbrowser.open, 'https://www.ursinaengine.org/cheat_sheet_dark.html'),
             # 'Asset Store' : Func(webbrowser.open, 'https://itch.io/tools/tag-ursina'),
-            'ursfx (Sound Effect Maker)' : lambda: exec('from ursina.prefabs.synth import instance'),
+            'ursfx (Sound Effect Maker)' : lambda: exec('from ursina.prefabs.ursfx_synth import instance'),
             # 'Open Scene Editor' : Func(print, ' '),
             'Change Render Mode <gray>[F10]<default>' : self.next_render_mode,
             'Reset Render Mode <gray>[F9]<default>' : Func(setattr, self, 'render_mode', 'default'),
@@ -276,6 +276,7 @@ class Window(WindowProperties):
                     self.windowed_position = self.position
                     self.windowed_size = self.size
                     self.size = self.fullscreen_size
+                    self.setFullscreen(False)
                     self.center_on_screen()
                 else:
                     self.size = self.windowed_size
@@ -318,9 +319,9 @@ class Window(WindowProperties):
                 elif value == False:
                     print('error: disabling vsync during runtime is not yet implemented')
 
-                elif isinstance(value, int):
+                elif isinstance(value, (int, float, complex)):
                     globalClock.setMode(ClockObject.MLimited)
-                    globalClock.setFrameRate(30)
+                    globalClock.setFrameRate(int(value))
 
             object.__setattr__(self, name, value)
 
@@ -331,17 +332,18 @@ instance = Window()
 if __name__ == '__main__':
     from ursina import *
     # application.development_mode = False
-    window.vsync = 30
-    app = Ursina(borderless = False)
+    app = Ursina(vsync=True)
+    # window.vsync = 10
 
+    # window.forced_aspect_ratio = 16/9
     window.title = 'ursina'
     # window.borderless = False
     # window.fullscreen = False
-    window.fps_counter.enabled = False
+    # window.fps_counter.enabled = False
     # window.cog_button.enabled = False
 
     camera.orthographic = True
     camera.fov = 2
 
-    Entity(model='cube', color=color.green, collider='box', texture='shore')
+    # Entity(model='cube', color=color.green, collider='box', texture='shore')
     app.run()
