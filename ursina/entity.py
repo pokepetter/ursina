@@ -774,7 +774,7 @@ class Entity(NodePath):
     def tileset_size(self):
         return self._tileset_size
     @tileset_size.setter
-    def tilemap_size(self, value):
+    def tileset_size(self, value):
         self._tileset_size = value
         if self.model and self.texture:
             self.model.setTexScale(TextureStage.getDefault(), 1/value[0], 1/value[1])
@@ -1008,6 +1008,10 @@ class Entity(NodePath):
 # ANIMATIONS
 #------------
     def animate(self, name, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt='kill', time_step=None, auto_destroy=True):
+        if duration == 0 and delay == 0:
+            setattr(self, name, value)
+            return None
+
         if delay:
             from ursina.ursinastuff import invoke
             return invoke(self.animate, name, value, duration=duration, curve=curve, loop=loop, resolution=resolution, time_step=time_step, auto_destroy=auto_destroy, delay=delay)
@@ -1052,6 +1056,9 @@ class Entity(NodePath):
     def animate_scale(self, value, duration=.1, **kwargs):
         if isinstance(value, (int, float, complex)):
             value = Vec3(value, value, value)
+        elif isinstance(value, tuple) and len(value) == 2:
+            value = Vec3(*value, self.z)
+
         return self.animate('scale', value, duration,  **kwargs)
 
     # generate animation functions
