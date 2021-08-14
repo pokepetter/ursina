@@ -101,7 +101,9 @@ def find_sequence(name, file_types, folders): # find frame_0, frame_1, frame_2 a
         for file_type in file_types:
             files = list(folder.glob(f'**/{name}*.{file_type}'))
             if files:
+                files.sort()
                 return files
+    return []
 
 
 def import_all_classes(path=application.asset_folder, debug=False):

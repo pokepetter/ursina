@@ -13,7 +13,6 @@ from textwrap import dedent
 from enum import Enum
 from pathlib import Path
 
-
 class MeshModes(Enum):
     triangle = 'triangle'
     ngon = 'ngon'
@@ -264,6 +263,9 @@ class Mesh(NodePath):
 
         elif name.endswith('.obj'):
             from ursina.mesh_importer import ursina_mesh_to_obj
+            import os
+            # Remove the filename, else we get 'name.obj.obj'
+            name = str(os.path.splitext(name)[0])
             ursina_mesh_to_obj(self, name, path)
 
         elif name.endswith('.bam'):
