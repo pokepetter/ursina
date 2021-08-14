@@ -85,6 +85,7 @@ class Scene(Entity):
                     # e.collision = False
                     e.shader = lit_with_shadows_shader
                     e.ignore = True
+                    e.selectable = True
                     e.original_parent = e.parent
             except Exception as e:
                 print('error in scene:', self.name, e)
@@ -122,6 +123,8 @@ class LevelEditor(Entity):
         self.origin_mode_menu.on_value_changed = self.render_selection
         self.local_global_menu = ButtonGroup(['local', 'global'], min_selection=1, position=window.top - Vec2(.2,0))
         self.local_global_menu.on_value_changed = self.render_selection
+        # self.current_poke_node = None
+        self.entity_list_text = Text(parent=self.ui, scale=.5, position=window.left)
 
     @property
     def entities(self):
@@ -145,8 +148,13 @@ class LevelEditor(Entity):
             self.current_scene.save()
 
     def render_selection(self, update_gizmo_position=True):
-        self.point_renderer.model.vertices = [e.world_position for e in self.entities]
-        self.point_renderer.model.colors = [color.azure if e in self.selection else color.white66 for e in self.entities]
+        # entities = self.entities
+        # if self.current_poke_node:
+        #     selectable_entities = self.current_poke_node.point_gizmos
+        self.entity_list_text.text = '\n'.join([f'{e.name}    {e.selectable}' for e in self.entities])
+
+        self.point_renderer.model.vertices = [e.world_position for e in self.entities if e.selectable]
+        self.point_renderer.model.colors = [color.azure if e in self.selection else color.white66 for e in self.entities if e.selectable]
         self.point_renderer.model.generate()
 
         gizmo.enabled = bool(self.selection)
@@ -158,9 +166,9 @@ class LevelEditor(Entity):
                 gizmo.world_position = sum([e.world_position for e in self.selection]) / len(self.selection)
 
             if self.local_global_menu.value == 'local' and self.origin_mode_menu.value == 'last':
-                gizmo.rotation = self.selection[-1].world_rotation
+                gizmo.world_rotation = self.selection[-1].world_rotation
             else:
-                gizmo.rotation = Vec3(0,0,0)
+                gizmo.world_rotation = Vec3(0,0,0)
 
         # print('---------- rendered selection')
 
@@ -283,8 +291,12 @@ class Gizmo(Entity):
     def __init__(self, **kwargs):
         super().__init__(parent=level_editor, enabled=False)
         self.arrow_parent = Entity(parent=self)
-        self.lock_axis_helper_parent = Entity(parent=level_editor)
-        self.lock_axis_helper = Entity(parent=self.lock_axis_helper_parent) # this will help us lock the movement to an axis on local space
+        self.lock_axis_helper_parent = Entity(parent=level_editor,
+            # model='wireframe_cube',
+        )
+        self.lock_axis_helper = Entity(parent=self.lock_axis_helper_parent,
+            # model=Circle(6, radius=.2), color=color.red, double_sided=True, always_on_top=True, render_queue=1
+        ) # this will help us lock the movement to an axis on local space
 
 
         self.subgizmos = {
@@ -297,46 +309,51 @@ class Gizmo(Entity):
             e.highlight_color = color.white
 
         self.fake_gizmo = Entity(parent=level_editor, enabled=False)
-        self.fake_gizmo.subgizmos = []
-        for e in self.subgizmos:
-            self.fake_gizmo.subgizmos.append(duplicate(self.subgizmos[e], parent=self.fake_gizmo, collider=None, ignore=True))
+        self.fake_gizmo.subgizmos = dict()
+        for key, value in self.subgizmos.items():
+            self.fake_gizmo.subgizmos[key] = duplicate(self.subgizmos[key], parent=self.fake_gizmo, collider=None, ignore=True)
 
 
-    def input(self, key):
+    def input(self, key):   # this will execute before GizmoArrow drag()
         if key == 'left mouse down' and mouse.hovered_entity in self.subgizmos.values():
-            for i, axis in enumerate('xyz'):
-                self.subgizmos[axis].plane_direction = self.up
-
-                self.subgizmos[axis].lock = [0,0,0]
-                if level_editor.local_global_menu.value == 'global':
-                    self.subgizmos[axis].lock = [1,1,1]
-                    self.subgizmos[axis].lock[i] = 0
-                print(self.subgizmos[axis].lock)
-
-                if axis == 'y':
-                    self.subgizmos[axis].plane_direction = self.forward
-
-            self.subgizmos['xz'].plane_direction = self.up
-
-            # use fake gizmo technique to lock movement to local axis. if in global mode, skip this and use the old simpler way.
-            if level_editor.local_global_menu.value == 'local':
-                self.lock_axis_helper_parent.world_transform = self.world_transform
-                self.lock_axis_helper.position = (0,0,0)
-                self.fake_gizmo.world_transform = self.world_transform
-
-                self.fake_gizmo.enabled = True
-                self.visible = False
-
-                mouse.hovered_entity.visible_self = False
-                for e in self.fake_gizmo.children:
-                    e.visible_self = True
-
+            self.drag()
 
         if key == 'left mouse up' and level_editor.local_global_menu.value == 'local':
-            self.fake_gizmo.enabled = False
-            self.visible = True
-            [setattr(e, 'visible_self', False) for e in self.fake_gizmo.subgizmos]
-            [setattr(e, 'visible_self', True) for e in self.subgizmos.values()]
+            self.drop()
+
+
+    def drag(self, show_gizmo_while_dragging=True):
+        for i, axis in enumerate('xyz'):
+            self.subgizmos[axis].plane_direction = self.up
+
+            self.subgizmos[axis].lock = [0,0,0]
+            if level_editor.local_global_menu.value == 'global':
+                self.subgizmos[axis].lock = [1,1,1]
+                self.subgizmos[axis].lock[i] = 0
+
+            if axis == 'y':
+                self.subgizmos[axis].plane_direction = self.forward
+
+        self.subgizmos['xz'].plane_direction = self.up
+
+        # use fake gizmo technique to lock movement to local axis. if in global mode, skip this and use the old simpler way.
+        if level_editor.local_global_menu.value == 'local':
+            self.lock_axis_helper_parent.world_transform = self.world_transform
+            self.lock_axis_helper.position = (0,0,0)
+            self.fake_gizmo.world_transform = self.world_transform
+
+            self.fake_gizmo.enabled = True
+            self.visible = False
+            if show_gizmo_while_dragging:
+                [setattr(e, 'visible_self', True) for e in self.fake_gizmo.subgizmos.values()]
+            [setattr(e, 'visible_self', False) for e in self.subgizmos.values()]
+
+
+    def drop(self):
+        self.fake_gizmo.enabled = False
+        self.visible = True
+        [setattr(e, 'visible_self', False) for e in self.fake_gizmo.subgizmos.values()]
+        [setattr(e, 'visible_self', True) for e in self.subgizmos.values()]
 
 
 
@@ -478,13 +495,41 @@ class GizmoToggler(Entity):
 
 class QuickGrabber(Entity):
     def __init__(self, **kwargs):
+        super().__init__()
+        self.plane = Entity(model='plane', scale=(999,.1,999), color=color.white33, collider='mesh', enabled=False, texture='white_cube', texture_scale=(999,999), visible=False)
+        self.target_entity = None
+
+    def input(self, key):
+        if held_keys['control'] or held_keys['shift'] or held_keys['alt']:
+            return
+
+        if key == 'g':
+            self.target_entity = selector.get_hovered_entity()
+            if self.target_entity:
+                self.plane.world_position = self.target_entity.world_position
+                self.plane.world_rotation = self.target_entity.world_rotation
+                self.plane.enabled = True
+
+        elif key == 'g up' and self.target_entity:
+            self.target_entity = None
+            self.plane.enabled = False
+
+
+    def update(self):
+        if self.plane.enabled:
+            self.target_entity.world_position = mouse.world_point
+
+
+
+class QuickScaleOrRotate(Entity):
+    def __init__(self, **kwargs):
         super().__init__(
             parent=level_editor,
             gizmos_to_toggle={
-                'g' : gizmo.subgizmos['xz'],
-                'x' : gizmo.subgizmos['x'],
-                'y' : gizmo.subgizmos['y'],
-                'z' : gizmo.subgizmos['z'],
+                # 'g' : gizmo.subgizmos['xz'],
+                # 'x' : gizmo.subgizmos['x'],
+                # 'y' : gizmo.subgizmos['y'],
+                # 'z' : gizmo.subgizmos['z'],
                 's' : scale_gizmo,
                 'sx' : scale_gizmo,
                 'sy' : scale_gizmo,
@@ -494,6 +539,7 @@ class QuickGrabber(Entity):
             clear_selection = False
             )
 
+
     def input(self, key):
         if held_keys['control'] or held_keys['shift'] or held_keys['alt']:
             return
@@ -501,9 +547,9 @@ class QuickGrabber(Entity):
         if held_keys['s'] and not key == 's':
             key = 's' + key
 
-        if key in ('g', 'x', 'y', 'z'):
-            self.original_gizmo_state = gizmo_toggler.animator.state
-            gizmo_toggler.animator.state = 'w'
+        # if key in ('g', 'x', 'y', 'z'):
+        #     self.original_gizmo_state = gizmo_toggler.animator.state
+        #     gizmo_toggler.animator.state = 'w'
 
         if key in ('c',):
             self.original_gizmo_state = gizmo_toggler.animator.state
@@ -524,10 +570,10 @@ class QuickGrabber(Entity):
             if not key in ('sx', 'sy', 'sz'):
                 self.clear_selection = not level_editor.selection
 
-            if level_editor.selection and key in ('g', 'x', 'y', 'z'):
-                temp_plane = Entity(model='plane', scale=9999, collider='mesh', visible=False, color=color.white33, position=level_editor.selection[-1].world_position)
-                gizmo.position = raycast(camera.world_position, camera.forward, traverse_target=temp_plane).world_point
-                destroy(temp_plane, delay=1/60)
+            # if level_editor.selection and key in ('g', 'x', 'y', 'z'):
+            #     temp_plane = Entity(model='plane', scale=9999, collider='mesh', visible=False, color=color.white33, position=level_editor.selection[-1].world_position)
+            #     gizmo.position = raycast(camera.world_position, camera.forward, traverse_target=temp_plane).world_point
+            #     destroy(temp_plane, delay=1/60)
 
             if not level_editor.selection:
                 selector.input('left mouse down')
@@ -605,7 +651,7 @@ class Selector(Entity):
 
 
     def get_hovered_entity(self):
-        entities_in_range = [(distance(e.screen_position, mouse.position), e) for e in level_editor.entities]
+        entities_in_range = [(distance(e.screen_position, mouse.position), e) for e in level_editor.entities if e.selectable]
         entities_in_range = [e for e in entities_in_range if e[0] < .03]
         entities_in_range.sort()
 
@@ -669,6 +715,8 @@ class SelectionBox(Entity):
                 level_editor.selection.clear()
 
             for e in level_editor.entities:
+                if not e.selectable:
+                    continue
 
                 pos = e.screen_position
                 if pos.x > self.x and pos.x < self.x + abs(self.scale_x) and pos.y > self.y and pos.y < self.y + abs(self.scale_y):
@@ -694,7 +742,7 @@ class Spawner(Entity):
         if key == 'n':
             if not mouse.hovered_entity in level_editor.entities:
                 level_editor.grid.collision = True
-            self.target = Entity(model='cube', origin_y=-.5, shader=lit_with_shadows_shader, texture='white_cube', position=mouse.world_point, original_parent=level_editor)
+            self.target = Entity(model='cube', origin_y=-.5, shader=lit_with_shadows_shader, texture='white_cube', position=mouse.world_point, original_parent=level_editor, selectable=True)
             level_editor.current_scene.entities.append(self.target)
 
 
@@ -1010,36 +1058,60 @@ class PokeShape(Entity):
         if 'parent' in kwargs.keys():
             del kwargs['parent']
 
-        super().__init__(parent=level_editor, original_parent=level_editor, model=Mesh(vertices=points), **kwargs)
-        self.point_gizmos = LoopingList([Entity(parent=self, original_parent=self, position=e) for e in points])
+        super().__init__(parent=level_editor, original_parent=level_editor, model=Mesh(vertices=points), selectable=True, shader=lit_with_shadows_shader, color=color.lime, **kwargs)
+        self.point_gizmos = LoopingList([Entity(parent=self, original_parent=self, position=e, selectable=False, name='PokeShape_point') for e in points])
         self.edit_mode = False
 
-        from panda3d.core import Triangulator, LPoint2d
-        self.triangulator = Triangulator()
+
+        self.add_collider = False
+
+        self.make_wall = True
+        self.wall_parent = None
+        if self.make_wall:
+            self.wall_parent = Entity(parent=self, model=Mesh(), shader=lit_with_shadows_shader, color=color.dark_gray)
+
+        self.wall_height = 1
+        self.wall_thickness = .1
+
         self.generate()
 
+
     def generate(self):
-        self.model.vertices = [e.position for e in self.point_gizmos]
-        self.triangulator.clear()
+        import tripy
+        polygon = [e.position.xz for e in self.point_gizmos]
+        triangles = tripy.earclip(polygon)
+        self.model.vertices = []
+        for tri in triangles:
+            for v in tri:
+                self.model.vertices.append(Vec3(v[0], 0, v[1]))
 
-        for v in self.model.vertices:
-            vi = self.triangulator.add_vertex(v[0], v[2])
-            self.triangulator.addPolygonVertex(vi)
-
-        self.triangulator.triangulate()
-        self.model.triangles = []
-
-        for i in range(self.triangulator.getNumTriangles()):
-            self.model.triangles.append((
-                self.triangulator.getTriangleV0(i),
-                self.triangulator.getTriangleV1(i),
-                self.triangulator.getTriangleV2(i),
-            ))
-
-        self.model.uvs = [v*10 for v in self.model.vertices]
+        self.model.uvs = [Vec2(v[0],v[2])*1 for v in self.model.vertices]
         self.model.normals = [Vec3(0,1,0) for i in range(len(self.model.vertices))]
         self.model.generate()
+        self.texture = 'grass'
 
+
+        if self.make_wall:
+            # self.wall_parent.model.vertices = self.model.vertices
+            wall_verts = []
+            for i, v in enumerate([e.position for e in self.point_gizmos]):
+                wall_verts.extend((
+                    v,
+                    v + Vec3(0,-1,0),
+                    self.point_gizmos[i+1].position,
+
+                    self.point_gizmos[i+1].position,
+                    v + Vec3(0,-1,0),
+                    self.point_gizmos[i+1].position + Vec3(0,-1,0),
+                ))
+
+            self.wall_parent.model.vertices = wall_verts
+            self.wall_parent.model.generate()
+
+
+
+        if self.add_collider:
+            self.collider = self.model
         # for i, e in enumerate(self.point_gizmos):
         #     [destroy(c) for c in e.children]
         #     Text(str(i), parent=e, always_on_top=True, color=color.black)
@@ -1054,14 +1126,28 @@ class PokeShape(Entity):
     def edit_mode(self, value):
         self._edit_mode = value
         if value:
+            [setattr(e, 'selectable', False) for e in level_editor.entities if not e == self]
             [level_editor.entities.append(e) for e in self.point_gizmos]
+            [setattr(e, 'selectable', True) for e in self.point_gizmos]
+            gizmo.subgizmos['y'].enabled = False
+            gizmo.fake_gizmo.subgizmos['y'].enabled = False
+
         else:
             [level_editor.entities.remove(e) for e in self.point_gizmos]
+            [setattr(e, 'selectable', True) for e in level_editor.entities]
             if True in [e in level_editor.selection for e in self.point_gizmos]: # if point is selected when exiting edit mode, select the poke shape
                 level_editor.selection = [self, ]
 
+            gizmo.subgizmos['y'].enabled = True
+            gizmo.fake_gizmo.subgizmos['y'].enabled = True
+
         level_editor.render_selection()
 
+
+    def update(self):
+        if self.edit_mode:
+            if mouse.left or held_keys['g']:
+                level_editor.render_selection()
 
 
     def input(self, key):
@@ -1072,9 +1158,9 @@ class PokeShape(Entity):
 
         if key == '+' and len(level_editor.selection) == 1 and level_editor.selection[0] in self.point_gizmos:
             print('add point')
-            i = self.points.index(level_editor.selection[0])
+            i = self.point_gizmos.index(level_editor.selection[0])
 
-            new_point = Entity(parent=self, original_parent=self, position=lerp(self.point_gizmos[i].position, self.point_gizmos[i+1].position, .5))
+            new_point = Entity(parent=self, original_parent=self, position=lerp(self.point_gizmos[i].position, self.point_gizmos[i+1].position, .5), selectable=True)
             level_editor.entities.append(new_point)
             self.point_gizmos.insert(i+1, new_point)
             level_editor.render_selection()
@@ -1084,6 +1170,25 @@ class PokeShape(Entity):
         if key == 'space':
             self.generate()
 
+        if key == 'double click' and level_editor.selection == [self, ] and selector.get_hovered_entity() == self:
+            self.edit_mode = not self.edit_mode
+
+        if self.edit_mode and key.endswith(' up'):
+            invoke(self.generate, delay=3/60)
+
+        # if self.edit_mode:
+        #     if key == 'left mouse down' and selector.get_hovered_entity() in self.point_gizmos and not level_editor.selection and not held_keys['shift'] and not held_keys['alt']:
+        #         quick_grabber.input('g')
+        #     if key == 'left mouse up' and hasattr(quick_grabber, 'original_gizmo_state'):
+        #         quick_grabber.input('g up')
+
+
+
+
+        # if key == 'left mouse down':
+        #     e = selector.get_hovered_entity()
+        #     if not held_keys['shift'] and not held_keys['alt']:
+        #         level_editor.selection =
 
 
 
@@ -1104,7 +1209,8 @@ rotation_gizmo = RotationGizmo()
 scale_gizmo = ScaleGizmo()
 gizmo_toggler = GizmoToggler(parent=level_editor)
 
-QuickGrabber(parent=level_editor)   # requires gizmo, scale_gizmo, gizmo_toggler, selector
+quick_grabber = QuickGrabber(parent=level_editor)   # requires gizmo, selector
+# QuickScaleOrRotate()    # requires scale_gizmo, gizmo_toggler, selector
 selector = Selector(parent=level_editor)
 SelectionBox(parent=level_editor.ui, model=Quad(0, mode='line'), origin=(-.5,-.5,0), scale=(0,0,1), color=color.white33, mode='new')
 Spawner(parent=level_editor)
