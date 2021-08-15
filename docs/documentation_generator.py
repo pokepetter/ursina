@@ -393,6 +393,7 @@ texture_names = [f'\'{f.stem}\'' for f in path.glob('textures/*.*')]
 asset_info['textures'] = ('', '', texture_names, '', '''e = Entity(model='cube', texture='brick')''')
 
 shaders = [f'{f.stem}' for f in path.glob('shaders/*.*')] + [f'{f.stem}' for f in path.glob('shaders/screenspace_shaders/*.*')]
+shaders = [e for e in shaders if not e.startswith('_')]
 asset_info['shaders'] = ('', '', shaders, '', '''from ursina.shaders import normals_shader\ne = Entity(shader=normals_shader)''')
 
 for f in path.glob('models/procedural/*.py'):
