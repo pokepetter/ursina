@@ -17,6 +17,21 @@ python -m ursina.build
 
 It will then move the necessary files to a 'build' directory which you can then distribute.
 
+Package ursina application for Windows 10.
+Provided with project folder path, creates a build folder where
+it copies python and project's dependent packages. Requires a main.py file.
+Copies game scripts and assets into 'build/scr' folder.
+Creates a .bat file to start the game.
+
+# code
+--ignore            # add assets to ignore
+--name              # change project name
+--include_modules   # inlude extra modules like this: --include_modules module_one,module_two,module_tree
+--overwrite         # don't ask to overwrite existing build, just overwrite
+--skip_engine
+--skip_game
+# text
+
 
 
 ## Building Your App with auto-py-to-exe (singlefile)

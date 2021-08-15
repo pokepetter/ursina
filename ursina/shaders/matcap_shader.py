@@ -6,7 +6,6 @@ uniform mat3 p3d_NormalMatrix;
 in vec4 p3d_Vertex;
 in vec3 p3d_Normal;
 
-// out vec2 uv;
 out vec3 eye;
 out vec3 view_normal;
 // reflect alternative:
@@ -17,21 +16,6 @@ void main() {
 
     eye = normalize(vec3(p3d_ModelViewMatrix * vec4(p3d_Vertex.xyz, 1.0)));
     view_normal = normalize( p3d_NormalMatrix * p3d_Normal );
-
-    // vec4 position = vec4(p3d_Vertex.xyz, 1.);
-    // vec3 eye = normalize(vec3(p3d_ModelViewMatrix * position));
-    // vec3 view_normal =  p3d_NormalMatrix * p3d_Normal;
-    // world_normal = mat3(p3d_ModelMatrix) * p3d_Normal;
-
-    // vec3 r = reflect(eye, view_normal);
-    //
-    // float m = 2. * sqrt(
-    //     pow(r.x, 2.) +
-    //     pow(r.y, 2.) +
-    //     pow(r.z + 1., 2.)
-    // );
-    //
-    // uv = r.xy / m + .5;
 }
 ''',
 fragment='''
