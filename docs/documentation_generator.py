@@ -272,10 +272,6 @@ class_info = dict()
 
 # ignore files that are not commited
 ignored_files = list()
-from git import Repo
-repo = Repo(path.parent)
-ignored_files =  repo.untracked_files
-ignored_files = [Path(path.parent / e) for e in ignored_files]
 for f in ignored_files:
     print('ignoring:', f)
 ignored_files.append(path / 'gamepad.py')
