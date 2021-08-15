@@ -61,6 +61,7 @@ z-index: 1;
 <a style="color:hsl(349.0, 89%, 28%);" href="#Texture">Texture</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Trigger">Trigger</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Empty">Empty</a>
+<a style="color:hsl(349.0, 89%, 28%);" href="#LoopingList">LoopingList</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Vec2">Vec2</a>
 <a style="color:hsl(349.0, 89%, 28%);" href="#Vec3">Vec3</a>
 
@@ -99,8 +100,10 @@ z-index: 1;
 <a style="color:hsl(320.0, 89%, 28%);" href="#ThinSlider">ThinSlider</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#Sprite">Sprite</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#TextField">TextField</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#Tilemap">Tilemap</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#Tooltip">Tooltip</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#TrailRenderer">TrailRenderer</a>
+<a style="color:hsl(320.0, 89%, 28%);" href="#SynthGUI">SynthGUI</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#VideoRecorder">VideoRecorder</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#VideoRecorderUI">VideoRecorderUI</a>
 <a style="color:hsl(320.0, 89%, 28%);" href="#Space">Space</a>
@@ -947,9 +950,10 @@ invoke(test_func, <green>'test2'</green>, x=<yellow>1</yellow>, <olive>y</olive>
 <div id="window"><div id="window" style="color:hsl(20.0, 89%, 28%); font-size:1.75em; font-weight:normal;">window</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/window.py"><gray>ursina.window</gray></a><br><br>vsync<gray> = True   # can't be set during play</gray> 
 show_ursina_splash<gray> = False</gray> 
 title<gray> = application.asset_folder.name</gray> 
-fullscreen_size<gray> = Vec2(self.screen_resolution[0]+1, self.screen_resolution[1]+1)</gray> 
+fullscreen_size<gray> = Vec2(*self.screen_resolution)</gray> 
 windowed_size<gray> = self.fullscreen_size / 1.25</gray> 
 windowed_position<gray> = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode</gray> 
+forced_aspect_ratio<gray> = None # example: window.forced_aspect_ratio</gray> 
 size<gray> = self.windowed_size</gray> 
 borderless<gray> = True</gray> 
 top<gray> = Vec2(0, .5)</gray> 
@@ -974,20 +978,15 @@ make_editor_gui()   <gray># called by main after setting up camera and applicati
 update_aspect_ratio()   
 next_render_mode()   
 
-<div class="example">window.vsync = <yellow>3</yellow><yellow>0</yellow>
-app = Ursina(borderless = False)
+<div class="example">app = Ursina(vsync=True)
 
 window.title = <green>'ursina'</green>
-window.fps_counter.enabled = False
-window.cog_button.enabled = False
 
 camera.orthographic = True
 camera.fov = <yellow>2</yellow>
-
-<olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.green, <olive>collider</olive>=<green>'box'</green>, <olive>texture</olive>=<green>'shore'</green>)
 </div>
 </div></div>
-<div id="Audio"><div id="Audio" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Audio<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/audio.py"><gray>ursina.audio</gray></a><br><br><params class="params">Audio(sound_file_name='', autoplay=True, **kwargs)</params>
+<div id="Audio"><div id="Audio" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Audio<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/audio.py"><gray>ursina.audio</gray></a><br><br><params class="params">Audio(sound_file_name='', autoplay=True, auto_destroy=False, **kwargs)</params>
 
 volume<gray> = 1</gray> 
 pitch<gray> = 1</gray> 
@@ -995,6 +994,7 @@ balance<gray> = 0</gray>
 loop<gray> = False</gray> 
 loops<gray> = 1</gray> 
 autoplay<gray> = autoplay</gray> 
+auto_destroy<gray> = auto_destroy</gray> 
 clip
 length
 status
@@ -1020,6 +1020,9 @@ b = <purple><b>Audio</b></purple>(a.clip)
 <purple>def</purple> input(key):
     <purple>if</purple> key == <green>'f'</green>:
         a.fade_out(duration=<yellow>4</yellow>, <olive>curve</olive>=curve.linear)
+
+<purple>def</purple> update():
+    <blue>print</blue>(a.time)
 </div>
 </div></div>
 <div id="Collider"><div id="Collider" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Collider<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/collider.py"><gray>ursina.collider</gray></a><br><br><params class="params">Collider()</params>
@@ -1390,7 +1393,7 @@ pivot = <olive>Entity</olive>()
 DirectionalLight(<olive>parent</olive>=pivot, <olive>y</olive>=<yellow>2</yellow>, <olive>z</olive>=<yellow>3</yellow>, shadows=True)
 </div>
 </div></div>
-<div id="Ursina"><div id="Ursina" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Ursina<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/main.py"><gray>ursina.main</gray></a><br><br><params class="params">Ursina(**kwargs): # optional arguments: title, fullscreen, size, position, vsync, borderless, show_ursina_splash, render_mode, development_mode, editor_ui_enabled</params>
+<div id="Ursina"><div id="Ursina" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Ursina<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/main.py"><gray>ursina.main</gray></a><br><br><params class="params">Ursina(**kwargs): # optional arguments: title, fullscreen, size, forced_aspect_ratio, position, vsync, borderless, show_ursina_splash, render_mode, development_mode, editor_ui_enabled</params>
 
 mouse<gray> = mouse</gray> 
 
@@ -1597,6 +1600,14 @@ save(<gray>path</gray>)
     A texture file can be a .png, .jpg or .psd.
     If it's a .psd it and no compressed version exists, it will compress it automatically.
 <green>''</green>'</green>
+e = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'brick'</green>)
+e.texture.set_pixel(<yellow>0</yellow>, <yellow>2</yellow>, color.blue)
+e.texture.apply()
+
+<purple>for</purple> y in <blue>range</blue>(e.texture.height):
+    <purple>for</purple> x in <blue>range</blue>(e.texture.width):
+        <purple>if</purple> e.texture.get_pixel(x,y) == color.blue:
+            <blue>print</blue>(<green>'found blue pixel at:'</green>, x, y)
 </div>
 </div></div>
 <div id="Trigger"><div id="Trigger" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Trigger<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/trigger.py"><gray>ursina.trigger</gray></a><br><br><params class="params">Trigger(**kwargs)</params>
@@ -1627,6 +1638,23 @@ destroy(<gray>entity, delay=0</gray>)
 find_sequence(<gray>name, file_types, folders</gray>)   <gray># find frame_0, frame_1, frame_2 and so on</gray>
 import_all_classes(<gray>path=application.asset_folder, debug=False</gray>)   
 print_on_screen(<gray>text, position=window.top_left, origin=(-.5,.5), scale=1, duration=1</gray>)   
+
+<div class="example"><purple>def</purple> test_func(item, x=None, <olive>y</olive>=None):
+    <blue>print</blue>(item, x, y)
+
+test_func(<green>'test'</green>)
+invoke(test_func, <green>'test'</green>, dela<olive>y</olive>=.<yellow>1</yellow>)
+invoke(test_func, <green>'test1'</green>, <yellow>1</yellow>, <yellow>2</yellow>, dela<olive>y</olive>=.<yellow>2</yellow>)
+invoke(test_func, <green>'test2'</green>, x=<yellow>1</yellow>, <olive>y</olive>=<yellow>2</yellow>, dela<olive>y</olive>=.<yellow>3</yellow>)
+
+<purple>def</purple> input(key):
+    <purple>if</purple> key == <green>'space'</green>:
+        print_on_screen(<green>'debug message'</green>, <olive>position</olive>=(<yellow>0</yellow>,<yellow>0</yellow>), <olive>origin</olive>=(<yellow>0</yellow>,<yellow>0</yellow>), <olive>scale</olive>=<yellow>2</yellow>)
+</div>
+</div></div>
+<div id="LoopingList"><div id="LoopingList" style="color:hsl(349.0, 89%, 28%); font-size:1.75em; font-weight:normal;">LoopingList<gray>(list)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursinastuff.py"><gray>ursinastuff</gray></a><br><br><params class="params">LoopingList(**kwargs)</params>
+
+
 
 <div class="example"><purple>def</purple> test_func(item, x=None, <olive>y</olive>=None):
     <blue>print</blue>(item, x, y)
@@ -1690,22 +1718,6 @@ You can also load a .gif by including the file type: <b>Animation</b>(<green>'im
 <green>''</green>'</green>
 
 <purple><b>Animation</b></purple>(<green>'ursina_wink'</green>)
-
-
-
-application.asset_folder = Path(r<green>'C:\sync\gifs'</green>)
-a = <purple><b>Animation</b></purple>(<green>'teslagrad_2_water_test.gif'</green>)
-<purple>from</purple> ursina.prefabs.memory_counter <purple>import</purple> MemoryCounter
-MemoryCounter()
-
-<purple>def</purple> input(key):
-    <blue>print</blue>(<green>'unload textures'</green>)
-    <purple>if</purple> key == <green>'space'</green>:
-        destroy(a)
-        <purple>for</purple> tex in a.frames:
-            tex._texture = None
-        <purple>for</purple> tex in a.frames:
-            <blue>print</blue>(tex, tex._texture)
 </div>
 </div></div>
 <div id="Animator"><div id="Animator" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Animator<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/animator.py"><gray>ursina.prefabs.animator</gray></a><br><br><params class="params">Animator(animations=None, start_state='')</params>
@@ -2653,12 +2665,12 @@ text_entity<gray> = Text(
 line_numbers<gray> = Text(
         parent</gray> 
 character_width<gray> = Text.get_width('a', font=self.font)</gray> 
-cursor_parent<gray> = Entity(parent=self, scale=(self.character_width, -1*Text.size*self.line_height*1.16))</gray> 
+cursor_parent<gray> = Entity(parent=self, scale=(self.character_width, -1*Text.size))</gray> 
 cursor<gray> = Entity(parent=self.cursor_parent, model='cube', color=color.white33, origin=(-.5, -.5), scale=(.1, 1))</gray> 
 bg<gray> = Entity(parent=self.cursor_parent, model='cube', color=color.dark_gray, origin=(-.5,-.5), z=1, scale=(120, 20), collider='box', visible=False)</gray> 
 selection<gray> = None</gray> 
 selection_parent<gray> = Entity(parent=self.cursor_parent)</gray> 
-register_mouse_input<gray> = True</gray> 
+register_mouse_input<gray> = False</gray> 
 text<gray> = ''</gray> 
 replacements<gray> = dict()</gray> 
 on_undo<gray> = list()</gray> 
@@ -2740,6 +2752,37 @@ te.text = dedent(<green><green>''</green>'
 te.render()
 </div>
 </div></div>
+<div id="Tilemap"><div id="Tilemap" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Tilemap<gray>(GridEditor)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/tilemap.py"><gray>ursina.prefabs.tilemap</gray></a><br><br><params class="params">Tilemap(tilemap='', tileset='', tileset_size=(8,8), **kwargs)</params>
+
+grid<gray> = [[self.tilemap.get_pixel(x,y) for y in range(self.tilemap.height)] for x in range(self.tilemap.width)]</gray> 
+tileset<gray> = tileset</gray> 
+tileset_size<gray> = tileset_size</gray> 
+model<gray> = Mesh()</gray> 
+texture<gray> = tileset</gray> 
+colliders<gray> = list()</gray> 
+auto_render<gray> = False</gray> 
+outline<gray> = Entity(parent=self, model=Quad(segments=0, mode='line', thickness=1), color=color.cyan, z=.01, origin=(-.5,-.5), enabled=self.edit_mode)</gray> 
+uv_dict<gray> = {
+        '11111111' : [(4,1), (5,1), (6,1), (7,1)],     # fill</gray> 
+single_block_coordinates<gray> = [(4,0), (5,0), (6,0), (7,0)]</gray> 
+variation_chance<gray> = [0,0,0,0,1,1,1,2,2,3]</gray> 
+uv_margin<gray> = .002</gray> 
+
+update()   
+draw_temp(<gray>position</gray>)   
+input(<gray>key</gray>)   
+render()   
+save()   
+
+<div class="example">EditorCamera()
+tilemap = <purple><b>Tilemap</b></purple>(<green>'tilemap_test_level'</green>, tileset=<green>'test_tileset'</green>, tileset_size=(<yellow>8</yellow>,<yellow>4</yellow>), <olive>parent</olive>=scene)
+camera.orthographic = True
+camera.position = tilemap.tilemap.size / <yellow>2</yellow>
+camera.fov = tilemap.tilemap.height
+
+Text(<green>'press tab to toggle edit mode'</green>, <olive>origin</olive>=(.<yellow>5</yellow>,<yellow>0</yellow>), <olive>position</olive>=(-.<yellow>5</yellow><yellow>5</yellow>,.<yellow>4</yellow>))
+</div>
+</div></div>
 <div id="Tooltip"><div id="Tooltip" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Tooltip<gray>(<a style="color: gray;" href="#Text">Text</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/tooltip.py"><gray>ursina.prefabs.tooltip</gray></a><br><br><params class="params">Tooltip(text='', background_color=color.black66, **kwargs)</params>
 
 original_scale<gray> = self.scale</gray> 
@@ -2761,25 +2804,78 @@ Lasts for 4 rounds.<green>''</green><green>'</green>.replace('</green>\n<green>'
     app.run()
 </div>
 </div></div>
-<div id="TrailRenderer"><div id="TrailRenderer" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">TrailRenderer<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/trail_renderer.py"><gray>ursina.prefabs.trail_renderer</gray></a><br><br><params class="params">TrailRenderer(target=None, **kwargs)</params>
+<div id="TrailRenderer"><div id="TrailRenderer" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">TrailRenderer<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/trail_renderer.py"><gray>ursina.prefabs.trail_renderer</gray></a><br><br><params class="params">TrailRenderer(thickness=10, color=color.white, end_color=color.clear, length=6, **kwargs)</params>
 
-model<gray> = Mesh(
-        vertices=[Vec3(0,0,0) for i in range(6)],
-        colors=[lerp(color.clear, color.white, i/6*2) for i in range(6)],
-        mode='line',
-        thickness=5,
-        static=False</gray> 
-target<gray> = target</gray> 
+renderer<gray> = Entity(
+        model</gray> 
 update_step<gray> = .025</gray> 
 
 update()   
+on_destroy()   
 
-<div class="example">mouse.visible = False
-player = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>scale</olive>=.<yellow>1</yellow>, <olive>color</olive>=color.orange)
-trail_renderer = <purple><b>TrailRenderer</b></purple>(target=player)
+<div class="example">window.color = color.black
+mouse.visible = False
+player = <olive>Entity</olive>()
+player.graphics = <olive>Entity</olive>(<olive>parent</olive>=player, <olive>scale</olive>=.<yellow>1</yellow>, <olive>model</olive>=<green>'circle'</green>)
+trail_renderer = <purple><b>TrailRenderer</b></purple>(<olive>parent</olive>=player, <olive>thickness</olive>=<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>, <olive>color</olive>=color.yellow, length=<yellow>6</yellow>)
+
+pivot = <olive>Entity</olive>(<olive>parent</olive>=player)
+trail_renderer = <purple><b>TrailRenderer</b></purple>(<olive>parent</olive>=pivot, x=.<yellow>1</yellow>, <olive>thickness</olive>=<yellow>2</yellow><yellow>0</yellow>, <olive>color</olive>=color.orange)
+trail_renderer = <purple><b>TrailRenderer</b></purple>(<olive>parent</olive>=pivot, <olive>y</olive>=<yellow>1</yellow>, <olive>thickness</olive>=<yellow>2</yellow><yellow>0</yellow>, <olive>color</olive>=color.orange)
+trail_renderer = <purple><b>TrailRenderer</b></purple>(<olive>parent</olive>=pivot, <olive>thickness</olive>=<yellow>2</yellow>, <olive>color</olive>=color.orange, alpha=.<yellow>5</yellow>, <olive>position</olive>=(.<yellow>4</yellow>,.<yellow>8</yellow>))
+trail_renderer = <purple><b>TrailRenderer</b></purple>(<olive>parent</olive>=pivot, <olive>thickness</olive>=<yellow>2</yellow>, <olive>color</olive>=color.orange, alpha=.<yellow>5</yellow>, <olive>position</olive>=(-.<yellow>5</yellow>,.<yellow>7</yellow>))
 
 <purple>def</purple> update():
-    player.position = mouse.position * <yellow>1</yellow><yellow>0</yellow>
+    player.position = lerp(player.position, mouse.position*<yellow>1</yellow><yellow>0</yellow>, time.dt*<yellow>4</yellow>)
+
+    <purple>if</purple> pivot:
+        pivot.rotation_z -= <yellow>3</yellow>
+        pivot.rotation_x -= <yellow>2</yellow>
+
+<purple>def</purple> input(key):
+    <purple>if</purple> key == <green>'space'</green>:
+        destroy(pivot)
+</div>
+</div></div>
+<div id="SynthGUI"><div id="SynthGUI" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">SynthGUI<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/ursfx_synth.py"><gray>ursina.prefabs.ursfx_synth</gray></a><br><br><params class="params">SynthGUI(**kwargs)</params>
+
+wave_panel<gray> = Entity(parent=self, scale=.35, x=-0)</gray> 
+waveform<gray> = Entity(parent=self.wave_panel, scale_y=.75)</gray> 
+waveform_bg<gray> = Entity(parent=self.waveform, model='quad', origin=(-.5,-.5), z=.01, color=color.black66)</gray> 
+volume_slider<gray> = Slider(parent=self.wave_panel, x=-.05, vertical=True, scale=1.95, min=.05, max=1, default=.75, step=.01, on_value_changed=self.play)</gray> 
+wave_selector<gray> = ButtonGroup(('sine', 'triangle', 'square', 'noise'), parent=self.wave_panel, scale=.11, y=-.075)</gray> 
+pitch_slider<gray> = Slider(parent=self.wave_panel, y=-.25, scale=1.95, min=-36, max=36, default=0, step=1, on_value_changed=self.play, text='pitch')</gray> 
+pitch_change_slider<gray> =  Slider(parent=self.wave_panel, y=-.325, scale=1.95, min=-12, max=12, default=0, step=1, on_value_changed=self.play, text='pitch change')</gray> 
+speed_slider<gray> =  Slider(parent=self.wave_panel, scale=1.95, min=.5, max=4, default=1, step=.1, on_value_changed=self.play, y=-.4, text='speed')</gray> 
+coin_button<gray> = Button(text='coin', parent=self.wave_panel, scale=(.25, .125), origin=(-.5,.5), y=-.45, on_click=coin_sound)</gray> 
+knobs<gray> = [Draggable(parent=self.waveform, scale=.05, model='circle', color=color.light_gray, highlight_color=color.azure, position=default_positions[i], i=i, min_y=0, max_y=1) for i in range(5)]</gray> 
+line<gray> = Entity(parent=self.waveform, model=Mesh(vertices=[Vec3(0,0,0), Vec3(1,0,0)], mode='line', thickness=3), z=.01, color=color.light_gray)</gray> 
+bg<gray> = Entity(parent=self.wave_panel, model='wireframe_quad', origin=(-.5,-.5), z=.02, color=color.black, scale_x=1)</gray> 
+play_button<gray> = Button(text='&gt', parent=self.wave_panel, model='circle', scale=(.125, .125), color=color.azure, origin=(-.5,-.5), position=(-.075,1.025), on_click=self.play)</gray> 
+copy_button<gray> = Button(text='copy', parent=self.wave_panel, scale=(.25, .125), color=color.dark_gray, origin=(-.5,-.5), position=(-.075+.125+.025, 1.025), on_click=self.copy_code)</gray> 
+paste_button<gray> = Button(text='paste', parent=self.wave_panel, scale=(.25, .125), color=color.dark_gray, origin=(-.5,-.5), position=(self.copy_button.x + self.copy_button.scale_x + .025, 1.025), on_click=self.paste_code)</gray> 
+code_text<gray> = Text('', parent=self.wave_panel, scale=2, position=(self.paste_button.x+self.paste_button.scale_x+.025,1.11))</gray> 
+background_panel<gray> = Entity(model=Quad(radius=.025), parent=self.wave_panel, color=color.black66, z=1, origin=(-.5,-.5), scale=(1.125,1.75+.025), position=(-.1,-.6))</gray> 
+recipe
+
+coin_sound()   
+drag(<gray>this_knob=knob</gray>)   
+drop(<gray>this_knob=knob</gray>)   
+update()   
+input(<gray>key</gray>)   
+copy_code()   
+paste_code(<gray>code=""</gray>)   
+draw()   
+play()   
+
+<div class="example">app = Ursina()
+
+instance = <purple><b>SynthGUI</b></purple>()
+
+
+<purple>if</purple> __name__ == <green>'__main__'</green>:
+    Sprite(<green>'shore'</green>, <olive>z</olive>=<yellow>1</yellow><yellow>0</yellow>, ppu=<yellow>6</yellow><yellow>4</yellow>, <olive>color</olive>=color.gray)
+    app.run()
 </div>
 </div></div>
 <div id="VideoRecorder"><div id="VideoRecorder" style="color:hsl(320.0, 89%, 28%); font-size:1.75em; font-weight:normal;">VideoRecorder<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/video_recorder.py"><gray>ursina.prefabs.video_recorder</gray></a><br><br><params class="params">VideoRecorder(duration=5, name='untitled_video', **kwargs)</params>
@@ -2949,10 +3045,10 @@ grid_layout(<gray>l, max_x=8, max_y=8, spacing=(0,0,0), origin=(-.5,.5,0), offse
 <div class="example">center = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>scale</olive>=.<yellow>1</yellow>, <olive>color</olive>=color.red)
 p = <olive>Entity</olive>()
 <purple>for</purple> i in <blue>range</blue>(<yellow>4</yellow>*<yellow>5</yellow>):
-    b = Button(<olive>parent</olive>=p, <olive>model</olive>=<green>'quad'</green>, <olive>scale</olive>=Vec2(.<yellow>2</yellow>,.<yellow>1</yellow>), <olive>text</olive>=str(i), <olive>color</olive>=color.tint(color.random_color(),-.<yellow>6</yellow>))
-    b.text_entity.<olive>scale</olive>=<yellow>1</yellow>
+    b = Button(<olive>parent</olive>=p, <olive>model</olive>=<green>'quad'</green>, <olive>scale</olive>=.<yellow>5</yellow>, <olive>scale_x</olive>=<yellow>1</yellow>, <olive>text</olive>=str(i), <olive>color</olive>=color.tint(color.random_color(),-.<yellow>6</yellow>))
+    b.text_entity.world_scale = <yellow>1</yellow>
 t = time.time()
-grid_layout(p.children, max_x=<yellow>7</yellow>, max_<olive>y</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>origin</olive>=(<yellow>0</yellow>, .<yellow>5</yellow>), spacing=(.<yellow>1</yellow><yellow>5</yellow>, <yellow>0</yellow>))
+grid_layout(p.children, max_x=<yellow>7</yellow>, max_<olive>y</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>origin</olive>=(<yellow>0</yellow>, .<yellow>5</yellow>))
 center = <olive>Entity</olive>(<olive>parent</olive>=camera.ui, <olive>model</olive>=Circle(), <olive>scale</olive>=.<yellow>0</yellow><yellow>0</yellow><yellow>5</yellow>, <olive>color</olive>=color.lime)
 EditorCamera()
 <blue>print</blue>(time.time() - t)
@@ -3045,15 +3141,11 @@ This will make target entity move up or down when you hover the entity/its child
 while scrolling the scroll wheel.
 <green>''</green>'</green>
 
-zone = <olive>Entity</olive>(<olive>parent</olive>=camera.ui)
-zone.set_scissor(Vec3(-.<yellow>5</yellow>,-.<yellow>2</yellow><yellow>5</yellow>,<yellow>0</yellow>), Vec3(.<yellow>5</yellow>,.<yellow>2</yellow><yellow>5</yellow>,<yellow>0</yellow>))
-
-button_parent = Button(<olive>parent</olive>=zone, <olive>model</olive>=<green>'quad'</green>, <olive>scale</olive>=(.<yellow>4</yellow>, .<yellow>8</yellow>), <olive>collider</olive>=<green>'box'</green>, visible_self=False)
-
+p = Button(<olive>model</olive>=<green>'quad'</green>, <olive>scale</olive>=(.<yellow>4</yellow>, .<yellow>8</yellow>), <olive>collider</olive>=<green>'box'</green>)
 <purple>for</purple> i in <blue>range</blue>(<yellow>8</yellow>):
-    Button(<olive>parent</olive>=button_parent , scale_<olive>y</olive>=.<yellow>0</yellow><yellow>5</yellow>, <olive>text</olive>=f<green>'giopwjoigjwr{i}'</green>, origin_<olive>y</olive>=.<yellow>5</yellow>, <olive>y</olive>=.<yellow>5</yellow>-(i*.<yellow>0</yellow><yellow>5</yellow><yellow>1</yellow>))
+    Button(<olive>parent</olive>=p , scale_<olive>y</olive>=.<yellow>0</yellow><yellow>5</yellow>, <olive>text</olive>=f<green>'giopwjoigjwr{i}'</green>, origin_<olive>y</olive>=.<yellow>5</yellow>, <olive>y</olive>=.<yellow>5</yellow>-(i*.<yellow>0</yellow><yellow>5</yellow>))
 
-button_parent.add_script(<purple><b>Scrollable</b></purple>(min=-.<yellow>1</yellow><yellow>5</yellow>, max=.<yellow>1</yellow><yellow>2</yellow><yellow>5</yellow>))
+p.add_script(<purple><b>Scrollable</b></purple>())
 </div>
 </div></div>
 <div id="SmoothFollow"><div id="SmoothFollow" style="color:hsl(290.0, 89%, 28%); font-size:1.75em; font-weight:normal;">SmoothFollow<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/scripts/smooth_follow.py"><gray>ursina.scripts.smooth_follow</gray></a><br><br><params class="params">SmoothFollow(target=None, offset=(0,0,0), speed=8, rotation_speed=0, rotation_offset=(0,0,0))</params>
@@ -3107,7 +3199,8 @@ EditorCamera()
 Sky()
 </div>
 </div></div>
-<div id="models"><div id="models" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">models</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;">'circle'
+<div id="models"><div id="models" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">models</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;">'arrow'
+'circle'
 'cube'
 'cube_uv_top'
 'diamond'
@@ -3115,39 +3208,36 @@ Sky()
 'line'
 'plane'
 'quad'
+'scale_gizmo'
 'sky_dome'
 'sphere'
 'wireframe_cube'
+'wireframe_quad'
 
 
 <div class="example">e = Entity(model='quad')
 </div>
 </div></div>
-<div id="textures"><div id="textures" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">textures</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;">'acorn_font_tileset'
-'arrow_down'
+<div id="textures"><div id="textures" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">textures</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;">'arrow_down'
 'arrow_right'
-'blender_matcap'
 'brick'
 'circle'
-'circle_hollow'
 'circle_outlined'
+'cog'
 'cursor'
 'file_icon'
 'folder'
 'grass'
-'Hack_square_64x64'
 'heightmap_1'
 'horizontal_gradient'
-'level_1'
 'noise'
 'radial_gradient'
 'reflection_map_3'
 'shore'
 'sky_default'
 'sky_sunset'
-'tileset_cave'
-'tileset_cave_blue_min'
-'ursina'
+'test_tileset'
+'tilemap_test_level'
 'ursina_logo'
 'ursina_wink_0000'
 'ursina_wink_0001'
@@ -3160,40 +3250,21 @@ Sky()
 </div></div>
 <div id="shaders"><div id="shaders" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">shaders</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;">basic_lighting_shader
 colored_lights_shader
-fading_shadows_shader
-fresnel_shader
-geom_shader
 lit_with_shadows_shader
 matcap_shader
 normals_shader
-point_shader
 texture_blend_shader
 transition_shader
 triplanar_shader
 unlit_shader
-__init__
-bw_glitch_shader
 camera_contrast
 camera_empty
 camera_grayscale
 camera_outline_shader
 camera_vertical_blur
-curvature_shader
 fxaa
-global_fog_shader
-main
-mix
-normals
 pixelation_shader
-screen_reflection_2d
-screen_space_normals_shader
 ssao
-ssao_2
-ssao_4
-ssao_cg
-ssao_old
-ssr_base
-ssr_zfar
 
 
 <div class="example">from ursina.shaders import normals_shader
@@ -3202,6 +3273,7 @@ e = Entity(shader=normals_shader)
 </div></div>
 <div id="Circle"><div id="Circle" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Circle<gray>(<a style="color: gray;" href="#Mesh">Mesh</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/models/procedural/circle.py"><gray>ursina.models.procedural.circle</gray></a><br><br><params class="params">Circle(resolution=16, radius=.5, rotate=True, mode='ngon', **kwargs)</params>
 
+vertices<gray> = list()</gray> 
 
 
 <div class="example">e = <olive>Entity</olive>(<olive>model</olive>=<purple><b>Circle</b></purple>(<yellow>8</yellow>, <olive>mode</olive>=<green>'line'</green>, <olive>thickness</olive>=<yellow>1</yellow><yellow>0</yellow>), <olive>color</olive>=color.color(<yellow>6</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>3</yellow>))
@@ -3249,7 +3321,7 @@ _ed = EditorCamera()
 <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.green, <olive>scale</olive>=.<yellow>0</yellow><yellow>5</yellow>)
 </div>
 </div></div>
-<div id="Prismatoid"><div id="Prismatoid" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Prismatoid<gray>(<a style="color: gray;" href="#Mesh">Mesh</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/models/procedural/prismatoid.py"><gray>ursina.models.procedural.prismatoid</gray></a><br><br><params class="params">Prismatoid(base_shape=Quad, origin=(0,0), path=((0,0,0),(0,1,0)), thicknesses=((1,1),), look_at=True, mode='triangle', **kwargs)</params>
+<div id="Prismatoid"><div id="Prismatoid" style="color:hsl(259.0, 89%, 28%); font-size:1.75em; font-weight:normal;">Prismatoid<gray>(<a style="color: gray;" href="#Mesh">Mesh</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/models/procedural/prismatoid.py"><gray>ursina.models.procedural.prismatoid</gray></a><br><br><params class="params">Prismatoid(base_shape=Quad, origin=(0,0), path=((0,0,0),(0,1,0)), thicknesses=((1,1),), look_at=True, cap_ends=True, mode='triangle', **kwargs)</params>
 
 base_shape<gray> = base_shape</gray> 
 
