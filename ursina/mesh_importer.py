@@ -210,11 +210,11 @@ def obj_to_ursinamesh(
         name = name[:-4]
 
     for f in path.glob(f'**/{name}.obj'):
-        filepath = path / (os.path.splitext(f)[0] + '.obj')
-        print('read obj at:', filepath)
+        # filepath = path / (os.path.splitext(f)[0] + '.obj')
+        print('read obj at:', f)
 
 
-        with open(filepath, 'r') as file:
+        with f.open('r') as file:
             lines = file.readlines()
 
         verts = list()
