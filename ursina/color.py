@@ -82,6 +82,9 @@ def to_hsv(color):
     return Color(colorsys.rgb_to_hsv(color[0], color[1], color[2]) + (color[3],))
 
 def hex(value):
+    if isinstance(value, int):
+        return rgb(*tuple((value >> (8 * i)) & 0xff for i in [2,1,0]))
+
     if value.startswith('#'):
         value = value[1:]
     return rgb(*tuple(int(value[i:i+2], 16) for i in (0, 2, 4)))
