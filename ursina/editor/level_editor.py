@@ -163,7 +163,7 @@ class LevelEditor(Entity):
             if self.origin_mode_menu.value in ('last', 'individual'):
                 gizmo.world_position = self.selection[-1].world_position
             elif self.origin_mode_menu.value == 'center':
-                gizmo.world_position = sum([e.world_position for e in self.selection]) / len(self.selection)
+                gizmo.world_position = sum(e.world_position for e in self.selection) / len(self.selection)
 
             if self.local_global_menu.value == 'local' and self.origin_mode_menu.value == 'last':
                 gizmo.world_rotation = self.selection[-1].world_rotation
@@ -822,7 +822,7 @@ class LevelMenu(Entity):
             print('found scene:', scene_file)
             name = scene_file.stem
             if '[' in name and ']' in name:
-                x, y = [int(e) for e in name.split('[')[1].split(']')[0].split(',')]
+                x, y = (int(e) for e in name.split('[')[1].split(']')[0].split(','))
                 print('scene is at coordinate:', x, y)
                 level_editor.scenes[x][y].path = scene_file
 

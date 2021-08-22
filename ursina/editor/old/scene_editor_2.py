@@ -39,7 +39,7 @@ class EditorIcon(Draggable):
         for icon in self.scene_editor.selection:
             icon.entity.world_parent = icon.entity.original_parent
 
-        s = Sequence(*[Func(setattr, icon.entity, 'world_position', icon.entity._start_position) for icon in self.scene_editor.selection])
+        s = Sequence(*(Func(setattr, icon.entity, 'world_position', icon.entity._start_position) for icon in self.scene_editor.selection))
         self.scene_editor.record_undo(s)
 
 

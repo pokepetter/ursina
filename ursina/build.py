@@ -178,9 +178,9 @@ if build_engine:
             'models'
             ):
             continue
-        print('copying:', f, '-->', str((python_dest / 'Lib/site-packages/panda3d/' / f.name)))
+        print('copying:', f, '-->', str(python_dest / 'Lib/site-packages/panda3d/' / f.name))
         if f.is_file():
-            copy(str(f), str((python_dest / 'Lib/site-packages/panda3d/' / f.name)))
+            copy(str(f), str(python_dest / 'Lib/site-packages/panda3d/' / f.name))
         else:
             (python_dest / 'Lib/site-packages/panda3d/' / f.name).mkdir(parents=True, exist_ok=True)
             copytree(f, (python_dest / 'Lib/site-packages/panda3d/' / f.name))
@@ -266,7 +266,7 @@ if build_game:
     if compile:
         c = 'c'
     with Path(build_folder / f'{project_name}.bat').open('w') as f:
-        f.write(dedent(f'''
+        f.write(dedent(fr'''
             chcp 65001
             set PYTHONIOENCODING=utf-8
 

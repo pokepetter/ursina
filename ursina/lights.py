@@ -46,7 +46,7 @@ class DirectionalLight(Light):
             lens = self._light.get_lens()
             lens.set_near_far(bmin.z*2, bmax.z*2)
             lens.set_film_offset((bmin.xy + bmax.xy) * .5)
-            lens.set_film_size((bmax.xy - bmin.xy))
+            lens.set_film_size(bmax.xy - bmin.xy)
         else:
             self._light.set_shadow_caster(False)
 

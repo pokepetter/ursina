@@ -91,7 +91,7 @@ def reset_rotation_helper():
 win_text_entity = Text(y=.35, text='', color=color.green, origin=(0,0), scale=3)
 
 def check_for_win():
-    if set([e.world_rotation for e in cubes]) == set((Vec3(0,0,0),)):
+    if {e.world_rotation for e in cubes} == {Vec3(0,0,0)}:
         win_text_entity.text = 'SOLVED!'
         win_text_entity.appear()
     else:

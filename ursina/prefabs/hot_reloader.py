@@ -96,7 +96,7 @@ class HotReloader(Entity):
     def hot_reload(self):
         for e in [e for e in scene.entities if not e.eternal]:
             try:
-                with open(e.line_definition.filename, 'r', encoding='utf8') as f:
+                with open(e.line_definition.filename, encoding='utf8') as f:
                     # print(f.readlines())
                     code = f.readlines()[e.line_definition.lineno-1]
 
@@ -124,7 +124,7 @@ class HotReloader(Entity):
             return
 
 
-        with open(self.path, 'r', encoding='utf8') as file:
+        with open(self.path, encoding='utf8') as file:
             text = file.read()
             text = make_code_reload_safe(text)
 
@@ -181,7 +181,7 @@ class HotReloader(Entity):
 
     def reload_models(self):
         entities = [e for e in scene.entities if e.model]
-        unique_names = list(set([e.model.name.split('.')[0] for e in entities]))
+        unique_names = list({e.model.name.split('.')[0] for e in entities})
         # print(unique_names)
         changed_models = list()
 
@@ -222,7 +222,7 @@ class HotReloader(Entity):
             # print(shader, shader.path)
             # TODO: check if file has changed
 
-            with open(shader.path, 'r', encoding='utf8') as f:
+            with open(shader.path, encoding='utf8') as f:
                 try:
                     print('trying to reload:', shader.path.name)
                     text = f.read()
