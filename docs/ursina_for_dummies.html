@@ -412,19 +412,19 @@ So you are seeing a lot of things that look like cubes but don't really feel lik
 <br>
 Textures are (usually) square images loaded into the video card memory. As with any image, a small image is fast to load into memory and fast to render, but provides less detail, a large image uses more memory and is slower to render, but provides more detail. You may tend to think that with larger textures your game will look neater but it may lead to slow rendering times. It all depends on your game and what you want to show. If it is a model that will be seen only from far away, why do you need high detail? If its too close the texture will look bad. It's something you need to agree on with your graphics artist.<br>
 <br>
-Anyway, get a texture from somewhere, for example get <a href="https://www.google.com/search?q=texture+3d+square+create">https://www.google.com/search?q=texture+3d+square+create</a> and save it next to your program file as a JPG. For this tutorial name it create.jpg and make sure it is square like 128x128 or 256x256 or 512x512 pixels.<br>
+Anyway, get a texture from somewhere, for example get <a href="https://www.google.com/search?q=texture+3d+square+crate">https://www.google.com/search?q=texture+3d+square+crate</a> and save it next to your program file as a JPG. For this tutorial name it crate.jpg and make sure it is square like 128x128 or 256x256 or 512x512 pixels.<br>
 <br>
 Now, when creating an entity, add the texture parameter, for example:<br>
 <br>
-<div class="code_block" style="margin-left: 0em;">cube = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.orange, <olive>scale</olive>=(<yellow>2</yellow>,<yellow>2</yellow>,<yellow>2</yellow>), <olive>texture</olive>="create")
+<div class="code_block" style="margin-left: 0em;">cube = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.orange, <olive>scale</olive>=(<yellow>2</yellow>,<yellow>2</yellow>,<yellow>2</yellow>), <olive>texture</olive>="crate")
 </div><br>
-Notice while the file is called "create.jpg", you only name it "create". The engine will look for JPG, PNG or even PSD files automatically. Feel free to add the parameter to all places where you create a cube.<br>
+Notice while the file is called "crate.jpg", you only name it "crate". The engine will look for JPG, PNG or even PSD files automatically. Feel free to add the parameter to all places where you create a cube.<br>
 <br>
 Now, something you will notice is that while the texture is applied to all cubes, each one has a different colour. This is because the colour of the texture is affected by the colour of the cube itself, so if the cube is red the whole object will look reddish, this operation is called a colour multiplication.<br>
 <br>
 This is pretty much the same problem you have when trying to paint a wall when there is another colur behind. Colours mix and you don't get what you want. This is exactly why painters start with a white canvas and why you prime a wall white before painting it with the colour you want. The way to get the right texture colour is to provide a full white colour to the cube, so in every entity creation replace the cube colour for "colour.white" or color.rgb(255,255,255) like:<br>
 <br>
-<div class="code_block" style="margin-left: 0em;">cube = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.white, <olive>scale</olive>=(<yellow>2</yellow>,<yellow>2</yellow>,<yellow>2</yellow>), <olive>texture</olive>="create")
+<div class="code_block" style="margin-left: 0em;">cube = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.white, <olive>scale</olive>=(<yellow>2</yellow>,<yellow>2</yellow>,<yellow>2</yellow>), <olive>texture</olive>="crate")
 </div><br>
 Now run your program again and you should see the real texture colour. You may still press space to change the central cube colour.<br>
 <br>
@@ -647,10 +647,10 @@ texoffset<yellow>2</yellow> = <yellow>0</yellow>.<yellow>0</yellow>             
         y = random_generator.random() * <yellow>1</yellow><yellow>0</yellow> - <yellow>5</yellow>     <gray># Value between -<yellow>5</yellow> and <yellow>5</yellow></gray>
         z = random_generator.random() * <yellow>1</yellow><yellow>0</yellow> - <yellow>5</yellow>     <gray># Value between -<yellow>5</yellow> and <yellow>5</yellow></gray>
         s = random_generator.random() * <yellow>1</yellow>          <gray># Value between <yellow>0</yellow> and <yellow>1</yellow></gray>
-        newcube = <olive>Entity</olive>(<olive>parent</olive>=cube, <olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.white, <olive>position</olive>=(x, y, z), <olive>scale</olive>=(s,s,s), <olive>texture</olive>="create")
+        newcube = <olive>Entity</olive>(<olive>parent</olive>=cube, <olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.white, <olive>position</olive>=(x, y, z), <olive>scale</olive>=(s,s,s), <olive>texture</olive>="crate")
         cubes.append(newcube)
         <green><green>''</green></green>'Create another child cube and add it to the list but using the newcube as the parent, keep the same colour, make it smaller<green><green>''</green></green>'
-        childcube = <olive>Entity</olive>(<olive>parent</olive>=newcube, <olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.white, <olive>position</olive>=(<yellow>1</yellow>, <yellow>0</yellow>, <yellow>0</yellow>), <olive>scale</olive>=(s/<yellow>2</yellow>, s/<yellow>2</yellow>, s/<yellow>2</yellow>), <olive>texture</olive>="create")
+        childcube = <olive>Entity</olive>(<olive>parent</olive>=newcube, <olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.white, <olive>position</olive>=(<yellow>1</yellow>, <yellow>0</yellow>, <yellow>0</yellow>), <olive>scale</olive>=(s/<yellow>2</yellow>, s/<yellow>2</yellow>, s/<yellow>2</yellow>), <olive>texture</olive>="crate")
         cubes.append(childcube)
 
 app = Ursina()
