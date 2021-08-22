@@ -18,7 +18,7 @@ class MenuMenu(Entity):
         self.background = Sprite('shore', color=color.dark_gray, z=1)
 
         # [MAIN MENU] WINDOW START
-        # Titile of our menu
+        # Title of our menu
         Text("MAIN MENU", parent=self.main_menu, y=0.4, x=0, origin=(0,0))
 
         # Reference of our action function for quit button
@@ -45,7 +45,7 @@ class MenuMenu(Entity):
         # [MAIN MENU] WINDOW END
 
         # [OPTIONS MENU] WINDOW START
-        # Titile of our menu
+        # Title of our menu
         Text ("OPTIONS MENU", parent=self.options_menu, y=0.4, x=0, origin=(0, 0))
 
         # Reference of our action function for back button
@@ -60,7 +60,7 @@ class MenuMenu(Entity):
         # [OPTIONS MENU] WINDOW END
 
         # [HELP MENU] WINDOW START
-        # Titile of our menu
+        # Title of our menu
         Text ("HELP MENU", parent=self.help_menu, y=0.4, x=0, origin=(0, 0))
 
         # Reference of our action function for back button

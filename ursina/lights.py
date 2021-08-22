@@ -89,7 +89,7 @@ class SpotLight(Light):
 
 if __name__ == '__main__':
     app = Ursina()
-    from ursina.shaders import lit_with_shadows_shader # you have to apply this shader to enties for them to recieve shadows.
+    from ursina.shaders import lit_with_shadows_shader # you have to apply this shader to enties for them to receive shadows.
     EditorCamera()
     Entity(model='plane', scale=10, color=color.gray, shader=lit_with_shadows_shader)
     Entity(model='cube', y=1, shader=lit_with_shadows_shader)

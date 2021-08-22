@@ -15,7 +15,7 @@ class Slider(Entity):
         self.step = 0
         self.height = height
 
-        self.on_value_changed = None    # set this to a function you wnat to be called when the slider changes
+        self.on_value_changed = None    # set this to a function you want to be called when the slider changes
         self.setattr = None             # set this to (object, 'attrname') to set that value when the slider changes
 
         self.label = Text(parent=self, origin=(0.5, 0), x=-0.025, text=text)

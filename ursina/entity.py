@@ -44,7 +44,7 @@ class Entity(NodePath):
         super().__init__(self.__class__.__name__)
 
         self.name = camel_to_snake(self.type)
-        self.enabled = True     # disabled entities wil not be visible nor run code.
+        self.enabled = True     # disabled entities will not be visible nor run code.
         self.visible = True
         self.ignore = False     # if True, will not try to run code.
         self.eternal = False    # eternal entities does not get destroyed on scene.clear()
@@ -56,7 +56,7 @@ class Entity(NodePath):
         if add_to_scene_entities:
             scene.entities.append(self)
 
-        self.model = None       # set model with model='model_name' (without file type extention)
+        self.model = None       # set model with model='model_name' (without file type extension)
         self.color = color.white
         self.texture = None     # set model with texture='texture_name'. requires a model to be set beforehand.
         self.render_queue = 0
@@ -203,7 +203,7 @@ class Entity(NodePath):
                     # print('loaded model successively')
                 else:
                     # if '.' in value:
-                    #     print(f'''trying to load model with specific filename extention. please omit it. '{value}' -> '{value.split('.')[0]}' ''')
+                    #     print(f'''trying to load model with specific filename extension. please omit it. '{value}' -> '{value.split('.')[0]}' ''')
                     print('missing model:', value)
                     return
 
@@ -253,7 +253,7 @@ class Entity(NodePath):
             super().__setattr__(name, value)
         except:
             pass
-            # print('failed to set attribiute:', name)
+            # print('failed to set attribute:', name)
 
 
     @property
@@ -1102,7 +1102,7 @@ class Entity(NodePath):
 
     def intersects(self, traverse_target=scene, ignore=(), debug=False):
         if isinstance(self.collider, MeshCollider):
-            raise Exception('''error: mesh colliders can't intersect other shapes, only primitive shapes can. Mesh colliders can "recieve" collisions though.''')
+            raise Exception('''error: mesh colliders can't intersect other shapes, only primitive shapes can. Mesh colliders can "receive" collisions though.''')
 
         from ursina.hit_info import HitInfo
 
