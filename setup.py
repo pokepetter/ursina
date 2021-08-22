@@ -24,8 +24,8 @@ setup(
         'screeninfo',
         'pyperclip',
     ],
-
     extras_require={
         'extras':  ['psd-tools3', 'imageio', 'psutil', 'hurry.filesize'],
-    }
+    },
+    python_requires='>=3.6',
 )
