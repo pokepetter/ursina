@@ -142,7 +142,7 @@ class LevelEditor(Entity):
     def input(self, key):
         if held_keys['control'] and not held_keys['shift'] and not held_keys['alt'] and key == 's':
             if not self.current_scene:
-                print('no current_scene, can't save')
+                print("no current_scene, can't save")
                 return
 
             self.current_scene.save()
