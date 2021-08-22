@@ -6,7 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
-      - run: pip install --upgrade pip wheel
+      - run: pip install --upgrade pip
       - run: pip install bandit codespell flake8 mypy pyupgrade safety
       - run: bandit --recursive  --skip B102,B110,B307,B311,B404,B603 .
       - run: codespell --ignore-words-list="crate,nd,te" .
