@@ -50,7 +50,7 @@ class Window(WindowProperties):
                 self.screen_resolution = (get_monitors()[0].width, get_monitors()[0].height)
                 print('OS:', os.name)
             except:
-                print('using default sceen resolution.', 'OS:', os.name)
+                print('using default screen resolution.', 'OS:', os.name)
                 self.screen_resolution = Vec2(1366, 768)
 
         print('screen resolution:', self.screen_resolution)

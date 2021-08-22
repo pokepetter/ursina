@@ -282,7 +282,7 @@ if __name__ == '__main__':
     '''
     pixel editor example, it's basically a drawing tool.
     can be useful for level editors and such
-    here we create a new texture, but can also give it an exisitng texture to modify.
+    here we create a new texture, but can also give it an existing texture to modify.
     '''
     from PIL import Image
     t = Texture(Image.new(mode='RGBA', size=(32,32), color=(0,0,0,1)))

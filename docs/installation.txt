@@ -14,7 +14,7 @@ Installing ursina
 
 ## Troubleshooting
 
-<b>ursina installed sucessfully, but python can't find it when I try to run a script</b>
+<b>ursina installed successfully, but python can't find it when I try to run a script</b>
 
 If you're using a venv, make sure you're installing it to the venv and not to the default location.
 Alternatively you can just not use a venv.

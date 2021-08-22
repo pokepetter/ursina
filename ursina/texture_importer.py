@@ -35,13 +35,13 @@ def load_texture(name, path=None):
 
 
     for folder in folders:
-        if '.' in name: # got name with file extention
+        if '.' in name: # got name with file extension
             for filename in folder.glob('**/' + name):
                 t = Texture(filename.resolve())
                 imported_textures[name] = t
                 return t
 
-        for filename in folder.glob('**/' + name + '.*'): # no file extention given, so try all supported
+        for filename in folder.glob('**/' + name + '.*'): # no file extension given, so try all supported
             if filename.suffix in file_types:
                 # print('found:', filename)
                 t = Texture(filename.resolve())

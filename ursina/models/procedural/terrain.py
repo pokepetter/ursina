@@ -27,7 +27,7 @@ class Terrain(Mesh):
         self.height_values = flip(self.height_values, axis=0)
         self.height_values = swapaxes(self.height_values, 0, 1)
 
-        # copy this from Plane to avoid unecessary init
+        # copy this from Plane to avoid unnecessary init
         self.vertices, self.triangles = list(), list()
         self.uvs = list()
         self.normals = list()

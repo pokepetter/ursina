@@ -103,7 +103,7 @@ class Text(Entity):
             return
 
         # parse tags
-        text = self.start_tag + self.end_tag + str(text) # start with empty tag for alignemnt to work?
+        text = self.start_tag + self.end_tag + str(text) # start with empty tag for alignment to work?
         sections = list()
         section = ''
         tag = self.start_tag+'default'+self.end_tag

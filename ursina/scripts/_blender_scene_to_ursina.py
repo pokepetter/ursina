@@ -68,7 +68,7 @@ for key, ob in unique_objects.items():
             verts.append((round(v.co[0],4),round(v.co[2],4),round(v.co[1],4)))
             normals.append((v.normal[0], v.normal[2], v.normal[1]))
 
-    # average the vertex normals ot get face normals
+    # average the vertex normals to get face normals
     sharp_normals = []
     for i in range(0, len(normals), 3):
         averaged_normal = (

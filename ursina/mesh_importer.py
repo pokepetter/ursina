@@ -76,7 +76,7 @@ def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursina
 if application.development_mode:
 
     if platform.system() == 'Windows':
-        # get blender path by getting default program for '.blend' file extention
+        # get blender path by getting default program for '.blend' file extension
         import shlex
         import winreg
 

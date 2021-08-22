@@ -202,7 +202,7 @@ z-index: 1;
             parameters
                 How instantiate the class, ie. Button(text='', **kwargs).
                 '**kwargs' in this case, means you can give it optional keyword arguments.
-                For example, Button('Start', scale=.25, color=color.blue, position=(-.1,.25)) also incldues
+                For example, Button('Start', scale=.25, color=color.blue, position=(-.1,.25)) also includes
                 information on how big the button should be, its color and its position.
 
             attributes
@@ -225,7 +225,7 @@ z-index: 1;
 <div id="Entity"><div id="Entity" style="color:hsl(49.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Entity<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/entity.py"><gray>ursina.entity</gray></a><br><br><params class="params">Entity(add_to_scene_entities=True, **kwargs)</params>
 
 name<gray> = camel_to_snake(self.type)</gray> 
-enabled<gray> = True     # disabled entities wil not be visible nor run code.</gray> 
+enabled<gray> = True     # disabled entities will not be visible nor run code.</gray> 
 visible<gray> = True</gray> 
 ignore<gray> = False     # if True, will not try to run code.</gray> 
 eternal<gray> = False    # eternal entities does not get destroyed on scene.clear()</gray> 
@@ -233,7 +233,7 @@ ignore_paused<gray> = False      # if True, will still run when application is p
 ignore_input<gray> = False</gray> 
 parent<gray> = scene     # default parent is scene, which means it's in 3d space. to use UI space, set the parent to camera.ui instead.</gray> 
 add_to_scene_entities<gray> = add_to_scene_entities # set to False to be ignored by the engine, but still get rendered.</gray> 
-model<gray> = None       # set model with model='model_name' (without file type extention)</gray> 
+model<gray> = None       # set model with model='model_name' (without file type extension)</gray> 
 color<gray> = color.white</gray> 
 texture<gray> = None     # set model with texture='texture_name'. requires a model to be set beforehand.</gray> 
 render_queue<gray> = 0</gray> 
@@ -1335,7 +1335,7 @@ gamepad_right_shoulder_up<gray> = 'gamepad right shoulder up'</gray>
 color
 
 
-<div class="example">from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to recieve shadows.</gray>
+<div class="example">from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to receive shadows.</gray>
 EditorCamera()
 <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>color</olive>=color.gray, <olive>shader</olive>=lit_with_shadows_shader)
 <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=<yellow>1</yellow>, <olive>shader</olive>=lit_with_shadows_shader)
@@ -1349,7 +1349,7 @@ shadow_map_resolution<gray> = Vec2(1024, 1024)</gray>
 shadows
 
 
-<div class="example">from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to recieve shadows.</gray>
+<div class="example">from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to receive shadows.</gray>
 EditorCamera()
 <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>color</olive>=color.gray, <olive>shader</olive>=lit_with_shadows_shader)
 <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=<yellow>1</yellow>, <olive>shader</olive>=lit_with_shadows_shader)
@@ -1361,7 +1361,7 @@ pivot = <olive>Entity</olive>()
 
 
 
-<div class="example">from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to recieve shadows.</gray>
+<div class="example">from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to receive shadows.</gray>
 EditorCamera()
 <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>color</olive>=color.gray, <olive>shader</olive>=lit_with_shadows_shader)
 <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=<yellow>1</yellow>, <olive>shader</olive>=lit_with_shadows_shader)
@@ -1373,7 +1373,7 @@ DirectionalLight(<olive>parent</olive>=pivot, <olive>y</olive>=<yellow>2</yellow
 
 
 
-<div class="example">from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to recieve shadows.</gray>
+<div class="example">from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to receive shadows.</gray>
 EditorCamera()
 <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>color</olive>=color.gray, <olive>shader</olive>=lit_with_shadows_shader)
 <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=<yellow>1</yellow>, <olive>shader</olive>=lit_with_shadows_shader)
@@ -1385,7 +1385,7 @@ DirectionalLight(<olive>parent</olive>=pivot, <olive>y</olive>=<yellow>2</yellow
 
 
 
-<div class="example">from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to recieve shadows.</gray>
+<div class="example">from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to receive shadows.</gray>
 EditorCamera()
 <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>color</olive>=color.gray, <olive>shader</olive>=lit_with_shadows_shader)
 <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=<yellow>1</yellow>, <olive>shader</olive>=lit_with_shadows_shader)
@@ -2278,7 +2278,7 @@ floodfill(<gray>matrix, x, y, first=True</gray>)
 <div class="example"><green><green>''</green>'
 pixel editor example, it's basically a drawing tool.
 can be useful for level editors and such
-here we create a new texture, but can also give it an exisitng texture to modify.
+here we create a new texture, but can also give it an existing texture to modify.
 <green>''</green>'</green>
 <purple>from</purple> PIL <purple>import</purple> Image
 t = Texture(Image.new(<olive>mode</olive>=<green>'RGBA'</green>, size=(<yellow>3</yellow><yellow>2</yellow>,<yellow>3</yellow><yellow>2</yellow>), <olive>color</olive>=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>)))
@@ -2302,7 +2302,7 @@ save()
 <div class="example"><green><green>''</green>'
 pixel editor example, it's basically a drawing tool.
 can be useful for level editors and such
-here we create a new texture, but can also give it an exisitng texture to modify.
+here we create a new texture, but can also give it an existing texture to modify.
 <green>''</green>'</green>
 <purple>from</purple> PIL <purple>import</purple> Image
 t = Texture(Image.new(<olive>mode</olive>=<green>'RGBA'</green>, size=(<yellow>3</yellow><yellow>2</yellow>,<yellow>3</yellow><yellow>2</yellow>), <olive>color</olive>=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>)))
@@ -2327,7 +2327,7 @@ input(<gray>key</gray>)
 <div class="example"><green><green>''</green>'
 pixel editor example, it's basically a drawing tool.
 can be useful for level editors and such
-here we create a new texture, but can also give it an exisitng texture to modify.
+here we create a new texture, but can also give it an existing texture to modify.
 <green>''</green>'</green>
 <purple>from</purple> PIL <purple>import</purple> Image
 t = Texture(Image.new(<olive>mode</olive>=<green>'RGBA'</green>, size=(<yellow>3</yellow><yellow>2</yellow>,<yellow>3</yellow><yellow>2</yellow>), <olive>color</olive>=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>)))
@@ -2487,7 +2487,7 @@ jumps_left<gray> = self.max_jumps</gray>
 gravity<gray> = 1</gray> 
 grounded<gray> = True</gray> 
 air_time<gray> = 0   # this increase while we're falling and used when calculating the distance we fall so we fall faster and faster instead of linearly.</gray> 
-traverse_target<gray> = scene     # by default, it wil collide with everything except itself. you can chage this to change the boxcast traverse target.</gray> 
+traverse_target<gray> = scene     # by default, it will collide with everything except itself. you can change this to change the boxcast traverse target.</gray> 
 gravity<gray> = 0</gray> 
 
 update()   
@@ -2591,7 +2591,7 @@ max<gray> = max</gray>
 default<gray> = default</gray> 
 step<gray> = 0</gray> 
 height<gray> = height</gray> 
-on_value_changed<gray> = None    # set this to a function you wnat to be called when the slider changes</gray> 
+on_value_changed<gray> = None    # set this to a function you want to be called when the slider changes</gray> 
 setattr<gray> = None             # set this to (object, 'attrname') to set that value when the slider changes</gray> 
 label<gray> = Text(parent=self, origin=(0.5, 0), x=-0.025, text=text)</gray> 
 bg<gray> = Entity(parent=self, model=Quad(scale=(.525, height), radius=Text.size/2, segments=3),

@@ -28,7 +28,7 @@ def update():
     right_paddle.y += (held_keys['up arrow'] - held_keys['down arrow']) * time.dt * 1
 
     if ball.collision_cooldown > 0:
-        # after a collision, wait a little while before another collision can occour.
+        # after a collision, wait a little while before another collision can occur.
         # this is to prevent the ball from colliding multiple times with the same wall because
         # it hasn't got time to be moved away from it yet.
         return

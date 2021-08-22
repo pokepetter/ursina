@@ -26,7 +26,7 @@ Creates a .bat file to start the game.
 # code
 --ignore            # add assets to ignore
 --name              # change project name
---include_modules   # inlude extra modules like this: --include_modules module_one,module_two,module_tree
+--include_modules   # include extra modules like this: --include_modules module_one,module_two,module_tree
 --overwrite         # don't ask to overwrite existing build, just overwrite
 --skip_engine
 --skip_game

@@ -400,22 +400,22 @@ So you are seeing a lot of things that look like cubes but don't really feel lik
 
 Textures are (usually) square images loaded into the video card memory. As with any image, a small image is fast to load into memory and fast to render, but provides less detail, a large image uses more memory and is slower to render, but provides more detail. You may tend to think that with larger textures your game will look neater but it may lead to slow rendering times. It all depends on your game and what you want to show. If it is a model that will be seen only from far away, why do you need high detail? If its too close the texture will look bad. It's something you need to agree on with your graphics artist.
 
-Anyway, get a texture from somewhere, for example get https://www.google.com/search?q=texture+3d+square+crate and save it next to your program file as a JPG. For this tutorial name it crate.jpg and make sure it is square like 128x128 or 256x256 or 512x512 pixels.
+Anyway, get a texture from somewhere, for example get https://www.google.com/search?q=texture+3d+square+create and save it next to your program file as a JPG. For this tutorial name it create.jpg and make sure it is square like 128x128 or 256x256 or 512x512 pixels.
 
 Now, when creating an entity, add the texture parameter, for example:
 
 # code
-cube = Entity(model='cube', color=color.orange, scale=(2,2,2), texture="crate")
+cube = Entity(model='cube', color=color.orange, scale=(2,2,2), texture="create")
 # text
 
-Notice while the file is called "crate.jpg", you only name it "crate". The engine will look for JPG, PNG or even PSD files automatically. Feel free to add the parameter to all places where you create a cube.
+Notice while the file is called "create.jpg", you only name it "create". The engine will look for JPG, PNG or even PSD files automatically. Feel free to add the parameter to all places where you create a cube.
 
 Now, something you will notice is that while the texture is applied to all cubes, each one has a different colour. This is because the colour of the texture is affected by the colour of the cube itself, so if the cube is red the whole object will look reddish, this operation is called a colour multiplication.
 
 This is pretty much the same problem you have when trying to paint a wall when there is another colur behind. Colours mix and you don't get what you want. This is exactly why painters start with a white canvas and why you prime a wall white before painting it with the colour you want. The way to get the right texture colour is to provide a full white colour to the cube, so in every entity creation replace the cube colour for "colour.white" or color.rgb(255,255,255) like:
 
 # code
-cube = Entity(model='cube', color=color.white, scale=(2,2,2), texture="crate")
+cube = Entity(model='cube', color=color.white, scale=(2,2,2), texture="create")
 # text
 
 Now run your program again and you should see the real texture colour. You may still press space to change the central cube colour.
@@ -643,10 +643,10 @@ def input(key):
         y = random_generator.random() * 10 - 5     # Value between -5 and 5
         z = random_generator.random() * 10 - 5     # Value between -5 and 5
         s = random_generator.random() * 1          # Value between 0 and 1
-        newcube = Entity(parent=cube, model='cube', color=color.white, position=(x, y, z), scale=(s,s,s), texture="crate")
+        newcube = Entity(parent=cube, model='cube', color=color.white, position=(x, y, z), scale=(s,s,s), texture="create")
         cubes.append(newcube)
         '''Create another child cube and add it to the list but using the newcube as the parent, keep the same colour, make it smaller'''
-        childcube = Entity(parent=newcube, model='cube', color=color.white, position=(1, 0, 0), scale=(s/2, s/2, s/2), texture="crate")
+        childcube = Entity(parent=newcube, model='cube', color=color.white, position=(1, 0, 0), scale=(s/2, s/2, s/2), texture="create")
         cubes.append(childcube)
 
 app = Ursina()
