@@ -39,8 +39,8 @@ class Voxel(Button):
 
             if key == 'right mouse down':
                 destroy(self)
-	    if key == 'escape':			#added this for those who don't know that shift + Q closes ursina
-		exit()
+    	    if key == 'escape':			#added this for those who don't know that shift + Q closes ursina
+                exit()
 
 for z in range(8):
     for x in range(8):
