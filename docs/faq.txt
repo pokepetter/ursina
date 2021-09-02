@@ -64,7 +64,7 @@ to structure your project in a good way, rather than micro-optimize.
 If all you want are some simple lights to make 3D shapes look more interesting,
 look at the program 'lights.py' in the samples folder.  For anything more complicated,
 you are on your own. The DirectionalLight has shadows too, but it's recommended to use the
-lit_with_shadows_shader on entities. The shadow area will be calcualted based on the scene bounds,
+lit_with_shadows_shader on entities. The shadow area will be calculated based on the scene bounds,
 so keep that in mind when isinstanciation the light.
 
 

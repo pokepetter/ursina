@@ -25,7 +25,7 @@ class MeshModes(Enum):
         return hash(self.value)
 
     def __eq__(self, other):
-        # overriden __eq__ to allow for both str and InputEvent comparisons
+        # overridden __eq__ to allow for both str and InputEvent comparisons
         if isinstance(other, MeshModes):
             return self.value == other.value
         return self.value == other

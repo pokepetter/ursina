@@ -66,7 +66,7 @@ for i, arg in enumerate(sys.argv):
             include extra modules like this: --include_modules module_one,module_two,module_tree
             --ignore            # add assets to ignore
             --name              # change project name
-            --include_modules   # inlude extra modules
+            --include_modules   # include extra modules
             --overwrite         # don't ask to overwrite existing build, just overwrite
             --skip_engine
             --skip_game

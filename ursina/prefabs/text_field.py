@@ -491,7 +491,7 @@ class TextField(Entity):
 
         if key == self.shortcuts['select_word']:
             pass
-            # move cursor to the begining
+            # move cursor to the beginning
             # select word right
 
         if key in self.shortcuts['copy']:

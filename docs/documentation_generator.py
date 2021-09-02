@@ -270,7 +270,7 @@ most_used_info = dict()
 module_info = dict()
 class_info = dict()
 
-# ignore files that are not commited
+# ignore files that are not committed
 ignored_files = list()
 for f in ignored_files:
     print('ignoring:', f)
@@ -508,7 +508,7 @@ def make_html(style, file_name):
             parameters
                 How instantiate the class, ie. Button(text='', **kwargs).
                 '**kwargs' in this case, means you can give it optional keyword arguments.
-                For example, Button('Start', scale=.25, color=color.blue, position=(-.1,.25)) also incldues
+                For example, Button('Start', scale=.25, color=color.blue, position=(-.1,.25)) also includes
                 information on how big the button should be, its color and its position.
 
             attributes

@@ -26,7 +26,7 @@ class Player(Entity):   # inherits Entity, out base class for most things. Like 
 
 
         self.model = 'quad' # tries to load model from /models folder
-        # you can aslo set it to a built in procedural model
+        # you can also set it to a built in procedural model
         # self.model = Circle(resolution=16)
 
         self.origin = (-.5, -.5)    # sets model offset. often used when working with ui

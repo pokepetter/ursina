@@ -115,7 +115,7 @@ Entity Basics
     other_entity = Entity(position=(10,1,8))
 
     e.look_at(other_entity) # make z-axis(forward) point at other_entity
-    e.look_at(other_entity, axis='up') # optinally define which axis
+    e.look_at(other_entity, axis='up') # optionally define which axis
     # text
 
 
