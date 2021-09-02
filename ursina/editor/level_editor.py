@@ -454,7 +454,7 @@ class ScaleGizmo(Draggable):
     def drag(self):
         for e in level_editor.selection:
             e.world_parent = self.scaler
-            e._original_world_scale = e.world_scale
+            e._original_world_transform = e.world_transform
         self.dragging = True
 
     def drop(self):
@@ -585,7 +585,7 @@ class QuickScaleOrRotate(Entity):
         if key.endswith(' up') and key[:-3] in self.gizmos_to_toggle.keys():
             key = key[:-3]
             self.gizmos_to_toggle[key].input('left mouse up')
-            # self.gizmos_to_toggle[key].drop()
+            self.gizmos_to_toggle[key].drop()
             if self.clear_selection:
                 level_editor.selection.clear()
                 level_editor.render_selection()
@@ -1210,7 +1210,7 @@ scale_gizmo = ScaleGizmo()
 gizmo_toggler = GizmoToggler(parent=level_editor)
 
 quick_grabber = QuickGrabber(parent=level_editor)   # requires gizmo, selector
-# QuickScaleOrRotate()    # requires scale_gizmo, gizmo_toggler, selector
+QuickScaleOrRotate()    # requires scale_gizmo, gizmo_toggler, selector
 selector = Selector(parent=level_editor)
 SelectionBox(parent=level_editor.ui, model=Quad(0, mode='line'), origin=(-.5,-.5,0), scale=(0,0,1), color=color.white33, mode='new')
 Spawner(parent=level_editor)
