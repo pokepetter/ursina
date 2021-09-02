@@ -579,7 +579,7 @@ z-index: 1;
             location = str(location)
             if 'ursina' in location:
                 location = location.split('ursina')[-1]
-                github_link = 'https://github.com/pokepetter/ursina/tree/master/ursina' + location.replace('\\', '/')
+                github_link = 'https://github.com/pokepetter/ursina/blob/master/ursina' + location.replace('\\', '/')
                 location = location.replace('\\', '.')[:-3]
                 html += f'''<a href="{github_link}"><gray>ursina{location}</gray></a><br><br>'''
 
