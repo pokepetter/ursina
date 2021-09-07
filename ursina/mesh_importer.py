@@ -92,7 +92,10 @@ if application.development_mode:
                 for blender_installation in blender_foundation_directory.glob('*'):
                     first_folder = tuple(blender_installation.glob('*'))[0] # version
                     version_name = first_folder.name[:3]
-                    application.blender_paths[version_name] = list(blender_installation.glob('blender.exe'))[0]
+                    blender_path = list(blender_installation.glob('blender.exe'))[0]
+                    if application.blender_path['default'] == blender_path:
+                        continue
+                    application.blender_paths[version_name] = blender_path
         except:
             pass
 
@@ -163,12 +166,16 @@ def get_blender(blend_file):    # try to get a matching blender version in case 
         return application.blender_paths['default']
 
     with open(blend_file, 'rb') as f:
-        blender_version_number = (f.read(12).decode("utf-8"))[-3:]   # get version from start of .blend file e.g. 'BLENDER-v280'
-        blender_version_number = blender_version_number[0] + '.' + blender_version_number[1:2]
-        print('blender_version:', blender_version_number)
-        if blender_version_number in application.blender_paths:
-            return application.blender_paths[blender_version_number]
-        else:
+        try:
+            blender_version_number = (f.read(12).decode("utf-8"))[-3:]   # get version from start of .blend file e.g. 'BLENDER-v280'
+            blender_version_number = blender_version_number[0] + '.' + blender_version_number[1:2]
+            print('blender_version:', blender_version_number)
+            if blender_version_number in application.blender_paths:
+                return application.blender_paths[blender_version_number]
+
+            print('using default blender version')
+            return application.blender_paths['default']
+        except:
             print('using default blender version')
             return application.blender_paths['default']
 
