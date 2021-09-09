@@ -7,3 +7,4 @@ include ursina/scripts/*
 include ursina/textures/*
 include ursina/textures/items/*
 include ursina/shaders/screenspace_shaders/*
+include ursina/audio/*
