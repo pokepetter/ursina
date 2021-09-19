@@ -7,6 +7,7 @@ from ursina.entity import Entity
 from ursina import color
 from ursina import application
 from ursina.scene import instance as scene    # for toggling collider visibility
+from ursina.string_utilities import print_info, print_warning
 
 
 class Window(WindowProperties):
@@ -50,14 +51,14 @@ class Window(WindowProperties):
                 self.screen_resolution = (get_monitors()[0].width, get_monitors()[0].height)
                 print('OS:', os.name)
             except:
-                print('using default screen resolution.', 'OS:', os.name)
+                print_warning('using default screen resolution.', 'OS:', os.name)
                 self.screen_resolution = Vec2(1366, 768)
 
         print('screen resolution:', self.screen_resolution)
         self.fullscreen_size = Vec2(*self.screen_resolution)
         self.windowed_size = self.fullscreen_size / 1.25
         self.windowed_position = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode
-        self.forced_aspect_ratio = None # example: window.forced_aspect_ratio = 16/9
+        self.forced_aspect_ratio = 16/9 # example: window.forced_aspect_ratio = 16/9
         self.size = self.windowed_size
         self.borderless = True
 
@@ -101,7 +102,7 @@ class Window(WindowProperties):
 
 
     def center_on_screen(self):
-        print('size;', self.size)
+        # print('size;', self.size)
         self.position = Vec2(
             int((self.screen_resolution[0] - self.size[0]) / 2),
             int((self.screen_resolution[1] - self.size[1]) / 2)
@@ -169,7 +170,10 @@ class Window(WindowProperties):
     def update_aspect_ratio(self):
         prev_aspect = self.aspect_ratio
         self.size = base.win.get_size()
-        print('changed aspect ratio:', round(prev_aspect, 3), '->', round(self.aspect_ratio, 3))
+        if prev_aspect == self.aspect_ratio:
+            return
+
+        print_info('changed aspect ratio:', round(prev_aspect, 3), '->', round(self.aspect_ratio, 3))
 
         from ursina import camera, window, application
         camera.ui_lens.set_film_size(camera.ui_size * .5 * self.aspect_ratio, camera.ui_size * .5)
@@ -215,7 +219,7 @@ class Window(WindowProperties):
     @render_mode.setter
     def render_mode(self, value):
         self._render_mode = value
-        print('render mode:', value)
+        # print('render mode:', value)
         base.wireframeOff()
 
         # disable collision display mode
@@ -288,7 +292,7 @@ class Window(WindowProperties):
                 object.__setattr__(self, name, value)
                 return
             except:
-                print('failed to set fullscreen', value)
+                print_warning('failed to set fullscreen', value)
                 pass
 
         if name == 'borderless':
@@ -317,7 +321,7 @@ class Window(WindowProperties):
                 if value == True:
                     globalClock.setMode(ClockObject.MNormal)
                 elif value == False:
-                    print('error: disabling vsync during runtime is not yet implemented')
+                    print_warning('error: disabling vsync during runtime is not yet implemented')
 
                 elif isinstance(value, (int, float, complex)):
                     globalClock.setMode(ClockObject.MLimited)

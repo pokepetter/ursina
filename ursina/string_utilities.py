@@ -34,6 +34,17 @@ def multireplace(string, replacements, ignore_case=False):
 def printvar(var):
      print(traceback.extract_stack(limit=2)[0][3][9:][:-1],"=", var)
 
+def print_info(str, *args):
+    from ursina import application
+    if application.print_info:
+        print('info:', str, *args)
+
+def print_warning(str, *args):
+    from ursina import application
+    if application.print_warnings:
+        print('\033[93mwarning:', str, *args, '\033[0m')
+
+
 
 if __name__ == '__main__':
     print(camel_to_snake('CamelToSnake'))

@@ -8,6 +8,7 @@ from ursina.mesh import Mesh
 from ursina import application
 from panda3d.core import CullFaceAttrib
 from time import perf_counter
+from ursina.string_utilities import print_info, print_warning
 
 imported_meshes = dict()
 blender_scenes = dict()
@@ -32,7 +33,7 @@ def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursina
         # warning: glob is case-insensitive on windows, so m.path will be all lowercase
         for filename in path.glob(f'**/{name}{filetype}'):
             if filetype == '.bam':
-                print('loading bam')
+                print_info('loading bam')
                 return loader.loadModel(filename)
 
             if filetype == '.ursinamesh':
@@ -44,7 +45,7 @@ def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursina
                         imported_meshes[name] = m
                         return m
                 except:
-                    print('invalid ursinamesh file:', filename)
+                    print_warning('invalid ursinamesh file:', filename)
 
 
             if filetype == '.obj':
@@ -58,7 +59,7 @@ def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursina
                 return m
 
             elif filetype == '.blend':
-                print('found blend file:', filename)
+                print_info('found blend file:', filename)
                 if compress_models(path=path, name=name):
                     # obj_to_ursinamesh(name=name)
                     return load_model(name, path)
@@ -106,10 +107,6 @@ if application.development_mode:
             blender_exec = which_process.stdout.decode().strip()
             application.blender_paths['default'] = blender_exec
 
-    from pprint import pprint
-    print('blender_paths:')
-    pprint(application.blender_paths)
-
 
 def load_blender_scene(name, path=application.asset_folder, load=True, reload=False, skip_hidden=True, models_only=False):
     scenes_folder = Path(application.asset_folder / 'scenes')
@@ -119,14 +116,14 @@ def load_blender_scene(name, path=application.asset_folder, load=True, reload=Fa
     out_file_path = scenes_folder / f'{name}.py'
     # print('loading:', out_file_path)
     if reload or not out_file_path.exists():
-        print('reload:')
+        print_info('reload:')
         t = perf_counter()
         blend_file = tuple(path.glob(f'**/{name}.blend'))
         if not blend_file:
             raise ValueError('no blender file found at:', path / name)
 
         blend_file = blend_file[0]
-        print('loading blender scene:', blend_file, '-->', out_file_path)
+        print_info('loading blender scene:', blend_file, '-->', out_file_path)
         blender = get_blender(blend_file)
         script_path = application.internal_scripts_folder / '_blender_scene_to_ursina.py'
 
@@ -160,7 +157,7 @@ def load_blender_scene(name, path=application.asset_folder, load=True, reload=Fa
 
 def get_blender(blend_file):    # try to get a matching blender version in case we have multiple blender version installed
     if not application.blender_paths:
-        raise Exception('error: trying to load .blend file, but no blender installation was found.')
+        raise Exception('error: trying to load .blend file, but no blender installation was found. blender_paths:', application.blender_paths)
 
     if len(application.blender_paths) == 1:
         return application.blender_paths['default']
@@ -169,14 +166,14 @@ def get_blender(blend_file):    # try to get a matching blender version in case 
         try:
             blender_version_number = (f.read(12).decode("utf-8"))[-3:]   # get version from start of .blend file e.g. 'BLENDER-v280'
             blender_version_number = blender_version_number[0] + '.' + blender_version_number[1:2]
-            print('blender_version:', blender_version_number)
+            print_info('blender_version:', blender_version_number)
             if blender_version_number in application.blender_paths:
                 return application.blender_paths[blender_version_number]
 
-            print('using default blender version')
+            print_info('using default blender version')
             return application.blender_paths['default']
         except:
-            print('using default blender version')
+            print_info('using default blender version')
             return application.blender_paths['default']
 
 
@@ -192,7 +189,7 @@ def compress_models(path=None, outpath=application.compressed_models_folder, nam
         blender = get_blender(blend_file)
 
         out_file_path = outpath / (blend_file.stem + '.obj')
-        print('converting .blend file to .obj:', blend_file, '-->', out_file_path, 'using:', blender)
+        print_info('converting .blend file to .obj:', blend_file, '-->', out_file_path, 'using:', blender)
 
         if platform.system() == 'Windows':
             subprocess.call(f'''"{blender}" "{blend_file}" --background --python "{export_script_path}" "{out_file_path}"''')
@@ -255,7 +252,7 @@ def obj_to_ursinamesh(
                 try:
                     tri = tuple([int(t.split('/')[0])-1 for t in l if t != '\n'])
                 except:
-                    print('error in obj file line:', i, ':', l)
+                    print_warning('error in obj file line:', i, ':', l)
                     return
                 if len(tri) == 3:
                     tris.extend(tri)
@@ -325,11 +322,11 @@ def obj_to_ursinamesh(
         if delete_obj:
             os.remove(filepath)
 
-        print('saved ursinamesh to:', outfilepath)
+        print_info('saved ursinamesh to:', outfilepath)
 
 # faster, but does not apply modifiers
 def compress_models_fast(model_name=None, write_to_disk=False):
-    print('find models')
+    print_info('find models')
     from tinyblend import BlenderFile
     application.compressed_models_folder.mkdir(parents=True, exist_ok=True)
 
@@ -435,7 +432,7 @@ def ursina_mesh_to_obj(mesh, name='', out_path=application.compressed_models_fol
     # print(obj)
     with open(out_path / (name + '.obj'), 'w') as f:
         f.write(obj)
-        print('saved obj:', out_path / (name + '.obj'))
+        print_info('saved obj:', out_path / (name + '.obj'))
 
 
 

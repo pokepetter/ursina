@@ -10,7 +10,7 @@ from ursina.window import instance as window
 from ursina import color
 from ursina.texture import Texture
 from ursina.shader import Shader
-
+from ursina.string_utilities import print_info
 
 
 class Camera(Entity):
@@ -179,7 +179,7 @@ class Camera(Entity):
                 self.set_shader_input(key, value)
 
 
-        print('set camera shader to:', shader)
+        print_info('set camera shader to:', shader)
 
 
     def set_shader_input(self, name, value):
@@ -189,8 +189,8 @@ class Camera(Entity):
                 value = value._texture    # make sure to send the panda3d texture to the shader
 
             self.filter_quad.setShaderInput(name, value)
-        else:
-            print('no filter quad')
+        # else:
+        #     print('no filter quad')
 
 
 instance = Camera()
