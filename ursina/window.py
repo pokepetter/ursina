@@ -170,8 +170,8 @@ class Window(WindowProperties):
     def update_aspect_ratio(self):
         prev_aspect = self.aspect_ratio
         self.size = base.win.get_size()
-        if prev_aspect == self.aspect_ratio:
-            return
+        # if prev_aspect == self.aspect_ratio:
+        #     return
 
         print_info('changed aspect ratio:', round(prev_aspect, 3), '->', round(self.aspect_ratio, 3))
 
