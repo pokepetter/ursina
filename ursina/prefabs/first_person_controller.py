@@ -19,9 +19,11 @@ class FirstPersonController(Entity):
         self.gravity = 1
         self.grounded = False
         self.jump_height = 2
+        self.jump_key = 'space'
         self.jump_duration = .5
         self.jumping = False
         self.air_time = 0
+        self.keys = ("w", "a", "s", "d")
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
@@ -34,8 +36,8 @@ class FirstPersonController(Entity):
         self.camera_pivot.rotation_x= clamp(self.camera_pivot.rotation_x, -90, 90)
 
         self.direction = Vec3(
-            self.forward * (held_keys['w'] - held_keys['s'])
-            + self.right * (held_keys['d'] - held_keys['a'])
+            self.forward * (held_keys[self.keys[0]] - held_keys[self.keys[2]])
+            + self.right * (held_keys[self.keys[3]] - held_keys[self.keys[1]])
             ).normalized()
 
         feet_ray = raycast(self.position+Vec3(0,0.5,0), self.direction, ignore=(self,), distance=.5, debug=False)
@@ -66,9 +68,12 @@ class FirstPersonController(Entity):
 
 
     def input(self, key):
-        if key == 'space':
+        if key == self.jump_key:
             self.jump()
 
+        if key == 'escape':
+            mouse.locked = False
+            self.cursor.enabled = False
 
     def jump(self):
         if not self.grounded:
@@ -102,7 +107,6 @@ class FirstPersonController(Entity):
 
 
 if __name__ == '__main__':
-    from ursina.prefabs.first_person_controller import FirstPersonController
     # window.vsync = False
     app = Ursina()
     # Sky(color=color.gray)
@@ -113,8 +117,8 @@ if __name__ == '__main__':
     e.texture_scale = (e.scale_z, e.scale_y)
 
     player = FirstPersonController(y=2, origin_y=-.5)
+    player.keys = ("w", "a", "s", "d")
     player.gun = None
-
 
     gun = Button(parent=scene, model='cube', color=color.blue, origin_y=-.5, position=(3,0,3), collider='box')
     gun.on_click = Sequence(Func(setattr, gun, 'parent', camera), Func(setattr, player, 'gun', gun))
