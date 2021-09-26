@@ -1,3 +1,9 @@
+'''
+Description:
+    When You run this program you will see a box and a sphare, 
+    If You will hover your mouse on box the color will change from red to yellow.
+    Now you can see different views of the 3D figures by moving your mouse with right key pressed.
+'''
 from panda3d.core import CollisionNode, CollisionBox, CollisionSphere, CollisionPolygon
 from panda3d.core import NodePath
 from ursina.vec3 import Vec3
