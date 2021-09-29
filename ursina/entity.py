@@ -1016,6 +1016,32 @@ class Entity(NodePath):
 
             'render_queue', 'always_on_top', 'collision', 'collider', 'scripts')
 
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        default_values = {
+            'name':'entity', 'enabled':True, 'eternal':False, 'position':Vec3(0,0,0), 'rotation':Vec3(0,0,0), 'scale':Vec3(1,1,1), 'model':None, 'origin':Vec3(0,0,0),
+            'texture':None, 'color':color.white, 'collider':None}
+
+        changes = []
+        for key, value in default_values.items():
+            if not getattr(self, key) == default_values[key]:
+                if key == 'model' and hasattr(self.model, 'name'):
+                    changes.append(f"model='{getattr(self, key).name}', ")
+                    continue
+                if key == 'texture':
+                    changes.append(f"texture='{getattr(self, key).name.split('.')[0]}', ")
+                    continue
+
+                value = getattr(self, key)
+                if isinstance(value, str):
+                    value = f"'{repr(value)}'"
+
+                changes.append(f"{key}={value}, ")
+
+        return f'{__class__.__name__}(' +  ''.join(changes) + ')'
+
 #------------
 # ANIMATIONS
 #------------
