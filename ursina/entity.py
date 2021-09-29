@@ -701,6 +701,8 @@ class Entity(NodePath):
             value.entity = self
 
             for key, value in value.default_input.items():
+                if callable(value):
+                    value = value()
                 self.set_shader_input(key, value)
 
             return
