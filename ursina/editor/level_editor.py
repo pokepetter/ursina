@@ -34,13 +34,23 @@ class Scene(Entity):
         ''')
 
         for e in self.entities:
-            scene_file_content += '        ' + e.__class__.__name__ + '(parent=self, '
-
             if hasattr(e, 'is_gizmo'):
                 continue
 
+            scene_file_content += '        '
+            if e.name != camel_to_snake(e.__class__.__name__):
+                scene_file_content += f'self.{camel_to_snake(e.__class__.__name__)} = '
+
+            scene_file_content += f'{e.__class__.__name__}(parent=self, '
+
             if hasattr(e, '__repr__'):
-                scene_file_content += repr(e).split(e.__class__.__name__)[1][1:-1]
+                recipe = repr(e).split(e.__class__.__name__)[1][1:-1] # remove start and end
+                # if 'parent=' in recipe: # remove parent
+                #     beginning, end = recipe.split('parent=')
+                #     print('---------', beginning, end)
+                #     recipe = beginning + end.split(',',1)[1]
+
+                scene_file_content += recipe
                 scene_file_content += ')\n' # TODO: add if it has a custom name
 
         # print('scene_file_content:\n', scene_file_content)
@@ -66,7 +76,7 @@ class Scene(Entity):
                 exec(f.read())
                 self.scene_parent = eval(f'Scene()')
                 self.scene_parent.name = self.name
-                self.entities = [e for e in scene.entities if e.has_ancestor(self.scene_parent)]
+                self.entities = [e for e in scene.entities if e.has_ancestor(self.scene_parent) and not hasattr(e, 'is_gizmo')]
                 for e in self.entities:
                     # e.collider = 'box'
                     # e.collision = False
@@ -162,7 +172,7 @@ class LevelEditor(Entity):
         self.entity_list_text.text = text
 
         self.point_renderer.model.vertices = [e.world_position for e in self.entities if e.selectable]
-        self.point_renderer.model.colors = [color.azure if e in self.selection else color.white66 for e in self.entities if e.selectable]
+        self.point_renderer.model.colors = [color.azure if e in self.selection else color.yellow for e in self.entities if e.selectable]
         self.point_renderer.model.generate()
 
         gizmo.enabled = bool(self.selection)
@@ -1081,7 +1091,7 @@ class PokeShape(Entity):
         self.make_wall = True
         self.wall_parent = None
         if self.make_wall:
-            self.wall_parent = Entity(parent=self, model=Mesh(), color=color.dark_gray)
+            self.wall_parent = Entity(parent=self, model=Mesh(), color=color.dark_gray, add_to_scene_entities=False)
 
         self.wall_height = 1
         self.wall_thickness = .1
@@ -1131,12 +1141,31 @@ class PokeShape(Entity):
 
     def __repr__(self):
         # default_values = {'parent':scene, 'position':Vec3(0,0,0), 'rotation':Vec3(0,0,0), 'scale':Vec3(1,1,1), 'model':None, 'origin':Vec3(0,0,0), 'texture':None, 'color':color.white}
-        default_values = {'position':Vec3(0,0,0), 'rotation':Vec3(0,0,0), 'scale':Vec3(1,1,1), 'origin':Vec3(0,0,0), 'texture':None, 'color':color.white, 'points':[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,.5), Vec3(-.5,0,.5)]}
-        return f'{__class__.__name__}(' +  ''.join((
-            f"{key}={repr(getattr(self, key))},"
-            for key, value in default_values.items()
-            if not getattr(self, key) == default_values[key]
-            )) + ')'
+        # default_values = {'position':Vec3(0,0,0), 'rotation':Vec3(0,0,0), 'scale':Vec3(1,1,1), 'origin':Vec3(0,0,0), 'color':color.white, 'points':[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,.5), Vec3(-.5,0,.5)]}
+        # return f'{__class__.__name__}(' +  ''.join((
+        #     f"{key}={repr(getattr(self, key))},"
+        #     for key, value in default_values.items()
+        #     if not getattr(self, key) == default_values[key]
+        #     )) + ')'
+        default_values = {
+            # 'parent':'scene',
+            'enabled':True, 'position':Vec3(0,0,0), 'rotation':Vec3(0,0,0), 'scale':Vec3(1,1,1), 'origin':Vec3(0,0,0),
+            'texture':None, 'color':color.white, 'collider':None, 'points':[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,.5), Vec3(-.5,0,.5)]}
+
+        changes = []
+        for key, value in default_values.items():
+            if not getattr(self, key) == default_values[key]:
+                if key == 'texture':
+                    changes.append(f"texture='{getattr(self, key).name.split('.')[0]}', ")
+                    continue
+
+                value = getattr(self, key)
+                if isinstance(value, str):
+                    value = f"'{repr(value)}'"
+
+                changes.append(f"{key}={value}, ")
+
+        return f'{__class__.__name__}(' +  ''.join(changes) + ')'
 
 
     @property
@@ -1149,10 +1178,15 @@ class PokeShape(Entity):
 
     @edit_mode.setter
     def edit_mode(self, value):
+        print('set edit mode', value)
         self._edit_mode = value
         if value:
             [setattr(e, 'selectable', False) for e in level_editor.entities if not e == self]
-            [level_editor.entities.append(e) for e in self.point_gizmos]
+            # [level_editor.entities.append(e) for e in self.point_gizmos]
+            for e in self.point_gizmos:
+                if not e in level_editor.entities:
+                    level_editor.entities.append(e)
+
             [setattr(e, 'selectable', True) for e in self.point_gizmos]
             gizmo.subgizmos['y'].enabled = False
             gizmo.fake_gizmo.subgizmos['y'].enabled = False

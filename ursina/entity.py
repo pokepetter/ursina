@@ -1023,6 +1023,7 @@ class Entity(NodePath):
 
     def __repr__(self):
         default_values = {
+            # 'parent':scene,
             'name':'entity', 'enabled':True, 'eternal':False, 'position':Vec3(0,0,0), 'rotation':Vec3(0,0,0), 'scale':Vec3(1,1,1), 'model':None, 'origin':Vec3(0,0,0),
             'texture':None, 'color':color.white, 'collider':None}
 

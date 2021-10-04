@@ -35,7 +35,7 @@ def make_code_reload_safe(code):
         if line.strip().startswith('#'):
             newtext += '\n'
             continue
-        if line.strip().startswith('EditorCamera('): # EditorCamera is eternal, so don't create multiple ones
+        if line.strip().startswith('EditorCamera(') and not 'eternal=False' in line: # EditorCamera is eternal, so don't create multiple ones
             newtext += '\n'
             continue
 
@@ -151,7 +151,7 @@ class HotReloader(Entity):
             application.paused = False
 
         except Exception as e:
-            print('\n'.join([f'{i}: {e}' for i, e in enumerate(text.split('\n'))]))
+            # print('\n'.join([f'{i}: {e}' for i, e in enumerate(text.split('\n'))]))
             print(e)
         #     for l in text.split('\n'):
         #         try:
