@@ -9,6 +9,7 @@ from ursina.window import instance as window
 from ursina.scene import instance as scene
 from ursina.camera import instance as camera
 from ursina.mouse import instance as mouse
+from ursina.string_utilities import print_info
 
 import __main__
 time.dt = 0
@@ -232,7 +233,7 @@ class Ursina(ShowBase):
             from ursina.prefabs import ursina_splash
 
         application.load_settings()
-        print('development mode:', application.development_mode)
+        print_info('development mode:', application.development_mode)
         print('application successfully started')
 
         super().run()

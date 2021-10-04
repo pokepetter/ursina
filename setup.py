@@ -25,7 +25,7 @@ setup(
         'pyperclip',
     ],
     extras_require={
-        'extras':  ['psd-tools3', 'imageio', 'psutil', 'hurry.filesize'],
+        'extras':  ['psd-tools3', 'imageio', 'psutil'],
     },
     python_requires='>=3.6',
 )

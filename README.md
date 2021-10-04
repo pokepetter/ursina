@@ -44,12 +44,11 @@ On some systems you might have to use pip3 instead of pip in order to use Python
   * python 3.6+
   * panda3d
   * screeninfo, for detecting screen resolution
-  * hurry.filesize, for converting bytes to megabytes
   * pillow, for texture manipulation
   * psd-tools, for converting .psd files
   * blender, for converting .blend files
   * pyperclip, for copy/pasting
-  
+
 
 ## Examples
 ``` python

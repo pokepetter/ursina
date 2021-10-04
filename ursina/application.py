@@ -1,6 +1,7 @@
 import sys
 from pathlib import Path
 from panda3d.core import getModelPath
+from ursina import string_utilities
 
 paused = False
 time_scale = 1
@@ -17,6 +18,10 @@ dirs = [e.stem for e in asset_folder.parent.iterdir() if e.is_dir()]
 if 'src' in dirs and 'python' in dirs:
     development_mode = False
 
+print_info = development_mode
+print_warnings = True
+raise_exception_on_missing_model = False
+raise_exception_on_missing_texture = False
 
 internal_models_folder = package_folder / 'models/'
 internal_models_compressed_folder = package_folder / 'models_compressed/'
@@ -69,6 +74,6 @@ def load_settings(path=asset_folder / 'settings.py'):
                 # d = dict(locals(), **globals())
                 # exec(f.read(), d, d)
                 exec('from ursina import *\n' + f.read())
-                print('loaded settings from settings.py')
+                string_utilities.print_info('loaded settings from settings.py successfully')
             except Exception as e:
-                print('settings.py error:', e)
+                string_utilities.print_warning('warning: settings.py error:', e)

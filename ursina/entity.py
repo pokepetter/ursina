@@ -20,12 +20,14 @@ from ursina.sequence import Sequence, Func, Wait
 from ursina.ursinamath import lerp
 from ursina import curve
 from ursina.curve import CubicBezier
+from ursina import mesh_importer
 from ursina.mesh_importer import load_model
 from ursina.texture_importer import load_texture
 from ursina.string_utilities import camel_to_snake
 from textwrap import dedent
 from panda3d.core import Shader as Panda3dShader
 from ursina.shader import Shader
+from ursina.string_utilities import print_info, print_warning
 
 from ursina import color
 try:
@@ -97,6 +99,11 @@ class Entity(NodePath):
                 if application.print_entity_definition:
                     print(f'{Path(caller.filename).name} ->  {caller.lineno} -> {caller.code_context}')
 
+        # make sure things get set in the correct order. both colliders and texture need the model to be set first.
+        for key in ('model', 'origin', 'origin_x', 'origin_y', 'origin_z', 'collider', 'texture', 'texture_scale', 'texture_offset'):
+            if key in kwargs:
+                setattr(self, key, kwargs[key])
+                del kwargs[key]
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -197,14 +204,16 @@ class Entity(NodePath):
                 if m:
                     if self.model is not None:
                         self.model.removeNode()
+
+                    m.name = value
                     object.__setattr__(self, name, m)
-                    # if isinstance(m, Mesh):
-                    #     m.recipe = value
-                    # print('loaded model successively')
+                    # if not value in mesh_importer.imported_meshes:
+                    #     print_info('loaded model successfully:', value)
                 else:
-                    # if '.' in value:
-                    #     print(f'''trying to load model with specific filename extension. please omit it. '{value}' -> '{value.split('.')[0]}' ''')
-                    print('missing model:', value)
+                    if application.raise_exception_on_missing_model:
+                        raise ValueError(f"missing model: '{value}'")
+
+                    print_warning(f"missing model: '{value}'")
                     return
 
             if self.model:
@@ -272,7 +281,7 @@ class Entity(NodePath):
             try:
                 self.reparentTo(value)
             except:
-                print('invalid parent:', value)
+                raise ValueError(f'invalid parent: value')
 
     @property
     def world_parent(self):
@@ -692,11 +701,13 @@ class Entity(NodePath):
             value.entity = self
 
             for key, value in value.default_input.items():
+                if callable(value):
+                    value = value()
                 self.set_shader_input(key, value)
 
             return
 
-        print(value, 'is not a Shader')
+        raise ValueError(f'{value} is not a Shader')
 
 
 
@@ -732,7 +743,10 @@ class Entity(NodePath):
             texture = load_texture(value)
             # print('loaded texture:', texture)
             if texture is None:
-                print('no texture:', value)
+                if application.raise_exception_on_missing_texture:
+                    raise ValueError(f"missing texture: '{value}'")
+
+                print_warning(f"missing texture: '{value}'")
                 return
 
         self.model.setTextureOff(False)
@@ -830,7 +844,7 @@ class Entity(NodePath):
         base.saveSphereMap(_name, size=size)
         camera.position = org_pos
 
-        print('saved sphere map:', name)
+        # print('saved sphere map:', name)
         self.model.setTexGen(TextureStage.getDefault(), TexGenAttrib.MEyeSphereMap)
         self.reflection_map = name
 
@@ -843,7 +857,7 @@ class Entity(NodePath):
         base.saveCubeMap(_name+'.jpg', size=size)
         camera.position = org_pos
 
-        print('saved cube map:', name + '.jpg')
+        # print('saved cube map:', name + '.jpg')
         self.model.setTexGen(TextureStage.getDefault(), TexGenAttrib.MWorldCubeMap)
         self.reflection_map = _name + '#.jpg'
         self.model.setTexture(loader.loadCubeMap(_name + '#.jpg'), 1)
@@ -989,7 +1003,7 @@ class Entity(NodePath):
 
 
     @property
-    def attributes(self): # attribute names. used by duplicate() for instance.
+    def attributes(self): # attribute names. used by duplicate().
         return ('name', 'enabled', 'eternal', 'visible', 'parent',
             'origin', 'position', 'rotation', 'scale',
             'model', 'color', 'texture', 'texture_scale', 'texture_offset',
@@ -1003,6 +1017,33 @@ class Entity(NodePath):
             # 'scale_x', 'scale_y', 'scale_z',
 
             'render_queue', 'always_on_top', 'collision', 'collider', 'scripts')
+
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        default_values = {
+            # 'parent':scene,
+            'name':'entity', 'enabled':True, 'eternal':False, 'position':Vec3(0,0,0), 'rotation':Vec3(0,0,0), 'scale':Vec3(1,1,1), 'model':None, 'origin':Vec3(0,0,0),
+            'texture':None, 'color':color.white, 'collider':None}
+
+        changes = []
+        for key, value in default_values.items():
+            if not getattr(self, key) == default_values[key]:
+                if key == 'model' and hasattr(self.model, 'name'):
+                    changes.append(f"model='{getattr(self, key).name}', ")
+                    continue
+                if key == 'texture':
+                    changes.append(f"texture='{getattr(self, key).name.split('.')[0]}', ")
+                    continue
+
+                value = getattr(self, key)
+                if isinstance(value, str):
+                    value = f"'{repr(value)}'"
+
+                changes.append(f"{key}={value}, ")
+
+        return f'{__class__.__name__}(' +  ''.join(changes) + ')'
 
 #------------
 # ANIMATIONS
