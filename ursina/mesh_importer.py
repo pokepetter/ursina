@@ -83,7 +83,7 @@ if application.development_mode:
 
         try:
             class_root = winreg.QueryValue(winreg.HKEY_CLASSES_ROOT, '.blend')
-            with winreg.OpenKey(winreg.HKEY_CLASSES_ROOT, r'{}\shell\open\command'.format(class_root)) as key:
+            with winreg.OpenKey(winreg.HKEY_CLASSES_ROOT, fr'{class_root}\shell\open\command') as key:
                 command = winreg.QueryValueEx(key, '')[0]
                 default_blender = shlex.split(command)[0]
                 default_blender = Path(default_blender)
@@ -238,19 +238,19 @@ def obj_to_ursinamesh(
 
             elif l.startswith('vn '):
                 n = l[3:].strip().split(' ')
-                norms.append(tuple([float(e) for e in n]))
+                norms.append(tuple(float(e) for e in n))
 
             elif l.startswith('vt '):
                 uv = l[3:].strip()
                 uv = uv.split(' ')
-                uvs.append(tuple([float(e) for e in uv]))
+                uvs.append(tuple(float(e) for e in uv))
 
             elif l.startswith('f '):
                 l = l[2:]
                 l = l.split(' ')
 
                 try:
-                    tri = tuple([int(t.split('/')[0])-1 for t in l if t != '\n'])
+                    tri = tuple(int(t.split('/')[0])-1 for t in l if t != '\n')
                 except:
                     print_warning('error in obj file line:', i, ':', l)
                     return
@@ -264,7 +264,7 @@ def obj_to_ursinamesh(
 
 
                 try:
-                    uv = tuple([int(t.split('/')[1])-1 for t in l])
+                    uv = tuple(int(t.split('/')[1])-1 for t in l)
                     if len(uv) == 3:
                         uv_indices.extend(uv)
                     elif len(uv) == 4:
@@ -276,7 +276,7 @@ def obj_to_ursinamesh(
                     pass
 
                 try:
-                    n = tuple([int(t.split('/')[2])-1 for t in l])
+                    n = tuple(int(t.split('/')[2])-1 for t in l)
                     if len(n) == 3:
                         norm_indices.extend(n)
                     elif len(uv) == 4:
@@ -300,11 +300,11 @@ def obj_to_ursinamesh(
         meshstring += 'Mesh('
 
         meshstring += '\nvertices='
-        meshstring += str(tuple([verts[t] for t in tris]))
+        meshstring += str(tuple(verts[t] for t in tris))
 
         if uv_indices:
             meshstring += ', \nuvs='
-            meshstring += str(tuple([uvs[uid] for uid in uv_indices]))
+            meshstring += str(tuple(uvs[uid] for uid in uv_indices))
 
         if norm_indices:
             meshstring += ', \nnormals='
@@ -359,7 +359,7 @@ def compress_models_fast(model_name=None, write_to_disk=False):
                 file_path = os.path.join(application.compressed_models_folder, file_name)
                 print(file_path)
 
-                tris = tuple([triindex.v for triindex in o.data.mloop])
+                tris = tuple(triindex.v for triindex in o.data.mloop)
                 flippedtris = list()
                 for i in range(0, len(tris)-3, 3):
                     flippedtris.append(tris[i+2])
@@ -369,7 +369,7 @@ def compress_models_fast(model_name=None, write_to_disk=False):
                 file_content += ', triangles=' + str(flippedtris)
 
                 if o.data.mloopuv:
-                    uvs = tuple([v.uv for v in o.data.mloopuv])
+                    uvs = tuple(v.uv for v in o.data.mloopuv)
                     file_content += ', uvs=' + str(uvs)
 
                 file_content += ''', mode='triangle')'''

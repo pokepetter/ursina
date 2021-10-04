@@ -137,7 +137,7 @@ class Texture():
             from PIL import Image
             self._cached_image = Image.open(self.path)
 
-        self._cached_image.putpixel((x, self.height-y-1), tuple([int(e*255) for e in color]))
+        self._cached_image.putpixel((x, self.height-y-1), tuple(int(e*255) for e in color))
 
     def apply(self):
         from PIL import Image

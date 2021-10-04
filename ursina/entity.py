@@ -1177,7 +1177,7 @@ class Entity(NodePath):
             return self.hit
 
         ignore += (self, )
-        ignore += tuple([e for e in scene.entities if not e.collision])
+        ignore += tuple(e for e in scene.entities if not e.collision)
 
         self._pq.sort_entries()
         self.entries = [        # filter out ignored entities

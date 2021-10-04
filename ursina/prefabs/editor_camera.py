@@ -43,7 +43,7 @@ class EditorCamera(Entity):
 
 
     def input(self, key):
-        combined_key = ''.join((e+'+' for e in ('control', 'shift', 'alt') if held_keys[e] and not e == key)) + key
+        combined_key = ''.join(e+'+' for e in ('control', 'shift', 'alt') if held_keys[e] and not e == key) + key
 
         if combined_key == self.hotkeys['toggle_orthographic']:
             if not camera.orthographic:
