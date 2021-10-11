@@ -132,7 +132,7 @@ class SynthGUI(Entity):
     def update(self):
         for e in self.knobs:
             e.world_scale = .25
-        if sum([int(e.dragging) for e in self.knobs]) == 0:
+        if sum(int(e.dragging) for e in self.knobs) == 0:
             return
 
         self.draw()

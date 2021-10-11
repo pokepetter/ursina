@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-with open("README.md", "r", encoding="UTF-8") as f:
+with open("README.md", encoding="UTF-8") as f:
     long_desc = f.read()
 
 setup(
@@ -24,8 +24,8 @@ setup(
         'screeninfo',
         'pyperclip',
     ],
-
     extras_require={
         'extras':  ['psd-tools3', 'imageio', 'psutil'],
-    }
+    },
+    python_requires='>=3.6',
 )

@@ -56,7 +56,7 @@ class Mesh(NodePath):
 
     def __init__(self, vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1, render_points_in_3d=True):
         super().__init__('mesh')
-
+        self.name = 'mesh'
         self.vertices = vertices
         self.triangles = triangles
         self.colors = colors
@@ -185,6 +185,12 @@ class Mesh(NodePath):
         self._render_points_in_3d = value
         self.set_render_mode_perspective(value)
 
+
+    def __repr__(self):
+        if not self.name == 'mesh':
+            return self.name
+        else:
+            return self.recipe
 
 
     def __add__(self, other):

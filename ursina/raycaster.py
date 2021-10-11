@@ -54,7 +54,7 @@ class Raycaster(Entity):
             self.hit = HitInfo(hit=False, distance=distance)
             return self.hit
 
-        ignore += tuple([e for e in scene.entities if not e.collision])
+        ignore += tuple(e for e in scene.entities if not e.collision)
 
         self._pq.sort_entries()
         self.entries = [        # filter out ignored entities
