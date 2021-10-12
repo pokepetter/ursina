@@ -257,6 +257,11 @@ class Entity(NodePath):
         elif name == 'double_sided':
             self.setTwoSided(value)
 
+        elif hasattr(self, '_shader') and self.shader and name in self._shader.default_input:
+            # print('set shader input:', name, value)
+            object.__setattr__(self, name, value)
+            self.set_shader_input(name, value)
+
 
         try:
             super().__setattr__(name, value)
