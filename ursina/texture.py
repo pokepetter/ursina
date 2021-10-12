@@ -2,6 +2,7 @@ from panda3d.core import Texture as PandaTexture
 from panda3d.core import SamplerState
 from panda3d.core import Vec2, Vec3, Vec4
 from panda3d.core import Filename
+from panda3d.core import PNMImage
 from pathlib import Path
 from direct.showbase import Loader
 import sys
@@ -32,12 +33,25 @@ class Texture():
             self._texture = PandaTexture()
             self._texture.setup2dTexture(image.width, image.height, PandaTexture.TUnsignedByte, PandaTexture.FRgba)
             self._texture.setRamImageAs(image.transpose(Image.FLIP_TOP_BOTTOM).tobytes(), image.mode)
-            self._cached_image = image.transpose(Image.FLIP_TOP_BOTTOM)
+            self._cached_image = None   # for get_pixel() method
+            # self._cached_image = image.transpose(Image.FLIP_TOP_BOTTOM)
             self.path = None
 
 
 
         self.filtering = Texture.default_filtering      # None/'bilinear'/'mipmap' default: 'bilinear'
+
+    @staticmethod
+    def new(size, color=(255,255,255)):
+        img = PNMImage(*size)
+        if len(color) == 4:
+            img.addAlpha()
+
+        img.fill(*color)
+        panda_tex = PandaTexture('texture')
+        panda_tex.load(img)
+        return Texture(panda_tex)
+
 
 
     @property
@@ -154,6 +168,16 @@ class Texture():
 
         self._cached_image.save(path)
 
+    def __repr__(self):
+        return self.name
+
+
+    def __del__(self):
+        # self._texture.releaseAll()
+        del self._cached_image
+
+
+
 if __name__ == '__main__':
     from ursina import *
     app = Ursina()
@@ -168,11 +192,50 @@ if __name__ == '__main__':
     e = Entity(model='quad', texture='brick')
     e.texture.set_pixel(0, 2, color.blue)
     e.texture.apply()
+    #
+    # for y in range(e.texture.height):
+    #     for x in range(e.texture.width):
+    #         if e.texture.get_pixel(x,y) == color.blue:
+    #             print('found blue pixel at:', x, y)
 
-    for y in range(e.texture.height):
-        for x in range(e.texture.width):
-            if e.texture.get_pixel(x,y) == color.blue:
-                print('found blue pixel at:', x, y)
+    # test
+    application.asset_folder = Path(r'C:\sync\high resolution images')
+    e = Entity(model='quad')
+    # from PIL import Image
 
+    from ursina.prefabs.memory_counter import MemoryCounter
+    MemoryCounter()
+    def input(key):
+        if key == 'a':
+            # img = Image.open(r'C:\sync\high resolution images\tesla_city.png')
+            # print('-------', img)
+            # e.texture = Texture(img)
+            e.texture = 'tesla_city'
+
+        if key == 'space':
+            # if not 'tesla_city' in texture_importer.imported_textures:
+            #     return
+            # print('del texture')
+            # del texture_importer.imported_textures['tesla_city']
+            # del e.texture
+            # tex = e.texture._texture
+            t = e.texture._texture
+            # e.texture._texture = None
+            e.texture = None
+            t.releaseAll()
+            # print(t.releaseAll())
+            t.clearRamImage()
+            # e.texture._texture.clear()
+            # e.texture._texture = None
+            # e.texture = None
+            # destroy(e)
+        if key == 'p':
+            for key, value in texture_importer.imported_textures.items():
+                print(key, value)
+
+    e.texture = 'brick'
+    # e.texture.set_pixels([e for e in e.texture.get_pixels()])
+    e.texture.apply()
+    tex = Texture.new((512,512), (255,0,0))
 
     app.run()
