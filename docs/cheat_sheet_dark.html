@@ -131,7 +131,7 @@ z-index: 1;
 <a style="color:hsl(259.0, 89%, 66%);" href="#Cylinder">Cylinder</a>
 <a style="color:hsl(259.0, 89%, 66%);" href="#Grid">Grid</a>
 <a style="color:hsl(259.0, 89%, 66%);" href="#Plane">Plane</a>
-<a style="color:hsl(259.0, 89%, 66%);" href="#Prismatoid">Prismatoid</a>
+<a style="color:hsl(259.0, 89%, 66%);" href="#Pipe">Pipe</a>
 <a style="color:hsl(259.0, 89%, 66%);" href="#QuadMesh">QuadMesh</a>
 <a style="color:hsl(259.0, 89%, 66%);" href="#Terrain">Terrain</a>
 
@@ -1042,7 +1042,7 @@ e.collider = Box<b>Collider</b>(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   <gray
 e.collider = Sphere<b>Collider</b>(e, center=Vec3(0,0,0), radius=.75)      <gray># add SphereCollider at custom positions and size.</gray>
 e.collider = Mesh<b>Collider</b>(e, mesh=e.model, center=Vec3(0,0,0))      <gray># add MeshCollider with custom shape and center.</gray>
 
-m = Prismatoid(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
+m = Pipe(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
 e = Button(<olive>parent</olive>=scene, <olive>model</olive>=m, <olive>collider</olive>=<green>'mesh'</green>, <olive>color</olive>=color.red, <olive>highlight_color</olive>=color.yellow)
 
 EditorCamera()
@@ -1065,7 +1065,7 @@ e.collider = <b>BoxCollider</b>(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   <gray
 e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      <gray># add SphereCollider at custom positions and size.</gray>
 e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      <gray># add MeshCollider with custom shape and center.</gray>
 
-m = Prismatoid(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
+m = Pipe(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
 e = Button(<olive>parent</olive>=scene, <olive>model</olive>=m, <olive>collider</olive>=<green>'mesh'</green>, <olive>color</olive>=color.red, <olive>highlight_color</olive>=color.yellow)
 
 EditorCamera()
@@ -1087,7 +1087,7 @@ e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   <gray># add 
 e.collider = <b>SphereCollider</b>(e, center=Vec3(0,0,0), radius=.75)      <gray># add SphereCollider at custom positions and size.</gray>
 e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      <gray># add MeshCollider with custom shape and center.</gray>
 
-m = Prismatoid(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
+m = Pipe(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
 e = Button(<olive>parent</olive>=scene, <olive>model</olive>=m, <olive>collider</olive>=<green>'mesh'</green>, <olive>color</olive>=color.red, <olive>highlight_color</olive>=color.yellow)
 
 EditorCamera()
@@ -1110,7 +1110,7 @@ e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   <gray># add 
 e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      <gray># add SphereCollider at custom positions and size.</gray>
 e.collider = <b>MeshCollider</b>(e, mesh=e.model, center=Vec3(0,0,0))      <gray># add MeshCollider with custom shape and center.</gray>
 
-m = Prismatoid(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
+m = Pipe(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
 e = Button(<olive>parent</olive>=scene, <olive>model</olive>=m, <olive>collider</olive>=<green>'mesh'</green>, <olive>color</olive>=color.red, <olive>highlight_color</olive>=color.yellow)
 
 EditorCamera()
@@ -3291,7 +3291,7 @@ origin = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <oliv
 ed = EditorCamera(rotation_speed = <yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>, panning_speed=<yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>)
 </div>
 </div></div>
-<div id="Cylinder"><div id="Cylinder" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Cylinder<gray>(<a style="color: gray;" href="#Prismatoid">Prismatoid</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/models/procedural/cylinder.py"><gray>ursina.models.procedural.cylinder</gray></a><br><br><params class="params">Cylinder(resolution=8, radius=.5, start=0, height=1, direction=(0,1,0), mode='triangle', **kwargs)</params>
+<div id="Cylinder"><div id="Cylinder" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Cylinder<gray>(<a style="color: gray;" href="#Pipe">Pipe</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/models/procedural/cylinder.py"><gray>ursina.models.procedural.cylinder</gray></a><br><br><params class="params">Cylinder(resolution=8, radius=.5, start=0, height=1, direction=(0,1,0), mode='triangle', **kwargs)</params>
 
 
 
@@ -3321,14 +3321,14 @@ _ed = EditorCamera()
 <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.green, <olive>scale</olive>=.<yellow>0</yellow><yellow>5</yellow>)
 </div>
 </div></div>
-<div id="Prismatoid"><div id="Prismatoid" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Prismatoid<gray>(<a style="color: gray;" href="#Mesh">Mesh</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/models/procedural/prismatoid.py"><gray>ursina.models.procedural.prismatoid</gray></a><br><br><params class="params">Prismatoid(base_shape=Quad, origin=(0,0), path=((0,0,0),(0,1,0)), thicknesses=((1,1),), look_at=True, cap_ends=True, mode='triangle', **kwargs)</params>
+<div id="Pipe"><div id="Pipe" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Pipe<gray>(<a style="color: gray;" href="#Mesh">Mesh</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/models/procedural/pipe.py"><gray>ursina.models.procedural.pipe</gray></a><br><br><params class="params">Pipe(base_shape=Quad, origin=(0,0), path=((0,0,0),(0,1,0)), thicknesses=((1,1),), look_at=True, cap_ends=True, mode='triangle', **kwargs)</params>
 
 base_shape<gray> = base_shape</gray> 
 
 
 <div class="example">path = (Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>), Vec3(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>0</yellow>), Vec3(<yellow>0</yellow>,<yellow>3</yellow>,<yellow>0</yellow>), Vec3(<yellow>0</yellow>,<yellow>4</yellow>,<yellow>0</yellow>), Vec3(<yellow>2</yellow>,<yellow>5</yellow>,<yellow>0</yellow>))
 thicknesses = ((<yellow>1</yellow>,<yellow>1</yellow>), (.<yellow>5</yellow>,.<yellow>5</yellow>), (.<yellow>7</yellow><yellow>5</yellow>,.<yellow>7</yellow><yellow>5</yellow>), (.<yellow>5</yellow>,.<yellow>5</yellow>), (<yellow>1</yellow>,<yellow>1</yellow>))
-e = <olive>Entity</olive>(<olive>model</olive>=<purple><b>Prismatoid</b></purple>(path=path, thicknesses=thicknesses))
+e = <olive>Entity</olive>(<olive>model</olive>=<purple><b>Pipe</b></purple>(path=path, thicknesses=thicknesses))
 e.model.colorize()
 
 EditorCamera()

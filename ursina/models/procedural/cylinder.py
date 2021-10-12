@@ -1,7 +1,7 @@
 from ursina import *
 
 
-class Cylinder(Prismatoid):
+class Cylinder(Pipe):
     def __init__(self, resolution=8, radius=.5, start=0, height=1, direction=(0,1,0), mode='triangle', **kwargs):
         super().__init__(
             base_shape=Circle(resolution=resolution, radius=.5),

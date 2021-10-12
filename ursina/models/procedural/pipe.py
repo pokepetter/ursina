@@ -2,7 +2,7 @@ from ursina import *
 from ursina.duplicate import duplicate
 
 
-class Prismatoid(Mesh):
+class Pipe(Mesh):
     def __init__(self, base_shape=Quad, origin=(0,0), path=((0,0,0),(0,1,0)), thicknesses=((1,1),), look_at=True, cap_ends=True, mode='triangle', **kwargs):
         if type(base_shape) == type:
             base_shape = base_shape()
@@ -82,7 +82,7 @@ if __name__ == '__main__':
     # e = Entity(model=Prism(mode='line'))
     path = (Vec3(0,0,0), Vec3(0,1,0), Vec3(0,3,0), Vec3(0,4,0), Vec3(2,5,0))
     thicknesses = ((1,1), (.5,.5), (.75,.75), (.5,.5), (1,1))
-    e = Entity(model=Prismatoid(path=path, thicknesses=thicknesses))
+    e = Entity(model=Pipe(path=path, thicknesses=thicknesses))
     e.model.colorize()
     # e2 = duplicate(e)
     # e2.x=2

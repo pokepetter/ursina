@@ -62,11 +62,11 @@ if __name__ == '__main__':
     # rounded_quad = Entity(model=Quad(subdivisions=3, mode='line'), x=1)
     # cone = Entity(model=Cone(), x=3)
     # cone.model.colorize()
-    # prismatoid = Entity(model=Prismatoid(), x=4)
+    # pipe = Entity(model=Pipe(), x=4)
     # cylinder = Entity(model=Cylinder(), x=5)
     # mesh = Entity(model=Mesh(vertices=((0,0,0), (0,1,0), (-1,1,0))), x=6)
     #
-    # for i, e in enumerate((quad, sprite, circle, rounded_quad, sphere, cone, prismatoid, cylinder, mesh)):
+    # for i, e in enumerate((quad, sprite, circle, rounded_quad, sphere, cone, pipe, cylinder, mesh)):
     #     e2 = duplicate(e)
     #     e2.y += 1.5
 

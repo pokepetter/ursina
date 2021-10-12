@@ -556,7 +556,7 @@ z-index: 1;
 
             name = name.replace('ShowBase', '')
             name = name.replace('NodePath', '')
-            for parent_class in ('Entity', 'Button', 'Draggable', 'Text', 'Collider', 'Mesh', 'Prismatoid'):
+            for parent_class in ('Entity', 'Button', 'Draggable', 'Text', 'Collider', 'Mesh', 'Pipe'):
                 name = name.replace(f'({parent_class})', f'(<a style="color: gray;" href="#{parent_class}">{parent_class}</a>)')
 
             base_name = name
