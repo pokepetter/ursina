@@ -962,6 +962,8 @@ class Entity(NodePath):
         pos = target - self.world_position
         if axis == 'z':
             self.rotation_z = degrees(atan2(pos[0], pos[1]))
+        elif axis == 'y':
+            self.rotation_y = degrees(atan2(pos[0], pos[2]))
 
 
     def has_ancestor(self, possible_ancestor):
@@ -1177,7 +1179,7 @@ class Entity(NodePath):
             return self.hit
 
         ignore += (self, )
-        ignore += tuple([e for e in scene.entities if not e.collision])
+        ignore += tuple(e for e in scene.entities if not e.collision)
 
         self._pq.sort_entries()
         self.entries = [        # filter out ignored entities

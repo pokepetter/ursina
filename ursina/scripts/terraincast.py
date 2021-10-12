@@ -36,8 +36,8 @@ def prepare_terrain(terrain, debug=False, calculate_normals=True):
     else:
         terrain._cast.correction_scale = 1
 
-    terrain._cast.max = max([max(i) for i in height_values])
-    terrain._cast.min = min([min(i) for i in height_values])
+    terrain._cast.max = max(max(i) for i in height_values)
+    terrain._cast.min = min(min(i) for i in height_values)
 
     if calculate_normals:
         terrain._cast.prepared_height_values = []

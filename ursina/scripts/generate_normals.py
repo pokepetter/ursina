@@ -71,7 +71,7 @@ def generate_normals(vertices, triangles=None, smooth=True):
                     overlapping_verts_indices.append(j)
                     bucket.append(j)
 
-            average_normal = sum([normals[e] for e in overlapping_verts_indices]) / 3
+            average_normal = sum(normals[e] for e in overlapping_verts_indices) / 3
             for index in overlapping_verts_indices:
                 normals[index] = average_normal
 

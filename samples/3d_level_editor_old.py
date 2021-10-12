@@ -65,7 +65,7 @@ class LevelEditor(Entity):
 
                 print(self.origin_mode_menu.value)
                 if self.origin_mode_menu.value == 'center':
-                    self.gizmo.position = sum([e.position for e in self.selection]) / len(self.selection)
+                    self.gizmo.position = sum(e.position for e in self.selection) / len(self.selection)
 
 
         # print(key)
