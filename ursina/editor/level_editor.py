@@ -80,7 +80,7 @@ class Scene(Entity):
                 for e in self.entities:
                     # e.collider = 'box'
                     # e.collision = False
-                    e.shader = lit_with_shadows_shader
+                    # e.shader = lit_with_shadows_shader
                     # e.ignore = True
                     e.selectable = True
                     e.original_parent = e.parent
@@ -113,7 +113,7 @@ class LevelEditor(Entity):
         self.scenes = [[Scene(x, y, f'untitled_scene[{x},{y}]') for y in range(8)] for x in range(8)]
         self.current_scene = None
 
-        self.grid = Entity(parent=self, model=Grid(8,8), rotation_x=90, scale=32, collider='box', color=color.white33, collision=False, add_to_scene_entities=False)
+        self.grid = Entity(parent=self, model=Grid(16,16), rotation_x=90, scale=64, collider='box', color=color.white33, enabled=False)
         self.origin_mode = 'center'
         self.editor_camera = EditorCamera(parent=self, rotation_x=20, eternal=False)
         self.ui = Entity(parent=camera.ui, name='level_editor.ui')
@@ -152,6 +152,10 @@ class LevelEditor(Entity):
                 return
 
             self.current_scene.save()
+
+    def update(self):
+        if mouse.left or held_keys['g']:
+            self.render_selection()
 
     def render_selection(self, update_gizmo_position=True):
         # entities = self.entities
@@ -397,7 +401,7 @@ class RotationGizmo(Entity):
 
         path = Circle(24).vertices
         path.append(path[0])
-        rotation_gizmo_model = Prismatoid(base_shape=Quad(radius=0), path=[Vec3(e)*32 for e in path])
+        rotation_gizmo_model = Pipe(base_shape=Quad(radius=0), path=[Vec3(e)*32 for e in path])
 
         for i, dir in enumerate((Vec3(-1,0,0), Vec3(0,1,0), Vec3(0,0,-1))):
             b = Button(parent=self, model=copy(rotation_gizmo_model), collider='mesh',
@@ -626,7 +630,8 @@ class QuickScaleOrRotate(Entity):
 class Selector(Entity):
     def input(self, key):
         if key == 'left mouse down':
-            if mouse.hovered_entity:    # this means you clicked on ui or a gizmo since entities don't actually have colliders.
+            if mouse.hovered_entity and not mouse.hovered_entity == level_editor.grid:    # this means you clicked on ui or a gizmo since entities don't actually have colliders.
+                # print('return', mouse.hovered_entity, repr(mouse.hovered_entity))
                 return
 
             clicked_entity = self.get_hovered_entity()
@@ -756,23 +761,67 @@ class SelectionBox(Entity):
 
 
 class Spawner(Entity):
+    def __init__(self):
+        super().__init__(parent=level_editor)
+        self.target = None
+        self.button = Button(parent=level_editor.ui, scale=.1, origin=(.5,-.5), position=window.bottom_right, text='+', on_click=self.spawn_entity)
+
     def input(self, key):
         if key == 'n':
-            if not mouse.hovered_entity in level_editor.entities:
-                level_editor.grid.collision = True
-            self.target = Entity(model='cube', origin_y=-.5, shader=lit_with_shadows_shader, texture='white_cube', position=mouse.world_point, original_parent=level_editor, selectable=True)
-            level_editor.current_scene.entities.append(self.target)
-
+            self.spawn_entity()
 
         elif key == 'n up':
-            # self.target.collision = True
-            level_editor.current_scene.undo.record_undo([level_editor.current_scene.entities.index(self.target), Func(Entity, model='cube', origin_y=-.5, shader=lit_with_shadows_shader, texture='white_cube', position=self.target.position)])
-            self.target = None
-            level_editor.grid.collision = False
+            self.drop_entity()
+
+        elif self.target and key == 'left mouse up':
+            self.drop_entity()
+
+    def spawn_entity(self):
+        level_editor.grid.enabled = True
+        self.target = Entity(model='cube', shader=lit_with_shadows_shader, texture='white_cube', position=mouse.world_point, original_parent=level_editor, selectable=True)
+        level_editor.current_scene.entities.append(self.target)
+
+    def drop_entity(self):
+        level_editor.current_scene.undo.record_undo([level_editor.current_scene.entities.index(self.target), Func(Entity, model='cube', origin_y=-.5, shader=lit_with_shadows_shader, texture='white_cube', position=self.target.position)])
+        self.target = None
+        level_editor.grid.enabled = False
+
 
     def update(self):
-        if held_keys['n'] and mouse.world_point and self.target:
-            self.target.position = mouse.world_point
+        if mouse.world_point and self.target:
+            if held_keys['n'] or mouse.left:
+                self.target.position = mouse.world_point
+
+
+class Deleter(Entity):
+    def input(self, key):
+        if level_editor.selection and key == 'delete':
+            [destroy(e) for e in level_editor.selection]
+
+
+
+# class OriginSetter(Entity):
+#     def input(self, key):
+#         if key == 'o':
+#             if not level_editor.selection:
+#                 return
+#             if not len(set([e.origin for e in level_editor.selection])) == 1: # if seleciton has different origins, return
+#                 return
+#
+#             if not hasattr(self, 'menu'):
+#                 self.menu = Entity(parent=camera.ui, enabled=False)
+#                 for i, e in enumerate(('x','y','z')):
+#                     ButtonGroup(('-.5', '0', '.5'), parent=self.menu, y=-.05*i)
+#
+#             if not self.menu.enabled:
+#                 self.menu.enabled = True
+#
+#                 for i, button_group in enumerate(self.menu.children):
+#                     if str(level_editor.selection[0].origin[i]) in button_group.options:
+#                         button_group.value = str(level_editor.selection[0].origin[i])
+#
+#             else:
+#                 self.menu.enabled = False
 
 
 class PointOfViewSelector(Entity):
@@ -969,9 +1018,10 @@ class ModelMenu(Entity):
 
 
     def open(self):
-        self.model_names = [e.stem for e in application.internal_models_compressed_folder.glob('**/*.ursinamesh')]
+        # self.model_names = [e.stem for e in application.internal_models_compressed_folder.glob('**/*.ursinamesh')]
+        self.model_names = []
         for file_type in ('.bam', '.obj', '.ursinamesh'):
-            self.model_names += [e.stem for e in application.asset_folder.glob(f'**/*.{file_type}') if not 'animation' in e]
+            self.model_names += [e.stem for e in application.asset_folder.glob(f'**/*{file_type}') if not 'animation' in e.stem]
 
 
         model_dict = {name : Func(self.set_models_for_selection, name) for name in self.model_names}
@@ -987,6 +1037,39 @@ class ModelMenu(Entity):
     def set_models_for_selection(self, name):
         for e in level_editor.selection:
             e.model = name
+
+        self.button_list.enabled = False
+
+class TextureMenu(Entity):
+    def __init__(self, **kwargs):
+        super().__init__(parent=level_editor)
+        self.button_list = None     # gets created on self.open()
+
+
+    def open(self):
+        self.asset_names = []
+        # self.asset_names = [e.stem for e in application.internal_textures_folder.glob('**/*.png')]
+
+        for file_type in ('.png', '.jpg', '.jpeg'):
+            self.asset_names += [e.stem for e in application.asset_folder.glob(f'**/*{file_type}')]
+
+        if not self.asset_names:
+            print('no texture assets found')
+            return
+
+        texture_dict = {name : Func(self.set_texture_for_selection, name) for name in self.asset_names}
+        if not self.button_list:
+            self.button_list = ButtonList(texture_dict, font='VeraMono.ttf')
+        else:
+            self.button_list.enabled = True
+
+    def input(self, key):
+        if key == 't' and level_editor.selection:
+            self.open()
+
+    def set_texture_for_selection(self, name):
+        for e in level_editor.selection:
+            e.texture = name
 
         self.button_list.enabled = False
 
@@ -1261,7 +1344,20 @@ if __name__ == '__main__':
 
 level_editor = LevelEditor()
 
-sun = DirectionalLight(parent=level_editor).look_at(Vec3(-1,-1,-1))
+class SunHandler(Entity):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.sun = DirectionalLight(parent=level_editor, shadow_map_resolution=(2048,2048))
+        self.sun.look_at(Vec3(-2,-1,-1))
+
+    # def input(self, key):
+    #     if key == 'l':
+    #         for e in level_editor.entities:
+    #             e.shader = unlit_shader
+    #             e.unlit = not e.unlit
+
+# AmbientLight(color=color._16)
+SunHandler(parent=level_editor)
 
 for x in range(8):
     for y in range(8):
@@ -1277,12 +1373,16 @@ quick_grabber = QuickGrabber(parent=level_editor)   # requires gizmo, selector
 QuickScaleOrRotate()    # requires scale_gizmo, gizmo_toggler, selector
 selector = Selector(parent=level_editor)
 SelectionBox(parent=level_editor.ui, model=Quad(0, mode='line'), origin=(-.5,-.5,0), scale=(0,0,1), color=color.white33, mode='new')
-Spawner(parent=level_editor)
-LevelMenu()
+Spawner()
+Deleter(parent=level_editor)
+level_menu = LevelMenu()
+goto_scene = level_menu.goto_scene
 Duplicator()
 # ModelChanger()
 PrimitiveMenu()
 ModelMenu()
+TextureMenu()
+# OriginSetter(parent=level_editor)
 PointOfViewSelector()
 Help()
 
@@ -1290,7 +1390,7 @@ Help()
 class Debug(Entity):
     def input(self, key):
         if key == 'space':
-            print(level_editor.current_scene)
+            print(level_editor.selection)
             # for e in level_editor.entities:
             #     print(e.__class__.__name__)
 Debug()
