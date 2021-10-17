@@ -17,15 +17,18 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'numpy',
         'panda3d',
         'panda3d-gltf',
         'pillow',
         'screeninfo',
         'pyperclip',
     ],
-    extras_require={
-        'extras':  ['psd-tools3', 'imageio', 'psutil'],
+    extras_require={'extras': [
+        'numpy',
+        'imageio',
+        'psd-tools3', 
+        'psutil',
+        ],
     },
     python_requires='>=3.6',
 )
