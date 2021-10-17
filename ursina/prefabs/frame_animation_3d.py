@@ -8,7 +8,10 @@ class FrameAnimation3d(Entity):
         model_folders = [application.compressed_models_folder, application.asset_folder]
         model_names = find_sequence(name, ('*',), folders=model_folders)
         if not model_names:
-            raise FileNotFoundError(f'error: could not find models starting with: {name}')
+            if application.raise_exception_on_missing_model:
+                raise FileNotFoundError(f'error: could not find models starting with: {name}')
+            self.frames = []
+            return
 
         self.frames = [Entity(parent=self, model=e.stem, enabled=False, add_to_scene_entities=False) for e in model_names]
         self.frames[0].enabled = True
