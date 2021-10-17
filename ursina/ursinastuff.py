@@ -53,7 +53,8 @@ def destroy(entity, delay=0):
     return s
 
 def _destroy(entity, force_destroy=False):
-    if not entity:
+    from ursina import camera
+    if not entity or entity == camera:
         return
 
     if entity.eternal and not force_destroy:
@@ -63,14 +64,15 @@ def _destroy(entity, force_destroy=False):
         entity.stop(False)
         # return
 
+    if hasattr(entity, 'on_destroy'):
+        entity.on_destroy()
+
     for c in entity.children:
-        destroy(c)
+        _destroy(c)
 
     if entity in scene.entities:
         scene.entities.remove(entity)
 
-    if hasattr(entity, 'on_destroy'):
-        entity.on_destroy()
 
     if hasattr(entity, 'scripts'):
         for s in entity.scripts:
@@ -82,13 +84,15 @@ def _destroy(entity, force_destroy=False):
             anim.kill()
 
     if hasattr(entity, 'tooltip'):
-        destroy(entity.tooltip)
+        _destroy(entity.tooltip)
 
     if hasattr(entity, '_on_click') and isinstance(entity._on_click, Sequence):
         entity._on_click.kill()
 
-    entity.removeNode()
-
+    try:
+        entity.removeNode()
+    except:
+        print('already destroyed')
     #unload texture
     # if hasattr(entity, 'texture') and entity.texture != None:
     #     entity.texture.releaseAll()
