@@ -104,4 +104,4 @@ app.run()                     # opens a window and starts the game.
 
 4) You can now move the orange box around with 'a' and 'd'!
 
-   To close the window, you can by default, press shift+q or press the red x. to disable this, write `window.exit_button.enabled = False` somewhere in your code.
+   To close the window, you can by default, press shift+q or press the red x. To disable this, write `window.exit_button.enabled = False` somewhere in your code.
