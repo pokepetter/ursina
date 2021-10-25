@@ -5,6 +5,8 @@ uniform mat4 p3d_ModelMatrix;
 
 in vec4 p3d_Vertex;
 in vec2 p3d_MultiTexCoord0;
+uniform vec2 texture_scale;
+uniform vec2 texture_offset;
 out vec2 texcoord;
 uniform vec2 projector_uv_scale;
 uniform vec2 projector_uv_offset;
@@ -14,7 +16,7 @@ uniform float time;
 
 void main() {
     gl_Position = p3d_ModelViewProjectionMatrix * p3d_Vertex;
-    texcoord = p3d_MultiTexCoord0;
+    texcoord = (p3d_MultiTexCoord0 * texture_scale) + texture_offset;
     world_uv = (p3d_ModelMatrix * p3d_Vertex).xz * projector_uv_scale;
     world_uv -= projector_uv_offset;
     world_uv += vec2(.5);
@@ -42,6 +44,8 @@ void main() {
 }''',
 
 default_input = {
+    'texture_scale': Vec2(1,1),
+    'texture_offset': Vec2(0,0),
     'projector_texture' : Func(load_texture, 'vignette'),
     'projector_uv_scale' : Vec2(.05, .05),
     'projector_uv_offset' : Vec2(.0, .0),
@@ -52,7 +56,6 @@ default_input = {
 
 if __name__ == '__main__':
     from ursina import *
-    Texture.default_filtering = 'bilinear'
     app = Ursina()
 
     Entity.default_shader = projector_shader
@@ -62,10 +65,10 @@ if __name__ == '__main__':
     t = Entity(model='quad', texture='noise', x=1000).texture
     editor_camera = EditorCamera(rotation_x=30,)
 
-    # ground.t = 0
-
     light = Entity(model='sphere', unlit=True)
     ground = Entity(model='plane', collider='box', scale=64, texture='grass', texture_scale=(4,4))
+
+    random.seed(0)
     for i in range(16):
         Entity(model='cube', origin_y=-.5, scale=2, texture='brick', texture_scale=(1,2),
             x=random.uniform(-8,8),
@@ -77,15 +80,9 @@ if __name__ == '__main__':
 
     projector_texture = load_texture('vignette', application.internal_textures_folder)
     projector_texture.repeat = False
-
-
-
     projector_shader.default_input['projector_texture'] = projector_texture
 
     def update():
-        # ground.t += time.dt
-        # ground.set_shader_input('time', ground.t)
-
         light.x += (held_keys['d'] - held_keys['a']) * time.dt * 3
         light.z += (held_keys['w'] - held_keys['s']) * time.dt * 3
 
