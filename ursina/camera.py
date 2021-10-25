@@ -167,6 +167,8 @@ class Camera(Entity):
                 )
             self.filter_quad.set_shader_input("tex", self.render_texture)
             self.filter_quad.set_shader_input("dtex", self.depth_texture)
+
+            self.clip_plane_near = 1
             # self.filter_quad.set_shader_input("ntex", self.normals_texture)
 
         self.filter_quad.setShader(shader)
