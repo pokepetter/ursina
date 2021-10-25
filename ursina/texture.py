@@ -113,6 +113,15 @@ class Texture():
             self._texture.setMinfilter(SamplerState.FT_linear_mipmap_linear)
             self._filtering = 'mipmap'
 
+    @property
+    def repeat(self):
+        return self._repeat
+
+    @repeat.setter
+    def repeat(self, value):
+        self._repeat = value
+        self._texture.setWrapU(value)
+        self._texture.setWrapV(value)
 
 
     def get_pixel(self, x, y):
