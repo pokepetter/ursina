@@ -33,7 +33,7 @@ class Texture():
             self._texture = PandaTexture()
             self._texture.setup2dTexture(image.width, image.height, PandaTexture.TUnsignedByte, PandaTexture.FRgba)
             self._texture.setRamImageAs(image.transpose(Image.FLIP_TOP_BOTTOM).tobytes(), image.mode)
-            self._cached_image = None   # for get_pixel() method
+            self._cached_image = image   # for get_pixel() method
             # self._cached_image = image.transpose(Image.FLIP_TOP_BOTTOM)
             self.path = None
 
