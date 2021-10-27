@@ -25,7 +25,7 @@ def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursina
     if name in imported_meshes:
         # print('load cached model', name)
         try:
-            return deepcopy(imported_meshes[name])
+            return copy(imported_meshes[name])
         except:
             pass
 
