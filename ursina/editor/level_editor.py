@@ -893,13 +893,15 @@ class LevelMenu(Entity):
                 level_editor.scenes[x][y].path = scene_file
 
 
-
     def draw(self):
+        if not hasattr(self, 'quad_vertices'):
+            self.quad_vertices = Quad(0).vertices
+
         self.content_renderer.model.clear()
         for x in range(8):
             for y in range(8):
                 if level_editor.scenes[x][y].path:
-                    self.content_renderer.model.vertices += [Vec3(*v)+Vec3(x+.5,y+.5,0) for v in load_model('quad').vertices]
+                    self.content_renderer.model.vertices += [Vec3(*v)+Vec3(x+.5,y+.5,0) for v in self.quad_vertices]
 
         self.content_renderer.model.generate()
 
@@ -1184,7 +1186,7 @@ class PokeShape(Entity):
 
     def generate(self):
         import tripy
-        polygon = [e.position.xz for e in self.point_gizmos]
+        polygon = LoopingList(e.get_position(relative_to=self).xz for e in self.point_gizmos)
         triangles = tripy.earclip(polygon)
         self.model.vertices = []
         for tri in triangles:
@@ -1198,17 +1200,19 @@ class PokeShape(Entity):
 
 
         if self.make_wall:
-            # self.wall_parent.model.vertices = self.model.vertices
             wall_verts = []
-            for i, v in enumerate([e.position for e in self.point_gizmos]):
-                wall_verts.extend((
-                    v,
-                    v + Vec3(0,-1,0),
-                    self.point_gizmos[i+1].position,
+            for i, vert in enumerate(polygon):
+                vert = Vec3(vert[0], 0, vert[1])
+                next_vert = Vec3(polygon[i+1][0], 0, polygon[i+1][1])
 
-                    self.point_gizmos[i+1].position,
-                    v + Vec3(0,-1,0),
-                    self.point_gizmos[i+1].position + Vec3(0,-1,0),
+                wall_verts.extend((
+                    vert,
+                    vert + Vec3(0,-1,0),
+                    next_vert,
+
+                    next_vert,
+                    vert + Vec3(0,-1,0),
+                    next_vert + Vec3(0,-1,0),
                 ))
 
             self.wall_parent.model.vertices = wall_verts
@@ -1218,18 +1222,8 @@ class PokeShape(Entity):
 
         if self.add_collider:
             self.collider = self.model
-        # for i, e in enumerate(self.point_gizmos):
-        #     [destroy(c) for c in e.children]
-        #     Text(str(i), parent=e, always_on_top=True, color=color.black)
 
     def __repr__(self):
-        # default_values = {'parent':scene, 'position':Vec3(0,0,0), 'rotation':Vec3(0,0,0), 'scale':Vec3(1,1,1), 'model':None, 'origin':Vec3(0,0,0), 'texture':None, 'color':color.white}
-        # default_values = {'position':Vec3(0,0,0), 'rotation':Vec3(0,0,0), 'scale':Vec3(1,1,1), 'origin':Vec3(0,0,0), 'color':color.white, 'points':[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,.5), Vec3(-.5,0,.5)]}
-        # return f'{__class__.__name__}(' +  ''.join((
-        #     f"{key}={repr(getattr(self, key))},"
-        #     for key, value in default_values.items()
-        #     if not getattr(self, key) == default_values[key]
-        #     )) + ')'
         default_values = {
             # 'parent':'scene',
             'enabled':True, 'position':Vec3(0,0,0), 'rotation':Vec3(0,0,0), 'scale':Vec3(1,1,1), 'origin':Vec3(0,0,0),
@@ -1265,7 +1259,6 @@ class PokeShape(Entity):
         self._edit_mode = value
         if value:
             [setattr(e, 'selectable', False) for e in level_editor.entities if not e == self]
-            # [level_editor.entities.append(e) for e in self.point_gizmos]
             for e in self.point_gizmos:
                 if not e in level_editor.entities:
                     level_editor.entities.append(e)
@@ -1275,7 +1268,6 @@ class PokeShape(Entity):
             gizmo.fake_gizmo.subgizmos['y'].enabled = False
 
         else:
-            print('eeeeeeeeeeeeeeeeeeeeeeeeee', value, [e.name for e in self.point_gizmos])
             print(self.point_gizmos[0] in level_editor.entities)
             [level_editor.entities.remove(e) for e in self.point_gizmos]
             [setattr(e, 'selectable', True) for e in level_editor.entities]
@@ -1284,6 +1276,7 @@ class PokeShape(Entity):
 
             gizmo.subgizmos['y'].enabled = True
             gizmo.fake_gizmo.subgizmos['y'].enabled = True
+
         level_editor.render_selection()
 
 
@@ -1291,16 +1284,24 @@ class PokeShape(Entity):
         if self.edit_mode:
             if mouse.left or held_keys['g']:
                 level_editor.render_selection()
+                self.generate()
 
 
     def input(self, key):
         if key == 'tab':
-            print('dddddddddddddd')
             if self in level_editor.selection or True in [e in level_editor.selection for e in self.point_gizmos]:
                 self.edit_mode = not self.edit_mode
 
+        elif key == 'left mouse down' and self.edit_mode and selector.get_hovered_entity():
+            level_editor.selection.clear()
+            selection_box.enabled = False
+            quick_grabber.input('g')
 
-        if key == '+' and len(level_editor.selection) == 1 and level_editor.selection[0] in self.point_gizmos:
+        elif key == 'left mouse up' and self.edit_mode:
+            quick_grabber.input('g up')
+            selection_box.enabled = True
+
+        elif key == '+' and len(level_editor.selection) == 1 and level_editor.selection[0] in self.point_gizmos:
             print('add point')
             i = self.point_gizmos.index(level_editor.selection[0])
 
@@ -1311,34 +1312,19 @@ class PokeShape(Entity):
             # self.generate()
 
 
-        if key == 'space':
+        elif key == 'space':
             self.generate()
 
-        if key == 'double click' and level_editor.selection == [self, ] and selector.get_hovered_entity() == self:
+        elif key == 'double click' and level_editor.selection == [self, ] and selector.get_hovered_entity() == self:
             self.edit_mode = not self.edit_mode
 
-        if self.edit_mode and key.endswith(' up'):
+        elif self.edit_mode and key.endswith(' up'):
             invoke(self.generate, delay=3/60)
 
-
-        # if self.edit_mode:
-        #     if key == 'left mouse down' and selector.get_hovered_entity() in self.point_gizmos and not level_editor.selection and not held_keys['shift'] and not held_keys['alt']:
-        #         quick_grabber.input('g')
-        #     if key == 'left mouse up' and hasattr(quick_grabber, 'original_gizmo_state'):
-        #         quick_grabber.input('g up')
-
-
-
-
-        # if key == 'left mouse down':
-        #     e = selector.get_hovered_entity()
-        #     if not held_keys['shift'] and not held_keys['alt']:
-        #         level_editor.selection =
 
 
 if __name__ == '__main__':
     app = Ursina()
-    # from poke_shape import PokeShape
     # app = Ursina(vsync=False)
 
 
@@ -1372,7 +1358,7 @@ gizmo_toggler = GizmoToggler(parent=level_editor)
 quick_grabber = QuickGrabber(parent=level_editor)   # requires gizmo, selector
 QuickScaleOrRotate()    # requires scale_gizmo, gizmo_toggler, selector
 selector = Selector(parent=level_editor)
-SelectionBox(parent=level_editor.ui, model=Quad(0, mode='line'), origin=(-.5,-.5,0), scale=(0,0,1), color=color.white33, mode='new')
+selection_box = SelectionBox(parent=level_editor.ui, model=Quad(0, mode='line'), origin=(-.5,-.5,0), scale=(0,0,1), color=color.white33, mode='new')
 Spawner()
 Deleter(parent=level_editor)
 level_menu = LevelMenu()

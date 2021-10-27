@@ -4,7 +4,7 @@ from ursina.duplicate import duplicate
 
 class Pipe(Mesh):
     def __init__(self, base_shape=Quad, origin=(0,0), path=((0,0,0),(0,1,0)), thicknesses=((1,1),), look_at=True, cap_ends=True, mode='triangle', **kwargs):
-        if type(base_shape) == type:
+        if callable(base_shape):
             base_shape = base_shape()
 
         self.base_shape = base_shape
