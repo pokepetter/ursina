@@ -105,8 +105,8 @@ app.run()                     # opens a window and starts the game.
 4) You can now move the orange box around with 'a' and 'd'!
 
    To close the window, you can by default, press shift+q or press the red x. to disable this, write `window.exit_button.enabled = False` somewhere in your code.
-   
-  
+
+
 ## Project Structure
 ```
 ## Project Structure
@@ -128,7 +128,7 @@ app.run()                     # opens a window and starts the game.
 
 📁samples               # small example games.
 
-📁ursina                # the actaal ursina module.
+📁ursina                # the actual ursina module.
     📁audio                 # built-in audio clips.
     📁editor                # the 3d level editor for ursina.
     📁fonts                 # built-in fonts.

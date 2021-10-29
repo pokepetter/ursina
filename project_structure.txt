@@ -5,7 +5,7 @@
     📃documentation.txt
     📃inventory_tutorial.txt
     ...
-        # text files for the website. theses get turned into .html files with sswg.
+        # text files for the website. gets turned into .html files with sswg.
 
     📃cheat_sheet.html
         # auto generated documentation made with documentation_generator.py.
@@ -17,14 +17,14 @@
 
 📁samples               # small example games.
 
-📁ursina                # the acutal ursina module.
+📁ursina                # the actual ursina module.
     📁audio                 # built-in audio clips.
     📁editor                # the 3d level editor for ursina.
     📁fonts                 # built-in fonts.
     📁models                # .blend files, source files, for built-in 3d models.
         📁procedural            # classes for generating 3d models, like Cylinder, Quad and Terrain.
     📁models_compressed     # .blend files converted to .ursinamesh.
-    📁prefabs               # higher level classes like Draggable, Slider, Sprite and stuff like that.
+    📁prefabs               # higher level classes like Draggable, Slider, Sprite, etc.
 
     📃__init__.py
     📃application.py
