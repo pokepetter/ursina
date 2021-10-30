@@ -60,11 +60,7 @@ if __name__ == '__main__':
 
     Entity.default_shader = projector_shader
 
-    e = Draggable(parent=scene, color=color.white, plane_direction=Vec3(0,1,0), model='cube', texture='brick', shader=projector_shader)
-
-    t = Entity(model='quad', texture='noise', x=1000).texture
     editor_camera = EditorCamera(rotation_x=30,)
-
     light = Entity(model='sphere', unlit=True)
     ground = Entity(model='plane', collider='box', scale=64, texture='grass', texture_scale=(4,4))
 

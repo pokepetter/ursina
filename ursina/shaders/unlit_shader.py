@@ -30,7 +30,7 @@ void main() {
 ''',
 default_input={
     'texture_scale' : Vec2(1,1),
-    'texture_offset' : Vec2(.5,0),
+    'texture_offset' : Vec2(0.0, 0.0),
 }
 )
 
