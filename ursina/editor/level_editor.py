@@ -80,7 +80,7 @@ class Scene(Entity):
                 for e in self.entities:
                     # e.collider = 'box'
                     # e.collision = False
-                    # e.shader = lit_with_shadows_shader
+                    e.shader = lit_with_shadows_shader
                     # e.ignore = True
                     e.selectable = True
                     e.original_parent = e.parent
@@ -118,15 +118,14 @@ class LevelEditor(Entity):
         self.editor_camera = EditorCamera(parent=self, rotation_x=20, eternal=False)
         self.ui = Entity(parent=camera.ui, name='level_editor.ui')
         self.point_renderer = Entity(parent=self, model=Mesh([], mode='point', thickness=20, render_points_in_3d=False), texture='circle', always_on_top=True, unlit=True, render_queue=1)
-        self.on_enable = Func(self.ui.enable)
-        self.on_disable = Func(self.ui.disable)
-        self.origin_mode_menu = ButtonGroup(['last', 'center', 'individual'], min_selection=1, position=window.top)
+        self.origin_mode_menu = ButtonGroup(['last', 'center', 'individual'], min_selection=1, position=window.top, parent=self.ui)
+        self.origin_mode_menu.scale *= .75
         self.origin_mode_menu.on_value_changed = self.render_selection
-        self.local_global_menu = ButtonGroup(['local', 'global'], min_selection=1, position=window.top - Vec2(.2,0))
+        self.local_global_menu = ButtonGroup(['local', 'global'], min_selection=1, position=window.top - Vec2(.2,0), parent=self.ui)
+        self.local_global_menu.scale *= .75
         self.local_global_menu.on_value_changed = self.render_selection
         # self.current_poke_node = None
         self.entity_list_text = Text(parent=self.ui, scale=.5, position=window.left)
-
 
     @property
     def entities(self):
@@ -193,6 +192,15 @@ class LevelEditor(Entity):
                 gizmo.world_rotation = Vec3(0,0,0)
 
         # print('---------- rendered selection')
+    def on_enable(self):
+        if hasattr(self, 'ui'):
+            self.ui.enabled = True
+
+    def on_disable(self):
+        self.ui.enabled = False
+
+
+
 
 class Undo(Entity):
     def __init__(self, **kwargs):
@@ -770,13 +778,17 @@ class Spawner(Entity):
         if key == 'n':
             self.spawn_entity()
 
-        elif key == 'n up':
+        elif key == 'n up' and self.target:
             self.drop_entity()
 
         elif self.target and key == 'left mouse up':
             self.drop_entity()
 
     def spawn_entity(self):
+        if not level_editor.current_scene:
+            print_on_screen('<red>select a scene first', position=(0,0), origin=(0,0))
+            return
+
         level_editor.grid.enabled = True
         self.target = Entity(model='cube', shader=lit_with_shadows_shader, texture='white_cube', position=mouse.world_point, original_parent=level_editor, selectable=True)
         level_editor.current_scene.entities.append(self.target)
@@ -867,16 +879,16 @@ class LevelMenu(Entity):
         super().__init__(parent=level_editor)
         self.menu = Entity(parent=level_editor.ui, model=Quad(radius=.05), color=color.black, scale=.2, origin=(.5,0), x=camera.aspect_ratio*.495, collider='box')
         self.menu.grid = Entity(parent=self.menu, model=Grid(8,8), z=-1, origin=self.menu.origin, color=color.dark_gray)
-        self.content_renderer = Entity(parent=self.menu, scale=1/8, position=(-1,-.5,-1), model=Mesh(), color='#333333') # scales the content so I can set the position as (x,y) instead of (-1+(x/8),-.5+(y/8))
+        self.content_renderer = Entity(parent=self.menu, scale=1/8, position=(-1,-.5,-1), model=Mesh(), color='#222222') # scales the content so I can set the position as (x,y) instead of (-1+(x/8),-.5+(y/8))
         self.cursor = Entity(parent=self.content_renderer, model='quad', color=color.lime, origin=(-.5,-.5), z=-2, alpha=.5)
-        self.current_scene_idicator = Entity(parent=self.content_renderer, model='circle', color=color.azure, origin=(-.5,-.5), z=-1)
+        self.current_scene_idicator = Entity(parent=self.content_renderer, model='circle', color=color.azure, origin=(-.5,-.5), z=-1, enabled=False)
         # self.tabs = [Button(parent=self.menu, scale=(1/4,1/8), position=(-1+(i/4),.5), origin=(-.5,-.5), color=color.hsv(90*i,.5,.3)) for i in range(4)]
 
 
         self.current_scene_label = Text(parent=self.menu, x=-1, y=-.5, text='current scene:', z=-10, scale=4)
 
         self.load_scenes()
-        self.goto_scene(0, 0)
+        # self.goto_scene(0, 0)
         self.draw()
 
 
@@ -895,7 +907,8 @@ class LevelMenu(Entity):
 
     def draw(self):
         if not hasattr(self, 'quad_vertices'):
-            self.quad_vertices = Quad(0).vertices
+            self.quad_vertices = load_model('quad', application.internal_models_compressed_folder, use_deepcopy=True).vertices
+            self.quad_vertices = [Vec3(*e)*.75 for e in self.quad_vertices]
 
         self.content_renderer.model.clear()
         for x in range(8):
@@ -980,6 +993,7 @@ class LevelMenu(Entity):
 
 
     def goto_scene(self, x, y):
+        self.current_scene_idicator.enabled = True
         self.current_scene_idicator.position = (x,y)
         [[level_editor.scenes[_x][_y].unload() for _x in range(8)] for _y in range(8)]
         level_editor.current_scene = level_editor.scenes[x][y]
@@ -987,6 +1001,27 @@ class LevelMenu(Entity):
         self.current_scene_label.text = level_editor.current_scene.name
         self.draw()
         level_editor.render_selection()
+
+        try:
+            sun_handler.sun.shadows = True
+        except:
+            print('no sun')
+            pass
+
+# class Inspector(Entity):
+#     def __init__(self):
+#         super().__init__(parent=level_editor.ui, enabled=True, position=(-.4*window.aspect_ratio,.5-(.05*.75)), model=Quad(aspect=3/2, radius=.05), origin=(-.5,.5), scale=(.25,.2), color=color.black66, collider='box')
+#         self.name_field = InputField(default_value='entity')
+#         self.name_field.scale *= .75
+#         # self.background = Entity(parent=self, model=Quad(aspect=2), radius=.1, color=color.black66, scale=.25)
+#         self.position_field = Button(scale=(.1, .05), world_parent=self, )
+#
+#         # self.scale *= .75
+#
+#     def render(self):
+#         pass
+
+
 
 
 # class AssetBrowser(Entity()):
@@ -1021,18 +1056,21 @@ class ModelMenu(Entity):
 
     def open(self):
         # self.model_names = [e.stem for e in application.internal_models_compressed_folder.glob('**/*.ursinamesh')]
-        self.model_names = []
+        self.model_names = ['cube', 'sphere', 'plane']
         for file_type in ('.bam', '.obj', '.ursinamesh'):
             self.model_names += [e.stem for e in application.asset_folder.glob(f'**/*{file_type}') if not 'animation' in e.stem]
 
-
+        # print('mmmmmmm', self.model_names)
         model_dict = {name : Func(self.set_models_for_selection, name) for name in self.model_names}
         if not self.button_list:
             self.button_list = ButtonList(model_dict, font='VeraMono.ttf')
         else:
             self.button_list.enabled = True
 
+        self.button_list.position = mouse.position
+
     def input(self, key):
+
         if key == 'm' and level_editor.selection:
             self.open()
 
@@ -1079,7 +1117,7 @@ class TextureMenu(Entity):
 
 class Help(Button):
     def __init__(self, **kwargs):
-        super().__init__(parent=level_editor.ui, text='?', scale=.025, model='circle', origin=(-.5,.5), position=window.top_left)
+        super().__init__(parent=level_editor.ui, text='?', scale=.025, model='circle', origin=(-.5,.5), text_origin=(0,0), position=window.top_left)
         self.tooltip = Text(
             position=self.position + Vec3(.05,-.05,-1),
             # wordwrap=0,
@@ -1322,6 +1360,43 @@ class PokeShape(Entity):
             invoke(self.generate, delay=3/60)
 
 
+class SunHandler(Entity):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.sun = DirectionalLight(parent=level_editor, shadow_map_resolution=(2048,2048))
+        self.sun.look_at(Vec3(-2,-1,-1))
+
+        # def input(self, key):
+        #     if key == 'l':
+        #         for e in level_editor.entities:
+        #             e.shader = unlit_shader
+        #             e.unlit = not e.unlit
+from ursina.prefabs.radial_menu import RadialMenu
+class RightClickMenu(Entity):
+    def __init__(self):
+        super().__init__()
+        self.radial_menu = RadialMenu(
+            parent=level_editor.ui,
+            buttons = (
+                Button(highlight_color=color.azure, text='Model', on_click=model_menu.open),
+                Button(highlight_color=color.azure, text='Tex'),
+                Button(highlight_color=color.azure, text='Col'),
+                Button(highlight_color=color.azure, text='Sh'),
+                Button(highlight_color=color.black, text='del', scale=.5, color=color.red),
+                Button(highlight_color=color.azure, text='collider'),
+            ),
+            enabled=False,
+            scale=.05
+        )
+
+    def input(self, key):
+        if key == 'right mouse down':
+            self.start_click_pos = mouse.position
+
+        if key == 'right mouse up':
+            if level_editor.selection and sum(abs(e) for e in mouse.position-self.start_click_pos) < .005:
+                self.radial_menu.enabled = True
+
 
 if __name__ == '__main__':
     app = Ursina()
@@ -1330,20 +1405,9 @@ if __name__ == '__main__':
 
 level_editor = LevelEditor()
 
-class SunHandler(Entity):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.sun = DirectionalLight(parent=level_editor, shadow_map_resolution=(2048,2048))
-        self.sun.look_at(Vec3(-2,-1,-1))
-
-    # def input(self, key):
-    #     if key == 'l':
-    #         for e in level_editor.entities:
-    #             e.shader = unlit_shader
-    #             e.unlit = not e.unlit
 
 # AmbientLight(color=color._16)
-SunHandler(parent=level_editor)
+sun_handler = SunHandler(parent=level_editor)
 
 for x in range(8):
     for y in range(8):
@@ -1366,20 +1430,66 @@ goto_scene = level_menu.goto_scene
 Duplicator()
 # ModelChanger()
 PrimitiveMenu()
-ModelMenu()
+model_menu = ModelMenu()
 TextureMenu()
+right_click_menu = RightClickMenu()
 # OriginSetter(parent=level_editor)
 PointOfViewSelector()
 Help()
+# inspector = Inspector()
+
+# inspector = WindowPanel(
+#     title='entity',
+#     content=(
+#         # InputField(name='name_field'),
+#         (Button(text='0'), Button()),
+#         Text('Name:'),
+#         # Text('Age:'),
+#         # InputField(name='age_field'),
+#         # Text('Phone Number:'),
+#         # InputField(name='phone_number_field'),
+#         # Space(height=1),
+#         # Text('Send:'),
+#         Slider(),
+#         Slider(),
+#         # ButtonGroup(('test', 'eslk', 'skffk'))
+#         ),
+#         # popup=True,
+#         # enabled=False,
+#         parent=level_editor.ui,
+#     )
+# inspector = Entity(parent=level_editor.ui, position=window.top_left+Vec2(.1,-.05))
+# for y in range(3):
+#     for x in range(3):
+#         b = Button(scale=(.12,.033), text='013', parent=inspector, origin=(-.5,.5), position=(x*.121,-y*.035), radius=.5, text_origin=(-.5,0))
+#         b.text_entity.x += .1
+#
+# tooltips = ['tree_1', 'box', 'brick', 'triplanar_shader', 'color']
+# for x, name in enumerate(('M', 'C', 'Tex', 'Sh', 'c')):
+#     model_button = Button(parent=inspector, scale=.12/2, text=name, origin=(-.5,.5), position=(.01+(x*(.07)),-4*.03), radius=.1)
+#     model_button.tooltip = Tooltip(tooltips[x], scale=.75)
+#
+# inspector.background = Entity(parent=inspector, model=Quad(radius=.05), origin_y=.5, scale=(.12*3)+.01, position=((.12*3/2),.01), color=color.black66)
+# inspector.scale = .5
 
 
-class Debug(Entity):
-    def input(self, key):
-        if key == 'space':
-            print(level_editor.selection)
-            # for e in level_editor.entities:
-            #     print(e.__class__.__name__)
-Debug()
+#
+# level_editor_toggler = Entity()
+# def level_editor_toggler_input(key):
+#     if key == 'escape':
+#         level_editor.enabled = not level_editor.enabled
+#
+# level_editor_toggler.input = level_editor_toggler_input
+
+
+
+# class Debug(Entity):
+#     def input(self, key):
+#         if key == 'space':
+#             print(level_editor.selection)
+#             # for e in level_editor.entities:
+#             #     print(e.__class__.__name__)
+# Debug()
     # t = Text(position=window.top_left + Vec2(.01,-.06))
     # def update():
     #     t.text = 'selection:\n' + '\n'.join([str(e) for e in level_editor.selection])
