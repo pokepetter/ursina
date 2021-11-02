@@ -4,12 +4,12 @@ from ursina import *
 
 
 def combine(entity, analyze=False, auto_destroy=True, ignore=[]):
-    verts = list()
-    tris = list()
-    norms = list()
-    uvs = list()
-    cols = list()
-    to_destroy = list()
+    verts = []
+    tris = []
+    norms = []
+    uvs = []
+    cols = []
+    to_destroy = []
     o = 0
 
 
@@ -77,20 +77,22 @@ def combine(entity, analyze=False, auto_destroy=True, ignore=[]):
     return entity.model
 
 
+temp_entity = None
 
 def get_vertices(entity, relative_to=None):
+    global temp_entity
     if relative_to is None:
         return entity.model.vertices
 
     vertices = list()
-    temp_entity = Entity(parent=entity.model, ignore=True)
+    if not temp_entity:
+        temp_entity = Entity(ignore=True)
+
+    temp_entity.parent = entity.model
 
     for v in entity.model.vertices:
         temp_entity.position = v
         vertices.append(temp_entity.get_position(relative_to))
-
-    from ursina import destroy
-    destroy(temp_entity)
 
     return vertices
 
@@ -99,6 +101,7 @@ if __name__ == '__main__':
     from ursina import *
     app = Ursina()
 
+
     p = Entity()
     e1 = Entity(parent=p, model='sphere', y=1.5, color=color.pink)
     e2 = Entity(parent=p, model='cube', color=color.yellow, x=1, origin_y=-.5)
@@ -106,7 +109,11 @@ if __name__ == '__main__':
 
     def input(key):
         if key == 'space':
+            from time import perf_counter
+            t = perf_counter()
             p.combine()
+            print('combined in:', perf_counter() - t)
+
     # p.y=2
     # p.model.save()
     # ursina_mesh_to_obj(p.model, name='combined_model_test', out_path=application.asset_folder)
