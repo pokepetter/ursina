@@ -131,7 +131,7 @@ scene_parent.{ob.name.replace('.', '_')} = Entity(
     scale=Vec3({round(ob.scale.x,5)}, {round(ob.scale.z,5)}, {round(ob.scale.y,5)}),
     '''
 
-        code += f'''model=deepcopy(meshes['{ob.data.name.replace('.', '_')}']),'''
+        code += f'''model=copy(meshes['{ob.data.name.replace('.', '_')}']),'''
         # code += f'''model='cube','''
 
         if ob.active_material:

@@ -34,7 +34,6 @@ class Conversation(Entity):
 
         self.more_indicator.toggle = toggle
         self.more_indicator.toggle()
-        # self.question.text_entity.origin = (-.5,.5)
         self.spacing = 4 * .02
         self.wordwrap = 65
         self.button_model = Quad(radius=.5, aspect=1/.075)
@@ -69,13 +68,14 @@ class Conversation(Entity):
         for b in self.buttons:
             b.enabled = False
 
-        answers = list()
+        answers = []
         for i, child in enumerate(node.children):
-            # print(child)
             if child.code and child.code.startswith('if'):
                 a = eval(child.code[3:])
                 if a:
                     print('wooooooooooooooooooo', a)
+                else:
+                    continue
 
             answers.append(child)
 
@@ -89,14 +89,14 @@ class Conversation(Entity):
         self.button_appear_sequence = Sequence()
         invoke(self.button_appear_sequence.start, delay=self.question_appear_sequence.duration)
 
-        print('aaaaaa', [n.content for n in node.children])
+        # print('aaaaaa', [n.content for n in node.children])
         if not node.children:
             self.buttons[0].text = '*leave*'
             self.buttons[0].on_click = Func(setattr, self, 'enabled', False)
             self.button_appear_sequence.append(Func(setattr, self.buttons[0], 'enabled', True))
 
 
-        for i, child in enumerate(node.children):
+        for i, child in enumerate(answers):
             self.button_appear_sequence.append(Wait(i*.15))
             self.button_appear_sequence.append(Func(setattr, self.buttons[i], 'enabled', True))
             self.buttons[i].text = child.content[0]
@@ -151,10 +151,6 @@ class Conversation(Entity):
         node_index = 0
 
         for i, l in enumerate(convo.split('\n')):
-            # if i <= 1 and l.startswith('('):
-            #     npc_name = l[1:-1]
-            #     print('name: ' + npc_name)
-            #     continue
             if not l:
                 continue
 
@@ -185,8 +181,6 @@ class Conversation(Entity):
             nodes.append(n)
             prev_node = n
             node_index += 1
-            # if i == 0:
-            #     continue
 
             # look backwards through nodes to find current node's parent
             for j in range(node_index-1, -1, -1):
@@ -194,13 +188,6 @@ class Conversation(Entity):
                     nodes[j].children.append(n)
                     break
 
-
-        # for n in nodes:
-        #     print(n.content)
-        #     for c in n.children:
-        #         print(' |__', c.content)
-        #     if not n.children:
-        #         print(' |__leave')
 
         return nodes
 

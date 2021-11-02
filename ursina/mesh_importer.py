@@ -13,7 +13,7 @@ from ursina.string_utilities import print_info, print_warning
 imported_meshes = dict()
 blender_scenes = dict()
 
-def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursinamesh', '.obj', '.glb', '.gltf', '.blend')):
+def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursinamesh', '.obj', '.glb', '.gltf', '.blend'), use_deepcopy=False):
     if not isinstance(name, str):
         raise TypeError(f"Argument save must be of type str, not {type(str)}")
 
@@ -25,7 +25,10 @@ def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursina
     if name in imported_meshes:
         # print('load cached model', name)
         try:
-            return deepcopy(imported_meshes[name])
+            if not use_deepcopy:
+                return copy(imported_meshes[name])
+            else:
+                return deepcopy(imported_meshes[name])
         except:
             pass
 

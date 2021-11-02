@@ -33,7 +33,7 @@ class Texture():
             self._texture = PandaTexture()
             self._texture.setup2dTexture(image.width, image.height, PandaTexture.TUnsignedByte, PandaTexture.FRgba)
             self._texture.setRamImageAs(image.transpose(Image.FLIP_TOP_BOTTOM).tobytes(), image.mode)
-            self._cached_image = None   # for get_pixel() method
+            self._cached_image = image   # for get_pixel() method
             # self._cached_image = image.transpose(Image.FLIP_TOP_BOTTOM)
             self.path = None
 
@@ -113,6 +113,15 @@ class Texture():
             self._texture.setMinfilter(SamplerState.FT_linear_mipmap_linear)
             self._filtering = 'mipmap'
 
+    @property
+    def repeat(self):
+        return self._repeat
+
+    @repeat.setter
+    def repeat(self, value):
+        self._repeat = value
+        self._texture.setWrapU(value)
+        self._texture.setWrapV(value)
 
 
     def get_pixel(self, x, y):

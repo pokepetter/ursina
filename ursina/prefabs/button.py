@@ -8,7 +8,7 @@ class Button(Entity):
     color = color.black66
     default_model = None # will deatult to rounded Quad
 
-    def __init__(self, text='', **kwargs):
+    def __init__(self, text='', radius=.1, **kwargs):
         super().__init__()
         self.parent = camera.ui
         self.collider = 'box'
@@ -23,7 +23,7 @@ class Button(Entity):
 
         if Button.default_model is None:
             if not 'model' in kwargs and self.scale[0] != 0 and self.scale[1] != 0:
-                self.model = Quad(aspect=self.scale[0] / self.scale[1])
+                self.model = Quad(aspect=self.scale[0] / self.scale[1], radius=radius)
         else:
             self.model = Button.default_model
         self.color = Button.color
