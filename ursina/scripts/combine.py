@@ -20,7 +20,9 @@ def combine(entity, analyze=False, auto_destroy=True, ignore=[]):
         if e.has_ancestor(entity) or e == entity:
             if not hasattr(e, 'model') or e.model == None or e.scripts or e.eternal:
                 continue
-            if not e.model.vertices:
+            if not hasattr(e.model, 'vertices') or not e.model.vertices:
+                e.model = load_model(e.model.name, use_deepcopy=True)
+                e.origin = e.origin
                 continue
 
             if analyze:

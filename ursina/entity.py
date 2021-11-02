@@ -206,6 +206,7 @@ class Entity(NodePath):
                         self.model.removeNode()
 
                     m.name = value
+                    m.setPos(Vec3(0,0,0))
                     object.__setattr__(self, name, m)
                     # if not value in mesh_importer.imported_meshes:
                     #     print_info('loaded model successfully:', value)
