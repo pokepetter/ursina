@@ -19,7 +19,7 @@ class Terrain(Mesh):
         self.width, self.depth = self.heightmap.width//skip, self.heightmap.height//skip
         self.aspect_ratio = self.width / self.depth
 
-        img = Image.open(self.heightmap.path).convert('RGB')
+        img = Image.open(self.heightmap.path).convert('L')
         if self.skip > 1:
             img = img.resize([self.width, self.depth], Image.ANTIALIAS)
 
@@ -32,7 +32,7 @@ class Terrain(Mesh):
         self.uvs = list()
         self.normals = list()
         w, h = self.width, self.depth
-        self.height_values = [[j[0]/255 for j in i] for i in self.height_values]
+        self.height_values = [[j/255 for j in i] for i in self.height_values]
 
 
         centering_offset = Vec2(-.5, -.5)
