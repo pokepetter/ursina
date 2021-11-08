@@ -1,0 +1,92 @@
+from ursina import *
+
+
+fresnel_shader = Shader(language=Shader.GLSL,
+vertex = '''
+#version 140
+uniform mat4 p3d_ModelViewProjectionMatrix;
+uniform mat4 p3d_ModelMatrix;
+
+in vec4 p3d_Vertex;
+in vec2 p3d_MultiTexCoord0;
+out vec2 texcoord;
+uniform vec2 texture_scale;
+uniform vec2 texture_offset;
+
+in vec3 p3d_Normal;
+out vec3 world_normal;
+out vec3 world_position;
+
+void main() {
+    gl_Position = p3d_ModelViewProjectionMatrix * p3d_Vertex;
+    texcoord = (p3d_MultiTexCoord0 * texture_scale) + texture_offset;
+    world_normal = normalize(mat3(p3d_ModelMatrix) * p3d_Normal);
+    world_position = mat3(p3d_ModelMatrix) * p3d_Vertex.xyz;
+}
+''',
+
+fragment='''
+#version 140
+
+uniform sampler2D p3d_Texture0;
+uniform vec4 p3d_ColorScale;
+in vec2 texcoord;
+in vec3 world_normal;
+in vec3 world_position;
+out vec4 fragColor;
+
+uniform vec4 fresnel_color;
+uniform sampler2D fresnel_texture;
+uniform vec3 camera_world_position;
+
+void main() {
+    vec4 color = texture(p3d_Texture0, texcoord) * p3d_ColorScale;
+
+    float _Bias = .01;
+    float _Scale = 1.0;
+    float _Power = 3.0;
+    vec3 I = normalize(world_position - camera_world_position.xyz);
+    float fresnel = _Bias + _Scale * pow(1.0 + dot(I, world_normal), _Power);
+
+    fresnel *= texture(fresnel_texture, texcoord).r;
+
+    fragColor.rgb = mix(color.rgb, fresnel_color.rgb, fresnel*fresnel_color.a);
+    fragColor.a = color.a;
+}
+
+
+''', geometry='',
+default_input = {
+    'texture_scale' : Vec2(1,1),
+    'texture_offset' : Vec2(0.0, 0.0),
+
+    'fresnel_color' : color.light_gray,
+    'fresnel_texture' : Func(load_texture, 'noise'),
+}
+)
+
+
+if __name__ == '__main__':
+    from ursina import *
+    app = Ursina()
+    # window.color=color.black
+
+    b = Entity(model='sphere', color=color.black, shader=fresnel_shader)
+    ground = Entity(model='plane', color=color.gray, shader=fresnel_shader, y=-1, scale=64, texture='grass', texture_scale=Vec2(32,32))
+    ground.set_shader_input('fresnel_color', color.azure)
+    ground.set_shader_input('fresnel_texture', load_texture('white_cube'))
+    EditorCamera()
+
+    def update():
+        b.set_shader_input('camera_world_position', camera.world_position)
+        ground.set_shader_input('camera_world_position', camera.world_position)
+
+
+    # def update():
+    #     b.rotation_y += 1
+    #     #b.rotation_z += 1
+    #     b.rotation_x += 1
+    #     b.set_shader_input('transform_matrix', b.getNetTransform().getMat())
+    # EditorCamera()
+
+    app.run()
