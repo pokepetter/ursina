@@ -152,9 +152,9 @@ class LevelEditor(Entity):
 
             self.current_scene.save()
 
-    def update(self):
-        if mouse.left or held_keys['g']:
-            self.render_selection()
+    # def update(self):
+    #     if mouse.left or held_keys['g']:
+    #         self.render_selection()
 
     def render_selection(self, update_gizmo_position=True):
         # entities = self.entities
@@ -171,8 +171,17 @@ class LevelEditor(Entity):
             else:
                 text += '<default>'
 
-            text += f'{e.name}\n'
+            if e:
+                text += f'{e.name}\n'
+            else:
+                text += f'ERROR: \n'
         self.entity_list_text.text = text
+
+        for i, e in enumerate(self.entities):
+            if e == None:
+                print(f'error in entities {i}, is {e}')
+                self.entities.remove(e)
+
 
         self.point_renderer.model.vertices = [e.world_position for e in self.entities if e.selectable]
         self.point_renderer.model.colors = [color.azure if e in self.selection else color.yellow for e in self.entities if e.selectable]
@@ -218,17 +227,25 @@ class Undo(Entity):
 
         current_undo_data = self.undo_data[self.undo_index]
 
-        if len(current_undo_data) == 2:     # destroy/create entity with id
-            id = current_undo_data[0]
-            target_entity = level_editor.current_scene.entities.pop(id)
-            if target_entity in level_editor.selection:
-                level_editor.selection.remove(target_entity)
-            destroy(target_entity)
+        if current_undo_data[0] == 'restore entities':     # restore deleted entity
+            for recipe, id in zip(current_undo_data[1], current_undo_data[2]):
+                clone = eval(recipe)
+                clone.selectable = True
+                clone.original_parent = clone.parent
+                clone.shader = lit_with_shadows_shader
+                print('------------', recipe, id, 'clone:', clone)
+                level_editor.entities.insert(id, clone)
+
+        elif current_undo_data[0] == 'delete entities': # delete newly created entity
+            target_entities = [level_editor.entities[id] for id in current_undo_data[1]]
+            [level_editor.selection.remove(e) for e in target_entities if e in level_editor.selection]
+            [level_editor.entities.remove(e) for e in target_entities]
+            [destroy(e) for e in target_entities]
 
         else:
             for data in current_undo_data:
-                target, attr, original, new = data
-                setattr(target, attr, original)
+                id, attr, original, new = data
+                setattr(level_editor.entities[id], attr, original)
 
         level_editor.render_selection()     # make sure the gizmo position updates
         self.undo_index -= 1
@@ -244,8 +261,8 @@ class Undo(Entity):
 
         else:
             for data in current_undo_data:
-                target, attr, original, new = data
-                setattr(target, attr, new)
+                id, attr, original, new = data
+                setattr(level_editor.entities[id], attr, new)
 
         level_editor.render_selection()     # make sure the gizmo position updates
         self.undo_index += 1
@@ -307,7 +324,7 @@ class GizmoArrow(Draggable):
         changes = []
         for e in level_editor.selection:
             e.world_parent = e.original_parent
-            changes.append([e, 'world_transform', e._original_world_transform, e.world_transform])
+            changes.append([level_editor.entities.index(e), 'world_transform', e._original_world_transform, e.world_transform])
 
         self.parent = self.gizmo.arrow_parent
         self.position = (0,0,0)
@@ -429,6 +446,7 @@ class RotationGizmo(Entity):
 
 
     def drag(self):
+        self.rotator.world_parent = scene
         print('drag')
         for e in level_editor.selection:
             e.world_parent = self.rotator
@@ -437,10 +455,11 @@ class RotationGizmo(Entity):
 
     def drop(self):
         print('drop')
+        self.rotator.world_parent = gizmo
         changes = []
         for e in level_editor.selection:
             e.world_parent = e.original_parent
-            changes.append([e, 'world_transform', e._original_world_transform, e.world_transform])
+            changes.append([level_editor.entities.index(e), 'world_transform', e._original_world_transform, e.world_transform])
 
         level_editor.current_scene.undo.record_undo(changes)
         self.dragging = False
@@ -455,11 +474,12 @@ class RotationGizmo(Entity):
 
     def update(self):
         if self.dragging:
+            rotation_amount = Vec3(sum(mouse.velocity), sum(mouse.velocity), sum(mouse.velocity)) * self.sensitivity * time.dt * self.axis * Vec3(1,1,-1)
             if not level_editor.origin_mode_menu.value == 'individual':
-                self.rotator.rotation -= Vec3(sum(mouse.velocity), sum(mouse.velocity), sum(mouse.velocity)) * self.sensitivity * time.dt * self.axis * Vec3(1,1,-1)
+                self.rotator.rotation -= rotation_amount
             else:
                 for e in level_editor.selection:
-                    e.rotation += Vec3(sum(mouse.velocity), sum(mouse.velocity), sum(mouse.velocity)) * self.sensitivity * time.dt * self.axis * Vec3(1,1,-1)
+                    e.rotation -= rotation_amount
 
 
 
@@ -491,7 +511,7 @@ class ScaleGizmo(Draggable):
         changes = []
         for e in level_editor.selection:
             e.world_parent = e.original_parent
-            changes.append([e, 'world_transform', e._original_world_transform, e.world_transform])
+            changes.append([level_editor.entities.index(e), 'world_transform', e._original_world_transform, e.world_transform])
 
         level_editor.current_scene.undo.record_undo(changes)
         self.dragging = False
@@ -794,7 +814,9 @@ class Spawner(Entity):
         level_editor.current_scene.entities.append(self.target)
 
     def drop_entity(self):
-        level_editor.current_scene.undo.record_undo([level_editor.current_scene.entities.index(self.target), Func(Entity, model='cube', origin_y=-.5, shader=lit_with_shadows_shader, texture='white_cube', position=self.target.position)])
+        level_editor.current_scene.undo.record_undo(('delete entities', (level_editor.current_scene.entities.index(self.target), )))
+        level_editor.selection = [self.target, ]
+        level_editor.render_selection()
         self.target = None
         level_editor.grid.enabled = False
 
@@ -808,9 +830,16 @@ class Spawner(Entity):
 class Deleter(Entity):
     def input(self, key):
         if level_editor.selection and key == 'delete':
-            [destroy(e) for e in level_editor.selection]
+            level_editor.current_scene.undo.record_undo((
+                'restore entities',
+                [repr(e) for e in level_editor.selection],
+                [level_editor.entities.index(e) for e in level_editor.selection]
+                ))
 
-
+            [level_editor.entities.remove(e) for e in level_editor.selection]
+            [destroy(e, delay=1/60) for e in level_editor.selection]
+            level_editor.selection = []
+            level_editor.render_selection()
 
 # class OriginSetter(Entity):
 #     def input(self, key):
@@ -1158,9 +1187,14 @@ class Duplicator(Entity):
         if held_keys['shift'] and key == 'd' and level_editor.selection:
             self.dragger.position = level_editor.selection[-1].world_position
 
-            for e in level_editor.selection:
-                clone = duplicate(e, original_parent=e.parent, color=e.color, shader=e.shader, origin=e.origin, world_parent=self.dragger, selectable=e.selectable)
-                level_editor.entities.append(clone)
+            # for e in level_editor.selection:
+            #     clone = duplicate(e, original_parent=e.parent, color=e.color, shader=e.shader, origin=e.origin, world_parent=self.dragger, selectable=e.selectable)
+            #     level_editor.entities.append(clone)
+
+            clones = [duplicate(e, original_parent=e.parent, color=e.color, shader=e.shader, origin=e.origin, world_parent=self.dragger, selectable=e.selectable) for e in level_editor.selection]
+            [level_editor.entities.append(e) for e in clones]
+            level_editor.current_scene.undo.record_undo(('delete entities', [level_editor.entities.index(en) for en in clones]))
+
 
             level_editor.selection.clear()
             level_editor.selection = self.dragger.children
@@ -1318,11 +1352,11 @@ class PokeShape(Entity):
         level_editor.render_selection()
 
 
-    def update(self):
-        if self.edit_mode:
-            if mouse.left or held_keys['g']:
-                level_editor.render_selection()
-                self.generate()
+    # def update(self):
+    #     if self.edit_mode:
+    #         if mouse.left or held_keys['g']:
+    #             level_editor.render_selection()
+    #             self.generate()
 
 
     def input(self, key):
