@@ -100,7 +100,7 @@ class Entity(NodePath):
                     print(f'{Path(caller.filename).name} ->  {caller.lineno} -> {caller.code_context}')
 
         # make sure things get set in the correct order. both colliders and texture need the model to be set first.
-        for key in ('model', 'origin', 'origin_x', 'origin_y', 'origin_z', 'collider', 'texture', 'texture_scale', 'texture_offset'):
+        for key in ('model', 'origin', 'origin_x', 'origin_y', 'origin_z', 'collider', 'shader', 'texture', 'texture_scale', 'texture_offset'):
             if key in kwargs:
                 setattr(self, key, kwargs[key])
                 del kwargs[key]
