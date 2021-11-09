@@ -117,7 +117,7 @@ class LevelEditor(Entity):
         self.origin_mode = 'center'
         self.editor_camera = EditorCamera(parent=self, rotation_x=20, eternal=False)
         self.ui = Entity(parent=camera.ui, name='level_editor.ui')
-        self.point_renderer = Entity(parent=self, model=Mesh([], mode='point', thickness=20, render_points_in_3d=False), texture='circle', always_on_top=True, unlit=True, render_queue=1)
+        self.point_renderer = Entity(parent=self, model=Mesh([], mode='point', thickness=.20, render_points_in_3d=True), texture='circle', always_on_top=True, unlit=True, render_queue=1)
         self.origin_mode_menu = ButtonGroup(['last', 'center', 'individual'], min_selection=1, position=window.top, parent=self.ui)
         self.origin_mode_menu.scale *= .75
         self.origin_mode_menu.on_value_changed = self.render_selection
@@ -193,7 +193,7 @@ class LevelEditor(Entity):
             if self.origin_mode_menu.value in ('last', 'individual'):
                 gizmo.world_position = self.selection[-1].world_position
             elif self.origin_mode_menu.value == 'center':
-                gizmo.world_position = sum(e.world_position for e in self.selection) / len(self.selection)
+                gizmo.world_position = sum([e.world_position for e in self.selection]) / len(self.selection)
 
             if self.local_global_menu.value == 'local' and self.origin_mode_menu.value == 'last':
                 gizmo.world_rotation = self.selection[-1].world_rotation
@@ -354,6 +354,7 @@ class Gizmo(Entity):
         }
         for e in self.arrow_parent.children:
             e.highlight_color = color.white
+            e.original_scale = e.scale
 
         self.fake_gizmo = Entity(parent=level_editor, enabled=False)
         self.fake_gizmo.subgizmos = dict()
@@ -401,10 +402,12 @@ class Gizmo(Entity):
         self.visible = True
         [setattr(e, 'visible_self', False) for e in self.fake_gizmo.subgizmos.values()]
         [setattr(e, 'visible_self', True) for e in self.subgizmos.values()]
-
+        [setattr(e, 'scale', e.original_scale) for e in self.subgizmos.values()]
 
 
     def update(self):
+        self.world_scale = distance(self.world_position, camera.world_position) * .025
+
         for i, axis in enumerate('xyz'):
             if self.subgizmos[axis].dragging:
                 setattr(self.lock_axis_helper, axis, self.subgizmos[axis].get_position(relative_to=self.lock_axis_helper_parent)[i])
@@ -563,6 +566,7 @@ class QuickGrabber(Entity):
         elif key == 'g up' and self.target_entity:
             self.target_entity = None
             self.plane.enabled = False
+            level_editor.render_selection()
 
 
     def update(self):
@@ -614,6 +618,9 @@ class QuickScaleOrRotate(Entity):
 
 
         if key in self.gizmos_to_toggle.keys():
+            selector.enabled = False
+            selection_box.enabled = False
+
             gizmo.arrow_parent.visible = False
             scale_gizmo.visible = False
             self.gizmos_to_toggle[key].visible_self = False
@@ -645,6 +652,9 @@ class QuickScaleOrRotate(Entity):
             scale_gizmo.axis = Vec3(1,1,1)
             self.gizmos_to_toggle[key].visible_self = True
             gizmo_toggler.animator.state = self.original_gizmo_state
+
+            selector.enabled = True
+            selection_box.enabled = True
 
 
     def update(self):
@@ -1433,8 +1443,8 @@ class RightClickMenu(Entity):
 
 
 if __name__ == '__main__':
-    app = Ursina()
-    # app = Ursina(vsync=False)
+    # app = Ursina()
+    app = Ursina(vsync=False)
 
 
 level_editor = LevelEditor()
