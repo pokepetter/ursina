@@ -23,7 +23,6 @@ def combine(entity, analyze=False, auto_destroy=True, ignore=[]):
             if not hasattr(e.model, 'vertices') or not e.model.vertices:
                 e.model = load_model(e.model.name, use_deepcopy=True)
                 e.origin = e.origin
-                continue
 
             if analyze:
                 print('combining:', e)
