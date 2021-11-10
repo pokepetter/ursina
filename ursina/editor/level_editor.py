@@ -820,7 +820,7 @@ class Spawner(Entity):
             return
 
         level_editor.grid.enabled = True
-        self.target = Entity(model='cube', shader=lit_with_shadows_shader, texture='white_cube', position=mouse.world_point, original_parent=level_editor, selectable=True)
+        self.target = Entity(model='cube', shader=lit_with_shadows_shader, position=mouse.world_point, original_parent=level_editor, selectable=True)
         level_editor.current_scene.entities.append(self.target)
 
     def drop_entity(self):
@@ -1152,6 +1152,69 @@ class TextureMenu(Entity):
 
         self.button_list.enabled = False
 
+class ColorMenu(Entity):
+    def __init__(self):
+        super().__init__(parent=level_menu)
+        self.sub_menu = Entity(parent=level_editor.ui, enabled=False)
+
+        self.h_slider = Slider(name='h', min=0, max=360, step=1, text='h', dynamic=True, world_parent=self.sub_menu, on_value_changed=self.on_slider_changed)
+        self.h_slider.bg.color = color.white
+        self.h_slider.bg.texture = 'rainbow'
+        self.h_slider.bg.texture.filtering = True
+
+        self.s_slider = Slider(name='s', min=0, max=100, step=1, default=50, text='s', dynamic=True, world_parent=self.sub_menu, on_value_changed=self.on_slider_changed)
+        self.s_slider.bg.color = color.white
+        self.s_slider.bg.model.colors = [color.white for i in self.s_slider.bg.model.vertices]
+
+
+        self.v_slider = Slider(name='v', min=0, max=100, default=50, step=1, text='v', dynamic=True, world_parent=self.sub_menu, on_value_changed=self.on_slider_changed)
+        self.v_slider.bg.model.colors = [color.black for i in self.v_slider.bg.model.vertices]
+        self.v_slider.bg.color = color.white
+
+        for i, e in enumerate((self.h_slider, self.s_slider, self.v_slider)):
+            e.y = -i * .03
+            e.knob.color = color.white
+
+        self.sub_menu.scale *= .6
+
+        self.bg = Entity(parent=self.sub_menu, model='quad', collider='box', visible_self=False, scale=10, z=1, on_click=self.close)
+
+
+        self.on_slider_changed()
+
+    def on_slider_changed(self):
+
+        # if self.mode == 'rgb':
+        #     value = color.rgb(self.r_slider.value, self.g_slider.value, self.b_slider.value)
+        # else:
+        value = color.hsv(self.h_slider.value, self.s_slider.value/100, self.v_slider.value/100)
+        for e in level_editor.selection:
+            e.color = value
+
+        for i, v in enumerate(self.s_slider.bg.model.vertices):
+            if v[0] < 0:
+                self.s_slider.bg.model.colors[i] = color.gray
+            else:
+                self.s_slider.bg.model.colors[i] = color.hsv(value.h, 1, value.v)
+
+        self.s_slider.bg.model.generate()
+
+        for i, v in enumerate(self.v_slider.bg.model.vertices):
+            if v[0] > 0:
+                self.v_slider.bg.model.colors[i] = color.hsv(value.h, value.s, 1)
+
+        self.v_slider.bg.model.generate()
+        print('----')
+
+    def input(self, key):
+        if key == 'b' and not held_keys['control'] and not held_keys['shift'] and not held_keys['alt']:
+            self.open()
+
+    def open(self):
+        self.sub_menu.enabled = True
+
+    def close(self):
+        self.sub_menu.enabled = False
 
 
 class Help(Button):
@@ -1424,7 +1487,7 @@ class RightClickMenu(Entity):
             buttons = (
                 Button(highlight_color=color.azure, text='Model', on_click=model_menu.open),
                 Button(highlight_color=color.azure, text='Tex'),
-                Button(highlight_color=color.azure, text='Col'),
+                Button(highlight_color=color.azure, text='Col', on_click=color_menu.open),
                 Button(highlight_color=color.azure, text='Sh'),
                 Button(highlight_color=color.black, text='del', scale=.5, color=color.red),
                 Button(highlight_color=color.azure, text='collider'),
@@ -1475,7 +1538,8 @@ Duplicator()
 # ModelChanger()
 PrimitiveMenu()
 model_menu = ModelMenu()
-TextureMenu()
+texture_menu = TextureMenu()
+color_menu = ColorMenu()
 right_click_menu = RightClickMenu()
 # OriginSetter(parent=level_editor)
 PointOfViewSelector()
