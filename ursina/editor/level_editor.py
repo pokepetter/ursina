@@ -1166,30 +1166,34 @@ class ColorMenu(Entity):
         self.s_slider.bg.color = color.white
         self.s_slider.bg.model.colors = [color.white for i in self.s_slider.bg.model.vertices]
 
-
         self.v_slider = Slider(name='v', min=0, max=100, default=50, step=1, text='v', dynamic=True, world_parent=self.sub_menu, on_value_changed=self.on_slider_changed)
         self.v_slider.bg.model.colors = [color.black for i in self.v_slider.bg.model.vertices]
         self.v_slider.bg.color = color.white
 
-        for i, e in enumerate((self.h_slider, self.s_slider, self.v_slider)):
+        self.a_slider = Slider(name='a', min=0, max=100, default=100, step=1, text='a', dynamic=True, world_parent=self.sub_menu, on_value_changed=self.on_slider_changed)
+        self.a_slider.bg.model.colors = [color.white for i in self.a_slider.bg.model.vertices]
+        self.a_slider.bg.color = color.white
+        for i, v in enumerate(self.a_slider.bg.model.vertices):
+            if v[0] < 0:
+                self.a_slider.bg.model.colors[i] = color.clear
+        self.a_slider.bg.model.generate()
+
+        for i, e in enumerate((self.h_slider, self.s_slider, self.v_slider, self.a_slider)):
             e.y = -i * .03
             e.knob.color = color.white
 
         self.sub_menu.scale *= .6
 
         self.bg = Entity(parent=self.sub_menu, model='quad', collider='box', visible_self=False, scale=10, z=1, on_click=self.close)
+        self.apply_color = True     # set to False when you want to move the sliders but not update the color of the entities.
 
-
-        self.on_slider_changed()
 
     def on_slider_changed(self):
+        value = color.hsv(self.h_slider.value, self.s_slider.value/100, self.v_slider.value/100, self.a_slider.value/100)
 
-        # if self.mode == 'rgb':
-        #     value = color.rgb(self.r_slider.value, self.g_slider.value, self.b_slider.value)
-        # else:
-        value = color.hsv(self.h_slider.value, self.s_slider.value/100, self.v_slider.value/100)
-        for e in level_editor.selection:
-            e.color = value
+        if self.apply_color:
+            for e in level_editor.selection:
+                e.color = value
 
         for i, v in enumerate(self.s_slider.bg.model.vertices):
             if v[0] < 0:
@@ -1204,17 +1208,33 @@ class ColorMenu(Entity):
                 self.v_slider.bg.model.colors[i] = color.hsv(value.h, value.s, 1)
 
         self.v_slider.bg.model.generate()
-        print('----')
+
+        self.a_slider.bg.color = value
 
     def input(self, key):
         if key == 'b' and not held_keys['control'] and not held_keys['shift'] and not held_keys['alt']:
             self.open()
 
     def open(self):
+        if self.sub_menu.enabled:
+            return
+
+        for e in level_editor.selection:
+            e.original_color = e.color
+
         self.sub_menu.enabled = True
+        self.apply_color = False
+        self.h_slider.value = level_editor.selection[0].color.h * 360
+        self.s_slider.value = level_editor.selection[0].color.s * 100
+        self.v_slider.value = level_editor.selection[0].color.v * 100
+        self.a_slider.value = level_editor.selection[0].color.a * 100
+        self.apply_color = True
+
+
 
     def close(self):
         self.sub_menu.enabled = False
+        level_editor.current_scene.undo.record_undo([(level_editor.entities.index(e), 'color', e.original_color, e.color) for e in level_editor.selection])
 
 
 class Help(Button):
@@ -1506,8 +1526,8 @@ class RightClickMenu(Entity):
 
 
 if __name__ == '__main__':
-    # app = Ursina()
-    app = Ursina(vsync=False)
+    app = Ursina()
+    # app = Ursina(vsync=False)
 
 
 level_editor = LevelEditor()
