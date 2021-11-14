@@ -70,6 +70,9 @@ for i, arg in enumerate(sys.argv):
             --overwrite         # don't ask to overwrite existing build, just overwrite
             --skip_engine
             --skip_game
+
+            Make sure to inlude any extra modules with --include_modules PIL,numpy for example.
+            Any errors will be logged in log.txt.
             '''
             )
         )

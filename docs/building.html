@@ -44,23 +44,27 @@ Creates a .bat file to start the game.<br>
 <div id="Building Your App with auto-py-to-exe (singlefile)"/><br>
 Building Your App with auto-py-to-exe (singlefile)<br>
 <div style="font-size: 20.0px;font-weight: normal;">
+This way is not recommended since it will slow to open and have a bigger file size.<br>
 <br>
 1. pip install auto-py-to-exe<br>
-2. go to cmd and type auto-py-to-exe to open the gui<br>
-3. enter script location<br>
-4. select onefile<br>
-5. select either console based or window based<br>
-6. icon (optional)<br>
-7. under additional files, click add folder and add<br>
+2. Go to cmd and type auto-py-to-exe to open the gui<br>
+3. Enter script location<br>
+4. Select onefile<br>
+5. Select either console based or window based<br>
+6. Icon (optional)<br>
+7. Under additional files, click add folder and add:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;panda3d-1.10.6.dist-info,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;panda3d,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;panda3d_tools,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;direct,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;ursina-3.1.0.dist-info,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;ursina,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;and any other files included for your app/game<br>
-8. advanced (optional)<br>
-9. settings to set an output location (optional)<br>
-10. finally select "convert .py to .exe"<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;and any other files included for your app/game.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;You can find these in YOUR_PYTHON_FOLDER/Lib/site-packages/<br>
+<br>
+8. Go under "Advanced" to "–paths" and add folder "YOUR_PYTHON_FOLDER/Lib/site-packages/panda3d"<br>
+9. Set an output location (optional)<br>
+10. Finally select "convert .py to .exe"<br>
 <br>
 
 </html>
