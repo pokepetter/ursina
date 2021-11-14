@@ -13,7 +13,7 @@ class Circle(Mesh):
             self.vertices.append(point.world_position)
 
         if mode == 'line':  # add the first point to make the circle whole
-            self.vertices.append(verts[0])
+            self.vertices.append(self.vertices[0])
 
         destroy(origin)
         super().__init__(vertices=self.vertices, mode=mode, **kwargs)
