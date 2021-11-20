@@ -32,6 +32,9 @@ Creates a .bat file to start the game.
 --skip_game
 # text
 
+Make sure to include any extra modules with --include_modules PIL,numpy for example.
+Any errors while the application is running will be logged in log.txt instead of the console.
+
 
 
 ## Building Your App with auto-py-to-exe (singlefile)
