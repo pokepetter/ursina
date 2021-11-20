@@ -791,14 +791,20 @@ class Entity(NodePath):
         self._texture_offset = value
 
     @property
-    def tileset_size(self):
+    def tileset_size(self):         # if the texture is a tileset, say how many tiles there are so it only use one tile of the texture, e.g. tileset_size=[8,4]
         return self._tileset_size
     @tileset_size.setter
     def tileset_size(self, value):
         self._tileset_size = value
-        if self.model and self.texture:
-            self.model.setTexScale(TextureStage.getDefault(), 1/value[0], 1/value[1])
+        self.texture_scale = Vec2(1/value[0], 1/value[1])
 
+    @property
+    def tile_coordinate(self):      # set the tile coordinate, starts in the lower left.
+        return self._tile_coordinate
+    @tile_coordinate.setter
+    def tile_coordinate(self, value):
+        self._tile_coordinate = value
+        self.texture_offset = Vec2(value[0] / self.tileset_size[0], value[1] / self.tileset_size[1])
 
 
     @property
