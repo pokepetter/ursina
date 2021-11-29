@@ -71,8 +71,8 @@ for i, arg in enumerate(sys.argv):
             --skip_engine
             --skip_game
 
-            Make sure to inlude any extra modules with --include_modules PIL,numpy for example.
-            Any errors will be logged in log.txt.
+            Make sure to include any extra modules with --include_modules PIL,numpy for example.
+            Any errors while the application is running will be logged in log.txt instead of the console.
             '''
             )
         )
