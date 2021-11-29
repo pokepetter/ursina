@@ -19,7 +19,8 @@ class FirstPersonController(Entity):
         self.gravity = 1
         self.grounded = False
         self.jump_height = 2
-        self.jump_duration = .5
+        self.jump_up_duration = .5
+        self.fall_after = .35 # will interrupt jump up
         self.jumping = False
         self.air_time = 0
 
@@ -81,8 +82,8 @@ class FirstPersonController(Entity):
             return
 
         self.grounded = False
-        self.animate_y(self.y+self.jump_height, self.jump_duration, resolution=int(1//time.dt), curve=curve.out_expo)
-        invoke(self.start_fall, delay=self.jump_duration)
+        self.animate_y(self.y+self.jump_height, self.jump_up_duration, resolution=int(1//time.dt), curve=curve.out_expo)
+        invoke(self.start_fall, delay=self.fall_after)
 
 
     def start_fall(self):
