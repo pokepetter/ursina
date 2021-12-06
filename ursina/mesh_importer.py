@@ -9,6 +9,7 @@ from ursina import application
 from panda3d.core import CullFaceAttrib
 from time import perf_counter
 from ursina.string_utilities import print_info, print_warning
+from ursina import color
 
 imported_meshes = dict()
 blender_scenes = dict()
@@ -232,6 +233,10 @@ def obj_to_ursinamesh(
         norm_indices = list()
         norms = list()
 
+        vertex_colors = list()
+        current_color = None
+        mtl_dict = {}
+
         # parse the obj file to a Mesh
         for i, l in enumerate(lines):
             if l.startswith('v '):
@@ -259,12 +264,19 @@ def obj_to_ursinamesh(
                     return
                 if len(tri) == 3:
                     tris.extend(tri)
+                    if current_color:
+                        vertex_colors.extend([current_color for i in range(3)])
+
                 elif len(tri) == 4:
                     tris.extend((tri[0], tri[1], tri[2], tri[2], tri[3], tri[0]))
+                    if current_color:
+                        vertex_colors.extend([current_color for i in range(6)])
+
                 else: # ngon
                     for i in range(1, len(tri)-1):
                         tris.extend((tri[i], tri[i+1], tri[0]))
-
+                    if current_color:
+                        vertex_colors.extend([current_color for i in range(len(tri))])
 
                 try:
                     uv = tuple(int(t.split('/')[1])-1 for t in l)
@@ -290,13 +302,31 @@ def obj_to_ursinamesh(
                 except: # if no normals
                     pass
 
+            elif l.startswith('mtllib '):    # load mtl file
+                mtl_file_name = l[7:] # remove 'mtllib '
+                with open(str(f).rstrip('.obj') + '.mtl') as mtl_file:
+                    mtl_data = mtl_file.readlines()
+
+                    for i in range(len(mtl_data)-1):
+                        if mtl_data[i].startswith('newmtl ') and mtl_data[i+1].startswith('Kd '):
+                            material_name = mtl_data[i].strip()[7:] # remove 'newmtl '
+                            material_color = [float(e) for e in mtl_data[i+1].strip()[3:].split(' ')]
+                            mtl_dict[material_name] = *material_color, 1
+
+
+            elif l.startswith('usemtl ') and mtl_data: # apply material color
+                material_name = l[7:].strip()    # remove 'usemtl '
+                current_color = mtl_dict[material_name]
+
+
         normals = [(-norms[nid][0], norms[nid][1], norms[nid][2]) for nid in norm_indices]
 
         if return_mesh:
             return Mesh(
                 vertices=[verts[t] for t in tris],
                 normals=normals,
-                uvs=[uvs[uid] for uid in uv_indices]
+                uvs=[uvs[uid] for uid in uv_indices],
+                colors=vertex_colors
             )
 
         meshstring = ''
@@ -304,6 +334,10 @@ def obj_to_ursinamesh(
 
         meshstring += '\nvertices='
         meshstring += str(tuple(verts[t] for t in tris))
+
+        if vertex_colors:
+            meshstring += '\ncolors='
+            meshstring += str(tuple(col for col in vertex_colors))
 
         if uv_indices:
             meshstring += ', \nuvs='
@@ -460,14 +494,15 @@ if __name__ == '__main__':
 
     application.asset_folder = application.asset_folder.parent / 'samples'
     # from ursina.shaders import basic_lighting_shader
-    from ursina.shaders import normals_shader as rim_shader
-    from ursina.shaders import matcap_shader as rim_shader
+    # from ursina.shaders import normals_shader as rim_shader
+    # from ursina.shaders import matcap_shader as rim_shader
     # from ursina.shaders import height_shader as rim_shader
 
 
     t = time.time()
+    Entity(model='race')
     # blender_scene = load_blender_scene(path=application.asset_folder, name='desert', reload=True)
-    blender_scene = load_blender_scene(path=application.asset_folder, name='blender_level_editor_test_scene_2')
+    # blender_scene = load_blender_scene(path=application.asset_folder, name='blender_level_editor_test_scene_2')
     # print('-------', time.time() - t)
 
     # print('--------', blender_scene.children)
