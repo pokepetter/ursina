@@ -1030,7 +1030,7 @@ class Entity(NodePath):
             # 'rotation_x', 'rotation_y', 'rotation_z',
             # 'scale_x', 'scale_y', 'scale_z',
 
-            'render_queue', 'always_on_top', 'collision', 'collider', 'scripts')
+            'render_queue', 'always_on_top', 'collider', 'collision', 'scripts')
 
     def __str__(self):
         return self.name
@@ -1049,6 +1049,9 @@ class Entity(NodePath):
                     continue
                 if key == 'texture':
                     changes.append(f"texture='{getattr(self, key).name.split('.')[0]}', ")
+                    continue
+                if key == 'collider':
+                    changes.append(f"collider='{getattr(self, key).name}', ")
                     continue
 
                 value = getattr(self, key)

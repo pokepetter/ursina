@@ -9,10 +9,11 @@ uniform mat4 p3d_ModelMatrix;
 in vec2 p3d_MultiTexCoord0;
 in vec4 p3d_Vertex;
 in vec3 p3d_Normal;
+in vec4 p3d_Color;
 out vec3 world_normal;
 out vec3 vertex_world_position;
 out vec2 texcoord;
-
+out vec4 vertex_color;
 
 void main() {
   gl_Position = p3d_ModelViewProjectionMatrix * p3d_Vertex;
@@ -20,6 +21,7 @@ void main() {
 
   world_normal = normalize(mat3(p3d_ModelMatrix) * p3d_Normal);
   vertex_world_position = (p3d_ModelMatrix * p3d_Vertex).xyz;
+  vertex_color = p3d_Color;
 }
 ''',
 
@@ -35,8 +37,13 @@ uniform sampler2D top_texture;
 in vec3 world_normal;
 in vec3 vertex_world_position;
 
+uniform vec2 texture_scale;
+uniform vec2 top_texture_scale;
 in vec2 normalRepeat;
 in vec2 normalScale;
+
+in vec4 vertex_color;
+
 
 //"Standard" triplanar blending.
 vec3 TriPlanarBlendWeightsStandard(vec3 normal) {
@@ -69,25 +76,27 @@ void main(){
     vec3 blendFast = TriPlanarBlendWeightsConstantOverlap(world_normal);
     vec3 blend = blendFast;
 
-    vec3 albedoX = texture(p3d_Texture0, vertex_world_position.zy).rgb*blend.x;
-	vec3 albedoY = texture(p3d_Texture0, vertex_world_position.xz).rgb*blend.y;
-	vec3 albedoZ = texture(p3d_Texture0, vertex_world_position.xy).rgb*blend.z;
+    vec3 albedoX = texture(p3d_Texture0, vertex_world_position.zy * texture_scale).rgb*blend.x;
+	vec3 albedoY = texture(p3d_Texture0, vertex_world_position.xz * texture_scale).rgb*blend.y;
+	vec3 albedoZ = texture(p3d_Texture0, vertex_world_position.xy * texture_scale).rgb*blend.z;
 
     if (world_normal.y > .0) {
-		albedoY = texture(top_texture, vertex_world_position.xz).rgb*blend.y;
+		albedoY = texture(top_texture, vertex_world_position.xz * top_texture_scale.xy).rgb*blend.y;
     }
 
 	vec3 triPlanar = (albedoX + albedoY + albedoZ);
 
-    fragColor = vec4(triPlanar.rgb, 1);
+    fragColor = vec4(triPlanar.rgb, 1) * vertex_color;
 }
 
 ''',
 geometry='',
 default_input = {
+    'texture_scale' : Vec2(1,1),
+    'top_texture_scale' : Vec2(1,1),
     'normalRepeat' : Vec2(10,10),
     'normalScale' : Vec2(1,1),
-    'top_texture' : None
+    'top_texture' : None,
     }
 )
 
@@ -108,16 +117,24 @@ if __name__ == '__main__':
     # a.model.setTexture(a.texture._texture, 1)
     t = load_texture('brick')._texture
     print('------', type(t))
-    a.set_shader_input('top_texture', load_texture('shore')._texture)
+    a.set_shader_input('top_texture', load_texture('grass'))
     # print('---------', a.texture._texture)
 
     b = AzureSphere(shader=shader, rotation_y=180, x=3, texture='brick')
     b.texture.filtering = False
     GrayPlane(scale=10, y=-2, texture='shore')
-    b.set_shader_input('top_texture', load_texture('shore')._texture)
+    b.set_shader_input('top_texture', load_texture('grass'))
 
     Sky(color=color.light_gray)
     EditorCamera()
+
+    def set_top_texture_scale():
+        value = top_texture_scale_slider.value
+        b.set_shader_input('top_texture_scale', Vec2(value, value))
+        a.set_shader_input('top_texture_scale', Vec2(value, value))
+
+    top_texture_scale_slider = Slider(text='top_texture_scale', min=0, max=10, default=1, dynamic=True, on_value_changed=set_top_texture_scale)
+
 
     def update():
         b.rotation_y += 1

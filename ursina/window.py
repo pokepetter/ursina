@@ -32,7 +32,7 @@ class Window(WindowProperties):
         loadPrcFileData('', 'aux-display pandadx8')
         loadPrcFileData('', 'aux-display tinydisplay')
 
-        self.setForeground(True)
+        # self.setForeground(True)
         self.vsync = True   # can't be set during play
         self.show_ursina_splash = False
 
