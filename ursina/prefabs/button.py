@@ -6,7 +6,7 @@ import textwrap
 class Button(Entity):
 
     color = color.black66
-    default_model = None # will deatult to rounded Quad
+    default_model = None # will default to rounded Quad
 
     def __init__(self, text='', radius=.1, **kwargs):
         super().__init__()
