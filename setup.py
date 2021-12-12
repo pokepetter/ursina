@@ -8,7 +8,7 @@ setup(
     description='An easy to use game engine/framework for python.',
     long_description=long_desc,
     long_description_content_type="text/markdown",
-    version='4.0.0',
+    version='4.1.0',
     url='https://github.com/pokepetter/ursina',
     author='Petter Amland',
     author_email='pokepetter@gmail.com',
@@ -26,7 +26,7 @@ setup(
     extras_require={'extras': [
         'numpy',
         'imageio',
-        'psd-tools3', 
+        'psd-tools3',
         'psutil',
         ],
     },
