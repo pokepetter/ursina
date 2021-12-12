@@ -53,14 +53,7 @@ def ursfx(volume_curve, volume=.75, wave='sine', pitch=0, pitch_change=0, speed=
 
 class SynthGUI(Entity):
     def __init__(self, **kwargs):
-        super().__init__(parent=camera.ui)
-
-        # for i, (key, value) in enumerate(self.synth_settings.items()):
-        #     # print(i, key, value)
-        #     if not isinstance(value, (int, float, complex)):
-        #         continue
-        #
-        #     s = Slider(parent=self, y=.05*-i, min=0, max=1, default=value, text=key, setattr=(self.synth_settings, key), on_value_changed=self.play)
+        super().__init__(parent=camera.ui, **kwargs)
 
         default_positions = [(0,0), (.1,.9), (.15,.75), (.6,.75), (1,0)]
         self.wave_panel = Entity(parent=self, scale=.35, x=-0)
@@ -141,9 +134,6 @@ class SynthGUI(Entity):
     def input(self, key):
         if held_keys['control'] and key == 'v' and self.wave_panel.enabled:
             self.paste_code()
-
-        if key == 'f3':
-            self.wave_panel.enabled = not self.wave_panel.enabled
 
 
     def copy_code(self):
@@ -283,9 +273,16 @@ class SynthGUI(Entity):
 if __name__ == '__main__':
     app = Ursina()
 
-instance = SynthGUI()
+gui = SynthGUI(enabled=False)
+
+def toggle_gui_input(key):
+    if key == 'f3':
+        gui.enabled = not gui.enabled
+
+Entity(input=toggle_gui_input)
 
 
 if __name__ == '__main__':
     Sprite('shore', z=10, ppu=64, color=color.gray)
+    gui.enabled = True
     app.run()

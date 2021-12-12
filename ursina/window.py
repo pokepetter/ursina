@@ -138,7 +138,7 @@ class Window(WindowProperties):
             # 'Build' : Func(print, ' '),
             'API Reference' : Func(webbrowser.open, 'https://www.ursinaengine.org/cheat_sheet_dark.html'),
             # 'Asset Store' : Func(webbrowser.open, 'https://itch.io/tools/tag-ursina'),
-            'ursfx (Sound Effect Maker)' : lambda: exec('from ursina.prefabs.ursfx_synth import instance'),
+            'ursfx (Sound Effect Maker)' : lambda: exec('from ursina.prefabs import ursfx; ursfx.gui.enabled = True'),
             # 'Open Scene Editor' : Func(print, ' '),
             'Change Render Mode <gray>[F10]<default>' : self.next_render_mode,
             'Reset Render Mode <gray>[F9]<default>' : Func(setattr, self, 'render_mode', 'default'),
