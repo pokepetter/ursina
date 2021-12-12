@@ -1,7 +1,8 @@
 from ursina import *
 import os, shutil
+import numpy as np
 # import imageio    # gets imported in convert_to_gif
-
+# from panda3d.core import PNMImage
 
 class VideoRecorder(Entity):
     def __init__(self, duration=5, name='untitled_video', **kwargs):
@@ -10,65 +11,78 @@ class VideoRecorder(Entity):
         self.file_path = Path(application.asset_folder) / 'video_temp'
         self.i = 0
         self.duration = duration
-        self.frame_skip = 2  # 30 fps
+        self.fps = 30
         self.video_name = name
+        self.t = 0
 
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-    def input(self, key):
-        if key == 'f10':
-            self.recording = not self.recording
+
+        self.max_frames = int(self.duration * self.fps)
+        self.frames = []
+    # def input(self, key):
+    #     if key == 'f10':
+    #         self.recording = not self.recording
 
 
-    @property
-    def recording(self):
-        return self._recording
 
-    @recording.setter
-    def recording(self, value):
-
-        if value == True:
-            if self.file_path.exists():
-                shutil.rmtree(self.file_path)   # delete temp folder
+    def start_recording(self):
+        print('start recording,', self.duration, self.file_path)
+        window.fps_counter.enabled = False
+        window.exit_button.visible = False
+        self.frames = []
+        self.max_frames = self.duration * self.fps
+        if not self.file_path.exists():
             self.file_path.mkdir()
-            print('start recording,', self.duration, self.file_path)
-            window.fps_counter.enabled = False
-            window.exit_button.visible = False
-        else:
-            window.fps_counter.enabled = True
-            window.exit_button.visible = True
+        base.movie(namePrefix=f'\\video_temp\\{self.video_name}', duration=2.0, fps=30, format='png', sd=4)
 
-        self._recording = value
+        self.recording = True
+        invoke(self.stop_recording, delay=self.duration)
+
+
+    def stop_recording(self):
+        self.recording = False
+        window.fps_counter.enabled = True
+        window.exit_button.visible = True
+        print('stop recording')
+        self.convert_to_gif()
+
 
     def update(self):
-        if self.i > 60/self.frame_skip * self.duration:
-            if self.recording:
-                self.convert_to_gif()
-                self.recording = False
+        if not self.recording:
+            return
 
-        if self.recording:
-            if self.i % self.frame_skip == 0:
-                print(self.i / self.frame_skip)
+            self.t += time.dt
+            if self.t >= 1/30:
                 base.screenshot(
                  	namePrefix = '\\video_temp\\' + self.video_name + '_' + str(self.i).zfill(4) + '.png',
                  	defaultFilename = 0,
                     )
-            self.i += 1
+                self.t = 0
+        # # self.frames.append(self.renderToPNM())
+        # image = base.win.getScreenshot()
+        # data = image.getRamImageAs("RGB").getData()
+        # # from PIL import Image
+        # # image = Image.fromarray(data)
+        # # img = data.convert("RGBA")
+        # data = np.array(data)
+        #
+        # # image = deepcopy(camera.render_texture)
+        # self.frames.append(data)
+        self.i += 1
 
     # store screenshot in memory
-    def renderToPNM(self):
-        # Render the frame
-        base.graphicsEngine.renderFrame()
+    # def renderToPNM(self):
+        # base.graphicsEngine.renderFrame()
+        # if hasattr(camera, 'render_texure'):
+        #     return copy(camera.render_texure)
+        # # image = PNMImage()
+        # # dr = base.camNode.getDisplayRegion(0)
+        # # dr.getScreenshot(image)
+        # # win.setupRenderTexture()
+        # return None
 
-        ### FETCHING THE RENDERED IMAGE
-        image = PNMImage()
-        # Set display region to the default
-        dr = base.camNode.getDisplayRegion(0)
-        # Store the rendered frame into the variable screenshot
-        dr.getScreenshot(image)
-
-        return image
 
     def convert_to_gif(self):
         import imageio
@@ -77,7 +91,6 @@ class VideoRecorder(Entity):
             return
 
         for filename in os.listdir(self.file_path):
-            # print(filename)
             images.append(imageio.imread(self.file_path/filename))
 
         imageio.mimsave(Path(f'{self.file_path.parent}/{self.video_name}.gif'), images)
@@ -143,12 +156,51 @@ class VideoRecorderUI(WindowPanel):
 if __name__ == '__main__':
     app = Ursina()
     # window.size = (1600/3,900/3)
-    cube = primitives.RedCube()
-    cube.animate_x(5, duration=5, curve=curve.linear)
-    cube.animate_x(0, duration=5, curve=curve.linear, delay=5)
+    # cube = primitives.RedCube()
+    # cube.animate_x(5, duration=5, curve=curve.linear)
+    # cube.animate_x(0, duration=5, curve=curve.linear, delay=5)
     # vr = VideoRecorder()
     # invoke(setattr, vr, 'recording', True, delay=1)
     # invoke(os._exit, 0, delay=6)
     # vr.recording = True
-    Cursor()
+    window.size *= .5
+    from ursina.prefabs.first_person_controller import FirstPersonController
+    from ursina.shaders import lit_with_shadows_shader
+    random.seed(0)
+    Entity.default_shader = lit_with_shadows_shader
+
+    ground = Entity(model='plane', collider='box', scale=64, texture='grass', texture_scale=(4,4))
+
+    editor_camera = EditorCamera(enabled=False, ignore_paused=True)
+    player = FirstPersonController(model='cube', z=-10, color=color.orange, origin_y=-.5, speed=8)
+    player.collider = BoxCollider(player, Vec3(0,1,0), Vec3(1,2,1))
+
+    gun = Entity(model='cube', parent=camera, position=(.5,-.25,.25), scale=(.3,.2,1), origin_z=-.5, color=color.red, on_cooldown=False)
+
+    shootables_parent = Entity()
+    mouse.traverse_target = shootables_parent
+
+    for i in range(16):
+        Entity(model='cube', origin_y=-.5, scale=2, texture='brick', texture_scale=(1,2),
+            x=random.uniform(-8,8),
+            z=random.uniform(-8,8) + 8,
+            collider='box',
+            scale_y = random.uniform(2,3),
+            color=color.hsv(0, 0, random.uniform(.9, 1))
+            )
+
+
+    sun = DirectionalLight()
+    sun.look_at(Vec3(1,-1,-1))
+    Sky()
+
+    vr = VideoRecorder(duration=2)
+    def input(key):
+        if key == '5':
+            vr.start_recording()
+        if key == '6':
+            vr.stop_recording()
+
+
+
     app.run()
