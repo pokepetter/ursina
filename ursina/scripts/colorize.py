@@ -14,7 +14,7 @@ def get_world_normals(model):
     return normals
 
 
-def colorize(model, left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white, smooth=True, world_space=True):
+def colorize(model, left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white, smooth=True, world_space=True, strength=1):
 
     if not model.normals:
         print('generating normals for', model)
@@ -28,18 +28,17 @@ def colorize(model, left=color.white, right=color.blue, down=color.red, up=color
     cols = list()
     prev_col = color.white
     for n in normals:
-        # c = color.rgb((n[0]/2)+.5, (n[1]/2)+.5, (n[2]/2)+.5)
-        c = lerp(down, up, (n[1]/2 +.5))
+        c = lerp(down, up, ((n[1]*strength) +.5))
 
         if n[0] < 0:
-            c = lerp(c, left, -(n[0]/2))
+            c = lerp(c, left, -(n[0]*strength))
         else:
-            c = lerp(c, right, (n[0]/2))
+            c = lerp(c, right, (n[0]*strength))
 
         if n[2] < 0:
-            c = lerp(c, back, -(n[2]/2))
+            c = lerp(c, back, -(n[2]*strength))
         else:
-            c = lerp(c, forward, (n[2]/2))
+            c = lerp(c, forward, (n[2]*strength))
 
         has_nan = False
         for e in c:
@@ -56,42 +55,18 @@ def colorize(model, left=color.white, right=color.blue, down=color.red, up=color
 
     model.colors = cols
     model.generate()
-    # return model
-    # print('--------------')
-# m.setMaterialOff()
-# from panda3d.core import Material
-# material = Material()
-# print(material.getShininess())
-# print(material.getMetallic())
-# material.setMetallic(128)
-# material.setShininess(128)
-# m.setMaterial(material)
+
+
 if __name__ == '__main__':
     app = Ursina()
-    # colorize(e.model, smooth=False)
-    # print(e.getNetTransform().getMat())
-    # # e2.rotation_x = 180
     import random
     for i in range(10):
-        e = Entity(model='sphere')
+        e = Entity(model=load_model('sphere', path=application.internal_models_compressed_folder, use_deepcopy=True))
         e.position = (random.uniform(-3,3),random.uniform(-3,3),random.uniform(-3,3))
         e.rotation = (random.uniform(0,360),random.uniform(0,360),random.uniform(0,360))
         e.scale = random.uniform(1,3)
-        # e.look_at(d)
-        # e.x = i
-        e.model.colorize(smooth=False)
-            # color.black,
-            # color.black,
-            # color.black,
-            # color.white,
-            # color.black,
-            # color.black,
-            # smooth=False)
+        e.model.colorize(smooth=False, world_space=True, strength=.5)
 
-
-    # e = Entity(model='sphere', z=0)
-    # print(e.getNetTransform().getMat())
-    # print(e.getMat())
 
     Sky(color=color.gray)
     EditorCamera()
