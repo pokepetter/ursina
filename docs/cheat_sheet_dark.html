@@ -130,8 +130,8 @@ z-index: 1;
 <a style="color:hsl(259.0, 89%, 66%);" href="#Cone">Cone</a>
 <a style="color:hsl(259.0, 89%, 66%);" href="#Cylinder">Cylinder</a>
 <a style="color:hsl(259.0, 89%, 66%);" href="#Grid">Grid</a>
-<a style="color:hsl(259.0, 89%, 66%);" href="#Plane">Plane</a>
 <a style="color:hsl(259.0, 89%, 66%);" href="#Pipe">Pipe</a>
+<a style="color:hsl(259.0, 89%, 66%);" href="#Plane">Plane</a>
 <a style="color:hsl(259.0, 89%, 66%);" href="#QuadMesh">QuadMesh</a>
 <a style="color:hsl(259.0, 89%, 66%);" href="#Terrain">Terrain</a>
 
@@ -222,7 +222,7 @@ z-index: 1;
 
         You can search the document with Ctrl+F for instant search results.
     
-<div id="Entity"><div id="Entity" style="color:hsl(49.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Entity<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/entity.py"><gray>ursina.entity</gray></a><br><br><params class="params">Entity(add_to_scene_entities=True, **kwargs)</params>
+<div id="Entity"><div id="Entity" style="color:hsl(49.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Entity<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/entity.py"><gray>ursina.entity</gray></a><br><br><params class="params">Entity(add_to_scene_entities=True, **kwargs)</params>
 
 name<gray> = camel_to_snake(self.type)</gray> 
 enabled<gray> = True     # disabled entities will not be visible nor run code.</gray> 
@@ -292,7 +292,8 @@ screen_position     <gray># get screen position(ui space) from world space.</gra
 shader
 texture_scale
 texture_offset
-tileset_size
+tileset_size        <gray># if the texture is a tileset, say how many tiles there are so it only use one tile of the texture, e.g. tileset_size=[8,4]</gray>
+tile_coordinate     <gray># set the tile coordinate, starts in the lower left.</gray>
 alpha
 always_on_top
 unlit
@@ -301,7 +302,7 @@ model_bounds
 model_center
 bounds
 children
-attributes          <gray># attribute names. used by duplicate() for instance.</gray>
+attributes          <gray># attribute names. used by duplicate().</gray>
 
 enable()   
 disable()   
@@ -353,7 +354,7 @@ class Player(<olive>Entity</olive>):
 player = Player(x=-<yellow>1</yellow>)
 </div>
 </div></div>
-<div id="Text"><div id="Text" style="color:hsl(49.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Text<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/text.py"><gray>ursina.text</gray></a><br><br><params class="params">Text(text='', start_tag=start_tag, end_tag=end_tag, ignore=True, **kwargs)</params>
+<div id="Text"><div id="Text" style="color:hsl(49.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Text<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/text.py"><gray>ursina.text</gray></a><br><br><params class="params">Text(text='', start_tag=start_tag, end_tag=end_tag, ignore=True, **kwargs)</params>
 
 size<gray> = Text.size</gray> 
 parent<gray> = camera.ui</gray> 
@@ -411,7 +412,7 @@ get_width(<gray>string, font=None</gray>)
   app.run()
 </div>
 </div></div>
-<div id="Button"><div id="Button" style="color:hsl(49.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Button<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/button.py"><gray>ursina.prefabs.button</gray></a><br><br><params class="params">Button(text='', **kwargs)</params>
+<div id="Button"><div id="Button" style="color:hsl(49.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Button<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/button.py"><gray>ursina.prefabs.button</gray></a><br><br><params class="params">Button(text='', radius=.1, **kwargs)</params>
 
 parent<gray> = camera.ui</gray> 
 collider<gray> = 'box'</gray> 
@@ -439,7 +440,7 @@ b.on_click = application.quit <gray># assign a function to the button.</gray>
 b.tooltip = Tooltip(<green>'exit'</green>)
 </div>
 </div></div>
-<div id="mouse"><div id="mouse" style="color:hsl(49.0, 89%, 66%); font-size:1.75em; font-weight:normal;">mouse</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/mouse.py"><gray>ursina.mouse</gray></a><br><br>enabled<gray> = False</gray> 
+<div id="mouse"><div id="mouse" style="color:hsl(49.0, 89%, 66%); font-size:1.75em; font-weight:normal;">mouse</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/mouse.py"><gray>ursina.mouse</gray></a><br><br>enabled<gray> = False</gray> 
 visible<gray> = True</gray> 
 locked<gray> = False</gray> 
 position<gray> = Vec3(0,0,0)</gray> 
@@ -485,7 +486,7 @@ Cursor()
 mouse.visible = False
 </div>
 </div></div>
-<div id="raycaster"><div id="raycaster" style="color:hsl(49.0, 89%, 66%); font-size:1.75em; font-weight:normal;">raycaster</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/raycaster.py"><gray>ursina.raycaster</gray></a><br><br>
+<div id="raycaster"><div id="raycaster" style="color:hsl(49.0, 89%, 66%); font-size:1.75em; font-weight:normal;">raycaster</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/raycaster.py"><gray>ursina.raycaster</gray></a><br><br>
 distance(<gray>a, b</gray>)   
 raycast(<gray>origin, direction=(0,0,1), distance=inf, traverse_target=scene, ignore=list(), debug=False</gray>)   
 boxcast(<gray>origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_target=scene, ignore=list(), debug=False</gray>)   <gray># similar to raycast, but with width and height</gray>
@@ -521,7 +522,7 @@ wall_right = duplicate(wall_left, x=<yellow>4</yellow>)
 camera.y = <yellow>2</yellow>
 </div>
 </div></div>
-<div id="application"><div id="application" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">application</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/application.py"><gray>ursina.application</gray></a><br><br>paused<gray> = False</gray> 
+<div id="application"><div id="application" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">application</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/application.py"><gray>ursina.application</gray></a><br><br>paused<gray> = False</gray> 
 time_scale<gray> = 1</gray> 
 sequences<gray> = list()</gray> 
 trace_entity_definition<gray> = False # enable to set entity.line_definition</gray> 
@@ -542,14 +543,14 @@ quit()
 load_settings(<gray>path=asset_folder / 'settings.py'</gray>)   
 
 </div></div>
-<div id="build"><div id="build" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">build</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/__init__.py"><gray>ursina.__init__</gray></a><br><br><params class="params">python -m ursina.build</params>
+<div id="build"><div id="build" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">build</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/__init__.py"><gray>ursina.__init__</gray></a><br><br><params class="params">python -m ursina.build</params>
 
 
 
 <div class="example">open cmd at your project folder and run 'python -m ursina.build' to package your app for windows.
 </div>
 </div></div>
-<div id="camera"><div id="camera" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">camera</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/camera.py"><gray>ursina.camera</gray></a><br><br>parent<gray> = scene</gray> 
+<div id="camera"><div id="camera" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">camera</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/camera.py"><gray>ursina.camera</gray></a><br><br>parent<gray> = scene</gray> 
 name<gray> = 'camera'</gray> 
 eternal<gray> = True</gray> 
 ui_size<gray> = 40</gray> 
@@ -588,7 +589,7 @@ Editor<purple><b>Camera</b></purple>()
 camera.shader = camera_grayscale_shader
 </div>
 </div></div>
-<div id="color"><div id="color" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">color</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/color.py"><gray>ursina.color</gray></a><br><br>color<gray> = hsv</gray> 
+<div id="color"><div id="color" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">color</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/color.py"><gray>ursina.color</gray></a><br><br>color<gray> = hsv</gray> 
 white<gray> =         color(0, 0, 1)</gray> 
 smoke<gray> =         color(0, 0, 0.96)</gray> 
 light_gray<gray> =    color(0, 0, 0.75)</gray> 
@@ -656,7 +657,7 @@ e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>col
 <blue>print</blue>(e.color.name)
 </div>
 </div></div>
-<div id="curve"><div id="curve" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">curve</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/curve.py"><gray>ursina.curve</gray></a><br><br>
+<div id="curve"><div id="curve" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">curve</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/curve.py"><gray>ursina.curve</gray></a><br><br>
 linear(<gray>t</gray>)   
 in_sine(<gray>t</gray>)   
 out_sine(<gray>t</gray>)   
@@ -729,7 +730,7 @@ e2.animate_y(1, curve=curve.CubicBezier(0,.7,1,.3))
 <green>''</green>'</green>
 </div>
 </div></div>
-<div id="duplicate"><div id="duplicate" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">duplicate</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/duplicate.py"><gray>ursina.duplicate</gray></a><br><br>
+<div id="duplicate"><div id="duplicate" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">duplicate</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/duplicate.py"><gray>ursina.duplicate</gray></a><br><br>
 duplicate(<gray>entity, copy_children=True, **kwargs): # use a for loop instead of duplicate(</gray>)   <gray># use a for loop instead of duplicate() if you can.</gray>
 
 <div class="example">e = Button(<olive>parent</olive>=scene, <olive>scale</olive>=<yellow>1</yellow>, <olive>text</olive>=<green>'yolo'</green>)
@@ -737,7 +738,7 @@ e<yellow>2</yellow> = <purple><b>duplicate</b></purple>(e, x=<yellow>1</yellow>.
 EditorCamera()
 </div>
 </div></div>
-<div id="input_handler"><div id="input_handler" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">input_handler</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/input_handler.py"><gray>ursina.input_handler</gray></a><br><br>held_keys<gray> = defaultdict(lambda: 0)</gray> 
+<div id="input_handler"><div id="input_handler" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">input_handler</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/input_handler.py"><gray>ursina.input_handler</gray></a><br><br>held_keys<gray> = defaultdict(lambda: 0)</gray> 
 rebinds<gray> = dict()</gray> 
 
 bind(<gray>original_key, alternative_key</gray>)   
@@ -764,16 +765,16 @@ input(<gray>key</gray>)
             <blue>print</blue>(key, value)
 </div>
 </div></div>
-<div id="main"><div id="main" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">main</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/main.py"><gray>ursina.main</gray></a><br><br>time.dt<gray> = 0</gray> 
+<div id="main"><div id="main" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">main</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/main.py"><gray>ursina.main</gray></a><br><br>time.dt<gray> = 0</gray> 
 
 
 <div class="example">app = Ursina()
 app.run()
 </div>
 </div></div>
-<div id="mesh_importer"><div id="mesh_importer" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">mesh_importer</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/mesh_importer.py"><gray>ursina.mesh_importer</gray></a><br><br>blender_scenes<gray> = dict()</gray> 
+<div id="mesh_importer"><div id="mesh_importer" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">mesh_importer</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/mesh_importer.py"><gray>ursina.mesh_importer</gray></a><br><br>blender_scenes<gray> = dict()</gray> 
 
-load_model(<gray>name, path=application.asset_folder, file_types=('.bam', '.ursinamesh', '.obj', '.glb', '.gltf', '.blend')</gray>)   
+load_model(<gray>name, path=application.asset_folder, file_types=('.bam', '.ursinamesh', '.obj', '.glb', '.gltf', '.blend'), use_deepcopy=False</gray>)   
 load_blender_scene(<gray>name, path=application.asset_folder, load=True, reload=False, skip_hidden=True, models_only=False</gray>)   
 get_blender(<gray>blend_file</gray>)   <gray># try to get a matching blender version in case we have multiple blender version installed</gray>
 compress_models(<gray>path=None, outpath=application.compressed_models_folder, name='*'</gray>)   
@@ -784,20 +785,19 @@ compress_internal()
 
 <div class="example"><blue>print</blue>(<green>'imported_meshes:\n'</green>, imported_meshes)
 
-application.asset_folder = application.asset_folder.parent / <green>'samples'</green>
-<purple>from</purple> ursina.shaders <purple>import</purple> normals_shader as rim_shader
-<purple>from</purple> ursina.shaders <purple>import</purple> matcap_shader as rim_shader
-
-
 t = time.time()
-blender_scene = load_blender_scene(path=application.asset_folder, name=<green>'blender_level_editor_test_scene_2'</green>)
+
+application.asset_folder = application.asset_folder.parent / <green>'samples'</green>
+<olive>Entity</olive>(<olive>model</olive>=<green>'race'</green>)
+<olive>Entity</olive>(<olive>model</olive>=<green>'ambulance'</green>, x=<yellow>1</yellow>.<yellow>5</yellow>)
+
 
 
 EditorCamera()
 Sky(<olive>texture</olive>=<green>'sky_sunset'</green>)
 </div>
 </div></div>
-<div id="scene"><div id="scene" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">scene</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/scene.py"><gray>ursina.scene</gray></a><br><br>render<gray> = None</gray> 
+<div id="scene"><div id="scene" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">scene</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/scene.py"><gray>ursina.scene</gray></a><br><br>render<gray> = None</gray> 
 world<gray> = None</gray> 
 camera<gray> = None</gray> 
 ui_camera<gray> = None</gray> 
@@ -826,7 +826,7 @@ scene.fog_density = .1          <gray># sets exponential density</gray>
 scene.fog_density = (50, 200)   <gray># sets linear density start and end</gray>
 </div>
 </div></div>
-<div id="shader"><div id="shader" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">shader</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/shader.py"><gray>ursina.shader</gray></a><br><br>uniform mat4 p3d_ModelViewProjectionMatrix;
+<div id="shader"><div id="shader" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">shader</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/shader.py"><gray>ursina.shader</gray></a><br><br>uniform mat4 p3d_ModelViewProjectionMatrix;
 out vec2 uv;
 void main() {
 }
@@ -851,18 +851,20 @@ EditorCamera()
             <blue>print</blue>(<green>'-------'</green>, e.shader)
 </div>
 </div></div>
-<div id="string_utilities"><div id="string_utilities" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">string_utilities</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/string_utilities.py"><gray>ursina.string_utilities</gray></a><br><br>
+<div id="string_utilities"><div id="string_utilities" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">string_utilities</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/string_utilities.py"><gray>ursina.string_utilities</gray></a><br><br>
 camel_to_snake(<gray>value</gray>)   
 snake_to_camel(<gray>value</gray>)   
 multireplace(<gray>string, replacements, ignore_case=False</gray>)   
 printvar(<gray>var</gray>)   
+print_info(<gray>str, *args</gray>)   
+print_warning(<gray>str, *args</gray>)   
 
 <div class="example"><blue>print</blue>(camel_to_snake(<green>'CamelToSnake'</green>))
 <blue>print</blue>(snake_to_camel(<green>'snake_to_camel'</green>))
 printvar(<green>'test'</green>)
 </div>
 </div></div>
-<div id="text"><div id="text" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">text</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/text.py"><gray>ursina.text</gray></a><br><br>
+<div id="text"><div id="text" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">text</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/text.py"><gray>ursina.text</gray></a><br><br>
 get_width(<gray>string, font=None</gray>)   
 
 <div class="example"><purple>from</purple> ursina <purple>import</purple> *
@@ -891,7 +893,7 @@ get_width(<gray>string, font=None</gray>)
   app.run()
 </div>
 </div></div>
-<div id="texture_importer"><div id="texture_importer" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">texture_importer</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/texture_importer.py"><gray>ursina.texture_importer</gray></a><br><br>file_types<gray> = ('.tif', '.jpg', '.jpeg', '.png', '.gif')</gray> 
+<div id="texture_importer"><div id="texture_importer" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">texture_importer</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/texture_importer.py"><gray>ursina.texture_importer</gray></a><br><br>file_types<gray> = ('.tif', '.jpg', '.jpeg', '.png', '.gif')</gray> 
 textureless<gray> = False</gray> 
 
 load_texture(<gray>name, path=None</gray>)   
@@ -900,7 +902,7 @@ compress_textures(<gray>name=''</gray>)
 <div class="example"><olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'white_cube'</green>)
 </div>
 </div></div>
-<div id="ursinamath"><div id="ursinamath" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">ursinamath</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursinamath.py"><gray>ursinamath</gray></a><br><br>
+<div id="ursinamath"><div id="ursinamath" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">ursinamath</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursinamath.py"><gray>ursinamath</gray></a><br><br>
 distance(<gray>a, b</gray>)   
 distance_2d(<gray>a, b</gray>)   
 distance_xz(<gray>a, b</gray>)   
@@ -927,7 +929,7 @@ between_color = lerp(color.lime, color.magenta, .<yellow>5</yellow>)
 <blue>print</blue>(round(Vec3(.<yellow>3</yellow><yellow>8</yellow>, .<yellow>1</yellow><yellow>3</yellow><yellow>5</yellow><yellow>1</yellow>, <yellow>3</yellow><yellow>5</yellow><yellow>3</yellow>.<yellow>2</yellow><yellow>6</yellow>), <yellow>2</yellow>))
 </div>
 </div></div>
-<div id="ursinastuff"><div id="ursinastuff" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">ursinastuff</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursinastuff.py"><gray>ursinastuff</gray></a><br><br>
+<div id="ursinastuff"><div id="ursinastuff" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">ursinastuff</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursinastuff.py"><gray>ursinastuff</gray></a><br><br>
 invoke(<gray>function, *args, **kwargs</gray>)   
 destroy(<gray>entity, delay=0</gray>)   
 find_sequence(<gray>name, file_types, folders</gray>)   <gray># find frame_0, frame_1, frame_2 and so on</gray>
@@ -947,7 +949,7 @@ invoke(test_func, <green>'test2'</green>, x=<yellow>1</yellow>, <olive>y</olive>
         print_on_screen(<green>'debug message'</green>, <olive>position</olive>=(<yellow>0</yellow>,<yellow>0</yellow>), <olive>origin</olive>=(<yellow>0</yellow>,<yellow>0</yellow>), <olive>scale</olive>=<yellow>2</yellow>)
 </div>
 </div></div>
-<div id="window"><div id="window" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">window</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/window.py"><gray>ursina.window</gray></a><br><br>vsync<gray> = True   # can't be set during play</gray> 
+<div id="window"><div id="window" style="color:hsl(20.0, 89%, 66%); font-size:1.75em; font-weight:normal;">window</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/window.py"><gray>ursina.window</gray></a><br><br>vsync<gray> = True   # can't be set during play</gray> 
 show_ursina_splash<gray> = False</gray> 
 title<gray> = application.asset_folder.name</gray> 
 fullscreen_size<gray> = Vec2(*self.screen_resolution)</gray> 
@@ -986,7 +988,7 @@ camera.orthographic = True
 camera.fov = <yellow>2</yellow>
 </div>
 </div></div>
-<div id="Audio"><div id="Audio" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Audio<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/audio.py"><gray>ursina.audio</gray></a><br><br><params class="params">Audio(sound_file_name='', autoplay=True, auto_destroy=False, **kwargs)</params>
+<div id="Audio"><div id="Audio" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Audio<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/audio.py"><gray>ursina.audio</gray></a><br><br><params class="params">Audio(sound_file_name='', autoplay=True, auto_destroy=False, **kwargs)</params>
 
 volume<gray> = 1</gray> 
 pitch<gray> = 1</gray> 
@@ -1025,7 +1027,7 @@ b = <purple><b>Audio</b></purple>(a.clip)
     <blue>print</blue>(a.time)
 </div>
 </div></div>
-<div id="Collider"><div id="Collider" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Collider<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/collider.py"><gray>ursina.collider</gray></a><br><br><params class="params">Collider()</params>
+<div id="Collider"><div id="Collider" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Collider<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/collider.py"><gray>ursina.collider</gray></a><br><br><params class="params">Collider()</params>
 
 visible
 
@@ -1042,13 +1044,13 @@ e.collider = Box<b>Collider</b>(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   <gray
 e.collider = Sphere<b>Collider</b>(e, center=Vec3(0,0,0), radius=.75)      <gray># add SphereCollider at custom positions and size.</gray>
 e.collider = Mesh<b>Collider</b>(e, mesh=e.model, center=Vec3(0,0,0))      <gray># add MeshCollider with custom shape and center.</gray>
 
-m = Pipe(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
+m = Prismatoid(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
 e = Button(<olive>parent</olive>=scene, <olive>model</olive>=m, <olive>collider</olive>=<green>'mesh'</green>, <olive>color</olive>=color.red, <olive>highlight_color</olive>=color.yellow)
 
 EditorCamera()
 </div>
 </div></div>
-<div id="BoxCollider"><div id="BoxCollider" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">BoxCollider<gray>(<a style="color: gray;" href="#Collider">Collider</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/collider.py"><gray>ursina.collider</gray></a><br><br><params class="params">BoxCollider(entity, center=(0,0,0), size=(1,1,1))</params>
+<div id="BoxCollider"><div id="BoxCollider" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">BoxCollider<gray>(<a style="color: gray;" href="#Collider">Collider</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/collider.py"><gray>ursina.collider</gray></a><br><br><params class="params">BoxCollider(entity, center=(0,0,0), size=(1,1,1))</params>
 
 shape<gray> = CollisionBox(Vec3(center[0], center[1], center[2]), size[0], size[1], size[2])</gray> 
 collision_node<gray> = CollisionNode('CollisionNode')</gray> 
@@ -1065,13 +1067,13 @@ e.collider = <b>BoxCollider</b>(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   <gray
 e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      <gray># add SphereCollider at custom positions and size.</gray>
 e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      <gray># add MeshCollider with custom shape and center.</gray>
 
-m = Pipe(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
+m = Prismatoid(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
 e = Button(<olive>parent</olive>=scene, <olive>model</olive>=m, <olive>collider</olive>=<green>'mesh'</green>, <olive>color</olive>=color.red, <olive>highlight_color</olive>=color.yellow)
 
 EditorCamera()
 </div>
 </div></div>
-<div id="SphereCollider"><div id="SphereCollider" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">SphereCollider<gray>(<a style="color: gray;" href="#Collider">Collider</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/collider.py"><gray>ursina.collider</gray></a><br><br><params class="params">SphereCollider(entity, center=(0,0,0), radius=.5)</params>
+<div id="SphereCollider"><div id="SphereCollider" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">SphereCollider<gray>(<a style="color: gray;" href="#Collider">Collider</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/collider.py"><gray>ursina.collider</gray></a><br><br><params class="params">SphereCollider(entity, center=(0,0,0), radius=.5)</params>
 
 shape<gray> = CollisionSphere(center[0], center[1], center[2], radius)</gray> 
 node_path<gray> = entity.attachNewNode(CollisionNode('CollisionNode'))</gray> 
@@ -1087,13 +1089,13 @@ e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   <gray># add 
 e.collider = <b>SphereCollider</b>(e, center=Vec3(0,0,0), radius=.75)      <gray># add SphereCollider at custom positions and size.</gray>
 e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      <gray># add MeshCollider with custom shape and center.</gray>
 
-m = Pipe(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
+m = Prismatoid(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
 e = Button(<olive>parent</olive>=scene, <olive>model</olive>=m, <olive>collider</olive>=<green>'mesh'</green>, <olive>color</olive>=color.red, <olive>highlight_color</olive>=color.yellow)
 
 EditorCamera()
 </div>
 </div></div>
-<div id="MeshCollider"><div id="MeshCollider" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">MeshCollider<gray>(<a style="color: gray;" href="#Collider">Collider</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/collider.py"><gray>ursina.collider</gray></a><br><br><params class="params">MeshCollider(entity, mesh=None, center=(0,0,0))</params>
+<div id="MeshCollider"><div id="MeshCollider" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">MeshCollider<gray>(<a style="color: gray;" href="#Collider">Collider</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/collider.py"><gray>ursina.collider</gray></a><br><br><params class="params">MeshCollider(entity, mesh=None, center=(0,0,0))</params>
 
 node_path<gray> = entity.attachNewNode(CollisionNode('CollisionNode'))</gray> 
 node<gray> = self.node_path.node()</gray> 
@@ -1110,13 +1112,13 @@ e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   <gray># add 
 e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      <gray># add SphereCollider at custom positions and size.</gray>
 e.collider = <b>MeshCollider</b>(e, mesh=e.model, center=Vec3(0,0,0))      <gray># add MeshCollider with custom shape and center.</gray>
 
-m = Pipe(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
+m = Prismatoid(base_shape=Circle(<yellow>6</yellow>), thicknesses=(<yellow>1</yellow>, .<yellow>5</yellow>))
 e = Button(<olive>parent</olive>=scene, <olive>model</olive>=m, <olive>collider</olive>=<green>'mesh'</green>, <olive>color</olive>=color.red, <olive>highlight_color</olive>=color.yellow)
 
 EditorCamera()
 </div>
 </div></div>
-<div id="CollisionZone"><div id="CollisionZone" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">CollisionZone<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/collision_zone.py"><gray>ursina.collision_zone</gray></a><br><br><params class="params">CollisionZone(radius=2, target_entities=None, **kwargs)</params>
+<div id="CollisionZone"><div id="CollisionZone" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">CollisionZone<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/collision_zone.py"><gray>ursina.collision_zone</gray></a><br><br><params class="params">CollisionZone(radius=2, target_entities=None, **kwargs)</params>
 
 radius<gray> = radius</gray> 
 entities_with_mesh_colliders<gray> = target_entities # defaults to all entities with a mesh collider</gray> 
@@ -1149,7 +1151,7 @@ Sky()
 base.set_frame_rate_meter(True)
 </div>
 </div></div>
-<div id="Color"><div id="Color" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Color<gray>(Vec4)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/color.py"><gray>ursina.color</gray></a><br><br><params class="params">Color(self,*p)</params>
+<div id="Color"><div id="Color" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Color<gray>(Vec4)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/color.py"><gray>ursina.color</gray></a><br><br><params class="params">Color(self,*p)</params>
 
 name
 r
@@ -1192,7 +1194,7 @@ e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>col
 <blue>print</blue>(e.color.name)
 </div>
 </div></div>
-<div id="CubicBezier"><div id="CubicBezier" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">CubicBezier</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/curve.py"><gray>ursina.curve</gray></a><br><br><params class="params">CubicBezier(a, b, c, d)</params>
+<div id="CubicBezier"><div id="CubicBezier" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">CubicBezier</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/curve.py"><gray>ursina.curve</gray></a><br><br><params class="params">CubicBezier(a, b, c, d)</params>
 
 a<gray> = a</gray> 
 b<gray> = b</gray> 
@@ -1250,7 +1252,7 @@ e2.animate_y(1, curve=curve.<b>CubicBezier</b>(0,.7,1,.3))
 <green>''</green>'</green>
 </div>
 </div></div>
-<div id="HitInfo"><div id="HitInfo" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">HitInfo</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/hit_info.py"><gray>ursina.hit_info</gray></a><br><br><params class="params">HitInfo(**kwargs)</params>
+<div id="HitInfo"><div id="HitInfo" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">HitInfo</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/hit_info.py"><gray>ursina.hit_info</gray></a><br><br><params class="params">HitInfo(**kwargs)</params>
 
 hit<gray> = None</gray> 
 entity<gray> = None</gray> 
@@ -1264,7 +1266,7 @@ entities<gray> = []</gray>
 
 
 </div></div>
-<div id="Keys"><div id="Keys" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Keys<gray>(Enum)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/input_handler.py"><gray>ursina.input_handler</gray></a><br><br>left_mouse_down<gray> = 'left mouse down'</gray> 
+<div id="Keys"><div id="Keys" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Keys<gray>(Enum)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/input_handler.py"><gray>ursina.input_handler</gray></a><br><br>left_mouse_down<gray> = 'left mouse down'</gray> 
 left_mouse_up<gray> = 'left mouse up'</gray> 
 middle_mouse_down<gray> = 'middle mouse down'</gray> 
 middle_mouse_up<gray> = 'middle mouse up'</gray> 
@@ -1330,7 +1332,7 @@ gamepad_right_shoulder_up<gray> = 'gamepad right shoulder up'</gray>
 
 
 </div></div>
-<div id="Light"><div id="Light" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Light<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/lights.py"><gray>ursina.lights</gray></a><br><br><params class="params">Light(**kwargs)</params>
+<div id="Light"><div id="Light" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Light<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/lights.py"><gray>ursina.lights</gray></a><br><br><params class="params">Light(**kwargs)</params>
 
 color
 
@@ -1343,7 +1345,7 @@ pivot = <olive>Entity</olive>()
 Directional<purple><b>Light</b></purple>(<olive>parent</olive>=pivot, <olive>y</olive>=<yellow>2</yellow>, <olive>z</olive>=<yellow>3</yellow>, shadows=True)
 </div>
 </div></div>
-<div id="DirectionalLight"><div id="DirectionalLight" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">DirectionalLight<gray>(Light)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/lights.py"><gray>ursina.lights</gray></a><br><br><params class="params">DirectionalLight(shadows=True, **kwargs)</params>
+<div id="DirectionalLight"><div id="DirectionalLight" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">DirectionalLight<gray>(Light)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/lights.py"><gray>ursina.lights</gray></a><br><br><params class="params">DirectionalLight(shadows=True, **kwargs)</params>
 
 shadow_map_resolution<gray> = Vec2(1024, 1024)</gray> 
 shadows
@@ -1357,7 +1359,7 @@ pivot = <olive>Entity</olive>()
 <purple><b>DirectionalLight</b></purple>(<olive>parent</olive>=pivot, <olive>y</olive>=<yellow>2</yellow>, <olive>z</olive>=<yellow>3</yellow>, shadows=True)
 </div>
 </div></div>
-<div id="PointLight"><div id="PointLight" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">PointLight<gray>(Light)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/lights.py"><gray>ursina.lights</gray></a><br><br><params class="params">PointLight(**kwargs)</params>
+<div id="PointLight"><div id="PointLight" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">PointLight<gray>(Light)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/lights.py"><gray>ursina.lights</gray></a><br><br><params class="params">PointLight(**kwargs)</params>
 
 
 
@@ -1369,7 +1371,7 @@ pivot = <olive>Entity</olive>()
 DirectionalLight(<olive>parent</olive>=pivot, <olive>y</olive>=<yellow>2</yellow>, <olive>z</olive>=<yellow>3</yellow>, shadows=True)
 </div>
 </div></div>
-<div id="AmbientLight"><div id="AmbientLight" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">AmbientLight<gray>(Light)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/lights.py"><gray>ursina.lights</gray></a><br><br><params class="params">AmbientLight(**kwargs)</params>
+<div id="AmbientLight"><div id="AmbientLight" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">AmbientLight<gray>(Light)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/lights.py"><gray>ursina.lights</gray></a><br><br><params class="params">AmbientLight(**kwargs)</params>
 
 
 
@@ -1381,7 +1383,7 @@ pivot = <olive>Entity</olive>()
 DirectionalLight(<olive>parent</olive>=pivot, <olive>y</olive>=<yellow>2</yellow>, <olive>z</olive>=<yellow>3</yellow>, shadows=True)
 </div>
 </div></div>
-<div id="SpotLight"><div id="SpotLight" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">SpotLight<gray>(Light)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/lights.py"><gray>ursina.lights</gray></a><br><br><params class="params">SpotLight(**kwargs)</params>
+<div id="SpotLight"><div id="SpotLight" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">SpotLight<gray>(Light)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/lights.py"><gray>ursina.lights</gray></a><br><br><params class="params">SpotLight(**kwargs)</params>
 
 
 
@@ -1393,7 +1395,7 @@ pivot = <olive>Entity</olive>()
 DirectionalLight(<olive>parent</olive>=pivot, <olive>y</olive>=<yellow>2</yellow>, <olive>z</olive>=<yellow>3</yellow>, shadows=True)
 </div>
 </div></div>
-<div id="Ursina"><div id="Ursina" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Ursina<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/main.py"><gray>ursina.main</gray></a><br><br><params class="params">Ursina(**kwargs): # optional arguments: title, fullscreen, size, forced_aspect_ratio, position, vsync, borderless, show_ursina_splash, render_mode, development_mode, editor_ui_enabled</params>
+<div id="Ursina"><div id="Ursina" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Ursina<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/main.py"><gray>ursina.main</gray></a><br><br><params class="params">Ursina(**kwargs): # optional arguments: title, fullscreen, size, forced_aspect_ratio, position, vsync, borderless, show_ursina_splash, render_mode, development_mode, editor_ui_enabled</params>
 
 mouse<gray> = mouse</gray> 
 
@@ -1406,7 +1408,7 @@ run()
 app.run()
 </div>
 </div></div>
-<div id="MeshModes"><div id="MeshModes" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">MeshModes<gray>(Enum)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/mesh.py"><gray>ursina.mesh</gray></a><br><br>triangle<gray> = 'triangle'</gray> 
+<div id="MeshModes"><div id="MeshModes" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">MeshModes<gray>(Enum)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/mesh.py"><gray>ursina.mesh</gray></a><br><br>triangle<gray> = 'triangle'</gray> 
 ngon<gray> = 'ngon'</gray> 
 quad<gray> = 'quad'</gray> 
 line<gray> = 'line'</gray> 
@@ -1415,8 +1417,9 @@ tristrip<gray> = 'tristrip'</gray>
 
 
 </div></div>
-<div id="Mesh"><div id="Mesh" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Mesh<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/mesh.py"><gray>ursina.mesh</gray></a><br><br><params class="params">Mesh(vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1, render_points_in_3d=True)</params>
+<div id="Mesh"><div id="Mesh" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Mesh<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/mesh.py"><gray>ursina.mesh</gray></a><br><br><params class="params">Mesh(vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1, render_points_in_3d=True)</params>
 
+name<gray> = 'mesh'</gray> 
 vertices<gray> = vertices</gray> 
 triangles<gray> = triangles</gray> 
 colors<gray> = colors</gray> 
@@ -1430,7 +1433,7 @@ recipe
 
 generate()   <gray># call this after setting some of the variables to update it</gray>
 generate_normals(<gray>smooth=True</gray>)   
-colorize(<gray>left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white, smooth=True, world_space=True</gray>)   
+colorize(<gray>left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white, smooth=True, world_space=True, strength=1</gray>)   
 project_uvs(<gray>aspect_ratio=1, direction='forward'</gray>)   
 clear(<gray>regenerate=True</gray>)   
 save(<gray>name='', path=application.compressed_models_folder</gray>)   
@@ -1450,7 +1453,7 @@ lines = <olive>Entity</olive>(<olive>model</olive>=<purple><b>Mesh</b></purple>(
 points = <olive>Entity</olive>(<olive>model</olive>=<purple><b>Mesh</b></purple>(<olive>vertices</olive>=verts, <olive>mode</olive>=<green>'point'</green>, <olive>thickness</olive>=.<yellow>0</yellow><yellow>5</yellow>), <olive>color</olive>=color.red, <olive>z</olive>=-<yellow>1</yellow>.<yellow>0</yellow><yellow>1</yellow>)
 </div>
 </div></div>
-<div id="Wait"><div id="Wait" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Wait<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/sequence.py"><gray>ursina.sequence</gray></a><br><br><params class="params">Wait(duration)</params>
+<div id="Wait"><div id="Wait" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Wait<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/sequence.py"><gray>ursina.sequence</gray></a><br><br><params class="params">Wait(duration)</params>
 
 duration<gray> = duration</gray> 
 
@@ -1476,7 +1479,7 @@ s.append(
         actions[key]()
 </div>
 </div></div>
-<div id="Func"><div id="Func" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Func<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/sequence.py"><gray>ursina.sequence</gray></a><br><br><params class="params">Func(func, *args, **kwargs)</params>
+<div id="Func"><div id="Func" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Func<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/sequence.py"><gray>ursina.sequence</gray></a><br><br><params class="params">Func(func, *args, **kwargs)</params>
 
 func<gray> = func</gray> 
 args<gray> = args</gray> 
@@ -1506,7 +1509,7 @@ s.append(
         actions[key]()
 </div>
 </div></div>
-<div id="Sequence"><div id="Sequence" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Sequence<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/sequence.py"><gray>ursina.sequence</gray></a><br><br><params class="params">Sequence(*args, **kwargs)</params>
+<div id="Sequence"><div id="Sequence" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Sequence<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/sequence.py"><gray>ursina.sequence</gray></a><br><br><params class="params">Sequence(*args, **kwargs)</params>
 
 args<gray> = list(args)</gray> 
 t<gray> = 0</gray> 
@@ -1549,7 +1552,7 @@ s.append(
         actions[key]()
 </div>
 </div></div>
-<div id="Shader"><div id="Shader" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Shader</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/shader.py"><gray>ursina.shader</gray></a><br><br><params class="params">Shader(language=Panda3dShader.SL_GLSL, vertex=default_vertex_shader, fragment=default_fragment_shader, geometry='', **kwargs)</params>
+<div id="Shader"><div id="Shader" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Shader</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/shader.py"><gray>ursina.shader</gray></a><br><br><params class="params">Shader(language=Panda3dShader.SL_GLSL, vertex=default_vertex_shader, fragment=default_fragment_shader, geometry='', **kwargs)</params>
 
 path<gray> = Path(_caller.filename)</gray> 
 language<gray> = language</gray> 
@@ -1577,7 +1580,7 @@ EditorCamera()
             <blue>print</blue>(<green>'-------'</green>, e.shader)
 </div>
 </div></div>
-<div id="Texture"><div id="Texture" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Texture<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/texture.py"><gray>ursina.texture</gray></a><br><br><params class="params">Texture(value)</params>
+<div id="Texture"><div id="Texture" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Texture<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/texture.py"><gray>ursina.texture</gray></a><br><br><params class="params">Texture(value)</params>
 
 filtering<gray> = Texture.default_filtering      # None/'bilinear'/'mipmap' default: 'bilinear'</gray> 
 name
@@ -1585,6 +1588,7 @@ size
 width
 height
 pixels
+repeat
 
 get_pixel(<gray>x, y</gray>)   
 get_pixels(<gray>start, end</gray>)   
@@ -1603,14 +1607,9 @@ save(<gray>path</gray>)
 e = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'brick'</green>)
 e.texture.set_pixel(<yellow>0</yellow>, <yellow>2</yellow>, color.blue)
 e.texture.apply()
-
-<purple>for</purple> y in <blue>range</blue>(e.texture.height):
-    <purple>for</purple> x in <blue>range</blue>(e.texture.width):
-        <purple>if</purple> e.texture.get_pixel(x,y) == color.blue:
-            <blue>print</blue>(<green>'found blue pixel at:'</green>, x, y)
 </div>
 </div></div>
-<div id="Trigger"><div id="Trigger" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Trigger<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/trigger.py"><gray>ursina.trigger</gray></a><br><br><params class="params">Trigger(**kwargs)</params>
+<div id="Trigger"><div id="Trigger" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Trigger<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/trigger.py"><gray>ursina.trigger</gray></a><br><br><params class="params">Trigger(**kwargs)</params>
 
 trigger_targets<gray> = None</gray> 
 radius<gray> = .5</gray> 
@@ -1630,7 +1629,7 @@ t.on_trigger_exit =  Func(print, <green>'exit'</green>)
 t.on_trigger_stay =  Func(print, <green>'stay'</green>)
 </div>
 </div></div>
-<div id="Empty"><div id="Empty" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Empty<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursinastuff.py"><gray>ursinastuff</gray></a><br><br><params class="params">Empty(**kwargs)</params>
+<div id="Empty"><div id="Empty" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Empty<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursinastuff.py"><gray>ursinastuff</gray></a><br><br><params class="params">Empty(**kwargs)</params>
 
 
 invoke(<gray>function, *args, **kwargs</gray>)   
@@ -1652,7 +1651,7 @@ invoke(test_func, <green>'test2'</green>, x=<yellow>1</yellow>, <olive>y</olive>
         print_on_screen(<green>'debug message'</green>, <olive>position</olive>=(<yellow>0</yellow>,<yellow>0</yellow>), <olive>origin</olive>=(<yellow>0</yellow>,<yellow>0</yellow>), <olive>scale</olive>=<yellow>2</yellow>)
 </div>
 </div></div>
-<div id="LoopingList"><div id="LoopingList" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">LoopingList<gray>(list)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursinastuff.py"><gray>ursinastuff</gray></a><br><br><params class="params">LoopingList(**kwargs)</params>
+<div id="LoopingList"><div id="LoopingList" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">LoopingList<gray>(list)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursinastuff.py"><gray>ursinastuff</gray></a><br><br><params class="params">LoopingList(**kwargs)</params>
 
 
 
@@ -1669,7 +1668,7 @@ invoke(test_func, <green>'test2'</green>, x=<yellow>1</yellow>, <olive>y</olive>
         print_on_screen(<green>'debug message'</green>, <olive>position</olive>=(<yellow>0</yellow>,<yellow>0</yellow>), <olive>origin</olive>=(<yellow>0</yellow>,<yellow>0</yellow>), <olive>scale</olive>=<yellow>2</yellow>)
 </div>
 </div></div>
-<div id="Vec2"><div id="Vec2" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Vec2<gray>(PandaVec2)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/vec2.py"><gray>ursina.vec2</gray></a><br><br><params class="params">Vec2(**kwargs)</params>
+<div id="Vec2"><div id="Vec2" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Vec2<gray>(PandaVec2)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/vec2.py"><gray>ursina.vec2</gray></a><br><br><params class="params">Vec2(**kwargs)</params>
 
 x
 y
@@ -1680,7 +1679,7 @@ y
 <blue>print</blue>(round(a))
 </div>
 </div></div>
-<div id="Vec3"><div id="Vec3" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Vec3<gray>(PandaVec3)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/vec3.py"><gray>ursina.vec3</gray></a><br><br><params class="params">Vec3(**kwargs)</params>
+<div id="Vec3"><div id="Vec3" style="color:hsl(349.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Vec3<gray>(PandaVec3)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/vec3.py"><gray>ursina.vec3</gray></a><br><br><params class="params">Vec3(**kwargs)</params>
 
 x
 y
@@ -1696,7 +1695,7 @@ b = <purple><b>Vec3</b></purple>(<yellow>1</yellow>.<yellow>2</yellow><yellow>5<
 b += <purple><b>Vec3</b></purple>(<yellow>0</yellow>,<yellow>1</yellow>)
 </div>
 </div></div>
-<div id="Animation"><div id="Animation" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Animation<gray>(Sprite)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/animation.py"><gray>ursina.prefabs.animation</gray></a><br><br><params class="params">Animation(name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs)</params>
+<div id="Animation"><div id="Animation" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Animation<gray>(Sprite)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/animation.py"><gray>ursina.prefabs.animation</gray></a><br><br><params class="params">Animation(name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs)</params>
 
 sequence<gray> = Sequence(loop=loop, auto_destroy=False)</gray> 
 frame_times<gray> = frame_times</gray> 
@@ -1720,7 +1719,7 @@ You can also load a .gif by including the file type: <b>Animation</b>(<green>'im
 <purple><b>Animation</b></purple>(<green>'ursina_wink'</green>)
 </div>
 </div></div>
-<div id="Animator"><div id="Animator" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Animator<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/animator.py"><gray>ursina.prefabs.animator</gray></a><br><br><params class="params">Animator(animations=None, start_state='')</params>
+<div id="Animator"><div id="Animator" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Animator<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/animator.py"><gray>ursina.prefabs.animator</gray></a><br><br><params class="params">Animator(animations=None, start_state='')</params>
 
 animations<gray> = animations    # dict</gray> 
 start_state<gray> = start_state</gray> 
@@ -1749,7 +1748,7 @@ Text(<green>'press &ltred&gt1&ltdefault&gt, &ltgreen&gt2&ltdefault&gt or &ltviol
         <blue>print</blue>(anim.enabled)
 </div>
 </div></div>
-<div id="ButtonGroup"><div id="ButtonGroup" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">ButtonGroup<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/button_group.py"><gray>ursina.prefabs.button_group</gray></a><br><br><params class="params">ButtonGroup(options=None, default='', min_selection=1, max_selection=1, **kwargs)</params>
+<div id="ButtonGroup"><div id="ButtonGroup" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">ButtonGroup<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/button_group.py"><gray>ursina.prefabs.button_group</gray></a><br><br><params class="params">ButtonGroup(options=None, default='', min_selection=1, max_selection=1, **kwargs)</params>
 
 deselected_color<gray> = Button.color</gray> 
 selected_color<gray> = color.azure</gray> 
@@ -1781,7 +1780,7 @@ on_off_switch.on_value_changed = on_value_changed
 window.color = color._<yellow>3</yellow><yellow>2</yellow>
 </div>
 </div></div>
-<div id="ButtonList"><div id="ButtonList" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">ButtonList<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/button_list.py"><gray>ursina.prefabs.button_list</gray></a><br><br><params class="params">ButtonList(button_dict, button_height=1.1, fit_height=True, width=.5, **kwargs)</params>
+<div id="ButtonList"><div id="ButtonList" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">ButtonList<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/button_list.py"><gray>ursina.prefabs.button_list</gray></a><br><br><params class="params">ButtonList(button_dict, button_height=1.1, fit_height=True, width=.5, **kwargs)</params>
 
 fit_height<gray> = fit_height</gray> 
 button_height<gray> = button_height</gray> 
@@ -1821,7 +1820,7 @@ current_sound = None
 bl = <purple><b>ButtonList</b></purple>(sound_effects)
 </div>
 </div></div>
-<div id="Node"><div id="Node" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Node</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/conversation.py"><gray>ursina.prefabs.conversation</gray></a><br><br><params class="params">Node(button_dict, button_height=1.1, fit_height=True, width=.5, **kwargs)</params>
+<div id="Node"><div id="Node" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Node</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/conversation.py"><gray>ursina.prefabs.conversation</gray></a><br><br><params class="params">Node(button_dict, button_height=1.1, fit_height=True, width=.5, **kwargs)</params>
 
 
 
@@ -1853,7 +1852,7 @@ I'm worried. Will you help me?
     app.run()
 </div>
 </div></div>
-<div id="Conversation"><div id="Conversation" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Conversation<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/conversation.py"><gray>ursina.prefabs.conversation</gray></a><br><br><params class="params">Conversation(**kwargs)</params>
+<div id="Conversation"><div id="Conversation" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Conversation<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/conversation.py"><gray>ursina.prefabs.conversation</gray></a><br><br><params class="params">Conversation(**kwargs)</params>
 
 question<gray> = Button(
         parent=self,
@@ -1911,7 +1910,7 @@ I'm worried. Will you help me?
     app.run()
 </div>
 </div></div>
-<div id="Cursor"><div id="Cursor" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Cursor<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/cursor.py"><gray>ursina.prefabs.cursor</gray></a><br><br><params class="params">Cursor(**kwargs)</params>
+<div id="Cursor"><div id="Cursor" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Cursor<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/cursor.py"><gray>ursina.prefabs.cursor</gray></a><br><br><params class="params">Cursor(**kwargs)</params>
 
 parent<gray> = camera.ui</gray> 
 texture<gray> = 'cursor'</gray> 
@@ -1930,7 +1929,7 @@ mouse._mouse_watcher.setGeometry(e.model.node())
 mouse.visible = False
 </div>
 </div></div>
-<div id="DebugMenu"><div id="DebugMenu" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">DebugMenu<gray>(<a style="color: gray;" href="#Draggable">Draggable</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/debug_menu.py"><gray>ursina.prefabs.debug_menu</gray></a><br><br><params class="params">DebugMenu(target, **kwargs)</params>
+<div id="DebugMenu"><div id="DebugMenu" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">DebugMenu<gray>(<a style="color: gray;" href="#Draggable">Draggable</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/debug_menu.py"><gray>ursina.prefabs.debug_menu</gray></a><br><br><params class="params">DebugMenu(target, **kwargs)</params>
 
 target<gray> = target</gray> 
 scale<gray> = (.2, .025)</gray> 
@@ -1941,7 +1940,7 @@ draw_functions()
 <div class="example"><purple><b>DebugMenu</b></purple>(Audio(<green>'night_sky'</green>))
 </div>
 </div></div>
-<div id="Draggable"><div id="Draggable" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Draggable<gray>(<a style="color: gray;" href="#Button">Button</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/draggable.py"><gray>ursina.prefabs.draggable</gray></a><br><br><params class="params">Draggable(**kwargs)</params>
+<div id="Draggable"><div id="Draggable" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Draggable<gray>(<a style="color: gray;" href="#Button">Button</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/draggable.py"><gray>ursina.prefabs.draggable</gray></a><br><br><params class="params">Draggable(**kwargs)</params>
 
 require_key<gray> = None</gray> 
 dragging<gray> = False</gray> 
@@ -1967,7 +1966,7 @@ EditorCamera(<olive>rotation</olive>=(<yellow>3</yellow><yellow>0</yellow>,<yell
 world_space_draggable.drop = Func(print, <green>'dropped cube'</green>)
 </div>
 </div></div>
-<div id="DropdownMenuButton"><div id="DropdownMenuButton" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">DropdownMenuButton<gray>(<a style="color: gray;" href="#Button">Button</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/dropdown_menu.py"><gray>ursina.prefabs.dropdown_menu</gray></a><br><br><params class="params">DropdownMenuButton(text='', **kwargs)</params>
+<div id="DropdownMenuButton"><div id="DropdownMenuButton" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">DropdownMenuButton<gray>(<a style="color: gray;" href="#Button">Button</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/dropdown_menu.py"><gray>ursina.prefabs.dropdown_menu</gray></a><br><br><params class="params">DropdownMenuButton(text='', **kwargs)</params>
 
 
 
@@ -1989,7 +1988,7 @@ DropdownMenu(<green>'File'</green>, buttons=(
     ))
 </div>
 </div></div>
-<div id="DropdownMenu"><div id="DropdownMenu" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">DropdownMenu<gray>(DropdownMenuButton)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/dropdown_menu.py"><gray>ursina.prefabs.dropdown_menu</gray></a><br><br><params class="params">DropdownMenu(text='', buttons=list(), **kwargs)</params>
+<div id="DropdownMenu"><div id="DropdownMenu" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">DropdownMenu<gray>(DropdownMenuButton)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/dropdown_menu.py"><gray>ursina.prefabs.dropdown_menu</gray></a><br><br><params class="params">DropdownMenu(text='', buttons=list(), **kwargs)</params>
 
 position<gray> = window.top_left</gray> 
 buttons<gray> = buttons</gray> 
@@ -2019,7 +2018,7 @@ update()
     ))
 </div>
 </div></div>
-<div id="EditorCamera"><div id="EditorCamera" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">EditorCamera<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/editor_camera.py"><gray>ursina.prefabs.editor_camera</gray></a><br><br><params class="params">EditorCamera(**kwargs)</params>
+<div id="EditorCamera"><div id="EditorCamera" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">EditorCamera<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/editor_camera.py"><gray>ursina.prefabs.editor_camera</gray></a><br><br><params class="params">EditorCamera(**kwargs)</params>
 
 gizmo<gray> = Entity(parent=self, model='sphere', color=color.orange, scale=.025, add_to_scene_entities=False, enabled=False)</gray> 
 rotation_speed<gray> = 200</gray> 
@@ -2067,7 +2066,7 @@ rotation_info = Text(<olive>position</olive>=window.top_left)
         player.enabled = <purple>not</purple> player.enabled
 </div>
 </div></div>
-<div id="ExitButton"><div id="ExitButton" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">ExitButton<gray>(<a style="color: gray;" href="#Button">Button</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/exit_button.py"><gray>ursina.prefabs.exit_button</gray></a><br><br><params class="params">ExitButton(**kwargs)</params>
+<div id="ExitButton"><div id="ExitButton" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">ExitButton<gray>(<a style="color: gray;" href="#Button">Button</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/exit_button.py"><gray>ursina.prefabs.exit_button</gray></a><br><br><params class="params">ExitButton(**kwargs)</params>
 
 
 on_click()   
@@ -2080,7 +2079,7 @@ To disable it, set window.exit_button.enabled to False
 <green>''</green>'</green>
 </div>
 </div></div>
-<div id="FileButton"><div id="FileButton" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">FileButton<gray>(<a style="color: gray;" href="#Button">Button</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/file_browser.py"><gray>ursina.prefabs.file_browser</gray></a><br><br><params class="params">FileButton(load_menu, **kwargs)</params>
+<div id="FileButton"><div id="FileButton" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">FileButton<gray>(<a style="color: gray;" href="#Button">Button</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/file_browser.py"><gray>ursina.prefabs.file_browser</gray></a><br><br><params class="params">FileButton(load_menu, **kwargs)</params>
 
 load_menu<gray> = load_menu</gray> 
 selected
@@ -2098,7 +2097,7 @@ on_double_click()
 fb.on_submit = on_submit
 </div>
 </div></div>
-<div id="FileBrowser"><div id="FileBrowser" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">FileBrowser<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/file_browser.py"><gray>ursina.prefabs.file_browser</gray></a><br><br><params class="params">FileBrowser(**kwargs)</params>
+<div id="FileBrowser"><div id="FileBrowser" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">FileBrowser<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/file_browser.py"><gray>ursina.prefabs.file_browser</gray></a><br><br><params class="params">FileBrowser(**kwargs)</params>
 
 file_types<gray> = ['.*', ]</gray> 
 start_path<gray> = Path('.').resolve()</gray> 
@@ -2137,7 +2136,7 @@ open(<gray>path=None</gray>)
 fb.on_submit = on_submit
 </div>
 </div></div>
-<div id="FileBrowserSave"><div id="FileBrowserSave" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">FileBrowserSave<gray>(FileBrowser)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/file_browser_save.py"><gray>ursina.prefabs.file_browser_save</gray></a><br><br><params class="params">FileBrowserSave(**kwargs)</params>
+<div id="FileBrowserSave"><div id="FileBrowserSave" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">FileBrowserSave<gray>(FileBrowser)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/file_browser_save.py"><gray>ursina.prefabs.file_browser_save</gray></a><br><br><params class="params">FileBrowserSave(**kwargs)</params>
 
 save_button<gray> = self.open_button</gray> 
 file_name_field<gray> = InputField(
@@ -2167,7 +2166,7 @@ save_data = {<green>'level'</green>: <yellow>4</yellow>, <green>'name'</green>:<
 wp.data = json.dumps(save_data)
 </div>
 </div></div>
-<div id="FirstPersonController"><div id="FirstPersonController" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">FirstPersonController<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/first_person_controller.py"><gray>ursina.prefabs.first_person_controller</gray></a><br><br><params class="params">FirstPersonController(**kwargs)</params>
+<div id="FirstPersonController"><div id="FirstPersonController" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">FirstPersonController<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/first_person_controller.py"><gray>ursina.prefabs.first_person_controller</gray></a><br><br><params class="params">FirstPersonController(**kwargs)</params>
 
 cursor<gray> = Entity(parent=camera.ui, model='quad', color=color.pink, scale=.008, rotation_z=45)</gray> 
 speed<gray> = 5</gray> 
@@ -2177,7 +2176,8 @@ mouse_sensitivity<gray> = Vec2(40, 40)</gray>
 gravity<gray> = 1</gray> 
 grounded<gray> = False</gray> 
 jump_height<gray> = 2</gray> 
-jump_duration<gray> = .5</gray> 
+jump_up_duration<gray> = .5</gray> 
+fall_after<gray> = .35 # will interrupt jump up</gray> 
 jumping<gray> = False</gray> 
 air_time<gray> = 0</gray> 
 
@@ -2219,7 +2219,7 @@ hookshot_target.on_click = Func(player.animate_position, hookshot_target.positio
         destroy(bullet, dela<olive>y</olive>=<yellow>1</yellow>)
 </div>
 </div></div>
-<div id="FrameAnimation3d"><div id="FrameAnimation3d" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">FrameAnimation3d<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/frame_animation_3d.py"><gray>ursina.prefabs.frame_animation_3d</gray></a><br><br><params class="params">FrameAnimation3d(name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs)</params>
+<div id="FrameAnimation3d"><div id="FrameAnimation3d" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">FrameAnimation3d<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/frame_animation_3d.py"><gray>ursina.prefabs.frame_animation_3d</gray></a><br><br><params class="params">FrameAnimation3d(name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs)</params>
 
 frames<gray> = [Entity(parent=self, model=e.stem, enabled=False, add_to_scene_entities=False) for e in model_names]</gray> 
 sequence<gray> = Sequence(loop=loop, auto_destroy=False)</gray> 
@@ -2243,7 +2243,7 @@ you can load it like this: FrameAnimation3d(<green>'run_cycle_'</green>)
 FrameAnimation<yellow>3</yellow>d(<green>'blob_animation_'</green>)
 </div>
 </div></div>
-<div id="GridEditor"><div id="GridEditor" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">GridEditor<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/grid_editor.py"><gray>ursina.prefabs.grid_editor</gray></a><br><br><params class="params">GridEditor(size=(32,32), palette=(' ', '#', '|', 'o'), **kwargs)</params>
+<div id="GridEditor"><div id="GridEditor" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">GridEditor<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/grid_editor.py"><gray>ursina.prefabs.grid_editor</gray></a><br><br><params class="params">GridEditor(size=(32,32), palette=(' ', '#', '|', 'o'), **kwargs)</params>
 
 w, self.h<gray> = int(size[0]), int(size[1])</gray> 
 brush_size<gray> = 1</gray> 
@@ -2292,7 +2292,7 @@ same as the pixel editor, but with text.
 ASCIIEditor()
 </div>
 </div></div>
-<div id="PixelEditor"><div id="PixelEditor" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">PixelEditor<gray>(GridEditor)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/grid_editor.py"><gray>ursina.prefabs.grid_editor</gray></a><br><br><params class="params">PixelEditor(texture, palette=(color.black, color.white, color.light_gray, color.gray, color.red, color.orange, color.yellow, color.lime, color.green, color.turquoise, color.cyan, color.azure, color.blue, color.violet, color.magenta, color.pink), **kwargs)</params>
+<div id="PixelEditor"><div id="PixelEditor" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">PixelEditor<gray>(GridEditor)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/grid_editor.py"><gray>ursina.prefabs.grid_editor</gray></a><br><br><params class="params">PixelEditor(texture, palette=(color.black, color.white, color.light_gray, color.gray, color.red, color.orange, color.yellow, color.lime, color.green, color.turquoise, color.cyan, color.azure, color.blue, color.violet, color.magenta, color.pink), **kwargs)</params>
 
 grid<gray> = [[texture.get_pixel(x,y) for y in range(texture.height)] for x in range(texture.width)]</gray> 
 
@@ -2316,7 +2316,7 @@ same as the pixel editor, but with text.
 ASCIIEditor()
 </div>
 </div></div>
-<div id="ASCIIEditor"><div id="ASCIIEditor" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">ASCIIEditor<gray>(GridEditor)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/grid_editor.py"><gray>ursina.prefabs.grid_editor</gray></a><br><br><params class="params">ASCIIEditor(size=(61,28), palette=(' ', '#', '|', 'A', '/', '\\', 'o', '_', '-', 'i', 'M', '.'), font='VeraMono.ttf', color=color.black, line_height=1.1, **kwargs)</params>
+<div id="ASCIIEditor"><div id="ASCIIEditor" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">ASCIIEditor<gray>(GridEditor)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/grid_editor.py"><gray>ursina.prefabs.grid_editor</gray></a><br><br><params class="params">ASCIIEditor(size=(61,28), palette=(' ', '#', '|', 'A', '/', '\\', 'o', '_', '-', 'i', 'M', '.'), font='VeraMono.ttf', color=color.black, line_height=1.1, **kwargs)</params>
 
 text_entity<gray> = Text(parent=self.parent, text=text, x=self.x, line_height=line_height, font=font)</gray> 
 scale<gray> = (self.text_entity.width, self.text_entity.height)</gray> 
@@ -2341,7 +2341,7 @@ same as the pixel editor, but with text.
 <purple><b>ASCIIEditor</b></purple>()
 </div>
 </div></div>
-<div id="HealthBar"><div id="HealthBar" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">HealthBar<gray>(<a style="color: gray;" href="#Button">Button</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/health_bar.py"><gray>ursina.prefabs.health_bar</gray></a><br><br><params class="params">HealthBar(max_value=100, show_text=True, show_lines=False, **kwargs)</params>
+<div id="HealthBar"><div id="HealthBar" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">HealthBar<gray>(<a style="color: gray;" href="#Button">Button</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/health_bar.py"><gray>ursina.prefabs.health_bar</gray></a><br><br><params class="params">HealthBar(max_value=100, show_text=True, show_lines=False, **kwargs)</params>
 
 bar<gray> = Entity(parent=self, model='quad', origin=self.origin, z=-.01, color=color.red.tint(-.2), ignore=True)</gray> 
 animation_duration<gray> = .1</gray> 
@@ -2365,7 +2365,7 @@ value<gray> = self.max_value</gray>
         health_bar_<yellow>1</yellow>.value -= <yellow>1</yellow><yellow>0</yellow>
 </div>
 </div></div>
-<div id="HotReloader"><div id="HotReloader" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">HotReloader<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/hot_reloader.py"><gray>ursina.prefabs.hot_reloader</gray></a><br><br><params class="params">HotReloader(path=__file__, **kwargs)</params>
+<div id="HotReloader"><div id="HotReloader" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">HotReloader<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/hot_reloader.py"><gray>ursina.prefabs.hot_reloader</gray></a><br><br><params class="params">HotReloader(path=__file__, **kwargs)</params>
 
 path<gray> = path</gray> 
 path<gray> = Path(self.path)</gray> 
@@ -2395,7 +2395,7 @@ By default you can press F5 to reload the starting script, F6 to reimport textur
 <green>''</green>'</green>
 </div>
 </div></div>
-<div id="ContentTypes"><div id="ContentTypes" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">ContentTypes</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/input_field.py"><gray>ursina.prefabs.input_field</gray></a><br><br><params class="params">ContentTypes(path=__file__, **kwargs)</params>
+<div id="ContentTypes"><div id="ContentTypes" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">ContentTypes</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/input_field.py"><gray>ursina.prefabs.input_field</gray></a><br><br><params class="params">ContentTypes(path=__file__, **kwargs)</params>
 
 
 
@@ -2413,7 +2413,7 @@ username_field.next_field = password_field
 Button(<green>'Login'</green>, <olive>scale</olive>=.<yellow>1</yellow>, <olive>color</olive>=color.cyan.tint(-.<yellow>4</yellow>), <olive>y</olive>=-.<yellow>2</yellow><yellow>6</yellow>, <olive>on_click</olive>=submit).fit_to_text()
 </div>
 </div></div>
-<div id="InputField"><div id="InputField" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">InputField<gray>(<a style="color: gray;" href="#Button">Button</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/input_field.py"><gray>ursina.prefabs.input_field</gray></a><br><br><params class="params">InputField(default_value='', label='', max_lines=1, max_width=24, **kwargs)</params>
+<div id="InputField"><div id="InputField" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">InputField<gray>(<a style="color: gray;" href="#Button">Button</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/input_field.py"><gray>ursina.prefabs.input_field</gray></a><br><br><params class="params">InputField(default_value='', label='', max_lines=1, max_width=24, **kwargs)</params>
 
 default_value<gray> = default_value</gray> 
 limit_content_to<gray> = None</gray> 
@@ -2441,10 +2441,10 @@ username_field.next_field = password_field
 Button(<green>'Login'</green>, <olive>scale</olive>=.<yellow>1</yellow>, <olive>color</olive>=color.cyan.tint(-.<yellow>4</yellow>), <olive>y</olive>=-.<yellow>2</yellow><yellow>6</yellow>, <olive>on_click</olive>=submit).fit_to_text()
 </div>
 </div></div>
-<div id="MemoryCounter"><div id="MemoryCounter" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">MemoryCounter<gray>(<a style="color: gray;" href="#Text">Text</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/memory_counter.py"><gray>ursina.prefabs.memory_counter</gray></a><br><br><params class="params">MemoryCounter(**kwargs)</params>
+<div id="MemoryCounter"><div id="MemoryCounter" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">MemoryCounter<gray>(<a style="color: gray;" href="#Text">Text</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/memory_counter.py"><gray>ursina.prefabs.memory_counter</gray></a><br><br><params class="params">MemoryCounter(**kwargs)</params>
 
 parent<gray> = camera.ui</gray> 
-position<gray> = window.bottom_right</gray> 
+position<gray> = window.bottom_right - Vec2(.025,0)</gray> 
 origin<gray> = (0.5, -0.5)</gray> 
 process<gray> = psutil.Process(os.getpid())</gray> 
 i<gray> = 0</gray> 
@@ -2458,7 +2458,7 @@ Displays the amount of memory used in the bottom right corner
 <green>''</green>'</green>
 </div>
 </div></div>
-<div id="Panel"><div id="Panel" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Panel<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/panel.py"><gray>ursina.prefabs.panel</gray></a><br><br><params class="params">Panel(**kwargs)</params>
+<div id="Panel"><div id="Panel" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Panel<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/panel.py"><gray>ursina.prefabs.panel</gray></a><br><br><params class="params">Panel(**kwargs)</params>
 
 parent<gray> = camera.ui</gray> 
 model<gray> = Quad()</gray> 
@@ -2468,7 +2468,7 @@ color<gray> = Button.color</gray>
 <div class="example">p = <purple><b>Panel</b></purple>()
 </div>
 </div></div>
-<div id="PlatformerController2d"><div id="PlatformerController2d" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">PlatformerController2d<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/platformer_controller_2d.py"><gray>ursina.prefabs.platformer_controller_2d</gray></a><br><br><params class="params">PlatformerController2d(**kwargs)</params>
+<div id="PlatformerController2d"><div id="PlatformerController2d" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">PlatformerController2d<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/platformer_controller_2d.py"><gray>ursina.prefabs.platformer_controller_2d</gray></a><br><br><params class="params">PlatformerController2d(**kwargs)</params>
 
 model<gray> = 'cube'</gray> 
 origin_y<gray> = -.5</gray> 
@@ -2516,7 +2516,7 @@ camera.add_script(SmoothFollow(target=player_controller, offset=[<yellow>0</yell
 EditorCamera()
 </div>
 </div></div>
-<div id="RadialMenu"><div id="RadialMenu" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">RadialMenu<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/radial_menu.py"><gray>ursina.prefabs.radial_menu</gray></a><br><br><params class="params">RadialMenu(buttons=list(), **kwargs)</params>
+<div id="RadialMenu"><div id="RadialMenu" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">RadialMenu<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/radial_menu.py"><gray>ursina.prefabs.radial_menu</gray></a><br><br><params class="params">RadialMenu(buttons=list(), **kwargs)</params>
 
 parent<gray> = camera.ui</gray> 
 buttons<gray> = buttons</gray> 
@@ -2554,7 +2554,7 @@ cube = Button(<olive>parent</olive>=scene, <olive>model</olive>=<green>'cube'</g
 EditorCamera()
 </div>
 </div></div>
-<div id="RadialMenuButton"><div id="RadialMenuButton" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">RadialMenuButton<gray>(<a style="color: gray;" href="#Button">Button</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/radial_menu.py"><gray>ursina.prefabs.radial_menu</gray></a><br><br><params class="params">RadialMenuButton(**kwargs)</params>
+<div id="RadialMenuButton"><div id="RadialMenuButton" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">RadialMenuButton<gray>(<a style="color: gray;" href="#Button">Button</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/radial_menu.py"><gray>ursina.prefabs.radial_menu</gray></a><br><br><params class="params">RadialMenuButton(**kwargs)</params>
 
 
 
@@ -2576,13 +2576,13 @@ cube = Button(<olive>parent</olive>=scene, <olive>model</olive>=<green>'cube'</g
 EditorCamera()
 </div>
 </div></div>
-<div id="Sky"><div id="Sky" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Sky<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/sky.py"><gray>ursina.prefabs.sky</gray></a><br><br><params class="params">Sky(**kwargs)</params>
+<div id="Sky"><div id="Sky" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Sky<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/sky.py"><gray>ursina.prefabs.sky</gray></a><br><br><params class="params">Sky(**kwargs)</params>
 
 
 update()   
 
 </div></div>
-<div id="Slider"><div id="Slider" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Slider<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/slider.py"><gray>ursina.prefabs.slider</gray></a><br><br><params class="params">Slider(min=0, max=1, default=None, height=Text.size, text='', dynamic=False, **kwargs)</params>
+<div id="Slider"><div id="Slider" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Slider<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/slider.py"><gray>ursina.prefabs.slider</gray></a><br><br><params class="params">Slider(min=0, max=1, default=None, height=Text.size, text='', dynamic=False, **kwargs)</params>
 
 parent<gray> = camera.ui</gray> 
 vertical<gray> = False</gray> 
@@ -2621,7 +2621,7 @@ thin_slider.label.origin = (<yellow>0</yellow>,<yellow>0</yellow>)
 thin_slider.label.position = (.<yellow>2</yellow><yellow>5</yellow>, -.<yellow>1</yellow>)
 </div>
 </div></div>
-<div id="ThinSlider"><div id="ThinSlider" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">ThinSlider<gray>(Slider)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/slider.py"><gray>ursina.prefabs.slider</gray></a><br><br><params class="params">ThinSlider(*args, **kwargs)</params>
+<div id="ThinSlider"><div id="ThinSlider" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">ThinSlider<gray>(Slider)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/slider.py"><gray>ursina.prefabs.slider</gray></a><br><br><params class="params">ThinSlider(*args, **kwargs)</params>
 
 
 
@@ -2639,7 +2639,7 @@ thin_slider.label.origin = (<yellow>0</yellow>,<yellow>0</yellow>)
 thin_slider.label.position = (.<yellow>2</yellow><yellow>5</yellow>, -.<yellow>1</yellow>)
 </div>
 </div></div>
-<div id="Sprite"><div id="Sprite" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Sprite<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/sprite.py"><gray>ursina.prefabs.sprite</gray></a><br><br><params class="params">Sprite(texture=None, ppu=ppu, **kwargs)</params>
+<div id="Sprite"><div id="Sprite" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Sprite<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/sprite.py"><gray>ursina.prefabs.sprite</gray></a><br><br><params class="params">Sprite(texture=None, ppu=ppu, **kwargs)</params>
 
 model<gray> = 'quad'</gray> 
 texture<gray> = texture</gray> 
@@ -2655,7 +2655,7 @@ Texture.default_filtering = None
 s = <purple><b>Sprite</b></purple>(<green>'brick'</green>, filtering=False)
 </div>
 </div></div>
-<div id="TextField"><div id="TextField" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">TextField<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/text_field.py"><gray>ursina.prefabs.text_field</gray></a><br><br><params class="params">TextField(**kwargs)</params>
+<div id="TextField"><div id="TextField" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">TextField<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/text_field.py"><gray>ursina.prefabs.text_field</gray></a><br><br><params class="params">TextField(**kwargs)</params>
 
 font<gray> = 'VeraMono.ttf'</gray> 
 line_height<gray> = 1</gray> 
@@ -2752,7 +2752,7 @@ te.text = dedent(<green><green>''</green>'
 te.render()
 </div>
 </div></div>
-<div id="Tilemap"><div id="Tilemap" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Tilemap<gray>(GridEditor)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/tilemap.py"><gray>ursina.prefabs.tilemap</gray></a><br><br><params class="params">Tilemap(tilemap='', tileset='', tileset_size=(8,8), **kwargs)</params>
+<div id="Tilemap"><div id="Tilemap" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Tilemap<gray>(GridEditor)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/tilemap.py"><gray>ursina.prefabs.tilemap</gray></a><br><br><params class="params">Tilemap(tilemap='', tileset='', tileset_size=(8,8), **kwargs)</params>
 
 grid<gray> = [[self.tilemap.get_pixel(x,y) for y in range(self.tilemap.height)] for x in range(self.tilemap.width)]</gray> 
 tileset<gray> = tileset</gray> 
@@ -2783,7 +2783,7 @@ camera.fov = tilemap.tilemap.height
 Text(<green>'press tab to toggle edit mode'</green>, <olive>origin</olive>=(.<yellow>5</yellow>,<yellow>0</yellow>), <olive>position</olive>=(-.<yellow>5</yellow><yellow>5</yellow>,.<yellow>4</yellow>))
 </div>
 </div></div>
-<div id="Tooltip"><div id="Tooltip" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Tooltip<gray>(<a style="color: gray;" href="#Text">Text</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/tooltip.py"><gray>ursina.prefabs.tooltip</gray></a><br><br><params class="params">Tooltip(text='', background_color=color.black66, **kwargs)</params>
+<div id="Tooltip"><div id="Tooltip" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Tooltip<gray>(<a style="color: gray;" href="#Text">Text</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/tooltip.py"><gray>ursina.prefabs.tooltip</gray></a><br><br><params class="params">Tooltip(text='', background_color=color.black66, **kwargs)</params>
 
 original_scale<gray> = self.scale</gray> 
 
@@ -2804,7 +2804,7 @@ Lasts for 4 rounds.<green>''</green><green>'</green>.replace('</green>\n<green>'
     app.run()
 </div>
 </div></div>
-<div id="TrailRenderer"><div id="TrailRenderer" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">TrailRenderer<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/trail_renderer.py"><gray>ursina.prefabs.trail_renderer</gray></a><br><br><params class="params">TrailRenderer(thickness=10, color=color.white, end_color=color.clear, length=6, **kwargs)</params>
+<div id="TrailRenderer"><div id="TrailRenderer" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">TrailRenderer<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/trail_renderer.py"><gray>ursina.prefabs.trail_renderer</gray></a><br><br><params class="params">TrailRenderer(thickness=10, color=color.white, end_color=color.clear, length=6, **kwargs)</params>
 
 renderer<gray> = Entity(
         model</gray> 
@@ -2837,7 +2837,7 @@ trail_renderer = <purple><b>TrailRenderer</b></purple>(<olive>parent</olive>=piv
         destroy(pivot)
 </div>
 </div></div>
-<div id="SynthGUI"><div id="SynthGUI" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">SynthGUI<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/ursfx_synth.py"><gray>ursina.prefabs.ursfx_synth</gray></a><br><br><params class="params">SynthGUI(**kwargs)</params>
+<div id="SynthGUI"><div id="SynthGUI" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">SynthGUI<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/ursfx.py"><gray>ursina.prefabs.ursfx</gray></a><br><br><params class="params">SynthGUI(**kwargs)</params>
 
 wave_panel<gray> = Entity(parent=self, scale=.35, x=-0)</gray> 
 waveform<gray> = Entity(parent=self.wave_panel, scale_y=.75)</gray> 
@@ -2870,35 +2870,78 @@ play()
 
 <div class="example">app = Ursina()
 
-instance = <purple><b>SynthGUI</b></purple>()
+gui = <purple><b>SynthGUI</b></purple>(<olive>enabled</olive>=False)
+
+<purple>def</purple> toggle_gui_input(key):
+    <purple>if</purple> key == <green>'f3'</green>:
+        gui.enabled = <purple>not</purple> gui.enabled
+
+<olive>Entity</olive>(input=toggle_gui_input)
 
 
 <purple>if</purple> __name__ == <green>'__main__'</green>:
     Sprite(<green>'shore'</green>, <olive>z</olive>=<yellow>1</yellow><yellow>0</yellow>, ppu=<yellow>6</yellow><yellow>4</yellow>, <olive>color</olive>=color.gray)
+    gui.enabled = True
     app.run()
 </div>
 </div></div>
-<div id="VideoRecorder"><div id="VideoRecorder" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">VideoRecorder<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/video_recorder.py"><gray>ursina.prefabs.video_recorder</gray></a><br><br><params class="params">VideoRecorder(duration=5, name='untitled_video', **kwargs)</params>
+<div id="VideoRecorder"><div id="VideoRecorder" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">VideoRecorder<gray>(<a style="color: gray;" href="#Entity">Entity</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/video_recorder.py"><gray>ursina.prefabs.video_recorder</gray></a><br><br><params class="params">VideoRecorder(duration=5, name='untitled_video', **kwargs)</params>
 
 recording<gray> = False</gray> 
 file_path<gray> = Path(application.asset_folder) / 'video_temp'</gray> 
 i<gray> = 0</gray> 
 duration<gray> = duration</gray> 
-frame_skip<gray> = 2  # 30 fps</gray> 
+fps<gray> = 30</gray> 
 video_name<gray> = name</gray> 
+t<gray> = 0</gray> 
+max_frames<gray> = int(self.duration * self.fps)</gray> 
+frames<gray> = []</gray> 
 
-input(<gray>key</gray>)   
+start_recording()   
+stop_recording()   
 update()   
-renderToPNM()   
 convert_to_gif()   
 
-<div class="example">cube = primitives.RedCube()
-cube.animate_x(<yellow>5</yellow>, duration=<yellow>5</yellow>, <olive>curve</olive>=curve.linear)
-cube.animate_x(<yellow>0</yellow>, duration=<yellow>5</yellow>, <olive>curve</olive>=curve.linear, dela<olive>y</olive>=<yellow>5</yellow>)
-Cursor()
+<div class="example">window.size *= .<yellow>5</yellow>
+<purple>from</purple> ursina.prefabs.first_person_controller <purple>import</purple> FirstPersonController
+<purple>from</purple> ursina.shaders <purple>import</purple> lit_with_shadows_shader
+random.seed(<yellow>0</yellow>)
+<olive>Entity</olive>.default_shader = lit_with_shadows_shader
+
+ground = <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>collider</olive>=<green>'box'</green>, <olive>scale</olive>=<yellow>6</yellow><yellow>4</yellow>, <olive>texture</olive>=<green>'grass'</green>, <olive>texture_scale</olive>=(<yellow>4</yellow>,<yellow>4</yellow>))
+
+editor_camera = EditorCamera(<olive>enabled</olive>=False, ignore_paused=True)
+player = FirstPersonController(<olive>model</olive>=<green>'cube'</green>, <olive>z</olive>=-<yellow>1</yellow><yellow>0</yellow>, <olive>color</olive>=color.orange, origin_<olive>y</olive>=-.<yellow>5</yellow>, speed=<yellow>8</yellow>)
+player.collider = BoxCollider(player, Vec3(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>0</yellow>), Vec3(<yellow>1</yellow>,<yellow>2</yellow>,<yellow>1</yellow>))
+
+gun = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>parent</olive>=camera, <olive>position</olive>=(.<yellow>5</yellow>,-.<yellow>2</yellow><yellow>5</yellow>,.<yellow>2</yellow><yellow>5</yellow>), <olive>scale</olive>=(.<yellow>3</yellow>,.<yellow>2</yellow>,<yellow>1</yellow>), origin_<olive>z</olive>=-.<yellow>5</yellow>, <olive>color</olive>=color.red, on_cooldown=False)
+
+shootables_parent = <olive>Entity</olive>()
+mouse.traverse_target = shootables_parent
+
+<purple>for</purple> i in <blue>range</blue>(<yellow>1</yellow><yellow>6</yellow>):
+    <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>scale</olive>=<yellow>2</yellow>, <olive>texture</olive>=<green>'brick'</green>, <olive>texture_scale</olive>=(<yellow>1</yellow>,<yellow>2</yellow>),
+        x=random.uniform(-<yellow>8</yellow>,<yellow>8</yellow>),
+        <olive>z</olive>=random.uniform(-<yellow>8</yellow>,<yellow>8</yellow>) + <yellow>8</yellow>,
+        <olive>collider</olive>=<green>'box'</green>,
+        scale_y = random.uniform(<yellow>2</yellow>,<yellow>3</yellow>),
+        <olive>color</olive>=color.hsv(<yellow>0</yellow>, <yellow>0</yellow>, random.uniform(.<yellow>9</yellow>, <yellow>1</yellow>))
+        )
+
+
+sun = DirectionalLight()
+sun.look_at(Vec3(<yellow>1</yellow>,-<yellow>1</yellow>,-<yellow>1</yellow>))
+Sky()
+
+vr = <purple><b>VideoRecorder</b></purple>(duration=<yellow>2</yellow>)
+<purple>def</purple> input(key):
+    <purple>if</purple> key == <green>'5'</green>:
+        vr.start_recording()
+    <purple>if</purple> key == <green>'6'</green>:
+        vr.stop_recording()
 </div>
 </div></div>
-<div id="VideoRecorderUI"><div id="VideoRecorderUI" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">VideoRecorderUI<gray>(WindowPanel)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/video_recorder.py"><gray>ursina.prefabs.video_recorder</gray></a><br><br><params class="params">VideoRecorderUI(**kwargs)</params>
+<div id="VideoRecorderUI"><div id="VideoRecorderUI" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">VideoRecorderUI<gray>(WindowPanel)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/video_recorder.py"><gray>ursina.prefabs.video_recorder</gray></a><br><br><params class="params">VideoRecorderUI(**kwargs)</params>
 
 duration_label<gray> = Text('duration:')</gray> 
 duration_field<gray> = InputField(default_value='5')</gray> 
@@ -2913,13 +2956,46 @@ visible<gray> = False</gray>
 input(<gray>key</gray>)   
 start_recording()   
 
-<div class="example">cube = primitives.RedCube()
-cube.animate_x(<yellow>5</yellow>, duration=<yellow>5</yellow>, <olive>curve</olive>=curve.linear)
-cube.animate_x(<yellow>0</yellow>, duration=<yellow>5</yellow>, <olive>curve</olive>=curve.linear, dela<olive>y</olive>=<yellow>5</yellow>)
-Cursor()
+<div class="example">window.size *= .<yellow>5</yellow>
+<purple>from</purple> ursina.prefabs.first_person_controller <purple>import</purple> FirstPersonController
+<purple>from</purple> ursina.shaders <purple>import</purple> lit_with_shadows_shader
+random.seed(<yellow>0</yellow>)
+<olive>Entity</olive>.default_shader = lit_with_shadows_shader
+
+ground = <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>collider</olive>=<green>'box'</green>, <olive>scale</olive>=<yellow>6</yellow><yellow>4</yellow>, <olive>texture</olive>=<green>'grass'</green>, <olive>texture_scale</olive>=(<yellow>4</yellow>,<yellow>4</yellow>))
+
+editor_camera = EditorCamera(<olive>enabled</olive>=False, ignore_paused=True)
+player = FirstPersonController(<olive>model</olive>=<green>'cube'</green>, <olive>z</olive>=-<yellow>1</yellow><yellow>0</yellow>, <olive>color</olive>=color.orange, origin_<olive>y</olive>=-.<yellow>5</yellow>, speed=<yellow>8</yellow>)
+player.collider = BoxCollider(player, Vec3(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>0</yellow>), Vec3(<yellow>1</yellow>,<yellow>2</yellow>,<yellow>1</yellow>))
+
+gun = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>parent</olive>=camera, <olive>position</olive>=(.<yellow>5</yellow>,-.<yellow>2</yellow><yellow>5</yellow>,.<yellow>2</yellow><yellow>5</yellow>), <olive>scale</olive>=(.<yellow>3</yellow>,.<yellow>2</yellow>,<yellow>1</yellow>), origin_<olive>z</olive>=-.<yellow>5</yellow>, <olive>color</olive>=color.red, on_cooldown=False)
+
+shootables_parent = <olive>Entity</olive>()
+mouse.traverse_target = shootables_parent
+
+<purple>for</purple> i in <blue>range</blue>(<yellow>1</yellow><yellow>6</yellow>):
+    <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>scale</olive>=<yellow>2</yellow>, <olive>texture</olive>=<green>'brick'</green>, <olive>texture_scale</olive>=(<yellow>1</yellow>,<yellow>2</yellow>),
+        x=random.uniform(-<yellow>8</yellow>,<yellow>8</yellow>),
+        <olive>z</olive>=random.uniform(-<yellow>8</yellow>,<yellow>8</yellow>) + <yellow>8</yellow>,
+        <olive>collider</olive>=<green>'box'</green>,
+        scale_y = random.uniform(<yellow>2</yellow>,<yellow>3</yellow>),
+        <olive>color</olive>=color.hsv(<yellow>0</yellow>, <yellow>0</yellow>, random.uniform(.<yellow>9</yellow>, <yellow>1</yellow>))
+        )
+
+
+sun = DirectionalLight()
+sun.look_at(Vec3(<yellow>1</yellow>,-<yellow>1</yellow>,-<yellow>1</yellow>))
+Sky()
+
+vr = VideoRecorder(duration=<yellow>2</yellow>)
+<purple>def</purple> input(key):
+    <purple>if</purple> key == <green>'5'</green>:
+        vr.start_recording()
+    <purple>if</purple> key == <green>'6'</green>:
+        vr.stop_recording()
 </div>
 </div></div>
-<div id="Space"><div id="Space" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Space<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/window_panel.py"><gray>ursina.prefabs.window_panel</gray></a><br><br><params class="params">Space(height=1)</params>
+<div id="Space"><div id="Space" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Space<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/window_panel.py"><gray>ursina.prefabs.window_panel</gray></a><br><br><params class="params">Space(height=1)</params>
 
 height<gray> = height</gray> 
 
@@ -2945,7 +3021,7 @@ wp = WindowPanel(
         wp.enabled = True
 </div>
 </div></div>
-<div id="WindowPanel"><div id="WindowPanel" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">WindowPanel<gray>(<a style="color: gray;" href="#Draggable">Draggable</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/prefabs/window_panel.py"><gray>ursina.prefabs.window_panel</gray></a><br><br><params class="params">WindowPanel(title='', content=[], **kwargs)</params>
+<div id="WindowPanel"><div id="WindowPanel" style="color:hsl(320.0, 89%, 66%); font-size:1.75em; font-weight:normal;">WindowPanel<gray>(<a style="color: gray;" href="#Draggable">Draggable</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/window_panel.py"><gray>ursina.prefabs.window_panel</gray></a><br><br><params class="params">WindowPanel(title='', content=[], **kwargs)</params>
 
 content<gray> = content</gray> 
 text<gray> = title</gray> 
@@ -2977,7 +3053,7 @@ wp = <purple><b>WindowPanel</b></purple>(
         wp.enabled = True
 </div>
 </div></div>
-<div id="chunk_mesh"><div id="chunk_mesh" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">chunk_mesh</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/scripts/chunk_mesh.py"><gray>ursina.scripts.chunk_mesh</gray></a><br><br>app<gray> = Ursina()</gray> 
+<div id="chunk_mesh"><div id="chunk_mesh" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">chunk_mesh</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/scripts/chunk_mesh.py"><gray>ursina.scripts.chunk_mesh</gray></a><br><br>app<gray> = Ursina()</gray> 
 t<gray> = time.time()</gray> 
 application.asset_folder<gray> = application.asset_folder.parent.parent</gray> 
 terrain<gray> = Entity(model=Terrain('grass_fields_heightmap', skip=8), texture='grass', texture_scale=(3,3), scale=256)</gray> 
@@ -2992,25 +3068,25 @@ app.run()
 update()   
 
 </div></div>
-<div id="colorize"><div id="colorize" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">colorize</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/scripts/colorize.py"><gray>ursina.scripts.colorize</gray></a><br><br>
+<div id="colorize"><div id="colorize" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">colorize</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/scripts/colorize.py"><gray>ursina.scripts.colorize</gray></a><br><br>
 get_world_normals(<gray>model</gray>)   
-colorize(<gray>model, left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white, smooth=True, world_space=True</gray>)   
+colorize(<gray>model, left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white, smooth=True, world_space=True, strength=1</gray>)   
 
 <div class="example"><purple>import</purple> random
 <purple>for</purple> i in <blue>range</blue>(<yellow>1</yellow><yellow>0</yellow>):
-    e = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>)
+    e = <olive>Entity</olive>(<olive>model</olive>=load_model(<green>'sphere'</green>, path=application.internal_models_compressed_folder, use_deepcop<olive>y</olive>=True))
     e.position = (random.uniform(-<yellow>3</yellow>,<yellow>3</yellow>),random.uniform(-<yellow>3</yellow>,<yellow>3</yellow>),random.uniform(-<yellow>3</yellow>,<yellow>3</yellow>))
     e.rotation = (random.uniform(<yellow>0</yellow>,<yellow>3</yellow><yellow>6</yellow><yellow>0</yellow>),random.uniform(<yellow>0</yellow>,<yellow>3</yellow><yellow>6</yellow><yellow>0</yellow>),random.uniform(<yellow>0</yellow>,<yellow>3</yellow><yellow>6</yellow><yellow>0</yellow>))
     e.scale = random.uniform(<yellow>1</yellow>,<yellow>3</yellow>)
-    e.model.colorize(smooth=False)
-
+    e.model.colorize(smooth=False, world_space=True, strength=.<yellow>5</yellow>)
 
 
 Sky(<olive>color</olive>=color.gray)
 EditorCamera()
 </div>
 </div></div>
-<div id="combine"><div id="combine" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">combine</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/scripts/combine.py"><gray>ursina.scripts.combine</gray></a><br><br>
+<div id="combine"><div id="combine" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">combine</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/scripts/combine.py"><gray>ursina.scripts.combine</gray></a><br><br>temp_entity<gray> = None</gray> 
+
 combine(<gray>entity, analyze=False, auto_destroy=True, ignore=[]</gray>)   
 get_vertices(<gray>entity, relative_to=None</gray>)   
 
@@ -3021,13 +3097,17 @@ e<yellow>3</yellow> = <olive>Entity</olive>(<olive>parent</olive>=e<yellow>2</ye
 
 <purple>def</purple> input(key):
     <purple>if</purple> key == <green>'space'</green>:
+        <purple>from</purple> time <purple>import</purple> perf_counter
+        t = perf_counter()
         p.combine()
+        <blue>print</blue>(<green>'combined in:'</green>, perf_counter() - t)
+
 
 
 EditorCamera()
 </div>
 </div></div>
-<div id="generate_normals"><div id="generate_normals" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">generate_normals</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/scripts/generate_normals.py"><gray>ursina.scripts.generate_normals</gray></a><br><br>
+<div id="generate_normals"><div id="generate_normals" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">generate_normals</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/scripts/generate_normals.py"><gray>ursina.scripts.generate_normals</gray></a><br><br>
 normalize_v3(<gray>arr</gray>)   
 generate_normals(<gray>vertices, triangles=None, smooth=True</gray>)   
 
@@ -3039,7 +3119,7 @@ generate_normals(<gray>vertices, triangles=None, smooth=True</gray>)
 norms = generate_normals(vertices)
 </div>
 </div></div>
-<div id="grid_layout"><div id="grid_layout" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">grid_layout</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/scripts/grid_layout.py"><gray>ursina.scripts.grid_layout</gray></a><br><br>
+<div id="grid_layout"><div id="grid_layout" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">grid_layout</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/scripts/grid_layout.py"><gray>ursina.scripts.grid_layout</gray></a><br><br>
 grid_layout(<gray>l, max_x=8, max_y=8, spacing=(0,0,0), origin=(-.5,.5,0), offset=(0,0,0)</gray>)   
 
 <div class="example">center = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>scale</olive>=.<yellow>1</yellow>, <olive>color</olive>=color.red)
@@ -3054,7 +3134,7 @@ EditorCamera()
 <blue>print</blue>(time.time() - t)
 </div>
 </div></div>
-<div id="merge_vertices"><div id="merge_vertices" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">merge_vertices</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/scripts/merge_vertices.py"><gray>ursina.scripts.merge_vertices</gray></a><br><br>
+<div id="merge_vertices"><div id="merge_vertices" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">merge_vertices</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/scripts/merge_vertices.py"><gray>ursina.scripts.merge_vertices</gray></a><br><br>
 distance(<gray>a, b</gray>)   
 merge_overlapping_vertices(<gray>vertices, triangles=None, max_distance=.1</gray>)   
 
@@ -3070,7 +3150,7 @@ e = <olive>Entity</olive>(<olive>model</olive>=Mesh(new_verts, new_tris, <olive>
 EditorCamera()
 </div>
 </div></div>
-<div id="NoclipMode"><div id="NoclipMode" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">NoclipMode</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/scripts/noclip_mode.py"><gray>ursina.scripts.noclip_mode</gray></a><br><br><params class="params">NoclipMode(speed=10, require_key='shift')</params>
+<div id="NoclipMode"><div id="NoclipMode" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">NoclipMode</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/scripts/noclip_mode.py"><gray>ursina.scripts.noclip_mode</gray></a><br><br><params class="params">NoclipMode(speed=10, require_key='shift')</params>
 
 speed<gray> = speed</gray> 
 require_key<gray> = require_key</gray> 
@@ -3087,7 +3167,7 @@ EditorCamera()
 player.add_script(NoclipMode<yellow>2</yellow>d())
 </div>
 </div></div>
-<div id="NoclipMode2d"><div id="NoclipMode2d" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">NoclipMode2d</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/scripts/noclip_mode.py"><gray>ursina.scripts.noclip_mode</gray></a><br><br><params class="params">NoclipMode2d(speed=10, require_key='shift')</params>
+<div id="NoclipMode2d"><div id="NoclipMode2d" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">NoclipMode2d</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/scripts/noclip_mode.py"><gray>ursina.scripts.noclip_mode</gray></a><br><br><params class="params">NoclipMode2d(speed=10, require_key='shift')</params>
 
 speed<gray> = speed</gray> 
 require_key<gray> = require_key</gray> 
@@ -3104,7 +3184,7 @@ EditorCamera()
 player.add_script(NoclipMode<yellow>2</yellow>d())
 </div>
 </div></div>
-<div id="PositionLimiter"><div id="PositionLimiter" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">PositionLimiter<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/scripts/position_limiter.py"><gray>ursina.scripts.position_limiter</gray></a><br><br><params class="params">PositionLimiter(min_x=-math.inf, max_x=math.inf, min_y=-math.inf, max_y=math.inf, min_z=-math.inf, max_z=math.inf)</params>
+<div id="PositionLimiter"><div id="PositionLimiter" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">PositionLimiter<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/scripts/position_limiter.py"><gray>ursina.scripts.position_limiter</gray></a><br><br><params class="params">PositionLimiter(min_x=-math.inf, max_x=math.inf, min_y=-math.inf, max_y=math.inf, min_z=-math.inf, max_z=math.inf)</params>
 
 min_x<gray> = min_x</gray> 
 max_x<gray> = max_x</gray> 
@@ -3116,7 +3196,7 @@ max_z<gray> = max_z</gray>
 update()   
 
 </div></div>
-<div id="project_uvs"><div id="project_uvs" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">project_uvs</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/scripts/project_uvs.py"><gray>ursina.scripts.project_uvs</gray></a><br><br>
+<div id="project_uvs"><div id="project_uvs" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">project_uvs</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/scripts/project_uvs.py"><gray>ursina.scripts.project_uvs</gray></a><br><br>
 project_uvs(<gray>model, aspect_ratio=1, direction='forward', regenerate=False</gray>)   
 
 <div class="example">e = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, <olive>texture</olive>=<green>'ursina_logo'</green>)
@@ -3124,7 +3204,7 @@ project_uvs(e.model)
 EditorCamera()
 </div>
 </div></div>
-<div id="Scrollable"><div id="Scrollable" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Scrollable<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/scripts/scrollable.py"><gray>ursina.scripts.scrollable</gray></a><br><br><params class="params">Scrollable(**kwargs)</params>
+<div id="Scrollable"><div id="Scrollable" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Scrollable<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/scripts/scrollable.py"><gray>ursina.scripts.scrollable</gray></a><br><br><params class="params">Scrollable(**kwargs)</params>
 
 max<gray> = inf</gray> 
 min<gray> = -inf</gray> 
@@ -3148,7 +3228,7 @@ p = Button(<olive>model</olive>=<green>'quad'</green>, <olive>scale</olive>=(.<y
 p.add_script(<purple><b>Scrollable</b></purple>())
 </div>
 </div></div>
-<div id="SmoothFollow"><div id="SmoothFollow" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">SmoothFollow<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/scripts/smooth_follow.py"><gray>ursina.scripts.smooth_follow</gray></a><br><br><params class="params">SmoothFollow(target=None, offset=(0,0,0), speed=8, rotation_speed=0, rotation_offset=(0,0,0))</params>
+<div id="SmoothFollow"><div id="SmoothFollow" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">SmoothFollow<gray>()</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/scripts/smooth_follow.py"><gray>ursina.scripts.smooth_follow</gray></a><br><br><params class="params">SmoothFollow(target=None, offset=(0,0,0), speed=8, rotation_speed=0, rotation_offset=(0,0,0))</params>
 
 target<gray> = target</gray> 
 offset<gray> = offset</gray> 
@@ -3175,7 +3255,7 @@ sf = e.add_script(<purple><b>SmoothFollow</b></purple>(target=player, offset=(<y
 EditorCamera()
 </div>
 </div></div>
-<div id="terraincast"><div id="terraincast" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">terraincast</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/scripts/terraincast.py"><gray>ursina.scripts.terraincast</gray></a><br><br>
+<div id="terraincast"><div id="terraincast" style="color:hsl(289.0, 89%, 66%); font-size:1.75em; font-weight:normal;">terraincast</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/scripts/terraincast.py"><gray>ursina.scripts.terraincast</gray></a><br><br>
 prepare_terrain(<gray>terrain, debug=False, calculate_normals=True</gray>)   
 terraincast(<gray>origin,</gray>)   
 
@@ -3232,6 +3312,7 @@ Sky()
 'horizontal_gradient'
 'noise'
 'radial_gradient'
+'rainbow'
 'reflection_map_3'
 'shore'
 'sky_default'
@@ -3242,6 +3323,7 @@ Sky()
 'ursina_wink_0000'
 'ursina_wink_0001'
 'vertical_gradient'
+'vignette'
 'white_cube'
 
 
@@ -3250,9 +3332,12 @@ Sky()
 </div></div>
 <div id="shaders"><div id="shaders" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">shaders</div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;">basic_lighting_shader
 colored_lights_shader
+fresnel_shader
+geom_shader
 lit_with_shadows_shader
 matcap_shader
 normals_shader
+projector_shader
 texture_blend_shader
 transition_shader
 triplanar_shader
@@ -3271,7 +3356,7 @@ ssao
 e = Entity(shader=normals_shader)
 </div>
 </div></div>
-<div id="Circle"><div id="Circle" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Circle<gray>(<a style="color: gray;" href="#Mesh">Mesh</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/models/procedural/circle.py"><gray>ursina.models.procedural.circle</gray></a><br><br><params class="params">Circle(resolution=16, radius=.5, rotate=True, mode='ngon', **kwargs)</params>
+<div id="Circle"><div id="Circle" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Circle<gray>(<a style="color: gray;" href="#Mesh">Mesh</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/models/procedural/circle.py"><gray>ursina.models.procedural.circle</gray></a><br><br><params class="params">Circle(resolution=16, radius=.5, rotate=True, mode='ngon', **kwargs)</params>
 
 vertices<gray> = list()</gray> 
 
@@ -3282,7 +3367,7 @@ origin = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <oliv
 ed = EditorCamera(rotation_speed = <yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>, panning_speed=<yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>)
 </div>
 </div></div>
-<div id="Cone"><div id="Cone" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Cone<gray>(<a style="color: gray;" href="#Mesh">Mesh</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/models/procedural/cone.py"><gray>ursina.models.procedural.cone</gray></a><br><br><params class="params">Cone(resolution=4, radius=.5, height=1, direction=(0,1,0), add_bottom=True, mode='triangle', **kwargs)</params>
+<div id="Cone"><div id="Cone" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Cone<gray>(<a style="color: gray;" href="#Mesh">Mesh</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/models/procedural/cone.py"><gray>ursina.models.procedural.cone</gray></a><br><br><params class="params">Cone(resolution=4, radius=.5, height=1, direction=(0,1,0), add_bottom=True, mode='triangle', **kwargs)</params>
 
 
 
@@ -3291,7 +3376,7 @@ origin = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <oliv
 ed = EditorCamera(rotation_speed = <yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>, panning_speed=<yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>)
 </div>
 </div></div>
-<div id="Cylinder"><div id="Cylinder" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Cylinder<gray>(<a style="color: gray;" href="#Pipe">Pipe</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/models/procedural/cylinder.py"><gray>ursina.models.procedural.cylinder</gray></a><br><br><params class="params">Cylinder(resolution=8, radius=.5, start=0, height=1, direction=(0,1,0), mode='triangle', **kwargs)</params>
+<div id="Cylinder"><div id="Cylinder" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Cylinder<gray>(<a style="color: gray;" href="#Pipe">Pipe</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/models/procedural/cylinder.py"><gray>ursina.models.procedural.cylinder</gray></a><br><br><params class="params">Cylinder(resolution=8, radius=.5, start=0, height=1, direction=(0,1,0), mode='triangle', **kwargs)</params>
 
 
 
@@ -3300,7 +3385,7 @@ origin = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <oliv
 ed = EditorCamera(rotation_speed = <yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>, panning_speed=<yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>)
 </div>
 </div></div>
-<div id="Grid"><div id="Grid" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Grid<gray>(<a style="color: gray;" href="#Mesh">Mesh</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/models/procedural/grid.py"><gray>ursina.models.procedural.grid</gray></a><br><br><params class="params">Grid(width, height, mode='line', thickness=1, **kwargs)</params>
+<div id="Grid"><div id="Grid" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Grid<gray>(<a style="color: gray;" href="#Mesh">Mesh</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/models/procedural/grid.py"><gray>ursina.models.procedural.grid</gray></a><br><br><params class="params">Grid(width, height, mode='line', thickness=1, **kwargs)</params>
 
 width<gray> = width</gray> 
 height<gray> = height</gray> 
@@ -3309,19 +3394,7 @@ height<gray> = height</gray>
 <div class="example"><olive>Entity</olive>(<olive>model</olive>=<purple><b>Grid</b></purple>(<yellow>2</yellow>, <yellow>6</yellow>))
 </div>
 </div></div>
-<div id="Plane"><div id="Plane" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Plane<gray>(<a style="color: gray;" href="#Mesh">Mesh</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/models/procedural/plane.py"><gray>ursina.models.procedural.plane</gray></a><br><br><params class="params">Plane(subdivisions=(1,1), mode='triangle', **kwargs)</params>
-
-vertices, self.triangles<gray> = list(), list()</gray> 
-uvs<gray> = list()</gray> 
-
-
-<div class="example">front =  <olive>Entity</olive>(<olive>model</olive>=<purple><b>Plane</b></purple>(subdivisions=(<yellow>3</yellow>,<yellow>6</yellow>)), <olive>texture</olive>=<green>'brick'</green>, <olive>rotation_x</olive>=-<yellow>9</yellow><yellow>0</yellow>)
-
-_ed = EditorCamera()
-<olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.green, <olive>scale</olive>=.<yellow>0</yellow><yellow>5</yellow>)
-</div>
-</div></div>
-<div id="Pipe"><div id="Pipe" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Pipe<gray>(<a style="color: gray;" href="#Mesh">Mesh</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/models/procedural/pipe.py"><gray>ursina.models.procedural.pipe</gray></a><br><br><params class="params">Pipe(base_shape=Quad, origin=(0,0), path=((0,0,0),(0,1,0)), thicknesses=((1,1),), look_at=True, cap_ends=True, mode='triangle', **kwargs)</params>
+<div id="Pipe"><div id="Pipe" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Pipe<gray>(<a style="color: gray;" href="#Mesh">Mesh</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/models/procedural/pipe.py"><gray>ursina.models.procedural.pipe</gray></a><br><br><params class="params">Pipe(base_shape=Quad, origin=(0,0), path=((0,0,0),(0,1,0)), thicknesses=((1,1),), look_at=True, cap_ends=True, mode='triangle', **kwargs)</params>
 
 base_shape<gray> = base_shape</gray> 
 
@@ -3336,7 +3409,19 @@ origin = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <oliv
 origin.scale *= .<yellow>2</yellow><yellow>5</yellow>
 </div>
 </div></div>
-<div id="QuadMesh"><div id="QuadMesh" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">QuadMesh<gray>(<a style="color: gray;" href="#Mesh">Mesh</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/models/procedural/quad.py"><gray>ursina.models.procedural.quad</gray></a><br><br><params class="params">QuadMesh(radius=.1, segments=8, aspect=1, scale=(1,1), mode='ngon', thickness=1)</params>
+<div id="Plane"><div id="Plane" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Plane<gray>(<a style="color: gray;" href="#Mesh">Mesh</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/models/procedural/plane.py"><gray>ursina.models.procedural.plane</gray></a><br><br><params class="params">Plane(subdivisions=(1,1), mode='triangle', **kwargs)</params>
+
+vertices, self.triangles<gray> = list(), list()</gray> 
+uvs<gray> = list()</gray> 
+
+
+<div class="example">front =  <olive>Entity</olive>(<olive>model</olive>=<purple><b>Plane</b></purple>(subdivisions=(<yellow>3</yellow>,<yellow>6</yellow>)), <olive>texture</olive>=<green>'brick'</green>, <olive>rotation_x</olive>=-<yellow>9</yellow><yellow>0</yellow>)
+
+_ed = EditorCamera()
+<olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.green, <olive>scale</olive>=.<yellow>0</yellow><yellow>5</yellow>)
+</div>
+</div></div>
+<div id="QuadMesh"><div id="QuadMesh" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">QuadMesh<gray>(<a style="color: gray;" href="#Mesh">Mesh</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/models/procedural/quad.py"><gray>ursina.models.procedural.quad</gray></a><br><br><params class="params">QuadMesh(radius=.1, segments=8, aspect=1, scale=(1,1), mode='ngon', thickness=1)</params>
 
 vertices<gray> = [Vec3(0,0,0), Vec3(1,0,0), Vec3(1,1,0), Vec3(0,1,0)]</gray> 
 radius<gray> = radius</gray> 
@@ -3356,7 +3441,7 @@ origin = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <oliv
 camera.z = -<yellow>5</yellow>
 </div>
 </div></div>
-<div id="Terrain"><div id="Terrain" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Terrain<gray>(<a style="color: gray;" href="#Mesh">Mesh</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/tree/master/ursina/models/procedural/terrain.py"><gray>ursina.models.procedural.terrain</gray></a><br><br><params class="params">Terrain(heightmap, skip=1, **kwargs)</params>
+<div id="Terrain"><div id="Terrain" style="color:hsl(259.0, 89%, 66%); font-size:1.75em; font-weight:normal;">Terrain<gray>(<a style="color: gray;" href="#Mesh">Mesh</a>)</gray></div><div style="position:relative; padding:0em 0em 2em 1em; margin:0;"><a href="https://github.com/pokepetter/ursina/blob/master/ursina/models/procedural/terrain.py"><gray>ursina.models.procedural.terrain</gray></a><br><br><params class="params">Terrain(heightmap, skip=1, **kwargs)</params>
 
 heightmap<gray> = heightmap</gray> 
 skip<gray> = skip    # should be power of two.</gray> 
@@ -3368,7 +3453,7 @@ height_values<gray> = swapaxes(self.height_values, 0, 1)</gray>
 vertices, self.triangles<gray> = list(), list()</gray> 
 uvs<gray> = list()</gray> 
 normals<gray> = list()</gray> 
-height_values<gray> = [[j[0]/255 for j in i] for i in self.height_values]</gray> 
+height_values<gray> = [[j/255 for j in i] for i in self.height_values]</gray> 
 
 
 <div class="example">e = <olive>Entity</olive>(<olive>model</olive>=<purple><b>Terrain</b></purple>(<green>'heightmap_1'</green>, skip=<yellow>1</yellow><yellow>6</yellow>), <olive>scale</olive>=(<yellow>2</yellow><yellow>0</yellow>,<yellow>5</yellow>,<yellow>2</yellow><yellow>0</yellow>), <olive>texture</olive>=<green>'heightmap_1'</green>)

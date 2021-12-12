@@ -18,13 +18,8 @@ class VideoRecorder(Entity):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-
         self.max_frames = int(self.duration * self.fps)
         self.frames = []
-    # def input(self, key):
-    #     if key == 'f10':
-    #         self.recording = not self.recording
-
 
 
     def start_recording(self):
