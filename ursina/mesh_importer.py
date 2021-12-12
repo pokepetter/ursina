@@ -225,16 +225,18 @@ def obj_to_ursinamesh(
         with f.open('r') as file:
             lines = file.readlines()
 
-        verts = list()
-        tris = list()
+        verts = []
+        tris = []
 
-        uv_indices = list()
-        uvs = list()
-        norm_indices = list()
-        norms = list()
+        uv_indices = []
+        uvs = []
+        norm_indices = []
+        norms = []
+        normals = [] # final normals made getting norms with norm_indices
 
         vertex_colors = list()
         current_color = None
+        mtl_data = None
         mtl_dict = {}
 
         # parse the obj file to a Mesh
@@ -303,15 +305,16 @@ def obj_to_ursinamesh(
                     pass
 
             elif l.startswith('mtllib '):    # load mtl file
-                mtl_file_name = l[7:] # remove 'mtllib '
-                with open(str(f).rstrip('.obj') + '.mtl') as mtl_file:
-                    mtl_data = mtl_file.readlines()
+                mtl_file_name = Path(str(f).rstrip('.obj') + '.mtl')
+                if mtl_file_name.exists():
+                    with open(mtl_file_name) as mtl_file:
+                        mtl_data = mtl_file.readlines()
 
-                    for i in range(len(mtl_data)-1):
-                        if mtl_data[i].startswith('newmtl ') and mtl_data[i+1].startswith('Kd '):
-                            material_name = mtl_data[i].strip()[7:] # remove 'newmtl '
-                            material_color = [float(e) for e in mtl_data[i+1].strip()[3:].split(' ')]
-                            mtl_dict[material_name] = *material_color, 1
+                        for i in range(len(mtl_data)-1):
+                            if mtl_data[i].startswith('newmtl ') and mtl_data[i+1].startswith('Kd '):
+                                material_name = mtl_data[i].strip()[7:] # remove 'newmtl '
+                                material_color = [float(e) for e in mtl_data[i+1].strip()[3:].split(' ')]
+                                mtl_dict[material_name] = *material_color, 1
 
 
             elif l.startswith('usemtl ') and mtl_data: # apply material color
@@ -319,7 +322,8 @@ def obj_to_ursinamesh(
                 current_color = mtl_dict[material_name]
 
 
-        normals = [(-norms[nid][0], norms[nid][1], norms[nid][2]) for nid in norm_indices]
+        if norms: # make sure we have normals and not just normal indices (weird edge case).
+            normals = [(-norms[nid][0], norms[nid][1], norms[nid][2]) for nid in norm_indices]
 
         if return_mesh:
             return Mesh(
@@ -343,7 +347,7 @@ def obj_to_ursinamesh(
             meshstring += ', \nuvs='
             meshstring += str(tuple(uvs[uid] for uid in uv_indices))
 
-        if norm_indices:
+        if normals:
             meshstring += ', \nnormals='
             meshstring += str(normals)
 
@@ -492,15 +496,18 @@ if __name__ == '__main__':
     # Entity(model=m)
     # EditorCamera()
 
-    application.asset_folder = application.asset_folder.parent / 'samples'
-    # from ursina.shaders import basic_lighting_shader
-    # from ursina.shaders import normals_shader as rim_shader
-    # from ursina.shaders import matcap_shader as rim_shader
-    # from ursina.shaders import height_shader as rim_shader
-
-
     t = time.time()
+
+    application.asset_folder = application.asset_folder.parent / 'samples'
+    # application.asset_folder = Path(r'C:\\Users\\Petter\\Downloads\\')
+    # Entity(model='c1a0')
+    # from ursina.shaders import lit_with_shadows_shader
+    # Entity.default_shader = lit_with_shadows_shader
     Entity(model='race')
+    Entity(model='ambulance', x=1.5)
+    # ground = Entity(model='plane', scale=10, texture='brick', texture_scale=Vec2(4))
+    # DirectionalLight()
+
     # blender_scene = load_blender_scene(path=application.asset_folder, name='desert', reload=True)
     # blender_scene = load_blender_scene(path=application.asset_folder, name='blender_level_editor_test_scene_2')
     # print('-------', time.time() - t)
