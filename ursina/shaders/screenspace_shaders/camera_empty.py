@@ -1,7 +1,7 @@
 from ursina import Shader
 
 
-camera_contrast_shader = Shader(
+camera_empty_shader = Shader(
 vertex='''
 #version 430
 
@@ -38,7 +38,7 @@ if __name__ == '__main__':
 
     e = Entity(model='sphere', color=color.yellow)
     e = Entity(model='cube', y=-1)
-    camera.shader = camera_contrast_shader
+    camera.shader = camera_empty_shader
     camera.set_shader_input('contrast', 1)
 
     #slider = ThinSlider(max=1, dynamic=True, position=(-.25, -.45))
