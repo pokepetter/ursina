@@ -313,7 +313,7 @@ def obj_to_ursinamesh(
                         for i in range(len(mtl_data)-1):
                             if mtl_data[i].startswith('newmtl '):
                                 material_name = mtl_data[i].strip()[7:] # remove 'newmtl '
-                                for j in range(i+1, i+8):
+                                for j in range(i+1, min(i+8, len(mtl_data))):
                                     if mtl_data[j].startswith('newmtl'):
                                         break
                                     if mtl_data[j].startswith('Kd '):
