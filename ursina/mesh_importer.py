@@ -311,15 +311,20 @@ def obj_to_ursinamesh(
                         mtl_data = mtl_file.readlines()
 
                         for i in range(len(mtl_data)-1):
-                            if mtl_data[i].startswith('newmtl ') and mtl_data[i+1].startswith('Kd '):
+                            if mtl_data[i].startswith('newmtl '):
                                 material_name = mtl_data[i].strip()[7:] # remove 'newmtl '
-                                material_color = [float(e) for e in mtl_data[i+1].strip()[3:].split(' ')]
-                                mtl_dict[material_name] = *material_color, 1
+                                for j in range(i+1, i+8):
+                                    if mtl_data[j].startswith('newmtl'):
+                                        break
+                                    if mtl_data[j].startswith('Kd '):
+                                        material_color = [float(e) for e in mtl_data[j].strip()[3:].split(' ')]
+                                        mtl_dict[material_name] = *material_color, 1
 
 
             elif l.startswith('usemtl ') and mtl_data: # apply material color
                 material_name = l[7:].strip()    # remove 'usemtl '
-                current_color = mtl_dict[material_name]
+                if material_name in mtl_dict:
+                    current_color = mtl_dict[material_name]
 
 
         if norms: # make sure we have normals and not just normal indices (weird edge case).
@@ -490,21 +495,25 @@ if __name__ == '__main__':
     # compress_internal()
     from ursina import *
     app = Ursina()
-    print('imported_meshes:\n', imported_meshes)
+    # print('imported_meshes:\n', imported_meshes)
     # Entity(model='quad').model.save('quad.bam')
     # m = obj_to_ursinamesh(path=application.asset_folder.parent / 'samples', name='procedural_rock_0')
     # Entity(model=m)
     # EditorCamera()
 
-    t = time.time()
 
-    application.asset_folder = application.asset_folder.parent / 'samples'
+    # application.asset_folder = application.asset_folder.parent / 'samples'
     # application.asset_folder = Path(r'C:\\Users\\Petter\\Downloads\\')
     # Entity(model='c1a0')
     # from ursina.shaders import lit_with_shadows_shader
     # Entity.default_shader = lit_with_shadows_shader
-    Entity(model='race')
-    Entity(model='ambulance', x=1.5)
+    # Entity(model='race')
+    # Entity(model='ambulance', x=1.5)
+
+    application.asset_folder = Path(r'''C:\Users\Petter\Downloads''')
+    t = perf_counter()
+    Entity(model='untitled')
+    print('-------', perf_counter() - t)
     # ground = Entity(model='plane', scale=10, texture='brick', texture_scale=Vec2(4))
     # DirectionalLight()
 
