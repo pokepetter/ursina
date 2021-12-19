@@ -30,6 +30,7 @@ from ursina.shader import Shader
 from ursina.string_utilities import print_info, print_warning
 
 from ursina import color
+from ursina.color import Color
 try:
     from ursina.scene import instance as scene
 except:
@@ -830,6 +831,8 @@ class Entity(NodePath):
 
     @property
     def unlit(self):
+        if not hasattr(self, '_unlit'):
+            return False
         return self._unlit
 
     @unlit.setter
@@ -1061,6 +1064,11 @@ class Entity(NodePath):
                 changes.append(f"{key}={value}, ")
 
         return f'{__class__.__name__}(' +  ''.join(changes) + ')'
+
+
+    def __deepcopy__(self, memo):
+        return eval(repr(self))
+
 
 #------------
 # ANIMATIONS
