@@ -78,8 +78,7 @@ class Window(WindowProperties):
         self.render_mode = 'default'
         self.editor_ui = None
 
-        from ursina import invoke
-        invoke(base.accept, 'aspectRatioChanged', self.update_aspect_ratio, delay=1/60)
+        base.accept('aspectRatioChanged', self.update_aspect_ratio)
 
     @property
     def left(self):
@@ -169,9 +168,11 @@ class Window(WindowProperties):
 
     def update_aspect_ratio(self):
         prev_aspect = self.aspect_ratio
-        self.size = base.win.get_size()
-        # if prev_aspect == self.aspect_ratio:
-        #     return
+        self.aspect_ratio = self.size[0] / self.size[1]
+
+        from ursina import camera
+        value = [int(e) for e in base.win.getSize()]
+        camera.set_shader_input('window_size', value)
 
         print_info('changed aspect ratio:', round(prev_aspect, 3), '->', round(self.aspect_ratio, 3))
 
