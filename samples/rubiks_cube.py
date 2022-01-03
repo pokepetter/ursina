@@ -79,7 +79,7 @@ def rotate_side(normal, direction=1, speed=1):
 
     if speed:
         collider.ignore_input = True
-        invoke(setattr, collider, 'ignore_input', False, delay=.23*speed)
+        invoke(setattr, collider, 'ignore_input', False, delay=.24*speed)
         invoke(check_for_win, delay=.25*speed)
 
 
