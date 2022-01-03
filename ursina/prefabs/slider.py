@@ -69,7 +69,7 @@ class Slider(Entity):
     @property
     def value(self):
         val = lerp(self.min, self.max, self.knob.x * 2)
-        if isinstance(self.step, int) and not self.step == 0:
+        if isinstance(self.step, int) and self.step != 0:
             val = int(round(val, 0))
 
         return val
@@ -96,9 +96,10 @@ class Slider(Entity):
         t = self.knob.x / .5
         self.knob.text_entity.text = str(round(lerp(self.min, self.max, t), 2))
 
-        if self.step > 0:
-            if isinstance(self.step, int) or self.step.is_integer():
-                self.knob.text_entity.text = str(self.value)
+        if self.step > 0 and (
+            isinstance(self.step, int) or self.step.is_integer()
+        ):
+            self.knob.text_entity.text = str(self.value)
 
         if self.dynamic and self._prev_value != t:
             if self.on_value_changed:

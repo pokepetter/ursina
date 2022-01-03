@@ -47,18 +47,14 @@ class LevelEditor(Entity):
             elif mouse.hovered_entity in self.selection:
                 self.selection.remove(mouse.hovered_entity)
 
-            elif mouse.hovered_entity in self.entities and not mouse.hovered_entity in self.selection:
+            elif mouse.hovered_entity in self.entities:
                 if held_keys['shift']:
                     self.selection.append(mouse.hovered_entity)
                 else:
                     self.selection = [mouse.hovered_entity, ]
 
             for e in self.entities:
-                if e in self.selection:
-                    e.color = color.azure
-                else:
-                    e.color = color.light_gray
-
+                e.color = color.azure if e in self.selection else color.light_gray
             self.gizmo.enabled = bool(self.selection)
             if self.selection:
                 self.gizmo.position = self.selection[-1].position

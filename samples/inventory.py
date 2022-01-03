@@ -24,7 +24,7 @@ class Inventory(Entity):
                 grid_positions = [(int(e.x*self.texture_scale[0]), int(e.y*self.texture_scale[1])) for e in self.children]
                 print(grid_positions)
 
-                if not (x,-y) in grid_positions:
+                if (x, -y) not in grid_positions:
                     print('found free spot:', x, y)
                     return x, y
 

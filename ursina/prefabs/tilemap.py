@@ -19,7 +19,7 @@ class Tilemap(GridEditor):
         self.tileset_size = tileset_size
         self.model = Mesh()
         self.texture = tileset
-        self.colliders = list()
+        self.colliders = []
         # self.texture.filtering = None
 
         # self.grid = [[self.tilemap.get_pixel(x,y) for y in range(self.h)] for x in range(self.w)]
@@ -140,7 +140,7 @@ class Tilemap(GridEditor):
                     self.model.vertices.extend([Vec3(x/self.tilemap.width, y/self.tilemap.height, 0) + (v*1/self.tilemap.width) for v in self._quad.vertices]) # add quad vertices, but offset.
                     self.model.triangles.append([i+j for j in range(4)])
 
-                    neighbours = list()
+                    neighbours = []
                     # register neighbours clockwise starting from the top
                     for offset in [(0,1), (1,1), (1,0), (1,-1), (0,-1), (-1,-1), (-1,0), (-1,1)]:
                         try:

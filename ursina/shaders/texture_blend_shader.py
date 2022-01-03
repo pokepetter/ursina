@@ -75,10 +75,7 @@ if __name__ == '__main__':
 
     def input(key):
         if key == 'space':
-            if e.shader:
-                e.shader = None
-            else:
-                e.shader = texture_blend_shader
+            e.shader = None if e.shader else texture_blend_shader
 
 
     app.run()

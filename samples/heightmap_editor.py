@@ -15,7 +15,7 @@ cursor = Entity(model='sphere', color=color.azure, scale=1)
 # terrain = Mesh()
 
 vertices, triangles = list(), list()
-uvs = list()
+uvs = []
 # self.normals = list()
 w, h = 16,16
 # self.height_values = [[j/255 for j in i] for i in self.height_values]

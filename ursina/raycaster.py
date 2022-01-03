@@ -63,7 +63,7 @@ class Raycaster(Entity):
             and self.distance(self.world_position, Vec3(*e.get_surface_point(render))) <= distance
             ]
 
-        if len(self.entries) == 0:
+        if not self.entries:
             self.hit = HitInfo(hit=False, distance=distance)
             return self.hit
 
@@ -88,9 +88,6 @@ class Raycaster(Entity):
 
         self.hit.normal = Vec3(*self.collision.get_surface_normal(self.collision.get_into_node_path().parent).normalized())
         self.hit.world_normal = Vec3(*self.collision.get_surface_normal(render).normalized())
-        return self.hit
-
-        self.hit = HitInfo(hit=False, distance=distance)
         return self.hit
 
 
@@ -189,10 +186,7 @@ if __name__ == '__main__':
         # print(ray.distance, ray2.distance)
         intersection_marker.world_position = ray.world_point
         intersection_marker.visible = ray.hit
-        if ray.hit:
-            d.color = color.azure
-        else:
-            d.color = color.orange
+        d.color = color.azure if ray.hit else color.orange
 
     t = time.time()
     # ray = raycast(e.world_position, e.forward, 3, debug=True)

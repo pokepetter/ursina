@@ -15,9 +15,9 @@ def grid_layout(l, max_x=8, max_y=8, spacing=(0,0,0), origin=(-.5,.5,0), offset=
     direction = [-e*2 for e in origin]
     direction = [1 if e == 0 else e for e in direction]
     # print(direction)
-    row = list()
+    row = []
 
-    for i, e in enumerate(l):
+    for e in l:
         e.position = (
             x * dimensions[0] * direction[0],
             y * dimensions[1] * direction[1],

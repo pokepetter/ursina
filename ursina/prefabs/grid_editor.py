@@ -25,7 +25,7 @@ class GridEditor(Entity):
         self.start_pos = (0,0)
         self.outline = Entity(parent=self, model=Quad(segments=0, mode='line', thickness=1), color=color.cyan, z=.01, origin=(-.5,-.5))
 
-        self.undo_cache = list()
+        self.undo_cache = []
         self.undo_cache.append(deepcopy(self.grid))
         self.undo_index = 0
 
@@ -102,24 +102,23 @@ class GridEditor(Entity):
                 # if (x, y) == self.prev_draw:
                 #     return
 
-                if not held_keys['alt']:
-                    if self.prev_draw is not None and distance_2d(self.prev_draw, (x,y)) > 1:
-                        dist = distance_2d(self.prev_draw, (x,y))
+                if held_keys['alt']:
+                    self.selected_char = self.grid[x][y]
 
-                        if dist > 1: # draw line
-                            for i in range(int(dist)+1):
-                                inbetween_pos = lerp(self.prev_draw, (x,y), i/dist)
-                                self.draw(int(inbetween_pos[0]), int(inbetween_pos[1]))
+                elif self.prev_draw is not None and distance_2d(self.prev_draw, (x,y)) > 1:
+                    dist = distance_2d(self.prev_draw, (x,y))
 
-                            self.draw(x, y)
-                            self.prev_draw = (x,y)
+                    if dist > 1: # draw line
+                        for i in range(int(dist)+1):
+                            inbetween_pos = lerp(self.prev_draw, (x,y), i/dist)
+                            self.draw(int(inbetween_pos[0]), int(inbetween_pos[1]))
 
-                    else:
                         self.draw(x, y)
                         self.prev_draw = (x,y)
 
                 else:
-                    self.selected_char = self.grid[x][y]
+                    self.draw(x, y)
+                    self.prev_draw = (x,y)
 
 
 
@@ -185,9 +184,8 @@ class GridEditor(Entity):
             self.cursor.scale = Vec2(self.brush_size / self.w, self.brush_size / self.h)
             self.prev_draw = None
 
-        if held_keys['control'] and key == 's':
-            if hasattr(self, 'save'):
-                self.save()
+        if held_keys['control'] and key == 's' and hasattr(self, 'save'):
+            self.save()
 
 
     def record_undo(self):

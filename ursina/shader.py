@@ -49,7 +49,7 @@ class Shader:
         self.geometry = geometry
 
         self.entity = None
-        self.default_input = dict()
+        self.default_input = {}
         self.compiled = False
 
         for key, value in kwargs.items():
@@ -60,7 +60,7 @@ class Shader:
         self._shader = Panda3dShader.make(self.language, self.vertex, self.fragment, self.geometry)
         self.compiled = True
 
-        if not self in imported_shaders:
+        if self not in imported_shaders:
             imported_shaders.append(self)
 
 

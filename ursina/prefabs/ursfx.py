@@ -172,10 +172,7 @@ class SynthGUI(Entity):
             pitch = 1
             if 'pitch=' in code:
                 pitch = code.split('pitch=')[1]
-                if ',' in pitch:
-                    pitch = pitch.split(',')[0]
-                else:
-                    pitch = pitch[:-1]
+                pitch = pitch.split(',')[0] if ',' in pitch else pitch[:-1]
                 pitch = eval(pitch)
             self.pitch_slider.value = pitch
             print('--------pitch', pitch)
@@ -195,10 +192,7 @@ class SynthGUI(Entity):
             speed = 1
             if 'speed=' in code:
                 speed = code.split('speed=')[1]
-                if ',' in speed:
-                    speed = speed.split(',')[0]
-                else:
-                    speed = speed[:-1]
+                speed = speed.split(',')[0] if ',' in speed else speed[:-1]
                 speed = eval(speed)
             self.speed_slider.value = speed
             print('--------speed')
@@ -225,7 +219,7 @@ class SynthGUI(Entity):
         if speed_code != 1:
             speed_code = f', speed={round(self.speed_slider.value, 1)}'
 
-        return f"ursfx({str(self.volume_curve)}, volume={round(self.volume_slider.value,3)}, wave='{self.wave_selector.value}'{pitch_code}{pitch_change_code}{speed_code})"
+        return f"ursfx({self.volume_curve}, volume={round(self.volume_slider.value, 3)}, wave='{self.wave_selector.value}'{pitch_code}{pitch_change_code}{speed_code})"
 
 
 

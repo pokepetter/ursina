@@ -186,9 +186,8 @@ class Ursina(ShowBase):
 
         try: input_handler.input(key)
         except: pass
-        if not application.paused:
-            if hasattr(__main__, 'input'):
-                __main__.input(key)
+        if not application.paused and hasattr(__main__, 'input'):
+            __main__.input(key)
 
 
         for entity in scene.entities:

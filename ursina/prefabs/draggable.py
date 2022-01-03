@@ -34,9 +34,12 @@ class Draggable(Button):
 
 
     def input(self, key):
-        if self.hovered and key == 'left mouse down':
-            if self.require_key == None or held_keys[self.require_key]:
-                self.start_dragging()
+        if (
+            self.hovered
+            and key == 'left mouse down'
+            and (self.require_key is None or held_keys[self.require_key])
+        ):
+            self.start_dragging()
 
         if self.dragging and key == 'left mouse up':
             self.stop_dragging()

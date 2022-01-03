@@ -12,11 +12,7 @@ class Audio(Entity):
     def __init__(self, sound_file_name='', autoplay=True, auto_destroy=False, **kwargs):
         super().__init__(**kwargs)
         # printvar(sound_file_name)
-        if sound_file_name:
-            self.clip = sound_file_name
-        else:
-            self.clip = None
-
+        self.clip = sound_file_name or None
         self.volume = 1
         self.pitch = 1
         self.balance = 0
@@ -67,11 +63,7 @@ class Audio(Entity):
         if isinstance(value, str):
             self.name = value
 
-            if '.' in value:
-                file_types = ('',)
-            else:
-                file_types = ('.ogg', '.wav')
-
+            file_types = ('', ) if '.' in value else ('.ogg', '.wav')
             for folder in (application.asset_folder, application.internal_audio_folder):
                 for suffix in file_types:
                     for f in folder.glob(f'**/{value}{suffix}'):

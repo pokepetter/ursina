@@ -29,7 +29,7 @@ class QuadMesh(Mesh):
         _segments = segments
         _segments += 1
         if _segments > 1:
-            new_verts = list()
+            new_verts = []
             QuadMesh.corner_maker.rotation_z = 0
             QuadMesh.corner_maker.position = Vec3(0,0,0)
             QuadMesh.corner_maker.rotation_z -= 90/_segments/2
@@ -38,14 +38,14 @@ class QuadMesh(Mesh):
             corner_corrections = (Vec3(radius,radius,0), Vec3(-radius,radius,0), Vec3(-radius,-radius,0), Vec3(radius,-radius,0))
             for j in range(4):  # 4 corners
                 QuadMesh.corner_maker.position = self.vertices[j] + corner_corrections[j]
-                for i in range(_segments):
+                for _ in range(_segments):
                     new_verts.append(QuadMesh.point_placer.world_position)
                     QuadMesh.corner_maker.rotation_z -= 90/_segments
 
             self.vertices = new_verts
 
 
-        self.uvs = list()
+        self.uvs = []
         for v in self.vertices:
             self.uvs.append((v[0], v[1]))
 
@@ -84,7 +84,7 @@ if __name__ == '__main__':
     from time import perf_counter
     t = perf_counter()
     # m =
-    for i in range(100):
+    for _ in range(100):
         Entity(model=Quad(scale=(3,1), thickness=3, segments=3, mode='line'), color = color.color(0,1,1,.7))
     # Entity(scale=(3,1), model=Quad(aspect=3), color = color.color(60,1,1,.3))
     print('-------', (perf_counter() - t))

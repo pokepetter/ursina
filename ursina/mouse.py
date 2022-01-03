@@ -51,7 +51,7 @@ class Mouse():
 
         self.raycast = True
         self.collision = None
-        self.collisions = list()
+        self.collisions = []
         self.enabled = True
 
     @property
@@ -242,13 +242,13 @@ class Mouse():
 
     @property
     def normal(self): # returns the normal of the polygon, in local space.
-        if not self.collision is not None:
+        if self.collision is None:
             return None
         return Vec3(*self.collision.normal)
 
     @property
     def world_normal(self): # returns the normal of the polygon, in world space.
-        if not self.collision is not None:
+        if self.collision is None:
             return None
         return Vec3(*self.collision.world_normal)
 
@@ -265,7 +265,7 @@ class Mouse():
         return None
 
     def find_collision(self):
-        self.collisions = list()
+        self.collisions = []
         self.collision = None
         if not self.raycast or self._pq.get_num_entries() == 0:
             self.unhover_everything_not_hit()
@@ -276,18 +276,17 @@ class Mouse():
         for entry in self._pq.getEntries():
             for entity in scene.entities:
                 if entry.getIntoNodePath().parent == entity and entity.collision:
-                    if entity.collision:
-                        hit = HitInfo(
-                            hit = entry.collided(),
-                            entity = entity,
-                            distance = distance(entry.getSurfacePoint(scene), camera.getPos()),
-                            point = entry.getSurfacePoint(entity),
-                            world_point = entry.getSurfacePoint(scene),
-                            normal = entry.getSurfaceNormal(entity),
-                            world_normal = entry.getSurfaceNormal(scene),
-                            )
-                        self.collisions.append(hit)
-                        break
+                    hit = HitInfo(
+                        hit = entry.collided(),
+                        entity = entity,
+                        distance = distance(entry.getSurfacePoint(scene), camera.getPos()),
+                        point = entry.getSurfacePoint(entity),
+                        world_point = entry.getSurfacePoint(scene),
+                        normal = entry.getSurfaceNormal(entity),
+                        world_normal = entry.getSurfaceNormal(scene),
+                        )
+                    self.collisions.append(hit)
+                    break
 
         if self.collisions:
             self.collision = self.collisions[0]

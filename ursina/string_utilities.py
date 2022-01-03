@@ -9,11 +9,8 @@ def camel_to_snake(value):
 
 
 def snake_to_camel(value):
-    camel = ''
     words = value.split('_')
-    for w in words:
-        camel += w.title()
-    return camel
+    return ''.join(w.title() for w in words)
 
 
 def multireplace(string, replacements, ignore_case=False):

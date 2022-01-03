@@ -4,7 +4,7 @@ from ursina import application
 from ursina.texture import Texture
 
 
-imported_textures = dict()
+imported_textures = {}
 file_types = ('.tif', '.jpg', '.jpeg', '.png', '.gif')
 textureless = False
 
@@ -22,11 +22,7 @@ def load_texture(name, path=None):
         application.internal_textures_folder,
         )
     if path:
-        if isinstance(path, str):
-            folders = (Path(path),)
-        else:
-            folders = (path,)
-
+        folders = (Path(path), ) if isinstance(path, str) else (path, )
     if name.endswith('.mp4'):
         for folder in folders:
             for filename in folder.glob('**/' + name):
@@ -76,10 +72,7 @@ def compress_textures(name=''):
         application.compressed_textures_folder.mkdir()
 
 
-    file_type = '.*'
-    if '.' in name:
-        file_type = ''
-
+    file_type = '' if '.' in name else '.*'
     # print('searching for texture:', name + file_type)
     for f in application.asset_folder.glob('**/' + name + file_type):
 
@@ -103,7 +96,7 @@ def compress_textures(name=''):
             return False
         # print(max(image.size))
         # print('............', image.mode)
-        if image and image.mode != 'RGBA' and max(image.size) > 512:
+        if image.mode != 'RGBA' and max(image.size) > 512:
             image.save(
                 application.compressed_textures_folder / (Path(f).stem + '.jpg'),
                 'JPEG',

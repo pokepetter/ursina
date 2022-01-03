@@ -32,10 +32,7 @@ if __name__ == '__main__':
 
     def input(key):
         if key == 'space':
-            if camera.shader:
-                camera.shader = None
-            else:
-                camera.shader = camera_grayscale_shader
+            camera.shader = None if camera.shader else camera_grayscale_shader
 
 
     app.run()

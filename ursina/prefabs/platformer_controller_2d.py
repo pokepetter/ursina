@@ -70,12 +70,7 @@ class PlatformerController2d(Entity):
         if not self.grounded:
             self.animator.state = 'jump'
         else:
-            if self.walking:
-                self.animator.state = 'walk'
-            else:
-                self.animator.state = 'idle'
-
-
+            self.animator.state = 'walk' if self.walking else 'idle'
         # check if we're on the ground or not.
         ray = boxcast(
             self.world_position+Vec3(0,.1,0),
@@ -102,11 +97,20 @@ class PlatformerController2d(Entity):
 
 
         # if in jump and hit the ceiling, fall
-        if self.jumping:
-            if boxcast(self.position+(0,.1,0), self.up, distance=self.scale_y, thickness=.95, ignore=(self,), traverse_target=self.traverse_target).hit:
-                self.y_animator.kill()
-                self.air_time = 0
-                self.start_fall()
+        if (
+            self.jumping
+            and boxcast(
+                self.position + (0, 0.1, 0),
+                self.up,
+                distance=self.scale_y,
+                thickness=0.95,
+                ignore=(self,),
+                traverse_target=self.traverse_target,
+            ).hit
+        ):
+            self.y_animator.kill()
+            self.air_time = 0
+            self.start_fall()
 
 
 

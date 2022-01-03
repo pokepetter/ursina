@@ -31,7 +31,7 @@ class Sequence():
         self.t = 0
         self.time_step = Sequence.default_time_step
         self.duration = 0
-        self.funcs = list()
+        self.funcs = []
         self.paused = True
         self.loop = False
         self.auto_destroy = True
@@ -45,7 +45,7 @@ class Sequence():
 
 
     def generate(self):
-        self.funcs = list()
+        self.funcs = []
 
         for arg in self.args:
             if isinstance(arg, Wait):
@@ -108,11 +108,7 @@ class Sequence():
         if self.paused:
             return
 
-        if self.time_step is None:
-            self.t += time.dt
-        else:
-            self.t += self.time_step
-
+        self.t += time.dt if self.time_step is None else self.time_step
         for f in self.funcs:
             if not f.finished and f.delay <= self.t:
                 f()

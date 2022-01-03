@@ -19,7 +19,7 @@ print('file_name:', scene_name)
 
 code = ''
 
-if not '--models_only' in sys.argv:
+if '--models_only' not in sys.argv:
     code += '''from ursina import *
 from time import perf_counter
 
@@ -38,13 +38,10 @@ meshes = {
 dg = bpy.context.evaluated_depsgraph_get() #getting the dependency graph
 bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
 objects = [ob for ob in bpy.data.objects if ob.type == 'MESH']
-unique_objects = {}
-# print('meshes:', meshes)
-for ob in objects:
-    unique_objects[ob.data.name] = ob
+unique_objects = {ob.data.name: ob for ob in objects}
+face_normal_x, face_normal_y, face_normal_z = 0, 0, 0
 
-
-for key, ob in unique_objects.items():
+for ob in unique_objects.values():
     mesh = ob.evaluated_get(dg).data
 
     # triangulate mesh
@@ -61,8 +58,6 @@ for key, ob in unique_objects.items():
     uvs = []
 
     for poly in mesh.polygons:
-        face_normal_x, face_normal_y, face_normal_z = 0, 0, 0
-
         for idx in poly.vertices:
             v = mesh.vertices[idx]
             verts.append((round(v.co[0],4),round(v.co[2],4),round(v.co[1],4)))
@@ -76,7 +71,7 @@ for key, ob in unique_objects.items():
             round(sum((normals[i][1], normals[i+1][1], normals[i+2][1])) / 3, 5),
             round(sum((normals[i][2], normals[i+1][2], normals[i+2][2])) / 3, 5),
             )
-        for j in range(3):
+        for _ in range(3):
             sharp_normals.append(averaged_normal)
 
     normals = sharp_normals
@@ -105,9 +100,6 @@ code += '}\n'
 
 if '--models_only' in sys.argv:
     print('sucessfully exported blender models')
-    with open(out_file_path, 'w') as f:
-        f.write(code)
-
 else:
     # write entities
     code += '''print('loaded models:', perf_counter() - t)\n'''
@@ -139,58 +131,9 @@ scene_parent.{ob.name.replace('.', '_')} = Entity(
             code += f'''
     color=({round(color[0],5)}, {round(color[1],5)}, {round(color[2],5)}, {round(color[3],5)}),'''
 
-        code += f'''
-    ignore=True,
-    )'''
+        code += '\x1f    ignore=True,\x1f    )'
 
     code += '''\nprint('created entities:', perf_counter() - t)'''
-    #        if ob.parent:
-    #            code += f'''parent=self.{ob.name.replace('.', '_')}'''
-
-
-
-        #This has to be done every time the object updates:
-        # ob = ob.evaluated_get(dg) #this gives us the evaluated version of the object. Aka with all modifiers and deformations applied.
-        # mesh = ob.to_mesh() #turn it into the mesh data block we want.
-        # verts = []
-        # tris = []
-        # uvs = []
-        # normals = []
-        # vertex_colors = []
-
-        # for poly in mesh.polygons:
-        #     tris.append(tuple(e for e in poly.vertices))
-        # # for poly in mesh.polygons:
-        # #     for idx in poly.vertices:
-        # #         verts.append(mesh.vertices[idx])
-        # #         normal = mesh.vertices[idx].normal
-        # #         n = (normal[0], normal[1], normal[2])
-        # #         normals.append(n)
-        #
-        #
-        # color_layer = mesh.vertex_colors.active
-        # if color_layer and len(color_layer.data) > 0:
-        #     if not vertex_colors:
-        #         vertex_colors = [(1,1,1,1) for e in mesh.vertices]
-        #
-        #     i = 0
-        #     for poly in mesh.polygons:
-        #         for idx in poly.vertices:
-        #             vertex_colors[idx] = tuple(round(e, 4) for e in color_layer.data[i].color)
-        #             i += 1
-        #
-        # uv_layer = mesh.uv_layers.active
-        # if uv_layer and len(uv_layer.data) > 0:
-        #     if not uvs:
-        #         uvs = [(0,0) for e in mesh.vertices]
-        #
-        #     i = 0
-        #     for poly in mesh.polygons:
-        #         for idx in poly.vertices:
-        #             uvs[idx] = tuple(round(e, 4) for e in uv_layer.data[i].uv)
-        #             i += 1
-
-
     #     code += f'''
     # model=Mesh('''
     #     # code += f'''
@@ -226,5 +169,5 @@ if __name__ == '__main__':
 
     # return code
     print('sucessfully exported blender scene')
-    with open(out_file_path, 'w') as f:
-        f.write(code)
+with open(out_file_path, 'w') as f:
+    f.write(code)

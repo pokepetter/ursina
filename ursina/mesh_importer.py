@@ -12,7 +12,7 @@ from ursina.string_utilities import print_info, print_warning
 from ursina import color
 
 imported_meshes = dict()
-blender_scenes = dict()
+blender_scenes = {}
 
 def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursinamesh', '.obj', '.glb', '.gltf', '.blend'), use_deepcopy=False):
     if not isinstance(name, str):
@@ -187,7 +187,7 @@ def compress_models(path=None, outpath=application.compressed_models_folder, nam
         application.compressed_models_folder.mkdir()
 
     export_script_path = application.internal_scripts_folder / '_blend_export.py'
-    exported = list()
+    exported = []
 
     for blend_file in path.glob(f'**/{name}.blend'):
         blender = get_blender(blend_file)
@@ -234,7 +234,7 @@ def obj_to_ursinamesh(
         norms = []
         normals = [] # final normals made getting norms with norm_indices
 
-        vertex_colors = list()
+        vertex_colors = []
         current_color = None
         mtl_data = None
         mtl_dict = {}
@@ -338,15 +338,14 @@ def obj_to_ursinamesh(
                 colors=vertex_colors
             )
 
-        meshstring = ''
-        meshstring += 'Mesh('
+        meshstring = '' + 'Mesh('
 
         meshstring += '\nvertices='
         meshstring += str(tuple(verts[t] for t in tris))
 
         if vertex_colors:
             meshstring += '\ncolors='
-            meshstring += str(tuple(col for col in vertex_colors))
+            meshstring += str(tuple(vertex_colors))
 
         if uv_indices:
             meshstring += ', \nuvs='
@@ -406,7 +405,7 @@ def compress_models_fast(model_name=None, write_to_disk=False):
                 print(file_path)
 
                 tris = tuple(triindex.v for triindex in o.data.mloop)
-                flippedtris = list()
+                flippedtris = []
                 for i in range(0, len(tris)-3, 3):
                     flippedtris.append(tris[i+2])
                     flippedtris.append(tris[i+1])
@@ -449,7 +448,7 @@ def ursina_mesh_to_obj(mesh, name='', out_path=application.compressed_models_fol
         tris = mesh.triangles
 
         if isinstance(tris[0], tuple): # convert from tuples to flat
-            new_tris = list()
+            new_tris = []
             for t in tris:
                 if len(t) == 3:
                     new_tris.extend([t[0], t[1], t[2]])
@@ -460,7 +459,7 @@ def ursina_mesh_to_obj(mesh, name='', out_path=application.compressed_models_fol
 
 
     if mesh.mode == 'ngon':
-        tris = list()
+        tris = []
         for i in range(1, len(mesh.vertices)-1):
             tris.extend((i, i+1, 0))
 

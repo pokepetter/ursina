@@ -57,10 +57,13 @@ class RadialMenu(Entity):
 
 
     def input(self, key):
-        if key == 'left mouse down' and mouse.hovered_entity in [c for c in self.children if isinstance(c, Button)]:
-            invoke(setattr, self, 'enabled', False, delay=.1)
-        elif key == 'left mouse down' and mouse.hovered_entity == self.bg:
-            invoke(setattr, self, 'enabled', False, delay=.1)
+        if key == 'left mouse down':
+            if mouse.hovered_entity in [
+                c for c in self.children if isinstance(c, Button)
+            ]:
+                invoke(setattr, self, 'enabled', False, delay=.1)
+            elif mouse.hovered_entity == self.bg:
+                invoke(setattr, self, 'enabled', False, delay=.1)
 
 
 class RadialMenuButton(Button):

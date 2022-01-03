@@ -147,7 +147,7 @@ class Texture():
     def get_pixels(self, start, end):
         start = (clamp(start[0], 0, self.width), clamp(start[1], 0, self.width))
         end = (clamp(end[0], 0, self.width), clamp(end[1], 0, self.width))
-        pixels = list()
+        pixels = []
 
         for y in range(start[1], end[1]):
             for x in range(start[0], end[0]):
