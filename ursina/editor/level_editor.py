@@ -120,11 +120,11 @@ class LevelEditor(Entity):
 
         self.grid = Entity(parent=self, model=Grid(16,16), rotation_x=90, scale=64, collider='box', color=color.white33, enabled=False)
         self.origin_mode = 'center'
-        self.editor_camera = EditorCamera(parent=self, rotation_x=20, eternal=False)
+        self.editor_camera = EditorCamera(parent=self, rotation_x=20, eternal=False, rotation_smoothing=0)
         self.ui = Entity(parent=camera.ui, name='level_editor.ui')
 
-        self.point_renderer = Entity(parent=self, model=Mesh([], mode='point', thickness=.20, render_points_in_3d=True), texture='circle', always_on_top=True, unlit=True, render_queue=1)
-        self.cubes = [Entity(model='wireframe_cube', color=color.azure, parent=self, enabled=False) for i in range(32)]
+        self.point_renderer = Entity(parent=self, model=Mesh([], mode='point', thickness=.1, render_points_in_3d=True), texture='circle', always_on_top=True, unlit=True, render_queue=1)
+        self.cubes = [Entity(model='wireframe_cube', color=color.azure, parent=self, enabled=False) for i in range(128)] # max selection
 
         self.origin_mode_menu = ButtonGroup(['last', 'center', 'individual'], min_selection=1, position=window.top, parent=self.ui)
         self.origin_mode_menu.scale *= .75
@@ -160,6 +160,12 @@ class LevelEditor(Entity):
 
             self.current_scene.save()
 
+        if held_keys['control']:
+            if key == 'z':
+                self.current_scene.undo.undo()
+            elif key == 'y':
+                self.current_scene.undo.redo()
+
 
     def render_selection(self, update_gizmo_position=True):
         # entities = self.entities
@@ -189,7 +195,7 @@ class LevelEditor(Entity):
 
 
         self.point_renderer.model.vertices = [e.world_position for e in self.entities if e.selectable and not e.collider]
-        self.point_renderer.model.colors = [color.azure if e in self.selection else color.yellow for e in self.entities if e.selectable and not e.collider]
+        self.point_renderer.model.colors = [color.azure if e in self.selection else lerp(color.orange, color.hsv(0,0,1,0), distance(e.world_position, camera.world_position)/100) for e in self.entities if e.selectable and not e.collider]
         self.point_renderer.model.generate()
 
         gizmo.enabled = bool(self.selection)
@@ -210,6 +216,7 @@ class LevelEditor(Entity):
         for i, e in enumerate([e for e in self.selection if e.collider]):
             if i < len(self.cubes):
                 self.cubes[i].world_transform = e.world_transform
+                self.cubes[i].origin = e.origin
 
                 # self.cubes[i].parent = e
                 self.cubes[i].enabled = True
@@ -300,15 +307,6 @@ class Undo(Entity):
         level_editor.render_selection()     # make sure the gizmo position updates
         self.undo_index += 1
 
-    def input(self, key):
-        if held_keys['control']:
-            if key == 'z':
-                self.undo()
-            elif key == 'y':
-                self.redo()
-
-
-
 
 axis_colors = {
     'x' : color.magenta,
@@ -367,6 +365,14 @@ class GizmoArrow(Draggable):
         self.position = (0,0,0)
         self.rotation = self.original_rotation
         level_editor.render_selection()
+
+    def input(self, key):
+        super().input(key)
+        if key == 'control':
+            self.step = (.1,.1,.1)
+        elif key == 'control up':
+            self.step = (0,0,0)
+
 
 
 
@@ -453,9 +459,17 @@ class Gizmo(Entity):
             self.fake_gizmo.world_position = self.subgizmos['xz'].world_position
 
 
+
 class RotationGizmo(Entity):
+
     def __init__(self, **kwargs):
         super().__init__(parent=gizmo)
+        rotation_gizmo_model = load_model('rotation_gizmo_model')
+        if not rotation_gizmo_model:
+            path = Circle(24).vertices
+            path.append(path[0])
+            rotation_gizmo_model = Pipe(base_shape=Quad(radius=0), path=[Vec3(e)*32 for e in path])
+            rotation_gizmo_model.save('rotation_gizmo_model.ursinamesh')
 
         self.rotator = Entity(parent=gizmo)
         self.axis = Vec3(0,1,0)
@@ -463,12 +477,10 @@ class RotationGizmo(Entity):
         self.sensitivity = 36000
         self.dragging = False
 
-        path = Circle(24).vertices
-        path.append(path[0])
-        rotation_gizmo_model = Pipe(base_shape=Quad(radius=0), path=[Vec3(e)*32 for e in path])
+
 
         for i, dir in enumerate((Vec3(-1,0,0), Vec3(0,1,0), Vec3(0,0,-1))):
-            b = Button(parent=self, model=copy(rotation_gizmo_model), collider='mesh',
+            b = Button(parent=self, model='rotation_gizmo_model', collider='mesh',
                 color=axis_colors[('x','y','z')[i]], is_gizmo=True, always_on_top=True, render_queue=1, unlit=True, double_sided=True,
                 on_click=Sequence(Func(setattr, self, 'axis', dir), Func(self.drag)),
                 drop=self.drop,
@@ -1151,18 +1163,51 @@ class LevelMenu(Entity):
             print('no sun')
             pass
 
-# class Inspector(Entity):
-#     def __init__(self):
-#         super().__init__(parent=level_editor.ui, enabled=True, position=(-.4*window.aspect_ratio,.5-(.05*.75)), model=Quad(aspect=3/2, radius=.05), origin=(-.5,.5), scale=(.25,.2), color=color.black66, collider='box')
-#         self.name_field = InputField(default_value='entity')
-#         self.name_field.scale *= .75
-#         # self.background = Entity(parent=self, model=Quad(aspect=2), radius=.1, color=color.black66, scale=.25)
-#         self.position_field = Button(scale=(.1, .05), world_parent=self, )
-#
-#         # self.scale *= .75
-#
-#     def render(self):
-#         pass
+
+# inspector = Entity(parent=camera.ui, position=window.top_right-Vec2(.3,.1))
+# drag_bar = Draggable(parent=inspector, scale=(.3,.05), color=color.azure, origin=(-.5,-.5))
+# drag_bar.on_click = Sequence(Func(setattr, drag_bar, 'parent', camera.ui), Func(setattr, inspector, 'world_parent', drag_bar))
+# drag_bar.drop = Func(setattr, inspector, 'world_parent', camera.ui)
+
+
+class Inspector(Entity):
+    def __init__(self):
+        super().__init__(parent=level_editor.ui, position=window.top_right-Vec2(.225,.2))
+        self.ui = Entity(parent=self)
+        self.name_field = InputField(parent=self.ui, default_value='name', origin=(-.5,.5), scale_x=.125*3, color=color._8)
+        self.name_field.text_field.x = .025
+        self.name_field.text_field.y = -.25
+        self.name_field.text_field.text_entity.color = color.light_gray
+        self.name_field.highlight_color = color._32
+        self.bg = Panel(parent=self.ui, origin=(-.5,.5), scale=(.125*3, .3), z=.1, color=color._8)
+
+        self.fields = []
+        for y in range(3):
+            for i, e in enumerate('xyz'):
+                default = '0'
+                if y==2:
+                    default = '1'
+
+                field = InputField(max_width=5, model='quad', parent=self.ui, scale_x=.125, origin=(-.5,.5), default_value=default, x=i*.125, y=-.05-(y*.05), color=color._8)
+                field.text_field.x = .05
+                field.text_field.y = -.25
+                field.text_field.text_entity.color = color.light_gray
+                field.highlight_color = color._32
+                self.fields.append(field)
+
+
+        Entity(model=Grid(3,3), parent=self.fields[0], scale=3, origin=(-.5,.5), z=-.1, color=color._64)
+        self.scale = .6
+
+    def update(self):
+        self.ui.enabled = bool(level_editor.selection)
+        if level_editor.selection and (mouse.left or held_keys['g']):
+            if len(level_editor.selection) == 1:
+                self.name_field.text_field.text_entity.text = level_editor.selection[0].name
+                for i, attr_name in enumerate(('world_x', 'world_y', 'world_z', 'world_rotation_x', 'world_rotation_y', 'world_rotation_z', 'world_scale_x', 'world_scale_y', 'world_scale_z')):
+                    self.fields[i].text_field.text_entity.text = str(round(getattr(level_editor.selection[0], attr_name), 3))
+            else:
+                self.name_field.text_field.text_entity.text = '--------'
 
 
 
@@ -1341,13 +1386,26 @@ class Help(Button):
                 shift+p:    toggle perspective/orthographic
                 shift+d:    duplicate
             ''').strip(),
-            background=True
+            background=True,
+            scale=.25
         )
+        self.tooltip.original_scale = .75
 
 class Duplicator(Entity):
     def input(self, key):
         if held_keys['shift'] and key == 'd' and level_editor.selection:
-            clones = [duplicate(e, original_parent=level_editor.current_scene, color=e.color, shader=e.shader, origin=e.origin, parent=level_editor.current_scene, selectable=e.selectable) for e in level_editor.selection]
+            # clones = [duplicate(e, original_parent=level_editor.current_scene, color=e.color, shader=e.shader, origin=e.origin, parent=level_editor.current_scene, selectable=e.selectable) for e in level_editor.selection]
+            clones = []
+            for e in level_editor.selection:
+                clone = deepcopy(e)
+                clone.original_parent = level_editor.current_scene
+                clone.color = e.color
+                clone.shader = e.shader
+                clone.origin = e.origin
+                clone.parent = level_editor.current_scene
+                clone.selectable = e.selectable
+                clones.append(clone)
+
             [level_editor.entities.append(e) for e in clones]
             level_editor.selection = clones
             level_editor.current_scene.undo.record_undo(('delete entities', [level_editor.entities.index(en) for en in clones], [repr(e) for e in clones],))
@@ -1444,6 +1502,10 @@ class PokeShape(Entity):
         return f'{__class__.__name__}(' +  ''.join(changes) + ')'
 
 
+    def __deepcopy__(self, memo):
+        return eval(repr(self))
+
+
     @property
     def points(self):
         return [e.position for e in self.point_gizmos]
@@ -1491,14 +1553,14 @@ class PokeShape(Entity):
             if self in level_editor.selection or True in [e in level_editor.selection for e in self.point_gizmos]:
                 self.edit_mode = not self.edit_mode
 
-        elif key == 'left mouse down' and self.edit_mode and selector.get_hovered_entity():
-            level_editor.selection.clear()
-            selection_box.enabled = False
-            quick_grabber.input('g')
-
-        elif key == 'left mouse up' and self.edit_mode:
-            quick_grabber.input('g up')
-            selection_box.enabled = True
+        # elif key == 'left mouse down' and self.edit_mode and selector.get_hovered_entity():
+        #     level_editor.selection.clear()
+        #     selection_box.enabled = False
+        #     quick_grabber.input('g')
+        #
+        # elif key == 'left mouse up' and self.edit_mode:
+        #     quick_grabber.input('g up')
+        #     selection_box.enabled = True
 
         elif key == '+' and len(level_editor.selection) == 1 and level_editor.selection[0] in self.point_gizmos:
             print('add point')
@@ -1527,11 +1589,14 @@ class SunHandler(Entity):
         self.sun = DirectionalLight(parent=level_editor, shadow_map_resolution=(2048,2048))
         self.sun.look_at(Vec3(-2,-1,-1))
 
-        # def input(self, key):
-        #     if key == 'l':
-        #         for e in level_editor.entities:
-        #             e.shader = unlit_shader
-        #             e.unlit = not e.unlit
+    def input(self, key):
+        if key == 'l':
+            print('toggle sun')
+            # self.sun.enabled = not self.sun.enabled
+            for e in level_editor.entities:
+                # e.shader = unlit_shader
+                e.unlit = not e.unlit
+
 from ursina.prefabs.radial_menu import RadialMenu
 class RightClickMenu(Entity):
     def __init__(self):
@@ -1560,11 +1625,25 @@ class RightClickMenu(Entity):
 
 
 
+class Search(Entity):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        self.input_field = InputField(parent=level_editor.ui, enabled=False)
+
+
+    def input(self, key):
+        if key == 'space' and level_editor.selection:
+            self.input_field.enabled = True
+            self.input_field.text = ''
+
+        elif len(key) == 1:
+            print('---', self.input_field.text)
 
 
 if __name__ == '__main__':
-    app = Ursina(size=(1280,720))
-    # app = Ursina(vsync=False)
+    # app = Ursina(size=(1280,720))
+    app = Ursina(vsync=False)
 
 
 level_editor = LevelEditor()
@@ -1579,7 +1658,11 @@ for x in range(8):
 
 gizmo = Gizmo()
 level_editor.gizmo = gizmo
+t = perf_counter()
 rotation_gizmo = RotationGizmo()
+
+print('-----', perf_counter() - t)
+
 scale_gizmo = ScaleGizmo()
 box_gizmo = BoxGizmo()
 gizmo_toggler = GizmoToggler(parent=level_editor)
@@ -1601,6 +1684,7 @@ right_click_menu = RightClickMenu()
 # OriginSetter(parent=level_editor)
 PointOfViewSelector()
 Help()
+search = Search(parent=level_editor)
 
 
 debug_text = Text(y=-.45)
@@ -1623,7 +1707,7 @@ def update():
         # print('a')
         # debug_text.text = f'{round(Vec3(*level_editor.selection[-1].forward.normalized()), 0) + round(Vec3(*look_at_angle_helper.forward), 0)}'
 
-# inspector = Inspector()
+inspector = Inspector()
 
 # inspector = WindowPanel(
 #     title='entity',
@@ -1677,7 +1761,7 @@ def update():
     # def update():
     #     t.text = 'selection:\n' + '\n'.join([str(e) for e in level_editor.selection])
 if __name__ == '__main__':
-    goto_scene(2,0)
+    goto_scene(0,0)
     # from poke_shape import PokeShape
     # poke_shape = PokeShape(scale=4, points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,-.25), Vec3(.75,0,-.25), Vec3(.75,0,.25), Vec3(.5,0,.25), Vec3(.5,0,.5), Vec3(-.5,0,.5)])
     # poke_shape = PokeShape(scale=4, points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,-.25), Vec3(.75,0,-.25), Vec3(.75,0,.25), Vec3(.5,0,.25), Vec3(.5,0,.5), Vec3(.5,0,.55), Vec3(-.5,0,.5)])
