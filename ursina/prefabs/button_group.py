@@ -10,7 +10,7 @@ class ButtonGroup(Entity):
         self.max_selection = max(min_selection, max_selection)
 
         self.buttons = list()
-        self.selected = list()
+        self.selected = []
         self.options = options
 
         self.parent = camera.ui
@@ -53,7 +53,7 @@ class ButtonGroup(Entity):
 
     def layout(self):
         [destroy(c) for c in self.buttons]
-        self.buttons = list()
+        self.buttons = []
         spacing = .05
         longest_word = max(self.options, key=len) + '__' # padding
         width = Text.get_width(longest_word) / Text.size / 2
@@ -78,7 +78,7 @@ class ButtonGroup(Entity):
             return
 
         # add
-        if not b in self.selected:
+        if b not in self.selected:
             b.color = self.selected_color
             self.selected.append(b)
 
@@ -86,7 +86,6 @@ class ButtonGroup(Entity):
                 # remove oldest addition
                 self.selected[0].color = self.deselected_color
                 self.selected.pop(0)
-        # remove
         else:
             b.color = self.deselected_color
             self.selected.remove(b)

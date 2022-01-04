@@ -27,8 +27,8 @@ class Text(Entity):
         self.parent = camera.ui
 
         self.setColorScaleOff()
-        self.text_nodes = list()
-        self.images = list()
+        self.text_nodes = []
+        self.images = []
         self.origin = (-.5, .5)
 
         self.font = Text.default_font
@@ -64,10 +64,7 @@ class Text(Entity):
     @property
     def text(self):
         t = ''
-        y = 0
-        if self.text_nodes:
-            y = self.text_nodes[0].getY()
-
+        y = self.text_nodes[0].getY() if self.text_nodes else 0
         for tn in self.text_nodes:
             if y != tn.getY():
                 t += '\n'
@@ -93,10 +90,13 @@ class Text(Entity):
         self.text_nodes = []
 
         # check if using tags
-        if (not self.use_tags
-            or self.text == self.start_tag or self.text == self.end_tag
-            or not self.start_tag in text or not self.end_tag in text
-            ):
+        if (
+            not self.use_tags
+            or self.text == self.start_tag
+            or self.text == self.end_tag
+            or self.start_tag not in text
+            or self.end_tag not in text
+        ):
 
             self.create_text_section(text)
             self.align()
@@ -104,7 +104,7 @@ class Text(Entity):
 
         # parse tags
         text = self.start_tag + self.end_tag + str(text) # start with empty tag for alignment to work?
-        sections = list()
+        sections = []
         section = ''
         tag = self.start_tag+'default'+self.end_tag
         temp_text_node = TextNode('temp_text_node')
@@ -130,7 +130,7 @@ class Text(Entity):
                 tag = ''
                 for j in range(len(text)-i):
                     tag += text[i+j]
-                    if text[i+j] == self.end_tag and len(tag) > 0:
+                    if text[i + j] == self.end_tag and tag != '':
                         i += j+1
                         break
             else:
@@ -139,7 +139,7 @@ class Text(Entity):
 
         sections.append([section, tag, x, y])
 
-        for i, s in enumerate(sections):
+        for s in sections:
             tag = s[1]
             # move the text after image one space right
             if tag.startswith(self.start_tag+'image:'):
@@ -199,9 +199,8 @@ class Text(Entity):
                 else:
                     self.images.append(image)
 
-            else:
-                if tag in self.text_colors:
-                    self.current_color = self.text_colors[tag]
+            elif tag in self.text_colors:
+                self.current_color = self.text_colors[tag]
 
         self.text_node_path.setScale(self.scale_override * self.size)
         self.text_node.setText(text)
@@ -402,12 +401,12 @@ class Text(Entity):
 
         x = 0
         self.appear_sequence = Sequence()
-        for i, tn in enumerate(self.text_nodes):
+        for tn in self.text_nodes:
             target_text = tn.node().getText()
             tn.node().setText('')
             new_text = ''
 
-            for j, char in enumerate(target_text):
+            for char in target_text:
                 new_text += char
                 self.appear_sequence.append(Wait(speed))
                 self.appear_sequence.append(Func(tn.node().setText, new_text))

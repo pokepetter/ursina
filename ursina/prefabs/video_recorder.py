@@ -48,13 +48,6 @@ class VideoRecorder(Entity):
         if not self.recording:
             return
 
-            self.t += time.dt
-            if self.t >= 1/30:
-                base.screenshot(
-                 	namePrefix = '\\video_temp\\' + self.video_name + '_' + str(self.i).zfill(4) + '.png',
-                 	defaultFilename = 0,
-                    )
-                self.t = 0
         # # self.frames.append(self.renderToPNM())
         # image = base.win.getScreenshot()
         # data = image.getRamImageAs("RGB").getData()
@@ -81,12 +74,13 @@ class VideoRecorder(Entity):
 
     def convert_to_gif(self):
         import imageio
-        images = []
         if not os.path.exists(self.file_path):
             return
 
-        for filename in os.listdir(self.file_path):
-            images.append(imageio.imread(self.file_path/filename))
+        images = [
+            imageio.imread(self.file_path / filename)
+            for filename in os.listdir(self.file_path)
+        ]
 
         imageio.mimsave(Path(f'{self.file_path.parent}/{self.video_name}.gif'), images)
         shutil.rmtree(self.file_path)   # delete temp folder

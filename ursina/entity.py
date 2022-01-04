@@ -69,8 +69,8 @@ class Entity(NodePath):
 
         self.collision = False  # toggle collision without changing collider.
         self.collider = None    # set to 'box'/'sphere'/'mesh' for auto fitted collider.
-        self.scripts = list()   # add with add_script(class_instance). will assign an 'entity' variable to the script.
-        self.animations = list()
+        self.scripts = []
+        self.animations = []
         self.hovered = False    # will return True if mouse hovers entity.
 
         self.origin = Vec3(0,0,0)
@@ -90,9 +90,12 @@ class Entity(NodePath):
             if caller.code_context:
                 self.code_context = caller.code_context[0]
 
-                if (self.code_context.count('(') == self.code_context.count(')') and
-                ' = ' in self.code_context and not 'name=' in self.code_context
-                and not 'Ursina()' in self.code_context):
+                if (
+                    self.code_context.count('(') == self.code_context.count(')')
+                    and ' = ' in self.code_context
+                    and 'name=' not in self.code_context
+                    and 'Ursina()' not in self.code_context
+                ):
 
                     self.name = self.code_context.split(' = ')[0].strip().replace('self.', '')
                     # print('set name to:', self.code_context.split(' = ')[0].strip().replace('self.', ''))
@@ -173,9 +176,8 @@ class Entity(NodePath):
         if value == True:
             if hasattr(self, 'is_singleton') and not self.is_singleton():
                 self.unstash()
-        else:
-            if hasattr(self, 'is_singleton') and not self.is_singleton():
-                self.stash()
+        elif hasattr(self, 'is_singleton') and not self.is_singleton():
+            self.stash()
 
         self._enabled = value
 
@@ -224,9 +226,8 @@ class Entity(NodePath):
                 self.color = self.color # reapply color after changing model
                 self.texture = self.texture # reapply texture after changing model
                 self._vert_cache = None
-                if isinstance(value, Mesh):
-                    if hasattr(value, 'on_assign'):
-                        value.on_assign(assigned_to=self)
+                if isinstance(value, Mesh) and hasattr(value, 'on_assign'):
+                    value.on_assign(assigned_to=self)
             return
 
         elif name == 'color' and value is not None:
@@ -288,7 +289,7 @@ class Entity(NodePath):
             try:
                 self.reparentTo(value)
             except:
-                raise ValueError(f'invalid parent: value')
+                raise ValueError('invalid parent: value')
 
     @property
     def world_parent(self):
@@ -681,8 +682,7 @@ class Entity(NodePath):
         full = camera.lens.getProjectionMat().xform(Vec4(*p3, 1))
         recip_full3 = 1 / full[3]
         p2 = Vec3(full[0], full[1], full[2]) * recip_full3
-        screen_pos = Vec3(p2[0]*camera.aspect_ratio/2, p2[1]/2, 0)
-        return screen_pos
+        return Vec3(p2[0]*camera.aspect_ratio/2, p2[1]/2, 0)
 
     @property
     def shader(self):
@@ -992,23 +992,21 @@ class Entity(NodePath):
 
                     p = p.parent
 
-        if isinstance(possible_ancestor, list) or isinstance(possible_ancestor, tuple):
+        if isinstance(possible_ancestor, (list, tuple)):
             # print('LIST OR TUPLE')
             for e in possible_ancestor:
-                for i in range(100):
+                for _ in range(100):
                     if p.parent:
                         if p.parent == e:
                             return True
-                            break
                         p = p.parent
 
         elif isinstance(possible_ancestor, str):
             print('CLASS NAME', possible_ancestor)
-            for i in range(100):
+            for _ in range(100):
                 if p.parent:
                     if p.parent.__class__.__name__ == possible_ancestor:
                         return True
-                        break
                     p = p.parent
 
         return False
@@ -1046,7 +1044,7 @@ class Entity(NodePath):
 
         changes = []
         for key, value in default_values.items():
-            if not getattr(self, key) == default_values[key]:
+            if getattr(self, key) != default_values[key]:
                 if key == 'model' and hasattr(self.model, 'name'):
                     changes.append(f"model='{getattr(self, key).name}', ")
                     continue
@@ -1108,9 +1106,7 @@ class Entity(NodePath):
     def animate_position(self, value, duration=.1, **kwargs):
         x = self.animate('x', value[0], duration,  **kwargs)
         y = self.animate('y', value[1], duration,  **kwargs)
-        z = None
-        if len(value) > 2:
-            z = self.animate('z', value[2], duration, **kwargs)
+        z = self.animate('z', value[2], duration, **kwargs) if len(value) > 2 else None
         return x, y, z
 
     def animate_rotation(self, value, duration=.1,  **kwargs):
@@ -1139,7 +1135,7 @@ class Entity(NodePath):
         import random
         s = Sequence()
         original_position = self.world_position
-        for i in range(int(duration / speed)):
+        for _ in range(int(duration / speed)):
             s.append(Func(self.set_position,
                 Vec3(
                     original_position[0] + (random.uniform(-.1, .1) * magnitude * direction[0]),
@@ -1210,7 +1206,7 @@ class Entity(NodePath):
             if e.get_into_node_path().parent not in ignore
             ]
 
-        if len(self.entries) == 0:
+        if not self.entries:
             self.hit = HitInfo(hit=False, distance=0)
             return self.hit
 

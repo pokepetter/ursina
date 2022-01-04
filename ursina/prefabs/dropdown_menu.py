@@ -45,7 +45,7 @@ class DropdownMenu(DropdownMenuButton):
             invoke(setattr, self.buttons[i], 'enabled', True, delay=(i*.02))
 
     def close(self):
-        for i, b in enumerate(reversed(self.buttons)):
+        for b in reversed(self.buttons):
             b.enabled = False
 
 

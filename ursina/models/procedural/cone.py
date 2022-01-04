@@ -14,8 +14,8 @@ class Cone(Mesh):
 
         rot_axis = 'rotation_' + ('x', 'y', 'z')[axis_index]
 
-        verts = list()
-        for i in range(resolution):
+        verts = []
+        for _ in range(resolution):
             verts.append(point.world_position) # outer point
             if add_bottom:
                 verts.append((0,0,0)) #center point

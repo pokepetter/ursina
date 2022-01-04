@@ -92,7 +92,6 @@ class WindowPanel(Draggable):
 
 
     def on_enable(self):
-        pass
         try:
             if self.popup:
                 self.bg.enabled = True

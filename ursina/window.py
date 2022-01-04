@@ -225,7 +225,7 @@ class Window(WindowProperties):
 
         # disable collision display mode
         if hasattr(self, 'original_colors'):
-            for i, e in enumerate([e for e in scene.entities if hasattr(e, 'color')]):
+            for i, e in enumerate(e for e in scene.entities if hasattr(e, 'color')):
                 e.color = self.original_colors[i]
                 if e.collider:
                     e.collider.visible = False
@@ -294,8 +294,6 @@ class Window(WindowProperties):
                 return
             except:
                 print_warning('failed to set fullscreen', value)
-                pass
-
         if name == 'borderless':
             self.setUndecorated(value)
             if hasattr(self, 'exit_button'):
@@ -311,13 +309,7 @@ class Window(WindowProperties):
             application.base.camNode.get_display_region(0).get_window().set_clear_color(value)
 
         if name == 'vsync':
-            if not application.base:     # set vsync/framerate before window opened
-                if value == True or value == False:
-                    loadPrcFileData('', f'sync-video {value}')
-                elif isinstance(value, int):
-                    loadPrcFileData('', 'clock-mode limited')
-                    loadPrcFileData('', f'clock-frame-rate {value}')
-            else:
+            if application.base:
                 from panda3d.core import ClockObject                      # set vsync/framerate in runtime
                 if value == True:
                     globalClock.setMode(ClockObject.MNormal)
@@ -328,6 +320,11 @@ class Window(WindowProperties):
                     globalClock.setMode(ClockObject.MLimited)
                     globalClock.setFrameRate(int(value))
 
+            elif value in [True, False]:
+                loadPrcFileData('', f'sync-video {value}')
+            elif isinstance(value, int):
+                loadPrcFileData('', 'clock-mode limited')
+                loadPrcFileData('', f'clock-frame-rate {value}')
             object.__setattr__(self, name, value)
 
 

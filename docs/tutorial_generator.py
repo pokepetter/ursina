@@ -15,7 +15,7 @@ for path in files:
 
         lines = f.readlines()
         y = 0 # track the nujmber for non-commented lines
-        for i, line in enumerate(lines):
+        for line in lines:
             if line.startswith('#'):
                 if not is_comment_block:
                     is_comment_block = True
@@ -50,7 +50,7 @@ for path in files:
 {path.stem.title().replace('_',' ')}
 # left, size 1, normal\n\n\n
 '''
-    for i, (comment, code) in enumerate(zip(comment_parts, code_parts)):
+    for comment, code in zip(comment_parts, code_parts):
         # text += f'## {i}\n'
         text += comment
         text += '\n# code\n'

@@ -20,12 +20,8 @@ def colorize(model, left=color.white, right=color.blue, down=color.red, up=color
         print('generating normals for', model)
         model.generate_normals(smooth=smooth)
 
-    if world_space:
-        normals = get_world_normals(model)
-    else:
-        normals = model.normals
-
-    cols = list()
+    normals = get_world_normals(model) if world_space else model.normals
+    cols = []
     prev_col = color.white
     for n in normals:
         c = lerp(down, up, ((n[1]*strength) +.5))
@@ -40,12 +36,7 @@ def colorize(model, left=color.white, right=color.blue, down=color.red, up=color
         else:
             c = lerp(c, forward, (n[2]*strength))
 
-        has_nan = False
-        for e in c:
-            if math.isnan(e):
-                has_nan = True
-                break
-
+        has_nan = any(math.isnan(e) for e in c)
         if not has_nan:
             prev_col = c
             cols.append(c)
@@ -60,7 +51,7 @@ def colorize(model, left=color.white, right=color.blue, down=color.red, up=color
 if __name__ == '__main__':
     app = Ursina()
     import random
-    for i in range(10):
+    for _ in range(10):
         e = Entity(model=load_model('sphere', path=application.internal_models_compressed_folder, use_deepcopy=True))
         e.position = (random.uniform(-3,3),random.uniform(-3,3),random.uniform(-3,3))
         e.rotation = (random.uniform(0,360),random.uniform(0,360),random.uniform(0,360))

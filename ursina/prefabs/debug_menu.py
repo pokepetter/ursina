@@ -15,9 +15,9 @@ class DebugMenu(Draggable):
     def draw_functions(self):
         for c in self.children:
             destroy(c)
-        for i, f in enumerate([func for func in self.target.__class__.__dict__
-        if callable(getattr(self.target.__class__, func))
-        and not func.startswith("__")]):
+        for i, f in enumerate(func for func in self.target.__class__.__dict__
+            if callable(getattr(self.target.__class__, func))
+            and not func.startswith("__")):
             # print('functions:', f)
             b = Button(
                 parent = self,

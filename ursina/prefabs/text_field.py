@@ -217,7 +217,7 @@ class TextField(Entity):
                 print('delete line:', y)
 
 
-        for x in range(int(self.selection[1][0]) - int(self.selection[0][0])):
+        for _ in range(int(self.selection[1][0]) - int(self.selection[0][0])):
             self.erase()
         # l = lines[int(self.selection[1])]
 
@@ -247,14 +247,12 @@ class TextField(Entity):
         lines = text.split('\n')
         l = lines[y]
 
-        if key in self.shortcuts['move_up']:
-            if y > 0:
-                cursor.y -= 1
-                cursor.x = min(x, len(lines[y-1]))
-        if key in self.shortcuts['move_down']:
-            if y < len(lines)-1:
-                cursor.y += 1
-                cursor.x = min(x, len(lines[y+1]))
+        if key in self.shortcuts['move_up'] and y > 0:
+            cursor.y -= 1
+            cursor.x = min(x, len(lines[y-1]))
+        if key in self.shortcuts['move_down'] and y < len(lines) - 1:
+            cursor.y += 1
+            cursor.x = min(x, len(lines[y+1]))
         if key in self.shortcuts['move_right']:
             if x == len(l) and y < len(lines)-1:        # end of line, move to beginning of next
                 cursor.y += 1
@@ -488,11 +486,6 @@ class TextField(Entity):
 
             self.text = '\n'.join(lines)
 
-
-        if key == self.shortcuts['select_word']:
-            pass
-            # move cursor to the beginning
-            # select word right
 
         if key in self.shortcuts['copy']:
             print('-----copy:', self.selection)

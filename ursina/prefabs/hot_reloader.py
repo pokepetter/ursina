@@ -18,33 +18,30 @@ def is_valid_python(code):
 
 
 def make_code_reload_safe(code):
-    newtext = ''
-    dedent_next = False
+   newtext = ''
+   dedent_next = False
 
-    for line in code.split('\n'):
-        if 'Ursina(' in line or line.strip().endswith('app.run()') or line.strip().endswith('HotReloader()'):
-            continue
-        if 'eternal=True' in line:
-            continue
-        if line.startswith('''if __name__ == '__main__':'''):
-            dedent_next = True
-            continue
-        if line and line[0] != ' ':
-            dedent_next = False
+   for line in code.split('\n'):
+      if 'Ursina(' in line or line.strip().endswith('app.run()') or line.strip().endswith('HotReloader()'):
+          continue
+      if 'eternal=True' in line:
+          continue
+      if line.startswith('''if __name__ == '__main__':'''):
+          dedent_next = True
+          continue
+      if line and line[0] != ' ':
+          dedent_next = False
 
-        if line.strip().startswith('#'):
-            newtext += '\n'
-            continue
-        if line.strip().startswith('EditorCamera(') and not 'eternal=False' in line: # EditorCamera is eternal, so don't create multiple ones
-            newtext += '\n'
-            continue
+      if line.strip().startswith('#'):
+          newtext += '\n'
+          continue
+      if (line.strip().startswith('EditorCamera(')
+          and 'eternal=False' not in line): # EditorCamera is eternal, so don't create multiple ones
+         newtext += '\n'
+         continue
 
-        if dedent_next:
-            newtext += line[4:] + '\n'
-        else:
-            newtext += line + '\n'
-
-    return newtext
+      newtext += line[4:] + '\n' if dedent_next else line + '\n'
+   return newtext
 
 
 
@@ -162,97 +159,96 @@ class HotReloader(Entity):
 
 
     def reload_textures(self):
-        textured_entities = [e for e in scene.entities if e.texture]
-        reloaded_textures = list()
+       textured_entities = [e for e in scene.entities if e.texture]
+       reloaded_textures = []
 
-        for e in textured_entities:
-            if e.texture.name in reloaded_textures:
-                continue
+       for e in textured_entities:
+           if e.texture.name in reloaded_textures:
+               continue
 
-            if e.texture.path.parent.name == application.compressed_textures_folder.name:
-                print('texture is made from .psd file', e.texture.path.stem + '.psd')
-                texture_importer.compress_textures(e.texture.path.stem)
-            print('reloaded texture:', e.texture.path)
-            e.texture._texture.reload()
-            reloaded_textures.append(e.texture.name)
+           if e.texture.path.parent.name == application.compressed_textures_folder.name:
+               print('texture is made from .psd file', e.texture.path.stem + '.psd')
+               texture_importer.compress_textures(e.texture.path.stem)
+           print('reloaded texture:', e.texture.path)
+           e.texture._texture.reload()
+           reloaded_textures.append(e.texture.name)
 
-        return reloaded_textures
+       return reloaded_textures
 
 
     def reload_models(self):
-        entities = [e for e in scene.entities if e.model]
-        unique_names = list({e.model.name.split('.')[0] for e in entities})
+       entities = [e for e in scene.entities if e.model]
+       unique_names = list({e.model.name.split('.')[0] for e in entities})
         # print(unique_names)
-        changed_models = list()
+       changed_models = []
 
-        for name in unique_names:
-            matches = [e for e in application.asset_folder.glob(f'**/{name}.blend')]
-            if not matches:
-                continue
+       for name in unique_names:
+          matches = list(application.asset_folder.glob(f'**/{name}.blend'))
+          if not matches:
+              continue
 
-            blend_path = matches[0]
-            # ignore internal models
-            if blend_path.parent == application.internal_models_folder or '/build/' in str(blend_path):
-                continue
+          blend_path = matches[0]
+          # ignore internal models
+          if blend_path.parent == application.internal_models_folder or '/build/' in str(blend_path):
+              continue
 
-            if name in mesh_importer.imported_meshes:
-                mesh_importer.imported_meshes.pop(name, None)
+          if name in mesh_importer.imported_meshes:
+              mesh_importer.imported_meshes.pop(name, None)
 
-            # print('model is made from .blend file:', blend_path)
-            mesh_importer.compress_models(path=blend_path.parent, name=name)
-            # print(f'compressed {name}.blend sucessfully')
-            changed_models.append(name)
+          # print('model is made from .blend file:', blend_path)
+          mesh_importer.compress_models(path=blend_path.parent, name=name)
+          # print(f'compressed {name}.blend sucessfully')
+          changed_models.append(name)
 
 
-        for e in entities:
-            if e.model:
-                name = e.model.name.split('.')[0]
-                print(name, changed_models, name in changed_models)
-                if name in changed_models:
-                    e.model = None
-                    e.model = name
-                    e.origin = e.origin
-                    print('reloaded model:', name, e.model)
+       for e in entities:
+           if e.model:
+               name = e.model.name.split('.')[0]
+               print(name, changed_models, name in changed_models)
+               if name in changed_models:
+                   e.model = None
+                   e.model = name
+                   e.origin = e.origin
+                   print('reloaded model:', name, e.model)
 
 
     def reload_shaders(self):
-        import ursina
+       import ursina
 
-        for shader in ursina.shader.imported_shaders:
+       for shader in ursina.shader.imported_shaders:
             # print(shader, shader.path)
             # TODO: check if file has changed
 
-            with open(shader.path, encoding='utf8') as f:
-                try:
-                    print('trying to reload:', shader.path.name)
-                    text = f.read()
-                    vert = ''
-                    if r"vertex = '''" in text:
-                        vert = text.split(r"vertex = '''", 1)[1].split("'''", 1)[0]
+          with open(shader.path, encoding='utf8') as f:
+             try:
+                print('trying to reload:', shader.path.name)
+                text = f.read()
+                vert = ''
+                if r"vertex = '''" in text:
+                    vert = text.split(r"vertex = '''", 1)[1].split("'''", 1)[0]
 
-                    frag = text.split(r"fragment='''", 1)[1].split("'''", 1)[0]
+                frag = text.split(r"fragment='''", 1)[1].split("'''", 1)[0]
 
-                    geom = ''
-                    if r"geometry = '''" in text:
-                        geom = text.split(r"geometry='''", 1)[1].split("'''", 1)[0]
+                geom = ''
+                if r"geometry = '''" in text:
+                    geom = text.split(r"geometry='''", 1)[1].split("'''", 1)[0]
 
-                    if vert:
-                        shader.vertex = vert
-                    # if geom:
-                    #     shader.geometry = geom
-                    shader.fragment = frag
+                if vert:
+                    shader.vertex = vert
+                # if geom:
+                #     shader.geometry = geom
+                shader.fragment = frag
 
-                    shader.compile()
+                shader.compile()
 
-                    for e in scene.entities:
-                        if hasattr(e, '_shader') and e.shader == shader:
-                            e.clearShader()
-                            e.shader = e.shader
+                for e in scene.entities:
+                    if hasattr(e, '_shader') and e.shader == shader:
+                        e.clearShader()
+                        e.shader = e.shader
 
-                    print('reloaded shader:', shader.path.name)
-                except Exception as e:
-                    print('failed to reload shader:', shader.path.name, 'error:', e)
-                    pass
+                print('reloaded shader:', shader.path.name)
+             except Exception as e:
+                print('failed to reload shader:', shader.path.name, 'error:', e)
 
 # class InGameTextEditor(Entity):
 #     def __init__(self, path, **kwargs):

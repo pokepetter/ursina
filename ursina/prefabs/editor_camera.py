@@ -43,7 +43,15 @@ class EditorCamera(Entity):
 
 
     def input(self, key):
-        combined_key = ''.join(e+'+' for e in ('control', 'shift', 'alt') if held_keys[e] and not e == key) + key
+        combined_key = (
+            ''.join(
+                e + '+'
+                for e in ('control', 'shift', 'alt')
+                if held_keys[e] and e != key
+            )
+            + key
+        )
+
 
         if combined_key == self.hotkeys['toggle_orthographic']:
             if not camera.orthographic:
@@ -81,7 +89,7 @@ class EditorCamera(Entity):
             else:
                 camera.fov += self.zoom_speed * (abs(camera.z)*.1)
 
-        elif key == 'right mouse down' or key == 'middle mouse down':
+        elif key in ['right mouse down', 'middle mouse down']:
             if mouse.hovered_entity and self.rotate_around_mouse_hit:
                 org_pos = camera.world_position
                 self.world_position = mouse.world_point

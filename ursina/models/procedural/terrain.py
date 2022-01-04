@@ -29,8 +29,8 @@ class Terrain(Mesh):
 
         # copy this from Plane to avoid unnecessary init
         self.vertices, self.triangles = list(), list()
-        self.uvs = list()
-        self.normals = list()
+        self.uvs = []
+        self.normals = []
         w, h = self.width, self.depth
         self.height_values = [[j/255 for j in i] for i in self.height_values]
 

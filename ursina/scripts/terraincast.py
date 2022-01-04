@@ -44,9 +44,11 @@ def prepare_terrain(terrain, debug=False, calculate_normals=True):
         for scan_x, v in enumerate(height_values):
             row_to_add = []
             for scan_z, w in enumerate(v):
-                quad_to_add = []
-                for sub_face in [False, True]:
-                    quad_to_add.append(_terraincast_get_plane(terrain, scan_x, scan_z, sub_face))
+                quad_to_add = [
+                    _terraincast_get_plane(terrain, scan_x, scan_z, sub_face)
+                    for sub_face in [False, True]
+                ]
+
                 row_to_add.append(quad_to_add)
             terrain._cast.prepared_height_values.append(row_to_add)
 
@@ -302,12 +304,12 @@ def terraincast(origin,
         hit.hits = [True, ]
         if hit.distance > distance:
             hit = HitInfo(hit=False)
-        return hit
     else:
         terrain._cast.visible = False
 
         hit = HitInfo(hit=False)
-        return hit
+
+    return hit
 
 
 if __name__ == '__main__':

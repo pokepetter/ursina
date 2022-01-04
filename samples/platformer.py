@@ -22,7 +22,7 @@ ground = Entity(
     )
 
 random.seed(4)
-for i in range(10):
+for _ in range(10):
     Entity(
         model='cube', color=color.dark_gray, collider='box', ignore=True,
         position=(random.randint(-20,20), random.randint(0,10)),

@@ -148,7 +148,7 @@ def in_out_back(t, magnitude=1.70158):
 
 
 def in_elastic(t, magnitude=.7):
-    if t == 0 or t == 1:
+    if t in [0, 1]:
         return t
     scaledTime = t / 1
     scaledTime1 = scaledTime - 1
@@ -165,7 +165,7 @@ def out_elastic(t, magnitude=.7):
     p = 1 - magnitude
     scaledTime = t * 2
 
-    if t == 0 or t == 1:
+    if t in [0, 1]:
         return t
 
     s = p / (2 * pi) * asin(1)
@@ -177,7 +177,7 @@ def out_elastic(t, magnitude=.7):
 
 def in_out_elastic(t, magnitude=0.65):
     p = 1 - magnitude
-    if t == 0 or t == 1:
+    if t in [0, 1]:
         return t
 
     scaledTime = t * 2

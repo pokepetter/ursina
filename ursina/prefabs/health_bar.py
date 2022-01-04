@@ -94,9 +94,9 @@ if __name__ == '__main__':
     health_bar_1 = HealthBar(bar_color=color.lime.tint(-.25), roundness=.5, value=50)
 
     def input(key):
-        if key == '+' or key == '+ hold':
+        if key in ['+', '+ hold']:
             health_bar_1.value += 10
-        if key == '-' or key == '- hold':
+        if key in ['-', '- hold']:
             health_bar_1.value -= 10
 
     app.run()

@@ -5,13 +5,13 @@ from ursina import string_utilities
 
 paused = False
 time_scale = 1
-sequences = list()
+sequences = []
 trace_entity_definition = False # enable to set entity.line_definition
 print_entity_definition = False
 
 package_folder = Path(__file__).parent
 asset_folder = Path(sys.argv[0]).parent
-blender_paths = dict()
+blender_paths = {}
 
 development_mode = True
 dirs = [e.stem for e in asset_folder.parent.iterdir() if e.is_dir()]

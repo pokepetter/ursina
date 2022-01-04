@@ -88,24 +88,21 @@ class MenuMenu(Entity):
         # Just write like that:
 
         # If our main menu enabled and we press [Escape]
-        if self.main_menu.enabled:
-            if key == "escape":
-                # Close app
-                application.quit()
+        if self.main_menu.enabled and key == "escape":
+            # Close app
+            application.quit()
 
         # If our options menu enabled and we press [Escape]
-        if self.options_menu.enabled:
-            if key == "escape":
-                # Close options window and show main menu
-                self.main_menu.enable()
-                self.options_menu.disable()
+        if self.options_menu.enabled and key == "escape":
+            # Close options window and show main menu
+            self.main_menu.enable()
+            self.options_menu.disable()
 
         # If our help menu enabled and we press [Escape]
-        if self.help_menu.enabled:
-            if key == "escape":
-                # Close help window and show main menu
-                self.main_menu.enable()
-                self.help_menu.disable()
+        if self.help_menu.enabled and key == "escape":
+            # Close help window and show main menu
+            self.main_menu.enable()
+            self.help_menu.disable()
 
     # Update function that check something every frame
     # You can use it similar to input with checking

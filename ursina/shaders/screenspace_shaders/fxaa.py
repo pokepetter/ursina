@@ -111,10 +111,7 @@ if __name__ == '__main__':
 
     def input(key):
         if key == 'space':
-            if not camera.shader:
-                camera.shader = fxaa_shader
-            else:
-                camera.shader = None
+            camera.shader = fxaa_shader if not camera.shader else None
 
 
     app.run()

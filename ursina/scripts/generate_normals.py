@@ -21,7 +21,7 @@ def generate_normals(vertices, triangles=None, smooth=True):
         # print('generated triangles:', triangles)
         new_tris = [(i, i+1, i+2) for i in range(0, len(vertices), 3)]
     else:
-        new_tris = list()
+        new_tris = []
         for t in triangles:
             if isinstance(t, int):
                 new_tris.append(t)
@@ -60,12 +60,12 @@ def generate_normals(vertices, triangles=None, smooth=True):
     # smooth
     if smooth:
         vertices=vertices.tolist()
-        bucket = list()
+        bucket = []
         for i, v in enumerate(vertices):
             if i in bucket:
                 continue
 
-            overlapping_verts_indices = list()
+            overlapping_verts_indices = []
             for j, w in enumerate(vertices):
                 if w == v:
                     overlapping_verts_indices.append(j)

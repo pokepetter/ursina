@@ -119,7 +119,11 @@ class Conversation(Entity):
 
 
     def input(self, key):
-        if key == 'left mouse down' or key == 'space' and not mouse.hovered_entity in self.buttons:
+        if (
+            key == 'left mouse down'
+            or key == 'space'
+            and mouse.hovered_entity not in self.buttons
+        ):
             self.next()
 
 
@@ -146,11 +150,11 @@ class Conversation(Entity):
 
     def parse_conversation(self, convo):
         convo = convo.strip()
-        nodes = list()
+        nodes = []
         prev_node = None
         node_index = 0
 
-        for i, l in enumerate(convo.split('\n')):
+        for l in convo.split('\n'):
             if not l:
                 continue
 
@@ -176,7 +180,7 @@ class Conversation(Entity):
             if n.is_answer:
                 content = content[2:]
             n.content = [content, ]
-            n.children = list()
+            n.children = []
             n.code = code
             nodes.append(n)
             prev_node = n
@@ -184,8 +188,8 @@ class Conversation(Entity):
 
             # look backwards through nodes to find current node's parent
             for j in range(node_index-1, -1, -1):
-                if nodes[j].indent_level == n.indent_level-1:
-                    nodes[j].children.append(n)
+                if nodes[j].indent_level == prev_node.indent_level - 1:
+                    nodes[j].children.append(prev_node)
                     break
 
 

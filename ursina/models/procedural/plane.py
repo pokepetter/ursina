@@ -5,7 +5,7 @@ class Plane(Mesh):
     def __init__(self, subdivisions=(1,1), mode='triangle', **kwargs):
 
         self.vertices, self.triangles = list(), list()
-        self.uvs = list()
+        self.uvs = []
 
         w, h = subdivisions
         i = 0

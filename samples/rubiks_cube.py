@@ -100,7 +100,7 @@ def check_for_win():
 
 def randomize():
     faces = (Vec3(1,0,0), Vec3(0,1,0), Vec3(0,0,1), Vec3(-1,0,0), Vec3(0,-1,0), Vec3(0,0,-1))
-    for i in range(20):
+    for _ in range(20):
         rotate_side(normal=random.choice(faces), direction=random.choice((-1,1)), speed=0)
 
 randomize_button = Button(text='randomize', color=color.azure, position=(.7,-.4), on_click=randomize)

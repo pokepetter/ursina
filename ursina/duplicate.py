@@ -24,9 +24,8 @@ def duplicate(entity, copy_children=True, **kwargs): # use a for loop instead of
             for script in entity.scripts:
                 e.add_script(copy(script))
 
-        else:
-            if hasattr(entity, name):
-                setattr(e, name, getattr(entity, name))
+        elif hasattr(entity, name):
+            setattr(e, name, getattr(entity, name))
 
     for c in entity.children:
         clone = duplicate(c, copy_children=False)

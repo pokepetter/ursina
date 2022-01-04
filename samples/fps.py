@@ -20,7 +20,7 @@ shootables_parent = Entity()
 mouse.traverse_target = shootables_parent
 
 
-for i in range(16):
+for _ in range(16):
     Entity(model='cube', origin_y=-.5, scale=2, texture='brick', texture_scale=(1,2),
         x=random.uniform(-8,8),
         z=random.uniform(-8,8) + 8,
@@ -34,17 +34,18 @@ def update():
         shoot()
 
 def shoot():
-    if not gun.on_cooldown:
-        # print('shoot')
-        gun.on_cooldown = True
-        gun.muzzle_flash.enabled=True
-        from ursina.prefabs.ursfx import ursfx
-        ursfx([(0.0, 0.0), (0.1, 0.9), (0.15, 0.75), (0.3, 0.14), (0.6, 0.0)], volume=0.5, wave='noise', pitch=random.uniform(-13,-12), pitch_change=-12, speed=3.0)
-        invoke(gun.muzzle_flash.disable, delay=.05)
-        invoke(setattr, gun, 'on_cooldown', False, delay=.15)
-        if mouse.hovered_entity and hasattr(mouse.hovered_entity, 'hp'):
-            mouse.hovered_entity.hp -= 10
-            mouse.hovered_entity.blink(color.red)
+    if gun.on_cooldown:
+        return
+    # print('shoot')
+    gun.on_cooldown = True
+    gun.muzzle_flash.enabled=True
+    from ursina.prefabs.ursfx import ursfx
+    ursfx([(0.0, 0.0), (0.1, 0.9), (0.15, 0.75), (0.3, 0.14), (0.6, 0.0)], volume=0.5, wave='noise', pitch=random.uniform(-13,-12), pitch_change=-12, speed=3.0)
+    invoke(gun.muzzle_flash.disable, delay=.05)
+    invoke(setattr, gun, 'on_cooldown', False, delay=.15)
+    if mouse.hovered_entity and hasattr(mouse.hovered_entity, 'hp'):
+        mouse.hovered_entity.hp -= 10
+        mouse.hovered_entity.blink(color.red)
 
 
 from ursina.prefabs.health_bar import HealthBar
@@ -66,9 +67,8 @@ class Enemy(Entity):
 
         self.look_at_2d(player.position, 'y')
         hit_info = raycast(self.world_position + Vec3(0,1,0), self.forward, 30, ignore=(self,))
-        if hit_info.entity == player:
-            if dist > 2:
-                self.position += self.forward * time.dt * 5
+        if hit_info.entity == player and dist > 2:
+            self.position += self.forward * time.dt * 5
 
     @property
     def hp(self):

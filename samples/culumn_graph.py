@@ -9,11 +9,8 @@ color.text_color = color.dark_text
 names = ['Amy', 'Ruby', 'Tara', 'Ann', 'Samantha', 'Gary', 'Lee', 'Frank', 'Joe', 'Thomas']
 
 random.seed(0)
-data = dict()
-for name in names:
-    data[name] = random.randint(0, 100)
-
-sliders = list()
+data = {name: random.randint(0, 100) for name in names}
+sliders = []
 
 for i, (name, value) in enumerate(data.items()):
     column = Button(

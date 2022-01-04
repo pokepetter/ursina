@@ -118,10 +118,7 @@ if __name__ == '__main__':
 
     def input(key):
         if key == 'space':
-            if camera.shader:
-                camera.shader = None
-            else:
-                camera.shader = ssao_shader
+            camera.shader = None if camera.shader else ssao_shader
 
 
     random.seed(2)

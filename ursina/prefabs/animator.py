@@ -22,10 +22,10 @@ class Animator():
     @state.setter
     def state(self, value):
 
-        if not value in self.animations:
+        if value not in self.animations:
             print(self, 'has no animation:', value)
 
-        elif not self._state == value:
+        elif self._state != value:
             # only show set state and disable the rest
             for key, anim in self.animations.items():
                 if anim:
