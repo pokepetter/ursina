@@ -24,25 +24,29 @@ state_handler = Animator({
 )
 
 
+
+
+
 # main menu content
 main_menu.buttons = [
-    MenuButton('resume'),
-    MenuButton('new game'),
-    MenuButton('load game', on_click=Func(setattr, state_handler, 'state', 'load_menu')),
+    MenuButton('start', on_click=Func(setattr, state_handler, 'state', 'load_menu')),
     MenuButton('options', on_click=Func(setattr, state_handler, 'state', 'options_menu')),
     MenuButton('quit', on_click=Sequence(Wait(.01), Func(sys.exit))),
 ]
 for i, e in enumerate(main_menu.buttons):
     e.parent = main_menu
-    e.y = -i * button_spacing
+    e.y = (-i-2) * button_spacing
 
 
+def start_game():
+    menu_parent.enabled = False
+    import tic_tac_toe
 
 # load menu content
 for i in range(3):
-    MenuButton(parent=load_menu, text=f'Empty Slot {i}', y=-i * button_spacing)
-load_menu.back_button = MenuButton(parent=load_menu, text='back', y=((-i-2) * button_spacing), on_click=Func(setattr, state_handler, 'state', 'main_menu'))
+    MenuButton(parent=load_menu, text=f'Empty Slot {i}', y=-i * button_spacing, on_click=start_game)
 
+load_menu.back_button = MenuButton(parent=load_menu, text='back', y=((-i-2) * button_spacing), on_click=Func(setattr, state_handler, 'state', 'main_menu'))
 
 
 # options menu content
@@ -87,6 +91,6 @@ for menu in (main_menu, load_menu, options_menu):
     menu.on_enable = animate_in_menu
 
 
-background = Entity(model='quad', texture='shore', parent=camera.ui, scale=(camera.aspect_ratio,1), color=color.white, z=1)
+# background = Entity(model='quad', texture='shore', parent=camera.ui, scale=(camera.aspect_ratio,1), color=color.white, z=1)
 
 app.run()

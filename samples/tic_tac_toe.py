@@ -1,7 +1,7 @@
 from ursina import *
 
-
-app = Ursina()
+if __name__ == '__main__':
+    app = Ursina()
 
 camera.orthographic = True
 camera.fov = 4
@@ -63,5 +63,5 @@ def check_for_victory():
         t.create_background(padding=(.5,.25), radius=Text.size/2)
         t.background.color = player.color.tint(-.2)
 
-
-app.run()
+if __name__ == '__main__':
+    app.run()
