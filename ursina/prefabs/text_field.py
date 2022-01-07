@@ -15,8 +15,8 @@ class TextField(Entity):
 
         self.font = 'VeraMono.ttf'
         self.line_height = 1
-        # self.max_width = 80
         self.max_lines = 99999
+        self.character_limit = None
 
         self.text_entity = Text(
             parent = self,
@@ -74,7 +74,7 @@ class TextField(Entity):
             '1' : '!',
             '2' : '"',
             '3' : '#',
-            # '4' : '¤',
+            '4' : '¤',
             '5' : '%',
             '6' : '&',
             '7' : '/',
@@ -129,7 +129,11 @@ class TextField(Entity):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
+
     def add_text(self, s, move_cursor=True):
+        if self.character_limit is not None and len(self.text) >= self.character_limit:
+            return
+
         x, y = int(self.cursor.x), int(self.cursor.y)
 
         lines = self.text.split('\n')
@@ -228,6 +232,7 @@ class TextField(Entity):
 
 
     def input(self, key):
+        # print('---', key)
         text, cursor, on_undo, add_text, erase = self.text, self.cursor, self.on_undo, self.add_text, self.erase
 
         if key == 'space':

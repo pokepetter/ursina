@@ -8,12 +8,13 @@ class ContentTypes:
 
 
 class InputField(Button):
-    def __init__(self, default_value='', label='', max_lines=1, max_width=24, **kwargs):
+    def __init__(self, default_value='', label='', max_lines=1, character_limit=24, **kwargs):
         super().__init__(
             scale=(.5, Text.size * 2 * max_lines),
             highlight_scale = 1,
             pressed_scale = 1,
-            highlight_color = color.black
+            highlight_color = color.black,
+            **kwargs
             )
         for key, value in kwargs.items():
             if 'scale' in key:
@@ -25,7 +26,7 @@ class InputField(Button):
 
         self.next_field = None
 
-        self.text_field = TextField(world_parent=self, x=-.45, y=.3, z=-.1, max_lines=max_lines)
+        self.text_field = TextField(world_parent=self, x=-.45, y=.3, z=-.1, max_lines=max_lines, character_limit=character_limit)
         def render():
             if self.limit_content_to:
                 org_length = len(self.text_field.text)
@@ -95,7 +96,6 @@ class InputField(Button):
 
     @active.setter
     def active(self, value):
-        print(value)
         self._active = value
         self.text_field.ignore = not value
         self.text_field.cursor.enabled = value
