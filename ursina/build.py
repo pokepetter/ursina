@@ -61,7 +61,7 @@ for i, arg in enumerate(sys.argv):
             package ursina application for windows10.
             provided with project folder path, creates a build folder where
             it copies python and project's dependent packages. requires a main.py file.
-            copies game scripts and assets into 'build/scr' folder.
+            copies game scripts and assets into 'build/src' folder.
             creates a .bat file to start the game.
             include extra modules like this: --include_modules module_one,module_two,module_tree
             --ignore            # add assets to ignore
