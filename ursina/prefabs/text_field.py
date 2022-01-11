@@ -230,6 +230,15 @@ class TextField(Entity):
         # self.on_undo.append((self.text, y, x))
         self.draw_selection()
 
+    def mousePos(self):
+        x = round(mouse.point[0] * self.bg.scale_x)
+        y = floor(mouse.point[1] * self.bg.scale_y)
+
+        lines = self.text.split('\n')
+        y = clamp(y, 0, len(lines) - 1)
+        x = clamp(x, 0, len(lines[y]))
+
+        return (x, y)
 
     def input(self, key):
         # print('---', key)
@@ -506,32 +515,25 @@ class TextField(Entity):
             self.add_text(pyperclip.paste())
 
 
-        if self.register_mouse_input:
+        if self.register_mouse_input and mouse.point is not None:
             if key == 'left mouse down' and mouse.hovered_entity == self.bg:
                 # if mouse.x < self.x:
                 #     return
                 # from math import floor
-                x = round(mouse.point[0] * self.bg.scale_x)
-                y = floor(mouse.point[1] * self.bg.scale_y)
 
-                cursor.position = (x, y)
-                click_position = cursor.position
-                self.selection = [click_position, click_position]
-
+                cursor.position = self.mousePos()
+                self.selection = [self.cursor.position, self.cursor.position]  
 
             if key == 'left mouse up':
                 # if mouse.x < self.x:
                 #     return
 
-                x = round(mouse.point[0] * self.bg.scale_x)
-                y = floor(mouse.point[1] * self.bg.scale_y)
+                cursor.position = self.mousePos()
+                if self.selection is not None:
+                    self.selection[1] = self.cursor.position
 
-                cursor.position = (x, y)
-                click_position = cursor.position
-                self.selection[1] = click_position
-
-                if self.selection[1][1] < self.selection[0][1]:
-                    self.selection = [self.selection[1], self.selection[0]]
+                    if self.selection[1][1] < self.selection[0][1]:
+                        self.selection = [self.selection[1], self.selection[0]]
 
                 self.draw_selection()
 
@@ -554,13 +556,10 @@ class TextField(Entity):
     def update(self):
         # self.debug_cursor.position = self.get_mouse_position()
 
-        if self.register_mouse_input and mouse.left:
-            x = round(mouse.point[0] * self.bg.scale_x)
-            y = floor(mouse.point[1] * self.bg.scale_y)
-
-            self.cursor.position = (x, y)
-            click_position = self.cursor.position
-            self.selection[1] = click_position
+        if self.register_mouse_input and mouse.left and mouse.point:
+            self.cursor.position = self.mousePos()
+            if self.selection is not None:
+                self.selection[1] = self.cursor.position
 
             # if self.selection[1][1] < self.selection[0][1]:
             #     self.selection = [self.selection[1], self.selection[0]]
