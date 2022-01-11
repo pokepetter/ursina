@@ -63,7 +63,6 @@ class MeshCollider(Collider):
             # print('''auto generating mesh collider from entity's mesh''')
 
         self.node_path = entity.attachNewNode(CollisionNode('CollisionNode'))
-        self.node = self.node_path.node()
         self.collision_polygons = list()
 
         if isinstance(mesh, Mesh):
@@ -82,18 +81,14 @@ class MeshCollider(Collider):
                         self.collision_polygons.append(poly)
                     elif len(tri) == 4:
                         poly = CollisionPolygon(
+                            Vec3(mesh.vertices[tri[3]]),
                             Vec3(mesh.vertices[tri[2]]),
                             Vec3(mesh.vertices[tri[1]]),
                             Vec3(mesh.vertices[tri[0]]))
                         self.collision_polygons.append(poly)
-                        poly = CollisionPolygon(
-                            Vec3(mesh.vertices[tri[0]]),
-                            Vec3(mesh.vertices[tri[3]]),
-                            Vec3(mesh.vertices[tri[2]]))
-                        self.collision_polygons.append(poly)
 
 
-            elif mesh.mode == 'triangle':
+            elif mesh.mode == 'triangle': # no triangle list, so take 3 and 3 vertices
                 for i in range(0, len(mesh.vertices), 3):
                     poly = CollisionPolygon(
                         Vec3(mesh.vertices[i+2]),
@@ -135,11 +130,16 @@ class MeshCollider(Collider):
                 self.collision_polygons.append(p)
 
 
+        node = self.node_path.node()
         for poly in self.collision_polygons:
-            self.node.addSolid(poly)
+            node.addSolid(poly)
         self.visible = False
 
 
+    def remove(self):
+        self.node_path.node().clearSolids()
+        self.collision_polygons.clear()
+        self.node_path.removeNode()
 
 
 if __name__ == '__main__':
@@ -147,16 +147,28 @@ if __name__ == '__main__':
     app = Ursina()
 
     e = Entity(model='sphere', x=2)
-    e.collider = 'box'      # add BoxCollider based on entity's bounds.
-    e.collider = 'sphere'   # add SphereCollider based on entity's bounds.
-    e.collider = 'mesh'     # add MeshCollider based on entity's bounds.
+    e.collider = 'box'          # add BoxCollider based on entity's bounds.
+    e.collider = 'sphere'       # add SphereCollider based on entity's bounds.
+    e.collider = 'mesh'         # add MeshCollider matching the entity's model.
+    e.collider = 'file_name'    # load a model and us it as MeshCollider.
+    e.collider = e.model        # copy target model/Mesh and use it as MeshCollider.
 
     e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   # add BoxCollider at custom positions and size.
     e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      # add SphereCollider at custom positions and size.
     e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      # add MeshCollider with custom shape and center.
 
-    m = Prismatoid(base_shape=Circle(6), thicknesses=(1, .5))
-    e = Button(parent=scene, model=m, collider='mesh', color=color.red, highlight_color=color.yellow)
+    m = Pipe(base_shape=Circle(6), thicknesses=(1, .5))
+    e = Button(parent=scene, model='cube', collider='mesh', color=color.red, highlight_color=color.yellow)
+    # e = Button(parent=scene, model='quad', collider=, color=color.lime, x=-1)
 
     EditorCamera()
+
+    def input(key):
+        if key == 'c':
+            e.collider = None
+
+    # def update():
+    #     print(mouse.point)
+
+
     app.run()

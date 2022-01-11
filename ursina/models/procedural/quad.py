@@ -2,6 +2,14 @@ from ursina import *
 
 cached_quads = {}
 def Quad(radius=.1, segments=8, aspect=1, scale=(1,1), mode='ngon', thickness=1):
+
+    if radius == 0 and aspect==1 and scale == (1,1) and mode == 'ngon':
+        return Mesh(
+            vertices=[Vec3(-0.5, -0.5, 0.0), Vec3(0.5, -0.5, 0.0), Vec3(0.5, 0.5, 0.0), Vec3(-0.5, 0.5, 0.0)],
+            triangles=[(0,1,2,3), ],
+            uvs=[Vec2(0,0), Vec2(1,0), Vec2(1,1), Vec2(0,1)],
+            mode='triangle'
+            )
     # copy a cached quad if a QuadMesh with the same settings have been created before
     quad_identifier = f'QuadMesh({radius}, {segments}, {aspect}, {scale}, {mode}, {thickness})'
     if quad_identifier in cached_quads and cached_quads[quad_identifier]:
@@ -91,5 +99,8 @@ if __name__ == '__main__':
 
     origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
     # ed = EditorCamera(rotation_speed = 200, panning_speed=200)
+
+    Entity(model=Quad(0), texture='shore', x=-1)
+
     camera.z = -5
     app.run()

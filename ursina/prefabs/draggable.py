@@ -19,7 +19,7 @@ class Draggable(Button):
 
         if not Draggable._z_plane.model: # set these after game start so it can load the model
             Draggable._z_plane.model = 'quad'
-            Draggable._z_plane.collider = 'box'
+            Draggable._z_plane.collider = Mesh(vertices=((-0.5, -0.5, 0.0), (0.5, -0.5, 0.0), (0.5, 0.5, 0.0), (-0.5, 0.5, 0.0)), triangles=((0,1,2,3),), mode='triangle')
             Draggable._z_plane.color = color.clear
 
 
