@@ -195,7 +195,7 @@ class Entity(NodePath):
 
             if isinstance(value, NodePath): # pass procedural model
                 if self.model is not None and value != self.model:
-                    self.model.removeNode()
+                    self.model.detachNode()
                 object.__setattr__(self, name, value)
 
             elif isinstance(value, str): # pass model asset name
@@ -723,8 +723,6 @@ class Entity(NodePath):
             value = value._texture    # make sure to send the panda3d texture to the shader
 
         super().set_shader_input(name, value)
-
-
 
 
     @property
