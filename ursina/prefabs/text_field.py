@@ -580,11 +580,7 @@ class TextField(Entity):
     def draw_selection(self):
         [destroy(c) for c in self.selection_parent.children]
 
-        if self.selection == None:
-            return
-
-
-        if self.selection[0] == self.selection[1]:
+        if self.selection == None or self.selection[0] == self.selection[1]:
             return
 
         start_y = int(self.selection[0][1])
