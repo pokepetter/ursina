@@ -532,9 +532,6 @@ class TextField(Entity):
                 if self.selection is not None:
                     self.selection[1] = self.cursor.position
 
-                    if self.selection[1][1] < self.selection[0][1]:
-                        self.selection = [self.selection[1], self.selection[0]]
-
                 self.draw_selection()
 
         self.render()
@@ -581,25 +578,29 @@ class TextField(Entity):
 
         if self.selection == None or self.selection[0] == self.selection[1]:
             return
+            
+        sel = self.selection
+        if sel[1][1] < sel[0][1] or (sel[1][1] == sel[0][1] and sel[1][0] < sel[0][0]):
+            sel = [sel[1], sel[0]]
 
-        start_y = int(self.selection[0][1])
-        end_y = int(self.selection[1][1])
+        start_y = int(sel[0][1])
+        end_y = int(sel[1][1])
         lines = self.text.split('\n')
 
         # draw selection
-        for y in range(int(self.selection[0][1]), int(self.selection[1][1])):
+        for y in range(start_y, end_y):
             e = Entity(parent=self.selection_parent, model='cube', origin=(-.5, -.5),
-                color=color.color(120,1,1,.1), double_sided=True, position=(0,y*1.15), ignore=True, scale_x=len(lines[y]))
-            if y == self.selection[0][1]:
-                e.x = self.selection[0][0]
-                e.scale_x -= self.selection[0][0]
+                color=color.color(120,1,1,.1), double_sided=True, position=(0,y), ignore=True, scale_x=len(lines[y]))
+            if y == sel[0][1]:
+                e.x = sel[0][0]
+                e.scale_x -= sel[0][0]
 
         e = Entity(parent=self.selection_parent, model='cube', origin=(-.5, -.5),
-            color=color.color(120,1,1,.1), double_sided=True, position=(0,end_y*1.15),
-            ignore=True, scale_x=self.selection[1][0])
-        if self.selection[0][1] == self.selection[1][1]:
-            e.x = self.selection[0][0]
-            e.scale_x -= self.selection[0][0]
+            color=color.color(120,1,1,.1), double_sided=True, position=(0,end_y),
+            ignore=True, scale_x=sel[1][0])
+        if sel[0][1] == sel[1][1]:
+            e.x = sel[0][0]
+            e.scale_x -= sel[0][0]
 
 
 if __name__ == '__main__':
