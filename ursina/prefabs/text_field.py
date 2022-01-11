@@ -214,17 +214,25 @@ class TextField(Entity):
 
     def delete_selected(self):
         lines = self.text.split('\n')
-        self.cursor.position = self.selection[1]
-        if int(self.selection[1][1]) > int(self.selection[0][1]):
-            for y in range(int(self.selection[0][1]), int(self.selection[1][1])):
-                lines.pop(y)
+
+        sel = self.selection
+        if sel[1][1] < sel[0][1] or (sel[1][1] == sel[0][1] and sel[1][0] < sel[0][0]):
+            sel = [sel[1], sel[0]]
+        self.cursor.position = sel[0]
+
+        if int(sel[1][1]) > int(sel[0][1]) + 1:
+            for y in range(int(sel[0][1]) + 1, int(sel[1][1])):
+                lines.pop(int(sel[0][1] + 1))
                 print('delete line:', y)
 
+        if int(sel[1][1]) == int(sel[0][1]):
+            li = lines[int(sel[1][1])]
+            lines[int(sel[1][1])] = li[:int(sel[0][0])] + li[int(sel[1][0]):]
+        else:
+            lines[int(sel[0][1])] = lines[int(sel[0][1])][:int(sel[0][0])] + lines[int(sel[0][1]) + 1][int(sel[1][0]):]
+            lines.pop(int(sel[0][1]) + 1)
 
-        for x in range(int(self.selection[1][0]) - int(self.selection[0][0])):
-            self.erase()
-        # l = lines[int(self.selection[1])]
-
+        self.on_undo.append((self.text, self.cursor.y, self.cursor.x))
         self.text = '\n'.join(lines)
         self.selection = None
         # self.on_undo.append((self.text, y, x))
