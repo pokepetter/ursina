@@ -226,20 +226,22 @@ class HotReloader(Entity):
                 try:
                     print('trying to reload:', shader.path.name)
                     text = f.read()
+
+                    geom = ''
+                    if r"geometry='''" in text:
+                        geom = text.split(r"geometry='''", 1)[1].split("'''", 1)[0]
+                        print('geommmmmmmmmmmmmmm', geom)
+
                     vert = ''
-                    if r"vertex = '''" in text:
-                        vert = text.split(r"vertex = '''", 1)[1].split("'''", 1)[0]
+                    if r"verte ='''" in text:
+                        vert = text.split(r"vertex='''", 1)[1].split("'''", 1)[0]
 
                     frag = text.split(r"fragment='''", 1)[1].split("'''", 1)[0]
 
-                    geom = ''
-                    if r"geometry = '''" in text:
-                        geom = text.split(r"geometry='''", 1)[1].split("'''", 1)[0]
-
+                    if geom:
+                        shader.geometry = geom
                     if vert:
                         shader.vertex = vert
-                    # if geom:
-                    #     shader.geometry = geom
                     shader.fragment = frag
 
                     shader.compile()
