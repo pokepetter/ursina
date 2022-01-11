@@ -371,6 +371,9 @@ class TextField(Entity):
             add_text(' ')
 
         if key in self.shortcuts['newline'] and self.cursor.y < self.max_lines-1:
+            if self.selection:
+                self.delete_selected()
+
             if l.startswith('class ') and not l.endswith(':'):
                 add_text(':')
             if l.startswith('def ') and not l.endswith(':'):
@@ -520,6 +523,8 @@ class TextField(Entity):
             print('-----copy:', self.selection)
 
         if key in self.shortcuts['paste']:
+            if self.selection:
+                self.delete_selected()
             self.add_text(pyperclip.paste())
 
 
