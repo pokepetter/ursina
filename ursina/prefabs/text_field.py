@@ -41,21 +41,13 @@ class TextField(Entity):
         # self.max_line_indicatior = Entity(parent=self.cursor_parent, model='quad', origin=(-.5,.5), scale=(100,.05), rotation_x=180, color=color.red)
         # self.max_width_indicatior = Entity(
         #     parent=self.cursor_parent, model='quad', origin=(-.5,.5), scale=(100,.05), rotation_x=180, rotation_z=90, color=color.color(0,0,1,.05), x=80)
-        self.cursor = Entity(parent=self.cursor_parent, model='cube', color=color.white33, origin=(-.5, -.5), scale=(.1, 1))
+        self.cursor = Entity(parent=self.cursor_parent, model='cube', color=color.clear, origin=(-.5, -.5), scale=(.1, 1))
         self.bg = Entity(parent=self.cursor_parent, model='cube', color=color.dark_gray, origin=(-.5,-.5), z=1, scale=(120, 20), collider='box', visible=False)
 
         self.selection = None
         self.selection_parent = Entity(parent=self.cursor_parent)
         self.register_mouse_input = False
 
-        def blink_cursor():
-            if self.cursor.color == color.cyan:
-                self.cursor.color = color.clear
-            else:
-                self.cursor.color = color.cyan
-            invoke(blink_cursor, delay=.5)
-
-        blink_cursor()
         self.text = ''
 
         self.replacements = dict()
@@ -129,6 +121,34 @@ class TextField(Entity):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
+        self.__typingEnabled = False
+        self.__blinker = None
+
+        self.enableTyping(self.__typingEnabled or not self.register_mouse_input)
+
+    def enableTyping(self, on=True):
+        if self.__typingEnabled == on:
+            return
+
+        self.__typingEnabled = on
+
+        def blink_cursor():
+            if self.cursor.color == color.cyan:
+                self.cursor.color = color.clear
+            else:
+                self.cursor.color = color.cyan
+            if self.__typingEnabled:
+                self.__blinker = invoke(blink_cursor, delay=.5)
+
+        if self.__blinker is not None and not self.__blinker.finished:
+            self.__blinker.kill()
+
+        if on:
+            self.__blinker = invoke(blink_cursor, delay=.0)
+        else:
+            self.selection = None
+            self.draw_selection()
+            self.cursor.color = color.clear
 
     def add_text(self, s, move_cursor=True):
         if self.character_limit is not None and len(self.text) >= self.character_limit:
@@ -251,6 +271,12 @@ class TextField(Entity):
     def input(self, key):
         # print('---', key)
         text, cursor, on_undo, add_text, erase = self.text, self.cursor, self.on_undo, self.add_text, self.erase
+
+        if self.register_mouse_input and key == 'left mouse down':
+            self.enableTyping(mouse.point is not None or mouse.hovered_entity == self.bg)
+
+        if not self.__typingEnabled:
+            return
 
         if key == 'space':
             key = ' '
@@ -631,7 +657,7 @@ if __name__ == '__main__':
     Text.default_font = 'consola.ttf'
     Text.default_resolution = 16*2
     # TreeView()
-    te = TextField(max_lines=300, scale=1)
+    te = TextField(max_lines=300, scale=1, register_mouse_input = True)
     # te.line_numbers.enabled = True
     # for name in color.color_names:
     #     if name == 'black':
