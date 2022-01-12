@@ -582,8 +582,8 @@ class TextField(Entity):
             self.add_text(pyperclip.paste())
 
         if key in self.shortcuts['cut']:
-            if self.selection:
-                selectedText = self.get_selected()
+            selectedText = self.get_selected()
+            if selectedText:
                 pyperclip.copy(selectedText)
                 self.delete_selected()
                 print('-----cut:', selectedText)
