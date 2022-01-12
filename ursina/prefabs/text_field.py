@@ -97,7 +97,7 @@ class TextField(Entity):
             'dedent':           ('shift+tab',),
             'move_line_down':   ('ctrl+down arrow', 'ctrl+down arrow hold'),
             'move_line_up':     ('ctrl+up arrow', 'ctrl+up arrow hold'),
-            # 'cut':              ('ctrl+x',),
+            'cut':              ('ctrl+x',),
             'copy':             ('ctrl+c',),
             'paste':            ('ctrl+v',),
             # 'select_all':       ('ctrl+a',),
@@ -578,6 +578,12 @@ class TextField(Entity):
                 self.delete_selected()
             self.add_text(pyperclip.paste())
 
+        if key in self.shortcuts['cut']:
+            if self.selection:
+                selectedText = self.get_selected()
+                pyperclip.copy(selectedText)
+                self.delete_selected()
+                print('-----cut:', selectedText)
 
         if self.register_mouse_input and mouse.point is not None:
             if key == 'left mouse down' and mouse.hovered_entity == self.bg:
