@@ -123,7 +123,6 @@ class TextField(Entity):
 
         self.__typingEnabled = False
         self.__blinker = None
-        self.__lastText = ''
 
         self.enableTyping(self.__typingEnabled or not self.register_mouse_input)
 
@@ -619,8 +618,7 @@ class TextField(Entity):
         lines = self.text.split('\n')
         text = '\n'.join(lines[0:self.max_lines+1])
 
-        if self.__lastText != text:
-            self.__lastText = text
+        if not hasattr(self.text_entity, 'raw_text') or self.text_entity.raw_text != text:
             
             if self.replacements:
                 self.text_entity.text = multireplace(text, self.replacements)
