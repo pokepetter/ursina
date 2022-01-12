@@ -444,30 +444,37 @@ class TextField(Entity):
                 add_text(' '*4, move_cursor=True)
 
             else:
-                for y in range(self.selection[0][1], self.selection[1][1]+1):
+                for y in range(int(self.selection[0][1]), int(self.selection[1][1])+1):
                     # print('indent', y)
                     lines[y] = (' '*4) + lines[y]
 
-                self.cursor.x += 4
-                self.on_undo.append((self.text, y, x))
-                self.text = '\n'.join(lines)
+            self.cursor.x += 4
+            self.on_undo.append((self.text, y, x))
+            self.text = '\n'.join(lines)
 
 
         if key in self.shortcuts['dedent']:
-            if not self.selection or self.selection[1] == self.selection[0]:
+            moveCursor = False
+            appendHistory = False
+            if not self.selection or self.selection[0] == self.selection[1]:
                 if l.startswith(' '*4):
                     lines[y] = l[4:]
+                    appendHistory = moveCursor = True
             else:
-                for y in range(self.selection[0][1], self.selection[1][1]+1):
+                for y in range(int(self.selection[0][1]), int(self.selection[1][1])+1):
                     l = lines[y]
                     if l.startswith(' '*4):
                         # print('dedent')
                         lines[y] = l[4:]
+                        if y == int(cursor.y):
+                            moveCursor = True
+                        appendHistory = True
 
-            self.cursor.x -= 4
-            self.cursor.x = max(self.cursor.x, 0)
-            self.on_undo.append((self.text, y, x))
-            self.text = '\n'.join(lines)
+            if moveCursor:
+                self.cursor.x = max(self.cursor.x - 4, 0)
+            if appendHistory:
+                self.on_undo.append((self.text, y, x))
+                self.text = '\n'.join(lines)
 
 
         if key in self.shortcuts['erase']:
