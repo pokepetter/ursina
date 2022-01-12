@@ -471,7 +471,7 @@ class TextField(Entity):
 
 
         if key in self.shortcuts['erase']:
-            if not self.selection:
+            if not self.selection or self.selection[1] == self.selection[0]:
                 erase()
             else:
                 self.delete_selected()
