@@ -100,7 +100,7 @@ class TextField(Entity):
             'cut':              ('ctrl+x',),
             'copy':             ('ctrl+c',),
             'paste':            ('ctrl+v',),
-            # 'select_all':       ('ctrl+a',),
+            'select_all':       ('ctrl+a',),
             # 'toggle_comment':   ('ctrl+alt+c',),
             # 'find':             ('ctrl+f',),
 
@@ -584,6 +584,9 @@ class TextField(Entity):
                 pyperclip.copy(selectedText)
                 self.delete_selected()
                 print('-----cut:', selectedText)
+            
+        if key in self.shortcuts['select_all']:
+            self.select_all()
 
         if self.register_mouse_input and mouse.point is not None:
             if key == 'left mouse down' and mouse.hovered_entity == self.bg:
@@ -643,8 +646,10 @@ class TextField(Entity):
         lines = self.text.splitlines()
         # print('|||||||||', len(lines), len(self.text.splitlines()), self.text.splitlines(), lines)
         if lines:
-            self.selection = [(0,0), (len(lines[-1]), len(lines))]
+            self.selection = [(0,0), (len(lines[-1]), len(lines) - 1)]
             print(self.selection)
+
+        self.draw_selection()
 
 
     def draw_selection(self):
