@@ -141,7 +141,7 @@ class TextField(Entity):
             if self.__typingEnabled:
                 self.__blinker = invoke(blink_cursor, delay=.5)
 
-        if self.__blinker is not None and not self.__blinker.finished:
+        if self.__blinker and not self.__blinker.finished:
             self.__blinker.kill()
 
         if on:
@@ -152,7 +152,7 @@ class TextField(Entity):
             self.cursor.color = color.clear
 
     def add_text(self, s, move_cursor=True):
-        if self.character_limit is not None and len(self.text) >= self.character_limit:
+        if self.character_limit and len(self.text) >= self.character_limit:
             return
 
         x, y = int(self.cursor.x), int(self.cursor.y)
@@ -234,14 +234,14 @@ class TextField(Entity):
         self.text = '\n'.join(lines)
 
     def _ordered_selection(self):
-        if self.selection == None:
+        if not self.selection:
             return None
         if self.selection[1][1] < self.selection[0][1] or (self.selection[1][1] == self.selection[0][1] and self.selection[1][0] < self.selection[0][0]):
             return [self.selection[1], self.selection[0]]
         return self.selection
 
     def delete_selected(self):
-        if self.selection == None or self.selection[0] == self.selection[1]:
+        if not self.selection or self.selection[0] == self.selection[1]:
             return
 
         sel = self._ordered_selection()
@@ -260,7 +260,7 @@ class TextField(Entity):
         self.draw_selection()
 
     def get_selected(self):
-        if self.selection == None or self.selection[0] == self.selection[1]:
+        if not self.selection or self.selection[0] == self.selection[1]:
             return None
         
         sel = self._ordered_selection()
@@ -440,7 +440,7 @@ class TextField(Entity):
             # self.cursor.x = indent
 
         if key in self.shortcuts['indent']:
-            if self.selection == None or self.selection[0] == self.selection[1]:
+            if not self.selection or self.selection[0] == self.selection[1]:
                 add_text(' '*4, move_cursor=True)
 
             else:
@@ -454,7 +454,7 @@ class TextField(Entity):
 
 
         if key in self.shortcuts['dedent']:
-            if self.selection == None:
+            if not self.selection or self.selection[1] == self.selection[0]:
                 if l.startswith(' '*4):
                     lines[y] = l[4:]
             else:
@@ -600,7 +600,7 @@ class TextField(Entity):
                 #     return
 
                 cursor.position = self.mousePos()
-                if self.selection is not None:
+                if self.selection:
                     self.selection[1] = self.cursor.position
 
                 self.draw_selection()
@@ -630,7 +630,7 @@ class TextField(Entity):
 
         if self.register_mouse_input and mouse.left and mouse.point:
             self.cursor.position = self.mousePos()
-            if self.selection is not None:
+            if self.selection:
                 self.selection[1] = self.cursor.position
 
             # if self.selection[1][1] < self.selection[0][1]:
@@ -653,7 +653,7 @@ class TextField(Entity):
     def draw_selection(self):
         [destroy(c) for c in self.selection_parent.children]
 
-        if self.selection == None or self.selection[0] == self.selection[1]:
+        if not self.selection or self.selection[0] == self.selection[1]:
             return
             
         sel = self._ordered_selection()
