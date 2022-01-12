@@ -259,6 +259,27 @@ class TextField(Entity):
         # self.on_undo.append((self.text, y, x))
         self.draw_selection()
 
+    def get_selected(self):
+        if self.selection == None or self.selection[0] == self.selection[1]:
+            return None
+        
+        sel = self.selection
+        if sel[1][1] < sel[0][1] or (sel[1][1] == sel[0][1] and sel[1][0] < sel[0][0]):
+            sel = [sel[1], sel[0]]
+
+        start_y = int(sel[0][1])
+        end_y = int(sel[1][1])
+        lines = self.text.split('\n')
+
+        selectedText = ''
+
+        for y in range(start_y, end_y + 1):
+            if y > start_y:
+                selectedText += '\n'
+            selectedText += lines[y][ (int(sel[0][0]) if y == start_y else 0) : (int(sel[1][0]) if y == end_y else len(lines[y])) ]
+
+        return selectedText
+
     def mousePos(self):
         x = round(mouse.point[0] * self.bg.scale_x)
         y = floor(mouse.point[1] * self.bg.scale_y)
@@ -547,7 +568,10 @@ class TextField(Entity):
             # select word right
 
         if key in self.shortcuts['copy']:
-            print('-----copy:', self.selection)
+            selectedText = self.get_selected()
+            if selectedText:
+                pyperclip.copy(selectedText)
+                print('-----copy:', selectedText)
 
         if key in self.shortcuts['paste']:
             if self.selection:
