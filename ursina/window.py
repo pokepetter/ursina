@@ -44,8 +44,10 @@ class Window(WindowProperties):
             user32 = ctypes.windll.user32
             user32.SetProcessDPIAware()
             self.screen_resolution = (user32.GetSystemMetrics(0), user32.GetSystemMetrics(1))
+            self.borderless = True
 
         else:
+            self.borderless = False
             try:
                 from screeninfo import get_monitors
                 self.screen_resolution = (get_monitors()[0].width, get_monitors()[0].height)
@@ -60,7 +62,6 @@ class Window(WindowProperties):
         self.windowed_position = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode
         self.forced_aspect_ratio = None # example: window.forced_aspect_ratio = 16/9
         self.size = self.windowed_size
-        self.borderless = True
 
         self.top = Vec2(0, .5)
         self.bottom = Vec2(0, -.5)
