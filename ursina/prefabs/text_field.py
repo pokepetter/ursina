@@ -123,6 +123,7 @@ class TextField(Entity):
 
         self.__typingEnabled = False
         self.__blinker = None
+        self.__lastText = ''
 
         self.enableTyping(self.__typingEnabled or not self.register_mouse_input)
 
@@ -580,12 +581,16 @@ class TextField(Entity):
         lines = self.text.split('\n')
         text = '\n'.join(lines[0:self.max_lines+1])
 
-        if self.replacements:
-            self.text_entity.text = multireplace(text, self.replacements)
-        else:
-            self.text_entity.text = text
-        self.line_numbers.text = '\n'.join([str(e) for e in range(min(len(lines), self.max_lines))])
-        self.line_numbers.color = color.gray
+        if self.__lastText != text:
+            self.__lastText = text
+            
+            if self.replacements:
+                self.text_entity.text = multireplace(text, self.replacements)
+            else:
+                self.text_entity.text = text
+
+            self.line_numbers.text = '\n'.join([str(e) for e in range(min(len(lines), self.max_lines))])
+            self.line_numbers.color = color.gray
 
 
 
