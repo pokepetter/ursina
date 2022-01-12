@@ -241,22 +241,17 @@ class TextField(Entity):
         return self.selection
 
     def delete_selected(self):
-        lines = self.text.split('\n')
+        if self.selection == None or self.selection[0] == self.selection[1]:
+            return
 
         sel = self._ordered_selection()
         self.cursor.position = sel[0]
+        start_y = int(sel[0][1])
+        end_y = int(sel[1][1])
+        lines = self.text.split('\n')
 
-        if int(sel[1][1]) > int(sel[0][1]) + 1:
-            for y in range(int(sel[0][1]) + 1, int(sel[1][1])):
-                lines.pop(int(sel[0][1] + 1))
-                print('delete line:', y)
-
-        if int(sel[1][1]) == int(sel[0][1]):
-            li = lines[int(sel[1][1])]
-            lines[int(sel[1][1])] = li[:int(sel[0][0])] + li[int(sel[1][0]):]
-        else:
-            lines[int(sel[0][1])] = lines[int(sel[0][1])][:int(sel[0][0])] + lines[int(sel[0][1]) + 1][int(sel[1][0]):]
-            lines.pop(int(sel[0][1]) + 1)
+        lines[start_y] = lines[start_y][:int(sel[0][0])] + lines[end_y][int(sel[1][0]):]
+        del lines[(start_y + 1) : (end_y + 1)]
 
         self.on_undo.append((self.text, self.cursor.y, self.cursor.x))
         self.text = '\n'.join(lines)
@@ -671,14 +666,14 @@ class TextField(Entity):
         for y in range(start_y, end_y):
             e = Entity(parent=self.selection_parent, model='cube', origin=(-.5, -.5),
                 color=color.color(120,1,1,.1), double_sided=True, position=(0,y), ignore=True, scale_x=len(lines[y]))
-            if y == sel[0][1]:
+            if y == start_y:
                 e.x = sel[0][0]
                 e.scale_x -= sel[0][0]
 
         e = Entity(parent=self.selection_parent, model='cube', origin=(-.5, -.5),
             color=color.color(120,1,1,.1), double_sided=True, position=(0,end_y),
             ignore=True, scale_x=sel[1][0])
-        if sel[0][1] == sel[1][1]:
+        if start_y == end_y:
             e.x = sel[0][0]
             e.scale_x -= sel[0][0]
 
