@@ -233,12 +233,17 @@ class TextField(Entity):
 
         self.text = '\n'.join(lines)
 
+    def _ordered_selection(self):
+        if self.selection == None:
+            return None
+        if self.selection[1][1] < self.selection[0][1] or (self.selection[1][1] == self.selection[0][1] and self.selection[1][0] < self.selection[0][0]):
+            return [self.selection[1], self.selection[0]]
+        return self.selection
+
     def delete_selected(self):
         lines = self.text.split('\n')
 
-        sel = self.selection
-        if sel[1][1] < sel[0][1] or (sel[1][1] == sel[0][1] and sel[1][0] < sel[0][0]):
-            sel = [sel[1], sel[0]]
+        sel = self._ordered_selection()
         self.cursor.position = sel[0]
 
         if int(sel[1][1]) > int(sel[0][1]) + 1:
@@ -263,9 +268,7 @@ class TextField(Entity):
         if self.selection == None or self.selection[0] == self.selection[1]:
             return None
         
-        sel = self.selection
-        if sel[1][1] < sel[0][1] or (sel[1][1] == sel[0][1] and sel[1][0] < sel[0][0]):
-            sel = [sel[1], sel[0]]
+        sel = self._ordered_selection()
 
         start_y = int(sel[0][1])
         end_y = int(sel[1][1])
@@ -658,9 +661,7 @@ class TextField(Entity):
         if self.selection == None or self.selection[0] == self.selection[1]:
             return
             
-        sel = self.selection
-        if sel[1][1] < sel[0][1] or (sel[1][1] == sel[0][1] and sel[1][0] < sel[0][0]):
-            sel = [sel[1], sel[0]]
+        sel = self._ordered_selection()
 
         start_y = int(sel[0][1])
         end_y = int(sel[1][1])
