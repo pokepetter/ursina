@@ -122,7 +122,17 @@ class TextField(Entity):
             setattr(self, key, value)
 
         self._active = False
-        self._blinker = None
+
+        def blink_cursor():
+            if self.cursor.color == color.cyan:
+                self.cursor.color = color.clear
+            else:
+                self.cursor.color = color.cyan
+            if self._active:
+                self._blinker = invoke(blink_cursor, delay=.5)
+
+        self._blinker = invoke(blink_cursor, delay=.5)
+        self._blinker.pause()
 
         self.active = (not self.register_mouse_input)
 
@@ -134,19 +144,12 @@ class TextField(Entity):
     def active(self, value):
         self._active = value
 
-        def blink_cursor():
-            if self.cursor.color == color.cyan:
-                self.cursor.color = color.clear
-            else:
-                self.cursor.color = color.cyan
-            if self.active:
-                self._blinker = invoke(blink_cursor, delay=.5)
-
         if self._blinker and not self._blinker.finished:
-            self._blinker.kill()
+            self._blinker.pause()
+            self.cursor.color = color.cyan
 
-        if value:
-            self._blinker = invoke(blink_cursor, delay=.0)
+        if self._active:
+            self._blinker.resume()
         else:
             self.selection = None
             self.draw_selection()
