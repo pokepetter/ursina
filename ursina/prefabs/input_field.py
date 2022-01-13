@@ -7,14 +7,10 @@ class ContentTypes:
     math = float + '+-*/'
 
 
-class InputField(Button):
+class InputField(Entity):
     def __init__(self, default_value='', label='', max_lines=1, character_limit=24, **kwargs):
         super().__init__(
-            scale=(.5, Text.size * 2 * max_lines),
-            highlight_scale = 1,
-            pressed_scale = 1,
-            highlight_color = color.black,
-            **kwargs
+            parent = camera.ui
             )
         for key, value in kwargs.items():
             if 'scale' in key:
@@ -26,7 +22,10 @@ class InputField(Button):
 
         self.next_field = None
 
-        self.text_field = TextField(world_parent=self, x=-.45, y=.3, z=-.1, max_lines=max_lines, character_limit=character_limit)
+        self.text_field = TextField(parent = self, x=-.45 * .5, y=.3 * Text.size * 2 * max_lines, z=-.1, max_lines=max_lines, character_limit=character_limit, register_mouse_input = True)
+        destroy(self.text_field.bg)
+        self.text_field.bg = Button(parent = self, scale=(.5, Text.size * 2 * max_lines), highlight_scale = 1, pressed_scale = 1, highlight_color = color.black, collider = 'box')
+        
         def render():
             if self.limit_content_to:
                 org_length = len(self.text_field.text)
@@ -49,8 +48,9 @@ class InputField(Button):
         self.text_field.scale *= 1.25
         self.text_field.text = default_value
         self.text_field.render()
+        self.text_field.shortcuts['indent'] = ('')
+        self.text_field.shortcuts['dedent'] = ('')
 
-        self.text_field.register_mouse_input = False
         self.active = False
 
         if label:
@@ -62,9 +62,6 @@ class InputField(Button):
             setattr(self, key, value)
 
     def input(self, key):
-        if key == 'left mouse down':
-            self.active = self.hovered
-
         if key == 'tab' and self.text_field.cursor.y >= self.text_field.max_lines-1 and self.active:
             self.active = False
             if self.next_field:
@@ -92,14 +89,11 @@ class InputField(Button):
 
     @property
     def active(self):
-        return self._active
+        return self.text_field.active
 
     @active.setter
     def active(self, value):
-        self._active = value
-        self.text_field.ignore = not value
-        self.text_field.cursor.enabled = value
-        # self.text_field.register_mouse_input = True
+        self.text_field.active = value
         # if value == True:
         #     # self.text_field.select_all()
         #     invoke(self.text_field.select_all, delay=.1)
