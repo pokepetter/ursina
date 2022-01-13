@@ -278,8 +278,13 @@ class TextField(Entity):
         return selectedText
 
     def mousePos(self):
-        x = round(mouse.point[0] * self.bg.scale_x)
-        y = floor(mouse.point[1] * self.bg.scale_y)
+        mpos = mouse.position
+        mpos.x = mpos.x / self.scale_x
+        mpos.y = mpos.y / self.scale_y
+        mpos += camera.ui.get_position(self.text_entity)
+
+        x = round(mpos.x / self.cursor_parent.scale_x)
+        y = floor(mpos.y / self.cursor_parent.scale_y)
 
         lines = self.text.split('\n')
         y = clamp(y, 0, len(lines) - 1)
@@ -292,7 +297,7 @@ class TextField(Entity):
         text, cursor, on_undo, add_text, erase = self.text, self.cursor, self.on_undo, self.add_text, self.erase
 
         if self.register_mouse_input and key == 'left mouse down':
-            self.enableTyping(mouse.point is not None or mouse.hovered_entity == self.bg)
+            self.enableTyping(mouse.hovered_entity == self.bg)
 
         if not self.__typingEnabled:
             return
@@ -632,8 +637,8 @@ class TextField(Entity):
 
     def update(self):
         # self.debug_cursor.position = self.get_mouse_position()
-
-        if self.register_mouse_input and mouse.left and mouse.point:
+        
+        if self.register_mouse_input and mouse.left:
             self.cursor.position = self.mousePos()
             if self.selection:
                 self.selection[1] = self.cursor.position
