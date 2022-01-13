@@ -7,10 +7,14 @@ class ContentTypes:
     math = float + '+-*/'
 
 
-class InputField(Entity):
+class InputField(Button):
     def __init__(self, default_value='', label='', max_lines=1, character_limit=24, **kwargs):
         super().__init__(
-            parent = camera.ui
+            scale=(.5, Text.size * 2 * max_lines),
+            highlight_scale = 1,
+            pressed_scale = 1,
+            highlight_color = color.black,
+            **kwargs
             )
         for key, value in kwargs.items():
             if 'scale' in key:
@@ -22,9 +26,9 @@ class InputField(Entity):
 
         self.next_field = None
 
-        self.text_field = TextField(parent = self, x=-.45 * .5, y=.3 * Text.size * 2 * max_lines, z=-.1, max_lines=max_lines, character_limit=character_limit, register_mouse_input = True)
+        self.text_field = TextField(world_parent = self, x=-.45, y=.3, z=-.1, max_lines=max_lines, character_limit=character_limit, register_mouse_input = True)
         destroy(self.text_field.bg)
-        self.text_field.bg = Button(parent = self, scale=(.5, Text.size * 2 * max_lines), highlight_scale = 1, pressed_scale = 1, highlight_color = color.black, collider = 'box')
+        self.text_field.bg = self
         
         def render():
             if self.limit_content_to:
