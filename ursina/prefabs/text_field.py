@@ -97,10 +97,10 @@ class TextField(Entity):
             'dedent':           ('shift+tab',),
             'move_line_down':   ('ctrl+down arrow', 'ctrl+down arrow hold'),
             'move_line_up':     ('ctrl+up arrow', 'ctrl+up arrow hold'),
-            # 'cut':              ('ctrl+x',),
+            'cut':              ('ctrl+x',),
             'copy':             ('ctrl+c',),
             'paste':            ('ctrl+v',),
-            # 'select_all':       ('ctrl+a',),
+            'select_all':       ('ctrl+a',),
             # 'toggle_comment':   ('ctrl+alt+c',),
             # 'find':             ('ctrl+f',),
 
@@ -121,37 +121,42 @@ class TextField(Entity):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-        self.__typingEnabled = False
-        self.__blinker = None
-
-        self.enableTyping(self.__typingEnabled or not self.register_mouse_input)
-
-    def enableTyping(self, on=True):
-        if self.__typingEnabled == on:
-            return
-
-        self.__typingEnabled = on
+        self._active = False
 
         def blink_cursor():
             if self.cursor.color == color.cyan:
                 self.cursor.color = color.clear
             else:
                 self.cursor.color = color.cyan
-            if self.__typingEnabled:
-                self.__blinker = invoke(blink_cursor, delay=.5)
+            if self._active:
+                self._blinker = invoke(blink_cursor, delay=.5)
 
-        if self.__blinker is not None and not self.__blinker.finished:
-            self.__blinker.kill()
+        self._blinker = invoke(blink_cursor, delay=.5)
+        self._blinker.pause()
 
-        if on:
-            self.__blinker = invoke(blink_cursor, delay=.0)
+        self.active = (not self.register_mouse_input)
+
+    @property
+    def active(self):
+        return self._active
+
+    @active.setter
+    def active(self, value):
+        self._active = value
+
+        if self._blinker and not self._blinker.finished:
+            self._blinker.pause()
+            self.cursor.color = color.cyan
+
+        if self._active:
+            self._blinker.resume()
         else:
             self.selection = None
             self.draw_selection()
             self.cursor.color = color.clear
 
     def add_text(self, s, move_cursor=True):
-        if self.character_limit is not None and len(self.text) >= self.character_limit:
+        if self.character_limit and len(self.text) >= self.character_limit:
             return
 
         x, y = int(self.cursor.x), int(self.cursor.y)
@@ -232,25 +237,25 @@ class TextField(Entity):
 
         self.text = '\n'.join(lines)
 
+    def _ordered_selection(self):
+        if not self.selection:
+            return None
+        if self.selection[1][1] < self.selection[0][1] or (self.selection[1][1] == self.selection[0][1] and self.selection[1][0] < self.selection[0][0]):
+            return [self.selection[1], self.selection[0]]
+        return self.selection
+
     def delete_selected(self):
+        if not self.selection or self.selection[0] == self.selection[1]:
+            return
+
+        sel = self._ordered_selection()
+        self.cursor.position = sel[0]
+        start_y = int(sel[0][1])
+        end_y = int(sel[1][1])
         lines = self.text.split('\n')
 
-        sel = self.selection
-        if sel[1][1] < sel[0][1] or (sel[1][1] == sel[0][1] and sel[1][0] < sel[0][0]):
-            sel = [sel[1], sel[0]]
-        self.cursor.position = sel[0]
-
-        if int(sel[1][1]) > int(sel[0][1]) + 1:
-            for y in range(int(sel[0][1]) + 1, int(sel[1][1])):
-                lines.pop(int(sel[0][1] + 1))
-                print('delete line:', y)
-
-        if int(sel[1][1]) == int(sel[0][1]):
-            li = lines[int(sel[1][1])]
-            lines[int(sel[1][1])] = li[:int(sel[0][0])] + li[int(sel[1][0]):]
-        else:
-            lines[int(sel[0][1])] = lines[int(sel[0][1])][:int(sel[0][0])] + lines[int(sel[0][1]) + 1][int(sel[1][0]):]
-            lines.pop(int(sel[0][1]) + 1)
+        lines[start_y] = lines[start_y][:int(sel[0][0])] + lines[end_y][int(sel[1][0]):]
+        del lines[(start_y + 1) : (end_y + 1)]
 
         self.on_undo.append((self.text, self.cursor.y, self.cursor.x))
         self.text = '\n'.join(lines)
@@ -258,9 +263,33 @@ class TextField(Entity):
         # self.on_undo.append((self.text, y, x))
         self.draw_selection()
 
+    def get_selected(self):
+        if not self.selection or self.selection[0] == self.selection[1]:
+            return None
+        
+        sel = self._ordered_selection()
+
+        start_y = int(sel[0][1])
+        end_y = int(sel[1][1])
+        lines = self.text.split('\n')
+
+        selectedText = ''
+
+        for y in range(start_y, end_y + 1):
+            if y > start_y:
+                selectedText += '\n'
+            selectedText += lines[y][ (int(sel[0][0]) if y == start_y else 0) : (int(sel[1][0]) if y == end_y else len(lines[y])) ]
+
+        return selectedText
+
     def mousePos(self):
-        x = round(mouse.point[0] * self.bg.scale_x)
-        y = floor(mouse.point[1] * self.bg.scale_y)
+        mpos = mouse.position
+        mpos.x = mpos.x / self.world_scale_x * camera.ui.world_scale_x
+        mpos.y = mpos.y / self.world_scale_y * camera.ui.world_scale_y
+        mpos += camera.ui.get_position(self.text_entity)
+
+        x = round(mpos.x / self.cursor_parent.scale_x)
+        y = floor(mpos.y / self.cursor_parent.scale_y)
 
         lines = self.text.split('\n')
         y = clamp(y, 0, len(lines) - 1)
@@ -273,9 +302,9 @@ class TextField(Entity):
         text, cursor, on_undo, add_text, erase = self.text, self.cursor, self.on_undo, self.add_text, self.erase
 
         if self.register_mouse_input and key == 'left mouse down':
-            self.enableTyping(mouse.point is not None or mouse.hovered_entity == self.bg)
+            self.active = (mouse.hovered_entity == self.bg)
 
-        if not self.__typingEnabled:
+        if not self.active:
             return
 
         if key == 'space':
@@ -420,38 +449,45 @@ class TextField(Entity):
             # self.cursor.x = indent
 
         if key in self.shortcuts['indent']:
-            if self.selection == None or self.selection[0] == self.selection[1]:
+            if not self.selection or self.selection[0] == self.selection[1]:
                 add_text(' '*4, move_cursor=True)
 
             else:
-                for y in range(self.selection[0][1], self.selection[1][1]+1):
+                for y in range(int(self.selection[0][1]), int(self.selection[1][1])+1):
                     # print('indent', y)
                     lines[y] = (' '*4) + lines[y]
 
-                self.cursor.x += 4
-                self.on_undo.append((self.text, y, x))
-                self.text = '\n'.join(lines)
-
-
-        if key in self.shortcuts['dedent']:
-            if self.selection == None:
-                if l.startswith(' '*4):
-                    lines[y] = l[4:]
-            else:
-                for y in range(self.selection[0][1], self.selection[1][1]+1):
-                    l = lines[y]
-                    if l.startswith(' '*4):
-                        # print('dedent')
-                        lines[y] = l[4:]
-
-            self.cursor.x -= 4
-            self.cursor.x = max(self.cursor.x, 0)
+            self.cursor.x += 4
             self.on_undo.append((self.text, y, x))
             self.text = '\n'.join(lines)
 
 
+        if key in self.shortcuts['dedent']:
+            moveCursor = False
+            appendHistory = False
+            if not self.selection or self.selection[0] == self.selection[1]:
+                if l.startswith(' '*4):
+                    lines[y] = l[4:]
+                    appendHistory = moveCursor = True
+            else:
+                for y in range(int(self.selection[0][1]), int(self.selection[1][1])+1):
+                    l = lines[y]
+                    if l.startswith(' '*4):
+                        # print('dedent')
+                        lines[y] = l[4:]
+                        if y == int(cursor.y):
+                            moveCursor = True
+                        appendHistory = True
+
+            if moveCursor:
+                self.cursor.x = max(self.cursor.x - 4, 0)
+            if appendHistory:
+                self.on_undo.append((self.text, y, x))
+                self.text = '\n'.join(lines)
+
+
         if key in self.shortcuts['erase']:
-            if not self.selection:
+            if not self.selection or self.selection[1] == self.selection[0]:
                 erase()
             else:
                 self.delete_selected()
@@ -546,13 +582,25 @@ class TextField(Entity):
             # select word right
 
         if key in self.shortcuts['copy']:
-            print('-----copy:', self.selection)
+            selectedText = self.get_selected()
+            if selectedText:
+                pyperclip.copy(selectedText)
+                print('-----copy:', selectedText)
 
         if key in self.shortcuts['paste']:
             if self.selection:
                 self.delete_selected()
             self.add_text(pyperclip.paste())
 
+        if key in self.shortcuts['cut']:
+            selectedText = self.get_selected()
+            if selectedText:
+                pyperclip.copy(selectedText)
+                self.delete_selected()
+                print('-----cut:', selectedText)
+            
+        if key in self.shortcuts['select_all']:
+            self.select_all()
 
         if self.register_mouse_input and mouse.point is not None:
             if key == 'left mouse down' and mouse.hovered_entity == self.bg:
@@ -568,7 +616,7 @@ class TextField(Entity):
                 #     return
 
                 cursor.position = self.mousePos()
-                if self.selection is not None:
+                if self.selection:
                     self.selection[1] = self.cursor.position
 
                 self.draw_selection()
@@ -580,21 +628,24 @@ class TextField(Entity):
         lines = self.text.split('\n')
         text = '\n'.join(lines[0:self.max_lines+1])
 
-        if self.replacements:
-            self.text_entity.text = multireplace(text, self.replacements)
-        else:
-            self.text_entity.text = text
-        self.line_numbers.text = '\n'.join([str(e) for e in range(min(len(lines), self.max_lines))])
-        self.line_numbers.color = color.gray
+        if not hasattr(self.text_entity, 'raw_text') or self.text_entity.raw_text != text:
+            
+            if self.replacements:
+                self.text_entity.text = multireplace(text, self.replacements)
+            else:
+                self.text_entity.text = text
+
+            self.line_numbers.text = '\n'.join([str(e) for e in range(min(len(lines), self.max_lines))])
+            self.line_numbers.color = color.gray
 
 
 
     def update(self):
         # self.debug_cursor.position = self.get_mouse_position()
-
-        if self.register_mouse_input and mouse.left and mouse.point:
+        
+        if self.register_mouse_input and mouse.left:
             self.cursor.position = self.mousePos()
-            if self.selection is not None:
+            if self.selection:
                 self.selection[1] = self.cursor.position
 
             # if self.selection[1][1] < self.selection[0][1]:
@@ -608,19 +659,19 @@ class TextField(Entity):
         lines = self.text.splitlines()
         # print('|||||||||', len(lines), len(self.text.splitlines()), self.text.splitlines(), lines)
         if lines:
-            self.selection = [(0,0), (len(lines[-1]), len(lines))]
+            self.selection = [(0,0), (len(lines[-1]), len(lines) - 1)]
             print(self.selection)
+
+        self.draw_selection()
 
 
     def draw_selection(self):
         [destroy(c) for c in self.selection_parent.children]
 
-        if self.selection == None or self.selection[0] == self.selection[1]:
+        if not self.selection or self.selection[0] == self.selection[1]:
             return
             
-        sel = self.selection
-        if sel[1][1] < sel[0][1] or (sel[1][1] == sel[0][1] and sel[1][0] < sel[0][0]):
-            sel = [sel[1], sel[0]]
+        sel = self._ordered_selection()
 
         start_y = int(sel[0][1])
         end_y = int(sel[1][1])
@@ -630,14 +681,14 @@ class TextField(Entity):
         for y in range(start_y, end_y):
             e = Entity(parent=self.selection_parent, model='cube', origin=(-.5, -.5),
                 color=color.color(120,1,1,.1), double_sided=True, position=(0,y), ignore=True, scale_x=len(lines[y]))
-            if y == sel[0][1]:
+            if y == start_y:
                 e.x = sel[0][0]
                 e.scale_x -= sel[0][0]
 
         e = Entity(parent=self.selection_parent, model='cube', origin=(-.5, -.5),
             color=color.color(120,1,1,.1), double_sided=True, position=(0,end_y),
             ignore=True, scale_x=sel[1][0])
-        if sel[0][1] == sel[1][1]:
+        if start_y == end_y:
             e.x = sel[0][0]
             e.scale_x -= sel[0][0]
 
