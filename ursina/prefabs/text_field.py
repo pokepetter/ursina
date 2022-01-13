@@ -284,8 +284,8 @@ class TextField(Entity):
 
     def mousePos(self):
         mpos = mouse.position
-        mpos.x = mpos.x / self.scale_x
-        mpos.y = mpos.y / self.scale_y
+        mpos.x = mpos.x / self.world_scale_x * camera.ui.world_scale_x
+        mpos.y = mpos.y / self.world_scale_y * camera.ui.world_scale_y
         mpos += camera.ui.get_position(self.text_entity)
 
         x = round(mpos.x / self.cursor_parent.scale_x)
