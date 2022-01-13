@@ -121,30 +121,32 @@ class TextField(Entity):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-        self.__typingEnabled = False
-        self.__blinker = None
+        self._active = False
+        self._blinker = None
 
-        self.enableTyping(self.__typingEnabled or not self.register_mouse_input)
+        self.active = (not self.register_mouse_input)
 
-    def enableTyping(self, on=True):
-        if self.__typingEnabled == on:
-            return
+    @property
+    def active(self):
+        return self._active
 
-        self.__typingEnabled = on
+    @active.setter
+    def active(self, value):
+        self._active = value
 
         def blink_cursor():
             if self.cursor.color == color.cyan:
                 self.cursor.color = color.clear
             else:
                 self.cursor.color = color.cyan
-            if self.__typingEnabled:
-                self.__blinker = invoke(blink_cursor, delay=.5)
+            if self.active:
+                self._blinker = invoke(blink_cursor, delay=.5)
 
-        if self.__blinker and not self.__blinker.finished:
-            self.__blinker.kill()
+        if self._blinker and not self._blinker.finished:
+            self._blinker.kill()
 
-        if on:
-            self.__blinker = invoke(blink_cursor, delay=.0)
+        if value:
+            self._blinker = invoke(blink_cursor, delay=.0)
         else:
             self.selection = None
             self.draw_selection()
@@ -297,9 +299,9 @@ class TextField(Entity):
         text, cursor, on_undo, add_text, erase = self.text, self.cursor, self.on_undo, self.add_text, self.erase
 
         if self.register_mouse_input and key == 'left mouse down':
-            self.enableTyping(mouse.hovered_entity == self.bg)
+            self.active = (mouse.hovered_entity == self.bg)
 
-        if not self.__typingEnabled:
+        if not self.active:
             return
 
         if key == 'space':
