@@ -456,10 +456,9 @@ class TextField(Entity):
                 for y in range(int(self.selection[0][1]), int(self.selection[1][1])+1):
                     # print('indent', y)
                     lines[y] = (' '*4) + lines[y]
-
-            self.cursor.x += 4
-            self.on_undo.append((self.text, y, x))
-            self.text = '\n'.join(lines)
+                self.cursor.x += 4
+                self.on_undo.append((self.text, y, x))
+                self.text = '\n'.join(lines)
 
 
         if key in self.shortcuts['dedent']:
