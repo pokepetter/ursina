@@ -122,6 +122,7 @@ class TextField(Entity):
             setattr(self, key, value)
 
         self._active = False
+        self._prev_text = ''
 
         def blink_cursor():
             if self.cursor.color == color.cyan:
@@ -627,7 +628,7 @@ class TextField(Entity):
         lines = self.text.split('\n')
         text = '\n'.join(lines[0:self.max_lines+1])
 
-        if not hasattr(self.text_entity, 'raw_text') or self.text_entity.raw_text != text:
+        if not hasattr(self.text_entity, 'raw_text') or self._prev_text != text:
             
             if self.replacements:
                 self.text_entity.text = multireplace(text, self.replacements)
@@ -636,6 +637,8 @@ class TextField(Entity):
 
             self.line_numbers.text = '\n'.join([str(e) for e in range(min(len(lines), self.max_lines))])
             self.line_numbers.color = color.gray
+
+            self._prev_text = text
 
 
 
