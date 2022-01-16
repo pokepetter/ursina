@@ -806,6 +806,7 @@ if __name__ == '__main__':
     Text.default_resolution = 16*2
     # TreeView()
     te = TextField(max_lines=300, scale=1, register_mouse_input = True)
+    #te = TextField(max_lines=300, scale=1, register_mouse_input = True, scroll_enabled = True, scroll_size = (50,3))
     # te.line_numbers.enabled = True
     # for name in color.color_names:
     #     if name == 'black':
