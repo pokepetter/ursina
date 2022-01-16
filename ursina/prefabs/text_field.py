@@ -41,12 +41,13 @@ class TextField(Entity):
         # self.max_line_indicatior = Entity(parent=self.cursor_parent, model='quad', origin=(-.5,.5), scale=(100,.05), rotation_x=180, color=color.red)
         # self.max_width_indicatior = Entity(
         #     parent=self.cursor_parent, model='quad', origin=(-.5,.5), scale=(100,.05), rotation_x=180, rotation_z=90, color=color.color(0,0,1,.05), x=80)
-        self.cursor = Entity(parent=self.cursor_parent, model='cube', color=color.clear, origin=(-.5, -.5), scale=(.1, 1))
-        self.bg = Entity(parent=self.cursor_parent, model='cube', color=color.dark_gray, origin=(-.5,-.5), z=1, scale=(120, 20), collider='box', visible=False)
+        self.cursor = Entity(parent=self.cursor_parent, model='cube', color=color.clear, origin=(-.5, -.5), scale=(.1, 1, 0))
+        self.bg = Entity(parent=self.cursor_parent, model='cube', color=color.dark_gray, origin=(-.5,-.5), z=0.001, scale=(120, 20, 0.01), collider='box', visible=False)
 
         self.selection = None
-        self.selection_parent = Entity(parent=self.cursor_parent)
+        self.selection_parent = Entity(parent=self.cursor_parent, scale=(1,1,0))
         self.register_mouse_input = False
+        self.world_space_mouse = False
 
         self.text = ''
 
@@ -284,13 +285,22 @@ class TextField(Entity):
         return selectedText
 
     def mousePos(self):
-        mpos = mouse.position
-        mpos.x = mpos.x / self.world_scale_x * camera.ui.world_scale_x
-        mpos.y = mpos.y / self.world_scale_y * camera.ui.world_scale_y
-        mpos += camera.ui.get_position(self.text_entity)
+        if self.world_space_mouse:
+            if mouse.point:
+                x = round(mouse.point[0] * self.bg.scale_x)
+                y = floor(mouse.point[1] * self.bg.scale_y)
+            else:
+                x = int(self.cursor.x)
+                y = int(self.cursor.y)
+            
+        else:
+            mpos = mouse.position
+            mpos.x = mpos.x / self.world_scale_x * camera.ui.world_scale_x
+            mpos.y = mpos.y / self.world_scale_y * camera.ui.world_scale_y
+            mpos += camera.ui.get_position(self.text_entity)
 
-        x = round(mpos.x / self.cursor_parent.scale_x)
-        y = floor(mpos.y / self.cursor_parent.scale_y)
+            x = round(mpos.x / self.cursor_parent.scale_x)
+            y = floor(mpos.y / self.cursor_parent.scale_y)
 
         lines = self.text.split('\n')
         y = clamp(y, 0, len(lines) - 1)
