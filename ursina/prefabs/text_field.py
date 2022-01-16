@@ -49,6 +49,11 @@ class TextField(Entity):
         self.register_mouse_input = False
         self.world_space_mouse = False
 
+        self.scroll_enabled = False
+        self.scroll_size = (0,0)
+        self.scroll_position = (0,0)
+        self.scroll_delay = 0.07
+
         self.text = ''
 
         self.replacements = dict()
@@ -124,6 +129,7 @@ class TextField(Entity):
 
         self._active = False
         self._prev_text = ''
+        self._scroll_wait = True
 
         def blink_cursor():
             if self.cursor.color == color.cyan:
@@ -284,7 +290,7 @@ class TextField(Entity):
 
         return selectedText
 
-    def mousePos(self):
+    def mousePosUnclamped(self):
         if self.world_space_mouse:
             if mouse.point:
                 x = round(mouse.point[0] * self.bg.scale_x)
@@ -301,12 +307,29 @@ class TextField(Entity):
 
             x = round(mpos.x / self.cursor_parent.scale_x)
             y = floor(mpos.y / self.cursor_parent.scale_y)
+        
+        if self.scroll_enabled:
+            x += self.scroll_position[0]
+            y += self.scroll_position[1]
+
+        return (x, y)
+
+    def mousePos(self):
+        (x, y) = self.mousePosUnclamped()
 
         lines = self.text.split('\n')
         y = clamp(y, 0, len(lines) - 1)
         x = clamp(x, 0, len(lines[y]))
 
         return (x, y)
+
+    def clampMouseScrollOrigin(self):
+        if self.scroll_enabled:
+            scrollX = (self.cursor.origin_x + 0.5) * 0.1
+            scrollY = self.cursor.origin_y + 0.5
+            scrollX = clamp(scrollX, self.cursor.x - self.scroll_size[0], self.cursor.x)
+            scrollY = clamp(scrollY, self.cursor.y - self.scroll_size[1] + 1, self.cursor.y)
+            self.cursor.origin = (scrollX * 10 - 0.5, scrollY - 0.5, 0)
 
     def input(self, key):
         # print('---', key)
@@ -631,11 +654,21 @@ class TextField(Entity):
 
                 self.draw_selection()
 
+        self.clampMouseScrollOrigin()
         self.render()
 
 
     def render(self):
         lines = self.text.split('\n')
+
+        if self.scroll_enabled:
+            lines = lines[self.scroll_position[1] : (self.scroll_position[1] + self.scroll_size[1])]
+            # del lines[:self.scroll_position[1]]
+            # del lines[self.scroll_size[1]:]
+
+            for i in range(len(lines)):
+                lines[i] = lines[i][self.scroll_position[0] : min(len(lines[i]), self.scroll_position[0] + self.scroll_size[0])]
+
         text = '\n'.join(lines[0:self.max_lines+1])
 
         if not hasattr(self.text_entity, 'raw_text') or self._prev_text != text:
@@ -645,7 +678,8 @@ class TextField(Entity):
             else:
                 self.text_entity.text = text
 
-            self.line_numbers.text = '\n'.join([str(e) for e in range(min(len(lines), self.max_lines))])
+            scroll = 1 + (self.scroll_position[1] if self.scroll_enabled else 0)
+            self.line_numbers.text = '\n'.join([str(e + scroll) for e in range(min(len(lines), self.max_lines))])
             self.line_numbers.color = color.gray
 
             self._prev_text = text
@@ -654,11 +688,50 @@ class TextField(Entity):
 
     def update(self):
         # self.debug_cursor.position = self.get_mouse_position()
+
+        if self.scroll_enabled and self._scroll_wait:
+            x = self.cursor.position.x
+            y = self.cursor.position.y
+            if mouse.left:
+                (x, y) = self.mousePosUnclamped()
+
+            scrollX = self.scroll_position[0]
+            scrollY = self.scroll_position[1]
+
+            lines = self.text.split('\n')
+            
+            if y - scrollY < 0 and scrollY > 0:
+                scrollY -= 1
+            elif y - scrollY >= self.scroll_size[1] and scrollY + self.scroll_size[1] < len(lines):
+                scrollY += 1
+
+            max_x = 0
+            for i in range(min(self.scroll_size[1], len(lines))):
+                max_x = max(max_x, len(lines[i + scrollY]))
+
+            if x - scrollX < 0 and scrollX > 0:
+                scrollX -= 1
+            elif x - scrollX >= self.scroll_size[0] and scrollX + self.scroll_size[0] < max_x:
+                scrollX += 1
+
+            if self.scroll_position != (scrollX, scrollY):
+                self._scroll_wait = False
+                self.scroll_position = (scrollX, scrollY)
+                self.cursor.origin = (scrollX * 10 - 0.5, scrollY - 0.5, 0)
+                self.clampMouseScrollOrigin()
+                self.render()
+
+                def resetScrollWait(field):
+                    if field:
+                        field._scroll_wait = True
+                invoke(resetScrollWait, field=self, delay=self.scroll_delay)
+                
         
         if self.register_mouse_input and mouse.left:
             self.cursor.position = self.mousePos()
             if self.selection:
                 self.selection[1] = self.cursor.position
+            self.clampMouseScrollOrigin()
 
             # if self.selection[1][1] < self.selection[0][1]:
             #     self.selection = [self.selection[1], self.selection[0]]
@@ -703,6 +776,18 @@ class TextField(Entity):
         if start_y == end_y:
             e.x = sel[0][0]
             e.scale_x -= sel[0][0]
+        
+        if self.scroll_enabled:
+            for c in self.selection_parent.children:
+                c.y -= self.scroll_position[1]
+                if c.y < 0 or c.y >= self.scroll_size[1]:
+                    c.scale_x = 0
+                else:
+                    c.x -= self.scroll_position[0]
+                    if c.x < 0:
+                        c.scale_x += c.x
+                        c.x = 0
+                    c.scale_x = clamp(c.scale_x, 0, self.scroll_size[0] - c.x)
 
 
 if __name__ == '__main__':
