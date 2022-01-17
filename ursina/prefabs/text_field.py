@@ -708,7 +708,7 @@ class TextField(Entity):
     def update(self):
         # self.debug_cursor.position = self.get_mouse_position()
 
-        if self.scroll_enabled and self._scroll_wait:
+        if self.active and self.scroll_enabled and self._scroll_wait:
             x = self.cursor.position.x
             y = self.cursor.position.y
             if mouse.left:
