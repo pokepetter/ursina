@@ -103,6 +103,8 @@ class TextField(Entity):
             'dedent':           ('shift+tab',),
             'move_line_down':   ('ctrl+down arrow', 'ctrl+down arrow hold'),
             'move_line_up':     ('ctrl+up arrow', 'ctrl+up arrow hold'),
+            'scroll_up':        ('scroll up'),
+            'scroll_down':      ('scroll down'),
             'cut':              ('ctrl+x',),
             'copy':             ('ctrl+c',),
             'paste':            ('ctrl+v',),
@@ -325,10 +327,8 @@ class TextField(Entity):
 
     def clampMouseScrollOrigin(self):
         if self.scroll_enabled:
-            scrollX = (self.cursor.origin_x + 0.5) * 0.1
-            scrollY = self.cursor.origin_y + 0.5
-            scrollX = clamp(scrollX, self.cursor.x - self.scroll_size[0], self.cursor.x)
-            scrollY = clamp(scrollY, self.cursor.y - self.scroll_size[1] + 1, self.cursor.y)
+            scrollX = clamp(self.scroll_position[0], self.cursor.x - self.scroll_size[0], self.cursor.x)
+            scrollY = clamp(self.scroll_position[1], self.cursor.y - self.scroll_size[1] + 1, self.cursor.y)
             self.cursor.origin = (scrollX * 10 - 0.5, scrollY - 0.5, 0)
 
     def input(self, key):
@@ -575,6 +575,13 @@ class TextField(Entity):
             self.move_line(y, y-1)
             cursor.y -= 1
 
+        if key in self.shortcuts['scroll_up'] and self.scroll_enabled and mouse.hovered_entity == self.bg:
+            self.scroll_position = (self.scroll_position[0], max(self.scroll_position[1] - 1, 0))
+            self.cursor.y = max(self.cursor.y - 1, 0)
+
+        if key in self.shortcuts['scroll_down'] and self.scroll_enabled and mouse.hovered_entity == self.bg:
+            self.scroll_position = (self.scroll_position[0], min(self.scroll_position[1] + 1, max(0, len(lines) - self.scroll_size[1])))
+            self.cursor.y = min(self.cursor.y + 1, len(lines) - 1)
 
         if key in self.shortcuts['undo']:
             if not on_undo:
@@ -717,7 +724,6 @@ class TextField(Entity):
             if self.scroll_position != (scrollX, scrollY):
                 self._scroll_wait = False
                 self.scroll_position = (scrollX, scrollY)
-                self.cursor.origin = (scrollX * 10 - 0.5, scrollY - 0.5, 0)
                 self.clampMouseScrollOrigin()
                 self.render()
 
