@@ -132,6 +132,7 @@ class TextField(Entity):
         self._active = False
         self._prev_text = ''
         self._scroll_wait = True
+        self._scroll_prev_position = self.scroll_position
 
         def blink_cursor():
             if self.cursor.color == color.cyan:
@@ -591,12 +592,14 @@ class TextField(Entity):
         if key in self.shortcuts['scroll_up'] and self.scroll_enabled and mouse.hovered_entity == self.bg:
             self.scroll_position = (self.scroll_position[0], max(self.scroll_position[1] - 1, 0))
             self.cursor.y = max(self.cursor.y - 1, 0)
+            self.cursor.x = min(x, len(lines[int(self.cursor.y)]))
             if self.selection:
                 self.draw_selection()
 
         if key in self.shortcuts['scroll_down'] and self.scroll_enabled and mouse.hovered_entity == self.bg:
             self.scroll_position = (self.scroll_position[0], min(self.scroll_position[1] + 1, max(0, len(lines) - self.scroll_size[1])))
             self.cursor.y = min(self.cursor.y + 1, len(lines) - 1)
+            self.cursor.x = min(x, len(lines[int(self.cursor.y)]))
             if self.selection:
                 self.draw_selection()
 
@@ -661,17 +664,10 @@ class TextField(Entity):
 
         if self.register_mouse_input and mouse.point is not None:
             if key == 'left mouse down' and mouse.hovered_entity == self.bg:
-                # if mouse.x < self.x:
-                #     return
-                # from math import floor
-
                 cursor.position = self.mousePos()
                 self.selection = [self.cursor.position, self.cursor.position]  
 
             if key == 'left mouse up':
-                # if mouse.x < self.x:
-                #     return
-
                 cursor.position = self.mousePos()
                 if self.selection:
                     self.selection[1] = self.cursor.position
@@ -687,15 +683,13 @@ class TextField(Entity):
 
         if self.scroll_enabled:
             lines = lines[self.scroll_position[1] : (self.scroll_position[1] + self.scroll_size[1])]
-            # del lines[:self.scroll_position[1]]
-            # del lines[self.scroll_size[1]:]
 
             for i in range(len(lines)):
                 lines[i] = lines[i][self.scroll_position[0] : min(len(lines[i]), self.scroll_position[0] + self.scroll_size[0])]
 
         text = '\n'.join(lines[0:self.max_lines+1])
 
-        if not hasattr(self.text_entity, 'raw_text') or self._prev_text != text:
+        if not hasattr(self.text_entity, 'raw_text') or self._prev_text != text or self._scroll_prev_position != self.scroll_position:
             
             if self.replacements:
                 self.text_entity.text = multireplace(text, self.replacements)
@@ -703,10 +697,11 @@ class TextField(Entity):
                 self.text_entity.text = text
 
             scroll = 1 + (self.scroll_position[1] if self.scroll_enabled else 0)
-            self.line_numbers.text = '\n'.join([str(e + scroll) for e in range(min(len(lines), self.max_lines))])
+            self.line_numbers.text = '\n'.join([str(e + scroll).rjust(5, ' ') for e in range(min(len(lines), self.max_lines))])
             self.line_numbers.color = color.gray
 
             self._prev_text = text
+            self._scroll_prev_position = self.scroll_position
 
 
 
@@ -755,9 +750,6 @@ class TextField(Entity):
             if self.selection:
                 self.selection[1] = self.cursor.position
             self.clampMouseScrollOrigin()
-
-            # if self.selection[1][1] < self.selection[0][1]:
-            #     self.selection = [self.selection[1], self.selection[0]]
 
             self.draw_selection()
 
@@ -829,7 +821,7 @@ if __name__ == '__main__':
     Text.default_resolution = 16*2
     # TreeView()
     te = TextField(max_lines=300, scale=1, register_mouse_input = True)
-    #te = TextField(max_lines=300, scale=1, register_mouse_input = True, scroll_enabled = True, scroll_size = (50,3))
+    #te = TextField(max_lines=300, scale=1, register_mouse_input = True, scroll_size = (50,3))
     # te.line_numbers.enabled = True
     # for name in color.color_names:
     #     if name == 'black':
