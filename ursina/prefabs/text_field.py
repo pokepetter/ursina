@@ -42,7 +42,7 @@ class TextField(Entity):
         # self.max_width_indicatior = Entity(
         #     parent=self.cursor_parent, model='quad', origin=(-.5,.5), scale=(100,.05), rotation_x=180, rotation_z=90, color=color.color(0,0,1,.05), x=80)
         self.cursor = Entity(parent=self.cursor_parent, model='cube', color=color.clear, origin=(-.5, -.5), scale=(.1, 1, 0))
-        self.bg = Entity(parent=self.cursor_parent, model='cube', color=color.dark_gray, origin=(-.5,-.5), z=0.001, scale=(120, 20, 0.01), collider='box', visible=False)
+        self.bg = Entity(parent=self.cursor_parent, model='cube', color=color.dark_gray, origin=(-.5,-.5), z=0.005, scale=(120, 20, 0.001), collider='box', visible=False)
 
         self.selection = None
         self.selection_parent = Entity(parent=self.cursor_parent, scale=(1,1,0))
@@ -175,7 +175,7 @@ class TextField(Entity):
         self._scroll_size = value
         if value[0] > 0 and value[1] > 0:
             self.scroll_enabled = True
-            self.bg.scale = (value[0], value[1], 0.01)
+            self.bg.scale = (value[0], value[1], 0.001)
         else:
             self.scroll_enabled = False
 
