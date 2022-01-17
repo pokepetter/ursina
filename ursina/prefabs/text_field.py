@@ -165,6 +165,19 @@ class TextField(Entity):
             self.draw_selection()
             self.cursor.color = color.clear
 
+    @property
+    def scroll_size(self):
+        return self._scroll_size
+
+    @scroll_size.setter
+    def scroll_size(self, value):
+        self._scroll_size = value
+        if value[0] > 0 and value[1] > 0:
+            self.scroll_enabled = True
+            self.bg.scale = (value[0], value[1], 0.01)
+        else:
+            self.scroll_enabled = False
+
     def add_text(self, s, move_cursor=True):
         if self.character_limit and len(self.text) >= self.character_limit:
             return
