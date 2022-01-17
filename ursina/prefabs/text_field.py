@@ -578,10 +578,14 @@ class TextField(Entity):
         if key in self.shortcuts['scroll_up'] and self.scroll_enabled and mouse.hovered_entity == self.bg:
             self.scroll_position = (self.scroll_position[0], max(self.scroll_position[1] - 1, 0))
             self.cursor.y = max(self.cursor.y - 1, 0)
+            if self.selection:
+                self.draw_selection()
 
         if key in self.shortcuts['scroll_down'] and self.scroll_enabled and mouse.hovered_entity == self.bg:
             self.scroll_position = (self.scroll_position[0], min(self.scroll_position[1] + 1, max(0, len(lines) - self.scroll_size[1])))
             self.cursor.y = min(self.cursor.y + 1, len(lines) - 1)
+            if self.selection:
+                self.draw_selection()
 
         if key in self.shortcuts['undo']:
             if not on_undo:
@@ -787,7 +791,7 @@ class TextField(Entity):
             for c in self.selection_parent.children:
                 c.y -= self.scroll_position[1]
                 if c.y < 0 or c.y >= self.scroll_size[1]:
-                    c.scale_x = 0
+                    destroy(c)
                 else:
                     c.x -= self.scroll_position[0]
                     if c.x < 0:
