@@ -304,8 +304,8 @@ class Window(WindowProperties):
                 try:
                     application.base.win.request_properties(self)
                 except:
-                    pass
                     print_warning('failed to set borderless', value)
+                    pass
                 object.__setattr__(self, name, value)
             else:
                 print_warning('failed to set borderless', value)
