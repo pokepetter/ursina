@@ -10,6 +10,8 @@ from ursina.scene import instance as scene
 from ursina.camera import instance as camera
 from ursina.mouse import instance as mouse
 from ursina.string_utilities import print_info
+from panda3d.core import KeyboardButton
+from panda3d.core import ConfigVariableBool
 
 import __main__
 time.dt = 0
@@ -51,6 +53,7 @@ class Ursina(ShowBase):
         base.buttonThrowers[0].node().setButtonDownEvent('buttonDown')
         base.buttonThrowers[0].node().setButtonUpEvent('buttonUp')
         base.buttonThrowers[0].node().setButtonRepeatEvent('buttonHold')
+        base.buttonThrowers[0].node().setKeystrokeEvent('keystroke')
         self._input_name_changes = {
             'mouse1' : 'left mouse down',
             'mouse1 up' : 'left mouse up',
@@ -97,6 +100,8 @@ class Ursina(ShowBase):
         self.accept('buttonDown', self.input)
         self.accept('buttonUp', self.input_up)
         self.accept('buttonHold', self.input_hold)
+        self.accept('keystroke', self.keystroke)
+        ConfigVariableBool('paste-emit-keystrokes', False)
 
         base.disableMouse()
         mouse._mouse_watcher = base.mouseWatcherNode
@@ -226,6 +231,31 @@ class Ursina(ShowBase):
 
         if key == 'f9':
             window.render_mode = 'default'
+
+
+    def keystroke(self, key):
+        key = str(KeyboardButton.asciiKey(key))
+
+        if key == None:
+            return
+        if key == 'space':
+            key = ' '
+        if len(key) != 1:
+            return
+        
+        for entity in scene.entities:
+            if entity.enabled == False or entity.ignore or entity.ignore_input:
+                continue
+            if application.paused and entity.ignore_paused == False:
+                continue
+
+            if hasattr(entity, 'keystroke') and callable(entity.keystroke):
+                entity.keystroke(key)
+
+            if hasattr(entity, 'scripts'):
+                for script in entity.scripts:
+                    if script.enabled and hasattr(script, 'keystroke') and callable(script.keystroke):
+                        script.keystroke(key)
 
 
     def run(self):
