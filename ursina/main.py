@@ -242,6 +242,10 @@ class Ursina(ShowBase):
             key = ' '
         if len(key) != 1:
             return
+
+        if not application.paused:
+            if hasattr(__main__, 'keystroke'):
+                __main__.keystroke(key)
         
         for entity in scene.entities:
             if entity.enabled == False or entity.ignore or entity.ignore_input:
