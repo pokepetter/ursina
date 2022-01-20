@@ -1,9 +1,7 @@
 from ursina import *
 
 
-
-
-def combine(entity, analyze=False, auto_destroy=True, ignore=[]):
+def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[]):
     verts = []
     tris = []
     norms = []
@@ -12,22 +10,24 @@ def combine(entity, analyze=False, auto_destroy=True, ignore=[]):
     to_destroy = []
     o = 0
 
-
     for e in scene.entities:
         if e in ignore:
             continue
 
-        if e.has_ancestor(entity) or e == entity:
+        if e.has_ancestor(combine_parent) or e == combine_parent:
             if not hasattr(e, 'model') or e.model == None or e.scripts or e.eternal:
                 continue
             if not hasattr(e.model, 'vertices') or not e.model.vertices:
                 e.model = load_model(e.model.name, use_deepcopy=True)
                 e.origin = e.origin
+            if not e.model:
+                continue
 
             if analyze:
                 print('combining:', e)
 
-            verts += get_vertices(e, entity)
+            vertex_to_world_matrix = e.model.getTransform(combine_parent).getMat()
+            verts += [vertex_to_world_matrix.xformPoint(v) for v in e.model.vertices]
 
             if not e.model.triangles:
                 new_tris = [i for i in range(len(e.model.vertices))]
@@ -55,45 +55,27 @@ def combine(entity, analyze=False, auto_destroy=True, ignore=[]):
                 uvs += e.model.uvs
 
             if e.model.colors: # if has vertex colors
-                cols.extend(e.model.colors)
+                cols.extend([vcol*e.color for vcol in e.model.colors])
             else:
                 cols.extend((e.color, ) * len(e.model.vertices))
 
 
-            if auto_destroy and e != entity:
+            if auto_destroy and e != combine_parent:
                 to_destroy.append(e)
 
     if auto_destroy:
         from ursina import destroy
         [destroy(e) for e in to_destroy]
 
-    entity.model = Mesh(vertices=verts, triangles=tris, normals=norms, uvs=uvs, colors=cols, mode='triangle')
+    combine_parent.model = Mesh(vertices=verts, triangles=tris, normals=norms, uvs=uvs, colors=cols, mode='triangle')
     print('combined')
     # entity.model = Mesh(vertices=verts,  mode='triangle')
     # entity.flatten_strong()
     if analyze:
         render.analyze()
-    return entity.model
+    return combine_parent.model
 
 
-temp_entity = None
-
-def get_vertices(entity, relative_to=None):
-    global temp_entity
-    if relative_to is None:
-        return entity.model.vertices
-
-    vertices = list()
-    if not temp_entity:
-        temp_entity = Entity(ignore=True)
-
-    temp_entity.parent = entity.model
-
-    for v in entity.model.vertices:
-        temp_entity.position = v
-        vertices.append(temp_entity.get_position(relative_to))
-
-    return vertices
 
 
 if __name__ == '__main__':
