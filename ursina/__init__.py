@@ -24,14 +24,14 @@ from ursina.color import Color, hsv, rgb
 from ursina.sequence import Sequence, Func, Wait
 from ursina.entity import Entity
 from ursina.collider import *
-from ursina.collision_zone import CollisionZone
 from ursina.raycaster import raycast, boxcast
 from ursina.trigger import Trigger
 from ursina.audio import Audio
 from ursina.duplicate import duplicate
-from panda3d.core import Vec4, Quat
+from panda3d.core import Quat
 from ursina.vec2 import Vec2
 from ursina.vec3 import Vec3
+from ursina.vec4 import Vec4
 from ursina.shader import Shader
 from ursina.lights import *
 

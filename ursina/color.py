@@ -2,7 +2,7 @@ import colorsys
 import random
 import sys
 from math import floor, inf
-from panda3d.core import Vec4
+from ursina.vec4 import Vec4
 
 
 class Color(Vec4):
@@ -174,7 +174,7 @@ if __name__ == '__main__':
     p = Entity(x=-2)
     for key in color.colors:
         print(key)
-        b = Button(parent=p, model=Quad(subdivisions=2), color=color.colors[key], text=key)
+        b = Button(parent=p, model=Quad(0), color=color.colors[key], text=key)
         b.text_entity.scale *= .5
 
     grid_layout(p.children, max_x=8)

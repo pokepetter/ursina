@@ -234,7 +234,7 @@ def obj_to_ursinamesh(
         norms = []
         normals = [] # final normals made getting norms with norm_indices
 
-        vertex_colors = list()
+        vertex_colors = []
         current_color = None
         mtl_data = None
         mtl_dict = {}

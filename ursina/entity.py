@@ -4,7 +4,8 @@ import glob
 from pathlib import Path
 from panda3d.core import NodePath
 from ursina.vec3 import Vec3
-from panda3d.core import Vec4, Vec2
+from ursina.vec4 import Vec4
+from panda3d.core import Vec2
 from panda3d.core import TransparencyAttrib
 from panda3d.core import Shader
 from panda3d.core import TextureStage, TexGenAttrib

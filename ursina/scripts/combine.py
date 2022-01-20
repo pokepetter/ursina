@@ -55,7 +55,7 @@ def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[]):
                 uvs += e.model.uvs
 
             if e.model.colors: # if has vertex colors
-                cols.extend([vcol*e.color for vcol in e.model.colors])
+                cols.extend([Color(*vcol) * e.color for vcol in e.model.colors])
             else:
                 cols.extend((e.color, ) * len(e.model.vertices))
 
