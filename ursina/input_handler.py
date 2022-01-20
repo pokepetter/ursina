@@ -10,6 +10,7 @@ class Keys(Enum):
     middle_mouse_up = 'middle mouse up'
     right_mouse_down = 'right mouse down'
     right_mouse_up = 'right mouse up'
+    double_click = 'double click'
     scroll_up = 'scroll up'
     scroll_down = 'scroll down'
     left_arrow = 'left arrow'
