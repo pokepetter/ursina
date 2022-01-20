@@ -26,7 +26,10 @@ class InputField(Button):
 
         self.next_field = None
 
-        self.text_field = TextField(world_parent=self, x=-.45, y=.3, z=-.1, max_lines=max_lines, character_limit=character_limit)
+        self.text_field = TextField(world_parent = self, x=-.45, y=.3, z=-.1, max_lines=max_lines, character_limit=character_limit, register_mouse_input = True)
+        destroy(self.text_field.bg)
+        self.text_field.bg = self
+        
         def render():
             if self.limit_content_to:
                 org_length = len(self.text_field.text)
@@ -49,22 +52,20 @@ class InputField(Button):
         self.text_field.scale *= 1.25
         self.text_field.text = default_value
         self.text_field.render()
+        self.text_field.shortcuts['indent'] = ('')
+        self.text_field.shortcuts['dedent'] = ('')
 
-        self.text_field.register_mouse_input = False
         self.active = False
 
         if label:
-            self.label = Text('Label:')
-            self.text_field.x += 5
+            self.label = Text(str(label) + ':', parent = self, position = self.text_field.position, scale = 1.25)
+            self.text_field.x += 0.1 * (len(str(label)) + 1.0) / 6.0
 
 
         for key, value in kwargs.items():
             setattr(self, key, value)
 
     def input(self, key):
-        if key == 'left mouse down':
-            self.active = self.hovered
-
         if key == 'tab' and self.text_field.cursor.y >= self.text_field.max_lines-1 and self.active:
             self.active = False
             if self.next_field:
@@ -92,14 +93,11 @@ class InputField(Button):
 
     @property
     def active(self):
-        return self._active
+        return self.text_field.active
 
     @active.setter
     def active(self, value):
-        self._active = value
-        self.text_field.ignore = not value
-        self.text_field.cursor.enabled = value
-        # self.text_field.register_mouse_input = True
+        self.text_field.active = value
         # if value == True:
         #     # self.text_field.select_all()
         #     invoke(self.text_field.select_all, delay=.1)
