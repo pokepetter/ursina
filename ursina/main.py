@@ -5,6 +5,7 @@ from direct.task.Task import Task
 
 from ursina import application
 from ursina import input_handler
+from ursina import event_handler
 from ursina.window import instance as window
 from ursina.scene import instance as scene
 from ursina.camera import instance as camera
@@ -132,7 +133,7 @@ class Ursina(ShowBase):
         for seq in application.sequences:
             seq.update()
 
-        for entity in scene.entities:
+        for entity in event_handler.event_update:
             if entity.enabled == False or entity.ignore:
                 continue
 
@@ -191,7 +192,7 @@ class Ursina(ShowBase):
                 __main__.input(key)
 
 
-        for entity in scene.entities:
+        for entity in event_handler.event_input:
             if entity.enabled == False or entity.ignore or entity.ignore_input:
                 continue
             if application.paused and entity.ignore_paused == False:

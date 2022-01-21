@@ -9,6 +9,7 @@ import time
 from pathlib import Path
 
 from ursina import application
+from ursina import event_handler
 from ursina.text import Text
 from ursina.window import instance as window
 from ursina.scene import instance as scene
@@ -73,6 +74,9 @@ def _destroy(entity, force_destroy=False):
     if entity in scene.entities:
         scene.entities.remove(entity)
 
+    event_handler.append_update_event(entity, False)
+    event_handler.append_input_event(entity, False)
+    event_handler.append_keystroke_event(entity, False)
 
     if hasattr(entity, 'scripts'):
         for s in entity.scripts:

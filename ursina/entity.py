@@ -29,6 +29,7 @@ from textwrap import dedent
 from panda3d.core import Shader as Panda3dShader
 from ursina.shader import Shader
 from ursina.string_utilities import print_info, print_warning
+from ursina import event_handler
 
 from ursina import color
 from ursina.color import Color
@@ -121,6 +122,15 @@ class Entity(NodePath):
                 self.on_disable()
             elif isinstance(self.on_disable, Sequence):
                 self.on_disable.start()
+
+        if hasattr(self, 'update') and callable(self.update):
+            event_handler.append_update_event(self)
+
+        if hasattr(self, 'input') and callable(self.input):
+            event_handler.append_input_event(self)
+            
+        if hasattr(self, 'keystroke') and callable(self.keystroke):
+            event_handler.append_keystroke_event(self)
 
 
     def _list_to_vec(self, value):
@@ -265,6 +275,14 @@ class Entity(NodePath):
             object.__setattr__(self, name, value)
             self.set_shader_input(name, value)
 
+        elif name == 'update':
+            event_handler.append_update_event(self, value != None)
+
+        elif name == 'input':
+            event_handler.append_input_event(self, value != None)
+
+        elif name == 'keystroke':
+            event_handler.append_keystroke_event(self, value != None)
 
         try:
             super().__setattr__(name, value)

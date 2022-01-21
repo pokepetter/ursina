@@ -14,6 +14,7 @@ from ursina.main import Ursina
 from ursina.ursinamath import *
 from ursina.ursinastuff import *
 from ursina import input_handler
+from ursina import event_handler
 from ursina.input_handler import held_keys, Keys
 from ursina.string_utilities import *
 from ursina.mesh_importer import load_model, load_blender_scene
