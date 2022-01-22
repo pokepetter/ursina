@@ -35,8 +35,7 @@ ground = Entity(model='quad', scale_x=10, collider='box', color=color.black)
 # copying the quad model and offset the vertices. If we wanted to use a tileset with different
 # graphics for each tile, we'd scale and offset the uvs as well.
 
-quad = load_model('quad')
-print('--------------', quad)
+quad = load_model('quad', use_deepcopy=True)
 
 
 level_parent = Entity(model=Mesh(vertices=[], uvs=[]), texture='white_cube')
@@ -53,7 +52,7 @@ def make_level(texture):
 
             # If it's black, it's solid, so we'll place a tile there.
             if col == color.black:
-                level_parent.model.vertices += [Vec3(*e) + Vec3(x+.5,y+.5,0) for e in quad.vertices] # copy the quad model, but offset it with Vec3(x+.5,y+.5,0)
+                level_parent.model.vertices += [Vec3(*e) + Vec3(x+.5,y+.5,0) for e in quad.generated_vertices] # copy the quad model, but offset it with Vec3(x+.5,y+.5,0)
                 level_parent.model.uvs += quad.uvs
                 # Entity(parent=level_parent, position=(x,y), model='cube', origin=(-.5,-.5), color=color.gray, texture='white_cube', visible=True)
                 if not collider:

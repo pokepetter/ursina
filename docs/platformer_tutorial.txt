@@ -50,8 +50,7 @@ graphics for each tile, we'd scale and offset the uvs as well.
 
 # code
 
-quad = load_model('quad')
-print('--------------', quad)
+quad = load_model('quad', use_deepcopy=True)
 
 
 level_parent = Entity(model=Mesh(vertices=[], uvs=[]), texture='white_cube')
@@ -68,7 +67,7 @@ def make_level(texture):
 
             # If it's black, it's solid, so we'll place a tile there.
             if col == color.black:
-                level_parent.model.vertices += [Vec3(*e) + Vec3(x+.5,y+.5,0) for e in quad.vertices] # copy the quad model, but offset it with Vec3(x+.5,y+.5,0)
+                level_parent.model.vertices += [Vec3(*e) + Vec3(x+.5,y+.5,0) for e in quad.generated_vertices] # copy the quad model, but offset it with Vec3(x+.5,y+.5,0)
                 level_parent.model.uvs += quad.uvs
                 # Entity(parent=level_parent, position=(x,y), model='cube', origin=(-.5,-.5), color=color.gray, texture='white_cube', visible=True)
                 if not collider:
@@ -89,15 +88,21 @@ def make_level(texture):
 make_level(load_texture('platformer_tutorial_level'))   # generate the level
 # text
 
+quad = load_model('quad')
+
+# code
+camera.orthographic = True
+camera.position = (30/2,8)
+camera.fov = 16
+# text
+
 ## Positioning the camera
 Set the camera to orthographic so there's no perspective.
 Move the camera to the middle of the level and set the fov so the level fits nicely.
 Setting the fov on an orthographic camera means setting how many units vertically the camera can see.
 
 # code
-camera.orthographic = True
-camera.position = (30/2,8)
-camera.fov = 16
+
 # text
 
 ## Adding player graphics and animations
@@ -108,16 +113,6 @@ You can also load a .gif by including the file type: Animation('image.gif')
 player.walk_animation = Animation('player_walk')
 
 # code
-
-# text
-
-the platformer controller has an Animator and will toggle the state based on
-whether it's standing still, is walking or is jumping.
-All the Animator does is to make sure only one Animation is enabled at the same time.
-Otherwise they would overlap.
-self.animator = Animator({'idle' : None, 'walk' : None, 'jump' : None})
-
-# code
 player.traverse_target = level_parent
 enemy = Entity(model='cube', collider='box', color=color.red, position=(16,5,-.1))
 def update():
@@ -126,7 +121,11 @@ def update():
         player.position = player.start_position
 # text
 
-## Start the game
+the platformer controller has an Animator and will toggle the state based on
+whether it's standing still, is walking or is jumping.
+All the Animator does is to make sure only one Animation is enabled at the same time.
+Otherwise they would overlap.
+self.animator = Animator({'idle' : None, 'walk' : None, 'jump' : None})
 
 # code
 app.run()
@@ -143,8 +142,7 @@ player = PlatformerController2d(y=1, z=.01, scale_y=1, max_jumps=2)
 ground = Entity(model='quad', scale_x=10, collider='box', color=color.black)
 
 
-quad = load_model('quad')
-print('--------------', quad)
+quad = load_model('quad', use_deepcopy=True)
 
 
 level_parent = Entity(model=Mesh(vertices=[], uvs=[]), texture='white_cube')
@@ -161,7 +159,7 @@ def make_level(texture):
 
             # If it's black, it's solid, so we'll place a tile there.
             if col == color.black:
-                level_parent.model.vertices += [Vec3(*e) + Vec3(x+.5,y+.5,0) for e in quad.vertices] # copy the quad model, but offset it with Vec3(x+.5,y+.5,0)
+                level_parent.model.vertices += [Vec3(*e) + Vec3(x+.5,y+.5,0) for e in quad.generated_vertices] # copy the quad model, but offset it with Vec3(x+.5,y+.5,0)
                 level_parent.model.uvs += quad.uvs
                 # Entity(parent=level_parent, position=(x,y), model='cube', origin=(-.5,-.5), color=color.gray, texture='white_cube', visible=True)
                 if not collider:
