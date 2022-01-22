@@ -61,35 +61,6 @@ class TextField(Entity):
         self.on_undo = list()
         self.on_redo = list()
 
-        self.shifted_keys = {
-            '-' : '_',
-            '.' : ':',
-            ',' : ';',
-            '\'' : '*',
-            '<' : '>',
-            '+' : '?',
-            '0' : '=',
-            '1' : '!',
-            '2' : '"',
-            '3' : '#',
-            '4' : '¤',
-            '5' : '%',
-            '6' : '&',
-            '7' : '/',
-            '8' : '(',
-            '9' : ')',
-        }
-        self.alted_keys = {
-            '\'' : '´',
-            '0' : '}',
-            '2' : '@',
-            '3' : '£',
-            '4' : '¤',
-            '5' : '€',
-            '7' : '{',
-            '8' : '[',
-            '9' : ']',
-        }
         self.shortcuts = {
             'newline':          ('enter', 'enter hold'),
             'erase':            ('backspace', 'backspace hold'),
@@ -355,8 +326,6 @@ class TextField(Entity):
         if not self.active:
             return
 
-        if key == 'space':
-            key = ' '
         # key = f'{"ctrl" if held_keys["control"]} + {key}'
         ctrl, shift, alt = '', '', ''
         if held_keys['control'] and key != 'control':
@@ -441,37 +410,6 @@ class TextField(Entity):
             # self.selection[0] = self.cursor.position
             print(self.selection)
             self.draw_selection()
-
-
-        k = key.replace(' hold', '')
-        k = k.replace('shift+', '')
-        # print(Text.get_width('f'))
-        if len(k) == 1 and not held_keys['control']:
-
-            if held_keys['shift']:
-                k = k.upper()
-                if k in self.shifted_keys:
-                    k = self.shifted_keys[k]
-                if k in self.alted_keys:
-                    k = self.alted_keys[k]
-
-            if self.selection:  # delete selected text
-                self.delete_selected()
-
-            add_text(k)
-
-            if k == '(':
-                add_text(')')
-                cursor.x -= 1
-
-            if k == '[':
-                add_text(']')
-            if k == '{':
-                add_text('}')
-
-
-        if key in ('space', 'space hold'):
-            add_text(' ')
 
         if key in self.shortcuts['newline'] and self.cursor.y < self.max_lines-1:
             if self.selection:
@@ -677,6 +615,28 @@ class TextField(Entity):
         self.clampMouseScrollOrigin()
         self.render()
 
+    def keystroke(self, key):
+        cursor, add_text = self.cursor, self.add_text
+
+        if not self.active:
+            return
+
+        if self.selection:  # delete selected text
+            self.delete_selected()
+
+        add_text(key)
+
+        if key == '(':
+            add_text(')')
+            cursor.x -= 1
+        elif key == '[':
+            add_text(']')
+            cursor.x -= 1
+        elif key == '{':
+            add_text('}')
+            cursor.x -= 1
+        
+        self.render()
 
     def render(self):
         lines = self.text.split('\n')
