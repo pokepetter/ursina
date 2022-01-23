@@ -314,19 +314,19 @@ axis_colors = {
     'z' : color.cyan
 }
 
-# if not load_model('arrow'):
-#     p = Entity(enabled=False)
-#     Entity(parent=p, model='cube', scale=(1,.05,.05))
-#     Entity(parent=p, model=Cone(4, direction=(1,0,0)), x=.5, scale=.2)
-#     arrow_model = p.combine()
-#     arrow_model.save('arrow.ursinamesh', path=internal_models_compressed_folder)
-#
-# if not load_model('scale_gizmo'):
-#     p = Entity(enabled=False)
-#     Entity(parent=p, model='cube', scale=(.05,.05,1))
-#     Entity(parent=p, model='cube', z=.5, scale=.2)
-#     arrow_model = p.combine()
-#     arrow_model.save('scale_gizmo.ursinamesh', path=internal_models_compressed_folder)
+if not load_model('arrow', application.internal_models_compressed_folder):
+    p = Entity(enabled=False)
+    Entity(parent=p, model='cube', scale=(1,.05,.05))
+    Entity(parent=p, model=Cone(4, direction=(1,0,0)), x=.5, scale=.2)
+    arrow_model = p.combine()
+    arrow_model.save('arrow.ursinamesh', path=internal_models_compressed_folder)
+
+if not load_model('scale_gizmo', application.internal_models_compressed_folder):
+    p = Entity(enabled=False)
+    Entity(parent=p, model='cube', scale=(.05,.05,1))
+    Entity(parent=p, model='cube', z=.5, scale=.2)
+    arrow_model = p.combine()
+    arrow_model.save('scale_gizmo.ursinamesh', path=internal_models_compressed_folder)
 
 
 class GizmoArrow(Draggable):
@@ -343,6 +343,8 @@ class GizmoArrow(Draggable):
         self.world_parent = level_editor
         self.gizmo.world_parent = self
         for e in level_editor.selection:
+            e.original_parent = e.parent
+
             if level_editor.local_global_menu.value == 'global':
                 e.world_parent = self
             else:
@@ -353,10 +355,19 @@ class GizmoArrow(Draggable):
 
     def drop(self):
         self.gizmo.world_parent = level_editor
-        if self.record_undo:
+
+        for e in level_editor.selection:
+            e.world_parent = e.original_parent
+
+        changed = ( # don't record undo if transform didn't change
+            distance(level_editor.selection[0].world_transform[0], level_editor.selection[0]._original_world_transform[0]) > .0001 or
+            distance(level_editor.selection[0].world_transform[1], level_editor.selection[0]._original_world_transform[1]) > .0001 or
+            distance(level_editor.selection[0].world_transform[2], level_editor.selection[0]._original_world_transform[2]) > .0001
+            )
+
+        if self.record_undo and changed:
             changes = []
             for e in level_editor.selection:
-                e.world_parent = e.original_parent
                 changes.append([level_editor.entities.index(e), 'world_transform', e._original_world_transform, e.world_transform])
 
             level_editor.current_scene.undo.record_undo(changes)
@@ -375,7 +386,6 @@ class GizmoArrow(Draggable):
 
 
 
-
 class Gizmo(Entity):
     def __init__(self, **kwargs):
         super().__init__(parent=level_editor, enabled=False)
@@ -389,7 +399,7 @@ class Gizmo(Entity):
 
 
         self.subgizmos = {
-            'xz' : GizmoArrow(parent=self.arrow_parent, gizmo=self, model='cube', scale=.6, scale_y=.05, origin=(-.75,0,-.75), color=lerp(color.magenta, color.cyan, .5), plane_direction=(0,1,0)),
+            'xz' : GizmoArrow(parent=self.arrow_parent, gizmo=self, model='cube', collider='plane', scale=.6, scale_y=.05, origin=(-.75,0,-.75), color=lerp(color.magenta, color.cyan, .5), plane_direction=(0,1,0)),
             'x'  : GizmoArrow(parent=self.arrow_parent, gizmo=self, color=axis_colors['x'], lock=(0,1,1)),
             'y'  : GizmoArrow(parent=self.arrow_parent, gizmo=self, rotation=(0,0,-90), color=axis_colors['y'], lock=(1,0,1)),
             'z'  : GizmoArrow(parent=self.arrow_parent, gizmo=self, rotation=(0,-90,0), color=axis_colors['z'], plane_direction=(0,1,0), lock=(1,1,0)),
@@ -464,12 +474,12 @@ class RotationGizmo(Entity):
 
     def __init__(self, **kwargs):
         super().__init__(parent=gizmo)
-        rotation_gizmo_model = load_model('rotation_gizmo_model')
+        rotation_gizmo_model = load_model('rotation_gizmo_model', application.internal_models_compressed_folder)
         if not rotation_gizmo_model:
             path = Circle(24).vertices
             path.append(path[0])
             rotation_gizmo_model = Pipe(base_shape=Quad(radius=0), path=[Vec3(e)*32 for e in path])
-            rotation_gizmo_model.save('rotation_gizmo_model.ursinamesh')
+            rotation_gizmo_model.save('rotation_gizmo_model', application.internal_models_compressed_folder)
 
         self.rotator = Entity(parent=gizmo)
         self.axis = Vec3(0,1,0)
@@ -596,7 +606,7 @@ class BoxGizmo(Entity):
             mouse.update()
             if mouse.hovered_entity in level_editor.entities and mouse.normal and mouse.normal != Vec3(0):
                 self.target = mouse.hovered_entity
-                self.target.original_parent = self.target.parent
+                # self.target.original_parent = self.target.parent
 
                 self.normal = Vec3(mouse.normal)
                 self.axis_name = 'xyz'[[abs(int(e)) for e in self.normal].index(1)]
@@ -912,7 +922,8 @@ class Spawner(Entity):
     def __init__(self):
         super().__init__(parent=level_editor)
         self.target = None
-        self.button = Button(parent=level_editor.ui, scale=.1, origin=(.5,-.5), position=window.bottom_right, text='+', on_click=self.spawn_entity)
+        self.button = Button(parent=level_editor.ui, scale=.075, origin=(.5,-.5), position=window.bottom_right, text='+', on_click=self.spawn_entity)
+        self.button.i = Entity(parent=self.button, model='wireframe_cube', rotation=(-10,10,0), scale=.5, position=(-.5,.5))
 
     def input(self, key):
         if key == 'n':
@@ -1338,8 +1349,11 @@ class ColorMenu(Entity):
         self.a_slider.bg.color = value
 
     def input(self, key):
-        if key == 'b' and not held_keys['control'] and not held_keys['shift'] and not held_keys['alt']:
-            self.open()
+        if key == 'b':
+            if not held_keys['control'] and not held_keys['shift'] and not held_keys['alt'] and not self.sub_menu.enabled:
+                self.open()
+            else:
+                self.sub_menu.enabled = False
 
     def open(self):
         if self.sub_menu.enabled:
@@ -1411,6 +1425,7 @@ class Duplicator(Entity):
             level_editor.current_scene.undo.record_undo(('delete entities', [level_editor.entities.index(en) for en in clones], [repr(e) for e in clones],))
 
             level_editor.render_selection()
+            mouse.position = level_editor.selection[-1].screen_position
             gizmo.drag()
             gizmo.subgizmos['xz'].start_dragging()
 
