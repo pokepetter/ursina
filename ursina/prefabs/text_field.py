@@ -363,7 +363,7 @@ class TextField(Entity):
                 cursor.y -= 1
                 cursor.x = len(lines[y-1])
 
-        delimiters = (' ', '.')
+        delimiters = ' .,!?;:(){}[]<>\'\"@#$%^&*+=-\\|/`~'
         if key in self.shortcuts['move_to_end_of_word']:
             if x == len(l):
                 if y < len(lines)-1:        # end of line, move to beginning of next
