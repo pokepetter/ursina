@@ -658,19 +658,19 @@ class Entity(NodePath):
 
     @property
     def forward(self): # get forward direction.
-        return render.getRelativeVector(self, (0, 0, 1))
+        return Vec3(*render.getRelativeVector(self, (0, 0, 1)))
     @property
     def back(self): # get backwards direction.
         return -self.forward
     @property
     def right(self): # get right direction.
-        return render.getRelativeVector(self, (1, 0, 0))
+        return Vec3(*render.getRelativeVector(self, (1, 0, 0)))
     @property
     def left(self): # get left direction.
         return -self.right
     @property
     def up(self): # get up direction.
-        return render.getRelativeVector(self, (0, 1, 0))
+        return Vec3(*render.getRelativeVector(self, (0, 1, 0)))
     @property
     def down(self): # get down direction.
         return -self.up
