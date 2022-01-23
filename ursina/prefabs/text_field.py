@@ -584,9 +584,10 @@ class TextField(Entity):
             self.text = '\n'.join(lines)
 
         if key in self.shortcuts['duplicate_line']:
-            self._append_undo(self.text, y, 0)
-            lines.insert(y, lines[y])
-            self.text = '\n'.join(lines)
+            if len(lines) < self.max_lines:
+                self._append_undo(self.text, y, 0)
+                lines.insert(y, lines[y])
+                self.text = '\n'.join(lines)
 
 
         if key == self.shortcuts['select_word']:
