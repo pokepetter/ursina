@@ -66,6 +66,7 @@ class TextField(Entity):
             'erase':            ('backspace', 'backspace hold'),
             'erase_word':       ('ctrl+backspace', 'ctrl+backspace hold'),
             'delete_line':      ('ctrl+shift+k',),
+            'duplicate_line':   ('ctrl+d',),
             'undo':             ('ctrl+z', 'ctrl+z hold'),
             'redo':             ('ctrl+y', 'ctrl+y hold', 'ctrl+shift+z', 'ctrl+shift+z hold'),
             # 'save':             ('ctrl+s',),
@@ -580,6 +581,11 @@ class TextField(Entity):
             if y >= len(lines) and y > 0:
                 self.cursor.y -= 1
 
+            self.text = '\n'.join(lines)
+
+        if key in self.shortcuts['duplicate_line']:
+            self._append_undo(self.text, y, 0)
+            lines.insert(y, lines[y])
             self.text = '\n'.join(lines)
 
 
