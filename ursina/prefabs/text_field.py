@@ -546,19 +546,21 @@ class TextField(Entity):
             if not on_undo:
                 return
 
-            # self.on_redo.append((self.text, y, x))
+            self.on_redo.append((self.text, y, x))
             self.text = on_undo[-1][0]
             cursor.y = on_undo[-1][1]
             cursor.x = on_undo[-1][2]
             on_undo.pop()
 
-        # if key in self.shortcuts['redo']:
-        #     if not self.on_redo:
-        #         return
-        #     self.text = self.on_redo[-1][0]
-        #     cursor.y = self.on_redo[-1][1]
-        #     cursor.x = self.on_redo[-1][2]
-        #     self.on_redo.pop()
+        if key in self.shortcuts['redo']:
+            if not self.on_redo:
+                return
+
+            self.on_undo.append((self.text, y, x))
+            self.text = self.on_redo[-1][0]
+            cursor.y = self.on_redo[-1][1]
+            cursor.x = self.on_redo[-1][2]
+            self.on_redo.pop()
 
 
         if key in self.shortcuts['delete_line']:
