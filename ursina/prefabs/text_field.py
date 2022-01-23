@@ -160,11 +160,16 @@ class TextField(Entity):
         lines = self.text.split('\n')
         l = lines[y]
         lines[y] =  l[:x] + s + l[x:]
-        self.on_undo.append((self.text, y, x))
+        self._append_undo(self.text, y, x)
         self.text = '\n'.join(lines)
 
         if move_cursor:
             self.cursor.x += len(s)
+
+    def _append_undo(self, text, y, x, clear_redo = True):
+        if clear_redo:
+            self.on_redo.clear()
+        self.on_undo.append((text, y, x))
 
 
     def move_line(self, a, b):
@@ -172,7 +177,7 @@ class TextField(Entity):
 
         lines = self.text.split('\n')
         lines[a], lines[b] = lines[b], lines[a]
-        self.on_undo.append((self.text, y, x))
+        self._append_undo(self.text, y, x)
         self.text = '\n'.join(lines)
         # print('moved line')
 
@@ -206,7 +211,7 @@ class TextField(Entity):
 
             lines[y] = l
 
-        self.on_undo.append((self.text, y, x))
+        self._append_undo(self.text, y, x)
 
         # else:   # delete selected
         #     self.delete_selected()
@@ -253,10 +258,10 @@ class TextField(Entity):
         lines[start_y] = lines[start_y][:int(sel[0][0])] + lines[end_y][int(sel[1][0]):]
         del lines[(start_y + 1) : (end_y + 1)]
 
-        self.on_undo.append((self.text, self.cursor.y, self.cursor.x))
+        self._append_undo(self.text, self.cursor.y, self.cursor.x)
         self.text = '\n'.join(lines)
         self.selection = None
-        # self.on_undo.append((self.text, y, x))
+        # self._append_undo(self.text, y, x)
         self.draw_selection()
 
     def get_selected(self):
@@ -444,7 +449,7 @@ class TextField(Entity):
                     # print('indent', y)
                     lines[y] = (' '*4) + lines[y]
                 self.cursor.x += 4
-                self.on_undo.append((self.text, y, x))
+                self._append_undo(self.text, y, x)
                 self.text = '\n'.join(lines)
 
 
@@ -468,7 +473,7 @@ class TextField(Entity):
             if moveCursor:
                 self.cursor.x = max(self.cursor.x - 4, 0)
             if appendHistory:
-                self.on_undo.append((self.text, y, x))
+                self._append_undo(self.text, y, x)
                 self.text = '\n'.join(lines)
 
 
@@ -512,7 +517,7 @@ class TextField(Entity):
 
 
             lines[y] = l
-            self.on_undo.append((self.text, y, x))
+            self._append_undo(self.text, y, x)
             self.text = '\n'.join(lines)
 
 
@@ -556,7 +561,7 @@ class TextField(Entity):
             if not self.on_redo:
                 return
 
-            self.on_undo.append((self.text, y, x))
+            on_undo.append((self.text, y, x))
             self.text = self.on_redo[-1][0]
             cursor.y = self.on_redo[-1][1]
             cursor.x = self.on_redo[-1][2]
@@ -564,6 +569,7 @@ class TextField(Entity):
 
 
         if key in self.shortcuts['delete_line']:
+            self._append_undo(self.text, y, 0)
             lines.pop(y)
 
             if y == 0:
