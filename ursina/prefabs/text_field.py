@@ -104,6 +104,7 @@ class TextField(Entity):
         self._prev_text = ''
         self._scroll_wait = True
         self._scroll_prev_position = self.scroll_position
+        self._ignore_next_click = False
 
         def blink_cursor():
             if self.cursor.color == color.cyan:
@@ -575,9 +576,20 @@ class TextField(Entity):
 
 
         if key == self.shortcuts['select_word']:
-            pass
-            # move cursor to the beginning
-            # select word right
+            xStart = x
+            xEnd = x
+            while xStart > 0 and (lines[y][xStart - 1] not in delimiters):
+                xStart -= 1
+
+            lineWidth = len(lines[y])
+            while xEnd < lineWidth and (lines[y][xEnd] not in delimiters):
+                xEnd += 1
+
+            self.selection = [Vec2(xStart, y), Vec2(xEnd, y)]
+            self.cursor.position = self.selection[0]
+            self._ignore_next_click = True
+            self.draw_selection()
+
 
         if key in self.shortcuts['copy']:
             selectedText = self.get_selected()
@@ -606,11 +618,14 @@ class TextField(Entity):
                 self.selection = [self.cursor.position, self.cursor.position]  
 
             if key == 'left mouse up':
-                cursor.position = self.mousePos()
-                if self.selection:
-                    self.selection[1] = self.cursor.position
+                if not self._ignore_next_click:
+                    cursor.position = self.mousePos()
+                    if self.selection:
+                        self.selection[1] = self.cursor.position
 
-                self.draw_selection()
+                    self.draw_selection()
+                else:
+                    self._ignore_next_click = False
 
         self.clampMouseScrollOrigin()
         self.render()
@@ -705,7 +720,7 @@ class TextField(Entity):
                 invoke(resetScrollWait, field=self, delay=self.scroll_delay)
                 
         
-        if self.register_mouse_input and mouse.left:
+        if self.register_mouse_input and mouse.left and not self._ignore_next_click:
             self.cursor.position = self.mousePos()
             if self.selection:
                 self.selection[1] = self.cursor.position
