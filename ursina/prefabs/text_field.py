@@ -626,14 +626,19 @@ class TextField(Entity):
         if key in self.shortcuts['select_all']:
             self.select_all()
 
-        if self.register_mouse_input and mouse.point is not None:
-            if key == 'left mouse down' and mouse.hovered_entity == self.bg:
+        if self.register_mouse_input:
+            if key == 'left mouse down' and mouse.hovered_entity == self.bg and mouse.point is not None:
                 cursor.position = self.mousePos()
                 self.selection = [self.cursor.position, self.cursor.position]  
 
             if key == 'left mouse up':
                 if not self._ignore_next_click:
                     cursor.position = self.mousePos()
+                    if self.scroll_enabled:
+                        cursor.x = clamp(cursor.x, self.scroll_position[0], self.scroll_position[0] + self.scroll_size[0])
+                        cursor.y = clamp(cursor.y, self.scroll_position[1], self.scroll_position[1] + self.scroll_size[1])
+                        cursor.x = clamp(cursor.x, 0, len(lines[y]))
+
                     if self.selection:
                         self.selection[1] = self.cursor.position
 
@@ -723,15 +728,19 @@ class TextField(Entity):
                 scrollX += 1
 
             if self.scroll_position != (scrollX, scrollY):
-                self._scroll_wait = False
+                if mouse.left:
+                    self._scroll_wait = False
+                    def resetScrollWait(field):
+                        if field:
+                            field._scroll_wait = True
+                    invoke(resetScrollWait, field=self, delay=self.scroll_delay)
+
                 self.scroll_position = (scrollX, scrollY)
                 self.clampMouseScrollOrigin()
                 self.render()
 
-                def resetScrollWait(field):
-                    if field:
-                        field._scroll_wait = True
-                invoke(resetScrollWait, field=self, delay=self.scroll_delay)
+                if self.selection:
+                    self.draw_selection()
                 
         
         if self.register_mouse_input and mouse.left and not self._ignore_next_click:
