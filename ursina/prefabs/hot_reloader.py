@@ -35,9 +35,9 @@ def make_code_reload_safe(code):
         if line.strip().startswith('#'):
             newtext += '\n'
             continue
-        if line.strip().startswith('EditorCamera(') and not 'eternal=False' in line: # EditorCamera is eternal, so don't create multiple ones
-            newtext += '\n'
-            continue
+        # if line.strip().startswith('EditorCamera(') and not 'eternal=False' in line: # EditorCamera is eternal, so don't create multiple ones
+        #     newtext += '\n'
+        #     continue
 
         if dedent_next:
             newtext += line[4:] + '\n'
@@ -57,7 +57,8 @@ class HotReloader(Entity):
             setattr(self, key, value)
 
         self.path = Path(self.path)
-        self.realtime_editing = False   # toggle with f8
+        self.hotreload = False   # toggle with f9
+        self._original_source_code_content = self.get_source_code()
         # self.text_editor = InGameTextEditor(path=self.path, enabled=False)
         self._i = 0
         self.hotkeys = {
@@ -66,7 +67,7 @@ class HotReloader(Entity):
             'f6'     : self.reload_textures,
             'f7'     : self.reload_models,
             'f8'     : self.reload_shaders,
-            # 'f9'     : self.toggle_hotreloading,
+            'f9'     : self.toggle_hotreloading,
             }
 
 
@@ -81,41 +82,27 @@ class HotReloader(Entity):
         #         self.text_editor.enabled = not self.text_editor.enabled
 
     def update(self):
-        if self.realtime_editing:
+        if self.hotreload:
             self._i += time.dt
-            if self._i > .5:
-                self.hot_reload()
+            if self._i > .2:
+                current_source_code = self.get_source_code()
+
+                if current_source_code != self._original_source_code_content:
+                    self.reload_code()
+                    self._original_source_code_content = current_source_code
+
                 self._i = 0
+
+    def get_source_code(self):
+        with open(self.path, encoding='utf8') as file:
+            text = file.read()
+        return text
 
 
     def toggle_hotreloading(self):
-        self.realtime_editing = not self.realtime_editing
-        print_on_screen(f'<azure>hotreloading: {self.realtime_editing}')
+        self.hotreload = not self.hotreload
+        print_on_screen(f'<azure>hotreloading: {self.hotreload}')
 
-
-    def hot_reload(self):
-        for e in [e for e in scene.entities if not e.eternal]:
-            try:
-                with open(e.line_definition.filename, encoding='utf8') as f:
-                    # print(f.readlines())
-                    code = f.readlines()[e.line_definition.lineno-1]
-
-                # code = e.line_definition.code_context[0]
-                # print(e,
-                #     Path(info.filename).name,
-                #     info.lineno, info.code_context)
-                    # print('---', code)
-                    if '(' in code and ')' in code and code.count('(') == code.count(')'):
-                        code = code.split('(', 1)[1][:-2]
-                        code = code.split(',')
-                        for arg in code:
-                            name, value = arg.split('=')
-                            name = name.strip()
-                            value = value.strip()
-                            # print(name, eval(value))
-                            setattr(e, name, eval(value))
-            except:
-                pass
 
 
     def reload_code(self, reset_camera=True):
@@ -145,19 +132,14 @@ class HotReloader(Entity):
 
             import __main__
             for key, value in d.items():
-                if key in dir(__main__):
+                if key in dir(__main__) or key in ('update', 'input'):
                     setattr(__main__, key, value)
 
             application.paused = False
 
         except Exception as e:
-            # print('\n'.join([f'{i}: {e}' for i, e in enumerate(text.split('\n'))]))
             print(e)
-        #     for l in text.split('\n'):
-        #         try:
-        #             exec(l.strip())
-        #         except:
-        #             pass
+
         print('reloaded in:', time.time() - t)
 
 

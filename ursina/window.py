@@ -61,6 +61,7 @@ class Window(WindowProperties):
         self.forced_aspect_ratio = None # example: window.forced_aspect_ratio = 16/9
         self.size = self.windowed_size
         self.borderless = True
+        self.always_on_top = False
 
         self.top = Vec2(0, .5)
         self.bottom = Vec2(0, -.5)
@@ -79,6 +80,8 @@ class Window(WindowProperties):
         self.editor_ui = None
 
         base.accept('aspectRatioChanged', self.update_aspect_ratio)
+        if self.always_on_top:
+            self.setZOrder(WindowProperties.Z_top)
 
     @property
     def left(self):
