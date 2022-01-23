@@ -92,7 +92,7 @@ class TextField(Entity):
             'move_to_start_of_word' : ('ctrl+left arrow', 'ctrl+left arrow hold'),
 
             'select_word_left': ('ctrl+shift+left arrow', 'ctrl+shift+left arrow hold'),
-            'select_word':      ('double click'),
+            'select_word':      ('double click',),
         }
 
         # self.debug_cursor = Entity(parent=self.cursor_parent, model='cube', origin=(-.5,-.5), color=color.white33)
@@ -590,7 +590,7 @@ class TextField(Entity):
                 self.text = '\n'.join(lines)
 
 
-        if key == self.shortcuts['select_word']:
+        if key in self.shortcuts['select_word']:
             xStart = x
             xEnd = x
             while xStart > 0 and (lines[y][xStart - 1] not in delimiters):
