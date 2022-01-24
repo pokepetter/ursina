@@ -443,12 +443,12 @@ class Inventory(<olive>Entity</olive>):
             icon.x = int(icon.x)
             icon.y = int(icon.y)
 
-<mark>            <green><green>''</green></green>'<purple>if</purple> outside, return to original position<green><green>''</green></green>'               </mark>
+<mark>            <green><green>#<purple>if</purple> outside, return to original position<green><green>               </mark>
 <mark>            <purple>if</purple> icon.x < <yellow>0</yellow> or icon.x >= <yellow>1</yellow> or icon.y > <yellow>0</yellow> or icon.y <= -<yellow>1</yellow>: </mark>
 <mark>                icon.position = (icon.org_pos)                          </mark>
 <mark>                return                                                  </mark>
 
-            <green><green>''</green></green>'<purple>if</purple> the spot is taken, swap positions<green><green>''</green></green>'
+            <green><green>#<purple>if</purple> the spot is taken, swap positions<green><green>
             <purple>for</purple> c in self.children:
                 <purple>if</purple> c == icon:
                     continue
