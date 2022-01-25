@@ -173,13 +173,13 @@ class Window(WindowProperties):
         prev_aspect = self.aspect_ratio
         self.aspect_ratio = self.size[0] / self.size[1]
 
-        from ursina import camera
+        from ursina import camera, window, application
         value = [int(e) for e in base.win.getSize()]
         camera.set_shader_input('window_size', value)
 
         print_info('changed aspect ratio:', round(prev_aspect, 3), '->', round(self.aspect_ratio, 3))
 
-        from ursina import camera, window, application
+  
         camera.ui_lens.set_film_size(camera.ui_size * .5 * self.aspect_ratio, camera.ui_size * .5)
         for e in [e for e in scene.entities if e.parent == camera.ui] + self.editor_ui.children:
             e.x /= prev_aspect / self.aspect_ratio
