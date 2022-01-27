@@ -66,6 +66,8 @@ def normalize(a):
     mag = magnitude(a)
     if isinstance(a, tuple):
         a = list(a)
+    else:
+        a = type(a)(a)
     for i in range(len(a)):
         a[i] /= mag
     return a
@@ -76,6 +78,7 @@ def sign(a):
     if isinstance(a, (list, tuple)):
         return [1 if a[i] > 0 else -1 for i in range(len(a))]
     if isinstance(a, (Vec2, Vec3, Vec4, LVector3f)):
+        a = type(a)(a)
         for i in range(len(a)):
             a[i] = 1 if a[i] > 0 else -1
     return a
@@ -153,7 +156,7 @@ def move_towards(a, b, amount):
 
 
 def move_towards_angle(a, b, amount):
-    if not isinstance(a, (int, float)):
+    if not isinstance(a, (int, float)) or not isinstance(b, (int, float)):
         return a
     a, b = a % 360, b % 360
 
