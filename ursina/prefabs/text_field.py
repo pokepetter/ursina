@@ -66,6 +66,7 @@ class TextField(Entity):
             'erase':            ('backspace', 'backspace hold'),
             'erase_word':       ('ctrl+backspace', 'ctrl+backspace hold'),
             'delete_line':      ('ctrl+shift+k',),
+            'duplicate_line':   ('ctrl+d',),
             'undo':             ('ctrl+z', 'ctrl+z hold'),
             'redo':             ('ctrl+y', 'ctrl+y hold', 'ctrl+shift+z', 'ctrl+shift+z hold'),
             # 'save':             ('ctrl+s',),
@@ -91,7 +92,7 @@ class TextField(Entity):
             'move_to_start_of_word' : ('ctrl+left arrow', 'ctrl+left arrow hold'),
 
             'select_word_left': ('ctrl+shift+left arrow', 'ctrl+shift+left arrow hold'),
-            'select_word':      ('double click'),
+            'select_word':      ('double click',),
         }
 
         # self.debug_cursor = Entity(parent=self.cursor_parent, model='cube', origin=(-.5,-.5), color=color.white33)
@@ -104,6 +105,7 @@ class TextField(Entity):
         self._prev_text = ''
         self._scroll_wait = True
         self._scroll_prev_position = self.scroll_position
+        self._ignore_next_click = False
 
         def blink_cursor():
             if self.cursor.color == color.cyan:
@@ -159,11 +161,16 @@ class TextField(Entity):
         lines = self.text.split('\n')
         l = lines[y]
         lines[y] =  l[:x] + s + l[x:]
-        self.on_undo.append((self.text, y, x))
+        self._append_undo(self.text, y, x)
         self.text = '\n'.join(lines)
 
         if move_cursor:
             self.cursor.x += len(s)
+
+    def _append_undo(self, text, y, x, clear_redo = True):
+        if clear_redo:
+            self.on_redo.clear()
+        self.on_undo.append((text, y, x))
 
 
     def move_line(self, a, b):
@@ -171,7 +178,7 @@ class TextField(Entity):
 
         lines = self.text.split('\n')
         lines[a], lines[b] = lines[b], lines[a]
-        self.on_undo.append((self.text, y, x))
+        self._append_undo(self.text, y, x)
         self.text = '\n'.join(lines)
         # print('moved line')
 
@@ -205,7 +212,7 @@ class TextField(Entity):
 
             lines[y] = l
 
-        self.on_undo.append((self.text, y, x))
+        self._append_undo(self.text, y, x)
 
         # else:   # delete selected
         #     self.delete_selected()
@@ -252,10 +259,10 @@ class TextField(Entity):
         lines[start_y] = lines[start_y][:int(sel[0][0])] + lines[end_y][int(sel[1][0]):]
         del lines[(start_y + 1) : (end_y + 1)]
 
-        self.on_undo.append((self.text, self.cursor.y, self.cursor.x))
+        self._append_undo(self.text, self.cursor.y, self.cursor.x)
         self.text = '\n'.join(lines)
         self.selection = None
-        # self.on_undo.append((self.text, y, x))
+        # self._append_undo(self.text, y, x)
         self.draw_selection()
 
     def get_selected(self):
@@ -362,7 +369,7 @@ class TextField(Entity):
                 cursor.y -= 1
                 cursor.x = len(lines[y-1])
 
-        delimiters = (' ', '.')
+        delimiters = ' .,!?;:(){}[]<>\'\"@#$%^&*+=-\\|/`~'
         if key in self.shortcuts['move_to_end_of_word']:
             if x == len(l):
                 if y < len(lines)-1:        # end of line, move to beginning of next
@@ -443,7 +450,7 @@ class TextField(Entity):
                     # print('indent', y)
                     lines[y] = (' '*4) + lines[y]
                 self.cursor.x += 4
-                self.on_undo.append((self.text, y, x))
+                self._append_undo(self.text, y, x)
                 self.text = '\n'.join(lines)
 
 
@@ -467,7 +474,7 @@ class TextField(Entity):
             if moveCursor:
                 self.cursor.x = max(self.cursor.x - 4, 0)
             if appendHistory:
-                self.on_undo.append((self.text, y, x))
+                self._append_undo(self.text, y, x)
                 self.text = '\n'.join(lines)
 
 
@@ -511,7 +518,7 @@ class TextField(Entity):
 
 
             lines[y] = l
-            self.on_undo.append((self.text, y, x))
+            self._append_undo(self.text, y, x)
             self.text = '\n'.join(lines)
 
 
@@ -545,22 +552,25 @@ class TextField(Entity):
             if not on_undo:
                 return
 
-            # self.on_redo.append((self.text, y, x))
+            self.on_redo.append((self.text, y, x))
             self.text = on_undo[-1][0]
             cursor.y = on_undo[-1][1]
             cursor.x = on_undo[-1][2]
             on_undo.pop()
 
-        # if key in self.shortcuts['redo']:
-        #     if not self.on_redo:
-        #         return
-        #     self.text = self.on_redo[-1][0]
-        #     cursor.y = self.on_redo[-1][1]
-        #     cursor.x = self.on_redo[-1][2]
-        #     self.on_redo.pop()
+        if key in self.shortcuts['redo']:
+            if not self.on_redo:
+                return
+
+            on_undo.append((self.text, y, x))
+            self.text = self.on_redo[-1][0]
+            cursor.y = self.on_redo[-1][1]
+            cursor.x = self.on_redo[-1][2]
+            self.on_redo.pop()
 
 
         if key in self.shortcuts['delete_line']:
+            self._append_undo(self.text, y, 0)
             lines.pop(y)
 
             if y == 0:
@@ -573,11 +583,28 @@ class TextField(Entity):
 
             self.text = '\n'.join(lines)
 
+        if key in self.shortcuts['duplicate_line']:
+            if len(lines) < self.max_lines:
+                self._append_undo(self.text, y, 0)
+                lines.insert(y, lines[y])
+                self.text = '\n'.join(lines)
 
-        if key == self.shortcuts['select_word']:
-            pass
-            # move cursor to the beginning
-            # select word right
+
+        if key in self.shortcuts['select_word']:
+            xStart = x
+            xEnd = x
+            while xStart > 0 and (lines[y][xStart - 1] not in delimiters):
+                xStart -= 1
+
+            lineWidth = len(lines[y])
+            while xEnd < lineWidth and (lines[y][xEnd] not in delimiters):
+                xEnd += 1
+
+            self.selection = [Vec2(xStart, y), Vec2(xEnd, y)]
+            self.cursor.position = self.selection[0]
+            self._ignore_next_click = True
+            self.draw_selection()
+
 
         if key in self.shortcuts['copy']:
             selectedText = self.get_selected()
@@ -600,17 +627,25 @@ class TextField(Entity):
         if key in self.shortcuts['select_all']:
             self.select_all()
 
-        if self.register_mouse_input and mouse.point is not None:
-            if key == 'left mouse down' and mouse.hovered_entity == self.bg:
+        if self.register_mouse_input:
+            if key == 'left mouse down' and mouse.hovered_entity == self.bg and mouse.point is not None:
                 cursor.position = self.mousePos()
                 self.selection = [self.cursor.position, self.cursor.position]  
 
             if key == 'left mouse up':
-                cursor.position = self.mousePos()
-                if self.selection:
-                    self.selection[1] = self.cursor.position
+                if not self._ignore_next_click:
+                    cursor.position = self.mousePos()
+                    if self.scroll_enabled:
+                        cursor.x = clamp(cursor.x, self.scroll_position[0], self.scroll_position[0] + self.scroll_size[0])
+                        cursor.y = clamp(cursor.y, self.scroll_position[1], self.scroll_position[1] + self.scroll_size[1])
+                        cursor.x = clamp(cursor.x, 0, len(lines[y]))
 
-                self.draw_selection()
+                    if self.selection:
+                        self.selection[1] = self.cursor.position
+
+                    self.draw_selection()
+                else:
+                    self._ignore_next_click = False
 
         self.clampMouseScrollOrigin()
         self.render()
@@ -694,18 +729,22 @@ class TextField(Entity):
                 scrollX += 1
 
             if self.scroll_position != (scrollX, scrollY):
-                self._scroll_wait = False
+                if mouse.left:
+                    self._scroll_wait = False
+                    def resetScrollWait(field):
+                        if field:
+                            field._scroll_wait = True
+                    invoke(resetScrollWait, field=self, delay=self.scroll_delay)
+
                 self.scroll_position = (scrollX, scrollY)
                 self.clampMouseScrollOrigin()
                 self.render()
 
-                def resetScrollWait(field):
-                    if field:
-                        field._scroll_wait = True
-                invoke(resetScrollWait, field=self, delay=self.scroll_delay)
+                if self.selection:
+                    self.draw_selection()
                 
         
-        if self.register_mouse_input and mouse.left:
+        if self.register_mouse_input and mouse.left and not self._ignore_next_click:
             self.cursor.position = self.mousePos()
             if self.selection:
                 self.selection[1] = self.cursor.position
