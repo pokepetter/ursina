@@ -68,8 +68,12 @@ def normalize(a):
         a = list(a)
     else:
         a = type(a)(a)
-    for i in range(len(a)):
-        a[i] /= mag
+    if mag == 0:
+        for i in range(len(a)):
+            a[i] = 0
+    else:
+        for i in range(len(a)):
+            a[i] /= mag
     return a
 
 def sign(a):
