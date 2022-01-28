@@ -42,39 +42,8 @@ def distance_xz(a, b):
     return sqrt((b[0] - a[0])**2 + (b[2] - a[2])**2)
 
 
-def magnitude(a):
-    return sqrt(sum(a[i]**2 for i in range(len(a))))
-
-def dot(a, b):
-    return sum(a[i]*b[i] for i in range(len(a)))
-
-def cross(a, b):
-    if len(a) == 2:
-        return a[0]*b[1] - a[1]*b[0]
-    
-    if len(a) == 3:
-        if isinstance(a, (list, tuple)):
-            return [a[1]*b[2] - a[2]*b[1], a[2]*b[0] - a[0]*b[2], a[0]*b[1] - a[1]*b[0]]
-        else:
-            return Vec3(a[1]*b[2] - a[2]*b[1], a[2]*b[0] - a[0]*b[2], a[0]*b[1] - a[1]*b[0])
-    return a
-
 def reflect(a, normal):
     return a - normal * dot(a, normal) * 2
-
-def normalize(a):
-    mag = magnitude(a)
-    if isinstance(a, tuple):
-        a = list(a)
-    else:
-        a = type(a)(a)
-    if mag == 0:
-        for i in range(len(a)):
-            a[i] = 0
-    else:
-        for i in range(len(a)):
-            a[i] /= mag
-    return a
 
 def sign(a):
     if isinstance(a, (int, float)):
@@ -137,22 +106,18 @@ def slerp(q1, q2, t):
 def move_towards(a, b, amount):
     if isinstance(a, (Vec2, Vec3, Vec4, LVector3f)):
         delta = b - a
-        delta_length = magnitude(delta)
-        if delta_length < amount:
-            return b
-        return a + delta / delta_length * amount 
+        return a + delta.normalized() * min(amount, delta.length()) 
     
     if isinstance(a, (list, tuple)):
         size = range(len(a))
         delta = [(b[i] - a[i]) for i in size]
-        delta_length = magnitude(delta)
-        if delta_length < amount:
-           return a
-        m = min(delta_length, amount) / delta_length
+        length = sqrt(sum(v ** 2 for v in delta))
+        if length == 0: return b
+        m = min(1, amount / length)
         return [a[i] + delta[i] * m for i in size]
     
     if isinstance(a, (int, float)):
-        if abs(b - a) < amount:
+        if abs(b - a) <= amount:
             return b
         return a + (amount if a < b else -amount)
     
@@ -166,7 +131,7 @@ def move_towards_angle(a, b, amount):
 
     if abs(b - a) > 180:
         b += 360 if a > b else -360
-    if abs(b - a) < amount:
+    if abs(b - a) <= amount:
         return b
     return a + (amount if b > a else -amount)
 
@@ -232,11 +197,6 @@ if __name__ == '__main__':
     print(move_towards((0,0,2), (2,1,0), 1))
     print(move_towards_angle(340, 20, 10))
 
-    print(magnitude(Vec3(1,2,3)))
-    print(normalize(Vec3(1,2,3)))
-    print(dot(Vec3(1,1,0), Vec3(0,1,1)))
-    print(cross((3,1,3), (2,2,1)))
-    
     print(sign(-99))
     print(sign(Vec3(1,-2,-3)))
 
