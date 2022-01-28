@@ -24,20 +24,22 @@ def terraincast(world_position, terrain_entity, height_values=None):    # uses x
         x, _, z = pos
 
         point =     height_values[int(floor(x))][int(floor(z))]
-        point_e =   height_values[int(min(w-1, ceil(x)))][int(floor(z))]
-        point_n =   height_values[int(floor(x))][int(min(d-1, ceil(z)))]
-        point_ne =  height_values[int(min(w-1, ceil(x)))][int(min(d-1, ceil(z)))]
+        if ceil(x) - x > 0 and ceil(z) - z > 0:
+            point_e =   height_values[int(min(w-1, ceil(x)))][int(floor(z))]
+            point_n =   height_values[int(floor(x))][int(min(d-1, ceil(z)))]
+            point_ne =  height_values[int(min(w-1, ceil(x)))][int(min(d-1, ceil(z)))]
 
-        u0v0 = point * (ceil(x) - x) * (ceil(z) - z) # interpolated (x0, z0)
-        u1v0 = point_e * (x - floor(x)) * (ceil(z) - z) # interpolated (x1, z0)
-        u0v1 = point_n * (ceil(x) - x) * (z - floor(z)) # interpolated (x0, z1)
-        u1v1 = point_ne * (x - floor(x)) * (z - floor(z)) # interpolated (x1, z1)
+            u0v0 = point * (ceil(x) - x) * (ceil(z) - z) # interpolated (x0, z0)
+            u1v0 = point_e * (x - floor(x)) * (ceil(z) - z) # interpolated (x1, z0)
+            u0v1 = point_n * (ceil(x) - x) * (z - floor(z)) # interpolated (x0, z1)
+            u1v1 = point_ne * (x - floor(x)) * (z - floor(z)) # interpolated (x1, z1)
 
-        _h = u0v0 + u1v0 + u0v1 + u1v1  #estimate
+            point = u0v0 + u1v0 + u0v1 + u1v1  #estimate
+
         helper.y = _h * terrain_entity.scale_y / 255
         return helper.y
 
-    return 0
+    return None
 
 
 if __name__ == '__main__':
@@ -54,7 +56,6 @@ if __name__ == '__main__':
         player.position += direction * time.dt * 4
 
         player.y = terraincast(player.world_position, terrain_entity, hv)
-
 
     EditorCamera()
     Sky()
