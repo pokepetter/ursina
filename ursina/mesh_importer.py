@@ -104,7 +104,7 @@ if application.development_mode:
         except:
             pass
 
-    elif platform.system() == 'Linux':
+    elif platform.system() == 'Linux' or platform.system() == 'Darwin':
         # Use "which" command to find blender
         which_process = subprocess.run(('which', 'blender'), stdout=subprocess.PIPE)
         if which_process.returncode == 0:
