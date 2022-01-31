@@ -23,11 +23,11 @@ def terraincast(world_position, terrain_entity, height_values=None):    # uses x
         helper.y = height_values[int(pos.x)][int(pos.z)]
         x, _, z = pos
 
-        point =     height_values[int(floor(x))][int(floor(z))]
+        point = height_values[int(floor(x))][int(floor(z))]
         if ceil(x) - x > 0 and ceil(z) - z > 0:
-            point_e =   height_values[int(min(w-1, ceil(x)))][int(floor(z))]
-            point_n =   height_values[int(floor(x))][int(min(d-1, ceil(z)))]
-            point_ne =  height_values[int(min(w-1, ceil(x)))][int(min(d-1, ceil(z)))]
+            point_e =  height_values[int(min(w-1, ceil(x)))][int(floor(z))]
+            point_n =  height_values[int(floor(x))][int(min(d-1, ceil(z)))]
+            point_ne = height_values[int(min(w-1, ceil(x)))][int(min(d-1, ceil(z)))]
 
             u0v0 = point * (ceil(x) - x) * (ceil(z) - z) # interpolated (x0, z0)
             u1v0 = point_e * (x - floor(x)) * (ceil(z) - z) # interpolated (x1, z0)
@@ -36,7 +36,7 @@ def terraincast(world_position, terrain_entity, height_values=None):    # uses x
 
             point = u0v0 + u1v0 + u0v1 + u1v1  #estimate
 
-        helper.y = _h * terrain_entity.scale_y / 255
+        helper.y = point * terrain_entity.scale_y / 255
         return helper.y
 
     return None
