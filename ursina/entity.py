@@ -3,9 +3,10 @@ import importlib
 import glob
 from pathlib import Path
 from panda3d.core import NodePath
+from ursina.vec3 import Vec2
 from ursina.vec3 import Vec3
 from ursina.vec4 import Vec4
-from panda3d.core import Vec2
+from panda3d.core import Quat
 from panda3d.core import TransparencyAttrib
 from panda3d.core import Shader
 from panda3d.core import TextureStage, TexGenAttrib
@@ -568,10 +569,10 @@ class Entity(NodePath):
         self.rotation = Vec3(self.rotation[0], self.rotation[1], value)
 
     @property
-    def quat(self):
-        return self.get_quat()
-    @quat.setter
-    def quat(self, value):
+    def quaternion(self):
+        return self.get_quat() * Quat(-1,0,0,0) * Quat(0,1,0,0)
+    @quaternion.setter
+    def quaternion(self, value):
         self.set_quat(value)
 
     @property
@@ -1150,6 +1151,7 @@ class Entity(NodePath):
             s.append(Wait(speed))
             s.append(Func(setattr, self, 'world_position', original_position))
 
+        self.animations.append(s)
         s.start()
         return s
 
