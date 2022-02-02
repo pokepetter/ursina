@@ -3,7 +3,7 @@ import importlib
 import glob
 from pathlib import Path
 from panda3d.core import NodePath
-from ursina.vec3 import Vec2
+from ursina.vec2 import Vec2
 from ursina.vec3 import Vec3
 from ursina.vec4 import Vec4
 from panda3d.core import Quat
@@ -739,10 +739,7 @@ class Entity(NodePath):
     def texture(self, value):
         if value is None and self._texture:
             # print('remove texture')
-            # self._texture = None
             self.model.clearTexture()
-            # del self.texture
-            # self.setTextureOff(True)
             return
 
         if value.__class__ is Texture:
