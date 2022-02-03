@@ -27,9 +27,13 @@ def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursina
         # print('load cached model', name)
         try:
             if not use_deepcopy:
-                return copy(imported_meshes[name])
+                instance = copy(imported_meshes[name])
             else:
-                return deepcopy(imported_meshes[name])
+                instance = deepcopy(imported_meshes[name])
+
+            instance.clearTexture()
+            return instance
+
         except:
             pass
 

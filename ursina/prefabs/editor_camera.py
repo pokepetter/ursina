@@ -4,7 +4,7 @@ class EditorCamera(Entity):
 
     def __init__(self, **kwargs):
         camera.editor_position = camera.position
-        super().__init__(name='editor_camera', eternal=True)
+        super().__init__(name='editor_camera', eternal=False)
 
         self.gizmo = Entity(parent=self, model='sphere', color=color.orange, scale=.025, add_to_scene_entities=False, enabled=False)
 
@@ -14,6 +14,9 @@ class EditorCamera(Entity):
         self.zoom_speed = 1.25
         self.zoom_smoothing = 8
         self.rotate_around_mouse_hit = False
+
+        self.smoothing_helper = Entity(add_to_scene_entities=False)
+        self.rotation_smoothing = 0
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -40,6 +43,10 @@ class EditorCamera(Entity):
         camera.parent = camera.org_parent
         camera.position = camera.org_position
         camera.rotation = camera.org_rotation
+
+
+    def on_destroy(self):
+        destroy(self.smoothing_helper)
 
 
     def input(self, key):
@@ -91,8 +98,8 @@ class EditorCamera(Entity):
 
     def update(self):
         if mouse.right:
-            self.rotation_x -= mouse.velocity[1] * self.rotation_speed
-            self.rotation_y += mouse.velocity[0] * self.rotation_speed
+            self.smoothing_helper.rotation_x -= mouse.velocity[1] * self.rotation_speed
+            self.smoothing_helper.rotation_y += mouse.velocity[0] * self.rotation_speed
 
             self.direction = Vec3(
                 self.forward * (held_keys['w'] - held_keys['s'])
@@ -120,6 +127,19 @@ class EditorCamera(Entity):
 
         camera.z = lerp(camera.z, self.target_z, time.dt*self.zoom_smoothing)
 
+        if self.rotation_smoothing == 0:
+            self.rotation = self.smoothing_helper.rotation
+        else:
+            self.quat = slerp(self.quat, self.smoothing_helper.quat, time.dt*self.rotation_smoothing)
+            camera.world_rotation_z = 0
+
+
+    def __setattr__(self, name, value):
+        super().__setattr__(name, value)
+        if hasattr(self, 'smoothing_helper') and name in ('rotation', 'rotation_x', 'rotation_y', 'rotation_z'):
+            setattr(self.smoothing_helper, name, value)
+
+
 
 if __name__ == '__main__':
     # window.vsync = False
@@ -130,14 +150,14 @@ if __name__ == '__main__':
     '''
 
     sky = Sky()
-    e = Entity(model='cube', color=color.white, collider='box')
+    e = Entity(model=load_model('cube', use_deepcopy=True), color=color.white, collider='box')
     e.model.colorize()
 
     from ursina.prefabs.first_person_controller import FirstPersonController
 
     ground = Entity(model='plane', scale=32, texture='white_cube', texture_scale=(32,32), collider='box')
     box = Entity(model='cube', collider='box', texture='white_cube', scale=(10,2,2), position=(2,1,5), color=color.light_gray)
-    ec = EditorCamera(rotation_smoothing=2, enabled=1, rotation=(30,30,0))
+    ec = EditorCamera(rotation_smoothing=10, enabled=1, rotation=(30,30,0))
     # player = FirstPersonController()
 
     rotation_info = Text(position=window.top_left)

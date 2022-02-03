@@ -1,5 +1,5 @@
 import operator
-from math import sqrt, sin, acos
+from math import sqrt, sin, acos, pi, cos
 from panda3d.core import Vec4, LVector3f, Mat3, Mat4
 from ursina.vec2 import Vec2
 from ursina.vec3 import Vec3
@@ -88,6 +88,7 @@ def slerp(q1, q2, t):
     return (q1*r1) + (q2*r2)
 
 
+
 def clamp(value, floor, ceiling):
     return max(min(value, ceiling), floor)
 
@@ -98,6 +99,19 @@ def round_to_closest(value, step=0):
 
     step = 1/step
     return round(value * step) / step
+
+
+def rotate_point_2d(point, origin, deg):
+    angle_rad = -deg/180 * pi # ursina rotation is positive=clockwise, so do *= -1
+    cos_angle = cos(angle_rad)
+    sin_angle = sin(angle_rad)
+    dx = point[0] - origin[0]
+    dy = point[1] - origin[1]
+
+    return (
+        origin[0] + (dx*cos_angle - dy*sin_angle),
+        origin[1] + (dx*sin_angle + dy*cos_angle)
+        )
 
 
 def chunk_list(l, chunk_size):
@@ -145,5 +159,8 @@ if __name__ == '__main__':
     print(lerp([0,0], [0,1], .5))
 
     print(round(Vec3(.38, .1351, 353.26), 2))
+
+    p = (1,0)
+    print(p, 'rotated ->', rotate_point_2d(p, (0,0), 90))
 
     app.run()
