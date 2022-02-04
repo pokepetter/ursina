@@ -12,6 +12,7 @@ from ursina.mouse import instance as mouse
 from ursina.string_utilities import print_info
 from panda3d.core import KeyboardButton
 from panda3d.core import ConfigVariableBool
+from pandac.PandaModules import loadPrcFileData
 
 import __main__
 time.dt = 0
@@ -19,7 +20,12 @@ time.dt = 0
 
 class Ursina(ShowBase):
 
-    def __init__(self, **kwargs): # optional arguments: title, fullscreen, size, forced_aspect_ratio, position, vsync, borderless, show_ursina_splash, render_mode, development_mode, editor_ui_enabled.
+    def __init__(self, windowless=False, **kwargs): # optional arguments: title, fullscreen, size, forced_aspect_ratio, position, vsync, borderless, show_ursina_splash, render_mode, development_mode, editor_ui_enabled, windowless.
+
+        self.windowless = windowless
+        if self.windowless:
+            loadPrcFileData("", "window-type none")
+
         for name in ('size', 'vsync'):
             if name in kwargs and hasattr(window, name):
                 setattr(window, name, kwargs[name])
@@ -36,24 +42,26 @@ class Ursina(ShowBase):
         except:
             pass
 
-        window.late_init()
-        for name in ('title', 'fullscreen', 'position', 'show_ursina_splash', 'borderless', 'render_mode', 'forced_aspect_ratio'):
-            if name in kwargs and hasattr(window, name):
-                setattr(window, name, kwargs[name])
+        if not self.windowless:
+            window.late_init()
+            for name in ('title', 'fullscreen', 'position', 'show_ursina_splash', 'borderless', 'render_mode', 'forced_aspect_ratio'):
+                if name in kwargs and hasattr(window, name):
+                    setattr(window, name, kwargs[name])
 
-        # camera
-        camera._cam = base.camera
-        camera._cam.reparent_to(camera)
-        camera.render = base.render
-        camera.position = (0, 0, -20)
-        scene.camera = camera
-        camera.set_up()
+            # camera
+            camera._cam = base.camera
+            camera._cam.reparent_to(camera)
+            camera.render = base.render
+            camera.position = (0, 0, -20)
+            scene.camera = camera
+            camera.set_up()
 
-        # input
-        base.buttonThrowers[0].node().setButtonDownEvent('buttonDown')
-        base.buttonThrowers[0].node().setButtonUpEvent('buttonUp')
-        base.buttonThrowers[0].node().setButtonRepeatEvent('buttonHold')
-        base.buttonThrowers[0].node().setKeystrokeEvent('keystroke')
+            # input
+            base.buttonThrowers[0].node().setButtonDownEvent('buttonDown')
+            base.buttonThrowers[0].node().setButtonUpEvent('buttonUp')
+            base.buttonThrowers[0].node().setButtonRepeatEvent('buttonHold')
+            base.buttonThrowers[0].node().setKeystrokeEvent('keystroke')
+
         self._input_name_changes = {
             'mouse1' : 'left mouse down',
             'mouse1 up' : 'left mouse up',
@@ -129,7 +137,8 @@ class Ursina(ShowBase):
         # time between frames
         time.dt = globalClock.getDt() * application.time_scale
 
-        mouse.update()
+        if not self.windowless:
+            mouse.update()
 
         if hasattr(__main__, 'update') and __main__.update and not application.paused:
             __main__.update()
