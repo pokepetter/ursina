@@ -49,6 +49,9 @@ class TextField(Entity):
         self.register_mouse_input = False
         self.world_space_mouse = False
 
+        self.triple_click_delay = 0.3
+        self._last_double_click = 0
+
         self.scroll_enabled = False
         self.scroll_size = (0,0)
         self.scroll_position = (0,0)
@@ -95,6 +98,7 @@ class TextField(Entity):
 
             'select_word_left': ('ctrl+shift+left arrow', 'ctrl+shift+left arrow hold'),
             'select_word':      ('double click',),
+            'select_line':      ('triple click',),
         }
 
         # self.debug_cursor = Entity(parent=self.cursor_parent, model='cube', origin=(-.5,-.5), color=color.white33)
@@ -331,6 +335,12 @@ class TextField(Entity):
 
         if not self.active:
             return
+
+        if key == 'double click':
+            t = time.time()
+            if t - self._last_double_click < self.triple_click_delay:
+                key = 'triple click'
+            self._last_double_click = t
 
         # key = f'{"ctrl" if held_keys["control"]} + {key}'
         ctrl, shift, alt = '', '', ''
@@ -604,6 +614,11 @@ class TextField(Entity):
             self._ignore_next_click = True
             self.draw_selection()
 
+        if key in self.shortcuts['select_line']:
+            self.selection = [Vec2(0, y), Vec2(len(lines[y]), y)]
+            self.cursor.position = self.selection[1]
+            self._ignore_next_click = True
+            self.draw_selection()
 
         if key in self.shortcuts['copy']:
             selectedText = self.get_selected()
