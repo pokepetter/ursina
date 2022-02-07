@@ -68,7 +68,6 @@ def reset():
     ball.position = (0,0,0)
     ball.rotation = (0,0,0)
     ball.speed = 10
-    ball.speed = 2
     for paddle in (left_paddle, right_paddle):
         paddle.collision = True
         paddle.y = 0
