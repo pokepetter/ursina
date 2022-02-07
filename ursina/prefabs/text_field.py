@@ -765,6 +765,9 @@ class TextField(Entity):
 
             self.draw_selection()
 
+    def on_destroy(self):
+        self._blinker.kill()
+
 
     def select_all(self):
         lines = self.text.split('\n')
