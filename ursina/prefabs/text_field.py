@@ -41,7 +41,7 @@ class TextField(Entity):
         # self.max_line_indicatior = Entity(parent=self.cursor_parent, model='quad', origin=(-.5,.5), scale=(100,.05), rotation_x=180, color=color.red)
         # self.max_width_indicatior = Entity(
         #     parent=self.cursor_parent, model='quad', origin=(-.5,.5), scale=(100,.05), rotation_x=180, rotation_z=90, color=color.color(0,0,1,.05), x=80)
-        self.cursor = Entity(parent=self.cursor_parent, model='cube', color=color.clear, origin=(-.5, -.5), scale=(.1, 1, 0))
+        self.cursor = Entity(parent=self.cursor_parent, model='cube', color=color.cyan, origin=(-.5, -.5), scale=(.1, 1, 0), visible=False)
         self.bg = Entity(parent=self.cursor_parent, model='cube', color=color.dark_gray, origin=(-.5,-.5), z=0.005, scale=(120, 20, 0.001), collider='box', visible=False)
 
         self.selection = None
@@ -53,6 +53,8 @@ class TextField(Entity):
         self.scroll_size = (0,0)
         self.scroll_position = (0,0)
         self.scroll_delay = 0.07
+
+        self.highlight_color = color.color(120,1,1,.1)
 
         self.text = ''
 
@@ -108,10 +110,7 @@ class TextField(Entity):
         self._ignore_next_click = False
 
         def blink_cursor():
-            if self.cursor.color == color.cyan:
-                self.cursor.color = color.clear
-            else:
-                self.cursor.color = color.cyan
+            self.cursor.visible = not self.cursor.visible
             if self._active:
                 self._blinker = invoke(blink_cursor, delay=.5)
 
@@ -130,14 +129,14 @@ class TextField(Entity):
 
         if self._blinker and not self._blinker.finished:
             self._blinker.pause()
-            self.cursor.color = color.cyan
+            self.cursor.visible = True
 
         if self._active:
             self._blinker.resume()
         else:
             self.selection = None
             self.draw_selection()
-            self.cursor.color = color.clear
+            self.cursor.visible = False
 
     @property
     def scroll_size(self):
@@ -693,7 +692,6 @@ class TextField(Entity):
 
             scroll = 1 + (self.scroll_position[1] if self.scroll_enabled else 0)
             self.line_numbers.text = '\n'.join([str(e + scroll).rjust(5, ' ') for e in range(min(len(lines), self.max_lines))])
-            self.line_numbers.color = color.gray
 
             self._prev_text = text
             self._scroll_prev_position = self.scroll_position
@@ -779,13 +777,13 @@ class TextField(Entity):
         # draw selection
         for y in range(start_y, end_y):
             e = Entity(parent=self.selection_parent, model='cube', origin=(-.5, -.5),
-                color=color.color(120,1,1,.1), double_sided=True, position=(0,y), ignore=True, scale_x=len(lines[y]))
+                color=self.highlight_color, double_sided=True, position=(0,y), ignore=True, scale_x=len(lines[y]))
             if y == start_y:
                 e.x = sel[0][0]
                 e.scale_x -= sel[0][0]
 
         e = Entity(parent=self.selection_parent, model='cube', origin=(-.5, -.5),
-            color=color.color(120,1,1,.1), double_sided=True, position=(0,end_y),
+            color=self.highlight_color, double_sided=True, position=(0,end_y),
             ignore=True, scale_x=sel[1][0])
         if start_y == end_y:
             e.x = sel[0][0]
