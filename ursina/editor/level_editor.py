@@ -133,6 +133,8 @@ class LevelEditor(Entity):
         self.local_global_menu.on_value_changed = self.render_selection
         # self.current_poke_node = None
         self.entity_list_text = Text(parent=self.ui, scale=.5, position=window.left)
+        self.target_fov = 90
+
 
     @property
     def entities(self):
@@ -149,6 +151,14 @@ class LevelEditor(Entity):
     @selection.setter
     def selection(self, value):
         self.current_scene.selection = value
+
+    def on_enable(self):
+        self._camera_original_fov = camera.fov
+        camera.gov = self.target_fov
+
+    def on_disable(self):
+        camera.fov = self._camera_original_fov
+
 
 
     def input(self, key):
@@ -457,7 +467,7 @@ class Gizmo(Entity):
 
 
     def update(self):
-        self.world_scale = distance(self.world_position, camera.world_position) * .05
+        self.world_scale = distance(self.world_position, camera.world_position) * camera.fov * .001
 
         for i, axis in enumerate('xyz'):
             if self.subgizmos[axis].dragging:
@@ -1671,7 +1681,7 @@ if __name__ == '__main__':
     # app = Ursina(size=(1280,720))
     app = Ursina(vsync=False)
 
-
+# camera.fov = 90
 level_editor = LevelEditor()
 
 
