@@ -2,10 +2,8 @@ import sys
 import os
 from panda3d.core import WindowProperties
 from panda3d.core import loadPrcFileData
-from panda3d.core import Vec2
-from ursina.entity import Entity
-from ursina import color
-from ursina import application
+from ursina.vec2 import Vec2
+from ursina import color, application
 from ursina.scene import instance as scene    # for toggling collider visibility
 from ursina.string_utilities import print_info, print_warning
 
@@ -22,8 +20,6 @@ class Window(WindowProperties):
         # loadPrcFileData("", "framebuffer-multisample 1")
         # loadPrcFileData('', 'multisamples 2')
         # loadPrcFileData('', 'textures-power-2 none')
-
-        # loadPrcFileData('', 'cursor-filename mycursor.ico')
         # loadPrcFileData('', 'threading-model Cull/Draw')
         loadPrcFileData('', 'coordinate-system y-up-left')
 
@@ -32,7 +28,6 @@ class Window(WindowProperties):
         loadPrcFileData('', 'aux-display pandadx8')
         loadPrcFileData('', 'aux-display tinydisplay')
 
-        # self.setForeground(True)
         self.vsync = True   # can't be set during play
         self.show_ursina_splash = False
 
@@ -46,6 +41,7 @@ class Window(WindowProperties):
             self.screen_resolution = (user32.GetSystemMetrics(0), user32.GetSystemMetrics(1))
 
         else:
+            window.borderless = False
             try:
                 from screeninfo import get_monitors
                 self.screen_resolution = (get_monitors()[0].width, get_monitors()[0].height)
@@ -74,6 +70,7 @@ class Window(WindowProperties):
         if not application.development_mode:
             self.fullscreen = True
 
+
         self.color = color.dark_gray
         self.render_modes = ('default', 'wireframe', 'colliders', 'normals')
         self.render_mode = 'default'
@@ -82,6 +79,7 @@ class Window(WindowProperties):
         base.accept('aspectRatioChanged', self.update_aspect_ratio)
         if self.always_on_top:
             self.setZOrder(WindowProperties.Z_top)
+
 
     @property
     def left(self):
@@ -111,7 +109,7 @@ class Window(WindowProperties):
             )
 
     def make_editor_gui(self):     # called by main after setting up camera and application.development_mode
-        from ursina import camera, Text, Button, ButtonList, Func, Tooltip
+        from ursina import camera, Entity, Text, Button, ButtonList, Func, Tooltip, held_keys, mouse
         import time
 
         self.editor_ui = Entity(parent=camera.ui, eternal=True, enabled=bool(application.development_mode))
@@ -119,7 +117,6 @@ class Window(WindowProperties):
             position=self.top_right, z=-999, scale=(.05, .025), color=color.red.tint(-.2), text='x', on_click=application.quit, name='exit_button')
 
         def _exit_button_input(key):
-            from ursina import held_keys, mouse
             if held_keys['shift'] and key == 'q' and not mouse.right:
                 self.exit_button.on_click()
         self.exit_button.input = _exit_button_input
@@ -173,13 +170,12 @@ class Window(WindowProperties):
         prev_aspect = self.aspect_ratio
         self.aspect_ratio = self.size[0] / self.size[1]
 
-        from ursina import camera
+        from ursina import camera, window, application
         value = [int(e) for e in base.win.getSize()]
         camera.set_shader_input('window_size', value)
 
         print_info('changed aspect ratio:', round(prev_aspect, 3), '->', round(self.aspect_ratio, 3))
 
-        from ursina import camera, window, application
         camera.ui_lens.set_film_size(camera.ui_size * .5 * self.aspect_ratio, camera.ui_size * .5)
         for e in [e for e in scene.entities if e.parent == camera.ui] + self.editor_ui.children:
             e.x /= prev_aspect / self.aspect_ratio
@@ -203,18 +199,34 @@ class Window(WindowProperties):
 
     @property
     def size(self):
-        return Vec2(self.get_size()[0], self.get_size()[1])
+        return Vec2(*self.get_size())
 
     @size.setter
     def size(self, value):
-        if self.forced_aspect_ratio:
-            value = (value[1]*self.forced_aspect_ratio, value[1])
+        if hasattr(self, '_forced_aspect_ratio') and self.forced_aspect_ratio:
+            value = (value[1] * self.forced_aspect_ratio, value[1])
 
         self.set_size(int(value[0]), int(value[1]))
         self.aspect_ratio = value[0] / value[1]
         from ursina import camera
         camera.set_shader_input('window_size', value)
         base.win.request_properties(self)
+
+    @property
+    def forced_aspect_ratio(self):
+        if not hasattr(self, '_forced_aspect_ratio'):
+            return None
+        return self._forced_aspect_ratio
+
+    @forced_aspect_ratio.setter
+    def forced_aspect_ratio(self, value):
+        if not value:
+            return
+
+        print('ttoooo', value)
+        self._forced_aspect_ratio = value
+        self.size = self.size
+
 
     @property
     def render_mode(self):
@@ -239,7 +251,7 @@ class Window(WindowProperties):
         if value == 'wireframe':
             base.wireframeOn()
 
-        if value == 'colliders':
+        elif value == 'colliders':
             self.original_colors = [e.color for e in scene.entities if hasattr(e, 'color')]
             for e in scene.entities:
                 e.color = color.clear
@@ -247,7 +259,7 @@ class Window(WindowProperties):
                     # e.visible = False
                     e.collider.visible = True
 
-        if value == 'normals':
+        elif value == 'normals':
             from ursina.shaders import normals_shader
             for e in [e for e in scene.entities if e.model and e.alpha]:
                 e.shader = normals_shader
@@ -260,6 +272,16 @@ class Window(WindowProperties):
             i = 0
 
         self.render_mode = self.render_modes[i]
+
+
+    @property
+    def title(self):
+        return self._title
+
+    @title.setter
+    def title(self, value):
+        self._title = value
+        loadPrcFileData('', f'window-title {value}')
 
 
     @property
@@ -284,7 +306,6 @@ class Window(WindowProperties):
                     self.windowed_position = self.position
                     self.windowed_size = self.size
                     self.size = self.fullscreen_size
-                    self.setFullscreen(False)
                     self.center_on_screen()
                 else:
                     self.size = self.windowed_size
@@ -293,6 +314,7 @@ class Window(WindowProperties):
                     else:
                         self.center_on_screen()
 
+                self.setFullscreen(value)
                 object.__setattr__(self, name, value)
                 return
             except:
@@ -340,10 +362,10 @@ instance = Window()
 if __name__ == '__main__':
     from ursina import *
     # application.development_mode = False
-    app = Ursina(vsync=True)
+    app = Ursina()
+    # window.forced_aspect_ratio = 1
     # window.vsync = 10
 
-    # window.forced_aspect_ratio = 16/9
     window.title = 'ursina'
     # window.borderless = False
     # window.fullscreen = False
