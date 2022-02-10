@@ -3,9 +3,7 @@ from ursina import application
 import time
 
 
-class Wait():
-    def __init__(self, duration):
-        self.duration = duration
+Wait = float
 
 
 class Func():
@@ -31,7 +29,7 @@ class Sequence():
         self.t = 0
         self.time_step = Sequence.default_time_step
         self.duration = 0
-        self.funcs = list()
+        self.funcs = []
         self.paused = True
         self.loop = False
         self.auto_destroy = True
@@ -45,12 +43,10 @@ class Sequence():
 
 
     def generate(self):
-        self.funcs = list()
+        self.funcs = []
 
         for arg in self.args:
-            if isinstance(arg, Wait):
-                self.duration += arg.duration
-            elif isinstance(arg, (int, float)):
+            if isinstance(arg, (int, float)):
                 self.duration += arg
 
             elif isinstance(arg, Func):
@@ -61,9 +57,7 @@ class Sequence():
     def append(self, arg):
         self.args.append(arg)
 
-        if isinstance(arg, Wait):
-            self.duration += arg.duration
-        elif isinstance(arg, (int, float)):
+        if isinstance(arg, (int, float)):
             self.duration += arg
 
         elif isinstance(arg, Func):

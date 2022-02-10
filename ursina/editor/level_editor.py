@@ -2,7 +2,6 @@ from ursina import *
 from ursina.shaders import lit_with_shadows_shader, unlit_shader
 from time import perf_counter
 
-
 class Scene(Entity):
     def __init__(self, x, y, name, **kwargs):
         super().__init__()
@@ -134,6 +133,8 @@ class LevelEditor(Entity):
         self.local_global_menu.on_value_changed = self.render_selection
         # self.current_poke_node = None
         self.entity_list_text = Text(parent=self.ui, scale=.5, position=window.left)
+        self.target_fov = 90
+
 
     @property
     def entities(self):
@@ -150,6 +151,14 @@ class LevelEditor(Entity):
     @selection.setter
     def selection(self, value):
         self.current_scene.selection = value
+
+    def on_enable(self):
+        self._camera_original_fov = camera.fov
+        camera.gov = self.target_fov
+
+    def on_disable(self):
+        camera.fov = self._camera_original_fov
+
 
 
     def input(self, key):
@@ -458,7 +467,7 @@ class Gizmo(Entity):
 
 
     def update(self):
-        self.world_scale = distance(self.world_position, camera.world_position) * .025
+        self.world_scale = distance(self.world_position, camera.world_position) * camera.fov * .001
 
         for i, axis in enumerate('xyz'):
             if self.subgizmos[axis].dragging:
@@ -978,34 +987,11 @@ class Deleter(Entity):
             level_editor.selection = []
             level_editor.render_selection()
 
-# class OriginSetter(Entity):
-#     def input(self, key):
-#         if key == 'o':
-#             if not level_editor.selection:
-#                 return
-#             if not len(set([e.origin for e in level_editor.selection])) == 1: # if seleciton has different origins, return
-#                 return
-#
-#             if not hasattr(self, 'menu'):
-#                 self.menu = Entity(parent=camera.ui, enabled=False)
-#                 for i, e in enumerate(('x','y','z')):
-#                     ButtonGroup(('-.5', '0', '.5'), parent=self.menu, y=-.05*i)
-#
-#             if not self.menu.enabled:
-#                 self.menu.enabled = True
-#
-#                 for i, button_group in enumerate(self.menu.children):
-#                     if str(level_editor.selection[0].origin[i]) in button_group.options:
-#                         button_group.value = str(level_editor.selection[0].origin[i])
-#
-#             else:
-#                 self.menu.enabled = False
-
 
 class PointOfViewSelector(Entity):
     def __init__(self, **kwargs):
 
-        super().__init__(parent=level_editor.ui, model='cube', collider='box', texture='white_cube', scale=.05, position=window.top_right-Vec2(.1,.1))
+        super().__init__(parent=level_editor.ui, model='cube', collider='box', texture='white_cube', scale=.05, position=window.top_right-Vec2(.1,.05))
         self.front_text = Text(parent=self, text='front', z=-.5, scale=10, origin=(0,0), color=color.azure)
 
         for key, value in kwargs.items():
@@ -1183,16 +1169,14 @@ class LevelMenu(Entity):
 
 class Inspector(Entity):
     def __init__(self):
-        super().__init__(parent=level_editor.ui, position=window.top_right-Vec2(.225,.2))
+        super().__init__(parent=level_editor.ui, position=window.top_right-Vec2(.225,.1))
         self.ui = Entity(parent=self)
         self.name_field = InputField(parent=self.ui, default_value='name', origin=(-.5,.5), scale_x=.125*3, color=color._8)
-        self.name_field.text_field.x = .025
-        self.name_field.text_field.y = -.25
-        self.name_field.text_field.text_entity.color = color.light_gray
-        self.name_field.highlight_color = color._32
-        self.bg = Panel(parent=self.ui, origin=(-.5,.5), scale=(.125*3, .3), z=.1, color=color._8)
+        self.bg = Panel(parent=self.ui, origin=(-.5,.5), scale=(.125*3, .3), z=.1, color=color._8, collider='box')
 
-        self.fields = []
+        self.input_fields = [self.name_field, ]
+        self.transform_fields = []
+
         for y in range(3):
             for i, e in enumerate('xyz'):
                 default = '0'
@@ -1200,60 +1184,97 @@ class Inspector(Entity):
                     default = '1'
 
                 field = InputField(max_width=5, model='quad', parent=self.ui, scale_x=.125, origin=(-.5,.5), default_value=default, x=i*.125, y=-.05-(y*.05), color=color._8)
-                field.text_field.x = .05
-                field.text_field.y = -.25
-                field.text_field.text_entity.color = color.light_gray
-                field.highlight_color = color._32
-                self.fields.append(field)
+                self.transform_fields.append(field)
+                self.input_fields.append(field)
 
+        for field in self.input_fields:
+            field.text_field.x = .05
+            field.text_field.y = -.25
+            field.text_field.text_entity.color = color.light_gray
+            field.highlight_color = color._32
 
-        Entity(model=Grid(3,3), parent=self.fields[0], scale=3, origin=(-.5,.5), z=-.1, color=color._64)
+        self.fields = dict(
+            model_field =   Button(parent=self.name_field, origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, text='model: cube', color=color._8, highlight_color=color._32),
+            texture_field = Button(parent=self.name_field, origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, text='texture: ', color=color._8, highlight_color=color._32),
+            color_field =   Button(parent=self.name_field, origin=(-.5,.5), color=color._8, highlight_color=color._32),
+        )
+        for i, field in enumerate(self.fields.values()):
+            if field.text:
+                field.text_entity.font = 'VeraMono.ttf'
+                field.text_entity.x = .025
+                # field.text_entity.y = -.25
+                field.text_entity.scale *= .75
+
+            field.y = -4-i
+
+        Entity(model=Grid(3,3), parent=self.transform_fields[0], scale=3, origin=(-.5,.5), z=-.1, color=color._64)
+        Entity(model=Grid(1,3), parent=self.transform_fields[-3], scale=3, origin=(-.5,.5), z=-.1, color=color._64)
         self.scale = .6
 
-    def update(self):
+    def input(self, key):
+        if not key == Keys.left_mouse_up:
+            return
+
         self.ui.enabled = bool(level_editor.selection)
         if level_editor.selection and (mouse.left or held_keys['g']):
             if len(level_editor.selection) == 1:
-                self.name_field.text_field.text_entity.text = level_editor.selection[0].name
+                selected = level_editor.selection[0]
+
+                self.name_field.text_field.text_entity.text = selected.name
                 for i, attr_name in enumerate(('world_x', 'world_y', 'world_z', 'world_rotation_x', 'world_rotation_y', 'world_rotation_z', 'world_scale_x', 'world_scale_y', 'world_scale_z')):
-                    self.fields[i].text_field.text_entity.text = str(round(getattr(level_editor.selection[0], attr_name), 3))
+                    self.transform_fields[i].text_field.text_entity.text = str(round(getattr(selected, attr_name), 3))
+
+                self.fields['model_field'].text_entity.text = ('model:' + selected.model.name) if selected.model else 'model: None'
+                self.fields['texture_field'].text_entity.text = ('texture:' + selected.texture.name) if selected.texture else 'texture: None'
+                # self.fields['texture_field'].text_entity.text = selected.texture
             else:
                 self.name_field.text_field.text_entity.text = '--------'
+                self.fields['model_field'].text_entity.text = '--------'
+                self.fields['texture_field'].text_entity.text = '--------'
 
 
 
 class ModelMenu(Entity):
     def __init__(self, **kwargs):
-        super().__init__(parent=level_editor)
+        super().__init__(parent=level_editor.ui)
+        self.menu_parent = Entity(parent=self, enabled=False)
+        self.search_field = InputField(parent=self.menu_parent, y=.3)
         self.button_list = None     # gets created on self.open()
 
     def open(self):
         # self.model_names = [e.stem for e in application.internal_models_compressed_folder.glob('**/*.ursinamesh')]
-        self.model_names = ['cube', 'sphere', 'plane']
-        for file_type in ('.bam', '.obj', '.ursinamesh'):
-            self.model_names += [e.stem for e in application.asset_folder.glob(f'**/*{file_type}') if not 'animation' in e.stem]
+        self.model_names = ['cube', 'sphere', 'plane', 'test', 'test_2', 'test_3', 'test_4', 'test_5', 'another_test', 'player_idle']
+        # for file_type in ('.bam', '.obj', '.ursinamesh'):
+        #     self.model_names += [e.stem for e in application.asset_folder.glob(f'**/*{file_type}') if not 'animation' in e.stem]
 
-        # print('mmmmmmm', self.model_names)
         model_dict = {name : Func(self.set_models_for_selection, name) for name in self.model_names}
+        # print('mmmmmmm', model_dict)
         if not self.button_list:
-            self.button_list = ButtonList(model_dict, font='VeraMono.ttf')
-            self.bg = Entity(parent=self.button_list, model='quad', collider='box', color=color.black33, on_click=self.button_list.disable, z=.1, scale=100)
-        else:
-            self.button_list.enabled = True
+            self.button_list = ButtonList(model_dict, parent=self.menu_parent, font='VeraMono.ttf', y=.25)
+            self.bg = Entity(parent=self.menu_parent, model='quad', collider='box', color=color.black33, on_click=self.menu_parent.disable, z=.1, scale=100)
 
-        self.button_list.position = mouse.position
+        self.menu_parent.enabled = True
+        # self.search_field.active = True
+
+        # self.search_field.text = ''
+        # self.button_list.position = mouse.position
 
 
     def input(self, key):
+        if key == 'm':
+            if self.button_list is None or (not self.menu_parent.enabled and level_editor.selection):
+                self.open()
 
-        if key == 'm' and level_editor.selection:
-            self.open()
+
+
+
 
     def set_models_for_selection(self, name):
         for e in level_editor.selection:
             e.model = name
 
-        self.button_list.enabled = False
+        self.menu_parent.enabled = False
+
 
 class TextureMenu(Entity):
     def __init__(self, **kwargs):
@@ -1660,7 +1681,7 @@ if __name__ == '__main__':
     # app = Ursina(size=(1280,720))
     app = Ursina(vsync=False)
 
-
+# camera.fov = 90
 level_editor = LevelEditor()
 
 
@@ -1692,14 +1713,14 @@ level_menu = LevelMenu()
 goto_scene = level_menu.goto_scene
 duplicator = Duplicator()
 
+inspector = Inspector()
 model_menu = ModelMenu()
 texture_menu = TextureMenu()
 color_menu = ColorMenu()
 right_click_menu = RightClickMenu()
-# OriginSetter(parent=level_editor)
 PointOfViewSelector()
 Help()
-search = Search(parent=level_editor)
+# search = Search(parent=level_editor)
 
 
 debug_text = Text(y=-.45)
@@ -1722,40 +1743,8 @@ def update():
         # print('a')
         # debug_text.text = f'{round(Vec3(*level_editor.selection[-1].forward.normalized()), 0) + round(Vec3(*look_at_angle_helper.forward), 0)}'
 
-inspector = Inspector()
-
-# inspector = WindowPanel(
-#     title='entity',
-#     content=(
-#         # InputField(name='name_field'),
-#         (Button(text='0'), Button()),
-#         Text('Name:'),
-#         # Text('Age:'),
-#         # InputField(name='age_field'),
-#         # Text('Phone Number:'),
-#         # InputField(name='phone_number_field'),
-#         # Space(height=1),
-#         # Text('Send:'),
-#         Slider(),
-#         Slider(),
-#         # ButtonGroup(('test', 'eslk', 'skffk'))
-#         ),
-#         # popup=True,
-#         # enabled=False,
-#         parent=level_editor.ui,
-#     )
-# inspector = Entity(parent=level_editor.ui, position=window.top_left+Vec2(.1,-.05))
-# for y in range(3):
-#     for x in range(3):
-#         b = Button(scale=(.12,.033), text='013', parent=inspector, origin=(-.5,.5), position=(x*.121,-y*.035), radius=.5, text_origin=(-.5,0))
-#         b.text_entity.x += .1
-#
-#
-# inspector.background = Entity(parent=inspector, model=Quad(radius=.05), origin_y=.5, scale=(.12*3)+.01, position=((.12*3/2),.01), color=color.black66)
-# inspector.scale = .5
 
 
-#
 # level_editor_toggler = Entity()
 # def level_editor_toggler_input(key):
 #     if key == 'escape':
@@ -1781,4 +1770,5 @@ if __name__ == '__main__':
     # poke_shape = PokeShape(scale=4, points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,-.25), Vec3(.75,0,-.25), Vec3(.75,0,.25), Vec3(.5,0,.25), Vec3(.5,0,.5), Vec3(-.5,0,.5)])
     # poke_shape = PokeShape(scale=4, points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,-.25), Vec3(.75,0,-.25), Vec3(.75,0,.25), Vec3(.5,0,.25), Vec3(.5,0,.5), Vec3(.5,0,.55), Vec3(-.5,0,.5)])
     # level_editor.entities.append(poke_shape)
+    Sky()
     app.run()

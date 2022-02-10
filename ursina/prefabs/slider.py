@@ -37,7 +37,6 @@ class Slider(Entity):
             if self.setattr:
                 if isinstance(self.setattr[0], dict):   # set value of dict
                     self.setattr[0][self.setattr[1]] = self.value
-                    print(self.setattr)
                 else:                                   # set value of Entity
                     setattr(self.setattr[0], self.setattr[1], self.value)
 
@@ -94,7 +93,6 @@ class Slider(Entity):
 
     def slide(self):
         t = self.knob.x / .5
-        self.knob.text_entity.text = str(round(lerp(self.min, self.max, t), 2))
 
         if self.step > 0:
             if isinstance(self.step, int) or self.step.is_integer():
@@ -109,6 +107,11 @@ class Slider(Entity):
                 setattr(target_object, attr, self.value)
 
             self._prev_value = t
+
+        invoke(self._update_text, delay=1/60)
+
+    def _update_text(self):
+            self.knob.text_entity.text = str(round(self.value, 2))
 
 
     def __setattr__(self, name, value):

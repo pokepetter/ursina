@@ -40,9 +40,13 @@ open source game engine
 
         • Reload code/textures/models while in-game
         • Automatic import of .psd and .blend files
-        • Play in fullscreen while developing
         • Easy to use mesh class for making procedural geometry
+        • Concise code and less boilerplate code
+        • Built-in animation and tweening
+        • Pre-made prefabs such as FirstPersonController, 2d platformer controller, editor camera
         • Lots of included procedural 3D primitives
+        • Play in fullscreen while developing
+        • Many shaders to choose from, or write your own with GLSL
 
 
 
@@ -50,6 +54,7 @@ open source game engine
 
         • Windows
         • Linux
+
 
 
 ## Free and Open Source
@@ -65,7 +70,7 @@ open source game engine
 
 
 ## Dependencies
-
+w
     • python 3.6+
     • panda3d
     • screeninfo, for detecting screen resolution

@@ -39,7 +39,7 @@ class Texture():
 
 
 
-        self.filtering = Texture.default_filtering      # None/'bilinear'/'mipmap' default: 'bilinear'
+        self.filtering = Texture.default_filtering      # None/'bilinear'/'mipmap' default: 'None'
 
     @staticmethod
     def new(size, color=(255,255,255)):
