@@ -29,7 +29,7 @@ class InputField(Button):
         self.text_field = TextField(world_parent = self, x=-.45, y=.3, z=-.1, max_lines=max_lines, character_limit=character_limit, register_mouse_input = True)
         destroy(self.text_field.bg)
         self.text_field.bg = self
-        
+
         def render():
             if self.limit_content_to:
                 org_length = len(self.text_field.text)
@@ -81,6 +81,7 @@ class InputField(Button):
         self.text_field.text = ''
         self.text_field.cursor.position = (0,0)
         self.text_field.add_text(value, move_cursor=True)
+        self.text_field.render()
 
     @property
     def text_color(self):
