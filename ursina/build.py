@@ -54,6 +54,7 @@ python_lib_dest = Path(build_folder / 'python/Lib')
 src_dest = Path(build_folder / 'src')
 build_engine = True
 build_game = True
+compile_to_pyc = True
 
 for i, arg in enumerate(sys.argv):
     if arg == '--help':
@@ -70,6 +71,7 @@ for i, arg in enumerate(sys.argv):
             --overwrite         # don't ask to overwrite existing build, just overwrite
             --skip_engine
             --skip_game
+            --compile_to_pyc    # default: True
 
             Make sure to include any extra modules with --include_modules PIL,numpy for example.
             Any errors while the application is running will be logged in log.txt instead of the console.
@@ -95,6 +97,9 @@ for i, arg in enumerate(sys.argv):
         build_engine = False
     elif arg == '--skip_game':
         build_game = False
+
+    elif arg == '--compile_to_pyc':
+        compile_to_pyc = bool(sys.argv[i+1])
 
 
 if (build_engine and python_dest.exists() or (build_game and src_dest.exists())):
@@ -231,7 +236,6 @@ if build_game:
 
     ignore.extend(['.git', 'build', '.gitignore', 'build.bat'])
     ignore_patterns = ['.psd', '.zip']
-    compile_to_pyc = True
     ignore.append('__pycache__')
 
     if compile_to_pyc:
