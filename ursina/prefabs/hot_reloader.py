@@ -58,7 +58,7 @@ class HotReloader(Entity):
 
         self.path = Path(self.path)
         self.hotreload = False   # toggle with f9
-        self._original_source_code_content = self.get_source_code()
+        self._original_source_code_content = ''
         # self.text_editor = InGameTextEditor(path=self.path, enabled=False)
         self._i = 0
         self.hotkeys = {
