@@ -10,7 +10,6 @@ from ursina.scene import instance as scene
 from ursina.camera import instance as camera
 from ursina.mouse import instance as mouse
 from ursina.string_utilities import print_info
-from panda3d.core import KeyboardButton
 from panda3d.core import ConfigVariableBool
 
 import __main__
