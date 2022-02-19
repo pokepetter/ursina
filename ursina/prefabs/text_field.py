@@ -154,6 +154,7 @@ class TextField(Entity):
             self.bg.scale = (value[0], value[1], 0.001)
         else:
             self.scroll_enabled = False
+        self.render()
 
     def add_text(self, s, move_cursor=True):
         if self.character_limit and len(self.text) >= self.character_limit:
@@ -733,8 +734,8 @@ class TextField(Entity):
                 scrollY += 1
 
             max_x = 0
-            for i in range(min(self.scroll_size[1], len(lines))):
-                max_x = max(max_x, len(lines[i + scrollY]))
+            for i in range(min(scrollY, len(lines)), min(self.scroll_size[1] + scrollY, len(lines))):
+                max_x = max(max_x, len(lines[i]))
 
             if x - scrollX < 0 and scrollX > 0:
                 scrollX -= 1

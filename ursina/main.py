@@ -234,9 +234,7 @@ class Ursina(ShowBase):
 
 
     def keystroke(self, key):
-        key = str(KeyboardButton.asciiKey(key))
-
-        if key == None:
+        if input_handler.held_keys['control'] or key == None:
             return
         if key == 'space':
             key = ' '
