@@ -1,0 +1,107 @@
+from ursina import *
+
+def get_instance(name):
+  _object = None
+  for i in scene.entities:
+    if i.name == name:
+      _object = i
+      break
+  if _object != None:
+    return _object
+  else:
+    raise RuntimeError(f'No instantiated object named {name} exists')
+
+class ScrollableText(Entity):
+  def __init__(self, lines=20, length=15, text='', background=False, **kwargs):
+    super().__init__(**kwargs)
+    
+    self.text = self.clean(repr(text))
+    content = self.wrap(self.text, length)
+    
+    
+    content = self.cn_return(content)
+    self.draw(lines, len(content), length)
+    
+    self.populate(content, lines)
+
+    self.content, self.lines = content, lines
+
+    if background:
+      self.background(lines, length)
+
+  def background(self, lines, length):
+    self.background = Entity(model=Quad(radius=0), color=color.white, origin=(-0.48, 0.48, 0), parent=self, scale=(0.025+length*Text.size/2+0.025, 0.025*lines+0.025))
+
+  def sample(self, content):
+    for i in content:
+      print(i)
+
+  def trigger(self):
+    self.populate(self.content, self.lines)
+
+  def populate(self, content, lines):
+    if self.slider:
+      value = self.slider.value
+    else:
+      value = 0
+      
+    for i in range(lines):
+      try:
+        get_instance(f'line_{str(i)}').text = content[i+value]
+      except:
+        get_instance(f'line_{str(i)}').text = ''
+
+  def split_word(self, word):
+    return [char for char in word]
+
+  def wrap(self, text, length):
+    out = []
+    temp = ''
+    count = 0
+    
+    for i in text: # Length Catch
+      count+=len(self.split_word(i))+1
+      if count > length:
+        out.append(temp)
+        temp = ''
+        count = 0
+      temp += i + ' '
+    out.append(temp)
+
+    for i in range(len(out)-1):
+      out[i] = out[i].replace('\\n', '{#r#}')
+      out[i] = out[i].replace('\\r', '{#r#}')
+    return out
+
+  def cn_return(self, content):
+    i = 0
+    while i <= len(content)-1:
+      if '{#r#}' in content[i]:
+        temp = content[i].split('{#r#}')
+        content[i] = temp[0]
+        content.insert(i+1, temp[1])
+      i += 1
+        
+    return content
+      
+  def clean(self, text):
+    text = text.split(' ')
+    for i in text:
+      i = i.split('\n')
+    for i in text:
+      i = i.split('\r')
+    return text
+  
+  def draw(self, lines, maxScroll, length):
+    self.slider = Slider(min=0, max=maxScroll, step=1, default=None, height=Text.size, text='', dynamic=True, on_value_changed=self.trigger, parent=self, position=((0.025*length+0.025)*0.25, .03, 0))
+    for i in range(lines):
+      Text(text=f'<black>', name='line_'+str(i), y=i*-0.025, parent=self, always_on_top=True)
+
+if __name__ == '__main__':
+  e = Ursina()
+
+  dsr = '''Your Text Here'''
+  
+  st = ScrollableText(text=dsr, length=10, background=True, position=(-3, 0, 0))
+  st.scale = 5
+  e.run()
