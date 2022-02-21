@@ -117,7 +117,7 @@ def input(key):
 
     key = key.replace('mouse down', 'mouse')
 
-    if key.endswith('up'):
+    if key.endswith('up') and key != 'page up':
         held_keys[key[:-3]] = 0
     else:
         held_keys[key] = 1
