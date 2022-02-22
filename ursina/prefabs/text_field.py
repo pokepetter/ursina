@@ -646,6 +646,7 @@ class TextField(Entity):
             if key == 'left mouse down' and mouse.hovered_entity == self.bg and mouse.point is not None:
                 cursor.position = self.mousePos()
                 self.selection = [self.cursor.position, self.cursor.position]  
+                self.draw_selection()
 
             if key == 'left mouse up':
                 if not self._ignore_next_click:
@@ -760,11 +761,11 @@ class TextField(Entity):
         
         if self.register_mouse_input and mouse.left and not self._ignore_next_click:
             self.cursor.position = self.mousePos()
-            if self.selection:
-                self.selection[1] = self.cursor.position
             self.clampMouseScrollOrigin()
-
-            self.draw_selection()
+            if self.selection and self.selection[1] != self.cursor.position:
+                self.selection[1] = self.cursor.position
+                self.draw_selection()
+            
 
     def on_destroy(self):
         self._blinker.kill()
