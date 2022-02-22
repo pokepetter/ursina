@@ -322,14 +322,15 @@ class Window(WindowProperties):
                 pass
 
         if name == 'borderless':
-            self.setUndecorated(value)
-            if hasattr(self, 'exit_button'):
-                self.exit_button.enabled = not value
-            try:
-                application.base.win.request_properties(self)
-            except:
-                pass
-            object.__setattr__(self, name, value)
+            if os.name == 'nt':
+                self.setUndecorated(value)
+                if hasattr(self, 'exit_button'):
+                    self.exit_button.enabled = not value
+                try:
+                    application.base.win.request_properties(self)
+                except:
+                    pass
+                object.__setattr__(self, name, value)
 
 
         if name == 'color':
