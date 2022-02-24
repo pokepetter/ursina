@@ -463,6 +463,10 @@ class TextField(Entity):
                 self._append_undo(self.text, y, x)
                 self.text = '\n'.join(lines)
 
+            if self.selection:
+                self.selection[0][0] += 4
+                self.selection[1][0] += 4
+                invoke(self.draw_selection, delay = 0.01)
 
         if key in self.shortcuts['dedent']:
             moveCursor = False
@@ -483,6 +487,11 @@ class TextField(Entity):
 
             if moveCursor:
                 self.cursor.x = max(self.cursor.x - 4, 0)
+                if self.selection:
+                    self.selection[0][0] = max(0, self.selection[0][0] - 4)
+                    self.selection[1][0] = max(0, self.selection[1][0] - 4)
+                    invoke(self.draw_selection, delay = 0.01)
+
             if appendHistory:
                 self._append_undo(self.text, y, x)
                 self.text = '\n'.join(lines)
