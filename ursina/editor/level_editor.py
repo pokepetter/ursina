@@ -133,7 +133,7 @@ class LevelEditor(Entity):
         self.local_global_menu.on_value_changed = self.render_selection
         # self.current_poke_node = None
         self.entity_list_text = Text(parent=self.ui, scale=.5, position=window.left)
-        self.target_fov = 90
+        self.target_fov = 40
 
 
     @property
@@ -467,7 +467,7 @@ class Gizmo(Entity):
 
 
     def update(self):
-        self.world_scale = distance(self.world_position, camera.world_position) * camera.fov * .001
+        self.world_scale = distance(self.world_position, camera.world_position) * camera.fov * .0005
 
         for i, axis in enumerate('xyz'):
             if self.subgizmos[axis].dragging:
@@ -825,10 +825,11 @@ class Selector(Entity):
 
             clicked_entity = self.get_hovered_entity()
 
-            if clicked_entity in level_editor.entities and not clicked_entity in level_editor.selection and not held_keys['alt']:
-                if held_keys['shift']:
+            if clicked_entity in level_editor.entities and not held_keys['alt']:
+                if held_keys['shift'] and not clicked_entity in level_editor.selection:
                     level_editor.selection.append(clicked_entity) # append
                 else:
+                    print(clicked_entity)
                     level_editor.selection = [clicked_entity, ]   # overwrite
 
             if held_keys['alt'] and clicked_entity in level_editor.selection:
