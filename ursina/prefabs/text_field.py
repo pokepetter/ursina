@@ -129,18 +129,19 @@ class TextField(Entity):
 
     @active.setter
     def active(self, value):
-        self._active = value
+        if self._active != value:
+            self._active = value
+            
+            if self._blinker and not self._blinker.finished:
+                self._blinker.pause()
+                self.cursor.visible = True
 
-        if self._blinker and not self._blinker.finished:
-            self._blinker.pause()
-            self.cursor.visible = True
-
-        if self._active:
-            self._blinker.resume()
-        else:
-            self.selection = None
-            self.draw_selection()
-            self.cursor.visible = False
+            if self._active:
+                self._blinker.resume()
+            else:
+                self.selection = None
+                self.draw_selection()
+                self.cursor.visible = False
 
     @property
     def scroll_size(self):
@@ -768,7 +769,7 @@ class TextField(Entity):
                     self.draw_selection()
                 
         
-        if self.register_mouse_input and mouse.left and not self._ignore_next_click:
+        if self.active and self.register_mouse_input and mouse.left and not self._ignore_next_click:
             self.cursor.position = self.mousePos()
             self.clampMouseScrollOrigin()
             if self.selection and self.selection[1] != self.cursor.position:
