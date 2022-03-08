@@ -328,14 +328,14 @@ if not load_model('arrow', application.internal_models_compressed_folder):
     Entity(parent=p, model='cube', scale=(1,.05,.05))
     Entity(parent=p, model=Cone(4, direction=(1,0,0)), x=.5, scale=.2)
     arrow_model = p.combine()
-    arrow_model.save('arrow.ursinamesh', path=internal_models_compressed_folder)
+    arrow_model.save('arrow.ursinamesh', path=application.internal_models_compressed_folder)
 
 if not load_model('scale_gizmo', application.internal_models_compressed_folder):
     p = Entity(enabled=False)
     Entity(parent=p, model='cube', scale=(.05,.05,1))
     Entity(parent=p, model='cube', z=.5, scale=.2)
     arrow_model = p.combine()
-    arrow_model.save('scale_gizmo.ursinamesh', path=internal_models_compressed_folder)
+    arrow_model.save('scale_gizmo.ursinamesh', path=application.internal_models_compressed_folder)
 
 
 class GizmoArrow(Draggable):
@@ -1184,7 +1184,7 @@ class Inspector(Entity):
                 if y==2:
                     default = '1'
 
-                field = InputField(max_width=5, model='quad', parent=self.ui, scale_x=.125, origin=(-.5,.5), default_value=default, x=i*.125, y=-.05-(y*.05), color=color._8)
+                field = InputField(max_width=5, model='quad', parent=self.ui, scale_x=.125, origin=(-.5,.5), default_value=default, limit_content_to=ContentTypes.math, x=i*.125, y=-.05-(y*.05), color=color._8)
                 self.transform_fields.append(field)
                 self.input_fields.append(field)
 
@@ -1428,10 +1428,13 @@ class Help(Button):
         self.tooltip.original_scale = .75
 
 class Duplicator(Entity):
+    def __init__(self, **kwargs):
+        super().__init__(clones=None)
+
     def input(self, key):
         if held_keys['shift'] and key == 'd' and level_editor.selection:
             # clones = [duplicate(e, original_parent=level_editor.current_scene, color=e.color, shader=e.shader, origin=e.origin, parent=level_editor.current_scene, selectable=e.selectable) for e in level_editor.selection]
-            clones = []
+            self.clones = []
             for e in level_editor.selection:
                 clone = deepcopy(e)
                 clone.original_parent = level_editor.current_scene
@@ -1440,17 +1443,19 @@ class Duplicator(Entity):
                 clone.origin = e.origin
                 clone.parent = level_editor.current_scene
                 clone.selectable = e.selectable
-                clones.append(clone)
+                self.clones.append(clone)
 
-            [level_editor.entities.append(e) for e in clones]
-            level_editor.selection = clones
-            level_editor.current_scene.undo.record_undo(('delete entities', [level_editor.entities.index(en) for en in clones], [repr(e) for e in clones],))
+            [level_editor.entities.append(e) for e in self.clones]
+            level_editor.selection = self.clonesD
+            level_editor.current_scene.undo.record_undo(('delete entities', [level_editor.entities.index(en) for en in clones], [repr(e) for e in self.clones],))
 
             level_editor.render_selection()
             mouse.position = level_editor.selection[-1].screen_position
             gizmo.drag()
             gizmo.subgizmos['xz'].start_dragging()
 
+        elif self.clones and key == 'middle mouse down':
+            gizmo.subgizmos['xz'].drop()
 
 
 class PokeShape(Entity):
@@ -1726,17 +1731,20 @@ Help()
 
 debug_text = Text(y=-.45)
 
-def update():
-    if level_editor.selection:
-        e = level_editor.selection[-1]
-        r = round(camera.back.dot(e.right), 1)
-        u = round(camera.back.dot(e.up), 1)
-        f = round(camera.back.dot(e.forward), 1)
-        dir = (r, u, f)
-        axis_index = dir.index(max(dir, key=abs))
-        # is_positive_direction = dir[axis_index] > 0
+# def update():
+#     if level_editor.selection:
+#         print(get_major_axis_relative_to_view(level_editor.selection[-1]))
 
-        # print(axis_index, is_positive_direction)
+
+def get_major_axis_relative_to_view(entity): # if we're looking at the entity from the right/left, return 0, top/bot:1, front/back: 2
+    r = round(camera.back.dot(entity.right), 1)
+    u = round(camera.back.dot(entity.up), 1)
+    f = round(camera.back.dot(entity.forward), 1)
+    dir = (r, u, f)
+    axis_index = dir.index(max(dir, key=abs))
+    is_positive_direction = dir[axis_index] > 0
+
+    return axis_index, is_positive_direction
         # dir =
         # print('f:', camera.forward.dot(e.forward))
         # print('u:', camera.forward.dot(e.up))
@@ -1765,6 +1773,17 @@ def update():
     # t = Text(position=window.top_left + Vec2(.01,-.06))
     # def update():
     #     t.text = 'selection:\n' + '\n'.join([str(e) for e in level_editor.selection])
+
+class MeshEditor(Entity):
+    def __init__(self, **kwargs):
+        super().__init__()
+
+
+
+    for key, value in kwargs.items():
+        setattr(self, key, value)
+
+
 if __name__ == '__main__':
     goto_scene(0,0)
     # from poke_shape import PokeShape
