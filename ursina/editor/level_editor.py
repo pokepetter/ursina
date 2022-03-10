@@ -1446,7 +1446,7 @@ class Duplicator(Entity):
                 self.clones.append(clone)
 
             [level_editor.entities.append(e) for e in self.clones]
-            level_editor.selection = self.clonesD
+            level_editor.selection = self.clones
             level_editor.current_scene.undo.record_undo(('delete entities', [level_editor.entities.index(en) for en in clones], [repr(e) for e in self.clones],))
 
             level_editor.render_selection()
