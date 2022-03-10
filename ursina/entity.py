@@ -781,6 +781,8 @@ class Entity(NodePath):
 
     @property
     def texture_offset(self):
+        if not hasattr(self, '_texture_offset'):
+            return Vec2(0,0)
         return self._texture_offset
 
     @texture_offset.setter
