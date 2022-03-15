@@ -1,5 +1,6 @@
 from ursina import *
 
+
 app = Ursina()
 class MenuButton(Button):
     def __init__(self, text='', **kwargs):
@@ -22,9 +23,6 @@ state_handler = Animator({
     'options_menu' : options_menu,
     }
 )
-
-
-
 
 
 # main menu content
@@ -91,6 +89,6 @@ for menu in (main_menu, load_menu, options_menu):
     menu.on_enable = animate_in_menu
 
 
-# background = Entity(model='quad', texture='shore', parent=camera.ui, scale=(camera.aspect_ratio,1), color=color.white, z=1)
+background = Entity(parent=menu_parent, model='quad', texture='shore', scale=(camera.aspect_ratio,1), color=color.white, z=1, world_y=0)
 
 app.run()

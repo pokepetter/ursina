@@ -480,15 +480,17 @@ class Gizmo(Entity):
 
 
 class RotationGizmo(Entity):
+    model = None
 
     def __init__(self, **kwargs):
         super().__init__(parent=gizmo)
-        rotation_gizmo_model = load_model('rotation_gizmo_model', application.internal_models_compressed_folder)
-        if not rotation_gizmo_model:
-            path = Circle(24).vertices
-            path.append(path[0])
-            rotation_gizmo_model = Pipe(base_shape=Quad(radius=0), path=[Vec3(e)*32 for e in path])
-            rotation_gizmo_model.save('rotation_gizmo_model', application.internal_models_compressed_folder)
+        if not RotationGizmo.model:
+            RotationGizmo.model = load_model('rotation_gizmo_model', application.internal_models_compressed_folder)
+            if not RotationGizmo.model:
+                path = Circle(24).vertices
+                path.append(path[0])
+                RotationGizmo.model = Pipe(base_shape=Quad(radius=0), path=[Vec3(e)*32 for e in path])
+                RotationGizmo.model.save('rotation_gizmo_model', application.internal_models_compressed_folder)
 
         self.rotator = Entity(parent=gizmo)
         self.axis = Vec3(0,1,0)
@@ -499,7 +501,7 @@ class RotationGizmo(Entity):
 
 
         for i, dir in enumerate((Vec3(-1,0,0), Vec3(0,1,0), Vec3(0,0,-1))):
-            b = Button(parent=self, model='rotation_gizmo_model', collider='mesh',
+            b = Button(parent=self, model=copy(RotationGizmo.model), collider='mesh',
                 color=axis_colors[('x','y','z')[i]], is_gizmo=True, always_on_top=True, render_queue=1, unlit=True, double_sided=True,
                 on_click=Sequence(Func(setattr, self, 'axis', dir), Func(self.drag)),
                 drop=self.drop,

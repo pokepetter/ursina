@@ -120,7 +120,7 @@ void main() {
     // Obtain final intensity as reflectance (BRDF) scaled by the energy of the light (cosine law)
     // vec3 color = NdotL * p3d_LightSource[i].color * (diffuseContrib + specContrib);
     vec3 color =  NdotL * p3d_LightSource[i].color * diffuseContrib;
-    const float bias = 0.001;
+    const float bias = 0.0001;
 
     vec4 shadowcoord = shad[i];
     shadowcoord.z += bias;
@@ -151,7 +151,7 @@ if __name__ == '__main__':
 
     a = Entity(model='cube', shader=shader, color=color.light_gray)
     Entity(model='cube', color=color.white, scale=(10,1,10), y=-2, shader=shader, texture='white_cube')
-    Entity(model='cube', color=color.gray, scale=(5,1,10), x=-3.5, y=-1, shader=shader)
+    Entity(model='cube', color=color.gray, scale=(5,1,10), x=-3.5, y=-1, shader=shader, rotation_z=4)
 
 
     # Enable shadows; we need to set a frustum for that.
@@ -159,12 +159,15 @@ if __name__ == '__main__':
     # sun = DirectionalLight(y=10, rotation=(90+30,90,0))
     sun = DirectionalLight()
     sun.look_at(Vec3(-1,-1,-1))
-    # sun._light.show_frustum()
+    lens = sun._light.get_lens()
+    lens.set_near_far(0, 100)
+    sun._light.show_frustum()
 
     Sky(color=color.light_gray)
     EditorCamera()
 
     def update():
+        a.rotation_z += 10 * time.dt * held_keys['r']
         a.x += (held_keys['d'] - held_keys['a']) * time.dt * 5
         a.y += (held_keys['e'] - held_keys['q']) * time.dt * 5
         a.z += (held_keys['w'] - held_keys['s']) * time.dt * 5
