@@ -150,6 +150,14 @@ Entity Basics
             self.x += 1 * time.dt
     # text
 
+    You could also put a function called update at module level, but
+    it would have to be in __main__ (the starting script).
+
+    # code
+    e = Entity()
+    def update():
+        e.x += 1 * time.dt
+    # text
 
 
 ## Input
@@ -161,14 +169,25 @@ Entity Basics
         def input(self, key):
             if key == 'w':
                 self.position += self.forward
-
-            if key == 'd':
-                self.animate('rotation_y', self.rotation_y + 90, duration=.1)
-
-            if key == 'a':
-                self.animate('rotation_y', self.rotation_y - 90, duration=.1)
     # text
 
+    Or like this:
+    # code
+    player = Entity(model='cube')
+    def player_input(key):
+        if key == 'w':
+            player.position += player.forward
+
+    player.input = player_input # assign the function to the player Entity.
+    # text
+
+    Or in __main__:
+    # code
+    player = Entity(model='cube')
+    def input(key):
+        if key == 'w':
+            player.position += player.forward
+    # text
 
 ## Mouse Input
 
