@@ -133,7 +133,7 @@ class LevelEditor(Entity):
         self.local_global_menu.on_value_changed = self.render_selection
         # self.current_poke_node = None
         self.entity_list_text = Text(parent=self.ui, scale=.5, position=window.left)
-        self.target_fov = 90
+        self.target_fov = 40
 
 
     @property
@@ -328,14 +328,14 @@ if not load_model('arrow', application.internal_models_compressed_folder):
     Entity(parent=p, model='cube', scale=(1,.05,.05))
     Entity(parent=p, model=Cone(4, direction=(1,0,0)), x=.5, scale=.2)
     arrow_model = p.combine()
-    arrow_model.save('arrow.ursinamesh', path=internal_models_compressed_folder)
+    arrow_model.save('arrow.ursinamesh', path=application.internal_models_compressed_folder)
 
 if not load_model('scale_gizmo', application.internal_models_compressed_folder):
     p = Entity(enabled=False)
     Entity(parent=p, model='cube', scale=(.05,.05,1))
     Entity(parent=p, model='cube', z=.5, scale=.2)
     arrow_model = p.combine()
-    arrow_model.save('scale_gizmo.ursinamesh', path=internal_models_compressed_folder)
+    arrow_model.save('scale_gizmo.ursinamesh', path=application.internal_models_compressed_folder)
 
 
 class GizmoArrow(Draggable):
@@ -467,7 +467,7 @@ class Gizmo(Entity):
 
 
     def update(self):
-        self.world_scale = distance(self.world_position, camera.world_position) * camera.fov * .001
+        self.world_scale = distance(self.world_position, camera.world_position) * camera.fov * .0005
 
         for i, axis in enumerate('xyz'):
             if self.subgizmos[axis].dragging:
@@ -480,15 +480,17 @@ class Gizmo(Entity):
 
 
 class RotationGizmo(Entity):
+    model = None
 
     def __init__(self, **kwargs):
         super().__init__(parent=gizmo)
-        rotation_gizmo_model = load_model('rotation_gizmo_model', application.internal_models_compressed_folder)
-        if not rotation_gizmo_model:
-            path = Circle(24).vertices
-            path.append(path[0])
-            rotation_gizmo_model = Pipe(base_shape=Quad(radius=0), path=[Vec3(e)*32 for e in path])
-            rotation_gizmo_model.save('rotation_gizmo_model', application.internal_models_compressed_folder)
+        if not RotationGizmo.model:
+            RotationGizmo.model = load_model('rotation_gizmo_model', application.internal_models_compressed_folder)
+            if not RotationGizmo.model:
+                path = Circle(24).vertices
+                path.append(path[0])
+                RotationGizmo.model = Pipe(base_shape=Quad(radius=0), path=[Vec3(e)*32 for e in path])
+                RotationGizmo.model.save('rotation_gizmo_model', application.internal_models_compressed_folder)
 
         self.rotator = Entity(parent=gizmo)
         self.axis = Vec3(0,1,0)
@@ -499,7 +501,7 @@ class RotationGizmo(Entity):
 
 
         for i, dir in enumerate((Vec3(-1,0,0), Vec3(0,1,0), Vec3(0,0,-1))):
-            b = Button(parent=self, model='rotation_gizmo_model', collider='mesh',
+            b = Button(parent=self, model=copy(RotationGizmo.model), collider='mesh',
                 color=axis_colors[('x','y','z')[i]], is_gizmo=True, always_on_top=True, render_queue=1, unlit=True, double_sided=True,
                 on_click=Sequence(Func(setattr, self, 'axis', dir), Func(self.drag)),
                 drop=self.drop,
@@ -825,10 +827,11 @@ class Selector(Entity):
 
             clicked_entity = self.get_hovered_entity()
 
-            if clicked_entity in level_editor.entities and not clicked_entity in level_editor.selection and not held_keys['alt']:
-                if held_keys['shift']:
+            if clicked_entity in level_editor.entities and not held_keys['alt']:
+                if held_keys['shift'] and not clicked_entity in level_editor.selection:
                     level_editor.selection.append(clicked_entity) # append
                 else:
+                    print(clicked_entity)
                     level_editor.selection = [clicked_entity, ]   # overwrite
 
             if held_keys['alt'] and clicked_entity in level_editor.selection:
@@ -1183,7 +1186,7 @@ class Inspector(Entity):
                 if y==2:
                     default = '1'
 
-                field = InputField(max_width=5, model='quad', parent=self.ui, scale_x=.125, origin=(-.5,.5), default_value=default, x=i*.125, y=-.05-(y*.05), color=color._8)
+                field = InputField(max_width=5, model='quad', parent=self.ui, scale_x=.125, origin=(-.5,.5), default_value=default, limit_content_to=ContentTypes.math, x=i*.125, y=-.05-(y*.05), color=color._8)
                 self.transform_fields.append(field)
                 self.input_fields.append(field)
 
@@ -1427,10 +1430,13 @@ class Help(Button):
         self.tooltip.original_scale = .75
 
 class Duplicator(Entity):
+    def __init__(self, **kwargs):
+        super().__init__(clones=None)
+
     def input(self, key):
         if held_keys['shift'] and key == 'd' and level_editor.selection:
             # clones = [duplicate(e, original_parent=level_editor.current_scene, color=e.color, shader=e.shader, origin=e.origin, parent=level_editor.current_scene, selectable=e.selectable) for e in level_editor.selection]
-            clones = []
+            self.clones = []
             for e in level_editor.selection:
                 clone = deepcopy(e)
                 clone.original_parent = level_editor.current_scene
@@ -1439,17 +1445,19 @@ class Duplicator(Entity):
                 clone.origin = e.origin
                 clone.parent = level_editor.current_scene
                 clone.selectable = e.selectable
-                clones.append(clone)
+                self.clones.append(clone)
 
-            [level_editor.entities.append(e) for e in clones]
-            level_editor.selection = clones
-            level_editor.current_scene.undo.record_undo(('delete entities', [level_editor.entities.index(en) for en in clones], [repr(e) for e in clones],))
+            [level_editor.entities.append(e) for e in self.clones]
+            level_editor.selection = self.clonesD
+            level_editor.current_scene.undo.record_undo(('delete entities', [level_editor.entities.index(en) for en in clones], [repr(e) for e in self.clones],))
 
             level_editor.render_selection()
             mouse.position = level_editor.selection[-1].screen_position
             gizmo.drag()
             gizmo.subgizmos['xz'].start_dragging()
 
+        elif self.clones and key == 'middle mouse down':
+            gizmo.subgizmos['xz'].drop()
 
 
 class PokeShape(Entity):
@@ -1725,17 +1733,20 @@ Help()
 
 debug_text = Text(y=-.45)
 
-def update():
-    if level_editor.selection:
-        e = level_editor.selection[-1]
-        r = round(camera.back.dot(e.right), 1)
-        u = round(camera.back.dot(e.up), 1)
-        f = round(camera.back.dot(e.forward), 1)
-        dir = (r, u, f)
-        axis_index = dir.index(max(dir, key=abs))
-        # is_positive_direction = dir[axis_index] > 0
+# def update():
+#     if level_editor.selection:
+#         print(get_major_axis_relative_to_view(level_editor.selection[-1]))
 
-        # print(axis_index, is_positive_direction)
+
+def get_major_axis_relative_to_view(entity): # if we're looking at the entity from the right/left, return 0, top/bot:1, front/back: 2
+    r = round(camera.back.dot(entity.right), 1)
+    u = round(camera.back.dot(entity.up), 1)
+    f = round(camera.back.dot(entity.forward), 1)
+    dir = (r, u, f)
+    axis_index = dir.index(max(dir, key=abs))
+    is_positive_direction = dir[axis_index] > 0
+
+    return axis_index, is_positive_direction
         # dir =
         # print('f:', camera.forward.dot(e.forward))
         # print('u:', camera.forward.dot(e.up))
@@ -1764,6 +1775,17 @@ def update():
     # t = Text(position=window.top_left + Vec2(.01,-.06))
     # def update():
     #     t.text = 'selection:\n' + '\n'.join([str(e) for e in level_editor.selection])
+
+class MeshEditor(Entity):
+    def __init__(self, **kwargs):
+        super().__init__()
+
+
+
+    for key, value in kwargs.items():
+        setattr(self, key, value)
+
+
 if __name__ == '__main__':
     goto_scene(0,0)
     # from poke_shape import PokeShape
