@@ -728,7 +728,10 @@ class QuickGrabber(Entity):
 
                 gizmo.drag(show_gizmo_while_dragging=False)
                 self.target_gizmo = gizmo.subgizmos[self.target_axis]
-                self.target_gizmo.start_dragging()
+                self.target_gizmo.input('left mouse down')
+                # self.target_gizmo.start_dragging()
+                # invoke(self.target_gizmo.input, 'left mouse down', delay=2/60)
+                # invoke(self.target_gizmo.start_dragging, delay=2/60)
 
         elif key in ('x up', 'y up', 'z up', 'g up') and self.target_entity:
             self.target_entity = None
@@ -740,7 +743,7 @@ class QuickGrabber(Entity):
 
 
 
-class QuickScaleOrRotate(Entity):
+class QuickScale(Entity):
     def __init__(self, **kwargs):
         super().__init__(
             parent=level_editor,
@@ -749,7 +752,6 @@ class QuickScaleOrRotate(Entity):
                 'sx' : scale_gizmo,
                 'sy' : scale_gizmo,
                 'sz' : scale_gizmo,
-                'c' : rotation_gizmo.subgizmos['y'],
             },
             clear_selection = False
             )
@@ -762,9 +764,6 @@ class QuickScaleOrRotate(Entity):
         if held_keys['s'] and not key == 's':
             key = 's' + key
 
-        if key in ('c',):
-            self.original_gizmo_state = gizmo_toggler.animator.state
-            gizmo_toggler.animator.state = 'r'
 
         elif key in ('s', 'sx', 'sy', 'sz'):
             self.original_gizmo_state = gizmo_toggler.animator.state
@@ -814,6 +813,36 @@ class QuickScaleOrRotate(Entity):
             if held_keys[key] and not held_keys['control'] and not held_keys['shift'] and mouse.velocity != Vec3(0,0,0):
                 level_editor.render_selection(update_gizmo_position=False)
                 return
+
+
+class QuickRotator(Entity):
+    def input(self, key):
+        if held_keys['control'] or held_keys['shift'] or held_keys['alt']:
+            return
+
+        if key == 'r' and not level_editor.selection:
+            self.target_entity = selector.get_hovered_entity()
+            if not level_editor.selection or len(level_editor.selection) == 1:
+                level_editor.selection = [self.target_entity, ]
+                level_editor.render_selection()
+
+            # if rotation_gizmo.enabled and level_editor.selection:
+            #     rotation_gizmo.subgizmos['y'].on_click()
+            print('aaaaaaaaaa', mouse.normal)
+            rotation_gizmo.subgizmos['y'].input('left mouse down')
+            rotation_gizmo.subgizmos['y'].start_dragging()
+            # rotation_gizmo.subgizmos['y'].visible_self = False
+            # if mouse.normal:
+
+        elif key == 'r up' and hasattr(self, 'target_entity') and self.target_entity:
+            key = key[:-3]
+            rotation_gizmo.subgizmos['y'].input('left mouse up')
+            rotation_gizmo.subgizmos['y'].drop()
+            level_editor.selection.clear()
+            level_editor.render_selection()
+            self.target_entity = None
+            # gizmo.arrow_parent.visible = True
+            # rotation_gizmo.subgizmos['y'].visible_self = True
 
 
 
@@ -1430,6 +1459,8 @@ class Help(Button):
 class Duplicator(Entity):
     def __init__(self, **kwargs):
         super().__init__(clones=None)
+        self.dragger = Draggable(parent=scene, model='cube')
+        self.dragging = False
 
     def input(self, key):
         if held_keys['shift'] and key == 'd' and level_editor.selection:
@@ -1441,21 +1472,46 @@ class Duplicator(Entity):
                 clone.color = e.color
                 clone.shader = e.shader
                 clone.origin = e.origin
-                clone.parent = level_editor.current_scene
+                # clone.parent = level_editor.current_scene
                 clone.selectable = e.selectable
                 self.clones.append(clone)
 
             [level_editor.entities.append(e) for e in self.clones]
-            level_editor.selection = self.clonesD
-            level_editor.current_scene.undo.record_undo(('delete entities', [level_editor.entities.index(en) for en in clones], [repr(e) for e in self.clones],))
+            level_editor.selection = self.clones
+            level_editor.current_scene.undo.record_undo(('delete entities', [level_editor.entities.index(en) for en in self.clones], [repr(e) for e in self.clones],))
 
-            level_editor.render_selection()
-            mouse.position = level_editor.selection[-1].screen_position
-            gizmo.drag()
-            gizmo.subgizmos['xz'].start_dragging()
+            self.dragger.world_position = level_editor.selection[-1].world_position
+            # for e in level_editor.selection:
+            #     e.world_parent = self.dragger
+                # e.x -= .1
 
-        elif self.clones and key == 'middle mouse down':
-            gizmo.subgizmos['xz'].drop()
+            # level_editor.render_selection()
+            # invoke(self.dragger.start_dragging, delay=1/60)
+            # self.dragging = True
+            # for e in level_editor.selection:
+                # invoke(setattr, e, 'world_parent', scene, delay=1/60)
+
+            # self.dragger.start_dragging()
+            # gizmo.input('left mouse down')
+            # invoke(level_editor.render_selection, delay=1/60)
+            # print('------------', level_editor.selection)
+            # for e in level_editor.selection:
+            #     e.color = color.red
+            #     e.x -= .1
+
+            # mouse.position = level_editor.selection[-1].screen_position
+            # gizmo.dragging = True
+            # gizmo.drag()
+            # gizmo.subgizmos['xz'].start_dragging()
+            # invoke(gizmo.drag, delay=2/60)
+            # invoke(gizmo.subgizmos['xz'].start_dragging, delay=4/60)
+
+        # elif self.clones and key == 'middle mouse down':
+        #     gizmo.subgizmos['xz'].drop()
+        elif self.dragging and key == 'left mouse up':
+            for e in level_editor.selection:
+                e.world_parent = scene
+
 
 
 class PokeShape(Entity):
@@ -1710,7 +1766,8 @@ box_gizmo = BoxGizmo()
 gizmo_toggler = GizmoToggler(parent=level_editor)
 
 quick_grabber = QuickGrabber(parent=level_editor)   # requires gizmo, selector
-QuickScaleOrRotate()    # requires scale_gizmo, gizmo_toggler, selector
+QuickScale()    # requires scale_gizmo, gizmo_toggler, selector
+QuickRotator()
 selector = Selector(parent=level_editor)
 selection_box = SelectionBox(parent=level_editor.ui, model=Quad(0, mode='line'), origin=(-.5,-.5,0), scale=(0,0,1), color=color.white33, mode='new')
 spawner = Spawner()
@@ -1773,15 +1830,15 @@ def get_major_axis_relative_to_view(entity): # if we're looking at the entity fr
     # t = Text(position=window.top_left + Vec2(.01,-.06))
     # def update():
     #     t.text = 'selection:\n' + '\n'.join([str(e) for e in level_editor.selection])
-
-class MeshEditor(Entity):
-    def __init__(self, **kwargs):
-        super().__init__()
-
-
-
-    for key, value in kwargs.items():
-        setattr(self, key, value)
+#
+# class MeshEditor(Entity):
+#     def __init__(self, **kwargs):
+#         super().__init__()
+#
+#
+#
+#     for key, value in kwargs.items():
+#         setattr(self, key, value)
 
 
 if __name__ == '__main__':
