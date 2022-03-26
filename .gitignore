@@ -12,6 +12,10 @@ samples/wip
 ursina/shaders/wip
 promo/
 samples/models*
+samples/textures*
+samples/scenes*
+samples/textures_compressed*
+samples/city_builder*
 *blob_animation*
 program.prof
 

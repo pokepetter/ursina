@@ -1,5 +1,6 @@
 # title building your app
-# center, width 1000, arial
+# arial, normal, size 1, left, width 1200
+# insert doc_index_sidebar.txt
 # size 5, bold
 Building
 # size 1, normal

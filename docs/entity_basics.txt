@@ -1,11 +1,13 @@
 # title entity basics
-# center, width 1000, arial
+# center, width 1200, arial
+
 # size 5, bold
 Entity Basics
 # size 1, normal
 
 
-# left
+# normal, size 1, left, width 1200
+# insert doc_index_sidebar.txt
 ## What is an Entity?
 
     An entity is a thing in the world, and is the "god class" in ursina.
@@ -18,7 +20,7 @@ Entity Basics
 
 
 
-## Setting a model
+## Model
 
     There are several included models like 'quad', 'plane', 'cube', and 'sphere',
     but you can also use your own.
@@ -60,7 +62,7 @@ Entity Basics
 
 
 
-## Setting the color
+## Color
 
     # code
     e.color = color.red # set it to a color in the color module
@@ -74,59 +76,77 @@ Entity Basics
 
 
 
-## Moving
+## Position, Rotation, Scale
 
-    You can move an entity by setting the attributes:
-    'position', 'x', 'y', 'z', 'world_position', 'world_x', 'world_y', 'world_z'
+    <b>Position</b>
 
-     # code
-     # you can give it a position when you create i, or you can omit it and set it later
-     e = Entity(position=(0,0,0))
-     # set position relative to parent entity:
-     e.position = Vec3(0,0,0)
-     e.position = Vec2(0,0)
-     e.position = (0,0,0)
-     e.position = (0,0)
+    To set the position relative to the parent, set .position:
 
-     # shortcuts for individual axes:
-     e.x = 0
-     e.y = 0
-     e.z = 0
+        # code
+        e = Entity()
+        e.position = Vec3(0,0,0)
+        e.position = Vec2(0,0)
+        e.position = (0,0,0)
+        e.position = (0,0)
+        # text
 
-    # set position relative to the world:
-     e.world_position = (0,0,0)
-    # text
+    You can also set 'x', 'y', 'z' for setting the position on a specific axis.
+
+        # code
+        e = Entity(position=Vec3(1,1,1))
+        e.x = 0
+        print(position)
+        >>> Vec3(0,1,1)
+        # text
+
+    To set the position relative to the scene, that is, ignoring the position of any parents, set .world_position:
+    
+        # code
+        parent_entity = Entity(position=Vec3(0,2,0))
+        e = Entity(parent=parent_entity, position=Vec3(0,2,0))
+        print(e.position)
+        >>> Vec3(0,2,0)
+        print(e.world_position)
+        >>> Vec3(0,4,0)
+
+        e.world_position = Vec3(0,0,0)
+        print(e.position)
+        >>> Vec3(0,-2,0)
+        # text
+
+    As with position, there's shortcuts for setting world position on individual axes too:
+    world_x, world_y and world_z
 
     See https://www.ursinaengine.org/coordinate_system.html for more
     information on how the coordinate system works.
 
 
 
-## Rotating
+    <b>Rotation</b>
 
-    #code
-    e.rotation = (0,0,0)
-    e.rotation_y = 90
-    # text
+        #code
+        e.rotation = (0,0,0)
+        e.rotation_y = 90
+        # text
 
-    The look_at() method can also be for pointing an entity at something:
+        The look_at() method can also be for pointing an entity at something:
 
-    #code
-    other_entity = Entity(position=(10,1,8))
+        #code
+        other_entity = Entity(position=(10,1,8))
 
-    e.look_at(other_entity) # make z-axis(forward) point at other_entity
-    e.look_at(other_entity, axis='up') # optionally define which axis
-    # text
+        e.look_at(other_entity) # make z-axis(forward) point at other_entity
+        e.look_at(other_entity, axis='up') # optionally define which axis
+        # text
 
 
 
-## Scaling
+    <b>Scale</b>
 
-    Change the size of the entity by setting the scale attribute:
+        Change the size of the entity by setting the scale attribute:
 
-    # code
-    e = Entity(model='cube', scale=(3,1,1))
-    # text
+        # code
+        e = Entity(model='cube', scale=(3,1,1))
+        # text
 
 
 
@@ -150,6 +170,14 @@ Entity Basics
             self.x += 1 * time.dt
     # text
 
+    The third option is to put a function called update in __main__, the starting script.
+    You'll see this in a lot of examples since it's convenient for small scripts.
+    Keep in mind this won't work if you import a module with an update function defined at module level.
+
+    # code
+    def update():
+        print('update')
+    # text
 
 
 ## Input
