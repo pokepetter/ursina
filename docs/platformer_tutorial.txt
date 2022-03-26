@@ -25,7 +25,7 @@ player = PlatformerController2d(y=1, z=.01, scale_y=1, max_jumps=2)
 # text
 
 You can change settings like jump_height, walk_speed, and gravity.
-If you want to larn more about how it works you can read its code here:
+If you want to learn more about how it works you can read its code here:
 https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/platformer_controller_2d.py
 If we try to play the game right now, you'll fall for all infinity, so let's add a ground:
 

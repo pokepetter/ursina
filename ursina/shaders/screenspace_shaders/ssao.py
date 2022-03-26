@@ -14,13 +14,9 @@ vec3 sphere[16] = vec3[](
 );
 
 
-uniform vec4 k_params1;
-uniform vec4 k_params2;
 uniform sampler2D tex;
 uniform sampler2D dtex;
 uniform sampler2D random_texture;
-uniform mat4 p3d_ProjectionMatrixInverse;
-uniform mat4 p3d_ProjectionMatrix;
 uniform mat4 p3d_ViewProjectionMatrix;
 
 in vec2 uv;
