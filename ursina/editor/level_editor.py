@@ -1461,12 +1461,16 @@ class Help(Button):
 class Duplicator(Entity):
     def __init__(self, **kwargs):
         super().__init__(clones=None)
-        self.dragger = Draggable(parent=scene, model='cube')
+        self.plane = Entity(model='plane', collider='box', scale=Vec3(100,.1,100), enabled=False, visible=False)
+        self.dragger = Draggable(parent=scene, model=None, enabled=False)
         self.dragging = False
+
+    def update(self):
+        if self.plane.enabled:
+            self.dragger.position = mouse.world_point
 
     def input(self, key):
         if held_keys['shift'] and key == 'd' and level_editor.selection:
-            # clones = [duplicate(e, original_parent=level_editor.current_scene, color=e.color, shader=e.shader, origin=e.origin, parent=level_editor.current_scene, selectable=e.selectable) for e in level_editor.selection]
             self.clones = []
             for e in level_editor.selection:
                 clone = deepcopy(e)
@@ -1474,7 +1478,6 @@ class Duplicator(Entity):
                 clone.color = e.color
                 clone.shader = e.shader
                 clone.origin = e.origin
-                # clone.parent = level_editor.current_scene
                 clone.selectable = e.selectable
                 self.clones.append(clone)
 
@@ -1482,37 +1485,28 @@ class Duplicator(Entity):
             level_editor.selection = self.clones
             level_editor.current_scene.undo.record_undo(('delete entities', [level_editor.entities.index(en) for en in self.clones], [repr(e) for e in self.clones],))
 
-            self.dragger.world_position = level_editor.selection[-1].world_position
-            # for e in level_editor.selection:
-            #     e.world_parent = self.dragger
-                # e.x -= .1
+            self.plane.y = level_editor.selection[-1].world_y
+            self.plane.enabled = True
 
-            # level_editor.render_selection()
-            # invoke(self.dragger.start_dragging, delay=1/60)
-            # self.dragging = True
-            # for e in level_editor.selection:
-                # invoke(setattr, e, 'world_parent', scene, delay=1/60)
+            mouse.traverse_target = self.plane
+            mouse.update()
+            pos = mouse.world_point
+            self.dragger.world_position = pos
+            self.dragger.enabled = True
 
-            # self.dragger.start_dragging()
-            # gizmo.input('left mouse down')
-            # invoke(level_editor.render_selection, delay=1/60)
-            # print('------------', level_editor.selection)
-            # for e in level_editor.selection:
-            #     e.color = color.red
-            #     e.x -= .1
-
-            # mouse.position = level_editor.selection[-1].screen_position
-            # gizmo.dragging = True
-            # gizmo.drag()
-            # gizmo.subgizmos['xz'].start_dragging()
-            # invoke(gizmo.drag, delay=2/60)
-            # invoke(gizmo.subgizmos['xz'].start_dragging, delay=4/60)
-
-        # elif self.clones and key == 'middle mouse down':
-        #     gizmo.subgizmos['xz'].drop()
-        elif self.dragging and key == 'left mouse up':
             for e in level_editor.selection:
+                e.world_parent = self.dragger
+
+
+        elif self.plane.enabled and key == 'left mouse up':
+            for e in self.dragger.children:
                 e.world_parent = scene
+
+            self.plane.enabled = False
+            mouse.traverse_target = scene
+            level_editor.render_selection()
+
+
 
 
 
