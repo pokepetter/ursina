@@ -70,7 +70,7 @@ open source game engine
 
 
 ## Dependencies
-
+w
     • python 3.6+
     • panda3d
     • screeninfo, for detecting screen resolution
