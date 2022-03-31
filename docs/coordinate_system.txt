@@ -2,7 +2,9 @@
 # center, bold, arial, size 5
 <a href="index.html" style="text-decoration: none; color:inherit">ursina engine
 ʕ •ᴥ•ʔゝ□</a>
-# normal, size 3, left, width 650
+# normal, size 1, left, width 1200
+# insert doc_index_sidebar.txt
+
 
 ## Entity Coordinate System
 

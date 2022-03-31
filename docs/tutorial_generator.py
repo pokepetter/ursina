@@ -14,7 +14,7 @@ for path in files:
         is_comment_block = False
 
         lines = f.readlines()
-        y = 0 # track the number for non-commented lines
+        y = 0 # track the nujmber for non-commented lines
         for i, line in enumerate(lines):
             if line.startswith('#'):
                 if not is_comment_block:

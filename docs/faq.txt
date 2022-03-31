@@ -1,12 +1,8 @@
-[← Back, documentation.html]
-# ursina FAQ
-# center, width 1000, arial
-# size 5, bold
-Frequently Asked Questions
-# size 1, normal
+# arial, normal, size 1, left, width 1200
+# insert doc_index_sidebar.txt
 
+### Frequently Asked Questions
 
-# left
 
 <b>How do I update ursina?</b>
 

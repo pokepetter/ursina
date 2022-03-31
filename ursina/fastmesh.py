@@ -35,7 +35,11 @@ class MeshModes(Enum):
             return self.value == other.value
         return self.value == other
 
-
+# Create the vertex array data format
+# vertex_format = GeomVertexArrayFormat("vertex", 3, core.Geom.NT_float32, core.Geom.C_point)
+# normal_format = GeomVertexArrayFormat("normal", 3, core.Geom.NT_float32, core.Geom.NTFloat32)
+# vertex_color_format = GeomVertexArrayFormat("color", 4, core.Geom.NT_uint8, core.Geom.C_color)
+# uv_format = GeomVertexArrayFormat("uv", 2, core.Geom.NT_uint8, core.Geom.C_texcoord)
 
 
 class FastMesh(NodePath):
@@ -82,28 +86,21 @@ class FastMesh(NodePath):
         if hasattr(self, 'geomNode'):
             self.geomNode.removeAllGeoms()
 
-        # prim.modify_vertices()
-
         static_mode = Geom.UHStatic if self.static else Geom.UHDynamic
         vertex_format = Mesh._formats[(bool(self.colors), bool(self.uvs), bool(self.normals))]
         self.vdata = GeomVertexData('name', vertex_format, static_mode)
         self.vdata.setNumRows(len(self.vertices)//3) # for speed
-
-        arrayHandle0: core.GeomVertexArrayData = self.vdata.modifyArray(0)
-        # arrayHandle1: core.GeomVertexArrayData = self.vdata.modifyArray(1)
         prim = Mesh._modes[self.mode](static_mode)
-        # coords = [1., -3., 7., -4., 12., 5., 8., 2., -1., -6., 14., -11.]
-        # either convert this sequence to an array of bytes...
-        # (note that if you call tobytes() on it, you don't need to call
-        # cast("f") on the memoryview, below)
-        # pos_data = array.array("f", self.vertices)#.tobytes()
 
-
-        pos_array = self.vdata.modify_array(0)
-        memview = memoryview(pos_array).cast("B").cast("f")
-        # memview = memoryview(pos_array).cast("B")
+        vertices_array = self.vdata.modify_array(0)
+        memview = memoryview(vertices_array).cast("B").cast("f")
         memview[:] = self.vertices
-        # print(pos_array)
+
+        # print(vertices_array)
+        # arrayHandle0 = vertexData.modifyArray(0)
+        # arrayHandle1 = vertexData.modifyArray(1)
+        # arrayHandle0.modifyHandle().copyDataFrom(vertices.astype(np.float32))
+        # arrayHandle1.modifyHandle().copyDataFrom(colors.astype(np.uint8))
 
         if not hasattr(self, 'geomNode'):
             self.geomNode = GeomNode('mesh')
@@ -133,11 +130,20 @@ if __name__ == '__main__':
 
 
     verts = ((0.5, 0.5, 0.0), (-0.5, 0.5, 0.0), (-0.5, -0.5, 0.0), (0.5, -0.5, 0.0), (0.5, 0.5, 0.0), (-0.5, -0.5, 0.0))
-    verts = load_model('sphere').vertices
+    sphere_model = load_model('sphere')
+    verts = sphere_model.vertices
+    norms =   sphere_model.normals
 
     flat_verts = []
     [flat_verts.extend(v) for v in verts]
     flat_verts = array.array("f", flat_verts)#.tobytes()
+
+    flat_norms = []
+    [flat_norms.extend(v) for v in norms]
+    flat_norms = array.array("f", flat_norms)#.tobytes()
+
+    # import numpy as np
+    # verts = np.array(flat_verts, dtype=np.float32)
 
     from time import perf_counter
 
@@ -146,11 +152,14 @@ if __name__ == '__main__':
     print('-------fast mesh:', perf_counter() - t)
 
     t = perf_counter()
-    m = Mesh(vertices=verts)
+    m = Mesh(vertices=flat_verts, fast=True)
     print('-------old mesh:', perf_counter() - t)
 
+# -------fast mesh: 0.0006238999999998995
+# -------old mesh: 0.0039017999999999553
+
     Entity(model=copy(fm), x=0)
-    Entity(model=copy(m), x=2)
+    # Entity(model=copy(m), x=2)
 
     EditorCamera()
     app.run()
