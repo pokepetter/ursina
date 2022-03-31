@@ -2,7 +2,7 @@ from ursina import *
 
 
 class ButtonList(Entity):
-    def __init__(self, button_dict, button_height=1.1, fit_height=True, width=.5, **kwargs):
+    def __init__(self, button_dict, button_height=1.1, fit_height=True, width=.5, font=Text.default_font, **kwargs):
         super().__init__(
             parent=camera.ui,
             model='quad',
@@ -17,7 +17,7 @@ class ButtonList(Entity):
         if fit_height:
             self.scale_y = button_height * len(button_dict) * Text.size
 
-        self.text_entity = Text(parent=self, origin=(-.5,.5), text='empty', world_scale=20, z=-.1, x=.01, line_height=button_height)
+        self.text_entity = Text(parent=self, font=font, origin=(-.5,.5), text='empty', world_scale=20, z=-.1, x=.01, line_height=button_height)
         self.button_height = self.text_entity.height
         self.button_dict = button_dict
         self.highlight = Entity(parent=self, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5), z=-.01, add_to_scene_entities=False)
@@ -34,7 +34,7 @@ class ButtonList(Entity):
     @button_dict.setter
     def button_dict(self, value):
         self._button_dict = value
-        self.actions = [*self.button_dict.values()]
+        self.actions = list(self.button_dict.values())
         self.text_entity.text = '\n'.join(self.button_dict.keys())
 
 
@@ -97,14 +97,10 @@ if __name__ == '__main__':
     sound_effects = {}
     current_sound = None
 
-    for name in ('blip', 'boom', 'coin', 'hurt', 'jump', 'lose', 'powerup', 'teleport'):
-        for i in range(1,4):
-            a = Audio(f'{name}_{i}', autoplay=False)
-            if a.clip:
-                # print('-------------', a)
-                sound_effects[f'{name}_{i}'] = Func(print, 'a')
+    model_names = ['cube', 'sphere', 'plane', 'test', 'test_2', 'test_3', 'test_4', 'test_5', 'another_test','player_idle']
+    model_dict = {name : Func(print, name) for name in model_names}
 
-    bl = ButtonList(sound_effects)
+    bl = ButtonList(model_dict, font='VeraMono.ttf')
 
     # bl.button_dict = {'a':Func(print,'lodlw'), 'b':1, 'c':1}
     app.run()
