@@ -304,23 +304,21 @@ class Text(Entity):
     def wordwrap(self, value):
         self._wordwrap = value
         new_text = ''
-        is_in_tag = False
-        i = 0
+        x = 0
         for word in self.raw_text.replace(self.end_tag, self.end_tag+' ').split(' '):
 
             if word.startswith(self.start_tag) and new_text:
                 new_text = new_text[:-1]
 
             if not word.startswith(self.start_tag):
-                i += len(word)
+                x += len(word) + 1
 
-            if i >= value:
+            if x >= value:
                 new_text += '\n'
-                i = 0
+                x = 0
 
             new_text += word + ' '
 
-        # print('--------------------\n', new_text)
         self.text = new_text
 
 
@@ -432,17 +430,18 @@ if __name__ == '__main__':
     app = Ursina()
     # Text.size = .001
     descr = dedent('''
-        <scale:1.5><orange>Rainstorm<default><scale:1>
-        Summon a <azure>rain storm <default>to deal 5 <azure>water
+        Rainstorm
+        Summon a rain storm to deal 5 water
 
-        damage <default>to <hsb(0,1,.7)>everyone, <default><image:file_icon> <red><image:file_icon> test <default>including <orange>yourself. <default>
+        damage to everyone, test including yourself.
+        1234 1234 1234 1234 1234 1234 2134 1234 1234 1234 1234 1234 2134 2134 1234 1234 1234 1234
         Lasts for 4 rounds.''').strip()
 
     # Text.default_font = 'VeraMono.ttf'
     # Text.default_font = 'consola.ttf'
     # color.text_color = color.lime
     Text.default_resolution = 1080 * Text.size
-    test = Text(text=descr, origin=(0,0), background=True)
+    test = Text(text=descr, wordwrap=30)
     # test.align()
     # test = Text(descr)
 
