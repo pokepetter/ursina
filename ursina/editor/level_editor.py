@@ -729,9 +729,10 @@ class QuickGrabber(Entity):
                 level_editor.local_global_menu.orignal_value = 'global'
 
                 gizmo.drag(show_gizmo_while_dragging=False)
+                print('-------------', level_editor.selection)
                 self.target_gizmo = gizmo.subgizmos[self.target_axis]
-                self.target_gizmo.input('left mouse down')
-                # self.target_gizmo.start_dragging()
+                # self.target_gizmo.input('left mouse down')
+                self.target_gizmo.start_dragging()
                 # invoke(self.target_gizmo.input, 'left mouse down', delay=2/60)
                 # invoke(self.target_gizmo.start_dragging, delay=2/60)
 
@@ -1464,10 +1465,26 @@ class Duplicator(Entity):
         self.plane = Entity(model='plane', collider='box', scale=Vec3(100,.1,100), enabled=False, visible=False)
         self.dragger = Draggable(parent=scene, model=None, enabled=False)
         self.dragging = False
+        self.start_position = None
+        self.clone_from_position = None
+        self.axis_lock = None
+        self.axis_lock_gizmos = [
+            Entity(model='cube', scale=Vec3(100,.01,.01), color=color.magenta, parent=self.dragger, unlit=True, enabled=False),
+            Entity(model='cube', scale=Vec3(.01,100,.01), color=color.yellow, parent=self.dragger, unlit=True, enabled=False),
+            Entity(model='cube', scale=Vec3(.01,.01,100), color=color.cyan, parent=self.dragger, unlit=True, enabled=False),
+        ]
 
     def update(self):
         if self.plane.enabled:
             self.dragger.position = mouse.world_point
+            if self.axis_lock is not None:
+
+                self.axis_lock_gizmos[self.axis_lock].enabled = True
+                if self.axis_lock == 0:
+                    self.dragger.z = self.start_position.z
+                if self.axis_lock == 2:
+                    self.dragger.x = self.start_position.x
+
 
     def input(self, key):
         if held_keys['shift'] and key == 'd' and level_editor.selection:
@@ -1485,14 +1502,16 @@ class Duplicator(Entity):
             level_editor.selection = self.clones
             level_editor.current_scene.undo.record_undo(('delete entities', [level_editor.entities.index(en) for en in self.clones], [repr(e) for e in self.clones],))
 
+            self.clone_from_position = self.clones[-1].position
             self.plane.y = level_editor.selection[-1].world_y
             self.plane.enabled = True
 
             mouse.traverse_target = self.plane
             mouse.update()
-            pos = mouse.world_point
-            self.dragger.world_position = pos
+            self.start_position = mouse.world_point
+            self.dragger.world_position = self.start_position
             self.dragger.enabled = True
+            self.axis_lock = None
 
             for e in level_editor.selection:
                 e.world_parent = self.dragger
@@ -1504,10 +1523,19 @@ class Duplicator(Entity):
 
             self.plane.enabled = False
             mouse.traverse_target = scene
+            [e.disable() for e in self.axis_lock_gizmos]
             level_editor.render_selection()
 
-
-
+        elif self.plane.enabled and key == 'middle mouse down':
+            if self.axis_lock == None:
+                delta_position = (abs(self.dragger.x-self.start_position.x), abs(self.dragger.y-self.start_position.y), abs(self.dragger.z-self.start_position.z))
+                max_val = max(delta_position)
+                self.axis_lock = delta_position.index(max_val)
+                for e in self.axis_lock_gizmos:
+                    e.world_position = self.clones[-1].world_position
+                # print('lock on axis:', delta_position, max_val, self.axis_lock)
+            else:
+                self.axis_lock = None
 
 
 class PokeShape(Entity):
