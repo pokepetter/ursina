@@ -9,8 +9,8 @@ class ButtonGroup(Entity):
         self.min_selection = min_selection
         self.max_selection = max(min_selection, max_selection)
 
-        self.buttons = list()
-        self.selected = list()
+        self.buttons = []
+        self.selected = []
         self.options = options
 
         self.parent = camera.ui
@@ -53,7 +53,7 @@ class ButtonGroup(Entity):
 
     def layout(self):
         [destroy(c) for c in self.buttons]
-        self.buttons = list()
+        self.buttons = []
         spacing = .05
         longest_word = max(self.options, key=len) + '__' # padding
         width = Text.get_width(longest_word) / Text.size / 2
