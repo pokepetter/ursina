@@ -33,7 +33,7 @@ def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[]):
                 new_tris = [i for i in range(len(e.model.vertices))]
 
             else:
-                new_tris = list()
+                new_tris = []
                 for t in e.model.triangles:
                     if isinstance(t, int):
                         new_tris.append(t)

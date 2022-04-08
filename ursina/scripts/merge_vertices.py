@@ -13,7 +13,7 @@ def merge_overlapping_vertices(vertices, triangles=None, max_distance=.1):
     if triangles[0] is int:
         triangles = [(triangles[i], triangles[i+1], triangles[i+2]) for i in range(0, len(triangles), 3)]
 
-    unique = list()
+    unique = []
     triangles = list(triangles)
 
     for i, v in enumerate(vertices):
