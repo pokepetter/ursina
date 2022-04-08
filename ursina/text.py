@@ -27,8 +27,8 @@ class Text(Entity):
         self.parent = camera.ui
 
         self.setColorScaleOff()
-        self.text_nodes = list()
-        self.images = list()
+        self.text_nodes = []
+        self.images = []
         self.origin = (-.5, .5)
 
         self.font = Text.default_font
@@ -104,7 +104,7 @@ class Text(Entity):
 
         # parse tags
         text = self.start_tag + self.end_tag + str(text) # start with empty tag for alignment to work?
-        sections = list()
+        sections = []
         section = ''
         tag = self.start_tag+'default'+self.end_tag
         temp_text_node = TextNode('temp_text_node')

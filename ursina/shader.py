@@ -49,7 +49,7 @@ class Shader:
         self.geometry = geometry
 
         self.entity = None
-        self.default_input = dict()
+        self.default_input = {}
         self.compiled = False
 
         for key, value in kwargs.items():

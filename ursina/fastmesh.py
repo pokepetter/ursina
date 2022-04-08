@@ -76,7 +76,7 @@ class FastMesh(NodePath):
         # for var in (('vertices', vertices), ('triangles', triangles), ('colors', colors), ('uvs', uvs), ('normals', normals)):
         #     name, value = var
         #     if value is None:
-        #         setattr(self, name, list())
+        #         setattr(self, name, [])
 
         if self.vertices is not None:
             self.generate()

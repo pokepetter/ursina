@@ -159,7 +159,7 @@ for i in range(256):
 color_names = ('white', 'smoke', 'light_gray', 'gray', 'dark_gray', 'black',
     'red', 'orange', 'yellow', 'lime', 'green', 'turquoise', 'cyan', 'azure',
     'blue', 'violet', 'magenta', 'pink', 'brown', 'olive', 'peach', 'gold', 'salmon')
-colors = dict()
+colors = {}
 for cn in color_names:
     colors[cn] = getattr(sys.modules[__name__], cn)
 
