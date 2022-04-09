@@ -305,12 +305,14 @@ for f in path.glob('*.py'):
             # continue
             classes = get_classes(code)
             for class_name, class_definition in classes.items():
+                print('parsing class:', class_name)
                 if 'Enum' in class_name:
                     class_definition = class_definition.split('def ')[0]
                     attrs = [l.strip() for l in class_definition.split('\n') if ' = ' in l]
                     class_info[class_name] = (f, '', attrs, '', '')
                     continue
 
+                params = ''
                 if 'def __init__' in class_definition:
                     # init line
                     params =  '__init__('+ class_definition.split('def __init__(')[1].split('\n')[0][:-1]

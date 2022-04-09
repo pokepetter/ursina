@@ -214,7 +214,7 @@ The Python "if" instruction will execute the commands inside its block only if t
 Drawing some cubes<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
-Right now the engine is running on empty. An engine is supposed to update a scene, then draw some graphics in the background, then flip to the foreground, but we are not doing anything so we only see a black screen. Let's do something about this but before starting you need to understand how an engine is presented.<br>
+Right now the engine is running on empty. An engine is supposed to update a scene, then draw some graphics in the background, then flip to the foreground, but we are not doing anything so we only see a black screen. Let's do something about this but before starting you need to understand how an engine is presente.<br>
 <br>
 Game engines are pretty much like filming a video. What you see in the screen is a scene that you film through some camera lens. So the idea is you put objects in the scene which Ursina calls Entities but other engines refer to them in similar ways like actors or game objects. The camera is pointing to the center of the scene which in coordinates is the 0,0,0.<br>
 <br>
@@ -275,7 +275,7 @@ Now&nbsp;&nbsp;paint this cube randomly. Each time random() is called a number f
 </div><br>
 Now run and press the r key a few times and you should see the cube changing colours.<br>
 <br>
-While this looks cool, you might notice that if you leave the r key pressed, the cube will flash changing colours multiple times. This happens because the change is evaluated every time the update function is invoked so while the key is pressed it will keep changing colours.<br>
+While this looks cool, you might notice that if you leave the r key pressed, the cube will flash changing colous multiple times. This happens because the change is evaluated every time the update function is invoked so while the key is pressed it will keep changing colours.<br>
 <br>
 However, sometimes you want to act on the first press of a key only so Ursina provides a way to capture this "when pressed" event by using the input() function. Add this after the update function.<br>
 <br>
@@ -356,7 +356,7 @@ Now we have many cubes but in the same dull orange colour. Use some code similar
 Rotating more cubes<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
-So now all the entities are in the scene but they are not moving.&nbsp;&nbsp;go through all entities in the scene and move them all, not just the cube. Update your update() function as:<br>
+So now all the entities are in the scene but they are not moving.&nbsp;&nbsp;go througn all entities in the scene and move them all, not just the cube. Update your update() function as:<br>
 <br>
 <div class="code_block" style="margin-left: 0em;"><purple>def</purple> update():
     <purple>for</purple> entity in cubes:                             <gray># Go through the cube list</gray>
@@ -442,7 +442,7 @@ You might notice in this example, the texture is nicely applied to each side of 
 <br>
 So the easiest way to imagine a texture is like a square piece of rubber with each corner extending from 0 to 1. So the top left corner is a 0,0 and the lower right corner is a 1,1. Now in this models we are using, each face of the cube is also marked&nbsp;&nbsp;with the same coordinates in the corners, so some one corner reads as (0,0), (0,1) , (1,0) and (1,1). Then the engine matches the corners of the texture to the corners of the cube and all of them are nicely aligned. This coordinates in the mesh that pins the texture against the model are called UV coordinates. The U stands for the horizontal "x" axis and the V stands for the vertical "y" axis.<br>
 <br>
-But then what will happen if we change the model but not the texture? Ursina engine has some basic primitives like 'cube', 'quad', 'sky_dome', 'sphere', try them out. Use "q" to move the camera to try and see the objects from the top. Observe how the texture wraps around each figure in a different way. If you think the texture is a rubber surface that stretches to match the object, then you will notice that what makes it stretch around is how the figures are defined.<br>
+But then what will heppen if we change the model but not the texture? Ursina engine has some basic primitives like 'cube', 'quad', 'sky_dome', 'sphere', try them out. Use "q" to move the camera to try and see the objects from the top. Observe how the texture wraps around each figure in a different way. If you think the texture is a rubber surface that stretches to match the object, then you will notice that what makes it stretch around is how the figures are defined.<br>
 <br>
 <br>
 <br>
