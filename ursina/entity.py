@@ -112,16 +112,16 @@ class Entity(NodePath):
             setattr(self, key, value)
 
         if self.enabled and hasattr(self, 'on_enable'):
-            if callable(self.on_enable):
-                self.on_enable()
-            elif isinstance(self.on_enable, Sequence):
+            if isinstance(self.on_enable, Sequence):
                 self.on_enable.start()
+            elif callable(self.on_enable):
+                self.on_enable()
 
         elif not self.enabled and hasattr(self, 'on_disable'):
-            if callable(self.on_disable):
-                self.on_disable()
-            elif isinstance(self.on_disable, Sequence):
+            if isinstance(self.on_disable, Sequence):
                 self.on_disable.start()
+            elif callable(self.on_disable):
+                self.on_disable()
 
 
     def _list_to_vec(self, value):
@@ -160,16 +160,16 @@ class Entity(NodePath):
     @enabled.setter
     def enabled(self, value):
         if value and hasattr(self, 'on_enable') and not self.enabled:
-            if callable(self.on_enable):
-                self.on_enable()
-            elif isinstance(self.on_disable, Sequence):
+            if isinstance(self.on_enable, Sequence):
                 self.on_enable.start()
+            elif callable(self.on_enable):
+                self.on_enable()
 
         elif value == False and hasattr(self, 'on_disable') and self.enabled:
-            if callable(self.on_disable):
-                self.on_disable()
-            elif isinstance(self.on_disable, Sequence):
+            if isinstance(self.on_disable, Sequence):
                 self.on_disable.start()
+            elif callable(self.on_disable):
+                self.on_disable()
 
 
         if value == True:
