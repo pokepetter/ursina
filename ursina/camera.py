@@ -71,7 +71,7 @@ class Camera(Entity):
         scene.ui_camera = self.ui_camera
 
         self.ui = Entity(eternal=True, name='ui', parent=self.ui_camera, scale=(self.ui_size*.5, self.ui_size*.5))
-        self.overlay = Entity(parent=self.ui, model='quad', scale_x=self.aspect_ratio, color=color.clear, eternal=True, z=-99)
+        self.overlay = Entity(parent=self.ui, model='quad', scale=99, color=color.clear, eternal=True, z=-99)
 
         # these get created when setting a shader
         self.filter_manager = None
