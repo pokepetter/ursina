@@ -1,5 +1,5 @@
 
-<div style='position:fixed; z-index:1; left:1em; top:1em;'>
+<div class="sidebar">
 <b><a href="documentation.html">Documentation</a></b>
 
 <a href="installation.html">Installation</a>
