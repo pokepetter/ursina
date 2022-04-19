@@ -51,7 +51,7 @@ class Mouse():
 
         self.raycast = True
         self.collision = None
-        self.collisions = list()
+        self.collisions = []
         self.enabled = True
 
     @property
@@ -265,7 +265,7 @@ class Mouse():
         return None
 
     def find_collision(self):
-        self.collisions = list()
+        self.collisions = []
         self.collision = None
         if not self.raycast or self._pq.get_num_entries() == 0:
             self.unhover_everything_not_hit()

@@ -51,7 +51,7 @@ def lerp(a, b, t):
         return Color(col[0], col[1], col[2], col[3])
 
     elif isinstance(a, (tuple, list, Vec2, Vec3, Vec4, LVector3f)) and isinstance(b, (tuple, list, Vec2, Vec3, Vec4, LVector3f)):
-        lerped = list()
+        lerped = []
         for i in range(min(len(a), len(b))):
             lerped.append(lerp(a[i], b[i], t))
 
@@ -122,7 +122,7 @@ def chunk_list(l, chunk_size):
 
 def size_list():
     #return a list of current python objects sorted by size
-    globals_list = list()
+    globals_list = []
     globals_list.clear()
     for e in globals():
         # object, size

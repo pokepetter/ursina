@@ -63,7 +63,7 @@ class MeshCollider(Collider):
             # print('''auto generating mesh collider from entity's mesh''')
 
         self.node_path = entity.attachNewNode(CollisionNode('CollisionNode'))
-        self.collision_polygons = list()
+        self.collision_polygons = []
 
         if isinstance(mesh, Mesh):
             if mesh.triangles:
