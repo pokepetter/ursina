@@ -25,7 +25,7 @@ def colorize(model, left=color.white, right=color.blue, down=color.red, up=color
     else:
         normals = model.normals
 
-    cols = []
+    cols = list()
     prev_col = color.white
     for n in normals:
         c = lerp(down, up, ((n[1]*strength) +.5))

@@ -19,7 +19,7 @@ class DropdownMenuButton(Button):
 
 class DropdownMenu(DropdownMenuButton):
 
-    def __init__(self, text='', buttons=[], **kwargs):
+    def __init__(self, text='', buttons=list(), **kwargs):
         super().__init__(text=text)
         self.position = window.top_left
         self.buttons = buttons

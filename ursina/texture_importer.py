@@ -4,7 +4,7 @@ from ursina import application
 from ursina.texture import Texture
 
 
-imported_textures = {}
+imported_textures = dict()
 file_types = ('.tif', '.jpg', '.jpeg', '.png', '.gif')
 textureless = False
 

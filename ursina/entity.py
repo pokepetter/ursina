@@ -71,8 +71,8 @@ class Entity(NodePath):
 
         self.collision = False  # toggle collision without changing collider.
         self.collider = None    # set to 'box'/'sphere'/'mesh' for auto fitted collider.
-        self.scripts = []   # add with add_script(class_instance). will assign an 'entity' variable to the script.
-        self.animations = []
+        self.scripts = list()   # add with add_script(class_instance). will assign an 'entity' variable to the script.
+        self.animations = list()
         self.hovered = False    # will return True if mouse hovers entity.
 
         self.origin = Vec3(0,0,0)

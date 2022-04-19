@@ -2,7 +2,7 @@ from ursina import *
 
 
 class RadialMenu(Entity):
-    def __init__(self, buttons=[], **kwargs):
+    def __init__(self, buttons=list(), **kwargs):
         super().__init__()
         self.parent = camera.ui
         self.buttons = buttons

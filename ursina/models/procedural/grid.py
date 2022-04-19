@@ -6,8 +6,8 @@ class Grid(Mesh):
         self.width = width
         self.height = height
 
-        verts = []
-        tris = []
+        verts = list()
+        tris = list()
 
         for x in range(int(width) + 1):
             verts.append(Vec3(-.5 + (x/width), -.5, 0))

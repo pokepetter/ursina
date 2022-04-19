@@ -25,7 +25,7 @@ class GridEditor(Entity):
         self.start_pos = (0,0)
         self.outline = Entity(parent=self, model=Quad(segments=0, mode='line', thickness=1), color=color.cyan, z=.01, origin=(-.5,-.5))
 
-        self.undo_cache = []
+        self.undo_cache = list()
         self.undo_cache.append(deepcopy(self.grid))
         self.undo_index = 0
 

@@ -17,7 +17,7 @@ class Pipe(Mesh):
         b.look_at(path[1])
         e = duplicate(b)
 
-        verts = []
+        verts = list()
 
         # cap start
         if cap_ends:

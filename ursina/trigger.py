@@ -16,7 +16,7 @@ class Trigger(Entity):
 
         self.trigger_targets = None
         self.radius = .5
-        self.triggerers = []
+        self.triggerers = list()
         self.update_rate = 4
         self._i = 0
 

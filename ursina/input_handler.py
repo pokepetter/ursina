@@ -84,7 +84,7 @@ class Keys(Enum):
 
 
 held_keys = defaultdict(lambda: 0)
-rebinds = {}
+rebinds = dict()
 
 
 def bind(original_key, alternative_key):

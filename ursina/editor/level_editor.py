@@ -418,7 +418,7 @@ class Gizmo(Entity):
             e.original_scale = e.scale
 
         self.fake_gizmo = Entity(parent=level_editor, enabled=False)
-        self.fake_gizmo.subgizmos = {}
+        self.fake_gizmo.subgizmos = dict()
         for key, value in self.subgizmos.items():
             self.fake_gizmo.subgizmos[key] = duplicate(self.subgizmos[key], parent=self.fake_gizmo, collider=None, ignore=True)
 
