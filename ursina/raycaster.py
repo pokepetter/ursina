@@ -32,7 +32,7 @@ class Raycaster(Entity):
         return sqrt(sum( (a - b)**2 for a, b in zip(a, b)))
 
 
-    def raycast(self, origin, direction=(0,0,1), distance=inf, traverse_target=scene, ignore=list(), debug=False):
+    def raycast(self, origin, direction=(0,0,1), distance=inf, traverse_target=scene, ignore=[], debug=False):
         self.position = origin
         self.look_at(self.position + direction)
 
@@ -94,7 +94,7 @@ class Raycaster(Entity):
         return self.hit
 
 
-    def boxcast(self, origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_target=scene, ignore=list(), debug=False): # similar to raycast, but with width and height
+    def boxcast(self, origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_target=scene, ignore=[], debug=False): # similar to raycast, but with width and height
         if isinstance(thickness, (int, float, complex)):
             thickness = (thickness, thickness)
 

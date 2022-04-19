@@ -191,7 +191,7 @@ def compress_models(path=None, outpath=application.compressed_models_folder, nam
         application.compressed_models_folder.mkdir()
 
     export_script_path = application.internal_scripts_folder / '_blend_export.py'
-    exported = list()
+    exported = []
 
     for blend_file in path.glob(f'**/{name}.blend'):
         blender = get_blender(blend_file)
@@ -410,7 +410,7 @@ def compress_models_fast(model_name=None, write_to_disk=False):
                 print(file_path)
 
                 tris = tuple(triindex.v for triindex in o.data.mloop)
-                flippedtris = list()
+                flippedtris = []
                 for i in range(0, len(tris)-3, 3):
                     flippedtris.append(tris[i+2])
                     flippedtris.append(tris[i+1])
@@ -453,7 +453,7 @@ def ursina_mesh_to_obj(mesh, name='', out_path=application.compressed_models_fol
         tris = mesh.triangles
 
         if isinstance(tris[0], tuple): # convert from tuples to flat
-            new_tris = list()
+            new_tris = []
             for t in tris:
                 if len(t) == 3:
                     new_tris.extend([t[0], t[1], t[2]])
@@ -464,7 +464,7 @@ def ursina_mesh_to_obj(mesh, name='', out_path=application.compressed_models_fol
 
 
     if mesh.mode == 'ngon':
-        tris = list()
+        tris = []
         for i in range(1, len(mesh.vertices)-1):
             tris.extend((i, i+1, 0))
 
