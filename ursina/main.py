@@ -262,13 +262,14 @@ class Ursina(ShowBase):
                         script.keystroke(key)
 
 
-    def run(self):
+    def run(self, info=True):
         if window.show_ursina_splash:
             from ursina.prefabs import ursina_splash
 
         application.load_settings()
-        print_info('development mode:', application.development_mode)
-        print('application successfully started')
+        if info:
+            print_info('development mode:', application.development_mode)
+            print('application successfully started')
 
         super().run()
 
