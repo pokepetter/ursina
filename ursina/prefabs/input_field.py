@@ -117,7 +117,7 @@ if __name__ == '__main__':
     username_field.next_field = password_field
 
     def submit():
-        print('ursername:', username_field.text)
+        print('username:', username_field.text)
         print('password:',  password_field.text)
 
     Button('Login', scale=.1, color=color.cyan.tint(-.4), y=-.26, on_click=submit).fit_to_text()
