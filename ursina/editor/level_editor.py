@@ -207,7 +207,8 @@ class LevelEditor(Entity):
         self.point_renderer.model.colors = [color.azure if e in self.selection else lerp(color.orange, color.hsv(0,0,1,0), distance(e.world_position, camera.world_position)/100) for e in self.entities if e.selectable and not e.collider]
         self.point_renderer.model.generate()
 
-        gizmo.enabled = bool(self.selection)
+        gizmo.enabled = bool(self.selection and self.selection[-1])
+        self.selection = [e for e in self.selection if e]
 
         if update_gizmo_position and self.selection:
             if self.origin_mode_menu.value in ('last', 'individual'):
@@ -367,6 +368,9 @@ class GizmoArrow(Draggable):
 
         for e in level_editor.selection:
             e.world_parent = e.original_parent
+
+        if not level_editor.selection:
+            return
 
         changed = ( # don't record undo if transform didn't change
             distance(level_editor.selection[0].world_transform[0], level_editor.selection[0]._original_world_transform[0]) > .0001 or
@@ -710,10 +714,14 @@ class QuickGrabber(Entity):
 
 
     def input(self, key):
-        if held_keys['control'] or held_keys['shift'] or held_keys['alt']:
+        if held_keys['control'] or held_keys['shift'] or held_keys['alt'] or held_keys['s']:
             return
 
-        if key in ('x', 'y', 'z', 'g'):
+
+        if key in 'gxyz':
+            if self.target_entity:
+                return
+
             self.target_entity = selector.get_hovered_entity()
 
             if self.target_entity:
@@ -756,19 +764,25 @@ class QuickScale(Entity):
                 'sy' : scale_gizmo,
                 'sz' : scale_gizmo,
             },
-            clear_selection = False
+            clear_selection=False,
+            dragging=False,
             )
 
 
     def input(self, key):
+
+
         if held_keys['control'] or held_keys['shift'] or held_keys['alt']:
+            return
+
+        if (held_keys['x'] or held_keys['y'] or held_keys['z']) and key == 's':
+            self.original_gizmo_state = gizmo_toggler.animator.state
             return
 
         if held_keys['s'] and not key == 's':
             key = 's' + key
 
-
-        elif key in ('s', 'sx', 'sy', 'sz'):
+        if key in ('s', 'sx', 'sy', 'sz'):
             self.original_gizmo_state = gizmo_toggler.animator.state
             gizmo_toggler.animator.state = 'e'
 
@@ -794,9 +808,10 @@ class QuickScale(Entity):
 
 
         if key.endswith(' up') and key[:-3] in self.gizmos_to_toggle.keys():
+            # print('------------', key)
             key = key[:-3]
             self.gizmos_to_toggle[key].input('left mouse up')
-            self.gizmos_to_toggle[key].drop()
+            # self.gizmos_to_toggle[key].drop()
             if self.clear_selection:
                 level_editor.selection.clear()
                 level_editor.render_selection()
@@ -824,18 +839,14 @@ class QuickRotator(Entity):
             return
 
         if key == 'r' and not level_editor.selection:
-            self.target_entity = selector.get_hovered_entity()
+            if not level_editor.selection:
+                self.target_entity = selector.get_hovered_entity()
             if not level_editor.selection or len(level_editor.selection) == 1:
                 level_editor.selection = [self.target_entity, ]
                 level_editor.render_selection()
 
-            # if rotation_gizmo.enabled and level_editor.selection:
-            #     rotation_gizmo.subgizmos['y'].on_click()
-            print('aaaaaaaaaa', mouse.normal)
             rotation_gizmo.subgizmos['y'].input('left mouse down')
             rotation_gizmo.subgizmos['y'].start_dragging()
-            # rotation_gizmo.subgizmos['y'].visible_self = False
-            # if mouse.normal:
 
         elif key == 'r up' and hasattr(self, 'target_entity') and self.target_entity:
             key = key[:-3]
@@ -844,8 +855,51 @@ class QuickRotator(Entity):
             level_editor.selection.clear()
             level_editor.render_selection()
             self.target_entity = None
-            # gizmo.arrow_parent.visible = True
-            # rotation_gizmo.subgizmos['y'].visible_self = True
+            
+
+class RotateRelativeToView(Entity):
+    _rotation_helper = Entity(name='RotateRelativeToView_rotation_helper')
+    sensitivity = Vec2(200,200)
+
+    def input(self, key):
+        if held_keys['control'] or held_keys['shift'] or held_keys['alt']:
+            return
+
+        if key == 'c':
+            if len(level_editor.selection) > 1:
+                return
+
+            if not level_editor.selection:
+                level_editor.selection = [selector.get_hovered_entity(), ]
+                level_editor.render_selection()
+
+            if not level_editor.selection:
+                return
+
+            self.target_entity = level_editor.selection[0]
+            __class__._rotation_helper.world_parent = scene
+            __class__._rotation_helper.position = self.target_entity.world_position
+            __class__._rotation_helper.rotation = Vec3(0,0,0)
+
+            self._entity_original_parent = self.target_entity.parent
+            self._entity_original_rotation = self.target_entity.world_rotation
+            self.target_entity.world_parent = __class__._rotation_helper
+            self._mouse_start_x = mouse.x
+            self._mouse_start_y = mouse.y
+
+        elif key == 'c up' and self.target_entity:
+            self.target_entity.world_parent = self._entity_original_parent
+            level_editor.selection.clear()
+            level_editor.render_selection()
+            self.target_entity = None
+            self.x_mov = 0
+            self.y_mov = 0
+
+    def update(self):
+        if self.target_entity and held_keys['c']:
+            __class__._rotation_helper.rotation_y -= mouse.velocity[0] * __class__.sensitivity.x / camera.aspect_ratio
+            __class__._rotation_helper.rotation_x += mouse.velocity[1] * __class__.sensitivity.y
+
 
 
 
@@ -898,11 +952,6 @@ class Selector(Entity):
             return mouse.hovered_entity
 
         [setattr(e, 'collision', False) for e in level_editor.entities if not hasattr(e, 'is_gizmo')]
-
-
-
-
-
 
 
 
@@ -1194,12 +1243,6 @@ class LevelMenu(Entity):
             pass
 
 
-# inspector = Entity(parent=camera.ui, position=window.top_right-Vec2(.3,.1))
-# drag_bar = Draggable(parent=inspector, scale=(.3,.05), color=color.azure, origin=(-.5,-.5))
-# drag_bar.on_click = Sequence(Func(setattr, drag_bar, 'parent', camera.ui), Func(setattr, inspector, 'world_parent', drag_bar))
-# drag_bar.drop = Func(setattr, inspector, 'world_parent', camera.ui)
-
-
 class Inspector(Entity):
     def __init__(self):
         super().__init__(parent=level_editor.ui, position=window.top_right-Vec2(.225,.1))
@@ -1227,8 +1270,8 @@ class Inspector(Entity):
             field.highlight_color = color._32
 
         self.fields = dict(
-            model_field =   Button(parent=self.name_field, origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, text='model: cube', color=color._8, highlight_color=color._32),
-            texture_field = Button(parent=self.name_field, origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, text='texture: ', color=color._8, highlight_color=color._32),
+            model_field =   Button(parent=self.name_field, origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, text='model: cube', color=color._8, highlight_color=color._32, on_click=model_menu.open),
+            texture_field = Button(parent=self.name_field, origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, text='texture: ', color=color._8, highlight_color=color._32, on_click=texture_menu.open),
             color_field =   Button(parent=self.name_field, origin=(-.5,.5), color=color._8, highlight_color=color._32),
         )
         for i, field in enumerate(self.fields.values()):
@@ -1292,17 +1335,14 @@ class ModelMenu(Entity):
         # self.search_field.text = ''
         # self.button_list.position = mouse.position
 
-
     def input(self, key):
         if key == 'm':
             if self.button_list is None or (not self.menu_parent.enabled and level_editor.selection):
                 self.open()
 
-
-
-
-
     def set_models_for_selection(self, name):
+        level_editor.current_scene.undo.record_undo([(level_editor.entities.index(e), 'model', e.model.name, name) for e in level_editor.selection])
+
         for e in level_editor.selection:
             e.model = name
 
@@ -1338,10 +1378,13 @@ class TextureMenu(Entity):
             self.open()
 
     def set_texture_for_selection(self, name):
+        level_editor.current_scene.undo.record_undo([(level_editor.entities.index(e), 'texture', e.texture, name) for e in level_editor.selection])
         for e in level_editor.selection:
             e.texture = name
 
         self.button_list.enabled = False
+
+
 
 class ColorMenu(Entity):
     def __init__(self):
@@ -1496,9 +1539,11 @@ class Duplicator(Entity):
                 clone.shader = e.shader
                 clone.origin = e.origin
                 clone.selectable = e.selectable
+                # clone.collision = e.collision
+                print(repr(clone))
                 self.clones.append(clone)
 
-            [level_editor.entities.append(e) for e in self.clones]
+            level_editor.entities.extend(self.clones)
             level_editor.selection = self.clones
             level_editor.current_scene.undo.record_undo(('delete entities', [level_editor.entities.index(en) for en in self.clones], [repr(e) for e in self.clones],))
 
@@ -1515,6 +1560,8 @@ class Duplicator(Entity):
 
             for e in level_editor.selection:
                 e.world_parent = self.dragger
+
+
 
 
         elif self.plane.enabled and key == 'left mouse up':
@@ -1792,6 +1839,7 @@ gizmo_toggler = GizmoToggler(parent=level_editor)
 quick_grabber = QuickGrabber(parent=level_editor)   # requires gizmo, selector
 QuickScale()    # requires scale_gizmo, gizmo_toggler, selector
 QuickRotator()
+RotateRelativeToView(target_entity=None)
 selector = Selector(parent=level_editor)
 selection_box = SelectionBox(parent=level_editor.ui, model=Quad(0, mode='line'), origin=(-.5,-.5,0), scale=(0,0,1), color=color.white33, mode='new')
 spawner = Spawner()
@@ -1800,11 +1848,11 @@ level_menu = LevelMenu()
 goto_scene = level_menu.goto_scene
 duplicator = Duplicator()
 
-inspector = Inspector()
 model_menu = ModelMenu()
 texture_menu = TextureMenu()
 color_menu = ColorMenu()
 right_click_menu = RightClickMenu()
+inspector = Inspector()
 PointOfViewSelector()
 Help()
 # search = Search(parent=level_editor)
