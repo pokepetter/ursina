@@ -195,31 +195,30 @@ class Conversation(Entity):
 
 if __name__ == '__main__':
     app = Ursina()
-    # import main
-    # Button.color = color.hsv(0,0,0,.8)
+
     conversation = Conversation()
     # conversation.question.model = 'quad'
     # for b in conversation.buttons:
     #     b.model = 'quad'
     bar_mission_solved = False
-    convo = '''
-I'm looking for my sister. Can you help me find her, please? I haven't seen her in days! Who know what could've happened!?
-I'm worried. Will you help me?
-    * Yes, of course. This can be a dangerous city.
-        Oh no! Do you think something happened to her?
-        What should I do?!
-            * She's probably fine. She can handle herself.
-                You're right. I'm still worried though.
-                    * Don't worry, I'll look for her.
-            * Maybe. (chaos += 1)
-                Help me look for her, please! *runs off*
-    * I'm sorry, but I don't have time right now.
-        A true friend wouldn't say that. (evil += 1)
-    * I know where she is! (if bar_mission_solved)
-        Really? Where?
-            * I saw her on a ship by the docks, it looked like they were ready to set off.
-                Thank you! *runs off*
-'''
+    convo = dedent('''
+    I'm looking for my sister. Can you help me find her, please? I haven't seen her in days! Who know what could've happened!?
+    I'm worried. Will you help me?
+        * Yes, of course. This can be a dangerous city.
+            Oh no! Do you think something happened to her?
+            What should I do?!
+                * She's probably fine. She can handle herself.
+                    You're right. I'm still worried though.
+                        * Don't worry, I'll look for her.
+                * Maybe. (chaos += 1)
+                    Help me look for her, please! *runs off*
+        * I'm sorry, but I don't have time right now.
+            A true friend wouldn't say that. (evil += 1)
+        * I know where she is! (if bar_mission_solved)
+            Really? Where?
+                * I saw her on a ship by the docks, it looked like they were ready to set off.
+                    Thank you! *runs off*
+    ''')
     conversation.start_conversation(convo)
     # conversation.parse_conversation(convo)
 
