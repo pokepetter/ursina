@@ -123,7 +123,7 @@ class LevelEditor(Entity):
         self.ui = Entity(parent=camera.ui, name='level_editor.ui')
 
         self.point_renderer = Entity(parent=self, model=Mesh([], mode='point', thickness=.1, render_points_in_3d=True), texture='circle', always_on_top=True, unlit=True, render_queue=1)
-        self.cubes = [Entity(model='wireframe_cube', color=color.azure, parent=self, enabled=False) for i in range(128)] # max selection
+        self.cubes = [Entity(model='wireframe_cube', color=color.azure, parent=self, enabled=True) for i in range(128)] # max selection
 
         self.origin_mode_menu = ButtonGroup(['last', 'center', 'individual'], min_selection=1, position=window.top, parent=self.ui)
         self.origin_mode_menu.scale *= .75
@@ -855,7 +855,7 @@ class QuickRotator(Entity):
             level_editor.selection.clear()
             level_editor.render_selection()
             self.target_entity = None
-            
+
 
 class RotateRelativeToView(Entity):
     _rotation_helper = Entity(name='RotateRelativeToView_rotation_helper')
@@ -945,9 +945,11 @@ class Selector(Entity):
 
         # try getting entities with box collider
         [setattr(e, 'collision', True) for e in level_editor.entities if not hasattr(e, 'is_gizmo')]
+        # print('-------------', len([e for e in level_editor.entities  if not hasattr(e, 'is_gizmo') and e.collider and e.collision]))
         mouse.update()
 
         if mouse.hovered_entity in level_editor.entities:
+
             [setattr(e, 'collision', False) for e in level_editor.entities if not hasattr(e, 'is_gizmo')]
             return mouse.hovered_entity
 
@@ -1506,7 +1508,7 @@ class Duplicator(Entity):
     def __init__(self, **kwargs):
         super().__init__(clones=None)
         self.plane = Entity(model='plane', collider='box', scale=Vec3(100,.1,100), enabled=False, visible=False)
-        self.dragger = Draggable(parent=scene, model=None, enabled=False)
+        self.dragger = Draggable(parent=scene, model=None, collider=None, enabled=False)
         self.dragging = False
         self.start_position = None
         self.clone_from_position = None
@@ -1538,7 +1540,9 @@ class Duplicator(Entity):
                 clone.color = e.color
                 clone.shader = e.shader
                 clone.origin = e.origin
-                clone.selectable = e.selectable
+                clone.selectable = True
+
+                clone.collision = False
                 # clone.collision = e.collision
                 print(repr(clone))
                 self.clones.append(clone)
@@ -1569,6 +1573,7 @@ class Duplicator(Entity):
                 e.world_parent = scene
 
             self.plane.enabled = False
+            self.dragger.enabled = False
             mouse.traverse_target = scene
             [e.disable() for e in self.axis_lock_gizmos]
             level_editor.render_selection()
