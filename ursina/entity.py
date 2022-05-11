@@ -922,6 +922,13 @@ class Entity(NodePath):
         self.setPos(relative_to, Vec3(value[0], value[1], value[2]))
 
 
+    def rotate(self, value, relative_to=None):  # rotate around local axis.
+        if not relative_to:
+            relative_to = self
+
+        self.setHpr(relative_to, Vec3(value[1], value[0], value[2]) * Entity.rotation_directions)
+
+
     def add_script(self, class_instance):
         if isinstance(class_instance, object) and type(class_instance) is not str:
             class_instance.entity = self
