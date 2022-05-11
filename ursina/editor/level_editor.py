@@ -855,7 +855,7 @@ class QuickRotator(Entity):
             level_editor.selection.clear()
             level_editor.render_selection()
             self.target_entity = None
-            
+
 
 class RotateRelativeToView(Entity):
     _rotation_helper = Entity(name='RotateRelativeToView_rotation_helper')
@@ -1273,6 +1273,7 @@ class Inspector(Entity):
             model_field =   Button(parent=self.name_field, origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, text='model: cube', color=color._8, highlight_color=color._32, on_click=model_menu.open),
             texture_field = Button(parent=self.name_field, origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, text='texture: ', color=color._8, highlight_color=color._32, on_click=texture_menu.open),
             color_field =   Button(parent=self.name_field, origin=(-.5,.5), color=color._8, highlight_color=color._32),
+            shader_field = Button(parent=self.name_field, origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, text='shader: ', color=color._8, highlight_color=color._32, on_click=shader_menu.open),
         )
         for i, field in enumerate(self.fields.values()):
             if field.text:
@@ -1472,6 +1473,46 @@ class ColorMenu(Entity):
     def close(self):
         self.sub_menu.enabled = False
         level_editor.current_scene.undo.record_undo([(level_editor.entities.index(e), 'color', e.original_color, e.color) for e in level_editor.selection])
+
+
+class ShaderMenu(Entity):
+    def __init__(self, **kwargs):
+        super().__init__(parent=level_editor)
+        self.button_list = None     # gets created on self.open()
+
+
+    def open(self):
+        self.asset_names = [
+            'unlit_shader',
+            'lit_with_shadows_shader',
+            'triplanar_shader',
+            'matcap_shader',
+
+        ]
+
+        if not self.asset_names:
+            print('no shaders found')
+            return
+
+        shader_dict = {name : Func(self.set_shader_for_selection, name) for name in self.asset_names}
+        if not self.button_list:
+            self.button_list = ButtonList(shader_dict, font='VeraMono.ttf')
+            self.bg = Entity(parent=self.button_list, model='quad', collider='box', color=color.black33, on_click=self.button_list.disable, z=.1, scale=100)
+        else:
+            self.button_list.enabled = True
+
+    # def input(self, key):
+    #     if key == 'v' and level_editor.selection:
+    #         self.open()
+
+    def set_shader_for_selection(self, name):
+        level_editor.current_scene.undo.record_undo([(level_editor.entities.index(e), 'shader', e.shader, name) for e in level_editor.selection])
+        for e in level_editor.selection:
+            exec(f'from ursina.shaders import {name}')
+            exec(f'e.shader = {name}')
+
+        self.button_list.enabled = False
+
 
 
 class Help(Button):
@@ -1851,6 +1892,7 @@ duplicator = Duplicator()
 model_menu = ModelMenu()
 texture_menu = TextureMenu()
 color_menu = ColorMenu()
+shader_menu = ShaderMenu()
 right_click_menu = RightClickMenu()
 inspector = Inspector()
 PointOfViewSelector()
