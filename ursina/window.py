@@ -199,7 +199,7 @@ class Window(WindowProperties):
 
     @property
     def size(self):
-        return Vec2(*self.get_size())
+        return Vec2(*base.win.get_size())
 
     @size.setter
     def size(self, value):
@@ -362,7 +362,7 @@ instance = Window()
 if __name__ == '__main__':
     from ursina import *
     # application.development_mode = False
-    app = Ursina()
+    app = Ursina(borderless=False)
     # window.forced_aspect_ratio = 1
     # window.vsync = 10
 
