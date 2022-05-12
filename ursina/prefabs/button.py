@@ -11,7 +11,6 @@ class Button(Entity):
     def __init__(self, text='', radius=.1, **kwargs):
         super().__init__()
         self.parent = camera.ui
-        self.collider = 'box'
         self.disabled = False
         self._on_click = None
 
@@ -38,6 +37,7 @@ class Button(Entity):
         self.pressed_color = self.color.tint(-.2)
         self.highlight_scale = 1    # multiplier
         self.pressed_scale = 1     # multiplier
+        self.collider = 'box'
 
         for key, value in kwargs.items():
             setattr(self, key, value)
