@@ -199,14 +199,18 @@ class Window(WindowProperties):
 
     @property
     def size(self):
-        return Vec2(*base.win.get_size())
+        try:
+            return Vec2(*base.win.getSize())
+        except:
+            return self._size
 
     @size.setter
     def size(self, value):
         if hasattr(self, '_forced_aspect_ratio') and self.forced_aspect_ratio:
             value = (value[1] * self.forced_aspect_ratio, value[1])
 
-        self.set_size(int(value[0]), int(value[1]))
+        self._size = value
+        self.setSize(int(value[0]), int(value[1]))
         self.aspect_ratio = value[0] / value[1]
         from ursina import camera
         camera.set_shader_input('window_size', value)
