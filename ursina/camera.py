@@ -187,14 +187,13 @@ class Camera(Entity):
 
 
     def set_shader_input(self, name, value):
-        if self.filter_quad:
+        if not hasattr(self, 'filter_quad') or self.filter_quad is None:
+            return
 
-            if isinstance(value, Texture):
-                value = value._texture    # make sure to send the panda3d texture to the shader
+        if isinstance(value, Texture):
+            value = value._texture    # make sure to send the panda3d texture to the shader
 
-            self.filter_quad.setShaderInput(name, value)
-        # else:
-        #     print('no filter quad')
+        self.filter_quad.setShaderInput(name, value)
 
 
 instance = Camera()
