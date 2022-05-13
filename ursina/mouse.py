@@ -18,6 +18,7 @@ class Mouse():
         self.enabled = False
         self.visible = True
         self.locked = False
+        self.prev_locked = False
         self.position = Vec3(0,0,0)
         self.delta = Vec3(0,0,0)
         self.prev_x = 0
@@ -187,7 +188,11 @@ class Mouse():
         if not self.enabled or not self._mouse_watcher.has_mouse():
             self.velocity = Vec3(0,0,0)
             return
-
+        
+        if self.locked != self.prev_locked:
+            self.position = (0,0)
+            self.prev_locked = self.locked
+        
         self.moving = self.x + self.y != self.prev_x + self.prev_y
 
         if self.moving:
