@@ -70,9 +70,8 @@ class FirstPersonController(Entity):
 
             if ray.distance <= self.height+.1:
                 if not self.grounded:
-                    self.air_time = 0
-                    self.grounded = True
-
+                    self.land()
+                self.grounded = True
                 # make sure it's not a wall and that the point is not too far up
                 if ray.world_normal.y > .7 and ray.world_point.y - self.world_y < .5: # walk up slope
                     self.y = ray.world_point[1]
@@ -83,10 +82,6 @@ class FirstPersonController(Entity):
             # if not on ground and not on way up in jump, fall
             self.y -= min(self.air_time, ray.distance-.05) * time.dt * 100
             self.air_time += time.dt * .25 * self.gravity
-        
-        if self.jumping:
-            if raycast(self.position+Vec3(0,self.height-.5,0), self.up, distance=.5, ignore=(self,)).hit:
-                self.start_fall()
 
 
     def input(self, key):
@@ -99,7 +94,6 @@ class FirstPersonController(Entity):
             return
 
         self.grounded = False
-        self.jumping = True
         self.animate_y(self.y+self.jump_height, self.jump_up_duration, resolution=int(1//time.dt), curve=curve.out_expo)
         invoke(self.start_fall, delay=self.fall_after)
 
@@ -107,6 +101,11 @@ class FirstPersonController(Entity):
     def start_fall(self):
         self.y_animator.pause()
         self.jumping = False
+
+    def land(self):
+        # print('land')
+        self.air_time = 0
+        self.grounded = True
 
 
     def on_enable(self):
