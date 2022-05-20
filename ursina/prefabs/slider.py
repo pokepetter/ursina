@@ -90,7 +90,6 @@ class Slider(Entity):
         self.knob.step = value / (self.max-self.min) / 2
 
     def update(self):
-        print('u')
         if self.knob.dragging:
             self.slide()
 
