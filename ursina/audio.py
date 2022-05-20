@@ -92,7 +92,7 @@ class Audio(Entity):
 
 
     @property
-    def length(self):
+    def length(self):       # get the duration of the audio clip.
         return self.clip.length() if self.clip else 0
 
     @property
@@ -115,6 +115,16 @@ class Audio(Entity):
     @time.setter
     def time(self, value):
         self.clip.set_time(value)
+
+    @property
+    def balance(self):      # pan the audio. should be a value between -.5 and .5. default: 0
+        return self._balance
+
+    @balance.setter
+    def balance(self, value):
+        self._balance = value
+        self.clip.setBalance(value*2)
+
 
     def play(self, start=0):
         if hasattr(self, 'clip') and self.clip:
@@ -174,10 +184,12 @@ if __name__ == '__main__':
 
     app = Ursina()
     # a = Audio('life_is_currency_wav', pitch=1)
-    a = Audio('life_is_currency', pitch=1, loop=True, autoplay=True)
-    print(a.clip)
-    a.volume=0
-    b = Audio(a.clip)
+    def input(key):
+        if key == 'space':
+            a = Audio('life_is_currency', pitch=random.uniform(.5,1), loop=True, autoplay=True)
+    # print(a.clip)
+    # a.volume=0
+    # b = Audio(a.clip)
     # a2 = Audio(clip=a.clip)
     # a2 = duplicate(a)
     # a2.clip = a.clip
@@ -186,11 +198,11 @@ if __name__ == '__main__':
     # a.fade_out(delay=1)
     # DebugMenu(a)
 
-    def input(key):
-        if key == 'f':
-            a.fade_out(duration=4, curve=curve.linear)
-
-    def update():
-        print(a.time)
+    # def input(key):
+    #     if key == 'f':
+    #         a.fade_out(duration=4, curve=curve.linear)
+    #
+    # def update():
+    #     print(a.time)
 
     app.run()
