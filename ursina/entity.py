@@ -963,7 +963,7 @@ class Entity(NodePath):
         if not isinstance(target, Entity):
             target = Vec3(*target)
 
-        self.lookAt(target)
+        self.lookAt(target, Vec3(0,0,1))
         if axis == 'forward':
             return
 

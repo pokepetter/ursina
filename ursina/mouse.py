@@ -20,7 +20,7 @@ class Mouse():
         self.locked = False
         self.prev_locked = False
         self.position = Vec3(0,0,0)
-        self.delta = Vec3(0,0,0)
+        self.delta = Vec3(0,0,0)    # movement since you pressed a mouse button.
         self.prev_x = 0
         self.prev_y = 0
         self.start_x = 0
@@ -35,7 +35,7 @@ class Mouse():
         self.left = False
         self.right = False
         self.middle = False
-        self.delta_drag = Vec3(0,0,0)
+        self.delta_drag = Vec3(0,0,0)   # movement between left mouse down and left mouse up.
 
         self.update_step = 1
         self.traverse_target = scene  # set this to None to disable collision with scene, which might be a good idea if you have lots of colliders.

@@ -11,7 +11,6 @@ from ursina.string_utilities import print_info, print_warning
 class Window(WindowProperties):
 
     def __init__(self):
-        print('aaaaaaaINITaaaaaaaaaaa')
         super().__init__()
         loadPrcFileData('', 'window-title ursina')
         loadPrcFileData('', 'notify-level-util error')
@@ -63,7 +62,6 @@ class Window(WindowProperties):
 
 
     def late_init(self):
-        print('AAAAAaa', self.size)
         self.center_on_screen()
         if not application.development_mode:
             self.fullscreen = True
