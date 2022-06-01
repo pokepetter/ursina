@@ -104,7 +104,8 @@ if __name__ == '__main__':
     You can also load a .gif by including the file type: Animation('image.gif')
     '''
 
-    Animation('ursina_wink')
-    # Animation('city_in_desert_valley_water.gif')
+    a = Animation('ursina_wink')
+    destroy(a)
+# Animation('city_in_desert_valley_water.gif')
 
     app.run()

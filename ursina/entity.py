@@ -71,8 +71,8 @@ class Entity(NodePath):
 
         self.collision = False  # toggle collision without changing collider.
         self.collider = None    # set to 'box'/'sphere'/'mesh' for auto fitted collider.
-        self.scripts = list()   # add with add_script(class_instance). will assign an 'entity' variable to the script.
-        self.animations = list()
+        self.scripts = []   # add with add_script(class_instance). will assign an 'entity' variable to the script.
+        self.animations = []
         self.hovered = False    # will return True if mouse hovers entity.
 
         self.origin = Vec3(0,0,0)
@@ -112,16 +112,16 @@ class Entity(NodePath):
             setattr(self, key, value)
 
         if self.enabled and hasattr(self, 'on_enable'):
-            if callable(self.on_enable):
-                self.on_enable()
-            elif isinstance(self.on_enable, Sequence):
+            if isinstance(self.on_enable, Sequence):
                 self.on_enable.start()
+            elif callable(self.on_enable):
+                self.on_enable()
 
         elif not self.enabled and hasattr(self, 'on_disable'):
-            if callable(self.on_disable):
-                self.on_disable()
-            elif isinstance(self.on_disable, Sequence):
+            if isinstance(self.on_disable, Sequence):
                 self.on_disable.start()
+            elif callable(self.on_disable):
+                self.on_disable()
 
 
     def _list_to_vec(self, value):
@@ -160,16 +160,16 @@ class Entity(NodePath):
     @enabled.setter
     def enabled(self, value):
         if value and hasattr(self, 'on_enable') and not self.enabled:
-            if callable(self.on_enable):
-                self.on_enable()
-            elif isinstance(self.on_disable, Sequence):
+            if isinstance(self.on_enable, Sequence):
                 self.on_enable.start()
+            elif callable(self.on_enable):
+                self.on_enable()
 
         elif value == False and hasattr(self, 'on_disable') and self.enabled:
-            if callable(self.on_disable):
-                self.on_disable()
-            elif isinstance(self.on_disable, Sequence):
+            if isinstance(self.on_disable, Sequence):
                 self.on_disable.start()
+            elif callable(self.on_disable):
+                self.on_disable()
 
 
         if value == True:
@@ -604,7 +604,7 @@ class Entity(NodePath):
         return self.getScale(base.render)[2]
     @world_scale_z.setter
     def world_scale_z(self, value):
-        self.setScale(base.render, Vec3(self.world_scale_x, value, self.world_scale_z))
+        self.setScale(base.render, Vec3(self.world_scale_x, self.world_scale_y, value))
 
     @property
     def scale(self):
@@ -781,6 +781,8 @@ class Entity(NodePath):
 
     @property
     def texture_offset(self):
+        if not hasattr(self, '_texture_offset'):
+            return Vec2(0,0)
         return self._texture_offset
 
     @texture_offset.setter
@@ -920,6 +922,13 @@ class Entity(NodePath):
         self.setPos(relative_to, Vec3(value[0], value[1], value[2]))
 
 
+    def rotate(self, value, relative_to=None):  # rotate around local axis.
+        if not relative_to:
+            relative_to = self
+
+        self.setHpr(relative_to, Vec3(value[1], value[0], value[2]) * Entity.rotation_directions)
+
+
     def add_script(self, class_instance):
         if isinstance(class_instance, object) and type(class_instance) is not str:
             class_instance.entity = self
@@ -954,7 +963,7 @@ class Entity(NodePath):
         if not isinstance(target, Entity):
             target = Vec3(*target)
 
-        self.lookAt(target)
+        self.lookAt(target, Vec3(0,0,1))
         if axis == 'forward':
             return
 

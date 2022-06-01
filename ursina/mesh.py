@@ -70,7 +70,7 @@ class Mesh(NodePath):
         for var in (('vertices', vertices), ('triangles', triangles), ('colors', colors), ('uvs', uvs), ('normals', normals)):
             name, value = var
             if value is None:
-                setattr(self, name, list())
+                setattr(self, name, [])
 
         if self.vertices is not None:
             self.generate()
@@ -109,7 +109,7 @@ class Mesh(NodePath):
 
 
         if self.mode != 'line' or not self._triangles:
-            self.indices = list()
+            self.indices = []
 
             if self._triangles:
                 if isinstance(self._triangles[0], int):
@@ -247,7 +247,7 @@ class Mesh(NodePath):
 
 
     def clear(self, regenerate=True):
-        self.vertices, self.triangles, self.colors, self.uvs, self.normals = list(), list(), list(), list(), list()
+        self.vertices, self.triangles, self.colors, self.uvs, self.normals = [], [], [], [], []
         if regenerate:
             self.generate()
 

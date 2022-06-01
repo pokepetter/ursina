@@ -2,26 +2,14 @@ from ursina import *
 
 
 class ButtonList(Entity):
-    def __init__(self, button_dict, button_height=1.1, fit_height=True, width=.5, **kwargs):
-        super().__init__(
-            parent=camera.ui,
-            model='quad',
-            scale=(width,1),
-            color=Button.color,
-            origin=(-.5,.5),
-            position=(-.25, .45),
-            collider='box',
-        )
-        self.fit_height = fit_height
-        self.button_height = button_height
-        if fit_height:
-            self.scale_y = button_height * len(button_dict) * Text.size
+    def __init__(self, button_dict, button_height=1.1, width=.5, font=Text.default_font, **kwargs):
+        super().__init__(parent=camera.ui, model='quad', scale=(width,1), color=Button.color, origin=(-.5,.5), position=(-.25, .45), collider='box')
 
-        self.text_entity = Text(parent=self, origin=(-.5,.5), text='empty', world_scale=20, z=-.1, x=.01, line_height=button_height)
-        self.button_height = self.text_entity.height
-        self.button_dict = button_dict
+        self.button_height = button_height
+        self.text_entity = Text(parent=self, font=font, origin=(-.5,.5), text='empty', world_scale=20, z=-.1, x=.01, line_height=button_height)
         self.highlight = Entity(parent=self, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5), z=-.01, add_to_scene_entities=False)
         self.selection_marker = Entity(parent=self, model='quad', color=color.azure, scale=(1,self.button_height), origin=(-.5,.5), z=-.02, enabled=False, add_to_scene_entities=False)
+        self.button_dict = button_dict
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -34,14 +22,18 @@ class ButtonList(Entity):
     @button_dict.setter
     def button_dict(self, value):
         self._button_dict = value
-        self.actions = [*self.button_dict.values()]
+        self.actions = list(self._button_dict.values())
         self.text_entity.text = '\n'.join(self.button_dict.keys())
+        self.scale_y = self.button_height * len(value) * Text.size
+        self.text_entity.world_scale = 20
+        self.highlight.scale_y = 1 / len(value)
+        self.selection_marker.scale_y = 1 / len(value)
 
 
     def input(self, key):
         # handle click here instead of in on_click so you can assign a custom on_click function
         if key == 'left mouse down' and self.hovered:
-            y = round(abs(self.highlight.y / self.button_height))
+            y = floor(-mouse.point.y * len(self.button_dict))
 
             action = self.actions[y]
             self.highlight.blink(color.black, .1)
@@ -61,10 +53,8 @@ class ButtonList(Entity):
     def update(self):
         self.highlight.enabled = mouse.hovered_entity == self
         if mouse.hovered_entity == self:
-            if abs(mouse.point[1] // self.button_height) > len(self.button_dict):
-                self.highlight.enabled = False
-
-            self.highlight.y = ceil(mouse.point[1] / self.button_height) * self.button_height
+            y = floor(-mouse.point.y * len(self.button_dict))
+            self.highlight.y = -y / len(self.button_dict)
 
 
     def on_disable(self):
@@ -81,30 +71,18 @@ if __name__ == '__main__':
     def test(a=1, b=2):
         print('------:', a, b)
 
-    button_dict = {
-        'one' :     None,
-        'two' :     default,
-        'tree' :    Func(test, 3, 4),
-        'four' :    Func(test, b=3, a=4),
-        # 'five':     Sequence(1, Func(print, 'lol'), loop=True),
-    }
+    button_dict = {}
     for i in range(6, 20):
         button_dict[f'button {i}'] = Func(print, i)
 
-    # bl = ButtonList(button_dict)
-    # bl.scale *= .2
-    # bl.on_click = Func(setattr, bl, 'enabled', False)
-    sound_effects = {}
-    current_sound = None
+    bl = ButtonList(button_dict, font='VeraMono.ttf')
+    def input(key):
+        if key == 'space':
+            bl.button_dict = {
+                'one' :     None,
+                'two' :     default,
+                'tree' :    Func(test, 3, 4),
+                'four' :    Func(test, b=3, a=4),
+            }
 
-    for name in ('blip', 'boom', 'coin', 'hurt', 'jump', 'lose', 'powerup', 'teleport'):
-        for i in range(1,4):
-            a = Audio(f'{name}_{i}', autoplay=False)
-            if a.clip:
-                # print('-------------', a)
-                sound_effects[f'{name}_{i}'] = Func(print, 'a')
-
-    bl = ButtonList(sound_effects)
-
-    # bl.button_dict = {'a':Func(print,'lodlw'), 'b':1, 'c':1}
     app.run()

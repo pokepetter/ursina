@@ -43,7 +43,6 @@ On some systems you might have to use pip3 instead of pip in order to use Python
 ## Dependencies
   * python 3.6+
   * panda3d
-  * screeninfo, for detecting screen resolution
   * pillow, for texture manipulation
   * psd-tools, for converting .psd files
   * blender, for converting .blend files

@@ -115,7 +115,7 @@ def import_all_classes(path=application.asset_folder, debug=False):
     sys.path.append(path)
     from ursina.string_utilities import snake_to_camel
     from glob import iglob
-    imported_successfully = list()
+    imported_successfully = []
 
     for file_path in iglob(path + '**/*.py', recursive=True):
         if '\\build\\' in file_path or '__' in file_path:

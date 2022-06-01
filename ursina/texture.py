@@ -1,11 +1,10 @@
 from panda3d.core import Texture as PandaTexture
 from panda3d.core import SamplerState
-from panda3d.core import Vec2, Vec3, Vec4
 from panda3d.core import Filename
 from panda3d.core import PNMImage
 from pathlib import Path
 from direct.showbase import Loader
-import sys
+from ursina.vec2 import Vec2
 from ursina import color
 # from PIL import Image
 
@@ -147,7 +146,7 @@ class Texture():
     def get_pixels(self, start, end):
         start = (clamp(start[0], 0, self.width), clamp(start[1], 0, self.width))
         end = (clamp(end[0], 0, self.width), clamp(end[1], 0, self.width))
-        pixels = list()
+        pixels = []
 
         for y in range(start[1], end[1]):
             for x in range(start[0], end[0]):

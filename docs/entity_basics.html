@@ -1,18 +1,57 @@
+
+<!DOCTYPE HTML>
 <!--generated with sswg-->
+
 <html>
-<left>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <head> <link rel="stylesheet" href="sswg.css"> </head>
+<left>
 <title> entity basics</title>
 <br>
 
-<div style="text-align: center;max-width: 1000px; margin: auto;font-family: arial;">
+<div style="text-align: center;max-width: 1200px; margin: auto;font-family: arial;">
+<br>
 <div style="font-size: 100.0px;font-weight: bold;">
 Entity Basics<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
 <br>
-<div style="text-align: left;">
+<div style="font-size: 20.0px;text-align: left;max-width: 1200px; margin: auto;">
+<br>
+<div class="sidebar"><br>
+<b><a href="documentation.html">Documentation</a></b><br>
+<br>
+<a href="installation.html">Installation</a><br>
+<br>
+<a href="entity_basics.html">Entity Basics</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#What is an Entity?">What is an Entity?</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Model">Model</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Texture">Texture</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Color">Color</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position, Rotation, Scale">Position, Rotation, Scale</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Update">Update</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Input">Input</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Mouse Input">Mouse Input</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Other Magic Functions">Other Magic Functions</a><br>
+<br>
+<a href="coordinate_system.html">Coordinate System</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#Entity Coordinate System">Entity Coordinate System</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#UI Coordinate System">UI Coordinate System</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#Rotation">Rotation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#Origin">Origin</a><br>
+<br>
+<a href="collision.html">Collision</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Adding Colliders">Adding Colliders</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#raycast()">raycast()</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#boxcast()">boxcast()</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#intersects()">intersects()</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#HitInfo">HitInfo</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Distance Check">Distance Check</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Mouse Collision">Mouse Collision</a><br>
+<br>
+<a href="faq.html">F.A.Q.</a><br>
+<a href="building.html">Build and Release</a><br>
+</div><br>
 <div style="font-size: 40.0px;font-weight: bold;">
 <div id="What is an Entity?"/><br>
 What is an Entity?<br>
@@ -29,8 +68,8 @@ What is an Entity?<br>
 <br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
-<div id="Setting a model"/><br>
-Setting a model<br>
+<div id="Model"/><br>
+Model<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;There are several included models like 'quad', 'plane', 'cube', and 'sphere',<br>
@@ -71,8 +110,8 @@ e<yellow>4</yellow> = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</
 <br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
-<div id="Setting the color"/><br>
-Setting the color<br>
+<div id="Color"/><br>
+Color<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
 <div class="code_block" style="margin-left: 1em;">e.color = color.red <gray># set it to a color in the color module</gray>
@@ -86,59 +125,67 @@ e.color = lerp(color.red, color.green, .<yellow>5</yellow>) <gray># set it to a 
 <br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
-<div id="Moving"/><br>
-Moving<br>
+<div id="Position, Rotation, Scale"/><br>
+Position, Rotation, Scale<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;You can move an entity by setting the attributes:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;'position', 'x', 'y', 'z', 'world_position', 'world_x', 'world_y', 'world_z'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<b>Position</b><br>
 <br>
-<div class="code_block" style="margin-left: 1em;"><gray># you can give it a position when you create i, or you can omit it and set it later</gray>
-e = <olive>Entity</olive>(<olive>position</olive>=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>))
-<gray># set position relative to parent entity:</gray>
+&nbsp;&nbsp;&nbsp;&nbsp;To set the position relative to the parent, set .position:<br>
+<br>
+<div class="code_block" style="margin-left: 2em;">e = <olive>Entity</olive>()
 e.position = Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)
 e.position = Vec2(<yellow>0</yellow>,<yellow>0</yellow>)
 e.position = (<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)
 e.position = (<yellow>0</yellow>,<yellow>0</yellow>)
-
-<gray># shortcuts <purple>for</purple> individual axes:</gray>
-e.x = <yellow>0</yellow>
-e.y = <yellow>0</yellow>
-e.z = <yellow>0</yellow>
-
-    <gray># set position relative to the world:</gray>
-e.world_position = (<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)
 </div><br>
+&nbsp;&nbsp;&nbsp;&nbsp;You can also set 'x', 'y', 'z' for setting the position on a specific axis.<br>
+<br>
+<div class="code_block" style="margin-left: 2em;">e = <olive>Entity</olive>(<olive>position</olive>=Vec3(<yellow>1</yellow>,<yellow>1</yellow>,<yellow>1</yellow>))
+e.x = <yellow>0</yellow>
+<blue>print</blue>(position)
+>>> Vec3(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>)
+</div><br>
+&nbsp;&nbsp;&nbsp;&nbsp;To set the position relative to the scene, that is, ignoring the position of any parents, set .world_position:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<div class="code_block" style="margin-left: 2em;">parent_entity = <olive>Entity</olive>(<olive>position</olive>=Vec3(<yellow>0</yellow>,<yellow>2</yellow>,<yellow>0</yellow>))
+e = <olive>Entity</olive>(<olive>parent</olive>=parent_entity, <olive>position</olive>=Vec3(<yellow>0</yellow>,<yellow>2</yellow>,<yellow>0</yellow>))
+<blue>print</blue>(e.position)
+>>> Vec3(<yellow>0</yellow>,<yellow>2</yellow>,<yellow>0</yellow>)
+<blue>print</blue>(e.world_position)
+>>> Vec3(<yellow>0</yellow>,<yellow>4</yellow>,<yellow>0</yellow>)
+
+e.world_position = Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)
+<blue>print</blue>(e.position)
+>>> Vec3(<yellow>0</yellow>,-<yellow>2</yellow>,<yellow>0</yellow>)
+</div><br>
+&nbsp;&nbsp;&nbsp;&nbsp;As with position, there's shortcuts for setting world position on individual axes too:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;world_x, world_y and world_z<br>
+<br>
 &nbsp;&nbsp;&nbsp;&nbsp;See <a href="https://www.ursinaengine.org/coordinate_system.html">https://www.ursinaengine.org/coordinate_system.html</a> for more<br>
 &nbsp;&nbsp;&nbsp;&nbsp;information on how the coordinate system works.<br>
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Rotating"/><br>
-Rotating<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+&nbsp;&nbsp;&nbsp;&nbsp;<b>Rotation</b><br>
 <br>
-<div class="code_block" style="margin-left: 1em;">e.rotation = (<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)
+<div class="code_block" style="margin-left: 2em;">e.rotation = (<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)
 e.rotation_y = <yellow>9</yellow><yellow>0</yellow>
 </div><br>
-&nbsp;&nbsp;&nbsp;&nbsp;The look_at() method can also be for pointing an entity at something:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The look_at() method can also be for pointing an entity at something:<br>
 <br>
-<div class="code_block" style="margin-left: 1em;">other_entity = <olive>Entity</olive>(<olive>position</olive>=(<yellow>1</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>8</yellow>))
+<div class="code_block" style="margin-left: 2em;">other_entity = <olive>Entity</olive>(<olive>position</olive>=(<yellow>1</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>8</yellow>))
 
 e.look_at(other_entity) <gray># make z-axis(forward) point at other_entity</gray>
 e.look_at(other_entity, axis=<green>'up'</green>) <gray># optionally define which axis</gray>
 </div><br>
 <br>
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Scaling"/><br>
-Scaling<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+&nbsp;&nbsp;&nbsp;&nbsp;<b>Scale</b><br>
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;Change the size of the entity by setting the scale attribute:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Change the size of the entity by setting the scale attribute:<br>
 <br>
-<div class="code_block" style="margin-left: 1em;">e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>scale</olive>=(<yellow>3</yellow>,<yellow>1</yellow>,<yellow>1</yellow>))
+<div class="code_block" style="margin-left: 2em;">e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>scale</olive>=(<yellow>3</yellow>,<yellow>1</yellow>,<yellow>1</yellow>))
 </div><br>
 <br>
 <br>
@@ -161,7 +208,13 @@ e.update = my_update
     <purple>def</purple> update(self):
         self.x += <yellow>1</yellow> * time.dt
 </div><br>
+&nbsp;&nbsp;&nbsp;&nbsp;The third option is to put a function called update in __main__, the starting script.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;You'll see this in a lot of examples since it's convenient for small scripts.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Keep in mind this won't work if you import a module with an update function defined at module level.<br>
 <br>
+<div class="code_block" style="margin-left: 1em;"><purple>def</purple> update():
+    <blue>print</blue>(<green>'update'</green>)
+</div><br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
 <div id="Input"/><br>

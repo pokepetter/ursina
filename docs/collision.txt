@@ -1,9 +1,10 @@
-[← Back, documentation.html]
-# ursina collision
-# width 1200, arial
+# arial, normal, size 1, left, width 1200
+# insert doc_index_sidebar.txt
+
+
 ### Collision
 
-## Colliders
+## Adding Colliders
 
 # code
 e = Entity(model='sphere', x=2)

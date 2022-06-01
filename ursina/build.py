@@ -152,7 +152,6 @@ if build_engine:
         'Lib/logging',
         'Lib/xml',
         # 'Lib/site-packages/panda3d/',
-        'Lib/site-packages/screeninfo/',
         'Lib/site-packages/direct/',
         'Lib/site-packages/pyperclip/',
         'Lib/site-packages/PIL/',

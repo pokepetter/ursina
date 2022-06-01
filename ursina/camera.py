@@ -71,7 +71,7 @@ class Camera(Entity):
         scene.ui_camera = self.ui_camera
 
         self.ui = Entity(eternal=True, name='ui', parent=self.ui_camera, scale=(self.ui_size*.5, self.ui_size*.5))
-        self.overlay = Entity(parent=self.ui, model='quad', scale_x=self.aspect_ratio, color=color.clear, eternal=True, z=-99)
+        self.overlay = Entity(parent=self.ui, model='quad', scale=99, color=color.clear, eternal=True, z=-99)
 
         # these get created when setting a shader
         self.filter_manager = None
@@ -187,14 +187,13 @@ class Camera(Entity):
 
 
     def set_shader_input(self, name, value):
-        if self.filter_quad:
+        if not hasattr(self, 'filter_quad') or self.filter_quad is None:
+            return
 
-            if isinstance(value, Texture):
-                value = value._texture    # make sure to send the panda3d texture to the shader
+        if isinstance(value, Texture):
+            value = value._texture    # make sure to send the panda3d texture to the shader
 
-            self.filter_quad.setShaderInput(name, value)
-        # else:
-        #     print('no filter quad')
+        self.filter_quad.setShaderInput(name, value)
 
 
 instance = Camera()

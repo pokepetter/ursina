@@ -14,19 +14,13 @@ cursor = Entity(model='sphere', color=color.azure, scale=1)
 
 # terrain = Mesh()
 
-vertices, triangles = list(), list()
-uvs = list()
-# self.normals = list()
+vertices, triangles = [], []
+uvs = []
 w, h = 16,16
 # self.height_values = [[j/255 for j in i] for i in self.height_values]
 
-
 centering_offset = Vec2(-.5, -.5)
-# centering_offset = Vec2(0, 0)
-# if self.aspect_ratio > 1: # offset should be different if the terrain is not 1:1
-#     centering_offset.x *= self.aspect_ratio
-# else:
-#     centering_offset.y /= self.aspect_ratio
+
 
 min_dim = min(w, h)
 
@@ -52,7 +46,7 @@ terrain.model.generate()
 terrain.model.height_values =[[0 for x in range(w)] for y in range(h)]
 # from ursina.prefabs.first_person_controller import FirstPersonController
 
-ec = EditorCamera(rotation_smoothing=2, enabled=1, rotation=(30,30,0))
+ec = EditorCamera(rotation_smoothing=0, enabled=1, rotation=(30,30,0))
 # player = FirstPersonController()
 
 # def generate_normals_for_heightmap
@@ -65,32 +59,38 @@ def update():
         if mouse.left:
             x = int(cursor.x/(terrain.scale_x/w) + w/2)
             z = int(cursor.z/(terrain.scale_z/h) + h/2)
-            # print(cursor.position / 128)
             i = (z*(w)) + x
-            # print(x, z, i)
-            if x >= 0 and x+1 < w and z >= 0 and z+1 < h:
-                # terrain.model.vertices[i] += Vec3(0, strength*time.dt, 0)
-                # terrain.model.vertices[i+1] += Vec3(0, strength*time.dt, 0)
-                # terrain.model.vertices[i+h+1] += Vec3(0, strength*time.dt, 0)
-                # terrain.model.vertices[i+h+1+1] += Vec3(0, strength*time.dt, 0)
 
-                terrain.model.height_values[x][z] += strength*time.dt
-                terrain.model.height_values[x+1][z] += strength*time.dt
-                terrain.model.height_values[x][z+1] += strength*time.dt
-                terrain.model.height_values[x+1][z+1] += strength*time.dt
+            heights = []
+            for z_offset in range(-3, 3):
+                for x_offset in range(-3, 3):
+                    true_z, true_x = x+x_offset, z+z_offset
+                    if true_x >= 0 and true_x+1 < w and true_z >= 0 and true_z+1 < h:
+                        heights.append(terrain.model.height_values[true_x][true_z])
+            average_height = sum(heights) / len(heights)
+            # print('average:', average_height)
+            for z_offset in range(-3, 3):
+                for x_offset in range(-3, 3):
+                    true_z, true_x = x+x_offset, z+z_offset
+                    brush_falloff = 1 - (distance_2d((0,0), (x_offset,z_offset)) / 4)
 
-                # terrain.model.colors[i] = terrain.model.colors[i].tint(-.05)
-                # terrain.model.vertices
+                    if true_x >= 0 and true_x+1 < w and true_z >= 0 and true_z+1 < h:
+                        if not held_keys['shift']:
+                            if not held_keys['alt']:
+                                terrain.model.height_values[true_z][true_x] += strength * brush_falloff * time.dt
+                            else:
+                                terrain.model.height_values[true_z][true_x] -= strength * brush_falloff * time.dt
+                        else:   #smooth
+                            terrain.model.height_values[true_z][true_x] = lerp(terrain.model.height_values[true_z][true_x], average_height, strength * brush_falloff * time.dt)
 
-                terrain.model.vertices = []
-                for z, column in enumerate(terrain.model.height_values):
-                    for x, row in enumerate(column):
-                        terrain.model.vertices.append(Vec3(x/w, terrain.model.height_values[x][z], z/h) + Vec3(centering_offset.x, 0, centering_offset.y))
+            terrain.model.vertices = []
+            terrain.model.colors = []
+            for z, column in enumerate(terrain.model.height_values):
+                for x, row in enumerate(column):
+                    terrain.model.vertices.append(Vec3(x/w, terrain.model.height_values[x][z], z/h) + Vec3(centering_offset.x, 0, centering_offset.y))
+                    terrain.model.colors.append(hsv(0, 0, 1-(terrain.model.height_values[x][z]*1)))
 
-
-
-                terrain.model.generate()
-
+            terrain.model.generate()
 
     pos = cursor.get_position(relative_to=terrain) + Vec3(.5,0,.5)
     if pos.x >= 0 and pos.x < 1 and pos.z >= 0 and pos.z < 1:

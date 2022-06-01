@@ -1,5 +1,4 @@
-[← Back, documentation.html]
-# arial, normal, size 1, width 1024
+# arial, normal, size 1, width 1200
 # bold, size 3
 Introduction Tutorial
 # normal, size 1

@@ -1,5 +1,10 @@
 # style a.button {background-color: #6b943a;} a.button:hover {background-color: #a9a33a}
 # title ursina engine
+<meta property="og:title" content="Ursina Engine"/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://www.ursinaengine.org"/>
+<meta property="og:description" content="Ursina, an open source, python powered game engine"/>
+
 # center, bold, arial, size 5, width 900
 ursina engine
 ʕ •ᴥ•ʔゝ□
@@ -70,10 +75,9 @@ open source game engine
 
 
 ## Dependencies
-w
+
     • python 3.6+
     • panda3d
-    • screeninfo, for detecting screen resolution
     • pillow, for texture manipulation
 
     • psutil, for measuring memory usage (optional)

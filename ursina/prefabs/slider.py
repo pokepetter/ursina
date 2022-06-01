@@ -3,7 +3,7 @@ from ursina import *
 
 class Slider(Entity):
     def __init__(self, min=0, max=1, default=None, height=Text.size, text='', dynamic=False, **kwargs):
-        super().__init__()
+        super().__init__(add_to_scene_entities=False) # add later, when __init__ is done
         self.parent = camera.ui
         self.vertical = False
         self.min = min
@@ -63,6 +63,8 @@ class Slider(Entity):
         else:
             self.knob.lock = (0,1,1)
             self.knob.text_entity.y = height/2
+
+        scene.entities.append(self)
 
 
     @property

@@ -1,11 +1,19 @@
+
+<!DOCTYPE HTML>
 <!--generated with sswg-->
+
 <html>
-<left>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <head> <link rel="stylesheet" href="sswg.css"> </head>
+<left>
 <style>a.button {background-color: #6b943a;} a.button:hover {background-color: #a9a33a}</style><title> ursina engine</title>
 <br>
 
+<meta property="og:title" content="Ursina Engine"/><br>
+<meta property="og:type" content="website"/><br>
+<meta property="og:url" content="https://www.ursinaengine.org"/><br>
+<meta property="og:description" content="Ursina, an open source, python powered game engine"/><br>
+<br>
 <div style="text-align: center;font-weight: bold;font-family: arial;font-size: 100.0px;max-width: 900px; margin: auto;">
 ursina engine<br>
 ʕ •ᴥ•ʔゝ□<br>
@@ -87,78 +95,44 @@ Free and Open Source<br>
 Getting Started<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
-1) Install Python 3.6 or newer. <a href="https://www.python.org/downloads/
-">https://www.python.org/downloads/
-</a><br>
-
+1) Install Python 3.6 or newer. <a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a><br>
 <br>
-2) Open cmd/terminal and type:
-<br>
+2) Open cmd/terminal and type:<br>
 <div class="code_block" style="margin-left: 1em;">pip install ursina
-
-</div>
+</div><br>
 <br>
-
-<br>
-If you want to install the newest version from GitHub, you can install like this:
-<br>
-<div class="code_block" style="margin-left: 1em;">pip install <a href="https://github.com/pokepetter/ursina/archive/master.zip
-">https://github.com/pokepetter/ursina/archive/master.zip
-</a>
-</div>
-<br>
-or
-<br>
-
+If you want to install the newest version from GitHub, you can install like this:<br>
+<div class="code_block" style="margin-left: 1em;">pip install <a href="https://github.com/pokepetter/ursina/archive/master.zip">https://github.com/pokepetter/ursina/archive/master.zip</a>
+</div><br>
+or<br>
 <br>
 <div class="code_block" style="margin-left: 1em;">pip install git+https://github.com/pokepetter/ursina.git
-
-</div>
+</div><br>
+Keep in mind that things *could* break.<br>
 <br>
-Keep in mind that things *could* break.
 <br>
-
-<br>
-
-<br>
-If you want to easily edit the source, it's recommended to clone the git
-<br>
-repo and install as develop like this. Make sure you have git installed. <a href="https://git-scm.com/
-">https://git-scm.com/
-</a><br>
-<div class="code_block" style="margin-left: 1em;">git clone <a href="https://github.com/pokepetter/ursina.git
-">https://github.com/pokepetter/ursina.git
-</a>
+If you want to easily edit the source, it's recommended to clone the git<br>
+repo and install as develop like this. Make sure you have git installed. <a href="https://git-scm.com/">https://git-scm.com/</a><br>
+<div class="code_block" style="margin-left: 1em;">git clone <a href="https://github.com/pokepetter/ursina.git">https://github.com/pokepetter/ursina.git</a>
 python setup.py develop
-
-</div>
-<br>
-Also install any of the optional dependencies you want from the list below,
-<br>
-or install them all with:
-<br>
+</div><br>
+Also install any of the optional dependencies you want from the list below,<br>
+or install them all with:<br>
 <div class="code_block" style="margin-left: 1em;">pip install ursina[extras]
-
-</div>
+</div><br>
 <br>
-
-<br>
-On some systems you might have to use pip3 instead of pip in order to use Python 3 and not the old Python 2.
-<br>
-If the pip command is not found, you can use:
-<br>
+On some systems you might have to use pip3 instead of pip in order to use Python 3 and not the old Python 2.<br>
+If the pip command is not found, you can use:<br>
 <div class="code_block" style="margin-left: 0em;">python -m pip install ursina
-
 </div><br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
 <div id="Dependencies"/><br>
 Dependencies<br>
 <div style="font-size: 20.0px;font-weight: normal;">
-w<br>
+<br>
 &nbsp;&nbsp;&nbsp;&nbsp;• python 3.6+<br>
 &nbsp;&nbsp;&nbsp;&nbsp;• panda3d<br>
-&nbsp;&nbsp;&nbsp;&nbsp;• screeninfo, for detecting screen resolution<br>
 &nbsp;&nbsp;&nbsp;&nbsp;• pillow, for texture manipulation<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;• psutil, for measuring memory usage (optional)<br>

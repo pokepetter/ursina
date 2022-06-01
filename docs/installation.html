@@ -1,79 +1,87 @@
+
+<!DOCTYPE HTML>
 <!--generated with sswg-->
+
 <html>
-<left>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <head> <link rel="stylesheet" href="sswg.css"> </head>
+<left>
 <title>installation</title>
 <br>
 
-<div style="font-family: arial;font-size: 20.0px;max-width: 1024px; margin: auto;">
-<div style="font-weight: bold;font-size: 60.0px;">
+<div style="font-family: arial;font-size: 20.0px;max-width: 1200px; margin: auto;">
+<div style="font-size: 60.0px;font-weight: bold;">
+<div id="Installing ursina"/><br>
 Installing ursina<br>
-<div style="font-weight: normal;font-size: 20.0px;">
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 <br>
-1) Install Python 3.6 or newer. <a href="https://www.python.org/downloads/
-">https://www.python.org/downloads/
-</a><br>
-
+<div class="sidebar"><br>
+<b><a href="documentation.html">Documentation</a></b><br>
 <br>
-2) Open cmd/terminal and type:
+<a href="installation.html">Installation</a><br>
 <br>
+<a href="entity_basics.html">Entity Basics</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#What is an Entity?">What is an Entity?</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Model">Model</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Texture">Texture</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Color">Color</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position, Rotation, Scale">Position, Rotation, Scale</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Update">Update</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Input">Input</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Mouse Input">Mouse Input</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Other Magic Functions">Other Magic Functions</a><br>
+<br>
+<a href="coordinate_system.html">Coordinate System</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#Entity Coordinate System">Entity Coordinate System</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#UI Coordinate System">UI Coordinate System</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#Rotation">Rotation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#Origin">Origin</a><br>
+<br>
+<a href="collision.html">Collision</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Adding Colliders">Adding Colliders</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#raycast()">raycast()</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#boxcast()">boxcast()</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#intersects()">intersects()</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#HitInfo">HitInfo</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Distance Check">Distance Check</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Mouse Collision">Mouse Collision</a><br>
+<br>
+<a href="faq.html">F.A.Q.</a><br>
+<a href="building.html">Build and Release</a><br>
+</div><br>
+<br>
+<br>
+<br>
+1) Install Python 3.6 or newer. <a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a><br>
+<br>
+2) Open cmd/terminal and type:<br>
 <div class="code_block" style="margin-left: 1em;">pip install ursina
-
-</div>
+</div><br>
 <br>
-
-<br>
-If you want to install the newest version from GitHub, you can install like this:
-<br>
-<div class="code_block" style="margin-left: 1em;">pip install <a href="https://github.com/pokepetter/ursina/archive/master.zip
-">https://github.com/pokepetter/ursina/archive/master.zip
-</a>
-</div>
-<br>
-or
-<br>
-
+If you want to install the newest version from GitHub, you can install like this:<br>
+<div class="code_block" style="margin-left: 1em;">pip install <a href="https://github.com/pokepetter/ursina/archive/master.zip">https://github.com/pokepetter/ursina/archive/master.zip</a>
+</div><br>
+or<br>
 <br>
 <div class="code_block" style="margin-left: 1em;">pip install git+https://github.com/pokepetter/ursina.git
-
-</div>
+</div><br>
+Keep in mind that things *could* break.<br>
 <br>
-Keep in mind that things *could* break.
 <br>
-
-<br>
-
-<br>
-If you want to easily edit the source, it's recommended to clone the git
-<br>
-repo and install as develop like this. Make sure you have git installed. <a href="https://git-scm.com/
-">https://git-scm.com/
-</a><br>
-<div class="code_block" style="margin-left: 1em;">git clone <a href="https://github.com/pokepetter/ursina.git
-">https://github.com/pokepetter/ursina.git
-</a>
+If you want to easily edit the source, it's recommended to clone the git<br>
+repo and install as develop like this. Make sure you have git installed. <a href="https://git-scm.com/">https://git-scm.com/</a><br>
+<div class="code_block" style="margin-left: 1em;">git clone <a href="https://github.com/pokepetter/ursina.git">https://github.com/pokepetter/ursina.git</a>
 python setup.py develop
-
-</div>
-<br>
-Also install any of the optional dependencies you want from the list below,
-<br>
-or install them all with:
-<br>
+</div><br>
+Also install any of the optional dependencies you want from the list below,<br>
+or install them all with:<br>
 <div class="code_block" style="margin-left: 1em;">pip install ursina[extras]
-
-</div>
+</div><br>
 <br>
-
-<br>
-On some systems you might have to use pip3 instead of pip in order to use Python 3 and not the old Python 2.
-<br>
-If the pip command is not found, you can use:
-<br>
+On some systems you might have to use pip3 instead of pip in order to use Python 3 and not the old Python 2.<br>
+If the pip command is not found, you can use:<br>
 <div class="code_block" style="margin-left: 0em;">python -m pip install ursina
-
 </div><br>
 3) If everything went well, you can go to the introduction tutorial where<br>
 &nbsp;&nbsp; we'll cover how to create a basic program and how to run it.<br>

@@ -48,7 +48,19 @@ class FirstPersonController(Entity):
         feet_ray = raycast(self.position+Vec3(0,0.5,0), self.direction, ignore=(self,), distance=.5, debug=False)
         head_ray = raycast(self.position+Vec3(0,self.height-.1,0), self.direction, ignore=(self,), distance=.5, debug=False)
         if not feet_ray.hit and not head_ray.hit:
-            self.position += self.direction * self.speed * time.dt
+            move_amount = self.direction * time.dt * self.speed
+
+            if raycast(self.position+Vec3(-.0,1,0), Vec3(1,0,0), distance=.5, ignore=(self,)).hit:
+                move_amount[0] = min(move_amount[0], 0)
+            if raycast(self.position+Vec3(-.0,1,0), Vec3(-1,0,0), distance=.5, ignore=(self,)).hit:
+                move_amount[0] = max(move_amount[0], 0)
+            if raycast(self.position+Vec3(-.0,1,0), Vec3(0,0,1), distance=.5, ignore=(self,)).hit:
+                move_amount[2] = min(move_amount[2], 0)
+            if raycast(self.position+Vec3(-.0,1,0), Vec3(0,0,-1), distance=.5, ignore=(self,)).hit:
+                move_amount[2] = max(move_amount[2], 0)
+            self.position += move_amount
+
+            # self.position += self.direction * self.speed * time.dt
 
 
         if self.gravity:
@@ -110,7 +122,7 @@ class FirstPersonController(Entity):
 
 if __name__ == '__main__':
     from ursina.prefabs.first_person_controller import FirstPersonController
-    # window.vsync = False
+    window.vsync = False
     app = Ursina()
     # Sky(color=color.gray)
     ground = Entity(model='plane', scale=(100,1,100), color=color.yellow.tint(-.2), texture='white_cube', texture_scale=(100,100), collider='box')

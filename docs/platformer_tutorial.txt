@@ -25,7 +25,7 @@ player = PlatformerController2d(y=1, z=.01, scale_y=1, max_jumps=2)
 # text
 
 You can change settings like jump_height, walk_speed, and gravity.
-If you want to larn more about how it works you can read its code here:
+If you want to learn more about how it works you can read its code here:
 https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/platformer_controller_2d.py
 If we try to play the game right now, you'll fall for all infinity, so let's add a ground:
 
@@ -88,21 +88,15 @@ def make_level(texture):
 make_level(load_texture('platformer_tutorial_level'))   # generate the level
 # text
 
-quad = load_model('quad')
-
-# code
-camera.orthographic = True
-camera.position = (30/2,8)
-camera.fov = 16
-# text
-
 ## Positioning the camera
 Set the camera to orthographic so there's no perspective.
 Move the camera to the middle of the level and set the fov so the level fits nicely.
 Setting the fov on an orthographic camera means setting how many units vertically the camera can see.
 
 # code
-
+camera.orthographic = True
+camera.position = (30/2,8)
+camera.fov = 16
 # text
 
 ## Adding player graphics and animations
@@ -113,6 +107,16 @@ You can also load a .gif by including the file type: Animation('image.gif')
 player.walk_animation = Animation('player_walk')
 
 # code
+
+# text
+
+the platformer controller has an Animator and will toggle the state based on
+whether it's standing still, is walking or is jumping.
+All the Animator does is to make sure only one Animation is enabled at the same time.
+Otherwise they would overlap.
+self.animator = Animator({'idle' : None, 'walk' : None, 'jump' : None})
+
+# code
 player.traverse_target = level_parent
 enemy = Entity(model='cube', collider='box', color=color.red, position=(16,5,-.1))
 def update():
@@ -121,11 +125,7 @@ def update():
         player.position = player.start_position
 # text
 
-the platformer controller has an Animator and will toggle the state based on
-whether it's standing still, is walking or is jumping.
-All the Animator does is to make sure only one Animation is enabled at the same time.
-Otherwise they would overlap.
-self.animator = Animator({'idle' : None, 'walk' : None, 'jump' : None})
+## Start the game
 
 # code
 app.run()

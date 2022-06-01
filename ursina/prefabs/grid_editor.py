@@ -17,13 +17,13 @@ class GridEditor(Entity):
             self.grid = [[palette[0] for y in range(self.h)] for x in range(self.w)]
         self.brush_size = 1
         self.auto_render = True
-        self.cursor = Entity(parent=self, model=Quad(segments=0, mode='line'), origin=(-.5,-.5), scale=(1/self.w, 1/self.h), color=color.color(0,1,1,.5), z=-.1)
+        self.cursor = Entity(parent=self, model=Quad(segments=0, mode='line', thickness=2), origin=(-.5,-.5), scale=(1/self.w, 1/self.h), color=color.color(120,1,1,.5), z=-.2)
 
         self.selected_char = palette[1]
         self.palette = palette
         self.prev_draw = None
-        self.start_pos = (0,0)
-        self.outline = Entity(parent=self, model=Quad(segments=0, mode='line', thickness=1), color=color.cyan, z=.01, origin=(-.5,-.5))
+        self.lock_axis = None
+        self.outline = Entity(parent=self, model=Quad(segments=0, mode='line', thickness=2), color=color.cyan, z=.01, origin=(-.5,-.5))
 
         self.undo_cache = list()
         self.undo_cache.append(deepcopy(self.grid))
@@ -34,6 +34,7 @@ class GridEditor(Entity):
                 left mouse:    draw
                 control(hold): draw lines
                 alt(hold):     select character
+                right click:   select character
                 ctrl + z:      undo
                 ctrl + y:      redo
             '''),
@@ -58,7 +59,7 @@ class GridEditor(Entity):
         if hasattr(self, 'palette_parent'):
             destroy(self.palette_parent)
 
-        self.palette_parent = Entity(parent=camera.ui, position=(-.75,-.05))
+        self.palette_parent = Entity(parent=self, position=(-.3,.5))
         for i, e in enumerate(value):
             if isinstance(e, str):
                 i = e
@@ -92,17 +93,31 @@ class GridEditor(Entity):
 
         self.cursor.enabled = mouse.hovered_entity == self
         if self.hovered:
+
             self.cursor.position = mouse.point
             self.cursor.x = floor(self.cursor.x * self.w) / self.w
             self.cursor.y = floor(self.cursor.y * self.h) / self.h
 
-            if mouse.left:
+            if mouse.left or mouse.right:
+                if held_keys['shift'] and self.prev_draw:
+                    if not self.lock_axis:
+                        if abs(mouse.velocity[0]) > abs(mouse.velocity[1]):
+                            self.lock_axis = 'horizontal'
+                        else:
+                            self.lock_axis = 'vertical'
+
+                    if self.lock_axis == 'horizontal':
+                        self.cursor.y = self.prev_draw[1] / self.h
+
+                    if self.lock_axis == 'vertical':
+                        self.cursor.x = self.prev_draw[0] / self.w
+
+
                 y = int(round(self.cursor.y * self.h))
                 x = int(round(self.cursor.x * self.w))
-                # if (x, y) == self.prev_draw:
-                #     return
 
-                if not held_keys['alt']:
+
+                if not held_keys['alt'] and not mouse.right:
                     if self.prev_draw is not None and distance_2d(self.prev_draw, (x,y)) > 1:
                         dist = distance_2d(self.prev_draw, (x,y))
 
@@ -136,24 +151,24 @@ class GridEditor(Entity):
         if key == 'tab':
             self.edit_mode = not self.edit_mode
 
-
-        # if not self.edit_mode:
-        #     return
+        if not self.edit_mode:
+            return
 
         if key == 'left mouse down':
-            self.start_pos = (
-                int(self.cursor.x * (self.w+1)),
-                -int(self.cursor.y * self.h)
-            )
-            if not held_keys['shift']:
+            self.start_pos = self.cursor.position
+            if not held_keys['control']:
                 self.prev_draw = None
 
         if key == 'left mouse up':
+            self.start_pos = None
+            self.lock_axis = None
             self.render()
 
             if not held_keys['control']:
                 self.record_undo()
 
+        if key == 'shift up':
+            self._lock_origin = None
 
         if held_keys['control'] and key == 'z':
             self.undo_index -= 1
@@ -226,6 +241,14 @@ class PixelEditor(GridEditor):
         self.texture.filtering = False
         self.render()
 
+    def draw(self, x, y):
+        for _y in range(y, min(y+self.brush_size, self.h)):
+            for _x in range(x, min(x+self.brush_size, self.w)):
+                self.grid[_x][_y] = self.selected_char
+                self.texture.set_pixel(x, y, self.grid[x][y])
+
+        self.texture.apply()
+
 
     def render(self):
         for y in range(self.h):
@@ -248,7 +271,7 @@ class ASCIIEditor(GridEditor):
         rotated_grid = list(zip(*self.grid[::-1]))
         text = '\n'.join([''.join(reversed(line)) for line in reversed(rotated_grid)])
 
-        self.text_entity = Text(parent=self.parent, text=text, x=self.x, line_height=line_height, font=font)
+        self.text_entity = Text(parent=self.parent, text=text, x=-.0, y=.5, line_height=line_height, font=font)
 
         self.scale = (self.text_entity.width, self.text_entity.height)
         self.text_entity.world_parent = self
@@ -276,9 +299,7 @@ class ASCIIEditor(GridEditor):
 
 
 if __name__ == '__main__':
-    app = Ursina()
-
-
+    app = Ursina(size=(1920,1080))
     '''
     pixel editor example, it's basically a drawing tool.
     can be useful for level editors and such
@@ -287,13 +308,12 @@ if __name__ == '__main__':
     from PIL import Image
     t = Texture(Image.new(mode='RGBA', size=(32,32), color=(0,0,0,1)))
     from ursina.prefabs.grid_editor import PixelEditor
-    PixelEditor(texture=load_texture('brick'))
+    PixelEditor(texture=load_texture('brick'), x=-.7, scale=.6)
 
     '''
     same as the pixel editor, but with text.
     '''
     from ursina.prefabs.grid_editor import ASCIIEditor
-    ASCIIEditor()
-
+    ASCIIEditor(x=0, scale=.1)
 
     app.run()

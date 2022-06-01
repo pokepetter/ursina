@@ -1,7 +1,8 @@
-# arial, normal, size 1, width 1024
-# bold, size 3
-Installing ursina
-# normal, size 1
+# arial, size 1, left, width 1200
+### Installing ursina
+
+# insert doc_index_sidebar.txt
+
 
 
 # insert _getting_started.txt

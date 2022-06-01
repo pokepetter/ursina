@@ -1,8 +1,11 @@
+
+<!DOCTYPE HTML>
 <!--generated with sswg-->
+
 <html>
-<left>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <head> <link rel="stylesheet" href="sswg.css"> </head>
+<left>
 <title>platformer_tutorial</title>
 <br>
 
@@ -32,7 +35,7 @@ It is however a good starting point, so let's import it like this:<br>
 player = PlatformerController<yellow>2</yellow>d(<olive>y</olive>=<yellow>1</yellow>, <olive>z</olive>=.<yellow>0</yellow><yellow>1</yellow>, scale_<olive>y</olive>=<yellow>1</yellow>, max_jumps=<yellow>2</yellow>)
 </div><br>
 You can change settings like jump_height, walk_speed, and gravity.<br>
-If you want to larn more about how it works you can read its code here:<br>
+If you want to learn more about how it works you can read its code here:<br>
 <a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/platformer_controller_2d.py">https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/platformer_controller_2d.py</a><br>
 If we try to play the game right now, you'll fall for all infinity, so let's add a ground:<br>
 <br>
@@ -94,12 +97,6 @@ level_parent = <olive>Entity</olive>(<olive>model</olive>=Mesh(<olive>vertices</
 
 make_level(load_texture(<green>'platformer_tutorial_level'</green>))   <gray># generate the level</gray>
 </div><br>
-quad = load_model('quad')<br>
-<br>
-<div class="code_block" style="margin-left: 0em;">camera.orthographic = True
-camera.position = (<yellow>3</yellow><yellow>0</yellow>/<yellow>2</yellow>,<yellow>8</yellow>)
-camera.fov = <yellow>1</yellow><yellow>6</yellow>
-</div><br>
 <div style="font-size: 40.0px;font-weight: bold;">
 <div id="Positioning the camera"/><br>
 Positioning the camera<br>
@@ -108,7 +105,9 @@ Set the camera to orthographic so there's no perspective.<br>
 Move the camera to the middle of the level and set the fov so the level fits nicely.<br>
 Setting the fov on an orthographic camera means setting how many units vertically the camera can see.<br>
 <br>
-<div class="code_block" style="margin-left: 0em;">
+<div class="code_block" style="margin-left: 0em;">camera.orthographic = True
+camera.position = (<yellow>3</yellow><yellow>0</yellow>/<yellow>2</yellow>,<yellow>8</yellow>)
+camera.fov = <yellow>1</yellow><yellow>6</yellow>
 </div><br>
 <div style="font-size: 40.0px;font-weight: bold;">
 <div id="Adding player graphics and animations"/><br>
@@ -120,6 +119,14 @@ you can load it like this: Animation('image')<br>
 You can also load a .gif by including the file type: Animation('image.gif')<br>
 player.walk_animation = Animation('player_walk')<br>
 <br>
+<div class="code_block" style="margin-left: 0em;">
+</div><br>
+the platformer controller has an Animator and will toggle the state based on<br>
+whether it's standing still, is walking or is jumping.<br>
+All the Animator does is to make sure only one Animation is enabled at the same time.<br>
+Otherwise they would overlap.<br>
+self.animator = Animator({'idle' : None, 'walk' : None, 'jump' : None})<br>
+<br>
 <div class="code_block" style="margin-left: 0em;">player.traverse_target = level_parent
 enemy = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>, <olive>color</olive>=color.red, <olive>position</olive>=(<yellow>1</yellow><yellow>6</yellow>,<yellow>5</yellow>,-.<yellow>1</yellow>))
 <purple>def</purple> update():
@@ -127,11 +134,10 @@ enemy = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive
         <blue>print</blue>(<green>'die'</green>)
         player.position = player.start_position
 </div><br>
-the platformer controller has an Animator and will toggle the state based on<br>
-whether it's standing still, is walking or is jumping.<br>
-All the Animator does is to make sure only one Animation is enabled at the same time.<br>
-Otherwise they would overlap.<br>
-self.animator = Animator({'idle' : None, 'walk' : None, 'jump' : None})<br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Start the game"/><br>
+Start the game<br>
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 <div class="code_block" style="margin-left: 0em;">app.run()
 </div><br>

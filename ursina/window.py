@@ -32,24 +32,20 @@ class Window(WindowProperties):
         self.show_ursina_splash = False
 
         self.title = application.asset_folder.name
+        self.borderless = True
         # self.icon = 'textures/ursina.ico'
 
         if os.name == 'nt':     # windows
-            self.borderless = True
             import ctypes
             user32 = ctypes.windll.user32
             user32.SetProcessDPIAware()
             self.screen_resolution = (user32.GetSystemMetrics(0), user32.GetSystemMetrics(1))
 
         else:
-            self.borderless = False
-            try:
-                from screeninfo import get_monitors
-                self.screen_resolution = (get_monitors()[0].width, get_monitors()[0].height)
-                print('OS:', os.name)
-            except:
-                print_warning('using default screen resolution.', 'OS:', os.name)
-                self.screen_resolution = Vec2(1366, 768)
+            import subprocess
+            output = subprocess.Popen('xrandr | grep "\*" | cut -d" " -f4', shell=True, stdout=subprocess.PIPE).communicate()[0]
+            resolution = output.split()[0].split(b'x')
+            self.screen_resolution = [int(e) for e in resolution]
 
         print('screen resolution:', self.screen_resolution)
         self.fullscreen_size = Vec2(*self.screen_resolution)
@@ -102,7 +98,7 @@ class Window(WindowProperties):
 
 
     def center_on_screen(self):
-        # print('size;', self.size)
+        print('CETNERsize;', self.screen_resolution)
         self.position = Vec2(
             int((self.screen_resolution[0] - self.size[0]) / 2),
             int((self.screen_resolution[1] - self.size[1]) / 2)
@@ -199,14 +195,17 @@ class Window(WindowProperties):
 
     @property
     def size(self):
-        return Vec2(*self.get_size())
+        if not self.borderless:
+            return Vec2(*base.win.getSize())
+        return self._size
 
     @size.setter
     def size(self, value):
         if hasattr(self, '_forced_aspect_ratio') and self.forced_aspect_ratio:
             value = (value[1] * self.forced_aspect_ratio, value[1])
 
-        self.set_size(int(value[0]), int(value[1]))
+        self._size = value
+        self.setSize(int(value[0]), int(value[1]))
         self.aspect_ratio = value[0] / value[1]
         from ursina import camera
         camera.set_shader_input('window_size', value)
@@ -362,7 +361,7 @@ instance = Window()
 if __name__ == '__main__':
     from ursina import *
     # application.development_mode = False
-    app = Ursina()
+    app = Ursina(borderless=True)
     # window.forced_aspect_ratio = 1
     # window.vsync = 10
 
@@ -374,6 +373,10 @@ if __name__ == '__main__':
 
     camera.orthographic = True
     camera.fov = 2
+
+    def input(key):
+        if key == 'space':
+            window.center_on_screen()
 
     # Entity(model='cube', color=color.green, collider='box', texture='shore')
     app.run()

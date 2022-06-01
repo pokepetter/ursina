@@ -1,5 +1,12 @@
 
 html {max-width: 100%; margin: auto; color: #333333;}
+
+a {transition: color .2s; color: #19405c;}
+a:link, a:visited {color: #19405c;}
+a:hover {color: #7FDBFF;}
+a:active {transition: color .3s; color: #007BE6;}
+.link {text-decoration: none;}
+
 a.button {padding: 15px 32px; background-color: #555; border-radius: 2em; border-width: 0px; text-decoration: none; color: white; font-size: 25.0px; line-height: 2.5em;}
 a.button:hover {background-color: #777}
 a.button_big {padding: 0.5em; background-image: linear-gradient(to top, #427b0e, #9ba97d); background-color: lightgray; background-blend-mode: multiply; border-radius: .75em; border-width: 0px; text-decoration: none; min-width: 150px; max-width: 150px; min-height: 150px; max-height: 150px; display: inline-block; vertical-align: top; margin: 4px 4px 10px 4px; color: white; font-size: 25.0px; background-size: auto 100%; background-position-x: center;}
@@ -8,6 +15,8 @@ mark {background: #ccff99;}
 span {background-color: rgba(0, 0, 0, 0.55); padding: .1em; line-height: 1.35em;}
 img {max-width: 100%; vertical-align: top;}
 .code_block {background-color: whitesmoke; padding: 10px; margin: 0; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;}
+.sidebar {position:fixed; z-index:1; left:1em; top:1em;}
+@media screen and (max-width: 1800px) {.sidebar {display:none;}}
 
 purple {color: hsl(289.0, 50%, 50%);}
 gray {color: gray;}
