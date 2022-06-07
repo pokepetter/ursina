@@ -50,7 +50,7 @@ class Window(WindowProperties):
             self.screen_resolution = [int(e) for e in resolution]
 
         elif os_name == 'Darwin':     # mac
-            import AppKit
+            from AppKit import NSScreen
             size = NSScreen.mainScreen().frame().size
             self.screen_resolution = [size.width, size.height]
 
