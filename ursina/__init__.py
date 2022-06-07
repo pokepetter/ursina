@@ -41,6 +41,7 @@ from ursina.mesh import Mesh, MeshModes
 from ursina.prefabs.sprite import Sprite
 from ursina.prefabs.button import Button
 from ursina.prefabs.panel import Panel
+from ursina.prefabs.sprite_sheet_animation import SpriteSheetAnimation
 from ursina.prefabs.animation import Animation
 from ursina.prefabs.frame_animation_3d import FrameAnimation3d
 from ursina.prefabs.animator import Animator
