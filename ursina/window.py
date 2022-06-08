@@ -44,10 +44,10 @@ class Window(WindowProperties):
             self.screen_resolution = (user32.GetSystemMetrics(0), user32.GetSystemMetrics(1))
 
         elif os_name == 'Linux':
-            import subprocess
-            output = subprocess.Popen('xrandr | grep "\*" | cut -d" " -f4', shell=True, stdout=subprocess.PIPE).communicate()[0]
-            resolution = output.split()[0].split(b'x')
-            self.screen_resolution = [int(e) for e in resolution]
+            import Xlib
+            import Xlib.display
+            resolution = Xlib.display.Display().screen().root.get_geometry()
+            self.screen_resolution = Vec2(resolution.width, resolution.height)
 
         elif os_name == 'Darwin':     # mac
             from AppKit import NSScreen
