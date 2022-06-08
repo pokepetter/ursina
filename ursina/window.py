@@ -1,5 +1,6 @@
 import sys
 import os
+import platform
 from panda3d.core import WindowProperties
 from panda3d.core import loadPrcFileData
 from ursina.vec2 import Vec2
@@ -34,18 +35,24 @@ class Window(WindowProperties):
         self.title = application.asset_folder.name
         self.borderless = True
         # self.icon = 'textures/ursina.ico'
+        os_name = platform.system()
 
-        if os.name == 'nt':     # windows
+        if os_name == 'Windows':     # windows
             import ctypes
             user32 = ctypes.windll.user32
             user32.SetProcessDPIAware()
             self.screen_resolution = (user32.GetSystemMetrics(0), user32.GetSystemMetrics(1))
 
-        else:
+        elif os_name == 'Linux':
             import subprocess
             output = subprocess.Popen('xrandr | grep "\*" | cut -d" " -f4', shell=True, stdout=subprocess.PIPE).communicate()[0]
             resolution = output.split()[0].split(b'x')
             self.screen_resolution = [int(e) for e in resolution]
+
+        elif os_name == 'Darwin':     # mac
+            from AppKit import NSScreen
+            size = NSScreen.mainScreen().frame().size
+            self.screen_resolution = [size.width, size.height]
 
         print('screen resolution:', self.screen_resolution)
         self.fullscreen_size = Vec2(*self.screen_resolution)

@@ -130,7 +130,7 @@ void main() {
     shadowcoord.z += bias;
 
     vec3 converted_shadow_color = (vec3(1.,1.,1.) - shadow_color.rgb) * shadow_color.a;
-
+    p3d_FragColor.rgb *= p3d_LightSource[i].color.rgb;
     p3d_FragColor.rgb += textureProj(p3d_LightSource[i].shadowMap, shadowcoord) * converted_shadow_color;
     p3d_FragColor.rgb += color - converted_shadow_color;
   }
@@ -169,5 +169,11 @@ if __name__ == '__main__':
         a.y += (held_keys['e'] - held_keys['q']) * time.dt * 5
         a.z += (held_keys['w'] - held_keys['s']) * time.dt * 5
 
+    def input(key):
+        if key == 'r':
+            if sun.color == color.white:
+                sun.color = color.red
+            else:
+                sun.color = color.white
 
     app.run()
