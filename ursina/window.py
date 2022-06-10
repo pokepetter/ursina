@@ -54,7 +54,6 @@ class Window(WindowProperties):
             size = NSScreen.mainScreen().frame().size
             self.screen_resolution = [size.width, size.height]
 
-        print('screen resolution:', self.screen_resolution)
         self.fullscreen_size = Vec2(*self.screen_resolution)
         self.windowed_size = self.fullscreen_size / 1.25
         self.windowed_position = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode
@@ -105,7 +104,6 @@ class Window(WindowProperties):
 
 
     def center_on_screen(self):
-        print('CETNERsize;', self.screen_resolution)
         self.position = Vec2(
             int((self.screen_resolution[0] - self.size[0]) / 2),
             int((self.screen_resolution[1] - self.size[1]) / 2)
