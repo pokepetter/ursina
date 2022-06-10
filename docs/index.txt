@@ -78,6 +78,7 @@ open source game engine
 
     • python 3.6+
     • panda3d
+    • screeninfo, for detecting screen resolution
     • pillow, for texture manipulation
 
     • psutil, for measuring memory usage (optional)

@@ -21,6 +21,7 @@ setup(
         'panda3d-gltf',
         'pillow',
         'pyperclip',
+        'screeninfo',
     ],
     extras_require={'extras': [
         'numpy',
