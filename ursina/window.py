@@ -37,22 +37,26 @@ class Window(WindowProperties):
         # self.icon = 'textures/ursina.ico'
         os_name = platform.system()
 
-        if os_name == 'Windows':     # windows
-            import ctypes
-            user32 = ctypes.windll.user32
-            user32.SetProcessDPIAware()
-            self.screen_resolution = (user32.GetSystemMetrics(0), user32.GetSystemMetrics(1))
+        try:
+            if os_name == 'Windows':     # windows
+                import ctypes
+                user32 = ctypes.windll.user32
+                user32.SetProcessDPIAware()
+                self.screen_resolution = (user32.GetSystemMetrics(0), user32.GetSystemMetrics(1))
 
-        elif os_name == 'Linux':
-            import Xlib
-            import Xlib.display
-            resolution = Xlib.display.Display().screen().root.get_geometry()
-            self.screen_resolution = Vec2(resolution.width, resolution.height)
+            elif os_name == 'Linux':
+                import Xlib
+                import Xlib.display
+                resolution = Xlib.display.Display().screen().root.get_geometry()
+                self.screen_resolution = Vec2(resolution.width, resolution.height)
 
-        elif os_name == 'Darwin':     # mac
-            from AppKit import NSScreen
-            size = NSScreen.mainScreen().frame().size
-            self.screen_resolution = [size.width, size.height]
+            elif os_name == 'Darwin':     # mac
+                from AppKit import NSScreen
+                size = NSScreen.mainScreen().frame().size
+                self.screen_resolution = [size.width, size.height]
+        except:
+            from screeninfo import get_monitors
+            self.screen_resolution = [get_monitors()[0].width, get_monitors()[0].height]
 
         print('screen resolution:', self.screen_resolution)
         self.fullscreen_size = Vec2(*self.screen_resolution)
@@ -105,7 +109,6 @@ class Window(WindowProperties):
 
 
     def center_on_screen(self):
-        print('CETNERsize;', self.screen_resolution)
         self.position = Vec2(
             int((self.screen_resolution[0] - self.size[0]) / 2),
             int((self.screen_resolution[1] - self.size[1]) / 2)
