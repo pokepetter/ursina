@@ -58,7 +58,6 @@ class Window(WindowProperties):
             from screeninfo import get_monitors
             self.screen_resolution = [get_monitors()[0].width, get_monitors()[0].height]
 
-        print('screen resolution:', self.screen_resolution)
         self.fullscreen_size = Vec2(*self.screen_resolution)
         self.windowed_size = self.fullscreen_size / 1.25
         self.windowed_position = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode

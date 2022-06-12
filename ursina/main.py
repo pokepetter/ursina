@@ -1,4 +1,5 @@
 import time
+import platform
 
 from direct.showbase.ShowBase import ShowBase
 from direct.task.Task import Task
@@ -268,7 +269,9 @@ class Ursina(ShowBase):
 
         application.load_settings()
         if info:
-            print_info('development mode:', application.development_mode)
+            print('screen resolution:', window.screen_resolution)
+            print('os:', platform.system())
+            print('development mode:', application.development_mode)
             print('application successfully started')
 
         super().run()
