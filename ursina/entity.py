@@ -570,7 +570,7 @@ class Entity(NodePath):
 
     @property
     def quaternion(self):
-        return self.get_quat() * Quat(-1,0,0,0) * Quat(0,1,0,0)
+        return self.get_quat()
     @quaternion.setter
     def quaternion(self, value):
         self.set_quat(value)
@@ -988,6 +988,8 @@ class Entity(NodePath):
             self.rotation_z = degrees(atan2(pos[0], pos[1]))
         elif axis == 'y':
             self.rotation_y = degrees(atan2(pos[0], pos[2]))
+        elif axis == 'x':
+            self.rotation_x = degrees(atan2(pos[1], pos[2]))
 
 
     def has_ancestor(self, possible_ancestor):
@@ -1051,13 +1053,16 @@ class Entity(NodePath):
         default_values = {
             # 'parent':scene,
             'name':'entity', 'enabled':True, 'eternal':False, 'position':Vec3(0,0,0), 'rotation':Vec3(0,0,0), 'scale':Vec3(1,1,1), 'model':None, 'origin':Vec3(0,0,0),
-            'texture':None, 'color':color.white, 'collider':None}
+            'shader':None, 'texture':None, 'color':color.white, 'collider':None}
 
         changes = []
         for key, value in default_values.items():
             if not getattr(self, key) == default_values[key]:
                 if key == 'model' and hasattr(self.model, 'name'):
                     changes.append(f"model='{getattr(self, key).name}', ")
+                    continue
+                if key == 'shader' and self.shader:
+                    changes.append(f"shader={getattr(self, key).name}, ")
                     continue
                 if key == 'texture':
                     changes.append(f"texture='{getattr(self, key).name.split('.')[0]}', ")
