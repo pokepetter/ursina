@@ -66,7 +66,8 @@ class Terrain(Mesh):
                 self.uvs.append((x/w, z/h))
 
                 if x > 0 and z > 0:
-                    self.triangles.append((i, i-1, i-w-1, i-w))
+                    # self.triangles.append((i, i-1, i-w-1, i-w))
+                    self.triangles.extend(((i-w-1, i-w, i), (i-w-1, i, i-1)))
 
                 # normals
                 if x > 0 and z > 0 and x < w-1 and z < h-1:
