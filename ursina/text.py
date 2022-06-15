@@ -27,6 +27,7 @@ class Text(Entity):
         self.parent = camera.ui
 
         self.setColorScaleOff()
+        self.shader = None
         self.text_nodes = []
         self.images = []
         self.origin = (-.5, .5)
