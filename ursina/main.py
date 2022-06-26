@@ -262,6 +262,9 @@ class Ursina(ShowBase):
                     if script.enabled and hasattr(script, 'keystroke') and callable(script.keystroke):
                         script.keystroke(key)
 
+    def step(self):     # use this control the update loop yourself. call app.step() in a while loop for example, instead of app.run()
+        self.taskMgr.step()
+
 
     def run(self, info=True):
         if window.show_ursina_splash:
