@@ -1,4 +1,4 @@
-from ursina import *; unlit_shader = Shader(language=Shader.GLSL, vertex = '''#version 130
+from ursina import *; unlit_shader = Shader(name='unlit_shader', language=Shader.GLSL, vertex = '''#version 130
 
 
 uniform mat4 p3d_ModelViewProjectionMatrix;

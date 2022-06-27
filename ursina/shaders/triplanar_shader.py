@@ -2,6 +2,7 @@ from ursina import *
 
 
 triplanar_shader = Shader(
+name='triplanar_shader', language=Shader.GLSL, 
 vertex='''
 #version 140
 uniform mat4 p3d_ModelViewProjectionMatrix;

@@ -1,5 +1,5 @@
 from ursina import *;
-transition_shader = Shader(language=Shader.GLSL, fragment='''
+transition_shader = Shader(name='transition_shader', language=Shader.GLSL, fragment='''
 #version 140
 
 uniform sampler2D p3d_Texture0;

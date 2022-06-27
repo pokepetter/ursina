@@ -1,7 +1,7 @@
 from ursina import *
 
 
-basic_lighting_shader = Shader(language=Shader.GLSL,
+basic_lighting_shader = Shader(name='basic_lighting_shader', language=Shader.GLSL,
 vertex = '''
 #version 140
 uniform mat4 p3d_ModelViewProjectionMatrix;

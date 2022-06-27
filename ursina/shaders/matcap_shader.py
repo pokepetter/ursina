@@ -1,4 +1,4 @@
-from ursina import *; matcap_shader = Shader(language=Shader.GLSL, vertex = '''#version 140
+from ursina import *; matcap_shader = Shader(name='matcap_shader', language=Shader.GLSL, vertex = '''#version 140
 uniform mat4 p3d_ModelViewProjectionMatrix;
 uniform mat4 p3d_ModelMatrix;
 uniform mat4 p3d_ModelViewMatrix;
@@ -64,5 +64,5 @@ if __name__ == '__main__':
         b.rotation_y += 1
         b.rotation_x += 1
     # EditorCamera()
-
+    print('-----------------', repr(a.shader))
     app.run()

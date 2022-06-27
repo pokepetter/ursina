@@ -1,6 +1,6 @@
 from ursina import *
 
-texture_blend_shader = Shader(language=Shader.GLSL,
+texture_blend_shader = Shader(name='texture_blend_shader', language=Shader.GLSL, 
 fragment='''
 #version 430
 

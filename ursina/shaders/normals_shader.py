@@ -1,6 +1,6 @@
 from ursina import *
 
-normals_shader = Shader(language=Shader.GLSL,
+normals_shader = Shader(name='normals_shader',language=Shader.GLSL, 
 vertex = '''
 #version 140
 uniform mat4 p3d_ModelViewProjectionMatrix;

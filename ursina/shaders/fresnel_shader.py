@@ -1,7 +1,7 @@
 from ursina import *
 
 
-fresnel_shader = Shader(language=Shader.GLSL,
+fresnel_shader = Shader(name='fresnel_shader', language=Shader.GLSL,
 vertex = '''
 #version 140
 uniform mat4 p3d_ModelViewProjectionMatrix;
@@ -39,9 +39,7 @@ uniform vec4 fresnel_color;
 uniform sampler2D fresnel_texture;
 uniform vec3 camera_world_position;
 
-void main() {
-    vec4 color = texture(p3d_Texture0, texcoord) * p3d_ColorScale;
-
+vec3 do_fresnel(vec4 color) {
     float _Bias = .05;
     float _Scale = .5;
     float _Power = 3.0;
@@ -49,8 +47,13 @@ void main() {
     float fresnel = _Bias + _Scale * pow(1.0 + dot(I, world_normal), _Power);
 
     fresnel *= texture(fresnel_texture, texcoord).r;
+    return mix(color.rgb, fresnel_color.rgb, fresnel*fresnel_color.a);
+}
 
-    fragColor.rgb = mix(color.rgb, fresnel_color.rgb, fresnel*fresnel_color.a);
+void main() {
+    vec4 color = texture(p3d_Texture0, texcoord) * p3d_ColorScale;
+
+    fragColor.rgb = do_fresnel(color);
     fragColor.a = color.a;
 }
 

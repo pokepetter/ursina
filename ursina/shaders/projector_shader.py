@@ -1,4 +1,4 @@
-from ursina import *; projector_shader = Shader(language=Shader.GLSL, vertex = '''
+from ursina import *; projector_shader = Shader(name='projector_shader', language=Shader.GLSL, vertex = '''
 #version 140
 uniform mat4 p3d_ModelViewProjectionMatrix;
 uniform mat4 p3d_ModelMatrix;
@@ -14,13 +14,15 @@ uniform vec2 projector_uv_offset;
 out vec2 world_uv;
 uniform float time;
 
+out float z;
+
 void main() {
     gl_Position = p3d_ModelViewProjectionMatrix * p3d_Vertex;
     texcoord = (p3d_MultiTexCoord0 * texture_scale) + texture_offset;
     world_uv = (p3d_ModelMatrix * p3d_Vertex).xz * projector_uv_scale;
     world_uv -= projector_uv_offset;
     world_uv += vec2(.5);
-    // world_uv += vec2(time, time);
+    z = gl_Position.z;
 }
 ''',
 
@@ -33,13 +35,28 @@ in vec2 texcoord;
 out vec4 fragColor;
 
 uniform sampler2D projector_texture;
+uniform vec4 projector_color;
 in vec2 world_uv;
-//uniform float t;
 
+uniform struct p3d_FogParameters {
+  vec4 color;
+  float density;
+  float start;
+  float end;
+  float scale; // 1.0 / (end - start)
+} p3d_Fog;
+
+in float z;
+
+float inverse_lerp(float a, float b, float v) {
+    return (v-a) / (b-a);
+}
 
 void main() {
     vec4 color = texture(p3d_Texture0, texcoord) * p3d_ColorScale;
-    color.rgb -= texture(projector_texture, world_uv).r * 1.;
+    color.rgb -= texture(projector_texture, world_uv).r * (vec3(1.) - projector_color.rgb) * projector_color.a;
+    color.rgb = mix(color.rgb, p3d_Fog.color.rgb, clamp(inverse_lerp(p3d_Fog.start, p3d_Fog.end, z), 0.0, 1.0)); // linear fog
+
     fragColor = color.rgba;
 }''',
 
@@ -49,6 +66,7 @@ default_input = {
     'projector_texture' : Func(load_texture, 'vignette'),
     'projector_uv_scale' : Vec2(.05, .05),
     'projector_uv_offset' : Vec2(.0, .0),
+    'projector_color' : color.black,
     'time' : 0.0,
 }
 )
@@ -74,8 +92,10 @@ if __name__ == '__main__':
             color=color.hsv(0, 0, random.uniform(.9, 1))
         )
 
+    scene.fog_density = (10, 200)
+
     projector_texture = load_texture('vignette', application.internal_textures_folder)
-    projector_texture.repeat = False
+    # projector_texture.repeat = False
     projector_shader.default_input['projector_texture'] = projector_texture
 
     def update():

@@ -1,4 +1,4 @@
-from ursina import Shader, Vec2, Vec3, Vec4, Quat; instancing_shader=Shader(language=Shader.GLSL, vertex='''#version 140
+from ursina import Shader, Vec2, Vec3, Vec4, Quat; instancing_shader=Shader(name='instancing_shader', language=Shader.GLSL, vertex='''#version 140
 
 uniform mat4 p3d_ModelViewProjectionMatrix;
 in vec4 p3d_Vertex;

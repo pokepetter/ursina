@@ -2,7 +2,7 @@ from ursina import *
 from panda3d.core import Shader as Panda3dShader
 
 
-colored_lights_shader = Shader(
+colored_lights_shader = Shader(name='colored_lights_shader', language=Shader.GLSL, 
 vertex='''
 #version 130
 uniform mat4 p3d_ModelViewProjectionMatrix;
