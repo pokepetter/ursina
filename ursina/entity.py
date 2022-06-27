@@ -946,16 +946,21 @@ class Entity(NodePath):
         return self.model
 
 
-    def flip_faces(self):
-        if not hasattr(self, '_vertex_order'):
-            self._vertex_order = True
-
-        self._vertex_order = not self._vertex_order
-        if self._vertex_order:
+    @property
+    def flipped_faces(self):
+        return self._flipped_faces
+    @flipped_faces.setter
+    def flipped_faces(self, value):
+        self._flipped_faces = value
+        if value:
             self.setAttrib(CullFaceAttrib.make(CullFaceAttrib.MCullClockwise))
         else:
             self.setAttrib(CullFaceAttrib.make(CullFaceAttrib.MCullCounterClockwise))
 
+
+    def flip_faces(self):
+        print_warning('flipped_faces() is legacy. please use .flipped_faces instead')
+        self.flipped_faces = not self.flipped_faces
 
 
     def look_at(self, target, axis='forward'):
@@ -1035,15 +1040,6 @@ class Entity(NodePath):
         return ('name', 'enabled', 'eternal', 'visible', 'parent',
             'origin', 'position', 'rotation', 'scale',
             'model', 'color', 'texture', 'texture_scale', 'texture_offset',
-
-            # 'world_position', 'world_x', 'world_y', 'world_z',
-            # 'world_rotation', 'world_rotation_x', 'world_rotation_y', 'world_rotation_z',
-            # 'world_scale', 'world_scale_x', 'world_scale_y', 'world_scale_z',
-            # 'x', 'y', 'z',
-            # 'origin_x', 'origin_y', 'origin_z',
-            # 'rotation_x', 'rotation_y', 'rotation_z',
-            # 'scale_x', 'scale_y', 'scale_z',
-
             'render_queue', 'always_on_top', 'collider', 'collision', 'scripts')
 
     def __str__(self):
