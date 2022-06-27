@@ -6,7 +6,7 @@ class EditorCamera(Entity):
         camera.editor_position = camera.position
         super().__init__(name='editor_camera', eternal=False)
 
-        self.gizmo = Entity(parent=self, model='sphere', color=color.orange, scale=.025, add_to_scene_entities=False, enabled=False)
+        # self.gizmo = Entity(parent=self, model='sphere', color=color.orange, scale=.025, add_to_scene_entities=False, enabled=False)
 
         self.rotation_speed = 200
         self.pan_speed = Vec2(5, 5)
@@ -36,6 +36,7 @@ class EditorCamera(Entity):
         camera.position = camera.editor_position
         camera.rotation = (0,0,0)
         self.target_z = camera.z
+        self.target_fov = camera.fov
 
 
     def on_disable(self):
@@ -79,14 +80,16 @@ class EditorCamera(Entity):
                 self.world_position = lerp(self.world_position, target_position, self.zoom_speed * time.dt * 10)
                 self.target_z += self.zoom_speed * (abs(self.target_z)*.1)
             else:
-                camera.fov -= self.zoom_speed * (abs(self.target_z)*.1)
+                self.target_fov -= self.zoom_speed * (abs(self.target_fov)*.1)
+                self.target_fov = clamp(self.target_fov, 1, 200)
 
         elif key == 'scroll down':
             if not camera.orthographic:
                 # camera.world_position += camera.back * self.zoom_speed * 100 * time.dt * (abs(camera.z)*.1)
-                self.target_z -= self.zoom_speed * (abs(camera.z)*.1)
+                self.target_z -= self.zoom_speed * (abs(self.target_z)*.1)
             else:
-                camera.fov += self.zoom_speed * (abs(camera.z)*.1)
+                self.target_fov += self.zoom_speed * (abs(self.target_fov)*.1)
+                self.target_fov = clamp(self.target_fov, 1, 200)
 
         elif key == 'right mouse down' or key == 'middle mouse down':
             if mouse.hovered_entity and self.rotate_around_mouse_hit:
@@ -125,12 +128,15 @@ class EditorCamera(Entity):
             self.position -= camera.right * mouse.velocity[0] * self.pan_speed[0] * zoom_compensation
             self.position -= camera.up * mouse.velocity[1] * self.pan_speed[1] * zoom_compensation
 
-        camera.z = lerp(camera.z, self.target_z, time.dt*self.zoom_smoothing)
+        if not camera.orthographic:
+            camera.z = lerp(camera.z, self.target_z, time.dt*self.zoom_smoothing)
+        else:
+            camera.fov = lerp(camera.fov, self.target_fov, time.dt*self.zoom_smoothing)
 
         if self.rotation_smoothing == 0:
             self.rotation = self.smoothing_helper.rotation
         else:
-            self.quat = slerp(self.quat, self.smoothing_helper.quat, time.dt*self.rotation_smoothing)
+            self.quaternion = slerp(self.quaternion, self.smoothing_helper.quaternion, time.dt*self.rotation_smoothing)
             camera.world_rotation_z = 0
 
 
@@ -157,9 +163,10 @@ if __name__ == '__main__':
 
     ground = Entity(model='plane', scale=32, texture='white_cube', texture_scale=(32,32), collider='box')
     box = Entity(model='cube', collider='box', texture='white_cube', scale=(10,2,2), position=(2,1,5), color=color.light_gray)
-    ec = EditorCamera(rotation_smoothing=10, enabled=1, rotation=(30,30,0))
-    # player = FirstPersonController()
+    player = FirstPersonController(y=1, enabled=True)
 
+    ec = EditorCamera(rotation_smoothing=3)
+    ec.enabled = False
     rotation_info = Text(position=window.top_left)
 
     def update():
