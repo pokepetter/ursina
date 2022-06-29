@@ -1,7 +1,7 @@
 from ursina import *
 
 
-app = Ursina(size=(1280, 720))
+app = Ursina()
 
 
 # player = Entity(model='cube', color=color.orange, scale_y=2)

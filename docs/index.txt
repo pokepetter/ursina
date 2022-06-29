@@ -95,20 +95,19 @@ open source game engine
     Entity Example:
 
         # code
-from ursina import *            # import everything we need with one line.
+        from ursina import *
 
-app = Ursina()
-ground = Entity(
-    model = 'cube',
-    color = color.magenta,
-    z = -.1,
-    y = -3,
-    origin = (0, .5),
-    scale = (50, 1, 10),
-    collider = 'box'
-    )
+        app = Ursina()
 
-app.run()                       # opens a window and starts the game.
+        cube = Entity(model='cube', texture='white_cube', color=color.magenta, scale=2, collider='box')
+
+        def spin():
+            cube.animate('rotation_y', cube.rotation_y+360, duration=2, curve=curve.in_out_expo)
+
+        cube.on_click = spin
+        EditorCamera()  # add camera controls for orbiting and moving the camera
+
+        app.run()
 
         # text
 
