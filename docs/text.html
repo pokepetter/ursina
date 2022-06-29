@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <head> <link rel="stylesheet" href="sswg.css"> </head>
 <left>
-<title> building your app</title>
+<title>text</title>
 <br>
 
 <div style="font-family: arial;font-size: 20.0px;max-width: 1200px; margin: auto;">
@@ -52,66 +52,60 @@
 <a href="faq.html">F.A.Q.</a><br>
 <a href="building.html">Build and Release</a><br>
 </div><br>
-<div style="font-size: 100.0px;font-weight: bold;">
-Building<br>
+<br>
+<div style="font-size: 60.0px;font-weight: bold;">
+<div id="Text"/><br>
+Text<br>
 <div style="font-size: 20.0px;font-weight: normal;">
-<br>
-<br>
-<br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
-<div id="Building Your App with ursina.build"/><br>
-Building Your App with ursina.build<br>
+<div id="Text Size"/><br>
+Text Size<br>
 <div style="font-size: 20.0px;font-weight: normal;">
-<br>
-Open cmd in the project folder and run<br>
-<div class="code_block" style="margin-left: 0em;">python -m ursina.build
+Set .scale or .world_scale:<br>
+<div class="code_block" style="margin-left: 0em;">text_entity = Text(<green>'hello'</green>, <olive>scale</olive>=<yellow>2</yellow>)
 </div><br>
-It will then move the necessary files to a 'build' directory which you can then distribute.<br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Font and Resolution"/><br>
+Font and Resolution<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+For one Text Entity:<br>
 <br>
-Package ursina application for Windows 10.<br>
-Provided with project folder path, creates a build folder where<br>
-it copies python and project's dependent packages. Requires a main.py file.<br>
-Copies game scripts and assets into 'build/scr' folder.<br>
-Creates a .bat file to start the game.<br>
-<br>
-<div class="code_block" style="margin-left: 0em;">--ignore            <gray># add assets to ignore</gray>
---name              <gray># change project name</gray>
---include_modules   <gray># include extra modules like this: --include_modules module_one,module_two,module_tree</gray>
---overwrite         <gray># don't ask to overwrite existing build, just overwrite</gray>
---skip_engine
---skip_game
+<div class="code_block" style="margin-left: 0em;">text = Text(font=<green>'VeraMono.ttf'</green>, resolution=<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>*Text.size)
+text.text = descr
 </div><br>
-Make sure to include any extra modules with --include_modules PIL,numpy for example.<br>
-Any errors while the application is running will be logged in log.txt instead of the console.<br>
+For all Text Entities:<br>
 <br>
-<br>
+<div class="code_block" style="margin-left: 0em;">Text.default_font = <green>'VeraMono.ttf'</green>
+Text.default_resolution = <yellow>1</yellow><yellow>0</yellow><yellow>0</yellow> * Text.size
+</div><br>
+Keep in mind you don't *have* to change the resolution, but for pixel fonts for example, you<br>
+might want a higher resolution in order for it to not appear blurry.<br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
-<div id="Building Your App with auto-py-to-exe (singlefile)"/><br>
-Building Your App with auto-py-to-exe (singlefile)<br>
+<div id="Text Alignment"/><br>
+Text Alignment<br>
 <div style="font-size: 20.0px;font-weight: normal;">
-This way is not recommended since it will slow to open and have a bigger file size.<br>
+Change text alignemnt by setting .origin:<br>
+<div class="code_block" style="margin-left: 0em;">Text(<green>'Hello\nWorld!'</green>, <olive>origin</olive>=(-.<yellow>5</yellow>,.<yellow>5</yellow>))  <gray># the default. text starts in the upper left like normal.</gray>
+Text(<green>'Hello\nWorld!'</green>, <olive>origin</olive>=(<yellow>0</yellow>,<yellow>0</yellow>))     <gray># text is centered both horizontally and vertically.</gray>
+</div><br>
 <br>
-1. pip install auto-py-to-exe<br>
-2. Go to cmd and type auto-py-to-exe to open the gui<br>
-3. Enter script location<br>
-4. Select onefile<br>
-5. Select either console based or window based<br>
-6. Icon (optional)<br>
-7. Under additional files, click add folder and add:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;panda3d-1.10.6.dist-info,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;panda3d,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;direct,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;ursina-3.1.0.dist-info,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;ursina,<br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;and any other files included for your app/game.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;You can find these in YOUR_PYTHON_FOLDER/Lib/site-packages/<br>
-<br>
-8. Go under "Advanced" to "–paths" and add folder "YOUR_PYTHON_FOLDER/Lib/site-packages/panda3d"<br>
-9. Set an output location (optional)<br>
-10. Finally select "convert .py to .exe"<br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Text Colors"/><br>
+Text Colors<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+Set .color to color the whole text.<br>
+<div class="code_block" style="margin-left: 0em;">t = Text(<green>'This is some text'</green>, <olive>color</olive>=color.blue)
+</div><br>
+Use tags to color parts of the text.<br>
+<div class="code_block" style="margin-left: 0em;">t = Text(<green>'This is some &lt;pink&gt;colored text. &lt;default&gt;Reset color back to default.'</green>, <olive>color</olive>=color.blue)
+</div><br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Changing Text of Prefabs"/><br>
+Changing Text of Prefabs<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+Things like Slider, InputField, etc., usually has .text_entity which you can access if you need it.<br>
 <br>
 
 </html>

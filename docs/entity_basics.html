@@ -49,6 +49,13 @@ Entity Basics<br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Distance Check">Distance Check</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Mouse Collision">Mouse Collision</a><br>
 <br>
+<a href="text.html">Text</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Size">Text Size</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Font and Resolution">Font and Resolution</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Alignment">Text Alignment</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Colors">Text Colors</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Changing Text of Prefabs">Changing Text of Prefabs</a><br>
+<br>
 <a href="faq.html">F.A.Q.</a><br>
 <a href="building.html">Build and Release</a><br>
 </div><br>
@@ -144,20 +151,20 @@ e.position = (<yellow>0</yellow>,<yellow>0</yellow>)
 <div class="code_block" style="margin-left: 2em;">e = <olive>Entity</olive>(<olive>position</olive>=Vec3(<yellow>1</yellow>,<yellow>1</yellow>,<yellow>1</yellow>))
 e.x = <yellow>0</yellow>
 <blue>print</blue>(position)
->>> Vec3(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>)
+&gt;&gt;&gt; Vec3(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>)
 </div><br>
 &nbsp;&nbsp;&nbsp;&nbsp;To set the position relative to the scene, that is, ignoring the position of any parents, set .world_position:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<br>
 <div class="code_block" style="margin-left: 2em;">parent_entity = <olive>Entity</olive>(<olive>position</olive>=Vec3(<yellow>0</yellow>,<yellow>2</yellow>,<yellow>0</yellow>))
 e = <olive>Entity</olive>(<olive>parent</olive>=parent_entity, <olive>position</olive>=Vec3(<yellow>0</yellow>,<yellow>2</yellow>,<yellow>0</yellow>))
 <blue>print</blue>(e.position)
->>> Vec3(<yellow>0</yellow>,<yellow>2</yellow>,<yellow>0</yellow>)
+&gt;&gt;&gt; Vec3(<yellow>0</yellow>,<yellow>2</yellow>,<yellow>0</yellow>)
 <blue>print</blue>(e.world_position)
->>> Vec3(<yellow>0</yellow>,<yellow>4</yellow>,<yellow>0</yellow>)
+&gt;&gt;&gt; Vec3(<yellow>0</yellow>,<yellow>4</yellow>,<yellow>0</yellow>)
 
 e.world_position = Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)
 <blue>print</blue>(e.position)
->>> Vec3(<yellow>0</yellow>,-<yellow>2</yellow>,<yellow>0</yellow>)
+&gt;&gt;&gt; Vec3(<yellow>0</yellow>,-<yellow>2</yellow>,<yellow>0</yellow>)
 </div><br>
 &nbsp;&nbsp;&nbsp;&nbsp;As with position, there's shortcuts for setting world position on individual axes too:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;world_x, world_y and world_z<br>

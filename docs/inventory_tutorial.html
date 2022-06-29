@@ -447,7 +447,7 @@ class Inventory(<olive>Entity</olive>):
             icon.y = int(icon.y)
 
 <mark>            <green><green>''</green></green>'<purple>if</purple> outside, return to original position<green><green>''</green></green>'               </mark>
-<mark>            <purple>if</purple> icon.x < <yellow>0</yellow> or icon.x >= <yellow>1</yellow> or icon.y > <yellow>0</yellow> or icon.y <= -<yellow>1</yellow>: </mark>
+<mark>            <purple>if</purple> icon.x &lt; <yellow>0</yellow> or icon.x &gt;= <yellow>1</yellow> or icon.y &gt; <yellow>0</yellow> or icon.y &lt;= -<yellow>1</yellow>: </mark>
 <mark>                icon.position = (icon.org_pos)                          </mark>
 <mark>                return                                                  </mark>
 
@@ -484,7 +484,7 @@ class Inventory(<olive>Entity</olive>):
 <mark>            icon.z += .<yellow>0</yellow><yellow>1</yellow>                                                </mark>
 
             <green><green>''</green></green>'<purple>if</purple> outside, return to original position<green><green>''</green></green>'
-            <purple>if</purple> icon.x < <yellow>0</yellow> or icon.x >= <yellow>1</yellow> or icon.y > <yellow>0</yellow> or icon.y <= -<yellow>1</yellow>:
+            <purple>if</purple> icon.x &lt; <yellow>0</yellow> or icon.x &gt;= <yellow>1</yellow> or icon.y &gt; <yellow>0</yellow> or icon.y &lt;= -<yellow>1</yellow>:
                 icon.position = (icon.org_pos)
                 return
 

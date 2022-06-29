@@ -152,20 +152,19 @@ Examples<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;Entity Example:<br>
 <br>
-<div class="code_block" style="margin-left: 2em;"><purple>from</purple> ursina <purple>import</purple> *            <gray># <purple>import</purple> everything we need with one line.</gray>
+<div class="code_block" style="margin-left: 2em;"><purple>from</purple> ursina <purple>import</purple> *
 
 app = Ursina()
-ground = <olive>Entity</olive>(
-    model = <green>'cube'</green>,
-    color = color.magenta,
-    z = -.<yellow>1</yellow>,
-    y = -<yellow>3</yellow>,
-    origin = (<yellow>0</yellow>, .<yellow>5</yellow>),
-    scale = (<yellow>5</yellow><yellow>0</yellow>, <yellow>1</yellow>, <yellow>1</yellow><yellow>0</yellow>),
-    collider = <green>'box'</green>
-    )
 
-app.run()                       <gray># opens a window and starts the game.</gray>
+cube = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>texture</olive>=<green>'white_cube'</green>, <olive>color</olive>=color.magenta, <olive>scale</olive>=<yellow>2</yellow>, <olive>collider</olive>=<green>'box'</green>)
+
+<purple>def</purple> spin():
+    cube.animate(<green>'rotation_y'</green>, cube.rotation_y+<yellow>3</yellow><yellow>6</yellow><yellow>0</yellow>, duration=<yellow>2</yellow>, <olive>curve</olive>=curve.in_out_expo)
+
+cube.on_click = spin
+EditorCamera()  <gray># add camera controls <purple>for</purple> orbiting and moving the camera</gray>
+
+app.run()
 
 </div><br>
 <br>
