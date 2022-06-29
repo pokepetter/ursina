@@ -41,6 +41,8 @@ def grid_layout(l, max_x=8, max_y=8, spacing=(0,0,0), origin=(-.5,.5,0), offset=
             z += 1
             y = 0
 
+        e.x *= 1 + spacing[0]
+        e.y *= 1 + spacing[1]
 
     # center last row
     if origin[0] == 0:
@@ -53,12 +55,27 @@ if __name__ == '__main__':
     center = Entity(model='quad', scale=.1, color=color.red)
     p = Entity()
     for i in range(4*5):
-        b = Button(parent=p, model='quad', scale=.5, scale_x=1, text=str(i), color=color.tint(color.random_color(),-.6))
-        b.text_entity.world_scale = 1
+        b = Button(parent=p, model='quad', scale=Vec2(.2,.1), text=str(i), color=color.tint(color.random_color(),-.6))
+        b.text_entity.scale=1
     t = time.time()
-    grid_layout(p.children, max_x=7, max_y=10, origin=(0, .5))
+    grid_layout(p.children, max_x=7, max_y=10, origin=(0, .5), spacing=(.15, 0))
     center = Entity(parent=camera.ui, model=Circle(), scale=.005, color=color.lime)
     EditorCamera()
     print(time.time() - t)
+
+    # test
+    for e in [(-.5,.5), (0,.5), (.5,.5), (-.5,0), (0,0), (.5,0), (-.5,-.5), (0,-.5), (.5,-.5)]:
+        Button(
+            text='*',
+            model='quad',
+            text_origin=e,
+            scale=.095,
+            origin=(-.5,.5),
+            position = window.top_left + Vec2(*e)*.2 + Vec2(.1,-.1),
+            tooltip=Tooltip(str(e)),
+            on_click=Func(grid_layout, p.children, max_x=7, max_y=10, origin=e, spacing=(.15, 0))
+        )
+
+
 
     app.run()
