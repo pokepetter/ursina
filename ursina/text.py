@@ -304,6 +304,9 @@ class Text(Entity):
     @wordwrap.setter
     def wordwrap(self, value):
         self._wordwrap = value
+        if not value:
+            return
+            
         new_text = ''
         x = 0
         for word in self.raw_text.replace(self.end_tag, self.end_tag+' ').split(' '):

@@ -3,18 +3,9 @@ from ursina import *
 
 class Tooltip(Text):
 
-    def __init__(self, text='', background_color=color.black66, **kwargs):
-        super().__init__(
-            text=text,
-            ignore=False,
-            parent = camera.ui,
-            wordwrap = 40,
-            origin = (-.5, -.5),
-            margin = (2, 2),
-            background_color = color.inverse(color.text_color),
-            enabled = False,
-            background = True
-            )
+    def __init__(self, text='', wordwrap=40, background_color=color.black66, **kwargs):
+        super().__init__(text=text, ignore=False, parent=camera.ui, wordwrap=wordwrap, origin=(-.5,-.5), margin=(2,2),
+            background_color=color.inverse(color.text_color), enabled=False, background=True)
         self.background.color = background_color
 
         for key, value in kwargs.items():
