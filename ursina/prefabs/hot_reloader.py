@@ -1,9 +1,8 @@
 # this will clear the scene and try to execute the main.py code without
 # restarting the program
 
-from ursina import *
-from ursina import texture_importer
-from ursina import mesh_importer
+from ursina import Entity, camera, texture_importer, mesh_importer, scene, application, print_on_screen
+from pathlib import Path
 import time
 import ast
 
