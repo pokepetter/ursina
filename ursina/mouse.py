@@ -25,6 +25,7 @@ class Mouse():
         self.start_x = 0
         self.start_y = 0
         self.velocity = Vec3(0,0,0)
+        self.moving = False
         self.prev_click_time = time.time()
         self.prev_click_pos = None
         self.double_click_distance = .5
@@ -88,8 +89,6 @@ class Mouse():
             round(value[0] + (window.size[0]/2) + (value[0]/2*window.size[0]) *1.124), # no idea why I have * with 1.124
             round(value[1] + (window.size[1]/2) - (value[1]*window.size[1])),
         )
-
-
 
     def __setattr__(self, name, value):
 
