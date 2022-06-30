@@ -176,6 +176,9 @@ class LevelEditor(Entity):
             elif key == 'y':
                 self.current_scene.undo.redo()
 
+        if self.selection and key == 'f':
+            self.editor_camera.animate_position(gizmo.world_position, duration=.1, curve=curve.linear)
+
 
     def render_selection(self, update_gizmo_position=True):
         # entities = self.entities
