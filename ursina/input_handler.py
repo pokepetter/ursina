@@ -42,6 +42,10 @@ class Keys(Enum):
     escape = 'escape'
     tab = 'tab'
 
+    gamepad_left_stick_x = 'gamepad left stick x'   # held_keys only
+    gamepad_left_stick_y = 'gamepad left stick y'   # held_keys only
+    gamepad_right_stick_x = 'gamepad right stick x'   # held_keys only
+    gamepad_right_stick_y = 'gamepad right stick y'   # held_keys only
     gamepad_a = 'gamepad a'
     gamepad_a_up = 'gamepad a up'
     gamepad_b = 'gamepad b'
