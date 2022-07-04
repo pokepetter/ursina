@@ -98,6 +98,7 @@ if __name__ == '__main__':
 
     '''
     Loads an image sequence as a frame animation.
+    Consider using SpriteSheetAnimation instead if possible.
     So if you have some frames named image_000.png, image_001.png, image_002.png and so on,
     you can load it like this: Animation('image')
 

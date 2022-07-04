@@ -1,4 +1,4 @@
-from ursina import *; lit_with_shadows_shader = Shader(language=Shader.GLSL, vertex = '''#version 150
+from ursina import *; lit_with_shadows_shader = Shader(language=Shader.GLSL, name='lit_with_shadows_shader', vertex = '''#version 150
 uniform struct {
   vec4 position;
   vec3 color;
@@ -160,7 +160,7 @@ if __name__ == '__main__':
     sun = DirectionalLight(shadow_map_resolution=(2048,2048))
     sun.look_at(Vec3(-1,-1,-10))
     # sun._light.show_frustum()
-    # scene.fog_density = (1, 50)
+    scene.fog_density = (1, 50)
     Sky(color=color.light_gray)
     EditorCamera()
 

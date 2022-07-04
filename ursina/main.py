@@ -3,6 +3,8 @@ import platform
 
 from direct.showbase.ShowBase import ShowBase
 from direct.task.Task import Task
+from panda3d.core import KeyboardButton
+from panda3d.core import ConfigVariableBool
 
 from ursina import application
 from ursina import input_handler
@@ -11,8 +13,7 @@ from ursina.scene import instance as scene
 from ursina.camera import instance as camera
 from ursina.mouse import instance as mouse
 from ursina.string_utilities import print_info
-from panda3d.core import KeyboardButton
-from panda3d.core import ConfigVariableBool
+
 
 import __main__
 time.dt = 0
@@ -117,7 +118,7 @@ class Ursina(ShowBase):
         # try to load settings that need to be applied before entity creation
         application.load_settings()
 
-        from ursina import HotReloader
+        from ursina.prefabs.hot_reloader import HotReloader
         # make sure it's running from a file and not an interactive session.
         application.hot_reloader = HotReloader(__main__.__file__ if hasattr(__main__, '__file__') else 'None')
 
