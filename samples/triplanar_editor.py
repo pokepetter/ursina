@@ -5,7 +5,7 @@ from ursina.shaders.triplanar_shader import triplanar_shader
 app = Ursina()
 
 
-from ursina.editor.level_editor import level_editor, Scene, goto_scene
+from ursina.editor.level_editor import level_editor, goto_scene
 goto_scene(0,0)
 
 e = Entity(model='cube', scale=(10,2,10), y=-1, shader=triplanar_shader, texture='brick', selectable=True, collider='box', original_parent=scene)

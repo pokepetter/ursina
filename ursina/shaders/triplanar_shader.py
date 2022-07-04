@@ -2,7 +2,7 @@ from ursina import *
 
 
 triplanar_shader = Shader(
-name='triplanar_shader', language=Shader.GLSL, 
+name='triplanar_shader', language=Shader.GLSL,
 vertex='''
 #version 140
 uniform mat4 p3d_ModelViewProjectionMatrix;
@@ -97,7 +97,7 @@ default_input = {
     'top_texture_scale' : Vec2(1,1),
     'normalRepeat' : Vec2(10,10),
     'normalScale' : Vec2(1,1),
-    'top_texture' : None,
+    'top_texture' : Func(load_texture, 'grass'),
     }
 )
 
