@@ -15,7 +15,8 @@ def Cube(bevel=0, subdivisions=(1,1,1), mode='triangle', **kwargs):
             (3,2,6,7), (4,5,1,0),   # up, down
             (1,5,6,2), (4,0,3,7)    # right, left
             )
-        cube = Mesh(verts, tris, mode=mode, **kwargs)
+        uvs = ((0,0), (1,0), (1,1), (0,1), (0,0), (1,0), (1,1), (0,1))
+        cube = Mesh(verts, tris, uvs=uvs, mode=mode, **kwargs)
 
     else:
         w,h,d = subdivisions

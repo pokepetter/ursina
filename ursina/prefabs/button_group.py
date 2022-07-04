@@ -1,5 +1,5 @@
-from ursina import *
-
+from ursina import Entity, Button, camera, color, Text, window, mouse
+from ursina.scripts.grid_layout import grid_layout
 
 class ButtonGroup(Entity):
     def __init__(self, options=None, default='', min_selection=1, max_selection=1, **kwargs):
@@ -53,7 +53,7 @@ class ButtonGroup(Entity):
 
     def layout(self):
         [destroy(c) for c in self.buttons]
-        self.buttons = list()
+        self.buttons = []
         spacing = .05
         longest_word = max(self.options, key=len) + '__' # padding
         width = Text.get_width(longest_word) / Text.size / 2
@@ -101,6 +101,7 @@ class ButtonGroup(Entity):
 
 
 if __name__ == '__main__':
+    from ursina import Ursina
     app = Ursina()
 
     # Text.default_font = 'VeraMono.ttf'

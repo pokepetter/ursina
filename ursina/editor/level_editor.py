@@ -1,8 +1,8 @@
 from ursina import *
-from ursina.shaders import lit_with_shadows_shader, unlit_shader, matcap_shader
+from ursina.shaders import unlit_shader, lit_with_shadows_shader, matcap_shader, triplanar_shader, normals_shader
 from time import perf_counter
 
-class Scene(Entity):
+class LevelEditorScene(Entity):
     def __init__(self, x, y, name, **kwargs):
         super().__init__()
         self.coordinates = [x,y]
@@ -69,6 +69,7 @@ class Scene(Entity):
             return
 
         t = perf_counter()
+
         with open(self.path) as f:
             try:
                 entities_before_exec = [e for e in scene.entities]
@@ -77,21 +78,16 @@ class Scene(Entity):
                 self.scene_parent.name = self.name
                 self.entities = [e for e in scene.entities if e.has_ancestor(self.scene_parent) and not hasattr(e, 'is_gizmo')]
                 for e in self.entities:
-                    # e.collider = 'box'
-                    # e.collision = False
                     if not e.shader:
                         e.shader = lit_with_shadows_shader
-                    # e.ignore = True
                     e.selectable = True
                     e.original_parent = e.parent
                     if e.model.name == 'cube':
                         e.collider = 'box'
                         e.collision = False
 
-
             except Exception as e:
                 print('error in scene:', self.name, e)
-                [destroy(e) for e in scene.entities if not e in entities_before_exec]
 
         if self.scene_parent:
             print(f'loaded scene: "{self.name}" in {perf_counter()-t}')
@@ -115,7 +111,7 @@ class LevelEditor(Entity):
         super().__init__()
 
         self.scene_folder = application.asset_folder / 'scenes'
-        self.scenes = [[Scene(x, y, f'untitled_scene[{x},{y}]') for y in range(8)] for x in range(8)]
+        self.scenes = [[LevelEditorScene(x, y, f'untitled_scene[{x},{y}]') for y in range(8)] for x in range(8)]
         self.current_scene = None
 
         self.grid = Entity(parent=self, model=Grid(16,16), rotation_x=90, scale=64, collider='box', color=color.white33, enabled=False)
@@ -1230,10 +1226,10 @@ class LevelMenu(Entity):
             self.goto_scene(coords[0], coords[1])
 
 
-        elif key == 'right mouse down' and self.hovered:
-            x, y = [int((mouse.point.x+1) * 8), int((mouse.point.y+.5) * 8)]
-            self.right_click_menu.enabled = True
-            self.right_click_menu.position = (x,y)
+        # elif key == 'right mouse down' and self.hovered:
+        #     x, y = [int((mouse.point.x+1) * 8), int((mouse.point.y+.5) * 8)]
+        #     self.right_click_menu.enabled = True
+        #     self.right_click_menu.position = (x,y)
 
 
 
@@ -1281,13 +1277,13 @@ class Inspector(Entity):
             field.highlight_color = color._32
 
         self.fields = dict(
-            model_field =   Button(parent=self.name_field, origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, text='model: cube', color=color._8, highlight_color=color._32, on_click=Func(setattr, menu_handler, 'state', 'model_menu')),
-            texture_field = Button(parent=self.name_field, origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, text='texture: ', color=color._8, highlight_color=color._32, on_click=Func(setattr, menu_handler, 'state', 'texture_menu')),
-            color_field =   Button(parent=self.name_field, origin=(-.5,.5), color=color._8, highlight_color=color._32, on_click=Func(setattr, menu_handler, 'state', 'color_menu')),
-            shader_field = Button(parent=self.name_field, origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, text='shader: ', color=color._8, highlight_color=color._32, on_click=Func(setattr, menu_handler, 'state', 'shader_menu')),
+            model_field =   Button(parent=self.name_field, model='quad', origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, text='model: cube', color=color._8, highlight_color=color._32, on_click=Func(setattr, menu_handler, 'state', 'model_menu')),
+            texture_field = Button(parent=self.name_field, model='quad', origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, text='texture: ', color=color._8, highlight_color=color._32, on_click=Func(setattr, menu_handler, 'state', 'texture_menu')),
+            color_field =   Entity(parent=self.name_field, model='quad', collider='box', origin=(-.5,.5), color=color._8, on_click=Func(setattr, menu_handler, 'state', 'color_menu')),
+            shader_field = Button(parent=self.name_field, model='quad', origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, text='shader: ', color=color._8, highlight_color=color._32, on_click=Func(setattr, menu_handler, 'state', 'shader_menu')),
         )
         for i, field in enumerate(self.fields.values()):
-            if field.text:
+            if hasattr(field, 'text') and field.text:
                 field.text_entity.font = 'VeraMono.ttf'
                 field.text_entity.x = .025
                 # field.text_entity.y = -.25
@@ -1375,9 +1371,9 @@ class ModelMenu(Entity):
 
     def on_enable(self):
         # self.model_names = [e.stem for e in application.internal_models_compressed_folder.glob('**/*.ursinamesh')]
-        self.model_names = ['cube', 'sphere', 'plane', 'test', 'test_2', 'test_3', 'test_4', 'test_5', 'another_test', 'player_idle']
-        # for file_type in ('.bam', '.obj', '.ursinamesh'):
-        #     self.model_names += [e.stem for e in application.asset_folder.glob(f'**/*{file_type}') if not 'animation' in e.stem]
+        self.model_names = ['cube', 'sphere', 'plane']
+        for file_type in ('.bam', '.obj', '.ursinamesh'):
+            self.model_names += [e.stem for e in application.asset_folder.glob(f'**/*{file_type}') if not 'animation' in e.stem]
 
         model_dict = {name : Func(self.set_models_for_selection, name) for name in self.model_names}
         # print('mmmmmmm', model_dict)
@@ -1403,7 +1399,7 @@ class ModelMenu(Entity):
         for e in level_editor.selection:
             e.model = name
 
-        self.enabled = False
+        menu_handler.state = 'None'
 
 
 class TextureMenu(Entity):
@@ -1445,7 +1441,7 @@ class TextureMenu(Entity):
         for e in level_editor.selection:
             e.texture = name
 
-        self.enabled = False
+        menu_handler.state = 'None'
 
 
 
@@ -1523,23 +1519,23 @@ class ColorMenu(Entity):
 
 
     def close(self):
-        self.enabled = False
+        menu_handler.state = 'None'
         level_editor.current_scene.undo.record_undo([(level_editor.entities.index(e), 'color', e.original_color, e.color) for e in level_editor.selection])
 
 
 class ShaderMenu(Entity):
     def __init__(self, **kwargs):
-        super().__init__(parent=level_editor)
-        self.button_list = None     # gets created on self.open()
+        super().__init__(parent=level_editor.ui, enabled=False)
+        self.button_list = None     # gets created on on_enable()
 
 
-    def open(self):
+    def on_enable(self):
         self.asset_names = [
             'unlit_shader',
             'lit_with_shadows_shader',
             'triplanar_shader',
             'matcap_shader',
-
+            'normals_shader',
         ]
 
         if not self.asset_names:
@@ -1548,22 +1544,16 @@ class ShaderMenu(Entity):
 
         shader_dict = {name : Func(self.set_shader_for_selection, name) for name in self.asset_names}
         if not self.button_list:
-            self.button_list = ButtonList(shader_dict, font='VeraMono.ttf')
-            self.bg = Entity(parent=self.button_list, model='quad', collider='box', color=color.black33, on_click=self.button_list.disable, z=.1, scale=100)
-        else:
-            self.button_list.enabled = True
+            self.button_list = ButtonList(shader_dict, parent=self, font='VeraMono.ttf')
+            self.bg = Entity(parent=self, model='quad', collider='box', color=color.black33, on_click=Func(setattr, menu_handler, 'state', 'None'), z=.1, scale=100)
 
-    # def input(self, key):
-    #     if key == 'v' and level_editor.selection:
-    #         self.open()
 
     def set_shader_for_selection(self, name):
+        menu_handler.state = 'None'
         level_editor.current_scene.undo.record_undo([(level_editor.entities.index(e), 'shader', e.shader, name) for e in level_editor.selection])
         for e in level_editor.selection:
             exec(f'from ursina.shaders import {name}')
             exec(f'e.shader = {name}')
-
-        self.button_list.enabled = False
 
 
 
@@ -1862,32 +1852,32 @@ class SunHandler(Entity):
                 # e.shader = unlit_shader
                 e.unlit = not e.unlit
 
-from ursina.prefabs.radial_menu import RadialMenu
-class RightClickMenu(Entity):
-    def __init__(self):
-        super().__init__()
-        self.radial_menu = RadialMenu(
-            parent=level_editor.ui,
-            buttons = (
-                Button(highlight_color=color.azure, text='Model', on_click=Func(setattr, menu_handler, 'state', 'model_menu')),
-                Button(highlight_color=color.azure, text='Tex', on_click=Func(setattr, menu_handler, 'state', 'texture_menu')),
-                Button(highlight_color=color.azure, text='Col', on_click=Func(setattr, menu_handler, 'state', 'color_menu')),
-                Button(highlight_color=color.azure, text='Sh', on_click=Func(setattr, menu_handler, 'state', 'shader_menu')),
-                Button(highlight_color=color.black, text='del', scale=.5, color=color.red, on_click=deleter.delete_selected),
-                Button(highlight_color=color.azure, text='collider'),
-            ),
-            enabled=False,
-            scale=.05
-        )
-
-    def input(self, key):
-        if key == 'right mouse down':
-            self.start_click_pos = mouse.position
-
-        if key == 'right mouse up':
-            if level_editor.selection and sum(abs(e) for e in mouse.position-self.start_click_pos) < .005:
-                self.radial_menu.enabled = True
-
+# from ursina.prefabs.radial_menu import RadialMenu
+# class RightClickMenu(Entity):
+#     def __init__(self):
+#         super().__init__()
+#         self.radial_menu = RadialMenu(
+#             parent=level_editor.ui,
+#             buttons = (
+#                 Button(highlight_color=color.azure, text='Model', on_click=Func(setattr, menu_handler, 'state', 'model_menu')),
+#                 Button(highlight_color=color.azure, text='Tex', on_click=Func(setattr, menu_handler, 'state', 'texture_menu')),
+#                 Button(highlight_color=color.azure, text='Col', on_click=Func(setattr, menu_handler, 'state', 'color_menu')),
+#                 Button(highlight_color=color.azure, text='Sh', on_click=Func(setattr, menu_handler, 'state', 'shader_menu')),
+#                 Button(highlight_color=color.black, text='del', scale=.5, color=color.red, on_click=deleter.delete_selected),
+#                 Button(highlight_color=color.azure, text='collider'),
+#             ),
+#             enabled=False,
+#             scale=.05
+#         )
+#
+#     def input(self, key):
+#         if key == 'right mouse down':
+#             self.start_click_pos = mouse.position
+#
+#         if key == 'right mouse up':
+#             if level_editor.selection and sum(abs(e) for e in mouse.position-self.start_click_pos) < .005:
+#                 self.radial_menu.enabled = True
+#
 
 
 class Search(Entity):
@@ -1949,7 +1939,7 @@ texture_menu = TextureMenu()
 color_menu = ColorMenu()
 shader_menu = ShaderMenu()
 menu_handler = MenuHandler()
-right_click_menu = RightClickMenu()
+# right_click_menu = RightClickMenu()
 inspector = Inspector()
 PointOfViewSelector()
 Help()
