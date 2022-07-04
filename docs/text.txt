@@ -28,7 +28,7 @@ Keep in mind you don't *have* to change the resolution, but for pixel fonts for 
 might want a higher resolution in order for it to not appear blurry.
 
 ## Text Alignment
-Change text alignemnt by setting .origin:
+Change text alignment by setting .origin:
 # code
 Text('Hello\nWorld!', origin=(-.5,.5))  # the default. text starts in the upper left like normal.
 Text('Hello\nWorld!', origin=(0,0))     # text is centered both horizontally and vertically.
