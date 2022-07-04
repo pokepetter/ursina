@@ -97,7 +97,15 @@ class MeshCollider(Collider):
                         )
                     self.collision_polygons.append(poly)
 
-
+            elif mesh.mode == 'ngon':
+                # NOTE: does not support vertices len < 3. Is already being intercepted by pandas3D.
+                for i in range(2, len(mesh.vertices)):
+                    poly = CollisionPolygon(
+                        Vec3(mesh.vertices[i]),
+                        Vec3(mesh.vertices[i - 1]),
+                        Vec3(mesh.vertices[0]),
+                    )
+                    self.collision_polygons.append(poly)
             else:
                 print('error: mesh collider does not support', mesh.mode, 'mode')
                 return None
