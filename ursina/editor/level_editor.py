@@ -44,11 +44,6 @@ class LevelEditorScene(Entity):
 
             if hasattr(e, '__repr__'):
                 recipe = repr(e).split(e.__class__.__name__)[1][1:-1] # remove start and end
-                # if 'parent=' in recipe: # remove parent
-                #     beginning, end = recipe.split('parent=')
-                #     print('---------', beginning, end)
-                #     recipe = beginning + end.split(',',1)[1]
-
                 scene_file_content += recipe
                 scene_file_content += ')\n' # TODO: add if it has a custom name
 
@@ -60,7 +55,6 @@ class LevelEditorScene(Entity):
 
 
     def load(self):
-        # print('aaaaaaaaa')
         if not self.path:
             print('cant load scene, no path')
             return

@@ -28,6 +28,7 @@ from ursina.texture_importer import load_texture
 from ursina.string_utilities import camel_to_snake
 from textwrap import dedent
 from panda3d.core import Shader as Panda3dShader
+from ursina import shader
 from ursina.shader import Shader
 from ursina.string_utilities import print_info, print_warning
 
@@ -694,17 +695,25 @@ class Entity(NodePath):
 
     @shader.setter
     def shader(self, value):
-        self._shader = value
-
         if value is None:
+            self._shader = value
             self.setShaderAuto()
             return
 
         if isinstance(value, Panda3dShader): #panda3d shader
+            self._shader = value
             self.setShader(value)
             return
 
+        if isinstance(value, str):
+            if not value in shader.imported_shaders:
+                print_warning('missing shader:', value)
+                return
+
+            value = shader.imported_shaders[value]
+
         if isinstance(value, Shader):
+            self._shader = value
             if not value.compiled:
                 value.compile()
 
@@ -1058,7 +1067,7 @@ class Entity(NodePath):
                     changes.append(f"model='{getattr(self, key).name}', ")
                     continue
                 if key == 'shader' and self.shader:
-                    changes.append(f"shader={getattr(self, key).name}, ")
+                    changes.append(f"shader='{getattr(self, key).name}', ")
                     continue
                 if key == 'texture':
                     changes.append(f"texture='{getattr(self, key).name.split('.')[0]}', ")
