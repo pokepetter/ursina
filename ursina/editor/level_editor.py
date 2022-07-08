@@ -1098,11 +1098,11 @@ class PointOfViewSelector(Entity):
     def update(self):
         self.rotation = -level_editor.editor_camera.rotation
 
-    def input(self, key):
-        if key == '1':   level_editor.editor_camera.animate_rotation((0,0,0)) # front
-        elif key == '3': level_editor.editor_camera.animate_rotation((0,90,0)) # right
-        elif key == '7': level_editor.editor_camera.animate_rotation((90,0,0)) # top
-        elif key == '5': camera.orthographic = not camera.orthographic
+    # def input(self, key):
+    #     if key == '1':   level_editor.editor_camera.animate_rotation((0,0,0)) # front
+    #     elif key == '3': level_editor.editor_camera.animate_rotation((0,90,0)) # right
+    #     elif key == '7': level_editor.editor_camera.animate_rotation((90,0,0)) # top
+    #     elif key == '5': camera.orthographic = not camera.orthographic
 
 
 # class PaintBucket(Entity):
@@ -1260,15 +1260,39 @@ class Inspector(Entity):
         self.input_fields = [self.name_field, ]
         self.transform_fields = []
 
-        for y in range(3):
-            for i, e in enumerate('xyz'):
+        for y, names in enumerate((('x','y','z'), ('rotation_x','rotation_y','rotation_z'), ('scale_x','scale_y','scale_z'))):
+            for x in range(3):
                 default = '0'
-                if y==2:
+                if y == 2:
                     default = '1'
 
-                field = InputField(max_width=5, model='quad', parent=self.ui, scale_x=.125, origin=(-.5,.5), default_value=default, limit_content_to=ContentTypes.math, x=i*.125, y=-.05-(y*.05), color=color._8)
+                field = InputField(max_width=5, model='quad', parent=self.ui, scale_x=.125, origin=(-.5,.5), default_value=default, limit_content_to=ContentTypes.math, x=x*.125, y=-.05-(y*.05), color=color._8)
+                def on_submit(names=names, x=x, field=field):
+                    # print('SUBMIT')
+                    # for math_symbol in '+-*/':
+                    #     if math_symbol in field.text:
+                    #         return
+                    try:
+                        value = float(eval(field.text))
+                        # print('value:', value)
+                        if isinstance(value, float):
+                            field.text = str(value)
+                            for e in level_editor.selection:
+                                setattr(e, names[x], value)
+                    except: # invalid/incomplete math
+                        # print('invalid')
+                        return
+
+                field.submit_on = 'enter'
+                field.on_submit = on_submit
+                field.on_value_changed = on_submit
+
                 self.transform_fields.append(field)
                 self.input_fields.append(field)
+
+        for i in range(len(self.transform_fields)-1):
+            self.transform_fields[i].next_field = self.transform_fields[i+1]
+
 
         for field in self.input_fields:
             field.text_field.x = .05
@@ -1306,7 +1330,7 @@ class Inspector(Entity):
 
                 self.name_field.text_field.text_entity.text = selected.name
                 for i, attr_name in enumerate(('world_x', 'world_y', 'world_z', 'world_rotation_x', 'world_rotation_y', 'world_rotation_z', 'world_scale_x', 'world_scale_y', 'world_scale_z')):
-                    self.transform_fields[i].text_field.text_entity.text = str(round(getattr(selected, attr_name), 3))
+                    self.transform_fields[i].text = str(round(getattr(selected, attr_name), 3))
 
                 self.fields['model_field'].text_entity.text = ('model:' + selected.model.name) if selected.model else 'model: None'
                 self.fields['texture_field'].text_entity.text = ('texture:' + selected.texture.name) if selected.texture else 'texture: None'
@@ -1892,8 +1916,8 @@ class Search(Entity):
             self.input_field.enabled = True
             self.input_field.text = ''
 
-        elif len(key) == 1:
-            print('---', self.input_field.text)
+        # elif len(key) == 1:
+        #     print('---', self.input_field.text)
 
 
 if __name__ == '__main__':
