@@ -199,7 +199,7 @@ class HotReloader(Entity):
     def reload_shaders(self):
         import ursina
 
-        for shader in ursina.shader.imported_shaders:
+        for shader in ursina.shader.imported_shaders.values():
             # print(shader, shader.path)
             # TODO: check if file has changed
 

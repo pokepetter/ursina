@@ -44,11 +44,6 @@ class LevelEditorScene(Entity):
 
             if hasattr(e, '__repr__'):
                 recipe = repr(e).split(e.__class__.__name__)[1][1:-1] # remove start and end
-                # if 'parent=' in recipe: # remove parent
-                #     beginning, end = recipe.split('parent=')
-                #     print('---------', beginning, end)
-                #     recipe = beginning + end.split(',',1)[1]
-
                 scene_file_content += recipe
                 scene_file_content += ')\n' # TODO: add if it has a custom name
 
@@ -60,7 +55,6 @@ class LevelEditorScene(Entity):
 
 
     def load(self):
-        # print('aaaaaaaaa')
         if not self.path:
             print('cant load scene, no path')
             return
@@ -1118,7 +1112,7 @@ class PointOfViewSelector(Entity):
 class LevelMenu(Entity):
     def __init__(self, **kwargs):
         super().__init__(parent=level_editor)
-        self.menu = Entity(parent=level_editor.ui, model=Quad(radius=.05), color=color.black, scale=.2, origin=(.5,0), x=camera.aspect_ratio*.495, collider='box')
+        self.menu = Entity(parent=level_editor.ui, model=Quad(radius=.05), color=color.black, scale=.2, origin=(.5,0), x=camera.aspect_ratio*.495, y=-.3, collider='box')
         self.menu.grid = Entity(parent=self.menu, model=Grid(8,8), z=-1, origin=self.menu.origin, color=color.dark_gray)
         self.content_renderer = Entity(parent=self.menu, scale=1/8, position=(-1,-.5,-1), model=Mesh(), color='#222222') # scales the content so I can set the position as (x,y) instead of (-1+(x/8),-.5+(y/8))
         self.cursor = Entity(parent=self.content_renderer, model='quad', color=color.lime, origin=(-.5,-.5), z=-2, alpha=.5)
@@ -1303,8 +1297,8 @@ class Inspector(Entity):
         self.fields = dict(
             model_field =   Button(parent=self.name_field, model='quad', origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, text='model: cube', color=color._8, highlight_color=color._32, on_click=Func(setattr, menu_handler, 'state', 'model_menu')),
             texture_field = Button(parent=self.name_field, model='quad', origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, text='texture: ', color=color._8, highlight_color=color._32, on_click=Func(setattr, menu_handler, 'state', 'texture_menu')),
-            color_field =   Entity(parent=self.name_field, model='quad', collider='box', origin=(-.5,.5), color=color._8, on_click=Func(setattr, menu_handler, 'state', 'color_menu')),
-            shader_field = Button(parent=self.name_field, model='quad', origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, text='shader: ', color=color._8, highlight_color=color._32, on_click=Func(setattr, menu_handler, 'state', 'shader_menu')),
+            color_field =   Button(parent=self.name_field, model='quad', origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, text='color: ', color=color._8, highlight_color=color._32, on_click=Func(setattr, menu_handler, 'state', 'color_menu')),
+            shader_field =  Button(parent=self.name_field, model='quad', origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, text='shader: ', color=color._8, highlight_color=color._32, on_click=Func(setattr, menu_handler, 'state', 'shader_menu')),
         )
         for i, field in enumerate(self.fields.values()):
             if hasattr(field, 'text') and field.text:
@@ -1317,6 +1311,9 @@ class Inspector(Entity):
 
         Entity(model=Grid(3,3), parent=self.transform_fields[0], scale=3, origin=(-.5,.5), z=-.1, color=color._64)
         Entity(model=Grid(1,3), parent=self.transform_fields[-3], scale=3, origin=(-.5,.5), z=-.1, color=color._64)
+
+        self.shader_inputs_parent = Entity(parent=self.name_field, y=-8)
+
         self.scale = .6
 
     def input(self, key):
@@ -1336,11 +1333,23 @@ class Inspector(Entity):
                 self.fields['texture_field'].text_entity.text = ('texture:' + selected.texture.name) if selected.texture else 'texture: None'
                 self.fields['color_field'].color = selected.color
                 self.fields['shader_field'].text_entity.text = f'shader: {selected.shader.name}' if selected.shader else 'shader: None'
+
+                [destroy(e) for e in self.shader_inputs_parent.children]
+                for i, (name, value) in enumerate(selected.shader.default_input.items()):
+                    print('shader input', name, value)
+                    b = Button(parent=self.shader_inputs_parent, model='quad', origin=(-.5,.5), text_origin=(-.5,0),
+                        text_color=color.light_gray, text=f'{name}:', color=color._8, highlight_color=color._32, x=.01, y=-i,
+                    )
+                    b.text_entity.scale *= .5
+                    b.text_entity.x = .025
+
             else:
                 self.name_field.text_field.text_entity.text = '--------'
                 self.fields['model_field'].text_entity.text = '--------'
                 self.fields['texture_field'].text_entity.text = '--------'
                 self.fields['color_field'].color = color._8
+                self.fields['shader_field'].text_entity.text = '--------'
+                [destroy(e) for e in self.shader_inputs_parent.children]
 
 class MenuHandler(Entity):
     def __init__(self):
