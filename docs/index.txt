@@ -40,12 +40,24 @@ Python is the world's most popular programming language for a reason. The ease o
 
 • Reload code/textures/models while in-game
 • Automatic import of .psd and .blend files
-• Built-in animation and tweening
 • Compile times:
-    ursina: 0.05s, when pressing F5 in real project.
-    Godot: 1.7s, when running portal2d.
-    bevy: 0.8-3.0  with the "fast compiles" configuration.
-    Unity: 33s to recompile + 65s to enter play mode the first time, a total of 98 seconds.
+
+Iteration speed benchmark. Time from code/scene change to play. Game: pong clone. Lower is better.
+# code
+engine:         duration:       times as slow:
+
+ursina          0.01            1x
+Godot           1.18            118x
+bevy            1.9             190x
+Unity:          11.45           1145x
+
+Unity(Teslagrad 2):          98              9800x
+Godot(portal2d)           1.7             170x
+# text
+(reloading pong.py with F5)
+(portal2d)
+("fast compiles" configuration. Average of 0.8-3.0.)
+(33s to recompile + 65s to enter play)
 
 
 # size 2, arial
@@ -55,6 +67,8 @@ Python is the world's most popular programming language for a reason. The ease o
 • Sleek modern design.
 • Full control. Change the looks of anything, down to the smallest details.
 • Built with Entities like everything else, so you don't have to relearn anything.
+
+# image ursina_ui_banner.jpg
 
 # size 2, arial
 ## Batteries Included
