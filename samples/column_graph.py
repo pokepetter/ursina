@@ -27,7 +27,7 @@ for i, (name, value) in enumerate(data.items()):
         text = name,
         tooltip = Tooltip('00') # to ensure uniform with
     )
-    column.tooltip.text = value
+    column.tooltip.text = str(value)
     column.text_entity.scale *= .4
     column.text_entity.world_y = column.world_y - .2
     column.text_entity.z = -.5
