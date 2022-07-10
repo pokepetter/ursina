@@ -20,6 +20,9 @@ class InputField(Button):
         self.hide_content = False   # if set to True, will display content as '*'. can also be set to character instead of True.
 
         self.next_field = None
+        self.submit_on = None   # for example: self.submit_on = 'enter' will call self.on_submit whne you press enter.
+        self.on_submit = None   # function to be called when you press self.submit_on.
+        self.on_value_changed = None
 
         self.text_field = TextField(world_parent = self, x=-.45, y=.3, z=-.1, max_lines=max_lines, character_limit=character_limit, register_mouse_input = True)
         destroy(self.text_field.bg)
@@ -40,6 +43,8 @@ class InputField(Button):
                 self.text_field.text_entity.text = replacement_char * len(self.text_field.text)
                 return
 
+            if self.on_value_changed and not self.text_field.text_entity.text == self.text_field.text:
+                self.on_value_changed()
             self.text_field.text_entity.text = self.text_field.text
 
         self.text_field.render = render
@@ -66,6 +71,10 @@ class InputField(Button):
             if self.next_field:
                 mouse.position = self.next_field.get_position(relative_to=camera.ui)
                 invoke(setattr, self.next_field, 'active', True, delay=.01)
+
+        if self.active and self.submit_on and key == self.submit_on and self.on_submit:
+            self.on_submit()
+            self.active = False
 
     @property
     def text(self):
@@ -116,5 +125,5 @@ if __name__ == '__main__':
         print('password:',  password_field.text)
 
     Button('Login', scale=.1, color=color.cyan.tint(-.4), y=-.26, on_click=submit).fit_to_text()
-
+    username_field.on_value_changed = submit
     app.run()
