@@ -1,4 +1,4 @@
-from ursina import *
+from ursina import Entity, Text, camera, color, mouse, BoxCollider, Sequence, Func, Vec3, scene
 from ursina.models.procedural.quad import Quad
 import textwrap
 
@@ -216,7 +216,7 @@ class Button(Entity):
 
 
 if __name__ == '__main__':
-    from ursina import *
+    from ursina import Ursina, application, Tooltip
     app = Ursina()
 
     b = Button(text='hello world!', color=color.azure, icon='sword', scale=.25, text_origin=(-.5,0))

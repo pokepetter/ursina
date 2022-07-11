@@ -1,4 +1,5 @@
-from ursina import *
+from ursina import Entity, Text, camera, Button, color, mouse
+from math import floor
 
 
 class ButtonList(Entity):
@@ -64,6 +65,7 @@ class ButtonList(Entity):
 
 
 if __name__ == '__main__':
+    from ursina import Ursina, Func
     app = Ursina()
 
     default = Func(print, 'not yet implemented')

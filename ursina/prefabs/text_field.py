@@ -25,7 +25,7 @@ class TextField(Entity):
 
         self.bg = Entity(name='text_field_bg', parent=self, model='cube', color=color.dark_gray, origin=(-.5,.5), z=0.005, scale=(120, Text.size*self.max_lines, 0.001), collider='box', visible=True)
 
-        self.selection = None
+        self.selection = [Vec2(0,0), Vec2(0,0)]
         self.selection_parent = Entity(name='text_field_selection_parent', parent=self.cursor_parent, scale=(1,1,0))
         self.register_mouse_input = False
         self.world_space_mouse = False
@@ -39,8 +39,9 @@ class TextField(Entity):
         self.highlight_color = color.color(120,1,1,.1)
         self.text = ''
         self.replacements = dict()
-        self.on_undo = list()
-        self.on_redo = list()
+        self.on_undo = []
+        self.on_redo = []
+        self.on_value_changed = None
 
         self.shortcuts = {
             'newline':          ('enter', 'enter hold'),
@@ -371,7 +372,7 @@ class TextField(Entity):
         if key in self.shortcuts['select_word_left']:
             self.selection[1] = self.cursor.position
             self.input(self.shortcuts['move_to_start_of_word'][0])
-            # self.selection[0] = self.cursor.position
+            self.selection[0] = self.cursor.position
             # print(self.selection)
             self.draw_selection()
 
@@ -529,22 +530,20 @@ class TextField(Entity):
 
 
         if key in self.shortcuts['select_word']:
-            # TODO
             for start_x in range(x, -1, -1):
                 if l[start_x] in delimiters:
-                    # start_x -= 1
                     break
+            if start_x > 0:
+                start_x += 1
 
             for end_x in range(x, len(l)):
-                print(end_x)
                 if l[end_x] in delimiters:
                     break
+            if end_x == len(l)-1:
+                end_x += 1
 
-            # print('select word', end_x)
-            # self.cursor.x = end_x
-            # print(self.cursor.x)
+
             self.selection = [Vec2(start_x, y), Vec2(end_x, y)]
-            print('set sel', self.selection)
             self.draw_selection()
             return
 
@@ -580,6 +579,7 @@ class TextField(Entity):
             if key == 'left mouse down' and mouse.hovered_entity == self.bg and mouse.point is not None:
                 cursor.position = self.get_mouse_position()
                 self.selection = [self.cursor.position, self.cursor.position]
+                self.draw_selection()
 
             if key == 'left mouse up':
                     cursor.position = self.get_mouse_position()
@@ -587,7 +587,6 @@ class TextField(Entity):
                     if self.selection:
                         self.selection[1] = self.cursor.position
 
-                    # self.draw_selection()
 
         self.render()
 
@@ -635,8 +634,9 @@ class TextField(Entity):
             self._prev_scroll = self.scroll
             self.scroll_parent.y = (self.scroll * Text.size)
             # self.cursor.y
+            self.draw_selection()
 
-        if hasattr(self, 'on_value_changed'):
+        if self.on_value_changed:
             self.on_value_changed()
 
 
@@ -667,40 +667,35 @@ class TextField(Entity):
         if not self.selection or self.selection[0] == self.selection[1]:
             return
 
-        # sel = self._ordered_selection()
-        print('---', self.selection)
+        sel = self._ordered_selection()
+        # print('---', self.selection, self.scroll)
 
-        start_y = int(self.selection[0].y)
-        end_y = int(self.selection[1].y)
+        start_y = int(sel[0].y)
+        end_y = int(sel[1].y)
         lines = self.text.split('\n')
         if start_y == end_y:
             e = Entity(parent=self.selection_parent, model='cube', origin=(-.5,-.5), color=self.highlight_color, ignore=True, y=start_y)
-            e.x = self.selection[0].x
-            e.scale_x = self.selection[1].x - self.selection[0].x
+            e.x = sel[0].x
+            e.scale_x = sel[1].x - sel[0].x
             return
 
-        # draw selection middle
-        for y in range(start_y, end_y):
-            e = Entity(parent=self.selection_parent, model='cube', origin=(-.5, -.5),
+        # first line
+        if start_y >= self.scroll and start_y < self.scroll+self.max_lines:
+            e = Entity(parent=self.selection_parent, model='quad', origin=(-.5, -.5),
+            color=self.highlight_color, double_sided=True, position=(sel[0].x,start_y), ignore=True)
+            e.scale_x = len(lines[start_y]) - sel[0].x
+
+        # middle lines
+        for y in range(max(start_y+1, self.scroll), min(end_y, self.scroll+self.max_lines)):
+            e = Entity(parent=self.selection_parent, model='quad', origin=(-.5, -.5),
                 color=self.highlight_color, double_sided=True, position=(0,y), ignore=True, scale_x=len(lines[y]))
-            if y == start_y:
-                print('select start')
-                e.x = self.selection[0].x
-                e.scale_x = self.selection[1].x - self.selection[0].x
 
+        # last line
+        if end_y >= self.scroll and end_y < self.scroll+self.max_lines:
+            e = Entity(parent=self.selection_parent, model='quad', origin=(-.5, -.5),
+            color=self.highlight_color, double_sided=True, position=(0,end_y), ignore=True)
+            e.scale_x = sel[1].x
 
-
-        # if self.scroll_enabled:
-        #     for c in self.selection_parent.children:
-        #         c.y -= self.scroll_position[1]
-        #         if c.y < 0 or c.y >= self.scroll_size[1]:
-        #             destroy(c)
-        #         else:
-        #             c.x -= self.scroll_position[0]
-        #             if c.x < 0:
-        #                 c.scale_x += c.x
-        #                 c.x = 0
-        #             c.scale_x = clamp(c.scale_x, 0, self.scroll_size[0] - c.x)
 
 
 if __name__ == '__main__':
@@ -748,6 +743,11 @@ if __name__ == '__main__':
     # te.selection = [(25,0), (10,3)]
     # te.draw_selection()
     te.render()
+
+    def test():
+        print('CHANGED')
+
+    te.on_value_changed = test
     # te.selection = ((0,0),(4,0))
     # te.select_all()
     # te.selection = ((1,0),(3,0))
