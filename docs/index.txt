@@ -18,16 +18,33 @@ open source game engine
 # left
 # size 2
 ## Powered by Python
-# size 1, verdana
+# size 1
 
 Python is the world's most popular programming language for a reason. The ease of use of Python combined with ursina's design, makes it easy to write concise code and avoid lots of boilerplate code.
 
-# image code_example.jpg
+# size 0.8
+# code
+from ursina import *
+
+app = Ursina()
+
+cube = Entity(model='cube', color=hsv(300,1,1), scale=2, collider='box')
+
+def spin():
+    cube.animate('rotation_y', cube.rotation_y+360, duration=2, curve=curve.in_out_expo)
+
+cube.on_click = spin
+EditorCamera()  # add camera controls for orbiting and moving the camera
+
+app.run()
+
+# text
+# size 1
 
 
 # size 2, arial
 ## Make Any Type of Game
-# size 1, verdana
+# size 1
 
 2D games, 3D games, applications, visualizations, you can make anything you want with ursina.
 
@@ -36,7 +53,7 @@ Python is the world's most popular programming language for a reason. The ease o
 
 # size 2, arial
 ## Iterate Faster
-# size 1, verdana
+# size 1
 
 • Reload code/textures/models while in-game
 • Automatic import of .psd and .blend files
@@ -55,7 +72,7 @@ Unity           11.45s          1145x
 
 # size 2, arial
 ## Modern UI
-# size 1, verdana
+# size 1
 
 • Sleek modern design.
 • Full control. Change the looks of anything, down to the smallest details.
@@ -67,7 +84,7 @@ Unity           11.45s          1145x
 
 # size 2, arial
 ## Batteries Included
-# size 1, verdana
+# size 1
 
 • Easy to use mesh class for making procedural geometry
 • Built-in animation and tweening
@@ -75,12 +92,12 @@ Unity           11.45s          1145x
 • Lots of included procedural 3D primitives
 • Many shaders to choose from, or write your own with GLSL
 
-# image made_with_ursina.jpg
+# image ursina_batteries_included_banner.jpg
 
 
 # size 2, arial
 ## Free
-# size 1, verdana
+# size 1
 
 Licensed under the permissive MIT license,
 you can use Ursina for whatever you want.
@@ -91,7 +108,7 @@ you can use Ursina for whatever you want.
 
 # size 2, arial
 ## Dependencies
-# size 1, verdana
+# size 1
 
 • python 3.6+
 • panda3d

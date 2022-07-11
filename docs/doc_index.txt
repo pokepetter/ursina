@@ -9,5 +9,8 @@
 <a href="collision.html">Collision</a>
     # index collision.txt
 
+<a href="text.html">Text</a>
+    # index text.txt
+
 <a href="faq.html">F.A.Q.</a>
 <a href="building.html">Build and Release</a>
