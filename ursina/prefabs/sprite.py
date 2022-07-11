@@ -4,11 +4,11 @@ class Sprite(Entity):
 
     ppu = 100
 
-    def __init__(self, texture=None, ppu=ppu, **kwargs):
+    def __init__(self, texture=None, **kwargs):
         super().__init__(**kwargs)
         self.model = 'quad'
         self.texture = texture
-        self.ppu = ppu
+        self.ppu = Sprite.ppu
 
         for key, value in kwargs.items():
             setattr(self, key, value)
