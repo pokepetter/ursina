@@ -967,11 +967,6 @@ class Entity(NodePath):
             self.setAttrib(CullFaceAttrib.make(CullFaceAttrib.MCullCounterClockwise))
 
 
-    def flip_faces(self):
-        print_warning('flipped_faces() is legacy. please use .flipped_faces instead')
-        self.flipped_faces = not self.flipped_faces
-
-
     def look_at(self, target, axis='forward'):
         from panda3d.core import Quat
         if not isinstance(target, Entity):
