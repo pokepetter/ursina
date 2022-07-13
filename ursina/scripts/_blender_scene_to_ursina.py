@@ -142,8 +142,9 @@ scene_parent.{ob.name.replace('.', '_')} = Entity(
         code += f'''
     ignore=True,
     )'''
+    code += '''\n\nscene_parent.meshes = meshes'''
 
-    code += '''\nprint('created entities:', perf_counter() - t)'''
+    code += '''\nprint('created entities:', perf_counter() - t)\n'''
     #        if ob.parent:
     #            code += f'''parent=self.{ob.name.replace('.', '_')}'''
 
