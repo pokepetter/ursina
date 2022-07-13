@@ -55,6 +55,7 @@ from ursina.models.procedural.pipe import Pipe
 from ursina.models.procedural.cone import Cone
 from ursina.models.procedural.cube import Cube
 from ursina.models.procedural.cylinder import Cylinder
+from ursina.models.procedural.capsule import Capsule
 from ursina.models.procedural.grid import Grid
 from ursina.models.procedural.terrain import Terrain
 
