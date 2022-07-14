@@ -1,6 +1,6 @@
 # style a.button {background-color: #6b943a; box-shadow:5px 20px 40px #00000057;} a.button:hover {background-color: #a9a33a}
 # title ursina engine
-<meta property="og:title" content="Ursina Engine"/> <meta property="og:type" content="website"/> <meta property="og:url" content="https://www.ursinaengine.org"/> <meta property="og:description" content="Ursina, an open source, python powered game engine"/>
+<meta property="og:title" content="Ursina Engine"/> <meta property="og:type" content="website"/> <meta property="og:url" content="https://www.ursinaengine.org"/> <meta property="og:description" content="Ursina, an open source, python powered game engine"/> <meta property="og:image" content="https://www.ursinaengine.org/made_with_ursina.jpg"/>
 # width 900, right
 <a href="https://github.com/pokepetter/ursina"><img src="icons/github_icon.png"></img></a>  <a href="https://twitter.com/ursinaengine"><img src="icons/twitter_icon.png"></img></a>  <a href="https://discord.gg/ydXfhyb"><img src="icons/discord_icon.png"></img></a>
 # center, bold, arial, size 5, width 900
@@ -16,9 +16,7 @@ open source game engine
 [⭳ Download, installation.html]  [🗎 Documentation, documentation.html]  [Donate, https://github.com/sponsors/pokepetter]
 
 # left
-# size 2
 ## Powered by Python
-# size 1
 
 Python is the world's most popular programming language for a reason. The ease of use of Python combined with ursina's design, makes it easy to write concise code and avoid lots of boilerplate code.
 
@@ -42,18 +40,14 @@ app.run()
 # size 1
 
 
-# size 2, arial
 ## Make Any Type of Game
-# size 1
 
 2D games, 3D games, applications, visualizations, you can make anything you want with ursina.
 
 # image made_with_ursina.jpg
 
 
-# size 2, arial
 ## Iterate Faster
-# size 1
 
 • Reload code/textures/models while in-game
 • Automatic import of .psd and .blend files
@@ -70,9 +64,7 @@ Unity           11.45s          1145x
 # text
 
 
-# size 2, arial
 ## Modern UI
-# size 1
 
 • Sleek modern design.
 • Full control. Change the looks of anything, down to the smallest details.
@@ -82,9 +74,7 @@ Unity           11.45s          1145x
 
 
 
-# size 2, arial
 ## Batteries Included
-# size 1
 
 • Easy to use mesh class for making procedural geometry
 • Built-in animation and tweening
@@ -95,9 +85,7 @@ Unity           11.45s          1145x
 # image ursina_batteries_included_banner.jpg
 
 
-# size 2, arial
 ## Free
-# size 1
 
 Licensed under the permissive MIT license,
 you can use Ursina for whatever you want.
@@ -106,9 +94,7 @@ you can use Ursina for whatever you want.
 • Freely modify source code to fix bugs or add features
 
 
-# size 2, arial
 ## Dependencies
-# size 1
 
 • python 3.6+
 • panda3d
@@ -120,6 +106,13 @@ Optional:
 • imageio, for recording and converting to gifs
 • psd-tools3, for converting .psd files
 • Blender, for converting .blend files
+
+
+## Platforms
+
+• Windows
+• Linux
+• Mac (not officially supported, but will most likely work)
 
 
 

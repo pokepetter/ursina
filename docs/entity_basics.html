@@ -105,7 +105,7 @@ Texture<br>
 
 <gray># other ways are:</gray>
 e<yellow>2</yellow> = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>texture</olive>=e<yellow>1</yellow>.texture) <gray># or set it to another Texture</gray>
-e<yellow>3</yellow> = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>texture</olive>=PIL.Image.new(<olive>mode</olive>="RGBA", size=(<yellow>8</yellow><yellow>5</yellow><yellow>4</yellow>,<yellow>4</yellow><yellow>8</yellow><yellow>0</yellow>))) <gray># set a PIL texture</gray>
+e<yellow>3</yellow> = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>texture</olive>=Texture(PIL.Image.new(<olive>mode</olive>="RGBA", size=(<yellow>8</yellow><yellow>5</yellow><yellow>4</yellow>,<yellow>4</yellow><yellow>8</yellow><yellow>0</yellow>)))) <gray># set a PIL texture</gray>
 e<yellow>4</yellow> = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>texture</olive>=<green>'movie_name.mp<yellow>4</yellow>'</green>) <gray># set video texture</gray>
 </div><br>
 &nbsp;&nbsp;&nbsp;&nbsp;For 2d graphics there's also the Sprite class, which is simply an Entity with a<br>
@@ -154,7 +154,7 @@ e.x = <yellow>0</yellow>
 &gt;&gt;&gt; Vec3(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>)
 </div><br>
 &nbsp;&nbsp;&nbsp;&nbsp;To set the position relative to the scene, that is, ignoring the position of any parents, set .world_position:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<br>
 <div class="code_block" style="margin-left: 2em;">parent_entity = <olive>Entity</olive>(<olive>position</olive>=Vec3(<yellow>0</yellow>,<yellow>2</yellow>,<yellow>0</yellow>))
 e = <olive>Entity</olive>(<olive>parent</olive>=parent_entity, <olive>position</olive>=Vec3(<yellow>0</yellow>,<yellow>2</yellow>,<yellow>0</yellow>))
 <blue>print</blue>(e.position)
