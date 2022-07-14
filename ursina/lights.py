@@ -42,15 +42,17 @@ class DirectionalLight(Light):
         self._shadows = value
         if value:
             self._light.set_shadow_caster(True, int(self.shadow_map_resolution[0]), int(self.shadow_map_resolution[1]))
-            bmin, bmax = scene.get_tight_bounds(self)
-            lens = self._light.get_lens()
-            lens.set_near_far(bmin.z*2, bmax.z*2)
-            lens.set_film_offset((bmin.xy + bmax.xy) * .5)
-            lens.set_film_size(bmax.xy - bmin.xy)
+            self.update_bounds()
         else:
             self._light.set_shadow_caster(False)
 
 
+    def update_bounds(self, entity=scene):  # update the shadow area to fit the bounds of target entity, defaulted to scene.
+        bmin, bmax = entity.get_tight_bounds(self)
+        lens = self._light.get_lens()
+        lens.set_near_far(bmin.z*2, bmax.z*2)
+        lens.set_film_offset((bmin.xy + bmax.xy) * .5)
+        lens.set_film_size(bmax.xy - bmin.xy)
 
 
 class PointLight(Light):
@@ -96,6 +98,5 @@ if __name__ == '__main__':
     pivot = Entity()
     DirectionalLight(parent=pivot, y=2, z=3, shadows=True)
 
-    # pivot.animate_rotation_y(360, duration=4, curve=curve.linear, loop=True)
 
     app.run()
