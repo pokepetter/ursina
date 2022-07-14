@@ -48,7 +48,7 @@ Entity Basics
 
     # other ways are:
     e2 = Entity(model='cube', texture=e1.texture) # or set it to another Texture
-    e3 = Entity(model='cube', texture=PIL.Image.new(mode="RGBA", size=(854,480))) # set a PIL texture
+    e3 = Entity(model='cube', texture=Texture(PIL.Image.new(mode="RGBA", size=(854,480)))) # set a PIL texture
     e4 = Entity(model='cube', texture='movie_name.mp4') # set video texture
     # text
 
@@ -100,7 +100,7 @@ Entity Basics
         # text
 
     To set the position relative to the scene, that is, ignoring the position of any parents, set .world_position:
-    
+
         # code
         parent_entity = Entity(position=Vec3(0,2,0))
         e = Entity(parent=parent_entity, position=Vec3(0,2,0))
