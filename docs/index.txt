@@ -1,6 +1,6 @@
 # style a.button {background-color: #6b943a; box-shadow:5px 20px 40px #00000057;} a.button:hover {background-color: #a9a33a}
 # title ursina engine
-<meta property="og:title" content="Ursina Engine"/> <meta property="og:type" content="website"/> <meta property="og:url" content="https://www.ursinaengine.org"/> <meta property="og:description" content="Ursina, an open source, python powered game engine"/> <meta property="og:image" content="made_with_ursina.jpg"/>
+<meta property="og:title" content="Ursina Engine"/> <meta property="og:type" content="website"/> <meta property="og:url" content="https://www.ursinaengine.org"/> <meta property="og:description" content="Ursina, an open source, python powered game engine"/> <meta property="og:image" content="https://www.ursinaengine.org/made_with_ursina.jpg"/>
 # width 900, right
 <a href="https://github.com/pokepetter/ursina"><img src="icons/github_icon.png"></img></a>  <a href="https://twitter.com/ursinaengine"><img src="icons/twitter_icon.png"></img></a>  <a href="https://discord.gg/ydXfhyb"><img src="icons/discord_icon.png"></img></a>
 # center, bold, arial, size 5, width 900
