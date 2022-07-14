@@ -543,7 +543,6 @@ overflow-y: scroll;
 width: 15em;
 z-index: 1;
 ">
-<a href="cheat_sheet.html">light</a>  <a href="cheat_sheet_dark.html">dark</a>
 
 '''
 
@@ -617,5 +616,5 @@ z-index: 1;
     with open(file_name, 'w', encoding='utf-8') as f:
         f.write(html)
 
-make_html('light', 'cheat_sheet.html')
-make_html('dark', 'cheat_sheet_dark.html')
+# make_html('light', 'cheat_sheet.html')
+make_html('dark', 'cheat_sheet.html')
