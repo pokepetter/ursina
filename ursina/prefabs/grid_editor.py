@@ -245,7 +245,7 @@ class PixelEditor(GridEditor):
         for _y in range(y, min(y+self.brush_size, self.h)):
             for _x in range(x, min(x+self.brush_size, self.w)):
                 self.grid[_x][_y] = self.selected_char
-                self.texture.set_pixel(x, y, self.grid[x][y])
+                self.texture.set_pixel(_x, _y, self.grid[_x][_y])
 
         self.texture.apply()
 
