@@ -106,7 +106,6 @@ if __name__ == '__main__':
     '''
 
     a = Animation('ursina_wink')
-    destroy(a)
 # Animation('city_in_desert_valley_water.gif')
 
     app.run()

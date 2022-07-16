@@ -557,7 +557,7 @@ class TextField(Entity):
             selectedText = self.get_selected()
             if selectedText:
                 pyperclip.copy(selectedText)
-                print('-----copy:', selectedText)
+                # print('-----copy:', selectedText)
 
         if key in self.shortcuts['paste']:# TODO
             if self.selection:
@@ -569,7 +569,7 @@ class TextField(Entity):
             if selectedText:
                 pyperclip.copy(selectedText)
                 self.delete_selected()
-                print('-----cut:', selectedText)
+                # print('-----cut:', selectedText)
 
         if key in self.shortcuts['select_all']:
             self.select_all()
@@ -621,7 +621,7 @@ class TextField(Entity):
         text = '\n'*self.scroll + '\n'.join(lines[self.scroll : self.max_lines + self.scroll])
 
         if not hasattr(self.text_entity, 'raw_text') or self._prev_text != text or self.scroll != self._prev_scroll:
-            print(self.scroll)
+            # print(self.scroll)
 
             if self.replacements:
                 self.text_entity.text = multireplace(text, self.replacements)
@@ -739,19 +739,6 @@ if __name__ == '__main__':
         nec rutrum ipsum condimentum in. Mauris iaculis arcu nec justo rutrum euismod.
         Suspendisse dolor tortor, congue id erat sit amet, sollicitudin facilisis velit.'''
         ), 10))[1:]
-    # te.cursor.position = (4,0)
-    # te.selection = [(25,0), (10,3)]
-    # te.draw_selection()
     te.render()
-
-    def test():
-        print('CHANGED')
-
-    te.on_value_changed = test
-    # te.selection = ((0,0),(4,0))
-    # te.select_all()
-    # te.selection = ((1,0),(3,0))
-    # te.selection = ((2,3),(0,0))
-    # te.draw_selection()
 
     app.run()

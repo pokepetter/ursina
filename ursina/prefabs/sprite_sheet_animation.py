@@ -16,7 +16,6 @@ class SpriteSheetAnimation(Entity):
 
             for y in range(start_coord[1], end_coord[1]+1):
                 for x in range(start_coord[0], end_coord[0]+1):
-                    print('aaaa')
                     s.extend([
                         Func(setattr, self, 'tile_coordinate', (x,y)),
                         Wait(1/fps)

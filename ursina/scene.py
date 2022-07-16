@@ -3,8 +3,6 @@ from panda3d.core import NodePath
 from panda3d.core import Fog
 from ursina import color
 from ursina.texture_importer import load_texture
-# from ursina.ursinastuff import destroy
-# from ursina.entity import Entity
 
 
 class Scene(NodePath):
@@ -23,7 +21,6 @@ class Scene(NodePath):
 
 
     def set_up(self):
-        from ursina.entity import Entity
         self.reparent_to(render)
         self.reflection_map = load_texture(self.reflection_map_name)
         self.fog = Fog('fog')
