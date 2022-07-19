@@ -10,14 +10,7 @@ class RadialMenu(Entity):
         self.open_at_cursor = True
         self.open_duration = .25
 
-        self.bg = Panel(
-            parent=self,
-            model='quad',
-            z=99,
-            scale=999,
-            collider='box',
-            color=color.color(0,0,0,.1),
-            enabled=False)
+        self.bg = Panel(parent=self, model='quad', z=99, scale=999, collider='box', color=color.color(0,0,0,.1), enabled=False)
         self.z = -99
 
         offset = lerp(.5, 2, len(self.buttons)/8)
@@ -65,12 +58,7 @@ class RadialMenu(Entity):
 
 class RadialMenuButton(Button):
     def __init__(self, **kwargs):
-        super().__init__(
-            model='sphere',
-            scale=1.3,
-            highlight_scale=1.2,
-            pressed_color=color.azure
-            )
+        super().__init__(model='sphere', scale=1.3, highlight_scale=1.2, pressed_color=color.azure)
 
 
         for key, value in kwargs.items():

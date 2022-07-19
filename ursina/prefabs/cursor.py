@@ -26,18 +26,8 @@ if __name__ == '__main__':
     from ursina import Ursina, Button, scene, Panel, Mesh
     app = Ursina()
     Button('button').fit_to_text()
-    Panel()
     camera.orthographic = True
     camera.fov = 100
-    cursor =  Cursor(
-        texture=None,
-        model=Mesh(
-            vertices=[(-.5,0,0), (.5,0,0), (0,-.5,0), (0,.5,0)],
-            triangles=[(0,1), (2,3)],
-            mode='line',
-            thickness=2,
-            ),
-        scale=.02
-        )
+    cursor =  Cursor(model=Mesh(vertices=[(-.5,0,0),(.5,0,0),(0,-.5,0),(0,.5,0)], triangles=[(0,1),(2,3)], mode='line', thickness=2), scale=.02)
     mouse.visible = False
     app.run()

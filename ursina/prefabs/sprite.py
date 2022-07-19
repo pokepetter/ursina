@@ -14,8 +14,7 @@ class Sprite(Entity):
             setattr(self, key, value)
 
         if not self.texture:
-            # destroy(self)
-            return None
+            return
 
         self.scale_y *= self.texture.height / self.ppu
         self.aspect_ratio = self.texture.width / self.texture.height

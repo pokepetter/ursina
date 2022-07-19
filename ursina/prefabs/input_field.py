@@ -20,7 +20,7 @@ class InputField(Button):
         self.hide_content = False   # if set to True, will display content as '*'. can also be set to character instead of True.
 
         self.next_field = None
-        self.submit_on = None   # for example: self.submit_on = 'enter' will call self.on_submit whne you press enter.
+        self.submit_on = None   # for example: self.submit_on = 'enter' will call self.on_submit when you press enter.
         self.on_submit = None   # function to be called when you press self.submit_on.
         self.on_value_changed = None
 

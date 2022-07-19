@@ -22,7 +22,6 @@ class FrameAnimation3d(Entity):
             self.sequence.append(Func(setattr, self.frames[i], 'enabled', True))
             self.sequence.append(Wait(1/fps))
 
-        self.is_playing = False
         self.autoplay = autoplay
 
 
@@ -35,10 +34,9 @@ class FrameAnimation3d(Entity):
 
 
     def start(self):
-        if self.is_playing:
-            self.finish()
+        if not self.sequence.finished:
+            self.sequence.finish()
         self.sequence.start()
-        self.is_playing = True
 
     def pause(self):
         self.sequence.pause()
@@ -48,7 +46,6 @@ class FrameAnimation3d(Entity):
 
     def finish(self):
         self.sequence.finish()
-        self.is_playing = False
 
 
     @property

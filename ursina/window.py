@@ -162,7 +162,7 @@ class Window(WindowProperties):
         self.cog_menu.text_entity.x += .025
         self.cog_menu.highlight.color = color.azure
         self.cog_button = Button(parent=self.editor_ui, eternal=True, model='quad', texture='cog', scale=.015, origin=(1,-1), position=self.bottom_right, name='cog_button')
-        info_text ='''This menu is not enabled in builds <gray>(unless you set application.development to be not False).'''
+        info_text ='''This menu is not enabled in builds <gray>(unless you set application.development_mode to be not False).'''
         self.cog_menu.info = Button(parent=self.cog_menu, model='quad', text='<gray>?', scale=.1, x=1, y=.01, origin=(.5,-.5), tooltip=Tooltip(info_text, scale=.75, origin=(-.5,-.5), eternal=True), eternal=True, name='cog_menu_info')
         self.cog_menu.info.text_entity.scale *= .75
         def _toggle_cog_menu():

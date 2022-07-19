@@ -1,4 +1,4 @@
-from ursina import *
+from ursina import Entity, Draggable, Text, Slider, Button, color, Vec3, Quad
 from ursina.prefabs.input_field import InputField
 
 
@@ -111,29 +111,19 @@ if __name__ == '__main__':
     '''
     WindowPanel is an easy way to create UI. It will automatically layout the content.
     '''
+    from ursina import Ursina, ButtonGroup
     app = Ursina()
     wp = WindowPanel(
         title='Custom Window',
         content=(
             Text('Name:'),
             InputField(name='name_field'),
-            # Text('Age:'),
-            # InputField(name='age_field'),
-            # Text('Phone Number:'),
-            # InputField(name='phone_number_field'),
-            # Space(height=1),
-            # Text('Send:'),
             Button(text='Submit', color=color.azure),
             Slider(),
             Slider(),
-            # ButtonGroup(('test', 'eslk', 'skffk'))
+            ButtonGroup(('test', 'eslk', 'skffk'))
             ),
-            popup=True,
-            enabled=False
         )
 
-    def input(key):
-        if key == 'space':
-            wp.enabled = True
 
     app.run()
