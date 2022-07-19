@@ -10,7 +10,7 @@ camera.z = -10
 ground = Entity(model='plane', texture='grass', scale=10)
 
 # Create an Entity for handling pausing an unpausing.
-# Make sure to set ignore_paused to True so the pause handler itself can still recieve input while the game is paused.
+# Make sure to set ignore_paused to True so the pause handler itself can still receive input while the game is paused.
 pause_handler = Entity(ignore_paused=True)
 pause_text = Text('PAUSED', origin=(0,0), scale=2, enabled=False) # Make a Text saying "PAUSED" just to make it clear when it's paused.
 
