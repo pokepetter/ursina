@@ -170,6 +170,8 @@ class Window(WindowProperties):
         self.cog_button.on_click = _toggle_cog_menu
         # print('-----------', time.time() - t) # 0.04
 
+    def disable_editor_ui(self):
+        self.editor_ui.disable()
 
     def update_aspect_ratio(self):
         prev_aspect = self.aspect_ratio
