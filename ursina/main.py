@@ -16,10 +16,10 @@ from ursina.string_utilities import print_info
 
 import __main__
 time.dt = 0
+keyboard_keys = '1234567890qwertyuiopasdfghjklzxcvbnm'
 
 
 class Ursina(ShowBase):
-
     def __init__(self, **kwargs): # optional arguments: title, fullscreen, size, forced_aspect_ratio, position, vsync, borderless, show_ursina_splash, render_mode, development_mode, editor_ui_enabled.
         for name in ('size', 'vsync', 'forced_aspect_ratio'):
             if name in kwargs and hasattr(window, name):
@@ -98,10 +98,15 @@ class Ursina(ShowBase):
             'page_up' : 'page up',
             'page_up up' : 'page up up',
             }
+        for e in keyboard_keys:
+            self.accept(f'raw-{e}', self.input, [e, True])
+            self.accept(f'raw-{e}-up', self.input_up, [e, True])
+            # self.accept(f'raw-{e}-repeat', self.input_hold, [e, True])
+
         self.accept('buttonDown', self.input)
         self.accept('buttonUp', self.input_up)
         self.accept('buttonHold', self.input_hold)
-        self.accept('keystroke', self.keystroke)
+        self.accept('keystroke', self.text_input)
         ConfigVariableBool('paste-emit-keystrokes', False)
 
         base.disableMouse()
@@ -159,7 +164,10 @@ class Ursina(ShowBase):
 
 
 
-    def input_up(self, key):
+    def input_up(self, key, is_raw=False):
+        if not is_raw and key in keyboard_keys:
+            return
+
         if key in  ('wheel_up', 'wheel_down'):
             return
 
@@ -167,7 +175,10 @@ class Ursina(ShowBase):
         self.input(key)
 
 
-    def input_hold(self, key):
+    def input_hold(self, key, is_raw=False):
+        # if not is_raw and key in keyboard_keys:
+        #     return
+
         key = key.replace('control-', '')
         key = key.replace('shift-', '')
         key = key.replace('alt-', '')
@@ -179,7 +190,10 @@ class Ursina(ShowBase):
         self.input(key)
 
 
-    def input(self, key):
+    def input(self, key, is_raw=False):
+        if not is_raw and key in keyboard_keys:
+            return
+        # print('----:', key)
         key = key.replace('control-', '')
         key = key.replace('shift-', '')
         key = key.replace('alt-', '')
@@ -234,7 +248,7 @@ class Ursina(ShowBase):
             window.render_mode = 'default'
 
 
-    def keystroke(self, key):
+    def text_input(self, key):
         key_code = ord(key)
         if key_code < 32 or key_code >= 127 and key_code <= 160:
             return
@@ -243,8 +257,8 @@ class Ursina(ShowBase):
             return
 
         if not application.paused:
-            if hasattr(__main__, 'keystroke'):
-                __main__.keystroke(key)
+            if hasattr(__main__, 'text_input'):
+                __main__.text_input(key)
 
         for entity in scene.entities:
             if entity.enabled == False or entity.ignore or entity.ignore_input:
@@ -252,13 +266,13 @@ class Ursina(ShowBase):
             if application.paused and entity.ignore_paused == False:
                 continue
 
-            if hasattr(entity, 'keystroke') and callable(entity.keystroke):
-                entity.keystroke(key)
+            if hasattr(entity, 'text_input') and callable(entity.text_input):
+                entity.text_input(key)
 
             if hasattr(entity, 'scripts'):
                 for script in entity.scripts:
-                    if script.enabled and hasattr(script, 'keystroke') and callable(script.keystroke):
-                        script.keystroke(key)
+                    if script.enabled and hasattr(script, 'text_input') and callable(script.text_input):
+                        script.text_input(key)
 
     def step(self):     # use this control the update loop yourself. call app.step() in a while loop for example, instead of app.run()
         self.taskMgr.step()
@@ -279,5 +293,6 @@ class Ursina(ShowBase):
 
 
 if __name__ == '__main__':
+    from ursina import *
     app = Ursina()
     app.run()
