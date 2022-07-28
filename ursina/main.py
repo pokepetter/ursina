@@ -3,7 +3,6 @@ import platform
 
 from direct.showbase.ShowBase import ShowBase
 from direct.task.Task import Task
-from panda3d.core import KeyboardButton
 from panda3d.core import ConfigVariableBool
 
 from ursina import application
@@ -236,13 +235,11 @@ class Ursina(ShowBase):
 
 
     def keystroke(self, key):
-        key = str(KeyboardButton.asciiKey(key))
-
-        if key == None:
+        key_code = ord(key)
+        if key_code < 32 or key_code >= 127 and key_code <= 160:
             return
-        if key == 'space':
-            key = ' '
-        if len(key) != 1:
+
+        if input_handler.held_keys['control'] or key != ' ' and key.isspace():
             return
 
         if not application.paused:
