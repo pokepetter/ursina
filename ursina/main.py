@@ -3,7 +3,6 @@ import platform
 
 from direct.showbase.ShowBase import ShowBase
 from direct.task.Task import Task
-from panda3d.core import KeyboardButton
 from panda3d.core import ConfigVariableBool
 
 from ursina import application
