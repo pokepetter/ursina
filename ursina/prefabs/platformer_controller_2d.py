@@ -34,7 +34,6 @@ class PlatformerController2d(Entity):
         self.air_time = 0   # this increase while we're falling and used when calculating the distance we fall so we fall faster and faster instead of linearly.
         self.traverse_target = scene     # by default, it will collide with everything except itself. you can change this to change the boxcast traverse target.
         self._start_fall_sequence = None # we need to store this so we can interrupt the fall call if we try to double jump.
-        self.grounded_checker = Entity(parent=self, y=-.5, scale_y=.1, model='cube', collider='box', color=color.red, alpha=.5)
 
         ray = boxcast(self.world_position, self.down, distance=10, ignore=(self, ), traverse_target=self.traverse_target, thickness=.9)
         if ray.hit:
