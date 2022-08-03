@@ -591,7 +591,7 @@ class TextField(Entity):
         self.render()
 
 
-    def keystroke(self, key):
+    def text_input(self, key):
         cursor, add_text = self.cursor, self.add_text
 
         if not self.active:

@@ -7,16 +7,13 @@ from ursina.mesh import Mesh
 class Collider(NodePath):
     def __init__(self):
         super().__init__('box_collider')
+        self._visible = False
 
-    def show(self):
-        self.visible = True
-
-    def hide(self):
-        self.visible = False
 
     def remove(self):
         self.node_path.node().clearSolids()
         self.node_path.removeNode()
+
 
     @property
     def visible(self):
@@ -24,11 +21,11 @@ class Collider(NodePath):
 
     @visible.setter
     def visible(self, value):
+        self._visible = value
         if value:
             self.node_path.show()
         else:
             self.node_path.hide()
-            pass
 
 
 class BoxCollider(Collider):
