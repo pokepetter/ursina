@@ -175,8 +175,23 @@ class LevelEditor(Entity):
                 self.entities.remove(e)
 
 
-        self.point_renderer.model.vertices = [e.world_position for e in self.entities if e.selectable and not e.collider]
-        self.point_renderer.model.colors = [color.azure if e in self.selection else lerp(color.orange, color.hsv(0,0,1,0), distance(e.world_position, camera.world_position)/100) for e in self.entities if e.selectable and not e.collider]
+        # self.point_renderer.model.vertices = [e.world_position for e in self.entities if e.selectable and not e.model ]
+        self.point_renderer.model.vertices.clear()
+        self.point_renderer.model.colors.clear()
+
+        for e in self.entities:
+            if e.model and e.model.name == 'cube':
+                continue
+
+            self.point_renderer.model.vertices.append(e.world_position)
+
+            if e in self.selection:
+                self.point_renderer.model.colors.append(color.azure)
+            else:
+                self.point_renderer.model.colors.append(lerp(color.orange, color.hsv(0,0,1,0), distance(e.world_position, camera.world_position)/100))
+
+
+        # self.point_renderer.model.colors = [color.azure if e in self.selection else lerp(color.orange, color.hsv(0,0,1,0), distance(e.world_position, camera.world_position)/100) for e in self.entities if e.selectable and not e.collider]
         self.point_renderer.model.generate()
 
         gizmo.enabled = bool(self.selection and self.selection[-1])
@@ -420,6 +435,8 @@ class Gizmo(Entity):
                 self.subgizmos[axis].plane_direction = self.forward
 
         self.subgizmos['xz'].plane_direction = self.up
+        [setattr(e, 'visible_self', show_gizmo_while_dragging) for e in self.subgizmos.values()]
+
 
         # use fake gizmo technique to lock movement to local axis. if in global mode, skip this and use the old simpler way.
         if level_editor.local_global_menu.value == 'local':
@@ -429,8 +446,7 @@ class Gizmo(Entity):
 
             self.fake_gizmo.enabled = True
             self.visible = False
-            if show_gizmo_while_dragging:
-                [setattr(e, 'visible_self', True) for e in self.fake_gizmo.subgizmos.values()]
+            [setattr(e, 'visible_self', show_gizmo_while_dragging) for e in self.fake_gizmo.subgizmos.values()]
             [setattr(e, 'visible_self', False) for e in self.subgizmos.values()]
 
 
@@ -695,8 +711,12 @@ class QuickGrabber(Entity):
             return
 
 
-        if key in 'gxyz':
+        if key in 'gxyzw':
             if self.target_entity:
+                return
+
+            print('dsajfikhsdkjfhsdfkljh')
+            if key == 'w' and level_editor.selection:
                 return
 
             self.target_entity = selector.get_hovered_entity()
@@ -704,15 +724,15 @@ class QuickGrabber(Entity):
             if self.target_entity:
                 print(self.target_entity.color)
                 self.target_axis = key
-                if key == 'g':
+                if key in 'gw':
                     self.target_axis = 'xz'
 
                 level_editor.selection = [self.target_entity, ]
                 level_editor.render_selection()
 
-                level_editor.local_global_menu.orignal_value = level_editor.local_global_menu.value
-                level_editor.local_global_menu.orignal_value = 'global'
-
+                # level_editor.local_global_menu.orignal_value = level_editor.local_global_menu.value
+                # level_editor.local_global_menu.value = 'global'
+                gizmo.world_scale = Vec3(1)
                 gizmo.drag(show_gizmo_while_dragging=False)
                 print('-------------', level_editor.selection)
                 self.target_gizmo = gizmo.subgizmos[self.target_axis]
@@ -721,11 +741,12 @@ class QuickGrabber(Entity):
                 # invoke(self.target_gizmo.input, 'left mouse down', delay=2/60)
                 # invoke(self.target_gizmo.start_dragging, delay=2/60)
 
-        elif key in ('x up', 'y up', 'z up', 'g up') and self.target_entity:
+        elif key in ('x up', 'y up', 'z up', 'g up', 'w up') and self.target_entity:
             self.target_entity = None
             gizmo.drop()
             self.target_gizmo.stop_dragging()
             level_editor.selection = []
+            # level_editor.local_global_menu.value = 'global'
             level_editor.render_selection()
 
 
@@ -988,12 +1009,24 @@ class SelectionBox(Entity):
             self.scale_y = mouse.y - self.y
 
 
+class Cube(Entity):
+    def __init__(self, **kwargs):
+        super().__init__(model='cube', collider='box', **kwargs)
+class Pyramid(Entity):
+    def __init__(self, **kwargs):
+        super().__init__(model=Cone(4), **kwargs)
+class Rock(Entity):
+    def __init__(self, **kwargs):
+        super().__init__(model='procedural_rock_0', collider='box', color=hsv(20,.2,.45), **kwargs)
+
+
 class Spawner(Entity):
     def __init__(self):
         super().__init__(parent=level_editor)
         self.target = None
-        self.button = Button(parent=level_editor.ui, scale=.075, origin=(.5,-.5), position=window.bottom_right, text='+', on_click=self.spawn_entity)
-        self.button.i = Entity(parent=self.button, model='wireframe_cube', rotation=(-10,10,0), scale=.5, position=(-.5,.5))
+        for i, prefab in enumerate([Cube, Pyramid, Rock]):
+            button = Button(parent=level_editor.ui, scale=.075/2, origin=(.5,-.5), position=window.bottom_right+Vec2(-.05 -(i*.0375),0), on_click=Func(self.spawn_entity, prefab))
+        # self.button.i = Entity(parent=self.button, model='wireframe_cube', rotation=(-10,10,0), scale=.5, position=(-.5,.5,-1))
 
     def input(self, key):
         if key == 'i':
@@ -1007,13 +1040,20 @@ class Spawner(Entity):
         elif self.target and key == 'left mouse up':
             self.drop_entity()
 
-    def spawn_entity(self):
+    def spawn_entity(self, _class=Entity):
         if not level_editor.current_scene:
             print_on_screen('<red>select a scene first', position=(0,0), origin=(0,0))
             return
 
         level_editor.grid.enabled = True
-        self.target = Entity(model='cube', shader=lit_with_shadows_shader, position=mouse.world_point, original_parent=level_editor, selectable=True, collider='box', collision=False)
+        self.target = _class(position=mouse.world_point, original_parent=level_editor, selectable=True, collision=False)
+        print(self.target.model.name)
+        # if not self.target.collider:
+        #     self.target.collider = 'box'
+        #     self.target.collision = False
+        if not self.target.shader:
+            self.target.shader = lit_with_shadows_shader
+
         level_editor.current_scene.entities.append(self.target)
 
     def drop_entity(self):
@@ -1047,6 +1087,7 @@ class Deleter(Entity):
             [destroy(e, delay=1/60) for e in level_editor.selection]
             level_editor.selection = []
             level_editor.render_selection()
+            hierarchy_list.render_selection()
 
 
 class PointOfViewSelector(Entity):
@@ -1214,6 +1255,10 @@ class LevelMenu(Entity):
         self.current_scene_label.text = level_editor.current_scene.name
         self.draw()
         level_editor.render_selection()
+        try:
+            hierarchy_list.render_selection()
+        except:
+            pass
 
         try:
             sun_handler.sun.shadows = True
@@ -1221,7 +1266,7 @@ class LevelMenu(Entity):
             print('no sun')
             pass
 
-class HierachyList(Entity):
+class HierarchyList(Entity):
     def __init__(self):
         super().__init__(parent=level_editor.ui)
         self.quad_model = load_model('quad', application.internal_models_folder, use_deepcopy=True)
@@ -1230,12 +1275,33 @@ class HierachyList(Entity):
         self.selected_renderer = Entity(parent=self.entity_list_text, scale=(.25,Text.size), model=Mesh(vertices=[]), color=hsv(210,.9,.6), origin=(-.5,.5), x=-.01, z=-1)
         self.selected_renderer.world_parent = self
         self.selected_renderer.z= -.1
+        self.prev_y = None
 
     def input(self, key):
-        if key == 'left mouse up':
-            self.draw_selection()
+        if key == 'left mouse down' and self.bg.hovered:
+            y = int(-mouse.point.y * self.bg.scale_y / Text.size / self.entity_list_text.scale_y)
+            if y < len(level_editor.entities):
+                if not held_keys['control'] and not held_keys['shift']:     # select one
+                    level_editor.selection = [level_editor.entities[y], ]
+                elif held_keys['control'] and not held_keys['shift']:       # add one
+                    level_editor.selection.append(level_editor.entities[y])
+                elif held_keys['shift'] and self.prev_y:                    # add multiple
+                    from_y = min(self.prev_y, y)
+                    to_y = max(self.prev_y, y)
+                    level_editor.selection.extend(level_editor.entities[from_y:to_y+1])
 
-    def draw_selection(self):
+            elif not held_keys['control'] and not held_keys['shift']:
+                level_editor.selection.clear()
+
+            self.prev_y = y
+            self.render_selection()
+            level_editor.render_selection()
+
+
+        if key == 'left mouse up':
+            self.render_selection()
+
+    def render_selection(self):
         text = ''
         self.selected_renderer.model.vertices = []
 
@@ -1360,7 +1426,7 @@ class Inspector(Entity):
                 field_values = [getattr(e, name) for e in level_editor.selection]
                 field_values = [e.name for e in field_values if hasattr(e, 'name')]
                 field_values = tuple(set(field_values))
-                print('---', field_values)
+                # print('---', field_values)
                 # print(field_values)
                 if len(field_values) == 1:
                     self.fields[name].text_entity.text = (f'{name[0]}: {field_values[0]}')
@@ -1458,6 +1524,10 @@ class ModelMenu(Entity):
 
         for e in level_editor.selection:
             e.model = name
+            if name == 'cube':
+                e.collider = 'cube'
+            else:
+                e.colllider = None
 
         menu_handler.state = 'None'
 
@@ -2000,7 +2070,7 @@ color_menu = ColorMenu()
 shader_menu = ShaderMenu()
 menu_handler = MenuHandler()
 # right_click_menu = RightClickMenu()
-hierachy_list = HierachyList()
+hierarchy_list = HierarchyList()
 inspector = Inspector()
 PointOfViewSelector()
 Help()
