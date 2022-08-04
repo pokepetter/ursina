@@ -193,10 +193,6 @@ class Ursina(ShowBase):
     def input(self, key, is_raw=False):
         if not is_raw and key in keyboard_keys:
             return
-        # print('----:', key)
-        key = key.replace('control-', '')
-        key = key.replace('shift-', '')
-        key = key.replace('alt-', '')
 
         if key in self._input_name_changes:
             key = self._input_name_changes[key]
