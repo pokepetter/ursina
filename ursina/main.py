@@ -194,6 +194,9 @@ class Ursina(ShowBase):
         if not is_raw and key in keyboard_keys:
             return
 
+        if '-' in key and not key == '-':
+            return
+
         if key in self._input_name_changes:
             key = self._input_name_changes[key]
 
