@@ -1058,6 +1058,9 @@ class Entity(NodePath):
         changes = []
         for key, value in default_values.items():
             if not getattr(self, key) == default_values[key]:
+                if key == 'name' and hasattr(self, 'name'):
+                    changes.append(f"name='{getattr(self, key)}', ")
+                    continue
                 if key == 'model' and hasattr(self.model, 'name'):
                     changes.append(f"model='{getattr(self, key).name}', ")
                     continue
@@ -1103,6 +1106,9 @@ class Entity(NodePath):
             # print('interrupt', interrupt, animator_name)
 
         sequence = Sequence(loop=loop, time_step=time_step, auto_destroy=auto_destroy)
+        if hasattr(self, animator_name) and getattr(self, animator_name) in self.animations:
+            self.animations.remove(getattr(self, animator_name))
+
         setattr(self, animator_name, sequence)
         self.animations.append(sequence)
 

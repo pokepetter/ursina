@@ -8,7 +8,7 @@ class RadialMenu(Entity):
         self.buttons = buttons
         origin = Entity(parent=self)
         self.open_at_cursor = True
-        self.open_duration = .25
+        self.open_duration = .1
 
         self.bg = Panel(parent=self, model='quad', z=99, scale=999, collider='box', color=color.color(0,0,0,.1), enabled=False)
         self.z = -99
@@ -46,7 +46,7 @@ class RadialMenu(Entity):
                 continue
 
             c.scale = 0
-            c.animate_scale(original_scales[i], duration=.2, delay=i*delay_step, curve=curve.out_bounce)
+            c.animate_scale(original_scales[i], duration=self.open_duration, delay=i*delay_step, curve=curve.linear)
 
 
     def input(self, key):

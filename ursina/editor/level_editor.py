@@ -119,7 +119,7 @@ class LevelEditor(Entity):
         self.origin_mode_menu = ButtonGroup(['last', 'center', 'individual'], min_selection=1, position=window.top, parent=self.ui)
         self.origin_mode_menu.scale *= .75
         self.origin_mode_menu.on_value_changed = self.render_selection
-        self.local_global_menu = ButtonGroup(['local', 'global'], min_selection=1, position=window.top - Vec2(.2,0), parent=self.ui)
+        self.local_global_menu = ButtonGroup(['local', 'global'], default='global', min_selection=1, position=window.top - Vec2(.2,0), parent=self.ui)
         self.local_global_menu.scale *= .75
         self.local_global_menu.on_value_changed = self.render_selection
         self.target_fov = 90
@@ -1341,15 +1341,15 @@ class Inspector(Entity):
                         value = float(eval(field.text))
                         if isinstance(value, float):
                             field.text = str(value)
-                            for e in level_editor.selection:
-                                setattr(e, names[x], value)
+                            # for e in level_editor.selection:
+                            #     setattr(e, names[x], value)
                     except: # invalid/incomplete math
                         # print('invalid')
                         return
 
                 # field.submit_on = 'enter'
                 field.on_submit = on_submit
-                field.on_value_changed = on_submit
+                # field.on_value_changed = on_submit
 
                 self.transform_fields.append(field)
                 self.input_fields.append(field)
@@ -1488,38 +1488,33 @@ class MenuHandler(Entity):
             self.state = self.keybinds[key]
             print('sets state:', self.keybinds[key], self.state)
 
-
-class ModelMenu(Entity):
+class AssetMenu(Entity):
     def __init__(self):
-        super().__init__(parent=level_editor.ui, enabled=False)
-        self.search_field = InputField(parent=self, y=.3)
-        self.button_list = None     # gets created on self.open()
+        super().__init__(parent=level_editor.ui, enabled=False, z=-2, name=__class__.__name__)
+        self.button_list = ButtonList({}, parent=self, font='VeraMono.ttf', x=-.25*.75, scale=.75)
+        self.bg = Entity(parent=self.button_list, model='quad', collider='box', color=color.black33, on_click=self.disable, z=.1, scale=100)
 
     def on_enable(self):
+        if not self.asset_names:
+            print('no texture assets found')
+            # return
+        asset_dict = {name : Func(self.on_select_asset, name) for name in self.asset_names}
+        self.button_list.button_dict = asset_dict
+        self.button_list.y = len(asset_dict) / 2 * self.button_list.button_height * Text.size
+        self.button_list.x = mouse.x
+        self.button_list.y = mouse.y
+
+
+class ModelMenu(AssetMenu):
+    def on_enable(self):
         # self.model_names = [e.stem for e in application.internal_models_compressed_folder.glob('**/*.ursinamesh')]
-        self.model_names = ['cube', 'sphere', 'plane']
+        self.asset_names = ['cube', 'sphere', 'plane']
         for file_type in ('.bam', '.obj', '.ursinamesh'):
-            self.model_names += [e.stem for e in application.asset_folder.glob(f'**/*{file_type}') if not 'animation' in e.stem]
+            self.asset_names += [e.stem for e in application.asset_folder.glob(f'**/*{file_type}') if not 'animation' in e.stem]
 
-        model_dict = {name : Func(self.set_models_for_selection, name) for name in self.model_names}
-        # print('mmmmmmm', model_dict)
-        if not self.button_list:
-            self.button_list = ButtonList(model_dict, parent=self, font='VeraMono.ttf', y=.25)
-            self.bg = Entity(parent=self, model='quad', collider='box', color=color.black33, on_click=self.disable, z=.1, scale=100)
+        super().on_enable()
 
-        # self.menu_parent.enabled = True
-        # self.search_field.active = True
-
-        # self.search_field.text = ''
-        # self.button_list.position = mouse.position
-
-    # def input(self, key):
-    #     if key == 'm':
-    #         if self.button_list is None or (not self.menu_parent.enabled and level_editor.selection):
-    #             self.open()
-
-
-    def set_models_for_selection(self, name):
+    def on_select_asset(self, name):
         level_editor.current_scene.undo.record_undo([(level_editor.entities.index(e), 'model', e.model.name, name) for e in level_editor.selection])
 
         for e in level_editor.selection:
@@ -1532,47 +1527,40 @@ class ModelMenu(Entity):
         menu_handler.state = 'None'
 
 
-class TextureMenu(Entity):
-    def __init__(self):
-        super().__init__(parent=level_editor.ui, enabled=False)
-        self.button_list = None     # gets created on self.open()
-        self.search_field = None
-        Entity(parent=self, model='quad', scale=.2, color=color.red)
-
-
+class TextureMenu(AssetMenu):
     def on_enable(self):
         search_for = ''
-        if self.search_field is not None:
-            self.search_field.text = ''
-            # search_for = self.search_for.text
-            print('------------', search_for)
 
         self.asset_names = [e.stem for e in application.internal_textures_folder.glob(f'**/{search_for}*.jpg')]
         for file_type in ('.png', '.jpg', '.jpeg'):
             self.asset_names += [e.stem for e in application.asset_folder.glob(f'**/{search_for}*{file_type}')]
 
-        # if not self.asset_names:
-        #     print('no texture assets found')
-        #     return
+        super().on_enable()
 
-        texture_dict = {name : Func(self.set_texture_for_selection, name) for name in self.asset_names}
-        if not self.button_list:
-            self.button_list = ButtonList(texture_dict, font='VeraMono.ttf', parent=self)
-            self.bg = Entity(parent=self.button_list, model='quad', collider='box', color=color.black33, on_click=self.disable, z=.1, scale=100)
-            self.search_field = InputField(parent=self)
-            self.search_field.text_field.on_value_changed = Func(print, 'æaaaaa')
-
-        self.button_list.button_dict = texture_dict
-        self.search_field.active = True
-
-
-    def set_texture_for_selection(self, name):
+    def on_select_asset(self, name):
         level_editor.current_scene.undo.record_undo([(level_editor.entities.index(e), 'texture', e.texture, name) for e in level_editor.selection])
         for e in level_editor.selection:
             e.texture = name
 
         menu_handler.state = 'None'
 
+class ShaderMenu(AssetMenu):
+    def on_enable(self):
+        self.asset_names = [
+            'unlit_shader',
+            'lit_with_shadows_shader',
+            'triplanar_shader',
+            'matcap_shader',
+            'normals_shader',
+        ]
+        super().on_enable()
+
+    def on_select_asset(self, name):
+        menu_handler.state = 'None'
+        level_editor.current_scene.undo.record_undo([(level_editor.entities.index(e), 'shader', e.shader, name) for e in level_editor.selection])
+        for e in level_editor.selection:
+            exec(f'from ursina.shaders import {name}')
+            exec(f'e.shader = {name}')
 
 
 class ColorMenu(Entity):
@@ -1651,39 +1639,6 @@ class ColorMenu(Entity):
     def close(self):
         menu_handler.state = 'None'
         level_editor.current_scene.undo.record_undo([(level_editor.entities.index(e), 'color', e.original_color, e.color) for e in level_editor.selection])
-
-
-class ShaderMenu(Entity):
-    def __init__(self, **kwargs):
-        super().__init__(parent=level_editor.ui, enabled=False)
-        self.button_list = None     # gets created on on_enable()
-
-
-    def on_enable(self):
-        self.asset_names = [
-            'unlit_shader',
-            'lit_with_shadows_shader',
-            'triplanar_shader',
-            'matcap_shader',
-            'normals_shader',
-        ]
-
-        if not self.asset_names:
-            print('no shaders found')
-            return
-
-        shader_dict = {name : Func(self.set_shader_for_selection, name) for name in self.asset_names}
-        if not self.button_list:
-            self.button_list = ButtonList(shader_dict, parent=self, font='VeraMono.ttf')
-            self.bg = Entity(parent=self, model='quad', collider='box', color=color.black33, on_click=Func(setattr, menu_handler, 'state', 'None'), z=.1, scale=100)
-
-
-    def set_shader_for_selection(self, name):
-        menu_handler.state = 'None'
-        level_editor.current_scene.undo.record_undo([(level_editor.entities.index(e), 'shader', e.shader, name) for e in level_editor.selection])
-        for e in level_editor.selection:
-            exec(f'from ursina.shaders import {name}')
-            exec(f'e.shader = {name}')
 
 
 
@@ -1982,32 +1937,32 @@ class SunHandler(Entity):
                 # e.shader = unlit_shader
                 e.unlit = not e.unlit
 
-# from ursina.prefabs.radial_menu import RadialMenu
-# class RightClickMenu(Entity):
-#     def __init__(self):
-#         super().__init__()
-#         self.radial_menu = RadialMenu(
-#             parent=level_editor.ui,
-#             buttons = (
-#                 Button(highlight_color=color.azure, text='Model', on_click=Func(setattr, menu_handler, 'state', 'model_menu')),
-#                 Button(highlight_color=color.azure, text='Tex', on_click=Func(setattr, menu_handler, 'state', 'texture_menu')),
-#                 Button(highlight_color=color.azure, text='Col', on_click=Func(setattr, menu_handler, 'state', 'color_menu')),
-#                 Button(highlight_color=color.azure, text='Sh', on_click=Func(setattr, menu_handler, 'state', 'shader_menu')),
-#                 Button(highlight_color=color.black, text='del', scale=.5, color=color.red, on_click=deleter.delete_selected),
-#                 Button(highlight_color=color.azure, text='collider'),
-#             ),
-#             enabled=False,
-#             scale=.05
-#         )
-#
-#     def input(self, key):
-#         if key == 'right mouse down':
-#             self.start_click_pos = mouse.position
-#
-#         if key == 'right mouse up':
-#             if level_editor.selection and sum(abs(e) for e in mouse.position-self.start_click_pos) < .005:
-#                 self.radial_menu.enabled = True
-#
+from ursina.prefabs.radial_menu import RadialMenu
+class RightClickMenu(Entity):
+    def __init__(self):
+        super().__init__()
+        self.radial_menu = RadialMenu(
+            parent=level_editor.ui,
+            buttons = (
+                Button(highlight_color=color.azure, text='Model', on_click=Func(setattr, menu_handler, 'state', 'model_menu')),
+                Button(highlight_color=color.azure, text='Tex', on_click=Func(setattr, menu_handler, 'state', 'texture_menu')),
+                Button(highlight_color=color.azure, text='Col', on_click=Func(setattr, menu_handler, 'state', 'color_menu')),
+                Button(highlight_color=color.azure, text='Sh', on_click=Func(setattr, menu_handler, 'state', 'shader_menu')),
+                Button(highlight_color=color.black, text='del', scale=.5, color=color.red, on_click=deleter.delete_selected),
+                Button(highlight_color=color.azure, text='collider'),
+            ),
+            enabled=False,
+            scale=.05
+        )
+
+    def input(self, key):
+        if key == 'right mouse down':
+            self.start_click_pos = mouse.position
+
+        if key == 'right mouse up':
+            if level_editor.selection and sum(abs(e) for e in mouse.position-self.start_click_pos) < .005 and selector.get_hovered_entity() in level_editor.selection:
+                self.radial_menu.enabled = True
+
 
 
 class Search(Entity):
@@ -2069,7 +2024,7 @@ texture_menu = TextureMenu()
 color_menu = ColorMenu()
 shader_menu = ShaderMenu()
 menu_handler = MenuHandler()
-# right_click_menu = RightClickMenu()
+right_click_menu = RightClickMenu()
 hierarchy_list = HierarchyList()
 inspector = Inspector()
 PointOfViewSelector()
@@ -2135,6 +2090,8 @@ def get_major_axis_relative_to_view(entity): # if we're looking at the entity fr
 if __name__ == '__main__':
     goto_scene(0,0)
     level_editor.selection = [level_editor.entities[0], ]
+    middle = Entity(parent=camera.ui, model='quad', scale_x=.001, color=color.azure)
+    middle = Entity(parent=camera.ui, model='quad', scale_y=.001, color=color.azure)
     # color_menu.open()
     # from poke_shape import PokeShape
     # poke_shape = PokeShape(scale=4, points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,-.25), Vec3(.75,0,-.25), Vec3(.75,0,.25), Vec3(.5,0,.25), Vec3(.5,0,.5), Vec3(-.5,0,.5)])
