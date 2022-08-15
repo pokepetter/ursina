@@ -144,6 +144,15 @@ def sum(l):
     return total
 
 
+class Bounds:
+    __slots__ = ['start', 'end', 'center', 'size']
+    def __init__(self, start, end, center, size):
+        self.start = start
+        self.end = end
+        self.center = center
+        self.size = size
+
+
 if __name__ == '__main__':
     from ursina import *
     app = Ursina()
