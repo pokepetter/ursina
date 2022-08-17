@@ -31,6 +31,7 @@ from panda3d.core import Shader as Panda3dShader
 from ursina import shader
 from ursina.shader import Shader
 from ursina.string_utilities import print_info, print_warning
+from ursina.ursinamath import Bounds
 
 from ursina import color
 from ursina.color import Color
@@ -355,9 +356,9 @@ class Entity(NodePath):
 
         if value == 'box':
             if self.model:
-                # start, end = self.model.getTightBounds()
-                # model_center = (start + end) / 2
-                self._collider = BoxCollider(entity=self, center=-self.origin, size=self.model_bounds)
+                _bounds = self.model_bounds
+                print('----', _bounds.center)
+                self._collider = BoxCollider(entity=self, center=_bounds.center, size=_bounds.size)
             else:
                 self._collider = BoxCollider(entity=self)
             self._collider.name = value
@@ -892,12 +893,14 @@ class Entity(NodePath):
     @property
     def model_bounds(self):
         if self.model:
-            bounds = self.model.getTightBounds()
-            bounds = Vec3(
-                Vec3(bounds[1][0], bounds[1][1], bounds[1][2])  # max point
-                - Vec3(bounds[0][0], bounds[0][1], bounds[0][2])    # min point
-                )
-            return bounds
+            start, end = self.model.getTightBounds()
+            start = Vec3(start)
+            end = Vec3(end)
+            center = (start + end) / 2
+            print('start', start, 'end', end, 'center', center)
+            size = end - start
+            return Bounds(start=start, end=end, center=center, size=size)
+            # return [Vec3(e) for e in self.model.getTightBounds()]
 
         return Vec3(0,0,0)
 
@@ -909,11 +912,8 @@ class Entity(NodePath):
 
     @property
     def bounds(self):
-        return Vec3(
-            self.model_bounds[0] * self.scale_x,
-            self.model_bounds[1] * self.scale_y,
-            self.model_bounds[2] * self.scale_z
-            )
+        _bounds = self.model_bounds
+        return Bounds(start=_bounds.start*self.scale, end=_bounds.end*self.scale, center=_bounds.center, size=_bounds.size*self.scale)
 
 
     def reparent_to(self, entity):
@@ -1106,10 +1106,10 @@ class Entity(NodePath):
         if interrupt and hasattr(self, animator_name):
             getattr(getattr(self, animator_name), interrupt)() # call kill() or finish() depending on what the interrupt value is.
             # print('interrupt', interrupt, animator_name)
-
-        sequence = Sequence(loop=loop, time_step=time_step, auto_destroy=auto_destroy)
         if hasattr(self, animator_name) and getattr(self, animator_name) in self.animations:
             self.animations.remove(getattr(self, animator_name))
+
+        sequence = Sequence(loop=loop, time_step=time_step, auto_destroy=auto_destroy)
 
         setattr(self, animator_name, sequence)
         self.animations.append(sequence)
@@ -1297,7 +1297,9 @@ if __name__ == '__main__':
 
 
     # test
-    e = Entity(model='cube')
+    e = Entity(model='cube', collider='box')
+    print(e.model_bounds)
+    print(e.bounds)
     # e.animate_x(3, duration=2, delay=.5, loop=True)
     # e.animate_position(Vec3(1,1,1), duration=1, loop=True)
     # e.animate_rotation(Vec3(45,45,45))
@@ -1306,7 +1308,7 @@ if __name__ == '__main__':
     # e.shake()
     # e.fade_out(delay=.5)
     # e.fade_in(delay=2.5)
-    e.blink(color.red, duration=1, curve=curve.linear_boomerang, loop=True)
+    # e.blink(color.red, duration=1, curve=curve.linear_boomerang, loop=True)
 
 
 

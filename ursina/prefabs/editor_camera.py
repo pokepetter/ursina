@@ -17,6 +17,8 @@ class EditorCamera(Entity):
 
         self.smoothing_helper = Entity(add_to_scene_entities=False)
         self.rotation_smoothing = 0
+        self.look_at = self.smoothing_helper.look_at
+        self.look_at_2d = self.smoothing_helper.look_at_2d
 
         for key, value in kwargs.items():
             setattr(self, key, value)
