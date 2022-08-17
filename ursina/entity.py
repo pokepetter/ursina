@@ -969,7 +969,9 @@ class Entity(NodePath):
 
     def look_at(self, target, axis='forward'):
         from panda3d.core import Quat
-        if not isinstance(target, Entity):
+        if isinstance(target, Entity):
+            target = Vec3(*target.world_position)
+        elif not isinstance(target, Vec3):
             target = Vec3(*target)
 
         self.lookAt(target, Vec3(0,0,1))
