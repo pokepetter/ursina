@@ -357,7 +357,6 @@ class Entity(NodePath):
         if value == 'box':
             if self.model:
                 _bounds = self.model_bounds
-                print('----', _bounds.center)
                 self._collider = BoxCollider(entity=self, center=_bounds.center, size=_bounds.size)
             else:
                 self._collider = BoxCollider(entity=self)
@@ -897,10 +896,8 @@ class Entity(NodePath):
             start = Vec3(start)
             end = Vec3(end)
             center = (start + end) / 2
-            print('start', start, 'end', end, 'center', center)
             size = end - start
             return Bounds(start=start, end=end, center=center, size=size)
-            # return [Vec3(e) for e in self.model.getTightBounds()]
 
         return Vec3(0,0,0)
 
@@ -1025,7 +1022,7 @@ class Entity(NodePath):
                         p = p.parent
 
         elif isinstance(possible_ancestor, str):
-            print('CLASS NAME', possible_ancestor)
+            # print('CLASS NAME', possible_ancestor)
             for i in range(100):
                 if p.parent:
                     if p.parent.__class__.__name__ == possible_ancestor:
