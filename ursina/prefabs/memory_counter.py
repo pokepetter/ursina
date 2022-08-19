@@ -1,6 +1,7 @@
 import os
-from ursina import *
 import psutil
+import math
+from ursina import Text, Vec2, window, camera
 
 
 def size(size_bytes):
@@ -36,6 +37,7 @@ class MemoryCounter(Text):
 
 
 if __name__ == '__main__':
+    from ursina import Ursina
     app = Ursina()
     MemoryCounter()
     '''

@@ -1,8 +1,11 @@
-from ursina import *
-from panda3d.core import Filename
+from ursina import application
+import random
+from ursina.entity import Entity
+from ursina import curve
+from ursina.ursinastuff import invoke
+from ursina.ursinastuff import destroy as _destroy
 
-# Set to avoid name-space conflicts in the Audio class.
-_destroy = destroy
+from panda3d.core import Filename
 
 
 class Audio(Entity):
@@ -77,7 +80,7 @@ class Audio(Entity):
                     for f in folder.glob(f'**/{value}{suffix}'):
                         p = str(f.resolve())
                         p = Filename.fromOsSpecific(p)
-                        self._clip = loader.loadSfx(p)
+                        self._clip = loader.loadSfx(p)  # type: ignore
                         # print('...loaded audio clip:', f, p)
                         return
 

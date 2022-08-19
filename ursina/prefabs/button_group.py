@@ -1,4 +1,4 @@
-from ursina import Entity, Button, camera, color, Text, window, mouse
+from ursina import Entity, Button, camera, color, Text, window, mouse, destroy
 from ursina.scripts.grid_layout import grid_layout
 
 class ButtonGroup(Entity):

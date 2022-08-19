@@ -42,7 +42,7 @@ def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursina
         for filename in path.glob(f'**/{name}{filetype}'):
             if filetype == '.bam':
                 print_info('loading bam')
-                return loader.loadModel(filename)
+                return loader.loadModel(filename)  # type: ignore
 
             if filetype == '.ursinamesh':
                 try:
@@ -74,7 +74,7 @@ def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursina
 
             else:
                 try:
-                    return loader.loadModel(filename)
+                    return loader.loadModel(filename)  # type: ignore
                 except:
                     pass
 
@@ -370,14 +370,14 @@ def obj_to_ursinamesh(
             file.write(meshstring)
 
         if delete_obj:
-            os.remove(filepath)
+            os.remove(outfilepath)
 
         print_info('saved ursinamesh to:', outfilepath)
 
 # faster, but does not apply modifiers
 def compress_models_fast(model_name=None, write_to_disk=False):
     print_info('find models')
-    from tinyblend import BlenderFile
+    from tinyblend import BlenderFile  # type: ignore
     application.compressed_models_folder.mkdir(parents=True, exist_ok=True)
 
     files = os.listdir(application.models_folder)

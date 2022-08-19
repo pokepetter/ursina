@@ -1,14 +1,14 @@
 import sys
 
-from ursina import *
 from ursina.entity import Entity
 from ursina.mesh import Mesh
 from ursina.scene import instance as scene
-from panda3d.core import CollisionTraverser, CollisionNode, CollisionHandlerQueue
-from panda3d.core import CollisionRay, CollisionSegment, CollisionBox
+from panda3d.core import CollisionTraverser, CollisionNode, CollisionHandlerQueue, CollisionRay
 from ursina.vec3 import Vec3
 from math import sqrt, inf
 from ursina.hit_info import HitInfo
+from ursina import ursinamath, color
+from ursina.ursinastuff import destroy, invoke
 
 
 class Raycaster(Entity):
@@ -129,6 +129,7 @@ sys.modules[__name__] = instance
 
 
 if __name__ == '__main__':
+    from ursina import *
     app = Ursina()
 
     '''

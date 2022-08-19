@@ -1,4 +1,4 @@
-from ursina import *
+from ursina import Entity, camera, destroy, held_keys, mouse, curve, lerp, clamp, time, Vec2, Vec3, slerp
 
 class EditorCamera(Entity):
 
@@ -151,6 +151,7 @@ class EditorCamera(Entity):
 
 if __name__ == '__main__':
     # window.vsync = False
+    from ursina import Ursina, Sky, load_model, color, Text, window
     app = Ursina(vsync=False)
     '''
     Simple camera for debugging.
