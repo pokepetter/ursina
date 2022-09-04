@@ -4,7 +4,7 @@
 # width 900, right
 <a href="https://github.com/pokepetter/ursina"><img src="icons/github_icon.png"></img></a>  <a href="https://twitter.com/ursinaengine"><img src="icons/twitter_icon.png"></img></a>  <a href="https://discord.gg/ydXfhyb"><img src="icons/discord_icon.png"></img></a>
 # center, bold, arial, size 5, width 900
-<img src="ursina_chan_alpha.png" style="width: 30%; height: auto;">
+# image ursina_chan_alpha.png
 ursina engine
 # size 1.25, bold
 # normal
