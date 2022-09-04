@@ -21,7 +21,7 @@ open source game engine
 Python is the world's most popular programming language for a reason. The ease of use of Python combined with ursina's design, makes it easy to write concise code and avoid lots of boilerplate code.
 
 # size 0.8
-# code
+```
 from ursina import *
 
 app = Ursina()
@@ -36,7 +36,7 @@ EditorCamera()  # add camera controls for orbiting and moving the camera
 
 app.run()
 
-# text
+```
 # size 1
 
 
@@ -55,13 +55,13 @@ app.run()
 
 Iteration speed benchmark. Time from code/scene change to play. Game: pong clone. Lower is better.
 
-# code
+```
 engine:         duration:       times as slow:
 
 ursina          00.01s          1x
 Godot           01.18s          118x
 Unity           11.45s          1145x
-# text
+```
 
 
 ## Modern UI

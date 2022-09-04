@@ -24,7 +24,8 @@ from ursina.color import Color, hsv, rgb
 from ursina.sequence import Sequence, Func, Wait
 from ursina.entity import Entity
 from ursina.collider import *
-from ursina.raycaster import raycast, boxcast
+from ursina.raycast import raycast
+from ursina.boxcast import boxcast
 # from ursina.trigger import Trigger
 from ursina.audio import Audio
 from ursina.duplicate import duplicate

@@ -4,7 +4,7 @@
 <a href="index.html" style="text-decoration: none; color:inherit">ursina engine</a>
 # normal, size 1, left, width 650
 
-[🗎 API Reference, cheat_sheet.html]
+[🗎 API Reference, api_reference.html]
 
 
 # insert doc_index.txt
