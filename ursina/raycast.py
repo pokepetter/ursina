@@ -61,7 +61,7 @@ def raycast(origin, direction=(0,0,1), distance=inf, traverse_target=scene, igno
     nP = _raycaster.collision.get_into_node_path().parent
     point = Vec3(*_raycaster.collision.get_surface_point(nP))
     world_point = Vec3(*_raycaster.collision.get_surface_point(render))
-    hit_dist = _distance(_raycaster.world_position, world_point)
+    hit_dist = ursinamath.distance(_raycaster.world_position, world_point)
 
 
     _raycaster.hit = HitInfo(hit=True, distance=distance)
