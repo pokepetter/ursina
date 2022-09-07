@@ -123,9 +123,7 @@ blue {color: hsl(210, 50%, 50%);}
     color: #111;
     border-radius: 0px;
     padding: 10px;
-    max-width:250px;
     line-height: 1.5em;
-    min-width: 250px;
 }
 .sidebar_box a {
     text-decoration: none;
