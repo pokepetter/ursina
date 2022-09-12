@@ -12,9 +12,6 @@ ursina engine
 # normal
 open source game engine
 
-# bold
-# normal
-
 
 [⭳ Download, installation.html]  [🗎 Documentation, documentation.html]  [Donate, https://github.com/sponsors/pokepetter]
 
