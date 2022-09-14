@@ -76,6 +76,9 @@ class Text(Entity):
 
             t += tn.node().text
 
+        #Calls the render queue setter to make sure the text nodes render properly
+        #This is so that the render queue will work when the text is changed
+        self.render_queue=self.render_queue
         return t
 
 
