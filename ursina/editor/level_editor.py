@@ -2,6 +2,8 @@ from ursina import *
 from ursina.shaders import unlit_shader, lit_with_shadows_shader, matcap_shader, triplanar_shader, normals_shader
 from time import perf_counter
 
+
+
 class LevelEditorScene(Entity):
     def __init__(self, x, y, name, **kwargs):
         super().__init__()
@@ -43,6 +45,8 @@ class LevelEditorScene(Entity):
             scene_file_content += f'{e.__class__.__name__}(parent=self, '
 
             if hasattr(e, '__repr__'):
+
+                print('------------', repr(e), e.__class__.__name__)
                 recipe = repr(e).split(e.__class__.__name__)[1][1:-1] # remove start and end
                 scene_file_content += recipe
                 scene_file_content += ')\n' # TODO: add if it has a custom name
@@ -113,7 +117,7 @@ class LevelEditor(Entity):
         self.editor_camera = EditorCamera(parent=self, rotation_x=20, eternal=False, rotation_smoothing=0)
         self.ui = Entity(parent=camera.ui, name='level_editor.ui')
 
-        self.point_renderer = Entity(parent=self, model=Mesh([], mode='point', thickness=.1, render_points_in_3d=True), texture='orb', always_on_top=True, unlit=True, render_queue=1)
+        self.point_renderer = Entity(parent=self, model=Mesh([], mode='point', thickness=.1, render_points_in_3d=True), texture='circle', always_on_top=True, unlit=True, render_queue=1)
         self.cubes = [Entity(model='wireframe_cube', color=color.azure, parent=self, enabled=True) for i in range(128)] # max selection
 
         self.origin_mode_menu = ButtonGroup(['last', 'center', 'individual'], min_selection=1, position=window.top, parent=self.ui)
@@ -172,7 +176,7 @@ class LevelEditor(Entity):
             elif key == 'y':
                 self.current_scene.undo.redo()
 
-        if self.selection and key == 'f':
+        if self.selection and key == 't':
             self.editor_camera.animate_position(gizmo.world_position, duration=.1, curve=curve.linear)
 
 
@@ -411,6 +415,7 @@ class Gizmo(Entity):
             'y'  : GizmoArrow(parent=self.arrow_parent, gizmo=self, rotation=(0,0,-90), color=axis_colors['y'], lock=(1,0,1)),
             'z'  : GizmoArrow(parent=self.arrow_parent, gizmo=self, rotation=(0,-90,0), color=axis_colors['z'], plane_direction=(0,1,0), lock=(1,1,0)),
         }
+
         for e in self.arrow_parent.children:
             e.highlight_color = color.white
             e.original_scale = e.scale
@@ -439,7 +444,8 @@ class Gizmo(Entity):
                 self.subgizmos[axis].lock[i] = 0
 
             if axis == 'y':
-                self.subgizmos[axis].plane_direction = self.forward
+                self.subgizmos[axis].plane_direction = camera.back
+
 
         self.subgizmos['xz'].plane_direction = self.up
         [setattr(e, 'visible_self', show_gizmo_while_dragging) for e in self.subgizmos.values()]
@@ -611,7 +617,7 @@ class BoxGizmo(Entity):
         self.axis_name = None
 
     def input(self, key):
-        if key == 't':
+        if key == 'f':
             [setattr(e, 'collision', True) for e in level_editor.entities]
             mouse.update()
 
@@ -653,7 +659,7 @@ class BoxGizmo(Entity):
                 gizmo.subgizmos[self.axis_name].start_dragging()
 
 
-        elif key == 't up' and self.target:
+        elif key == 'f up' and self.target:
             [setattr(e, 'collision', False) for e in level_editor.entities]
             self.target.world_parent = self.target.original_parent
             self.normal = None
@@ -674,7 +680,7 @@ class BoxGizmo(Entity):
 
 
     def update(self):
-        if self.target and held_keys['t'] and self.helper and self.scaler:
+        if self.target and held_keys['f'] and self.helper and self.scaler:
             relative_position = self.helper.get_position(relative_to=self.scaler)
             value = abs(relative_position[[abs(int(e)) for e in self.normal].index(1)])
             if self.scale_from_center:
@@ -718,11 +724,10 @@ class QuickGrabber(Entity):
             return
 
 
-        if key in 'gxyzw':
+        if key in 'dxyzw':
             if self.target_entity:
                 return
 
-            print('dsajfikhsdkjfhsdfkljh')
             if key == 'w' and level_editor.selection:
                 return
 
@@ -731,7 +736,7 @@ class QuickGrabber(Entity):
             if self.target_entity:
                 print(self.target_entity.color)
                 self.target_axis = key
-                if key in 'gw':
+                if key in 'dw':
                     self.target_axis = 'xz'
 
                 level_editor.selection = [self.target_entity, ]
@@ -748,7 +753,7 @@ class QuickGrabber(Entity):
                 # invoke(self.target_gizmo.input, 'left mouse down', delay=2/60)
                 # invoke(self.target_gizmo.start_dragging, delay=2/60)
 
-        elif key in ('x up', 'y up', 'z up', 'g up', 'w up') and self.target_entity:
+        elif key in ('x up', 'y up', 'z up', 'd up', 'w up') and self.target_entity:
             self.target_entity = None
             gizmo.drop()
             self.target_gizmo.stop_dragging()
@@ -1411,7 +1416,7 @@ class Inspector(Entity):
             return
 
         self.ui.enabled = bool(level_editor.selection)
-        if level_editor.selection and (mouse.left or held_keys['g']):
+        if level_editor.selection and (mouse.left or held_keys['d']):
             self.fields['color'].color = level_editor.selection[0].color
 
             if len(level_editor.selection) == 1:
@@ -1893,7 +1898,7 @@ class PokeShape(Entity):
 
     # def update(self):
     #     if self.edit_mode:
-    #         if mouse.left or held_keys['g']:
+    #         if mouse.left or held_keys['d']:
     #             level_editor.render_selection()
     #             self.generate()
 
@@ -1906,10 +1911,10 @@ class PokeShape(Entity):
         # elif key == 'left mouse down' and self.edit_mode and selector.get_hovered_entity():
         #     level_editor.selection.clear()
         #     selection_box.enabled = False
-        #     quick_grabber.input('g')
+        #     quick_grabber.input('d')
         #
         # elif key == 'left mouse up' and self.edit_mode:
-        #     quick_grabber.input('g up')
+        #     quick_grabber.input('d up')
         #     selection_box.enabled = True
 
         elif key == '+' and len(level_editor.selection) == 1 and level_editor.selection[0] in self.point_gizmos:
@@ -2206,12 +2211,13 @@ def get_major_axis_relative_to_view(entity): # if we're looking at the entity fr
 #     for key, value in kwargs.items():
 #         setattr(self, key, value)
 
+input_handler.bind('a', 'y')
 
 if __name__ == '__main__':
     goto_scene(0,0)
     level_editor.selection = [level_editor.entities[0], ]
-    middle = Entity(parent=camera.ui, model='quad', scale_x=.001, color=color.azure)
-    middle = Entity(parent=camera.ui, model='quad', scale_y=.001, color=color.azure)
+    # middle = Entity(parent=camera.ui, model='quad', scale_x=.001, color=color.azure)
+    # middle = Entity(parent=camera.ui, model='quad', scale_y=.001, color=color.azure)
     # color_menu.open()
     # from poke_shape import PokeShape
     # poke_shape = PokeShape(scale=4, points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,-.25), Vec3(.75,0,-.25), Vec3(.75,0,.25), Vec3(.5,0,.25), Vec3(.5,0,.5), Vec3(-.5,0,.5)])

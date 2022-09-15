@@ -1079,7 +1079,7 @@ class Entity(NodePath):
 
                 changes.append(f"{key}={value}, ")
 
-        return f'{__class__.__name__}(' +  ''.join(changes) + ')'
+        return f'{self.__class__.__name__}(' +  ''.join(changes) + ')'
 
 
     def __deepcopy__(self, memo):
