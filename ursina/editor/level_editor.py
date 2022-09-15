@@ -113,7 +113,7 @@ class LevelEditor(Entity):
         self.editor_camera = EditorCamera(parent=self, rotation_x=20, eternal=False, rotation_smoothing=0)
         self.ui = Entity(parent=camera.ui, name='level_editor.ui')
 
-        self.point_renderer = Entity(parent=self, model=Mesh([], mode='point', thickness=.1, render_points_in_3d=True), texture='circle', always_on_top=True, unlit=True, render_queue=1)
+        self.point_renderer = Entity(parent=self, model=Mesh([], mode='point', thickness=.1, render_points_in_3d=True), texture='orb', always_on_top=True, unlit=True, render_queue=1)
         self.cubes = [Entity(model='wireframe_cube', color=color.azure, parent=self, enabled=True) for i in range(128)] # max selection
 
         self.origin_mode_menu = ButtonGroup(['last', 'center', 'individual'], min_selection=1, position=window.top, parent=self.ui)
@@ -188,7 +188,7 @@ class LevelEditor(Entity):
             if e in self.selection:
                 self.point_renderer.model.colors.append(color.azure)
             else:
-                self.point_renderer.model.colors.append(lerp(color.orange, color.hsv(0,0,1,0), distance(e.world_position, camera.world_position)/100))
+                self.point_renderer.model.colors.append(color.orange)
 
 
         # self.point_renderer.model.colors = [color.azure if e in self.selection else lerp(color.orange, color.hsv(0,0,1,0), distance(e.world_position, camera.world_position)/100) for e in self.entities if e.selectable and not e.collider]
@@ -1111,11 +1111,11 @@ class PointOfViewSelector(Entity):
     def update(self):
         self.rotation = -level_editor.editor_camera.rotation
 
-    # def input(self, key):
-    #     if key == '1':   level_editor.editor_camera.animate_rotation((0,0,0)) # front
-    #     elif key == '3': level_editor.editor_camera.animate_rotation((0,90,0)) # right
-    #     elif key == '7': level_editor.editor_camera.animate_rotation((90,0,0)) # top
-    #     elif key == '5': camera.orthographic = not camera.orthographic
+    def input(self, key):
+        if key == '1':   level_editor.editor_camera.animate_rotation((0,0,0)) # front
+        elif key == '3': level_editor.editor_camera.animate_rotation((0,90,0)) # right
+        elif key == '7': level_editor.editor_camera.animate_rotation((90,0,0)) # top
+        elif key == '5': camera.orthographic = not camera.orthographic
 
 
 # class PaintBucket(Entity):
@@ -1271,7 +1271,7 @@ class HierarchyList(Entity):
         super().__init__(parent=level_editor.ui)
         self.quad_model = load_model('quad', application.internal_models_folder, use_deepcopy=True)
         self.bg = Entity(parent=self, model='quad', collider='box', origin=(-.5,.5), color=color.black90, position=window.top_left+Vec2(0,-.05), scale=(.15,10))
-        self.entity_list_text = Text(font='VeraMono.ttf', parent=self, scale=.6, line_height=1.2, position=window.top_left+Vec2(.005,-.05), z=-2)
+        self.entity_list_text = Text(font='VeraMono.ttf', parent=self, scale=.6, line_height=1, position=window.top_left+Vec2(.005,-.05), z=-2)
         self.selected_renderer = Entity(parent=self.entity_list_text, scale=(.25,Text.size), model=Mesh(vertices=[]), color=hsv(210,.9,.6), origin=(-.5,.5), x=-.01, z=-1)
         self.selected_renderer.world_parent = self
         self.selected_renderer.z= -.1
@@ -1308,9 +1308,10 @@ class HierarchyList(Entity):
         for i, e in enumerate(level_editor.entities):
             if e in level_editor.selection:
                 self.selected_renderer.model.vertices.extend([Vec3(v)-Vec3(0,i,0) for v in self.quad_model.vertices])
+                text += f'<white>{e.name}\n'
 
-            if e:
-                text += f'{e.name}\n'
+            elif e:
+                text += f'<gray>{e.name}\n'
             else:
                 text += f'ERROR: \n'
 
