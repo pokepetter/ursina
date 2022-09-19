@@ -46,6 +46,10 @@ class Entity(NodePath):
 
     rotation_directions = (-1,-1,1)
     default_shader = None
+    default_values = {
+        # 'parent':scene,
+        'name':'entity', 'enabled':True, 'eternal':False, 'position':Vec3(0,0,0), 'rotation':Vec3(0,0,0), 'scale':Vec3(1,1,1), 'model':None, 'origin':Vec3(0,0,0),
+        'shader':None, 'texture':None, 'color':color.white, 'collider':None}
 
     def __init__(self, add_to_scene_entities=True, **kwargs):
         super().__init__(self.__class__.__name__)
@@ -1048,38 +1052,43 @@ class Entity(NodePath):
     def __str__(self):
         return self.name
 
+
+    def get_changes(self, target_class=None): # returns a dict of all the changes
+        if not target_class:
+            target_class = self.__class__
+
+        changes = dict()
+        for key, value in target_class.default_values.items():
+            attr = getattr(self, key)
+
+
+            if hasattr(attr, 'name'):
+                attr = attr.name
+                if '.' in attr:
+                    attr = attr.split('.')[0]
+
+
+            if attr == target_class.default_values[key]:
+                continue
+
+            print('attr changed:', key, 'from:', target_class.default_values[key], 'to:', attr)
+            if isinstance(attr, str):
+                attr = f"'{attr}'"
+
+            if key == 'color':
+                attr = f'color.{attr[1:-1]}'
+
+            if attr == "'mesh'":
+                continue
+
+            changes[key] = attr
+        return changes
+
+
+
     def __repr__(self):
-        default_values = {
-            # 'parent':scene,
-            'name':'entity', 'enabled':True, 'eternal':False, 'position':Vec3(0,0,0), 'rotation':Vec3(0,0,0), 'scale':Vec3(1,1,1), 'model':None, 'origin':Vec3(0,0,0),
-            'shader':None, 'texture':None, 'color':color.white, 'collider':None}
-
-        changes = []
-        for key, value in default_values.items():
-            if not getattr(self, key) == default_values[key]:
-                if key == 'name' and hasattr(self, 'name'):
-                    changes.append(f"name='{getattr(self, key)}', ")
-                    continue
-                if key == 'model' and hasattr(self.model, 'name'):
-                    changes.append(f"model='{getattr(self, key).name}', ")
-                    continue
-                if key == 'shader' and self.shader:
-                    changes.append(f"shader='{getattr(self, key).name}', ")
-                    continue
-                if key == 'texture':
-                    changes.append(f"texture='{getattr(self, key).name.split('.')[0]}', ")
-                    continue
-                if key == 'collider':
-                    changes.append(f"collider='{getattr(self, key).name}', ")
-                    continue
-
-                value = getattr(self, key)
-                if isinstance(value, str):
-                    value = f"'{repr(value)}'"
-
-                changes.append(f"{key}={value}, ")
-
-        return f'{self.__class__.__name__}(' +  ''.join(changes) + ')'
+        changes = self.get_changes(self.__class__)
+        return f'{self.__class__.__name__}(' +  ''.join(f'{key}={value}, ' for key, value in changes.items()) + ')'
 
 
     def __deepcopy__(self, memo):
@@ -1294,9 +1303,9 @@ if __name__ == '__main__':
 
 
     # test
-    e = Entity(model='cube', collider='box')
-    print(e.model_bounds)
-    print(e.bounds)
+    e = Entity(model='cube', collider='box', texture='shore')
+    print(repr(e))
+
     # e.animate_x(3, duration=2, delay=.5, loop=True)
     # e.animate_position(Vec3(1,1,1), duration=1, loop=True)
     # e.animate_rotation(Vec3(45,45,45))
