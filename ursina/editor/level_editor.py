@@ -1022,9 +1022,18 @@ class SelectionBox(Entity):
 
 
 class Cube(Entity):
+    # __slots__ = 'model', 'shader', 'texture', 'collider'
+    default_values = Entity.default_values | dict(model='cube', shader='triplanar_shader', texture='white_cube', collider='box') # combine dicts
+
     def __init__(self, **kwargs):
-        super().__init__(model='cube', shader=triplanar_shader, texture='white_cube', collider='box', **kwargs)
+        super().__init__(**__class__.default_values | kwargs)
+
         self.set_shader_input('top_texture', load_texture('brick'))
+
+    def __deepcopy__(self, memo):
+        return eval(repr(self))
+
+
 class Pyramid(Entity):
     def __init__(self, **kwargs):
         super().__init__(model=Cone(4), texture='brick', **kwargs)
@@ -1772,13 +1781,13 @@ class Duplicator(Entity):
 
 
 class PokeShape(Entity):
+    default_values = Entity.default_values | dict(points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,.5), Vec3(-.5,0,.5)], name='poke_shape') # combine dicts
+
     def __init__(self, points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,.5), Vec3(-.5,0,.5)], **kwargs):
-        # if 'parent' in kwargs.keys():
-        #     del kwargs['parent']
 
-
-        super().__init__(original_parent=level_editor, model=Mesh(), selectable=True, name='poke_shape', **kwargs)
+        super().__init__(original_parent=level_editor, selectable=True, **__class__.default_values | kwargs)
         level_editor.entities.append(self)
+        self.model = Mesh()
 
         self.point_gizmos = LoopingList([Entity(parent=self, original_parent=self, position=e, selectable=False, name='PokeShape_point', is_gizmo=True) for e in points])
         self.edit_mode = False
@@ -1831,31 +1840,8 @@ class PokeShape(Entity):
             self.wall_parent.model.generate()
 
 
-
         if self.add_collider:
             self.collider = self.model
-
-    def __repr__(self):
-        default_values = {
-            # 'parent':'scene',
-            'enabled':True, 'position':Vec3(0,0,0), 'rotation':Vec3(0,0,0), 'scale':Vec3(1,1,1), 'origin':Vec3(0,0,0),
-            'texture':None, 'color':color.white, 'collider':None, 'points':[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,.5), Vec3(-.5,0,.5)]}
-
-        changes = []
-        for key, value in default_values.items():
-            if not getattr(self, key) == default_values[key]:
-                if key == 'texture':
-                    changes.append(f"texture='{getattr(self, key).name.split('.')[0]}', ")
-                    continue
-
-                value = getattr(self, key)
-                if isinstance(value, str):
-                    value = f"'{repr(value)}'"
-
-                changes.append(f"{key}={value}, ")
-
-        return f'{__class__.__name__}(' +  ''.join(changes) + ')'
-
 
     def __deepcopy__(self, memo):
         return eval(repr(self))
@@ -1964,28 +1950,6 @@ class PipeEditor(Entity):
 
         if self.add_collider:
             self.collider = self.model
-
-
-    def __repr__(self):
-        default_values = {
-            # 'parent':'scene',
-            'enabled':True, 'position':Vec3(0,0,0), 'rotation':Vec3(0,0,0), 'scale':Vec3(1,1,1), 'origin':Vec3(0,0,0),
-            'texture':None, 'color':color.white, 'collider':None, 'points':[Vec3(0,0,0), Vec3(0,1,0)]}
-
-        changes = []
-        for key, value in default_values.items():
-            if not getattr(self, key) == default_values[key]:
-                if key == 'texture':
-                    changes.append(f"texture='{getattr(self, key).name.split('.')[0]}', ")
-                    continue
-
-                value = getattr(self, key)
-                if isinstance(value, str):
-                    value = f"'{repr(value)}'"
-
-                changes.append(f"{key}={value}, ")
-
-        return f'{__class__.__name__}(' +  ''.join(changes) + ')'
 
 
     def __deepcopy__(self, memo):
@@ -2223,7 +2187,7 @@ if __name__ == '__main__':
     # poke_shape = PokeShape(scale=4, points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,-.25), Vec3(.75,0,-.25), Vec3(.75,0,.25), Vec3(.5,0,.25), Vec3(.5,0,.5), Vec3(-.5,0,.5)])
     # poke_shape = PokeShape(scale=4, points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,-.25), Vec3(.75,0,-.25), Vec3(.75,0,.25), Vec3(.5,0,.25), Vec3(.5,0,.5), Vec3(.5,0,.55), Vec3(-.5,0,.5)])
     # level_editor.entities.append(poke_shape)
-    pipe = PipeEditor()
-    level_editor.entities.append(pipe)
+    # pipe = PipeEditor()
+    # level_editor.entities.append(pipe)
     Sky()
     app.run()
