@@ -633,7 +633,7 @@ class TextField(Entity):
             self._prev_text = text
             self._prev_scroll = self.scroll
             self.scroll_parent.y = (self.scroll * Text.size)
-            # self.cursor.y
+            self.cursor.visible = self.cursor.y >= self.scroll and self.cursor.y < self.scroll + self.max_lines
             self.draw_selection()
 
         if self.on_value_changed:
@@ -674,28 +674,29 @@ class TextField(Entity):
         end_y = int(sel[1].y)
         lines = self.text.split('\n')
         if start_y == end_y:
-            e = Entity(parent=self.selection_parent, model='cube', origin=(-.5,-.5), color=self.highlight_color, ignore=True, y=start_y)
+            e = Entity(parent=self.selection_parent, model='quad', origin=(-.5,-.5), color=self.highlight_color, double_sided=True, ignore=True, y=start_y)
             e.x = sel[0].x
             e.scale_x = sel[1].x - sel[0].x
-            return
+        else:
+            # first line
+            if start_y >= self.scroll and start_y < self.scroll+self.max_lines:
+                e = Entity(parent=self.selection_parent, model='quad', origin=(-.5, -.5),
+                color=self.highlight_color, double_sided=True, position=(sel[0].x,start_y), ignore=True)
+                e.scale_x = len(lines[start_y]) - sel[0].x
 
-        # first line
-        if start_y >= self.scroll and start_y < self.scroll+self.max_lines:
-            e = Entity(parent=self.selection_parent, model='quad', origin=(-.5, -.5),
-            color=self.highlight_color, double_sided=True, position=(sel[0].x,start_y), ignore=True)
-            e.scale_x = len(lines[start_y]) - sel[0].x
+            # middle lines
+            for y in range(max(start_y+1, self.scroll), min(end_y, self.scroll+self.max_lines)):
+                e = Entity(parent=self.selection_parent, model='quad', origin=(-.5, -.5),
+                    color=self.highlight_color, double_sided=True, position=(0,y), ignore=True, scale_x=len(lines[y]))
 
-        # middle lines
-        for y in range(max(start_y+1, self.scroll), min(end_y, self.scroll+self.max_lines)):
-            e = Entity(parent=self.selection_parent, model='quad', origin=(-.5, -.5),
-                color=self.highlight_color, double_sided=True, position=(0,y), ignore=True, scale_x=len(lines[y]))
+            # last line
+            if end_y >= self.scroll and end_y < self.scroll+self.max_lines:
+                e = Entity(parent=self.selection_parent, model='quad', origin=(-.5, -.5),
+                color=self.highlight_color, double_sided=True, position=(0,end_y), ignore=True)
+                e.scale_x = sel[1].x
 
-        # last line
-        if end_y >= self.scroll and end_y < self.scroll+self.max_lines:
-            e = Entity(parent=self.selection_parent, model='quad', origin=(-.5, -.5),
-            color=self.highlight_color, double_sided=True, position=(0,end_y), ignore=True)
-            e.scale_x = sel[1].x
-
+        for e in self.selection_parent.children:
+            e.enabled = e.y >= self.scroll and e.y < self.scroll+self.max_lines
 
 
 if __name__ == '__main__':
