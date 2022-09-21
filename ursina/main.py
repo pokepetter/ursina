@@ -28,8 +28,8 @@ class Ursina(ShowBase):
         if 'development_mode' in kwargs:
             application.development_mode = kwargs['development_mode']
 
+        # base = base
         super().__init__()
-        application.base = base
 
         try:
             import gltf
@@ -56,52 +56,21 @@ class Ursina(ShowBase):
         base.buttonThrowers[0].node().setButtonRepeatEvent('buttonHold')
         base.buttonThrowers[0].node().setKeystrokeEvent('keystroke')
         self._input_name_changes = {
-            'mouse1' : 'left mouse down',
-            'mouse1 up' : 'left mouse up',
-            'mouse2' : 'middle mouse down',
-            'mouse2 up' : 'middle mouse up',
-            'mouse3' : 'right mouse down',
-            'mouse3 up' : 'right mouse up',
-            'wheel_up' : 'scroll up',
-            'wheel_down' : 'scroll down',
-            'arrow_left' : 'left arrow',
-            'arrow_left up' : 'left arrow up',
-            'arrow_up' : 'up arrow',
-            'arrow_up up' : 'up arrow up',
-            'arrow_down' : 'down arrow',
-            'arrow_down up' : 'down arrow up',
-            'arrow_right' : 'right arrow',
-            'arrow_right up' : 'right arrow up',
-            'lcontrol' : 'left control',
-            'rcontrol' : 'right control',
-            'lshift' : 'left shift',
-            'rshift' : 'right shift',
-            'lalt' : 'left alt',
-            'ralt' : 'right alt',
-            'lcontrol up' : 'left control up',
-            'rcontrol up' : 'right control up',
-            'lshift up' : 'left shift up',
-            'rshift up' : 'right shift up',
-            'lalt up' : 'left alt up',
-            'ralt up' : 'right alt up',
-            'control-mouse1' : 'left mouse down',
-            'control-mouse2' : 'middle mouse down',
-            'control-mouse3' : 'right mouse down',
-            'shift-mouse1' : 'left mouse down',
-            'shift-mouse2' : 'middle mouse down',
-            'shift-mouse3' : 'right mouse down',
-            'alt-mouse1' : 'left mouse down',
-            'alt-mouse2' : 'middle mouse down',
-            'alt-mouse3' : 'right mouse down',
-            'page_down' : 'page down',
-            'page_down up' : 'page down up',
-            'page_up' : 'page up',
-            'page_up up' : 'page up up',
+            'mouse1' : 'left mouse down', 'mouse1 up' : 'left mouse up', 'mouse2' : 'middle mouse down', 'mouse2 up' : 'middle mouse up', 'mouse3' : 'right mouse down', 'mouse3 up' : 'right mouse up',
+            'wheel_up' : 'scroll up', 'wheel_down' : 'scroll down',
+            'arrow_left' : 'left arrow', 'arrow_left up' : 'left arrow up', 'arrow_up' : 'up arrow', 'arrow_up up' : 'up arrow up', 'arrow_down' : 'down arrow', 'arrow_down up' : 'down arrow up', 'arrow_right' : 'right arrow', 'arrow_right up' : 'right arrow up',
+            'lcontrol' : 'left control', 'rcontrol' : 'right control', 'lshift' : 'left shift', 'rshift' : 'right shift', 'lalt' : 'left alt', 'ralt' : 'right alt',
+            'lcontrol up' : 'left control up', 'rcontrol up' : 'right control up', 'lshift up' : 'left shift up', 'rshift up' : 'right shift up', 'lalt up' : 'left alt up', 'ralt up' : 'right alt up',
+            'control-mouse1' : 'left mouse down', 'control-mouse2' : 'middle mouse down', 'control-mouse3' : 'right mouse down',
+            'shift-mouse1' : 'left mouse down', 'shift-mouse2' : 'middle mouse down', 'shift-mouse3' : 'right mouse down',
+            'alt-mouse1' : 'left mouse down', 'alt-mouse2' : 'middle mouse down', 'alt-mouse3' : 'right mouse down',
+            'page_down' : 'page down', 'page_down up' : 'page down up', 'page_up' : 'page up', 'page_up up' : 'page up up',
             }
+
         for e in keyboard_keys:
             self.accept(f'raw-{e}', self.input, [e, True])
             self.accept(f'raw-{e}-up', self.input_up, [e, True])
-            # self.accept(f'raw-{e}-repeat', self.input_hold, [e, True])
+            self.accept(f'raw-{e}-repeat', self.input_hold, [e, True])
 
         self.accept('buttonDown', self.input)
         self.accept('buttonUp', self.input_up)
@@ -113,8 +82,6 @@ class Ursina(ShowBase):
         mouse._mouse_watcher = base.mouseWatcherNode
         mouse.enabled = True
         self.mouse = mouse
-
-        from ursina import gamepad
 
         scene.set_up()
         self._update_task = taskMgr.add(self._update, "update")
@@ -132,9 +99,7 @@ class Ursina(ShowBase):
 
 
     def _update(self, task):
-        # time between frames
-        time.dt = globalClock.getDt() * application.time_scale
-
+        time.dt = globalClock.getDt() * application.time_scale          # time between frames
         mouse.update()
 
         if hasattr(__main__, 'update') and __main__.update and not application.paused:
@@ -153,22 +118,19 @@ class Ursina(ShowBase):
             if hasattr(entity, 'update') and callable(entity.update):
                 entity.update()
 
-
             if hasattr(entity, 'scripts'):
                 for script in entity.scripts:
                     if script.enabled and hasattr(script, 'update') and callable(script.update):
                         script.update()
 
-
         return Task.cont
-
 
 
     def input_up(self, key, is_raw=False):
         if not is_raw and key in keyboard_keys:
             return
 
-        if key in  ('wheel_up', 'wheel_down'):
+        if key in ('wheel_up', 'wheel_down'):
             return
 
         key += ' up'
@@ -176,9 +138,6 @@ class Ursina(ShowBase):
 
 
     def input_hold(self, key, is_raw=False):
-        # if not is_raw and key in keyboard_keys:
-        #     return
-
         key = key.replace('control-', '')
         key = key.replace('shift-', '')
         key = key.replace('alt-', '')
@@ -195,7 +154,7 @@ class Ursina(ShowBase):
             return
 
         if '-' in key and not key == '-':
-            return
+            key = key.replace('-', '+')
 
         if key in self._input_name_changes:
             key = self._input_name_changes[key]
@@ -203,12 +162,11 @@ class Ursina(ShowBase):
         if key in input_handler.rebinds:
             key = input_handler.rebinds[key]
 
-        try: input_handler.input(key)
-        except: pass
+        input_handler.input(key)
+
         if not application.paused:
             if hasattr(__main__, 'input'):
                 __main__.input(key)
-
 
         for entity in scene.entities:
             if entity.enabled == False or entity.ignore or entity.ignore_input:
@@ -225,26 +183,7 @@ class Ursina(ShowBase):
                         script.input(key)
 
 
-        try: mouse.input(key)
-        except: pass
-
-
-        if key == 'f12':
-            window.editor_ui.enabled = not window.editor_ui.enabled
-
-        if key == 'f11':
-            window.fullscreen = not window.fullscreen
-
-        if key == 'f10':
-            i = window.render_modes.index(window.render_mode)
-            i += 1
-            if i >= len(window.render_modes):
-                i = 0
-
-            window.render_mode = window.render_modes[i]
-
-        if key == 'f9':
-            window.render_mode = 'default'
+        mouse.input(key)
 
 
     def text_input(self, key):
@@ -294,4 +233,6 @@ class Ursina(ShowBase):
 if __name__ == '__main__':
     from ursina import *
     app = Ursina()
+    def input(key):
+        print(key)
     app.run()

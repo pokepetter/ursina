@@ -17,13 +17,13 @@ class Window(WindowProperties):
         loadPrcFileData('', 'notify-level-util error')
         loadPrcFileData('', 'textures-auto-power-2 #t')
         loadPrcFileData('', 'load-file-type p3assimp')
+        loadPrcFileData('', 'undecorated 1')
         # loadPrcFileData('', 'allow-portal-cull #t')
         # loadPrcFileData("", "framebuffer-multisample 1")
         # loadPrcFileData('', 'multisamples 2')
         # loadPrcFileData('', 'textures-power-2 none')
         # loadPrcFileData('', 'threading-model Cull/Draw')
         loadPrcFileData('', 'coordinate-system y-up-left')
-
         # fallback to one of these if opengl is not supported
         loadPrcFileData('', 'aux-display pandadx9')
         loadPrcFileData('', 'aux-display pandadx8')
@@ -60,6 +60,7 @@ class Window(WindowProperties):
 
         self.fullscreen_size = Vec2(*self.screen_resolution)
         self.windowed_size = self.fullscreen_size / 1.25
+        loadPrcFileData('', f'win-size {self.windowed_size[0]} {self.windowed_size[1]}')
         self.windowed_position = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode
         self.forced_aspect_ratio = None # example: window.forced_aspect_ratio = 16/9
         self.size = self.windowed_size
@@ -70,12 +71,10 @@ class Window(WindowProperties):
         self.center = Vec2(0, 0)
 
 
-
     def late_init(self):
         self.center_on_screen()
         if not application.development_mode:
             self.fullscreen = True
-
 
         self.color = color.dark_gray
         self.render_modes = ('default', 'wireframe', 'colliders', 'normals')
@@ -108,16 +107,32 @@ class Window(WindowProperties):
 
 
     def center_on_screen(self):
-        self.position = Vec2(
-            int((self.screen_resolution[0] - self.size[0]) / 2),
-            int((self.screen_resolution[1] - self.size[1]) / 2)
-            )
+        self.position = Vec2(int((self.screen_resolution[0]-self.size[0])/2), int((self.screen_resolution[1]-self.size[1])/2))
 
     def make_editor_gui(self):     # called by main after setting up camera and application.development_mode
         from ursina import camera, Entity, Text, Button, ButtonList, Func, Tooltip, held_keys, mouse
         import time
 
         self.editor_ui = Entity(parent=camera.ui, eternal=True, enabled=bool(application.development_mode))
+
+        def window_input(key):
+            if key == 'f12':
+                self.editor_ui.enabled = not self.editor_ui.enabled
+
+            elif key == 'f11':
+                self.fullscreen = not self.fullscreen
+
+            elif key == 'f10':
+                if held_keys['shift']:
+                    self.render_mode = 'default'
+                else:
+                    i = self.render_modes.index(self.render_mode) + 1
+                    if i >= len(self.render_modes):
+                        i = 0
+
+                    self.render_mode = self.render_modes[i]
+        self.input_entity = Entity(name = 'window.input_entity', input=window_input)
+
         self.exit_button = Button(parent=self.editor_ui, eternal=True, ignore_paused=True, origin=(.5, .5), enabled=self.borderless,
             position=self.top_right, z=-999, scale=(.05, .025), color=color.red.tint(-.2), text='x', on_click=application.quit, name='exit_button')
 
@@ -145,16 +160,14 @@ class Window(WindowProperties):
             'ursfx (Sound Effect Maker)' : lambda: exec('from ursina.prefabs import ursfx; ursfx.gui.enabled = True'),
             # 'Open Scene Editor' : Func(print, ' '),
             'Change Render Mode <gray>[F10]<default>' : self.next_render_mode,
-            'Reset Render Mode <gray>[F9]<default>' : Func(setattr, self, 'render_mode', 'default'),
+            'Reset Render Mode <gray>[Shift+F10]<default>' : Func(setattr, self, 'render_mode', 'default'),
+            'Toggle Hotreloading <gray>[F9]<default>' : application.hot_reloader.toggle_hotreloading,
+            'Reload Shaders <gray>[F7]<default>' : application.hot_reloader.reload_shaders,
             'Reload Models <gray>[F7]<default>' : application.hot_reloader.reload_models,
             'Reload Textures <gray>[F6]<default>' : application.hot_reloader.reload_textures,
             'Reload Code <gray>[F5]<default>' : application.hot_reloader.reload_code,
         },
-            width=.35,
-            x=.62,
-            enabled=False,
-            eternal=True,
-            name='cog_menu',
+            width=.35, x=.62, enabled=False, eternal=True, name='cog_menu',
         )
         self.cog_menu.on_click = Func(setattr, self.cog_menu, 'enabled', False)
         self.cog_menu.y = -.5 + self.cog_menu.scale_y
@@ -187,7 +200,7 @@ class Window(WindowProperties):
 
         if camera.orthographic:
             camera.orthographic_lens.set_film_size(camera.fov * window.aspect_ratio, camera.fov)
-            application.base.cam.node().set_lens(camera.orthographic_lens)
+            base.cam.node().set_lens(camera.orthographic_lens)
 
 
     @property
@@ -334,17 +347,18 @@ class Window(WindowProperties):
             if hasattr(self, 'exit_button'):
                 self.exit_button.enabled = not value
             try:
-                application.base.win.request_properties(self)
+                base.win.request_properties(self)
             except:
                 pass
             object.__setattr__(self, name, value)
 
 
         if name == 'color':
-            application.base.camNode.get_display_region(0).get_window().set_clear_color(value)
+            base.camNode.get_display_region(0).get_window().set_clear_color(value)
 
         if name == 'vsync':
-            if not application.base:     # set vsync/framerate before window opened
+
+            if not 'base' in sys.modules:     # set vsync/framerate before window opened
                 if value == True or value == False:
                     loadPrcFileData('', f'sync-video {value}')
                 elif isinstance(value, int):
@@ -371,6 +385,7 @@ if __name__ == '__main__':
     from ursina import *
     # application.development_mode = False
     app = Ursina(borderless=True)
+    # time.sleep(2)
     # window.forced_aspect_ratio = 1
     # window.vsync = 10
 
