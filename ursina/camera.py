@@ -90,7 +90,7 @@ class Camera(Entity):
     def orthographic(self, value):
         self._orthographic = value
         self.lens_node = (self.perspective_lens_node, self.orthographic_lens_node)[value] # this need to be set for the mouse raycasting
-        application.base.cam.node().set_lens((self.perspective_lens, self.orthographic_lens)[value])
+        base.cam.node().set_lens((self.perspective_lens, self.orthographic_lens)[value])
         self.fov = self.fov
 
     @property
@@ -108,7 +108,7 @@ class Camera(Entity):
         elif self.orthographic and hasattr(self, 'orthographic_lens'):
             self.orthographic_lens.set_film_size(value * self.aspect_ratio, value)
 
-        application.base.cam.node().set_lens((self.perspective_lens, self.orthographic_lens)[value])
+        base.cam.node().set_lens((self.perspective_lens, self.orthographic_lens)[value])
 
     @property
     def clip_plane_near(self):

@@ -94,8 +94,8 @@ class Mouse():
 
         if name == 'visible':
             window.set_cursor_hidden(not value)
-            if application.base:
-                application.base.win.requestProperties(window)
+            if base:
+                base.win.requestProperties(window)
 
         if name == 'locked':
             try:
@@ -106,7 +106,7 @@ class Mouse():
                 else:
                     window.set_mouse_mode(window.M_absolute)
 
-                application.base.win.requestProperties(window)
+                base.win.requestProperties(window)
             except:
                 pass
 
