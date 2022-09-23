@@ -31,11 +31,11 @@ class Camera(Entity):
 
 
     def set_up(self):
-        self.display_region = base.camNode.get_display_region(0)
+        self.display_region = application.base.camNode.get_display_region(0)
         win = self.display_region.get_window()
 
         self.perspective_lens = PerspectiveLens()
-        self.perspective_lens = base.camLens # use panda3d's default for automatic aspect ratio on window resize
+        self.perspective_lens = application.base.camLens # use panda3d's default for automatic aspect ratio on window resize
         self.lens = self.perspective_lens
         self.perspective_lens.set_aspect_ratio(window.aspect_ratio)
         self.perspective_lens_node = LensNode('perspective_lens_node', self.perspective_lens)
@@ -45,7 +45,7 @@ class Camera(Entity):
         self.orthographic_lens.set_film_size(self.fov * window.aspect_ratio, self.fov)
         self.orthographic_lens_node = LensNode('orthographic_lens_node', self.orthographic_lens)
 
-        base.cam.node().set_lens(self.lens)
+        application.base.cam.node().set_lens(self.lens)
 
         self.orthographic = False
         self.fov = 40   # horizontal fov
@@ -90,7 +90,7 @@ class Camera(Entity):
     def orthographic(self, value):
         self._orthographic = value
         self.lens_node = (self.perspective_lens_node, self.orthographic_lens_node)[value] # this need to be set for the mouse raycasting
-        base.cam.node().set_lens((self.perspective_lens, self.orthographic_lens)[value])
+        application.base.cam.node().set_lens((self.perspective_lens, self.orthographic_lens)[value])
         self.fov = self.fov
 
     @property
@@ -108,7 +108,7 @@ class Camera(Entity):
         elif self.orthographic and hasattr(self, 'orthographic_lens'):
             self.orthographic_lens.set_film_size(value * self.aspect_ratio, value)
 
-        base.cam.node().set_lens((self.perspective_lens, self.orthographic_lens)[value])
+        application.base.cam.node().set_lens((self.perspective_lens, self.orthographic_lens)[value])
 
     @property
     def clip_plane_near(self):
@@ -156,7 +156,7 @@ class Camera(Entity):
             shader = shader._shader
 
         if not self.filter_manager:
-            self.filter_manager = FilterManager(base.win, base.cam)
+            self.filter_manager = FilterManager(application.base.win, application.base.cam)
             self.render_texture = PandaTexture()
             self.depth_texture = PandaTexture()
             # self.normals_texture = PandaTexture()

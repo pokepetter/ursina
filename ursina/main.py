@@ -28,7 +28,7 @@ class Ursina(ShowBase):
         if 'development_mode' in kwargs:
             application.development_mode = kwargs['development_mode']
 
-        # base = base
+        application.base = self
         super().__init__()
 
         try:
@@ -43,18 +43,18 @@ class Ursina(ShowBase):
                 setattr(window, name, kwargs[name])
 
         # camera
-        camera._cam = base.camera
+        camera._cam = self.camera
         camera._cam.reparent_to(camera)
-        camera.render = base.render
+        camera.render = self.render
         camera.position = (0, 0, -20)
         scene.camera = camera
         camera.set_up()
 
         # input
-        base.buttonThrowers[0].node().setButtonDownEvent('buttonDown')
-        base.buttonThrowers[0].node().setButtonUpEvent('buttonUp')
-        base.buttonThrowers[0].node().setButtonRepeatEvent('buttonHold')
-        base.buttonThrowers[0].node().setKeystrokeEvent('keystroke')
+        self.buttonThrowers[0].node().setButtonDownEvent('buttonDown')
+        self.buttonThrowers[0].node().setButtonUpEvent('buttonUp')
+        self.buttonThrowers[0].node().setButtonRepeatEvent('buttonHold')
+        self.buttonThrowers[0].node().setKeystrokeEvent('keystroke')
         self._input_name_changes = {
             'mouse1' : 'left mouse down', 'mouse1 up' : 'left mouse up', 'mouse2' : 'middle mouse down', 'mouse2 up' : 'middle mouse up', 'mouse3' : 'right mouse down', 'mouse3 up' : 'right mouse up',
             'wheel_up' : 'scroll up', 'wheel_down' : 'scroll down',
@@ -78,8 +78,8 @@ class Ursina(ShowBase):
         self.accept('keystroke', self.text_input)
         ConfigVariableBool('paste-emit-keystrokes', False)
 
-        base.disableMouse()
-        mouse._mouse_watcher = base.mouseWatcherNode
+        self.disableMouse()
+        mouse._mouse_watcher = self.mouseWatcherNode
         mouse.enabled = True
         self.mouse = mouse
 

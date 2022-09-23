@@ -84,7 +84,7 @@ class Mouse():
 
     @position.setter
     def position(self, value):
-        base.win.move_pointer(
+        application.base.win.move_pointer(
             0,
             round(value[0] + (window.size[0]/2) + (value[0]/2*window.size[0]) *1.124), # no idea why I have * with 1.124
             round(value[1] + (window.size[1]/2) - (value[1]*window.size[1])),
@@ -94,8 +94,8 @@ class Mouse():
 
         if name == 'visible':
             window.set_cursor_hidden(not value)
-            if base:
-                base.win.requestProperties(window)
+            if application.base:
+                application.base.win.requestProperties(window)
 
         if name == 'locked':
             try:
@@ -106,7 +106,7 @@ class Mouse():
                 else:
                     window.set_mouse_mode(window.M_absolute)
 
-                base.win.requestProperties(window)
+                application.base.win.requestProperties(window)
             except:
                 pass
 
@@ -152,7 +152,7 @@ class Mouse():
                 if abs(self.x-self.prev_click_pos[0]) > self.double_click_movement_limit or abs(self.y-self.prev_click_pos[1]) > self.double_click_movement_limit:
                     return # moused moved too much since previous click, so don't register double click.
 
-                base.input('double click')
+                application.base.input('double click')
                 if self.hovered_entity:
                     if hasattr(self.hovered_entity, 'on_double_click'):
                         try:
