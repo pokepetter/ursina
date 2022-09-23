@@ -45,7 +45,7 @@ class Camera(Entity):
         self.orthographic_lens.set_film_size(self.fov * window.aspect_ratio, self.fov)
         self.orthographic_lens_node = LensNode('orthographic_lens_node', self.orthographic_lens)
 
-        application.base.cam.node().set_lens(self.lens)
+        base.cam.node().set_lens(self.lens)
 
         self.orthographic = False
         self.fov = 40   # horizontal fov
