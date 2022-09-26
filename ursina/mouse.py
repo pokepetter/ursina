@@ -18,6 +18,7 @@ class Mouse():
         self.enabled = False
         self.visible = True
         self.locked = False
+        self._locked_mouse_last_frame = False
         self.position = Vec3(0,0,0)
         self.delta = Vec3(0,0,0)    # movement since you pressed a mouse button.
         self.prev_x = 0
@@ -107,6 +108,7 @@ class Mouse():
                     window.set_mouse_mode(window.M_absolute)
 
                 application.base.win.requestProperties(window)
+                self._locked_mouse_last_frame = True
             except:
                 pass
 
@@ -183,8 +185,9 @@ class Mouse():
 
 
     def update(self):
-        if not self.enabled or not self._mouse_watcher.has_mouse():
+        if not self.enabled or not self._mouse_watcher.has_mouse() or self._locked_mouse_last_frame:
             self.velocity = Vec3(0,0,0)
+            self._locked_mouse_last_frame = False
             return
 
         self.moving = self.x + self.y != self.prev_x + self.prev_y
