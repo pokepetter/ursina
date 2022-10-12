@@ -21,7 +21,9 @@ setup(
         'panda3d-gltf',
         'pillow',
         'pyperclip',
+        'Xlib; platform_system == "Linux"',
     ],
+
     extras_require={'extras': [
         'numpy',
         'imageio',
