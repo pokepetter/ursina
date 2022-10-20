@@ -1,4 +1,4 @@
-from ursina import Entity, Text, camera, color, mouse, BoxCollider, Sequence, Func, Vec3, scene
+from ursina import Entity, Text, camera, color, mouse, BoxCollider, Sequence, Func, Vec2, Vec3, scene
 from ursina.models.procedural.quad import Quad
 import textwrap
 
@@ -200,25 +200,25 @@ class Button(Entity):
             exec(textwrap.dedent(action))
 
 
-    def fit_to_text(self, radius=.1):
+    def fit_to_text(self, radius=.1, padding=Vec2(Text.size*1.5, Text.size)):
         if not self.text_entity.text or self.text_entity.text == '':
             return
 
         self.text_entity.world_parent = scene
-        self.scale = (
-            (self.text_entity.width * Text.size * 2) + self.text_entity.height * Text.size * 2,
-            self.text_entity.height * Text.size * 2 * 2
-            )
+        self.original_parent = self.parent
+        self.parent = self.text_entity
+        self.scale = Vec2(self.text_entity.width, self.text_entity.height) * Text.size * 2
+        self.scale += Vec2(*padding)
+
         self.model = Quad(aspect=self.scale_x/self.scale_y, radius=radius)
+        self.parent = self.original_parent
         self.text_entity.world_parent = self
-        # print('fit to text', self.scale)
 
 
 
 if __name__ == '__main__':
     from ursina import Ursina, application, Tooltip
     app = Ursina()
-
     b = Button(text='hello world!', color=color.azure, icon='sword', scale=.25, text_origin=(-.5,0))
     # b.fit_to_text()
     b.on_click = application.quit # assign a function to the button.
