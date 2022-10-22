@@ -43,7 +43,7 @@ Any errors while the application is running will be logged in log.txt instead of
 1. pip install auto-py-to-exe
 2. Go to cmd and type auto-py-to-exe to open the gui
 3. Enter script location
-4. Select 'one file' or 'one directory' (one file is not recommended since packs all the files into one exe and slows down the program)
+4. Select 'one file' or 'one directory' (one file is not recommended since it packs all the files into one exe and slows down the program)
 5. Select either console based or window based
 6. Icon (optional)
 7. Under additional files, click add folder and add:
