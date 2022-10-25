@@ -1,4 +1,4 @@
-from ursina import Entity, Draggable, Text, Slider, Button, color, Vec3, Quad
+from ursina import Entity, Draggable, Text, Slider, Button, color, Vec3, Quad, invoke
 from ursina.prefabs.input_field import InputField
 
 
@@ -124,6 +124,6 @@ if __name__ == '__main__':
             ButtonGroup(('test', 'eslk', 'skffk'))
             ),
         )
-
+    wp.y = wp.panel.scale_y / 2 * wp.scale_y    # center the window panel
 
     app.run()
