@@ -1062,7 +1062,7 @@ class Entity(NodePath):
             attr = getattr(self, key)
 
 
-            if hasattr(attr, 'name'):
+            if hasattr(attr, 'name') and attr.name:
                 attr = attr.name
                 if '.' in attr:
                     attr = attr.split('.')[0]
@@ -1071,12 +1071,16 @@ class Entity(NodePath):
             if attr == target_class.default_values[key]:
                 continue
 
-            print('attr changed:', key, 'from:', target_class.default_values[key], 'to:', attr)
-            if isinstance(attr, str):
-                attr = f"'{attr}'"
-
+            # print('attr changed:', key, 'from:', target_class.default_values[key], 'to:', attr)
             if key == 'color':
-                attr = f'color.{attr[1:-1]}'
+                if isinstance(attr, str):
+                    if not attr.startswith('#'):
+                        attr = f'color.{attr}'
+                elif isinstance(attr, Color):
+                    attr = f"'{color.rgb_to_hex(*attr)}'"
+
+            elif isinstance(attr, str):
+                attr = f"'{attr}'"
 
             if attr == "'mesh'":
                 continue
@@ -1303,7 +1307,7 @@ if __name__ == '__main__':
 
 
     # test
-    e = Entity(model='cube', collider='box', texture='shore')
+    e = Entity(model='cube', collider='box', texture='shore', color=hsv(.3,1,.5))
     print(repr(e))
 
     # e.animate_x(3, duration=2, delay=.5, loop=True)
