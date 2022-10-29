@@ -14,7 +14,11 @@ a.button_big:hover {background-color: white; color: #e6d23f; text-decoration: un
 mark {background: #ccff99;}
 span {background-color: rgba(0, 0, 0, 0.55); padding: .1em; line-height: 1.35em;}
 img {max-width: 100%; vertical-align: top;}
-.code_block {background-color: whitesmoke; padding: 10px; margin: 0; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre;}
+.code_block {background-color: whitesmoke; padding: 10px; margin: 0; font-family: monospace; font-size: 20; font-weight: normal; white-space: pre; overflow: auto; border-radius:4px; scrollbar-color:red;}
+/* Hide scrollbar for Chrome, Safari and Opera */
+.code_block::-webkit-scrollbar {
+  //display: none;
+}
 .sidebar {position:fixed; z-index:1; left:1em; top:1em;}
 @media screen and (max-width: 1800px) {.sidebar {display:none;}}
 

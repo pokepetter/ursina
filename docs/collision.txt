@@ -104,6 +104,7 @@ app.run()
 
 
 ## HitInfo
+
 All of these functions will return a HitInfo. This contains information about what it hit.
 
 # code
@@ -119,6 +120,7 @@ entities = []
 # text
 
 ## Distance Check
+
 Sometimes it enough to just check the distance between two entities.
 For example if you want a pickup:
 
@@ -148,6 +150,7 @@ app.run()
 
 
 ## Mouse Collision
+
 The mouse does raycast automatically.
 Both UI elements(Entities parented to camera.ui) and Entities in 3d space (parented to scene) can
 get hit as long as they have a collider. UI elements will however block things behind them.

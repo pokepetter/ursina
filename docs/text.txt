@@ -4,12 +4,14 @@
 ### Text
 
 ## Text Size
+
 Set .scale or .world_scale:
 # code
 text_entity = Text('hello', scale=2)
 # text
 
 ## Font and Resolution
+
 For one Text Entity:
 
 # code
@@ -28,6 +30,7 @@ Keep in mind you don't *have* to change the resolution, but for pixel fonts for 
 might want a higher resolution in order for it to not appear blurry.
 
 ## Text Alignment
+
 Change text alignment by setting .origin:
 # code
 Text('Hello\nWorld!', origin=(-.5,.5))  # the default. text starts in the upper left like normal.
@@ -36,6 +39,7 @@ Text('Hello\nWorld!', origin=(0,0))     # text is centered both horizontally and
 
 
 ## Text Colors
+
 Set .color to color the whole text.
 # code
 t = Text('This is some text', color=color.blue)
@@ -47,4 +51,5 @@ t = Text('This is some <pink>colored text. <default>Reset color back to default.
 # text
 
 ## Changing Text of Prefabs
+
 Things like Slider, InputField, etc., usually has .text_entity which you can access if you need it.
