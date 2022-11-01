@@ -1,0 +1,16 @@
+a.button {
+    background-color: #4b8d56;
+    box-shadow: 5px 20px 40px #00000057;
+}
+
+a.button:hover {
+    background-color: #88a959
+}
+@font-face {
+    font-family: Lato;
+    src: url("Lato-Regular.ttf");
+}
+
+body {
+    font-family: Lato, Arial, Sans-Serif;
+}

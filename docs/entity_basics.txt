@@ -1,5 +1,5 @@
 # title entity basics
-# center, width 1200, arial
+# center, width 1200
 
 # size 5, bold
 Entity Basics
@@ -246,4 +246,5 @@ Entity Basics
     # code
     on_enable()
     on_disable()
+    on_destroy()
     # text

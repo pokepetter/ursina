@@ -1,6 +1,6 @@
 # style a.button:hover {background-color: #4CAF50}
 # title ursina engine documentation
-# center, bold, arial, size 5
+# center, bold, size 5
 <a href="index.html" style="text-decoration: none; color:inherit">ursina engine</a>
 # normal, size 1, left, width 650
 

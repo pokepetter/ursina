@@ -1,4 +1,4 @@
-# center, width 1000, arial
+# center, width 1000
 # size 5, bold
 Inventory Tutorial
 # size 1, normal

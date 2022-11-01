@@ -4,13 +4,16 @@
 
 <html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<head> <link rel="stylesheet" href="sswg.css"> </head>
+<head>
+    <link rel="stylesheet" href="sswg.css">
+    <link rel="stylesheet" href="style.css">
+</head>
 <body>
 <left>
 <title>collision</title>
 <br>
 
-<div style="font-family: arial;font-size: 20.0px;max-width: 1200px; margin: auto;">
+<div style="font-size: 20.0px;max-width: 1200px; margin: auto;">
 <br>
 <div class="sidebar"><br>
 <b><a href="documentation.html">Documentation</a></b><br>
@@ -163,7 +166,6 @@ app.run()
 <div id="HitInfo"/><br>
 HitInfo<br>
 <div style="font-size: 20.0px;font-weight: normal;">
-<br>
 All of these functions will return a HitInfo. This contains information about what it hit.<br>
 <br>
 <div class="code_block" style="margin-left: 0em;">hit = None
@@ -180,7 +182,6 @@ entities = []
 <div id="Distance Check"/><br>
 Distance Check<br>
 <div style="font-size: 20.0px;font-weight: normal;">
-<br>
 Sometimes it enough to just check the distance between two entities.<br>
 For example if you want a pickup:<br>
 <br>
@@ -211,7 +212,6 @@ app.run()
 <div id="Mouse Collision"/><br>
 Mouse Collision<br>
 <div style="font-size: 20.0px;font-weight: normal;">
-<br>
 The mouse does raycast automatically.<br>
 Both UI elements(Entities parented to camera.ui) and Entities in 3d space (parented to scene) can<br>
 get hit as long as they have a collider. UI elements will however block things behind them.<br>
