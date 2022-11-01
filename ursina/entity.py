@@ -1167,19 +1167,20 @@ class Entity(NodePath):
         '''))
 
 
-    def shake(self, duration=.2, magnitude=1, speed=.05, direction=(1,1)):
+    def shake(self, duration=.2, magnitude=1, speed=.05, direction=(1,1), delay=0, attr_name='world_position'):
         import random
-        s = Sequence()
-        original_position = self.world_position
+        s = Sequence(Wait(delay))
+        original_position = getattr(self, attr_name)
+
         for i in range(int(duration / speed)):
-            s.append(Func(self.set_position,
+            s.append(Func(setattr, self, attr_name,
                 Vec3(
                     original_position[0] + (random.uniform(-.1, .1) * magnitude * direction[0]),
                     original_position[1] + (random.uniform(-.1, .1) * magnitude * direction[1]),
                     original_position[2],
                 )))
             s.append(Wait(speed))
-            s.append(Func(setattr, self, 'world_position', original_position))
+            s.append(Func(setattr, self, attr_name, original_position))
 
         self.animations.append(s)
         s.start()
