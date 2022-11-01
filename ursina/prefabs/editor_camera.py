@@ -19,6 +19,7 @@ class EditorCamera(Entity):
         self.rotation_smoothing = 0
         self.look_at = self.smoothing_helper.look_at
         self.look_at_2d = self.smoothing_helper.look_at_2d
+        self.rotate_key = 'right mouse'
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -102,7 +103,7 @@ class EditorCamera(Entity):
 
 
     def update(self):
-        if mouse.right:
+        if held_keys[self.rotate_key]:
             self.smoothing_helper.rotation_x -= mouse.velocity[1] * self.rotation_speed
             self.smoothing_helper.rotation_y += mouse.velocity[0] * self.rotation_speed
 

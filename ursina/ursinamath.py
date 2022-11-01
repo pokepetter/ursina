@@ -1,5 +1,5 @@
 import operator
-from math import sqrt, sin, acos, pi, cos
+from math import sqrt, sin, acos, pi, cos, floor
 from panda3d.core import Vec4, LVector3f, Mat3, Mat4
 from ursina.vec2 import Vec2
 from ursina.vec3 import Vec3
@@ -142,6 +142,23 @@ def sum(l):
         total += e
 
     return total
+
+
+def sample_gradient(list_of_values, t):     # distribute list_of_values equally on a line and get the interpolated value at t (0-1).
+    l = len(list_of_values)
+    if l == 1:
+        return list_of_values[0]
+
+    t *= l-1
+    index = floor(t - .001)
+    index = clamp(index, 0, l-1)
+    relative = t - index
+    # print(t, index, relative)
+
+    if index < l-1:
+        return lerp(list_of_values[index], list_of_values[index+1], relative)
+    else:
+        return lerp(list_of_values[index-1], list_of_values[index], relative)
 
 
 class Bounds:

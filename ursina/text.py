@@ -95,8 +95,8 @@ class Text(Entity):
 
         # check if using tags
         if (not self.use_tags
-            or self.text == self.start_tag or self.text == self.end_tag
-            or not self.start_tag in text or not self.end_tag in text
+            # or self.text == self.start_tag or self.text == self.end_tag
+            # or not self.start_tag in text or not self.end_tag in text
             ):
 
             self.create_text_section(text)
@@ -259,9 +259,10 @@ class Text(Entity):
     @line_height.setter
     def line_height(self, value):
         self._line_height = value
-        self._font.setLineHeight(value)
         if self.use_tags:
             self.text = self.raw_text
+        else:
+            self._font.setLineHeight(value)
 
     @property
     def width(self): # gets the width of the widest line.
@@ -306,7 +307,7 @@ class Text(Entity):
         self._wordwrap = value
         if not value:
             return
-            
+
         new_text = ''
         x = 0
         for word in self.raw_text.replace(self.end_tag, self.end_tag+' ').split(' '):

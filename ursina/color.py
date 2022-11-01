@@ -89,6 +89,10 @@ def hex(value):
         value = value[1:]
     return rgb(*tuple(int(value[i:i+2], 16) for i in (0, 2, 4)))
 
+def rgb_to_hex(r, g, b, a=1):
+    return "#{0:02x}{1:02x}{2:02x}{3:02x}".format(int(r*255), int(g*255), int(b*255), int(a*255))
+
+
 def brightness(color):
     if color[0] > 1 or color[1] > 1 or color[2] > 1:
         color = Color(tuple(c/255 for c in color))
@@ -184,7 +188,7 @@ if __name__ == '__main__':
 
     e = Entity(model='cube', color=color.lime)
     print(e.color.name)
-
+    print('rgb to hex:', rgb_to_hex(*color.blue))
     # e.color = hex('ced9a9')
 
     app.run()
