@@ -1,4 +1,4 @@
-# arial, normal, size 1, left, width 1200
+# normal, size 1, left, width 1200
 # insert doc_index_sidebar.txt
 
 

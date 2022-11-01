@@ -1,4 +1,4 @@
-# arial, size 1, left, width 1200
+# size 1, left, width 1200
 ### Installing ursina
 
 # insert doc_index_sidebar.txt
