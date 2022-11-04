@@ -46,7 +46,7 @@ class LevelEditorScene(Entity):
 
             if hasattr(e, '__repr__'):
 
-                print('------------', repr(e), e.__class__.__name__)
+                # print('------------', repr(e), e.__class__.__name__)
                 recipe = repr(e).split(e.__class__.__name__)[1][1:-1] # remove start and end
                 scene_file_content += recipe
                 scene_file_content += ')\n' # TODO: add if it has a custom name
@@ -746,7 +746,7 @@ class QuickGrabber(Entity):
                 # level_editor.local_global_menu.value = 'global'
                 gizmo.world_scale = Vec3(1)
                 gizmo.drag(show_gizmo_while_dragging=False)
-                print('-------------', level_editor.selection)
+                # print('-------------', level_editor.selection)
                 self.target_gizmo = gizmo.subgizmos[self.target_axis]
                 # self.target_gizmo.input('left mouse down')
                 self.target_gizmo.start_dragging()
@@ -817,7 +817,7 @@ class QuickScale(Entity):
             invoke(self.gizmos_to_toggle[key].start_dragging, delay=1/60)
 
 
-        print('------------', key)
+        # print('------------', key)
         if key.endswith(' up') and key[:-3] in self.gizmos_to_toggle.keys():
             key = key[:-3]
             self.gizmos_to_toggle[key].input('left mouse up')
@@ -1098,18 +1098,18 @@ class Deleter(Entity):
             self.delete_selected()
 
     def delete_selected(self):
-            level_editor.current_scene.undo.record_undo((
-                'restore entities',
-                [level_editor.entities.index(e) for e in level_editor.selection],
-                [repr(e) for e in level_editor.selection],
-                ))
+        level_editor.current_scene.undo.record_undo((
+            'restore entities',
+            [level_editor.entities.index(e) for e in level_editor.selection],
+            [repr(e) for e in level_editor.selection],
+            ))
 
-            [level_editor.entities.remove(e) for e in level_editor.selection]
-            [setattr(e, 'parent', level_editor) for e in level_editor.cubes]
-            [destroy(e, delay=1/60) for e in level_editor.selection]
-            level_editor.selection = []
-            level_editor.render_selection()
-            hierarchy_list.render_selection()
+        [level_editor.entities.remove(e) for e in level_editor.selection]
+        [setattr(e, 'parent', level_editor) for e in level_editor.cubes]
+        [destroy(e, delay=1/60) for e in level_editor.selection]
+        level_editor.selection = []
+        level_editor.render_selection()
+        hierarchy_list.render_selection()
 
 
 class PointOfViewSelector(Entity):
@@ -1722,7 +1722,9 @@ class Duplicator(Entity):
 
 
     def input(self, key):
+        print('key:', key)
         if held_keys['shift'] and key == 'd' and level_editor.selection:
+            print('duplicate')
             self.clones = []
             for e in level_editor.selection:
                 clone = deepcopy(e)
@@ -1733,8 +1735,6 @@ class Duplicator(Entity):
                 clone.selectable = True
 
                 clone.collision = False
-                # clone.collision = e.collision
-                print(repr(clone))
                 self.clones.append(clone)
 
             level_editor.entities.extend(self.clones)
