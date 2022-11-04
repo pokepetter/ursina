@@ -93,6 +93,11 @@ class Ursina(ShowBase):
         # make sure it's running from a file and not an interactive session.
         application.hot_reloader = HotReloader(__main__.__file__ if hasattr(__main__, '__file__') else 'None')
 
+        try:
+            from ursina import gamepad
+        except e as Exception:
+            print(e)
+
         window.make_editor_gui()
         if 'editor_ui_enabled' in kwargs:
             window.editor_ui.enabled = kwargs['editor_ui_enabled']
