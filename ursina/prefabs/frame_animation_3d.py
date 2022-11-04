@@ -53,6 +53,13 @@ class FrameAnimation3d(Entity):
         return self.sequence.duration
 
 
+    @property
+    def current_frame(self):
+        for e in self.frames:
+            if e.enabled:
+                return e
+
+
     def __setattr__(self, name, value):
         if hasattr(self, 'frames') and name in ('color', 'origin', 'texture'):
             for f in self.frames:
