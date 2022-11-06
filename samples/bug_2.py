@@ -1,9 +1,9 @@
-from time import perf_counter
-t = perf_counter()
 from ursina import *
 
 app = Ursina()
 
-print('----', perf_counter() - t)
+def update():
+    print(held_keys['gamepad left stick x'])
+
 
 app.run()

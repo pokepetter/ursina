@@ -26,6 +26,10 @@ open source game engine
 
 [⭳ Download, installation.html]  [🗎 Documentation, documentation.html]  [Donate, https://github.com/sponsors/pokepetter]
 
+
+
+<a href="https://youtu.be/j71j88oCTNo" target="_blank" rel="noopener noreferrer"><img src="ursina_trailer_preview.webp" alt="link to ursina trailer" style="width:900px;height:491px;"></a>
+
 # left
 ## Powered by Python
 
