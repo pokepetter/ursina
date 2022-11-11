@@ -5,7 +5,8 @@ html = '''
     <link rel="stylesheet" href="api_reference.css">
 </head>
 <body>
-
+<input type="checkbox" id="checkbox"></input>
+<bg></bg>
 '''
 
 groups = {
@@ -404,10 +405,13 @@ def is_singleton(str):
 path = application.package_folder
 module_info = dict()
 class_info = dict()
+module_info['textures'] = ('', '', ('noise', 'grass', 'vignette', 'arrow_right', 'test_tileset', 'tilemap_test_level', 'shore', 'file_icon', 'sky_sunset', 'radial_gradient', 'circle', 'perlin_noise', 'brick', 'grass_tintable', 'circle_outlined', 'ursina_logo', 'arrow_down', 'cog', 'vertical_gradient', 'white_cube', 'horizontal_gradient', 'folder', 'rainbow', 'heightmap_1', 'sky_default',), (), ())
+module_info['models'] = ('', '', ('quad', 'wireframe_cube', 'plane', 'circle', 'diamond', 'wireframe_quad', 'sphere', 'cube', 'icosphere', 'cube_uv_top', 'arrow', 'sky_dome', ), (), ())
+module_info['shaders'] = ('', '', ('colored_lights_shader', 'fresnel_shader', 'projector_shader', 'instancing_shader', 'texture_blend_shader', 'matcap_shader', 'triplanar_shader', 'unlit_shader', 'geom_shader', 'normals_shader', 'transition_shader', 'noise_fog_shader', 'lit_with_shadows_shader', 'fxaa', 'camera_empty', 'ssao', 'camera_outline_shader', 'pixelation_shader', 'camera_contrast', 'camera_vertical_blur', 'camera_grayscale', ), (), ())
 
 
 for f in path.glob('**/*.py'):
-    with open(f, encoding='utf8') as t:
+    with open(f, encoding='utf-8') as t:
         code = t.read()
         code = code.replace('<', '&lt').replace('>', '&gt')
 
@@ -465,19 +469,19 @@ from textwrap import dedent
 html += '''<div class="sidebar">''' ## index container
 i = 0
 for group_name, group in groups.items():
-    links = '\n     '.join([f'<a href="#{e}">{e}</a><br>' for e in group])
-    html += dedent(f'''
-        <div class="sidebar_box" style="color: hsl({30+(i*20)}deg 94% 21%);">
-            <div class="group_header">{group_name}</div>
-            <div class="group_content">{links}</div>
-            <br>
-        </div>
-    ''')
+    links = ''.join([f'\n            <a href="#{e}">{e}</a><br>' for e in group])
+    html += f'''
+    <div class="sidebar_box" style="color: hsl({30+(i*20)}deg 94% 21%);">
+        <div class="group_header">{group_name}</div>
+        <div class="group_content">{links}</div>
+        <br>
+    </div>
+    '''
     i+= 1
-html += '</div>'
-html += '<main_section>'
-html += '<h1 class="main_header">ursina API Reference</h1>'
-html += '<p>v5.0.0</p>'
+html += '</div>\n'
+html += '<main_section>\n'
+html += '    <h1 class="main_header">ursina API Reference</h1>\n'
+html += '    <p>v5.0.0</p>\n'
 # print(module_info)
 # main part
 for group_name, group in groups.items():
@@ -505,22 +509,26 @@ for group_name, group in groups.items():
         for parent_class in ('Entity', 'Button', 'Draggable', 'Text', 'Collider', 'Mesh', 'Pipe'):
             name = name.replace(f'({parent_class})', f'(<a style="color: gray;" href="#{parent_class}">{parent_class}</a>)')
 
-        html += dedent(f'''
-            <div class="class_box" id="{name}">
-                <h1>{name}</h1>
-        ''')
+        html += (
+            f'''    <div class="class_box" id="{name}">\n'''
+            f'''        <h1>{name}</h1>\n'''
+            )
         location = str(location)
         if 'ursina' in location:
             location = location.split('ursina')[-1]
             github_link = 'https://github.com/pokepetter/ursina/blob/master/ursina' + location.replace('\\', '/')
             location = location.replace('\\', '.')[:-3]
-            html += f'''<a href="{github_link}"><gray>ursina{location}</gray></a><br><br>'''
+            html += f'''        <a href="{github_link}"><gray>ursina{location}</gray></a><br><br>\n'''
 
         if params:
-            params = f'<div class="params">{params}</div>\n'
-            html += params + '\n<br>'
+            html += f'        <div class="params">{params}</div><br>\n'
 
-        html += '<table>'
+        html += '        <table> <!-- attributes -->\n'
+
+        dot = '.'
+        if group_name == 'Assets':    # don't add a . for asset names
+            dot = ''
+
         for e in attrs:
             attr_name = e
             default = ''
@@ -535,40 +543,37 @@ for group_name, group in groups.items():
             if info:
                 info = f'<span>{info.strip()}</span>'
 
-            html += f'''
-              <tr>
-                <td>.{attr_name}<gray>{default}</gray></td><td>{info}</td>
-              </tr>
-            '''
+            html += (
+                f'            <tr>\n'
+                f'                <td>{dot}{attr_name}<gray>{default}</gray></td><td>{info}</td>\n'
+                f'            </tr>\n'
+            )
 
-        html += '</table>'
-        html += '\n<br>'
-        html += '<table>'
+        html += '        </table><br>\n'
 
         if funcs:
-            html += '\n<div><gray>functions:</gray>\n</div>'
+            html += '        <div><gray>functions:</gray></div>\n'
+            html += '        <table>\n'
 
         for e in funcs:
-            html += f'''
-              <tr>
-                <td> &nbsp;{e[0]}(<gray>{e[1]}</gray>) <span>{e[2][2:]}</span></td>
-              </tr>
-            '''
+            html += (
+                f'''            <tr>\n'''
+                f'''                <td> &nbsp;{e[0]}(<gray>{e[1]}</gray>) <span>{e[2][2:]}</span></td>\n'''
+                f'''            </tr>\n'''
+            )
 
-        html += '</table>'
+        html += '        </table><br>\n'
 
-        html += '\n<br>'
         if example:
-            html += '\n<div><gray>example:</gray>\n</div>'
-            html += '\n<div class="example">' + example +'\n</div>'
+            html += '    <div><gray>example:</gray></div>\n'
+            html += f'    <div class="example">{example}\n</div>\n'
 
-        html += '\n</div></div>'
+        # html += '\n</div></div>'
         html = html.replace('<gray></gray>', '')
 
         html += dedent('''
             </div>
             <br>
-        </div>
         ''')
 
 
@@ -577,5 +582,5 @@ html += '''
 </body>
 </html>
 '''
-with open('api_reference.html', 'w') as f:
+with open('api_reference.html', 'w', encoding='utf-8') as f:
     f.write(html)

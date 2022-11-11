@@ -1,22 +1,58 @@
 html {
-  scrollbar-face-color: hsl(240.0, 0%, 80%);
-  scrollbar-base-color: hsl(240.0, 0%, 80%);
-  scrollbar-3dlight-color: hsl(240.0, 0%, 80%)4;
-  scrollbar-highlight-color: hsl(240.0, 0%, 80%);
-  scrollbar-track-color: hsl(60.0, 5%, 13%);
-  scrollbar-arrow-color: hsl(60.0, 5%, 13%);
+  scrollbar-face-color: var(--scrollbar_color);
+  scrollbar-base-color: var(--scrollbar_color);
+  /* scrollbar-3dlight-color: var(--scrollbar_color); */
+  scrollbar-highlight-color: var(--scrollbar_color);
+  scrollbar-track-color: var(--scrollbar_bg_color);
+  scrollbar-arrow-color: var(--scrollbar_bg_color);
   scrollbar-shadow-color: hsl(240.0, 0%, 80%);
   scrollbar-darkshadow-color: hsl(240.0, 0%, 80%);
 }
 
 ::-webkit-scrollbar { width: 8px; height: 3px;}
 ::-webkit-scrollbar { width: 8px; height: 3px;}
-::-webkit-scrollbar-button {  background-color: hsl(60.0, 3%, 90%); }
-::-webkit-scrollbar-track {  background-color: hsl(60.0, 5%, 80%);}
-::-webkit-scrollbar-track-piece { background-color: hsl(60.0, 5%, 80%);}
-::-webkit-scrollbar-thumb { height: 50px; background-color: hsl(60.0, 3%, 90%); border-radius: 3px;}
-::-webkit-scrollbar-corner { background-color: hsl(60.0, 5%, 80%);}
-::-webkit-resizer { background-color: hsl(60.0, 5%, 80%);}
+::-webkit-scrollbar-button {  background-color: var(--scrollbar_color); }
+::-webkit-scrollbar-track {  background-color: var(--scrollbar_bg_color);}
+::-webkit-scrollbar-track-piece { background-color: var(--scrollbar_bg_color);}
+::-webkit-scrollbar-thumb { height: 50px; background-color: var(--scrollbar_color); border-radius: 3px;}
+::-webkit-scrollbar-corner { background-color: var(--scrollbar_color);}
+::-webkit-resizer { background-color: var(--scrollbar_color);}
+
+/* light mode colors */
+:root {
+  --bg_color: hsl(0,0%,92%);
+  --class_box_bg_color: hsl(0,0%,97%);
+  --text_color: hsl(0,0%,0%);
+  --params_color: hsl(240.0, 0%, 10%);
+  --example_bg_color: hsl(0,0%,92%);
+  --span_bg_color: hsl(305, 71%, 90%);
+  --span_bg_color_hovered: #dcd5f8;
+  --span_text_color: #181818;
+  --span_text_color_hovered: #181818;
+  --main_header_color: #333;
+
+  --sidebar_bg_color: #fafafa;
+  --sidebar_text_color: #000000;
+  --scrollbar_color: hsl(0, 0%, 90%);
+  --scrollbar_bg_color: hsl(0, 0%, 80%);
+}
+/* dark mode */
+input:checked + content, input:checked ~ * {
+  --bg_color: hsl(0,0%,8%);
+  --class_box_bg_color: hsl(0,0%,3%);
+  --text_color: hsl(0,0%,100%);
+  --params_color: hsl(240.0, 0%, 90%);
+  --example_bg_color: hsl(0,0%,8%);
+  --span_bg_color: hsl(305, 71%, 10%);
+  --span_bg_color_hovered: #dcd5f8;
+  --span_text_color: #181818;
+  --span_text_color_hovered: #181818;
+  --main_header_color: #999;
+  --sidebar_bg_color: #000000;
+  --sidebar_text_color: #fafafa;
+  --scrollbar_color: hsl(0, 0%, 20%);
+  --scrollbar_bg_color: hsl(0, 0%, 10%);
+}
 
 body {
     margin: auto;
@@ -25,15 +61,31 @@ body {
     max-width: 100%;
     overflow-x: hidden;
     white-space: normal;
-    background-color: hsl(0,0%,92%);
+    transition: .2s ease;
+    background-color: var(--bg_color);
+    color: var(--text_color);
 }
+bg {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: -1
+  top: 0;
+  left: 0;
+  background-color: var(--bg_color);
+  color: var(--text_color);
+}
+/* #checkbox:checked ~ .body{
+  background-color: hsl(0,0%,8%);
+  color: white;
+} */
 h1 {
     margin: 0;
     margin-top: 1em;
 }
 .main_header {
     font-size: 5.5em;
-    color: #333;
+    color: var(--main_header_color);
     font-weight: normal;
     /* text-shadow: -5px -5px 0 #000, 5px -5px 0 #000, -5px 5px 0 #000, 1px 1px 0 #000; */
 }
@@ -44,25 +96,25 @@ table {
     font-size: inherit;
     /* border-collapse: collapse; */
     border-spacing: 1em .2em;
+    color: var(--text_color);
 }
 table span {
-    background-color: #f8d5f5;
-    color: #181818;
+    background-color: var(--span_bg_color);
+    color: var(--span_text_color)
     border-radius: 5px;
     padding-top: 1px;
     padding-bottom: 1px;
     /* padding-left: 5px; */
 }
 tr:hover {
-    /* background-color: #dcd5f8; */
     color: #bf1da7;
-    /* font-weight: bold; */
 }
 tr:hover gray{
     font-weight: normal;
 }
 tr:hover span{
-    background-color: #dcd5f8;
+    background-color: var(--span_bg_color_hovered);
+    color: var(--span_text_color_hovered);
     font-weight: normal;
 }
 main_section {
@@ -81,20 +133,20 @@ green {color: seagreen;}
 blue {color: hsl(210, 50%, 50%);}
 
 .class_box {
-    background-color: #f7f7f7;
+    background-color: var(--class_box_bg_color);
+    color: var(--text_color);
     border-radius: 10px;
     padding: 1.5em 1em 1em 2em;
     line-height: 1.35em;
     font-size: 1.0em;
     /* width: fit-content; */
-
 }
 .class_box a {
     color: gray;
 }
 .example {
     padding: 1em;
-    background-color: hsl(0,0%,92%);
+    background-color: var(--example_bg_color);
     white-space: pre;
     border-radius: 3px;
     /* margin-top: 1em; */
@@ -103,12 +155,13 @@ blue {color: hsl(210, 50%, 50%);}
     min-width: 65em;
 }
 .params {
-    color:hsl(240.0, 0%, 10%);
+    color: var(--params_color);
     font-weight:bold;
     font-size: 1.2em;
 }
 .sidebar {
-    background-color: #fafafa;
+    background-color: var(--sidebar_bg_color);
+    color: var(--sidebar_text_color);
     left: 0px;
     position: fixed;
     top: 0px;
@@ -138,4 +191,40 @@ blue {color: hsl(210, 50%, 50%);}
 .group_content {
     color:inherit;
     margin-left: .75em;
+}
+
+#checkbox{
+    position: absolute;
+    top: 2em;
+    right: 2em;
+    appearance: none;
+    width: 4em;
+    height: 2em;
+    background: black;
+    border-radius: 1em;
+    cursor: pointer;
+    outline: none;
+    z-index: 4;
+}
+/* styling the circle inside the checkbox input */
+#checkbox::before{
+    content: '';
+    position: absolute;
+    width: 1.8em;
+    height: 1.8em;
+    top: .1em;
+    left: .1em;
+    background-color:white;
+    border-radius: 1em;
+    cursor: pointer;
+}
+
+}
+/* moving the checkbox circle when it's toggled by the user */
+#checkbox:checked::before {
+    left: 2.0999999999999996em
+}
+/* changing the color of the checkbox when it's toggled */
+#checkbox:checked {
+    background: rgb(156, 177, 81);
 }
