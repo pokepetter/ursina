@@ -23,35 +23,47 @@ html {
   --bg_color: hsl(0,0%,92%);
   --class_box_bg_color: hsl(0,0%,97%);
   --text_color: hsl(0,0%,0%);
+  --main_header_color: #333;
+  --header_color: hsl(0, 0%, 0%);
   --params_color: hsl(240.0, 0%, 10%);
-  --example_bg_color: hsl(0,0%,92%);
+  --variable_text_color_hovered: #bf1da7;
   --span_bg_color: hsl(305, 71%, 90%);
   --span_bg_color_hovered: #dcd5f8;
   --span_text_color: #181818;
   --span_text_color_hovered: #181818;
-  --main_header_color: #333;
+  --example_bg_color: hsl(0,0%,92%);
+
+  --olive: olive;
+  --green: seagreen;
+  --blue: hsl(210, 50%, 50%);
+  --purple: hsl(289.0, 50%, 50%);
 
   --sidebar_bg_color: #fafafa;
-  --sidebar_text_color: #000000;
   --scrollbar_color: hsl(0, 0%, 90%);
   --scrollbar_bg_color: hsl(0, 0%, 80%);
 }
 /* dark mode */
 input:checked + content, input:checked ~ * {
-  --bg_color: hsl(0,0%,8%);
-  --class_box_bg_color: hsl(0,0%,3%);
-  --text_color: hsl(0,0%,100%);
-  --params_color: hsl(240.0, 0%, 90%);
-  --example_bg_color: hsl(0,0%,8%);
-  --span_bg_color: hsl(305, 71%, 10%);
-  --span_bg_color_hovered: #dcd5f8;
-  --span_text_color: #181818;
-  --span_text_color_hovered: #181818;
+  --bg_color: hsl(60, 5%, 10%);
+  --class_box_bg_color: hsl(60, 5%, 13%);
+  --text_color: hsl(240, 0%, 80%);
+  --header_color: hsl(34deg 65% 51%);
+  --params_color: hsl(240.0, 0%, 80%);
+  --example_bg_color: hsl(60, 3%, 16%);
+  --variable_text_color_hovered: hsl(222deg 97% 64%);
+  --span_bg_color: hsl(312deg 18% 19%);
+  --span_bg_color_hovered: hsl(220deg 40% 25%);
+  --span_text_color: #202020;
+  --span_text_color_hovered: #eee;
   --main_header_color: #999;
-  --sidebar_bg_color: #000000;
-  --sidebar_text_color: #fafafa;
+  --sidebar_bg_color: hsl(60, 5%, 13%);
+  --sidebar_text_color: hsl(0, 0%, 80%) !important;
   --scrollbar_color: hsl(0, 0%, 20%);
   --scrollbar_bg_color: hsl(0, 0%, 10%);
+  --olive: #b29527;
+  --green: #39a468;
+  --blue: hsl(210deg 68% 58%);
+  --purple: hsl(323deg 55% 55%);
 }
 
 body {
@@ -61,9 +73,6 @@ body {
     max-width: 100%;
     overflow-x: hidden;
     white-space: normal;
-    transition: .2s ease;
-    background-color: var(--bg_color);
-    color: var(--text_color);
 }
 bg {
   width: 100%;
@@ -75,13 +84,10 @@ bg {
   background-color: var(--bg_color);
   color: var(--text_color);
 }
-/* #checkbox:checked ~ .body{
-  background-color: hsl(0,0%,8%);
-  color: white;
-} */
 h1 {
     margin: 0;
     margin-top: 1em;
+    color: var(--header_color);
 }
 .main_header {
     font-size: 5.5em;
@@ -107,7 +113,7 @@ table span {
     /* padding-left: 5px; */
 }
 tr:hover {
-    color: #bf1da7;
+    color: var(--variable_text_color_hovered);
 }
 tr:hover gray{
     font-weight: normal;
@@ -123,14 +129,15 @@ main_section {
     width: fit-content;
     position: absolute;
     left: 20em;
+    color: var(--main_header_color);
 }
 
-purple {color: hsl(289.0, 50%, 50%);}
+purple {color: var(--purple);}
 gray {color: gray;}
-olive {color: olive;}
+olive {color: var(--olive);}
 yellow {color: darkgoldenrod;}
-green {color: seagreen;}
-blue {color: hsl(210, 50%, 50%);}
+green {color: var(--green);}
+blue {color: var(--blue);}
 
 .class_box {
     background-color: var(--class_box_bg_color);
@@ -156,7 +163,7 @@ blue {color: hsl(210, 50%, 50%);}
 }
 .params {
     color: var(--params_color);
-    font-weight:bold;
+    font-weight: bold;
     font-size: 1.2em;
 }
 .sidebar {
@@ -180,13 +187,14 @@ blue {color: hsl(210, 50%, 50%);}
 }
 .sidebar_box a {
     text-decoration: none;
-    color: inherit;
+    color: var(--sidebar_text_color);
 }
 .sidebar_box a:hover {
     text-decoration: underline;
 }
 .group_header {
     font-weight: bold;
+    color: var(--sidebar_text_color);
 }
 .group_content {
     color:inherit;
@@ -222,9 +230,10 @@ blue {color: hsl(210, 50%, 50%);}
 }
 /* moving the checkbox circle when it's toggled by the user */
 #checkbox:checked::before {
-    left: 2.0999999999999996em
+    position: absolute;
+    left: 2em;
 }
 /* changing the color of the checkbox when it's toggled */
 #checkbox:checked {
-    background: rgb(156, 177, 81);
+    background: rgb(156, 177, 70);
 }
