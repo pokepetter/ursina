@@ -77,9 +77,9 @@ class Pipe(Mesh):
                 verts.append(b.children[n].world_position)
                 verts.append(e.children[j].world_position)
 
-                from_color = sample_gradient(self.color_gradient, (i-1)/(len(self.path)-1))
-                to_color = sample_gradient(self.color_gradient, (i-0)/(len(self.path)-1))
                 if self.color_gradient:
+                    from_color = sample_gradient(self.color_gradient, (i-1)/(len(self.path)-1))
+                    to_color = sample_gradient(self.color_gradient, (i-0)/(len(self.path)-1))
                     self.colors.append(to_color)
                     self.colors.append(from_color)
                     self.colors.append(from_color)
@@ -112,7 +112,7 @@ if __name__ == '__main__':
     # e = Entity(model=Prism(mode='line'))
     path = (Vec3(0,0,0), Vec3(0,1,0), Vec3(0,3,0), Vec3(0,4,0), Vec3(2,5,0))
     thicknesses = ((1,1), (.5,.5), (.75,.75), (.5,.5), (1,1))
-    e = Entity(model=Pipe(path=path, thicknesses=thicknesses, color_gradient=[color.black, color.white]))
+    e = Entity(model=Pipe(path=path, thicknesses=thicknesses))
     # print(e.model.colors)
     print(len(e.model.vertices), len(e.model.colors))
     # e.model.colorize()
