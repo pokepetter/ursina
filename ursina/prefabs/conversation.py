@@ -10,20 +10,12 @@ class Node:
         return 'Node:\n    ' + '\n    '.join([f'{e} = {getattr(self, e)}' for e in Node.__slots__])
 
 
-bar_mission_solved = False
 class Conversation(Entity):
 
-    def __init__(self, **kwargs):
+    def __init__(self, variables_object=None, **kwargs):
         super().__init__(parent=camera.ui, y=-.1)
 
-        self.question = Button(
-            parent=self,
-            text_origin=(-.5,0),
-            scale_x=1,
-            scale_y=.1,
-            model=Quad(radius=.5, aspect=1/.1),
-            text='What do you want\nWhat do you want?'
-            )
+        self.question = Button(parent=self, text_origin=(-.5,0), scale=(1,.1), model=Quad(radius=.5,aspect=1/.1), text='Question')
         self.question.text_entity.line_height = 1.25
         self.question.text_entity.position = (-.45, -.05)
         self.question.highlight_color = self.question.color
@@ -37,6 +29,7 @@ class Conversation(Entity):
         self.spacing = 4 * .02
         self.wordwrap = 65
         self.button_model = Quad(radius=.5, aspect=1/.075)
+        self.variables_object = variables_object
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
@@ -70,12 +63,12 @@ class Conversation(Entity):
 
         answers = []
         for i, child in enumerate(node.children):
-            if child.code and child.code.startswith('if'):
-                a = eval(child.code[3:])
-                if a:
-                    print('wooooooooooooooooooo', a)
-                else:
-                    continue
+            if self.variables_object and child.code and child.code.startswith('if'):
+                try:
+                    if not getattr(self.variables_object, child.code[3:]):
+                        continue
+                except Exception as e:
+                    print('failed parsing conversation if statement:', e)
 
             answers.append(child)
 
@@ -89,12 +82,10 @@ class Conversation(Entity):
         self.button_appear_sequence = Sequence()
         invoke(self.button_appear_sequence.start, delay=self.question_appear_sequence.duration)
 
-        # print('aaaaaa', [n.content for n in node.children])
         if not node.children:
             self.buttons[0].text = '*leave*'
             self.buttons[0].on_click = Func(setattr, self, 'enabled', False)
             self.button_appear_sequence.append(Func(setattr, self.buttons[0], 'enabled', True))
-
 
         for i, child in enumerate(answers):
             self.button_appear_sequence.append(Wait(i*.15))
@@ -103,12 +94,27 @@ class Conversation(Entity):
             self.buttons[i].text_entity.wordwrap = self.wordwrap
 
             def on_click(node=child):
-                # print(node)
                 if not node.children:
-                    print('end')
+                    print('end conversation')
                     self.enabled = False
                     return
 
+                if node.code and not node.code.startswith('if '):
+                    try:
+                        if '+=' in node.code or '-=' in node.code or '*=' in node.code or '/=' in node.code:
+                            var, operator, value = node.code.split()
+                            original_value = getattr(self.variables_object, var)
+                            data_type = type(original_value)
+                            value = data_type(value)
+                            if operator == '+=':    new_value = original_value + value
+                            if operator == '-=':    new_value = original_value - value
+                            if operator == '*=':    new_value = original_value * value
+                            if operator == '/=':    new_value = original_value / value
+
+                            setattr(self.variables_object, var, new_value)
+                        print('executed code:', node.code)
+                    except Exception as e:
+                        print('failed executing code on node:', node, 'code:', node.code, 'error:', e)
 
                 invoke(self.ask, node.children[0], 0, delay=.1)
                 if len(node.children) > 1:
@@ -196,11 +202,16 @@ class Conversation(Entity):
 if __name__ == '__main__':
     app = Ursina()
 
-    conversation = Conversation()
+    variables = Empty(
+        evil=0,
+        chaos=0,
+        bar_mission_solved=False,
+    )
+    conversation = Conversation(variables_object=variables)
     # conversation.question.model = 'quad'
     # for b in conversation.buttons:
     #     b.model = 'quad'
-    bar_mission_solved = False
+    
     convo = dedent('''
     I'm looking for my sister. Can you help me find her, please? I haven't seen her in days! Who know what could've happened!?
     I'm worried. Will you help me?
@@ -210,10 +221,10 @@ if __name__ == '__main__':
                 * She's probably fine. She can handle herself.
                     You're right. I'm still worried though.
                         * Don't worry, I'll look for her.
-                * Maybe. (chaos += 1)
+                * Maybe. (stats.chaos += 1)
                     Help me look for her, please! *runs off*
-        * I'm sorry, but I don't have time right now.
-            A true friend wouldn't say that. (evil += 1)
+        * I'm sorry, but I don't have time right now. (evil += 1)
+            A true friend wouldn't say that.
         * I know where she is! (if bar_mission_solved)
             Really? Where?
                 * I saw her on a ship by the docks, it looked like they were ready to set off.
@@ -221,10 +232,18 @@ if __name__ == '__main__':
     ''')
     conversation.start_conversation(convo)
     # conversation.parse_conversation(convo)
-
     # def input(key):
-    #     if key == 'space':
-    #         conversation.start_conversation()
+    #     if key == 'left mouse down' and mouse.hovered_entity in conversation.buttons:
+    #         print('add sound here')
+
+
+
+
+    def input(key):
+        if key == 'space':
+            print(variables.evil)
+            # conversation.start_conversation()
+
     # window.color = color._16
     window.size = window.fullscreen_size * .5
     Sprite('shore', z=1)
