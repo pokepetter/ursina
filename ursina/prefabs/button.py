@@ -58,13 +58,7 @@ class Button(Entity):
     def text(self, value):
         if type(value) is str:
             if not self.text_entity:
-                self.text_entity = Text(
-                    parent = self,
-                    size = Text.size * 20,
-                    position = (-self.origin[0], -self.origin[1], -.1),
-                    origin = (0,0),
-                    add_to_scene_entities = False,
-                    )
+                self.text_entity = Text(parent=self, size=Text.size*20, position=(-self.origin[0],-self.origin[1],-.1), origin=(0,0), add_to_scene_entities=False)
 
             self.text_entity.text = value
             self.text_entity.world_scale = (1,1,1)
