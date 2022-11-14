@@ -17,7 +17,7 @@ class Window(WindowProperties):
         loadPrcFileData('', 'notify-level-util error')
         loadPrcFileData('', 'textures-auto-power-2 #t')
         loadPrcFileData('', 'load-file-type p3assimp')
-        loadPrcFileData('', 'undecorated 1')
+        # loadPrcFileData('', 'undecorated 1')
         # loadPrcFileData('', 'allow-portal-cull #t')
         # loadPrcFileData("", "framebuffer-multisample 1")
         # loadPrcFileData('', 'multisamples 2')
@@ -384,7 +384,7 @@ instance = Window()
 if __name__ == '__main__':
     from ursina import *
     # application.development_mode = False
-    app = Ursina(borderless=True)
+    app = Ursina(borderless=False)
     # time.sleep(2)
     # window.forced_aspect_ratio = 1
     # window.vsync = 10
