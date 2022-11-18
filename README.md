@@ -3,6 +3,7 @@ An easy to use game engine/framework for python.
 
 ![Banner](/docs/made_with_ursina.jpg)
 
+[![Trailer](/docs/ursina_trailer_preview.webp](https://youtu.be/j71j88oCTNo)
 
 ## Getting Started
 1) Install Python 3.6 or newer. https://www.python.org/downloads/
