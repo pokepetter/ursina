@@ -51,7 +51,8 @@ class Text(Entity):
 
         if 'origin' in kwargs:   # set the scale before model for correct corners
             setattr(self, 'origin', kwargs['origin'])
-
+        if 'use_tags' in kwargs:
+            setattr(self, 'use_tags', kwargs['use_tags'])
 
         if text != '':
             self.text = text
@@ -95,7 +96,7 @@ class Text(Entity):
 
         # check if using tags
         if (not self.use_tags
-            # or self.text == self.start_tag or self.text == self.end_tag
+            or self.text == self.start_tag or self.text == self.end_tag
             # or not self.start_tag in text or not self.end_tag in text
             ):
 
