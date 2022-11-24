@@ -161,7 +161,11 @@ class Ursina(ShowBase):
         if not 'mouse' in key:
             for prefix in ('control-', 'shift-', 'alt-'):
                 if key.startswith(prefix):
-                    return
+                    key = key.replace('control-', '')
+                    key = key.replace('shift-', '')
+                    key = key.replace('alt-', '')
+                    if key in keyboard_keys:
+                        return
 
         if key in self._input_name_changes:
             key = self._input_name_changes[key]
