@@ -96,7 +96,7 @@ class Text(Entity):
 
         # check if using tags
         if (not self.use_tags
-            or self.text == self.start_tag or self.text == self.end_tag
+            # or self.text == self.start_tag or self.text == self.end_tag
             # or not self.start_tag in text or not self.end_tag in text
             ):
 
@@ -130,11 +130,15 @@ class Text(Entity):
                 section = ''
 
                 tag = ''
+                done = False
                 for j in range(len(text)-i):
                     tag += text[i+j]
                     if text[i+j] == self.end_tag and len(tag) > 0:
                         i += j+1
+                        done = True
                         break
+                if not done:
+                    i += 1
             else:
                 section += char
                 i += 1

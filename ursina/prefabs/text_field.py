@@ -23,7 +23,7 @@ class TextField(Entity):
         # self.max_width_indicatior = Entity(
         #     parent=self.cursor_parent, model='quad', origin=(-.5,.5), scale=(100,.05), rotation_x=180, rotation_z=90, color=color.color(0,0,1,.05), x=80)
 
-        self.bg = Entity(name='text_field_bg', parent=self, model='cube', color=color.dark_gray, origin=(-.5,.5), z=0.005, scale=(120, Text.size*self.max_lines, 0.001), collider='box', visible=True)
+        self.bg = Entity(name='text_field_bg', parent=self, model='quad', double_sided=True, color=color.dark_gray, origin=(-.5,.5), z=0.005, scale=(120, Text.size*self.max_lines), collider='box', visible=True)
 
         self.selection = [Vec2(0,0), Vec2(0,0)]
         self.selection_parent = Entity(name='text_field_selection_parent', parent=self.cursor_parent, scale=(1,1,0))
@@ -652,11 +652,8 @@ class TextField(Entity):
 
     def select_all(self):
         lines = self.text.split('\n')
-        lines = self.text.splitlines()
-        # print('|||||||||', len(lines), len(self.text.splitlines()), self.text.splitlines(), lines)
         if lines:
-            self.selection = [(0,0), (len(lines[-1]), len(lines) - 1)]
-            print(self.selection)
+            self.selection = [Vec2(0,0), Vec2(len(lines[-1]), len(lines) - 1)]
 
         self.draw_selection()
 
@@ -704,19 +701,19 @@ if __name__ == '__main__':
     # camera.orthographic = True
     # camera.fov = 1
     # window.size = window.fullscreen_size
-    window.x = 200
+    # window.x = 200
 
     window.color = color.color(0, 0, .1)
     Button.color = color._20
     window.color = color._25
 
     # Text.size = 1/window.fullscreen_size[1]*16
-    Text.default_font = 'consola.ttf'
-    Text.default_resolution = 16*2
+    # Text.default_font = 'consola.ttf'
+    # Text.default_resolution = 16*2
     # TreeView()
-    te = TextField(max_lines=20, scale=1, register_mouse_input = True)
+    te = TextField(max_lines=20, scale=1, register_mouse_input = True, text='1234')
     #te = TextField(max_lines=300, scale=1, register_mouse_input = True, scroll_size = (50,3))
-    te.line_numbers.enabled = True
+    # te.line_numbers.enabled = True
     # for name in color.color_names:
     #     if name == 'black':
     #         continue
@@ -733,13 +730,13 @@ if __name__ == '__main__':
     #     }
     #
     import textwrap
-    te.text = "\n".join(textwrap.wrap(dedent('''
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        Aliquam sapien tellus, venenatis sit amet ante et, malesuada porta risus.
-        Etiam et mi luctus, viverra urna at, maximus eros. Sed dictum faucibus purus,
-        nec rutrum ipsum condimentum in. Mauris iaculis arcu nec justo rutrum euismod.
-        Suspendisse dolor tortor, congue id erat sit amet, sollicitudin facilisis velit.'''
-        ), 10))[1:]
+    # te.text = "\n".join(textwrap.wrap(dedent('''
+    #     Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    #     Aliquam sapien tellus, venenatis sit amet ante et, malesuada porta risus.
+    #     Etiam et mi luctus, viverra urna at, maximus eros. Sed dictum faucibus purus,
+    #     nec rutrum ipsum condimentum in. Mauris iaculis arcu nec justo rutrum euismod.
+    #     Suspendisse dolor tortor, congue id erat sit amet, sollicitudin facilisis velit.'''
+    #     ), 10))[1:]
     te.render()
 
     app.run()
