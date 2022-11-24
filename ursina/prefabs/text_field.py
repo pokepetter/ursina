@@ -38,6 +38,7 @@ class TextField(Entity):
         self.active = True
         self.highlight_color = color.color(120,1,1,.1)
         self.text = ''
+        self.delimiters = ' .,!?;:(){}[]<>\'\"@#$%^&*+=-\\|/`~'
         self.replacements = dict()
         self.on_undo = []
         self.on_redo = []
@@ -48,7 +49,7 @@ class TextField(Entity):
             'erase':            ('backspace', 'backspace hold'),
             'erase_word':       ('ctrl+backspace', 'ctrl+backspace hold'),
             'delete_line':      ('ctrl+shift+k',),
-            'duplicate_line':   ('ctrl+d',),
+            'duplicate_line':   ('ctrl+shift+d',),
             'undo':             ('ctrl+z', 'ctrl+z hold'),
             'redo':             ('ctrl+y', 'ctrl+y hold', 'ctrl+shift+z', 'ctrl+shift+z hold'),
             # 'save':             ('ctrl+s',),
@@ -95,7 +96,7 @@ class TextField(Entity):
         self.cursor.enabled = value
 
         if not value:
-            self.selection = None
+            self.selection = [Vec2(0,0), Vec2(0,0)]
             self.draw_selection()
 
 
@@ -209,7 +210,7 @@ class TextField(Entity):
 
         self._append_undo(self.text, self.cursor.y, self.cursor.x)
         self.text = '\n'.join(lines)
-        self.selection = None
+        self.selection = [Vec2(0,0), Vec2(0,0)]
         # self._append_undo(self.text, y, x)
         self.draw_selection()
 
@@ -266,7 +267,7 @@ class TextField(Entity):
 
 
     def input(self, key):
-        # print('---', key)
+        print('-------------', key)
         text, cursor, on_undo, add_text, erase = self.text, self.cursor, self.on_undo, self.add_text, self.erase
 
         if mouse.hovered_entity == self.bg:
@@ -300,8 +301,9 @@ class TextField(Entity):
         if held_keys['alt'] and key != 'alt':
             alt = 'alt+'
 
+        start_key = key
         key = ctrl+shift+alt+key
-        # print(key)
+        # print('-', key, 'start_key:', start_key)
         x, y = int(cursor.x), int(cursor.y)
         lines = text.split('\n')
         l = lines[y]
@@ -327,7 +329,8 @@ class TextField(Entity):
                 cursor.y -= 1
                 cursor.x = len(lines[y-1])
 
-        delimiters = ' .,!?;:(){}[]<>\'\"@#$%^&*+=-\\|/`~'
+        delimiters = self.delimiters
+
         if key in self.shortcuts['move_to_end_of_word']:
             if x == len(l):
                 if y < len(lines)-1:        # end of line, move to beginning of next
@@ -349,31 +352,12 @@ class TextField(Entity):
                 cursor.x = len(l)
 
         if key in self.shortcuts['move_to_start_of_word']:
-            if x == 0 and y == 0:
-                pass
-
-            elif x == 0 and y > 0:                        # move to end of line above
-                cursor.y -= 1
-                cursor.x = len(lines[y-1])
-
-            elif l[x-1] not in delimiters:              # move left to closest delimiter
-                for x in range(x-1, 0, -1):
-                    if l[x] in delimiters:
-                        cursor.x = x+1
-                        return
-                cursor.x = 0
-            else:                                       # move left to closest word
-                for x in range(x-1, 0, -1):
-                    if l[x] not in delimiters:
-                        cursor.x = x+1
-                        return
-                cursor.x = 0
+            self.move_to_start_of_word()
 
         if key in self.shortcuts['select_word_left']:
             self.selection[1] = self.cursor.position
-            self.input(self.shortcuts['move_to_start_of_word'][0])
+            self.move_to_start_of_word()
             self.selection[0] = self.cursor.position
-            # print(self.selection)
             self.draw_selection()
 
         if key in self.shortcuts['newline'] and self.cursor.y < self.max_lines-1:
@@ -527,6 +511,7 @@ class TextField(Entity):
                 self._append_undo(self.text, y, 0)
                 lines.insert(y, lines[y])
                 self.text = '\n'.join(lines)
+                cursor.y += 1
 
 
         if key in self.shortcuts['select_word']:
@@ -589,6 +574,33 @@ class TextField(Entity):
 
 
         self.render()
+
+    def move_to_start_of_word(self):
+        cursor = self.cursor
+        x, y = int(cursor.x), int(cursor.y)
+        lines = self.text.split('\n')
+        l = lines[y]
+        delimiters = self.delimiters
+
+        if x == 0 and y == 0:
+            pass
+
+        elif x == 0 and y > 0:                        # move to end of line above
+            cursor.y -= 1
+            cursor.x = len(lines[y-1])
+
+        elif l[x-1] not in delimiters:              # move left to closest delimiter
+            for x in range(x-1, 0, -1):
+                if l[x] in delimiters:
+                    cursor.x = x+1
+                    return
+            cursor.x = 0
+        else:                                       # move left to closest word
+            for x in range(x-1, 0, -1):
+                if l[x] not in delimiters:
+                    cursor.x = x+1
+                    return
+            cursor.x = 0
 
 
     def text_input(self, key):
