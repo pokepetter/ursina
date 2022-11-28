@@ -405,9 +405,9 @@ def is_singleton(str):
 path = application.package_folder
 module_info = dict()
 class_info = dict()
-module_info['textures'] = ('', '', ('noise', 'grass', 'vignette', 'arrow_right', 'test_tileset', 'tilemap_test_level', 'shore', 'file_icon', 'sky_sunset', 'radial_gradient', 'circle', 'perlin_noise', 'brick', 'grass_tintable', 'circle_outlined', 'ursina_logo', 'arrow_down', 'cog', 'vertical_gradient', 'white_cube', 'horizontal_gradient', 'folder', 'rainbow', 'heightmap_1', 'sky_default',), (), ())
-module_info['models'] = ('', '', ('quad', 'wireframe_cube', 'plane', 'circle', 'diamond', 'wireframe_quad', 'sphere', 'cube', 'icosphere', 'cube_uv_top', 'arrow', 'sky_dome', ), (), ())
-module_info['shaders'] = ('', '', ('colored_lights_shader', 'fresnel_shader', 'projector_shader', 'instancing_shader', 'texture_blend_shader', 'matcap_shader', 'triplanar_shader', 'unlit_shader', 'geom_shader', 'normals_shader', 'transition_shader', 'noise_fog_shader', 'lit_with_shadows_shader', 'fxaa', 'camera_empty', 'ssao', 'camera_outline_shader', 'pixelation_shader', 'camera_contrast', 'camera_vertical_blur', 'camera_grayscale', ), (), ())
+module_info['textures'] = ('', '', '', ('noise', 'grass', 'vignette', 'arrow_right', 'test_tileset', 'tilemap_test_level', 'shore', 'file_icon', 'sky_sunset', 'radial_gradient', 'circle', 'perlin_noise', 'brick', 'grass_tintable', 'circle_outlined', 'ursina_logo', 'arrow_down', 'cog', 'vertical_gradient', 'white_cube', 'horizontal_gradient', 'folder', 'rainbow', 'heightmap_1', 'sky_default',), (), ())
+module_info['models'] = ('', '', '', ('quad', 'wireframe_cube', 'plane', 'circle', 'diamond', 'wireframe_quad', 'sphere', 'cube', 'icosphere', 'cube_uv_top', 'arrow', 'sky_dome', ), (), ())
+module_info['shaders'] = ('', '', '', ('colored_lights_shader', 'fresnel_shader', 'projector_shader', 'instancing_shader', 'texture_blend_shader', 'matcap_shader', 'triplanar_shader', 'unlit_shader', 'geom_shader', 'normals_shader', 'transition_shader', 'noise_fog_shader', 'lit_with_shadows_shader', 'fxaa', 'camera_empty', 'ssao', 'camera_outline_shader', 'pixelation_shader', 'camera_contrast', 'camera_vertical_blur', 'camera_grayscale', ), (), ())
 
 
 for f in path.glob('**/*.py'):
@@ -422,17 +422,12 @@ for f in path.glob('**/*.py'):
             funcs = get_functions(code)
             example = get_example(code, name)
             if attrs or funcs:
-                module_info[name] = (f, '', attrs, funcs, example)
+                module_info[name] = (f, '', '', attrs, funcs, example)
 
             # continue
             classes = get_classes(code)
             for class_name, class_definition in classes.items():
                 print('parsing class:', class_name)
-                # if 'Enum' in class_name:
-                #     class_definition = class_definition.split('def ')[0]
-                #     attrs = [l.strip() for l in class_definition.split('\n') if ' = ' in l]
-                #     class_info[class_name] = (f, '', attrs, '', '')
-                #     continue
 
                 params = ''
                 if 'def __init__' in class_definition:
@@ -443,8 +438,9 @@ for f in path.glob('**/*.py'):
                 example = get_example(code, class_name)
 
                 if ('(') in class_name:
+                    parent_class = class_name.split('(')[1].split(')')[0]
                     class_name =  class_name.split('(')[0]
-                class_info[class_name] = (f, params, attrs, methods, example)
+                class_info[class_name] = (f, parent_class, params, attrs, methods, example)
         # singletons
         else:
             module_name = f.stem
@@ -456,7 +452,7 @@ for f in path.glob('**/*.py'):
                 methods = get_functions(class_definition, is_class=True)
                 example = get_example(code, class_name)
 
-                module_info[module_name] = (f, '', attrs, methods, example)
+                module_info[module_name] = (f, '', '', attrs, methods, example)
 
 def html_color(color):
     return f'hsl({color.h}, {int(color.s*100)}%, {int(color.v*100)}%)'
@@ -499,19 +495,20 @@ for group_name, group in groups.items():
             continue
             print('no info found for', name)
         # f, params, attrs, methods, example = data
-        location, params, attrs, funcs, example = data
+        location, parent_class, params, attrs, funcs, example = data
         params = params.replace('__init__', name.split('(')[0])
         params = params.replace('(self, ', '(')
         params = params.replace('(self)', '()')
 
-        name = name.replace('ShowBase', '')
-        name = name.replace('NodePath', '')
-        for parent_class in ('Entity', 'Button', 'Draggable', 'Text', 'Collider', 'Mesh', 'Pipe'):
-            name = name.replace(f'({parent_class})', f'(<a style="color: gray;" href="#{parent_class}">{parent_class}</a>)')
+        parent_class = parent_class.replace('ShowBase', '')
+        parent_class = parent_class.replace('NodePath', '')
+        link_to_parent_class = ''
+        if parent_class:
+            link_to_parent_class = f'<a style="color: gray; font-weight:normal;" href="#{parent_class}">({parent_class})</a>'
 
         html += (
             f'''    <div class="class_box" id="{name}">\n'''
-            f'''        <h1>{name}</h1>\n'''
+            f'''        <h1>{name}{link_to_parent_class}</h1>\n'''
             )
         location = str(location)
         if 'ursina' in location:
