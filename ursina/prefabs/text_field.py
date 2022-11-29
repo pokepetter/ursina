@@ -267,7 +267,7 @@ class TextField(Entity):
 
 
     def input(self, key):
-        #print('-------------', key)
+        # print('-------------', key)
         text, cursor, on_undo, add_text, erase = self.text, self.cursor, self.on_undo, self.add_text, self.erase
 
         if mouse.hovered_entity == self.bg:
