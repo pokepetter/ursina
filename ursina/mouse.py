@@ -85,38 +85,50 @@ class Mouse():
 
     @position.setter
     def position(self, value):
+        if not application.base:
+            return
         application.base.win.move_pointer(
             0,
             round(value[0] + (window.size[0]/2) + (value[0]/2*window.size[0]) *1.124), # no idea why I have * with 1.124
             round(value[1] + (window.size[1]/2) - (value[1]*window.size[1])),
         )
 
-    def __setattr__(self, name, value):
+    @property
+    def locked(self):
+        if not hasattr(self, '_locked'):
+            return False
+        return self._locked
 
-        if name == 'visible':
-            window.set_cursor_hidden(not value)
-            if application.base:
-                application.base.win.requestProperties(window)
+    @locked.setter
+    def locked(self, value):
+        self._locked = value
+        if value:
+            window.set_mouse_mode(window.M_relative)
+        else:
+            window.set_mouse_mode(window.M_absolute)
 
-        if name == 'locked':
-            try:
-                object.__setattr__(self, name, value)
-                window.set_cursor_hidden(value)
-                if value:
-                    window.set_mouse_mode(window.M_relative)
-                else:
-                    window.set_mouse_mode(window.M_absolute)
+        if not application.base:
+            return
 
-                application.base.win.requestProperties(window)
-                self._locked_mouse_last_frame = True
-            except:
-                pass
+        print('return', value)
+        # self.position = Vec3(0,0,0)
+        window.set_cursor_hidden(value)
+        application.base.win.requestProperties(window)
+        self._locked_mouse_last_frame = True
 
-        try:
-            super().__setattr__(name, value)
-            # return
-        except:
-            pass
+
+    @property
+    def visible(self):
+        if not hasattr(self, '_visible'):
+            return True
+        return self._visible
+
+    @visible.setter
+    def visible(self, value):
+        self._visible = value
+        window.set_cursor_hidden(not value)
+        if application.base:
+            application.base.win.requestProperties(window)
 
 
     def input(self, key):
@@ -128,12 +140,7 @@ class Mouse():
             self.start_y = self.y
 
         elif key.endswith('mouse up'):
-            self.delta_drag = Vec3(
-                self.x - self.start_x,
-                self.y - self.start_y,
-                0
-                )
-
+            self.delta_drag = Vec3(self.x-self.start_x, self.y-self.start_y, 0)
 
         if key == 'left mouse down':
             self.left = True
@@ -330,11 +337,13 @@ if __name__ == '__main__':
     app = Ursina()
     Button(parent=scene, text='a')
 
-    def update():
-        print(mouse.position, mouse.point)
+    def input(key):
+        if key == 'space':
+            mouse.locked = not mouse.locked
+            print(mouse.velocity)
 
-    Cursor()
-    mouse.visible = False
+    # Cursor()
+    # mouse.visible = False
 
 
     app.run()
