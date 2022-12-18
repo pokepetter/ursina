@@ -35,21 +35,21 @@ class Pong(ursina.Entity):
     def build_game_objects(self) -> None:
         '''Creates basic game objects'''
         background = ursina.Entity(
-            model='quad', texture=r'assets\images\background.png',
+            model='quad', texture=r'assets/images/background.png',
             scale=(ursina.window.aspect_ratio, 1)
         )
 
         self.background_music = ursina.Audio(
-            r'assets\music\background.mp3', loop=True, autoplay=self.is_music_on,
+            r'assets/music/background.mp3', loop=True, autoplay=self.is_music_on,
             volume=0.25
         )
 
         self.point_sound = ursina.Audio(
-            r'assets\sounds\point.mp3', autoplay=False
+            r'assets/sounds/point.mp3', autoplay=False
         )
 
         self.hit_sound = ursina.Audio(
-            r'assets\sounds\hit.mp3', volume=3, autoplay=False
+            r'assets/sounds/hit.mp3', volume=3, autoplay=False
         )
 
         self.left_paddle = Paddle(x=-0.85, control_keys=('w', 's'))
