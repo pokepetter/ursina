@@ -5,7 +5,19 @@ html = '''
     <link rel="stylesheet" href="api_reference.css">
 </head>
 <body>
-<input type="checkbox" id="checkbox"></input>
+<input type="checkbox" id="checkbox" onClick="save()"></input>
+<script>
+
+function save() {
+	var checkbox = document.getElementById("checkbox");
+    localStorage.setItem("checkbox", checkbox.checked);
+}
+
+// loading
+var checked = JSON.parse(localStorage.getItem("checkbox"));
+document.getElementById("checkbox").checked = checked;
+
+</script>
 <bg></bg>
 '''
 

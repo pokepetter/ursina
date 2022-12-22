@@ -3,13 +3,12 @@ from ursina import *
 
 class HealthBar(Button):
 
-    def __init__(self, max_value=100, roundness=.25, animation_duration=.1, show_text=True, show_lines=True, **kwargs):
+    def __init__(self, max_value=100, roundness=.25, animation_duration=.1, show_text=True, show_lines=False, **kwargs):
         super().__init__(position=(-.45*window.aspect_ratio,.45), origin=(-.5,.5), scale=(Text.size*20,Text.size), color=color.black66, highlight_color=color.black66, text='hp / max hp', ignore=True)
 
         self.bar = Entity(parent=self, model='quad', origin=self.origin, z=-.01, color=color.red.tint(-.2), ignore=True)
         self.lines = Entity(parent=self.bar, y=-1, color=color.black33, ignore=True, enabled=show_lines, z=-.01)
         self.text_entity.scale *= .7
-        self.text_entity.enabled = show_text
 
         self.max_value = max_value
         self.clamp = True
@@ -24,6 +23,7 @@ class HealthBar(Button):
 
         self.scale_y = self.scale_y # update background's rounded corners
         self.value = self.max_value
+        self.text_entity.enabled = show_text
 
 
     @property
@@ -93,7 +93,7 @@ class HealthBar(Button):
 if __name__ == '__main__':
     app = Ursina()
 
-    health_bar_1 = HealthBar(bar_color=color.lime.tint(-.25), roundness=.5, value=50, show_text=False, show_lines=False)
+    health_bar_1 = HealthBar(bar_color=color.lime.tint(-.25), roundness=.5, value=50)
     print(health_bar_1.text_entity.enabled, health_bar_1.text_entity.text)
     # health_bar_1.show_text = False
     # health_bar_1.show_lines = True
