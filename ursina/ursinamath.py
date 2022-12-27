@@ -145,6 +145,7 @@ def sum(l):
 
 
 def sample_gradient(list_of_values, t):     # distribute list_of_values equally on a line and get the interpolated value at t (0-1).
+    if not list_of_values: list_of_values = [Color(0, 0, 0, 0)]
     l = len(list_of_values)
     if l == 1:
         return list_of_values[0]
