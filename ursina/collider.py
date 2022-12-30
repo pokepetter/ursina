@@ -1,4 +1,4 @@
-from panda3d.core import CollisionNode, CollisionBox, CollisionSphere, CollisionPolygon
+from panda3d.core import CollisionNode, CollisionBox, CollisionSphere, CollisionCapsule, CollisionPolygon
 from panda3d.core import NodePath
 from ursina.vec3 import Vec3
 from ursina.mesh import Mesh
@@ -46,6 +46,15 @@ class SphereCollider(Collider):
     def __init__(self, entity, center=(0,0,0), radius=.5):
         super().__init__()
         self.shape = CollisionSphere(center[0], center[1], center[2], radius)
+        self.node_path = entity.attachNewNode(CollisionNode('CollisionNode'))
+        self.node_path.node().addSolid(self.shape)
+        self.visible = False
+
+        
+class CapsuleCollider(Collider):
+    def __init__(self, entity, center=(0,0,0), height=2, radius=.5):
+        super().__init__()
+        self.shape = CollisionCapsule(center[0], center[1] + radius, center[2], center[0], center[1] + height, center[2], radius)
         self.node_path = entity.attachNewNode(CollisionNode('CollisionNode'))
         self.node_path.node().addSolid(self.shape)
         self.visible = False
@@ -154,12 +163,14 @@ if __name__ == '__main__':
     e = Entity(model='sphere', x=2)
     e.collider = 'box'          # add BoxCollider based on entity's bounds.
     e.collider = 'sphere'       # add SphereCollider based on entity's bounds.
+    e.collider = 'capsule'      # add CapsuleCollider based on entity's bounds.
     e.collider = 'mesh'         # add MeshCollider matching the entity's model.
     e.collider = 'file_name'    # load a model and us it as MeshCollider.
     e.collider = e.model        # copy target model/Mesh and use it as MeshCollider.
 
     e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   # add BoxCollider at custom positions and size.
     e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      # add SphereCollider at custom positions and size.
+    e.collider = CapsuleCollider(e, center=Vec3(0,0,0), height=3, radius=.75) # add CapsuleCollider at custom positions and size.
     e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      # add MeshCollider with custom shape and center.
 
     m = Pipe(base_shape=Circle(6), thicknesses=(1, .5))
