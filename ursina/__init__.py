@@ -1,5 +1,4 @@
 # do imports here so I can do a single line import
-import sys
 from pathlib import Path
 from textwrap import dedent
 import time
@@ -22,11 +21,11 @@ from ursina.texture_importer import load_texture
 from ursina import color
 from ursina.color import Color, hsv, rgb
 from ursina.sequence import Sequence, Func, Wait
+from ursina import curve
 from ursina.entity import Entity
 from ursina.collider import *
 from ursina.raycast import raycast
 from ursina.boxcast import boxcast
-# from ursina.trigger import Trigger
 from ursina.audio import Audio
 from ursina.duplicate import duplicate
 from panda3d.core import Quat
@@ -62,11 +61,8 @@ from ursina.models.procedural.terrain import Terrain
 
 from ursina.scripts.terraincast import terraincast
 from ursina.scripts.smooth_follow import SmoothFollow
-# from ursina.scripts.position_limiter import PositionLimiter
-# from ursina.scripts.noclip_mode import NoclipMode, NoclipMode2d
 from ursina.scripts.grid_layout import grid_layout
 from ursina.scripts.scrollable import Scrollable
-# from ursina.scripts.colorize import get_world_normals
 
 from ursina.prefabs.tooltip import Tooltip
 from ursina.prefabs.text_field import TextField
