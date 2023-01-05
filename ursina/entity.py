@@ -76,7 +76,7 @@ class Entity(NodePath):
             self.shader = Entity.default_shader
 
         self.collision = False  # toggle collision without changing collider.
-        self.collider = None    # set to 'box'/'sphere'/'mesh' for auto fitted collider.
+        self.collider = None    # set to 'box'/'sphere'/'capsule'/'mesh' for auto fitted collider.
         self.scripts = []   # add with add_script(class_instance). will assign an 'entity' variable to the script.
         self.animations = []
         self.hovered = False    # will return True if mouse hovers entity.
@@ -368,6 +368,10 @@ class Entity(NodePath):
 
         elif value == 'sphere':
             self._collider = SphereCollider(entity=self, center=-self.origin)
+            self._collider.name = value
+           
+        elif value == 'capsule':
+            self._collider = CapsuleCollider(entity=self, center=-self.origin)
             self._collider.name = value
 
         elif value == 'mesh' and self.model:

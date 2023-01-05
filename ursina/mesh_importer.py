@@ -309,7 +309,7 @@ def obj_to_ursinamesh(
                     pass
 
             elif l.startswith('mtllib '):    # load mtl file
-                mtl_file_name = Path(str(f).rstrip('.obj') + '.mtl')
+                mtl_file_name = Path(f).with_suffix('.mtl')
                 if mtl_file_name.exists():
                     with open(mtl_file_name) as mtl_file:
                         mtl_data = mtl_file.readlines()
