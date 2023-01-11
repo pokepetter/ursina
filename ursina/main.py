@@ -199,10 +199,10 @@ class Ursina(ShowBase):
 
     def text_input(self, key):
         key_code = ord(key)
-        if key_code < 32 or key_code >= 127 and key_code <= 160:
+        if key_code < 32 or (key_code >= 127 and key_code <= 160):
             return
 
-        if input_handler.held_keys['control'] or key != ' ' and key.isspace():
+        if key == ' ' and input_handler.held_keys['control']:
             return
 
         if not application.paused:
