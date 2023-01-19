@@ -14,3 +14,6 @@ a.button:hover {
 body {
     font-family: Lato, Arial, Sans-Serif;
 }
+img {
+    border-radius: 10px;
+}
