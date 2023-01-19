@@ -4,11 +4,11 @@ import pyperclip
 
 
 class TextField(Entity):
-    def __init__(self, max_lines=9999, **kwargs):
+    def __init__(self, max_lines=9999, line_height=1.1, **kwargs):
         super().__init__(parent=camera.ui, x=-.5, y=.4, ignore_paused=True)
 
         self.font = 'VeraMono.ttf'
-        self.line_height = 1
+        self.line_height = line_height
         self.max_lines = max_lines
         self.character_limit = None
 
@@ -16,13 +16,9 @@ class TextField(Entity):
         self.text_entity = Text(parent=self.scroll_parent, start_tag='☾', end_tag='☽', font=self.font, text='', line_height=self.line_height, origin=(-.5, .5))
         self.line_numbers = Text(parent=self.scroll_parent, font=self.font, text='0', origin=(.5,.5), x=-.04, color=color.gray, enabled=False)
         self.character_width = Text.get_width('a', font=self.font)
-        self.cursor_parent = Entity(parent=self.scroll_parent, scale=(self.character_width, -1*Text.size))
+        self.cursor_parent = Entity(parent=self.scroll_parent, scale=(self.character_width, -1*Text.size*self.line_height))
         self.cursor = Entity(name='text_field_cursor', parent=self.cursor_parent, model='cube', color=color.cyan, origin=(-.5, -.5), scale=(.1, 1, 0), enabled=False)
         self.cursor.blink(duration=1.2, loop=True)
-        # self.max_line_indicatior = Entity(parent=self.cursor_parent, model='quad', origin=(-.5,.5), scale=(100,.05), rotation_x=180, color=color.red)
-        # self.max_width_indicatior = Entity(
-        #     parent=self.cursor_parent, model='quad', origin=(-.5,.5), scale=(100,.05), rotation_x=180, rotation_z=90, color=color.color(0,0,1,.05), x=80)
-
         self.bg = Entity(name='text_field_bg', parent=self, model='quad', double_sided=True, color=color.dark_gray, origin=(-.5,.5), z=0.005, scale=(120, Text.size*self.max_lines), collider='box', visible=True)
 
         self.selection = [Vec2(0,0), Vec2(0,0)]
@@ -64,19 +60,21 @@ class TextField(Entity):
             'copy':             ('ctrl+c',),
             'paste':            ('ctrl+v',),
             'select_all':       ('ctrl+a',),
-            # 'toggle_comment':   ('ctrl+alt+c',),
-            # 'find':             ('ctrl+f',),
-
-            'move_left':        ('left arrow', 'left arrow hold'),
-            'move_right':       ('right arrow', 'right arrow hold'),
-            'move_up':          ('up arrow', 'up arrow hold'),
-            'move_down':        ('down arrow', 'down arrow hold'),
-            'move_to_end_of_word' : ('ctrl+right arrow', 'ctrl+right arrow hold'),
-            'move_to_start_of_word' : ('ctrl+left arrow', 'ctrl+left arrow hold'),
-
-            'select_word_left': ('ctrl+shift+left arrow', 'ctrl+shift+left arrow hold'),
             'select_word':      ('double click',),
             'select_line':      ('triple click',),
+            # 'toggle_comment':   ('ctrl+alt+c',),
+            # 'find':             ('ctrl+f',),
+            'move_operations' : {
+                'move_left':                ('left arrow', 'left arrow hold', 'shift+left arrow', 'shift+left arrow hold'),
+                'move_right':               ('right arrow', 'right arrow hold', 'shift+right arrow', 'shift+right arrow hold'),
+                'move_up':                  ('up arrow', 'up arrow hold', 'shift+up arrow', 'shift+up arrow hold'),
+                'move_down':                ('down arrow', 'down arrow hold', 'shift+down arrow', 'shift+down arrow hold'),
+                'move_to_end_of_word' :     ('ctrl+right arrow', 'ctrl+right arrow hold', 'ctrl+shift+right arrow', 'ctrl+shift+right arrow hold'),
+                'move_to_start_of_word' :   ('ctrl+left arrow', 'ctrl+left arrow hold', 'ctrl+shift+left arrow', 'ctrl+shift+left arrow hold'),
+            },
+
+            # 'select_word_left': ('ctrl+shift+left arrow', 'ctrl+shift+left arrow hold'),
+            # 'select_word_right': ('ctrl+shift+right arrow', 'ctrl+shift+right arrow hold'),
         }
 
 
@@ -121,14 +119,45 @@ class TextField(Entity):
         self.on_undo.append((text, y, x))
 
 
-    def move_line(self, a, b):
+    def move_line(self, line_index, delta, move_cursor=True):
         x, y = int(self.cursor.x), int(self.cursor.y)
 
+        start_y, end_y = self.cursor.Y, self.cursor.Y
+
+        if self.selection != [Vec2(0,0), Vec2(0,0)]:
+            start_y = int(self.selection[0].y)
+            end_y = int(self.selection[1].y)
+
         lines = self.text.split('\n')
-        lines[a], lines[b] = lines[b], lines[a]
+        # lines[line_index], lines[line_index+delta] = lines[line_index+delta], lines[line_index]
+        # start = []
+        # if start_y-1 > 0:
+        #     start = lines[:int(start_y-1)]
+
+        middle = lines[start_y:end_y+1]
+        del lines[start_y:end_y+1]
+        for l in middle[::delta]:
+            lines.insert(start_y+delta, l)
+        # end = lines[start_y+1:]
+
+        [print(e) for e in middle]
+        self.cursor.y += delta * move_cursor
+        for e in self.selection:
+            e.y += delta
+        self.draw_selection()
+
+        # if delta == 1:
+        #     _ = start.pop()
+        #     end.insert(0, _)
+        # elif delta == -1:
+        #     _ = end.pop(0)
+        #     start.append(_)
+        #
+        # lines = start + middle + end
+        #
         self._append_undo(self.text, y, x)
         self.text = '\n'.join(lines)
-        # print('moved line')
+        print('moved line')
 
 
     def erase(self):
@@ -267,7 +296,7 @@ class TextField(Entity):
 
 
     def input(self, key):
-        print('-------------', key)
+        # print('-------------', key)
         text, cursor, on_undo, add_text, erase = self.text, self.cursor, self.on_undo, self.add_text, self.erase
 
         if mouse.hovered_entity == self.bg:
@@ -308,57 +337,56 @@ class TextField(Entity):
         lines = text.split('\n')
         l = lines[y]
 
-        if key in self.shortcuts['move_up']:
+        if key in self.shortcuts['move_operations']['move_up']:
             if y > 0:
                 cursor.y -= 1
                 cursor.x = min(x, len(lines[y-1]))
-        if key in self.shortcuts['move_down']:
+        if key in self.shortcuts['move_operations']['move_down']:
             if y < len(lines)-1:
                 cursor.y += 1
                 cursor.x = min(x, len(lines[y+1]))
-        if key in self.shortcuts['move_right']:
+        if key in self.shortcuts['move_operations']['move_right']:
             if x == len(l) and y < len(lines)-1:        # end of line, move to beginning of next
                 cursor.y += 1
                 cursor.x = 0
             elif x < len(l):
                 cursor.x += 1
-        if key in self.shortcuts['move_left']:
+        if key in self.shortcuts['move_operations']['move_left']:
             if x > 0:
                 cursor.x -= 1
             elif y > 0:                                 # move to end of line above
                 cursor.y -= 1
                 cursor.x = len(lines[y-1])
 
+
         delimiters = self.delimiters
 
-        if key in self.shortcuts['move_to_end_of_word']:
-            if x == len(l):
-                if y < len(lines)-1:        # end of line, move to beginning of next
-                    cursor.y += 1
-                    cursor.x = 0
-                return
-
-            elif l[x] not in delimiters:                # move right to closest delimiter
-                for x in range(x, len(l)):
-                    if l[x] in delimiters:
-                        cursor.x = x
-                        return
-                cursor.x = len(l)
-            else:                                       # move right to closest word
-                for x in range(x, len(l)):
-                    if l[x] not in delimiters:
-                        cursor.x = x
-                        return
-                cursor.x = len(l)
-
-        if key in self.shortcuts['move_to_start_of_word']:
+        if key in self.shortcuts['move_operations']['move_to_start_of_word']:
             self.move_to_start_of_word()
+            if x < len(l) and (l[x] in delimiters or x == 0):
+                self.move_to_start_of_word()
+            if held_keys['shift']:
+                self.selection[1] = self.cursor.position
+                self.draw_selection()
 
-        if key in self.shortcuts['select_word_left']:
+        if key in self.shortcuts['move_operations']['move_to_end_of_word']:
+            self.move_to_end_of_word()
+            if x == len(l) or l[x] in delimiters:
+                self.move_to_end_of_word()
+
+        moved_cursor = False
+        for move in self.shortcuts['move_operations']:
+            if key in self.shortcuts['move_operations'][move]:
+                moved_cursor = True
+                if not held_keys['shift']:
+                    self.selection = [Vec2(self.cursor.X, self.cursor.Y), Vec2(self.cursor.X, self.cursor.Y)]
+                    self.draw_selection()
+                break
+
+        if moved_cursor and held_keys['shift']:
             self.selection[1] = self.cursor.position
-            self.move_to_start_of_word()
-            self.selection[0] = self.cursor.position
             self.draw_selection()
+
 
         if key in self.shortcuts['newline'] and self.cursor.y < self.max_lines-1:
             if self.selection:
@@ -463,12 +491,10 @@ class TextField(Entity):
             if y+1 == len(lines): # if at last line
                 self.text += '\n'
 
-            self.move_line(y, y+1)
-            cursor.y += 1
+            self.move_line(y, 1)
 
         if key in self.shortcuts['move_line_up'] and y > 0:
-            self.move_line(y, y-1)
-            cursor.y -= 1
+            self.move_line(y, -1)
 
 
         if key in self.shortcuts['undo']:
@@ -515,7 +541,10 @@ class TextField(Entity):
 
 
         if key in self.shortcuts['select_word']:
-            for start_x in range(x, -1, -1):
+            if x >= len(l):
+                return
+
+            for start_x in range(x, -1, -1):    # go left until end of word
                 if l[start_x] in delimiters:
                     break
             if start_x > 0:
@@ -602,6 +631,32 @@ class TextField(Entity):
                     return
             cursor.x = 0
 
+    def move_to_end_of_word(self):
+        cursor = self.cursor
+        x, y = int(cursor.x), int(cursor.y)
+        lines = self.text.split('\n')
+        l = lines[y]
+        delimiters = self.delimiters
+
+        if x == len(l):
+            if y < len(lines)-1:        # end of line, move to beginning of next
+                cursor.y += 1
+                cursor.x = 0
+            return
+
+        elif l[x] not in delimiters:                # move right to closest delimiter
+            for x in range(x, len(l)):
+                if l[x] in delimiters:
+                    cursor.x = x
+                    return
+            cursor.x = len(l)
+        else:                                       # move right to closest word
+            for x in range(x, len(l)):
+                if l[x] not in delimiters:
+                    cursor.x = x
+                    return
+            cursor.x = len(l)
+
 
     def text_input(self, key):
         cursor, add_text = self.cursor, self.add_text
@@ -636,11 +691,19 @@ class TextField(Entity):
             # print(self.scroll)
 
             if self.replacements:
-                self.text_entity.text = multireplace(text, self.replacements)
+                _lines = text.split('\n')
+                for i in range(len(_lines)):
+                    if _lines[i].lstrip().startswith('#'):
+                        _lines[i] = f'☾gray☽{lines[i]}☾default☽'
+                    else:
+                        _lines[i] = multireplace(_lines[i], self.replacements)
+                self.text_entity.text = '\n'.join(_lines)
+
+                # self.text_entity.text = multireplace(text, self.replacements)
             else:
                 self.text_entity.text = text
 
-            self.line_numbers.text = ('     \n'*self.scroll) + '\n'.join([str(e + self.scroll).rjust(5, '-') for e in range(min(len(lines), self.max_lines))])
+            self.line_numbers.text = ('     \n'*self.scroll) + '\n'.join([str(e + self.scroll).rjust(3, '0') for e in range(min(len(lines), self.max_lines))])
 
             self._prev_text = text
             self._prev_scroll = self.scroll
@@ -671,6 +734,7 @@ class TextField(Entity):
 
 
     def draw_selection(self):
+        # print(self.selection)
         [destroy(c) for c in self.selection_parent.children]
 
         if not self.selection or self.selection[0] == self.selection[1]:
@@ -709,7 +773,8 @@ class TextField(Entity):
 
 
 if __name__ == '__main__':
-    app = Ursina()
+    app = Ursina(vsync=60)
+
     # camera.orthographic = True
     # camera.fov = 1
     # window.size = window.fullscreen_size
@@ -742,13 +807,13 @@ if __name__ == '__main__':
     #     }
     #
     import textwrap
-    # te.text = "\n".join(textwrap.wrap(dedent('''
-    #     Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-    #     Aliquam sapien tellus, venenatis sit amet ante et, malesuada porta risus.
-    #     Etiam et mi luctus, viverra urna at, maximus eros. Sed dictum faucibus purus,
-    #     nec rutrum ipsum condimentum in. Mauris iaculis arcu nec justo rutrum euismod.
-    #     Suspendisse dolor tortor, congue id erat sit amet, sollicitudin facilisis velit.'''
-    #     ), 10))[1:]
+    te.text = dedent('''
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Aliquam sapien tellus, venenatis sit amet ante et, malesuada porta risus.
+        Etiam et mi luctus, viverra urna at, maximus eros. Sed dictum faucibus purus,
+        nec rutrum ipsum condimentum in. Mauris iaculis arcu nec justo rutrum euismod.
+        Suspendisse dolor tortor, congue id erat sit amet, sollicitudin facilisis velit.'''
+        )[1:]
     te.render()
 
     app.run()
