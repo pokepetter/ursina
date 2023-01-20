@@ -16,7 +16,7 @@ Entity Basics
     It can have a position, rotation, and scale.
     It can have a model, texture, and color.
     It can have an update function, input function, and scripts.
-    For an overview of all its attributes and functions, see https://www.ursinaengine.org/cheat_sheet.html#Entity
+    For an overview of all its attributes and functions, see https://www.ursinaengine.org/api_reference.html#Entity
 
 
 
