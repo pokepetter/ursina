@@ -1172,7 +1172,7 @@ class Entity(NodePath):
         '''))
 
 
-    def shake(self, duration=.2, magnitude=1, speed=.05, direction=(1,1), delay=0, attr_name='world_position', interrupt='finish'):
+    def shake(self, duration=.2, magnitude=1, speed=.05, direction=(1,1), delay=0, attr_name='position', interrupt='finish'):
         import random
 
         if hasattr(self, 'shake_sequence') and self.shake_sequence:
