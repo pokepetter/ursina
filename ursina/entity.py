@@ -369,7 +369,7 @@ class Entity(NodePath):
         elif value == 'sphere':
             self._collider = SphereCollider(entity=self, center=-self.origin)
             self._collider.name = value
-           
+
         elif value == 'capsule':
             self._collider = CapsuleCollider(entity=self, center=-self.origin)
             self._collider.name = value
@@ -1172,24 +1172,28 @@ class Entity(NodePath):
         '''))
 
 
-    def shake(self, duration=.2, magnitude=1, speed=.05, direction=(1,1), delay=0, attr_name='world_position'):
+    def shake(self, duration=.2, magnitude=1, speed=.05, direction=(1,1), delay=0, attr_name='world_position', interrupt='finish'):
         import random
-        s = Sequence(Wait(delay))
+
+        if hasattr(self, 'shake_sequence') and self.shake_sequence:
+            getattr(getattr(self, 'shake_sequence'), interrupt)()
+
+        self.shake_sequence = Sequence(Wait(delay))
         original_position = getattr(self, attr_name)
 
         for i in range(int(duration / speed)):
-            s.append(Func(setattr, self, attr_name,
+            self.shake_sequence.append(Func(setattr, self, attr_name,
                 Vec3(
                     original_position[0] + (random.uniform(-.1, .1) * magnitude * direction[0]),
                     original_position[1] + (random.uniform(-.1, .1) * magnitude * direction[1]),
                     original_position[2],
                 )))
-            s.append(Wait(speed))
-            s.append(Func(setattr, self, attr_name, original_position))
+            self.shake_sequence.append(Wait(speed))
+            self.shake_sequence.append(Func(setattr, self, attr_name, original_position))
 
-        self.animations.append(s)
-        s.start()
-        return s
+        self.animations.append(self.shake_sequence)
+        self.shake_sequence.start()
+        return self.shake_sequence
 
     def animate_color(self, value, duration=.1, interrupt='finish', **kwargs):
         return self.animate('color', value, duration, interrupt=interrupt, **kwargs)
