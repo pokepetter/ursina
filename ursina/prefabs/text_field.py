@@ -261,7 +261,7 @@ class TextField(Entity):
                 selected_text += '\n'
             selected_text += lines[y][(int(sel[0][0]) if y == start_y else 0) : (int(sel[1][0]) if y == end_y else len(lines[y])) ]
 
-        return selectedText
+        return selected_text
 
 
     def get_mouse_position_unclamped(self):
