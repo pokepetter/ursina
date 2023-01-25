@@ -720,7 +720,7 @@ class QuickGrabber(Entity):
 
 
     def input(self, key):
-        if held_keys['control'] or held_keys['shift'] or held_keys['alt'] or held_keys['s']:
+        if held_keys['control'] or held_keys['shift'] or held_keys['alt'] or held_keys['s'] or mouse.right or mouse.middle:
             return
 
 
@@ -745,6 +745,7 @@ class QuickGrabber(Entity):
                 # level_editor.local_global_menu.orignal_value = level_editor.local_global_menu.value
                 # level_editor.local_global_menu.value = 'global'
                 gizmo.world_scale = Vec3(1)
+                gizmo.world_position = self.target_entity.world_position
                 gizmo.drag(show_gizmo_while_dragging=False)
                 # print('-------------', level_editor.selection)
                 self.target_gizmo = gizmo.subgizmos[self.target_axis]
@@ -848,13 +849,12 @@ class QuickRotator(Entity):
         if held_keys['control'] or held_keys['shift'] or held_keys['alt']:
             return
 
-        if key == 'r' and not level_editor.selection:
+        if key == 'r' and len(level_editor.selection) <= 1:
             if not level_editor.selection:
-                self.target_entity = selector.get_hovered_entity()
-            if not level_editor.selection or len(level_editor.selection) == 1:
-                level_editor.selection = [self.target_entity, ]
+                level_editor.selection = [selector.get_hovered_entity(), ]
                 level_editor.render_selection()
 
+            self.target_entity = level_editor.selection[0]
             rotation_gizmo.subgizmos['y'].input('left mouse down')
             rotation_gizmo.subgizmos['y'].start_dragging()
 
@@ -945,7 +945,7 @@ class Selector(Entity):
 
 
     def get_hovered_entity(self):
-        entities_in_range = [(distance(e.screen_position, mouse.position), e) for e in level_editor.entities if e.selectable and not e.collider]
+        entities_in_range = [(distance_2d(e.screen_position, mouse.position), e) for e in level_editor.entities if e.selectable and not e.collider]
         entities_in_range = [e for e in entities_in_range if e[0] < .03]
         entities_in_range.sort()
 
@@ -1046,9 +1046,10 @@ class Spawner(Entity):
     def __init__(self):
         super().__init__(parent=level_editor)
         self.target = None
-        for i, prefab in enumerate([Cube, Pyramid, Rock]):
+        for i, prefab in enumerate([Cube, Pyramid, PokeShape]):
             button = Button(parent=level_editor.ui, scale=.075/2, origin=(.5,-.5), position=window.bottom_right+Vec2(-.05 -(i*.0375),0), on_click=Func(self.spawn_entity, prefab))
-        # self.button.i = Entity(parent=self.button, model='wireframe_cube', rotation=(-10,10,0), scale=.5, position=(-.5,.5,-1))
+            button.text = str(prefab)
+            # self.button.i = Entity(parent=self.button, model='wireframe_cube', rotation=(-10,10,0), scale=.5, position=(-.5,.5,-1))
 
     def input(self, key):
         if key == 'i':
@@ -1785,7 +1786,9 @@ class PokeShape(Entity):
 
     def __init__(self, points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,.5), Vec3(-.5,0,.5)], **kwargs):
 
-        super().__init__(original_parent=level_editor, selectable=True, **__class__.default_values | kwargs)
+        self.original_parent = level_editor
+        self.selectable = True
+        super().__init__(**__class__.default_values | kwargs)
         level_editor.entities.append(self)
         self.model = Mesh()
 
@@ -1882,11 +1885,11 @@ class PokeShape(Entity):
         level_editor.render_selection()
 
 
-    # def update(self):
-    #     if self.edit_mode:
-    #         if mouse.left or held_keys['d']:
-    #             level_editor.render_selection()
-    #             self.generate()
+    def update(self):
+        if self.edit_mode:
+            if mouse.left or held_keys['d']:
+                level_editor.render_selection()
+                self.generate()
 
 
     def input(self, key):
