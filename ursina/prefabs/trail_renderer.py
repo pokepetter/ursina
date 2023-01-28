@@ -5,7 +5,7 @@ class TrailRenderer(Entity):
         super().__init__(**kwargs)
         self.renderer = Entity(
             model = Pipe(
-                base_shape = Quad(segments=1, scale=size),
+                base_shape = Quad(segments=0, scale=size),
                 path=[Vec3(0,0,i) for i in range(2)],
                 color_gradient = color_gradient[::-1],
                 static=False,
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     player.graphics = Entity(parent=player, scale=.1, model='circle')
 
     pivot = Entity()
-    trail_renderer = TrailRenderer(size=[1,1], segments=8*8, min_spacing=1/8, parent=player, color_gradient=[color.magenta, color.cyan.tint(-.5), color.clear])
+    trail_renderer = TrailRenderer(size=[1,.01], segments=8*8, min_spacing=1/8, parent=player, color_gradient=[color.magenta, color.cyan.tint(-.5), color.clear])
 
 
     def update():
