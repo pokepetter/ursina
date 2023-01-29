@@ -3,12 +3,17 @@ from ursina import *
 class TrailRenderer(Entity):
     def __init__(self, size=[1,.01], segments=8, min_spacing=.05, fade_speed=0, color_gradient=[color.white, color.clear], **kwargs):
         super().__init__(**kwargs)
+        if color_gradient:
+            color_gradient = color_gradient[::-1]
+
         self.renderer = Entity(
             model = Pipe(
-                base_shape = Quad(segments=1, scale=size),
+                # base_shape = Quad(segments=1, scale=size),
+                base_shape = Mesh(vertices=[Vec3(-.5,0,0), Vec3(.5,0,0), Vec3(0,0,.01)]),
                 path=[Vec3(0,0,i) for i in range(2)],
-                color_gradient = color_gradient[::-1],
+                color_gradient=color_gradient,
                 static=False,
+                cap_ends=False,
             ),
         )
         self._t = 0
@@ -17,10 +22,14 @@ class TrailRenderer(Entity):
         self.min_spacing = min_spacing
         self.fade_speed = fade_speed
 
+        self.on_enable = self.renderer.enable
+        self.on_disable = self.renderer.disable
+
 
     def update(self):
         self._t += time.dt
         if self._t >= self.update_step:
+
             self._t = 0
             if distance(self.world_position, self.renderer.model.path[-1]) > self.min_spacing:
                 self.renderer.model.path.append(self.world_position)
@@ -48,8 +57,11 @@ if __name__ == '__main__':
     player.graphics = Entity(parent=player, scale=.1, model='circle')
 
     pivot = Entity()
-    trail_renderer = TrailRenderer(size=[1,1], segments=8*8, min_spacing=1/8, parent=player, color_gradient=[color.magenta, color.cyan.tint(-.5), color.clear])
 
+    trail_renderers = []
+    for i in range(1):
+        tr = TrailRenderer(size=[1,1], segments=8, min_spacing=.05, fade_speed=0, parent=player, color_gradient=[color.magenta, color.cyan.tint(-.5), color.clear])
+        trail_renderers.append(tr)
 
     def update():
         player.position = lerp(player.position, mouse.position*10, time.dt*4)
@@ -57,7 +69,8 @@ if __name__ == '__main__':
 
     def input(key):
         if key == 'escape':
-            trail_renderer.ignore = not trail_renderer.ignore
+            for e in trail_renderers:
+                e.enabled = not e.enabled
 
         if key == 'space':
             destroy(pivot)
