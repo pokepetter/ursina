@@ -16,42 +16,46 @@ class Pipe(Mesh):
         self.cap_ends = cap_ends
         self.mode = mode
         self.color_gradient = color_gradient
+        self.b = None
+        self.e = None
         super().__init__(**kwargs)
+
 
 
     def generate(self):
         shape = self.base_shape.vertices
         # make the base shape and rotate it
-        b = Entity(position=self.path[0], color=color.lime, scale=self.thicknesses[0], origin=self.origin)
-        for p in shape:
-            Entity(parent=b, position=Vec3(p), model='cube', scale=(.05, .05, .05), color=color.yellow)
+        if not self.b:
+            self.b = Entity(position=self.path[0], scale=self.thicknesses[0], origin=self.origin, enabled=False)
+            for p in shape:
+                Entity(parent=self.b, position=Vec3(p), scale=(.05, .05, .05), color=color.yellow, enabled=False)
 
-        b.look_at(self.path[1])
-        e = duplicate(b)
+            self.b.look_at(self.path[1])
+            self.e = duplicate(self.b)
 
         verts = []
         self.colors = []
 
         # cap start
         if self.cap_ends:
-            for i in range(len(b.children)):
+            for i in range(len(self.b.children)):
                 verts.append(self.path[0])
-                verts.append(b.children[i].world_position)
-                if i >= len(b.children)-1:
-                    verts.append(b.children[0].world_position)
+                verts.append(self.b.children[i].world_position)
+                if i >= len(self.b.children)-1:
+                    verts.append(self.b.children[0].world_position)
                 else:
-                    verts.append(b.children[i+1].world_position)
+                    verts.append(self.b.children[i+1].world_position)
 
                 if self.color_gradient:
                     self.colors.extend([self.color_gradient[0], ]*3)
 
         for i in range(1, len(self.path)):
-            b.position = self.path[i-1]
+            self.b.position = self.path[i-1]
             if self.look_at:
-                b.look_at(self.path[i])
-            e.position = self.path[i]
+                self.b.look_at(self.path[i])
+            self.e.position = self.path[i]
             if i+1 < len(self.path) and self.look_at:
-                e.look_at(self.path[i+1])
+                self.e.look_at(self.path[i+1])
 
             # for debugging sections
             # clone = duplicate(e)
@@ -59,42 +63,46 @@ class Pipe(Mesh):
             # clone.scale *= 1.1
 
             try:
-                e.scale = self.thicknesses[i]
-                b.scale = self.thicknesses[i-1]
+                self.e.scale = self.thicknesses[i]
+                self.b.scale = self.thicknesses[i-1]
             except:
                 pass
 
             # add sides
-            for j in range(len(e.children)):
+            for j in range(len(self.e.children)):
                 n = j+1
-                if j == len(e.children)-1:
+                if j == len(self.e.children)-1:
                     n = 0
-                verts.append(e.children[j].world_position)
-                verts.append(b.children[n].world_position)
-                verts.append(b.children[j].world_position)
+                verts.extend([
+                    self.e.children[j].world_position,
+                    self.b.children[n].world_position,
+                    self.b.children[j].world_position,
 
-                verts.append(e.children[n].world_position)
-                verts.append(b.children[n].world_position)
-                verts.append(e.children[j].world_position)
+                    self.e.children[n].world_position,
+                    self.b.children[n].world_position,
+                    self.e.children[j].world_position
+                ])
 
                 if self.color_gradient:
                     from_color = sample_gradient(self.color_gradient, (i-1)/(len(self.path)-1))
                     to_color = sample_gradient(self.color_gradient, (i-0)/(len(self.path)-1))
-                    self.colors.append(to_color)
-                    self.colors.append(from_color)
-                    self.colors.append(from_color)
-                    self.colors.append(to_color)
-                    self.colors.append(from_color)
-                    self.colors.append(to_color)
+                    self.colors.extend([
+                        to_color,
+                        from_color,
+                        from_color,
+                        to_color,
+                        from_color,
+                        to_color,
+                    ])
 
         # cap end
         if self.cap_ends:
-            for i in range(len(e.children)):
-                if i >= len(e.children)-1:
-                    verts.append(e.children[0].world_position)
+            for i in range(len(self.e.children)):
+                if i >= len(self.e.children)-1:
+                    verts.append(self.e.children[0].world_position)
                 else:
-                    verts.append(e.children[i+1].world_position)
-                verts.append(e.children[i].world_position)
+                    verts.append(self.e.children[i+1].world_position)
+                verts.append(self.e.children[i].world_position)
                 verts.append(self.path[-1])
 
                 if self.color_gradient:
@@ -102,8 +110,8 @@ class Pipe(Mesh):
 
         self.vertices = verts
         super().generate()
-        destroy(b)
-        destroy(e)
+        # destroy(b)
+        # destroy(e)
 
 
 
