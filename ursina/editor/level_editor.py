@@ -472,7 +472,7 @@ class Gizmo(Entity):
 
 
     def update(self):
-        self.world_scale = distance(self.world_position, camera.world_position) * camera.fov * .0005
+        # self.world_scale = distance(self.world_position, camera.world_position) * camera.fov * .0005
 
         for i, axis in enumerate('xyz'):
             if self.subgizmos[axis].dragging:
@@ -716,13 +716,15 @@ class QuickGrabber(Entity):
         super().__init__()
         self.target_entity = None
         self.target_axis = None
-        self.target_gizmo = None
-
+        self.plane = Entity(model='quad', collider='box', scale=Vec3(100,100,1), visible_self=False, enabled=False)
+        self.offset_helper = Entity()
+        self.start_position = Vec3(0,0,0)
+        self.axis_lock = [0,1,0]
+        self.is_dragging = False
 
     def input(self, key):
         if held_keys['control'] or held_keys['shift'] or held_keys['alt'] or held_keys['s'] or mouse.right or mouse.middle:
             return
-
 
         if key in 'dxyzw':
             if self.target_entity:
@@ -734,35 +736,56 @@ class QuickGrabber(Entity):
             self.target_entity = selector.get_hovered_entity()
 
             if self.target_entity:
-                print(self.target_entity.color)
-                self.target_axis = key
-                if key in 'dw':
-                    self.target_axis = 'xz'
 
                 level_editor.selection = [self.target_entity, ]
-                level_editor.render_selection()
+                self.plane.enabled = True
+                self.plane.position = self.target_entity.world_position
 
-                # level_editor.local_global_menu.orignal_value = level_editor.local_global_menu.value
-                # level_editor.local_global_menu.value = 'global'
-                gizmo.world_scale = Vec3(1)
-                gizmo.world_position = self.target_entity.world_position
-                gizmo.drag(show_gizmo_while_dragging=False)
-                # print('-------------', level_editor.selection)
-                self.target_gizmo = gizmo.subgizmos[self.target_axis]
-                # self.target_gizmo.input('left mouse down')
-                self.target_gizmo.start_dragging()
-                # invoke(self.target_gizmo.input, 'left mouse down', delay=2/60)
-                # invoke(self.target_gizmo.start_dragging, delay=2/60)
+                target_axis = key
+                if key in 'dw':
+                    target_axis = 'xz'
+
+                if target_axis == 'y':
+                    self.plane.look_at(self.plane.position + Vec3(0,0,-1))
+                else:
+                    self.plane.look_at(self.plane.position + Vec3(0,1,0))
+
+                self.axis_lock = [target_axis!='x', target_axis!='y', target_axis!='z']
+                if target_axis == 'xz':
+                    self.axis_lock = [0,0,0]
+
+                self._original_mouse_traverse_target = mouse.traverse_target
+                mouse.traverse_target = self.plane
+                mouse.update()
+                self.offset_helper.position = mouse.world_point
+                self.start_position = self.offset_helper.world_position
+
+                self.target_entity.original_parent = self.target_entity.parent
+                self.target_entity.world_parent = self.offset_helper
+
+                self.is_dragging = True
+
 
         elif key in ('x up', 'y up', 'z up', 'd up', 'w up') and self.target_entity:
+            self.is_dragging = False
+            mouse.traverse_target = self._original_mouse_traverse_target
+            self.target_entity.world_parent = self.target_entity.original_parent
             self.target_entity = None
-            gizmo.drop()
-            self.target_gizmo.stop_dragging()
+            self.plane.enabled = False
             level_editor.selection = []
-            # level_editor.local_global_menu.value = 'global'
             level_editor.render_selection()
 
 
+    def update(self):
+        if not self.is_dragging or not mouse.world_point:
+            return
+
+        pos = mouse.world_point
+        for i, e in enumerate(pos):
+            if self.axis_lock[i]:
+                pos[i] = self.start_position[i]
+
+        self.offset_helper.world_position = pos
 
 
 class QuickScale(Entity):
@@ -1723,7 +1746,6 @@ class Duplicator(Entity):
 
 
     def input(self, key):
-        print('key:', key)
         if held_keys['shift'] and key == 'd' and level_editor.selection:
             print('duplicate')
             self.clones = []
