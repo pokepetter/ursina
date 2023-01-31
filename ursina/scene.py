@@ -21,7 +21,19 @@ class Scene(NodePath):
         from ursina.ursinastuff import destroy
         from ursina import application
 
-        [destroy(e) for e in self.entities if not e.eternal]
+        to_destroy = [e for e in self.entities if not e.eternal]
+        to_keep = [e for e in self.entities if e.eternal]
+
+        for d in to_destroy:
+            try:
+                destroy(d)
+            except Exception as e:
+                print('failed to destroy entity', e)
+
+
+        self.entities = to_keep
+
+
         application.sequences.clear()
 
 
