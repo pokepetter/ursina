@@ -3,6 +3,7 @@ from panda3d.core import GeomVertexData, GeomVertexFormat, Geom, GeomVertexWrite
 from panda3d.core import GeomTriangles, GeomTristrips, GeomTrifans
 from panda3d.core import GeomLines, GeomLinestrips, GeomPoints
 from panda3d.core import TexGenAttrib, TextureStage
+from panda3d.core import LVector4f
 from ursina.vec3 import Vec3
 from ursina.scripts.generate_normals import generate_normals
 from ursina.scripts.project_uvs import project_uvs
@@ -56,7 +57,6 @@ class Mesh(NodePath):
 
     def __init__(self, vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1, render_points_in_3d=True):
         super().__init__('mesh')
-        self.name = 'mesh'
         self.vertices = vertices
         self.triangles = triangles
         self.colors = colors
@@ -95,7 +95,7 @@ class Mesh(NodePath):
         if self.colors:
             colorwriter = GeomVertexWriter(vdata, 'color')
             for c in self.colors:
-                colorwriter.addData4f(c)
+                colorwriter.addData4f(LVector4f(*c))
 
         if self.uvs:
             uvwriter = GeomVertexWriter(vdata, 'texcoord')
