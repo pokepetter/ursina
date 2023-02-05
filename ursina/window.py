@@ -60,7 +60,6 @@ class Window(WindowProperties):
 
         self.fullscreen_size = Vec2(*self.screen_resolution)
         self.windowed_size = self.fullscreen_size / 1.25
-        loadPrcFileData('', f'win-size {self.windowed_size[0]} {self.windowed_size[1]}')
         self.windowed_position = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode
         self.forced_aspect_ratio = None # example: window.forced_aspect_ratio = 16/9
         self.size = self.windowed_size
