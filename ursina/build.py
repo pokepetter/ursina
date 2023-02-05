@@ -151,6 +151,7 @@ if build_engine:
         'Lib/urllib',
         'Lib/logging',
         'Lib/xml',
+        'Lib/re',
         # 'Lib/site-packages/panda3d/',
         'Lib/site-packages/direct/',
         'Lib/site-packages/pyperclip/',
