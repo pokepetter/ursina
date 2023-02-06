@@ -2,15 +2,15 @@ from modulefinder import ModuleFinder
 import os
 import sys
 import shutil
-from shutil import copy, copyfile
-from distutils.dir_util import copy_tree
+from shutil import copy, copyfile, copytree
 from pathlib import Path
 import time
 from textwrap import dedent
+import platform
 
 project_folder = Path.cwd()
 project_name = project_folder.stem
-build_folder = Path(project_folder / 'build')
+build_folder = Path(project_folder / f'build_{platform.system()}')
 build_folder.mkdir(exist_ok=True)
 
 ignore = []
@@ -233,17 +233,18 @@ if build_game:
         shutil.rmtree(str(src_dest))
     src_dest.mkdir()
 
-    ignore.extend(['.git', 'build', '.gitignore', 'build.bat'])
+    ignore.extend(['.git', 'build_Windows', 'build_Linux', '.gitignore', 'build.bat'])
     ignore_patterns = ['.psd', '.zip']
     ignore.append('__pycache__')
 
     if compile_to_pyc:
         import py_compile
         for f in project_folder.glob('**/*.py'):
-            if '\\build\\' in str(f):
+            parents = f.relative_to(project_folder).parents
+            if len(parents) > 2 and str(parents[-2]).startswith('build_'):
                 continue
-
-            print('compiling:', f, src_dest / str(f)[len(str(project_folder))+1:])
+            if 'scenes' in parents:
+                continue
             py_compile.compile(f, src_dest / (str(f)[len(str(project_folder))+1:]+'c'))
 
         ignore_patterns.append('.py')
