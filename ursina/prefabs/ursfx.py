@@ -53,7 +53,7 @@ def ursfx(volume_curve, volume=.75, wave='sine', pitch=0, pitch_change=0, speed=
 
 class SynthGUI(Entity):
     def __init__(self, **kwargs):
-        super().__init__(parent=camera.ui, **kwargs)
+        super().__init__(parent=camera.ui, z=-998, **kwargs)
 
         default_positions = [(0,0), (.1,.9), (.15,.75), (.6,.75), (1,0)]
         self.wave_panel = Entity(parent=self, scale=.35, x=-0)
