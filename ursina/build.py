@@ -64,14 +64,15 @@ for i, arg in enumerate(sys.argv):
             it copies python and project's dependent packages. requires a main.py file.
             copies game scripts and assets into 'build/src' folder.
             creates a .bat file to start the game.
-            include extra modules like this: --include_modules module_one,module_two,module_tree
+
             --ignore            # add assets to ignore
             --name              # change project name
-            --include_modules   # include extra modules
+            --include_modules   # include extra modules like this: --include_modules module_one,module_two,module_tree
             --overwrite         # don't ask to overwrite existing build, just overwrite
             --skip_engine
             --skip_game
-            --compile_to_pyc    # default: True
+            --compile_to_pyc=True
+            --compile_to_pyc=False
 
             Make sure to include any extra modules with --include_modules PIL,numpy for example.
             Any errors while the application is running will be logged in log.txt instead of the console.
@@ -98,8 +99,10 @@ for i, arg in enumerate(sys.argv):
     elif arg == '--skip_game':
         build_game = False
 
-    elif arg == '--compile_to_pyc':
-        compile_to_pyc = bool(sys.argv[i+1])
+    elif arg == '--compile_to_pyc=True':
+        compile_to_pyc = True
+    elif arg == '--compile_to_pyc=False':
+        compile_to_pyc = False
 
 
 if (build_engine and python_dest.exists() or (build_game and src_dest.exists())):

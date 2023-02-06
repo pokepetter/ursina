@@ -31,6 +31,8 @@ Creates a .bat file to start the game.
 --overwrite         # don't ask to overwrite existing build, just overwrite
 --skip_engine
 --skip_game
+--compile_to_pyc=True
+--compile_to_pyc=False
 # text
 
 Make sure to include any extra modules with --include_modules PIL,numpy for example.
