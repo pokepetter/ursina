@@ -245,8 +245,6 @@ if build_game:
         import py_compile
         for f in project_folder.glob('**/*.py'):
             parents = f.relative_to(project_folder).parents
-            if len(parents) > 2 and str(parents[-2]).startswith('build_'):
-                continue
             if 'scenes' in parents:
                 continue
             py_compile.compile(f, src_dest / (str(f)[len(str(project_folder))+1:]+'c'))

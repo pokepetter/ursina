@@ -121,7 +121,7 @@ def load_blender_scene(name, path=application.asset_folder, load=True, reload=Fa
     if not scenes_folder.exists():
         scenes_folder.mkdir()
 
-    out_file_path = scenes_folder / f'{name}.py'
+    out_file_path = scenes_folder / f'{name}.ursina_blender_scene'
     # print('loading:', out_file_path)
     if reload or not out_file_path.exists():
         print_info('reload:')
