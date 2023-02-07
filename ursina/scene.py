@@ -7,6 +7,7 @@ class Scene(NodePath):
     def __init__(self):
         super().__init__('scene')
         self.entities = []
+        self._children = []
 
 
     def set_up(self):
@@ -57,6 +58,17 @@ class Scene(NodePath):
             self.fog.setLinearRange(value[0], value[1])
         else:
             self.fog.setExpDensity(value)
+
+    @property
+    def children(self):
+        return self._children
+
+        # return [e for e in scene.entities if e.parent == self]
+    @children.setter
+    def children(self, value):
+        if self._children:
+            raise Exception('error setting .children, entity already has children')
+        self._children = value
 
 
 instance = Scene()

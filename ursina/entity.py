@@ -52,6 +52,7 @@ class Entity(NodePath):
         'shader':None, 'texture':None, 'color':color.white, 'collider':None}
 
     def __init__(self, add_to_scene_entities=True, **kwargs):
+        self._children = []
         super().__init__(self.__class__.__name__)
 
         self.name = camel_to_snake(self.type)
@@ -62,6 +63,7 @@ class Entity(NodePath):
         self.ignore_paused = False      # if True, will still run when application is paused. useful when making a pause menu for example.
         self.ignore_input = False
 
+        self._parent = None
         self.parent = scene     # default parent is scene, which means it's in 3d space. to use UI space, set the parent to camera.ui instead.
         self.add_to_scene_entities = add_to_scene_entities # set to False to be ignored by the engine, but still get rendered.
         if add_to_scene_entities:
@@ -193,7 +195,7 @@ class Entity(NodePath):
             for c in self.children:
                 c.eternal = value
 
-        elif name == 'model':
+        if name == 'model':
             if value is None:
                 if hasattr(self, 'model') and self.model:
                     self.model.removeNode()
@@ -282,29 +284,34 @@ class Entity(NodePath):
 
     @property
     def parent(self):
-        try:
-            return self._parent
-        except:
-            return None
+        return self._parent
 
     @parent.setter
     def parent(self, value):
+        if hasattr(self, '_parent') and self._parent and self in self._parent._children:
+            self._parent._children.remove(self)
+
+        if hasattr(value,'_children') and not self in value._children:
+            value._children.append(self)
+
+        self.reparentTo(value)
         self._parent = value
-        if value is None:
-            destroy(self)
-        else:
-            try:
-                self.reparentTo(value)
-            except:
-                raise ValueError(f'invalid parent: value')
+
 
     @property
     def world_parent(self):
-        return self.parent
+        return self._parent
 
     @world_parent.setter
     def world_parent(self, value):  # change the parent, but keep position, rotation and scale
+        if hasattr(self, '_parent') and self._parent and self in self._parent._children:
+            self._parent._children.remove(self)
+
+        if hasattr(value,'_children') and not self in value._children:
+            value._children.append(self)
+
         self.reparent_to(value)
+        self._parent = value
 
 
     @property
@@ -1044,7 +1051,11 @@ class Entity(NodePath):
 
     @property
     def children(self):
-        return [e for e in scene.entities if e.parent == self]
+        return self._children
+
+    @children.setter
+    def children(self, value):
+        self._children = value
 
 
     @property
@@ -1055,8 +1066,10 @@ class Entity(NodePath):
             'render_queue', 'always_on_top', 'collider', 'collision', 'scripts')
 
     def __str__(self):
-        return self.name
-
+        try:
+            return self.name
+        except:
+            return '*destroyed entity*'
 
     def get_changes(self, target_class=None): # returns a dict of all the changes
         if not target_class:
@@ -1319,6 +1332,9 @@ if __name__ == '__main__':
     # test
     e = Entity(model='cube', collider='box', texture='shore', color=hsv(.3,1,.5))
     print(repr(e))
+    # a = Entity()
+    # b = Entity(parent=a)
+
 
     # e.animate_x(3, duration=2, delay=.5, loop=True)
     # e.animate_position(Vec3(1,1,1), duration=1, loop=True)

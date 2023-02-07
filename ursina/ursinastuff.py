@@ -67,6 +67,8 @@ def _destroy(entity, force_destroy=False):
     if hasattr(entity, 'on_destroy'):
         entity.on_destroy()
 
+    entity.parent.children.remove(entity)
+
     for c in entity.children:
         _destroy(c)
 
@@ -89,10 +91,7 @@ def _destroy(entity, force_destroy=False):
     if hasattr(entity, '_on_click') and isinstance(entity._on_click, Sequence):
         entity._on_click.kill()
 
-    try:
-        entity.removeNode()
-    except:
-        print('already destroyed')
+    entity.removeNode()
     #unload texture
     # if hasattr(entity, 'texture') and entity.texture != None:
     #     entity.texture.releaseAll()
