@@ -61,13 +61,10 @@ class Scene(NodePath):
 
     @property
     def children(self):
-        return self._children
+        return [e for e in self._children if e]     # make sure list doesn't contain destroyed entities
 
-        # return [e for e in scene.entities if e.parent == self]
     @children.setter
     def children(self, value):
-        if self._children:
-            raise Exception('error setting .children, entity already has children')
         self._children = value
 
 

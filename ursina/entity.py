@@ -294,7 +294,7 @@ class Entity(NodePath):
         if hasattr(value,'_children') and not self in value._children:
             value._children.append(self)
 
-        self.reparentTo(value)
+        self.reparent_to(value)
         self._parent = value
 
 
@@ -310,7 +310,7 @@ class Entity(NodePath):
         if hasattr(value,'_children') and not self in value._children:
             value._children.append(self)
 
-        self.reparent_to(value)
+        self.wrtReparentTo(value)
         self._parent = value
 
 
@@ -929,13 +929,6 @@ class Entity(NodePath):
         return Bounds(start=_bounds.start*self.scale, end=_bounds.end*self.scale, center=_bounds.center, size=_bounds.size*self.scale)
 
 
-    def reparent_to(self, entity):
-        if entity is not None:
-            self.wrtReparentTo(entity)
-
-        self._parent = entity
-
-
     def get_position(self, relative_to=scene):
         return self.getPos(relative_to)
 
@@ -1051,7 +1044,7 @@ class Entity(NodePath):
 
     @property
     def children(self):
-        return self._children
+        return [e for e in self._children if e]     # make sure list doesn't contain destroyed entities
 
     @children.setter
     def children(self, value):

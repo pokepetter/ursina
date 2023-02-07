@@ -62,19 +62,12 @@ def _destroy(entity, force_destroy=False):
 
     if hasattr(entity, 'stop'):
         entity.stop(False)
-        # return
 
     if hasattr(entity, 'on_destroy'):
         entity.on_destroy()
 
-    entity.parent.children.remove(entity)
-
-    for c in entity.children:
-        _destroy(c)
-
     if entity in scene.entities:
         scene.entities.remove(entity)
-
 
     if hasattr(entity, 'scripts'):
         for s in entity.scripts:
