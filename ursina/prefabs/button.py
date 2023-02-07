@@ -161,12 +161,7 @@ class Button(Entity):
                 self.model.setScale(Vec3(self.highlight_scale, self.highlight_scale, 1))
 
         if hasattr(self, 'tooltip'):
-            self.tooltip.scale = (0,0,0)
             self.tooltip.enabled = True
-            if not hasattr(self.tooltip, 'original_scale'):
-                self.tooltip.original_scale = 1
-
-            self.tooltip.animate_scale(self.tooltip.original_scale)
 
 
     def on_mouse_exit(self):

@@ -11,8 +11,6 @@ class Tooltip(Text):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-        self.original_scale = self.scale
-
 
     def update(self):
         self.position = mouse.position
@@ -22,7 +20,7 @@ class Tooltip(Text):
             )
         self.x = min(self.x, (.5 * window.aspect_ratio) - self.width - self.size - .005)
         self.y = min(self.y, .5 - (self.height + self.size + .005))
-        self.z = -9
+        self.z = -99
 
 if __name__ == '__main__':
     app = Ursina()
