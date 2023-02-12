@@ -76,8 +76,10 @@ for key, ob in unique_objects.items():
             [round(e,decimals) for e in col.color_srgb]
                 for col in mesh.attributes.active_color.data]
 
-        for idx in indices:
+        for idx in indices:     # vertex colors
             vertex_colors.append(v_cols[idx])
+
+        # vertex_colors = v_cols  # use this instead if using face color. face colors doesn't work with baking light to vertex colors though.
 
 
     if '--normals' in sys.argv:
@@ -98,7 +100,7 @@ for key, ob in unique_objects.items():
         normals = sharp_normals
 
 
-    if '--vertex_colors' in sys.argv:
+    if '--uvs' in sys.argv:
         uv_layer = mesh.uv_layers.active
         if uv_layer and len(uv_layer.data) > 0:
             uvs = [tuple(round(e, decimals) for e in data.uv) for data in uv_layer.data]
