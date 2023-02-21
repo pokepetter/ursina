@@ -30,7 +30,7 @@
     [FPS, https://github.com/pokepetter/ursina/blob/master/samples/fps.py, icons/fps.jpg]
     [Particle System, https://github.com/pokepetter/ursina/blob/master/samples/particle_system.py, icons/particle_system.jpg]
 
-    [Culumn Graph, https://github.com/pokepetter/ursina/blob/master/samples/culumn_graph.py, icons/column_graph_icon.jpg]
+    [Culumn Graph, https://github.com/pokepetter/ursina/blob/master/samples/column_graph.py, icons/column_graph_icon.jpg]
     [Value of Life, https://github.com/pokepetter/ld44_life_is_currency, icons/value_of_life_icon.jpg]
     [Castaway, https://github.com/pokepetter/pyweek_30_castaway, icons/castaway_icon.jpg]
 
