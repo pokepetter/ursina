@@ -18,7 +18,15 @@ import __main__
 time.dt = 0
 keyboard_keys = '1234567890qwertyuiopasdfghjklzxcvbnm'
 
+def singleton(cls):
+    instances = {}
+    def getinstance():
+        if cls not in instances:
+            instances[cls] = cls()
+        return instances[cls]
+    return getinstance
 
+@singleton
 class Ursina(ShowBase):
     def __init__(self, **kwargs): # optional arguments: title, fullscreen, size, forced_aspect_ratio, position, vsync, borderless, show_ursina_splash, render_mode, development_mode, editor_ui_enabled.
         for name in ('size', 'vsync', 'forced_aspect_ratio'):
