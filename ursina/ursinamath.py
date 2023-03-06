@@ -113,6 +113,13 @@ def rotate_point_2d(point, origin, deg):
         origin[1] + (dx*sin_angle + dy*cos_angle)
         )
 
+def world_position_to_screen_position(point): # get screen position(ui space) from world space.
+    from ursina import camera, Entity, destroy
+    _temp_entity = Entity(position=point, add_to_scene_entities=False)
+    result = _temp_entity.screen_position
+    destroy(_temp_entity)
+    return result
+
 
 def chunk_list(l, chunk_size):
     # yield successive chunks from list

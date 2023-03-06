@@ -1813,8 +1813,16 @@ class PokeShape(Entity):
         super().__init__(**__class__.default_values | kwargs)
         level_editor.entities.append(self)
         self.model = Mesh()
+        # self.edit_mode_collider = Entity(parent=self, model=copy(self.model), color=color.cyan, alpha=.3, is_gizmo=True, selectable=False)
+        # def edit_mode_collider_on_click():
+        #     level_editor.selection = [self, ]
+        #     level_editor.render_selection()
+        # self.edit_mode_collider.on_click = edit_mode_collider_on_click
+
 
         self.point_gizmos = LoopingList([Entity(parent=self, original_parent=self, position=e, selectable=False, name='PokeShape_point', is_gizmo=True) for e in points])
+        self.add_new_point_renderer = Entity(model=Mesh(vertices=[], mode='point', thickness=.1), color=color.azure, texture='circle', is_gizmo=True, selectable=False, enabled=False)
+        # self.add_new_point_renderer = Entity(parent=self, model='cube', color=color.azure, texture='circle')
         self.edit_mode = False
 
         self.add_collider = False
@@ -1826,13 +1834,21 @@ class PokeShape(Entity):
 
         self.wall_height = 1
         self.wall_thickness = .1
+        self.subdivisions = 0
 
         self.generate()
 
 
     def generate(self):
         import tripy
-        polygon = LoopingList(e.get_position(relative_to=self).xz for e in self.point_gizmos)
+        polygon = LoopingList(Vec2(*e.get_position(relative_to=self).xz) for e in self.point_gizmos)
+
+        smooth_polygon = LoopingList()
+        for i, p in enumerate(polygon):
+            smooth_polygon.append(lerp(p, polygon[i-1], .1))
+            smooth_polygon.append(lerp(p, polygon[i+1], .1))
+        polygon = smooth_polygon
+
         triangles = tripy.earclip(polygon)
         self.model.vertices = []
         for tri in triangles:
@@ -1844,6 +1860,8 @@ class PokeShape(Entity):
         self.model.generate()
         self.texture = 'grass'
 
+        # self.edit_mode_collider.collider = 'mesh'
+        self.collider = 'mesh'
 
         if self.make_wall:
             wall_verts = []
@@ -1868,6 +1886,12 @@ class PokeShape(Entity):
         if self.add_collider:
             self.collider = self.model
 
+        self.add_new_point_renderer.model.vertices = []
+        for i, e in enumerate(self.point_gizmos):
+            self.add_new_point_renderer.model.vertices.append(lerp(self.point_gizmos[i].world_position, self.point_gizmos[i+1].world_position, .5))
+            # self.add_new_point_renderer.model.vertices.append(self.point_gizmos[i].world_position)
+        self.add_new_point_renderer.model.generate()
+
     def __deepcopy__(self, memo):
         return eval(repr(self))
 
@@ -1882,6 +1906,7 @@ class PokeShape(Entity):
 
     @edit_mode.setter
     def edit_mode(self, value):
+
         print('set edit mode', value)
         self._edit_mode = value
         if value:
@@ -1893,9 +1918,9 @@ class PokeShape(Entity):
             [setattr(e, 'selectable', True) for e in self.point_gizmos]
             gizmo.subgizmos['y'].enabled = False
             gizmo.fake_gizmo.subgizmos['y'].enabled = False
+            self.add_new_point_renderer.enabled = True
 
         else:
-            print(self.point_gizmos[0] in level_editor.entities)
             [level_editor.entities.remove(e) for e in self.point_gizmos]
             [setattr(e, 'selectable', True) for e in level_editor.entities]
             if True in [e in level_editor.selection for e in self.point_gizmos]: # if point is selected when exiting edit mode, select the poke shape
@@ -1903,6 +1928,7 @@ class PokeShape(Entity):
 
             gizmo.subgizmos['y'].enabled = True
             gizmo.fake_gizmo.subgizmos['y'].enabled = True
+            self.add_new_point_renderer.enabled = False
 
         level_editor.render_selection()
 
@@ -1928,9 +1954,20 @@ class PokeShape(Entity):
         #     quick_grabber.input('d up')
         #     selection_box.enabled = True
 
-        elif key == '+' and len(level_editor.selection) == 1 and level_editor.selection[0] in self.point_gizmos:
+        # elif key == '+' and len(level_editor.selection) == 1 and level_editor.selection[0] in self.point_gizmos:
+        if key == 'left mouse down':
+            points_in_range = [(distance_2d(world_position_to_screen_position(v), mouse.position), v) for v in self.add_new_point_renderer.model.vertices]
+            points_in_range = [e for e in points_in_range if e[0] < .03]
+            points_in_range.sort()
+
+            closest_point = None
+            if not points_in_range:
+                return
+
+            closest_point = points_in_range[0][1]
             print('add point')
-            i = self.point_gizmos.index(level_editor.selection[0])
+            # i = self.point_gizmos.index(level_editor.selection[0])
+            i = self.add_new_point_renderer.model.vertices.index(closest_point)
 
             new_point = Entity(parent=self, original_parent=self, position=lerp(self.point_gizmos[i].position, self.point_gizmos[i+1].position, .5), selectable=True, is_gizmo=True)
             level_editor.entities.append(new_point)
@@ -2097,7 +2134,7 @@ class Search(Entity):
 
 if __name__ == '__main__':
     # app = Ursina(size=(1280,720))
-    app = Ursina(vsync=False, forced_aspect_ratio=16/9)
+    app = Ursina(vsync=False, borderless=False, fullscreen=True)
 
 # camera.fov = 90
 level_editor = LevelEditor()
