@@ -18,11 +18,11 @@ import __main__
 time.dt = 0
 keyboard_keys = '1234567890qwertyuiopasdfghjklzxcvbnm'
 
-def singleton(cls):
+def singleton(cls, **kwargs):
     instances = {}
-    def getinstance():
+    def getinstance(**kwargs):
         if cls not in instances:
-            instances[cls] = cls()
+            instances[cls] = cls(**kwargs)
         return instances[cls]
     return getinstance
 
