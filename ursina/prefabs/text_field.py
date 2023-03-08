@@ -4,7 +4,7 @@ import pyperclip
 
 
 class TextField(Entity):
-    def __init__(self, max_lines=9999, line_height=1.1, **kwargs):
+    def __init__(self, max_lines=64, line_height=1.1, **kwargs):
         super().__init__(parent=camera.ui, x=-.5, y=.4, ignore_paused=True)
 
         self.font = 'VeraMono.ttf'
@@ -14,7 +14,7 @@ class TextField(Entity):
 
         self.scroll_parent = Entity(parent=self)
         self.text_entity = Text(parent=self.scroll_parent, start_tag='☾', end_tag='☽', font=self.font, text='', line_height=self.line_height, origin=(-.5, .5))
-        self.line_numbers = Text(parent=self.scroll_parent, font=self.font, text='0', origin=(.5,.5), x=-.04, color=color.gray, enabled=False)
+        self.line_numbers = Text(parent=self.scroll_parent, font=self.font, line_height=line_height, text='0', origin=(.5,.5), x=-.04, color=color.gray, enabled=False)
         self.character_width = Text.get_width('a', font=self.font)
         self.cursor_parent = Entity(parent=self.scroll_parent, scale=(self.character_width, -1*Text.size*self.line_height))
         self.cursor = Entity(name='text_field_cursor', parent=self.cursor_parent, model='cube', color=color.cyan, origin=(-.5, -.5), scale=(.1, 1, 0), enabled=False)
@@ -29,6 +29,7 @@ class TextField(Entity):
         self.triple_click_delay = 0.3
         self._last_double_click = 0
         self.scroll = 0
+        self.scroll_amount = 2
         self._prev_scroll = self.scroll
 
         self.active = True
@@ -98,7 +99,7 @@ class TextField(Entity):
             self.draw_selection()
 
 
-    def add_text(self, s, move_cursor=True):
+    def add_text(self, s, move_cursor=True, rerender=True):
         if self.character_limit and len(self.text) >= self.character_limit:
             return
 
@@ -112,6 +113,9 @@ class TextField(Entity):
 
         if move_cursor:
             self.cursor.x += len(s)
+
+        if rerender:
+            self.render()
 
     def _append_undo(self, text, y, x, clear_redo = True):
         if clear_redo:
@@ -140,7 +144,7 @@ class TextField(Entity):
             lines.insert(start_y+delta, l)
         # end = lines[start_y+1:]
 
-        [print(e) for e in middle]
+        # [print(e) for e in middle]
         self.cursor.y += delta * move_cursor
         for e in self.selection:
             e.y += delta
@@ -157,10 +161,10 @@ class TextField(Entity):
         #
         self._append_undo(self.text, y, x)
         self.text = '\n'.join(lines)
-        print('moved line')
+        # print('moved line')
 
 
-    def erase(self):
+    def erase(self, rerender=True):
         # if not self.selection or self.selection[0] == self.selection[1]:
         x, y = int(self.cursor.x), int(self.cursor.y)
         if x+y == 0:
@@ -215,6 +219,8 @@ class TextField(Entity):
 
 
         self.text = '\n'.join(lines)
+        if rerender:
+            self.render()
 
     def _ordered_selection(self):
         if not self.selection:
@@ -242,6 +248,7 @@ class TextField(Entity):
         self.selection = [Vec2(0,0), Vec2(0,0)]
         # self._append_undo(self.text, y, x)
         self.draw_selection()
+        self.render()
 
 
     def get_selected(self):
@@ -301,12 +308,22 @@ class TextField(Entity):
 
         if mouse.hovered_entity == self.bg:
             if key in self.shortcuts['scroll_down']:
-                self.scroll = clamp(self.scroll+1, 0, self.max_lines)
-                self.render()
+                if self.max_lines < 9999:
+                    self.scroll = clamp(self.scroll+self.scroll_amount, 0, self.max_lines)
+                    self.render()
+                else:
+                    self.scroll = clamp(self.scroll+self.scroll_amount, 0, 9999)
+                    self.scroll_parent.y = (self.scroll * Text.size * self.line_height)
+                return
 
             elif key in self.shortcuts['scroll_up']:
-                self.scroll = clamp(self.scroll-1, 0, self.max_lines)
-                self.render()
+                if self.max_lines < 9999:
+                    self.scroll = clamp(self.scroll-self.scroll_amount, 0, self.max_lines)
+                    self.render()
+                else:
+                    self.scroll = clamp(self.scroll-self.scroll_amount, 0, 9999)
+                    self.scroll_parent.y = (self.scroll * Text.size * self.line_height)
+                return
 
 
         if self.register_mouse_input and key == 'left mouse down':
@@ -388,16 +405,16 @@ class TextField(Entity):
             self.draw_selection()
 
 
-        if key in self.shortcuts['newline'] and self.cursor.y < self.max_lines-1:
+        if key in self.shortcuts['newline'] and (self.cursor.y < self.max_lines-1 or self.max_lines == 9999):
             if self.selection:
                 self.delete_selected()
 
             if l.startswith('class ') and not l.endswith(':'):
-                add_text(':')
+                add_text(':', rerender=False)
             if l.startswith('def ') and not l.endswith(':'):
-                add_text(':')
+                add_text(':', rerender=False)
 
-            add_text('\n')
+            add_text('\n', rerender=False)
 
             if l.strip() == '':
                 indent = len(l)
@@ -409,11 +426,13 @@ class TextField(Entity):
             self.cursor.y += 1
             self.cursor.x = 0
             add_text(' '*indent)
+            return
             # self.cursor.x = indent
 
         if key in self.shortcuts['indent']:
             if not self.selection or self.selection[0] == self.selection[1]:
                 add_text(' '*4, move_cursor=True)
+                return
 
             else:
                 for y in range(int(self.selection[0][1]), int(self.selection[1][1])+1):
@@ -422,7 +441,8 @@ class TextField(Entity):
                 self.cursor.x += 4
                 self._append_undo(self.text, y, x)
                 self.text = '\n'.join(lines)
-
+                self.render()
+                return
 
         if key in self.shortcuts['dedent']:
             if not self.selection or self.selection[0] == self.selection[1]:
@@ -440,13 +460,16 @@ class TextField(Entity):
             self.cursor.x = max(self.cursor.x - 4, 0)
             self._append_undo(self.text, y, x)
             self.text = '\n'.join(lines)
-
+            self.render()
+            return
 
         if key in self.shortcuts['erase']:
             if not self.selection or self.selection[1] == self.selection[0]:
                 erase()
+                return
             else:
                 self.delete_selected()
+                return
 
         if key in self.shortcuts['erase_word']:
             # print('delete word')
@@ -480,11 +503,11 @@ class TextField(Entity):
                 l = beginning + l[x:]
                 self.cursor.x -= len(removed)
 
-
             lines[y] = l
             self._append_undo(self.text, y, x)
             self.text = '\n'.join(lines)
-
+            self.render()
+            return
 
         if key in self.shortcuts['move_line_down'] and self.cursor.y < self.max_lines:
             # print('move down')
@@ -492,10 +515,13 @@ class TextField(Entity):
                 self.text += '\n'
 
             self.move_line(y, 1)
+            self.render()
+            return
 
         if key in self.shortcuts['move_line_up'] and y > 0:
             self.move_line(y, -1)
-
+            self.render()
+            return
 
         if key in self.shortcuts['undo']:
             if not on_undo:
@@ -506,6 +532,8 @@ class TextField(Entity):
             cursor.y = on_undo[-1][1]
             cursor.x = on_undo[-1][2]
             on_undo.pop()
+            self.render()
+            return
 
         if key in self.shortcuts['redo']:
             if not self.on_redo:
@@ -516,7 +544,8 @@ class TextField(Entity):
             cursor.y = self.on_redo[-1][1]
             cursor.x = self.on_redo[-1][2]
             self.on_redo.pop()
-
+            self.render()
+            return
 
         if key in self.shortcuts['delete_line']:
             self._append_undo(self.text, y, 0)
@@ -531,6 +560,8 @@ class TextField(Entity):
                 self.cursor.y -= 1
 
             self.text = '\n'.join(lines)
+            self.render()
+            return
 
         if key in self.shortcuts['duplicate_line']:
             if len(lines) < self.max_lines:
@@ -587,9 +618,9 @@ class TextField(Entity):
 
         if key in self.shortcuts['select_all']:
             self.select_all()
+            return
 
-
-        elif self.register_mouse_input:
+        if self.register_mouse_input:
             if key == 'left mouse down' and mouse.hovered_entity == self.bg and mouse.point is not None:
                 cursor.position = self.get_mouse_position()
                 self.selection = [self.cursor.position, self.cursor.position]
@@ -602,7 +633,6 @@ class TextField(Entity):
                         self.selection[1] = self.cursor.position
 
 
-        self.render()
 
     def move_to_start_of_word(self):
         cursor = self.cursor
@@ -664,6 +694,9 @@ class TextField(Entity):
         if not self.active:
             return
 
+        if held_keys['shift'] and held_keys['alt']:
+            return
+
         if self.selection:  # delete selected text
             self.delete_selected()
 
@@ -684,8 +717,10 @@ class TextField(Entity):
 
     def render(self):
         lines = self.text.split('\n')
-
-        text = '\n'*self.scroll + '\n'.join(lines[self.scroll : self.max_lines + self.scroll])
+        if self.max_lines < 9999:
+            text = '\n'*self.scroll + '\n'.join(lines[self.scroll : self.max_lines + self.scroll])
+        else:
+            text = self.text
 
         if not hasattr(self.text_entity, 'raw_text') or self._prev_text != text or self.scroll != self._prev_scroll:
             # print(self.scroll)
@@ -703,11 +738,11 @@ class TextField(Entity):
             else:
                 self.text_entity.text = text
 
-            self.line_numbers.text = ('     \n'*self.scroll) + '\n'.join([str(e + self.scroll).rjust(3, '0') for e in range(min(len(lines), self.max_lines))])
+            self.line_numbers.text = ('     \n'*self.scroll) + '\n'.join([str(e + self.scroll).rjust(3, ' ') for e in range(min(len(lines), self.max_lines))])
 
             self._prev_text = text
             self._prev_scroll = self.scroll
-            self.scroll_parent.y = (self.scroll * Text.size)
+            self.scroll_parent.y = (self.scroll * Text.size * self.line_height)
             self.cursor.visible = self.cursor.y >= self.scroll and self.cursor.y < self.scroll + self.max_lines
             self.draw_selection()
 
@@ -788,7 +823,7 @@ if __name__ == '__main__':
     # Text.default_font = 'consola.ttf'
     # Text.default_resolution = 16*2
     # TreeView()
-    te = TextField(max_lines=20, scale=1, register_mouse_input = True, text='1234')
+    te = TextField(max_lines=9999, scale=1, register_mouse_input = True, text='1234')
     #te = TextField(max_lines=300, scale=1, register_mouse_input = True, scroll_size = (50,3))
     # te.line_numbers.enabled = True
     # for name in color.color_names:
@@ -812,7 +847,12 @@ if __name__ == '__main__':
         Aliquam sapien tellus, venenatis sit amet ante et, malesuada porta risus.
         Etiam et mi luctus, viverra urna at, maximus eros. Sed dictum faucibus purus,
         nec rutrum ipsum condimentum in. Mauris iaculis arcu nec justo rutrum euismod.
-        Suspendisse dolor tortor, congue id erat sit amet, sollicitudin facilisis velit.'''
+        Suspendisse dolor tortor, congue id erat sit amet, sollicitudin facilisis velit.
+        Aliquam sapien tellus, venenatis sit amet ante et, malesuada porta risus.
+        Etiam et mi luctus, viverra urna at, maximus eros. Sed dictum faucibus purus,
+        nec rutrum ipsum condimentum in. Mauris iaculis arcu nec justo rutrum euismod.
+        Suspendisse dolor tortor, congue id erat sit amet, sollicitudin facilisis velit.
+        '''*30
         )[1:]
     te.render()
 
