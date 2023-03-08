@@ -25,7 +25,9 @@ centering_offset = Vec2(-.5, -.5)
 min_dim = min(w, h)
 
 # from ursina.shaders import lit_with_shadows_shader
-terrain = Entity(model=Mesh(vertices=[], triangles=[], uvs=[], colors=[]), scale=(w,1,h), y=-.01, texture='grass', collider='box')
+terrain = Entity(model=Mesh(vertices=[], triangles=[], uvs=[], colors=[]), scale=(w,1,h), y=-.01,
+    # texture='grass',
+collider='box')
 terrain.scale *= 5
 
 # create the plane
@@ -50,6 +52,55 @@ ec = EditorCamera(rotation_smoothing=0, enabled=1, rotation=(30,30,0))
 # player = FirstPersonController()
 
 # def generate_normals_for_heightmap
+gradient_colors = {
+     '0'  : '#9d9867',
+    '11'  : '#9b9563',
+    '38'  : '#828131',
+    '43'  : '#696327',
+    '46'  : '#696327',
+    '47'  : '#716d37',
+    '49'  : '#6d6828',
+    '51'  : '#675f26',
+    '54'  : '#5d5b2a',
+    '55'  : '#4c483e',
+    '58'  : '#645c27',
+    '60'  : '#433d2e',
+    '62'  : '#5e5a3a',
+    '66'  : '#4b473c',
+    '73'  : '#3d3425',
+    '78'  : '#3a3a39',
+    '80'  : '#423d31',
+    '82'  : '#2e2d29',
+    '88'  : '#3d3c3a',
+    '255'  : '#000000',
+}
+def make_gradient(index_color_dict):    # returns a list of 256 colors
+    '''
+    given a dict of positions and colors, interpolates the colors into a list of 256 colors
+    example input: {'0':color.hex('#9d9867'), '38':color.hex('#828131'), '54':color.hex('#5d5b2a'), '255':color.hex('#000000')}
+    '''
+    gradient = [color.black for i in range(256)]
+
+    gradient_color_keys = tuple(index_color_dict.keys())
+    gradient_color_values = tuple(index_color_dict.values())
+
+    for i in range(len(gradient_colors)):
+        from_col = color.hex(gradient_color_values[i-1])
+        to_col = color.hex(gradient_color_values[i])
+
+        from_num = 0
+        if i > 0:
+            from_num = int(gradient_color_keys[i-1])
+        to_num = int(gradient_color_keys[i])
+        dist = to_num - from_num
+
+        for j in range(dist):
+            gradient[from_num+j] = lerp(from_col, to_col, j/dist)
+
+    return gradient
+
+gradient = make_gradient(gradient_colors)
+
 
 strength = 5
 def update():
@@ -88,7 +139,10 @@ def update():
             for z, column in enumerate(terrain.model.height_values):
                 for x, row in enumerate(column):
                     terrain.model.vertices.append(Vec3(x/w, terrain.model.height_values[x][z], z/h) + Vec3(centering_offset.x, 0, centering_offset.y))
-                    terrain.model.colors.append(hsv(0, 0, 1-(terrain.model.height_values[x][z]*1)))
+                    # terrain.model.colors.append(hsv(0, 0, 1-(terrain.model.height_values[x][z]*1)))
+                    y = int(terrain.model.height_values[x][z]*16)
+                    y = clamp(y, 0, 255)
+                    terrain.model.colors.append(gradient[y])
 
             terrain.model.generate()
 
