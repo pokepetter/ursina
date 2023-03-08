@@ -8,6 +8,8 @@ in vec2 p3d_MultiTexCoord0;
 uniform vec2 texture_scale;
 uniform vec2 texture_offset;
 out vec2 texcoord;
+in vec4 p3d_Color;
+out vec4 vertex_color;
 uniform vec2 projector_uv_scale;
 uniform vec2 projector_uv_offset;
 
@@ -19,6 +21,8 @@ out float z;
 void main() {
     gl_Position = p3d_ModelViewProjectionMatrix * p3d_Vertex;
     texcoord = (p3d_MultiTexCoord0 * texture_scale) + texture_offset;
+    vertex_color = p3d_Color;
+
     world_uv = (p3d_ModelMatrix * p3d_Vertex).xz * projector_uv_scale;
     world_uv -= projector_uv_offset;
     world_uv += vec2(.5);
@@ -33,6 +37,7 @@ uniform sampler2D p3d_Texture0;
 uniform vec4 p3d_ColorScale;
 in vec2 texcoord;
 out vec4 fragColor;
+in vec4 vertex_color;
 
 uniform sampler2D projector_texture;
 uniform vec4 projector_color;
@@ -57,7 +62,7 @@ void main() {
     color.rgb -= texture(projector_texture, world_uv).r * (vec3(1.) - projector_color.rgb) * projector_color.a;
     color.rgb = mix(color.rgb, p3d_Fog.color.rgb, clamp(inverse_lerp(p3d_Fog.start, p3d_Fog.end, z), 0.0, 1.0)); // linear fog
 
-    fragColor = color.rgba;
+    fragColor = color.rgba * vertex_color;
 }''',
 
 default_input = {
