@@ -110,7 +110,7 @@ class Mouse():
         if not application.base:
             return
 
-        print('return', value)
+        # print('return', value)
         # self.position = Vec3(0,0,0)
         window.set_cursor_hidden(value)
         application.base.win.requestProperties(window)
