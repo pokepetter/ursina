@@ -166,12 +166,11 @@ class Window(WindowProperties):
             'Reload Textures <gray>[F6]<default>' : application.hot_reloader.reload_textures,
             'Reload Code <gray>[F5]<default>' : application.hot_reloader.reload_code,
         },
-            width=.35, x=.62, enabled=False, eternal=True, name='cog_menu',
+            width=.4, scale=.75, x=(.5*self.aspect_ratio)-(.4*.75), enabled=False, eternal=True, name='cog_menu',
         )
         self.cog_menu.on_click = Func(setattr, self.cog_menu, 'enabled', False)
-        print(self.cog_menu.scale_y)
-        self.cog_menu.scale *= .75
-        self.cog_menu.text_entity.x += .025
+        # print(self.cog_menu.scale_y)
+        # self.cog_menu.scale *= .75
         self.cog_menu.highlight.color = color.azure
         self.cog_button = Button(parent=self.editor_ui, eternal=True, model='quad', texture='cog', scale=.015, origin=(1,-1), position=self.bottom_right, name='cog_button')
         self.cog_menu.y = self.cog_button.y + (self.cog_menu.bg.scale_y * self.cog_menu.scale_y) + Text.size
