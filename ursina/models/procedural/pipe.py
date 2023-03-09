@@ -18,7 +18,7 @@ class Pipe(Mesh):
         self.color_gradient = color_gradient
         self.b = None
         self.e = None
-        super().__init__(**kwargs)
+        super().__init__(mode=mode, **kwargs)
 
 
 
