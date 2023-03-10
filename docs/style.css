@@ -17,3 +17,10 @@ body {
 img {
     border-radius: 10px;
 }
+
+.sidebar {
+  position: fixed;
+  left: 10px;
+  bottom: 10px;
+  overflow-y: scroll;
+}

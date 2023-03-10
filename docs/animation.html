@@ -10,7 +10,7 @@
 </head>
 <body>
 <left>
-<title> building your app</title>
+<title>animation</title>
 <br>
 
 <div style="font-size: 20.0px;max-width: 1200px; margin: auto;">
@@ -62,69 +62,60 @@
 <a href="faq.html">F.A.Q.</a><br>
 <a href="building.html">Build and Release</a><br>
 </div><br>
-<div style="font-size: 100.0px;font-weight: bold;">
-Building<br>
+<br>
+<div style="font-size: 60.0px;font-weight: bold;">
+<div id="Animation"/><br>
+Animation<br>
 <div style="font-size: 20.0px;font-weight: normal;">
-<br>
-<br>
-<br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
-<div id="Building Your App with ursina.build"/><br>
-Building Your App with ursina.build<br>
+<div id="2D Animation"/><br>
+2D Animation<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
-Open cmd in the project folder and run<br>
-<div class="code_block" style="margin-left: 0em;">python -m ursina.build
-</div><br>
-It will then move the necessary files to a 'build' directory which you can then distribute.<br>
-<br>
-Package ursina application for Windows 10.<br>
-Provided with project folder path, creates a build folder where<br>
-it copies python and project's dependent packages. Requires a main.py file.<br>
-Copies game scripts and assets into 'build/scr' folder.<br>
-Creates a .bat file to start the game.<br>
-<br>
-<div class="code_block" style="margin-left: 0em;">--ignore            <gray># add assets to ignore</gray>
---name              <gray># change project name</gray>
---include_modules   <gray># include extra modules like this: --include_modules module_one,module_two,module_tree</gray>
---overwrite         <gray># don't ask to overwrite existing build, just overwrite</gray>
---skip_engine
---skip_game
---compile_to_pyc=True
---compile_to_pyc=False
-</div><br>
-Make sure to include any extra modules with --include_modules PIL,numpy for example.<br>
-Any errors while the application is running will be logged in log.txt instead of the console.<br>
-<br>
-<br>
+SpriteSheetAnimation<br>
+Animation<br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
-<div id="Building Your App with auto-py-to-exe (singlefile)"/><br>
-Building Your App with auto-py-to-exe (singlefile)<br>
+<div id="3D Animation"/><br>
+3D Animation<br>
 <div style="font-size: 20.0px;font-weight: normal;">
-This way is not recommended since it will slow to open and have a bigger file size.<br>
 <br>
-1. pip install auto-py-to-exe<br>
-2. Go to cmd and type auto-py-to-exe to open the gui<br>
-3. Enter script location<br>
-4. Select onefile<br>
-5. Select either console based or window based<br>
-6. Icon (optional)<br>
-7. Under additional files, click add folder and add:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;panda3d-1.10.6.dist-info,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;panda3d,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;direct,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;ursina-3.1.0.dist-info,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;ursina,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For skeletal animations you can use panda3d's Actor.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Export the model as .glft/.glb since that format support<br>
+&nbsp;&nbsp;&nbsp;&nbsp;mesh data, texture data, animations and more, all in one file.<br>
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;and any other files included for your app/game.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;You can find these in YOUR_PYTHON_FOLDER/Lib/site-packages/<br>
+<div class="code_block" style="margin-left: 1em;"><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> direct.actor.Actor <purple>import</purple> Actor
+
+app = Ursina()
+
+entity = <olive>Entity</olive>()
+<gray>#animations are stored within the file</gray>
+actor = Actor("filename.gltf")
+actor.reparent_to(entity)
+
+actor.loop("animation_name")  <gray># use .play() instead of loop() to play it once.</gray>
+
+app.run()
+</div><br>
+&nbsp;&nbsp;&nbsp;&nbsp;See the <a href="https://docs.panda3d.org/1.10/python/programming/models-and-actors/actor-animations">panda3d documentation</a> for more info.<br>
 <br>
-8. Go under "Advanced" to "–paths" and add folder "YOUR_PYTHON_FOLDER/Lib/site-packages/panda3d"<br>
-9. Set an output location (optional)<br>
-10. Finally select "convert .py to .exe"<br>
 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;FrameAnimation3d loads a sequence of models and cycles through them so it looks like it animates.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;This a memory intensive option, so it's recommended to not have very a high poly count.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;With this method you can't interpolate animations or move a single bone like you can with Actor.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;However, FrameAnimation3D is a very solid solution that is very unlikely to break or produce<br>
+&nbsp;&nbsp;&nbsp;&nbsp;bugs like skeletal animation often can. Also, since every frame is unique, it's possible to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;adjust each frame individually.<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;First, export your animation as a sequence of 3d models.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Assuming you have a bunch of models named run_cycle_000.obj, run_cycle_001.obj, run_cycle_002.obj and so on,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;you can load the animation like this:<br>
+<br>
+<div class="code_block" style="margin-left: 1em;">FrameAnimation<yellow>3</yellow>d(<green>'run_cycle_'</green>)
+</div><br>
 
 </body>
 </html>
