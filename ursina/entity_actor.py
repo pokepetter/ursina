@@ -17,6 +17,7 @@ from panda3d.core import TextureStage
 from panda3d.core import CullFaceAttrib
 from ursina.collider import *
 from direct.actor.Actor import Actor
+from direct.interval.ActorInterval import LerpAnimInterval
 
 from panda3d.core import Shader as Panda3dShader
 from ursina import shader
@@ -36,6 +37,7 @@ class AnimatedEntity(Entity, Actor):
         Actor.__init__(self, model, animations)
         self.entity = Entity(model=None, **kwargs)
         self.entity.model = self
+        self.current_anim=None
 
     @property
     def model(self):
@@ -44,20 +46,37 @@ class AnimatedEntity(Entity, Actor):
     @model.setter
     def model(self, value):
         self.entity.model = value
-        
 
-    def play_animation(self, anim_name):
-        self.play(anim_name)
-    def loop_animation(self, anim_name):
-        self.loop(anim_name)
+    def LerpAnim(self,toanim,rate=1,part=None):
+        current=self.get_current_anim()
+        self.enableBlend()
+        self.setPlayRate(rate,toanim,partName=part)
+        if toanim==self.current_anim:
+            pass     
+        elif self.current_anim!=None:
+            self.loop(toanim, partName=part)
+            Interv=LerpAnimInterval(self, 0.25, self.current_anim, toanim, partName=part)
+            Interv.start()
+        elif self.current_anim==None:
+            self.loop(toanim, partName=part)
+            Interv=LerpAnimInterval(self, 0.25, current, toanim, partName=part)
+            Interv.start()
+        else: #This part doesnt work
+            print(f"No animtion with name {toanim} found")
+        self.current_anim=toanim
+
+    
 
 if __name__ == '__main__':
     from ursina import *
     app=Ursina()
     #Get your own model for it too work
-    e1=AnimatedEntity(model='player.glb',color=color.red,scale=.01,x=-5)
+    e1=AnimatedEntity(model='player.glb',color=color.red,scale=.05)
+    e1.loop('idle')
     EditorCamera()
     def input(key):
         if key=='s':
-            e1.loop_animation('walk')
+            e1.LerpAnim('run')
+        elif key=='w':
+            e1.LerpAnim('walk')
     app.run()
