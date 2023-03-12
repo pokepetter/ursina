@@ -22,7 +22,6 @@ from direct.interval.ActorInterval import LerpAnimInterval
 from panda3d.core import Shader as Panda3dShader
 from ursina import shader
 from ursina.shader import Shader
-from ursina.string_utilities import print_info, print_warning
 from ursina.ursinamath import Bounds
 
 from ursina import color,Entity
@@ -31,6 +30,9 @@ try:
     from ursina.scene import instance as scene
 except:
     pass
+
+
+#Don't know what imports I do and don't need so im importing everything from entity.py
 
 class AnimatedEntity(Entity, Actor):
     def __init__(self, model, animations=None, **kwargs):
@@ -61,6 +63,7 @@ class AnimatedEntity(Entity, Actor):
             self.loop(toanim, partName=part)
             Interv=LerpAnimInterval(self, 0.25, current, toanim, partName=part)
             Interv.start()
+            print(3)
         else: #This part doesnt work
             print(f"No animtion with name {toanim} found")
         self.current_anim=toanim
@@ -76,7 +79,9 @@ if __name__ == '__main__':
     EditorCamera()
     def input(key):
         if key=='s':
+            e1.color=color.white
             e1.LerpAnim('run')
         elif key=='w':
+            e1.scale=1
             e1.LerpAnim('walk')
     app.run()
