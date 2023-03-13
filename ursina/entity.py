@@ -21,6 +21,8 @@ from ursina.mesh import Mesh
 from ursina.sequence import Sequence, Func, Wait
 from ursina.ursinamath import lerp
 from ursina import curve
+from direct.actor.Actor import Actor
+from direct.interval.ActorInterval import LerpAnimInterval
 from ursina.curve import CubicBezier
 from ursina import mesh_importer
 from ursina.mesh_importer import load_model
@@ -288,10 +290,10 @@ class Entity(NodePath):
 
     @parent.setter
     def parent(self, value):
-        if hasattr(self, '_parent') and self._parent and hasattr(self._parent, '_children') and self in self._parent._children:
+        if hasattr(self, '_parent') and self._parent and self in self._parent._children:
             self._parent._children.remove(self)
 
-        if hasattr(value, '_children') and not self in value._children:
+        if hasattr(value,'_children') and not self in value._children:
             value._children.append(self)
 
         self.reparent_to(value)
@@ -304,11 +306,10 @@ class Entity(NodePath):
 
     @world_parent.setter
     def world_parent(self, value):  # change the parent, but keep position, rotation and scale
-        if hasattr(self, '_parent') and self._parent and hasattr(self._parent, '_children') and self in self._parent._children:
+        if hasattr(self, '_parent') and self._parent and self in self._parent._children:
             self._parent._children.remove(self)
-            print('remove from world parent', self.model)
 
-        if hasattr(value, '_children') and not self in value._children:
+        if hasattr(value,'_children') and not self in value._children:
             value._children.append(self)
 
         self.wrtReparentTo(value)
@@ -1291,8 +1292,44 @@ class Entity(NodePath):
 
         return self.hit
 
+class AnimatedEntity(Entity, Actor):
+    def __init__(self, model, animations=None, **kwargs):
+        Actor.__init__(self, model, animations)
+        self.entity = Entity(model=None, input=self.input,update=self.update,**kwargs)
+        self.entity.model = self
+        self.current_anim=None
 
+    @property
+    def model(self):
+        return self.entity.model
 
+    @model.setter
+    def model(self, value):
+        self.entity.model = value
+
+    def LerpAnim(self,toanim,rate=1,part=None):
+        current=self.get_current_anim()
+        self.enableBlend()
+        self.setPlayRate(rate,toanim,partName=part)
+        if toanim==self.current_anim:
+            pass     
+        elif self.current_anim!=None:
+            self.loop(toanim, partName=part)
+            Interv=LerpAnimInterval(self, 0.25, self.current_anim, toanim, partName=part)
+            Interv.start()
+        elif self.current_anim==None:
+            self.loop(toanim, partName=part)
+            Interv=LerpAnimInterval(self, 0.25, current, toanim, partName=part)
+            Interv.start()
+            print(3)
+        else: #This part doesnt work
+            print(f"No animtion with name {toanim} found")
+        self.current_anim=toanim
+
+    def input(self,key):
+        pass
+    def update(self):
+        pass
 if __name__ == '__main__':
     from ursina import *
     app = Ursina()

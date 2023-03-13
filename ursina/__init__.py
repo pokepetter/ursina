@@ -22,8 +22,7 @@ from ursina import color
 from ursina.color import Color, hsv, rgb
 from ursina.sequence import Sequence, Func, Wait
 from ursina import curve
-from ursina.entity import Entity
-from ursina.entity_actor import AnimatedEntity
+from ursina.entity import Entity,AnimatedEntity
 from ursina.collider import *
 from ursina.raycast import raycast
 from ursina.boxcast import boxcast
