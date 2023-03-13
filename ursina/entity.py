@@ -306,7 +306,6 @@ class Entity(NodePath):
     def world_parent(self, value):  # change the parent, but keep position, rotation and scale
         if hasattr(self, '_parent') and self._parent and hasattr(self._parent, '_children') and self in self._parent._children:
             self._parent._children.remove(self)
-            print('remove from world parent', self.model)
 
         if hasattr(value, '_children') and not self in value._children:
             value._children.append(self)
