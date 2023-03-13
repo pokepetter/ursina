@@ -24,7 +24,7 @@ class InputField(Button):
         self.on_submit = None   # function to be called when you press self.submit_on.
         self.on_value_changed = None
 
-        self.text_field = TextField(world_parent = self, x=-.45, y=.3, z=-.1, max_lines=max_lines, character_limit=character_limit, register_mouse_input = True)
+        self.text_field = TextField(world_parent=self, x=-.45, y=.3, z=-.1, max_lines=max_lines, character_limit=character_limit, register_mouse_input=True)
         destroy(self.text_field.bg)
         self.text_field.bg = self
 

@@ -761,6 +761,7 @@ class QuickGrabber(Entity):
                 self.start_position = self.offset_helper.world_position
 
                 self.target_entity.original_parent = self.target_entity.parent
+                self.target_entity._original_world_position = self.target_entity.world_position
                 self.target_entity.world_parent = self.offset_helper
 
                 self.is_dragging = True
@@ -770,6 +771,14 @@ class QuickGrabber(Entity):
             self.is_dragging = False
             mouse.traverse_target = self._original_mouse_traverse_target
             self.target_entity.world_parent = self.target_entity.original_parent
+
+            if self.target_entity.world_position != self.target_entity._original_world_position:
+                changes = []
+                for e in level_editor.selection:
+                    changes.append([level_editor.entities.index(e), 'world_position', e._original_world_position, e.world_position])
+
+                level_editor.current_scene.undo.record_undo(changes)
+
             self.target_entity = None
             self.plane.enabled = False
             level_editor.selection = []
@@ -877,6 +886,9 @@ class QuickRotator(Entity):
                 level_editor.selection = [selector.get_hovered_entity(), ]
                 level_editor.render_selection()
 
+            if not level_editor.selection:
+                return
+
             self.target_entity = level_editor.selection[0]
             rotation_gizmo.subgizmos['y'].input('left mouse down')
             rotation_gizmo.subgizmos['y'].start_dragging()
@@ -945,8 +957,9 @@ class Selector(Entity):
             clicked_entity = self.get_hovered_entity()
 
             if clicked_entity in level_editor.entities and not held_keys['alt']:
-                if held_keys['shift'] and not clicked_entity in level_editor.selection:
-                    level_editor.selection.append(clicked_entity) # append
+                if held_keys['shift']:
+                    if not clicked_entity in level_editor.selection:
+                        level_editor.selection.append(clicked_entity) # append
                 else:
                     print(clicked_entity)
                     level_editor.selection = [clicked_entity, ]   # overwrite
@@ -1158,10 +1171,11 @@ class PointOfViewSelector(Entity):
         self.rotation = -level_editor.editor_camera.rotation
 
     def input(self, key):
-        if key == '1':   level_editor.editor_camera.animate_rotation((0,0,0)) # front
-        elif key == '3': level_editor.editor_camera.animate_rotation((0,90,0)) # right
-        elif key == '7': level_editor.editor_camera.animate_rotation((90,0,0)) # top
-        elif key == '5': camera.orthographic = not camera.orthographic
+        if held_keys['shift']:
+            if key == '1':   level_editor.editor_camera.animate_rotation((0,0,0)) # front
+            elif key == '3': level_editor.editor_camera.animate_rotation((0,90,0)) # right
+            elif key == '7': level_editor.editor_camera.animate_rotation((90,0,0)) # top
+            elif key == '5': camera.orthographic = not camera.orthographic
 
 
 # class PaintBucket(Entity):
@@ -1387,16 +1401,17 @@ class Inspector(Entity):
                     try:
                         value = float(eval(field.text))
                         if isinstance(value, float):
-                            field.text = str(value)
-                            # for e in level_editor.selection:
-                            #     setattr(e, names[x], value)
+                            field.text_field.text_entity.text = str(value)
+                            for e in level_editor.selection:
+                                # print('set', e, names[x], value)
+                                setattr(e, names[x], value)
                     except: # invalid/incomplete math
                         # print('invalid')
                         return
 
                 # field.submit_on = 'enter'
                 field.on_submit = on_submit
-                # field.on_value_changed = on_submit
+                field.on_value_changed = on_submit
 
                 self.transform_fields.append(field)
                 self.input_fields.append(field)
@@ -1938,10 +1953,13 @@ class PokeShape(Button):
     def input(self, key):
         super().input(key)
         if key == 'tab':
+            if not level_editor.selection:
+                self.edit_mode = False
+
             if self in level_editor.selection or True in [e in level_editor.selection for e in self.point_gizmos]:
                 self.edit_mode = not self.edit_mode
 
-        if key == 'left mouse down' or key == 'd':
+        if self.edit_mode and (key == 'left mouse down' or key == 'd'):
             points_in_range = [(distance_2d(world_position_to_screen_position(v), mouse.position), v) for v in self.add_new_point_renderer.model.vertices]
             points_in_range = [e for e in points_in_range if e[0] < .075/2]
             points_in_range.sort()
@@ -2075,9 +2093,10 @@ class SunHandler(Entity):
         if key == 'l':
             print('toggle sun')
             # self.sun.enabled = not self.sun.enabled
-            for e in level_editor.entities:
-                # e.shader = unlit_shader
-                e.unlit = not e.unlit
+            self.sun.update_bounds()
+            # for e in level_editor.entities:
+            #     # e.shader = unlit_shader
+            #     e.unlit = not e.unlit
 
 from ursina.prefabs.radial_menu import RadialMenu
 class RightClickMenu(Entity):
@@ -2228,7 +2247,7 @@ def get_major_axis_relative_to_view(entity): # if we're looking at the entity fr
 #     for key, value in kwargs.items():
 #         setattr(self, key, value)
 
-input_handler.bind('a', 'y')
+# input_handler.bind('a', 'y')
 
 if __name__ == '__main__':
     goto_scene(0,0)
@@ -2242,5 +2261,7 @@ if __name__ == '__main__':
     # level_editor.entities.append(poke_shape)
     # pipe = PipeEditor()
     # level_editor.entities.append(pipe)
+    from ursina.shaders import ssao_shader
+    camera.shader = ssao_shader
     Sky()
     app.run()
