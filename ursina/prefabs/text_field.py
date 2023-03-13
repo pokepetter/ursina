@@ -77,12 +77,49 @@ class TextField(Entity):
             # 'select_word_left': ('ctrl+shift+left arrow', 'ctrl+shift+left arrow hold'),
             # 'select_word_right': ('ctrl+shift+right arrow', 'ctrl+shift+right arrow hold'),
         }
+        def middle_click_input(key):
+            if self.register_mouse_input:
+                if key == 'middle mouse down':
+                    self.middle_click_scroller.start_y = mouse.y
+                    self._original_scroll_amount = self.scroll_amount
+                elif key == 'middle mouse up':
+                    self.middle_click_scroller.start_y = None
+                    self.scroll_amount = self._original_scroll_amount
+
+        def middle_click_update():
+            if not mouse.middle:
+                return
+            self.middle_click_scroller.t += time.dt
+            if self.middle_click_scroller.t < self.middle_click_scroller.update_rate:
+                return
+
+            # self.middle_click_scroller.update_rate = 1-mouse.delta_drag[0]
+            # print('-aaaaaaaaaaa', 1-mouse.delta_drag[0])
+            dist = abs(mouse.y - self.middle_click_scroller.start_y)
+            self.scroll_amount = 1
+            if dist > .1:
+                self.scroll_amount = 4
+            elif dist > .2:
+                self.scroll_amount = 6
+            # elif dist > .4:
+            #     self.scroll_amount = 12
+
+            self.middle_click_scroller.t = 0
+
+            if self.register_mouse_input:
+                if mouse.y < self.middle_click_scroller.start_y:
+                    self.input('scroll down')
+                if mouse.y > self.middle_click_scroller.start_y:
+                    self.input('scroll up')
+
+        self.middle_click_scroller = Entity(parent=self, start_y=None, input=middle_click_input, update=middle_click_update, t=0, update_rate=.05)
 
 
         for key, value in kwargs.items():
             setattr(self, key, value)
 
         self._prev_text = ''
+
 
 
     @property
@@ -306,11 +343,20 @@ class TextField(Entity):
         # print('-------------', key)
         text, cursor, on_undo, add_text, erase = self.text, self.cursor, self.on_undo, self.add_text, self.erase
 
+        if self.register_mouse_input and key == 'left mouse down':
+            self.active = (mouse.hovered_entity == self.bg)
+
+        if not self.active:
+            return
+
         if mouse.hovered_entity == self.bg:
             if key in self.shortcuts['scroll_down']:
                 if self.max_lines < 9999:
-                    self.scroll = clamp(self.scroll+self.scroll_amount, 0, self.max_lines)
-                    self.render()
+                    if self.scroll < 9999:
+                        self.scroll = clamp(self.scroll+self.scroll_amount, 0, 9999)
+                        self.y = .4-.025
+                        self.animate('y', .4, duration=.045, curve=curve.linear)
+                        self.render()
                 else:
                     self.scroll = clamp(self.scroll+self.scroll_amount, 0, 9999)
                     self.scroll_parent.y = (self.scroll * Text.size * self.line_height)
@@ -318,19 +364,15 @@ class TextField(Entity):
 
             elif key in self.shortcuts['scroll_up']:
                 if self.max_lines < 9999:
-                    self.scroll = clamp(self.scroll-self.scroll_amount, 0, self.max_lines)
+                    # if self.scroll > 0:
+                    self.scroll = clamp(self.scroll-self.scroll_amount, 0, 9999)
+                    # self.y = .4-.025
+                    # self.animate('y', .4, duration=.045, curve=curve.linear)
                     self.render()
                 else:
                     self.scroll = clamp(self.scroll-self.scroll_amount, 0, 9999)
                     self.scroll_parent.y = (self.scroll * Text.size * self.line_height)
                 return
-
-
-        if self.register_mouse_input and key == 'left mouse down':
-            self.active = (mouse.hovered_entity == self.bg)
-
-        if not self.active:
-            return
 
         if key == 'double click':
             t = time.time()
@@ -752,7 +794,7 @@ class TextField(Entity):
 
 
     def update(self):
-        if self.register_mouse_input and mouse.left and mouse.moving:
+        if self.active and self.register_mouse_input and mouse.left and mouse.moving:
             self.cursor.position = self.get_mouse_position()
             if self.selection:
                 self.selection[1] = self.cursor.position
@@ -823,7 +865,7 @@ if __name__ == '__main__':
     # Text.default_font = 'consola.ttf'
     # Text.default_resolution = 16*2
     # TreeView()
-    te = TextField(max_lines=9999, scale=1, register_mouse_input = True, text='1234')
+    te = TextField(max_lines=50, scale=1, register_mouse_input = True, text='1234')
     #te = TextField(max_lines=300, scale=1, register_mouse_input = True, scroll_size = (50,3))
     # te.line_numbers.enabled = True
     # for name in color.color_names:
