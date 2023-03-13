@@ -1320,7 +1320,6 @@ class AnimatedEntity(Entity, Actor):
             self.loop(toanim, partName=part)
             Interv=LerpAnimInterval(self, 0.25, current, toanim, partName=part)
             Interv.start()
-            print(3)
         else: #This part doesnt work
             print(f"No animtion with name {toanim} found")
         self.current_anim=toanim
