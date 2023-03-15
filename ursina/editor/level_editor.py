@@ -3,6 +3,9 @@ from ursina.shaders import unlit_shader, lit_with_shadows_shader, matcap_shader,
 from time import perf_counter
 
 
+# from ursina.editor.prefabs.poke_shape import PokeShape
+
+
 
 class LevelEditorScene(Entity):
     def __init__(self, x, y, name, **kwargs):
@@ -1084,7 +1087,12 @@ class Spawner(Entity):
         self.target = None
         for i, prefab in enumerate([Cube, Pyramid, PokeShape]):
             button = Button(parent=level_editor.ui, scale=.075/2, origin=(.5,-.5), position=window.bottom_right+Vec2(-.05 -(i*.0375),0), on_click=Func(self.spawn_entity, prefab))
-            button.text = str(prefab)
+            if hasattr(prefab, 'icon'):
+                button.icon = prefab.icon
+            else:
+                button.text = '\n'.join(chunk_list(prefab.__name__, 5))
+                button.text_entity.scale = .5
+
             # self.button.i = Entity(parent=self.button, model='wireframe_cube', rotation=(-10,10,0), scale=.5, position=(-.5,.5,-1))
 
     def input(self, key):
@@ -1396,15 +1404,14 @@ class Inspector(Entity):
                 if y == 2:
                     default = '1'
 
-                field = InputField(max_width=5, model='quad', parent=self.name_field, scale_x=1/3, scale_y=1, origin=(-.5,.5), default_value=default, limit_content_to=ContentTypes.math, x=x/3, y=-y-1, color=color._8)
+                field = InputField(max_width=8, model='quad', parent=self.name_field, scale_x=1/3, scale_y=1, origin=(-.5,.5), default_value=default, limit_content_to=ContentTypes.math, x=x/3, y=-y-1, color=color._8)
                 def on_submit(names=names, x=x, field=field):
                     try:
-                        value = float(eval(field.text))
+                        value = float(eval(field.text[:8]))
                         if isinstance(value, float):
-                            field.text_field.text_entity.text = str(value)
+                            field.text_field.text_entity.text = str(value)[:8]
                             for e in level_editor.selection:
-                                # print('set', e, names[x], value)
-                                setattr(e, names[x], value)
+                                setattr(e, names[x], float(field.text_field.text_entity.text))
                     except: # invalid/incomplete math
                         # print('invalid')
                         return
@@ -1472,7 +1479,7 @@ class Inspector(Entity):
 
                 self.name_field.text_field.text_entity.text = selected.name
                 for i, attr_name in enumerate(('world_x', 'world_y', 'world_z', 'world_rotation_x', 'world_rotation_y', 'world_rotation_z', 'world_scale_x', 'world_scale_y', 'world_scale_z')):
-                    self.transform_fields[i].text = str(getattr(selected, attr_name))[:5]
+                    self.transform_fields[i].text = str(round(getattr(selected, attr_name),4))
 
                 [destroy(e) for e in self.shader_inputs_parent.children]
                 if selected.shader:
@@ -1818,7 +1825,7 @@ class Duplicator(Entity):
                 self.axis_lock = None
 
 
-class PokeShape(Button):
+class PokeShape(Entity):
     default_values = Entity.default_values | dict(points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,.5), Vec3(-.5,0,.5)], name='poke_shape') # combine dicts
 
     def __init__(self, points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,.5), Vec3(-.5,0,.5)], **kwargs):
@@ -1951,7 +1958,6 @@ class PokeShape(Button):
 
 
     def input(self, key):
-        super().input(key)
         if key == 'tab':
             if not level_editor.selection:
                 self.edit_mode = False
@@ -1993,6 +1999,7 @@ class PokeShape(Button):
 
         elif self.edit_mode and key.endswith(' up'):
             invoke(self.generate, delay=3/60)
+
 
 
 class PipeEditor(Entity):
@@ -2192,6 +2199,9 @@ PointOfViewSelector()
 Help()
 # search = Search(parent=level_editor)
 
+# import ursina
+# ursina.editor.prefabs.poke_shape.level_editor = level_editor
+# ursina.editor.prefabs.poke_shape.quick_grabber = quick_grabber
 
 debug_text = Text(y=-.45)
 
