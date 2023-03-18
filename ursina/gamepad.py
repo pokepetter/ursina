@@ -6,7 +6,17 @@ if __name__ == '__main__':
     text_entity = Text()
     player = Entity(model='cube', color=color.azure)
 
+    input_handler.gamepads = base.devices.getDevices()
+    print(gamepad.buttons)
+    print(gamepad.axes)
+
     def update():
+        for button in gamepad.buttons:
+            print(button.handle.name,":", button.pressed)
+
+        for axis in gamepad.axes:
+            print(axis.axis, ":", axis.value)
+
         player.x += held_keys['gamepad left stick x'] * time.dt * 5
         player.y += held_keys['gamepad left stick y'] * time.dt * 5
         text_entity.text = '\n'.join([f'{key}: {held_keys[key]}' for key in ('gamepad left trigger', 'gamepad right trigger', 'gamepad right stick x', 'gamepad right stick y')])
