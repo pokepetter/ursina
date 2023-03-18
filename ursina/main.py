@@ -194,13 +194,14 @@ class Ursina(ShowBase):
                 continue
 
             if hasattr(entity, 'input') and callable(entity.input):
-                entity.input(key)
+                if entity.input(key):
+                    break
 
             if hasattr(entity, 'scripts'):
                 for script in entity.scripts:
                     if script.enabled and hasattr(script, 'input') and callable(script.input):
-                        script.input(key)
-
+                        if script.input(key):
+                            break
 
         mouse.input(key)
 
