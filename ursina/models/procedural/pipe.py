@@ -16,8 +16,8 @@ class Pipe(Mesh):
         self.cap_ends = cap_ends
         self.mode = mode
         self.color_gradient = color_gradient
-        self.b = None
-        self.e = None
+        self.prev = None
+        self.curr = None
         super().__init__(mode=mode, **kwargs)
 
 
@@ -25,37 +25,41 @@ class Pipe(Mesh):
     def generate(self):
         shape = self.base_shape.vertices
         # make the base shape and rotate it
-        if not self.b:
-            self.b = Entity(position=self.path[0], scale=self.thicknesses[0], origin=self.origin, enabled=False)
+        if not self.prev:
+            self.prev = Entity(position=self.path[0], scale=self.thicknesses[0], origin=self.origin, enabled=False)
             for p in shape:
-                Entity(parent=self.b, position=Vec3(p), scale=(.05, .05, .05), color=color.yellow, enabled=False)
+                Entity(parent=self.prev, position=Vec3(p), scale=(.05, .05, .05), color=color.yellow, enabled=False)
 
-            self.b.look_at(self.path[1])
-            self.e = duplicate(self.b)
+            self.prev.look_at(self.path[1])
+            self.curr = duplicate(self.prev)
 
         verts = []
         self.colors = []
 
         # cap start
         if self.cap_ends:
-            for i in range(len(self.b.children)):
+            for i in range(len(self.prev.children)):
                 verts.append(self.path[0])
-                verts.append(self.b.children[i].world_position)
-                if i >= len(self.b.children)-1:
-                    verts.append(self.b.children[0].world_position)
+                verts.append(self.prev.children[i].world_position)
+                if i >= len(self.prev.children)-1:
+                    verts.append(self.prev.children[0].world_position)
                 else:
-                    verts.append(self.b.children[i+1].world_position)
+                    verts.append(self.prev.children[i+1].world_position)
 
                 if self.color_gradient:
                     self.colors.extend([self.color_gradient[0], ]*3)
 
         for i in range(1, len(self.path)):
-            self.b.position = self.path[i-1]
+            self.prev.position = self.path[i-1]
+            self.curr.position = self.path[i]
             if self.look_at:
-                self.b.look_at(self.path[i])
-            self.e.position = self.path[i]
-            if i+1 < len(self.path) and self.look_at:
-                self.e.look_at(self.path[i+1])
+                self.prev.look_at(self.path[i])
+
+                if i+1 < len(self.path):
+                    self.curr.look_at(self.path[i+1])
+
+                if i == len(self.path)-1 and self.path[0] == self.path[-1]: # if the first and last point are the same, make the end math the rotation of the start.
+                    self.curr.look_at(self.path[1])
 
             # for debugging sections
             # clone = duplicate(e)
@@ -63,24 +67,24 @@ class Pipe(Mesh):
             # clone.scale *= 1.1
 
             try:
-                self.e.scale = self.thicknesses[i]
-                self.b.scale = self.thicknesses[i-1]
+                self.curr.scale = self.thicknesses[i]
+                self.prev.scale = self.thicknesses[i-1]
             except:
                 pass
 
             # add sides
-            for j in range(len(self.e.children)):
+            for j in range(len(self.curr.children)):
                 n = j+1
-                if j == len(self.e.children)-1:
+                if j == len(self.curr.children)-1:
                     n = 0
                 verts.extend([
-                    self.e.children[j].world_position,
-                    self.b.children[n].world_position,
-                    self.b.children[j].world_position,
+                    self.curr.children[j].world_position,
+                    self.prev.children[n].world_position,
+                    self.prev.children[j].world_position,
 
-                    self.e.children[n].world_position,
-                    self.b.children[n].world_position,
-                    self.e.children[j].world_position
+                    self.curr.children[n].world_position,
+                    self.prev.children[n].world_position,
+                    self.curr.children[j].world_position
                 ])
 
                 if self.color_gradient:
@@ -97,12 +101,12 @@ class Pipe(Mesh):
 
         # cap end
         if self.cap_ends:
-            for i in range(len(self.e.children)):
-                if i >= len(self.e.children)-1:
-                    verts.append(self.e.children[0].world_position)
+            for i in range(len(self.curr.children)):
+                if i >= len(self.curr.children)-1:
+                    verts.append(self.curr.children[0].world_position)
                 else:
-                    verts.append(self.e.children[i+1].world_position)
-                verts.append(self.e.children[i].world_position)
+                    verts.append(self.curr.children[i+1].world_position)
+                verts.append(self.curr.children[i].world_position)
                 verts.append(self.path[-1])
 
                 if self.color_gradient:
@@ -118,9 +122,12 @@ class Pipe(Mesh):
 if __name__ == '__main__':
     app = Ursina()
     # e = Entity(model=Prism(mode='line'))
-    path = (Vec3(0,0,0), Vec3(0,1,0), Vec3(0,3,0), Vec3(0,4,0), Vec3(2,5,0))
-    thicknesses = ((1,1), (.5,.5), (.75,.75), (.5,.5), (1,1))
-    e = Entity(model=Pipe(path=path, thicknesses=thicknesses))
+    path = [e*5 for e in Circle().vertices]
+    # path = [e.xzy for e in path]
+
+    path.append(path[0])
+    # thicknesses = ((1,1), (.5,.5), (.75,.75), (.5,.5), (1,1))
+    e = Entity(model=Pipe(path=path, cap_ends=False))
     # print(e.model.colors)
     print(len(e.model.vertices), len(e.model.colors))
     # e.model.colorize()
