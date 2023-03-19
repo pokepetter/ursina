@@ -190,7 +190,10 @@ def get_blender(blend_file):    # try to get a matching blender version in case 
 
 
 def compress_models(path=None, outpath=application.compressed_models_folder, name='*'):
-
+    if "/" in name:
+        print_warning(f'Path character "/" found in blender name ({name}), to succesfully import .blend files, use only the file name");
+        raise Exception("Error in model name, see warning")
+    
     if not application.compressed_models_folder.exists():
         application.compressed_models_folder.mkdir()
 
