@@ -55,7 +55,7 @@ class Entity(NodePath):
         self._children = []
         super().__init__(self.__class__.__name__)
 
-        self.name = camel_to_snake(self.type)
+        self.name = camel_to_snake(self.__class__.__name__)
         self.enabled = True     # disabled entities will not be visible nor run code.
         self.visible = True
         self.ignore = False     # if True, will not try to run code.
@@ -269,6 +269,7 @@ class Entity(NodePath):
         elif name == 'double_sided':
             self.setTwoSided(value)
 
+
         elif hasattr(self, '_shader') and self.shader and name in self._shader.default_input:
             # print('set shader input:', name, value)
             object.__setattr__(self, name, value)
@@ -313,10 +314,6 @@ class Entity(NodePath):
         self.wrtReparentTo(value)
         self._parent = value
 
-
-    @property
-    def type(self): # get class name.
-        return self.__class__.__name__
 
     @property
     def types(self): # get all class names including those this inhertits from.
