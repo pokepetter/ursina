@@ -877,6 +877,15 @@ class Entity(NodePath):
         if value:
             self.setBillboardPointEye(value)
 
+    @property
+    def wireframe(self):
+        return self._wireframe
+
+    @wireframe.setter
+    def wireframe(self, value):
+        self._wireframe = value
+        self.setRenderModeWireframe(value)
+
 
     def generate_sphere_map(self, size=512, name=f'sphere_map_{len(scene.entities)}'):
         from ursina import camera
