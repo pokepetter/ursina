@@ -7,7 +7,6 @@ import csv
 # from ursina.editor.prefabs.poke_shape import PokeShape
 
 
-
 class LevelEditorScene:
     def __init__(self, x, y, name, **kwargs):
         super().__init__()
@@ -128,8 +127,6 @@ class LevelEditor(Entity):
         self.local_global_menu.scale *= .75
         self.local_global_menu.on_value_changed = self.render_selection
         self.target_fov = 90
-
-        self.prefabs = [Cube, Pyramid, PokeShape]
 
     @property
     def entities(self):
@@ -698,7 +695,7 @@ class BoxGizmo(Entity):
 
 class GizmoToggler(Entity):
     def __init__(self, **kwargs):
-        super().__init__()
+        super().__init__(parent=level_editor)
         self.animator = Animator({
             'w' : gizmo.arrow_parent,
             'e' : scale_gizmo,
@@ -715,7 +712,7 @@ class GizmoToggler(Entity):
 
 class QuickGrabber(Entity):
     def __init__(self, **kwargs):
-        super().__init__()
+        super().__init__(parent=level_editor)
         self.target_entity = None
         self.target_axis = None
         self.plane = Entity(model='quad', collider='box', scale=Vec3(100,100,1), visible_self=False, enabled=False)
@@ -815,8 +812,6 @@ class QuickScale(Entity):
 
 
     def input(self, key):
-
-
         if held_keys['control'] or held_keys['shift'] or held_keys['alt']:
             return
 
@@ -879,6 +874,9 @@ class QuickScale(Entity):
 
 
 class QuickRotator(Entity):
+    def __init__(self):
+        super().__init__(parent=level_editor)
+
     def input(self, key):
         if held_keys['control'] or held_keys['shift'] or held_keys['alt']:
             return
@@ -907,6 +905,9 @@ class QuickRotator(Entity):
 class RotateRelativeToView(Entity):
     _rotation_helper = Entity(name='RotateRelativeToView_rotation_helper')
     sensitivity = Vec2(200,200)
+
+    def __init__(self, **kwargs):
+        super().__init__(parent=level_editor, **kwargs)
 
     def input(self, key):
         if held_keys['control'] or held_keys['shift'] or held_keys['alt']:
@@ -951,6 +952,9 @@ class RotateRelativeToView(Entity):
 
 
 class Selector(Entity):
+    def __init__(self):
+        super().__init__(parent=level_editor)
+
     def input(self, key):
         if key == 'left mouse down':
             if mouse.hovered_entity:
@@ -1006,6 +1010,9 @@ class Selector(Entity):
 
 
 class SelectionBox(Entity):
+    def __init__(self, **kwargs):
+        super().__init__(parent=level_editor.ui, **kwargs)
+
     def input(self, key):
         if key == 'left mouse down':
             if mouse.hovered_entity and not mouse.hovered_entity in level_editor.selection:
@@ -1087,7 +1094,7 @@ class Spawner(Entity):
         self.update_menu()
 
     def update_menu(self):
-        for i, prefab in enumerate(level_editor.prefabs):
+        for i, prefab in enumerate(prefabs):
             button = Button(parent=level_editor.ui, scale=.075/2, origin=(.5,-.5), position=window.bottom_right+Vec2(-.05 -(i*.0375),0), on_click=Func(self.spawn_entity, prefab))
             if hasattr(prefab, 'icon'):
                 button.icon = prefab.icon
@@ -1139,6 +1146,9 @@ class Spawner(Entity):
 
 
 class Deleter(Entity):
+    def __init__(self):
+        super().__init__(parent=level_editor)
+
     def input(self, key):
         if level_editor.selection and key == 'delete':
             self.delete_selected()
@@ -1159,6 +1169,9 @@ class Deleter(Entity):
 
 
 class PointOfViewSelector(Entity):
+    def __init__(self):
+        super().__init__(parent=level_editor)
+
     def __init__(self, **kwargs):
 
         super().__init__(parent=level_editor.ui, model='cube', collider='box', texture='white_cube', scale=.05, position=window.top_right-Vec2(.1,.05))
@@ -1517,7 +1530,7 @@ class Inspector(Entity):
 
 class MenuHandler(Entity):
     def __init__(self):
-        super().__init__()
+        super().__init__(parent=level_editor)
         self._state = None
         self.states = {
             'None' : None,
@@ -1743,7 +1756,7 @@ class Help(Button):
 
 class Duplicator(Entity):
     def __init__(self, **kwargs):
-        super().__init__(clones=None)
+        super().__init__(parent=level_editor, clones=None)
         self.plane = Entity(model='plane', collider='box', scale=Vec3(100,.1,100), enabled=False, visible=False)
         self.dragger = Draggable(parent=scene, model=None, collider=None, enabled=False)
         self.dragging = False
@@ -2093,7 +2106,7 @@ class PipeEditor(Entity):
 
 class SunHandler(Entity):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__(parent=level_editor, **kwargs)
         self.sun = DirectionalLight(parent=level_editor, shadow_map_resolution=(2048,2048))
         self.sun.look_at(Vec3(-2,-1,-1))
 
@@ -2109,7 +2122,7 @@ class SunHandler(Entity):
 from ursina.prefabs.radial_menu import RadialMenu
 class RightClickMenu(Entity):
     def __init__(self):
-        super().__init__()
+        super().__init__(parent=level_editor.ui)
         self.radial_menu = RadialMenu(
             parent=level_editor.ui,
             buttons = (
@@ -2136,7 +2149,7 @@ class RightClickMenu(Entity):
 
 class Search(Entity):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__(parent=level_editor.ui, **kwargs)
 
         self.input_field = InputField(parent=level_editor.ui, enabled=False)
 
@@ -2159,7 +2172,7 @@ level_editor = LevelEditor()
 
 
 # AmbientLight(color=color._16)
-sun_handler = SunHandler(parent=level_editor)
+sun_handler = SunHandler()
 
 for x in range(8):
     for y in range(8):
@@ -2174,16 +2187,18 @@ print('-----', perf_counter() - t)
 
 scale_gizmo = ScaleGizmo()
 box_gizmo = BoxGizmo()
-gizmo_toggler = GizmoToggler(parent=level_editor)
+gizmo_toggler = GizmoToggler()
 
-quick_grabber = QuickGrabber(parent=level_editor)   # requires gizmo, selector
+quick_grabber = QuickGrabber()   # requires gizmo, selector
 QuickScale()    # requires scale_gizmo, gizmo_toggler, selector
 QuickRotator()
 RotateRelativeToView(target_entity=None)
-selector = Selector(parent=level_editor)
-selection_box = SelectionBox(parent=level_editor.ui, model=Quad(0, mode='line'), origin=(-.5,-.5,0), scale=(0,0,1), color=color.white33, mode='new')
+selector = Selector()
+selection_box = SelectionBox(model=Quad(0, mode='line'), origin=(-.5,-.5,0), scale=(0,0,1), color=color.white33, mode='new')
+
+prefabs = [Cube, Pyramid, PokeShape]
 level_editor.spawner = Spawner()
-deleter = Deleter(parent=level_editor)
+deleter = Deleter()
 level_menu = LevelMenu()
 level_editor.goto_scene = level_menu.goto_scene
 duplicator = Duplicator()
@@ -2198,6 +2213,8 @@ hierarchy_list = HierarchyList()
 inspector = Inspector()
 PointOfViewSelector()
 Help()
+
+
 # search = Search(parent=level_editor)
 
 # import ursina
