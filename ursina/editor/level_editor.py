@@ -1,13 +1,14 @@
 from ursina import *
 from ursina.shaders import unlit_shader, lit_with_shadows_shader, matcap_shader, triplanar_shader, normals_shader
 from time import perf_counter
+import csv
 
 
 # from ursina.editor.prefabs.poke_shape import PokeShape
 
 
 
-class LevelEditorScene(Entity):
+class LevelEditorScene:
     def __init__(self, x, y, name, **kwargs):
         super().__init__()
         self.coordinates = [x,y]
@@ -24,40 +25,29 @@ class LevelEditorScene(Entity):
             return
 
         level_editor.scene_folder.mkdir(parents=True, exist_ok=True)
-        # create __init__ file in scene folder so we can import it during self.load()
-        if not Path(level_editor.scene_folder / '__init__.py').is_file():
-            print('creating an __init__.py in the scene folder')
-            with open(level_editor.scene_folder / '__init__.py', 'w', encoding='utf-8') as f:
-                pass
+        list_of_dicts = []
 
-        print('saving:', self.name)
-        scene_file_content = dedent(f'''
-            class Scene(Entity):
-                def __init__(self, **kwargs):
-                    super().__init__(**kwargs)
-        ''')
-
-        for e in self.entities:
+        fields = ['class', 'parent', 'position', 'rotation', 'scale']
+        for e in level_editor.current_scene.entities:
             if hasattr(e, 'is_gizmo'):
                 continue
 
-            scene_file_content += '        '
-            if e.name != camel_to_snake(e.__class__.__name__):
-                scene_file_content += f'self.{camel_to_snake(e.__class__.__name__)} = '
+            changes = e.get_changes()
+            changes['class'] = e.__class__.__name__
+            list_of_dicts.append(changes)
+            for key in changes.keys():
+                if key not in fields:
+                    fields.append(key)
 
-            scene_file_content += f'{e.__class__.__name__}(parent=self, '
 
-            if hasattr(e, '__repr__'):
+        name = level_editor.current_scene.name
+        self.path =  level_editor.scene_folder / f'{name}.csv'
 
-                # print('------------', repr(e), e.__class__.__name__)
-                recipe = repr(e).split(e.__class__.__name__)[1][1:-1] # remove start and end
-                scene_file_content += recipe
-                scene_file_content += ')\n' # TODO: add if it has a custom name
+        with self.path.open('w', encoding='UTF8') as file:
+            writer = csv.DictWriter(file, fieldnames=fields, delimiter=';')
+            writer.writeheader()
+            writer.writerows(list_of_dicts)
 
-        # print('scene_file_content:\n', scene_file_content)
-        self.path = level_editor.scene_folder/(self.name+'.py')
-        with open(self.path, 'w', encoding='utf-8') as f:
-            f.write(scene_file_content)
         print('saved:', self.path)
 
 
@@ -70,14 +60,23 @@ class LevelEditorScene(Entity):
             return
 
         t = perf_counter()
+        with self.path.open('r') as f:
+            self.scene_parent = Entity()
+            reader = csv.DictReader(f, delimiter=';')
+            fields = reader.fieldnames[1:]
 
-        with open(self.path) as f:
-            try:
-                entities_before_exec = [e for e in scene.entities]
-                exec(f.read())
-                self.scene_parent = eval(f'Scene()')
-                self.scene_parent.name = self.name
-                self.entities = [e for e in scene.entities if e.has_ancestor(self.scene_parent) and not hasattr(e, 'is_gizmo')]
+            for line in reader:
+                e = eval(f'{line["class"]}(parent=self.scene_parent)')
+                for key in fields:
+                    if not line[key]:
+                        continue
+                    try:
+                        value = eval(line[key])
+                        setattr(e, key, value)
+                    except:
+                        raise ValueError(value)
+
+                self.entities.append(e)
                 for e in self.entities:
                     if not e.shader:
                         e.shader = lit_with_shadows_shader
@@ -87,8 +86,6 @@ class LevelEditorScene(Entity):
                         e.collider = 'box'
                         e.collision = False
 
-            except Exception as e:
-                print('error in scene:', self.name, e)
 
         if self.scene_parent:
             print(f'loaded scene: "{self.name}" in {perf_counter()-t}')
@@ -105,6 +102,7 @@ class LevelEditorScene(Entity):
         self.selection = []
         self.entities = []
         destroy(self.scene_parent)
+
 
 
 class LevelEditor(Entity):
@@ -131,6 +129,7 @@ class LevelEditor(Entity):
         self.local_global_menu.on_value_changed = self.render_selection
         self.target_fov = 90
 
+        self.prefabs = [Cube, Pyramid, PokeShape]
 
     @property
     def entities(self):
@@ -1085,7 +1084,10 @@ class Spawner(Entity):
     def __init__(self):
         super().__init__(parent=level_editor)
         self.target = None
-        for i, prefab in enumerate([Cube, Pyramid, PokeShape]):
+        self.update_menu()
+
+    def update_menu(self):
+        for i, prefab in enumerate(level_editor.prefabs):
             button = Button(parent=level_editor.ui, scale=.075/2, origin=(.5,-.5), position=window.bottom_right+Vec2(-.05 -(i*.0375),0), on_click=Func(self.spawn_entity, prefab))
             if hasattr(prefab, 'icon'):
                 button.icon = prefab.icon
@@ -1093,7 +1095,6 @@ class Spawner(Entity):
                 button.text = '\n'.join(chunk_list(prefab.__name__, 5))
                 button.text_entity.scale = .5
 
-            # self.button.i = Entity(parent=self.button, model='wireframe_cube', rotation=(-10,10,0), scale=.5, position=(-.5,.5,-1))
 
     def input(self, key):
         if key == 'i':
@@ -1215,7 +1216,7 @@ class LevelMenu(Entity):
 
 
     def load_scenes(self):
-        for scene_file in level_editor.scene_folder.glob('*.py'):
+        for scene_file in level_editor.scene_folder.glob('*.csv'):
             if '__' in scene_file.name:
                 continue
 
@@ -2181,10 +2182,10 @@ QuickRotator()
 RotateRelativeToView(target_entity=None)
 selector = Selector(parent=level_editor)
 selection_box = SelectionBox(parent=level_editor.ui, model=Quad(0, mode='line'), origin=(-.5,-.5,0), scale=(0,0,1), color=color.white33, mode='new')
-spawner = Spawner()
+level_editor.spawner = Spawner()
 deleter = Deleter(parent=level_editor)
 level_menu = LevelMenu()
-goto_scene = level_menu.goto_scene
+level_editor.goto_scene = level_menu.goto_scene
 duplicator = Duplicator()
 
 model_menu = ModelMenu()
@@ -2260,7 +2261,7 @@ def get_major_axis_relative_to_view(entity): # if we're looking at the entity fr
 # input_handler.bind('a', 'y')
 
 if __name__ == '__main__':
-    goto_scene(0,0)
+    level_editor.goto_scene(0,0)
     level_editor.selection = [level_editor.entities[0], ]
     # middle = Entity(parent=camera.ui, model='quad', scale_x=.001, color=color.azure)
     # middle = Entity(parent=camera.ui, model='quad', scale_y=.001, color=color.azure)
@@ -2271,7 +2272,33 @@ if __name__ == '__main__':
     # level_editor.entities.append(poke_shape)
     # pipe = PipeEditor()
     # level_editor.entities.append(pipe)
-    from ursina.shaders import ssao_shader
-    camera.shader = ssao_shader
+    def input(key):
+        if key == 'space':
+            import csv
+            list_of_dicts = []
+
+            fields = ['class', 'parent', 'position', 'rotation', 'scale']
+            for e in level_editor.current_scene.entities:
+                changes = e.get_changes()
+                changes['class'] = e.__class__.__name__
+                list_of_dicts.append(changes)
+                for key in changes.keys():
+                    if key not in fields:
+                        fields.append(key)
+
+
+            # print(list_of_dicts)
+            name = level_editor.current_scene.name
+            print('name ', name)
+            out_path =  level_editor.scene_folder / f'{name}.csv'
+
+            with out_path.open('w', encoding='UTF8') as file:
+                writer = csv.DictWriter(file, fieldnames=fields, delimiter=';')
+                writer.writeheader()
+                writer.writerows(list_of_dicts)
+
+
+    # from ursina.shaders import ssao_shader
+    # camera.shader = ssao_shader
     Sky()
     app.run()
