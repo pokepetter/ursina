@@ -121,7 +121,7 @@ class LevelEditor(Entity):
         self.ui = Entity(parent=camera.ui, name='level_editor.ui')
 
         self.point_renderer = Entity(parent=self, model=Mesh([], mode='point', thickness=.1, render_points_in_3d=True), texture='circle', always_on_top=True, unlit=True, render_queue=1)
-        self.cubes = [Entity(model='wireframe_cube', color=color.azure, parent=self, enabled=True) for i in range(128)] # max selection
+        self.cubes = [Entity(wireframe=True, color=color.azure, parent=self, enabled=True) for i in range(128)] # max selection
 
         self.origin_mode_menu = ButtonGroup(['last', 'center', 'individual'], min_selection=1, position=window.top, parent=self.ui)
         self.origin_mode_menu.scale *= .75
@@ -229,8 +229,7 @@ class LevelEditor(Entity):
             if i < len(self.cubes):
                 self.cubes[i].world_transform = e.world_transform
                 self.cubes[i].origin = e.origin
-
-                # self.cubes[i].parent = e
+                self.cubes[i].model = copy(e.model)
                 self.cubes[i].enabled = True
 
         # print('---------- rendered selection')
@@ -1852,6 +1851,7 @@ class PokeShape(Entity):
         self.subdivisions = 3
         self.smoothing_distance = .1
 
+        self._edit_mode = False
         self.generate()
         self.edit_mode = False
 
@@ -1879,35 +1879,44 @@ class PokeShape(Entity):
         self.model.normals = [Vec3(0,1,0) for i in range(len(self.model.vertices))]
         self.model.generate()
         self.texture = 'grass'
+        self.texture_scale = Vec2(.125)
+        # [destroy(e) for e in self.wall_parent.children]
 
         if self.make_wall:
-            wall_verts = []
-            for i, vert in enumerate(polygon):
-                vert = Vec3(vert[0], 0, vert[1])
-                next_vert = Vec3(polygon[i+1][0], 0, polygon[i+1][1])
-
-                wall_verts.extend((
-                    vert,
-                    vert + Vec3(0,-1,0),
-                    next_vert,
-
-                    next_vert,
-                    vert + Vec3(0,-1,0),
-                    next_vert + Vec3(0,-1,0),
-                ))
-
-            self.wall_parent.model.vertices = wall_verts
-            self.wall_parent.model.generate()
+            pass
+            polygon_3d = [Vec3(e[0], 0, e[1]) for e in polygon]
+            polygon_3d.append(polygon_3d[0])
+            self.wall_parent.model = Pipe(base_shape=Quad(0), path=polygon_3d)
+            # wall_verts = []
+            # for i, vert in enumerate(polygon):
+            #     vert = Vec3(vert[0], 0, vert[1])
+            #     next_vert = Vec3(polygon[i+1][0], 0, polygon[i+1][1])
+            #
+            #     wall_verts.extend((
+            #         vert,
+            #         vert + Vec3(0,-1,0),
+            #         next_vert,
+            #
+            #         next_vert,
+            #         vert + Vec3(0,-1,0),
+            #         next_vert + Vec3(0,-1,0),
+            #     ))
+            # #     # wall = Entity(model='cube', origin_x=-.5, scale=.1, position=vert, scale_x=distance(vert, next_vert), color=color.blue, parent=self.wall_parent, add_to_scene_entities=False)
+            # #     # wall.look_at(next_vert, 'right')
+            # #
+            # self.wall_parent.model.vertices = wall_verts
+            # self.wall_parent.model.generate()
 
 
         # if self.add_collider:
         #     self.collider = self.model
 
-        self.add_new_point_renderer.model.vertices = []
-        for i, e in enumerate(self.point_gizmos):
-            self.add_new_point_renderer.model.vertices.append(lerp(self.point_gizmos[i].world_position, self.point_gizmos[i+1].world_position, .5))
-            # self.add_new_point_renderer.model.vertices.append(self.point_gizmos[i].world_position)
-        self.add_new_point_renderer.model.generate()
+        if self.edit_mode:
+            self.add_new_point_renderer.model.vertices = []
+            for i, e in enumerate(self.point_gizmos):
+                self.add_new_point_renderer.model.vertices.append(lerp(self.point_gizmos[i].world_position, self.point_gizmos[i+1].world_position, .5))
+                # self.add_new_point_renderer.model.vertices.append(self.point_gizmos[i].world_position)
+            self.add_new_point_renderer.model.generate()
 
     def __deepcopy__(self, memo):
         return eval(repr(self))
@@ -1966,6 +1975,8 @@ class PokeShape(Entity):
                 self.edit_mode = not self.edit_mode
 
         if self.edit_mode and (key == 'left mouse down' or key == 'd'):
+            if selector.get_hovered_entity():
+                return
             points_in_range = [(distance_2d(world_position_to_screen_position(v), mouse.position), v) for v in self.add_new_point_renderer.model.vertices]
             points_in_range = [e for e in points_in_range if e[0] < .075/2]
             points_in_range.sort()
@@ -2271,7 +2282,7 @@ if __name__ == '__main__':
     # level_editor.entities.append(poke_shape)
     # pipe = PipeEditor()
     # level_editor.entities.append(pipe)
-    from ursina.shaders import ssao_shader
-    camera.shader = ssao_shader
+    # from ursina.shaders import ssao_shader
+    # camera.shader = ssao_shader
     Sky()
     app.run()
