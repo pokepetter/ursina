@@ -29,7 +29,7 @@ def singleton(cls, **kwargs):
 @singleton
 class Ursina(ShowBase):
     def __init__(self, **kwargs): # optional arguments: title, fullscreen, size, forced_aspect_ratio, position, vsync, borderless, show_ursina_splash, render_mode, development_mode, editor_ui_enabled.
-        for name in ('size', 'vsync', 'forced_aspect_ratio'):
+        for name in ('title', 'size', 'vsync', 'forced_aspect_ratio'):
             if name in kwargs and hasattr(window, name):
                 setattr(window, name, kwargs[name])
 
@@ -54,7 +54,7 @@ class Ursina(ShowBase):
             pass
 
         window.late_init()
-        for name in ('title', 'fullscreen', 'position', 'show_ursina_splash', 'borderless', 'render_mode'):
+        for name in ('fullscreen', 'position', 'show_ursina_splash', 'borderless', 'render_mode'):
             if name in kwargs and hasattr(window, name):
                 setattr(window, name, kwargs[name])
 
@@ -205,12 +205,14 @@ class Ursina(ShowBase):
                 continue
 
             if hasattr(entity, 'input') and callable(entity.input):
-                entity.input(key)
+                if entity.input(key):
+                    break
 
             if hasattr(entity, 'scripts'):
                 for script in entity.scripts:
                     if script.enabled and hasattr(script, 'input') and callable(script.input):
-                        script.input(key)
+                        if script.input(key):
+                            break
 
 
         mouse.input(key)
