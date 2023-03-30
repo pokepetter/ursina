@@ -979,14 +979,18 @@ class Entity(NodePath):
             self.setAttrib(CullFaceAttrib.make(CullFaceAttrib.MCullCounterClockwise))
 
 
-    def look_at(self, target, axis='forward'):
+    def look_at(self, target, axis='forward', up=None): # up defaults to self.up
         from panda3d.core import Quat
         if isinstance(target, Entity):
             target = Vec3(*target.world_position)
         elif not isinstance(target, Vec3):
             target = Vec3(*target)
 
-        self.lookAt(target, self.up)
+        up_axis = self.up
+        if up:
+            up_axis = up
+        self.lookAt(target, up_axis)
+
         if axis == 'forward':
             return
 
