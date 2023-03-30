@@ -26,7 +26,7 @@ class LevelEditorScene:
         level_editor.scene_folder.mkdir(parents=True, exist_ok=True)
         list_of_dicts = []
 
-        fields = ['class', 'parent', 'position', 'rotation', 'scale']
+        fields = ['class', ]
         for e in level_editor.current_scene.entities:
             if hasattr(e, 'is_gizmo'):
                 continue
@@ -65,15 +65,8 @@ class LevelEditorScene:
             fields = reader.fieldnames[1:]
 
             for line in reader:
-                e = eval(f'{line["class"]}(parent=self.scene_parent)')
-                for key in fields:
-                    if not line[key]:
-                        continue
-                    try:
-                        value = eval(line[key])
-                        setattr(e, key, value)
-                    except:
-                        raise ValueError(value)
+                args = ', '.join([f'{key}={value}' for key, value in line.items() if value and not key=='class'])
+                e = eval(f'{line["class"]}(parent=self.scene_parent, {args})')
 
                 self.entities.append(e)
                 for e in self.entities:
@@ -986,6 +979,8 @@ class Selector(Entity):
 
 
     def get_hovered_entity(self):
+        level_editor.entities = [e for e in level_editor.entities if e]
+        [print(str(e)) for e in level_editor.entities]
         entities_in_range = [(distance_2d(e.screen_position, mouse.position), e) for e in level_editor.entities if e.selectable and not e.collider]
         entities_in_range = [e for e in entities_in_range if e[0] < .03]
         entities_in_range.sort()
@@ -1160,8 +1155,9 @@ class Deleter(Entity):
             ))
 
         [level_editor.entities.remove(e) for e in level_editor.selection]
+        [destroy(e) for e in level_editor.selection]
         [setattr(e, 'parent', level_editor) for e in level_editor.cubes]
-        [destroy(e, delay=1/60) for e in level_editor.selection]
+        level_editor.entities = [e for e in level_editor.entities if e]
         level_editor.selection = []
         level_editor.render_selection()
         hierarchy_list.render_selection()
