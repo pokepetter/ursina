@@ -21,7 +21,7 @@ setup(
         'panda3d-gltf',
         'pillow',
         'pyperclip',
-        'Xlib; platform_system == "Linux"',
+        'screeninfo',
     ],
 
     extras_require={'extras': [
@@ -31,5 +31,5 @@ setup(
         'psutil',
         ],
     },
-    python_requires='>=3.6',
+    python_requires='>=3.10',
 )

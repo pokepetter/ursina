@@ -7,6 +7,7 @@ from ursina.vec2 import Vec2
 from ursina import color, application
 from ursina.scene import instance as scene    # for toggling collider visibility
 from ursina.string_utilities import print_info, print_warning
+from screeninfo import get_monitors
 
 
 class Window(WindowProperties):
@@ -35,30 +36,11 @@ class Window(WindowProperties):
         self.title = application.asset_folder.name
         self.borderless = True
         # self.icon = 'textures/ursina.ico'
-        os_name = platform.system()
+        self.monitors = get_monitors()
+        self.monitor_index = 0
 
-        try:
-            if os_name == 'Windows':     # windows
-                import ctypes
-                user32 = ctypes.windll.user32
-                user32.SetProcessDPIAware()
-                self.screen_resolution = (user32.GetSystemMetrics(0), user32.GetSystemMetrics(1))
-
-            elif os_name == 'Linux':
-                import Xlib
-                import Xlib.display
-                resolution = Xlib.display.Display().screen().root.get_geometry()
-                self.screen_resolution = Vec2(resolution.width, resolution.height)
-
-            elif os_name == 'Darwin':     # mac
-                from AppKit import NSScreen
-                size = NSScreen.mainScreen().frame().size
-                self.screen_resolution = [size.width, size.height]
-        except:
-            from screeninfo import get_monitors
-            self.screen_resolution = [get_monitors()[0].width, get_monitors()[0].height]
-
-        self.fullscreen_size = Vec2(*self.screen_resolution)
+        monitor = self.monitors[self.monitor_index]
+        self.fullscreen_size = Vec2(monitor.width, monitor.height)
         self.windowed_size = self.fullscreen_size / 1.25
         self.windowed_position = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode
         self.forced_aspect_ratio = None # example: window.forced_aspect_ratio = 16/9
@@ -106,7 +88,11 @@ class Window(WindowProperties):
 
 
     def center_on_screen(self):
-        self.position = Vec2(int((self.screen_resolution[0]-self.size[0])/2), int((self.screen_resolution[1]-self.size[1])/2))
+        monitor = self.monitors[self.monitor_index]
+        x = monitor.x + (monitor.width-self.size.x)/2
+        y = monitor.y + (monitor.height-self.size.y)/2
+        self.position = Vec2(x,y)
+
 
     def make_editor_gui(self):     # called by main after setting up camera and application.development_mode
         from ursina import camera, Entity, Text, Button, ButtonList, Func, Tooltip, held_keys, mouse
