@@ -18,6 +18,8 @@ dirs = [e.stem for e in asset_folder.parent.iterdir() if e.is_dir()]
 if 'src' in dirs and 'python' in dirs:
     development_mode = False
 
+window_type = 'onscreen'
+
 print_info = development_mode
 print_warnings = True
 raise_exception_on_missing_model = False
