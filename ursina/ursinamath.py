@@ -101,7 +101,7 @@ def round_to_closest(value, step=0):
     return round(value * step) / step
 
 
-def rotate_point_2d(point, origin, deg):
+def rotate_around_point_2d(point, origin, deg):
     angle_rad = -deg/180 * pi # ursina rotation is positive=clockwise, so do *= -1
     cos_angle = cos(angle_rad)
     sin_angle = sin(angle_rad)
@@ -194,6 +194,6 @@ if __name__ == '__main__':
     print(round(Vec3(.38, .1351, 353.26), 2))
 
     p = (1,0)
-    print(p, 'rotated ->', rotate_point_2d(p, (0,0), 90))
+    print(p, 'rotated ->', rotate_around_point_2d(p, (0,0), 90))
 
     app.run()

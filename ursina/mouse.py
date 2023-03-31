@@ -192,6 +192,9 @@ class Mouse():
 
 
     def update(self):
+        if application.window_type != 'onscreen':
+            return
+
         if not self.enabled or not self._mouse_watcher.has_mouse() or self._locked_mouse_last_frame:
             self.velocity = Vec3(0,0,0)
             self._locked_mouse_last_frame = False

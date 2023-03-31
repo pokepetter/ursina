@@ -55,7 +55,7 @@ class Entity(NodePath):
         self._children = []
         super().__init__(self.__class__.__name__)
 
-        self.name = camel_to_snake(self.type)
+        self.name = camel_to_snake(self.__class__.__name__)
         self.enabled = True     # disabled entities will not be visible nor run code.
         self.visible = True
         self.ignore = False     # if True, will not try to run code.
@@ -269,6 +269,7 @@ class Entity(NodePath):
         elif name == 'double_sided':
             self.setTwoSided(value)
 
+
         elif hasattr(self, '_shader') and self.shader and name in self._shader.default_input:
             # print('set shader input:', name, value)
             object.__setattr__(self, name, value)
@@ -306,7 +307,6 @@ class Entity(NodePath):
     def world_parent(self, value):  # change the parent, but keep position, rotation and scale
         if hasattr(self, '_parent') and self._parent and hasattr(self._parent, '_children') and self in self._parent._children:
             self._parent._children.remove(self)
-            print('remove from world parent', self.model)
 
         if hasattr(value, '_children') and not self in value._children:
             value._children.append(self)
@@ -314,10 +314,6 @@ class Entity(NodePath):
         self.wrtReparentTo(value)
         self._parent = value
 
-
-    @property
-    def type(self): # get class name.
-        return self.__class__.__name__
 
     @property
     def types(self): # get all class names including those this inhertits from.
@@ -878,6 +874,15 @@ class Entity(NodePath):
         if value:
             self.setBillboardPointEye(value)
 
+    @property
+    def wireframe(self):
+        return self._wireframe
+
+    @wireframe.setter
+    def wireframe(self, value):
+        self._wireframe = value
+        self.setRenderModeWireframe(value)
+
 
     def generate_sphere_map(self, size=512, name=f'sphere_map_{len(scene.entities)}'):
         from ursina import camera
@@ -974,14 +979,18 @@ class Entity(NodePath):
             self.setAttrib(CullFaceAttrib.make(CullFaceAttrib.MCullCounterClockwise))
 
 
-    def look_at(self, target, axis='forward'):
+    def look_at(self, target, axis='forward', up=None): # up defaults to self.up
         from panda3d.core import Quat
         if isinstance(target, Entity):
             target = Vec3(*target.world_position)
         elif not isinstance(target, Vec3):
             target = Vec3(*target)
 
-        self.lookAt(target, Vec3(0,0,1))
+        up_axis = self.up
+        if up:
+            up_axis = up
+        self.lookAt(target, up_axis)
+
         if axis == 'forward':
             return
 

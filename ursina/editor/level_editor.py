@@ -1,10 +1,13 @@
 from ursina import *
 from ursina.shaders import unlit_shader, lit_with_shadows_shader, matcap_shader, triplanar_shader, normals_shader
 from time import perf_counter
+import csv
 
 
+# from ursina.editor.prefabs.poke_shape import PokeShape
 
-class LevelEditorScene(Entity):
+
+class LevelEditorScene:
     def __init__(self, x, y, name, **kwargs):
         super().__init__()
         self.coordinates = [x,y]
@@ -21,40 +24,29 @@ class LevelEditorScene(Entity):
             return
 
         level_editor.scene_folder.mkdir(parents=True, exist_ok=True)
-        # create __init__ file in scene folder so we can import it during self.load()
-        if not Path(level_editor.scene_folder / '__init__.py').is_file():
-            print('creating an __init__.py in the scene folder')
-            with open(level_editor.scene_folder / '__init__.py', 'w', encoding='utf-8') as f:
-                pass
+        list_of_dicts = []
 
-        print('saving:', self.name)
-        scene_file_content = dedent(f'''
-            class Scene(Entity):
-                def __init__(self, **kwargs):
-                    super().__init__(**kwargs)
-        ''')
-
-        for e in self.entities:
+        fields = ['class', ]
+        for e in level_editor.current_scene.entities:
             if hasattr(e, 'is_gizmo'):
                 continue
 
-            scene_file_content += '        '
-            if e.name != camel_to_snake(e.__class__.__name__):
-                scene_file_content += f'self.{camel_to_snake(e.__class__.__name__)} = '
+            changes = e.get_changes()
+            changes['class'] = e.__class__.__name__
+            list_of_dicts.append(changes)
+            for key in changes.keys():
+                if key not in fields:
+                    fields.append(key)
 
-            scene_file_content += f'{e.__class__.__name__}(parent=self, '
 
-            if hasattr(e, '__repr__'):
+        name = level_editor.current_scene.name
+        self.path =  level_editor.scene_folder / f'{name}.csv'
 
-                # print('------------', repr(e), e.__class__.__name__)
-                recipe = repr(e).split(e.__class__.__name__)[1][1:-1] # remove start and end
-                scene_file_content += recipe
-                scene_file_content += ')\n' # TODO: add if it has a custom name
+        with self.path.open('w', encoding='UTF8') as file:
+            writer = csv.DictWriter(file, fieldnames=fields, delimiter=';')
+            writer.writeheader()
+            writer.writerows(list_of_dicts)
 
-        # print('scene_file_content:\n', scene_file_content)
-        self.path = level_editor.scene_folder/(self.name+'.py')
-        with open(self.path, 'w', encoding='utf-8') as f:
-            f.write(scene_file_content)
         print('saved:', self.path)
 
 
@@ -67,14 +59,16 @@ class LevelEditorScene(Entity):
             return
 
         t = perf_counter()
+        with self.path.open('r') as f:
+            self.scene_parent = Entity()
+            reader = csv.DictReader(f, delimiter=';')
+            fields = reader.fieldnames[1:]
 
-        with open(self.path) as f:
-            try:
-                entities_before_exec = [e for e in scene.entities]
-                exec(f.read())
-                self.scene_parent = eval(f'Scene()')
-                self.scene_parent.name = self.name
-                self.entities = [e for e in scene.entities if e.has_ancestor(self.scene_parent) and not hasattr(e, 'is_gizmo')]
+            for line in reader:
+                args = ', '.join([f'{key}={value}' for key, value in line.items() if value and not key=='class'])
+                e = eval(f'{line["class"]}(parent=self.scene_parent, {args})')
+
+                self.entities.append(e)
                 for e in self.entities:
                     if not e.shader:
                         e.shader = lit_with_shadows_shader
@@ -84,8 +78,6 @@ class LevelEditorScene(Entity):
                         e.collider = 'box'
                         e.collision = False
 
-            except Exception as e:
-                print('error in scene:', self.name, e)
 
         if self.scene_parent:
             print(f'loaded scene: "{self.name}" in {perf_counter()-t}')
@@ -104,6 +96,7 @@ class LevelEditorScene(Entity):
         destroy(self.scene_parent)
 
 
+
 class LevelEditor(Entity):
     def __init__(self, **kwargs):
         super().__init__()
@@ -118,7 +111,7 @@ class LevelEditor(Entity):
         self.ui = Entity(parent=camera.ui, name='level_editor.ui')
 
         self.point_renderer = Entity(parent=self, model=Mesh([], mode='point', thickness=.1, render_points_in_3d=True), texture='circle', always_on_top=True, unlit=True, render_queue=1)
-        self.cubes = [Entity(model='wireframe_cube', color=color.azure, parent=self, enabled=True) for i in range(128)] # max selection
+        self.cubes = [Entity(wireframe=True, color=color.azure, parent=self, enabled=True) for i in range(128)] # max selection
 
         self.origin_mode_menu = ButtonGroup(['last', 'center', 'individual'], min_selection=1, position=window.top, parent=self.ui)
         self.origin_mode_menu.scale *= .75
@@ -127,7 +120,6 @@ class LevelEditor(Entity):
         self.local_global_menu.scale *= .75
         self.local_global_menu.on_value_changed = self.render_selection
         self.target_fov = 90
-
 
     @property
     def entities(self):
@@ -226,8 +218,7 @@ class LevelEditor(Entity):
             if i < len(self.cubes):
                 self.cubes[i].world_transform = e.world_transform
                 self.cubes[i].origin = e.origin
-
-                # self.cubes[i].parent = e
+                self.cubes[i].model = copy(e.model)
                 self.cubes[i].enabled = True
 
         # print('---------- rendered selection')
@@ -696,7 +687,7 @@ class BoxGizmo(Entity):
 
 class GizmoToggler(Entity):
     def __init__(self, **kwargs):
-        super().__init__()
+        super().__init__(parent=level_editor)
         self.animator = Animator({
             'w' : gizmo.arrow_parent,
             'e' : scale_gizmo,
@@ -713,7 +704,7 @@ class GizmoToggler(Entity):
 
 class QuickGrabber(Entity):
     def __init__(self, **kwargs):
-        super().__init__()
+        super().__init__(parent=level_editor)
         self.target_entity = None
         self.target_axis = None
         self.plane = Entity(model='quad', collider='box', scale=Vec3(100,100,1), visible_self=False, enabled=False)
@@ -761,6 +752,7 @@ class QuickGrabber(Entity):
                 self.start_position = self.offset_helper.world_position
 
                 self.target_entity.original_parent = self.target_entity.parent
+                self.target_entity._original_world_position = self.target_entity.world_position
                 self.target_entity.world_parent = self.offset_helper
 
                 self.is_dragging = True
@@ -770,6 +762,14 @@ class QuickGrabber(Entity):
             self.is_dragging = False
             mouse.traverse_target = self._original_mouse_traverse_target
             self.target_entity.world_parent = self.target_entity.original_parent
+
+            if self.target_entity.world_position != self.target_entity._original_world_position:
+                changes = []
+                for e in level_editor.selection:
+                    changes.append([level_editor.entities.index(e), 'world_position', e._original_world_position, e.world_position])
+
+                level_editor.current_scene.undo.record_undo(changes)
+
             self.target_entity = None
             self.plane.enabled = False
             level_editor.selection = []
@@ -804,8 +804,6 @@ class QuickScale(Entity):
 
 
     def input(self, key):
-
-
         if held_keys['control'] or held_keys['shift'] or held_keys['alt']:
             return
 
@@ -868,6 +866,9 @@ class QuickScale(Entity):
 
 
 class QuickRotator(Entity):
+    def __init__(self):
+        super().__init__(parent=level_editor)
+
     def input(self, key):
         if held_keys['control'] or held_keys['shift'] or held_keys['alt']:
             return
@@ -876,6 +877,9 @@ class QuickRotator(Entity):
             if not level_editor.selection:
                 level_editor.selection = [selector.get_hovered_entity(), ]
                 level_editor.render_selection()
+
+            if not level_editor.selection:
+                return
 
             self.target_entity = level_editor.selection[0]
             rotation_gizmo.subgizmos['y'].input('left mouse down')
@@ -893,6 +897,9 @@ class QuickRotator(Entity):
 class RotateRelativeToView(Entity):
     _rotation_helper = Entity(name='RotateRelativeToView_rotation_helper')
     sensitivity = Vec2(200,200)
+
+    def __init__(self, **kwargs):
+        super().__init__(parent=level_editor, **kwargs)
 
     def input(self, key):
         if held_keys['control'] or held_keys['shift'] or held_keys['alt']:
@@ -937,6 +944,9 @@ class RotateRelativeToView(Entity):
 
 
 class Selector(Entity):
+    def __init__(self):
+        super().__init__(parent=level_editor)
+
     def input(self, key):
         if key == 'left mouse down':
             if mouse.hovered_entity:
@@ -945,8 +955,9 @@ class Selector(Entity):
             clicked_entity = self.get_hovered_entity()
 
             if clicked_entity in level_editor.entities and not held_keys['alt']:
-                if held_keys['shift'] and not clicked_entity in level_editor.selection:
-                    level_editor.selection.append(clicked_entity) # append
+                if held_keys['shift']:
+                    if not clicked_entity in level_editor.selection:
+                        level_editor.selection.append(clicked_entity) # append
                 else:
                     print(clicked_entity)
                     level_editor.selection = [clicked_entity, ]   # overwrite
@@ -968,6 +979,8 @@ class Selector(Entity):
 
 
     def get_hovered_entity(self):
+        level_editor.entities = [e for e in level_editor.entities if e]
+        [print(str(e)) for e in level_editor.entities]
         entities_in_range = [(distance_2d(e.screen_position, mouse.position), e) for e in level_editor.entities if e.selectable and not e.collider]
         entities_in_range = [e for e in entities_in_range if e[0] < .03]
         entities_in_range.sort()
@@ -991,6 +1004,9 @@ class Selector(Entity):
 
 
 class SelectionBox(Entity):
+    def __init__(self, **kwargs):
+        super().__init__(parent=level_editor.ui, **kwargs)
+
     def input(self, key):
         if key == 'left mouse down':
             if mouse.hovered_entity and not mouse.hovered_entity in level_editor.selection:
@@ -1069,10 +1085,17 @@ class Spawner(Entity):
     def __init__(self):
         super().__init__(parent=level_editor)
         self.target = None
-        for i, prefab in enumerate([Cube, Pyramid, PokeShape]):
+        self.update_menu()
+
+    def update_menu(self):
+        for i, prefab in enumerate(prefabs):
             button = Button(parent=level_editor.ui, scale=.075/2, origin=(.5,-.5), position=window.bottom_right+Vec2(-.05 -(i*.0375),0), on_click=Func(self.spawn_entity, prefab))
-            button.text = str(prefab)
-            # self.button.i = Entity(parent=self.button, model='wireframe_cube', rotation=(-10,10,0), scale=.5, position=(-.5,.5,-1))
+            if hasattr(prefab, 'icon'):
+                button.icon = prefab.icon
+            else:
+                button.text = '\n'.join(chunk_list(prefab.__name__, 5))
+                button.text_entity.scale = .5
+
 
     def input(self, key):
         if key == 'i':
@@ -1117,6 +1140,9 @@ class Spawner(Entity):
 
 
 class Deleter(Entity):
+    def __init__(self):
+        super().__init__(parent=level_editor)
+
     def input(self, key):
         if level_editor.selection and key == 'delete':
             self.delete_selected()
@@ -1129,14 +1155,18 @@ class Deleter(Entity):
             ))
 
         [level_editor.entities.remove(e) for e in level_editor.selection]
+        [destroy(e) for e in level_editor.selection]
         [setattr(e, 'parent', level_editor) for e in level_editor.cubes]
-        [destroy(e, delay=1/60) for e in level_editor.selection]
+        level_editor.entities = [e for e in level_editor.entities if e]
         level_editor.selection = []
         level_editor.render_selection()
         hierarchy_list.render_selection()
 
 
 class PointOfViewSelector(Entity):
+    def __init__(self):
+        super().__init__(parent=level_editor)
+
     def __init__(self, **kwargs):
 
         super().__init__(parent=level_editor.ui, model='cube', collider='box', texture='white_cube', scale=.05, position=window.top_right-Vec2(.1,.05))
@@ -1158,10 +1188,11 @@ class PointOfViewSelector(Entity):
         self.rotation = -level_editor.editor_camera.rotation
 
     def input(self, key):
-        if key == '1':   level_editor.editor_camera.animate_rotation((0,0,0)) # front
-        elif key == '3': level_editor.editor_camera.animate_rotation((0,90,0)) # right
-        elif key == '7': level_editor.editor_camera.animate_rotation((90,0,0)) # top
-        elif key == '5': camera.orthographic = not camera.orthographic
+        if held_keys['shift']:
+            if key == '1':   level_editor.editor_camera.animate_rotation((0,0,0)) # front
+            elif key == '3': level_editor.editor_camera.animate_rotation((0,90,0)) # right
+            elif key == '7': level_editor.editor_camera.animate_rotation((90,0,0)) # top
+            elif key == '5': camera.orthographic = not camera.orthographic
 
 
 # class PaintBucket(Entity):
@@ -1193,7 +1224,7 @@ class LevelMenu(Entity):
 
 
     def load_scenes(self):
-        for scene_file in level_editor.scene_folder.glob('*.py'):
+        for scene_file in level_editor.scene_folder.glob('*.csv'):
             if '__' in scene_file.name:
                 continue
 
@@ -1382,21 +1413,21 @@ class Inspector(Entity):
                 if y == 2:
                     default = '1'
 
-                field = InputField(max_width=5, model='quad', parent=self.name_field, scale_x=1/3, scale_y=1, origin=(-.5,.5), default_value=default, limit_content_to=ContentTypes.math, x=x/3, y=-y-1, color=color._8)
+                field = InputField(max_width=8, model='quad', parent=self.name_field, scale_x=1/3, scale_y=1, origin=(-.5,.5), default_value=default, limit_content_to=ContentTypes.math, x=x/3, y=-y-1, color=color._8)
                 def on_submit(names=names, x=x, field=field):
                     try:
-                        value = float(eval(field.text))
+                        value = float(eval(field.text[:8]))
                         if isinstance(value, float):
-                            field.text = str(value)
-                            # for e in level_editor.selection:
-                            #     setattr(e, names[x], value)
+                            field.text_field.text_entity.text = str(value)[:8]
+                            for e in level_editor.selection:
+                                setattr(e, names[x], float(field.text_field.text_entity.text))
                     except: # invalid/incomplete math
                         # print('invalid')
                         return
 
                 # field.submit_on = 'enter'
                 field.on_submit = on_submit
-                # field.on_value_changed = on_submit
+                field.on_value_changed = on_submit
 
                 self.transform_fields.append(field)
                 self.input_fields.append(field)
@@ -1457,7 +1488,7 @@ class Inspector(Entity):
 
                 self.name_field.text_field.text_entity.text = selected.name
                 for i, attr_name in enumerate(('world_x', 'world_y', 'world_z', 'world_rotation_x', 'world_rotation_y', 'world_rotation_z', 'world_scale_x', 'world_scale_y', 'world_scale_z')):
-                    self.transform_fields[i].text = str(getattr(selected, attr_name))[:5]
+                    self.transform_fields[i].text = str(round(getattr(selected, attr_name),4))
 
                 [destroy(e) for e in self.shader_inputs_parent.children]
                 if selected.shader:
@@ -1494,7 +1525,7 @@ class Inspector(Entity):
 
 class MenuHandler(Entity):
     def __init__(self):
-        super().__init__()
+        super().__init__(parent=level_editor)
         self._state = None
         self.states = {
             'None' : None,
@@ -1720,7 +1751,7 @@ class Help(Button):
 
 class Duplicator(Entity):
     def __init__(self, **kwargs):
-        super().__init__(clones=None)
+        super().__init__(parent=level_editor, clones=None)
         self.plane = Entity(model='plane', collider='box', scale=Vec3(100,.1,100), enabled=False, visible=False)
         self.dragger = Draggable(parent=scene, model=None, collider=None, enabled=False)
         self.dragging = False
@@ -1803,7 +1834,7 @@ class Duplicator(Entity):
                 self.axis_lock = None
 
 
-class PokeShape(Button):
+class PokeShape(Entity):
     default_values = Entity.default_values | dict(points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,.5), Vec3(-.5,0,.5)], name='poke_shape') # combine dicts
 
     def __init__(self, points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,.5), Vec3(-.5,0,.5)], **kwargs):
@@ -1830,6 +1861,7 @@ class PokeShape(Button):
         self.subdivisions = 3
         self.smoothing_distance = .1
 
+        self._edit_mode = False
         self.generate()
         self.edit_mode = False
 
@@ -1857,35 +1889,44 @@ class PokeShape(Button):
         self.model.normals = [Vec3(0,1,0) for i in range(len(self.model.vertices))]
         self.model.generate()
         self.texture = 'grass'
+        self.texture_scale = Vec2(.125)
+        # [destroy(e) for e in self.wall_parent.children]
 
         if self.make_wall:
-            wall_verts = []
-            for i, vert in enumerate(polygon):
-                vert = Vec3(vert[0], 0, vert[1])
-                next_vert = Vec3(polygon[i+1][0], 0, polygon[i+1][1])
-
-                wall_verts.extend((
-                    vert,
-                    vert + Vec3(0,-1,0),
-                    next_vert,
-
-                    next_vert,
-                    vert + Vec3(0,-1,0),
-                    next_vert + Vec3(0,-1,0),
-                ))
-
-            self.wall_parent.model.vertices = wall_verts
-            self.wall_parent.model.generate()
+            pass
+            polygon_3d = [Vec3(e[0], 0, e[1]) for e in polygon]
+            polygon_3d.append(polygon_3d[0])
+            self.wall_parent.model = Pipe(base_shape=Quad(0), path=polygon_3d)
+            # wall_verts = []
+            # for i, vert in enumerate(polygon):
+            #     vert = Vec3(vert[0], 0, vert[1])
+            #     next_vert = Vec3(polygon[i+1][0], 0, polygon[i+1][1])
+            #
+            #     wall_verts.extend((
+            #         vert,
+            #         vert + Vec3(0,-1,0),
+            #         next_vert,
+            #
+            #         next_vert,
+            #         vert + Vec3(0,-1,0),
+            #         next_vert + Vec3(0,-1,0),
+            #     ))
+            # #     # wall = Entity(model='cube', origin_x=-.5, scale=.1, position=vert, scale_x=distance(vert, next_vert), color=color.blue, parent=self.wall_parent, add_to_scene_entities=False)
+            # #     # wall.look_at(next_vert, 'right')
+            # #
+            # self.wall_parent.model.vertices = wall_verts
+            # self.wall_parent.model.generate()
 
 
         # if self.add_collider:
         #     self.collider = self.model
 
-        self.add_new_point_renderer.model.vertices = []
-        for i, e in enumerate(self.point_gizmos):
-            self.add_new_point_renderer.model.vertices.append(lerp(self.point_gizmos[i].world_position, self.point_gizmos[i+1].world_position, .5))
-            # self.add_new_point_renderer.model.vertices.append(self.point_gizmos[i].world_position)
-        self.add_new_point_renderer.model.generate()
+        if self.edit_mode:
+            self.add_new_point_renderer.model.vertices = []
+            for i, e in enumerate(self.point_gizmos):
+                self.add_new_point_renderer.model.vertices.append(lerp(self.point_gizmos[i].world_position, self.point_gizmos[i+1].world_position, .5))
+                # self.add_new_point_renderer.model.vertices.append(self.point_gizmos[i].world_position)
+            self.add_new_point_renderer.model.generate()
 
     def __deepcopy__(self, memo):
         return eval(repr(self))
@@ -1936,12 +1977,16 @@ class PokeShape(Button):
 
 
     def input(self, key):
-        super().input(key)
         if key == 'tab':
+            if not level_editor.selection:
+                self.edit_mode = False
+
             if self in level_editor.selection or True in [e in level_editor.selection for e in self.point_gizmos]:
                 self.edit_mode = not self.edit_mode
 
-        if key == 'left mouse down' or key == 'd':
+        if self.edit_mode and (key == 'left mouse down' or key == 'd'):
+            if selector.get_hovered_entity():
+                return
             points_in_range = [(distance_2d(world_position_to_screen_position(v), mouse.position), v) for v in self.add_new_point_renderer.model.vertices]
             points_in_range = [e for e in points_in_range if e[0] < .075/2]
             points_in_range.sort()
@@ -1975,6 +2020,7 @@ class PokeShape(Button):
 
         elif self.edit_mode and key.endswith(' up'):
             invoke(self.generate, delay=3/60)
+
 
 
 class PipeEditor(Entity):
@@ -2067,7 +2113,7 @@ class PipeEditor(Entity):
 
 class SunHandler(Entity):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__(parent=level_editor, **kwargs)
         self.sun = DirectionalLight(parent=level_editor, shadow_map_resolution=(2048,2048))
         self.sun.look_at(Vec3(-2,-1,-1))
 
@@ -2075,14 +2121,15 @@ class SunHandler(Entity):
         if key == 'l':
             print('toggle sun')
             # self.sun.enabled = not self.sun.enabled
-            for e in level_editor.entities:
-                # e.shader = unlit_shader
-                e.unlit = not e.unlit
+            self.sun.update_bounds()
+            # for e in level_editor.entities:
+            #     # e.shader = unlit_shader
+            #     e.unlit = not e.unlit
 
 from ursina.prefabs.radial_menu import RadialMenu
 class RightClickMenu(Entity):
     def __init__(self):
-        super().__init__()
+        super().__init__(parent=level_editor.ui)
         self.radial_menu = RadialMenu(
             parent=level_editor.ui,
             buttons = (
@@ -2109,7 +2156,7 @@ class RightClickMenu(Entity):
 
 class Search(Entity):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__(parent=level_editor.ui, **kwargs)
 
         self.input_field = InputField(parent=level_editor.ui, enabled=False)
 
@@ -2132,7 +2179,7 @@ level_editor = LevelEditor()
 
 
 # AmbientLight(color=color._16)
-sun_handler = SunHandler(parent=level_editor)
+sun_handler = SunHandler()
 
 for x in range(8):
     for y in range(8):
@@ -2147,18 +2194,20 @@ print('-----', perf_counter() - t)
 
 scale_gizmo = ScaleGizmo()
 box_gizmo = BoxGizmo()
-gizmo_toggler = GizmoToggler(parent=level_editor)
+gizmo_toggler = GizmoToggler()
 
-quick_grabber = QuickGrabber(parent=level_editor)   # requires gizmo, selector
+quick_grabber = QuickGrabber()   # requires gizmo, selector
 QuickScale()    # requires scale_gizmo, gizmo_toggler, selector
 QuickRotator()
 RotateRelativeToView(target_entity=None)
-selector = Selector(parent=level_editor)
-selection_box = SelectionBox(parent=level_editor.ui, model=Quad(0, mode='line'), origin=(-.5,-.5,0), scale=(0,0,1), color=color.white33, mode='new')
-spawner = Spawner()
-deleter = Deleter(parent=level_editor)
+selector = Selector()
+selection_box = SelectionBox(model=Quad(0, mode='line'), origin=(-.5,-.5,0), scale=(0,0,1), color=color.white33, mode='new')
+
+prefabs = [Cube, Pyramid, PokeShape]
+level_editor.spawner = Spawner()
+deleter = Deleter()
 level_menu = LevelMenu()
-goto_scene = level_menu.goto_scene
+level_editor.goto_scene = level_menu.goto_scene
 duplicator = Duplicator()
 
 model_menu = ModelMenu()
@@ -2171,8 +2220,13 @@ hierarchy_list = HierarchyList()
 inspector = Inspector()
 PointOfViewSelector()
 Help()
+
+
 # search = Search(parent=level_editor)
 
+# import ursina
+# ursina.editor.prefabs.poke_shape.level_editor = level_editor
+# ursina.editor.prefabs.poke_shape.quick_grabber = quick_grabber
 
 debug_text = Text(y=-.45)
 
@@ -2228,10 +2282,10 @@ def get_major_axis_relative_to_view(entity): # if we're looking at the entity fr
 #     for key, value in kwargs.items():
 #         setattr(self, key, value)
 
-input_handler.bind('a', 'y')
+# input_handler.bind('a', 'y')
 
 if __name__ == '__main__':
-    goto_scene(0,0)
+    level_editor.goto_scene(0,0)
     level_editor.selection = [level_editor.entities[0], ]
     # middle = Entity(parent=camera.ui, model='quad', scale_x=.001, color=color.azure)
     # middle = Entity(parent=camera.ui, model='quad', scale_y=.001, color=color.azure)
@@ -2242,5 +2296,7 @@ if __name__ == '__main__':
     # level_editor.entities.append(poke_shape)
     # pipe = PipeEditor()
     # level_editor.entities.append(pipe)
+    # from ursina.shaders import ssao_shader
+    # camera.shader = ssao_shader
     Sky()
     app.run()

@@ -29,15 +29,23 @@ def singleton(cls, **kwargs):
 @singleton
 class Ursina(ShowBase):
     def __init__(self, **kwargs): # optional arguments: title, fullscreen, size, forced_aspect_ratio, position, vsync, borderless, show_ursina_splash, render_mode, development_mode, editor_ui_enabled.
-        for name in ('size', 'vsync', 'forced_aspect_ratio'):
+        for name in ('title', 'size', 'vsync', 'forced_aspect_ratio'):
             if name in kwargs and hasattr(window, name):
                 setattr(window, name, kwargs[name])
 
         if 'development_mode' in kwargs:
             application.development_mode = kwargs['development_mode']
 
+        window_type = 'onscreen'
+        p3d_window_type = None
+        if 'window_type' in kwargs:
+            window_type = kwargs['window_type']
+            if window_type != 'onscreen':
+                p3d_window_type = window_type
+        application.window_type = window_type
+
         application.base = self
-        super().__init__()
+        super().__init__(windowType=p3d_window_type)
 
         try:
             import gltf
@@ -46,23 +54,25 @@ class Ursina(ShowBase):
             pass
 
         window.late_init()
-        for name in ('title', 'fullscreen', 'position', 'show_ursina_splash', 'borderless', 'render_mode'):
+        for name in ('fullscreen', 'position', 'show_ursina_splash', 'borderless', 'render_mode'):
             if name in kwargs and hasattr(window, name):
                 setattr(window, name, kwargs[name])
 
         # camera
-        camera._cam = self.camera
-        camera._cam.reparent_to(camera)
-        camera.render = self.render
-        camera.position = (0, 0, -20)
-        scene.camera = camera
-        camera.set_up()
+        if window_type != 'none':
+            camera._cam = self.camera
+            camera._cam.reparent_to(camera)
+            camera.render = self.render
+            camera.position = (0, 0, -20)
+            scene.camera = camera
+            camera.set_up()
 
         # input
-        self.buttonThrowers[0].node().setButtonDownEvent('buttonDown')
-        self.buttonThrowers[0].node().setButtonUpEvent('buttonUp')
-        self.buttonThrowers[0].node().setButtonRepeatEvent('buttonHold')
-        self.buttonThrowers[0].node().setKeystrokeEvent('keystroke')
+        if window_type == 'onscreen':
+            self.buttonThrowers[0].node().setButtonDownEvent('buttonDown')
+            self.buttonThrowers[0].node().setButtonUpEvent('buttonUp')
+            self.buttonThrowers[0].node().setButtonRepeatEvent('buttonHold')
+            self.buttonThrowers[0].node().setKeystrokeEvent('keystroke')
         self._input_name_changes = {
             'mouse1' : 'left mouse down', 'mouse1 up' : 'left mouse up', 'mouse2' : 'middle mouse down', 'mouse2 up' : 'middle mouse up', 'mouse3' : 'right mouse down', 'mouse3 up' : 'right mouse up',
             'wheel_up' : 'scroll up', 'wheel_down' : 'scroll down',
@@ -106,7 +116,8 @@ class Ursina(ShowBase):
         except e as Exception:
             print(e)
 
-        window.make_editor_gui()
+        if window_type != 'none':
+            window.make_editor_gui()
         if 'editor_ui_enabled' in kwargs:
             window.editor_ui.enabled = kwargs['editor_ui_enabled']
 
@@ -194,12 +205,14 @@ class Ursina(ShowBase):
                 continue
 
             if hasattr(entity, 'input') and callable(entity.input):
-                entity.input(key)
+                if entity.input(key):
+                    break
 
             if hasattr(entity, 'scripts'):
                 for script in entity.scripts:
                     if script.enabled and hasattr(script, 'input') and callable(script.input):
-                        script.input(key)
+                        if script.input(key):
+                            break
 
 
         mouse.input(key)
@@ -241,7 +254,6 @@ class Ursina(ShowBase):
 
         application.load_settings()
         if info:
-            print('screen resolution:', window.screen_resolution)
             print('os:', platform.system())
             print('development mode:', application.development_mode)
             print('application successfully started')

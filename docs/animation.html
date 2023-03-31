@@ -54,10 +54,10 @@
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Changing Text of Prefabs">Changing Text of Prefabs</a><br>
 <br>
 <a href="animation.html">Animation</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#2D Animation">2D Animation</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#3D Animation">3D Animation</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#Actor">Actor</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#FrameAnimation3D">FrameAnimation3D</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#SpriteSheetAnimation (2D)">SpriteSheetAnimation (2D)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#Animation (2D)">Animation (2D)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#Actor (3D)">Actor (3D)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#FrameAnimation3D (3D)">FrameAnimation3D (3D)</a><br>
 <br>
 <a href="faq.html">F.A.Q.</a><br>
 <a href="building.html">Build and Release</a><br>
@@ -69,23 +69,35 @@ Animation<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
-<div id="2D Animation"/><br>
-2D Animation<br>
+<div id="SpriteSheetAnimation (2D)"/><br>
+SpriteSheetAnimation (2D)<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
-SpriteSheetAnimation<br>
-Animation<br>
+Use a sprite sheet to make an animation. A sprite sheet is an image<br>
+containing the all animation frames in on image, laid out in a grid.<br>
+<br>
+<a href="https://www.ursinaengine.org/api_reference.html#SpriteSheetAnimation">SpriteSheetAnimation Documentation</a><br>
+<br>
 <br>
 <div style="font-size: 40.0px;font-weight: bold;">
-<div id="3D Animation"/><br>
-3D Animation<br>
+<div id="Animation (2D)"/><br>
+Animation (2D)<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;For skeletal animations you can use panda3d's Actor.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Export the model as .glft/.glb since that format support<br>
-&nbsp;&nbsp;&nbsp;&nbsp;mesh data, texture data, animations and more, all in one file.<br>
+Loads an image sequence or a .gif as an animation.<br>
+<a href="https://www.ursinaengine.org/api_reference.html#Animation">Animation Documentation</a><br>
 <br>
-<div class="code_block" style="margin-left: 1em;"><purple>from</purple> ursina <purple>import</purple> *
+<br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Actor (3D)"/><br>
+Actor (3D)<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<br>
+For skeletal animations you can use panda3d's Actor.<br>
+Export the model as .glft/.glb since that format support<br>
+mesh data, texture data, animations and more, all in one file.<br>
+<br>
+<div class="code_block" style="margin-left: 0em;"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> direct.actor.Actor <purple>import</purple> Actor
 
 app = Ursina()
@@ -99,22 +111,26 @@ actor.loop("animation_name")  <gray># use .play() instead of loop() to play it o
 
 app.run()
 </div><br>
-&nbsp;&nbsp;&nbsp;&nbsp;See the <a href="https://docs.panda3d.org/1.10/python/programming/models-and-actors/actor-animations">panda3d documentation</a> for more info.<br>
+See the <a href="https://docs.panda3d.org/1.10/python/programming/models-and-actors/actor-animations">panda3d documentation</a> for more info.<br>
 <br>
 <br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="FrameAnimation3D (3D)"/><br>
+FrameAnimation3D (3D)<br>
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;FrameAnimation3d loads a sequence of models and cycles through them so it looks like it animates.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;This a memory intensive option, so it's recommended to not have very a high poly count.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;With this method you can't interpolate animations or move a single bone like you can with Actor.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;However, FrameAnimation3D is a very solid solution that is very unlikely to break or produce<br>
-&nbsp;&nbsp;&nbsp;&nbsp;bugs like skeletal animation often can. Also, since every frame is unique, it's possible to<br>
-&nbsp;&nbsp;&nbsp;&nbsp;adjust each frame individually.<br>
+FrameAnimation3d loads a sequence of models and cycles through them so it looks like it animates.<br>
+This a memory intensive option, so it's recommended to not have very a high poly count.<br>
+With this method you can't interpolate animations or move a single bone like you can with Actor.<br>
+However, FrameAnimation3D is a very solid solution that is very unlikely to break or produce<br>
+bugs like skeletal animation often can. Also, since every frame is unique, it's possible to<br>
+adjust each frame individually.<br>
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;First, export your animation as a sequence of 3d models.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Assuming you have a bunch of models named run_cycle_000.obj, run_cycle_001.obj, run_cycle_002.obj and so on,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;you can load the animation like this:<br>
+First, export your animation as a sequence of 3d models.<br>
+Assuming you have a bunch of models named run_cycle_000.obj, run_cycle_001.obj, run_cycle_002.obj and so on,<br>
+you can load the animation like this:<br>
 <br>
-<div class="code_block" style="margin-left: 1em;">FrameAnimation<yellow>3</yellow>d(<green>'run_cycle_'</green>)
+<div class="code_block" style="margin-left: 0em;">FrameAnimation<yellow>3</yellow>d(<green>'run_cycle_'</green>)
 </div><br>
 
 </body>

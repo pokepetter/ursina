@@ -1,4 +1,4 @@
-from ursina import Mesh, Vec3, rotate_point_2d
+from ursina import Mesh, Vec3, rotate_around_point_2d
 
 
 class Cone(Mesh):
@@ -11,7 +11,7 @@ class Cone(Mesh):
         verts = []
         for i in range(resolution):
             verts.append(Vec3(v[0], 0, v[1]))
-            v = rotate_point_2d(v, origin, -degrees_to_rotate)
+            v = rotate_around_point_2d(v, origin, -degrees_to_rotate)
             verts.append(Vec3(v[0], 0, v[1]))
 
             verts.append(Vec3(0,height,0))
@@ -19,7 +19,7 @@ class Cone(Mesh):
             for i in range(resolution):
                 verts.append(Vec3(v[0], 0, v[1]))
                 verts.append(Vec3(0,0,0))
-                v = rotate_point_2d(v, origin, -degrees_to_rotate)
+                v = rotate_around_point_2d(v, origin, -degrees_to_rotate)
                 verts.append(Vec3(v[0], 0, v[1]))
 
 
@@ -33,7 +33,7 @@ if __name__ == '__main__':
 
     # # rotate model
     # for i, v in enumerate(e.model.vertices):
-    #     x, y = rotate_point_2d((v.x, v.y), (0,0), 90)
+    #     x, y = rotate_around_point_2d((v.x, v.y), (0,0), 90)
     #
     #     e.model.vertices[i] = Vec3(x, y, v.z)
     #
