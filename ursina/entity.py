@@ -1300,43 +1300,6 @@ class Entity(NodePath):
 
         return self.hit
 
-class AnimatedEntity(Entity, Actor):
-    def __init__(self, model, animations=None, **kwargs):
-        Actor.__init__(self, model, animations)
-        self.entity = Entity(model=None, input=self.input,update=self.update,**kwargs)
-        self.entity.model = self
-        self.current_anim=None
-
-    @property
-    def model(self):
-        return self.entity.model
-
-    @model.setter
-    def model(self, value):
-        self.entity.model = value
-
-    def LerpAnim(self,toanim,rate=1,part=None):
-        current=self.get_current_anim()
-        self.enableBlend()
-        self.setPlayRate(rate,toanim,partName=part)
-        if toanim==self.current_anim:
-            pass     
-        elif self.current_anim!=None:
-            self.loop(toanim, partName=part)
-            Interv=LerpAnimInterval(self, 0.25, self.current_anim, toanim, partName=part)
-            Interv.start()
-        elif self.current_anim==None:
-            self.loop(toanim, partName=part)
-            Interv=LerpAnimInterval(self, 0.25, current, toanim, partName=part)
-            Interv.start()
-        else: #This part doesnt work
-            print(f"No animtion with name {toanim} found")
-        self.current_anim=toanim
-
-    def input(self,key):
-        pass
-    def update(self):
-        pass
 if __name__ == '__main__':
     from ursina import *
     app = Ursina()
