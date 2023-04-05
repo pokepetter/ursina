@@ -13,7 +13,7 @@ from ursina.ursinastuff import destroy, invoke
 
 _line_model = Mesh(vertices=[Vec3(0,0,0), Vec3(0,0,1)], mode='line')
 
-_raycaster = Entity()
+_raycaster = Entity(add_to_scene_entities=False)
 _raycaster._picker = CollisionTraverser()  # Make a traverser
 _raycaster._pq = CollisionHandlerQueue()  # Make a handler
 _raycaster._pickerNode = CollisionNode('_raycaster')
@@ -120,7 +120,7 @@ if __name__ == '__main__':
     app.run()
 
     # test
-    breakpoint()
+    # breakpoint()
     d = Entity(parent=scene, position=(0,0,2), model='cube', color=color.orange, collider='box', scale=2)
     e = Entity(model='cube', color=color.lime)
 
