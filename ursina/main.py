@@ -254,8 +254,6 @@ class Ursina(ShowBase):
         if window.frame_rate != False and not window.vsync:
             globalClock.setMode(ClockObject.MLimited)
             globalClock.setFrameRate(window.frame_rate)
-        else:
-            print_warning("Frame rate cannot be set with vsync")
         application.load_settings()
         if info:
             print('os:', platform.system())
