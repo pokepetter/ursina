@@ -9,6 +9,7 @@ from ursina.scene import instance as scene    # for toggling collider visibility
 from ursina.string_utilities import print_info, print_warning
 from screeninfo import get_monitors
 
+
 class Window(WindowProperties):
 
     def __init__(self):
@@ -30,8 +31,9 @@ class Window(WindowProperties):
         loadPrcFileData('', 'aux-display tinydisplay')
 
         self.vsync = True   # can't be set during play
+        self.frame_rate = False
         self.show_ursina_splash = False
-        self.frame_rate = None
+
         self.title = application.asset_folder.name
         self.borderless = True
         # self.icon = 'textures/ursina.ico'
@@ -88,8 +90,8 @@ class Window(WindowProperties):
 
     def center_on_screen(self):
         monitor = self.monitors[self.monitor_index]
-        x = monitor.x + (monitor.width-self.size[0])/2
-        y = monitor.y + (monitor.height-self.size[1])/2
+        x = monitor.x + (monitor.width-self.size.x)/2
+        y = monitor.y + (monitor.height-self.size.y)/2
         self.position = Vec2(x,y)
 
 
@@ -304,7 +306,7 @@ class Window(WindowProperties):
             super().__setattr__(name, value)
         except:
             pass
-        
+
         if name == 'fullscreen':
             try:
                 if value == True:
@@ -340,19 +342,9 @@ class Window(WindowProperties):
         if name == 'color':
             base.camNode.get_display_region(0).get_window().set_clear_color(value)
 
-        if name == 'frame_rate':
-            if value != None:
-                if not 'base' in sys.modules:
-                    print("Frames", value)
-                    loadPrcFileData('', 'clock-mode limited')
-                    loadPrcFileData('', f'clock-frame-rate {value}')
-                else:
-                    from panda3d.core import ClockObject
-                    globalClock.setMode(ClockObject.MLimited)
-                    globalClock.setFrameRate(int(value))
-                object.__setattr__(self, name, value)
-        if name == 'vsync' and object.__setattr__(self, "frame_rate", value) == None:
-            if not 'base' in sys.modules: # set vsync/framerate before window opened
+        if name == 'vsync':
+
+            if not 'base' in sys.modules:     # set vsync/framerate before window opened
                 if value == True or value == False:
                     loadPrcFileData('', f'sync-video {value}')
                 elif isinstance(value, int):
@@ -368,9 +360,8 @@ class Window(WindowProperties):
                 elif isinstance(value, (int, float, complex)):
                     globalClock.setMode(ClockObject.MLimited)
                     globalClock.setFrameRate(int(value))
+
             object.__setattr__(self, name, value)
-        elif name == 'vsync' and object.__setattr__(self, "frame_rate", value) != None:
-            print_warning("Vsync cannot be set when using a player-set framerate.")
 
 
 instance = Window()
@@ -379,7 +370,6 @@ instance = Window()
 if __name__ == '__main__':
     from ursina import *
     # application.development_mode = False
-    window.frame_rate = 24
     app = Ursina(borderless=1)
     # time.sleep(2)
     # window.forced_aspect_ratio = 1
@@ -390,7 +380,7 @@ if __name__ == '__main__':
     # window.fullscreen = False
     # window.fps_counter.enabled = False
     # window.cog_button.enabled = False
-    globalClock.setFrameRate(25)
+
     camera.orthographic = True
     camera.fov = 2
 

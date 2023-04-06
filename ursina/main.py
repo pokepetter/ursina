@@ -4,7 +4,7 @@ import platform
 from direct.showbase.ShowBase import ShowBase
 from direct.task.Task import Task
 from panda3d.core import ConfigVariableBool
-
+from panda3d.core import ClockObject
 from ursina import application
 from ursina import input_handler
 from ursina.window import instance as window
@@ -32,7 +32,6 @@ class Ursina(ShowBase):
         for name in ('title', 'size', 'vsync', 'forced_aspect_ratio'):
             if name in kwargs and hasattr(window, name):
                 setattr(window, name, kwargs[name])
-
         if 'development_mode' in kwargs:
             application.development_mode = kwargs['development_mode']
 
@@ -57,7 +56,7 @@ class Ursina(ShowBase):
         for name in ('fullscreen', 'position', 'show_ursina_splash', 'borderless', 'render_mode'):
             if name in kwargs and hasattr(window, name):
                 setattr(window, name, kwargs[name])
-
+            
         # camera
         if window_type != 'none':
             camera._cam = self.camera
@@ -146,7 +145,9 @@ class Ursina(ShowBase):
                 for script in entity.scripts:
                     if script.enabled and hasattr(script, 'update') and callable(script.update):
                         script.update()
-
+        if window.frame_rate != False and not window.vsync:
+            globalClock.setMode(ClockObject.MLimited)
+            globalClock.setFrameRate(window.frame_rate)
         return Task.cont
 
 
@@ -243,24 +244,25 @@ class Ursina(ShowBase):
                 for script in entity.scripts:
                     if script.enabled and hasattr(script, 'text_input') and callable(script.text_input):
                         script.text_input(key)
-
     def step(self):     # use this control the update loop yourself. call app.step() in a while loop for example, instead of app.run()
         self.taskMgr.step()
 
 
-    def run(self, info=True):
+    def run(self, info=False):
         if window.show_ursina_splash:
             from ursina.prefabs import ursina_splash
-
+        if window.frame_rate != False and not window.vsync:
+            globalClock.setMode(ClockObject.MLimited)
+            globalClock.setFrameRate(window.frame_rate)
+        else:
+            print_warning("Frame rate cannot be set with vsync")
         application.load_settings()
         if info:
             print('os:', platform.system())
             print('development mode:', application.development_mode)
             print('application successfully started')
-
         super().run()
-
-
+        
 if __name__ == '__main__':
     from ursina import *
     app = Ursina()
