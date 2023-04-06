@@ -90,8 +90,8 @@ class Window(WindowProperties):
 
     def center_on_screen(self):
         monitor = self.monitors[self.monitor_index]
-        x = monitor.x + (monitor.width-self.size.x)/2
-        y = monitor.y + (monitor.height-self.size.y)/2
+        x = monitor.x + (monitor.width-self.size[0])/2
+        y = monitor.y + (monitor.height-self.size[1])/2
         self.position = Vec2(x,y)
 
 
