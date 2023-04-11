@@ -53,7 +53,9 @@ class Window(WindowProperties):
 
 
     def late_init(self):
-        self.center_on_screen()
+        if application.window_type != 'none':
+            self.center_on_screen()
+
         if not application.development_mode:
             self.fullscreen = True
 
@@ -62,9 +64,10 @@ class Window(WindowProperties):
         self.render_mode = 'default'
         self.editor_ui = None
 
-        base.accept('aspectRatioChanged', self.update_aspect_ratio)
-        if self.always_on_top:
-            self.setZOrder(WindowProperties.Z_top)
+        if application.window_type != 'none':
+            base.accept('aspectRatioChanged', self.update_aspect_ratio)
+            if self.always_on_top:
+                self.setZOrder(WindowProperties.Z_top)
 
 
     @property
@@ -301,6 +304,8 @@ class Window(WindowProperties):
 
 
     def __setattr__(self, name, value):
+        if application.window_type == 'none':
+            return
         try:
             super().__setattr__(name, value)
         except:

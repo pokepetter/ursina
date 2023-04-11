@@ -28,7 +28,7 @@ def singleton(cls, **kwargs):
 
 @singleton
 class Ursina(ShowBase):
-    def __init__(self, **kwargs): # optional arguments: title, fullscreen, size, forced_aspect_ratio, position, vsync, borderless, show_ursina_splash, render_mode, development_mode, editor_ui_enabled.
+    def __init__(self, **kwargs): # optional arguments: title, fullscreen, size, forced_aspect_ratio, position, vsync, borderless, show_ursina_splash, render_mode, development_mode, editor_ui_enabled, window_type='onscreen'/'offscreen'/'none'.
         for name in ('title', 'size', 'vsync', 'forced_aspect_ratio'):
             if name in kwargs and hasattr(window, name):
                 setattr(window, name, kwargs[name])
@@ -36,16 +36,13 @@ class Ursina(ShowBase):
         if 'development_mode' in kwargs:
             application.development_mode = kwargs['development_mode']
 
-        window_type = 'onscreen'
-        p3d_window_type = None
+        application.window_type = 'onscreen'
         if 'window_type' in kwargs:
-            window_type = kwargs['window_type']
-            if window_type != 'onscreen':
-                p3d_window_type = window_type
-        application.window_type = window_type
+            application.window_type = kwargs['window_type']
+        # application.window_type = window_type
 
         application.base = self
-        super().__init__(windowType=p3d_window_type)
+        super().__init__(windowType=application.window_type)
 
         try:
             import gltf
@@ -59,7 +56,7 @@ class Ursina(ShowBase):
                 setattr(window, name, kwargs[name])
 
         # camera
-        if window_type != 'none':
+        if application.window_type != 'none':
             camera._cam = self.camera
             camera._cam.reparent_to(camera)
             camera.render = self.render
@@ -68,7 +65,7 @@ class Ursina(ShowBase):
             camera.set_up()
 
         # input
-        if window_type == 'onscreen':
+        if application.window_type == 'onscreen':
             self.buttonThrowers[0].node().setButtonDownEvent('buttonDown')
             self.buttonThrowers[0].node().setButtonUpEvent('buttonUp')
             self.buttonThrowers[0].node().setButtonRepeatEvent('buttonHold')
@@ -116,7 +113,7 @@ class Ursina(ShowBase):
         except e as Exception:
             print(e)
 
-        if window_type != 'none':
+        if application.window_type != 'none':
             window.make_editor_gui()
         if 'editor_ui_enabled' in kwargs:
             window.editor_ui.enabled = kwargs['editor_ui_enabled']
@@ -263,7 +260,7 @@ class Ursina(ShowBase):
 
 if __name__ == '__main__':
     from ursina import *
-    app = Ursina()
+    app = Ursina(window_type='offscreen')
     def input(key):
         print(key)
     app.run()
