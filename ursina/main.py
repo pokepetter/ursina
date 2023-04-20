@@ -120,7 +120,8 @@ class Ursina(ShowBase):
 
 
     def _update(self, task):
-        time.dt = globalClock.getDt() * application.time_scale          # time between frames
+        if application.calculate_dt:
+            time.dt = globalClock.getDt() * application.time_scale          # time between frames
         mouse.update()
 
         if hasattr(__main__, 'update') and __main__.update and not application.paused:

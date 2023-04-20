@@ -52,7 +52,8 @@ def load_texture(name, path=None):
         try:
             from psd_tools import PSDImage
         except (ModuleNotFoundError, ImportError) as e:
-            print('info: psd-tools3 not installed')
+            pass
+            # print('info: psd-tools3 not installed')
 
         for folder in folders:
             for filename in folder.glob('**/' + name + '.psd'):
