@@ -99,7 +99,6 @@ class Ursina(ShowBase):
         self.mouse = mouse
 
         scene.set_up()
-        self.calculate_dt = True
         self._update_task = taskMgr.add(self._update, "update")
 
         # try to load settings that need to be applied before entity creation
@@ -121,7 +120,7 @@ class Ursina(ShowBase):
 
 
     def _update(self, task):
-        if self.calculate_dt:
+        if application.calculate_dt:
             time.dt = globalClock.getDt() * application.time_scale          # time between frames
         mouse.update()
 
