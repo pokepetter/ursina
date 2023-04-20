@@ -5,6 +5,7 @@ from ursina import string_utilities
 
 paused = False
 time_scale = 1
+calculate_dt = True
 sequences = []
 trace_entity_definition = False # enable to set entity.line_definition
 print_entity_definition = False
