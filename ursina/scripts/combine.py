@@ -68,7 +68,7 @@ def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[]):
         [destroy(e) for e in to_destroy]
 
     combine_parent.model = Mesh(vertices=verts, triangles=tris, normals=norms, uvs=uvs, colors=cols, mode='triangle')
-    print('combined')
+    # print('combined')
     # entity.model = Mesh(vertices=verts,  mode='triangle')
     # entity.flatten_strong()
     if analyze:
