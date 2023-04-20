@@ -438,7 +438,7 @@ class Entity(NodePath):
 
     @property
     def world_position(self):
-        return Vec3(self.get_position(render))
+        return Vec3(self.get_position(scene))
 
     @world_position.setter
     def world_position(self, value):
@@ -447,27 +447,27 @@ class Entity(NodePath):
         if isinstance(value, Vec2):
             value = Vec3(*value, self.z)
 
-        self.setPos(render, Vec3(value[0], value[1], value[2]))
+        self.setPos(scene, Vec3(value[0], value[1], value[2]))
 
     @property
     def world_x(self):
-        return self.getX(render)
+        return self.getX(scene)
     @property
     def world_y(self):
-        return self.getY(render)
+        return self.getY(scene)
     @property
     def world_z(self):
-        return self.getZ(render)
+        return self.getZ(scene)
 
     @world_x.setter
     def world_x(self, value):
-        self.setX(render, value)
+        self.setX(scene, value)
     @world_y.setter
     def world_y(self, value):
-        self.setY(render, value)
+        self.setY(scene, value)
     @world_z.setter
     def world_z(self, value):
-        self.setZ(render, value)
+        self.setZ(scene, value)
 
     @property
     def position(self):
@@ -590,34 +590,34 @@ class Entity(NodePath):
 
     @property
     def world_scale(self):
-        return Vec3(*self.getScale(base.render))
+        return Vec3(*self.getScale(scene))
     @world_scale.setter
     def world_scale(self, value):
         if isinstance(value, (int, float, complex)):
             value = Vec3(value, value, value)
 
-        self.setScale(base.render, value)
+        self.setScale(scene, value)
 
     @property
     def world_scale_x(self):
-        return self.getScale(base.render)[0]
+        return self.getScale(scene)[0]
     @world_scale_x.setter
     def world_scale_x(self, value):
-        self.setScale(base.render, Vec3(value, self.world_scale_y, self.world_scale_z))
+        self.setScale(scene, Vec3(value, self.world_scale_y, self.world_scale_z))
 
     @property
     def world_scale_y(self):
-        return self.getScale(base.render)[1]
+        return self.getScale(scene)[1]
     @world_scale_y.setter
     def world_scale_y(self, value):
-        self.setScale(base.render, Vec3(self.world_scale_x, value, self.world_scale_z))
+        self.setScale(scene, Vec3(self.world_scale_x, value, self.world_scale_z))
 
     @property
     def world_scale_z(self):
-        return self.getScale(base.render)[2]
+        return self.getScale(scene)[2]
     @world_scale_z.setter
     def world_scale_z(self, value):
-        self.setScale(base.render, Vec3(self.world_scale_x, self.world_scale_y, value))
+        self.setScale(scene, Vec3(self.world_scale_x, self.world_scale_y, value))
 
     @property
     def scale(self):
@@ -672,19 +672,19 @@ class Entity(NodePath):
 
     @property
     def forward(self): # get forward direction.
-        return Vec3(*render.getRelativeVector(self, (0, 0, 1)))
+        return Vec3(*scene.getRelativeVector(self, (0, 0, 1)))
     @property
     def back(self): # get backwards direction.
         return -self.forward
     @property
     def right(self): # get right direction.
-        return Vec3(*render.getRelativeVector(self, (1, 0, 0)))
+        return Vec3(*scene.getRelativeVector(self, (1, 0, 0)))
     @property
     def left(self): # get left direction.
         return -self.right
     @property
     def up(self): # get up direction.
-        return Vec3(*render.getRelativeVector(self, (0, 1, 0)))
+        return Vec3(*scene.getRelativeVector(self, (0, 1, 0)))
     @property
     def down(self): # get down direction.
         return -self.up
@@ -1277,7 +1277,7 @@ class Entity(NodePath):
         nP = collision.get_into_node_path().parent
         point = collision.get_surface_point(nP)
         point = Vec3(*point)
-        world_point = collision.get_surface_point(render)
+        world_point = collision.get_surface_point(scene)
         world_point = Vec3(*world_point)
         hit_dist = distance(self.world_position, world_point)
 
@@ -1291,7 +1291,7 @@ class Entity(NodePath):
         normal = collision.get_surface_normal(collision.get_into_node_path().parent).normalized()
         self.hit.normal = Vec3(*normal)
 
-        normal = collision.get_surface_normal(render).normalized()
+        normal = collision.get_surface_normal(scene).normalized()
         self.hit.world_normal = Vec3(*normal)
 
         self.hit.entities = []
