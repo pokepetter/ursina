@@ -159,6 +159,7 @@ if build_engine:
         'Lib/site-packages/direct/',
         'Lib/site-packages/pyperclip/',
         'Lib/site-packages/PIL/',
+        'Lib/site-packages/screeninfo/',
         'DLLs/libffi-7.dll',
         'DLLs/_ctypes.pyd',
         ]
