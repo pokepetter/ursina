@@ -190,7 +190,7 @@ class Ursina(ShowBase):
 
 
     def input(self, key, is_raw=False):
-        """Built-in input handler. Calls the input function of the current scene and the input function of the main script. Can be overriden.
+        """Built-in input handler. Calls the input function of the current scene and the input function of the main script.
 
         Args:
             key (Any): The input key.
