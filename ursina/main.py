@@ -120,10 +120,8 @@ class Ursina(ShowBase):
         # try to load settings that need to be applied before entity creation
         application.load_settings()
 
-        if application.development_mode:
-            from ursina.prefabs.hot_reloader import HotReloader
-            # make sure it's running from a file and not an interactive session.
-            application.hot_reloader = HotReloader(__main__.__file__ if hasattr(__main__, '__file__') else 'None')
+        from ursina.prefabs.hot_reloader import HotReloader
+        application.hot_reloader = HotReloader(__main__.__file__ if hasattr(__main__, '__file__') else 'None', enabled=application.development_mode)  # make sure it's running from a file and not an interactive session.
 
         try:
             from ursina import gamepad
@@ -285,7 +283,7 @@ class Ursina(ShowBase):
 
 if __name__ == '__main__':
     from ursina import *
-    app = Ursina(window_type='offscreen')
+    app = Ursina()
     def input(key):
         print(key)
     app.run()
