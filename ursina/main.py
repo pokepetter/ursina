@@ -40,35 +40,11 @@ class Ursina(ShowBase):
     def __init__(
         self, **kwargs # I couldn't figure out how to type-hint this. Please don't make fun of me.
     ) -> Ursina:
-        """
-        Summary: 
-            The main class of the Ursina Engine. It is a singleton, so you can only have one instance of it. It is responsible for creating the window, running the game loop, and handling the main scene.
-        
-        Inherits:
-            ShowBase
-
-        Args:
-
-            (None of these args actually default to what they claim to default to. They are just here for the future!!!)
-
-            title (OptionalString): The title of the window. Defaults to "Ursina Engine".\n
-            window_size (WindowSize): The size of the window. Defaults to (1280, 720).\n
-            vertical_sync (OptionalBool): Whether or not to use vertical sync. Defaults to True.\n
-            forced_aspect_ratio (OptionalBool): Whether or not to force the aspect ratio. Defaults to False.\n
-            fullscreen (OptionalBool): Whether or not to set the window to the full size of the screen. Defaults to False.\n
-            borderless (OptionalBool): Whether or not to make the window borderless. Defaults to False.\n
-            show_ursina_splash (OptionalBool): Whether or not to show the Ursina splash screen. Defaults to False.\n
-            render_mode (RenderMode): The render mode. Defaults to "default".\n
-            window_type (WindowType): The type of window. Defaults to "onscreen".\n
-            development_mode (OptionalBool): Whether or not to enable development mode. Defaults to False.\n
-            editor_ui_enabled (OptionalBool): Whether or not to enable the editor UI. Defaults to False.\n
+        """The main class of Ursina engine. It is a singleton class, so you can only have one instance of it. Handles the entire application.
 
         Returns:
-            Ursina: The Ursina instance.
-
-        Aliases:
-            None.
-        """
+            Ursina: The instance of the Ursina class.
+        """        
         for name in ("title", "size", "vsync", "forced_aspect_ratio"):
             if name in kwargs and hasattr(window, name):
                 setattr(window, name, kwargs[name])
@@ -201,6 +177,7 @@ class Ursina(ShowBase):
             window.editor_ui.enabled = kwargs["editor_ui_enabled"]
 
     def _update(self, task):
+        """Private update function. Calls the update function of the main script and all entities."""
         if application.calculate_dt:
             time.dt = (
                 globalClock.getDt() * application.time_scale
@@ -235,6 +212,12 @@ class Ursina(ShowBase):
         return Task.cont
 
     def input_up(self, key, is_raw=False):
+        """Called when a key is released. Calls the input function of the current scene, then the input function of the current entity.
+
+        Args:
+            key (_type_): The key that was released.
+            is_raw (bool, optional): Whether or not to pass the raw input. Defaults to False.
+        """        
         if not is_raw and key in keyboard_keys:
             return
 
@@ -245,6 +228,12 @@ class Ursina(ShowBase):
         self.input(key)
 
     def input_hold(self, key, is_raw=False):
+        """Called when a key is held down. Calls the input function of the current scene, then the input function of the current entity.
+
+        Args:
+            key (_type_): The key being held down.
+            is_raw (bool, optional): Whether or not to pass the raw input. Defaults to False.
+        """
         key = key.replace("control-", "")
         key = key.replace("shift-", "")
         key = key.replace("alt-", "")
@@ -256,6 +245,12 @@ class Ursina(ShowBase):
         self.input(key)
 
     def input(self, key, is_raw=False):
+        """Called when any input is detected. Calls the input function of the current scene, then the input function of the current entity.
+
+        Args:
+            key (Any): The key that was pressed.
+            is_raw (bool, optional): Whether or not to pass the raw input. Defaults to False.
+        """
         if not is_raw and key in keyboard_keys:
             return
 
@@ -303,6 +298,11 @@ class Ursina(ShowBase):
         mouse.input(key)
 
     def text_input(self, key):
+        """Called when a key is pressed while the mouse is over the window.
+
+        Args:
+            key (_type_): The key that was pressed.
+        """
         key_code = ord(key)
         if key_code < 32 or (key_code >= 127 and key_code <= 160):
             return
@@ -332,12 +332,19 @@ class Ursina(ShowBase):
                     ):
                         script.text_input(key)
 
-    def step(
-        self,
-    ):  # use this control the update loop yourself. call app.step() in a while loop for example, instead of app.run()
+    def step(self):
+        """Steps the application.
+        
+        use this control the update loop yourself. call app.step() in a while loop for example, instead of app.run()
+        """
         self.taskMgr.step()
 
-    def run(self, info=True):
+    def run(self, info=True): 
+        """Runs the application.
+
+        Args:
+
+            info (bool, optional): Whether or not to display information. Defaults to True. """
         if window.show_ursina_splash:
             from ursina.prefabs import ursina_splash
 
