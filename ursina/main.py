@@ -190,7 +190,7 @@ class Ursina(ShowBase):
 
 
     def input(self, key, is_raw=False):
-        """Built-in input handler. Calls the input function of the current scene and the input function of the main script.
+        """Built-in input handler. Propagates the input to all entities and the input function of the main script. MAin use case for this it to simulate input though code, like: app.input('a').
 
         Args:
             key (Any): The input key.
