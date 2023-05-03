@@ -41,7 +41,7 @@ class Ursina(ShowBase):
         self, **kwargs # I couldn't figure out how to type-hint this. Please don't make fun of me.
     ) -> Ursina:
         """
-        Summary:
+        Summary: 
             The main class of the Ursina Engine. It is a singleton, so you can only have one instance of it. It is responsible for creating the window, running the game loop, and handling the main scene.
         
         Inherits:
