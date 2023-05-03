@@ -4,8 +4,11 @@ from ursina.entity import Entity
 from ursina import curve
 from ursina.ursinastuff import invoke
 from ursina.ursinastuff import destroy as _destroy
+import panda3d
 
 from panda3d.core import Filename
+
+from typing import Union
 
 
 class Audio(Entity):
@@ -13,6 +16,13 @@ class Audio(Entity):
     volume_multiplier = .5  #
 
     def __init__(self, sound_file_name='', autoplay=True, auto_destroy=False, **kwargs):
+        """Plays a sound file. If no sound_file_name is given, it will only create an Audio object that can be used to play sounds.
+
+        Args:
+            sound_file_name (str, optional): The name of the sound file.. Defaults to ''.
+            autoplay (bool, optional): Whether or not to play on init. Defaults to True.
+            auto_destroy (bool, optional): Whether or not to destroy after audio finishes. Defaults to False.
+        """
         super().__init__(**kwargs)
         # printvar(sound_file_name)
         if sound_file_name:
@@ -66,7 +76,12 @@ class Audio(Entity):
         return self._clip
 
     @clip.setter
-    def clip(self, value):
+    def clip(self, value: Union[str, None]):
+        """Sets the audio clip to play.
+
+        Args:
+            value (Union[str, panda3d.core.AudioSound]): The name of the audio file or the audio clip itself.
+        """
         if isinstance(value, str):
             self.name = value
 
@@ -95,24 +110,45 @@ class Audio(Entity):
 
 
     @property
-    def length(self):       # get the duration of the audio clip.
+    def length(self):     
+        """Get the duration of the audio clip."""
         return self.clip.length() if self.clip else 0
 
     @property
     def status(self):
+        """Get the status of the audio clip.
+
+        Returns:
+            @property: The status of the audio clip.
+        """
         if self.clip:
             return self.clip.status()
 
     @property
     def ready(self):
+        """Get whether or not the audio clip is ready to play.
+
+        Returns:
+            int: 1 if ready, 0 if not.
+        """
         return 1 if self.clip and self.status > 0 else 0
 
     @property
     def playing(self):
+        """Get whether or not the audio clip is playing.
+
+        Returns:
+            int: 1 if playing, 0 if not.
+        """
         return 1 if self.clip and self.status == 2 else 0
 
     @property
     def time(self):
+        """Get the current time of the audio clip.
+
+        Returns:
+            float: The current time of the audio clip.
+        """
         return self.clip.get_time()
 
     @time.setter
@@ -121,15 +157,22 @@ class Audio(Entity):
 
     @property
     def balance(self):      # pan the audio. should be a value between -.5 and .5. default: 0
+        """Get the balance of the audio clip."""
         return self._balance
 
     @balance.setter
     def balance(self, value):
+        """Set the balance of the audio clip."""
         self._balance = value
         self.clip.setBalance(value*2)
 
 
     def play(self, start=0):
+        """Play the audio clip.
+        
+        Args:
+            start (int, optional): The time to start playing from. Defaults to 0.
+        """
         if hasattr(self, 'clip') and self.clip:
             # print('play from:', start)
             self.time = start
@@ -138,6 +181,7 @@ class Audio(Entity):
             print(self, 'has no audio clip')
 
     def pause(self):
+        """Pause the audio clip."""
         if self.clip:
             self.paused_volume = self.volume
             self.paused_pitch = self.pitch
@@ -147,6 +191,7 @@ class Audio(Entity):
             self.stop(destroy=False)
 
     def resume(self):
+        """Resume the audio clip."""
         if self.clip and hasattr(self, 'temp_time'):
             self.clip = self.name
             self.volume = self.paused_volume
@@ -155,16 +200,42 @@ class Audio(Entity):
             self.play(self.temp_time)
 
     def stop(self, destroy=True):
+        """Stop the audio clip.
+
+        Args:
+            destroy (bool, optional): Whether or not to destroy the audio clip once stopped. Defaults to True.
+        """
         if self.clip:
             self.clip.stop()
         if destroy:
             _destroy(self)
 
     def fade(self, value, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
+        """Fade the audio clip to a volume.
+
+        Args:
+            value (float): The volume to fade to.
+            duration (float, optional): The duration of the fade. Defaults to .5.
+            delay (int, optional): The delay before the fade starts. Defaults to 0.
+            curve (function, optional): The curve of the fade. Defaults to curve.in_expo.
+            resolution (int, optional): The resolution of the fade. Defaults to None.
+            interrupt (bool, optional): Whether or not to interrupt the fade. Defaults to True.
+        """
         self.animate('volume', value, duration, delay, curve, resolution, interrupt)
 
     def fade_in(self, value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt='finish',
                 destroy_on_ended=False):
+        """Fade the audio clip in.
+        
+        Args:
+            value (float, optional): The volume to fade to. Defaults to 1.
+            duration (float, optional): The duration of the fade. Defaults to .5.
+            delay (int, optional): The delay before the fade starts. Defaults to 0.
+            curve (function, optional): The curve of the fade. Defaults to curve.in_expo.
+            resolution (int, optional): The resolution of the fade. Defaults to None.
+            interrupt (bool, optional): Whether or not to interrupt the fade. Defaults to True.
+            destroy_on_ended (bool, optional): Whether or not to destroy the audio clip once the fade is finished. Defaults to False.
+        """
         if duration <= 0:
             self.volume = value
         else:
@@ -174,6 +245,17 @@ class Audio(Entity):
 
     def fade_out(self, value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt='finish',
                  destroy_on_ended=True):
+        """Fade the audio clip out.
+        
+        Args:
+            value (float, optional): The volume to fade to. Defaults to 0.
+            duration (float, optional): The duration of the fade. Defaults to .5.
+            delay (int, optional): The delay before the fade starts. Defaults to 0.
+            curve (function, optional): The curve of the fade. Defaults to curve.in_expo.
+            resolution (int, optional): The resolution of the fade. Defaults to None.
+            interrupt (bool, optional): Whether or not to interrupt the fade. Defaults to True.
+            destroy_on_ended (bool, optional): Whether or not to destroy the audio clip once the fade is finished. Defaults to True.
+        """
         if duration <= 0:
             self.volume = value
         else:
