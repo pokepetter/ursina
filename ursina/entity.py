@@ -72,7 +72,7 @@ class Entity(NodePath):
         self.model = None       # set model with model='model_name' (without file type extension)
         self.color = color.white
         self.texture = None     # set model with texture='texture_name'. requires a model to be set beforehand.
-        self.render_queue = 0
+        self.render_queue = 0   # for custom sorting in case of conflict. To sort things in 2d, set .z instead of using this.
         self.double_sided = False
         if Entity.default_shader:
             self.shader = Entity.default_shader
@@ -152,10 +152,10 @@ class Entity(NodePath):
         return new_value
 
 
-    def enable(self):
+    def enable(self): # same as .enabled = True
         self.enabled = True
 
-    def disable(self):
+    def disable(self): # same as .enabled = False
         self.enabled = False
 
 
@@ -795,7 +795,7 @@ class Entity(NodePath):
             return Vec2(1,1)
         return self._texture_scale
     @texture_scale.setter
-    def texture_scale(self, value):
+    def texture_scale(self, value):  # how many times the texture should repeat, eg. texture_scale=(8,8).
         self._texture_scale = value
         if self.model and self.texture:
             self.model.setTexScale(TextureStage.getDefault(), value[0], value[1])
@@ -935,11 +935,11 @@ class Entity(NodePath):
         return Bounds(start=_bounds.start*self.scale, end=_bounds.end*self.scale, center=_bounds.center, size=_bounds.size*self.scale)
 
 
-    def get_position(self, relative_to=scene):
+    def get_position(self, relative_to=scene):  # get position relative to on other Entity. In most cases, use .position instead.
         return self.getPos(relative_to)
 
 
-    def set_position(self, value, relative_to=scene):
+    def set_position(self, value, relative_to=scene): # set position relative to on other Entity. In most cases, use .position instead.
         self.setPos(relative_to, Vec3(value[0], value[1], value[2]))
 
 
