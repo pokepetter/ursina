@@ -29,6 +29,22 @@ def singleton(cls, **kwargs):
 @singleton
 class Ursina(ShowBase):
     def __init__(self, **kwargs): # optional arguments: title, fullscreen, size, forced_aspect_ratio, position, vsync, borderless, show_ursina_splash, render_mode, development_mode, editor_ui_enabled, window_type='onscreen'/'offscreen'/'none'.
+        """The main class of Ursina. This class is a singleton, so you can only have one instance of it.
+
+        Keyword Args (optional):
+            title (str): The title of the window.\n
+            fullscreen (bool): Whether the window should be fullscreen or not.\n
+            size (tuple(int, int)): The size of the window.\n
+            forced_aspect_ratio (bool): Whether the window should have a forced aspect ratio or not.\n
+            position (tuple(int, int)): The position of the window.\n
+            vsync (bool): Whether the window should have vsync enabled or not.\n
+            borderless (bool): Whether the window should be borderless or not.\n
+            show_ursina_splash (bool): Whether the Ursina splash should be shown or not.\n
+            render_mode (str): The render mode of the window.\n
+            development_mode (bool): Whether the development mode should be enabled or not.\n
+            editor_ui_enabled (bool): Whether the editor UI should be enabled or not.\n
+            window_type (str): The type of the window. Can be 'onscreen', 'offscreen' or 'none'.\n
+        """
         for name in ('title', 'size', 'vsync', 'forced_aspect_ratio'):
             if name in kwargs and hasattr(window, name):
                 setattr(window, name, kwargs[name])
@@ -121,6 +137,7 @@ class Ursina(ShowBase):
 
 
     def _update(self, task):
+        """Internal task that runs every frame. Updates time, mouse, sequences and entities."""
         if application.calculate_dt:
             time.dt = globalClock.getDt() * application.time_scale          # time between frames
         mouse.update()
@@ -173,6 +190,12 @@ class Ursina(ShowBase):
 
 
     def input(self, key, is_raw=False):
+        """Built-in input handler. Calls the input function of the current scene and the input function of the main script. Can be overriden.
+
+        Args:
+            key (Any): The input key.
+            is_raw (bool, optional): Whether or not the input should be treated as "raw". Defaults to False.
+        """
         if not is_raw and key in keyboard_keys:
             return
 
