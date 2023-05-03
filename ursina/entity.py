@@ -52,6 +52,14 @@ class Entity(NodePath):
         'shader':None, 'texture':None, 'color':color.white, 'collider':None}
 
     def __init__(self, add_to_scene_entities=True, **kwargs):
+        """Base class for all entities. Entities are the building blocks of your game. They can be empty or have a model, collider, texture, shader, etc.
+
+        Args:
+            add_to_scene_entities (bool, optional): Whether it will be added to scene.entities or not. Defaults to True.
+
+        Returns:
+            Entity: An Entity object.
+        """
         self._children = []
         super().__init__(self.__class__.__name__)
 
