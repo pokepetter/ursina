@@ -10,11 +10,13 @@ from panda3d.core import CullFaceAttrib
 from time import perf_counter
 from ursina.string_utilities import print_info, print_warning
 from ursina import color
+import panda3d.core as p3d
+import gltf
 
 imported_meshes = dict()
 blender_scenes = dict()
 
-def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursinamesh', '.obj', '.glb', '.gltf', '.blend'), use_deepcopy=False):
+def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursinamesh', '.obj', '.glb', '.gltf', '.blend'), use_deepcopy=False, gltf_no_srgb=None):
     if not isinstance(name, str):
         raise TypeError(f"Argument save must be of type str, not {type(str)}")
 
@@ -43,6 +45,16 @@ def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursina
             if filetype == '.bam':
                 print_info('loading bam')
                 return loader.loadModel(filename)  # type: ignore
+
+            if filetype == '.gltf' or filetype == '.glb':
+                gltf_settings = gltf.GltfSettings()
+                if gltf_no_srgb is None:
+                    gltf_settings.no_srgb = application.gltf_no_srgb
+                else:
+                    gltf_settings.no_srgb = gltf_no_srgb
+                model_root = gltf.load_model(str(filename), gltf_settings=gltf_settings)
+                model_node_path = p3d.NodePath(model_root)
+                return model_node_path
 
             if filetype == '.ursinamesh':
                 try:
