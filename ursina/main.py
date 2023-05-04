@@ -50,6 +50,9 @@ class Ursina(ShowBase):
         except:
             pass
 
+        if 'gltf_no_srgb' in kwargs:
+            application.gltf_no_srgb = kwargs['gltf_no_srgb']
+
         window.late_init()
         for name in ('fullscreen', 'position', 'show_ursina_splash', 'borderless', 'render_mode'):
             if name in kwargs and hasattr(window, name):

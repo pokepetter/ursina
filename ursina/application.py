@@ -21,6 +21,8 @@ if 'src' in dirs and 'python' in dirs:
 
 window_type = 'onscreen'
 
+gltf_no_srgb = True
+
 print_info = development_mode
 print_warnings = True
 raise_exception_on_missing_model = False
