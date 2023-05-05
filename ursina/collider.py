@@ -29,7 +29,16 @@ class Collider(NodePath):
 
 
 class BoxCollider(Collider):
-    def __init__(self, entity, center=(0,0,0), size=(1,1,1)):
+    def __init__(self, entity: Entity, center: Vec3=Vec3(0,0,0), size: Vec3=(1,1,1)):
+        """Creates a box collider for an entity. Should be used for 2D entities.
+
+        Args:
+            entity (Entity): The entity to attach the collider to.
+
+            center (Vec3, optional): Defaults to (0,0,0).
+
+            size (Vec3, optional): Defaults to (1,1,1).
+        """
         super().__init__()
         size = [e/2 for e in size]
         size = [max(0.001, e) for e in size] # collider needs to have thickness
@@ -43,7 +52,16 @@ class BoxCollider(Collider):
         # for some reason self.node_path gets removed after this and can't be shown.
 
 class SphereCollider(Collider):
-    def __init__(self, entity, center=(0,0,0), radius=.5):
+    def __init__(self, entity: Entity, center: Vec3=Vec3(0,0,0), radius: float=.5):
+        """Creates a sphere collider for an entity. Should be used for 3D entities.
+
+        Args:
+            entity (Entity): The entity to attach the collider to.
+
+            center (Vec3, optional): Defaults to (0,0,0).
+
+            radius (float, optional): Defaults to 0.5.
+        """
         super().__init__()
         self.shape = CollisionSphere(center[0], center[1], center[2], radius)
         self.node_path = entity.attachNewNode(CollisionNode('CollisionNode'))
@@ -52,7 +70,18 @@ class SphereCollider(Collider):
 
         
 class CapsuleCollider(Collider):
-    def __init__(self, entity, center=(0,0,0), height=2, radius=.5):
+    def __init__(self, entity: Entity, center: Vec3 = Vec3(0,0,0), height = 2, radius = 0.5):
+        """Creates a capsule collider for an entity. Should be used for 3D entities.
+
+        Args:
+            entity (Entity): The entity to attach the collider to.
+
+            center (Vec3, optional): Defaults to (0,0,0).
+
+            height (int, optional): Defaults to 2.
+
+            radius (float, optional): Defaults to 0.5.
+        """
         super().__init__()
         self.shape = CollisionCapsule(center[0], center[1] + radius, center[2], center[0], center[1] + height, center[2], radius)
         self.node_path = entity.attachNewNode(CollisionNode('CollisionNode'))
@@ -61,7 +90,16 @@ class CapsuleCollider(Collider):
 
 
 class MeshCollider(Collider):
-    def __init__(self, entity, mesh=None, center=(0,0,0)):
+    def __init__(self, entity: Entity, mesh: Mesh = None, center: Vec3 = Vec3(0,0,0)):
+        """Creates a mesh collider for an entity. Should be used for Mesh entities.
+
+        Args:
+            entity (Entity): The entity to attach the collider to.
+
+            mesh (Mesh, optional): Defaults to None.
+
+            center (tuple, optional): Defaults to (0,0,0).
+        """
         super().__init__()
         center = Vec3(center)
         if mesh == None and entity.model:
