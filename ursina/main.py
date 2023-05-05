@@ -32,18 +32,29 @@ class Ursina(ShowBase):
         """The main class of Ursina. This class is a singleton, so you can only have one instance of it.
 
         Keyword Args (optional):
-            title (str): The title of the window.\n
-            fullscreen (bool): Whether the window should be fullscreen or not.\n
-            size (tuple(int, int)): The size of the window.\n
-            forced_aspect_ratio (bool): Whether the window should have a forced aspect ratio or not.\n
-            position (tuple(int, int)): The position of the window.\n
-            vsync (bool): Whether the window should have vsync enabled or not.\n
-            borderless (bool): Whether the window should be borderless or not.\n
-            show_ursina_splash (bool): Whether the Ursina splash should be shown or not.\n
-            render_mode (str): The render mode of the window.\n
-            development_mode (bool): Whether the development mode should be enabled or not.\n
-            editor_ui_enabled (bool): Whether the editor UI should be enabled or not.\n
-            window_type (str): The type of the window. Can be 'onscreen', 'offscreen' or 'none'.\n
+            title (str): The title of the window.
+
+            fullscreen (bool): Whether the window should be fullscreen or not.
+
+            size (tuple(int, int)): The size of the window.
+
+            forced_aspect_ratio (bool): Whether the window should have a forced aspect ratio or not.
+
+            position (tuple(int, int)): The position of the window.
+
+            vsync (bool): Whether the window should have vsync enabled or not.
+
+            borderless (bool): Whether the window should be borderless or not.
+
+            show_ursina_splash (bool): Whether the Ursina splash should be shown or not.
+
+            render_mode (str): The render mode of the window.
+
+            development_mode (bool): Whether the development mode should be enabled or not.
+
+            editor_ui_enabled (bool): Whether the editor UI should be enabled or not.
+            
+            window_type (str): The type of the window. Can be 'onscreen', 'offscreen' or 'none'.
         """
         for name in ('title', 'size', 'vsync', 'forced_aspect_ratio'):
             if name in kwargs and hasattr(window, name):
