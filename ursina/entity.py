@@ -52,6 +52,11 @@ class Entity(NodePath):
         'shader':None, 'texture':None, 'color':color.white, 'collider':None}
 
     def __init__(self, add_to_scene_entities=True, **kwargs):
+        """Base class for all entities in the engine. Inherits from NodePath, so it can be used as a parent for other entities.
+
+        Args:
+            add_to_scene_entities (bool, optional): Whether or not to add the entity to scene.entities. Defaults to True.
+        """
         self._children = []
         super().__init__(self.__class__.__name__)
 
