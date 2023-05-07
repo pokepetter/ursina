@@ -1,4 +1,4 @@
-calculate_colorfrom ursina import Entity, Slider, color, Button, camera, Quad, copy
+from ursina import Entity, Slider, color, Button, camera, Quad, copy
 
 
 class ColorPicker(Entity):
