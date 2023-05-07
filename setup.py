@@ -8,7 +8,7 @@ setup(
     description='An easy to use game engine/framework for python.',
     long_description=long_desc,
     long_description_content_type="text/markdown",
-    version='5.2.0',
+    version='5.3.0',
     url='https://github.com/pokepetter/ursina',
     author='Petter Amland',
     author_email='pokepetter@gmail.com',
