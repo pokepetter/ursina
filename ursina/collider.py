@@ -31,6 +31,9 @@ class Collider(NodePath):
 class BoxCollider(Collider):
     def __init__(self, entity, center=(0,0,0), size=(1,1,1)):
         super().__init__()
+        self.center = center
+        self.size = size
+
         size = [e/2 for e in size]
         size = [max(0.001, e) for e in size] # collider needs to have thickness
         self.shape = CollisionBox(Vec3(center[0], center[1], center[2]), size[0], size[1], size[2])
@@ -44,15 +47,20 @@ class BoxCollider(Collider):
 
 class SphereCollider(Collider):
     def __init__(self, entity, center=(0,0,0), radius=.5):
+        self.center = center
+        self.radius = radius
         super().__init__()
         self.shape = CollisionSphere(center[0], center[1], center[2], radius)
         self.node_path = entity.attachNewNode(CollisionNode('CollisionNode'))
         self.node_path.node().addSolid(self.shape)
         self.visible = False
 
-        
+
 class CapsuleCollider(Collider):
     def __init__(self, entity, center=(0,0,0), height=2, radius=.5):
+        self.center = center
+        self.height = height
+        self.radius = radius
         super().__init__()
         self.shape = CollisionCapsule(center[0], center[1] + radius, center[2], center[0], center[1] + height, center[2], radius)
         self.node_path = entity.attachNewNode(CollisionNode('CollisionNode'))
@@ -62,6 +70,7 @@ class CapsuleCollider(Collider):
 
 class MeshCollider(Collider):
     def __init__(self, entity, mesh=None, center=(0,0,0)):
+        self.center = center
         super().__init__()
         center = Vec3(center)
         if mesh == None and entity.model:
