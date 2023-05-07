@@ -41,7 +41,7 @@ def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursina
         # warning: glob is case-insensitive on windows, so m.path will be all lowercase
         for filename in path.glob(f'**/{name}{filetype}'):
             if filetype == '.bam':
-                print_info('loading bam')
+                # print_info('loading bam')
                 return loader.loadModel(filename)  # type: ignore
 
             if filetype == '.ursinamesh':
@@ -58,20 +58,20 @@ def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursina
 
             if filetype == '.obj':
                 # print('found obj', filename)
-                # m = loader.loadModel(filename)
-                # m.setAttrib(CullFaceAttrib.make(CullFaceAttrib.MCullCounterClockwise))
                 m = obj_to_ursinamesh(path=path, name=name, return_mesh=True)
                 m.path = filename
                 m.name = name
                 imported_meshes[name] = m
+                if not use_deepcopy:
+                    m.save(f'{name}.bam')
+
                 return m
 
             elif filetype == '.blend':
                 print_info('found blend file:', filename)
                 if compress_models(path=path, name=name):
                     # obj_to_ursinamesh(name=name)
-                    return load_model(name, path)
-
+                    return load_model(name, path, use_deepcopy=use_deepcopy)
             else:
                 try:
                     return loader.loadModel(filename)  # type: ignore
@@ -215,15 +215,7 @@ def compress_models(path=None, outpath=application.compressed_models_folder, nam
     return exported
 
 
-def obj_to_ursinamesh(
-    path=application.compressed_models_folder,
-    outpath=application.compressed_models_folder,
-    name='*',
-    return_mesh=True,
-    save_to_file=False,
-    delete_obj=False
-    ):
-
+def obj_to_ursinamesh(path=application.compressed_models_folder, outpath=application.compressed_models_folder, name='*', return_mesh=True, save_to_file=False, delete_obj=False):
     if name.endswith('.obj'):
         name = name[:-4]
 
