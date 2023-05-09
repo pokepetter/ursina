@@ -2,7 +2,6 @@ from collections import defaultdict
 from enum import Enum
 
 
-
 class Keys(Enum):
     left_mouse_down = 'left mouse down'
     left_mouse_up = 'left mouse up'
@@ -123,7 +122,7 @@ def input(key):
 
     key = key.replace('mouse down', 'mouse')
 
-    if key.endswith(' up') and key != 'page up':
+    if key.endswith(' up') and key != 'page up' and key != 'gamepad dpad up':
         held_keys[key[:-3]] = 0
     else:
         held_keys[key] = 1
