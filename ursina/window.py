@@ -149,6 +149,16 @@ class Window(WindowProperties):
             self.entity_counter.t += time.dt
         self.entity_counter.update = _entity_counter_update
 
+        self.collider_counter = Text(parent=self.editor_ui, eternal=True, origin=(-.5,.5), text='00', ignore=False, t=.1,
+            position=((.5*self.aspect_ratio)-self.exit_button.scale_x, .38+(.02*(not self.exit_button.enabled)), -999))
+        Text(parent=self.editor_ui, position=self.collider_counter.position, text='colliders:', origin=(-.5,-.75), scale=.4, add_to_scene_entities=False)
+        def _collider_counter_update():
+            if self.collider_counter.t > 1:
+                self.collider_counter.text = str(len([e for e in scene.entities if e.collider and e.enabled])-4)
+                self.collider_counter.i = 0
+            self.collider_counter.t += time.dt
+        self.collider_counter.update = _collider_counter_update
+
 
         import webbrowser
         self.cog_menu = ButtonList({
