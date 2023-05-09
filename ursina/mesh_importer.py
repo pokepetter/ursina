@@ -440,15 +440,15 @@ def compress_models_fast(model_name=None, write_to_disk=False):
 
                 return file_content
 
-def ursina_mesh_to_obj(mesh, name='', out_path=application.compressed_models_folder, max_decimals=3):
+def ursina_mesh_to_obj(mesh, name='', out_path=application.compressed_models_folder, max_decimals=5, flip_faces=True):
     from ursina.string_utilities import camel_to_snake
 
     if not name:
         name = camel_to_snake(mesh.__class__.__name__)
     obj = 'o ' + name + '\n'
+    verts = mesh.vertices
 
-
-    for v in mesh.vertices:
+    for v in verts:
         v = [round(e, max_decimals) for e in v]
         obj += f'v {v[0]} {v[1]} {v[2]}\n'
 
@@ -466,9 +466,15 @@ def ursina_mesh_to_obj(mesh, name='', out_path=application.compressed_models_fol
             new_tris = []
             for t in tris:
                 if len(t) == 3:
-                    new_tris.extend([t[0], t[1], t[2]])
+                    if not flip_faces:
+                        new_tris.extend([t[0], t[1], t[2]])
+                    else:
+                        new_tris.extend([t[2], t[1], t[0]])
                 elif len(t) == 4: # turn quad into tris
-                    new_tris.extend([t[0], t[1], t[2], t[2], t[3], t[0]])
+                    if not flip_faces:
+                        new_tris.extend([t[0], t[1], t[2], t[2], t[3], t[0]])
+                    else:
+                        new_tris.extend([t[2], t[1], t[0], t[0], t[3], t[2]])
 
             tris = new_tris
 
