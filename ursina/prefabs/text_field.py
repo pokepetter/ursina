@@ -354,8 +354,6 @@ class TextField(Entity):
                 if self.max_lines < 9999:
                     if self.scroll < 9999:
                         self.scroll = clamp(self.scroll+self.scroll_amount, 0, 9999)
-                        self.y = .4-.025
-                        self.animate('y', .4, duration=.045, curve=curve.linear)
                         self.render()
                 else:
                     self.scroll = clamp(self.scroll+self.scroll_amount, 0, 9999)
