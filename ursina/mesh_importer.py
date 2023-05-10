@@ -10,8 +10,10 @@ from panda3d.core import CullFaceAttrib
 from time import perf_counter
 from ursina.string_utilities import print_info, print_warning
 from ursina import color
+from ursina.vec3 import Vec3
 import panda3d.core as p3d
 import gltf
+
 
 imported_meshes = dict()
 blender_scenes = dict()
@@ -62,6 +64,7 @@ def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursina
                         m = eval(f.read())
                         m.path = filename
                         m.name = name
+                        m.vertices = [Vec3(*v) for v in m.vertices]
                         imported_meshes[name] = m
                         return m
                 except:
@@ -534,6 +537,7 @@ if __name__ == '__main__':
     t = perf_counter()
     Entity(model='untitled')
     print('-------', perf_counter() - t)
+    m = load_model('cube', use_deepcopy=True)
     # ground = Entity(model='plane', scale=10, texture='brick', texture_scale=Vec2(4))
     # DirectionalLight()
 
