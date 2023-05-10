@@ -144,7 +144,7 @@ class Window(WindowProperties):
         Text(parent=self.editor_ui, position=self.entity_counter.position, text='entities:', origin=(-.5,-.75), scale=.4, add_to_scene_entities=False)
         def _entity_counter_update():
             if self.entity_counter.t > 1:
-                self.entity_counter.text = str(len([e for e in scene.entities if e.model and e.enabled])-6)
+                self.entity_counter.text = str(max(0, len([e for e in scene.entities if e.model and e.enabled])-6))
                 self.entity_counter.i = 0
             self.entity_counter.t += time.dt
         self.entity_counter.update = _entity_counter_update
@@ -154,7 +154,7 @@ class Window(WindowProperties):
         Text(parent=self.editor_ui, position=self.collider_counter.position, text='colliders:', origin=(-.5,-.75), scale=.4, add_to_scene_entities=False)
         def _collider_counter_update():
             if self.collider_counter.t > 1:
-                self.collider_counter.text = str(len([e for e in scene.entities if e.collider and e.enabled])-4)
+                self.collider_counter.text = str(max(0, len([e for e in scene.entities if e.collider and e.enabled])-4))
                 self.collider_counter.i = 0
             self.collider_counter.t += time.dt
         self.collider_counter.update = _collider_counter_update
