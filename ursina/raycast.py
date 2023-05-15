@@ -26,7 +26,10 @@ _ray.setDirection(Vec3(0,0,1))
 _raycaster._pickerNode.addSolid(_ray)
 
 
-def raycast(origin, direction=(0,0,1), distance=inf, traverse_target=scene, ignore=[], debug=False):
+def raycast(origin, direction:Vec3=(0,0,1), distance=inf, traverse_target:Entity=scene, ignore:list=None, debug=False):
+    if not ignore:
+        ignore = []
+
     _raycaster.position = origin
     _raycaster.look_at(_raycaster.position + direction)
 
@@ -137,9 +140,9 @@ if __name__ == '__main__':
         e.rotation_y -= held_keys['q'] * rotation_speed
         e.rotation_y += held_keys['e'] * rotation_speed
 
+        ray = raycast(e.world_position, e.forward, 3, debug=True)
         # ray = raycast(e.world_position, e.forward, 3, debug=True)
-        # ray = raycast(e.world_position, e.forward, 3, debug=True)
-        ray = boxcast(e.world_position, e.right, 3, debug=True)
+        # ray = boxcast(e.world_position, e.right, 3, debug=True)
         # print(ray.distance, ray2.distance)
         intersection_marker.world_position = ray.world_point
         intersection_marker.visible = ray.hit
