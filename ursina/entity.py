@@ -1020,6 +1020,9 @@ class Entity(NodePath):
 
 
     def has_ancestor(self, possible_ancestor):
+        if self.parent == possible_ancestor:
+            return True
+            
         p = self
         if isinstance(possible_ancestor, Entity):
             # print('ENTITY')
