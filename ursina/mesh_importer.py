@@ -446,9 +446,13 @@ def compress_models_fast(model_name=None, write_to_disk=False):
 def ursina_mesh_to_obj(mesh, name='', out_path=application.compressed_models_folder, max_decimals=5, flip_faces=True):
     from ursina.string_utilities import camel_to_snake
 
+    obj = ''
+    obj += f'mtllib {name}.mtl\n'
+    obj += f'usemtl {name}\n'
+
     if not name:
         name = camel_to_snake(mesh.__class__.__name__)
-    obj = 'o ' + name + '\n'
+    obj += 'o ' + name + '\n'
     verts = mesh.vertices
 
     for v in verts:
@@ -497,7 +501,7 @@ def ursina_mesh_to_obj(mesh, name='', out_path=application.compressed_models_fol
             obj += '/'+str(t+1)
         obj += ' '
 
-
+    obj += '\n'
     # print(obj)
     with open(out_path / (name + '.obj'), 'w') as f:
         f.write(obj)
