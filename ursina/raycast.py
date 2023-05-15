@@ -20,18 +20,15 @@ _raycaster._pickerNode = CollisionNode('_raycaster')
 _raycaster._pickerNode.set_into_collide_mask(0)
 _raycaster._pickerNP = _raycaster.attach_new_node(_raycaster._pickerNode)
 _raycaster._picker.addCollider(_raycaster._pickerNP, _raycaster._pq)
+_ray = CollisionRay()
+_ray.setOrigin(Vec3(0,0,0))
+_ray.setDirection(Vec3(0,0,1))
+_raycaster._pickerNode.addSolid(_ray)
 
 
 def raycast(origin, direction=(0,0,1), distance=inf, traverse_target=scene, ignore=[], debug=False):
     _raycaster.position = origin
     _raycaster.look_at(_raycaster.position + direction)
-
-    _raycaster._pickerNode.clearSolids()
-    ray = CollisionRay()
-    ray.setOrigin(Vec3(0,0,0))
-    ray.setDirection(Vec3(0,0,1))
-
-    _raycaster._pickerNode.addSolid(ray)
 
     if debug:
         temp = Entity(position=origin, model=_line_model, scale=Vec3(1,1,min(distance,9999)), add_to_scene_entities=False)
