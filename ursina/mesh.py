@@ -268,11 +268,18 @@ class Mesh(NodePath):
             print('saved .ursinamesh to:', folder / name)
 
         elif name.endswith('.obj'):
-            from ursina.mesh_importer import ursina_mesh_to_obj
+            from ursina.mesh_exporter import ursinamesh_to_obj
             import os
-            # Remove the filename, else we get 'name.obj.obj'
+            # Remove the file extension, so we don't get 'name.obj.obj'
             name = str(os.path.splitext(name)[0])
-            ursina_mesh_to_obj(self, name, folder, flip_faces)
+            ursinamesh_to_obj(self, name, folder, flip_faces)
+
+        elif name.endswith('.dae'):
+            from ursina.mesh_exporter import ursinamesh_to_dae
+            import os
+            # Remove the file extension, so we don't get 'name.dae.dae'
+            name = str(os.path.splitext(name)[0])
+            ursinamesh_to_dae(self, name, folder)
 
         elif name.endswith('.bam'):
             success = self.writeBamFile(folder / name)

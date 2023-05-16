@@ -82,7 +82,7 @@ def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[]):
 
 if __name__ == '__main__':
     from ursina import *
-    from ursina.mesh_exporter import ursina_mesh_to_obj
+    from ursina.mesh_exporter import ursinamesh_to_obj
     app = Ursina()
 
 
@@ -101,7 +101,7 @@ if __name__ == '__main__':
 
     # p.y=2
     # p.model.save()
-    # ursina_mesh_to_obj(p.model, name='combined_model_test', out_path=application.asset_folder)
+    # ursinamesh_to_obj(p.model, name='combined_model_test', out_path=application.asset_folder)
 
 
     EditorCamera()
