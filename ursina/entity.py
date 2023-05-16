@@ -794,9 +794,10 @@ class Entity(NodePath):
         if not hasattr(self, '_texture_scale'):
             return Vec2(1,1)
         return self._texture_scale
+
     @texture_scale.setter
     def texture_scale(self, value):  # how many times the texture should repeat, eg. texture_scale=(8,8).
-        self._texture_scale = value
+        self._texture_scale = Vec2(*value)
         if self.model and self.texture:
             self.model.setTexScale(TextureStage.getDefault(), value[0], value[1])
             self.set_shader_input('texture_scale', value)
@@ -809,6 +810,7 @@ class Entity(NodePath):
 
     @texture_offset.setter
     def texture_offset(self, value):
+        value = Vec2(*value)
         if self.model and self.texture:
             self.model.setTexOffset(TextureStage.getDefault(), value[0], value[1])
             self.texture = self.texture
@@ -1022,7 +1024,7 @@ class Entity(NodePath):
     def has_ancestor(self, possible_ancestor):
         if self.parent == possible_ancestor:
             return True
-            
+
         p = self
         if isinstance(possible_ancestor, Entity):
             # print('ENTITY')
