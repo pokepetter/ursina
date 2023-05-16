@@ -27,8 +27,8 @@ _raycaster._pickerNode.addSolid(_ray)
 
 
 def raycast(origin, direction:Vec3=(0,0,1), distance=inf, traverse_target:Entity=scene, ignore:list=None, debug=False):
-    if not ignore:
-        ignore = []
+    _ignore = [e for e in scene.entities if not e.collision]
+    _ignore.extend(ignore)
 
     _raycaster.position = origin
     _raycaster.look_at(_raycaster.position + direction)
@@ -44,7 +44,6 @@ def raycast(origin, direction:Vec3=(0,0,1), distance=inf, traverse_target:Entity
         _raycaster.hit = HitInfo(hit=False, distance=distance)
         return _raycaster.hit
 
-    ignore += tuple(e for e in scene.entities if not e.collision)
 
     _raycaster._pq.sort_entries()
     _raycaster.entries = [        # filter out ignored entities
