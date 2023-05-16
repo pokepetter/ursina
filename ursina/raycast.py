@@ -49,7 +49,7 @@ def raycast(origin, direction:Vec3=(0,0,1), distance=inf, traverse_target:Entity
     _raycaster._pq.sort_entries()
     _raycaster.entries = [        # filter out ignored entities
         e for e in _raycaster._pq.getEntries()
-        if e.get_into_node_path().parent not in ignore
+        if e.get_into_node_path().parent not in _ignore
         and ursinamath.distance(_raycaster.world_position, Vec3(*e.get_surface_point(render))) <= distance
         ]
 
