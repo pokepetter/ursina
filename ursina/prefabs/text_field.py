@@ -87,7 +87,7 @@ class TextField(Entity):
                     self.scroll_amount = self._original_scroll_amount
 
         def middle_click_update():
-            if not mouse.middle:
+            if not mouse.middle or self.middle_click_scroller.start_y == None:
                 return
             self.middle_click_scroller.t += time.dt
             if self.middle_click_scroller.t < self.middle_click_scroller.update_rate:
