@@ -66,6 +66,7 @@ class LevelEditorScene:
 
             for line in reader:
                 args = ', '.join([f'{key}={value}' for key, value in line.items() if value and not key=='class'])
+                print('eval:', f'{line["class"]}(parent=self.scene_parent, {args})')
                 e = eval(f'{line["class"]}(parent=self.scene_parent, {args})')
 
                 self.entities.append(e)
@@ -184,7 +185,7 @@ class LevelEditor(Entity):
         self.point_renderer.model.colors.clear()
 
         for e in self.entities:
-            if e.model and e.model.name == 'cube':
+            if not e or e.model and e.model.name == 'cube':
                 continue
 
             self.point_renderer.model.vertices.append(e.world_position)
@@ -981,7 +982,7 @@ class Selector(Entity):
     def get_hovered_entity(self):
         level_editor.entities = [e for e in level_editor.entities if e]
         [print(str(e)) for e in level_editor.entities]
-        entities_in_range = [(distance_2d(e.screen_position, mouse.position), e) for e in level_editor.entities if e.selectable and not e.collider]
+        entities_in_range = [(distance_2d(e.screen_position, mouse.position), e) for e in level_editor.entities if e and e.selectable and not e.collider]
         entities_in_range = [e for e in entities_in_range if e[0] < .03]
         entities_in_range.sort()
 
@@ -1154,11 +1155,16 @@ class Deleter(Entity):
             [repr(e) for e in level_editor.selection],
             ))
 
-        [level_editor.entities.remove(e) for e in level_editor.selection]
-        [destroy(e) for e in level_editor.selection]
+        print(level_editor.selection)
+        before = len(level_editor.entities)
+        # level_editor.entities = [e for e in level_editor.entities if e not in level_editor.selection]
+        for e in level_editor.selection:
+            level_editor.entities.remove(e)
+
+        print('---------------', before, '-->', len(level_editor.entities))
         [setattr(e, 'parent', level_editor) for e in level_editor.cubes]
-        level_editor.entities = [e for e in level_editor.entities if e]
-        level_editor.selection = []
+        [destroy(e) for e in level_editor.selection]
+        level_editor.selection.clear()
         level_editor.render_selection()
         hierarchy_list.render_selection()
 
@@ -1454,8 +1460,8 @@ class Inspector(Entity):
 
         self.fields = dict(
             model =   InspectorField(parent=self.name_field, text='m:', y=-4, on_click=Func(setattr, menu_handler, 'state', 'model_menu')),
-            texture = InspectorField(parent=self.name_field, text='t: green_grass_light', y=-4-1, on_click=Func(setattr, menu_handler, 'state', 'texture_menu')),
-            color =   InspectorField(parent=self.name_field, text='c: ', y=-4-2, color=color.white, on_click=Func(setattr, menu_handler, 'state', 'color_menu')),
+            texture = InspectorField(parent=self.name_field, text='t: green_grass_light', y=-4-1, on_click=Sequence(Func(setattr, menu_handler, 'state', 'texture_menu'), Func(setattr, texture_menu, 'target_attr', 'texture'))),
+            color =   InspectorField(parent=self.name_field, text='c: ', y=-4-2, on_click=Func(setattr, menu_handler, 'state', 'color_menu')),
             shader =  InspectorField(parent=self.name_field, text='sh: ', y=-4-3, on_click=Func(setattr, menu_handler, 'state', 'shader_menu')),
         )
         for i, field in enumerate(self.fields.values()):
@@ -1466,7 +1472,7 @@ class Inspector(Entity):
                 field.text_entity.scale *= .75
 
             # field.y = -4-i
-
+        self.fields['color'].color_field = Entity(parent=self.fields['color'], model=Quad(aspect=4/1), scale=(.8,.8), origin=(-.5,.5), x=.15, z=-.1, y=-.05)
         Entity(model=Grid(3,3), parent=self.transform_fields[0], scale=3, origin=(-.5,.5), z=-.1, color=color._64)
         # Entity(model=Grid(1,3), parent=self.transform_fields[-3], scale=3, origin=(-.5,.5), z=-.1, color=color._64)
         # Entity(model=Grid(2,3), parent=self.transform_fields[-3], scale=3, origin=(-.5,.5), z=-.1, color=color._64)
@@ -1479,15 +1485,16 @@ class Inspector(Entity):
         if key != 'left mouse up':
             return
 
+
         self.ui.enabled = bool(level_editor.selection)
         if level_editor.selection and (mouse.left or held_keys['d']):
-            self.fields['color'].color = level_editor.selection[0].color
+            self.fields['color'].color_field.color = level_editor.selection[0].color
 
             if len(level_editor.selection) == 1:
                 selected = level_editor.selection[0]
 
                 self.name_field.text_field.text_entity.text = selected.name
-                for i, attr_name in enumerate(('world_x', 'world_y', 'world_z', 'world_rotation_x', 'world_rotation_y', 'world_rotation_z', 'world_scale_x', 'world_scale_y', 'world_scale_z')):
+                for i, attr_name in enumerate(('x', 'y', 'z', 'rotation_x', 'rotation_y', 'rotation_z', 'scale_x', 'scale_y', 'scale_z')):
                     self.transform_fields[i].text = str(round(getattr(selected, attr_name),4))
 
                 [destroy(e) for e in self.shader_inputs_parent.children]
@@ -1500,6 +1507,28 @@ class Inspector(Entity):
                         b.text_entity.font = 'VeraMono.ttf'
                         b.text_entity.scale *= .5
                         b.text_entity.x = .025
+
+                        if isinstance(value, str):
+                            b.on_click = Sequence(Func(setattr, menu_handler, 'state', 'texture_menu'), Func(setattr, texture_menu, 'target_attr', name))
+
+                        if isinstance(value, Vec2):
+                            field = InputField(max_width=8, model='quad', parent=self.shader_inputs_parent, scale_x=1/3, scale_y=1, origin=(-.5,.5), default_value=value.x, limit_content_to=ContentTypes.math, x=0, y=0, color=color._8)
+                            # field.text_entity.scale *= .5
+                            # def on_submit(names=names, x=x, field=field):
+                            #     try:
+                            #         value = float(eval(field.text[:8]))
+                            #         if isinstance(value, float):
+                            #             field.text_field.text_entity.text = str(value)[:8]
+                            #             for e in level_editor.selection:
+                            #                 setattr(e, names[x], float(field.text_field.text_entity.text))
+                            #     except: # invalid/incomplete math
+                            #         # print('invalid')
+                            #         return
+                            #
+                            # # field.submit_on = 'enter'
+                            # field.on_submit = on_submit
+                            # field.on_value_changed = on_submit
+
 
             for name in ('model', 'texture', 'shader'):
                 field_values = [getattr(e, name) for e in level_editor.selection]
@@ -1607,6 +1636,10 @@ class ModelMenu(AssetMenu):
 
 
 class TextureMenu(AssetMenu):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.target_attr = 'texture'
+
     def on_enable(self):
         search_for = ''
 
@@ -1617,9 +1650,15 @@ class TextureMenu(AssetMenu):
         super().on_enable()
 
     def on_select_asset(self, name):
-        level_editor.current_scene.undo.record_undo([(level_editor.entities.index(e), 'texture', e.texture, name) for e in level_editor.selection])
-        for e in level_editor.selection:
-            e.texture = name
+        if self.target_attr == 'texture':
+            level_editor.current_scene.undo.record_undo([(level_editor.entities.index(e), 'texture', e.texture, name) for e in level_editor.selection])
+            for e in level_editor.selection:
+                e.texture = name
+        else:
+            # level_editor.current_scene.undo.record_undo([(level_editor.entities.index(e), 'texture', e.texture, name) for e in level_editor.selection])
+            for e in level_editor.selection:
+                e.set_shader_input(self.target_attr, name)
+
 
         menu_handler.state = 'None'
 
@@ -1843,7 +1882,6 @@ class PokeShape(Entity):
         self.selectable = True
         self.highlight_color = color.blue
         super().__init__(**__class__.default_values | kwargs)
-        level_editor.entities.append(self)
         self.model = Mesh()
 
         self.point_gizmos = LoopingList([Entity(parent=self, original_parent=self, position=e, selectable=False, name='PokeShape_point', is_gizmo=True) for e in points])
@@ -2134,7 +2172,7 @@ class RightClickMenu(Entity):
             parent=level_editor.ui,
             buttons = (
                 Button(highlight_color=color.azure, text='Model', on_click=Func(setattr, menu_handler, 'state', 'model_menu')),
-                Button(highlight_color=color.azure, text='Tex', on_click=Func(setattr, menu_handler, 'state', 'texture_menu')),
+                Button(highlight_color=color.azure, text='Tex', on_click=Sequence(Func(setattr, menu_handler, 'state', 'texture_menu'), Func(setattr, texture_menu, 'target_attr', 'texture'))),
                 Button(highlight_color=color.azure, text='Col', on_click=Func(setattr, menu_handler, 'state', 'color_menu')),
                 Button(highlight_color=color.azure, text='Sh', on_click=Func(setattr, menu_handler, 'state', 'shader_menu')),
                 Button(highlight_color=color.black, text='del', scale=.5, color=color.red, on_click=deleter.delete_selected),
@@ -2283,10 +2321,26 @@ def get_major_axis_relative_to_view(entity): # if we're looking at the entity fr
 #         setattr(self, key, value)
 
 # input_handler.bind('a', 'y')
+# level_editor.enabled = False
+class Tree(Entity):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.model = 'cube'
+        self.color = color.brown
+
+        self.top = Entity(parent=self, y=1.5, model='cube', color=color.green, selectable=True)
+        level_editor.entities.append(self.top)
+
+prefabs.append(Tree)
+level_editor.spawner.update_menu()
+
+
 
 if __name__ == '__main__':
     level_editor.goto_scene(0,0)
     level_editor.selection = [level_editor.entities[0], ]
+    # level_editor.spawner.spawn_entity(Tree)
+    # Tree()
     # middle = Entity(parent=camera.ui, model='quad', scale_x=.001, color=color.azure)
     # middle = Entity(parent=camera.ui, model='quad', scale_y=.001, color=color.azure)
     # color_menu.open()
