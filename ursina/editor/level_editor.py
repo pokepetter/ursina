@@ -1403,12 +1403,59 @@ class HierarchyList(Entity):
 
 
 
+Text.default_font = 'VeraMono.ttf'
+class InspectorInputField(InputField):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.text_field.x = .05
+        self.text_field.y = -.25
+        self.text_field.world_scale = 25 * .75
+        self.text_field.text_entity.color = color.light_gray
+        self.highlight_color = color._32
+
+
+class InspectorButton(Button):
+    defaults = dict(model='quad', origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, color=color.black90, highlight_color=color._32)
+
+    def __init__(self, **kwargs):
+        kwargs = __class__.defaults | kwargs
+        super().__init__(**kwargs)
+        self.text_entity.x = .025
+        self.text_entity.scale *= .75
+
+
+class ColorField(InspectorButton):
+    def __init__(self, attr_name='color', is_shader_input=False, value=color.white, **kwargs):
+        super().__init__(**kwargs)
+        self.attr_name = attr_name
+        self.is_shader_input = is_shader_input
+
+        self.preview = Entity(parent=self, model=Quad(aspect=2/1), scale=(.5,.8), origin=(.5,.5), x=1, z=-.1, y=-.05, collider='box', on_click=self.on_color_field_click)
+        self.text_entity.scale *= .75
+        self.value = value
+
+    @property
+    def value(self):
+        return self.preview.color
+
+    @value.setter
+    def value(self, value):
+        self.preview.color = value
+
+
+    def on_color_field_click(self):
+        color_menu.color_field = self
+        menu_handler.state = 'color_menu'
+
+
 class Inspector(Entity):
     def __init__(self):
         super().__init__(parent=level_editor.ui, position=window.top_left+Vec2(.15,-.04))
+
+        self.selected_entity = None
+
         self.ui = Entity(parent=self)
-        self.name_field = InputField(parent=self.ui, default_value='name', origin=(-.5,.5), scale_x=.1*3, scale_y=.05*.75, color=hsv(210,.9,.6))
-        # self.bg = Panel(parent=self.ui, origin=(-.5,.5), scale=(.125*3, .3), z=.1, color=color._8, collider='box')
+        self.name_field = InspectorInputField(parent=self.ui, default_value='name', origin=(-.5,.5), scale_x=.15*3, scale_y=.05*.75, color=hsv(210,.9,.6))
 
         self.input_fields = [self.name_field, ]
         self.transform_fields = []
@@ -1419,7 +1466,7 @@ class Inspector(Entity):
                 if y == 2:
                     default = '1'
 
-                field = InputField(max_width=8, model='quad', parent=self.name_field, scale_x=1/3, scale_y=1, origin=(-.5,.5), default_value=default, limit_content_to=ContentTypes.math, x=x/3, y=-y-1, color=color._8)
+                field = InspectorInputField(max_width=8, model='quad', parent=self.name_field, scale=(1/3,1), origin=(-.5,.5), default_value=default, limit_content_to=ContentTypes.math, x=x/3, y=-y-1, color=color._8)
                 def on_submit(names=names, x=x, field=field):
                     try:
                         value = float(eval(field.text[:8]))
@@ -1436,121 +1483,103 @@ class Inspector(Entity):
                 field.on_value_changed = on_submit
 
                 self.transform_fields.append(field)
-                self.input_fields.append(field)
+                # self.input_fields.append(field)
 
         for i in range(len(self.transform_fields)-1):
             self.transform_fields[i].next_field = self.transform_fields[i+1]
 
-
-        for field in self.input_fields:
-            field.text_field.x = .05
-            field.text_field.y = -.25
-            field.text_field.scale *= .75
-            field.text_field.text_entity.color = color.light_gray
-            field.highlight_color = color._32
-
-        class InspectorField(Button):
-            def __init__(self, **kwargs):
-                super().__init__(model='quad', origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, highlight_color=color._32, **kwargs)
-                self.color = color.black90
-                # self.scale_y=.75
-                for key, value in kwargs.items():
-                    setattr(self, key, value)
-
-
         self.fields = dict(
-            model =   InspectorField(parent=self.name_field, text='m:', y=-4, on_click=Func(setattr, menu_handler, 'state', 'model_menu')),
-            texture = InspectorField(parent=self.name_field, text='t: green_grass_light', y=-4-1, on_click=Sequence(Func(setattr, menu_handler, 'state', 'texture_menu'), Func(setattr, texture_menu, 'target_attr', 'texture'))),
-            color =   InspectorField(parent=self.name_field, text='c: ', y=-4-2, on_click=Func(setattr, menu_handler, 'state', 'color_menu')),
-            shader =  InspectorField(parent=self.name_field, text='sh: ', y=-4-3, on_click=Func(setattr, menu_handler, 'state', 'shader_menu')),
+            model =   InspectorButton(parent=self.name_field, text='model:', y=-4, on_click=Func(setattr, menu_handler, 'state', 'model_menu')),
+            texture = InspectorButton(parent=self.name_field, text='texture: green_grass_light', y=-4-1, on_click=Sequence(Func(setattr, menu_handler, 'state', 'texture_menu'), Func(setattr, texture_menu, 'target_attr', 'texture'))),
+            color =   ColorField(parent=self.name_field, text='color: ', y=-4-2, attr_name='color', is_shader_input=False),
+            shader =  InspectorButton(parent=self.name_field, text='shader: ', y=-4-3, on_click=Func(setattr, menu_handler, 'state', 'shader_menu')),
         )
-        for i, field in enumerate(self.fields.values()):
-            if hasattr(field, 'text') and field.text:
-                field.text_entity.font = 'VeraMono.ttf'
-                field.text_entity.x = .025
-                # field.text_entity.y = -.25
-                field.text_entity.scale *= .75
 
-            # field.y = -4-i
-        self.fields['color'].color_field = Entity(parent=self.fields['color'], model=Quad(aspect=4/1), scale=(.8,.8), origin=(-.5,.5), x=.15, z=-.1, y=-.05)
         Entity(model=Grid(3,3), parent=self.transform_fields[0], scale=3, origin=(-.5,.5), z=-.1, color=color._64)
-        # Entity(model=Grid(1,3), parent=self.transform_fields[-3], scale=3, origin=(-.5,.5), z=-.1, color=color._64)
-        # Entity(model=Grid(2,3), parent=self.transform_fields[-3], scale=3, origin=(-.5,.5), z=-.1, color=color._64)
 
         self.shader_inputs_parent = Entity(parent=self.name_field, y=-8)
-
         self.scale = .6
+
 
     def input(self, key):
         if key != 'left mouse up':
             return
 
-
         self.ui.enabled = bool(level_editor.selection)
         if level_editor.selection and (mouse.left or held_keys['d']):
-            self.fields['color'].color_field.color = level_editor.selection[0].color
-
-            if len(level_editor.selection) == 1:
-                selected = level_editor.selection[0]
-
-                self.name_field.text_field.text_entity.text = selected.name
-                for i, attr_name in enumerate(('x', 'y', 'z', 'rotation_x', 'rotation_y', 'rotation_z', 'scale_x', 'scale_y', 'scale_z')):
-                    self.transform_fields[i].text = str(round(getattr(selected, attr_name),4))
-
-                [destroy(e) for e in self.shader_inputs_parent.children]
-                if selected.shader:
-                    for i, (name, value) in enumerate(selected.shader.default_input.items()):
-                        print('shader input', name, value)
-                        b = Button(parent=self.shader_inputs_parent, model='quad', origin=(-.5,.5), text_origin=(-.5,0),
-                            text_color=color.light_gray, text=f' {name}:', color=color.black90, highlight_color=color._32, y=-i,
-                        )
-                        b.text_entity.font = 'VeraMono.ttf'
-                        b.text_entity.scale *= .5
-                        b.text_entity.x = .025
-
-                        if isinstance(value, str):
-                            b.on_click = Sequence(Func(setattr, menu_handler, 'state', 'texture_menu'), Func(setattr, texture_menu, 'target_attr', name))
-
-                        if isinstance(value, Vec2):
-                            field = InputField(max_width=8, model='quad', parent=self.shader_inputs_parent, scale_x=1/3, scale_y=1, origin=(-.5,.5), default_value=value.x, limit_content_to=ContentTypes.math, x=0, y=0, color=color._8)
-                            # field.text_entity.scale *= .5
-                            # def on_submit(names=names, x=x, field=field):
-                            #     try:
-                            #         value = float(eval(field.text[:8]))
-                            #         if isinstance(value, float):
-                            #             field.text_field.text_entity.text = str(value)[:8]
-                            #             for e in level_editor.selection:
-                            #                 setattr(e, names[x], float(field.text_field.text_entity.text))
-                            #     except: # invalid/incomplete math
-                            #         # print('invalid')
-                            #         return
-                            #
-                            # # field.submit_on = 'enter'
-                            # field.on_submit = on_submit
-                            # field.on_value_changed = on_submit
+            if not self.selected_entity:
+                self.update_inspector()
+            elif self.selected_entity != level_editor.selection[0]:
+                self.update_inspector()
 
 
-            for name in ('model', 'texture', 'shader'):
-                field_values = [getattr(e, name) for e in level_editor.selection]
-                field_values = [e.name for e in field_values if hasattr(e, 'name')]
-                field_values = tuple(set(field_values))
-                # print('---', field_values)
-                # print(field_values)
-                if len(field_values) == 1:
-                    self.fields[name].text_entity.text = (f'{name[0]}: {field_values[0]}')
-                else:
-                    self.fields[name].text_entity.text = f'{name[0]}: -----'
-                # self.fields['texture'].text_entity.text = ('t: ' + selected.texture.name) if selected.texture else 't: None'
-                # self.fields['shader'].text_entity.text = f'sh: {selected.shader.name}' if selected.shader else 's: None'
+    def update_inspector(self):
+        # print('update inspector')
+        self.selected_entity = level_editor.selection[0]
+        self.fields['color'].preview.color = level_editor.selection[0].color
+        self.name_field.text_field.text_entity.text = self.selected_entity.name
 
+        for i, attr_name in enumerate(('x', 'y', 'z', 'rotation_x', 'rotation_y', 'rotation_z', 'scale_x', 'scale_y', 'scale_z')):
+            self.transform_fields[i].text = str(round(getattr(self.selected_entity, attr_name),4))
 
-            # else:
-            #     self.name_field.text_field.text_entity.text = '--------'
-            #     self.fields['model'].text_entity.text = '--------'
-            #     self.fields['texture'].text_entity.text = '--------'
-            #     self.fields['color'].color = color._8
-            #     self.fields['shader'].text_entity.text = '--------'
-            #     [destroy(e) for e in self.shader_inputs_parent.children]
+        for name in ('model', 'texture', 'shader'):
+            field_values = [getattr(e, name) for e in level_editor.selection]
+            field_values = [e.name for e in field_values if hasattr(e, 'name')]
+            field_values = tuple(set(field_values))
+
+            if len(field_values) == 1:
+                self.fields[name].text_entity.text = (f'{name[0]}:{field_values[0]}')
+            else:
+                self.fields[name].text_entity.text = f'{name[0]}: -----'
+
+        [destroy(e) for e in self.shader_inputs_parent.children]
+        if self.selected_entity.shader:
+            for i, (name, value) in enumerate(self.selected_entity.shader.default_input.items()):
+
+                instance_value = self.selected_entity.get_shader_input(name)
+                if instance_value:
+                    print('use instance value,', instance_value)
+                    value = instance_value
+
+                if isinstance(value, str):
+                    b = InspectorButton(parent=self.shader_inputs_parent, text=f'   {name}:', highlight_color=color.black90, y=-i)
+                    b.text_entity.scale *= .6
+                    b.on_click = Sequence(Func(setattr, menu_handler, 'state', 'texture_menu'), Func(setattr, texture_menu, 'target_attr', name))
+
+                if isinstance(value, Vec2):
+                    x_field = InspectorInputField(max_width=8, model='quad', parent=self.shader_inputs_parent, scale=(1/4,1), origin=(-.5,.5), default_value=str(value.x), limit_content_to=ContentTypes.math, x=2/4, y=-i, z=-2, color=color._8)
+                    y_field = InspectorInputField(max_width=8, model='quad', parent=self.shader_inputs_parent, scale=(1/4,1), origin=(-.5,.5), default_value=str(value.y), limit_content_to=ContentTypes.math, x=3/4, y=-i, z=-2, color=color._8)
+                    x_field.text_field.text_entity.world_scale = 25 * .75 *.6
+                    y_field.text_field.text_entity.world_scale = 25 * .75 *.6
+
+                # float
+                # int
+                # Vec3
+
+                    def on_submit(name=name, value=value, x_field=x_field, y_field=y_field):
+                        try:
+                            x_value = float(eval(x_field.text[:8]))
+                            y_value = float(eval(y_field.text[:8]))
+                            new_value = Vec2(x_value, y_value)
+                            # print('aaaaaaaaaaaa')
+                            x_field.text_field.text_entity.text = str(value.x)[:8]
+                            y_field.text_field.text_entity.text = str(value.y)[:8]
+                            for e in level_editor.selection:
+                                # setattr(e, name, float(field.text_field.text_entity.text))
+                                e.set_shader_input(name, new_value)
+                                print('set shader input', name, value)
+                        except: # invalid/incomplete math
+                            # print('invalid')
+                            return
+
+                    x_field.on_submit = on_submit
+                    x_field.on_value_changed = on_submit
+                    y_field.on_submit = on_submit
+                    y_field.on_value_changed = on_submit
+
+                elif isinstance(value, Color):
+                    color_field = ColorField(parent=self.shader_inputs_parent, text=name, y=-i, is_shader_input=True, attr_name=name, value=value),
+
 
 class MenuHandler(Entity):
     def __init__(self):
@@ -1679,11 +1708,14 @@ class ShaderMenu(AssetMenu):
         for e in level_editor.selection:
             exec(f'from ursina.shaders import {name}')
             exec(f'e.shader = {name}')
+        inspector.update_inspector()
 
 
 class ColorMenu(Entity):
     def __init__(self):
         super().__init__(parent=level_editor.ui, enabled=False)
+        self.color_field = None
+
         self.bg = Entity(parent=self, collider='box', z=.1, color=color.black, alpha=.8, origin=(-.5,.5), scale=(.6,.15), position=(-.05,.03), model=Quad(aspect=.6/.15))
 
         self.h_slider = Slider(name='h', min=0, max=360, step=1, text='h', dynamic=True, world_parent=self, on_value_changed=self.on_slider_changed)
@@ -1721,8 +1753,15 @@ class ColorMenu(Entity):
         value = color.hsv(self.h_slider.value, self.s_slider.value/100, self.v_slider.value/100, self.a_slider.value/100)
 
         if self.apply_color:
-            for e in level_editor.selection:
-                e.color = value
+            self.color_field.preview.color = value
+            if not self.color_field.is_shader_input:
+                for e in level_editor.selection:
+                    e.color = value
+            else:
+                print('is shader input, set', self.color_field.attr_name)
+                for e in level_editor.selection:
+                    e.set_shader_input(self.color_field.attr_name, value)
+
 
         for i, v in enumerate(self.s_slider.bg.model.vertices):
             if v[0] < 0:
@@ -1745,13 +1784,16 @@ class ColorMenu(Entity):
         for e in level_editor.selection:
             e.original_color = e.color
 
+        # if not self.color_field:
+        #     return
+        print('set sliders to ', self.color_field.preview.color.hsv)
         self.apply_color = False
-        self.h_slider.value = level_editor.selection[0].color.h
-        self.s_slider.value = level_editor.selection[0].color.s * 100
-        self.v_slider.value = level_editor.selection[0].color.v * 100
-        self.a_slider.value = level_editor.selection[0].color.a * 100
+        self.h_slider.value = self.color_field.preview.color.h
+        self.s_slider.value = self.color_field.preview.color.s * 100
+        self.v_slider.value = self.color_field.preview.color.v * 100
+        self.a_slider.value = self.color_field.preview.color.a * 100
         self.apply_color = True
-
+        print('oiefjseoifjseofisejfioj')
 
 
     def close(self):
@@ -2328,7 +2370,7 @@ class Tree(Entity):
         self.model = 'cube'
         self.color = color.brown
 
-        self.top = Entity(parent=self, y=1.5, model='cube', color=color.green, selectable=True)
+        self.top = Entity(name='tree_top', parent=self, y=1.5, model='cube', color=color.green, selectable=True)
         level_editor.entities.append(self.top)
 
 prefabs.append(Tree)
