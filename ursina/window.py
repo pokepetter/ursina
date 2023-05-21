@@ -252,7 +252,6 @@ class Window(WindowProperties):
         if not value:
             return
 
-        print('ttoooo', value)
         self._forced_aspect_ratio = value
         self.size = self.size
 
