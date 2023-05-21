@@ -76,6 +76,7 @@ class Entity(NodePath):
         self.double_sided = False
         if Entity.default_shader:
             self.shader = Entity.default_shader
+        self._shader_inputs = {}
 
         self.collision = False  # toggle collision without changing collider.
         self.collider = None    # set to 'box'/'sphere'/'capsule'/'mesh' for auto fitted collider.
@@ -743,8 +744,17 @@ class Entity(NodePath):
         raise ValueError(f'{value} is not a Shader')
 
 
+    def get_shader_input(self, name):
+        if name in self._shader_inputs:
+            return self._shader_inputs[name]
+        return None
+
 
     def set_shader_input(self, name, value):
+        self._shader_inputs[name] = value
+        if isinstance(value, str):
+            value = load_texture(value)
+
         if isinstance(value, Texture):
             value = value._texture    # make sure to send the panda3d texture to the shader
 
