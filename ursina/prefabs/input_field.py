@@ -9,7 +9,10 @@ class ContentTypes:
 
 class InputField(Button):
     def __init__(self, default_value='', label='', max_lines=1, character_limit=24, **kwargs):
-        super().__init__(scale=(.5, Text.size*2*max_lines), highlight_scale=1, pressed_scale=1, highlight_color=color.black, **kwargs)
+        if not 'scale' in kwargs and not 'scale_x' in kwargs and not 'scale_y' in kwargs:
+            kwargs['scale'] = (.5, Text.size*2*max_lines)
+
+        super().__init__(highlight_scale=1, pressed_scale=1, highlight_color=color.black, **kwargs)
 
         for key, value in kwargs.items():
             if 'scale' in key:
