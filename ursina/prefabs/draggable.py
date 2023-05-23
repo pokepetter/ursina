@@ -60,6 +60,7 @@ class Draggable(Button):
         self.start_pos = self.world_position
         self.collision = False
         Draggable._z_plane.enabled = True
+        mouse._original_traverse_target = mouse.traverse_target
         mouse.traverse_target = Draggable._z_plane
         if hasattr(self, 'drag'):
             self.drag()
@@ -70,7 +71,10 @@ class Draggable(Button):
         self.delta_drag = self.world_position - self.start_pos
         Draggable._z_plane.enabled = False
         self.collision = True
-        mouse.traverse_target = scene
+        if hasattr(mouse, '_original_traverse_target'):
+            mouse.traverse_target = mouse._original_traverse_target
+        else:
+            mouse.traverse_target = scene
 
         if hasattr(self, 'drop'):
             self.drop()
