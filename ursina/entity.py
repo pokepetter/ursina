@@ -74,9 +74,9 @@ class Entity(NodePath):
         self.texture = None     # set model with texture='texture_name'. requires a model to be set beforehand.
         self.render_queue = 0   # for custom sorting in case of conflict. To sort things in 2d, set .z instead of using this.
         self.double_sided = False
+        self._shader_inputs = {}
         if Entity.default_shader:
             self.shader = Entity.default_shader
-        self._shader_inputs = {}
 
         self.collision = False  # toggle collision without changing collider.
         self.collider = None    # set to 'box'/'sphere'/'capsule'/'mesh' for auto fitted collider.
