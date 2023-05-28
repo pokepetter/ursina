@@ -1431,7 +1431,7 @@ class ColorField(InspectorButton):
         self.is_shader_input = is_shader_input
 
         self.preview = Entity(parent=self, model=Quad(aspect=2/1), scale=(.5,.8), origin=(.5,.5), x=1, z=-.1, y=-.05, collider='box', on_click=self.on_color_field_click)
-        self.text_entity.scale *= .75
+        # self.text_entity.scale *= .75
         self.value = value
 
     @property
@@ -1491,7 +1491,7 @@ class Inspector(Entity):
         self.fields = dict(
             model =   InspectorButton(parent=self.name_field, text='model:', y=-4, on_click=Func(setattr, menu_handler, 'state', 'model_menu')),
             texture = InspectorButton(parent=self.name_field, text='texture: green_grass_light', y=-4-1, on_click=Sequence(Func(setattr, menu_handler, 'state', 'texture_menu'), Func(setattr, texture_menu, 'target_attr', 'texture'))),
-            color =   ColorField(parent=self.name_field, text='color: ', y=-4-2, attr_name='color', is_shader_input=False),
+            color =   ColorField(parent=self.name_field, text='c:color: ', y=-4-2, attr_name='color', is_shader_input=False),
             shader =  InspectorButton(parent=self.name_field, text='shader: ', y=-4-3, on_click=Func(setattr, menu_handler, 'state', 'shader_menu')),
         )
 
@@ -1546,39 +1546,29 @@ class Inspector(Entity):
                     b.text_entity.scale *= .6
                     b.on_click = Sequence(Func(setattr, menu_handler, 'state', 'texture_menu'), Func(setattr, texture_menu, 'target_attr', name))
 
+
                 if isinstance(value, Vec2):
-                    x_field = InspectorInputField(max_width=8, model='quad', parent=self.shader_inputs_parent, scale=(1/4,1), origin=(-.5,.5), default_value=str(value.x), limit_content_to=ContentTypes.math, x=2/4, y=-i, z=-2, color=color._8)
-                    y_field = InspectorInputField(max_width=8, model='quad', parent=self.shader_inputs_parent, scale=(1/4,1), origin=(-.5,.5), default_value=str(value.y), limit_content_to=ContentTypes.math, x=3/4, y=-i, z=-2, color=color._8)
-                    x_field.text_field.text_entity.world_scale = 25 * .75 *.6
-                    y_field.text_field.text_entity.world_scale = 25 * .75 *.6
+                    from ursina.prefabs.vec_field import VecField
+                    field = VecField(default_value=instance_value, parent=self.shader_inputs_parent, model='quad', scale=(1,1), x=.5, y=-i-.5, text=f'  {name}')
+                    for e in field.fields:
+                        e.text_field.scale *= .6
+                        e.text_field.text_entity.color = color.light_gray
+                    field.text_entity.scale *= .6*.75
+                    field.text_entity.color = color.light_gray
 
-                # float
-                # int
-                # Vec3
+                    def on_submit(name=name, field=field):
+                        for e in level_editor.selection:
+                            # setattr(e, name, float(field.text_field.text_entity.text))
+                            e.set_shader_input(name, field.value)
+                    field.on_value_changed = on_submit
 
-                    def on_submit(name=name, value=value, x_field=x_field, y_field=y_field):
-                        try:
-                            x_value = float(eval(x_field.text[:8]))
-                            y_value = float(eval(y_field.text[:8]))
-                            new_value = Vec2(x_value, y_value)
-                            # print('aaaaaaaaaaaa')
-                            x_field.text_field.text_entity.text = str(value.x)[:8]
-                            y_field.text_field.text_entity.text = str(value.y)[:8]
-                            for e in level_editor.selection:
-                                # setattr(e, name, float(field.text_field.text_entity.text))
-                                e.set_shader_input(name, new_value)
-                                print('set shader input', name, value)
-                        except: # invalid/incomplete math
-                            # print('invalid')
-                            return
-
-                    x_field.on_submit = on_submit
-                    x_field.on_value_changed = on_submit
-                    y_field.on_submit = on_submit
-                    y_field.on_value_changed = on_submit
+                # # float
+                # # int
+                # # Vec3
 
                 elif isinstance(value, Color):
-                    color_field = ColorField(parent=self.shader_inputs_parent, text=name, y=-i, is_shader_input=True, attr_name=name, value=value),
+                    color_field = ColorField(parent=self.shader_inputs_parent, text=f' {name}', y=-i, is_shader_input=True, attr_name=name, value=value)
+                    color_field.text_entity.scale *= .6
 
 
 class MenuHandler(Entity):
@@ -2252,7 +2242,7 @@ class Search(Entity):
 
 if __name__ == '__main__':
     # app = Ursina(size=(1280,720))
-    app = Ursina(vsync=False)
+    app = Ursina(vsync=False, forced_aspect_ratio=16/9)
 
 # camera.fov = 90
 level_editor = LevelEditor()

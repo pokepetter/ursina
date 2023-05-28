@@ -23,7 +23,7 @@ class InputField(Button):
         self.hide_content = False   # if set to True, will display content as '*'. can also be set to character instead of True.
 
         self.next_field = None
-        self.submit_on = None   # for example: self.submit_on = 'enter' will call self.on_submit when you press enter.
+        self.submit_on = []   # for example: self.submit_on = ['enter', ] will call self.on_submit when you press enter.
         self.on_submit = None   # function to be called when you press self.submit_on.
         self.on_value_changed = None
 
@@ -75,7 +75,7 @@ class InputField(Button):
                 mouse.position = self.next_field.get_position(relative_to=camera.ui)
                 invoke(setattr, self.next_field, 'active', True, delay=.01)
 
-        if self.active and self.submit_on and key == self.submit_on and self.on_submit:
+        if self.active and key in self.submit_on and self.on_submit:
             self.on_submit()
             self.active = False
 
@@ -116,7 +116,7 @@ class InputField(Button):
 if __name__ == '__main__':
     app = Ursina()
     # window.fullscreen_size = (1366, 768)
-    background = Entity(model='quad', texture='pixelscape_combo', parent=camera.ui, scale=(camera.aspect_ratio,1), color=color.white)
+    # background = Entity(model='quad', texture='pixelscape_combo', parent=camera.ui, scale=(camera.aspect_ratio,1), color=color.white)
     gradient = Entity(model='quad', texture='vertical_gradient', parent=camera.ui, scale=(camera.aspect_ratio,1), color=color.hsv(240,.6,.1,.75))
 
     username_field = InputField(y=-.12, limit_content_to='0123456789')
