@@ -1,16 +1,18 @@
-from ursina import *
+from ursina import Entity, camera, Text, Vec2, mouse, color, floor, clamp, time, held_keys, destroy
 import pyperclip
+
+from ursina.string_utilities import multireplace
 # from tree_view import TreeView
 
 
 class TextField(Entity):
-    def __init__(self, max_lines=64, line_height=1.1, **kwargs):
+    def __init__(self, max_lines=64, line_height=1.1, character_limit=None, **kwargs):
         super().__init__(parent=camera.ui, x=-.5, y=.4, ignore_paused=True)
 
         self.font = 'VeraMono.ttf'
         self.line_height = line_height
         self.max_lines = max_lines
-        self.character_limit = None
+        self.character_limit = character_limit
 
         self.scroll_parent = Entity(parent=self)
         self.text_entity = Text(parent=self.scroll_parent, start_tag='☾', end_tag='☽', font=self.font, text='', line_height=self.line_height, origin=(-.5, .5))
@@ -387,9 +389,7 @@ class TextField(Entity):
         if held_keys['alt'] and key != 'alt':
             alt = 'alt+'
 
-        start_key = key
         key = ctrl+shift+alt+key
-        # print('-', key, 'start_key:', start_key)
         x, y = int(cursor.x), int(cursor.y)
         lines = text.split('\n')
         l = lines[y]
@@ -494,8 +494,6 @@ class TextField(Entity):
                     if l.startswith(' '*4):
                         # print('dedent')
                         lines[y] = l[4:]
-                        if y == int(cursor.y):
-                            moveCursor = True
 
             self.cursor.x = max(self.cursor.x - 4, 0)
             self._append_undo(self.text, y, x)
@@ -517,7 +515,7 @@ class TextField(Entity):
                 erase()
                 return
 
-            if not ' ' in l:
+            if ' ' not in l:
                 l = l[x:]
                 self.cursor.x = 0
 
@@ -533,7 +531,7 @@ class TextField(Entity):
                 for delimiter in ('.', '\'', '\"', '(', '"', '\''):
                     beginning = beginning.replace(delimiter, ' ')
 
-                if not ' ' in beginning: # first word of the line
+                if ' ' not in beginning: # first word of the line
                     beginning = ''
                 else:
                     beginning = beginning.rstrip().rsplit(' ', 1)[0]
@@ -848,6 +846,7 @@ class TextField(Entity):
 
 
 if __name__ == '__main__':
+    from ursina import Ursina, window, Button
     app = Ursina(vsync=60)
 
     # camera.orthographic = True
@@ -881,7 +880,7 @@ if __name__ == '__main__':
     #     '    ':      '☾dark_gray☽----☾default☽',
     #     }
     #
-    import textwrap
+    from textwrap import dedent
     te.text = dedent('''
         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
         Aliquam sapien tellus, venenatis sit amet ante et, malesuada porta risus.
