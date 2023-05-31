@@ -26,6 +26,9 @@ def copytree(src, dst, symlinks=False, ignore_patterns=[], ignore_filetypes=[]):
     dst = str(dst)
 
     for item in os.listdir(src):
+        if item in ignore_patterns:
+            continue
+
         s = os.path.join(src, item)
         d = os.path.join(dst, item)
         if os.path.isdir(s):
@@ -246,12 +249,21 @@ if build_game:
         shutil.rmtree(str(src_dest))
     src_dest.mkdir()
 
-    ignore_folders.extend(['build_Windows', 'build_Linux', 'build.bat', '__pycache__'])
-    ignore_filetypes.extend(['.git', '.gitignore', '.psd', '.zip'])
+    ignore_folders.extend(['build_Windows', 'build_Linux', 'build.bat', '__pycache__', '.git'])
+    ignore_filetypes.extend(['.gitignore', '.psd', '.zip'])
 
     if compile_to_pyc:
         import py_compile
         for f in project_folder.glob('**/*.py'):
+            in_ignore = False
+            for e in ignore_folders:
+                if e in [str(e.name) for e  in f.parents]:
+                    in_ignore = True
+                    print('skip compiling:', f)
+                    break
+            if in_ignore:
+                continue
+
             parents = f.relative_to(project_folder).parents
             if 'scenes' in parents:
                 continue
