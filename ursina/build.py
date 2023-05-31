@@ -55,6 +55,7 @@ src_dest = Path(build_folder / 'src')
 build_engine = True
 build_game = True
 compile_to_pyc = True
+entry_point = 'main.py'
 
 for i, arg in enumerate(sys.argv):
     if arg == '--help':
@@ -103,6 +104,8 @@ for i, arg in enumerate(sys.argv):
         compile_to_pyc = True
     elif arg == '--compile_to_pyc=False':
         compile_to_pyc = False
+    elif arg.startswith('--entry_point='):
+        entry_point = arg.split('=')[1]
 
 
 if (build_engine and python_dest.exists() or (build_game and src_dest.exists())):
@@ -155,6 +158,7 @@ if build_engine:
         'Lib/logging',
         'Lib/xml',
         'Lib/re',
+        'Lib/json',
         # 'Lib/site-packages/panda3d/',
         'Lib/site-packages/direct/',
         'Lib/site-packages/pyperclip/',
@@ -162,6 +166,7 @@ if build_engine:
         'Lib/site-packages/screeninfo/',
         'DLLs/libffi-7.dll',
         'DLLs/_ctypes.pyd',
+        'DLLs',
         ]
 
     for path in always_include + include_modules:
@@ -280,7 +285,7 @@ if build_game:
             chcp 65001
             set PYTHONIOENCODING=utf-8
 
-            call "python\python.exe" "src\main.py{c}" > "log.txt" 2>&1'''
+            call "python\python.exe" "src\{entry_point}{c}" > "log.txt" 2>&1'''
         ))
 
 # make exe
