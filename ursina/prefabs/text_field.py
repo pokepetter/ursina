@@ -21,7 +21,7 @@ class TextField(Entity):
         self.cursor_parent = Entity(parent=self.scroll_parent, scale=(self.character_width, -1*Text.size*self.line_height))
         self.cursor = Entity(name='text_field_cursor', parent=self.cursor_parent, model='cube', color=color.cyan, origin=(-.5, -.5), scale=(.1, 1, 0), enabled=False)
         self.cursor.blink(duration=1.2, loop=True)
-        self.bg = Entity(name='text_field_bg', parent=self, model='quad', double_sided=True, color=color.dark_gray, origin=(-.5,.5), z=0.005, scale=(120, Text.size*self.max_lines), collider='box', visible=True)
+        self.bg = Entity(name='text_field_bg', parent=self, model='quad', double_sided=True, color=color.dark_gray, origin=(-.5,.5), z=0.005, scale=(120, Text.size*self.max_lines*self.line_height), collider='box', visible=True)
 
         self.selection = [Vec2(0,0), Vec2(0,0)]
         self.selection_parent = Entity(name='text_field_selection_parent', parent=self.cursor_parent, scale=(1,1,0))
@@ -151,7 +151,13 @@ class TextField(Entity):
         self.text = '\n'.join(lines)
 
         if move_cursor:
-            self.cursor.x += len(s)
+            if len(lines) == 1:
+                self.cursor.x += len(s)
+            else:
+                self.cursor.y += s.count('\n')
+                if self.cursor.y > self.max_lines:
+                    self.scroll += s.count('\n')
+                self.cursor.x = len(s.split('\n')[-1])
 
         if rerender:
             self.render()
@@ -862,9 +868,9 @@ if __name__ == '__main__':
     # Text.default_font = 'consola.ttf'
     # Text.default_resolution = 16*2
     # TreeView()
-    te = TextField(max_lines=50, scale=1, register_mouse_input = True, text='1234')
+    te = TextField(max_lines=20, register_mouse_input=True, text='1234')
     #te = TextField(max_lines=300, scale=1, register_mouse_input = True, scroll_size = (50,3))
-    # te.line_numbers.enabled = True
+    te.line_numbers.enabled = True
     # for name in color.color_names:
     #     if name == 'black':
     #         continue
