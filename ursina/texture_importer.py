@@ -61,6 +61,7 @@ def load_texture(name, path=None):
                 compress_textures(name)
                 return load_texture(name)
 
+    imported_textures[name] = None  # prevent searching for the same missing texture multiple times
     return None
 
 

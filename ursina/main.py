@@ -133,8 +133,33 @@ class Ursina(ShowBase):
 
         if application.window_type != 'none':
             window.make_editor_gui()
+            if 'use_ingame_console' in kwargs and kwargs['use_ingame_console']:
+                import builtins
+                from ursina import Entity, TextField, color
+                window.console = Entity(parent=window.editor_ui, position=window.top_left, eternal=True)
+                window.console.text_field = TextField(parent=window.console, scale=.75, font='VeraMono.ttf', max_lines=20, position=(0,0), register_mouse_input=True, text_input=None, eternal=True)
+                window.console.text_field.bg.color = color.black66
+                window.console.text_field.bg.scale_x = 1.5
+                def custom_print(*args, **kwargs):
+                    content = ' '.join([str(e) for e in args])
+                    if 'error' in content:
+                        content = f'{content}'
+                    window.console.text_field.cursor.y = window.console.text_field.text.count('\n')
+                    window.console.text_field.cursor.x = 999
+                    window.console.text_field.add_text(f'\n{content}')
+                builtins.print = custom_print
+
+                def console_text_input(key):
+                    if key == '|':
+                        window.console.text_field.enabled = not window.console.text_field.enabled
+                window.console.text_input = console_text_input
+
+
         if 'editor_ui_enabled' in kwargs:
             window.editor_ui.enabled = kwargs['editor_ui_enabled']
+
+        print('package_folder:', application.package_folder)
+        print('asset_folder:', application.asset_folder)
 
 
     def _update(self, task):

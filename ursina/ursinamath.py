@@ -8,20 +8,16 @@ internal_sum = sum
 
 
 def distance(a, b):
-    try:
-        # dist = [abs(e) for e in (a - b)]
+    if isinstance(a, (Color, Vec4)):
         dist = abs(a[0] - b[0])
         dist += abs(a[1] - b[1])
         dist += abs(a[2] - b[2])
         dist += abs(a[3] - b[3])
-        # print('color distance', a, b)
         return dist
-    except:
-        pass
 
     # if input is Entity, convert to positions
-    if hasattr(a, 'position'): a = a.position
-    if hasattr(b, 'position'): b = b.position
+    if hasattr(a, 'world_position'): a = a.world_position
+    if hasattr(b, 'world_position'): b = b.world_position
 
     dist = sqrt((b[0] - a[0])**2 + (b[1] - a[1])**2 + (b[2] - a[2])**2)
     # print('------------DIST:', dist)
