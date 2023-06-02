@@ -1533,6 +1533,7 @@ class Inspector(Entity):
                 self.fields[name].text_entity.text = f'{name[0]}: -----'
 
         [destroy(e) for e in self.shader_inputs_parent.children]
+        from ursina.prefabs.vec_field import VecField
         if self.selected_entity.shader:
             for i, (name, value) in enumerate(self.selected_entity.shader.default_input.items()):
 
@@ -1548,7 +1549,6 @@ class Inspector(Entity):
 
 
                 if isinstance(value, Vec2):
-                    from ursina.prefabs.vec_field import VecField
                     field = VecField(default_value=instance_value, parent=self.shader_inputs_parent, model='quad', scale=(1,1), x=.5, y=-i-.5, text=f'  {name}')
                     for e in field.fields:
                         e.text_field.scale *= .6
@@ -1569,6 +1569,41 @@ class Inspector(Entity):
                 elif isinstance(value, Color):
                     color_field = ColorField(parent=self.shader_inputs_parent, text=f' {name}', y=-i, is_shader_input=True, attr_name=name, value=value)
                     color_field.text_entity.scale *= .6
+
+        if hasattr(self.selected_entity, 'draw_inspector'):
+            print('-------------', self.selected_entity.draw_inspector())
+            for i, name in enumerate(self.selected_entity.draw_inspector()):
+                if not hasattr(self.selected_entity, name):
+                    continue
+                attr = getattr(self.selected_entity, name)
+                if attr is False or attr is True:
+                # if isinstance(attr, bool):
+                    b = InspectorButton(parent=self.shader_inputs_parent, text=f' {name}:', highlight_color=color.black90, y=-(len(self.selected_entity.shader.default_input))-i-1, origin=(-.5,0))
+                    b.text_entity.scale *= .6
+                    def toggle_value(name=name):
+                        new_value = not getattr(self.selected_entity, name)
+                        for e in level_editor.selection:
+                            setattr(e, name, new_value)
+                            if hasattr(e, 'generate'):
+                                e.generate()
+
+                    b.on_click = toggle_value
+
+                elif isinstance(attr, (float, int)):
+                    field = VecField(default_value=attr, parent=self.shader_inputs_parent, model='quad', scale=(1,1), x=.5, y=-(len(self.selected_entity.shader.default_input))-i-1, text=f'  {name}')
+                    for e in field.fields:
+                        e.text_field.scale *= .6
+                        e.text_field.text_entity.color = color.light_gray
+                    field.text_entity.scale *= .6*.75
+                    field.text_entity.color = color.light_gray
+
+                    def on_submit(name=name, field=field):
+                        for e in level_editor.selection:
+                            setattr(e, name, field.value)
+
+                    field.on_value_changed = on_submit
+
+
 
 
 class MenuHandler(Entity):
@@ -1909,7 +1944,6 @@ class PokeShape(Entity):
     default_values = Entity.default_values | dict(points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,.5), Vec3(-.5,0,.5)], name='poke_shape') # combine dicts
 
     def __init__(self, points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,.5), Vec3(-.5,0,.5)], **kwargs):
-
         self.original_parent = level_editor
         self.selectable = True
         self.highlight_color = color.blue
@@ -1923,10 +1957,8 @@ class PokeShape(Entity):
 
         self.make_wall = True
         self.wall_parent = None
-        if self.make_wall:
-            self.wall_parent = Entity(parent=self, model=Mesh(), color=color.dark_gray, add_to_scene_entities=False)
 
-        self.wall_height = 1
+        self.wall_height = 1.0
         self.wall_thickness = .1
         self.subdivisions = 3
         self.smoothing_distance = .1
@@ -1934,6 +1966,10 @@ class PokeShape(Entity):
         self._edit_mode = False
         self.generate()
         self.edit_mode = False
+
+
+    def draw_inspector(self):
+        return ['make_wall', 'wall_height', 'wall_thickness', 'subdivisions', 'smoothing_distance']
 
 
     def generate(self):
@@ -1961,12 +1997,21 @@ class PokeShape(Entity):
         self.texture = 'grass'
         self.texture_scale = Vec2(.125)
         # [destroy(e) for e in self.wall_parent.children]
+        print('-------------', self.make_wall, self.wall_parent)
+        if not self.make_wall and self.wall_parent:
+            print('destroy old wall parent')
+            destroy(self.wall_parent)
+            self.wall_parent = None
 
         if self.make_wall:
+            if not self.wall_parent:
+                print('make new wall parent')
+                self.wall_parent = Entity(parent=self, model=Mesh(), color=color.dark_gray, add_to_scene_entities=False)
+
             pass
             polygon_3d = [Vec3(e[0], 0, e[1]) for e in polygon]
             polygon_3d.append(polygon_3d[0])
-            self.wall_parent.model = Pipe(base_shape=Quad(0), path=polygon_3d)
+            self.wall_parent.model = Pipe(base_shape=Quad(scale=(self.wall_thickness, self.wall_height)), path=polygon_3d)
             # wall_verts = []
             # for i, vert in enumerate(polygon):
             #     vert = Vec3(vert[0], 0, vert[1])
