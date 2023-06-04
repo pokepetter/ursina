@@ -295,7 +295,7 @@ class Undo(Entity):
             target_entities = [level_editor.entities[id] for id in current_undo_data[1]]
             [level_editor.selection.remove(e) for e in target_entities if e in level_editor.selection]
             [setattr(e, 'parent', level_editor) for e in level_editor.cubes]
-            [level_editor.entities.remove(e) for e in target_entities]
+            [level_editor.entities.remove(e) for e in target_entities if e in level_editor.entities]
             [destroy(e) for e in target_entities]
 
 
@@ -1159,7 +1159,8 @@ class Deleter(Entity):
         before = len(level_editor.entities)
         # level_editor.entities = [e for e in level_editor.entities if e not in level_editor.selection]
         for e in level_editor.selection:
-            level_editor.entities.remove(e)
+            if e in level_editor.entities:
+                level_editor.entities.remove(e)
 
         print('---------------', before, '-->', len(level_editor.entities))
         [setattr(e, 'parent', level_editor) for e in level_editor.cubes]
@@ -1167,6 +1168,25 @@ class Deleter(Entity):
         level_editor.selection.clear()
         level_editor.render_selection()
         hierarchy_list.render_selection()
+
+class Grouper(Entity):
+    def __init__(self):
+        super().__init__(parent=level_editor)
+
+    def input(self, key):
+        if held_keys['control'] and key == 'g' and level_editor.selection:
+            group_entity = Entity(parent=level_editor.current_scene.scene_parent, name='[group]', selectable=True)
+            level_editor.entities.append(group_entity)
+
+            parents = tuple(set([e.parent for e in level_editor.selection]))
+            if len(parents) == 1:
+                group_entity.world_parent = parents[0]
+
+            group_entity.world_position = sum([e.world_position for e in level_editor.selection]) / len(level_editor.selection)
+            for e in level_editor.selection:
+                e.world_parent = group_entity
+
+            level_editor.selection = [group_entity, ]
 
 
 class PointOfViewSelector(Entity):
@@ -1365,13 +1385,14 @@ class HierarchyList(Entity):
             y = int(-mouse.point.y * self.bg.scale_y / Text.size / self.entity_list_text.scale_y)
             if y < len(level_editor.entities):
                 if not held_keys['control'] and not held_keys['shift']:     # select one
-                    level_editor.selection = [level_editor.entities[y], ]
+                    level_editor.selection = [level_editor.entities[self.entity_indices[y]], ]
                 elif held_keys['control'] and not held_keys['shift']:       # add one
-                    level_editor.selection.append(level_editor.entities[y])
+                    level_editor.selection.append(level_editor.entities[self.entity_indices[y]])
                 elif held_keys['shift'] and self.prev_y:                    # add multiple
                     from_y = min(self.prev_y, y)
                     to_y = max(self.prev_y, y)
-                    level_editor.selection.extend(level_editor.entities[from_y:to_y+1])
+                    for _ in range(from_y, to_y+1):
+                        level_editor.selection.append(level_editor.entities[self.entity_indices[_]])
 
             elif not held_keys['control'] and not held_keys['shift']:
                 level_editor.selection.clear()
@@ -1384,19 +1405,52 @@ class HierarchyList(Entity):
         if key == 'left mouse up':
             self.render_selection()
 
+
     def render_selection(self):
         text = ''
         self.selected_renderer.model.vertices = []
+        self.entity_indices = [-1 for e in level_editor.entities]
 
-        for i, e in enumerate(level_editor.entities):
-            if e in level_editor.selection:
-                self.selected_renderer.model.vertices.extend([Vec3(v)-Vec3(0,i,0) for v in self.quad_model.vertices])
-                text += f'<white>{e.name}\n'
+        y = 0
+        current_node = None
 
-            elif e:
-                text += f'<gray>{e.name}\n'
-            else:
-                text += f'ERROR: \n'
+        for entity in level_editor.entities:
+            if entity.parent == level_editor.current_scene.scene_parent:
+                self.entity_indices[y] = level_editor.entities.index(entity)
+                if not entity in level_editor.selection:
+                    text += f'<gray>{entity.name}\n'
+                else:
+                    self.selected_renderer.model.vertices.extend([Vec3(v)-Vec3(0,y,0) for v in self.quad_model.vertices])
+                    text += f'<white>{entity.name}\n'
+                y += 1
+
+                for child in [e for e in entity.children if e in level_editor.entities]:
+                    self.entity_indices[y] = level_editor.entities.index(child)
+                    if not child in level_editor.selection:
+                        text += f'<gray> {child.name}\n'
+                    else:
+                        self.selected_renderer.model.vertices.extend([Vec3(v)-Vec3(0,y,0) for v in self.quad_model.vertices])
+                        text += f'<white> {child.name}\n'
+                    y += 1
+
+                    for child_2 in [e for e in child.children if e in level_editor.entities]:
+                        self.entity_indices[y] = level_editor.entities.index(child_2)
+                        if not child_2 in level_editor.selection:
+                            text += f'<gray>  {child_2.name}\n'
+                        else:
+                            self.selected_renderer.model.vertices.extend([Vec3(v)-Vec3(0,y,0) for v in self.quad_model.vertices])
+                            text += f'<white>  {child_2.name}\n'
+                        y += 1
+
+                        for child_3 in [e for e in child_2.children if e in level_editor.entities]:
+                            self.entity_indices[y] = level_editor.entities.index(child_3)
+                            if not child_3 in level_editor.selection:
+                                text += f'<gray>   {child_3.name}\n'
+                            else:
+                                self.selected_renderer.model.vertices.extend([Vec3(v)-Vec3(0,y,0) for v in self.quad_model.vertices])
+                                text += f'<white>   {child_3.name}\n'
+                            y += 1
+
 
         self.entity_list_text.text = text
         self.selected_renderer.model.generate()
@@ -2321,6 +2375,7 @@ selection_box = SelectionBox(model=Quad(0, mode='line'), origin=(-.5,-.5,0), sca
 prefabs = [Cube, Pyramid, PokeShape]
 level_editor.spawner = Spawner()
 deleter = Deleter()
+grouper = Grouper()
 level_menu = LevelMenu()
 level_editor.goto_scene = level_menu.goto_scene
 duplicator = Duplicator()
