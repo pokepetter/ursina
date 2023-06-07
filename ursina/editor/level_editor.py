@@ -1543,8 +1543,8 @@ class Inspector(Entity):
             self.transform_fields[i].next_field = self.transform_fields[i+1]
 
         self.fields = dict(
-            model =   InspectorButton(parent=self.name_field, text='model:', y=-4, on_click=Func(setattr, menu_handler, 'state', 'model_menu')),
-            texture = InspectorButton(parent=self.name_field, text='texture: green_grass_light', y=-4-1, on_click=Sequence(Func(setattr, menu_handler, 'state', 'texture_menu'), Func(setattr, texture_menu, 'target_attr', 'texture'))),
+            model =   InspectorButton(parent=self.name_field, text='model: ', y=-4, on_click=Func(setattr, menu_handler, 'state', 'model_menu')),
+            texture = InspectorButton(parent=self.name_field, text='texture: ', y=-4-1, on_click=Sequence(Func(setattr, menu_handler, 'state', 'texture_menu'), Func(setattr, texture_menu, 'target_attr', 'texture'))),
             color =   ColorField(parent=self.name_field, text='c:color: ', y=-4-2, attr_name='color', is_shader_input=False),
             shader =  InspectorButton(parent=self.name_field, text='shader: ', y=-4-3, on_click=Func(setattr, menu_handler, 'state', 'shader_menu')),
         )
@@ -1767,7 +1767,7 @@ class TextureMenu(AssetMenu):
             for e in level_editor.selection:
                 e.set_shader_input(self.target_attr, name)
 
-
+        inspector.update_inspector()
         menu_handler.state = 'None'
 
 class ShaderMenu(AssetMenu):
@@ -1885,7 +1885,7 @@ class Help(Button):
     def __init__(self, **kwargs):
         super().__init__(parent=level_editor.ui, text='?', scale=.025, model='circle', origin=(-.5,.5), text_origin=(0,0), position=window.top_left)
         self.tooltip = Text(
-            position=self.position + Vec3(.05,-.05,-1),
+            position=self.position + Vec3(.05,-.05,-10),
             # wordwrap=0,
             font='VeraMono.ttf',
             enabled=False,
@@ -1905,8 +1905,9 @@ class Help(Button):
                 shift+d:    duplicate
             ''').strip(),
             background=True,
-            scale=.25
+            scale=.5
         )
+        self.tooltip.background.color = color.black
         self.tooltip.original_scale = .75
 
 class Duplicator(Entity):
