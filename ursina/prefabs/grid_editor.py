@@ -236,10 +236,17 @@ class GridEditor(Entity):
 
 class PixelEditor(GridEditor):
     def __init__(self, texture, palette=(color.black, color.white, color.light_gray, color.gray, color.red, color.orange, color.yellow, color.lime, color.green, color.turquoise, color.cyan, color.azure, color.blue, color.violet, color.magenta, color.pink), **kwargs):
-        self.grid = [[texture.get_pixel(x,y) for y in range(texture.height)] for x in range(texture.width)]
         super().__init__(texture=texture, size=texture.size, palette=palette, **kwargs)
-        self.texture.filtering = False
-        self.render()
+        self.set_texture(texture)
+
+    def set_texture(self, texture, render=True):
+        self.texture = texture
+        self.w, self.h = int(texture.size[0]), int(texture.size[1])
+        self.grid = [[texture.get_pixel(x,y) for y in range(texture.height)] for x in range(texture.width)]
+        self.texture.filtering = None
+        if render:
+            self.render()
+
 
     def draw(self, x, y):
         for _y in range(y, min(y+self.brush_size, self.h)):
@@ -261,7 +268,7 @@ class PixelEditor(GridEditor):
     def save(self):
         if self.texture.path:
             self.texture.save(self.texture.path)
-            print('saving:', self.texture.path)
+            print('saved:', self.texture.path)
 
 
 
