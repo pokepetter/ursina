@@ -9,11 +9,11 @@ file_types = ('.tif', '.jpg', '.jpeg', '.png', '.gif')
 textureless = False
 
 
-def load_texture(name, path=None):
+def load_texture(name, path=None, use_cache=True):
     if textureless:
         return None
 
-    if name in imported_textures:
+    if use_cache and name in imported_textures:
         return copy(imported_textures[name])
 
     folders = ( # folder search order
