@@ -177,8 +177,9 @@ class Ursina(ShowBase):
         for entity in scene.entities:
             if entity.enabled == False or entity.ignore:
                 continue
-
             if application.paused and entity.ignore_paused == False:
+                continue
+            if entity.has_disabled_ancestor():
                 continue
 
             if hasattr(entity, 'update') and callable(entity.update):
@@ -251,6 +252,9 @@ class Ursina(ShowBase):
                 continue
             if application.paused and entity.ignore_paused == False:
                 continue
+            if entity.has_disabled_ancestor():
+                continue
+
 
             if hasattr(entity, 'input') and callable(entity.input):
                 if entity.input(key):
