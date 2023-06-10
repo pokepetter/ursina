@@ -1,16 +1,18 @@
-from ursina import *
+from ursina import Entity, camera, Text, Vec2, mouse, color, floor, clamp, time, held_keys, destroy
 import pyperclip
+
+from ursina.string_utilities import multireplace
 # from tree_view import TreeView
 
 
 class TextField(Entity):
-    def __init__(self, max_lines=64, line_height=1.1, **kwargs):
+    def __init__(self, max_lines=64, line_height=1.1, character_limit=None, **kwargs):
         super().__init__(parent=camera.ui, x=-.5, y=.4, ignore_paused=True)
 
         self.font = 'VeraMono.ttf'
         self.line_height = line_height
         self.max_lines = max_lines
-        self.character_limit = None
+        self.character_limit = character_limit
 
         self.scroll_parent = Entity(parent=self)
         self.text_entity = Text(parent=self.scroll_parent, start_tag='☾', end_tag='☽', font=self.font, text='', line_height=self.line_height, origin=(-.5, .5))
@@ -19,7 +21,7 @@ class TextField(Entity):
         self.cursor_parent = Entity(parent=self.scroll_parent, scale=(self.character_width, -1*Text.size*self.line_height))
         self.cursor = Entity(name='text_field_cursor', parent=self.cursor_parent, model='cube', color=color.cyan, origin=(-.5, -.5), scale=(.1, 1, 0), enabled=False)
         self.cursor.blink(duration=1.2, loop=True)
-        self.bg = Entity(name='text_field_bg', parent=self, model='quad', double_sided=True, color=color.dark_gray, origin=(-.5,.5), z=0.005, scale=(120, Text.size*self.max_lines), collider='box', visible=True)
+        self.bg = Entity(name='text_field_bg', parent=self, model='quad', double_sided=True, color=color.dark_gray, origin=(-.5,.5), z=0.005, scale=(120, Text.size*self.max_lines*self.line_height), collider='box', visible=True)
 
         self.selection = [Vec2(0,0), Vec2(0,0)]
         self.selection_parent = Entity(name='text_field_selection_parent', parent=self.cursor_parent, scale=(1,1,0))
@@ -87,7 +89,7 @@ class TextField(Entity):
                     self.scroll_amount = self._original_scroll_amount
 
         def middle_click_update():
-            if not mouse.middle:
+            if not mouse.middle or self.middle_click_scroller.start_y == None:
                 return
             self.middle_click_scroller.t += time.dt
             if self.middle_click_scroller.t < self.middle_click_scroller.update_rate:
@@ -149,7 +151,13 @@ class TextField(Entity):
         self.text = '\n'.join(lines)
 
         if move_cursor:
-            self.cursor.x += len(s)
+            if len(lines) == 1:
+                self.cursor.x += len(s)
+            else:
+                self.cursor.y += s.count('\n')
+                if self.cursor.y > self.max_lines:
+                    self.scroll += s.count('\n')
+                self.cursor.x = len(s.split('\n')[-1])
 
         if rerender:
             self.render()
@@ -343,8 +351,12 @@ class TextField(Entity):
         # print('-------------', key)
         text, cursor, on_undo, add_text, erase = self.text, self.cursor, self.on_undo, self.add_text, self.erase
 
-        if self.register_mouse_input and key == 'left mouse down':
-            self.active = (mouse.hovered_entity == self.bg)
+        if self.register_mouse_input and self.bg.hovered and key == 'left mouse up':
+            self.active = True
+
+        elif self.register_mouse_input and not self.bg.hovered and key == 'left mouse down':    # clicked outside
+            self.active = False
+
 
         if not self.active:
             return
@@ -354,8 +366,6 @@ class TextField(Entity):
                 if self.max_lines < 9999:
                     if self.scroll < 9999:
                         self.scroll = clamp(self.scroll+self.scroll_amount, 0, 9999)
-                        self.y = .4-.025
-                        self.animate('y', .4, duration=.045, curve=curve.linear)
                         self.render()
                 else:
                     self.scroll = clamp(self.scroll+self.scroll_amount, 0, 9999)
@@ -389,9 +399,7 @@ class TextField(Entity):
         if held_keys['alt'] and key != 'alt':
             alt = 'alt+'
 
-        start_key = key
         key = ctrl+shift+alt+key
-        # print('-', key, 'start_key:', start_key)
         x, y = int(cursor.x), int(cursor.y)
         lines = text.split('\n')
         l = lines[y]
@@ -496,8 +504,6 @@ class TextField(Entity):
                     if l.startswith(' '*4):
                         # print('dedent')
                         lines[y] = l[4:]
-                        if y == int(cursor.y):
-                            moveCursor = True
 
             self.cursor.x = max(self.cursor.x - 4, 0)
             self._append_undo(self.text, y, x)
@@ -519,7 +525,7 @@ class TextField(Entity):
                 erase()
                 return
 
-            if not ' ' in l:
+            if ' ' not in l:
                 l = l[x:]
                 self.cursor.x = 0
 
@@ -535,7 +541,7 @@ class TextField(Entity):
                 for delimiter in ('.', '\'', '\"', '(', '"', '\''):
                     beginning = beginning.replace(delimiter, ' ')
 
-                if not ' ' in beginning: # first word of the line
+                if ' ' not in beginning: # first word of the line
                     beginning = ''
                 else:
                     beginning = beginning.rstrip().rsplit(' ', 1)[0]
@@ -850,6 +856,7 @@ class TextField(Entity):
 
 
 if __name__ == '__main__':
+    from ursina import Ursina, window, Button
     app = Ursina(vsync=60)
 
     # camera.orthographic = True
@@ -865,9 +872,9 @@ if __name__ == '__main__':
     # Text.default_font = 'consola.ttf'
     # Text.default_resolution = 16*2
     # TreeView()
-    te = TextField(max_lines=50, scale=1, register_mouse_input = True, text='1234')
+    te = TextField(max_lines=20, register_mouse_input=True, text='1234')
     #te = TextField(max_lines=300, scale=1, register_mouse_input = True, scroll_size = (50,3))
-    # te.line_numbers.enabled = True
+    te.line_numbers.enabled = True
     # for name in color.color_names:
     #     if name == 'black':
     #         continue
@@ -883,7 +890,7 @@ if __name__ == '__main__':
     #     '    ':      '☾dark_gray☽----☾default☽',
     #     }
     #
-    import textwrap
+    from textwrap import dedent
     te.text = dedent('''
         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
         Aliquam sapien tellus, venenatis sit amet ante et, malesuada porta risus.

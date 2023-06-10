@@ -140,7 +140,7 @@ void main() {
 default_input = {
     'texture_scale': Vec2(1,1),
     'texture_offset': Vec2(0,0),
-    'shadow_color' : Vec4(0, .5, 1, .25),
+    'shadow_color' : Color(0, .5, 1, .25),
     }
 )
 

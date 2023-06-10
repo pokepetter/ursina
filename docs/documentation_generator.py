@@ -83,6 +83,7 @@ groups = {
     'ursinastuff',
     'Sequence',
     'Func',
+    'Keys',
 ],
 'Collision' : [
     'raycast',
@@ -125,6 +126,7 @@ groups = {
     'RadialMenu',
     'RadialMenuButton',
     'HealthBar',
+    'ColorPicker',
 ],
 'Editor': [
     'HotReloader',
@@ -185,6 +187,20 @@ def get_classes(str):
     return classes
 
 
+def get_class_scope_variables(str):
+    vars = []
+    for i, line in enumerate(str.split('\n')):
+        if not line:
+            continue
+        if line.strip().startswith('_'):
+            continue
+        if line.strip().startswith('def'):
+            break
+        vars.append(line)
+
+    return vars
+
+
 def get_class_attributes(str):
     attributes = list()
     lines = str.split('\n')
@@ -201,9 +217,7 @@ def get_class_attributes(str):
 
             start = i
             for j in range(i+1, len(lines)):
-                if (indentation(lines[j]) == indentation(line)
-                and not lines[j].strip().startswith('def late_init')
-                ):
+                if (indentation(lines[j]) == indentation(line) and not lines[j].strip().startswith('def late_init')):
                     end = j
                     found_init = True
                     break
@@ -417,9 +431,9 @@ def is_singleton(str):
 path = application.package_folder
 module_info = dict()
 class_info = dict()
-module_info['textures'] = ('', '', '', ('noise', 'grass', 'vignette', 'arrow_right', 'test_tileset', 'tilemap_test_level', 'shore', 'file_icon', 'sky_sunset', 'radial_gradient', 'circle', 'perlin_noise', 'brick', 'grass_tintable', 'circle_outlined', 'ursina_logo', 'arrow_down', 'cog', 'vertical_gradient', 'white_cube', 'horizontal_gradient', 'folder', 'rainbow', 'heightmap_1', 'sky_default',), (), ())
-module_info['models'] = ('', '', '', ('quad', 'wireframe_cube', 'plane', 'circle', 'diamond', 'wireframe_quad', 'sphere', 'cube', 'icosphere', 'cube_uv_top', 'arrow', 'sky_dome', ), (), ())
-module_info['shaders'] = ('', '', '', ('colored_lights_shader', 'fresnel_shader', 'projector_shader', 'instancing_shader', 'texture_blend_shader', 'matcap_shader', 'triplanar_shader', 'unlit_shader', 'geom_shader', 'normals_shader', 'transition_shader', 'noise_fog_shader', 'lit_with_shadows_shader', 'fxaa', 'camera_empty', 'ssao', 'camera_outline_shader', 'pixelation_shader', 'camera_contrast', 'camera_vertical_blur', 'camera_grayscale', ), (), ())
+module_info['textures'] = ('', '', '', [], ('noise', 'grass', 'vignette', 'arrow_right', 'test_tileset', 'tilemap_test_level', 'shore', 'file_icon', 'sky_sunset', 'radial_gradient', 'circle', 'perlin_noise', 'brick', 'grass_tintable', 'circle_outlined', 'ursina_logo', 'arrow_down', 'cog', 'vertical_gradient', 'white_cube', 'horizontal_gradient', 'folder', 'rainbow', 'heightmap_1', 'sky_default',), (), ())
+module_info['models'] = ('', '', '', [], ('quad', 'wireframe_cube', 'plane', 'circle', 'diamond', 'wireframe_quad', 'sphere', 'cube', 'icosphere', 'cube_uv_top', 'arrow', 'sky_dome', ), (), ())
+module_info['shaders'] = ('', '', '', [], ('colored_lights_shader', 'fresnel_shader', 'projector_shader', 'instancing_shader', 'texture_blend_shader', 'matcap_shader', 'triplanar_shader', 'unlit_shader', 'geom_shader', 'normals_shader', 'transition_shader', 'noise_fog_shader', 'lit_with_shadows_shader', 'fxaa', 'camera_empty', 'ssao', 'camera_outline_shader', 'pixelation_shader', 'camera_contrast', 'camera_vertical_blur', 'camera_grayscale', ), (), ())
 
 
 for f in path.glob('**/*.py'):
@@ -429,12 +443,12 @@ for f in path.glob('**/*.py'):
 
         if not is_singleton(code):
             name = f.stem
-            attrs, funcs = list(), list()
+            attrs, funcs = [], []
             attrs = get_module_attributes(code)
             funcs = get_functions(code)
             example = get_example(code, name)
             if attrs or funcs:
-                module_info[name] = (f, '', '', attrs, funcs, example)
+                module_info[name] = (f, '', '', [], attrs, funcs, example)
 
             # continue
             classes = get_classes(code)
@@ -445,14 +459,17 @@ for f in path.glob('**/*.py'):
                 if 'def __init__' in class_definition:
                     # init line
                     params =  '__init__('+ class_definition.split('def __init__(')[1].split('\n')[0][:-1]
+
+                class_scope_vars = get_class_scope_variables(class_definition)
                 attrs = get_class_attributes(class_definition)
                 methods = get_functions(class_definition, is_class=True)
                 example = get_example(code, class_name)
 
+                parent_class = ''
                 if ('(') in class_name:
                     parent_class = class_name.split('(')[1].split(')')[0]
                     class_name =  class_name.split('(')[0]
-                class_info[class_name] = (f, parent_class, params, attrs, methods, example)
+                class_info[class_name] = (f, parent_class, params, class_scope_vars, attrs, methods, example)
         # singletons
         else:
             module_name = f.stem
@@ -464,7 +481,7 @@ for f in path.glob('**/*.py'):
                 methods = get_functions(class_definition, is_class=True)
                 example = get_example(code, class_name)
 
-                module_info[module_name] = (f, '', '', attrs, methods, example)
+                module_info[module_name] = (f, '', '', [], attrs, methods, example)
 
 def html_color(color):
     return f'hsl({color.h}, {int(color.s*100)}%, {int(color.v*100)}%)'
@@ -507,7 +524,7 @@ for group_name, group in groups.items():
             continue
             print('no info found for', name)
         # f, params, attrs, methods, example = data
-        location, parent_class, params, attrs, funcs, example = data
+        location, parent_class, params, class_scope_vars, attrs, funcs, example = data
         params = params.replace('__init__', name.split('(')[0])
         params = params.replace('(self, ', '(')
         params = params.replace('(self)', '()')
@@ -533,6 +550,14 @@ for group_name, group in groups.items():
             html += f'        <div class="params">{params}</div><br>\n'
 
         html += '        <table> <!-- attributes -->\n'
+
+        for e in class_scope_vars:
+            html += (
+            f'            <tr>\n'
+            f'                <td>{name}.{e.strip()}<gray></gray></td><td>{info}</td>\n'
+            f'            </tr>\n'
+            )
+
 
         dot = '.'
         if group_name == 'Assets':    # don't add a . for asset names

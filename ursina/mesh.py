@@ -252,7 +252,7 @@ class Mesh(NodePath):
             self.generate()
 
 
-    def save(self, name='', path=application.compressed_models_folder):
+    def save(self, name='', folder:Path=application.compressed_models_folder, flip_faces=False):
         if not application.compressed_models_folder.exists():
             application.compressed_models_folder.mkdir()
 
@@ -262,21 +262,28 @@ class Mesh(NodePath):
                 name += '.ursinamesh'
 
         if name.endswith('ursinamesh'):
-            with open(path / name, 'w') as f:
+            with open(folder / name, 'w') as f:
                 # recipe = self.recipe.replace('LVector3f', '')
                 f.write(self.recipe)
-            print('saved .ursinamesh to:', path / name)
+            print('saved .ursinamesh to:', folder / name)
 
         elif name.endswith('.obj'):
-            from ursina.mesh_importer import ursina_mesh_to_obj
+            from ursina.mesh_exporter import ursinamesh_to_obj
             import os
-            # Remove the filename, else we get 'name.obj.obj'
+            # Remove the file extension, so we don't get 'name.obj.obj'
             name = str(os.path.splitext(name)[0])
-            ursina_mesh_to_obj(self, name, path)
+            ursinamesh_to_obj(self, name, folder, flip_faces)
+
+        elif name.endswith('.dae'):
+            from ursina.mesh_exporter import ursinamesh_to_dae
+            import os
+            # Remove the file extension, so we don't get 'name.dae.dae'
+            name = str(os.path.splitext(name)[0])
+            ursinamesh_to_dae(self, name, folder)
 
         elif name.endswith('.bam'):
-            success = self.writeBamFile(path / name)
-            print('saved .bam to:', path / name)
+            success = self.writeBamFile(folder / name)
+            print('saved .bam to:', folder / name)
 
 
 

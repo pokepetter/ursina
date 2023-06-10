@@ -37,6 +37,7 @@ class ButtonList(Entity):
         # handle click here instead of in on_click so you can assign a custom on_click function
         if key == 'left mouse down' and self.bg.hovered:
             y = floor(-mouse.point.y * len(self.button_dict))
+            y = min(y, len(self.button_dict)-1)
 
             action = self.actions[y]
             self.highlight.blink(color.black, .1)
@@ -57,6 +58,7 @@ class ButtonList(Entity):
         self.highlight.enabled = mouse.hovered_entity == self.bg
         if mouse.hovered_entity == self.bg:
             y = floor(-mouse.point.y * len(self.button_dict))
+            y = min(y, len(self.button_dict)-1)
             self.highlight.y = -y / len(self.button_dict)
 
 

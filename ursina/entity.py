@@ -74,6 +74,7 @@ class Entity(NodePath):
         self.texture = None     # set model with texture='texture_name'. requires a model to be set beforehand.
         self.render_queue = 0   # for custom sorting in case of conflict. To sort things in 2d, set .z instead of using this.
         self.double_sided = False
+        self._shader_inputs = {}
         if Entity.default_shader:
             self.shader = Entity.default_shader
 
@@ -743,8 +744,17 @@ class Entity(NodePath):
         raise ValueError(f'{value} is not a Shader')
 
 
+    def get_shader_input(self, name):
+        if name in self._shader_inputs:
+            return self._shader_inputs[name]
+        return None
+
 
     def set_shader_input(self, name, value):
+        self._shader_inputs[name] = value
+        if isinstance(value, str):
+            value = load_texture(value)
+
         if isinstance(value, Texture):
             value = value._texture    # make sure to send the panda3d texture to the shader
 
@@ -794,9 +804,10 @@ class Entity(NodePath):
         if not hasattr(self, '_texture_scale'):
             return Vec2(1,1)
         return self._texture_scale
+
     @texture_scale.setter
     def texture_scale(self, value):  # how many times the texture should repeat, eg. texture_scale=(8,8).
-        self._texture_scale = value
+        self._texture_scale = Vec2(*value)
         if self.model and self.texture:
             self.model.setTexScale(TextureStage.getDefault(), value[0], value[1])
             self.set_shader_input('texture_scale', value)
@@ -809,6 +820,7 @@ class Entity(NodePath):
 
     @texture_offset.setter
     def texture_offset(self, value):
+        value = Vec2(*value)
         if self.model and self.texture:
             self.model.setTexOffset(TextureStage.getDefault(), value[0], value[1])
             self.texture = self.texture
@@ -1020,6 +1032,9 @@ class Entity(NodePath):
 
 
     def has_ancestor(self, possible_ancestor):
+        if self.parent == possible_ancestor:
+            return True
+
         p = self
         if isinstance(possible_ancestor, Entity):
             # print('ENTITY')
