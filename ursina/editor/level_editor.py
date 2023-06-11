@@ -1544,11 +1544,13 @@ class Inspector(Entity):
             texture = InspectorButton(parent=self.name_field, text='texture: ', y=-4-1, on_click=Sequence(Func(setattr, menu_handler, 'state', 'texture_menu'), Func(setattr, texture_menu, 'target_attr', 'texture'))),
             color =   ColorField(parent=self.name_field, text='c:color: ', y=-4-2, attr_name='color', is_shader_input=False),
             shader =  InspectorButton(parent=self.name_field, text='shader: ', y=-4-3, on_click=Func(setattr, menu_handler, 'state', 'shader_menu')),
+            collider_type = InspectorButton(parent=self.name_field, text='collider_type: ', y=-4-4, on_click=Func(setattr, menu_handler, 'state', 'collider_menu')),
         )
+
 
         Entity(model=Grid(3,3), parent=self.transform_fields[0], scale=3, origin=(-.5,.5), z=-.1, color=color._64)
 
-        self.shader_inputs_parent = Entity(parent=self.name_field, y=-8)
+        self.shader_inputs_parent = Entity(parent=self.name_field, y=-9)
         self.scale = .6
 
 
@@ -1573,10 +1575,12 @@ class Inspector(Entity):
         for i, attr_name in enumerate(('x', 'y', 'z', 'rotation_x', 'rotation_y', 'rotation_z', 'scale_x', 'scale_y', 'scale_z')):
             self.transform_fields[i].text_field.text_entity.text = str(round(getattr(self.selected_entity, attr_name),4))
 
-        for name in ('model', 'texture', 'shader'):
-            field_values = [getattr(e, name) for e in level_editor.selection]
-            field_values = [e.name for e in field_values if hasattr(e, 'name')]
+        for name in ('model', 'texture', 'shader', 'collider_type'):
+            field_values = [getattr(e, name) for e in level_editor.selection if hasattr(e, name)]
+            field_values = [str(e) for e in field_values]
             field_values = tuple(set(field_values))
+            # if not field_values:
+            #     break
 
             if len(field_values) == 1:
                 self.fields[name].text_entity.text = (f'{name[0]}:{field_values[0]}')
@@ -1667,6 +1671,7 @@ class MenuHandler(Entity):
             'texture_menu' : texture_menu,
             'shader_menu' : shader_menu,
             'color_menu' : color_menu,
+            'collider_menu': collider_menu
         }
         self.keybinds = {'m' : 'model_menu', 'v' : 'texture_menu', 'n' : 'shader_menu', 'b' : 'color_menu', 'escape' : 'None'}
 
@@ -1876,6 +1881,19 @@ class ColorMenu(Entity):
         menu_handler.state = 'None'
         level_editor.current_scene.undo.record_undo([(level_editor.entities.index(e), 'color', e.original_color, e.color) for e in level_editor.selection])
 
+
+class ColliderMenu(AssetMenu):
+    def on_enable(self):
+        self.asset_names = ['box', 'sphere', 'mesh', ]
+        super().on_enable()
+
+    def on_select_asset(self, name):
+        # level_editor.current_scene.undo.record_undo([(level_editor.entities.index(e), 'collider', e.texture, name) for e in level_editor.selection])
+        for e in level_editor.selection:
+            e.collider_type = name
+
+        inspector.update_inspector()
+        menu_handler.state = 'None'
 
 
 class Help(Button):
@@ -2382,6 +2400,7 @@ model_menu = ModelMenu()
 texture_menu = TextureMenu()
 color_menu = ColorMenu()
 shader_menu = ShaderMenu()
+collider_menu = ColliderMenu()
 menu_handler = MenuHandler()
 right_click_menu = RightClickMenu()
 hierarchy_list = HierarchyList()
