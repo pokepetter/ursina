@@ -151,7 +151,6 @@ class TextField(Entity):
         self.text = '\n'.join(lines)
 
         if move_cursor:
-            print('add_text:', s, len(s))
             self.cursor.x += len(s)
 
         if rerender:
