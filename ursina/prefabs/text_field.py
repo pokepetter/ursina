@@ -175,6 +175,7 @@ class TextField(Entity):
         # lines[line_index], lines[line_index+delta] = lines[line_index+delta], lines[line_index]
         # start = []
         # if start_y-1 > 0:
+
         #     start = lines[:int(start_y-1)]
 
         middle = lines[start_y:end_y+1]
@@ -345,8 +346,11 @@ class TextField(Entity):
         # print('-------------', key)
         text, cursor, on_undo, add_text, erase = self.text, self.cursor, self.on_undo, self.add_text, self.erase
 
-        if self.register_mouse_input and key == 'left mouse down':
-            self.active = (mouse.hovered_entity == self.bg)
+        if self.register_mouse_input and self.bg.hovered and key == 'left mouse up':
+            self.active = True
+
+        elif self.register_mouse_input and not self.bg.hovered and key == 'left mouse down':    # clicked outside
+            self.active = False
 
         if not self.active:
             return
