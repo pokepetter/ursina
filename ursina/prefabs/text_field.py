@@ -151,13 +151,8 @@ class TextField(Entity):
         self.text = '\n'.join(lines)
 
         if move_cursor:
-            if len(lines) == 1:
-                self.cursor.x += len(s)
-            else:
-                self.cursor.y += s.count('\n')
-                if self.cursor.y > self.max_lines:
-                    self.scroll += s.count('\n')
-                self.cursor.x = len(s.split('\n')[-1])
+            print('add_text:', s, len(s))
+            self.cursor.x += len(s)
 
         if rerender:
             self.render()
@@ -351,12 +346,8 @@ class TextField(Entity):
         # print('-------------', key)
         text, cursor, on_undo, add_text, erase = self.text, self.cursor, self.on_undo, self.add_text, self.erase
 
-        if self.register_mouse_input and self.bg.hovered and key == 'left mouse up':
-            self.active = True
-
-        elif self.register_mouse_input and not self.bg.hovered and key == 'left mouse down':    # clicked outside
-            self.active = False
-
+        if self.register_mouse_input and key == 'left mouse down':
+            self.active = (mouse.hovered_entity == self.bg)
 
         if not self.active:
             return
@@ -469,10 +460,11 @@ class TextField(Entity):
             if l.strip() == '':
                 indent = len(l)
             else:
-                indent = len(l) - len(l.lstrip())
+                indent = 0
                 if l.lstrip().startswith('class ') or l.lstrip().startswith('def '):
                     indent += 4
 
+            self.cursor.y += 1
             self.cursor.x = 0
             add_text(' '*indent)
             return
@@ -871,9 +863,9 @@ if __name__ == '__main__':
     # Text.default_font = 'consola.ttf'
     # Text.default_resolution = 16*2
     # TreeView()
-    te = TextField(max_lines=200, register_mouse_input=True, text='1234')
+    te = TextField(max_lines=50, scale=1, register_mouse_input = True, text='1234')
     #te = TextField(max_lines=300, scale=1, register_mouse_input = True, scroll_size = (50,3))
-    te.line_numbers.enabled = True
+    # te.line_numbers.enabled = True
     # for name in color.color_names:
     #     if name == 'black':
     #         continue
