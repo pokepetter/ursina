@@ -473,7 +473,6 @@ class TextField(Entity):
                 if l.lstrip().startswith('class ') or l.lstrip().startswith('def '):
                     indent += 4
 
-            self.cursor.y += 1
             self.cursor.x = 0
             add_text(' '*indent)
             return
@@ -872,7 +871,7 @@ if __name__ == '__main__':
     # Text.default_font = 'consola.ttf'
     # Text.default_resolution = 16*2
     # TreeView()
-    te = TextField(max_lines=20, register_mouse_input=True, text='1234')
+    te = TextField(max_lines=200, register_mouse_input=True, text='1234')
     #te = TextField(max_lines=300, scale=1, register_mouse_input = True, scroll_size = (50,3))
     te.line_numbers.enabled = True
     # for name in color.color_names:
