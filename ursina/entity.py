@@ -253,16 +253,6 @@ class Entity(NodePath):
                 self.model.setColorScale(value)
                 object.__setattr__(self, name, value)
 
-
-        elif name == 'collision' and hasattr(self, 'collider') and self.collider:
-            if value:
-                self.collider.node_path.unstash()
-            else:
-                self.collider.node_path.stash()
-
-            object.__setattr__(self, name, value)
-            return
-
         elif name == 'render_queue':
             if self.model:
                 self.model.setBin('fixed', value)
@@ -397,6 +387,20 @@ class Entity(NodePath):
         self.collision = bool(self.collider)
         return
 
+    @property
+    def collision(self):
+        return self._collision
+
+    @collision.setter
+    def collision(self, value):
+        self._collision = value
+        if not hasattr(self, 'collider') or not self.collider:
+            return
+
+        if value:
+            self.collider.node_path.unstash()
+        else:
+            self.collider.node_path.stash()
 
     @property
     def origin(self):
