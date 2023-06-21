@@ -3,12 +3,12 @@ import pyperclip
 from copy import deepcopy
 import sys
 from math import floor
-
+from ursina.shaders import unlit_shader
 
 
 class GridEditor(Entity):
     def __init__(self, size=(32,32), palette=(' ', '#', '|', 'o'), **kwargs):
-        super().__init__(parent=camera.ui, model='quad', position=(-.45,-.45), origin=(-.5,-.5), scale=.9, collider='box')
+        super().__init__(parent=camera.ui, model='quad', position=(-.45,-.45), origin=(-.5,-.5), scale=.9, collider='box', shader=unlit_shader)
 
         self.w, self.h = int(size[0]), int(size[1])
         sys.setrecursionlimit(self.w * self.h)
@@ -17,7 +17,7 @@ class GridEditor(Entity):
             self.grid = [[palette[0] for y in range(self.h)] for x in range(self.w)]
         self.brush_size = 1
         self.auto_render = True
-        self.cursor = Entity(parent=self, model=Quad(segments=0, mode='line', thickness=2), origin=(-.5,-.5), scale=(1/self.w, 1/self.h), color=color.color(120,1,1,.5), z=-.2)
+        self.cursor = Entity(parent=self, model=Quad(segments=0, mode='line', thickness=2), origin=(-.5,-.5), scale=(1/self.w, 1/self.h), color=color.color(120,1,1,.5), z=-.2, shader=unlit_shader)
 
         self.selected_char = palette[1]
         self.palette = palette
@@ -59,12 +59,12 @@ class GridEditor(Entity):
         if hasattr(self, 'palette_parent'):
             destroy(self.palette_parent)
 
-        self.palette_parent = Entity(parent=self, position=(-.3,.5))
+        self.palette_parent = Entity(parent=self, position=(-.3,.5), shader=unlit_shader)
         for i, e in enumerate(value):
             if isinstance(e, str):
                 i = e
 
-            b = Button(parent=self.palette_parent, scale=.05, text=i, model='quad', color=color._32)
+            b = Button(parent=self.palette_parent, scale=.05, text=i, model='quad', color=color._32, shader=unlit_shader)
             b.on_click = Func(setattr, self, 'selected_char', e)
             b.tooltip = Tooltip(str(e))
 
