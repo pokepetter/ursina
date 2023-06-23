@@ -226,6 +226,7 @@ class Window(WindowProperties):
 
     @property
     def size(self):
+        if not hasattr(self, '_size'): return None
         if not self.borderless:
             return Vec2(*base.win.getSize())
         return self._size
@@ -247,21 +248,21 @@ class Window(WindowProperties):
 
     @property
     def forced_aspect_ratio(self):
-        if not hasattr(self, '_forced_aspect_ratio'):
-            return None
+        if not hasattr(self, '_forced_aspect_ratio'): return None
         return self._forced_aspect_ratio
 
     @forced_aspect_ratio.setter
     def forced_aspect_ratio(self, value):
+        self._forced_aspect_ratio = value
         if not value:
             return
 
-        self._forced_aspect_ratio = value
         self.size = self.size
 
 
     @property
     def render_mode(self):
+        if not hasattr(self, '_render_mode'): return None
         return self._render_mode
 
     @render_mode.setter
@@ -328,6 +329,7 @@ class Window(WindowProperties):
 
     @property
     def borderless(self):
+        if not hasattr(self, '_borderless'): return True
         return self._borderless
 
     @borderless.setter
@@ -346,6 +348,7 @@ class Window(WindowProperties):
 
     @property
     def fullscreen(self):
+        if not hasattr(self, '_fullscreen'): return True
         return self._fullscreen
 
     @fullscreen.setter
