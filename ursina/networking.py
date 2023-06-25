@@ -7,6 +7,8 @@ import panda3d.core as p3d
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
 
+from enum import Enum, auto
+
 from collections import deque
 
 import uuid
@@ -28,141 +30,38 @@ import time
 import atexit
 import signal
 
-class TCPPacketConnection:
-    def __init__(self, socket, address, connection_timeout=None):
+import threading
+import asyncio
+
+class Connection:
+    def __init__(self, peer, socket, address):
+        self.peer = peer
         self.socket = socket
         self.address = address
-        self.connection_timeout = connection_timeout
 
         self.connected = True
-        
-        self.received_bytes_once = False
-        self.last_time_bytes_received = 0.0
-        self.time_since_bytes_received = 0.0
         self.timed_out = False
 
         self.state = "l"
-        self.length_byte_count = 4
+        self.length_byte_count = 2
         self.expected_byte_count = self.length_byte_count
         self.bytes_received = bytearray()
-        self.packet_queue = deque()
 
-        self.buffer = bytearray()
+        self.uid = str(uuid.uuid4())
+
+        self.async_task = None
 
     def __hash__(self):
-        return hash(self.address)
+        return hash(self.uid)
 
     def __eq__(self, other):
-        return self.address == other.address
-    
-    def receive(self):
-        if not self.connected:
-            return
+        return self.uid == other.uid
 
-        if self.socket.fileno() == -1:
-            self.connected = False
-            return
-
-        b = None
-        try:
-            b = self.socket.recv(self.expected_byte_count)
-        except socket.error as e:
-            pass
-
-        now = time.time()
-        if self.received_bytes_once:
-            self.time_since_bytes_received = now - self.last_time_bytes_received
-            if b is not None:
-                self.last_time_bytes_received = now
-        else:
-            self.last_time_bytes_received = now
-        if self.connection_timeout is not None:
-            if self.time_since_bytes_received >= self.connection_timeout:
-                self.connected = False
-                self.timed_out = True
-                return
-        self.received_bytes_once = True
-
-        if b is None:
-            return
-
-        if len(b) == 0:
-            self.connected = False
-            return
-
-        self.bytes_received += b
-        self.expected_byte_count -= len(b)
-
-        if self.expected_byte_count == 0:
-            if self.state == "l":
-                l = struct.unpack(">I", self.bytes_received)[0]
-                self.state = "c"
-                self.expected_byte_count = l
-                self.bytes_received.clear()
-            elif self.state == "c":
-                self.packet_queue.append(self.bytes_received.copy())
-                self.state = "l"
-                self.expected_byte_count = self.length_byte_count
-                self.bytes_received.clear()
-
-    def has_packet(self):
-        return len(self.packet_queue) > 0
-
-    def next_packet(self):
-        return bytes(self.packet_queue.popleft())
-
-    def clear_buffer(self):
-        self.buffer.clear()
-
-    def write_to_buffer(self, byte_data):
-        self.buffer += byte_data
-
-    def get_buffer_length(self):
-        return len(self.buffer)
-
-    def send_buffer(self):
-        try:
-            self.socket.send(self.buffer)
-            self.buffer.clear()
-        except:
-            self.connected = False
-
-    def send(self, bytes_data):
-        if not self.connected:
-            return
-
-        b = bytearray()
-        b += struct.pack(">I", len(bytes_data))
-        b += bytes_data
-
-        try:
-            self.socket.send(b)
-        except:
-            self.connected = False
+    def send(self, data):
+        self.peer.send(self, data)
 
     def disconnect(self):
-        if not self.connected:
-            return
-
-        try:
-            self.socket.close()
-        except:
-            pass
-        self.connected = False
-
-    def reconnect(self):
-        if self.connected:
-            return
-
-        try:
-            self.socket.connect(self.address)
-            self.connected = True
-            self.received_bytes_once = False
-            self.last_time_bytes_received = 0.0
-            self.time_since_bytes_received = 0.0
-            self.timed_out = False
-        except:
-            pass
+        self.peer.disconnect(self)
 
     def is_timed_out(self):
         return self.timed_out
@@ -171,159 +70,52 @@ class TCPPacketConnection:
         return self.connected
 
 
-class TCPPacketServer:
-    def __init__(self, on_connect=None, on_disconnect=None, on_data=None, on_raw_data=None, connection_timeout=None, path_to_certchain=None, path_to_private_key=None):
-        self.on_connect = on_connect
-        self.on_disconnect = on_disconnect
-        self.on_data = on_data
-        self.on_raw_data = on_raw_data
-        self.connection_timeout = connection_timeout
-        self.path_to_certchain = path_to_certchain
-        self.path_to_private_key = path_to_private_key
-
-        self.use_tls = False
-        if self.path_to_certchain is not None and self.path_to_private_key is not None:
-            self.use_tls = True
-
-        self.ssl_context = None
-        if self.use_tls:
-            self.ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-            self.ssl_context.load_cert_chain(self.path_to_certchain, self.path_to_private_key)
-
-        self.connections = []
-
-        self.socket = None
-        self.secure_socket = None
-        self.host_name = None
-        self.port = None
-        self.running = False
-
-        def on_application_exit():
-            if self.running:
-                self.stop()
-
-        atexit.register(on_application_exit)
-
-        prev_signal_handler = signal.getsignal(signal.SIGINT)
-
-        def on_keyboard_interrupt(*args):
-            if self.running:
-                self.stop()
-            if prev_signal_handler is not None:
-                if prev_signal_handler != signal.SIG_DFL:
-                    prev_signal_handler(*args)
-
-        signal.signal(signal.SIGINT, on_keyboard_interrupt)
-
-    def start(self, host_name, port, backlog=100):
-        assert not self.running, "Can't start TCP server that is already running."
-
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
-        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.socket.bind((host_name, port))
-        self.socket.listen(backlog)
-        self.socket.setblocking(False)
-        if self.use_tls:
-            self.secure_socket = self.ssl_context.wrap_socket(self.socket, server_side=True)
-        self.host_name = host_name
-        self.port = port
-        self.running = True
-
-    def stop(self):
-        assert self.running, "Can't stop TCP server that is not running."
-
-        try:
-            self.disconnect_all()
-            if self.use_tls:
-                self.secure_socket.close()
-            self.socket.close()
-        except:
-            pass
-
-        self.running = False
-
-    def update(self, max_packets=100):
-        assert self.running, "Can't update TCP server that is not running."
-        
-        server_socket = self.socket
-        if self.use_tls:
-            server_socket = self.secure_socket
-
-        try:
-            client_socket, client_address = server_socket.accept()
-            client_socket.setblocking(False)
-            client_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-            connection = TCPPacketConnection(client_socket, client_address, connection_timeout=self.connection_timeout)
-            self.connections.append(connection)
-            if self.on_connect is not None:
-                self.on_connect(connection)
-        except:
-            pass
-
-        packet_count = 0
-        for connection in self.connections:
-            connection.receive()
-            while connection.has_packet() and packet_count < max_packets:
-                packet = connection.next_packet()
-                if self.on_data is not None:
-                    # Allow for middleware handler that intercepts data.
-                    if self.on_raw_data is not None:
-                        r = self.on_raw_data(connection, packet)
-                        self.on_data(connection, r)
-                    else:
-                        self.on_data(connection, packet)
-                packet_count += 1
-            if connection.get_buffer_length() > 0:
-                connection.send_buffer()
-
-        to_be_removed = []
-        for connection in self.connections:
-            if not connection.is_connected():
-                to_be_removed.append(connection)
-        for connection in to_be_removed:
-            if self.on_disconnect is not None:
-                self.on_disconnect(connection)
-            self.connections.remove(connection)
-
-    def disconnect_all(self):
-        to_be_removed = []
-        for connection in self.connections:
-            to_be_removed.append(connection)
-        for connection in to_be_removed:
-            connection.disconnect()
-            if self.on_disconnect is not None:
-                self.on_disconnect(connection)
-            self.connections.remove(connection)
-
-    def is_running(self):
-        return self.running
+class PeerEvent(Enum):
+    ERROR = auto()
+    CONNECT = auto()
+    DISCONNECT = auto()
+    DATA = auto()
 
 
-class TCPPacketClient:
-    def __init__(self, on_connect=None, on_disconnect=None, on_data=None, on_raw_data=None, connection_timeout=None, use_tls=False, path_to_cabundle=None):
+class PeerInput(Enum):
+    ERROR = auto()
+    SEND = auto()
+    DISCONNECT = auto()
+    DISCONNECT_ALL = auto()
+
+
+class Peer:
+    def __init__(self, on_connect=None, on_disconnect=None, on_data=None, on_raw_data=None, connection_timeout=None, use_tls=False, path_to_certchain=None, path_to_private_key=None, path_to_cabundle=None):
         self.on_connect = on_connect
         self.on_disconnect = on_disconnect
         self.on_data = on_data
         self.on_raw_data = on_raw_data
         self.connection_timeout = connection_timeout
         self.use_tls = use_tls
+        self.path_to_certchain = path_to_certchain
+        self.path_to_private_key = path_to_private_key
         self.path_to_cabundle = path_to_cabundle
 
         self.ssl_context = None
-        if self.use_tls:
-            if path_to_cabundle is not None:
-                self.ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-                self.ssl_context.load_verify_locations(self.path_to_cabundle)
-            else:
-                self.ssl_context = ssl.create_default_context()
 
-        self.connection = None
+        self.connections = []
+        self.output_event_queue = deque()
+        self.input_event_queue = deque()
 
         self.socket = None
         self.secure_socket = None
         self.host_name = None
+        self.tls_host_name = None
         self.port = None
+        self.backlog = 100
+        self.is_host = False
+
         self.running = False
+
+        self.main_thread = None
+        self.output_event_lock = threading.Lock()
+        self.input_event_lock = threading.Lock()
+        self.listen_task = None
 
         def on_application_exit():
             if self.running:
@@ -342,117 +134,312 @@ class TCPPacketClient:
 
         signal.signal(signal.SIGINT, on_keyboard_interrupt)
 
-    def start(self, host_name, port, tls_host_name=None):
-        assert not self.running, "Can't start TCP client that is already running."
+    def start(self, host_name, port, is_host=False, backlog=100, tls_host_name=None):
+        if self.running:
+            return
 
-        if tls_host_name is None:
-            tls_host_name = host_name
-
-        try:
-            self.socket = socket.create_connection((host_name, port))
-            client_socket = self.socket
+        if is_host:
             if self.use_tls:
-                try:
-                    self.secure_socket = self.ssl_context.wrap_socket(self.socket, server_hostname=tls_host_name)
-                    self.secure_socket.setblocking(False)
-                    client_socket = self.secure_socket
-                except Exception as e:
-                    print(e)
-                    raise e
-            else:
-                self.socket.setblocking(False)
-            self.host_name = host_name
-            self.port = port
-            self.running = True
-            self.connection = TCPPacketConnection(client_socket, (host_name, port), connection_timeout=self.connection_timeout)
-            if self.on_connect is not None:
-                self.on_connect(self.connection)
-        except:
-            return False
+                self.ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+                self.ssl_context.load_cert_chain(self.path_to_certchain, self.path_to_private_key)
+        else:
+            if self.use_tls:
+                if self.path_to_cabundle is not None:
+                    self.ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+                    self.ssl_context.load_verify_locations(self.path_to_cabundle)
+                else:
+                    self.ssl_context = ssl.create_default_context()
 
-        return True
+        self.host_name = host_name
+        self.tls_host_name = tls_host_name
+        self.port = port
+        self.backlog = backlog
+        self.is_host = is_host
+
+        self.running = True
+
+        self.output_event_queue.clear()
+        self.input_event_queue.clear()
+        self.main_thread = threading.Thread(target=self._start, daemon=True)
+        self.main_thread.start()
 
     def stop(self):
-        assert self.running, "Can't stop TCP client that is not running."
-
-        try:
-            self.socket.close()
-            if self.on_disconnect is not None:
-                self.on_disconnect(self.connection)
-        except:
-            pass
+        if not self.running:
+            return
 
         self.running = False
-
-    def update(self, max_packets=100):
-        assert self.running, "Can't update TCP client that is not running."
         
-        client_socket = self.socket
-        if self.use_tls:
-            client_socket = self.secure_socket
+        self.main_thread.join()
 
-        self.connection.receive()
-        packet_count = 0
-        while self.connection.has_packet() and packet_count < max_packets:
-            packet = self.connection.next_packet()
-            if self.on_data is not None:
-                # Allow for middleware handler that intercepts data.
-                if self.on_raw_data is not None:
-                    r = self.on_raw_data(self.connection, packet)
-                    self.on_data(self.connection, r)
-                else:
-                    self.on_data(self.connection, packet)
-            packet_count += 1
-        if self.connection.get_buffer_length() > 0:
-            self.connection.send_buffer()
+    def update(self, max_events=100):
+        with self.output_event_lock:
+            for i in range(max_events):
+                if len(self.output_event_queue) == 0:
+                    break
+                next_event = self.output_event_queue.popleft()
+                if next_event[0] == PeerEvent.CONNECT:
+                    if self.on_connect is not None:
+                        self.on_connect(next_event[1])
+                elif next_event[0] == PeerEvent.DISCONNECT:
+                    if self.on_disconnect is not None:
+                        self.on_disconnect(next_event[1])
+                elif next_event[0] == PeerEvent.DATA:
+                    d = next_event[2]
+                    t = next_event[3]
+                    if self.on_raw_data is not None:
+                        d = self.on_raw_data(next_event[1], d, t)
+                    if self.on_data is not None:
+                        self.on_data(next_event[1], d, t)
 
-        if not self.connection.is_connected():
-            self.stop()
+    def send(self, connection, data):
+        b = bytearray()
+        b += struct.pack(">H", len(data))
+        b += data
 
-    def send(self, bytes_data):
-        self.connection.send(bytes_data)
+        with self.input_event_lock:
+            self.input_event_queue.append((PeerInput.SEND, connection, b))
+
+    def disconnect(self, connection):
+        with self.input_event_lock:
+            self.input_event_queue.append((PeerInput.DISCONNECT, connection, None))
+
+    def disconnect_all(self):
+        with self.input_event_lock:
+            self.input_event_queue.append((PeerInput.DISCONNECT_ALL, None, None))
 
     def is_running(self):
         return self.running
 
+    def is_hosting(self):
+        return self.is_host
+
+    def connection_count(self):
+        return len(self.connections)
+
+    def get_connections(self):
+        return self.connections
+
+    def _start(self):
+        asyncio.run(self._run())
+
+    def _add_connection(self, socket, address, async_loop):
+        connection = Connection(self, socket, address)
+        connection_task = async_loop.create_task(self._receive(connection, async_loop))
+        connection.async_task = connection_task
+        self.connections.append(connection)
+        with self.output_event_lock:
+            self.output_event_queue.append((PeerEvent.CONNECT, connection, None, None))
+
+    async def _run(self):
+        async_loop = asyncio.get_event_loop()
+
+        if self.is_host:
+            try:
+                self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
+                self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                self.socket.bind((self.host_name, self.port))
+                self.socket.listen(self.backlog)
+                self.socket.setblocking(False)
+            except Exception as e:
+                self.running = False
+                raise
+            
+            if self.use_tls:
+                try:
+                    self.secure_socket = self.ssl_context.wrap_socket(self.socket, server_side=True)
+                except Exception as e:
+                    try:
+                        self.socket.close()
+                    except:
+                        pass
+                    self.running = False
+                    raise
+
+            self.listen_task = asyncio.create_task(self._listen(async_loop))
+        else:
+            client_socket = None
+            try:
+                client_socket = socket.create_connection((self.host_name, self.port))
+            except Exception as e:
+                self.running = False
+                return
+            try:
+                if self.use_tls:
+                    try:
+                        secure_socket = self.ssl_context.wrap_socket(client_socket, server_hostname=self.tls_host_name)
+                        client_socket = secure_socket
+                    except Exception as e:
+                        print(e)
+                        raise e
+                client_socket.setblocking(False)
+                client_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+                self._add_connection(client_socket, (self.host_name, self.port), async_loop)
+            except Exception as e:
+                print(e)
+                self.running = False
+                return
+
+        while self.running:
+            to_be_removed = []
+            with self.input_event_lock:
+                while len(self.input_event_queue) > 0:
+                    next_event = self.input_event_queue.popleft()
+                    event = next_event[0]
+                    connection = next_event[1]
+                    data = next_event[2]
+                    if event == PeerInput.SEND:
+                        try:
+                            connection.socket.sendall(data)
+                        except:
+                            to_be_removed.append(connection)
+                    elif event == PeerInput.DISCONNECT:
+                        to_be_removed.append(connection)
+                    elif event == PeerInput.DISCONNECT_ALL:
+                        for connection in self.connections:
+                            to_be_removed.append(connection)
+            for connection in to_be_removed:
+                connection.async_task.cancel()
+                try:
+                    await connection.async_task
+                except:
+                    pass
+            await asyncio.sleep(0.0001)
+
+        for connection in self.connections:
+            connection.async_task.cancel()
+            try:
+                await connection.async_task
+            except:
+                pass
+
+        if self.is_host:
+            self.listen_task.cancel()
+            try:
+                await self.listen_task
+            except:
+                pass
+
+    async def _listen(self, async_loop): 
+        try:
+            server_socket = self.socket
+            if self.use_tls:
+                server_socket = self.secure_socket
+
+            while True:
+                client_socket, client_address = await async_loop.sock_accept(server_socket)
+                self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+                if self.connection_timeout is not None:
+                    client_socket.settimeout(self.connection_timeout)
+                self._add_connection(client_socket, client_address, async_loop)
+        except asyncio.CancelledError:
+            pass
+        finally:
+            try:
+                if self.use_tls:
+                    self.secure_socket.close()
+            except:
+                pass
+            try:
+                self.socket.close()
+            except:
+                pass
+
+    async def _receive(self, connection, async_loop):
+        try:
+            while True:
+                try:
+                    data = await async_loop.sock_recv(connection.socket, connection.expected_byte_count)
+                except socket.timeout:
+                    connection.timed_out = True
+                    raise
+                except:
+                    raise
+                if data is None:
+                    break
+                if len(data) == 0:
+                    break
+                connection.bytes_received += data
+                connection.expected_byte_count -= len(data)
+
+                if connection.expected_byte_count == 0:
+                    if connection.state == "l":
+                        l = struct.unpack(">H", connection.bytes_received)[0]
+                        connection.state = "c"
+                        connection.expected_byte_count = l
+                        connection.bytes_received.clear()
+                    elif connection.state == "c":
+                        d = bytes(connection.bytes_received.copy())
+                        with self.output_event_lock:
+                            self.output_event_queue.append((PeerEvent.DATA, connection, d, time.time()))
+                        connection.state = "l"
+                        connection.expected_byte_count = connection.length_byte_count
+                        connection.bytes_received.clear()
+        except asyncio.CancelledError:
+            pass
+        finally:
+            try:
+                connection.socket.close()
+            except:
+                pass
+            connection.state = "l"
+            connection.bytes_received.clear()
+            connection.expected_byte_count = connection.length_byte_count
+            connection.connected = False
+            self.connections.remove(connection)
+            with self.output_event_lock:
+                self.output_event_queue.append((PeerEvent.DISCONNECT, connection, None, None))
+            if not self.is_host:
+                self.running = False
+
 
 class DatagramWriter:
     def __init__(self):
+        self.datagram = PyDatagram()
+        self.type_functions = dict()
+
+    def register_type(self, the_type, write_func):
+        self.type_functions[the_type] = write_func
+
+    def clear(self):
         self.datagram = PyDatagram()
 
     def get_datagram(self):
         return self.datagram
 
     def write(self, value):
-        if isinstance(value, bool):
-            self.write_int8(int(value))
-        elif isinstance(value, int):
-            self.write_int64(value)
-        elif isinstance(value, float):
-            self.write_float64(value)
-        elif isinstance(value, str):
-            self.write_string32(value)
-        elif isinstance(value, p3d.Vec2):
-            self.write_float64(value[0])
-            self.write_float64(value[1])
-        elif isinstance(value, p3d.Vec3):
-            self.write_float64(value[0])
-            self.write_float64(value[1])
-            self.write_float64(value[2])
-        elif isinstance(value, p3d.Vec4):
-            self.write_float64(value[0])
-            self.write_float64(value[1])
-            self.write_float64(value[2])
-            self.write_float64(value[3])
-        elif isinstance(value, tuple):
-            for v in value:
-                self.write(v)
-        elif isinstance(value, list):
-            self.write_int32(len(value))
-            for v in value:
-                self.write(v)
+        converter_func = self.type_functions.get(type(value))
+        if converter_func is not None:
+            converter_func(self, value)
         else:
-            raise Exception("Unspported value type for DatagramWriter: {0}".format(type(value).__name__))
+            if isinstance(value, bool):
+                self.write_int8(int(value))
+            elif isinstance(value, int):
+                self.write_int64(value)
+            elif isinstance(value, float):
+                self.write_float64(value)
+            elif isinstance(value, str):
+                self.write_string32(value)
+            elif isinstance(value, p3d.Vec2):
+                self.write_float64(value[0])
+                self.write_float64(value[1])
+            elif isinstance(value, p3d.Vec3):
+                self.write_float64(value[0])
+                self.write_float64(value[1])
+                self.write_float64(value[2])
+            elif isinstance(value, p3d.Vec4):
+                self.write_float64(value[0])
+                self.write_float64(value[1])
+                self.write_float64(value[2])
+                self.write_float64(value[3])
+            elif isinstance(value, tuple):
+                for v in value:
+                    self.write(v)
+            elif isinstance(value, list):
+                self.write_int32(len(value))
+                for v in value:
+                    self.write(v)
+            else:
+                raise Exception("Unspported value type for DatagramWriter: {0}".format(type(value).__name__))
 
     def write_string(self, value):
         self.datagram.addString(value)
@@ -486,7 +473,15 @@ class DatagramWriter:
 
 
 class DatagramReader:
-    def __init__(self, datagram):
+    def __init__(self):
+        self.datagram = None
+        self.iter = None
+        self.read_functions = dict()
+
+    def register_type(self, the_type, read_func):
+        self.read_functions[the_type] = read_func
+
+    def set_datagram(self, datagram):
         self.datagram = datagram
         self.iter = PyDatagramIterator(self.datagram)
 
@@ -494,41 +489,45 @@ class DatagramReader:
         return self.datagram
 
     def read(self, value_type, max_list_length=1000):
-        if value_type is bool:
-            return bool(self.read_int8())
-        elif value_type is int:
-            return self.read_int64()
-        elif value_type is float:
-            return self.read_float64()
-        elif value_type is str:
-            return self.read_string32()
-        elif value_type is Vec2:
-            return Vec2(self.read_float64(), self.read_float64())
-        elif value_type is Vec3:
-            return Vec3(self.read_float64(), self.read_float64(), self.read_float64())
-        elif value_type is Vec4:
-            return Vec4(self.read_float64(), self.read_float64(), self.read_float64(), self.read_float64())
-        elif value_type is types.GenericAlias:
-            origin_type = tpying.get_origin(value_type)
-            if origin_type is tuple:
-                arg_types = typing.get_args(value_type)
-                values = []
-                for arg_type in arg_types:
-                    values.append(self.read(arg_type))
-                return tuple(values)
-            elif origin_type is list:
-                arg_type = typing.get_args(value_type)[0]
-                if arg_type is list:
-                    raise Exception("DatagramReader does not support lists of lists.")
-                l = self.read_int32()
-                if l > max_list_length:
-                    raise Exception("Received list that exceeds the max list length allowed by the DatagramReader.")
-                values = []
-                for i in range(l):
-                    values.append(self.read(arg_type))
-                return values
+        converter_func = self.read_functions.get(value_type)
+        if converter_func is not None:
+            return converter_func(self)
         else:
-            raise Exception("Unspported value type for DatagramReader: {0}".format(value_type.__name__))
+            if value_type is bool:
+                return bool(self.read_int8())
+            elif value_type is int:
+                return self.read_int64()
+            elif value_type is float:
+                return self.read_float64()
+            elif value_type is str:
+                return self.read_string32()
+            elif value_type is Vec2:
+                return Vec2(self.read_float64(), self.read_float64())
+            elif value_type is Vec3:
+                return Vec3(self.read_float64(), self.read_float64(), self.read_float64())
+            elif value_type is Vec4:
+                return Vec4(self.read_float64(), self.read_float64(), self.read_float64(), self.read_float64())
+            elif value_type is types.GenericAlias:
+                origin_type = tpying.get_origin(value_type)
+                if origin_type is tuple:
+                    arg_types = typing.get_args(value_type)
+                    values = []
+                    for arg_type in arg_types:
+                        values.append(self.read(arg_type))
+                    return tuple(values)
+                elif origin_type is list:
+                    arg_type = typing.get_args(value_type)[0]
+                    if arg_type is list:
+                        raise Exception("DatagramReader does not support lists of lists.")
+                    l = self.read_int32()
+                    if l > max_list_length:
+                        raise Exception("Received list that exceeds the max list length allowed by the DatagramReader.")
+                    values = []
+                    for i in range(l):
+                        values.append(self.read(arg_type))
+                    return values
+            else:
+                raise Exception("Unspported value type for DatagramReader: {0}".format(value_type.__name__))
 
     def read_string(self):
         return self.iter.getString()
@@ -567,9 +566,9 @@ def procedure_hash(name):
     return int.from_bytes(h[:4], byteorder="big") >> 1
 
 
-class RPCServer:
+class RPCPeer:
     def __init__(self, max_list_length=16, **kwargs):
-        self.server = TCPPacketServer(**kwargs)
+        self.peer = Peer(**kwargs)
 
         self.max_list_length = max_list_length
 
@@ -579,165 +578,110 @@ class RPCServer:
         def default_on_disconnect(connection):
             print("Disconnected:", connection.address)
 
-        def on_data(connection, data):
-            self.rpc_on_data(connection, data)
+        def on_data(connection, data, time_received):
+            self.rpc_on_data(connection, data, time_received)
 
-        if self.server.on_connect is None:
-            self.server.on_connect = default_on_connect
-        if self.server.on_disconnect is None:
-            self.server.on_disconnect = default_on_disconnect
-        self.server.on_data = on_data
+        if self.peer.on_connect is None:
+            self.peer.on_connect = default_on_connect
+        if self.peer.on_disconnect is None:
+            self.peer.on_disconnect = default_on_disconnect
+        self.peer.on_data = on_data
 
         self.procedures = dict()
+        self.writer = DatagramWriter()
+        self.reader = DatagramReader()
 
-    def start(self, host_name, port, backlog=100):
-        return self.server.start(host_name, port, backlog=backlog)
+    def start(self, host_name, port, is_host=False, backlog=100, tls_host_name=None):
+        return self.peer.start(host_name, port, is_host=is_host, backlog=backlog, tls_host_name=tls_host_name)
 
     def stop(self):
-        self.server.stop(*args, **kwargs)
+        self.peer.stop()
 
-    def update(self):
-        self.server.update()
+    def update(self, max_events=100):
+        self.peer.update(max_events=max_events)
 
     def is_running(self):
-        return self.server.is_running()
+        return self.peer.is_running()
+
+    def is_hosting(self):
+        return self.peer.is_hosting()
 
     def disconnect_all(self):
-        self.server.disconnect_all()
+        self.peer.disconnect_all()
 
-    def register_procedure(self, proc):
+    def connection_count(self):
+        return self.peer.connection_count()
+
+    def get_connections(self):
+        return self.peer.get_connections()
+
+    def register_type(self, the_type, write_func, read_func):
+        self.writer.register_type(the_type, write_func)
+        self.reader.register_type(the_type, read_func)
+
+    def register_procedure(self, proc, host_only=False, client_only=False):
         func_spec = inspect.getfullargspec(proc)
         arg_types = []
-        for func_arg in func_spec.args[1:]:
+        assert len(func_spec.args) >= 2, "{} must have at least two arguments, connection and time_received.".format(proc.__name__)
+        for func_arg in func_spec.args[2:]:
             func_arg_type = func_spec.annotations.get(func_arg)
-            if func_arg_type is None:
-                raise Exception("RCPServer failed to register the '{}' procedure, it's missing one or more type annotations for the arguments.".format(proc.__name__))
+            assert func_arg_type is not None, "Failed to register the '{}' procedure, it's missing a type annotation for the '{}' argument.".format(proc.__name__, func_arg)
             arg_types.append(func_arg_type)
         procedure_name_hash = procedure_hash(proc.__name__)
-        self.procedures[procedure_name_hash] = (proc.__name__, arg_types, proc)
+        assert procedure_name_hash not in self.procedures, "{} was already registered before.".format(proc.__name__)
+        self.procedures[procedure_name_hash] = (proc.__name__, arg_types, proc, host_only, client_only)
 
     def __getattr__(self, name):
         def remote_procedure(*args):
-            assert len(args) >= 1, "RPC must have at least one argument. The connection."
-            assert isinstance(args[0], TCPPacketConnection), "First argument to RPC must be a TCPPacketConnection."
-            writer = DatagramWriter()
+            assert len(args) >= 1, "Remote prcoedure call '{}' must have at least one argument, the connection.".format(name)
+            assert isinstance(args[0], Connection), "First argument to the RPC '{}' must be a 'Connection' type.".format(name)
             procedure_name_hash = procedure_hash(name)
-            writer.write_int32(procedure_name_hash)
+            self.writer.clear()
+            self.writer.write_int32(procedure_name_hash)
             connection = args[0]
             for arg in args[1:]:
-                writer.write(arg)
-            connection.send(writer.get_datagram().getMessage())
+                self.writer.write(arg)
+            connection.send(self.writer.get_datagram().getMessage())
 
         return remote_procedure
 
-    def rpc_on_data(self, connection, data):
-        reader = DatagramReader(p3d.Datagram(data))
+    def rpc_on_data(self, connection, data, time_received):
+        self.reader.set_datagram(p3d.Datagram(data))
         proc_name = None
         proc_func = None
         proc_arg_values = None
         try:
-            procedure_name_hash = reader.read_int32()
+            procedure_name_hash = self.reader.read_int32()
             proc = self.procedures.get(procedure_name_hash)
             if proc is None:
-                raise Exception("Server procedure does not exist.")
+                raise Exception("Remote attempted to call a RPC that does not exist.")
             proc_name = proc[0]
             proc_arg_types = proc[1]
             proc_func = proc[2]
+            host_only = proc[3]
+            client_only = proc[4]
+            if (host_only and not self.peer.is_hosting()) or (client_only and self.peer.is_hosting()):
+                raise Exception("Remote attempted to call RPC that is restricted to host only or client only.")
             proc_arg_values = []
             for t in proc_arg_types:
-                v = reader.read(t, max_list_length=self.max_list_length)
+                v = self.reader.read(t, max_list_length=self.max_list_length)
                 proc_arg_values.append(v)
-        except:
+        except Exception as e:
+            print("WARNING: Received invalid remote procedure call, disconnecting...")
             connection.disconnect()
 
         if proc_func is not None and proc_arg_values is not None:
-            proc_func(connection, *proc_arg_values)
-
-
-class RPCClient(TCPPacketClient):
-    def __init__(self, max_list_length=16, **kwargs):
-        self.client = TCPPacketClient(**kwargs)
-
-        self.max_list_length = max_list_length
-
-        def default_on_connect(connection):
-            print("New connection:", connection.address)
-
-        def default_on_disconnect(connection):
-            print("Disconnect:", connection.address)
-
-        def on_data(connection, data):
-            self.rpc_on_data(connection, data)
-
-        if self.client.on_connect is None:
-            self.client.on_connect = default_on_connect
-        if self.client.on_disconnect is None:
-            self.client.on_disconnect = default_on_disconnect
-        self.client.on_data = on_data
-
-        self.procedures = dict()
-
-    def start(self, host_name, port, tls_host_name=None):
-        return self.client.start(host_name, port, tls_host_name=tls_host_name)
-
-    def stop(self):
-        self.client.stop()
-
-    def update(self):
-        self.client.update()
-
-    def is_running(self):
-        return self.client.is_running()
-
-    def register_procedure(self, proc):
-        func_spec = inspect.getfullargspec(proc)
-        arg_types = []
-        for func_arg in func_spec.args[1:]:
-            func_arg_type = func_spec.annotations.get(func_arg)
-            if func_arg_type is None:
-                raise Exception("RCPClient failed to register the '{}' procedure, it's missing one or more type annotations for the arguments.".format(proc.__name__))
-            arg_types.append(func_arg_type)
-        procedure_name_hash = procedure_hash(proc.__name__)
-        self.procedures[procedure_name_hash] = (proc.__name__, arg_types, proc)
-
-    def __getattr__(self, name):
-        def remote_procedure(*args):
-            writer = DatagramWriter()
-            procedure_name_hash = procedure_hash(name)
-            writer.write_int32(procedure_name_hash)
-            for arg in args:
-                writer.write(arg)
-            self.client.send(writer.get_datagram().getMessage())
-
-        return remote_procedure
-
-    def rpc_on_data(self, connection, data):
-        reader = DatagramReader(p3d.Datagram(data))
-        try:
-            procedure_name_hash = reader.read_int32()
-            proc = self.procedures.get(procedure_name_hash)
-            if proc is None:
-                raise Exception("Client procedure does not exist.")
-            proc_name = proc[0]
-            proc_arg_types = proc[1]
-            proc_func = proc[2]
-            proc_arg_values = []
-            for t in proc_arg_types:
-                v = reader.read(t, max_list_length=self.max_list_length)
-                proc_arg_values.append(v)
-            proc_func(connection, *proc_arg_values)
-        except:
-            connection.disconnect()
+            proc_func(connection, time_received, *proc_arg_values)
 
 
 # Convenience attribute applied to functions to register them as remote procedure calls.
 #
-# @rpc(my_rpc_server_object)
+# @rpc(my_rpc_peer_object)
 # def foo(x: int):
 #     print(x)
-def rpc(peer):
+def rpc(peer, host_only=False, client_only=False):
     def wrapper(f):
-        peer.register_procedure(f)
+        peer.register_procedure(f, host_only=host_only, client_only=client_only)
     return wrapper
 
 
