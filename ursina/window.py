@@ -18,7 +18,7 @@ class Window(WindowProperties):
         loadPrcFileData('', 'notify-level-util error')
         loadPrcFileData('', 'textures-auto-power-2 #t')
         loadPrcFileData('', 'load-file-type p3assimp')
-        # loadPrcFileData('', 'undecorated 1')
+        loadPrcFileData('', 'undecorated 1')
         # loadPrcFileData('', 'allow-portal-cull #t')
         # loadPrcFileData("", "framebuffer-multisample 1")
         # loadPrcFileData('', 'multisamples 2')
@@ -34,18 +34,18 @@ class Window(WindowProperties):
         self.show_ursina_splash = False
 
         self.title = application.asset_folder.name
-        self.borderless = True
         # self.icon = 'textures/ursina.ico'
         self.monitors = get_monitors()
-        self.monitor_index = 0
-
-        monitor = self.monitors[self.monitor_index]
-        self.fullscreen_size = Vec2(monitor.width, monitor.height)
+        self.main_monitor = [e for e in self.monitors if e.is_primary][0]
+        self.monitor_index = self.monitors.index(self.main_monitor)
+        self.fullscreen_size = Vec2(self.main_monitor.width, self.main_monitor.height)
         self.windowed_size = self.fullscreen_size / 1.25
         self.windowed_position = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode
         self.forced_aspect_ratio = None # example: window.forced_aspect_ratio = 16/9
-        self.size = self.windowed_size
         self.always_on_top = False
+
+        # self._borderless = False
+        # self._fullscreen = not application.development_mode
 
         self.top = Vec2(0, .5)
         self.bottom = Vec2(0, -.5)
@@ -53,11 +53,9 @@ class Window(WindowProperties):
 
 
     def late_init(self):
-        if application.window_type != 'none':
-            self.center_on_screen()
-
-        if not application.development_mode:
-            self.fullscreen = True
+        self.borderless = True
+        self.fullscreen = not application.development_mode
+        self.center_on_screen()
 
         self.color = color.dark_gray
         self.render_modes = ('default', 'wireframe', 'colliders', 'normals')
@@ -91,9 +89,10 @@ class Window(WindowProperties):
 
 
     def center_on_screen(self):
-        monitor = self.monitors[self.monitor_index]
-        x = monitor.x + (monitor.width-self.size[0])/2
-        y = monitor.y + (monitor.height-self.size[1])/2
+        if application.window_type == 'none':
+            return
+        x = self.main_monitor.x + (self.main_monitor.width - self.size[0]) / 2
+        y = self.main_monitor.y + (self.main_monitor.height - self.size[1]) / 2
         self.position = Vec2(x,y)
 
 
@@ -217,6 +216,8 @@ class Window(WindowProperties):
 
     @position.setter
     def position(self, value):
+        if application.window_type == 'none':
+            return
         # print('set window position:', value)
         self._position = value
         self.setOrigin(int(value[0]), int(value[1]))
@@ -225,12 +226,16 @@ class Window(WindowProperties):
 
     @property
     def size(self):
+        if not hasattr(self, '_size'): return None
         if not self.borderless:
             return Vec2(*base.win.getSize())
         return self._size
 
     @size.setter
     def size(self, value):
+        if application.window_type == 'none':
+            return
+
         if hasattr(self, '_forced_aspect_ratio') and self.forced_aspect_ratio:
             value = (value[1] * self.forced_aspect_ratio, value[1])
 
@@ -243,21 +248,21 @@ class Window(WindowProperties):
 
     @property
     def forced_aspect_ratio(self):
-        if not hasattr(self, '_forced_aspect_ratio'):
-            return None
+        if not hasattr(self, '_forced_aspect_ratio'): return None
         return self._forced_aspect_ratio
 
     @forced_aspect_ratio.setter
     def forced_aspect_ratio(self, value):
+        self._forced_aspect_ratio = value
         if not value:
             return
 
-        self._forced_aspect_ratio = value
         self.size = self.size
 
 
     @property
     def render_mode(self):
+        if not hasattr(self, '_render_mode'): return None
         return self._render_mode
 
     @render_mode.setter
@@ -322,69 +327,90 @@ class Window(WindowProperties):
         self.setIconFilename(value)
 
 
-    def __setattr__(self, name, value):
-        if application.window_type == 'none':
-            return
+    @property
+    def borderless(self):
+        if not hasattr(self, '_borderless'): return True
+        return self._borderless
+
+    @borderless.setter
+    def borderless(self, value):
+        self._borderless = value
+        if application.window_type == 'none': return
+
+        self.setUndecorated(value)
+        if hasattr(self, 'exit_button'):
+            self.exit_button.enabled = not value
         try:
-            super().__setattr__(name, value)
+            base.win.request_properties(self)
         except:
             pass
 
-        if name == 'fullscreen':
-            try:
-                if value == True:
-                    self.windowed_position = self.position
-                    self.windowed_size = self.size
-                    self.size = self.fullscreen_size
-                    self.center_on_screen()
-                else:
-                    self.size = self.windowed_size
-                    if self.windowed_position is not None:
-                        self.position = self.windowed_position
-                    else:
-                        self.center_on_screen()
 
-                self.setFullscreen(value)
-                object.__setattr__(self, name, value)
-                return
-            except:
-                print_warning('failed to set fullscreen', value)
-                pass
+    @property
+    def fullscreen(self):
+        if not hasattr(self, '_fullscreen'): return True
+        return self._fullscreen
 
-        if name == 'borderless':
-            self.setUndecorated(value)
-            if hasattr(self, 'exit_button'):
-                self.exit_button.enabled = not value
-            try:
-                base.win.request_properties(self)
-            except:
-                pass
-            object.__setattr__(self, name, value)
+    @fullscreen.setter
+    def fullscreen(self, value):
+        self._fullscreen = value
+        if application.window_type == 'none': return
 
-
-        if name == 'color':
-            base.camNode.get_display_region(0).get_window().set_clear_color(value)
-
-        if name == 'vsync':
-
-            if not 'base' in sys.modules:     # set vsync/framerate before window opened
-                if value == True or value == False:
-                    loadPrcFileData('', f'sync-video {value}')
-                elif isinstance(value, int):
-                    loadPrcFileData('', 'clock-mode limited')
-                    loadPrcFileData('', f'clock-frame-rate {value}')
+        print('set fullscreen to', value)
+        if value == True:
+            print(self.main_monitor)
+            self.windowed_position = self.position
+            self.windowed_size = self.size
+            self.position = Vec2(self.main_monitor.x, self.main_monitor.y)
+            self.size = Vec2(self.main_monitor.width, self.main_monitor.height)
+        else:
+            self.size = self.windowed_size
+            if self.windowed_position is not None:
+                self.position = self.windowed_position
             else:
-                from panda3d.core import ClockObject                      # set vsync/framerate in runtime
-                if value == True:
-                    globalClock.setMode(ClockObject.MNormal)
-                elif value == False:
-                    print_warning('error: disabling vsync during runtime is not yet implemented')
+                self.center_on_screen()
 
-                elif isinstance(value, (int, float, complex)):
-                    globalClock.setMode(ClockObject.MLimited)
-                    globalClock.setFrameRate(int(value))
+        # self.setFullscreen(value)
+        # base.win.request_properties(self)
+        # except:
+        #     print_warning('failed to set fullscreen', value)
+        #     pass
 
-            object.__setattr__(self, name, value)
+    @property
+    def color(self):
+        return self._color
+
+    @color.setter
+    def color(self, value):
+        self._color = value
+        if application.window_type == 'none': return
+
+        base.camNode.get_display_region(0).get_window().set_clear_color(value)
+
+
+    @property
+    def vsync(self):
+        return self._vsync
+
+    @vsync.setter
+    def vsync(self, value):
+        self._vsync = value
+        if not 'base' in sys.modules:     # set vsync/framerate before window opened
+            if value == True or value == False:
+                loadPrcFileData('', f'sync-video {value}')
+            elif isinstance(value, int):
+                loadPrcFileData('', 'clock-mode limited')
+                loadPrcFileData('', f'clock-frame-rate {value}')
+        else:
+            from panda3d.core import ClockObject                      # set vsync/framerate in runtime
+            if value == True:
+                globalClock.setMode(ClockObject.MNormal)
+            elif value == False:
+                print_warning('error: disabling vsync during runtime is not yet implemented')
+
+            elif isinstance(value, (int, float, complex)):
+                globalClock.setMode(ClockObject.MLimited)
+                globalClock.setFrameRate(int(value))
 
 
 instance = Window()
@@ -393,20 +419,23 @@ instance = Window()
 if __name__ == '__main__':
     from ursina import *
     # application.development_mode = False
-    app = Ursina(borderless=1)
+    app = Ursina(borderless=True)
+    # window.monitor_index = 0
+    # window.center_on_screen()
+    print('------------', window.monitors)
     # time.sleep(2)
     # window.forced_aspect_ratio = 1
     # window.vsync = 10
-
     window.title = 'ursina'
     # window.borderless = False
     # window.fullscreen = False
     # window.fps_counter.enabled = False
     # window.cog_button.enabled = False
+    # window.position =(0,837)
 
     camera.orthographic = True
     camera.fov = 2
-
+    Text(text='adoij', x=.1)
     def input(key):
         if key == 'space':
             window.center_on_screen()

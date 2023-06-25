@@ -72,7 +72,7 @@ class Mesh(NodePath):
             if value is None:
                 setattr(self, name, [])
 
-        if self.vertices is not None:
+        if self.vertices:
             self.generate()
 
 
@@ -192,6 +192,10 @@ class Mesh(NodePath):
         else:
             return self.recipe
 
+    def __str__(self):
+        if hasattr(self, 'name'):
+            return self.name
+
 
     def __add__(self, other):
         self.vertices += other.vertices
@@ -203,6 +207,7 @@ class Mesh(NodePath):
 
         self.normals += other.normals
         self.uvs += other.uvs
+
 
 
     def __deepcopy__(self, memo):

@@ -66,7 +66,7 @@ class LevelEditorScene:
 
             for line in reader:
                 args = ', '.join([f'{key}={value}' for key, value in line.items() if value and not key=='class'])
-                print('eval:', f'{line["class"]}(parent=self.scene_parent, {args})')
+                # print('eval:', f'{line["class"]}(parent=self.scene_parent, {args})')
                 e = eval(f'{line["class"]}(parent=self.scene_parent, {args})')
 
                 self.entities.append(e)
@@ -238,7 +238,7 @@ class Undo(Entity):
         super().__init__(parent=level_editor, undo_data=[], undo_index=-1)
 
     def record_undo(self, data):
-        print('record undo:', data)
+        # print('record undo:', data)
         self.undo_data = self.undo_data[:self.undo_index+1]
         self.undo_data.append(data)
         self.undo_index += 1
@@ -516,14 +516,14 @@ class RotationGizmo(Entity):
 
     def drag(self):
         self.rotator.world_parent = scene
-        print('drag')
+        # print('drag')
         for e in level_editor.selection:
             e.world_parent = self.rotator
             e._original_world_transform = e.world_transform
         self.dragging = True
 
     def drop(self):
-        print('drop')
+        # print('drop')
         self.rotator.world_parent = gizmo
         changes = []
         for e in level_editor.selection:
@@ -981,7 +981,7 @@ class Selector(Entity):
 
     def get_hovered_entity(self):
         level_editor.entities = [e for e in level_editor.entities if e]
-        [print(str(e)) for e in level_editor.entities]
+        # [print(str(e)) for e in level_editor.entities]
         entities_in_range = [(distance_2d(e.screen_position, mouse.position), e) for e in level_editor.entities if e and e.selectable and not e.collider]
         entities_in_range = [e for e in entities_in_range if e[0] < .03]
         entities_in_range.sort()
@@ -1155,14 +1155,14 @@ class Deleter(Entity):
             [repr(e) for e in level_editor.selection],
             ))
 
-        print(level_editor.selection)
+        # print(level_editor.selection)
         before = len(level_editor.entities)
         # level_editor.entities = [e for e in level_editor.entities if e not in level_editor.selection]
         for e in level_editor.selection:
             if e in level_editor.entities:
                 level_editor.entities.remove(e)
 
-        print('---------------', before, '-->', len(level_editor.entities))
+        # print('---------------', before, '-->', len(level_editor.entities))
         [setattr(e, 'parent', level_editor) for e in level_editor.cubes]
         [destroy(e) for e in level_editor.selection]
         level_editor.selection.clear()
@@ -1254,11 +1254,11 @@ class LevelMenu(Entity):
             if '__' in scene_file.name:
                 continue
 
-            print('found scene:', scene_file)
+            # print('found scene:', scene_file)
             name = scene_file.stem
             if '[' in name and ']' in name:
                 x, y = (int(e) for e in name.split('[')[1].split(']')[0].split(','))
-                print('scene is at coordinate:', x, y)
+                # print('scene is at coordinate:', x, y)
                 level_editor.scenes[x][y].path = scene_file
 
 
@@ -1366,7 +1366,7 @@ class LevelMenu(Entity):
         try:
             sun_handler.sun.shadows = True
         except:
-            print('no sun')
+            # print('no sun')
             pass
 
 class HierarchyList(Entity):
@@ -1505,12 +1505,9 @@ class ColorField(InspectorButton):
 class Inspector(Entity):
     def __init__(self):
         super().__init__(parent=level_editor.ui, position=window.top_left+Vec2(.15,-.04))
-
         self.selected_entity = None
-
         self.ui = Entity(parent=self)
         self.name_field = InspectorInputField(parent=self.ui, default_value='name', origin=(-.5,.5), scale_x=.15*3, scale_y=.05*.75, color=hsv(210,.9,.6))
-
         self.input_fields = [self.name_field, ]
         self.transform_fields = []
 
@@ -1547,11 +1544,13 @@ class Inspector(Entity):
             texture = InspectorButton(parent=self.name_field, text='texture: ', y=-4-1, on_click=Sequence(Func(setattr, menu_handler, 'state', 'texture_menu'), Func(setattr, texture_menu, 'target_attr', 'texture'))),
             color =   ColorField(parent=self.name_field, text='c:color: ', y=-4-2, attr_name='color', is_shader_input=False),
             shader =  InspectorButton(parent=self.name_field, text='shader: ', y=-4-3, on_click=Func(setattr, menu_handler, 'state', 'shader_menu')),
+            collider_type = InspectorButton(parent=self.name_field, text='collider_type: ', y=-4-4, on_click=Func(setattr, menu_handler, 'state', 'collider_menu')),
         )
+
 
         Entity(model=Grid(3,3), parent=self.transform_fields[0], scale=3, origin=(-.5,.5), z=-.1, color=color._64)
 
-        self.shader_inputs_parent = Entity(parent=self.name_field, y=-8)
+        self.shader_inputs_parent = Entity(parent=self.name_field, y=-9)
         self.scale = .6
 
 
@@ -1574,12 +1573,14 @@ class Inspector(Entity):
         self.name_field.text_field.text_entity.text = self.selected_entity.name
 
         for i, attr_name in enumerate(('x', 'y', 'z', 'rotation_x', 'rotation_y', 'rotation_z', 'scale_x', 'scale_y', 'scale_z')):
-            self.transform_fields[i].text = str(round(getattr(self.selected_entity, attr_name),4))
+            self.transform_fields[i].text_field.text_entity.text = str(round(getattr(self.selected_entity, attr_name),4))
 
-        for name in ('model', 'texture', 'shader'):
-            field_values = [getattr(e, name) for e in level_editor.selection]
-            field_values = [e.name for e in field_values if hasattr(e, 'name')]
+        for name in ('model', 'texture', 'shader', 'collider_type'):
+            field_values = [getattr(e, name) for e in level_editor.selection if hasattr(e, name)]
+            field_values = [str(e) for e in field_values]
             field_values = tuple(set(field_values))
+            # if not field_values:
+            #     break
 
             if len(field_values) == 1:
                 self.fields[name].text_entity.text = (f'{name[0]}:{field_values[0]}')
@@ -1593,7 +1594,7 @@ class Inspector(Entity):
 
                 instance_value = self.selected_entity.get_shader_input(name)
                 if instance_value:
-                    print('use instance value,', instance_value)
+                    # print('use instance value,', instance_value)
                     value = instance_value
 
                 if isinstance(value, str):
@@ -1602,7 +1603,7 @@ class Inspector(Entity):
                     b.on_click = Sequence(Func(setattr, menu_handler, 'state', 'texture_menu'), Func(setattr, texture_menu, 'target_attr', name))
 
 
-                if isinstance(value, Vec2):
+                if isinstance(value, Vec2) or (hasattr(value, '__len__') and len(value) == 2):
                     field = VecField(default_value=instance_value, parent=self.shader_inputs_parent, model='quad', scale=(1,1), x=.5, y=-i-.5, text=f'  {name}')
                     for e in field.fields:
                         e.text_field.scale *= .6
@@ -1625,7 +1626,7 @@ class Inspector(Entity):
                     color_field.text_entity.scale *= .6
 
         if hasattr(self.selected_entity, 'draw_inspector'):
-            print('-------------', self.selected_entity.draw_inspector())
+            # print('-------------', self.selected_entity.draw_inspector())
             for i, name in enumerate(self.selected_entity.draw_inspector()):
                 if not hasattr(self.selected_entity, name):
                     continue
@@ -1670,6 +1671,7 @@ class MenuHandler(Entity):
             'texture_menu' : texture_menu,
             'shader_menu' : shader_menu,
             'color_menu' : color_menu,
+            'collider_menu': collider_menu
         }
         self.keybinds = {'m' : 'model_menu', 'v' : 'texture_menu', 'n' : 'shader_menu', 'b' : 'color_menu', 'escape' : 'None'}
 
@@ -1681,7 +1683,7 @@ class MenuHandler(Entity):
     def state(self, value):
         target_state = self.states[value]
         if self._state == value:
-            print('toggle:', target_state, 'from:', target_state.enabled, not target_state.enabled)
+            # print('toggle:', target_state, 'from:', target_state.enabled, not target_state.enabled)
             target_state.enabled = not target_state.enabled
             return
 
@@ -1702,7 +1704,7 @@ class MenuHandler(Entity):
 
         if key in self.keybinds and level_editor.selection:
             self.state = self.keybinds[key]
-            print('sets state:', self.keybinds[key], self.state)
+            # print('sets state:', self.keybinds[key], self.state)
 
 class AssetMenu(Entity):
     def __init__(self):
@@ -1837,7 +1839,7 @@ class ColorMenu(Entity):
                 for e in level_editor.selection:
                     e.color = value
             else:
-                print('is shader input, set', self.color_field.attr_name)
+                # print('is shader input, set', self.color_field.attr_name)
                 for e in level_editor.selection:
                     e.set_shader_input(self.color_field.attr_name, value)
 
@@ -1865,20 +1867,33 @@ class ColorMenu(Entity):
 
         # if not self.color_field:
         #     return
-        print('set sliders to ', self.color_field.preview.color.hsv)
+        # print('set sliders to ', self.color_field.preview.color.hsv)
         self.apply_color = False
         self.h_slider.value = self.color_field.preview.color.h
         self.s_slider.value = self.color_field.preview.color.s * 100
         self.v_slider.value = self.color_field.preview.color.v * 100
         self.a_slider.value = self.color_field.preview.color.a * 100
         self.apply_color = True
-        print('oiefjseoifjseofisejfioj')
+        # print('oiefjseoifjseofisejfioj')
 
 
     def close(self):
         menu_handler.state = 'None'
         level_editor.current_scene.undo.record_undo([(level_editor.entities.index(e), 'color', e.original_color, e.color) for e in level_editor.selection])
 
+
+class ColliderMenu(AssetMenu):
+    def on_enable(self):
+        self.asset_names = ['box', 'sphere', 'mesh', ]
+        super().on_enable()
+
+    def on_select_asset(self, name):
+        # level_editor.current_scene.undo.record_undo([(level_editor.entities.index(e), 'collider', e.texture, name) for e in level_editor.selection])
+        for e in level_editor.selection:
+            e.collider_type = name
+
+        inspector.update_inspector()
+        menu_handler.state = 'None'
 
 
 class Help(Button):
@@ -1939,7 +1954,7 @@ class Duplicator(Entity):
 
     def input(self, key):
         if held_keys['shift'] and key == 'd' and level_editor.selection:
-            print('duplicate')
+            # print('duplicate')
             self.clones = []
             for e in level_editor.selection:
                 clone = deepcopy(e)
@@ -2052,15 +2067,15 @@ class PokeShape(Entity):
         self.texture = 'grass'
         self.texture_scale = Vec2(.125)
         # [destroy(e) for e in self.wall_parent.children]
-        print('-------------', self.make_wall, self.wall_parent)
+        # print('-------------', self.make_wall, self.wall_parent)
         if not self.make_wall and self.wall_parent:
-            print('destroy old wall parent')
+            # print('destroy old wall parent')
             destroy(self.wall_parent)
             self.wall_parent = None
 
         if self.make_wall:
             if not self.wall_parent:
-                print('make new wall parent')
+                # print('make new wall parent')
                 self.wall_parent = Entity(parent=self, model=Mesh(), color=color.dark_gray, add_to_scene_entities=False)
 
             pass
@@ -2113,7 +2128,7 @@ class PokeShape(Entity):
     @edit_mode.setter
     def edit_mode(self, value):
 
-        print('set edit mode', value)
+        # print('set edit mode', value)
         self._edit_mode = value
         if value:
             [setattr(e, 'selectable', False) for e in level_editor.entities if not e == self]
@@ -2166,7 +2181,7 @@ class PokeShape(Entity):
                 return
 
             closest_point = points_in_range[0][1]
-            print('add point')
+            # print('add point')
             # i = self.point_gizmos.index(level_editor.selection[0])
             i = self.add_new_point_renderer.model.vertices.index(closest_point)
 
@@ -2214,7 +2229,7 @@ class PipeEditor(Entity):
             path = [e.get_position(relative_to=self) for e in self.point_gizmos],
             thicknesses = [e.scale.xz for e in self.point_gizmos]
         )
-        print('GENERATE')
+        # print('GENERATE')
         self.texture = 'grass'
 
         if self.add_collider:
@@ -2235,7 +2250,7 @@ class PipeEditor(Entity):
 
     @edit_mode.setter
     def edit_mode(self, value):
-        print('set edit mode', value)
+        # print('set edit mode', value)
         self._edit_mode = value
         if value:
             [setattr(e, 'selectable', False) for e in level_editor.entities if not e == self]
@@ -2385,6 +2400,7 @@ model_menu = ModelMenu()
 texture_menu = TextureMenu()
 color_menu = ColorMenu()
 shader_menu = ShaderMenu()
+collider_menu = ColliderMenu()
 menu_handler = MenuHandler()
 right_click_menu = RightClickMenu()
 hierarchy_list = HierarchyList()

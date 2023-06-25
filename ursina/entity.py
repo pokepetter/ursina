@@ -253,16 +253,6 @@ class Entity(NodePath):
                 self.model.setColorScale(value)
                 object.__setattr__(self, name, value)
 
-
-        elif name == 'collision' and hasattr(self, 'collider') and self.collider:
-            if value:
-                self.collider.node_path.unstash()
-            else:
-                self.collider.node_path.stash()
-
-            object.__setattr__(self, name, value)
-            return
-
         elif name == 'render_queue':
             if self.model:
                 self.model.setBin('fixed', value)
@@ -397,6 +387,20 @@ class Entity(NodePath):
         self.collision = bool(self.collider)
         return
 
+    @property
+    def collision(self):
+        return self._collision
+
+    @collision.setter
+    def collision(self, value):
+        self._collision = value
+        if not hasattr(self, 'collider') or not self.collider:
+            return
+
+        if value:
+            self.collider.node_path.unstash()
+        else:
+            self.collider.node_path.stash()
 
     @property
     def origin(self):
@@ -1037,7 +1041,6 @@ class Entity(NodePath):
 
         p = self
         if isinstance(possible_ancestor, Entity):
-            # print('ENTITY')
             for i in range(100):
                 if p.parent:
                     if p.parent == possible_ancestor:
@@ -1045,27 +1048,22 @@ class Entity(NodePath):
 
                     p = p.parent
 
-        if isinstance(possible_ancestor, list) or isinstance(possible_ancestor, tuple):
-            # print('LIST OR TUPLE')
-            for e in possible_ancestor:
-                for i in range(100):
-                    if p.parent:
-                        if p.parent == e:
-                            return True
-                            break
-                        p = p.parent
-
-        elif isinstance(possible_ancestor, str):
-            # print('CLASS NAME', possible_ancestor)
-            for i in range(100):
-                if p.parent:
-                    if p.parent.__class__.__name__ == possible_ancestor:
-                        return True
-                        break
-                    p = p.parent
-
         return False
 
+    def has_disabled_ancestor(self):
+        p = self
+        for i in range(100):
+            if not p.parent:
+                return False
+            if not hasattr(p, 'parent') or not hasattr(p.parent, 'enabled'):
+                return False
+
+            p = p.parent
+
+            if p.enabled == False:
+                return True
+
+        return False
 
     @property
     def children(self):
