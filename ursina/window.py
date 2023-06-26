@@ -243,9 +243,12 @@ class Window(WindowProperties):
         self._size = value
         self.setSize(int(value[0]), int(value[1]))
         self.aspect_ratio = value[0] / value[1]
-        from ursina import camera
-        camera.set_shader_input('window_size', value)
-        base.win.request_properties(self)
+        try:
+            from ursina import camera
+            camera.set_shader_input('window_size', value)
+            base.win.request_properties(self)
+        except:
+            pass
 
     @property
     def forced_aspect_ratio(self):
