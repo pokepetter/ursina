@@ -435,7 +435,7 @@ class DatagramWriter:
                 for v in value:
                     self.write(v)
             elif isinstance(value, list):
-                self.write_int32(len(value))
+                self.write_int16(len(value))
                 for v in value:
                     self.write(v)
             else:
@@ -519,7 +519,7 @@ class DatagramReader:
                     arg_type = typing.get_args(value_type)[0]
                     if arg_type is list:
                         raise Exception("DatagramReader does not support lists of lists.")
-                    l = self.read_int32()
+                    l = self.read_int16()
                     if l > max_list_length:
                         raise Exception("Received list that exceeds the max list length allowed by the DatagramReader.")
                     values = []

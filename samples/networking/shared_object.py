@@ -3,7 +3,8 @@ from ursina.networking import *
 
 app = Ursina(size=(800, 600), borderless=False)
 
-status_text = Text(text="Press H to host or C to connect.", origin=(0, 0), z=1)
+start_text = "Press H to host or C to connect."
+status_text = Text(text=start_text, origin=(0, 0), z=1)
 
 box = Entity(model="quad", texture="white_cube", color=color.red, parent=camera.ui, scale=0.1, y=0.1)
 other_box = Entity(model="quad", texture="white_cube", color=color.blue, parent=camera.ui, scale=0.1, y=-0.1, z=0.5)
@@ -39,6 +40,13 @@ def update():
     global update_timer, lerp_timer 
 
     peer.update()
+    if not peer.is_running():
+        status_text.text = start_text
+        box.x = 0.0
+        box.y = 0.1
+        other_box.x = 0.0
+        other_box.y = -0.1
+        return
 
     box.x += (held_keys["d"] - held_keys["a"]) * box_speed * time.dt
     box.y += (held_keys["w"] - held_keys["s"]) * box_speed * time.dt
