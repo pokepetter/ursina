@@ -1,9 +1,8 @@
-# size 1, left, width 1200
-### Installing ursina
-
+# title ursina engine download
+# insert menu.txt
 # insert doc_index_sidebar.txt
 
-
+### Downloading and Installing Ursina
 
 # insert _getting_started.txt
 
@@ -17,5 +16,10 @@
 
 <b>ursina installed successfully, but python can't find it when I try to run a script</b>
 
+If you have multiple Python installs, make sure you installed ursina to the correct one.
+You can specify which Python version to install to like this:
+```
+python3.10 -m pip install ursina
+```
+
 If you're using a venv, make sure you're installing it to the venv and not to the default location.
-Alternatively you can just not use a venv.

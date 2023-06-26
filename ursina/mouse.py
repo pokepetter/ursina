@@ -158,7 +158,7 @@ class Mouse():
 
             # double click
             if time.time() - self.prev_click_time <= self.double_click_distance:
-                if abs(self.x-self.prev_click_pos[0]) > self.double_click_movement_limit or abs(self.y-self.prev_click_pos[1]) > self.double_click_movement_limit:
+                if self.prev_click_pos and (abs(self.x-self.prev_click_pos[0]) > self.double_click_movement_limit or abs(self.y-self.prev_click_pos[1]) > self.double_click_movement_limit):
                     return # moused moved too much since previous click, so don't register double click.
 
                 application.base.input('double click')

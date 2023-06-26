@@ -212,6 +212,7 @@ class Window(WindowProperties):
 
     @property
     def position(self):
+        if not hasattr(self, '_position'): return Vec2(0,0)
         return self._position
 
     @position.setter
@@ -233,7 +234,7 @@ class Window(WindowProperties):
 
     @size.setter
     def size(self, value):
-        if application.window_type == 'none':
+        if application.window_type == 'none' or not value:
             return
 
         if hasattr(self, '_forced_aspect_ratio') and self.forced_aspect_ratio:
@@ -242,9 +243,12 @@ class Window(WindowProperties):
         self._size = value
         self.setSize(int(value[0]), int(value[1]))
         self.aspect_ratio = value[0] / value[1]
-        from ursina import camera
-        camera.set_shader_input('window_size', value)
-        base.win.request_properties(self)
+        try:
+            from ursina import camera
+            camera.set_shader_input('window_size', value)
+            base.win.request_properties(self)
+        except:
+            pass
 
     @property
     def forced_aspect_ratio(self):
@@ -419,7 +423,15 @@ instance = Window()
 if __name__ == '__main__':
     from ursina import *
     # application.development_mode = False
-    app = Ursina(borderless=True)
+    # app = Ursina(borderless=True, forced_aspect_ratio=16/9)
+    app = Ursina(
+        title='Sudden Death',
+        borderless = False,
+        fullscreen = True,
+        show_ursina_splash = True,
+        development_mode = False,
+        # vsync = True
+        )
     # window.monitor_index = 0
     # window.center_on_screen()
     print('------------', window.monitors)

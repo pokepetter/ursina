@@ -10,10 +10,11 @@
 </head>
 <body>
 <left>
-<title>faq</title>
+<title> ursina engine faq</title>
 <br>
 
-<div style="font-size: 20.0px;max-width: 1200px; margin: auto;">
+<div style="max-width: 1200px; margin: auto;">
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:65px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" samples.html" class="button">Samples</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" https://github.com/sponsors/pokepetter" class="button">Donate</a><br>
 <br>
 <div class="sidebar"><br>
 <b><a href="documentation.html">Documentation</a></b><br>
@@ -25,7 +26,9 @@
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Model">Model</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Texture">Texture</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Color">Color</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position, Rotation, Scale">Position, Rotation, Scale</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position">Position</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Rotation">Rotation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Scale">Scale</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Update">Update</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Input">Input</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Mouse Input">Mouse Input</a><br>
@@ -68,16 +71,18 @@
 Frequently Asked Questions<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
+<h2><div id="How do I update ursina?"/><br>
+How do I update ursina?<br>
+</h2><br>
 <br>
-<b>How do I update ursina?</b><br>
-<br>
-<div class="code_block" style="margin-left: 1em;">pip install <a href="https://github.com/pokepetter/ursina/archive/master.zip">https://github.com/pokepetter/ursina/archive/master.zip</a> --upgrade
+<div class="code_block" style="margin-left: 0em;">pip install <a href="https://github.com/pokepetter/ursina/archive/master.zip">https://github.com/pokepetter/ursina/archive/master.zip</a> --upgrade
 </div><br>
 <br>
-<b>How should I structure my project?</b><br>
+<h2><div id="How should I structure my project?"/><br>
+How should I structure my project?<br>
+</h2><br>
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;Like this:<br>
-<div class="code_block" style="margin-left: 1em;">project_folder/         <gray># create a new folder <purple>for</purple> each project</gray>
+<div class="code_block" style="margin-left: 0em;">project_folder/         <gray># create a new folder <purple>for</purple> each project</gray>
     enemies.py
     level.py
     main.py             <gray># the starting script</gray>
@@ -90,14 +95,20 @@ Frequently Asked Questions<br>
 <br>
 <br>
 <br>
-<b>How do I move the camera?</b><br>
+<h2><div id="How do I move the camera?"/><br>
+How do I move the camera?<br>
+</h2><br>
 <br>
 The camera is an Entity, so you can move and rotate it just like everything else:<br>
-<div class="code_block" style="margin-left: 1em;">camera.position = Vec3(<yellow>1</yellow>,<yellow>1</yellow>,<yellow>0</yellow>)
-</div><br>
+&nbsp;&nbsp;&nbsp;&nbsp;```<br>
+&nbsp;&nbsp;&nbsp;&nbsp;camera.position = Vec3(1,1,0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;```<br>
 <br>
 <br>
-<b>Why should I use Python for game development. Isn't it slow?</b><br>
+<br>
+<h2><div id="Why should I use Python for game development. Isn't it slow?"/><br>
+Why should I use Python for game development. Isn't it slow?<br>
+</h2><br>
 <br>
 Not really. The most performance critical part are written in C++ or shader code.<br>
 Python can make you more productive as a developer and thus make it easier<br>
@@ -106,13 +117,17 @@ to structure your project in a good way, rather than micro-optimize.<br>
 <br>
 <br>
 <br>
-<b>How do I call a function with a delay?</b><br>
+<h2><div id="How do I call a function with a delay?</b>"/><br>
+How do I call a function with a delay?</b><br>
+</h2><br>
 <br>
-<div class="code_block" style="margin-left: 1em;">invoke(some_function, arg<yellow>1</yellow>, kwarg<yellow>1</yellow>=<green>'some kwarg'</green>, dela<olive>y</olive>=<yellow>2</yellow>)
+<div class="code_block" style="margin-left: 0em;">invoke(some_function, arg<yellow>1</yellow>, kwarg<yellow>1</yellow>=<green>'some kwarg'</green>, dela<olive>y</olive>=<yellow>2</yellow>)
 </div><br>
 <br>
 <br>
-<b>How do I add lights?</b><br>
+<h2><div id="How do I add lights?"/><br>
+How do I add lights?<br>
+</h2><br>
 <br>
 If all you want are some simple lights to make 3D shapes look more interesting,<br>
 look at the program 'lights.py' in the samples folder.&nbsp;&nbsp;For anything more complicated,<br>
@@ -123,66 +138,13 @@ so keep that in mind when isinstanciation the light.<br>
 <br>
 <br>
 <br>
-<b>How can I use panda3d alongside ursina?</b><br>
+<h2><div id="How can I use panda3d alongside ursina?"/><br>
+How can I use panda3d alongside ursina?<br>
+</h2><br>
 <br>
 What you need to know is that Entity is a NodePath and Ursina is a ShowBase.<br>
 You can also write custom shaders, see panda3d's shader documentation for that.<br>
 <br>
-<br>
-<br>
-<br>
-<b>How do I detect collisions?</b><br>
-<br>
-One way is with raycasts. They can hit anything with a collider.<br>
-<br>
-<a href="https://www.ursinaengine.org/cheat_sheet.html#raycaster">https://www.ursinaengine.org/cheat_sheet.html#raycaster</a><br>
-<a href="https://www.ursinaengine.org/cheat_sheet.html#HitInfo">https://www.ursinaengine.org/cheat_sheet.html#HitInfo</a><br>
-<a href="https://www.ursinaengine.org/cheat_sheet.html#Collider">https://www.ursinaengine.org/cheat_sheet.html#Collider</a><br>
-<br>
-There's also intersects(), which use the entity's collider and check if it intersects other colliders.<br>
-Like raycast(), it also returns a HitInfo.<br>
-<br>
-<br>
-<br>
-Here's an example from the FirstPersonController:<br>
-<br>
-<div class="code_block" style="margin-left: 1em;"><gray># cast a ray <purple>from</purple> the player position in the walk direction.</gray>
-<gray># only move forward <purple>if</purple> it doesn't hit anything.</gray>
-origin = self.world_position + (self.up*.<yellow>5</yellow>) + (self.direction/<yellow>2</yellow>)
-ray = raycast(origin , self.direction, <olive>ignore</olive>=[self,], distance=.<yellow>2</yellow><yellow>5</yellow>, debug=False)
-
-<purple>if</purple> <purple>not</purple> ray.hit:
-   self.position += self.direction * self.speed * time.dt
-
-</div><br>
-<br>
-<b>How do I make a character animate?</b><br>
-<br>
-You have two options here. The first one is using .glft files and panda3d's Actor:<br>
-<br>
-<div class="code_block" style="margin-left: 1em;"><purple>from</purple> ursina <purple>import</purple> *
-<purple>from</purple> direct.actor.Actor <purple>import</purple> Actor
-
-app = Ursina()
-
-entity = <olive>Entity</olive>()
-<gray>#animations are stored within the file</gray>
-actor = Actor("filename.gltf")
-actor.reparent_to(entity)
-
-actor.play("animation_name")
-
-app.run()
-</div><br>
-See the panda3d documentation for more info.<br>
-<br>
-<br>
-The second option is to use FrameAnimation3d. For that you need a sequence of models that can be loaded by ursina.<br>
-So if you have some frames named run_cycle_000.obj, run_cycle_001.obj, run_cycle_002.obj and so on,<br>
-you can load it like this:<br>
-<br>
-<div class="code_block" style="margin-left: 1em;">FrameAnimation<yellow>3</yellow>d(<green>'run_cycle_'</green>)
-</div><br>
 
 </body>
 </html>

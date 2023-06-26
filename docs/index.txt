@@ -1,31 +1,13 @@
-<style>
-body {
-    background-image: url("background_header.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-    height: 35em;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-}
-</style>
-# right
-<a href="https://github.com/pokepetter/ursina"><img src="icons/github_icon.png"></img></a>  <a href="https://twitter.com/ursinaengine"><img src="icons/twitter_icon.png"></img></a>  <a href="https://discord.gg/ydXfhyb"><img src="icons/discord_icon.png"></img></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 # title ursina engine
+# insert menu.txt
+
 <meta property="og:title" content="Ursina Engine"/> <meta property="og:type" content="website"/> <meta property="og:url" content="https://www.ursinaengine.org"/> <meta property="og:description" content="Ursina, an open source, python powered game engine"/> <meta property="og:image" content="https://www.ursinaengine.org/made_with_ursina.jpg"/>
-# right
-# width 900, right
-# center, bold, size 5, width 900
-# image ursina_chan_alpha.png
-ursina engine
-# size 1.25, bold
-# normal
-open source game engine
+# center
+<div id="header">ursina engine</div>
+# size 1, normal
+A Python powered, open source game engine
 
-
-[⭳ Download, installation.html]  [🗎 Documentation, documentation.html]  [Donate, https://github.com/sponsors/pokepetter]
-
+<a href="https://github.com/pokepetter/ursina"><img src="icons/github_icon.png"></img></a>  <a href="https://twitter.com/ursinaengine"><img src="icons/twitter_icon.png"></img></a>  <a href="https://discord.gg/ydXfhyb"><img src="icons/discord_icon.png"></img></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
 <a href="https://youtu.be/j71j88oCTNo" target="_blank" rel="noopener noreferrer"><img src="ursina_trailer_preview.webp" alt="link to ursina trailer" style="width:900px;height:491px;"></a>
