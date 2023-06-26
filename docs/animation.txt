@@ -1,4 +1,5 @@
-# normal, size 1, left, width 1200
+# title ursina engine animation
+# insert menu.txt
 # insert doc_index_sidebar.txt
 
 ### Animation
@@ -23,7 +24,7 @@ For skeletal animations you can use panda3d's Actor.
 Export the model as .glft/.glb since that format support
 mesh data, texture data, animations and more, all in one file.
 
-# code
+```
 from ursina import *
 from direct.actor.Actor import Actor
 
@@ -37,7 +38,7 @@ actor.reparent_to(entity)
 actor.loop("animation_name")  # use .play() instead of loop() to play it once.
 
 app.run()
-# text
+```
 
 See the <a href="https://docs.panda3d.org/1.10/python/programming/models-and-actors/actor-animations">panda3d documentation</a> for more info.
 
@@ -57,6 +58,6 @@ First, export your animation as a sequence of 3d models.
 Assuming you have a bunch of models named run_cycle_000.obj, run_cycle_001.obj, run_cycle_002.obj and so on,
 you can load the animation like this:
 
-#code
+```
 FrameAnimation3d('run_cycle_')
-# text
+```

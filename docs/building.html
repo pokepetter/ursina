@@ -10,10 +10,11 @@
 </head>
 <body>
 <left>
-<title> building your app</title>
+<title> ursina engine build and release</title>
 <br>
 
-<div style="font-size: 20.0px;max-width: 1200px; margin: auto;">
+<div style="max-width: 1200px; margin: auto;">
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:65px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" samples.html" class="button">Samples</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" https://github.com/sponsors/pokepetter" class="button">Donate</a><br>
 <br>
 <div class="sidebar"><br>
 <b><a href="documentation.html">Documentation</a></b><br>
@@ -25,7 +26,9 @@
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Model">Model</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Texture">Texture</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Color">Color</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position, Rotation, Scale">Position, Rotation, Scale</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position">Position</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Rotation">Rotation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Scale">Scale</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Update">Update</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Input">Input</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Mouse Input">Mouse Input</a><br>
@@ -62,17 +65,15 @@
 <a href="faq.html">F.A.Q.</a><br>
 <a href="building.html">Build and Release</a><br>
 </div><br>
-<div style="font-size: 100.0px;font-weight: bold;">
+<br>
+<div style="font-size: 60.0px;font-weight: bold;">
+<div id="Building"/><br>
 Building<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
-<br>
-<br>
-<br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Building Your App with ursina.build"/><br>
+<h2><div id="Building Your App with ursina.build"/><br>
 Building Your App with ursina.build<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 Open cmd in the project folder and run<br>
 <div class="code_block" style="margin-left: 0em;">python -m ursina.build
@@ -99,10 +100,9 @@ Any errors while the application is running will be logged in log.txt instead of
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Building Your App with auto-py-to-exe (singlefile)"/><br>
+<h2><div id="Building Your App with auto-py-to-exe (singlefile)"/><br>
 Building Your App with auto-py-to-exe (singlefile)<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 This way is not recommended since it will slow to open and have a bigger file size.<br>
 <br>
 1. pip install auto-py-to-exe<br>

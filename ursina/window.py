@@ -233,7 +233,7 @@ class Window(WindowProperties):
 
     @size.setter
     def size(self, value):
-        if application.window_type == 'none':
+        if application.window_type == 'none' or not value:
             return
 
         if hasattr(self, '_forced_aspect_ratio') and self.forced_aspect_ratio:
@@ -419,7 +419,7 @@ instance = Window()
 if __name__ == '__main__':
     from ursina import *
     # application.development_mode = False
-    app = Ursina(borderless=True)
+    app = Ursina(borderless=True, forced_aspect_ratio=16/9)
     # window.monitor_index = 0
     # window.center_on_screen()
     print('------------', window.monitors)

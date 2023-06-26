@@ -1,5 +1,6 @@
 
 html {max-width: 100%; margin: auto; color: #333333;}
+h2 {font-size: 50px; margin-block-end:0px; margin-block-start:0px;}
 
 a {transition: color .2s; color: #19405c; white-space: nowrap;}
 a:link, a:visited {color: #19405c;}

@@ -1,4 +1,5 @@
-# normal, size 1, left, width 1200
+# title ursina engine text
+# insert menu.txt
 # insert doc_index_sidebar.txt
 
 ### Text
@@ -6,25 +7,25 @@
 ## Text Size
 
 Set .scale or .world_scale:
-# code
+```
 text_entity = Text('hello', scale=2)
-# text
+```
 
 ## Font and Resolution
 
 For one Text Entity:
 
-# code
+```
 text = Text(font='VeraMono.ttf', resolution=100*Text.size)
 text.text = descr
-# text
+```
 
 For all Text Entities:
 
-# code
+```
 Text.default_font = 'VeraMono.ttf'
 Text.default_resolution = 100 * Text.size
-# text
+```
 
 Keep in mind you don't *have* to change the resolution, but for pixel fonts for example, you
 might want a higher resolution in order for it to not appear blurry.
@@ -32,23 +33,23 @@ might want a higher resolution in order for it to not appear blurry.
 ## Text Alignment
 
 Change text alignment by setting .origin:
-# code
+```
 Text('Hello\nWorld!', origin=(-.5,.5))  # the default. text starts in the upper left like normal.
-Text('Hello\nWorld!', origin=(0,0))     # text is centered both horizontally and vertically.
-# text
+Text('Hello\nWorld!', origin=(0,0))     ``` is centered both horizontally and vertically.
+```
 
 
 ## Text Colors
 
 Set .color to color the whole text.
-# code
+```
 t = Text('This is some text', color=color.blue)
-# text
+```
 
 Use tags to color parts of the text.
-# code
+```
 t = Text('This is some <pink>colored text. <default>Reset color back to default.', color=color.blue)
-# text
+```
 
 ## Changing Text of Prefabs
 

@@ -10,10 +10,11 @@
 </head>
 <body>
 <left>
-<title>text</title>
+<title> ursina engine text</title>
 <br>
 
-<div style="font-size: 20.0px;max-width: 1200px; margin: auto;">
+<div style="max-width: 1200px; margin: auto;">
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:65px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" samples.html" class="button">Samples</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" https://github.com/sponsors/pokepetter" class="button">Donate</a><br>
 <br>
 <div class="sidebar"><br>
 <b><a href="documentation.html">Documentation</a></b><br>
@@ -25,7 +26,9 @@
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Model">Model</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Texture">Texture</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Color">Color</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position, Rotation, Scale">Position, Rotation, Scale</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position">Position</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Rotation">Rotation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Scale">Scale</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Update">Update</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Input">Input</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Mouse Input">Mouse Input</a><br>
@@ -68,18 +71,16 @@
 Text<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Text Size"/><br>
+<h2><div id="Text Size"/><br>
 Text Size<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 Set .scale or .world_scale:<br>
 <div class="code_block" style="margin-left: 0em;">text_entity = Text(<green>'hello'</green>, <olive>scale</olive>=<yellow>2</yellow>)
 </div><br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Font and Resolution"/><br>
+<h2><div id="Font and Resolution"/><br>
 Font and Resolution<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 For one Text Entity:<br>
 <br>
@@ -94,20 +95,18 @@ Text.default_resolution = <yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>
 Keep in mind you don't *have* to change the resolution, but for pixel fonts for example, you<br>
 might want a higher resolution in order for it to not appear blurry.<br>
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Text Alignment"/><br>
+<h2><div id="Text Alignment"/><br>
 Text Alignment<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 Change text alignment by setting .origin:<br>
 <div class="code_block" style="margin-left: 0em;">Text(<green>'Hello\nWorld!'</green>, <olive>origin</olive>=(-.<yellow>5</yellow>,.<yellow>5</yellow>))  <gray># the default. text starts in the upper left like normal.</gray>
-Text(<green>'Hello\nWorld!'</green>, <olive>origin</olive>=(<yellow>0</yellow>,<yellow>0</yellow>))     <gray># text is centered both horizontally and vertically.</gray>
+Text(<green>'Hello\nWorld!'</green>, <olive>origin</olive>=(<yellow>0</yellow>,<yellow>0</yellow>))     ``` is centered both horizontally and vertically.
 </div><br>
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Text Colors"/><br>
+<h2><div id="Text Colors"/><br>
 Text Colors<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 Set .color to color the whole text.<br>
 <div class="code_block" style="margin-left: 0em;">t = Text(<green>'This is some text'</green>, <olive>color</olive>=color.blue)
@@ -115,10 +114,9 @@ Set .color to color the whole text.<br>
 Use tags to color parts of the text.<br>
 <div class="code_block" style="margin-left: 0em;">t = Text(<green>'This is some &lt;pink&gt;colored text. &lt;default&gt;Reset color back to default.'</green>, <olive>color</olive>=color.blue)
 </div><br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Changing Text of Prefabs"/><br>
+<h2><div id="Changing Text of Prefabs"/><br>
 Changing Text of Prefabs<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 Things like Slider, InputField, etc., usually has .text_entity which you can access if you need it.<br>
 <br>

@@ -10,15 +10,11 @@
 </head>
 <body>
 <left>
-<title>installation</title>
+<title> ursina engine download</title>
 <br>
 
-<div style="font-size: 20.0px;max-width: 1200px; margin: auto;">
-<div style="font-size: 60.0px;font-weight: bold;">
-<div id="Installing ursina"/><br>
-Installing ursina<br>
-<div style="font-size: 20.0px;font-weight: normal;">
-<br>
+<div style="max-width: 1200px; margin: auto;">
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:65px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" samples.html" class="button">Samples</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" https://github.com/sponsors/pokepetter" class="button">Donate</a><br>
 <br>
 <div class="sidebar"><br>
 <b><a href="documentation.html">Documentation</a></b><br>
@@ -30,7 +26,9 @@ Installing ursina<br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Model">Model</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Texture">Texture</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Color">Color</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position, Rotation, Scale">Position, Rotation, Scale</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position">Position</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Rotation">Rotation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Scale">Scale</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Update">Update</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Input">Input</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Mouse Input">Mouse Input</a><br>
@@ -68,16 +66,19 @@ Installing ursina<br>
 <a href="building.html">Build and Release</a><br>
 </div><br>
 <br>
+<div style="font-size: 60.0px;font-weight: bold;">
+<div id="Downloading and Installing Ursina"/><br>
+Downloading and Installing Ursina<br>
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
-<br>
-1) Install Python 3.6 or newer. <a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a><br>
+1) Install Python 3.10 or newer. <a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a><br>
 <br>
 2) Open cmd/terminal and type:<br>
-<div class="code_block" style="margin-left: 1em;">pip install ursina
+<div class="code_block" style="margin-left: 0em;">pip install ursina
 </div><br>
 <br>
 If you want to install the newest version from GitHub, you can install like this:<br>
-<div class="code_block" style="margin-left: 1em;">pip install <a href="https://github.com/pokepetter/ursina/archive/master.zip">https://github.com/pokepetter/ursina/archive/master.zip</a> --upgrade --force-reinstall
+<div class="code_block" style="margin-left: 0em;">pip install <a href="https://github.com/pokepetter/ursina/archive/master.zip">https://github.com/pokepetter/ursina/archive/master.zip</a> --upgrade --force-reinstall
 </div><br>
 <br>
 Keep in mind that things *could* break.<br>
@@ -85,12 +86,12 @@ Keep in mind that things *could* break.<br>
 <br>
 If you want to easily edit the source, it's recommended to clone the git<br>
 repo and install as develop like this. Make sure you have git installed. <a href="https://git-scm.com/">https://git-scm.com/</a><br>
-<div class="code_block" style="margin-left: 1em;">git clone <a href="https://github.com/pokepetter/ursina.git">https://github.com/pokepetter/ursina.git</a>
+<div class="code_block" style="margin-left: 0em;">git clone <a href="https://github.com/pokepetter/ursina.git">https://github.com/pokepetter/ursina.git</a>
 python setup.py develop
 </div><br>
 Also install any of the optional dependencies you want from the list below,<br>
 or install them all with:<br>
-<div class="code_block" style="margin-left: 1em;">pip install ursina[extras]
+<div class="code_block" style="margin-left: 0em;">pip install ursina[extras]
 </div><br>
 <br>
 On some systems you might have to use pip3 instead of pip in order to use Python 3 and not the old Python 2.<br>
@@ -103,15 +104,17 @@ If the pip command is not found, you can use:<br>
 &nbsp;&nbsp; <a href=" introduction_tutorial.html" class="button">Introduction Tutorial</a><br>
 <br>
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Troubleshooting"/><br>
+<h2><div id="Troubleshooting"/><br>
 Troubleshooting<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 <b>ursina installed successfully, but python can't find it when I try to run a script</b><br>
 <br>
+If you have multiple Python installs, make sure you installed ursina to the correct one.<br>
+You can specify which Python version to install to like this:<br>
+<div class="code_block" style="margin-left: 0em;">python<yellow>3</yellow>.<yellow>1</yellow><yellow>0</yellow> -m pip install ursina
+</div><br>
 If you're using a venv, make sure you're installing it to the venv and not to the default location.<br>
-Alternatively you can just not use a venv.<br>
 <br>
 
 </body>

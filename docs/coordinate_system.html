@@ -10,13 +10,11 @@
 </head>
 <body>
 <left>
-<title> ursina engine documentation</title>
+<title> ursina engine coordinate system</title>
 <br>
 
-<div style="text-align: center;font-weight: bold;font-size: 100.0px;">
-<a href="index.html" style="text-decoration: none; color:inherit">ursina engine<br>
-ʕ •ᴥ•ʔゝ□</a><br>
-<div style="font-weight: normal;font-size: 20.0px;text-align: left;max-width: 1200px; margin: auto;">
+<div style="max-width: 1200px; margin: auto;">
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:65px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" samples.html" class="button">Samples</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" https://github.com/sponsors/pokepetter" class="button">Donate</a><br>
 <br>
 <div class="sidebar"><br>
 <b><a href="documentation.html">Documentation</a></b><br>
@@ -28,7 +26,9 @@
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Model">Model</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Texture">Texture</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Color">Color</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position, Rotation, Scale">Position, Rotation, Scale</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position">Position</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Rotation">Rotation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Scale">Scale</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Update">Update</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Input">Input</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Mouse Input">Mouse Input</a><br>
@@ -66,11 +66,14 @@
 <a href="building.html">Build and Release</a><br>
 </div><br>
 <br>
-<br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Entity Coordinate System"/><br>
-Entity Coordinate System<br>
+<div style="font-size: 60.0px;font-weight: bold;">
+<div id="Coordinate System"/><br>
+Coordinate System<br>
 <div style="font-size: 20.0px;font-weight: normal;">
+<br>
+<h2><div id="Entity Coordinate System"/><br>
+Entity Coordinate System<br>
+</h2><br>
 <br>
 <div class="code_block" style="margin-left: 0em;">
             y (up)
@@ -85,10 +88,9 @@ Entity Coordinate System<br>
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="UI Coordinate System"/><br>
+<h2><div id="UI Coordinate System"/><br>
 UI Coordinate System<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 <div class="code_block" style="margin-left: 0em;">
 _______________________(.<yellow>5</yellow>, .<yellow>5</yellow>)____(window.top_right)
@@ -107,10 +109,9 @@ _______________________(.<yellow>5</yellow>, .<yellow>5</yellow>)____(window.top
 Want a different UI coordinate system? No problem. camera.ui is an Entity as well so you can move and scale it as you see fit.<br>
 <br>
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Rotation"/><br>
+<h2><div id="Rotation"/><br>
 Rotation<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 Positive value is clock-wise around axis.<br>
 Imagine looking from a positive point on the axis and turing the entity left.<br>
@@ -131,10 +132,9 @@ Imagine looking from a positive point on the axis and turing the entity left.<br
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Origin"/><br>
+<h2><div id="Origin"/><br>
 Origin<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 Setting the origin will move the origin point of the model.<br>
 This can be especially useful when working with the UI.<br>
