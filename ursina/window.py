@@ -212,6 +212,7 @@ class Window(WindowProperties):
 
     @property
     def position(self):
+        if not hasattr(self, '_position'): return Vec2(0,0)
         return self._position
 
     @position.setter
@@ -419,7 +420,15 @@ instance = Window()
 if __name__ == '__main__':
     from ursina import *
     # application.development_mode = False
-    app = Ursina(borderless=True, forced_aspect_ratio=16/9)
+    # app = Ursina(borderless=True, forced_aspect_ratio=16/9)
+    app = Ursina(
+        title='Sudden Death',
+        borderless = False,
+        fullscreen = True,
+        show_ursina_splash = True,
+        development_mode = False,
+        # vsync = True
+        )
     # window.monitor_index = 0
     # window.center_on_screen()
     print('------------', window.monitors)
