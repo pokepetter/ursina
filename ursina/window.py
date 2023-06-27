@@ -222,7 +222,8 @@ class Window(WindowProperties):
         # print('set window position:', value)
         self._position = value
         self.setOrigin(int(value[0]), int(value[1]))
-        base.win.request_properties(self)
+        if application.base and hasattr(application.base.win, 'request_properties'):
+            application.base.win.request_properties(self)
 
 
     @property
@@ -241,14 +242,13 @@ class Window(WindowProperties):
             value = (value[1] * self.forced_aspect_ratio, value[1])
 
         self._size = value
+
         self.setSize(int(value[0]), int(value[1]))
         self.aspect_ratio = value[0] / value[1]
-        try:
-            from ursina import camera
-            camera.set_shader_input('window_size', value)
-            base.win.request_properties(self)
-        except:
-            pass
+        from ursina import camera
+        camera.set_shader_input('window_size', value)
+        if application.base and hasattr(application.base.win, 'request_properties'):
+            application.base.win.request_properties(self)
 
     @property
     def forced_aspect_ratio(self):
@@ -344,10 +344,9 @@ class Window(WindowProperties):
         self.setUndecorated(value)
         if hasattr(self, 'exit_button'):
             self.exit_button.enabled = not value
-        try:
-            base.win.request_properties(self)
-        except:
-            pass
+
+        if application.base and hasattr(application.base.win, 'request_properties'):
+            application.base.win.request_properties(self)
 
 
     @property
