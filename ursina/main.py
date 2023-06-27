@@ -45,9 +45,12 @@ class Ursina(ShowBase):
             editor_ui_enabled (bool): Whether the editor UI should be enabled or not.\n
             window_type (str): The type of the window. Can be 'onscreen', 'offscreen' or 'none'.\n
         """
-        for name in ('title', 'size', 'vsync', 'forced_aspect_ratio'):
+        for name in ('title', 'vsync', 'forced_aspect_ratio'):
             if name in kwargs and hasattr(window, name):
                 setattr(window, name, kwargs[name])
+
+        if 'size' in kwargs:
+            window.windowed_size = kwargs['size']
 
         if 'development_mode' in kwargs:
             application.development_mode = kwargs['development_mode']
