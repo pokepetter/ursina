@@ -136,7 +136,7 @@ class Peer:
 
     def start(self, host_name, port, is_host=False, backlog=100, tls_host_name=None):
         if self.running:
-            return
+            self.stop()
 
         if is_host:
             if self.use_tls:
