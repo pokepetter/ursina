@@ -35,8 +35,7 @@ def deserialize_input_state(reader):
     input_state.sequence_number = reader.read(int)
     return input_state
 
-#app = Ursina(size=(800, 600), borderless=False)
-app = Ursina(size=(800, 600))
+app = Ursina(size=(800, 600), borderless=False)
 
 start_text = "Press H to host or C to connect."
 status_text = Text(text=start_text, origin=(0, 0), z=1)
@@ -125,7 +124,7 @@ def tick(dt):
             other_input_state.right = False
 
 def update():
-    global update_timer, lerp_timer 
+    global update_timer, lerp_timer, tick_timer
 
     peer.update()
     if not peer.is_running():
