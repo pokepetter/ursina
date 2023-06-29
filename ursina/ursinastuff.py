@@ -60,6 +60,12 @@ def _destroy(entity, force_destroy=False):
     if entity.eternal and not force_destroy:
         return
 
+    for child in entity.children:
+        _destroy(child)
+
+    if entity.collider:
+        entity.collider.remove()
+
     if hasattr(entity, 'stop'):
         entity.stop(False)
 
