@@ -73,6 +73,10 @@ class FrameAnimation3d(Entity):
         except Exception as e:
             return e
 
+    def on_destroy(self):
+        self.sequence.kill()
+
+
 
 if __name__ == '__main__':
     application.asset_folder = application.asset_folder.parent.parent / 'samples'
