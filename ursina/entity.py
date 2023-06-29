@@ -79,6 +79,7 @@ class Entity(NodePath):
             self.shader = Entity.default_shader
 
         self.collision = False  # toggle collision without changing collider.
+        self._collider = None
         self.collider = None    # set to 'box'/'sphere'/'capsule'/'mesh' for auto fitted collider.
         self.scripts = []   # add with add_script(class_instance). will assign an 'entity' variable to the script.
         self.animations = []
@@ -347,11 +348,16 @@ class Entity(NodePath):
 
     @collider.setter
     def collider(self, value):
+        if value is None and self._collider:
+            self._collider.remove()
+            self._collider = None
+            self.collision = False
+            return
+
         # destroy existing collider
-        if value and hasattr(self, 'collider') and self._collider:
+        if value and self._collider:
             self._collider.remove()
 
-        self._collider = value
 
         if value == 'box':
             if self.model:
@@ -370,7 +376,7 @@ class Entity(NodePath):
             self._collider.name = value
 
         elif value == 'mesh' and self.model:
-            self._collider = MeshCollider(entity=self, mesh=None, center=-self.origin)
+            self._collider = MeshCollider(entity=self, mesh=self.model, center=-self.origin)
             self._collider.name = value
 
         elif isinstance(value, Mesh):
@@ -379,12 +385,14 @@ class Entity(NodePath):
         elif isinstance(value, str):
             m = load_model(value)
             if not m:
+                self._collider = None
+                self._collision = False
                 return
             self._collider = MeshCollider(entity=self, mesh=m, center=-self.origin)
             self._collider.name = value
 
 
-        self.collision = bool(self.collider)
+        self.collision = bool(self._collider)
         return
 
     @property
