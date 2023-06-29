@@ -412,7 +412,7 @@ class DatagramWriter:
             converter_func(self, value)
         else:
             if isinstance(value, bool):
-                self.write_int8(int(value))
+                self.write_bool(value)
             elif isinstance(value, int):
                 self.write_int64(value)
             elif isinstance(value, float):
@@ -447,8 +447,8 @@ class DatagramWriter:
     def write_string32(self, value):
         self.datagram.addString32(value)
 
-    def write_int8(self, value):
-        self.datagram.addBeInt8(value)
+    def write_bool(self, value):
+        self.datagram.addBool(value)
 
     def write_int16(self, value):
         self.datagram.addBeInt16(value)
@@ -470,6 +470,10 @@ class DatagramWriter:
 
     def write_blob32(self, value):
         self.datagram.addBlob32(value)
+
+
+class ExceedsListLimitException(Exception):
+    pass
 
 
 class DatagramReader:
@@ -494,7 +498,7 @@ class DatagramReader:
             return converter_func(self)
         else:
             if value_type is bool:
-                return bool(self.read_int8())
+                return self.read_bool()
             elif value_type is int:
                 return self.read_int64()
             elif value_type is float:
@@ -507,25 +511,27 @@ class DatagramReader:
                 return Vec3(self.read_float64(), self.read_float64(), self.read_float64())
             elif value_type is Vec4:
                 return Vec4(self.read_float64(), self.read_float64(), self.read_float64(), self.read_float64())
-            elif value_type is types.GenericAlias:
-                origin_type = tpying.get_origin(value_type)
+            elif type(value_type) is tuple:
+                origin_type = value_type[0]
                 if origin_type is tuple:
-                    arg_types = typing.get_args(value_type)
+                    arg_types = value_type[1]
                     values = []
                     for arg_type in arg_types:
                         values.append(self.read(arg_type))
                     return tuple(values)
                 elif origin_type is list:
-                    arg_type = typing.get_args(value_type)[0]
+                    arg_type = value_type[1][0]
                     if arg_type is list:
                         raise Exception("DatagramReader does not support lists of lists.")
                     l = self.read_int16()
                     if l > max_list_length:
-                        raise Exception("Received list that exceeds the max list length allowed by the DatagramReader.")
+                        raise ExceedsListLimitException("Received list that exceeds the max list length allowed by the DatagramReader.")
                     values = []
                     for i in range(l):
                         values.append(self.read(arg_type))
                     return values
+                else:
+                    raise Exception("Unspported value type for DatagramReader: {0}".format(value_type.__name__))
             else:
                 raise Exception("Unspported value type for DatagramReader: {0}".format(value_type.__name__))
 
@@ -535,8 +541,8 @@ class DatagramReader:
     def read_string32(self):
         return self.iter.getString32()
 
-    def read_int8(self):
-        return self.iter.getBeInt8()
+    def read_bool(self):
+        return self.iter.getBool()
 
     def read_int16(self):
         return self.iter.getBeInt16()
@@ -626,7 +632,10 @@ class RPCPeer:
         for func_arg in func_spec.args[2:]:
             func_arg_type = func_spec.annotations.get(func_arg)
             assert func_arg_type is not None, "Failed to register the '{}' procedure, it's missing a type annotation for the '{}' argument.".format(proc.__name__, func_arg)
-            arg_types.append(func_arg_type)
+            if type(func_arg_type) is types.GenericAlias:
+                arg_types.append((typing.get_origin(func_arg_type), typing.get_args(func_arg_type)))
+            else:
+                arg_types.append(func_arg_type)
         procedure_name_hash = procedure_hash(proc.__name__)
         assert procedure_name_hash not in self.procedures, "{} was already registered before.".format(proc.__name__)
         self.procedures[procedure_name_hash] = (proc.__name__, arg_types, proc, host_only, client_only)
@@ -647,31 +656,47 @@ class RPCPeer:
 
     def rpc_on_data(self, connection, data, time_received):
         self.reader.set_datagram(p3d.Datagram(data))
+
         proc_name = None
         proc_func = None
         proc_arg_values = None
+        proc_arg_types = None
+
         try:
             procedure_name_hash = self.reader.read_int32()
             proc = self.procedures.get(procedure_name_hash)
             if proc is None:
-                raise Exception("Remote attempted to call a RPC that does not exist.")
+                raise Exception("Remote attempted to call a RPC that does not exist (maybe a name typo in the source code?).")
             proc_name = proc[0]
             proc_arg_types = proc[1]
             proc_func = proc[2]
             host_only = proc[3]
             client_only = proc[4]
             if (host_only and not self.peer.is_hosting()) or (client_only and self.peer.is_hosting()):
-                raise Exception("Remote attempted to call RPC that is restricted to host only or client only.")
+                raise Exception("Remote attempted to call '{}' that is restricted to host only or client only.".format(proc_name))
             proc_arg_values = []
-            for t in proc_arg_types:
-                v = self.reader.read(t, max_list_length=self.max_list_length)
-                proc_arg_values.append(v)
+            arg_type = None
+            try:
+                for t in proc_arg_types:
+                    arg_type = t
+                    v = self.reader.read(t, max_list_length=self.max_list_length)
+                    proc_arg_values.append(v)
+            except ExceedsListLimitException:
+                raise Exception("Argument with type '{}' exceeds max list size limit for procedure '{}'.".format(arg_type, proc_name))
+            except:
+                raise Exception("Received invalid or missing argument or list/tuple exceeding max length allowed for procedure '{}', expected a '{}'.".format(proc_name, arg_type))
         except Exception as e:
             print("WARNING: Received invalid remote procedure call, disconnecting...")
+            print(e)
             connection.disconnect()
 
-        if proc_func is not None and proc_arg_values is not None:
-            proc_func(connection, time_received, *proc_arg_values)
+        if proc_func is not None and proc_arg_types is not None and proc_arg_values is not None:
+            if len(proc_arg_values) != len(proc_arg_types):
+                print("WARNING: Received invalid remote procedure call, disconnecting...")
+                print("Received an invalid number of arguments for procedure '{}'.".format(proc_name))
+                connection.disconnect()
+            else:
+                proc_func(connection, time_received, *proc_arg_values)
 
 
 # Convenience attribute applied to functions to register them as remote procedure calls.
