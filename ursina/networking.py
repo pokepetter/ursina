@@ -376,6 +376,8 @@ class Peer:
                         connection.bytes_received.clear()
         except asyncio.CancelledError:
             pass
+        except:
+            pass
         finally:
             try:
                 connection.socket.close()
