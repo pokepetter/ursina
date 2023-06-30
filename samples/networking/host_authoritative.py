@@ -175,6 +175,11 @@ def update():
         other_box.y = -0.1
         return
 
+    if peer.is_hosting():
+        status_text.text = "Hosting on localhost, port 8080.\nWASD to move."
+    else:
+        status_text.text = "Connected to host with address localhost, port 8080.\nWASD to move."
+
     tick_timer += time.dt * time_factor
     while tick_timer >= tick_rate:
         tick(tick_rate)
@@ -219,8 +224,6 @@ def input(key):
         shadow_box.visible = False
 
         peer.start("localhost", 8080, is_host=True)
-        if peer.is_running():
-            status_text.text = "Hosting on localhost, port 8080.\nWASD to move."
     elif key == "c":
         box.y = -0.1
         other_box.y = 0.1
@@ -231,7 +234,5 @@ def input(key):
         shadow_box.visible = True
 
         peer.start("localhost", 8080, is_host=False)
-        if peer.is_running():
-            status_text.text = "Connected to host with address localhost, port 8080.\nWASD to move."
 
 app.run()

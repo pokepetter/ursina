@@ -1,7 +1,7 @@
 from ursina import *
 from ursina.networking import *
 
-app = Ursina(size=(800, 600), borderless=False)
+app = Ursina(borderless=False)
 
 start_text = "Press H to host or C to connect."
 status_text = Text(text=start_text, origin=(0, 0), z=1)
@@ -48,6 +48,11 @@ def update():
         other_box.y = -0.1
         return
 
+    if peer.is_hosting():
+        status_text.text = "Hosting on localhost, port 8080.\nWASD to move."
+    else:
+        status_text.text = "Connected to host with address localhost, port 8080.\nWASD to move."
+
     box.x += (held_keys["d"] - held_keys["a"]) * box_speed * time.dt
     box.y += (held_keys["w"] - held_keys["s"]) * box_speed * time.dt
 
@@ -79,8 +84,6 @@ def input(key):
         other_box.prev_y = other_box.y
 
         peer.start("localhost", 8080, is_host=True)
-        if peer.is_running():
-            status_text.text = "Hosting on localhost, port 8080.\nWASD to move."
     elif key == "c":
         box.y = -0.1
         other_box.y = 0.1
@@ -90,7 +93,5 @@ def input(key):
         other_box.prev_y = other_box.y
 
         peer.start("localhost", 8080, is_host=False)
-        if peer.is_running():
-            status_text.text = "Connected to host with address localhost, port 8080.\nWASD to move."
 
 app.run()

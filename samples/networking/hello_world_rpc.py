@@ -1,9 +1,10 @@
 from ursina import *
 from ursina.networking import *
 
-app = Ursina(size=(800, 600), borderless=False)
+app = Ursina(borderless=False)
 
-status_text = Text(text="Press H to host or C to connect.", origin=(0, 0))
+start_text = "Press H to host or C to connect."
+status_text = Text(text=start_text, origin=(0, 0))
 messages = []
 
 peer = RPCPeer()
@@ -18,18 +19,23 @@ def message(connection, time_received, msg: str):
 def update():
     peer.update()
 
+    if not peer.is_running():
+        status_text.text = start_text
+        return
+
+    if peer.is_hosting():
+        status_text.text = "Hosting on localhost, port 8080.\nSpace to send message."
+    else:
+        status_text.text = "Connected to host with address localhost, port 8080.\nSpace to send meesage."
+
 def input(key):
     if key == "space":
         if peer.is_running():
             peer.message(peer.get_connections()[0], "Hello, World!")
     elif key == "h":
         peer.start("localhost", 8080, is_host=True)
-        if peer.is_running():
-            status_text.text = "Hosting on localhost, port 8080.\nSpace to send message."
     elif key == "c":
         peer.start("localhost", 8080, is_host=False)
-        if peer.is_running():
-            status_text.text = "Connected to host with address localhost, port 8080.\nSpace to send meesage."
 
 app.run()
  

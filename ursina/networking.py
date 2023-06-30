@@ -113,6 +113,7 @@ class Peer:
         self.running = False
 
         self.main_thread = None
+        self.running_lock = threading.Lock()
         self.output_event_lock = threading.Lock()
         self.input_event_lock = threading.Lock()
         self.listen_task = None
@@ -156,10 +157,9 @@ class Peer:
         self.backlog = backlog
         self.is_host = is_host
 
-        self.running = True
-
         self.output_event_queue.clear()
         self.input_event_queue.clear()
+
         self.main_thread = threading.Thread(target=self._start, daemon=True)
         self.main_thread.start()
 
@@ -167,7 +167,8 @@ class Peer:
         if not self.running:
             return
 
-        self.running = False
+        with self.running_lock:
+            self.running = False
         
         self.main_thread.join()
 
@@ -278,6 +279,9 @@ class Peer:
                 print(e)
                 self.running = False
                 return
+
+        with self.running_lock:
+            self.running = True
 
         while self.running:
             to_be_removed = []
