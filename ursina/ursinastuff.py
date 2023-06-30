@@ -74,6 +74,10 @@ def _destroy(entity, force_destroy=False):
 
     if entity in scene.entities:
         scene.entities.remove(entity)
+        
+    if entity in scene._children:
+        scene._children.remove(entity)
+
 
     if hasattr(entity, 'scripts'):
         for s in entity.scripts:
