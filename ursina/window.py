@@ -45,7 +45,7 @@ class Window(WindowProperties):
         self.always_on_top = False
 
         # self._borderless = False
-        # self._fullscreen = not application.development_mode
+        self._fullscreen = not application.development_mode
 
         self.top = Vec2(0, .5)
         self.bottom = Vec2(0, -.5)
@@ -54,7 +54,7 @@ class Window(WindowProperties):
 
     def late_init(self):
         self.borderless = True
-        self.fullscreen = not application.development_mode
+        self.fullscreen = self._fullscreen
         self.center_on_screen()
 
         self.color = color.dark_gray
