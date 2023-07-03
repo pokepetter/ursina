@@ -174,9 +174,9 @@ class Window(WindowProperties):
             'Reload Textures <gray>[F6]<default>' : application.hot_reloader.reload_textures,
             'Reload Code <gray>[F5]<default>' : application.hot_reloader.reload_code,
         },
-            width=.4, scale=.75, x=(.5*self.aspect_ratio)-(.4*.75), enabled=False, eternal=True, name='cog_menu',
+            width=.4, scale=.75, x=(.5*self.aspect_ratio)-(.4*.75), enabled=False, eternal=True, name='cog_menu', z=-10, color=color.black90
         )
-        self.cog_menu.on_click = Func(setattr, self.cog_menu, 'enabled', False)
+        self.cog_menu.on_click = self.cog_menu.disable
         # print(self.cog_menu.scale_y)
         # self.cog_menu.scale *= .75
         self.cog_menu.highlight.color = color.azure
