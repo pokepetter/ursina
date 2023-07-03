@@ -358,8 +358,10 @@ class Entity(NodePath):
         if value and self._collider:
             self._collider.remove()
 
+        if isinstance(value, Collider):
+            self._collider = value
 
-        if value == 'box':
+        elif value == 'box':
             if self.model:
                 _bounds = self.model_bounds
                 self._collider = BoxCollider(entity=self, center=_bounds.center, size=_bounds.size)
