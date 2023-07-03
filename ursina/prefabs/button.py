@@ -5,7 +5,7 @@ import textwrap
 
 class Button(Entity):
 
-    color = color.black66
+    color = color.black90
     default_model = None # will default to rounded Quad
 
     def __init__(self, text='', radius=.1, **kwargs):
@@ -160,7 +160,7 @@ class Button(Entity):
             if self.highlight_scale != 1:
                 self.model.setScale(Vec3(self.highlight_scale, self.highlight_scale, 1))
 
-        if hasattr(self, 'tooltip'):
+        if hasattr(self, 'tooltip') and self.tooltip:
             self.tooltip.enabled = True
 
 
@@ -171,7 +171,7 @@ class Button(Entity):
             if not mouse.left and self.highlight_scale != 1:
                 self.model.setScale(Vec3(1,1,1))
 
-        if hasattr(self, 'tooltip'):
+        if hasattr(self, 'tooltip') and self.tooltip:
             self.tooltip.enabled = False
 
     def on_click(self):
