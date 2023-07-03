@@ -280,12 +280,12 @@ def set_states(connection, time_received, bear_states: list[BearState]):
             continue
 
         if my_bear_uuid is None or my_bear_uuid != new_bear_state.uuid:
-            bear.interpolate(bear.state, new_bear_state, update_rate + 0.0125)
+            bear.interpolate(bear.state, new_bear_state, update_rate * 2.0)
         else:
             # Compute processed input difference between client and host.
             sequence_delta = input_state.sequence_number - new_bear_state.input_state.sequence_number
             # Maybe slow down if ahead of host.
-            max_delta = ((update_rate / tick_rate) + 1) * 2
+            max_delta = ((update_rate / tick_rate) + 1) * 2.5
             if sequence_delta > max_delta:
                 time_factor = 0.95
             elif sequence_delta < max_delta * 0.75:
