@@ -26,27 +26,27 @@
 /* input:checked + content, input:checked ~ * { */
 @media screen and (prefers-color-scheme: dark) {
     :root {
-      --bg_color: hsl(0deg 0% 4%);
-      --text_color: hsl(240, 0%, 80%);
-      --header_color: #85a9f7;
-      --button_hover: #ac4fff;
-      --link: #6c94b1;
-      --link_hover: #d4edff;
-      --link_active: #007BE6;
+        --bg_color: hsl(0deg 0% 4%);
+        --text_color: hsl(240, 0%, 80%);
+        --header_color: #85a9f7;
+        --button_hover: #ac4fff;
+        --link: #6c94b1;
+        --link_hover: #d4edff;
+        --link_active: #007BE6;
 
-      /* original plue/pink */
-      --gradient_start: #00fbff;
-      --gradient_end: #ff5eef;
+        /* original plue/pink */
+        --gradient_start: #00fbff;
+        --gradient_end: #ff5eef;
 
-      --code_block_bg_color: hsl(60, 0%, 10%);
-      --code_block_text_color: hsl(240, 0%, 80%);
-      --olive: #b29527;
-      --green: #39a468;
-      --blue: hsl(210deg 68% 58%);
-      --purple: hsl(323deg 55% 65%);
+        --code_block_bg_color: hsl(60, 0%, 10%);
+        --code_block_text_color: hsl(240, 0%, 80%);
+        --olive: #b29527;
+        --green: #39a468;
+        --blue: hsl(210deg 68% 58%);
+        --purple: hsl(323deg 55% 65%);
 
-      --scrollbar_color: hsl(0, 0%, 20%);
-      --scrollbar_bg_color: hsl(0, 0%, 10%);
+        --scrollbar_color: hsl(0, 0%, 20%);
+        --scrollbar_bg_color: hsl(0, 0%, 10%);
     }
 }
 
@@ -97,9 +97,6 @@ a.button:hover {
     background-color: transparent;}
 }
 
-a.button:hover {
-    background-color: #88a959;
-}
 @font-face {
     font-family: Lato;
     src: url("Lato-Regular.ttf");
@@ -139,33 +136,39 @@ blue {color: var(--blue);}
 purple {color: var(--purple)}
 
 .sidebar {
-  position: fixed;
-  left: 10px;
-  bottom: 10px;
-  overflow-y: scroll;
+    position: fixed;
+    left: 10px;
+    bottom: 10px;
+    overflow-y: scroll;
 }
 
+span {
+    background-color: var(--bg_color);
+    padding: .1em;
+    line-height: 1.35em;
+    color: var(--text_color);
+}
 
 /* ===== Scrollbar CSS ===== */
 /* Firefox */
 * {
-scrollbar-width: auto;
-scrollbar-color: #3c3c3c #c2beb3;
+    scrollbar-width: auto;
+    scrollbar-color: #3c3c3c #c2beb3;
 }
 
 /* Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
-width: 16px;
+    width: 16px;
 }
 
 *::-webkit-scrollbar-track {
-background: var(--bg_color);
+    background: var(--bg_color);
 }
 
 *::-webkit-scrollbar-thumb {
-background-color: #3c3c3c;
-border-radius: 10px;
-border: 2px solid var(--bg_color);
+    background-color: #3c3c3c;
+    border-radius: 10px;
+    border: 2px solid var(--bg_color);
 }
 @media (max-width: 725px) {
     .button {display: block;}
