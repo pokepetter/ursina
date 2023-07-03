@@ -178,15 +178,15 @@ class Peer:
                 if len(self.output_event_queue) == 0:
                     break
                 next_event = self.output_event_queue.popleft()
+                d = next_event[2]
+                t = next_event[3]
                 if next_event[0] == PeerEvent.CONNECT:
                     if self.on_connect is not None:
-                        self.on_connect(next_event[1])
+                        self.on_connect(next_event[1], t)
                 elif next_event[0] == PeerEvent.DISCONNECT:
                     if self.on_disconnect is not None:
-                        self.on_disconnect(next_event[1])
+                        self.on_disconnect(next_event[1], t)
                 elif next_event[0] == PeerEvent.DATA:
-                    d = next_event[2]
-                    t = next_event[3]
                     if self.on_raw_data is not None:
                         d = self.on_raw_data(next_event[1], d, t)
                     if self.on_data is not None:
@@ -229,7 +229,7 @@ class Peer:
         connection.async_task = connection_task
         self.connections.append(connection)
         with self.output_event_lock:
-            self.output_event_queue.append((PeerEvent.CONNECT, connection, None, None))
+            self.output_event_queue.append((PeerEvent.CONNECT, connection, None, time.time()))
 
     async def _run(self):
         async_loop = asyncio.get_event_loop()
@@ -584,11 +584,23 @@ class RPCPeer:
 
         self.max_list_length = max_list_length
 
-        def default_on_connect(connection):
-            print("New connection:", connection.address)
+        self.print_connect = True
+        self.print_disconnect = True
 
-        def default_on_disconnect(connection):
-            print("Disconnected:", connection.address)
+        def default_on_connect(connection, time_connected):
+            connection.rpc_peer = self
+            if self.print_connect:
+                print("New connection:", connection.address)
+            on_connect = self.procedures.get(procedure_hash("on_connect"))
+            if on_connect is not None:
+                on_connect[2](connection, time_connected)
+
+        def default_on_disconnect(connection, time_disconnected):
+            if self.print_disconnect:
+                print("Disconnected:", connection.address)
+            on_disconnect = self.procedures.get(procedure_hash("on_disconnect"))
+            if on_disconnect is not None:
+                on_disconnect[2](connection, time_disconnected)
 
         def on_data(connection, data, time_received):
             self.rpc_on_data(connection, data, time_received)
@@ -600,6 +612,7 @@ class RPCPeer:
         self.peer.on_data = on_data
 
         self.procedures = dict()
+
         self.writer = DatagramWriter()
         self.reader = DatagramReader()
 
