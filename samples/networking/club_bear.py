@@ -368,7 +368,9 @@ def join():
 
     peer.start(h, port, is_host=False)
     host_input_field.enabled = False
+    host_button.disabled = True
     host_button.enabled = False
+    join_button.disabled = True
     join_button.enabled = False
 
 join_button.on_click = join
@@ -442,13 +444,17 @@ def update():
         status_text.text = start_text
         status_text.y = 0.1
         host_input_field.enabled = True
+        host_button.disabled = False
         host_button.enabled = True
+        join_button.disabled = False
         join_button.enabled = True
         chat_input_field.enabled = False
         return
 
     host_input_field.enabled = False
+    host_button.disabled = True
     host_button.enabled = False
+    join_button.disabled = True
     join_button.enabled = False
     chat_input_field.enabled = True
     if peer.is_hosting():
