@@ -85,7 +85,12 @@ class PeerInput(Enum):
 
 
 class Peer:
-    def __init__(self, on_connect=None, on_disconnect=None, on_data=None, on_raw_data=None, connection_timeout=None, use_tls=False, path_to_certchain=None, path_to_private_key=None, path_to_cabundle=None):
+    def __init__(self, on_connect=None, on_disconnect=None, on_data=None, on_raw_data=None,
+                 connection_timeout=None,
+                 use_tls=False,
+                 path_to_certchain=None, path_to_private_key=None,
+                 path_to_cabundle=None,
+                 socket_address_family="INET"):
         self.on_connect = on_connect
         self.on_disconnect = on_disconnect
         self.on_data = on_data
@@ -95,6 +100,12 @@ class Peer:
         self.path_to_certchain = path_to_certchain
         self.path_to_private_key = path_to_private_key
         self.path_to_cabundle = path_to_cabundle
+        if socket_address_family == "INET":
+            self.socket_address_family = socket.AF_INET
+        elif socket_address_family == "INET6":
+            self.socket_address_family = socket.AF_INET6
+        else:
+            raise Exception("Invalid/unsupported socket address family '{}'.".format(socket_address_family))
 
         self.ssl_context = None
 
@@ -118,6 +129,8 @@ class Peer:
         self.input_event_lock = threading.Lock()
         self.listen_task = None
 
+        self.main_thread_sleep_time = 0.001
+
         def on_application_exit():
             if self.running:
                 self.stop()
@@ -135,9 +148,16 @@ class Peer:
 
         signal.signal(signal.SIGINT, on_keyboard_interrupt)
 
-    def start(self, host_name, port, is_host=False, backlog=100, tls_host_name=None):
+    def start(self, host_name, port, is_host=False, backlog=100, tls_host_name=None, socket_address_family="INET"):
         if self.running:
             self.stop()
+
+        if socket_address_family == "INET":
+            self.socket_address_family = socket.AF_INET
+        elif socket_address_family == "INET6":
+            self.socket_address_family = socket.AF_INET6
+        else:
+            raise Exception("Invalid/unsupported socket address family '{}'.".format(socket_address_family))
 
         if is_host:
             if self.use_tls:
@@ -236,7 +256,7 @@ class Peer:
 
         if self.is_host:
             try:
-                self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
+                self.socket = socket.socket(self.socket_address_family, socket.SOCK_STREAM, 0)
                 self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
                 self.socket.bind((self.host_name, self.port))
                 self.socket.listen(self.backlog)
@@ -307,7 +327,7 @@ class Peer:
                     await connection.async_task
                 except:
                     pass
-            await asyncio.sleep(0.0001)
+            await asyncio.sleep(self.main_thread_sleep_time)
 
         for connection in self.connections:
             connection.async_task.cancel()
@@ -616,8 +636,8 @@ class RPCPeer:
         self.writer = DatagramWriter()
         self.reader = DatagramReader()
 
-    def start(self, host_name, port, is_host=False, backlog=100, tls_host_name=None):
-        return self.peer.start(host_name, port, is_host=is_host, backlog=backlog, tls_host_name=tls_host_name)
+    def start(self, host_name, port, is_host=False, backlog=100, tls_host_name=None, socket_address_family="INET"):
+        return self.peer.start(host_name, port, is_host=is_host, backlog=backlog, tls_host_name=tls_host_name, socket_address_family=socket_address_family)
 
     def stop(self):
         self.peer.stop()
