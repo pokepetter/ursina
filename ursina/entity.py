@@ -705,7 +705,7 @@ class Entity(NodePath):
     @property
     def screen_position(self): # get screen position(ui space) from world space.
         from ursina import camera
-        p3d = camera.getRelativePoint(self, Vec3.zero())
+        p3d = camera.getRelativePoint(self, Vec3.zero)
         full = camera.lens.getProjectionMat().xform(Vec4(*p3d, 1))
         recip_full3 = 1
         if full[3] > 0:
