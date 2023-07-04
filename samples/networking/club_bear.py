@@ -482,6 +482,10 @@ def update():
         update_timer = 0.0
 
 def input(key):
+    if key == "f5":
+        peer.stop()
+    if key == "f9":
+        peer.stop()
     if not peer.is_running():
         return
     if key == "enter up":
