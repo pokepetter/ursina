@@ -148,16 +148,17 @@ class Peer:
 
         signal.signal(signal.SIGINT, on_keyboard_interrupt)
 
-    def start(self, host_name, port, is_host=False, backlog=100, tls_host_name=None, socket_address_family="INET"):
+    def start(self, host_name, port, is_host=False, backlog=100, tls_host_name=None, socket_address_family=None):
         if self.running:
             self.stop()
 
-        if socket_address_family == "INET":
-            self.socket_address_family = socket.AF_INET
-        elif socket_address_family == "INET6":
-            self.socket_address_family = socket.AF_INET6
-        else:
-            raise Exception("Invalid/unsupported socket address family '{}'.".format(socket_address_family))
+        if socket_address_family is not None:
+            if socket_address_family == "INET":
+                self.socket_address_family = socket.AF_INET
+            elif socket_address_family == "INET6":
+                self.socket_address_family = socket.AF_INET6
+            else:
+                raise Exception("Invalid/unsupported socket address family '{}'.".format(socket_address_family))
 
         if is_host:
             if self.use_tls:
@@ -636,7 +637,7 @@ class RPCPeer:
         self.writer = DatagramWriter()
         self.reader = DatagramReader()
 
-    def start(self, host_name, port, is_host=False, backlog=100, tls_host_name=None, socket_address_family="INET"):
+    def start(self, host_name, port, is_host=False, backlog=100, tls_host_name=None, socket_address_family=None):
         return self.peer.start(host_name, port, is_host=is_host, backlog=backlog, tls_host_name=tls_host_name, socket_address_family=socket_address_family)
 
     def stop(self):
