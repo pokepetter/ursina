@@ -6,6 +6,7 @@ from ursina.scene import instance as scene
 from panda3d.core import CollisionTraverser, CollisionNode, CollisionHandlerQueue, CollisionRay
 from ursina.vec3 import Vec3
 from math import sqrt, inf
+from copy import copy
 from ursina.hit_info import HitInfo
 from ursina import ursinamath, color
 from ursina.ursinastuff import destroy, invoke
@@ -26,7 +27,7 @@ _ray.setDirection(Vec3(0,0,1))
 _raycaster._pickerNode.addSolid(_ray)
 
 
-def raycast(origin, direction:Vec3=(0,0,1), distance=inf, traverse_target:Entity=scene, ignore:list=None, debug=False):
+def raycast(origin, direction:Vec3=(0,0,1), distance=inf, traverse_target:Entity=scene, ignore:list=None, debug=False, color=color.white):
     _ignore = [e for e in scene.entities if not e.collision]
     if ignore:
         _ignore.extend(ignore)
@@ -35,7 +36,7 @@ def raycast(origin, direction:Vec3=(0,0,1), distance=inf, traverse_target:Entity
     _raycaster.look_at(_raycaster.position + direction)
 
     if debug:
-        temp = Entity(position=origin, model=_line_model, scale=Vec3(1,1,min(distance,9999)), add_to_scene_entities=False)
+        temp = Entity(position=origin, model=copy(_line_model), scale=Vec3(1,1,min(distance,9999)), color=color, add_to_scene_entities=False)
         temp.look_at(_raycaster.position + direction)
         destroy(temp, 1/30)
 
