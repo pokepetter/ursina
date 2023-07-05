@@ -410,7 +410,7 @@ class GizmoArrow(Draggable):
         changed = ( # don't record undo if transform didn't change
             distance(LEVEL_EDITOR.selection[0].world_transform[0], LEVEL_EDITOR.selection[0]._original_world_transform[0]) > .0001 or
             distance(LEVEL_EDITOR.selection[0].world_transform[1], LEVEL_EDITOR.selection[0]._original_world_transform[1]) > .0001 or
-            distance(lself.evel_editor.selection[0].world_transform[2], LEVEL_EDITOR.selection[0]._original_world_transform[2]) > .0001
+            distance(self.evel_editor.selection[0].world_transform[2], LEVEL_EDITOR.selection[0]._original_world_transform[2]) > .0001
             )
 
         if self.record_undo and changed:

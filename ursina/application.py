@@ -56,14 +56,10 @@ hot_reloader = None     # will be set my main if development_mode
 def pause():
     global paused
     paused = True
-    for seq in sequences:
-        seq.pause()
 
 def resume():
     global paused
     paused = False
-    for seq in sequences:
-        seq.resume()
 
 def quit():
     from ursina import invoke

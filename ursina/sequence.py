@@ -29,7 +29,9 @@ class Sequence():
         self.time_step = Sequence.default_time_step
         self.duration = 0
         self.funcs = []
-        self.paused = True
+        self.started = False
+        self.paused = False
+        self.ignore_paused = False
         self.loop = False
         self.auto_destroy = True
 
@@ -74,6 +76,7 @@ class Sequence():
             f.finished = False
 
         self.t = 0
+        self.started = True
         self.paused = False
 
     def pause(self):
@@ -85,6 +88,7 @@ class Sequence():
     def finish(self):
         self.t = self.duration
         self.paused = False
+        self.started = False
         self.update()
 
     def kill(self):
@@ -98,7 +102,10 @@ class Sequence():
 
 
     def update(self):
-        if self.paused:
+        if not self.started:
+            return
+
+        if self.ignore_paused == False and (self.paused or application.paused):
             return
 
         if self.time_step is None:
