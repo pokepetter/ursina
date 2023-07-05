@@ -34,10 +34,12 @@ import threading
 import asyncio
 
 class Connection:
-    def __init__(self, peer, socket, address):
+    def __init__(self, peer, socket, address, connection_timeout):
         self.peer = peer
         self.socket = socket
         self.address = address
+
+        self.connection_timeout = connection_timeout
 
         self.connected = True
         self.timed_out = False
@@ -245,7 +247,7 @@ class Peer:
         asyncio.run(self._run())
 
     def _add_connection(self, socket, address, async_loop):
-        connection = Connection(self, socket, address)
+        connection = Connection(self, socket, address, self.connection_timeout)
         connection_task = async_loop.create_task(self._receive(connection, async_loop))
         connection.async_task = connection_task
         self.connections.append(connection)
@@ -353,8 +355,6 @@ class Peer:
             while True:
                 client_socket, client_address = await async_loop.sock_accept(server_socket)
                 self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-                if self.connection_timeout is not None:
-                    client_socket.settimeout(self.connection_timeout)
                 self._add_connection(client_socket, client_address, async_loop)
         except asyncio.CancelledError:
             pass
@@ -369,12 +369,19 @@ class Peer:
             except:
                 pass
 
+    async def _recv(self, connection, async_loop):
+        return await async_loop.sock_recv(connection.socket, connection.expected_byte_count)
+
     async def _receive(self, connection, async_loop):
         try:
             while True:
+                data = None
                 try:
-                    data = await async_loop.sock_recv(connection.socket, connection.expected_byte_count)
-                except socket.timeout:
+                    if connection.connection_timeout is None:
+                        data = await self._recv(connection, async_loop)
+                    else:
+                        data = await asyncio.wait_for(self._recv(connection, async_loop), timeout=connection.connection_timeout)
+                except asyncio.exceptions.TimeoutError:
                     connection.timed_out = True
                     raise
                 except:
@@ -477,6 +484,9 @@ class DatagramWriter:
     def write_bool(self, value):
         self.datagram.addBool(value)
 
+    def write_int8(self, value):
+        return self.iter.addInt8(value)
+
     def write_int16(self, value):
         self.datagram.addBeInt16(value)
 
@@ -570,6 +580,9 @@ class DatagramReader:
 
     def read_bool(self):
         return self.iter.getBool()
+
+    def read_int8(self):
+        return self.iter.getInt8()
 
     def read_int16(self):
         return self.iter.getBeInt16()

@@ -186,7 +186,7 @@ update_timer = 0.0
 
 speech_duration = 3.0
 
-peer = RPCPeer()
+peer = RPCPeer(connection_timeout=5.0)
 
 peer.register_type(InputState, serialize_input_state, deserialize_input_state)
 peer.register_type(BearState, serialize_bear_state, deserialize_bear_state)
@@ -221,6 +221,8 @@ def on_disconnect(connection, time_disconnected):
             del inputs_received[b.state.uuid]
             for conn in connection.rpc_peer.get_connections():
                 connection.rpc_peer.remove_bears(conn, [b.state.uuid])
+        if connection.is_timed_out():
+            print("\tConnection timed out.")
         print("Bear count:", len(bears))
     else:
         for bear in bears:
