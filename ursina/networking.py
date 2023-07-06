@@ -485,7 +485,7 @@ class DatagramWriter:
         self.datagram.addBool(value)
 
     def write_int8(self, value):
-        return self.iter.addInt8(value)
+        return self.datagram.addInt8(value)
 
     def write_int16(self, value):
         self.datagram.addBeInt16(value)
@@ -678,20 +678,26 @@ class RPCPeer:
         self.writer.register_type(the_type, write_func)
         self.reader.register_type(the_type, read_func)
 
-    def register_procedure(self, proc, host_only=False, client_only=False):
+    def register_procedure(self, proc, host_only=False, client_only=False, prefix=None):
         func_spec = inspect.getfullargspec(proc)
-        arg_types = []
         assert len(func_spec.args) >= 2, "{} must have at least two arguments, connection and time_received.".format(proc.__name__)
-        for func_arg in func_spec.args[2:]:
+        func_args = func_spec.args[2:]
+        if func_spec.args[0] == "self":
+            func_args = func_args[1:]
+        arg_types = []
+        for func_arg in func_args:
             func_arg_type = func_spec.annotations.get(func_arg)
             assert func_arg_type is not None, "Failed to register the '{}' procedure, it's missing a type annotation for the '{}' argument.".format(proc.__name__, func_arg)
             if type(func_arg_type) is types.GenericAlias:
                 arg_types.append((typing.get_origin(func_arg_type), typing.get_args(func_arg_type)))
             else:
                 arg_types.append(func_arg_type)
-        procedure_name_hash = procedure_hash(proc.__name__)
-        assert procedure_name_hash not in self.procedures, "{} was already registered before.".format(proc.__name__)
-        self.procedures[procedure_name_hash] = (proc.__name__, arg_types, proc, host_only, client_only)
+        proc_name = proc.__name__
+        if prefix is not None:
+            proc_name = prefix + "_" + proc_name
+        procedure_name_hash = procedure_hash(proc_name)
+        assert procedure_name_hash not in self.procedures, "{} was already registered before.".format(proc_name)
+        self.procedures[procedure_name_hash] = (proc_name, arg_types, proc, host_only, client_only)
 
     def __getattr__(self, name):
         def remote_procedure(*args):
