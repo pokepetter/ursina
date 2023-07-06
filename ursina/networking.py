@@ -485,7 +485,7 @@ class DatagramWriter:
         self.datagram.addBool(value)
 
     def write_int8(self, value):
-        return self.datagram.addInt8(value)
+        self.datagram.addInt8(value)
 
     def write_int16(self, value):
         self.datagram.addBeInt16(value)
