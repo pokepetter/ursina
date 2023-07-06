@@ -90,7 +90,7 @@ void main () {
 }
 ''',
 default_input={
-    'window_size': window.size,
+    'window_size': Vec2(1280,720),
 }
 )
 
