@@ -35,11 +35,14 @@ class Window(WindowProperties):
 
         self.title = application.asset_folder.name
         # self.icon = 'textures/ursina.ico'
-        self.monitors = get_monitors()
-        self.main_monitor = [e for e in self.monitors if e.is_primary][0]
-        self.monitor_index = self.monitors.index(self.main_monitor)
-        self.fullscreen_size = Vec2(self.main_monitor.width, self.main_monitor.height)
-        self.windowed_size = self.fullscreen_size / 1.25
+        try:
+            self.monitors = get_monitors()
+            self.main_monitor = [e for e in self.monitors if e.is_primary][0]
+            self.monitor_index = self.monitors.index(self.main_monitor)
+            self.windowed_size =  Vec2(self.main_monitor.width, self.main_monitor.height) / 1.25
+        except:
+            print_warning('no monitors found')
+
         self.windowed_position = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode
         self.forced_aspect_ratio = None # example: window.forced_aspect_ratio = 16/9
         self.always_on_top = False
