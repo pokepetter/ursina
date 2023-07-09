@@ -1,10 +1,12 @@
 from ursina import *
 
 class Draggable(Button):
-
-    _z_plane = Entity(name='_z_plane', scale=(9999,9999), enabled=False, eternal=True, add_to_scene_entities=False)
+    _z_plane = None
 
     def __init__(self, **kwargs):
+        if not __class__._z_plane:
+            __class__._z_plane = Entity(name='_z_plane', scale=(9999,9999), enabled=False, eternal=True)
+
         super().__init__(**kwargs)
         self.require_key = None
         self.dragging = False
