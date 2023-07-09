@@ -1594,6 +1594,7 @@ class Inspector(Entity):
 
         self.shader_inputs_parent = Entity(parent=self.name_field, y=-9)
         self.scale = .6
+        self.update_inspector()
 
 
     def input(self, key):
