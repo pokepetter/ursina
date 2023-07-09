@@ -40,10 +40,12 @@ try:
 except:
     pass
 
+application.trace_entity_definition = True
+_Ursina_instance = None
+_warn_if_ursina_not_instantiated = True # gets set to True after Ursina.__init__() to ensure the correct order.
 
 
 class Entity(NodePath):
-
     rotation_directions = (-1,-1,1)
     default_shader = None
     default_values = {
@@ -91,7 +93,8 @@ class Entity(NodePath):
         self.scale = Vec3(1,1,1)    # can also set self.scale_x, self.scale_y, self.scale_z
 
         self.line_definition = None # returns a Traceback(filename, lineno, function, code_context, index).
-        if application.trace_entity_definition and add_to_scene_entities:
+
+        if application.trace_entity_definition and add_to_scene_entities or (not _Ursina_instance and _warn_if_ursina_not_instantiated):
             from inspect import getframeinfo, stack
             _stack = stack()
             caller = getframeinfo(_stack[1][0])
@@ -111,6 +114,11 @@ class Entity(NodePath):
 
                 if application.print_entity_definition:
                     print(f'{Path(caller.filename).name} ->  {caller.lineno} -> {caller.code_context}')
+
+
+        if not _Ursina_instance and _warn_if_ursina_not_instantiated and add_to_scene_entities:
+            print_warning('Tried to instantiate Entity before Ursina. Please create an instance of Ursina first (app = Ursina())', self.line_definition)
+
 
         # make sure things get set in the correct order. both colliders and texture need the model to be set first.
         for key in ('model', 'origin', 'origin_x', 'origin_y', 'origin_z', 'collider', 'shader', 'texture', 'texture_scale', 'texture_offset'):
@@ -424,7 +432,7 @@ class Entity(NodePath):
             value = Vec3(*value, self.origin_z)
 
         self._origin = value
-        
+
         if self.model:
             self.model.setPos(-value[0], -value[1], -value[2])
 

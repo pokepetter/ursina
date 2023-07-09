@@ -12,6 +12,7 @@ from ursina.scene import instance as scene
 from ursina.camera import instance as camera
 from ursina.mouse import instance as mouse
 from ursina.string_utilities import print_info
+from ursina import entity
 
 
 import __main__
@@ -19,11 +20,11 @@ time.dt = 0
 keyboard_keys = '1234567890qwertyuiopasdfghjklzxcvbnm'
 
 def singleton(cls, **kwargs):
-    instances = {}
     def getinstance(**kwargs):
-        if cls not in instances:
-            instances[cls] = cls(**kwargs)
-        return instances[cls]
+        if not hasattr(cls, '_instance') or not cls._instance:
+            cls._instance = cls(**kwargs)
+        return cls._instance
+
     return getinstance
 
 @singleton
@@ -45,6 +46,9 @@ class Ursina(ShowBase):
             editor_ui_enabled (bool): Whether the editor UI should be enabled or not.\n
             window_type (str): The type of the window. Can be 'onscreen', 'offscreen' or 'none'.\n
         """
+        entity._warn_if_ursina_not_instantiated = False
+
+
         for name in ('title', 'vsync', 'forced_aspect_ratio'):
             if name in kwargs and hasattr(window, name):
                 setattr(window, name, kwargs[name])
@@ -163,6 +167,8 @@ class Ursina(ShowBase):
 
         print('package_folder:', application.package_folder)
         print('asset_folder:', application.asset_folder)
+
+        entity._Ursina_instance = self
 
 
     def _update(self, task):

@@ -16,7 +16,7 @@ from ursina.string_utilities import print_info
 class Camera(Entity):
 
     def __init__(self):
-        super().__init__()
+        super().__init__(add_to_scene_entities=False)
         self.parent = scene
         self.name = 'camera'
         self.eternal = True
