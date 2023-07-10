@@ -106,9 +106,9 @@ class LevelEditor(Entity):
             self.current_scene.save()
 
         if held_keys['control']:
-            if key == 'z':
+            if key == 'z' and self.current_scene:
                 self.current_scene.undo.undo()
-            elif key == 'y':
+            elif key == 'y' and self.current_scene:
                 self.current_scene.undo.redo()
 
         if self.selection and key == 't':
@@ -2425,49 +2425,6 @@ class Search(Entity):
         # elif len(key) == 1:
         #     print('---', self.input_field.text)
 
-
-if __name__ == '__main__':
-    # app = Ursina(size=(1280,720))
-    # app = Ursina(vsync=False, forced_aspect_ratio=16/9)
-    app = Ursina(vsync=False)
-
-# camera.fov = 90
-LEVEL_EDITOR = LevelEditor()
-
-
-# AmbientLight(color=color._16)
-# sun_handler = SunHandler()
-
-# for x in range(8):
-#     for y in range(8):
-#         LEVEL_EDITOR.scenes[x][y].undo = Undo()
-
-# gizmo = Gizmo()
-# LEVEL_EDITOR.gizmo = gizmo
-# t = perf_counter()
-# rotation_gizmo = RotationGizmo()
-
-# print('-----', perf_counter() - t)
-
-
-
-
-
-
-
-# search = Search(parent=LEVEL_EDITOR)
-
-# import ursina
-# ursina.editor.prefabs.poke_shape.LEVEL_EDITOR = LEVEL_EDITOR
-# ursina.editor.prefabs.poke_shape.quick_grabber = quick_grabber
-
-debug_text = Text(y=-.45)
-
-# def update():
-#     if LEVEL_EDITOR.selection:
-#         print(get_major_axis_relative_to_view(LEVEL_EDITOR.selection[-1]))
-
-
 def get_major_axis_relative_to_view(entity): # if we're looking at the entity from the right/left, return 0, top/bot:1, front/back: 2
     r = round(camera.back.dot(entity.right), 1)
     u = round(camera.back.dot(entity.up), 1)
@@ -2477,77 +2434,31 @@ def get_major_axis_relative_to_view(entity): # if we're looking at the entity fr
     is_positive_direction = dir[axis_index] > 0
 
     return axis_index, is_positive_direction
-        # dir =
-        # print('f:', camera.forward.dot(e.forward))
-        # print('u:', camera.forward.dot(e.up))
-        # print('r:', camera.forward.dot(e.right))
-        # print('a')
-        # debug_text.text = f'{round(Vec3(*LEVEL_EDITOR.selection[-1].forward.normalized()), 0) + round(Vec3(*look_at_angle_helper.forward), 0)}'
-
-
-
-# LEVEL_EDITOR_toggler = Entity()
-# def LEVEL_EDITOR_toggler_input(key):
-#     if key == 'escape':
-#         LEVEL_EDITOR.enabled = not LEVEL_EDITOR.enabled
-#
-# LEVEL_EDITOR_toggler.input = LEVEL_EDITOR_toggler_input
-
-
-
-# class Debug(Entity):
-#     def input(self, key):
-#         if key == 'space':
-#             print(LEVEL_EDITOR.selection)
-#             # for e in LEVEL_EDITOR.entities:
-#             #     print(e.__class__.__name__)
-# Debug()
-    # t = Text(position=window.top_left + Vec2(.01,-.06))
-    # def update():
-    #     t.text = 'selection:\n' + '\n'.join([str(e) for e in LEVEL_EDITOR.selection])
-#
-# class MeshEditor(Entity):
-#     def __init__(self, **kwargs):
-#         super().__init__()
-#
-#
-#
-#     for key, value in kwargs.items():
-#         setattr(self, key, value)
-
-# input_handler.bind('a', 'y')
-# LEVEL_EDITOR.enabled = False
-class Tree(Entity):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.model = 'cube'
-        self.color = color.brown
-
-        self.top = Entity(name='tree_top', parent=self, y=1.5, model='cube', color=color.green, selectable=True)
-        # LEVEL_EDITOR.entities.append(self.top)
-
-LEVEL_EDITOR.prefabs.append(Tree)
-LEVEL_EDITOR.spawner.update_menu()
-
 
 
 if __name__ == '__main__':
-    LEVEL_EDITOR.goto_scene(0,0)
-    LEVEL_EDITOR.selection = [LEVEL_EDITOR.entities[0], ]
-    # LEVEL_EDITOR.spawner.spawn_entity(Tree)
-    # Tree()
-    # middle = Entity(parent=camera.ui, model='quad', scale_x=.001, color=color.azure)
-    # middle = Entity(parent=camera.ui, model='quad', scale_y=.001, color=color.azure)
-    # color_menu.open()
-    # from poke_shape import PokeShape
-    # poke_shape = PokeShape(scale=4, points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,-.25), Vec3(.75,0,-.25), Vec3(.75,0,.25), Vec3(.5,0,.25), Vec3(.5,0,.5), Vec3(-.5,0,.5)])
-    # poke_shape = PokeShape(scale=4, points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,-.25), Vec3(.75,0,-.25), Vec3(.75,0,.25), Vec3(.5,0,.25), Vec3(.5,0,.5), Vec3(.5,0,.55), Vec3(-.5,0,.5)])
-    # LEVEL_EDITOR.entities.append(poke_shape)
-    # pipe = PipeEditor()
-    # LEVEL_EDITOR.entities.append(pipe)
-    # from ursina.shaders import ssao_shader
-    # camera.shader = ssao_shader
-    window.fullscreen = True
-    window.center_on_screen()
-    Sky()
+    from ursina import *
+    from urtsina.editor.level_editor import LevelEditor
+
+    app = Ursina(vsync=False)
+
+    level_editor = LevelEditor()
+    level_editor.goto_scene(0,0)
+
     app.run()
+
+    # class Tree(Entity):
+    #     def __init__(self, **kwargs):
+    #         super().__init__(**kwargs)
+    #         self.model = 'cube'
+    #         self.color = color.brown
+    #
+    #         self.top = Entity(name='tree_top', parent=self, y=1.5, model='cube', color=color.green, selectable=True)
+            # LEVEL_EDITOR.entities.append(self.top)
+
+    # level_editor.prefabs.append(Tree)
+    # level_editor.spawner.update_menu()
+
+    # level_editor.selection = [level_editor.entities[0], ]
+    # window.center_on_screen()
+    # Sky()
