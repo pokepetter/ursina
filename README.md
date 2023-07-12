@@ -2,8 +2,7 @@
 
 <p align="center">An easy to use game engine/framework for python.</p>
 
-![Banner](/docs/made_with_ursina.jpg)
-
+<img src="/docs/made_with_ursina.jpg" alt="Banner" />
 
 ## Introduction
 
