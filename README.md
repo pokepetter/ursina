@@ -1,58 +1,64 @@
-# ursina    ʕ •ᴥ•ʔゝ□
-An easy to use game engine/framework for python.
+<h1 align="center">ʕ •ᴥ•ʔ</br>ursina</h1>
+<p align="center">An easy to use game engine/framework for python.</p>
+<hr></hr>
 
-![Banner](/docs/made_with_ursina.jpg)
+[Banner](https://github.com/tannnxr/ursina/blob/master/docs/made_with_ursina.jpg)
 
-[![Trailer](/docs/ursina_trailer_preview.webp)](https://youtu.be/j71j88oCTNo)
 
-## Getting Started
-1) Install Python 3.6 or newer. https://www.python.org/downloads/
-2) Open cmd/terminal and type:
+## Introduction
 
-```
+Thank you for choosing ursina.  Our team of developers work hard to create an intuitive game framework.  We appreciate you using and/or contributing to this project. Please open an issue, or create a pull request to start contributing.
+
+## Initial Setup
+
+1. Ensure that you have Python 3.6 or a later version installed. If not, please download it from the official Python website: https://www.python.org/downloads/
+
+2. Open your command prompt or terminal and enter the following command to install Ursina:
+
+```bash
 pip install ursina
 ```
 
+If you wish to install the most recent version of Ursina directly from the GitHub repository, use the following command:
 
-If you want to install the newest version from git, you can install like this:
-
-```
+```bash
 pip install git+https://github.com/pokepetter/ursina.git
 ```
 
+In case you need to modify the source code directly, it is advisable to clone the GitHub repository and install it as a development version. Please ensure that Git is installed on your system. You can download Git from: https://git-scm.com/
 
-If you want to easily edit the source, it's recommended to clone the git
-repo and install as develop like this. Make sure you have git installed. https://git-scm.com/
+Execute the following commands:
 
-```
+```bash
 git clone https://github.com/pokepetter/ursina.git
 python setup.py develop
 ```
 
+You may also choose to install any of the optional dependencies listed in the next section. Alternatively, you can install all optional dependencies by executing the following command:
 
-Also install any of the optional dependencies you want from the list below,
-or install them all with:
-
-```
+```bash
 pip install ursina[extras]
 ```
 
-
-On some systems you might have to use pip3 instead of pip in order to use Python 3 and not the old Python 2.
-
+Note: Some systems might require using `pip3` instead of `pip` to ensure you are using Python 3 and not Python 2.
 
 ## Dependencies
-  * python 3.6+
-  * panda3d
-  * pillow, for texture manipulation
-  * psd-tools, for converting .psd files
-  * blender, for converting .blend files
-  * pyperclip, for copy/pasting
 
+The Ursina package relies on the following dependencies:
 
-## Examples
-``` python
-from ursina import *            # this will import everything we need from ursina with just one line.
+  * Python 3.6 or later
+  * Panda3D
+  * Pillow for texture manipulation
+  * PSD-Tools for converting .psd files
+  * Blender for converting .blend files
+  * Pyperclip for copy/pasting operations
+
+## Sample Usage
+
+Here is a simple example that demonstrates the usage of Ursina:
+
+```python
+from ursina import * 
 
 app = Ursina()
 ground = Entity(
@@ -63,84 +69,80 @@ ground = Entity(
     origin = (0, .5),
     scale = (50, 1, 10),
     collider = 'box',
-    )
+)
 
-app.run()                       # opens a window and starts the game.
+app.run()
 ```
 
+Additional sample games can be found here:
 
 * [Minecraft Clone](/samples/minecraft_clone.py)
-
 * [Platformer Game](/samples/platformer.py)
 
+## Creating a Game with Ursina
 
-## How do I make a game?
-Ursina games are made by writing Python code. You can use any text editor you want, but personally I like to use Atom.
-1) Create an empty .py file called `ursina_game.py`
-2) Copy this text into your new file:
-``` python
-from ursina import *           # this will import everything we need from ursina with just one line.
+Ursina games are developed using Python code. Follow the steps below to create a simple game:
+
+1. Create a new Python file with the name `ursina_game.py`.
+2. Insert the following code into your newly created file:
+
+```python
+from ursina import *
 
 app = Ursina()
 
 player = Entity(
-    model = 'cube' ,           # finds a 3d model by name
+    model = 'cube',
     color = color.orange,
     scale_y = 2
-    )
+)
 
-def update():                  # update gets automatically called by the engine.
+def update(): 
     player.x += held_keys['d'] * .1
     player.x -= held_keys['a'] * .1
 
-
-app.run()                     # opens a window and starts the game.
+app.run()
 ```
 
-3) Type this in the terminal to start the game:
+3. Run the game by typing the following command in your terminal:
 
-       python ursina_game.py
-   If you use Atom, I recommend installing the package atom-python-run to run your scripts with the press of a button.
-
-4) You can now move the orange box around with 'a' and 'd'!
-
-   To close the window, you can by default, press shift+q or press the red x. to disable this, write `window.exit_button.enabled = False` somewhere in your code.
-
-
-## Project Structure
+```bash
+python ursina_game.py
 ```
+
+Note: If you're using Atom, we recommend installing the package atom-python-run to execute your scripts at the press of a button.
+
+4. Now, you can move the orange box around with 'a' and 'd' keys!
+
+To exit the game, press shift+q or click on the red x in the window's corner. To disable this functionality, insert `window.exit_button.enabled = False` into your code.
+
 ## Project Structure
 
+```
 📁docs
     📃index.txt
     📃documentation.txt
     📃inventory_tutorial.txt
     ...
-        # text files for the website. gets turned into .html files with sswg.
-
     📃cheat_sheet.html
-        # auto generated documentation made with documentation_generator.py.
-
     📃tutorial_generator.py
-        # turns specific .py files into .txt files, which can then be turned into .html by sswg.
-        # this extracts the comments from the source files into description for that step and the code after into code blocks.
-        # see platformer_tutorial.py for an example.
 
-📁samples               # small example games.
-
-📁ursina                # the actual ursina module.
-    📁audio                 # built-in audio clips.
-    📁editor                # the 3d level editor for ursina.
-    📁fonts                 # built-in fonts.
-    📁models                # .blend files, source files, for built-in 3d models.
-        📁procedural            # classes for generating 3d models, like Cylinder, Quad and Terrain.
-    📁models_compressed     # .blend files converted to .ursinamesh.
-    📁prefabs               # higher level classes like Draggable, Slider, Sprite, etc.
+📁samples
+📁ursina
+    📁audio
+    📁editor
+    📁fonts
+    📁models
+        📁procedural
+    📁models_compressed
+    📁prefabs
 
     📃__init__.py
     📃application.py
     📃audio.py
     ...
-        # ursina base modules, like code for Entity, input_handler, Text, window and so on.
-
 ```
+<footer>
+This project includes several folders, such as `docs` which contains the text files for the website, as well as automatically generated documentation. The `samples` folder contains small example games, and the `ursina` folder includes the Ursina module, built-in audio clips, fonts, 3D models, and higher-level classes.
+</footer>
+
