@@ -1,6 +1,7 @@
 <h1 align="center">ʕ •ᴥ•ʔ</br>ursina</h1>
+
 <p align="center">An easy to use game engine/framework for python.</p>
-<hr></hr>
+<hr>
 
 [Banner](https://github.com/tannnxr/ursina/blob/master/docs/made_with_ursina.jpg)
 
