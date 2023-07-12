@@ -2,7 +2,7 @@
 
 <p align="center">An easy to use game engine/framework for python.</p>
 
-<img src="/docs/made_with_ursina.jpg" alt="Banner" />
+<img align="center" src="/docs/made_with_ursina.jpg" alt="Banner" />
 
 ## Introduction
 
