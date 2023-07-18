@@ -296,6 +296,7 @@ class Entity(NodePath):
             value._children.append(self)
 
         self.reparent_to(value)
+        self.enabled = self._enabled   # parenting will undo the .stash() done when setting .enabled to False, so reapply it here
         self._parent = value
 
 
@@ -312,6 +313,7 @@ class Entity(NodePath):
             value._children.append(self)
 
         self.wrtReparentTo(value)
+        self.enabled = self._enabled   # parenting will undo the .stash() done when setting .enabled to False, so reapply it here
         self._parent = value
 
 
