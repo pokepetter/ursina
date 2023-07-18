@@ -62,8 +62,7 @@ def resume():
     paused = False
 
 def quit():
-    from ursina import invoke
-    invoke(sys.exit, delay=.01)
+    sys.exit()
 
 
 def load_settings(path=asset_folder / 'settings.py'):
