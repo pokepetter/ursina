@@ -10,7 +10,7 @@ Entity.default_shader = lit_with_shadows_shader
 ground = Entity(model='plane', collider='box', scale=64, texture='grass', texture_scale=(4,4))
 
 editor_camera = EditorCamera(enabled=False, ignore_paused=True)
-player = FirstPersonController(model='cube', z=-10, color=color.orange, origin_y=-.5, speed=8)
+player = FirstPersonController(model='cube', z=-10, color=color.orange, origin_y=-.5, speed=8, collider='box')
 player.collider = BoxCollider(player, Vec3(0,1,0), Vec3(1,2,1))
 
 gun = Entity(model='cube', parent=camera, position=(.5,-.25,.25), scale=(.3,.2,1), origin_z=-.5, color=color.red, on_cooldown=False)
@@ -52,6 +52,7 @@ from ursina.prefabs.health_bar import HealthBar
 class Enemy(Entity):
     def __init__(self, **kwargs):
         super().__init__(parent=shootables_parent, model='cube', scale_y=2, origin_y=-.5, color=color.light_gray, collider='box', **kwargs)
+        print('------------', self.collision)
         self.health_bar = Entity(parent=self, y=1.2, model='cube', color=color.red, world_scale=(1.5,.1,.1))
         self.max_hp = 100
         self.hp = self.max_hp
@@ -66,6 +67,7 @@ class Enemy(Entity):
 
         self.look_at_2d(player.position, 'y')
         hit_info = raycast(self.world_position + Vec3(0,1,0), self.forward, 30, ignore=(self,))
+        # print(hit_info.entity)
         if hit_info.entity == player:
             if dist > 2:
                 self.position += self.forward * time.dt * 5
