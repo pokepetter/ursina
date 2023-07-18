@@ -126,7 +126,7 @@ class LevelEditor(Entity):
 
     @edit_mode.setter
     def edit_mode(self, value):
-        print('set edito mode to', value)
+        # print('set editor mode to', value)
         if not value and self._edit_mode:
             [e.disable() for e in self.children]
             self.ui.enabled = False
@@ -143,16 +143,15 @@ class LevelEditor(Entity):
 
                 if hasattr(e, 'start') and callable(e.start):
                     e.start()
-            print('PLAY.---------------------')
 
         elif value and not self._edit_mode:
             [e.enable() for e in self.children]
             self.ui.enabled = True
             for e in self.current_scene.entities:
+                e.collider = e.editor_collider
                 if hasattr(e, 'stop') and callable(e.stop):
                     e.stop()
 
-                e.collider = e.editor_collider
 
         self._edit_mode = value
 
@@ -1166,7 +1165,7 @@ class WhiteCube(Entity):
         super().__init__(**__class__.default_values | kwargs)
 
 class ClassSpawner(Entity):
-    '''Prefab for spawing target class on play'''
+    '''Prefab for spawning target class on play'''
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.class_to_spawn = WhiteCube
@@ -1178,8 +1177,8 @@ class ClassSpawner(Entity):
         return ['class_to_spawn', ]
 
     def start(self):
-        e.enabled = False
-        e.class_instance = e.class_to_spawn(world_transform=e.world_transform, add_to_scene_entities=False)
+        self.enabled = False
+        self.class_instance = self.class_to_spawn(world_transform=self.world_transform, add_to_scene_entities=False)
 
     def stop(self):
         if self.class_instance:
