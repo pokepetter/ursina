@@ -29,7 +29,7 @@ class LevelEditor(Entity):
         self.local_global_menu.on_value_changed = self.render_selection
         self.target_fov = 90
 
-        self.sun_handler = SunHandler(parent=self)
+        self.sun_handler = SunHandler()
         self.gizmo = Gizmo()
         self.rotation_gizmo = RotationGizmo()
         self.scale_gizmo = ScaleGizmo()
@@ -43,7 +43,7 @@ class LevelEditor(Entity):
         self.selector = Selector()
         self.selection_box = SelectionBox(model=Quad(0, mode='line'), origin=(-.5,-.5,0), scale=(0,0,1), color=color.white33, mode='new')
 
-        self.prefabs = [Cube, Pyramid, PokeShape]
+        self.prefabs = [ClassSpawner, WhiteCube, TriplanarCube, Pyramid, PokeShape]
         self.spawner = Spawner()
         self.deleter = Deleter()
         self.grouper = Grouper()
@@ -62,6 +62,8 @@ class LevelEditor(Entity):
         self.inspector = Inspector()
         self.point_of_view_selector = PointOfViewSelector()
         self.help = Help()
+
+        self._edit_mode = True
 
 
     @property
@@ -111,8 +113,49 @@ class LevelEditor(Entity):
             elif key == 'y' and self.current_scene:
                 self.current_scene.undo.redo()
 
-        if self.selection and key == 't':
-            self.editor_camera.animate_position(gizmo.world_position, duration=.1, curve=curve.linear)
+        if self.selection and key == 'f':
+            self.editor_camera.animate_position(self.gizmo.world_position, duration=.1, curve=curve.linear)
+
+        if key == 'tab':
+            self.edit_mode = not self.edit_mode
+
+
+    @property
+    def edit_mode(self):
+        return self._edit_mode
+
+    @edit_mode.setter
+    def edit_mode(self, value):
+        print('set edito mode to', value)
+        if not value and self._edit_mode:
+            [e.disable() for e in self.children]
+            self.ui.enabled = False
+            for e in self.current_scene.entities:
+                # switch editor colliders out for what they should have during play
+                e.editor_collider = e.collider
+                if e.collider:
+                    e.editor_collider = e.collider.name
+
+                if hasattr(e, 'collider_type') and e.collider_type != 'None':
+                    e.collider = e.collider_type
+                else:
+                    e.collider = None
+
+                if hasattr(e, 'start') and callable(e.start):
+                    e.start()
+            print('PLAY.---------------------')
+
+        elif value and not self._edit_mode:
+            [e.enable() for e in self.children]
+            self.ui.enabled = True
+            for e in self.current_scene.entities:
+                if hasattr(e, 'stop') and callable(e.stop):
+                    e.stop()
+
+                e.collider = e.editor_collider
+
+        self._edit_mode = value
+
 
 
     def render_selection(self, update_gizmo_position=True):
@@ -248,7 +291,10 @@ class LevelEditorScene:
             for line in reader:
                 args = ', '.join([f'{key}={value}' for key, value in line.items() if value and not key=='class'])
                 # print('eval:', f'{line["class"]}(parent=self.scene_parent, {args})')
-                e = eval(f'{line["class"]}(parent=self.scene_parent, {args})')
+                try:
+                    e = eval(f'{line["class"]}(parent=self.scene_parent, {args})')
+                except Exception as e:
+                    raise Exception('Error loading scene:', self.path.name, e, 'line:\n', f'{line["class"]}(parent=self.scene_parent, {args})')
 
                 self.entities.append(e)
                 for e in self.entities:
@@ -283,7 +329,7 @@ class Undo(Entity):
         super().__init__(parent=LEVEL_EDITOR, undo_data=[], undo_index=-1)
 
     def record_undo(self, data):
-        # print('record undo:', data)
+        print('record undo:')
         self.undo_data = self.undo_data[:self.undo_index+1]
         self.undo_data.append(data)
         self.undo_index += 1
@@ -509,6 +555,8 @@ class Gizmo(Entity):
 
 
     def update(self):
+        if held_keys['r'] or held_keys['s']:
+            return
         # self.world_scale = distance(self.world_position, camera.world_position) * camera.fov * .0005
 
         for i, axis in enumerate('xyz'):
@@ -532,7 +580,7 @@ class RotationGizmo(Entity):
                 path = Circle(24).vertices
                 path.append(path[0])
                 RotationGizmo.model = Pipe(base_shape=Quad(radius=0), path=[Vec3(e)*32 for e in path])
-                RotationGizmo.model.save('rotation_gizmo_model', application.internal_models_compressed_folder)
+                RotationGizmo.model.save('rotation_gizmo_model.ursinamesh', Path('.')/'models_compressed')
 
         self.rotator = Entity(parent=LEVEL_EDITOR.gizmo)
         self.axis = Vec3(0,1,0)
@@ -654,7 +702,7 @@ class BoxGizmo(Entity):
         self.axis_name = None
 
     def input(self, key):
-        if key == 'f':
+        if key == 'a':
             [setattr(e, 'collision', True) for e in LEVEL_EDITOR.entities]
             mouse.update()
 
@@ -696,7 +744,7 @@ class BoxGizmo(Entity):
                 LEVEL_EDITOR.gizmo.subgizmos[self.axis_name].start_dragging()
 
 
-        elif key == 'f up' and self.target:
+        elif key == 'a up' and self.target:
             [setattr(e, 'collision', False) for e in LEVEL_EDITOR.entities]
             self.target.world_parent = self.target.original_parent
             self.normal = None
@@ -717,7 +765,7 @@ class BoxGizmo(Entity):
 
 
     def update(self):
-        if self.target and held_keys['f'] and self.helper and self.scaler:
+        if self.target and held_keys['a'] and self.helper and self.scaler:
             relative_position = self.helper.get_position(relative_to=self.scaler)
             value = abs(relative_position[[abs(int(e)) for e in self.normal].index(1)])
             if self.scale_from_center:
@@ -737,14 +785,14 @@ class GizmoToggler(Entity):
         self.animator = Animator({
             'w' : LEVEL_EDITOR.gizmo.arrow_parent,
             'e' : LEVEL_EDITOR.scale_gizmo,
-            'r' : LEVEL_EDITOR.rotation_gizmo,
+            'u' : LEVEL_EDITOR.rotation_gizmo,
             # 't' : box_gizmo,
 
             'q' : None,
         })
 
     def input(self, key):
-        if key in self.animator.animations:
+        if key in self.animator.animations and not mouse.left:
             self.animator.state = key
 
 
@@ -760,14 +808,14 @@ class QuickGrabber(Entity):
         self.is_dragging = False
 
     def input(self, key):
-        if held_keys['control'] or held_keys['shift'] or held_keys['alt'] or held_keys['s'] or mouse.right or mouse.middle:
+        if held_keys['control'] or held_keys['shift'] or held_keys['alt'] or held_keys['s'] or mouse.right or mouse.middle or held_keys['r']:
             return
 
         if key in 'dxyzw':
             if self.target_entity:
                 return
 
-            if key == 'w' and LEVEL_EDITOR.selection:
+            if key == 'w' and len(LEVEL_EDITOR.selection) > 1:
                 return
 
             self.target_entity = LEVEL_EDITOR.selector.get_hovered_entity()
@@ -790,7 +838,6 @@ class QuickGrabber(Entity):
                 if target_axis == 'xz':
                     self.axis_lock = [0,0,0]
 
-                self._original_mouse_traverse_target = mouse.traverse_target
                 mouse.traverse_target = self.plane
                 mouse.update()
                 self.offset_helper.position = mouse.world_point
@@ -802,10 +849,9 @@ class QuickGrabber(Entity):
 
                 self.is_dragging = True
 
-
         elif key in ('x up', 'y up', 'z up', 'd up', 'w up') and self.target_entity:
             self.is_dragging = False
-            mouse.traverse_target = self._original_mouse_traverse_target
+            mouse.traverse_target = scene
             self.target_entity.world_parent = self.target_entity.original_parent
 
             if self.target_entity.world_position != self.target_entity._original_world_position:
@@ -819,6 +865,7 @@ class QuickGrabber(Entity):
             self.plane.enabled = False
             LEVEL_EDITOR.selection = []
             LEVEL_EDITOR.render_selection()
+
 
 
     def update(self):
@@ -850,7 +897,7 @@ class QuickScaler(Entity):
 
 
     def input(self, key):
-        if held_keys['control'] or held_keys['shift'] or held_keys['alt']:
+        if held_keys['control'] or held_keys['shift'] or held_keys['alt'] or mouse.left or mouse.middle or held_keys['r'] or held_keys['d'] or held_keys['t']:
             return
 
         if (held_keys['x'] or held_keys['y'] or held_keys['z']) and key == 's':
@@ -881,14 +928,14 @@ class QuickScaler(Entity):
             if not LEVEL_EDITOR.selection:
                 LEVEL_EDITOR.selector.input('left mouse down')
 
-            invoke(self.gizmos_to_toggle[key].input, 'left mouse down', delay=1/60)
-            invoke(self.gizmos_to_toggle[key].start_dragging, delay=1/60)
+            self.gizmos_to_toggle[key].input('left mouse down')
+            self.gizmos_to_toggle[key].start_dragging()
 
 
         # print('------------', key)
-        if key.endswith(' up') and key[:-3] in self.gizmos_to_toggle.keys():
-            key = key[:-3]
-            self.gizmos_to_toggle[key].input('left mouse up')
+        if key in ('s up', 'x up', 'y up', 'z up'):
+            for e in self.gizmos_to_toggle.values():
+                e.input('left mouse up')
             # self.gizmos_to_toggle[key].drop()
             if self.clear_selection:
                 LEVEL_EDITOR.selection.clear()
@@ -897,11 +944,12 @@ class QuickScaler(Entity):
             LEVEL_EDITOR.gizmo.arrow_parent.visible = True
             LEVEL_EDITOR.scale_gizmo.visible = True
             LEVEL_EDITOR.scale_gizmo.axis = Vec3(1,1,1)
-            self.gizmos_to_toggle[key].visible_self = True
+            # self.gizmos_to_toggle[key].visible_self = True
             LEVEL_EDITOR.gizmo_toggler.animator.state = self.original_gizmo_state
 
             LEVEL_EDITOR.selector.enabled = True
             LEVEL_EDITOR.selection_box.enabled = True
+            mouse.traverse_target = scene
 
 
     def update(self):
@@ -916,7 +964,7 @@ class QuickRotator(Entity):
         super().__init__(parent=LEVEL_EDITOR)
 
     def input(self, key):
-        if held_keys['control'] or held_keys['shift'] or held_keys['alt']:
+        if held_keys['control'] or held_keys['shift'] or held_keys['alt'] or held_keys['s']:
             return
 
         if key == 'r' and len(LEVEL_EDITOR.selection) <= 1:
@@ -939,6 +987,11 @@ class QuickRotator(Entity):
             LEVEL_EDITOR.render_selection()
             self.target_entity = None
 
+    def update(self):
+        if held_keys['r'] and not held_keys['control'] and not held_keys['shift'] and mouse.velocity != Vec3(0,0,0):
+            LEVEL_EDITOR.render_selection(update_gizmo_position=False)
+            return
+
 
 class RotateRelativeToView(Entity):
     _rotation_helper = Entity(name='RotateRelativeToView_rotation_helper', add_to_scene_entities=False)
@@ -948,10 +1001,10 @@ class RotateRelativeToView(Entity):
         super().__init__(parent=LEVEL_EDITOR, **kwargs)
 
     def input(self, key):
-        if held_keys['control'] or held_keys['shift'] or held_keys['alt']:
+        if held_keys['control'] or held_keys['shift'] or held_keys['alt'] or held_keys['s'] or held_keys['r']:
             return
 
-        if key == 'c':
+        if key == 't':
             if len(LEVEL_EDITOR.selection) > 1:
                 return
 
@@ -973,7 +1026,7 @@ class RotateRelativeToView(Entity):
             self._mouse_start_x = mouse.x
             self._mouse_start_y = mouse.y
 
-        elif key == 'c up' and self.target_entity:
+        elif key == 't up' and self.target_entity:
             self.target_entity.world_parent = self._entity_original_parent
             LEVEL_EDITOR.selection.clear()
             LEVEL_EDITOR.render_selection()
@@ -982,7 +1035,7 @@ class RotateRelativeToView(Entity):
             self.y_mov = 0
 
     def update(self):
-        if self.target_entity and held_keys['c']:
+        if self.target_entity and held_keys['t']:
             __class__._rotation_helper.rotation_y -= mouse.velocity[0] * __class__.sensitivity.x / camera.aspect_ratio
             __class__._rotation_helper.rotation_x += mouse.velocity[1] * __class__.sensitivity.y
 
@@ -1105,15 +1158,42 @@ class SelectionBox(Entity):
             self.scale_y = mouse.y - self.y
 
 
-class Cube(Entity):
+
+
+class WhiteCube(Entity):
+    default_values = Entity.default_values | dict(model='cube', shader='lit_with_shadows_shader', texture='white_cube', collider='box', name='cube') # combine dicts
+    def __init__(self, **kwargs):
+        super().__init__(**__class__.default_values | kwargs)
+
+class ClassSpawner(Entity):
+    '''Prefab for spawing target class on play'''
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.class_to_spawn = WhiteCube
+        self.class_instance = None
+        self.model = 'wireframe_cube'
+        self.color = color.lime
+
+    def draw_inspector(self):
+        return ['class_to_spawn', ]
+
+    def start(self):
+        e.enabled = False
+        e.class_instance = e.class_to_spawn(world_transform=e.world_transform, add_to_scene_entities=False)
+
+    def stop(self):
+        if self.class_instance:
+            destroy(self.class_instance)
+        self.enabled = True
+
+
+
+class TriplanarCube(Entity):
     default_values = Entity.default_values | dict(model='cube', shader='triplanar_shader', texture='white_cube', collider='box', name='cube') # combine dicts
 
     def __init__(self, **kwargs):
         super().__init__(**__class__.default_values | kwargs)
         self.set_shader_input('top_texture', load_texture('brick'))
-
-    def __deepcopy__(self, memo):
-        return eval(repr(self))
 
 
 class Pyramid(Entity):
@@ -1698,6 +1778,11 @@ class Inspector(Entity):
 
                     b.on_click = toggle_value
 
+                elif callable(attr):
+                    b = InspectorButton(parent=self.shader_inputs_parent, text=f' {name}: {attr}', highlight_color=color.red, y=-i, origin=(-.5,0))
+                    b.text_entity.scale *= .6
+
+
                 elif isinstance(attr, (float, int)):
                     field = VecField(default_value=attr, parent=self.shader_inputs_parent, model='quad', scale=(1,1), x=.5, y=-i, text=f'  {name}')
                     for e in field.fields:
@@ -1958,6 +2043,22 @@ class ColliderMenu(AssetMenu):
         LEVEL_EDITOR.inspector.update_inspector()
         LEVEL_EDITOR.menu_handler.state = 'None'
 
+class ClassMenu(AssetMenu):
+    def on_enable(self):
+        self.asset_names = ['None', 'box', 'sphere', 'mesh', ]
+        super().on_enable()
+
+    def on_select_asset(self, name):
+        if name == 'None':
+            name = None
+        # LEVEL_EDITOR.current_scene.undo.record_undo([(LEVEL_EDITOR.entities.index(e), 'collider', e.texture, name) for e in LEVEL_EDITOR.selection])
+        # for e in LEVEL_EDITOR.selection:
+        #     if hasattr(e, 'class_to_spawn')
+        #     e.collider_type = name
+
+        LEVEL_EDITOR.inspector.update_inspector()
+        LEVEL_EDITOR.menu_handler.state = 'None'
+
 
 class Help(Button):
     def __init__(self, **kwargs):
@@ -1970,13 +2071,18 @@ class Help(Button):
             text=dedent('''
                 Hotkeys:
                 n:          add new cube
+
+                d:          quick drag
                 w:          move tool
-                g:          quick move
                 x/y/z:      hold to quick move on axis
-                c:          quick rotate
+
+                c:          quick rotate on y axis
+                t:          tilt
+
                 e:          scale tool
                 s:          quick scale
                 s + x/y/z:  quick scale on axis
+
                 f:          move editor camera to point
                 shift+f:    reset editor camera position
                 shift+p:    toggle perspective/orthographic
@@ -2371,7 +2477,7 @@ class PipeEditor(Entity):
 
 class SunHandler(Entity):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__(parent=LEVEL_EDITOR, **kwargs)
         self.sun = DirectionalLight(shadow_map_resolution=(2048,2048))
         self.sun.look_at(Vec3(-2,-1,-1))
 
@@ -2438,23 +2544,25 @@ def get_major_axis_relative_to_view(entity): # if we're looking at the entity fr
 
 if __name__ == '__main__':
     from ursina import *
-    from urtsina.editor.level_editor import LevelEditor
+    # from ursina.editor.level_editor import LevelEditor
 
     app = Ursina(vsync=False)
+
+    class Tree(Entity):
+        def __init__(self, **kwargs):
+            super().__init__(**kwargs)
+            self.model = 'cube'
+            self.color = color.brown
+
+            self.top = Entity(name='tree_top', parent=self, y=1.5, model='cube', color=color.green, selectable=True)
+            LEVEL_EDITOR.entities.append(self.top)
+
 
     level_editor = LevelEditor()
     level_editor.goto_scene(0,0)
 
     app.run()
 
-    # class Tree(Entity):
-    #     def __init__(self, **kwargs):
-    #         super().__init__(**kwargs)
-    #         self.model = 'cube'
-    #         self.color = color.brown
-    #
-    #         self.top = Entity(name='tree_top', parent=self, y=1.5, model='cube', color=color.green, selectable=True)
-            # LEVEL_EDITOR.entities.append(self.top)
 
     # level_editor.prefabs.append(Tree)
     # level_editor.spawner.update_menu()
