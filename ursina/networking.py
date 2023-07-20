@@ -283,7 +283,7 @@ class Peer:
         else:
             client_socket = None
             try:
-                client_socket = socket.create_connection((self.host_name, self.port))
+                client_socket = socket.create_connection((self.host_name, self.port), timeout=self.connection_timeout)
             except Exception as e:
                 self.running = False
                 return
@@ -354,7 +354,7 @@ class Peer:
 
             while True:
                 client_socket, client_address = await async_loop.sock_accept(server_socket)
-                self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+                client_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
                 self._add_connection(client_socket, client_address, async_loop)
         except asyncio.CancelledError:
             pass
@@ -472,6 +472,8 @@ class DatagramWriter:
                 self.write_int16(len(value))
                 for v in value:
                     self.write(v)
+            elif isinstance(value, bytes):
+                self.write_blob(value)
             else:
                 raise Exception("Unspported value type for DatagramWriter: {0}".format(type(value).__name__))
 
@@ -529,6 +531,9 @@ class DatagramReader:
     def get_datagram(self):
         return self.datagram
 
+    def set_datagram_from_blob(self, blob):
+        self.set_datagram(p3d.Datagram(blob))
+
     def read(self, value_type, max_list_length=1000):
         converter_func = self.read_functions.get(value_type)
         if converter_func is not None:
@@ -569,6 +574,8 @@ class DatagramReader:
                     return values
                 else:
                     raise Exception("Unspported value type for DatagramReader: {0}".format(value_type.__name__))
+            elif value_type is bytes:
+                return self.read_blob()
             else:
                 raise Exception("Unspported value type for DatagramReader: {0}".format(value_type.__name__))
 
@@ -625,16 +632,32 @@ class RPCPeer:
             connection.rpc_peer = self
             if self.print_connect:
                 print("New connection:", connection.address)
-            on_connect = self.procedures.get(procedure_hash("on_connect"))
-            if on_connect is not None:
-                on_connect[2](connection, time_connected)
+            on_connects = self.procedures.get(procedure_hash("on_connect"))
+            if on_connects is not None:
+                for on_connect in reversed(on_connects):
+                    host_only = on_connect[3]
+                    client_only = on_connect[4]
+                    if self.peer.is_hosting():
+                        if not client_only:
+                            on_connect[2](connection, time_connected)
+                    else:
+                        if not host_only:
+                            on_connect[2](connection, time_connected)
 
         def default_on_disconnect(connection, time_disconnected):
             if self.print_disconnect:
                 print("Disconnected:", connection.address)
-            on_disconnect = self.procedures.get(procedure_hash("on_disconnect"))
-            if on_disconnect is not None:
-                on_disconnect[2](connection, time_disconnected)
+            on_disconnects = self.procedures.get(procedure_hash("on_disconnect"))
+            if on_disconnects is not None:
+                for on_disconnect in reversed(on_disconnects):
+                    host_only = on_disconnect[3]
+                    client_only = on_disconnect[4]
+                    if self.peer.is_hosting():
+                        if not client_only:
+                            on_disconnect[2](connection, time_disconnected)
+                    else:
+                        if not host_only:
+                            on_disconnect[2](connection, time_disconnected)
 
         def on_data(connection, data, time_received):
             self.rpc_on_data(connection, data, time_received)
@@ -646,6 +669,8 @@ class RPCPeer:
         self.peer.on_data = on_data
 
         self.procedures = dict()
+        self.procedures[procedure_hash("on_connect")] = []
+        self.procedures[procedure_hash("on_disconnect")] = []
 
         self.writer = DatagramWriter()
         self.reader = DatagramReader()
@@ -696,8 +721,12 @@ class RPCPeer:
         if prefix is not None:
             proc_name = prefix + "_" + proc_name
         procedure_name_hash = procedure_hash(proc_name)
-        assert procedure_name_hash not in self.procedures, "{} was already registered before.".format(proc_name)
-        self.procedures[procedure_name_hash] = (proc_name, arg_types, proc, host_only, client_only)
+        if proc.__name__ in ("on_connect", "on_disconnect"):
+            p = self.procedures.get(procedure_name_hash)
+            p.append((proc_name, arg_types, proc, host_only, client_only))
+        else:
+            assert procedure_name_hash not in self.procedures, "{} was already registered before.".format(proc_name)
+            self.procedures[procedure_name_hash] = (proc_name, arg_types, proc, host_only, client_only)
 
     def __getattr__(self, name):
         def remote_procedure(*args):
@@ -720,6 +749,8 @@ class RPCPeer:
         proc_func = None
         proc_arg_values = None
         proc_arg_types = None
+        host_only = False
+        client_only = False
 
         try:
             procedure_name_hash = self.reader.read_int32()
@@ -731,8 +762,6 @@ class RPCPeer:
             proc_func = proc[2]
             host_only = proc[3]
             client_only = proc[4]
-            if (host_only and not self.peer.is_hosting()) or (client_only and self.peer.is_hosting()):
-                raise Exception("Remote attempted to call '{}' that is restricted to host only or client only.".format(proc_name))
             proc_arg_values = []
             arg_type = None
             try:
@@ -742,8 +771,8 @@ class RPCPeer:
                     proc_arg_values.append(v)
             except ExceedsListLimitException:
                 raise Exception("Argument with type '{}' exceeds max list size limit for procedure '{}'.".format(arg_type, proc_name))
-            except:
-                raise Exception("Received invalid or missing argument or list/tuple exceeding max length allowed for procedure '{}', expected a '{}'.".format(proc_name, arg_type))
+            except Exception as e:
+                raise Exception("Received invalid or missing argument or list/tuple exceeding max length allowed for procedure '{}', expected a '{}'.\n    {}".format(proc_name, arg_type, str(e)))
         except Exception as e:
             print("WARNING: Received invalid remote procedure call, disconnecting...")
             print(e)
@@ -755,7 +784,12 @@ class RPCPeer:
                 print("Received an invalid number of arguments for procedure '{}'.".format(proc_name))
                 connection.disconnect()
             else:
-                proc_func(connection, time_received, *proc_arg_values)
+                if self.peer.is_hosting():
+                    if not client_only:
+                        proc_func(connection, time_received, *proc_arg_values)
+                else:
+                    if not host_only:
+                        proc_func(connection, time_received, *proc_arg_values)
 
 
 # Convenience attribute applied to functions to register them as remote procedure calls.
