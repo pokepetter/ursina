@@ -230,6 +230,8 @@ def on_disconnect(connection, time_disconnected):
             del uuid_to_bear[bear.state.uuid]
         bears.clear()
         my_bear_uuid = None
+        if connection.is_timed_out():
+            print("\tConnection timed out.")
 
 
 @rpc(peer)
@@ -351,9 +353,6 @@ def host():
     h = host_input_field.text
     port = 8080
     
-    if h == "":
-        h = "localhost"
-
     peer.start(h, port, is_host=True)
     host_input_field.enabled = False
     host_button.enabled = False
@@ -365,9 +364,6 @@ def join():
     h = host_input_field.text
     port = 8080
     
-    if h == "":
-        h = "localhost"
-
     peer.start(h, port, is_host=False)
     host_input_field.enabled = False
     host_button.disabled = True

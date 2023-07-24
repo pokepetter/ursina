@@ -116,7 +116,6 @@ class Peer:
         self.input_event_queue = deque()
 
         self.socket = None
-        self.secure_socket = None
         self.host_name = None
         self.tls_host_name = None
         self.port = None
@@ -132,6 +131,9 @@ class Peer:
         self.listen_task = None
 
         self.main_thread_sleep_time = 0.001
+        self.ssl_handshake_sleep_time = 0.0001
+        self.recv_ssl_sleep_time = 0.0001
+        self.recv_unavailable_sleep_time = 0.0001
 
         def on_application_exit():
             if self.running:
@@ -176,6 +178,8 @@ class Peer:
 
         self.host_name = host_name
         self.tls_host_name = tls_host_name
+        if self.tls_host_name is None and self.use_tls:
+            self.tls_host_name = self.host_name
         self.port = port
         self.backlog = backlog
         self.is_host = is_host
@@ -265,36 +269,30 @@ class Peer:
                 self.socket.listen(self.backlog)
                 self.socket.setblocking(False)
             except Exception as e:
+                print(e)
                 self.running = False
                 raise
             
-            if self.use_tls:
-                try:
-                    self.secure_socket = self.ssl_context.wrap_socket(self.socket, server_side=True)
-                except Exception as e:
-                    try:
-                        self.socket.close()
-                    except:
-                        pass
-                    self.running = False
-                    raise
-
             self.listen_task = asyncio.create_task(self._listen(async_loop))
         else:
             client_socket = None
+            if self.use_tls:
+                try:
+                    self.socket = socket.socket(self.socket_address_family, socket.SOCK_STREAM, 0)
+                    client_socket = self.ssl_context.wrap_socket(self.socket, server_hostname=self.tls_host_name)
+                    client_socket.connect((self.host_name, self.port))
+                except Exception as e:
+                    print(e)
+                    self.running = False
+                    return
+            else:
+                try:
+                    client_socket = socket.create_connection((self.host_name, self.port))
+                except Exception as e:
+                    print(e)
+                    self.running = False
+                    return
             try:
-                client_socket = socket.create_connection((self.host_name, self.port), timeout=self.connection_timeout)
-            except Exception as e:
-                self.running = False
-                return
-            try:
-                if self.use_tls:
-                    try:
-                        secure_socket = self.ssl_context.wrap_socket(client_socket, server_hostname=self.tls_host_name)
-                        client_socket = secure_socket
-                    except Exception as e:
-                        print(e)
-                        raise e
                 client_socket.setblocking(False)
                 client_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
                 self._add_connection(client_socket, (self.host_name, self.port), async_loop)
@@ -348,29 +346,56 @@ class Peer:
 
     async def _listen(self, async_loop): 
         try:
-            server_socket = self.socket
-            if self.use_tls:
-                server_socket = self.secure_socket
-
             while True:
-                client_socket, client_address = await async_loop.sock_accept(server_socket)
+                client_socket, client_address = await async_loop.sock_accept(self.socket)
+                if self.use_tls:
+                    try:
+                        client_socket = self.ssl_context.wrap_socket(client_socket, server_side=True, do_handshake_on_connect=False)
+                    except Exception as e:
+                        try:
+                            client_socket.close()
+                        except:
+                            pass
+                    while True:
+                        try:
+                            client_socket.do_handshake()
+                            break
+                        except ssl.SSLWantReadError as e:
+                            await asyncio.sleep(self.ssl_handshake_sleep_time)
+                        except ssl.SSLWantWriteError as e:
+                            await asyncio.sleep(self.ssl_handshake_sleep_time)
+                        except Exception as e:
+                            try:
+                                client_socket.close()
+                            except:
+                                pass
+                client_socket.setblocking(False)
                 client_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
                 self._add_connection(client_socket, client_address, async_loop)
         except asyncio.CancelledError:
             pass
         finally:
             try:
-                if self.use_tls:
-                    self.secure_socket.close()
-            except:
-                pass
-            try:
                 self.socket.close()
             except:
                 pass
 
     async def _recv(self, connection, async_loop):
-        return await async_loop.sock_recv(connection.socket, connection.expected_byte_count)
+        data = None
+        while True:
+            try:
+                data = connection.socket.recv(connection.expected_byte_count)
+                break
+            except ssl.SSLWantReadError:
+                await asyncio.sleep(self.recv_ssl_sleep_time)
+            except ssl.SSLWantWriteError:
+                await asyncio.sleep(self.recv_ssl_sleep_time)
+            except BlockingIOError:
+                await asyncio.sleep(self.recv_unavailable_sleep_time)
+            except Exception as e:
+                raise
+        #return await async_loop.sock_recv(connection.socket, connection.expected_byte_count)
+        return data
 
     async def _receive(self, connection, async_loop):
         try:
@@ -384,7 +409,8 @@ class Peer:
                 except asyncio.exceptions.TimeoutError:
                     connection.timed_out = True
                     raise
-                except:
+                except Exception as e:
+                    print(e)
                     raise
                 if data is None:
                     break
