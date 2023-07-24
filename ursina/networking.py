@@ -349,26 +349,36 @@ class Peer:
             while True:
                 client_socket, client_address = await async_loop.sock_accept(self.socket)
                 if self.use_tls:
+                    socket_wrap_failed = True
                     try:
                         client_socket = self.ssl_context.wrap_socket(client_socket, server_side=True, do_handshake_on_connect=False)
+                        socket_wrap_failed = False
                     except Exception as e:
+                        pass
+                    if socket_wrap_failed:
                         try:
                             client_socket.close()
                         except:
                             pass
+                        continue
+                    handshake_failed = True
                     while True:
                         try:
                             client_socket.do_handshake()
+                            handshake_failed = False
                             break
                         except ssl.SSLWantReadError as e:
                             await asyncio.sleep(self.ssl_handshake_sleep_time)
                         except ssl.SSLWantWriteError as e:
                             await asyncio.sleep(self.ssl_handshake_sleep_time)
                         except Exception as e:
-                            try:
-                                client_socket.close()
-                            except:
-                                pass
+                            break
+                    if handshake_failed:
+                        try:
+                            client_socket.close()
+                        except:
+                            pass
+                        continue
                 client_socket.setblocking(False)
                 client_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
                 self._add_connection(client_socket, client_address, async_loop)
