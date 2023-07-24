@@ -797,6 +797,11 @@ class Entity(NodePath):
             self.model.clearTexture()
             self._texture = None
             return
+            
+        if value.__class__ is MovieTexture:
+            self._texture = value
+            self.model.setTexture(value, 1)
+            return
 
         if value.__class__ is Texture:
             texture = value
