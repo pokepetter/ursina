@@ -26,6 +26,7 @@ class FirstPersonController(Entity):
 
         self.traverse_target = scene     # by default, it will collide with everything. change this to change the raycasts' traverse targets.
         self.ignore_list = [self, ]
+        self.on_destroy = self.on_disable
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
