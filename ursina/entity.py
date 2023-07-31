@@ -199,55 +199,60 @@ class Entity(NodePath):
 
         self._enabled = value
 
+    @property
+    def model(self):
+        return self._model
+
+    @model.setter
+    def model(self, value):
+        if value is None:
+            if hasattr(self, 'model') and self.model:
+                self.model.removeNode()
+                # print('removed model')
+            self._model = value
+            return
+
+        if isinstance(value, NodePath): # pass procedural model
+            if self.model is not None and value != self.model:
+                self.model.detachNode()
+            self._model = value
+
+        elif isinstance(value, str): # pass model asset name
+            m = load_model(value, application.asset_folder)
+            if not m:
+                m = load_model(value, application.internal_models_compressed_folder)
+            if m:
+                if self.model is not None:
+                    self.model.removeNode()
+
+                m.name = value
+                m.setPos(Vec3(0,0,0))
+                self._model = m
+                # if not value in mesh_importer.imported_meshes:
+                #     print_info('loaded model successfully:', value)
+            else:
+                if application.raise_exception_on_missing_model:
+                    raise ValueError(f"missing model: '{value}'")
+
+                print_warning(f"missing model: '{value}'")
+                return
+
+        if self.model:
+            self.model.reparentTo(self)
+            self.model.setTransparency(TransparencyAttrib.M_dual)
+            self.color = self.color # reapply color after changing model
+            self.texture = self.texture # reapply texture after changing model
+            self._vert_cache = None
+            if isinstance(value, Mesh):
+                if hasattr(value, 'on_assign'):
+                    value.on_assign(assigned_to=self)
+
+
 
     def __setattr__(self, name, value):
         if name == 'eternal':
             for c in self.children:
                 c.eternal = value
-
-        if name == 'model':
-            if value is None:
-                if hasattr(self, 'model') and self.model:
-                    self.model.removeNode()
-                    # print('removed model')
-                object.__setattr__(self, name, value)
-                return None
-
-            if isinstance(value, NodePath): # pass procedural model
-                if self.model is not None and value != self.model:
-                    self.model.detachNode()
-                object.__setattr__(self, name, value)
-
-            elif isinstance(value, str): # pass model asset name
-                m = load_model(value, application.asset_folder)
-                if not m:
-                    m = load_model(value, application.internal_models_compressed_folder)
-                if m:
-                    if self.model is not None:
-                        self.model.removeNode()
-
-                    m.name = value
-                    m.setPos(Vec3(0,0,0))
-                    object.__setattr__(self, name, m)
-                    # if not value in mesh_importer.imported_meshes:
-                    #     print_info('loaded model successfully:', value)
-                else:
-                    if application.raise_exception_on_missing_model:
-                        raise ValueError(f"missing model: '{value}'")
-
-                    print_warning(f"missing model: '{value}'")
-                    return
-
-            if self.model:
-                self.model.reparentTo(self)
-                self.model.setTransparency(TransparencyAttrib.M_dual)
-                self.color = self.color # reapply color after changing model
-                self.texture = self.texture # reapply texture after changing model
-                self._vert_cache = None
-                if isinstance(value, Mesh):
-                    if hasattr(value, 'on_assign'):
-                        value.on_assign(assigned_to=self)
-            return
 
         elif name == 'color' and value is not None:
             if isinstance(value, str):
