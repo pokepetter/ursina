@@ -50,24 +50,23 @@ def raycast(origin, direction:Vec3=(0,0,1), distance=inf, traverse_target:Entity
     entries = _raycaster._pq.getEntries()
     entities = [e.get_into_node_path().parent for e in entries]
 
-    _raycaster.entries = [        # filter out ignored entities
+    entries = [        # filter out ignored entities
         e for i, e in enumerate(entries)
         if entities[i] in scene.collidables
         and entities[i] not in ignore
         and ursinamath.distance(_raycaster.world_position, e.get_surface_point(render)) <= distance
         ]
 
-    if len(_raycaster.entries) == 0:
-        hit_info = HitInfo(hit=False, distance=distance)
-        return hit_info
+    if len(entries) == 0:
+        return HitInfo(hit=False)
 
-    _raycaster.collision = _raycaster.entries[0]
+    _raycaster.collision = entries[0]
     nP = _raycaster.collision.get_into_node_path().parent
     point = Vec3(*_raycaster.collision.get_surface_point(nP))
     world_point = Vec3(*_raycaster.collision.get_surface_point(render))
 
     hit_info = HitInfo(hit=True)
-    hit_info.entities = [e.get_into_node_path().parent for e in _raycaster.entries]
+    hit_info.entities = [e.get_into_node_path().parent.getPythonTag('Entity') for e in entries]
     hit_info.entity = hit_info.entities[0]
 
     hit_info.point = point
@@ -108,6 +107,8 @@ if __name__ == '__main__':
             hit_info = raycast(origin , self.direction, ignore=(self,), distance=.5, debug=False)
             if not hit_info.hit:
                 self.position += self.direction * 5 * time.dt
+            else:
+                print(hit_info.entity)
 
     Player(model='cube', origin_y=-.5, color=color.orange)
     wall_left = Entity(model='cube', collider='box', scale_y=3, origin_y=-.5, color=color.azure, x=-4)

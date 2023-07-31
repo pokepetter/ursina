@@ -82,6 +82,7 @@ class Entity(NodePath):
 
         self.collision = False  # toggle collision without changing collider.
         self._collider = None
+        self.setPythonTag('Entity', self)   # for the raycast to get the Entity and not just the NodePath
         self.collider = None    # set to 'box'/'sphere'/'capsule'/'mesh' for auto fitted collider.
         self.scripts = []   # add with add_script(class_instance). will assign an 'entity' variable to the script.
         self.animations = []
