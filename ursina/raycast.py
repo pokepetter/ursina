@@ -28,9 +28,8 @@ _raycaster._pickerNode.addSolid(_ray)
 
 
 def raycast(origin, direction:Vec3=(0,0,1), distance=inf, traverse_target:Entity=scene, ignore:list=None, debug=False, color=color.white):
-    _ignore = [e for e in scene.entities if not e.collision]
-    if ignore:
-        _ignore.extend(ignore)
+    if not ignore:
+        ignore = []
 
     _raycaster.position = origin
     _raycaster.look_at(_raycaster.position + direction)
@@ -40,7 +39,7 @@ def raycast(origin, direction:Vec3=(0,0,1), distance=inf, traverse_target:Entity
         temp.look_at(_raycaster.position + direction)
         destroy(temp, 1/30)
 
-    _raycaster._picker.traverse(traverse_target)
+    _raycaster._picker.traverse(traverse_target)      #HALF!
 
     if _raycaster._pq.get_num_entries() == 0:
         _raycaster.hit = HitInfo(hit=False, distance=distance)
@@ -48,41 +47,37 @@ def raycast(origin, direction:Vec3=(0,0,1), distance=inf, traverse_target:Entity
 
 
     _raycaster._pq.sort_entries()
+    entries = _raycaster._pq.getEntries()
+    entities = [e.get_into_node_path().parent for e in entries]
+
     _raycaster.entries = [        # filter out ignored entities
-        e for e in _raycaster._pq.getEntries()
-        if e.get_into_node_path().parent not in _ignore
-        and ursinamath.distance(_raycaster.world_position, Vec3(*e.get_surface_point(render))) <= distance
+        e for i, e in enumerate(entries)
+        if entities[i] in scene.collidables
+        and entities[i] not in ignore
+        and ursinamath.distance(_raycaster.world_position, e.get_surface_point(render)) <= distance
         ]
 
     if len(_raycaster.entries) == 0:
-        _raycaster.hit = HitInfo(hit=False, distance=distance)
-        return _raycaster.hit
+        hit_info = HitInfo(hit=False, distance=distance)
+        return hit_info
 
     _raycaster.collision = _raycaster.entries[0]
     nP = _raycaster.collision.get_into_node_path().parent
     point = Vec3(*_raycaster.collision.get_surface_point(nP))
     world_point = Vec3(*_raycaster.collision.get_surface_point(render))
-    hit_dist = ursinamath.distance(_raycaster.world_position, world_point)
 
+    hit_info = HitInfo(hit=True)
+    hit_info.entities = [e.get_into_node_path().parent for e in _raycaster.entries]
+    hit_info.entity = hit_info.entities[0]
 
-    _raycaster.hit = HitInfo(hit=True, distance=distance)
-    for e in scene.entities:
-        if e == nP:
-            _raycaster.hit.entity = e
+    hit_info.point = point
+    hit_info.world_point = world_point
+    hit_info.distance = ursinamath.distance(_raycaster.world_position, hit_info.world_point)
 
-    nPs = [e.get_into_node_path().parent for e in _raycaster.entries]
-    _raycaster.hit.entities = [e for e in scene.entities if e in nPs]
+    hit_info.normal = Vec3(*_raycaster.collision.get_surface_normal(_raycaster.collision.get_into_node_path().parent).normalized())
+    hit_info.world_normal = Vec3(*_raycaster.collision.get_surface_normal(render).normalized())
 
-    _raycaster.hit.point = point
-    _raycaster.hit.world_point = world_point
-    _raycaster.hit.distance = hit_dist
-
-    _raycaster.hit.normal = Vec3(*_raycaster.collision.get_surface_normal(_raycaster.collision.get_into_node_path().parent).normalized())
-    _raycaster.hit.world_normal = Vec3(*_raycaster.collision.get_surface_normal(render).normalized())
-    return _raycaster.hit
-
-    _raycaster.hit = HitInfo(hit=False, distance=distance)
-    return _raycaster.hit
+    return hit_info
 
 
 if __name__ == '__main__':
@@ -100,26 +95,26 @@ if __name__ == '__main__':
     Example where we only move if a wall is not hit:
     '''
 
-    #
-    # class Player(Entity):
-    #
-    #     def update(self):
-    #         self.direction = Vec3(
-    #             self.forward * (held_keys['w'] - held_keys['s'])
-    #             + self.right * (held_keys['d'] - held_keys['a'])
-    #             ).normalized()  # get the direction we're trying to walk in.
-    #
-    #         origin = self.world_position + (self.up*.5) # the ray should start slightly up from the ground so we can walk up slopes or walk over small objects.
-    #         hit_info = raycast(origin , self.direction, ignore=(self,), distance=.5, debug=False)
-    #         if not hit_info.hit:
-    #             self.position += self.direction * 5 * time.dt
-    #
-    # Player(model='cube', origin_y=-.5, color=color.orange)
-    # wall_left = Entity(model='cube', collider='box', scale_y=3, origin_y=-.5, color=color.azure, x=-4)
-    # wall_right = duplicate(wall_left, x=4)
-    # camera.y = 2
-    # app.run()
-    #
+
+    class Player(Entity):
+
+        def update(self):
+            self.direction = Vec3(
+                self.forward * (held_keys['w'] - held_keys['s'])
+                + self.right * (held_keys['d'] - held_keys['a'])
+                ).normalized()  # get the direction we're trying to walk in.
+
+            origin = self.world_position + (self.up*.5) # the ray should start slightly up from the ground so we can walk up slopes or walk over small objects.
+            hit_info = raycast(origin , self.direction, ignore=(self,), distance=.5, debug=False)
+            if not hit_info.hit:
+                self.position += self.direction * 5 * time.dt
+
+    Player(model='cube', origin_y=-.5, color=color.orange)
+    wall_left = Entity(model='cube', collider='box', scale_y=3, origin_y=-.5, color=color.azure, x=-4)
+    wall_right = duplicate(wall_left, x=4)
+    camera.y = 2
+    app.run()
+
     # # test
     # # breakpoint()
     # d = Entity(parent=scene, position=(0,0,2), model='cube', color=color.orange, collider='box', scale=2)
@@ -152,11 +147,7 @@ if __name__ == '__main__':
     #     else:
     #         d.color = color.orange
 
-    ray = raycast(Vec3(0), Vec3(0,0,1), 3, debug=True)
-    t = time.time()
     # ray = raycast(e.world_position, e.forward, 3, debug=True)
-    print(time.time() - t)
-    # raycast((0,0,-2), (0,0,1), 5, debug=False)
 
     EditorCamera()
     app.run()

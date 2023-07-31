@@ -415,12 +415,17 @@ class Entity(NodePath):
     def collision(self, value):
         self._collision = value
         if not hasattr(self, 'collider') or not self.collider:
+            if self in scene.collidables:
+                scene.collidables.remove(self)
             return
 
         if value:
             self.collider.node_path.unstash()
+            scene.collidables.add(self)
         else:
             self.collider.node_path.stash()
+            if self in scene.collidables:
+                scene.collidables.remove(self)
 
     @property
     def origin(self):
