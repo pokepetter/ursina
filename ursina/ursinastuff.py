@@ -61,10 +61,7 @@ def destroy(entity, delay=0):
         _destroy(entity)
         return
 
-    s = Sequence(
-        Wait(delay),
-        Func(_destroy, entity)
-    )
+    s = Sequence(Wait(delay), Func(_destroy, entity))
     s.start()
     return s
 
@@ -82,7 +79,7 @@ def _destroy(entity, force_destroy=False):
     if entity.collider:
         entity.collider.remove()
 
-    if hasattr(entity, 'stop'):
+    if hasattr(entity, 'clip') and hasattr(entity, 'stop'): # stop audio
         entity.stop(False)
 
     if hasattr(entity, 'on_destroy'):
