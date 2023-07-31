@@ -22,10 +22,10 @@ class LevelEditor(Entity):
         self.cubes = [Entity(wireframe=True, color=color.azure, parent=self, enabled=True) for i in range(128)] # max selection
 
         self.origin_mode_menu = ButtonGroup(['last', 'center', 'individual'], min_selection=1, position=window.top, parent=self.ui)
-        self.origin_mode_menu.scale *= .75
+        self.origin_mode_menu.scale *= .5
         self.origin_mode_menu.on_value_changed = self.render_selection
         self.local_global_menu = ButtonGroup(['local', 'global'], default='global', min_selection=1, position=window.top - Vec2(.2,0), parent=self.ui)
-        self.local_global_menu.scale *= .75
+        self.local_global_menu.scale *= .5
         self.local_global_menu.on_value_changed = self.render_selection
         self.target_fov = 90
 
@@ -56,6 +56,7 @@ class LevelEditor(Entity):
         self.color_menu = ColorMenu()
         self.shader_menu = ShaderMenu()
         self.collider_menu = ColliderMenu()
+        self.class_menu = ClassMenu()
         self.menu_handler = MenuHandler()
         self.right_click_menu = RightClickMenu()
         self.hierarchy_list = HierarchyList()
@@ -126,9 +127,13 @@ class LevelEditor(Entity):
 
     @edit_mode.setter
     def edit_mode(self, value):
-        # print('set editor mode to', value)
-        if not value and self._edit_mode:
-            [e.disable() for e in self.children]
+        if not value and self._edit_mode:   # enter play mode
+            for e in self.children:
+                e.ignore = True
+                e.visible = False
+
+            self.editor_camera.original_target_z = self.editor_camera.target_z
+            self.editor_camera.enabled = False
             self.ui.enabled = False
             for e in self.current_scene.entities:
                 # switch editor colliders out for what they should have during play
@@ -144,17 +149,23 @@ class LevelEditor(Entity):
                 if hasattr(e, 'start') and callable(e.start):
                     e.start()
 
-        elif value and not self._edit_mode:
-            [e.enable() for e in self.children]
+        elif value and not self._edit_mode: # back to editor mode
             self.ui.enabled = True
             for e in self.current_scene.entities:
-                e.collider = e.editor_collider
                 if hasattr(e, 'stop') and callable(e.stop):
                     e.stop()
+                e.collider = e.editor_collider
 
+            for e in self.children:
+                e.ignore = False
+                e.visible = True
+
+            self.editor_camera.enabled = True
+            self.editor_camera.target_z = self.editor_camera.original_target_z
+            camera.z = self.editor_camera.target_z
 
         self._edit_mode = value
-
+        # print('set edit mode to', value)
 
 
     def render_selection(self, update_gizmo_position=True):
@@ -162,7 +173,6 @@ class LevelEditor(Entity):
             if e == None:
                 print(f'error in entities {i}, is {e}')
                 self.entities.remove(e)
-
 
         # self.point_renderer.model.vertices = [e.world_position for e in self.entities if e.selectable and not e.model ]
         self.point_renderer.model.vertices.clear()
@@ -300,6 +310,10 @@ class LevelEditorScene:
                     if not e.shader:
                         e.shader = lit_with_shadows_shader
                     e.selectable = True
+
+                    if not hasattr(e, 'collider_type'):
+                        e.collider_type = None
+
                     e.original_parent = e.parent
                     if e.model.name == 'cube':
                         e.collider = 'box'
@@ -849,21 +863,27 @@ class QuickGrabber(Entity):
                 self.is_dragging = True
 
         elif key in ('x up', 'y up', 'z up', 'd up', 'w up') and self.target_entity:
-            self.is_dragging = False
-            mouse.traverse_target = scene
-            self.target_entity.world_parent = self.target_entity.original_parent
+            self.drop()
 
-            if self.target_entity.world_position != self.target_entity._original_world_position:
-                changes = []
-                for e in LEVEL_EDITOR.selection:
-                    changes.append([LEVEL_EDITOR.entities.index(e), 'world_position', e._original_world_position, e.world_position])
+    def drop(self):
+        self.is_dragging = False
+        mouse.traverse_target = scene
+        self.target_entity.world_parent = self.target_entity.original_parent
 
-                LEVEL_EDITOR.current_scene.undo.record_undo(changes)
+        if self.target_entity.world_position != self.target_entity._original_world_position:
+            changes = []
+            for e in LEVEL_EDITOR.selection:
+                changes.append([LEVEL_EDITOR.entities.index(e), 'world_position', e._original_world_position, e.world_position])
 
-            self.target_entity = None
-            self.plane.enabled = False
-            LEVEL_EDITOR.selection = []
-            LEVEL_EDITOR.render_selection()
+            LEVEL_EDITOR.current_scene.undo.record_undo(changes)
+
+        self.target_entity = None
+        self.plane.enabled = False
+        LEVEL_EDITOR.selection = []
+        LEVEL_EDITOR.render_selection()
+
+    def on_disable(self):
+        self.drop()
 
 
 
@@ -1048,6 +1068,7 @@ class Selector(Entity):
     def input(self, key):
         if key == 'left mouse down':
             if mouse.hovered_entity:
+                # print('sroifjseofisjeoij')
                 return
 
             clicked_entity = self.get_hovered_entity()
@@ -1164,27 +1185,34 @@ class WhiteCube(Entity):
     def __init__(self, **kwargs):
         super().__init__(**__class__.default_values | kwargs)
 
+    def __deepcopy__(self, memo):
+        return eval(repr(self))
+
+
 class ClassSpawner(Entity):
+    default_values = Entity.default_values | dict(class_to_spawn=None, model='wireframe_cube', color=color.blue, name='ClassSpawner') # combine dicts
     '''Prefab for spawning target class on play'''
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.class_to_spawn = WhiteCube
+        super().__init__(**__class__.default_values | kwargs)
         self.class_instance = None
-        self.model = 'wireframe_cube'
-        self.color = color.lime
 
     def draw_inspector(self):
-        return ['class_to_spawn', ]
+        return {'class_to_spawn': type}
 
     def start(self):
         self.enabled = False
-        self.class_instance = self.class_to_spawn(world_transform=self.world_transform, add_to_scene_entities=False)
+        if self.class_to_spawn:
+            print('spawn class', self.class_to_spawn)
+            self.class_instance = self.class_to_spawn(world_transform=self.world_transform, add_to_scene_entities=False)
 
     def stop(self):
         if self.class_instance:
             destroy(self.class_instance)
+            self.class_instance = None
         self.enabled = True
 
+    def __deepcopy__(self, memo):
+        return eval(repr(self))
 
 
 class TriplanarCube(Entity):
@@ -1194,6 +1222,9 @@ class TriplanarCube(Entity):
         super().__init__(**__class__.default_values | kwargs)
         self.set_shader_input('top_texture', load_texture('brick'))
 
+    def __deepcopy__(self, memo):
+        return eval(repr(self))
+
 
 class Pyramid(Entity):
     default_values = Entity.default_values | dict(name='pyramid', model=Cone(4), texture='brick') # combine dicts
@@ -1201,12 +1232,18 @@ class Pyramid(Entity):
     def __init__(self, **kwargs):
         super().__init__(**__class__.default_values | kwargs)
 
+    def __deepcopy__(self, memo):
+        return eval(repr(self))
+
 
 class Rock(Entity):
     default_values = Entity.default_values | dict(name='rock', model='procedural_rock_0', collider='box', color=hsv(20,.2,.45)) # combine dicts
     gizmo_color = color.brown
     def __init__(self, **kwargs):
         super().__init__(**__class__.default_values | kwargs)
+
+    def __deepcopy__(self, memo):
+        return eval(repr(self))
 
 
 class Spawner(Entity):
@@ -1701,17 +1738,18 @@ class Inspector(Entity):
             self.transform_fields[i].text_field.text_entity.text = str(round(getattr(self.selected_entity, attr_name),4))
 
         for name in ('model', 'texture', 'collider_type', 'shader'):
-            field_values = [getattr(e, name) for e in LEVEL_EDITOR.selection if hasattr(e, name)]
-            field_values = [str(e) for e in field_values]
-            field_values = tuple(set(field_values))
-            # print('mmmmmmm', self.selected_entity.model.name, field_values)
-            # if not field_values:
-            #     break
+            unique_field_values = tuple(set([getattr(e, name) for e in LEVEL_EDITOR.selection if hasattr(e, name)]))
+            if unique_field_values == ():
+                text = '*error*'
 
-            if len(field_values) == 1:
-                self.fields[name].text_entity.text = (f'{name[0]}:{field_values[0]}')
+            elif len(unique_field_values) == 1: # all selected entities has the same value, so draw that
+                text = unique_field_values[0]
+                if hasattr(text, 'name'):
+                    text = text.name
             else:
-                self.fields[name].text_entity.text = f'{name[0]}: -----'
+                text = '--- mixed ---'
+
+            self.fields[name].text_entity.text = (f'{name[0]}:{text}')
 
         [destroy(e) for e in self.shader_inputs_parent.children]
         from ursina.prefabs.vec_field import VecField
@@ -1760,7 +1798,7 @@ class Inspector(Entity):
             divider = Entity(parent=self.shader_inputs_parent, model='quad', collider='box', origin=(-.5,.5), scale=(1,.5), color=color.black90, y=-i)
             i += 1
             # print('-------------', self.selected_entity.draw_inspector())
-            for name in self.selected_entity.draw_inspector():
+            for name, _type in self.selected_entity.draw_inspector().items():
                 if not hasattr(self.selected_entity, name):
                     continue
                 attr = getattr(self.selected_entity, name)
@@ -1777,12 +1815,7 @@ class Inspector(Entity):
 
                     b.on_click = toggle_value
 
-                elif callable(attr):
-                    b = InspectorButton(parent=self.shader_inputs_parent, text=f' {name}: {attr}', highlight_color=color.red, y=-i, origin=(-.5,0))
-                    b.text_entity.scale *= .6
-
-
-                elif isinstance(attr, (float, int)):
+                elif _type in (float, int):
                     field = VecField(default_value=attr, parent=self.shader_inputs_parent, model='quad', scale=(1,1), x=.5, y=-i, text=f'  {name}')
                     for e in field.fields:
                         e.text_field.scale *= .6
@@ -1795,6 +1828,15 @@ class Inspector(Entity):
                             setattr(e, name, field.value)
 
                     field.on_value_changed = on_submit
+
+                elif isinstance(_type, type):
+                    text = attr
+                    if hasattr(attr, 'name'):
+                        text = attr.__name__
+
+                    b = InspectorButton(parent=self.shader_inputs_parent, text=f' {name}: {text}', y=-i, origin=(-.5,0))
+                    b.text_entity.scale *= .6
+                    b.on_click = Func(setattr, LEVEL_EDITOR.menu_handler, 'state', 'class_menu')
 
                 i += 1
 
@@ -1810,7 +1852,8 @@ class MenuHandler(Entity):
             'texture_menu' : LEVEL_EDITOR.texture_menu,
             'shader_menu' : LEVEL_EDITOR.shader_menu,
             'color_menu' : LEVEL_EDITOR.color_menu,
-            'collider_menu': LEVEL_EDITOR.collider_menu
+            'collider_menu': LEVEL_EDITOR.collider_menu,
+            'class_menu': LEVEL_EDITOR.class_menu
         }
         self.keybinds = {'m' : 'model_menu', 'v' : 'texture_menu', 'n' : 'shader_menu', 'b' : 'color_menu', 'escape' : 'None'}
 
@@ -2042,18 +2085,21 @@ class ColliderMenu(AssetMenu):
         LEVEL_EDITOR.inspector.update_inspector()
         LEVEL_EDITOR.menu_handler.state = 'None'
 
+
 class ClassMenu(AssetMenu):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.available_classes = {'None': None}
+
     def on_enable(self):
-        self.asset_names = ['None', 'box', 'sphere', 'mesh', ]
+        self.asset_names = self.available_classes.keys()
         super().on_enable()
 
     def on_select_asset(self, name):
-        if name == 'None':
-            name = None
         # LEVEL_EDITOR.current_scene.undo.record_undo([(LEVEL_EDITOR.entities.index(e), 'collider', e.texture, name) for e in LEVEL_EDITOR.selection])
-        # for e in LEVEL_EDITOR.selection:
-        #     if hasattr(e, 'class_to_spawn')
-        #     e.collider_type = name
+        for e in LEVEL_EDITOR.selection:
+            if hasattr(e, 'class_to_spawn'):
+                e.class_to_spawn = self.available_classes[name]
 
         LEVEL_EDITOR.inspector.update_inspector()
         LEVEL_EDITOR.menu_handler.state = 'None'
@@ -2200,6 +2246,7 @@ class PokeShape(Entity):
         super().__init__(**__class__.default_values | kwargs)
 
         self.model = Mesh()
+
         self.point_gizmos = LoopingList([Entity(parent=self, original_parent=self, position=e, selectable=False, name='PokeShape_point', is_gizmo=True) for e in points])
         self.add_new_point_renderer = Entity(model=Mesh(vertices=[], mode='point', thickness=.075), color=color.white, alpha=.5, texture='circle', unlit=True, is_gizmo=True, selectable=False, enabled=False, always_on_top=True)
         self.add_collider = False
@@ -2210,7 +2257,7 @@ class PokeShape(Entity):
 
 
     def draw_inspector(self):
-        return ['edit_mode', 'wall_height', 'subdivisions', 'smoothing_distance']
+        return {'edit_mode': bool, 'wall_height': float, 'subdivisions':int, 'smoothing_distance':float}
 
 
     def generate(self):
@@ -2359,8 +2406,6 @@ class PokeShape(Entity):
                 return
 
             closest_point = points_in_range[0][1]
-            # print('add point')
-            # i = self.point_gizmos.index(LEVEL_EDITOR.selection[0])
             i = self.add_new_point_renderer.model.vertices.index(closest_point)
 
             new_point = Entity(parent=self, original_parent=self, position=lerp(self.point_gizmos[i].position, self.point_gizmos[i+1].position, .5), selectable=True, is_gizmo=True)
@@ -2369,10 +2414,6 @@ class PokeShape(Entity):
             LEVEL_EDITOR.render_selection()
             if key == 'd':
                 LEVEL_EDITOR.quick_grabber.input('d')
-            #     time.sleep(1/60)
-            #     LEVEL_EDITOR.selection = [new_point, ]
-            #     invoke(quick_grabber.input, 'd', delay=1/60)
-            # self.generate()
 
 
         elif key == 'space':
@@ -2383,6 +2424,13 @@ class PokeShape(Entity):
 
         elif self.edit_mode and key.endswith(' up'):
             invoke(self.generate, delay=3/60)
+
+    def __setattr__(self, name, value):
+        if name == 'model' and hasattr(self, 'model') and self.model and not isinstance(value, Mesh):
+            print_info('can\'t set model of PokeShape')
+            return
+
+        super().__setattr__(name, value)
 
 
 
@@ -2496,12 +2544,12 @@ class RightClickMenu(Entity):
         self.radial_menu = RadialMenu(
             parent=LEVEL_EDITOR.ui,
             buttons = (
-                Button(highlight_color=color.azure, text='Model', on_click=Func(setattr, LEVEL_EDITOR.menu_handler, 'state', 'model_menu')),
-                Button(highlight_color=color.azure, text='Tex', on_click=Sequence(Func(setattr, LEVEL_EDITOR.menu_handler, 'state', 'texture_menu'), Func(setattr, LEVEL_EDITOR.texture_menu, 'target_attr', 'texture'))),
-                Button(highlight_color=color.azure, text='Col', on_click=Sequence(Func(setattr, LEVEL_EDITOR.menu_handler, 'state', 'color_menu'), Func(setattr, LEVEL_EDITOR.color_menu, 'position', mouse.position))),
-                Button(highlight_color=color.azure, text='Sh', on_click=Func(setattr, LEVEL_EDITOR.menu_handler, 'state', 'shader_menu')),
-                Button(highlight_color=color.black, text='del', scale=.5, color=color.red, on_click=LEVEL_EDITOR.deleter.delete_selected),
-                Button(highlight_color=color.azure, text='collider'),
+                Button(highlight_color=color.azure, model='circle', text='Model', scale=1.5, on_click=Func(setattr, LEVEL_EDITOR.menu_handler, 'state', 'model_menu')),
+                Button(highlight_color=color.azure, model='circle', text='Tex', scale=1.5, on_click=Sequence(Func(setattr, LEVEL_EDITOR.menu_handler, 'state', 'texture_menu'), Func(setattr, LEVEL_EDITOR.texture_menu, 'target_attr', 'texture'))),
+                Button(highlight_color=color.azure, model='circle', text='Col', scale=1.5, on_click=Sequence(Func(setattr, LEVEL_EDITOR.menu_handler, 'state', 'color_menu'), Func(setattr, LEVEL_EDITOR.color_menu, 'position', mouse.position))),
+                Button(highlight_color=color.azure, model='circle', text='Sh',  scale=1.5, on_click=Func(setattr, LEVEL_EDITOR.menu_handler, 'state', 'shader_menu')),
+                Button(highlight_color=color.black, model='circle', text='del', scale=.75, color=color.red, on_click=LEVEL_EDITOR.deleter.delete_selected),
+                Button(highlight_color=color.azure, model='circle', text='Coll', scale=1.5),
             ),
             enabled=False,
             scale=.05
@@ -2559,6 +2607,8 @@ if __name__ == '__main__':
 
     level_editor = LevelEditor()
     level_editor.goto_scene(0,0)
+
+    level_editor.class_menu.available_classes |= {'WhiteCube': WhiteCube, 'EditorCamera':EditorCamera, }
 
     app.run()
 
