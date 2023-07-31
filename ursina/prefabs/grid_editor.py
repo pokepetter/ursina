@@ -29,7 +29,8 @@ class GridEditor(Entity):
         self.undo_cache.append(deepcopy(self.grid))
         self.undo_index = 0
 
-        self.help_text = Text(
+        self.help_icon = Button(parent=self, scale=.025, model='circle', origin=(-.5,-.5), position=(-.0,1.005,-1), text='?')
+        self.help_icon.tooltip = Tooltip(
             text=dedent('''
                 left mouse:    draw
                 control(hold): draw lines
