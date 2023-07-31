@@ -52,7 +52,6 @@ from ursina.prefabs.health_bar import HealthBar
 class Enemy(Entity):
     def __init__(self, **kwargs):
         super().__init__(parent=shootables_parent, model='cube', scale_y=2, origin_y=-.5, color=color.light_gray, collider='box', **kwargs)
-        print('------------', self.collision)
         self.health_bar = Entity(parent=self, y=1.2, model='cube', color=color.red, world_scale=(1.5,.1,.1))
         self.max_hp = 100
         self.hp = self.max_hp
