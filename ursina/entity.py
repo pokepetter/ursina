@@ -1113,9 +1113,15 @@ class Entity(NodePath):
         changes = dict()
         for key, value in target_class.default_values.items():
             attr = getattr(self, key)
+            if attr == target_class.default_values[key]:
+                continue
 
+            if hasattr(attr, '__name__'):
+                attr = attr.__name__
+                changes[key] = attr
+                continue
 
-            if hasattr(attr, 'name') and attr.name:
+            if attr and hasattr(attr, 'name') and attr.name and isinstance(attr.name, str):
                 attr = attr.name
                 if '.' in attr:
                     attr = attr.split('.')[0]
