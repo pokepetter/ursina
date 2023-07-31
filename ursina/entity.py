@@ -1131,10 +1131,6 @@ class Entity(NodePath):
                 if '.' in attr:
                     attr = attr.split('.')[0]
 
-
-            if attr == target_class.default_values[key]:
-                continue
-
             # print('attr changed:', key, 'from:', target_class.default_values[key], 'to:', attr)
             if key == 'color':
                 if isinstance(attr, str):
