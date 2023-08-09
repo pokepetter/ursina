@@ -40,7 +40,6 @@ try:
 except:
     pass
 
-application.trace_entity_definition = True
 _Ursina_instance = None
 _warn_if_ursina_not_instantiated = True # gets set to True after Ursina.__init__() to ensure the correct order.
 
@@ -95,7 +94,7 @@ class Entity(NodePath):
 
         self.line_definition = None # returns a Traceback(filename, lineno, function, code_context, index).
 
-        if application.trace_entity_definition and add_to_scene_entities or (not _Ursina_instance and _warn_if_ursina_not_instantiated):
+        if application.trace_entity_definition and add_to_scene_entities or (not _Ursina_instance and _warn_if_ursina_not_instantiated and add_to_scene_entities):
             from inspect import getframeinfo, stack
             _stack = stack()
             caller = getframeinfo(_stack[1][0])
