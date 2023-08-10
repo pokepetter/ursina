@@ -17,7 +17,7 @@ def texture_to_height_values(heightmap, skip=1):
     width, depth = heightmap.width//skip, heightmap.height//skip
     img = Image.open(heightmap.path).convert('L')
     if skip > 1:
-        img = img.resize([width, depth], Image.ANTIALIAS)
+        img = img.resize([width, depth], Image.LANCZOS)
 
     height_values = asarray(img)
     height_values = flip(height_values, axis=0)
