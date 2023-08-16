@@ -9,10 +9,10 @@ messages = []
 
 peer = Peer()
 
-def on_connect(connection):
+def on_connect(connection, time_connected):
     print("Connected to", connection.address)
 
-def on_disconnect(connection):
+def on_disconnect(connection, time_disconnected):
     print("Disconnected from", connection.address)
 
 def on_data(connection, data, time_received):

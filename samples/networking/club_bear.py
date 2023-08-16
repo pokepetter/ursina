@@ -2,6 +2,8 @@ from ursina import *
 from ursina.networking import *
 from collections import deque
 
+# -- Begin custom classes with serialization for networking --
+
 class InputState:
     def __init__(self, input_state=None):
         if input_state is not None:
@@ -71,7 +73,17 @@ def deserialize_bear_state(reader):
     bear_state.input_state = deserialize_input_state(reader)
     return bear_state
 
+# -- End custom classes with serialization for networking --
 
+# -- Begin the main Bear (Player) class of the game --
+
+# In general in a networked game you have two states for networked entities.
+# There is the actual position / state, and then there is the visual state (how / where it's drawn).
+# These two can differ. In general the visual state is an interpolation between two actual states.
+# This gives the illusion of smooth movement between updates from the server.
+# This is known as client side interpolation (CSI).
+# The locally controlled player (your player) is not interpolated, instead it respondes immediately to controller input.
+# This is known as client side prediction (CSP).
 class Bear(Entity):
     def __init__(self):
         super().__init__(parent=camera.ui, model="quad", texture="unicode_bear", scale=0.1)
@@ -94,6 +106,7 @@ class Bear(Entity):
         self.speech_text = Text(visible=False, y=self.y+0.05, origin=(0, 0))
         self.speech_audio = Audio("sine", autoplay=False, loop=True, loops=20)
 
+    # Mostly handles client side interpolation.
     def update(self):
         if self.lerping:
             self.lerp_timer += time.dt
@@ -123,6 +136,9 @@ class Bear(Entity):
         else:
             self.speech_text.visible = False
 
+    # The actual update function with normal game logic.
+    # This is a fixed timestep, sometimes also called fixed_update, tick, step, or fixed.
+    # The delta time argument (dt) is fixed, it's constant.
     def tick(self, dt):
         self.state.x += float(int(self.state.input_state.right) - int(self.state.input_state.left)) * self.speed * dt
         self.state.y += float(int(self.state.input_state.up) - int(self.state.input_state.down)) * self.speed * dt
@@ -151,6 +167,9 @@ class Bear(Entity):
         self.speech_text.text = msg
         self.speech_audio.play()
 
+# -- End the main Bear (Player) class of the game --
+
+# -- Begin game initialization and global state (putting this into a class would be a good idea) --
 
 app = Ursina(borderless=False)
 
@@ -186,15 +205,24 @@ update_timer = 0.0
 
 speech_duration = 3.0
 
+# Setting a connection timeout is important to detect disconnects.
 peer = RPCPeer(connection_timeout=5.0)
 
+# These registered types can be used as types in remote procedure calls.
 peer.register_type(InputState, serialize_input_state, deserialize_input_state)
 peer.register_type(BearState, serialize_bear_state, deserialize_bear_state)
+
+# -- End game initialization and global state (putting this into a class would be a good idea) --
+
+# -- Begin remote procedure calls (for both host and client) --
 
 @rpc(peer)
 def on_connect(connection, time_connected):
     global uuid_counter
 
+    # If this is the server, we need to make a new bear, and track which connection is associated with it.
+    # Each bear is assigned a unique id, so that it can be synchronized across the network.
+    # This id will be the same on both server and client.
     if peer.is_hosting():
         b = Bear()
         b.state.uuid = uuid_counter
@@ -234,6 +262,7 @@ def on_disconnect(connection, time_disconnected):
             print("\tConnection timed out.")
 
 
+# The client needs to know which bear is their bear that they control.
 @rpc(peer)
 def set_bear_uuid(connection, time_received, uuid: int):
     global my_bear_uuid
@@ -283,7 +312,9 @@ def set_states(connection, time_received, bear_states: list[BearState]):
         if bear is None:
             continue
 
+        # Interpolate other bears, and predict my bear.
         if my_bear_uuid is None or my_bear_uuid != new_bear_state.uuid:
+            # A better way would be to keep a buffer of the past N states and interpolate between them.
             bear.interpolate(bear.state, new_bear_state, update_rate * 2.0)
         else:
             # Compute processed input difference between client and host.
@@ -340,6 +371,8 @@ def chat(connection, time_received, uuid: int, msg: str):
             return
         bear.set_speech(msg, speech_duration)
 
+# -- End remote procedure calls (for both host and client) --
+
 def host():
     global uuid_counter, my_bear_uuid
 
@@ -393,6 +426,7 @@ def on_chat_submit():
     chat_input_field.text = ""
     chat_input_field.active = False
 
+#  Networked games require a fixed timestep to function semi-deterministically.
 def tick(dt):
     global last_input_sequence_number_processed
 
@@ -437,6 +471,7 @@ def tick(dt):
 def update():
     global update_timer, tick_timer
 
+    # Remember to update the peer (process network events waiting in queue).
     peer.update()
     if not peer.is_running():
         status_text.text = start_text
@@ -462,11 +497,14 @@ def update():
         status_text.text = "Connected to host.\nWASD to move."
         status_text.y = -0.45
 
+    # Try to call the fixed timestep function at a fixed rate.
     tick_timer += time.dt * time_factor
     while tick_timer >= tick_rate:
         tick(tick_rate)
         tick_timer -= tick_rate
 
+    # Try to send network messages (RPCs) at a fixed rate.
+    # "update_rate" is not a very descriptive name.
     update_timer += time.dt
     if update_timer >= update_rate:
         if peer.is_running() and peer.connection_count() > 0:

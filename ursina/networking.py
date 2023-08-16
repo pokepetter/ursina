@@ -33,6 +33,9 @@ import signal
 import threading
 import asyncio
 
+# This class represents and single connection.
+# It can be hashed and compared so that it may be used as a dictionary key.
+# This is useful for mapping from a connection to player data.
 class Connection:
     def __init__(self, peer, socket, address, connection_timeout):
         self.peer = peer
@@ -72,6 +75,7 @@ class Connection:
         return self.connected
 
 
+# Used interally by Peer.
 class PeerEvent(Enum):
     ERROR = auto()
     CONNECT = auto()
@@ -79,6 +83,7 @@ class PeerEvent(Enum):
     DATA = auto()
 
 
+# Used interally by Peer.
 class PeerInput(Enum):
     ERROR = auto()
     SEND = auto()
@@ -86,6 +91,22 @@ class PeerInput(Enum):
     DISCONNECT_ALL = auto()
 
 
+# -- Description --
+# The main driving class of the networking module.
+# This is either a server or a client depending on if it's hosting or not.
+# -- Callbacks --
+# The arguments starting with "on" are callback functions for network events.
+# Their arguments are generally (connection, data, time).
+# The connect and disconnect functions don't have the data argument.
+# See the networking samples or update function definition for more.
+# -- TLS / secure networking --
+# TLS support can be enabled with `use_tls=True`.
+# The host requires the path to the certificate chain, and the private key.
+# The client can make use of a given path to a certifcate authority bundle for testing / developement / self signed.
+# -- Address family --
+# The socket address family can be either "INET" (ipv4) or "INET6" (ipv6).
+# -- Notes --
+# Keep in mind that the networking in running on its own thread and you must therefor check if it's running (is_running).
 class Peer:
     def __init__(self, on_connect=None, on_disconnect=None, on_data=None, on_raw_data=None,
                  connection_timeout=None,
@@ -151,6 +172,9 @@ class Peer:
                     prev_signal_handler(*args)
 
         signal.signal(signal.SIGINT, on_keyboard_interrupt)
+    
+    def is_using_tls(self):
+        return self.use_tls
 
     def start(self, host_name, port, is_host=False, backlog=100, tls_host_name=None, socket_address_family=None):
         if self.running:
@@ -205,17 +229,19 @@ class Peer:
                 if len(self.output_event_queue) == 0:
                     break
                 next_event = self.output_event_queue.popleft()
+                event_type = next_event[0]
+                conn = next_event[1]
                 d = next_event[2]
                 t = next_event[3]
-                if next_event[0] == PeerEvent.CONNECT:
+                if event_type == PeerEvent.CONNECT:
                     if self.on_connect is not None:
-                        self.on_connect(next_event[1], t)
-                elif next_event[0] == PeerEvent.DISCONNECT:
+                        self.on_connect(conn, t)
+                elif event_type == PeerEvent.DISCONNECT:
                     if self.on_disconnect is not None:
-                        self.on_disconnect(next_event[1], t)
-                elif next_event[0] == PeerEvent.DATA:
+                        self.on_disconnect(conn, t)
+                elif event_type == PeerEvent.DATA:
                     if self.on_raw_data is not None:
-                        d = self.on_raw_data(next_event[1], d, t)
+                        d = self.on_raw_data(conn, d, t)
                     if self.on_data is not None:
                         self.on_data(next_event[1], d, t)
 
@@ -404,7 +430,6 @@ class Peer:
                 await asyncio.sleep(self.recv_unavailable_sleep_time)
             except Exception as e:
                 raise
-        #return await async_loop.sock_recv(connection.socket, connection.expected_byte_count)
         return data
 
     async def _receive(self, connection, async_loop):
@@ -462,6 +487,8 @@ class Peer:
                 self.running = False
 
 
+# -- Description --
+# Main serialization class used by the networking module.
 class DatagramWriter:
     def __init__(self):
         self.datagram = PyDatagram()
@@ -547,10 +574,13 @@ class DatagramWriter:
         self.datagram.addBlob32(value)
 
 
+# Used interally by networking module.
 class ExceedsListLimitException(Exception):
     pass
 
 
+# -- Description --
+# Main deserialization class used by the networking module.
 class DatagramReader:
     def __init__(self):
         self.datagram = None
@@ -655,6 +685,19 @@ def procedure_hash(name):
     return int.from_bytes(h[:4], byteorder="big") >> 1
 
 
+# -- Description --
+# Main remote procedure call class used by the networking module.
+# This class is likely the one you are looking for.
+# -- max list length --
+# Lists are supported for remote procedure calls, but to preven attacks involving giant lists,
+# there is an upper limit on the length, this can be configured, the default is small on purpose.
+# -- kwargs --
+# The remaining keyword arguments are passed to Peer, see the Peer class for more information.
+# -- Notes --
+# The first two arguments passed to a remote procedure call are connection, and time_received.
+# You can disable the printing of messages on connect and disconnect via the
+# print_connect, and print_disconnect booleans.
+# See the networking samples on how to use this class.
 class RPCPeer:
     def __init__(self, max_list_length=16, **kwargs):
         self.peer = Peer(**kwargs)
@@ -710,6 +753,9 @@ class RPCPeer:
 
         self.writer = DatagramWriter()
         self.reader = DatagramReader()
+
+    def is_using_tls(self):
+        return self.peer.is_using_tls()
 
     def start(self, host_name, port, is_host=False, backlog=100, tls_host_name=None, socket_address_family=None):
         return self.peer.start(host_name, port, is_host=is_host, backlog=backlog, tls_host_name=tls_host_name, socket_address_family=socket_address_family)
@@ -831,7 +877,7 @@ class RPCPeer:
 # Convenience attribute applied to functions to register them as remote procedure calls.
 #
 # @rpc(my_rpc_peer_object)
-# def foo(x: int):
+# def foo(connection, time_received, x: int):
 #     print(x)
 def rpc(peer, host_only=False, client_only=False):
     def wrapper(f):
