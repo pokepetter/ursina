@@ -103,7 +103,7 @@ class Mouse():
     def locked(self, value):
         self._locked = value
         if value:
-            window.set_mouse_mode(window.M_relative)
+            window.set_mouse_mode(window.M_confined)
         else:
             window.set_mouse_mode(window.M_absolute)
 
