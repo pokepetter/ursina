@@ -240,14 +240,22 @@ class PixelEditor(GridEditor):
         super().__init__(texture=texture, size=texture.size, palette=palette, **kwargs)
         self.set_texture(texture)
 
-    def set_texture(self, texture, render=True):
+    def set_texture(self, texture, render=True, clear_undo_stack=True):
         self.canvas.texture = texture
         self.w, self.h = int(texture.size[0]), int(texture.size[1])
         self.canvas.scale_x = self.canvas.scale_y * self.w / self.h
         self.grid = [[texture.get_pixel(x,y) for y in range(texture.height)] for x in range(texture.width)]
         self.canvas.texture.filtering = None
+        self.cursor.scale = Vec2(self.brush_size / self.w, self.brush_size / self.h)
+
+        if clear_undo_stack:
+            self.undo_stack.clear()
+            self.undo_index = -1
+        self.record_undo()
+
         if render:
             self.render()
+
 
     def draw(self, x, y):
         for _y in range(y, min(y+self.brush_size, self.h)):
