@@ -276,6 +276,11 @@ class Mouse():
             return Vec3(*self.collision.world_point)
         return None
 
+    @property
+    def is_outside(self):
+        return not self._mouse_watcher.has_mouse()
+
+
     def find_collision(self):
         self.collisions = []
         self.collision = None
