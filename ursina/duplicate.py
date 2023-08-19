@@ -2,11 +2,11 @@ from ursina import *
 from copy import copy, deepcopy
 
 
-def duplicate(entity, copy_children=True, **kwargs): # use a for loop instead of duplicate() if you can.
+def duplicate(entity, copy_children=True, *args, **kwargs): # use a for loop instead of duplicate() if you can.
     if entity.__class__ == Entity:
-        e = entity.__class__(entity.add_to_scene_entities)
+        e = entity.__class__(entity.add_to_scene_entities, *args, **kwargs)
     else:
-        e = entity.__class__()
+        e = entity.__class__(*args, **kwargs)
 
 
     if hasattr(entity, 'model') and entity.model:

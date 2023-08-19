@@ -19,7 +19,7 @@ class Pipe(Mesh):
         self.prev = None
         self.curr = None
         super().__init__(mode=mode, **kwargs)
-
+        self.generate()
 
 
     def generate(self):

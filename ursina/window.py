@@ -35,17 +35,20 @@ class Window(WindowProperties):
 
         self.title = application.asset_folder.name
         # self.icon = 'textures/ursina.ico'
-        self.monitors = get_monitors()
-        self.main_monitor = [e for e in self.monitors if e.is_primary][0]
-        self.monitor_index = self.monitors.index(self.main_monitor)
-        self.fullscreen_size = Vec2(self.main_monitor.width, self.main_monitor.height)
-        self.windowed_size = self.fullscreen_size / 1.25
+        try:
+            self.monitors = get_monitors()
+            self.main_monitor = [e for e in self.monitors if e.is_primary][0]
+            self.monitor_index = self.monitors.index(self.main_monitor)
+            self.windowed_size =  Vec2(self.main_monitor.width, self.main_monitor.height) / 1.25
+        except:
+            print_warning('no monitors found')
+
         self.windowed_position = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode
         self.forced_aspect_ratio = None # example: window.forced_aspect_ratio = 16/9
         self.always_on_top = False
 
         # self._borderless = False
-        # self._fullscreen = not application.development_mode
+        self._fullscreen = not application.development_mode
 
         self.top = Vec2(0, .5)
         self.bottom = Vec2(0, -.5)
@@ -54,7 +57,7 @@ class Window(WindowProperties):
 
     def late_init(self):
         self.borderless = True
-        self.fullscreen = not application.development_mode
+        self.fullscreen = self._fullscreen
         self.center_on_screen()
 
         self.color = color.dark_gray
@@ -174,9 +177,9 @@ class Window(WindowProperties):
             'Reload Textures <gray>[F6]<default>' : application.hot_reloader.reload_textures,
             'Reload Code <gray>[F5]<default>' : application.hot_reloader.reload_code,
         },
-            width=.4, scale=.75, x=(.5*self.aspect_ratio)-(.4*.75), enabled=False, eternal=True, name='cog_menu',
+            width=.4, scale=.75, x=(.5*self.aspect_ratio)-(.4*.75), enabled=False, eternal=True, name='cog_menu', z=-10, color=color.black90
         )
-        self.cog_menu.on_click = Func(setattr, self.cog_menu, 'enabled', False)
+        self.cog_menu.on_click = self.cog_menu.disable
         # print(self.cog_menu.scale_y)
         # self.cog_menu.scale *= .75
         self.cog_menu.highlight.color = color.azure

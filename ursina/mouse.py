@@ -103,7 +103,7 @@ class Mouse():
     def locked(self, value):
         self._locked = value
         if value:
-            window.set_mouse_mode(window.M_relative)
+            window.set_mouse_mode(window.M_confined)
         else:
             window.set_mouse_mode(window.M_absolute)
 
@@ -275,6 +275,11 @@ class Mouse():
         if self.collision is not None:
             return Vec3(*self.collision.world_point)
         return None
+
+    @property
+    def is_outside(self):
+        return not self._mouse_watcher.has_mouse()
+
 
     def find_collision(self):
         self.collisions = []

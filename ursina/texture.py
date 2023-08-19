@@ -52,13 +52,16 @@ class Texture():
         return Texture(panda_tex)
 
 
-
     @property
     def name(self):
         try:
             return self.path.name
         except:
             return f'PIL_texture_{self.size}'
+
+    def __str__(self):
+        return self.name
+
 
     @property
     def size(self):

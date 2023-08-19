@@ -40,10 +40,11 @@ try:
 except:
     pass
 
+_Ursina_instance = None
+_warn_if_ursina_not_instantiated = True # gets set to True after Ursina.__init__() to ensure the correct order.
 
 
 class Entity(NodePath):
-
     rotation_directions = (-1,-1,1)
     default_shader = None
     default_values = {
@@ -79,6 +80,8 @@ class Entity(NodePath):
             self.shader = Entity.default_shader
 
         self.collision = False  # toggle collision without changing collider.
+        self._collider = None
+        self.setPythonTag('Entity', self)   # for the raycast to get the Entity and not just the NodePath
         self.collider = None    # set to 'box'/'sphere'/'capsule'/'mesh' for auto fitted collider.
         self.scripts = []   # add with add_script(class_instance). will assign an 'entity' variable to the script.
         self.animations = []
@@ -90,7 +93,8 @@ class Entity(NodePath):
         self.scale = Vec3(1,1,1)    # can also set self.scale_x, self.scale_y, self.scale_z
 
         self.line_definition = None # returns a Traceback(filename, lineno, function, code_context, index).
-        if application.trace_entity_definition and add_to_scene_entities:
+
+        if application.trace_entity_definition and add_to_scene_entities or (not _Ursina_instance and _warn_if_ursina_not_instantiated and add_to_scene_entities):
             from inspect import getframeinfo, stack
             _stack = stack()
             caller = getframeinfo(_stack[1][0])
@@ -110,6 +114,11 @@ class Entity(NodePath):
 
                 if application.print_entity_definition:
                     print(f'{Path(caller.filename).name} ->  {caller.lineno} -> {caller.code_context}')
+
+
+        if not _Ursina_instance and _warn_if_ursina_not_instantiated and add_to_scene_entities:
+            print_warning('Tried to instantiate Entity before Ursina. Please create an instance of Ursina first (app = Ursina())', self.line_definition)
+
 
         # make sure things get set in the correct order. both colliders and texture need the model to be set first.
         for key in ('model', 'origin', 'origin_x', 'origin_y', 'origin_z', 'collider', 'shader', 'texture', 'texture_scale', 'texture_offset'):
@@ -190,55 +199,60 @@ class Entity(NodePath):
 
         self._enabled = value
 
+    @property
+    def model(self):
+        return self._model
+
+    @model.setter
+    def model(self, value):
+        if value is None:
+            if hasattr(self, 'model') and self.model:
+                self.model.removeNode()
+                # print('removed model')
+            self._model = value
+            return
+
+        if isinstance(value, NodePath): # pass procedural model
+            if self.model is not None and value != self.model:
+                self.model.detachNode()
+            self._model = value
+
+        elif isinstance(value, str): # pass model asset name
+            m = load_model(value, application.asset_folder)
+            if not m:
+                m = load_model(value, application.internal_models_compressed_folder)
+            if m:
+                if self.model is not None:
+                    self.model.removeNode()
+
+                m.name = value
+                m.setPos(Vec3(0,0,0))
+                self._model = m
+                # if not value in mesh_importer.imported_meshes:
+                #     print_info('loaded model successfully:', value)
+            else:
+                if application.raise_exception_on_missing_model:
+                    raise ValueError(f"missing model: '{value}'")
+
+                print_warning(f"missing model: '{value}'")
+                return
+
+        if self.model:
+            self.model.reparentTo(self)
+            self.model.setTransparency(TransparencyAttrib.M_dual)
+            self.color = self.color # reapply color after changing model
+            self.texture = self.texture # reapply texture after changing model
+            self._vert_cache = None
+            if isinstance(value, Mesh):
+                if hasattr(value, 'on_assign'):
+                    value.on_assign(assigned_to=self)
+
+
 
     def __setattr__(self, name, value):
         if name == 'eternal':
             for c in self.children:
                 c.eternal = value
-
-        if name == 'model':
-            if value is None:
-                if hasattr(self, 'model') and self.model:
-                    self.model.removeNode()
-                    # print('removed model')
-                object.__setattr__(self, name, value)
-                return None
-
-            if isinstance(value, NodePath): # pass procedural model
-                if self.model is not None and value != self.model:
-                    self.model.detachNode()
-                object.__setattr__(self, name, value)
-
-            elif isinstance(value, str): # pass model asset name
-                m = load_model(value, application.asset_folder)
-                if not m:
-                    m = load_model(value, application.internal_models_compressed_folder)
-                if m:
-                    if self.model is not None:
-                        self.model.removeNode()
-
-                    m.name = value
-                    m.setPos(Vec3(0,0,0))
-                    object.__setattr__(self, name, m)
-                    # if not value in mesh_importer.imported_meshes:
-                    #     print_info('loaded model successfully:', value)
-                else:
-                    if application.raise_exception_on_missing_model:
-                        raise ValueError(f"missing model: '{value}'")
-
-                    print_warning(f"missing model: '{value}'")
-                    return
-
-            if self.model:
-                self.model.reparentTo(self)
-                self.model.setTransparency(TransparencyAttrib.M_dual)
-                self.color = self.color # reapply color after changing model
-                self.texture = self.texture # reapply texture after changing model
-                self._vert_cache = None
-                if isinstance(value, Mesh):
-                    if hasattr(value, 'on_assign'):
-                        value.on_assign(assigned_to=self)
-            return
 
         elif name == 'color' and value is not None:
             if isinstance(value, str):
@@ -287,6 +301,7 @@ class Entity(NodePath):
             value._children.append(self)
 
         self.reparent_to(value)
+        self.enabled = self._enabled   # parenting will undo the .stash() done when setting .enabled to False, so reapply it here
         self._parent = value
 
 
@@ -303,6 +318,7 @@ class Entity(NodePath):
             value._children.append(self)
 
         self.wrtReparentTo(value)
+        self.enabled = self._enabled   # parenting will undo the .stash() done when setting .enabled to False, so reapply it here
         self._parent = value
 
 
@@ -347,13 +363,20 @@ class Entity(NodePath):
 
     @collider.setter
     def collider(self, value):
+        if value is None and self._collider:
+            self._collider.remove()
+            self._collider = None
+            self.collision = False
+            return
+
         # destroy existing collider
-        if value and hasattr(self, 'collider') and self._collider:
+        if value and self._collider:
             self._collider.remove()
 
-        self._collider = value
+        if isinstance(value, Collider):
+            self._collider = value
 
-        if value == 'box':
+        elif value == 'box':
             if self.model:
                 _bounds = self.model_bounds
                 self._collider = BoxCollider(entity=self, center=_bounds.center, size=_bounds.size)
@@ -370,7 +393,7 @@ class Entity(NodePath):
             self._collider.name = value
 
         elif value == 'mesh' and self.model:
-            self._collider = MeshCollider(entity=self, mesh=None, center=-self.origin)
+            self._collider = MeshCollider(entity=self, mesh=self.model, center=-self.origin)
             self._collider.name = value
 
         elif isinstance(value, Mesh):
@@ -379,12 +402,14 @@ class Entity(NodePath):
         elif isinstance(value, str):
             m = load_model(value)
             if not m:
+                self._collider = None
+                self._collision = False
                 return
             self._collider = MeshCollider(entity=self, mesh=m, center=-self.origin)
             self._collider.name = value
 
 
-        self.collision = bool(self.collider)
+        self.collision = bool(self._collider)
         return
 
     @property
@@ -395,12 +420,17 @@ class Entity(NodePath):
     def collision(self, value):
         self._collision = value
         if not hasattr(self, 'collider') or not self.collider:
+            if self in scene.collidables:
+                scene.collidables.remove(self)
             return
 
         if value:
             self.collider.node_path.unstash()
+            scene.collidables.add(self)
         else:
             self.collider.node_path.stash()
+            if self in scene.collidables:
+                scene.collidables.remove(self)
 
     @property
     def origin(self):
@@ -408,16 +438,15 @@ class Entity(NodePath):
 
     @origin.setter
     def origin(self, value):
-        if not self.model:
-            self._origin = Vec3(0,0,0)
-            return
         if not isinstance(value, (Vec2, Vec3)):
             value = self._list_to_vec(value)
         if isinstance(value, Vec2):
             value = Vec3(*value, self.origin_z)
 
         self._origin = value
-        self.model.setPos(-value[0], -value[1], -value[2])
+
+        if self.model:
+            self.model.setPos(-value[0], -value[1], -value[2])
 
 
     @property
@@ -697,7 +726,7 @@ class Entity(NodePath):
     @property
     def screen_position(self): # get screen position(ui space) from world space.
         from ursina import camera
-        p3d = camera.getRelativePoint(self, Vec3.zero())
+        p3d = camera.getRelativePoint(self, Vec3.zero)
         full = camera.lens.getProjectionMat().xform(Vec4(*p3d, 1))
         recip_full3 = 1
         if full[3] > 0:
@@ -1094,16 +1123,18 @@ class Entity(NodePath):
         changes = dict()
         for key, value in target_class.default_values.items():
             attr = getattr(self, key)
+            if attr == target_class.default_values[key]:
+                continue
 
+            if hasattr(attr, '__name__'):
+                attr = attr.__name__
+                changes[key] = attr
+                continue
 
-            if hasattr(attr, 'name') and attr.name:
+            if attr and hasattr(attr, 'name') and attr.name and isinstance(attr.name, str):
                 attr = attr.name
                 if '.' in attr:
                     attr = attr.split('.')[0]
-
-
-            if attr == target_class.default_values[key]:
-                continue
 
             # print('attr changed:', key, 'from:', target_class.default_values[key], 'to:', attr)
             if key == 'color':

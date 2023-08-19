@@ -7,29 +7,30 @@ from ursina.shaders import unlit_shader
 
 
 class GridEditor(Entity):
-    def __init__(self, size=(32,32), palette=(' ', '#', '|', 'o'), **kwargs):
-        super().__init__(parent=camera.ui, model='quad', position=(-.45,-.45), origin=(-.5,-.5), scale=.9, collider='box', shader=unlit_shader)
-
+    def __init__(self, size=(32,32), palette=(' ', '#', '|', 'o'), canvas_color=color.white, **kwargs):
+        super().__init__(parent=camera.ui, position=(-.45,-.45), scale=.9, model='quad', origin=(-.5,-.5), visible_self=False)
         self.w, self.h = int(size[0]), int(size[1])
-        sys.setrecursionlimit(self.w * self.h)
+        self.canvas = Entity(parent=self, model='quad', origin=(-.5,-.5), collider='box', shader=unlit_shader, scale=(self.w/self.h, 1), color=canvas_color)
+        sys.setrecursionlimit(max(sys.getrecursionlimit(), self.w * self.h))
         # self.grid = [[palette[0] for x in range(self.w)] for y in range(self.h)]
         if not hasattr(self, 'grid'):
             self.grid = [[palette[0] for y in range(self.h)] for x in range(self.w)]
         self.brush_size = 1
         self.auto_render = True
-        self.cursor = Entity(parent=self, model=Quad(segments=0, mode='line', thickness=2), origin=(-.5,-.5), scale=(1/self.w, 1/self.h), color=color.color(120,1,1,.5), z=-.2, shader=unlit_shader)
+        self.cursor = Entity(parent=self.canvas, model=Quad(segments=0, mode='line', thickness=2), origin=(-.5,-.5), scale=(1/self.w, 1/self.h), color=color.color(120,1,1,.5), z=-.2, shader=unlit_shader)
 
         self.selected_char = palette[1]
         self.palette = palette
         self.prev_draw = None
         self.lock_axis = None
-        self.outline = Entity(parent=self, model=Quad(segments=0, mode='line', thickness=2), color=color.cyan, z=.01, origin=(-.5,-.5))
+        self.outline = Entity(parent=self.canvas, model=Quad(segments=0, mode='line', thickness=2), color=color.cyan, z=.01, origin=(-.5,-.5))
 
-        self.undo_cache = list()
-        self.undo_cache.append(deepcopy(self.grid))
+        self.undo_stack = []
+        self.undo_stack.append(deepcopy(self.grid))
         self.undo_index = 0
 
-        self.help_text = Text(
+        self.help_icon = Button(parent=self, scale=.025, model='circle', origin=(-.5,-.5), position=(-.0,1.005,-1), text='?')
+        self.help_icon.tooltip = Tooltip(
             text=dedent('''
                 left mouse:    draw
                 control(hold): draw lines
@@ -38,8 +39,9 @@ class GridEditor(Entity):
                 ctrl + z:      undo
                 ctrl + y:      redo
             '''),
-            position=window.top_left,
-            scale=.75
+            font='VeraMono.ttf',
+            wordwrap=100,
+            # scale=.75,
             )
 
         self.edit_mode = True
@@ -59,7 +61,7 @@ class GridEditor(Entity):
         if hasattr(self, 'palette_parent'):
             destroy(self.palette_parent)
 
-        self.palette_parent = Entity(parent=self, position=(-.3,.5), shader=unlit_shader)
+        self.palette_parent = Entity(parent=self, position=(-.3,.5,-1), shader=unlit_shader)
         for i, e in enumerate(value):
             if isinstance(e, str):
                 i = e
@@ -84,15 +86,14 @@ class GridEditor(Entity):
         self.cursor.enabled = value
         self.outline.enabled = value
         self.palette_parent.enabled = value
-        self.help_text.enabled = value
 
 
     def update(self):
         if not self.edit_mode:
             return
 
-        self.cursor.enabled = mouse.hovered_entity == self
-        if self.hovered:
+        self.cursor.enabled = mouse.hovered_entity == self.canvas
+        if self.canvas.hovered:
 
             self.cursor.position = mouse.point
             self.cursor.x = floor(self.cursor.x * self.w) / self.w
@@ -172,14 +173,14 @@ class GridEditor(Entity):
 
         if held_keys['control'] and key == 'z':
             self.undo_index -= 1
-            self.undo_index = clamp(self.undo_index, 0, len(self.undo_cache)-1)
-            self.grid = deepcopy(self.undo_cache[self.undo_index])
+            self.undo_index = clamp(self.undo_index, 0, len(self.undo_stack)-1)
+            self.grid = deepcopy(self.undo_stack[self.undo_index])
             self.render()
 
         if held_keys['control'] and key == 'y':
             self.undo_index += 1
-            self.undo_index = clamp(self.undo_index, 0, len(self.undo_cache)-1)
-            self.grid = deepcopy(self.undo_cache[self.undo_index])
+            self.undo_index = clamp(self.undo_index, 0, len(self.undo_stack)-1)
+            self.grid = deepcopy(self.undo_stack[self.undo_index])
             self.render()
 
         # fill
@@ -207,8 +208,8 @@ class GridEditor(Entity):
 
     def record_undo(self):
         self.undo_index += 1
-        self.undo_cache = self.undo_cache[:self.undo_index]
-        self.undo_cache.append(deepcopy(self.grid))
+        self.undo_stack = self.undo_stack[:self.undo_index]
+        self.undo_stack.append(deepcopy(self.grid))
 
 
 
@@ -239,11 +240,19 @@ class PixelEditor(GridEditor):
         super().__init__(texture=texture, size=texture.size, palette=palette, **kwargs)
         self.set_texture(texture)
 
-    def set_texture(self, texture, render=True):
-        self.texture = texture
+    def set_texture(self, texture, render=True, clear_undo_stack=True):
+        self.canvas.texture = texture
         self.w, self.h = int(texture.size[0]), int(texture.size[1])
+        self.canvas.scale_x = self.canvas.scale_y * self.w / self.h
         self.grid = [[texture.get_pixel(x,y) for y in range(texture.height)] for x in range(texture.width)]
-        self.texture.filtering = None
+        self.canvas.texture.filtering = None
+        self.cursor.scale = Vec2(self.brush_size / self.w, self.brush_size / self.h)
+
+        if clear_undo_stack:
+            self.undo_stack.clear()
+            self.undo_index = -1
+        self.record_undo()
+
         if render:
             self.render()
 
@@ -252,35 +261,44 @@ class PixelEditor(GridEditor):
         for _y in range(y, min(y+self.brush_size, self.h)):
             for _x in range(x, min(x+self.brush_size, self.w)):
                 self.grid[_x][_y] = self.selected_char
-                self.texture.set_pixel(_x, _y, self.grid[_x][_y])
+                self.canvas.texture.set_pixel(_x, _y, self.grid[_x][_y])
 
-        self.texture.apply()
+        self.canvas.texture.apply()
 
 
     def render(self):
         for y in range(self.h):
             for x in range(self.w):
-                self.texture.set_pixel(x, y, self.grid[x][y])
+                self.canvas.texture.set_pixel(x, y, self.grid[x][y])
 
-        self.texture.apply()
+        self.canvas.texture.apply()
 
 
     def save(self):
-        if self.texture.path:
-            self.texture.save(self.texture.path)
-            print('saved:', self.texture.path)
+        if self.canvas.texture.path:
+            self.canvas.texture.save(self.canvas.texture.path)
+            print('saved:', self.canvas.texture.path)
+
+    @property
+    def texture(self):
+        return self.canvas.texture
+
+    @texture.setter
+    def texture(self, value):
+        self.canvas.texture = value
 
 
 
 class ASCIIEditor(GridEditor):
-    def __init__(self, size=(61,28), palette=(' ', '#', '|', 'A', '/', '\\', 'o', '_', '-', 'i', 'M', '.'), font='VeraMono.ttf', color=color.black, line_height=1.1, **kwargs):
-        super().__init__(size=size, palette=palette, color=color, **kwargs)
+    def __init__(self, size=(61,28), palette=(' ', '#', '|', 'A', '/', '\\', 'o', '_', '-', 'i', 'M', '.'), font='VeraMono.ttf', canvas_color=color.black, line_height=1.1, **kwargs):
+        super().__init__(size=size, palette=palette, canvas_color=canvas_color, **kwargs)
         rotated_grid = list(zip(*self.grid[::-1]))
         text = '\n'.join([''.join(reversed(line)) for line in reversed(rotated_grid)])
 
         self.text_entity = Text(parent=self.parent, text=text, x=-.0, y=.5, line_height=line_height, font=font)
 
         self.scale = (self.text_entity.width, self.text_entity.height)
+        self.canvas.scale = 1
         self.text_entity.world_parent = self
         self.text_entity.y = 1
         self.text_entity.z = -.001
@@ -299,8 +317,8 @@ class ASCIIEditor(GridEditor):
         # if held_keys['control'] and key == 'v' and pyperclip.paste().count('\n') == (h-1):
         #     t.text = pyperclip.paste()
         #     undo_index += 1
-        #     undo_cache = undo_cache[:undo_index]
-        #     undo_cache.append(deepcopy(grid))
+        #     undo_stack = undo_stack[:undo_index]
+        #     undo_stack.append(deepcopy(grid))
 
 
 

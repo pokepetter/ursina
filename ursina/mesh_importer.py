@@ -42,6 +42,8 @@ def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursina
             pass
 
     for filetype in file_types:
+        if use_deepcopy and filetype == '.bam':
+            continue
         # warning: glob is case-insensitive on windows, so m.path will be all lowercase
         for filename in path.glob(f'**/{name}{filetype}'):
             if filetype == '.bam':

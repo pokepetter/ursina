@@ -9,7 +9,7 @@ from ursina import ursinamath, color
 from ursina.ursinastuff import invoke
 
 
-_boxcast_box = Entity(model='cube', origin_z=-.5, collider='box', color=color.white33, enabled=False, eternal=True)
+_boxcast_box = Entity(model='cube', origin_z=-.5, collider='box', color=color.white33, enabled=False, eternal=True, add_to_scene_entities=False)
 
 def boxcast(origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_target=scene, ignore=[], debug=False): # similar to raycast, but with width and height
     if isinstance(thickness, (int, float, complex)):

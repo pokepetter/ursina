@@ -7,6 +7,7 @@
 <head>
     <link rel="stylesheet" href="sswg.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
 <left>
@@ -20,17 +21,15 @@ Using Blender as a Level Editor<br>
 <br>
 <br>
 <div style="text-align: left;">
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Prerequisites"/><br>
+<h2><div id="Prerequisites"/><br>
 Prerequisites<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 Knowledge of Blender and how to use it.<br>
 <br>
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="How to use it?"/><br>
+<h2><div id="How to use it?"/><br>
 How to use it?<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 <div class="code_block" style="margin-left: 0em;">level = load_blender_scene(path = application.asset_folder,
     name=<green>'castaway_island'</green>,
@@ -39,18 +38,16 @@ How to use it?<br>
 </div><br>
 <br>
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="What does it do?"/><br>
+<h2><div id="What does it do?"/><br>
 What does it do?<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 Make sure objects share the same mesh where possible.<br>
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="What about colliders?"/><br>
+<h2><div id="What about colliders?"/><br>
 What about colliders?<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 Just loop through the level's children and do the modifications you need:<br>
 <div class="code_block" style="margin-left: 0em;"><purple>for</purple> e in level.children:
     e.collider = <green>'box'</green>
