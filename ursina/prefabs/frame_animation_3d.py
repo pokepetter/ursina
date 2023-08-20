@@ -11,6 +11,7 @@ class FrameAnimation3d(Entity):
             if application.raise_exception_on_missing_model:
                 raise FileNotFoundError(f'error: could not find models starting with: {name}')
             self.frames = []
+            self.sequence = Sequence(loop=loop, auto_destroy=False)
             return
 
         self.frames = [Entity(parent=self, model=e.stem, enabled=False, add_to_scene_entities=False) for e in model_names]
