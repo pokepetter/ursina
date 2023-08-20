@@ -83,34 +83,12 @@ class MeshCollider(Collider):
         self.collision_polygons = []
 
         if isinstance(mesh, Mesh):
-            if mesh.triangles:
-                triangles = mesh.triangles
-                if not isinstance(mesh.triangles[0], tuple):
-                    triangles = [triangles[i:i + 3] for i in range(0, len(triangles), 3)] # group into groups of three
-
-                for tri in triangles:
-                    if len(tri) == 3:
-                        poly = CollisionPolygon(
-                            Vec3(mesh.vertices[tri[2]]),
-                            Vec3(mesh.vertices[tri[1]]),
-                            Vec3(mesh.vertices[tri[0]]),
-                            )
-                        self.collision_polygons.append(poly)
-                    elif len(tri) == 4:
-                        poly = CollisionPolygon(
-                            Vec3(mesh.vertices[tri[3]]),
-                            Vec3(mesh.vertices[tri[2]]),
-                            Vec3(mesh.vertices[tri[1]]),
-                            Vec3(mesh.vertices[tri[0]]))
-                        self.collision_polygons.append(poly)
-
-
-            elif mesh.mode == 'triangle': # no triangle list, so take 3 and 3 vertices
-                for i in range(0, len(mesh.vertices), 3):
+            if mesh.mode == 'triangle':
+                for i in range(0, len(mesh.generated_vertices), 3):
                     poly = CollisionPolygon(
-                        Vec3(mesh.vertices[i+2]),
-                        Vec3(mesh.vertices[i+1]),
-                        Vec3(mesh.vertices[i]),
+                        Vec3(mesh.generated_vertices[i+2]),
+                        Vec3(mesh.generated_vertices[i+1]),
+                        Vec3(mesh.generated_vertices[i]),
                         )
                     self.collision_polygons.append(poly)
 
