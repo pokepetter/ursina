@@ -3,6 +3,7 @@ from math import sqrt, sin, acos, pi, cos, floor
 from panda3d.core import Vec4, LVector3f, Mat3, Mat4
 from ursina.vec2 import Vec2
 from ursina.vec3 import Vec3
+from ursina import color
 from ursina.color import Color
 internal_sum = sum
 
@@ -147,6 +148,32 @@ def sum(l):
     return total
 
 
+def make_gradient(index_color_dict):    # returns a list of 256 colors
+    '''
+    given a dict of positions and colors, interpolates the colors into a list of 256 colors
+    example input: {'0':color.hex('#9d9867'), '38':color.hex('#828131'), '54':color.hex('#5d5b2a'), '255':color.hex('#000000')}
+    '''
+    gradient = [color.black for i in range(256)]
+
+    gradient_color_keys = tuple(index_color_dict.keys())
+    gradient_color_values = tuple(index_color_dict.values())
+
+    for i in range(len(gradient_color_values)):
+        from_col = color.hex(gradient_color_values[i-1])
+        to_col = color.hex(gradient_color_values[i])
+
+        from_num = 0
+        if i > 0:
+            from_num = int(gradient_color_keys[i-1])
+        to_num = int(gradient_color_keys[i])
+        dist = to_num - from_num
+
+        for j in range(dist):
+            gradient[from_num+j] = lerp(from_col, to_col, j/dist)
+
+    return gradient
+
+
 def sample_gradient(list_of_values, t):     # distribute list_of_values equally on a line and get the interpolated value at t (0-1).
     l = len(list_of_values)
     if l == 1:
@@ -162,6 +189,9 @@ def sample_gradient(list_of_values, t):     # distribute list_of_values equally 
         return lerp(list_of_values[index], list_of_values[index+1], relative)
     else:
         return lerp(list_of_values[index-1], list_of_values[index], relative)
+
+
+
 
 
 class Bounds:
