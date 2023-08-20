@@ -72,7 +72,7 @@ class Mesh(NodePath):
             if value is None:
                 setattr(self, name, [])
 
-        if self.vertices:
+        if self.vertices != []:
             self.generate()
 
 
