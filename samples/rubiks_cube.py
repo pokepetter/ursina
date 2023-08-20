@@ -55,27 +55,27 @@ rotation_helper = Entity()
 def rotate_side(normal, direction=1, speed=1):
     if normal == Vec3(1,0,0):
         [setattr(e, 'world_parent', rotation_helper) for e in cubes if e.x > 0]
-        rotation_helper.animate('rotation_x', 90 * direction, duration=.2*speed, curve=curve.linear, interrupt='finish')
+        rotation_helper.animate('rotation_x', 90 * direction, duration=.15*speed, curve=curve.linear, interrupt='finish')
     elif normal == Vec3(-1,0,0):
         [setattr(e, 'world_parent', rotation_helper) for e in cubes if e.x < 0]
-        rotation_helper.animate('rotation_x', -90 * direction, duration=.2*speed, curve=curve.linear, interrupt='finish')
+        rotation_helper.animate('rotation_x', -90 * direction, duration=.15*speed, curve=curve.linear, interrupt='finish')
 
     elif normal == Vec3(0,1,0):
         [setattr(e, 'world_parent', rotation_helper) for e in cubes if e.y > 0]
-        rotation_helper.animate('rotation_y', 90 * direction, duration=.2*speed, curve=curve.linear, interrupt='finish')
+        rotation_helper.animate('rotation_y', 90 * direction, duration=.15*speed, curve=curve.linear, interrupt='finish')
     elif normal == Vec3(0,-1,0):
         [setattr(e, 'world_parent', rotation_helper) for e in cubes if e.y < 0]
-        rotation_helper.animate('rotation_y', -90 * direction, duration=.2*speed, curve=curve.linear, interrupt='finish')
+        rotation_helper.animate('rotation_y', -90 * direction, duration=.15*speed, curve=curve.linear, interrupt='finish')
 
     elif normal == Vec3(0,0,1):
         [setattr(e, 'world_parent', rotation_helper) for e in cubes if e.z > 0]
-        rotation_helper.animate('rotation_z', -90 * direction, duration=.2*speed, curve=curve.linear, interrupt='finish')
+        rotation_helper.animate('rotation_z', -90 * direction, duration=.15*speed, curve=curve.linear, interrupt='finish')
     elif normal == Vec3(0,0,-1):
         [setattr(e, 'world_parent', rotation_helper) for e in cubes if e.z < 0]
-        rotation_helper.animate('rotation_z', 90 * direction, duration=.2*speed, curve=curve.linear, interrupt='finish')
+        rotation_helper.animate('rotation_z', 90 * direction, duration=.15*speed, curve=curve.linear, interrupt='finish')
 
 
-    invoke(reset_rotation_helper, delay=.22*speed)
+    invoke(reset_rotation_helper, delay=.2*speed)
 
     if speed:
         collider.ignore_input = True
