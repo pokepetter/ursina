@@ -427,32 +427,32 @@ if __name__ == '__main__':
     # application.development_mode = False
     # app = Ursina(borderless=True, forced_aspect_ratio=16/9)
     app = Ursina(
-        title='Sudden Death',
-        borderless = False,
-        fullscreen = True,
-        show_ursina_splash = True,
-        development_mode = False,
+        title='Ursina',
+        borderless=False,
+        fullscreen=True,
+        show_ursina_splash=True,
+        development_mode=False,
         # vsync = True
         )
     # window.monitor_index = 0
     # window.center_on_screen()
-    print('------------', window.monitors)
+    # print('------------', window.monitors)
     # time.sleep(2)
     # window.forced_aspect_ratio = 1
     # window.vsync = 10
-    window.title = 'ursina'
+    # window.title = 'ursina'
     # window.borderless = False
     # window.fullscreen = False
     # window.fps_counter.enabled = False
     # window.cog_button.enabled = False
     # window.position =(0,837)
 
-    camera.orthographic = True
-    camera.fov = 2
-    Text(text='adoij', x=.1)
-    def input(key):
-        if key == 'space':
-            window.center_on_screen()
+    # camera.orthographic = True
+    # camera.fov = 2
+    # Text(text='adoij', x=.1)
+    # def input(key):
+    #     if key == 'space':
+    #         window.center_on_screen()
 
     # Entity(model='cube', color=color.green, collider='box', texture='shore')
     app.run()

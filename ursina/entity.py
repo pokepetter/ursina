@@ -40,7 +40,6 @@ try:
 except:
     pass
 
-application.trace_entity_definition = True
 _Ursina_instance = None
 _warn_if_ursina_not_instantiated = True # gets set to True after Ursina.__init__() to ensure the correct order.
 
@@ -82,6 +81,7 @@ class Entity(NodePath):
 
         self.collision = False  # toggle collision without changing collider.
         self._collider = None
+        self.setPythonTag('Entity', self)   # for the raycast to get the Entity and not just the NodePath
         self.collider = None    # set to 'box'/'sphere'/'capsule'/'mesh' for auto fitted collider.
         self.scripts = []   # add with add_script(class_instance). will assign an 'entity' variable to the script.
         self.animations = []
@@ -94,7 +94,7 @@ class Entity(NodePath):
 
         self.line_definition = None # returns a Traceback(filename, lineno, function, code_context, index).
 
-        if application.trace_entity_definition and add_to_scene_entities or (not _Ursina_instance and _warn_if_ursina_not_instantiated):
+        if application.trace_entity_definition and add_to_scene_entities or (not _Ursina_instance and _warn_if_ursina_not_instantiated and add_to_scene_entities):
             from inspect import getframeinfo, stack
             _stack = stack()
             caller = getframeinfo(_stack[1][0])
@@ -199,55 +199,60 @@ class Entity(NodePath):
 
         self._enabled = value
 
+    @property
+    def model(self):
+        return self._model
+
+    @model.setter
+    def model(self, value):
+        if value is None:
+            if hasattr(self, 'model') and self.model:
+                self.model.removeNode()
+                # print('removed model')
+            self._model = value
+            return
+
+        if isinstance(value, NodePath): # pass procedural model
+            if self.model is not None and value != self.model:
+                self.model.detachNode()
+            self._model = value
+
+        elif isinstance(value, str): # pass model asset name
+            m = load_model(value, application.asset_folder)
+            if not m:
+                m = load_model(value, application.internal_models_compressed_folder)
+            if m:
+                if self.model is not None:
+                    self.model.removeNode()
+
+                m.name = value
+                m.setPos(Vec3(0,0,0))
+                self._model = m
+                # if not value in mesh_importer.imported_meshes:
+                #     print_info('loaded model successfully:', value)
+            else:
+                if application.raise_exception_on_missing_model:
+                    raise ValueError(f"missing model: '{value}'")
+
+                print_warning(f"missing model: '{value}'")
+                return
+
+        if self.model:
+            self.model.reparentTo(self)
+            self.model.setTransparency(TransparencyAttrib.M_dual)
+            self.color = self.color # reapply color after changing model
+            self.texture = self.texture # reapply texture after changing model
+            self._vert_cache = None
+            if isinstance(value, Mesh):
+                if hasattr(value, 'on_assign'):
+                    value.on_assign(assigned_to=self)
+
+
 
     def __setattr__(self, name, value):
         if name == 'eternal':
             for c in self.children:
                 c.eternal = value
-
-        if name == 'model':
-            if value is None:
-                if hasattr(self, 'model') and self.model:
-                    self.model.removeNode()
-                    # print('removed model')
-                object.__setattr__(self, name, value)
-                return None
-
-            if isinstance(value, NodePath): # pass procedural model
-                if self.model is not None and value != self.model:
-                    self.model.detachNode()
-                object.__setattr__(self, name, value)
-
-            elif isinstance(value, str): # pass model asset name
-                m = load_model(value, application.asset_folder)
-                if not m:
-                    m = load_model(value, application.internal_models_compressed_folder)
-                if m:
-                    if self.model is not None:
-                        self.model.removeNode()
-
-                    m.name = value
-                    m.setPos(Vec3(0,0,0))
-                    object.__setattr__(self, name, m)
-                    # if not value in mesh_importer.imported_meshes:
-                    #     print_info('loaded model successfully:', value)
-                else:
-                    if application.raise_exception_on_missing_model:
-                        raise ValueError(f"missing model: '{value}'")
-
-                    print_warning(f"missing model: '{value}'")
-                    return
-
-            if self.model:
-                self.model.reparentTo(self)
-                self.model.setTransparency(TransparencyAttrib.M_dual)
-                self.color = self.color # reapply color after changing model
-                self.texture = self.texture # reapply texture after changing model
-                self._vert_cache = None
-                if isinstance(value, Mesh):
-                    if hasattr(value, 'on_assign'):
-                        value.on_assign(assigned_to=self)
-            return
 
         elif name == 'color' and value is not None:
             if isinstance(value, str):
@@ -415,12 +420,17 @@ class Entity(NodePath):
     def collision(self, value):
         self._collision = value
         if not hasattr(self, 'collider') or not self.collider:
+            if self in scene.collidables:
+                scene.collidables.remove(self)
             return
 
         if value:
             self.collider.node_path.unstash()
+            scene.collidables.add(self)
         else:
             self.collider.node_path.stash()
+            if self in scene.collidables:
+                scene.collidables.remove(self)
 
     @property
     def origin(self):
@@ -1118,16 +1128,18 @@ class Entity(NodePath):
         changes = dict()
         for key, value in target_class.default_values.items():
             attr = getattr(self, key)
+            if attr == target_class.default_values[key]:
+                continue
 
+            if hasattr(attr, '__name__'):
+                attr = attr.__name__
+                changes[key] = attr
+                continue
 
-            if hasattr(attr, 'name') and attr.name:
+            if attr and hasattr(attr, 'name') and attr.name and isinstance(attr.name, str):
                 attr = attr.name
                 if '.' in attr:
                     attr = attr.split('.')[0]
-
-
-            if attr == target_class.default_values[key]:
-                continue
 
             # print('attr changed:', key, 'from:', target_class.default_values[key], 'to:', attr)
             if key == 'color':

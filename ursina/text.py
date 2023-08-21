@@ -281,12 +281,12 @@ class Text(Entity):
         for line in self.text.split('\n'):
             longest_line_length = max(longest_line_length, temp_text_node.calcWidth(line))
 
-        return longest_line_length  * self.scale_x * self.size
+        return longest_line_length * self.size
 
 
     @property
     def height(self): # gets the height of the text
-        return (len(self.lines) * self.line_height * self.scale_y * self.size)
+        return (len(self.lines) * self.line_height * self.size)
 
     @property
     def lines(self):
@@ -397,7 +397,7 @@ class Text(Entity):
         #     self._background.x += self.origin_x * self.width * 2
         self._background.y -= self.origin_y * self.height
 
-        self._background.model = Quad(radius=radius, scale=(w/self.scale_x, h/self.scale_y))
+        self._background.model = Quad(radius=radius, scale=(w, h))
         self._background.color = color
 
 

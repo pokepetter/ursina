@@ -222,6 +222,7 @@ if __name__ == '__main__':
     app = Ursina()
     EditorCamera()
     tilemap = Tilemap('tilemap_test_level', tileset='test_tileset', tileset_size=(8,4), parent=scene)
+    tilemap.canvas.texture = 'tilemap_test_level'
     # tilemap = Tilemap('brick', tileset='tileset_cave', tileset_size=(8,4), parent=scene)
     camera.orthographic = True
     camera.position = tilemap.tilemap.size / 2

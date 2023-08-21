@@ -11,7 +11,7 @@ class HitInfo:
         self.entity = None
         self.point = None
         self.world_point = None
-        self.distance = math.inf
+        self.distance = 9999
         self.normal = None
         self.world_normal = None
         self.hits = []

@@ -73,7 +73,6 @@ class VecField(Button):
         if len(value) == 1:
             value = value[0]
 
-        print('set value to', value)
         if self.on_value_changed is not None:
             self.on_value_changed()
 

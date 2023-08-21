@@ -2,7 +2,7 @@ from ursina import Entity, Button, camera, color, Text, window, mouse, destroy
 from ursina.scripts.grid_layout import grid_layout
 
 class ButtonGroup(Entity):
-    def __init__(self, options=None, default='', min_selection=1, max_selection=1, origin=(-.5,.5,0), spacing=(0.025,0,0), **kwargs):
+    def __init__(self, options, default='', min_selection=1, max_selection=1, origin=(-.5,.5,0), spacing=(0.025,0,0), **kwargs):
         super().__init__()
         self.deselected_color = Button.color
         self.selected_color = color.azure
@@ -48,9 +48,7 @@ class ButtonGroup(Entity):
 
     @value.setter
     def value(self, value):
-        print('set buttongroup value to:', value)
         [self.select(b) for b in self.buttons if b.value in value]
-
 
 
     def layout(self):

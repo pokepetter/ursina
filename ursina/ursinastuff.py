@@ -40,15 +40,28 @@ def invoke(function, *args, **kwargs):
     return s
 
 
+def after(delay):
+    '''@after  decorator for calling a function after some time.
+
+        example:
+        @after(.4)
+        def reset_cooldown():
+            self.on_cooldown = False
+            self.color = color.green
+    '''
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            invoke(func, *args, **kwargs, delay=delay)
+        return wrapper()
+    return decorator
+
+
 def destroy(entity, delay=0):
     if delay == 0:
         _destroy(entity)
         return
 
-    s = Sequence(
-        Wait(delay),
-        Func(_destroy, entity)
-    )
+    s = Sequence(Wait(delay), Func(_destroy, entity))
     s.start()
     return s
 
@@ -66,7 +79,7 @@ def _destroy(entity, force_destroy=False):
     if entity.collider:
         entity.collider.remove()
 
-    if hasattr(entity, 'stop'):
+    if hasattr(entity, 'clip') and hasattr(entity, 'stop'): # stop audio
         entity.stop(False)
 
     if hasattr(entity, 'on_destroy'):
@@ -74,6 +87,9 @@ def _destroy(entity, force_destroy=False):
 
     if entity in scene.entities:
         scene.entities.remove(entity)
+        
+    if entity in scene.collidables:
+        scene.collidables.remove(entity)
 
     if hasattr(entity, '_parent') and entity._parent and hasattr(entity._parent, '_children') and entity in entity._parent._children:
         entity._parent._children.remove(entity)
