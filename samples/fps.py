@@ -29,7 +29,7 @@ for i in range(16):
         color=color.hsv(0, 0, random.uniform(.9, 1))
         )
 
-def update():
+def update(self):
     if held_keys['left mouse']:
         shoot()
 
