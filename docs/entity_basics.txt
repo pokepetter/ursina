@@ -197,7 +197,7 @@ print(mouse.hovered_entity)
 ```
 
 
-To check if and entity with a collider is hovered by the mouse:
+To check if an entity with a collider is hovered by the mouse:
 ```
 print(my_entity.hovered)
 ```
