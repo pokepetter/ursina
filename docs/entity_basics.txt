@@ -110,7 +110,7 @@ As with position, there's shortcuts for setting world position on individual axe
 world_x, world_y and world_z
 
 See https://www.ursinaengine.org/coordinate_system.html for more
-information on how the coordinate system works.
+information on how the coordinate system works. It is also the next section of this documentation.
 
 
 
