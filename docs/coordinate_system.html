@@ -7,7 +7,6 @@
 <head>
     <link rel="stylesheet" href="sswg.css">
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
 <left>
@@ -72,9 +71,10 @@
 Coordinate System<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
-<h2><div id="Entity Coordinate System"/><br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Entity Coordinate System"/><br>
 Entity Coordinate System<br>
-</h2><br>
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 <div class="code_block" style="margin-left: 0em;">
             y (up)
@@ -89,33 +89,43 @@ Entity Coordinate System<br>
 <br>
 <br>
 <br>
-<h2><div id="UI Coordinate System"/><br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="UI Coordinate System"/><br>
 UI Coordinate System<br>
-</h2><br>
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
-<div class="code_block" style="margin-left: 0em;">
-_______________________(.<yellow>5</yellow>, .<yellow>5</yellow>)____(window.top_right)
-|       <green>'                  '</green>       |
-|       <green>'                  '</green>       |
-|       <green>'                  '</green>       |
-|       <green>'                  '</green>       |
-|       <green>'      (<yellow>0</yellow>, <yellow>0</yellow>)      '</green>       |(.<yellow>5</yellow>*window.aspect_ratio, <yellow>0</yellow>)
-|       <green>'                  '</green>       |
-|       <green>'                  '</green>       |
-|       <green>'                  '</green>       |
-|_______<green>'__________________'</green>_______|
-    (-.<yellow>5</yellow>, -.<yellow>5</yellow>)
-
+<div class="code_block" style="margin-left: 0em;">                      (-.<yellow>5</yellow>, .<yellow>5</yellow>)           (.<yellow>5</yellow>, .<yellow>5</yellow>)
+  (window.top_right)_______|__(window.top)____|_______(window.top_right)
+                   |       <green>'                  '</green>       |
+                   |       <green>'                  '</green>       |
+                   |       <green>'                  '</green>       |
+                   |       <green>'                  '</green>       |
+       (window.left)       <green>'      (<yellow>0</yellow>, <yellow>0</yellow>)      '</green>       (window.right or Vec2(.<yellow>5</yellow>*window.aspect_ratio, <yellow>0</yellow>))
+                   |       <green>'                  '</green>       |
+                   |       <green>'                  '</green>       |
+                   |       <green>'                  '</green>       |
+                   |_______<green>'__________________'</green>_______|
+(window.bottom_left)       |  (window.bottom) |       (window.bottom_right)
+                      (-.<yellow>5</yellow>, -.<yellow>5</yellow>)          (.<yellow>5</yellow>, -.<yellow>5</yellow>)
 </div><br>
 Want a different UI coordinate system? No problem. camera.ui is an Entity as well so you can move and scale it as you see fit.<br>
 <br>
 <br>
-<h2><div id="Rotation"/><br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Rotation"/><br>
 Rotation<br>
-</h2><br>
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
-Positive value is clock-wise around axis.<br>
-Imagine looking from a positive point on the axis and turing the entity left.<br>
+Positive rotation means rotating clockwise around the axis, looking from the outside in.<br>
+The exception to this is the z-axis, which is counter-clockwise.<br>
+While this is inconsistent, it makes setting rotation_z in 2D also clockwise.<br>
+<br>
+Although generally not recommended, the rotation direction can be changed by<br>
+setting <span>Entity.rotation_directions</span> (default: (-1,-1,1)).<br>
+<br>
+In general when working with rotation you'll want to only set one of the axes at the same time.<br>
+For more complicated rotations you can use <span>entity.look_at(position)</span>, <span>entity.look_at_2d(position)</span><br>
+or even set/get .quaternion if you're comfortable with that. For continuous rotation, <span>entity.rotate(amount)</span> can be good as it will add a rotation to the current rotation.<br>
 <br>
 <div class="code_block" style="margin-left: 0em;">
            _______
@@ -123,8 +133,8 @@ Imagine looking from a positive point on the axis and turing the entity left.<br
           \-&gt;
     __
    /  \     y
-  |   v     |
-  |      z  |                __
+   v  |     |
+      |  z  |                __
           \ |               /  \
            \|               v   |
             *---------- x       |
@@ -133,26 +143,27 @@ Imagine looking from a positive point on the axis and turing the entity left.<br
 <br>
 <br>
 <br>
-<h2><div id="Origin"/><br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Origin"/><br>
 Origin<br>
-</h2><br>
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 Setting the origin will move the origin point of the model.<br>
 This can be especially useful when working with the UI.<br>
 <br>
-<div class="code_block" style="margin-left: 0em;">            (-.<yellow>5</yellow>,.<yellow>5</yellow>)
-+--------+      *--------+
-|        |      |        |
-|  (<yellow>0</yellow>,<yellow>0</yellow>) |      |        |
-|        |      |        |
-+--------+      +--------+
+<div class="code_block" style="margin-left: 0em;">             (-.<yellow>5</yellow>,.<yellow>5</yellow>)
++---------+      <yellow>0</yellow>---------+
+|  (<yellow>0</yellow>,<yellow>0</yellow>)  |      |         |
+|    <yellow>0</yellow>    |      |         |
+|         |      |         |
++---------+      +---------+
 
-  (<yellow>0</yellow>,.<yellow>5</yellow>)
-+----*---+      +--------+
-|        |      |        |
-|        |      |        * (.<yellow>5</yellow>,<yellow>0</yellow>)
-|        |      |        |
-+--------+      +--------+
+   (<yellow>0</yellow>,.<yellow>5</yellow>)
++----<yellow>0</yellow>----+      +---------+
+|         |      |         |
+|         |      |         <yellow>0</yellow> (.<yellow>5</yellow>,<yellow>0</yellow>)
+|         |      |         |
++---------+      +---------+
 
 </div><br>
 

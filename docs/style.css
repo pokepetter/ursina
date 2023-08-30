@@ -10,6 +10,7 @@
 
   --code_block_bg_color: #efefef;
   --code_block_text_color: hsl(240, 0%, 20%);
+  --inline_code_bg_color: hsl(300, 35%, 81%);
 
   /*blue/orange */
   --gradient_start: #00a9d3;
@@ -40,6 +41,8 @@
 
         --code_block_bg_color: hsl(60, 0%, 10%);
         --code_block_text_color: hsl(240, 0%, 80%);
+        --inline_code_bg_color: hsl(302, 30%, 15%);
+
         --olive: #b29527;
         --green: #39a468;
         --blue: hsl(210deg 68% 58%);
@@ -143,10 +146,14 @@ purple {color: var(--purple)}
 }
 
 span {
-    background-color: var(--bg_color);
-    padding: .1em;
+    background-color: var(--inline_code_bg_color);
+    padding-left: .25em;
+    padding-right: .25em;
     line-height: 1.35em;
-    color: var(--text_color);
+    color: var(--code_block_text_color);
+    font-family: monospace;
+    font-size: .9em;
+    border-radius: .5em;
 }
 
 /* ===== Scrollbar CSS ===== */
