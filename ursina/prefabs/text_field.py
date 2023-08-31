@@ -84,7 +84,7 @@ class TextField(Entity):
                 if key == 'middle mouse down':
                     self.middle_click_scroller.start_y = mouse.y
                     self._original_scroll_amount = self.scroll_amount
-                elif key == 'middle mouse up':
+                elif key == 'middle mouse up' and hasattr(self, '_original_scroll_amount'):
                     self.middle_click_scroller.start_y = None
                     self.scroll_amount = self._original_scroll_amount
 

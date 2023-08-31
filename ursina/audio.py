@@ -161,7 +161,7 @@ class Audio(Entity):
             _destroy(self)
 
     def fade(self, value, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
-        self.animate('volume', value, duration, delay, curve, resolution, interrupt)
+        self.animate('volume', value=value, duration=duration, delay=delay, curve=curve, resolution=resolution, interrupt=interrupt)
 
     def fade_in(self, value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt='finish',
                 destroy_on_ended=False):

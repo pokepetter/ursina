@@ -7,7 +7,6 @@
 <head>
     <link rel="stylesheet" href="sswg.css">
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
 <left>
@@ -72,16 +71,11 @@
 Frequently Asked Questions<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
-<h2><div id="How do I update ursina?"/><br>
-How do I update ursina?<br>
-</h2><br>
 <br>
-<div class="code_block" style="margin-left: 0em;">pip install <a href="https://github.com/pokepetter/ursina/archive/master.zip">https://github.com/pokepetter/ursina/archive/master.zip</a> --upgrade
-</div><br>
-<br>
-<h2><div id="How should I structure my project?"/><br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="How should I structure my project?"/><br>
 How should I structure my project?<br>
-</h2><br>
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 <div class="code_block" style="margin-left: 0em;">project_folder/         <gray># create a new folder <purple>for</purple> each project</gray>
     enemies.py
@@ -96,9 +90,10 @@ How should I structure my project?<br>
 <br>
 <br>
 <br>
-<h2><div id="How do I move the camera?"/><br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="How do I move the camera?"/><br>
 How do I move the camera?<br>
-</h2><br>
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 The camera is an Entity, so you can move and rotate it just like everything else:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;```<br>
@@ -107,9 +102,10 @@ The camera is an Entity, so you can move and rotate it just like everything else
 <br>
 <br>
 <br>
-<h2><div id="Why should I use Python for game development. Isn't it slow?"/><br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="Why should I use Python for game development. Isn't it slow?"/><br>
 Why should I use Python for game development. Isn't it slow?<br>
-</h2><br>
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 Not really. The most performance critical part are written in C++ or shader code.<br>
 Python can make you more productive as a developer and thus make it easier<br>
@@ -118,30 +114,19 @@ to structure your project in a good way, rather than micro-optimize.<br>
 <br>
 <br>
 <br>
-<h2><div id="How do I call a function with a delay?</b>"/><br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="How do I call a function with a delay?</b>"/><br>
 How do I call a function with a delay?</b><br>
-</h2><br>
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 <div class="code_block" style="margin-left: 0em;">invoke(some_function, arg<yellow>1</yellow>, kwarg<yellow>1</yellow>=<green>'some kwarg'</green>, dela<olive>y</olive>=<yellow>2</yellow>)
 </div><br>
 <br>
 <br>
-<h2><div id="How do I add lights?"/><br>
-How do I add lights?<br>
-</h2><br>
-<br>
-If all you want are some simple lights to make 3D shapes look more interesting,<br>
-look at the program 'lights.py' in the samples folder.&nbsp;&nbsp;For anything more complicated,<br>
-you are on your own. The DirectionalLight has shadows too, but it's recommended to use the<br>
-lit_with_shadows_shader on entities. The shadow area will be calculated based on the scene bounds,<br>
-so keep that in mind when isinstanciation the light.<br>
-<br>
-<br>
-<br>
-<br>
-<h2><div id="How can I use panda3d alongside ursina?"/><br>
+<div style="font-size: 40.0px;font-weight: bold;">
+<div id="How can I use panda3d alongside ursina?"/><br>
 How can I use panda3d alongside ursina?<br>
-</h2><br>
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 What you need to know is that Entity is a NodePath and Ursina is a ShowBase.<br>
 You can also write custom shaders, see panda3d's shader documentation for that.<br>
