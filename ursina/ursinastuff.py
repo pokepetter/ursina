@@ -9,8 +9,6 @@ import time
 from pathlib import Path
 
 from ursina import application
-from ursina.text import Text
-from ursina.window import instance as window
 from ursina.scene import instance as scene
 from ursina.sequence import Sequence, Func, Wait
 
@@ -123,7 +121,7 @@ def _destroy(entity, force_destroy=False):
 
     if entity in scene.entities:
         scene.entities.remove(entity)
-        
+
     if entity in scene.collidables:
         scene.collidables.remove(entity)
 
@@ -197,6 +195,7 @@ def import_all_classes(path=application.asset_folder, debug=False):
 
 
 def print_on_screen(text, position=(0,0), origin=(-.5,.5), scale=1, duration=1):
+    from ursina.text import Text
     text_entity = Text(text=text, position=position, origin=origin, scale=scale)
     destroy(text_entity, delay=duration)
 
@@ -211,17 +210,8 @@ if __name__ == '__main__':
 
     from ursina import *
     app = Ursina()
-    def test_func(item, x=None, y=None):
-        print(item, x, y)
-
-    test_func('test')
-    invoke(test_func, 'test', delay=.1)
-    invoke(test_func, 'test1', 1, 2, delay=.2)
-    invoke(test_func, 'test2', x=1, y=2, delay=.3)
-
-    def input(key):
-        if key == 'space':
-            print_on_screen('debug message', position=(0,0), origin=(0,0), scale=2)
 
 
+
+    # Player()
     app.run()
