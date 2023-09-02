@@ -27,7 +27,7 @@ _ray.setDirection(Vec3(0,0,1))
 _raycaster._pickerNode.addSolid(_ray)
 
 
-def raycast(origin, direction:Vec3=(0,0,1), distance=inf, traverse_target:Entity=scene, ignore:list=None, debug=False, color=color.white):
+def raycast(origin, direction:Vec3=(0,0,1), distance=9999, traverse_target:Entity=scene, ignore:list=None, debug=False, color=color.white):
     if not ignore:
         ignore = []
 
