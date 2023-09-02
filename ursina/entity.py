@@ -1269,7 +1269,11 @@ class Entity(NodePath):
 
 
 
-    def intersects(self, traverse_target=scene, ignore=(), debug=False):
+    def intersects(self, traverse_target=scene, ignore:list=None, debug=False):
+        if not ignore:
+            ignore = []
+        ignore = list(ignore)
+
         if isinstance(self.collider, MeshCollider):
             raise Exception('''error: mesh colliders can't intersect other shapes, only primitive shapes can. Mesh colliders can "receive" collisions though.''')
 
@@ -1304,45 +1308,27 @@ class Entity(NodePath):
             self.hit = HitInfo(hit=False)
             return self.hit
 
-        ignore += (self, )
-        ignore += tuple(e for e in scene.entities if not e.collision)
+        ignore.append(self)
+        ignore.extend((e for e in scene.entities if not e.collision))
 
         self._pq.sort_entries()
-        self.entries = [        # filter out ignored entities
-            e for e in self._pq.getEntries()
-            if e.get_into_node_path().parent not in ignore
+        entries = self._pq.getEntries()
+        entities = [e.get_into_node_path().parent for e in entries]
+
+        entries = [        # filter out ignored entities
+            e for i, e in enumerate(entries)
+            if entities[i] in scene.collidables
+            and entities[i] not in ignore
             ]
 
-        if len(self.entries) == 0:
-            self.hit = HitInfo(hit=False, distance=0)
-            return self.hit
+        if len(entries) == 0:
+            return HitInfo(hit=False)
 
-        collision = self.entries[0]
-        nP = collision.get_into_node_path().parent
-        point = collision.get_surface_point(nP)
-        point = Vec3(*point)
-        world_point = collision.get_surface_point(scene)
-        world_point = Vec3(*world_point)
-        hit_dist = distance(self.world_position, world_point)
+        hit_info = HitInfo(hit=True)
+        hit_info.entities = [e.get_into_node_path().parent.getPythonTag('Entity') for e in entries]
+        hit_info.entity = hit_info.entities[0]
 
-        self.hit = HitInfo(hit=True)
-        self.hit.entity = next(e for e in scene.entities if e == nP)
-
-        self.hit.point = point
-        self.hit.world_point = world_point
-        self.hit.distance = hit_dist
-
-        normal = collision.get_surface_normal(collision.get_into_node_path().parent).normalized()
-        self.hit.normal = Vec3(*normal)
-
-        normal = collision.get_surface_normal(scene).normalized()
-        self.hit.world_normal = Vec3(*normal)
-
-        self.hit.entities = []
-        for collision in self.entries:
-            self.hit.entities.append(next(e for e in scene.entities if e == collision.get_into_node_path().parent))
-
-        return self.hit
+        return hit_info
 
 
 
