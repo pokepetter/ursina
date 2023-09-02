@@ -30,7 +30,7 @@ def invoke(function, *args, **kwargs):
 
     if not delay:
         function(*args, **kwargs)
-        return function
+        return None
 
     s = Sequence(
         Wait(delay),
