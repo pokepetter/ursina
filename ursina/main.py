@@ -147,19 +147,19 @@ class Ursina(ShowBase):
                 window.console.text_field = TextField(parent=window.console, scale=.75, font='VeraMono.ttf', max_lines=20, position=(0,0), register_mouse_input=True, text_input=None, eternal=True)
                 window.console.text_field.bg.color = color.black66
                 window.console.text_field.bg.scale_x = 1.5
-                def custom_print(*args, **kwargs):
+                def _custom_print(*args, **kwargs):  # makes print() poutput to the in-game console instead of the terminal if use_ingame_console is True
                     content = ' '.join([str(e) for e in args])
                     if 'error' in content:
                         content = f'{content}'
                     window.console.text_field.cursor.y = window.console.text_field.text.count('\n')
                     window.console.text_field.cursor.x = 999
                     window.console.text_field.add_text(f'\n{content}')
-                builtins.print = custom_print
+                builtins.print = _custom_print
 
-                def console_text_input(key):
+                def _console_text_input(key):
                     if key == '|':
                         window.console.text_field.enabled = not window.console.text_field.enabled
-                window.console.text_input = console_text_input
+                window.console.text_input = _console_text_input
 
 
         if 'editor_ui_enabled' in kwargs:
@@ -202,7 +202,7 @@ class Ursina(ShowBase):
         return Task.cont
 
 
-    def input_up(self, key, is_raw=False):
+    def input_up(self, key, is_raw=False): # internal method for key release
         if not is_raw and key in keyboard_keys:
             return
 
@@ -213,7 +213,7 @@ class Ursina(ShowBase):
         self.input(key)
 
 
-    def input_hold(self, key, is_raw=False):
+    def input_hold(self, key, is_raw=False):   # internal method for handling repeating input that occurs when you hold the key
         key = key.replace('control-', '')
         key = key.replace('shift-', '')
         key = key.replace('alt-', '')
@@ -225,8 +225,8 @@ class Ursina(ShowBase):
         self.input(key)
 
 
-    def input(self, key, is_raw=False):
-        """Built-in input handler. Propagates the input to all entities and the input function of the main script. MAin use case for this it to simulate input though code, like: app.input('a').
+    def input(self, key, is_raw=False): # internal method for handling input
+        """Built-in input handler. Propagates the input to all entities and the input function of the main script. Main use case for this it to simulate input though code, like: app.input('a').
 
         Args:
             key (Any): The input key.
@@ -279,7 +279,7 @@ class Ursina(ShowBase):
         mouse.input(key)
 
 
-    def text_input(self, key):
+    def text_input(self, key):  # internal method for handling text input
         key_code = ord(key)
         if key_code < 32 or (key_code >= 127 and key_code <= 160):
             return
@@ -305,7 +305,7 @@ class Ursina(ShowBase):
                     if script.enabled and hasattr(script, 'text_input') and callable(script.text_input):
                         script.text_input(key)
 
-    def step(self):     # use this control the update loop yourself. call app.step() in a while loop for example, instead of app.run()
+    def step(self): # use this control the update loop yourself. call app.step() in a while loop for example, instead of app.run()
         self.taskMgr.step()
 
 
