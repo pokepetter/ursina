@@ -57,10 +57,6 @@ def generate_properties_for_class(getter_suffix='_getter', setter_suffix='_sette
 
 
 if __name__ == '__main__':
-    # from ursina import *
-    # def getter(func):
-    #     print(func)
-    #
     class Z:
         pass
 
@@ -68,7 +64,7 @@ if __name__ == '__main__':
     class A:
         pass
         # def x_getter(self):
-        #     print('get orignal x')
+        #     print('get original x')
         #     return self._x
 
         # def x_setter(self, value):
@@ -81,16 +77,10 @@ if __name__ == '__main__':
         def __init__(self):
             super().__init__()
 
-
-        # pass
         def x_setter(self, value):
             self._x = value
             # super().x_setter(value) # enables you to use getters and setters with inheritance while keeping the parent class's behavior
             print('B setter side effect')
-        # @Property
-        # def x(self):
-        #     print('aa')
-        #
         # @x.setter
         # def x(self, value):
         #     setattr(super(), 'x', value)
@@ -98,7 +88,7 @@ if __name__ == '__main__':
 
 
 
-    # how you'd do it wouth the property generator, using __getattr__ and __setattr__
+    # how you'd do it without the property generator, using __getattr__ and __setattr__
     # class B(A):
     #     def __setattr__(self, name, value):
     #         super().__setattr__(name, value)
