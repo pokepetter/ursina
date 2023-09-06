@@ -123,7 +123,10 @@ class Sequence():
                 for f in self.funcs:
                     f.finished = False
 
-                self.t = 0
+                if time.dt > self.duration: # if delta time is too big, set t to 0 so it doens't get stuck, but allow desync.
+                    self.t = 0
+                else:
+                    self.t -= self.duration
                 return
 
             if self.auto_destroy and self in application.sequences:

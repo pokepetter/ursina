@@ -4,12 +4,6 @@
 
 ### Frequently Asked Questions
 
-## How do I update ursina?
-
-```
-pip install https://github.com/pokepetter/ursina/archive/master.zip --upgrade
-```
-
 
 ## How should I structure my project?
 
@@ -51,17 +45,6 @@ to structure your project in a good way, rather than micro-optimize.
 ```
 invoke(some_function, arg1, kwarg1='some kwarg', delay=2)
 ```
-
-
-
-## How do I add lights?
-
-If all you want are some simple lights to make 3D shapes look more interesting,
-look at the program 'lights.py' in the samples folder.  For anything more complicated,
-you are on your own. The DirectionalLight has shadows too, but it's recommended to use the
-lit_with_shadows_shader on entities. The shadow area will be calculated based on the scene bounds,
-so keep that in mind when isinstanciation the light.
-
 
 
 

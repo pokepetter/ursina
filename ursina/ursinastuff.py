@@ -9,8 +9,6 @@ import time
 from pathlib import Path
 
 from ursina import application
-from ursina.text import Text
-from ursina.window import instance as window
 from ursina.scene import instance as scene
 from ursina.sequence import Sequence, Func, Wait
 
@@ -30,7 +28,7 @@ def invoke(function, *args, **kwargs):
 
     if not delay:
         function(*args, **kwargs)
-        return function
+        return None
 
     s = Sequence(
         Wait(delay),
@@ -54,6 +52,42 @@ def after(delay):
             invoke(func, *args, **kwargs, delay=delay)
         return wrapper()
     return decorator
+
+
+
+def get_class_name(func):
+    qualname_parts = func.__qualname__.split('.')
+    class_name = qualname_parts[-2] if len(qualname_parts) > 1 else None
+    return class_name
+
+class every:
+    '''@after  decorator for calling a function on an Entity after some time.
+
+        example:
+        @every(.1)
+        def fixed_update():
+            print('check collision')
+
+        Using the @every decorator is the same as doing this in __init__() (on Entity):
+        self.animations.append(Sequence(Func(self.fixed_update), Wait(.1), loop=True, started=True))
+        The Sequence will call the function every .1 second, while adding it to
+        self.animations ensures the Sequence gets cleaned up when the Entity gets destroyed.
+    '''
+    decorated_methods = []  # store decorated methods here
+
+    def __init__(self, interval):
+        self.interval = interval
+
+    def __call__(self, func):
+        def wrapper(*args, **kwargs):
+            # print(f"Calling {func.__name__} every {self.interval} seconds")
+            return func(*args, **kwargs)
+
+        wrapper._every = self  # add _every attribute to the decorated method
+        wrapper._func = func
+        every.decorated_methods.append(wrapper)  # store the decorated method
+        return wrapper
+
 
 
 def destroy(entity, delay=0):
@@ -87,7 +121,7 @@ def _destroy(entity, force_destroy=False):
 
     if entity in scene.entities:
         scene.entities.remove(entity)
-        
+
     if entity in scene.collidables:
         scene.collidables.remove(entity)
 
@@ -161,6 +195,7 @@ def import_all_classes(path=application.asset_folder, debug=False):
 
 
 def print_on_screen(text, position=(0,0), origin=(-.5,.5), scale=1, duration=1):
+    from ursina.text import Text
     text_entity = Text(text=text, position=position, origin=origin, scale=scale)
     destroy(text_entity, delay=duration)
 
@@ -175,17 +210,8 @@ if __name__ == '__main__':
 
     from ursina import *
     app = Ursina()
-    def test_func(item, x=None, y=None):
-        print(item, x, y)
-
-    test_func('test')
-    invoke(test_func, 'test', delay=.1)
-    invoke(test_func, 'test1', 1, 2, delay=.2)
-    invoke(test_func, 'test2', x=1, y=2, delay=.3)
-
-    def input(key):
-        if key == 'space':
-            print_on_screen('debug message', position=(0,0), origin=(0,0), scale=2)
 
 
+
+    # Player()
     app.run()

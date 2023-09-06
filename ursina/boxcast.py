@@ -11,7 +11,10 @@ from ursina.ursinastuff import invoke
 
 _boxcast_box = Entity(model='cube', origin_z=-.5, collider='box', color=color.white33, enabled=False, eternal=True, add_to_scene_entities=False)
 
-def boxcast(origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_target=scene, ignore=[], debug=False): # similar to raycast, but with width and height
+def boxcast(origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_target=scene, ignore:list=None, debug=False): # similar to raycast, but with width and height
+    if not ignore:
+        ignore = []
+
     if isinstance(thickness, (int, float, complex)):
         thickness = (thickness, thickness)
 
@@ -24,14 +27,9 @@ def boxcast(origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_
 
     _boxcast_box.look_at(origin + direction)
     hit_info = _boxcast_box.intersects(traverse_target=traverse_target, ignore=ignore)
-    if hit_info.world_point:
-        hit_info.distance = ursinamath.distance(origin, hit_info.world_point)
-    else:
-        hit_info.distance = distance
 
     if debug:
         _boxcast_box.collision = False
-        _boxcast_box.scale_z = hit_info.distance
         invoke(setattr, _boxcast_box, 'enabled', False, delay=.2)
     else:
         _boxcast_box.enabled = False

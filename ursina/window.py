@@ -143,7 +143,7 @@ class Window(WindowProperties):
 
         self.entity_counter = Text(parent=self.editor_ui, eternal=True, origin=(-.5,.5), text='00', ignore=False, t=0,
             position=((.5*self.aspect_ratio)-self.exit_button.scale_x, .425+(.02*(not self.exit_button.enabled)), -999))
-        Text(parent=self.editor_ui, position=self.entity_counter.position, text='entities:', origin=(-.5,-.75), scale=.4, add_to_scene_entities=False)
+        self.entity_counter.text_entity = Text(parent=self.entity_counter, text='entities:', origin=(-.5,-.75), scale=.4, add_to_scene_entities=False)
         def _entity_counter_update():
             if self.entity_counter.t > 1:
                 self.entity_counter.text = str(max(0, len([e for e in scene.entities if e.model and e.enabled])-6))
@@ -153,7 +153,7 @@ class Window(WindowProperties):
 
         self.collider_counter = Text(parent=self.editor_ui, eternal=True, origin=(-.5,.5), text='00', ignore=False, t=.1,
             position=((.5*self.aspect_ratio)-self.exit_button.scale_x, .38+(.02*(not self.exit_button.enabled)), -999))
-        Text(parent=self.editor_ui, position=self.collider_counter.position, text='colliders:', origin=(-.5,-.75), scale=.4, add_to_scene_entities=False)
+        self.collider_counter.text_entity = Text(parent=self.collider_counter, text='colliders:', origin=(-.5,-.75), scale=.4, add_to_scene_entities=False)
         def _collider_counter_update():
             if self.collider_counter.t > 1:
                 self.collider_counter.text = str(max(0, len([e for e in scene.entities if e.collider and e.enabled])-4))
