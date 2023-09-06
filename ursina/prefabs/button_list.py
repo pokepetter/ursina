@@ -9,14 +9,13 @@ class ButtonList(Entity):
         self.button_height = button_height
         self.width = width
         self.text_entity = Text(parent=self, font=font, origin=(-.5,.5), text='empty', world_scale=20, z=-.1, x=.01, y=-(button_height*.25*Text.size), line_height=button_height)
-        self.bg = Entity(parent=self, model='quad', origin=(-.5,.5), scale=width, color=Button.color, collider='box')
-        self.highlight = Entity(parent=self.bg, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5), z=-.01, add_to_scene_entities=False)
-        self.selection_marker = Entity(parent=self.bg, model='quad', color=color.azure, scale=(1,self.button_height), origin=(-.5,.5), z=-.02, enabled=False, add_to_scene_entities=False)
+        self.bg = Entity(parent=self, model='quad', origin=(-.5,.5), scale=width, color=Button.default_color, collider='box')
+        self.highlight = Entity(parent=self.bg, model='quad', color=color.white33, scale=(1,self.button_height), origin=(-.5,.5), z=-.01, add_to_scene_entities=False, name='highlight')
+        self.selection_marker = Entity(parent=self.bg, model='quad', color=color.azure, scale=(1,self.button_height), origin=(-.5,.5), z=-.02, enabled=False, add_to_scene_entities=False, name='selection_marker')
         self.button_dict = button_dict
 
         for key, value in kwargs.items():
             setattr(self, key, value)
-
 
     @property
     def button_dict(self):
@@ -40,7 +39,6 @@ class ButtonList(Entity):
             y = min(y, len(self.button_dict)-1)
 
             action = self.actions[y]
-            self.highlight.blink(color.black, .1)
             self.selection_marker.enabled = True
             self.selection_marker.y = self.highlight.y
 

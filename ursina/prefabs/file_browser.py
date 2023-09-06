@@ -43,7 +43,7 @@ class FileButton(Button):
             self.color = color.azure
             self.highlight_color = color.azure
         else:
-            self.color = Button.color
+            self.color = Button.default_color
 
         self.load_menu.open_button.color = color.azure if self.load_menu.selection else color.dark_gray
 

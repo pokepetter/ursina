@@ -5,7 +5,7 @@ import textwrap
 
 class Button(Entity):
 
-    color = color.black90
+    default_color = color.black90
     default_model = None # will default to rounded Quad
 
     def __init__(self, text='', radius=.1, **kwargs):
@@ -25,14 +25,12 @@ class Button(Entity):
                 self.model = Quad(aspect=self.scale[0] / self.scale[1], radius=radius)
         else:
             self.model = Button.default_model
-        self.color = Button.color
-
-        self.text_entity = None
-        if text:
-            self.text = text
 
         if 'color' in kwargs:
-            setattr(self, 'color', kwargs['color'])
+            self.color = kwargs['color']
+        else:
+            self.color = Button.default_color
+
         self.highlight_color = self.color.tint(.2)
         self.pressed_color = self.color.tint(-.2)
         self.highlight_scale = 1    # multiplier

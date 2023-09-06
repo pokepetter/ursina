@@ -859,7 +859,7 @@ if __name__ == '__main__':
     # window.x = 200
 
     window.color = color.color(0, 0, .1)
-    Button.color = color._20
+    Button.default_color = color._20
     window.color = color._25
 
     # Text.size = 1/window.fullscreen_size[1]*16

@@ -616,7 +616,7 @@ player = Player(x=-<yellow>1</yellow>)
         <div class="params">Button(text='', radius=.1, **kwargs)</div><br>
         <table> <!-- attributes -->
             <tr>
-                <td>Button.color = color.black90</td><td><span>attribute names. used by duplicate().</gray></span></td>
+                <td>Button.default_color = color.black90</td><td><span>attribute names. used by duplicate().</gray></span></td>
             </tr>
             <tr>
                 <td>.parent<gray> = camera.ui</gray></td><td></td>
@@ -625,7 +625,7 @@ player = Player(x=-<yellow>1</yellow>)
                 <td>.disabled<gray> = False</gray></td><td></td>
             </tr>
             <tr>
-                <td>.color<gray> = Button.color</gray></td><td></td>
+                <td>.color<gray> = Button.default_color</gray></td><td></td>
             </tr>
             <tr>
                 <td>.text_entity<gray> = None</gray></td><td></td>
@@ -4331,7 +4331,7 @@ Sprite(<green>'shore'</green>, <olive>z</olive>=<yellow>1</yellow>)
         <div class="params">Button(text='', radius=.1, **kwargs)</div><br>
         <table> <!-- attributes -->
             <tr>
-                <td>Button.color = color.black90</td><td></td>
+                <td>Button.default_color = color.black90</td><td></td>
             </tr>
             <tr>
                 <td>.parent<gray> = camera.ui</gray></td><td></td>
@@ -4340,7 +4340,7 @@ Sprite(<green>'shore'</green>, <olive>z</olive>=<yellow>1</yellow>)
                 <td>.disabled<gray> = False</gray></td><td></td>
             </tr>
             <tr>
-                <td>.color<gray> = Button.color</gray></td><td></td>
+                <td>.color<gray> = Button.default_color</gray></td><td></td>
             </tr>
             <tr>
                 <td>.text_entity<gray> = None</gray></td><td></td>
@@ -4785,7 +4785,7 @@ app = Ursina(vsync=<yellow>6</yellow><yellow>0</yellow>)
 
 
 window.color = color.color(<yellow>0</yellow>, <yellow>0</yellow>, .<yellow>1</yellow>)
-Button.color = color._<yellow>2</yellow><yellow>0</yellow>
+Button.default_color = color._<yellow>2</yellow><yellow>0</yellow>
 window.color = color._<yellow>2</yellow><yellow>5</yellow>
 
 te = <purple><b>TextField</b></purple>(max_lines=<yellow>5</yellow><yellow>0</yellow>, <olive>scale</olive>=<yellow>1</yellow>, register_mouse_input = True, <olive>text</olive>=<green>'1234'</green>)
@@ -4948,7 +4948,7 @@ username_field.on_value_changed = submit
     <div class="class_box" id="ButtonList">
         <h1>ButtonList<a style="color: gray; font-weight:normal;" href="#Entity">(Entity)</a></h1>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/button_list.py"><gray>ursina/prefabs/button_list</gray></a><br><br>
-        <div class="params">ButtonList(button_dict, button_height=1.1, width=.5, popup=False, color=Button.color, highlight_color=color.white33, selected_color=color.azure, font=Text.default_font, **kwargs)</div><br>
+        <div class="params">ButtonList(button_dict, button_height=1.1, width=.5, popup=False, color=Button.default_color, highlight_color=color.white33, selected_color=color.azure, font=Text.default_font, **kwargs)</div><br>
         <table> <!-- attributes -->
             <tr>
                 <td>.button_height<gray> = button_height</gray></td><td></td>
@@ -5018,7 +5018,7 @@ bl = <purple><b>ButtonList</b></purple>(button_dict, font=<green>'VeraMono.ttf'<
         <div class="params">ButtonGroup(options, default='', min_selection=1, max_selection=1, origin=(-.5,.5,0), spacing=(0.025,0,0), **kwargs)</div><br>
         <table> <!-- attributes -->
             <tr>
-                <td>.deselected_color<gray> = Button.color</gray></td><td></td>
+                <td>.deselected_color<gray> = Button.default_color</gray></td><td></td>
             </tr>
             <tr>
                 <td>.selected_color<gray> = color.azure</gray></td><td></td>
