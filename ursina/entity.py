@@ -1,6 +1,7 @@
 import sys
 import importlib
 import glob
+import ursina
 from pathlib import Path
 from panda3d.core import NodePath
 from ursina.vec2 import Vec2
@@ -43,7 +44,8 @@ except:
 _Ursina_instance = None
 _warn_if_ursina_not_instantiated = True # gets set to True after Ursina.__init__() to ensure the correct order.
 
-
+from ursina.scripts.property_generator import generate_properties_for_class
+@generate_properties_for_class()
 class Entity(NodePath):
     rotation_directions = (-1,-1,1)
     default_shader = None
@@ -64,25 +66,23 @@ class Entity(NodePath):
         self.ignore_paused = False      # if True, will still run when application is paused. useful when making a pause menu for example.
         self.ignore_input = False
 
-        self._parent = None
         self.parent = scene     # default parent is scene, which means it's in 3d space. to use UI space, set the parent to camera.ui instead.
         self.add_to_scene_entities = add_to_scene_entities # set to False to be ignored by the engine, but still get rendered.
         if add_to_scene_entities:
             scene.entities.append(self)
 
-        self.model = None       # set model with model='model_name' (without file type extension)
-        self.color = color.white
-        self.texture = None     # set model with texture='texture_name'. requires a model to be set beforehand.
-        self.render_queue = 0   # for custom sorting in case of conflict. To sort things in 2d, set .z instead of using this.
-        self.double_sided = False
+        # self.model = None       # set model with model='model_name' (without file type extension)
+        # self.color = color.white
+        # self.texture = None     # set model with texture='texture_name'. requires a model to be set beforehand.
+        # self.render_queue = 0   # for custom sorting in case of conflict. To sort things in 2d, set .z instead of using this.
+        # self.double_sided = False
         self._shader_inputs = {}
         if Entity.default_shader:
             self.shader = Entity.default_shader
 
-        self.collision = False  # toggle collision without changing collider.
-        self._collider = None
+        # self.collision = False  # toggle collision without changing collider.
         self.setPythonTag('Entity', self)   # for the raycast to get the Entity and not just the NodePath
-        self.collider = None    # set to 'box'/'sphere'/'capsule'/'mesh' for auto fitted collider.
+        # self.collider = None    # set to 'box'/'sphere'/'capsule'/'mesh' for auto fitted collider.
         self.scripts = []   # add with add_script(class_instance). will assign an 'entity' variable to the script.
         self.animations = []
         self.hovered = False    # will return True if mouse hovers entity.
@@ -169,14 +169,10 @@ class Entity(NodePath):
         self.enabled = False
 
 
-    @property
-    def enabled(self):
-        if not hasattr(self, '_enabled'):
-            return True
-        return self._enabled
+    def enabled_getter(self):
+        return getattr(self, '_enabled', True)
 
-    @enabled.setter
-    def enabled(self, value):
+    def enabled_setter(self, value):
         if value and hasattr(self, 'on_enable') and not self.enabled:
             if isinstance(self.on_enable, Sequence):
                 self.on_enable.start()
@@ -199,21 +195,20 @@ class Entity(NodePath):
 
         self._enabled = value
 
-    @property
-    def model(self):
-        return self._model
 
-    @model.setter
-    def model(self, value):
+    def model_getter(self):
+        return getattr(self, '_model', None)
+
+    def model_setter(self, value):
         if value is None:
-            if hasattr(self, 'model') and self.model:
+            if self.model:
                 self.model.removeNode()
                 # print('removed model')
             self._model = value
             return
 
         if isinstance(value, NodePath): # pass procedural model
-            if self.model is not None and value != self.model:
+            if self.model and value != self.model:
                 self.model.detachNode()
             self._model = value
 
@@ -248,38 +243,54 @@ class Entity(NodePath):
                     value.on_assign(assigned_to=self)
 
 
+    def color_getter(self):
+        return getattr(self, '_color', color.white)
+
+    def color_setter(self, value):
+        if isinstance(value, str):
+            value = color.hex(value)
+
+        if not isinstance(value, Vec4):
+            value = Vec4(value[0], value[1], value[2], value[3])
+
+        self._color = value
+
+        if self.model:
+            # print('SET COLOR TO', value, self.name)
+            self.model.setColorScaleOff() # prevent inheriting color from parent
+            self.model.setColorScale(value)
+
+
+    def eternal_getter(self):
+        return getattr(self, '_eternal', False)
+
+    def eternal_setter(self, value):
+        self._eternal = value
+        for c in self.children:
+            c.eternal = value
+
+    def double_sided_setter(self, value):
+        self._double_sided = value
+        self.setTwoSided(value)
+
+    def render_queue_setter(self, value):
+        self._render_queue = value
+        if self.model:
+            self.model.setBin('fixed', value)
+
 
     def __setattr__(self, name, value):
-        if name == 'eternal':
-            for c in self.children:
-                c.eternal = value
-
-        elif name == 'color' and value is not None:
-            if isinstance(value, str):
-                value = color.hex(value)
-
-            if not isinstance(value, Vec4):
-                value = Vec4(value[0], value[1], value[2], value[3])
-
-
-            if self.model:
-                self.model.setColorScaleOff() # prevent inheriting color from parent
-                self.model.setColorScale(value)
-                object.__setattr__(self, name, value)
-
-        elif name == 'render_queue':
-            if self.model:
-                self.model.setBin('fixed', value)
-
-        elif name == 'double_sided':
-            self.setTwoSided(value)
-
-
-        elif hasattr(self, '_shader') and self.shader and name in self._shader.default_input:
-            # print('set shader input:', name, value)
-            object.__setattr__(self, name, value)
-            self.set_shader_input(name, value)
-
+        # if name == 'color':
+        #     if isinstance(value, str):
+        #         value = color.hex(value)
+        #
+        #     if not isinstance(value, Vec4):
+        #         value = Vec4(value[0], value[1], value[2], value[3])
+        #
+        #     if self.model:
+        #         self.model.setColorScaleOff() # prevent inheriting color from parent
+        #         self.model.setColorScale(value)
+        #         object.__setattr__(self, name, value)
 
         try:
             super().__setattr__(name, value)
@@ -288,12 +299,10 @@ class Entity(NodePath):
             # print('failed to set attribute:', name)
 
 
-    @property
-    def parent(self):
-        return self._parent
+    def parent_getter(self):
+        return getattr(self, '_parent', None)
 
-    @parent.setter
-    def parent(self, value):
+    def parent_setter(self, value):
         if hasattr(self, '_parent') and self._parent and hasattr(self._parent, '_children') and self in self._parent._children:
             self._parent._children.remove(self)
 
@@ -305,12 +314,10 @@ class Entity(NodePath):
         self._parent = value
 
 
-    @property
-    def world_parent(self):
-        return self._parent
+    def world_parent_getter(self):
+        return getattr(self, '_parent', None)
 
-    @world_parent.setter
-    def world_parent(self, value):  # change the parent, but keep position, rotation and scale
+    def world_parent_setter(self, value):  # change the parent, but keep position, rotation and scale
         if hasattr(self, '_parent') and self._parent and hasattr(self._parent, '_children') and self in self._parent._children:
             self._parent._children.remove(self)
 
@@ -328,12 +335,10 @@ class Entity(NodePath):
         return [c.__name__ for c in getmro(self.__class__)]
 
 
-    @property
-    def visible(self):
-        return self._visible
+    def visible_getter(self):
+        return getasttr(self, '_visible', True)
 
-    @visible.setter
-    def visible(self, value):
+    def visible_setter(self, value):
         self._visible = value
         if value:
             self.show()
@@ -342,9 +347,7 @@ class Entity(NodePath):
 
     @property
     def visible_self(self): # set visibility of self, without affecting children.
-        if not hasattr(self, '_visible_self'):
-            return True
-        return self._visible_self
+        return getattr(self, '_visible_self', True)
 
     @visible_self.setter
     def visible_self(self, value):
@@ -357,20 +360,20 @@ class Entity(NodePath):
             self.model.hide()
 
 
-    @property
-    def collider(self):
-        return self._collider
+    # @property
+    def collider_getter(self):
+        return getattr(self, '_collider', None)
 
-    @collider.setter
-    def collider(self, value):
-        if value is None and self._collider:
+    # @collider.setter
+    def collider_setter(self, value):
+        if value is None and self.collider:
             self._collider.remove()
             self._collider = None
             self.collision = False
             return
 
         # destroy existing collider
-        if value and self._collider:
+        if value and self.collider:
             self._collider.remove()
 
         if isinstance(value, Collider):
@@ -414,7 +417,7 @@ class Entity(NodePath):
 
     @property
     def collision(self):
-        return self._collision
+        return getattr(self, '_collision', False)
 
     @collision.setter
     def collision(self, value):
@@ -432,12 +435,10 @@ class Entity(NodePath):
             if self in scene.collidables:
                 scene.collidables.remove(self)
 
-    @property
-    def origin(self):
-        return self._origin
+    def origin_getter(self):
+        return getattr(self, '_origin', Vec3.zero)
 
-    @origin.setter
-    def origin(self, value):
+    def origin_setter(self, value):
         if not isinstance(value, (Vec2, Vec3)):
             value = self._list_to_vec(value)
         if isinstance(value, Vec2):
@@ -516,25 +517,19 @@ class Entity(NodePath):
 
         self.setPos(value[0], value[1], value[2])
 
-    @property
-    def x(self):
+    def x_getter(self):
         return self.getX()
-    @x.setter
-    def x(self, value):
+    def x_setter(self, value):
         self.setX(value)
 
-    @property
-    def y(self):
+    def y_getter(self):
         return self.getY()
-    @y.setter
-    def y(self, value):
+    def y_setter(self, value):
         self.setY(value)
 
-    @property
-    def z(self):
+    def z_getter(self):
         return self.getZ()
-    @z.setter
-    def z(self, value):
+    def z_setter(self, value):
         self.setZ(value)
 
     @property
@@ -802,34 +797,32 @@ class Entity(NodePath):
 
     @texture.setter
     def texture(self, value):
-        if value is None and self._texture:
+        if value is None and self.texture:
             # print('remove texture')
             self.model.clearTexture()
             self._texture = None
             return
 
-        if value.__class__ is Texture:
-            texture = value
-
-        elif isinstance(value, str):
-            texture = load_texture(value)
+        if isinstance(value, str):
+            texture_name = value
+            value = load_texture(value)
             # print('loaded texture:', texture)
-            if texture is None:
+            if value is None:
                 if application.raise_exception_on_missing_texture:
-                    raise ValueError(f"missing texture: '{value}'")
+                    raise ValueError(f"missing texture: '{texture_name}'")
 
-                print_warning(f"missing texture: '{value}'")
+                print_warning(f"missing texture: '{texture_name}'")
                 return
 
         self.model.setTextureOff(False)
-        if texture.__class__ is MovieTexture:
-            self._texture = texture
-            self.model.setTexture(texture, 1)
+        if value.__class__ is MovieTexture:
+            self._texture = value
+            self.model.setTexture(value, 1)
             return
 
-        self._texture = texture
-        if self.model:
-            self.model.setTexture(texture._texture, 1)
+        self._texture = value
+        if self.model and value is not None:
+            self.model.setTexture(value._texture, 1)
 
 
     @property
@@ -1264,7 +1257,7 @@ class Entity(NodePath):
     def fade_in(self, value=1, duration=.5, **kwargs):
         return self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration,  **kwargs)
 
-    def blink(self, value=color.clear, duration=.1, delay=0, curve=curve.in_expo_boomerang, interrupt='finish', **kwargs):
+    def blink(self, value=ursina.color.clear, duration=.1, delay=0, curve=curve.in_expo_boomerang, interrupt='finish', **kwargs):
         return self.animate_color(value, duration=duration, delay=delay, curve=curve, interrupt=interrupt, **kwargs)
 
 
@@ -1392,7 +1385,5 @@ if __name__ == '__main__':
     # e.fade_out(delay=.5)
     # e.fade_in(delay=2.5)
     # e.blink(color.red, duration=1, curve=curve.linear_boomerang, loop=True)
-
-
 
     app.run()

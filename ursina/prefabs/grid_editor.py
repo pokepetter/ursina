@@ -5,7 +5,8 @@ import sys
 from math import floor
 from ursina.shaders import unlit_shader
 
-
+from ursina.scripts.property_generator import generate_properties_for_class
+@generate_properties_for_class()
 class GridEditor(Entity):
     def __init__(self, size=(32,32), palette=(' ', '#', '|', 'o'), canvas_color=color.white, **kwargs):
         super().__init__(parent=camera.ui, position=(-.45,-.45), scale=.9, model='quad', origin=(-.5,-.5), visible_self=False)
@@ -50,13 +51,7 @@ class GridEditor(Entity):
             setattr(self, key ,value)
 
 
-
-    @property
-    def palette(self):
-        return self._palette
-
-    @palette.setter
-    def palette(self, value):
+    def palette_setter(self, value):
         self._palette = value
         if hasattr(self, 'palette_parent'):
             destroy(self.palette_parent)
@@ -75,13 +70,10 @@ class GridEditor(Entity):
 
         grid_layout(self.palette_parent.children, max_x=4)
 
+    def edit_mode_getter(self):
+        return getattr(self, '_edit_mode', True)
 
-    @property
-    def edit_mode(self):
-        return self._edit_mode
-
-    @edit_mode.setter
-    def edit_mode(self, value):
+    def edit_mode_setter(self, value):
         self._edit_mode = value
         self.cursor.enabled = value
         self.outline.enabled = value
