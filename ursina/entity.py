@@ -1173,7 +1173,7 @@ class Entity(NodePath):
 #------------
 # ANIMATIONS
 #------------
-    def animate(self, name, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt='kill', time_step=None, auto_destroy=True):
+    def animate(self, name, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt='kill', time_step=None, auto_play=True, auto_destroy=True):
         if duration == 0 and delay == 0:
             setattr(self, name, value)
             return None
@@ -1205,7 +1205,8 @@ class Entity(NodePath):
             sequence.append(Wait(duration / resolution))
             sequence.append(Func(setattr, self, name, lerp(getattr(self, name), value, t)))
 
-        sequence.start()
+        if auto_play:
+            sequence.start()
         return sequence
 
     def animate_position(self, value, duration=.1, **kwargs):
