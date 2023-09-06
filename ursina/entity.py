@@ -1333,6 +1333,14 @@ class Entity(NodePath):
         hit_info.entities = [e.get_into_node_path().parent.getPythonTag('Entity') for e in entries]
         hit_info.entity = hit_info.entities[0]
 
+        collision = entries[0]
+        # nP = collision.get_into_node_path().parent
+        hit_info.point = Vec3(*collision.get_surface_point(hit_info.entity))
+        hit_info.world_point = Vec3(*collision.get_surface_point(scene))
+        hit_info.distance = distance(self.world_position, hit_info.world_point)
+        hit_info.normal = Vec3(*collision.get_surface_normal(collision.get_into_node_path().parent).normalized())
+        hit_info.world_normal = Vec3(*collision.get_surface_normal(scene).normalized())
+
         return hit_info
 
 
