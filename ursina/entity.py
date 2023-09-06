@@ -342,7 +342,7 @@ class Entity(NodePath):
 
 
     def visible_getter(self):
-        return getasttr(self, '_visible', True)
+        return getattr(self, '_visible', True)
 
     def visible_setter(self, value):
         self._visible = value
