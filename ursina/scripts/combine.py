@@ -27,7 +27,7 @@ def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[]):
                 print('combining:', e)
 
             vertex_to_world_matrix = e.model.getTransform(combine_parent).getMat()
-            verts += [vertex_to_world_matrix.xformPoint(v) for v in e.model.vertices]
+            verts += [Vec3(*vertex_to_world_matrix.xformPoint(v)) for v in e.model.vertices]
 
             if not e.model.triangles:
                 new_tris = [i for i in range(len(e.model.vertices))]
@@ -99,10 +99,11 @@ if __name__ == '__main__':
             p.texture='brick'
             print('combined in:', perf_counter() - t)
 
+    p.combine()
     # p.y=2
     # p.model.save()
     # ursinamesh_to_obj(p.model, name='combined_model_test', out_path=application.asset_folder)
-
+    print(p.model.vertices[0].__class__)
 
     EditorCamera()
     app.run()

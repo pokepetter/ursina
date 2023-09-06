@@ -108,7 +108,7 @@ for key, ob in unique_objects.items():
 
 
     code += f'''
-'{mesh.name.replace('.', '_')}' : Mesh(
+'{mesh.name}' : Mesh(
     vertices={str(verts).replace(' ', '')},
     normals={str(normals).replace(' ', '')},
     colors={str(vertex_colors).replace(' ', '')},

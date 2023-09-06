@@ -130,7 +130,7 @@ if application.development_mode:
             application.blender_paths['default'] = blender_exec
 
 
-def load_blender_scene(name, path=application.asset_folder, load=True, reload=False, skip_hidden=True, models_only=False, uvs=True, vertex_colors=True, normals=True, decimals=4):
+def load_blender_scene(name, path=application.asset_folder, reload=False, skip_hidden=True, models_only=False, uvs=True, vertex_colors=True, normals=True, decimals=4):
     scenes_folder = Path(application.asset_folder / 'scenes')
     if not scenes_folder.exists():
         scenes_folder.mkdir()

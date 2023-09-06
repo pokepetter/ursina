@@ -9,10 +9,9 @@ class Space():
 
 class WindowPanel(Draggable):
     def __init__(self, title='', content=[], **kwargs):
-        super().__init__(origin=(-0,.5), scale=(.5, Text.size*2), color=color.black)
+        super().__init__(origin=(-0,.5), scale=(.5, Text.size*2), text=title, color=color.black)
 
         self.content = content
-        self.text = title
         self.popup = False
         self._prev_input_field = None
         self._original_scale = self.scale
@@ -20,8 +19,8 @@ class WindowPanel(Draggable):
         for key, value in kwargs.items():
             setattr(self, key ,value)
 
-        if self.text_entity:
-            self.text_entity.world_scale_y = 1
+        # if self.text_entity:
+        #     self.text_entity.world_scale_y = 1
 
         self.panel = Entity(parent=self, model='quad', origin=(0,.5), z=.1, color=self.color.tint(.1), collider='box')
 

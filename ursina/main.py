@@ -19,14 +19,8 @@ import __main__
 time.dt = 0
 keyboard_keys = '1234567890qwertyuiopasdfghjklzxcvbnm'
 
-def singleton(cls, **kwargs):
-    def getinstance(**kwargs):
-        if not hasattr(cls, '_instance') or not cls._instance:
-            cls._instance = cls(**kwargs)
-        return cls._instance
 
-    return getinstance
-
+from ursina.scripts.singleton_decorator import singleton
 @singleton
 class Ursina(ShowBase):
     def __init__(self, **kwargs): # optional arguments: title, fullscreen, size, forced_aspect_ratio, position, vsync, borderless, show_ursina_splash, render_mode, development_mode, editor_ui_enabled, window_type='onscreen'/'offscreen'/'none'.
