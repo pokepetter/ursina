@@ -1069,6 +1069,11 @@ class Entity(NodePath):
         elif axis == 'x':
             self.rotation_x = degrees(atan2(pos[1], pos[2]))
 
+    def look_at_xy(self, target):
+        self.look_at_2d(target)
+    def look_at_xz(self, target):
+        self.look_at_2d(target, 'y')
+
 
     def has_ancestor(self, possible_ancestor):
         if self.parent == possible_ancestor:
