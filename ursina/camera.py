@@ -1,3 +1,7 @@
+'''
+Description: After running the program you will see two rectangular shape which is camera, lights etc.
+You can move the camera just by right clicking your mouse button and then move
+'''
 import sys
 from ursina.entity import Entity
 from panda3d.core import PerspectiveLens, OrthographicLens, LensNode, NodePath
