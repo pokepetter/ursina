@@ -3,6 +3,7 @@ from ursina.shaders import unlit_shader, lit_with_shadows_shader, matcap_shader,
 from time import perf_counter
 import csv
 import builtins
+import pyperclip
 
 
 class LevelEditor(Entity):
@@ -50,6 +51,7 @@ class LevelEditor(Entity):
         self.level_menu = LevelMenu()
         self.goto_scene = self.level_menu.goto_scene
         self.duplicator = Duplicator()
+        self.copier = Copier()
 
         self.model_menu = ModelMenu()
         self.texture_menu = TextureMenu()
@@ -65,6 +67,7 @@ class LevelEditor(Entity):
         self.help = Help()
 
         self._edit_mode = True
+        self.sky = Sky
 
 
     @property
@@ -117,7 +120,7 @@ class LevelEditor(Entity):
         if self.selection and key == 'f':
             self.editor_camera.animate_position(self.gizmo.world_position, duration=.1, curve=curve.linear)
 
-        if key == 'tab':
+        if held_keys['control'] and key == 'p':
             self.edit_mode = not self.edit_mode
 
 
@@ -137,6 +140,9 @@ class LevelEditor(Entity):
             self.ui.enabled = False
             for e in self.current_scene.entities:
                 # switch editor colliders out for what they should have during play
+                if hasattr(e, 'edit_mode') and e.edit_mode:
+                    e.edit_mode = False
+
                 e.editor_collider = e.collider
                 if e.collider:
                     e.editor_collider = e.collider.name
@@ -145,6 +151,7 @@ class LevelEditor(Entity):
                     e.collider = e.collider_type
                 else:
                     e.collider = None
+
 
                 if hasattr(e, 'start') and callable(e.start):
                     e.start()
@@ -301,9 +308,16 @@ class LevelEditorScene:
                 args = ', '.join([f'{key}={value}' for key, value in line.items() if value and not key=='class'])
                 # print('eval:', f'{line["class"]}(parent=self.scene_parent, {args})')
                 try:
-                    e = eval(f'{line["class"]}(parent=self.scene_parent, {args})')
+                    e = eval(f'{line["class"]}(parent=self.scene_parent, {args})', globals(), locals())
                 except Exception as e:
-                    raise Exception('Error loading scene:', self.path.name, e, 'line:\n', f'{line["class"]}(parent=self.scene_parent, {args})')
+                    print_warning('Error loading scene:', self.path.name, e, 'line:\n', f'{line["class"]}(parent=self.scene_parent, {args})')
+                    try:
+                        e = eval(f'{line["class"]}(parent=self.scene_parent)')
+                    except:
+                        print('missing/invalid class:', line['class'])
+                        # error_cube = Entity(model='cube', color=color.magenta)
+                        # for key in ('parent', 'position', 'rotation', 'scale'):
+                        #     if line[key]: setattr(error_cube, key, line[key]
 
                 self.entities.append(e)
                 for e in self.entities:
@@ -342,7 +356,7 @@ class Undo(Entity):
         super().__init__(parent=LEVEL_EDITOR, undo_data=[], undo_index=-1)
 
     def record_undo(self, data):
-        print('record undo:')
+        print('record undo:', data)
         self.undo_data = self.undo_data[:self.undo_index+1]
         self.undo_data.append(data)
         self.undo_index += 1
@@ -814,55 +828,62 @@ class QuickGrabber(Entity):
         super().__init__(parent=LEVEL_EDITOR)
         self.target_entity = None
         self.target_axis = None
-        self.plane = Entity(model='quad', collider='box', scale=Vec3(100,100,1), visible_self=False, enabled=False)
+        self.plane = Entity(model='quad', collider='box', scale=Vec3(999,999,1), visible_self=False, enabled=False)
         self.offset_helper = Entity()
         self.start_position = Vec3(0,0,0)
         self.axis_lock = [0,1,0]
         self.is_dragging = False
+        self.shortcuts = {
+            'd': Func(self.start_moving_on_axis, 'xz'),
+            'w': Func(self.start_moving_on_axis, 'xz', auto_select_hovered_entity=False),
+            'x': Func(self.start_moving_on_axis, 'x'),
+            'y': Func(self.start_moving_on_axis, 'y'),
+            'z': Func(self.start_moving_on_axis, 'z'),
+            }
+
+    def start_moving_on_axis(self, axis, auto_select_hovered_entity=True):
+        if not auto_select_hovered_entity and len(LEVEL_EDITOR.selection) > 1:
+            return
+
+        self.target_entity = LEVEL_EDITOR.selector.get_hovered_entity()
+        print('MOVE ON AXIS', axis)
+        if self.target_entity:
+            LEVEL_EDITOR.selection = [self.target_entity, ]
+            self.plane.enabled = True
+            self.plane.position = self.target_entity.world_position
+
+            if axis == 'y' or axis == 'xy':
+                self.plane.look_at(self.plane.position + Vec3(0,0,-1))
+            else:
+                self.plane.look_at(self.plane.position + Vec3(0,1,0))
+
+            if len(axis) > 1:
+                self.axis_lock = [0,0,0]
+            else:
+                self.axis_lock = [axis!='x', axis!='y', axis!='z']
+
+            mouse.traverse_target = self.plane
+            mouse.update()
+            self.offset_helper.position = mouse.world_point
+            self.start_position = self.offset_helper.world_position
+
+            self.target_entity.original_parent = self.target_entity.parent
+            self.target_entity._original_world_position = self.target_entity.world_position
+            self.target_entity.world_parent = self.offset_helper
+
+            self.is_dragging = True
+
 
     def input(self, key):
         if held_keys['control'] or held_keys['shift'] or held_keys['alt'] or held_keys['s'] or mouse.right or mouse.middle or held_keys['r']:
             return
 
-        if key in 'dxyzw':
+        if key in self.shortcuts.keys():
             if self.target_entity:
                 return
+            self.shortcuts[key]()
 
-            if key == 'w' and len(LEVEL_EDITOR.selection) > 1:
-                return
-
-            self.target_entity = LEVEL_EDITOR.selector.get_hovered_entity()
-
-            if self.target_entity:
-                LEVEL_EDITOR.selection = [self.target_entity, ]
-                self.plane.enabled = True
-                self.plane.position = self.target_entity.world_position
-
-                target_axis = key
-                if key in 'dw':
-                    target_axis = 'xz'
-
-                if target_axis == 'y':
-                    self.plane.look_at(self.plane.position + Vec3(0,0,-1))
-                else:
-                    self.plane.look_at(self.plane.position + Vec3(0,1,0))
-
-                self.axis_lock = [target_axis!='x', target_axis!='y', target_axis!='z']
-                if target_axis == 'xz':
-                    self.axis_lock = [0,0,0]
-
-                mouse.traverse_target = self.plane
-                mouse.update()
-                self.offset_helper.position = mouse.world_point
-                self.start_position = self.offset_helper.world_position
-
-                self.target_entity.original_parent = self.target_entity.parent
-                self.target_entity._original_world_position = self.target_entity.world_position
-                self.target_entity.world_parent = self.offset_helper
-
-                self.is_dragging = True
-
-        elif key in ('x up', 'y up', 'z up', 'd up', 'w up') and self.target_entity:
+        elif key in [f'{e} up' for e in self.shortcuts.keys()] and self.target_entity:
             self.drop()
 
     def drop(self):
@@ -882,9 +903,9 @@ class QuickGrabber(Entity):
         LEVEL_EDITOR.selection = []
         LEVEL_EDITOR.render_selection()
 
+
     def on_disable(self):
         self.drop()
-
 
 
     def update(self):
@@ -1127,7 +1148,7 @@ class SelectionBox(Entity):
 
     def input(self, key):
         if key == 'left mouse down':
-            if mouse.hovered_entity and not mouse.hovered_entity in LEVEL_EDITOR.selection:
+            if mouse.hovered_entity and mouse.hovered_entity not in LEVEL_EDITOR.selection:
                 # print('-------', 'clicked on gizmo, dont box select')
                 return
             self.position = mouse.position
@@ -1287,6 +1308,8 @@ class Spawner(Entity):
 
         LEVEL_EDITOR.grid.enabled = True
         self.target = _class(position=mouse.world_point, original_parent=LEVEL_EDITOR, selectable=True, collision=False)
+        if not hasattr(self.target, 'collider_type'):
+            self.target.collider_type = 'None'
         # print(self.target.model.name)
         # if not self.target.collider:
         #     self.target.collider = 'box'
@@ -1393,8 +1416,38 @@ class PointOfViewSelector(Entity):
 #         if held_keys['alt'] and key == 'c' and mouse.hovered_entity:
 #             self.color = mouse.hovered_entity.color
 
+class Copier(Entity):
+    prefix = 'ursina_editor_copy_data:```py\n'
 
+    def input(self, key):
+        if held_keys['control'] and key == 'c':
+            if LEVEL_EDITOR.selection:
+                code = __class__.prefix
+                for e in LEVEL_EDITOR.selection:
+                    entity_repr = repr(e)
+                    if not 'collider_type=' in entity_repr and hasattr(e, 'collider_type'):
+                        entity_repr = f'{entity_repr[:-1]}collider_type=\'{e.collider_type}\')'
+                    code += entity_repr + '\n'
 
+                pyperclip.copy(f'{code}\n```')
+
+        if held_keys['control'] and key == 'v':
+            value = pyperclip.paste()
+            if value.startswith('ursina_editor_copy_data:```py\n') and value.endswith('\n```'):
+                cleaned_code = value[len(__class__.prefix):-4].strip().split('\n')
+                clones = []
+                for line in cleaned_code:
+                    instance = eval(line)
+                    instance.selectable = True
+                    LEVEL_EDITOR.current_scene.entities.append(instance)
+                    clones.append(instance)
+
+                LEVEL_EDITOR.entities.extend(clones)
+                LEVEL_EDITOR.selection = clones
+                LEVEL_EDITOR.current_scene.undo.record_undo(('delete entities', [LEVEL_EDITOR.entities.index(en) for en in clones], [repr(e) for e in clones]))
+                print('------------------------')
+                LEVEL_EDITOR.render_selection()
+                LEVEL_EDITOR.hierarchy_list.render_selection()
 
 
 
@@ -1884,7 +1937,7 @@ class MenuHandler(Entity):
         if self.state != 'None':
             return
 
-        if key in self.keybinds and LEVEL_EDITOR.selection:
+        if not held_keys['control'] and not held_keys['shift'] and not held_keys['alt'] and key in self.keybinds and LEVEL_EDITOR.selection:
             self.state = self.keybinds[key]
             # print('sets state:', self.keybinds[key], self.state)
 
@@ -2179,8 +2232,11 @@ class Duplicator(Entity):
                 clone.shader = e.shader
                 clone.origin = e.origin
                 clone.selectable = True
+                for key, value in e._shader_inputs.items():
+                    clone.set_shader_input(key, value)
 
                 clone.collision = False
+                clone.collider_type = e.collider_type
                 self.clones.append(clone)
 
             LEVEL_EDITOR.entities.extend(self.clones)
@@ -2235,6 +2291,9 @@ class PokeShape(Entity):
         subdivisions=0,
         smoothing_distance=.1,
         points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,.5), Vec3(-.5,0,.5)],
+        texture_scale=Vec2(.125),
+        collider_type=None,
+
     ) # combine dicts
 
     gizmo_color = color.violet
@@ -2244,7 +2303,6 @@ class PokeShape(Entity):
         self.selectable = True
         self.highlight_color = color.blue
         super().__init__(**__class__.default_values | kwargs)
-
         self.model = Mesh()
 
         self.point_gizmos = LoopingList([Entity(parent=self, original_parent=self, position=e, selectable=False, name='PokeShape_point', is_gizmo=True) for e in points])
@@ -2283,7 +2341,6 @@ class PokeShape(Entity):
         self.model.normals = [Vec3(0,1,0) for i in range(len(self.model.vertices))]
         self.model.generate()
         self.texture = 'grass'
-        self.texture_scale = Vec2(.125)
         # [destroy(e) for e in self.wall_parent.children]
         # print('-------------', self.make_wall, self.wall_parent)
         if self.wall_parent:
@@ -2332,7 +2389,12 @@ class PokeShape(Entity):
             self.add_new_point_renderer.model.generate()
 
     def __deepcopy__(self, memo):
-        return eval(repr(self))
+        changes = self.get_changes(__class__)
+
+        _copy = __class__(texture_scale = self.texture_scale, **changes)
+        _copy.texture_scale = self.texture_scale
+        print('---------------', _copy.texture_scale)
+        return _copy
 
 
     @property
@@ -2387,7 +2449,7 @@ class PokeShape(Entity):
 
 
     def input(self, key):
-        if held_keys['alt'] and key == 's':
+        if key == 'tab' and not held_keys['control'] and not held_keys['shift']:
             if not LEVEL_EDITOR.selection:
                 self.edit_mode = False
 
@@ -2419,8 +2481,11 @@ class PokeShape(Entity):
         elif key == 'space':
             self.generate()
 
-        elif key == 'double click' and LEVEL_EDITOR.selection == [self, ] and LEVEL_EDITOR.selector.get_hovered_entity() == self:
-            self.edit_mode = not self.edit_mode
+        elif key == 'double click' and LEVEL_EDITOR.selector.get_hovered_entity() == self:
+            self.edit_mode = True
+
+        elif key == 'double click' and not LEVEL_EDITOR.selector.get_hovered_entity():
+            self.edit_mode = False
 
         elif self.edit_mode and key.endswith(' up'):
             invoke(self.generate, delay=3/60)
@@ -2496,7 +2561,7 @@ class PipeEditor(Entity):
 
 
     def input(self, key):
-        if key == 'tab':
+        if key == 'tab' and not held_keys['control'] and not held_keys['shift']:
             if self in LEVEL_EDITOR.selection or True in [e in LEVEL_EDITOR.selection for e in self.point_gizmos]:
                 self.edit_mode = not self.edit_mode
 
@@ -2607,6 +2672,8 @@ if __name__ == '__main__':
 
     level_editor = LevelEditor()
     level_editor.goto_scene(0,0)
+
+
 
     level_editor.class_menu.available_classes |= {'WhiteCube': WhiteCube, 'EditorCamera':EditorCamera, }
 

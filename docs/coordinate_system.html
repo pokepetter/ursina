@@ -7,6 +7,7 @@
 <head>
     <link rel="stylesheet" href="sswg.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
 <left>
@@ -14,7 +15,7 @@
 <br>
 
 <div style="max-width: 1200px; margin: auto;">
-<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:65px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" samples.html" class="button">Samples</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" https://github.com/sponsors/pokepetter" class="button">Donate</a><br>
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" https://github.com/sponsors/pokepetter" class="button">Donate🡕</a><br>
 <br>
 <div class="sidebar"><br>
 <b><a href="documentation.html">Documentation</a></b><br>
@@ -71,10 +72,9 @@
 Coordinate System<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Entity Coordinate System"/><br>
+<h2><div id="Entity Coordinate System"/><br>
 Entity Coordinate System<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 <div class="code_block" style="margin-left: 0em;">
             y (up)
@@ -89,10 +89,9 @@ Entity Coordinate System<br>
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="UI Coordinate System"/><br>
+<h2><div id="UI Coordinate System"/><br>
 UI Coordinate System<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 <div class="code_block" style="margin-left: 0em;">                      (-.<yellow>5</yellow>, .<yellow>5</yellow>)           (.<yellow>5</yellow>, .<yellow>5</yellow>)
   (window.top_right)_______|__(window.top)____|_______(window.top_right)
@@ -111,21 +110,20 @@ UI Coordinate System<br>
 Want a different UI coordinate system? No problem. camera.ui is an Entity as well so you can move and scale it as you see fit.<br>
 <br>
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Rotation"/><br>
+<h2><div id="Rotation"/><br>
 Rotation<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 Positive rotation means rotating clockwise around the axis, looking from the outside in.<br>
 The exception to this is the z-axis, which is counter-clockwise.<br>
 While this is inconsistent, it makes setting rotation_z in 2D also clockwise.<br>
 <br>
 Although generally not recommended, the rotation direction can be changed by<br>
-setting <span>Entity.rotation_directions</span> (default: (-1,-1,1)).<br>
+setting `Entity.rotation_directions` (default: (-1,-1,1)).<br>
 <br>
 In general when working with rotation you'll want to only set one of the axes at the same time.<br>
-For more complicated rotations you can use <span>entity.look_at(position)</span>, <span>entity.look_at_2d(position)</span><br>
-or even set/get .quaternion if you're comfortable with that. For continuous rotation, <span>entity.rotate(amount)</span> can be good as it will add a rotation to the current rotation.<br>
+For more complicated rotations you can use `entity.look_at(position)`, `entity.look_at_2d(position)`<br>
+or even set/get .quaternion if you're comfortable with that. For continuous rotation, `entity.rotate(amount)` can be good as it will add a rotation to the current rotation.<br>
 <br>
 <div class="code_block" style="margin-left: 0em;">
            _______
@@ -143,10 +141,9 @@ or even set/get .quaternion if you're comfortable with that. For continuous rota
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Origin"/><br>
+<h2><div id="Origin"/><br>
 Origin<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 Setting the origin will move the origin point of the model.<br>
 This can be especially useful when working with the UI.<br>

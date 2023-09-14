@@ -87,12 +87,12 @@ a.button {
     border-radius: 2em;
     border-width: 2px;
     text-decoration: none;
-    font-size: 25px;
+    font-size: 20px;
     line-height: 2.5em;
     border-style: solid;
     background-color: transparent;
     letter-spacing: 2px;
-    margin: 8px;
+    margin: 4px;
 }
 a.button:hover {
     color: var(--button_hover);
