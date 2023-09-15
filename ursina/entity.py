@@ -59,8 +59,8 @@ class Entity(NodePath):
         super().__init__(self.__class__.__name__)
 
         self.name = camel_to_snake(self.__class__.__name__)
-        self.enabled = True     # disabled entities will not be visible nor run code.
-        self.visible = True
+        # self.enabled = True     # disabled entities will not be visible nor run code.
+        # self.visible = True
         self.ignore = False     # if True, will not try to run code.
         self.eternal = False    # eternal entities does not get destroyed on scene.clear()
         self.ignore_paused = False      # if True, will still run when application is paused. useful when making a pause menu for example.
@@ -285,26 +285,6 @@ class Entity(NodePath):
             self.model.setBin('fixed', value)
 
 
-    def __setattr__(self, name, value):
-        # if name == 'color':
-        #     if isinstance(value, str):
-        #         value = color.hex(value)
-        #
-        #     if not isinstance(value, Vec4):
-        #         value = Vec4(value[0], value[1], value[2], value[3])
-        #
-        #     if self.model:
-        #         self.model.setColorScaleOff() # prevent inheriting color from parent
-        #         self.model.setColorScale(value)
-        #         object.__setattr__(self, name, value)
-
-        try:
-            super().__setattr__(name, value)
-        except:
-            pass
-            # print('failed to set attribute:', name)
-
-
     def parent_getter(self):
         return getattr(self, '_parent', None)
 
@@ -316,7 +296,7 @@ class Entity(NodePath):
             value._children.append(self)
 
         self.reparent_to(value)
-        self.enabled = self._enabled   # parenting will undo the .stash() done when setting .enabled to False, so reapply it here
+        self.enabled = self.enabled   # parenting will undo the .stash() done when setting .enabled to False, so reapply it here
         self._parent = value
 
 
@@ -351,12 +331,10 @@ class Entity(NodePath):
         else:
             self.hide()
 
-    @property
-    def visible_self(self): # set visibility of self, without affecting children.
+    def visible_self_getter(self): # set visibility of self, without affecting children.
         return getattr(self, '_visible_self', True)
 
-    @visible_self.setter
-    def visible_self(self, value):
+    def visible_self_setter(self, value):
         self._visible_self = value
         if not self.model:
             return
@@ -366,11 +344,9 @@ class Entity(NodePath):
             self.model.hide()
 
 
-    # @property
     def collider_getter(self):
         return getattr(self, '_collider', None)
 
-    # @collider.setter
     def collider_setter(self, value):
         if value is None and self.collider:
             self._collider.remove()
@@ -421,12 +397,10 @@ class Entity(NodePath):
         self.collision = bool(self._collider)
         return
 
-    @property
-    def collision(self):
+    def collision_getter(self):
         return getattr(self, '_collision', False)
 
-    @collision.setter
-    def collision(self, value):
+    def collision_setter(self, value):
         self._collision = value
         if not hasattr(self, 'collider') or not self.collider:
             if self in scene.collidables:
@@ -456,33 +430,25 @@ class Entity(NodePath):
             self.model.setPos(-value[0], -value[1], -value[2])
 
 
-    @property
-    def origin_x(self):
+    def origin_x_getter(self):
         return self.origin[0]
-    @origin_x.setter
-    def origin_x(self, value):
-        self.origin = (value, self.origin_y, self.origin_z)
+    def origin_x_setter(self, value):
+        self.origin = Vec3(value, self.origin_y, self.origin_z)
 
-    @property
-    def origin_y(self):
+    def origin_y_getter(self):
         return self.origin[1]
-    @origin_y.setter
-    def origin_y(self, value):
-        self.origin = (self.origin_x, value, self.origin_z)
+    def origin_y_setter(self, value):
+        self.origin = Vec3(self.origin_x, value, self.origin_z)
 
-    @property
-    def origin_z(self):
+    def origin_z_getter(self):
         return self.origin[2]
-    @origin_z.setter
-    def origin_z(self, value):
-        self.origin = (self.origin_x, self.origin_y, value)
+    def origin_z_setter(self, value):
+        self.origin = Vec3(self.origin_x, self.origin_y, value)
 
-    @property
-    def world_position(self):
+    def world_position_getter(self):
         return Vec3(self.get_position(scene))
 
-    @world_position.setter
-    def world_position(self, value):
+    def world_position_setter(self, value):
         if not isinstance(value, (Vec2, Vec3)):
             value = self._list_to_vec(value)
         if isinstance(value, Vec2):
@@ -490,32 +456,24 @@ class Entity(NodePath):
 
         self.setPos(scene, Vec3(value[0], value[1], value[2]))
 
-    @property
-    def world_x(self):
+    def world_x_getter(self):
         return self.getX(scene)
-    @property
-    def world_y(self):
+    def world_y_getter(self):
         return self.getY(scene)
-    @property
-    def world_z(self):
+    def world_z_getter(self):
         return self.getZ(scene)
 
-    @world_x.setter
-    def world_x(self, value):
+    def world_x_setter(self, value):
         self.setX(scene, value)
-    @world_y.setter
-    def world_y(self, value):
+    def world_y_setter(self, value):
         self.setY(scene, value)
-    @world_z.setter
-    def world_z(self, value):
+    def world_z_setter(self, value):
         self.setZ(scene, value)
 
-    @property
-    def position(self):
+    def position_getter(self):
         return Vec3(*self.getPos())
 
-    @position.setter
-    def position(self, value):
+    def position_setter(self, value):
         if not isinstance(value, (Vec2, Vec3)):
             value = self._list_to_vec(value)
         if isinstance(value, Vec2):
@@ -539,7 +497,7 @@ class Entity(NodePath):
         self.setZ(value)
 
     @property
-    def X(self):    # shortcut for int(entity.x)
+    def X_getter(self):    # shortcut for int(entity.x)
         return int(self.x)
     @property
     def Y(self):    # shortcut for int(entity.y)
@@ -548,46 +506,36 @@ class Entity(NodePath):
     def Z(self):    # shortcut for int(entity.z)
         return int(self.z)
 
-    @property
-    def world_rotation(self):
+    def world_rotation_getter(self):
         rotation = self.getHpr(scene)
         return Vec3(rotation[1], rotation[0], rotation[2]) * Entity.rotation_directions
 
-    @world_rotation.setter
-    def world_rotation(self, value):
+    def world_rotation_setter(self, value):
         self.setHpr(scene, Vec3(value[1], value[0], value[2]) * Entity.rotation_directions)
 
-    @property
-    def world_rotation_x(self):
+    def world_rotation_x_getter(self):
         return self.world_rotation[0]
 
-    @world_rotation_x.setter
-    def world_rotation_x(self, value):
+    def world_rotation_x_setter(self, value):
         self.world_rotation = Vec3(value, self.world_rotation[1], self.world_rotation[2])
 
-    @property
-    def world_rotation_y(self):
+    def world_rotation_y_getter(self):
         return self.world_rotation[1]
 
-    @world_rotation_y.setter
-    def world_rotation_y(self, value):
+    def world_rotation_y_setter(self, value):
         self.world_rotation = Vec3(self.world_rotation[0], value, self.world_rotation[2])
 
-    @property
-    def world_rotation_z(self):
+    def world_rotation_z_getter(self):
         return self.world_rotation[2]
 
-    @world_rotation_z.setter
-    def world_rotation_z(self, value):
+    def world_rotation_z_setter(self, value):
         self.world_rotation = Vec3(self.world_rotation[0], self.world_rotation[1], value)
 
-    @property
-    def rotation(self):
+    def rotation_getter(self):
         rotation = self.getHpr()
         return Vec3(rotation[1], rotation[0], rotation[2]) * Entity.rotation_directions
 
-    @rotation.setter
-    def rotation(self, value):
+    def rotation_setter(self, value):
         if not isinstance(value, (Vec2, Vec3)):
             value = self._list_to_vec(value)
         if isinstance(value, Vec2):
@@ -595,72 +543,54 @@ class Entity(NodePath):
 
         self.setHpr(Vec3(value[1], value[0], value[2]) * Entity.rotation_directions)
 
-    @property
-    def rotation_x(self):
+    def rotation_x_getter(self):
         return self.rotation.x
-    @rotation_x.setter
-    def rotation_x(self, value):
+    def rotation_x_setter(self, value):
         self.rotation = Vec3(value, self.rotation[1], self.rotation[2])
 
-    @property
-    def rotation_y(self):
+    def rotation_y_getter(self):
         return self.rotation.y
-    @rotation_y.setter
-    def rotation_y(self, value):
+    def rotation_y_setter(self, value):
         self.rotation = Vec3(self.rotation[0], value, self.rotation[2])
 
-    @property
-    def rotation_z(self):
+    def rotation_z_getter(self):
         return self.rotation.z
-    @rotation_z.setter
-    def rotation_z(self, value):
+    def rotation_z_setter(self, value):
         self.rotation = Vec3(self.rotation[0], self.rotation[1], value)
 
-    @property
-    def quaternion(self):
+    def quaternion_getter(self):
         return self.get_quat()
-    @quaternion.setter
-    def quaternion(self, value):
+    def quaternion_setter(self, value):
         self.set_quat(value)
 
-    @property
-    def world_scale(self):
+    def world_scale_getter(self):
         return Vec3(*self.getScale(scene))
-    @world_scale.setter
-    def world_scale(self, value):
+    def world_scale_setter(self, value):
         if isinstance(value, (int, float, complex)):
             value = Vec3(value, value, value)
 
         self.setScale(scene, value)
 
-    @property
-    def world_scale_x(self):
+    def world_scale_x_getter(self):
         return self.getScale(scene)[0]
-    @world_scale_x.setter
-    def world_scale_x(self, value):
+    def world_scale_x_setter(self, value):
         self.setScale(scene, Vec3(value, self.world_scale_y, self.world_scale_z))
 
-    @property
-    def world_scale_y(self):
+    def world_scale_y_getter(self):
         return self.getScale(scene)[1]
-    @world_scale_y.setter
-    def world_scale_y(self, value):
+    def world_scale_y_setter(self, value):
         self.setScale(scene, Vec3(self.world_scale_x, value, self.world_scale_z))
 
-    @property
-    def world_scale_z(self):
+    def world_scale_z_getter(self):
         return self.getScale(scene)[2]
-    @world_scale_z.setter
-    def world_scale_z(self, value):
+    def world_scale_z_setter(self, value):
         self.setScale(scene, Vec3(self.world_scale_x, self.world_scale_y, value))
 
-    @property
-    def scale(self):
+    def scale_getter(self):
         scale = self.getScale()
         return Vec3(scale[0], scale[1], scale[2])
 
-    @scale.setter
-    def scale(self, value):
+    def scale_setter(self, value):
         if not isinstance(value, (Vec2, Vec3)):
             value = self._list_to_vec(value)
         if isinstance(value, Vec2):
@@ -669,39 +599,29 @@ class Entity(NodePath):
         value = [e if e!=0 else .001 for e in value]
         self.setScale(value[0], value[1], value[2])
 
-    @property
-    def scale_x(self):
+    def scale_x_getter(self):
         return self.scale[0]
-    @scale_x.setter
-    def scale_x(self, value):
+    def scale_x_setter(self, value):
         self.setScale(value, self.scale_y, self.scale_z)
 
-    @property
-    def scale_y(self):
+    def scale_y_getter(self):
         return self.scale[1]
-    @scale_y.setter
-    def scale_y(self, value):
+    def scale_y_setter(self, value):
         self.setScale(self.scale_x, value, self.scale_z)
 
-    @property
-    def scale_z(self):
+    def scale_z_getter(self):
         return self.scale[2]
-    @scale_z.setter
-    def scale_z(self, value):
+    def scale_z_setter(self, value):
         self.setScale(self.scale_x, self.scale_y, value)
 
-    @property
-    def transform(self): # get/set position, rotation and scale
+    def transform_getter(self): # get/set position, rotation and scale
         return (self.position, self.rotation, self.scale)
-    @transform.setter
-    def transform(self, value):
+    def transform_setter(self, value):
         self.position, self.rotation, self.scale = value
 
-    @property
-    def world_transform(self): # get/set world_position, world_rotation and world_scale
+    def world_transform_getter(self): # get/set world_position, world_rotation and world_scale
         return (self.world_position, self.world_rotation, self.world_scale)
-    @world_transform.setter
-    def world_transform(self, value):
+    def world_transform_setter(self, value):
         self.world_position, self.world_rotation, self.world_scale = value
 
 
@@ -735,14 +655,12 @@ class Entity(NodePath):
         p2d = full * recip_full3
         return Vec2(p2d[0]*camera.aspect_ratio/2, p2d[1]/2)
 
-    @property
-    def shader(self):
+    def shader_getter(self):
         if not hasattr(self, '_shader'):
             return None
         return self._shader
 
-    @shader.setter
-    def shader(self, value):
+    def shader_setter(self, value):
         if value is None:
             self._shader = value
             self.setShaderAuto()
@@ -795,14 +713,10 @@ class Entity(NodePath):
         super().set_shader_input(name, value)
 
 
-    @property
-    def texture(self):
-        if not hasattr(self, '_texture'):
-            return None
-        return self._texture
+    def texture_getter(self):
+        return getattr(self, '_texture', None)
 
-    @texture.setter
-    def texture(self, value):
+    def texture_setter(self, value):
         if value is None and self.texture:
             # print('remove texture')
             self.model.clearTexture()
@@ -831,27 +745,19 @@ class Entity(NodePath):
             self.model.setTexture(value._texture, 1)
 
 
-    @property
-    def texture_scale(self):
-        if not hasattr(self, '_texture_scale'):
-            return Vec2(1,1)
-        return self._texture_scale
+    def texture_scale_getter(self):
+        return getattr(self, '_texture_scale', Vec2(1,1))
 
-    @texture_scale.setter
-    def texture_scale(self, value):  # how many times the texture should repeat, eg. texture_scale=(8,8).
+    def texture_scale_setter(self, value):  # how many times the texture should repeat, eg. texture_scale=(8,8).
         self._texture_scale = Vec2(*value)
         if self.model and self.texture:
             self.model.setTexScale(TextureStage.getDefault(), value[0], value[1])
             self.set_shader_input('texture_scale', value)
 
-    @property
-    def texture_offset(self):
-        if not hasattr(self, '_texture_offset'):
-            return Vec2(0,0)
-        return self._texture_offset
+    def texture_offset_getter(self):
+        return getattr(self, '_texture_offset', Vec2(0,0))
 
-    @texture_offset.setter
-    def texture_offset(self, value):
+    def texture_offset_setter(self, value):
         value = Vec2(*value)
         if self.model and self.texture:
             self.model.setTexOffset(TextureStage.getDefault(), value[0], value[1])
@@ -859,71 +765,55 @@ class Entity(NodePath):
             self.set_shader_input('texture_offset', value)
         self._texture_offset = value
 
-    @property
-    def tileset_size(self):         # if the texture is a tileset, say how many tiles there are so it only use one tile of the texture, e.g. tileset_size=[8,4]
+    def tileset_size_getter(self):         # if the texture is a tileset, say how many tiles there are so it only use one tile of the texture, e.g. tileset_size=[8,4]
         return self._tileset_size
-    @tileset_size.setter
-    def tileset_size(self, value):
+    def tileset_size_setter(self, value):
         self._tileset_size = value
         self.texture_scale = Vec2(1/value[0], 1/value[1])
 
-    @property
-    def tile_coordinate(self):      # set the tile coordinate, starts in the lower left.
+    def tile_coordinate_getter(self):      # set the tile coordinate, starts in the lower left.
         return self._tile_coordinate
-    @tile_coordinate.setter
-    def tile_coordinate(self, value):
+    def tile_coordinate_setter(self, value):
         self._tile_coordinate = value
         self.texture_offset = Vec2(value[0] / self.tileset_size[0], value[1] / self.tileset_size[1])
 
 
-    @property
-    def alpha(self):
+    def alpha_getter(self):
         return self.color[3]
 
-    @alpha.setter
-    def alpha(self, value):
+    def alpha_setter(self, value):
         if value > 1:
             value = value / 255
         self.color = color.color(self.color.h, self.color.s, self.color.v, value)
 
 
-    @property
-    def always_on_top(self):
-        return self._always_on_top
-    @always_on_top.setter
-    def always_on_top(self, value):
+    def always_on_top_getter(self):
+        return getattr(self, '_always_on_top', False)
+    def always_on_top_setter(self, value):
         self._always_on_top = value
         self.set_bin("fixed", 0)
         self.set_depth_write(not value)
         self.set_depth_test(not value)
 
-    @property
-    def unlit(self):
-        if not hasattr(self, '_unlit'):
-            return False
-        return self._unlit
+    def unlit_getter(self):
+        return getattr(self, '_unlit', False)
 
-    @unlit.setter
-    def unlit(self, value):
+    def unlit_setter(self, value):
         self._unlit = value
         self.setLightOff(value)
 
-    @property
-    def billboard(self): # set to True to make this Entity always face the camera.
-        return self._billboard
+    def billboard_getter(self): # set to True to make this Entity always face the camera.
+        return getattr(self, '_billboard', False)
 
-    @billboard.setter
-    def billboard(self, value):
+    def billboard_setter(self, value):
         self._billboard = value
         if value:
             self.setBillboardPointEye(value)
 
-    @property
-    def wireframe(self):
-        return self._wireframe
+    def wireframe_getter(self):
+        return getattr(self, '_wireframe', False)
 
-    @wireframe.setter
-    def wireframe(self, value):
+    def wireframe_setter(self, value):
         self._wireframe = value
         self.setRenderModeWireframe(value)
 
@@ -1011,11 +901,9 @@ class Entity(NodePath):
         return self.model
 
 
-    @property
-    def flipped_faces(self):
-        return self._flipped_faces
-    @flipped_faces.setter
-    def flipped_faces(self, value):
+    def flipped_faces_getter(self):
+        return getattr(self, '_flipped_faces', False)
+    def flipped_faces_setter(self, value):
         self._flipped_faces = value
         if value:
             self.setAttrib(CullFaceAttrib.make(CullFaceAttrib.MCullClockwise))
@@ -1098,12 +986,10 @@ class Entity(NodePath):
 
         return False
 
-    @property
-    def children(self):
-        return [e for e in self._children if e]     # make sure list doesn't contain destroyed entities
+    def children_getter(self):
+        return [e for e in getattr(self, '_children', []) if e]     # make sure list doesn't contain destroyed entities
 
-    @children.setter
-    def children(self, value):
+    def children_setter(self, value):
         self._children = value
 
 
@@ -1342,6 +1228,15 @@ class Entity(NodePath):
         hit_info.world_normal = Vec3(*collision.get_surface_normal(scene).normalized())
 
         return hit_info
+
+
+    def __setattr__(self, name, value):
+        try:
+            super().__setattr__(name, value)
+        except:
+            pass
+            # print('failed to set attribute:', name)
+
 
 
 
