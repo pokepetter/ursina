@@ -22,6 +22,7 @@ class GridEditor(Entity):
 
         self.selected_char = palette[1]
         self.palette = palette
+        self.start_pos = None
         self.prev_draw = None
         self.lock_axis = None
         self.outline = Entity(parent=self.canvas, model=Quad(segments=0, mode='line', thickness=2), color=color.cyan, z=.01, origin=(-.5,-.5))
@@ -86,12 +87,11 @@ class GridEditor(Entity):
 
         self.cursor.enabled = mouse.hovered_entity == self.canvas
         if self.canvas.hovered:
-
             self.cursor.position = mouse.point
             self.cursor.x = floor(self.cursor.x * self.w) / self.w
             self.cursor.y = floor(self.cursor.y * self.h) / self.h
 
-            if mouse.left or mouse.right:
+            if self.start_pos and mouse.left or mouse.right:
                 if held_keys['shift'] and self.prev_draw:
                     if not self.lock_axis:
                         if abs(mouse.velocity[0]) > abs(mouse.velocity[1]):
@@ -152,7 +152,7 @@ class GridEditor(Entity):
             if not held_keys['control']:
                 self.prev_draw = None
 
-        if key == 'left mouse up':
+        if key == 'left mouse up' and self.start_pos:
             self.start_pos = None
             self.lock_axis = None
             self.render()
