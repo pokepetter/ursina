@@ -241,7 +241,7 @@ class Text(Entity):
 
     @property
     def color(self): # sets the default color.
-        return self._color
+        return getattr(self, '_color', color.white)
 
     @color.setter
     def color(self, value):
