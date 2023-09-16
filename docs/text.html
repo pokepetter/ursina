@@ -77,8 +77,16 @@ Text Size<br>
 </h2><br>
 <br>
 Set .scale or .world_scale:<br>
-<div class="code_block" style="margin-left: 0em;">text_entity = Text(<green>'hello'</green>, <olive>scale</olive>=<yellow>2</yellow>)
+<div class="code_block" style="margin-left: 0em;">text_entity = Text(<green>'hello'</green>, world_<olive>scale</olive>=<yellow>2</yellow>)
 </div><br>
+Changing default text size (globally):<br>
+<div class="code_block" style="margin-left: 0em;">Text.size = .<yellow>0</yellow><yellow>5</yellow> <gray># make all the text double as big (default: .<yellow>0</yellow><yellow>2</yellow><yellow>5</yellow>).</gray>
+</div><br>
+Changing the text size of the non-uniformly scaled Button:<br>
+<div class="code_block" style="margin-left: 0em;">button = Button(<olive>scale</olive>=(.<yellow>2</yellow>,.<yellow>1</yellow>), <olive>text</olive>=<green>'Start'</green>)
+button.text_entity.world_scale = <yellow>2</yellow>  <gray># make the text_entity twice as big.</gray>
+</div><br>
+<br>
 <h2><div id="Font and Resolution"/><br>
 Font and Resolution<br>
 </h2><br>

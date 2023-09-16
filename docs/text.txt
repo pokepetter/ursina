@@ -8,8 +8,20 @@
 
 Set .scale or .world_scale:
 ```
-text_entity = Text('hello', scale=2)
+text_entity = Text('hello', world_scale=2)
 ```
+
+Changing default text size (globally):
+```
+Text.size = .05 # make all the text double as big (default: .025).
+```
+
+Changing the text size of the non-uniformly scaled Button:
+```
+button = Button(scale=(.2,.1), text='Start')
+button.text_entity.world_scale = 2  # make the text_entity twice as big.
+```
+
 
 ## Font and Resolution
 
