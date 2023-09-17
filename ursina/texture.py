@@ -3,10 +3,9 @@ from panda3d.core import SamplerState
 from panda3d.core import Filename
 from panda3d.core import PNMImage
 from pathlib import Path
-from direct.showbase import Loader
 from ursina.vec2 import Vec2
 from ursina import color
-# from PIL import Image
+from ursina.ursinamath import clamp
 
 
 class Texture():

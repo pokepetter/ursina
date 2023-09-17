@@ -59,10 +59,7 @@ class Entity(NodePath):
         super().__init__(self.__class__.__name__)
 
         self.name = camel_to_snake(self.__class__.__name__)
-        # self.enabled = True     # disabled entities will not be visible nor run code.
-        # self.visible = True
         self.ignore = False     # if True, will not try to run code.
-        self.eternal = False    # eternal entities does not get destroyed on scene.clear()
         self.ignore_paused = False      # if True, will still run when application is paused. useful when making a pause menu for example.
         self.ignore_input = False
 
@@ -71,27 +68,14 @@ class Entity(NodePath):
         if add_to_scene_entities:
             scene.entities.append(self)
 
-        # self.model = None       # set model with model='model_name' (without file type extension)
-        # self.color = color.white
-        # self.texture = None     # set model with texture='texture_name'. requires a model to be set beforehand.
-        # self.render_queue = 0   # for custom sorting in case of conflict. To sort things in 2d, set .z instead of using this.
-        # self.double_sided = False
         self._shader_inputs = {}
         if Entity.default_shader:
             self.shader = Entity.default_shader
 
-        # self.collision = False  # toggle collision without changing collider.
         self.setPythonTag('Entity', self)   # for the raycast to get the Entity and not just the NodePath
-        # self.collider = None    # set to 'box'/'sphere'/'capsule'/'mesh' for auto fitted collider.
         self.scripts = []   # add with add_script(class_instance). will assign an 'entity' variable to the script.
         self.animations = []
         self.hovered = False    # will return True if mouse hovers entity.
-
-        self.origin = Vec3(0,0,0)
-        self.position = Vec3(0,0,0) # right, up, forward. can also set self.x, self.y, self.z
-        self.rotation = Vec3(0,0,0) # can also set self.rotation_x, self.rotation_y, self.rotation_z
-        self.scale = Vec3(1,1,1)    # can also set self.scale_x, self.scale_y, self.scale_z
-
         self.line_definition = None # returns a Traceback(filename, lineno, function, code_context, index).
 
         if application.trace_entity_definition and add_to_scene_entities or (not _Ursina_instance and _warn_if_ursina_not_instantiated and add_to_scene_entities):
@@ -106,8 +90,8 @@ class Entity(NodePath):
                 self.code_context = caller.code_context[0]
 
                 if (self.code_context.count('(') == self.code_context.count(')') and
-                ' = ' in self.code_context and not 'name=' in self.code_context
-                and not 'Ursina()' in self.code_context):
+                ' = ' in self.code_context and 'name=' not in self.code_context
+                and 'Ursina()' not in self.code_context):
 
                     self.name = self.code_context.split(' = ')[0].strip().replace('self.', '')
                     # print('set name to:', self.code_context.split(' = ')[0].strip().replace('self.', ''))
@@ -178,21 +162,21 @@ class Entity(NodePath):
     def enabled_getter(self):
         return getattr(self, '_enabled', True)
 
-    def enabled_setter(self, value):
+    def enabled_setter(self, value):    # disabled entities will not be visible nor run code.
         if value and hasattr(self, 'on_enable') and not self.enabled:
             if isinstance(self.on_enable, Sequence):
                 self.on_enable.start()
             elif callable(self.on_enable):
                 self.on_enable()
 
-        elif value == False and hasattr(self, 'on_disable') and self.enabled:
+        elif value is False and hasattr(self, 'on_disable') and self.enabled:
             if isinstance(self.on_disable, Sequence):
                 self.on_disable.start()
             elif callable(self.on_disable):
                 self.on_disable()
 
 
-        if value == True:
+        if value is True:
             if hasattr(self, 'is_singleton') and not self.is_singleton():
                 self.unstash()
         else:
@@ -205,7 +189,7 @@ class Entity(NodePath):
     def model_getter(self):
         return getattr(self, '_model', None)
 
-    def model_setter(self, value):
+    def model_setter(self, value):  # set model with model='model_name' (without file type extension)
         if value is None:
             if self.model:
                 self.model.removeNode()
@@ -269,17 +253,20 @@ class Entity(NodePath):
 
     def eternal_getter(self):
         return getattr(self, '_eternal', False)
-
-    def eternal_setter(self, value):
+    def eternal_setter(self, value):    # eternal entities does not get destroyed on scene.clear()
         self._eternal = value
         for c in self.children:
             c.eternal = value
 
+    def double_sided_getter(self):
+        return getattr(self, '_double_sided', False)
     def double_sided_setter(self, value):
         self._double_sided = value
         self.setTwoSided(value)
 
-    def render_queue_setter(self, value):
+    def render_queue_getter(self):
+        return getattr(self, '_render_queue', 0)
+    def render_queue_setter(self, value):   # for custom sorting in case of conflict. To sort things in 2d, set .z instead of using this.
         self._render_queue = value
         if self.model:
             self.model.setBin('fixed', value)
@@ -292,7 +279,7 @@ class Entity(NodePath):
         if hasattr(self, '_parent') and self._parent and hasattr(self._parent, '_children') and self in self._parent._children:
             self._parent._children.remove(self)
 
-        if hasattr(value, '_children') and not self in value._children:
+        if hasattr(value, '_children') and self not in value._children:
             value._children.append(self)
 
         self.reparent_to(value)
@@ -307,7 +294,7 @@ class Entity(NodePath):
         if hasattr(self, '_parent') and self._parent and hasattr(self._parent, '_children') and self in self._parent._children:
             self._parent._children.remove(self)
 
-        if hasattr(value, '_children') and not self in value._children:
+        if hasattr(value, '_children') and self not in value._children:
             value._children.append(self)
 
         self.wrtReparentTo(value)
@@ -347,7 +334,7 @@ class Entity(NodePath):
     def collider_getter(self):
         return getattr(self, '_collider', None)
 
-    def collider_setter(self, value):
+    def collider_setter(self, value):   # set to 'box'/'sphere'/'capsule'/'mesh' for auto fitted collider.
         if value is None and self.collider:
             self._collider.remove()
             self._collider = None
@@ -400,7 +387,7 @@ class Entity(NodePath):
     def collision_getter(self):
         return getattr(self, '_collision', False)
 
-    def collision_setter(self, value):
+    def collision_setter(self, value):  # toggle collision without changing collider.
         self._collision = value
         if not hasattr(self, 'collider') or not self.collider:
             if self in scene.collidables:
@@ -473,7 +460,7 @@ class Entity(NodePath):
     def position_getter(self):
         return Vec3(*self.getPos())
 
-    def position_setter(self, value):
+    def position_setter(self, value):   # right, up, forward. can also set self.x, self.y, self.z
         if not isinstance(value, (Vec2, Vec3)):
             value = self._list_to_vec(value)
         if isinstance(value, Vec2):
@@ -497,7 +484,7 @@ class Entity(NodePath):
         self.setZ(value)
 
     @property
-    def X_getter(self):    # shortcut for int(entity.x)
+    def X(self):    # shortcut for int(entity.x)
         return int(self.x)
     @property
     def Y(self):    # shortcut for int(entity.y)
@@ -535,7 +522,7 @@ class Entity(NodePath):
         rotation = self.getHpr()
         return Vec3(rotation[1], rotation[0], rotation[2]) * Entity.rotation_directions
 
-    def rotation_setter(self, value):
+    def rotation_setter(self, value):   # can also set self.rotation_x, self.rotation_y, self.rotation_z
         if not isinstance(value, (Vec2, Vec3)):
             value = self._list_to_vec(value)
         if isinstance(value, Vec2):
@@ -590,7 +577,7 @@ class Entity(NodePath):
         scale = self.getScale()
         return Vec3(scale[0], scale[1], scale[2])
 
-    def scale_setter(self, value):
+    def scale_setter(self, value):  # can also set self.scale_x, self.scale_y, self.scale_z
         if not isinstance(value, (Vec2, Vec3)):
             value = self._list_to_vec(value)
         if isinstance(value, Vec2):
@@ -716,7 +703,7 @@ class Entity(NodePath):
     def texture_getter(self):
         return getattr(self, '_texture', None)
 
-    def texture_setter(self, value):
+    def texture_setter(self, value):    # set model with texture='texture_name'. requires a model to be set beforehand.
         if value is None and self.texture:
             # print('remove texture')
             self.model.clearTexture()
@@ -1177,7 +1164,6 @@ class Entity(NodePath):
         from ursina import distance
         if not hasattr(self, '_picker'):
             from panda3d.core import CollisionTraverser, CollisionNode, CollisionHandlerQueue
-            from panda3d.core import CollisionRay, CollisionSegment, CollisionBox
 
             self._picker = CollisionTraverser()  # Make a traverser
             self._pq = CollisionHandlerQueue()  # Make a handler
@@ -1236,7 +1222,6 @@ class Entity(NodePath):
         except:
             pass
             # print('failed to set attribute:', name)
-
 
 
 
