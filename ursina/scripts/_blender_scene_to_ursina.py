@@ -71,16 +71,10 @@ for key, ob in unique_objects.items():
         verts.append((round(v.co[0],decimals),round(v.co[2],decimals),round(v.co[1],decimals)))
 
 
-    if '--vertex_colors' in sys.argv:
-        v_cols = [
-            [round(e,decimals) for e in col.color_srgb]
-                for col in mesh.attributes.active_color.data]
-
-        for idx in indices:     # vertex colors
-            vertex_colors.append(v_cols[idx])
-
-        # vertex_colors = v_cols  # use this instead if using face color. face colors doesn't work with baking light to vertex colors though.
-
+    if '--vertex_colors' in sys.argv and 'Color' in mesh.attributes:
+        color_data = mesh.attributes['Color'].data
+        vertex_colors_data = [[round(e,4) for e in (color_data[vertex.index].color_srgb)] for vertex in mesh.vertices]
+        vertex_colors = [vertex_colors_data[idx] for idx in indices]
 
     if '--normals' in sys.argv:
         for idx in indices:
@@ -130,7 +124,7 @@ else:
 
 
     for ob in objects:
-        if '--skip-hidden' in sys.argv and ob.hide_get() == True:
+        if '--skip_hidden' in sys.argv and ob.hide_get() == True:
             continue
 
         #deselect all but just one object and make it active
@@ -146,7 +140,7 @@ scene_parent.{ob.name.replace('.', '_')} = Entity(
     scale=Vec3({round(ob.scale.x,5)}, {round(ob.scale.z,5)}, {round(ob.scale.y,5)}),
     '''
 
-        code += f'''model=copy(meshes['{ob.data.name.replace('.', '_')}']),'''
+        code += f'''model=copy(meshes['{ob.data.name}']),'''
         # code += f'''model='cube','''
 
         if ob.active_material:
