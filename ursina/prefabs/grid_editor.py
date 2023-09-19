@@ -27,6 +27,9 @@ class GridEditor(Entity):
         self.lock_axis = None
         self.outline = Entity(parent=self.canvas, model=Quad(segments=0, mode='line', thickness=2), color=color.cyan, z=.01, origin=(-.5,-.5))
 
+        self.selection = [Vec2(0,0), Vec2(0,0)]
+        self.selection_renderer = Entity(parent=self.canvas, model=Quad(segments=0, mode='line', thickness=2), color=color.lime, z=.01, origin=(-.5,-.5), enabled=False)
+
         self.undo_stack = []
         self.undo_stack.append(deepcopy(self.grid))
         self.undo_index = 0
@@ -88,10 +91,16 @@ class GridEditor(Entity):
         self.cursor.enabled = mouse.hovered_entity == self.canvas
         if self.canvas.hovered:
             self.cursor.position = mouse.point
+
+            # center cursor
+            self.cursor.x -= self.brush_size // 2 / self.w
+            self.cursor.y -= self.brush_size // 2 / self.h
+
             self.cursor.x = floor(self.cursor.x * self.w) / self.w
             self.cursor.y = floor(self.cursor.y * self.h) / self.h
 
-            if self.start_pos and mouse.left or mouse.right:
+
+            if self.start_pos and mouse.left:
                 if held_keys['shift'] and self.prev_draw:
                     if not self.lock_axis:
                         if abs(mouse.velocity[0]) > abs(mouse.velocity[1]):
@@ -110,7 +119,7 @@ class GridEditor(Entity):
                 x = int(round(self.cursor.x * self.w))
 
 
-                if not held_keys['alt'] and not mouse.right:
+                if not held_keys['alt']:
                     if self.prev_draw is not None and distance_2d(self.prev_draw, (x,y)) > 1:
                         dist = distance_2d(self.prev_draw, (x,y))
 
@@ -126,9 +135,18 @@ class GridEditor(Entity):
                         self.draw(x, y)
                         self.prev_draw = (x,y)
 
-                else:
+                else:   # sample color
                     self.selected_char = self.grid[x][y]
 
+        if mouse.right:     # selection
+            self.selection[1] = self.cursor.position
+            if self.selection[0] == self.selection[1]:
+                self.selection_renderer.enabled = False
+                return
+            self.selection_renderer.enabled = True
+            self.selection_renderer.position = Vec3(min(self.selection[0].x, self.selection[1].x), min(self.selection[0].y, self.selection[1].y), -.1)
+            end = Vec3(max(self.selection[0].x, self.selection[1].x), max(self.selection[0].y, self.selection[1].y), -.1) + Vec3(1/self.w,1/self.h,0)
+            self.selection_renderer.scale = end - self.selection_renderer.position
 
 
     def draw(self, x, y):
@@ -160,6 +178,9 @@ class GridEditor(Entity):
             if not held_keys['control']:
                 self.record_undo()
 
+        if key == 'right mouse down':
+            self.selection[0] = self.cursor.position
+
         if key == 'shift up':
             self._lock_origin = None
 
@@ -176,7 +197,7 @@ class GridEditor(Entity):
             self.render()
 
         # fill
-        if key == 'g':
+        if key == 'g' and self.canvas.hovered:
             y = int(self.cursor.y * self.h)
             x = int(self.cursor.x * self.w)
             self.floodfill(self.grid, x, y)
