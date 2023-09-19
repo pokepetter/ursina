@@ -1,16 +1,7 @@
-import os
-import glob
-import platform
-import subprocess
-from copy import copy, deepcopy
 from pathlib import Path
-from ursina.mesh import Mesh
 from ursina import application
-from panda3d.core import CullFaceAttrib
 from time import perf_counter
-from ursina.string_utilities import print_info, print_warning
-from ursina import color
-from ursina.vec3 import Vec3
+from ursina.string_utilities import print_info
 
 
 def ursinamesh_to_obj(mesh, name='', out_path=application.compressed_models_folder, max_decimals=5, flip_faces=True):
@@ -224,7 +215,7 @@ def ursinamesh_to_dae(mesh, name, folder:Path=application.compressed_models_fold
 
 
 if __name__ == '__main__':
-    from ursina import *
+    from ursina import Ursina, Entity, load_model, EditorCamera, Sky
     app = Ursina()
 
     t = perf_counter()

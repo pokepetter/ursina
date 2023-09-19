@@ -1,6 +1,5 @@
 import re
 import traceback
-from textwrap import dedent
 
 
 def camel_to_snake(value):

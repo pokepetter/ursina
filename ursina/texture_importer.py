@@ -70,7 +70,6 @@ def load_texture(name, path=None, use_cache=True):
 
 
 def compress_textures(name=''):
-    import os
     try:
         from PIL import Image
     except Exception as e:

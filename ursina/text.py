@@ -1,6 +1,5 @@
-from panda3d.core import TransparencyAttrib
-from panda3d.core import Filename
 from panda3d.core import TextNode
+import builtins
 # from direct.interval.IntervalGlobal import Sequence, Func, Wait, SoundInterval
 
 import ursina
@@ -9,6 +8,7 @@ from ursina import camera
 from ursina.entity import Entity
 from ursina.sequence import Sequence, Func, Wait
 from ursina import color
+from ursina import destroy
 # note:
 # <scale:n> tag doesn't work well in the middle of text.
 # only good for titles for now.
@@ -231,7 +231,7 @@ class Text(Entity):
 
     @font.setter
     def font(self, value):
-        font = loader.loadFont(value)
+        font = builtins.loader.loadFont(value)
         if font:
             self._font = font
             self._font.clear()  # remove assertion warning
@@ -348,7 +348,7 @@ class Text(Entity):
 
     @background.setter
     def background(self, value):
-        if value == True:
+        if value is True:
             self.create_background()
         elif self._background:
             from ursina.ursinastuff import destroy
@@ -401,21 +401,19 @@ class Text(Entity):
         self._background.color = color
 
 
-    def appear(self, speed=.025, delay=0):
-        from ursina.ursinastuff import invoke
+    def appear(self, speed=.025):
         self.enabled = True
         # self.visible = True   # setting visible seems to reset the colors
         if self.appear_sequence:
             self.appear_sequence.finish()
 
-        x = 0
         self.appear_sequence = Sequence()
-        for i, tn in enumerate(self.text_nodes):
+        for tn in self.text_nodes:
             target_text = tn.node().getText()
             tn.node().setText('')
             new_text = ''
 
-            for j, char in enumerate(target_text):
+            for char in target_text:
                 new_text += char
                 self.appear_sequence.append(Wait(speed))
                 self.appear_sequence.append(Func(tn.node().setText, new_text))
@@ -437,6 +435,7 @@ class Text(Entity):
 
 if __name__ == '__main__':
     from ursina import *
+    from ursina import Ursina, dedent, window
     app = Ursina()
     # Text.size = .001
     descr = dedent('''

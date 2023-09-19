@@ -2,7 +2,7 @@ from modulefinder import ModuleFinder
 import os
 import sys
 import shutil
-from shutil import copy, copyfile, copytree
+from shutil import copy
 from pathlib import Path
 import time
 from textwrap import dedent
@@ -111,7 +111,7 @@ for i, arg in enumerate(sys.argv):
 
 
 if (build_engine and python_dest.exists() or (build_game and src_dest.exists())):
-    if not '--overwrite' in sys.argv:
+    if '--overwrite' not in sys.argv:
         for e in (python_dest, src_dest):
             msg = f'Folder {e} already exists. \nProceed to delete and overwrite?'
             overwrite = input("%s (y/N) " % msg).lower() == 'y'

@@ -1,11 +1,7 @@
-import sys
-
 from ursina.entity import Entity
 from ursina.scene import instance as scene
 from ursina.vec3 import Vec3
-from math import sqrt, inf
-from ursina.hit_info import HitInfo
-from ursina import ursinamath, color
+from ursina import color
 from ursina.ursinastuff import invoke
 
 
@@ -39,7 +35,7 @@ def boxcast(origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_
 
 
 if __name__ == '__main__':
-    from ursina import *
+    from ursina import Ursina, held_keys, camera, duplicate, raycast, time, EditorCamera
     app = Ursina()
 
     '''

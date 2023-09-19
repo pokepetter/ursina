@@ -1,18 +1,16 @@
 import os
-import glob
 import platform
 import subprocess
 from copy import copy, deepcopy
 from pathlib import Path
 from ursina.mesh import Mesh
 from ursina import application
-from panda3d.core import CullFaceAttrib
 from time import perf_counter
 from ursina.string_utilities import print_info, print_warning
-from ursina import color
 from ursina.vec3 import Vec3
 import panda3d.core as p3d
 import gltf
+import builtins
 
 
 imported_meshes = dict()
@@ -48,7 +46,7 @@ def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursina
         for filename in path.glob(f'**/{name}{filetype}'):
             if filetype == '.bam':
                 # print_info('loading bam')
-                return loader.loadModel(filename)  # type: ignore
+                return builtins.loader.loadModel(filename)  # type: ignore
 
             if filetype == '.gltf' or filetype == '.glb':
                 gltf_settings = gltf.GltfSettings()
@@ -88,7 +86,7 @@ def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursina
                     return load_model(name, path, use_deepcopy=use_deepcopy)
             else:
                 try:
-                    return loader.loadModel(filename)  # type: ignore
+                    return builtins.loader.loadModel(filename)  # type: ignore
                 except:
                     pass
 
@@ -139,15 +137,12 @@ def load_blender_scene(name, path=application.asset_folder, reload=False, skip_h
     # print('loading:', out_file_path)
     if reload or not out_file_path.exists():
         print_info('reload:')
-        t = perf_counter()
         blend_file = tuple(path.glob(f'**/{name}.blend'))
         if not blend_file:
             raise ValueError('no blender file found at:', path / name)
 
         blend_file = blend_file[0]
         print_info('loading blender scene:', blend_file, '-->', out_file_path)
-        blender = get_blender(blend_file)
-        script_path = application.internal_scripts_folder / '_blender_scene_to_ursina.py'
 
         args = [
             get_blender(blend_file),
@@ -256,7 +251,7 @@ def obj_to_ursinamesh(path=application.compressed_models_folder, outpath=applica
         mtl_dict = {}
 
         # parse the obj file to a Mesh
-        for i, l in enumerate(lines):
+        for i, l in enumerate(lines):  # noqa: E741
             if l.startswith('v '):
                 vert = [float(v) for v in l[2:].strip().split(' ')]
                 vert[0] = -vert[0]
@@ -272,8 +267,8 @@ def obj_to_ursinamesh(path=application.compressed_models_folder, outpath=applica
                 uvs.append(tuple(float(e) for e in uv))
 
             elif l.startswith('f '):
-                l = l[2:]
-                l = l.split(' ')
+                l = l[2:]  # noqa: E741
+                l = l.split(' ')  # noqa: E741
 
                 try:
                     tri = tuple(int(t.split('/')[0])-1 for t in l if t != '\n')
@@ -393,7 +388,6 @@ def compress_models_fast(model_name=None, write_to_disk=False):
     application.compressed_models_folder.mkdir(parents=True, exist_ok=True)
 
     files = os.listdir(application.models_folder)
-    compressed_files = os.listdir(application.compressed_models_folder)
 
     for f in files:
         if f.endswith('.blend'):
@@ -520,6 +514,7 @@ def compress_internal():
 if __name__ == '__main__':
     # compress_internal()
     from ursina import *
+    from ursina import Ursina, Entity, EditorCamera, Sky
     app = Ursina()
     # print('imported_meshes:\n', imported_meshes)
     # Entity(model='quad').model.save('quad.bam')

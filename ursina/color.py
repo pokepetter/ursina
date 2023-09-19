@@ -1,7 +1,7 @@
 import colorsys
 import random
 import sys
-from math import floor, inf
+from math import floor
 from ursina.vec4 import Vec4
 
 
@@ -170,10 +170,10 @@ for cn in color_names:
 
 if __name__ == '__main__':
     from ursina import *
+    from ursina import Ursina, Entity, Button, Quad, grid_layout
     app = Ursina()
 
     print(color.brightness(color.blue))
-    print(_3)
 
     p = Entity(x=-2)
     for key in color.colors:

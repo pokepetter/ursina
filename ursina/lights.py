@@ -1,4 +1,4 @@
-from ursina import *
+from ursina import Entity, Vec2, invoke, scene
 from panda3d.core import DirectionalLight as PandaDirectionalLight
 from panda3d.core import PointLight as PandaPointLight
 from panda3d.core import AmbientLight as PandaAmbientLight
@@ -7,7 +7,7 @@ from panda3d.core import Spotlight as PandaSpotLight
 
 class Light(Entity):
     def __init__(self, **kwargs):
-        super().__init__(rotation_x=90)
+        super().__init__(rotation_x=90, **kwargs)
 
 
     @property
@@ -90,6 +90,8 @@ class SpotLight(Light):
 
 
 if __name__ == '__main__':
+    from ursina import Ursina, EditorCamera, color
+
     app = Ursina()
     from ursina.shaders import lit_with_shadows_shader # you have to apply this shader to enties for them to receive shadows.
     EditorCamera()

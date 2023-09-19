@@ -1,7 +1,9 @@
-from ursina import *
+from ursina import input_handler, held_keys, Entity
 from panda3d.core import InputDevice
 
+
 if __name__ == '__main__':
+    from ursina import Ursina, Text, time, color
     app = Ursina()
     text_entity = Text()
     player = Entity(model='cube', color=color.azure)
@@ -15,7 +17,6 @@ if __name__ == '__main__':
         print('key:', key)
 
     app.run()
-
 
 
 input_handler.gamepad = None

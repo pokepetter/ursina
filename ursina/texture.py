@@ -20,7 +20,7 @@ class Texture():
         if isinstance(value, Path):
             self.path = Path(value)
             self._texture = loader.loadTexture(Filename.fromOsSpecific(str(value)))
-            self._cached_image = None   # for get_pixel() method
+            self._cached_image = None   # for get_pixel() method            
 
         elif isinstance(value, PandaTexture):
             self._texture = value
@@ -190,6 +190,7 @@ class Texture():
 
 if __name__ == '__main__':
     from ursina import *
+    from ursina import texture_importer
     app = Ursina()
     '''
         The Texture class rarely used manually but usually instantiated

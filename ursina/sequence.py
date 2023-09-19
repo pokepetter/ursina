@@ -1,4 +1,3 @@
-import math
 from ursina import application
 import time
 
@@ -105,7 +104,7 @@ class Sequence():
         if not self.started:
             return
 
-        if self.ignore_paused == False and (self.paused or application.paused):
+        if self.ignore_paused is False and (self.paused or application.paused):
             return
 
         if self.time_step is None:
@@ -137,6 +136,7 @@ class Sequence():
 
 if __name__ == '__main__':
     from ursina import *
+    from ursina import Ursina, Entity
     app = Ursina()
     e = Entity(model='quad')
     s = Sequence(

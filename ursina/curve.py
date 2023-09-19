@@ -279,8 +279,8 @@ class CubicBezier:
         t1 = 0
         t2 = 0
         x2 = 0
-        d2 = 0
-        i = 0
+        # d2 = 0
+        # i = 0
 
         # t2 = t
         # for i in range(8):
@@ -321,6 +321,7 @@ class CubicBezier:
 if __name__ == '__main__':
     '''Draws a sheet with every curve and its name'''
     from ursina import *
+    from ursina import Ursina, camera, window, curve, Entity, Mesh, Text, color
 
     app = Ursina()
     camera.orthographic = True

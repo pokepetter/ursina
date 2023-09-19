@@ -1,5 +1,5 @@
-from ursina import *
-from copy import copy, deepcopy
+from ursina import Entity, Audio
+from copy import copy
 
 
 def duplicate(entity, copy_children=True, *args, **kwargs): # use a for loop instead of duplicate() if you can.
@@ -54,6 +54,8 @@ def duplicate(entity, copy_children=True, *args, **kwargs): # use a for loop ins
 
 
 if __name__ == '__main__':
+    from ursina import *
+    from ursina import Ursina, Button, scene, EditorCamera
     app = Ursina()
 
     # quad = Button(parent=scene, model='quad', texture='brick', x=-1, collider='box')

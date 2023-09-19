@@ -1,15 +1,14 @@
-import sys
-
+import builtins
 from ursina.entity import Entity
 from ursina.mesh import Mesh
 from ursina.scene import instance as scene
 from panda3d.core import CollisionTraverser, CollisionNode, CollisionHandlerQueue, CollisionRay
 from ursina.vec3 import Vec3
-from math import sqrt, inf
 from copy import copy
 from ursina.hit_info import HitInfo
 from ursina import ursinamath, color
-from ursina.ursinastuff import destroy, invoke
+from ursina.ursinastuff import destroy
+
 
 
 _line_model = Mesh(vertices=[Vec3(0,0,0), Vec3(0,0,1)], mode='line')
@@ -54,7 +53,7 @@ def raycast(origin, direction:Vec3=(0,0,1), distance=9999, traverse_target:Entit
         e for i, e in enumerate(entries)
         if entities[i] in scene.collidables
         and entities[i] not in ignore
-        and ursinamath.distance(_raycaster.world_position, e.get_surface_point(render)) <= distance
+        and ursinamath.distance(_raycaster.world_position, e.get_surface_point(builtins.render)) <= distance
         ]
 
     if len(entries) == 0:
@@ -63,7 +62,7 @@ def raycast(origin, direction:Vec3=(0,0,1), distance=9999, traverse_target:Entit
     _raycaster.collision = entries[0]
     nP = _raycaster.collision.get_into_node_path().parent
     point = Vec3(*_raycaster.collision.get_surface_point(nP))
-    world_point = Vec3(*_raycaster.collision.get_surface_point(render))
+    world_point = Vec3(*_raycaster.collision.get_surface_point(builtins.render))
 
     hit_info = HitInfo(hit=True)
     hit_info.entities = [e.get_into_node_path().parent.getPythonTag('Entity') for e in entries]
@@ -74,13 +73,14 @@ def raycast(origin, direction:Vec3=(0,0,1), distance=9999, traverse_target:Entit
     hit_info.distance = ursinamath.distance(_raycaster.world_position, hit_info.world_point)
 
     hit_info.normal = Vec3(*_raycaster.collision.get_surface_normal(_raycaster.collision.get_into_node_path().parent).normalized())
-    hit_info.world_normal = Vec3(*_raycaster.collision.get_surface_normal(render).normalized())
+    hit_info.world_normal = Vec3(*_raycaster.collision.get_surface_normal(builtins.render).normalized())
 
     return hit_info
 
 
 if __name__ == '__main__':
     from ursina import *
+    from ursina import Ursina, Entity, held_keys, time, duplicate, camera, EditorCamera
     app = Ursina()
 
     '''

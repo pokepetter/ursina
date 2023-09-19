@@ -1,5 +1,4 @@
 from ursina import application
-import random
 from ursina.entity import Entity
 from ursina import curve
 from ursina.ursinastuff import invoke

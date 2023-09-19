@@ -10,14 +10,15 @@ from ursina.vec4 import Vec4
 from panda3d.core import Quat
 from panda3d.core import TransparencyAttrib
 from panda3d.core import Shader
-from panda3d.core import TextureStage, TexGenAttrib
+from panda3d.core import TexGenAttrib
 
 from ursina.texture import Texture
 from panda3d.core import MovieTexture
 from panda3d.core import TextureStage
 from panda3d.core import CullFaceAttrib
+
 from ursina import application
-from ursina.collider import *
+from ursina.collider import Collider, BoxCollider, SphereCollider, MeshCollider, CapsuleCollider
 from ursina.mesh import Mesh
 from ursina.sequence import Sequence, Func, Wait
 from ursina.ursinamath import lerp
@@ -872,7 +873,7 @@ class Entity(NodePath):
 
 
     def add_script(self, class_instance):
-        if isinstance(class_instance, object) and type(class_instance) is not str:
+        if isinstance(class_instance, object) and not isinstance(class_instance, str):
             class_instance.entity = self
             class_instance.enabled = True
             setattr(self, camel_to_snake(class_instance.__class__.__name__), class_instance)
@@ -968,7 +969,7 @@ class Entity(NodePath):
 
             p = p.parent
 
-            if p.enabled == False:
+            if p.enabled is False:
                 return True
 
         return False

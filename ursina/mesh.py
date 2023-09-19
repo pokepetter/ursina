@@ -1,7 +1,7 @@
-from panda3d.core import MeshDrawer, NodePath
+from panda3d.core import NodePath
 from panda3d.core import GeomVertexData, GeomVertexFormat, Geom, GeomVertexWriter, GeomNode
 from panda3d.core import GeomTriangles, GeomTristrips, GeomTrifans
-from panda3d.core import GeomLines, GeomLinestrips, GeomPoints
+from panda3d.core import GeomLinestrips, GeomPoints
 from panda3d.core import TexGenAttrib, TextureStage
 from panda3d.core import LVector4f
 from ursina.vec3 import Vec3
@@ -102,7 +102,7 @@ class Mesh(NodePath):
             for uv in self.uvs:
                 uvwriter.addData2f(uv[0], uv[1])
 
-        if self.normals != None:
+        if self.normals is not None:
             normalwriter = GeomVertexWriter(vdata, 'normal')
             for norm in self.normals:
                 normalwriter.addData3f(*norm)
@@ -227,7 +227,7 @@ class Mesh(NodePath):
 
     @property
     def triangles(self):
-        if self._triangles == None:
+        if self._triangles is None:
             self._triangles = [(i, i+1, i+2) for i in range(0, len(self.vertices), 3)]
 
         return self._triangles
@@ -263,7 +263,7 @@ class Mesh(NodePath):
 
         if not name and hasattr(self, 'path'):
             name = self.path.stem
-            if not '.' in name:
+            if '.' not in name:
                 name += '.ursinamesh'
 
         if name.endswith('ursinamesh'):

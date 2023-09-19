@@ -75,7 +75,7 @@ class MeshCollider(Collider):
         self.center = center
         super().__init__()
         center = Vec3(center)
-        if mesh == None and entity.model:
+        if mesh is None and entity.model:
             mesh = entity.model
             # print('''auto generating mesh collider from entity's mesh''')
 
@@ -147,6 +147,7 @@ class MeshCollider(Collider):
 
 if __name__ == '__main__':
     from ursina import *
+    from ursina import Ursina, Entity, Pipe, Circle, Button, scene, EditorCamera, color
     app = Ursina()
 
     e = Entity(model='sphere', x=2)

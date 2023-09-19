@@ -1,4 +1,3 @@
-import sys
 import time
 import traceback
 from panda3d.core import CollisionTraverser, CollisionNode
@@ -148,7 +147,7 @@ class Mouse():
                 if hasattr(self.hovered_entity, 'on_click') and callable(self.hovered_entity.on_click):
                     try:
                         self.hovered_entity.on_click()
-                    except Exception as e:
+                    except:
                         print(traceback.format_exc())
                         application.quit()
 
@@ -166,7 +165,7 @@ class Mouse():
                     if hasattr(self.hovered_entity, 'on_double_click'):
                         try:
                             self.hovered_entity.on_double_click()
-                        except Exception as e:
+                        except:
                             print(traceback.format_exc())
                             application.quit()
 
@@ -342,6 +341,7 @@ instance = Mouse()
 
 if __name__ == '__main__':
     from ursina import *
+    from ursina import Ursina, Button, mouse
     app = Ursina()
     Button(parent=scene, text='a')
 
