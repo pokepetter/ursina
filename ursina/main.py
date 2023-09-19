@@ -5,13 +5,12 @@ from direct.showbase.ShowBase import ShowBase
 from direct.task.Task import Task
 from panda3d.core import ConfigVariableBool
 
+from ursina.window import instance as window
 from ursina import application
 from ursina import input_handler
-from ursina.window import instance as window
 from ursina.scene import instance as scene
 from ursina.camera import instance as camera
 from ursina.mouse import instance as mouse
-from ursina.string_utilities import print_info
 from ursina import entity
 
 
@@ -23,7 +22,7 @@ keyboard_keys = '1234567890qwertyuiopasdfghjklzxcvbnm'
 from ursina.scripts.singleton_decorator import singleton
 @singleton
 class Ursina(ShowBase):
-    def __init__(self, **kwargs): # optional arguments: title, fullscreen, size, forced_aspect_ratio, position, vsync, borderless, show_ursina_splash, render_mode, development_mode, editor_ui_enabled, window_type='onscreen'/'offscreen'/'none'.
+    def __init__(self, title='ursina', icon='textures/ursina.ico', borderless=True, fullscreen=False, size=None, forced_aspect_ratio=None, position=None, vsync=True, editor_ui_enabled=True, window_type='onscreen', development_mode=True, render_mode=None, show_ursina_splash=False, **kwargs):
         """The main class of Ursina. This class is a singleton, so you can only have one instance of it.
 
         Keyword Args (optional):
@@ -41,25 +40,10 @@ class Ursina(ShowBase):
             window_type (str): The type of the window. Can be 'onscreen', 'offscreen' or 'none'.\n
         """
         entity._warn_if_ursina_not_instantiated = False
-
-
-        for name in ('title', 'vsync', 'forced_aspect_ratio'):
-            if name in kwargs and hasattr(window, name):
-                setattr(window, name, kwargs[name])
-
-        if 'size' in kwargs:
-            window.windowed_size = kwargs['size']
-
-        if 'development_mode' in kwargs:
-            application.development_mode = kwargs['development_mode']
-
-        application.window_type = 'onscreen'
-        if 'window_type' in kwargs:
-            application.window_type = kwargs['window_type']
-        # application.window_type = window_type
-
+        application.window_type = window_type
         application.base = self
-        super().__init__(windowType=application.window_type)
+        application.development_mode = development_mode
+        application.show_ursina_splash = show_ursina_splash
 
         try:
             import gltf
@@ -70,11 +54,15 @@ class Ursina(ShowBase):
         if 'gltf_no_srgb' in kwargs:
             application.gltf_no_srgb = kwargs['gltf_no_srgb']
 
-        window.late_init()
-        for name in ('fullscreen', 'position', 'show_ursina_splash', 'borderless', 'render_mode'):
-            if name in kwargs and hasattr(window, name):
-                setattr(window, name, kwargs[name])
+        if not application.development_mode:
+            fullscreen = True
 
+        window.ready(title=title, icon=icon,
+            borderless=borderless, fullscreen=fullscreen, size=size, forced_aspect_ratio=forced_aspect_ratio, position=position, vsync=vsync, window_type=window_type,
+            editor_ui_enabled=editor_ui_enabled, render_mode=render_mode)
+
+        super().__init__(windowType=application.window_type)
+        window.apply_settings()
         # camera
         if application.window_type != 'none':
             camera._cam = self.camera
@@ -119,7 +107,7 @@ class Ursina(ShowBase):
         self.mouse = mouse
 
         scene.set_up()
-        self._update_task = taskMgr.add(self._update, "update")
+        self._update_task = self.taskMgr.add(self._update, "update")
 
         # try to load settings that need to be applied before entity creation
         application.load_settings()
@@ -177,19 +165,19 @@ class Ursina(ShowBase):
         for seq in application.sequences:
             seq.update()
 
-        for entity in scene.entities:
-            if entity.enabled == False or entity.ignore:
+        for e in scene.entities:
+            if not e.enabled or e.ignore:
                 continue
-            if application.paused and entity.ignore_paused == False:
+            if application.paused and e.ignore_paused is False:
                 continue
-            if entity.has_disabled_ancestor():
+            if e.has_disabled_ancestor():
                 continue
 
-            if hasattr(entity, 'update') and callable(entity.update):
-                entity.update()
+            if hasattr(e, 'update') and callable(e.update):
+                e.update()
 
-            if hasattr(entity, 'scripts'):
-                for script in entity.scripts:
+            if hasattr(e, 'scripts'):
+                for script in e.scripts:
                     if script.enabled and hasattr(script, 'update') and callable(script.update):
                         script.update()
 
@@ -229,7 +217,7 @@ class Ursina(ShowBase):
         if not is_raw and key in keyboard_keys:
             return
 
-        if not 'mouse' in key:
+        if 'mouse' not in key:
             for prefix in ('control-', 'shift-', 'alt-'):
                 if key.startswith(prefix):
                     key = key.replace('control-', '')
@@ -250,21 +238,21 @@ class Ursina(ShowBase):
             if hasattr(__main__, 'input'):
                 __main__.input(key)
 
-        for entity in scene.entities:
-            if entity.enabled == False or entity.ignore or entity.ignore_input:
+        for e in scene.entities:
+            if e.enabled is False or e.ignore or e.ignore_input:
                 continue
-            if application.paused and entity.ignore_paused == False:
+            if application.paused and e.ignore_paused is False:
                 continue
-            if entity.has_disabled_ancestor():
+            if e.has_disabled_ancestor():
                 continue
 
 
-            if hasattr(entity, 'input') and callable(entity.input):
-                if entity.input(key):
+            if hasattr(e, 'input') and callable(e.input):
+                if e.input(key):
                     break
 
-            if hasattr(entity, 'scripts'):
-                for script in entity.scripts:
+            if hasattr(e, 'scripts'):
+                for script in e.scripts:
                     if script.enabled and hasattr(script, 'input') and callable(script.input):
                         if script.input(key):
                             break
@@ -285,17 +273,17 @@ class Ursina(ShowBase):
             if hasattr(__main__, 'text_input'):
                 __main__.text_input(key)
 
-        for entity in scene.entities:
-            if entity.enabled == False or entity.ignore or entity.ignore_input:
+        for e in scene.entities:
+            if e.enabled is False or e.ignore or e.ignore_input:
                 continue
-            if application.paused and entity.ignore_paused == False:
+            if application.paused and e.ignore_paused is False:
                 continue
 
-            if hasattr(entity, 'text_input') and callable(entity.text_input):
-                entity.text_input(key)
+            if hasattr(e, 'text_input') and callable(e.text_input):
+                e.text_input(key)
 
-            if hasattr(entity, 'scripts'):
-                for script in entity.scripts:
+            if hasattr(e, 'scripts'):
+                for script in e.scripts:
                     if script.enabled and hasattr(script, 'text_input') and callable(script.text_input):
                         script.text_input(key)
 
@@ -304,7 +292,7 @@ class Ursina(ShowBase):
 
 
     def run(self, info=True):
-        if window.show_ursina_splash:
+        if application.show_ursina_splash:
             from ursina.prefabs import ursina_splash
 
         application.load_settings()

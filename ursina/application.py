@@ -20,7 +20,7 @@ if 'src' in dirs and 'python' in dirs:
     development_mode = False
 
 window_type = 'onscreen'
-
+show_ursina_splash = False
 gltf_no_srgb = True
 
 print_info = development_mode
