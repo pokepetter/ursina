@@ -1,4 +1,3 @@
-import sys
 from ursina.entity import Entity
 from panda3d.core import PerspectiveLens, OrthographicLens, LensNode, NodePath
 from panda3d.core import Camera as PandaCamera
@@ -108,10 +107,14 @@ class Camera(Entity):
 
         application.base.cam.node().set_lens((self.perspective_lens, self.orthographic_lens)[value])
 
+    def clip_plane_near_getter(self):
+        return self._clip_plane_near
     def clip_plane_near_setter(self, value):
         self._clip_plane_near = value
         self.lens.set_near(value)
 
+    def clip_plane_far_getter(self):
+        return self._clip_plane_far
     def clip_plane_far_setter(self, value):
         self._clip_plane_far = value
         self.lens.set_far(value)
@@ -185,6 +188,8 @@ instance = Camera()
 
 if __name__ == '__main__':
     from ursina import *
+    from ursina import Ursina, camera, Entity, EditorCamera
+
     window.borderless = False
     app = Ursina()
 
