@@ -128,7 +128,7 @@ class Peer:
         elif socket_address_family == "INET6":
             self.socket_address_family = socket.AF_INET6
         else:
-            raise Exception("Invalid/unsupported socket address family '{}'.".format(socket_address_family))
+            raise Exception("Invalid/unsupported socket address family '{socket_address_family}'.")
 
         self.ssl_context = None
 
@@ -172,7 +172,7 @@ class Peer:
                     prev_signal_handler(*args)
 
         signal.signal(signal.SIGINT, on_keyboard_interrupt)
-    
+
     def is_using_tls(self):
         return self.use_tls
 
@@ -186,7 +186,7 @@ class Peer:
             elif socket_address_family == "INET6":
                 self.socket_address_family = socket.AF_INET6
             else:
-                raise Exception("Invalid/unsupported socket address family '{}'.".format(socket_address_family))
+                raise Exception(f"Invalid/unsupported socket address family '{socket_address_family}'.")
 
         if is_host:
             if self.use_tls:
@@ -220,7 +220,7 @@ class Peer:
 
         with self.running_lock:
             self.running = False
-        
+
         self.main_thread.join()
 
     def update(self, max_events=100):
@@ -298,7 +298,7 @@ class Peer:
                 print(e)
                 self.running = False
                 raise
-            
+
             self.listen_task = asyncio.create_task(self._listen(async_loop))
         else:
             client_socket = None
@@ -370,7 +370,7 @@ class Peer:
             except:
                 pass
 
-    async def _listen(self, async_loop): 
+    async def _listen(self, async_loop):
         try:
             while True:
                 client_socket, client_address = await async_loop.sock_accept(self.socket)
@@ -538,7 +538,7 @@ class DatagramWriter:
             elif isinstance(value, bytes):
                 self.write_blob(value)
             else:
-                raise Exception("Unspported value type for DatagramWriter: {0}".format(type(value).__name__))
+                raise Exception(f"Unspported value type for DatagramWriter: {type(value).__name__}")
 
     def write_string(self, value):
         self.datagram.addString(value)
@@ -639,11 +639,11 @@ class DatagramReader:
                         values.append(self.read(arg_type))
                     return values
                 else:
-                    raise Exception("Unspported value type for DatagramReader: {0}".format(value_type.__name__))
+                    raise Exception(f"Unspported value type for DatagramReader: {value_type.__name__}")
             elif value_type is bytes:
                 return self.read_blob()
             else:
-                raise Exception("Unspported value type for DatagramReader: {0}".format(value_type.__name__))
+                raise Exception(f"Unspported value type for DatagramReader: {value_type.__name__}")
 
     def read_string(self):
         return self.iter.getString()
@@ -677,7 +677,7 @@ class DatagramReader:
 
     def read_blob32(self):
         return self.iter.getBlob32()
-    
+
 
 # Gives a 32 bit hash value (shifted one right (31 bit)) that is the same across runs and devices.
 def procedure_hash(name):
@@ -787,14 +787,16 @@ class RPCPeer:
 
     def register_procedure(self, proc, host_only=False, client_only=False, prefix=None):
         func_spec = inspect.getfullargspec(proc)
-        assert len(func_spec.args) >= 2, "{} must have at least two arguments, connection and time_received.".format(proc.__name__)
+        if not len(func_spec.args) >= 2:
+            raise Exception(f"{proc.__name__} must have at least two arguments, connection and time_received.")
         func_args = func_spec.args[2:]
         if func_spec.args[0] == "self":
             func_args = func_args[1:]
         arg_types = []
         for func_arg in func_args:
             func_arg_type = func_spec.annotations.get(func_arg)
-            assert func_arg_type is not None, "Failed to register the '{}' procedure, it's missing a type annotation for the '{}' argument.".format(proc.__name__, func_arg)
+            if not func_arg_type is not None:
+                raise Exception(f"Failed to register the '{proc.__name__}' procedure, it's missing a type annotation for the '{func_arg}' argument.")
             if type(func_arg_type) is types.GenericAlias:
                 arg_types.append((typing.get_origin(func_arg_type), typing.get_args(func_arg_type)))
             else:
@@ -807,13 +809,16 @@ class RPCPeer:
             p = self.procedures.get(procedure_name_hash)
             p.append((proc_name, arg_types, proc, host_only, client_only))
         else:
-            assert procedure_name_hash not in self.procedures, "{} was already registered before.".format(proc_name)
+            if not procedure_name_hash not in self.procedures:
+                raise Exception(f"{proc_name} was already registered before.")
             self.procedures[procedure_name_hash] = (proc_name, arg_types, proc, host_only, client_only)
 
     def __getattr__(self, name):
         def remote_procedure(*args):
-            assert len(args) >= 1, "Remote prcoedure call '{}' must have at least one argument, the connection.".format(name)
-            assert isinstance(args[0], Connection), "First argument to the RPC '{}' must be a 'Connection' type.".format(name)
+            if not len(args) >= 1:
+                raise Exception(f"Remote procedure call '{name}' must have at least one argument, the connection.")
+            if not isinstance(args[0], Connection):
+                raise Exception(f"First argument to the RPC '{name}' must be a 'Connection' type.")
             procedure_name_hash = procedure_hash(name)
             self.writer.clear()
             self.writer.write_int32(procedure_name_hash)
@@ -852,9 +857,9 @@ class RPCPeer:
                     v = self.reader.read(t, max_list_length=self.max_list_length)
                     proc_arg_values.append(v)
             except ExceedsListLimitException:
-                raise Exception("Argument with type '{}' exceeds max list size limit for procedure '{}'.".format(arg_type, proc_name))
+                raise Exception(f"Argument with type '{arg_type}' exceeds max list size limit for procedure '{proc_name}'.")
             except Exception as e:
-                raise Exception("Received invalid or missing argument or list/tuple exceeding max length allowed for procedure '{}', expected a '{}'.\n    {}".format(proc_name, arg_type, str(e)))
+                raise Exception(f"Received invalid or missing argument or list/tuple exceeding max length allowed for procedure '{proc_name}', expected a '{arg_type}'.\n    {str(e)}".)
         except Exception as e:
             print("WARNING: Received invalid remote procedure call, disconnecting...")
             print(e)
@@ -863,7 +868,7 @@ class RPCPeer:
         if proc_func is not None and proc_arg_types is not None and proc_arg_values is not None:
             if len(proc_arg_values) != len(proc_arg_types):
                 print("WARNING: Received invalid remote procedure call, disconnecting...")
-                print("Received an invalid number of arguments for procedure '{}'.".format(proc_name))
+                print("Received an invalid number of arguments for procedure '{proc_name}'.")
                 connection.disconnect()
             else:
                 if self.peer.is_hosting():
