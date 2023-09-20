@@ -56,7 +56,6 @@ class Window(WindowProperties):
         if not fullscreen:
             loadPrcFileData('', f'win-size {self.windowed_size[0]} {self.windowed_size[1]}')
         else:
-            print('fffffffffffffffffffffffffffffffffffffffffffffffffffff')
             loadPrcFileData('', f'win-size {self.fullscreen_size.x} {self.fullscreen_size.y}')
 
         self.windowed_position = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode
