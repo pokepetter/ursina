@@ -34,11 +34,16 @@ Make sure to include any extra modules with --include_modules PIL,numpy for exam
 Any errors while the application is running will be logged in log.txt instead of the console.
 
 
+## Building with Nuitka
 
-## Building Your App with auto-py-to-exe (singlefile)
+Follow the instructions on https://nuitka.net/
+
+
+## Building Your App with auto-py-to-exe
+
 This way is not recommended since it will slow to open and have a bigger file size.
 
-1. pip install auto-py-to-exe
+1. `pip install auto-py-to-exe`
 2. Go to cmd and type auto-py-to-exe to open the gui
 3. Enter script location
 4. Select onefile
