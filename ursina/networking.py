@@ -75,7 +75,7 @@ class Connection:
         return self.connected
 
 
-# Used interally by Peer.
+# Used internally by Peer.
 class PeerEvent(Enum):
     ERROR = auto()
     CONNECT = auto()
@@ -83,7 +83,7 @@ class PeerEvent(Enum):
     DATA = auto()
 
 
-# Used interally by Peer.
+# Used internally by Peer.
 class PeerInput(Enum):
     ERROR = auto()
     SEND = auto()
@@ -102,11 +102,11 @@ class PeerInput(Enum):
 # -- TLS / secure networking --
 # TLS support can be enabled with `use_tls=True`.
 # The host requires the path to the certificate chain, and the private key.
-# The client can make use of a given path to a certifcate authority bundle for testing / developement / self signed.
+# The client can make use of a given path to a certificate authority bundle for testing / development / self signed.
 # -- Address family --
 # The socket address family can be either "INET" (ipv4) or "INET6" (ipv6).
 # -- Notes --
-# Keep in mind that the networking in running on its own thread and you must therefor check if it's running (is_running).
+# Keep in mind that the networking in running on its own thread and you must therefore check if it's running (is_running).
 class Peer:
     def __init__(self, on_connect=None, on_disconnect=None, on_data=None, on_raw_data=None,
                  connection_timeout=None,
@@ -538,7 +538,7 @@ class DatagramWriter:
             elif isinstance(value, bytes):
                 self.write_blob(value)
             else:
-                raise Exception(f"Unspported value type for DatagramWriter: {type(value).__name__}")
+                raise Exception(f"Unsupported value type for DatagramWriter: {type(value).__name__}")
 
     def write_string(self, value):
         self.datagram.addString(value)
@@ -574,7 +574,7 @@ class DatagramWriter:
         self.datagram.addBlob32(value)
 
 
-# Used interally by networking module.
+# Used internally by networking module.
 class ExceedsListLimitException(Exception):
     pass
 
@@ -639,11 +639,11 @@ class DatagramReader:
                         values.append(self.read(arg_type))
                     return values
                 else:
-                    raise Exception(f"Unspported value type for DatagramReader: {value_type.__name__}")
+                    raise Exception(f"Unsupported value type for DatagramReader: {value_type.__name__}")
             elif value_type is bytes:
                 return self.read_blob()
             else:
-                raise Exception(f"Unspported value type for DatagramReader: {value_type.__name__}")
+                raise Exception(f"Unsupported value type for DatagramReader: {value_type.__name__}")
 
     def read_string(self):
         return self.iter.getString()
@@ -689,7 +689,7 @@ def procedure_hash(name):
 # Main remote procedure call class used by the networking module.
 # This class is likely the one you are looking for.
 # -- max list length --
-# Lists are supported for remote procedure calls, but to preven attacks involving giant lists,
+# Lists are supported for remote procedure calls, but to prevent attacks involving giant lists,
 # there is an upper limit on the length, this can be configured, the default is small on purpose.
 # -- kwargs --
 # The remaining keyword arguments are passed to Peer, see the Peer class for more information.
