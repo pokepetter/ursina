@@ -859,7 +859,7 @@ class RPCPeer:
             except ExceedsListLimitException:
                 raise Exception(f"Argument with type '{arg_type}' exceeds max list size limit for procedure '{proc_name}'.")
             except Exception as e:
-                raise Exception(f"Received invalid or missing argument or list/tuple exceeding max length allowed for procedure '{proc_name}', expected a '{arg_type}'.\n    {str(e)}".)
+                raise Exception(f"Received invalid or missing argument or list/tuple exceeding max length allowed for procedure '{proc_name}', expected a '{arg_type}'.\n    {str(e)}")
         except Exception as e:
             print("WARNING: Received invalid remote procedure call, disconnecting...")
             print(e)
