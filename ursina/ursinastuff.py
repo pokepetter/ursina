@@ -158,6 +158,39 @@ def _destroy(entity, force_destroy=False):
     del entity
 
 
+
+def chunk_list(l, chunk_size):
+    # yield successive chunks from list
+    for i in range(0, len(l), chunk_size):
+        yield l[i:i + chunk_size]
+
+
+def flatten_list(l):
+    # return [item for sublist in l for item in sublist]
+    import itertools
+    return list(itertools.chain(*l))
+
+def flatten_completely(container):
+    for i in container:
+        if isinstance(i, (list,tuple)):
+            for j in flatten(i):
+                yield j
+        else:
+            yield i
+
+
+
+def size_list():
+    #return a list of current python objects sorted by size
+    globals_list = []
+    globals_list.clear()
+    for e in globals():
+        # object, size
+        globals_list.append([e, sys.getsizeof(e)])
+    globals_list.sort(key=operator.itemgetter(1), reverse=True)
+    print('scene size:', globals_list)
+
+
 def find_sequence(name, file_types, folders): # find frame_0, frame_1, frame_2 and so on
     for folder in folders:
         for file_type in file_types:

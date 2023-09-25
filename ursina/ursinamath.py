@@ -118,23 +118,6 @@ def world_position_to_screen_position(point): # get screen position(ui space) fr
     return result
 
 
-def chunk_list(l, chunk_size):
-    # yield successive chunks from list
-    for i in range(0, len(l), chunk_size):
-        yield l[i:i + chunk_size]
-
-
-def size_list():
-    #return a list of current python objects sorted by size
-    globals_list = []
-    globals_list.clear()
-    for e in globals():
-        # object, size
-        globals_list.append([e, sys.getsizeof(e)])
-    globals_list.sort(key=operator.itemgetter(1), reverse=True)
-    print('scene size:', globals_list)
-
-
 def sum(l):
     try:
         return internal_sum(l)
