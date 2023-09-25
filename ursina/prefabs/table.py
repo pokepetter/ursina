@@ -127,6 +127,11 @@ class Table(Entity):
 
         self.scroll_parent.y = value * (self._row_height + self._border)
 
+    @property
+    def selected(self) -> list[str]:
+        """ returns the values from the selected row """
+        return [txt.text for _, txt in self._rows[self._selected_row_idx]]
+
 
 if __name__ == '__main__':
     """ generate a simple table for a lobby menu """
@@ -148,5 +153,11 @@ if __name__ == '__main__':
     lobby_bg = Entity(parent=camera.ui, position=(-.4, .4))
     table = Table(max_lines=10, row_height=.03, col_widths=[.15, .1, .2, .1], parent=lobby_bg)
     table.fill(game_data)
+
+
+    def input(key):
+        if key == 'p':
+            print(table.selected)
+
 
     app.run()
