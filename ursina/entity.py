@@ -1045,14 +1045,14 @@ class Entity(NodePath):
 #------------
 # ANIMATIONS
 #------------
-    def animate(self, name, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt='kill', time_step=None, auto_play=True, auto_destroy=True):
+    def animate(self, name, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt='kill', time_step=None, unscaled=False, auto_play=True, auto_destroy=True):
         if duration == 0 and delay == 0:
             setattr(self, name, value)
             return None
 
         if delay:
             from ursina.ursinastuff import invoke
-            return invoke(self.animate, name, value, duration=duration, curve=curve, loop=loop, resolution=resolution, time_step=time_step, auto_destroy=auto_destroy, delay=delay)
+            return invoke(self.animate, name, value, duration=duration, curve=curve, loop=loop, resolution=resolution, time_step=time_step, auto_destroy=auto_destroy, delay=delay, unscaled=unscaled)
 
         animator_name = name + '_animator'
         # print('start animating value:', name, animator_name )
@@ -1062,7 +1062,7 @@ class Entity(NodePath):
         if hasattr(self, animator_name) and getattr(self, animator_name) in self.animations:
             self.animations.remove(getattr(self, animator_name))
 
-        sequence = Sequence(loop=loop, time_step=time_step, auto_destroy=auto_destroy)
+        sequence = Sequence(loop=loop, time_step=time_step, auto_destroy=auto_destroy, unscaled=unscaled)
 
         setattr(self, animator_name, sequence)
         self.animations.append(sequence)
@@ -1101,17 +1101,17 @@ class Entity(NodePath):
         elif isinstance(value, tuple) and len(value) == 2:
             value = Vec3(*value, self.z)
 
-        return self.animate('scale', value, duration,  **kwargs)
+        return self.animate('scale', value, duration=duration, **kwargs)
 
     # generate animation functions
     for e in ('x', 'y', 'z', 'rotation_x', 'rotation_y', 'rotation_z', 'scale_x', 'scale_y', 'scale_z'):
         exec(dedent(f'''
-            def animate_{e}(self, value, duration=.1, delay=0, **kwargs):
-                return self.animate('{e}', value, duration=duration, delay=delay, **kwargs)
+            def animate_{e}(self, value, duration=.1, delay=0, unscaled=False, **kwargs):
+                return self.animate('{e}', value, duration=duration, delay=delay, unscaled=unscaled, **kwargs)
         '''))
 
 
-    def shake(self, duration=.2, magnitude=1, speed=.05, direction=(1,1), delay=0, attr_name='position', interrupt='finish'):
+    def shake(self, duration=.2, magnitude=1, speed=.05, direction=(1,1), delay=0, attr_name='position', interrupt='finish', unscaled=False):
         import random
 
         if hasattr(self, 'shake_sequence') and self.shake_sequence:
@@ -1131,20 +1131,21 @@ class Entity(NodePath):
             self.shake_sequence.append(Func(setattr, self, attr_name, original_position))
 
         self.animations.append(self.shake_sequence)
+        self.shake_sequence.unscaled = unscaled
         self.shake_sequence.start()
         return self.shake_sequence
 
-    def animate_color(self, value, duration=.1, interrupt='finish', **kwargs):
-        return self.animate('color', value, duration, interrupt=interrupt, **kwargs)
+    def animate_color(self, value, duration=.1, interrupt='finish', unscaled=False, **kwargs):
+        return self.animate('color', value, duration, interrupt=interrupt, unscaled=unscaled,**kwargs)
 
-    def fade_out(self, value=0, duration=.5, **kwargs):
-        return self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration,  **kwargs)
+    def fade_out(self, value=0, duration=.5, unscaled=False, **kwargs):
+        return self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration=duration, unscaled=unscaled, **kwargs)
 
-    def fade_in(self, value=1, duration=.5, **kwargs):
-        return self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration,  **kwargs)
+    def fade_in(self, value=1, duration=.5, unscaled=False, **kwargs):
+        return self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration=duration, unscaled=unscaled, **kwargs)
 
-    def blink(self, value=ursina.color.clear, duration=.1, delay=0, curve=curve.in_expo_boomerang, interrupt='finish', **kwargs):
-        return self.animate_color(value, duration=duration, delay=delay, curve=curve, interrupt=interrupt, **kwargs)
+    def blink(self, value=ursina.color.clear, duration=.1, delay=0, curve=curve.in_expo_boomerang, interrupt='finish', unscaled=False, **kwargs):
+        return self.animate_color(value, duration=duration, delay=delay, curve=curve, interrupt=interrupt, unscaled=unscaled, **kwargs)
 
 
 
