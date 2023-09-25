@@ -1,3 +1,154 @@
+
+html = '''
+<html>
+<head>
+    <link rel="stylesheet" href="api_reference.css">
+</head>
+<body>
+<input type="checkbox" id="checkbox" onClick="save()"></input>
+<script>
+
+function save() {
+	var checkbox = document.getElementById("checkbox");
+    localStorage.setItem("checkbox", checkbox.checked);
+}
+
+// loading
+var checked = JSON.parse(localStorage.getItem("checkbox"));
+document.getElementById("checkbox").checked = checked;
+
+</script>
+<bg></bg>
+'''
+
+groups = {
+'Basics' : [
+    'Ursina',
+    'Entity',
+    'Button',
+    'Sprite',
+    'Text',
+    'Audio',
+    ],
+'Core Modules' : [
+    'camera',
+    'mouse',
+    'window',
+    'application',
+    'scene',
+    ],
+'Graphics' : [
+    'color',
+    'Mesh',
+    'Shader',
+    'Texture',
+    'Light',
+    'DirectionalLight',
+    'PointLight',
+    'AmbientLight',
+    'SpotLight',
+    ],
+'Procedural Models': [
+    'Quad',
+    'Circle',
+    'Plane',
+    'Grid',
+    'Cone',
+    'Cylinder',
+    'Pipe',
+    'Terrain',
+    ],
+'modules': [
+    'input_handler',
+    'mesh_importer',
+    'texture_importer',
+    'string_utilities',
+    ],
+'Animation': [
+    'Animation',
+    'FrameAnimation3d',
+    'SpriteSheetAnimation',
+    'Animator',
+    'TrailRenderer',
+    'curve',
+    ],
+'Math': [
+    'ursinamath',
+    'Vec2',
+    'Vec3',
+    'Vec4',
+    'CubicBezier',
+],
+'Gameplay' : [
+    'ursinastuff',
+    'Sequence',
+    'Func',
+    'Keys',
+],
+'Collision' : [
+    'raycast',
+    'terraincast',
+    'boxcast',
+    'HitInfo',
+    'Collider',
+    'BoxCollider',
+    'SphereCollider',
+    'MeshCollider',
+],
+'Prefabs': [
+    'Sky',
+    'EditorCamera',
+    'Tilemap',
+    'FirstPersonController',
+    'PlatformerController2d',
+    'Conversation',
+    'Node',
+],
+'UI': [
+    'Button',
+    'Draggable',
+    'Tooltip',
+    'Slider',
+    'ThinSlider',
+    'TextField',
+    'Cursor',
+    'InputField',
+    'ContentTypes',
+    'ButtonList',
+    'ButtonGroup',
+    'WindowPanel',
+    'Space',
+    'FileBrowser',
+    'FileButton',
+    'FileBrowserSave',
+    'DropdownMenu',
+    'DropdownMenuButton',
+    'RadialMenu',
+    'RadialMenuButton',
+    'HealthBar',
+    'ColorPicker',
+],
+'Editor': [
+    'HotReloader',
+    'GridEditor',
+    'PixelEditor',
+    'ASCIIEditor',
+],
+'Scripts': [
+    'grid_layout',
+    'duplicate',
+    'SmoothFollow',
+    'Scrollable',
+    'NoclipMode',
+    'NoclipMode2d',
+    'build',
+],
+'Assets': [
+    'models',
+    'textures',
+    'shaders',
+],
+}
 from pathlib import Path
 from pprint import pprint
 import keyword
@@ -36,6 +187,20 @@ def get_classes(str):
     return classes
 
 
+def get_class_scope_variables(str):
+    vars = []
+    for i, line in enumerate(str.split('\n')):
+        if not line:
+            continue
+        if line.strip().startswith('_'):
+            continue
+        if line.strip().startswith('def'):
+            break
+        vars.append(line)
+
+    return vars
+
+
 def get_class_attributes(str):
     attributes = list()
     lines = str.split('\n')
@@ -52,9 +217,7 @@ def get_class_attributes(str):
 
             start = i
             for j in range(i+1, len(lines)):
-                if (indentation(lines[j]) == indentation(line)
-                and not lines[j].strip().startswith('def late_init')
-                ):
+                if (indentation(lines[j]) == indentation(line) and not lines[j].strip().startswith('def late_init')):
                     end = j
                     found_init = True
                     break
@@ -72,7 +235,7 @@ def get_class_attributes(str):
             key = stripped_line.split(' = ')[0]
             value = stripped_line.split(' = ')[1]
 
-            if i < len(init_section) and indentation(init_section[i+1]) > indentation(line):
+            if i < len(init_section)-1 and indentation(init_section[i+1]) > indentation(line):
                 # value = 'multiline'
                 start = i
                 end = i
@@ -108,7 +271,7 @@ def get_functions(str, is_class=False):
 
     functions = list()
     lines = str.split('\n')
-    ignore_functions_for_property_generation = 'generate_properties(' in str
+    # ignore_functions_for_property_generation = 'generate_properties(' in str
 
     for i, line in enumerate(lines):
 
@@ -122,9 +285,9 @@ def get_functions(str, is_class=False):
             if name.startswith('_') or lines[i-1].strip().startswith('@'):
                 continue
 
-            if ignore_functions_for_property_generation:
-                if name.startswith('get_') or name.startswith('set_'):
-                    continue
+            # if ignore_functions_for_property_generation:
+            #     if name.startswith('get_') or name.startswith('set_'):
+            #         continue
 
 
             params = line.replace('(self, ', '(')
@@ -266,64 +429,50 @@ def is_singleton(str):
 
 
 path = application.package_folder
-most_used_info = dict()
 module_info = dict()
 class_info = dict()
+module_info['textures'] = ('', '', '', [], ('noise', 'grass', 'vignette', 'arrow_right', 'test_tileset', 'tilemap_test_level', 'shore', 'file_icon', 'sky_sunset', 'radial_gradient', 'circle', 'perlin_noise', 'brick', 'grass_tintable', 'circle_outlined', 'ursina_logo', 'arrow_down', 'cog', 'vertical_gradient', 'white_cube', 'horizontal_gradient', 'folder', 'rainbow', 'heightmap_1', 'sky_default',), (), ())
+module_info['models'] = ('', '', '', [], ('quad', 'wireframe_cube', 'plane', 'circle', 'diamond', 'wireframe_quad', 'sphere', 'cube', 'icosphere', 'cube_uv_top', 'arrow', 'sky_dome', ), (), ())
+module_info['shaders'] = ('', '', '', [], ('colored_lights_shader', 'fresnel_shader', 'projector_shader', 'instancing_shader', 'texture_blend_shader', 'matcap_shader', 'triplanar_shader', 'unlit_shader', 'geom_shader', 'normals_shader', 'transition_shader', 'noise_fog_shader', 'lit_with_shadows_shader', 'fxaa', 'camera_empty', 'ssao', 'camera_outline_shader', 'pixelation_shader', 'camera_contrast', 'camera_vertical_blur', 'camera_grayscale', ), (), ())
 
-# ignore files that are not committed
-ignored_files = list()
-for f in ignored_files:
-    print('ignoring:', f)
-ignored_files.append(path / 'gamepad.py')
 
-for f in path.glob('*.py'):
-    if f in ignored_files:
-        continue
-    if f.name.startswith('_') or f.name == 'build.py':
-        module_info['build'] = (
-            f,
-            'python -m ursina.build',
-            {},
-            '',
-            '''open cmd at your project folder and run 'python -m ursina.build' to package your app for windows.'''
-            )
-        continue
-
-    with open(f, encoding='utf8') as t:
+for f in path.glob('**/*.py'):
+    with open(f, encoding='utf-8') as t:
         code = t.read()
         code = code.replace('<', '&lt').replace('>', '&gt')
 
         if not is_singleton(code):
             name = f.stem
-            attrs, funcs = list(), list()
+            attrs, funcs = [], []
             attrs = get_module_attributes(code)
             funcs = get_functions(code)
             example = get_example(code, name)
             if attrs or funcs:
-                module_info[name] = (f, '', attrs, funcs, example)
+                module_info[name] = (f, '', '', [], attrs, funcs, example)
 
             # continue
             classes = get_classes(code)
             for class_name, class_definition in classes.items():
                 print('parsing class:', class_name)
-                if 'Enum' in class_name:
-                    class_definition = class_definition.split('def ')[0]
-                    attrs = [l.strip() for l in class_definition.split('\n') if ' = ' in l]
-                    class_info[class_name] = (f, '', attrs, '', '')
-                    continue
 
                 params = ''
                 if 'def __init__' in class_definition:
                     # init line
                     params =  '__init__('+ class_definition.split('def __init__(')[1].split('\n')[0][:-1]
+
+                class_scope_vars = get_class_scope_variables(class_definition)
                 attrs = get_class_attributes(class_definition)
                 methods = get_functions(class_definition, is_class=True)
                 example = get_example(code, class_name)
 
-                class_info[class_name] = (f, params, attrs, methods, example)
+                parent_class = ''
+                if ('(') in class_name:
+                    parent_class = class_name.split('(')[1].split(')')[0]
+                    class_name =  class_name.split('(')[0]
+                class_info[class_name] = (f, parent_class, params, class_scope_vars, attrs, methods, example)
         # singletons
         else:
-            module_name = f.name.split('.')[0]
+            module_name = f.stem
             classes = get_classes(code)
             for class_name, class_definition in classes.items():
                 # print(module_name)
@@ -332,290 +481,140 @@ for f in path.glob('*.py'):
                 methods = get_functions(class_definition, is_class=True)
                 example = get_example(code, class_name)
 
-                module_info[module_name] = (f, '', attrs, methods, example)
-
-
-prefab_info = dict()
-for f in path.glob('prefabs/*.py'):
-    if f.name.startswith('_') or f in ignored_files:
-        continue
-
-    with open(f, encoding='utf8') as t:
-        code = t.read()
-        code = code.replace('<', '&lt').replace('>', '&gt')
-
-        classes = get_classes(code)
-        for class_name, class_definition in classes.items():
-            if 'def __init__' in class_definition:
-                params =  '__init__('+ class_definition.split('def __init__(')[1].split('\n')[0][:-1]
-            attrs = get_class_attributes(class_definition)
-            methods = get_functions(class_definition, is_class=True)
-            example = get_example(code, class_name)
-
-            prefab_info[class_name] = (f, params, attrs, methods, example)
-
-
-script_info = dict()
-for f in path.glob('scripts/*.py'):
-    if f.name.startswith('_') or f in ignored_files:
-        continue
-
-    # if f.is_file() and f.name.endswith(('.py', )):
-    with open(f, encoding='utf8') as t:
-
-        code = t.read()
-        if not 'class ' in code:
-            name = f.name.split('.')[0]
-            attrs, funcs = list(), list()
-            attrs = get_module_attributes(code)
-            funcs = get_functions(code)
-            example = get_example(code)
-            if attrs or funcs:
-                script_info[name] = (f, '', attrs, funcs, example)
-
-        classes = get_classes(code)
-        for class_name, class_definition in classes.items():
-            if 'def __init__' in class_definition:
-                params =  '__init__('+ class_definition.split('def __init__(')[1].split('\n')[0][:-1]
-            attrs = get_class_attributes(class_definition)
-            methods = get_functions(class_definition, is_class=True)
-            example = get_example(code, class_name)
-
-            script_info[class_name] = (f, params, attrs, methods, example)
-
-asset_info = dict()
-model_names = [f'\'{f.stem}\'' for f in path.glob('models_compressed/*.ursinamesh')]
-asset_info['models'] = ('', '', model_names, '', '''e = Entity(model='quad')''')
-
-texture_names = [f'\'{f.stem}\'' for f in path.glob('textures/*.*')]
-asset_info['textures'] = ('', '', texture_names, '', '''e = Entity(model='cube', texture='brick')''')
-
-shaders = [f'{f.stem}' for f in path.glob('shaders/*.*')] + [f'{f.stem}' for f in path.glob('shaders/screenspace_shaders/*.*')]
-shaders = [e for e in shaders if not e.startswith('_')]
-asset_info['shaders'] = ('', '', shaders, '', '''from ursina.shaders import normals_shader\ne = Entity(shader=normals_shader)''')
-
-for f in path.glob('models/procedural/*.py'):
-    if f.name.startswith('_') or f in ignored_files:
-        continue
-
-    with open(f, encoding='utf8') as t:
-        code = t.read()
-        classes = get_classes(code)
-        for class_name, class_definition in classes.items():
-            if 'def __init__' in class_definition:
-                params =  '__init__('+ class_definition.split('def __init__(')[1].split('\n')[0][:-1]
-            attrs = get_class_attributes(class_definition)
-            methods = get_functions(class_definition, is_class=True)
-            example = get_example(code, class_name)
-
-            asset_info[class_name] = (f, params, attrs, methods, example)
-
-
-most_used_info = dict()
-for name in ('Entity(NodePath)', 'Text(Entity)', 'Button(Entity)', 'mouse', 'raycaster',):
-    for d in (module_info, class_info, prefab_info):
-        if name in d:
-            most_used_info[name] = d[name]
-            del d[name]
-
-
+                module_info[module_name] = (f, '', '', [], attrs, methods, example)
 
 def html_color(color):
     return f'hsl({color.h}, {int(color.s*100)}%, {int(color.v*100)}%)'
 
 
-def make_html(style, file_name):
-    if style == 'light':
-        base_color = color.color(60, 0, .99)
-        background_color = lerp(base_color, base_color.invert(), 0)
-    else:
-        base_color = color.color(60, 1, .01)
-        background_color = lerp(base_color, base_color.invert(), .125)
 
-    text_color = lerp(background_color, background_color.invert(), .9)
-    example_color = lerp(background_color, text_color, .1)
-    scrollbar_color = html_color(lerp(background_color, text_color, .1))
-    link_color = html_color(color.gray)
-    init_color = html_color(base_color.invert())
-
-    style = f'''
-        <style>
-            html {{
-              scrollbar-face-color: {html_color(text_color)};
-              scrollbar-base-color: {html_color(text_color)};
-              scrollbar-3dlight-color: {html_color(text_color)}4;
-              scrollbar-highlight-color: {html_color(text_color)};
-              scrollbar-track-color: {html_color(background_color)};
-              scrollbar-arrow-color: {html_color(background_color)};
-              scrollbar-shadow-color: {html_color(text_color)};
-              scrollbar-darkshadow-color: {html_color(text_color)};
-            }}
-
-            ::-webkit-scrollbar {{ width: 8px; height: 3px;}}
-            ::-webkit-scrollbar {{ width: 8px; height: 3px;}}
-            ::-webkit-scrollbar-button {{  background-color: {scrollbar_color}; }}
-            ::-webkit-scrollbar-track {{  background-color: {html_color(background_color)};}}
-            ::-webkit-scrollbar-track-piece {{ background-color: {html_color(background_color)};}}
-            ::-webkit-scrollbar-thumb {{ height: 50px; background-color: {scrollbar_color}; border-radius: 3px;}}
-            ::-webkit-scrollbar-corner {{ background-color: {html_color(background_color)};}}
-            ::-webkit-resizer {{ background-color: {html_color(background_color)};}}
-
-            body {{
-                margin: auto;
-                background-color: {html_color(background_color)};
-                color: {html_color(text_color)};
-                font-family: monospace;
-                position: absolute;
-                top:0;
-                left: 24em;
-                font-size: 1.375em;
-                font-weight: lighter;
-                max-width: 100%;
-                overflow-x: hidden;
-                white-space: pre-wrap;
-            }}
-            a {{
-              color: {link_color};
-            }}
-
-            purple {{color: hsl(289.0, 50%, 50%);}}
-            gray {{color: gray;}}
-            olive {{color: olive;}}
-            yellow {{color: darkgoldenrod;}}
-            green {{color: seagreen;}}
-            blue {{color: hsl(210, 50%, 50%);}}
-
-            .example {{
-                padding-left: 1em;
-                background-color: {html_color(example_color)};
-            }}
-            .params {{
-                color:{init_color};
-                font-weight:bold;
-            }}
-        </style>
-        '''
-    # return style
-
-
-    html = '<title> ursina cheat sheet</title>'
-    html += '''
-        <b>Ursina cheat sheet</b>
-
-        This document lists most modules and classes in ursina. Each section is structured as follows:
-
-        ClassName(BaseClass)
-            module location
-
-            parameters
-                How instantiate the class, ie. Button(text='', **kwargs).
-                '**kwargs' in this case, means you can give it optional keyword arguments.
-                For example, Button('Start', scale=.25, color=color.blue, position=(-.1,.25)) also includes
-                information on how big the button should be, its color and its position.
-
-            attributes
-                Names of values we can get/set, sometimes followed by its starting value and a short explanation.
-                For example, 'scale', 'color' and 'position' are
-                attributes we gave the Button above. These are members of Entity, which Button class
-                inherits from, so the Button class can also access these.
-
-            methods/functions
-                these ends with (), which means they are functions that can be called.
-                Also lists their parameters and default arguments.
-                For example, Entity has a method called 'look_at()'. You need to give it a
-                'target' (an Entity or position) to look at and optionally say
-                which axis will be facing the target.
-
-            example
-
-        You can search the document with Ctrl+F for instant search results.
+# make index menu
+from textwrap import dedent
+# html += '''<div class="parent">''' ## index container
+html += '''<div class="sidebar">''' ## index container
+i = 0
+for group_name, group in groups.items():
+    links = ''.join([f'\n            <a href="#{e}">{e}</a><br>' for e in group])
+    html += f'''
+    <div class="sidebar_box" style="color: hsl({30+(i*20)}deg 94% 21%);">
+        <div class="group_header">{group_name}</div>
+        <div class="group_content">{links}</div>
+        <br>
+    </div>
     '''
+    i+= 1
+html += '</div>\n'
+html += '<main_section>\n'
+html += '    <h1 class="main_header">ursina API Reference</h1>\n'
+html += '    <p>v5.0.0</p>\n'
+# print(module_info)
+# main part
+for group_name, group in groups.items():
+    # links = '\n     '.join([f'<a href="#{e}">{e}</a><br>' for e in group])
+    for name in group:
+        init_text = ''
+        is_class = name[0].isupper()
+        data = None
+        if name in module_info:
+            data = module_info[name]
+        elif name in class_info:
+            data = class_info[name]
 
-    sidebar = '''
-<div class="sidebar" style="
-left: 0px;
-position: fixed;
-top: 0px;
-padding-top:40px;
-padding-left:20px;
-bottom: 0;
-overflow-y: scroll;
-width: 15em;
-z-index: 1;
-">
-<a href="cheat_sheet.html">light</a>  <a href="cheat_sheet_dark.html">dark</a>
+        if not data:
+            continue
+            print('no info found for', name)
+        # f, params, attrs, methods, example = data
+        location, parent_class, params, class_scope_vars, attrs, funcs, example = data
+        params = params.replace('__init__', name.split('(')[0])
+        params = params.replace('(self, ', '(')
+        params = params.replace('(self)', '()')
 
+        parent_class = parent_class.replace('ShowBase', '')
+        parent_class = parent_class.replace('NodePath', '')
+        link_to_parent_class = ''
+        if parent_class:
+            link_to_parent_class = f'<a style="color: gray; font-weight:normal;" href="#{parent_class}">({parent_class})</a>'
+
+        html += (
+            f'''    <div class="class_box" id="{name}">\n'''
+            f'''        <h1>{name}{link_to_parent_class}</h1>\n'''
+            )
+        location = str(location)
+        if 'ursina' in location:
+            location = location.split('ursina')[-1]
+            github_link = 'https://github.com/pokepetter/ursina/blob/master/ursina' + location.replace('\\', '/')
+            location = location.replace('\\', '.')[:-3]
+            html += f'''        <a href="{github_link}"><gray>ursina{location}</gray></a><br><br>\n'''
+
+        if params:
+            html += f'        <div class="params">{params}</div><br>\n'
+
+        html += '        <table> <!-- attributes -->\n'
+
+        for e in class_scope_vars:
+            html += (
+            f'            <tr>\n'
+            f'                <td>{name}.{e.strip()}<gray></gray></td><td>{info}</td>\n'
+            f'            </tr>\n'
+            )
+
+
+        dot = '.'
+        if group_name == 'Assets':    # don't add a . for asset names
+            dot = ''
+
+        for e in attrs:
+            attr_name = e
+            default = ''
+            info = ''
+
+            if '# ' in e:
+                attr_name, info = e.split('# ', 1)
+            if ' = ' in attr_name:
+                attr_name, default = attr_name.split(' = ', 1)
+                default = f' = {default}'
+
+            if info:
+                info = f'<span>{info.strip()}</span>'
+
+            html += (
+                f'            <tr>\n'
+                f'                <td>{dot}{attr_name}<gray>{default}</gray></td><td>{info}</td>\n'
+                f'            </tr>\n'
+            )
+
+        html += '        </table><br>\n'
+
+        if funcs:
+            html += '        <div><gray>functions:</gray></div>\n'
+            html += '        <table>\n'
+
+        for e in funcs:
+            html += (
+                f'''            <tr>\n'''
+                f'''                <td> &nbsp;{e[0]}(<gray>{e[1]}</gray>) <span>{e[2][2:]}</span></td>\n'''
+                f'''            </tr>\n'''
+            )
+
+        html += '        </table><br>\n'
+
+        if example:
+            html += '    <div><gray>example:</gray></div>\n'
+            html += f'    <div class="example">{example}\n</div>\n'
+
+        # html += '\n</div></div>'
+        html = html.replace('<gray></gray>', '')
+
+        html += dedent('''
+            </div>
+            <br>
+        ''')
+
+
+html += '''
+</main_section>
+</body>
+</html>
 '''
-
-    for i, class_dictionary in enumerate((most_used_info, module_info, class_info, prefab_info, script_info, asset_info)):
-        for name, attrs_and_functions in class_dictionary.items():
-            print('generating docs for', name)
-            location, params, attrs, funcs, example = attrs_and_functions
-
-            params = params.replace('__init__', name.split('(')[0])
-            params = params.replace('(self, ', '(')
-            params = params.replace('(self)', '()')
-
-            name = name.replace('ShowBase', '')
-            name = name.replace('NodePath', '')
-            for parent_class in ('Entity', 'Button', 'Draggable', 'Text', 'Collider', 'Mesh', 'Pipe'):
-                name = name.replace(f'({parent_class})', f'(<a style="color: gray;" href="#{parent_class}">{parent_class}</a>)')
-
-            base_name = name
-            if '(' in base_name:
-                base_name = base_name.split('(')[0]
-                base_name = base_name.split(')')[0]
-            name = name.replace('(', '<gray>(')
-            name = name.replace(')', ')</gray>')
-
-            v = lerp(text_color.v, background_color.v, .2)
-            # v = .5
-            col = color.color(50-(i*30), .9, v)
-            col = html_color(col)
-
-            sidebar += f'''<a style="color:{col};" href="#{base_name}">{base_name}</a>\n'''
-            html += '\n'
-            html += f'''<div id="{base_name}"><div id="{base_name}" style="color:{col}; font-size:1.75em; font-weight:normal;">{name}</div>'''
-            html += '<div style="position:relative; padding:0em 0em 2em 1em; margin:0;">'
-            # location
-            location = str(location)
-            if 'ursina' in location:
-                location = location.split('ursina')[-1]
-                github_link = 'https://github.com/pokepetter/ursina/blob/master/ursina' + location.replace('\\', '/')
-                location = location.replace('\\', '.')[:-3]
-                html += f'''<a href="{github_link}"><gray>ursina{location}</gray></a><br><br>'''
-
-            if params:
-                params = f'<params class="params">{params}</params>\n'
-                html += params + '\n'
-
-            for e in attrs:
-                if ' = ' in e:
-                    e = f'''{e.split(' = ')[0]}<gray> = {e.split(' = ')[1]}</gray> '''
-
-                html += f'''{e}\n'''
-
-            html += '\n'
-            for e in funcs:
-                e = f'{e[0]}(<gray>{e[1]}</gray>)   <gray>{e[2]}</gray>'
-                html += e + '\n'
-
-            if example:
-                html += '\n<div class="example">' + example +'\n</div>'
-
-
-            html += '\n</div></div>'
-
-            html = html.replace('<gray></gray>', '')
-
-        sidebar += '\n'
-
-    sidebar += '</div>'
-    html += '</div>'
-
-    html = sidebar + style + '<div id="content">' + html + '</div>' + '</body>'
-    with open(file_name, 'w', encoding='utf-8') as f:
-        f.write(html)
-
-make_html('light', 'cheat_sheet.html')
-make_html('dark', 'cheat_sheet_dark.html')
+with open('api_reference.html', 'w', encoding='utf-8') as f:
+    f.write(html)

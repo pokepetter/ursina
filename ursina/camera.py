@@ -1,4 +1,3 @@
-import sys
 from ursina.entity import Entity
 from panda3d.core import PerspectiveLens, OrthographicLens, LensNode, NodePath
 from panda3d.core import Camera as PandaCamera
@@ -12,11 +11,11 @@ from ursina.texture import Texture
 from ursina.shader import Shader
 from ursina.string_utilities import print_info
 
-
+from ursina.scripts.property_generator import generate_properties_for_class
+@generate_properties_for_class()
 class Camera(Entity):
-
     def __init__(self):
-        super().__init__()
+        super().__init__(add_to_scene_entities=False)
         self.parent = scene
         self.name = 'camera'
         self.eternal = True
@@ -31,11 +30,11 @@ class Camera(Entity):
 
 
     def set_up(self):
-        self.display_region = base.camNode.get_display_region(0)
+        self.display_region = application.base.camNode.get_display_region(0)
         win = self.display_region.get_window()
 
         self.perspective_lens = PerspectiveLens()
-        self.perspective_lens = base.camLens # use panda3d's default for automatic aspect ratio on window resize
+        self.perspective_lens = application.base.camLens # use panda3d's default for automatic aspect ratio on window resize
         self.lens = self.perspective_lens
         self.perspective_lens.set_aspect_ratio(window.aspect_ratio)
         self.perspective_lens_node = LensNode('perspective_lens_node', self.perspective_lens)
@@ -82,23 +81,21 @@ class Camera(Entity):
         # self.normals_texture = None
 
 
-    @property
-    def orthographic(self):
-        return self._orthographic
+    def orthographic_getter(self):
+        return getattr(self, '_orthographic', 0)
 
-    @orthographic.setter
-    def orthographic(self, value):
+
+    def orthographic_setter(self, value):
         self._orthographic = value
         self.lens_node = (self.perspective_lens_node, self.orthographic_lens_node)[value] # this need to be set for the mouse raycasting
         application.base.cam.node().set_lens((self.perspective_lens, self.orthographic_lens)[value])
         self.fov = self.fov
 
-    @property
-    def fov(self):
-        return self._fov
+    def fov_getter(self):
+        return getattr(self, '_fov', 0)
 
-    @fov.setter
-    def fov(self, value):
+
+    def fov_setter(self, value):
         value = max(1, value)
         self._fov = value
         if not self.orthographic and hasattr(self, 'perspective_lens'):
@@ -110,34 +107,24 @@ class Camera(Entity):
 
         application.base.cam.node().set_lens((self.perspective_lens, self.orthographic_lens)[value])
 
-    @property
-    def clip_plane_near(self):
-        return self.lens.getNear()
-
-    @clip_plane_near.setter
-    def clip_plane_near(self, value):
+    def clip_plane_near_getter(self):
+        return self._clip_plane_near
+    def clip_plane_near_setter(self, value):
+        self._clip_plane_near = value
         self.lens.set_near(value)
 
-    @property
-    def clip_plane_far(self):
-        return self.lens.getFar()
-
-    @clip_plane_far.setter
-    def clip_plane_far(self, value):
+    def clip_plane_far_getter(self):
+        return self._clip_plane_far
+    def clip_plane_far_setter(self, value):
+        self._clip_plane_far = value
         self.lens.set_far(value)
 
-    @property
-    def aspect_ratio(self):
+
+    def aspect_ratio_getter(self):
         return self.perspective_lens.get_aspect_ratio()
 
-    @property
-    def shader(self):
-        if not hasattr(self, '_shader'):
-            return None
-        return self._shader
 
-    @shader.setter
-    def shader(self, value):
+    def shader_setter(self, value):
         self._shader = value
         if value is None:
             self.filter_manager.cleanup()
@@ -156,7 +143,7 @@ class Camera(Entity):
             shader = shader._shader
 
         if not self.filter_manager:
-            self.filter_manager = FilterManager(base.win, base.cam)
+            self.filter_manager = FilterManager(application.base.win, application.base.cam)
             self.render_texture = PandaTexture()
             self.depth_texture = PandaTexture()
             # self.normals_texture = PandaTexture()
@@ -201,6 +188,8 @@ instance = Camera()
 
 if __name__ == '__main__':
     from ursina import *
+    from ursina import Ursina, camera, Entity, EditorCamera
+
     window.borderless = False
     app = Ursina()
 

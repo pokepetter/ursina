@@ -28,7 +28,7 @@ void main() {
 }
 
 '''
-imported_shaders = []
+imported_shaders = dict()
 
 class Shader:
     CG = Panda3dShader.SL_Cg
@@ -52,6 +52,8 @@ class Shader:
         self.entity = None
         self.default_input = dict()
         self.compiled = False
+        if self not in imported_shaders:
+            imported_shaders[self.name] = self
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
@@ -60,9 +62,6 @@ class Shader:
     def compile(self):
         self._shader = Panda3dShader.make(self.language, self.vertex, self.fragment, self.geometry)
         self.compiled = True
-
-        if not self in imported_shaders:
-            imported_shaders.append(self)
 
 
     @classmethod
@@ -88,6 +87,8 @@ if __name__ == '__main__':
     from time import perf_counter
     t = perf_counter()
     from ursina import *
+    from ursina import Ursina, Entity, held_keys, scene, EditorCamera
+
     app = Ursina()
     Entity(model='cube', shader=Shader())
     EditorCamera()

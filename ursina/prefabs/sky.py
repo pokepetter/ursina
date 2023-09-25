@@ -12,7 +12,7 @@ class Sky(Entity):
 
     def update(self):
         self.world_position = camera.world_position
-
+        self.scale = camera.clip_plane_far / 2
 
 if __name__  == '__main__':
     app = Ursina()

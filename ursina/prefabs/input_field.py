@@ -4,12 +4,16 @@ from enum import Enum
 class ContentTypes:
     int = '0123456789'
     float = int + '.,'
+    int_math = int + '+-*/'
     math = float + '+-*/'
 
 
 class InputField(Button):
     def __init__(self, default_value='', label='', max_lines=1, character_limit=24, **kwargs):
-        super().__init__(scale=(.5, Text.size*2*max_lines), highlight_scale=1, pressed_scale=1, highlight_color=color.black, **kwargs)
+        if not 'scale' in kwargs and not 'scale_x' in kwargs and not 'scale_y' in kwargs:
+            kwargs['scale'] = (.5, Text.size*2*max_lines)
+
+        super().__init__(highlight_scale=1, pressed_scale=1, highlight_color=color.black, **kwargs)
 
         for key, value in kwargs.items():
             if 'scale' in key:
@@ -20,8 +24,11 @@ class InputField(Button):
         self.hide_content = False   # if set to True, will display content as '*'. can also be set to character instead of True.
 
         self.next_field = None
+        self.submit_on = []   # for example: self.submit_on = ['enter', ] will call self.on_submit when you press enter.
+        self.on_submit = None   # function to be called when you press self.submit_on.
+        self.on_value_changed = None
 
-        self.text_field = TextField(world_parent = self, x=-.45, y=.3, z=-.1, max_lines=max_lines, character_limit=character_limit, register_mouse_input = True)
+        self.text_field = TextField(world_parent=self, x=-.45, y=.25, z=-.1, max_lines=max_lines, character_limit=character_limit, register_mouse_input=True)
         destroy(self.text_field.bg)
         self.text_field.bg = self
 
@@ -40,6 +47,8 @@ class InputField(Button):
                 self.text_field.text_entity.text = replacement_char * len(self.text_field.text)
                 return
 
+            if self.on_value_changed and not self.text_field.text_entity.text == self.text_field.text:
+                self.on_value_changed()
             self.text_field.text_entity.text = self.text_field.text
 
         self.text_field.render = render
@@ -66,6 +75,10 @@ class InputField(Button):
             if self.next_field:
                 mouse.position = self.next_field.get_position(relative_to=camera.ui)
                 invoke(setattr, self.next_field, 'active', True, delay=.01)
+
+        if self.active and key in self.submit_on and self.on_submit:
+            self.on_submit()
+            self.active = False
 
     @property
     def text(self):
@@ -104,7 +117,7 @@ class InputField(Button):
 if __name__ == '__main__':
     app = Ursina()
     # window.fullscreen_size = (1366, 768)
-    background = Entity(model='quad', texture='pixelscape_combo', parent=camera.ui, scale=(camera.aspect_ratio,1), color=color.white)
+    # background = Entity(model='quad', texture='pixelscape_combo', parent=camera.ui, scale=(camera.aspect_ratio,1), color=color.white)
     gradient = Entity(model='quad', texture='vertical_gradient', parent=camera.ui, scale=(camera.aspect_ratio,1), color=color.hsv(240,.6,.1,.75))
 
     username_field = InputField(y=-.12, limit_content_to='0123456789')
@@ -116,5 +129,5 @@ if __name__ == '__main__':
         print('password:',  password_field.text)
 
     Button('Login', scale=.1, color=color.cyan.tint(-.4), y=-.26, on_click=submit).fit_to_text()
-
+    username_field.on_value_changed = submit
     app.run()

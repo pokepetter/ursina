@@ -100,6 +100,15 @@ class Vec3(PandaVec3):
 
         return Vec3(self[0]/value[0], self[1]/value[1], self[2]/value[2])
 
+Vec3.zero = Vec3(0,0,0)
+Vec3.one = Vec3(1,1,1)
+Vec3.right = Vec3(1,0,0)
+Vec3.left = Vec3(-1,0,0)
+Vec3.up = Vec3(0,1,0)
+Vec3.down = Vec3(0,-1,0)
+Vec3.forward = Vec3(0,0,1)
+Vec3.back = Vec3(0,0,-1)
+
 
 if __name__ == '__main__':
     a = Vec3(1,0,0) * 2

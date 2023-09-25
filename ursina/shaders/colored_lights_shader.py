@@ -2,7 +2,7 @@ from ursina import *
 from panda3d.core import Shader as Panda3dShader
 
 
-colored_lights_shader = Shader(name='colored_lights_shader', language=Shader.GLSL, 
+colored_lights_shader = Shader(name='colored_lights_shader', language=Shader.GLSL,
 vertex='''
 #version 130
 uniform mat4 p3d_ModelViewProjectionMatrix;
@@ -12,7 +12,7 @@ in vec3 p3d_Normal;
 in vec4 p3d_Color;
 in vec2 p3d_MultiTexCoord0;
 
-out vec2 texcoord;
+out vec2 uv;
 out vec3 world_normal;
 out vec4 vertex_color;
 
@@ -21,6 +21,7 @@ void main() {
   gl_Position = p3d_ModelViewProjectionMatrix * p3d_Vertex;
   world_normal = normalize(mat3(p3d_ModelMatrix) * p3d_Normal);
   vertex_color = p3d_Color;
+  uv = p3d_MultiTexCoord0;
 }
 ''',
 
@@ -29,7 +30,7 @@ fragment='''
 
 uniform sampler2D p3d_Texture0;
 uniform vec4 p3d_ColorScale;
-in vec2 texcoord;
+in vec2 uv;
 in vec3 world_normal;
 in vec4 vertex_color;
 
@@ -45,7 +46,7 @@ out vec4 fragColor;
 
 void main() {
     vec4 norm = vec4(world_normal*0.5+0.5, 1);
-    vec4 color = texture(p3d_Texture0, texcoord) * vertex_color * p3d_ColorScale;
+    vec4 color = texture(p3d_Texture0, uv) * vertex_color * p3d_ColorScale;
     // color += mix(bottom_color, top_color, norm.y) / 3.;
     // color += mix(right_color, left_color, norm.x) / 3.;
     // color += mix(front_color, back_color, norm.z) / 3.;
@@ -90,10 +91,14 @@ if __name__ == '__main__':
     shader = colored_lights_shader
 
     Entity(model='cube', color=color.white, shader=colored_lights_shader)
-    e = Entity(model='cube', x=1.2, shader=colored_lights_shader)
-    e.model.colors = len(e.model.vertices) * (color.red, )
-    e.model.generate()
-    # AzureSphere(shader=a.shader, y=2)
+    e = Entity(model='cube', x=1.2, shader=colored_lights_shader, color=color.white)
+    e.set_shader_input('top_color', hsv(0,1,1))
+    e.set_shader_input('bottom_color', hsv(0,0,0))
+    e.set_shader_input('left_color', hsv(0,0,0))
+    e.set_shader_input('right_color', hsv(0,0,0))
+    e.set_shader_input('front_color', hsv(0,0,0))
+    e.set_shader_input('back_color', hsv(0,0,0))
+
     GrayPlane(scale=10, y=-2, texture='shore')
 
     Sky(color=color.light_gray)

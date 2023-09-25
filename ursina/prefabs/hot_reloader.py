@@ -147,7 +147,7 @@ class HotReloader(Entity):
         reloaded_textures = list()
 
         for e in textured_entities:
-            if e.texture.name in reloaded_textures:
+            if e.texture.name in reloaded_textures or not hasattr(e.texture, 'path') or not e.texture.path:
                 continue
 
             if e.texture.path.parent.name == application.compressed_textures_folder.name:
@@ -199,7 +199,7 @@ class HotReloader(Entity):
     def reload_shaders(self):
         import ursina
 
-        for shader in ursina.shader.imported_shaders:
+        for shader in ursina.shader.imported_shaders.values():
             # print(shader, shader.path)
             # TODO: check if file has changed
 

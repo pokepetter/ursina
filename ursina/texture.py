@@ -3,10 +3,9 @@ from panda3d.core import SamplerState
 from panda3d.core import Filename
 from panda3d.core import PNMImage
 from pathlib import Path
-from direct.showbase import Loader
 from ursina.vec2 import Vec2
 from ursina import color
-# from PIL import Image
+from ursina.ursinamath import clamp
 
 
 class Texture():
@@ -21,7 +20,7 @@ class Texture():
         if isinstance(value, Path):
             self.path = Path(value)
             self._texture = loader.loadTexture(Filename.fromOsSpecific(str(value)))
-            self._cached_image = None   # for get_pixel() method
+            self._cached_image = None   # for get_pixel() method            
 
         elif isinstance(value, PandaTexture):
             self._texture = value
@@ -52,13 +51,16 @@ class Texture():
         return Texture(panda_tex)
 
 
-
     @property
     def name(self):
         try:
             return self.path.name
         except:
             return f'PIL_texture_{self.size}'
+
+    def __str__(self):
+        return self.name
+
 
     @property
     def size(self):
@@ -188,6 +190,7 @@ class Texture():
 
 if __name__ == '__main__':
     from ursina import *
+    from ursina import texture_importer
     app = Ursina()
     '''
         The Texture class rarely used manually but usually instantiated

@@ -80,12 +80,14 @@ class PlatformerController2d(Entity):
         ray = boxcast(
             self.world_position+Vec3(0,.1,0),
             self.down,
-            distance=max(.1, self.air_time * self.gravity),
+            distance=max(.15, self.air_time * self.gravity),
             ignore=(self, ),
             traverse_target=self.traverse_target,
-            thickness=self.scale_x*.9
+            thickness=self.scale_x*.9,
+            # debug=True
             )
 
+        # print(self.grounded)
         if ray.hit:
             if not self.grounded:
                 self.land()
@@ -157,7 +159,6 @@ class PlatformerController2d(Entity):
         hit_above = boxcast(self.position+(0,self.scale_y/2,0), self.up, distance=self.jump_height-(self.scale_y/2), thickness=.9, ignore=(self,))
         if hit_above.hit:
             target_y = min(hit_above.world_point.y-self.scale_y, target_y)
-            # print('------', target_y)
             try:
                 duration *= target_y / (self.y+self.jump_height)
             except ZeroDivisionError as e:
@@ -186,7 +187,7 @@ if __name__ == '__main__':
     camera.orthographic = True
     camera.fov = 10
 
-    ground = Entity(model='cube', color=color.white33, origin_y=.5, scale=(20, 10, 1), collider='box')
+    ground = Entity(model='cube', color=color.white33, origin_y=.5, scale=(20, 10, 1), collider='box', y=18)
     wall = Entity(model='cube', color=color.azure, origin=(-.5,.5), scale=(5,10), x=10, y=.5, collider='box')
     wall_2 = Entity(model='cube', color=color.white33, origin=(-.5,.5), scale=(5,10), x=10, y=5, collider='box')
     ceiling = Entity(model='cube', color=color.white33, origin_y=-.5, scale=(1, 1, 1), y=1, collider='box')
@@ -197,7 +198,7 @@ if __name__ == '__main__':
             print(wall.collision)
 
 
-    player_controller = PlatformerController2d(scale_y=2, jump_height=4, x=3)
+    player_controller = PlatformerController2d(scale_y=2, jump_height=4, x=3, y=20)
     camera.add_script(SmoothFollow(target=player_controller, offset=[0,1,-30], speed=4))
 
     EditorCamera()

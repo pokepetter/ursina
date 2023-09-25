@@ -6,35 +6,38 @@ from ursina.texture import Texture
 
 imported_textures = dict()
 file_types = ('.tif', '.jpg', '.jpeg', '.png', '.gif')
+folders = [ # folder search order
+    application.compressed_textures_folder,
+    application.asset_folder,
+    application.internal_textures_folder,
+    ]
 textureless = False
 
 
-def load_texture(name, path=None):
+def load_texture(name, path=None, use_cache=True):
     if textureless:
         return None
 
-    if name in imported_textures:
+    if use_cache and name in imported_textures:
         return copy(imported_textures[name])
 
-    folders = ( # folder search order
-        application.compressed_textures_folder,
-        application.asset_folder,
-        application.internal_textures_folder,
-        )
+
+    _folders = folders
+    # print('looking in:', _folders)
     if path:
         if isinstance(path, str):
-            folders = (Path(path),)
+            _folders = (Path(path),)
         else:
-            folders = (path,)
+            _folders = (path,)
 
     if name.endswith('.mp4'):
-        for folder in folders:
+        for folder in _folders:
             for filename in folder.glob('**/' + name):
                 # print('loaded movie texture:', filename)
                 return loader.loadTexture(filename.resolve())
 
 
-    for folder in folders:
+    for folder in _folders:
         if '.' in name: # got name with file extension
             for filename in folder.glob('**/' + name):
                 t = Texture(filename.resolve())
@@ -52,20 +55,21 @@ def load_texture(name, path=None):
         try:
             from psd_tools import PSDImage
         except (ModuleNotFoundError, ImportError) as e:
-            print('info: psd-tools3 not installed')
+            pass
+            # print('info: psd-tools3 not installed')
 
-        for folder in folders:
+        for folder in _folders:
             for filename in folder.glob('**/' + name + '.psd'):
                 print('found uncompressed psd, compressing it...')
                 compress_textures(name)
                 return load_texture(name)
 
+    imported_textures[name] = None  # prevent searching for the same missing texture multiple times
     return None
 
 
 
 def compress_textures(name=''):
-    import os
     try:
         from PIL import Image
     except Exception as e:

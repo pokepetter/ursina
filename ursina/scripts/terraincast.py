@@ -3,7 +3,8 @@ from ursina import *
 
 helper = None
 
-def terraincast(world_position, terrain_entity, height_values=None):    # uses x and z to return y on terrain.
+
+def terraincast(world_position, terrain_entity, height_values=None, return_normals=False):    # uses x and z to return y on terrain.
     global helper
     if not helper:
         helper = Entity()
@@ -24,6 +25,8 @@ def terraincast(world_position, terrain_entity, height_values=None):    # uses x
         x, _, z = pos
 
         point = height_values[int(floor(x))][int(floor(z))]
+        normal = Vec3(0,0,0)
+
         if ceil(x) - x > 0 and ceil(z) - z > 0:
             point_e =  height_values[int(min(w-1, ceil(x)))][int(floor(z))]
             point_n =  height_values[int(floor(x))][int(min(d-1, ceil(z)))]
@@ -35,11 +38,27 @@ def terraincast(world_position, terrain_entity, height_values=None):    # uses x
             u1v1 = point_ne * (x - floor(x)) * (z - floor(z)) # interpolated (x1, z1)
 
             point = u0v0 + u1v0 + u0v1 + u1v1  #estimate
+            # normal = Vec3(2*(point_e-L), 2*(B-T), -4).Normalize();
+            # print(point_e)
+            if return_normals:
+                normal = Vec3(0,1,0)
+                p1 = Vec3(min(w-1, ceil(x)), point_e, floor(z))
+                p2 = Vec3(floor(x), point, floor(z))
+                p3 = Vec3(floor(x), point_n, min(d-1, ceil(z)))
+                normal = (p2 - p1).cross(p3-p1).normalized()
+                # print(normal)
+
 
         helper.y = point * terrain_entity.scale_y / 255
-        return helper.y
+        if not return_normals:
+            return helper.y
 
-    return None
+        return helper.y, normal
+
+    if not return_normals:
+        return None
+
+    return None, None
 
 
 if __name__ == '__main__':
@@ -56,6 +75,8 @@ if __name__ == '__main__':
         player.position += direction * time.dt * 4
 
         player.y = terraincast(player.world_position, terrain_entity, hv)
+        # test.world_position = player.world_position
+        # test.look_at(test.world_position + normal)
 
     EditorCamera()
     Sky()

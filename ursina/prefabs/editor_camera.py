@@ -1,4 +1,4 @@
-from ursina import *
+from ursina import Entity, camera, destroy, held_keys, mouse, curve, lerp, clamp, time, Vec2, Vec3, slerp
 
 class EditorCamera(Entity):
 
@@ -17,6 +17,9 @@ class EditorCamera(Entity):
 
         self.smoothing_helper = Entity(add_to_scene_entities=False)
         self.rotation_smoothing = 0
+        self.look_at = self.smoothing_helper.look_at
+        self.look_at_2d = self.smoothing_helper.look_at_2d
+        self.rotate_key = 'right mouse'
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -100,7 +103,11 @@ class EditorCamera(Entity):
 
 
     def update(self):
-        if mouse.right:
+        if held_keys['gamepad right stick y'] or held_keys['gamepad right stick x']:
+            self.smoothing_helper.rotation_x -= held_keys['gamepad right stick y'] * self.rotation_speed / 100
+            self.smoothing_helper.rotation_y += held_keys['gamepad right stick x'] * self.rotation_speed / 100
+
+        elif held_keys[self.rotate_key]:
             self.smoothing_helper.rotation_x -= mouse.velocity[1] * self.rotation_speed
             self.smoothing_helper.rotation_y += mouse.velocity[0] * self.rotation_speed
 
@@ -149,6 +156,7 @@ class EditorCamera(Entity):
 
 if __name__ == '__main__':
     # window.vsync = False
+    from ursina import Ursina, Sky, load_model, color, Text, window
     app = Ursina(vsync=False)
     '''
     Simple camera for debugging.
@@ -165,7 +173,7 @@ if __name__ == '__main__':
     box = Entity(model='cube', collider='box', texture='white_cube', scale=(10,2,2), position=(2,1,5), color=color.light_gray)
     player = FirstPersonController(y=1, enabled=True)
 
-    ec = EditorCamera(rotation_smoothing=3)
+    ec = EditorCamera()
     ec.enabled = False
     rotation_info = Text(position=window.top_left)
 

@@ -1,155 +1,117 @@
-# style a.button {background-color: #6b943a;} a.button:hover {background-color: #a9a33a}
 # title ursina engine
-<meta property="og:title" content="Ursina Engine"/>
-<meta property="og:type" content="website"/>
-<meta property="og:url" content="https://www.ursinaengine.org"/>
-<meta property="og:description" content="Ursina, an open source, python powered game engine"/>
+# insert menu.txt
 
-# center, bold, arial, size 5, width 900
-ursina engine
-ʕ •ᴥ•ʔゝ□
-# size 1.25, bold
-# normal
-open source game engine
+<meta property="og:title" content="Ursina Engine"/> <meta property="og:type" content="website"/> <meta property="og:url" content="https://www.ursinaengine.org"/> <meta property="og:description" content="Ursina, an open source, python powered game engine"/> <meta property="og:image" content="https://www.ursinaengine.org/made_with_ursina.jpg"/>
+# center
+<div id="header">ursina engine</div>
+# size 1, normal
+A Python powered, open source game engine
 
-# bold
-# normal
+<a href="https://github.com/pokepetter/ursina"><img src="icons/github_icon.png"></img></a>  <a href="https://discord.gg/ydXfhyb"><img src="icons/discord_icon.png"></img></a>  <a href="https://twitter.com/ursinaengine"><img src="icons/twitter_icon.png"></img></a>  <a href="https://www.patreon.com/ursinaengine"><img src="icons/patreon_icon.png"></img></a>
 
-[Download, #Getting Started]  [Documentation, documentation.html]
 
-<a href="https://github.com/pokepetter/ursina"><img src="icons/github_icon.png"></img></a>  <a href="https://twitter.com/ursinaengine"><img src="icons/twitter_icon.png"></img></a>  <a href="https://discord.gg/ydXfhyb"><img src="icons/discord_icon.png"></img></a>  <a href="https://www.patreon.com/ursinaengine"><img src="icons/patreon_icon.png"></img></a>
-
-<iframe width="900" height="505" src="https://www.youtube-nocookie.com/embed/j71j88oCTNo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
+<a href="https://youtu.be/j71j88oCTNo" target="_blank" rel="noopener noreferrer"><img src="ursina_trailer_preview.webp" alt="link to ursina trailer" style="width:900px;height:491px;"></a>
 
 # left
 ## Powered by Python
 
-    Ursina makes it easier to develop games, visualizations and other kinds of software.
-    The concise API combined with the power of the Python programming language,
-    makes life easier for the developer so they can focus on what they are making.
+Python is the world's most popular programming language for a reason. The ease of use of Python combined with ursina's design, makes it easy to write concise code and avoid lots of boilerplate code.
 
-    Things you won't miss from other game engines:
-
-        • Waiting for your code to compile
-        • The editor crashing and possibly losing your work
-        • Not being able to fix engine bugs or add features
-        • Overly verbose code
-        • Uncustomizable workflow
-        • Waiting for imports
-        • Long build times
-        • Revenue cut or subscription fee
-
-
-## Useful Features
-
-        • Reload code/textures/models while in-game
-        • Automatic import of .psd and .blend files
-        • Easy to use mesh class for making procedural geometry
-        • Concise code and less boilerplate code
-        • Built-in animation and tweening
-        • Pre-made prefabs such as FirstPersonController, 2d platformer controller, editor camera
-        • Lots of included procedural 3D primitives
-        • Play in fullscreen while developing
-        • Many shaders to choose from, or write your own with GLSL
-
-
-
-## Platforms
-
-        • Windows
-        • Linux
-
-
-
-## Free and Open Source
-
-    Licensed under the permissive MIT license,
-    you can use Ursina for whatever you want. No subscription fee, no revenue cut.
-
-
-
-## Getting Started
-
-# insert _getting_started.txt
-
-
-## Dependencies
-
-    • python 3.6+
-    • panda3d
-    • pillow, for texture manipulation
-
-    • psutil, for measuring memory usage (optional)
-    • hurry.filesize, for converting bytes to megabytes (optional)
-    • imageio, for recording and converting to gifs (optional)
-    • psd-tools3, for converting .psd files (optional)
-    • blender, for converting .blend files (optional)
-
-    Optional dependencies must be installed manually.
-
-
-
-## Examples
-
-    Entity Example:
-
-        # code
-        from ursina import *
-
-        app = Ursina()
-
-        cube = Entity(model='cube', texture='white_cube', color=color.magenta, scale=2, collider='box')
-
-        def spin():
-            cube.animate('rotation_y', cube.rotation_y+360, duration=2, curve=curve.in_out_expo)
-
-        cube.on_click = spin
-        EditorCamera()  # add camera controls for orbiting and moving the camera
-
-        app.run()
-
-        # text
-
-
-## How do I make a game?
-
-    Ursina games are made by writing Python code. You can use any text editor you want.
-
-        1) Create an empty .py file called 'ursina_game.py'
-        2) Copy this text into your new file:
-
-            # code
+# size 0.8
+```
 from ursina import *
 
 app = Ursina()
 
-player = Entity(model='cube', color=color.orange, scale_y=2)
+cube = Entity(model='cube', color=hsv(300,1,1), scale=2, collider='box')
 
-def update():   # update gets automatically called.
-    player.x += held_keys['d'] * .1
-    player.x -= held_keys['a'] * .1
+def spin():
+    cube.animate('rotation_y', cube.rotation_y+360, duration=2, curve=curve.in_out_expo)
 
-app.run()   # opens a window and starts the game.
+cube.on_click = spin
+EditorCamera()  # add camera controls for orbiting and moving the camera
 
-            # text
+app.run()
 
-
-        3) Type this in the terminal to start the game. I recommend setting a hotkey
-           for this in your text editor:
-
-            # code
-python ursina_game.py
-            # text
-
-    The game should start! You can now move the orange box around with 'a' and 'd'!
-    To close the window, you can by default, press shift+q or press the red x.
+```
+# size 1
 
 
+## Make Any Type of Game
 
+2D games, 3D games, applications, visualizations, you can make anything you want with ursina.
 
-# left, size 2, bold
 # image made_with_ursina.jpg
-# size .75, center, normal
 
-A variety of games made with Ursina
+
+## Iterate Faster
+
+• Reload code/textures/models while in-game
+• Automatic import of .psd and .blend files
+• Compile times:
+
+Iteration speed benchmark. Time from code/scene change to play. Game: pong clone. Lower is better.
+
+```
+engine:         duration:       times as slow:
+
+ursina          00.01s          1x
+Godot           01.18s          118x
+Unity           11.45s          1145x
+```
+
+
+## Modern UI
+
+• Sleek modern design.
+• Full control. Change the looks of anything, down to the smallest details.
+• Built with Entities like everything else, so you don't have to relearn anything.
+
+# image ursina_ui_banner.jpg
+
+
+
+## Batteries Included
+
+• Easy to use mesh class for making procedural geometry
+• Built-in animation and tweening
+• Pre-made prefabs such as FirstPersonController, 2d platformer controller, editor camera
+• Lots of included procedural 3D primitives
+• Many shaders to choose from, or write your own with GLSL
+
+# image ursina_batteries_included_banner.jpg
+
+
+## Free
+
+Licensed under the permissive MIT license,
+you can use Ursina for whatever you want.
+
+• No revenue cut or subscription fee.
+• Freely modify source code to fix bugs or add features
+
+
+## Dependencies
+
+• python 3.6+
+• panda3d
+• pillow, for texture manipulation
+• pyperclip, for cut and paste support
+
+Optional:
+• psutil, for measuring memory usage
+• imageio, for recording and converting to gifs
+• psd-tools3, for converting .psd files
+• Blender, for converting .blend files
+
+
+## Platforms
+
+• Windows
+• Linux
+• Mac (not officially supported, but will most likely work)
+
+
+
+
+[⭳ Download, installation.html]

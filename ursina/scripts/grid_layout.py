@@ -11,7 +11,7 @@ def grid_layout(l, max_x=8, max_y=8, spacing=(0,0,0), origin=(-.5,.5,0), offset=
         return
     x, y, z = 0, 0, 0
 
-    dimensions = l[0].bounds
+    dimensions = l[0].bounds.size
     direction = [-e*2 for e in origin]
     direction = [1 if e == 0 else e for e in direction]
     # print(direction)
@@ -34,7 +34,7 @@ def grid_layout(l, max_x=8, max_y=8, spacing=(0,0,0), origin=(-.5,.5,0), offset=
             # center row
             if origin[0] == 0:
                 for e in row:
-                    e.x -= e.bounds[0] * len(row) / 2 - e.bounds[0] / 2
+                    e.x -= e.bounds.size.x * len(row) / 2 - e.bounds.size.x / 2
             row.clear()
 
         if y >= max_y:
@@ -47,7 +47,7 @@ def grid_layout(l, max_x=8, max_y=8, spacing=(0,0,0), origin=(-.5,.5,0), offset=
     # center last row
     if origin[0] == 0:
         for e in row:
-            e.x -= e.bounds[0] * len(row) / 2 - e.bounds[0] / 2
+            e.x -= e.bounds.size.x * len(row) / 2 - (e.bounds.size.x / 2)
 
 if __name__ == '__main__':
     app = Ursina()

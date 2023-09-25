@@ -2,7 +2,7 @@ from ursina import *
 
 
 class Circle(Mesh):
-    def __init__(self, resolution=16, radius=.5, rotate=True, mode='ngon', **kwargs):
+    def __init__(self, resolution=16, radius=.5, mode='ngon', **kwargs):
         origin = Entity()
         point = Entity(parent=origin)
         point.y = radius

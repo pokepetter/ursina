@@ -1,0 +1,8 @@
+
+[tool.ruff]
+# Allow lines to be as long as 120 characters.
+line-length = 300
+# Allow F403:`from my_module import *`, E402:import not at top of file, E722:bare except, E405:undefined or from star import
+ignore = ["F403", "E402", "E722", "E405"]
+
+builtins = ["base", "loader", "render", "globalClock", "LEVEL_EDITOR"]

@@ -1,4 +1,4 @@
-# arial, normal, size 1, width 1200
+# normal, size 1, width 1200
 # bold, size 3
 Introduction Tutorial
 # normal, size 1
@@ -47,7 +47,7 @@ Introduction Tutorial
 
     # most things in ursina are Entities. An Entity is a thing you place in the world.
     # you can think of them as GameObjects in Unity or Actors in Unreal.
-    # the first paramenter tells us the Entity's model will be a 3d-model called 'cube'.
+    # the first parameter tells us the Entity's model will be a 3d-model called 'cube'.
     # ursina includes some basic models like 'cube', 'sphere' and 'quad'.
 
     # the next parameter tells us the model's color should be orange.

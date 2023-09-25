@@ -4,16 +4,23 @@
 
 <html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<head> <link rel="stylesheet" href="sswg.css"> </head>
+<head>
+    <link rel="stylesheet" href="sswg.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
 <left>
-<style>a.button:hover {background-color: #4CAF50}</style><title> ursina engine documentation</title>
+<title> ursina engine documentation</title>
 <br>
 
-<div style="text-align: center;font-weight: bold;font-family: arial;font-size: 100.0px;">
-<a href="index.html" style="text-decoration: none; color:inherit">ursina engine</a><br>
-<div style="font-weight: normal;font-size: 20.0px;text-align: left;max-width: 650px; margin: auto;">
+<div style="max-width: 1200px; margin: auto;">
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" https://github.com/sponsors/pokepetter" class="button">Donate🡕</a><br>
 <br>
-<a href=" cheat_sheet.html" class="button">API Reference</a><br>
+<div style="font-size: 60.0px;font-weight: bold;">
+<div id="Documentation"/><br>
+Documentation<br>
+<div style="font-size: 20.0px;font-weight: normal;">
 <br>
 <br>
 <a href="installation.html">Installation</a><br>
@@ -23,7 +30,9 @@
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Model">Model</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Texture">Texture</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Color">Color</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position, Rotation, Scale">Position, Rotation, Scale</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position">Position</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Rotation">Rotation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Scale">Scale</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Update">Update</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Input">Input</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Mouse Input">Mouse Input</a><br>
@@ -44,47 +53,58 @@
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Distance Check">Distance Check</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Mouse Collision">Mouse Collision</a><br>
 <br>
+<a href="text.html">Text</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Size">Text Size</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Font and Resolution">Font and Resolution</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Alignment">Text Alignment</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Colors">Text Colors</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Changing Text of Prefabs">Changing Text of Prefabs</a><br>
+<br>
+<a href="animation.html">Animation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#SpriteSheetAnimation (2D)">SpriteSheetAnimation (2D)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#Animation (2D)">Animation (2D)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#Actor (3D)">Actor (3D)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#FrameAnimation3D (3D)">FrameAnimation3D (3D)</a><br>
+<br>
+<br>
+<a href="networking.html">Networking</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#~~ Networking Concepts ~~">~~ Networking Concepts ~~</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#How Data Goes from Point A to Point B">How Data Goes from Point A to Point B</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#IP Addresses">IP Addresses</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Ports">Ports</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Communication Protocols">Communication Protocols</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#References">References</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#~~ Game Networking Concepts ~~">~~ Game Networking Concepts ~~</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Multiplayer Preparations">Multiplayer Preparations</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Sending Inputs">Sending Inputs</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Sending Game State">Sending Game State</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Client Authoritative">Client Authoritative</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Server Authoritative">Server Authoritative</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Deterministic Lockstep">Deterministic Lockstep</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Snapshot Interpolation">Snapshot Interpolation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Server Side Lag Compensation">Server Side Lag Compensation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Client Side Prediction">Client Side Prediction</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#References">References</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#~~ Introduction to Ursina Networking ~~">~~ Introduction to Ursina Networking ~~</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Limitations">Limitations</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Basics">Basics</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Samples">Samples</a><br>
+<br>
 <a href="faq.html">F.A.Q.</a><br>
+<br>
 <a href="building.html">Build and Release</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="building.html#Building Your App with ursina.build">Building Your App with ursina.build</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="building.html#Building with Nuitka">Building with Nuitka</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="building.html#Building Your App with auto-py-to-exe">Building Your App with auto-py-to-exe</a><br>
 <br>
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Tutorials"/><br>
+<h2><div id="Tutorials"/><br>
 Tutorials<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href=" introduction_tutorial.html" class="button_big" style="background-image: url('icons/entity_basics_icon.jpg')"><span>Introduction</span></a>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href=" inventory_tutorial.html" class="button_big" style="background-image: url('icons/inventory_icon.jpg')"><span>Inventory Tutorial</span></a>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href=" platformer_tutorial.html" class="button_big" style="background-image: url('icons/platformer.jpg')"><span>Platformer Tutorial</span></a>
 <br>
-<br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Example Projects"/><br>
-Example Projects<br>
-<div style="font-size: 20.0px;font-weight: normal;">
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href=" https://github.com/pokepetter/ursina/blob/master/samples/tic_tac_toe.py" class="button_big" style="background-image: url('icons/tic_tac_toe_icon.jpg')"><span>Tic Tac Toe</span></a>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href=" https://github.com/pokepetter/ursina/blob/master/samples/inventory.py" class="button_big" style="background-image: url('icons/inventory_icon.jpg')"><span>Inventory</span></a>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href=" https://github.com/pokepetter/ursina/blob/master/samples/pong.py" class="button_big" style="background-image: url('icons/pong.jpg')"><span>Pong</span></a>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href=" https://github.com/pokepetter/ursina/blob/master/samples/minecraft_clone.py" class="button_big" style="background-image: url('icons/minecraft_clone_icon.jpg')"><span>Minecraft Clone</span></a>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href=" https://github.com/pokepetter/ursina/blob/master/samples/rubiks_cube.py" class="button_big" style="background-image: url('icons/rubiks_cube.jpg')"><span>Rubik's Cube</span></a>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href=" https://github.com/pokepetter/ursina/blob/master/samples/clicker_game.py" class="button_big" style="background-image: url('icons/installation_guide_icon.jpg')"><span>Cookie Clicker</span></a>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href=" https://github.com/pokepetter/ursina/blob/master/samples/platformer.py" class="button_big" style="background-image: url('icons/installation_guide_icon.jpg')"><span>Platformer</span></a>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href=" https://github.com/pokepetter/ursina/blob/master/samples/fps.py" class="button_big" style="background-image: url('icons/fps.jpg')"><span>FPS</span></a>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href=" https://github.com/pokepetter/ursina/blob/master/samples/particle_system.py" class="button_big" style="background-image: url('icons/particle_system.jpg')"><span>Particle System</span></a>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href=" https://github.com/pokepetter/ursina/blob/master/samples/culumn_graph.py" class="button_big" style="background-image: url('icons/column_graph_icon.jpg')"><span>Culumn Graph</span></a>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href=" https://github.com/pokepetter/ld44_life_is_currency" class="button_big" style="background-image: url('icons/value_of_life_icon.jpg')"><span>Value of Life</span></a>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href=" https://github.com/pokepetter/pyweek_30_castaway" class="button_big" style="background-image: url('icons/castaway_icon.jpg')"><span>Castaway</span></a>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-.<br>
-<br>
 
+</body>
 </html>

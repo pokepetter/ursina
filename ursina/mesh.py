@@ -1,8 +1,9 @@
-from panda3d.core import MeshDrawer, NodePath
+from panda3d.core import NodePath
 from panda3d.core import GeomVertexData, GeomVertexFormat, Geom, GeomVertexWriter, GeomNode
 from panda3d.core import GeomTriangles, GeomTristrips, GeomTrifans
-from panda3d.core import GeomLines, GeomLinestrips, GeomPoints
+from panda3d.core import GeomLinestrips, GeomPoints
 from panda3d.core import TexGenAttrib, TextureStage
+from panda3d.core import LVector4f
 from ursina.vec3 import Vec3
 from ursina.scripts.generate_normals import generate_normals
 from ursina.scripts.project_uvs import project_uvs
@@ -56,7 +57,6 @@ class Mesh(NodePath):
 
     def __init__(self, vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1, render_points_in_3d=True):
         super().__init__('mesh')
-        self.name = 'mesh'
         self.vertices = vertices
         self.triangles = triangles
         self.colors = colors
@@ -72,7 +72,7 @@ class Mesh(NodePath):
             if value is None:
                 setattr(self, name, [])
 
-        if self.vertices is not None:
+        if self.vertices != []:
             self.generate()
 
 
@@ -95,14 +95,14 @@ class Mesh(NodePath):
         if self.colors:
             colorwriter = GeomVertexWriter(vdata, 'color')
             for c in self.colors:
-                colorwriter.addData4f(c)
+                colorwriter.addData4f(LVector4f(*c))
 
         if self.uvs:
             uvwriter = GeomVertexWriter(vdata, 'texcoord')
             for uv in self.uvs:
                 uvwriter.addData2f(uv[0], uv[1])
 
-        if self.normals != None:
+        if self.normals is not None:
             normalwriter = GeomVertexWriter(vdata, 'normal')
             for norm in self.normals:
                 normalwriter.addData3f(*norm)
@@ -192,6 +192,10 @@ class Mesh(NodePath):
         else:
             return self.recipe
 
+    def __str__(self):
+        if hasattr(self, 'name'):
+            return self.name
+
 
     def __add__(self, other):
         self.vertices += other.vertices
@@ -203,6 +207,7 @@ class Mesh(NodePath):
 
         self.normals += other.normals
         self.uvs += other.uvs
+
 
 
     def __deepcopy__(self, memo):
@@ -222,7 +227,7 @@ class Mesh(NodePath):
 
     @property
     def triangles(self):
-        if self._triangles == None:
+        if self._triangles is None:
             self._triangles = [(i, i+1, i+2) for i in range(0, len(self.vertices), 3)]
 
         return self._triangles
@@ -252,31 +257,38 @@ class Mesh(NodePath):
             self.generate()
 
 
-    def save(self, name='', path=application.compressed_models_folder):
+    def save(self, name='', folder:Path=application.compressed_models_folder, flip_faces=False):
         if not application.compressed_models_folder.exists():
             application.compressed_models_folder.mkdir()
 
         if not name and hasattr(self, 'path'):
             name = self.path.stem
-            if not '.' in name:
+            if '.' not in name:
                 name += '.ursinamesh'
 
         if name.endswith('ursinamesh'):
-            with open(path / name, 'w') as f:
+            with open(folder / name, 'w') as f:
                 # recipe = self.recipe.replace('LVector3f', '')
                 f.write(self.recipe)
-            print('saved .ursinamesh to:', path / name)
+            print('saved .ursinamesh to:', folder / name)
 
         elif name.endswith('.obj'):
-            from ursina.mesh_importer import ursina_mesh_to_obj
+            from ursina.mesh_exporter import ursinamesh_to_obj
             import os
-            # Remove the filename, else we get 'name.obj.obj'
+            # Remove the file extension, so we don't get 'name.obj.obj'
             name = str(os.path.splitext(name)[0])
-            ursina_mesh_to_obj(self, name, path)
+            ursinamesh_to_obj(self, name, folder, flip_faces)
+
+        elif name.endswith('.dae'):
+            from ursina.mesh_exporter import ursinamesh_to_dae
+            import os
+            # Remove the file extension, so we don't get 'name.dae.dae'
+            name = str(os.path.splitext(name)[0])
+            ursinamesh_to_dae(self, name, folder)
 
         elif name.endswith('.bam'):
-            success = self.writeBamFile(path / name)
-            print('saved .bam to:', path / name)
+            success = self.writeBamFile(folder / name)
+            print('saved .bam to:', folder / name)
 
 
 

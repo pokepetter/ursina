@@ -1,4 +1,3 @@
-import math
 from ursina import application
 import time
 
@@ -20,7 +19,6 @@ class Func():
 
 
 class Sequence():
-
     default_time_step = None
 
     def __init__(self, *args, **kwargs):
@@ -30,7 +28,9 @@ class Sequence():
         self.time_step = Sequence.default_time_step
         self.duration = 0
         self.funcs = []
-        self.paused = True
+        self.started = False
+        self.paused = False
+        self.ignore_paused = False
         self.loop = False
         self.auto_destroy = True
 
@@ -60,7 +60,7 @@ class Sequence():
         if isinstance(arg, (int, float)):
             self.duration += arg
 
-        elif isinstance(arg, Func):
+        elif callable(arg):
             arg.delay = self.duration
             self.funcs.append(arg)
 
@@ -75,6 +75,7 @@ class Sequence():
             f.finished = False
 
         self.t = 0
+        self.started = True
         self.paused = False
 
     def pause(self):
@@ -86,6 +87,7 @@ class Sequence():
     def finish(self):
         self.t = self.duration
         self.paused = False
+        self.started = False
         self.update()
 
     def kill(self):
@@ -99,7 +101,10 @@ class Sequence():
 
 
     def update(self):
-        if self.paused:
+        if not self.started:
+            return
+
+        if self.ignore_paused is False and (self.paused or application.paused):
             return
 
         if self.time_step is None:
@@ -117,7 +122,10 @@ class Sequence():
                 for f in self.funcs:
                     f.finished = False
 
-                self.t = 0
+                if time.dt > self.duration: # if delta time is too big, set t to 0 so it doesn't get stuck, but allow desync.
+                    self.t = 0
+                else:
+                    self.t -= self.duration
                 return
 
             if self.auto_destroy and self in application.sequences:
@@ -128,6 +136,7 @@ class Sequence():
 
 if __name__ == '__main__':
     from ursina import *
+    from ursina import Ursina, Entity
     app = Ursina()
     e = Entity(model='quad')
     s = Sequence(

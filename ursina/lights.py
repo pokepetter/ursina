@@ -1,4 +1,4 @@
-from ursina import *
+from ursina import Entity, Vec2, invoke, scene
 from panda3d.core import DirectionalLight as PandaDirectionalLight
 from panda3d.core import PointLight as PandaPointLight
 from panda3d.core import AmbientLight as PandaAmbientLight
@@ -7,7 +7,7 @@ from panda3d.core import Spotlight as PandaSpotLight
 
 class Light(Entity):
     def __init__(self, **kwargs):
-        super().__init__(rotation_x=90)
+        super().__init__(rotation_x=90, **kwargs)
 
 
     @property
@@ -42,15 +42,17 @@ class DirectionalLight(Light):
         self._shadows = value
         if value:
             self._light.set_shadow_caster(True, int(self.shadow_map_resolution[0]), int(self.shadow_map_resolution[1]))
-            bmin, bmax = scene.get_tight_bounds(self)
-            lens = self._light.get_lens()
-            lens.set_near_far(bmin.z*2, bmax.z*2)
-            lens.set_film_offset((bmin.xy + bmax.xy) * .5)
-            lens.set_film_size(bmax.xy - bmin.xy)
+            self.update_bounds()
         else:
             self._light.set_shadow_caster(False)
 
 
+    def update_bounds(self, entity=scene):  # update the shadow area to fit the bounds of target entity, defaulted to scene.
+        bmin, bmax = entity.get_tight_bounds(self)
+        lens = self._light.get_lens()
+        lens.set_near_far(bmin.z*2, bmax.z*2)
+        lens.set_film_offset((bmin.xy + bmax.xy) * .5)
+        lens.set_film_size(bmax.xy - bmin.xy)
 
 
 class PointLight(Light):
@@ -88,6 +90,8 @@ class SpotLight(Light):
 
 
 if __name__ == '__main__':
+    from ursina import Ursina, EditorCamera, color
+
     app = Ursina()
     from ursina.shaders import lit_with_shadows_shader # you have to apply this shader to enties for them to receive shadows.
     EditorCamera()
@@ -96,6 +100,5 @@ if __name__ == '__main__':
     pivot = Entity()
     DirectionalLight(parent=pivot, y=2, z=3, shadows=True)
 
-    # pivot.animate_rotation_y(360, duration=4, curve=curve.linear, loop=True)
 
     app.run()

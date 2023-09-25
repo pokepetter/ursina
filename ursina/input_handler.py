@@ -2,7 +2,6 @@ from collections import defaultdict
 from enum import Enum
 
 
-
 class Keys(Enum):
     left_mouse_down = 'left mouse down'
     left_mouse_up = 'left mouse up'
@@ -46,6 +45,8 @@ class Keys(Enum):
     gamepad_left_stick_y = 'gamepad left stick y'   # held_keys only
     gamepad_right_stick_x = 'gamepad right stick x'   # held_keys only
     gamepad_right_stick_y = 'gamepad right stick y'   # held_keys only
+    gamepad_left_trigger = 'gamepad left trigger'   # held_keys only
+    gamepad_right_trigger = 'gamepad right trigger'   # held_keys only
     gamepad_a = 'gamepad a'
     gamepad_a_up = 'gamepad a up'
     gamepad_b = 'gamepad b'
@@ -121,7 +122,7 @@ def input(key):
 
     key = key.replace('mouse down', 'mouse')
 
-    if key.endswith('up') and key != 'page up':
+    if key.endswith(' up') and key != 'page up' and key != 'gamepad dpad up':
         held_keys[key[:-3]] = 0
     else:
         held_keys[key] = 1
@@ -130,6 +131,7 @@ def input(key):
 
 if __name__ == '__main__':
     from ursina import *
+    from ursina import Ursina, input_handler
 
     app = Ursina()
     input_handler.rebind('z', 'w')  # 'z'-key will now be registered as 'w'-key

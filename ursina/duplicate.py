@@ -1,12 +1,12 @@
-from ursina import *
-from copy import copy, deepcopy
+from ursina import Entity, Audio
+from copy import copy
 
 
-def duplicate(entity, copy_children=True, **kwargs): # use a for loop instead of duplicate() if you can.
+def duplicate(entity, copy_children=True, *args, **kwargs): # use a for loop instead of duplicate() if you can.
     if entity.__class__ == Entity:
-        e = entity.__class__(entity.add_to_scene_entities)
+        e = entity.__class__(entity.add_to_scene_entities, *args, **kwargs)
     else:
-        e = entity.__class__()
+        e = entity.__class__(*args, **kwargs)
 
 
     if hasattr(entity, 'model') and entity.model:
@@ -54,6 +54,8 @@ def duplicate(entity, copy_children=True, **kwargs): # use a for loop instead of
 
 
 if __name__ == '__main__':
+    from ursina import *
+    from ursina import Ursina, Button, scene, EditorCamera
     app = Ursina()
 
     # quad = Button(parent=scene, model='quad', texture='brick', x=-1, collider='box')

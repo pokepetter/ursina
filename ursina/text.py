@@ -1,6 +1,5 @@
-from panda3d.core import TransparencyAttrib
-from panda3d.core import Filename
 from panda3d.core import TextNode
+import builtins
 # from direct.interval.IntervalGlobal import Sequence, Func, Wait, SoundInterval
 
 import ursina
@@ -9,6 +8,7 @@ from ursina import camera
 from ursina.entity import Entity
 from ursina.sequence import Sequence, Func, Wait
 from ursina import color
+from ursina import destroy
 # note:
 # <scale:n> tag doesn't work well in the middle of text.
 # only good for titles for now.
@@ -51,7 +51,8 @@ class Text(Entity):
 
         if 'origin' in kwargs:   # set the scale before model for correct corners
             setattr(self, 'origin', kwargs['origin'])
-
+        if 'use_tags' in kwargs:
+            setattr(self, 'use_tags', kwargs['use_tags'])
 
         if text != '':
             self.text = text
@@ -95,8 +96,8 @@ class Text(Entity):
 
         # check if using tags
         if (not self.use_tags
-            or self.text == self.start_tag or self.text == self.end_tag
-            or not self.start_tag in text or not self.end_tag in text
+            # or self.text == self.start_tag or self.text == self.end_tag
+            # or not self.start_tag in text or not self.end_tag in text
             ):
 
             self.create_text_section(text)
@@ -129,11 +130,15 @@ class Text(Entity):
                 section = ''
 
                 tag = ''
+                done = False
                 for j in range(len(text)-i):
                     tag += text[i+j]
                     if text[i+j] == self.end_tag and len(tag) > 0:
                         i += j+1
+                        done = True
                         break
+                if not done:
+                    i += 1
             else:
                 section += char
                 i += 1
@@ -226,7 +231,7 @@ class Text(Entity):
 
     @font.setter
     def font(self, value):
-        font = loader.loadFont(value)
+        font = builtins.loader.loadFont(value)
         if font:
             self._font = font
             self._font.clear()  # remove assertion warning
@@ -236,7 +241,7 @@ class Text(Entity):
 
     @property
     def color(self): # sets the default color.
-        return self._color
+        return getattr(self, '_color', color.white)
 
     @color.setter
     def color(self, value):
@@ -259,9 +264,10 @@ class Text(Entity):
     @line_height.setter
     def line_height(self, value):
         self._line_height = value
-        self._font.setLineHeight(value)
         if self.use_tags:
             self.text = self.raw_text
+        else:
+            self._font.setLineHeight(value)
 
     @property
     def width(self): # gets the width of the widest line.
@@ -275,12 +281,12 @@ class Text(Entity):
         for line in self.text.split('\n'):
             longest_line_length = max(longest_line_length, temp_text_node.calcWidth(line))
 
-        return longest_line_length  * self.scale_x * self.size
+        return longest_line_length * self.size
 
 
     @property
     def height(self): # gets the height of the text
-        return (len(self.lines) * self.line_height * self.scale_y * self.size)
+        return (len(self.lines) * self.line_height * self.size)
 
     @property
     def lines(self):
@@ -306,7 +312,7 @@ class Text(Entity):
         self._wordwrap = value
         if not value:
             return
-            
+
         new_text = ''
         x = 0
         for word in self.raw_text.replace(self.end_tag, self.end_tag+' ').split(' '):
@@ -342,7 +348,7 @@ class Text(Entity):
 
     @background.setter
     def background(self, value):
-        if value == True:
+        if value is True:
             self.create_background()
         elif self._background:
             from ursina.ursinastuff import destroy
@@ -391,25 +397,23 @@ class Text(Entity):
         #     self._background.x += self.origin_x * self.width * 2
         self._background.y -= self.origin_y * self.height
 
-        self._background.model = Quad(radius=radius, scale=(w/self.scale_x, h/self.scale_y))
+        self._background.model = Quad(radius=radius, scale=(w, h))
         self._background.color = color
 
 
-    def appear(self, speed=.025, delay=0):
-        from ursina.ursinastuff import invoke
+    def appear(self, speed=.025):
         self.enabled = True
         # self.visible = True   # setting visible seems to reset the colors
         if self.appear_sequence:
             self.appear_sequence.finish()
 
-        x = 0
         self.appear_sequence = Sequence()
-        for i, tn in enumerate(self.text_nodes):
+        for tn in self.text_nodes:
             target_text = tn.node().getText()
             tn.node().setText('')
             new_text = ''
 
-            for j, char in enumerate(target_text):
+            for char in target_text:
                 new_text += char
                 self.appear_sequence.append(Wait(speed))
                 self.appear_sequence.append(Func(tn.node().setText, new_text))
@@ -431,6 +435,7 @@ class Text(Entity):
 
 if __name__ == '__main__':
     from ursina import *
+    from ursina import Ursina, dedent, window
     app = Ursina()
     # Text.size = .001
     descr = dedent('''

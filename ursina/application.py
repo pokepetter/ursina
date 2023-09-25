@@ -5,6 +5,7 @@ from ursina import string_utilities
 
 paused = False
 time_scale = 1
+calculate_dt = True
 sequences = []
 trace_entity_definition = False # enable to set entity.line_definition
 print_entity_definition = False
@@ -17,6 +18,10 @@ development_mode = True
 dirs = [e.stem for e in asset_folder.parent.iterdir() if e.is_dir()]
 if 'src' in dirs and 'python' in dirs:
     development_mode = False
+
+window_type = 'onscreen'
+show_ursina_splash = False
+gltf_no_srgb = True
 
 print_info = development_mode
 print_warnings = True
@@ -44,8 +49,6 @@ _model_path.append_path(str(internal_fonts_folder.resolve()))
 _model_path.append_path(str(Path('C:/Windows/Fonts').resolve()))
 _model_path.append_path(str(asset_folder.resolve()))
 
-print('package_folder:', package_folder)
-print('asset_folder:', asset_folder)
 
 base = None             # this will be set once the Ursina() is created
 hot_reloader = None     # will be set my main if development_mode
@@ -53,18 +56,13 @@ hot_reloader = None     # will be set my main if development_mode
 def pause():
     global paused
     paused = True
-    for seq in sequences:
-        seq.pause()
 
 def resume():
     global paused
     paused = False
-    for seq in sequences:
-        seq.resume()
 
 def quit():
-    from ursina import invoke
-    invoke(sys.exit, delay=.01)
+    sys.exit()
 
 
 def load_settings(path=asset_folder / 'settings.py'):

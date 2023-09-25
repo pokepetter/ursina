@@ -16,7 +16,6 @@ class SpriteSheetAnimation(Entity):
 
             for y in range(start_coord[1], end_coord[1]+1):
                 for x in range(start_coord[0], end_coord[0]+1):
-                    print('aaaa')
                     s.extend([
                         Func(setattr, self, 'tile_coordinate', (x,y)),
                         Wait(1/fps)
@@ -35,13 +34,17 @@ class SpriteSheetAnimation(Entity):
 
 if __name__ == '__main__':
     '''
-    (0,0) is in bottom left
+    Sprite sheet coordinate system:
+    (0,3) (1,3) (2,3) (3,3)
+    (0,2) (1,2) (2,2) (3,2)
+    (0,1) (1,1) (2,1) (3,1)
+    (0,0) (1,0) (2,0) (3,0)
     '''
     from ursina import Ursina
     app = Ursina()
     player_graphics = SpriteSheetAnimation('sprite_sheet', tileset_size=(4,4), fps=6, animations={
-        'idle' : ((0,0), (0,0)),
-        'walk_up' : ((0,0), (3,0)),
+        'idle' : ((0,0), (0,0)),        # makes an animation from (0,0) to (0,0), a single frame
+        'walk_up' : ((0,0), (3,0)),     # makes an animation from (0,0) to (3,0), the bottom row
         'walk_right' : ((0,1), (3,1)),
         'walk_left' : ((0,2), (3,2)),
         'walk_down' : ((0,3), (3,3)),

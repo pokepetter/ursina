@@ -1,27 +1,24 @@
 import operator
-from math import sqrt, sin, acos, pi, cos
+from math import sqrt, sin, acos, pi, cos, floor
 from panda3d.core import Vec4, LVector3f, Mat3, Mat4
 from ursina.vec2 import Vec2
 from ursina.vec3 import Vec3
+from ursina import color
 from ursina.color import Color
 internal_sum = sum
 
 
 def distance(a, b):
-    try:
-        # dist = [abs(e) for e in (a - b)]
+    if isinstance(a, (Color, Vec4)):
         dist = abs(a[0] - b[0])
         dist += abs(a[1] - b[1])
         dist += abs(a[2] - b[2])
         dist += abs(a[3] - b[3])
-        # print('color distance', a, b)
         return dist
-    except:
-        pass
 
     # if input is Entity, convert to positions
-    if hasattr(a, 'position'): a = a.position
-    if hasattr(b, 'position'): b = b.position
+    if hasattr(a, 'world_position'): a = a.world_position
+    if hasattr(b, 'world_position'): b = b.world_position
 
     dist = sqrt((b[0] - a[0])**2 + (b[1] - a[1])**2 + (b[2] - a[2])**2)
     # print('------------DIST:', dist)
@@ -101,7 +98,7 @@ def round_to_closest(value, step=0):
     return round(value * step) / step
 
 
-def rotate_point_2d(point, origin, deg):
+def rotate_around_point_2d(point, origin, deg):
     angle_rad = -deg/180 * pi # ursina rotation is positive=clockwise, so do *= -1
     cos_angle = cos(angle_rad)
     sin_angle = sin(angle_rad)
@@ -113,22 +110,12 @@ def rotate_point_2d(point, origin, deg):
         origin[1] + (dx*sin_angle + dy*cos_angle)
         )
 
-
-def chunk_list(l, chunk_size):
-    # yield successive chunks from list
-    for i in range(0, len(l), chunk_size):
-        yield l[i:i + chunk_size]
-
-
-def size_list():
-    #return a list of current python objects sorted by size
-    globals_list = []
-    globals_list.clear()
-    for e in globals():
-        # object, size
-        globals_list.append([e, sys.getsizeof(e)])
-    globals_list.sort(key=operator.itemgetter(1), reverse=True)
-    print('scene size:', globals_list)
+def world_position_to_screen_position(point): # get screen position(ui space) from world space.
+    from ursina import camera, Entity, destroy
+    _temp_entity = Entity(position=point, add_to_scene_entities=False)
+    result = _temp_entity.screen_position
+    destroy(_temp_entity)
+    return result
 
 
 def sum(l):
@@ -142,6 +129,61 @@ def sum(l):
         total += e
 
     return total
+
+
+def make_gradient(index_color_dict):    # returns a list of 256 colors
+    '''
+    given a dict of positions and colors, interpolates the colors into a list of 256 colors
+    example input: {'0':color.hex('#9d9867'), '38':color.hex('#828131'), '54':color.hex('#5d5b2a'), '255':color.hex('#000000')}
+    '''
+    gradient = [color.black for i in range(256)]
+
+    gradient_color_keys = tuple(index_color_dict.keys())
+    gradient_color_values = tuple(index_color_dict.values())
+
+    for i in range(len(gradient_color_values)):
+        from_col = color.hex(gradient_color_values[i-1])
+        to_col = color.hex(gradient_color_values[i])
+
+        from_num = 0
+        if i > 0:
+            from_num = int(gradient_color_keys[i-1])
+        to_num = int(gradient_color_keys[i])
+        dist = to_num - from_num
+
+        for j in range(dist):
+            gradient[from_num+j] = lerp(from_col, to_col, j/dist)
+
+    return gradient
+
+
+def sample_gradient(list_of_values, t):     # distribute list_of_values equally on a line and get the interpolated value at t (0-1).
+    l = len(list_of_values)
+    if l == 1:
+        return list_of_values[0]
+
+    t *= l-1
+    index = floor(t - .001)
+    index = clamp(index, 0, l-1)
+    relative = t - index
+    # print(t, index, relative)
+
+    if index < l-1:
+        return lerp(list_of_values[index], list_of_values[index+1], relative)
+    else:
+        return lerp(list_of_values[index-1], list_of_values[index], relative)
+
+
+
+
+
+class Bounds:
+    __slots__ = ['start', 'end', 'center', 'size']
+    def __init__(self, start, end, center, size):
+        self.start = start
+        self.end = end
+        self.center = center
+        self.size = size
 
 
 if __name__ == '__main__':
@@ -161,6 +203,6 @@ if __name__ == '__main__':
     print(round(Vec3(.38, .1351, 353.26), 2))
 
     p = (1,0)
-    print(p, 'rotated ->', rotate_point_2d(p, (0,0), 90))
+    print(p, 'rotated ->', rotate_around_point_2d(p, (0,0), 90))
 
     app.run()

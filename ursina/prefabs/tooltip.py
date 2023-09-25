@@ -5,13 +5,13 @@ class Tooltip(Text):
 
     def __init__(self, text='', wordwrap=40, background_color=color.black66, **kwargs):
         super().__init__(text=text, ignore=False, parent=camera.ui, wordwrap=wordwrap, origin=(-.5,-.5), margin=(2,2),
-            background_color=color.inverse(color.text_color), enabled=False, background=True)
-        self.background.color = background_color
+            background_color=color.inverse(color.text_color), enabled=False)
 
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-        self.original_scale = self.scale
+        self.create_background()
+        self.background.color = background_color
 
 
     def update(self):
@@ -22,7 +22,7 @@ class Tooltip(Text):
             )
         self.x = min(self.x, (.5 * window.aspect_ratio) - self.width - self.size - .005)
         self.y = min(self.y, .5 - (self.height + self.size + .005))
-        self.z = -9
+        self.z = -99
 
 if __name__ == '__main__':
     app = Ursina()
@@ -33,7 +33,9 @@ if __name__ == '__main__':
 storm <default>to deal 5 <blue>water
 damage <default>to <red>everyone, <default>including <orange>yourself. <default>
 Lasts for 4 rounds.'''.replace('\n', ' '),
-        background_color=color.red
+        background_color=color.violet,
+        font='VeraMono.ttf',
+        wordwrap=50,
 )
 
     tooltip_test.enabled = True

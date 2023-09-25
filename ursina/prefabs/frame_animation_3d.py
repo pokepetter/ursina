@@ -11,6 +11,7 @@ class FrameAnimation3d(Entity):
             if application.raise_exception_on_missing_model:
                 raise FileNotFoundError(f'error: could not find models starting with: {name}')
             self.frames = []
+            self.sequence = Sequence(loop=loop, auto_destroy=False)
             return
 
         self.frames = [Entity(parent=self, model=e.stem, enabled=False, add_to_scene_entities=False) for e in model_names]
@@ -22,7 +23,6 @@ class FrameAnimation3d(Entity):
             self.sequence.append(Func(setattr, self.frames[i], 'enabled', True))
             self.sequence.append(Wait(1/fps))
 
-        self.is_playing = False
         self.autoplay = autoplay
 
 
@@ -35,10 +35,9 @@ class FrameAnimation3d(Entity):
 
 
     def start(self):
-        if self.is_playing:
-            self.finish()
+        if not self.sequence.finished:
+            self.sequence.finish()
         self.sequence.start()
-        self.is_playing = True
 
     def pause(self):
         self.sequence.pause()
@@ -48,12 +47,18 @@ class FrameAnimation3d(Entity):
 
     def finish(self):
         self.sequence.finish()
-        self.is_playing = False
 
 
     @property
     def duration(self):
         return self.sequence.duration
+
+
+    @property
+    def current_frame(self):
+        for e in self.frames:
+            if e.enabled:
+                return e
 
 
     def __setattr__(self, name, value):
@@ -68,6 +73,10 @@ class FrameAnimation3d(Entity):
             super().__setattr__(name, value)
         except Exception as e:
             return e
+
+    def on_destroy(self):
+        self.sequence.kill()
+
 
 
 if __name__ == '__main__':

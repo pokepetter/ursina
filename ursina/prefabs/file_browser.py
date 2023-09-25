@@ -3,13 +3,7 @@ from ursina import *
 
 class FileButton(Button):
     def __init__(self, load_menu, **kwargs):
-        super().__init__(
-            model='quad',
-            highlight_color = color.orange,
-            scale = (.875,.025),
-            pressed_scale = 1,
-            selected = False,
-            )
+        super().__init__(model='quad', highlight_color=color.dark_gray, scale=(.875,.025), pressed_scale=1, selected=False)
         self.load_menu = load_menu
 
         for key, value in kwargs.items():
@@ -49,7 +43,7 @@ class FileButton(Button):
             self.color = color.azure
             self.highlight_color = color.azure
         else:
-            self.color = Button.color
+            self.color = Button.default_color
 
         self.load_menu.open_button.color = color.azure if self.load_menu.selection else color.dark_gray
 
@@ -73,7 +67,7 @@ class FileBrowser(Entity):
         self.address_bar.text_entity.x = -.5 + Text.get_width(' ')
         self.address_bar.text_entity.color = color.red
 
-        self.folder_up_button = Button(parent=self, scale=(.035,.035), texture='arrow_down', rotation_z=180, position=(-.42,-.05), color=color.white, highlight_color=color.azure, on_click=self.folder_up)
+        self.folder_up_button = Button(parent=self, scale=(.035,.035), texture='arrow_down', rotation_z=180, position=(-.42,-.05,-1), color=color.white, highlight_color=color.azure, on_click=self.folder_up)
         self.button_parent = Entity(parent=self)
         self.back_panel = Entity(parent=self, model='quad', collider='box', origin_y=.5, scale=(.9,(self.max_buttons*.025)+.19), color=color._32, z=.1)
         self.bg = Button(parent=self, z=1, scale=(999,999), color=color.black66, highlight_color=color.black66, pressed_color=color.black66)

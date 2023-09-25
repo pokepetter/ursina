@@ -1,4 +1,4 @@
-from ursina import *
+from ursina import Entity, Draggable, Text, Slider, Button, color, Vec3, Quad, invoke
 from ursina.prefabs.input_field import InputField
 
 
@@ -9,10 +9,9 @@ class Space():
 
 class WindowPanel(Draggable):
     def __init__(self, title='', content=[], **kwargs):
-        super().__init__(origin=(-0,.5), scale=(.5, Text.size*2), color=color.black)
+        super().__init__(origin=(-0,.5), scale=(.5, Text.size*2), text=title, color=color.black)
 
         self.content = content
-        self.text = title
         self.popup = False
         self._prev_input_field = None
         self._original_scale = self.scale
@@ -20,8 +19,8 @@ class WindowPanel(Draggable):
         for key, value in kwargs.items():
             setattr(self, key ,value)
 
-        if self.text_entity:
-            self.text_entity.world_scale_y = 1
+        # if self.text_entity:
+        #     self.text_entity.world_scale_y = 1
 
         self.panel = Entity(parent=self, model='quad', origin=(0,.5), z=.1, color=self.color.tint(.1), collider='box')
 
@@ -111,29 +110,19 @@ if __name__ == '__main__':
     '''
     WindowPanel is an easy way to create UI. It will automatically layout the content.
     '''
+    from ursina import Ursina, ButtonGroup
     app = Ursina()
     wp = WindowPanel(
         title='Custom Window',
         content=(
             Text('Name:'),
             InputField(name='name_field'),
-            # Text('Age:'),
-            # InputField(name='age_field'),
-            # Text('Phone Number:'),
-            # InputField(name='phone_number_field'),
-            # Space(height=1),
-            # Text('Send:'),
             Button(text='Submit', color=color.azure),
             Slider(),
             Slider(),
-            # ButtonGroup(('test', 'eslk', 'skffk'))
+            ButtonGroup(('test', 'eslk', 'skffk'))
             ),
-            popup=True,
-            enabled=False
         )
-
-    def input(key):
-        if key == 'space':
-            wp.enabled = True
+    wp.y = wp.panel.scale_y / 2 * wp.scale_y    # center the window panel
 
     app.run()

@@ -1,5 +1,4 @@
 # do imports here so I can do a single line import
-import sys
 from pathlib import Path
 from textwrap import dedent
 import time
@@ -22,10 +21,11 @@ from ursina.texture_importer import load_texture
 from ursina import color
 from ursina.color import Color, hsv, rgb
 from ursina.sequence import Sequence, Func, Wait
+from ursina import curve
 from ursina.entity import Entity
 from ursina.collider import *
-from ursina.raycaster import raycast, boxcast
-from ursina.trigger import Trigger
+from ursina.raycast import raycast
+from ursina.boxcast import boxcast
 from ursina.audio import Audio
 from ursina.duplicate import duplicate
 from panda3d.core import Quat
@@ -55,16 +55,15 @@ from ursina.models.procedural.pipe import Pipe
 from ursina.models.procedural.cone import Cone
 from ursina.models.procedural.cube import Cube
 from ursina.models.procedural.cylinder import Cylinder
+from ursina.models.procedural.capsule import Capsule
 from ursina.models.procedural.grid import Grid
 from ursina.models.procedural.terrain import Terrain
 
 from ursina.scripts.terraincast import terraincast
 from ursina.scripts.smooth_follow import SmoothFollow
-from ursina.scripts.position_limiter import PositionLimiter
-from ursina.scripts.noclip_mode import NoclipMode, NoclipMode2d
 from ursina.scripts.grid_layout import grid_layout
 from ursina.scripts.scrollable import Scrollable
-from ursina.scripts.colorize import get_world_normals
+from ursina.scripts.property_generator import generate_properties_for_class
 
 from ursina.prefabs.tooltip import Tooltip
 from ursina.prefabs.text_field import TextField
@@ -74,9 +73,9 @@ from ursina.prefabs.slider import Slider, ThinSlider
 from ursina.prefabs.button_group import ButtonGroup
 from ursina.prefabs.window_panel import WindowPanel, Space
 from ursina.prefabs.button_list import ButtonList
-from ursina.prefabs.file_browser import FileBrowser
+# from ursina.prefabs.file_browser import FileBrowser
 # from ursina.prefabs import primitives
 
-from ursina.prefabs.debug_menu import DebugMenu
+# from ursina.prefabs.debug_menu import DebugMenu
 from ursina.prefabs.editor_camera import EditorCamera
-from ursina.prefabs.hot_reloader import HotReloader
+# from ursina.prefabs.hot_reloader import HotReloader

@@ -3,25 +3,19 @@ from ursina import *
 
 class DropdownMenuButton(Button):
     def __init__(self, text='', **kwargs):
-        super().__init__(
-            scale=(.25,.025),
-            origin=(-.5,.5),
-            pressed_scale=1,
-            text=text,
-            **kwargs
-            )
+        super().__init__(scale=(.25,.025), origin=(-.5,.5), pressed_scale=1, text_origin=(-.5,0), text=text, **kwargs)
 
         if self.text_entity:
             self.text_entity.x = .05
-            self.text_entity.origin = (-.5, 0)
             self.text_entity.scale *= .8
 
 
 class DropdownMenu(DropdownMenuButton):
-
-    def __init__(self, text='', buttons=list(), **kwargs):
+    def __init__(self, text='', buttons:list=None, **kwargs):
         super().__init__(text=text)
         self.position = window.top_left
+        if not buttons:
+            buttons = []
         self.buttons = buttons
         for i, b in enumerate(self.buttons):
             b.world_parent = self

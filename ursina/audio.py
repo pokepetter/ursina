@@ -1,8 +1,10 @@
-from ursina import *
-from panda3d.core import Filename
+from ursina import application
+from ursina.entity import Entity
+from ursina import curve
+from ursina.ursinastuff import invoke
+from ursina.ursinastuff import destroy as _destroy
 
-# Set to avoid name-space conflicts in the Audio class.
-_destroy = destroy
+from panda3d.core import Filename
 
 
 class Audio(Entity):
@@ -77,7 +79,7 @@ class Audio(Entity):
                     for f in folder.glob(f'**/{value}{suffix}'):
                         p = str(f.resolve())
                         p = Filename.fromOsSpecific(p)
-                        self._clip = loader.loadSfx(p)
+                        self._clip = loader.loadSfx(p)  # type: ignore
                         # print('...loaded audio clip:', f, p)
                         return
 
@@ -158,7 +160,7 @@ class Audio(Entity):
             _destroy(self)
 
     def fade(self, value, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
-        self.animate('volume', value, duration, delay, curve, resolution, interrupt)
+        self.animate('volume', value=value, duration=duration, delay=delay, curve=curve, resolution=resolution, interrupt=interrupt)
 
     def fade_in(self, value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt='finish',
                 destroy_on_ended=False):
