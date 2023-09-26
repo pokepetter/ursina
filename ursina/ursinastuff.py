@@ -20,11 +20,16 @@ class Empty():
 
 
 
-def invoke(function, *args, **kwargs):
+def invoke(function, *args, **kwargs):  # reserved keywords: 'delay', 'unscaled'
     delay = 0
     if 'delay' in kwargs:
         delay = kwargs['delay']
         del kwargs['delay']
+
+    unscaled = False
+    if 'unscaled' in kwargs:
+        unscaled = kwargs['unscaled']
+        del kwargs['unscaled']
 
     if not delay:
         function(*args, **kwargs)
@@ -34,11 +39,12 @@ def invoke(function, *args, **kwargs):
         Wait(delay),
         Func(function, *args, **kwargs)
     )
+    s.unscaled = unscaled
     s.start()
     return s
 
 
-def after(delay):
+def after(delay, unscaled=True):
     '''@after  decorator for calling a function after some time.
 
         example:
@@ -49,7 +55,7 @@ def after(delay):
     '''
     def decorator(func):
         def wrapper(*args, **kwargs):
-            invoke(func, *args, **kwargs, delay=delay)
+            invoke(func, *args, **kwargs, delay=delay, unscaled=unscaled)
         return wrapper()
     return decorator
 

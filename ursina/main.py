@@ -16,6 +16,7 @@ from ursina import entity
 
 import __main__
 time.dt = 0
+time.dt_unscaled = 0
 keyboard_keys = '1234567890qwertyuiopasdfghjklzxcvbnm'
 
 
@@ -156,7 +157,8 @@ class Ursina(ShowBase):
     def _update(self, task):
         """Internal task that runs every frame. Updates time, mouse, sequences and entities."""
         if application.calculate_dt:
-            time.dt = globalClock.getDt() * application.time_scale          # time between frames
+            time.dt_unscaled = globalClock.getDt()
+            time.dt = time.dt_unscaled * application.time_scale          # time between frames
         mouse.update()
 
         if hasattr(__main__, 'update') and __main__.update and not application.paused:

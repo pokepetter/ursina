@@ -26,6 +26,7 @@ class Sequence():
         self.args = list(args)
         self.t = 0
         self.time_step = Sequence.default_time_step
+        self.unscaled = False
         self.duration = 0
         self.funcs = []
         self.started = False
@@ -108,7 +109,10 @@ class Sequence():
             return
 
         if self.time_step is None:
-            self.t += time.dt
+            if not self.unscaled:
+                self.t += time.dt
+            else:
+                self.t += time.dt_unscaled
         else:
             self.t += self.time_step
 
