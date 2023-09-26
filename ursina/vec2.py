@@ -4,7 +4,6 @@ from panda3d.core import Vec2 as PandaVec2
 
 
 class Vec2(PandaVec2):
-
     def __round__(self, decimals=4):
         return Vec2(round(self[0], decimals), round(self[1], decimals))
 
@@ -24,6 +23,10 @@ class Vec2(PandaVec2):
         return Vec2(self[0]+value[0], self[1]+value[1])
 
 
+    def __sub__(self, value):
+        return Vec2(self[0]-value[0], self[1]-value[1])
+
+
     @property
     def x(self):
         return self[0]
@@ -37,6 +40,13 @@ class Vec2(PandaVec2):
     @y.setter
     def y(self, value):
         self[1] = value
+
+    @property
+    def X(self):
+        return int(self.x)
+    @property
+    def Y(self):
+        return int(self.y)
 
 
     def __mul__(self, value):

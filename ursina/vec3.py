@@ -4,7 +4,6 @@ from ursina.vec2 import Vec2
 
 
 class Vec3(PandaVec3):
-
     def __round__(self, decimals=4):
         return Vec3(*(round(e,decimals) for e in self))
 
@@ -32,8 +31,16 @@ class Vec3(PandaVec3):
         if len(value) == 3:
             return Vec3(self[0]+value[0], self[1]+value[1], self[2]+value[2])
 
-        elif len(value) == 2:
+        if len(value) == 2:
             return Vec3(self[0]+value[0], self[1]+value[1], self[2])
+
+
+    def __sub__(self, value):
+        if len(value) == 3:
+            return Vec3(self[0]-value[0], self[1]-value[1], self[2]-value[2])
+
+        if len(value) == 2:
+            return Vec3(self[0]-value[0], self[1]-value[1], self[2])
 
 
     @property
@@ -81,7 +88,15 @@ class Vec3(PandaVec3):
         self[1] = value[0]
         self[2] = value[1]
 
-
+    @property
+    def X(self):
+        return int(self.x)
+    @property
+    def Y(self):
+        return int(self.y)
+    @property
+    def Z(self):
+        return int(self.z)
 
 
     def __mul__(self, value):
