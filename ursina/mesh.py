@@ -127,6 +127,9 @@ class Mesh(NodePath):
             else:
                 self.indices = [i for i in range(len(self.vertices))]
 
+            if not self.indices:
+                return
+
             prim = Mesh._modes[self.mode](static_mode)
 
             self.generated_vertices = [self.vertices[i] for i in self.indices]
@@ -328,5 +331,9 @@ if __name__ == '__main__':
     # print('-------', (perf_counter() - t) * 1000)
     # print(clonde.mode)
 
+    # test .clear()
+    e.model.clear()
+    points.model.clear()
+    lines.model.clear()
     EditorCamera()
     app.run()
