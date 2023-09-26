@@ -29,7 +29,8 @@ class WindowPanel(Draggable):
             self.bg = Button(parent=self, z=1, scale=(999, 999), color=color.black66, highlight_color=color.black66, pressed_color=color.black66)
             self.bg.on_click = self.close
 
-        self.layout()
+        if self.content:
+            self.layout()
 
 
     def layout(self):
@@ -95,14 +96,14 @@ class WindowPanel(Draggable):
         try:
             if self.popup:
                 self.bg.enabled = True
-                self.animate_scale(self._original_scale, duration=.1)
+                # self.animate_scale(self._original_scale, duration=.1)
         except:
             pass
 
     def close(self):
         if self.popup:
             self.bg.enabled = False
-        self.animate_scale_y(0, duration=.1)
+        # self.animate_scale_y(0, duration=.1)
         invoke(setattr, self, 'enabled', False, delay=.2)
 
 
