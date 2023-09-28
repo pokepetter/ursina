@@ -845,11 +845,6 @@ class Entity(NodePath):
 
         return Vec3(0,0,0)
 
-    @property
-    def model_center(self):
-        if not self.model:
-            return Vec3(0,0,0)
-        return self.model.getTightBounds().getCenter()
 
     @property
     def bounds(self):
@@ -876,8 +871,9 @@ class Entity(NodePath):
         if isinstance(class_instance, object) and not isinstance(class_instance, str):
             class_instance.entity = self
             class_instance.enabled = True
-            setattr(self, camel_to_snake(class_instance.__class__.__name__), class_instance)
             self.scripts.append(class_instance)
+            if hasattr(class_instance, 'on_script_added') and callable(class_instance.on_script_added):
+                class_instance.on_script_added()
             # print('added script:', camel_to_snake(name.__class__.__name__))
             return class_instance
 
