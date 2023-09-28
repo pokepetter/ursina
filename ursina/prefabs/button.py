@@ -37,8 +37,6 @@ class Button(Entity):
         self.pressed_scale = 1     # multiplier
         self.collider = 'box'
 
-        for key, value in kwargs.items():
-            setattr(self, key, value)
 
         self.text_entity = None
         if text:
@@ -46,6 +44,11 @@ class Button(Entity):
 
         self.text_origin = text_origin
         self.original_scale = self.scale
+
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        # if 'eternal' in kwargs: # eternal needs to be set after text, so the text_Entity also gets the same eternal value
+        #     self.eternal = kwargs['eternal']
 
 
     def text_getter(self):
@@ -57,7 +60,7 @@ class Button(Entity):
             self.text_entity = Text(parent=self, size=Text.size*20, position=(-self.origin[0],-self.origin[1],-.1), origin=(0,0), add_to_scene_entities=False)
 
         self.text_entity.text = value
-        self.text_entity.world_scale = (1,1,1)
+        self.text_entity.world_scale = Vec3(self.text_size)
 
 
     def text_origin_getter(self):
@@ -99,6 +102,14 @@ class Button(Entity):
         if self.icon:
             self.icon_entity.world_scale = value
 
+    def text_size_getter(self):
+        return getattr(self, '_text_size', 1)
+
+    def text_size_setter(self, value):
+        self._text_size = value
+        if self.text_entity:
+            self.text_entity.world_scale = Vec3(value)
+
 
     def origin_getter(self):
         return getattr(self, '_origin', Vec3.zero)
@@ -114,11 +125,6 @@ class Button(Entity):
         if isinstance(self.collider, BoxCollider):    # update collider position by making a new one
             self.collider = 'box'
 
-
-    def eternal_setter(self, value):
-        super().eternal_setter(value)
-        if self.text_entity:
-            self.text_entity.eternal = value
 
 
     def input(self, key):
