@@ -59,7 +59,7 @@ from ursina.models.procedural.capsule import Capsule
 from ursina.models.procedural.grid import Grid
 from ursina.models.procedural.terrain import Terrain
 
-from ursina.scripts.terraincast import terraincast
+from ursina.terraincast import terraincast
 from ursina.scripts.smooth_follow import SmoothFollow
 from ursina.scripts.grid_layout import grid_layout
 from ursina.scripts.scrollable import Scrollable
