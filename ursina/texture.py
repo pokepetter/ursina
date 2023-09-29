@@ -12,7 +12,7 @@ class Texture():
 
     default_filtering = None      # options: None / 'bilinear' / 'mipmap'
 
-    def __init__(self, value):
+    def __init__(self, value, filtering='default'):
 
         if isinstance(value, str):
             value = Path(value)
@@ -20,7 +20,7 @@ class Texture():
         if isinstance(value, Path):
             self.path = Path(value)
             self._texture = loader.loadTexture(Filename.fromOsSpecific(str(value)))
-            self._cached_image = None   # for get_pixel() method            
+            self._cached_image = None   # for get_pixel() method
 
         elif isinstance(value, PandaTexture):
             self._texture = value
@@ -35,9 +35,10 @@ class Texture():
             # self._cached_image = image.transpose(Image.FLIP_TOP_BOTTOM)
             self.path = None
 
+        if filtering == 'default':
+            filtering = Texture.default_filtering      # None/'bilinear'/'mipmap' default: 'None'
+        self.filtering = filtering
 
-
-        self.filtering = Texture.default_filtering      # None/'bilinear'/'mipmap' default: 'None'
 
     @staticmethod
     def new(size, color=(255,255,255)):
