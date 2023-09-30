@@ -18,6 +18,8 @@ class Empty():
         for key, value in kwargs.items():
             setattr(self, key ,value)
 
+class Default:
+    pass
 
 
 def invoke(function, *args, **kwargs):  # reserved keywords: 'delay', 'unscaled'

@@ -2,10 +2,12 @@ from ursina import Entity, Button, camera, color, Text, window, mouse, destroy
 from ursina.scripts.grid_layout import grid_layout
 
 class ButtonGroup(Entity):
+    default_selected_color = color.azure
+
     def __init__(self, options, default='', min_selection=1, max_selection=1, origin=(-.5,.5,0), spacing=(0.025,0,0), **kwargs):
         super().__init__()
         self.deselected_color = Button.default_color
-        self.selected_color = color.azure
+        self.selected_color = ButtonGroup.default_selected_color
         self.min_selection = min_selection
         self.max_selection = max(min_selection, max_selection)
         self.origin = origin
@@ -58,10 +60,8 @@ class ButtonGroup(Entity):
         width = Text.get_width(longest_word) / Text.size / 2
 
         for e in self.options:
-            b = Button(parent=self, text=e, name=e, scale_x=width, scale_y=.9)
+            b = Button(parent=self, text=e, name=e, scale_x=width, scale_y=.9, highlight_scale=1, pressed_scale=1)
             b.value = e
-            b.highlight_scale = 1
-            b.pressed_scale = 1
             self.buttons.append(b)
 
         grid_layout(self.buttons, origin=self.origin, spacing=self.spacing)

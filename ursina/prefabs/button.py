@@ -1,4 +1,4 @@
-from ursina import Entity, Text, camera, color, mouse, BoxCollider, Sequence, Func, Vec2, Vec3, scene
+from ursina import Entity, Text, camera, color, mouse, BoxCollider, Sequence, Func, Vec2, Vec3, scene, Default
 from ursina.models.procedural.quad import Quad
 import textwrap
 
@@ -9,44 +9,46 @@ class Button(Entity):
     default_color = color.black90
     default_model = None # will default to rounded Quad
 
-    def __init__(self, text='', radius=.1, text_origin=(0,0), **kwargs):
-        super().__init__()
-        self.parent = camera.ui
-        self.disabled = False
+    def __init__(self, parent=camera.ui, text='', model=Default, radius=.1, origin=(0,0), text_origin=(0,0), text_size=1, color=Default, collider='box', highlight_scale=1, pressed_scale=1, disabled=False, **kwargs):
+        super().__init__(parent=camera.ui)
+        self.parent = parent
 
-        for key, value in kwargs.items():   # set the scale before model for correct corners
-            if key in ('scale', 'scale_x', 'scale_y', 'scale_z',
-            'world_scale', 'world_scale_x', 'world_scale_y', 'world_scale_z'):
+        for key in ('scale', 'scale_x', 'scale_y', 'scale_z', 'world_scale', 'world_scale_x', 'world_scale_y', 'world_scale_z'):
+            if key in kwargs:   # set the scale before model for correct corners
+                setattr(self, key, kwargs[key])
 
-                setattr(self, key, value)
-
-        if Button.default_model is None:
-            if not 'model' in kwargs and self.scale[0] != 0 and self.scale[1] != 0:
-                self.model = Quad(aspect=self.scale[0] / self.scale[1], radius=radius)
+        if model == Default:
+            if not Button.default_model:
+                if self.scale[0] != 0 and self.scale[1] != 0:
+                    self.model = Quad(aspect=self.scale[0] / self.scale[1], radius=radius)
+            else:
+                self.model = Button.default_model
         else:
-            self.model = Button.default_model
+            self.model = model
 
-        if 'color' in kwargs:
-            self.color = kwargs['color']
-        else:
-            self.color = Button.default_color
+        self.origin = origin
+
+        if color == Default:
+            color = Button.default_color
+        self.color = color
 
         self.highlight_color = self.color.tint(.2)
         self.pressed_color = self.color.tint(-.2)
-        self.highlight_scale = 1    # multiplier
-        self.pressed_scale = 1     # multiplier
-        self.collider = 'box'
-
+        self.highlight_scale = highlight_scale    # multiplier
+        self.pressed_scale = pressed_scale     # multiplier
+        self.collider = collider
+        self.disabled = disabled
 
         self.text_entity = None
         if text:
-            self.text = text
+            self.text_entity = Text(parent=self.model, text=text, position=Vec3(text_origin[0],text_origin[1],-.1), origin=text_origin, add_to_scene_entities=False)
+            self.text_entity.world_parent = self
+            self.text_entity.world_scale = Vec3(20 * text_size)
 
-        self.text_origin = text_origin
-        self.original_scale = self.scale
 
         for key, value in kwargs.items():
             setattr(self, key, value)
+
         # if 'eternal' in kwargs: # eternal needs to be set after text, so the text_Entity also gets the same eternal value
         #     self.eternal = kwargs['eternal']
 
@@ -56,11 +58,16 @@ class Button(Entity):
             return self.text_entity.text
 
     def text_setter(self, value):
-        if isinstance(value, str) and not self.text_entity:
-            self.text_entity = Text(parent=self, size=Text.size*20, position=(-self.origin[0],-self.origin[1],-.1), origin=(0,0), add_to_scene_entities=False)
+        if not isinstance(value, str):
+            raise TypeError('Text must be a string')
 
-        self.text_entity.text = value
-        self.text_entity.world_scale = Vec3(self.text_size)
+        if not self.text_entity:
+            self.text_entity = Text(parent=self.model, text=text, position=Vec3(value[0],value[1],-.1), origin=value, add_to_scene_entities=False)
+            self.text_entity.world_parent = self
+            self.text_entity.world_scale = Vec3(20 * self.text_size)
+
+        else:
+            self.text_entity.text = value
 
 
     def text_origin_getter(self):
@@ -108,7 +115,7 @@ class Button(Entity):
     def text_size_setter(self, value):
         self._text_size = value
         if self.text_entity:
-            self.text_entity.world_scale = Vec3(value)
+            self.text_entity.world_scale = Vec3(value * 20)
 
 
     def origin_getter(self):
@@ -188,9 +195,29 @@ class Button(Entity):
 if __name__ == '__main__':
     from ursina import Ursina, application, Tooltip
     app = Ursina()
-    b = Button(text='hello world!', color=color.azure, icon='sword', scale=.25, text_origin=(-.5,0))
+
+    Button.default_color = color.red
+    Button(model='quad', scale=.05, x=-.5, color=color.lime, text='text scale\ntest', text_size=.5, text_color=color.black)
+
+
+    b = Button(parent=camera.ui, text='hello world!', scale=.25)
+    Button.default_color = color.blue
+    b = Button(text='hello world!', icon='sword', scale=.25, text_origin=(-.5,0), x=.5)
     # b.fit_to_text()
     b.on_click = application.quit # assign a function to the button.
     b.tooltip = Tooltip('exit')
+
+    par = Entity(parent=camera.ui, scale=.2, y=-.2)
+    b = Button(parent=par, text='test', scale_x=1, origin=(-.5,.5))
+    b.text ='new text'
+    print(b.text_entity)
+
+    # Entity(model='quad', parent=b, x=1)
+    Text('Text size\nreference', x=.15)
+    # b.eternal = True
+    def input(key):
+
+        if key == 'd':
+            scene.clear()
 
     app.run()
