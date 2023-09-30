@@ -14,7 +14,7 @@ folders = [ # folder search order
 textureless = False
 
 
-def load_texture(name, path=None, use_cache=True):
+def load_texture(name, path=None, use_cache=True, filtering='default'):
     if textureless:
         return None
 
@@ -40,14 +40,14 @@ def load_texture(name, path=None, use_cache=True):
     for folder in _folders:
         if '.' in name: # got name with file extension
             for filename in folder.glob('**/' + name):
-                t = Texture(filename.resolve())
+                t = Texture(filename.resolve(), filtering=filtering)
                 imported_textures[name] = t
                 return t
 
         for filename in folder.glob('**/' + name + '.*'): # no file extension given, so try all supported
             if filename.suffix in file_types:
                 # print('found:', filename)
-                t = Texture(filename.resolve())
+                t = Texture(filename.resolve(), filtering=filtering)
                 imported_textures[name] = t
                 return t
 
