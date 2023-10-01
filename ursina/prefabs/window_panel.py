@@ -82,7 +82,7 @@ class WindowPanel(Draggable):
                     height += c.scale_y
 
                 if hasattr(c, 'text_entity') and c.text_entity is not None:
-                    c.text_entity.world_scale = (1,1,1)
+                    c.text_entity.world_scale = Vec3(20,20,1)
 
                 height += spacing
 
