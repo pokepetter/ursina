@@ -128,6 +128,17 @@ def input(key):
         held_keys[key] = 1
 
 
+def get_combined_key(key):
+    '''
+    Adds control, shift and alt prefix to key.
+    Example: holding control and pressing 'f' would result in 'control+f'.
+    This makes it easier to check for a specific combination without manually
+    checking each combination of held_keys['control'], held_keys['shift'] and held_keys['alt'].
+    '''
+
+    return ''.join(e+'+' for e in ('control', 'shift', 'alt') if held_keys[e] and not e == key) + key
+
+
 
 if __name__ == '__main__':
     from ursina import *
