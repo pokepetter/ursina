@@ -681,7 +681,7 @@ class DatagramReader:
 
 # Gives a 32 bit hash value (shifted one right (31 bit)) that is the same across runs and devices.
 def procedure_hash(name):
-    h = hashlib.sha1(name.encode("utf-8")).digest()
+    h = hashlib.sha1(name.encode("utf-8"), usedforsecurity=False).digest()
     return int.from_bytes(h[:4], byteorder="big") >> 1
 
 
