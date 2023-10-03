@@ -51,7 +51,7 @@ def ursfx(volume_curve, volume=.75, wave='sine', pitch=0, pitch_change=0, speed=
     return a
 
 
-class SynthGUI(Entity):
+class UrsfxGUI(Entity):
     def __init__(self, **kwargs):
         super().__init__(parent=camera.ui, z=-998, **kwargs)
 
@@ -270,19 +270,21 @@ class SynthGUI(Entity):
 
         self.code_text.text = self.recipe
 
+gui = None
+def open_gui():
+    global gui
+    if not gui:
+        gui = UrsfxGUI(enabled=False)
+
+        def toggle_gui_input(key):
+            if key == 'f3':
+                gui.enabled = not gui.enabled
+        Entity(input=toggle_gui_input)
+    gui.enabled = True
+
+
 if __name__ == '__main__':
     app = Ursina()
-
-gui = SynthGUI(enabled=False)
-
-def toggle_gui_input(key):
-    if key == 'f3':
-        gui.enabled = not gui.enabled
-
-Entity(input=toggle_gui_input)
-
-
-if __name__ == '__main__':
+    sfx_editor = UrsfxGUI()
     Sprite('shore', z=10, ppu=64, color=color.gray)
-    gui.enabled = True
     app.run()

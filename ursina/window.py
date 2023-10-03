@@ -191,7 +191,7 @@ class Window(WindowProperties):
             # 'Build' : Func(print, ' '),
             'API Reference' : Func(webbrowser.open, 'https://www.ursinaengine.org/api_reference.html'),
             # 'Asset Store' : Func(webbrowser.open, 'https://itch.io/tools/tag-ursina'),
-            'ursfx (Sound Effect Maker)' : lambda: exec('from ursina.prefabs import ursfx; ursfx.gui.enabled = True'),
+            'ursfx (Sound Effect Maker)' : lambda: exec('from ursina.prefabs import ursfx; ursfx.open_gui()'),
             # 'Open Scene Editor' : Func(print, ' '),
             'Change Render Mode <gray>[F10]<default>' : self.next_render_mode,
             'Reset Render Mode <gray>[Shift+F10]<default>' : Func(setattr, self, 'render_mode', 'default'),
