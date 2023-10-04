@@ -56,13 +56,14 @@ class Button(Entity):
     def text_getter(self):
         if self.text_entity:
             return self.text_entity.text
+        return ''
 
     def text_setter(self, value):
         if not isinstance(value, str):
             raise TypeError('Text must be a string')
 
         if not self.text_entity:
-            self.text_entity = Text(parent=self.model, text=text, position=Vec3(value[0],value[1],-.1), origin=value, add_to_scene_entities=False)
+            self.text_entity = Text(text=value, parent=self.model, position=Vec3(0,0,-.01), origin=(0,0), add_to_scene_entities=False)
             self.text_entity.world_parent = self
             self.text_entity.world_scale = Vec3(20 * self.text_size)
 
@@ -175,7 +176,7 @@ class Button(Entity):
 
 
     def fit_to_text(self, radius=.1, padding=Vec2(Text.size*1.5, Text.size)):
-        if not self.text_entity.text or self.text_entity.text == '':
+        if not self.text_entity or not self.text_entity.text or self.text_entity.text == '':
             return
 
         self.text_entity.world_parent = scene
