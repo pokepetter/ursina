@@ -15,7 +15,7 @@ class GridEditor(Entity):
         super().__init__(parent=camera.ui, position=(-.45,-.45), scale=.9, model='quad', origin=(-.5,-.5), visible_self=False)
         self.w, self.h = int(size[0]), int(size[1])
         self.canvas = Entity(parent=self, model='quad', origin=(-.5,-.5), shader=unlit_shader, scale=(self.w/self.h, 1), color=canvas_color)
-        self.canvas_collider = Entity(parent=self.canvas, model='wireframe_quad', origin=self.canvas.origin, color=color.blue, scale=2, position=(-.5,-.5), collider='box')
+        self.canvas_collider = Entity(parent=self.canvas, model='wireframe_quad', origin=self.canvas.origin, color=color.blue, scale=2, position=(-.5,-.5), collider='box', visible=False)
         sys.setrecursionlimit(max(sys.getrecursionlimit(), self.w * self.h))
         # self.grid = [[palette[0] for x in range(self.w)] for y in range(self.h)]
         if not hasattr(self, 'grid'):
