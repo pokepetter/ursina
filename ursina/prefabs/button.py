@@ -9,7 +9,7 @@ class Button(Entity):
     default_color = color.black90
     default_model = None # will default to rounded Quad
 
-    def __init__(self, parent=camera.ui, text='', model=Default, radius=.1, origin=(0,0), text_origin=(0,0), text_size=1, color=Default, collider='box', highlight_scale=1, pressed_scale=1, disabled=False, **kwargs):
+    def __init__(self, text='', parent=camera.ui, model=Default, radius=.1, origin=(0,0), text_origin=(0,0), text_size=1, color=Default, collider='box', highlight_scale=1, pressed_scale=1, disabled=False, **kwargs):
         super().__init__(parent=camera.ui)
         self.parent = parent
 
@@ -39,18 +39,13 @@ class Button(Entity):
         self.collider = collider
         self.disabled = disabled
 
+        self.text_origin = text_origin
         self.text_entity = None
         if text:
-            self.text_entity = Text(parent=self.model, text=text, position=Vec3(text_origin[0],text_origin[1],-.1), origin=text_origin, add_to_scene_entities=False)
-            self.text_entity.world_parent = self
-            self.text_entity.world_scale = Vec3(20 * text_size)
-
+            self.text = text
 
         for key, value in kwargs.items():
             setattr(self, key, value)
-
-        # if 'eternal' in kwargs: # eternal needs to be set after text, so the text_Entity also gets the same eternal value
-        #     self.eternal = kwargs['eternal']
 
 
     def text_getter(self):
@@ -63,7 +58,7 @@ class Button(Entity):
             raise TypeError('Text must be a string')
 
         if not self.text_entity:
-            self.text_entity = Text(text=value, parent=self.model, position=Vec3(0,0,-.01), origin=(0,0), add_to_scene_entities=False)
+            self.text_entity = Text(text=value, parent=self.model, position=Vec3(self.text_origin[0],self.text_origin[1],-.01), origin=self.text_origin, add_to_scene_entities=False)
             self.text_entity.world_parent = self
             self.text_entity.world_scale = Vec3(20 * self.text_size)
 
@@ -72,14 +67,17 @@ class Button(Entity):
 
 
     def text_origin_getter(self):
-        if not self.text_entity:
-            return (0,0)
-        return self.text_entity.origin
+        if self.text_entity:
+            return self.text_entity.origin
+
+        return getattr(self, '_text_origin', (0,0))
 
     def text_origin_setter(self, value):
+        self._text_origin = value
         if not self.text_entity:
             return
 
+        self.text_entity.origin = value
         self.text_entity.world_parent = self.model
         self.text_entity.position = value
         # self.text_entity.x += self.model.radius * self.scale_y/self.scale_x * (-value[0]*2)
@@ -220,5 +218,9 @@ if __name__ == '__main__':
 
         if key == 'd':
             scene.clear()
+
+        if key == 'space':
+            b.text = 'updated text'
+
 
     app.run()
