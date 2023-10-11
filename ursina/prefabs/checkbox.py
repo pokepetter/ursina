@@ -20,7 +20,6 @@ class CheckBox(Button):
 
     @value.setter
     def value(self, new_value):
-        # print('set checkbox state to:', value)
         self._value = new_value
         self.text = ' x'[int(new_value)]
 

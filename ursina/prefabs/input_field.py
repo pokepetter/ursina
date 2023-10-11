@@ -128,6 +128,6 @@ if __name__ == '__main__':
         print('ursername:', username_field.text)
         print('password:',  password_field.text)
 
-    Button('Login', scale=.1, color=color.cyan.tint(-.4), y=-.26, on_click=submit).fit_to_text()
+    Button(text='Login', scale=.1, color=color.cyan.tint(-.4), y=-.26, on_click=submit).fit_to_text()
     username_field.on_value_changed = submit
     app.run()

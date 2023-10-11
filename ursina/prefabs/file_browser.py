@@ -54,14 +54,14 @@ class FileBrowser(Entity):
 
         self.file_types = ['.*', ]
         self.start_path = Path('.').resolve()
-        super().__init__(parent=camera.ui, scale=(1,1), model='quad', color=color.clear, collider='box', y=.45)
+        super().__init__(parent=camera.ui, y=.45)
 
         self.return_files = True
         self.return_folders = False
         self.selection_limit = 1
         self.max_buttons = 24
 
-        self.title_bar = Button(parent=self, scale=(.9,.035), text='<gray>Open', color=color.dark_gray, collision=False)
+        self.title_bar = Button(parent=self, scale=(.9,.035), text='<gray>Open', color=color.dark_gray, highlight_color=color.dark_gray)
         self.address_bar = Button(parent=self, scale=(.8,.035), text='//', text_origin=(-.5,0), y=-.05, highlight_color=color.black)
         self.address_bar.text_entity.scale *= .75
         self.address_bar.text_entity.x = -.5 + Text.get_width(' ')
@@ -150,8 +150,8 @@ class FileBrowser(Entity):
                 # print('create new:', i)
                 b = FileButton(
                     parent = self.button_parent,
-                    text = prefix + f.name,
                     text_origin = (-.5, 0),
+                    text = prefix + f.name,
                     y = -i*.025 -.09,
                     load_menu = self,
                     path = f,
