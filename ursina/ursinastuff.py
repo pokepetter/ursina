@@ -152,6 +152,9 @@ def _destroy(entity, force_destroy=False):
     if hasattr(entity, '_on_click') and isinstance(entity._on_click, Sequence):
         entity._on_click.kill()
 
+    if entity.hasPythonTag("Entity"):
+        entity.clearPythonTag("Entity")
+
     entity.removeNode()
     #unload texture
     # if hasattr(entity, 'texture') and entity.texture != None:
