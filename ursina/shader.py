@@ -30,6 +30,37 @@ void main() {
 '''
 imported_shaders = dict()
 
+def do_shader_includes(shader_source, included=None):
+    if shader_source is None:
+        return None
+    if shader_source == "":
+        return ""
+    inc = None
+    if included is not None:
+        inc = included
+    else:
+        inc = set()
+    lines = shader_source.split("\n")
+    res = ""
+    for line in lines:
+        if line.startswith("#include"):
+            str_start = line.find("\"");
+            include_str = line[str_start:]
+            str_end = include_str[1:].find("\"")
+            if str_end == -1:
+                raise Exception("Missing closing quotation mark in GLSL include.")
+            include_path = include_str[1:-1]
+            include_path = include_path.replace("ursina/", str(application.package_folder / "shaders") + "/")
+            if include_path not in inc:
+                inc.add(include_path)
+                with open(include_path, "r") as f:
+                    file_contents = f.read() + "\n"
+                    file_contents = do_shader_includes(file_contents, included=inc)
+                    res += file_contents
+        else:
+            res += line + "\n"
+    return res
+
 class Shader:
     CG = Panda3dShader.SL_Cg
     GLSL = Panda3dShader.SL_GLSL
@@ -59,8 +90,11 @@ class Shader:
             setattr(self, key ,value)
 
 
-    def compile(self):
-        self._shader = Panda3dShader.make(self.language, self.vertex, self.fragment, self.geometry)
+    def compile(self, shader_includes=True):
+        if shader_includes:
+            self._shader = Panda3dShader.make(self.language, do_shader_includes(self.vertex), do_shader_includes(self.fragment), do_shader_includes(self.geometry))
+        else:
+            self._shader = Panda3dShader.make(self.language, self.vertex, self.fragment, self.geometry)
         self.compiled = True
 
 
