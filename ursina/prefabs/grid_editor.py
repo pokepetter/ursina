@@ -128,6 +128,7 @@ class GridEditor(Entity):
                 y = int(round(self.cursor.y * self.h))
                 x = int(round(self.cursor.x * self.w))
                 if x < 0 or x > self.w-1 or y < 0 or y > self.h-1:
+                    self.prev_draw = (clamp(x, 0, self.w), clamp(y, 0, self.h))
                     return
 
                 if not held_keys['alt'] and not self.is_in_paste_mode:
@@ -190,7 +191,7 @@ class GridEditor(Entity):
         if not self.edit_mode:
             return
 
-        if key == 'left mouse down' and not self.is_in_paste_mode:
+        if key == 'left mouse down' and self.canvas_collider.hovered and not self.is_in_paste_mode:
             self.start_pos = self.get_cursor_position()
             if not held_keys['control']:
                 self.prev_draw = None
