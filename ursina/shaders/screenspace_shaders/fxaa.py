@@ -108,6 +108,7 @@ if __name__ == '__main__':
     # Button(scale=.25, model='circle')
     camera.shader = fxaa_shader
     camera.clip_plane_far=100
+    Sky()
 
     def input(key):
         if key == 'space':
