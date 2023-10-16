@@ -70,7 +70,6 @@ class FirstPersonController(Entity):
         if self.gravity:
             # gravity
             ray = raycast(self.world_position+(0,self.height,0), self.down, traverse_target=self.traverse_target, ignore=self.ignore_list)
-            # ray = boxcast(self.world_position+(0,2,0), self.down, ignore=self.ignore_list)
 
             if ray.distance <= self.height+.1:
                 if not self.grounded:
@@ -91,7 +90,6 @@ class FirstPersonController(Entity):
     def input(self, key):
         if key == 'space':
             self.jump()
-
 
     def jump(self):
         if not self.grounded:
@@ -115,11 +113,14 @@ class FirstPersonController(Entity):
     def on_enable(self):
         mouse.locked = True
         self.cursor.enabled = True
+        if hasattr(self, 'camera_pivot'):
+            camera.world_parent = self.camera_pivot
 
 
     def on_disable(self):
         mouse.locked = False
         self.cursor.enabled = False
+        camera.world_parent = scene
 
 
 
