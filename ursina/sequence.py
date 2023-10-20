@@ -33,7 +33,7 @@ class Sequence():
         self.paused = False
         self.ignore_paused = False
         self.loop = False
-        self.auto_destroy = True
+        self.auto_destroy = False
         self.entity = None  # you can assign this to make the sequence pause when the entity is disabled or .ignore is True
 
         for key, value in kwargs.items():
