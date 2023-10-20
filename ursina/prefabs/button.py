@@ -43,6 +43,7 @@ class Button(Entity):
         self.text_entity = None
         if text:
             self.text = text
+            self.text_size = text_size
 
         for key, value in kwargs.items():
             setattr(self, key, value)
