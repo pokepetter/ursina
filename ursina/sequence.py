@@ -34,6 +34,7 @@ class Sequence():
         self.ignore_paused = False
         self.loop = False
         self.auto_destroy = True
+        self.entity = None  # you can assign this to make the sequence pause when the entity is disabled or .ignore is True
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -112,6 +113,10 @@ class Sequence():
 
         if self.ignore_paused is False and (self.paused or application.paused):
             return
+
+        if self.entity and (self.entity.enabled == False or self.entity.ignore):
+            return
+
 
         if self.time_step is None:
             if not self.unscaled:

@@ -64,6 +64,7 @@ from ursina.scripts.smooth_follow import SmoothFollow
 from ursina.scripts.grid_layout import grid_layout
 from ursina.scripts.scrollable import Scrollable
 from ursina.scripts.property_generator import generate_properties_for_class
+from ursina.scripts.every_decorator import every
 
 from ursina.prefabs.tooltip import Tooltip
 from ursina.prefabs.text_field import TextField

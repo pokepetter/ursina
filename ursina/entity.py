@@ -127,10 +127,11 @@ class Entity(NodePath):
                 self.on_disable()
 
         # look for @every decorator and start a looping Sequence for decorated method
-        from ursina.ursinastuff import every, get_class_name
+        from ursina.scripts.every_decorator import every, get_class_name
         for method in every.decorated_methods:
             if get_class_name(method._func) == self.types[0]:
-                self.animations.append(Sequence(Func(method, self), Wait(method._every.interval), loop=True, started=True))
+                self.animations.append(Sequence(Func(method, self), Wait(method._every.interval), loop=True, started=True, entity=self))
+                print('append to animations:', self)
 
 
     def _list_to_vec(self, value):
