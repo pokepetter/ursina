@@ -28,7 +28,7 @@ class EditorCamera(Entity):
         self.perspective_fov = camera.fov
         self.orthographic_fov = camera.fov
         self.on_destroy = self.on_disable
-        self.hotkeys = {'toggle_orthographic':'shift+p', 'focus':'f', 'reset_center':'shift+f'}
+        self.shortcuts = {'toggle_orthographic':'shift+p', 'focus':'shift+f', 'reset_center':'alt+f'}
 
 
     def on_enable(self):
@@ -56,7 +56,7 @@ class EditorCamera(Entity):
     def input(self, key):
         combined_key = ''.join(e+'+' for e in ('control', 'shift', 'alt') if held_keys[e] and not e == key) + key
 
-        if combined_key == self.hotkeys['toggle_orthographic']:
+        if combined_key == self.shortcuts['toggle_orthographic']:
             if not camera.orthographic:
                 self.orthographic_fov = camera.fov
                 camera.fov = self.perspective_fov
@@ -67,10 +67,10 @@ class EditorCamera(Entity):
             camera.orthographic = not camera.orthographic
 
 
-        elif combined_key == self.hotkeys['reset_center']:
+        elif combined_key == self.shortcuts['reset_center']:
             self.animate_position(self.start_position, duration=.1, curve=curve.linear)
 
-        elif combined_key == self.hotkeys['focus'] and mouse.world_point:
+        elif combined_key == self.shortcuts['focus'] and mouse.world_point:
             self.animate_position(mouse.world_point, duration=.1, curve=curve.linear)
 
 
