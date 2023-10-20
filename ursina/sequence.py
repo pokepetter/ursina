@@ -54,6 +54,11 @@ class Sequence():
                 arg.delay = self.duration
                 self.funcs.append(arg)
 
+    def __call__(self):
+        self.start()
+        return self
+
+
 
     def append(self, arg):
         self.args.append(arg)
