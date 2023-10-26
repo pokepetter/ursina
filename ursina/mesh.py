@@ -2,6 +2,8 @@ from pathlib import Path
 from enum import Enum
 from textwrap import dedent
 import struct
+import numbers
+import array
 
 from ursina import application
 from ursina import color
