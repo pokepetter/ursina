@@ -343,7 +343,7 @@ class Mesh(p3d.NodePath):
         if not name and hasattr(self, 'path'):
             name = self.path.stem
             if '.' not in name:
-                name += ".ursinamesh"
+                name += '.ursinamesh'
 
         if name.endswith('ursinamesh'):
             with open(folder / name, 'w') as f:
@@ -354,7 +354,7 @@ class Mesh(p3d.NodePath):
             import os
             name = str(os.path.splitext(name)[0])
             ursinamesh_to_obj(self, name, folder, flip_faces)
-        elif name.endswidth('.dae'):
+        elif name.endswith('.dae'):
             from ursina.mesh_exporter import ursinamesh_to_dae
             import os
             name = str(os.path.splitext(name)[0])
