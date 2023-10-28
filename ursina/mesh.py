@@ -106,6 +106,11 @@ class Mesh(p3d.NodePath):
 
         vertex_format = p3d.GeomVertexFormat()
 
+        position_attribute_index = 0
+        color_attribute_index = -1
+        uv_attribute_index = -1
+        normal_attribute_index = -1
+
         if self.vertex_buffer is not None:
             vertex_array_format = p3d.GeomVertexArrayFormat()
             attributes = self.vertex_buffer_format.split(",")
@@ -139,12 +144,19 @@ class Mesh(p3d.NodePath):
         else:
             vertex_format = p3d.GeomVertexFormat()
             vertex_format.add_array(p3d.GeomVertexFormat.getV3().arrays[0])
+            attribute_count = 1
             if self.colors is not None and len(self.colors) > 0:
                 vertex_format.add_array(p3d.GeomVertexArrayFormat('color', 4, p3d.Geom.NT_float32, p3d.Geom.C_color))
+                color_attribute_index = attribute_count
+                attribute_count += 1
             if self.uvs is not None and len(self.uvs) > 0:
                 vertex_format.add_array(p3d.GeomVertexArrayFormat('texcoord', 2, p3d.Geom.NT_float32, p3d.Geom.C_texcoord))
+                uv_attribute_index = attribute_count
+                attribute_count += 1
             if self.normals is not None and len(self.normals) > 0:
                 vertex_format.add_array(p3d.GeomVertexArrayFormat('normal', 3, p3d.Geom.NT_float32, p3d.Geom.C_normal))
+                normal_attribute_index = attribute_count
+                attribute_count += 1
 
         vertex_format = p3d.GeomVertexFormat.register_format(vertex_format)
 
@@ -165,36 +177,95 @@ class Mesh(p3d.NodePath):
             self._set_array_data(vdata.modify_array(0), self._ravel(self.vertices), 'f')
 
             if self.colors is not None and len(self.colors) > 0:
-                self._set_array_data(vdata.modify_array(1), self._ravel(self.colors), 'f')
+                self._set_array_data(vdata.modify_array(color_attribute_index), self._ravel(self.colors), 'f')
 
             if self.uvs is not None and len(self.uvs) > 0:
-                self._set_array_data(vdata.modify_array(2), self._ravel(self.uvs), 'f')
+                self._set_array_data(vdata.modify_array(uv_attribute_index), self._ravel(self.uvs), 'f')
 
             if self.normals is not None and len(self.normals) > 0:
-                self._set_array_data(vdata.modify_array(3), self._ravel(self.normals), 'f')
-
-        prim = Mesh._modes[self.mode](static_mode)
-        prim.set_index_type(p3d.GeomEnums.NT_uint32)
-
-        parray = prim.modify_vertices()
-        parray.unclean_set_num_rows(len(self.triangles))
-
-        if not isinstance(self.triangles[0], numbers.Real) and len(self.triangles[0]) == 4:
-            tris = bytearray()
-            for quad in self.triangles:
-                tris.extend(struct.pack(
-                    "6I",
-                    quad[0], quad[1], quad[2],
-                    quad[2], quad[3], quad[0]
-                ))
-            self._set_array_data(parray, tris, 'I')
-        else:
-            self._set_array_data(parray, self._ravel(self.triangles), 'I')
-
-        prim.close_primitive()
+                self._set_array_data(vdata.modify_array(normal_attribute_index), self._ravel(self.normals), 'f')
 
         geom = p3d.Geom(vdata)
-        geom.addPrimitive(prim)
+
+        if len(self.triangles) == 0:
+            prim = Mesh._modes[self.mode](static_mode)
+            prim.set_index_type(p3d.GeomEnums.NT_uint32)
+
+            parray = prim.modify_vertices()
+
+            if self.mode == 'point':
+                self.triangles = [i for i in range(len(self.vertices))]
+                parray.unclean_set_num_rows(len(self.triangles))
+            elif self.mode == 'line':
+                self.triangles = [i for i in range(len(self.vertices))]
+                parray.unclean_set_num_rows(len(self.triangles))
+            elif self.mode == 'ngon':
+                self.triangles = [i for i in range(len(self.vertices))]
+                parray.unclean_set_num_rows(len(self.triangles))
+            else:
+                self.triangles = [(i, i + 1, i + 2) for i in range(0, len(self.vertices), 3)]
+                parray.unclean_set_num_rows(len(self.triangles) * 3)
+
+            self._set_array_data(parray, self._ravel(self.triangles), 'I')
+
+            prim.close_primitive()
+            geom.addPrimitive(prim)
+        else:
+            if not isinstance(self.triangles[0], numbers.Real):
+                if len(self.triangles[0]) == 2:
+                    for line_segment in self.triangles:
+                        prim = Mesh._modes[self.mode](static_mode)
+                        prim.set_index_type(p3d.GeomEnums.NT_uint32)
+
+                        parray = prim.modify_vertices()
+
+                        parray.unclean_set_num_rows(len(line_segment))
+                        self._set_array_data(parray, line_segment, 'I')
+
+                        prim.close_primitive()
+                        geom.addPrimitive(prim)
+                if len(self.triangles[0]) == 3:
+                    prim = Mesh._modes[self.mode](static_mode)
+                    prim.set_index_type(p3d.GeomEnums.NT_uint32)
+
+                    parray = prim.modify_vertices()
+
+                    parray.unclean_set_num_rows(len(self.triangles) * 3)
+                    self._set_array_data(parray, self._ravel(self.triangles), 'I')
+
+                    prim.close_primitive()
+                    geom.addPrimitive(prim)
+                elif len(self.triangles[0]) == 4:
+                    prim = Mesh._modes[self.mode](static_mode)
+                    prim.set_index_type(p3d.GeomEnums.NT_uint32)
+
+                    parray = prim.modify_vertices()
+
+                    tris = bytearray()
+                    for quad in self.triangles:
+                        tris.extend(struct.pack(
+                            "6I",
+                            quad[0], quad[1], quad[2],
+                            quad[2], quad[3], quad[0]
+                        ))
+
+                    parray.unclean_set_num_rows(len(self.triangles) * 2)
+                    self._set_array_data(parray, tris, 'I')
+
+                    prim.close_primitive()
+                    geom.addPrimitive(prim)
+            else:
+                prim = Mesh._modes[self.mode](static_mode)
+                prim.set_index_type(p3d.GeomEnums.NT_uint32)
+
+                parray = prim.modify_vertices()
+
+                parray.unclean_set_num_rows(len(self.triangles))
+                self._set_array_data(parray, self._ravel(self.triangles), 'I')
+
+                prim.close_primitive()
+                geom.addPrimitive(prim)
+
         self.geomNode.addGeom(geom)
 
         if self.mode == 'point':
@@ -299,9 +370,13 @@ class Mesh(p3d.NodePath):
 
     @property
     def triangles(self):
-        if self._triangles is None:
-            if self.mode == 'line':
-                self._triangles = [(i, i + 1) for i in range(0, len(self.vertices), 2)]
+        if not hasattr(self, '_triangles') or self._triangles is None:
+            if self.mode == 'point':
+                self._triangles = [i for i in range(len(self.vertices))]
+            elif self.mode == 'line':
+                self._triangles = [i for i in range(len(self.vertices))]
+            elif self.mode == 'ngon':
+                self._triangles = [i for i in range(len(self.vertices))]
             else:
                 self._triangles = [(i, i + 1, i + 2) for i in range(0, len(self.vertices), 3)]
 
