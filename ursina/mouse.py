@@ -145,11 +145,7 @@ class Mouse():
             self.left = True
             if self.hovered_entity:
                 if hasattr(self.hovered_entity, 'on_click') and callable(self.hovered_entity.on_click):
-                    try:
-                        self.hovered_entity.on_click()
-                    except:
-                        print(traceback.format_exc())
-                        application.quit()
+                    self.hovered_entity.on_click()
 
                 for s in self.hovered_entity.scripts:
                     if hasattr(s, 'on_click') and callable(s.on_click):
@@ -163,11 +159,7 @@ class Mouse():
                 application.base.input('double click')
                 if self.hovered_entity:
                     if hasattr(self.hovered_entity, 'on_double_click'):
-                        try:
-                            self.hovered_entity.on_double_click()
-                        except:
-                            print(traceback.format_exc())
-                            application.quit()
+                        self.hovered_entity.on_double_click()
 
                     for s in self.hovered_entity.scripts:
                         if hasattr(s, 'on_double_click'):
