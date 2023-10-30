@@ -14,6 +14,10 @@ blender_executable, blend_file = sys.argv[:2]
 script_file = sys.argv[4]
 out_file_path = sys.argv[5]
 decimals = int([e for e in sys.argv if e.startswith('--decimals=')][0][len('--decimals='):])
+TRIANGULATE = '--triangulate' in sys.argv
+
+
+print('-----------------------', 'decimals:', decimals, 'triangulate:', TRIANGULATE)
 
 scene_name = Path(bpy.data.filepath).stem
 print('file_name:', scene_name)
@@ -46,30 +50,39 @@ for ob in objects:
 
 
 for key, ob in unique_objects.items():
-    mesh = ob.evaluated_get(dg).data
-
-    # triangulate mesh
-    bm = bmesh.new()
-    bm.from_mesh(mesh)
-    bmesh.ops.triangulate(bm, faces=bm.faces[:], quad_method='BEAUTY', ngon_method='BEAUTY')
-    bm.normal_update()
-    bm.to_mesh(mesh)
-    bm.free()
-
+    polygons =[]
     verts = []
     normals = []
     vertex_colors = []
     uvs = []
-
     indices = []
+
+    mesh = ob.evaluated_get(dg).data
+    # for poly in mesh.polygons:
+    #     print('---------------poly:', [int(e) for e in poly.vertices])
+    if TRIANGULATE:
+        # triangulate mesh
+        bm = bmesh.new()
+        bm.from_mesh(mesh)
+        bmesh.ops.triangulate(bm, faces=bm.faces[:], quad_method='BEAUTY', ngon_method='BEAUTY')
+        bm.normal_update()
+        bm.to_mesh(mesh)
+        bm.free()
+    else:
+        for poly in mesh.polygons:
+            # print('---------------poly:', [int(e) for e in poly.vertices])
+            polygons.append([int(e) for e in poly.vertices])
+
 
     for poly in mesh.polygons:
         indices.extend(poly.vertices)
 
-    for idx in indices:
-        v = mesh.vertices[idx]
-        verts.append((round(v.co[0],decimals),round(v.co[2],decimals),round(v.co[1],decimals)))
-
+    if TRIANGULATE:
+        for idx in indices:
+            v = mesh.vertices[idx]
+            verts.append((round(v.co[0],decimals),round(v.co[2],decimals),round(v.co[1],decimals)))
+    else:
+        verts = [(round(v.co[0],decimals),round(v.co[2],decimals),round(v.co[1],decimals)) for v in mesh.vertices]
 
     if '--vertex_colors' in sys.argv and 'Color' in mesh.attributes:
         color_data = mesh.attributes['Color'].data
@@ -104,6 +117,7 @@ for key, ob in unique_objects.items():
     code += f'''
 '{mesh.name}' : Mesh(
     vertices={str(verts).replace(' ', '')},
+    triangles={polygons},
     normals={str(normals).replace(' ', '')},
     colors={str(vertex_colors).replace(' ', '')},
     uvs={str(uvs).replace(' ', '')},
