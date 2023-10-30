@@ -64,6 +64,15 @@ def inverselerp(a, b, t) :
     return (a - b) / (t - b)
 
 
+def lerp_angle(start_angle, end_angle, t):
+    start_angle = start_angle % 360
+    end_angle = end_angle % 360
+    angle_diff = (end_angle - start_angle + 180) % 360 - 180
+    result_angle = start_angle + t * angle_diff
+    result_angle = (result_angle + 360) % 360
+    return result_angle
+
+
 def slerp(q1, q2, t):
     costheta = q1.dot(q2)
     if costheta < 0.0:
