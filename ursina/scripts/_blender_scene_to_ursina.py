@@ -105,7 +105,22 @@ for key, ob in unique_objects.items():
                 sharp_normals.append(averaged_normal)
 
         normals = sharp_normals
-
+        if '--smooth_normals' in sys.argv:
+            vertices=verts
+            bucket = list()
+            for i, v in enumerate(vertices):
+                if i in bucket:
+                    continue
+    
+                overlapping_verts_indices = list()
+                for j, w in enumerate(vertices):
+                    if w == v:
+                        overlapping_verts_indices.append(j)
+                        bucket.append(j)
+    
+                average_normal = sum(normals[e] for e in overlapping_verts_indices) / 3
+                for index in overlapping_verts_indices:
+                    normals[index] = average_normal
 
     if '--uvs' in sys.argv:
         uv_layer = mesh.uv_layers.active
