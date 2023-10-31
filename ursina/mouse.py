@@ -144,15 +144,11 @@ class Mouse():
         if key == 'left mouse down':
             self.left = True
             if self.hovered_entity:
-                if hasattr(self.hovered_entity, 'on_click') and callable(self.hovered_entity.on_click):
-                    try:
-                        self.hovered_entity.on_click()
-                    except:
-                        print(traceback.format_exc())
-                        application.quit()
+                if self.hovered_entity.on_click:
+                    self.hovered_entity.on_click()
 
                 for s in self.hovered_entity.scripts:
-                    if hasattr(s, 'on_click') and callable(s.on_click):
+                    if hasattr(s, 'on_click') and s.on_click:
                         s.on_click()
 
             # double click
@@ -162,15 +158,11 @@ class Mouse():
 
                 application.base.input('double click')
                 if self.hovered_entity:
-                    if hasattr(self.hovered_entity, 'on_double_click'):
-                        try:
+                    if hasattr(self.hovered_entity, 'on_double_click') and self.hovered_entity.on_double_click:
                             self.hovered_entity.on_double_click()
-                        except:
-                            print(traceback.format_exc())
-                            application.quit()
 
                     for s in self.hovered_entity.scripts:
-                        if hasattr(s, 'on_double_click'):
+                        if hasattr(s, 'on_double_click') and s.on_double_click:
                             s.on_double_click()
 
             self.prev_click_time = time.time()
