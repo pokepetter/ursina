@@ -1,4 +1,4 @@
-from panda3d.core import NodePath, BitMask32, TransformState
+from panda3d.core import BitMask32, TransformState
 from panda3d.bullet import BulletRigidBodyNode, BulletBoxShape, BulletSphereShape, BulletCapsuleShape, XUp, YUp, ZUp, BulletTriangleMesh, BulletTriangleMeshShape, BulletDebugNode, BulletWorld
 from ursina.vec3 import Vec3
 
@@ -25,10 +25,8 @@ class MeshShape:
 		self.center = center
 
 
-
-class Body(NodePath):
+class Body:
     def __init__(self, name: str, world):
-        super().__init__(name)
         self.world = world
         self.attached = False
         self._visible = False
@@ -110,7 +108,6 @@ def _convert_shape(shape):
         output.addGeom(geom_target)
 
         return BulletTriangleMeshShape(output, dynamic=True)
-
 
 
 
