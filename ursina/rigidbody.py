@@ -25,7 +25,7 @@ class MeshShape:
 		self.center = center
 
 
-class Body:
+class _PhysicsBody:
     def __init__(self, name: str, world):
         self.world = world
         self.attached = False
@@ -58,7 +58,7 @@ class Body:
             self.node_path.hide()
 
 
-class Rigidbody(Body):
+class Rigidbody(_PhysicsBody):
     def __init__(self, world, shape, entity=None, mass=0, friction=.5, mask=0x1):
         super().__init__(name='Rigidbody', world=world)
         self.collision_node = BulletRigidBodyNode('Rigidbody')
