@@ -1,7 +1,30 @@
 from panda3d.core import NodePath, BitMask32, TransformState
 from panda3d.bullet import BulletRigidBodyNode, BulletBoxShape, BulletSphereShape, BulletCapsuleShape, XUp, YUp, ZUp, BulletTriangleMesh, BulletTriangleMeshShape, BulletDebugNode, BulletWorld
-from ursina.shapes import *
 from ursina.vec3 import Vec3
+
+class BoxShape:
+	def __init__(self, center=(0,0,0), size=(1,1,1)):
+		self.center = center
+		self.size = size
+
+class SphereShape:
+	def __init__(self, center=(0,0,0), radius=.5):
+		self.center = center
+		self.radius = radius
+
+class CapsuleShape:
+	def __init__(self, center=(0,0,0), radius=.5, height=2, axis='y'):
+		self.center = center
+		self.radius = radius
+		self.height = height
+		self.axis = axis
+
+class MeshShape:
+	def __init__(self, mesh=None, center=(0,0,0)):
+		self.mesh = mesh
+		self.center = center
+
+
 
 class Body(NodePath):
     def __init__(self, name: str, world):
@@ -45,74 +68,50 @@ class Rigidbody(Body):
         self.collision_node.setFriction(friction)
         self.node_path = entity.getParent().attachNewNode(self.collision_node)
 
-        self.shape_infos = shape.getProperties()
-
-        if self.shape_infos['shape'] == 'box':
-            self.shape = BulletBoxShape(Vec3(self.shape_infos['size'][0] / 2, self.shape_infos['size'][1] / 2, self.shape_infos['size'][2] / 2))
-            self.node_path.node().addShape(self.shape)
-
-        elif self.shape_infos['shape'] == 'sphere':
-            self.shape = BulletSphereShape(self.shape_infos['radius'])
-            self.node_path.node().addShape(self.shape)
-
-        elif self.shape_infos['shape'] == 'capsule':
-            if self.shape_infos['axis'] == 'y':
-                axis = YUp
-            elif self.shape_infos['axis'] == 'z':
-                axis = ZUp
-            elif self.shape_infos['axis'] == 'x':
-                axis = XUp
-            self.shape = BulletCapsuleShape(self.shape_infos['radius'] / 2, self.shape_infos['height'] / 2, axis)
-            self.node_path.node().addShape(self.shape)
-
-        elif self.shape_infos['shape'] == 'mesh':
-            if self.shape_infos['mesh'] == None and entity.model:
-                mesh = entity.model
-            else:
-                mesh = self.shape_infos['mesh']
-
-            geom_target = mesh.findAllMatches('**/+GeomNode').getPath(0).node().getGeom(0)
-            output = BulletTriangleMesh()
-            output.addGeom(geom_target)
-
-            self.shape = BulletTriangleMeshShape(output, dynamic=True)
-            self.node_path.node().addShape(self.shape)
-
-        elif self.shape_infos['shape'] == 'compound':
-            for s in self.shape_infos['shapes']:
-                if s['shape'] == 'box':
-                    self.shape = BulletBoxShape(Vec3(s['size'][0] / 2, s['size'][1] / 2, s['size'][2] / 2))
-                elif s['shape'] == 'sphere':
-                    self.shape = BulletSphereShape(s['radius'])
-                elif s['shape'] == 'capsule':
-                    if s['axis'] == 'y':
-                        axis = YUp
-                    elif s['axis'] == 'z':
-                        axis = ZUp
-                    elif s['axis'] == 'x':
-                        axis = XUp
-                    self.shape = BulletCapsuleShape(s['radius'] / 2, s['height'] / 2, axis)
-                elif s['shape'] == 'mesh':
-                    if self.shape_infos['mesh'] == None and entity.model:
-                        mesh = entity.model
-                    else:
-                        mesh = self.shape_infos['mesh']
-
-                    geom_target = mesh.findAllMatches('**/+GeomNode').getPath(0).node().getGeom(0)
-                    output = BulletTriangleMesh()
-                    output.addGeom(geom_target)
-
-                    self.shape = BulletTriangleMeshShape(output, dynamic=True)
-
-                self.node_path.node().addShape(self.shape, TransformState.makePos(s['center']))
+        if not isinstance(shape, (list, tuple)):    # add just one shape
+            self.node_path.node().addShape(_convert_shape(shape))
+        else:   # add multiple shapes
+            for s in shape:
+                self.node_path.node().addShape(_convert_shape(s), TransformState.makePos(s.center))
 
         self.node_path.node().setIntoCollideMask(BitMask32(mask))
         entity.reparentTo(self.node_path)
-        self.node_path.setPos(entity.x, entity.y, entity.z)
+        self.node_path.setPos(entity.position)
         self.attach()
-        entity.position = self.shape_infos['center']
+        entity.position = shape.center
 
         self.node_path.setPythonTag('Entity', entity)
+
+
+def _convert_shape(shape):
+    if isinstance(shape, BoxShape):
+        return BulletBoxShape(Vec3(shape.size[0] / 2, shape.size[1] / 2, shape.size[2] / 2))
+
+    if isinstance(shape, SphereShape):
+        return BulletSphereShape(shape.radius)
+
+    if isinstance(shape, CapsuleShape):
+        if shape.axis == 'y':
+            axis = YUp
+        elif shape.axis == 'z':
+            axis = ZUp
+        elif shape.axis == 'x':
+            axis = XUp
+        return BulletCapsuleShape(shape.radius / 2, shape.height / 2, axis)
+
+    if isinstance(shape, MeshShape):
+        if shape.mesh is None and entity.model:
+            mesh = entity.model
+        else:
+            mesh = shape.mesh
+
+        geom_target = mesh.findAllMatches('**/+GeomNode').getPath(0).node().getGeom(0)
+        output = BulletTriangleMesh()
+        output.addGeom(geom_target)
+
+        return BulletTriangleMeshShape(output, dynamic=True)
+
+
 
 
 if __name__ == '__main__':
@@ -127,7 +126,7 @@ if __name__ == '__main__':
     debugNode.showNormals(False)
     debugNP = render.attachNewNode(debugNode)
     debugNP.show()
-    
+
     world = BulletWorld()
     world.setGravity(Vec3(0, -9.81, 0))
     world.setDebugNode(debugNP.node())
