@@ -405,6 +405,16 @@ class Entity(NodePath):
             if self in scene.collidables:
                 scene.collidables.remove(self)
 
+
+    def on_click_getter(self):
+        return getattr(self, '_on_click', None)
+
+    def on_click_setter(self, value):
+        if not callable(value):
+            raise TypeError(f'on_click must be a callabe, not {type(value)}')
+        self._on_click = value
+
+
     def origin_getter(self):
         return getattr(self, '_origin', Vec3.zero)
 

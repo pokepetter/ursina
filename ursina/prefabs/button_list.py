@@ -3,11 +3,12 @@ from math import floor
 
 
 class ButtonList(Entity):
-    def __init__(self, button_dict, button_height=1.1, width=.5, popup=False, color=Button.default_color, highlight_color=color.white33, selected_color=color.azure, font=Text.default_font, **kwargs):
-        super().__init__(parent=camera.ui, position=(-(width/2), .45))
-
+    def __init__(self, button_dict, button_height=1.1, width=.5, popup=False, color=Button.default_color, highlight_color=color.white33, selected_color=color.azure, font=Text.default_font, clear_selected_on_enable=True, **kwargs):
+        self.clear_selected_on_enable = clear_selected_on_enable
         self.button_height = button_height
         self.width = width
+        super().__init__(parent=camera.ui, position=(-(width/2), .45))
+
         self.text_entity = Text(parent=self, font=font, origin=(-.5,.5), text='empty', world_scale=20, z=-.1, x=.01, y=-(button_height*.25*Text.size), line_height=button_height)
         self.bg = Entity(parent=self, model='quad', origin=(-.5,.5), scale=width, color=color, collider='box')
         self.highlight = Entity(parent=self.bg, model='quad', color=highlight_color, scale=(1,self.button_height), origin=(-.5,.5), z=-.01, add_to_scene_entities=False)
@@ -54,9 +55,6 @@ class ButtonList(Entity):
             if callable(action):
                 action()
 
-            elif isinstance(action, Sequence):
-                action.start()
-
             if self.popup:
                 self.disable()
 
@@ -75,7 +73,24 @@ class ButtonList(Entity):
     def on_disable(self):
         self.selection_marker.enabled = False
 
+    def on_enable(self):
+        if self.clear_selected_on_enable:
+            self.selected = None
 
+
+    @property
+    def selected(self):
+        return getattr(self, '_selected', None)
+    @selected.setter
+    def selected(self, value):
+        if not value:
+            self.selection_marker.enabled = False
+            return
+
+        self._selected = value
+        self.selection_marker.enabled = True
+        y = list(self.button_dict.keys()).index(value)
+        self.selection_marker.y = -y / len(self.button_dict)
 
 
 if __name__ == '__main__':
@@ -91,7 +106,7 @@ if __name__ == '__main__':
     for i in range(6, 20):
         button_dict[f'button {i}'] = Func(print, i)
 
-    bl = ButtonList(button_dict, font='VeraMono.ttf', button_height=1.5, popup=True)
+    bl = ButtonList(button_dict, font='VeraMono.ttf', button_height=1.5, popup=0, clear_selected_on_enable=False)
     def input(key):
         if key == 'space':
             bl.button_dict = {
@@ -100,5 +115,9 @@ if __name__ == '__main__':
                 'tree' :    Func(test, 3, 4),
                 'four' :    Func(test, b=3, a=4),
             }
+        if key == 'o':
+            bl.enabled = True
+
+    bl.selected = 'button 7'
 
     app.run()
