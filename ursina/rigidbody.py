@@ -68,7 +68,7 @@ class Rigidbody(_PhysicsBody):
 
         if not isinstance(shape, (list, tuple)):    # add just one shape
             self.node_path.node().addShape(_convert_shape(shape))
-        else:   # add multiple shapes
+        else:    # add multiple shapes
             for s in shape:
                 self.node_path.node().addShape(_convert_shape(s), TransformState.makePos(s.center))
 
