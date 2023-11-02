@@ -3,29 +3,29 @@ from panda3d.bullet import BulletRigidBodyNode, BulletBoxShape, BulletSphereShap
 from ursina.vec3 import Vec3
 
 class BoxShape:
-	def __init__(self, center=(0,0,0), size=(1,1,1)):
-		self.center = center
-		self.size = size
+    def __init__(self, center=(0,0,0), size=(1,1,1)):
+        self.center = center
+        self.size = size
 
 class SphereShape:
-	def __init__(self, center=(0,0,0), radius=.5):
-		self.center = center
-		self.radius = radius
+    def __init__(self, center=(0,0,0), radius=.5):
+        self.center = center
+        self.radius = radius
 
 class CapsuleShape:
-	def __init__(self, center=(0,0,0), radius=.5, height=2, axis='y'):
-		self.center = center
-		self.radius = radius
-		self.height = height
-		self.axis = axis
+    def __init__(self, center=(0,0,0), radius=.5, height=2, axis='y'):
+        self.center = center
+        self.radius = radius
+        self.height = height
+        self.axis = axis
 
 class MeshShape:
-	def __init__(self, mesh=None, center=(0,0,0)):
-		self.mesh = mesh
-		self.center = center
+    def __init__(self, mesh=None, center=(0,0,0)):
+        self.mesh = mesh
+        self.center = center
 
 
-class _PhysicsBody:
+class PhysicsBody:
     def __init__(self, name: str, world):
         self.world = world
         self.attached = False
@@ -58,13 +58,16 @@ class _PhysicsBody:
             self.node_path.hide()
 
 
-class Rigidbody(_PhysicsBody):
+class Rigidbody(PhysicsBody):
     def __init__(self, world, shape, entity=None, mass=0, friction=.5, mask=0x1):
         super().__init__(name='Rigidbody', world=world)
         self.collision_node = BulletRigidBodyNode('Rigidbody')
         self.collision_node.setMass(mass)
         self.collision_node.setFriction(friction)
-        self.node_path = entity.getParent().attachNewNode(self.collision_node)
+        if entity != None:
+            self.node_path = entity.getParent().attachNewNode(self.collision_node)
+        else:
+            self.node_path = self.attachNewNode(self.collision_node)
 
         if not isinstance(shape, (list, tuple)):    # add just one shape
             self.node_path.node().addShape(_convert_shape(shape))
@@ -73,11 +76,12 @@ class Rigidbody(_PhysicsBody):
                 self.node_path.node().addShape(_convert_shape(s), TransformState.makePos(s.center))
 
         self.node_path.node().setIntoCollideMask(BitMask32(mask))
-        entity.reparentTo(self.node_path)
-        self.node_path.setPos(entity.position)
-        self.attach()
-        entity.position = shape.center
+        if entity != None:
+            entity.reparentTo(self.node_path)
+            self.node_path.setPos(entity.position)
+            entity.position = shape.center
 
+        self.attach()
         self.node_path.setPythonTag('Entity', entity)
 
 
