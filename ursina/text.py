@@ -34,8 +34,8 @@ class Text(Entity):
 
         self.font = Text.default_font
         self.resolution = Text.default_resolution
-        self.line_height = 1
         self.use_tags = True
+        self.line_height = 1
         self.start_tag = start_tag
         self.end_tag = end_tag
         self.text_colors = {'default' : color.text_color}
@@ -237,7 +237,8 @@ class Text(Entity):
             self._font.clear()  # remove assertion warning
             self._font.setPixelsPerUnit(self.resolution)
             self._font.setLineHeight(self.line_height)
-            self.text = self.raw_text   # update tex
+            if self.text:
+                self.text = self.raw_text   # update tex
 
     @property
     def color(self): # sets the default color.
@@ -256,15 +257,12 @@ class Text(Entity):
 
     @property
     def line_height(self):
-        try:
-            return self._line_height
-        except:
-            return 1
+        return getattr(self, '_line_height', 1)
 
     @line_height.setter
     def line_height(self, value):
         self._line_height = value
-        if self.use_tags:
+        if self.use_tags and self.text:
             self.text = self.raw_text
         else:
             self._font.setLineHeight(value)
