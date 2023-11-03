@@ -70,10 +70,10 @@ class Rigidbody(PhysicsBody):
             self.node_path = render.attachNewNode(self.collision_node)
 
         if not isinstance(shape, (list, tuple)):    # add just one shape
-            self.node_path.node().addShape(_convert_shape(shape))
+            self.node_path.node().addShape(_convert_shape(shape, entity))
         else:    # add multiple shapes
             for s in shape:
-                self.node_path.node().addShape(_convert_shape(s), TransformState.makePos(s.center))
+                self.node_path.node().addShape(_convert_shape(s, entity), TransformState.makePos(s.center))
 
         self.node_path.node().setIntoCollideMask(BitMask32(mask))
         if entity:
@@ -85,7 +85,7 @@ class Rigidbody(PhysicsBody):
         self.node_path.setPythonTag('Entity', entity)
 
 
-def _convert_shape(shape):
+def _convert_shape(shape, entity):
     if isinstance(shape, BoxShape):
         return BulletBoxShape(Vec3(shape.size[0] / 2, shape.size[1] / 2, shape.size[2] / 2))
 
@@ -101,7 +101,7 @@ def _convert_shape(shape):
             axis = XUp
         return BulletCapsuleShape(shape.radius / 2, shape.height / 2, axis)
 
-    if isinstance(shape, MeshShape):
+    if isinstance(shape, MeshShape) and entity:
         if shape.mesh is None and entity.model:
             mesh = entity.model
         else:
@@ -112,6 +112,8 @@ def _convert_shape(shape):
         output.addGeom(geom_target)
 
         return BulletTriangleMeshShape(output, dynamic=True)
+    else:
+        raise Exception('To use a mesh shape you must specify at least one entity or mesh.')
 
 
 
