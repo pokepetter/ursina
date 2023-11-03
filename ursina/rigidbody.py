@@ -64,7 +64,7 @@ class Rigidbody(PhysicsBody):
         self.collision_node = BulletRigidBodyNode('Rigidbody')
         self.collision_node.setMass(mass)
         self.collision_node.setFriction(friction)
-        if entity != None:
+        if entity:
             self.node_path = entity.getParent().attachNewNode(self.collision_node)
         else:
             self.node_path = self.attachNewNode(self.collision_node)
@@ -76,7 +76,7 @@ class Rigidbody(PhysicsBody):
                 self.node_path.node().addShape(_convert_shape(s), TransformState.makePos(s.center))
 
         self.node_path.node().setIntoCollideMask(BitMask32(mask))
-        if entity != None:
+        if entity:
             entity.reparentTo(self.node_path)
             self.node_path.setPos(entity.position)
             entity.position = shape.center
