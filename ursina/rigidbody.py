@@ -67,7 +67,7 @@ class Rigidbody(PhysicsBody):
         if entity:
             self.node_path = entity.getParent().attachNewNode(self.collision_node)
         else:
-            self.node_path = self.attachNewNode(self.collision_node)
+            self.node_path = render.attachNewNode(self.collision_node)
 
         if not isinstance(shape, (list, tuple)):    # add just one shape
             self.node_path.node().addShape(_convert_shape(shape))
