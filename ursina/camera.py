@@ -23,13 +23,12 @@ class Camera(Entity):
         self._cam = None
         self._render = None
         self.ui_size = 40
-        self._ui_lens_node = None
-        self.ui = None
 
+        self._ui_lens_node = None
         self.ui = Entity(eternal=True, name='ui', scale=(self.ui_size*.5, self.ui_size*.5), add_to_scene_entities=False)
         self.overlay = Entity(parent=self.ui, model='quad', scale=99, color=color.clear, eternal=True, z=-99, add_to_scene_entities=False)
-        # self.fov = 40
-        # self.orthographic = False
+        self.orthographic = False
+        self.fov = 40   # horizontal fov
 
 
     def set_up(self):
@@ -50,8 +49,6 @@ class Camera(Entity):
         application.base.cam.node().set_lens(self.lens)
 
         self.orthographic = False
-        self.fov = 40   # horizontal fov
-        # self.fov = 22.5
         self.clip_plane_near = 0.1
         self.clip_plane_far = 10000
 
@@ -190,7 +187,7 @@ if __name__ == '__main__':
     from ursina import *
     from ursina import Ursina, camera, Entity, EditorCamera
 
-    window.borderless = False
+    # window.borderless = False
     app = Ursina()
 
     camera.orthographic = True
