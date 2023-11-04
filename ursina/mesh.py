@@ -545,13 +545,40 @@ if __name__ == '__main__':
         )
     Text(parent=quad, text='quad_with_usv_and_normals_and_vertex_colors', y=1, scale=5, origin=(0,-.5))
 
-    copy_test = Entity(position=(10,0), model=copy(quad.model))
+    quad = Entity(
+        position=(10,0),
+        model=Mesh(
+            vertices=((-0.5, -0.5, 0.0), (0.5, -0.5, 0.0), (0.5, 0.5, 0.0), (-0.5, 0.5, 0.0)),
+            triangles=(0,1,2, 2,3,0),
+            mode='triangle'),
+        )
+    Text(parent=quad, text='triangles flat', y=1, scale=5, origin=(0,-.5))
+
+    quad = Entity(
+        position=(10,-2),
+        model=Mesh(
+            vertices=((-0.5, -0.5, 0.0), (0.5, -0.5, 0.0), (0.5, 0.5, 0.0), (-0.5, 0.5, 0.0)),
+            triangles=((0,1,2), (2,3,0)),
+            mode='triangle'),
+        )
+    Text(parent=quad, text='triangles triplets', y=1, scale=5, origin=(0,-.5))
+
+    quad = Entity(
+        position=(10,-4),
+        model=Mesh(
+            vertices=((-0.5, -0.5, 0.0), (0.5, -0.5, 0.0), (0.5, 0.5, 0.0), (-0.5, 0.5, 0.0)),
+            triangles=((0,1,2,3), (0,3,2)),
+            mode='triangle'),
+        )
+    Text(parent=quad, text='triangles quad + tri', y=1, scale=5, origin=(0,-.5))
+
+    copy_test = Entity(position=(12,0), model=copy(quad.model))
     Text(parent=copy_test, text='copy_test', y=1, scale=5, origin=(0,-.5))
 
-    deepcopy_test = Entity(position=(10,-2), model=deepcopy(quad.model))
+    deepcopy_test = Entity(position=(12,-2), model=deepcopy(quad.model))
     Text(parent=deepcopy_test, text='deepcopy_test', y=1, scale=5, origin=(0,-.5))
 
-    clear_test = Entity(position=(10,-4), model=deepcopy(quad.model))
+    clear_test = Entity(position=(12,-4), model=deepcopy(quad.model))
     clear_test.model.clear()
     Text(parent=clear_test, text='.clear() test', y=1, scale=5, origin=(0,-.5))
 
