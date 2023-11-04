@@ -1,34 +1,32 @@
-from panda3d.core import NodePath, BitMask32, TransformState
+from panda3d.core import BitMask32, TransformState
 from panda3d.bullet import BulletRigidBodyNode, BulletBoxShape, BulletSphereShape, BulletCapsuleShape, XUp, YUp, ZUp, BulletTriangleMesh, BulletTriangleMeshShape, BulletDebugNode, BulletWorld
 from ursina.vec3 import Vec3
 
 class BoxShape:
-	def __init__(self, center=(0,0,0), size=(1,1,1)):
-		self.center = center
-		self.size = size
+    def __init__(self, center=(0,0,0), size=(1,1,1)):
+        self.center = center
+        self.size = size
 
 class SphereShape:
-	def __init__(self, center=(0,0,0), radius=.5):
-		self.center = center
-		self.radius = radius
+    def __init__(self, center=(0,0,0), radius=.5):
+        self.center = center
+        self.radius = radius
 
 class CapsuleShape:
-	def __init__(self, center=(0,0,0), radius=.5, height=2, axis='y'):
-		self.center = center
-		self.radius = radius
-		self.height = height
-		self.axis = axis
+    def __init__(self, center=(0,0,0), radius=.5, height=2, axis='y'):
+        self.center = center
+        self.radius = radius
+        self.height = height
+        self.axis = axis
 
 class MeshShape:
-	def __init__(self, mesh=None, center=(0,0,0)):
-		self.mesh = mesh
-		self.center = center
+    def __init__(self, mesh=None, center=(0,0,0)):
+        self.mesh = mesh
+        self.center = center
 
 
-
-class Body(NodePath):
+class PhysicsBody:
     def __init__(self, name: str, world):
-        super().__init__(name)
         self.world = world
         self.attached = False
         self._visible = False
@@ -60,30 +58,34 @@ class Body(NodePath):
             self.node_path.hide()
 
 
-class Rigidbody(Body):
+class Rigidbody(PhysicsBody):
     def __init__(self, world, shape, entity=None, mass=0, friction=.5, mask=0x1):
         super().__init__(name='Rigidbody', world=world)
         self.collision_node = BulletRigidBodyNode('Rigidbody')
         self.collision_node.setMass(mass)
         self.collision_node.setFriction(friction)
-        self.node_path = entity.getParent().attachNewNode(self.collision_node)
+        if entity:
+            self.node_path = entity.getParent().attachNewNode(self.collision_node)
+        else:
+            self.node_path = render.attachNewNode(self.collision_node)
 
         if not isinstance(shape, (list, tuple)):    # add just one shape
-            self.node_path.node().addShape(_convert_shape(shape))
-        else:   # add multiple shapes
+            self.node_path.node().addShape(_convert_shape(shape, entity))
+        else:    # add multiple shapes
             for s in shape:
-                self.node_path.node().addShape(_convert_shape(s), TransformState.makePos(s.center))
+                self.node_path.node().addShape(_convert_shape(s, entity), TransformState.makePos(s.center))
 
         self.node_path.node().setIntoCollideMask(BitMask32(mask))
-        entity.reparentTo(self.node_path)
-        self.node_path.setPos(entity.position)
-        self.attach()
-        entity.position = shape.center
+        if entity:
+            entity.reparentTo(self.node_path)
+            self.node_path.setPos(entity.position)
+            entity.position = shape.center
 
+        self.attach()
         self.node_path.setPythonTag('Entity', entity)
 
 
-def _convert_shape(shape):
+def _convert_shape(shape, entity):
     if isinstance(shape, BoxShape):
         return BulletBoxShape(Vec3(shape.size[0] / 2, shape.size[1] / 2, shape.size[2] / 2))
 
@@ -99,7 +101,7 @@ def _convert_shape(shape):
             axis = XUp
         return BulletCapsuleShape(shape.radius / 2, shape.height / 2, axis)
 
-    if isinstance(shape, MeshShape):
+    if isinstance(shape, MeshShape) and entity:
         if shape.mesh is None and entity.model:
             mesh = entity.model
         else:
@@ -110,7 +112,8 @@ def _convert_shape(shape):
         output.addGeom(geom_target)
 
         return BulletTriangleMeshShape(output, dynamic=True)
-
+    else:
+        raise Exception('To use a mesh shape you must specify at least one entity or mesh.')
 
 
 
