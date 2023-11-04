@@ -25,8 +25,11 @@ class Camera(Entity):
         self.ui_size = 40
         self._ui_lens_node = None
         self.ui = None
-        self.fov = 40
-        self.orthographic = False
+
+        self.ui = Entity(eternal=True, name='ui', scale=(self.ui_size*.5, self.ui_size*.5), add_to_scene_entities=False)
+        self.overlay = Entity(parent=self.ui, model='quad', scale=99, color=color.clear, eternal=True, z=-99, add_to_scene_entities=False)
+        # self.fov = 40
+        # self.orthographic = False
 
 
     def set_up(self):
@@ -69,8 +72,7 @@ class Camera(Entity):
         self.ui_display_region.set_camera(self.ui_camera)
         scene.ui_camera = self.ui_camera
 
-        self.ui = Entity(eternal=True, name='ui', parent=self.ui_camera, scale=(self.ui_size*.5, self.ui_size*.5))
-        self.overlay = Entity(parent=self.ui, model='quad', scale=99, color=color.clear, eternal=True, z=-99)
+        self.ui.parent = self.ui_camera
 
         # these get created when setting a shader
         self.filter_manager = None
@@ -93,8 +95,6 @@ class Camera(Entity):
 
     def fov_getter(self):
         return getattr(self, '_fov', 0)
-
-
     def fov_setter(self, value):
         value = max(1, value)
         self._fov = value
