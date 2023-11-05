@@ -212,45 +212,35 @@ class Mesh(p3d.NodePath):
             geom.addPrimitive(prim)
         else:
             if not isinstance(self.triangles[0], numbers.Real):
-                if len(self.triangles[0]) == 2:
-                    for line_segment in self.triangles:
-                        prim = Mesh._modes[self.mode](static_mode)
-                        prim.set_index_type(p3d.GeomEnums.NT_uint32)
-
-                        parray = prim.modify_vertices()
-
-                        parray.unclean_set_num_rows(len(line_segment))
-                        self._set_array_data(parray, line_segment, 'I')
-
-                        prim.close_primitive()
-                        geom.addPrimitive(prim)
-                if len(self.triangles[0]) == 3:
-                    prim = Mesh._modes[self.mode](static_mode)
+                line_segments = []
+                triangles = []
+                for tup in self.triangles:
+                    if len(tup) == 2:
+                        line_segments.append(tup)
+                    elif len(tup) == 3:
+                        triangles.extend(tup)
+                    elif len(tup) == 4:
+                        triangles.extend((tup[0], tup[1], tup[2],
+                                          tup[2], tup[3], tup[0]))
+                for line_segment in line_segments:
+                    prim = Mesh._modes['line'](static_mode)
                     prim.set_index_type(p3d.GeomEnums.NT_uint32)
 
                     parray = prim.modify_vertices()
 
-                    parray.unclean_set_num_rows(len(self.triangles) * 3)
-                    self._set_array_data(parray, self._ravel(self.triangles), 'I')
+                    parray.unclean_set_num_rows(len(line_segment))
+                    self._set_array_data(parray, line_segment, 'I')
 
                     prim.close_primitive()
                     geom.addPrimitive(prim)
-                elif len(self.triangles[0]) == 4:
+                if len(triangles) > 0:
                     prim = Mesh._modes[self.mode](static_mode)
                     prim.set_index_type(p3d.GeomEnums.NT_uint32)
 
                     parray = prim.modify_vertices()
 
-                    tris = bytearray()
-                    for quad in self.triangles:
-                        tris.extend(struct.pack(
-                            "6I",
-                            quad[0], quad[1], quad[2],
-                            quad[2], quad[3], quad[0]
-                        ))
-
-                    parray.unclean_set_num_rows(len(self.triangles) * 2)
-                    self._set_array_data(parray, tris, 'I')
+                    parray.unclean_set_num_rows(len(triangles))
+                    self._set_array_data(parray, triangles, 'I')
 
                     prim.close_primitive()
                     geom.addPrimitive(prim)
