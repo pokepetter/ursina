@@ -11,6 +11,7 @@ class EditorCamera(Entity):
         self.rotation_speed = 200
         self.pan_speed = Vec2(5, 5)
         self.move_speed = 10
+        self.target_fov = camera.fov
         self.zoom_speed = 1.25
         self.zoom_smoothing = 8
         self.rotate_around_mouse_hit = False
