@@ -25,10 +25,13 @@ class Camera(Entity):
         self.ui_size = 40
 
         self._ui_lens_node = None
+        self.perspective_lens_node = None
+        self.orthographic_lens_node = None
         self.ui = Entity(eternal=True, name='ui', scale=(self.ui_size*.5, self.ui_size*.5), add_to_scene_entities=False)
         self.overlay = Entity(parent=self.ui, model='quad', scale=99, color=color.clear, eternal=True, z=-99, add_to_scene_entities=False)
-        self.orthographic = False
-        self.fov = 40   # horizontal fov
+        # self.ready = False
+        # self._orthographic = False
+        # self._fov = 40   # horizontal fov
 
 
     def set_up(self):
@@ -49,6 +52,7 @@ class Camera(Entity):
         application.base.cam.node().set_lens(self.lens)
 
         self.orthographic = False
+        self.fov = 40   # horizontal fov
         self.clip_plane_near = 0.1
         self.clip_plane_far = 10000
 
@@ -77,12 +81,10 @@ class Camera(Entity):
         self.render_texture = None
         self.filter_quad = None
         self.depth_texture = None
-        # self.normals_texture = None
 
 
     def orthographic_getter(self):
-        return getattr(self, '_orthographic', 0)
-
+        return getattr(self, '_orthographic', False)
 
     def orthographic_setter(self, value):
         self._orthographic = value
@@ -101,8 +103,6 @@ class Camera(Entity):
 
         elif self.orthographic and hasattr(self, 'orthographic_lens'):
             self.orthographic_lens.set_film_size(value * self.aspect_ratio, value)
-
-        application.base.cam.node().set_lens((self.perspective_lens, self.orthographic_lens)[value])
 
     def clip_plane_near_getter(self):
         return self._clip_plane_near
