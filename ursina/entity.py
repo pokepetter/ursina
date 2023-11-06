@@ -1237,14 +1237,6 @@ class Entity(NodePath):
         return hit_info
 
 
-    def __setattr__(self, name, value):
-        try:
-            super().__setattr__(name, value)
-        except:
-            pass
-            # print('failed to set attribute:', name)
-
-
 
 if __name__ == '__main__':
     from ursina import *
