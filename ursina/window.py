@@ -54,7 +54,10 @@ class Window(WindowProperties):
             self.windowed_size = size
 
         if not fullscreen:
-            loadPrcFileData('', f'win-size {self.windowed_size[0]} {self.windowed_size[1]}')
+            if forced_aspect_ratio is None:
+                loadPrcFileData('', f'win-size {self.windowed_size[0]} {self.windowed_size[1]}')
+            else:
+                loadPrcFileData('', f'win-size {self.windowed_size[1] * forced_aspect_ratio} {self.windowed_size[1]}')
         else:
             loadPrcFileData('', f'win-size {self.fullscreen_size.x} {self.fullscreen_size.y}')
 
