@@ -92,7 +92,7 @@ class Button(Entity):
         self.text_entity.color = value
 
     def icon_getter(self):
-        return self.getattr('icon_entity', None)
+        return getattr(self, 'icon_entity', None)
 
     def icon_setter(self, value):
         if value and not hasattr(self, 'icon_entity'):
