@@ -28,7 +28,7 @@ for y, line in enumerate(grid):
 level_geometry.model.generate()
 level_geometry.model.set_render_mode_perspective(True)
 
-player = Button(parent=scene, model=None, text='<lime>@', position=(4,2,-.1))
+player = Button(parent=scene, text='<lime>@', position=(4,2,-.1))
 
 
 def input(key):

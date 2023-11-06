@@ -93,6 +93,8 @@ class Text(Entity):
         for tn in self.text_nodes:
             tn.remove_node()
         self.text_nodes = []
+        if not text:
+            return
 
         # check if using tags
         if (not self.use_tags
@@ -357,11 +359,12 @@ class Text(Entity):
         value = self.origin
 
         linewidths = [self.text_nodes[0].node().calcWidth(line) for line in self.lines]
-        # print('.........', linewidths)
         for tn in self.text_nodes:
             # center text horizontally
             # linenumber = abs(int(tn.getZ() / self.size / self.line_height))
             linenumber = abs(int(tn.getY() / self.size / self.line_height))
+            linenumber = clamp(linenumber, 0, len(linewidths)-1)
+
             tn.setX(tn.getX() - (linewidths[linenumber] / 2 * self.size * tn.getScale()[0] / self.size))
             # tn.setX(tn.getX() - (linewidths[linenumber] / 2 * self.size))
             # add offset based on origin/value
@@ -472,6 +475,8 @@ if __name__ == '__main__':
             test.text = '<default><image:file_icon> <red><image:file_icon> test '
             print('by', test.text)
 
+        if key == 'c':
+            test.text = ''
     # test.create_background()
     window.fps_counter.enabled = False
     print('....', Text.get_width('yolo'))

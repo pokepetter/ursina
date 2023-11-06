@@ -38,8 +38,9 @@ class ButtonList(Entity):
 
         self.text_entity.text = '\n'.join(self.button_dict.keys())
         self.text_entity.line_height = self.button_height
-        self.highlight.scale_y = 1 / len(value)
-        self.selection_marker.scale_y = 1 / len(value)
+        if len(value) > 0:
+            self.highlight.scale_y = 1 / len(value)
+            self.selection_marker.scale_y = 1 / len(value)
 
 
     def input(self, key):
@@ -83,11 +84,14 @@ class ButtonList(Entity):
         return getattr(self, '_selected', None)
     @selected.setter
     def selected(self, value):
+        self._selected = value
+        if not hasattr(self, 'selection_marker'):
+            return
+
         if not value:
             self.selection_marker.enabled = False
             return
 
-        self._selected = value
         self.selection_marker.enabled = True
         y = list(self.button_dict.keys()).index(value)
         self.selection_marker.y = -y / len(self.button_dict)
@@ -119,5 +123,7 @@ if __name__ == '__main__':
             bl.enabled = True
 
     bl.selected = 'button 7'
+
+    bl.button_dict = {}
 
     app.run()
