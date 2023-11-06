@@ -359,11 +359,12 @@ class Text(Entity):
         value = self.origin
 
         linewidths = [self.text_nodes[0].node().calcWidth(line) for line in self.lines]
-        # print('.........', linewidths)
         for tn in self.text_nodes:
             # center text horizontally
             # linenumber = abs(int(tn.getZ() / self.size / self.line_height))
             linenumber = abs(int(tn.getY() / self.size / self.line_height))
+            linenumber = clamp(linenumber, 0, len(linewidths)-1)
+
             tn.setX(tn.getX() - (linewidths[linenumber] / 2 * self.size * tn.getScale()[0] / self.size))
             # tn.setX(tn.getX() - (linewidths[linenumber] / 2 * self.size))
             # add offset based on origin/value
