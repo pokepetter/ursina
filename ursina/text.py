@@ -93,6 +93,8 @@ class Text(Entity):
         for tn in self.text_nodes:
             tn.remove_node()
         self.text_nodes = []
+        if not text:
+            return
 
         # check if using tags
         if (not self.use_tags
@@ -472,6 +474,8 @@ if __name__ == '__main__':
             test.text = '<default><image:file_icon> <red><image:file_icon> test '
             print('by', test.text)
 
+        if key == 'c':
+            test.text = ''
     # test.create_background()
     window.fps_counter.enabled = False
     print('....', Text.get_width('yolo'))
