@@ -857,6 +857,9 @@ class Entity(NodePath):
     @property
     def model_bounds(self):
         if self.model:
+            if not self.model.getTightBounds():
+                return Bounds(start=self.position, end=self.position, center=Vec3.zero, size=Vec3.zero)
+
             start, end = self.model.getTightBounds()
             start = Vec3(start)
             end = Vec3(end)
