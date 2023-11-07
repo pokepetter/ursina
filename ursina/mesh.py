@@ -279,6 +279,10 @@ class Mesh(p3d.NodePath):
         if hasattr(self, '_recipe'):
             return self._recipe
 
+        vbuf_format = self.vertex_buffer_format
+        if vbuf_format is not None:
+            vbuf_format = f'"{vbuf_format}"'
+
         return dedent(f'''
             Mesh(
                 vertices={list(self.vertices)},
@@ -292,7 +296,7 @@ class Mesh(p3d.NodePath):
                 render_points_in_3d={self.render_points_in_3d},
                 vertex_buffer={self.vertex_buffer},
                 vertex_buffer_length={self.vertex_buffer_length},
-                vertex_buffer_format="{self.vertex_buffer_format}"
+                vertex_buffer_format={vbuf_format}
             )
         ''')
 
@@ -571,6 +575,9 @@ if __name__ == '__main__':
     clear_test = Entity(position=(12,-4), model=deepcopy(quad.model))
     clear_test.model.clear()
     Text(parent=clear_test, text='.clear() test', y=1, scale=5, origin=(0,-.5))
+
+    recipe_test = Entity(position=(12,-6), model=eval(quad.model.recipe))
+    Text(parent=recipe_test, text='.recipe test', y=1, scale=5, origin=(0,-.5))
 
     window.color = color.black
     EditorCamera()
