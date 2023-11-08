@@ -32,17 +32,6 @@ class MeshModes(Enum):
 
 
 class Mesh(p3d.NodePath):
-    _formats = {
-        (0,0,0) : p3d.GeomVertexFormat.getV3(),
-        (1,0,0) : p3d.GeomVertexFormat.getV3c4(),
-        (0,1,0) : p3d.GeomVertexFormat.getV3t2(),
-        (0,0,1) : p3d.GeomVertexFormat.getV3n3(),
-        (1,0,1) : p3d.GeomVertexFormat.getV3n3c4(),
-        (1,1,0) : p3d.GeomVertexFormat.getV3c4t2(),
-        (0,1,1) : p3d.GeomVertexFormat.getV3n3t2(),
-        (1,1,1) : p3d.GeomVertexFormat.getV3n3c4t2(),
-    }
-
     _modes = {
         'triangle' : p3d.GeomTriangles,
         'tristrip' : p3d.GeomTristrips,
@@ -149,17 +138,16 @@ class Mesh(p3d.NodePath):
                 vertex_format.add_array(p3d.GeomVertexArrayFormat('color', 4, p3d.Geom.NT_float32, p3d.Geom.C_color))
                 color_attribute_index = attribute_count
                 attribute_count += 1
-            if self.uvs is not None and len(self.uvs) > 0:
+            if self.uvs is not None and len(self.uvs) > 0 and self.mode != 'line':
                 vertex_format.add_array(p3d.GeomVertexArrayFormat('texcoord', 2, p3d.Geom.NT_float32, p3d.Geom.C_texcoord))
                 uv_attribute_index = attribute_count
                 attribute_count += 1
-            if self.normals is not None and len(self.normals) > 0:
+            if self.normals is not None and len(self.normals) > 0 and self.mode != 'line':
                 vertex_format.add_array(p3d.GeomVertexArrayFormat('normal', 3, p3d.Geom.NT_float32, p3d.Geom.C_normal))
                 normal_attribute_index = attribute_count
                 attribute_count += 1
 
         vertex_format = p3d.GeomVertexFormat.register_format(vertex_format)
-
         vdata = p3d.GeomVertexData('vertex_data', vertex_format, static_mode)
 
         if self.vertex_buffer is not None:
@@ -168,6 +156,7 @@ class Mesh(p3d.NodePath):
             array_handle = vdata.modify_array(0)
             vmem = memoryview(array_handle).cast('B')
             vmem[:] = m
+
         else:
             if isinstance(self.vertices[0], numbers.Real):
                 vdata.unclean_set_num_rows(len(self.vertices) // 3)
@@ -179,10 +168,10 @@ class Mesh(p3d.NodePath):
             if self.colors is not None and len(self.colors) > 0:
                 self._set_array_data(vdata.modify_array(color_attribute_index), self._ravel(self.colors), 'f')
 
-            if self.uvs is not None and len(self.uvs) > 0:
+            if self.uvs is not None and len(self.uvs) > 0 and self.mode != 'line':
                 self._set_array_data(vdata.modify_array(uv_attribute_index), self._ravel(self.uvs), 'f')
 
-            if self.normals is not None and len(self.normals) > 0:
+            if self.normals is not None and len(self.normals) > 0 and self.mode != 'line':
                 self._set_array_data(vdata.modify_array(normal_attribute_index), self._ravel(self.normals), 'f')
 
         geom = p3d.Geom(vdata)
@@ -192,24 +181,13 @@ class Mesh(p3d.NodePath):
             prim.set_index_type(p3d.GeomEnums.NT_uint32)
 
             parray = prim.modify_vertices()
-
-            if self.mode == 'point':
-                self.triangles = [i for i in range(len(self.vertices))]
-                parray.unclean_set_num_rows(len(self.triangles))
-            elif self.mode == 'line':
-                self.triangles = [i for i in range(len(self.vertices))]
-                parray.unclean_set_num_rows(len(self.triangles))
-            elif self.mode == 'ngon':
-                self.triangles = [i for i in range(len(self.vertices))]
-                parray.unclean_set_num_rows(len(self.triangles))
-            else:
-                self.triangles = [(i, i + 1, i + 2) for i in range(0, len(self.vertices), 3)]
-                parray.unclean_set_num_rows(len(self.triangles) * 3)
-
+            self.triangles = [i for i in range(len(self.vertices))]
+            parray.unclean_set_num_rows(len(self.triangles))
             self._set_array_data(parray, self._ravel(self.triangles), 'I')
 
             prim.close_primitive()
             geom.addPrimitive(prim)
+
         else:
             if not isinstance(self.triangles[0], numbers.Real):
                 line_segments = []
