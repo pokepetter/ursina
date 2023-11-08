@@ -55,6 +55,8 @@ class Mesh(p3d.NodePath):
         self.vertex_buffer_length = vertex_buffer_length
         self.vertex_buffer_format = vertex_buffer_format
 
+        self._generated_vertices = None
+
         for var in (('vertices', vertices), ('triangles', triangles), ('colors', colors), ('uvs', uvs), ('normals', normals)):
             name, value = var
             if value is None:
@@ -82,6 +84,8 @@ class Mesh(p3d.NodePath):
         vmem[:] = a
 
     def generate(self):
+        self._generated_vertices = None
+
         if hasattr(self, 'geomNode'):
             self.geomNode.removeAllGeoms()
         else:
@@ -241,11 +245,21 @@ class Mesh(p3d.NodePath):
 
     @property
     def generated_vertices(self):
-        if not hasattr(self, "_generated_vertices"):
+        if self._generated_vertices is None:
             if self.triangles is not None and len(self.triangles) > 0:
-                return [self.vertices[i] for i in self.triangles]
+                if not isinstance(self.triangles[0], numbers.Real):
+                    tris = []
+                    for tup in self.triangles:
+                        if len(tup) == 4:
+                            tris.extend((tup[0], tup[1], tup[2],
+                                         tup[2], tup[3], tup[0]))
+                        else:
+                            tris.extend(tup)
+                    self._generated_vertices = [self.vertices[i] for i in tris]
+                else:
+                    self._generated_vertices = [self.vertices[i] for i in self.triangles]
             else:
-                return [v for v in self.vertices]
+                self._generated_vertices = self.vertices
         return self._generated_vertices
 
     @generated_vertices.setter
