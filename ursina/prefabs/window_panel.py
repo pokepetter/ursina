@@ -9,25 +9,22 @@ class Space():
 
 class WindowPanel(Draggable):
     def __init__(self, title='', content=[], **kwargs):
-        super().__init__(origin=(-0,.5), scale=(.5, Text.size*2), text=title, color=color.black)
 
         self.content = content
         self.popup = False
         self._prev_input_field = None
+        super().__init__(origin=(-0,.5), scale=(.5, Text.size*2), text=title, color=color.black)
         self._original_scale = self.scale
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
-
-        # if self.text_entity:
-        #     self.text_entity.world_scale_y = 1
 
         self.panel = Entity(parent=self, model='quad', origin=(0,.5), z=.1, color=self.color.tint(.1), collider='box')
 
         if self.popup:
             self.lock = Vec3(1,1,1)
             self.bg = Button(parent=self, z=1, scale=(999, 999), color=color.black66, highlight_color=color.black66, pressed_color=color.black66)
-            self.bg.on_click = self.close
+            self.bg.on_click = self.disable
 
         if self.content:
             self.layout()
@@ -91,21 +88,6 @@ class WindowPanel(Draggable):
         self.panel.origin = (0, .5)
 
 
-    def on_enable(self):
-        pass
-        try:
-            if self.popup:
-                self.bg.enabled = True
-                # self.animate_scale(self._original_scale, duration=.1)
-        except:
-            pass
-
-    def close(self):
-        if self.popup:
-            self.bg.enabled = False
-        # self.animate_scale_y(0, duration=.1)
-        invoke(setattr, self, 'enabled', False, delay=.2)
-
 
 if __name__ == '__main__':
     '''
@@ -123,7 +105,12 @@ if __name__ == '__main__':
             Slider(),
             ButtonGroup(('test', 'eslk', 'skffk'))
             ),
+        popup=True
         )
     wp.y = wp.panel.scale_y / 2 * wp.scale_y    # center the window panel
+
+    def input(key):
+        if key == 'space':
+            wp.enabled = True
 
     app.run()

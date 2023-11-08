@@ -11,7 +11,7 @@ import json
 from ursina.scripts.property_generator import generate_properties_for_class
 @generate_properties_for_class()
 class GridEditor(Entity):
-    def __init__(self, size=(32,32), palette=(' ', '#', '|', 'o'), canvas_color=color.white, **kwargs):
+    def __init__(self, size=(32,32), palette=(' ', '#', '|', 'o'), canvas_color=color.white, edit_mode=True, **kwargs):
         super().__init__(parent=camera.ui, position=(-.45,-.45), scale=.9, model='quad', origin=(-.5,-.5), visible_self=False)
         self.w, self.h = int(size[0]), int(size[1])
         self.canvas = Entity(parent=self, model='quad', origin=(-.5,-.5), shader=unlit_shader, scale=(self.w/self.h, 1), color=canvas_color)
@@ -36,7 +36,7 @@ class GridEditor(Entity):
         self.rect_tool = Entity(parent=self.canvas, model=Quad(0, mode='line', thickness=2), color=color.lime, z=-.01, origin=(-.5,-.5), start=Vec2(0,0), end=Vec2(0,0))
         # self.selection_mover = Draggable(parent=self.canvas, model='circle', color=color.blue, origin=(.5,.5), step=(1/self.w,1/self.h,0), enabled=False)
         self.selection_matrix = [[0 for y in range(self.h)] for x in range(self.w)]
-        self.temp_paste_layer = Entity(parent=self.cursor, model='quad', origin=(-.5,-.5), z=-.02, enabled=1)
+        self.temp_paste_layer = Entity(parent=self.cursor, model='quad', origin=(-.5,-.5), z=-.02, enabled=False)
         Entity(parent=self.temp_paste_layer, model='wireframe_quad', origin=self.temp_paste_layer.origin, color=color.black)
         self.is_in_paste_mode = False
 
@@ -59,7 +59,7 @@ class GridEditor(Entity):
             # scale=.75,
             )
 
-        self.edit_mode = True
+        self.edit_mode = edit_mode
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
@@ -72,10 +72,11 @@ class GridEditor(Entity):
 
         self.palette_parent = Entity(parent=self, position=(-.3,.5,-1), shader=unlit_shader)
         for i, e in enumerate(value):
+            button_text = ''
             if isinstance(e, str):
-                i = e
+                button_text = e
 
-            b = Button(parent=self.palette_parent, scale=.05, text=i, model='quad', color=color._32, shader=unlit_shader)
+            b = Button(parent=self.palette_parent, scale=.05, text=button_text, model='quad', color=color._32, shader=unlit_shader)
             b.on_click = Func(setattr, self, 'selected_char', e)
             b.tooltip = Tooltip(str(e))
 
@@ -457,11 +458,14 @@ class PixelEditor(GridEditor):
 
     @property
     def texture(self):
+        if not hasattr(self, 'canvas'):
+            return None
         return self.canvas.texture
 
     @texture.setter
     def texture(self, value):
-        self.canvas.texture = value
+        if hasattr(self, 'canvas'):
+            self.canvas.texture = value
 
 
 
@@ -521,7 +525,7 @@ if __name__ == '__main__':
     # '''
     # same as the pixel editor, but with text.
     # '''
-    # from ursina.prefabs.grid_editor import ASCIIEditor
-    # ASCIIEditor(x=0, scale=.1)
+    from ursina.prefabs.grid_editor import ASCIIEditor
+    ASCIIEditor(x=0, scale=.1)
 
     app.run()

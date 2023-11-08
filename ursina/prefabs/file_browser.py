@@ -3,8 +3,8 @@ from ursina import *
 
 class FileButton(Button):
     def __init__(self, load_menu, **kwargs):
-        super().__init__(model='quad', highlight_color=color.dark_gray, scale=(.875,.025), pressed_scale=1, selected=False)
         self.load_menu = load_menu
+        super().__init__(model='quad', highlight_color=color.dark_gray, scale=(.875,.025), pressed_scale=1, selected=False)
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -52,6 +52,7 @@ class FileButton(Button):
 class FileBrowser(Entity):
     def __init__(self, **kwargs):
 
+        self.ready = False
         self.file_types = ['.*', ]
         self.start_path = Path('.').resolve()
         super().__init__(parent=camera.ui, y=.45)
@@ -80,6 +81,7 @@ class FileBrowser(Entity):
 
         self.can_scroll_up_indicator = Entity(parent=self, model='quad', texture='arrow_down', rotation_z=180, scale=(.05,.05), y=-.0765, z=-.1, color=color.dark_gray, enabled=False, add_to_scene_entities=False)
         self.can_scroll_down_indicator = Entity(parent=self, model='quad', texture='arrow_down', scale=(.05,.05), y=(-self.max_buttons*.025)-.104, z=-.1, color=color.dark_gray, enabled=False, add_to_scene_entities=False)
+        self.ready = True
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
@@ -87,6 +89,7 @@ class FileBrowser(Entity):
         if self.enabled:
             self.path = self.start_path     # this will populate the list
             self.scroll = 0
+
 
 
     def input(self, key):
@@ -125,6 +128,8 @@ class FileBrowser(Entity):
     @path.setter
     def path(self, value):
         self._path = value
+        if not self.ready:
+            return
         self.address_bar.text_entity.text = '<light_gray>' + str(value.resolve())
 
 

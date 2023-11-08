@@ -115,10 +115,10 @@ class Entity(NodePath):
             setattr(self, key, value)
 
         self.enabled = enabled
-        if self.enabled and hasattr(self, 'on_enable') and callable(self.on_enable):
+        if enabled and hasattr(self, 'on_enable'):
             self.on_enable()
 
-        elif not self.enabled and hasattr(self, 'on_disable') and callable(self.on_disable):
+        elif not enabled and hasattr(self, 'on_disable'):
             self.on_disable()
 
         # look for @every decorator and start a looping Sequence for decorated method
@@ -163,15 +163,11 @@ class Entity(NodePath):
         original_value = self.enabled
         self._enabled = value
 
-        if value and not original_value and hasattr(self, 'on_enable') and callable(self.on_enable):
-            print('----- try calling on_enable')
+        if value and not original_value and hasattr(self, 'on_enable'):
             self.on_enable()
-            print('----- successfully called on_enable')
 
-        if not value and original_value and hasattr(self, 'on_disable') and callable(self.on_disable):
-            print('----- try calling on_disable')
+        if not value and original_value and hasattr(self, 'on_disable'):
             self.on_disable()
-            print('----- successfully called on_disable')
 
         if value:
             if hasattr(self, 'is_singleton') and not self.is_singleton():
@@ -179,10 +175,6 @@ class Entity(NodePath):
         else:
             if hasattr(self, 'is_singleton') and not self.is_singleton():
                 self.stash()
-
-
-
-
 
 
     def model_getter(self):
@@ -857,6 +849,9 @@ class Entity(NodePath):
     @property
     def model_bounds(self):
         if self.model:
+            if not self.model.getTightBounds():
+                return Bounds(start=self.world_position, end=self.world_position, center=Vec3.zero, size=Vec3.zero)
+
             start, end = self.model.getTightBounds()
             start = Vec3(start)
             end = Vec3(end)
@@ -1240,14 +1235,6 @@ class Entity(NodePath):
         hit_info.world_normal = Vec3(*collision.get_surface_normal(scene).normalized())
 
         return hit_info
-
-
-    def __setattr__(self, name, value):
-        try:
-            super().__setattr__(name, value)
-        except:
-            pass
-            # print('failed to set attribute:', name)
 
 
 
