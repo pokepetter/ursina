@@ -57,6 +57,14 @@ class PhysicsBody:
         else:
             self.node_path.hide()
 
+    @property
+    def position(self):
+        return Vec3(*self.node_path.getPos())
+
+    @position.setter
+    def position(self, value):
+    	self.node_path.setPos(Vec3(value))
+
 
 class Rigidbody(PhysicsBody):
     def __init__(self, world, shape, entity=None, mass=0, friction=.5, mask=0x1):
@@ -64,22 +72,23 @@ class Rigidbody(PhysicsBody):
         self.collision_node = BulletRigidBodyNode('Rigidbody')
         self.collision_node.setMass(mass)
         self.collision_node.setFriction(friction)
+
         if entity:
             self.node_path = entity.getParent().attachNewNode(self.collision_node)
+            entity.reparentTo(self.node_path)
+            self.position = entity.position
+            entity.position = shape.center
         else:
             self.node_path = render.attachNewNode(self.collision_node)
+        self.node_path.setPos(self.position)
+        self.node_path.node().setIntoCollideMask(BitMask32(mask))
+
 
         if not isinstance(shape, (list, tuple)):    # add just one shape
             self.node_path.node().addShape(_convert_shape(shape, entity))
         else:    # add multiple shapes
             for s in shape:
                 self.node_path.node().addShape(_convert_shape(s, entity), TransformState.makePos(s.center))
-
-        self.node_path.node().setIntoCollideMask(BitMask32(mask))
-        if entity:
-            entity.reparentTo(self.node_path)
-            self.node_path.setPos(entity.position)
-            entity.position = shape.center
 
         self.attach()
         self.node_path.setPythonTag('Entity', entity)
