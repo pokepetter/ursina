@@ -122,7 +122,7 @@ def _convert_shape(shape, entity):
 
         return BulletTriangleMeshShape(output, dynamic=True)
     else:
-        raise Exception('To use a mesh shape you must specify at least one entity or mesh.')
+        raise Exception('To use a mesh shape you must specify at least one entity or mesh!')
 
 
 
