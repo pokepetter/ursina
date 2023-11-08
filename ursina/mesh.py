@@ -71,7 +71,7 @@ class Mesh(p3d.NodePath):
             if value is None:
                 setattr(self, name, [])
 
-        if self.vertices != [] or self.vertex_buffer is not None:
+        if (self.vertices is not None and len(self.vertices) > 0) or self.vertex_buffer is not None:
             self.generate()
 
     def _ravel(self, data):
