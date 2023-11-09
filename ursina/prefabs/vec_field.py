@@ -34,7 +34,7 @@ class VecField(Button):
             field.grid = Entity(parent=field, model='wireframe_quad', color=color.dark_gray, z=-1)
             field.text_field.scale *= .75
             field.on_submit = self.convert_text_to_vector
-            field.on_value_changed = self.convert_text_to_vector
+            # field.on_value_changed = self.convert_text_to_vector
             field.text_field.shortcuts['select_all'] = ('double click', )
             field.text_field.shortcuts['select_word'] = []
             self.fields.append(field)
@@ -71,13 +71,14 @@ class VecField(Button):
     def value(self, value):
         self._value = value
         if len(value) == 1:
-            value = value[0]
+            value = str(value[0])
 
         if self.on_value_changed is not None:
             self.on_value_changed()
 
         for i, field in enumerate(self.fields):
-            field.text = value[i][:self.character_limit]
+            # print('---------', field.text, str(value[i]))
+            field.text = str(value[i])[:self.character_limit]
 
 
     def input(self, key):
