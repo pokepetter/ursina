@@ -313,7 +313,8 @@ class GridEditor(Entity):
         # find the indices of the rows and columns with True values
         rows = [i for i in range(len(self.selection_matrix)) if any(self.selection_matrix[i])]
         cols = [j for j in range(len(self.selection_matrix[0])) if any(self.selection_matrix[i][j] for i in range(len(self.selection_matrix)))]
-
+        if not rows or not cols:
+            return
         # crop the matrix based on the boolean values
         start_x = min(rows)
         start_y = min(cols)
@@ -323,7 +324,7 @@ class GridEditor(Entity):
         selection_height = (max(cols) + 1) - start_y
         # cropped_matrix = [[matrix[i][j] for j in range(start_y, max(cols) + 1)] for i in range(start_x, max(rows) + 1)]
 
-        copy_data = [[tuple(self.grid[start_x+x][start_y+y]) if self.selection_matrix[x][y] else None for y in range(selection_height)] for x in range(selection_width)]
+        copy_data = [[tuple(self.grid[start_x+x][start_y+y]) for y in range(selection_height)] for x in range(selection_width)]
         pyperclip.copy(json.dumps(dict(data=copy_data)))
 
 
@@ -377,19 +378,18 @@ class GridEditor(Entity):
 
                 self.grid[x+x_offset][y+y_offset] = pixel
 
+        self.clear_selection()
         self.render()
 
 
     def clear_selection(self):
         self.selection_matrix = [[0 for y in range(self.h)] for x in range(self.w)]
         self.selection_renderer.model.clear()
-        print('cleare selection')
-        # print('seofijsoefisjeofij', self.selection_renderer.enabled)
+        print('clear selection')
 
 
     def render_selection(self):
         quad = load_model('quad', use_deepcopy=True)
-        # self.selection_renderer.enabled = True
         self.selection_renderer.model.clear(False)
         verts = []
         for x in range(self.w):
@@ -404,7 +404,6 @@ class GridEditor(Entity):
                     if y >= self.h-1 or not self.selection_matrix[x][y+1]:
                         verts.extend((Vec3(x,y+1,0), Vec3(x+1,y+1,0)))
 
-        # if verts:
         self.selection_renderer.model.vertices = [v+Vec3(-.5,-.5,0) for v in verts]
         self.selection_renderer.model.triangles = [(i, i+1) for i in range(0, len(verts), 2)]
         self.selection_renderer.model.generate()
@@ -423,7 +422,7 @@ class PixelEditor(GridEditor):
         self.canvas.texture.filtering = None
         self.cursor.scale = Vec2(self.brush_size / self.w, self.brush_size / self.h)
         self.help_icon.scale = self.help_icon.target_scale
-        # self.selection_mover.world_scale = .5
+        self.selection_renderer.scale=(1/self.w,1/self.h)
 
         if clear_undo_stack:
             self.undo_stack.clear()
