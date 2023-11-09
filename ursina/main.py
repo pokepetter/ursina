@@ -127,7 +127,7 @@ class Ursina(ShowBase):
                 import builtins
                 from ursina import Entity, TextField, color
                 window.console = Entity(parent=window.editor_ui, position=window.top_left, z=-999, eternal=True)
-                window.console.text_field = TextField(parent=window.console, scale=.75, font='VeraMono.ttf', max_lines=20, position=(0,0), register_mouse_input=True, text_input=None, scroll_amount=1, eternal=True)
+                window.console.text_field = TextField(parent=window.console, scale=.75, font='VeraMono.ttf', max_lines=20, position=(0,0), register_mouse_input=True, text_input=None, eternal=True)
                 window.console.text_field.bg.color = color.black66
                 window.console.text_field.bg.scale_x = 1.5
                 def _custom_print(*args, **kwargs):  # makes print() poutput to the in-game console instead of the terminal if use_ingame_console is True
