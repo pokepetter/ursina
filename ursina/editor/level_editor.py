@@ -83,6 +83,9 @@ class LevelEditor(Entity):
         if not self.current_scene:
             return []
         return self.current_scene.entities
+    @entities.setter
+    def entities(self, value):
+        self.current_scene.entities = value
 
     @property
     def selection(self):
@@ -319,31 +322,35 @@ class LevelEditorScene:
             for line in reader:
                 args = ', '.join([f'{key}={value}' for key, value in line.items() if value and not key=='class'])
                 # print('eval:', f'{line["class"]}(parent=self.scene_parent, {args})')
+                e = None
                 try:
                     e = eval(f'{line["class"]}(parent=self.scene_parent, {args})', globals(), locals())
+                    self.entities.append(e)
                 except Exception as e:
                     print_warning('Error loading scene:', self.path.name, e, 'line:\n', f'{line["class"]}(parent=self.scene_parent, {args})')
                     try:
                         e = eval(f'{line["class"]}(parent=self.scene_parent)')
+                        self.entities.append(e)
                     except:
                         print('missing/invalid class:', line['class'])
                         # error_cube = Entity(model='cube', color=color.magenta)
                         # for key in ('parent', 'position', 'rotation', 'scale'):
                         #     if line[key]: setattr(error_cube, key, line[key]
 
-                self.entities.append(e)
-                for e in self.entities:
-                    if not e.shader:
-                        e.shader = lit_with_shadows_shader
-                    e.selectable = True
+                # if e:
 
-                    if not hasattr(e, 'collider_type'):
-                        e.collider_type = None
+            for e in self.entities:
+                if not e.shader:
+                    e.shader = lit_with_shadows_shader
+                e.selectable = True
 
-                    e.original_parent = e.parent
-                    if e.model.name == 'cube':
-                        e.collider = 'box'
-                        e.collision = False
+                if not hasattr(e, 'collider_type'):
+                    e.collider_type = None
+
+                e.original_parent = e.parent
+                if e.model and e.model.name == 'cube':
+                    e.collider = 'box'
+                    e.collision = False
 
 
         if self.scene_parent:
@@ -444,26 +451,30 @@ axis_colors = {
     'z' : color.cyan
 }
 
-if not load_model('arrow', application.internal_models_compressed_folder):
-    p = Entity(enabled=False)
-    Entity(parent=p, model='cube', scale=(1,.05,.05))
-    Entity(parent=p, model=Cone(4, direction=(1,0,0)), x=.5, scale=.2)
-    arrow_model = p.combine()
-    arrow_model.save('arrow.ursinamesh', path=application.internal_models_compressed_folder)
+# if not load_model('arrow', application.internal_models_compressed_folder):
+p = Entity(enabled=False)
+Entity(parent=p, model='cube', scale=(1,.05,.05))
+Entity(parent=p, model=Cone(4), x=.5, scale=.2, rotation=(0,90,0))
+arrow_model = p.combine()
+
+    # arrow_model.save('arrow.ursinamesh', folder=application.internal_models_compressed_folder)
 
 if not load_model('scale_gizmo', application.internal_models_compressed_folder):
     p = Entity(enabled=False)
     Entity(parent=p, model='cube', scale=(.05,.05,1))
     Entity(parent=p, model='cube', z=.5, scale=.2)
-    arrow_model = p.combine()
-    arrow_model.save('scale_gizmo.ursinamesh', path=application.internal_models_compressed_folder)
+    scale_gizmo_model = p.combine()
+    scale_gizmo_model.save('scale_gizmo.ursinamesh', folder=application.internal_models_compressed_folder)
 
 
 class GizmoArrow(Draggable):
-    def __init__(self, model='arrow', collider='box', **kwargs):
-        super().__init__(model=model, origin_x=-.55, always_on_top=True, render_queue=1, is_gizmo=True, shader=unlit_shader, **kwargs)
-        for key, value in kwargs.items():
-            setattr(self, key, value)
+    def __init__(self, model=None, collider='box', **kwargs):
+        super().__init__(model=None, origin_x=-.55, always_on_top=True, render_queue=1, is_gizmo=True, shader=unlit_shader, **kwargs)
+        if not model:
+            self.model = copy(arrow_model)
+        self.origin_x=-.55
+        # for key, value in kwargs.items():
+        #     setattr(self, key, value)
 
         self.record_undo = True     # this can be set to False when moving this though code for example, and you don't want it to record undo.
         self.original_rotation = self.rotation
@@ -2358,11 +2369,11 @@ class PokeShape(Entity):
 
     gizmo_color = color.violet
 
-    def __init__(self, points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,.5), Vec3(-.5,0,.5)], **kwargs):
+    def __init__(self, points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,.5), Vec3(-.5,0,.5)], edit_mode=False, **kwargs):
         self.original_parent = LEVEL_EDITOR
         self.selectable = True
         self.highlight_color = color.blue
-        super().__init__(**__class__.default_values | kwargs)
+        super().__init__()
         self.model = Mesh()
 
         self.point_gizmos = LoopingList([Entity(parent=self, original_parent=self, position=e, selectable=False, name='PokeShape_point', is_gizmo=True) for e in points])
@@ -2370,8 +2381,12 @@ class PokeShape(Entity):
         self.add_collider = False
         self.wall_parent = None
         self._edit_mode = False
+        kwargs = __class__.default_values | kwargs
+        for key, value in kwargs.items():
+            setattr(self, key, value)
         self.generate()
-        self.edit_mode = False
+        self.edit_mode = edit_mode
+
 
 
     def draw_inspector(self):
@@ -2459,15 +2474,16 @@ class PokeShape(Entity):
 
     @property
     def points(self):
+        if not hasattr(self, 'point_gizmos'):
+            return []
         return [e.position for e in self.point_gizmos]
 
     @property
     def edit_mode(self):
-        return self._edit_mode
+        return getattr(self, '_edit_mode', False)
 
     @edit_mode.setter
     def edit_mode(self, value):
-
         # print('set edit mode', value)
         self._edit_mode = value
         if value:
@@ -2493,13 +2509,13 @@ class PokeShape(Entity):
             self.collider = 'mesh'
         LEVEL_EDITOR.render_selection()
 
-    @property
-    def wall_height(self):
-        return self._wall_height
-    @wall_height.setter
-    def wall_height(self, value):
-        self._wall_height = value
-        self.generate()
+    # @property
+    # def wall_height(self):
+    #     return self._wall_height
+    # @wall_height.setter
+    # def wall_height(self, value):
+    #     self._wall_height = value
+    #     self.generate()
 
     def update(self):
         if self.edit_mode:
@@ -2555,8 +2571,10 @@ class PokeShape(Entity):
             print_info('can\'t set model of PokeShape')
             return
 
-        super().__setattr__(name, value)
-
+        try:
+            super().__setattr__(name, value)
+        except:
+            pass
 
 
 class PipeEditor(Entity):
@@ -2732,13 +2750,14 @@ if __name__ == '__main__':
 
     level_editor = LevelEditor()
     level_editor.goto_scene(0,0)
+    # PokeShape(points=(Vec3(0,0,0), Vec3(1,0,0), Vec3(1,0,1)))
+
 
 
 
     level_editor.class_menu.available_classes |= {'WhiteCube': WhiteCube, 'EditorCamera':EditorCamera, }
 
     app.run()
-
 
     # level_editor.prefabs.append(Tree)
     # level_editor.spawner.update_menu()
