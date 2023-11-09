@@ -14,7 +14,6 @@ class LevelEditor(Entity):
         self.scenes = [[LevelEditorScene(x, y, f'untitled_scene[{x},{y}]') for y in range(8)] for x in range(8)]
         self.current_scene = None
 
-
         self.grid = Entity(parent=self, model=Grid(16,16), rotation_x=90, scale=64, collider='box', color=color.white33, enabled=False)
         self.origin_mode = 'center'
         self.editor_camera = EditorCamera(parent=self, rotation_x=20, eternal=False, rotation_smoothing=0)
@@ -25,7 +24,6 @@ class LevelEditor(Entity):
 
 
         self.ui = Entity(parent=camera.ui, name='LEVEL_EDITOR.ui')
-
         self.point_renderer = Entity(parent=self, model=Mesh([], mode='point', thickness=.1, render_points_in_3d=True), texture='circle_outlined', always_on_top=True, unlit=True, render_queue=1)
         self.cubes = [Entity(wireframe=True, color=color.azure, parent=self, enabled=True) for i in range(128)] # max selection
 
@@ -53,6 +51,7 @@ class LevelEditor(Entity):
 
         self.prefab_folder = application.asset_folder / 'prefabs'
         self.built_in_prefabs = [ClassSpawner, WhiteCube, TriplanarCube, Pyramid, PokeShape]
+        self.prefabs = []
         self.spawner = Spawner()
         self.deleter = Deleter()
         self.grouper = Grouper()
@@ -75,7 +74,7 @@ class LevelEditor(Entity):
         self.help = Help()
 
         self._edit_mode = True
-        self.sky = Sky
+        self.sky = Sky()
 
 
     @property
@@ -600,7 +599,7 @@ class Gizmo(Entity):
     def update(self):
         if held_keys['r'] or held_keys['s']:
             return
-        # self.world_scale = distance(self.world_position, camera.world_position) * camera.fov * .0005
+        self.world_scale = distance(self.world_position, camera.world_position) * camera.fov * .0005
 
         for i, axis in enumerate('xyz'):
             if self.subgizmos[axis].dragging:
@@ -1298,7 +1297,7 @@ class TriplanarCube(Entity):
 
     def __init__(self, **kwargs):
         super().__init__(**__class__.default_values | kwargs)
-        self.set_shader_input('top_texture', load_texture('brick'))
+        self.set_shader_input('side_texture', load_texture('brick'))
 
     def __deepcopy__(self, memo):
         return eval(repr(self))
@@ -1337,7 +1336,7 @@ class Spawner(Entity):
         import_all_classes(LEVEL_EDITOR.prefab_folder, debug=True)
         # LEVEL_EDITOR.prefabs =
 
-        for i, prefab in enumerate(LEVEL_EDITOR.built_in_prefabs):
+        for i, prefab in enumerate(LEVEL_EDITOR.built_in_prefabs + LEVEL_EDITOR.prefabs):
             button = Button(parent=self.ui, scale=.075/2, text=' ', text_size=.5, on_click=Func(self.spawn_entity, prefab))
             if hasattr(prefab, 'icon'):
                 button.icon = prefab.icon
@@ -1565,7 +1564,8 @@ class LevelMenu(Entity):
 
 
     def input(self, key):
-        if held_keys['shift'] and key == 'm':
+        combined_key = input_handler.get_combined_key(key)
+        if combined_key == 'shift+m':
             self.menu.enabled = not self.menu.enabled
 
         # if key == 'left mouse down' and self.menu.hovered:
@@ -1876,10 +1876,13 @@ class Inspector(Entity):
                     # print('use instance value,', instance_value)
                     value = instance_value
 
-                if isinstance(value, str):
-                    b = InspectorButton(parent=self.shader_inputs_parent, text=f'   {name}:', highlight_color=color.black90, y=-i)
+                if isinstance(value, str):  # texture
+                    b = InspectorButton(parent=self.shader_inputs_parent, text=f' {name}: {value}', highlight_color=color.black90, y=-i)
                     b.text_entity.scale *= .6
-                    b.on_click = Sequence(Func(setattr, LEVEL_EDITOR.menu_handler, 'state', 'texture_menu'), Func(setattr, LEVEL_EDITOR.texture_menu, 'target_attr', name))
+                    b.on_click = Sequence(
+                        Func(setattr, LEVEL_EDITOR.menu_handler, 'state', 'texture_menu'),
+                        Func(setattr, LEVEL_EDITOR.texture_menu, 'target_attr', name)
+                        )
 
 
                 if isinstance(value, Vec2) or (hasattr(value, '__len__') and len(value) == 2):
@@ -1903,6 +1906,7 @@ class Inspector(Entity):
                 elif isinstance(value, Color):
                     color_field = ColorField(parent=self.shader_inputs_parent, text=f' {name}', y=-i, is_shader_input=True, attr_name=name, value=value)
                     color_field.text_entity.scale *= .6
+
 
                 i += 1
 
@@ -1977,8 +1981,8 @@ class MenuHandler(Entity):
     @state.setter
     def state(self, value):
         target_state = self.states[value]
+        print('toggle:', value, 'from:', self._state)
         if self._state == value:
-            # print('toggle:', target_state, 'from:', target_state.enabled, not target_state.enabled)
             target_state.enabled = not target_state.enabled
             return
 
@@ -2072,12 +2076,13 @@ class TextureMenu(AssetMenu):
             for e in LEVEL_EDITOR.selection:
                 e.texture = name
         else:
-            # LEVEL_EDITOR.current_scene.undo.record_undo([(LEVEL_EDITOR.entities.index(e), 'texture', e.texture, name) for e in LEVEL_EDITOR.selection])
+            LEVEL_EDITOR.current_scene.undo.record_undo([(LEVEL_EDITOR.entities.index(e), self.target_attr, e.get_shader_input(self.target_attr), name) for e in LEVEL_EDITOR.selection])
             for e in LEVEL_EDITOR.selection:
                 e.set_shader_input(self.target_attr, name)
 
         LEVEL_EDITOR.inspector.update_inspector()
         LEVEL_EDITOR.menu_handler.state = 'None'
+
 
 class ShaderMenu(AssetMenu):
     def on_enable(self):
@@ -2281,7 +2286,8 @@ class Duplicator(Entity):
 
 
     def input(self, key):
-        if held_keys['shift'] and key == 'd' and LEVEL_EDITOR.selection:
+        combined_key = input_handler.get_combined_key(key)
+        if combined_key == 'shift+d' and LEVEL_EDITOR.selection:
             # print('duplicate')
 
             LEVEL_EDITOR.menu_handler.state = 'None'
@@ -2351,18 +2357,21 @@ class PokeShape(Entity):
         subdivisions=0,
         smoothing_distance=.1,
         points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,.5), Vec3(-.5,0,.5)],
-        texture_scale=Vec2(.125),
         collider_type=None,
+        texture='grass',
+        texture_scale=Vec2(.125, .125),
+        # shader_inputs={'side_texture':Func(load_texture, 'grass'), }
 
     ) # combine dicts
 
     gizmo_color = color.violet
 
     def __init__(self, points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,.5), Vec3(-.5,0,.5)], **kwargs):
+        kwargs = __class__.default_values | kwargs
         self.original_parent = LEVEL_EDITOR
         self.selectable = True
         self.highlight_color = color.blue
-        super().__init__(**__class__.default_values | kwargs)
+        super().__init__(**kwargs)
         self.model = Mesh()
 
         self.point_gizmos = LoopingList([Entity(parent=self, original_parent=self, position=e, selectable=False, name='PokeShape_point', is_gizmo=True) for e in points])
@@ -2373,12 +2382,16 @@ class PokeShape(Entity):
         self.generate()
         self.edit_mode = False
 
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
 
     def draw_inspector(self):
         return {'edit_mode': bool, 'wall_height': float, 'subdivisions':int, 'smoothing_distance':float}
 
 
     def generate(self):
+        print('--------------', self.texture_scale)
         import tripy
         self.point_gizmos = LoopingList([e for e in self.point_gizmos if e])
         polygon = LoopingList(Vec2(*e.get_position(relative_to=self).xz) for e in self.point_gizmos)
@@ -2400,7 +2413,7 @@ class PokeShape(Entity):
         self.model.uvs = [Vec2(v[0],v[2])*1 for v in self.model.vertices]
         self.model.normals = [Vec3(0,1,0) for i in range(len(self.model.vertices))]
         self.model.generate()
-        self.texture = 'grass'
+        # self.texture = 'grass'
         # [destroy(e) for e in self.wall_parent.children]
         # print('-------------', self.make_wall, self.wall_parent)
         if self.wall_parent:
@@ -2447,6 +2460,7 @@ class PokeShape(Entity):
                 self.add_new_point_renderer.model.vertices.append(lerp(self.point_gizmos[i].world_position, self.point_gizmos[i+1].world_position, .5))
                 # self.add_new_point_renderer.model.vertices.append(self.point_gizmos[i].world_position)
             self.add_new_point_renderer.model.generate()
+
 
     def __deepcopy__(self, memo):
         changes = self.get_changes(__class__)
@@ -2509,7 +2523,8 @@ class PokeShape(Entity):
 
 
     def input(self, key):
-        if key == 'tab' and not held_keys['control'] and not held_keys['shift']:
+        combined_key = input_handler.get_combined_key(key)
+        if combined_key == 'tab':
             if not LEVEL_EDITOR.selection:
                 self.edit_mode = False
 
@@ -2621,7 +2636,8 @@ class PipeEditor(Entity):
 
 
     def input(self, key):
-        if key == 'tab' and not held_keys['control'] and not held_keys['shift']:
+        combined_key = input_handler.get_combined_key(key)
+        if combined_key == 'tab':
             if self in LEVEL_EDITOR.selection or True in [e in LEVEL_EDITOR.selection for e in self.point_gizmos]:
                 self.edit_mode = not self.edit_mode
 
