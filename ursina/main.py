@@ -126,8 +126,8 @@ class Ursina(ShowBase):
             if 'use_ingame_console' in kwargs and kwargs['use_ingame_console']:
                 import builtins
                 from ursina import Entity, TextField, color
-                window.console = Entity(parent=window.editor_ui, position=window.top_left, eternal=True)
-                window.console.text_field = TextField(parent=window.console, scale=.75, font='VeraMono.ttf', max_lines=20, position=(0,0), register_mouse_input=True, text_input=None, eternal=True)
+                window.console = Entity(parent=window.editor_ui, position=window.top_left, z=-999, eternal=True)
+                window.console.text_field = TextField(parent=window.console, scale=.75, font='VeraMono.ttf', max_lines=20, position=(0,0), register_mouse_input=True, text_input=None, scroll_amount=1, eternal=True)
                 window.console.text_field.bg.color = color.black66
                 window.console.text_field.bg.scale_x = 1.5
                 def _custom_print(*args, **kwargs):  # makes print() poutput to the in-game console instead of the terminal if use_ingame_console is True
@@ -137,6 +137,8 @@ class Ursina(ShowBase):
                     window.console.text_field.cursor.y = window.console.text_field.text.count('\n')
                     window.console.text_field.cursor.x = 999
                     window.console.text_field.add_text(f'\n{content}')
+                    window.console.text_field.scroll_to_bottom(1)
+                    window.console.text_field.render()
                 builtins.print = _custom_print
 
                 def _console_text_input(key):
@@ -308,7 +310,7 @@ class Ursina(ShowBase):
 
 if __name__ == '__main__':
     from ursina import *
-    app = Ursina()
+    app = Ursina(use_ingame_console=True)
     def input(key):
         print(key)
     app.run()
