@@ -313,7 +313,8 @@ class GridEditor(Entity):
         # find the indices of the rows and columns with True values
         rows = [i for i in range(len(self.selection_matrix)) if any(self.selection_matrix[i])]
         cols = [j for j in range(len(self.selection_matrix[0])) if any(self.selection_matrix[i][j] for i in range(len(self.selection_matrix)))]
-
+        if not rows or not cols:
+            return
         # crop the matrix based on the boolean values
         start_x = min(rows)
         start_y = min(cols)
