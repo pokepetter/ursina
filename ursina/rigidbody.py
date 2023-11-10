@@ -65,6 +65,25 @@ class PhysicsBody:
     def position(self, value):
     	self.node_path.setPos(Vec3(value))
 
+    @property
+    def rotation(self):
+        rotation = self.node_path.getHpr()
+        return Vec3(rotation[1], rotation[0], rotation[2])
+
+    @rotation.setter
+    def rotation(self, value):
+    	self.node_path.setHpr(Vec3(value[1], value[0], value[2]))
+
+    @property
+    def scale(self):
+        scale = self.node_path.getScale()
+        return Vec3(scale[0], scale[1], scale[2])
+
+    @scale.setter
+    def scale(self, value):
+        value = [e if e!=0 else .001 for e in value]
+        self.node_path.setScale(value[0], value[1], value[2])
+
 
 class Rigidbody(PhysicsBody):
     def __init__(self, world, shape, entity=None, mass=0, friction=.5, mask=0x1):
@@ -78,9 +97,9 @@ class Rigidbody(PhysicsBody):
             entity.reparentTo(self.node_path)
             self.position = entity.position
             entity.position = shape.center
+            self.rotation = entity.rotation
         else:
             self.node_path = render.attachNewNode(self.collision_node)
-        self.node_path.setPos(self.position)
         self.node_path.node().setIntoCollideMask(BitMask32(mask))
 
 
