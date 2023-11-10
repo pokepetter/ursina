@@ -57,6 +57,33 @@ class PhysicsBody:
         else:
             self.node_path.hide()
 
+    @property
+    def position(self):
+        return Vec3(*self.node_path.getPos())
+
+    @position.setter
+    def position(self, value):
+    	self.node_path.setPos(Vec3(value))
+
+    @property
+    def rotation(self):
+        rotation = self.node_path.getHpr()
+        return Vec3(rotation[1], rotation[0], rotation[2])
+
+    @rotation.setter
+    def rotation(self, value):
+    	self.node_path.setHpr(Vec3(value[1], value[0], value[2]))
+
+    @property
+    def scale(self):
+        scale = self.node_path.getScale()
+        return Vec3(scale[0], scale[1], scale[2])
+
+    @scale.setter
+    def scale(self, value):
+        value = [e if e!=0 else .001 for e in value]
+        self.node_path.setScale(value[0], value[1], value[2])
+
 
 class Rigidbody(PhysicsBody):
     def __init__(self, world, shape, entity=None, mass=0, friction=.5, mask=0x1):
@@ -64,22 +91,23 @@ class Rigidbody(PhysicsBody):
         self.collision_node = BulletRigidBodyNode('Rigidbody')
         self.collision_node.setMass(mass)
         self.collision_node.setFriction(friction)
+
         if entity:
             self.node_path = entity.getParent().attachNewNode(self.collision_node)
+            entity.reparentTo(self.node_path)
+            self.position = entity.position
+            entity.position = shape.center
+            self.rotation = entity.rotation
         else:
             self.node_path = render.attachNewNode(self.collision_node)
+        self.node_path.node().setIntoCollideMask(BitMask32(mask))
+
 
         if not isinstance(shape, (list, tuple)):    # add just one shape
             self.node_path.node().addShape(_convert_shape(shape, entity))
         else:    # add multiple shapes
             for s in shape:
                 self.node_path.node().addShape(_convert_shape(s, entity), TransformState.makePos(s.center))
-
-        self.node_path.node().setIntoCollideMask(BitMask32(mask))
-        if entity:
-            entity.reparentTo(self.node_path)
-            self.node_path.setPos(entity.position)
-            entity.position = shape.center
 
         self.attach()
         self.node_path.setPythonTag('Entity', entity)
@@ -113,7 +141,7 @@ def _convert_shape(shape, entity):
 
         return BulletTriangleMeshShape(output, dynamic=True)
     else:
-        raise Exception('To use a mesh shape you must specify at least one entity or mesh.')
+        raise Exception('To use a mesh shape you must specify at least one entity or mesh!')
 
 
 
