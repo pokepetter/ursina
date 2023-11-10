@@ -75,8 +75,8 @@ class Ursina(ShowBase):
 
         # input
         if application.window_type == 'onscreen':
-            self.buttonThrowers[0].node().setButtonDownEvent('buttonDown')
-            self.buttonThrowers[0].node().setButtonUpEvent('buttonUp')
+            self.buttonThrowers[0].node().setRawButtonDownEvent('buttonDown')
+            self.buttonThrowers[0].node().setRawButtonUpEvent('buttonUp')
             self.buttonThrowers[0].node().setButtonRepeatEvent('buttonHold')
             self.buttonThrowers[0].node().setKeystrokeEvent('keystroke')
         self._input_name_changes = {
