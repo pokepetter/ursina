@@ -24,11 +24,11 @@ class MeshModes(Enum):
     def __hash__(self):
         return hash(self.value)
 
-    def __eq__(self, other):
-        # overridden __eq__ to allow for both str and InputEvent comparisons
+    def __eq__(self, other): # overridden __eq__ to allow for both str and MeshModes comparisons
         if isinstance(other, MeshModes):
             return self.value == other.value
         return self.value == other
+
 
 
 class Mesh(p3d.NodePath):
@@ -65,6 +65,7 @@ class Mesh(p3d.NodePath):
         if (self.vertices is not None and len(self.vertices) > 0) or self.vertex_buffer is not None:
             self.generate()
 
+
     def _ravel(self, data):
         if not isinstance(data[0], numbers.Real):
             d = []
@@ -72,6 +73,7 @@ class Mesh(p3d.NodePath):
                 d.extend(v)
             return d
         return data
+
 
     def _set_array_data(self, array_handle, data, dtype_string='f'):
         a = None
@@ -82,6 +84,7 @@ class Mesh(p3d.NodePath):
 
         vmem = memoryview(array_handle).cast('B').cast(dtype_string)
         vmem[:] = a
+
 
     def generate(self):
         self._generated_vertices = None
@@ -134,6 +137,7 @@ class Mesh(p3d.NodePath):
                     raise Exception("Invalid vertex buffer format attribute data type: {}.".format(attribute_dtype))
                 vertex_array_format.addColumn(attribute_type_name, attribute_count, attribute_dtype, attribute_type)
             vertex_format.addArray(vertex_array_format)
+
         else:
             vertex_format = p3d.GeomVertexFormat()
             vertex_format.add_array(p3d.GeomVertexFormat.getV3().arrays[0])
@@ -142,11 +146,11 @@ class Mesh(p3d.NodePath):
                 vertex_format.add_array(p3d.GeomVertexArrayFormat('color', 4, p3d.Geom.NT_float32, p3d.Geom.C_color))
                 color_attribute_index = attribute_count
                 attribute_count += 1
-            if self.uvs is not None and len(self.uvs) > 0 and self.mode != 'line':
+            if self.uvs is not None and len(self.uvs) > 0 and self.mode not in ['line', 'point']:
                 vertex_format.add_array(p3d.GeomVertexArrayFormat('texcoord', 2, p3d.Geom.NT_float32, p3d.Geom.C_texcoord))
                 uv_attribute_index = attribute_count
                 attribute_count += 1
-            if self.normals is not None and len(self.normals) > 0 and self.mode != 'line':
+            if self.normals is not None and len(self.normals) > 0 and self.mode not in ['line', 'point']:
                 vertex_format.add_array(p3d.GeomVertexArrayFormat('normal', 3, p3d.Geom.NT_float32, p3d.Geom.C_normal))
                 normal_attribute_index = attribute_count
                 attribute_count += 1
@@ -172,15 +176,15 @@ class Mesh(p3d.NodePath):
             if self.colors is not None and len(self.colors) > 0:
                 self._set_array_data(vdata.modify_array(color_attribute_index), self._ravel(self.colors), 'f')
 
-            if self.uvs is not None and len(self.uvs) > 0 and self.mode != 'line':
+            if self.uvs is not None and len(self.uvs) > 0 and self.mode not in ['line', 'point']:
                 self._set_array_data(vdata.modify_array(uv_attribute_index), self._ravel(self.uvs), 'f')
 
-            if self.normals is not None and len(self.normals) > 0 and self.mode != 'line':
+            if self.normals is not None and len(self.normals) > 0 and self.mode not in ['line', 'point']:
                 self._set_array_data(vdata.modify_array(normal_attribute_index), self._ravel(self.normals), 'f')
 
         geom = p3d.Geom(vdata)
 
-        if len(self.triangles) == 0:
+        if len(self.triangles) == 0:    # no triangles provided, so just add them in order
             prim = Mesh._modes[self.mode](static_mode)
             prim.set_index_type(p3d.GeomEnums.NT_uint32)
 
@@ -193,7 +197,7 @@ class Mesh(p3d.NodePath):
             geom.addPrimitive(prim)
 
         else:
-            if not isinstance(self.triangles[0], numbers.Real):
+            if not isinstance(self.triangles[0], numbers.Real): # triangles provided as [(0,1,2), (3,4,5,6), ...] etc., so unpack them
                 line_segments = []
                 triangles = []
                 for tup in self.triangles:
@@ -204,29 +208,26 @@ class Mesh(p3d.NodePath):
                     elif len(tup) == 4:
                         triangles.extend((tup[0], tup[1], tup[2],
                                           tup[2], tup[3], tup[0]))
+
                 for line_segment in line_segments:
                     prim = Mesh._modes['line'](static_mode)
                     prim.set_index_type(p3d.GeomEnums.NT_uint32)
-
                     parray = prim.modify_vertices()
-
                     parray.unclean_set_num_rows(len(line_segment))
                     self._set_array_data(parray, line_segment, 'I')
-
                     prim.close_primitive()
                     geom.addPrimitive(prim)
+
                 if len(triangles) > 0:
                     prim = Mesh._modes[self.mode](static_mode)
                     prim.set_index_type(p3d.GeomEnums.NT_uint32)
-
                     parray = prim.modify_vertices()
-
                     parray.unclean_set_num_rows(len(triangles))
                     self._set_array_data(parray, triangles, 'I')
-
                     prim.close_primitive()
                     geom.addPrimitive(prim)
-            else:
+
+            else:   # got triangles as [0,1,2,3,4,5], ie. flat
                 prim = Mesh._modes[self.mode](static_mode)
                 prim.set_index_type(p3d.GeomEnums.NT_uint32)
 
