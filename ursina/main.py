@@ -297,7 +297,8 @@ class Ursina(ShowBase):
 
     def run(self, info=True):
         if application.show_ursina_splash:
-            from ursina.prefabs import ursina_splash
+            from ursina.prefabs.splash_screen import SplashScreen
+            application.ursina_splash = SplashScreen()
 
         application.load_settings()
         if info:
