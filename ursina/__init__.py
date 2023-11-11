@@ -1,8 +1,9 @@
 # do imports here so I can do a single line import
 from pathlib import Path
 from textwrap import dedent
-import time
+import math
 import random
+import time
 from copy import copy, deepcopy
 from math import floor, ceil, inf
 

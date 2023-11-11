@@ -1,12 +1,5 @@
 import sys
 import os
-import math
-import random
-import inspect
-import importlib
-import subprocess
-import time
-from pathlib import Path
 
 from ursina import application
 from ursina.scene import instance as scene
@@ -129,29 +122,30 @@ def _destroy(entity, force_destroy=False):
 
 
 
-def chunk_list(l, chunk_size):
+def chunk_list(target_list, chunk_size):
     # yield successive chunks from list
-    for i in range(0, len(l), chunk_size):
-        yield l[i:i + chunk_size]
+    for i in range(0, len(target_list), chunk_size):
+        yield target_list[i:i + chunk_size]
 
 
-def flatten_list(l):
+def flatten_list(target_list):
     # return [item for sublist in l for item in sublist]
     import itertools
-    return list(itertools.chain(*l))
+    return list(itertools.chain(*target_list))
 
 def flatten_completely(container):
     for i in container:
         if isinstance(i, (list,tuple)):
-            for j in flatten(i):
+            for j in flatten_list(i):
                 yield j
         else:
             yield i
 
 
 
-def size_list():
-    #return a list of current python objects sorted by size
+def size_list():    #return a list of current python objects sorted by size
+    import operator
+
     globals_list = []
     globals_list.clear()
     for e in globals():

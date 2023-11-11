@@ -227,8 +227,6 @@ class TextField(Entity):
             lines[y] = l
         # normal erase
         else:
-            removed = l[x-1]
-
             l = l[:x-1] + l[x:]
             self.cursor.x -= 1
 

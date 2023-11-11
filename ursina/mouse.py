@@ -1,5 +1,4 @@
 import time
-import traceback
 from panda3d.core import CollisionTraverser, CollisionNode
 from panda3d.core import CollisionHandlerQueue, CollisionRay
 from ursina import application
@@ -11,8 +10,7 @@ from ursina.vec3 import Vec3
 from ursina.ursinamath import distance
 
 
-class Mouse():
-
+class Mouse:
     def __init__(self):
         self.enabled = False
         self.visible = True

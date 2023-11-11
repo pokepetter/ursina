@@ -1,7 +1,6 @@
 from pathlib import Path
 from enum import Enum
 from textwrap import dedent
-import struct
 import numbers
 import array
 
@@ -99,10 +98,8 @@ class Mesh(p3d.NodePath):
             return
 
         static_mode = p3d.Geom.UHStatic if self.static else p3d.Geom.UHDynamic
-
         vertex_format = p3d.GeomVertexFormat()
 
-        position_attribute_index = 0
         color_attribute_index = -1
         uv_attribute_index = -1
         normal_attribute_index = -1
@@ -404,7 +401,7 @@ class Mesh(p3d.NodePath):
             name = str(os.path.splitext(name)[0])
             ursinamesh_to_dae(self, name, folder)
         elif name.endswith('.bam'):
-            success = self.writeBamFile(folder / name)
+            self.writeBamFile(folder / name)
             print('saved .bam to:', folder / name)
 
 
