@@ -59,7 +59,7 @@ class Window(WindowProperties):
             else:
                 loadPrcFileData('', f'win-size {self.windowed_size[1] * forced_aspect_ratio} {self.windowed_size[1]}')
         else:
-            loadPrcFileData('', f'win-size {self.fullscreen_size.x} {self.fullscreen_size.y}')
+            loadPrcFileData('', f'win-size {self.fullscreen_size[0]} {self.fullscreen_size[1]}')
 
         self.windowed_position = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode
         self.show_ursina_splash = False
