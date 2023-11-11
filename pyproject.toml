@@ -15,7 +15,7 @@ builtins = [
     "time", "random", "math", "copy", "deepcopy",
     "floor", "ceil", "inf", "lerp", "inverselerp", "lerp_angle", "slerp", "distance", "distance_2d", "distance_xz", "clamp", "round_to_closest", "rotate_around_point_2d",
     "Vec2", "Vec3", "Vec4", "Quat",
-    "window", "camera", "mouse", "scene", "application", "input_handler", "held_keys", "Keys"
+    "window", "camera", "mouse", "scene", "application", "input_handler", "held_keys", "Keys",
     "load_model", "load_texture", "load_blender_scene", "texture_importer", "Texture", "Shader",
     "Entity", "Audio", "Text", "Button",
     "color", "Color", "hsv", "rgb",
@@ -28,7 +28,7 @@ builtins = [
     "singleton", "generate_properties_for_class", "every", "after",
     "BoxCollider", "SphereCollider", "CapsuleCollider", "MeshCollider",
     "Animation", "SpriteSheetAnimation", "FrameAnimation3d", "Animator", "curve", "SmoothFollow",
-    "Sky", "DirectionalLight"
+    "Sky", "DirectionalLight",
     "Tooltip", "Sprite", "Draggable", "Panel", "Slider", "ThinSlider", "ButtonList", "ButtonGroup", "WindowPanel", "Space", "TextField", "InputField", "ContentTypes",
     "raycast", "boxcast", "terraincast"
     ]
