@@ -98,6 +98,16 @@ class Button(Entity):
         if value and not hasattr(self, 'icon_entity'):
             self.icon_entity = Entity(parent=self.model, name=f'button_icon_entity_{value}', model='quad', z=-.1, add_to_scene_entities=False)
         self.icon_entity.texture = value
+        longest_side = max(self.icon_entity.texture.width, self.icon_entity.texture.height)
+        aspect_ratio = self.icon_entity.texture.width / self.icon_entity.texture.height
+        if aspect_ratio == 1:
+            return
+
+        if self.icon_entity.texture.width < self.icon_entity.texture.height:
+            self.icon_entity.scale_x = self.icon_entity.scale_y * aspect_ratio
+        else:
+            self.icon_entity.scale_y = self.icon_entity.scale_x / aspect_ratio
+
 
     def icon_world_scale_getter(self):
         if not self.icon:
