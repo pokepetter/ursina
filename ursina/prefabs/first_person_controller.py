@@ -113,13 +113,16 @@ class FirstPersonController(Entity):
     def on_enable(self):
         mouse.locked = True
         self.cursor.enabled = True
-        if hasattr(self, 'camera_pivot'):
-            camera.world_parent = self.camera_pivot
+        # restore parent and position/rotation from before disablem in case you moved the camera in the meantime.
+        if hasattr(self, 'camera_pivot') and hasattr(self, '_original_camera_transform'):
+            camera.parent = self.camera_pivot
+            camera.transform = self._original_camera_transform
 
 
     def on_disable(self):
         mouse.locked = False
         self.cursor.enabled = False
+        self._original_camera_transform = camera.transform  # store original position and rotation
         camera.world_parent = scene
 
 

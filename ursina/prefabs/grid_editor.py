@@ -11,7 +11,7 @@ import json
 from ursina.scripts.property_generator import generate_properties_for_class
 @generate_properties_for_class()
 class GridEditor(Entity):
-    def __init__(self, size=(32,32), palette=(' ', '#', '|', 'o'), canvas_color=color.white, **kwargs):
+    def __init__(self, size=(32,32), palette=(' ', '#', '|', 'o'), canvas_color=color.white, edit_mode=True, **kwargs):
         super().__init__(parent=camera.ui, position=(-.45,-.45), scale=.9, model='quad', origin=(-.5,-.5), visible_self=False)
         self.w, self.h = int(size[0]), int(size[1])
         self.canvas = Entity(parent=self, model='quad', origin=(-.5,-.5), shader=unlit_shader, scale=(self.w/self.h, 1), color=canvas_color)
@@ -36,7 +36,7 @@ class GridEditor(Entity):
         self.rect_tool = Entity(parent=self.canvas, model=Quad(0, mode='line', thickness=2), color=color.lime, z=-.01, origin=(-.5,-.5), start=Vec2(0,0), end=Vec2(0,0))
         # self.selection_mover = Draggable(parent=self.canvas, model='circle', color=color.blue, origin=(.5,.5), step=(1/self.w,1/self.h,0), enabled=False)
         self.selection_matrix = [[0 for y in range(self.h)] for x in range(self.w)]
-        self.temp_paste_layer = Entity(parent=self.cursor, model='quad', origin=(-.5,-.5), z=-.02, enabled=1)
+        self.temp_paste_layer = Entity(parent=self.cursor, model='quad', origin=(-.5,-.5), z=-.02, enabled=False)
         Entity(parent=self.temp_paste_layer, model='wireframe_quad', origin=self.temp_paste_layer.origin, color=color.black)
         self.is_in_paste_mode = False
 
@@ -59,7 +59,7 @@ class GridEditor(Entity):
             # scale=.75,
             )
 
-        self.edit_mode = True
+        self.edit_mode = edit_mode
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
@@ -72,10 +72,11 @@ class GridEditor(Entity):
 
         self.palette_parent = Entity(parent=self, position=(-.3,.5,-1), shader=unlit_shader)
         for i, e in enumerate(value):
+            button_text = ''
             if isinstance(e, str):
-                i = e
+                button_text = e
 
-            b = Button(parent=self.palette_parent, scale=.05, text=i, model='quad', color=color._32, shader=unlit_shader)
+            b = Button(parent=self.palette_parent, scale=.05, text=button_text, model='quad', color=color._32, shader=unlit_shader)
             b.on_click = Func(setattr, self, 'selected_char', e)
             b.tooltip = Tooltip(str(e))
 
@@ -312,7 +313,8 @@ class GridEditor(Entity):
         # find the indices of the rows and columns with True values
         rows = [i for i in range(len(self.selection_matrix)) if any(self.selection_matrix[i])]
         cols = [j for j in range(len(self.selection_matrix[0])) if any(self.selection_matrix[i][j] for i in range(len(self.selection_matrix)))]
-
+        if not rows or not cols:
+            return
         # crop the matrix based on the boolean values
         start_x = min(rows)
         start_y = min(cols)
@@ -322,7 +324,7 @@ class GridEditor(Entity):
         selection_height = (max(cols) + 1) - start_y
         # cropped_matrix = [[matrix[i][j] for j in range(start_y, max(cols) + 1)] for i in range(start_x, max(rows) + 1)]
 
-        copy_data = [[tuple(self.grid[start_x+x][start_y+y]) if self.selection_matrix[x][y] else None for y in range(selection_height)] for x in range(selection_width)]
+        copy_data = [[tuple(self.grid[start_x+x][start_y+y]) for y in range(selection_height)] for x in range(selection_width)]
         pyperclip.copy(json.dumps(dict(data=copy_data)))
 
 
@@ -376,19 +378,18 @@ class GridEditor(Entity):
 
                 self.grid[x+x_offset][y+y_offset] = pixel
 
+        self.clear_selection()
         self.render()
 
 
     def clear_selection(self):
         self.selection_matrix = [[0 for y in range(self.h)] for x in range(self.w)]
         self.selection_renderer.model.clear()
-        print('cleare selection')
-        # print('seofijsoefisjeofij', self.selection_renderer.enabled)
+        print('clear selection')
 
 
     def render_selection(self):
         quad = load_model('quad', use_deepcopy=True)
-        # self.selection_renderer.enabled = True
         self.selection_renderer.model.clear(False)
         verts = []
         for x in range(self.w):
@@ -403,7 +404,6 @@ class GridEditor(Entity):
                     if y >= self.h-1 or not self.selection_matrix[x][y+1]:
                         verts.extend((Vec3(x,y+1,0), Vec3(x+1,y+1,0)))
 
-        # if verts:
         self.selection_renderer.model.vertices = [v+Vec3(-.5,-.5,0) for v in verts]
         self.selection_renderer.model.triangles = [(i, i+1) for i in range(0, len(verts), 2)]
         self.selection_renderer.model.generate()
@@ -422,7 +422,7 @@ class PixelEditor(GridEditor):
         self.canvas.texture.filtering = None
         self.cursor.scale = Vec2(self.brush_size / self.w, self.brush_size / self.h)
         self.help_icon.scale = self.help_icon.target_scale
-        # self.selection_mover.world_scale = .5
+        self.selection_renderer.scale=(1/self.w,1/self.h)
 
         if clear_undo_stack:
             self.undo_stack.clear()
@@ -457,11 +457,14 @@ class PixelEditor(GridEditor):
 
     @property
     def texture(self):
+        if not hasattr(self, 'canvas'):
+            return None
         return self.canvas.texture
 
     @texture.setter
     def texture(self, value):
-        self.canvas.texture = value
+        if hasattr(self, 'canvas'):
+            self.canvas.texture = value
 
 
 
@@ -521,7 +524,7 @@ if __name__ == '__main__':
     # '''
     # same as the pixel editor, but with text.
     # '''
-    # from ursina.prefabs.grid_editor import ASCIIEditor
-    # ASCIIEditor(x=0, scale=.1)
+    from ursina.prefabs.grid_editor import ASCIIEditor
+    ASCIIEditor(x=0, scale=.1)
 
     app.run()
