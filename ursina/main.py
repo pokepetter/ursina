@@ -94,7 +94,11 @@ class Ursina(ShowBase):
         for e in keyboard_keys:
             self.accept(f'raw-{e}', self.input, [e, True])
             self.accept(f'raw-{e}-up', self.input_up, [e, True])
-            self.accept(f'raw-{e}-repeat', self.input_hold, [e, True])
+
+        for e in ('control', 'shift', 'alt'):
+            for s in ('l', 'r'):
+                self.accept(f'raw-{s}{e}', self.input, [e, True])
+                self.accept(f'raw-{s}{e}-up', self.input_up, [e, True])
 
         self.accept('buttonDown', self.input)
         self.accept('buttonUp', self.input_up)
@@ -220,15 +224,6 @@ class Ursina(ShowBase):
         """
         if not is_raw and key in keyboard_keys:
             return
-
-        if 'mouse' not in key:
-            for prefix in ('control-', 'shift-', 'alt-'):
-                if key.startswith(prefix):
-                    key = key.replace('control-', '')
-                    key = key.replace('shift-', '')
-                    key = key.replace('alt-', '')
-                    if key in keyboard_keys:
-                        return
 
         if key in self._input_name_changes:
             key = self._input_name_changes[key]
