@@ -244,6 +244,22 @@ class Mesh(p3d.NodePath):
         if self.mode == 'point':
             self.setTexGen(p3d.TextureStage.getDefault(), p3d.TexGenAttrib.MPointSprite)
 
+
+    @property
+    def indices(self):
+        if isinstance(self.triangles[0], numbers.Real):
+            return self.triangles
+
+        indices = []
+        for tup in self.triangles:
+            if len(tup) == 3:
+                indices.extend(tup)
+            elif len(tup) == 4:
+                indices.extend((tup[0], tup[1], tup[2], tup[2], tup[3], tup[0]))
+
+        return indices
+        
+
     @property
     def generated_vertices(self):
         if self._generated_vertices is None:
