@@ -247,7 +247,7 @@ class Mesh(p3d.NodePath):
 
     @property
     def indices(self):
-        if isinstance(self.triangles[0], numbers.Real):
+        if self.triangles and isinstance(self.triangles[0], numbers.Real):
             return self.triangles
 
         indices = []
@@ -258,7 +258,7 @@ class Mesh(p3d.NodePath):
                 indices.extend((tup[0], tup[1], tup[2], tup[2], tup[3], tup[0]))
 
         return indices
-        
+
 
     @property
     def generated_vertices(self):
