@@ -9,6 +9,7 @@ def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[]):
     cols = []
     to_destroy = []
     o = 0
+    original_texture = combine_parent.texture
 
     for e in scene.entities:
         if e in ignore:
@@ -70,6 +71,7 @@ def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[]):
         [destroy(e) for e in to_destroy]
 
     combine_parent.model = Mesh(vertices=verts, triangles=tris, normals=norms, uvs=uvs, colors=cols, mode='triangle')
+    combine_parent.texture = original_texture
     # print('combined')
     # entity.model = Mesh(vertices=verts,  mode='triangle')
     # entity.flatten_strong()
