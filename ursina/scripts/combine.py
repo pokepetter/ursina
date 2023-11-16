@@ -44,7 +44,7 @@ def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[]):
                         new_tris.extend([t[0], t[1], t[2], t[2], t[3], t[0]])
 
             new_tris = [t+o for t in new_tris]
-            new_tris = [(new_tris[i], new_tris[i+1], new_tris[i+2]) for i in range(0, len(new_tris), 3)]
+            new_tris = [(new_tris[i], new_tris[i+1], new_tris[i+2]) for i in range(0, len(new_tris)-1, 3)]
 
             o += len(e.model.vertices)
             tris += new_tris
