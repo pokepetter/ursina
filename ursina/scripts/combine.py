@@ -1,7 +1,7 @@
 from ursina import *
 
 
-def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[]):
+def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[], ignore_disabled=True):
     verts = []
     tris = []
     norms = []
@@ -13,6 +13,9 @@ def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[]):
 
     for e in scene.entities:
         if e in ignore:
+            continue
+
+        if ignore_disabled and not e.enabled:
             continue
 
         if e.has_ancestor(combine_parent) or e == combine_parent:
