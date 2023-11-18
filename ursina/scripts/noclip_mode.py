@@ -91,5 +91,5 @@ if __name__ == '__main__':
     #     player.x -= held_keys['a'] * .1
 
 
-    player.add_script(NoclipMode2d())
+    player.add_script(NoclipMode())
     app.run()
