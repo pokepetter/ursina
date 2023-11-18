@@ -421,22 +421,22 @@ app.run()
                 <td> &nbsp;origin_setter(<gray>value</gray>) <span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;origin_x_getter() <span></span></td>
+                <td> &nbsp;origin_x_getter() <span>the x coordinate of the position that the object rotates around</span></td>
             </tr>
             <tr>
-                <td> &nbsp;origin_x_setter(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;origin_x_setter(<gray>value</gray>) <span>the x coordinate of the position that the object rotates around</span></td>
             </tr>
             <tr>
-                <td> &nbsp;origin_y_getter() <span></span></td>
+                <td> &nbsp;origin_y_getter() <span>the y coordinate of the position that the object rotates around</span></td>
             </tr>
             <tr>
-                <td> &nbsp;origin_y_setter(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;origin_y_setter(<gray>value</gray>) <span>the y coordinate of the position that the object rotates around</span></td>
             </tr>
             <tr>
-                <td> &nbsp;origin_z_getter() <span></span></td>
+                <td> &nbsp;origin_z_getter() <span>the z coordinate of the position that the object rotates around</span></td>
             </tr>
             <tr>
-                <td> &nbsp;origin_z_setter(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;origin_z_setter(<gray>value</gray>) <span>the z coordinate of the position that the object rotates around</span></td>
             </tr>
             <tr>
                 <td> &nbsp;world_position_getter() <span></span></td>
@@ -571,22 +571,22 @@ app.run()
                 <td> &nbsp;scale_setter(<gray>value</gray>) <span>can also set self.scale_x, self.scale_y, self.scale_z</span></td>
             </tr>
             <tr>
-                <td> &nbsp;scale_x_getter() <span></span></td>
+                <td> &nbsp;scale_x_getter() <span>The model scale in the x direction</span></td>
             </tr>
             <tr>
-                <td> &nbsp;scale_x_setter(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;scale_x_setter(<gray>value</gray>) <span>The model scale in the x direction</span></td>
             </tr>
             <tr>
-                <td> &nbsp;scale_y_getter() <span></span></td>
+                <td> &nbsp;scale_y_getter() <span>The model scale in the y direction</span></td>
             </tr>
             <tr>
-                <td> &nbsp;scale_y_setter(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;scale_y_setter(<gray>value</gray>) <span>The model scale in the y direction</span></td>
             </tr>
             <tr>
-                <td> &nbsp;scale_z_getter() <span></span></td>
+                <td> &nbsp;scale_z_getter() <span>The model scale in the z direction</span></td>
             </tr>
             <tr>
-                <td> &nbsp;scale_z_setter(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;scale_z_setter(<gray>value</gray>) <span>The model scale in the z direction</span></td>
             </tr>
             <tr>
                 <td> &nbsp;transform_getter() <span>get/set position, rotation and scale</span></td>
@@ -613,13 +613,13 @@ app.run()
                 <td> &nbsp;set_shader_input(<gray>name, value</gray>) <span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;texture_getter() <span></span></td>
+                <td> &nbsp;texture_getter() <span>The texture on the model</span></td>
             </tr>
             <tr>
                 <td> &nbsp;texture_setter(<gray>value</gray>) <span>set model with texture='texture_name'. requires a model to be set beforehand.</span></td>
             </tr>
             <tr>
-                <td> &nbsp;texture_scale_getter() <span></span></td>
+                <td> &nbsp;texture_scale_getter(<gray>): #(A tuple of x and y) The amount of times the texture is repeated. For example, texture_scale=(2,2</gray>) <span>A tuple of x and y) The amount of times the texture is repeated. For example, texture_scale=(2,2), means that the texture is fit four times into each face of a cube.</span></td>
             </tr>
             <tr>
                 <td> &nbsp;texture_scale_setter(<gray>value):  # how many times the texture should repeat, eg. texture_scale=(8,8</gray>) <span>how many times the texture should repeat, eg. texture_scale=(8,8).</span></td>
@@ -826,28 +826,28 @@ player = Player(x=-<yellow>1</yellow>)
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;text_getter() <span></span></td>
+                <td> &nbsp;text_getter() <span>The text displayed on the button</span></td>
             </tr>
             <tr>
-                <td> &nbsp;text_setter(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;text_setter(<gray>value</gray>) <span>The text displayed in the button.</span></td>
             </tr>
             <tr>
-                <td> &nbsp;text_origin_getter() <span></span></td>
+                <td> &nbsp;text_origin_getter(<gray>): # An xy tuple of where the text starts reletive to the button. HINT:(1, 1) is off the screen, and (0, 0) is the center of the button. Try (0.3, 0.3</gray>) <span>An xy tuple of where the text starts reletive to the button. HINT:(1, 1) is off the screen, and (0, 0) is the center of the button. Try (0.3, 0.3).</span></td>
             </tr>
             <tr>
-                <td> &nbsp;text_origin_setter(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;text_origin_setter(<gray>value): # An xy tuple of where the text starts reletive to the button. HINT:(1, 1) is off the screen, and (0, 0) is the center of the button. Try (0.3, 0.3</gray>) <span>An xy tuple of where the text starts reletive to the button. HINT:(1, 1) is off the screen, and (0, 0) is the center of the button. Try (0.3, 0.3).</span></td>
             </tr>
             <tr>
-                <td> &nbsp;text_color_getter() <span></span></td>
+                <td> &nbsp;text_color_getter() <span>Text colour. Example: color.red</span></td>
             </tr>
             <tr>
-                <td> &nbsp;text_color_setter(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;text_color_setter(<gray>value</gray>) <span>Text colour. Example: color.red</span></td>
             </tr>
             <tr>
-                <td> &nbsp;icon_getter() <span></span></td>
+                <td> &nbsp;icon_getter() <span>An image displayed on the button. Try icon='sword'</span></td>
             </tr>
             <tr>
-                <td> &nbsp;icon_setter(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;icon_setter(<gray>value</gray>) <span>An image displayed on the button. Try icon='sword'</span></td>
             </tr>
             <tr>
                 <td> &nbsp;icon_world_scale_getter() <span></span></td>
@@ -4812,28 +4812,28 @@ Sprite(<green>'shore'</green>, <olive>z</olive>=<yellow>1</yellow>)
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;text_getter() <span></span></td>
+                <td> &nbsp;text_getter() <span>The text displayed on the button</span></td>
             </tr>
             <tr>
-                <td> &nbsp;text_setter(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;text_setter(<gray>value</gray>) <span>The text displayed in the button.</span></td>
             </tr>
             <tr>
-                <td> &nbsp;text_origin_getter() <span></span></td>
+                <td> &nbsp;text_origin_getter(<gray>): # An xy tuple of where the text starts reletive to the button. HINT:(1, 1) is off the screen, and (0, 0) is the center of the button. Try (0.3, 0.3</gray>) <span>An xy tuple of where the text starts reletive to the button. HINT:(1, 1) is off the screen, and (0, 0) is the center of the button. Try (0.3, 0.3).</span></td>
             </tr>
             <tr>
-                <td> &nbsp;text_origin_setter(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;text_origin_setter(<gray>value): # An xy tuple of where the text starts reletive to the button. HINT:(1, 1) is off the screen, and (0, 0) is the center of the button. Try (0.3, 0.3</gray>) <span>An xy tuple of where the text starts reletive to the button. HINT:(1, 1) is off the screen, and (0, 0) is the center of the button. Try (0.3, 0.3).</span></td>
             </tr>
             <tr>
-                <td> &nbsp;text_color_getter() <span></span></td>
+                <td> &nbsp;text_color_getter() <span>Text colour. Example: color.red</span></td>
             </tr>
             <tr>
-                <td> &nbsp;text_color_setter(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;text_color_setter(<gray>value</gray>) <span>Text colour. Example: color.red</span></td>
             </tr>
             <tr>
-                <td> &nbsp;icon_getter() <span></span></td>
+                <td> &nbsp;icon_getter() <span>An image displayed on the button. Try icon='sword'</span></td>
             </tr>
             <tr>
-                <td> &nbsp;icon_setter(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;icon_setter(<gray>value</gray>) <span>An image displayed on the button. Try icon='sword'</span></td>
             </tr>
             <tr>
                 <td> &nbsp;icon_world_scale_getter() <span></span></td>
@@ -6596,7 +6596,7 @@ p.add_script(<purple><b>Scrollable</b></purple>())
 EditorCamera()
 
 
-player.add_script(NoclipMode<yellow>2</yellow>d())
+player.add_script(<purple><b>NoclipMode</b></purple>())
 </div>
 
 </div>
@@ -6631,7 +6631,7 @@ player.add_script(NoclipMode<yellow>2</yellow>d())
 EditorCamera()
 
 
-player.add_script(NoclipMode<yellow>2</yellow>d())
+player.add_script(NoclipMode())
 </div>
 
 </div>
