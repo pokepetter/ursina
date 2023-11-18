@@ -290,9 +290,6 @@ class Mesh(p3d.NodePath):
             )
         ''')
 
-    @recipe.setter
-    def recipe(self, value):
-        self._recipe = value
 
     @property
     def render_points_in_3d(self):
@@ -377,7 +374,7 @@ class Mesh(p3d.NodePath):
         if regenerate:
             self.generate()
 
-    def save(self, name='', folder:Path=application.compressed_models_folder, flip_faces=False):
+    def save(self, name='', folder:Path=application.compressed_models_folder, flip_faces=False, max_decimals=16):
         if not application.compressed_models_folder.exists():
             application.compressed_models_folder.mkdir()
 
@@ -387,9 +384,22 @@ class Mesh(p3d.NodePath):
                 name += '.ursinamesh'
 
         if name.endswith('ursinamesh'):
+            mesh_code = dedent(f'''Mesh(
+                vertices={[tuple(round(_,max_decimals) for _ in e) for e in self.vertices]},
+                triangles={self.triangles},
+                colors={[tuple(round(_,max_decimals) for _ in e) for e in self.colors]},
+                uvs={[tuple(round(_,max_decimals) for _ in e) for e in self.uvs]},
+                normals={[tuple(round(_,max_decimals) for _ in e) for e in self.normals]},
+                static={self.static},
+                mode="{self.mode}",
+                thickness={self.thickness},
+                render_points_in_3d={self.render_points_in_3d},
+            ''')
             with open(folder / name, 'w') as f:
-                f.write(self.recipe)
+                f.write(mesh_code)
             print('saved .ursinamesh to:', folder / name)
+
+
         elif name.endswith('.obj'):
             from ursina.mesh_exporter import ursinamesh_to_obj
             import os
