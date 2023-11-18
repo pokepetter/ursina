@@ -9,6 +9,7 @@ from ursina import color
 from ursina.scripts.generate_normals import generate_normals
 from ursina.scripts.project_uvs import project_uvs
 from ursina.scripts.colorize import colorize
+from ursina.ursinastuff import LoopingList
 
 import panda3d.core as p3d
 
@@ -205,6 +206,11 @@ class Mesh(p3d.NodePath):
                     elif len(tup) == 4:
                         triangles.extend((tup[0], tup[1], tup[2],
                                           tup[2], tup[3], tup[0]))
+                    elif len(tup) > 4:
+                        tup = LoopingList(tup)
+                        for i in range(1, len(tup)):
+                            triangles.extend((tup[0], tup[i], tup[i+1]))
+
 
                 for line_segment in line_segments:
                     prim = Mesh._modes['line'](static_mode)
