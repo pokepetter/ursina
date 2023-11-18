@@ -48,12 +48,12 @@ class Button(Entity):
             setattr(self, key, value)
 
 
-    def text_getter(self):
+    def text_getter(self): # The text displayed on the button
         if self.text_entity:
             return self.text_entity.text
         return ''
 
-    def text_setter(self, value):
+    def text_setter(self, value): # The text displayed in the button.
         if not isinstance(value, str):
             raise TypeError('Text must be a string')
 
@@ -66,13 +66,13 @@ class Button(Entity):
             self.text_entity.text = value
 
 
-    def text_origin_getter(self):
+    def text_origin_getter(self): # An xy tuple of where the text starts reletive to the button. HINT:(1, 1) is off the screen, and (0, 0) is the center of the button. Try (0.3, 0.3).
         if self.text_entity:
             return self.text_entity.origin
 
         return getattr(self, '_text_origin', (0,0))
 
-    def text_origin_setter(self, value):
+    def text_origin_setter(self, value): # An xy tuple of where the text starts reletive to the button. HINT:(1, 1) is off the screen, and (0, 0) is the center of the button. Try (0.3, 0.3).
         self._text_origin = value
         if not self.text_entity:
             return
@@ -85,16 +85,16 @@ class Button(Entity):
         self.text_entity.origin = value
         self.text_entity.world_parent = self
 
-    def text_color_getter(self):
+    def text_color_getter(self): # Text colour. Example: color.red
         return self.text_entity.color
 
-    def text_color_setter(self, value):
+    def text_color_setter(self, value): # Text colour. Example: color.red
         self.text_entity.color = value
 
-    def icon_getter(self):
+    def icon_getter(self): # An image displayed on the button. Try icon='sword'
         return getattr(self, 'icon_entity', None)
 
-    def icon_setter(self, value):
+    def icon_setter(self, value): # An image displayed on the button. Try icon='sword'
         if value and not hasattr(self, 'icon_entity'):
             self.icon_entity = Entity(parent=self.model, name=f'button_icon_entity_{value}', model='quad', z=-.1, add_to_scene_entities=False)
         self.icon_entity.texture = value
