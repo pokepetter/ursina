@@ -8,10 +8,14 @@ class SplashScreen(Sprite):
         self.animate_color(color.white, duration=2, delay=1, curve=curve.out_quint_boomerang)
         invoke(destroy, self, delay=3)
 
+
     def input(self, key):
         if key in ('space', 'gamepad a', 'escape', 'left mouse down'):
-            camera.overlay.animate_color(color.clear, duration=.25)
             destroy(self)
+
+
+    def on_destroy(self):
+        camera.overlay.animate_color(color.clear, duration=.25)
 
 
 

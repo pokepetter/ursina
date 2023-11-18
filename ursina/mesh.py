@@ -187,9 +187,12 @@ class Mesh(p3d.NodePath):
             prim.set_index_type(p3d.GeomEnums.NT_uint32)
 
             parray = prim.modify_vertices()
-            triangles = [i for i in range(len(self.vertices))]
-            parray.unclean_set_num_rows(len(triangles))
-            self._set_array_data(parray, self._ravel(triangles), 'I')
+            n = len(self.vertices)
+            if isinstance(self.vertices[0], numbers.Real):
+                n = n // 3
+            triangles = [i for i in range(n)]
+            parray.unclean_set_num_rows(n)
+            self._set_array_data(parray, triangles, 'I')
 
             prim.close_primitive()
             geom.addPrimitive(prim)
@@ -246,6 +249,22 @@ class Mesh(p3d.NodePath):
 
         if self.mode == 'point':
             self.setTexGen(p3d.TextureStage.getDefault(), p3d.TexGenAttrib.MPointSprite)
+
+
+    @property
+    def indices(self):
+        if self.triangles and isinstance(self.triangles[0], numbers.Real):
+            return self.triangles
+
+        indices = []
+        for tup in self.triangles:
+            if len(tup) == 3:
+                indices.extend(tup)
+            elif len(tup) == 4:
+                indices.extend((tup[0], tup[1], tup[2], tup[2], tup[3], tup[0]))
+
+        return indices
+
 
     @property
     def generated_vertices(self):
