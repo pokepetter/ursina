@@ -56,7 +56,7 @@ class Conversation(Entity):
         self.question.text = node.content[question_part]
         self.question.text_entity.wordwrap = self.wordwrap
         self.more_indicator.enabled = False
-        self.question_appear_sequence = self.question.text_entity.appear(delay=.1)
+        self.question_appear_sequence = self.question.text_entity.appear()
 
         for b in self.buttons:
             b.enabled = False
