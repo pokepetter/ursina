@@ -1,3 +1,9 @@
+import keyword
+import builtins
+import textwrap
+from types import SimpleNamespace
+
+from ursina import application
 
 html = '''
 <html>
@@ -149,13 +155,6 @@ groups = {
     'shaders',
 ],
 }
-from pathlib import Path
-from pprint import pprint
-import keyword
-import builtins
-import textwrap
-from ursina import color, lerp, application
-
 
 
 def indentation(line):
@@ -163,7 +162,7 @@ def indentation(line):
 
 
 def get_module_attributes(str):
-    attrs = list()
+    attrs = []
 
     for l in str.split('\n'):
         if len(l) == 0:
@@ -196,13 +195,14 @@ def get_class_scope_variables(str):
             continue
         if line.strip().startswith('def'):
             break
-        vars.append(line)
+
+        vars.append(SimpleNamespace(name=line, comment=''))
 
     return vars
 
 
 def get_class_attributes(str):
-    attributes = list()
+    attributes = []
     lines = str.split('\n')
     start = 0
     end = len(lines)
@@ -250,22 +250,11 @@ def get_class_attributes(str):
 
             attributes.append(key + ' = ' + value)
 
-    if '@property' in code:
-        for i, line in enumerate(lines):
-            if line.strip().startswith('@property'):
-                name = lines[i+1].split('def ')[1].split('(')[0]
-
-                # include comments for properties
-                if '#' in lines[i+1]:
-                    name += ((20-len(name)) * ' ') + '<gray>#' + lines[i+1].split('#',1)[1] + '</gray>'
-
-                if not name in [e.split(' = ')[0] for e in attributes]:
-                    attributes.append(name)
 
     return attributes
 
 
-def get_functions(str, is_class=False):
+def get_functions(str, is_class=False, include_properties=True):
     functions = dict()
     lines = str.split('\n')
 
@@ -274,7 +263,6 @@ def get_functions(str, is_class=False):
     # ignore_functions_for_property_generation = 'generate_properties(' in str
 
     for i, line in enumerate(lines):
-
         if line == '''if __name__ == '__main__':''' or 'docignore' in line:
             break
         if line.strip().startswith('def '):
@@ -282,13 +270,21 @@ def get_functions(str, is_class=False):
                 continue
 
             name = line.split('def ')[1].split('(')[0]
-            if name.startswith('_') or lines[i-1].strip().startswith('@'):
+            if name.startswith('_'):
                 continue
 
-            # if ignore_functions_for_property_generation:
-            #     if name.startswith('get_') or name.startswith('set_'):
-            #         continue
-
+            is_property = False
+            is_property = False
+            # ignore properties
+            if lines[i-1].strip().startswith('@property') or lines[i-1].strip().endswith('.setter'):
+                is_property = True
+                if not include_properties:
+                    continue
+            # ignore_functions_for_property_generation:
+            if name.endswith('_getter') or name.endswith('_setter'):
+                is_property = True
+                if not include_properties:
+                        continue
 
             params = line.replace('(self, ', '(')
             params = params.replace('(self)', '()')
@@ -298,7 +294,7 @@ def get_functions(str, is_class=False):
             if '#' in line:
                 comment = '#' + line.split('#')[1]
 
-            functions.append((name, params, comment))
+            functions.append(SimpleNamespace(name=name, parameters=params, comment=comment, is_property=is_property))
 
     return functions
 
@@ -367,8 +363,8 @@ def get_example(str, name=None):    # use name to highlight the relevant class
             line = line.replace(f'{i}', f'<yellow>{i}</yellow>')
 
         # destyle Vec2 and Vec3
-        line = line.replace(f'<yellow>3</yellow>(', '3(')
-        line = line.replace(f'<yellow>2</yellow>(', '2(')
+        line = line.replace('<yellow>3</yellow>(', '3(')
+        line = line.replace('<yellow>2</yellow>(', '2(')
 
         # highlight class name
         if name:
@@ -425,30 +421,44 @@ def is_singleton(str):
         if l.startswith('instance = '):
             return True
 
-    result = False
+    return False
+
+
+class Info:
+    def __init__(self, path=None, parent_class='', parameters='', class_vars=None, attributes=None, properties=None, functions=None, example=''):
+        self.path = path
+        self.parent_class = parent_class
+        self.parameters = parameters
+        self.class_vars = class_vars if class_vars else []
+        self.attributes = attributes if attributes else []
+        self.properties = properties if properties else []
+        self.functions = functions if functions else []
+        self.example = example
+
 
 
 path = application.package_folder
 module_info = dict()
 class_info = dict()
-module_info['textures'] = ('', '', '', [], ('noise', 'grass', 'vignette', 'arrow_right', 'test_tileset', 'tilemap_test_level', 'shore', 'file_icon', 'sky_sunset', 'radial_gradient', 'circle', 'perlin_noise', 'brick', 'grass_tintable', 'circle_outlined', 'ursina_logo', 'arrow_down', 'cog', 'vertical_gradient', 'white_cube', 'horizontal_gradient', 'folder', 'rainbow', 'heightmap_1', 'sky_default',), (), ())
-module_info['models'] = ('', '', '', [], ('quad', 'wireframe_cube', 'plane', 'circle', 'diamond', 'wireframe_quad', 'sphere', 'cube', 'icosphere', 'cube_uv_top', 'arrow', 'sky_dome', ), (), ())
-module_info['shaders'] = ('', '', '', [], ('colored_lights_shader', 'fresnel_shader', 'projector_shader', 'instancing_shader', 'texture_blend_shader', 'matcap_shader', 'triplanar_shader', 'unlit_shader', 'geom_shader', 'normals_shader', 'transition_shader', 'noise_fog_shader', 'lit_with_shadows_shader', 'fxaa', 'camera_empty', 'ssao', 'camera_outline_shader', 'pixelation_shader', 'camera_contrast', 'camera_vertical_blur', 'camera_grayscale', ), (), ())
+# path=file, parent_class=parent_class, parameters=params, class_vars=class_vars, attributes=attrs, properties=properties, functions=methods, example=example
+module_info['textures'] = Info(attributes=['noise', 'grass', 'vignette', 'arrow_right', 'test_tileset', 'tilemap_test_level', 'shore', 'file_icon', 'sky_sunset', 'radial_gradient', 'circle', 'perlin_noise', 'brick', 'grass_tintable', 'circle_outlined', 'ursina_logo', 'arrow_down', 'cog', 'vertical_gradient', 'white_cube', 'horizontal_gradient', 'folder', 'rainbow', 'heightmap_1', 'sky_default', ])
+module_info['models'] = Info(attributes=['quad', 'wireframe_cube', 'plane', 'circle', 'diamond', 'wireframe_quad', 'sphere', 'cube', 'icosphere', 'cube_uv_top', 'arrow', 'sky_dome', ])
+module_info['shaders'] = Info(attributes=['colored_lights_shader', 'fresnel_shader', 'projector_shader', 'instancing_shader', 'texture_blend_shader', 'matcap_shader', 'triplanar_shader', 'unlit_shader', 'geom_shader', 'normals_shader', 'transition_shader', 'noise_fog_shader', 'lit_with_shadows_shader', 'fxaa', 'camera_empty', 'ssao', 'camera_outline_shader', 'pixelation_shader', 'camera_contrast', 'camera_vertical_blur', 'camera_grayscale', ])
 
 
-for f in path.glob('**/*.py'):
-    with open(f, encoding='utf-8') as t:
-        code = t.read()
+for file in path.glob('**/*.py'):
+    with open(file, encoding='utf-8') as f:
+        code = f.read()
         code = code.replace('<', '&lt').replace('>', '&gt')
 
         if not is_singleton(code):
-            name = f.stem
+            name = file.stem
             attrs, funcs = [], []
             attrs = get_module_attributes(code)
             funcs = get_functions(code)
             example = get_example(code, name)
             if attrs or funcs:
-                module_info[name] = (f, '', '', [], attrs, funcs, example)
+                module_info[name] = Info(path=file, attributes=attrs, functions=funcs, example=example)
 
             # continue
             classes = get_classes(code)
@@ -460,19 +470,38 @@ for f in path.glob('**/*.py'):
                     # init line
                     params =  '__init__('+ class_definition.split('def __init__(')[1].split('\n')[0][:-1]
 
-                class_scope_vars = get_class_scope_variables(class_definition)
+                class_vars = get_class_scope_variables(class_definition)
                 attrs = get_class_attributes(class_definition)
-                methods = get_functions(class_definition, is_class=True)
+
+                all_methods = get_functions(class_definition, is_class=True)
+                methods = [e for e in all_methods if not e.is_property]
+
+                properties = dict()
+                for prop in [e for e in all_methods if e.is_property]:
+                    name = prop.name
+                    if prop.name.endswith('_getter'):
+                        name = prop.name[:-len('_getter')]
+                    if prop.name.endswith('_setter'):
+                        name = prop.name[:-len('_setter')]
+
+                    if name not in properties:
+                        properties[name] = SimpleNamespace(name=name, comment=prop.comment)
+                    elif not properties[name].comment:  # in case we have a comment on the sett but not on the getter
+                        properties[name].comment = prop.comment
+
+                properties = properties.values()
+
+
                 example = get_example(code, class_name)
 
                 parent_class = ''
                 if ('(') in class_name:
                     parent_class = class_name.split('(')[1].split(')')[0]
                     class_name =  class_name.split('(')[0]
-                class_info[class_name] = (f, parent_class, params, class_scope_vars, attrs, methods, example)
+                class_info[class_name] = Info(path=file, parent_class=parent_class, parameters=params, class_vars=class_vars, attributes=attrs, properties=properties, functions=methods, example=example)
         # singletons
         else:
-            module_name = f.stem
+            module_name = file.stem
             classes = get_classes(code)
             for class_name, class_definition in classes.items():
                 # print(module_name)
@@ -481,10 +510,10 @@ for f in path.glob('**/*.py'):
                 methods = get_functions(class_definition, is_class=True)
                 example = get_example(code, class_name)
 
-                module_info[module_name] = (f, '', '', [], attrs, methods, example)
+                module_info[module_name] = Info(path=file, attributes=attrs, functions=methods, example=example)
 
-def html_color(color):
-    return f'hsl({color.h}, {int(color.s*100)}%, {int(color.v*100)}%)'
+def html_color(value):
+    return f'hsl({value.h}, {int(value.s*100)}%, {int(value.v*100)}%)'
 
 
 
@@ -524,13 +553,13 @@ for group_name, group in groups.items():
             continue
             print('no info found for', name)
         # f, params, attrs, methods, example = data
-        location, parent_class, params, class_scope_vars, attrs, funcs, example = data
-        params = params.replace('__init__', name.split('(')[0])
+        # funcs, example = data
+
+        params = data.parameters.replace('__init__', name.split('(')[0])
         params = params.replace('(self, ', '(')
         params = params.replace('(self)', '()')
 
-        parent_class = parent_class.replace('ShowBase', '')
-        parent_class = parent_class.replace('NodePath', '')
+        parent_class = data.parent_class.replace('ShowBase', '').replace('NodePath', '')
         link_to_parent_class = ''
         if parent_class:
             link_to_parent_class = f'<a style="color: gray; font-weight:normal;" href="#{parent_class}">({parent_class})</a>'
@@ -539,7 +568,7 @@ for group_name, group in groups.items():
             f'''    <div class="class_box" id="{name}">\n'''
             f'''        <h1>{name}{link_to_parent_class}</h1>\n'''
             )
-        location = str(location)
+        location = str(data.path)
         if 'ursina' in location:
             location = location.split('ursina')[-1]
             github_link = 'https://github.com/pokepetter/ursina/blob/master/ursina' + location.replace('\\', '/')
@@ -551,10 +580,10 @@ for group_name, group in groups.items():
 
         html += '        <table> <!-- attributes -->\n'
 
-        for e in class_scope_vars:
+        for class_var in data.class_vars:
             html += (
             f'            <tr>\n'
-            f'                <td>{name}.{e.strip()}<gray></gray></td><td>{info}</td>\n'
+            f'                <td>{name}.{class_var.name.strip()}<gray></gray></td><td>{class_var.comment}</td>\n'
             f'            </tr>\n'
             )
 
@@ -563,13 +592,16 @@ for group_name, group in groups.items():
         if group_name == 'Assets':    # don't add a . for asset names
             dot = ''
 
-        for e in attrs:
-            attr_name = e
+        variables = data.attributes
+        # variables.extend(data.properties)
+
+        for attr in variables:
+            attr_name = attr
             default = ''
             info = ''
 
-            if '# ' in e:
-                attr_name, info = e.split('# ', 1)
+            if '# ' in attr:
+                attr_name, info = attr.split('# ', 1)
             if ' = ' in attr_name:
                 attr_name, default = attr_name.split(' = ', 1)
                 default = f' = {default}'
@@ -585,22 +617,35 @@ for group_name, group in groups.items():
 
         html += '        </table><br>\n'
 
-        if funcs:
+        if data.properties:
+            html += '        <div><gray>properties:</gray></div>\n'
+            html += '        <table>\n'
+
+            for prop in data.properties:
+                html += (
+                    f'            <tr>\n'
+                    f'                <td>.{prop.name}</td><td><span>{prop.comment}</span></td>\n'
+                    f'            </tr>\n'
+                )
+            html += '        </table><br>\n'
+
+
+        if data.functions:
             html += '        <div><gray>functions:</gray></div>\n'
             html += '        <table>\n'
 
-        for e in funcs:
+        for function in data.functions:
             html += (
                 f'''            <tr>\n'''
-                f'''                <td> &nbsp;{e[0]}(<gray>{e[1]}</gray>) <span>{e[2][2:]}</span></td>\n'''
+                f'''                <td> &nbsp;{function.name}(<gray>{function.parameters}</gray>) <span>{function.comment[2:]}</span></td>\n'''
                 f'''            </tr>\n'''
             )
 
         html += '        </table><br>\n'
 
-        if example:
+        if data.example:
             html += '    <div><gray>example:</gray></div>\n'
-            html += f'    <div class="example">{example}\n</div>\n'
+            html += f'    <div class="example">{data.example}\n</div>\n'
 
         # html += '\n</div></div>'
         html = html.replace('<gray></gray>', '')
