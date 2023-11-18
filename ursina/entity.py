@@ -419,19 +419,19 @@ class Entity(NodePath):
             self.model.setPos(-value[0], -value[1], -value[2])
 
 
-    def origin_x_getter(self):
+    def origin_x_getter(self): # the x coordinate of the position that the object rotates around
         return self.origin[0]
-    def origin_x_setter(self, value):
+    def origin_x_setter(self, value): # the x coordinate of the position that the object rotates around
         self.origin = Vec3(value, self.origin_y, self.origin_z)
 
-    def origin_y_getter(self):
+    def origin_y_getter(self): # the y coordinate of the position that the object rotates around
         return self.origin[1]
-    def origin_y_setter(self, value):
+    def origin_y_setter(self, value): # the y coordinate of the position that the object rotates around
         self.origin = Vec3(self.origin_x, value, self.origin_z)
 
-    def origin_z_getter(self):
+    def origin_z_getter(self): # the z coordinate of the position that the object rotates around
         return self.origin[2]
-    def origin_z_setter(self, value):
+    def origin_z_setter(self, value): # the z coordinate of the position that the object rotates around
         self.origin = Vec3(self.origin_x, self.origin_y, value)
 
     def world_position_getter(self):
