@@ -65,6 +65,7 @@ class TextField(Entity):
             'select_all':       ('ctrl+a',),
             'select_word':      ('double click',),
             'select_line':      ('triple click',),
+            'scroll_to_bottom': ('shift+alt+e',),
             # 'toggle_comment':   ('ctrl+alt+c',),
             # 'find':             ('ctrl+f',),
             'move_operations' : {
@@ -226,8 +227,6 @@ class TextField(Entity):
             lines[y] = l
         # normal erase
         else:
-            removed = l[x-1]
-
             l = l[:x-1] + l[x:]
             self.cursor.x -= 1
 
@@ -341,6 +340,19 @@ class TextField(Entity):
 
         return (x, y)
 
+    def set_scroll(self, value, render=True):
+        self.scroll = value
+        if self.max_lines < 9999:
+            if self.scroll < 9999:
+                self.scroll = clamp(self.scroll, 0, 9999)
+                self.render()
+        else:
+            self.scroll = clamp(self.scroll, 0, 9999)
+            self.scroll_parent.y = (self.scroll * Text.size * self.line_height)
+
+        if render:
+            self.render()
+
 
     def input(self, key):
         # print('-------------', key)
@@ -357,26 +369,10 @@ class TextField(Entity):
 
         if mouse.hovered_entity == self.bg:
             if key in self.shortcuts['scroll_down']:
-                if self.max_lines < 9999:
-                    if self.scroll < 9999:
-                        self.scroll = clamp(self.scroll+self.scroll_amount, 0, 9999)
-                        self.render()
-                else:
-                    self.scroll = clamp(self.scroll+self.scroll_amount, 0, 9999)
-                    self.scroll_parent.y = (self.scroll * Text.size * self.line_height)
-                return
+                self.set_scroll(self.scroll + self.scroll_amount)
 
             elif key in self.shortcuts['scroll_up']:
-                if self.max_lines < 9999:
-                    # if self.scroll > 0:
-                    self.scroll = clamp(self.scroll-self.scroll_amount, 0, 9999)
-                    # self.y = .4-.025
-                    # self.animate('y', .4, duration=.045, curve=curve.linear)
-                    self.render()
-                else:
-                    self.scroll = clamp(self.scroll-self.scroll_amount, 0, 9999)
-                    self.scroll_parent.y = (self.scroll * Text.size * self.line_height)
-                return
+                self.set_scroll(self.scroll - self.scroll_amount)
 
         if key == 'double click':
             t = time.time()
@@ -504,6 +500,10 @@ class TextField(Entity):
             self.text = '\n'.join(lines)
             self.render()
             return
+
+        if key in self.shortcuts['scroll_to_bottom'] and mouse.hovered_entity == self.bg:
+            self.scroll_to_bottom()
+
 
         if key in self.shortcuts['erase']:
             if not self.selection or self.selection[1] == self.selection[0]:
@@ -729,6 +729,11 @@ class TextField(Entity):
                     return
             cursor.x = len(l)
 
+    def scroll_to_bottom(self, blank_lines_at_bottom=0):
+        # self.scroll = min(len(self.text.split('\n')), self.max_lines)
+        self.set_scroll(len(self.text.split('\n'))-self.max_lines+blank_lines_at_bottom)
+        # print('scrolled to bottom', min(len(self.text.split('\n')), self.max_lines))
+
 
     def text_input(self, key):
         cursor, add_text = self.cursor, self.add_text
@@ -866,7 +871,7 @@ if __name__ == '__main__':
     # Text.default_font = 'consola.ttf'
     # Text.default_resolution = 16*2
     # TreeView()
-    te = TextField(max_lines=50, scale=1, register_mouse_input = True, text='1234')
+    te = TextField(max_lines=30, scale=1, register_mouse_input = True, text='1234')
     #te = TextField(max_lines=300, scale=1, register_mouse_input = True, scroll_size = (50,3))
     # te.line_numbers.enabled = True
     # for name in color.color_names:
@@ -898,5 +903,10 @@ if __name__ == '__main__':
         '''*30
         )[1:]
     te.render()
+
+    def input(key):
+        if key == '3':
+            te.input('scroll down')
+
 
     app.run()

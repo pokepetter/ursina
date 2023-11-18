@@ -1,5 +1,5 @@
 from ursina import *
-from enum import Enum
+
 
 class ContentTypes:
     int = '0123456789'
@@ -9,12 +9,12 @@ class ContentTypes:
 
 
 class InputField(Button):
-    def __init__(self, default_value='', label='', max_lines=1, character_limit=24, **kwargs):
+    def __init__(self, default_value='', label='', max_lines=1, character_limit=24, text='', active=False, **kwargs):
         if not 'scale' in kwargs and not 'scale_x' in kwargs and not 'scale_y' in kwargs:
             kwargs['scale'] = (.5, Text.size*2*max_lines)
 
-        super().__init__(highlight_scale=1, pressed_scale=1, highlight_color=color.black, **kwargs)
 
+        super().__init__(highlight_scale=1, pressed_scale=1, highlight_color=color.black, **kwargs)
         for key, value in kwargs.items():
             if 'scale' in key:
                 setattr(self, key, value)
@@ -28,7 +28,7 @@ class InputField(Button):
         self.on_submit = None   # function to be called when you press self.submit_on.
         self.on_value_changed = None
 
-        self.text_field = TextField(world_parent=self, x=-.45, y=.25, z=-.1, max_lines=max_lines, character_limit=character_limit, register_mouse_input=True)
+        self.text_field = TextField(world_parent=self, x=-.45, y=.25, z=-.1, max_lines=max_lines, character_limit=character_limit, text=text, register_mouse_input=True)
         destroy(self.text_field.bg)
         self.text_field.bg = self
 
@@ -59,7 +59,7 @@ class InputField(Button):
         self.text_field.shortcuts['indent'] = ('')
         self.text_field.shortcuts['dedent'] = ('')
 
-        self.active = False
+        self.active = active
 
         if label:
             self.label = Text(str(label) + ':', parent = self, position = self.text_field.position, scale = 1.25)
@@ -120,7 +120,8 @@ if __name__ == '__main__':
     # background = Entity(model='quad', texture='pixelscape_combo', parent=camera.ui, scale=(camera.aspect_ratio,1), color=color.white)
     gradient = Entity(model='quad', texture='vertical_gradient', parent=camera.ui, scale=(camera.aspect_ratio,1), color=color.hsv(240,.6,.1,.75))
 
-    username_field = InputField(y=-.12, limit_content_to='0123456789')
+    username_field = InputField(y=-.12, limit_content_to='0123456789', default_value='11', active=True)
+    username_field.text = '0929468098'
     password_field = InputField(y=-.18, hide_content=True)
     username_field.next_field = password_field
 

@@ -21,6 +21,7 @@ if 'src' in dirs and 'python' in dirs:
 
 window_type = 'onscreen'
 show_ursina_splash = False
+ursina_splash = None
 gltf_no_srgb = True
 
 print_info = development_mode

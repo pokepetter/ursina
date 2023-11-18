@@ -1,6 +1,3 @@
-import sys
-import importlib
-import glob
 import ursina
 from pathlib import Path
 from panda3d.core import NodePath
@@ -53,9 +50,9 @@ class Entity(NodePath):
     default_values = {
         # 'parent':scene,
         'name':'entity', 'enabled':True, 'eternal':False, 'position':Vec3(0,0,0), 'rotation':Vec3(0,0,0), 'scale':Vec3(1,1,1), 'model':None, 'origin':Vec3(0,0,0),
-        'shader':None, 'texture':None, 'color':color.white, 'collider':None}
+        'shader':None, 'texture':None, 'texture_scale':Vec2(1,1), 'color':color.white, 'collider':None}
 
-    def __init__(self, add_to_scene_entities=True, **kwargs):
+    def __init__(self, add_to_scene_entities=True, enabled=True, **kwargs):
         self._children = []
         super().__init__(self.__class__.__name__)
 
@@ -114,17 +111,12 @@ class Entity(NodePath):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-        if self.enabled and hasattr(self, 'on_enable'):
-            if isinstance(self.on_enable, Sequence):
-                self.on_enable.start()
-            elif callable(self.on_enable):
-                self.on_enable()
+        self.enabled = enabled
+        if enabled and hasattr(self, 'on_enable'):
+            self.on_enable()
 
-        elif not self.enabled and hasattr(self, 'on_disable'):
-            if isinstance(self.on_disable, Sequence):
-                self.on_disable.start()
-            elif callable(self.on_disable):
-                self.on_disable()
+        elif not enabled and hasattr(self, 'on_disable'):
+            self.on_disable()
 
         # look for @every decorator and start a looping Sequence for decorated method
         from ursina.scripts.every_decorator import every, get_class_name
@@ -165,27 +157,21 @@ class Entity(NodePath):
         return getattr(self, '_enabled', True)
 
     def enabled_setter(self, value):    # disabled entities will not be visible nor run code.
-        if value and hasattr(self, 'on_enable') and not self.enabled:
-            if isinstance(self.on_enable, Sequence):
-                self.on_enable.start()
-            elif callable(self.on_enable):
-                self.on_enable()
+        original_value = self.enabled
+        self._enabled = value
 
-        elif value is False and hasattr(self, 'on_disable') and self.enabled:
-            if isinstance(self.on_disable, Sequence):
-                self.on_disable.start()
-            elif callable(self.on_disable):
-                self.on_disable()
+        if value and not original_value and hasattr(self, 'on_enable'):
+            self.on_enable()
 
+        if not value and original_value and hasattr(self, 'on_disable'):
+            self.on_disable()
 
-        if value is True:
+        if value:
             if hasattr(self, 'is_singleton') and not self.is_singleton():
                 self.unstash()
         else:
             if hasattr(self, 'is_singleton') and not self.is_singleton():
                 self.stash()
-
-        self._enabled = value
 
 
     def model_getter(self):
@@ -224,9 +210,9 @@ class Entity(NodePath):
                 print_warning(f"missing model: '{value}'")
                 return
 
-        if self.model:
-            self.model.reparentTo(self)
-            self.model.setTransparency(TransparencyAttrib.M_dual)
+        if self._model:
+            self._model.reparentTo(self)
+            self._model.setTransparency(TransparencyAttrib.M_dual)
             self.color = self.color # reapply color after changing model
             self.texture = self.texture # reapply texture after changing model
             self._vert_cache = None
@@ -284,9 +270,13 @@ class Entity(NodePath):
         if hasattr(value, '_children') and self not in value._children:
             value._children.append(self)
 
+        self._parent = value
+        if value is None:
+            self.enabled = False
+            return
+        #     value = scene
         self.reparent_to(value)
         self.enabled = self.enabled   # parenting will undo the .stash() done when setting .enabled to False, so reapply it here
-        self._parent = value
 
 
     def world_parent_getter(self):
@@ -383,7 +373,7 @@ class Entity(NodePath):
             self._collider.name = value
 
 
-        self.collision = bool(self._collider)
+        self.collision = bool(self.collider)
         return
 
     def collision_getter(self):
@@ -403,6 +393,16 @@ class Entity(NodePath):
             self.collider.node_path.stash()
             if self in scene.collidables:
                 scene.collidables.remove(self)
+
+
+    def on_click_getter(self):
+        return getattr(self, '_on_click', None)
+
+    def on_click_setter(self, value):
+        if not callable(value):
+            raise TypeError(f'on_click must be a callabe, not {type(value)}')
+        self._on_click = value
+
 
     def origin_getter(self):
         return getattr(self, '_origin', Vec3.zero)
@@ -555,8 +555,10 @@ class Entity(NodePath):
     def world_scale_getter(self):
         return Vec3(*self.getScale(scene))
     def world_scale_setter(self, value):
-        if isinstance(value, (int, float, complex)):
-            value = Vec3(value, value, value)
+        if not isinstance(value, (Vec2, Vec3)):
+            value = self._list_to_vec(value)
+        if isinstance(value, Vec2):
+            value = Vec3(*value, self.scale_z)
 
         self.setScale(scene, value)
 
@@ -708,8 +710,9 @@ class Entity(NodePath):
     def texture_setter(self, value):    # set model with texture='texture_name'. requires a model to be set beforehand.
         if value is None and self.texture:
             # print('remove texture')
-            self.model.clearTexture()
             self._texture = None
+            if self.model:
+                self.model.clearTexture()
             return
 
         if isinstance(value, str):
@@ -723,10 +726,13 @@ class Entity(NodePath):
                 print_warning(f"missing texture: '{texture_name}'")
                 return
 
-        self.model.setTextureOff(False)
+        if self.model:
+            self.model.setTextureOff(False)
+
         if value.__class__ is MovieTexture:
             self._texture = value
-            self.model.setTexture(value, 1)
+            if self.model:
+                self.model.setTexture(value, 1)
             return
 
         self._texture = value
@@ -735,10 +741,13 @@ class Entity(NodePath):
 
 
     def texture_scale_getter(self):
-        return getattr(self, '_texture_scale', Vec2(1,1))
+        if 'texture_scale' in self._shader_inputs:
+            return self._shader_inputs['texture_scale']
+        else:
+            return Vec2(1,1)
 
     def texture_scale_setter(self, value):  # how many times the texture should repeat, eg. texture_scale=(8,8).
-        self._texture_scale = Vec2(*value)
+        value = Vec2(*value)
         if self.model and self.texture:
             self.model.setTexScale(TextureStage.getDefault(), value[0], value[1])
             self.set_shader_input('texture_scale', value)
@@ -837,6 +846,9 @@ class Entity(NodePath):
     @property
     def model_bounds(self):
         if self.model:
+            if not self.model.getTightBounds():
+                return Bounds(start=self.world_position, end=self.world_position, center=Vec3.zero, size=Vec3.zero)
+
             start, end = self.model.getTightBounds()
             start = Vec3(start)
             end = Vec3(end)
@@ -861,9 +873,16 @@ class Entity(NodePath):
         self.setPos(relative_to, Vec3(value[0], value[1], value[2]))
 
 
-    def rotate(self, value, relative_to=None):  # rotate around local axis.
+    def rotate(self, value, relative_to=None, duration=0, fps=60):  # rotate around local axis.
         if not relative_to:
             relative_to = self
+
+        if duration:
+            rotation_sequence = Sequence()
+            for i in range(60*duration):
+                rotation_sequence.append(Func(self.rotate, rotation_step))
+                rotation_sequence.append(Wait(time_step))
+
 
         self.setHpr(relative_to, Vec3(value[1], value[0], value[2]) * Entity.rotation_directions)
 
@@ -1215,14 +1234,6 @@ class Entity(NodePath):
         return hit_info
 
 
-    def __setattr__(self, name, value):
-        try:
-            super().__setattr__(name, value)
-        except:
-            pass
-            # print('failed to set attribute:', name)
-
-
 
 if __name__ == '__main__':
     from ursina import *
@@ -1255,7 +1266,7 @@ if __name__ == '__main__':
 
 
     # test
-    e = Entity(model='cube', collider='box', texture='shore', color=hsv(.3,1,.5))
+    e = Entity(model='cube', collider='box', texture='shore', texture_scale=Vec2(2), color=hsv(.3,1,.5))
     print(repr(e))
     # a = Entity()
     # b = Entity(parent=a)

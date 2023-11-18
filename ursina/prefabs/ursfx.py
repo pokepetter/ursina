@@ -40,7 +40,6 @@ from ursina import *
 def ursfx(volume_curve, volume=.75, wave='sine', pitch=0, pitch_change=0, speed=1, pitch_curve=curve.linear):  # play a retro style sound effect
     a = Audio(wave, loop=True, pitch=pow(1 / 1.05946309436, -pitch), volume=volume_curve[0][1] * volume)
 
-    cumulative_time = 0
     for i in range(len(volume_curve)-1):
         a.animate('volume', volume_curve[i+1][1] * volume, duration=(volume_curve[i+1][0] - volume_curve[i][0]) / speed, delay=volume_curve[i][0] / speed, curve=curve.linear)
 

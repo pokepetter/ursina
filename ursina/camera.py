@@ -23,10 +23,15 @@ class Camera(Entity):
         self._cam = None
         self._render = None
         self.ui_size = 40
+
         self._ui_lens_node = None
-        self.ui = None
-        self.fov = 40
-        self.orthographic = False
+        self.perspective_lens_node = None
+        self.orthographic_lens_node = None
+        self.ui = Entity(eternal=True, name='ui', scale=(self.ui_size*.5, self.ui_size*.5), add_to_scene_entities=False)
+        self.overlay = Entity(parent=self.ui, model='quad', scale=99, color=color.clear, eternal=True, z=-99, add_to_scene_entities=False)
+        # self.ready = False
+        # self._orthographic = False
+        # self._fov = 40   # horizontal fov
 
 
     def set_up(self):
@@ -48,7 +53,6 @@ class Camera(Entity):
 
         self.orthographic = False
         self.fov = 40   # horizontal fov
-        # self.fov = 22.5
         self.clip_plane_near = 0.1
         self.clip_plane_far = 10000
 
@@ -69,8 +73,7 @@ class Camera(Entity):
         self.ui_display_region.set_camera(self.ui_camera)
         scene.ui_camera = self.ui_camera
 
-        self.ui = Entity(eternal=True, name='ui', parent=self.ui_camera, scale=(self.ui_size*.5, self.ui_size*.5))
-        self.overlay = Entity(parent=self.ui, model='quad', scale=99, color=color.clear, eternal=True, z=-99)
+        self.ui.parent = self.ui_camera
 
         # these get created when setting a shader
         self.filter_manager = None
@@ -78,12 +81,10 @@ class Camera(Entity):
         self.render_texture = None
         self.filter_quad = None
         self.depth_texture = None
-        # self.normals_texture = None
 
 
     def orthographic_getter(self):
-        return getattr(self, '_orthographic', 0)
-
+        return getattr(self, '_orthographic', False)
 
     def orthographic_setter(self, value):
         self._orthographic = value
@@ -93,8 +94,6 @@ class Camera(Entity):
 
     def fov_getter(self):
         return getattr(self, '_fov', 0)
-
-
     def fov_setter(self, value):
         value = max(1, value)
         self._fov = value
@@ -104,8 +103,6 @@ class Camera(Entity):
 
         elif self.orthographic and hasattr(self, 'orthographic_lens'):
             self.orthographic_lens.set_film_size(value * self.aspect_ratio, value)
-
-        application.base.cam.node().set_lens((self.perspective_lens, self.orthographic_lens)[value])
 
     def clip_plane_near_getter(self):
         return self._clip_plane_near
@@ -190,7 +187,7 @@ if __name__ == '__main__':
     from ursina import *
     from ursina import Ursina, camera, Entity, EditorCamera
 
-    window.borderless = False
+    # window.borderless = False
     app = Ursina()
 
     camera.orthographic = True

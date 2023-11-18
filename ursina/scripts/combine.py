@@ -1,7 +1,7 @@
 from ursina import *
 
 
-def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[]):
+def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[], ignore_disabled=True):
     verts = []
     tris = []
     norms = []
@@ -9,9 +9,13 @@ def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[]):
     cols = []
     to_destroy = []
     o = 0
+    original_texture = combine_parent.texture
 
     for e in scene.entities:
         if e in ignore:
+            continue
+
+        if ignore_disabled and not e.enabled:
             continue
 
         if e.has_ancestor(combine_parent) or e == combine_parent:
@@ -43,7 +47,7 @@ def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[]):
                         new_tris.extend([t[0], t[1], t[2], t[2], t[3], t[0]])
 
             new_tris = [t+o for t in new_tris]
-            new_tris = [(new_tris[i], new_tris[i+1], new_tris[i+2]) for i in range(0, len(new_tris), 3)]
+            new_tris = [(new_tris[i], new_tris[i+1], new_tris[i+2]) for i in range(0, len(new_tris)-1, 3)]
 
             o += len(e.model.vertices)
             tris += new_tris
@@ -70,6 +74,7 @@ def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[]):
         [destroy(e) for e in to_destroy]
 
     combine_parent.model = Mesh(vertices=verts, triangles=tris, normals=norms, uvs=uvs, colors=cols, mode='triangle')
+    combine_parent.texture = original_texture
     # print('combined')
     # entity.model = Mesh(vertices=verts,  mode='triangle')
     # entity.flatten_strong()

@@ -10,8 +10,7 @@ class Button(Entity):
     default_model = None # will default to rounded Quad
 
     def __init__(self, text='', parent=camera.ui, model=Default, radius=.1, origin=(0,0), text_origin=(0,0), text_size=1, color=Default, collider='box', highlight_scale=1, pressed_scale=1, disabled=False, **kwargs):
-        super().__init__(parent=camera.ui)
-        self.parent = parent
+        super().__init__(parent=parent)
 
         for key in ('scale', 'scale_x', 'scale_y', 'scale_z', 'world_scale', 'world_scale_x', 'world_scale_y', 'world_scale_z'):
             if key in kwargs:   # set the scale before model for correct corners
@@ -39,8 +38,8 @@ class Button(Entity):
         self.collider = collider
         self.disabled = disabled
 
-        self.text_origin = text_origin
         self.text_entity = None
+        self.text_origin = text_origin
         if text:
             self.text = text
             self.text_size = text_size
@@ -93,12 +92,22 @@ class Button(Entity):
         self.text_entity.color = value
 
     def icon_getter(self):
-        return self.getattr('icon_entity', None)
+        return getattr(self, 'icon_entity', None)
 
     def icon_setter(self, value):
         if value and not hasattr(self, 'icon_entity'):
             self.icon_entity = Entity(parent=self.model, name=f'button_icon_entity_{value}', model='quad', z=-.1, add_to_scene_entities=False)
         self.icon_entity.texture = value
+        longest_side = max(self.icon_entity.texture.width, self.icon_entity.texture.height)
+        aspect_ratio = self.icon_entity.texture.width / self.icon_entity.texture.height
+        if aspect_ratio == 1:
+            return
+
+        if self.icon_entity.texture.width < self.icon_entity.texture.height:
+            self.icon_entity.scale_x = self.icon_entity.scale_y * aspect_ratio
+        else:
+            self.icon_entity.scale_y = self.icon_entity.scale_x / aspect_ratio
+
 
     def icon_world_scale_getter(self):
         if not self.icon:
@@ -193,12 +202,13 @@ class Button(Entity):
 
 
 if __name__ == '__main__':
-    from ursina import Ursina, application, Tooltip
+    from ursina import *
     app = Ursina()
 
     Button.default_color = color.red
-    Button(model='quad', scale=.05, x=-.5, color=color.lime, text='text scale\ntest', text_size=.5, text_color=color.black)
-
+    b = Button(model='quad', scale=.05, x=-.5, color=color.lime, text='text scale\ntest', text_size=.5, text_color=color.black)
+    b.text_size = .5
+    b.on_click = Sequence(Wait(.5), Func(print, 'aaaaaa'), )
 
     b = Button(parent=camera.ui, text='hello world!', scale=.25)
     Button.default_color = color.blue

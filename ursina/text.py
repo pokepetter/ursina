@@ -34,8 +34,8 @@ class Text(Entity):
 
         self.font = Text.default_font
         self.resolution = Text.default_resolution
-        self.line_height = 1
         self.use_tags = True
+        self.line_height = 1
         self.start_tag = start_tag
         self.end_tag = end_tag
         self.text_colors = {'default' : color.text_color}
@@ -93,6 +93,8 @@ class Text(Entity):
         for tn in self.text_nodes:
             tn.remove_node()
         self.text_nodes = []
+        if not text:
+            return
 
         # check if using tags
         if (not self.use_tags
@@ -237,7 +239,8 @@ class Text(Entity):
             self._font.clear()  # remove assertion warning
             self._font.setPixelsPerUnit(self.resolution)
             self._font.setLineHeight(self.line_height)
-            self.text = self.raw_text   # update tex
+            if self.text:
+                self.text = self.raw_text   # update tex
 
     @property
     def color(self): # sets the default color.
@@ -256,15 +259,12 @@ class Text(Entity):
 
     @property
     def line_height(self):
-        try:
-            return self._line_height
-        except:
-            return 1
+        return getattr(self, '_line_height', 1)
 
     @line_height.setter
     def line_height(self, value):
         self._line_height = value
-        if self.use_tags:
+        if self.use_tags and self.text:
             self.text = self.raw_text
         else:
             self._font.setLineHeight(value)
@@ -359,11 +359,12 @@ class Text(Entity):
         value = self.origin
 
         linewidths = [self.text_nodes[0].node().calcWidth(line) for line in self.lines]
-        # print('.........', linewidths)
         for tn in self.text_nodes:
             # center text horizontally
             # linenumber = abs(int(tn.getZ() / self.size / self.line_height))
             linenumber = abs(int(tn.getY() / self.size / self.line_height))
+            linenumber = clamp(linenumber, 0, len(linewidths)-1)
+
             tn.setX(tn.getX() - (linewidths[linenumber] / 2 * self.size * tn.getScale()[0] / self.size))
             # tn.setX(tn.getX() - (linewidths[linenumber] / 2 * self.size))
             # add offset based on origin/value
@@ -474,6 +475,8 @@ if __name__ == '__main__':
             test.text = '<default><image:file_icon> <red><image:file_icon> test '
             print('by', test.text)
 
+        if key == 'c':
+            test.text = ''
     # test.create_background()
     window.fps_counter.enabled = False
     print('....', Text.get_width('yolo'))

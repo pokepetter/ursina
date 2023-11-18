@@ -14,7 +14,6 @@ class LevelEditor(Entity):
         self.scenes = [[LevelEditorScene(x, y, f'untitled_scene[{x},{y}]') for y in range(8)] for x in range(8)]
         self.current_scene = None
 
-
         self.grid = Entity(parent=self, model=Grid(16,16), rotation_x=90, scale=64, collider='box', color=color.white33, enabled=False)
         self.origin_mode = 'center'
         self.editor_camera = EditorCamera(parent=self, rotation_x=20, eternal=False, rotation_smoothing=0)
@@ -25,7 +24,6 @@ class LevelEditor(Entity):
 
 
         self.ui = Entity(parent=camera.ui, name='LEVEL_EDITOR.ui')
-
         self.point_renderer = Entity(parent=self, model=Mesh([], mode='point', thickness=.1, render_points_in_3d=True), texture='circle_outlined', always_on_top=True, unlit=True, render_queue=1)
         self.cubes = [Entity(wireframe=True, color=color.azure, parent=self, enabled=True) for i in range(128)] # max selection
 
@@ -53,6 +51,7 @@ class LevelEditor(Entity):
 
         self.prefab_folder = application.asset_folder / 'prefabs'
         self.built_in_prefabs = [ClassSpawner, WhiteCube, TriplanarCube, Pyramid, PokeShape]
+        self.prefabs = []
         self.spawner = Spawner()
         self.deleter = Deleter()
         self.grouper = Grouper()
@@ -75,7 +74,7 @@ class LevelEditor(Entity):
         self.help = Help()
 
         self._edit_mode = True
-        self.sky = Sky
+        # self.sky = Sky()
 
 
     @property
@@ -83,6 +82,10 @@ class LevelEditor(Entity):
         if not self.current_scene:
             return []
         return self.current_scene.entities
+
+    @entities.setter
+    def entities(self, value):
+        self.current_scene.entities = value
 
     @property
     def selection(self):
@@ -190,8 +193,8 @@ class LevelEditor(Entity):
                 self.entities.remove(e)
 
         # self.point_renderer.model.vertices = [e.world_position for e in self.entities if e.selectable and not e.model ]
-        self.point_renderer.model.vertices.clear()
-        self.point_renderer.model.colors.clear()
+        self.point_renderer.model.vertices = []
+        self.point_renderer.model.colors = []
 
         for e in self.entities:
             if not e or e.model and e.model.name == 'cube':
@@ -213,6 +216,8 @@ class LevelEditor(Entity):
 
 
         # self.point_renderer.model.colors = [color.azure if e in self.selection else lerp(color.orange, color.hsv(0,0,1,0), distance(e.world_position, camera.world_position)/100) for e in self.entities if e.selectable and not e.collider]
+        self.point_renderer.model.triangles = []
+        print('--------------', len(self.point_renderer.model.vertices), len(self.point_renderer.model.colors), self.point_renderer.model.recipe)
         self.point_renderer.model.generate()
 
         # self.gizmo.enabled = bool(self.selection and self.selection[-1])
@@ -321,17 +326,18 @@ class LevelEditorScene:
                 # print('eval:', f'{line["class"]}(parent=self.scene_parent, {args})')
                 try:
                     e = eval(f'{line["class"]}(parent=self.scene_parent, {args})', globals(), locals())
+                    self.entities.append(e)
                 except Exception as e:
-                    print_warning('Error loading scene:', self.path.name, e, 'line:\n', f'{line["class"]}(parent=self.scene_parent, {args})')
-                    try:
-                        e = eval(f'{line["class"]}(parent=self.scene_parent)')
-                    except:
-                        print('missing/invalid class:', line['class'])
+                    # print_warning('Error loading scene:', self.path.name, e, 'line:\n', f'{line["class"]}(parent=self.scene_parent, {args})')
+                    # try:
+                    e = eval(f'{line["class"]}(parent=self.scene_parent)')
+                    self.entities.append(e)
+                    # except:
+                    #     print('missing/invalid class:', line['class'])
                         # error_cube = Entity(model='cube', color=color.magenta)
                         # for key in ('parent', 'position', 'rotation', 'scale'):
                         #     if line[key]: setattr(error_cube, key, line[key]
 
-                self.entities.append(e)
                 for e in self.entities:
                     if not e.shader:
                         e.shader = lit_with_shadows_shader
@@ -341,7 +347,7 @@ class LevelEditorScene:
                         e.collider_type = None
 
                     e.original_parent = e.parent
-                    if e.model.name == 'cube':
+                    if e.model and e.model.name == 'cube':
                         e.collider = 'box'
                         e.collision = False
 
@@ -447,16 +453,16 @@ axis_colors = {
 if not load_model('arrow', application.internal_models_compressed_folder):
     p = Entity(enabled=False)
     Entity(parent=p, model='cube', scale=(1,.05,.05))
-    Entity(parent=p, model=Cone(4, direction=(1,0,0)), x=.5, scale=.2)
+    Entity(parent=p, model=Cone(4), x=.5, scale=.2, rotation=(0,90,0))
     arrow_model = p.combine()
-    arrow_model.save('arrow.ursinamesh', path=application.internal_models_compressed_folder)
+    arrow_model.save('arrow.ursinamesh', folder=application.internal_models_compressed_folder)
 
 if not load_model('scale_gizmo', application.internal_models_compressed_folder):
     p = Entity(enabled=False)
     Entity(parent=p, model='cube', scale=(.05,.05,1))
     Entity(parent=p, model='cube', z=.5, scale=.2)
     arrow_model = p.combine()
-    arrow_model.save('scale_gizmo.ursinamesh', path=application.internal_models_compressed_folder)
+    arrow_model.save('scale_gizmo.ursinamesh', folder=application.internal_models_compressed_folder)
 
 
 class GizmoArrow(Draggable):
@@ -600,7 +606,7 @@ class Gizmo(Entity):
     def update(self):
         if held_keys['r'] or held_keys['s']:
             return
-        # self.world_scale = distance(self.world_position, camera.world_position) * camera.fov * .0005
+        self.world_scale = distance(self.world_position, camera.world_position) * camera.fov * .0005
 
         for i, axis in enumerate('xyz'):
             if self.subgizmos[axis].dragging:
@@ -1298,7 +1304,7 @@ class TriplanarCube(Entity):
 
     def __init__(self, **kwargs):
         super().__init__(**__class__.default_values | kwargs)
-        self.set_shader_input('top_texture', load_texture('brick'))
+        self.set_shader_input('side_texture', load_texture('brick'))
 
     def __deepcopy__(self, memo):
         return eval(repr(self))
@@ -1337,7 +1343,7 @@ class Spawner(Entity):
         import_all_classes(LEVEL_EDITOR.prefab_folder, debug=True)
         # LEVEL_EDITOR.prefabs =
 
-        for i, prefab in enumerate(LEVEL_EDITOR.built_in_prefabs):
+        for i, prefab in enumerate(LEVEL_EDITOR.built_in_prefabs + LEVEL_EDITOR.prefabs):
             button = Button(parent=self.ui, scale=.075/2, text=' ', text_size=.5, on_click=Func(self.spawn_entity, prefab))
             if hasattr(prefab, 'icon'):
                 button.icon = prefab.icon
@@ -1565,7 +1571,8 @@ class LevelMenu(Entity):
 
 
     def input(self, key):
-        if held_keys['shift'] and key == 'm':
+        combined_key = input_handler.get_combined_key(key)
+        if combined_key == 'shift+m':
             self.menu.enabled = not self.menu.enabled
 
         # if key == 'left mouse down' and self.menu.hovered:
@@ -1876,10 +1883,13 @@ class Inspector(Entity):
                     # print('use instance value,', instance_value)
                     value = instance_value
 
-                if isinstance(value, str):
-                    b = InspectorButton(parent=self.shader_inputs_parent, text=f'   {name}:', highlight_color=color.black90, y=-i)
+                if isinstance(value, str):  # texture
+                    b = InspectorButton(parent=self.shader_inputs_parent, text=f' {name}: {value}', highlight_color=color.black90, y=-i)
                     b.text_entity.scale *= .6
-                    b.on_click = Sequence(Func(setattr, LEVEL_EDITOR.menu_handler, 'state', 'texture_menu'), Func(setattr, LEVEL_EDITOR.texture_menu, 'target_attr', name))
+                    b.on_click = Sequence(
+                        Func(setattr, LEVEL_EDITOR.menu_handler, 'state', 'texture_menu'),
+                        Func(setattr, LEVEL_EDITOR.texture_menu, 'target_attr', name)
+                        )
 
 
                 if isinstance(value, Vec2) or (hasattr(value, '__len__') and len(value) == 2):
@@ -1903,6 +1913,7 @@ class Inspector(Entity):
                 elif isinstance(value, Color):
                     color_field = ColorField(parent=self.shader_inputs_parent, text=f' {name}', y=-i, is_shader_input=True, attr_name=name, value=value)
                     color_field.text_entity.scale *= .6
+
 
                 i += 1
 
@@ -1977,8 +1988,8 @@ class MenuHandler(Entity):
     @state.setter
     def state(self, value):
         target_state = self.states[value]
+        print('toggle:', value, 'from:', self._state)
         if self._state == value:
-            # print('toggle:', target_state, 'from:', target_state.enabled, not target_state.enabled)
             target_state.enabled = not target_state.enabled
             return
 
@@ -2072,12 +2083,13 @@ class TextureMenu(AssetMenu):
             for e in LEVEL_EDITOR.selection:
                 e.texture = name
         else:
-            # LEVEL_EDITOR.current_scene.undo.record_undo([(LEVEL_EDITOR.entities.index(e), 'texture', e.texture, name) for e in LEVEL_EDITOR.selection])
+            LEVEL_EDITOR.current_scene.undo.record_undo([(LEVEL_EDITOR.entities.index(e), self.target_attr, e.get_shader_input(self.target_attr), name) for e in LEVEL_EDITOR.selection])
             for e in LEVEL_EDITOR.selection:
                 e.set_shader_input(self.target_attr, name)
 
         LEVEL_EDITOR.inspector.update_inspector()
         LEVEL_EDITOR.menu_handler.state = 'None'
+
 
 class ShaderMenu(AssetMenu):
     def on_enable(self):
@@ -2281,7 +2293,8 @@ class Duplicator(Entity):
 
 
     def input(self, key):
-        if held_keys['shift'] and key == 'd' and LEVEL_EDITOR.selection:
+        combined_key = input_handler.get_combined_key(key)
+        if combined_key == 'shift+d' and LEVEL_EDITOR.selection:
             # print('duplicate')
 
             LEVEL_EDITOR.menu_handler.state = 'None'
@@ -2351,27 +2364,47 @@ class PokeShape(Entity):
         subdivisions=0,
         smoothing_distance=.1,
         points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,.5), Vec3(-.5,0,.5)],
-        texture_scale=Vec2(.125),
         collider_type=None,
+        texture='grass',
+        texture_scale=Vec2(.125, .125),
+        # shader_inputs={'side_texture':Func(load_texture, 'grass'), }
 
     ) # combine dicts
 
     gizmo_color = color.violet
 
-    def __init__(self, points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,.5), Vec3(-.5,0,.5)], **kwargs):
+    def __init__(self, edit_mode=False, **kwargs):
+        kwargs = __class__.default_values | kwargs
+        super().__init__(name=kwargs['name'])
+
         self.original_parent = LEVEL_EDITOR
         self.selectable = True
         self.highlight_color = color.blue
-        super().__init__(**__class__.default_values | kwargs)
+        # self._point_gizmos = LoopingList([Entity(parent=self, original_parent=self, position=e, selectable=False, name='PokeShape_point', is_gizmo=True) for e in kwargs['points']])
         self.model = Mesh()
-
-        self.point_gizmos = LoopingList([Entity(parent=self, original_parent=self, position=e, selectable=False, name='PokeShape_point', is_gizmo=True) for e in points])
-        self.add_new_point_renderer = Entity(model=Mesh(vertices=[], mode='point', thickness=.075), color=color.white, alpha=.5, texture='circle', unlit=True, is_gizmo=True, selectable=False, enabled=False, always_on_top=True)
+        self.add_new_point_renderer = Entity(model=Mesh(mode='point', vertices=[], thickness=.075), color=color.white, alpha=.5, texture='circle', unlit=True, is_gizmo=True, selectable=False, enabled=False, always_on_top=True)
         self.add_collider = False
-        self.wall_parent = None
-        self._edit_mode = False
+        self._wall_parent = None
+        self.wall_height = kwargs['wall_height']
+        self.subdivisions =  kwargs['subdivisions']
+
+        self._point_gizmos = []
+        self.points = kwargs['points']
+        self.edit_mode = edit_mode
+        self.texture = kwargs['texture']
+
+        self.position = kwargs['position']
+        for key in Entity.default_values.keys():
+            if key == 'model':
+                continue
+            setattr(self, key, kwargs[key])
+
+        # for key, value in kwargs.items():
+        #     try:
+        #         setattr(self, key, value)
+        #     except:
+        #         pass
         self.generate()
-        self.edit_mode = False
 
 
     def draw_inspector(self):
@@ -2379,9 +2412,12 @@ class PokeShape(Entity):
 
 
     def generate(self):
+        # print('--------------', self.texture_scale)
         import tripy
-        self.point_gizmos = LoopingList([e for e in self.point_gizmos if e])
-        polygon = LoopingList(Vec2(*e.get_position(relative_to=self).xz) for e in self.point_gizmos)
+        # if not self.model:
+        #     return
+
+        polygon = LoopingList(Vec2(*e.get_position(relative_to=self).xz) for e in self._point_gizmos)
 
         if self.subdivisions:
             for j in range(self.subdivisions):
@@ -2400,18 +2436,18 @@ class PokeShape(Entity):
         self.model.uvs = [Vec2(v[0],v[2])*1 for v in self.model.vertices]
         self.model.normals = [Vec3(0,1,0) for i in range(len(self.model.vertices))]
         self.model.generate()
-        self.texture = 'grass'
+        # self.texture = 'grass'
         # [destroy(e) for e in self.wall_parent.children]
         # print('-------------', self.make_wall, self.wall_parent)
-        if self.wall_parent:
+        if self._wall_parent:
             # print('destroy old wall parent')
-            destroy(self.wall_parent)
-            self.wall_parent = None
+            destroy(self._wall_parent)
+            self._wall_parent = None
 
         if self.wall_height:
-            if not self.wall_parent:
+            if not self._wall_parent:
                 # print('make new wall parent')
-                self.wall_parent = Entity(parent=self, model=Mesh(), color=color.dark_gray, add_to_scene_entities=False)
+                self._wall_parent = Entity(parent=self, model=Mesh(), color=color.dark_gray, add_to_scene_entities=False)
 
             # polygon_3d = [Vec3(e[0], 0, e[1]) for e in polygon]
             # polygon_3d.append(polygon_3d[0])
@@ -2431,11 +2467,11 @@ class PokeShape(Entity):
                     vert + Vec3(0,-self.wall_height,0),
                     next_vert + Vec3(0,-self.wall_height,0),
                 ))
-            #     # wall = Entity(model='cube', origin_x=-.5, scale=.1, position=vert, scale_x=distance(vert, next_vert), color=color.blue, parent=self.wall_parent, add_to_scene_entities=False)
+            #     # wall = Entity(model='cube', origin_x=-.5, scale=.1, position=vert, scale_x=distance(vert, next_vert), color=color.blue, parent=self._wall_parent, add_to_scene_entities=False)
             #     # wall.look_at(next_vert, 'right')
             #
-            self.wall_parent.model.vertices = wall_verts
-            self.wall_parent.model.generate()
+            self._wall_parent.model.vertices = wall_verts
+            self._wall_parent.model.generate()
 
 
         # if self.add_collider:
@@ -2443,23 +2479,31 @@ class PokeShape(Entity):
 
         if self.edit_mode:
             self.add_new_point_renderer.model.vertices = []
-            for i, e in enumerate(self.point_gizmos):
-                self.add_new_point_renderer.model.vertices.append(lerp(self.point_gizmos[i].world_position, self.point_gizmos[i+1].world_position, .5))
-                # self.add_new_point_renderer.model.vertices.append(self.point_gizmos[i].world_position)
+            for i, e in enumerate(self._point_gizmos):
+                self.add_new_point_renderer.model.vertices.append(lerp(self._point_gizmos[i].world_position, self._point_gizmos[i+1].world_position, .5))
+                # self.add_new_point_renderer.model.vertices.append(self._point_gizmos[i].world_position)
             self.add_new_point_renderer.model.generate()
+
 
     def __deepcopy__(self, memo):
         changes = self.get_changes(__class__)
 
         _copy = __class__(texture_scale = self.texture_scale, **changes)
         _copy.texture_scale = self.texture_scale
-        print('---------------', _copy.texture_scale)
+        # print('---------------', _copy.texture_scale)
         return _copy
 
 
     @property
     def points(self):
-        return [e.position for e in self.point_gizmos]
+        return [e.position for e in self._point_gizmos]
+
+    @points.setter
+    def points(self, value):
+        [destroy(e) for e in self._point_gizmos]
+        self._point_gizmos = LoopingList([Entity(parent=self, original_parent=self, position=e, selectable=False, name='PokeShape_point', is_gizmo=True) for e in value])
+        LEVEL_EDITOR.entities.extend(self._point_gizmos)
+
 
     @property
     def edit_mode(self):
@@ -2467,24 +2511,23 @@ class PokeShape(Entity):
 
     @edit_mode.setter
     def edit_mode(self, value):
-
-        # print('set edit mode', value)
         self._edit_mode = value
+        # print('set edit mode', value)
         if value:
             [setattr(e, 'selectable', False) for e in LEVEL_EDITOR.entities if not e == self]
-            for e in self.point_gizmos:
+            for e in self._point_gizmos:
                 if not e in LEVEL_EDITOR.entities:
                     LEVEL_EDITOR.entities.append(e)
 
-            [setattr(e, 'selectable', True) for e in self.point_gizmos]
+            [setattr(e, 'selectable', True) for e in self._point_gizmos]
             LEVEL_EDITOR.gizmo.subgizmos['y'].enabled = False
             LEVEL_EDITOR.gizmo.fake_gizmo.subgizmos['y'].enabled = False
             self.add_new_point_renderer.enabled = True
             self.collider = None
         else:
-            [LEVEL_EDITOR.entities.remove(e) for e in self.point_gizmos]
+            [LEVEL_EDITOR.entities.remove(e) for e in self._point_gizmos]
             [setattr(e, 'selectable', True) for e in LEVEL_EDITOR.entities]
-            if True in [e in LEVEL_EDITOR.selection for e in self.point_gizmos]: # if point is selected when exiting edit mode, select the poke shape
+            if True in [e in LEVEL_EDITOR.selection for e in self._point_gizmos]: # if point is selected when exiting edit mode, select the poke shape
                 LEVEL_EDITOR.selection = [self, ]
 
             LEVEL_EDITOR.gizmo.subgizmos['y'].enabled = True
@@ -2493,13 +2536,13 @@ class PokeShape(Entity):
             self.collider = 'mesh'
         LEVEL_EDITOR.render_selection()
 
-    @property
-    def wall_height(self):
-        return self._wall_height
-    @wall_height.setter
-    def wall_height(self, value):
-        self._wall_height = value
-        self.generate()
+    # @property
+    # def wall_height(self):
+    #     return self._wall_height
+    # @wall_height.setter
+    # def wall_height(self, value):
+    #     self._wall_height = value
+    #     self.generate()
 
     def update(self):
         if self.edit_mode:
@@ -2509,11 +2552,12 @@ class PokeShape(Entity):
 
 
     def input(self, key):
-        if key == 'tab' and not held_keys['control'] and not held_keys['shift']:
+        combined_key = input_handler.get_combined_key(key)
+        if combined_key == 'tab':
             if not LEVEL_EDITOR.selection:
                 self.edit_mode = False
 
-            if self in LEVEL_EDITOR.selection or True in [e in LEVEL_EDITOR.selection for e in self.point_gizmos]:
+            if self in LEVEL_EDITOR.selection or True in [e in LEVEL_EDITOR.selection for e in self._point_gizmos]:
                 self.edit_mode = not self.edit_mode
 
         if self.edit_mode and (key == 'left mouse down' or key == 'd'):
@@ -2530,9 +2574,9 @@ class PokeShape(Entity):
             closest_point = points_in_range[0][1]
             i = self.add_new_point_renderer.model.vertices.index(closest_point)
 
-            new_point = Entity(parent=self, original_parent=self, position=lerp(self.point_gizmos[i].position, self.point_gizmos[i+1].position, .5), selectable=True, is_gizmo=True)
+            new_point = Entity(parent=self, original_parent=self, position=lerp(self._point_gizmos[i].position, self._point_gizmos[i+1].position, .5), selectable=True, is_gizmo=True)
             LEVEL_EDITOR.entities.append(new_point)
-            self.point_gizmos.insert(i+1, new_point)
+            self._point_gizmos.insert(i+1, new_point)
             LEVEL_EDITOR.render_selection()
             if key == 'd':
                 LEVEL_EDITOR.quick_grabber.input('d')
@@ -2550,12 +2594,12 @@ class PokeShape(Entity):
         elif self.edit_mode and key.endswith(' up'):
             invoke(self.generate, delay=3/60)
 
-    def __setattr__(self, name, value):
-        if name == 'model' and hasattr(self, 'model') and self.model and not isinstance(value, Mesh):
-            print_info('can\'t set model of PokeShape')
-            return
-
-        super().__setattr__(name, value)
+    # def __setattr__(self, name, value):
+    #     if name == 'model' and hasattr(self, 'model') and self.model and not isinstance(value, Mesh):
+    #         print_info('can\'t set model of PokeShape')
+    #         return
+    #
+    #     super().__setattr__(name, value)
 
 
 
@@ -2563,7 +2607,7 @@ class PipeEditor(Entity):
     def __init__(self, points=[Vec3(0,0,0), Vec3(0,1,0)], **kwargs):
         super().__init__(original_parent=LEVEL_EDITOR, selectable=True, name='Pipe', **kwargs)
         LEVEL_EDITOR.entities.append(self)
-        self.point_gizmos = LoopingList([Entity(parent=self, original_parent=self, position=e, selectable=False, name='PipeEditor_point', is_gizmo=True) for e in points])
+        self._point_gizmos = LoopingList([Entity(parent=self, original_parent=self, position=e, selectable=False, name='PipeEditor_point', is_gizmo=True) for e in points])
         self.model = Pipe()
         self.edit_mode = False
         self.add_collider = False
@@ -2572,13 +2616,13 @@ class PipeEditor(Entity):
 
 
     def generate(self):
-        # self.model.path = [e.get_position(relative_to=self) for e in self.point_gizmos]
-        # self.model.thicknesses = [e.scale.xz for e in self.point_gizmos]
+        # self.model.path = [e.get_position(relative_to=self) for e in self._point_gizmos]
+        # self.model.thicknesses = [e.scale.xz for e in self._point_gizmos]
         #
         # self.model.generate()
         self.model = Pipe(
-            path = [e.get_position(relative_to=self) for e in self.point_gizmos],
-            thicknesses = [e.scale.xz for e in self.point_gizmos]
+            path = [e.get_position(relative_to=self) for e in self._point_gizmos],
+            thicknesses = [e.scale.xz for e in self._point_gizmos]
         )
         # print('GENERATE')
         self.texture = 'grass'
@@ -2593,7 +2637,7 @@ class PipeEditor(Entity):
 
     @property
     def points(self):
-        return [e.position for e in self.point_gizmos]
+        return [e.position for e in self._point_gizmos]
 
     @property
     def edit_mode(self):
@@ -2605,34 +2649,35 @@ class PipeEditor(Entity):
         self._edit_mode = value
         if value:
             [setattr(e, 'selectable', False) for e in LEVEL_EDITOR.entities if not e == self]
-            for e in self.point_gizmos:
+            for e in self._point_gizmos:
                 if not e in LEVEL_EDITOR.entities:
                     LEVEL_EDITOR.entities.append(e)
 
-            [setattr(e, 'selectable', True) for e in self.point_gizmos]
+            [setattr(e, 'selectable', True) for e in self._point_gizmos]
         else:
-            # print(self.point_gizmos[0] in LEVEL_EDITOR.entities)
-            [LEVEL_EDITOR.entities.remove(e) for e in self.point_gizmos]
+            # print(self._point_gizmos[0] in LEVEL_EDITOR.entities)
+            [LEVEL_EDITOR.entities.remove(e) for e in self._point_gizmos]
             [setattr(e, 'selectable', True) for e in LEVEL_EDITOR.entities]
-            if True in [e in LEVEL_EDITOR.selection for e in self.point_gizmos]: # if point is selected when exiting edit mode, select the poke shape
+            if True in [e in LEVEL_EDITOR.selection for e in self._point_gizmos]: # if point is selected when exiting edit mode, select the poke shape
                 LEVEL_EDITOR.selection = [self, ]
 
         LEVEL_EDITOR.render_selection()
 
 
     def input(self, key):
-        if key == 'tab' and not held_keys['control'] and not held_keys['shift']:
-            if self in LEVEL_EDITOR.selection or True in [e in LEVEL_EDITOR.selection for e in self.point_gizmos]:
+        combined_key = input_handler.get_combined_key(key)
+        if combined_key == 'tab':
+            if self in LEVEL_EDITOR.selection or True in [e in LEVEL_EDITOR.selection for e in self._point_gizmos]:
                 self.edit_mode = not self.edit_mode
 
 
-        # elif key == '+' and len(LEVEL_EDITOR.selection) == 1 and LEVEL_EDITOR.selection[0] in self.point_gizmos:
+        # elif key == '+' and len(LEVEL_EDITOR.selection) == 1 and LEVEL_EDITOR.selection[0] in self._point_gizmos:
         #     print('add point')
-        #     i = self.point_gizmos.index(LEVEL_EDITOR.selection[0])
+        #     i = self._point_gizmos.index(LEVEL_EDITOR.selection[0])
         #
-        #     new_point = Entity(parent=self, original_parent=self, position=lerp(self.point_gizmos[i].position, self.point_gizmos[i+1].position, .5), selectable=True, is_gizmo=True)
+        #     new_point = Entity(parent=self, original_parent=self, position=lerp(self._point_gizmos[i].position, self._point_gizmos[i+1].position, .5), selectable=True, is_gizmo=True)
         #     LEVEL_EDITOR.entities.append(new_point)
-        #     self.point_gizmos.insert(i+1, new_point)
+        #     self._point_gizmos.insert(i+1, new_point)
         #     LEVEL_EDITOR.render_selection()
         #     # self.generate()
 

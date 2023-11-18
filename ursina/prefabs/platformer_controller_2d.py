@@ -77,7 +77,7 @@ class PlatformerController2d(Entity):
 
 
     def update(self):
-        if boxcast(
+        if not boxcast(
             self.position+Vec3(self.velocity * time.dt * self.walk_speed,self.scale_y/2,0),
             # self.position+Vec3(sefl,self.scale_y/2,0),
             direction=Vec3(self.velocity,0,0),
@@ -85,7 +85,7 @@ class PlatformerController2d(Entity):
             ignore=self.ignore_list,
             traverse_target=self.traverse_target,
             thickness=(self.scale_x*.99, self.scale_y*.9),
-            ).hit == False:
+            ).hit:
 
             self.x += self.velocity * time.dt * self.walk_speed
 

@@ -71,6 +71,9 @@ class Sequence():
             arg.delay = self.duration
             self.funcs.append(arg)
 
+        else:
+            raise TypeError(f'Invalid type: {arg}. Must be Func, Wait or float.')
+
 
     def extend(self, list):
         for e in list:

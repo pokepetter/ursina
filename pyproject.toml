@@ -1,8 +1,34 @@
-
 [tool.ruff]
+
 # Allow lines to be as long as 120 characters.
 line-length = 300
-# Allow F403:`from my_module import *`, E402:import not at top of file, E722:bare except, E405:undefined or from star import
-ignore = ["F403", "E402", "E722", "E405"]
-
-builtins = ["base", "loader", "render", "globalClock", "LEVEL_EDITOR"]
+ignore-init-module-imports = true
+# F403: allow `from my_module import *`
+# E402: allow import not at top of file
+# E722: allow bare except
+# E405: allow undefined or from star import
+# E741: allow single character variable names
+# E711: allow var == None instead of var is None
+ignore = ["F403", "E402", "E722", "E713", "E741", "E711"]
+builtins = [
+    "Ursina", "Path", "base", "loader", "render", "globalClock", "LEVEL_EDITOR",
+    "time", "random", "math", "copy", "deepcopy",
+    "floor", "ceil", "inf", "lerp", "inverselerp", "lerp_angle", "slerp", "distance", "distance_2d", "distance_xz", "clamp", "round_to_closest", "rotate_around_point_2d",
+    "Vec2", "Vec3", "Vec4", "Quat",
+    "window", "camera", "mouse", "scene", "application", "input_handler", "held_keys", "Keys",
+    "load_model", "load_texture", "load_blender_scene", "texture_importer", "Texture", "Shader",
+    "Entity", "Audio", "Text", "Button",
+    "color", "Color", "hsv", "rgb",
+    "dedent", "camel_to_snake", "snake_to_camel", "multireplace", "printvar", "print_info", "print_warning",
+    "chunk_list", "flatten_list", "flatten_completely", "size_list", "find_sequence",
+    "grid_layout",
+    "EditorCamera", "Empty", "LoopingList", "Default",
+    "Mesh", "MeshModes", "Quad", "Plane", "Circle", "Pipe", "Cone", "Cube", "Cylinder", "Capsule", "Grid", "Terrain",
+    "Func", "Wait", "Sequence", "invoke", "destroy", "duplicate",
+    "singleton", "generate_properties_for_class", "every", "after",
+    "BoxCollider", "SphereCollider", "CapsuleCollider", "MeshCollider",
+    "Animation", "SpriteSheetAnimation", "FrameAnimation3d", "Animator", "curve", "SmoothFollow",
+    "Sky", "DirectionalLight",
+    "Tooltip", "Sprite", "Draggable", "Panel", "Slider", "ThinSlider", "ButtonList", "ButtonGroup", "WindowPanel", "Space", "TextField", "InputField", "ContentTypes",
+    "raycast", "boxcast", "terraincast"
+    ]

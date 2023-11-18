@@ -182,7 +182,7 @@ class Audio(Entity):
 
 
 if __name__ == '__main__':
-    from ursina import Ursina, printvar
+    from ursina import Ursina
 
     app = Ursina()
     # a = Audio('life_is_currency_wav', pitch=1)

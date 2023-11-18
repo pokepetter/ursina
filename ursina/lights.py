@@ -48,6 +48,8 @@ class DirectionalLight(Light):
 
 
     def update_bounds(self, entity=scene):  # update the shadow area to fit the bounds of target entity, defaulted to scene.
+        if not entity.get_tight_bounds(self):
+            return
         bmin, bmax = entity.get_tight_bounds(self)
         lens = self._light.get_lens()
         lens.set_near_far(bmin.z*2, bmax.z*2)
