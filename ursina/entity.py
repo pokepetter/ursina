@@ -590,19 +590,19 @@ class Entity(NodePath):
         value = [e if e!=0 else .001 for e in value]
         self.setScale(value[0], value[1], value[2])
 
-    def scale_x_getter(self):
+    def scale_x_getter(self): # The model scale in the x direction
         return self.scale[0]
-    def scale_x_setter(self, value):
+    def scale_x_setter(self, value): # The model scale in the x direction
         self.setScale(value, self.scale_y, self.scale_z)
 
-    def scale_y_getter(self):
+    def scale_y_getter(self): # The model scale in the y direction
         return self.scale[1]
-    def scale_y_setter(self, value):
+    def scale_y_setter(self, value): # The model scale in the y direction
         self.setScale(self.scale_x, value, self.scale_z)
 
-    def scale_z_getter(self):
+    def scale_z_getter(self): # The model scale in the z direction
         return self.scale[2]
-    def scale_z_setter(self, value):
+    def scale_z_setter(self, value): # The model scale in the z direction
         self.setScale(self.scale_x, self.scale_y, value)
 
     def transform_getter(self): # get/set position, rotation and scale
@@ -704,7 +704,7 @@ class Entity(NodePath):
         super().set_shader_input(name, value)
 
 
-    def texture_getter(self):
+    def texture_getter(self): # The texture on the model
         return getattr(self, '_texture', None)
 
     def texture_setter(self, value):    # set model with texture='texture_name'. requires a model to be set beforehand.
@@ -740,7 +740,7 @@ class Entity(NodePath):
             self.model.setTexture(value._texture, 1)
 
 
-    def texture_scale_getter(self):
+    def texture_scale_getter(self): #(A tuple of x and y) The amount of times the texture is repeated. For example, texture_scale=(2,2), means that the texture is fit four times into each face of a cube.
         if 'texture_scale' in self._shader_inputs:
             return self._shader_inputs['texture_scale']
         else:
