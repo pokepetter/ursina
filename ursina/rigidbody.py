@@ -3,32 +3,32 @@ from panda3d.bullet import BulletRigidBodyNode, BulletPlaneShape, BulletBoxShape
 from ursina.vec3 import Vec3
 
 class PlaneShape:
-    def __init__(self, normal=Vec3(0,1,0), offset=0):
-        self.center = (0,0,0)
+    def __init__(self, origin=(0,0,0), normal=Vec3(0,1,0), offset=0):
+        self.origin = origin
         self.normal = normal
         self.offset = offset
 
 class BoxShape:
-    def __init__(self, center=(0,0,0), size=(1,1,1)):
-        self.center = center
+    def __init__(self, origin=(0,0,0), size=(1,1,1)):
+        self.origin = origin
         self.size = size
 
 class SphereShape:
-    def __init__(self, center=(0,0,0), radius=.5):
-        self.center = center
+    def __init__(self, origin=(0,0,0), radius=.5):
+        self.origin = origin
         self.radius = radius
 
 class CapsuleShape:
-    def __init__(self, center=(0,0,0), radius=.5, height=2, axis='y'):
-        self.center = center
+    def __init__(self, origin=(0,0,0), radius=.5, height=2, axis='y'):
+        self.origin = origin
         self.radius = radius
         self.height = height
         self.axis = axis
 
 class MeshShape:
-    def __init__(self, mesh=None, center=(0,0,0)):
+    def __init__(self, mesh=None, origin=(0,0,0)):
         self.mesh = mesh
-        self.center = center
+        self.origin = origin
 
 
 class PhysicsBody:
@@ -119,19 +119,19 @@ class PhysicsBody:
 
 
 class RigidBody(PhysicsBody):
-    def __init__(self, world, shape, entity=None, mass=0, kinematic=False, friction=.5, mask=0x1):
+    def __init__(self, world, shape, entity=None, mass=0, friction=.5, kinematic=False, mask=0x1):
         super().__init__(name='RigidBody', world=world)
         self.rigid_body_node = BulletRigidBodyNode('RigidBody')
         self.rigid_body_node.setMass(mass)
-        self.rigid_body_node.setKinematic(kinematic)
         self.rigid_body_node.setFriction(friction)
+        self.rigid_body_node.setKinematic(kinematic)
 
         if entity:
             self.node_path = entity.getParent().attachNewNode(self.rigid_body_node)
             self.scale = entity.world_scale
             entity.reparentTo(self.node_path)
             self.position = entity.position
-            entity.position = shape.center
+            entity.position = shape.origin
             self.rotation = entity.rotation
             entity.world_scale = self.scale
         else:
@@ -142,7 +142,7 @@ class RigidBody(PhysicsBody):
             self.node_path.node().addShape(_convert_shape(shape, entity, dynamic=not self.rigid_body_node.isStatic()))
         else:    # add multiple shapes
             for s in shape:
-                self.node_path.node().addShape(_convert_shape(s, entity, dynamic=not self.rigid_body_node.isStatic()), TransformState.makePos(s.center))
+                self.node_path.node().addShape(_convert_shape(s, entity, dynamic=not self.rigid_body_node.isStatic()), TransformState.makePos(s.origin))
 
         self.attach()
         self.node_path.setPythonTag('Entity', entity)
@@ -212,8 +212,8 @@ if __name__ == '__main__':
     capsule = Entity(model='sphere', texture='brick', y=17, scale=(1,2,1))
     RigidBody(world=world, shape=CapsuleShape(height=2, radius=1), entity=capsule, mass=3)
 
-    platform = Entity(model='cube', texture='white_cube', y=1, scale=(4, 1, 4))
-    platform_body = RigidBody(world, BoxShape(), entity=platform, kinematic=True, friction=1.0)
+    platform = Entity(model='cube', texture='white_cube', y=1, scale=(4,1,4))
+    platform_body = RigidBody(world=world, shape=BoxShape(), entity=platform, friction=1, kinematic=True)
     platform.positions = {
         'A': Vec3(-2, 1, -2),
         'B': Vec3(2, 1, -2),
@@ -224,22 +224,26 @@ if __name__ == '__main__':
         'B': 'C',
         'C': 'A'
     }
+
     platform.state = 'A'
-    platform.time_passed = 0.0
-    platform.move_time = 2.0
+    platform.time_passed = 0
+    platform.move_time = 2
+
 
     def update():
         platform.time_passed += time.dt
         platform_body.position = lerp(platform.positions[platform.state], platform.positions[platform.state_table[platform.state]], clamp(platform.time_passed / platform.move_time, 0, 1))
         if platform.time_passed > platform.move_time:
             platform.state = platform.state_table[platform.state]
-            platform.time_passed = 0.0
+            platform.time_passed = 0
+    
         world.doPhysics(time.dt)
+
 
     def input(key):
         if key == 'space up':
             spawned_cube = Entity(model='cube', texture='white_cube', y=7)
-            RigidBody(world, BoxShape(), entity=spawned_cube, mass=1, friction=1.0)
+            RigidBody(world=world, shape=BoxShape(), entity=spawned_cube, mass=1, friction=1)
 
     EditorCamera()
 
