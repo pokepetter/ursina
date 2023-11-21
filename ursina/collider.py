@@ -9,13 +9,11 @@ class Collider(NodePath):
         super().__init__('box_collider')
         self._visible = False
 
-
     def remove(self):
         self.node_path.node().clearSolids()
         self.node_path.removeNode()
         self.node_path = None
         # print('remove  collider')
-
 
     @property
     def visible(self):
@@ -31,14 +29,14 @@ class Collider(NodePath):
 
 
 class BoxCollider(Collider):
-    def __init__(self, entity, center=(0,0,0), size=(1,1,1)):
+    def __init__(self, entity, origin=(0,0,0), size=(1,1,1)):
         super().__init__()
-        self.center = center
+        self.origin = origin
         self.size = size
 
         size = [e/2 for e in size]
-        size = [max(0.001, e) for e in size] # collider needs to have thickness
-        self.shape = CollisionBox(Vec3(center[0], center[1], center[2]), size[0], size[1], size[2])
+        size = [max(.001, e) for e in size] # collider needs to have thickness
+        self.shape = CollisionBox(Vec3(origin[0], origin[1], origin[2]), size[0], size[1], size[2])
         # self.remove()
         self.collision_node = CollisionNode('CollisionNode')
         self.node_path = entity.attachNewNode(self.collision_node)
@@ -47,34 +45,38 @@ class BoxCollider(Collider):
         # self.node_path.show()
         # for some reason self.node_path gets removed after this and can't be shown.
 
+
 class SphereCollider(Collider):
-    def __init__(self, entity, center=(0,0,0), radius=.5):
-        self.center = center
-        self.radius = radius
+    def __init__(self, entity, origin=(0,0,0), radius=.5):
         super().__init__()
-        self.shape = CollisionSphere(center[0], center[1], center[2], radius)
+        self.origin = origin
+        self.radius = radius
+
+        self.shape = CollisionSphere(origin[0], origin[1], origin[2], radius)
         self.node_path = entity.attachNewNode(CollisionNode('CollisionNode'))
         self.node_path.node().addSolid(self.shape)
         self.visible = False
 
 
 class CapsuleCollider(Collider):
-    def __init__(self, entity, center=(0,0,0), height=2, radius=.5):
-        self.center = center
+    def __init__(self, entity, origin=(0,0,0), height=2, radius=.5):
+        super().__init__()
+        self.origin = origin
         self.height = height
         self.radius = radius
-        super().__init__()
-        self.shape = CollisionCapsule(center[0], center[1] + radius, center[2], center[0], center[1] + height, center[2], radius)
+
+        self.shape = CollisionCapsule(origin[0], origin[1] + radius, origin[2], origin[0], origin[1] + height, origin[2], radius)
         self.node_path = entity.attachNewNode(CollisionNode('CollisionNode'))
         self.node_path.node().addSolid(self.shape)
         self.visible = False
 
 
 class MeshCollider(Collider):
-    def __init__(self, entity, mesh=None, center=(0,0,0)):
-        self.center = center
+    def __init__(self, entity, mesh=None, origin=(0,0,0)):
         super().__init__()
-        center = Vec3(center)
+        self.origin = origin
+        origin = Vec3(origin)
+
         if mesh is None and entity.model:
             mesh = entity.model
             # print('''auto generating mesh collider from entity's mesh''')
@@ -132,7 +134,6 @@ class MeshCollider(Collider):
                 p = CollisionPolygon(Vec3(verts[i+2]), Vec3(verts[i+1]), Vec3(verts[i]))
                 self.collision_polygons.append(p)
 
-
         node = self.node_path.node()
         for poly in self.collision_polygons:
             node.addSolid(poly)
@@ -145,9 +146,10 @@ class MeshCollider(Collider):
         self.node_path.removeNode()
 
 
+
 if __name__ == '__main__':
     from ursina import *
-    from ursina import Ursina, Entity, Pipe, Circle, Button, scene, EditorCamera, color
+
     app = Ursina()
 
     e = Entity(model='sphere', x=2)
@@ -158,10 +160,10 @@ if __name__ == '__main__':
     e.collider = 'file_name'    # load a model and us it as MeshCollider.
     e.collider = e.model        # copy target model/Mesh and use it as MeshCollider.
 
-    e.collider = BoxCollider(e, center=Vec3(0,0,0), size=Vec3(1,1,1))   # add BoxCollider at custom positions and size.
-    e.collider = SphereCollider(e, center=Vec3(0,0,0), radius=.75)      # add SphereCollider at custom positions and size.
-    e.collider = CapsuleCollider(e, center=Vec3(0,0,0), height=3, radius=.75) # add CapsuleCollider at custom positions and size.
-    e.collider = MeshCollider(e, mesh=e.model, center=Vec3(0,0,0))      # add MeshCollider with custom shape and center.
+    e.collider = BoxCollider(e, origin=Vec3(0,0,0), size=Vec3(1,1,1))   # add BoxCollider at custom positions and size.
+    e.collider = SphereCollider(e, origin=Vec3(0,0,0), radius=.75)      # add SphereCollider at custom positions and size.
+    e.collider = CapsuleCollider(e, origin=Vec3(0,0,0), height=3, radius=.75) # add CapsuleCollider at custom positions and size.
+    e.collider = MeshCollider(e, mesh=e.model, origin=Vec3(0,0,0))      # add MeshCollider with custom shape and origin.
 
     m = Pipe(base_shape=Circle(6), thicknesses=(1, .5))
     e = Button(parent=scene, model='cube', collider='mesh', color=color.red, highlight_color=color.yellow)
