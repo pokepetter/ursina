@@ -3,32 +3,32 @@ from panda3d.bullet import BulletRigidBodyNode, BulletPlaneShape, BulletBoxShape
 from ursina.vec3 import Vec3
 
 class PlaneShape:
-    def __init__(self, origin=(0,0,0), normal=Vec3(0,1,0), offset=0):
-        self.origin = origin
+    def __init__(self, position=(0,0,0), normal=Vec3(0,1,0), offset=0):
+        self.position = position
         self.normal = normal
         self.offset = offset
 
 class BoxShape:
-    def __init__(self, origin=(0,0,0), size=(1,1,1)):
-        self.origin = origin
+    def __init__(self, position=(0,0,0), size=(1,1,1)):
+        self.position = position
         self.size = size
 
 class SphereShape:
-    def __init__(self, origin=(0,0,0), radius=.5):
-        self.origin = origin
+    def __init__(self, position=(0,0,0), radius=.5):
+        self.position = position
         self.radius = radius
 
 class CapsuleShape:
-    def __init__(self, origin=(0,0,0), radius=.5, height=2, axis='y'):
-        self.origin = origin
+    def __init__(self, position=(0,0,0), radius=.5, height=2, axis='y'):
+        self.position = position
         self.radius = radius
         self.height = height
         self.axis = axis
 
 class MeshShape:
-    def __init__(self, mesh=None, origin=(0,0,0)):
+    def __init__(self, mesh=None, position=(0,0,0)):
         self.mesh = mesh
-        self.origin = origin
+        self.position = position
 
 
 class PhysicsBody:
@@ -72,7 +72,7 @@ class PhysicsBody:
 
     @position.setter
     def position(self, value):
-    	self.node_path.setPos(Vec3(value))
+        self.node_path.setPos(Vec3(value))
 
     @property
     def x(self):
@@ -105,7 +105,7 @@ class PhysicsBody:
 
     @rotation.setter
     def rotation(self, value):
-    	self.node_path.setHpr(Vec3(value[1], value[0], value[2]))
+        self.node_path.setHpr(Vec3(value[1], value[0], value[2]))
 
     @property
     def scale(self):
@@ -131,7 +131,7 @@ class RigidBody(PhysicsBody):
             self.scale = entity.world_scale
             entity.reparentTo(self.node_path)
             self.position = entity.position
-            entity.position = shape.origin
+            entity.position = shape.position
             self.rotation = entity.rotation
             entity.world_scale = self.scale
         else:
@@ -142,7 +142,7 @@ class RigidBody(PhysicsBody):
             self.node_path.node().addShape(_convert_shape(shape, entity, dynamic=not self.rigid_body_node.isStatic()))
         else:    # add multiple shapes
             for s in shape:
-                self.node_path.node().addShape(_convert_shape(s, entity, dynamic=not self.rigid_body_node.isStatic()), TransformState.makePos(s.origin))
+                self.node_path.node().addShape(_convert_shape(s, entity, dynamic=not self.rigid_body_node.isStatic()), TransformState.makePos(s.position))
 
         self.attach()
         self.node_path.setPythonTag('Entity', entity)
