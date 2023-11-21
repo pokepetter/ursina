@@ -19,13 +19,8 @@ class Conversation(Entity):
         self.question.text_entity.line_height = 1.25
         self.question.text_entity.position = (-.45, -.05)
         self.question.highlight_color = self.question.color
-        self.more_indicator = Entity(parent=self.question, model=Circle(3), position=(.45,-.4,-.1), rotation_z=180, color=color.azure, world_scale=.5, z=-1, enabled=False)
-        def toggle():
-            self.more_indicator.visible = not self.more_indicator.visible
-            invoke(self.more_indicator.toggle, delay=.5)
-
-        self.more_indicator.toggle = toggle
-        self.more_indicator.toggle()
+        self.more_indicator = Entity(parent=self.question, model=Circle(3), position=(.45,-.4,-1), rotation_z=180, color=color.azure, world_scale=.5, z=-1, enabled=False)
+        self.more_indicator.blink(duration=1, loop=True)
         self.spacing = 4 * .02
         self.wordwrap = 65
         self.button_model = Quad(radius=.5, aspect=1/.075)
@@ -56,7 +51,7 @@ class Conversation(Entity):
         self.question.text = node.content[question_part]
         self.question.text_entity.wordwrap = self.wordwrap
         self.more_indicator.enabled = False
-        self.question_appear_sequence = self.question.text_entity.appear(delay=.1)
+        self.question_appear_sequence = self.question.text_entity.appear()
 
         for b in self.buttons:
             b.enabled = False
@@ -211,7 +206,7 @@ if __name__ == '__main__':
     # conversation.question.model = 'quad'
     # for b in conversation.buttons:
     #     b.model = 'quad'
-    
+
     convo = dedent('''
     I'm looking for my sister. Can you help me find her, please? I haven't seen her in days! Who know what could've happened!?
     I'm worried. Will you help me?
@@ -245,6 +240,6 @@ if __name__ == '__main__':
             # conversation.start_conversation()
 
     # window.color = color._16
-    window.size = window.fullscreen_size * .5
+    # window.size = window.fullscreen_size * .5
     Sprite('shore', z=1)
     app.run()
