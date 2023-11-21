@@ -96,9 +96,9 @@ class Sequence():
 
     def finish(self):
         self.t = self.duration
+        self.update()
         self.paused = False
         self.started = False
-        self.update()
 
     def kill(self):
         if self in application.sequences:
