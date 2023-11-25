@@ -52,7 +52,7 @@ class LevelEditor(Entity):
 
         self.prefab_folder = application.asset_folder / 'prefabs'
         from ursina.editor.prefabs.poke_shape import PokeShape
-        print('-----------------', PokeShape)
+        # print('-----------------', PokeShape)
         self.built_in_prefabs = [ClassSpawner, WhiteCube, TriplanarCube, Pyramid, PokeShape]
         self.prefabs = []
         self.spawner = Spawner()
@@ -81,7 +81,7 @@ class LevelEditor(Entity):
 
     def add_entity(self, entity):
         for key, value in dict(original_parent=LEVEL_EDITOR, selectable=True, collision=False, collider_type='None').items():
-            print('set', key, value)
+            # print('set', key, value)
             if not hasattr(entity, key):
                 setattr(entity, key, value)
 
@@ -228,7 +228,7 @@ class LevelEditor(Entity):
 
         # self.point_renderer.model.colors = [color.azure if e in self.selection else lerp(color.orange, color.hsv(0,0,1,0), distance(e.world_position, camera.world_position)/100) for e in self.entities if e.selectable and not e.collider]
         self.point_renderer.model.triangles = []
-        print('--------------', len(self.point_renderer.model.vertices), len(self.point_renderer.model.colors), self.point_renderer.model.recipe)
+        # print('--------------', len(self.point_renderer.model.vertices), len(self.point_renderer.model.colors), self.point_renderer.model.recipe)
         self.point_renderer.model.generate()
 
         # self.gizmo.enabled = bool(self.selection and self.selection[-1])
@@ -343,20 +343,20 @@ class LevelEditorScene:
             fields = reader.fieldnames[1:]
 
             for line in reader:
-                # args = ', '.join([f'{key}={value}' for key, value in line.items() if value and not key=='class'])
-                # print('eval:', f'{line["class"]}(parent=self.scene_parent, {args})')
-                kwargs = dict(line.items())
+                kwargs = {key : value for key, value in line.items() if value and not key == 'class'}
                 if not 'parent' in kwargs:
                     kwargs['parent'] = self.scene_parent
 
                 for key, value in kwargs.items():
+                    if key == 'parent':
+                        continue
+
                     try:
                         value = eval(value)
                         kwargs[key] = value
                     except:
                         pass
 
-                print('aaaaaaaaaaaaaa', 'tyign to find class', line['class'])
                 target_class = imported_classes[line["class"]]
 
                 if not target_class:
@@ -1720,7 +1720,7 @@ class HierarchyList(Entity):
     def draw(self, entity, indent=0):
         self.entity_indices[self.i] = LEVEL_EDITOR.entities.index(entity)
         if not entity in LEVEL_EDITOR.selection:
-            self._text += f'<gray>{" "*indent}{entity.name}\n'
+            self._text += f'<gray>{" "*indent}{entity.name if entity.name else "lol"}\n'
         else:
             self.selected_renderer.model.vertices.extend([Vec3(v)-Vec3(0,self.i,0) for v in self.quad_model.vertices])
             self._text += f'<white>{" "*indent}{entity.name}\n'
