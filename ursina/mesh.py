@@ -253,6 +253,9 @@ class Mesh(p3d.NodePath):
 
     @property
     def indices(self):
+        if not self.triangles:
+            return list(range(len(self.vertices)))
+
         if self.triangles and isinstance(self.triangles[0], numbers.Real):
             return self.triangles
 
