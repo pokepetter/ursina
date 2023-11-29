@@ -52,8 +52,9 @@ class LevelEditor(Entity):
 
         self.prefab_folder = application.asset_folder / 'prefabs'
         from ursina.editor.prefabs.poke_shape import PokeShape
+        from ursina.editor.prefabs.sliced_cube import SlicedCube
         # print('-----------------', PokeShape)
-        self.built_in_prefabs = [ClassSpawner, WhiteCube, TriplanarCube, Pyramid, PokeShape]
+        self.built_in_prefabs = [ClassSpawner, WhiteCube, TriplanarCube, Pyramid, PokeShape, SlicedCube]
         self.prefabs = []
         self.spawner = Spawner()
         self.deleter = Deleter()
@@ -267,8 +268,9 @@ class LevelEditor(Entity):
         self.ui.enabled = False
 
 class ErrorEntity(Entity):
-    pass
-
+    def __init__(self, model='wireframe_cube', color=color.red, **kwargs):
+        super().__init__(model=model, color=color, **kwargs)
+    
 class LevelEditorScene:
     def __init__(self, x, y, name, **kwargs):
         super().__init__()
@@ -357,10 +359,11 @@ class LevelEditorScene:
                     except:
                         pass
 
-                target_class = imported_classes[line["class"]]
+                if not line["class"] in imported_classes:
+                    target_class = ErrorEntity
+                else:
+                    target_class = imported_classes[line["class"]]
 
-                if not target_class:
-                    target_class = ErrorEntity(parent=target_parent)
 
                 instance = target_class(**kwargs)
                 self.entities.append(instance)
@@ -483,14 +486,14 @@ if not load_model('arrow', application.internal_models_compressed_folder):
     Entity(parent=p, model='cube', scale=(1,.05,.05))
     Entity(parent=p, model=Cone(4), x=.5, scale=.2, rotation=(0,90,0))
     arrow_model = p.combine()
-    arrow_model.save('arrow.ursinamesh', folder=application.internal_models_compressed_folder)
+    arrow_model.save('arrow.ursinamesh', folder=application.internal_models_compressed_folder, max_decimals=4)
 
 if not load_model('scale_gizmo', application.internal_models_compressed_folder):
     p = Entity(enabled=False)
     Entity(parent=p, model='cube', scale=(.05,.05,1))
     Entity(parent=p, model='cube', z=.5, scale=.2)
     arrow_model = p.combine()
-    arrow_model.save('scale_gizmo.ursinamesh', folder=application.internal_models_compressed_folder)
+    arrow_model.save('scale_gizmo.ursinamesh', folder=application.internal_models_compressed_folder, max_decimals=4)
 
 
 class GizmoArrow(Draggable):
@@ -657,7 +660,7 @@ class RotationGizmo(Entity):
                 path = Circle(24).vertices
                 path.append(path[0])
                 RotationGizmo.model = Pipe(base_shape=Quad(radius=0), path=[Vec3(e)*32 for e in path])
-                RotationGizmo.model.save('rotation_gizmo_model.ursinamesh', Path('.')/'models_compressed')
+                RotationGizmo.model.save('rotation_gizmo_model.ursinamesh', application.internal_models_compressed_folder, max_decimals=4)
 
         self.rotator = Entity(parent=LEVEL_EDITOR.gizmo)
         self.axis = Vec3(0,1,0)

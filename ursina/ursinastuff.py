@@ -135,7 +135,7 @@ def flatten_list(target_list):
 
 def flatten_completely(container):
     for i in container:
-        if isinstance(i, (list,tuple)):
+        if isinstance(i, (list, tuple)):
             for j in flatten_list(i):
                 yield j
         else:

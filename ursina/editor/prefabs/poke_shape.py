@@ -10,7 +10,7 @@ class PokeShape(Entity):
         subdivisions=0,
         smoothing_distance=.1,
         points=[Vec3(-.5,0,-.5), Vec3(.5,0,-.5), Vec3(.5,0,.5), Vec3(-.5,0,.5)],
-        collider_type=None,
+        collider_type='None',
         texture='grass',
         texture_scale=Vec2(.125, .125),
         # shader_inputs={'side_texture':Func(load_texture, 'grass'), }
@@ -41,7 +41,7 @@ class PokeShape(Entity):
             self.points = __class__.default_values['points']
         else:
             self.points = points
-        self.edit_mode = edit_mode
+
         self.texture = kwargs['texture']
 
         self.position = kwargs['position']
@@ -49,6 +49,9 @@ class PokeShape(Entity):
             if key == 'model':
                 continue
             setattr(self, key, kwargs[key])
+
+        # if edit_mode:
+        self.edit_mode = edit_mode
 
         self.generate()
         self.ready = True
@@ -159,9 +162,9 @@ class PokeShape(Entity):
     @edit_mode.setter
     def edit_mode(self, value):
         self._edit_mode = value
-        if not self.ready:
-            return
-        # print('set edit mode', value)
+
+
+        print('set edit mode', value)
         if value:
             [setattr(e, 'selectable', False) for e in LEVEL_EDITOR.entities if not e == self]
             for e in self._point_gizmos:
