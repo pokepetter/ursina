@@ -48,6 +48,15 @@ class Vec2(PandaVec2):
     def Y(self):
         return int(self.y)
 
+    @property
+    def yx(self):
+        return Vec2(self.y, self.x)
+    @yx.setter
+    def yx(self, value):
+        self[1] = value[0]
+        self[0] = value[1]
+
+
 
     def __mul__(self, value):
         if isinstance(value, (int, float, complex)):
@@ -66,6 +75,9 @@ class Vec2(PandaVec2):
 
         return Vec2(self[0]/value[0], self[1]/value[1])
 
+
+    def __abs__(self):
+        return Vec2(*[abs(e) for e in self])
 
 
 if __name__ == '__main__':
