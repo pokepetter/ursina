@@ -24,7 +24,9 @@ class DirectionalLight(Light):
     def __init__(self, shadows=True, **kwargs):
         super().__init__()
         self._light = PandaDirectionalLight('directional_light')
-        render.setLight(self.attachNewNode(self._light))
+        node_path = self.attachNewNode(self._light)
+        node_path.node().setCameraMask(0b0001)
+        render.setLight(node_path)
         self.shadow_map_resolution = Vec2(1024, 1024)
 
         for key, value in kwargs.items():
@@ -92,15 +94,22 @@ class SpotLight(Light):
 
 
 if __name__ == '__main__':
-    from ursina import Ursina, EditorCamera, color
+    from ursina import Ursina, EditorCamera, color, Vec3
 
     app = Ursina()
     from ursina.shaders import lit_with_shadows_shader # you have to apply this shader to enties for them to receive shadows.
     EditorCamera()
     Entity(model='plane', scale=10, color=color.gray, shader=lit_with_shadows_shader)
-    Entity(model='cube', y=1, shader=lit_with_shadows_shader)
-    pivot = Entity()
-    DirectionalLight(parent=pivot, y=2, z=3, shadows=True)
+    Entity(model='cube', y=1, shader=lit_with_shadows_shader, color=color.light_gray)
+    light = DirectionalLight(shadows=True)
+    light.look_at(Vec3(1,-1,1))
 
+    dont_cast_shadow = Entity(model='cube', y=1, shader=lit_with_shadows_shader, x=2, color=color.light_gray)
+    dont_cast_shadow.hide(0b0001)
+
+    unlit_entity = Entity(model='cube', y=1, shader=lit_with_shadows_shader, x=-2, unlit=True, color=color.light_gray)
+
+    bar = Entity(model='cube', position=(0,3,-2), shader=lit_with_shadows_shader, scale=(10,.2,.2), color=color.light_gray)
+    # dont_cast_shadow.hide(0b0001)
 
     app.run()
