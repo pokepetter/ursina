@@ -31,6 +31,7 @@ from ursina import shader
 from ursina.shader import Shader
 from ursina.string_utilities import print_info, print_warning
 from ursina.ursinamath import Bounds
+from ursina.ursinastuff import invoke, PostInitCaller
 
 from ursina import color
 from ursina.color import Color
@@ -44,7 +45,7 @@ _warn_if_ursina_not_instantiated = True # gets set to True after Ursina.__init__
 
 from ursina.scripts.property_generator import generate_properties_for_class
 @generate_properties_for_class()
-class Entity(NodePath):
+class Entity(NodePath, metaclass=PostInitCaller):
     rotation_directions = (-1,-1,1)
     default_shader = None
     default_values = {
@@ -112,11 +113,6 @@ class Entity(NodePath):
             setattr(self, key, value)
 
         self.enabled = enabled
-        if enabled and hasattr(self, 'on_enable'):
-            self.on_enable()
-
-        elif not enabled and hasattr(self, 'on_disable'):
-            self.on_disable()
 
         # look for @every decorator and start a looping Sequence for decorated method
         from ursina.scripts.every_decorator import every, get_class_name
@@ -124,6 +120,15 @@ class Entity(NodePath):
             if get_class_name(method._func) == self.types[0]:
                 self.animations.append(Sequence(Func(method, self), Wait(method._every.interval), loop=True, started=True, entity=self))
                 print('append to animations:', self)
+
+
+    def __post_init__(self):
+        if self.enabled and hasattr(self, 'on_enable'):
+            self.on_enable()
+
+        elif not self.enabled and hasattr(self, 'on_disable'):
+            self.on_disable()
+
 
 
     def _list_to_vec(self, value):
