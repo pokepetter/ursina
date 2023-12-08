@@ -1,4 +1,4 @@
-from ursina import Entity, Vec2, invoke, scene
+from ursina import Entity, Vec2, invoke, scene, color
 from panda3d.core import DirectionalLight as PandaDirectionalLight
 from panda3d.core import PointLight as PandaPointLight
 from panda3d.core import AmbientLight as PandaAmbientLight
@@ -12,7 +12,7 @@ class Light(Entity):
 
     @property
     def color(self):
-        return self._color
+        return getattr(self, '_color', color.white)
 
     @color.setter
     def color(self, value):
