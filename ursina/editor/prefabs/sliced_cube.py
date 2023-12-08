@@ -1,51 +1,61 @@
 from ursina.editor.level_editor import *
 
 
-def stretch_vertices(verts, scale, limit=.25):
-    verts = [Vec3(*e) for e in verts]
+def stretch_model(mesh, scale, limit=.25, scale_multiplier=1, regenerate=False):
+    verts = [Vec3(*e) for e in mesh.vertices]
+    mesh.uvs = [Vec2(*e) for e in mesh.uvs]
 
     for i, v in enumerate(verts):
         for j in [0,1,2]:
             if v[j] <= -limit:
-                verts[i][j] += .5
+                verts[i][j] += .5 + (scale_multiplier/2)
                 verts[i][j] -= scale[j] / 2
+                if mesh.uvs:
+                    mesh.uvs[i][0] += .5 + (scale_multiplier/2)
+
             elif v[j] >= limit:
                 verts[i][j] -= .5
                 verts[i][j] += scale[j] / 2
 
-        verts[i][0] /= scale[0]
-        verts[i][1] /= scale[1]
-        verts[i][2] /= scale[2]
+        verts[i] /= scale
 
-    return verts
+    mesh.vertices = verts
+    print('----', mesh.vertices)
 
-sliced_cube_model = Mesh(
-    vertices=[(0.4, -0.5, 0.4), (-0.4, -0.5, -0.4), (-0.4, -0.5, 0.4), (-0.5, 0.4, -0.4), (-0.5, -0.4, 0.4), (-0.5, -0.4, -0.4), (0.4, 0.4, -0.5), (-0.4, -0.4, -0.5), (0.4, -0.4, -0.5), (-0.4, 0.5, 0.4), (0.4, 0.5, -0.4), (0.4, 0.5, 0.4), (0.5, 0.4, 0.4), (0.5, -0.4, -0.4), (0.5, -0.4, 0.4), (0.5, 0.4, -0.4), (0.4, 0.5, -0.4), (0.4, 0.4, -0.5), (0.5, -0.4, -0.4), (0.4, -0.4, -0.5), (0.4, -0.5, -0.4), (-0.5, 0.4, -0.4), (-0.4, 0.4, -0.5), (-0.4, 0.5, -0.4), (-0.4, -0.5, -0.4), (-0.4, -0.4, -0.5), (-0.5, -0.4, -0.4), (-0.4, -0.5, -0.4), (-0.5, -0.4, 0.4), (-0.4, -0.5, 0.4), (-0.4, 0.4, -0.5), (-0.5, -0.4, -0.4), (-0.4, -0.4, -0.5), (0.4, -0.4, -0.5), (0.5, 0.4, -0.4), (0.4, 0.4, -0.5), (-0.4, 0.5, -0.4), (0.4, 0.4, -0.5), (0.4, 0.5, -0.4), (0.4, 0.5, -0.4), (0.5, 0.4, 0.4), (0.4, 0.5, 0.4), (0.4, -0.5, -0.4), (-0.4, -0.4, -0.5), (-0.4, -0.5, -0.4), (-0.4, 0.5, 0.4), (-0.5, 0.4, -0.4), (-0.4, 0.5, -0.4), (0.4, -0.5, 0.4), (0.5, -0.4, -0.4), (0.4, -0.5, -0.4), (0.4, -0.5, 0.4), (0.4, -0.5, -0.4), (-0.4, -0.5, -0.4), (-0.5, 0.4, -0.4), (-0.5, 0.4, 0.4), (-0.5, -0.4, 0.4), (0.4, 0.4, -0.5), (-0.4, 0.4, -0.5), (-0.4, -0.4, -0.5), (-0.4, 0.5, 0.4), (-0.4, 0.5, -0.4), (0.4, 0.5, -0.4), (0.5, 0.4, 0.4), (0.5, 0.4, -0.4), (0.5, -0.4, -0.4), (-0.4, -0.5, -0.4), (-0.5, -0.4, -0.4), (-0.5, -0.4, 0.4), (-0.4, 0.4, -0.5), (-0.5, 0.4, -0.4), (-0.5, -0.4, -0.4), (0.4, -0.4, -0.5), (0.5, -0.4, -0.4), (0.5, 0.4, -0.4), (-0.4, 0.5, -0.4), (-0.4, 0.4, -0.5), (0.4, 0.4, -0.5), (0.4, 0.5, -0.4), (0.5, 0.4, -0.4), (0.5, 0.4, 0.4), (0.4, -0.5, -0.4), (0.4, -0.4, -0.5), (-0.4, -0.4, -0.5), (-0.4, 0.5, 0.4), (-0.5, 0.4, 0.4), (-0.5, 0.4, -0.4), (0.4, -0.5, 0.4), (0.5, -0.4, 0.4), (0.5, -0.4, -0.4)],
-    uvs=[(0.9, 0.9), (0.1, 0.1), (0.1, 0.9), (0.1, 0.9), (0.9, 0.1), (0.1, 0.1), (0.9, 0.9), (0.1, 0.1), (0.9, 0.1), (0.1, 0.1), (0.9, 0.9), (0.9, 0.1), (0.1, 0.9), (0.9, 0.1), (0.1, 0.1), (1.0, 0.9), (0.9, 1.0), (0.9, 0.9), (1.0, 0.1), (0.9, 0.1), (0.9, 0.0), (0.0, 0.9), (0.1, 0.9), (0.1, 1.0), (0.1, 0.0), (0.1, 0.1), (0.0, 0.1), (0.1, 0.0), (0.0, 0.1), (0.1, 0.0), (0.1, 0.9), (0.0, 0.1), (0.1, 0.1), (0.9, 0.1), (1.0, 0.9), (0.9, 0.9), (0.1, 1.0), (0.9, 0.9), (0.9, 1.0), (0.9, 1.0), (1.0, 0.9), (0.9, 1.0), (0.9, 0.0), (0.1, 0.1), (0.1, 0.0), (0.1, 1.0), (0.0, 0.9), (0.1, 1.0), (0.9, 0.0), (1.0, 0.1), (0.9, 0.0), (0.9, 0.9), (0.9, 0.1), (0.1, 0.1), (0.1, 0.9), (0.9, 0.9), (0.9, 0.1), (0.9, 0.9), (0.1, 0.9), (0.1, 0.1), (0.1, 0.1), (0.1, 0.9), (0.9, 0.9), (0.1, 0.9), (0.9, 0.9), (0.9, 0.1), (0.1, 0.0), (0.0, 0.1), (0.0, 0.1), (0.1, 0.9), (0.0, 0.9), (0.0, 0.1), (0.9, 0.1), (1.0, 0.1), (1.0, 0.9), (0.1, 1.0), (0.1, 0.9), (0.9, 0.9), (0.9, 1.0), (1.0, 0.9), (1.0, 0.9), (0.9, 0.0), (0.9, 0.1), (0.1, 0.1), (0.1, 1.0), (0.0, 0.9), (0.0, 0.9), (0.9, 0.0), (1.0, 0.1), (1.0, 0.1)],
-    normals=[(-0.0, -1.0, 0.0), (-0.0, -1.0, 0.0), (-0.0, -1.0, 0.0), (-1.0, 0.0, 0.0), (-1.0, 0.0, 0.0), (-1.0, 0.0, 0.0), (-0.0, 0.0, -1.0), (-0.0, 0.0, -1.0), (-0.0, 0.0, -1.0), (-0.0, 1.0, 0.0), (-0.0, 1.0, 0.0), (-0.0, 1.0, 0.0), (1.0, 0.0, 0.0), (1.0, 0.0, 0.0), (1.0, 0.0, 0.0), (0.5774, 0.5774, -0.5774), (0.5774, 0.5774, -0.5774), (0.5774, 0.5774, -0.5774), (0.5774, -0.5774, -0.5774), (0.5774, -0.5774, -0.5774), (0.5774, -0.5774, -0.5774), (-0.5774, 0.5774, -0.5774), (-0.5774, 0.5774, -0.5774), (-0.5774, 0.5774, -0.5774), (-0.5774, -0.5774, -0.5774), (-0.5774, -0.5774, -0.5774), (-0.5774, -0.5774, -0.5774), (-0.7071, -0.7071, 0.0), (-0.7071, -0.7071, 0.0), (-0.7071, -0.7071, 0.0), (-0.7071, 0.0, -0.7071), (-0.7071, 0.0, -0.7071), (-0.7071, 0.0, -0.7071), (0.7071, 0.0, -0.7071), (0.7071, 0.0, -0.7071), (0.7071, 0.0, -0.7071), (-0.0, 0.7071, -0.7071), (-0.0, 0.7071, -0.7071), (-0.0, 0.7071, -0.7071), (0.7071, 0.7071, 0.0), (0.7071, 0.7071, 0.0), (0.7071, 0.7071, 0.0), (-0.0, -0.7071, -0.7071), (-0.0, -0.7071, -0.7071), (-0.0, -0.7071, -0.7071), (-0.7071, 0.7071, 0.0), (-0.7071, 0.7071, 0.0), (-0.7071, 0.7071, 0.0), (0.7071, -0.7071, 0.0), (0.7071, -0.7071, 0.0), (0.7071, -0.7071, 0.0), (-0.0, -1.0, 0.0), (-0.0, -1.0, 0.0), (-0.0, -1.0, 0.0), (-1.0, 0.0, 0.0), (-1.0, 0.0, 0.0), (-1.0, 0.0, 0.0), (-0.0, 0.0, -1.0), (-0.0, 0.0, -1.0), (-0.0, 0.0, -1.0), (-0.0, 1.0, 0.0), (-0.0, 1.0, 0.0), (-0.0, 1.0, 0.0), (1.0, 0.0, 0.0), (1.0, 0.0, 0.0), (1.0, 0.0, 0.0), (-0.7071, -0.7071, 0.0), (-0.7071, -0.7071, 0.0), (-0.7071, -0.7071, 0.0), (-0.7071, 0.0, -0.7071), (-0.7071, 0.0, -0.7071), (-0.7071, 0.0, -0.7071), (0.7071, 0.0, -0.7071), (0.7071, 0.0, -0.7071), (0.7071, 0.0, -0.7071), (-0.0, 0.7071, -0.7071), (-0.0, 0.7071, -0.7071), (-0.0, 0.7071, -0.7071), (0.7071, 0.7071, 0.0), (0.7071, 0.7071, 0.0), (0.7071, 0.7071, 0.0), (-0.0, -0.7071, -0.7071), (-0.0, -0.7071, -0.7071), (-0.0, -0.7071, -0.7071), (-0.7071, 0.7071, 0.0), (-0.7071, 0.7071, 0.0), (-0.7071, 0.7071, 0.0), (0.7071, -0.7071, 0.0), (0.7071, -0.7071, 0.0), (0.7071, -0.7071, 0.0)],
-    static=True,
-    mode="triangle",
-)
+    # if mesh.uvs:
+
+
+    if regenerate:
+        mesh.generate()
+
+
+
+
+if not load_model('sliceable_cube.ursinamesh', path=Path(__file__).parent):
+    m = load_model('sliceable_cube.blend', path=Path(__file__).parent)
+    m.save('sliceable_cube.ursinamesh')
 
 
 
 @generate_properties_for_class()
 class SlicedCube(Entity):
-    default_values = Entity.default_values | dict(model=None, shader='lit_with_shadows_shader', texture='white_cube', collider='box', name='sliced_cube') # combine dicts
-    def __init__(self, stretchable_mesh=sliced_cube_model, **kwargs):
+    default_values = Entity.default_values | dict(model=None, shader='lit_with_shadows_shader', texture='white_cube', collider='box', name='sliced_cube', scale_multiplier=1) # combine dicts
+    def __init__(self, stretchable_mesh='sliceable_cube', **kwargs):
         kwargs = __class__.default_values | kwargs
 
         if isinstance(stretchable_mesh, str):
+            # Entity(model=stretchable_mesh)
             stretchable_mesh = load_model(stretchable_mesh, use_deepcopy=True)
+            print('--------------------', 'asdasdølaksdjkljload:', stretchable_mesh)
         self.stretchable_mesh = stretchable_mesh
         # self.original_vertices = model.vertices
         super().__init__(**__class__.default_values | kwargs)
         self.model = deepcopy(self.stretchable_mesh)
         # self.model = Mesh(vertices=self.stretchable_mesh.vertices, uvs=self.stretchable_mesh.uvs)
         self.model.name = 'cube'
+        self.scale_multiplier = kwargs['scale_multiplier']
         self.scale = kwargs['scale']
         self.texture = kwargs['texture']
-        print('----------', self.texture)
 
 
     def __deepcopy__(self, memo):
@@ -62,7 +72,10 @@ class SlicedCube(Entity):
 
     def generate(self):
         print('update model',self.scale)
-        self.model.vertices = stretch_vertices(self.stretchable_mesh.vertices, self.world_scale)
+
+        self.model.vertices = self.stretchable_mesh.vertices
+        self.model.uvs = self.stretchable_mesh.uvs
+        stretch_model(self.model, self.world_scale)
         self.model.generate()
 
     def __setattr__(self, name, value):
@@ -77,7 +90,7 @@ if __name__ == '__main__':
     level_editor = LevelEditor()
     level_editor.goto_scene(0,0)
 
-    sliced_cube = SlicedCube(selectable=True, texture='white_cube', original_parent=scene)
+    sliced_cube = SlicedCube(selectable=True, texture='sliceable_cube_template', shader='unlit_shader', scale_multiplier=1.5)
     def input(key):
         if key == 'space':
             sliced_cube.generate()

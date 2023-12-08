@@ -73,6 +73,14 @@ class Vec3(PandaVec3):
         self[1] = value[1]
 
     @property
+    def yx(self):
+        return Vec2(self.y, self.x)
+    @yx.setter
+    def yx(self, value):
+        self[1] = value[0]
+        self[0] = value[1]
+
+    @property
     def xz(self):
         return Vec2(self.x, self.z)
     @xz.setter
@@ -115,6 +123,10 @@ class Vec3(PandaVec3):
 
         return Vec3(self[0]/value[0], self[1]/value[1], self[2]/value[2])
 
+    def __abs__(self):
+        return Vec3(*[abs(e) for e in self])
+
+
 Vec3.zero = Vec3(0,0,0)
 Vec3.one = Vec3(1,1,1)
 Vec3.right = Vec3(1,0,0)
@@ -140,3 +152,4 @@ if __name__ == '__main__':
     print(round(b.xy))
     print('-----------', a * 2)
     print('-----------', 2 * a)
+    print(abs(Vec3(-1,2,-3)))

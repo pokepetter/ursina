@@ -200,19 +200,10 @@ class Mesh(p3d.NodePath):
         else:
             if not isinstance(self.triangles[0], numbers.Real): # triangles provided as [(0,1,2), (3,4,5,6), ...] etc., so unpack them
                 line_segments = []
-                triangles = []
+                indices = self.indices
                 for tup in self.triangles:
                     if len(tup) == 2:
                         line_segments.append(tup)
-                    elif len(tup) == 3:
-                        triangles.extend(tup)
-                    elif len(tup) == 4:
-                        triangles.extend((tup[0], tup[1], tup[2],
-                                          tup[2], tup[3], tup[0]))
-                    elif len(tup) > 4:
-                        tup = LoopingList(tup)
-                        for i in range(1, len(tup)):
-                            triangles.extend((tup[0], tup[i], tup[i+1]))
 
 
                 for line_segment in line_segments:
@@ -224,12 +215,12 @@ class Mesh(p3d.NodePath):
                     prim.close_primitive()
                     geom.addPrimitive(prim)
 
-                if len(triangles) > 0:
+                if len(indices) > 0:
                     prim = Mesh._modes[self.mode](static_mode)
                     prim.set_index_type(p3d.GeomEnums.NT_uint32)
                     parray = prim.modify_vertices()
-                    parray.unclean_set_num_rows(len(triangles))
-                    self._set_array_data(parray, triangles, 'I')
+                    parray.unclean_set_num_rows(len(indices))
+                    self._set_array_data(parray, indices, 'I')
                     prim.close_primitive()
                     geom.addPrimitive(prim)
 
@@ -261,10 +252,17 @@ class Mesh(p3d.NodePath):
 
         indices = []
         for tup in self.triangles:
+            # if len(tup) == 2:
+            #     line_segments.append(tup)
             if len(tup) == 3:
                 indices.extend(tup)
             elif len(tup) == 4:
-                indices.extend((tup[0], tup[1], tup[2], tup[2], tup[3], tup[0]))
+                indices.extend((tup[0], tup[1], tup[2],
+                                  tup[2], tup[3], tup[0]))
+            elif len(tup) > 4:
+                tup = LoopingList(tup)
+                for i in range(1, len(tup)):
+                    indices.extend((tup[0], tup[i], tup[i+1]))
 
         return indices
 
@@ -412,7 +410,8 @@ class Mesh(p3d.NodePath):
                 name += '.ursinamesh'
 
         if name.endswith('ursinamesh'):
-            mesh_code = dedent(f'''Mesh(
+            mesh_code = dedent(f'''
+            Mesh(
                 vertices={[tuple(round(_,max_decimals) for _ in e) for e in self.vertices]},
                 triangles={self.triangles},
                 colors={[tuple(round(_,max_decimals) for _ in e) for e in self.colors]},
@@ -422,7 +421,7 @@ class Mesh(p3d.NodePath):
                 mode="{self.mode}",
                 thickness={self.thickness},
                 render_points_in_3d={self.render_points_in_3d},
-            ''')
+            )'''[1:])
             with open(folder / name, 'w') as f:
                 f.write(mesh_code)
             print('saved .ursinamesh to:', folder / name)
