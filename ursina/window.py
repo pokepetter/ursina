@@ -40,7 +40,9 @@ class Window(WindowProperties):
             self.main_monitor = [e for e in self.monitors if e.is_primary][0]
             self.monitor_index = self.monitors.index(self.main_monitor)
         except:
-            print_warning('no monitors found')
+            print_warning('no primary monitor found')
+            print_warning(f'using: {self.monitors[0]}')
+            self.main_monitor = self.monitors[0]
 
         if not size:
             if self.main_monitor:
