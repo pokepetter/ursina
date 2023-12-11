@@ -10,6 +10,8 @@ from ursina.scripts.generate_normals import generate_normals
 from ursina.scripts.project_uvs import project_uvs
 from ursina.scripts.colorize import colorize
 from ursina.ursinastuff import LoopingList
+from ursina.vec3 import Vec3
+from ursina.vec2 import Vec2
 
 import panda3d.core as p3d
 
@@ -351,11 +353,11 @@ class Mesh(p3d.NodePath):
 
     def __deepcopy__(self, memo):
         m = Mesh(
-            vertices=self.vertices,
+            vertices=[Vec3(*e) for e in self.vertices],
             triangles=self.triangles,
-            colors=self.colors,
-            uvs=self.uvs,
-            normals=self.normals,
+            colors=[Color(*e) for e in self.colors],
+            uvs=[Vec2(*e) for e in self.uvs],
+            normals=[Vec3(*e) for e in self.normals],
             static=self.static,
             mode=self.mode,
             thickness=self.thickness,
