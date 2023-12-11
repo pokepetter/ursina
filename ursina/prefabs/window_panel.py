@@ -9,11 +9,10 @@ class Space():
 
 class WindowPanel(Draggable):
     def __init__(self, title='', content=[], **kwargs):
-
         self.content = content
         self.popup = False
         self._prev_input_field = None
-        super().__init__(origin=(-0,.5), scale=(.5, Text.size*2), text=title, color=color.black)
+        super().__init__(origin=(-0,.5), scale=(.5, .05), text=title, color=color.black)
         self._original_scale = self.scale
 
         for key, value in kwargs.items():
@@ -35,7 +34,7 @@ class WindowPanel(Draggable):
         if not content:
             return
         spacing = .25
-        height = 1 + spacing
+        height = 1.5 + spacing
 
         if isinstance(content, dict):
             content = content.values()
@@ -50,6 +49,7 @@ class WindowPanel(Draggable):
                 c.position = (0, -height, 0)
 
                 if isinstance(c, InputField):
+                    c.text_field.text_entity.world_scale = Vec3(20,20,1)
                     if self._prev_input_field:
                         self._prev_input_field.next_field = c
                     self._prev_input_field = c
@@ -108,6 +108,7 @@ if __name__ == '__main__':
         popup=True
         )
     wp.y = wp.panel.scale_y / 2 * wp.scale_y    # center the window panel
+    wp.layout()
 
     def input(key):
         if key == 'space':

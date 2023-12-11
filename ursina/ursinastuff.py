@@ -208,6 +208,12 @@ class LoopingList(list):
         return super().__getitem__(i % len(self))
 
 
+# define a new metaclass which overrides the "__call__" function
+class PostInitCaller(type):
+    def __call__(cls, *args, **kwargs):
+        obj = type.__call__(cls, *args, **kwargs)
+        obj.__post_init__()
+        return obj
 
 if __name__ == '__main__':
 
