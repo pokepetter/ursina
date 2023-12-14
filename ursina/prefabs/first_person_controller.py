@@ -69,7 +69,7 @@ class FirstPersonController(Entity):
 
         if self.gravity:
             # gravity
-            ray = raycast(self.world_position+(0,self.height,0), self.down, traverse_target=self.traverse_target, ignore=self.ignore_list)
+            ray = raycast(self.world_position+(0,self.height-.1,0), self.down, traverse_target=self.traverse_target, ignore=self.ignore_list)
 
             if ray.distance <= self.height+.1:
                 if not self.grounded:
