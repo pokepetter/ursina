@@ -89,7 +89,9 @@ class FirstPersonController(Entity):
 
     def input(self, key):
         if key == 'space':
-            self.jump()
+            ray = raycast((self.position[0],self.position[1]+.5,self.position[2]),self.up,distance=self.height-1)
+            if not ray.hit:
+                self.jump()
 
     def jump(self):
         if not self.grounded:
