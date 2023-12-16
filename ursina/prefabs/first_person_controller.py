@@ -3,7 +3,7 @@ from ursina import *
 
 class FirstPersonController(Entity):
     def __init__(self, **kwargs):
-        self.cursor = Entity(parent=camera.ui, model='quad', color=color.pink, scale=.008, rotation_z=45)
+        self.cursor = 'cursor'
         super().__init__()
         self.speed = 5
         self.height = 2
@@ -30,6 +30,8 @@ class FirstPersonController(Entity):
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
+        if self.cursor == 'cursor':
+            self.cursor = Entity(parent=camera.ui, model='quad', color=color.pink, scale=.008, rotation_z=45)
 
         # make sure we don't fall through the ground if we start inside it
         if self.gravity:
