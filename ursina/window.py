@@ -37,19 +37,15 @@ class Window(WindowProperties):
         self.monitor_index = 0
         try:
             self.monitors = get_monitors()
-            for e in self.monitors:
-                if e.is_primary:
-                    self.main_monitor = e
-                    print_info(f'using primary monitor: {e}')    # remove this line when following code is teseted and working
-                    break
-                elif e.x == 0 and e.y == 0:
-                    self.main_monitor = e
-                    print_info('no primary monitor found, using first monitor instead')  # remove this line when following code is teseted and working
-                    break
-            self.monitor_index = self.monitors.index(self.main_monitor)
+            if self.monitors:
+                self.main_monitor = next((e for e in self.monitors if e.is_primary), self.monitors[0])
+                if self.main_monitor.is_primary:
+                    print_info(f'Using primary monitor: {self.main_monitor}')
+                else:
+                    print_info('No primary monitor found, using first monitor instead')
+                self.monitor_index = self.monitors.index(self.main_monitor)
         except:
-            if self.main_monitor == None:
-                print_warning('no monitors found')
+            print_warning('No monitors found')
 
         if not size:
             if self.main_monitor:
