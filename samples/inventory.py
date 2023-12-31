@@ -1,5 +1,4 @@
-from ursina import camera, Entity, Quad, color, Draggable, Tooltip, Ursina, Button, Cursor, mouse
-from random import random, choice
+from ursina import *
 
 
 class Inventory(Entity):
@@ -32,6 +31,7 @@ class Inventory(Entity):
                     print('found free spot:', x, y)
                     return x, y
 
+
     def append(self, item, x=0, y=0):
         print('add item:', item)
 
@@ -57,7 +57,7 @@ class Inventory(Entity):
             )
         name = item.replace('_', ' ').title()
 
-        if random() < .25:
+        if random.random() < .25:
             icon.color = color.gold
             name = '<orange>Rare ' + name
 
@@ -88,7 +88,6 @@ class Inventory(Entity):
                     print('swap positions')
                     c.position = icon.org_pos
 
-
         icon.drag = drag
         icon.drop = drop
 
@@ -100,7 +99,7 @@ if __name__ == '__main__':
     inventory = Inventory()
 
     def add_item():
-        inventory.append(choice(('bag', 'bow_arrow', 'gem', 'orb', 'sword')))
+        inventory.append(random.choice(('bag', 'bow_arrow', 'gem', 'orb', 'sword')))
 
     add_item()
     add_item()
