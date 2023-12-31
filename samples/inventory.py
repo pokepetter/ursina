@@ -35,7 +35,7 @@ class Inventory(Entity):
     def append(self, item, x=0, y=0):
         print('add item:', item)
 
-        if len(self.children) >= 40:
+        if len(self.children) >= self.width*self.height:
             print('inventory full')
             error_message = Text('<red>Inventory is full!', origin=(0,-1.5), x=-.5, scale=2)
             destroy(error_message, delay=1)
