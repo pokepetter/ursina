@@ -1,4 +1,4 @@
-from ursina import Entity, Text, camera, color, mouse, BoxCollider, Sequence, Func, Vec2, Vec3, scene, Default
+from ursina import Entity, Text, camera, color, mouse, BoxCollider, Sequence, Func, Vec2, Vec3, scene, Default, Audio
 from ursina.models.procedural.quad import Quad
 import textwrap
 
@@ -35,6 +35,8 @@ class Button(Entity):
         self.pressed_color = self.color.tint(-.2)
         self.highlight_scale = highlight_scale    # multiplier
         self.pressed_scale = pressed_scale     # multiplier
+        self.highlight_sound = None
+        self.pressed_sound = None
         self.collider = collider
         self.disabled = disabled
 
@@ -151,6 +153,11 @@ class Button(Entity):
             if self.hovered:
                 self.model.setColorScale(self.pressed_color)
                 self.model.setScale(Vec3(self.pressed_scale, self.pressed_scale, 1))
+                if self.pressed_sound:
+                    if isinstance(self.pressed_sound, Audio):
+                        self.pressed_sound.play()
+                    elif isinstance(self.pressed_sound, str):
+                        Audio(self.pressed_sound, auto_destroy=True)
 
         if key == 'left mouse up':
             if self.hovered:
@@ -167,6 +174,12 @@ class Button(Entity):
 
             if self.highlight_scale != 1:
                 self.model.setScale(Vec3(self.highlight_scale, self.highlight_scale, 1))
+
+            if self.highlight_sound:
+                if isinstance(self.highlight_sound, Audio):
+                    self.highlight_sound.play()
+                elif isinstance(self.highlight_sound, str):
+                    Audio(self.highlight_sound, auto_destroy=True)
 
         if hasattr(self, 'tooltip') and self.tooltip:
             self.tooltip.enabled = True
@@ -221,6 +234,8 @@ if __name__ == '__main__':
     b = Button(parent=par, text='test', scale_x=1, origin=(-.5,.5))
     b.text ='new text'
     print(b.text_entity)
+
+    Button(text='sound', scale=.2, position=(-.25,-.2), color=color.pink, highlight_sound='blip_1', pressed_sound=Audio('coin_1', autoplay=False))
 
     # Entity(model='quad', parent=b, x=1)
     Text('Text size\nreference', x=.15)
