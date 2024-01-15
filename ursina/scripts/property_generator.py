@@ -3,7 +3,7 @@ from types import FunctionType
 
 def generate_properties_for_class(getter_suffix='_getter', setter_suffix='_setter', deleter_suffix='_deleter'):
     def decorator(cls):
-        names = []
+        names = set()
         getters = {}
         setters = {}
         deleters = {}
@@ -14,17 +14,17 @@ def generate_properties_for_class(getter_suffix='_getter', setter_suffix='_sette
             if name.endswith(getter_suffix):
                 base_name = name[:-len(getter_suffix)]
                 getters[base_name] = getattr(cls, name)
-                names.append(base_name)
+                names.add(base_name)
 
             if name.endswith(setter_suffix):
                 base_name = name[:-len(setter_suffix)]
                 setters[base_name] = getattr(cls, name)
-                names.append(base_name)
+                names.add(base_name)
 
             if name.endswith(deleter_suffix):
                 base_name = name[:-len(deleter_suffix)]
                 deleters[name[:-len(deleter_suffix)]] = getattr(cls, name)
-                names.append(base_name)
+                names.add(base_name)
 
 
         for name in names:
@@ -34,19 +34,18 @@ def generate_properties_for_class(getter_suffix='_getter', setter_suffix='_sette
 
             if not getter:
                 # print('make default getter for', cls, name, f'_{name}')
-                def default_getter(self):
-                    # print('use default getter', self, name)
-                    return getattr(self, f'_{name}', None)
+                def default_getter(cls, name=name):
+                    return getattr(cls, f'_{name}', None)
                 getter = default_getter
 
             if not setter:
-                def default_setter(self, value):
-                    setattr(self, f'_{name}', value)
+                def default_setter(cls, value, name=name):
+                    setattr(cls, f'_{name}', value)
                 setter = default_setter
 
             if not deleter:
-                def default_deleter(self):
-                    delattr(self, f'_{name}')
+                def default_deleter(cls, name=name):
+                    delattr(cls, f'_{name}')
                 deleter = default_deleter
 
             setattr(cls, name, property(getter, setter, deleter))
