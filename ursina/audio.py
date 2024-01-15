@@ -3,69 +3,57 @@ from ursina.entity import Entity
 from ursina import curve
 from ursina.ursinastuff import invoke
 from ursina.ursinastuff import destroy as _destroy
+from ursina.string_utilities import print_info, print_warning
 
 from panda3d.core import Filename
 
-
+from ursina.scripts.property_generator import generate_properties_for_class
+@generate_properties_for_class()
 class Audio(Entity):
 
     volume_multiplier = .5  #
 
-    def __init__(self, sound_file_name='', autoplay=True, auto_destroy=False, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, sound_file_name='', volume=1, pitch=1, balance=0, loop=False, loops=1, autoplay=True, auto_destroy=False):
+        super().__init__()
         # printvar(sound_file_name)
-        if sound_file_name:
-            self.clip = sound_file_name
-        else:
-            self.clip = None
+        self.clip = sound_file_name
+        if not self.clip:
+            print_warning('missing audio clip:', sound_file_name)
+            return
 
-        self.volume = 1
-        self.pitch = 1
-        self.balance = 0
-
-        self.loop = False
-        self.loops = 1
+        self.volume = volume
+        self.pitch = pitch
+        self.balance = balance
+        self.loop = loop
+        self.loops = loops
         self.autoplay = autoplay
         self.auto_destroy = auto_destroy
 
-        # self.volume_variation = 0
-        # self.pitch_variation = 0
-
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-
-        if autoplay:
+        if self.autoplay:
             self.play()
 
-        if auto_destroy:
+        if self.auto_destroy:
             invoke(self.stop, destroy=True, delay=self.length)
 
 
-    def __setattr__(self, name, value):
-        if hasattr(self, 'clip') and self._clip:
-            if name == 'volume':
-                self._clip.setVolume(value * Audio.volume_multiplier)
+    def volume_setter(self, value):
+        self._volume = value
+        self._clip.setVolume(value * Audio.volume_multiplier)
 
-            if name == 'pitch':
-                self._clip.setPlayRate(value)
+    def pitch_setter(self, value):
+        self._pitch = value
+        self._clip.setPlayRate(value)
 
-            if name == 'loop':
-                self._clip.setLoop(value)
+    def loop_setter(self, value):
+        self._loop = value
+        self._clip.setLoop(value)
 
-            if name == 'loops':
-                self._clip.setLoopCount(value)
+    def loops_setter(self, value):
+        self._loops = value
+        self._clip.setLoopCount(value)
 
-        try:
-            super().__setattr__(name, value)
-        except Exception as e:
-            return e
 
-    @property
-    def clip(self):
-        return self._clip
-
-    @clip.setter
-    def clip(self, value):
+    def clip_setter(self, value):
         if isinstance(value, str):
             self.name = value
 
@@ -80,57 +68,43 @@ class Audio(Entity):
                         p = str(f.resolve())
                         p = Filename.fromOsSpecific(p)
                         self._clip = loader.loadSfx(p)  # type: ignore
-                        # print('...loaded audio clip:', f, p)
+                        # print('...loaded audio clip:', p, self._clip)
                         return
 
             self._clip = None
             print('no audio found with name:', value, 'supported formats: .ogg, .wav')
             return
-        else:
-            try:
-                self._clip = value
-            except Exception as e:
-                print('no audio found with name:', value, 'supported formats: .ogg, .wav', e)
+
+        self._clip = value
 
 
-    @property
-    def length(self):       # get the duration of the audio clip.
+    def length_getter(self):       # get the duration of the audio clip.
         return self.clip.length() if self.clip else 0
 
-    @property
-    def status(self):
+    def status_getter(self):
         if self.clip:
             return self.clip.status()
 
-    @property
-    def ready(self):
+    def ready_getter(self):
         return 1 if self.clip and self.status > 0 else 0
 
-    @property
-    def playing(self):
+    def playing_getter(self):
         return 1 if self.clip and self.status == 2 else 0
 
-    @property
-    def time(self):
+    def time_getter(self):
         return self.clip.get_time()
-
-    @time.setter
-    def time(self, value):
+    def time_setter(self, value):
         self.clip.set_time(value)
 
-    @property
-    def balance(self):      # pan the audio. should be a value between -.5 and .5. default: 0
-        return self._balance
 
-    @balance.setter
-    def balance(self, value):
+    def balance_setter(self, value):    # pan the audio. should be a value between -.5 and .5. default: 0
         self._balance = value
         self.clip.setBalance(value*2)
 
 
     def play(self, start=0):
-        if hasattr(self, 'clip') and self.clip:
-            # print('play from:', start)
+        if self.clip:
+            # print('play from:', start, self.clip)
             self.time = start
             self.clip.play()
         else:
@@ -183,12 +157,17 @@ class Audio(Entity):
 
 if __name__ == '__main__':
     from ursina import Ursina
+    import random
 
     app = Ursina()
+    a = Audio('sine', loop=True, autoplay=True)
+
+    a.volume = .5
+    print('---', a.volume)
     # a = Audio('life_is_currency_wav', pitch=1)
     def input(key):
         if key == 'space':
-            a = Audio('life_is_currency', pitch=random.uniform(.5,1), loop=True, autoplay=True)
+            a = Audio('sine', pitch=random.uniform(.5,1), loop=True)
     # print(a.clip)
     # a.volume=0
     # b = Audio(a.clip)
