@@ -1,4 +1,4 @@
-""" """
+""" Creates a simple 2D table for the UI """
 from ursina import Entity, Text, Keys
 from ursina import color, camera, mouse, floor, destroy
 
