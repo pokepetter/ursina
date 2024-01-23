@@ -709,6 +709,14 @@ class Entity(NodePath, metaclass=PostInitCaller):
         super().set_shader_input(name, value)
 
 
+    def shader_input_getter(self):
+        return self._shader_inputs
+
+    def shader_input_setter(self, value):
+        for key, value in value.items():
+            self.set_shader_input(key, value)
+
+
     def texture_getter(self):
         return getattr(self, '_texture', None)
 
