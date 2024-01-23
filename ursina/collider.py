@@ -5,9 +5,18 @@ from ursina.mesh import Mesh
 
 
 class Collider(NodePath):
-    def __init__(self):
-        super().__init__('box_collider')
-        self._visible = False
+    def __init__(self, entity, shape):
+        super().__init__('collider')
+        self.collision_node = CollisionNode('CollisionNode')
+
+        self.shape = shape
+        self.node_path = entity.attachNewNode(self.collision_node)
+
+        if isinstance(shape, (list, tuple)):
+            for e in shape:
+                self.node_path.node().addSolid(e)
+        else:
+            self.node_path.node().addSolid(self.shape)
 
 
     def remove(self):
@@ -32,30 +41,19 @@ class Collider(NodePath):
 
 class BoxCollider(Collider):
     def __init__(self, entity, center=(0,0,0), size=(1,1,1)):
-        super().__init__()
         self.center = center
         self.size = size
 
         size = [e/2 for e in size]
         size = [max(0.001, e) for e in size] # collider needs to have thickness
-        self.shape = CollisionBox(Vec3(center[0], center[1], center[2]), size[0], size[1], size[2])
-        # self.remove()
-        self.collision_node = CollisionNode('CollisionNode')
-        self.node_path = entity.attachNewNode(self.collision_node)
-        self.node_path.node().addSolid(self.shape)
-        self.visible = False
-        # self.node_path.show()
-        # for some reason self.node_path gets removed after this and can't be shown.
+        super().__init__(entity, CollisionBox(Vec3(center[0], center[1], center[2]), size[0], size[1], size[2]))
+
 
 class SphereCollider(Collider):
     def __init__(self, entity, center=(0,0,0), radius=.5):
         self.center = center
         self.radius = radius
-        super().__init__()
-        self.shape = CollisionSphere(center[0], center[1], center[2], radius)
-        self.node_path = entity.attachNewNode(CollisionNode('CollisionNode'))
-        self.node_path.node().addSolid(self.shape)
-        self.visible = False
+        super().__init__(entity, CollisionSphere(center[0], center[1], center[2], radius))
 
 
 class CapsuleCollider(Collider):
@@ -63,23 +61,17 @@ class CapsuleCollider(Collider):
         self.center = center
         self.height = height
         self.radius = radius
-        super().__init__()
-        self.shape = CollisionCapsule(center[0], center[1] + radius, center[2], center[0], center[1] + height, center[2], radius)
-        self.node_path = entity.attachNewNode(CollisionNode('CollisionNode'))
-        self.node_path.node().addSolid(self.shape)
-        self.visible = False
+        super().__init__(entity, CollisionCapsule(center[0], center[1] + radius, center[2], center[0], center[1] + height, center[2], radius))
 
 
 class MeshCollider(Collider):
     def __init__(self, entity, mesh=None, center=(0,0,0)):
         self.center = center
-        super().__init__()
         center = Vec3(center)
         if mesh is None and entity.model:
             mesh = entity.model
             # print('''auto generating mesh collider from entity's mesh''')
 
-        self.node_path = entity.attachNewNode(CollisionNode('CollisionNode'))
         self.collision_polygons = []
 
         if isinstance(mesh, Mesh):
@@ -132,17 +124,14 @@ class MeshCollider(Collider):
                 p = CollisionPolygon(Vec3(verts[i+2]), Vec3(verts[i+1]), Vec3(verts[i]))
                 self.collision_polygons.append(p)
 
-
-        node = self.node_path.node()
-        for poly in self.collision_polygons:
-            node.addSolid(poly)
-        self.visible = False
+        super().__init__(entity, self.collision_polygons)
 
 
     def remove(self):
         self.node_path.node().clearSolids()
         self.collision_polygons.clear()
         self.node_path.removeNode()
+
 
 
 if __name__ == '__main__':
