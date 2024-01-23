@@ -804,6 +804,10 @@ class Entity(NodePath, metaclass=PostInitCaller):
     def unlit_setter(self, value):
         self._unlit = value
         self.setLightOff(value)
+        if value:
+            self.hide(0b0001)
+        else:
+            self.show(0b0001)
 
     def billboard_getter(self): # set to True to make this Entity always face the camera.
         return getattr(self, '_billboard', False)
