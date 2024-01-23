@@ -111,7 +111,7 @@ class Vec3(PandaVec3):
         if isinstance(value, (int, float, complex)):
             return Vec3(*(e*value for e in self))
 
-        return Vec3(self[0]*value[0], self[1]*value[1], self[2]*value[2])
+        return Vec3(self[0]*value[0], self[1]*value[1], self[2]* (value[2] if len(value) > 2 else 1))
 
 
     __rmul__ = __mul__
@@ -153,3 +153,5 @@ if __name__ == '__main__':
     print('-----------', a * 2)
     print('-----------', 2 * a)
     print(abs(Vec3(-1,2,-3)))
+
+    print(Vec3(1,1,1) * (2,2))
