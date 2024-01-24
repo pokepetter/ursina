@@ -158,12 +158,12 @@ class Window(WindowProperties):
                 self.exit_button.on_click()
         self.exit_button.input = _exit_button_input
 
-        self.fps_counter = Text(parent=self.editor_ui, eternal=True, text='60', ignore=False, i=0,
+        self.fps_counter = Text(parent=self.editor_ui, eternal=True, text='60', ignore=False, i=0, ignore_paused=True,
             position=((.5*self.aspect_ratio)-self.exit_button.scale_x, .47+(.02*(not self.exit_button.enabled)), -999))
 
         def _fps_counter_update():
             if self.fps_counter.i > 60:
-                self.fps_counter.text = str(int(1//time.dt))
+                self.fps_counter.text = str(int(1//time.dt_unscaled))
                 self.fps_counter.i = 0
             self.fps_counter.i += 1
         self.fps_counter.update = _fps_counter_update

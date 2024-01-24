@@ -85,8 +85,10 @@ class Mesh(p3d.NodePath):
             a = array.array(dtype_string, data)
 
         vmem = memoryview(array_handle).cast('B').cast(dtype_string)
-        vmem[:] = a
-
+        try:
+            vmem[:] = a
+        except:
+            raise Exception(f'Error in Mesh. Ensure Mesh is valid and the inputs have same length: vertices:{len(self.vertices)}, triangles:{len(self.triangles)}, normals:{len(self.normals)}, colors:{len(self.colors)}, uvs:{len(self.uvs)}')
 
     def generate(self):
         self._generated_vertices = None

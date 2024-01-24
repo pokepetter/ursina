@@ -56,34 +56,29 @@ vec3 TriPlanarBlendWeightsStandard(vec3 normal) {
 	return blend_weights*rcpBlend;
 }
 
-//Constant width Triplanar blending
-vec3 TriPlanarBlendWeightsConstantOverlap(vec3 normal) {
+void main() {
+    // vec3 blendFast = TriPlanarBlendWeightsConstantOverlap(world_normal);
 
-	vec3 blend_weights = normal*normal;//or abs(normal) for linear falloff(and adjust BlendZone)
-	float maxBlend = max(blend_weights.x, max(blend_weights.y, blend_weights.z));
+    //Constant width Triplanar blending
+    vec3 blend_weights = world_normal * world_normal;//or abs(world_normal) for linear falloff(and adjust BlendZone)
+    float maxBlend = max(blend_weights.x, max(blend_weights.y, blend_weights.z));
 
     float BlendZone = 0.8f;
-	blend_weights = blend_weights - maxBlend*BlendZone;
+    blend_weights = blend_weights - maxBlend*BlendZone;
+    blend_weights = max(blend_weights, 0.0);
 
-	blend_weights = max(blend_weights, 0.0);
-
-	float rcpBlend = 1.0 / (blend_weights.x + blend_weights.y + blend_weights.z);
-	return blend_weights*rcpBlend;
-}
-
-void main(){
-    vec3 blendFast = TriPlanarBlendWeightsConstantOverlap(world_normal);
-    vec3 blend = blendFast;
+    float rcpBlend = 1.0 / (blend_weights.x + blend_weights.y + blend_weights.z);
+    vec3 blend = blend_weights * rcpBlend;
 
     vec3 albedoX = texture(side_texture, vertex_world_position.zy * side_texture_scale).rgb*blend.x;
-	vec3 albedoY = texture(side_texture, vertex_world_position.xz * side_texture_scale).rgb*blend.y;
-	vec3 albedoZ = texture(side_texture, vertex_world_position.xy * side_texture_scale).rgb*blend.z;
+  	vec3 albedoY = texture(side_texture, vertex_world_position.xz * side_texture_scale).rgb*blend.y;
+  	vec3 albedoZ = texture(side_texture, vertex_world_position.xy * side_texture_scale).rgb*blend.z;
 
     if (world_normal.y > .0) {
-		albedoY = texture(p3d_Texture0, vertex_world_position.xz * texture_scale.xy).rgb*blend.y;
+		    albedoY = texture(p3d_Texture0, vertex_world_position.xz * texture_scale.xy).rgb*blend.y;
     }
 
-	vec3 triPlanar = (albedoX + albedoY + albedoZ);
+	   vec3 triPlanar = (albedoX + albedoY + albedoZ);
 
     fragColor = vec4(triPlanar.rgb, 1) * vertex_color;
 }

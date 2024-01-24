@@ -93,14 +93,29 @@ rebinds = dict()
 
 
 def bind(original_key, alternative_key):
-    rebinds[original_key] = alternative_key
+    if not original_key in rebinds:
+        rebinds[original_key] = {original_key, }
+
+    rebinds[original_key].add(alternative_key)
+
+
     if ' mouse ' in alternative_key:
-        rebinds[original_key + ' up'] = alternative_key[:-5] + ' up'
+        if not rebinds.get(f'{original_key} up'):
+            rebinds[f'{original_key} up'] = {original_key, }
+        rebinds[f'{original_key} up'].add(f'{alternative_key[:-5]} up')
         return
 
-    rebinds[original_key + ' hold'] = alternative_key + ' hold'
-    rebinds[original_key + ' up'] = alternative_key + ' up'
 
+    if not rebinds.get(f'{original_key} hold'):
+        rebinds[f'{original_key} hold'] = {f'{original_key} hold', }
+    rebinds[f'{original_key} hold'].add(f'{alternative_key} hold')
+
+    if not rebinds.get(f'{original_key} up'):
+        rebinds[f'{original_key} up'] = {f'{original_key} up', }
+    rebinds[f'{original_key} up'].add(f'{alternative_key} up')
+
+    # rebinds[original_key + ' hold'] = alternative_key + ' hold'
+    # rebinds[original_key + ' up'] = alternative_key + ' up'
 
 def unbind(key):
     if key in rebinds:
@@ -144,25 +159,27 @@ if __name__ == '__main__':
     from ursina import *
     from ursina import Ursina, input_handler
 
-    app = Ursina()
-    input_handler.rebind('z', 'w')  # 'z'-key will now be registered as 'w'-key
+    app = Ursina(borderless=False)
+    input_handler.bind('z', 'w')  # 'z'-key will now be registered as 'w'-key
+    input_handler.bind('left mouse down', 'attack')  # 'left mouse down'-key will now send 'attack'to input functions
+    input_handler.bind('gamepad b', 'attack')  # 'gamepad b'-key will now be registered as 'attack'-key
 
-    def test():
-        print('----')
-    # input_handler.rebind('a', 'f')
+
     def input(key):
-        print(key)
-        if key == 'left mouse down':
-            print('pressed left mouse button')
+        print('got key:', key)
+        if key == 'attack':
+            destroy(Entity(model='cube', color=color.blue), delay=.2)
+        # if key == 'left mouse down':
+        #     print('pressed left mouse button')
 
-        if key == Keys.left_mouse_down:   # same as above, but with Keys enum.
-            print('pressed left mouse button')
+        # if key == Keys.left_mouse_down:   # same as above, but with Keys enum.
+        #     print('pressed left mouse button')
 
 
-    def update():
-        for key, value in held_keys.items():
-            if value != 0:
-                print(key, value)
+    # def update():
+    #     for key, value in held_keys.items():
+    #         if value != 0:
+    #             print(key, value)
 
 
 

@@ -233,36 +233,49 @@ class Ursina(ShowBase):
         if key in self._input_name_changes:
             key = self._input_name_changes[key]
 
-        if key in input_handler.rebinds:
-            key = input_handler.rebinds[key]
+        # since we can rebind one key to multiple, get a list of keys
+        bound_keys = input_handler.rebinds.get(key, (key, ))
 
-        input_handler.input(key)
+        for key in bound_keys:
+            input_handler.input(key)
 
         if not application.paused:
             if hasattr(__main__, 'input'):
-                __main__.input(key)
+                for key in bound_keys:
+                    __main__.input(key)
 
-        for e in scene.entities:
-            if e.enabled is False or e.ignore or e.ignore_input:
-                continue
-            if application.paused and e.ignore_paused is False:
-                continue
-            if e.has_disabled_ancestor():
-                continue
+            for e in scene.entities:
+                if e.enabled is False or e.ignore or e.ignore_input:
+                    continue
+                if application.paused and e.ignore_paused is False:
+                    continue
+                if e.has_disabled_ancestor():
+                    continue
 
 
-            if hasattr(e, 'input') and callable(e.input):
-                if e.input(key):
-                    break
-
-            if hasattr(e, 'scripts'):
-                for script in e.scripts:
-                    if script.enabled and hasattr(script, 'input') and callable(script.input):
-                        if script.input(key):
+                if hasattr(e, 'input') and callable(e.input):
+                    break_outer = False
+                    for key in bound_keys:
+                        if break_outer:
                             break
+                        if e.input(key):    # if the input function returns True, eat the input
+                            break_outer = True
 
 
-        mouse.input(key)
+                if hasattr(e, 'scripts'):
+                    break_outer = False
+                    if break_outer:
+                        break
+
+                    for script in e.scripts:
+                        if script.enabled and hasattr(script, 'input') and callable(script.input):
+                            for key in bound_keys:
+                                if script.input(key): # if the input function returns True, eat the input
+                                    break_outer = True
+                                    break
+
+
+            mouse.input(key)
 
 
     def text_input(self, key):  # internal method for handling text input

@@ -2,6 +2,7 @@ from ursina import *
 from ursina.prefabs.file_browser import FileBrowser
 
 
+@generate_properties_for_class()
 class FileBrowserSave(FileBrowser):
     def __init__(self, **kwargs):
         super().__init__()
@@ -9,38 +10,30 @@ class FileBrowserSave(FileBrowser):
         self.save_button = self.open_button
         self.save_button.color = color.azure
         self.save_button.text = 'Save'
-        self.save_button.on_click = self.save
-        self.file_name_field = InputField(
-            parent = self,
-            scale_x = .75,
-            scale_y = self.save_button.scale_y,
-            y = self.save_button.y,
-            active = True,
-            )
-        # self.file_name_field.text_field.scale *= .6
+        self.save_button.on_click = self._save
+        self.file_name_field = InputField(parent=self, scale_x=.75, scale_y=self.save_button.scale_y, y=self.save_button.y, active=True)
         self.save_button.y -= .075
         self.cancel_button.y -= .075
         self.file_name_field.text_field.text = ''
         self.file_type = '' # to save as
 
-        self.data = ''
         self.last_saved_file = None     # gets set when you save a file
         self.overwrite_prompt = WindowPanel(
             content=(
                 Text('Overwrite?'),
-                Button('Yes', color=color.azure, on_click=self.save),
+                Button('Yes', color=color.azure, on_click=self._save),
                 Button('Cancel')
-            ),
-            z=-1,
-            popup=True,
-            enabled=False)
+            ), z=-1, popup=True, enabled=False)
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
 
 
+    def file_type_setter(self, value):
+        self.file_types = (value, )
 
-    def save(self):
+
+    def _save(self):
         file_name = self.file_name_field.text_field.text
         if not file_name.endswith(self.file_type):
             file_name += self.file_type
@@ -51,17 +44,14 @@ class FileBrowserSave(FileBrowser):
             # print('overwrite file?')
             self.overwrite_prompt.enabled = True
 
-        else:
-            if isinstance(self.data, str):
-                path.write_text(self.data)
-            else:
-                # print('write bytes')
-                path.write_bytes(self.data)
+        self.last_saved_file = path
+        self.overwrite_prompt.enabled = False
+        self.close()
+        self.on_submit(path)
 
-            self.last_saved_file = path
-            self.overwrite_prompt.enabled = False
-            self.close()
 
+    def on_submit(self, path):  # implement .on_submit to handle saving
+        print('save to path:', path, 'please implement .on_submit to handle saving')
 
 
 

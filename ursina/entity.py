@@ -709,6 +709,14 @@ class Entity(NodePath, metaclass=PostInitCaller):
         super().set_shader_input(name, value)
 
 
+    def shader_input_getter(self):
+        return self._shader_inputs
+
+    def shader_input_setter(self, value):
+        for key, value in value.items():
+            self.set_shader_input(key, value)
+
+
     def texture_getter(self):
         return getattr(self, '_texture', None)
 
@@ -804,6 +812,10 @@ class Entity(NodePath, metaclass=PostInitCaller):
     def unlit_setter(self, value):
         self._unlit = value
         self.setLightOff(value)
+        if value:
+            self.hide(0b0001)
+        else:
+            self.show(0b0001)
 
     def billboard_getter(self): # set to True to make this Entity always face the camera.
         return getattr(self, '_billboard', False)
