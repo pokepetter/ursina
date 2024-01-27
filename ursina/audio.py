@@ -25,7 +25,8 @@ class Audio(Entity):
         self.pitch = pitch
         self.balance = balance
         self.loop = loop
-        self.loops = loops
+        if not loop:
+            self.loops = loops
         self.autoplay = autoplay
         self.auto_destroy = auto_destroy
 
@@ -138,7 +139,7 @@ class Audio(Entity):
 
     def fade_in(self, value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt='finish',
                 destroy_on_ended=False):
-        if duration <= 0:
+        if duration+delay <= 0:
             self.volume = value
         else:
             self.animate('volume', value, duration=duration, delay=delay, curve=curve, resolution=resolution, interrupt=interrupt)
@@ -148,7 +149,7 @@ class Audio(Entity):
     def fade_out(self, value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt='finish',
                  destroy_on_ended=True):
 
-        if duration <= 0 and delay <= 0:
+        if duration+delay <= 0:
             self.volume = value
         else:
             self.animate('volume', value, duration=duration, delay=delay, curve=curve, resolution=resolution, interrupt=interrupt)
