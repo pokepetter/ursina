@@ -93,7 +93,7 @@ you can use Ursina for whatever you want.
 
 ## Dependencies
 
-• python 3.6+
+• python 3.10+
 • panda3d
 • pillow, for texture manipulation
 • pyperclip, for cut and paste support
