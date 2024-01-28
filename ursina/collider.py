@@ -122,7 +122,7 @@ class MeshCollider(Collider):
 
             # ursina uses a left handed y-up coordinate system
             # but panda3d uses a right handed z-up coordinate system
-            verts = list(map(lambda v : Vec3(v[0],-v[2],v[1]), verts))
+            verts = list(map(lambda v : Vec3(v[0],v[2],v[1]), verts))
 
             for i in range(0, len(verts)-3, 3):
                 p = CollisionPolygon(verts[i+2], verts[i+1], verts[i])
