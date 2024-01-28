@@ -233,7 +233,7 @@ b.on_mouse_exit = Func(setattr, b, 'text', '''No! Don't leave me ;-;''')
 
 ## Other Magic Functions
 
-Sometimes you want side effects when you enable/disable and entity, like play an animation or something.
+Sometimes you want side effects when you enable/disable an entity, like play an animation or something.
 
 ```
 on_enable()
