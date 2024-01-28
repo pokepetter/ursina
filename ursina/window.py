@@ -124,7 +124,7 @@ class Window(WindowProperties):
 
 
     def center_on_screen(self):
-        if application.window_type == 'none':
+        if application.window_type == 'none' or not self.main_monitor:
             return
         x = self.main_monitor.x + ((self.main_monitor.width - self.size[0]) / 2)
         y = self.main_monitor.y + ((self.main_monitor.height - self.size[1]) / 2)
