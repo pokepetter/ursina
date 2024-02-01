@@ -178,9 +178,10 @@ class Entity(NodePath, metaclass=PostInitCaller):
             if hasattr(self, 'is_singleton') and not self.is_singleton():
                 self.stash()
 
+        for loose_child in self.loose_children:
+            loose_child.enabled = value
 
-    def model_getter(self):
-        return getattr(self, '_model', None)
+
 
     def model_setter(self, value):  # set model with model='model_name' (without file type extension)
         if value is None:
@@ -246,27 +247,26 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
     def eternal_getter(self):
         return getattr(self, '_eternal', False)
+
     def eternal_setter(self, value):    # eternal entities does not get destroyed on scene.clear()
         self._eternal = value
-        for c in self.children:
+        for c in self.children + self.loose_children:
             c.eternal = value
 
-    def double_sided_getter(self):
-        return getattr(self, '_double_sided', False)
+
     def double_sided_setter(self, value):
         self._double_sided = value
         self.setTwoSided(value)
 
+
     def render_queue_getter(self):
         return getattr(self, '_render_queue', 0)
+
     def render_queue_setter(self, value):   # for custom sorting in case of conflict. To sort things in 2d, set .z instead of using this.
         self._render_queue = value
         if self.model:
             self.model.setBin('fixed', value)
 
-
-    def parent_getter(self):
-        return getattr(self, '_parent', None)
 
     def parent_setter(self, value):
         if hasattr(self, '_parent') and self._parent and hasattr(self._parent, '_children') and self in self._parent._children:
@@ -282,6 +282,20 @@ class Entity(NodePath, metaclass=PostInitCaller):
         #     value = scene
         self.reparent_to(value)
         self.enabled = self.enabled   # parenting will undo the .stash() done when setting .enabled to False, so reapply it here
+
+
+    def loose_parent_getter(self):
+        return getattr(self, '_loose_parent', None)
+
+    def loose_parent_setter(self, value):
+        if hasattr(self, '_loose_parent') and self._loose_parent and hasattr(self._loose_parent, '_loose_children') and self in self._loose_parent._loose_children:
+            self._loose_parent._loose_children.remove(self)
+
+        if not hasattr(value, '_loose_children'):
+            value.loose_children = []
+        value._loose_children.append(self)
+
+        self._loose_parent = value
 
 
     def world_parent_getter(self):
@@ -651,10 +665,6 @@ class Entity(NodePath, metaclass=PostInitCaller):
         p2d = full * recip_full3
         return Vec2(p2d[0]*camera.aspect_ratio/2, p2d[1]/2)
 
-    def shader_getter(self):
-        if not hasattr(self, '_shader'):
-            return None
-        return self._shader
 
     def shader_setter(self, value):
         if value is None:
@@ -693,10 +703,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def get_shader_input(self, name):
-        if name in self._shader_inputs:
-            return self._shader_inputs[name]
-        return None
-
+        return self._shader_inputs.get(name, None)
 
     def set_shader_input(self, name, value):
         self._shader_inputs[name] = value
@@ -716,9 +723,6 @@ class Entity(NodePath, metaclass=PostInitCaller):
         for key, value in value.items():
             self.set_shader_input(key, value)
 
-
-    def texture_getter(self):
-        return getattr(self, '_texture', None)
 
     def texture_setter(self, value):    # set model with texture='texture_name'. requires a model to be set beforehand.
         if value is None and self.texture:
@@ -792,24 +796,20 @@ class Entity(NodePath, metaclass=PostInitCaller):
     def alpha_getter(self):
         return self.color[3]
 
-    def alpha_setter(self, value):
+    def alpha_setter(self, value):  # shortcut for setting color's transparency/opacity
         if value > 1:
             value = value / 255
         self.color = color.color(self.color.h, self.color.s, self.color.v, value)
 
 
-    def always_on_top_getter(self):
-        return getattr(self, '_always_on_top', False)
     def always_on_top_setter(self, value):
         self._always_on_top = value
         self.set_bin("fixed", 0)
         self.set_depth_write(not value)
         self.set_depth_test(not value)
 
-    def unlit_getter(self):
-        return getattr(self, '_unlit', False)
 
-    def unlit_setter(self, value):
+    def unlit_setter(self, value):  # set to True to ignore light and not cast shadows
         self._unlit = value
         self.setLightOff(value)
         if value:
@@ -817,18 +817,14 @@ class Entity(NodePath, metaclass=PostInitCaller):
         else:
             self.show(0b0001)
 
-    def billboard_getter(self): # set to True to make this Entity always face the camera.
-        return getattr(self, '_billboard', False)
 
-    def billboard_setter(self, value):
+    def billboard_setter(self, value):  # set to True to make this Entity always face the camera.
         self._billboard = value
         if value:
             self.setBillboardPointEye(value)
 
-    def wireframe_getter(self):
-        return getattr(self, '_wireframe', False)
 
-    def wireframe_setter(self, value):
+    def wireframe_setter(self, value):  # set to True to render model as wireframe
         self._wireframe = value
         self.setRenderModeWireframe(value)
 
@@ -922,8 +918,6 @@ class Entity(NodePath, metaclass=PostInitCaller):
         return self.model
 
 
-    def flipped_faces_getter(self):
-        return getattr(self, '_flipped_faces', False)
     def flipped_faces_setter(self, value):
         self._flipped_faces = value
         if value:
@@ -1012,6 +1006,9 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
     def children_setter(self, value):
         self._children = value
+
+    def loose_children_getter(self):
+        return getattr(self, '_loose_children', [])
 
 
     @property
