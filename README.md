@@ -30,6 +30,62 @@ This will make your game run in a Tkinter window with a size of 500x500 pixels.
 
 Then if you want to use Tkinter widgets, you can just import Tkinter and use it like you normally would but instead of creating a new tk window with `tk.Tk()` you would use `app.tkRoot` or `app.getTkWindow()` which is the Tkinter window that Ursina is using.
 
+### Example
+
+Updated minecraft clone example from the original Ursina repo (tkinter_minecraft_clone.py)[/samples/tkinter_minecraft_clone.py] :
+```python
+from ursina import *
+from ursina.prefabs.first_person_controller import FirstPersonController
+
+
+app = Ursina(window_type='tkinter',size=(500,500))
+
+# Define a Voxel class.
+# By setting the parent to scene and the model to 'cube' it becomes a 3d button.
+
+class Voxel(Button):
+    def __init__(self, position=(0,0,0)):
+        super().__init__(parent=scene,
+            position=position,
+            model='cube',
+            origin_y=.5,
+            texture='white_cube',
+            color=color.color(0, 0, random.uniform(.9, 1.0)),
+            highlight_color=color.lime,
+        )
+
+for z in range(8):
+    for x in range(8):
+        voxel = Voxel(position=(x,0,z))
+
+
+def input(key):
+    if key == 'left mouse down':
+        hit_info = raycast(camera.world_position, camera.forward, distance=5)
+        if hit_info.hit:
+            Voxel(position=hit_info.entity.position + hit_info.normal)
+    if key == 'right mouse down' and mouse.hovered_entity:
+        destroy(mouse.hovered_entity)
+        
+class pauseManager(Entity):
+    def __init__(self):
+        super().__init__(ignore_paused=True)
+
+
+    def input(self,key):
+        print(key)
+        if key == 'escape':
+            application.paused = not application.paused
+            camera.overlay.color = color.black66 if application.paused else color.clear
+            mouse.locked = not application.paused
+
+pause_manager = pauseManager()
+
+mouse.locked
+
+player = FirstPersonController()
+app.run()
+```
 
 # Original `README.md` from [pokepetter/ursina](https://github.com/pokepetter/ursina)
 
@@ -145,21 +201,6 @@ app.run()                     # opens a window and starts the game.
 ## Project Structure
 ```
 ## Project Structure
-
-📁docs
-    📃index.txt
-    📃documentation.txt
-    📃inventory_tutorial.txt
-    ...
-        # text files for the website. gets turned into .html files with sswg.
-
-    📃cheat_sheet.html
-        # auto generated documentation made with documentation_generator.py.
-
-    📃tutorial_generator.py
-        # turns specific .py files into .txt files, which can then be turned into .html by sswg.
-        # this extracts the comments from the source files into description for that step and the code after into code blocks.
-        # see platformer_tutorial.py for an example.
 
 📁samples               # small example games.
 
