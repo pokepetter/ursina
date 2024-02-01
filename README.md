@@ -36,9 +36,13 @@ Updated minecraft clone example from the original Ursina repo ([tkinter_minecraf
 ```python
 from ursina import *
 from ursina.prefabs.first_person_controller import FirstPersonController
-
+import tkinter as tk
 
 app = Ursina(window_type='tkinter',size=(500,500))
+
+"""
+Ursina part
+"""
 
 # Define a Voxel class.
 # By setting the parent to scene and the model to 'cube' it becomes a 3d button.
@@ -81,9 +85,27 @@ class pauseManager(Entity):
 
 pause_manager = pauseManager()
 
-mouse.locked
-
 player = FirstPersonController()
+
+
+"""
+Tkinter part
+"""
+
+tkWindow = app.getTkWindow()
+
+button = tk.Button(
+    tkWindow,
+    text="Resize"
+)
+
+def resize_window():
+    window.size = tkWindow.winfo_width(), tkWindow.winfo_height()
+
+button.config(command=resize_window)
+
+button.place(x=0, y=0)
+
 app.run()
 ```
 
