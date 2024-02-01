@@ -1,3 +1,38 @@
+# Ursina Engine - Now with Tkinter Integration
+
+## What is this?
+This is a fork of the Ursina Engine, a game engine for Python. This fork adds Tkinter integration, allowing you to use your Ursina games in Tkinter windows.
+
+## How do I use it?
+
+### Installation
+
+1. Clone this repository 
+2. Copy the `ursina` folder into your project folder
+3. Import `ursina` in your project using `from ursina import *`
+4. Run your project like you would a normal Ursina project
+
+### Usage
+
+To make your Ursina game run in a Tkinter window, you just need to change a few parameters in your `Ursina()` call.
+
+So, instead of this:
+```python
+app = Ursina()
+```
+
+You would do this:
+```python
+app = Ursina(window_type='tkinter', size=(500, 500))
+```
+
+This will make your game run in a Tkinter window with a size of 500x500 pixels.
+
+Then if you want to use Tkinter widgets, you can just import Tkinter and use it like you normally would but instead of creating a new tk window with `tk.Tk()` you would use `app.tkRoot` or `app.getTkWindow()` which is the Tkinter window that Ursina is using.
+
+
+# Original `README.md` from [pokepetter/ursina](https://github.com/pokepetter/ursina)
+
 # ursina    ʕ •ᴥ•ʔゝ□
 An easy to use game engine/framework for python.
 
