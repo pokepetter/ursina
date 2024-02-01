@@ -101,7 +101,7 @@ class Window(WindowProperties):
         self.render_modes = ('default', 'wireframe', 'colliders', 'normals')
         self.render_mode = 'default'
         self.editor_ui = None
-        if application.window_type not in ('none','tkinter'):
+        if application.window_type != 'none':
             base.accept('aspectRatioChanged', self.update_aspect_ratio)
             if self.always_on_top:
                 self.setZOrder(WindowProperties.Z_top)
