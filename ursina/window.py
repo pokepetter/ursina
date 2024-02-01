@@ -256,14 +256,14 @@ class Window(WindowProperties):
 
     @property
     def position(self):
-        if application.window_type in ('none','tkinter'):
+        if application.window_type =='none':
             return Vec2(0,0)
 
         return Vec2(*self.getOrigin())
 
     @position.setter
     def position(self, value):
-        if application.window_type in ('none','tkinter'):
+        if application.window_type == 'none':
             return
         print('set window position:', value)
         self.setOrigin(int(value[0]), int(value[1]))
@@ -412,7 +412,7 @@ class Window(WindowProperties):
     def fullscreen(self, value):
         # print('----------------------', value, self._fullscreen)
         self._fullscreen = value
-        if application.window_type in ('none','tkinter'): return
+        if application.window_type == 'none': return
 
         print('set fullscreen to', value)
         if value:
@@ -441,7 +441,7 @@ class Window(WindowProperties):
     @color.setter
     def color(self, value):
         self._color = value
-        if application.window_type in ('none','tkinter'): return
+        if application.window_type == 'none': return
 
         base.camNode.get_display_region(0).get_window().set_clear_color(value)
 
