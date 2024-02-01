@@ -32,7 +32,7 @@ Then if you want to use Tkinter widgets, you can just import Tkinter and use it 
 
 ### Example
 
-Updated minecraft clone example from the original Ursina repo (tkinter_minecraft_clone.py)[/samples/tkinter_minecraft_clone.py] :
+Updated minecraft clone example from the original Ursina repo ([tkinter_minecraft_clone.py](/samples/tkinter_minecraft_clone.py)) :
 ```python
 from ursina import *
 from ursina.prefabs.first_person_controller import FirstPersonController
@@ -91,10 +91,6 @@ app.run()
 
 # ursina    ʕ •ᴥ•ʔゝ□
 An easy to use game engine/framework for python.
-
-![Banner](/docs/made_with_ursina.jpg)
-
-[![Trailer](/docs/ursina_trailer_preview.webp)](https://youtu.be/j71j88oCTNo)
 
 ## Getting Started
 1) Install Python 3.6 or newer. https://www.python.org/downloads/
