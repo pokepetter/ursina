@@ -28,8 +28,8 @@ class FileBrowserSave(FileBrowser):
         for key, value in kwargs.items():
             setattr(self, key ,value)
 
-
     def file_type_setter(self, value):
+        self._file_type = value
         self.file_types = (value, )
 
 
