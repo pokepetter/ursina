@@ -274,7 +274,7 @@ class Ursina(ShowBase):
                                 break_outer = True
                                 break
 
-            mouse.input(key)
+        mouse.input(key)
 
 
     def text_input(self, key):  # internal method for handling text input
