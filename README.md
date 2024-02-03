@@ -164,9 +164,8 @@ resize_button.place(x=0, y=25)
 app.run()
 ```
 
-# Suport me ;)
-<a href="https://www.buymeacoffee.com/anatolesot" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-violet.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
-
+## Suport me ;)
+<a href="https://www.buymeacoffee.com/anatolesot" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-violet.png" alt="Buy Me A Coffee" style="height: 50px !important;width: 200px !important;" ></a>
 
 # Original `README.md` from [pokepetter/ursina](https://github.com/pokepetter/ursina)
 
