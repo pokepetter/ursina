@@ -723,6 +723,13 @@ class Entity(NodePath, metaclass=PostInitCaller):
         for key, value in value.items():
             self.set_shader_input(key, value)
 
+    def material_setter(self, value):  # a way to set shader, texture, texture_scale, texture_offset and shader inputs in one go
+        for name in ('shader', 'texture', 'texture_scale', 'texture_offset'):
+            if name in value:
+                setattr(self, name, value[name])
+
+        self.shader_input = {key: value for key, value in value.items() if key not in ('shader', 'texture', 'texture_scale', 'texture_offset')}
+
 
     def texture_setter(self, value):    # set model with texture='texture_name'. requires a model to be set beforehand.
         if value is None and self.texture:
@@ -879,7 +886,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def get_position(self, relative_to=scene):  # get position relative to on other Entity. In most cases, use .position instead.
-        return self.getPos(relative_to)
+        return Vec3(*self.getPos(relative_to))
 
 
     def set_position(self, value, relative_to=scene): # set position relative to on other Entity. In most cases, use .position instead.
