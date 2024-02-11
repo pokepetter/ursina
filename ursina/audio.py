@@ -13,8 +13,8 @@ class Audio(Entity):
 
     volume_multiplier = .5  #
 
-    def __init__(self, sound_file_name='', volume=1, pitch=1, balance=0, loop=False, loops=1, autoplay=True, auto_destroy=False):
-        super().__init__()
+    def __init__(self, sound_file_name='', volume=1, pitch=1, balance=0, loop=False, loops=1, autoplay=True, auto_destroy=False, **kwargs):
+        super().__init__(**kwargs)
         # printvar(sound_file_name)
         self.clip = sound_file_name
         if not self.clip:
