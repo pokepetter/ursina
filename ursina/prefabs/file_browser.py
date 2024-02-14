@@ -1,20 +1,20 @@
 from ursina import *
+from ursina.scripts.property_generator import generate_properties_for_class
 
-
+@generate_properties_for_class()
 class FileButton(Button):
-    def __init__(self, load_menu, **kwargs):
+    def __init__(self, load_menu, path, **kwargs):
         self.load_menu = load_menu
-        super().__init__(model='quad', highlight_color=color.dark_gray, scale=(.875,.025), pressed_scale=1, selected=False)
-
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-
+        self.path = path
+        super().__init__(model='quad', highlight_color=color.dark_gray, scale=(.875,.025), pressed_scale=1, ignore_paused=True, **kwargs)
         self.text_entity.scale *= .75
+        self.original_color = self.color
+        self.selected = False
 
 
     def on_click(self):
-        if len(self.load_menu.selection) >= self.load_menu.selection_limit and not self.selected:
-            for e in self.parent.children:
+        if len([e for e in self.parent.children if e.selected]) >= self.load_menu.selection_limit and not self.selected:
+            for e in self.parent.children:  # clear selection
                 e.selected = False
 
         self.selected = not self.selected
@@ -32,34 +32,34 @@ class FileButton(Button):
             self.load_menu.open()
 
 
-    @property
-    def selected(self):
-        return self._selected
-
-    @selected.setter
-    def selected(self, value):
+    def selected_setter(self, value):
         self._selected = value
         if value == True:
             self.color = color.azure
-            self.highlight_color = color.azure
+            self.highlight_color = color.azure.tint(.1)
         else:
-            self.color = Button.default_color
+            self.color = self.original_color
+            self.highlight_color = color.dark_gray
 
         self.load_menu.open_button.color = color.azure if self.load_menu.selection else color.dark_gray
 
 
 
+@generate_properties_for_class()
 class FileBrowser(Entity):
-    def __init__(self, **kwargs):
-
-        self.ready = False
+    def __init__(self, file_button_class=FileButton, selection_limit=1, start_path=None, **kwargs):
         self.file_types = ['.*', ]
-        self.start_path = Path('.').resolve()
-        super().__init__(parent=camera.ui, y=.45)
+        if not start_path:
+            start_path = Path('.').resolve()
+        self.start_path = start_path
+        self.file_button_class = file_button_class
+        kwargs = dict(ignore_paused=True) | kwargs
+
+        super().__init__(parent=camera.ui, y=.45, **kwargs)
 
         self.return_files = True
         self.return_folders = False
-        self.selection_limit = 1
+        self.selection_limit = selection_limit
         self.max_buttons = 24
 
         self.title_bar = Button(parent=self, scale=(.9,.035), text='<gray>Open', color=color.dark_gray, highlight_color=color.dark_gray)
@@ -81,14 +81,9 @@ class FileBrowser(Entity):
 
         self.can_scroll_up_indicator = Entity(parent=self, model='quad', texture='arrow_down', rotation_z=180, scale=(.05,.05), y=-.0765, z=-.1, color=color.dark_gray, enabled=False, add_to_scene_entities=False)
         self.can_scroll_down_indicator = Entity(parent=self, model='quad', texture='arrow_down', scale=(.05,.05), y=(-self.max_buttons*.025)-.104, z=-.1, color=color.dark_gray, enabled=False, add_to_scene_entities=False)
-        self.ready = True
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
-
-        if self.enabled:
-            self.path = self.start_path     # this will populate the list
-            self.scroll = 0
 
 
 
@@ -102,16 +97,11 @@ class FileBrowser(Entity):
                 self.scroll -= 1
 
 
-    @property
-    def scroll(self):
-        return self._scroll
-
-    @scroll.setter
-    def scroll(self, value):
+    def scroll_setter(self, value):
         self._scroll = value
 
         for i, c in enumerate(self.button_parent.children):
-            if i < value or i > value + self.max_buttons:
+            if i < value or i >= value + self.max_buttons:
                 c.enabled = False
             else:
                 c.enabled = True
@@ -121,17 +111,12 @@ class FileBrowser(Entity):
         self.can_scroll_down_indicator.enabled = value + self.max_buttons + 1 != len(self.button_parent.children)
 
 
-    @property
-    def path(self):
-        return self._path
+    def path_setter(self, value):
+        if not value:
+            value = self.start_path
 
-    @path.setter
-    def path(self, value):
         self._path = value
-        if not self.ready:
-            return
         self.address_bar.text_entity.text = '<light_gray>' + str(value.resolve())
-
 
         files = [e for e in value.iterdir() if e.is_dir() or e.suffix in self.file_types or '.*' in self.file_types]
         files.sort(key=lambda x : x.is_file())  # directories first
@@ -153,29 +138,21 @@ class FileBrowser(Entity):
 
             else:
                 # print('create new:', i)
-                b = FileButton(
-                    parent = self.button_parent,
-                    text_origin = (-.5, 0),
-                    text = prefix + f.name,
-                    y = -i*.025 -.09,
-                    load_menu = self,
-                    path = f,
-                    add_to_scene_entities = False
-                    )
+                b = self.file_button_class(parent=self.button_parent, path=f, text_origin=(-.5,0), text=prefix+f.name, y=-i*.025 -.09, load_menu=self, add_to_scene_entities=False)
 
         self.scroll = 0
 
 
     def on_enable(self):
+        # print('-------------', 'start path:', self.start_path)
         if not hasattr(self, 'path'):
             self.path = self.start_path
-            invoke(setattr, self, 'scroll', 0, delay=.05)
+            self.scroll = 0
             return
 
-        self.scale = 1
-        self.path = self.path
+        self.path = self.path if hasattr(self, 'path') else self.start_path
         self.button_parent.y = 0
-        invoke(setattr, self, 'scroll', 0, delay=.1)
+        self.scroll = 0
 
 
     def close(self):
@@ -200,10 +177,8 @@ class FileBrowser(Entity):
         self.close()
 
 
-    @property
-    def selection(self):
+    def selection_getter(self):
         return [c.path for c in self.button_parent.children if c.selected == True]
-
 
 
 
@@ -211,7 +186,7 @@ class FileBrowser(Entity):
 if __name__ == '__main__':
     app = Ursina()
 
-    fb = FileBrowser(file_types=('.*'), enabled=True)
+    fb = FileBrowser(file_types=('.*'), enabled=False)
 
     def on_submit(paths):
         print('--------', paths)
@@ -219,5 +194,10 @@ if __name__ == '__main__':
             print('---', p)
 
     fb.on_submit = on_submit
+
+    def input(key):
+        if key == 'tab':
+            fb.enabled = not fb.enabled
+
 
     app.run()
