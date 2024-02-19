@@ -144,6 +144,11 @@ def flatten_completely(container):
             yield i
 
 
+def enumerate_2d(array):
+    for x, line in enumerate(array):
+        for y, value in enumerate(line):
+            yield (x, y), value
+
 
 def size_list():    #return a list of current python objects sorted by size
     import operator
