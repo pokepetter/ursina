@@ -53,9 +53,9 @@ class LevelEditor(Entity):
 
         self.prefab_folder = application.asset_folder / 'prefabs'
         from ursina.editor.prefabs.poke_shape import PokeShape
-        from ursina.editor.prefabs.sliced_cube import SlicedCube
+        # from ursina.editor.prefabs.sliced_cube import SlicedCube
         # print('-----------------', PokeShape)
-        self.built_in_prefabs = [ClassSpawner, WhiteCube, TriplanarCube, Pyramid, PokeShape, SlicedCube]
+        self.built_in_prefabs = [ClassSpawner, WhiteCube, TriplanarCube, Pyramid, PokeShape]
         self.prefabs = []
         self.spawner = Spawner()
         self.deleter = Deleter()
