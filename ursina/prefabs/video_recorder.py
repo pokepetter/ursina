@@ -49,7 +49,7 @@ class VideoRecorder(Entity):
         print('stop recording')
         # self.convert_to_gif()
         # command = 'ffmpeg -framerate 60 -f image2 -i video_temp/%04d.png -c:v libvpx-vp9 -pix_fmt yuva420p untitled_video.webm'
-        command = f'ffmpeg -framerate 60 -f image2 -i {self.file_path}/untitled_video_%04d.png {self.video_name}.mp4'
+        command = f'ffmpeg -framerate 60 -f image2 -i {self.file_path}/{self.video_name}_%04d.png {self.video_name}.mp4'
         result = subprocess.Popen(command, shell=True)
         application.calculate_dt = True
 
