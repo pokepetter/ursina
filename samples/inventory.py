@@ -11,7 +11,7 @@ class Inventory(Entity):
             scale = (width*.1, height*.1),
             origin = (-.5,.5),
             position = (-.3,.4),
-            color = color.color(0, 0, .1, .9),
+            color = color.hsv(0, 0, .1, .9),
             )
 
         self.width = width
@@ -62,7 +62,7 @@ class Inventory(Entity):
             name = '<orange>Rare ' + name
 
         icon.tooltip = Tooltip(name)
-        icon.tooltip.background.color = color.color(0,0,0,.8)
+        icon.tooltip.background.color = color.hsv(0,0,0,.8)
 
 
         def drag():

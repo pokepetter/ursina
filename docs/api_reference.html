@@ -2347,8 +2347,8 @@ DirectionalLight(<olive>parent</olive>=pivot, <olive>y</olive>=<yellow>2</yellow
     <div><gray>example:</gray></div>
     <div class="example"><purple>from</purple> time <purple>import</purple> perf_counter
 t = perf_counter()
-<olive>Entity</olive>(<olive>model</olive>=<purple><b>Quad</b></purple>(<olive>scale</olive>=(<yellow>3</yellow>,<yellow>1</yellow>), <olive>thickness</olive>=<yellow>3</yellow>, segments=<yellow>3</yellow>, <olive>mode</olive>=<green>'line'</green>), color = color.color(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>7</yellow>))
-<olive>Entity</olive>(<olive>scale</olive>=(<yellow>3</yellow>,<yellow>1</yellow>), <olive>model</olive>=<purple><b>Quad</b></purple>(aspect=<yellow>3</yellow>), color = color.color(<yellow>6</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>3</yellow>))
+<olive>Entity</olive>(<olive>model</olive>=<purple><b>Quad</b></purple>(<olive>scale</olive>=(<yellow>3</yellow>,<yellow>1</yellow>), <olive>thickness</olive>=<yellow>3</yellow>, segments=<yellow>3</yellow>, <olive>mode</olive>=<green>'line'</green>), color = color.hsv(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>7</yellow>))
+<olive>Entity</olive>(<olive>scale</olive>=(<yellow>3</yellow>,<yellow>1</yellow>), <olive>model</olive>=<purple><b>Quad</b></purple>(aspect=<yellow>3</yellow>), color = color.hsv(<yellow>6</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>3</yellow>))
 <blue>print</blue>(<green>'-------'</green>, (perf_counter() - t)*<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>)
 origin = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>color</olive>=color.orange, <olive>scale</olive>=(.<yellow>0</yellow><yellow>5</yellow>, .<yellow>0</yellow><yellow>5</yellow>))
 camera.z = -<yellow>5</yellow>
@@ -2367,7 +2367,7 @@ camera.z = -<yellow>5</yellow>
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">e = <olive>Entity</olive>(<olive>model</olive>=<purple><b>Circle</b></purple>(<yellow>8</yellow>, <olive>mode</olive>=<green>'line'</green>, <olive>thickness</olive>=<yellow>1</yellow><yellow>0</yellow>), <olive>color</olive>=color.color(<yellow>6</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>3</yellow>))
+    <div class="example">e = <olive>Entity</olive>(<olive>model</olive>=<purple><b>Circle</b></purple>(<yellow>8</yellow>, <olive>mode</olive>=<green>'line'</green>, <olive>thickness</olive>=<yellow>1</yellow><yellow>0</yellow>), <olive>color</olive>=color.hsv(<yellow>6</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>3</yellow>))
 <blue>print</blue>(e.model.recipe)
 origin = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>color</olive>=color.orange, <olive>scale</olive>=(.<yellow>0</yellow><yellow>5</yellow>, .<yellow>0</yellow><yellow>5</yellow>))
 ed = EditorCamera(rotation_speed = <yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>, panning_speed=<yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>)
@@ -2442,7 +2442,7 @@ ed = EditorCamera()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example"><olive>Entity</olive>(<olive>model</olive>=<purple><b>Cylinder</b></purple>(<yellow>6</yellow>, start=-.<yellow>5</yellow>), <olive>color</olive>=color.color(<yellow>6</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>3</yellow>))
+    <div class="example"><olive>Entity</olive>(<olive>model</olive>=<purple><b>Cylinder</b></purple>(<yellow>6</yellow>, start=-.<yellow>5</yellow>), <olive>color</olive>=color.hsv(<yellow>6</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>3</yellow>))
 origin = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>color</olive>=color.orange, <olive>scale</olive>=(<yellow>5</yellow>, .<yellow>0</yellow><yellow>5</yellow>))
 ed = EditorCamera(rotation_speed = <yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>, panning_speed=<yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>)
 </div>
@@ -5163,7 +5163,7 @@ thin_slider.label.position = (.<yellow>2</yellow><yellow>5</yellow>, -.<yellow>1
                 <td>.active<gray> = True</gray></td><td></td>
             </tr>
             <tr>
-                <td>.highlight_color<gray> = color.color(120,1,1,.1)</gray></td><td></td>
+                <td>.highlight_color<gray> = color.hsv(120,1,1,.1)</gray></td><td></td>
             </tr>
             <tr>
                 <td>.text<gray> = ''</gray></td><td></td>
@@ -5293,7 +5293,7 @@ thin_slider.label.position = (.<yellow>2</yellow><yellow>5</yellow>, -.<yellow>1
 app = Ursina(vsync=<yellow>6</yellow><yellow>0</yellow>)
 
 
-window.color = color.color(<yellow>0</yellow>, <yellow>0</yellow>, .<yellow>1</yellow>)
+window.color = color.hsv(<yellow>0</yellow>, <yellow>0</yellow>, .<yellow>1</yellow>)
 Button.default_color = color._<yellow>2</yellow><yellow>0</yellow>
 window.color = color._<yellow>2</yellow><yellow>5</yellow>
 
@@ -6014,7 +6014,7 @@ DropdownMenu(<green>'File'</green>, buttons=(
                 <td>.open_duration<gray> = .1</gray></td><td></td>
             </tr>
             <tr>
-                <td>.bg<gray> = Panel(parent=self, model='quad', z=99, scale=999, collider='box', color=color.color(0,0,0,.1), enabled=False)</gray></td><td></td>
+                <td>.bg<gray> = Panel(parent=self, model='quad', z=99, scale=999, collider='box', color=color.hsv(0,0,0,.1), enabled=False)</gray></td><td></td>
             </tr>
             <tr>
                 <td>.z<gray> = -99</gray></td><td></td>
@@ -6262,7 +6262,7 @@ By default you can press F5 to reload the starting script, F6 to reimport textur
                 <td>.auto_render<gray> = True</gray></td><td></td>
             </tr>
             <tr>
-                <td>.cursor<gray> = Entity(parent=self.canvas, model=Quad(segments=0, mode='line', thickness=2), origin=(-.5,-.5), scale=(1/self.w, 1/self.h), color=color.color(120,1,1,.5), z=-.2, shader=unlit_shader)</gray></td><td></td>
+                <td>.cursor<gray> = Entity(parent=self.canvas, model=Quad(segments=0, mode='line', thickness=2), origin=(-.5,-.5), scale=(1/self.w, 1/self.h), color=color.hsv(120,1,1,.5), z=-.2, shader=unlit_shader)</gray></td><td></td>
             </tr>
             <tr>
                 <td>.selected_char<gray> = palette[1]</gray></td><td></td>

@@ -26,7 +26,7 @@ class Voxel(Button):
             model='cube',
             origin_y=.5,
             texture='white_cube',
-            color=color.color(0, 0, random.uniform(.9, 1.0)),
+            color=color.hsv(0, 0, random.uniform(.9, 1.0)),
             highlight_color=color.lime,
         )
 

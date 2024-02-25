@@ -162,8 +162,10 @@ Color<br>
 <br>
 <div class="code_block" style="margin-left: 0em;">e.color = color.red <gray># set it to a color in the color module</gray>
 
-e.color = color.color(<yellow>1</yellow><yellow>2</yellow><yellow>0</yellow>, .<yellow>5</yellow>, .<yellow>5</yellow>) <gray># hsv color</gray>
-e.color = color.rgb(.<yellow>8</yellow>, .<yellow>1</yellow>, <yellow>0</yellow>) <gray># rgb color</gray>
+e.color = hsv(<yellow>1</yellow><yellow>2</yellow><yellow>0</yellow>, .<yellow>5</yellow>, .<yellow>5</yellow>) <gray># hsv color</gray>
+e.color = rgb(.<yellow>8</yellow>, .<yellow>1</yellow>, <yellow>0</yellow>) <gray># rgb color</gray>
+e.color = rgb<yellow>3</yellow>2(<yellow>1</yellow><yellow>6</yellow>, <yellow>1</yellow><yellow>2</yellow><yellow>8</yellow>, <yellow>2</yellow><yellow>5</yellow><yellow>5</yellow>) <gray># rgb color</gray>
+e.color = <green>'<gray>#aabbcc'</green> <gray># hex color</gray>
 e.color = e.color.tint(.<yellow>1</yellow>) <gray># tint the color</gray>
 e.color = color.random_color() <gray># set it to a random color</gray>
 e.color = lerp(color.red, color.green, .<yellow>5</yellow>) <gray># set it to a color half way between red and green</gray>
@@ -315,7 +317,7 @@ b.on_mouse_exit = Func(setattr, b, <green>'text'</green>, <green><green>''</gree
 Other Magic Functions<br>
 </h2><br>
 <br>
-Sometimes you want side effects when you enable/disable and entity, like play an animation or something.<br>
+Sometimes you want side effects when you enable/disable an entity, like play an animation or something.<br>
 <br>
 <div class="code_block" style="margin-left: 0em;">on_enable()
 on_disable()

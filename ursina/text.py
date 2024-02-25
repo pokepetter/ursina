@@ -178,7 +178,7 @@ class Text(Entity):
             if tag.startswith('hsb('):   # set color based on numbers
                 tag = tag[4:-1]
                 hsb_values = tuple(float(e.strip()) for e in tag.split(','))
-                self.current_color = color.color(*hsb_values)
+                self.current_color = color.hsv(*hsb_values)
 
             elif tag.startswith('rgb('):   # set color based on numbers
                 tag = tag[4:-1]

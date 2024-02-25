@@ -93,8 +93,8 @@ if __name__ == '__main__':
     t = perf_counter()
     # m =
     for i in range(100):
-        Entity(model=Quad(scale=(3,1), thickness=3, segments=3, mode='line'), color = color.color(0,1,1,.7))
-    # Entity(scale=(3,1), model=Quad(aspect=3), color = color.color(60,1,1,.3))
+        Entity(model=Quad(scale=(3,1), thickness=3, segments=3, mode='line'), color = color.hsv(0,1,1,.7))
+    # Entity(scale=(3,1), model=Quad(aspect=3), color = color.hsv(60,1,1,.3))
     print('-------', (perf_counter() - t))
 
     origin = Entity(model='quad', color=color.orange, scale=(.05, .05))

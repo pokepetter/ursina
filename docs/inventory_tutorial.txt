@@ -322,7 +322,7 @@ In this tutorial we will make a drag and drop inventory like this.
                     )
                 name = item.replace('_', ' ').title()                           # +
                 icon.tooltip = Tooltip(name)                                    # +
-                icon.tooltip.background.color = color.color(0,0,0,.8)           # +
+                icon.tooltip.background.color = color.hsv(0,0,0,.8)           # +
 
         # text
 
@@ -347,7 +347,7 @@ In this tutorial we will make a drag and drop inventory like this.
                     )
                 name = item.replace('_', ' ').title()
                 icon.tooltip = Tooltip(name)
-                icon.tooltip.background.color = color.color(0,0,0,.8)
+                icon.tooltip.background.color = color.hsv(0,0,0,.8)
 
         # text
 
@@ -374,7 +374,7 @@ In this tutorial we will make a drag and drop inventory like this.
                 )
             name = item.replace('_', ' ').title()
             icon.tooltip = Tooltip(name)
-            icon.tooltip.background.color = color.color(0,0,0,.8)
+            icon.tooltip.background.color = color.hsv(0,0,0,.8)
 
 
             def drop():                                                         # +

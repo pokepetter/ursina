@@ -35,7 +35,7 @@ class TextField(Entity):
         self._prev_scroll = self.scroll
 
         self.active = True
-        self.highlight_color = color.color(120,1,1,.1)
+        self.highlight_color = color.hsv(120,1,1,.1)
         self.text = ''
         self.delimiters = ' .,!?;:(){}[]<>\'\"@#$%^&*+=-\\|/`~'
         self.replacements = dict()
@@ -863,7 +863,7 @@ if __name__ == '__main__':
     # window.size = window.fullscreen_size
     # window.x = 200
 
-    window.color = color.color(0, 0, .1)
+    window.color = color.hsv(0, 0, .1)
     Button.default_color = color._20
     window.color = color._25
 

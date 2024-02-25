@@ -335,7 +335,7 @@ class Inventory(<olive>Entity</olive>):
             )
 <mark>        name = item.replace(<green>'_'</green>, <green>' '</green>).title()                           </mark>
 <mark>        icon.tooltip = Tooltip(name)                                    </mark>
-<mark>        icon.tooltip.background.color = color.color(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,.<yellow>8</yellow>)           </mark>
+<mark>        icon.tooltip.background.color = color.hsv(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,.<yellow>8</yellow>)           </mark>
 
 </div><br>
 <br>
@@ -360,7 +360,7 @@ class Inventory(<olive>Entity</olive>):
             )
         name = item.replace(<green>'_'</green>, <green>' '</green>).title()
         icon.tooltip = Tooltip(name)
-        icon.tooltip.background.color = color.color(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,.<yellow>8</yellow>)
+        icon.tooltip.background.color = color.hsv(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,.<yellow>8</yellow>)
 
 </div><br>
 <br>
@@ -387,7 +387,7 @@ class Inventory(<olive>Entity</olive>):
             )
         name = item.replace(<green>'_'</green>, <green>' '</green>).title()
         icon.tooltip = Tooltip(name)
-        icon.tooltip.background.color = color.color(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,.<yellow>8</yellow>)
+        icon.tooltip.background.color = color.hsv(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,.<yellow>8</yellow>)
 
 
 <mark>        <purple>def</purple> drop():                                                         </mark>

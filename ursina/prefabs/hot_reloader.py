@@ -243,15 +243,15 @@ class HotReloader(Entity):
 #         self.file_path = path
 #
 #         self.add_script(Scrollable(min=0, max=10))
-#         self.bg = Entity(parent=self, model='quad', scale_x=camera.aspect_ratio, color=color.color(0,0,0,.9), z=1, collider='box', origin_y=.5, y=.5, scale_y=10, eternal=True)
+#         self.bg = Entity(parent=self, model='quad', scale_x=camera.aspect_ratio, color=color.hsv(0,0,0,.9), z=1, collider='box', origin_y=.5, y=.5, scale_y=10, eternal=True)
 #         self.header = Text(parent=self, x=-.5, y=.475, text=self.file_path.name)
 #         self.text_editor = TextField(parent=self, font_size=14, max_lines=50)
-#         self.text_editor.text_entity.text_colors['default'] = color.color(219, .0, .95)
-#         self.text_editor.text_entity.text_colors['class_color'] = color.color(40, .61, .9)
-#         self.text_editor.text_entity.text_colors['kw_color'] = color.color(210, .59, .94)
-#         self.text_editor.text_entity.text_colors['func_color'] = color.color(250, .46, .87)
-#         self.text_editor.text_entity.text_colors['param_clor'] = color.color(30, .71, .92)
-#         self.text_editor.text_entity.text_colors['string_color'] = color.color(90, .48, .86)
+#         self.text_editor.text_entity.text_colors['default'] = color.hsv(219, .0, .95)
+#         self.text_editor.text_entity.text_colors['class_color'] = color.hsv(40, .61, .9)
+#         self.text_editor.text_entity.text_colors['kw_color'] = color.hsv(210, .59, .94)
+#         self.text_editor.text_entity.text_colors['func_color'] = color.hsv(250, .46, .87)
+#         self.text_editor.text_entity.text_colors['param_clor'] = color.hsv(30, .71, .92)
+#         self.text_editor.text_entity.text_colors['string_color'] = color.hsv(90, .48, .86)
 #
 #
 #         self.text_editor.replacements = {

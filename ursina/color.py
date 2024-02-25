@@ -6,7 +6,6 @@ from ursina.vec4 import Vec4
 
 
 class Color(Vec4):
-
     def __init__(self,*p):
         super().__init__(*p)
 
@@ -18,7 +17,6 @@ class Color(Vec4):
         for key, value in colors.items():
             if value == self:
                 return key
-
         return None
 
     @property
@@ -66,17 +64,17 @@ class Color(Vec4):
 def hsv(h, s, v, a=1):
     return Color(colorsys.hsv_to_rgb((h / 360) - floor(h / 360), s, v) + (a,))
 
-color = hsv
+def rgba32(r, g, b, a=255):
+    return Color(r/255, g/255, b/255, a/255)
 
-def rgba(r, g, b, a=255):
-    color = Color(r, g, b, a)
-    if color[0] > 1 or color[1] > 1 or color[2] > 1 or color[3] > 1:
-        color = Color(tuple(c/255 for c in color))
-    # color[3] = min(1, color[3])
-    return color
+def rgb32(r, g, b):
+    return Color(r/255, g/255, b/255, 255)
 
-def rgb(r, g, b, a=255):
-    return rgba(r, g, b, a)
+def rgba(r, g, b, a):
+    return Color(r, g, b, a)
+
+def rgb(r, g, b):
+    return Color(r, g, b, 1)
 
 def to_hsv(color):
     return Color(colorsys.rgb_to_hsv(color[0], color[1], color[2]) + (color[3],))
@@ -115,50 +113,50 @@ def tint(color, amount=.2):
         )
 
 
-white =         color(0, 0, 1)
-smoke =         color(0, 0, 0.96)
-light_gray =    color(0, 0, 0.75)
-gray =          color(0, 0, 0.5)
-dark_gray =     color(0, 0, 0.25)
-black =         color(0, 0, 0)
-red =           color(0, 1, 1)
-orange =        color(30, 1, 1)
-yellow =        color(60, 1, 1)
-lime =          color(90, 1, 1)
-green =         color(120, 1, 1)
-turquoise =     color(150, 1, 1)
-cyan =          color(180, 1, 1)
-azure =         color(210, 1, 1)
-blue =          color(240, 1, 1)
-violet =        color(270, 1, 1)
-magenta =       color(300, 1, 1)
-pink =          color(330, 1, 1)
+white =         hsv(0, 0, 1)
+smoke =         hsv(0, 0, 0.96)
+light_gray =    hsv(0, 0, 0.75)
+gray =          hsv(0, 0, 0.5)
+dark_gray =     hsv(0, 0, 0.25)
+black =         hsv(0, 0, 0)
+red =           hsv(0, 1, 1)
+orange =        hsv(30, 1, 1)
+yellow =        hsv(60, 1, 1)
+lime =          hsv(90, 1, 1)
+green =         hsv(120, 1, 1)
+turquoise =     hsv(150, 1, 1)
+cyan =          hsv(180, 1, 1)
+azure =         hsv(210, 1, 1)
+blue =          hsv(240, 1, 1)
+violet =        hsv(270, 1, 1)
+magenta =       hsv(300, 1, 1)
+pink =          hsv(330, 1, 1)
 
-brown =         rgb(165, 42, 42)
-olive =         rgb(128, 128, 0)
-peach =         rgb(255, 218, 185)
-gold =          rgb(255, 215, 0)
-salmon =        rgb(250, 128, 114)
+brown =         rgb32(165, 42, 42)
+olive =         rgb32(128, 128, 0)
+peach =         rgb32(255, 218, 185)
+gold =          rgb32(255, 215, 0)
+salmon =        rgb32(250, 128, 114)
 
-clear =         Color(0, 0, 0, 0)
-white10 =       Color(1,1,1, 0.10)
-white33 =       Color(1,1,1, 0.33)
-white50 =       Color(1,1,1, 0.50)
-white66 =       Color(1,1,1, 0.66)
-black10 =       Color(0,0,0, 0.10)
-black33 =       Color(0,0,0, 0.33)
-black50 =       Color(0,0,0, 0.50)
-black66 =       Color(0,0,0, 0.66)
-black90 =       Color(0,0,0, 0.90)
+clear =         rgba(0, 0, 0, 0)
+white10 =       rgba(1,1,1, 0.10)
+white33 =       rgba(1,1,1, 0.33)
+white50 =       rgba(1,1,1, 0.50)
+white66 =       rgba(1,1,1, 0.66)
+black10 =       rgba(0,0,0, 0.10)
+black33 =       rgba(0,0,0, 0.33)
+black50 =       rgba(0,0,0, 0.50)
+black66 =       rgba(0,0,0, 0.66)
+black90 =       rgba(0,0,0, 0.90)
 
 text = smoke
 light_text = smoke
-dark_text = color(0, 0, .1)
+dark_text = hsv(0, 0, .1)
 text_color = light_text
 
 # generate attributes for grayscale values. _0=black, _128=gray, 255=white
 for i in range(256):
-    setattr(sys.modules[__name__], '_' + str(i), color(0,0,i/255))
+    setattr(sys.modules[__name__], '_' + str(i), hsv(0,0,i/255))
 
 color_names = ('white', 'smoke', 'light_gray', 'gray', 'dark_gray', 'black',
     'red', 'orange', 'yellow', 'lime', 'green', 'turquoise', 'cyan', 'azure',

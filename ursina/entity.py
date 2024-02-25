@@ -806,7 +806,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
     def alpha_setter(self, value):  # shortcut for setting color's transparency/opacity
         if value > 1:
             value = value / 255
-        self.color = color.color(self.color.h, self.color.s, self.color.v, value)
+        self.color = color.hsv(self.color.h, self.color.s, self.color.v, value)
 
 
     def always_on_top_setter(self, value):

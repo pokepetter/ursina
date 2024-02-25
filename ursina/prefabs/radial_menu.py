@@ -10,7 +10,7 @@ class RadialMenu(Entity):
         self.open_at_cursor = True
         self.open_duration = .1
 
-        self.bg = Panel(parent=self, model='quad', z=99, scale=999, collider='box', color=color.color(0,0,0,.1), enabled=False)
+        self.bg = Panel(parent=self, model='quad', z=99, scale=999, collider='box', color=color.hsv(0,0,0,.1), enabled=False)
         self.z = -99
 
         offset = lerp(.5, 2, len(self.buttons)/8)
