@@ -4,6 +4,11 @@ import sys
 from math import floor
 from ursina.vec4 import Vec4
 
+try:
+    from warnings import deprecated
+except:
+    from ursina.scripts.deprecated_decorator import deprecated
+
 
 class Color(Vec4):
     def __init__(self,*p):
@@ -59,7 +64,9 @@ class Color(Vec4):
     def tint(self, amount):
         return tint(self, amount)
 
-
+@deprecated("Use hsv(...) instead of color(...)")
+def color(h,s,v,a=1):
+    return hsv(h,s,v,a)
 
 def hsv(h, s, v, a=1):
     return Color(colorsys.hsv_to_rgb((h / 360) - floor(h / 360), s, v) + (a,))
@@ -188,5 +195,5 @@ if __name__ == '__main__':
     print(e.color.name)
     print('rgb to hex:', rgb_to_hex(*color.blue))
     # e.color = hex('ced9a9')
-
+    e.color = color.color(1,2,3)
     app.run()
