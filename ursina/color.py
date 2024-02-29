@@ -92,7 +92,7 @@ def hex(value):
 
     if value.startswith('#'):
         value = value[1:]
-    return rgb(*tuple(int(value[i:i+2], 16) for i in (0, 2, 4)))
+    return rgb32(*tuple(int(value[i:i+2], 16) for i in (0, 2, 4)))
 
 def rgb_to_hex(r, g, b, a=1):
     return "#{0:02x}{1:02x}{2:02x}{3:02x}".format(int(r*255), int(g*255), int(b*255), int(a*255))
