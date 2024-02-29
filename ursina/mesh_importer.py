@@ -4,7 +4,7 @@ import subprocess
 from copy import copy, deepcopy
 from pathlib import Path
 from ursina.mesh import Mesh
-from ursina import application
+from ursina import application, color
 from time import perf_counter
 from ursina.string_utilities import print_info, print_warning
 from ursina.vec3 import Vec3
@@ -247,6 +247,7 @@ def obj_to_ursinamesh(path=application.compressed_models_folder, outpath=applica
         normals = [] # final normals made getting norms with norm_indices
 
         vertex_colors = []
+        vertex_colors_packed = []
         current_color = None
         mtl_data = None
         mtl_dict = {}
@@ -254,9 +255,13 @@ def obj_to_ursinamesh(path=application.compressed_models_folder, outpath=applica
         # parse the obj file to a Mesh
         for i, l in enumerate(lines):  # noqa: E741
             if l.startswith('v '):
-                vert = [float(v) for v in l[2:].strip().split(' ')]
+                parts = [float(v) for v in l[2:].strip().split(' ')]
+                vert = parts[:3]
                 vert[0] = -vert[0]
                 verts.append(tuple(vert))
+                if len(parts) > 3:
+                    # current_color = color.rgb(*parts[3:])
+                    vertex_colors_packed.append(color.rgb(*parts[3:]))
 
             elif l.startswith('vn '):
                 n = l[3:].strip().split(' ')
@@ -280,17 +285,24 @@ def obj_to_ursinamesh(path=application.compressed_models_folder, outpath=applica
                     tris.extend(tri)
                     if current_color:
                         vertex_colors.extend([current_color for i in range(3)])
+                    else:
+                        vertex_colors.extend([vertex_colors_packed[idx] for idx in tri])
 
                 elif len(tri) == 4:
                     tris.extend((tri[0], tri[1], tri[2], tri[2], tri[3], tri[0]))
                     if current_color:
                         vertex_colors.extend([current_color for i in range(6)])
+                    else:
+                        vertex_colors.extend([vertex_colors_packed[idx] for idx in (tri[0], tri[1], tri[2], tri[2], tri[3], tri[0])])
 
                 else: # ngon
                     for i in range(1, len(tri)-1):
                         tris.extend((tri[i], tri[i+1], tri[0]))
                     if current_color:
                         vertex_colors.extend([current_color for i in range(len(tri))])
+                    else:
+                        for i in range(1, len(tri)-1):
+                            vertex_colors.extend([vertex_colors_packed[idx] for idx in (tri[i], tri[i+1], tri[0])])
 
                 try:
                     uv = tuple(int(t.split('/')[1])-1 for t in l)
