@@ -3,12 +3,12 @@ from ursina import *
 
 class HealthBar(Button):
 
-    def __init__(self, max_value=100, roundness=.25, animation_duration=.1, show_text=True, show_lines=False, **kwargs):
-        super().__init__(position=(-.45*window.aspect_ratio,.45), origin=(-.5,.5), scale=(Text.size*20,Text.size), color=color.black66, highlight_color=color.black66, text='hp / max hp', radius=roundness, ignore=True)
+    def __init__(self, max_value=100, roundness=.25, animation_duration=.1, show_text=True, show_lines=False, text_size=.7, **kwargs):
+        super().__init__(position=(-.45*window.aspect_ratio,.45), origin=(-.5,.5), scale=(Text.size*20,Text.size),
+        color=color.black66, highlight_color=color.black66, text='hp / max hp', text_size=text_size, radius=roundness, ignore=True)
 
-        self.bar = Entity(parent=self, model=Quad(radius=roundness), origin=self.origin, z=-.01, color=color.red.tint(-.2), ignore=True)
-        self.lines = Entity(parent=self.bar, y=-1, color=color.black33, ignore=True, enabled=show_lines, z=-.01)
-        self.text_entity.scale *= .7
+        self.bar = Entity(parent=self, model=Quad(radius=roundness), origin=self.origin, z=-.005, color=color.red.tint(-.2), ignore=True)
+        self.lines = Entity(parent=self.bar, y=-1, color=color.black33, ignore=True, enabled=show_lines, z=-.05)
 
         self.max_value = max_value
         self.clamp = True
@@ -79,6 +79,8 @@ class HealthBar(Button):
         if 'scale' and hasattr(self, 'model') and self.model:  # update rounded corners of background when scaling
             self.model.aspect = self.world_scale_x / self.world_scale_y
             self.model.generate()
+            if hasattr(self, 'text_entity') and self.text_entity:
+                self.text_entity.world_scale = 25 * self.text_size
 
         super().__setattr__(name, value)
 
