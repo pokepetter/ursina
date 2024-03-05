@@ -285,14 +285,14 @@ def obj_to_ursinamesh(path=application.compressed_models_folder, outpath=applica
                     tris.extend(tri)
                     if current_color:
                         vertex_colors.extend([current_color for i in range(3)])
-                    else:
+                    elif vertex_colors_packed:
                         vertex_colors.extend([vertex_colors_packed[idx] for idx in tri])
 
                 elif len(tri) == 4:
                     tris.extend((tri[0], tri[1], tri[2], tri[2], tri[3], tri[0]))
                     if current_color:
                         vertex_colors.extend([current_color for i in range(6)])
-                    else:
+                    elif vertex_colors_packed:
                         vertex_colors.extend([vertex_colors_packed[idx] for idx in (tri[0], tri[1], tri[2], tri[2], tri[3], tri[0])])
 
                 else: # ngon
@@ -300,7 +300,7 @@ def obj_to_ursinamesh(path=application.compressed_models_folder, outpath=applica
                         tris.extend((tri[i], tri[i+1], tri[0]))
                     if current_color:
                         vertex_colors.extend([current_color for i in range(len(tri))])
-                    else:
+                    elif vertex_colors_packed:
                         for i in range(1, len(tri)-1):
                             vertex_colors.extend([vertex_colors_packed[idx] for idx in (tri[i], tri[i+1], tri[0])])
 
