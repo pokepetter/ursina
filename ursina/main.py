@@ -118,7 +118,7 @@ class Ursina(ShowBase):
 
         try:
             from ursina import gamepad
-        except e as Exception:
+        except Exception as e:
             print(e)
 
         if application.window_type != 'none':
