@@ -75,7 +75,7 @@ def rgba32(r, g, b, a=255):
     return Color(r/255, g/255, b/255, a/255)
 
 def rgb32(r, g, b):
-    return Color(r/255, g/255, b/255, 255)
+    return Color(r/255, g/255, b/255, 1)
 
 def rgba(r, g, b, a):
     return Color(r, g, b, a)
