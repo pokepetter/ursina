@@ -87,6 +87,7 @@ class Sequence():
         self.t = 0
         self.started = True
         self.paused = False
+        return self
 
     def pause(self):
         self.paused = True
