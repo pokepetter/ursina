@@ -76,7 +76,7 @@ class FirstPersonController(Entity):
                     self.land()
                 self.grounded = True
                 # make sure it's not a wall and that the point is not too far up
-                if ray.world_normal.y > .7 and ray.world_point.y - self.world_y < .5: # walk up slope
+                if ray.world_normal.y < .7 and ray.world_point.y - self.world_y < .5: # walk up slope
                     self.y = ray.world_point[1]
                 return
             else:
