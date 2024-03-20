@@ -128,7 +128,7 @@ if application.development_mode:
             application.blender_paths['default'] = blender_exec
 
 
-def load_blender_scene(name, path=application.asset_folder, reload=False, skip_hidden=True, models_only=False, uvs=True, vertex_colors=True, normals=True, triangulate=True, decimals=4):
+def load_blender_scene(name, path=application.asset_folder, reload=False, skip_hidden=True, models_only=False, uvs=True, vertex_colors=True, normals=True, smooth_normals=False, triangulate=True, decimals=4):
     scenes_folder = Path(application.asset_folder / 'scenes')
     if not scenes_folder.exists():
         scenes_folder.mkdir()
@@ -156,6 +156,7 @@ def load_blender_scene(name, path=application.asset_folder, reload=False, skip_h
             '--uvs' if uvs else '',
             '--normals' if normals else '',
             '--vertex_colors' if vertex_colors else '',
+            '--smooth_normals' if smooth_normals else '',
             '--triangulate' if triangulate else '',
             f'--decimals={decimals}',
         ]
