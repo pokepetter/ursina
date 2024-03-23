@@ -15,7 +15,7 @@ from ursina.scripts.property_generator import generate_properties_for_class
 @generate_properties_for_class()
 class Camera(Entity):
     def __init__(self):
-        super().__init__(add_to_scene_entities=False)
+        super().__init__(eternal=True)
         self.parent = scene
         self.name = 'camera'
         self.eternal = True
