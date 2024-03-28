@@ -78,9 +78,9 @@ class MeshCollider(Collider):
             if mesh.mode == 'triangle':
                 for i in range(0, len(mesh.generated_vertices), 3):
                     poly = CollisionPolygon(
-                        Vec3(mesh.generated_vertices[i+2]),
-                        Vec3(mesh.generated_vertices[i+1]),
-                        Vec3(mesh.generated_vertices[i]),
+                        Vec3(*mesh.generated_vertices[i+2]),
+                        Vec3(*mesh.generated_vertices[i+1]),
+                        Vec3(*mesh.generated_vertices[i]),
                         )
                     self.collision_polygons.append(poly)
 
@@ -88,9 +88,9 @@ class MeshCollider(Collider):
                 # NOTE: does not support vertices len < 3. Is already being intercepted by pandas3D.
                 for i in range(2, len(mesh.vertices)):
                     poly = CollisionPolygon(
-                        Vec3(mesh.vertices[i]),
-                        Vec3(mesh.vertices[i - 1]),
-                        Vec3(mesh.vertices[0]),
+                        Vec3(*mesh.vertices[i]),
+                        Vec3(*mesh.vertices[i - 1]),
+                        Vec3(*mesh.vertices[0]),
                     )
                     self.collision_polygons.append(poly)
             else:
@@ -139,7 +139,7 @@ if __name__ == '__main__':
     from ursina import Ursina, Entity, Pipe, Circle, Button, scene, EditorCamera, color
     app = Ursina()
 
-    e = Entity(model='sphere', x=2)
+    e = Button(parent=scene, model='sphere', x=2)
     e.collider = 'box'          # add BoxCollider based on entity's bounds.
     e.collider = 'sphere'       # add SphereCollider based on entity's bounds.
     e.collider = 'capsule'      # add CapsuleCollider based on entity's bounds.
@@ -155,6 +155,8 @@ if __name__ == '__main__':
     m = Pipe(base_shape=Circle(6), thicknesses=(1, .5))
     e = Button(parent=scene, model='cube', collider='mesh', color=color.red, highlight_color=color.yellow)
     # e = Button(parent=scene, model='quad', collider=, color=color.lime, x=-1)
+
+    sphere = Button(parent=scene, model='icosphere', collider='mesh', color=color.red, highlight_color=color.yellow, x=4)
 
     EditorCamera()
 
