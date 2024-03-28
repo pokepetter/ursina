@@ -175,7 +175,7 @@ for cn in color_names:
 
 if __name__ == '__main__':
     from ursina import *
-    from ursina import Ursina, Entity, Button, Quad, grid_layout
+    from ursina import Ursina, Entity, Button, Quad, grid_layout, color
     app = Ursina()
 
     print(color.brightness(color.blue))
@@ -193,7 +193,7 @@ if __name__ == '__main__':
 
     e = Entity(model='cube', color=color.lime)
     print(e.color.name)
-    print('rgb to hex:', rgb_to_hex(*color.blue))
+    print('rgb to hex:', color.rgb_to_hex(*color.blue))
     # e.color = hex('ced9a9')
     e.color = color.color(1,2,3)
     app.run()
