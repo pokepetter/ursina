@@ -1,6 +1,7 @@
 import bpy
 import os
 import sys
+import numpy
 from pathlib import Path
 from math import degrees
 import bmesh
@@ -105,7 +106,25 @@ for key, ob in unique_objects.items():
                 sharp_normals.append(averaged_normal)
 
         normals = sharp_normals
+        if '--smooth_normals' in sys.argv:
+            vertices=verts
+            bucket = list()
+            _normals = numpy.array(normals)
+            for i, v in enumerate(vertices):
+                if i in bucket:
+                    continue
+    
+                overlapping_verts_indices = list()
+                for j, w in enumerate(vertices):
+                    if w == v:
+                        overlapping_verts_indices.append(j)
+                        bucket.append(j)
 
+                average_normal = sum(_normals[e] for e in overlapping_verts_indices) / 3
+                for index in overlapping_verts_indices:
+                    _normals[index] = average_normal
+            normals = list(_normals)
+        normals = numpy.array(normals)
 
     if '--uvs' in sys.argv:
         uv_layer = mesh.uv_layers.active
@@ -114,11 +133,12 @@ for key, ob in unique_objects.items():
 
 
 
+    normals_string = numpy.array2string(normals, separator=',').replace('\n', '')
     code += f'''
 '{mesh.name}' : Mesh(
     vertices={str(verts).replace(' ', '')},
     triangles={polygons},
-    normals={str(normals).replace(' ', '')},
+    normals={normals_string.replace(' ', '')},
     colors={str(vertex_colors).replace(' ', '')},
     uvs={str(uvs).replace(' ', '')},
 ),
