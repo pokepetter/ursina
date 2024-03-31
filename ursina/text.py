@@ -1,9 +1,8 @@
 from panda3d.core import TextNode
 import builtins
-# from direct.interval.IntervalGlobal import Sequence, Func, Wait, SoundInterval
+import re
 
 import ursina
-# from ursina import *
 from ursina import camera
 from ursina.entity import Entity
 from ursina.sequence import Sequence, Func, Wait
@@ -314,20 +313,20 @@ class Text(Entity):
             return
 
         new_text = ''
-        x = 0
-        for word in self.raw_text.replace(self.end_tag, self.end_tag+' ').split(' '):
+        for line in self.raw_text.split('\n'):
+            x = 0
+            for word in line.split(' '):
+                clean_string = re.sub('<.*?>', '', word)
+                x += len(clean_string) + 1
+                # print('w:', word, 'len:', len(clean_string), 'clean str:', clean_string)
 
-            if word.startswith(self.start_tag) and new_text:
-                new_text = new_text[:-1]
+                if x >= value:
+                    new_text += '\n'
+                    x = 0
 
-            if not word.startswith(self.start_tag):
-                x += len(word) + 1
+                new_text += word + ' '
 
-            if x >= value:
-                new_text += '\n'
-                x = 0
-
-            new_text += word + ' '
+            new_text += '\n'
 
         self.text = new_text
 
@@ -440,10 +439,8 @@ if __name__ == '__main__':
     app = Ursina()
     # Text.size = .001
     descr = dedent('''
-        Rainstorm
-        Summon a rain storm to deal 5 water
-
-        damage to everyone, test including yourself.
+        <red>Rainstorm<default> <red>Rainstorm<default>
+        Summon a rain storm to deal 5 <blue>water<default> damage to everyone, test including yourself.
         1234 1234 1234 1234 1234 1234 2134 1234 1234 1234 1234 1234 2134 2134 1234 1234 1234 1234
         Lasts for 4 rounds.''').strip()
 
