@@ -51,17 +51,15 @@ class DirectionalLight(Light):
 
 
     def update_bounds(self, entity=scene):  # update the shadow area to fit the bounds of target entity, defaulted to scene.
-        if not entity.get_tight_bounds(self):
-            return
-
         # don't include skydome when calculating shadow bounds
         [e.disable() for e in Sky.instances]
-
-        bmin, bmax = entity.get_tight_bounds(self)
-        lens = self._light.get_lens()
-        lens.set_near_far(bmin.z*2, bmax.z*2)
-        lens.set_film_offset((bmin.xy + bmax.xy) * .5)
-        lens.set_film_size(bmax.xy - bmin.xy)
+        bounds = entity.get_tight_bounds(self)
+        if bounds is not None:
+            bmin, bmax = bounds
+            lens = self._light.get_lens()
+            lens.set_near_far(bmin.z*2, bmax.z*2)
+            lens.set_film_offset((bmin.xy + bmax.xy) * .5)
+            lens.set_film_size(bmax.xy - bmin.xy)
 
         [e.enable() for e in Sky.instances]
 
