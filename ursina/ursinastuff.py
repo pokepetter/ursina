@@ -26,6 +26,11 @@ def invoke(function, *args, **kwargs):  # reserved keywords: 'delay', 'unscaled'
         unscaled = kwargs['unscaled']
         del kwargs['unscaled']
 
+    ignore_paused = False
+    if 'ignore_paused' in kwargs:
+        ignore_paused = kwargs['ignore_paused']
+        del kwargs['ignore_paused']
+
     if not delay:
         function(*args, **kwargs)
         return None
@@ -34,7 +39,11 @@ def invoke(function, *args, **kwargs):  # reserved keywords: 'delay', 'unscaled'
         Wait(delay),
         Func(function, *args, **kwargs)
     )
+    s.ignore_paused = ignore_paused
     s.unscaled = unscaled
+    if s.ignore_paused:
+        s.unscaled = True
+
     s.start()
     return s
 
