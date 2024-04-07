@@ -76,6 +76,7 @@ from ursina.prefabs.slider import Slider, ThinSlider
 from ursina.prefabs.button_group import ButtonGroup
 from ursina.prefabs.window_panel import WindowPanel, Space
 from ursina.prefabs.button_list import ButtonList
+from ursina.prefabs.checkbox import CheckBox
 # from ursina.prefabs.file_browser import FileBrowser
 # from ursina.prefabs import primitives
 
