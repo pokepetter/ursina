@@ -97,6 +97,8 @@ class LevelEditor(Entity):
 
     @entities.setter
     def entities(self, value):
+        if not self.current_scene:
+            return
         self.current_scene.entities = value
 
     @property
@@ -107,6 +109,8 @@ class LevelEditor(Entity):
 
     @selection.setter
     def selection(self, value):
+        if not self.current_scene:
+            return
         self.current_scene.selection = value
 
     def on_enable(self):
@@ -2477,7 +2481,7 @@ if __name__ == '__main__':
 
 
     level_editor = LevelEditor()
-    level_editor.goto_scene(0,0)
+    # level_editor.goto_scene(0,0)
 
 
 
