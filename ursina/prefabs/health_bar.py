@@ -1,13 +1,14 @@
 from ursina import *
 
-
+from ursina.scripts.property_generator import generate_properties_for_class
+@generate_properties_for_class()
 class HealthBar(Button):
 
-    def __init__(self, max_value=100, roundness=.25, animation_duration=.1, show_text=True, show_lines=False, text_size=.7, **kwargs):
-        super().__init__(position=(-.45*window.aspect_ratio,.45), origin=(-.5,.5), scale=(Text.size*20,Text.size),
+    def __init__(self, max_value=100, value=Default, roundness=.25, animation_duration=.1, show_text=True, show_lines=False, text_size=.7, origin=(-.5,.5), **kwargs):
+        super().__init__(position=(-.45*window.aspect_ratio,.45), scale=(Text.size*20,Text.size), origin=origin,
         color=color.black66, highlight_color=color.black66, text='hp / max hp', text_size=text_size, radius=roundness, ignore=True)
 
-        self.bar = Entity(parent=self, model=Quad(radius=roundness), origin=self.origin, z=-.005, color=color.red.tint(-.2), ignore=True)
+        self.bar = Entity(parent=self, model=Quad(radius=roundness), origin=origin, z=-.005, color=color.red.tint(-.2), ignore=True)
         self.lines = Entity(parent=self.bar, y=-1, color=color.black33, ignore=True, enabled=show_lines, z=-.05)
 
         self.max_value = max_value
@@ -16,21 +17,15 @@ class HealthBar(Button):
         self.animation_duration = animation_duration
         self.show_lines = show_lines
         self.show_text = show_text
+        self.value = self.max_value if value == Default else value
 
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-        self.value = self.max_value
         self.text_entity.enabled = show_text
 
 
-    @property
-    def value(self):
-        return self._value
-
-
-    @value.setter
-    def value(self, n):
+    def value_setter(self, n):
         if self.clamp:
             n = clamp(n, 0, self.max_value)
 
@@ -52,27 +47,21 @@ class HealthBar(Button):
 
 
 
-    @property
-    def show_text(self):
+    def show_text_getter(self):
         return self.text_entity.enabled
-    @show_text.setter
-    def show_text(self, value):
+    def show_text_setter(self, value):
         self.text_entity.enabled = value
-        print(self.text_entity.enabled)
 
-    @property
-    def show_lines(self):
+    def show_lines_getter(self):
         return self.lines.enabled
-    @show_lines.setter
-    def show_lines(self, value):
+    def show_lines_setter(self, value):
         self.lines.enabled = value
 
-    @property
-    def bar_color(self):
+    def bar_color_getter(self):
         return self.bar.color
-    @bar_color.setter
-    def bar_color(self, value):
+    def bar_color_setter(self, value):
         self.bar.color = value
+
 
 
     def __setattr__(self, name, value):
@@ -88,7 +77,7 @@ class HealthBar(Button):
 if __name__ == '__main__':
     app = Ursina()
 
-    health_bar_1 = HealthBar(bar_color=color.lime.tint(-.25), roundness=.5, value=50)
+    health_bar_1 = HealthBar(bar_color=color.lime.tint(-.25), roundness=.5, max_value=100, value=50)
     print(health_bar_1.text_entity.enabled, health_bar_1.text_entity.text)
     # health_bar_1.show_text = False
     # health_bar_1.show_lines = True
