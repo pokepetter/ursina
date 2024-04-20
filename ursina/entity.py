@@ -7,7 +7,6 @@ from ursina.vec3 import Vec3
 from ursina.vec4 import Vec4
 from panda3d.core import Quat
 from panda3d.core import TransparencyAttrib
-from panda3d.core import Shader
 from panda3d.core import TexGenAttrib
 
 from ursina.texture import Texture
@@ -27,6 +26,7 @@ from ursina.string_utilities import camel_to_snake
 from textwrap import dedent
 from panda3d.core import Shader as Panda3dShader
 from ursina import shader
+from ursina.shader import Shader
 from ursina.string_utilities import print_warning
 from ursina.ursinamath import Bounds
 from ursina.ursinastuff import invoke, PostInitCaller

@@ -11,12 +11,18 @@ from ursina.vec3 import Vec3
 import panda3d.core as p3d
 import gltf
 import builtins
+from ursina.sequence import Func
 
 
 imported_meshes = dict()
 blender_scenes = dict()
 
-def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursinamesh', '.obj', '.glb', '.gltf', '.blend'), use_deepcopy=False, gltf_no_srgb=application.gltf_no_srgb):
+def load_model(name, path=Func(getattr, application, 'asset_folder'), file_types=('.bam', '.ursinamesh', '.obj', '.glb', '.gltf', '.blend'), use_deepcopy=False, gltf_no_srgb=Func(getattr, application, 'gltf_no_srgb')):
+    if callable(path):
+        path = path()
+    if callable(gltf_no_srgb):
+        gltf_no_srgb = gltf_no_srgb()
+
     if not isinstance(name, str):
         raise TypeError(f"Argument save must be of type str, not {type(str)}")
 
@@ -128,7 +134,10 @@ if application.development_mode:
             application.blender_paths['default'] = blender_exec
 
 
-def load_blender_scene(name, path=application.asset_folder, reload=False, skip_hidden=True, models_only=False, uvs=True, vertex_colors=True, normals=True, triangulate=True, decimals=4):
+def load_blender_scene(name, path=Func(getattr, application, 'asset_folder'), reload=False, skip_hidden=True, models_only=False, uvs=True, vertex_colors=True, normals=True, triangulate=True, decimals=4):
+    if callable(path):
+        path = path()
+
     scenes_folder = Path(application.asset_folder / 'scenes')
     if not scenes_folder.exists():
         scenes_folder.mkdir()
@@ -199,7 +208,10 @@ def get_blender(blend_file):    # try to get a matching blender version in case 
             return application.blender_paths['default']
 
 
-def compress_models(path=None, outpath=application.compressed_models_folder, name='*'):
+def compress_models(path=None, out_path=Func(getattr, application, 'compressed_models_folder'), name='*'):
+    if callable(out_path):
+        out_path = out_path()
+
     if "/" in name or '\\' in name:
         raise Exception(f'Path character "/" or "\\" found in blender name ({name}). To successfully import .blend files, use only the file name.')
 
@@ -212,7 +224,7 @@ def compress_models(path=None, outpath=application.compressed_models_folder, nam
     for blend_file in path.glob(f'**/{name}.blend'):
         blender = get_blender(blend_file)
 
-        out_file_path = outpath / (blend_file.stem + '.obj')
+        out_file_path = out_path / (blend_file.stem + '.obj')
         print_info('converting .blend file to .obj:', blend_file, '-->', out_file_path, 'using:', blender)
 
         if platform.system() == 'Windows':
@@ -225,7 +237,12 @@ def compress_models(path=None, outpath=application.compressed_models_folder, nam
     return exported
 
 
-def obj_to_ursinamesh(path=application.compressed_models_folder, outpath=application.compressed_models_folder, name='*', return_mesh=True, save_to_file=False, delete_obj=False):
+def obj_to_ursinamesh(path=Func(getattr, application, 'compressed_models_folder'), out_path=Func(getattr, application, 'compressed_models_folder'), name='*', return_mesh=True, save_to_file=False, delete_obj=False):
+    if callable(path):
+        path = path()
+    if callable(out_path):
+        out_path = out_path()
+
     if name.endswith('.obj'):
         name = name[:-4]
 
@@ -385,14 +402,14 @@ def obj_to_ursinamesh(path=application.compressed_models_folder, outpath=applica
         if not save_to_file:
             return meshstring
 
-        outfilepath = outpath / (os.path.splitext(f)[0] + '.ursinamesh')
-        with open(outfilepath, 'w') as file:
+        out_path = out_path / (os.path.splitext(f)[0] + '.ursinamesh')
+        with open(out_path, 'w') as file:
             file.write(meshstring)
 
         if delete_obj:
-            os.remove(outfilepath)
+            os.remove(out_path)
 
-        print_info('saved ursinamesh to:', outfilepath)
+        print_info('saved ursinamesh to:', out_path)
 
 # faster, but does not apply modifiers
 def compress_models_fast(model_name=None, write_to_disk=False):
@@ -449,7 +466,10 @@ def compress_models_fast(model_name=None, write_to_disk=False):
 
                 return file_content
 
-def ursina_mesh_to_obj(mesh, name='', out_path=application.compressed_models_folder, max_decimals=5, flip_faces=True):
+def ursina_mesh_to_obj(mesh, name='', out_path=Func(getattr, application, 'compressed_models_folder'), max_decimals=5, flip_faces=True):
+    if callable(out_path):
+        out_path = out_path()
+
     from ursina.string_utilities import camel_to_snake
 
     obj = ''

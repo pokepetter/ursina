@@ -12,6 +12,7 @@ from ursina.scripts.colorize import colorize
 from ursina.ursinastuff import LoopingList
 from ursina.vec3 import Vec3
 from ursina.vec2 import Vec2
+from ursina.sequence import Func
 
 import panda3d.core as p3d
 
@@ -404,9 +405,11 @@ class Mesh(p3d.NodePath):
         if regenerate:
             self.generate()
 
-    def save(self, name='', folder:Path=application.compressed_models_folder, flip_faces=False, max_decimals=16):
-        if not application.compressed_models_folder.exists():
-            application.compressed_models_folder.mkdir()
+    def save(self, name='', folder:Path=Func(getattr, application, 'compressed_models_folder'), flip_faces=False, max_decimals=16):
+        if callable(folder):
+            folder = folder()
+        if not folder.exists():
+            folder.mkdir()
 
         if not name and hasattr(self, 'path'):
             name = self.path.stem
