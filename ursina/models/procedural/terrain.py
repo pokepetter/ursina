@@ -61,7 +61,7 @@ class Terrain(Mesh):
         for z in range(h):
             for x in range(w):
 
-                self.vertices.append(Vec3((x/min_dim)+(centering_offset.x), _height_values[x][z], (z/min_dim)+centering_offset.y))
+                self.vertices.append(Vec3((x/(w-1))+(centering_offset.x), _height_values[x][z], (z/(h-1))+centering_offset.y))
                 self.uvs.append((x/w, z/h))
 
                 if x > 0 and z > 0:
@@ -103,22 +103,24 @@ if __name__ == '__main__':
     '''
     hv = terrain_from_heightmap_texture.model.height_values.tolist()
     terrain_from_list = Entity(model=Terrain(height_values=hv), scale=(40,5,20), texture='heightmap_1', x=40)
+    terrain_bounds = Entity(model='wireframe_cube', origin_y=-.5, scale=(40,5,20), color=color.lime)
 
     def input(key):
         if key == 'space':  # randomize the terrain
             terrain_from_list.model.height_values = [[random.uniform(0,255) for a in column] for column in terrain_from_list.model.height_values]
             terrain_from_list.model.generate()
 
-    EditorCamera()
+    EditorCamera(rotation_x=90)
+    camera.orthographic = True
     Sky()
-
     player = Entity(model='sphere', color=color.azure, scale=.2, origin_y=-.5)
-    hv = terrain_from_list.model.height_values
 
     def update():
         direction = Vec3(held_keys['d'] - held_keys['a'], 0, held_keys['w'] - held_keys['s']).normalized()
         player.position += direction * time.dt * 8
-        player.y = terraincast(player.world_position, terrain_from_list, hv)
+        y = terraincast(player.world_position, terrain_from_list, terrain_from_list.model.height_values)
+        if y is not None:
+            player.y = y
 
 
 
