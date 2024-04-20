@@ -196,7 +196,7 @@ def import_all_classes(path=application.asset_folder, debug=False):
         if rel_path.startswith('.'):
             rel_path = rel_path[1:]
         module_name = os.path.basename(file_path).split('.')[0]
-        class_name = snake_to_camel(module_name)
+        # class_name = snake_to_camel(module_name)
         module_name = module_name
         import_statement = 'from ' + rel_path + ' import *'
 

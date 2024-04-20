@@ -44,7 +44,7 @@ def do_shader_includes(shader_source, included=None):
     res = ""
     for line in lines:
         if line.startswith("#include"):
-            str_start = line.find("\"");
+            str_start = line.find("\"")
             include_str = line[str_start:]
             str_end = include_str[1:].find("\"")
             if str_end == -1:

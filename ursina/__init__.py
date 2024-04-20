@@ -11,6 +11,7 @@ from ursina.window import instance as window
 from ursina.camera import instance as camera
 from ursina.mouse import instance as mouse
 from ursina.main import Ursina
+from panda3d.core import Mat3, Mat4
 from ursina.ursinamath import *
 from ursina.ursinastuff import *
 from ursina import input_handler

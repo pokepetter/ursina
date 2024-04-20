@@ -1,4 +1,5 @@
 import ursina
+import builtins
 from pathlib import Path
 from panda3d.core import NodePath
 from ursina.vec2 import Vec2
@@ -20,16 +21,13 @@ from ursina.mesh import Mesh
 from ursina.sequence import Sequence, Func, Wait
 from ursina.ursinamath import lerp
 from ursina import curve
-from ursina.curve import CubicBezier
-from ursina import mesh_importer
 from ursina.mesh_importer import load_model
 from ursina.texture_importer import load_texture
 from ursina.string_utilities import camel_to_snake
 from textwrap import dedent
 from panda3d.core import Shader as Panda3dShader
 from ursina import shader
-from ursina.shader import Shader
-from ursina.string_utilities import print_info, print_warning
+from ursina.string_utilities import print_warning
 from ursina.ursinamath import Bounds
 from ursina.ursinastuff import invoke, PostInitCaller
 
@@ -207,6 +205,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
                 m.name = value
                 m.setPos(Vec3(0,0,0))
                 self._model = m
+                # import mesh_importer
                 # if not value in mesh_importer.imported_meshes:
                 #     print_info('loaded model successfully:', value)
             else:
@@ -841,7 +840,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
         _name = 'textures/' + name + '.jpg'
         org_pos = camera.position
         camera.position = self.position
-        base.saveSphereMap(_name, size=size)
+        application.base.saveSphereMap(_name, size=size)
         camera.position = org_pos
 
         # print('saved sphere map:', name)
@@ -854,13 +853,13 @@ class Entity(NodePath, metaclass=PostInitCaller):
         _name = 'textures/' + name
         org_pos = camera.position
         camera.position = self.position
-        base.saveCubeMap(_name+'.jpg', size=size)
+        application.base.saveCubeMap(_name+'.jpg', size=size)
         camera.position = org_pos
 
         # print('saved cube map:', name + '.jpg')
         self.model.setTexGen(TextureStage.getDefault(), TexGenAttrib.MWorldCubeMap)
         self.reflection_map = _name + '#.jpg'
-        self.model.setTexture(loader.loadCubeMap(_name + '#.jpg'), 1)
+        self.model.setTexture(builtins.loader.loadCubeMap(_name + '#.jpg'), 1)
 
 
     @property
@@ -893,16 +892,9 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.setPos(relative_to, Vec3(value[0], value[1], value[2]))
 
 
-    def rotate(self, value, relative_to=None, duration=0, fps=60):  # rotate around local axis.
+    def rotate(self, value, relative_to=None):  # rotate around local axis.
         if not relative_to:
             relative_to = self
-
-        if duration:
-            rotation_sequence = Sequence()
-            for i in range(60*duration):
-                rotation_sequence.append(Func(self.rotate, rotation_step))
-                rotation_sequence.append(Wait(time_step))
-
 
         self.setHpr(relative_to, Vec3(value[1], value[0], value[2]) * Entity.rotation_directions)
 
@@ -934,7 +926,6 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def look_at(self, target, axis='forward', up=None): # up defaults to self.up
-        from panda3d.core import Quat
         if isinstance(target, Entity):
             target = Vec3(*target.world_position)
         elif not isinstance(target, Vec3):
@@ -1091,7 +1082,6 @@ class Entity(NodePath, metaclass=PostInitCaller):
             unscaled = True
 
         if delay:
-            from ursina.ursinastuff import invoke
             return invoke(self.animate, name, value, duration=duration, curve=curve, loop=loop, resolution=resolution, time_step=time_step, auto_destroy=auto_destroy, delay=delay, unscaled=unscaled, ignore_paused=self.ignore_paused)
 
         animator_name = name + '_animator'

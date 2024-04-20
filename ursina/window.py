@@ -1,6 +1,5 @@
 import sys
 import os
-import platform
 from panda3d.core import WindowProperties
 from panda3d.core import loadPrcFileData
 from ursina.vec2 import Vec2
@@ -178,7 +177,7 @@ class Window(WindowProperties):
         self.entity_counter.text_entity = Text(parent=self.entity_counter, text='entities:', origin=(-.5,-.75), scale=.4, add_to_scene_entities=False, eternal=True)
         def _entity_counter_update():
             if self.entity_counter.t > 1:
-                self.entity_counter.text = str(max(0, len([e for e in scene.entities if e.model and e.enabled])-6))
+                self.entity_counter.text = str(max(0, len([e for e in scene.entities if e.model and e.enabled])-5))
                 self.entity_counter.i = 0
             self.entity_counter.t += time.dt
         self.entity_counter.update = _entity_counter_update
@@ -302,8 +301,7 @@ class Window(WindowProperties):
 
     @property
     def forced_aspect_ratio(self):
-        if not hasattr(self, '_forced_aspect_ratio'): return None
-        return self._forced_aspect_ratio
+        return getattr(self, '_forced_aspect_ratio', None)
 
     @forced_aspect_ratio.setter
     def forced_aspect_ratio(self, value):
@@ -316,8 +314,7 @@ class Window(WindowProperties):
 
     @property
     def render_mode(self):
-        if not hasattr(self, '_render_mode'): return None
-        return self._render_mode
+        return getattr(self, '_render_mode', None)
 
     @render_mode.setter
     def render_mode(self, value):
@@ -388,7 +385,8 @@ class Window(WindowProperties):
     @borderless.setter
     def borderless(self, value):
         self._borderless = value
-        if application.window_type == 'none': return
+        if application.window_type == 'none':
+            return
 
         self.setUndecorated(value)
         if hasattr(self, 'exit_button'):
@@ -407,7 +405,8 @@ class Window(WindowProperties):
     def fullscreen(self, value):
         # print('----------------------', value, self._fullscreen)
         self._fullscreen = value
-        if application.window_type == 'none': return
+        if application.window_type == 'none':
+            return
 
         print('set fullscreen to', value)
         if value:
@@ -436,7 +435,8 @@ class Window(WindowProperties):
     @color.setter
     def color(self, value):
         self._color = value
-        if application.window_type == 'none': return
+        if application.window_type == 'none':
+            return
 
         base.camNode.get_display_region(0).get_window().set_clear_color(value)
 

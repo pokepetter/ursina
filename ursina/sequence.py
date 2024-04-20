@@ -118,7 +118,7 @@ class Sequence():
         if self.ignore_paused is False and (self.paused or application.paused):
             return
 
-        if self.entity and (self.entity.enabled == False or self.entity.ignore):
+        if self.entity and (not self.entity.enabled or self.entity.ignore):
             return
 
 
