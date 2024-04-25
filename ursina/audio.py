@@ -66,9 +66,8 @@ class Audio(Entity):
             for folder in (application.asset_folder, application.internal_audio_folder):
                 for suffix in file_types:
                     for f in folder.glob(f'**/{value}{suffix}'):
-                        p = str(f.resolve())
-                        p = Filename.fromOsSpecific(p)
-                        self._clip = loader.loadSfx(p)  # type: ignore
+                        self.path = str(f.resolve())
+                        self._clip = loader.loadSfx(Filename.fromOsSpecific(self.path))  # type: ignore
                         # print('...loaded audio clip:', p, self._clip)
                         return
 
