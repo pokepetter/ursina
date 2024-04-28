@@ -47,7 +47,7 @@ def raycast(origin, direction:Vec3=(0,0,1), distance=9999, traverse_target:Entit
 
     _raycaster._pq.sort_entries()
     entries = _raycaster._pq.getEntries()
-    entities = [e.get_into_node_path().parent for e in entries]
+    entities = [e.get_into_node_path().parent.getPythonTag('Entity') for e in entries]
 
     entries = [        # filter out ignored entities
         e for i, e in enumerate(entries)
