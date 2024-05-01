@@ -161,7 +161,17 @@ blue {color: var(--blue);}
     margin-bottom: 1em;
     width: fit-content;
     min-width: 65em;
+    position: relative;
 }
+.copy_code_button {
+    position: absolute;
+    right: 10px;
+    border: none;
+    border-radius: 5px;
+    font-family: inherit;
+    color: gray;
+}
+
 .params {
     color: var(--params_color);
     font-weight: bold;

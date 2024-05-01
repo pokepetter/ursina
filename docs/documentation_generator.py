@@ -26,6 +26,15 @@ function save() {
 var checked = JSON.parse(localStorage.getItem("checkbox"));
 document.getElementById("checkbox").checked = checked;
 
+function copy_to_clipboard(containerid) {
+    var range = document.createRange();
+    range.selectNode(containerid); //changed here
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();
+}
+
 </script>
 <bg></bg>
 '''
@@ -711,9 +720,8 @@ for group_name, group in groups.items():
 
         if data.example:
             html += '    <div><gray>example:</gray></div>\n'
-            html += f'    <div class="example">{data.example}\n</div>\n'
+            html += f'   <div class="example" id="{name}_example"><button class="copy_code_button" onclick="copy_to_clipboard({name}_example)">copy</button>{data.example}\n</div>\n'
 
-        # html += '\n</div></div>'
         html = html.replace('<gray></gray>', '')
 
         html += dedent('''
