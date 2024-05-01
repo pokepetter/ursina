@@ -32,7 +32,7 @@ Powered by Python<br>
 Python is the world's most popular programming language for a reason. The ease of use of Python combined with ursina's design, makes it easy to write concise code and avoid lots of boilerplate code.<br>
 <br>
 <div style="font-size: 16.0px;">
-<div class="code_block" style="margin-left: 0em;"><purple>from</purple> ursina <purple>import</purple> *
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina <purple>import</purple> *
 
 app = Ursina()
 
@@ -68,7 +68,7 @@ Iterate Faster<br>
 <br>
 Iteration speed benchmark. Time from code/scene change to play. Game: pong clone. Lower is better.<br>
 <br>
-<div class="code_block" style="margin-left: 0em;">engine:         duration:       times as slow:
+<div class="code_block" id="code_block_1" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>engine:         duration:       times as slow:
 
 ursina          <yellow>0</yellow><yellow>0</yellow>.<yellow>0</yellow><yellow>1</yellow>s          <yellow>1</yellow>x
 Godot           <yellow>0</yellow><yellow>1</yellow>.<yellow>1</yellow><yellow>8</yellow>s          <yellow>1</yellow><yellow>1</yellow><yellow>8</yellow>x
@@ -140,6 +140,16 @@ Platforms<br>
 <br>
 <a href=" installation.html" class="button">⭳ Download</a><br>
 <br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange();
+    range.selectNode(containerid); //changed here
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();
+}
+</script>
 
 </body>
 </html>

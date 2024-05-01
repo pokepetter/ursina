@@ -17,23 +17,29 @@
 <div id="Samples"/><br>
 Samples<br>
 <div style="font-size: 20.0px;font-weight: normal;">
-<br>
-<a href=" https://github.com/pokepetter/ursina/blob/master/samples/tic_tac_toe.py" class="button_big" style="background-image: url('icons/tic_tac_toe_icon.jpg')"><span>Tic Tac Toe</span></a>
-<a href=" https://github.com/pokepetter/ursina/blob/master/samples/inventory.py" class="button_big" style="background-image: url('icons/inventory_icon.jpg')"><span>Inventory</span></a>
-<a href=" https://github.com/pokepetter/ursina/blob/master/samples/pong.py" class="button_big" style="background-image: url('icons/pong.jpg')"><span>Pong</span></a>
-<br>
-<a href=" https://github.com/pokepetter/ursina/blob/master/samples/minecraft_clone.py" class="button_big" style="background-image: url('icons/minecraft_clone_icon.jpg')"><span>Minecraft Clone</span></a>
-<a href=" https://github.com/pokepetter/ursina/blob/master/samples/rubiks_cube.py" class="button_big" style="background-image: url('icons/rubiks_cube.jpg')"><span>Rubik's Cube</span></a>
-<a href=" https://github.com/pokepetter/ursina/blob/master/samples/clicker_game.py" class="button_big" style="background-image: url('icons/installation_guide_icon.jpg')"><span>Cookie Clicker</span></a>
-<br>
-<a href=" https://github.com/pokepetter/ursina/blob/master/samples/platformer.py" class="button_big" style="background-image: url('icons/installation_guide_icon.jpg')"><span>Platformer</span></a>
-<a href=" https://github.com/pokepetter/ursina/blob/master/samples/fps.py" class="button_big" style="background-image: url('icons/fps.jpg')"><span>FPS</span></a>
-<a href=" https://github.com/pokepetter/ursina/blob/master/samples/particle_system.py" class="button_big" style="background-image: url('icons/particle_system.jpg')"><span>Particle System</span></a>
-<br>
-<a href=" https://github.com/pokepetter/ursina/blob/master/samples/column_graph.py" class="button_big" style="background-image: url('icons/column_graph_icon.jpg')"><span>Culumn Graph</span></a>
+<a href=" tic_tac_toe.html" class="button_big" style="background-image: url('icons/tic_tac_toe.jpg')"><span>Tic Tac Toe</span></a>
+<a href=" inventory.html" class="button_big" style="background-image: url('icons/inventory.jpg')"><span>Inventory</span></a>
+<a href=" pong.html" class="button_big" style="background-image: url('icons/pong.jpg')"><span>Pong</span></a>
+<a href=" minecraft_clone.html" class="button_big" style="background-image: url('icons/minecraft_clone.jpg')"><span>Minecraft Clone</span></a>
+<a href=" rubiks_cube.html" class="button_big" style="background-image: url('icons/rubiks_cube.jpg')"><span>Rubik's Cube</span></a>
+<a href=" clicker_game.html" class="button_big" style="background-image: url('icons/clicker_game.jpg')"><span>Clicker Game</span></a>
+<a href=" platformer.html" class="button_big" style="background-image: url('icons/platformer.jpg')"><span>Platformer</span></a>
+<a href=" fps.html" class="button_big" style="background-image: url('icons/fps.jpg')"><span>FPS</span></a>
+<a href=" particle_system.html" class="button_big" style="background-image: url('icons/particle_system.jpg')"><span>Particle System</span></a>
+<a href=" column_graph.html" class="button_big" style="background-image: url('icons/column_graph.jpg')"><span>Column Graph</span></a>
 <a href=" https://github.com/pokepetter/ld44_life_is_currency" class="button_big" style="background-image: url('icons/value_of_life_icon.jpg')"><span>Value of Life</span></a>
 <a href=" https://github.com/pokepetter/pyweek_30_castaway" class="button_big" style="background-image: url('icons/castaway_icon.jpg')"><span>Castaway</span></a>
 <br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange();
+    range.selectNode(containerid); //changed here
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();
+}
+</script>
 
 </body>
 </html>

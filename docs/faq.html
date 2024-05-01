@@ -103,7 +103,7 @@ Frequently Asked Questions<br>
 How should I structure my project?<br>
 </h2><br>
 <br>
-<div class="code_block" style="margin-left: 0em;">project_folder/         <gray># create a new folder <purple>for</purple> each project</gray>
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>project_folder/         <gray># create a new folder <purple>for</purple> each project</gray>
     enemies.py
     level.py
     main.py             <gray># the starting script</gray>
@@ -142,7 +142,7 @@ to structure your project in a good way, rather than micro-optimize.<br>
 How do I call a function with a delay?</b><br>
 </h2><br>
 <br>
-<div class="code_block" style="margin-left: 0em;">invoke(some_function, arg<yellow>1</yellow>, kwarg<yellow>1</yellow>=<green>'some kwarg'</green>, dela<olive>y</olive>=<yellow>2</yellow>)
+<div class="code_block" id="code_block_1" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>invoke(some_function, arg<yellow>1</yellow>, kwarg<yellow>1</yellow>=<green>'some kwarg'</green>, dela<olive>y</olive>=<yellow>2</yellow>)
 </div><br>
 <br>
 <br>
@@ -153,6 +153,16 @@ How can I use panda3d alongside ursina?<br>
 What you need to know is that Entity is a NodePath and Ursina is a ShowBase.<br>
 You can also write custom shaders, see panda3d's shader documentation for that.<br>
 <br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange();
+    range.selectNode(containerid); //changed here
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();
+}
+</script>
 
 </body>
 </html>

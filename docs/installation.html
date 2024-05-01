@@ -101,11 +101,11 @@ Downloading and Installing Ursina<br>
 1) Install Python 3.10 or newer. <a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a><br>
 <br>
 2) Open cmd/terminal and type:<br>
-<div class="code_block" style="margin-left: 0em;">pip install ursina
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>pip install ursina
 </div><br>
 <br>
 If you want to install the newest version from GitHub, you can install like this:<br>
-<div class="code_block" style="margin-left: 0em;">pip install <a href="https://github.com/pokepetter/ursina/archive/master.zip">https://github.com/pokepetter/ursina/archive/master.zip</a> --upgrade --force-reinstall
+<div class="code_block" id="code_block_1" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>pip install <a href="https://github.com/pokepetter/ursina/archive/master.zip">https://github.com/pokepetter/ursina/archive/master.zip</a> --upgrade --force-reinstall
 </div><br>
 <br>
 Keep in mind that things *could* break.<br>
@@ -113,17 +113,17 @@ Keep in mind that things *could* break.<br>
 <br>
 If you want to easily edit the source, it's recommended to clone the git<br>
 repo and install as develop like this. Make sure you have git installed. <a href="https://git-scm.com/">https://git-scm.com/</a><br>
-<div class="code_block" style="margin-left: 0em;">git clone <a href="https://github.com/pokepetter/ursina.git">https://github.com/pokepetter/ursina.git</a>
+<div class="code_block" id="code_block_2" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_2)">copy</button>git clone <a href="https://github.com/pokepetter/ursina.git">https://github.com/pokepetter/ursina.git</a>
 python setup.py develop
 </div><br>
 Also install any of the optional dependencies you want from the list below,<br>
 or install them all with:<br>
-<div class="code_block" style="margin-left: 0em;">pip install ursina[extras]
+<div class="code_block" id="code_block_3" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_3)">copy</button>pip install ursina[extras]
 </div><br>
 <br>
 On some systems you might have to use pip3 instead of pip in order to use Python 3 and not the old Python 2.<br>
 If the pip command is not found, you can use:<br>
-<div class="code_block" style="margin-left: 0em;">python -m pip install ursina
+<div class="code_block" id="code_block_4" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_4)">copy</button>python -m pip install ursina
 </div><br>
 3) If everything went well, you can go to the introduction tutorial where<br>
 &nbsp;&nbsp; we'll cover how to create a basic program and how to run it.<br>
@@ -139,10 +139,20 @@ Troubleshooting<br>
 <br>
 If you have multiple Python installs, make sure you installed ursina to the correct one.<br>
 You can specify which Python version to install to like this:<br>
-<div class="code_block" style="margin-left: 0em;">python<yellow>3</yellow>.<yellow>1</yellow><yellow>0</yellow> -m pip install ursina
+<div class="code_block" id="code_block_5" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_5)">copy</button>python<yellow>3</yellow>.<yellow>1</yellow><yellow>0</yellow> -m pip install ursina
 </div><br>
 If you're using a venv, make sure you're installing it to the venv and not to the default location.<br>
 <br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange();
+    range.selectNode(containerid); //changed here
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();
+}
+</script>
 
 </body>
 </html>

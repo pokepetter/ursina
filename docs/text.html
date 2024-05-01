@@ -103,13 +103,13 @@ Text Size<br>
 </h2><br>
 <br>
 Set .scale or .world_scale:<br>
-<div class="code_block" style="margin-left: 0em;">text_entity = Text(<green>'hello'</green>, world_<olive>scale</olive>=<yellow>2</yellow>)
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>text_entity = Text(<green>'hello'</green>, world_<olive>scale</olive>=<yellow>2</yellow>)
 </div><br>
 Changing default text size (globally):<br>
-<div class="code_block" style="margin-left: 0em;">Text.size = .<yellow>0</yellow><yellow>5</yellow> <gray># make all the text double as big (default: .<yellow>0</yellow><yellow>2</yellow><yellow>5</yellow>).</gray>
+<div class="code_block" id="code_block_1" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>Text.size = .<yellow>0</yellow><yellow>5</yellow> <gray># make all the text double as big (default: .<yellow>0</yellow><yellow>2</yellow><yellow>5</yellow>).</gray>
 </div><br>
 Changing the text size of the non-uniformly scaled Button:<br>
-<div class="code_block" style="margin-left: 0em;">button = Button(<olive>scale</olive>=(.<yellow>2</yellow>,.<yellow>1</yellow>), <olive>text</olive>=<green>'Start'</green>)
+<div class="code_block" id="code_block_2" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_2)">copy</button>button = Button(<olive>scale</olive>=(.<yellow>2</yellow>,.<yellow>1</yellow>), <olive>text</olive>=<green>'Start'</green>)
 button.text_entity.world_scale = <yellow>2</yellow>  <gray># make the text_entity twice as big.</gray>
 </div><br>
 <br>
@@ -119,12 +119,12 @@ Font and Resolution<br>
 <br>
 For one Text Entity:<br>
 <br>
-<div class="code_block" style="margin-left: 0em;">text = Text(font=<green>'VeraMono.ttf'</green>, resolution=<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>*Text.size)
+<div class="code_block" id="code_block_3" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_3)">copy</button>text = Text(font=<green>'VeraMono.ttf'</green>, resolution=<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>*Text.size)
 text.text = descr
 </div><br>
 For all Text Entities:<br>
 <br>
-<div class="code_block" style="margin-left: 0em;">Text.default_font = <green>'VeraMono.ttf'</green>
+<div class="code_block" id="code_block_4" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_4)">copy</button>Text.default_font = <green>'VeraMono.ttf'</green>
 Text.default_resolution = <yellow>1</yellow><yellow>0</yellow><yellow>0</yellow> * Text.size
 </div><br>
 Keep in mind you don't *have* to change the resolution, but for pixel fonts for example, you<br>
@@ -135,7 +135,7 @@ Text Alignment<br>
 </h2><br>
 <br>
 Change text alignment by setting .origin:<br>
-<div class="code_block" style="margin-left: 0em;">Text(<green>'Hello\nWorld!'</green>, <olive>origin</olive>=(-.<yellow>5</yellow>,.<yellow>5</yellow>))  <gray># the default. text starts in the upper left like normal.</gray>
+<div class="code_block" id="code_block_5" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_5)">copy</button>Text(<green>'Hello\nWorld!'</green>, <olive>origin</olive>=(-.<yellow>5</yellow>,.<yellow>5</yellow>))  <gray># the default. text starts in the upper left like normal.</gray>
 Text(<green>'Hello\nWorld!'</green>, <olive>origin</olive>=(<yellow>0</yellow>,<yellow>0</yellow>))     ``` is centered both horizontally and vertically.
 </div><br>
 <br>
@@ -144,10 +144,10 @@ Text Colors<br>
 </h2><br>
 <br>
 Set .color to color the whole text.<br>
-<div class="code_block" style="margin-left: 0em;">t = Text(<green>'This is some text'</green>, <olive>color</olive>=color.blue)
+<div class="code_block" id="code_block_6" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_6)">copy</button>t = Text(<green>'This is some text'</green>, <olive>color</olive>=color.blue)
 </div><br>
 Use tags to color parts of the text.<br>
-<div class="code_block" style="margin-left: 0em;">t = Text(<green>'This is some &lt;pink&gt;colored text. &lt;default&gt;Reset color back to default.'</green>, <olive>color</olive>=color.blue)
+<div class="code_block" id="code_block_7" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_7)">copy</button>t = Text(<green>'This is some &lt;pink&gt;colored text. &lt;default&gt;Reset color back to default.'</green>, <olive>color</olive>=color.blue)
 </div><br>
 <h2><div id="Changing Text of Prefabs"/><br>
 Changing Text of Prefabs<br>
@@ -155,6 +155,16 @@ Changing Text of Prefabs<br>
 <br>
 Things like Slider, InputField, etc., usually has .text_entity which you can access if you need it.<br>
 <br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange();
+    range.selectNode(containerid); //changed here
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();
+}
+</script>
 
 </body>
 </html>

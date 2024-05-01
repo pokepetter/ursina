@@ -471,7 +471,7 @@ machine, where it is unpacked and then used to call some function. Usage of remo
 samples that come with Ursina.<br>
 <br>
 RPC code will look something like this in typical use:<br>
-<div class="code_block" style="margin-left: 0em;"><gray># ...</gray>
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><gray># ...</gray>
 
 rpc_peer = RPCPeer()
 
@@ -496,7 +496,7 @@ rpc_peer = RPCPeer()
 <gray># ...</gray>
 </div><br>
 Then the <span>say</span> function can be called by another peer via their own <span>RPCPeer</span>:<br>
-<div class="code_block" style="margin-left: 0em;"><gray># If connected, this will run the say function on the other peer over the internet.</gray>
+<div class="code_block" id="code_block_1" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button><gray># If connected, this will run the say function on the other peer over the internet.</gray>
 rpc_peer.say(rpc_peer.get_connections()[<yellow>0</yellow>], "Hello, World!")
 </div><br>
 Note that type hints are **required** for user arguments such as the <span>message</span> argument in the example.<br>
@@ -515,6 +515,16 @@ is a functional realtime multiplayer game tested on a real server. Their order i
 4. <span>host_authoritative.py</span> is the same as <span>shared_object.py</span> but the host is in charge of object state.<br>
 5. <span>club_bear.py</span> is similar to <span>host_authoritative.py</span> but more fleshed out with multiple players, chat, and more.<br>
 <br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange();
+    range.selectNode(containerid); //changed here
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();
+}
+</script>
 
 </body>
 </html>

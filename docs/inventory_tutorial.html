@@ -27,7 +27,7 @@ In this tutorial we will make a drag and drop inventory like this.<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;Let's begin by making an Inventory class<br>
 <br>
-<div class="code_block" style="margin-left: 2em;"><purple>from</purple> ursina <purple>import</purple> *
+<div class="code_block" id="code_block_0" style="margin-left: 2em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina <purple>import</purple> *
 
 class Inventory(<olive>Entity</olive>):
     <purple>def</purple> __init__(self):
@@ -49,7 +49,7 @@ class Inventory(<olive>Entity</olive>):
 &nbsp;&nbsp;&nbsp;&nbsp;However, if we run the code, we'll see that there's nothing visible.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Let's parent it to the ui and set the model to 'quad', an included model.<br>
 <br>
-<div class="code_block" style="margin-left: 2em;"><purple>from</purple> ursina <purple>import</purple> *
+<div class="code_block" id="code_block_1" style="margin-left: 2em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button><purple>from</purple> ursina <purple>import</purple> *
 
 class Inventory(<olive>Entity</olive>):
     <purple>def</purple> __init__(self):
@@ -74,7 +74,7 @@ class Inventory(<olive>Entity</olive>):
 &nbsp;&nbsp;&nbsp;&nbsp;There are multiple way to do that, but in this case, we'll simply make the texture repeat<br>
 &nbsp;&nbsp;&nbsp;&nbsp;by setting texture_scale to (5,6). That'll nicely fit the size of our inventory.<br>
 <br>
-<div class="code_block" style="margin-left: 2em;"><purple>from</purple> ursina <purple>import</purple> *
+<div class="code_block" id="code_block_2" style="margin-left: 2em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_2)">copy</button><purple>from</purple> ursina <purple>import</purple> *
 
 class Inventory(<olive>Entity</olive>):
     <purple>def</purple> __init__(self):
@@ -104,7 +104,7 @@ class Inventory(<olive>Entity</olive>):
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;Let's try to add some items to the inventory.<br>
 <br>
-<div class="code_block" style="margin-left: 2em;"><purple>from</purple> ursina <purple>import</purple> *
+<div class="code_block" id="code_block_3" style="margin-left: 2em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_3)">copy</button><purple>from</purple> ursina <purple>import</purple> *
 
 class Inventory(<olive>Entity</olive>):
     <purple>def</purple> __init__(self):
@@ -136,7 +136,7 @@ class Inventory(<olive>Entity</olive>):
 &nbsp;&nbsp;&nbsp;&nbsp;They also don't fit the grid. Fix that by setting origin to the upper left<br>
 &nbsp;&nbsp;&nbsp;&nbsp;corner, (-.5,.5).<br>
 <br>
-<div class="code_block" style="margin-left: 2em;"><purple>from</purple> ursina <purple>import</purple> *
+<div class="code_block" id="code_block_4" style="margin-left: 2em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_4)">copy</button><purple>from</purple> ursina <purple>import</purple> *
 
 class Inventory(<olive>Entity</olive>):
     <purple>def</purple> __init__(self):
@@ -179,7 +179,7 @@ class Inventory(<olive>Entity</olive>):
 &nbsp;&nbsp;&nbsp;&nbsp;Lastly, let's call inventory.append('test item') a couple of times to make sure it works.<br>
 <br>
 <br>
-<div class="code_block" style="margin-left: 2em;"><purple>from</purple> ursina <purple>import</purple> *
+<div class="code_block" id="code_block_5" style="margin-left: 2em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_5)">copy</button><purple>from</purple> ursina <purple>import</purple> *
 
 class Inventory(<olive>Entity</olive>):
     <purple>def</purple> __init__(self):
@@ -224,7 +224,7 @@ class Inventory(<olive>Entity</olive>):
 &nbsp;&nbsp;&nbsp;&nbsp;and place the item there. We can to this by checking each grid position and see if any<br>
 &nbsp;&nbsp;&nbsp;&nbsp;if the items occupy that position already.<br>
 <br>
-<div class="code_block" style="margin-left: 2em;"><purple>from</purple> ursina <purple>import</purple> *
+<div class="code_block" id="code_block_6" style="margin-left: 2em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_6)">copy</button><purple>from</purple> ursina <purple>import</purple> *
 
 class Inventory(<olive>Entity</olive>):
     <purple>def</purple> __init__(self):
@@ -282,7 +282,7 @@ class Inventory(<olive>Entity</olive>):
 &nbsp;&nbsp;&nbsp;&nbsp;Let's make an tuple with those and make the button choose a random item from the tuple<br>
 &nbsp;&nbsp;&nbsp;&nbsp;using random.choice(items)<br>
 <br>
-<div class="code_block" style="margin-left: 2em;">
+<div class="code_block" id="code_block_7" style="margin-left: 2em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_7)">copy</button>
 <purple>if</purple> __name__ == <green>'__main__'</green>:
     app = Ursina()
     inventory = Inventory()
@@ -318,7 +318,7 @@ class Inventory(<olive>Entity</olive>):
 &nbsp;&nbsp;&nbsp;&nbsp;Let's also remove the random color and instead show the item's name when we hover it with the mouse.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;If a button has 'tooltip' set to something, it will show it when we hover the Button.<br>
 <br>
-<div class="code_block" style="margin-left: 2em;">    <purple>def</purple> append(self, item):
+<div class="code_block" id="code_block_8" style="margin-left: 2em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_8)">copy</button>    <purple>def</purple> append(self, item):
 <mark>        icon = Button(                                                  </mark>
             parent = inventory.item_parent,
             model = <green>'quad'</green>,
@@ -343,7 +343,7 @@ class Inventory(<olive>Entity</olive>):
 &nbsp;&nbsp;&nbsp;&nbsp;However, that's easy to change. Just spawn a Draggable instead of Button.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Draggable inherits from Button, so the tooltips will still work!<br>
 <br>
-<div class="code_block" style="margin-left: 2em;">    <purple>def</purple> append(self, item):
+<div class="code_block" id="code_block_9" style="margin-left: 2em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_9)">copy</button>    <purple>def</purple> append(self, item):
 <mark>        icon = Draggable(                                                   </mark>
             parent = inventory.item_parent,
             model = <green>'quad'</green>,
@@ -370,7 +370,7 @@ class Inventory(<olive>Entity</olive>):
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;round the position on drop<br>
 <br>
-<div class="code_block" style="margin-left: 1em;">    <purple>def</purple> append(self, item):
+<div class="code_block" id="code_block_10" style="margin-left: 1em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_10)">copy</button>    <purple>def</purple> append(self, item):
         icon = Draggable(
             parent = inventory.item_parent,
             model = <green>'quad'</green>,
@@ -402,7 +402,7 @@ class Inventory(<olive>Entity</olive>):
 &nbsp;&nbsp;&nbsp;&nbsp;Add a drag function to remember the start position as org_pos.<br>
 <br>
 <br>
-<div class="code_block" style="margin-left: 1em;"><mark>        <purple>def</purple> drag():                                                     </mark>
+<div class="code_block" id="code_block_11" style="margin-left: 1em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_11)">copy</button><mark>        <purple>def</purple> drag():                                                     </mark>
 <mark>            icon.org_pos = (icon.x, icon.y)                             </mark>
 
         <purple>def</purple> drop():
@@ -431,7 +431,7 @@ class Inventory(<olive>Entity</olive>):
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;We shouldn't be able to drop the items outside of the inventory.<br>
 <br>
-<div class="code_block" style="margin-left: 1em;">        <purple>def</purple> drop():
+<div class="code_block" id="code_block_12" style="margin-left: 1em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_12)">copy</button>        <purple>def</purple> drop():
             icon.x = int(icon.x)
             icon.y = int(icon.y)
 
@@ -462,7 +462,7 @@ class Inventory(<olive>Entity</olive>):
 &nbsp;&nbsp;&nbsp;&nbsp;It feels natural that the item we're currently dragging stays on top,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;so we'll move it back a bit when we drag it and forward when we drop it.<br>
 <br>
-<div class="code_block" style="margin-left: 1em;">        <purple>def</purple> drag():
+<div class="code_block" id="code_block_13" style="margin-left: 1em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_13)">copy</button>        <purple>def</purple> drag():
             icon.org_pos = (icon.x, icon.y)
 <mark>            icon.z -= .<yellow>0</yellow><yellow>1</yellow>   <gray># ensure the dragged item overlaps the rest </mark></gray>
 
@@ -490,6 +490,16 @@ class Inventory(<olive>Entity</olive>):
 
 
 </div><br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange();
+    range.selectNode(containerid); //changed here
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();
+}
+</script>
 
 </body>
 </html>
