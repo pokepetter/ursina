@@ -32,9 +32,10 @@ html {
   --span_text_color: #181818;
   --span_text_color_hovered: #181818;
   --example_bg_color: hsl(0,0%,92%);
-  --copy_code_button_bg_color: hsl(0,0%,92%);
-  --copy_code_button_text_color: hsl(0,0%,0%);
-  --copy_code_button_bg_color_hovered: #bf1da7;
+  --copy_code_button_bg_color: hsl(0,0%,85%);
+  --copy_code_button_text_color: hsl(0,0%,50%);
+  --copy_code_button_bg_color_hovered: hsl(0,0%,97%);
+  --copy_code_button_text_color_hovered: hsl(0,0%,50%);
 
   --olive: olive;
   --green: seagreen;
@@ -59,9 +60,10 @@ input:checked + content, input:checked ~ * {
   --span_text_color: #202020;
   --span_text_color_hovered: #eee;
   --example_bg_color: hsl(60, 3%, 16%);
-  --copy_code_button_bg_color: hsl(60, 5%, 10%);
-  --copy_code_button_text_color: hsl(240, 0%, 80%);
-  --copy_code_button_bg_color_hovered: hsl(222deg 97% 64%);
+  --copy_code_button_bg_color: hsl(60, 5%, 12%);
+  --copy_code_button_text_color: hsl(240, 0%, 60%);
+  --copy_code_button_bg_color_hovered: hsl(222, 97% 64%);
+  --copy_code_button_text_color_hovered: hsl(240, 0%, 80%);
 
   --olive: #b29527;
   --green: #39a468;
@@ -181,8 +183,8 @@ blue {color: var(--blue);}
     background-color: var(--copy_code_button_bg_color);
 }
 .copy_code_button:hover {
+    color: var(--copy_code_button_text_color_hovered);
     background-color: var(--copy_code_button_bg_color_hovered);
-    color: var(--copy_code_button_bg_color);
 }
 
 .params {
