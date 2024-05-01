@@ -48,8 +48,8 @@ def invoke(function, *args, **kwargs):  # reserved keywords: 'delay', 'unscaled'
     return s
 
 
-def after(delay, unscaled=True):
-    '''@after  decorator for calling a function after some time.
+def after(delay, unscaled=True):    # function for @after decorator. Use the docrator, not this.
+    '''@after decorator for calling a function after some time.
 
         example:
         @after(.4)
@@ -57,11 +57,11 @@ def after(delay, unscaled=True):
             self.on_cooldown = False
             self.color = color.green
     '''
-    def decorator(func):
+    def _decorator(func):
         def wrapper(*args, **kwargs):
             invoke(func, *args, **kwargs, delay=delay, unscaled=unscaled)
         return wrapper()
-    return decorator
+    return _decorator
 
 
 
@@ -144,22 +144,23 @@ def flatten_list(target_list):
     import itertools
     return list(itertools.chain(*target_list))
 
-def flatten_completely(container):
-    for i in container:
-        if isinstance(i, (list, tuple)):
+
+def flatten_completely(target_list):
+    for i in target_list:
+        if isinstance(i, (sub_list, tuple)):
             for j in flatten_list(i):
                 yield j
         else:
             yield i
 
 
-def enumerate_2d(array):
+def enumerate_2d(array):    # usage: for (x, y), value in enumerate_2d(my_2d_list)
     for x, line in enumerate(array):
         for y, value in enumerate(line):
             yield (x, y), value
 
 
-def size_list():    #return a list of current python objects sorted by size
+def size_list():    # return a list of current python objects sorted by size
     import operator
 
     globals_list = []

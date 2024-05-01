@@ -6,9 +6,12 @@ from types import SimpleNamespace
 from ursina import application
 
 html = '''
+<!DOCTYPE HTML>
+<!--generated with documentation_generator.py-->
 <html>
 <head>
     <link rel="stylesheet" href="api_reference.css">
+    <title>ursina API Reference</title>
 </head>
 <body>
 <input type="checkbox" id="checkbox" onClick="save()"></input>
@@ -152,7 +155,26 @@ groups = {
 'Assets': [
     'models',
     'textures',
-    'shaders',
+],
+'Shaders': [
+    'unlit_shader',
+    'lit_with_shadows_shader',
+    'matcap_shader',
+    'colored_lights_shader',
+    'fresnel_shader',
+    'projector_shader',
+    'texture_blend_shader',
+    'instancing_shader',
+    'triplanar_shader',
+    'normals_shader',
+    'transition_shader',
+    'fxaa',
+    'ssao',
+    'camera_outline_shader',
+    'pixelation_shader',
+    'camera_contrast',
+    'camera_vertical_blur',
+    'camera_grayscale',
 ],
 }
 
@@ -320,7 +342,8 @@ def get_example(str, name=None):    # use name to highlight the relevant class
     example = '\n'.join(lines)
     example = textwrap.dedent(example)
     example = example.split('# test\n')[0]
-    ignore = ('app = Ursina()', 'app.run()', 'from ursina import *')
+    # ignore = ('app = Ursina()', 'app.run()', 'from ursina import *')
+    ignore = ()
     if 'class Ursina' in str:   # don't ignore in main.py
         ignore = ()
 
@@ -440,12 +463,13 @@ class Info:
 path = application.package_folder
 module_info = dict()
 class_info = dict()
+# shader_info = dict()
 # path=file, parent_class=parent_class, parameters=params, class_vars=class_vars, attributes=attrs, properties=properties, functions=methods, example=example
 module_info['textures'] = Info(attributes=['noise', 'grass', 'vignette', 'arrow_right', 'test_tileset', 'tilemap_test_level', 'shore', 'file_icon', 'sky_sunset', 'radial_gradient', 'circle', 'perlin_noise', 'brick', 'grass_tintable', 'circle_outlined', 'ursina_logo', 'arrow_down', 'cog', 'vertical_gradient', 'white_cube', 'horizontal_gradient', 'folder', 'rainbow', 'heightmap_1', 'sky_default', ])
 module_info['models'] = Info(attributes=['quad', 'wireframe_cube', 'plane', 'circle', 'diamond', 'wireframe_quad', 'sphere', 'cube', 'icosphere', 'cube_uv_top', 'arrow', 'sky_dome', ])
-module_info['shaders'] = Info(attributes=['colored_lights_shader', 'fresnel_shader', 'projector_shader', 'instancing_shader', 'texture_blend_shader', 'matcap_shader', 'triplanar_shader', 'unlit_shader', 'geom_shader', 'normals_shader', 'transition_shader', 'noise_fog_shader', 'lit_with_shadows_shader', 'fxaa', 'camera_empty', 'ssao', 'camera_outline_shader', 'pixelation_shader', 'camera_contrast', 'camera_vertical_blur', 'camera_grayscale', ])
+# module_info['shaders'] = Info(attributes=['colored_lights_shader', 'fresnel_shader', 'projector_shader', 'instancing_shader', 'texture_blend_shader', 'matcap_shader', 'triplanar_shader', 'unlit_shader', 'geom_shader', 'normals_shader', 'transition_shader', 'noise_fog_shader', 'lit_with_shadows_shader', 'fxaa', 'camera_empty', 'ssao', 'camera_outline_shader', 'pixelation_shader', 'camera_contrast', 'camera_vertical_blur', 'camera_grayscale', ])
 
-
+# find all modules and classes
 for file in path.glob('**/*.py'):
     with open(file, encoding='utf-8') as f:
         code = f.read()
@@ -504,7 +528,7 @@ for file in path.glob('**/*.py'):
             module_name = file.stem
             classes = get_classes(code)
             for class_name, class_definition in classes.items():
-                # print(module_name)
+                print('parsing module:', module_name)
                 attrs, methods = list(), list()
                 attrs = get_class_attributes(class_definition)
                 methods = get_functions(class_definition, is_class=True)
@@ -515,6 +539,43 @@ for file in path.glob('**/*.py'):
 def html_color(value):
     return f'hsl({value.h}, {int(value.s*100)}%, {int(value.v*100)}%)'
 
+
+# find shader info
+for shader_name in groups['Shaders']:
+    path_to_shader = tuple(path.glob(f'*/**/{shader_name}.py'))
+    if not path_to_shader:
+        raise FileNotFoundError(shader_name)
+    else:
+        path_to_shader = path_to_shader[0]
+
+    print('parsing shader:', shader_name)
+    # import sys, inspect
+    # sys.path.append(str(path_to_shader.parent))
+    # exec(f'import {shader_name}')
+    # shader_object = getattr(sys.modules[shader_name], shader_name, None)
+    # if not shader_object:
+    #     print('error: could not find shader:', path_to_shader, shader_name)
+    #     del module_info[shader_name]
+    #     continue
+    # default_input = getattr(shader_object, 'default_input', None)
+
+    try:
+        with path_to_shader.open('r') as f:
+            default_input_code = f.read().split(',\ndefault_input')[1].split('if __name__ ==')[0]
+            default_input = [line for line in default_input_code.split('\n') if any(char.isalpha() or char.isdigit() for char in line)] # skip lines without alphanumeric symbols
+            if default_input:
+                default_input = ['default_input'] + default_input
+    except:
+        print(path_to_shader, 'has no default_input')
+        default_input = []
+
+    example = module_info[shader_name].example  # example already got extracted when we parsed all the files/modules earlier, so retain it.
+
+    module_info[shader_name] = Info(
+        path=path_to_shader,
+        attributes=default_input,
+        example=example
+        )
 
 
 # make index menu
@@ -548,12 +609,17 @@ for group_name, group in groups.items():
             data = module_info[name]
         elif name in class_info:
             data = class_info[name]
+        # elif name in shader_info:
+        #     data = shader_info[name]
 
         if not data:
             continue
             print('no info found for', name)
         # f, params, attrs, methods, example = data
         # funcs, example = data
+        print(f'make html for: {group_name} -> {name}:')
+        # for key in ('path', 'parent_class', 'parameters', 'class_vars', 'attributes', 'properties', 'functions'):
+        #     print(f'    {key}: {getattr(data, key)}')
 
         params = data.parameters.replace('__init__', name.split('(')[0])
         params = params.replace('(self, ', '(')
@@ -589,7 +655,7 @@ for group_name, group in groups.items():
 
 
         dot = '.'
-        if group_name == 'Assets':    # don't add a . for asset names
+        if group_name in ('Assets', 'Shaders'):    # don't add a . for asset names
             dot = ''
 
         variables = data.attributes

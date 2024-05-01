@@ -3,11 +3,11 @@ from collections import namedtuple
 from copy import copy
 
 
-class Node:
+class _ConversationNode:
     __slots__ = ['index', 'indent_level', 'content', 'code', 'children', 'is_answer']
 
     def __str__(self):
-        return 'Node:\n    ' + '\n    '.join([f'{e} = {getattr(self, e)}' for e in Node.__slots__])
+        return f'{__class__.__name__}:\n    ' + '\n    '.join([f'{e} = {getattr(self, e)}' for e in __class__.__slots__])
 
 
 class Conversation(Entity):
@@ -170,7 +170,7 @@ class Conversation(Entity):
                 prev_node = n
                 continue
 
-            n = Node()
+            n = _ConversationNode()
             n.index = node_index
             n.indent_level = indent_level
             n.is_answer = content.startswith('* ')
