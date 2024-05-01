@@ -101,6 +101,16 @@ Tutorials<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href=" introduction_tutorial.html" class="button_big" style="background-image: url('icons/entity_basics_icon.jpg')"><span>Introduction</span></a>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href=" platformer_tutorial.html" class="button_big" style="background-image: url('icons/platformer.jpg')"><span>Platformer Tutorial</span></a>
 <br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange();
+    range.selectNode(containerid); //changed here
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();
+}
+</script>
 
 </body>
 </html>

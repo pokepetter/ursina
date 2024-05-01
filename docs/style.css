@@ -22,6 +22,11 @@
   --green: seagreen;
   --blue: hsl(210, 50%, 50%);
   --purple: hsl(289.0, 50%, 50%);
+
+  --copy_code_button_bg_color: hsl(0,0%,85%);
+  --copy_code_button_text_color: hsl(0,0%,50%);
+  --copy_code_button_bg_color_hovered: hsl(0,0%,97%);
+  --copy_code_button_text_color_hovered: hsl(0,0%,50%);
 }
 /* dark mode */
 /* input:checked + content, input:checked ~ * { */
@@ -50,6 +55,11 @@
 
         --scrollbar_color: hsl(0, 0%, 20%);
         --scrollbar_bg_color: hsl(0, 0%, 10%);
+
+        --copy_code_button_bg_color: hsl(60, 5%, 12%);
+        --copy_code_button_text_color: hsl(240, 0%, 60%);
+        --copy_code_button_bg_color_hovered: hsl(222, 97% 64%);
+        --copy_code_button_text_color_hovered: hsl(240, 0%, 80%);
     }
 }
 
@@ -131,6 +141,19 @@ img {
     font-weight: normal;
     white-space: pre;
     overflow: auto;
+}
+.copy_code_button {
+    position: absolute;
+    right: 10px;
+    border: none;
+    border-radius: 5px;
+    font-family: inherit;
+    color: var(--copy_code_button_text_color);
+    background-color: var(--copy_code_button_bg_color);
+}
+.copy_code_button:hover {
+    color: var(--copy_code_button_text_color_hovered);
+    background-color: var(--copy_code_button_bg_color_hovered);
 }
 
 olive {color: var(--olive);}

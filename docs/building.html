@@ -103,7 +103,7 @@ Building Your App with ursina.build<br>
 </h2><br>
 <br>
 Open cmd in the project folder and run<br>
-<div class="code_block" style="margin-left: 0em;">python -m ursina.build
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>python -m ursina.build
 </div><br>
 It will then move the necessary files to a 'build' directory which you can then distribute.<br>
 <br>
@@ -113,7 +113,7 @@ it copies python and project's dependent packages. Requires a main.py file.<br>
 Copies game scripts and assets into 'build/scr' folder.<br>
 Creates a .bat file to start the game.<br>
 <br>
-<div class="code_block" style="margin-left: 0em;">--ignore            <gray># add assets to ignore</gray>
+<div class="code_block" id="code_block_1" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>--ignore            <gray># add assets to ignore</gray>
 --name              <gray># change project name</gray>
 --include_modules   <gray># include extra modules like this: --include_modules module_one,module_two,module_tree</gray>
 --overwrite         <gray># don't ask to overwrite existing build, just overwrite</gray>
@@ -159,6 +159,16 @@ This way is not recommended since it will slow to open and have a bigger file si
 9. Set an output location (optional)<br>
 10. Finally select "convert .py to .exe"<br>
 <br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange();
+    range.selectNode(containerid); //changed here
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();
+}
+</script>
 
 </body>
 </html>

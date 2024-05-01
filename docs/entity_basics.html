@@ -127,7 +127,7 @@ Supported file types are:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;• blend (gets auto converted to an obj)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;• ursinamesh (custom human readable format identical to how you'd make a Mesh in code)<br>
 <br>
-<div class="code_block" style="margin-left: 0em;"><olive>Entity</olive>(<olive>model</olive>=<green>'name_of_your_model'</green>)
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><olive>Entity</olive>(<olive>model</olive>=<green>'name_of_your_model'</green>)
 </div><br>
 <br>
 <br>
@@ -137,7 +137,7 @@ Texture<br>
 <br>
 Setting a texture is similar to setting a model. Just give it a name in this case as well:<br>
 <br>
-<div class="code_block" style="margin-left: 0em;">e<yellow>1</yellow> = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>texture</olive>=<green>'texture_name'</green>)
+<div class="code_block" id="code_block_1" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>e<yellow>1</yellow> = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>texture</olive>=<green>'texture_name'</green>)
 
 <gray># other ways are:</gray>
 e<yellow>2</yellow> = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>texture</olive>=e<yellow>1</yellow>.texture) <gray># or set it to another Texture</gray>
@@ -147,7 +147,7 @@ e<yellow>4</yellow> = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</
 For 2d graphics there's also the Sprite class, which is simply an Entity with a<br>
 'quad' model and scale set to automatically fit the size and aspect ratio of the texture.<br>
 <br>
-<div class="code_block" style="margin-left: 0em;">s = Sprite(<green>'texture_name'</green>)
+<div class="code_block" id="code_block_2" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_2)">copy</button>s = Sprite(<green>'texture_name'</green>)
 <blue>print</blue>(s.aspect_ratio)
 </div><br>
 <br>
@@ -156,7 +156,7 @@ For 2d graphics there's also the Sprite class, which is simply an Entity with a<
 Color<br>
 </h2><br>
 <br>
-<div class="code_block" style="margin-left: 0em;">e.color = color.red <gray># set it to a color in the color module</gray>
+<div class="code_block" id="code_block_3" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_3)">copy</button>e.color = color.red <gray># set it to a color in the color module</gray>
 
 e.color = hsv(<yellow>1</yellow><yellow>2</yellow><yellow>0</yellow>, .<yellow>5</yellow>, .<yellow>5</yellow>) <gray># hsv color</gray>
 e.color = rgb(.<yellow>8</yellow>, .<yellow>1</yellow>, <yellow>0</yellow>) <gray># rgb color</gray>
@@ -172,7 +172,7 @@ Position<br>
 </h2><br>
 <br>
 To set the position relative to the parent, set .position:<br>
-<div class="code_block" style="margin-left: 0em;">e = <olive>Entity</olive>()
+<div class="code_block" id="code_block_4" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_4)">copy</button>e = <olive>Entity</olive>()
 e.position = Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)
 e.position = Vec2(<yellow>0</yellow>,<yellow>0</yellow>)
 e.position = (<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)
@@ -180,14 +180,14 @@ e.position = (<yellow>0</yellow>,<yellow>0</yellow>)
 </div><br>
 <br>
 You can also set 'x', 'y', 'z' for setting the position on a specific axis.<br>
-<div class="code_block" style="margin-left: 0em;">e = <olive>Entity</olive>(<olive>position</olive>=Vec3(<yellow>1</yellow>,<yellow>1</yellow>,<yellow>1</yellow>))
+<div class="code_block" id="code_block_5" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_5)">copy</button>e = <olive>Entity</olive>(<olive>position</olive>=Vec3(<yellow>1</yellow>,<yellow>1</yellow>,<yellow>1</yellow>))
 e.x = <yellow>0</yellow>
 <blue>print</blue>(position)
 &gt;&gt;&gt; Vec3(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>)
 </div><br>
 <br>
 To set the position relative to the scene, that is, ignoring the position of any parents, set .world_position:<br>
-<div class="code_block" style="margin-left: 0em;">parent_entity = <olive>Entity</olive>(<olive>position</olive>=Vec3(<yellow>0</yellow>,<yellow>2</yellow>,<yellow>0</yellow>))
+<div class="code_block" id="code_block_6" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_6)">copy</button>parent_entity = <olive>Entity</olive>(<olive>position</olive>=Vec3(<yellow>0</yellow>,<yellow>2</yellow>,<yellow>0</yellow>))
 e = <olive>Entity</olive>(<olive>parent</olive>=parent_entity, <olive>position</olive>=Vec3(<yellow>0</yellow>,<yellow>2</yellow>,<yellow>0</yellow>))
 <blue>print</blue>(e.position)
 &gt;&gt;&gt; Vec3(<yellow>0</yellow>,<yellow>2</yellow>,<yellow>0</yellow>)
@@ -209,12 +209,12 @@ information on how the coordinate system works.<br>
 <h2><div id="Rotation"/><br>
 Rotation<br>
 </h2><br>
-<div class="code_block" style="margin-left: 0em;">e.rotation = (<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)
+<div class="code_block" id="code_block_7" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_7)">copy</button>e.rotation = (<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)
 e.rotation_y = <yellow>9</yellow><yellow>0</yellow>
 </div><br>
 <br>
 The look_at() method can also be for pointing an entity at something:<br>
-<div class="code_block" style="margin-left: 0em;">other_entity = <olive>Entity</olive>(<olive>position</olive>=(<yellow>1</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>8</yellow>))
+<div class="code_block" id="code_block_8" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_8)">copy</button>other_entity = <olive>Entity</olive>(<olive>position</olive>=(<yellow>1</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>8</yellow>))
 
 e.look_at(other_entity) <gray># make z-axis(forward) point at other_entity</gray>
 e.look_at(other_entity, axis=<green>'up'</green>) <gray># optionally define which axis</gray>
@@ -226,7 +226,7 @@ Scale<br>
 </h2><br>
 Change the size of the entity by setting the scale attribute:<br>
 <br>
-<div class="code_block" style="margin-left: 0em;">e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>scale</olive>=(<yellow>3</yellow>,<yellow>1</yellow>,<yellow>1</yellow>))
+<div class="code_block" id="code_block_9" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_9)">copy</button>e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>scale</olive>=(<yellow>3</yellow>,<yellow>1</yellow>,<yellow>1</yellow>))
 </div><br>
 <br>
 <br>
@@ -235,7 +235,7 @@ Update<br>
 </h2><br>
 <br>
 An Entity's update method will be called automatically:<br>
-<div class="code_block" style="margin-left: 0em;">e = <olive>Entity</olive>()
+<div class="code_block" id="code_block_10" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_10)">copy</button>e = <olive>Entity</olive>()
 <purple>def</purple> my_update():
     e.x += <yellow>1</yellow> * time.dt <gray># dt is short <purple>for</purple> delta time, the duration since the last frame.</gray>
 
@@ -243,7 +243,7 @@ e.update = my_update
 </div><br>
 <br>
 Or you can implement it by inheriting the Entity class:<br>
-<div class="code_block" style="margin-left: 0em;">class Player(<olive>Entity</olive>):
+<div class="code_block" id="code_block_11" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_11)">copy</button>class Player(<olive>Entity</olive>):
     <purple>def</purple> update(self):
         self.x += <yellow>1</yellow> * time.dt
 </div><br>
@@ -251,7 +251,7 @@ Or you can implement it by inheriting the Entity class:<br>
 The third option is to put a function called update in __main__, the starting script.<br>
 You'll see this in a lot of examples since it's convenient for small scripts.<br>
 Keep in mind this won't work if you import a module with an update function defined at module level.<br>
-<div class="code_block" style="margin-left: 0em;"><purple>def</purple> update():
+<div class="code_block" id="code_block_12" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_12)">copy</button><purple>def</purple> update():
     <blue>print</blue>(<green>'update'</green>)
 </div><br>
 <br>
@@ -260,7 +260,7 @@ Input<br>
 </h2><br>
 <br>
 The same goes for the input method:<br>
-<div class="code_block" style="margin-left: 0em;">class Player(<olive>Entity</olive>):
+<div class="code_block" id="code_block_13" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_13)">copy</button>class Player(<olive>Entity</olive>):
     <purple>def</purple> input(self, key):
         <purple>if</purple> key == <green>'w'</green>:
             self.position += self.forward
@@ -280,31 +280,31 @@ Entities can react to the mouse as long as they have collider.<br>
 Buttons will have one by default, but you can also assign one.<br>
 <br>
 To get the entity currently under the mouse:<br>
-<div class="code_block" style="margin-left: 0em;"><blue>print</blue>(mouse.hovered_entity)
+<div class="code_block" id="code_block_14" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_14)">copy</button><blue>print</blue>(mouse.hovered_entity)
 </div><br>
 <br>
 To check if and entity with a collider is hovered by the mouse:<br>
-<div class="code_block" style="margin-left: 0em;"><blue>print</blue>(my_entity.hovered)
+<div class="code_block" id="code_block_15" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_15)">copy</button><blue>print</blue>(my_entity.hovered)
 </div><br>
 <br>
 There are also functions for handling mouse clicks and hover/unhover.<br>
 These only works if the Entity has a collider and the function/callable is assigned.<br>
 <br>
-<div class="code_block" style="margin-left: 0em;">on_click()
+<div class="code_block" id="code_block_16" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_16)">copy</button>on_click()
 on_double_click()
 on_mouse_enter()
 on_mouse_exit()
 </div><br>
 <br>
 Example using on_click:<br>
-<div class="code_block" style="margin-left: 0em;"><purple>def</purple> action():
+<div class="code_block" id="code_block_17" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_17)">copy</button><purple>def</purple> action():
     <blue>print</blue>(<green>'Ow! That hurt!'</green>)
 
 <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>parent</olive>=camera.ui, <olive>scale</olive>=.<yellow>1</yellow>, <olive>collider</olive>=<green>'box'</green>, <olive>on_click</olive>=action) <gray># on_click should be a function/callable/Func/Sequence</gray>
 </div><br>
 <br>
 on_mouse_enter and on_mouse_exit example:<br>
-<div class="code_block" style="margin-left: 0em;">b = Button(<olive>scale</olive>=(.<yellow>5</yellow>, .<yellow>2</yellow><yellow>5</yellow>), <olive>text</olive>=<green>'zzz'</green>)
+<div class="code_block" id="code_block_18" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_18)">copy</button>b = Button(<olive>scale</olive>=(.<yellow>5</yellow>, .<yellow>2</yellow><yellow>5</yellow>), <olive>text</olive>=<green>'zzz'</green>)
 b.on_mouse_enter = Func(setattr, b, <green>'text'</green>, <green>'Hi, friend :D'</green>)
 b.on_mouse_exit = Func(setattr, b, <green>'text'</green>, <green><green>''</green></green><green>'No! Don'</green>t leave me ;-;<green><green>''</green></green>')
 </div><br>
@@ -315,10 +315,20 @@ Other Magic Functions<br>
 <br>
 Sometimes you want side effects when you enable/disable an entity, like play an animation or something.<br>
 <br>
-<div class="code_block" style="margin-left: 0em;">on_enable()
+<div class="code_block" id="code_block_19" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_19)">copy</button>on_enable()
 on_disable()
 on_destroy()
 </div><br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange();
+    range.selectNode(containerid); //changed here
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();
+}
+</script>
 
 </body>
 </html>

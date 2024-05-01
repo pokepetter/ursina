@@ -737,3 +737,61 @@ html += '''
 '''
 with open('api_reference.html', 'w', encoding='utf-8') as f:
     f.write(html)
+
+
+from pathlib import Path
+# generate sample pages:
+samples_folder = application.package_folder.parent / 'samples'
+generated_sample_pages = dict()
+
+for sample_name in ('Tic Tac Toe', 'Inventory', 'Pong', 'Minecraft Clone', "Rubik's Cube", 'Clicker Game', 'Platformer', 'FPS', 'Particle System', 'Column Graph'):
+    file_name = sample_name.replace(' ','_').replace('\'','').lower() + '.py'
+    file_path = samples_folder / file_name
+    image_path = Path(f'icons/{file_path.stem}.jpg')
+    image_code = ''
+    image_url = f'icons/{file_path.stem}.jpg'
+    github_link = f'https://github.com/pokepetter/ursina/blob/master/samples/{file_name}'
+    if image_path.exists():
+        image_code = f'# image {image_url}'
+    else:
+        image_code = f'# image icons/installation_guide.jpg'
+        print('no image:', image_path)
+
+    if file_path.exists():
+        print(f'generate webpage for: {sample_name} -> {file_path.stem}.txt')
+        with open(file_path, 'r') as source_file:
+            source_code = source_file.read()
+
+        with open(f'{file_path.stem}.txt', 'w') as file:
+            file.write(textwrap.dedent(f'''\
+                # title ursina engine documentation
+                # insert menu.txt
+
+                ### {sample_name}
+                <a href="{github_link}">{github_link}</a>
+
+                {image_code}
+                ```''')
+                + source_code
+                + '```'
+            )
+            generated_sample_pages[sample_name] = (f'{file_path.stem}.html', image_url)
+    else:
+        print('sample not found:', file_path)
+
+samples_page_content = dedent('''\
+    # title ursina engine samples
+    # insert menu.txt
+
+    ### Samples
+    ''')
+for name, urls in generated_sample_pages.items():
+    html_url, image_url = urls
+    samples_page_content += f'[{name}, {html_url}, {image_url}]\n'
+
+samples_page_content += dedent('''\
+    [Value of Life, https://github.com/pokepetter/ld44_life_is_currency, icons/value_of_life_icon.jpg]
+    [Castaway, https://github.com/pokepetter/pyweek_30_castaway, icons/castaway_icon.jpg]
+    ''')
+with open('samples.txt', 'w') as f:
+    f.write(samples_page_content)

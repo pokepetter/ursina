@@ -83,6 +83,16 @@
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="building.html#Building with Nuitka">Building with Nuitka</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="building.html#Building Your App with auto-py-to-exe">Building Your App with auto-py-to-exe</a><br>
 <br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange();
+    range.selectNode(containerid); //changed here
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();
+}
+</script>
 
 </body>
 </html>

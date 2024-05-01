@@ -102,7 +102,7 @@ Collision<br>
 Adding Colliders<br>
 </h2><br>
 <br>
-<div class="code_block" style="margin-left: 0em;">e = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, x=<yellow>2</yellow>)
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>e = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, x=<yellow>2</yellow>)
 e.collider = <green>'box'</green>      <gray># add BoxCollider based on entity's bounds.</gray>
 e.collider = <green>'sphere'</green>   <gray># add SphereCollider based on entity's bounds.</gray>
 e.collider = <green>'mesh'</green>     <gray># add MeshCollider based on entity's bounds.</gray>
@@ -114,13 +114,13 @@ e.collider = MeshCollider(e, mesh=e.model, center=Vec3(<yellow>0</yellow>,<yello
 Usually you add the collider when you create the Entity, but make sure you set the model<br>
 before setting the collider if you want it to fit its bounds.<br>
 <br>
-<div class="code_block" style="margin-left: 0em;">e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>)
+<div class="code_block" id="code_block_1" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>)
 </div><br>
 <h2><div id="raycast()"/><br>
 raycast()<br>
 </h2><br>
 <br>
-<div class="code_block" style="margin-left: 0em;">raycast(origin, direction=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>), distance=inf, traverse_target=scene, <olive>ignore</olive>=list(), debug=False)
+<div class="code_block" id="code_block_2" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_2)">copy</button>raycast(origin, direction=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>), distance=inf, traverse_target=scene, <olive>ignore</olive>=list(), debug=False)
 </div><br>
 Casts a ray from *origin*, in *direction*, with length *distance* and returns<br>
 a HitInfo containing information about what it hit. This ray will only hit entities with a collider.<br>
@@ -131,7 +131,7 @@ Setting debug to True will draw the line on screen.<br>
 <br>
 Example where we only move if a wall is not hit:<br>
 <br>
-<div class="code_block" style="margin-left: 0em;"><purple>from</purple> ursina <purple>import</purple> *
+<div class="code_block" id="code_block_3" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_3)">copy</button><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
 
 class Player(<olive>Entity</olive>):
@@ -158,7 +158,7 @@ app.run()
 <h2><div id="boxcast()"/><br>
 boxcast()<br>
 </h2><br>
-<div class="code_block" style="margin-left: 0em;">boxcast(origin, direction=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>), distance=<yellow>9</yellow><yellow>9</yellow><yellow>9</yellow><yellow>9</yellow>, <olive>thickness</olive>=(<yellow>1</yellow>,<yellow>1</yellow>), traverse_target=scene, <olive>ignore</olive>=list(), debug=False)   <gray># similar to raycast, but with width and height</gray>
+<div class="code_block" id="code_block_4" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_4)">copy</button>boxcast(origin, direction=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>), distance=<yellow>9</yellow><yellow>9</yellow><yellow>9</yellow><yellow>9</yellow>, <olive>thickness</olive>=(<yellow>1</yellow>,<yellow>1</yellow>), traverse_target=scene, <olive>ignore</olive>=list(), debug=False)   <gray># similar to raycast, but with width and height</gray>
 </div><br>
 boxcast is similar to raycast, but the "ray" has thickness, height and width.<br>
 <br>
@@ -169,7 +169,7 @@ intersects()<br>
 <br>
 Check if a entity (with a collider) intersects other entities with colliders.<br>
 <br>
-<div class="code_block" style="margin-left: 0em;"><purple>from</purple> ursina <purple>import</purple> *
+<div class="code_block" id="code_block_5" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_5)">copy</button><purple>from</purple> ursina <purple>import</purple> *
 
 
 app = Ursina()
@@ -199,7 +199,7 @@ HitInfo<br>
 <br>
 All of these functions will return a HitInfo. This contains information about what it hit.<br>
 <br>
-<div class="code_block" style="margin-left: 0em;">hit = None
+<div class="code_block" id="code_block_6" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_6)">copy</button>hit = None
 entity = None
 point = None
 world_point = None
@@ -216,7 +216,7 @@ Distance Check<br>
 Sometimes it enough to just check the distance between two entities.<br>
 For example if you want a pickup:<br>
 <br>
-<div class="code_block" style="margin-left: 0em;"><purple>from</purple> ursina <purple>import</purple> *
+<div class="code_block" id="code_block_7" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_7)">copy</button><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina.prefabs.first_person_controller <purple>import</purple> FirstPersonController
 
 
@@ -247,7 +247,7 @@ The mouse does raycast automatically.<br>
 Both UI elements(Entities parented to camera.ui) and Entities in 3d space (parented to scene) can<br>
 get hit as long as they have a collider. UI elements will however block things behind them.<br>
 <br>
-<div class="code_block" style="margin-left: 0em;">mouse.hovered_entity      returns
+<div class="code_block" id="code_block_8" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_8)">copy</button>mouse.hovered_entity      returns
 mouse.normal              <gray># returns the normal of the polygon, in local space.</gray>
 mouse.world_normal        <gray># returns the normal of the polygon, in world space.</gray>
 mouse.point               <gray># returns the point hit, in local space</gray>
@@ -256,11 +256,21 @@ mouse.world_point         <gray># returns the point hit, in world space</gray>
 Handling clicks is very easy, just add a collider and on_click.<br>
 The on_click function will then be called when you click on the Entity with the mouse.<br>
 <br>
-<div class="code_block" style="margin-left: 0em;"><purple>def</purple> action():
+<div class="code_block" id="code_block_9" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_9)">copy</button><purple>def</purple> action():
     <blue>print</blue>(<green>'Ow! That hurt!'</green>)
 
 <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>parent</olive>=camera.ui, <olive>scale</olive>=.<yellow>1</yellow>, <olive>collider</olive>=<green>'box'</green>, <olive>on_click</olive>=action) <gray># on_click should be a function/callable/Func/Sequence</gray>
 </div><br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange();
+    range.selectNode(containerid); //changed here
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();
+}
+</script>
 
 </body>
 </html>

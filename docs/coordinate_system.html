@@ -102,7 +102,7 @@ Coordinate System<br>
 Entity Coordinate System<br>
 </h2><br>
 <br>
-<div class="code_block" style="margin-left: 0em;">
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>
             y (up)
             |
             |
@@ -119,7 +119,7 @@ Entity Coordinate System<br>
 UI Coordinate System<br>
 </h2><br>
 <br>
-<div class="code_block" style="margin-left: 0em;">                      (-.<yellow>5</yellow>, .<yellow>5</yellow>)           (.<yellow>5</yellow>, .<yellow>5</yellow>)
+<div class="code_block" id="code_block_1" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>                      (-.<yellow>5</yellow>, .<yellow>5</yellow>)           (.<yellow>5</yellow>, .<yellow>5</yellow>)
   (window.top_right)_______|__(window.top)____|_______(window.top_right)
                    |       <green>'                  '</green>       |
                    |       <green>'                  '</green>       |
@@ -151,7 +151,7 @@ In general when working with rotation you'll want to only set one of the axes at
 For more complicated rotations you can use <span>entity.look_at(position)</span>, <span>entity.look_at_2d(position)</span><br>
 or even set/get .quaternion if you're comfortable with that. For continuous rotation, <span>entity.rotate(amount)</span> can be good as it will add a rotation to the current rotation.<br>
 <br>
-<div class="code_block" style="margin-left: 0em;">
+<div class="code_block" id="code_block_2" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_2)">copy</button>
            _______
           /
           \-&gt;
@@ -174,7 +174,7 @@ Origin<br>
 Setting the origin will move the origin point of the model.<br>
 This can be especially useful when working with the UI.<br>
 <br>
-<div class="code_block" style="margin-left: 0em;">             (-.<yellow>5</yellow>,.<yellow>5</yellow>)
+<div class="code_block" id="code_block_3" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_3)">copy</button>             (-.<yellow>5</yellow>,.<yellow>5</yellow>)
 +---------+      <yellow>0</yellow>---------+
 |  (<yellow>0</yellow>,<yellow>0</yellow>)  |      |         |
 |    <yellow>0</yellow>    |      |         |
@@ -189,6 +189,16 @@ This can be especially useful when working with the UI.<br>
 +---------+      +---------+
 
 </div><br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange();
+    range.selectNode(containerid); //changed here
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();
+}
+</script>
 
 </body>
 </html>

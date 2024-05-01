@@ -22,6 +22,16 @@ Asset Store<br>
 <br>
 <a href=" https://itch.io/game-assets/tag-ursina" class="button">Game Assets🡕</a><br>
 <br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange();
+    range.selectNode(containerid); //changed here
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();
+}
+</script>
 
 </body>
 </html>
