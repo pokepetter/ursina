@@ -32,6 +32,9 @@ html {
   --span_text_color: #181818;
   --span_text_color_hovered: #181818;
   --example_bg_color: hsl(0,0%,92%);
+  --copy_code_button_bg_color: hsl(0,0%,92%);
+  --copy_code_button_text_color: hsl(0,0%,0%);
+  --copy_code_button_bg_color_hovered: #bf1da7;
 
   --olive: olive;
   --green: seagreen;
@@ -47,23 +50,28 @@ input:checked + content, input:checked ~ * {
   --bg_color: hsl(60, 5%, 10%);
   --class_box_bg_color: hsl(60, 5%, 13%);
   --text_color: hsl(240, 0%, 80%);
+  --main_header_color: #999;
   --header_color: hsl(34deg 65% 51%);
   --params_color: hsl(240.0, 0%, 80%);
-  --example_bg_color: hsl(60, 3%, 16%);
   --variable_text_color_hovered: hsl(222deg 97% 64%);
   --span_bg_color: hsl(312deg 18% 19%);
   --span_bg_color_hovered: hsl(220deg 40% 25%);
   --span_text_color: #202020;
   --span_text_color_hovered: #eee;
-  --main_header_color: #999;
-  --sidebar_bg_color: hsl(60, 5%, 13%);
-  --sidebar_text_color: hsl(0, 0%, 80%) !important;
-  --scrollbar_color: hsl(0, 0%, 20%);
-  --scrollbar_bg_color: hsl(0, 0%, 10%);
+  --example_bg_color: hsl(60, 3%, 16%);
+  --copy_code_button_bg_color: hsl(60, 5%, 10%);
+  --copy_code_button_text_color: hsl(240, 0%, 80%);
+  --copy_code_button_bg_color_hovered: hsl(222deg 97% 64%);
+
   --olive: #b29527;
   --green: #39a468;
   --blue: hsl(210deg 68% 58%);
   --purple: hsl(323deg 55% 55%);
+
+  --sidebar_bg_color: hsl(60, 5%, 13%);
+  --sidebar_text_color: hsl(0, 0%, 80%) !important;
+  --scrollbar_color: hsl(0, 0%, 20%);
+  --scrollbar_bg_color: hsl(0, 0%, 10%);
 }
 
 body {
@@ -169,7 +177,12 @@ blue {color: var(--blue);}
     border: none;
     border-radius: 5px;
     font-family: inherit;
-    color: gray;
+    color: var(--copy_code_button_text_color);
+    background-color: var(--copy_code_button_bg_color);
+}
+.copy_code_button:hover {
+    background-color: var(--copy_code_button_bg_color_hovered);
+    color: var(--copy_code_button_bg_color);
 }
 
 .params {
