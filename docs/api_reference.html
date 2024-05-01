@@ -1,7 +1,10 @@
 
+<!DOCTYPE HTML>
+<!--generated with documentation_generator.py-->
 <html>
 <head>
     <link rel="stylesheet" href="api_reference.css">
+    <title>ursina API Reference</title>
 </head>
 <body>
 <input type="checkbox" id="checkbox" onClick="save()"></input>
@@ -196,8 +199,31 @@ document.getElementById("checkbox").checked = checked;
         <div class="group_header">Assets</div>
         <div class="group_content">
             <a href="#models">models</a><br>
-            <a href="#textures">textures</a><br>
-            <a href="#shaders">shaders</a><br></div>
+            <a href="#textures">textures</a><br></div>
+        <br>
+    </div>
+    
+    <div class="sidebar_box" style="color: hsl(310deg 94% 21%);">
+        <div class="group_header">Shaders</div>
+        <div class="group_content">
+            <a href="#unlit_shader">unlit_shader</a><br>
+            <a href="#lit_with_shadows_shader">lit_with_shadows_shader</a><br>
+            <a href="#matcap_shader">matcap_shader</a><br>
+            <a href="#colored_lights_shader">colored_lights_shader</a><br>
+            <a href="#fresnel_shader">fresnel_shader</a><br>
+            <a href="#projector_shader">projector_shader</a><br>
+            <a href="#texture_blend_shader">texture_blend_shader</a><br>
+            <a href="#instancing_shader">instancing_shader</a><br>
+            <a href="#triplanar_shader">triplanar_shader</a><br>
+            <a href="#normals_shader">normals_shader</a><br>
+            <a href="#transition_shader">transition_shader</a><br>
+            <a href="#fxaa">fxaa</a><br>
+            <a href="#ssao">ssao</a><br>
+            <a href="#camera_outline_shader">camera_outline_shader</a><br>
+            <a href="#pixelation_shader">pixelation_shader</a><br>
+            <a href="#camera_contrast">camera_contrast</a><br>
+            <a href="#camera_vertical_blur">camera_vertical_blur</a><br>
+            <a href="#camera_grayscale">camera_grayscale</a><br></div>
         <br>
     </div>
     </div>
@@ -605,7 +631,10 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">e = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>color</olive>=color.orange, <olive>position</olive>=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>), <olive>scale</olive>=<yellow>1</yellow>.<yellow>5</yellow>, <olive>rotation</olive>=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>4</yellow><yellow>5</yellow>), <olive>texture</olive>=<green>'brick'</green>)
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+app = Ursina()
+
+e = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>color</olive>=color.orange, <olive>position</olive>=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>), <olive>scale</olive>=<yellow>1</yellow>.<yellow>5</yellow>, <olive>rotation</olive>=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>4</yellow><yellow>5</yellow>), <olive>texture</olive>=<green>'brick'</green>)
 
 <green><green><green>''</green></green>'example of inheriting Entity<green><green>''</green></green>'</green>
 class Player(<olive>Entity</olive>):
@@ -713,7 +742,10 @@ player = Player(x=-<yellow>1</yellow>)
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">Button.default_color = color.red
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+app = Ursina()
+
+Button.default_color = color.red
 b = <purple><b>Button</b></purple>(<olive>model</olive>=<green>'quad'</green>, <olive>scale</olive>=.<yellow>0</yellow><yellow>5</yellow>, x=-.<yellow>5</yellow>, <olive>color</olive>=color.lime, <olive>text</olive>=<green>'text scale\ntest'</green>, text_size=.<yellow>5</yellow>, text_<olive>color</olive>=color.black)
 b.text_size = .<yellow>5</yellow>
 b.on_click = Sequence(Wait(.<yellow>5</yellow>), Func(print, <green>'aaaaaa'</green>), )
@@ -739,6 +771,9 @@ Text(<green>'Text size\nreference'</green>, x=.<yellow>1</yellow><yellow>5</yell
 
     <purple>if</purple> key == <green>'space'</green>:
         b.text = <green>'updated text'</green>
+
+
+app.run()
 </div>
 
 </div>
@@ -769,11 +804,13 @@ Text(<green>'Text size\nreference'</green>, x=.<yellow>1</yellow><yellow>5</yell
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">camera.orthographic = True
+    <div class="example">app = Ursina()
+camera.orthographic = True
 camera.fov = <yellow>1</yellow>
 Sprite.ppu = <yellow>1</yellow><yellow>6</yellow>
 Texture.default_filtering = None
 s = <purple><b>Sprite</b></purple>(<green>'brick'</green>, filtering=False)
+app.run()
 </div>
 
 </div>
@@ -1020,6 +1057,7 @@ s = <purple><b>Sprite</b></purple>(<green>'brick'</green>, filtering=False)
     <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina
 <purple>import</purple> random
 
+app = Ursina()
 a = <purple><b>Audio</b></purple>(<green>'sine'</green>, loop=True, autopla<olive>y</olive>=True)
 
 a.volume = .<yellow>5</yellow>
@@ -1027,6 +1065,9 @@ a.volume = .<yellow>5</yellow>
 <purple>def</purple> input(key):
     <purple>if</purple> key == <green>'space'</green>:
         a = <purple><b>Audio</b></purple>(<green>'sine'</green>, pitch=random.uniform(.<yellow>5</yellow>,<yellow>1</yellow>), loop=True)
+
+
+app.run()
 </div>
 
 </div>
@@ -1100,8 +1141,10 @@ a.volume = .<yellow>5</yellow>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, camera, <olive>Entity</olive>, EditorCamera
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina <purple>import</purple> Ursina, camera, <olive>Entity</olive>, EditorCamera
 
+app = Ursina()
 
 camera.orthographic = True
 
@@ -1123,6 +1166,8 @@ e.position = (<yellow>0</yellow>, <yellow>0</yellow>, <yellow>4</yellow><yellow>
 Editor<purple><b>Camera</b></purple>()
 <purple>from</purple> ursina.shaders <purple>import</purple> camera_grayscale_shader
 camera.shader = camera_grayscale_shader
+
+app.run()
 </div>
 
 </div>
@@ -1271,7 +1316,9 @@ camera.shader = camera_grayscale_shader
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, Button, mouse
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina <purple>import</purple> Ursina, Button, mouse
+app = Ursina()
 Button(<olive>parent</olive>=scene, <olive>text</olive>=<green>'a'</green>)
 
 <purple>def</purple> input(key):
@@ -1280,6 +1327,9 @@ Button(<olive>parent</olive>=scene, <olive>text</olive>=<green>'a'</green>)
         <blue>print</blue>(mouse.velocity)
 
 Cursor()
+
+
+app.run()
 </div>
 
 </div>
@@ -1498,7 +1548,8 @@ Cursor()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">app = Ursina(
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+app = Ursina(
     title=<green>'Ursina'</green>,
     )
 button_list = ButtonList(
@@ -1537,6 +1588,11 @@ position_text = Text(<olive>y</olive>=.<yellow>5</yellow>,)
 <purple>def</purple> input(key):
     <purple>if</purple> key == <green>'space'</green>:
         window.center_on_screen()
+
+
+
+
+app.run()
 </div>
 
 </div>
@@ -1660,7 +1716,9 @@ position_text = Text(<olive>y</olive>=.<yellow>5</yellow>,)
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">e = <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>color</olive>=color.black, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>)
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+app = Ursina()
+e = <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>color</olive>=color.black, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>)
 EditorCamera()
 s = Sky()
 
@@ -1675,6 +1733,8 @@ s = Sky()
 
 scene.fog_density = .1          <gray># sets exponential density</gray>
 scene.fog_density = (50, 200)   <gray># sets linear density start and end</gray>
+
+app.run()
 </div>
 
 </div>
@@ -1844,7 +1904,9 @@ scene.fog_density = (50, 200)   <gray># sets linear density start and end</gray>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, Button, Quad, grid_layout, color
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, Button, Quad, grid_layout, color
+app = Ursina()
 
 <blue>print</blue>(color.brightness(color.blue))
 
@@ -1863,29 +1925,57 @@ e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>col
 <blue>print</blue>(e.color.name)
 <blue>print</blue>(<green>'rgb to hex:'</green>, color.rgb_to_hex(*color.blue))
 e.color = color.<purple><b>color</b></purple>(<yellow>1</yellow>,<yellow>2</yellow>,<yellow>3</yellow>)
+app.run()
 </div>
 
 </div>
 <br>
     <div class="class_box" id="Mesh">
-        <h1>Mesh<a style="color: gray; font-weight:normal;" href="#p3d.">(p3d.)</a></h1>
-        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/mesh.py"><gray>ursina/mesh</gray></a><br><br>
-        <div class="params">Mesh(vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1, render_points_in_3d=True, vertex_buffer=None, vertex_buffer_length=None, vertex_buffer_format=None)</div><br>
+        <h1>Mesh</h1>
+        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/mesh_old.py"><gray>ursina/mesh_old</gray></a><br><br>
+        <div class="params">Mesh(vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1, render_points_in_3d=True)</div><br>
         <table> <!-- attributes -->
             <tr>
-                <td>Mesh.'triangle' : p3d.GeomTriangles,</td><td></td>
+                <td>Mesh.(0,0,0) : GeomVertexFormat.getV3(),</td><td></td>
             </tr>
             <tr>
-                <td>Mesh.'tristrip' : p3d.GeomTristrips,</td><td></td>
+                <td>Mesh.(1,0,0) : GeomVertexFormat.getV3c4(),</td><td></td>
             </tr>
             <tr>
-                <td>Mesh.'ngon' : p3d.GeomTrifans,</td><td></td>
+                <td>Mesh.(0,1,0) : GeomVertexFormat.getV3t2(),</td><td></td>
             </tr>
             <tr>
-                <td>Mesh.'line' : p3d.GeomLinestrips,</td><td></td>
+                <td>Mesh.(0,0,1) : GeomVertexFormat.getV3n3(),</td><td></td>
             </tr>
             <tr>
-                <td>Mesh.'point' : p3d.GeomPoints,</td><td></td>
+                <td>Mesh.(1,0,1) : GeomVertexFormat.getV3n3c4(),</td><td></td>
+            </tr>
+            <tr>
+                <td>Mesh.(1,1,0) : GeomVertexFormat.getV3c4t2(),</td><td></td>
+            </tr>
+            <tr>
+                <td>Mesh.(0,1,1) : GeomVertexFormat.getV3n3t2(),</td><td></td>
+            </tr>
+            <tr>
+                <td>Mesh.(1,1,1) : GeomVertexFormat.getV3n3c4t2(),</td><td></td>
+            </tr>
+            <tr>
+                <td>Mesh.}</td><td></td>
+            </tr>
+            <tr>
+                <td>Mesh.'triangle' : GeomTriangles,</td><td></td>
+            </tr>
+            <tr>
+                <td>Mesh.'tristrip' : GeomTristrips,</td><td></td>
+            </tr>
+            <tr>
+                <td>Mesh.'ngon' : GeomTrifans,</td><td></td>
+            </tr>
+            <tr>
+                <td>Mesh.'line' : GeomLinestrips,</td><td></td>
+            </tr>
+            <tr>
+                <td>Mesh.'point' : GeomPoints,</td><td></td>
             </tr>
             <tr>
                 <td>Mesh.}</td><td></td>
@@ -1917,24 +2007,9 @@ e.color = color.<purple><b>color</b></purple>(<yellow>1</yellow>,<yellow>2</yell
             <tr>
                 <td>.render_points_in_3d<gray> = render_points_in_3d</gray></td><td></td>
             </tr>
-            <tr>
-                <td>.vertex_buffer<gray> = vertex_buffer</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.vertex_buffer_length<gray> = vertex_buffer_length</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.vertex_buffer_format<gray> = vertex_buffer_format</gray></td><td></td>
-            </tr>
         </table><br>
         <div><gray>properties:</gray></div>
         <table>
-            <tr>
-                <td>.indices</td><td><span></span></td>
-            </tr>
-            <tr>
-                <td>.generated_vertices</td><td><span></span></td>
-            </tr>
             <tr>
                 <td>.recipe</td><td><span></span></td>
             </tr>
@@ -1944,14 +2019,17 @@ e.color = color.<purple><b>color</b></purple>(<yellow>1</yellow>,<yellow>2</yell
             <tr>
                 <td>.thickness</td><td><span></span></td>
             </tr>
+            <tr>
+                <td>.triangles</td><td><span></span></td>
+            </tr>
         </table><br>
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;generate() <span></span></td>
+                <td> &nbsp;generate() <span>call this after setting some of the variables to update it</span></td>
             </tr>
             <tr>
-                <td> &nbsp;generate_normals(<gray>smooth=True, regenerate=True</gray>) <span></span></td>
+                <td> &nbsp;generate_normals(<gray>smooth=True</gray>) <span></span></td>
             </tr>
             <tr>
                 <td> &nbsp;colorize(<gray>left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white, smooth=True, world_space=True, strength=1</gray>) <span></span></td>
@@ -1963,11 +2041,14 @@ e.color = color.<purple><b>color</b></purple>(<yellow>1</yellow>,<yellow>2</yell
                 <td> &nbsp;clear(<gray>regenerate=True</gray>) <span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;save(<gray>name='', folder:Path=Func(getattr, application, 'compressed_models_folder'), flip_faces=False, max_decimals=16</gray>) <span></span></td>
+                <td> &nbsp;save(<gray>name='', folder:Path=application.compressed_models_folder, flip_faces=False</gray>) <span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">e = <olive>Entity</olive>(<olive>position</olive>=(<yellow>0</yellow>,<yellow>0</yellow>), <olive>model</olive>=<purple><b>Mesh</b></purple>(<olive>vertices</olive>=[(-.<yellow>5</yellow>,<yellow>0</yellow>,<yellow>0</yellow>), (.<yellow>5</yellow>,<yellow>0</yellow>,<yellow>0</yellow>), (<yellow>0</yellow>, <yellow>1</yellow>, <yellow>0</yellow>)]))
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+app = Ursina()
+
+e = <olive>Entity</olive>(<olive>position</olive>=(<yellow>0</yellow>,<yellow>0</yellow>), <olive>model</olive>=<purple><b>Mesh</b></purple>(<olive>vertices</olive>=[(-.<yellow>5</yellow>,<yellow>0</yellow>,<yellow>0</yellow>), (.<yellow>5</yellow>,<yellow>0</yellow>,<yellow>0</yellow>), (<yellow>0</yellow>, <yellow>1</yellow>, <yellow>0</yellow>)]))
 
 e = <olive>Entity</olive>(<olive>position</olive>=(<yellow>1</yellow>,<yellow>0</yellow>), <olive>model</olive>=<purple><b>Mesh</b></purple>(<olive>vertices</olive>=((-.<yellow>5</yellow>,<yellow>0</yellow>,<yellow>0</yellow>), (.<yellow>5</yellow>,<yellow>0</yellow>,<yellow>0</yellow>), (<yellow>0</yellow>, <yellow>1</yellow>, <yellow>0</yellow>))))
 Text(<olive>parent</olive>=e, <olive>text</olive>=<green>'triangle mesh\nwith verts as tuple of tuples'</green>, <olive>y</olive>=<yellow>1</yellow>, <olive>scale</olive>=<yellow>5</yellow>, <olive>origin</olive>=(<yellow>0</yellow>,-.<yellow>5</yellow>))
@@ -2098,11 +2179,10 @@ clear_test = <olive>Entity</olive>(<olive>position</olive>=(<yellow>1</yellow><y
 clear_test.model.clear()
 Text(<olive>parent</olive>=clear_test, <olive>text</olive>=<green>'.clear() test'</green>, <olive>y</olive>=<yellow>1</yellow>, <olive>scale</olive>=<yellow>5</yellow>, <olive>origin</olive>=(<yellow>0</yellow>,-.<yellow>5</yellow>))
 
-recipe_test = <olive>Entity</olive>(<olive>position</olive>=(<yellow>1</yellow><yellow>2</yellow>,-<yellow>6</yellow>), <olive>model</olive>=eval(quad.model.recipe))
-Text(<olive>parent</olive>=recipe_test, <olive>text</olive>=<green>'.recipe test'</green>, <olive>y</olive>=<yellow>1</yellow>, <olive>scale</olive>=<yellow>5</yellow>, <olive>origin</olive>=(<yellow>0</yellow>,-.<yellow>5</yellow>))
-
 window.color = color.black
 EditorCamera()
+
+app.run()
 </div>
 
 </div>
@@ -2164,8 +2244,10 @@ EditorCamera()
     <div><gray>example:</gray></div>
     <div class="example"><purple>from</purple> time <purple>import</purple> perf_counter
 t = perf_counter()
+<purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, held_keys, scene, EditorCamera
 
+app = Ursina()
 <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>shader</olive>=<purple><b>Shader</b></purple>())
 EditorCamera()
 <blue>print</blue>(<green>'ttttttttttttt'</green>, perf_counter() - t)
@@ -2177,6 +2259,8 @@ EditorCamera()
     <purple>for</purple> e in scene.entities:
         <purple>if</purple> <blue>hasattr</blue>(e, <green>'_shader'</green>):
             <blue>print</blue>(<green>'-------'</green>, e.shader)
+
+app.run()
 </div>
 
 </div>
@@ -2236,7 +2320,9 @@ EditorCamera()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example"><purple>from</purple> ursina <purple>import</purple> texture_importer
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina <purple>import</purple> texture_importer
+app = Ursina()
 <green><green>''</green>'
     The Texture class rarely used manually but usually instantiated
     when assigning a texture to an Entity
@@ -2268,6 +2354,7 @@ e.texture.apply()
     <div><gray>example:</gray></div>
     <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, EditorCamera, color, Vec<yellow>3</yellow>
 
+app = Ursina()
 from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to receive shadows.</gray>
 EditorCamera()
 <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>color</olive>=color.gray, <olive>shader</olive>=lit_with_shadows_shader)
@@ -2281,6 +2368,8 @@ dont_cast_shadow.hide(<yellow>0</yellow>b<yellow>0</yellow><yellow>0</yellow><ye
 unlit_entity = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=<yellow>1</yellow>,x=-<yellow>2</yellow>, unlit=True, <olive>color</olive>=color.light_gray)
 
 bar = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>position</olive>=(<yellow>0</yellow>,<yellow>3</yellow>,-<yellow>2</yellow>), <olive>shader</olive>=lit_with_shadows_shader, <olive>scale</olive>=(<yellow>1</yellow><yellow>0</yellow>,.<yellow>2</yellow>,.<yellow>2</yellow>), <olive>color</olive>=color.light_gray)
+
+app.run()
 </div>
 
 </div>
@@ -2309,6 +2398,7 @@ bar = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>p
     <div><gray>example:</gray></div>
     <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, EditorCamera, color, Vec<yellow>3</yellow>
 
+app = Ursina()
 from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to receive shadows.</gray>
 EditorCamera()
 <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>color</olive>=color.gray, <olive>shader</olive>=lit_with_shadows_shader)
@@ -2322,6 +2412,8 @@ dont_cast_shadow.hide(<yellow>0</yellow>b<yellow>0</yellow><yellow>0</yellow><ye
 unlit_entity = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=<yellow>1</yellow>,x=-<yellow>2</yellow>, unlit=True, <olive>color</olive>=color.light_gray)
 
 bar = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>position</olive>=(<yellow>0</yellow>,<yellow>3</yellow>,-<yellow>2</yellow>), <olive>shader</olive>=lit_with_shadows_shader, <olive>scale</olive>=(<yellow>1</yellow><yellow>0</yellow>,.<yellow>2</yellow>,.<yellow>2</yellow>), <olive>color</olive>=color.light_gray)
+
+app.run()
 </div>
 
 </div>
@@ -2336,6 +2428,7 @@ bar = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>p
     <div><gray>example:</gray></div>
     <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, EditorCamera, color, Vec<yellow>3</yellow>
 
+app = Ursina()
 from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to receive shadows.</gray>
 EditorCamera()
 <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>color</olive>=color.gray, <olive>shader</olive>=lit_with_shadows_shader)
@@ -2349,6 +2442,8 @@ dont_cast_shadow.hide(<yellow>0</yellow>b<yellow>0</yellow><yellow>0</yellow><ye
 unlit_entity = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=<yellow>1</yellow>,x=-<yellow>2</yellow>, unlit=True, <olive>color</olive>=color.light_gray)
 
 bar = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>position</olive>=(<yellow>0</yellow>,<yellow>3</yellow>,-<yellow>2</yellow>), <olive>shader</olive>=lit_with_shadows_shader, <olive>scale</olive>=(<yellow>1</yellow><yellow>0</yellow>,.<yellow>2</yellow>,.<yellow>2</yellow>), <olive>color</olive>=color.light_gray)
+
+app.run()
 </div>
 
 </div>
@@ -2363,6 +2458,7 @@ bar = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>p
     <div><gray>example:</gray></div>
     <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, EditorCamera, color, Vec<yellow>3</yellow>
 
+app = Ursina()
 from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to receive shadows.</gray>
 EditorCamera()
 <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>color</olive>=color.gray, <olive>shader</olive>=lit_with_shadows_shader)
@@ -2376,6 +2472,8 @@ dont_cast_shadow.hide(<yellow>0</yellow>b<yellow>0</yellow><yellow>0</yellow><ye
 unlit_entity = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=<yellow>1</yellow>,x=-<yellow>2</yellow>, unlit=True, <olive>color</olive>=color.light_gray)
 
 bar = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>position</olive>=(<yellow>0</yellow>,<yellow>3</yellow>,-<yellow>2</yellow>), <olive>shader</olive>=lit_with_shadows_shader, <olive>scale</olive>=(<yellow>1</yellow><yellow>0</yellow>,.<yellow>2</yellow>,.<yellow>2</yellow>), <olive>color</olive>=color.light_gray)
+
+app.run()
 </div>
 
 </div>
@@ -2390,6 +2488,7 @@ bar = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>p
     <div><gray>example:</gray></div>
     <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, EditorCamera, color, Vec<yellow>3</yellow>
 
+app = Ursina()
 from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to receive shadows.</gray>
 EditorCamera()
 <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>color</olive>=color.gray, <olive>shader</olive>=lit_with_shadows_shader)
@@ -2403,6 +2502,8 @@ dont_cast_shadow.hide(<yellow>0</yellow>b<yellow>0</yellow><yellow>0</yellow><ye
 unlit_entity = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=<yellow>1</yellow>,x=-<yellow>2</yellow>, unlit=True, <olive>color</olive>=color.light_gray)
 
 bar = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>position</olive>=(<yellow>0</yellow>,<yellow>3</yellow>,-<yellow>2</yellow>), <olive>shader</olive>=lit_with_shadows_shader, <olive>scale</olive>=(<yellow>1</yellow><yellow>0</yellow>,.<yellow>2</yellow>,.<yellow>2</yellow>), <olive>color</olive>=color.light_gray)
+
+app.run()
 </div>
 
 </div>
@@ -2430,13 +2531,15 @@ bar = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>p
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example"><purple>from</purple> time <purple>import</purple> perf_counter
+    <div class="example">app = Ursina()
+<purple>from</purple> time <purple>import</purple> perf_counter
 t = perf_counter()
 <olive>Entity</olive>(<olive>model</olive>=<purple><b>Quad</b></purple>(<olive>scale</olive>=(<yellow>3</yellow>,<yellow>1</yellow>), <olive>thickness</olive>=<yellow>3</yellow>, segments=<yellow>3</yellow>, <olive>mode</olive>=<green>'line'</green>), color = color.hsv(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>7</yellow>))
 <olive>Entity</olive>(<olive>scale</olive>=(<yellow>3</yellow>,<yellow>1</yellow>), <olive>model</olive>=<purple><b>Quad</b></purple>(aspect=<yellow>3</yellow>), color = color.hsv(<yellow>6</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>3</yellow>))
 <blue>print</blue>(<green>'-------'</green>, (perf_counter() - t)*<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>)
 origin = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>color</olive>=color.orange, <olive>scale</olive>=(.<yellow>0</yellow><yellow>5</yellow>, .<yellow>0</yellow><yellow>5</yellow>))
 camera.z = -<yellow>5</yellow>
+app.run()
 </div>
 
 </div>
@@ -2452,10 +2555,12 @@ camera.z = -<yellow>5</yellow>
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">e = <olive>Entity</olive>(<olive>model</olive>=<purple><b>Circle</b></purple>(<yellow>8</yellow>, <olive>mode</olive>=<green>'line'</green>, <olive>thickness</olive>=<yellow>1</yellow><yellow>0</yellow>), <olive>color</olive>=color.hsv(<yellow>6</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>3</yellow>))
+    <div class="example">app = Ursina()
+e = <olive>Entity</olive>(<olive>model</olive>=<purple><b>Circle</b></purple>(<yellow>8</yellow>, <olive>mode</olive>=<green>'line'</green>, <olive>thickness</olive>=<yellow>1</yellow><yellow>0</yellow>), <olive>color</olive>=color.hsv(<yellow>6</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>3</yellow>))
 <blue>print</blue>(e.model)
 origin = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>color</olive>=color.orange, <olive>scale</olive>=(.<yellow>0</yellow><yellow>5</yellow>, .<yellow>0</yellow><yellow>5</yellow>))
 ed = EditorCamera(rotation_speed = <yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>, panning_speed=<yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>)
+app.run()
 </div>
 
 </div>
@@ -2474,10 +2579,13 @@ ed = EditorCamera(rotation_speed = <yellow>2</yellow><yellow>0</yellow><yellow>0
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">front =  <olive>Entity</olive>(<olive>model</olive>=<purple><b>Plane</b></purple>(subdivisions=(<yellow>3</yellow>,<yellow>6</yellow>)), <olive>texture</olive>=<green>'brick'</green>, <olive>rotation_x</olive>=-<yellow>9</yellow><yellow>0</yellow>)
+    <div class="example">app = Ursina()
+
+front =  <olive>Entity</olive>(<olive>model</olive>=<purple><b>Plane</b></purple>(subdivisions=(<yellow>3</yellow>,<yellow>6</yellow>)), <olive>texture</olive>=<green>'brick'</green>, <olive>rotation_x</olive>=-<yellow>9</yellow><yellow>0</yellow>)
 
 _ed = EditorCamera()
 <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.green, <olive>scale</olive>=.<yellow>0</yellow><yellow>5</yellow>)
+app.run()
 </div>
 
 </div>
@@ -2496,7 +2604,9 @@ _ed = EditorCamera()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example"><olive>Entity</olive>(<olive>model</olive>=<purple><b>Grid</b></purple>(<yellow>2</yellow>, <yellow>6</yellow>))
+    <div class="example">app = Ursina()
+<olive>Entity</olive>(<olive>model</olive>=<purple><b>Grid</b></purple>(<yellow>2</yellow>, <yellow>6</yellow>))
+app.run()
 </div>
 
 </div>
@@ -2510,11 +2620,13 @@ _ed = EditorCamera()
         </table><br>
     <div><gray>example:</gray></div>
     <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, color, EditorCamera
+app = Ursina()
 e = <olive>Entity</olive>(<olive>model</olive>=<purple><b>Cone</b></purple>(<yellow>3</yellow>), <olive>texture</olive>=<green>'brick'</green>)
 
 
 origin = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>color</olive>=color.orange, <olive>scale</olive>=(.<yellow>0</yellow><yellow>5</yellow>, .<yellow>0</yellow><yellow>5</yellow>))
 ed = EditorCamera()
+app.run()
 </div>
 
 </div>
@@ -2527,9 +2639,11 @@ ed = EditorCamera()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example"><olive>Entity</olive>(<olive>model</olive>=<purple><b>Cylinder</b></purple>(<yellow>6</yellow>, start=-.<yellow>5</yellow>), <olive>color</olive>=color.hsv(<yellow>6</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>3</yellow>))
+    <div class="example">app = Ursina()
+<olive>Entity</olive>(<olive>model</olive>=<purple><b>Cylinder</b></purple>(<yellow>6</yellow>, start=-.<yellow>5</yellow>), <olive>color</olive>=color.hsv(<yellow>6</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>3</yellow>))
 origin = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>color</olive>=color.orange, <olive>scale</olive>=(<yellow>5</yellow>, .<yellow>0</yellow><yellow>5</yellow>))
 ed = EditorCamera(rotation_speed = <yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>, panning_speed=<yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>)
+app.run()
 </div>
 
 </div>
@@ -2577,7 +2691,8 @@ ed = EditorCamera(rotation_speed = <yellow>2</yellow><yellow>0</yellow><yellow>0
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">path = [e*<yellow>5</yellow> <purple>for</purple> e in Circle().vertices]
+    <div class="example">app = Ursina()
+path = [e*<yellow>5</yellow> <purple>for</purple> e in Circle().vertices]
 
 path.append(path[<yellow>0</yellow>])
 e = <olive>Entity</olive>(<olive>model</olive>=<purple><b>Pipe</b></purple>(path=path, cap_ends=False))
@@ -2586,6 +2701,7 @@ e = <olive>Entity</olive>(<olive>model</olive>=<purple><b>Pipe</b></purple>(path
 EditorCamera()
 origin = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.magenta)
 origin.scale *= .<yellow>2</yellow><yellow>5</yellow>
+app.run()
 </div>
 
 </div>
@@ -2615,7 +2731,8 @@ origin.scale *= .<yellow>2</yellow><yellow>5</yellow>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example"><green><green><green>''</green></green>'Terrain using an RGB texture as input<green><green>''</green></green>'</green>
+    <div class="example">app = Ursina()
+<green><green><green>''</green></green>'Terrain using an RGB texture as input<green><green>''</green></green>'</green>
 terrain_from_heightmap_texture = <olive>Entity</olive>(<olive>model</olive>=<purple><b>Terrain</b></purple>(<green>'heightmap_1'</green>, skip=<yellow>8</yellow>), <olive>scale</olive>=(<yellow>4</yellow><yellow>0</yellow>,<yellow>5</yellow>,<yellow>2</yellow><yellow>0</yellow>), <olive>texture</olive>=<green>'heightmap_1'</green>)
 
 <green><green>''</green>'
@@ -2642,6 +2759,12 @@ player = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, <ol
     y = terraincast(player.world_position, terrain_from_list, terrain_from_list.model.height_values)
     <purple>if</purple> y is <purple>not</purple> None:
         player.y = y
+
+
+
+
+
+app.run()
 </div>
 
 </div>
@@ -2676,7 +2799,8 @@ player = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, <ol
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, input_handler
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina <purple>import</purple> Ursina, input_handler
 
 app = Ursina(borderless=False)
 input_handler.bind(<green><green>'z'</green></green>, <green><green>'w'</green></green>)  <gray># <green><green>'z'</green></green>-key will now be registered as <green><green>'w'</green></green>-key</gray>
@@ -2688,6 +2812,13 @@ input_handler.bind(<green><green>'gamepad b'</green></green>, <green><green>'att
     <blue>print</blue>(<green>'got key:'</green>, key)
     <purple>if</purple> key == <green>'attack'</green>:
         destroy(<olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.blue), dela<olive>y</olive>=.<yellow>2</yellow>)
+
+
+
+
+
+
+app.run()
 </div>
 
 </div>
@@ -2728,7 +2859,9 @@ input_handler.bind(<green><green>'gamepad b'</green></green>, <green><green>'att
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, EditorCamera, Sky
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, EditorCamera, Sky
+app = Ursina()
 
 
 
@@ -2742,6 +2875,9 @@ m = load_model(<green>'cube'</green>, use_deepcop<olive>y</olive>=True)
 
 EditorCamera()
 Sky(<olive>texture</olive>=<green>'sky_sunset'</green>)
+
+
+app.run()
 </div>
 
 </div>
@@ -2770,7 +2906,10 @@ Sky(<olive>texture</olive>=<green>'sky_sunset'</green>)
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example"><olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'white_cube'</green>)
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+app = Ursina()
+<olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'white_cube'</green>)
+app.run()
 </div>
 
 </div>
@@ -2911,6 +3050,7 @@ printvar(<green>'test'</green>)
         </table><br>
     <div><gray>example:</gray></div>
     <div class="example">application.asset_folder = application.asset_folder.parent.parent / <green>'samples'</green>
+app = Ursina()
 
 <green><green>''</green>'
 Loads an obj sequence as a frame animation.
@@ -2947,6 +3087,7 @@ Sprite sheet coordinate system:
 (0,0) (1,0) (2,0) (3,0)
 <green>''</green>'</green>
 <purple>from</purple> ursina <purple>import</purple> Ursina
+app = Ursina()
 player_graphics = <purple><b>SpriteSheetAnimation</b></purple>(<green>'sprite_sheet'</green>, tileset_size=(<yellow>4</yellow>,<yellow>4</yellow>), fps=<yellow>6</yellow>, animations={
     <green>'idle'</green> : ((0,0), (0,0)),        <gray># makes an animation from (0,0) to (0,0), a single frame</gray>
     <green>'walk_up'</green> : ((0,0), (3,0)),     <gray># makes an animation from (0,0) to (3,0), the bottom row</gray>
@@ -2968,6 +3109,7 @@ player_graphics = <purple><b>SpriteSheetAnimation</b></purple>(<green>'sprite_sh
 
 
 <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'sprite_sheet'</green>, x=-<yellow>1</yellow>)
+app.run()
 </div>
 
 </div>
@@ -2998,7 +3140,8 @@ player_graphics = <purple><b>SpriteSheetAnimation</b></purple>(<green>'sprite_sh
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">anim = Animation(<green>'ursina_wink'</green>, loop=True, autopla<olive>y</olive>=False)
+    <div class="example">app = Ursina()
+anim = Animation(<green>'ursina_wink'</green>, loop=True, autopla<olive>y</olive>=False)
 a = <purple><b>Animator</b></purple>(
     animations = {
         <green>'lol'</green> : <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.red),
@@ -3018,6 +3161,8 @@ Text(<green>'press &ltred&gt1&ltdefault&gt, &ltgreen&gt2&ltdefault&gt or &ltviol
     <purple>if</purple> key == <green>'3'</green>:
         a.state = <green>'help'</green>
         <blue>print</blue>(anim.enabled)
+
+app.run()
 </div>
 
 </div>
@@ -3093,6 +3238,7 @@ trail_renderers = []
 
 EditorCamera()
 <olive>Entity</olive>(<olive>model</olive>=Grid(<yellow>8</yellow>,<yellow>8</yellow>), <olive>rotation_x</olive>=<yellow>9</yellow><yellow>0</yellow>, <olive>color</olive>=color.gray, <olive>y</olive>=-<yellow>3</yellow>, <olive>scale</olive>=<yellow>8</yellow>)
+app.run()
 </div>
 
 </div>
@@ -3203,8 +3349,10 @@ EditorCamera()
         </table><br>
     <div><gray>example:</gray></div>
     <div class="example"><green><green><green>''</green></green>'Draws a sheet with every curve and its name<green><green>''</green></green>'</green>
+<purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, camera, window, curve, <olive>Entity</olive>, Mesh, Text, color
 
+app = Ursina()
 camera.orthographic = True
 camera.fov = <yellow>1</yellow><yellow>6</yellow>
 camera.position = (<yellow>9</yellow>, <yellow>6</yellow>)
@@ -3231,6 +3379,7 @@ c = CubicBezier(<yellow>0</yellow>, .<yellow>5</yellow>, <yellow>1</yellow>, .<y
 
 window.exit_button.visible = False
 window.fps_counter.enabled = False
+app.run()
 <green><green>''</green>'
 These are used by Entity when animating, like this:
 
@@ -3295,7 +3444,9 @@ e2.animate_y(1, curve=curve.CubicBezier(0,.7,1,.3))
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">e<yellow>1</yellow> = <olive>Entity</olive>(position = (<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>))
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+app = Ursina()
+e<yellow>1</yellow> = <olive>Entity</olive>(position = (<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>))
 e<yellow>2</yellow> = <olive>Entity</olive>(position = (<yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>))
 distance(e<yellow>1</yellow>, e<yellow>2</yellow>)
 distance_xz(e<yellow>1</yellow>, e<yellow>2</yellow>.position)
@@ -3310,6 +3461,8 @@ between_color = lerp(color.lime, color.magenta, .<yellow>5</yellow>)
 
 p = (<yellow>1</yellow>,<yellow>0</yellow>)
 <blue>print</blue>(p, <green>'rotated -&gt'</green>, rotate_around_point_<yellow>2</yellow>d(p, (<yellow>0</yellow>,<yellow>0</yellow>), <yellow>9</yellow><yellow>0</yellow>))
+
+app.run()
 </div>
 
 </div>
@@ -3465,8 +3618,10 @@ b += Vec<yellow>4</yellow>(<yellow>0</yellow>,<yellow>1</yellow>)
         </table><br>
     <div><gray>example:</gray></div>
     <div class="example"><green><green><green>''</green></green>'Draws a sheet with every curve and its name<green><green>''</green></green>'</green>
+<purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, camera, window, curve, <olive>Entity</olive>, Mesh, Text, color
 
+app = Ursina()
 camera.orthographic = True
 camera.fov = <yellow>1</yellow><yellow>6</yellow>
 camera.position = (<yellow>9</yellow>, <yellow>6</yellow>)
@@ -3493,6 +3648,7 @@ c = <purple><b>CubicBezier</b></purple>(<yellow>0</yellow>, .<yellow>5</yellow>,
 
 window.exit_button.visible = False
 window.fps_counter.enabled = False
+app.run()
 <green><green>''</green>'
 These are used by Entity when animating, like this:
 
@@ -3517,13 +3673,10 @@ e2.animate_y(1, curve=curve.<b>CubicBezier</b>(0,.7,1,.3))
                 <td> &nbsp;invoke(<gray>function, *args, **kwargs</gray>) <span>reserved keywords: 'delay', 'unscaled'</span></td>
             </tr>
             <tr>
-                <td> &nbsp;after(<gray>delay, unscaled=True</gray>) <span></span></td>
+                <td> &nbsp;after(<gray>delay, unscaled=True</gray>) <span>function for @after decorator. Use the docrator, not this.</span></td>
             </tr>
             <tr>
                 <td> &nbsp;reset_cooldown() <span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;decorator(<gray>func</gray>) <span></span></td>
             </tr>
             <tr>
                 <td> &nbsp;wrapper(<gray>*args, **kwargs</gray>) <span></span></td>
@@ -3538,13 +3691,13 @@ e2.animate_y(1, curve=curve.<b>CubicBezier</b>(0,.7,1,.3))
                 <td> &nbsp;flatten_list(<gray>target_list</gray>) <span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;flatten_completely(<gray>container</gray>) <span></span></td>
+                <td> &nbsp;flatten_completely(<gray>target_list</gray>) <span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;enumerate_2d(<gray>array</gray>) <span></span></td>
+                <td> &nbsp;enumerate_2d(<gray>array):    # usage: for (x, y), value in enumerate_2d(my_2d_list</gray>) <span>usage: for (x, y), value in enumerate_2d(my_2d_list)</span></td>
             </tr>
             <tr>
-                <td> &nbsp;size_list() <span>eturn a list of current python objects sorted by size</span></td>
+                <td> &nbsp;size_list() <span>return a list of current python objects sorted by size</span></td>
             </tr>
             <tr>
                 <td> &nbsp;find_sequence(<gray>name, file_types, folders</gray>) <span>find frame_0, frame_1, frame_2 and so on</span></td>
@@ -3556,6 +3709,14 @@ e2.animate_y(1, curve=curve.<b>CubicBezier</b>(0,.7,1,.3))
                 <td> &nbsp;print_on_screen(<gray>text, position=(0,0), origin=(-.5,.5), scale=1, duration=1</gray>) <span></span></td>
             </tr>
         </table><br>
+    <div><gray>example:</gray></div>
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+app = Ursina()
+
+
+
+app.run()
+</div>
 
 </div>
 <br>
@@ -3638,7 +3799,9 @@ e2.animate_y(1, curve=curve.<b>CubicBezier</b>(0,.7,1,.3))
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>
+app = Ursina()
 e = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>)
 s = <purple><b>Sequence</b></purple>(
     <yellow>1</yellow>,
@@ -3658,6 +3821,8 @@ s.append(
     actions = {<green>'s'</green> : s.start, <green>'f'</green> : s.finish, <green>'p'</green> : s.pause, <green>'r'</green> : s.resume}
     <purple>if</purple> key in actions:
         actions[key]()
+
+app.run()
 </div>
 
 </div>
@@ -3685,7 +3850,9 @@ s.append(
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>
+app = Ursina()
 e = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>)
 s = Sequence(
     <yellow>1</yellow>,
@@ -3705,6 +3872,8 @@ s.append(
     actions = {<green>'s'</green> : s.start, <green>'f'</green> : s.finish, <green>'p'</green> : s.pause, <green>'r'</green> : s.resume}
     <purple>if</purple> key in actions:
         actions[key]()
+
+app.run()
 </div>
 
 </div>
@@ -3943,7 +4112,8 @@ s.append(
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, input_handler
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina <purple>import</purple> Ursina, input_handler
 
 app = Ursina(borderless=False)
 input_handler.bind(<green><green>'z'</green></green>, <green><green>'w'</green></green>)  <gray># <green><green>'z'</green></green>-key will now be registered as <green><green>'w'</green></green>-key</gray>
@@ -3955,6 +4125,13 @@ input_handler.bind(<green><green>'gamepad b'</green></green>, <green><green>'att
     <blue>print</blue>(<green>'got key:'</green>, key)
     <purple>if</purple> key == <green>'attack'</green>:
         destroy(<olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.blue), dela<olive>y</olive>=.<yellow>2</yellow>)
+
+
+
+
+
+
+app.run()
 </div>
 
 </div>
@@ -3971,7 +4148,9 @@ input_handler.bind(<green><green>'gamepad b'</green></green>, <green><green>'att
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, held_keys, time, duplicate, camera, EditorCamera
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, held_keys, time, duplicate, camera, EditorCamera
+app = Ursina()
 
 <green><green>''</green>'
 Casts a ray from *origin*, in *direction*, with length *distance* and returns
@@ -4004,6 +4183,7 @@ Player(<olive>model</olive>=<green>'cube'</green>, origin_<olive>y</olive>=-.<ye
 wall_left = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>, scale_<olive>y</olive>=<yellow>3</yellow>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>color</olive>=color.azure, x=-<yellow>4</yellow>)
 wall_right = duplicate(wall_left, x=<yellow>4</yellow>)
 camera.y = <yellow>2</yellow>
+app.run()
 </div>
 
 </div>
@@ -4020,7 +4200,9 @@ camera.y = <yellow>2</yellow>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">terrain_entity = <olive>Entity</olive>(<olive>model</olive>=Terrain(<green>'heightmap_1'</green>, skip=<yellow>8</yellow>), <olive>scale</olive>=(<yellow>4</yellow><yellow>0</yellow>, <yellow>5</yellow>, <yellow>2</yellow><yellow>0</yellow>), <olive>texture</olive>=<green>'heightmap_1'</green>)
+    <div class="example">app = Ursina()
+
+terrain_entity = <olive>Entity</olive>(<olive>model</olive>=Terrain(<green>'heightmap_1'</green>, skip=<yellow>8</yellow>), <olive>scale</olive>=(<yellow>4</yellow><yellow>0</yellow>, <yellow>5</yellow>, <yellow>2</yellow><yellow>0</yellow>), <olive>texture</olive>=<green>'heightmap_1'</green>)
 player = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, <olive>color</olive>=color.azure, <olive>scale</olive>=.<yellow>2</yellow>, origin_<olive>y</olive>=-.<yellow>5</yellow>)
 
 
@@ -4037,6 +4219,8 @@ EditorCamera()
 <purple>from</purple> ursina.shaders <purple>import</purple> ssao_shader
 camera.shader = ssao_shader
 Sky()
+
+app.run()
 </div>
 
 </div>
@@ -4054,6 +4238,7 @@ Sky()
         </table><br>
     <div><gray>example:</gray></div>
     <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, held_keys, camera, duplicate, raycast, time, EditorCamera
+app = Ursina()
 
 <green><green>''</green>'
 Casts a ray from *origin*, in *direction*, with length *distance* and returns
@@ -4084,6 +4269,7 @@ Player(<olive>model</olive>=<green>'cube'</green>, origin_<olive>y</olive>=-.<ye
 wall_left = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>, scale_<olive>y</olive>=<yellow>3</yellow>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>color</olive>=color.azure, x=-<yellow>4</yellow>)
 wall_right = duplicate(wall_left, x=<yellow>4</yellow>)
 camera.y = <yellow>2</yellow>
+app.run()
 </div>
 
 </div>
@@ -4116,7 +4302,9 @@ camera.y = <yellow>2</yellow>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, Pipe, Circle, Button, scene, EditorCamera, color
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, Pipe, Circle, Button, scene, EditorCamera, color
+app = Ursina()
 
 e = Button(<olive>parent</olive>=scene, <olive>model</olive>=<green>'sphere'</green>, x=<yellow>2</yellow>)
 e.collider = <green>'box'</green>          <gray># add BoxCollider based on entity's bounds.</gray>
@@ -4141,6 +4329,10 @@ EditorCamera()
 <purple>def</purple> input(key):
     <purple>if</purple> key == <green>'c'</green>:
         e.collider = None
+
+
+
+app.run()
 </div>
 
 </div>
@@ -4159,7 +4351,9 @@ EditorCamera()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, Pipe, Circle, Button, scene, EditorCamera, color
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, Pipe, Circle, Button, scene, EditorCamera, color
+app = Ursina()
 
 e = Button(<olive>parent</olive>=scene, <olive>model</olive>=<green>'sphere'</green>, x=<yellow>2</yellow>)
 e.collider = <green>'box'</green>          <gray># add BoxCollider based on entity's bounds.</gray>
@@ -4184,6 +4378,10 @@ EditorCamera()
 <purple>def</purple> input(key):
     <purple>if</purple> key == <green>'c'</green>:
         e.collider = None
+
+
+
+app.run()
 </div>
 
 </div>
@@ -4202,7 +4400,9 @@ EditorCamera()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, Pipe, Circle, Button, scene, EditorCamera, color
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, Pipe, Circle, Button, scene, EditorCamera, color
+app = Ursina()
 
 e = Button(<olive>parent</olive>=scene, <olive>model</olive>=<green>'sphere'</green>, x=<yellow>2</yellow>)
 e.collider = <green>'box'</green>          <gray># add BoxCollider based on entity's bounds.</gray>
@@ -4227,6 +4427,10 @@ EditorCamera()
 <purple>def</purple> input(key):
     <purple>if</purple> key == <green>'c'</green>:
         e.collider = None
+
+
+
+app.run()
 </div>
 
 </div>
@@ -4250,7 +4454,9 @@ EditorCamera()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, Pipe, Circle, Button, scene, EditorCamera, color
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, Pipe, Circle, Button, scene, EditorCamera, color
+app = Ursina()
 
 e = Button(<olive>parent</olive>=scene, <olive>model</olive>=<green>'sphere'</green>, x=<yellow>2</yellow>)
 e.collider = <green>'box'</green>          <gray># add BoxCollider based on entity's bounds.</gray>
@@ -4275,6 +4481,10 @@ EditorCamera()
 <purple>def</purple> input(key):
     <purple>if</purple> key == <green>'c'</green>:
         e.collider = None
+
+
+
+app.run()
 </div>
 
 </div>
@@ -4399,6 +4609,9 @@ rotation_info = Text(<olive>position</olive>=window.top_left)
 
 <purple>def</purple> update():
     rotation_info.text = str(int(ec.rotation_y)) + <green>'\n'</green> + str(int(ec.rotation_x))
+
+
+app.run()
 </div>
 
 </div>
@@ -4465,7 +4678,8 @@ rotation_info = Text(<olive>position</olive>=window.top_left)
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">EditorCamera()
+    <div class="example">app = Ursina()
+EditorCamera()
 tilemap = <purple><b>Tilemap</b></purple>(<green>'tilemap_test_level'</green>, tileset=<green>'test_tileset'</green>, tileset_size=(<yellow>8</yellow>,<yellow>4</yellow>), <olive>parent</olive>=scene)
 tilemap.canvas.texture = <green>'tilemap_test_level'</green>
 camera.orthographic = True
@@ -4473,6 +4687,8 @@ camera.position = tilemap.tilemap.size / <yellow>2</yellow>
 camera.fov = tilemap.tilemap.height
 
 Text(<green>'press tab to toggle edit mode'</green>, <olive>origin</olive>=(.<yellow>5</yellow>,<yellow>0</yellow>), <olive>position</olive>=(-.<yellow>5</yellow><yellow>5</yellow>,.<yellow>4</yellow>))
+
+app.run()
 </div>
 
 </div>
@@ -4555,6 +4771,7 @@ Text(<green>'press tab to toggle edit mode'</green>, <olive>origin</olive>=(.<ye
     <div><gray>example:</gray></div>
     <div class="example"><purple>from</purple> ursina.prefabs.first_person_controller <purple>import</purple> FirstPersonController
 window.vsync = False
+app = Ursina()
 ground = <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=(<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>), <olive>color</olive>=color.yellow.tint(-.<yellow>2</yellow>), <olive>texture</olive>=<green>'white_cube'</green>, <olive>texture_scale</olive>=(<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>,<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>), <olive>collider</olive>=<green>'box'</green>)
 e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>scale</olive>=(<yellow>1</yellow>,<yellow>5</yellow>,<yellow>1</yellow><yellow>0</yellow>), x=<yellow>2</yellow>, <olive>y</olive>=.<yellow>0</yellow><yellow>1</yellow>, rotation_<olive>y</olive>=<yellow>4</yellow><yellow>5</yellow>, <olive>collider</olive>=<green>'box'</green>, <olive>texture</olive>=<green>'white_cube'</green>)
 e.texture_scale = (e.scale_z, e.scale_y)
@@ -4586,6 +4803,8 @@ hookshot_target.on_click = Func(player.animate_position, hookshot_target.positio
         bullet.world_parent = scene
         bullet.animate_position(bullet.position+(bullet.forward*<yellow>5</yellow><yellow>0</yellow>), <olive>curve</olive>=curve.linear, duration=<yellow>1</yellow>)
         destroy(bullet, dela<olive>y</olive>=<yellow>1</yellow>)
+
+app.run()
 </div>
 
 </div>
@@ -4681,7 +4900,8 @@ hookshot_target.on_click = Func(player.animate_position, hookshot_target.positio
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">camera.orthographic = True
+    <div class="example">app = Ursina()
+camera.orthographic = True
 camera.fov = <yellow>1</yellow><yellow>0</yellow>
 
 ground = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.white<yellow>3</yellow><yellow>3</yellow>, origin_<olive>y</olive>=.<yellow>5</yellow>, <olive>scale</olive>=(<yellow>2</yellow><yellow>0</yellow>, <yellow>1</yellow>, <yellow>1</yellow>), <olive>collider</olive>=<green>'box'</green>, <olive>y</olive>=-<yellow>1</yellow>)
@@ -4700,6 +4920,8 @@ ground = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <oliv
 player_controller = PlatformerController<yellow>2</yellow>d(scale_<olive>y</olive>=<yellow>2</yellow>, jump_height=<yellow>4</yellow>, x=<yellow>3</yellow>, <olive>y</olive>=<yellow>2</yellow><yellow>0</yellow>, max_jumps=<yellow>2</yellow>)
 ec = EditorCamera()
 ec.add_script(SmoothFollow(target=player_controller, offset=[<yellow>0</yellow>,<yellow>1</yellow>,<yellow>0</yellow>], speed=<yellow>4</yellow>))
+
+app.run()
 </div>
 
 </div>
@@ -4771,7 +4993,9 @@ ec.add_script(SmoothFollow(target=player_controller, offset=[<yellow>0</yellow>,
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">variables = Empty(
+    <div class="example">app = Ursina()
+
+variables = Empty(
     evil=<yellow>0</yellow>,
     chaos=<yellow>0</yellow>,
     bar_mission_solved=False,
@@ -4806,52 +5030,7 @@ conversation.start_conversation(convo)
         <blue>print</blue>(variables.evil)
 
 Sprite(<green>'shore'</green>, <olive>z</olive>=<yellow>1</yellow>)
-</div>
-
-</div>
-<br>
-    <div class="class_box" id="Node">
-        <h1>Node</h1>
-        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/conversation.py"><gray>ursina/prefabs/conversation</gray></a><br><br>
-        <table> <!-- attributes -->
-        </table><br>
-        </table><br>
-    <div><gray>example:</gray></div>
-    <div class="example">variables = Empty(
-    evil=<yellow>0</yellow>,
-    chaos=<yellow>0</yellow>,
-    bar_mission_solved=False,
-)
-conversation = Conversation(variables_object=variables)
-
-convo = dedent(<green><green>''</green>'
-I<green>'m looking for my sister. Can you help me find her, please? I haven'</green>t seen her in days! Who know what could've happened!?
-I'm worried. Will you help me?
-    * Yes, of course. This can be a dangerous city.
-        Oh no! Do you think something happened to her?
-        What should I do?!
-            * She's probably fine. She can handle herself.
-                You<green>'re right. I'</green>m still worried though.
-                    * Don<green>'t worry, I'</green>ll look for her.
-            * Maybe. (stats.chaos += 1)
-                Help me look for her, please! *runs off*
-    * I<green>'m sorry, but I don'</green>t have time right now. (evil += 1)
-        A true friend wouldn't say that.
-    * I know where she is! (if bar_mission_solved)
-        Really? Where?
-            * I saw her on a ship by the docks, it looked like they were ready to set off.
-                Thank you! *runs off*
-<green>''</green>'</green>)
-conversation.start_conversation(convo)
-
-
-
-
-<purple>def</purple> input(key):
-    <purple>if</purple> key == <green>'space'</green>:
-        <blue>print</blue>(variables.evil)
-
-Sprite(<green>'shore'</green>, <olive>z</olive>=<yellow>1</yellow>)
+app.run()
 </div>
 
 </div>
@@ -4938,7 +5117,10 @@ Sprite(<green>'shore'</green>, <olive>z</olive>=<yellow>1</yellow>)
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">Button.default_color = color.red
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+app = Ursina()
+
+Button.default_color = color.red
 b = <purple><b>Button</b></purple>(<olive>model</olive>=<green>'quad'</green>, <olive>scale</olive>=.<yellow>0</yellow><yellow>5</yellow>, x=-.<yellow>5</yellow>, <olive>color</olive>=color.lime, <olive>text</olive>=<green>'text scale\ntest'</green>, text_size=.<yellow>5</yellow>, text_<olive>color</olive>=color.black)
 b.text_size = .<yellow>5</yellow>
 b.on_click = Sequence(Wait(.<yellow>5</yellow>), Func(print, <green>'aaaaaa'</green>), )
@@ -4964,6 +5146,9 @@ Text(<green>'Text size\nreference'</green>, x=.<yellow>1</yellow><yellow>5</yell
 
     <purple>if</purple> key == <green>'space'</green>:
         b.text = <green>'updated text'</green>
+
+
+app.run()
 </div>
 
 </div>
@@ -5026,12 +5211,16 @@ Text(<green>'Text size\nreference'</green>, x=.<yellow>1</yellow><yellow>5</yell
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example"><olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>8</yellow>, <olive>texture</olive>=<green>'white_cube'</green>, <olive>texture_scale</olive>=(<yellow>8</yellow>,<yellow>8</yellow>))
+    <div class="example">app = Ursina()
+
+<olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>8</yellow>, <olive>texture</olive>=<green>'white_cube'</green>, <olive>texture_scale</olive>=(<yellow>8</yellow>,<yellow>8</yellow>))
 draggable_button = <purple><b>Draggable</b></purple>(<olive>scale</olive>=.<yellow>1</yellow>, <olive>text</olive>=<green>'drag me'</green>, <olive>position</olive>=(-.<yellow>5</yellow>, <yellow>0</yellow>))
 world_space_draggable = <purple><b>Draggable</b></purple>(<olive>parent</olive>=scene, <olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.azure, plane_direction=(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>0</yellow>), lock=(<yellow>1</yellow>,<yellow>0</yellow>,<yellow>0</yellow>))
 
 EditorCamera(<olive>rotation</olive>=(<yellow>3</yellow><yellow>0</yellow>,<yellow>1</yellow><yellow>0</yellow>,<yellow>0</yellow>))
 world_space_draggable.drop = Func(print, <green>'dropped cube'</green>)
+
+app.run()
 </div>
 
 </div>
@@ -5089,7 +5278,7 @@ Lasts for 4 rounds.<green>''</green><green>'</green>.replace('</green>\n<green>'
                 <td>.default<gray> = default</gray></td><td></td>
             </tr>
             <tr>
-                <td>.step<gray> = 0</gray></td><td></td>
+                <td>.step<gray> = 0                   </gray></td><td><span>for example, setting .step to 1, would make the slider snap to the closest integer.</span></td>
             </tr>
             <tr>
                 <td>.height<gray> = height</gray></td><td></td>
@@ -5144,7 +5333,9 @@ Lasts for 4 rounds.<green>''</green><green>'</green>.replace('</green>\n<green>'
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">box = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>scale</olive>=<yellow>1</yellow>, <olive>color</olive>=color.orange)
+    <div class="example">app = Ursina()
+
+box = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>scale</olive>=<yellow>1</yellow>, <olive>color</olive>=color.orange)
 
 <purple>def</purple> scale_box():
     box.scale_y = slider.value
@@ -5156,6 +5347,8 @@ thin_slider = Thin<purple><b>Slider</b></purple>(<olive>text</olive>=<green>'hei
 
 thin_slider.label.origin = (<yellow>0</yellow>,<yellow>0</yellow>)
 thin_slider.label.position = (.<yellow>2</yellow><yellow>5</yellow>, -.<yellow>1</yellow>)
+
+app.run()
 </div>
 
 </div>
@@ -5168,7 +5361,9 @@ thin_slider.label.position = (.<yellow>2</yellow><yellow>5</yellow>, -.<yellow>1
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">box = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>scale</olive>=<yellow>1</yellow>, <olive>color</olive>=color.orange)
+    <div class="example">app = Ursina()
+
+box = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>scale</olive>=<yellow>1</yellow>, <olive>color</olive>=color.orange)
 
 <purple>def</purple> scale_box():
     box.scale_y = slider.value
@@ -5180,6 +5375,8 @@ thin_slider = <purple><b>ThinSlider</b></purple>(<olive>text</olive>=<green>'hei
 
 thin_slider.label.origin = (<yellow>0</yellow>,<yellow>0</yellow>)
 thin_slider.label.position = (.<yellow>2</yellow><yellow>5</yellow>, -.<yellow>1</yellow>)
+
+app.run()
 </div>
 
 </div>
@@ -5276,8 +5473,6 @@ thin_slider.label.position = (.<yellow>2</yellow><yellow>5</yellow>, -.<yellow>1
         'duplicate_line':   ('ctrl+shift+d',),
         'undo':             ('ctrl+z', 'ctrl+z hold'),
         'redo':             ('ctrl+y', 'ctrl+y hold', 'ctrl+shift+z', 'ctrl+shift+z hold'),
-        </gray></td><td><span>'save':             ('ctrl+s',),
-        # 'save_as':          ('ctrl+shift+s',),
         'indent':           ('tab',),
         'dedent':           ('shift+tab',),
         'move_line_down':   ('ctrl+down arrow', 'ctrl+down arrow hold'),
@@ -5291,8 +5486,6 @@ thin_slider.label.position = (.<yellow>2</yellow><yellow>5</yellow>, -.<yellow>1
         'select_word':      ('double click',),
         'select_line':      ('triple click',),
         'scroll_to_bottom': ('shift+alt+e',),
-        # 'toggle_comment':   ('ctrl+alt+c',),
-        # 'find':             ('ctrl+f',),
         'move_operations' : {
             'move_left':                ('left arrow', 'left arrow hold', 'shift+left arrow', 'shift+left arrow hold'),
             'move_right':               ('right arrow', 'right arrow hold', 'shift+right arrow', 'shift+right arrow hold'),
@@ -5300,7 +5493,13 @@ thin_slider.label.position = (.<yellow>2</yellow><yellow>5</yellow>, -.<yellow>1
             'move_down':                ('down arrow', 'down arrow hold', 'shift+down arrow', 'shift+down arrow hold'),
             'move_to_end_of_word' :     ('ctrl+right arrow', 'ctrl+right arrow hold', 'ctrl+shift+right arrow', 'ctrl+shift+right arrow hold'),
             'move_to_start_of_word' :   ('ctrl+left arrow', 'ctrl+left arrow hold', 'ctrl+shift+left arrow', 'ctrl+shift+left arrow hold'),
-        },</span></td>
+        },
+        </gray></td><td><span>'save':             ('ctrl+s',),
+        # 'save_as':          ('ctrl+shift+s',),
+        # 'toggle_comment':   ('ctrl+alt+c',),
+        # 'find':             ('ctrl+f',),
+        # 'select_word_left': ('ctrl+shift+left arrow', 'ctrl+shift+left arrow hold'),
+        # 'select_word_right': ('ctrl+shift+right arrow', 'ctrl+shift+right arrow hold'),</span></td>
             </tr>
             <tr>
                 <td>.middle_click_scroller<gray> = Entity(parent=self, start_y=None, input=middle_click_input, update=middle_click_update, t=0, update_rate=.05)</gray></td><td></td>
@@ -5400,6 +5599,9 @@ te.render()
 <purple>def</purple> input(key):
     <purple>if</purple> key == <green>'3'</green>:
         te.input(<green>'scroll down'</green>)
+
+
+app.run()
 </div>
 
 </div>
@@ -5433,11 +5635,13 @@ te.render()
         </table><br>
     <div><gray>example:</gray></div>
     <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, Button, scene, Panel, Mesh
+app = Ursina()
 Button(<green>'button'</green>).fit_to_text()
 camera.orthographic = True
 camera.fov = <yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>
 <purple><b>Cursor</b></purple>()
 mouse.visible = False
+app.run()
 </div>
 
 </div>
@@ -5497,7 +5701,8 @@ mouse.visible = False
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">gradient = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'vertical_gradient'</green>, <olive>parent</olive>=camera.ui, <olive>scale</olive>=(camera.aspect_ratio,<yellow>1</yellow>), <olive>color</olive>=color.hsv(<yellow>2</yellow><yellow>4</yellow><yellow>0</yellow>,.<yellow>6</yellow>,.<yellow>1</yellow>,.<yellow>7</yellow><yellow>5</yellow>))
+    <div class="example">app = Ursina()
+gradient = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'vertical_gradient'</green>, <olive>parent</olive>=camera.ui, <olive>scale</olive>=(camera.aspect_ratio,<yellow>1</yellow>), <olive>color</olive>=color.hsv(<yellow>2</yellow><yellow>4</yellow><yellow>0</yellow>,.<yellow>6</yellow>,.<yellow>1</yellow>,.<yellow>7</yellow><yellow>5</yellow>))
 
 username_field = <purple><b>InputField</b></purple>(<olive>y</olive>=-.<yellow>1</yellow><yellow>2</yellow>, limit_content_to=<green>'0123456789'</green>, default_value=<green>'11'</green>, active=True)
 username_field.text = <green>'0929468098'</green>
@@ -5510,6 +5715,7 @@ username_field.next_field = password_field
 
 Button(<olive>text</olive>=<green>'Login'</green>, <olive>scale</olive>=.<yellow>1</yellow>, <olive>color</olive>=color.cyan.tint(-.<yellow>4</yellow>), <olive>y</olive>=-.<yellow>2</yellow><yellow>6</yellow>, <olive>on_click</olive>=submit).fit_to_text()
 username_field.on_value_changed = submit
+app.run()
 </div>
 
 </div>
@@ -5533,7 +5739,8 @@ username_field.on_value_changed = submit
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">gradient = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'vertical_gradient'</green>, <olive>parent</olive>=camera.ui, <olive>scale</olive>=(camera.aspect_ratio,<yellow>1</yellow>), <olive>color</olive>=color.hsv(<yellow>2</yellow><yellow>4</yellow><yellow>0</yellow>,.<yellow>6</yellow>,.<yellow>1</yellow>,.<yellow>7</yellow><yellow>5</yellow>))
+    <div class="example">app = Ursina()
+gradient = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'vertical_gradient'</green>, <olive>parent</olive>=camera.ui, <olive>scale</olive>=(camera.aspect_ratio,<yellow>1</yellow>), <olive>color</olive>=color.hsv(<yellow>2</yellow><yellow>4</yellow><yellow>0</yellow>,.<yellow>6</yellow>,.<yellow>1</yellow>,.<yellow>7</yellow><yellow>5</yellow>))
 
 username_field = InputField(<olive>y</olive>=-.<yellow>1</yellow><yellow>2</yellow>, limit_content_to=<green>'0123456789'</green>, default_value=<green>'11'</green>, active=True)
 username_field.text = <green>'0929468098'</green>
@@ -5546,6 +5753,7 @@ username_field.next_field = password_field
 
 Button(<olive>text</olive>=<green>'Login'</green>, <olive>scale</olive>=.<yellow>1</yellow>, <olive>color</olive>=color.cyan.tint(-.<yellow>4</yellow>), <olive>y</olive>=-.<yellow>2</yellow><yellow>6</yellow>, <olive>on_click</olive>=submit).fit_to_text()
 username_field.on_value_changed = submit
+app.run()
 </div>
 
 </div>
@@ -5609,6 +5817,7 @@ username_field.on_value_changed = submit
         </table><br>
     <div><gray>example:</gray></div>
     <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, Func
+app = Ursina()
 
 default = Func(print, <green>'not yet implemented'</green>)
 
@@ -5634,6 +5843,8 @@ bl = <purple><b>ButtonList</b></purple>(button_dict, font=<green>'VeraMono.ttf'<
 bl.selected = <green>'button 7'</green>
 
 bl.button_dict = {}
+
+app.run()
 </div>
 
 </div>
@@ -5702,7 +5913,10 @@ bl.button_dict = {}
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">center = <olive>Entity</olive>(<olive>parent</olive>=camera.ui, <olive>model</olive>=<green>'circle'</green>, <olive>scale</olive>=.<yellow>0</yellow><yellow>0</yellow><yellow>5</yellow>, <olive>color</olive>=color.red, <olive>z</olive>=-<yellow>1</yellow>)
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+app = Ursina()
+
+center = <olive>Entity</olive>(<olive>parent</olive>=camera.ui, <olive>model</olive>=<green>'circle'</green>, <olive>scale</olive>=.<yellow>0</yellow><yellow>0</yellow><yellow>5</yellow>, <olive>color</olive>=color.red, <olive>z</olive>=-<yellow>1</yellow>)
 gender_selection = <purple><b>ButtonGroup</b></purple>((<green>'man'</green>, <green>'woman'</green>, <green>'other'</green>), <olive>origin</olive>=(-.<yellow>5</yellow>,<yellow>0</yellow>))
 
 <purple>def</purple> on_value_changed():
@@ -5741,6 +5955,7 @@ window.color = color._<yellow>3</yellow><yellow>2</yellow>
 WindowPanel is an easy way to create UI. It will automatically layout the content.
 <green>''</green>'</green>
 <purple>from</purple> ursina <purple>import</purple> Ursina, ButtonGroup
+app = Ursina()
 wp = <purple><b>WindowPanel</b></purple>(
     title=<green>'Custom Window'</green>,
     content=(
@@ -5759,6 +5974,8 @@ wp.layout()
 <purple>def</purple> input(key):
     <purple>if</purple> key == <green>'space'</green>:
         wp.enabled = True
+
+app.run()
 </div>
 
 </div>
@@ -5778,6 +5995,7 @@ wp.layout()
 WindowPanel is an easy way to create UI. It will automatically layout the content.
 <green>''</green>'</green>
 <purple>from</purple> ursina <purple>import</purple> Ursina, ButtonGroup
+app = Ursina()
 wp = WindowPanel(
     title=<green>'Custom Window'</green>,
     content=(
@@ -5796,6 +6014,8 @@ wp.layout()
 <purple>def</purple> input(key):
     <purple>if</purple> key == <green>'space'</green>:
         wp.enabled = True
+
+app.run()
 </div>
 
 </div>
@@ -5891,7 +6111,9 @@ wp.layout()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">fb = <purple><b>FileBrowser</b></purple>(file_types=(<green>'.*'</green>), <olive>enabled</olive>=False)
+    <div class="example">app = Ursina()
+
+fb = <purple><b>FileBrowser</b></purple>(file_types=(<green>'.*'</green>), <olive>enabled</olive>=False)
 
 <purple>def</purple> on_submit(paths):
     <blue>print</blue>(<green>'--------'</green>, paths)
@@ -5903,6 +6125,9 @@ fb.on_submit = on_submit
 <purple>def</purple> input(key):
     <purple>if</purple> key == <green>'tab'</green>:
         fb.enabled = <purple>not</purple> fb.enabled
+
+
+app.run()
 </div>
 
 </div>
@@ -5941,7 +6166,9 @@ fb.on_submit = on_submit
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">fb = FileBrowser(file_types=(<green>'.*'</green>), <olive>enabled</olive>=False)
+    <div class="example">app = Ursina()
+
+fb = FileBrowser(file_types=(<green>'.*'</green>), <olive>enabled</olive>=False)
 
 <purple>def</purple> on_submit(paths):
     <blue>print</blue>(<green>'--------'</green>, paths)
@@ -5953,6 +6180,9 @@ fb.on_submit = on_submit
 <purple>def</purple> input(key):
     <purple>if</purple> key == <green>'tab'</green>:
         fb.enabled = <purple>not</purple> fb.enabled
+
+
+app.run()
 </div>
 
 </div>
@@ -6002,8 +6232,10 @@ fb.on_submit = on_submit
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example"><purple>from</purple> ursina.prefabs.file_browser_save <purple>import</purple> FileBrowserSave
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina.prefabs.file_browser_save <purple>import</purple> FileBrowserSave
 
+app = Ursina()
 wp = <purple><b>FileBrowserSave</b></purple>(file_type = <green>'.*'</green>)
 
 
@@ -6015,6 +6247,9 @@ wp.enabled = False
 <purple>def</purple> input(key):
     <purple>if</purple> key == <green>'tab'</green>:
         wp.enabled = <purple>not</purple> wp.enabled
+
+
+app.run()
 </div>
 
 </div>
@@ -6055,6 +6290,7 @@ wp.enabled = False
     <div><gray>example:</gray></div>
     <div class="example"><purple>from</purple> ursina.prefabs.dropdown_menu <purple>import</purple> DropdownMenu, DropdownMenuButton
 
+app = Ursina()
 <purple><b>DropdownMenu</b></purple>(<green>'File'</green>, buttons=(
     DropdownMenuButton(<green>'New'</green>),
     DropdownMenuButton(<green>'Open'</green>),
@@ -6069,6 +6305,8 @@ wp.enabled = False
         )),
     DropdownMenuButton(<green>'Exit'</green>),
     ))
+
+app.run()
 </div>
 
 </div>
@@ -6083,6 +6321,7 @@ wp.enabled = False
     <div><gray>example:</gray></div>
     <div class="example"><purple>from</purple> ursina.prefabs.dropdown_menu <purple>import</purple> DropdownMenu, DropdownMenuButton
 
+app = Ursina()
 DropdownMenu(<green>'File'</green>, buttons=(
     <purple><b>DropdownMenuButton</b></purple>(<green>'New'</green>),
     <purple><b>DropdownMenuButton</b></purple>(<green>'Open'</green>),
@@ -6097,6 +6336,8 @@ DropdownMenu(<green>'File'</green>, buttons=(
         )),
     <purple><b>DropdownMenuButton</b></purple>(<green>'Exit'</green>),
     ))
+
+app.run()
 </div>
 
 </div>
@@ -6138,7 +6379,9 @@ DropdownMenu(<green>'File'</green>, buttons=(
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">rm = <purple><b>RadialMenu</b></purple>(
+    <div class="example">app = Ursina()
+
+rm = <purple><b>RadialMenu</b></purple>(
     buttons = (
         RadialMenuButton(<olive>text</olive>=<green>'1'</green>),
         RadialMenuButton(<olive>text</olive>=<green>'2'</green>),
@@ -6154,6 +6397,7 @@ RadialMenuButton(<olive>text</olive>=<green>'6'</green>, <olive>color</olive>=co
     rm.enabled = True
 cube = Button(<olive>parent</olive>=scene, <olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.orange, <olive>highlight_color</olive>=color.azure, <olive>on_click</olive>=enable_radial_menu)
 EditorCamera()
+app.run()
 </div>
 
 </div>
@@ -6166,7 +6410,9 @@ EditorCamera()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">rm = RadialMenu(
+    <div class="example">app = Ursina()
+
+rm = RadialMenu(
     buttons = (
         <purple><b>RadialMenuButton</b></purple>(<olive>text</olive>=<green>'1'</green>),
         <purple><b>RadialMenuButton</b></purple>(<olive>text</olive>=<green>'2'</green>),
@@ -6182,6 +6428,7 @@ EditorCamera()
     rm.enabled = True
 cube = Button(<olive>parent</olive>=scene, <olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.orange, <olive>highlight_color</olive>=color.azure, <olive>on_click</olive>=enable_radial_menu)
 EditorCamera()
+app.run()
 </div>
 
 </div>
@@ -6236,7 +6483,9 @@ EditorCamera()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">health_bar_<yellow>1</yellow> = <purple><b>HealthBar</b></purple>(bar_<olive>color</olive>=color.lime.tint(-.<yellow>2</yellow><yellow>5</yellow>), roundness=.<yellow>5</yellow>, max_value=<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>, value=<yellow>5</yellow><yellow>0</yellow>)
+    <div class="example">app = Ursina()
+
+health_bar_<yellow>1</yellow> = <purple><b>HealthBar</b></purple>(bar_<olive>color</olive>=color.lime.tint(-.<yellow>2</yellow><yellow>5</yellow>), roundness=.<yellow>5</yellow>, max_value=<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>, value=<yellow>5</yellow><yellow>0</yellow>)
 <blue>print</blue>(health_bar_<yellow>1</yellow>.text_entity.enabled, health_bar_<yellow>1</yellow>.text_entity.text)
 
 <purple>def</purple> input(key):
@@ -6245,6 +6494,7 @@ EditorCamera()
     <purple>if</purple> key == <green>'-'</green> or key == <green>'- hold'</green>:
         health_bar_<yellow>1</yellow>.value -= <yellow>1</yellow><yellow>0</yellow>
         <blue>print</blue>(<green>'ow'</green>)
+app.run()
 </div>
 
 </div>
@@ -6279,7 +6529,10 @@ EditorCamera()
         </table><br>
     <div><gray>example:</gray></div>
     <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina
+app = Ursina()
 <purple><b>ColorPicker</b></purple>()
+
+app.run()
 </div>
 
 </div>
@@ -6337,7 +6590,9 @@ EditorCamera()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">application.hot_reloader.path = application.asset_folder.parent.parent / <green>'samples'</green> / <green>'platformer.py'</green>
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+app = Ursina()
+application.hot_reloader.path = application.asset_folder.parent.parent / <green>'samples'</green> / <green>'platformer.py'</green>
 
 <green><green>''</green>'
 By default you can press F5 to reload the starting script, F6 to reimport textures and F7 to reload models.
@@ -6481,6 +6736,8 @@ EditorCamera(rotation_speed=<yellow>0</yellow>)
 
 <purple>from</purple> ursina.prefabs.grid_editor <purple>import</purple> ASCIIEditor
 ASCIIEditor(x=<yellow>0</yellow>, <olive>scale</olive>=.<yellow>1</yellow>)
+
+app.run()
 </div>
 
 </div>
@@ -6530,6 +6787,8 @@ EditorCamera(rotation_speed=<yellow>0</yellow>)
 
 <purple>from</purple> ursina.prefabs.grid_editor <purple>import</purple> ASCIIEditor
 ASCIIEditor(x=<yellow>0</yellow>, <olive>scale</olive>=.<yellow>1</yellow>)
+
+app.run()
 </div>
 
 </div>
@@ -6573,6 +6832,8 @@ EditorCamera(rotation_speed=<yellow>0</yellow>)
 
 <purple>from</purple> ursina.prefabs.grid_editor <purple>import</purple> ASCIIEditor
 <purple><b>ASCIIEditor</b></purple>(x=<yellow>0</yellow>, <olive>scale</olive>=.<yellow>1</yellow>)
+
+app.run()
 </div>
 
 </div>
@@ -6589,7 +6850,9 @@ EditorCamera(rotation_speed=<yellow>0</yellow>)
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">center = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>scale</olive>=.<yellow>1</yellow>, <olive>color</olive>=color.red)
+    <div class="example">app = Ursina()
+
+center = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>scale</olive>=.<yellow>1</yellow>, <olive>color</olive>=color.red)
 p = <olive>Entity</olive>()
 <purple>for</purple> i in <blue>range</blue>(<yellow>4</yellow>*<yellow>5</yellow>):
     b = Button(<olive>parent</olive>=p, <olive>model</olive>=<green>'quad'</green>, <olive>scale</olive>=Vec2(.<yellow>2</yellow>,.<yellow>1</yellow>), <olive>text</olive>=str(i), <olive>color</olive>=color.tint(color.random_color(),-.<yellow>6</yellow>))
@@ -6615,12 +6878,15 @@ EditorCamera()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, Button, scene, EditorCamera
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina <purple>import</purple> Ursina, Button, scene, EditorCamera
+app = Ursina()
 
 
 e = Button(<olive>parent</olive>=scene, <olive>scale</olive>=<yellow>1</yellow>, <olive>text</olive>=<green>'yolo'</green>)
 e<yellow>2</yellow> = <purple><b>duplicate</b></purple>(e, x=<yellow>1</yellow>.<yellow>2</yellow><yellow>5</yellow>)
 EditorCamera()
+app.run()
 </div>
 
 </div>
@@ -6653,7 +6919,9 @@ EditorCamera()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">player = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.orange)
+    <div class="example">app = Ursina()
+
+player = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.orange)
 
 <purple>def</purple> update():
     player.x += held_keys[<green>'d'</green>] * .<yellow>1</yellow>
@@ -6668,6 +6936,7 @@ sf = e.add_script(<purple><b>SmoothFollow</b></purple>(target=player, offset=(<y
         e.scripts.remove(sf)
 
 EditorCamera()
+app.run()
 </div>
 
 </div>
@@ -6711,11 +6980,13 @@ This will make target entity move up or down when you hover the entity/its child
 while scrolling the scroll wheel.
 <green>''</green>'</green>
 
+app = Ursina()
 p = Button(<olive>model</olive>=<green>'quad'</green>, <olive>scale</olive>=(.<yellow>4</yellow>, .<yellow>8</yellow>), <olive>collider</olive>=<green>'box'</green>)
 <purple>for</purple> i in <blue>range</blue>(<yellow>8</yellow>):
     Button(<olive>parent</olive>=p , scale_<olive>y</olive>=.<yellow>0</yellow><yellow>5</yellow>, <olive>text</olive>=f<green>'giopwjoigjwr{i}'</green>, origin_<olive>y</olive>=.<yellow>5</yellow>, <olive>y</olive>=.<yellow>5</yellow>-(i*.<yellow>0</yellow><yellow>5</yellow>))
 
 p.add_script(<purple><b>Scrollable</b></purple>())
+app.run()
 </div>
 
 </div>
@@ -6745,12 +7016,15 @@ p.add_script(<purple><b>Scrollable</b></purple>())
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">player = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.orange)
+    <div class="example">app = Ursina()
+
+player = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.orange)
 <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>)
 EditorCamera()
 
 
 player.add_script(NoclipMode<yellow>2</yellow>d())
+app.run()
 </div>
 
 </div>
@@ -6780,12 +7054,15 @@ player.add_script(NoclipMode<yellow>2</yellow>d())
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-    <div class="example">player = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.orange)
+    <div class="example">app = Ursina()
+
+player = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.orange)
 <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>)
 EditorCamera()
 
 
 player.add_script(NoclipMode<yellow>2</yellow>d())
+app.run()
 </div>
 
 </div>
@@ -6979,74 +7256,750 @@ player.add_script(NoclipMode<yellow>2</yellow>d())
 
 </div>
 <br>
-    <div class="class_box" id="shaders">
-        <h1>shaders</h1>
+    <div class="class_box" id="unlit_shader">
+        <h1>unlit_shader</h1>
+        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/unlit_shader.py"><gray>ursina/shaders/unlit_shader</gray></a><br><br>
         <table> <!-- attributes -->
             <tr>
-                <td>colored_lights_shader</td><td></td>
+                <td>default_input</td><td></td>
             </tr>
             <tr>
-                <td>fresnel_shader</td><td></td>
+                <td>    'texture_scale' : Vec2(1,1),</td><td></td>
             </tr>
             <tr>
-                <td>projector_shader</td><td></td>
-            </tr>
-            <tr>
-                <td>instancing_shader</td><td></td>
-            </tr>
-            <tr>
-                <td>texture_blend_shader</td><td></td>
-            </tr>
-            <tr>
-                <td>matcap_shader</td><td></td>
-            </tr>
-            <tr>
-                <td>triplanar_shader</td><td></td>
-            </tr>
-            <tr>
-                <td>unlit_shader</td><td></td>
-            </tr>
-            <tr>
-                <td>geom_shader</td><td></td>
-            </tr>
-            <tr>
-                <td>normals_shader</td><td></td>
-            </tr>
-            <tr>
-                <td>transition_shader</td><td></td>
-            </tr>
-            <tr>
-                <td>noise_fog_shader</td><td></td>
-            </tr>
-            <tr>
-                <td>lit_with_shadows_shader</td><td></td>
-            </tr>
-            <tr>
-                <td>fxaa</td><td></td>
-            </tr>
-            <tr>
-                <td>camera_empty</td><td></td>
-            </tr>
-            <tr>
-                <td>ssao</td><td></td>
-            </tr>
-            <tr>
-                <td>camera_outline_shader</td><td></td>
-            </tr>
-            <tr>
-                <td>pixelation_shader</td><td></td>
-            </tr>
-            <tr>
-                <td>camera_contrast</td><td></td>
-            </tr>
-            <tr>
-                <td>camera_vertical_blur</td><td></td>
-            </tr>
-            <tr>
-                <td>camera_grayscale</td><td></td>
+                <td>    'texture_offset' : Vec2(0.0, 0.0),</td><td></td>
             </tr>
         </table><br>
         </table><br>
+    <div><gray>example:</gray></div>
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina.prefabs.primitives <purple>import</purple> *
+app = Ursina()
+
+shader = unlit_shader
+
+ground = GrayPlane(<olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>y</olive>=-<yellow>2</yellow>, <olive>texture</olive>=<green>'shore'</green>, <olive>shader</olive>=shader, <olive>texture_scale</olive>=(<yellow>1</yellow><yellow>0</yellow>,<yellow>1</yellow><yellow>0</yellow>))
+ground.set_shader_input(<green>'texture_scale'</green>, Vec2(<yellow>2</yellow>, <yellow>1</yellow>))
+EditorCamera()
+
+app.run()
+</div>
+
+</div>
+<br>
+    <div class="class_box" id="lit_with_shadows_shader">
+        <h1>lit_with_shadows_shader</h1>
+        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/lit_with_shadows_shader.py"><gray>ursina/shaders/lit_with_shadows_shader</gray></a><br><br>
+        <table> <!-- attributes -->
+            <tr>
+                <td>default_input</td><td></td>
+            </tr>
+            <tr>
+                <td>    'texture_scale': Vec2(1,1),</td><td></td>
+            </tr>
+            <tr>
+                <td>    'texture_offset': Vec2(0,0),</td><td></td>
+            </tr>
+            <tr>
+                <td>    'shadow_color' : Color(0, .5, 1, .25),</td><td></td>
+            </tr>
+        </table><br>
+        </table><br>
+    <div><gray>example:</gray></div>
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+
+app = Ursina()
+shader = lit_with_shadows_shader
+
+a = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>shader</olive>=shader, <olive>y</olive>=<yellow>1</yellow>, <olive>color</olive>=color.light_gray)
+<olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, <olive>texture</olive>=<green>'shore'</green>, <olive>y</olive>=<yellow>2</yellow>, x=<yellow>1</yellow>, <olive>shader</olive>=shader)
+
+<olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>6</yellow>, <olive>texture</olive>=<green>'grass'</green>, <olive>shader</olive>=lit_with_shadows_shader)
+<purple>from</purple> ursina.lights <purple>import</purple> DirectionalLight
+sun = DirectionalLight(shadow_map_resolution=(<yellow>2</yellow><yellow>0</yellow><yellow>4</yellow><yellow>8</yellow>,<yellow>2</yellow><yellow>0</yellow><yellow>4</yellow><yellow>8</yellow>))
+sun.look_at(Vec3(-<yellow>1</yellow>,-<yellow>1</yellow>,-<yellow>1</yellow><yellow>0</yellow>))
+scene.fog_density = (<yellow>1</yellow>, <yellow>5</yellow><yellow>0</yellow>)
+Sky(<olive>color</olive>=color.light_gray)
+EditorCamera()
+
+<purple>def</purple> update():
+    a.x += (held_keys[<green>'d'</green>] - held_keys[<green>'a'</green>]) * time.dt * <yellow>5</yellow>
+    a.y += (held_keys[<green>'e'</green>] - held_keys[<green>'q'</green>]) * time.dt * <yellow>5</yellow>
+    a.z += (held_keys[<green>'w'</green>] - held_keys[<green>'s'</green>]) * time.dt * <yellow>5</yellow>
+
+<purple>def</purple> input(key):
+    <purple>if</purple> key == <green>'r'</green>:
+        <purple>if</purple> sun.color == color.white:
+            sun.color = color.red
+        <purple>else</purple>:
+            sun.color = color.white
+
+app.run()
+</div>
+
+</div>
+<br>
+    <div class="class_box" id="matcap_shader">
+        <h1>matcap_shader</h1>
+        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/matcap_shader.py"><gray>ursina/shaders/matcap_shader</gray></a><br><br>
+        <table> <!-- attributes -->
+        </table><br>
+        </table><br>
+    <div><gray>example:</gray></div>
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina.prefabs.primitives <purple>import</purple> *
+app = Ursina()
+window.<olive>color</olive>=color.black
+
+shader = matcap_shader
+
+a = WhiteCube(<olive>shader</olive>=shader, <olive>texture</olive>=<green>'shore'</green>)
+b = WhiteSphere(<olive>shader</olive>=shader, rotation_<olive>y</olive>=<yellow>1</yellow><yellow>8</yellow><yellow>0</yellow>, x=<yellow>3</yellow>, <olive>texture</olive>=<green>'shore'</green>)
+GrayPlane(<olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>y</olive>=-<yellow>2</yellow>, <olive>texture</olive>=<green>'shore'</green>)
+
+Sky(<olive>color</olive>=color.light_gray)
+EditorCamera()
+
+<purple>def</purple> update():
+    b.rotation_z += <yellow>1</yellow>
+    b.rotation_y += <yellow>1</yellow>
+    b.rotation_x += <yellow>1</yellow>
+<blue>print</blue>(<green>'-----------------'</green>, repr(a.shader))
+app.run()
+</div>
+
+</div>
+<br>
+    <div class="class_box" id="colored_lights_shader">
+        <h1>colored_lights_shader</h1>
+        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/colored_lights_shader.py"><gray>ursina/shaders/colored_lights_shader</gray></a><br><br>
+        <table> <!-- attributes -->
+            <tr>
+                <td>default_input</td><td></td>
+            </tr>
+            <tr>
+                <td>    'top_color': color.hsv(220, .12, .82),</td><td></td>
+            </tr>
+            <tr>
+                <td>    'bottom_color': color.hsv(285, .13, .47),</td><td></td>
+            </tr>
+            <tr>
+                <td>    'left_color': color.hsv(217, .3, .68),</td><td></td>
+            </tr>
+            <tr>
+                <td>    'right_color': color.hsv(0, .25, .93),</td><td></td>
+            </tr>
+            <tr>
+                <td>    'front_color': color.hsv(231, .08, .69),</td><td></td>
+            </tr>
+            <tr>
+                <td>    'back_color': color.hsv(240, .05, .76),</td><td></td>
+            </tr>
+        </table><br>
+        </table><br>
+    <div><gray>example:</gray></div>
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina.prefabs.primitives <purple>import</purple> *
+app = Ursina()
+window.<olive>color</olive>=color.black
+
+shader = colored_lights_shader
+
+<olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.white, <olive>shader</olive>=colored_lights_shader)
+e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, x=<yellow>1</yellow>.<yellow>2</yellow>, <olive>shader</olive>=colored_lights_shader, <olive>color</olive>=color.white)
+e.set_shader_input(<green>'top_color'</green>, hsv(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>))
+e.set_shader_input(<green>'bottom_color'</green>, hsv(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>))
+e.set_shader_input(<green>'left_color'</green>, hsv(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>))
+e.set_shader_input(<green>'right_color'</green>, hsv(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>))
+e.set_shader_input(<green>'front_color'</green>, hsv(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>))
+e.set_shader_input(<green>'back_color'</green>, hsv(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>))
+
+GrayPlane(<olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>y</olive>=-<yellow>2</yellow>, <olive>texture</olive>=<green>'shore'</green>)
+
+Sky(<olive>color</olive>=color.light_gray)
+EditorCamera(rotate_around_mouse_hit=False)
+
+
+EditorCamera()
+
+app.run()
+</div>
+
+</div>
+<br>
+    <div class="class_box" id="fresnel_shader">
+        <h1>fresnel_shader</h1>
+        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/fresnel_shader.py"><gray>ursina/shaders/fresnel_shader</gray></a><br><br>
+        <table> <!-- attributes -->
+            <tr>
+                <td>default_input</td><td></td>
+            </tr>
+            <tr>
+                <td>    'texture_scale' : Vec2(1,1),</td><td></td>
+            </tr>
+            <tr>
+                <td>    'texture_offset' : Vec2(0.0, 0.0),</td><td></td>
+            </tr>
+            <tr>
+                <td>    'fresnel_color' : color.light_gray,</td><td></td>
+            </tr>
+            <tr>
+                <td>    'fresnel_texture' : Func(load_texture, 'white_cube'),</td><td></td>
+            </tr>
+        </table><br>
+        </table><br>
+    <div><gray>example:</gray></div>
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+app = Ursina()
+
+b = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, <olive>color</olive>=color.black, <olive>shader</olive>=fresnel_shader)
+ground = <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>color</olive>=color.gray, <olive>shader</olive>=fresnel_shader, <olive>y</olive>=-<yellow>1</yellow>, <olive>scale</olive>=<yellow>6</yellow><yellow>4</yellow>, <olive>texture</olive>=<green>'grass'</green>, <olive>texture_scale</olive>=Vec2(<yellow>3</yellow><yellow>2</yellow>,<yellow>3</yellow><yellow>2</yellow>))
+ground.set_shader_input(<green>'fresnel_color'</green>, color.gray)
+ground.set_shader_input(<green>'fresnel_texture'</green>, load_texture(<green>'white_cube'</green>))
+EditorCamera()
+
+<purple>for</purple> i in <blue>range</blue>(<yellow>1</yellow><yellow>6</yellow>):
+    e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>scale</olive>=<yellow>2</yellow>, <olive>texture</olive>=<green>'brick'</green>, <olive>texture_scale</olive>=(<yellow>1</yellow>,<yellow>2</yellow>),
+        x=random.uniform(-<yellow>8</yellow>,<yellow>8</yellow>),
+        <olive>z</olive>=random.uniform(-<yellow>8</yellow>,<yellow>8</yellow>) + <yellow>8</yellow>,
+        scale_y = random.uniform(<yellow>2</yellow>,<yellow>3</yellow>),
+        <olive>color</olive>=color.hsv(<yellow>0</yellow>, <yellow>0</yellow>, random.uniform(.<yellow>9</yellow>, <yellow>1</yellow>)),
+        <olive>shader</olive>=fresnel_shader,
+        )
+    e.set_shader_input(<green>'fresnel_texture'</green>, load_texture(<green>'brick'</green>))
+
+<purple>def</purple> update():
+    <purple>for</purple> e in scene.entities:
+        <purple>if</purple> <blue>hasattr</blue>(e, <green>'shader'</green>) and e.shader == fresnel_shader:
+            e.set_shader_input(<green>'camera_world_position'</green>, camera.world_position)
+
+
+
+
+
+app.run()
+</div>
+
+</div>
+<br>
+    <div class="class_box" id="projector_shader">
+        <h1>projector_shader</h1>
+        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/projector_shader.py"><gray>ursina/shaders/projector_shader</gray></a><br><br>
+        <table> <!-- attributes -->
+        </table><br>
+        </table><br>
+    <div><gray>example:</gray></div>
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+app = Ursina()
+
+<olive>Entity</olive>.default_shader = projector_shader
+
+editor_camera = EditorCamera(<olive>rotation_x</olive>=<yellow>3</yellow><yellow>0</yellow>,)
+light = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, unlit=True)
+ground = <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>collider</olive>=<green>'box'</green>, <olive>scale</olive>=<yellow>6</yellow><yellow>4</yellow>, <olive>texture</olive>=<green>'grass'</green>, <olive>texture_scale</olive>=(<yellow>4</yellow>,<yellow>4</yellow>))
+
+random.seed(<yellow>0</yellow>)
+<purple>for</purple> i in <blue>range</blue>(<yellow>1</yellow><yellow>6</yellow>):
+    <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>scale</olive>=<yellow>2</yellow>, <olive>texture</olive>=<green>'brick'</green>, <olive>texture_scale</olive>=(<yellow>1</yellow>,<yellow>2</yellow>),
+        x=random.uniform(-<yellow>8</yellow>,<yellow>8</yellow>),
+        <olive>z</olive>=random.uniform(-<yellow>8</yellow>,<yellow>8</yellow>) + <yellow>8</yellow>,
+        <olive>collider</olive>=<green>'box'</green>,
+        scale_y = random.uniform(<yellow>2</yellow>,<yellow>3</yellow>),
+        <olive>color</olive>=color.hsv(<yellow>0</yellow>, <yellow>0</yellow>, random.uniform(.<yellow>9</yellow>, <yellow>1</yellow>))
+    )
+
+scene.fog_density = (<yellow>1</yellow><yellow>0</yellow>, <yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>)
+
+projector_texture = load_texture(<green>'vignette'</green>, application.internal_textures_folder)
+projector_shader.default_input[<green>'projector_texture'</green>] = projector_texture
+
+<purple>def</purple> update():
+    light.x += (held_keys[<green>'d'</green>] - held_keys[<green>'a'</green>]) * time.dt * <yellow>3</yellow>
+    light.z += (held_keys[<green>'w'</green>] - held_keys[<green>'s'</green>]) * time.dt * <yellow>3</yellow>
+
+    <purple>for</purple> e in scene.entities:
+        <purple>if</purple> <blue>hasattr</blue>(e,<green>'shader'</green>) and e.shader == projector_shader:
+            e.set_shader_input(<green>'projector_uv_offset'</green>, light.world_position.xz * projector_shader.default_input[<green>'projector_uv_scale'</green>])
+
+app.run()
+</div>
+
+</div>
+<br>
+    <div class="class_box" id="texture_blend_shader">
+        <h1>texture_blend_shader</h1>
+        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/texture_blend_shader.py"><gray>ursina/shaders/texture_blend_shader</gray></a><br><br>
+        <table> <!-- attributes -->
+        </table><br>
+        </table><br>
+    <div><gray>example:</gray></div>
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+Texture.default_filtering = <green>'bilinear'</green>
+app = Ursina(vsync=False)
+
+e = <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>shader</olive>=texture_blend_shader, <olive>texture</olive>=<green>'shore'</green>)
+
+e.set_shader_input(<green>'red_texture'</green>, load_texture(<green>'dirt.tif'</green>))
+
+e.set_shader_input(<green>'green_texture'</green>, load_texture(<green>'grass.png'</green>))
+e.set_shader_input(<green>'green_blend_texture'</green>, load_texture(<green>'grass_blend_map'</green>))
+e.set_shader_input(<green>'green_tint'</green>, color.hex(<green>'#6f6d24'</green>))
+
+e.set_shader_input(<green>'blue_texture'</green>, load_texture(<green>'cobblestone.tif'</green>))
+e.set_shader_input(<green>'blue_uv'</green>, Vec2(<yellow>2</yellow>))
+e.set_shader_input(<green>'blue_blend_texture'</green>, load_texture(<green>'cobblestone_blend_map'</green>))
+
+blend_map = load_texture(<green>'blend_map_example'</green>)
+e.set_shader_input(<green>'blend_map'</green>, blend_map)
+
+e.scale_x = blend_map.width / blend_map.height
+e.scale *= <yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>
+
+
+EditorCamera(<olive>rotation_x</olive>=<yellow>3</yellow><yellow>0</yellow>)
+
+app.draw_color = color.green
+
+<purple>def</purple> input(key):
+    <purple>if</purple> key == <green>'space'</green>:
+        <purple>if</purple> e.shader:
+            e.shader = None
+        <purple>else</purple>:
+            e.shader = texture_blend_shader
+
+    <purple>if</purple> key == <green>'left mouse up'</green>:
+        blend_map.apply()
+
+    <purple>if</purple> key == <green>'1'</green>:
+        app.draw_color = color.red
+    <purple>if</purple> key == <green>'2'</green>:
+        app.draw_color = color.green
+    <purple>if</purple> key == <green>'3'</green>:
+        app.draw_color = color.blue
+
+
+e.collider = <green>'mesh'</green>
+<purple>def</purple> update():
+    <purple>if</purple> mouse.left and mouse.hovered_entity == e:
+        x, _, y = mouse.point + Vec3(.<yellow>5</yellow>)
+        <blue>print</blue>(x, y)
+        blend_map.set_pixel(int(x*blend_map.width), int(y*blend_map.height), app.draw_color)
+        blend_map.apply()
+
+
+app.run()
+</div>
+
+</div>
+<br>
+    <div class="class_box" id="instancing_shader">
+        <h1>instancing_shader</h1>
+        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/instancing_shader.py"><gray>ursina/shaders/instancing_shader</gray></a><br><br>
+        <table> <!-- attributes -->
+            <tr>
+                <td>default_input</td><td></td>
+            </tr>
+            <tr>
+                <td>    'texture_scale' : Vec2(1,1),</td><td></td>
+            </tr>
+            <tr>
+                <td>    'texture_offset' : Vec2(0.0, 0.0),</td><td></td>
+            </tr>
+            <tr>
+                <td>    'position_offsets' : [Vec3(i,0,0) for i in range(256)],</td><td></td>
+            </tr>
+            <tr>
+                <td>    'rotation_offsets' : [Vec4(0) for i in range(256)],</td><td></td>
+            </tr>
+            <tr>
+                <td>    'scale_multipliers' : [Vec3(1) for i in range(256)],</td><td></td>
+            </tr>
+        </table><br>
+        </table><br>
+    <div><gray>example:</gray></div>
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, EditorCamera, Vec<yellow>3</yellow>, color, application, time, Cone
+<purple>import</purple> random
+app = Ursina(vsync=False)
+
+instances = []
+<olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>texture</olive>=<green>'grass'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>2</yellow><yellow>8</yellow>)
+application.asset_folder = application.asset_folder.parent.parent
+p = <olive>Entity</olive>(<olive>model</olive>=Cone(<yellow>5</yellow>), <olive>y</olive>=<yellow>1</yellow>, <olive>texture</olive>=<green>'brick'</green>)
+p.model.uvs = [(v[<yellow>0</yellow>],v[<yellow>1</yellow>]) <purple>for</purple> v in p.model.vertices]
+p.model.generate()
+p.shader = instancing_shader
+p.setInstanceCount(<yellow>2</yellow><yellow>5</yellow><yellow>6</yellow>)
+
+<purple>for</purple> z in <blue>range</blue>(<yellow>1</yellow><yellow>6</yellow>):
+    <purple>for</purple> x in <blue>range</blue>(<yellow>1</yellow><yellow>6</yellow>):
+        e = <olive>Entity</olive>(<olive>position</olive>=Vec3(x, <yellow>0</yellow>, z), <olive>color</olive>=color.lime, rotation_<olive>y</olive>=random.random()*<yellow>3</yellow><yellow>6</yellow><yellow>0</yellow>)
+        instances.append(e)
+        <blue>print</blue>(e.quaternion, Quat())
+
+p.set_shader_input(<green>'position_offsets'</green>, [e.position*<yellow>4</yellow> <purple>for</purple> e in instances])
+p.set_shader_input(<green>'rotation_offsets'</green>, [e.quaternion <purple>for</purple> e in instances])
+p.set_shader_input(<green>'scale_multipliers'</green>,[e.scale*random.uniform(.<yellow>9</yellow>,<yellow>2</yellow>) <purple>for</purple> e in instances])
+
+<blue>print</blue>(len(p.model.vertices) * len(instances))
+EditorCamera()
+
+app.run()
+</div>
+
+</div>
+<br>
+    <div class="class_box" id="triplanar_shader">
+        <h1>triplanar_shader</h1>
+        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/triplanar_shader.py"><gray>ursina/shaders/triplanar_shader</gray></a><br><br>
+        <table> <!-- attributes -->
+            <tr>
+                <td>default_input</td><td></td>
+            </tr>
+            <tr>
+                <td>    'texture_scale' : Vec2(1,1),</td><td></td>
+            </tr>
+            <tr>
+                <td>    'side_texture' : 'brick',</td><td></td>
+            </tr>
+            <tr>
+                <td>    'side_texture_scale' : Vec2(1,1),</td><td></td>
+            </tr>
+        </table><br>
+        </table><br>
+    <div><gray>example:</gray></div>
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina.prefabs.primitives <purple>import</purple> *
+app = Ursina()
+window.<olive>color</olive>=color.black
+
+shader = triplanar_shader
+
+a = Draggable(<olive>parent</olive>=scene, <olive>model</olive>=<green>'cube'</green>, <olive>shader</olive>=shader, <olive>texture</olive>=load_texture(<green>'brick'</green>), plane_direction=Vec3(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>0</yellow>))
+t = load_texture(<green>'brick'</green>)._texture
+<blue>print</blue>(<green>'------'</green>, type(t))
+a.set_shader_input(<green>'side_texture'</green>, load_texture(<green>'brick'</green>))
+
+b = AzureSphere(<olive>shader</olive>=shader, rotation_<olive>y</olive>=<yellow>1</yellow><yellow>8</yellow><yellow>0</yellow>, x=<yellow>3</yellow>, <olive>texture</olive>=<green>'grass'</green>)
+b.texture.filtering = False
+GrayPlane(<olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>y</olive>=-<yellow>2</yellow>, <olive>texture</olive>=<green>'shore'</green>)
+b.set_shader_input(<green>'side_texture'</green>, load_texture(<green>'brick'</green>))
+
+Sky(<olive>color</olive>=color.light_gray)
+EditorCamera()
+
+<purple>def</purple> set_side_texture_scale():
+    value = side_texture_scale_slider.value
+    b.set_shader_input(<green>'side_texture_scale'</green>, Vec2(value, value))
+    a.set_shader_input(<green>'side_texture_scale'</green>, Vec2(value, value))
+
+side_texture_scale_slider = Slider(<olive>text</olive>=<green>'side_texture_scale'</green>, min=<yellow>0</yellow>, max=<yellow>1</yellow><yellow>0</yellow>, default=<yellow>1</yellow>, dynamic=True, on_value_changed=set_side_texture_scale)
+
+
+<purple>def</purple> update():
+    b.rotation_y += <yellow>1</yellow>
+    b.rotation_x += <yellow>1</yellow>
+
+app.run()
+</div>
+
+</div>
+<br>
+    <div class="class_box" id="normals_shader">
+        <h1>normals_shader</h1>
+        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/normals_shader.py"><gray>ursina/shaders/normals_shader</gray></a><br><br>
+        <table> <!-- attributes -->
+        </table><br>
+        </table><br>
+    <div><gray>example:</gray></div>
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina.prefabs.primitives <purple>import</purple> *
+app = Ursina()
+window.<olive>color</olive>=color.black
+
+shader = normals_shader
+
+a = WhiteCube(<olive>shader</olive>=shader)
+b = AzureSphere(rotation_<olive>y</olive>=<yellow>1</yellow><yellow>8</yellow><yellow>0</yellow>, x=<yellow>3</yellow>)
+b.shader = shader
+GrayPlane(<olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>y</olive>=-<yellow>2</yellow>, <olive>texture</olive>=<green>'shore'</green>)
+
+Sky(<olive>color</olive>=color.light_gray)
+EditorCamera()
+
+<purple>def</purple> update():
+    b.rotation_z += <yellow>1</yellow>
+    b.rotation_y += <yellow>1</yellow>
+    b.rotation_x += <yellow>1</yellow>
+
+app.run()
+</div>
+
+</div>
+<br>
+    <div class="class_box" id="transition_shader">
+        <h1>transition_shader</h1>
+        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/transition_shader.py"><gray>ursina/shaders/transition_shader</gray></a><br><br>
+        <table> <!-- attributes -->
+        </table><br>
+        </table><br>
+    <div><gray>example:</gray></div>
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+app = Ursina()
+window.color = color._<yellow>1</yellow><yellow>6</yellow>
+Texture.default_filtering = <green>'bilinear'</green>
+
+e = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>shader</olive>=transition_shader, <olive>scale</olive>=<yellow>5</yellow>, cutoff=<yellow>0</yellow>)
+mask = load_texture(<green>'transition_shader_example_texture'</green>)
+<blue>print</blue>(mask)
+e.set_shader_input(<green>'mask_texture'</green>, mask)
+EditorCamera()
+
+cutoff_slider = Slider(<yellow>0</yellow>, <yellow>1</yellow>, dynamic=True, <olive>y</olive>=-.<yellow>4</yellow>)
+<purple>def</purple> on_value_changed():
+    e.set_shader_input(<green>'cutoff'</green>, cutoff_slider.value)
+cutoff_slider.on_value_changed = on_value_changed
+
+smooth_slider = Slider(<yellow>0</yellow>, <yellow>1</yellow>, dynamic=True, <olive>y</olive>=-.<yellow>4</yellow><yellow>5</yellow>)
+<purple>def</purple> on_value_changed():
+    e.set_shader_input(<green>'smooth_size'</green>, smooth_slider.value)
+smooth_slider.on_value_changed = on_value_changed
+
+<purple>def</purple> input(key):
+    <purple>if</purple> key == <green>'space'</green>:
+        e.cutoff = <yellow>0</yellow>
+        e.animate(<green>'cutoff'</green>, <yellow>1</yellow>, duration=.<yellow>1</yellow>, <olive>curve</olive>=curve.linear, dela<olive>y</olive>=.<yellow>0</yellow><yellow>5</yellow>)
+
+
+app.run()
+</div>
+
+</div>
+<br>
+    <div class="class_box" id="fxaa">
+        <h1>fxaa</h1>
+        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/screenspace_shaders/fxaa.py"><gray>ursina/shaders/screenspace_shaders/fxaa</gray></a><br><br>
+        <table> <!-- attributes -->
+            <tr>
+                <td>default_input</td><td></td>
+            </tr>
+            <tr>
+                <td>    'window_size': Vec2(1280,720),</td><td></td>
+            </tr>
+        </table><br>
+        </table><br>
+    <div><gray>example:</gray></div>
+    <div class="example">app = Ursina()
+window.<olive>color</olive>=color.black
+
+<olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>y</olive>=-<yellow>2</yellow>, <olive>texture</olive>=<green>'shore'</green>)
+EditorCamera()
+<olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>color</olive>=color.red, double_sided=True)
+<olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>color</olive>=color.green, <olive>z</olive>=-.<yellow>0</yellow><yellow>0</yellow><yellow>1</yellow>, <olive>scale</olive>=.<yellow>5</yellow>, <olive>texture</olive>=<green>'circle'</green>)
+camera.shader = fxaa_shader
+camera.clip_plane_far=<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>
+Sky()
+
+<purple>def</purple> input(key):
+    <purple>if</purple> key == <green>'space'</green>:
+        <purple>if</purple> <purple>not</purple> camera.shader:
+            camera.shader = fxaa_shader
+        <purple>else</purple>:
+            camera.shader = None
+
+
+app.run()
+</div>
+
+</div>
+<br>
+    <div class="class_box" id="ssao">
+        <h1>ssao</h1>
+        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/screenspace_shaders/ssao.py"><gray>ursina/shaders/screenspace_shaders/ssao</gray></a><br><br>
+        <table> <!-- attributes -->
+        </table><br>
+        </table><br>
+    <div><gray>example:</gray></div>
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+app = Ursina()
+
+e = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, <olive>color</olive>=color.orange)
+e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=-<yellow>1</yellow>)
+e = <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>, <olive>y</olive>=-<yellow>1</yellow>)
+camera.shader = ssao_shader
+camera.clip_plane_near = <yellow>1</yellow>
+
+EditorCamera()
+
+<purple>def</purple> input(key):
+    <purple>if</purple> key == <green>'space'</green>:
+        <purple>if</purple> camera.shader:
+            camera.shader = None
+        <purple>else</purple>:
+            camera.shader = ssao_shader
+
+
+random.seed(<yellow>2</yellow>)
+<purple>for</purple> i in <blue>range</blue>(<yellow>2</yellow><yellow>0</yellow>):
+    e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>position</olive>=Vec3(random.random(),random.random(),random.random())*<yellow>3</yellow>, <olive>rotation</olive>=Vec3(random.random(),random.random(),random.random())*<yellow>3</yellow><yellow>6</yellow><yellow>0</yellow>)
+app.run()
+</div>
+
+</div>
+<br>
+    <div class="class_box" id="camera_outline_shader">
+        <h1>camera_outline_shader</h1>
+        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/screenspace_shaders/camera_outline_shader.py"><gray>ursina/shaders/screenspace_shaders/camera_outline_shader</gray></a><br><br>
+        <table> <!-- attributes -->
+        </table><br>
+        </table><br>
+    <div><gray>example:</gray></div>
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+app = Ursina()
+<olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>texture</olive>=<green>'white_cube'</green>, <olive>color</olive>=color.red)
+<olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>texture</olive>=<green>'white_cube'</green>, <olive>color</olive>=color.white, x=<yellow>1</yellow>.<yellow>1</yellow>)
+<olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, <olive>texture</olive>=<green>'white_cube'</green>, <olive>color</olive>=color.gray, <olive>y</olive>=<yellow>1</yellow>.<yellow>1</yellow>)
+camera.shader = empty_shader
+<blue>print</blue>(camera.shader)
+
+t = <yellow>0</yellow>
+frame = <yellow>0</yellow>
+
+
+<purple>def</purple> update():
+  global t, frame
+  t += time.dt
+
+  frame += <yellow>1</yellow>
+
+
+EditorCamera()
+
+app.run()
+</div>
+
+</div>
+<br>
+    <div class="class_box" id="pixelation_shader">
+        <h1>pixelation_shader</h1>
+        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/screenspace_shaders/pixelation_shader.py"><gray>ursina/shaders/screenspace_shaders/pixelation_shader</gray></a><br><br>
+        <table> <!-- attributes -->
+        </table><br>
+        </table><br>
+    <div><gray>example:</gray></div>
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+app = Ursina()
+
+e = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, <olive>color</olive>=color.orange)
+e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=-<yellow>1</yellow>)
+camera.shader = pixelation_shader
+EditorCamera()
+
+app.run()
+</div>
+
+</div>
+<br>
+    <div class="class_box" id="camera_contrast">
+        <h1>camera_contrast</h1>
+        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/screenspace_shaders/camera_contrast.py"><gray>ursina/shaders/screenspace_shaders/camera_contrast</gray></a><br><br>
+        <table> <!-- attributes -->
+            <tr>
+                <td>default_input</td><td></td>
+            </tr>
+            <tr>
+                <td>    'contrast': 1,</td><td></td>
+            </tr>
+        </table><br>
+        </table><br>
+    <div><gray>example:</gray></div>
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+app = Ursina()
+
+e = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>)
+e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=-<yellow>1</yellow>)
+camera.shader = camera_contrast_shader
+camera.set_shader_input(<green>'contrast'</green>, <yellow>1</yellow>)
+
+slider = ThinSlider(max=<yellow>2</yellow>, dynamic=True, <olive>position</olive>=(-.<yellow>2</yellow><yellow>5</yellow>, -.<yellow>4</yellow><yellow>5</yellow>))
+<purple>def</purple> adjust_contrast():
+    camera.set_shader_input("contrast", slider.value)
+slider.on_value_changed = adjust_contrast
+
+EditorCamera()
+
+app.run()
+</div>
+
+</div>
+<br>
+    <div class="class_box" id="camera_vertical_blur">
+        <h1>camera_vertical_blur</h1>
+        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/screenspace_shaders/camera_vertical_blur.py"><gray>ursina/shaders/screenspace_shaders/camera_vertical_blur</gray></a><br><br>
+        <table> <!-- attributes -->
+            <tr>
+                <td>default_input</td><td></td>
+            </tr>
+            <tr>
+                <td>=dict(</td><td></td>
+            </tr>
+            <tr>
+                <td>    blur_size<gray> = .1</gray></td><td></td>
+            </tr>
+        </table><br>
+        </table><br>
+    <div><gray>example:</gray></div>
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+app = Ursina()
+window.color = color._<yellow>1</yellow><yellow>6</yellow>
+
+e = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, <olive>color</olive>=color.orange)
+e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=-<yellow>1</yellow>)
+camera.shader = camera_vertical_blur_shader
+
+
+slider = ThinSlider(max=.<yellow>1</yellow>, dynamic=True, <olive>position</olive>=(-.<yellow>2</yellow><yellow>5</yellow>, -.<yellow>4</yellow><yellow>5</yellow>))
+
+<purple>def</purple> set_blur():
+    <blue>print</blue>(slider.value)
+    camera.set_shader_input("blur_size", slider.value)
+
+<purple>def</purple> update():
+    camera.set_shader_input(<green>'blur_size'</green>, mouse.x)
+
+
+slider.on_value_changed = set_blur
+EditorCamera()
+
+app.run()
+</div>
+
+</div>
+<br>
+    <div class="class_box" id="camera_grayscale">
+        <h1>camera_grayscale</h1>
+        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/screenspace_shaders/camera_grayscale.py"><gray>ursina/shaders/screenspace_shaders/camera_grayscale</gray></a><br><br>
+        <table> <!-- attributes -->
+        </table><br>
+        </table><br>
+    <div><gray>example:</gray></div>
+    <div class="example"><purple>from</purple> ursina <purple>import</purple> *
+app = Ursina()
+
+e = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, <olive>color</olive>=color.orange)
+e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=-<yellow>1</yellow>)
+camera.shader = camera_grayscale_shader
+EditorCamera()
+
+<purple>def</purple> input(key):
+    <purple>if</purple> key == <green>'space'</green>:
+        <purple>if</purple> camera.shader:
+            camera.shader = None
+        <purple>else</purple>:
+            camera.shader = camera_grayscale_shader
+
+
+app.run()
+</div>
 
 </div>
 <br>
