@@ -358,6 +358,9 @@ class Entity(NodePath, metaclass=PostInitCaller):
         if isinstance(value, Collider):
             self._collider = value
 
+        if isinstance(value, str) and value not in ('box', 'sphere', 'capsule', 'mesh'):
+            raise ValueError(f"Incorrect value for auto-fitted collider: {value}. Choose one of: 'box', 'sphere', 'capsule', 'mesh'")
+
         elif value == 'box':
             if self.model:
                 _bounds = self.model_bounds
