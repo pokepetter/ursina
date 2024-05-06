@@ -188,7 +188,8 @@ def load_blender_scene(name, path=Func(getattr, application, 'asset_folder'), re
 
 def get_blender(blend_file):    # try to get a matching blender version in case we have multiple blender version installed
     if not application.blender_paths:
-        raise Exception('error: trying to load .blend file, but no blender installation was found. blender_paths:', application.blender_paths)
+        print_warning('error: trying to load .blend file, but no blender installation was found. blender_paths:', application.blender_paths)
+        return None
 
     if len(application.blender_paths) == 1:
         return application.blender_paths['default']
