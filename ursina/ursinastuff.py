@@ -35,17 +35,14 @@ def invoke(function, *args, **kwargs):  # reserved keywords: 'delay', 'unscaled'
         function(*args, **kwargs)
         return None
 
-    s = Sequence(
-        Wait(delay),
-        Func(function, *args, **kwargs)
-    )
-    s.ignore_paused = ignore_paused
-    s.unscaled = unscaled
-    if s.ignore_paused:
-        s.unscaled = True
+    if ignore_paused:
+        unscaled = True
 
-    s.start()
-    return s
+    return Sequence(
+        Wait(delay),
+        Func(function, *args, **kwargs),
+        auto_destroy=True, ignore_paused=ignore_paused, unscaled=unscaled, started=True,
+    )
 
 
 def after(delay, unscaled=True):    # function for @after decorator. Use the docrator, not this.
@@ -68,16 +65,15 @@ def after(delay, unscaled=True):    # function for @after decorator. Use the doc
 def destroy(entity, delay=0):
     if delay == 0:
         _destroy(entity)
-        return
+        return True
 
-    s = Sequence(Wait(delay), Func(_destroy, entity))
-    s.start()
-    return s
+    return Sequence(Wait(delay), Func(_destroy, entity), auto_destroy=True, started=True)
+
 
 def _destroy(entity, force_destroy=False):
-    from ursina import camera
-    if not entity or entity == camera:
-        return
+    # from ursina import camera
+    # if not entity or entity == camera:
+    #     return
 
     if entity.eternal and not force_destroy:
         return
@@ -246,6 +242,12 @@ if __name__ == '__main__':
     app = Ursina()
 
 
-
+    list_2d = [
+        [1,0,0,1, 0, 1,1,1,0, 0, 1,1,1,1, 0, 0,1,0,0],
+        [1,0,0,1, 0, 1,0,0,1, 0, 1,1,1,0, 0, 0,1,0,0],
+        [1,0,0,1, 0, 1,1,1,0, 0, 0,0,0,1, 0, 0,1,0,0],
+        [0,1,1,0, 0, 1,0,0,1, 0, 1,1,1,1, 0, 0,1,0,0],
+    ]
+    print(list_2d_to_string(list_2d))
     # Player()
     app.run()
