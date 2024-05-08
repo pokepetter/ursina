@@ -154,10 +154,18 @@ def flatten_completely(target_list):
             yield i
 
 
-def enumerate_2d(array):    # usage: for (x, y), value in enumerate_2d(my_2d_list)
-    for x, line in enumerate(array):
+def enumerate_2d(target_2d_list):    # usage: for (x, y), value in enumerate_2d(my_2d_list)
+    for x, line in enumerate(target_2d_list):
         for y, value in enumerate(line):
             yield (x, y), value
+
+
+def rotate_2d_list(target_2d_list):
+    return list(zip(*target_2d_list[::-1]))   # rotate
+
+
+def list_2d_to_string(target_2d_list, characters='.#'):
+    return '\n'.join([''.join([characters[e] for e in line]) for line in target_2d_list])
 
 
 def size_list():    # return a list of current python objects sorted by size
