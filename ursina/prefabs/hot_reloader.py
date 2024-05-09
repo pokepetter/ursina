@@ -191,7 +191,8 @@ class HotReloader(Entity):
                 mesh_importer.imported_meshes.pop(name, None)
 
             # print('model is made from .blend file:', model_path)
-            mesh_importer.compress_models(path=model_path.parent, name=name)
+            mesh_importer.blend_to_obj(model_path)
+            mesh_importer.obj_to_ursinamesh(application.compressed_models_folder, application.compressed_models_folder, return_mesh=True, save_to_file=False, delete_obj=True).save(f'{name}.bam')
             # print(f'compressed {name}.blend sucessfully')
             changed_models.append(name)
 
