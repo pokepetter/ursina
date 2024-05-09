@@ -6,9 +6,10 @@ pip install ursina
 ```
 
 
-If you want to install the newest version from GitHub, you can install like this:
+If you want to install the newest version from GitHub, you can install like this.
 ```
-pip install https://github.com/pokepetter/ursina/archive/master.zip --upgrade --force-reinstall
+pip uninstall ursina
+pip install https://github.com/pokepetter/ursina/archive/master.zip
 ```
 
 
@@ -19,7 +20,7 @@ If you want to easily edit the source, it's recommended to clone the git
 repo and install as develop like this. Make sure you have git installed. https://git-scm.com/
 ```
 git clone https://github.com/pokepetter/ursina.git
-python setup.py develop
+pip install --editable .
 ```
 
 Also install any of the optional dependencies you want from the list below,
