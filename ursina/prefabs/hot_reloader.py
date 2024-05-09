@@ -161,26 +161,37 @@ class HotReloader(Entity):
 
 
     def reload_models(self):
+        print('reloading models...')
         entities = [e for e in scene.entities if e.model]
-        unique_names = list({e.model.name.split('.')[0] for e in entities})
+        unique_names = list(set(e.model.name.split('.')[0] for e in entities))
         # print(unique_names)
-        changed_models = list()
+        changed_models = []
 
         for name in unique_names:
             matches = [e for e in application.asset_folder.glob(f'**/{name}.blend')]
+
+            if not matches or not application.blender_paths:    # reload bam files converted from obj
+                [e for e in application.asset_folder.glob(f'**/{name}.obj')]
+                if matches:
+                    m = mesh_importer.load_model(f'{matches[0]}.obj')
+                    print('-----------------load:', f'{matches[0]}.obj', m)
+                    mesh_importer.imported_meshes[name] = m
+                    changed_models.append(name)
+                    continue
+
             if not matches:
                 continue
 
-            blend_path = matches[0]
+            model_path = matches[0]
             # ignore internal models
-            if blend_path.parent == application.internal_models_folder or '/build/' in str(blend_path):
+            if model_path.parent == application.internal_models_folder or '/build/' in str(model_path):
                 continue
 
             if name in mesh_importer.imported_meshes:
                 mesh_importer.imported_meshes.pop(name, None)
 
-            # print('model is made from .blend file:', blend_path)
-            mesh_importer.compress_models(path=blend_path.parent, name=name)
+            # print('model is made from .blend file:', model_path)
+            mesh_importer.compress_models(path=model_path.parent, name=name)
             # print(f'compressed {name}.blend sucessfully')
             changed_models.append(name)
 
@@ -188,12 +199,12 @@ class HotReloader(Entity):
         for e in entities:
             if e.model:
                 name = e.model.name.split('.')[0]
-                print(name, changed_models, name in changed_models)
+                # print(name, changed_models, name in changed_models)
                 if name in changed_models:
                     e.model = None
                     e.model = name
                     e.origin = e.origin
-                    print('reloaded model:', name, e.model)
+                    print('reloaded model:', name)
 
 
     def reload_shaders(self):
