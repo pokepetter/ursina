@@ -10,11 +10,8 @@ class Func:
         self.func = func
         self.args = args
         self.kwargs = kwargs
-        # self.delay = 0
-        # self.finished = False
 
     def __call__ (self):
-        # self.finished = True
         return self.func(*self.args, **self.kwargs)
 
 
