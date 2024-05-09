@@ -126,6 +126,7 @@ class HotReloader(Entity):
         t = time.time()
         try:
             d = dict(locals(), **globals())
+            d['__name__'] = '__main__'
             application.paused = True
             exec(text, d, d)
 

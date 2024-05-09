@@ -123,6 +123,9 @@ table span {
     padding-bottom: 1px;
     /* padding-left: 5px; */
 }
+tr {
+    vertical-align: top;
+}
 tr:hover {
     color: var(--variable_text_color_hovered);
 }

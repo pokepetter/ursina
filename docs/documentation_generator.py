@@ -234,7 +234,7 @@ def get_class_scope_variables(str):
 
 def get_class_attributes(str):
     attributes = []
-    lines = str.split('\n')
+    lines = [l for l in str.split('\n') if not l.strip().startswith('#')]
     start = 0
     end = len(lines)
     for i, line in enumerate(lines):
@@ -699,7 +699,7 @@ for group_name, group in groups.items():
             for prop in data.properties:
                 html += (
                     f'            <tr>\n'
-                    f'                <td>.{prop.name}</td><td><span>{prop.comment}</span></td>\n'
+                    f'                <td>.{prop.name}</td><td><span>{prop.comment[1:].strip()}</span></td>\n'
                     f'            </tr>\n'
                 )
             html += '        </table><br>\n'
@@ -712,7 +712,7 @@ for group_name, group in groups.items():
         for function in data.functions:
             html += (
                 f'''            <tr>\n'''
-                f'''                <td> &nbsp;{function.name}(<gray>{function.parameters}</gray>) <span>{function.comment[2:]}</span></td>\n'''
+                f'''                <td> &nbsp;{function.name}(<gray>{function.parameters}</gray>)</td> <td><span>{function.comment[1:].strip}</span></td>\n'''
                 f'''            </tr>\n'''
             )
 
