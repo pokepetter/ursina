@@ -220,7 +220,7 @@ def get_classes(str):
 def get_class_scope_variables(str):
     vars = []
     for i, line in enumerate(str.split('\n')):
-        if not line:
+        if not line or line.strip().endswith(','):
             continue
         if line.strip().startswith('_'):
             continue
@@ -712,7 +712,7 @@ for group_name, group in groups.items():
         for function in data.functions:
             html += (
                 f'''            <tr>\n'''
-                f'''                <td> &nbsp;{function.name}(<gray>{function.parameters}</gray>)</td> <td><span>{function.comment[1:].strip}</span></td>\n'''
+                f'''                <td> &nbsp;{function.name}(<gray>{function.parameters}</gray>)</td> <td><span>{function.comment[1:].strip()}</span></td>\n'''
                 f'''            </tr>\n'''
             )
 

@@ -251,22 +251,22 @@ function copy_to_clipboard(containerid) {
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;input_up(<gray>key, is_raw=False</gray>) <span>internal method for key release</span></td>
+                <td> &nbsp;input_up(<gray>key, is_raw=False</gray>)</td> <td><span>internal method for key release</span></td>
             </tr>
             <tr>
-                <td> &nbsp;input_hold(<gray>key, is_raw=False</gray>) <span>internal method for handling repeating input that occurs when you hold the key</span></td>
+                <td> &nbsp;input_hold(<gray>key, is_raw=False</gray>)</td> <td><span>internal method for handling repeating input that occurs when you hold the key</span></td>
             </tr>
             <tr>
-                <td> &nbsp;input(<gray>key, is_raw=False</gray>) <span>internal method for handling input</span></td>
+                <td> &nbsp;input(<gray>key, is_raw=False</gray>)</td> <td><span>internal method for handling input</span></td>
             </tr>
             <tr>
-                <td> &nbsp;text_input(<gray>key</gray>) <span>internal method for handling text input</span></td>
+                <td> &nbsp;text_input(<gray>key</gray>)</td> <td><span>internal method for handling text input</span></td>
             </tr>
             <tr>
-                <td> &nbsp;step(<gray>): # use this control the update loop yourself. call app.step() in a while loop for example, instead of app.run(</gray>) <span>use this control the update loop yourself. call app.step() in a while loop for example, instead of app.run()</span></td>
+                <td> &nbsp;step(<gray>): # use this control the update loop yourself. call app.step() in a while loop for example, instead of app.run(</gray>)</td> <td><span>use this control the update loop yourself. call app.step() in a while loop for example, instead of app.run()</span></td>
             </tr>
             <tr>
-                <td> &nbsp;run(<gray>info=True</gray>) <span></span></td>
+                <td> &nbsp;run(<gray>info=True</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -324,22 +324,22 @@ app.run()
         <div><gray>properties:</gray></div>
         <table>
             <tr>
-                <td>.enabled</td><td><span># disabled entities will not be visible nor run code.</span></td>
+                <td>.enabled</td><td><span>disabled entities will not be visible nor run code.</span></td>
             </tr>
             <tr>
-                <td>.model</td><td><span># set model with model='model_name' (without file type extension)</span></td>
+                <td>.model</td><td><span>set model with model='model_name' (without file type extension)</span></td>
             </tr>
             <tr>
                 <td>.color</td><td><span></span></td>
             </tr>
             <tr>
-                <td>.eternal</td><td><span># eternal entities does not get destroyed on scene.clear()</span></td>
+                <td>.eternal</td><td><span>eternal entities does not get destroyed on scene.clear()</span></td>
             </tr>
             <tr>
                 <td>.double_sided</td><td><span></span></td>
             </tr>
             <tr>
-                <td>.render_queue</td><td><span># for custom sorting in case of conflict. To sort things in 2d, set .z instead of using this.</span></td>
+                <td>.render_queue</td><td><span>for custom sorting in case of conflict. To sort things in 2d, set .z instead of using this.</span></td>
             </tr>
             <tr>
                 <td>.parent</td><td><span></span></td>
@@ -348,22 +348,22 @@ app.run()
                 <td>.loose_parent</td><td><span></span></td>
             </tr>
             <tr>
-                <td>.world_parent</td><td><span># change the parent, but keep position, rotation and scale</span></td>
+                <td>.world_parent</td><td><span>change the parent, but keep position, rotation and scale</span></td>
             </tr>
             <tr>
-                <td>.types</td><td><span># get all class names including those this inhertits from.</span></td>
+                <td>.types</td><td><span>get all class names including those this inhertits from.</span></td>
             </tr>
             <tr>
                 <td>.visible</td><td><span></span></td>
             </tr>
             <tr>
-                <td>.visible_self</td><td><span># set visibility of self, without affecting children.</span></td>
+                <td>.visible_self</td><td><span>set visibility of self, without affecting children.</span></td>
             </tr>
             <tr>
-                <td>.collider</td><td><span># set to 'box'/'sphere'/'capsule'/'mesh' for auto fitted collider.</span></td>
+                <td>.collider</td><td><span>set to 'box'/'sphere'/'capsule'/'mesh' for auto fitted collider.</span></td>
             </tr>
             <tr>
-                <td>.collision</td><td><span># toggle collision without changing collider.</span></td>
+                <td>.collision</td><td><span>toggle collision without changing collider.</span></td>
             </tr>
             <tr>
                 <td>.on_click</td><td><span></span></td>
@@ -393,7 +393,7 @@ app.run()
                 <td>.world_z</td><td><span></span></td>
             </tr>
             <tr>
-                <td>.position</td><td><span># right, up, forward. can also set self.x, self.y, self.z</span></td>
+                <td>.position</td><td><span>right, up, forward. can also set self.x, self.y, self.z</span></td>
             </tr>
             <tr>
                 <td>.x</td><td><span></span></td>
@@ -405,13 +405,13 @@ app.run()
                 <td>.z</td><td><span></span></td>
             </tr>
             <tr>
-                <td>.X</td><td><span># shortcut for int(entity.x)</span></td>
+                <td>.X</td><td><span>shortcut for int(entity.x)</span></td>
             </tr>
             <tr>
-                <td>.Y</td><td><span># shortcut for int(entity.y)</span></td>
+                <td>.Y</td><td><span>shortcut for int(entity.y)</span></td>
             </tr>
             <tr>
-                <td>.Z</td><td><span># shortcut for int(entity.z)</span></td>
+                <td>.Z</td><td><span>shortcut for int(entity.z)</span></td>
             </tr>
             <tr>
                 <td>.world_rotation</td><td><span></span></td>
@@ -426,7 +426,7 @@ app.run()
                 <td>.world_rotation_z</td><td><span></span></td>
             </tr>
             <tr>
-                <td>.rotation</td><td><span># can also set self.rotation_x, self.rotation_y, self.rotation_z</span></td>
+                <td>.rotation</td><td><span>can also set self.rotation_x, self.rotation_y, self.rotation_z</span></td>
             </tr>
             <tr>
                 <td>.rotation_x</td><td><span></span></td>
@@ -453,7 +453,7 @@ app.run()
                 <td>.world_scale_z</td><td><span></span></td>
             </tr>
             <tr>
-                <td>.scale</td><td><span># can also set self.scale_x, self.scale_y, self.scale_z</span></td>
+                <td>.scale</td><td><span>can also set self.scale_x, self.scale_y, self.scale_z</span></td>
             </tr>
             <tr>
                 <td>.scale_x</td><td><span></span></td>
@@ -465,31 +465,31 @@ app.run()
                 <td>.scale_z</td><td><span></span></td>
             </tr>
             <tr>
-                <td>.transform</td><td><span># get/set position, rotation and scale</span></td>
+                <td>.transform</td><td><span>get/set position, rotation and scale</span></td>
             </tr>
             <tr>
-                <td>.world_transform</td><td><span># get/set world_position, world_rotation and world_scale</span></td>
+                <td>.world_transform</td><td><span>get/set world_position, world_rotation and world_scale</span></td>
             </tr>
             <tr>
-                <td>.forward</td><td><span># get forward direction.</span></td>
+                <td>.forward</td><td><span>get forward direction.</span></td>
             </tr>
             <tr>
-                <td>.back</td><td><span># get backwards direction.</span></td>
+                <td>.back</td><td><span>get backwards direction.</span></td>
             </tr>
             <tr>
-                <td>.right</td><td><span># get right direction.</span></td>
+                <td>.right</td><td><span>get right direction.</span></td>
             </tr>
             <tr>
-                <td>.left</td><td><span># get left direction.</span></td>
+                <td>.left</td><td><span>get left direction.</span></td>
             </tr>
             <tr>
-                <td>.up</td><td><span># get up direction.</span></td>
+                <td>.up</td><td><span>get up direction.</span></td>
             </tr>
             <tr>
-                <td>.down</td><td><span># get down direction.</span></td>
+                <td>.down</td><td><span>get down direction.</span></td>
             </tr>
             <tr>
-                <td>.screen_position</td><td><span># get screen position(ui space) from world space.</span></td>
+                <td>.screen_position</td><td><span>get screen position(ui space) from world space.</span></td>
             </tr>
             <tr>
                 <td>.shader</td><td><span></span></td>
@@ -498,37 +498,37 @@ app.run()
                 <td>.shader_input</td><td><span></span></td>
             </tr>
             <tr>
-                <td>.material</td><td><span># a way to set shader, texture, texture_scale, texture_offset and shader inputs in one go</span></td>
+                <td>.material</td><td><span>a way to set shader, texture, texture_scale, texture_offset and shader inputs in one go</span></td>
             </tr>
             <tr>
-                <td>.texture</td><td><span># set model with texture='texture_name'. requires a model to be set beforehand.</span></td>
+                <td>.texture</td><td><span>set model with texture='texture_name'. requires a model to be set beforehand.</span></td>
             </tr>
             <tr>
-                <td>.texture_scale</td><td><span># how many times the texture should repeat, eg. texture_scale=(8,8).</span></td>
+                <td>.texture_scale</td><td><span>how many times the texture should repeat, eg. texture_scale=(8,8).</span></td>
             </tr>
             <tr>
                 <td>.texture_offset</td><td><span></span></td>
             </tr>
             <tr>
-                <td>.tileset_size</td><td><span># if the texture is a tileset, say how many tiles there are so it only use one tile of the texture, e.g. tileset_size=[8,4]</span></td>
+                <td>.tileset_size</td><td><span>if the texture is a tileset, say how many tiles there are so it only use one tile of the texture, e.g. tileset_size=[8,4]</span></td>
             </tr>
             <tr>
-                <td>.tile_coordinate</td><td><span># set the tile coordinate, starts in the lower left.</span></td>
+                <td>.tile_coordinate</td><td><span>set the tile coordinate, starts in the lower left.</span></td>
             </tr>
             <tr>
-                <td>.alpha</td><td><span># shortcut for setting color's transparency/opacity</span></td>
+                <td>.alpha</td><td><span>shortcut for setting color's transparency/opacity</span></td>
             </tr>
             <tr>
                 <td>.always_on_top</td><td><span></span></td>
             </tr>
             <tr>
-                <td>.unlit</td><td><span># set to True to ignore light and not cast shadows</span></td>
+                <td>.unlit</td><td><span>set to True to ignore light and not cast shadows</span></td>
             </tr>
             <tr>
-                <td>.billboard</td><td><span># set to True to make this Entity always face the camera.</span></td>
+                <td>.billboard</td><td><span>set to True to make this Entity always face the camera.</span></td>
             </tr>
             <tr>
-                <td>.wireframe</td><td><span># set to True to render model as wireframe</span></td>
+                <td>.wireframe</td><td><span>set to True to render model as wireframe</span></td>
             </tr>
             <tr>
                 <td>.model_bounds</td><td><span></span></td>
@@ -546,97 +546,97 @@ app.run()
                 <td>.loose_children</td><td><span></span></td>
             </tr>
             <tr>
-                <td>.attributes</td><td><span># attribute names. used by duplicate().</span></td>
+                <td>.attributes</td><td><span>attribute names. used by duplicate().</span></td>
             </tr>
         </table><br>
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;enable() <span>same as .enabled = True</span></td>
+                <td> &nbsp;enable()</td> <td><span>same as .enabled = True</span></td>
             </tr>
             <tr>
-                <td> &nbsp;disable() <span>same as .enabled = False</span></td>
+                <td> &nbsp;disable()</td> <td><span>same as .enabled = False</span></td>
             </tr>
             <tr>
-                <td> &nbsp;get_shader_input(<gray>name</gray>) <span></span></td>
+                <td> &nbsp;get_shader_input(<gray>name</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;set_shader_input(<gray>name, value</gray>) <span></span></td>
+                <td> &nbsp;set_shader_input(<gray>name, value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;generate_sphere_map(<gray>size=512, name=f'sphere_map_{len(scene.entities)}'</gray>) <span></span></td>
+                <td> &nbsp;generate_sphere_map(<gray>size=512, name=f'sphere_map_{len(scene.entities)}'</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;generate_cube_map(<gray>size=512, name=f'cube_map_{len(scene.entities)}'</gray>) <span></span></td>
+                <td> &nbsp;generate_cube_map(<gray>size=512, name=f'cube_map_{len(scene.entities)}'</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;get_position(<gray>relative_to=scene</gray>) <span>get position relative to on other Entity. In most cases, use .position instead.</span></td>
+                <td> &nbsp;get_position(<gray>relative_to=scene</gray>)</td> <td><span>get position relative to on other Entity. In most cases, use .position instead.</span></td>
             </tr>
             <tr>
-                <td> &nbsp;set_position(<gray>value, relative_to=scene</gray>) <span>set position relative to on other Entity. In most cases, use .position instead.</span></td>
+                <td> &nbsp;set_position(<gray>value, relative_to=scene</gray>)</td> <td><span>set position relative to on other Entity. In most cases, use .position instead.</span></td>
             </tr>
             <tr>
-                <td> &nbsp;rotate(<gray>value, relative_to=None</gray>) <span>rotate around local axis.</span></td>
+                <td> &nbsp;rotate(<gray>value, relative_to=None</gray>)</td> <td><span>rotate around local axis.</span></td>
             </tr>
             <tr>
-                <td> &nbsp;add_script(<gray>class_instance</gray>) <span></span></td>
+                <td> &nbsp;add_script(<gray>class_instance</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;combine(<gray>analyze=False, auto_destroy=True, ignore=[]</gray>) <span></span></td>
+                <td> &nbsp;combine(<gray>analyze=False, auto_destroy=True, ignore=[]</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;look_at(<gray>target, axis='forward', up=None</gray>) <span>up defaults to self.up</span></td>
+                <td> &nbsp;look_at(<gray>target, axis='forward', up=None</gray>)</td> <td><span>up defaults to self.up</span></td>
             </tr>
             <tr>
-                <td> &nbsp;look_at_2d(<gray>target, axis='z'</gray>) <span></span></td>
+                <td> &nbsp;look_at_2d(<gray>target, axis='z'</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;look_at_xy(<gray>target</gray>) <span></span></td>
+                <td> &nbsp;look_at_xy(<gray>target</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;look_at_xz(<gray>target</gray>) <span></span></td>
+                <td> &nbsp;look_at_xz(<gray>target</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;has_ancestor(<gray>possible_ancestor</gray>) <span></span></td>
+                <td> &nbsp;has_ancestor(<gray>possible_ancestor</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;has_disabled_ancestor() <span></span></td>
+                <td> &nbsp;has_disabled_ancestor()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;get_changes(<gray>target_class=None</gray>) <span>returns a dict of all the changes</span></td>
+                <td> &nbsp;get_changes(<gray>target_class=None</gray>)</td> <td><span>returns a dict of all the changes</span></td>
             </tr>
             <tr>
-                <td> &nbsp;animate(<gray>name, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt='kill', time_step=None, unscaled=False, auto_play=True, auto_destroy=True</gray>) <span></span></td>
+                <td> &nbsp;animate(<gray>name, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt='kill', time_step=None, unscaled=False, auto_play=True, auto_destroy=True</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;animate_position(<gray>value, duration=.1, **kwargs</gray>) <span></span></td>
+                <td> &nbsp;animate_position(<gray>value, duration=.1, **kwargs</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;animate_rotation(<gray>value, duration=.1,  **kwargs</gray>) <span></span></td>
+                <td> &nbsp;animate_rotation(<gray>value, duration=.1,  **kwargs</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;animate_scale(<gray>value, duration=.1, **kwargs</gray>) <span></span></td>
+                <td> &nbsp;animate_scale(<gray>value, duration=.1, **kwargs</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;animate_{e}(<gray>value, duration=.1, delay=0, unscaled=False, **kwargs</gray>) <span></span></td>
+                <td> &nbsp;animate_{e}(<gray>value, duration=.1, delay=0, unscaled=False, **kwargs</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;shake(<gray>duration=.2, magnitude=1, speed=.05, direction=(1,1), delay=0, attr_name='position', interrupt='finish', unscaled=False</gray>) <span></span></td>
+                <td> &nbsp;shake(<gray>duration=.2, magnitude=1, speed=.05, direction=(1,1), delay=0, attr_name='position', interrupt='finish', unscaled=False</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;animate_color(<gray>value, duration=.1, interrupt='finish', unscaled=False, **kwargs</gray>) <span></span></td>
+                <td> &nbsp;animate_color(<gray>value, duration=.1, interrupt='finish', unscaled=False, **kwargs</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;fade_out(<gray>value=0, duration=.5, unscaled=False, **kwargs</gray>) <span></span></td>
+                <td> &nbsp;fade_out(<gray>value=0, duration=.5, unscaled=False, **kwargs</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;fade_in(<gray>value=1, duration=.5, **kwargs</gray>) <span></span></td>
+                <td> &nbsp;fade_in(<gray>value=1, duration=.5, **kwargs</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;blink(<gray>value=ursina.color.clear, duration=.1, delay=0, curve=curve.in_expo_boomerang, interrupt='finish', **kwargs</gray>) <span></span></td>
+                <td> &nbsp;blink(<gray>value=ursina.color.clear, duration=.1, delay=0, curve=curve.in_expo_boomerang, interrupt='finish', **kwargs</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;intersects(<gray>traverse_target=scene, ignore:list=None, debug=False</gray>) <span></span></td>
+                <td> &nbsp;intersects(<gray>traverse_target=scene, ignore:list=None, debug=False</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -738,16 +738,16 @@ player = Player(x=-<yellow>1</yellow>)
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;on_mouse_enter() <span></span></td>
+                <td> &nbsp;on_mouse_enter()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;on_mouse_exit() <span></span></td>
+                <td> &nbsp;on_mouse_exit()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;fit_to_text(<gray>radius=.1, padding=Vec2(Text.size*1.5, Text.size)</gray>) <span></span></td>
+                <td> &nbsp;fit_to_text(<gray>radius=.1, padding=Vec2(Text.size*1.5, Text.size)</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -893,16 +893,16 @@ app.run()
                 <td>.font</td><td><span></span></td>
             </tr>
             <tr>
-                <td>.color</td><td><span># sets the default color.</span></td>
+                <td>.color</td><td><span>sets the default color.</span></td>
             </tr>
             <tr>
                 <td>.line_height</td><td><span></span></td>
             </tr>
             <tr>
-                <td>.width</td><td><span># gets the width of the widest line.</span></td>
+                <td>.width</td><td><span>gets the width of the widest line.</span></td>
             </tr>
             <tr>
-                <td>.height</td><td><span># gets the height of the text</span></td>
+                <td>.height</td><td><span>gets the height of the text</span></td>
             </tr>
             <tr>
                 <td>.lines</td><td><span></span></td>
@@ -911,7 +911,7 @@ app.run()
                 <td>.resolution</td><td><span></span></td>
             </tr>
             <tr>
-                <td>.wordwrap</td><td><span># set this to make the text wrap after a certain number of characters.</span></td>
+                <td>.wordwrap</td><td><span>set this to make the text wrap after a certain number of characters.</span></td>
             </tr>
             <tr>
                 <td>.origin</td><td><span></span></td>
@@ -923,22 +923,22 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;text(<gray>text</gray>) <span></span></td>
+                <td> &nbsp;text(<gray>text</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;create_text_section(<gray>text, tag='', x=0, y=0</gray>) <span></span></td>
+                <td> &nbsp;create_text_section(<gray>text, tag='', x=0, y=0</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;align() <span></span></td>
+                <td> &nbsp;align()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;create_background(<gray>padding=size*2, radius=size, color=ursina.color.black66</gray>) <span></span></td>
+                <td> &nbsp;create_background(<gray>padding=size*2, radius=size, color=ursina.color.black66</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;appear(<gray>speed=.025</gray>) <span></span></td>
+                <td> &nbsp;appear(<gray>speed=.025</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;get_width(<gray>string, font=None</gray>) <span></span></td>
+                <td> &nbsp;get_width(<gray>string, font=None</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -1020,7 +1020,7 @@ app.run()
                 <td>.clip</td><td><span></span></td>
             </tr>
             <tr>
-                <td>.length</td><td><span># get the duration of the audio clip.</span></td>
+                <td>.length</td><td><span>get the duration of the audio clip.</span></td>
             </tr>
             <tr>
                 <td>.status</td><td><span></span></td>
@@ -1035,31 +1035,31 @@ app.run()
                 <td>.time</td><td><span></span></td>
             </tr>
             <tr>
-                <td>.balance</td><td><span># pan the audio. should be a value between -.5 and .5. default: 0</span></td>
+                <td>.balance</td><td><span>pan the audio. should be a value between -.5 and .5. default: 0</span></td>
             </tr>
         </table><br>
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;play(<gray>start=0</gray>) <span></span></td>
+                <td> &nbsp;play(<gray>start=0</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;pause() <span></span></td>
+                <td> &nbsp;pause()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;resume() <span></span></td>
+                <td> &nbsp;resume()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;stop(<gray>destroy=True</gray>) <span></span></td>
+                <td> &nbsp;stop(<gray>destroy=True</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;fade(<gray>value, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True</gray>) <span></span></td>
+                <td> &nbsp;fade(<gray>value, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;fade_in(<gray>value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt='finish',</gray>) <span></span></td>
+                <td> &nbsp;fade_in(<gray>value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt='finish',</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;fade_out(<gray>value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt='finish',</gray>) <span></span></td>
+                <td> &nbsp;fade_out(<gray>value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt='finish',</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -1113,40 +1113,40 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;set_up() <span></span></td>
+                <td> &nbsp;set_up()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;orthographic_getter() <span></span></td>
+                <td> &nbsp;orthographic_getter()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;orthographic_setter(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;orthographic_setter(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;fov_getter() <span></span></td>
+                <td> &nbsp;fov_getter()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;fov_setter(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;fov_setter(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;clip_plane_near_getter() <span></span></td>
+                <td> &nbsp;clip_plane_near_getter()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;clip_plane_near_setter(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;clip_plane_near_setter(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;clip_plane_far_getter() <span></span></td>
+                <td> &nbsp;clip_plane_far_getter()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;clip_plane_far_setter(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;clip_plane_far_setter(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;aspect_ratio_getter() <span></span></td>
+                <td> &nbsp;aspect_ratio_getter()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;shader_setter(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;shader_setter(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;set_shader_input(<gray>name, value</gray>) <span></span></td>
+                <td> &nbsp;set_shader_input(<gray>name, value</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -1267,61 +1267,61 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;x() <span></span></td>
+                <td> &nbsp;x()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;x(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;x(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;y() <span></span></td>
+                <td> &nbsp;y()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;y(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;y(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;position() <span></span></td>
+                <td> &nbsp;position()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;position(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;position(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;locked() <span></span></td>
+                <td> &nbsp;locked()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;locked(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;locked(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;visible() <span></span></td>
+                <td> &nbsp;visible()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;visible(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;visible(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;update() <span></span></td>
+                <td> &nbsp;update()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;normal() <span>returns the normal of the polygon, in local space.</span></td>
+                <td> &nbsp;normal()</td> <td><span>returns the normal of the polygon, in local space.</span></td>
             </tr>
             <tr>
-                <td> &nbsp;world_normal() <span>returns the normal of the polygon, in world space.</span></td>
+                <td> &nbsp;world_normal()</td> <td><span>returns the normal of the polygon, in world space.</span></td>
             </tr>
             <tr>
-                <td> &nbsp;point() <span>returns the point hit, in local space</span></td>
+                <td> &nbsp;point()</td> <td><span>returns the point hit, in local space</span></td>
             </tr>
             <tr>
-                <td> &nbsp;world_point() <span>returns the point hit, in world space</span></td>
+                <td> &nbsp;world_point()</td> <td><span>returns the point hit, in world space</span></td>
             </tr>
             <tr>
-                <td> &nbsp;is_outside() <span></span></td>
+                <td> &nbsp;is_outside()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;find_collision() <span></span></td>
+                <td> &nbsp;find_collision()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;unhover_everything_not_hit() <span></span></td>
+                <td> &nbsp;unhover_everything_not_hit()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -1425,18 +1425,15 @@ app.run()
             </tr>
             <tr>
                 <td>.cog_menu<gray> = ButtonList({
-        </gray></td><td><span>'Build' : Func(print, ' '),
         'API Reference' : Func(webbrowser.open, 'https://www.ursinaengine.org/api_reference.html'),
-        # 'Asset Store' : Func(webbrowser.open, 'https://itch.io/tools/tag-ursina'),
         'ursfx (Sound Effect Maker)' : lambda: exec('from ursina.prefabs import ursfx; ursfx.open_gui()'),
-        # 'Open Scene Editor' : Func(print, ' '),
         'Change Render Mode &ltgray&gt[F10]&ltdefault&gt' : self.next_render_mode,
         'Reset Render Mode &ltgray&gt[Shift+F10]&ltdefault&gt' : Func(setattr, self, 'render_mode', 'default'),
         'Toggle Hotreloading &ltgray&gt[F9]&ltdefault&gt' : application.hot_reloader.toggle_hotreloading,
         'Reload Shaders &ltgray&gt[F7]&ltdefault&gt' : application.hot_reloader.reload_shaders,
         'Reload Models &ltgray&gt[F7]&ltdefault&gt' : application.hot_reloader.reload_models,
         'Reload Textures &ltgray&gt[F6]&ltdefault&gt' : application.hot_reloader.reload_textures,
-        'Reload Code &ltgray&gt[F5]&ltdefault&gt' : application.hot_reloader.reload_code,</span></td>
+        'Reload Code &ltgray&gt[F5]&ltdefault&gt' : application.hot_reloader.reload_code,</gray></td><td></td>
             </tr>
             <tr>
                 <td>.cog_button<gray> = Button(parent=self.editor_ui, eternal=True, model='quad', texture='cog', scale=.015, origin=(1,-1), position=self.bottom_right, ignore_paused=True, name='cog_button')</gray></td><td></td>
@@ -1454,106 +1451,106 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;ready(<gray>title, icon, borderless, fullscreen, size, forced_aspect_ratio, position, vsync, editor_ui_enabled, window_type, render_mode</gray>) <span></span></td>
+                <td> &nbsp;ready(<gray>title, icon, borderless, fullscreen, size, forced_aspect_ratio, position, vsync, editor_ui_enabled, window_type, render_mode</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;apply_settings() <span></span></td>
+                <td> &nbsp;apply_settings()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;left() <span></span></td>
+                <td> &nbsp;left()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;right() <span></span></td>
+                <td> &nbsp;right()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;top_left() <span></span></td>
+                <td> &nbsp;top_left()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;top_right() <span></span></td>
+                <td> &nbsp;top_right()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;bottom_left() <span></span></td>
+                <td> &nbsp;bottom_left()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;bottom_right() <span></span></td>
+                <td> &nbsp;bottom_right()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;center_on_screen() <span></span></td>
+                <td> &nbsp;center_on_screen()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;make_editor_gui() <span>called by main after setting up camera and application.development_mode</span></td>
+                <td> &nbsp;make_editor_gui()</td> <td><span>called by main after setting up camera and application.development_mode</span></td>
             </tr>
             <tr>
-                <td> &nbsp;window_input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;window_input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;update_aspect_ratio() <span></span></td>
+                <td> &nbsp;update_aspect_ratio()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;position() <span></span></td>
+                <td> &nbsp;position()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;position(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;position(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;size() <span></span></td>
+                <td> &nbsp;size()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;size(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;size(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;aspect_ratio() <span></span></td>
+                <td> &nbsp;aspect_ratio()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;forced_aspect_ratio() <span></span></td>
+                <td> &nbsp;forced_aspect_ratio()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;forced_aspect_ratio(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;forced_aspect_ratio(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;render_mode() <span></span></td>
+                <td> &nbsp;render_mode()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;render_mode(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;render_mode(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;next_render_mode() <span></span></td>
+                <td> &nbsp;next_render_mode()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;title() <span></span></td>
+                <td> &nbsp;title()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;title(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;title(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;icon() <span></span></td>
+                <td> &nbsp;icon()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;icon(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;icon(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;borderless() <span></span></td>
+                <td> &nbsp;borderless()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;borderless(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;borderless(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;fullscreen() <span></span></td>
+                <td> &nbsp;fullscreen()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;fullscreen(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;fullscreen(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;color() <span></span></td>
+                <td> &nbsp;color()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;color(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;color(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;vsync() <span></span></td>
+                <td> &nbsp;vsync()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;vsync(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;vsync(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -1671,16 +1668,16 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;pause() <span></span></td>
+                <td> &nbsp;pause()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;resume() <span></span></td>
+                <td> &nbsp;resume()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;quit() <span></span></td>
+                <td> &nbsp;quit()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;load_settings(<gray>path=asset_folder / 'settings.py'</gray>) <span></span></td>
+                <td> &nbsp;load_settings(<gray>path=asset_folder / 'settings.py'</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
 
@@ -1700,28 +1697,28 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;set_up() <span></span></td>
+                <td> &nbsp;set_up()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;clear() <span></span></td>
+                <td> &nbsp;clear()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;fog_color() <span></span></td>
+                <td> &nbsp;fog_color()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;fog_color(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;fog_color(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;fog_density() <span></span></td>
+                <td> &nbsp;fog_density()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;fog_density(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;fog_density(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;children() <span></span></td>
+                <td> &nbsp;children()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;children(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;children(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -1873,43 +1870,43 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;color(<gray>h,s,v,a=1</gray>) <span></span></td>
+                <td> &nbsp;color(<gray>h,s,v,a=1</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;hsv(<gray>h, s, v, a=1</gray>) <span></span></td>
+                <td> &nbsp;hsv(<gray>h, s, v, a=1</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;rgba32(<gray>r, g, b, a=255</gray>) <span></span></td>
+                <td> &nbsp;rgba32(<gray>r, g, b, a=255</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;rgb32(<gray>r, g, b</gray>) <span></span></td>
+                <td> &nbsp;rgb32(<gray>r, g, b</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;rgba(<gray>r, g, b, a</gray>) <span></span></td>
+                <td> &nbsp;rgba(<gray>r, g, b, a</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;rgb(<gray>r, g, b</gray>) <span></span></td>
+                <td> &nbsp;rgb(<gray>r, g, b</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;to_hsv(<gray>color</gray>) <span></span></td>
+                <td> &nbsp;to_hsv(<gray>color</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;hex(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;hex(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;rgb_to_hex(<gray>r, g, b, a=1</gray>) <span></span></td>
+                <td> &nbsp;rgb_to_hex(<gray>r, g, b, a=1</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;brightness(<gray>color</gray>) <span></span></td>
+                <td> &nbsp;brightness(<gray>color</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;inverse(<gray>color</gray>) <span></span></td>
+                <td> &nbsp;inverse(<gray>color</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;random_color() <span></span></td>
+                <td> &nbsp;random_color()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;tint(<gray>color, amount=.2</gray>) <span></span></td>
+                <td> &nbsp;tint(<gray>color, amount=.2</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -1940,52 +1937,10 @@ app.run()
 </div>
 <br>
     <div class="class_box" id="Mesh">
-        <h1>Mesh</h1>
-        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/mesh_old.py"><gray>ursina/mesh_old</gray></a><br><br>
-        <div class="params">Mesh(vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1, render_points_in_3d=True)</div><br>
+        <h1>Mesh<a style="color: gray; font-weight:normal;" href="#p3d.">(p3d.)</a></h1>
+        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/mesh.py"><gray>ursina/mesh</gray></a><br><br>
+        <div class="params">Mesh(vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1, render_points_in_3d=True, vertex_buffer=None, vertex_buffer_length=None, vertex_buffer_format=None)</div><br>
         <table> <!-- attributes -->
-            <tr>
-                <td>Mesh.(0,0,0) : GeomVertexFormat.getV3(),</td><td></td>
-            </tr>
-            <tr>
-                <td>Mesh.(1,0,0) : GeomVertexFormat.getV3c4(),</td><td></td>
-            </tr>
-            <tr>
-                <td>Mesh.(0,1,0) : GeomVertexFormat.getV3t2(),</td><td></td>
-            </tr>
-            <tr>
-                <td>Mesh.(0,0,1) : GeomVertexFormat.getV3n3(),</td><td></td>
-            </tr>
-            <tr>
-                <td>Mesh.(1,0,1) : GeomVertexFormat.getV3n3c4(),</td><td></td>
-            </tr>
-            <tr>
-                <td>Mesh.(1,1,0) : GeomVertexFormat.getV3c4t2(),</td><td></td>
-            </tr>
-            <tr>
-                <td>Mesh.(0,1,1) : GeomVertexFormat.getV3n3t2(),</td><td></td>
-            </tr>
-            <tr>
-                <td>Mesh.(1,1,1) : GeomVertexFormat.getV3n3c4t2(),</td><td></td>
-            </tr>
-            <tr>
-                <td>Mesh.}</td><td></td>
-            </tr>
-            <tr>
-                <td>Mesh.'triangle' : GeomTriangles,</td><td></td>
-            </tr>
-            <tr>
-                <td>Mesh.'tristrip' : GeomTristrips,</td><td></td>
-            </tr>
-            <tr>
-                <td>Mesh.'ngon' : GeomTrifans,</td><td></td>
-            </tr>
-            <tr>
-                <td>Mesh.'line' : GeomLinestrips,</td><td></td>
-            </tr>
-            <tr>
-                <td>Mesh.'point' : GeomPoints,</td><td></td>
-            </tr>
             <tr>
                 <td>Mesh.}</td><td></td>
             </tr>
@@ -2016,9 +1971,24 @@ app.run()
             <tr>
                 <td>.render_points_in_3d<gray> = render_points_in_3d</gray></td><td></td>
             </tr>
+            <tr>
+                <td>.vertex_buffer<gray> = vertex_buffer</gray></td><td></td>
+            </tr>
+            <tr>
+                <td>.vertex_buffer_length<gray> = vertex_buffer_length</gray></td><td></td>
+            </tr>
+            <tr>
+                <td>.vertex_buffer_format<gray> = vertex_buffer_format</gray></td><td></td>
+            </tr>
         </table><br>
         <div><gray>properties:</gray></div>
         <table>
+            <tr>
+                <td>.indices</td><td><span></span></td>
+            </tr>
+            <tr>
+                <td>.generated_vertices</td><td><span></span></td>
+            </tr>
             <tr>
                 <td>.recipe</td><td><span></span></td>
             </tr>
@@ -2028,29 +1998,26 @@ app.run()
             <tr>
                 <td>.thickness</td><td><span></span></td>
             </tr>
-            <tr>
-                <td>.triangles</td><td><span></span></td>
-            </tr>
         </table><br>
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;generate() <span>call this after setting some of the variables to update it</span></td>
+                <td> &nbsp;generate()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;generate_normals(<gray>smooth=True</gray>) <span></span></td>
+                <td> &nbsp;generate_normals(<gray>smooth=True, regenerate=True</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;colorize(<gray>left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white, smooth=True, world_space=True, strength=1</gray>) <span></span></td>
+                <td> &nbsp;colorize(<gray>left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white, smooth=True, world_space=True, strength=1</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;project_uvs(<gray>aspect_ratio=1, direction='forward'</gray>) <span></span></td>
+                <td> &nbsp;project_uvs(<gray>aspect_ratio=1, direction='forward'</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;clear(<gray>regenerate=True</gray>) <span></span></td>
+                <td> &nbsp;clear(<gray>regenerate=True</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;save(<gray>name='', folder:Path=application.compressed_models_folder, flip_faces=False</gray>) <span></span></td>
+                <td> &nbsp;save(<gray>name='', folder:Path=Func(getattr, application, 'compressed_models_folder'), flip_faces=False, max_decimals=16</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -2188,8 +2155,11 @@ clear_test = <olive>Entity</olive>(<olive>position</olive>=(<yellow>1</yellow><y
 clear_test.model.clear()
 Text(<olive>parent</olive>=clear_test, <olive>text</olive>=<green>'.clear() test'</green>, <olive>y</olive>=<yellow>1</yellow>, <olive>scale</olive>=<yellow>5</yellow>, <olive>origin</olive>=(<yellow>0</yellow>,-.<yellow>5</yellow>))
 
+
 window.color = color.black
 EditorCamera()
+
+<blue>print</blue>(load_model(<green>'cube'</green>, application.internal_models_compressed_folder, use_deepcop<olive>y</olive>=True).recipe)
 
 app.run()
 </div>
@@ -2244,10 +2214,10 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;compile(<gray>shader_includes=True</gray>) <span></span></td>
+                <td> &nbsp;compile(<gray>shader_includes=True</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;load(<gray>cls, language=Panda3dShader.SL_GLSL, vertex=None, fragment=None, geometry=None, **kwargs</gray>) <span></span></td>
+                <td> &nbsp;load(<gray>cls, language=Panda3dShader.SL_GLSL, vertex=None, fragment=None, geometry=None, **kwargs</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -2310,22 +2280,22 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;new(<gray>size, color=(255,255,255)</gray>) <span></span></td>
+                <td> &nbsp;new(<gray>size, color=(255,255,255)</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;get_pixel(<gray>x, y</gray>) <span></span></td>
+                <td> &nbsp;get_pixel(<gray>x, y</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;get_pixels(<gray>start, end</gray>) <span></span></td>
+                <td> &nbsp;get_pixels(<gray>start, end</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;set_pixel(<gray>x, y, color</gray>) <span></span></td>
+                <td> &nbsp;set_pixel(<gray>x, y, color</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;apply() <span></span></td>
+                <td> &nbsp;apply()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;save(<gray>path</gray>) <span></span></td>
+                <td> &nbsp;save(<gray>path</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -2401,7 +2371,7 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;update_bounds(<gray>entity=scene</gray>) <span>update the shadow area to fit the bounds of target entity, defaulted to scene.</span></td>
+                <td> &nbsp;update_bounds(<gray>entity=scene</gray>)</td> <td><span>update the shadow area to fit the bounds of target entity, defaulted to scene.</span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -2512,42 +2482,6 @@ unlit_entity = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>,
 
 bar = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>position</olive>=(<yellow>0</yellow>,<yellow>3</yellow>,-<yellow>2</yellow>), <olive>shader</olive>=lit_with_shadows_shader, <olive>scale</olive>=(<yellow>1</yellow><yellow>0</yellow>,.<yellow>2</yellow>,.<yellow>2</yellow>), <olive>color</olive>=color.light_gray)
 
-app.run()
-</div>
-
-</div>
-<br>
-    <div class="class_box" id="Quad">
-        <h1>Quad<a style="color: gray; font-weight:normal;" href="#Mesh">(Mesh)</a></h1>
-        <a href="https://github.com/pokepetter/ursina/blob/master/ursina/models/procedural/quad_2.py"><gray>ursina/models/procedural/quad_2</gray></a><br><br>
-        <div class="params">Quad(radius=.1, segments=8, aspect=1, scale=(1,1), mode='ngon', **kwargs)</div><br>
-        <table> <!-- attributes -->
-            <tr>
-                <td>.vertices<gray> = [Vec2(0,0), Vec2(1,0), Vec2(1,1), Vec2(0,1)]</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.radius<gray> = radius</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.mode<gray> = mode</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.uvs<gray> = list()</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.vertices<gray> = [Vec3(v[0]-offset[0], v[1]-offset[1], 0) for v in self.vertices]</gray></td><td></td>
-            </tr>
-        </table><br>
-        </table><br>
-    <div><gray>example:</gray></div>
-   <div class="example" id="Quad_example"><button class="copy_code_button" onclick="copy_to_clipboard(Quad_example)">copy</button>app = Ursina()
-<purple>from</purple> time <purple>import</purple> perf_counter
-t = perf_counter()
-<olive>Entity</olive>(<olive>model</olive>=<purple><b>Quad</b></purple>(<olive>scale</olive>=(<yellow>3</yellow>,<yellow>1</yellow>), <olive>thickness</olive>=<yellow>3</yellow>, segments=<yellow>3</yellow>, <olive>mode</olive>=<green>'line'</green>), color = color.hsv(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>7</yellow>))
-<olive>Entity</olive>(<olive>scale</olive>=(<yellow>3</yellow>,<yellow>1</yellow>), <olive>model</olive>=<purple><b>Quad</b></purple>(aspect=<yellow>3</yellow>), color = color.hsv(<yellow>6</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>3</yellow>))
-<blue>print</blue>(<green>'-------'</green>, (perf_counter() - t)*<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>)
-origin = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>color</olive>=color.orange, <olive>scale</olive>=(.<yellow>0</yellow><yellow>5</yellow>, .<yellow>0</yellow><yellow>5</yellow>))
-camera.z = -<yellow>5</yellow>
 app.run()
 </div>
 
@@ -2696,7 +2630,7 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;generate() <span></span></td>
+                <td> &nbsp;generate()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -2736,7 +2670,7 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;generate() <span></span></td>
+                <td> &nbsp;generate()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -2792,19 +2726,19 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;bind(<gray>original_key, alternative_key</gray>) <span></span></td>
+                <td> &nbsp;bind(<gray>original_key, alternative_key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;unbind(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;unbind(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;rebind(<gray>to_key, from_key</gray>) <span></span></td>
+                <td> &nbsp;rebind(<gray>to_key, from_key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;get_combined_key(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;get_combined_key(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -2843,32 +2777,32 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;load_model(<gray>name, path=Func(getattr, application, 'asset_folder'), file_types=('.bam', '.ursinamesh', '.obj', '.glb', '.gltf', '.blend'), use_deepcopy=False, gltf_no_srgb=Func(getattr, application, 'gltf_no_srgb')</gray>) <span></span></td>
+                <td> &nbsp;load_model(<gray>name, folder=Func(getattr, application, 'asset_folder'), file_types=('.bam', '.ursinamesh', '.obj', '.glb', '.gltf', '.blend'), use_deepcopy=False, gltf_no_srgb=Func(getattr, application, 'gltf_no_srgb')</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;load_blender_scene(<gray>name, path=Func(getattr, application, 'asset_folder'), reload=False, skip_hidden=True, models_only=False, uvs=True, vertex_colors=True, normals=True, triangulate=True, decimals=4</gray>) <span></span></td>
+                <td> &nbsp;load_blender_scene(<gray>name, path=Func(getattr, application, 'asset_folder'), reload=False, skip_hidden=True, models_only=False, uvs=True, vertex_colors=True, normals=True, triangulate=True, decimals=4</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;get_blender(<gray>blend_file</gray>) <span>try to get a matching blender version in case we have multiple blender version installed</span></td>
+                <td> &nbsp;get_blender(<gray>blend_file</gray>)</td> <td><span>try to get a matching blender version in case we have multiple blender version installed</span></td>
             </tr>
             <tr>
-                <td> &nbsp;compress_models(<gray>path=None, out_path=Func(getattr, application, 'compressed_models_folder'), name='*'</gray>) <span></span></td>
+                <td> &nbsp;blend_to_obj(<gray>blend_file:Path, out_folder=Func(getattr, application, 'compressed_models_folder'), export_mtl=True</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;obj_to_ursinamesh(<gray>path=Func(getattr, application, 'compressed_models_folder'), out_path=Func(getattr, application, 'compressed_models_folder'), name='*', return_mesh=True, save_to_file=False, delete_obj=False</gray>) <span></span></td>
+                <td> &nbsp;obj_to_ursinamesh(<gray>folder=Func(getattr, application, 'compressed_models_folder'), out_folder=Func(getattr, application, 'compressed_models_folder'), name='*', return_mesh=True, save_to_file=False, delete_obj=False</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;compress_models_fast(<gray>model_name=None, write_to_disk=False</gray>) <span></span></td>
+                <td> &nbsp;blend_to_obj_fast(<gray>model_name=None, write_to_disk=False</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;ursina_mesh_to_obj(<gray>mesh, name='', out_path=Func(getattr, application, 'compressed_models_folder'), max_decimals=5, flip_faces=True</gray>) <span></span></td>
+                <td> &nbsp;ursina_mesh_to_obj(<gray>mesh, name='', out_path=Func(getattr, application, 'compressed_models_folder'), max_decimals=5, flip_faces=True</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;compress_internal() <span></span></td>
+                <td> &nbsp;compress_internal()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="mesh_importer_example"><button class="copy_code_button" onclick="copy_to_clipboard(mesh_importer_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example" id="mesh_importer_example"><button class="copy_code_button" onclick="copy_to_clipboard(mesh_importer_example)">copy</button>compress_internal()
 <purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, EditorCamera, Sky
 app = Ursina()
 
@@ -2908,10 +2842,10 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;load_texture(<gray>name, path=None, use_cache=True, filtering='default'</gray>) <span></span></td>
+                <td> &nbsp;load_texture(<gray>name, path=None, use_cache=True, filtering='default'</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;compress_textures(<gray>name=''</gray>) <span></span></td>
+                <td> &nbsp;compress_textures(<gray>name=''</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -2931,22 +2865,22 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;camel_to_snake(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;camel_to_snake(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;snake_to_camel(<gray>value</gray>) <span></span></td>
+                <td> &nbsp;snake_to_camel(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;multireplace(<gray>string, replacements, ignore_case=False</gray>) <span></span></td>
+                <td> &nbsp;multireplace(<gray>string, replacements, ignore_case=False</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;printvar(<gray>var</gray>) <span></span></td>
+                <td> &nbsp;printvar(<gray>var</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;print_info(<gray>str, *args</gray>) <span></span></td>
+                <td> &nbsp;print_info(<gray>str, *args</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;print_warning(<gray>str, *args</gray>) <span></span></td>
+                <td> &nbsp;print_warning(<gray>str, *args</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -2978,22 +2912,22 @@ printvar(<green>'test'</green>)
         <div><gray>properties:</gray></div>
         <table>
             <tr>
-                <td>.duration</td><td><span># get the duration of the animation. you can't set it. to do so, change the fps instead.</span></td>
+                <td>.duration</td><td><span>get the duration of the animation. you can't set it. to do so, change the fps instead.</span></td>
             </tr>
         </table><br>
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;start() <span></span></td>
+                <td> &nbsp;start()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;pause() <span></span></td>
+                <td> &nbsp;pause()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;resume() <span></span></td>
+                <td> &nbsp;resume()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;finish() <span></span></td>
+                <td> &nbsp;finish()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -3042,19 +2976,19 @@ printvar(<green>'test'</green>)
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;start() <span></span></td>
+                <td> &nbsp;start()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;pause() <span></span></td>
+                <td> &nbsp;pause()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;resume() <span></span></td>
+                <td> &nbsp;resume()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;finish() <span></span></td>
+                <td> &nbsp;finish()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;on_destroy() <span></span></td>
+                <td> &nbsp;on_destroy()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -3084,7 +3018,7 @@ FrameAnimation<yellow>3</yellow>d(<green>'blob_animation_'</green>)
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;play_animation(<gray>animation_name</gray>) <span></span></td>
+                <td> &nbsp;play_animation(<gray>animation_name</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -3213,10 +3147,10 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;update() <span></span></td>
+                <td> &nbsp;update()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;on_destroy() <span></span></td>
+                <td> &nbsp;on_destroy()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -3260,100 +3194,100 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;linear(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;linear(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;in_sine(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;in_sine(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;out_sine(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;out_sine(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;in_out_sine(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;in_out_sine(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;in_quad(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;in_quad(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;out_quad(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;out_quad(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;in_out_quad(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;in_out_quad(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;in_cubic(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;in_cubic(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;out_cubic(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;out_cubic(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;in_out_cubic(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;in_out_cubic(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;in_quart(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;in_quart(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;out_quart(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;out_quart(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;in_out_quart(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;in_out_quart(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;in_quint(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;in_quint(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;out_quint(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;out_quint(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;in_out_quint(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;in_out_quint(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;in_expo(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;in_expo(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;out_expo(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;out_expo(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;in_out_expo(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;in_out_expo(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;in_circ(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;in_circ(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;out_circ(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;out_circ(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;in_out_circ(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;in_out_circ(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;in_back(<gray>t, magnitude=1.70158</gray>) <span></span></td>
+                <td> &nbsp;in_back(<gray>t, magnitude=1.70158</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;out_back(<gray>t, magnitude=1.70158</gray>) <span></span></td>
+                <td> &nbsp;out_back(<gray>t, magnitude=1.70158</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;in_out_back(<gray>t, magnitude=1.70158</gray>) <span></span></td>
+                <td> &nbsp;in_out_back(<gray>t, magnitude=1.70158</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;in_elastic(<gray>t, magnitude=.7</gray>) <span></span></td>
+                <td> &nbsp;in_elastic(<gray>t, magnitude=.7</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;out_elastic(<gray>t, magnitude=.7</gray>) <span></span></td>
+                <td> &nbsp;out_elastic(<gray>t, magnitude=.7</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;in_out_elastic(<gray>t, magnitude=0.65</gray>) <span></span></td>
+                <td> &nbsp;in_out_elastic(<gray>t, magnitude=0.65</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;out_bounce(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;out_bounce(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;in_bounce(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;in_bounce(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;in_out_bounce(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;in_out_bounce(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;{e}_boomerang(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;{e}_boomerang(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -3410,46 +3344,46 @@ e2.animate_y(1, curve=curve.CubicBezier(0,.7,1,.3))
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;distance(<gray>a, b</gray>) <span></span></td>
+                <td> &nbsp;distance(<gray>a, b</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;distance_2d(<gray>a, b</gray>) <span></span></td>
+                <td> &nbsp;distance_2d(<gray>a, b</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;distance_xz(<gray>a, b</gray>) <span></span></td>
+                <td> &nbsp;distance_xz(<gray>a, b</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;lerp(<gray>a, b, t</gray>) <span></span></td>
+                <td> &nbsp;lerp(<gray>a, b, t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;inverselerp(<gray>a, b, t</gray>) <span></span></td>
+                <td> &nbsp;inverselerp(<gray>a, b, t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;lerp_angle(<gray>start_angle, end_angle, t</gray>) <span></span></td>
+                <td> &nbsp;lerp_angle(<gray>start_angle, end_angle, t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;slerp(<gray>q1, q2, t</gray>) <span></span></td>
+                <td> &nbsp;slerp(<gray>q1, q2, t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;clamp(<gray>value, floor, ceiling</gray>) <span></span></td>
+                <td> &nbsp;clamp(<gray>value, floor, ceiling</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;round_to_closest(<gray>value, step=0</gray>) <span></span></td>
+                <td> &nbsp;round_to_closest(<gray>value, step=0</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;rotate_around_point_2d(<gray>point, origin, deg</gray>) <span></span></td>
+                <td> &nbsp;rotate_around_point_2d(<gray>point, origin, deg</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;world_position_to_screen_position(<gray>point): # get screen position(ui space</gray>) <span>get screen position(ui space) from world space.</span></td>
+                <td> &nbsp;world_position_to_screen_position(<gray>point): # get screen position(ui space</gray>)</td> <td><span>get screen position(ui space) from world space.</span></td>
             </tr>
             <tr>
-                <td> &nbsp;sum(<gray>l</gray>) <span></span></td>
+                <td> &nbsp;sum(<gray>l</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;make_gradient(<gray>index_color_dict</gray>) <span>returns a list of 256 colors</span></td>
+                <td> &nbsp;make_gradient(<gray>index_color_dict</gray>)</td> <td><span>returns a list of 256 colors</span></td>
             </tr>
             <tr>
-                <td> &nbsp;sample_gradient(<gray>list_of_values, t):     # distribute list_of_values equally on a line and get the interpolated value at t (0-1</gray>) <span>distribute list_of_values equally on a line and get the interpolated value at t (0-1).</span></td>
+                <td> &nbsp;sample_gradient(<gray>list_of_values, t):     # distribute list_of_values equally on a line and get the interpolated value at t (0-1</gray>)</td> <td><span>distribute list_of_values equally on a line and get the interpolated value at t (0-1).</span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -3610,19 +3544,19 @@ b += Vec<yellow>4</yellow>(<yellow>0</yellow>,<yellow>1</yellow>)
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;sample_curve_x(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;sample_curve_x(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;sample_curve_y(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;sample_curve_y(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;sample_curve_derivative_x(<gray>t</gray>) <span></span></td>
+                <td> &nbsp;sample_curve_derivative_x(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;calculate(<gray>x, epsilon=.0001</gray>) <span></span></td>
+                <td> &nbsp;calculate(<gray>x, epsilon=.0001</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;solve_curve_x(<gray>t, epsilon=.0001</gray>) <span></span></td>
+                <td> &nbsp;solve_curve_x(<gray>t, epsilon=.0001</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -3679,43 +3613,49 @@ e2.animate_y(1, curve=curve.<b>CubicBezier</b>(0,.7,1,.3))
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;invoke(<gray>function, *args, **kwargs</gray>) <span>reserved keywords: 'delay', 'unscaled'</span></td>
+                <td> &nbsp;invoke(<gray>function, *args, **kwargs</gray>)</td> <td><span>reserved keywords: 'delay', 'unscaled'</span></td>
             </tr>
             <tr>
-                <td> &nbsp;after(<gray>delay, unscaled=True</gray>) <span>function for @after decorator. Use the docrator, not this.</span></td>
+                <td> &nbsp;after(<gray>delay, unscaled=True</gray>)</td> <td><span>function for @after decorator. Use the docrator, not this.</span></td>
             </tr>
             <tr>
-                <td> &nbsp;reset_cooldown() <span></span></td>
+                <td> &nbsp;reset_cooldown()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;wrapper(<gray>*args, **kwargs</gray>) <span></span></td>
+                <td> &nbsp;wrapper(<gray>*args, **kwargs</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;destroy(<gray>entity, delay=0</gray>) <span></span></td>
+                <td> &nbsp;destroy(<gray>entity, delay=0</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;chunk_list(<gray>target_list, chunk_size</gray>) <span></span></td>
+                <td> &nbsp;chunk_list(<gray>target_list, chunk_size</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;flatten_list(<gray>target_list</gray>) <span></span></td>
+                <td> &nbsp;flatten_list(<gray>target_list</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;flatten_completely(<gray>target_list</gray>) <span></span></td>
+                <td> &nbsp;flatten_completely(<gray>target_list</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;enumerate_2d(<gray>array):    # usage: for (x, y), value in enumerate_2d(my_2d_list</gray>) <span>usage: for (x, y), value in enumerate_2d(my_2d_list)</span></td>
+                <td> &nbsp;enumerate_2d(<gray>target_2d_list):    # usage: for (x, y), value in enumerate_2d(my_2d_list</gray>)</td> <td><span>usage: for (x, y), value in enumerate_2d(my_2d_list)</span></td>
             </tr>
             <tr>
-                <td> &nbsp;size_list() <span>return a list of current python objects sorted by size</span></td>
+                <td> &nbsp;rotate_2d_list(<gray>target_2d_list</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;find_sequence(<gray>name, file_types, folders</gray>) <span>find frame_0, frame_1, frame_2 and so on</span></td>
+                <td> &nbsp;list_2d_to_string(<gray>target_2d_list, characters='.#'</gray>)</td> <td><span>'):</span></td>
             </tr>
             <tr>
-                <td> &nbsp;import_all_classes(<gray>path=application.asset_folder, debug=False</gray>) <span></span></td>
+                <td> &nbsp;size_list()</td> <td><span>return a list of current python objects sorted by size</span></td>
             </tr>
             <tr>
-                <td> &nbsp;print_on_screen(<gray>text, position=(0,0), origin=(-.5,.5), scale=1, duration=1</gray>) <span></span></td>
+                <td> &nbsp;find_sequence(<gray>name, file_types, folders</gray>)</td> <td><span>find frame_0, frame_1, frame_2 and so on</span></td>
+            </tr>
+            <tr>
+                <td> &nbsp;import_all_classes(<gray>path=application.asset_folder, debug=False</gray>)</td> <td><span></span></td>
+            </tr>
+            <tr>
+                <td> &nbsp;print_on_screen(<gray>text, position=(0,0), origin=(-.5,.5), scale=1, duration=1</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -3723,7 +3663,13 @@ e2.animate_y(1, curve=curve.<b>CubicBezier</b>(0,.7,1,.3))
 app = Ursina()
 
 
-
+list_<yellow>2</yellow>d = [
+    [<yellow>1</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>, <yellow>0</yellow>, <yellow>1</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,<yellow>0</yellow>, <yellow>0</yellow>, <yellow>1</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,<yellow>1</yellow>, <yellow>0</yellow>, <yellow>0</yellow>,<yellow>1</yellow>,<yellow>0</yellow>,<yellow>0</yellow>],
+    [<yellow>1</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>, <yellow>0</yellow>, <yellow>1</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>, <yellow>0</yellow>, <yellow>1</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,<yellow>0</yellow>, <yellow>0</yellow>, <yellow>0</yellow>,<yellow>1</yellow>,<yellow>0</yellow>,<yellow>0</yellow>],
+    [<yellow>1</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>, <yellow>0</yellow>, <yellow>1</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,<yellow>0</yellow>, <yellow>0</yellow>, <yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>, <yellow>0</yellow>, <yellow>0</yellow>,<yellow>1</yellow>,<yellow>0</yellow>,<yellow>0</yellow>],
+    [<yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,<yellow>0</yellow>, <yellow>0</yellow>, <yellow>1</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>, <yellow>0</yellow>, <yellow>1</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,<yellow>1</yellow>, <yellow>0</yellow>, <yellow>0</yellow>,<yellow>1</yellow>,<yellow>0</yellow>,<yellow>0</yellow>],
+]
+<blue>print</blue>(list_<yellow>2</yellow>d_to_string(list_<yellow>2</yellow>d))
 app.run()
 </div>
 
@@ -3744,28 +3690,19 @@ app.run()
                 <td>.time_step<gray> = Sequence.default_time_step</gray></td><td></td>
             </tr>
             <tr>
-                <td>.unscaled<gray> = False</gray></td><td></td>
-            </tr>
-            <tr>
                 <td>.duration<gray> = 0</gray></td><td></td>
             </tr>
             <tr>
                 <td>.funcs<gray> = []</gray></td><td></td>
             </tr>
             <tr>
-                <td>.started<gray> = False</gray></td><td></td>
+                <td>.func_call_time<gray> = []</gray></td><td></td>
+            </tr>
+            <tr>
+                <td>.func_finished_statuses<gray> = []</gray></td><td></td>
             </tr>
             <tr>
                 <td>.paused<gray> = False</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.ignore_paused<gray> = False</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.loop<gray> = False</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.auto_destroy<gray> = False</gray></td><td></td>
             </tr>
             <tr>
                 <td>.entity<gray> = None  </gray></td><td><span>you can assign this to make the sequence pause when the entity is disabled or .ignore is True</span></td>
@@ -3780,31 +3717,31 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;generate() <span></span></td>
+                <td> &nbsp;generate()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;append(<gray>arg</gray>) <span></span></td>
+                <td> &nbsp;append(<gray>arg, regenerate=True</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;extend(<gray>list</gray>) <span></span></td>
+                <td> &nbsp;extend(<gray>list</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;start() <span></span></td>
+                <td> &nbsp;start()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;pause() <span></span></td>
+                <td> &nbsp;pause()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;resume() <span></span></td>
+                <td> &nbsp;resume()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;finish() <span></span></td>
+                <td> &nbsp;finish()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;kill() <span></span></td>
+                <td> &nbsp;kill()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;update() <span></span></td>
+                <td> &nbsp;update()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -3812,19 +3749,23 @@ app.run()
 <purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>
 app = Ursina()
 e = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>)
+<purple>def</purple> some_func():
+    <blue>print</blue>(<green>'some_func'</green>)
+
 s = <purple><b>Sequence</b></purple>(
+    some_func,
     <yellow>1</yellow>,
     Func(print, <green>'one'</green>),
     Func(e.fade_out, duration=<yellow>1</yellow>),
-    <yellow>1</yellow>,
-    Func(print, <green>'two'</green>),
-    Func(e.fade_in, duration=<yellow>1</yellow>),
+    Wait(<yellow>1</yellow>),
     loop=True
     )
 
-s.append(
-    Func(print, <green>'appended to sequence'</green>)
-    )
+<purple>for</purple> i in <blue>range</blue>(<yellow>8</yellow>):
+    s.append(Func(print, i))
+    s.append(Wait(.<yellow>2</yellow>))
+
+<blue>print</blue>(s)
 
 <purple>def</purple> input(key):
     actions = {<green>'s'</green> : s.start, <green>'f'</green> : s.finish, <green>'p'</green> : s.pause, <green>'r'</green> : s.resume}
@@ -3850,12 +3791,6 @@ app.run()
             <tr>
                 <td>.kwargs<gray> = kwargs</gray></td><td></td>
             </tr>
-            <tr>
-                <td>.delay<gray> = 0</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.finished<gray> = False</gray></td><td></td>
-            </tr>
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
@@ -3863,19 +3798,23 @@ app.run()
 <purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>
 app = Ursina()
 e = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>)
+<purple>def</purple> some_func():
+    <blue>print</blue>(<green>'some_func'</green>)
+
 s = Sequence(
+    some_func,
     <yellow>1</yellow>,
     <purple><b>Func</b></purple>(print, <green>'one'</green>),
     <purple><b>Func</b></purple>(e.fade_out, duration=<yellow>1</yellow>),
-    <yellow>1</yellow>,
-    <purple><b>Func</b></purple>(print, <green>'two'</green>),
-    <purple><b>Func</b></purple>(e.fade_in, duration=<yellow>1</yellow>),
+    Wait(<yellow>1</yellow>),
     loop=True
     )
 
-s.append(
-    <purple><b>Func</b></purple>(print, <green>'appended to sequence'</green>)
-    )
+<purple>for</purple> i in <blue>range</blue>(<yellow>8</yellow>):
+    s.append(<purple><b>Func</b></purple>(print, i))
+    s.append(Wait(.<yellow>2</yellow>))
+
+<blue>print</blue>(s)
 
 <purple>def</purple> input(key):
     actions = {<green>'s'</green> : s.start, <green>'f'</green> : s.finish, <green>'p'</green> : s.pause, <green>'r'</green> : s.resume}
@@ -4105,19 +4044,19 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;bind(<gray>original_key, alternative_key</gray>) <span></span></td>
+                <td> &nbsp;bind(<gray>original_key, alternative_key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;unbind(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;unbind(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;rebind(<gray>to_key, from_key</gray>) <span></span></td>
+                <td> &nbsp;rebind(<gray>to_key, from_key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;get_combined_key(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;get_combined_key(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -4153,7 +4092,7 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;raycast(<gray>origin, direction:Vec3=(0,0,1), distance=9999, traverse_target:Entity=scene, ignore:list=None, debug=False, color=color.white</gray>) <span></span></td>
+                <td> &nbsp;raycast(<gray>origin, direction:Vec3=(0,0,1), distance=9999, traverse_target:Entity=scene, ignore:list=None, debug=False, color=color.white</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -4205,7 +4144,7 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;terraincast(<gray>world_position, terrain_entity, height_values=None, return_normals=False</gray>) <span>uses x and z to return y on terrain.</span></td>
+                <td> &nbsp;terraincast(<gray>world_position, terrain_entity, height_values=None, return_normals=False</gray>)</td> <td><span>uses x and z to return y on terrain.</span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -4242,7 +4181,7 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;boxcast(<gray>origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_target=scene, ignore:list=None, debug=False</gray>) <span>similar to raycast, but with width and height</span></td>
+                <td> &nbsp;boxcast(<gray>origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_target=scene, ignore:list=None, debug=False</gray>)</td> <td><span>similar to raycast, but with width and height</span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -4286,7 +4225,7 @@ app.run()
     <div class="class_box" id="Collider">
         <h1>Collider</h1>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/collider.py"><gray>ursina/collider</gray></a><br><br>
-        <div class="params">Collider(entity, shape)</div><br>
+        <div class="params">Collider(entity, shape, bvh=False, bvh_max_depth=8, bvh_max_shapes=None, bvh_only_xz=False, bvh_flatten=False)</div><br>
         <table> <!-- attributes -->
             <tr>
                 <td>.collision_node<gray> = CollisionNode('CollisionNode')</gray></td><td></td>
@@ -4307,7 +4246,13 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;remove() <span></span></td>
+                <td> &nbsp;show_bounds(<gray>only_leaves=True</gray>)</td> <td><span></span></td>
+            </tr>
+            <tr>
+                <td> &nbsp;hide_bounds()</td> <td><span></span></td>
+            </tr>
+            <tr>
+                <td> &nbsp;remove()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -4447,7 +4392,7 @@ app.run()
     <div class="class_box" id="MeshCollider">
         <h1>MeshCollider<a style="color: gray; font-weight:normal;" href="#Collider">(Collider)</a></h1>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/collider.py"><gray>ursina/collider</gray></a><br><br>
-        <div class="params">MeshCollider(entity, mesh=None, center=(0,0,0))</div><br>
+        <div class="params">MeshCollider(entity, mesh=None, center=(0,0,0), bvh=False, bvh_max_depth=8, bvh_max_shapes=None, bvh_only_xz=False, bvh_flatten=False)</div><br>
         <table> <!-- attributes -->
             <tr>
                 <td>.center<gray> = center</gray></td><td></td>
@@ -4459,7 +4404,7 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;remove() <span></span></td>
+                <td> &nbsp;remove()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -4510,10 +4455,10 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;update() <span></span></td>
+                <td> &nbsp;update()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
 
@@ -4582,19 +4527,19 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;on_enable() <span></span></td>
+                <td> &nbsp;on_enable()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;on_disable() <span></span></td>
+                <td> &nbsp;on_disable()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;on_destroy() <span></span></td>
+                <td> &nbsp;on_destroy()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;update() <span></span></td>
+                <td> &nbsp;update()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -4671,19 +4616,19 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;update() <span></span></td>
+                <td> &nbsp;update()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;draw_temp(<gray>position</gray>) <span></span></td>
+                <td> &nbsp;draw_temp(<gray>position</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;render() <span></span></td>
+                <td> &nbsp;render()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;save() <span></span></td>
+                <td> &nbsp;save()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -4756,25 +4701,25 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;update() <span></span></td>
+                <td> &nbsp;update()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;jump() <span></span></td>
+                <td> &nbsp;jump()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;start_fall() <span></span></td>
+                <td> &nbsp;start_fall()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;land() <span></span></td>
+                <td> &nbsp;land()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;on_enable() <span></span></td>
+                <td> &nbsp;on_enable()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;on_disable() <span></span></td>
+                <td> &nbsp;on_disable()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -4893,19 +4838,19 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;update() <span></span></td>
+                <td> &nbsp;update()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;jump() <span></span></td>
+                <td> &nbsp;jump()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;start_fall() <span></span></td>
+                <td> &nbsp;start_fall()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;land() <span></span></td>
+                <td> &nbsp;land()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -4983,22 +4928,22 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;ask(<gray>node, question_part=0</gray>) <span></span></td>
+                <td> &nbsp;ask(<gray>node, question_part=0</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;on_click(<gray>node=child</gray>) <span></span></td>
+                <td> &nbsp;on_click(<gray>node=child</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;next() <span></span></td>
+                <td> &nbsp;next()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;start_conversation(<gray>conversation</gray>) <span></span></td>
+                <td> &nbsp;start_conversation(<gray>conversation</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;parse_conversation(<gray>convo</gray>) <span></span></td>
+                <td> &nbsp;parse_conversation(<gray>convo</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -5113,16 +5058,16 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;on_mouse_enter() <span></span></td>
+                <td> &nbsp;on_mouse_enter()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;on_mouse_exit() <span></span></td>
+                <td> &nbsp;on_mouse_exit()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;fit_to_text(<gray>radius=.1, padding=Vec2(Text.size*1.5, Text.size)</gray>) <span></span></td>
+                <td> &nbsp;fit_to_text(<gray>radius=.1, padding=Vec2(Text.size*1.5, Text.size)</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -5207,16 +5152,16 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;start_dragging() <span></span></td>
+                <td> &nbsp;start_dragging()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;stop_dragging() <span></span></td>
+                <td> &nbsp;stop_dragging()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;update() <span></span></td>
+                <td> &nbsp;update()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -5243,7 +5188,7 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;update() <span></span></td>
+                <td> &nbsp;update()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -5329,16 +5274,16 @@ Lasts for 4 rounds.<green>''</green><green>'</green>.replace('</green>\n<green>'
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;bg_click() <span></span></td>
+                <td> &nbsp;bg_click()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;drop() <span></span></td>
+                <td> &nbsp;drop()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;update() <span></span></td>
+                <td> &nbsp;update()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;slide() <span></span></td>
+                <td> &nbsp;slide()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -5502,13 +5447,7 @@ app.run()
             'move_down':                ('down arrow', 'down arrow hold', 'shift+down arrow', 'shift+down arrow hold'),
             'move_to_end_of_word' :     ('ctrl+right arrow', 'ctrl+right arrow hold', 'ctrl+shift+right arrow', 'ctrl+shift+right arrow hold'),
             'move_to_start_of_word' :   ('ctrl+left arrow', 'ctrl+left arrow hold', 'ctrl+shift+left arrow', 'ctrl+shift+left arrow hold'),
-        },
-        </gray></td><td><span>'save':             ('ctrl+s',),
-        # 'save_as':          ('ctrl+shift+s',),
-        # 'toggle_comment':   ('ctrl+alt+c',),
-        # 'find':             ('ctrl+f',),
-        # 'select_word_left': ('ctrl+shift+left arrow', 'ctrl+shift+left arrow hold'),
-        # 'select_word_right': ('ctrl+shift+right arrow', 'ctrl+shift+right arrow hold'),</span></td>
+        },</gray></td><td></td>
             </tr>
             <tr>
                 <td>.middle_click_scroller<gray> = Entity(parent=self, start_y=None, input=middle_click_input, update=middle_click_update, t=0, update_rate=.05)</gray></td><td></td>
@@ -5523,61 +5462,61 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;middle_click_input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;middle_click_input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;middle_click_update() <span></span></td>
+                <td> &nbsp;middle_click_update()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;add_text(<gray>s, move_cursor=True, rerender=True</gray>) <span></span></td>
+                <td> &nbsp;add_text(<gray>s, move_cursor=True, rerender=True</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;move_line(<gray>line_index, delta, move_cursor=True</gray>) <span></span></td>
+                <td> &nbsp;move_line(<gray>line_index, delta, move_cursor=True</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;erase(<gray>rerender=True</gray>) <span></span></td>
+                <td> &nbsp;erase(<gray>rerender=True</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;delete_selected() <span></span></td>
+                <td> &nbsp;delete_selected()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;get_selected() <span></span></td>
+                <td> &nbsp;get_selected()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;get_mouse_position_unclamped() <span></span></td>
+                <td> &nbsp;get_mouse_position_unclamped()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;get_mouse_position() <span></span></td>
+                <td> &nbsp;get_mouse_position()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;set_scroll(<gray>value, render=True</gray>) <span></span></td>
+                <td> &nbsp;set_scroll(<gray>value, render=True</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;move_to_start_of_word() <span></span></td>
+                <td> &nbsp;move_to_start_of_word()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;move_to_end_of_word() <span></span></td>
+                <td> &nbsp;move_to_end_of_word()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;scroll_to_bottom(<gray>blank_lines_at_bottom=0</gray>) <span></span></td>
+                <td> &nbsp;scroll_to_bottom(<gray>blank_lines_at_bottom=0</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;text_input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;text_input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;render() <span></span></td>
+                <td> &nbsp;render()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;update() <span></span></td>
+                <td> &nbsp;update()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;select_all() <span></span></td>
+                <td> &nbsp;select_all()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;draw_selection() <span></span></td>
+                <td> &nbsp;draw_selection()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -5639,7 +5578,7 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;update() <span></span></td>
+                <td> &nbsp;update()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -5703,10 +5642,10 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;render() <span></span></td>
+                <td> &nbsp;render()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -5812,16 +5751,16 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;update() <span></span></td>
+                <td> &nbsp;update()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;on_disable() <span></span></td>
+                <td> &nbsp;on_disable()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;on_enable() <span></span></td>
+                <td> &nbsp;on_enable()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -5909,16 +5848,16 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;layout() <span></span></td>
+                <td> &nbsp;layout()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;select(<gray>b</gray>) <span></span></td>
+                <td> &nbsp;select(<gray>b</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;on_value_changed() <span></span></td>
+                <td> &nbsp;on_value_changed()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -5956,7 +5895,7 @@ window.color = color._<yellow>3</yellow><yellow>2</yellow>
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;layout() <span></span></td>
+                <td> &nbsp;layout()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -6104,19 +6043,19 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;on_enable() <span></span></td>
+                <td> &nbsp;on_enable()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;close() <span></span></td>
+                <td> &nbsp;close()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;folder_up() <span></span></td>
+                <td> &nbsp;folder_up()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;open(<gray>path=None</gray>) <span></span></td>
+                <td> &nbsp;open(<gray>path=None</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -6168,10 +6107,10 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;on_click() <span></span></td>
+                <td> &nbsp;on_click()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;on_double_click() <span></span></td>
+                <td> &nbsp;on_double_click()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -6231,13 +6170,13 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;on_enable() <span></span></td>
+                <td> &nbsp;on_enable()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;on_disable() <span></span></td>
+                <td> &nbsp;on_disable()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;on_submit(<gray>path</gray>) <span>implement .on_submit to handle saving</span></td>
+                <td> &nbsp;on_submit(<gray>path</gray>)</td> <td><span>implement .on_submit to handle saving</span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -6281,19 +6220,19 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;open() <span></span></td>
+                <td> &nbsp;open()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;close() <span></span></td>
+                <td> &nbsp;close()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;on_mouse_enter() <span></span></td>
+                <td> &nbsp;on_mouse_enter()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;update() <span></span></td>
+                <td> &nbsp;update()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -6381,10 +6320,10 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;on_enable() <span></span></td>
+                <td> &nbsp;on_enable()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -6574,28 +6513,28 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;update() <span></span></td>
+                <td> &nbsp;update()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;get_source_code() <span></span></td>
+                <td> &nbsp;get_source_code()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;toggle_hotreloading() <span></span></td>
+                <td> &nbsp;toggle_hotreloading()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;reload_code(<gray>reset_camera=True</gray>) <span></span></td>
+                <td> &nbsp;reload_code(<gray>reset_camera=True</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;reload_textures() <span></span></td>
+                <td> &nbsp;reload_textures()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;reload_models() <span></span></td>
+                <td> &nbsp;reload_models()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;reload_shaders() <span></span></td>
+                <td> &nbsp;reload_shaders()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -6694,37 +6633,37 @@ By default you can press F5 to reload the starting script, F6 to reimport textur
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;update() <span></span></td>
+                <td> &nbsp;update()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;get_cursor_position() <span></span></td>
+                <td> &nbsp;get_cursor_position()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;draw(<gray>x, y</gray>) <span></span></td>
+                <td> &nbsp;draw(<gray>x, y</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;record_undo() <span></span></td>
+                <td> &nbsp;record_undo()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;floodfill(<gray>matrix, x, y, first=True</gray>) <span></span></td>
+                <td> &nbsp;floodfill(<gray>matrix, x, y, first=True</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;copy() <span></span></td>
+                <td> &nbsp;copy()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;enter_paste_mode() <span></span></td>
+                <td> &nbsp;enter_paste_mode()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;exit_paste_mode(<gray>discard=False</gray>) <span></span></td>
+                <td> &nbsp;exit_paste_mode(<gray>discard=False</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;clear_selection() <span></span></td>
+                <td> &nbsp;clear_selection()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;render_selection() <span></span></td>
+                <td> &nbsp;render_selection()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -6766,16 +6705,16 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;set_texture(<gray>texture, render=True, clear_undo_stack=True</gray>) <span></span></td>
+                <td> &nbsp;set_texture(<gray>texture, render=True, clear_undo_stack=True</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;draw(<gray>x, y</gray>) <span></span></td>
+                <td> &nbsp;draw(<gray>x, y</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;render() <span></span></td>
+                <td> &nbsp;render()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;save() <span></span></td>
+                <td> &nbsp;save()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -6817,10 +6756,10 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;render() <span></span></td>
+                <td> &nbsp;render()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -6855,7 +6794,7 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;grid_layout(<gray>l, max_x=8, max_y=8, spacing=(0,0,0), origin=(-.5,.5,0), offset=(0,0,0)</gray>) <span></span></td>
+                <td> &nbsp;grid_layout(<gray>l, max_x=8, max_y=8, spacing=(0,0,0), origin=(-.5,.5,0), offset=(0,0,0)</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -6883,7 +6822,7 @@ EditorCamera()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;duplicate(<gray>entity, copy_children=True, *args, **kwargs): # use a for loop instead of duplicate(</gray>) <span>use a for loop instead of duplicate() if you can.</span></td>
+                <td> &nbsp;duplicate(<gray>entity, copy_children=True, *args, **kwargs): # use a for loop instead of duplicate(</gray>)</td> <td><span>use a for loop instead of duplicate() if you can.</span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -6924,7 +6863,7 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;update() <span></span></td>
+                <td> &nbsp;update()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -6977,10 +6916,10 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;update() <span></span></td>
+                <td> &nbsp;update()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -7018,10 +6957,10 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;update() <span></span></td>
+                <td> &nbsp;update()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -7056,10 +6995,10 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;input(<gray>key</gray>) <span></span></td>
+                <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;update() <span></span></td>
+                <td> &nbsp;update()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -7132,7 +7071,7 @@ app.run()
         <div><gray>functions:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;copytree(<gray>src, dst, symlinks=False, ignore_patterns=[], ignore_filetypes=[]</gray>) <span></span></td>
+                <td> &nbsp;copytree(<gray>src, dst, symlinks=False, ignore_patterns=[], ignore_filetypes=[]</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
 
