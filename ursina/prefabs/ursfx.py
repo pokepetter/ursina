@@ -51,10 +51,11 @@ def ursfx(volume_curve, volume=.75, wave='sine', pitch=0, pitch_change=0, speed=
 
 
 class UrsfxGUI(Entity):
-    def __init__(self, ignore_paused=True, **kwargs):
+    def __init__(self, ignore_paused=True, play_after_change=True, **kwargs):
         super().__init__(**(dict(parent=camera.ui, z=-998, ignore_paused=ignore_paused) | kwargs))
 
         default_positions = [(0,0), (.1,.9), (.15,.75), (.6,.75), (1,0)]
+        self.play_after_change = play_after_change
         self.wave_panel = Entity(parent=self, scale=.35, x=-0)
         self.waveform = Entity(parent=self.wave_panel, scale_y=.75)
         self.waveform_bg = Entity(parent=self.waveform, model='quad', origin=(-.5,-.5), z=.01, color=color.black66)
@@ -63,9 +64,9 @@ class UrsfxGUI(Entity):
 
         self.wave_selector = ButtonGroup(('sine', 'triangle', 'square', 'noise'), parent=self.wave_panel, scale=.11, y=-.075)
 
-        self.pitch_slider = Slider(parent=self.wave_panel, y=-.25, scale=1.95, min=-36, max=36, default=0, step=1, on_value_changed=self.play, text='pitch')
-        self.pitch_change_slider =  Slider(parent=self.wave_panel, y=-.325, scale=1.95, min=-12, max=12, default=0, step=1, on_value_changed=self.play, text='pitch change')
-        self.speed_slider =  Slider(parent=self.wave_panel, scale=1.95, min=.5, max=4, default=1, step=.1, on_value_changed=self.play, y=-.4, text='speed')
+        self.pitch_slider = Slider(parent=self.wave_panel, y=-.25, scale=1.95, min=-36, max=36, default=0, step=1, on_value_changed=self.play_updated, text='pitch')
+        self.pitch_change_slider =  Slider(parent=self.wave_panel, y=-.325, scale=1.95, min=-12, max=12, default=0, step=1, on_value_changed=self.play_updated, text='pitch change')
+        self.speed_slider =  Slider(parent=self.wave_panel, scale=1.95, min=.5, max=4, default=1, step=.1, on_value_changed=self.play_updated, y=-.4, text='speed')
 
         def coin_sound():
             self.paste_code(f"ursfx([(0,1), ({random.uniform(.05,.15)},.5), (.25,.5), ({random.uniform(.25,.5)},.5), (1,0)], pitch={random.randint(-3, 24)}, speed={random.uniform(2.5,3)})")
@@ -87,8 +88,7 @@ class UrsfxGUI(Entity):
         self.paste_button.text_entity.scale *= .5
 
         self.code_text = Text('', parent=self.wave_panel, scale=2, position=(self.paste_button.x+self.paste_button.scale_x+.025,1.11))
-
-        self.wave_selector.on_value_changed = self.play
+        self.wave_selector.on_value_changed = self.play_updated
         self.background_panel = Entity(model=Quad(radius=.025), parent=self.wave_panel, color=color.black66, z=1, origin=(-.5,-.5), scale=(1.125,1.75+.025), position=(-.1,-.6))
 
         for i, knob in enumerate(self.knobs):
@@ -271,6 +271,11 @@ class UrsfxGUI(Entity):
             )
 
         self.code_text.text = self.recipe
+
+    def play_updated(self):
+        if self.play_after_change:
+            self.play()
+
 
 gui = None
 def open_gui():
