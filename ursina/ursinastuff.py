@@ -67,7 +67,8 @@ def destroy(entity, delay=0):
         _destroy(entity)
         return True
 
-    return Sequence(Wait(delay), Func(_destroy, entity), auto_destroy=True, started=True)
+    return invoke(_destroy, entity, delay=delay)
+    # return Sequence(Wait(delay), Func(_destroy, entity), auto_destroy=True, started=True)
 
 
 def _destroy(entity, force_destroy=False):
@@ -108,7 +109,6 @@ def _destroy(entity, force_destroy=False):
 
     if hasattr(entity, 'animations'):
         for anim in entity.animations:
-            anim.finish()
             anim.kill()
 
     if hasattr(entity, 'tooltip'):
@@ -249,5 +249,10 @@ if __name__ == '__main__':
         [0,1,1,0, 0, 1,0,0,1, 0, 1,1,1,1, 0, 0,1,0,0],
     ]
     print(list_2d_to_string(list_2d))
+
+
+    a = Audio('sine')
+    a.play()
+    destroy(a, delay=1)
     # Player()
     app.run()
