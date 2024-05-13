@@ -605,7 +605,7 @@ for group_name, group in groups.items():
 html += '</div>\n'
 html += '<main_section>\n'
 html += '    <h1 class="main_header">ursina API Reference</h1>\n'
-html += '    <p>v5.0.0</p>\n'
+html += '    <p>v7.0.0</p>\n'
 # print(module_info)
 # main part
 for group_name, group in groups.items():
