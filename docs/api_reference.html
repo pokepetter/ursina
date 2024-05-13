@@ -20,12 +20,12 @@ var checked = JSON.parse(localStorage.getItem("checkbox"));
 document.getElementById("checkbox").checked = checked;
 
 function copy_to_clipboard(containerid) {
-    var range = document.createRange();
-    range.selectNode(containerid); //changed here
-    window.getSelection().removeAllRanges();
-    window.getSelection().addRange(range);
-    document.execCommand("copy");
-    window.getSelection().removeAllRanges();
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
 }
 
 </script>
@@ -270,11 +270,11 @@ function copy_to_clipboard(containerid) {
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Ursina_example"><button class="copy_code_button" onclick="copy_to_clipboard(Ursina_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Ursina_example)">copy</button><p id="Ursina_example"><purple>from</purple> ursina <purple>import</purple> *
 app = <purple><b>Ursina</b></purple>(use_ingame_console=True)
 <purple>def</purple> input(key):
     <blue>print</blue>(key)
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -640,7 +640,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Entity_example"><button class="copy_code_button" onclick="copy_to_clipboard(Entity_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Entity_example)">copy</button><p id="Entity_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
 
 e = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>color</olive>=color.orange, <olive>position</olive>=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>), <olive>scale</olive>=<yellow>1</yellow>.<yellow>5</yellow>, <olive>rotation</olive>=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>4</yellow><yellow>5</yellow>), <olive>texture</olive>=<green>'brick'</green>)
@@ -664,7 +664,7 @@ class Player(<olive>Entity</olive>):
         self.x += held_keys[<green>'d'</green>] * time.dt * <yellow>1</yellow><yellow>0</yellow>
         self.x -= held_keys[<green>'a'</green>] * time.dt * <yellow>1</yellow><yellow>0</yellow>
 
-player = Player(x=-<yellow>1</yellow>)
+player = Player(x=-<yellow>1</yellow>)</p>
 </div>
 
 </div>
@@ -751,7 +751,7 @@ player = Player(x=-<yellow>1</yellow>)
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Button_example"><button class="copy_code_button" onclick="copy_to_clipboard(Button_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Button_example)">copy</button><p id="Button_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
 
 Button.default_color = color.red
@@ -782,7 +782,7 @@ Text(<green>'Text size\nreference'</green>, x=.<yellow>1</yellow><yellow>5</yell
         b.text = <green>'updated text'</green>
 
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -813,13 +813,13 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Sprite_example"><button class="copy_code_button" onclick="copy_to_clipboard(Sprite_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Sprite_example)">copy</button><p id="Sprite_example">app = Ursina()
 camera.orthographic = True
 camera.fov = <yellow>1</yellow>
 Sprite.ppu = <yellow>1</yellow><yellow>6</yellow>
 Texture.default_filtering = None
 s = <purple><b>Sprite</b></purple>(<green>'brick'</green>, filtering=False)
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -942,7 +942,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Text_example"><button class="copy_code_button" onclick="copy_to_clipboard(Text_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Text_example)">copy</button><p id="Text_example"><purple>from</purple> ursina <purple>import</purple> *
   <purple>from</purple> ursina <purple>import</purple> Ursina, dedent, window
   app = Ursina()
   descr = dedent(<green><green>''</green>'
@@ -967,7 +967,7 @@ app.run()
           test.text = <green>''</green>
   window.fps_counter.enabled = False
   <blue>print</blue>(<green>'....'</green>, Text.get_width(<green>'yolo'</green>))
-  app.run()
+  app.run()</p>
 </div>
 
 </div>
@@ -1063,7 +1063,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Audio_example"><button class="copy_code_button" onclick="copy_to_clipboard(Audio_example)">copy</button><purple>from</purple> ursina <purple>import</purple> Ursina
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Audio_example)">copy</button><p id="Audio_example"><purple>from</purple> ursina <purple>import</purple> Ursina
 <purple>import</purple> random
 
 app = Ursina()
@@ -1076,7 +1076,7 @@ a.volume = .<yellow>5</yellow>
         a = <purple><b>Audio</b></purple>(<green>'sine'</green>, pitch=random.uniform(.<yellow>5</yellow>,<yellow>1</yellow>), loop=True)
 
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -1150,7 +1150,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="camera_example"><button class="copy_code_button" onclick="copy_to_clipboard(camera_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(camera_example)">copy</button><p id="camera_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, camera, <olive>Entity</olive>, EditorCamera
 
 app = Ursina()
@@ -1176,7 +1176,7 @@ Editor<purple><b>Camera</b></purple>()
 <purple>from</purple> ursina.shaders <purple>import</purple> camera_grayscale_shader
 camera.shader = camera_grayscale_shader
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -1325,7 +1325,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="mouse_example"><button class="copy_code_button" onclick="copy_to_clipboard(mouse_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(mouse_example)">copy</button><p id="mouse_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, Button, mouse
 app = Ursina()
 Button(<olive>parent</olive>=scene, <olive>text</olive>=<green>'a'</green>)
@@ -1338,7 +1338,7 @@ Button(<olive>parent</olive>=scene, <olive>text</olive>=<green>'a'</green>)
 Cursor()
 
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -1554,7 +1554,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="window_example"><button class="copy_code_button" onclick="copy_to_clipboard(window_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(window_example)">copy</button><p id="window_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina(
     title=<green>'Ursina'</green>,
     )
@@ -1598,7 +1598,7 @@ position_text = Text(<olive>y</olive>=.<yellow>5</yellow>,)
 
 
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -1722,7 +1722,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="scene_example"><button class="copy_code_button" onclick="copy_to_clipboard(scene_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(scene_example)">copy</button><p id="scene_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
 e = <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>color</olive>=color.black, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>)
 EditorCamera()
@@ -1740,7 +1740,7 @@ s = Sky()
 scene.fog_density = .1          <gray># sets exponential density</gray>
 scene.fog_density = (50, 200)   <gray># sets linear density start and end</gray>
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -1910,7 +1910,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="color_example"><button class="copy_code_button" onclick="copy_to_clipboard(color_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(color_example)">copy</button><p id="color_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, Button, Quad, grid_layout, color
 app = Ursina()
 
@@ -1931,7 +1931,7 @@ e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>col
 <blue>print</blue>(e.color.name)
 <blue>print</blue>(<green>'rgb to hex:'</green>, color.rgb_to_hex(*color.blue))
 e.color = color.<purple><b>color</b></purple>(<yellow>1</yellow>,<yellow>2</yellow>,<yellow>3</yellow>)
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -2021,7 +2021,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Mesh_example"><button class="copy_code_button" onclick="copy_to_clipboard(Mesh_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Mesh_example)">copy</button><p id="Mesh_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
 
 e = <olive>Entity</olive>(<olive>position</olive>=(<yellow>0</yellow>,<yellow>0</yellow>), <olive>model</olive>=<purple><b>Mesh</b></purple>(<olive>vertices</olive>=[(-.<yellow>5</yellow>,<yellow>0</yellow>,<yellow>0</yellow>), (.<yellow>5</yellow>,<yellow>0</yellow>,<yellow>0</yellow>), (<yellow>0</yellow>, <yellow>1</yellow>, <yellow>0</yellow>)]))
@@ -2161,7 +2161,7 @@ EditorCamera()
 
 <blue>print</blue>(load_model(<green>'cube'</green>, application.internal_models_compressed_folder, use_deepcop<olive>y</olive>=True).recipe)
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -2169,7 +2169,7 @@ app.run()
     <div class="class_box" id="Shader">
         <h1>Shader</h1>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shader.py"><gray>ursina/shader</gray></a><br><br>
-        <div class="params">Shader(name='untitled_shader', language=Panda3dShader.SL_GLSL, vertex=default_vertex_shader, fragment=default_fragment_shader, geometry='', **kwargs)</div><br>
+        <div class="params">Shader(name='untitled_shader', language=GLSL, vertex=default_vertex_shader, fragment=default_fragment_shader, geometry='', **kwargs)</div><br>
         <table> <!-- attributes -->
             <tr>
                 <td>Shader.CG = Panda3dShader.SL_Cg</td><td></td>
@@ -2221,7 +2221,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Shader_example"><button class="copy_code_button" onclick="copy_to_clipboard(Shader_example)">copy</button><purple>from</purple> time <purple>import</purple> perf_counter
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Shader_example)">copy</button><p id="Shader_example"><purple>from</purple> time <purple>import</purple> perf_counter
 t = perf_counter()
 <purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, held_keys, scene, EditorCamera
@@ -2239,7 +2239,7 @@ EditorCamera()
         <purple>if</purple> <blue>hasattr</blue>(e, <green>'_shader'</green>):
             <blue>print</blue>(<green>'-------'</green>, e.shader)
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -2299,7 +2299,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Texture_example"><button class="copy_code_button" onclick="copy_to_clipboard(Texture_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Texture_example)">copy</button><p id="Texture_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> texture_importer
 app = Ursina()
 <green><green>''</green>'
@@ -2312,7 +2312,7 @@ app = Ursina()
 <green>''</green>'</green>
 e = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'brick'</green>)
 e.texture.set_pixel(<yellow>0</yellow>, <yellow>2</yellow>, color.blue)
-e.texture.apply()
+e.texture.apply()</p>
 </div>
 
 </div>
@@ -2331,7 +2331,7 @@ e.texture.apply()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Light_example"><button class="copy_code_button" onclick="copy_to_clipboard(Light_example)">copy</button><purple>from</purple> ursina <purple>import</purple> Ursina, EditorCamera, color, Vec<yellow>3</yellow>
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Light_example)">copy</button><p id="Light_example"><purple>from</purple> ursina <purple>import</purple> Ursina, EditorCamera, color, Vec<yellow>3</yellow>
 
 app = Ursina()
 from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to receive shadows.</gray>
@@ -2348,7 +2348,7 @@ unlit_entity = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>,
 
 bar = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>position</olive>=(<yellow>0</yellow>,<yellow>3</yellow>,-<yellow>2</yellow>), <olive>shader</olive>=lit_with_shadows_shader, <olive>scale</olive>=(<yellow>1</yellow><yellow>0</yellow>,.<yellow>2</yellow>,.<yellow>2</yellow>), <olive>color</olive>=color.light_gray)
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -2375,7 +2375,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="DirectionalLight_example"><button class="copy_code_button" onclick="copy_to_clipboard(DirectionalLight_example)">copy</button><purple>from</purple> ursina <purple>import</purple> Ursina, EditorCamera, color, Vec<yellow>3</yellow>
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(DirectionalLight_example)">copy</button><p id="DirectionalLight_example"><purple>from</purple> ursina <purple>import</purple> Ursina, EditorCamera, color, Vec<yellow>3</yellow>
 
 app = Ursina()
 from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to receive shadows.</gray>
@@ -2392,7 +2392,7 @@ unlit_entity = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>,
 
 bar = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>position</olive>=(<yellow>0</yellow>,<yellow>3</yellow>,-<yellow>2</yellow>), <olive>shader</olive>=lit_with_shadows_shader, <olive>scale</olive>=(<yellow>1</yellow><yellow>0</yellow>,.<yellow>2</yellow>,.<yellow>2</yellow>), <olive>color</olive>=color.light_gray)
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -2405,7 +2405,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="PointLight_example"><button class="copy_code_button" onclick="copy_to_clipboard(PointLight_example)">copy</button><purple>from</purple> ursina <purple>import</purple> Ursina, EditorCamera, color, Vec<yellow>3</yellow>
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(PointLight_example)">copy</button><p id="PointLight_example"><purple>from</purple> ursina <purple>import</purple> Ursina, EditorCamera, color, Vec<yellow>3</yellow>
 
 app = Ursina()
 from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to receive shadows.</gray>
@@ -2422,7 +2422,7 @@ unlit_entity = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>,
 
 bar = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>position</olive>=(<yellow>0</yellow>,<yellow>3</yellow>,-<yellow>2</yellow>), <olive>shader</olive>=lit_with_shadows_shader, <olive>scale</olive>=(<yellow>1</yellow><yellow>0</yellow>,.<yellow>2</yellow>,.<yellow>2</yellow>), <olive>color</olive>=color.light_gray)
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -2435,7 +2435,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="AmbientLight_example"><button class="copy_code_button" onclick="copy_to_clipboard(AmbientLight_example)">copy</button><purple>from</purple> ursina <purple>import</purple> Ursina, EditorCamera, color, Vec<yellow>3</yellow>
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(AmbientLight_example)">copy</button><p id="AmbientLight_example"><purple>from</purple> ursina <purple>import</purple> Ursina, EditorCamera, color, Vec<yellow>3</yellow>
 
 app = Ursina()
 from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to receive shadows.</gray>
@@ -2452,7 +2452,7 @@ unlit_entity = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>,
 
 bar = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>position</olive>=(<yellow>0</yellow>,<yellow>3</yellow>,-<yellow>2</yellow>), <olive>shader</olive>=lit_with_shadows_shader, <olive>scale</olive>=(<yellow>1</yellow><yellow>0</yellow>,.<yellow>2</yellow>,.<yellow>2</yellow>), <olive>color</olive>=color.light_gray)
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -2465,7 +2465,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="SpotLight_example"><button class="copy_code_button" onclick="copy_to_clipboard(SpotLight_example)">copy</button><purple>from</purple> ursina <purple>import</purple> Ursina, EditorCamera, color, Vec<yellow>3</yellow>
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(SpotLight_example)">copy</button><p id="SpotLight_example"><purple>from</purple> ursina <purple>import</purple> Ursina, EditorCamera, color, Vec<yellow>3</yellow>
 
 app = Ursina()
 from ursina.shaders import lit_with_shadows_shader <gray># you have to apply this shader to enties for them to receive shadows.</gray>
@@ -2482,7 +2482,7 @@ unlit_entity = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>,
 
 bar = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>position</olive>=(<yellow>0</yellow>,<yellow>3</yellow>,-<yellow>2</yellow>), <olive>shader</olive>=lit_with_shadows_shader, <olive>scale</olive>=(<yellow>1</yellow><yellow>0</yellow>,.<yellow>2</yellow>,.<yellow>2</yellow>), <olive>color</olive>=color.light_gray)
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -2498,12 +2498,12 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Circle_example"><button class="copy_code_button" onclick="copy_to_clipboard(Circle_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Circle_example)">copy</button><p id="Circle_example">app = Ursina()
 e = <olive>Entity</olive>(<olive>model</olive>=<purple><b>Circle</b></purple>(<yellow>8</yellow>, <olive>mode</olive>=<green>'line'</green>, <olive>thickness</olive>=<yellow>1</yellow><yellow>0</yellow>), <olive>color</olive>=color.hsv(<yellow>6</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>3</yellow>))
 <blue>print</blue>(e.model)
 origin = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>color</olive>=color.orange, <olive>scale</olive>=(.<yellow>0</yellow><yellow>5</yellow>, .<yellow>0</yellow><yellow>5</yellow>))
 ed = EditorCamera(rotation_speed = <yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>, panning_speed=<yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>)
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -2522,13 +2522,13 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Plane_example"><button class="copy_code_button" onclick="copy_to_clipboard(Plane_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Plane_example)">copy</button><p id="Plane_example">app = Ursina()
 
 front =  <olive>Entity</olive>(<olive>model</olive>=<purple><b>Plane</b></purple>(subdivisions=(<yellow>3</yellow>,<yellow>6</yellow>)), <olive>texture</olive>=<green>'brick'</green>, <olive>rotation_x</olive>=-<yellow>9</yellow><yellow>0</yellow>)
 
 _ed = EditorCamera()
 <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.green, <olive>scale</olive>=.<yellow>0</yellow><yellow>5</yellow>)
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -2547,9 +2547,9 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Grid_example"><button class="copy_code_button" onclick="copy_to_clipboard(Grid_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Grid_example)">copy</button><p id="Grid_example">app = Ursina()
 <olive>Entity</olive>(<olive>model</olive>=<purple><b>Grid</b></purple>(<yellow>2</yellow>, <yellow>6</yellow>))
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -2562,14 +2562,14 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Cone_example"><button class="copy_code_button" onclick="copy_to_clipboard(Cone_example)">copy</button><purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, color, EditorCamera
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Cone_example)">copy</button><p id="Cone_example"><purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, color, EditorCamera
 app = Ursina()
 e = <olive>Entity</olive>(<olive>model</olive>=<purple><b>Cone</b></purple>(<yellow>3</yellow>), <olive>texture</olive>=<green>'brick'</green>)
 
 
 origin = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>color</olive>=color.orange, <olive>scale</olive>=(.<yellow>0</yellow><yellow>5</yellow>, .<yellow>0</yellow><yellow>5</yellow>))
 ed = EditorCamera()
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -2582,11 +2582,11 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Cylinder_example"><button class="copy_code_button" onclick="copy_to_clipboard(Cylinder_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Cylinder_example)">copy</button><p id="Cylinder_example">app = Ursina()
 <olive>Entity</olive>(<olive>model</olive>=<purple><b>Cylinder</b></purple>(<yellow>6</yellow>, start=-.<yellow>5</yellow>), <olive>color</olive>=color.hsv(<yellow>6</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>3</yellow>))
 origin = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>color</olive>=color.orange, <olive>scale</olive>=(<yellow>5</yellow>, .<yellow>0</yellow><yellow>5</yellow>))
 ed = EditorCamera(rotation_speed = <yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>, panning_speed=<yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>)
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -2634,7 +2634,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Pipe_example"><button class="copy_code_button" onclick="copy_to_clipboard(Pipe_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Pipe_example)">copy</button><p id="Pipe_example">app = Ursina()
 path = [e*<yellow>5</yellow> <purple>for</purple> e in Circle().vertices]
 
 path.append(path[<yellow>0</yellow>])
@@ -2644,7 +2644,7 @@ e = <olive>Entity</olive>(<olive>model</olive>=<purple><b>Pipe</b></purple>(path
 EditorCamera()
 origin = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.magenta)
 origin.scale *= .<yellow>2</yellow><yellow>5</yellow>
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -2674,7 +2674,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Terrain_example"><button class="copy_code_button" onclick="copy_to_clipboard(Terrain_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Terrain_example)">copy</button><p id="Terrain_example">app = Ursina()
 <green><green><green>''</green></green>'Terrain using an RGB texture as input<green><green>''</green></green>'</green>
 terrain_from_heightmap_texture = <olive>Entity</olive>(<olive>model</olive>=<purple><b>Terrain</b></purple>(<green>'heightmap_1'</green>, skip=<yellow>8</yellow>), <olive>scale</olive>=(<yellow>4</yellow><yellow>0</yellow>,<yellow>5</yellow>,<yellow>2</yellow><yellow>0</yellow>), <olive>texture</olive>=<green>'heightmap_1'</green>)
 
@@ -2707,7 +2707,7 @@ player = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, <ol
 
 
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -2742,7 +2742,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="input_handler_example"><button class="copy_code_button" onclick="copy_to_clipboard(input_handler_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(input_handler_example)">copy</button><p id="input_handler_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, input_handler
 
 app = Ursina(borderless=False)
@@ -2761,7 +2761,7 @@ input_handler.bind(<green><green>'gamepad b'</green></green>, <green><green>'att
 
 
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -2802,7 +2802,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="mesh_importer_example"><button class="copy_code_button" onclick="copy_to_clipboard(mesh_importer_example)">copy</button>compress_internal()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(mesh_importer_example)">copy</button><p id="mesh_importer_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, EditorCamera, Sky
 app = Ursina()
 
@@ -2820,7 +2820,7 @@ EditorCamera()
 Sky(<olive>texture</olive>=<green>'sky_sunset'</green>)
 
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -2849,10 +2849,10 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="texture_importer_example"><button class="copy_code_button" onclick="copy_to_clipboard(texture_importer_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(texture_importer_example)">copy</button><p id="texture_importer_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
 <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'white_cube'</green>)
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -2884,9 +2884,9 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="string_utilities_example"><button class="copy_code_button" onclick="copy_to_clipboard(string_utilities_example)">copy</button><blue>print</blue>(camel_to_snake(<green>'CamelToSnake'</green>))
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(string_utilities_example)">copy</button><p id="string_utilities_example"><blue>print</blue>(camel_to_snake(<green>'CamelToSnake'</green>))
 <blue>print</blue>(snake_to_camel(<green>'snake_to_camel'</green>))
-printvar(<green>'test'</green>)
+printvar(<green>'test'</green>)</p>
 </div>
 
 </div>
@@ -2931,7 +2931,7 @@ printvar(<green>'test'</green>)
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Animation_example"><button class="copy_code_button" onclick="copy_to_clipboard(Animation_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Animation_example)">copy</button><p id="Animation_example">app = Ursina()
 
     <green><green>''</green>'
     Loads an image sequence as a frame animation.
@@ -2944,7 +2944,7 @@ printvar(<green>'test'</green>)
 
     a = <purple><b>Animation</b></purple>(<green>'ursina_wink'</green>)
 
-    app.run()
+    app.run()</p>
 </div>
 
 </div>
@@ -2992,7 +2992,7 @@ printvar(<green>'test'</green>)
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="FrameAnimation3d_example"><button class="copy_code_button" onclick="copy_to_clipboard(FrameAnimation3d_example)">copy</button>application.asset_folder = application.asset_folder.parent.parent / <green>'samples'</green>
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(FrameAnimation3d_example)">copy</button><p id="FrameAnimation3d_example">application.asset_folder = application.asset_folder.parent.parent / <green>'samples'</green>
 app = Ursina()
 
 <green><green>''</green>'
@@ -3001,7 +3001,7 @@ So if you have some frames named run_cycle_000.obj, run_cycle_001.obj, run_cycle
 you can load it like this: FrameAnimation3d(<green>'run_cycle_'</green>)
 <green>''</green>'</green>
 
-FrameAnimation<yellow>3</yellow>d(<green>'blob_animation_'</green>)
+FrameAnimation<yellow>3</yellow>d(<green>'blob_animation_'</green>)</p>
 </div>
 
 </div>
@@ -3022,7 +3022,7 @@ FrameAnimation<yellow>3</yellow>d(<green>'blob_animation_'</green>)
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="SpriteSheetAnimation_example"><button class="copy_code_button" onclick="copy_to_clipboard(SpriteSheetAnimation_example)">copy</button><green><green>''</green>'
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(SpriteSheetAnimation_example)">copy</button><p id="SpriteSheetAnimation_example"><green><green>''</green>'
 Sprite sheet coordinate system:
 (0,3) (1,3) (2,3) (3,3)
 (0,2) (1,2) (2,2) (3,2)
@@ -3052,7 +3052,7 @@ player_graphics = <purple><b>SpriteSheetAnimation</b></purple>(<green>'sprite_sh
 
 
 <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'sprite_sheet'</green>, x=-<yellow>1</yellow>)
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -3083,7 +3083,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Animator_example"><button class="copy_code_button" onclick="copy_to_clipboard(Animator_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Animator_example)">copy</button><p id="Animator_example">app = Ursina()
 anim = Animation(<green>'ursina_wink'</green>, loop=True, autopla<olive>y</olive>=False)
 a = <purple><b>Animator</b></purple>(
     animations = {
@@ -3105,7 +3105,7 @@ Text(<green>'press &ltred&gt1&ltdefault&gt, &ltgreen&gt2&ltdefault&gt or &ltviol
         a.state = <green>'help'</green>
         <blue>print</blue>(anim.enabled)
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -3154,7 +3154,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="TrailRenderer_example"><button class="copy_code_button" onclick="copy_to_clipboard(TrailRenderer_example)">copy</button>app = Ursina(vsync=False)
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(TrailRenderer_example)">copy</button><p id="TrailRenderer_example">app = Ursina(vsync=False)
 window.color = color.black
 mouse.visible = False
 player = <olive>Entity</olive>(<olive>z</olive>=<yellow>1</yellow>)
@@ -3181,7 +3181,7 @@ trail_renderers = []
 
 EditorCamera()
 <olive>Entity</olive>(<olive>model</olive>=Grid(<yellow>8</yellow>,<yellow>8</yellow>), <olive>rotation_x</olive>=<yellow>9</yellow><yellow>0</yellow>, <olive>color</olive>=color.gray, <olive>y</olive>=-<yellow>3</yellow>, <olive>scale</olive>=<yellow>8</yellow>)
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -3291,7 +3291,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="curve_example"><button class="copy_code_button" onclick="copy_to_clipboard(curve_example)">copy</button><green><green><green>''</green></green>'Draws a sheet with every curve and its name<green><green>''</green></green>'</green>
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(curve_example)">copy</button><p id="curve_example"><green><green><green>''</green></green>'Draws a sheet with every curve and its name<green><green>''</green></green>'</green>
 <purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, camera, window, curve, <olive>Entity</olive>, Mesh, Text, color
 
@@ -3331,7 +3331,7 @@ e.animate_y(1, curve=curve.in_expo)
 
 e2 = Entity(x=1.5)
 e2.animate_y(1, curve=curve.CubicBezier(0,.7,1,.3))
-<green>''</green>'</green>
+<green>''</green>'</green></p>
 </div>
 
 </div>
@@ -3387,7 +3387,7 @@ e2.animate_y(1, curve=curve.CubicBezier(0,.7,1,.3))
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="ursinamath_example"><button class="copy_code_button" onclick="copy_to_clipboard(ursinamath_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(ursinamath_example)">copy</button><p id="ursinamath_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
 e<yellow>1</yellow> = <olive>Entity</olive>(position = (<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>))
 e<yellow>2</yellow> = <olive>Entity</olive>(position = (<yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>))
@@ -3405,7 +3405,7 @@ between_color = lerp(color.lime, color.magenta, .<yellow>5</yellow>)
 p = (<yellow>1</yellow>,<yellow>0</yellow>)
 <blue>print</blue>(p, <green>'rotated -&gt'</green>, rotate_around_point_<yellow>2</yellow>d(p, (<yellow>0</yellow>,<yellow>0</yellow>), <yellow>9</yellow><yellow>0</yellow>))
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -3435,9 +3435,9 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Vec2_example"><button class="copy_code_button" onclick="copy_to_clipboard(Vec2_example)">copy</button>a = <purple><b>Vec2</b></purple>(<yellow>1</yellow>,<yellow>1</yellow>)
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Vec2_example)">copy</button><p id="Vec2_example">a = <purple><b>Vec2</b></purple>(<yellow>1</yellow>,<yellow>1</yellow>)
 <blue>print</blue>(a)
-<blue>print</blue>(round(a))
+<blue>print</blue>(round(a))</p>
 </div>
 
 </div>
@@ -3482,10 +3482,10 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Vec3_example"><button class="copy_code_button" onclick="copy_to_clipboard(Vec3_example)">copy</button>a = <purple><b>Vec3</b></purple>(<yellow>1</yellow>,<yellow>0</yellow>,<yellow>0</yellow>) * <yellow>2</yellow>
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Vec3_example)">copy</button><p id="Vec3_example">a = <purple><b>Vec3</b></purple>(<yellow>1</yellow>,<yellow>0</yellow>,<yellow>0</yellow>) * <yellow>2</yellow>
 a = <purple><b>Vec3</b></purple>(<yellow>1</yellow>,<yellow>0</yellow>,<yellow>1</yellow>) * <purple><b>Vec3</b></purple>(<yellow>2</yellow>,<yellow>1</yellow>,<yellow>2</yellow>)
 b = <purple><b>Vec3</b></purple>(<yellow>1</yellow>.<yellow>2</yellow><yellow>5</yellow><yellow>2</yellow><yellow>3</yellow><yellow>5</yellow><yellow>2</yellow><yellow>3</yellow><yellow>2</yellow><yellow>4</yellow>,<yellow>0</yellow>,<yellow>1</yellow>)
-b += <purple><b>Vec3</b></purple>(<yellow>0</yellow>,<yellow>1</yellow>)
+b += <purple><b>Vec3</b></purple>(<yellow>0</yellow>,<yellow>1</yellow>)</p>
 </div>
 
 </div>
@@ -3497,10 +3497,10 @@ b += <purple><b>Vec3</b></purple>(<yellow>0</yellow>,<yellow>1</yellow>)
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Vec4_example"><button class="copy_code_button" onclick="copy_to_clipboard(Vec4_example)">copy</button>a = Vec<yellow>4</yellow>(<yellow>1</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>) * <yellow>2</yellow>
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Vec4_example)">copy</button><p id="Vec4_example">a = Vec<yellow>4</yellow>(<yellow>1</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>) * <yellow>2</yellow>
 a = Vec<yellow>4</yellow>(<yellow>1</yellow>,<yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>) * Vec<yellow>4</yellow>(<yellow>2</yellow>,<yellow>1</yellow>,<yellow>2</yellow>,<yellow>3</yellow>)
 b = Vec<yellow>4</yellow>(<yellow>1</yellow>.<yellow>2</yellow><yellow>5</yellow><yellow>2</yellow><yellow>3</yellow><yellow>5</yellow><yellow>2</yellow><yellow>3</yellow><yellow>2</yellow><yellow>4</yellow>,<yellow>0</yellow>,<yellow>1</yellow>,.<yellow>2</yellow>)
-b += Vec<yellow>4</yellow>(<yellow>0</yellow>,<yellow>1</yellow>)
+b += Vec<yellow>4</yellow>(<yellow>0</yellow>,<yellow>1</yellow>)</p>
 </div>
 
 </div>
@@ -3560,7 +3560,7 @@ b += Vec<yellow>4</yellow>(<yellow>0</yellow>,<yellow>1</yellow>)
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="CubicBezier_example"><button class="copy_code_button" onclick="copy_to_clipboard(CubicBezier_example)">copy</button><green><green><green>''</green></green>'Draws a sheet with every curve and its name<green><green>''</green></green>'</green>
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(CubicBezier_example)">copy</button><p id="CubicBezier_example"><green><green><green>''</green></green>'Draws a sheet with every curve and its name<green><green>''</green></green>'</green>
 <purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, camera, window, curve, <olive>Entity</olive>, Mesh, Text, color
 
@@ -3600,7 +3600,7 @@ e.animate_y(1, curve=curve.in_expo)
 
 e2 = Entity(x=1.5)
 e2.animate_y(1, curve=curve.<b>CubicBezier</b>(0,.7,1,.3))
-<green>''</green>'</green>
+<green>''</green>'</green></p>
 </div>
 
 </div>
@@ -3659,7 +3659,7 @@ e2.animate_y(1, curve=curve.<b>CubicBezier</b>(0,.7,1,.3))
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="ursinastuff_example"><button class="copy_code_button" onclick="copy_to_clipboard(ursinastuff_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(ursinastuff_example)">copy</button><p id="ursinastuff_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
 
 
@@ -3670,7 +3670,12 @@ list_<yellow>2</yellow>d = [
     [<yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,<yellow>0</yellow>, <yellow>0</yellow>, <yellow>1</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>, <yellow>0</yellow>, <yellow>1</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,<yellow>1</yellow>, <yellow>0</yellow>, <yellow>0</yellow>,<yellow>1</yellow>,<yellow>0</yellow>,<yellow>0</yellow>],
 ]
 <blue>print</blue>(list_<yellow>2</yellow>d_to_string(list_<yellow>2</yellow>d))
-app.run()
+
+
+a = Audio(<green>'sine'</green>)
+a.play()
+destroy(a, dela<olive>y</olive>=<yellow>1</yellow>)
+app.run()</p>
 </div>
 
 </div>
@@ -3745,7 +3750,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Sequence_example"><button class="copy_code_button" onclick="copy_to_clipboard(Sequence_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Sequence_example)">copy</button><p id="Sequence_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>
 app = Ursina()
 e = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>)
@@ -3772,7 +3777,7 @@ s = <purple><b>Sequence</b></purple>(
     <purple>if</purple> key in actions:
         actions[key]()
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -3794,7 +3799,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Func_example"><button class="copy_code_button" onclick="copy_to_clipboard(Func_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Func_example)">copy</button><p id="Func_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>
 app = Ursina()
 e = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>)
@@ -3821,7 +3826,7 @@ s = Sequence(
     <purple>if</purple> key in actions:
         actions[key]()
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -4060,7 +4065,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Keys_example"><button class="copy_code_button" onclick="copy_to_clipboard(Keys_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Keys_example)">copy</button><p id="Keys_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, input_handler
 
 app = Ursina(borderless=False)
@@ -4079,7 +4084,7 @@ input_handler.bind(<green><green>'gamepad b'</green></green>, <green><green>'att
 
 
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -4096,7 +4101,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="raycast_example"><button class="copy_code_button" onclick="copy_to_clipboard(raycast_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(raycast_example)">copy</button><p id="raycast_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, held_keys, time, duplicate, camera, EditorCamera
 app = Ursina()
 
@@ -4131,7 +4136,7 @@ Player(<olive>model</olive>=<green>'cube'</green>, origin_<olive>y</olive>=-.<ye
 wall_left = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>, scale_<olive>y</olive>=<yellow>3</yellow>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>color</olive>=color.azure, x=-<yellow>4</yellow>)
 wall_right = duplicate(wall_left, x=<yellow>4</yellow>)
 camera.y = <yellow>2</yellow>
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -4148,7 +4153,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="terraincast_example"><button class="copy_code_button" onclick="copy_to_clipboard(terraincast_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(terraincast_example)">copy</button><p id="terraincast_example">app = Ursina()
 
 terrain_entity = <olive>Entity</olive>(<olive>model</olive>=Terrain(<green>'heightmap_1'</green>, skip=<yellow>8</yellow>), <olive>scale</olive>=(<yellow>4</yellow><yellow>0</yellow>, <yellow>5</yellow>, <yellow>2</yellow><yellow>0</yellow>), <olive>texture</olive>=<green>'heightmap_1'</green>)
 player = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, <olive>color</olive>=color.azure, <olive>scale</olive>=.<yellow>2</yellow>, origin_<olive>y</olive>=-.<yellow>5</yellow>)
@@ -4168,7 +4173,7 @@ EditorCamera()
 camera.shader = ssao_shader
 Sky()
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -4185,7 +4190,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="boxcast_example"><button class="copy_code_button" onclick="copy_to_clipboard(boxcast_example)">copy</button><purple>from</purple> ursina <purple>import</purple> Ursina, held_keys, camera, duplicate, raycast, time, EditorCamera
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(boxcast_example)">copy</button><p id="boxcast_example"><purple>from</purple> ursina <purple>import</purple> Ursina, held_keys, camera, duplicate, raycast, time, EditorCamera
 app = Ursina()
 
 <green><green>''</green>'
@@ -4217,7 +4222,7 @@ Player(<olive>model</olive>=<green>'cube'</green>, origin_<olive>y</olive>=-.<ye
 wall_left = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>, scale_<olive>y</olive>=<yellow>3</yellow>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>color</olive>=color.azure, x=-<yellow>4</yellow>)
 wall_right = duplicate(wall_left, x=<yellow>4</yellow>)
 camera.y = <yellow>2</yellow>
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -4256,7 +4261,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Collider_example"><button class="copy_code_button" onclick="copy_to_clipboard(Collider_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Collider_example)">copy</button><p id="Collider_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, Pipe, Circle, Button, scene, EditorCamera, color
 app = Ursina()
 
@@ -4286,7 +4291,7 @@ EditorCamera()
 
 
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -4305,7 +4310,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="BoxCollider_example"><button class="copy_code_button" onclick="copy_to_clipboard(BoxCollider_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(BoxCollider_example)">copy</button><p id="BoxCollider_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, Pipe, Circle, Button, scene, EditorCamera, color
 app = Ursina()
 
@@ -4335,7 +4340,7 @@ EditorCamera()
 
 
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -4354,7 +4359,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="SphereCollider_example"><button class="copy_code_button" onclick="copy_to_clipboard(SphereCollider_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(SphereCollider_example)">copy</button><p id="SphereCollider_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, Pipe, Circle, Button, scene, EditorCamera, color
 app = Ursina()
 
@@ -4384,7 +4389,7 @@ EditorCamera()
 
 
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -4408,7 +4413,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="MeshCollider_example"><button class="copy_code_button" onclick="copy_to_clipboard(MeshCollider_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(MeshCollider_example)">copy</button><p id="MeshCollider_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, Pipe, Circle, Button, scene, EditorCamera, color
 app = Ursina()
 
@@ -4438,7 +4443,7 @@ EditorCamera()
 
 
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -4543,7 +4548,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="EditorCamera_example"><button class="copy_code_button" onclick="copy_to_clipboard(EditorCamera_example)">copy</button><purple>from</purple> ursina <purple>import</purple> Ursina, Sky, load_model, color, Text, window, Button
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(EditorCamera_example)">copy</button><p id="EditorCamera_example"><purple>from</purple> ursina <purple>import</purple> Ursina, Sky, load_model, color, Text, window, Button
 app = Ursina(vsync=False, use_ingame_console=True)
 <green><green>''</green>'
 Simple camera for debugging.
@@ -4565,7 +4570,7 @@ rotation_info = Text(<olive>position</olive>=window.top_left)
     rotation_info.text = str(int(ec.rotation_y)) + <green>'\n'</green> + str(int(ec.rotation_x))
 
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -4632,7 +4637,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Tilemap_example"><button class="copy_code_button" onclick="copy_to_clipboard(Tilemap_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Tilemap_example)">copy</button><p id="Tilemap_example">app = Ursina()
 EditorCamera()
 tilemap = <purple><b>Tilemap</b></purple>(<green>'tilemap_test_level'</green>, tileset=<green>'test_tileset'</green>, tileset_size=(<yellow>8</yellow>,<yellow>4</yellow>), <olive>parent</olive>=scene)
 tilemap.canvas.texture = <green>'tilemap_test_level'</green>
@@ -4642,7 +4647,7 @@ camera.fov = tilemap.tilemap.height
 
 Text(<green>'press tab to toggle edit mode'</green>, <olive>origin</olive>=(.<yellow>5</yellow>,<yellow>0</yellow>), <olive>position</olive>=(-.<yellow>5</yellow><yellow>5</yellow>,.<yellow>4</yellow>))
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -4723,7 +4728,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="FirstPersonController_example"><button class="copy_code_button" onclick="copy_to_clipboard(FirstPersonController_example)">copy</button><purple>from</purple> ursina.prefabs.first_person_controller <purple>import</purple> FirstPersonController
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(FirstPersonController_example)">copy</button><p id="FirstPersonController_example"><purple>from</purple> ursina.prefabs.first_person_controller <purple>import</purple> FirstPersonController
 window.vsync = False
 app = Ursina()
 ground = <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=(<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>), <olive>color</olive>=color.yellow.tint(-.<yellow>2</yellow>), <olive>texture</olive>=<green>'white_cube'</green>, <olive>texture_scale</olive>=(<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>,<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>), <olive>collider</olive>=<green>'box'</green>)
@@ -4758,7 +4763,7 @@ hookshot_target.on_click = Func(player.animate_position, hookshot_target.positio
         bullet.animate_position(bullet.position+(bullet.forward*<yellow>5</yellow><yellow>0</yellow>), <olive>curve</olive>=curve.linear, duration=<yellow>1</yellow>)
         destroy(bullet, dela<olive>y</olive>=<yellow>1</yellow>)
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -4854,7 +4859,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="PlatformerController2d_example"><button class="copy_code_button" onclick="copy_to_clipboard(PlatformerController2d_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(PlatformerController2d_example)">copy</button><p id="PlatformerController2d_example">app = Ursina()
 camera.orthographic = True
 camera.fov = <yellow>1</yellow><yellow>0</yellow>
 
@@ -4875,7 +4880,7 @@ player_controller = PlatformerController<yellow>2</yellow>d(scale_<olive>y</oliv
 ec = EditorCamera()
 ec.add_script(SmoothFollow(target=player_controller, offset=[<yellow>0</yellow>,<yellow>1</yellow>,<yellow>0</yellow>], speed=<yellow>4</yellow>))
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -4947,7 +4952,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Conversation_example"><button class="copy_code_button" onclick="copy_to_clipboard(Conversation_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Conversation_example)">copy</button><p id="Conversation_example">app = Ursina()
 
 variables = Empty(
     evil=<yellow>0</yellow>,
@@ -4984,7 +4989,7 @@ conversation.start_conversation(convo)
         <blue>print</blue>(variables.evil)
 
 Sprite(<green>'shore'</green>, <olive>z</olive>=<yellow>1</yellow>)
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -5071,7 +5076,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Button_example"><button class="copy_code_button" onclick="copy_to_clipboard(Button_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Button_example)">copy</button><p id="Button_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
 
 Button.default_color = color.red
@@ -5102,7 +5107,7 @@ Text(<green>'Text size\nreference'</green>, x=.<yellow>1</yellow><yellow>5</yell
         b.text = <green>'updated text'</green>
 
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -5165,7 +5170,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Draggable_example"><button class="copy_code_button" onclick="copy_to_clipboard(Draggable_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Draggable_example)">copy</button><p id="Draggable_example">app = Ursina()
 
 <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>8</yellow>, <olive>texture</olive>=<green>'white_cube'</green>, <olive>texture_scale</olive>=(<yellow>8</yellow>,<yellow>8</yellow>))
 draggable_button = <purple><b>Draggable</b></purple>(<olive>scale</olive>=.<yellow>1</yellow>, <olive>text</olive>=<green>'drag me'</green>, <olive>position</olive>=(-.<yellow>5</yellow>, <yellow>0</yellow>))
@@ -5174,7 +5179,7 @@ world_space_draggable = <purple><b>Draggable</b></purple>(<olive>parent</olive>=
 EditorCamera(<olive>rotation</olive>=(<yellow>3</yellow><yellow>0</yellow>,<yellow>1</yellow><yellow>0</yellow>,<yellow>0</yellow>))
 world_space_draggable.drop = Func(print, <green>'dropped cube'</green>)
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -5192,7 +5197,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Tooltip_example"><button class="copy_code_button" onclick="copy_to_clipboard(Tooltip_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Tooltip_example)">copy</button><p id="Tooltip_example">app = Ursina()
 
     tooltip_test = <purple><b>Tooltip</b></purple>(
     <green>'&ltscale:1.5&gt&ltpink&gt'</green> + <green>'Rainstorm'</green> + <green>'&ltscale:1&gt \n \n'</green> +
@@ -5206,7 +5211,7 @@ Lasts for 4 rounds.<green>''</green><green>'</green>.replace('</green>\n<green>'
 )
 
     tooltip_test.enabled = True
-    app.run()
+    app.run()</p>
 </div>
 
 </div>
@@ -5287,7 +5292,7 @@ Lasts for 4 rounds.<green>''</green><green>'</green>.replace('</green>\n<green>'
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Slider_example"><button class="copy_code_button" onclick="copy_to_clipboard(Slider_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Slider_example)">copy</button><p id="Slider_example">app = Ursina()
 
 box = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>scale</olive>=<yellow>1</yellow>, <olive>color</olive>=color.orange)
 
@@ -5302,7 +5307,7 @@ thin_slider = Thin<purple><b>Slider</b></purple>(<olive>text</olive>=<green>'hei
 thin_slider.label.origin = (<yellow>0</yellow>,<yellow>0</yellow>)
 thin_slider.label.position = (.<yellow>2</yellow><yellow>5</yellow>, -.<yellow>1</yellow>)
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -5315,7 +5320,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="ThinSlider_example"><button class="copy_code_button" onclick="copy_to_clipboard(ThinSlider_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(ThinSlider_example)">copy</button><p id="ThinSlider_example">app = Ursina()
 
 box = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>scale</olive>=<yellow>1</yellow>, <olive>color</olive>=color.orange)
 
@@ -5330,7 +5335,7 @@ thin_slider = <purple><b>ThinSlider</b></purple>(<olive>text</olive>=<green>'hei
 thin_slider.label.origin = (<yellow>0</yellow>,<yellow>0</yellow>)
 thin_slider.label.position = (.<yellow>2</yellow><yellow>5</yellow>, -.<yellow>1</yellow>)
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -5520,7 +5525,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="TextField_example"><button class="copy_code_button" onclick="copy_to_clipboard(TextField_example)">copy</button><purple>from</purple> ursina <purple>import</purple> Ursina, window, Button
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(TextField_example)">copy</button><p id="TextField_example"><purple>from</purple> ursina <purple>import</purple> Ursina, window, Button
 app = Ursina(vsync=<yellow>6</yellow><yellow>0</yellow>)
 
 
@@ -5549,7 +5554,7 @@ te.render()
         te.input(<green>'scroll down'</green>)
 
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -5582,14 +5587,14 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Cursor_example"><button class="copy_code_button" onclick="copy_to_clipboard(Cursor_example)">copy</button><purple>from</purple> ursina <purple>import</purple> Ursina, Button, scene, Panel, Mesh
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Cursor_example)">copy</button><p id="Cursor_example"><purple>from</purple> ursina <purple>import</purple> Ursina, Button, scene, Panel, Mesh
 app = Ursina()
 Button(<green>'button'</green>).fit_to_text()
 camera.orthographic = True
 camera.fov = <yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>
 <purple><b>Cursor</b></purple>()
 mouse.visible = False
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -5649,7 +5654,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="InputField_example"><button class="copy_code_button" onclick="copy_to_clipboard(InputField_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(InputField_example)">copy</button><p id="InputField_example">app = Ursina()
 gradient = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'vertical_gradient'</green>, <olive>parent</olive>=camera.ui, <olive>scale</olive>=(camera.aspect_ratio,<yellow>1</yellow>), <olive>color</olive>=color.hsv(<yellow>2</yellow><yellow>4</yellow><yellow>0</yellow>,.<yellow>6</yellow>,.<yellow>1</yellow>,.<yellow>7</yellow><yellow>5</yellow>))
 
 username_field = <purple><b>InputField</b></purple>(<olive>y</olive>=-.<yellow>1</yellow><yellow>2</yellow>, limit_content_to=<green>'0123456789'</green>, default_value=<green>'11'</green>, active=True)
@@ -5663,7 +5668,7 @@ username_field.next_field = password_field
 
 Button(<olive>text</olive>=<green>'Login'</green>, <olive>scale</olive>=.<yellow>1</yellow>, <olive>color</olive>=color.cyan.tint(-.<yellow>4</yellow>), <olive>y</olive>=-.<yellow>2</yellow><yellow>6</yellow>, <olive>on_click</olive>=submit).fit_to_text()
 username_field.on_value_changed = submit
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -5687,7 +5692,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="ContentTypes_example"><button class="copy_code_button" onclick="copy_to_clipboard(ContentTypes_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(ContentTypes_example)">copy</button><p id="ContentTypes_example">app = Ursina()
 gradient = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'vertical_gradient'</green>, <olive>parent</olive>=camera.ui, <olive>scale</olive>=(camera.aspect_ratio,<yellow>1</yellow>), <olive>color</olive>=color.hsv(<yellow>2</yellow><yellow>4</yellow><yellow>0</yellow>,.<yellow>6</yellow>,.<yellow>1</yellow>,.<yellow>7</yellow><yellow>5</yellow>))
 
 username_field = InputField(<olive>y</olive>=-.<yellow>1</yellow><yellow>2</yellow>, limit_content_to=<green>'0123456789'</green>, default_value=<green>'11'</green>, active=True)
@@ -5701,7 +5706,7 @@ username_field.next_field = password_field
 
 Button(<olive>text</olive>=<green>'Login'</green>, <olive>scale</olive>=.<yellow>1</yellow>, <olive>color</olive>=color.cyan.tint(-.<yellow>4</yellow>), <olive>y</olive>=-.<yellow>2</yellow><yellow>6</yellow>, <olive>on_click</olive>=submit).fit_to_text()
 username_field.on_value_changed = submit
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -5764,7 +5769,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="ButtonList_example"><button class="copy_code_button" onclick="copy_to_clipboard(ButtonList_example)">copy</button><purple>from</purple> ursina <purple>import</purple> Ursina, Func
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(ButtonList_example)">copy</button><p id="ButtonList_example"><purple>from</purple> ursina <purple>import</purple> Ursina, Func
 app = Ursina()
 
 default = Func(print, <green>'not yet implemented'</green>)
@@ -5792,7 +5797,7 @@ bl.selected = <green>'button 7'</green>
 
 bl.button_dict = {}
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -5861,7 +5866,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="ButtonGroup_example"><button class="copy_code_button" onclick="copy_to_clipboard(ButtonGroup_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(ButtonGroup_example)">copy</button><p id="ButtonGroup_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
 
 center = <olive>Entity</olive>(<olive>parent</olive>=camera.ui, <olive>model</olive>=<green>'circle'</green>, <olive>scale</olive>=.<yellow>0</yellow><yellow>0</yellow><yellow>5</yellow>, <olive>color</olive>=color.red, <olive>z</olive>=-<yellow>1</yellow>)
@@ -5872,7 +5877,7 @@ gender_selection = <purple><b>ButtonGroup</b></purple>((<green>'man'</green>, <g
 gender_selection.on_value_changed = on_value_changed
 
 
-window.color = color._<yellow>3</yellow><yellow>2</yellow>
+window.color = color._<yellow>3</yellow><yellow>2</yellow></p>
 </div>
 
 </div>
@@ -5899,7 +5904,7 @@ window.color = color._<yellow>3</yellow><yellow>2</yellow>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="WindowPanel_example"><button class="copy_code_button" onclick="copy_to_clipboard(WindowPanel_example)">copy</button><green><green>''</green>'
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(WindowPanel_example)">copy</button><p id="WindowPanel_example"><green><green>''</green>'
 WindowPanel is an easy way to create UI. It will automatically layout the content.
 <green>''</green>'</green>
 <purple>from</purple> ursina <purple>import</purple> Ursina, ButtonGroup
@@ -5923,7 +5928,7 @@ wp.layout()
     <purple>if</purple> key == <green>'space'</green>:
         wp.enabled = True
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -5939,7 +5944,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Space_example"><button class="copy_code_button" onclick="copy_to_clipboard(Space_example)">copy</button><green><green>''</green>'
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Space_example)">copy</button><p id="Space_example"><green><green>''</green>'
 WindowPanel is an easy way to create UI. It will automatically layout the content.
 <green>''</green>'</green>
 <purple>from</purple> ursina <purple>import</purple> Ursina, ButtonGroup
@@ -5963,7 +5968,7 @@ wp.layout()
     <purple>if</purple> key == <green>'space'</green>:
         wp.enabled = True
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -6059,7 +6064,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="FileBrowser_example"><button class="copy_code_button" onclick="copy_to_clipboard(FileBrowser_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(FileBrowser_example)">copy</button><p id="FileBrowser_example">app = Ursina()
 
 fb = <purple><b>FileBrowser</b></purple>(file_types=(<green>'.*'</green>), <olive>enabled</olive>=False)
 
@@ -6075,7 +6080,7 @@ fb.on_submit = on_submit
         fb.enabled = <purple>not</purple> fb.enabled
 
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -6114,7 +6119,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="FileButton_example"><button class="copy_code_button" onclick="copy_to_clipboard(FileButton_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(FileButton_example)">copy</button><p id="FileButton_example">app = Ursina()
 
 fb = FileBrowser(file_types=(<green>'.*'</green>), <olive>enabled</olive>=False)
 
@@ -6130,7 +6135,7 @@ fb.on_submit = on_submit
         fb.enabled = <purple>not</purple> fb.enabled
 
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -6180,7 +6185,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="FileBrowserSave_example"><button class="copy_code_button" onclick="copy_to_clipboard(FileBrowserSave_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(FileBrowserSave_example)">copy</button><p id="FileBrowserSave_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina.prefabs.file_browser_save <purple>import</purple> FileBrowserSave
 
 app = Ursina()
@@ -6197,7 +6202,7 @@ wp.enabled = False
         wp.enabled = <purple>not</purple> wp.enabled
 
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -6236,7 +6241,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="DropdownMenu_example"><button class="copy_code_button" onclick="copy_to_clipboard(DropdownMenu_example)">copy</button><purple>from</purple> ursina.prefabs.dropdown_menu <purple>import</purple> DropdownMenu, DropdownMenuButton
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(DropdownMenu_example)">copy</button><p id="DropdownMenu_example"><purple>from</purple> ursina.prefabs.dropdown_menu <purple>import</purple> DropdownMenu, DropdownMenuButton
 
 app = Ursina()
 <purple><b>DropdownMenu</b></purple>(<green>'File'</green>, buttons=(
@@ -6254,7 +6259,7 @@ app = Ursina()
     DropdownMenuButton(<green>'Exit'</green>),
     ))
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -6267,7 +6272,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="DropdownMenuButton_example"><button class="copy_code_button" onclick="copy_to_clipboard(DropdownMenuButton_example)">copy</button><purple>from</purple> ursina.prefabs.dropdown_menu <purple>import</purple> DropdownMenu, DropdownMenuButton
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(DropdownMenuButton_example)">copy</button><p id="DropdownMenuButton_example"><purple>from</purple> ursina.prefabs.dropdown_menu <purple>import</purple> DropdownMenu, DropdownMenuButton
 
 app = Ursina()
 DropdownMenu(<green>'File'</green>, buttons=(
@@ -6285,7 +6290,7 @@ DropdownMenu(<green>'File'</green>, buttons=(
     <purple><b>DropdownMenuButton</b></purple>(<green>'Exit'</green>),
     ))
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -6327,7 +6332,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="RadialMenu_example"><button class="copy_code_button" onclick="copy_to_clipboard(RadialMenu_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(RadialMenu_example)">copy</button><p id="RadialMenu_example">app = Ursina()
 
 rm = <purple><b>RadialMenu</b></purple>(
     buttons = (
@@ -6345,7 +6350,7 @@ RadialMenuButton(<olive>text</olive>=<green>'6'</green>, <olive>color</olive>=co
     rm.enabled = True
 cube = Button(<olive>parent</olive>=scene, <olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.orange, <olive>highlight_color</olive>=color.azure, <olive>on_click</olive>=enable_radial_menu)
 EditorCamera()
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -6358,7 +6363,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="RadialMenuButton_example"><button class="copy_code_button" onclick="copy_to_clipboard(RadialMenuButton_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(RadialMenuButton_example)">copy</button><p id="RadialMenuButton_example">app = Ursina()
 
 rm = RadialMenu(
     buttons = (
@@ -6376,7 +6381,7 @@ rm = RadialMenu(
     rm.enabled = True
 cube = Button(<olive>parent</olive>=scene, <olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.orange, <olive>highlight_color</olive>=color.azure, <olive>on_click</olive>=enable_radial_menu)
 EditorCamera()
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -6431,7 +6436,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="HealthBar_example"><button class="copy_code_button" onclick="copy_to_clipboard(HealthBar_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(HealthBar_example)">copy</button><p id="HealthBar_example">app = Ursina()
 
 health_bar_<yellow>1</yellow> = <purple><b>HealthBar</b></purple>(bar_<olive>color</olive>=color.lime.tint(-.<yellow>2</yellow><yellow>5</yellow>), roundness=.<yellow>5</yellow>, max_value=<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>, value=<yellow>5</yellow><yellow>0</yellow>)
 <blue>print</blue>(health_bar_<yellow>1</yellow>.text_entity.enabled, health_bar_<yellow>1</yellow>.text_entity.text)
@@ -6442,7 +6447,7 @@ health_bar_<yellow>1</yellow> = <purple><b>HealthBar</b></purple>(bar_<olive>col
     <purple>if</purple> key == <green>'-'</green> or key == <green>'- hold'</green>:
         health_bar_<yellow>1</yellow>.value -= <yellow>1</yellow><yellow>0</yellow>
         <blue>print</blue>(<green>'ow'</green>)
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -6476,11 +6481,11 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="ColorPicker_example"><button class="copy_code_button" onclick="copy_to_clipboard(ColorPicker_example)">copy</button><purple>from</purple> ursina <purple>import</purple> Ursina
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(ColorPicker_example)">copy</button><p id="ColorPicker_example"><purple>from</purple> ursina <purple>import</purple> Ursina
 app = Ursina()
 <purple><b>ColorPicker</b></purple>()
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -6538,13 +6543,13 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="HotReloader_example"><button class="copy_code_button" onclick="copy_to_clipboard(HotReloader_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(HotReloader_example)">copy</button><p id="HotReloader_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
 application.hot_reloader.path = application.asset_folder.parent.parent / <green>'samples'</green> / <green>'platformer.py'</green>
 
 <green><green>''</green>'
 By default you can press F5 to reload the starting script, F6 to reimport textures and F7 to reload models.
-<green>''</green>'</green>
+<green>''</green>'</green></p>
 </div>
 
 </div>
@@ -6667,7 +6672,7 @@ By default you can press F5 to reload the starting script, F6 to reimport textur
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="GridEditor_example"><button class="copy_code_button" onclick="copy_to_clipboard(GridEditor_example)">copy</button>app = Ursina(borderless=False)
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(GridEditor_example)">copy</button><p id="GridEditor_example">app = Ursina(borderless=False)
 <green><green>''</green>'
 pixel editor example, it's basically a drawing tool.
 can be useful for level editors and such
@@ -6685,7 +6690,7 @@ EditorCamera(rotation_speed=<yellow>0</yellow>)
 <purple>from</purple> ursina.prefabs.grid_editor <purple>import</purple> ASCIIEditor
 ASCIIEditor(x=<yellow>0</yellow>, <olive>scale</olive>=.<yellow>1</yellow>)
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -6718,7 +6723,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="PixelEditor_example"><button class="copy_code_button" onclick="copy_to_clipboard(PixelEditor_example)">copy</button>app = Ursina(borderless=False)
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(PixelEditor_example)">copy</button><p id="PixelEditor_example">app = Ursina(borderless=False)
 <green><green>''</green>'
 pixel editor example, it's basically a drawing tool.
 can be useful for level editors and such
@@ -6736,7 +6741,7 @@ EditorCamera(rotation_speed=<yellow>0</yellow>)
 <purple>from</purple> ursina.prefabs.grid_editor <purple>import</purple> ASCIIEditor
 ASCIIEditor(x=<yellow>0</yellow>, <olive>scale</olive>=.<yellow>1</yellow>)
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -6763,7 +6768,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="ASCIIEditor_example"><button class="copy_code_button" onclick="copy_to_clipboard(ASCIIEditor_example)">copy</button>app = Ursina(borderless=False)
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(ASCIIEditor_example)">copy</button><p id="ASCIIEditor_example">app = Ursina(borderless=False)
 <green><green>''</green>'
 pixel editor example, it's basically a drawing tool.
 can be useful for level editors and such
@@ -6781,7 +6786,7 @@ EditorCamera(rotation_speed=<yellow>0</yellow>)
 <purple>from</purple> ursina.prefabs.grid_editor <purple>import</purple> ASCIIEditor
 <purple><b>ASCIIEditor</b></purple>(x=<yellow>0</yellow>, <olive>scale</olive>=.<yellow>1</yellow>)
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -6798,7 +6803,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="grid_layout_example"><button class="copy_code_button" onclick="copy_to_clipboard(grid_layout_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(grid_layout_example)">copy</button><p id="grid_layout_example">app = Ursina()
 
 center = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>scale</olive>=.<yellow>1</yellow>, <olive>color</olive>=color.red)
 p = <olive>Entity</olive>()
@@ -6809,7 +6814,7 @@ t = time.time()
 <purple><b>grid_layout</b></purple>(p.children, max_x=<yellow>7</yellow>, max_<olive>y</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>origin</olive>=(<yellow>0</yellow>, .<yellow>5</yellow>), spacing=(.<yellow>1</yellow><yellow>5</yellow>, <yellow>0</yellow>))
 center = <olive>Entity</olive>(<olive>parent</olive>=camera.ui, <olive>model</olive>=Circle(), <olive>scale</olive>=.<yellow>0</yellow><yellow>0</yellow><yellow>5</yellow>, <olive>color</olive>=color.lime)
 EditorCamera()
-<blue>print</blue>(time.time() - t)
+<blue>print</blue>(time.time() - t)</p>
 </div>
 
 </div>
@@ -6826,7 +6831,7 @@ EditorCamera()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="duplicate_example"><button class="copy_code_button" onclick="copy_to_clipboard(duplicate_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(duplicate_example)">copy</button><p id="duplicate_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, Button, scene, EditorCamera
 app = Ursina()
 
@@ -6834,7 +6839,7 @@ app = Ursina()
 e = Button(<olive>parent</olive>=scene, <olive>scale</olive>=<yellow>1</yellow>, <olive>text</olive>=<green>'yolo'</green>)
 e<yellow>2</yellow> = <purple><b>duplicate</b></purple>(e, x=<yellow>1</yellow>.<yellow>2</yellow><yellow>5</yellow>)
 EditorCamera()
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -6867,7 +6872,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="SmoothFollow_example"><button class="copy_code_button" onclick="copy_to_clipboard(SmoothFollow_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(SmoothFollow_example)">copy</button><p id="SmoothFollow_example">app = Ursina()
 
 player = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.orange)
 
@@ -6884,7 +6889,7 @@ sf = e.add_script(<purple><b>SmoothFollow</b></purple>(target=player, offset=(<y
         e.scripts.remove(sf)
 
 EditorCamera()
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -6923,7 +6928,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="Scrollable_example"><button class="copy_code_button" onclick="copy_to_clipboard(Scrollable_example)">copy</button><green><green>''</green>'
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Scrollable_example)">copy</button><p id="Scrollable_example"><green><green>''</green>'
 This will make target entity move up or down when you hover the entity/its children
 while scrolling the scroll wheel.
 <green>''</green>'</green>
@@ -6934,7 +6939,7 @@ p = Button(<olive>model</olive>=<green>'quad'</green>, <olive>scale</olive>=(.<y
     Button(<olive>parent</olive>=p , scale_<olive>y</olive>=.<yellow>0</yellow><yellow>5</yellow>, <olive>text</olive>=f<green>'giopwjoigjwr{i}'</green>, origin_<olive>y</olive>=.<yellow>5</yellow>, <olive>y</olive>=.<yellow>5</yellow>-(i*.<yellow>0</yellow><yellow>5</yellow>))
 
 p.add_script(<purple><b>Scrollable</b></purple>())
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -6964,7 +6969,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="NoclipMode_example"><button class="copy_code_button" onclick="copy_to_clipboard(NoclipMode_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(NoclipMode_example)">copy</button><p id="NoclipMode_example">app = Ursina()
 
 player = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.orange)
 <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>)
@@ -6972,7 +6977,7 @@ EditorCamera()
 
 
 player.add_script(NoclipMode<yellow>2</yellow>d())
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -7002,7 +7007,7 @@ app.run()
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="NoclipMode2d_example"><button class="copy_code_button" onclick="copy_to_clipboard(NoclipMode2d_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(NoclipMode2d_example)">copy</button><p id="NoclipMode2d_example">app = Ursina()
 
 player = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.orange)
 <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>)
@@ -7010,7 +7015,7 @@ EditorCamera()
 
 
 player.add_script(NoclipMode<yellow>2</yellow>d())
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -7220,7 +7225,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="unlit_shader_example"><button class="copy_code_button" onclick="copy_to_clipboard(unlit_shader_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(unlit_shader_example)">copy</button><p id="unlit_shader_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina.prefabs.primitives <purple>import</purple> *
 app = Ursina()
 
@@ -7230,7 +7235,7 @@ ground = GrayPlane(<olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <o
 ground.set_shader_input(<green>'texture_scale'</green>, Vec2(<yellow>2</yellow>, <yellow>1</yellow>))
 EditorCamera()
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -7254,7 +7259,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="lit_with_shadows_shader_example"><button class="copy_code_button" onclick="copy_to_clipboard(lit_with_shadows_shader_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(lit_with_shadows_shader_example)">copy</button><p id="lit_with_shadows_shader_example"><purple>from</purple> ursina <purple>import</purple> *
 
 app = Ursina()
 shader = lit_with_shadows_shader
@@ -7282,7 +7287,7 @@ EditorCamera()
         <purple>else</purple>:
             sun.color = color.white
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -7294,7 +7299,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="matcap_shader_example"><button class="copy_code_button" onclick="copy_to_clipboard(matcap_shader_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(matcap_shader_example)">copy</button><p id="matcap_shader_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina.prefabs.primitives <purple>import</purple> *
 app = Ursina()
 window.<olive>color</olive>=color.black
@@ -7313,7 +7318,7 @@ EditorCamera()
     b.rotation_y += <yellow>1</yellow>
     b.rotation_x += <yellow>1</yellow>
 <blue>print</blue>(<green>'-----------------'</green>, repr(a.shader))
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -7346,7 +7351,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="colored_lights_shader_example"><button class="copy_code_button" onclick="copy_to_clipboard(colored_lights_shader_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(colored_lights_shader_example)">copy</button><p id="colored_lights_shader_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina.prefabs.primitives <purple>import</purple> *
 app = Ursina()
 window.<olive>color</olive>=color.black
@@ -7370,7 +7375,7 @@ EditorCamera(rotate_around_mouse_hit=False)
 
 EditorCamera()
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -7397,7 +7402,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="fresnel_shader_example"><button class="copy_code_button" onclick="copy_to_clipboard(fresnel_shader_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(fresnel_shader_example)">copy</button><p id="fresnel_shader_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
 
 b = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, <olive>color</olive>=color.black, <olive>shader</olive>=fresnel_shader)
@@ -7425,7 +7430,7 @@ EditorCamera()
 
 
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -7437,7 +7442,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="projector_shader_example"><button class="copy_code_button" onclick="copy_to_clipboard(projector_shader_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(projector_shader_example)">copy</button><p id="projector_shader_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
 
 <olive>Entity</olive>.default_shader = projector_shader
@@ -7469,7 +7474,7 @@ projector_shader.default_input[<green>'projector_texture'</green>] = projector_t
         <purple>if</purple> <blue>hasattr</blue>(e,<green>'shader'</green>) and e.shader == projector_shader:
             e.set_shader_input(<green>'projector_uv_offset'</green>, light.world_position.xz * projector_shader.default_input[<green>'projector_uv_scale'</green>])
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -7481,7 +7486,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="texture_blend_shader_example"><button class="copy_code_button" onclick="copy_to_clipboard(texture_blend_shader_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(texture_blend_shader_example)">copy</button><p id="texture_blend_shader_example"><purple>from</purple> ursina <purple>import</purple> *
 Texture.default_filtering = <green>'bilinear'</green>
 app = Ursina(vsync=False)
 
@@ -7535,7 +7540,7 @@ e.collider = <green>'mesh'</green>
         blend_map.apply()
 
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -7565,7 +7570,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="instancing_shader_example"><button class="copy_code_button" onclick="copy_to_clipboard(instancing_shader_example)">copy</button><purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, EditorCamera, Vec<yellow>3</yellow>, color, application, time, Cone
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(instancing_shader_example)">copy</button><p id="instancing_shader_example"><purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, EditorCamera, Vec<yellow>3</yellow>, color, application, time, Cone
 <purple>import</purple> random
 app = Ursina(vsync=False)
 
@@ -7591,7 +7596,7 @@ p.set_shader_input(<green>'scale_multipliers'</green>,[e.scale*random.uniform(.<
 <blue>print</blue>(len(p.model.vertices) * len(instances))
 EditorCamera()
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -7615,7 +7620,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="triplanar_shader_example"><button class="copy_code_button" onclick="copy_to_clipboard(triplanar_shader_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(triplanar_shader_example)">copy</button><p id="triplanar_shader_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina.prefabs.primitives <purple>import</purple> *
 app = Ursina()
 window.<olive>color</olive>=color.black
@@ -7647,7 +7652,7 @@ side_texture_scale_slider = Slider(<olive>text</olive>=<green>'side_texture_scal
     b.rotation_y += <yellow>1</yellow>
     b.rotation_x += <yellow>1</yellow>
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -7659,7 +7664,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="normals_shader_example"><button class="copy_code_button" onclick="copy_to_clipboard(normals_shader_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(normals_shader_example)">copy</button><p id="normals_shader_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina.prefabs.primitives <purple>import</purple> *
 app = Ursina()
 window.<olive>color</olive>=color.black
@@ -7679,7 +7684,7 @@ EditorCamera()
     b.rotation_y += <yellow>1</yellow>
     b.rotation_x += <yellow>1</yellow>
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -7691,7 +7696,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="transition_shader_example"><button class="copy_code_button" onclick="copy_to_clipboard(transition_shader_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(transition_shader_example)">copy</button><p id="transition_shader_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
 window.color = color._<yellow>1</yellow><yellow>6</yellow>
 Texture.default_filtering = <green>'bilinear'</green>
@@ -7718,7 +7723,7 @@ smooth_slider.on_value_changed = on_value_changed
         e.animate(<green>'cutoff'</green>, <yellow>1</yellow>, duration=.<yellow>1</yellow>, <olive>curve</olive>=curve.linear, dela<olive>y</olive>=.<yellow>0</yellow><yellow>5</yellow>)
 
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -7736,7 +7741,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="fxaa_example"><button class="copy_code_button" onclick="copy_to_clipboard(fxaa_example)">copy</button>app = Ursina()
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(fxaa_example)">copy</button><p id="fxaa_example">app = Ursina()
 window.<olive>color</olive>=color.black
 
 <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>y</olive>=-<yellow>2</yellow>, <olive>texture</olive>=<green>'shore'</green>)
@@ -7755,7 +7760,7 @@ Sky()
             camera.shader = None
 
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -7767,7 +7772,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="ssao_example"><button class="copy_code_button" onclick="copy_to_clipboard(ssao_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(ssao_example)">copy</button><p id="ssao_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
 
 e = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, <olive>color</olive>=color.orange)
@@ -7789,7 +7794,7 @@ EditorCamera()
 random.seed(<yellow>2</yellow>)
 <purple>for</purple> i in <blue>range</blue>(<yellow>2</yellow><yellow>0</yellow>):
     e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>position</olive>=Vec3(random.random(),random.random(),random.random())*<yellow>3</yellow>, <olive>rotation</olive>=Vec3(random.random(),random.random(),random.random())*<yellow>3</yellow><yellow>6</yellow><yellow>0</yellow>)
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -7801,7 +7806,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="camera_outline_shader_example"><button class="copy_code_button" onclick="copy_to_clipboard(camera_outline_shader_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(camera_outline_shader_example)">copy</button><p id="camera_outline_shader_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
 <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>texture</olive>=<green>'white_cube'</green>, <olive>color</olive>=color.red)
 <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>texture</olive>=<green>'white_cube'</green>, <olive>color</olive>=color.white, x=<yellow>1</yellow>.<yellow>1</yellow>)
@@ -7822,7 +7827,7 @@ frame = <yellow>0</yellow>
 
 EditorCamera()
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -7834,7 +7839,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="pixelation_shader_example"><button class="copy_code_button" onclick="copy_to_clipboard(pixelation_shader_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(pixelation_shader_example)">copy</button><p id="pixelation_shader_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
 
 e = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, <olive>color</olive>=color.orange)
@@ -7842,7 +7847,7 @@ e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>y</
 camera.shader = pixelation_shader
 EditorCamera()
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -7860,7 +7865,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="camera_contrast_example"><button class="copy_code_button" onclick="copy_to_clipboard(camera_contrast_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(camera_contrast_example)">copy</button><p id="camera_contrast_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
 
 e = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>)
@@ -7875,7 +7880,7 @@ slider.on_value_changed = adjust_contrast
 
 EditorCamera()
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -7896,7 +7901,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="camera_vertical_blur_example"><button class="copy_code_button" onclick="copy_to_clipboard(camera_vertical_blur_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(camera_vertical_blur_example)">copy</button><p id="camera_vertical_blur_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
 window.color = color._<yellow>1</yellow><yellow>6</yellow>
 
@@ -7918,7 +7923,7 @@ slider = ThinSlider(max=.<yellow>1</yellow>, dynamic=True, <olive>position</oliv
 slider.on_value_changed = set_blur
 EditorCamera()
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
@@ -7930,7 +7935,7 @@ app.run()
         </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example" id="camera_grayscale_example"><button class="copy_code_button" onclick="copy_to_clipboard(camera_grayscale_example)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(camera_grayscale_example)">copy</button><p id="camera_grayscale_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
 
 e = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, <olive>color</olive>=color.orange)
@@ -7946,7 +7951,7 @@ EditorCamera()
             camera.shader = camera_grayscale_shader
 
 
-app.run()
+app.run()</p>
 </div>
 
 </div>
