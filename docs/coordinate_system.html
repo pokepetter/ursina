@@ -191,12 +191,12 @@ This can be especially useful when working with the UI.<br>
 </div><br>
 <script>
 function copy_to_clipboard(containerid) {
-    var range = document.createRange();
-    range.selectNode(containerid); //changed here
-    window.getSelection().removeAllRanges();
-    window.getSelection().addRange(range);
-    document.execCommand("copy");
-    window.getSelection().removeAllRanges();
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
 }
 </script>
 
