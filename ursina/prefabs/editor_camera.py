@@ -34,9 +34,9 @@ class EditorCamera(Entity):
 
 
     def on_enable(self):
-        camera.org_parent = camera.parent
-        camera.org_position = camera.position
-        camera.org_rotation = camera.rotation
+        self.org_cam_par = camera.parent
+        self.org_cam_pos = camera.position
+        self.org_cam_rot = camera.rotation
         camera.parent = self
         camera.position = camera.editor_position
         camera.rotation = (0,0,0)
@@ -46,9 +46,12 @@ class EditorCamera(Entity):
 
     def on_disable(self):
         camera.editor_position = camera.position
-        camera.parent = camera.org_parent
-        camera.position = camera.org_position
-        camera.rotation = camera.org_rotation
+
+        # if we instantiate with enabled=False, this will get called before on_enable and these variables won't exist.
+        if hasattr(self, 'org_cam_par'):
+            camera.parent = self.org_cam_par
+            camera.position = self.org_cam_pos
+            camera.rotation = self.org_cam_rot
 
 
     def on_destroy(self):

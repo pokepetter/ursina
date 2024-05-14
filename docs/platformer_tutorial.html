@@ -1,0 +1,226 @@
+<!DOCTYPE HTML>
+        <!--generated with sswg-->
+        <html lang="en">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <head>
+            <title>platformer_tutorial</title>
+            <link rel="stylesheet" href="sswg.css">
+            <link rel="stylesheet" href="style.css">
+            <link rel="icon" type="image/x-icon" href="favicon.ico">
+        </head>
+        <body>
+        <left><br>
+<a href=" documentation.html" class="button">← Back</a><br>
+<div style="font-family: arial;font-size: 20.0px;max-width: 1250px; margin: auto;">
+<div style="text-align: center;font-weight: bold;font-size: 80.0px;">
+Platformer Tutorial<br>
+<div style="text-align: left;font-size: 20.0px;font-weight: normal;">
+<br>
+<br>
+<br>
+Start by importing ursina and creating a window.<br>
+<br>
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+app = Ursina()
+</div><br>
+<h2><div id="Using the built in platformer controller"/><br>
+Using the built in platformer controller<br>
+</h2><br>
+<br>
+A simple way to get stared is to use the built in platformer controller.<br>
+It's pretty basic, so you might want to write your own at a later point.<br>
+It is however a good starting point, so let's import it like this:<br>
+<br>
+<div class="code_block" id="code_block_1" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button><purple>from</purple> ursina.prefabs.platformer_controller_<yellow>2</yellow>d <purple>import</purple> PlatformerController<yellow>2</yellow>d
+player = PlatformerController<yellow>2</yellow>d(<olive>y</olive>=<yellow>1</yellow>, <olive>z</olive>=.<yellow>0</yellow><yellow>1</yellow>, scale_<olive>y</olive>=<yellow>1</yellow>, max_jumps=<yellow>2</yellow>)
+</div><br>
+You can change settings like jump_height, walk_speed, and gravity.<br>
+If you want to larn more about how it works you can read its code here:<br>
+<a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/platformer_controller_2d.py">https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/platformer_controller_2d.py</a><br>
+<br>
+If we try to play the game right now, you'll fall for all infinity, so let's add a ground:<br>
+<br>
+<div class="code_block" id="code_block_2" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_2)">copy</button>ground = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>scale_x</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>collider</olive>=<green>'box'</green>, <olive>color</olive>=color.black)
+</div><br>
+<h2><div id="Making a "level editor""/><br>
+Making a "level editor"<br>
+</h2><br>
+<br>
+Now, it works, but it's a pretty boring game, so let's make a more interesting level.<br>
+There are many ways to go about making a level, but for this we'll make an image<br>
+where we can simply draw the level and then generate a level based on that.<br>
+<br>
+<img src="platformer_tutorial_level.png"></img> <br>
+↑<br>
+Make sure to save this image to same folder or below as your script.<br>
+<br>
+To generate the level we'll loop through all the pixels in the image above and do<br>
+something based on the color of the pixel. If it's white, it's air, so we'll skip it.<br>
+Now, we *could* create an Entity for each tile, but that's slower to render than one Entity with a custom model.<br>
+To make the model, we'll use the Mesh class. You'll have to be somewhat familiar with<br>
+what meshes are to do this, and know what vertices and uvs are. However, we'll just be<br>
+copying the quad model and offset the vertices. If we wanted to use a tileset with different<br>
+graphics for each tile, we'd scale and offset the uvs as well.<br>
+<br>
+<div class="code_block" id="code_block_3" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_3)">copy</button>
+quad = load_model(<green>'quad'</green>, use_deepcop<olive>y</olive>=True)
+
+
+level_parent = <olive>Entity</olive>(<olive>model</olive>=Mesh(<olive>vertices</olive>=[], <olive>uvs</olive>=[]), <olive>texture</olive>=<green>'white_cube'</green>)
+<purple>def</purple> make_level(texture):
+    <gray># destroy every child of the level parent.</gray>
+    <gray># This doesn't do anything the first time the level is generated, but <purple>if</purple> we want to update it several times</gray>
+    <gray># this will ensure it doesn't just create a bunch of overlapping entities.</gray>
+    [destroy(c) <purple>for</purple> c in level_parent.children]
+
+    <purple>for</purple> y in <blue>range</blue>(texture.height):
+        collider = None
+        <purple>for</purple> x in <blue>range</blue>(texture.width):
+            col = texture.get_pixel(x,y)
+
+            <gray># If it<green>'s black, it'</green>s solid, so we'll place a tile there.</gray>
+            <purple>if</purple> col == color.black:
+                level_parent.model.vertices += [Vec3(*e) + Vec3(x+.<yellow>5</yellow>,y+.<yellow>5</yellow>,<yellow>0</yellow>) <purple>for</purple> e in quad.generated_vertices] <gray># copy the quad model, but offset it with Vec3(x+.<yellow>5</yellow>,y+.<yellow>5</yellow>,<yellow>0</yellow>)</gray>
+                level_parent.model.uvs += quad.uvs
+                <gray># <olive>Entity</olive>(<olive>parent</olive>=level_parent, <olive>position</olive>=(x,y), <olive>model</olive>=<green>'cube'</green>, <olive>origin</olive>=(-.<yellow>5</yellow>,-.<yellow>5</yellow>), <olive>color</olive>=color.gray, <olive>texture</olive>=<green>'white_cube'</green>, <olive>visible</olive>=True)</gray>
+                <purple>if</purple> <purple>not</purple> collider:
+                    collider = <olive>Entity</olive>(<olive>parent</olive>=level_parent, <olive>position</olive>=(x,y), <olive>model</olive>=<green>'quad'</green>, <olive>origin</olive>=(-.<yellow>5</yellow>,-.<yellow>5</yellow>), <olive>collider</olive>=<green>'box'</green>, <olive>visible</olive>=False)
+                <purple>else</purple>:
+                    <gray># instead of creating a new collider per tile, stretch the previous collider right.</gray>
+                    collider.scale_x += <yellow>1</yellow>
+            <purple>else</purple>:
+                collider = None
+
+            <gray># If it<green>'s green, we'</green>ll place the player there. Store this in player.start_position so we can reset the plater position later.</gray>
+            <purple>if</purple> col == color.green:
+                player.start_position = (x, y)
+                player.position = player.start_position
+
+    level_parent.model.generate()
+
+make_level(load_texture(<green>'platformer_tutorial_level'</green>))   <gray># generate the level</gray>
+</div><br>
+<h2><div id="Positioning the camera"/><br>
+Positioning the camera<br>
+</h2><br>
+<br>
+Set the camera to orthographic so there's no perspective.<br>
+Move the camera to the middle of the level and set the fov so the level fits nicely.<br>
+Setting the fov on an orthographic camera means setting how many units vertically the camera can see.<br>
+<br>
+<div class="code_block" id="code_block_4" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_4)">copy</button>camera.orthographic = True
+camera.position = (<yellow>3</yellow><yellow>0</yellow>/<yellow>2</yellow>,<yellow>8</yellow>)
+camera.fov = <yellow>1</yellow><yellow>6</yellow>
+</div><br>
+<h2><div id="Adding player graphics and animations"/><br>
+Adding player graphics and animations<br>
+</h2><br>
+<br>
+Loads an image sequence as a frame animation.<br>
+So if you have some frames named image_000.png, image_001.png, image_002.png and so on,<br>
+you can load it like this: Animation('image')<br>
+You can also load a .gif by including the file type: Animation('image.gif')<br>
+player.walk_animation = Animation('player_walk')<br>
+<br>
+<div class="code_block" id="code_block_5" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_5)">copy</button>
+</div><br>
+the platformer controller has an Animator and will toggle the state based on<br>
+whether it's standing still, is walking or is jumping.<br>
+All the Animator does is to make sure only one Animation is enabled at the same time.<br>
+Otherwise they would overlap.<br>
+self.animator = Animator({'idle' : None, 'walk' : None, 'jump' : None})<br>
+<br>
+<div class="code_block" id="code_block_6" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_6)">copy</button>player.traverse_target = level_parent
+enemy = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>, <olive>color</olive>=color.red, <olive>position</olive>=(<yellow>1</yellow><yellow>6</yellow>,<yellow>5</yellow>,-.<yellow>1</yellow>))
+<purple>def</purple> update():
+    <purple>if</purple> player.intersects(enemy).hit:
+        <blue>print</blue>(<green>'die'</green>)
+        player.position = player.start_position
+</div><br>
+<h2><div id="Start the game"/><br>
+Start the game<br>
+</h2><br>
+<br>
+<br>
+<div class="code_block" id="code_block_7" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_7)">copy</button>app.run()
+</div><br>
+<h2><div id="Result"/><br>
+Result<br>
+</h2><br>
+<br>
+<div class="code_block" id="code_block_8" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_8)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+app = Ursina()
+
+<purple>from</purple> ursina.prefabs.platformer_controller_<yellow>2</yellow>d <purple>import</purple> PlatformerController<yellow>2</yellow>d
+player = PlatformerController<yellow>2</yellow>d(<olive>y</olive>=<yellow>1</yellow>, <olive>z</olive>=.<yellow>0</yellow><yellow>1</yellow>, scale_<olive>y</olive>=<yellow>1</yellow>, max_jumps=<yellow>2</yellow>)
+
+ground = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>scale_x</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>collider</olive>=<green>'box'</green>, <olive>color</olive>=color.black)
+
+
+quad = load_model(<green>'quad'</green>, use_deepcop<olive>y</olive>=True)
+
+
+level_parent = <olive>Entity</olive>(<olive>model</olive>=Mesh(<olive>vertices</olive>=[], <olive>uvs</olive>=[]), <olive>texture</olive>=<green>'white_cube'</green>)
+<purple>def</purple> make_level(texture):
+    <gray># destroy every child of the level parent.</gray>
+    <gray># This doesn't do anything the first time the level is generated, but <purple>if</purple> we want to update it several times</gray>
+    <gray># this will ensure it doesn't just create a bunch of overlapping entities.</gray>
+    [destroy(c) <purple>for</purple> c in level_parent.children]
+
+    <purple>for</purple> y in <blue>range</blue>(texture.height):
+        collider = None
+        <purple>for</purple> x in <blue>range</blue>(texture.width):
+            col = texture.get_pixel(x,y)
+
+            <gray># If it<green>'s black, it'</green>s solid, so we'll place a tile there.</gray>
+            <purple>if</purple> col == color.black:
+                level_parent.model.vertices += [Vec3(*e) + Vec3(x+.<yellow>5</yellow>,y+.<yellow>5</yellow>,<yellow>0</yellow>) <purple>for</purple> e in quad.generated_vertices] <gray># copy the quad model, but offset it with Vec3(x+.<yellow>5</yellow>,y+.<yellow>5</yellow>,<yellow>0</yellow>)</gray>
+                level_parent.model.uvs += quad.uvs
+                <gray># <olive>Entity</olive>(<olive>parent</olive>=level_parent, <olive>position</olive>=(x,y), <olive>model</olive>=<green>'cube'</green>, <olive>origin</olive>=(-.<yellow>5</yellow>,-.<yellow>5</yellow>), <olive>color</olive>=color.gray, <olive>texture</olive>=<green>'white_cube'</green>, <olive>visible</olive>=True)</gray>
+                <purple>if</purple> <purple>not</purple> collider:
+                    collider = <olive>Entity</olive>(<olive>parent</olive>=level_parent, <olive>position</olive>=(x,y), <olive>model</olive>=<green>'quad'</green>, <olive>origin</olive>=(-.<yellow>5</yellow>,-.<yellow>5</yellow>), <olive>collider</olive>=<green>'box'</green>, <olive>visible</olive>=False)
+                <purple>else</purple>:
+                    <gray># instead of creating a new collider per tile, stretch the previous collider right.</gray>
+                    collider.scale_x += <yellow>1</yellow>
+            <purple>else</purple>:
+                collider = None
+
+            <gray># If it<green>'s green, we'</green>ll place the player there. Store this in player.start_position so we can reset the plater position later.</gray>
+            <purple>if</purple> col == color.green:
+                player.start_position = (x, y)
+                player.position = player.start_position
+
+    level_parent.model.generate()
+
+make_level(load_texture(<green>'platformer_tutorial_level'</green>))   <gray># generate the level</gray>
+
+camera.orthographic = True
+camera.position = (<yellow>3</yellow><yellow>0</yellow>/<yellow>2</yellow>,<yellow>8</yellow>)
+camera.fov = <yellow>1</yellow><yellow>6</yellow>
+
+
+
+player.traverse_target = level_parent
+enemy = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>, <olive>color</olive>=color.red, <olive>position</olive>=(<yellow>1</yellow><yellow>6</yellow>,<yellow>5</yellow>,-.<yellow>1</yellow>))
+<purple>def</purple> update():
+    <purple>if</purple> player.intersects(enemy).hit:
+        <blue>print</blue>(<green>'die'</green>)
+        player.position = player.start_position
+
+
+app.run()
+
+
+</div><script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,268 @@
+html {
+  scrollbar-face-color: var(--scrollbar_color);
+  scrollbar-base-color: var(--scrollbar_color);
+  /* scrollbar-3dlight-color: var(--scrollbar_color); */
+  scrollbar-highlight-color: var(--scrollbar_color);
+  scrollbar-track-color: var(--scrollbar_bg_color);
+  scrollbar-arrow-color: var(--scrollbar_bg_color);
+  scrollbar-shadow-color: hsl(240.0, 0%, 80%);
+  scrollbar-darkshadow-color: hsl(240.0, 0%, 80%);
+}
+
+::-webkit-scrollbar { width: 8px; height: 3px;}
+::-webkit-scrollbar { width: 8px; height: 3px;}
+::-webkit-scrollbar-button {  background-color: var(--scrollbar_color); }
+::-webkit-scrollbar-track {  background-color: var(--scrollbar_bg_color);}
+::-webkit-scrollbar-track-piece { background-color: var(--scrollbar_bg_color);}
+::-webkit-scrollbar-thumb { height: 50px; background-color: var(--scrollbar_color); border-radius: 3px;}
+::-webkit-scrollbar-corner { background-color: var(--scrollbar_color);}
+::-webkit-resizer { background-color: var(--scrollbar_color);}
+
+/* light mode colors */
+:root {
+  --bg_color: hsl(0,0%,92%);
+  --class_box_bg_color: hsl(0,0%,97%);
+  --text_color: hsl(0,0%,0%);
+  --main_header_color: #333;
+  --header_color: hsl(0, 0%, 0%);
+  --params_color: hsl(240.0, 0%, 10%);
+  --variable_text_color_hovered: #bf1da7;
+  --span_bg_color: hsl(305, 71%, 90%);
+  --span_bg_color_hovered: #dcd5f8;
+  --span_text_color: #181818;
+  --span_text_color_hovered: #181818;
+  --example_bg_color: hsl(0,0%,92%);
+  --copy_code_button_bg_color: hsl(0,0%,85%);
+  --copy_code_button_text_color: hsl(0,0%,50%);
+  --copy_code_button_bg_color_hovered: hsl(0,0%,97%);
+  --copy_code_button_text_color_hovered: hsl(0,0%,50%);
+
+  --olive: olive;
+  --green: seagreen;
+  --blue: hsl(210, 50%, 50%);
+  --purple: hsl(289.0, 50%, 50%);
+
+  --sidebar_bg_color: #fafafa;
+  --scrollbar_color: hsl(0, 0%, 90%);
+  --scrollbar_bg_color: hsl(0, 0%, 80%);
+}
+/* dark mode */
+input:checked + content, input:checked ~ * {
+  --bg_color: hsl(60, 5%, 10%);
+  --class_box_bg_color: hsl(60, 5%, 13%);
+  --text_color: hsl(240, 0%, 80%);
+  --main_header_color: #999;
+  --header_color: hsl(34deg 65% 51%);
+  --params_color: hsl(240.0, 0%, 80%);
+  --variable_text_color_hovered: hsl(222deg 97% 64%);
+  --span_bg_color: hsl(312deg 18% 19%);
+  --span_bg_color_hovered: hsl(220deg 40% 25%);
+  --span_text_color: #202020;
+  --span_text_color_hovered: #eee;
+  --example_bg_color: hsl(60, 3%, 16%);
+  --copy_code_button_bg_color: hsl(60, 5%, 12%);
+  --copy_code_button_text_color: hsl(240, 0%, 60%);
+  --copy_code_button_bg_color_hovered: hsl(222, 97% 64%);
+  --copy_code_button_text_color_hovered: hsl(240, 0%, 80%);
+
+  --olive: #b29527;
+  --green: #39a468;
+  --blue: hsl(210deg 68% 58%);
+  --purple: hsl(323deg 55% 55%);
+
+  --sidebar_bg_color: hsl(60, 5%, 13%);
+  --sidebar_text_color: hsl(0, 0%, 80%) !important;
+  --scrollbar_color: hsl(0, 0%, 20%);
+  --scrollbar_bg_color: hsl(0, 0%, 10%);
+}
+
+body {
+    margin: auto;
+    font-family: monospace;
+    font-size: 1.24em;
+    max-width: 100%;
+    overflow-x: hidden;
+    white-space: normal;
+}
+bg {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: -1
+  top: 0;
+  left: 0;
+  background-color: var(--bg_color);
+  color: var(--text_color);
+}
+h1 {
+    margin: 0;
+    margin-top: 1em;
+    margin-bottom: 0.3em;
+    color: var(--header_color);
+}
+.main_header {
+    font-size: 5.5em;
+    color: var(--main_header_color);
+    font-weight: normal;
+    /* text-shadow: -5px -5px 0 #000, 5px -5px 0 #000, -5px 5px 0 #000, 1px 1px 0 #000; */
+}
+@media only screen and (min-width: 768px) {
+  .main_header {font-size:3.5em}
+}
+table {
+    font-size: inherit;
+    /* border-collapse: collapse; */
+    border-spacing: 1em .2em;
+    color: var(--text_color);
+}
+table span {
+    background-color: var(--span_bg_color);
+    color: var(--span_text_color)
+    border-radius: 5px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    /* padding-left: 5px; */
+}
+tr {
+    vertical-align: top;
+}
+tr:hover {
+    color: var(--variable_text_color_hovered);
+}
+tr:hover gray{
+    font-weight: normal;
+}
+tr:hover span{
+    background-color: var(--span_bg_color_hovered);
+    color: var(--span_text_color_hovered);
+    font-weight: normal;
+}
+main_section {
+    margin: auto;
+    max-width: calc(100vw - 20em - 1%);
+    width: fit-content;
+    position: absolute;
+    left: 20em;
+    color: var(--main_header_color);
+}
+
+purple {color: var(--purple);}
+gray {color: gray;}
+olive {color: var(--olive);}
+yellow {color: darkgoldenrod;}
+green {color: var(--green);}
+blue {color: var(--blue);}
+
+.class_box {
+    background-color: var(--class_box_bg_color);
+    color: var(--text_color);
+    border-radius: 10px;
+    padding: 1.5em 1em 1em 2em;
+    line-height: 1.35em;
+    font-size: 1.0em;
+    /* width: fit-content; */
+}
+.class_box a {
+    color: gray;
+}
+.example {
+    padding: 1em;
+    background-color: var(--example_bg_color);
+    white-space: pre;
+    border-radius: 3px;
+    /* margin-top: 1em; */
+    margin-bottom: 1em;
+    width: fit-content;
+    min-width: 65em;
+    position: relative;
+}
+.copy_code_button {
+    position: absolute;
+    right: 10px;
+    border: none;
+    border-radius: 5px;
+    font-family: inherit;
+    color: var(--copy_code_button_text_color);
+    background-color: var(--copy_code_button_bg_color);
+}
+.copy_code_button:hover {
+    color: var(--copy_code_button_text_color_hovered);
+    background-color: var(--copy_code_button_bg_color_hovered);
+}
+
+.params {
+    color: var(--params_color);
+    font-weight: bold;
+    font-size: 1.2em;
+}
+.sidebar {
+    background-color: var(--sidebar_bg_color);
+    color: var(--sidebar_text_color);
+    left: 0px;
+    position: fixed;
+    top: 0px;
+    padding-top:40px;
+    padding-left:8px;
+    bottom: 0;
+    overflow-y: scroll;
+    width: 15em;
+    z-index: 1;
+}
+.sidebar_box {
+    color: #111;
+    border-radius: 0px;
+    padding: 10px;
+    line-height: 1.5em;
+}
+.sidebar_box a {
+    text-decoration: none;
+    color: var(--sidebar_text_color);
+}
+.sidebar_box a:hover {
+    text-decoration: underline;
+}
+.group_header {
+    font-weight: bold;
+    color: var(--sidebar_text_color);
+}
+.group_content {
+    color:inherit;
+    margin-left: .75em;
+}
+
+#checkbox{
+    position: absolute;
+    top: 2em;
+    right: 2em;
+    appearance: none;
+    width: 4em;
+    height: 2em;
+    background: black;
+    border-radius: 1em;
+    cursor: pointer;
+    outline: none;
+    z-index: 4;
+}
+/* styling the circle inside the checkbox input */
+#checkbox::before{
+    content: '';
+    position: absolute;
+    width: 1.8em;
+    height: 1.8em;
+    top: .1em;
+    left: .1em;
+    background-color:white;
+    border-radius: 1em;
+    cursor: pointer;
+}
+
+}
+/* moving the checkbox circle when it's toggled by the user */
+#checkbox:checked::before {
+    position: absolute;
+    left: 2em;
+}
+/* changing the color of the checkbox when it's toggled */
+#checkbox:checked {
+    background: rgb(156, 177, 70);
+}

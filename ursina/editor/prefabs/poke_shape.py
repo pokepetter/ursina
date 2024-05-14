@@ -1,5 +1,5 @@
 from ursina.editor.level_editor import *
-
+from ursina.shaders import colored_lights_shader
 
 class PokeShape(Entity):
     default_values = Entity.default_values | dict(
@@ -66,7 +66,7 @@ class PokeShape(Entity):
         import tripy
         # if not self.model:
         #     return
-
+        self._point_gizmos = LoopingList([e for e in self._point_gizmos if e])   # ensure deleted points are removed
         polygon = LoopingList(Vec2(*e.get_position(relative_to=self).xz) for e in self._point_gizmos)
 
         if self.subdivisions:
@@ -97,7 +97,7 @@ class PokeShape(Entity):
         if self.wall_height:
             if not self._wall_parent:
                 # print('make new wall parent')
-                self._wall_parent = Entity(parent=self, model=Mesh(), color=color.dark_gray, add_to_scene_entities=False)
+                self._wall_parent = Entity(parent=self, model=Mesh(), color=color.dark_gray, add_to_scene_entities=False, shader=colored_lights_shader)
 
             # polygon_3d = [Vec3(e[0], 0, e[1]) for e in polygon]
             # polygon_3d.append(polygon_3d[0])
@@ -121,6 +121,7 @@ class PokeShape(Entity):
             #     # wall.look_at(next_vert, 'right')
             #
             self._wall_parent.model.vertices = wall_verts
+            self._wall_parent.model.generate_normals(False)
             self._wall_parent.model.generate()
 
 
@@ -237,11 +238,11 @@ class PokeShape(Entity):
         elif key == 'space':
             self.generate()
 
-        elif key == 'double click' and LEVEL_EDITOR.selector.get_hovered_entity() == self:
-            self.edit_mode = True
-
-        elif key == 'double click' and not LEVEL_EDITOR.selector.get_hovered_entity():
-            self.edit_mode = False
+        # elif key == 'double click' and LEVEL_EDITOR.selector.get_hovered_entity() == self:
+        #     self.edit_mode = True
+        #
+        # elif key == 'double click' and not LEVEL_EDITOR.selector.get_hovered_entity():
+        #     self.edit_mode = False
 
         elif self.edit_mode and key.endswith(' up'):
             invoke(self.generate, delay=3/60)

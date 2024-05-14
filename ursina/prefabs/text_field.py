@@ -35,7 +35,7 @@ class TextField(Entity):
         self._prev_scroll = self.scroll
 
         self.active = True
-        self.highlight_color = color.color(120,1,1,.1)
+        self.highlight_color = color.hsv(120,1,1,.1)
         self.text = ''
         self.delimiters = ' .,!?;:(){}[]<>\'\"@#$%^&*+=-\\|/`~'
         self.replacements = dict()
@@ -51,8 +51,6 @@ class TextField(Entity):
             'duplicate_line':   ('ctrl+shift+d',),
             'undo':             ('ctrl+z', 'ctrl+z hold'),
             'redo':             ('ctrl+y', 'ctrl+y hold', 'ctrl+shift+z', 'ctrl+shift+z hold'),
-            # 'save':             ('ctrl+s',),
-            # 'save_as':          ('ctrl+shift+s',),
             'indent':           ('tab',),
             'dedent':           ('shift+tab',),
             'move_line_down':   ('ctrl+down arrow', 'ctrl+down arrow hold'),
@@ -66,8 +64,6 @@ class TextField(Entity):
             'select_word':      ('double click',),
             'select_line':      ('triple click',),
             'scroll_to_bottom': ('shift+alt+e',),
-            # 'toggle_comment':   ('ctrl+alt+c',),
-            # 'find':             ('ctrl+f',),
             'move_operations' : {
                 'move_left':                ('left arrow', 'left arrow hold', 'shift+left arrow', 'shift+left arrow hold'),
                 'move_right':               ('right arrow', 'right arrow hold', 'shift+right arrow', 'shift+right arrow hold'),
@@ -76,7 +72,10 @@ class TextField(Entity):
                 'move_to_end_of_word' :     ('ctrl+right arrow', 'ctrl+right arrow hold', 'ctrl+shift+right arrow', 'ctrl+shift+right arrow hold'),
                 'move_to_start_of_word' :   ('ctrl+left arrow', 'ctrl+left arrow hold', 'ctrl+shift+left arrow', 'ctrl+shift+left arrow hold'),
             },
-
+            # 'save':             ('ctrl+s',),
+            # 'save_as':          ('ctrl+shift+s',),
+            # 'toggle_comment':   ('ctrl+alt+c',),
+            # 'find':             ('ctrl+f',),
             # 'select_word_left': ('ctrl+shift+left arrow', 'ctrl+shift+left arrow hold'),
             # 'select_word_right': ('ctrl+shift+right arrow', 'ctrl+shift+right arrow hold'),
         }
@@ -863,7 +862,7 @@ if __name__ == '__main__':
     # window.size = window.fullscreen_size
     # window.x = 200
 
-    window.color = color.color(0, 0, .1)
+    window.color = color.hsv(0, 0, .1)
     Button.default_color = color._20
     window.color = color._25
 

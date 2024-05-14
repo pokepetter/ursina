@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+        <!--generated with sswg-->
+        <html lang="en">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <head>
+            <title> ursina engine</title>
+            <link rel="stylesheet" href="sswg.css">
+            <link rel="stylesheet" href="style.css">
+            <link rel="icon" type="image/x-icon" href="favicon.ico">
+        </head>
+        <body>
+        <left><div style="max-width: 1200px; margin: auto;">
+<br>
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" https://github.com/sponsors/pokepetter" class="button">Donate🡕</a><br>
+<br>
+<meta property="og:title" content="Ursina Engine"/> <meta property="og:type" content="website"/> <meta property="og:url" content="https://www.ursinaengine.org"/> <meta property="og:description" content="Ursina, an open source, python powered game engine"/> <meta property="og:image" content="https://www.ursinaengine.org/made_with_ursina.jpg"/><br>
+<div style="text-align: center;">
+<div id="header">ursina engine</div><br>
+<div style="font-size: 20.0px;">
+A Python powered, open source game engine<br>
+<br>
+<a href="https://github.com/pokepetter/ursina"><img src="icons/github_icon.png"></img></a>&nbsp;&nbsp;<a href="https://discord.gg/ydXfhyb"><img src="icons/discord_icon.png"></img></a>&nbsp;&nbsp;<a href="https://twitter.com/ursinaengine"><img src="icons/twitter_icon.png"></img></a>&nbsp;&nbsp;<a href="https://www.patreon.com/ursinaengine"><img src="icons/patreon_icon.png"></img></a><br>
+<br>
+<br>
+<a href="https://youtu.be/j71j88oCTNo" target="_blank" rel="noopener noreferrer"><img src="ursina_trailer_preview.webp" alt="link to ursina trailer" style="width:900px;height:491px;"></a><br>
+<br>
+<div style="text-align: left;">
+<h2><div id="Powered by Python"/><br>
+Powered by Python<br>
+</h2><br>
+<br>
+Python is the world's most popular programming language for a reason. The ease of use of Python combined with ursina's design, makes it easy to write concise code and avoid lots of boilerplate code.<br>
+<br>
+<div style="font-size: 16.0px;">
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+
+app = Ursina()
+
+cube = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=hsv(<yellow>3</yellow><yellow>0</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>), <olive>scale</olive>=<yellow>2</yellow>, <olive>collider</olive>=<green>'box'</green>)
+
+<purple>def</purple> spin():
+    cube.animate(<green>'rotation_y'</green>, cube.rotation_y+<yellow>3</yellow><yellow>6</yellow><yellow>0</yellow>, duration=<yellow>2</yellow>, <olive>curve</olive>=curve.in_out_expo)
+
+cube.on_click = spin
+EditorCamera()  <gray># add camera controls <purple>for</purple> orbiting and moving the camera</gray>
+
+app.run()
+
+</div><div style="font-size: 20.0px;">
+<br>
+<br>
+<h2><div id="Make Any Type of Game"/><br>
+Make Any Type of Game<br>
+</h2><br>
+<br>
+2D games, 3D games, applications, visualizations, you can make anything you want with ursina.<br>
+<br>
+<img src="made_with_ursina.jpg"></img> <br>
+<br>
+<br>
+<h2><div id="Iterate Faster"/><br>
+Iterate Faster<br>
+</h2><br>
+<br>
+• Reload code/textures/models while in-game<br>
+• Automatic import of .psd and .blend files<br>
+• Compile times:<br>
+<br>
+Iteration speed benchmark. Time from code/scene change to play. Game: pong clone. Lower is better.<br>
+<br>
+<div class="code_block" id="code_block_1" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>engine:         duration:       times as slow:
+
+ursina          <yellow>0</yellow><yellow>0</yellow>.<yellow>0</yellow><yellow>1</yellow>s          <yellow>1</yellow>x
+Godot           <yellow>0</yellow><yellow>1</yellow>.<yellow>1</yellow><yellow>8</yellow>s          <yellow>1</yellow><yellow>1</yellow><yellow>8</yellow>x
+Unity           <yellow>1</yellow><yellow>1</yellow>.<yellow>4</yellow><yellow>5</yellow>s          <yellow>1</yellow><yellow>1</yellow><yellow>4</yellow><yellow>5</yellow>x
+</div><br>
+<br>
+<h2><div id="Modern UI"/><br>
+Modern UI<br>
+</h2><br>
+<br>
+• Sleek modern design.<br>
+• Full control. Change the looks of anything, down to the smallest details.<br>
+• Built with Entities like everything else, so you don't have to relearn anything.<br>
+<br>
+<img src="ursina_ui_banner.jpg"></img> <br>
+<br>
+<br>
+<br>
+<h2><div id="Batteries Included"/><br>
+Batteries Included<br>
+</h2><br>
+<br>
+• Easy to use mesh class for making procedural geometry<br>
+• Built-in animation and tweening<br>
+• Pre-made prefabs such as FirstPersonController, 2d platformer controller, editor camera<br>
+• Lots of included procedural 3D primitives<br>
+• Many shaders to choose from, or write your own with GLSL<br>
+<br>
+<img src="ursina_batteries_included_banner.jpg"></img> <br>
+<br>
+<br>
+<h2><div id="Free"/><br>
+Free<br>
+</h2><br>
+<br>
+Licensed under the permissive MIT license,<br>
+you can use Ursina for whatever you want.<br>
+<br>
+• No revenue cut or subscription fee.<br>
+• Freely modify source code to fix bugs or add features<br>
+<br>
+<br>
+<h2><div id="Dependencies"/><br>
+Dependencies<br>
+</h2><br>
+<br>
+• python 3.10+<br>
+• panda3d<br>
+• pillow, for texture manipulation<br>
+• pyperclip, for cut and paste support<br>
+<br>
+Optional:<br>
+• psutil, for measuring memory usage<br>
+• imageio, for recording and converting to gifs<br>
+• psd-tools3, for converting .psd files<br>
+• Blender, for converting .blend files<br>
+<br>
+<br>
+<h2><div id="Platforms"/><br>
+Platforms<br>
+</h2><br>
+<br>
+• Windows<br>
+• Linux<br>
+• Mac (not officially supported, but will most likely work)<br>
+<br>
+<br>
+<br>
+<br>
+<a href=" installation.html" class="button">⭳ Download</a><br>
+<br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
+</script>
+
+</body>
+</html>

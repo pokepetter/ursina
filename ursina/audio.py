@@ -13,8 +13,8 @@ class Audio(Entity):
 
     volume_multiplier = .5  #
 
-    def __init__(self, sound_file_name='', volume=1, pitch=1, balance=0, loop=False, loops=1, autoplay=True, auto_destroy=False):
-        super().__init__()
+    def __init__(self, sound_file_name='', volume=1, pitch=1, balance=0, loop=False, loops=1, autoplay=True, auto_destroy=False, **kwargs):
+        super().__init__(**kwargs)
         # printvar(sound_file_name)
         self.clip = sound_file_name
         if not self.clip:
@@ -66,9 +66,8 @@ class Audio(Entity):
             for folder in (application.asset_folder, application.internal_audio_folder):
                 for suffix in file_types:
                     for f in folder.glob(f'**/{value}{suffix}'):
-                        p = str(f.resolve())
-                        p = Filename.fromOsSpecific(p)
-                        self._clip = loader.loadSfx(p)  # type: ignore
+                        self.path = str(f.resolve())
+                        self._clip = loader.loadSfx(Filename.fromOsSpecific(self.path))  # type: ignore
                         # print('...loaded audio clip:', p, self._clip)
                         return
 

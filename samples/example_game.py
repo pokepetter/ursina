@@ -37,7 +37,7 @@ class Player(Entity):   # inherits Entity, out base class for most things. Like 
 
         self.color = color.orange
         # self.color = color.random.color()
-        # self.color = color.color(90, 1, 1, 1) #hsv color
+        # self.color = color.hsv(90, 1, 1, 1) #hsv color
 
         self.collider = 'box'
 

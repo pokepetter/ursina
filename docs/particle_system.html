@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+        <!--generated with sswg-->
+        <html lang="en">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <head>
+            <title> ursina engine documentation</title>
+            <link rel="stylesheet" href="sswg.css">
+            <link rel="stylesheet" href="style.css">
+            <link rel="icon" type="image/x-icon" href="favicon.ico">
+        </head>
+        <body>
+        <left><div style="max-width: 1200px; margin: auto;">
+<br>
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" https://github.com/sponsors/pokepetter" class="button">Donate🡕</a><br>
+<br>
+<div style="font-size: 60.0px;font-weight: bold;">
+<div id="Particle System"/><br>
+Particle System<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<a href="https://github.com/pokepetter/ursina/blob/master/samples/particle_system.py">https://github.com/pokepetter/ursina/blob/master/samples/particle_system.py</a><br>
+<br>
+<img src="icons/particle_system.jpg"></img> <br>
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>import</purple> numpy as np
+
+number_of_particles = <yellow>1</yellow><yellow>0</yellow><yellow>0</yellow><yellow>0</yellow>   <gray># keep this as low as possible</gray>
+points = np.array([Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>) <purple>for</purple> i in <blue>range</blue>(number_of_particles)])
+directions = np.array([Vec3(random.random()-.<yellow>5</yellow>,random.random()-.<yellow>5</yellow>,random.random()-.<yellow>5</yellow>)*.<yellow>0</yellow><yellow>5</yellow> <purple>for</purple> i in <blue>range</blue>(number_of_particles)])
+frames = []
+
+<gray># simulate the particles once and cache the positions in a list.</gray>
+<purple>for</purple> i in <blue>range</blue>(<yellow>6</yellow><yellow>0</yellow>*<yellow>1</yellow>):
+    points += directions
+    frames.append(copy(points))
+
+
+class ParticleSystem(<olive>Entity</olive>):
+    <purple>def</purple> __init__(self, **kwargs):
+        super().__init__(<olive>model</olive>=Mesh(<olive>vertices</olive>=points, <olive>mode</olive>=<green>'point'</green>, static=False, render_points_in_<yellow>3</yellow>d=True, <olive>thickness</olive>=.<yellow>1</yellow>), t=<yellow>0</yellow>, duration=<yellow>1</yellow>, **kwargs)
+
+        <purple>for</purple> key, value in kwargs.items():
+            <blue>setattr</blue>(self, key, value)
+
+
+    <purple>def</purple> update(self):
+        self.t += time.dt
+        <purple>if</purple> self.t &gt;= self.duration:
+            destroy(self)
+            return
+
+        self.model.vertices = frames[floor(self.t * <yellow>6</yellow><yellow>0</yellow>)]
+        self.model.generate()
+
+
+
+<purple>if</purple> __name__ == <green>'__main__'</green>:
+    app = Ursina(vsync=False)
+    window.color = color.black
+
+    <purple>def</purple> input(key):
+        <purple>if</purple> key == <green>'space'</green>:
+            p = ParticleSystem(<olive>position</olive>=Vec3(random.random(),random.random(),random.random())*<yellow>2</yellow>, <olive>color</olive>=color.random_color(), rotation_<olive>y</olive>=random.random()*<yellow>3</yellow><yellow>6</yellow><yellow>0</yellow>)
+            p.fade_out(duration=.<yellow>2</yellow>, dela<olive>y</olive>=<yellow>1</yellow>-.<yellow>2</yellow>, <olive>curve</olive>=curve.linear)
+
+    Text(<green>'press space to spawn particles'</green>, <olive>origin</olive>=(<yellow>0</yellow>,<yellow>0</yellow>), <olive>y</olive>=-.<yellow>4</yellow><yellow>5</yellow>)
+    EditorCamera()
+
+    app.run()
+</div><script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
+</script>
+
+</body>
+</html>

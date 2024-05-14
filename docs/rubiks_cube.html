@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+        <!--generated with sswg-->
+        <html lang="en">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <head>
+            <title> ursina engine documentation</title>
+            <link rel="stylesheet" href="sswg.css">
+            <link rel="stylesheet" href="style.css">
+            <link rel="icon" type="image/x-icon" href="favicon.ico">
+        </head>
+        <body>
+        <left><div style="max-width: 1200px; margin: auto;">
+<br>
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" https://github.com/sponsors/pokepetter" class="button">Donate🡕</a><br>
+<br>
+<div style="font-size: 60.0px;font-weight: bold;">
+<div id="Rubik's Cube"/><br>
+Rubik's Cube<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<a href="https://github.com/pokepetter/ursina/blob/master/samples/rubiks_cube.py">https://github.com/pokepetter/ursina/blob/master/samples/rubiks_cube.py</a><br>
+<br>
+<img src="icons/rubiks_cube.jpg"></img> <br>
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>
+
+app = Ursina()
+
+cube_colors = [
+    color.pink,  <gray># right</gray>
+    color.orange,   <gray># left</gray>
+    color.white,    <gray># top</gray>
+    color.yellow,   <gray># bottom</gray>
+    color.azure,    <gray># back</gray>
+    color.green,    <gray># front</gray>
+]
+
+<gray># make a model with a separate color on each face</gray>
+combine_parent = <olive>Entity</olive>(<olive>enabled</olive>=False)
+<purple>for</purple> i in <blue>range</blue>(<yellow>3</yellow>):
+    dir = Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)
+    dir[i] = <yellow>1</yellow>
+
+    e = <olive>Entity</olive>(<olive>parent</olive>=combine_parent, <olive>model</olive>=<green>'plane'</green>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>texture</olive>=<green>'white_cube'</green>, <olive>color</olive>=cube_colors[i*<yellow>2</yellow>])
+    e.look_at(dir, <green>'up'</green>)
+
+    e_flipped = <olive>Entity</olive>(<olive>parent</olive>=combine_parent, <olive>model</olive>=<green>'plane'</green>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>texture</olive>=<green>'white_cube'</green>, <olive>color</olive>=cube_colors[(i*<yellow>2</yellow>)+<yellow>1</yellow>])
+    e_flipped.look_at(-dir, <green>'up'</green>)
+
+combine_parent.combine()
+
+
+<gray># place <yellow>3</yellow>x<yellow>3</yellow>x<yellow>3</yellow> cubes</gray>
+cubes = []
+<purple>for</purple> x in <blue>range</blue>(<yellow>3</yellow>):
+    <purple>for</purple> y in <blue>range</blue>(<yellow>3</yellow>):
+        <purple>for</purple> z in <blue>range</blue>(<yellow>3</yellow>):
+            e = <olive>Entity</olive>(<olive>model</olive>=copy(combine_parent.model), <olive>position</olive>=Vec3(x,y,z) - (Vec3(<yellow>3</yellow>,<yellow>3</yellow>,<yellow>3</yellow>)/<yellow>3</yellow>), <olive>texture</olive>=<green>'white_cube'</green>)
+            cubes.append(e)
+
+
+<gray># rotate a side when we click on it</gray>
+collider = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>scale</olive>=<yellow>3</yellow>, <olive>collider</olive>=<green>'box'</green>, <olive>visible</olive>=False)
+
+<purple>def</purple> collider_input(key):
+    <purple>if</purple> mouse.hovered_entity == collider:
+        <purple>if</purple> key == <green>'left mouse down'</green>:
+            rotate_side(mouse.normal, <yellow>1</yellow>)
+        <purple>elif</purple> key == <green>'right mouse down'</green>:
+            rotate_side(mouse.normal, -<yellow>1</yellow>)
+
+collider.input = collider_input
+
+
+rotation_helper = <olive>Entity</olive>()
+
+
+<purple>def</purple> rotate_side(normal, direction=<yellow>1</yellow>, speed=<yellow>1</yellow>):
+    <purple>if</purple> normal == Vec3(<yellow>1</yellow>,<yellow>0</yellow>,<yellow>0</yellow>):
+        [<blue>setattr</blue>(e, <green>'world_parent'</green>, rotation_helper) <purple>for</purple> e in cubes <purple>if</purple> e.x &gt; <yellow>0</yellow>]
+        rotation_helper.animate(<green>'rotation_x'</green>, <yellow>9</yellow><yellow>0</yellow> * direction, duration=.<yellow>1</yellow><yellow>5</yellow>*speed, <olive>curve</olive>=curve.linear, interrupt=<green>'finish'</green>)
+    <purple>elif</purple> normal == Vec3(-<yellow>1</yellow>,<yellow>0</yellow>,<yellow>0</yellow>):
+        [<blue>setattr</blue>(e, <green>'world_parent'</green>, rotation_helper) <purple>for</purple> e in cubes <purple>if</purple> e.x &lt; <yellow>0</yellow>]
+        rotation_helper.animate(<green>'rotation_x'</green>, -<yellow>9</yellow><yellow>0</yellow> * direction, duration=.<yellow>1</yellow><yellow>5</yellow>*speed, <olive>curve</olive>=curve.linear, interrupt=<green>'finish'</green>)
+
+    <purple>elif</purple> normal == Vec3(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>0</yellow>):
+        [<blue>setattr</blue>(e, <green>'world_parent'</green>, rotation_helper) <purple>for</purple> e in cubes <purple>if</purple> e.y &gt; <yellow>0</yellow>]
+        rotation_helper.animate(<green>'rotation_y'</green>, <yellow>9</yellow><yellow>0</yellow> * direction, duration=.<yellow>1</yellow><yellow>5</yellow>*speed, <olive>curve</olive>=curve.linear, interrupt=<green>'finish'</green>)
+    <purple>elif</purple> normal == Vec3(<yellow>0</yellow>,-<yellow>1</yellow>,<yellow>0</yellow>):
+        [<blue>setattr</blue>(e, <green>'world_parent'</green>, rotation_helper) <purple>for</purple> e in cubes <purple>if</purple> e.y &lt; <yellow>0</yellow>]
+        rotation_helper.animate(<green>'rotation_y'</green>, -<yellow>9</yellow><yellow>0</yellow> * direction, duration=.<yellow>1</yellow><yellow>5</yellow>*speed, <olive>curve</olive>=curve.linear, interrupt=<green>'finish'</green>)
+
+    <purple>elif</purple> normal == Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>):
+        [<blue>setattr</blue>(e, <green>'world_parent'</green>, rotation_helper) <purple>for</purple> e in cubes <purple>if</purple> e.z &gt; <yellow>0</yellow>]
+        rotation_helper.animate(<green>'rotation_z'</green>, -<yellow>9</yellow><yellow>0</yellow> * direction, duration=.<yellow>1</yellow><yellow>5</yellow>*speed, <olive>curve</olive>=curve.linear, interrupt=<green>'finish'</green>)
+    <purple>elif</purple> normal == Vec3(<yellow>0</yellow>,<yellow>0</yellow>,-<yellow>1</yellow>):
+        [<blue>setattr</blue>(e, <green>'world_parent'</green>, rotation_helper) <purple>for</purple> e in cubes <purple>if</purple> e.z &lt; <yellow>0</yellow>]
+        rotation_helper.animate(<green>'rotation_z'</green>, <yellow>9</yellow><yellow>0</yellow> * direction, duration=.<yellow>1</yellow><yellow>5</yellow>*speed, <olive>curve</olive>=curve.linear, interrupt=<green>'finish'</green>)
+
+
+    invoke(reset_rotation_helper, dela<olive>y</olive>=.<yellow>2</yellow>*speed)
+
+    <purple>if</purple> speed:
+        collider.ignore_input = True
+        @after(.<yellow>2</yellow><yellow>5</yellow>*speed)
+        <purple>def</purple> _():
+            collider.ignore_input = False
+            check_for_win()
+
+
+<purple>def</purple> reset_rotation_helper():
+    [<blue>setattr</blue>(e, <green>'world_parent'</green>, scene) <purple>for</purple> e in cubes]
+    rotation_helper.rotation = (<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)
+
+
+win_text_entity = Text(<olive>y</olive>=.<yellow>3</yellow><yellow>5</yellow>, <olive>text</olive>=<green>''</green>, <olive>color</olive>=color.green, <olive>origin</olive>=(<yellow>0</yellow>,<yellow>0</yellow>), <olive>scale</olive>=<yellow>3</yellow>)
+
+<purple>def</purple> check_for_win():
+    <purple>if</purple> {e.world_rotation <purple>for</purple> e in cubes} == {Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)}:
+        win_text_entity.text = <green>'SOLVED!'</green>
+        win_text_entity.appear()
+    <purple>else</purple>:
+        win_text_entity.text = <green>''</green>
+
+
+<purple>def</purple> randomize():
+    faces = (Vec3(<yellow>1</yellow>,<yellow>0</yellow>,<yellow>0</yellow>), Vec3(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>0</yellow>), Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>), Vec3(-<yellow>1</yellow>,<yellow>0</yellow>,<yellow>0</yellow>), Vec3(<yellow>0</yellow>,-<yellow>1</yellow>,<yellow>0</yellow>), Vec3(<yellow>0</yellow>,<yellow>0</yellow>,-<yellow>1</yellow>))
+    <purple>for</purple> i in <blue>range</blue>(<yellow>2</yellow><yellow>0</yellow>):
+        rotate_side(normal=random.choice(faces), direction=random.choice((-<yellow>1</yellow>,<yellow>1</yellow>)), speed=<yellow>0</yellow>)
+
+randomize_button = Button(<olive>text</olive>=<green>'randomize'</green>, <olive>color</olive>=color.azure, <olive>position</olive>=(.<yellow>7</yellow>,-.<yellow>4</yellow>), <olive>on_click</olive>=randomize)
+randomize_button.fit_to_text()
+
+window.color = color._<yellow>1</yellow><yellow>6</yellow>
+EditorCamera()
+
+app.run()
+</div><script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
+</script>
+
+</body>
+</html>

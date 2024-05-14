@@ -26,21 +26,27 @@ def invoke(function, *args, **kwargs):  # reserved keywords: 'delay', 'unscaled'
         unscaled = kwargs['unscaled']
         del kwargs['unscaled']
 
+    ignore_paused = False
+    if 'ignore_paused' in kwargs:
+        ignore_paused = kwargs['ignore_paused']
+        del kwargs['ignore_paused']
+
     if not delay:
         function(*args, **kwargs)
         return None
 
-    s = Sequence(
+    if ignore_paused:
+        unscaled = True
+
+    return Sequence(
         Wait(delay),
-        Func(function, *args, **kwargs)
+        Func(function, *args, **kwargs),
+        auto_destroy=True, ignore_paused=ignore_paused, unscaled=unscaled, started=True,
     )
-    s.unscaled = unscaled
-    s.start()
-    return s
 
 
-def after(delay, unscaled=True):
-    '''@after  decorator for calling a function after some time.
+def after(delay, unscaled=True):    # function for @after decorator. Use the docrator, not this.
+    '''@after decorator for calling a function after some time.
 
         example:
         @after(.4)
@@ -48,27 +54,27 @@ def after(delay, unscaled=True):
             self.on_cooldown = False
             self.color = color.green
     '''
-    def decorator(func):
+    def _decorator(func):
         def wrapper(*args, **kwargs):
             invoke(func, *args, **kwargs, delay=delay, unscaled=unscaled)
         return wrapper()
-    return decorator
+    return _decorator
 
 
 
 def destroy(entity, delay=0):
     if delay == 0:
         _destroy(entity)
-        return
+        return True
 
-    s = Sequence(Wait(delay), Func(_destroy, entity))
-    s.start()
-    return s
+    return invoke(_destroy, entity, delay=delay)
+    # return Sequence(Wait(delay), Func(_destroy, entity), auto_destroy=True, started=True)
+
 
 def _destroy(entity, force_destroy=False):
-    from ursina import camera
-    if not entity or entity == camera:
-        return
+    # from ursina import camera
+    # if not entity or entity == camera:
+    #     return
 
     if entity.eternal and not force_destroy:
         return
@@ -94,6 +100,8 @@ def _destroy(entity, force_destroy=False):
     if hasattr(entity, '_parent') and entity._parent and hasattr(entity._parent, '_children') and entity in entity._parent._children:
         entity._parent._children.remove(entity)
 
+    if hasattr(entity, '_loose_parent') and entity._loose_parent and hasattr(entity._loose_parent, '_loose_children') and entity in entity._loose_parent._loose_children:
+        entity._loose_parent._loose_children.remove(entity)
 
     if hasattr(entity, 'scripts'):
         for s in entity.scripts:
@@ -101,7 +109,6 @@ def _destroy(entity, force_destroy=False):
 
     if hasattr(entity, 'animations'):
         for anim in entity.animations:
-            anim.finish()
             anim.kill()
 
     if hasattr(entity, 'tooltip'):
@@ -133,17 +140,31 @@ def flatten_list(target_list):
     import itertools
     return list(itertools.chain(*target_list))
 
-def flatten_completely(container):
-    for i in container:
-        if isinstance(i, (list, tuple)):
+
+def flatten_completely(target_list):
+    for i in target_list:
+        if isinstance(i, (sub_list, tuple)):
             for j in flatten_list(i):
                 yield j
         else:
             yield i
 
 
+def enumerate_2d(target_2d_list):    # usage: for (x, y), value in enumerate_2d(my_2d_list)
+    for x, line in enumerate(target_2d_list):
+        for y, value in enumerate(line):
+            yield (x, y), value
 
-def size_list():    #return a list of current python objects sorted by size
+
+def rotate_2d_list(target_2d_list):
+    return list(zip(*target_2d_list[::-1]))   # rotate
+
+
+def list_2d_to_string(target_2d_list, characters='.#'):
+    return '\n'.join([''.join([characters[e] for e in line]) for line in target_2d_list])
+
+
+def size_list():    # return a list of current python objects sorted by size
     import operator
 
     globals_list = []
@@ -180,7 +201,7 @@ def import_all_classes(path=application.asset_folder, debug=False):
         if rel_path.startswith('.'):
             rel_path = rel_path[1:]
         module_name = os.path.basename(file_path).split('.')[0]
-        class_name = snake_to_camel(module_name)
+        # class_name = snake_to_camel(module_name)
         module_name = module_name
         import_statement = 'from ' + rel_path + ' import *'
 
@@ -221,6 +242,17 @@ if __name__ == '__main__':
     app = Ursina()
 
 
+    list_2d = [
+        [1,0,0,1, 0, 1,1,1,0, 0, 1,1,1,1, 0, 0,1,0,0],
+        [1,0,0,1, 0, 1,0,0,1, 0, 1,1,1,0, 0, 0,1,0,0],
+        [1,0,0,1, 0, 1,1,1,0, 0, 0,0,0,1, 0, 0,1,0,0],
+        [0,1,1,0, 0, 1,0,0,1, 0, 1,1,1,1, 0, 0,1,0,0],
+    ]
+    print(list_2d_to_string(list_2d))
 
+
+    a = Audio('sine')
+    a.play()
+    destroy(a, delay=1)
     # Player()
     app.run()

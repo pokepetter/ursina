@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+        <!--generated with sswg-->
+        <html lang="en">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <head>
+            <title> ursina engine documentation</title>
+            <link rel="stylesheet" href="sswg.css">
+            <link rel="stylesheet" href="style.css">
+            <link rel="icon" type="image/x-icon" href="favicon.ico">
+        </head>
+        <body>
+        <left><div style="max-width: 1200px; margin: auto;">
+<br>
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" https://github.com/sponsors/pokepetter" class="button">Donate🡕</a><br>
+<br>
+<div style="font-size: 60.0px;font-weight: bold;">
+<div id="Minecraft Clone"/><br>
+Minecraft Clone<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<a href="https://github.com/pokepetter/ursina/blob/master/samples/minecraft_clone.py">https://github.com/pokepetter/ursina/blob/master/samples/minecraft_clone.py</a><br>
+<br>
+<img src="icons/minecraft_clone.jpg"></img> <br>
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>Disclaimer: This solution is <purple>not</purple> scalable <purple>for</purple> creating a big world.
+Creating a game like Minecraft requires specialized knowledge and is <purple>not</purple> as easy
+to make as it looks.
+
+You'll have to do some sort of chunking of the world and generate a combined mesh
+instead of separate blocks <purple>if</purple> you want it to run fast. You can use the Mesh class <purple>for</purple> this.
+
+You can then use blocks with colliders like in this example in a small area
+around the player so you can interact with the world.
+<green>''</green>'
+
+<purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina.prefabs.first_person_controller <purple>import</purple> FirstPersonController
+
+
+app = Ursina()
+
+<gray># Define a Voxel class.</gray>
+<gray># By setting the parent to scene and the model to <green>'cube'</green> it becomes a <yellow>3</yellow>d button.</gray>
+
+class Voxel(Button):
+    <purple>def</purple> __init__(self, <olive>position</olive>=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)):
+        super().__init__(<olive>parent</olive>=scene,
+            <olive>position</olive>=position,
+            <olive>model</olive>=<green>'cube'</green>,
+            origin_<olive>y</olive>=.<yellow>5</yellow>,
+            <olive>texture</olive>=<green>'white_cube'</green>,
+            <olive>color</olive>=color.hsv(<yellow>0</yellow>, <yellow>0</yellow>, random.uniform(.<yellow>9</yellow>, <yellow>1</yellow>.<yellow>0</yellow>)),
+            <olive>highlight_color</olive>=color.lime,
+        )
+
+<purple>for</purple> z in <blue>range</blue>(<yellow>8</yellow>):
+    <purple>for</purple> x in <blue>range</blue>(<yellow>8</yellow>):
+        voxel = Voxel(<olive>position</olive>=(x,<yellow>0</yellow>,z))
+
+
+<purple>def</purple> input(key):
+    <purple>if</purple> key == <green>'left mouse down'</green>:
+        hit_info = raycast(camera.world_position, camera.forward, distance=<yellow>5</yellow>)
+        <purple>if</purple> hit_info.hit:
+            Voxel(<olive>position</olive>=hit_info.entity.position + hit_info.normal)
+    <purple>if</purple> key == <green>'right mouse down'</green> and mouse.hovered_entity:
+        destroy(mouse.hovered_entity)
+
+
+player = FirstPersonController()
+app.run()
+</div><script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
+</script>
+
+</body>
+</html>

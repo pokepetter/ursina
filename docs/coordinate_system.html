@@ -1,0 +1,204 @@
+<!DOCTYPE HTML>
+        <!--generated with sswg-->
+        <html lang="en">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <head>
+            <title> ursina engine coordinate system</title>
+            <link rel="stylesheet" href="sswg.css">
+            <link rel="stylesheet" href="style.css">
+            <link rel="icon" type="image/x-icon" href="favicon.ico">
+        </head>
+        <body>
+        <left><div style="max-width: 1200px; margin: auto;">
+<br>
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" https://github.com/sponsors/pokepetter" class="button">Donate🡕</a><br>
+<br>
+<div class="sidebar"><br>
+<b><a href="documentation.html">Documentation</a></b><br>
+<br>
+<a href="installation.html">Installation</a><br>
+<br>
+<a href="entity_basics.html">Entity Basics</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#What is an Entity?">What is an Entity?</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Model">Model</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Texture">Texture</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Color">Color</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position">Position</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Rotation">Rotation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Scale">Scale</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Update">Update</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Input">Input</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Mouse Input">Mouse Input</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Other Magic Functions">Other Magic Functions</a><br>
+<br>
+<a href="coordinate_system.html">Coordinate System</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#Entity Coordinate System">Entity Coordinate System</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#UI Coordinate System">UI Coordinate System</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#Rotation">Rotation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#Origin">Origin</a><br>
+<br>
+<a href="collision.html">Collision</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Adding Colliders">Adding Colliders</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#raycast()">raycast()</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#boxcast()">boxcast()</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#intersects()">intersects()</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#HitInfo">HitInfo</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Distance Check">Distance Check</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Mouse Collision">Mouse Collision</a><br>
+<br>
+<a href="text.html">Text</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Size">Text Size</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Font and Resolution">Font and Resolution</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Alignment">Text Alignment</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Colors">Text Colors</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Changing Text of Prefabs">Changing Text of Prefabs</a><br>
+<br>
+<a href="animation.html">Animation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#SpriteSheetAnimation (2D)">SpriteSheetAnimation (2D)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#Animation (2D)">Animation (2D)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#Actor (3D)">Actor (3D)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#FrameAnimation3D (3D)">FrameAnimation3D (3D)</a><br>
+<br>
+<br>
+<a href="networking.html">Networking</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#~~ Networking Concepts ~~">~~ Networking Concepts ~~</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#How Data Goes from Point A to Point B">How Data Goes from Point A to Point B</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#IP Addresses">IP Addresses</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Ports">Ports</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Communication Protocols">Communication Protocols</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#References">References</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#~~ Game Networking Concepts ~~">~~ Game Networking Concepts ~~</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Multiplayer Preparations">Multiplayer Preparations</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Sending Inputs">Sending Inputs</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Sending Game State">Sending Game State</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Client Authoritative">Client Authoritative</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Server Authoritative">Server Authoritative</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Deterministic Lockstep">Deterministic Lockstep</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Snapshot Interpolation">Snapshot Interpolation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Server Side Lag Compensation">Server Side Lag Compensation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Client Side Prediction">Client Side Prediction</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#References">References</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#~~ Introduction to Ursina Networking ~~">~~ Introduction to Ursina Networking ~~</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Limitations">Limitations</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Basics">Basics</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Samples">Samples</a><br>
+<br>
+<a href="faq.html">F.A.Q.</a><br>
+<br>
+<a href="building.html">Build and Release</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="building.html#Building Your App with ursina.build">Building Your App with ursina.build</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="building.html#Building with Nuitka">Building with Nuitka</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="building.html#Building Your App with auto-py-to-exe">Building Your App with auto-py-to-exe</a><br>
+<br>
+<br>
+</div><br>
+<br>
+<div style="font-size: 60.0px;font-weight: bold;">
+<div id="Coordinate System"/><br>
+Coordinate System<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<br>
+<h2><div id="Entity Coordinate System"/><br>
+Entity Coordinate System<br>
+</h2><br>
+<br>
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>
+            y (up)
+            |
+            |
+(forward) z |
+          \ |
+           \|
+            *---------- x (right)
+
+</div><br>
+<br>
+<br>
+<br>
+<h2><div id="UI Coordinate System"/><br>
+UI Coordinate System<br>
+</h2><br>
+<br>
+<div class="code_block" id="code_block_1" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>                      (-.<yellow>5</yellow>, .<yellow>5</yellow>)           (.<yellow>5</yellow>, .<yellow>5</yellow>)
+  (window.top_right)_______|__(window.top)____|_______(window.top_right)
+                   |       <green>'                  '</green>       |
+                   |       <green>'                  '</green>       |
+                   |       <green>'                  '</green>       |
+                   |       <green>'                  '</green>       |
+       (window.left)       <green>'      (<yellow>0</yellow>, <yellow>0</yellow>)      '</green>       (window.right or Vec2(.<yellow>5</yellow>*window.aspect_ratio, <yellow>0</yellow>))
+                   |       <green>'                  '</green>       |
+                   |       <green>'                  '</green>       |
+                   |       <green>'                  '</green>       |
+                   |_______<green>'__________________'</green>_______|
+(window.bottom_left)       |  (window.bottom) |       (window.bottom_right)
+                      (-.<yellow>5</yellow>, -.<yellow>5</yellow>)          (.<yellow>5</yellow>, -.<yellow>5</yellow>)
+</div><br>
+Want a different UI coordinate system? No problem. camera.ui is an Entity as well so you can move and scale it as you see fit.<br>
+<br>
+<br>
+<h2><div id="Rotation"/><br>
+Rotation<br>
+</h2><br>
+<br>
+Positive rotation means rotating clockwise around the axis, looking from the outside in.<br>
+The exception to this is the z-axis, which is counter-clockwise.<br>
+While this is inconsistent, it makes setting rotation_z in 2D also clockwise.<br>
+<br>
+Although generally not recommended, the rotation direction can be changed by<br>
+setting <span>Entity.rotation_directions</span> (default: (-1,-1,1)).<br>
+<br>
+In general when working with rotation you'll want to only set one of the axes at the same time.<br>
+For more complicated rotations you can use <span>entity.look_at(position)</span>, <span>entity.look_at_2d(position)</span><br>
+or even set/get .quaternion if you're comfortable with that. For continuous rotation, <span>entity.rotate(amount)</span> can be good as it will add a rotation to the current rotation.<br>
+<br>
+<div class="code_block" id="code_block_2" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_2)">copy</button>
+           _______
+          /
+          \-&gt;
+    __
+   /  \     y
+   v  |     |
+      |  z  |                __
+          \ |               /  \
+           \|               v   |
+            *---------- x       |
+                                |
+</div><br>
+<br>
+<br>
+<br>
+<h2><div id="Origin"/><br>
+Origin<br>
+</h2><br>
+<br>
+Setting the origin will move the origin point of the model.<br>
+This can be especially useful when working with the UI.<br>
+<br>
+<div class="code_block" id="code_block_3" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_3)">copy</button>             (-.<yellow>5</yellow>,.<yellow>5</yellow>)
++---------+      <yellow>0</yellow>---------+
+|  (<yellow>0</yellow>,<yellow>0</yellow>)  |      |         |
+|    <yellow>0</yellow>    |      |         |
+|         |      |         |
++---------+      +---------+
+
+   (<yellow>0</yellow>,.<yellow>5</yellow>)
++----<yellow>0</yellow>----+      +---------+
+|         |      |         |
+|         |      |         <yellow>0</yellow> (.<yellow>5</yellow>,<yellow>0</yellow>)
+|         |      |         |
++---------+      +---------+
+
+</div><br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
+</script>
+
+</body>
+</html>

@@ -1,10 +1,40 @@
 from panda3d.core import BitMask32, TransformState
 from panda3d.bullet import BulletRigidBodyNode, BulletPlaneShape, BulletBoxShape, BulletSphereShape, BulletCapsuleShape, XUp, YUp, ZUp, BulletTriangleMesh, BulletTriangleMeshShape, BulletDebugNode, BulletWorld
 from ursina.vec3 import Vec3
+from ursina.entity import Entity
+from ursina import scene
+from ursina.scripts.property_generator import generate_properties_for_class
+import time
+
+@generate_properties_for_class()
+class PhysicsHandler(Entity):
+    def __init__(self):
+        self.world = BulletWorld()
+        self.world.setGravity(Vec3(0, -9.806, 0))
+        self._debug_node = BulletDebugNode('Debug')
+        self._debug_node.showWireframe(True)
+        self._debug_node.showConstraints(True)
+        self._debug_node.showBoundingBoxes(False)
+        self._debug_node.showNormals(False)
+        self._debug_node_path = scene.attachNewNode(self._debug_node)
+        self.world.setDebugNode(self._debug_node)
+        super().__init__()
+
+    def update(self):
+        self.world.doPhysics(time.dt)
+
+    def show_debug_setter(self, value):
+        if value:
+            self._debug_node_path.show()
+        else:
+            self._debug_node_path.hide()
+
+physics_handler = PhysicsHandler()
+
 
 class PlaneShape:
-    def __init__(self, normal=Vec3(0,1,0), offset=0):
-        self.center = (0,0,0)
+    def __init__(self, center=(0,0,0), normal=Vec3(0,1,0), offset=0):
+        self.center = center
         self.normal = normal
         self.offset = offset
 
@@ -31,14 +61,34 @@ class MeshShape:
         self.center = center
 
 
+
 class PhysicsBody:
+    # copy the animation functionality from Entity
+    animate = Entity.animate
+    animate_position = Entity.animate_position
+    animate_x = Entity.animate_x
+    animate_y = Entity.animate_y
+    animate_z = Entity.animate_z
+    animate_rotation = Entity.animate_rotation
+    animate_rotation_x = Entity.animate_rotation_x
+    animate_rotation_y = Entity.animate_rotation_y
+    animate_rotation_z = Entity.animate_rotation_z
+    animate_scale = Entity.animate_scale
+    animate_scale_x = Entity.animate_scale_x
+    animate_scale_y = Entity.animate_scale_y
+    animate_scale_z = Entity.animate_scale_z
+
+
     def __init__(self, name: str, world):
         self.world = world
         self.attached = False
         self._visible = False
+        self.ignore_paused = False
+        self.animations = []
 
     def __getattr__(self, attribute):
         return getattr(self.node_path.node(), attribute)
+
 
     def attach(self):
         if not self.attached:
@@ -53,6 +103,7 @@ class PhysicsBody:
     def remove(self):
         self.detach()
         self.node_path.removeNode()
+
 
     @property
     def visible(self):
@@ -72,7 +123,7 @@ class PhysicsBody:
 
     @position.setter
     def position(self, value):
-    	self.node_path.setPos(Vec3(value))
+        self.node_path.setPos(Vec3(value))
 
     @property
     def x(self):
@@ -105,7 +156,7 @@ class PhysicsBody:
 
     @rotation.setter
     def rotation(self, value):
-    	self.node_path.setHpr(Vec3(value[1], value[0], value[2]))
+        self.node_path.setHpr(Vec3(value[1], value[0], value[2]))
 
     @property
     def scale(self):
@@ -117,9 +168,15 @@ class PhysicsBody:
         value = [e if e!=0 else .001 for e in value]
         self.node_path.setScale(value[0], value[1], value[2])
 
+    def add_force(self, force, point=(0,0,0)):
+        if point != (0,0,0):
+            self.node_path.node().applyForce(force, point)
+        else:
+            self.node_path.node().applyCentralForce(force)
+
 
 class RigidBody(PhysicsBody):
-    def __init__(self, world, shape, entity=None, mass=0, kinematic=False, friction=.5, mask=0x1):
+    def __init__(self, shape, world=physics_handler.world, entity=None, mass=0, kinematic=False, friction=.5, mask=0x1):
         super().__init__(name='RigidBody', world=world)
         self.rigid_body_node = BulletRigidBodyNode('RigidBody')
         self.rigid_body_node.setMass(mass)
@@ -165,7 +222,7 @@ def _convert_shape(shape, entity, dynamic=True):
             axis = ZUp
         elif shape.axis == 'x':
             axis = XUp
-        return BulletCapsuleShape(shape.radius / 2, shape.height / 2, axis)
+        return BulletCapsuleShape(shape.radius, shape.height-1, axis)
 
     if isinstance(shape, MeshShape) and entity:
         if shape.mesh is None and entity.model:
@@ -179,68 +236,53 @@ def _convert_shape(shape, entity, dynamic=True):
 
         return BulletTriangleMeshShape(output, dynamic=dynamic)
     else:
-        raise Exception('To use a mesh shape you must specify at least one entity or mesh!')
+        raise Exception("To use MeshShape you must specify at least one entity or mesh!")
 
 
 
 if __name__ == '__main__':
-    from ursina import *
+    from ursina import Ursina, Entity, Vec3, time, EditorCamera, Sequence, Func, Wait, curve, Capsule
 
     app = Ursina(borderless=False)
 
-    debugNode = BulletDebugNode('Debug')
-    debugNode.showWireframe(True)
-    debugNode.showConstraints(True)
-    debugNode.showBoundingBoxes(False)
-    debugNode.showNormals(False)
-    debugNP = render.attachNewNode(debugNode)
-    debugNP.show()
-
-    world = BulletWorld()
-    world.setGravity(Vec3(0, -9.81, 0))
-    world.setDebugNode(debugNP.node())
-
-    ground = Entity(model='plane', texture='grass', y=0, scale=30)
-    RigidBody(world=world, shape=PlaneShape(), entity=ground)
+    ground = Entity(model='plane', texture='grass', scale=30)
+    RigidBody(shape=PlaneShape(), entity=ground)
 
     cube = Entity(model='cube', texture='white_cube', y=7)
-    RigidBody(world=world, shape=BoxShape(), entity=cube, mass=1)
+    cube_body = RigidBody(shape=BoxShape(), entity=cube, mass=1)
 
     sphere = Entity(model='sphere', texture='brick', y=30)
-    RigidBody(world=world, shape=SphereShape(), entity=sphere, mass=5)
+    RigidBody(shape=SphereShape(), entity=sphere, mass=5)
 
-    capsule = Entity(model='sphere', texture='brick', y=17, scale=(1,2,1))
-    RigidBody(world=world, shape=CapsuleShape(height=2, radius=1), entity=capsule, mass=3)
+    capsule = Entity(model=Capsule(height=2, radius=.5), texture='brick', y=17)
+    RigidBody(shape=CapsuleShape(height=2, radius=.5), entity=capsule, mass=3)
 
-    platform = Entity(model='cube', texture='white_cube', y=1, scale=(4, 1, 4))
-    platform_body = RigidBody(world, BoxShape(), entity=platform, kinematic=True, friction=1.0)
-    platform.positions = {
-        'A': Vec3(-2, 1, -2),
-        'B': Vec3(2, 1, -2),
-        'C': Vec3(0, 1, 2)
-    }
-    platform.state_table = {
-        'A': 'B',
-        'B': 'C',
-        'C': 'A'
-    }
-    platform.state = 'A'
-    platform.time_passed = 0.0
-    platform.move_time = 2.0
+    platform = Entity(model='cube', texture='white_cube', y=1, scale=(4,1,4))
+    platform_rb = RigidBody(shape=BoxShape(), entity=platform, kinematic=True, friction=1)
 
-    def update():
-        platform.time_passed += time.dt
-        platform_body.position = lerp(platform.positions[platform.state], platform.positions[platform.state_table[platform.state]], clamp(platform.time_passed / platform.move_time, 0, 1))
-        if platform.time_passed > platform.move_time:
-            platform.state = platform.state_table[platform.state]
-            platform.time_passed = 0.0
-        world.doPhysics(time.dt)
 
     def input(key):
         if key == 'space up':
-            spawned_cube = Entity(model='cube', texture='white_cube', y=7)
-            RigidBody(world, BoxShape(), entity=spawned_cube, mass=1, friction=1.0)
+            e = Entity(model='cube', texture='white_cube', y=7)
+            RigidBody(shape=BoxShape(), entity=e, mass=1, friction=1)
+        elif key == 'up arrow':
+            cube_body.add_force(force=Vec3(0, 1000, 0), point=Vec3(0,0,0))
+            print('force applied')
+
+    platform_move_sequence = Sequence(loop=True, entity=platform)
+    state_duration = 2
+    path = [Vec3(-2,1,-2), Vec3(2,1,-2), Vec3(0, 1, 2)]
+    path.append(path[0])    # make it loop back to start
+
+    for target_position in path:
+        platform_move_sequence.append(Func(platform_rb.animate_position, target_position, duration=state_duration, curve=curve.linear))
+        platform_move_sequence.append(Wait(state_duration))
+
+    platform_move_sequence.generate()
+    platform_move_sequence.start()
+
+    physics_handler.show_debug = True
+
 
     EditorCamera()
-
     app.run()

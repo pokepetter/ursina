@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+        <!--generated with sswg-->
+        <html lang="en">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <head>
+            <title> ursina engine documentation</title>
+            <link rel="stylesheet" href="sswg.css">
+            <link rel="stylesheet" href="style.css">
+            <link rel="icon" type="image/x-icon" href="favicon.ico">
+        </head>
+        <body>
+        <left><div style="max-width: 1200px; margin: auto;">
+<br>
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" https://github.com/sponsors/pokepetter" class="button">Donate🡕</a><br>
+<br>
+<div style="font-size: 60.0px;font-weight: bold;">
+<div id="Platformer"/><br>
+Platformer<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<a href="https://github.com/pokepetter/ursina/blob/master/samples/platformer.py">https://github.com/pokepetter/ursina/blob/master/samples/platformer.py</a><br>
+<br>
+<img src="icons/platformer.jpg"></img> <br>
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><gray># t = time.time()</gray>
+
+<purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina.prefabs.platformer_controller_<yellow>2</yellow>d <purple>import</purple> PlatformerController<yellow>2</yellow>d
+
+<gray># window.vsync = False</gray>
+window.borderless = False
+app = Ursina()
+window.color = color.light_gray
+camera.orthographic = True
+camera.fov = <yellow>2</yellow><yellow>0</yellow>
+ground = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.olive.tint(-.<yellow>4</yellow>), <olive>z</olive>=-.<yellow>1</yellow>, <olive>y</olive>=-<yellow>1</yellow>, origin_<olive>y</olive>=.<yellow>5</yellow>, <olive>scale</olive>=(<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow><yellow>0</yellow>,<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>,<yellow>1</yellow><yellow>0</yellow>), <olive>collider</olive>=<green>'box'</green>, <olive>ignore</olive>=True)
+
+random.seed(<yellow>4</yellow>)
+<purple>for</purple> i in <blue>range</blue>(<yellow>1</yellow><yellow>0</yellow>):
+    <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.dark_gray, <olive>collider</olive>=<green>'box'</green>, <olive>ignore</olive>=True, <olive>position</olive>=(random.randint(-<yellow>2</yellow><yellow>0</yellow>,<yellow>2</yellow><yellow>0</yellow>), random.randint(<yellow>0</yellow>,<yellow>1</yellow><yellow>0</yellow>)), <olive>scale</olive>=(random.randint(<yellow>1</yellow>,<yellow>2</yellow><yellow>0</yellow>), random.randint(<yellow>2</yellow>,<yellow>5</yellow>), <yellow>1</yellow><yellow>0</yellow>))
+<gray># ground = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.white<yellow>3</yellow><yellow>3</yellow>, origin_<olive>y</olive>=.<yellow>5</yellow>, <olive>scale</olive>=(<yellow>2</yellow><yellow>0</yellow>, <yellow>1</yellow><yellow>0</yellow>, <yellow>1</yellow>), <olive>collider</olive>=<green>'box'</green>)</gray>
+<gray># wall = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.azure, <olive>origin</olive>=(-.<yellow>5</yellow>,.<yellow>5</yellow>), <olive>scale</olive>=(<yellow>5</yellow>,<yellow>1</yellow><yellow>0</yellow>), x=<yellow>1</yellow><yellow>0</yellow>, <olive>y</olive>=.<yellow>5</yellow>, <olive>collider</olive>=<green>'box'</green>)</gray>
+<gray># ceiling = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.white<yellow>3</yellow><yellow>3</yellow>, origin_<olive>y</olive>=.<yellow>5</yellow>, <olive>scale</olive>=(<yellow>1</yellow><yellow>0</yellow>, <yellow>1</yellow>, <yellow>1</yellow>), <olive>y</olive>=<yellow>4</yellow>, <olive>collider</olive>=<green>'box'</green>)</gray>
+
+player = PlatformerController<yellow>2</yellow>d()
+player.x=<yellow>1</yellow>
+player.y = raycast(player.world_position, player.down).world_point[<yellow>1</yellow>] + .<yellow>0</yellow><yellow>1</yellow>
+camera.add_script(SmoothFollow(target=player, offset=[<yellow>0</yellow>,<yellow>5</yellow>,-<yellow>3</yellow><yellow>0</yellow>], speed=<yellow>4</yellow>))
+
+
+
+input_handler.bind(<green>'right arrow'</green>, <green>'d'</green>)
+input_handler.bind(<green>'left arrow'</green>, <green>'a'</green>)
+input_handler.bind(<green>'up arrow'</green>, <green>'space'</green>)
+input_handler.bind(<green>'gamepad dpad right'</green>, <green>'d'</green>)
+input_handler.bind(<green>'gamepad dpad left'</green>, <green>'a'</green>)
+input_handler.bind(<green>'gamepad a'</green>, <green>'space'</green>)
+
+<gray># test</gray>
+<purple>from</purple> ursina.scripts.noclip_mode <purple>import</purple> NoclipMode<yellow>2</yellow>d
+player.add_script(NoclipMode<yellow>2</yellow>d())
+
+app.run()
+</div><script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
+</script>
+
+</body>
+</html>

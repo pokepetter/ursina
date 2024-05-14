@@ -1,3 +1,4 @@
+from ursina import entity
 from ursina.entity import Entity
 from panda3d.core import PerspectiveLens, OrthographicLens, LensNode, NodePath
 from panda3d.core import Camera as PandaCamera
@@ -15,7 +16,11 @@ from ursina.scripts.property_generator import generate_properties_for_class
 @generate_properties_for_class()
 class Camera(Entity):
     def __init__(self):
-        super().__init__(add_to_scene_entities=False)
+        original_warn_if_ursina_not_instantiated = entity._warn_if_ursina_not_instantiated
+        entity._warn_if_ursina_not_instantiated = False
+        super().__init__()
+        entity._warn_if_ursina_not_instantiated = original_warn_if_ursina_not_instantiated
+
         self.parent = scene
         self.name = 'camera'
         self.eternal = True

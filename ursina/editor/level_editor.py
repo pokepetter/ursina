@@ -37,6 +37,7 @@ class LevelEditor(Entity):
         self.target_fov = 90
 
         self.sun_handler = SunHandler()
+        self.sky = Sky(parent=scene)
         self.gizmo = Gizmo()
         self.rotation_gizmo = RotationGizmo()
         self.scale_gizmo = ScaleGizmo()
@@ -52,9 +53,9 @@ class LevelEditor(Entity):
 
         self.prefab_folder = application.asset_folder / 'prefabs'
         from ursina.editor.prefabs.poke_shape import PokeShape
-        from ursina.editor.prefabs.sliced_cube import SlicedCube
+        # from ursina.editor.prefabs.sliced_cube import SlicedCube
         # print('-----------------', PokeShape)
-        self.built_in_prefabs = [ClassSpawner, WhiteCube, TriplanarCube, Pyramid, PokeShape, SlicedCube]
+        self.built_in_prefabs = [ClassSpawner, WhiteCube, TriplanarCube, Pyramid, PokeShape]
         self.prefabs = []
         self.spawner = Spawner()
         self.deleter = Deleter()
@@ -78,7 +79,6 @@ class LevelEditor(Entity):
         self.help = Help()
 
         self._edit_mode = True
-        # self.sky = Sky()
 
     def add_entity(self, entity):
         for key, value in dict(original_parent=LEVEL_EDITOR, selectable=True, collision=False, collider_type='None').items():
@@ -97,6 +97,8 @@ class LevelEditor(Entity):
 
     @entities.setter
     def entities(self, value):
+        if not self.current_scene:
+            return
         self.current_scene.entities = value
 
     @property
@@ -107,6 +109,8 @@ class LevelEditor(Entity):
 
     @selection.setter
     def selection(self, value):
+        if not self.current_scene:
+            return
         self.current_scene.selection = value
 
     def on_enable(self):
@@ -270,7 +274,7 @@ class LevelEditor(Entity):
 class ErrorEntity(Entity):
     def __init__(self, model='wireframe_cube', color=color.red, **kwargs):
         super().__init__(model=model, color=color, **kwargs)
-    
+
 class LevelEditorScene:
     def __init__(self, x, y, name, **kwargs):
         super().__init__()
@@ -332,7 +336,7 @@ class LevelEditorScene:
 
         # get all imported classes
         imported_classes = dict()
-        for module_name, module in sys.modules.items():
+        for module_name, module in list(sys.modules.items()):
             if hasattr(module, '__file__') and module.__file__ and not module.__file__.startswith(sys.prefix):  # filter out built-in modules and modules from the standard library
                 for _, obj in inspect.getmembers(module):
                     if inspect.isclass(obj):
@@ -936,10 +940,12 @@ class QuickGrabber(Entity):
 
 
     def input(self, key):
+        combined_key = input_handler.get_combined_key(key)
+
         if not key.endswith(' up') and (held_keys['shift'] or held_keys['alt'] or held_keys['s'] or mouse.right or mouse.middle or held_keys['r']):
             return
 
-        if key == 'left mouse up' and self.target_entity and distance(self.target_entity._original_world_position, self.target_entity.world_position) < .1 and (time.time()-mouse.prev_click_time) < .5:  # prevent accidentally moving the entity when you meant to select it
+        if combined_key == 'left mouse up' and self.target_entity and distance(self.target_entity._original_world_position, self.target_entity.world_position) < .1 and (time.time()-mouse.prev_click_time) < .5:  # prevent accidentally moving the entity when you meant to select it
             self.is_dragging = False
             mouse.traverse_target = scene
             self.target_entity.world_parent = self.target_entity.original_parent
@@ -950,7 +956,7 @@ class QuickGrabber(Entity):
             self.plane.enabled = False
             return
 
-        if key in self.shortcuts.keys():
+        if combined_key in self.shortcuts.keys():
             if self.target_entity:
                 return
             self.shortcuts[key]()
@@ -1433,9 +1439,11 @@ class Spawner(Entity):
 class Deleter(Entity):
     def __init__(self):
         super().__init__(parent=LEVEL_EDITOR)
+        self.shortcuts = ['delete', 'control+x']
 
     def input(self, key):
-        if LEVEL_EDITOR.selection and key == 'delete':
+        combined_key = input_handler.get_combined_key(key)
+        if LEVEL_EDITOR.selection and combined_key in self.shortcuts:
             self.delete_selected()
 
     def delete_selected(self):
@@ -1679,7 +1687,8 @@ class LevelMenu(Entity):
         LEVEL_EDITOR.render_selection()
 
         LEVEL_EDITOR.inspector.update_inspector()
-        LEVEL_EDITOR.sun_handler.sun.shadows = True
+        if LEVEL_EDITOR.current_scene.scene_parent:
+            LEVEL_EDITOR.sun_handler.update_bounds(LEVEL_EDITOR.current_scene.scene_parent)
 
 
 class HierarchyList(Entity):
@@ -2002,7 +2011,7 @@ class MenuHandler(Entity):
         super().__init__(parent=LEVEL_EDITOR)
         self._state = None
         self.states = {
-            'None' : None,
+            'None' : Entity(),
             'model_menu' : LEVEL_EDITOR.model_menu,
             'texture_menu' : LEVEL_EDITOR.texture_menu,
             'shader_menu' : LEVEL_EDITOR.shader_menu,
@@ -2392,15 +2401,16 @@ class SunHandler(Entity):
         super().__init__(parent=LEVEL_EDITOR, **kwargs)
         self.sun = DirectionalLight(shadow_map_resolution=(2048,2048))
         self.sun.look_at(Vec3(-2,-1,-1))
+        # self.update_bounds()
+
+    def update_bounds(self, entity):
+        self.sun.update_bounds(entity)
 
     def input(self, key):
         if key == 'l':
             print('toggle sun')
-            # self.sun.enabled = not self.sun.enabled
-            self.sun.update_bounds()
-            # for e in LEVEL_EDITOR.entities:
-            #     # e.shader = unlit_shader
-            #     e.unlit = not e.unlit
+            self.update_bounds()
+
 
 from ursina.prefabs.radial_menu import RadialMenu
 class RightClickMenu(Entity):
@@ -2471,7 +2481,7 @@ if __name__ == '__main__':
 
 
     level_editor = LevelEditor()
-    level_editor.goto_scene(0,0)
+    # level_editor.goto_scene(0,0)
 
 
 

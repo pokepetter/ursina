@@ -20,7 +20,7 @@ def terraincast(world_position, terrain_entity, height_values=None, return_norma
     w, d = len(height_values), len(height_values[0])
 
     if pos.x >= 0 and pos.x < 1 and pos.z >= 0 and pos.z < 1:
-        pos *= Vec3(w, 0, d)
+        pos *= Vec3(w-1, 0, d-1)
         helper.y = height_values[int(pos.x)][int(pos.z)]
         x, _, z = pos
 
@@ -73,12 +73,15 @@ if __name__ == '__main__':
     def update():
         direction = Vec3(held_keys['d'] - held_keys['a'], 0, held_keys['w'] - held_keys['s']).normalized()
         player.position += direction * time.dt * 4
-
-        player.y = terraincast(player.world_position, terrain_entity, hv)
+        y = terraincast(player.world_position, terrain_entity, hv)
+        if y is not None:
+            player.y = y
         # test.world_position = player.world_position
         # test.look_at(test.world_position + normal)
 
     EditorCamera()
+    from ursina.shaders import ssao_shader
+    camera.shader = ssao_shader
     Sky()
 
     app.run()

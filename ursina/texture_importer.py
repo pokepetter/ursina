@@ -1,5 +1,7 @@
 from pathlib import Path
 from copy import copy
+import builtins
+import importlib
 from ursina import application
 from ursina.texture import Texture
 
@@ -34,7 +36,7 @@ def load_texture(name, path=None, use_cache=True, filtering='default'):
         for folder in _folders:
             for filename in folder.glob('**/' + name):
                 # print('loaded movie texture:', filename)
-                return loader.loadTexture(filename.resolve())
+                return builtins.loader.loadTexture(filename.resolve())
 
 
     for folder in _folders:
@@ -51,12 +53,8 @@ def load_texture(name, path=None, use_cache=True, filtering='default'):
                 imported_textures[name] = t
                 return t
 
-    if application.development_mode:
-        try:
-            from psd_tools import PSDImage
-        except (ModuleNotFoundError, ImportError) as e:
-            pass
-            # print('info: psd-tools3 not installed')
+    if application.development_mode and importlib.util.find_spec('psd_tools'):
+        from psd_tools import PSDImage
 
         for folder in _folders:
             for filename in folder.glob('**/' + name + '.psd'):
@@ -94,7 +92,7 @@ def compress_textures(name=''):
         if f.suffix == '.psd':
             try:
                 from psd_tools import PSDImage
-            except (ModuleNotFoundError, ImportError) as e:
+            except (ModuleNotFoundError, ImportError):
                 print('info: psd-tools3 not installed')
                 return None
 

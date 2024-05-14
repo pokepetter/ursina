@@ -12,6 +12,7 @@ from ursina.scripts.colorize import colorize
 from ursina.ursinastuff import LoopingList
 from ursina.vec3 import Vec3
 from ursina.vec2 import Vec2
+from ursina.sequence import Func
 
 import panda3d.core as p3d
 
@@ -303,22 +304,22 @@ class Mesh(p3d.NodePath):
         if vbuf_format is not None:
             vbuf_format = f'"{vbuf_format}"'
 
-        return dedent(f'''
-            Mesh(
-                vertices={[tuple(e) for e in self.vertices]},
-                triangles={self.triangles},
-                colors={[tuple(e) for e in self.colors]},
-                uvs={[tuple(e) for e in self.uvs]},
-                normals={[tuple(e) for e in self.normals]},
-                static={self.static},
-                mode="{self.mode}",
-                thickness={self.thickness},
-                render_points_in_3d={self.render_points_in_3d},
-                vertex_buffer={self.vertex_buffer},
-                vertex_buffer_length={self.vertex_buffer_length},
-                vertex_buffer_format={vbuf_format}
-            )
-        ''')
+        mesh_as_string = 'Mesh('
+        mesh_as_string += f'\n    vertices={[tuple(e) for e in self.vertices]},' if self.vertices else ''
+        mesh_as_string += f'\n    triangles={self.triangles},' if self.triangles else ''
+        mesh_as_string += f'\n    colors={[tuple(e) for e in self.colors]},' if self.colors else ''
+        mesh_as_string += f'\n    uvs={[tuple(e) for e in self.uvs]},' if self.uvs else ''
+        mesh_as_string += f'\n    normals={[tuple(e) for e in self.normals]},' if self.normals else ''
+        mesh_as_string += f'\n    static={self.static},' if not self.static else ''
+        mesh_as_string += f'\n    mode="{self.mode}",' if self.mode != 'triangle' else ''
+        mesh_as_string += f'\n    thickness={self.thickness},' if self.thickness != 1 else ''
+        mesh_as_string += f'\n    render_points_in_3d={self.render_points_in_3d},' if self.render_points_in_3d != True else ''
+        mesh_as_string += f'\n    vertex_buffer={self.vertex_buffer},' if self.vertex_buffer is not None else ''
+        mesh_as_string += f'\n    vertex_buffer_length={self.vertex_buffer_length},' if self.vertex_buffer_length is not None else ''
+        mesh_as_string += f'\n    vertex_buffer_format={vbuf_format},' if self.vertex_buffer_format is not None else ''
+
+        mesh_as_string += '\n    )'
+        return mesh_as_string
 
 
     @property
@@ -404,9 +405,11 @@ class Mesh(p3d.NodePath):
         if regenerate:
             self.generate()
 
-    def save(self, name='', folder:Path=application.compressed_models_folder, flip_faces=False, max_decimals=16):
-        if not application.compressed_models_folder.exists():
-            application.compressed_models_folder.mkdir()
+    def save(self, name='', folder:Path=Func(getattr, application, 'compressed_models_folder'), flip_faces=False, max_decimals=16):
+        if callable(folder):
+            folder = folder()
+        if not folder.exists():
+            folder.mkdir()
 
         if not name and hasattr(self, 'path'):
             name = self.path.stem
@@ -414,20 +417,8 @@ class Mesh(p3d.NodePath):
                 name += '.ursinamesh'
 
         if name.endswith('ursinamesh'):
-            mesh_code = dedent(f'''
-            Mesh(
-                vertices={[tuple(round(_,max_decimals) for _ in e) for e in self.vertices]},
-                triangles={self.triangles},
-                colors={[tuple(round(_,max_decimals) for _ in e) for e in self.colors]},
-                uvs={[tuple(round(_,max_decimals) for _ in e) for e in self.uvs]},
-                normals={[tuple(round(_,max_decimals) for _ in e) for e in self.normals]},
-                static={self.static},
-                mode="{self.mode}",
-                thickness={self.thickness},
-                render_points_in_3d={self.render_points_in_3d},
-            )'''[1:])
             with open(folder / name, 'w') as f:
-                f.write(mesh_code)
+                f.write(self.recipe)
             print('saved .ursinamesh to:', folder / name)
 
 
@@ -589,10 +580,13 @@ if __name__ == '__main__':
     clear_test.model.clear()
     Text(parent=clear_test, text='.clear() test', y=1, scale=5, origin=(0,-.5))
 
-    recipe_test = Entity(position=(12,-6), model=eval(quad.model.recipe))
-    Text(parent=recipe_test, text='.recipe test', y=1, scale=5, origin=(0,-.5))
+    # recipe_test = Entity(position=(12,-6), model=eval(quad.model.recipe))
+    # Text(parent=recipe_test, text='.recipe test', y=1, scale=5, origin=(0,-.5))
 
     window.color = color.black
     EditorCamera()
+
+    # m = Mesh()
+    print(load_model('cube', application.internal_models_compressed_folder, use_deepcopy=True).recipe)
 
     app.run()

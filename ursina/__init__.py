@@ -11,6 +11,7 @@ from ursina.window import instance as window
 from ursina.camera import instance as camera
 from ursina.mouse import instance as mouse
 from ursina.main import Ursina
+from panda3d.core import Mat3, Mat4
 from ursina.ursinamath import *
 from ursina.ursinastuff import *
 from ursina import input_handler
@@ -76,6 +77,7 @@ from ursina.prefabs.slider import Slider, ThinSlider
 from ursina.prefabs.button_group import ButtonGroup
 from ursina.prefabs.window_panel import WindowPanel, Space
 from ursina.prefabs.button_list import ButtonList
+from ursina.prefabs.checkbox import CheckBox
 # from ursina.prefabs.file_browser import FileBrowser
 # from ursina.prefabs import primitives
 

@@ -140,7 +140,7 @@ class Texture():
             if self._cached_image.mode == 'L':
                 col = (col[0], col[0], col[0])
 
-            return color.rgba(*col)
+            return color.rgba32(*col)
         except Exception as e:
             print(e)
             return None
@@ -215,8 +215,8 @@ if __name__ == '__main__':
     e = Entity(model='quad')
     # from PIL import Image
 
-    from ursina.prefabs.memory_counter import MemoryCounter
-    MemoryCounter()
+    # from ursina.prefabs.memory_counter import MemoryCounter
+    # MemoryCounter()
     def input(key):
         if key == 'a':
             # img = Image.open(r'C:\sync\high resolution images\tesla_city.png')

@@ -1,4 +1,5 @@
 import ursina
+import builtins
 from pathlib import Path
 from panda3d.core import NodePath
 from ursina.vec2 import Vec2
@@ -6,7 +7,6 @@ from ursina.vec3 import Vec3
 from ursina.vec4 import Vec4
 from panda3d.core import Quat
 from panda3d.core import TransparencyAttrib
-from panda3d.core import Shader
 from panda3d.core import TexGenAttrib
 
 from ursina.texture import Texture
@@ -20,8 +20,6 @@ from ursina.mesh import Mesh
 from ursina.sequence import Sequence, Func, Wait
 from ursina.ursinamath import lerp
 from ursina import curve
-from ursina.curve import CubicBezier
-from ursina import mesh_importer
 from ursina.mesh_importer import load_model
 from ursina.texture_importer import load_texture
 from ursina.string_utilities import camel_to_snake
@@ -29,7 +27,7 @@ from textwrap import dedent
 from panda3d.core import Shader as Panda3dShader
 from ursina import shader
 from ursina.shader import Shader
-from ursina.string_utilities import print_info, print_warning
+from ursina.string_utilities import print_warning
 from ursina.ursinamath import Bounds
 from ursina.ursinastuff import invoke, PostInitCaller
 
@@ -178,9 +176,10 @@ class Entity(NodePath, metaclass=PostInitCaller):
             if hasattr(self, 'is_singleton') and not self.is_singleton():
                 self.stash()
 
+        for loose_child in self.loose_children:
+            loose_child.enabled = value
 
-    def model_getter(self):
-        return getattr(self, '_model', None)
+
 
     def model_setter(self, value):  # set model with model='model_name' (without file type extension)
         if value is None:
@@ -206,6 +205,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
                 m.name = value
                 m.setPos(Vec3(0,0,0))
                 self._model = m
+                # import mesh_importer
                 # if not value in mesh_importer.imported_meshes:
                 #     print_info('loaded model successfully:', value)
             else:
@@ -246,27 +246,26 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
     def eternal_getter(self):
         return getattr(self, '_eternal', False)
+
     def eternal_setter(self, value):    # eternal entities does not get destroyed on scene.clear()
         self._eternal = value
-        for c in self.children:
+        for c in self.children + self.loose_children:
             c.eternal = value
 
-    def double_sided_getter(self):
-        return getattr(self, '_double_sided', False)
+
     def double_sided_setter(self, value):
         self._double_sided = value
         self.setTwoSided(value)
 
+
     def render_queue_getter(self):
         return getattr(self, '_render_queue', 0)
+
     def render_queue_setter(self, value):   # for custom sorting in case of conflict. To sort things in 2d, set .z instead of using this.
         self._render_queue = value
         if self.model:
             self.model.setBin('fixed', value)
 
-
-    def parent_getter(self):
-        return getattr(self, '_parent', None)
 
     def parent_setter(self, value):
         if hasattr(self, '_parent') and self._parent and hasattr(self._parent, '_children') and self in self._parent._children:
@@ -282,6 +281,20 @@ class Entity(NodePath, metaclass=PostInitCaller):
         #     value = scene
         self.reparent_to(value)
         self.enabled = self.enabled   # parenting will undo the .stash() done when setting .enabled to False, so reapply it here
+
+
+    def loose_parent_getter(self):
+        return getattr(self, '_loose_parent', None)
+
+    def loose_parent_setter(self, value):
+        if hasattr(self, '_loose_parent') and self._loose_parent and hasattr(self._loose_parent, '_loose_children') and self in self._loose_parent._loose_children:
+            self._loose_parent._loose_children.remove(self)
+
+        if not hasattr(value, '_loose_children'):
+            value.loose_children = []
+        value._loose_children.append(self)
+
+        self._loose_parent = value
 
 
     def world_parent_getter(self):
@@ -344,6 +357,9 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
         if isinstance(value, Collider):
             self._collider = value
+
+        if isinstance(value, str) and value not in ('box', 'sphere', 'capsule', 'mesh'):
+            raise ValueError(f"Incorrect value for auto-fitted collider: {value}. Choose one of: 'box', 'sphere', 'capsule', 'mesh'")
 
         elif value == 'box':
             if self.model:
@@ -651,10 +667,6 @@ class Entity(NodePath, metaclass=PostInitCaller):
         p2d = full * recip_full3
         return Vec2(p2d[0]*camera.aspect_ratio/2, p2d[1]/2)
 
-    def shader_getter(self):
-        if not hasattr(self, '_shader'):
-            return None
-        return self._shader
 
     def shader_setter(self, value):
         if value is None:
@@ -693,10 +705,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def get_shader_input(self, name):
-        if name in self._shader_inputs:
-            return self._shader_inputs[name]
-        return None
-
+        return self._shader_inputs.get(name, None)
 
     def set_shader_input(self, name, value):
         self._shader_inputs[name] = value
@@ -716,9 +725,13 @@ class Entity(NodePath, metaclass=PostInitCaller):
         for key, value in value.items():
             self.set_shader_input(key, value)
 
+    def material_setter(self, value):  # a way to set shader, texture, texture_scale, texture_offset and shader inputs in one go
+        for name in ('shader', 'texture', 'texture_scale', 'texture_offset', 'color'):
+            if name in value:
+                setattr(self, name, value[name])
 
-    def texture_getter(self):
-        return getattr(self, '_texture', None)
+        self.shader_input = {key: value for key, value in value.items() if key not in ('shader', 'texture', 'texture_scale', 'texture_offset', 'color')}
+
 
     def texture_setter(self, value):    # set model with texture='texture_name'. requires a model to be set beforehand.
         if value is None and self.texture:
@@ -792,24 +805,20 @@ class Entity(NodePath, metaclass=PostInitCaller):
     def alpha_getter(self):
         return self.color[3]
 
-    def alpha_setter(self, value):
+    def alpha_setter(self, value):  # shortcut for setting color's transparency/opacity
         if value > 1:
             value = value / 255
-        self.color = color.color(self.color.h, self.color.s, self.color.v, value)
+        self.color = color.hsv(self.color.h, self.color.s, self.color.v, value)
 
 
-    def always_on_top_getter(self):
-        return getattr(self, '_always_on_top', False)
     def always_on_top_setter(self, value):
         self._always_on_top = value
         self.set_bin("fixed", 0)
         self.set_depth_write(not value)
         self.set_depth_test(not value)
 
-    def unlit_getter(self):
-        return getattr(self, '_unlit', False)
 
-    def unlit_setter(self, value):
+    def unlit_setter(self, value):  # set to True to ignore light and not cast shadows
         self._unlit = value
         self.setLightOff(value)
         if value:
@@ -817,18 +826,14 @@ class Entity(NodePath, metaclass=PostInitCaller):
         else:
             self.show(0b0001)
 
-    def billboard_getter(self): # set to True to make this Entity always face the camera.
-        return getattr(self, '_billboard', False)
 
-    def billboard_setter(self, value):
+    def billboard_setter(self, value):  # set to True to make this Entity always face the camera.
         self._billboard = value
         if value:
             self.setBillboardPointEye(value)
 
-    def wireframe_getter(self):
-        return getattr(self, '_wireframe', False)
 
-    def wireframe_setter(self, value):
+    def wireframe_setter(self, value):  # set to True to render model as wireframe
         self._wireframe = value
         self.setRenderModeWireframe(value)
 
@@ -838,7 +843,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
         _name = 'textures/' + name + '.jpg'
         org_pos = camera.position
         camera.position = self.position
-        base.saveSphereMap(_name, size=size)
+        application.base.saveSphereMap(_name, size=size)
         camera.position = org_pos
 
         # print('saved sphere map:', name)
@@ -851,13 +856,13 @@ class Entity(NodePath, metaclass=PostInitCaller):
         _name = 'textures/' + name
         org_pos = camera.position
         camera.position = self.position
-        base.saveCubeMap(_name+'.jpg', size=size)
+        application.base.saveCubeMap(_name+'.jpg', size=size)
         camera.position = org_pos
 
         # print('saved cube map:', name + '.jpg')
         self.model.setTexGen(TextureStage.getDefault(), TexGenAttrib.MWorldCubeMap)
         self.reflection_map = _name + '#.jpg'
-        self.model.setTexture(loader.loadCubeMap(_name + '#.jpg'), 1)
+        self.model.setTexture(builtins.loader.loadCubeMap(_name + '#.jpg'), 1)
 
 
     @property
@@ -883,23 +888,16 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def get_position(self, relative_to=scene):  # get position relative to on other Entity. In most cases, use .position instead.
-        return self.getPos(relative_to)
+        return Vec3(*self.getPos(relative_to))
 
 
     def set_position(self, value, relative_to=scene): # set position relative to on other Entity. In most cases, use .position instead.
         self.setPos(relative_to, Vec3(value[0], value[1], value[2]))
 
 
-    def rotate(self, value, relative_to=None, duration=0, fps=60):  # rotate around local axis.
+    def rotate(self, value, relative_to=None):  # rotate around local axis.
         if not relative_to:
             relative_to = self
-
-        if duration:
-            rotation_sequence = Sequence()
-            for i in range(60*duration):
-                rotation_sequence.append(Func(self.rotate, rotation_step))
-                rotation_sequence.append(Wait(time_step))
-
 
         self.setHpr(relative_to, Vec3(value[1], value[0], value[2]) * Entity.rotation_directions)
 
@@ -922,8 +920,6 @@ class Entity(NodePath, metaclass=PostInitCaller):
         return self.model
 
 
-    def flipped_faces_getter(self):
-        return getattr(self, '_flipped_faces', False)
     def flipped_faces_setter(self, value):
         self._flipped_faces = value
         if value:
@@ -933,7 +929,6 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def look_at(self, target, axis='forward', up=None): # up defaults to self.up
-        from panda3d.core import Quat
         if isinstance(target, Entity):
             target = Vec3(*target.world_position)
         elif not isinstance(target, Vec3):
@@ -1013,6 +1008,9 @@ class Entity(NodePath, metaclass=PostInitCaller):
     def children_setter(self, value):
         self._children = value
 
+    def loose_children_getter(self):
+        return getattr(self, '_loose_children', [])
+
 
     @property
     def attributes(self): # attribute names. used by duplicate().
@@ -1083,9 +1081,11 @@ class Entity(NodePath, metaclass=PostInitCaller):
             setattr(self, name, value)
             return None
 
+        if self.ignore_paused:
+            unscaled = True
+
         if delay:
-            from ursina.ursinastuff import invoke
-            return invoke(self.animate, name, value, duration=duration, curve=curve, loop=loop, resolution=resolution, time_step=time_step, auto_destroy=auto_destroy, delay=delay, unscaled=unscaled)
+            return invoke(self.animate, name, value, duration=duration, curve=curve, loop=loop, resolution=resolution, time_step=time_step, auto_destroy=auto_destroy, delay=delay, unscaled=unscaled, ignore_paused=self.ignore_paused)
 
         animator_name = name + '_animator'
         # print('start animating value:', name, animator_name )
@@ -1095,7 +1095,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
         if hasattr(self, animator_name) and getattr(self, animator_name) in self.animations:
             self.animations.remove(getattr(self, animator_name))
 
-        sequence = Sequence(loop=loop, time_step=time_step, auto_destroy=auto_destroy, unscaled=unscaled)
+        sequence = Sequence(loop=loop, time_step=time_step, auto_destroy=auto_destroy, unscaled=unscaled, ignore_paused=self.ignore_paused)
 
         setattr(self, animator_name, sequence)
         self.animations.append(sequence)
@@ -1165,20 +1165,21 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
         self.animations.append(self.shake_sequence)
         self.shake_sequence.unscaled = unscaled
+        self.shake_sequence.ignore_paused = self.ignore_paused
         self.shake_sequence.start()
         return self.shake_sequence
 
     def animate_color(self, value, duration=.1, interrupt='finish', unscaled=False, **kwargs):
-        return self.animate('color', value, duration, interrupt=interrupt, unscaled=unscaled,**kwargs)
+        return self.animate('color', value, duration, **kwargs)
 
     def fade_out(self, value=0, duration=.5, unscaled=False, **kwargs):
-        return self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration=duration, unscaled=unscaled, **kwargs)
+        return self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration=duration, **kwargs)
 
-    def fade_in(self, value=1, duration=.5, unscaled=False, **kwargs):
-        return self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration=duration, unscaled=unscaled, **kwargs)
+    def fade_in(self, value=1, duration=.5, **kwargs):
+        return self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration=duration, **kwargs)
 
-    def blink(self, value=ursina.color.clear, duration=.1, delay=0, curve=curve.in_expo_boomerang, interrupt='finish', unscaled=False, **kwargs):
-        return self.animate_color(value, duration=duration, delay=delay, curve=curve, interrupt=interrupt, unscaled=unscaled, **kwargs)
+    def blink(self, value=ursina.color.clear, duration=.1, delay=0, curve=curve.in_expo_boomerang, interrupt='finish', **kwargs):
+        return self.animate_color(value, duration=duration, delay=delay, curve=curve, interrupt=interrupt, **kwargs)
 
 
 
@@ -1225,7 +1226,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
         self._pq.sort_entries()
         entries = self._pq.getEntries()
-        entities = [e.get_into_node_path().parent for e in entries]
+        entities = [e.get_into_node_path().parent.getPythonTag('Entity') for e in entries]
 
         entries = [        # filter out ignored entities
             e for i, e in enumerate(entries)

@@ -80,6 +80,15 @@ class Vec2(PandaVec2):
         return Vec2(*[abs(e) for e in self])
 
 
+Vec2.zero = Vec2(0,0)
+Vec2.one = Vec2(1,1)
+Vec2.right = Vec2(1,0)
+Vec2.left = Vec2(-1,0)
+Vec2.up = Vec2(0,1)
+Vec2.down = Vec2(0,-1)
+
+
+
 if __name__ == '__main__':
     a = Vec2(1,1)
     print(a)

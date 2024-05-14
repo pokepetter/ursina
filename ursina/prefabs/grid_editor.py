@@ -22,7 +22,7 @@ class GridEditor(Entity):
             self.grid = [[palette[0] for y in range(self.h)] for x in range(self.w)]
         self.brush_size = 1
         self.auto_render = True
-        self.cursor = Entity(parent=self.canvas, model=Quad(segments=0, mode='line', thickness=2), origin=(-.5,-.5), scale=(1/self.w, 1/self.h), color=color.color(120,1,1,.5), z=-.2, shader=unlit_shader)
+        self.cursor = Entity(parent=self.canvas, model=Quad(segments=0, mode='line', thickness=2), origin=(-.5,-.5), scale=(1/self.w, 1/self.h), color=color.hsv(120,1,1,.5), z=-.2, shader=unlit_shader)
 
         self.selected_char = palette[1]
         self.palette = palette

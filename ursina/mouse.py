@@ -55,9 +55,10 @@ class Mouse:
 
     @property
     def x(self):
-        if not self._mouse_watcher.has_mouse():
+        pointer = base.win.get_pointer(0)
+        if not pointer.in_window:
             return 0
-        return self._mouse_watcher.getMouseX() / 2 * window.aspect_ratio  # same space as ui stuff
+        return ((pointer.get_x() / window.size.x) -.5) * window.aspect_ratio  # same space as ui stuff
 
     @x.setter
     def x(self, value):
@@ -66,10 +67,11 @@ class Mouse:
 
     @property
     def y(self):
-        if not self._mouse_watcher.has_mouse():
+        pointer = base.win.get_pointer(0)
+        if not pointer.in_window:
             return 0
+        return -((pointer.get_y() / window.size.y) -.5) # same space as ui stuff
 
-        return self._mouse_watcher.getMouseY() / 2
 
     @y.setter
     def y(self, value):
@@ -340,7 +342,7 @@ if __name__ == '__main__':
             mouse.locked = not mouse.locked
             print(mouse.velocity)
 
-    # Cursor()
+    Cursor()
     # mouse.visible = False
 
 

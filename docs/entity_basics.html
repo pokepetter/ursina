@@ -1,0 +1,334 @@
+<!DOCTYPE HTML>
+        <!--generated with sswg-->
+        <html lang="en">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <head>
+            <title> ursina engine samples</title>
+            <link rel="stylesheet" href="sswg.css">
+            <link rel="stylesheet" href="style.css">
+            <link rel="icon" type="image/x-icon" href="favicon.ico">
+        </head>
+        <body>
+        <left><div style="max-width: 1200px; margin: auto;">
+<br>
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" https://github.com/sponsors/pokepetter" class="button">Donate🡕</a><br>
+<br>
+<div class="sidebar"><br>
+<b><a href="documentation.html">Documentation</a></b><br>
+<br>
+<a href="installation.html">Installation</a><br>
+<br>
+<a href="entity_basics.html">Entity Basics</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#What is an Entity?">What is an Entity?</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Model">Model</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Texture">Texture</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Color">Color</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position">Position</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Rotation">Rotation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Scale">Scale</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Update">Update</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Input">Input</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Mouse Input">Mouse Input</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Other Magic Functions">Other Magic Functions</a><br>
+<br>
+<a href="coordinate_system.html">Coordinate System</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#Entity Coordinate System">Entity Coordinate System</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#UI Coordinate System">UI Coordinate System</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#Rotation">Rotation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#Origin">Origin</a><br>
+<br>
+<a href="collision.html">Collision</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Adding Colliders">Adding Colliders</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#raycast()">raycast()</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#boxcast()">boxcast()</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#intersects()">intersects()</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#HitInfo">HitInfo</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Distance Check">Distance Check</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Mouse Collision">Mouse Collision</a><br>
+<br>
+<a href="text.html">Text</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Size">Text Size</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Font and Resolution">Font and Resolution</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Alignment">Text Alignment</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Colors">Text Colors</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Changing Text of Prefabs">Changing Text of Prefabs</a><br>
+<br>
+<a href="animation.html">Animation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#SpriteSheetAnimation (2D)">SpriteSheetAnimation (2D)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#Animation (2D)">Animation (2D)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#Actor (3D)">Actor (3D)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#FrameAnimation3D (3D)">FrameAnimation3D (3D)</a><br>
+<br>
+<br>
+<a href="networking.html">Networking</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#~~ Networking Concepts ~~">~~ Networking Concepts ~~</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#How Data Goes from Point A to Point B">How Data Goes from Point A to Point B</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#IP Addresses">IP Addresses</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Ports">Ports</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Communication Protocols">Communication Protocols</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#References">References</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#~~ Game Networking Concepts ~~">~~ Game Networking Concepts ~~</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Multiplayer Preparations">Multiplayer Preparations</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Sending Inputs">Sending Inputs</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Sending Game State">Sending Game State</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Client Authoritative">Client Authoritative</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Server Authoritative">Server Authoritative</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Deterministic Lockstep">Deterministic Lockstep</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Snapshot Interpolation">Snapshot Interpolation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Server Side Lag Compensation">Server Side Lag Compensation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Client Side Prediction">Client Side Prediction</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#References">References</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#~~ Introduction to Ursina Networking ~~">~~ Introduction to Ursina Networking ~~</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Limitations">Limitations</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Basics">Basics</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Samples">Samples</a><br>
+<br>
+<a href="faq.html">F.A.Q.</a><br>
+<br>
+<a href="building.html">Build and Release</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="building.html#Building Your App with ursina.build">Building Your App with ursina.build</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="building.html#Building with Nuitka">Building with Nuitka</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="building.html#Building Your App with auto-py-to-exe">Building Your App with auto-py-to-exe</a><br>
+<br>
+<br>
+</div><br>
+<br>
+<div style="font-size: 60.0px;font-weight: bold;">
+<div id="Entity Basics"/><br>
+Entity Basics<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<br>
+<h2><div id="What is an Entity?"/><br>
+What is an Entity?<br>
+</h2><br>
+<br>
+An entity is a thing in the world, and is the "god class" in ursina.<br>
+It's like a GameObject in Unity or an Actor in Unreal.<br>
+<br>
+It can have a position, rotation, and scale.<br>
+It can have a model, texture, and color.<br>
+It can have an update function, input function, and scripts.<br>
+For an overview of all its attributes and functions, see <a href="https://www.ursinaengine.org/api_reference.html#Entity">https://www.ursinaengine.org/api_reference.html#Entity</a><br>
+<br>
+<br>
+<br>
+<h2><div id="Model"/><br>
+Model<br>
+</h2><br>
+<br>
+There are several included models like 'quad', 'plane', 'cube', and 'sphere',<br>
+but you can also use your own.<br>
+To do that simply give the base name of your model and it will glob/search for<br>
+the model and take the first one it finds.<br>
+<br>
+Supported file types are:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;• obj<br>
+&nbsp;&nbsp;&nbsp;&nbsp;• bam (binary format)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;• blend (gets auto converted to an obj)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;• ursinamesh (custom human readable format identical to how you'd make a Mesh in code)<br>
+<br>
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><olive>Entity</olive>(<olive>model</olive>=<green>'name_of_your_model'</green>)
+</div><br>
+<br>
+<br>
+<h2><div id="Texture"/><br>
+Texture<br>
+</h2><br>
+<br>
+Setting a texture is similar to setting a model. Just give it a name in this case as well:<br>
+<br>
+<div class="code_block" id="code_block_1" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>e<yellow>1</yellow> = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>texture</olive>=<green>'texture_name'</green>)
+
+<gray># other ways are:</gray>
+e<yellow>2</yellow> = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>texture</olive>=e<yellow>1</yellow>.texture) <gray># or set it to another Texture</gray>
+e<yellow>3</yellow> = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>texture</olive>=Texture(PIL.Image.new(<olive>mode</olive>="RGBA", size=(<yellow>8</yellow><yellow>5</yellow><yellow>4</yellow>,<yellow>4</yellow><yellow>8</yellow><yellow>0</yellow>)))) <gray># set a PIL texture</gray>
+e<yellow>4</yellow> = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>texture</olive>=<green>'movie_name.mp<yellow>4</yellow>'</green>) <gray># set video texture</gray>
+</div><br>
+For 2d graphics there's also the Sprite class, which is simply an Entity with a<br>
+'quad' model and scale set to automatically fit the size and aspect ratio of the texture.<br>
+<br>
+<div class="code_block" id="code_block_2" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_2)">copy</button>s = Sprite(<green>'texture_name'</green>)
+<blue>print</blue>(s.aspect_ratio)
+</div><br>
+<br>
+<br>
+<h2><div id="Color"/><br>
+Color<br>
+</h2><br>
+<br>
+<div class="code_block" id="code_block_3" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_3)">copy</button>e.color = color.red <gray># set it to a color in the color module</gray>
+
+e.color = hsv(<yellow>1</yellow><yellow>2</yellow><yellow>0</yellow>, .<yellow>5</yellow>, .<yellow>5</yellow>) <gray># hsv color</gray>
+e.color = rgb(.<yellow>8</yellow>, .<yellow>1</yellow>, <yellow>0</yellow>) <gray># rgb color</gray>
+e.color = rgb<yellow>3</yellow>2(<yellow>1</yellow><yellow>6</yellow>, <yellow>1</yellow><yellow>2</yellow><yellow>8</yellow>, <yellow>2</yellow><yellow>5</yellow><yellow>5</yellow>) <gray># rgb color</gray>
+e.color = <green>'<gray>#aabbcc'</green> <gray># hex color</gray>
+e.color = e.color.tint(.<yellow>1</yellow>) <gray># tint the color</gray>
+e.color = color.random_color() <gray># set it to a random color</gray>
+e.color = lerp(color.red, color.green, .<yellow>5</yellow>) <gray># set it to a color half way between red and green</gray>
+</div><br>
+<br>
+<h2><div id="Position"/><br>
+Position<br>
+</h2><br>
+<br>
+To set the position relative to the parent, set .position:<br>
+<div class="code_block" id="code_block_4" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_4)">copy</button>e = <olive>Entity</olive>()
+e.position = Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)
+e.position = Vec2(<yellow>0</yellow>,<yellow>0</yellow>)
+e.position = (<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)
+e.position = (<yellow>0</yellow>,<yellow>0</yellow>)
+</div><br>
+<br>
+You can also set 'x', 'y', 'z' for setting the position on a specific axis.<br>
+<div class="code_block" id="code_block_5" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_5)">copy</button>e = <olive>Entity</olive>(<olive>position</olive>=Vec3(<yellow>1</yellow>,<yellow>1</yellow>,<yellow>1</yellow>))
+e.x = <yellow>0</yellow>
+<blue>print</blue>(position)
+&gt;&gt;&gt; Vec3(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>)
+</div><br>
+<br>
+To set the position relative to the scene, that is, ignoring the position of any parents, set .world_position:<br>
+<div class="code_block" id="code_block_6" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_6)">copy</button>parent_entity = <olive>Entity</olive>(<olive>position</olive>=Vec3(<yellow>0</yellow>,<yellow>2</yellow>,<yellow>0</yellow>))
+e = <olive>Entity</olive>(<olive>parent</olive>=parent_entity, <olive>position</olive>=Vec3(<yellow>0</yellow>,<yellow>2</yellow>,<yellow>0</yellow>))
+<blue>print</blue>(e.position)
+&gt;&gt;&gt; Vec3(<yellow>0</yellow>,<yellow>2</yellow>,<yellow>0</yellow>)
+<blue>print</blue>(e.world_position)
+&gt;&gt;&gt; Vec3(<yellow>0</yellow>,<yellow>4</yellow>,<yellow>0</yellow>)
+
+e.world_position = Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)
+<blue>print</blue>(e.position)
+&gt;&gt;&gt; Vec3(<yellow>0</yellow>,-<yellow>2</yellow>,<yellow>0</yellow>)
+</div><br>
+As with position, there's shortcuts for setting world position on individual axes too:<br>
+world_x, world_y and world_z<br>
+<br>
+See <a href="https://www.ursinaengine.org/coordinate_system.html">https://www.ursinaengine.org/coordinate_system.html</a> for more<br>
+information on how the coordinate system works.<br>
+<br>
+<br>
+<br>
+<h2><div id="Rotation"/><br>
+Rotation<br>
+</h2><br>
+<div class="code_block" id="code_block_7" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_7)">copy</button>e.rotation = (<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)
+e.rotation_y = <yellow>9</yellow><yellow>0</yellow>
+</div><br>
+<br>
+The look_at() method can also be for pointing an entity at something:<br>
+<div class="code_block" id="code_block_8" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_8)">copy</button>other_entity = <olive>Entity</olive>(<olive>position</olive>=(<yellow>1</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>8</yellow>))
+
+e.look_at(other_entity) <gray># make z-axis(forward) point at other_entity</gray>
+e.look_at(other_entity, axis=<green>'up'</green>) <gray># optionally define which axis</gray>
+</div><br>
+<br>
+<br>
+<h2><div id="Scale"/><br>
+Scale<br>
+</h2><br>
+Change the size of the entity by setting the scale attribute:<br>
+<br>
+<div class="code_block" id="code_block_9" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_9)">copy</button>e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>scale</olive>=(<yellow>3</yellow>,<yellow>1</yellow>,<yellow>1</yellow>))
+</div><br>
+<br>
+<br>
+<h2><div id="Update"/><br>
+Update<br>
+</h2><br>
+<br>
+An Entity's update method will be called automatically:<br>
+<div class="code_block" id="code_block_10" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_10)">copy</button>e = <olive>Entity</olive>()
+<purple>def</purple> my_update():
+    e.x += <yellow>1</yellow> * time.dt <gray># dt is short <purple>for</purple> delta time, the duration since the last frame.</gray>
+
+e.update = my_update
+</div><br>
+<br>
+Or you can implement it by inheriting the Entity class:<br>
+<div class="code_block" id="code_block_11" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_11)">copy</button>class Player(<olive>Entity</olive>):
+    <purple>def</purple> update(self):
+        self.x += <yellow>1</yellow> * time.dt
+</div><br>
+<br>
+The third option is to put a function called update in __main__, the starting script.<br>
+You'll see this in a lot of examples since it's convenient for small scripts.<br>
+Keep in mind this won't work if you import a module with an update function defined at module level.<br>
+<div class="code_block" id="code_block_12" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_12)">copy</button><purple>def</purple> update():
+    <blue>print</blue>(<green>'update'</green>)
+</div><br>
+<br>
+<h2><div id="Input"/><br>
+Input<br>
+</h2><br>
+<br>
+The same goes for the input method:<br>
+<div class="code_block" id="code_block_13" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_13)">copy</button>class Player(<olive>Entity</olive>):
+    <purple>def</purple> input(self, key):
+        <purple>if</purple> key == <green>'w'</green>:
+            self.position += self.forward
+
+        <purple>if</purple> key == <green>'d'</green>:
+            self.animate(<green>'rotation_y'</green>, self.rotation_y + <yellow>9</yellow><yellow>0</yellow>, duration=.<yellow>1</yellow>)
+
+        <purple>if</purple> key == <green>'a'</green>:
+            self.animate(<green>'rotation_y'</green>, self.rotation_y - <yellow>9</yellow><yellow>0</yellow>, duration=.<yellow>1</yellow>)
+</div><br>
+<br>
+<h2><div id="Mouse Input"/><br>
+Mouse Input<br>
+</h2><br>
+<br>
+Entities can react to the mouse as long as they have collider.<br>
+Buttons will have one by default, but you can also assign one.<br>
+<br>
+To get the entity currently under the mouse:<br>
+<div class="code_block" id="code_block_14" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_14)">copy</button><blue>print</blue>(mouse.hovered_entity)
+</div><br>
+<br>
+To check if and entity with a collider is hovered by the mouse:<br>
+<div class="code_block" id="code_block_15" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_15)">copy</button><blue>print</blue>(my_entity.hovered)
+</div><br>
+<br>
+There are also functions for handling mouse clicks and hover/unhover.<br>
+These only works if the Entity has a collider and the function/callable is assigned.<br>
+<br>
+<div class="code_block" id="code_block_16" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_16)">copy</button>on_click()
+on_double_click()
+on_mouse_enter()
+on_mouse_exit()
+</div><br>
+<br>
+Example using on_click:<br>
+<div class="code_block" id="code_block_17" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_17)">copy</button><purple>def</purple> action():
+    <blue>print</blue>(<green>'Ow! That hurt!'</green>)
+
+<olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>parent</olive>=camera.ui, <olive>scale</olive>=.<yellow>1</yellow>, <olive>collider</olive>=<green>'box'</green>, <olive>on_click</olive>=action) <gray># on_click should be a function/callable/Func/Sequence</gray>
+</div><br>
+<br>
+on_mouse_enter and on_mouse_exit example:<br>
+<div class="code_block" id="code_block_18" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_18)">copy</button>b = Button(<olive>scale</olive>=(.<yellow>5</yellow>, .<yellow>2</yellow><yellow>5</yellow>), <olive>text</olive>=<green>'zzz'</green>)
+b.on_mouse_enter = Func(setattr, b, <green>'text'</green>, <green>'Hi, friend :D'</green>)
+b.on_mouse_exit = Func(setattr, b, <green>'text'</green>, <green><green>''</green></green><green>'No! Don'</green>t leave me ;-;<green><green>''</green></green>')
+</div><br>
+<br>
+<h2><div id="Other Magic Functions"/><br>
+Other Magic Functions<br>
+</h2><br>
+<br>
+Sometimes you want side effects when you enable/disable an entity, like play an animation or something.<br>
+<br>
+<div class="code_block" id="code_block_19" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_19)">copy</button>on_enable()
+on_disable()
+on_destroy()
+</div><br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
+</script>
+
+</body>
+</html>

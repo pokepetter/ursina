@@ -1,0 +1,530 @@
+<!DOCTYPE HTML>
+        <!--generated with sswg-->
+        <html lang="en">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <head>
+            <title> Networking Concepts</title>
+            <link rel="stylesheet" href="sswg.css">
+            <link rel="stylesheet" href="style.css">
+            <link rel="icon" type="image/x-icon" href="favicon.ico">
+        </head>
+        <body>
+        <left><div style="max-width: 1200px; margin: auto;">
+<br>
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" https://github.com/sponsors/pokepetter" class="button">Donate🡕</a><br>
+<br>
+<div class="sidebar"><br>
+<b><a href="documentation.html">Documentation</a></b><br>
+<br>
+<a href="installation.html">Installation</a><br>
+<br>
+<a href="entity_basics.html">Entity Basics</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#What is an Entity?">What is an Entity?</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Model">Model</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Texture">Texture</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Color">Color</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position">Position</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Rotation">Rotation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Scale">Scale</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Update">Update</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Input">Input</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Mouse Input">Mouse Input</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Other Magic Functions">Other Magic Functions</a><br>
+<br>
+<a href="coordinate_system.html">Coordinate System</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#Entity Coordinate System">Entity Coordinate System</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#UI Coordinate System">UI Coordinate System</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#Rotation">Rotation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#Origin">Origin</a><br>
+<br>
+<a href="collision.html">Collision</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Adding Colliders">Adding Colliders</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#raycast()">raycast()</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#boxcast()">boxcast()</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#intersects()">intersects()</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#HitInfo">HitInfo</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Distance Check">Distance Check</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Mouse Collision">Mouse Collision</a><br>
+<br>
+<a href="text.html">Text</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Size">Text Size</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Font and Resolution">Font and Resolution</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Alignment">Text Alignment</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Colors">Text Colors</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Changing Text of Prefabs">Changing Text of Prefabs</a><br>
+<br>
+<a href="animation.html">Animation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#SpriteSheetAnimation (2D)">SpriteSheetAnimation (2D)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#Animation (2D)">Animation (2D)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#Actor (3D)">Actor (3D)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#FrameAnimation3D (3D)">FrameAnimation3D (3D)</a><br>
+<br>
+<br>
+<a href="networking.html">Networking</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#~~ Networking Concepts ~~">~~ Networking Concepts ~~</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#How Data Goes from Point A to Point B">How Data Goes from Point A to Point B</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#IP Addresses">IP Addresses</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Ports">Ports</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Communication Protocols">Communication Protocols</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#References">References</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#~~ Game Networking Concepts ~~">~~ Game Networking Concepts ~~</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Multiplayer Preparations">Multiplayer Preparations</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Sending Inputs">Sending Inputs</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Sending Game State">Sending Game State</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Client Authoritative">Client Authoritative</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Server Authoritative">Server Authoritative</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Deterministic Lockstep">Deterministic Lockstep</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Snapshot Interpolation">Snapshot Interpolation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Server Side Lag Compensation">Server Side Lag Compensation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Client Side Prediction">Client Side Prediction</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#References">References</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#~~ Introduction to Ursina Networking ~~">~~ Introduction to Ursina Networking ~~</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Limitations">Limitations</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Basics">Basics</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Samples">Samples</a><br>
+<br>
+<a href="faq.html">F.A.Q.</a><br>
+<br>
+<a href="building.html">Build and Release</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="building.html#Building Your App with ursina.build">Building Your App with ursina.build</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="building.html#Building with Nuitka">Building with Nuitka</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="building.html#Building Your App with auto-py-to-exe">Building Your App with auto-py-to-exe</a><br>
+<br>
+<br>
+</div><br>
+<br>
+<div style="font-size: 60.0px;font-weight: bold;">
+<div id="Networking"/><br>
+Networking<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<br>
+<h2><div id="~~ Networking Concepts ~~"/><br>
+~~ Networking Concepts ~~<br>
+</h2><br>
+<br>
+This section will cover basic networking concepts, not just those applicable to video games.<br>
+There are many resources covering these topics so I will try to give the brief rundown as is relevant to video games.<br>
+This is an oversimplification, but should give you some idea of how things work.<br>
+<br>
+You can skip this section if you are familiar with networking basics.<br>
+<br>
+<br>
+<h2><div id="How Data Goes from Point A to Point B"/><br>
+How Data Goes from Point A to Point B<br>
+</h2><br>
+<br>
+When two computers try to send data to each other over the internet that data must have some way of findings its way to the other<br>
+computer. The protocol for doing that is known as Internet Protocol (IP). Data is transmitted via *packets*. These packets contain<br>
+not only the data that the user wishes to send, but extra information in *headers* that contain information on where to send that<br>
+data to and more. When a sender, the *source host*, tries to send data to the *destination host*, it includes an *IP address* in<br>
+the packet header. This address can be thought of as the destination house address.<br>
+<br>
+However, is it usually not the case that there is a direction connection between the two computers / *peers*.<br>
+Instead the packet is sent to some other in-between computer that then sends it to another in-between computer and so on, until it<br>
+reaches the destination. These *hops* between computers may be unreliable. The internet was built to withstand large scale<br>
+disruption by allowing packets to take multiple *routes* between the source and destination, but even with that packets may<br>
+still be *lost*.<br>
+<br>
+<br>
+<h2><div id="IP Addresses"/><br>
+IP Addresses<br>
+</h2><br>
+<br>
+There are two main types of IP addresses you will probably encounter, IPv4 (INET), and IPv6 (INET6). In the past IPv4 had enough<br>
+possible address values for all the computers on the internet, but as the internet rapidly increased in size, they ran out of<br>
+IPv4 addresses, this oversight led to the creation of IPv6, which has more than enough possible values. But much of the software<br>
+running on the internet was programmed to work with IPv4 already, and so to prevent having to rewrite a ton of software internet<br>
+service providers started adding *subnetworks*.<br>
+<br>
+The idea is that you can have a computer with one IPv4 address that accepts packets and distributes it to a<br>
+bunch of computers all on the same *network* that each have an address that is only valid within that network.<br>
+This led to the current structure of the internet consisting of networks of networks. And using IPv6<br>
+does not overcome this new problem, since the physical network structure is not changed by choice in address type.<br>
+<br>
+Since personal computers now each exist on their own *local area network* (LAN), and talk to computers on the<br>
+*wide area network* (WAN), we now need to go through the *router* that manages communication between the LAN and the WAN.<br>
+This also means that there are now two IP addresses involved, the private address (inside our network), and the public address,<br>
+which is our address as seen from outside our network. There are services that can tell you what your public address is, for<br>
+more on that look into STUN, TURN, and ICE.<br>
+<br>
+There are also several more layers in between us and the LAN, but those are outside of our control. We often need<br>
+to configure our routers to allow certain traffic through. This usually comes in the form of *port forwarding* when hosting a server locally.<br>
+<br>
+<br>
+<h2><div id="Ports"/><br>
+Ports<br>
+</h2><br>
+<br>
+In addition to IP addresses telling us where to send information to, we may also have multiple destinations at that destination<br>
+computer. If you are running two different networked applications on the same computer then the packets need to not only know<br>
+which computer to go to, but which application on that computer once it gets there. This is what the *port number* is for.<br>
+<br>
+Each application is assigned a port number that is required in addition to the address. If a server is hosting some application on<br>
+some given port number it will accepts packets targeted at that port number. But if it's part of a local network, the router does<br>
+not know that, and so it needs to be configured to allow packets with the target port number to pass through. This is what port<br>
+forwarding is, we are forwarding our port through the router. Routers typically have a website that can be used to configure them.<br>
+You can access that website using a web browser. The address is some local network address, such as "192.168.0.1". You can find<br>
+instructions for your specific router online. If you are hosting on a server provided by some service, you will probably need to<br>
+configure some network traffic / firewalls rules, similar to port forwarding.<br>
+<br>
+<br>
+<h2><div id="Communication Protocols"/><br>
+Communication Protocols<br>
+</h2><br>
+<br>
+There are two widely used protocols for transmitting data on top of IP. They are the User Datagram Protocol (UDP), and<br>
+Transmission Control Protocol (TCP). A protocol being the agreed upon way to communicate between computers. UDP is the more raw<br>
+way to communicate, it leaves it up to the user to do what needs to be done. UDP does not have connections, establishing a<br>
+connection is left up to the user. UDP simply tries to send the given data to the destination, and it may fail, or arrive out of<br>
+order.<br>
+<br>
+TCP does have connections, and many other things handled for the user, including reliable, order communication. The way it<br>
+achieves this is by sometimes resending packets until it gets confirmation from the other computer that it received the data.<br>
+It also assign ordering values to packets so that it can put them back in order on the receiving end. TCP seems a lot better<br>
+than UDP, but it comes with downsides. The resending behavior is not ideal for realtime video games due to it causing<br>
+high latency spikes.<br>
+<br>
+<br>
+<h2><div id="References"/><br>
+References<br>
+</h2><br>
+<br>
++ <a href="https://en.wikipedia.org/wiki/Internet_Protocol">https://en.wikipedia.org/wiki/Internet_Protocol</a><br>
++ <a href="https://en.wikipedia.org/wiki/Local_area_network">https://en.wikipedia.org/wiki/Local_area_network</a><br>
++ <a href="https://en.wikipedia.org/wiki/Wide_area_network">https://en.wikipedia.org/wiki/Wide_area_network</a><br>
++ <a href="https://en.wikipedia.org/wiki/Port_(computer_networking)">https://en.wikipedia.org/wiki/Port_(computer_networking)</a><br>
++ <a href="https://en.wikipedia.org/wiki/Port_forwarding">https://en.wikipedia.org/wiki/Port_forwarding</a><br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<h2><div id="~~ Game Networking Concepts ~~"/><br>
+~~ Game Networking Concepts ~~<br>
+</h2><br>
+<br>
+There are different game networking models for different types of games. This section will cover some of them.<br>
+You can skip this section if you are familiar with game networking concepts.<br>
+<br>
+<br>
+<h2><div id="Multiplayer Preparations"/><br>
+Multiplayer Preparations<br>
+</h2><br>
+<br>
+Adding multiplayer after the fact to a game may be infeasible. It's a good idea to think about multiplayer from the beginning.<br>
+However, not all the details need to be thought out from the beginning. With good preparation adding multiplayer can be made much<br>
+easier. Making the game logic mostly deterministic or entirely deterministic in the case of deterministic lockstep networking can<br>
+make adding multiplayer much easier. To achieve this it is important to have all the game's logic execute in a fixed timestep<br>
+update. Which means that the delta time used in physics processes, timers, etc is fixed, rather than variable.<br>
+<br>
+Another important preparation is to have some convenient way of copying input and game state and saving it (in memory to a buffer).<br>
+This is required by several networking methods that require rewind and replay of the game. To achieve this it is recommend for<br>
+your entities to have a copy implementation and for the visual aspect of your entity to be separated from the game logic state.<br>
+If your game can run without any display (headless), it's a good sign that these two parts have been separated.<br>
+<br>
+Finally, it's important to make sure that your game logic (not graphics) can run faster than realtime. This is needed for when a<br>
+networking method needs to replay game state. If the game struggles to run at the target framerate then it will have a hard time<br>
+with multiplayer. Make sure there is still a good chunk of compute still available for use.<br>
+<br>
+<br>
+<h2><div id="Sending Inputs"/><br>
+Sending Inputs<br>
+</h2><br>
+<br>
+One option is to only send player inputs across the network. This can either take the form of a "dumb terminal" or a<br>
+*deterministic lockstep* game. In the "dumb terminal" setup, each player sends their input to a server that is running the actual<br>
+game, and the servers sends back render information telling the clients how to display its game state. The clients themselves are<br>
+not actually running the game itself, they simply act as frontends rendering the game state to the user. In deterministic lockstep,<br>
+each peer sends their player inputs to each other, and use that to advance the game state. Each runs the game locally, see the<br>
+deterministic lockstep section for more. The main advantage to sending only player input is that it greatly reduces network usage,<br>
+and does not depend on the complexity or size of the game simulation, allowing the game simulation to be as big as is possible for<br>
+each client to run. It's CPU/GPU bound, rather than network bound.<br>
+<br>
+<br>
+<h2><div id="Sending Game State"/><br>
+Sending Game State<br>
+</h2><br>
+<br>
+Another option is to send game state across the network. In this setup one peer is the server that has authority over the game<br>
+state. The server sends game state every time an action is taken for non-realtime games or at a fixed rate for realtime games.<br>
+The game state data sent over the network usually consists of an array of entity data and a unique ID number for each.<br>
+<br>
+This ID number is the same on both the server and the client, and the client uses it to map the entity data it receives to<br>
+the associated entities. The client updates their local entity data with this new information. This approach is network bound,<br>
+the more entities that need to be send across the network, the more bandwidth is required. A game with too many entities will not<br>
+be able to use this approach. However, this approach is standard and will work well given that the amount of data being sent does<br>
+not become too large. If you are unsure whether to send just inputs or game state, sending game state is recommended as sending<br>
+just inputs places extra constraints on the game's code, and bandwidth has been increasing over time and continues to increase.<br>
+<br>
+<br>
+<h2><div id="Client Authoritative"/><br>
+Client Authoritative<br>
+</h2><br>
+<br>
+In client authoritative games the clients can determine their own player's state. They calculate their player state locally and<br>
+send it to the other peers/server.&nbsp;&nbsp;This approach can simplify the networking code a lot for a game, but opens the game up to easy<br>
+cheating since each player is in full control of their own state. However, many games manage to get away with this approach and if<br>
+your game is not a highly competitive game, or you know that each player you are playing with is trusted, then it can be an<br>
+optimal choice in terms of complexity. Games that will use this method include party games, and self host / private server games.<br>
+This method is not well suited for a game that wants to have match making between strangers.<br>
+<br>
+<br>
+<h2><div id="Server Authoritative"/><br>
+Server Authoritative<br>
+</h2><br>
+<br>
+Server authoritative games have the server by the final authority over what the current game state is. Players may send their<br>
+inputs and/or state, but it's up to the server to choose what to do with that. Each client receives updates from the server and<br>
+use that to update their local state. If their local state does not match that which was received from the server, they use the<br>
+server's given state. This method does not allow for easy cheating via manipulation of player state or network packets and is well<br>
+suited for most games, but comes with a major downside of increased complexity. However, it's the ideal solution and should be<br>
+preferred given enough development time and budget. It requires having either dedicated servers hosting the game or allowing<br>
+players to host the game themselves by providing the server executable in addition to the client to users.<br>
+If you want your game to be competitive, or allow for match making between strangers, then server-authoritative dedicated servers<br>
+is the best choice.<br>
+<br>
+<br>
+<h2><div id="Deterministic Lockstep"/><br>
+Deterministic Lockstep<br>
+</h2><br>
+<br>
+Deterministic lockstep is one of the main networking methods used in video games. It involves sending inputs between peers and<br>
+when they are ready, stepping, meaning running a single frame of the simulation with the given inputs. If each peer involved<br>
+has a simulation that gives the *exact same result* for a given starting state and inputs, then each peer will have the *exact<br>
+same simulation* running on their local machine and all peers will be in sync with each other. If there is even a slight<br>
+difference in how the state is calculated on each peer, their states will desync over time. This desync can happen much faster<br>
+than expected from only slight deviations in the calculations.This puts a great burden on the developers of the game to ensure<br>
+that their simulation is deterministic *across different devices*. This can require some drastic changes in how a game<br>
+is programmed.<br>
+<br>
+For example, floating point operations do not always produce the same results on different devices and therefore floating point<br>
+operations can't be used. Instead games will use just integer types, and either use software fixed point or floating point<br>
+arithmetic,similar to how games used to before floating point hardware existed. In Python, there are some options to help with<br>
+this such as the decimal module. Lesser drastic changes are also required, such as making sure that all peers have the same seed<br>
+set for pseudo random number generation. Given that the developer is willing to put in the effort to make the simulation<br>
+deterministic, there is one other downside to consider. Since game state is not being sent across the network it implies that a<br>
+new peer can't join mid-game, unless game state is sent and then they catch up to the current state with the rest of the peers.<br>
+This may seems like some big downsides, and they are, but the reward is something that can easily run peer to peer, requires<br>
+almost no bandwidth that is constant in relation to the number of entities, and having a deterministic simulation allows for<br>
+easier debugging/replay/saving systems. This method is commonly used by realtime strategy games where the game state is too big to<br>
+send over the network, and fighting games due to them historically being deterministic because they used to be arcade games<br>
+without floating point hardware and they want to allow for easy peer-to-peer (no server) networking.<br>
+<br>
+<br>
+<h2><div id="Snapshot Interpolation"/><br>
+Snapshot Interpolation<br>
+</h2><br>
+<br>
+Snapshot interpolation is likely the most commonly used method today. It's a method in which after receiving the game state the<br>
+peers also interpolate between states. The interpolation is used to *visually* smooth out state between updates. If a peer is<br>
+receiving game state updates at a fixed rate of 20 times per second, then if the peer simply updates their local state with that<br>
+new state and displays that state, the entities will by teleporting rather than moving smoothly between points.<br>
+Instead the peer keeps a circular buffer of updates received and interpolates between two of them smoothly.<br>
+This gives the player the illusion of a smooth experience.<br>
+<br>
+It also implies that the interpolated objects are not the current state of the game, but rather a past version of it, and so<br>
+the user is seeing an old, and interpolated, version of the game state. However, if the time between updates is not too large<br>
+such that the interpolation time is low, this will be only slightly behind and usually not become a game breaking issue.<br>
+But in a fast paced game in which the players need to be precise about how they interact with such interpolated objects,<br>
+additional work may be required in the form of *server side lag compensation* to make up for this gap in time, in addition to the<br>
+already existing gap of network latency.<br>
+<br>
+<br>
+<h2><div id="Server Side Lag Compensation"/><br>
+Server Side Lag Compensation<br>
+</h2><br>
+<br>
+To make up for network latency, and added latency of interpolation methods. The server/peers may decide to give some slack to<br>
+a player's actions. To explain this, consider a first person shooter game with snapshot interpolation. When a player aims at<br>
+another player they are aiming at a past version of that player, the actual player state on the server is ahead in time due to<br>
+network latency of sending the player state to the client, and additional latency of interpolation.<br>
+<br>
+Then when the player decides to shoot, there is even more latency from the player's input packet taking time to reach the server.<br>
+When the server receives the player's input to shoot, it can take into account this latency and decide to rewind the players by<br>
+an estimated amount of latency and then check to see if the player hit the other player, apply the effect of that, and then<br>
+play the game forward again (at faster than realtime speed) until it's caught back up to the current time.<br>
+<br>
+This requires the server to keep a circular buffer of past states. And forthe game code to have some convenient way to making such<br>
+state backups. It also helps for the server to be *mostly* deterministic such that the replay gives a correct result.<br>
+Server side lag compensation is not applied to all game mechanics, typically only things that are instantaneous, such as ray casts.<br>
+Something like a rocket launcher that fires a slow moving projectile would not have server side lag compensation applied.<br>
+<br>
+In that case, players with lower ping may have a significant advantage. One of the downsides of server side lag compensation is<br>
+that it may punish low latency players as they will not benefit nearly as much from the rewind process as high latency players,<br>
+and it can result in common issues such as being shot around corners.<br>
+<br>
+A solution to this problem is to require all players in a match to have similar latencies within some range and to limit how far<br>
+back in time a rewind is allowed to go. The concept of rewinding and replaying applies not only to servers, but clients as well,<br>
+as they too need to handle latency and responsiveness.<br>
+<br>
+<br>
+<h2><div id="Client Side Prediction"/><br>
+Client Side Prediction<br>
+</h2><br>
+<br>
+When a player takes an action and sends that input to the server, there is some latency from the network travel time, the server<br>
+process time, and return network travel time for the state update. If the client wait for that state update the player will have<br>
+a very unpleasant experience in which all of their inputs have latency. Even a small amount of latency is noticeable for this if<br>
+the game requires fast actions from the player. To make this experience better clients will apply the input locally immediately<br>
+as in a single player game while they wait for future state updates.<br>
+<br>
+This works well until the server and client disagree on the player's state. When the predicted player state and the state received<br>
+from the server does not match, the client must use the server's state if it's a server authoritative state setup. However, it's<br>
+not as simple as just setting the current state to what was received by the client because that state is in the past.<br>
+The round trip time (RTT) latency means that the state is behind the server's current state, and even more behind<br>
+the client's predicted state.<br>
+<br>
+To solve this, the client keeps a circular buffer of player inputs (or entire game state). Each input is assigned an integer<br>
+*sequence number*, which is just an increasing integer for each frame. When the client sends the player input to the server, it<br>
+also sends the sequence number associated with that input. When the server processes client input, it keeps track of which<br>
+sequence number it last processed for each client. Then when it sends a game state update to a client, it also sends the last<br>
+processed sequence number with it. When the client receives this state update it uses the sequence number to tell how far ahead of<br>
+that state update the current predicted state is; the delta between the sequence number and the one received from the server.<br>
+<br>
+The client now sets its state to the one received from the server and replays player inputs in the circular buffer from current<br>
+time minus the sequence number delta, to the current time. If the server state update plus replay matches the client's current<br>
+prediction then there will be no visible change, which is often the case, but when it does not match, the player may experience<br>
+"rubber banding," where their state snaps to the correct one from the server. This can be further improved with interpolation<br>
+on misprediction.<br>
+<br>
+This may seem rather complicated, but in practice it turns out to be a small amount of code with multiplayer preparations.<br>
+Note that client side prediction only works well for predictable objects. Since the client does not have the other player's<br>
+immediate inputs, it can't be applied to other players well. For other players and other unpredictable objects interpolation<br>
+is used.<br>
+<br>
+<br>
+<h2><div id="References"/><br>
+References<br>
+</h2><br>
+<br>
+Gaffer on Games, highly recommended.<br>
+<br>
++ <a href="https://www.gafferongames.com/post/deterministic_lockstep/">https://www.gafferongames.com/post/deterministic_lockstep/</a><br>
++ <a href="https://www.gafferongames.com/post/snapshot_interpolation/">https://www.gafferongames.com/post/snapshot_interpolation/</a><br>
++ <a href="https://www.gafferongames.com/post/snapshot_compression/">https://www.gafferongames.com/post/snapshot_compression/</a><br>
++ <a href="https://www.gafferongames.com/post/state_synchronization/">https://www.gafferongames.com/post/state_synchronization/</a><br>
+<br>
+Valve's networking model.<br>
+<br>
++ <a href="https://developer.valvesoftware.com/wiki/Source_Multiplayer_Networking">https://developer.valvesoftware.com/wiki/Source_Multiplayer_Networking</a><br>
++ <a href="https://developer.valvesoftware.com/wiki/Prediction">https://developer.valvesoftware.com/wiki/Prediction</a><br>
++ <a href="https://developer.valvesoftware.com/wiki/Interpolation">https://developer.valvesoftware.com/wiki/Interpolation</a><br>
++ <a href="https://developer.valvesoftware.com/wiki/Lag_Compensation">https://developer.valvesoftware.com/wiki/Lag_Compensation</a><br>
+<br>
+A nice article on deterministic lockstep.<br>
+<br>
++ <a href="https://quickgameworld.com/blog/deterministic-lockstep">https://quickgameworld.com/blog/deterministic-lockstep</a><br>
+<br>
+A highly recommended article on prediction, and interpolation.<br>
+Includes a demo that runs in the browser.<br>
+<br>
++ <a href="https://www.gabrielgambetta.com/client-server-game-architecture.html">https://www.gabrielgambetta.com/client-server-game-architecture.html</a><br>
+<br>
+A talk on Overwatch's networking. This is more advanced.<br>
+The first part is on its entity component system, which can be skipped.<br>
+<br>
++ <a href="https://www.youtube.com/watch?v=zrIY0eIyqmI">https://www.youtube.com/watch?v=zrIY0eIyqmI</a><br>
+<br>
+With time skip to netcode:<br>
++ <a href="https://youtu.be/zrIY0eIyqmI?t=1342">https://youtu.be/zrIY0eIyqmI?t=1342</a><br>
+<br>
+A video on "rollback" networking, a form of deterministic lockstep with prediction<br>
+used by modern fighting games.<br>
+<br>
++ <a href="https://www.youtube.com/watch?v=0NLe4IpdS1w">https://www.youtube.com/watch?v=0NLe4IpdS1w</a><br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<h2><div id="~~ Introduction to Ursina Networking ~~"/><br>
+~~ Introduction to Ursina Networking ~~<br>
+</h2><br>
+<br>
+<h2><div id="Limitations"/><br>
+Limitations<br>
+</h2><br>
+<br>
+Ursina's networking currently uses TCP. Partially because it's much easier to implement, and partially because it makes things<br>
+more simple for the user. The general thing to keep in mind is that TCP works well for video games when there is little to no<br>
+packet loss, resulting in few or no packet resends. Meaning that the network connection by the users must be stable and reliable.<br>
+<br>
+Network connections around the world have been improving over time making TCP more acceptable as an option. But if you need your<br>
+game to work everywhere, for as many users as possible, then you may want to use some other solution that uses UDP.<br>
+This does not apply to non-realtime networked games though, as any latency spikes causes by resends doesn't really matter.<br>
+<br>
+<br>
+<h2><div id="Basics"/><br>
+Basics<br>
+</h2><br>
+<br>
+The recommended way to do networking in Ursina is by using *remote procedure calls* (RPCs). This is an abstraction that lets<br>
+the user call functions on the server/client/peer. Effectively allowing the user to run functions (aka procedures) that exist on<br>
+another machine via a network connection. This hides all the details of packing up data and sending it over TCP to the other<br>
+machine, where it is unpacked and then used to call some function. Usage of remote procedure calls can be found in the networking<br>
+samples that come with Ursina.<br>
+<br>
+RPC code will look something like this in typical use:<br>
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><gray># ...</gray>
+
+rpc_peer = RPCPeer()
+
+@rpc(rpc_peer)
+<purple>def</purple> on_connect(connection, time_connected):
+	<blue>print</blue>("This is run when a new connection is established.")
+	<purple>if</purple> rpc_peer.is_hosting():
+		<blue>print</blue>("This is only run <purple>if</purple> we are the host (the server).")
+
+@rpc(rpc_peer)
+<purple>def</purple> on_disconnect(connection, time_disconnected):
+	<blue>print</blue>("This is run when a disconnect happens.")
+
+@rpc(rpc_peer)
+<purple>def</purple> say(connection, time_received, message: str)
+	<blue>print</blue>(message)
+
+<purple>def</purple> update():
+	<gray># Handle networking events, run this every update.</gray>
+	rpc_peer.update()
+
+<gray># ...</gray>
+</div><br>
+Then the <span>say</span> function can be called by another peer via their own <span>RPCPeer</span>:<br>
+<div class="code_block" id="code_block_1" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button><gray># If connected, this will run the say function on the other peer over the internet.</gray>
+rpc_peer.say(rpc_peer.get_connections()[<yellow>0</yellow>], "Hello, World!")
+</div><br>
+Note that type hints are **required** for user arguments such as the <span>message</span> argument in the example.<br>
+The RPC code needs the type information to serialize and deserialize the data. Custom user types can be added.<br>
+<br>
+<h2><div id="Samples"/><br>
+Samples<br>
+</h2><br>
+<br>
+It's recommended to read the networking samples included with Ursina. They build on each other and <span>club_bear.py</span><br>
+is a functional realtime multiplayer game tested on a real server. Their order is:<br>
+<br>
+1. <span>hello_world.py</span> which explains how to use the more low level <span>Peer</span> class.<br>
+2. <span>hello_world_rpc.py</span> gives an introduction to RPCs.<br>
+3. <span>shared_object.py</span> shows how to synchronize two player controlled objects.<br>
+4. <span>host_authoritative.py</span> is the same as <span>shared_object.py</span> but the host is in charge of object state.<br>
+5. <span>club_bear.py</span> is similar to <span>host_authoritative.py</span> but more fleshed out with multiple players, chat, and more.<br>
+<br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
+</script>
+
+</body>
+</html>

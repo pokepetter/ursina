@@ -1,6 +1,5 @@
-import operator
 from math import sqrt, sin, acos, pi, cos, floor
-from panda3d.core import Vec4, LVector3f, Mat3, Mat4
+from panda3d.core import Vec4, LVector3f
 from ursina.vec2 import Vec2
 from ursina.vec3 import Vec3
 from ursina import color

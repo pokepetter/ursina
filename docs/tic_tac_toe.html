@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+        <!--generated with sswg-->
+        <html lang="en">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <head>
+            <title> ursina engine documentation</title>
+            <link rel="stylesheet" href="sswg.css">
+            <link rel="stylesheet" href="style.css">
+            <link rel="icon" type="image/x-icon" href="favicon.ico">
+        </head>
+        <body>
+        <left><div style="max-width: 1200px; margin: auto;">
+<br>
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" https://github.com/sponsors/pokepetter" class="button">Donate🡕</a><br>
+<br>
+<div style="font-size: 60.0px;font-weight: bold;">
+<div id="Tic Tac Toe"/><br>
+Tic Tac Toe<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<a href="https://github.com/pokepetter/ursina/blob/master/samples/tic_tac_toe.py">https://github.com/pokepetter/ursina/blob/master/samples/tic_tac_toe.py</a><br>
+<br>
+<img src="icons/tic_tac_toe.jpg"></img> <br>
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>
+<purple>if</purple> __name__ == <green>'__main__'</green>:
+    app = Ursina()
+
+camera.orthographic = True
+camera.fov = <yellow>4</yellow>
+camera.position = (<yellow>1</yellow>, <yellow>1</yellow>)
+Text.default_resolution *= <yellow>2</yellow>
+
+player = <olive>Entity</olive>(name=<green>'o'</green>, <olive>color</olive>=color.azure)
+cursor = Tooltip(player.name, <olive>color</olive>=player.color, <olive>origin</olive>=(<yellow>0</yellow>,<yellow>0</yellow>), <olive>scale</olive>=<yellow>4</yellow>, <olive>enabled</olive>=True)
+cursor.background.color = color.clear
+bg = <olive>Entity</olive>(<olive>parent</olive>=scene, <olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'shore'</green>, <olive>scale</olive>=(<yellow>1</yellow><yellow>6</yellow>,<yellow>8</yellow>), <olive>z</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>color</olive>=color.light_gray)
+mouse.visible = False
+
+<gray># create a matrix to store the buttons in. makes it easier to check <purple>for</purple> victory</gray>
+board = [[None <purple>for</purple> x in <blue>range</blue>(<yellow>3</yellow>)] <purple>for</purple> y in <blue>range</blue>(<yellow>3</yellow>)]
+
+<purple>for</purple> y in <blue>range</blue>(<yellow>3</yellow>):
+    <purple>for</purple> x in <blue>range</blue>(<yellow>3</yellow>):
+        b = Button(<olive>parent</olive>=scene, <olive>position</olive>=(x,y))
+        board[x][y] = b
+
+        <purple>def</purple> on_click(b=b):
+            b.text = player.name
+            b.color = player.color
+            b.collision = False
+            check_for_victory()
+
+            <purple>if</purple> player.name == <green>'o'</green>:
+                player.name = <green>'x'</green>
+                player.color = color.orange
+            <purple>else</purple>:
+                player.name = <green>'o'</green>
+                player.color = color.azure
+
+            cursor.text = player.name
+            cursor.color = player.color
+
+        b.on_click = on_click
+
+
+<purple>def</purple> check_for_victory():
+    name = player.name
+
+    won = (
+    (board[<yellow>0</yellow>][<yellow>0</yellow>].text == name and board[<yellow>1</yellow>][<yellow>0</yellow>].text == name and board[<yellow>2</yellow>][<yellow>0</yellow>].text == name) or <gray># across the bottom</gray>
+    (board[<yellow>0</yellow>][<yellow>1</yellow>].text == name and board[<yellow>1</yellow>][<yellow>1</yellow>].text == name and board[<yellow>2</yellow>][<yellow>1</yellow>].text == name) or <gray># across the middle</gray>
+    (board[<yellow>0</yellow>][<yellow>2</yellow>].text == name and board[<yellow>1</yellow>][<yellow>2</yellow>].text == name and board[<yellow>2</yellow>][<yellow>2</yellow>].text == name) or <gray># across the top</gray>
+    (board[<yellow>0</yellow>][<yellow>0</yellow>].text == name and board[<yellow>0</yellow>][<yellow>1</yellow>].text == name and board[<yellow>0</yellow>][<yellow>2</yellow>].text == name) or <gray># down the left side</gray>
+    (board[<yellow>1</yellow>][<yellow>0</yellow>].text == name and board[<yellow>1</yellow>][<yellow>1</yellow>].text == name and board[<yellow>1</yellow>][<yellow>2</yellow>].text == name) or <gray># down the middle</gray>
+    (board[<yellow>2</yellow>][<yellow>0</yellow>].text == name and board[<yellow>2</yellow>][<yellow>1</yellow>].text == name and board[<yellow>2</yellow>][<yellow>2</yellow>].text == name) or <gray># down the right side</gray>
+    (board[<yellow>0</yellow>][<yellow>0</yellow>].text == name and board[<yellow>1</yellow>][<yellow>1</yellow>].text == name and board[<yellow>2</yellow>][<yellow>2</yellow>].text == name) or <gray># diagonal /</gray>
+    (board[<yellow>0</yellow>][<yellow>2</yellow>].text == name and board[<yellow>1</yellow>][<yellow>1</yellow>].text == name and board[<yellow>2</yellow>][<yellow>0</yellow>].text == name))   <gray># diagonal \</gray>
+
+    <purple>if</purple> won:
+        <blue>print</blue>(<green>'winner is:'</green>, name)
+        cursor.text = <green>''</green>
+        mouse.visible = True
+        Panel(<olive>z</olive>=<yellow>1</yellow>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>model</olive>=<green>'quad'</green>)
+        t = Text(f<green>'player\n{name}\nwon!'</green>, <olive>scale</olive>=<yellow>3</yellow>, <olive>origin</olive>=(<yellow>0</yellow>,<yellow>0</yellow>), background=True)
+        t.create_background(padding=(.<yellow>5</yellow>,.<yellow>2</yellow><yellow>5</yellow>), radius=Text.size/<yellow>2</yellow>)
+        t.background.color = player.color.tint(-.<yellow>2</yellow>)
+
+<purple>if</purple> __name__ == <green>'__main__'</green>:
+    app.run()
+</div><script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
+</script>
+
+</body>
+</html>

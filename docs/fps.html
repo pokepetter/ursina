@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+        <!--generated with sswg-->
+        <html lang="en">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <head>
+            <title> ursina engine documentation</title>
+            <link rel="stylesheet" href="sswg.css">
+            <link rel="stylesheet" href="style.css">
+            <link rel="icon" type="image/x-icon" href="favicon.ico">
+        </head>
+        <body>
+        <left><div style="max-width: 1200px; margin: auto;">
+<br>
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" https://github.com/sponsors/pokepetter" class="button">Donate🡕</a><br>
+<br>
+<div style="font-size: 60.0px;font-weight: bold;">
+<div id="FPS"/><br>
+FPS<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<a href="https://github.com/pokepetter/ursina/blob/master/samples/fps.py">https://github.com/pokepetter/ursina/blob/master/samples/fps.py</a><br>
+<br>
+<img src="icons/fps.jpg"></img> <br>
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina.prefabs.first_person_controller <purple>import</purple> FirstPersonController
+<purple>from</purple> ursina.shaders <purple>import</purple> lit_with_shadows_shader
+
+app = Ursina()
+
+random.seed(<yellow>0</yellow>)
+<olive>Entity</olive>.default_shader = lit_with_shadows_shader
+
+ground = <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>collider</olive>=<green>'box'</green>, <olive>scale</olive>=<yellow>6</yellow><yellow>4</yellow>, <olive>texture</olive>=<green>'grass'</green>, <olive>texture_scale</olive>=(<yellow>4</yellow>,<yellow>4</yellow>))
+
+editor_camera = EditorCamera(<olive>enabled</olive>=False, ignore_paused=True)
+player = FirstPersonController(<olive>model</olive>=<green>'cube'</green>, <olive>z</olive>=-<yellow>1</yellow><yellow>0</yellow>, <olive>color</olive>=color.orange, origin_<olive>y</olive>=-.<yellow>5</yellow>, speed=<yellow>8</yellow>, <olive>collider</olive>=<green>'box'</green>)
+player.collider = BoxCollider(player, Vec3(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>0</yellow>), Vec3(<yellow>1</yellow>,<yellow>2</yellow>,<yellow>1</yellow>))
+
+gun = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>parent</olive>=camera, <olive>position</olive>=(.<yellow>5</yellow>,-.<yellow>2</yellow><yellow>5</yellow>,.<yellow>2</yellow><yellow>5</yellow>), <olive>scale</olive>=(.<yellow>3</yellow>,.<yellow>2</yellow>,<yellow>1</yellow>), origin_<olive>z</olive>=-.<yellow>5</yellow>, <olive>color</olive>=color.red, on_cooldown=False)
+gun.muzzle_flash = <olive>Entity</olive>(<olive>parent</olive>=gun, <olive>z</olive>=<yellow>1</yellow>, world_<olive>scale</olive>=.<yellow>5</yellow>, <olive>model</olive>=<green>'quad'</green>, <olive>color</olive>=color.yellow, <olive>enabled</olive>=False)
+
+shootables_parent = <olive>Entity</olive>()
+mouse.traverse_target = shootables_parent
+
+
+<purple>for</purple> i in <blue>range</blue>(<yellow>1</yellow><yellow>6</yellow>):
+    <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>scale</olive>=<yellow>2</yellow>, <olive>texture</olive>=<green>'brick'</green>, <olive>texture_scale</olive>=(<yellow>1</yellow>,<yellow>2</yellow>),
+        x=random.uniform(-<yellow>8</yellow>,<yellow>8</yellow>),
+        <olive>z</olive>=random.uniform(-<yellow>8</yellow>,<yellow>8</yellow>) + <yellow>8</yellow>,
+        <olive>collider</olive>=<green>'box'</green>,
+        scale_y = random.uniform(<yellow>2</yellow>,<yellow>3</yellow>),
+        <olive>color</olive>=color.hsv(<yellow>0</yellow>, <yellow>0</yellow>, random.uniform(.<yellow>9</yellow>, <yellow>1</yellow>))
+        )
+
+<purple>def</purple> update():
+    <purple>if</purple> held_keys[<green>'left mouse'</green>]:
+        shoot()
+
+<purple>def</purple> shoot():
+    <purple>if</purple> <purple>not</purple> gun.on_cooldown:
+        <gray># <blue>print</blue>(<green>'shoot'</green>)</gray>
+        gun.on_cooldown = True
+        gun.muzzle_flash.<olive>enabled</olive>=True
+        <purple>from</purple> ursina.prefabs.ursfx <purple>import</purple> ursfx
+        ursfx([(<yellow>0</yellow>.<yellow>0</yellow>, <yellow>0</yellow>.<yellow>0</yellow>), (<yellow>0</yellow>.<yellow>1</yellow>, <yellow>0</yellow>.<yellow>9</yellow>), (<yellow>0</yellow>.<yellow>1</yellow><yellow>5</yellow>, <yellow>0</yellow>.<yellow>7</yellow><yellow>5</yellow>), (<yellow>0</yellow>.<yellow>3</yellow>, <yellow>0</yellow>.<yellow>1</yellow><yellow>4</yellow>), (<yellow>0</yellow>.<yellow>6</yellow>, <yellow>0</yellow>.<yellow>0</yellow>)], volume=<yellow>0</yellow>.<yellow>5</yellow>, wave=<green>'noise'</green>, pitch=random.uniform(-<yellow>1</yellow><yellow>3</yellow>,-<yellow>1</yellow><yellow>2</yellow>), pitch_change=-<yellow>1</yellow><yellow>2</yellow>, speed=<yellow>3</yellow>.<yellow>0</yellow>)
+        invoke(gun.muzzle_flash.disable, dela<olive>y</olive>=.<yellow>0</yellow><yellow>5</yellow>)
+        invoke(setattr, gun, <green>'on_cooldown'</green>, False, dela<olive>y</olive>=.<yellow>1</yellow><yellow>5</yellow>)
+        <purple>if</purple> mouse.hovered_entity and <blue>hasattr</blue>(mouse.hovered_entity, <green>'hp'</green>):
+            mouse.hovered_entity.hp -= <yellow>1</yellow><yellow>0</yellow>
+            mouse.hovered_entity.blink(color.red)
+
+
+<purple>from</purple> ursina.prefabs.health_bar <purple>import</purple> HealthBar
+
+class Enemy(<olive>Entity</olive>):
+    <purple>def</purple> __init__(self, **kwargs):
+        super().__init__(<olive>parent</olive>=shootables_parent, <olive>model</olive>=<green>'cube'</green>, scale_<olive>y</olive>=<yellow>2</yellow>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>color</olive>=color.light_gray, <olive>collider</olive>=<green>'box'</green>, **kwargs)
+        self.health_bar = <olive>Entity</olive>(<olive>parent</olive>=self, <olive>y</olive>=<yellow>1</yellow>.<yellow>2</yellow>, <olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.red, world_<olive>scale</olive>=(<yellow>1</yellow>.<yellow>5</yellow>,.<yellow>1</yellow>,.<yellow>1</yellow>))
+        self.max_hp = <yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>
+        self.hp = self.max_hp
+
+    <purple>def</purple> update(self):
+        dist = distance_xz(player.position, self.position)
+        <purple>if</purple> dist &gt; <yellow>4</yellow><yellow>0</yellow>:
+            return
+
+        self.health_bar.alpha = max(<yellow>0</yellow>, self.health_bar.alpha - time.dt)
+
+
+        self.look_at_<yellow>2</yellow>d(player.position, <green>'y'</green>)
+        hit_info = raycast(self.world_position + Vec3(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>0</yellow>), self.forward, <yellow>3</yellow><yellow>0</yellow>, <olive>ignore</olive>=(self,))
+        <gray># <blue>print</blue>(hit_info.entity)</gray>
+        <purple>if</purple> hit_info.entity == player:
+            <purple>if</purple> dist &gt; <yellow>2</yellow>:
+                self.position += self.forward * time.dt * <yellow>5</yellow>
+
+    @property
+    <purple>def</purple> hp(self):
+        return self._hp
+
+    @hp.setter
+    <purple>def</purple> hp(self, value):
+        self._hp = value
+        <purple>if</purple> value &lt;= <yellow>0</yellow>:
+            destroy(self)
+            return
+
+        self.health_bar.world_scale_x = self.hp / self.max_hp * <yellow>1</yellow>.<yellow>5</yellow>
+        self.health_bar.alpha = <yellow>1</yellow>
+
+<gray># Enemy()</gray>
+enemies = [Enemy(x=x*<yellow>4</yellow>) <purple>for</purple> x in <blue>range</blue>(<yellow>4</yellow>)]
+
+
+<purple>def</purple> pause_input(key):
+    <purple>if</purple> key == <green>'tab'</green>:    <gray># press tab to toggle edit/play mode</gray>
+        editor_camera.enabled = <purple>not</purple> editor_camera.enabled
+
+        player.visible_self = editor_camera.enabled
+        player.cursor.enabled = <purple>not</purple> editor_camera.enabled
+        gun.enabled = <purple>not</purple> editor_camera.enabled
+        mouse.locked = <purple>not</purple> editor_camera.enabled
+        editor_camera.position = player.position
+
+        application.paused = editor_camera.enabled
+
+pause_handler = <olive>Entity</olive>(ignore_paused=True, input=pause_input)
+
+
+sun = DirectionalLight()
+sun.look_at(Vec3(<yellow>1</yellow>,-<yellow>1</yellow>,-<yellow>1</yellow>))
+Sky()
+
+app.run()
+</div><script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
+</script>
+
+</body>
+</html>

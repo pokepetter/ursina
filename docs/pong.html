@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+        <!--generated with sswg-->
+        <html lang="en">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <head>
+            <title> ursina engine documentation</title>
+            <link rel="stylesheet" href="sswg.css">
+            <link rel="stylesheet" href="style.css">
+            <link rel="icon" type="image/x-icon" href="favicon.ico">
+        </head>
+        <body>
+        <left><div style="max-width: 1200px; margin: auto;">
+<br>
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" https://github.com/sponsors/pokepetter" class="button">Donate🡕</a><br>
+<br>
+<div style="font-size: 60.0px;font-weight: bold;">
+<div id="Pong"/><br>
+Pong<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<a href="https://github.com/pokepetter/ursina/blob/master/samples/pong.py">https://github.com/pokepetter/ursina/blob/master/samples/pong.py</a><br>
+<br>
+<img src="icons/pong.jpg"></img> <br>
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>
+
+app = Ursina()
+
+window.color = color.black
+camera.orthographic = True
+camera.fov = <yellow>1</yellow>
+
+left_paddle = <olive>Entity</olive>(<olive>scale</olive>=(<yellow>1</yellow>/<yellow>3</yellow><yellow>2</yellow>,<yellow>6</yellow>/<yellow>3</yellow><yellow>2</yellow>), x=-.<yellow>7</yellow><yellow>5</yellow>, <olive>model</olive>=<green>'quad'</green>, <olive>origin_x</olive>=.<yellow>5</yellow>, <olive>collider</olive>=<green>'box'</green>)
+right_paddle = duplicate(left_paddle, x=left_paddle.x*-<yellow>1</yellow>, rotation_<olive>z</olive>=left_paddle.rotation_z+<yellow>1</yellow><yellow>8</yellow><yellow>0</yellow>)
+
+floor = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>y</olive>=-.<yellow>5</yellow>, origin_<olive>y</olive>=.<yellow>5</yellow>, <olive>collider</olive>=<green>'box'</green>, <olive>scale</olive>=(<yellow>2</yellow>,<yellow>1</yellow><yellow>0</yellow>), <olive>visible</olive>=False)
+ceiling = duplicate(floor, <olive>y</olive>=.<yellow>5</yellow>, rotation_<olive>z</olive>=<yellow>1</yellow><yellow>8</yellow><yellow>0</yellow>, <olive>visible</olive>=False)
+left_wall = duplicate(floor, x=-.<yellow>5</yellow>*window.aspect_ratio, rotation_<olive>z</olive>=<yellow>9</yellow><yellow>0</yellow>, <olive>visible</olive>=True)
+right_wall = duplicate(floor, x=.<yellow>5</yellow>*window.aspect_ratio, rotation_<olive>z</olive>=-<yellow>9</yellow><yellow>0</yellow>, <olive>visible</olive>=True)
+
+
+collision_cooldown = .<yellow>1</yellow><yellow>5</yellow>
+ball = <olive>Entity</olive>(<olive>model</olive>=<green>'circle'</green>, <olive>scale</olive>=.<yellow>0</yellow><yellow>5</yellow>, <olive>collider</olive>=<green>'box'</green>, speed=<yellow>0</yellow>, collision_cooldown=collision_cooldown)
+
+
+<purple>def</purple> update():
+    ball.collision_cooldown -= time.dt
+    ball.position += ball.right * time.dt * ball.speed
+
+    left_paddle.y += (held_keys[<green>'w'</green>] - held_keys[<green>'s'</green>]) * time.dt * <yellow>1</yellow>
+    right_paddle.y += (held_keys[<green>'up arrow'</green>] - held_keys[<green>'down arrow'</green>]) * time.dt * <yellow>1</yellow>
+
+    <purple>if</purple> ball.collision_cooldown &gt; <yellow>0</yellow>:
+        <gray># after a collision, wait a little while before another collision can occur.</gray>
+        <gray># this is to prevent the ball <purple>from</purple> colliding multiple times with the same wall because</gray>
+        <gray># it hasn't got time to be moved away <purple>from</purple> it yet.</gray>
+        return
+
+    hit_info = ball.intersects()
+    <purple>if</purple> hit_info.hit:
+        ball.collision_cooldown = collision_cooldown
+
+        <purple>if</purple> hit_info.entity in (left_paddle, right_paddle, left_wall, right_wall):
+            hit_info.entity.collision = False
+            invoke(setattr, hit_info.entity, <green>'collision'</green>, False, dela<olive>y</olive>=.<yellow>1</yellow>)
+            direction_multiplier = <yellow>1</yellow>
+            <purple>if</purple> hit_info.entity == left_paddle:
+                direction_multiplier = -<yellow>1</yellow>
+
+                left_paddle.collision = False <gray># disable collision <purple>for</purple> the current paddle so it doesn't collide twice in a row</gray>
+                right_paddle.collision = True
+            <purple>else</purple>:
+                right_paddle.collision = False
+                left_paddle.collision = True
+
+            ball.rotation_z += <yellow>1</yellow><yellow>8</yellow><yellow>0</yellow> * direction_multiplier
+            ball.rotation_z -= (hit_info.entity.world_y - ball.y) * <yellow>2</yellow><yellow>0</yellow> * <yellow>3</yellow><yellow>2</yellow> * direction_multiplier
+            ball.speed *= <yellow>1</yellow>.<yellow>1</yellow>
+
+        <purple>else</purple>:   <gray># hit wall</gray>
+            ball.rotation_z *= -abs(hit_info.world_normal.normalized()[<yellow>1</yellow>])
+
+        <gray># create a particle on collision</gray>
+        particle = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>position</olive>=hit_info.world_point, <olive>scale</olive>=<yellow>0</yellow>, <olive>texture</olive>=<green>'circle'</green>, add_to_scene_entities=False)
+        particle.animate_scale(.<yellow>2</yellow>, .<yellow>5</yellow>, <olive>curve</olive>=curve.out_expo)
+        particle.animate_color(color.clear, duration=.<yellow>5</yellow>, <olive>curve</olive>=curve.out_expo)
+        destroy(particle, dela<olive>y</olive>=.<yellow>5</yellow>)
+
+
+<purple>def</purple> reset():
+    ball.position = (<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)
+    ball.rotation = (<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)
+    ball.speed = <yellow>1</yellow><yellow>0</yellow>
+    <purple>for</purple> paddle in (left_paddle, right_paddle):
+        paddle.collision = True
+        paddle.y = <yellow>0</yellow>
+
+
+info_text = Text("press space to play", <olive>y</olive>=-.<yellow>4</yellow><yellow>5</yellow>)
+
+<purple>def</purple> input(key):
+    <purple>if</purple> key == <green>'space'</green>:
+        info_text.enabled = False
+        reset()
+
+    <purple>if</purple> key == <green>'t'</green>:
+        ball.speed += <yellow>5</yellow>
+
+
+<gray># TODO: register when the ball exits either side and give points</gray>
+
+
+app.run()
+</div><script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+        <!--generated with sswg-->
+        <html lang="en">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <head>
+            <title> ursina engine documentation</title>
+            <link rel="stylesheet" href="sswg.css">
+            <link rel="stylesheet" href="style.css">
+            <link rel="icon" type="image/x-icon" href="favicon.ico">
+        </head>
+        <body>
+        <left><div style="max-width: 1200px; margin: auto;">
+<br>
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" https://github.com/sponsors/pokepetter" class="button">Donate🡕</a><br>
+<br>
+<div style="font-size: 60.0px;font-weight: bold;">
+<div id="Clicker Game"/><br>
+Clicker Game<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<a href="https://github.com/pokepetter/ursina/blob/master/samples/clicker_game.py">https://github.com/pokepetter/ursina/blob/master/samples/clicker_game.py</a><br>
+<br>
+<img src="icons/installation_guide.jpg"></img> <br>
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>clicker game
+make a gold counter
+make a button
+you earn gold <purple>for</purple> every click
+when you have enough gold you can unlock new nodes to automatically generate gold!
+<green>''</green>'
+
+
+
+<purple>from</purple> ursina <purple>import</purple> *
+
+app = Ursina()
+window.color = color._<yellow>2</yellow><yellow>0</yellow>
+
+gold = <yellow>0</yellow>
+counter = Text(<olive>text</olive>=<green>'<yellow>0</yellow>'</green>, <olive>y</olive>=.<yellow>2</yellow><yellow>5</yellow>, <olive>z</olive>=-<yellow>1</yellow>, <olive>scale</olive>=<yellow>2</yellow>, <olive>origin</olive>=(<yellow>0</yellow>,<yellow>0</yellow>), background=True)
+button = Button(<olive>text</olive>=<green>'+'</green>, <olive>color</olive>=color.azure, <olive>scale</olive>= .<yellow>1</yellow><yellow>2</yellow><yellow>5</yellow>)
+
+<purple>def</purple> button_click():
+    global gold
+    gold += <yellow>1</yellow>
+    counter.text = str(gold)
+
+button.on_click = button_click
+
+
+
+button_<yellow>2</yellow> = Button(cost=<yellow>1</yellow><yellow>0</yellow>, x=.<yellow>2</yellow>, <olive>scale</olive>=.<yellow>1</yellow><yellow>2</yellow><yellow>5</yellow>, <olive>color</olive>=color.dark_gray, disabled=True)
+button_<yellow>2</yellow>.tooltip = Tooltip(f<green>'&lt;gold&gt;Gold Generator\n&lt;default&gt;Earn <yellow>1</yellow> gold every second.\nCosts {button_<yellow>2</yellow>.cost} gold.'</green>)
+
+<purple>def</purple> buy_auto_gold():
+    global gold
+    <purple>if</purple> gold &gt;= button_<yellow>2</yellow>.cost:
+        gold -= button_<yellow>2</yellow>.cost
+        counter.text = str(gold)
+        invoke(auto_generate_gold, <yellow>1</yellow>, <yellow>1</yellow>)
+
+button_<yellow>2</yellow>.on_click = buy_auto_gold
+
+
+
+<purple>def</purple> auto_generate_gold(value=<yellow>1</yellow>, interval=<yellow>1</yellow>):
+    global gold
+    gold += <yellow>1</yellow>
+    counter.text = str(gold)
+    button_<yellow>2</yellow>.animate_scale(.<yellow>1</yellow><yellow>2</yellow><yellow>5</yellow> * <yellow>1</yellow>.<yellow>1</yellow>, duration=.<yellow>1</yellow>)
+    button_<yellow>2</yellow>.animate_scale(.<yellow>1</yellow><yellow>2</yellow><yellow>5</yellow>, duration=.<yellow>1</yellow>, dela<olive>y</olive>=.<yellow>1</yellow>)
+    invoke(auto_generate_gold, value, dela<olive>y</olive>=interval)
+
+
+<purple>def</purple> update():
+    global gold
+    <purple>for</purple> b in (button_<yellow>2</yellow>, ):
+        <purple>if</purple> gold &gt;= b.cost:
+            b.disabled = False
+            b.color = color.green
+        <purple>else</purple>:
+            b.disabled = True
+            b.color = color.gray
+
+
+
+app.run()
+</div><script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
+</script>
+
+</body>
+</html>

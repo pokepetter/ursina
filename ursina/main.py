@@ -132,7 +132,7 @@ class Ursina(ShowBase):
 
         try:
             from ursina import gamepad
-        except e as Exception:
+        except Exception as e:
             print(e)
 
         if application.window_type != 'none':
@@ -295,7 +295,10 @@ class Ursina(ShowBase):
                                 break_outer = True
                                 break
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/main
         mouse.input(key)
 
 

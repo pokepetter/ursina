@@ -1,4 +1,5 @@
 from ursina import Entity, Vec2, invoke, scene, color
+from ursina.prefabs.sky import Sky
 from panda3d.core import DirectionalLight as PandaDirectionalLight
 from panda3d.core import PointLight as PandaPointLight
 from panda3d.core import AmbientLight as PandaAmbientLight
@@ -32,7 +33,7 @@ class DirectionalLight(Light):
         for key, value in kwargs.items():
             setattr(self, key ,value)
 
-        invoke(setattr, self, 'shadows', shadows, delay=.1)
+        invoke(setattr, self, 'shadows', shadows, delay=1/60)
 
 
     @property
@@ -50,13 +51,17 @@ class DirectionalLight(Light):
 
 
     def update_bounds(self, entity=scene):  # update the shadow area to fit the bounds of target entity, defaulted to scene.
-        if not entity.get_tight_bounds(self):
-            return
-        bmin, bmax = entity.get_tight_bounds(self)
-        lens = self._light.get_lens()
-        lens.set_near_far(bmin.z*2, bmax.z*2)
-        lens.set_film_offset((bmin.xy + bmax.xy) * .5)
-        lens.set_film_size(bmax.xy - bmin.xy)
+        # don't include skydome when calculating shadow bounds
+        [e.disable() for e in Sky.instances]
+        bounds = entity.get_tight_bounds(self)
+        if bounds is not None:
+            bmin, bmax = bounds
+            lens = self._light.get_lens()
+            lens.set_near_far(bmin.z*2, bmax.z*2)
+            lens.set_film_offset((bmin.xy + bmax.xy) * .5)
+            lens.set_film_size(bmax.xy - bmin.xy)
+
+        [e.enable() for e in Sky.instances]
 
 
 class PointLight(Light):
@@ -107,7 +112,7 @@ if __name__ == '__main__':
     dont_cast_shadow = Entity(model='cube', y=1, shader=lit_with_shadows_shader, x=2, color=color.light_gray)
     dont_cast_shadow.hide(0b0001)
 
-    unlit_entity = Entity(model='cube', y=1, shader=lit_with_shadows_shader, x=-2, unlit=True, color=color.light_gray)
+    unlit_entity = Entity(model='cube', y=1,x=-2, unlit=True, color=color.light_gray)
 
     bar = Entity(model='cube', position=(0,3,-2), shader=lit_with_shadows_shader, scale=(10,.2,.2), color=color.light_gray)
     # dont_cast_shadow.hide(0b0001)

@@ -5,18 +5,19 @@ import sys
 
 blend_file_path = bpy.data.filepath
 filepath = sys.argv[-1]
+mtl_pattern = '*.mtl' if '--export_mtl' in sys.argv else ''
 
 bpy.ops.wm.obj_export(
     filepath=filepath,
     check_existing=True,
     forward_axis='Z',
     up_axis='Y',
-    filter_glob="*.obj;*.mtl",
+    filter_glob=f"*.obj;{mtl_pattern}",
     export_selected_objects=False,
     export_smooth_groups=False,
     export_normals=True,
     export_uv=True,
-    export_materials=True,
+    export_materials=('--export_mtl' in sys.argv),
     export_colors=True,
     export_triangulated_mesh=True,
     export_curves_as_nurbs=False,

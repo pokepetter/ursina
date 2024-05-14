@@ -1,0 +1,153 @@
+<!DOCTYPE HTML>
+        <!--generated with sswg-->
+        <html lang="en">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <head>
+            <title> ursina engine documentation</title>
+            <link rel="stylesheet" href="sswg.css">
+            <link rel="stylesheet" href="style.css">
+            <link rel="icon" type="image/x-icon" href="favicon.ico">
+        </head>
+        <body>
+        <left><div style="max-width: 1200px; margin: auto;">
+<br>
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" https://github.com/sponsors/pokepetter" class="button">Donate🡕</a><br>
+<br>
+<div style="font-size: 60.0px;font-weight: bold;">
+<div id="Inventory"/><br>
+Inventory<br>
+<div style="font-size: 20.0px;font-weight: normal;">
+<a href="https://github.com/pokepetter/ursina/blob/master/samples/inventory.py">https://github.com/pokepetter/ursina/blob/master/samples/inventory.py</a><br>
+<br>
+<img src="icons/inventory.jpg"></img> <br>
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>
+
+class Inventory(<olive>Entity</olive>):
+    <purple>def</purple> __init__(self, width=<yellow>5</yellow>, height=<yellow>8</yellow>, **kwargs):
+        super().__init__(
+            parent = camera.ui,
+            model = Quad(radius=.<yellow>0</yellow><yellow>1</yellow><yellow>5</yellow>),
+            texture = <green>'white_cube'</green>,
+            texture_scale = (width, height),
+            scale = (width*.<yellow>1</yellow>, height*.<yellow>1</yellow>),
+            origin = (-.<yellow>5</yellow>,.<yellow>5</yellow>),
+            position = (-.<yellow>3</yellow>,.<yellow>4</yellow>),
+            color = color.hsv(<yellow>0</yellow>, <yellow>0</yellow>, .<yellow>1</yellow>, .<yellow>9</yellow>),
+            )
+
+        self.width = width
+        self.height = height
+
+        <purple>for</purple> key, value in kwargs.items():
+            <blue>setattr</blue>(self, key, value)
+
+
+    <purple>def</purple> find_free_spot(self):
+        <purple>for</purple> y in <blue>range</blue>(self.height):
+            <purple>for</purple> x in <blue>range</blue>(self.width):
+                grid_positions = [(int(e.x*self.texture_scale[<yellow>0</yellow>]), int(e.y*self.texture_scale[<yellow>1</yellow>])) <purple>for</purple> e in self.children]
+                <blue>print</blue>(grid_positions)
+
+                <purple>if</purple> <purple>not</purple> (x, -y) in grid_positions:
+                    <blue>print</blue>(<green>'found free spot:'</green>, x, y)
+                    return x, y
+
+
+    <purple>def</purple> append(self, item, x=<yellow>0</yellow>, <olive>y</olive>=<yellow>0</yellow>):
+        <blue>print</blue>(<green>'add item:'</green>, item)
+
+        <purple>if</purple> len(self.children) &gt;= self.width*self.height:
+            <blue>print</blue>(<green>'inventory full'</green>)
+            error_message = Text(<green>'&lt;red&gt;Inventory is full!'</green>, <olive>origin</olive>=(<yellow>0</yellow>,-<yellow>1</yellow>.<yellow>5</yellow>), x=-.<yellow>5</yellow>, <olive>scale</olive>=<yellow>2</yellow>)
+            destroy(error_message, dela<olive>y</olive>=<yellow>1</yellow>)
+            return
+
+        x, y = self.find_free_spot()
+
+        icon = Draggable(
+            parent = self,
+            model = <green>'quad'</green>,
+            texture = item,
+            color = color.white,
+            scale_x = <yellow>1</yellow>/self.texture_scale[<yellow>0</yellow>],
+            scale_y = <yellow>1</yellow>/self.texture_scale[<yellow>1</yellow>],
+            origin = (-.<yellow>5</yellow>,.<yellow>5</yellow>),
+            x = x * <yellow>1</yellow>/self.texture_scale[<yellow>0</yellow>],
+            y = -y * <yellow>1</yellow>/self.texture_scale[<yellow>1</yellow>],
+            z = -.<yellow>5</yellow>,
+            )
+        name = item.replace(<green>'_'</green>, <green>' '</green>).title()
+
+        <purple>if</purple> random.random() &lt; .<yellow>2</yellow><yellow>5</yellow>:
+            icon.color = color.gold
+            name = <green>'&lt;orange&gt;Rare '</green> + name
+
+        icon.tooltip = Tooltip(name)
+        icon.tooltip.background.color = color.hsv(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,.<yellow>8</yellow>)
+
+
+        <purple>def</purple> drag():
+            icon.org_pos = (icon.x, icon.y)
+            icon.z -= .<yellow>0</yellow><yellow>1</yellow>   <gray># ensure the dragged item overlaps the rest</gray>
+
+        <purple>def</purple> drop():
+            icon.x = int((icon.x + (icon.scale_x/<yellow>2</yellow>)) * self.width) / self.width
+            icon.y = int((icon.y - (icon.scale_y/<yellow>2</yellow>)) * self.height) / self.height
+            icon.z += .<yellow>0</yellow><yellow>1</yellow>
+
+            <gray># <purple>if</purple> outside, return to original position</gray>
+            <purple>if</purple> icon.x &lt; <yellow>0</yellow> or icon.x &gt;= <yellow>1</yellow> or icon.y &gt; <yellow>0</yellow> or icon.y &lt;= -<yellow>1</yellow>:
+                icon.position = (icon.org_pos)
+                return
+
+            <gray># <purple>if</purple> the spot is taken, swap positions</gray>
+            <purple>for</purple> c in self.children:
+                <purple>if</purple> c == icon:
+                    continue
+
+                <purple>if</purple> c.x == icon.x and c.y == icon.y:
+                    <blue>print</blue>(<green>'swap positions'</green>)
+                    c.position = icon.org_pos
+
+        icon.drag = drag
+        icon.drop = drop
+
+
+
+<purple>if</purple> __name__ == <green>'__main__'</green>:
+    app = Ursina()
+
+    inventory = Inventory()
+
+    <purple>def</purple> add_item():
+        inventory.append(random.choice((<green>'bag'</green>, <green>'bow_arrow'</green>, <green>'gem'</green>, <green>'orb'</green>, <green>'sword'</green>)))
+
+    add_item()
+    add_item()
+    add_item_button = Button(
+        scale = (.<yellow>1</yellow>,.<yellow>1</yellow>),
+        x = -.<yellow>5</yellow>,
+        color = color.lime.tint(-.<yellow>2</yellow><yellow>5</yellow>),
+        text = <green>'+'</green>,
+        tooltip = Tooltip(<green>'Add random item'</green>),
+        on_click = add_item
+        )
+    background = <olive>Entity</olive>(<olive>parent</olive>=camera.ui, <olive>model</olive>=<green>'quad'</green>, <olive>texture</olive>=<green>'shore'</green>, <olive>scale_x</olive>=camera.aspect_ratio, <olive>z</olive>=<yellow>1</yellow>)
+
+    Cursor(<olive>texture</olive>=<green>'cursor'</green>, <olive>scale</olive>=.<yellow>1</yellow>)
+    mouse.visible = False
+
+    app.run()
+</div><script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
+</script>
+
+</body>
+</html>

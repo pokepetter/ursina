@@ -1,15 +1,46 @@
-[tool.ruff]
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
 
-# Allow lines to be as long as 120 characters.
+[tool.poetry]
+name = "ursina"
+version = "7.0.0"
+description = "An easy to use game engine/framework for python."
+authors = [
+    "Petter Amland <pokepetter@gmail.com>",
+    ]
+license = "MIT"
+homepage = "https://github.com/pokepetter/ursina"
+keywords = ["game development"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.10"
+panda3d = "*"
+panda3d-gltf = "*"
+pillow = "*"
+pyperclip = "*"
+screeninfo = "*"
+
+[tool.poetry.extras]
+extras = ["numpy", "imageio", "psd-tools3", "psutil"]
+
+
+
+[tool.ruff]
+# Allow lines to be as long as 300 characters.
 line-length = 300
-ignore-init-module-imports = true
-# F403: allow `from my_module import *`
-# E402: allow import not at top of file
-# E722: allow bare except
-# E405: allow undefined or from star import
-# E741: allow single character variable names
-# E711: allow var == None instead of var is None
-ignore = ["F403", "E402", "E722", "E713", "E741", "E711"]
+lint.ignore-init-module-imports = true
+# F403: ignore to allow `from my_module import *`
+# E402: ignore to allow import not at top of file
+# E722: ignore to allow bare except
+# E405: ignore to allow undefined or from star import
+# E741: ignore to allow single character variable names
+# E711: ignore to allow var == None instead of var is None
+# F401: ignore to allow importing all the stuff in __init__.py without using __all__
+# E701: ignore to allow multiple statements on one line (colon). This is rarely done anyway.
+lint.ignore = ["F403", "E402", "E722", "E713", "E741", "E711", "F401", "E701"]
+# Make linter not complain about stuff imported with * import
 builtins = [
     "Ursina", "Path", "base", "loader", "render", "globalClock", "LEVEL_EDITOR",
     "time", "random", "math", "copy", "deepcopy",
@@ -19,7 +50,7 @@ builtins = [
     "load_model", "load_texture", "load_blender_scene", "texture_importer", "Texture", "Shader",
     "Entity", "Audio", "Text", "Button",
     "color", "Color", "hsv", "rgb",
-    "dedent", "camel_to_snake", "snake_to_camel", "multireplace", "printvar", "print_info", "print_warning",
+    "dedent", "camel_to_snake", "snake_to_camel", "multireplace", "printvar", "print_info", "print_warning", "print_on_screen",
     "chunk_list", "flatten_list", "flatten_completely", "size_list", "find_sequence",
     "grid_layout",
     "EditorCamera", "Empty", "LoopingList", "Default",
@@ -29,6 +60,6 @@ builtins = [
     "BoxCollider", "SphereCollider", "CapsuleCollider", "MeshCollider",
     "Animation", "SpriteSheetAnimation", "FrameAnimation3d", "Animator", "curve", "SmoothFollow",
     "Sky", "DirectionalLight",
-    "Tooltip", "Sprite", "Draggable", "Panel", "Slider", "ThinSlider", "ButtonList", "ButtonGroup", "WindowPanel", "Space", "TextField", "InputField", "ContentTypes",
+    "Tooltip", "Sprite", "Draggable", "Panel", "Slider", "ThinSlider", "ButtonList", "ButtonGroup", "WindowPanel", "Space", "TextField", "InputField", "ContentTypes", "Cursor",
     "raycast", "boxcast", "terraincast"
     ]
