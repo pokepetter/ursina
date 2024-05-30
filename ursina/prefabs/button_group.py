@@ -1,10 +1,12 @@
 from ursina import Entity, Button, camera, color, Text, window, mouse, destroy
 from ursina.scripts.grid_layout import grid_layout
+from ursina.scripts.property_generator import generate_properties_for_class
 
+@generate_properties_for_class()
 class ButtonGroup(Entity):
     default_selected_color = color.azure
 
-    def __init__(self, options, default='', min_selection=1, max_selection=1, origin=(-.5,.5,0), spacing=(0.025,0,0), **kwargs):
+    def __init__(self, options, default='', min_selection=1, max_selection=1, origin=(-.5,.5,0), spacing=(0.025,0,0), label='', **kwargs):
         super().__init__()
         self.deselected_color = Button.default_color
         self.selected_color = ButtonGroup.default_selected_color
@@ -19,6 +21,7 @@ class ButtonGroup(Entity):
 
         self.parent = camera.ui
         self.scale = Text.size * 2
+        self.label = label
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -31,26 +34,26 @@ class ButtonGroup(Entity):
                 self.select(self.buttons[i])
 
 
-    @property
-    def options(self):
-        return self._options
-
-    @options.setter
-    def options(self, value):
+    def options_setter(self, value):
         self._options = value
         self.layout()
 
 
-    @property
-    def value(self):
+    def value_getter(self):
         if self.max_selection == 1:
             return self.selected[0].value
 
         return [b.value for b in self.selected]
 
-    @value.setter
-    def value(self, value):
+    def value_setter(self, value):
         [self.select(b) for b in self.buttons if b.value in value]
+
+
+    def label_setter(self, value):
+        if value and not hasattr(self, 'label_text_entity'):
+            self.label_text_entity = Text(parent=self, world_scale=25/2, origin=(-.5,-.5), position=(0,.5,-1), color=color.light_gray)
+        self.label_text_entity.text = value
+
 
 
     def layout(self):
@@ -105,7 +108,7 @@ if __name__ == '__main__':
 
     # Text.default_font = 'VeraMono.ttf'
     center = Entity(parent=camera.ui, model='circle', scale=.005, color=color.red, z=-1)
-    gender_selection = ButtonGroup(('man', 'woman', 'other'), origin=(-.5,0))
+    gender_selection = ButtonGroup(('man', 'woman', 'other'), origin=(-.5,0), label='choose gender:')
 
     def on_value_changed():
         print('set gender:', gender_selection.value)
