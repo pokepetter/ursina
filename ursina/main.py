@@ -244,6 +244,9 @@ class Ursina(ShowBase):
                 for key in bound_keys:
                     __main__.input(key)
 
+        break_outer = False
+
+
         for e in scene.entities:
             if e.enabled is False or e.ignore or e.ignore_input:
                 continue
@@ -252,29 +255,33 @@ class Ursina(ShowBase):
             if e.has_disabled_ancestor():
                 continue
 
+            if break_outer:
+                break
 
             if hasattr(e, 'input') and callable(e.input):
-                break_outer = False
                 for key in bound_keys:
                     if break_outer:
                         break
                     if e.input(key):    # if the input function returns True, eat the input
                         break_outer = True
-
+                        break
 
             if hasattr(e, 'scripts'):
-                break_outer = False
                 if break_outer:
                     break
 
                 for script in e.scripts:
+                    if break_outer:
+                        break
+
                     if script.enabled and hasattr(script, 'input') and callable(script.input):
                         for key in bound_keys:
                             if script.input(key): # if the input function returns True, eat the input
                                 break_outer = True
                                 break
 
-        mouse.input(key)
+        for key in bound_keys:
+            mouse.input(key)
 
 
     def text_input(self, key):  # internal method for handling text input
