@@ -80,6 +80,10 @@ class InputField(Button):
             self.on_submit()
             self.active = False
 
+        if self.active:
+            return True # eat input when entering text to prevent unwanted actions while typing.
+
+
     @property
     def text(self):
         return self.text_field.text
