@@ -21,7 +21,8 @@ class ButtonGroup(Entity):
 
         self.parent = camera.ui
         self.scale = Text.size * 2
-        self.label = label
+        if label:
+            self.label = label
 
         for key, value in kwargs.items():
             setattr(self, key, value)
