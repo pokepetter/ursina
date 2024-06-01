@@ -35,7 +35,7 @@ def update():
     if peer.is_hosting():
         status_text.text = "Hosting on localhost, port 8080.\nSpace to send message."
     else:
-        status_text.text = "Connected to host with address localhost, port 8080.\nSpace to send meesage."
+        status_text.text = "Connected to host with address localhost, port 8080.\nSpace to send message."
 
 def input(key):
     if key == "space":

@@ -223,7 +223,7 @@ When the server receives the player's input to shoot, it can take into account t
 an estimated amount of latency and then check to see if the player hit the other player, apply the effect of that, and then
 play the game forward again (at faster than realtime speed) until it's caught back up to the current time.
 
-This requires the server to keep a circular buffer of past states. And forthe game code to have some convenient way to making such
+This requires the server to keep a circular buffer of past states. And for the game code to have some convenient way to making such
 state backups. It also helps for the server to be *mostly* deterministic such that the replay gives a correct result.
 Server side lag compensation is not applied to all game mechanics, typically only things that are instantaneous, such as ray casts.
 Something like a rocket launcher that fires a slow moving projectile would not have server side lag compensation applied.
