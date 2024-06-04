@@ -913,10 +913,10 @@ class Entity(NodePath, metaclass=PostInitCaller):
             return class_instance
 
 
-    def combine(self, analyze=False, auto_destroy=True, ignore=[]):
+    def combine(self, analyze=False, auto_destroy=True, ignore=[], ignore_disabled=True, include_normals=False):
         from ursina.scripts.combine import combine
 
-        self.model = combine(self, analyze, auto_destroy, ignore)
+        self.model = combine(self, analyze, auto_destroy, ignore, ignore_disabled, include_normals)
         return self.model
 
 
