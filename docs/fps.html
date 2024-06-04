@@ -20,7 +20,8 @@ FPS<br>
 <a href="https://github.com/pokepetter/ursina/blob/master/samples/fps.py">https://github.com/pokepetter/ursina/blob/master/samples/fps.py</a><br>
 <br>
 <img src="icons/fps.jpg"></img> <br>
-<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina.prefabs.first_person_controller <purple>import</purple> FirstPersonController
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina.prefabs.first_person_controller <purple>import</purple> FirstPersonController
 <purple>from</purple> ursina.shaders <purple>import</purple> lit_with_shadows_shader
 
 app = Ursina()
@@ -130,6 +131,7 @@ sun.look_at(Vec3(<yellow>1</yellow>,-<yellow>1</yellow>,-<yellow>1</yellow>))
 Sky()
 
 app.run()
+
 </div><script>
 function copy_to_clipboard(containerid) {
     var range = document.createRange()

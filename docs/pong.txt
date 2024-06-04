@@ -5,7 +5,8 @@
 <a href="https://github.com/pokepetter/ursina/blob/master/samples/pong.py">https://github.com/pokepetter/ursina/blob/master/samples/pong.py</a>
 
 # image icons/pong.jpg
-```from ursina import *
+```
+from ursina import *
 
 
 app = Ursina()
@@ -95,4 +96,5 @@ def input(key):
 
 
 app.run()
+
 ```

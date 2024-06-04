@@ -5,7 +5,8 @@
 <a href="https://github.com/pokepetter/ursina/blob/master/samples/fps.py">https://github.com/pokepetter/ursina/blob/master/samples/fps.py</a>
 
 # image icons/fps.jpg
-```from ursina import *
+```
+from ursina import *
 from ursina.prefabs.first_person_controller import FirstPersonController
 from ursina.shaders import lit_with_shadows_shader
 
@@ -116,4 +117,5 @@ sun.look_at(Vec3(1,-1,-1))
 Sky()
 
 app.run()
+
 ```
