@@ -157,6 +157,9 @@ class LevelEditor(Entity):
 
     @edit_mode.setter
     def edit_mode(self, value):
+        if not self.current_scene:
+            return
+
         if not value and self._edit_mode:   # enter play mode
             for e in self.children:
                 e.ignore = True
@@ -401,7 +404,8 @@ class LevelEditorScene:
 
         self.selection = []
         self.entities = []
-        destroy(self.scene_parent)
+        if self.scene_parent:
+            destroy(self.scene_parent)
 
 
 class Undo(Entity):
@@ -1322,7 +1326,7 @@ class ClassSpawner(Entity):
             print_warning('class to spawn not found in LEVEL_EDITOR.class_menu.available_classes:', self.class_to_spawn)
             return
 
-        if self.class_to_spawn:
+        if self.class_to_spawn and self.class_to_spawn != 'None':
             print('spawn class', self.class_to_spawn)
             self.class_instance = LEVEL_EDITOR.class_menu.available_classes[self.class_to_spawn](world_transform=self.world_transform, add_to_scene_entities=False)
 
@@ -2484,8 +2488,8 @@ if __name__ == '__main__':
     # level_editor.goto_scene(0,0)
 
 
-
-    level_editor.class_menu.available_classes |= {'WhiteCube': WhiteCube, 'EditorCamera':EditorCamera, }
+    from ursina.prefabs.first_person_controller import FirstPersonController
+    level_editor.class_menu.available_classes |= {'WhiteCube': WhiteCube, 'EditorCamera':EditorCamera, 'FirstPersonController':FirstPersonController}
 
     app.run()
 
