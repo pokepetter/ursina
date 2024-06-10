@@ -81,6 +81,7 @@ class InputField(Button):
             self.active = False
 
         if self.active:
+            self.text_field.input(key)
             return True # eat input when entering text to prevent unwanted actions while typing.
 
 
