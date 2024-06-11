@@ -17,8 +17,15 @@ def normalize_v3(arr):
 def generate_normals(vertices, triangles=None, smooth=True):
     import numpy
 
+    if not vertices:
+        raise ValueError("can't generate normals for a mesh with 0 vertices")
+
     if not triangles:
         new_tris = [(i, i+1, i+2) for i in range(0, len(vertices), 3)]
+        
+    elif not isinstance(triangles[0], int):
+        raise TypeError(f'triangles must be ints, not {type(triangles[0])} ({triangles[0]})')
+
     else:
         new_tris = [(triangles[i], triangles[i+1], triangles[i+2]) for i in range(0, len(triangles), 3)]
 
