@@ -6,7 +6,7 @@ def grid_layout(l, max_x=8, max_y=8, spacing=(0,0,0), origin=(-.5,.5,0), offset=
         origin += (0,)
     if len(offset) == 2:
         offset += (0,)
-    if not isinstance(l, list):
+    if not isinstance(l, (list, tuple)):
         print('error: grid_layout input must be a list or tuple, not', l.__class__.__name__)
         return
     x, y, z = 0, 0, 0
