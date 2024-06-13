@@ -211,8 +211,12 @@ class MeshCollider(Collider):
                                     vertex_reader.setRow(vi)
                                     verts.append(child_mat.xformPointGeneral(vertex_reader.getData3()))
 
+            # ursina uses a left handed y-up coordinate system
+            # but panda3d uses a right handed z-up coordinate system
+            verts = list(map(lambda v : Vec3(v[0],v[2],v[1]), verts))
+
             for i in range(0, len(verts)-3, 3):
-                p = CollisionPolygon(Vec3(verts[i+2]), Vec3(verts[i+1]), Vec3(verts[i]))
+                p = CollisionPolygon(verts[i+2], verts[i+1], verts[i])
                 self.collision_polygons.append(p)
 
         super().__init__(entity, self.collision_polygons, bvh=bvh, bvh_max_depth=bvh_max_depth, bvh_max_shapes=bvh_max_shapes, bvh_only_xz=bvh_only_xz, bvh_flatten=bvh_flatten)
