@@ -254,7 +254,9 @@ class Window(WindowProperties):
         if application.window_type == 'none':
             return Vec2(0,0)
 
-        return Vec2(*self.getOrigin())
+        wp = base.win.getProperties()
+        return Vec2(wp.getXOrigin(), wp.getYOrigin())
+
 
     @position.setter
     def position(self, value):

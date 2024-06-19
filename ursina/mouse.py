@@ -127,6 +127,7 @@ class Mouse:
         self._visible = value
         window.set_cursor_hidden(not value)
         if application.base:
+            # window.position = window.position
             application.base.win.requestProperties(window)
 
 
