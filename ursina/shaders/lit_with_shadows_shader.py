@@ -1,6 +1,4 @@
-from ursina import *
-
-lit_with_shadows_shader = Shader(language=Shader.GLSL, name='lit_with_shadows_shader', vertex = '''#version 150
+from ursina import Shader, Vec2, Color; lit_with_shadows_shader = Shader(language=Shader.GLSL, name='lit_with_shadows_shader', vertex = '''#version 150
 uniform struct {
     vec4 position;
     vec3 color;
@@ -13,7 +11,6 @@ uniform struct {
 } p3d_LightSource[1];
 
 const float M_PI = 3.141592653589793;
-
 
 uniform mat4 p3d_ModelViewProjectionMatrix;
 uniform mat4 p3d_ModelViewMatrix;
@@ -28,17 +25,16 @@ uniform vec2 texture_scale;
 uniform vec2 texture_offset;
 out vec2 texcoords;
 
-
-out vec3 vpos;
-out vec3 norm;
-out vec4 shad[1];
+out vec3 vertex_position;
+out vec3 normal_vector;
+out vec4 shadow_coord[1];
 out vec4 vertex_color;
 
 void main() {
     gl_Position = p3d_ModelViewProjectionMatrix * vertex;
-    vpos = vec3(p3d_ModelViewMatrix * vertex);
-    norm = normalize(p3d_NormalMatrix * normal);
-    shad[0] = p3d_LightSource[0].shadowViewMatrix * vec4(vpos, 1);
+    vertex_position = vec3(p3d_ModelViewMatrix * vertex);
+    normal_vector = normalize(p3d_NormalMatrix * normal);
+    shadow_coord[0] = p3d_LightSource[0].shadowViewMatrix * vec4(vertex_position, 1);
     texcoords = (p3d_MultiTexCoord0 * texture_scale) + texture_offset;
     vertex_color = p3d_Color;
 }
@@ -74,50 +70,53 @@ uniform struct {
     float roughness;
 } p3d_Material;
 
-in vec3 vpos;
-in vec3 norm;
-in vec4 shad[1];
+in vec3 vertex_position;
+in vec3 normal_vector;
+in vec4 shadow_coord[1];
 in vec4 vertex_color;
 
-out vec4 p3d_FragColor;
+out vec4 fragment_color;
 uniform vec4 shadow_color;
 
-uniform float shadowBlur;
-uniform int shadowSamples;
+uniform float shadow_blur;
+uniform int shadow_samples;
 
 void main() {
-    p3d_FragColor = texture(p3d_Texture0, texcoords) * p3d_ColorScale * vertex_color;
-    vec3 N = norm;
+    fragment_color = texture(p3d_Texture0, texcoords) * p3d_ColorScale * vertex_color;
+    vec3 N = normal_vector;
+
+    float shadow_samples_float = float(shadow_samples);
+    float half_shadow_blur = shadow_blur / 2.0;
 
     for (int i = 0; i < p3d_LightSource.length(); ++i) {
-        vec3 diff = p3d_LightSource[i].position.xyz - vpos * p3d_LightSource[i].position.w;
+        vec3 diff = p3d_LightSource[i].position.xyz - vertex_position * p3d_LightSource[i].position.w;
         vec3 L = normalize(diff);
 
         float NdotL = clamp(dot(N, L), 0.001, 1.0);
         vec3 color =  NdotL * p3d_LightSource[i].color / M_PI;
         const float bias = 0.001;
 
-        vec4 shadowcoord = shad[i];
-        shadowcoord.z += bias;
+        vec4 shadow_coordinates = shadow_coord[i];
+        shadow_coordinates.z += bias;
 
         vec3 converted_shadow_color = (vec3(1.,1.,1.) - shadow_color.rgb) * shadow_color.a;
-        p3d_FragColor.rgb *= p3d_LightSource[i].color.rgb;
+        fragment_color.rgb *= p3d_LightSource[i].color.rgb;
 
         float shadow = 0.0;
-        for (int x = 0; x < shadowSamples; ++x) {
-            for (int y = 0; y < shadowSamples; ++y) {
-                float dx = float(x) * shadowBlur / float(shadowSamples) - shadowBlur / 2.0;
-                float dy = float(y) * shadowBlur / float(shadowSamples) - shadowBlur / 2.0;
-                vec4 coord = shadowcoord;
+        for (int x = 0; x < shadow_samples; ++x) {
+            for (int y = 0; y < shadow_samples; ++y) {
+                float dx = float(x) * shadow_blur / shadow_samples_float - half_shadow_blur;
+                float dy = float(y) * shadow_blur / shadow_samples_float - half_shadow_blur;
+                vec4 coord = shadow_coordinates;
                 coord.x += dx;
                 coord.y += dy;
                 shadow += textureProj(p3d_LightSource[i].shadowMap, coord);
             }
         }
-        shadow /= float(shadowSamples * shadowSamples);
+        shadow /= (shadow_samples_float * shadow_samples_float);
 
-        p3d_FragColor.rgb += shadow * converted_shadow_color;
-        p3d_FragColor.rgb += color - converted_shadow_color;
+        fragment_color.rgb += shadow * converted_shadow_color;
+        fragment_color.rgb += color - converted_shadow_color;
     }
 }
 
@@ -126,8 +125,8 @@ default_input = {
     'texture_scale': Vec2(1,1),
     'texture_offset': Vec2(0,0),
     'shadow_color' : Color(0, .5, 1, .25),
-    'shadowBlur': .005,
-    'shadowSamples': 4
+    'shadow_blur': .005,
+    'shadow_samples': 4
     }
 )
 
