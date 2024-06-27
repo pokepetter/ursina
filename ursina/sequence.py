@@ -17,7 +17,7 @@ class Func:
 
 class Sequence:
     default_time_step = None
-    defaults = dict(unscaled=False, started=False, ignore_paused=False, loop=False, auto_destroy=False, entity=None)
+    defaults = dict(unscaled=False, started=False, ignore_paused=False, loop=False, auto_destroy=False, entity=None, name='sequence')
 
     def __init__(self, *args, **kwargs):
         super().__init__()

@@ -1084,9 +1084,6 @@ class Entity(NodePath, metaclass=PostInitCaller):
         if self.ignore_paused:
             unscaled = True
 
-        if delay:
-            return invoke(self.animate, name, value, duration=duration, curve=curve, loop=loop, resolution=resolution, time_step=time_step, auto_destroy=auto_destroy, delay=delay, unscaled=unscaled, ignore_paused=self.ignore_paused)
-
         animator_name = name + '_animator'
         # print('start animating value:', name, animator_name )
         if interrupt and hasattr(self, animator_name):
@@ -1095,8 +1092,9 @@ class Entity(NodePath, metaclass=PostInitCaller):
         if hasattr(self, animator_name) and getattr(self, animator_name) in self.animations:
             self.animations.remove(getattr(self, animator_name))
 
-        sequence = Sequence(loop=loop, time_step=time_step, auto_destroy=auto_destroy, unscaled=unscaled, ignore_paused=self.ignore_paused)
-
+        sequence = Sequence(loop=loop, time_step=time_step, auto_destroy=auto_destroy, unscaled=unscaled, ignore_paused=self.ignore_paused, name=name)
+        sequence.append(Wait(delay))
+        
         setattr(self, animator_name, sequence)
         self.animations.append(sequence)
 
