@@ -16,6 +16,12 @@ from ursina.sequence import Func
 
 import panda3d.core as p3d
 
+try:
+    from warnings import deprecated
+except:
+    from ursina.scripts.deprecated_decorator import deprecated
+
+
 class MeshModes(Enum):
     triangle = 'triangle'
     ngon = 'ngon'
@@ -296,20 +302,21 @@ class Mesh(p3d.NodePath):
         self._generated_vertices = value
 
     @property
+    @deprecated("Use .serialize() instead of .recipe")
     def recipe(self):
-        if hasattr(self, '_recipe'):
-            return self._recipe
+        return self.serialize()
 
+    def serialize(self, vertex_decimal_limit=4, color_decimal_limit=4, uv_decimal_limit=4, normal_decimal_limit=4):
         vbuf_format = self.vertex_buffer_format
         if vbuf_format is not None:
             vbuf_format = f'"{vbuf_format}"'
 
         mesh_as_string = 'Mesh('
-        mesh_as_string += f'\n    vertices={[tuple(e) for e in self.vertices]},' if self.vertices else ''
+        mesh_as_string += f'\n    vertices={[tuple(round(e, vertex_decimal_limit) for e in vert) for vert in self.vertices]},' if self.vertices else ''
         mesh_as_string += f'\n    triangles={self.triangles},' if self.triangles else ''
-        mesh_as_string += f'\n    colors={[tuple(e) for e in self.colors]},' if self.colors else ''
-        mesh_as_string += f'\n    uvs={[tuple(e) for e in self.uvs]},' if self.uvs else ''
-        mesh_as_string += f'\n    normals={[tuple(e) for e in self.normals]},' if self.normals else ''
+        mesh_as_string += f'\n    colors={[tuple(round(e, color_decimal_limit) for e in col) for col in self.colors]},' if self.colors else ''
+        mesh_as_string += f'\n    uvs={[tuple(round(e, uv_decimal_limit) for e in uv) for uv in self.uvs]},' if self.uvs else ''
+        mesh_as_string += f'\n    normals={[tuple(round(e, normal_decimal_limit) for e in norm) for norm in self.normals]},' if self.normals else ''
         mesh_as_string += f'\n    static={self.static},' if not self.static else ''
         mesh_as_string += f'\n    mode="{self.mode}",' if self.mode != 'triangle' else ''
         mesh_as_string += f'\n    thickness={self.thickness},' if self.thickness != 1 else ''
@@ -335,7 +342,7 @@ class Mesh(p3d.NodePath):
         if not self.name == 'mesh':
             return self.name
         else:
-            return self.recipe
+            return self.serialize()
 
     def __str__(self):
         if hasattr(self, 'name'):
@@ -405,7 +412,7 @@ class Mesh(p3d.NodePath):
         if regenerate:
             self.generate()
 
-    def save(self, name='', folder:Path=Func(getattr, application, 'compressed_models_folder'), flip_faces=False, max_decimals=16):
+    def save(self, name='', folder:Path=Func(getattr, application, 'compressed_models_folder'), flip_faces=False, vertex_decimal_limit=5, color_decimal_limit=4):
         if callable(folder):
             folder = folder()
         if not folder.exists():
@@ -418,8 +425,8 @@ class Mesh(p3d.NodePath):
 
         if name.endswith('ursinamesh'):
             with open(folder / name, 'w') as f:
-                f.write(self.recipe)
-            print('saved .ursinamesh to:', folder / name)
+                f.write(self.serialize(vertex_decimal_limit=vertex_decimal_limit, color_decimal_limit=color_decimal_limit))
+            print('saved .ursinamesh to:', folder / name, 'vertex_decimal_limit:', vertex_decimal_limit, 'color_decimal_limit:', color_decimal_limit)
 
 
         elif name.endswith('.obj'):
@@ -587,6 +594,6 @@ if __name__ == '__main__':
     EditorCamera()
 
     # m = Mesh()
-    print(load_model('cube', application.internal_models_compressed_folder, use_deepcopy=True).recipe)
-
+    print(load_model('sphere', application.internal_models_compressed_folder, use_deepcopy=True).serialize())
+    # print()
     app.run()
