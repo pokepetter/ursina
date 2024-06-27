@@ -24,7 +24,7 @@ def play(track_name, fade_out_duration=2):
             return
         tracks[track_name] = audio_instance
 
-    if current_track is None: # if no music polay, start immediatley
+    if current_track is None: # if no music playing, start immediately
         tracks[track_name].play()
         current_track = track_name
         return
