@@ -63,7 +63,7 @@ class FrameAnimation3d(Entity):
 
 
     def __setattr__(self, name, value):
-        if hasattr(self, 'frames') and name in ('color', 'origin', 'texture'):
+        if hasattr(self, 'frames') and name in ('color', 'origin', 'texture', 'texture_scale', 'texture_offset'):
             for f in self.frames:
                 setattr(f, name, value)
 
