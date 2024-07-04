@@ -302,7 +302,7 @@ def obj_to_ursinamesh(folder=Func(getattr, application, 'compressed_models_folde
                     if current_color:
                         vertex_colors.extend([current_color for i in range(3)])
                     elif vertex_colors_packed:
-                        vertex_colors.extend([vertex_colors_packed[idx] for idx in tri])
+                        vertex_colors.extend([vertex_colors_packed[idx] if idx < len(vertex_colors_packed) else color.white for idx in tri])
 
                 elif len(tri) == 4:
                     tris.extend((tri[0], tri[1], tri[2], tri[2], tri[3], tri[0]))
