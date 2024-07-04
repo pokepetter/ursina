@@ -80,7 +80,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
             _stack = stack()
             caller = getframeinfo(_stack[1][0])
             if len(_stack) > 2 and _stack[1].code_context and 'super().__init__()' in _stack[1].code_context[0]:
-                caller = getframeinfo(_stack[2][0])
+                caller = getframeinfo(_stack[3][0])
 
             self.line_definition = caller
             if caller.code_context:
