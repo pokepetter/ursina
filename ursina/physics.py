@@ -4,7 +4,7 @@ from ursina.scripts.property_generator import generate_properties_for_class
 from ursina import Entity, scene, time, Vec3
 
 @generate_properties_for_class()
-class PhysicsHandler(Entity):
+class _PhysicsHandler(Entity):
     def __init__(self):
         super().__init__()
         self._debugNode = BulletDebugNode('Debug')
@@ -29,7 +29,7 @@ class PhysicsHandler(Entity):
             self.debug_node_path.show()
         else:
             self.debug_node_path.hide()
-physics_handler = PhysicsHandler()
+physics_handler = _PhysicsHandler()
 
 
 class PlaneShape:
@@ -61,7 +61,7 @@ class MeshShape:
         self.center = center
 
 
-class PhysicsBody:
+class _PhysicsBody:
     # Not worth rewriting from scratch
     animate = Entity.animate
 
@@ -177,9 +177,9 @@ class PhysicsBody:
             self.node_path.node().applyCentralForce(force)
 
 
-class RigidBody(PhysicsBody):
+class RigidBody(_PhysicsBody):
     def __init__(self, shape, world=physics_handler.world, entity=None, mass=0, kinematic=False, friction=.5, mask=0x1):
-        if not physics_handler.active:
+        if not physics_handler.active and world is physics_handler.world:
             physics_handler.active = True
         super().__init__(name='RigidBody', world=world)
         self.rigid_body_node = BulletRigidBodyNode('RigidBody')
