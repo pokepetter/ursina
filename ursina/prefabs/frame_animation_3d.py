@@ -3,7 +3,8 @@ from ursina import *
 
 class FrameAnimation3d(Entity):
     def __init__(self, name, fps=12, loop=True, autoplay=True, frame_times=None, auto_destroy=False, **kwargs):
-        super().__init__()
+        super().__init__(name=name)
+        self.play = self.start
 
         model_folders = [application.compressed_models_folder, application.asset_folder]
         model_names = find_sequence(name, ('*',), folders=model_folders)
