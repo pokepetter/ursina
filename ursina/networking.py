@@ -868,7 +868,7 @@ class RPCPeer:
         if proc_func is not None and proc_arg_types is not None and proc_arg_values is not None:
             if len(proc_arg_values) != len(proc_arg_types):
                 print("WARNING: Received invalid remote procedure call, disconnecting...")
-                print("Received an invalid number of arguments for procedure '{proc_name}'.")
+                print(f"Received an invalid number of arguments for procedure '{proc_name}'.")
                 connection.disconnect()
             else:
                 if self.peer.is_hosting():
