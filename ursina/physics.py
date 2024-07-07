@@ -226,7 +226,7 @@ def _convert_shape(shape, entity, dynamic=True):
             axis = ZUp
         elif shape.axis == 'x':
             axis = XUp
-        return BulletCapsuleShape(shape.radius / 2, shape.height / 2, axis)
+        return BulletCapsuleShape(shape.radius, shape.height-1, axis)
 
     elif isinstance(shape, MeshShape):
         if entity:
@@ -267,10 +267,9 @@ if __name__ == '__main__':
     platform_sequence = Sequence(entity=platform, loop=True)
 
     path = [Vec3(-2,1,-2), Vec3(2,1,-2), Vec3(0, 1, 2)]
-    path.append(path[0])    # make it loop back to start
     travel_time = 2
     for target_pos in path:
-        platform_sequence.append(Func(platform_body.animate_position, value=target_pos, duration=travel_time, curve=curve.linear), regenerate=True)
+        platform_sequence.append(Func(platform_body.animate_position, value=target_pos, duration=travel_time, curve=curve.linear))
         platform_sequence.append(Wait(travel_time), regenerate=True)
     platform_sequence.start()
 
