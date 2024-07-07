@@ -259,8 +259,8 @@ if __name__ == '__main__':
     sphere = Entity(model='sphere', texture='brick', y=30)
     RigidBody(shape=SphereShape(), entity=sphere, mass=5)
 
-    capsule = Entity(model=Capsule(height=2, radius=1), texture='brick', y=17)
-    RigidBody(shape=CapsuleShape(height=2, radius=1), entity=capsule, mass=3)
+    capsule = Entity(model=Capsule(height=2, radius=.5), texture='brick', y=17)
+    RigidBody(shape=CapsuleShape(height=2, radius=.5), entity=capsule, mass=3)
 
     platform = Entity(model='cube', texture='white_cube', y=1, scale=(4,1,4))
     platform_body = RigidBody(shape=BoxShape(), entity=platform, kinematic=True, friction=1)
@@ -269,8 +269,8 @@ if __name__ == '__main__':
     path = [Vec3(-2,1,-2), Vec3(2,1,-2), Vec3(0, 1, 2)]
     travel_time = 2
     for target_pos in path:
-        platform_sequence.append(Func(platform_body.animate_position, value=target_pos, duration=travel_time, curve=curve.linear))
-        platform_sequence.append(Wait(travel_time), regenerate=True)
+        platform_sequence.append(Func(platform_body.animate_position, value=target_pos, duration=travel_time, curve=curve.linear), regenerate=False)
+        platform_sequence.append(Wait(travel_time))
     platform_sequence.start()
 
     def input(key):
