@@ -6,7 +6,6 @@ from ursina import Entity, scene, time, Vec3
 @generate_properties_for_class()
 class _PhysicsHandler(Entity):
     def __init__(self):
-        super().__init__()
         self._debugNode = BulletDebugNode('Debug')
         self._debugNode.showWireframe(True)
         self._debugNode.showConstraints(True)
@@ -17,6 +16,7 @@ class _PhysicsHandler(Entity):
         self.world = BulletWorld()
         self.world.setGravity(Vec3(0, -9.806, 0))
         self.world.setDebugNode(self.debug_node_path.node())
+        super().__init__()
 
         self.active = False
 
@@ -62,7 +62,7 @@ class MeshShape:
 
 
 class _PhysicsBody:
-    # Not worth rewriting from scratch
+    # Copy animation functions from Entity
     animate = Entity.animate
 
     animate_position = Entity.animate_position
