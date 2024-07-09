@@ -1224,7 +1224,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
         self._pq.sort_entries()
         entries = self._pq.getEntries()
-        entities = [e.get_into_node_path().parent.getPythonTag('Entity') for e in entries]
+        entities = [e.get_into_node_path().parent for e in entries]
 
         entries = [        # filter out ignored entities
             e for i, e in enumerate(entries)
