@@ -42,14 +42,6 @@ class PeerEvent(Enum):
     DATA = auto()
 
 
-# Used internally by Peer.
-class PeerInput(Enum):
-    ERROR = auto()
-    SEND = auto()
-    DISCONNECT = auto()
-    DISCONNECT_ALL = auto()
-
-
 # This class represents and single connection.
 # It can be hashed and compared so that it may be used as a dictionary key.
 # This is useful for mapping from a connection to player data.
@@ -83,7 +75,10 @@ class Connection:
         b = bytearray()
         b += struct.pack(">H", len(data))
         b += data
-        self.socket.sendall(b)
+        try:
+            self.socket.sendall(b)
+        except:
+            pass
 
     def disconnect(self):
         if self.connected:
