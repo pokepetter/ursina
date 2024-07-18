@@ -99,7 +99,10 @@ def _destroy(entity, force_destroy=False):
 
     if hasattr(entity, '_parent') and entity._parent and hasattr(entity._parent, '_children') and entity in entity._parent._children:
         entity._parent._children.remove(entity)
-
+        
+    for e in entity.loose_children:
+        destroy(e)
+        
     if hasattr(entity, '_loose_parent') and entity._loose_parent and hasattr(entity._loose_parent, '_loose_children') and entity in entity._loose_parent._loose_children:
         entity._loose_parent._loose_children.remove(entity)
 

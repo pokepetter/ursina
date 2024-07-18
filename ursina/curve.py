@@ -225,6 +225,22 @@ def in_out_bounce(t):
 
     return (out_bounce((t * 2) - 1) * .5) + .5
 
+def zero(t):
+    return 0    
+
+def combine(curve_a, curve_b, split_at):
+    def new_curve_func(t):
+        if t < split_at:
+            return curve_a(t / split_at)
+        else:
+            return curve_b(min((t / (1-split_at)) - split_at, 1))
+    return new_curve_func
+
+def reverse(curve_function):
+    def new_curve_func(t):
+        return curve_function(1-t)
+    return new_curve_func
+
 
 # generate boomeranged versions of all the functions
 import sys
@@ -329,21 +345,26 @@ if __name__ == '__main__':
     camera.position = (9, 6)
     window.color = color.black
 
-    i = 0
-    for e in dir(curve):
-        try:
-            item = getattr(curve, e)
-            print(item.__name__, ':', item(.75))
-            curve_renderer = Entity(
-                model=Mesh(vertices=[Vec3(i / 31, item(i / 31), 0) for i in range(32)], mode='line', thickness=2),
-                color=color.light_gray)
-            row = floor(i / 8)
-            curve_renderer.x = (i % 8) * 2.5
-            curve_renderer.y = row * 1.75
-            label = Text(parent=curve_renderer, text=item.__name__, scale=8, color=color.gray, y=-.1)
-            i += 1
-        except:
-            pass
+    def render_curve(curve_function, name):
+        curve_renderer = Entity(model=Mesh(vertices=[Vec3(i / 31, curve_function(i / 31), 0) for i in range(32)], mode='line', thickness=2), color=color.light_gray)
+        label = Text(parent=curve_renderer, text=name, scale=8, color=color.gray, y=-.1)
+        return curve_renderer
+
+    # j = 0
+    # for e in dir(curve):
+    #     try:
+    #         item = getattr(curve, e)
+    #         print(item.__name__, ':', item(.75))
+    #         curve_renderer = render_curve(item, item.__name__)
+    #         row = floor(j / 8)
+    #         curve_renderer.x = (j % 8) * 2.5
+    #         curve_renderer.y = row * 1.75
+    #         label = Text(parent=curve_renderer, text=item.__name__, scale=8, color=color.gray, y=-.1)
+    #         j += 1
+    #     except:
+    #         pass
+
+    
 
     c = CubicBezier(0, .5, 1, .5)
     print('-----------', c.calculate(.23))
@@ -353,6 +374,12 @@ if __name__ == '__main__':
 
     window.exit_button.visible = False
     window.fps_counter.enabled = False
+
+    custom_curve = combine(linear, reverse(in_expo), .25)
+    render_curve(custom_curve, 'custom_curve')
+    # for i in range(10):
+    #     print(custom_curve, i/10)
+    EditorCamera()
     app.run()
     '''
     These are used by Entity when animating, like this:
