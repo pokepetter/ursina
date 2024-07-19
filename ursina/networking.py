@@ -152,7 +152,7 @@ class Connection:
 # -- Address family --
 # The socket address family can be either "INET" (ipv4) or "INET6" (ipv6).
 # -- Notes --
-# Keep in mind that the networking in running on its own thread and you must therefor check if it's running (is_running).
+# Keep in mind that the networking in running on its own thread and you must therefore check if it's running (is_running).
 class Peer:
     def __init__(self, on_connect=None, on_disconnect=None, on_data=None, on_raw_data=None,
                  connection_timeout=None,
