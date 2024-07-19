@@ -184,7 +184,6 @@ class Peer:
 
         self.socket = None
         self.listen_socket = None
-        self.tls_listen_socket = None
         self.host_name = None
         self.tls_host_name = None
         self.port = None
