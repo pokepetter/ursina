@@ -23,7 +23,7 @@ keyboard_keys = '1234567890qwertyuiopasdfghjklzxcvbnm'
 from ursina.scripts.singleton_decorator import singleton
 @singleton
 class Ursina(ShowBase):
-    def __init__(self, title='ursina', icon='textures/ursina.ico', borderless=True, fullscreen=False, size=None, forced_aspect_ratio=None, position=None, vsync=True, editor_ui_enabled=True, window_type='onscreen', development_mode=True, render_mode=None, show_ursina_splash=False, **kwargs):
+    def __init__(self, title='ursina', icon='textures/ursina.ico', borderless=False, fullscreen=False, size=None, forced_aspect_ratio=None, position=None, vsync=True, editor_ui_enabled=True, window_type='onscreen', development_mode=True, render_mode=None, show_ursina_splash=False, **kwargs):
         """The main class of Ursina. This class is a singleton, so you can only have one instance of it.
 
         Keyword Args (optional):
@@ -88,6 +88,8 @@ class Ursina(ShowBase):
             'control-mouse1' : 'left mouse down', 'control-mouse2' : 'middle mouse down', 'control-mouse3' : 'right mouse down',
             'shift-mouse1' : 'left mouse down', 'shift-mouse2' : 'middle mouse down', 'shift-mouse3' : 'right mouse down',
             'alt-mouse1' : 'left mouse down', 'alt-mouse2' : 'middle mouse down', 'alt-mouse3' : 'right mouse down',
+            'control-alt-mouse1' : 'left mouse down', 'control-alt-mouse2' : 'middle mouse down', 'control-alt-mouse3' : 'right mouse down',
+            'shift-control-alt-mouse1' : 'left mouse down', 'shift-control-alt-mouse2' : 'middle mouse down', 'shift-control-alt-mouse3' : 'right mouse down',
             'page_down' : 'page down', 'page_down up' : 'page down up', 'page_up' : 'page up', 'page_up up' : 'page up up',
             }
 
@@ -330,7 +332,7 @@ class Ursina(ShowBase):
 
 if __name__ == '__main__':
     from ursina import *
-    app = Ursina(use_ingame_console=True)
+    app = Ursina(development_mode=False, use_ingame_console=True)
     def input(key):
         print(key)
     app.run()
