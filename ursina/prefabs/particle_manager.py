@@ -42,8 +42,8 @@ in vec3 position;
 in vec3 velocity;
 in float lifetime;
 in float delay;
-in vec2 init_scale;
-in vec2 end_scale;
+in vec3 init_scale;
+in vec3 end_scale;
 in vec4 init_color;
 in vec4 end_color;
 
@@ -75,17 +75,17 @@ void main() {
     }
     discard_frag = 0;
 
-    vec3 new_scale = vec3(mix(init_scale, end_scale, life), 1.0);
+    vec4 new_scale = vec4(mix(init_scale, end_scale, life), 1.0);
 
-    vec3 v = p3d_Vertex.xyz * new_scale;
+    vec4 v = p3d_Vertex * new_scale;
     
     texcoord = p3d_MultiTexCoord0;
 
     new_color = mix(init_color, end_color, life);
 
-    vec3 adjusted_position = position+velocity*adjusted_time + 0.5*gravity*adjusted_time*adjusted_time;
+    vec3 adjusted_position = (position+velocity*adjusted_time + 0.5*gravity*adjusted_time*adjusted_time);
 
-    gl_Position = p3d_ModelViewProjectionMatrix * vec4(v + adjusted_position, 1.0);
+    gl_Position = gl_ModelViewProjectionMatrix * vec4((v.xyz + adjusted_position), p3d_Vertex.w);
 }""",
         fragment="""#version 140
 
@@ -111,6 +111,8 @@ void main() {
         simulation_speed=1,
         gravity=Vec3(0, -9.8, 0),
         particles=[],
+        billboard=True,
+        model="quad",
         **kwargs,
     ):
         """Creates a new ParticleManager
@@ -123,8 +125,8 @@ void main() {
         """
         self.instance = ParticleManager.i
         super().__init__(
-            model=Quad(segments=0),
-            billboard=True,
+            model=model,
+            billboard=billboard,
             shader=ParticleManager.particle_shader,
         )
         ParticleManager.i += 1
@@ -137,7 +139,7 @@ void main() {
 
         for key, value in kwargs.items():
             setattr(self, key, value)
-
+        
         self.geom_node = self.find("**/+GeomNode").node()
 
         if self.geom_node.getNumGeoms() == 0:
@@ -147,6 +149,9 @@ void main() {
             raise Exception("No vertex data found")
 
         if self.geom_node.getGeom(0).getVertexData().getNumRows() > 0:
+            
+            self._model_nb_rows = self.geom_node.getGeom(0).getVertexData().getNumRows()
+        
             self.iformat = GeomVertexArrayFormat()
             self.iformat.setDivisor(1)
             self.iformat.addColumn(f"position", 3, Geom.NT_stdfloat, Geom.C_vector)
@@ -155,8 +160,8 @@ void main() {
             self.iformat.addColumn(f"lifetime", 1, Geom.NT_stdfloat, Geom.C_vector)
             self.iformat.addColumn(f"delay", 1, Geom.NT_stdfloat, Geom.C_vector)
 
-            self.iformat.addColumn(f"init_scale", 2, Geom.NT_stdfloat, Geom.C_vector)
-            self.iformat.addColumn(f"end_scale", 2, Geom.NT_stdfloat, Geom.C_vector)
+            self.iformat.addColumn(f"init_scale", 3, Geom.NT_stdfloat, Geom.C_vector)
+            self.iformat.addColumn(f"end_scale", 3, Geom.NT_stdfloat, Geom.C_vector)
 
             self.iformat.addColumn(f"init_color", 4, Geom.NT_stdfloat, Geom.C_vector)
             self.iformat.addColumn(f"end_color", 4, Geom.NT_stdfloat, Geom.C_vector)
@@ -164,15 +169,16 @@ void main() {
             self.vformat = GeomVertexFormat(
                 self.geom_node.getGeom(0).getVertexData().getFormat()
             )
+            
             self.vformat.addArray(self.iformat)
             self.vformat = GeomVertexFormat.registerFormat(self.vformat)
+
 
             self.vdata = self.geom_node.modifyGeom(0).modifyVertexData()
             self.vdata.setFormat(self.vformat)
 
             if self.vdata.getFormat() != self.vformat:
                 raise Exception("Vertex data format mismatch")
-            print("Fuck")
             self.apply()
         else:
             raise Exception("No vertex data found")
@@ -185,7 +191,7 @@ void main() {
     def apply(self):
         to_generate = min(len(self.particles), ParticleManager.max_particles)
 
-        self.vdata.setNumRows(to_generate)
+        self.vdata.setNumRows(to_generate + self._model_nb_rows)
 
         position_i = GeomVertexWriter(self.vdata, f"position")
         velocity_i = GeomVertexWriter(self.vdata, f"velocity")
@@ -207,8 +213,8 @@ void main() {
             lifetime_i.add_data1(particle.lifetime)
             delay_i.add_data1(particle.delay)
 
-            init_scale_i.add_data2(*particle.init_scale)
-            end_scale_i.add_data2(*particle.end_scale)
+            init_scale_i.add_data3(*particle.init_scale)
+            end_scale_i.add_data3(*particle.end_scale)
 
             init_color_i.add_data4(*particle.init_color)
             end_color_i.add_data4(*particle.end_color)
