@@ -23,7 +23,7 @@ keyboard_keys = '1234567890qwertyuiopasdfghjklzxcvbnm'
 from ursina.scripts.singleton_decorator import singleton
 @singleton
 class Ursina(ShowBase):
-    def __init__(self, title='ursina', icon='textures/ursina.ico', borderless=True, fullscreen=False, size=None, forced_aspect_ratio=None, position=None, vsync=True, editor_ui_enabled=True, window_type='onscreen', development_mode=True, render_mode=None, show_ursina_splash=False, **kwargs):
+    def __init__(self, title='ursina', icon='textures/ursina.ico', borderless=True, fullscreen=False, size=None, forced_aspect_ratio=None, position=None, vsync=True, editor_ui_enabled=True, window_type='onscreen', development_mode=True, render_mode=None, show_ursina_splash=False, offset=(0,0), **kwargs):
         """The main class of Ursina. This class is a singleton, so you can only have one instance of it.
 
         Keyword Args (optional):
@@ -38,14 +38,14 @@ class Ursina(ShowBase):
             render_mode (str): The render mode of the window.\n
             development_mode (bool): Whether the development mode should be enabled or not.\n
             editor_ui_enabled (bool): Whether the editor UI should be enabled or not.\n
-            window_type (str): The type of the window. Can be 'onscreen', 'offscreen' or 'none'.\n
+            window_type (str): The type of the window. Can be 'onscreen', 'offscreen', 'tkinter' or 'none'.\n
         """
         entity._warn_if_ursina_not_instantiated = False
-        application.window_type = window_type
+        application.window_type = window_type 
         application.base = self
         application.development_mode = development_mode
         application.show_ursina_splash = show_ursina_splash
-
+        
         try:
             import gltf
             gltf.patch_loader(self.loader)
@@ -61,11 +61,24 @@ class Ursina(ShowBase):
         window.ready(title=title, icon=icon,
             borderless=borderless, fullscreen=fullscreen, size=size, forced_aspect_ratio=forced_aspect_ratio, position=position, vsync=vsync, window_type=window_type,
             editor_ui_enabled=editor_ui_enabled, render_mode=render_mode)
+        
+        super().__init__(windowType=(application.window_type if application.window_type!="tkinter" else 'none'))
+        
+        if application.window_type == 'tkinter':
+            self.startTk()
+            self.tkRoot.geometry(f"{size[0]}x{size[1]}")
+            self.tkRoot.title(title)
+            self.tkRoot.update()
+            id = self.tkRoot.winfo_id()
+            window.late_ready(id=id, offset=offset)
+            
+            self.make_default_pipe()
+            self.open_main_window(props=window)
 
-        super().__init__(windowType=application.window_type)
+            
         window.apply_settings()
         # camera
-        if application.window_type != 'none':
+        if window_type != 'none':
             camera._cam = self.camera
             camera._cam.reparent_to(camera)
             camera.render = self.render
@@ -74,11 +87,12 @@ class Ursina(ShowBase):
             camera.set_up()
 
         # input
-        if application.window_type == 'onscreen':
+        if application.window_type in ('onscreen',"tkinter"):
             self.buttonThrowers[0].node().setButtonDownEvent('buttonDown')
             self.buttonThrowers[0].node().setButtonUpEvent('buttonUp')
             self.buttonThrowers[0].node().setButtonRepeatEvent('buttonHold')
             self.buttonThrowers[0].node().setKeystrokeEvent('keystroke')
+            
         self._input_name_changes = {
             'mouse1' : 'left mouse down', 'mouse1 up' : 'left mouse up', 'mouse2' : 'middle mouse down', 'mouse2 up' : 'middle mouse up', 'mouse3' : 'right mouse down', 'mouse3 up' : 'right mouse up',
             'wheel_up' : 'scroll up', 'wheel_down' : 'scroll down',
@@ -153,9 +167,16 @@ class Ursina(ShowBase):
         print('package_folder:', application.package_folder)
         print('asset_folder:', application.asset_folder)
 
+        window.update_aspect_ratio()
         entity._Ursina_instance = self
 
 
+    def getTkWindow(self):
+        if application.window_type == "tkinter":
+            return self.tkRoot
+        else:
+            return None
+    
     def _update(self, task):
         """Internal task that runs every frame. Updates time, mouse, sequences and entities."""
         if application.calculate_dt:
@@ -274,6 +295,10 @@ class Ursina(ShowBase):
                                 break_outer = True
                                 break
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> origin/main
         mouse.input(key)
 
 
