@@ -28,12 +28,17 @@ class LevelEditor(Entity):
         self.point_renderer = Entity(parent=self, model=Mesh([], mode='point', thickness=.1, render_points_in_3d=True), texture='circle_outlined', always_on_top=True, unlit=True, render_queue=1)
         self.cubes = [Entity(wireframe=True, color=color.azure, parent=self, enabled=True) for i in range(128)] # max selection
 
-        self.origin_mode_menu = ButtonGroup(['last', 'center', 'individual'], min_selection=1, position=window.top, parent=self.ui)
+        self.origin_mode_menu = ButtonGroup(['last', 'center', 'individual'], min_selection=1, position=window.top_left+Vec2(.45,0), parent=self.ui)
         self.origin_mode_menu.scale *= .5
         self.origin_mode_menu.on_value_changed = self.render_selection
-        self.local_global_menu = ButtonGroup(['local', 'global'], default='global', min_selection=1, position=window.top - Vec2(.2,0), parent=self.ui)
+        self.local_global_menu = ButtonGroup(['local', 'global'], default='global', min_selection=1, position=window.top_left+Vec2(.25,0), parent=self.ui)
         self.local_global_menu.scale *= .5
         self.local_global_menu.on_value_changed = self.render_selection
+        # self.play_button = Button(parent=camera.ui, position=window.top, scale=.02, text='p', origin_y=.5)
+        # def play_button_on_click():
+        #     self.edit_mode = not self.edit_mode
+        # self.play_button.on_click = play_button_on_click
+
         self.target_fov = 90
 
         self.sun_handler = SunHandler()
@@ -157,6 +162,9 @@ class LevelEditor(Entity):
 
     @edit_mode.setter
     def edit_mode(self, value):
+        if not self.current_scene:
+            return
+
         if not value and self._edit_mode:   # enter play mode
             for e in self.children:
                 e.ignore = True
@@ -233,7 +241,7 @@ class LevelEditor(Entity):
 
         # self.point_renderer.model.colors = [color.azure if e in self.selection else lerp(color.orange, color.hsv(0,0,1,0), distance(e.world_position, camera.world_position)/100) for e in self.entities if e.selectable and not e.collider]
         self.point_renderer.model.triangles = []
-        # print('--------------', len(self.point_renderer.model.vertices), len(self.point_renderer.model.colors), self.point_renderer.model.recipe)
+        # print('--------------', len(self.point_renderer.model.vertices), len(self.point_renderer.model.colors), self.point_renderer.model.serialize())
         self.point_renderer.model.generate()
 
         # self.gizmo.enabled = bool(self.selection and self.selection[-1])
@@ -401,7 +409,8 @@ class LevelEditorScene:
 
         self.selection = []
         self.entities = []
-        destroy(self.scene_parent)
+        if self.scene_parent:
+            destroy(self.scene_parent)
 
 
 class Undo(Entity):
@@ -1322,7 +1331,7 @@ class ClassSpawner(Entity):
             print_warning('class to spawn not found in LEVEL_EDITOR.class_menu.available_classes:', self.class_to_spawn)
             return
 
-        if self.class_to_spawn:
+        if self.class_to_spawn and self.class_to_spawn != 'None':
             print('spawn class', self.class_to_spawn)
             self.class_instance = LEVEL_EDITOR.class_menu.available_classes[self.class_to_spawn](world_transform=self.world_transform, add_to_scene_entities=False)
 
@@ -2484,9 +2493,12 @@ if __name__ == '__main__':
     # level_editor.goto_scene(0,0)
 
 
-
-    level_editor.class_menu.available_classes |= {'WhiteCube': WhiteCube, 'EditorCamera':EditorCamera, }
-
+    from ursina.prefabs.first_person_controller import FirstPersonController
+    level_editor.class_menu.available_classes |= {'WhiteCube': WhiteCube, 'EditorCamera':EditorCamera, 'FirstPersonController':FirstPersonController}
+    from ursina.shaders import ssao_shader
+    # camera.clip_plane_far = 100
+    # camera.clip_plane_near = 1
+    # camera.shader = ssao_shader
     app.run()
 
 

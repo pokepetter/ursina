@@ -20,7 +20,8 @@ Platformer<br>
 <a href="https://github.com/pokepetter/ursina/blob/master/samples/platformer.py">https://github.com/pokepetter/ursina/blob/master/samples/platformer.py</a><br>
 <br>
 <img src="icons/platformer.jpg"></img> <br>
-<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><gray># t = time.time()</gray>
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>import</purple> time
+<gray># t = time.time()</gray>
 
 <purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina.prefabs.platformer_controller_<yellow>2</yellow>d <purple>import</purple> PlatformerController<yellow>2</yellow>d
@@ -59,6 +60,7 @@ input_handler.bind(<green>'gamepad a'</green>, <green>'space'</green>)
 player.add_script(NoclipMode<yellow>2</yellow>d())
 
 app.run()
+
 </div><script>
 function copy_to_clipboard(containerid) {
     var range = document.createRange()

@@ -7,6 +7,7 @@ from ursina import color, application
 from ursina.scene import instance as scene    # for toggling collider visibility
 from ursina.string_utilities import print_info, print_warning
 from screeninfo import get_monitors
+from ursina import input_handler
 
 
 class Window(WindowProperties):
@@ -160,10 +161,10 @@ class Window(WindowProperties):
         self.input_entity = Entity(name = 'window.input_entity', input=window_input)
 
         self.exit_button = Button(parent=self.editor_ui, text='x', eternal=True, ignore_paused=True, origin=(.5, .5), enabled=self.borderless,
-            position=self.top_right, z=-999, scale=(.05, .025), color=color.red.tint(-.2), on_click=application.quit, name='exit_button')
+            position=self.top_right, z=-999, scale=(.05, .025), color=color.red.tint(-.2), shortcuts=('control+shift+alt+q', 'alt+f4'), on_click=application.quit, name='exit_button')
 
         def _exit_button_input(key):
-            if held_keys['shift'] and key == 'q' and not mouse.right:
+            if input_handler.get_combined_key(key) in self.exit_button.shortcuts:
                 self.exit_button.on_click()
         self.exit_button.input = _exit_button_input
 
@@ -258,7 +259,9 @@ class Window(WindowProperties):
         if application.window_type =='none':
             return Vec2(0,0)
 
-        return Vec2(*self.getOrigin())
+        wp = base.win.getProperties()
+        return Vec2(wp.getXOrigin(), wp.getYOrigin())
+
 
     @position.setter
     def position(self, value):

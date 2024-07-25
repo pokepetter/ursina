@@ -5,7 +5,8 @@
 <a href="https://github.com/pokepetter/ursina/blob/master/samples/clicker_game.py">https://github.com/pokepetter/ursina/blob/master/samples/clicker_game.py</a>
 
 # image icons/installation_guide.jpg
-```'''
+```
+'''
 clicker game
 make a gold counter
 make a button
@@ -69,4 +70,5 @@ def update():
 
 
 app.run()
+
 ```

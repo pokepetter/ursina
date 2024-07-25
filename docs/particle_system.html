@@ -20,7 +20,8 @@ Particle System<br>
 <a href="https://github.com/pokepetter/ursina/blob/master/samples/particle_system.py">https://github.com/pokepetter/ursina/blob/master/samples/particle_system.py</a><br>
 <br>
 <img src="icons/particle_system.jpg"></img> <br>
-<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>import</purple> numpy as np
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+<purple>import</purple> numpy as np
 
 number_of_particles = <yellow>1</yellow><yellow>0</yellow><yellow>0</yellow><yellow>0</yellow>   <gray># keep this as low as possible</gray>
 points = np.array([Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>) <purple>for</purple> i in <blue>range</blue>(number_of_particles)])
@@ -65,6 +66,7 @@ class ParticleSystem(<olive>Entity</olive>):
     EditorCamera()
 
     app.run()
+
 </div><script>
 function copy_to_clipboard(containerid) {
     var range = document.createRange()

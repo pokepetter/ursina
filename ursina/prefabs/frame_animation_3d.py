@@ -2,8 +2,9 @@ from ursina import *
 
 
 class FrameAnimation3d(Entity):
-    def __init__(self, name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs):
-        super().__init__()
+    def __init__(self, name, fps=12, loop=True, autoplay=True, frame_times=None, auto_destroy=False, **kwargs):
+        super().__init__(name=name)
+        self.play = self.start
 
         model_folders = [application.compressed_models_folder, application.asset_folder]
         model_names = find_sequence(name, ('*',), folders=model_folders)
@@ -11,24 +12,25 @@ class FrameAnimation3d(Entity):
             if application.raise_exception_on_missing_model:
                 raise FileNotFoundError(f'error: could not find models starting with: {name}')
             self.frames = []
-            self.sequence = Sequence(loop=loop, auto_destroy=False)
+            self.sequence = Sequence(loop=loop, auto_destroy=auto_destroy)
             return
 
         self.frames = [Entity(parent=self, model=e.stem, enabled=False, add_to_scene_entities=False) for e in model_names]
         self.frames[0].enabled = True
 
-        self.sequence = Sequence(loop=loop, auto_destroy=False)
+        self.sequence = Sequence(loop=loop, auto_destroy=auto_destroy)
         for i, frame in enumerate(self.frames):
             self.sequence.append(Func(setattr, self.frames[i-1], 'enabled', False))
             self.sequence.append(Func(setattr, self.frames[i], 'enabled', True))
             self.sequence.append(Wait(1/fps))
 
-        self.autoplay = autoplay
+        if auto_destroy:
+            self.sequence.append(Func(destroy, self))
 
+        self.autoplay = autoplay
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
-
 
         if self.autoplay:
             self.start()
@@ -62,7 +64,7 @@ class FrameAnimation3d(Entity):
 
 
     def __setattr__(self, name, value):
-        if hasattr(self, 'frames') and name in ('color', 'origin', 'texture'):
+        if hasattr(self, 'frames') and name in ('color', 'origin', 'texture', 'texture_scale', 'texture_offset'):
             for f in self.frames:
                 setattr(f, name, value)
 

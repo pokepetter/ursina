@@ -1,7 +1,11 @@
 from ursina import *
 
 
-def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[], ignore_disabled=True):
+def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[], ignore_disabled=True, include_normals=False):
+    if not combine_parent.children:
+        print_warning('Error, trying to combine children of entity with no children.', combine_parent.children)
+        return
+
     verts = []
     tris = []
     norms = []
@@ -52,9 +56,6 @@ def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[], ignore_
             o += len(e.model.vertices)
             tris += new_tris
 
-            # if e.model.normals:
-            #     norms += e.model.normals
-
             if e.model.uvs:
                 uvs.extend([(uv * e.texture_scale) + e.texture_offset for uv in e.model.uvs])
             else:
@@ -64,6 +65,12 @@ def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[], ignore_
                 cols.extend([Color(*vcol) * e.color for vcol in e.model.colors])
             else:
                 cols.extend((e.color, ) * len(e.model.vertices))
+            
+            if include_normals:
+                if e.model.colors: # if has normals
+                    norms.extend(e.model.normals)
+                else:
+                    norms.extend((Vec3.up, ) * len(e.model.vertices))
 
 
             if auto_destroy and e != combine_parent:
@@ -104,11 +111,12 @@ if __name__ == '__main__':
             p.texture='brick'
             print('combined in:', perf_counter() - t)
 
-    p.combine()
+    print('----------', p.children)
+    # p.combine(include_normals=True)
     # p.y=2
     # p.model.save()
     # ursinamesh_to_obj(p.model, name='combined_model_test', out_path=application.asset_folder)
-    print(p.model.vertices[0].__class__)
+    # print('----combined model:', repr(p.model))
 
     EditorCamera()
     app.run()

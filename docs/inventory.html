@@ -20,7 +20,8 @@ Inventory<br>
 <a href="https://github.com/pokepetter/ursina/blob/master/samples/inventory.py">https://github.com/pokepetter/ursina/blob/master/samples/inventory.py</a><br>
 <br>
 <img src="icons/inventory.jpg"></img> <br>
-<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+
 
 class Inventory(<olive>Entity</olive>):
     <purple>def</purple> __init__(self, width=<yellow>5</yellow>, height=<yellow>8</yellow>, **kwargs):
@@ -138,6 +139,7 @@ class Inventory(<olive>Entity</olive>):
     mouse.visible = False
 
     app.run()
+
 </div><script>
 function copy_to_clipboard(containerid) {
     var range = document.createRange()

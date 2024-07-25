@@ -5,7 +5,8 @@
 <a href="https://github.com/pokepetter/ursina/blob/master/samples/minecraft_clone.py">https://github.com/pokepetter/ursina/blob/master/samples/minecraft_clone.py</a>
 
 # image icons/minecraft_clone.jpg
-```'''
+```
+'''
 Disclaimer: This solution is not scalable for creating a big world.
 Creating a game like Minecraft requires specialized knowledge and is not as easy
 to make as it looks.
@@ -53,4 +54,5 @@ def input(key):
 
 player = FirstPersonController()
 app.run()
+
 ```

@@ -5,7 +5,8 @@
 <a href="https://github.com/pokepetter/ursina/blob/master/samples/platformer.py">https://github.com/pokepetter/ursina/blob/master/samples/platformer.py</a>
 
 # image icons/platformer.jpg
-```import time
+```
+import time
 # t = time.time()
 
 from ursina import *
@@ -45,4 +46,5 @@ from ursina.scripts.noclip_mode import NoclipMode2d
 player.add_script(NoclipMode2d())
 
 app.run()
+
 ```

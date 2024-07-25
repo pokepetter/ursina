@@ -20,7 +20,8 @@ Tic Tac Toe<br>
 <a href="https://github.com/pokepetter/ursina/blob/master/samples/tic_tac_toe.py">https://github.com/pokepetter/ursina/blob/master/samples/tic_tac_toe.py</a><br>
 <br>
 <img src="icons/tic_tac_toe.jpg"></img> <br>
-<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+
 <purple>if</purple> __name__ == <green>'__main__'</green>:
     app = Ursina()
 
@@ -86,6 +87,7 @@ board = [[None <purple>for</purple> x in <blue>range</blue>(<yellow>3</yellow>)]
 
 <purple>if</purple> __name__ == <green>'__main__'</green>:
     app.run()
+
 </div><script>
 function copy_to_clipboard(containerid) {
     var range = document.createRange()

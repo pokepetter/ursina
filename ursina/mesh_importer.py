@@ -302,7 +302,7 @@ def obj_to_ursinamesh(folder=Func(getattr, application, 'compressed_models_folde
                     if current_color:
                         vertex_colors.extend([current_color for i in range(3)])
                     elif vertex_colors_packed:
-                        vertex_colors.extend([vertex_colors_packed[idx] for idx in tri])
+                        vertex_colors.extend([vertex_colors_packed[idx] if idx < len(vertex_colors_packed) else color.white for idx in tri])
 
                 elif len(tri) == 4:
                     tris.extend((tri[0], tri[1], tri[2], tri[2], tri[3], tri[0]))
@@ -524,13 +524,14 @@ def compress_internal():
 
 
 if __name__ == '__main__':
-    compress_internal()
-    # from ursina import *
+    # compress_internal()
+    from ursina import *
     from ursina import Ursina, Entity, EditorCamera, Sky
     app = Ursina()
     # print('imported_meshes:\n', imported_meshes)
     # Entity(model='quad').model.save('quad.bam')
-    # m = obj_to_ursinamesh(path=application.asset_folder.parent / 'samples', name='procedural_rock_0')
+    m = obj_to_ursinamesh(folder=application.asset_folder.parent / 'samples', name='procedural_rock_0', save_to_file=False, delete_obj=False)
+    print(m.serialize())
     # Entity(model=m)
     # EditorCamera()
 
@@ -543,11 +544,11 @@ if __name__ == '__main__':
     # Entity(model='race')
     # Entity(model='ambulance', x=1.5)
 
-    application.asset_folder = Path(r'''C:\Users\Petter\Downloads''')
-    t = perf_counter()
-    Entity(model='untitled')
-    print('-------', perf_counter() - t)
-    m = load_model('cube', use_deepcopy=True)
+    # application.asset_folder = Path(r'''C:\Users\Petter\Downloads''')
+    # t = perf_counter()
+    # Entity(model='untitled')
+    # print('-------', perf_counter() - t)
+    # m = load_model('cube', use_deepcopy=True)
     # ground = Entity(model='plane', scale=10, texture='brick', texture_scale=Vec2(4))
     # DirectionalLight()
 

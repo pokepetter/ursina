@@ -47,8 +47,9 @@ class FileButton(Button):
 
 @generate_properties_for_class()
 class FileBrowser(Entity):
-    def __init__(self, file_button_class=FileButton, selection_limit=1, start_path=None, **kwargs):
-        self.file_types = ['.*', ]
+    def __init__(self, file_button_class=FileButton, selection_limit=1, start_path=None, file_types:list=None, **kwargs):
+        self.file_types = file_types if file_types else ['.*', ]
+    
         if not start_path:
             start_path = Path('.').resolve()
         self.start_path = start_path
