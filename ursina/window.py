@@ -393,12 +393,8 @@ class Window(WindowProperties):
     @borderless.setter
     def borderless(self, value):
         self._borderless = value
-<<<<<<< HEAD
-        if application.window_type in ('none','tkinter'): return
-=======
         if application.window_type == 'none':
             return
->>>>>>> origin/main
 
         self.setUndecorated(value)
         if hasattr(self, 'exit_button'):
