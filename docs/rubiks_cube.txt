@@ -5,7 +5,8 @@
 <a href="https://github.com/pokepetter/ursina/blob/master/samples/rubiks_cube.py">https://github.com/pokepetter/ursina/blob/master/samples/rubiks_cube.py</a>
 
 # image icons/rubiks_cube.jpg
-```from ursina import *
+```
+from ursina import *
 
 
 app = Ursina()
@@ -119,4 +120,5 @@ window.color = color._16
 EditorCamera()
 
 app.run()
+
 ```

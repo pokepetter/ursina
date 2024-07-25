@@ -10,6 +10,7 @@ from direct.distributed.PyDatagramIterator import PyDatagramIterator
 from enum import Enum, auto
 
 from collections import deque
+import queue
 
 import uuid
 import hashlib
@@ -33,6 +34,14 @@ import signal
 import threading
 import asyncio
 
+# Used internally by Peer.
+class PeerEvent(Enum):
+    ERROR = auto()
+    CONNECT = auto()
+    DISCONNECT = auto()
+    DATA = auto()
+
+
 # This class represents and single connection.
 # It can be hashed and compared so that it may be used as a dictionary key.
 # This is useful for mapping from a connection to player data.
@@ -54,7 +63,7 @@ class Connection:
 
         self.uid = str(uuid.uuid4())
 
-        self.async_task = None
+        self.receiving_thread = None
 
     def __hash__(self):
         return hash(self.uid)
@@ -63,10 +72,23 @@ class Connection:
         return self.uid == other.uid
 
     def send(self, data):
-        self.peer.send(self, data)
+        b = bytearray()
+        b += struct.pack(">H", len(data))
+        b += data
+        try:
+            self.socket.sendall(b)
+        except:
+            pass
 
     def disconnect(self):
-        self.peer.disconnect(self)
+        if self.connected:
+            try:
+                self.socket.shutdown(socket.SHUT_RDWR)
+                self.socket.close()
+            except:
+                pass
+            self.connected = False
+            self.peer._remove_connection(self)
 
     def is_timed_out(self):
         return self.timed_out
@@ -74,21 +96,45 @@ class Connection:
     def is_connected(self):
         return self.connected
 
+    def _receive(self):
+        try:
+            while True:
+                data = None
+                try:
+                    if self.connection_timeout is not None:
+                        self.socket.settimeout(self.connection_timeout)
+                    data = self.socket.recv(self.expected_byte_count)
+                except socket.timeout:
+                    self.timed_out = True
+                    raise
+                except Exception as e:
+                    raise
+                if data is None:
+                    break
+                if len(data) == 0:
+                    break
+                self.bytes_received += data
+                self.expected_byte_count -= len(data)
 
-# Used internally by Peer.
-class PeerEvent(Enum):
-    ERROR = auto()
-    CONNECT = auto()
-    DISCONNECT = auto()
-    DATA = auto()
-
-
-# Used internally by Peer.
-class PeerInput(Enum):
-    ERROR = auto()
-    SEND = auto()
-    DISCONNECT = auto()
-    DISCONNECT_ALL = auto()
+                if self.expected_byte_count == 0:
+                    if self.state == "l":
+                        l = struct.unpack(">H", self.bytes_received)[0]
+                        self.state = "c"
+                        self.expected_byte_count = l
+                        self.bytes_received.clear()
+                    elif self.state == "c":
+                        d = bytes(self.bytes_received.copy())
+                        self.peer.output_event_queue.put((PeerEvent.DATA, self, d, time.time()))
+                        self.state = "l"
+                        self.expected_byte_count = self.length_byte_count
+                        self.bytes_received.clear()
+        except:
+            pass
+        finally:
+            self.disconnect()
+            self.state = "l"
+            self.bytes_received.clear()
+            self.expected_byte_count = self.length_byte_count
 
 
 # -- Description --
@@ -133,10 +179,11 @@ class Peer:
         self.ssl_context = None
 
         self.connections = []
-        self.output_event_queue = deque()
-        self.input_event_queue = deque()
+
+        self.output_event_queue = queue.Queue()
 
         self.socket = None
+        self.listen_socket = None
         self.host_name = None
         self.tls_host_name = None
         self.port = None
@@ -146,15 +193,9 @@ class Peer:
         self.running = False
 
         self.main_thread = None
+        self.server_listen_thread = None
         self.running_lock = threading.Lock()
-        self.output_event_lock = threading.Lock()
-        self.input_event_lock = threading.Lock()
-        self.listen_task = None
-
-        self.main_thread_sleep_time = 0.001
-        self.ssl_handshake_sleep_time = 0.0001
-        self.recv_ssl_sleep_time = 0.0001
-        self.recv_unavailable_sleep_time = 0.0001
+        self.connections_lock = threading.Lock()
 
         def on_application_exit():
             if self.running:
@@ -165,8 +206,7 @@ class Peer:
         prev_signal_handler = signal.getsignal(signal.SIGINT)
 
         def on_keyboard_interrupt(*args):
-            if self.running:
-                self.stop()
+            self.stop()
             if prev_signal_handler is not None:
                 if prev_signal_handler != signal.SIG_DFL:
                     prev_signal_handler(*args)
@@ -208,58 +248,61 @@ class Peer:
         self.backlog = backlog
         self.is_host = is_host
 
-        self.output_event_queue.clear()
-        self.input_event_queue.clear()
-
-        self.main_thread = threading.Thread(target=self._start, daemon=True)
+        self.main_thread = threading.Thread(target=self._run, daemon=True)
         self.main_thread.start()
 
     def stop(self):
         if not self.running:
             return
 
+        self.disconnect_all()
+
         with self.running_lock:
             self.running = False
 
+        if self.is_host:
+            try:
+                self.listen_socket.shutdown(socket.SHUT_RDWR)
+                self.listen_socket.close()
+            except:
+                raise
+
         self.main_thread.join()
 
+        while not self.output_event_queue.empty():
+            self.output_event_queue.get()
+
     def update(self, max_events=100):
-        with self.output_event_lock:
-            for i in range(max_events):
-                if len(self.output_event_queue) == 0:
-                    break
-                next_event = self.output_event_queue.popleft()
-                event_type = next_event[0]
-                conn = next_event[1]
-                d = next_event[2]
-                t = next_event[3]
-                if event_type == PeerEvent.CONNECT:
-                    if self.on_connect is not None:
-                        self.on_connect(conn, t)
-                elif event_type == PeerEvent.DISCONNECT:
-                    if self.on_disconnect is not None:
-                        self.on_disconnect(conn, t)
-                elif event_type == PeerEvent.DATA:
-                    if self.on_raw_data is not None:
-                        d = self.on_raw_data(conn, d, t)
-                    if self.on_data is not None:
-                        self.on_data(next_event[1], d, t)
+        for i in range(max_events):
+            if self.output_event_queue.empty():
+                break
+            next_event = self.output_event_queue.get()
+            event_type = next_event[0]
+            conn = next_event[1]
+            d = next_event[2]
+            t = next_event[3]
+            if event_type == PeerEvent.CONNECT:
+                if self.on_connect is not None:
+                    self.on_connect(conn, t)
+            elif event_type == PeerEvent.DISCONNECT:
+                if self.on_disconnect is not None:
+                    self.on_disconnect(conn, t)
+            elif event_type == PeerEvent.DATA:
+                if self.on_raw_data is not None:
+                    d = self.on_raw_data(conn, d, t)
+                if self.on_data is not None:
+                    self.on_data(next_event[1], d, t)
 
     def send(self, connection, data):
-        b = bytearray()
-        b += struct.pack(">H", len(data))
-        b += data
-
-        with self.input_event_lock:
-            self.input_event_queue.append((PeerInput.SEND, connection, b))
+        connection.send(data)
 
     def disconnect(self, connection):
-        with self.input_event_lock:
-            self.input_event_queue.append((PeerInput.DISCONNECT, connection, None))
+        connection.disconnect()
 
     def disconnect_all(self):
-        with self.input_event_lock:
-            self.input_event_queue.append((PeerInput.DISCONNECT_ALL, None, None))
+        connections = self.get_connections()
+        for connection in connections:
+            connection.disconnect()
 
     def is_running(self):
         return self.running
@@ -271,220 +314,75 @@ class Peer:
         return len(self.connections)
 
     def get_connections(self):
-        return self.connections
+        connections_copy = None
+        with self.connections_lock:
+            connections_copy = self.connections.copy()
+        return connections_copy
 
-    def _start(self):
-        asyncio.run(self._run())
-
-    def _add_connection(self, socket, address, async_loop):
+    def _add_connection(self, socket, address):
         connection = Connection(self, socket, address, self.connection_timeout)
-        connection_task = async_loop.create_task(self._receive(connection, async_loop))
-        connection.async_task = connection_task
-        self.connections.append(connection)
-        with self.output_event_lock:
-            self.output_event_queue.append((PeerEvent.CONNECT, connection, None, time.time()))
+        with self.connections_lock:
+            self.connections.append(connection)
+        self.output_event_queue.put((PeerEvent.CONNECT, connection, None, time.time()))
+        connection.receiving_thread = threading.Thread(target=connection._receive, daemon=True)
+        connection.receiving_thread.start()
 
-    async def _run(self):
-        async_loop = asyncio.get_event_loop()
+    def _remove_connection(self, connection):
+        with self.connections_lock:
+            if connection in self.connections:
+                self.connections.remove(connection)
+                self.output_event_queue.put((PeerEvent.DISCONNECT, connection, None, time.time()))
 
-        if self.is_host:
-            try:
-                self.socket = socket.socket(self.socket_address_family, socket.SOCK_STREAM, 0)
-                self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-                self.socket.bind((self.host_name, self.port))
-                self.socket.listen(self.backlog)
-                self.socket.setblocking(False)
-            except Exception as e:
-                print(e)
-                self.running = False
-                raise
-
-            self.listen_task = asyncio.create_task(self._listen(async_loop))
-        else:
-            client_socket = None
+    def _run_server(self):
+        try:
+            self.listen_socket = socket.socket(self.socket_address_family, socket.SOCK_STREAM, 0)
+            self.listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            self.listen_socket.bind((self.host_name, self.port))
+            self.listen_socket.listen(self.backlog)
             if self.use_tls:
-                try:
-                    self.socket = socket.socket(self.socket_address_family, socket.SOCK_STREAM, 0)
-                    client_socket = self.ssl_context.wrap_socket(self.socket, server_hostname=self.tls_host_name)
-                    client_socket.connect((self.host_name, self.port))
-                except Exception as e:
-                    print(e)
-                    self.running = False
-                    return
-            else:
-                try:
-                    client_socket = socket.create_connection((self.host_name, self.port))
-                except Exception as e:
-                    print(e)
-                    self.running = False
-                    return
-            try:
-                client_socket.setblocking(False)
-                client_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-                self._add_connection(client_socket, (self.host_name, self.port), async_loop)
-            except Exception as e:
-                print(e)
-                self.running = False
-                return
+                self.listen_socket = self.ssl_context.wrap_socket(self.listen_socket, server_side=True)
+        except Exception as e:
+            print(e)
+            raise
 
         with self.running_lock:
             self.running = True
 
         while self.running:
-            to_be_removed = []
-            with self.input_event_lock:
-                while len(self.input_event_queue) > 0:
-                    next_event = self.input_event_queue.popleft()
-                    event = next_event[0]
-                    connection = next_event[1]
-                    data = next_event[2]
-                    if event == PeerInput.SEND:
-                        try:
-                            connection.socket.sendall(data)
-                        except:
-                            to_be_removed.append(connection)
-                    elif event == PeerInput.DISCONNECT:
-                        to_be_removed.append(connection)
-                    elif event == PeerInput.DISCONNECT_ALL:
-                        for connection in self.connections:
-                            to_be_removed.append(connection)
-            for connection in to_be_removed:
-                connection.async_task.cancel()
-                try:
-                    await connection.async_task
-                except:
-                    pass
-            await asyncio.sleep(self.main_thread_sleep_time)
-
-        for connection in self.connections:
-            connection.async_task.cancel()
             try:
-                await connection.async_task
-            except:
-                pass
-
-        if self.is_host:
-            self.listen_task.cancel()
-            try:
-                await self.listen_task
-            except:
-                pass
-
-    async def _listen(self, async_loop):
-        try:
-            while True:
-                client_socket, client_address = await async_loop.sock_accept(self.socket)
-                if self.use_tls:
-                    socket_wrap_failed = True
-                    try:
-                        client_socket = self.ssl_context.wrap_socket(client_socket, server_side=True, do_handshake_on_connect=False)
-                        socket_wrap_failed = False
-                    except Exception as e:
-                        pass
-                    if socket_wrap_failed:
-                        try:
-                            client_socket.close()
-                        except:
-                            pass
-                        continue
-                    handshake_failed = True
-                    while True:
-                        try:
-                            client_socket.do_handshake()
-                            handshake_failed = False
-                            break
-                        except ssl.SSLWantReadError as e:
-                            await asyncio.sleep(self.ssl_handshake_sleep_time)
-                        except ssl.SSLWantWriteError as e:
-                            await asyncio.sleep(self.ssl_handshake_sleep_time)
-                        except Exception as e:
-                            break
-                    if handshake_failed:
-                        try:
-                            client_socket.close()
-                        except:
-                            pass
-                        continue
-                client_socket.setblocking(False)
+                client_socket, address = self.listen_socket.accept()
                 client_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-                self._add_connection(client_socket, client_address, async_loop)
-        except asyncio.CancelledError:
-            pass
-        finally:
-            try:
-                self.socket.close()
             except:
-                pass
-
-    async def _recv(self, connection, async_loop):
-        data = None
-        while True:
-            try:
-                data = connection.socket.recv(connection.expected_byte_count)
                 break
-            except ssl.SSLWantReadError:
-                await asyncio.sleep(self.recv_ssl_sleep_time)
-            except ssl.SSLWantWriteError:
-                await asyncio.sleep(self.recv_ssl_sleep_time)
-            except BlockingIOError:
-                await asyncio.sleep(self.recv_unavailable_sleep_time)
-            except Exception as e:
-                raise
-        return data
+            self._add_connection(client_socket, address)
 
-    async def _receive(self, connection, async_loop):
-        try:
-            while True:
-                data = None
-                try:
-                    if connection.connection_timeout is None:
-                        data = await self._recv(connection, async_loop)
-                    else:
-                        data = await asyncio.wait_for(self._recv(connection, async_loop), timeout=connection.connection_timeout)
-                except asyncio.exceptions.TimeoutError:
-                    connection.timed_out = True
-                    raise
-                except Exception as e:
-                    print(e)
-                    raise
-                if data is None:
-                    break
-                if len(data) == 0:
-                    break
-                connection.bytes_received += data
-                connection.expected_byte_count -= len(data)
-
-                if connection.expected_byte_count == 0:
-                    if connection.state == "l":
-                        l = struct.unpack(">H", connection.bytes_received)[0]
-                        connection.state = "c"
-                        connection.expected_byte_count = l
-                        connection.bytes_received.clear()
-                    elif connection.state == "c":
-                        d = bytes(connection.bytes_received.copy())
-                        with self.output_event_lock:
-                            self.output_event_queue.append((PeerEvent.DATA, connection, d, time.time()))
-                        connection.state = "l"
-                        connection.expected_byte_count = connection.length_byte_count
-                        connection.bytes_received.clear()
-        except asyncio.CancelledError:
-            pass
-        except:
-            pass
-        finally:
+    def _run_client(self):
+        client_socket = None
+        if self.use_tls:
             try:
-                connection.socket.close()
-            except:
-                pass
-            connection.state = "l"
-            connection.bytes_received.clear()
-            connection.expected_byte_count = connection.length_byte_count
-            connection.connected = False
-            self.connections.remove(connection)
-            with self.output_event_lock:
-                self.output_event_queue.append((PeerEvent.DISCONNECT, connection, None, None))
-            if not self.is_host:
+                self.socket = socket.socket(self.socket_address_family, socket.SOCK_STREAM, 0)
+                client_socket = self.ssl_context.wrap_socket(self.socket, server_hostname=self.tls_host_name)
+                client_socket.connect((self.host_name, self.port))
+            except Exception as e:
                 self.running = False
+                return
+        else:
+            try:
+                client_socket = socket.create_connection((self.host_name, self.port))
+            except Exception as e:
+                self.running = False
+                return
+        client_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+        self._add_connection(client_socket, (self.host_name, self.port))
+
+        with self.running_lock:
+            self.running = True
+
+    def _run(self):
+        if self.is_host:
+            self._run_server()
+        else:
+            self._run_client()
 
 
 # -- Description --
@@ -868,7 +766,7 @@ class RPCPeer:
         if proc_func is not None and proc_arg_types is not None and proc_arg_values is not None:
             if len(proc_arg_values) != len(proc_arg_types):
                 print("WARNING: Received invalid remote procedure call, disconnecting...")
-                print("Received an invalid number of arguments for procedure '{proc_name}'.")
+                print(f"Received an invalid number of arguments for procedure '{proc_name}'.")
                 connection.disconnect()
             else:
                 if self.peer.is_hosting():

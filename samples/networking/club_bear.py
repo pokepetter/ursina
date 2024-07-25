@@ -104,7 +104,7 @@ class Bear(Entity):
         self.talk_time = 0.0
         self.talk_timer = 0.0
         self.speech_text = Text(visible=False, y=self.y+0.05, origin=(0, 0))
-        self.speech_audio = Audio("sine", autoplay=False, loop=True, loops=20)
+        self.speech_audio = Audio("sine", autoplay=False, loops=20)
 
     # Mostly handles client side interpolation.
     def update(self):

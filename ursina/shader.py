@@ -67,7 +67,7 @@ class Shader:
     HLSL = Panda3dShader.SL_HLSL
     SPIR_V = Panda3dShader.SL_SPIR_V
 
-    def __init__(self, name='untitled_shader', language=Panda3dShader.SL_GLSL, vertex=default_vertex_shader, fragment=default_fragment_shader, geometry='', **kwargs):
+    def __init__(self, name='untitled_shader', language=GLSL, vertex=default_vertex_shader, fragment=default_fragment_shader, geometry='', **kwargs):
 
         from inspect import getframeinfo, stack
         _stack = stack()

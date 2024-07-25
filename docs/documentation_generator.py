@@ -771,9 +771,9 @@ for sample_name in ('Tic Tac Toe', 'Inventory', 'Pong', 'Minecraft Clone', "Rubi
                 <a href="{github_link}">{github_link}</a>
 
                 {image_code}
-                ```''')
+                ```\n''')
                 + source_code
-                + '```'
+                + '\n```'
             )
             generated_sample_pages[sample_name] = (f'{file_path.stem}.html', image_url)
     else:

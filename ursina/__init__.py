@@ -29,6 +29,7 @@ from ursina.collider import *
 from ursina.raycast import raycast
 from ursina.boxcast import boxcast
 from ursina.audio import Audio
+from ursina import music_system
 from ursina.duplicate import duplicate
 from panda3d.core import Quat
 from ursina.vec2 import Vec2
@@ -36,7 +37,6 @@ from ursina.vec3 import Vec3
 from ursina.vec4 import Vec4
 from ursina.shader import Shader
 from ursina.lights import *
-from ursina.rigidbody import *
 
 from ursina.text import Text
 from ursina.mesh import Mesh, MeshModes

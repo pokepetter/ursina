@@ -80,7 +80,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
             _stack = stack()
             caller = getframeinfo(_stack[1][0])
             if len(_stack) > 2 and _stack[1].code_context and 'super().__init__()' in _stack[1].code_context[0]:
-                caller = getframeinfo(_stack[2][0])
+                caller = getframeinfo(_stack[3][0])
 
             self.line_definition = caller
             if caller.code_context:
@@ -913,10 +913,10 @@ class Entity(NodePath, metaclass=PostInitCaller):
             return class_instance
 
 
-    def combine(self, analyze=False, auto_destroy=True, ignore=[]):
+    def combine(self, analyze=False, auto_destroy=True, ignore=[], ignore_disabled=True, include_normals=False):
         from ursina.scripts.combine import combine
 
-        self.model = combine(self, analyze, auto_destroy, ignore)
+        self.model = combine(self, analyze, auto_destroy, ignore, ignore_disabled, include_normals)
         return self.model
 
 
@@ -1084,9 +1084,6 @@ class Entity(NodePath, metaclass=PostInitCaller):
         if self.ignore_paused:
             unscaled = True
 
-        if delay:
-            return invoke(self.animate, name, value, duration=duration, curve=curve, loop=loop, resolution=resolution, time_step=time_step, auto_destroy=auto_destroy, delay=delay, unscaled=unscaled, ignore_paused=self.ignore_paused)
-
         animator_name = name + '_animator'
         # print('start animating value:', name, animator_name )
         if interrupt and hasattr(self, animator_name):
@@ -1095,8 +1092,9 @@ class Entity(NodePath, metaclass=PostInitCaller):
         if hasattr(self, animator_name) and getattr(self, animator_name) in self.animations:
             self.animations.remove(getattr(self, animator_name))
 
-        sequence = Sequence(loop=loop, time_step=time_step, auto_destroy=auto_destroy, unscaled=unscaled, ignore_paused=self.ignore_paused)
-
+        sequence = Sequence(loop=loop, time_step=time_step, auto_destroy=auto_destroy, unscaled=unscaled, ignore_paused=self.ignore_paused, name=name)
+        sequence.append(Wait(delay))
+        
         setattr(self, animator_name, sequence)
         self.animations.append(sequence)
 
@@ -1226,7 +1224,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
         self._pq.sort_entries()
         entries = self._pq.getEntries()
-        entities = [e.get_into_node_path().parent.getPythonTag('Entity') for e in entries]
+        entities = [e.get_into_node_path().parent for e in entries]
 
         entries = [        # filter out ignored entities
             e for i, e in enumerate(entries)

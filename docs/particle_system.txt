@@ -5,7 +5,8 @@
 <a href="https://github.com/pokepetter/ursina/blob/master/samples/particle_system.py">https://github.com/pokepetter/ursina/blob/master/samples/particle_system.py</a>
 
 # image icons/particle_system.jpg
-```from ursina import *
+```
+from ursina import *
 import numpy as np
 
 number_of_particles = 1000   # keep this as low as possible
@@ -51,4 +52,5 @@ if __name__ == '__main__':
     EditorCamera()
 
     app.run()
+
 ```

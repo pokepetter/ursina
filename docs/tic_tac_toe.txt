@@ -5,7 +5,8 @@
 <a href="https://github.com/pokepetter/ursina/blob/master/samples/tic_tac_toe.py">https://github.com/pokepetter/ursina/blob/master/samples/tic_tac_toe.py</a>
 
 # image icons/tic_tac_toe.jpg
-```from ursina import *
+```
+from ursina import *
 
 if __name__ == '__main__':
     app = Ursina()
@@ -72,4 +73,5 @@ def check_for_victory():
 
 if __name__ == '__main__':
     app.run()
+
 ```
