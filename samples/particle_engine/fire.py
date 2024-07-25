@@ -19,8 +19,8 @@ def generate_particle():
         ),
         lifetime=random.random() * 5 + 3,
         delay=random.random() * 4,
-        init_scale=Vec2(random.random() * 0.5),
-        end_scale=Vec2(random.random() * 0.2),
+        init_scale=Vec3(random.random() * 0.5),
+        end_scale=Vec3(random.random() * 0.2),
         init_color=Vec4(random.random(), random.random(), random.random(), 0) * 0.2
         + color.orange,
         end_color=Vec4(Vec3(random.random()), 1),
@@ -34,7 +34,7 @@ def generate_particles(n):
 manager = ParticleManager(
     texture="radial_gradient",
     scale=1,
-    particles=generate_particles(100_000),
+    particles=generate_particles(10_000),
     gravity=Vec3(0, 1, 0),
     position=Vec3(0, -3, 0),
     looping=True,
