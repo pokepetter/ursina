@@ -24,86 +24,310 @@ class Particle:
     init_color: Vec4
     end_color: Vec4
 
+    trail_init_color: Vec4 = None
+    trail_end_color: Vec4 = None
 
+class Trail(Entity):
+    def __init__(self, manager, duration=1, resolution=10, segments=10, thickness=0.3, **kwargs):
+        super().__init__(**kwargs)
+        self.resolution = resolution
+        self.segments = segments
+        self.thickness = thickness
+        self.generate_model()
+        self.manager = manager
+        self.duration = duration
+        self.shader = Shader(
+            vertex="""
+                #version 140
+
+                uniform mat4 p3d_ModelViewProjectionMatrix;
+                uniform mat4 p3d_ModelViewMatrix;
+                in vec4 p3d_Vertex;
+                in vec2 p3d_MultiTexCoord0;
+
+                in vec3 position;
+                in vec3 velocity;
+                in float lifetime;
+                in float delay;
+                in vec3 init_scale;
+                in vec3 end_scale;
+                in vec4 init_color;
+                in vec4 end_color;
+
+                uniform float elapsed_time;
+                uniform vec3 gravity;
+                uniform bool looping;
+
+                uniform int resolution;
+                uniform int segments;
+                uniform float duration;
+                
+                flat out int discard_frag;
+                out vec2 texcoord;
+                out vec4 new_color;
+
+
+                vec3 get_position(float time) {
+                    return (position+velocity*time + 0.5*gravity*time*time);
+                }
+
+                void main() {
+                    int layer = int(p3d_Vertex.y);
+                    
+                    float prev_progress = 0;
+                    float progress = float(layer) / float(segments);
+                    float next_progress = 1;
+                    
+                    float start_time = mod(elapsed_time - delay - duration, lifetime);
+                    float end_time = mod(elapsed_time - delay, lifetime);
+                    
+                    if (end_time < duration) {
+                        end_time = lifetime;
+                    }
+                    
+                    float prev_adjusted_time = mix(start_time, end_time, 1-prev_progress);
+                    float adjusted_time = mix(start_time, end_time, 1-progress);
+                    float next_adjusted_time = mix(start_time, end_time, 1-next_progress);
+                    
+                    float life = adjusted_time / lifetime;
+                    
+                    if (life < 0.0){
+                        discard_frag = 1;
+                        return;
+                    }
+                    discard_frag = 0;
+
+                    vec4 new_scale = vec4(mix(init_scale, end_scale, life), 1.0);
+
+                    vec4 v = p3d_Vertex * new_scale;
+                    
+                    texcoord = p3d_MultiTexCoord0;
+
+                    new_color = mix(init_color, end_color, life);
+
+                    vec3 adjusted_position = get_position(adjusted_time);
+                    
+                    gl_Position = gl_ModelViewProjectionMatrix * vec4((vec3(v.x,0,v.z) + adjusted_position), p3d_Vertex.w);
+                }""",
+            fragment="""
+                    #version 140
+                    uniform sampler2D p3d_Texture0;
+                    uniform vec4 p3d_ColorScale;
+                    in vec2 texcoord;
+                    flat in int discard_frag;
+                    in vec4 new_color;
+                    out vec4 fragColor;
+                    void main() {
+                        if (discard_frag == 1) {
+                            discard;
+                        }
+                        fragColor = texture(p3d_Texture0, texcoord)  * p3d_ColorScale * new_color;
+                    }""")
+
+    def generate_model(self):
+        if not(hasattr(self, "resolution") and hasattr(self, "segments") and hasattr(self, "thickness")):
+            return
+        resolution = self.resolution
+        segments = self.segments
+        thickness = self.thickness
+        triangles = []
+        uv = []
+        vertices = []
+        angle_step = math.radians(1/resolution*360)
+        half_thickness = thickness/2
+        for i in range(segments):
+            circle = []
+            progress = i/segments
+            for j in range(resolution):
+                angle = j*angle_step
+                vert = (Vec3(0,0,1)*math.cos(angle) + Vec3(1,0,0)*math.sin(angle))
+                dist = half_thickness * (1-progress)
+                vert *= dist
+                vert.y = i
+                circle.append(vert)
+                uv.append((progress,j/resolution))
+            vertices.extend(circle)
+            if i!=segments-1:
+                i_res = i*resolution
+                i_plus_1 = i_res+resolution
+                for j in range(resolution):
+                    j_plus_1 = (j+1)%resolution
+                    triangles.append([i_res+j_plus_1,i_plus_1+j,i_res+j])
+                    triangles.append([i_plus_1+j_plus_1,i_plus_1+j,i_res+j_plus_1])
+                    
+        vertices += [Vec3(0,segments,0)]
+        uv.append([1,0.5])
+        triangles += [[i*resolution+(j+1)%resolution,segments*resolution,i*resolution+j] for j in range(resolution)]
+        model = Mesh(
+            vertices=vertices,
+            uvs=uv,
+            triangles=triangles)
+        model.generate()
+        self.model = model
+
+    def generate_format(self):
+        geom_node = self.find("**/+GeomNode").node()
+
+        if geom_node.getNumGeoms() == 0:
+            raise Exception("No geometry found")
+
+        if geom_node.getGeom(0).getVertexData().getNumRows() == 0:
+            raise Exception("No vertex data found")
+
+        if geom_node.getGeom(0).getVertexData().getNumRows() > 0:
+            
+            self._model_nb_rows = geom_node.getGeom(0).getVertexData().getNumRows()
+        
+            self.iformat = GeomVertexArrayFormat()
+            self.iformat.setDivisor(1)
+            self.iformat.addColumn(f"position", 3, Geom.NT_stdfloat, Geom.C_vector)
+            self.iformat.addColumn(f"velocity", 3, Geom.NT_stdfloat, Geom.C_vector)
+
+            self.iformat.addColumn(f"lifetime", 1, Geom.NT_stdfloat, Geom.C_vector)
+            self.iformat.addColumn(f"delay", 1, Geom.NT_stdfloat, Geom.C_vector)
+
+            self.iformat.addColumn(f"init_scale", 3, Geom.NT_stdfloat, Geom.C_vector)
+            self.iformat.addColumn(f"end_scale", 3, Geom.NT_stdfloat, Geom.C_vector)
+
+            self.iformat.addColumn(f"init_color", 4, Geom.NT_stdfloat, Geom.C_vector)
+            self.iformat.addColumn(f"end_color", 4, Geom.NT_stdfloat, Geom.C_vector)
+
+            self.vformat = GeomVertexFormat(
+                geom_node.getGeom(0).getVertexData().getFormat()
+            )
+            
+            self.vformat.addArray(self.iformat)
+            self.vformat = GeomVertexFormat.registerFormat(self.vformat)
+
+
+            self.vdata = geom_node.modifyGeom(0).modifyVertexData()
+            self.vdata.setFormat(self.vformat)
+
+            if self.vdata.getFormat() != self.vformat:
+                raise Exception("Vertex data format mismatch")
+        else:
+            raise Exception("No vertex data found")
+
+    @property
+    def duration(self):
+        return self._duration
+    
+    @duration.setter
+    def duration(self, value):
+        self._duration = value
+        self.set_shader_input("duration", value)
+        
+    @property
+    def resolution(self):
+        return self._resolution
+    
+    @resolution.setter
+    def resolution(self, value):
+        self._resolution = value
+        self.set_shader_input("resolution", value)
+        self.generate_model()
+        
+    @property
+    def segments(self):
+        return self._segments
+    
+    @segments.setter
+    def segments(self, value):
+        self._segments = value
+        self.set_shader_input("segments", value)
+        self.generate_model()
+
+    @property
+    def thickness(self):
+        return self._thickness
+    
+    @thickness.setter
+    def thickness(self, value):
+        self._thickness = value
+        self.generate_model()
+
+    def update(self):
+        self.position = self.manager.position
+        
 class ParticleManager(Entity):
     max_particles = 1_000_000
     i = 0
     particle_shader = Shader(
         name=f"particle_shader",
         language=Shader.GLSL,
-        vertex="""#version 140
+        vertex="""
+                #version 140
 
-uniform mat4 p3d_ModelViewProjectionMatrix;
-uniform mat4 p3d_ModelViewMatrix;
-in vec4 p3d_Vertex;
-in vec2 p3d_MultiTexCoord0;
+                uniform mat4 p3d_ModelViewProjectionMatrix;
+                uniform mat4 p3d_ModelViewMatrix;
+                in vec4 p3d_Vertex;
+                in vec2 p3d_MultiTexCoord0;
 
-in vec3 position;
-in vec3 velocity;
-in float lifetime;
-in float delay;
-in vec3 init_scale;
-in vec3 end_scale;
-in vec4 init_color;
-in vec4 end_color;
+                in vec3 position;
+                in vec3 velocity;
+                in float lifetime;
+                in float delay;
+                in vec3 init_scale;
+                in vec3 end_scale;
+                in vec4 init_color;
+                in vec4 end_color;
 
-uniform float elapsed_time;
-uniform vec3 gravity;
-uniform bool looping;
+                uniform float elapsed_time;
+                uniform vec3 gravity;
+                uniform bool looping;
 
-flat out int discard_frag;
-out vec2 texcoord;
-out vec4 new_color;
+                flat out int discard_frag;
+                out vec2 texcoord;
+                out vec4 new_color;
 
-void main() {
+                void main() {
 
-    float adjusted_time = elapsed_time - delay;
-    float life = adjusted_time / lifetime;
+                    float adjusted_time = elapsed_time - delay;
+                    float life = adjusted_time / lifetime;
 
-    if (life > 1.0) {
-        if (looping) {
-            life = fract(life);
-            adjusted_time = mod(adjusted_time, lifetime);
-        } else {
-            discard_frag = 1;
-            return;
-        }
-    }
-    else if (life < 0.0){
-        discard_frag = 1;
-        return;
-    }
-    discard_frag = 0;
+                    if (life > 1.0) {
+                        if (looping) {
+                            life = fract(life);
+                            adjusted_time = mod(adjusted_time, lifetime);
+                        } else {
+                            discard_frag = 1;
+                            return;
+                        }
+                    }
+                    else if (life < 0.0){
+                        discard_frag = 1;
+                        return;
+                    }
+                    discard_frag = 0;
 
-    vec4 new_scale = vec4(mix(init_scale, end_scale, life), 1.0);
+                    vec4 new_scale = vec4(mix(init_scale, end_scale, life), 1.0);
 
-    vec4 v = p3d_Vertex * new_scale;
-    
-    texcoord = p3d_MultiTexCoord0;
+                    vec4 v = p3d_Vertex * new_scale;
+                    
+                    texcoord = p3d_MultiTexCoord0;
 
-    new_color = mix(init_color, end_color, life);
+                    new_color = mix(init_color, end_color, life);
 
-    vec3 adjusted_position = (position+velocity*adjusted_time + 0.5*gravity*adjusted_time*adjusted_time);
+                    vec3 adjusted_position = (position+velocity*adjusted_time + 0.5*gravity*adjusted_time*adjusted_time);
 
-    gl_Position = gl_ModelViewProjectionMatrix * vec4((v.xyz + adjusted_position), p3d_Vertex.w);
-}""",
+                    gl_Position = gl_ModelViewProjectionMatrix * vec4((v.xyz + adjusted_position), p3d_Vertex.w);
+                }""",
         fragment="""#version 140
 
-uniform sampler2D p3d_Texture0;
-uniform vec4 p3d_ColorScale;
-in vec2 texcoord;
-flat in int discard_frag;
-in vec4 new_color;
-out vec4 fragColor;
+                    uniform sampler2D p3d_Texture0;
+                    uniform vec4 p3d_ColorScale;
+                    in vec2 texcoord;
+                    flat in int discard_frag;
+                    in vec4 new_color;
+                    out vec4 fragColor;
 
 
-void main() {
-    if (discard_frag == 1) {
-        discard;
-    }
-    fragColor = texture(p3d_Texture0, texcoord) * p3d_ColorScale * new_color;
-}""",
-    )
+                    void main() {
+                        if (discard_frag == 1) {
+                            discard;
+                        }
+                        fragColor = texture(p3d_Texture0, texcoord) * p3d_ColorScale * new_color;
+                    }""")
 
     def __init__(
         self,
@@ -113,6 +337,9 @@ void main() {
         particles=[],
         billboard=True,
         model="quad",
+        trail_duration=1,
+        trail_segments=10,
+        trail_resolution=10,
         **kwargs,
     ):
         """Creates a new ParticleManager
@@ -130,27 +357,33 @@ void main() {
             shader=ParticleManager.particle_shader,
         )
         ParticleManager.i += 1
+        self.trail = Trail(manager=self, duration=trail_duration, resolution=trail_resolution, segments=trail_segments)
         self._bsphere = self.node().getBounds()
         self.elapsed_time = 0
         self.looping = looping
         self.simulation_speed = simulation_speed
         self.gravity = gravity
+        self.trail_segments = trail_segments
         self._particles = particles
 
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-        
-        self.geom_node = self.find("**/+GeomNode").node()
 
-        if self.geom_node.getNumGeoms() == 0:
+        for key, value in kwargs.items():
+            if key.startswith("trail_"):
+                setattr(self.trail, key[6:], value)
+            else:
+                setattr(self, key, value)
+        
+        geom_node = self.find("**/+GeomNode").node()
+
+        if geom_node.getNumGeoms() == 0:
             raise Exception("No geometry found")
 
-        if self.geom_node.getGeom(0).getVertexData().getNumRows() == 0:
+        if geom_node.getGeom(0).getVertexData().getNumRows() == 0:
             raise Exception("No vertex data found")
 
-        if self.geom_node.getGeom(0).getVertexData().getNumRows() > 0:
+        if geom_node.getGeom(0).getVertexData().getNumRows() > 0:
             
-            self._model_nb_rows = self.geom_node.getGeom(0).getVertexData().getNumRows()
+            self._model_nb_rows = geom_node.getGeom(0).getVertexData().getNumRows()
         
             self.iformat = GeomVertexArrayFormat()
             self.iformat.setDivisor(1)
@@ -167,14 +400,14 @@ void main() {
             self.iformat.addColumn(f"end_color", 4, Geom.NT_stdfloat, Geom.C_vector)
 
             self.vformat = GeomVertexFormat(
-                self.geom_node.getGeom(0).getVertexData().getFormat()
+                geom_node.getGeom(0).getVertexData().getFormat()
             )
             
             self.vformat.addArray(self.iformat)
             self.vformat = GeomVertexFormat.registerFormat(self.vformat)
 
 
-            self.vdata = self.geom_node.modifyGeom(0).modifyVertexData()
+            self.vdata = geom_node.modifyGeom(0).modifyVertexData()
             self.vdata.setFormat(self.vformat)
 
             if self.vdata.getFormat() != self.vformat:
@@ -186,11 +419,17 @@ void main() {
     def update(self):
         self.elapsed_time += time.dt * self.simulation_speed
         self.set_shader_input("elapsed_time", self.elapsed_time)
-        # print(mouse_emitter.world_position)
+        if hasattr(self, "trail") and isinstance(self.trail, Trail):
+            self.trail.set_shader_input("elapsed_time", self.elapsed_time)
 
     def apply(self):
         to_generate = min(len(self.particles), ParticleManager.max_particles)
 
+        if hasattr(self, "trail") and isinstance(self.trail, Trail):
+            self.trail.generate_format()
+            trail_vdata = self.trail.vdata
+            trail_vdata.setNumRows(to_generate + self.trail._model_nb_rows)
+            
         self.vdata.setNumRows(to_generate + self._model_nb_rows)
 
         position_i = GeomVertexWriter(self.vdata, f"position")
@@ -205,6 +444,17 @@ void main() {
         init_color_i = GeomVertexWriter(self.vdata, f"init_color")
         end_color_i = GeomVertexWriter(self.vdata, f"end_color")
 
+        if hasattr(self, "trail") and isinstance(self.trail, Trail):
+            trail_position_i = GeomVertexWriter(trail_vdata, f"position")
+            trail_velocity_i = GeomVertexWriter(trail_vdata, f"velocity")
+            trail_lifetime_i = GeomVertexWriter(trail_vdata, f"lifetime")
+            trail_delay_i = GeomVertexWriter(trail_vdata, f"delay")
+            trail_init_scale_i = GeomVertexWriter(trail_vdata, f"init_scale")
+            trail_end_scale_i = GeomVertexWriter(trail_vdata, f"end_scale")
+            trail_init_color_i = GeomVertexWriter(trail_vdata, f"init_color")
+            trail_end_color_i = GeomVertexWriter(trail_vdata, f"end_color")
+            
+            
         for i in range(to_generate):
             particle = self.particles[i]
             position_i.add_data3(*particle.position)
@@ -219,8 +469,26 @@ void main() {
             init_color_i.add_data4(*particle.init_color)
             end_color_i.add_data4(*particle.end_color)
 
+            if hasattr(self, "trail") and isinstance(self.trail, Trail):
+                trail_position_i.add_data3(*particle.position)
+                trail_velocity_i.add_data3(*particle.velocity)
+                
+                trail_lifetime_i.add_data1(particle.lifetime)
+                trail_delay_i.add_data1(particle.delay)
+                
+                trail_init_scale_i.add_data3(*particle.init_scale)
+                trail_end_scale_i.add_data3(*particle.end_scale)
+                
+                if hasattr(particle, "trail_init_color") and particle.trail_init_color is not None:
+                    trail_init_color_i.add_data4(*particle.trail_init_color)
+                    if hasattr(particle, "trail_end_color") and particle.trail_end_color is not None:
+                        trail_end_color_i.add_data4(*particle.trail_end_color)
+                
+                
         self.set_instance_count(to_generate)
-
+        if hasattr(self, "trail") and isinstance(self.trail, Trail):
+            self.trail.set_instance_count(to_generate)
+            
         self.elapsed_time = 0
 
     @property
@@ -232,10 +500,16 @@ void main() {
         if not value:
             self.node().setBounds(OmniBoundingVolume())
             self.node().setFinal(True)
+            if hasattr(self, "trail") and isinstance(self.trail, Trail):
+                self.trail.node().setBounds(OmniBoundingVolume())
+                self.trail.node().setFinal(True)
             self._culling = False
         else:
             self.node().setBounds(self._bsphere)
             self.node().setFinal(False)
+            if hasattr(self, "trail") and isinstance(self.trail, Trail):
+                self.trail.node().setBounds(self._bsphere)
+                self.trail.node().setFinal(False)
             self._culling = True
 
     @property
@@ -255,6 +529,8 @@ void main() {
     def gravity(self, value: Vec3):
         self._gravity = value
         self.set_shader_input("gravity", value)
+        if hasattr(self, "trail") and isinstance(self.trail, Trail):
+            self.trail.set_shader_input("gravity", value)
 
     @property
     def simulation_speed(self):
@@ -272,3 +548,5 @@ void main() {
     def looping(self, value: bool):
         self._looping = value
         self.set_shader_input("looping", value)
+        if hasattr(self, "trail") and isinstance(self.trail, Trail):
+            self.trail.set_shader_input("looping", value)
