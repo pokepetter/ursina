@@ -40,10 +40,11 @@ manager = ParticleManager(
     particles=generate_particles(100),
     gravity=Vec3(0, 1, 0),
     position=Vec3(0, 0, 0),
-    model="cube",
+    model="quad",
     texture="explosion_sprite_sheet",
     frames=Vec2(8,1),
     frames_per_loop=8,
+    billboard=True,
 )
 
 
