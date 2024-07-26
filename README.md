@@ -24,6 +24,10 @@ There is a new folder in the samples one which contains an example of how to use
 # ursina    ʕ •ᴥ•ʔゝ□
 An easy to use game engine/framework for python.
 
+![Banner](/docs/made_with_ursina.jpg)
+
+[![Trailer](/docs/ursina_trailer_preview.webp)](https://youtu.be/j71j88oCTNo)
+
 ## Getting Started
 1) Install Python 3.6 or newer. https://www.python.org/downloads/
 2) Open cmd/terminal and type:
@@ -129,6 +133,21 @@ app.run()                     # opens a window and starts the game.
 ## Project Structure
 ```
 ## Project Structure
+
+📁docs
+    📃index.txt
+    📃documentation.txt
+    📃inventory_tutorial.txt
+    ...
+        # text files for the website. gets turned into .html files with sswg.
+
+    📃cheat_sheet.html
+        # auto generated documentation made with documentation_generator.py.
+
+    📃tutorial_generator.py
+        # turns specific .py files into .txt files, which can then be turned into .html by sswg.
+        # this extracts the comments from the source files into description for that step and the code after into code blocks.
+        # see platformer_tutorial.py for an example.
 
 📁samples               # small example games.
 
