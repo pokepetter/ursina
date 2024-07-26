@@ -289,8 +289,8 @@ class ParticleManager(Entity):
         vertex="""
                 #version 430
 
+                uniform mat4 p3d_ModelViewProjectionMatrix;
                 uniform mat4 p3d_ModelViewMatrix;
-                uniform mat4 p3d_ProjectionMatrix;
                 in vec4 p3d_Vertex;
                 in vec2 p3d_MultiTexCoord0;
 
@@ -306,7 +306,6 @@ class ParticleManager(Entity):
                 uniform float elapsed_time;
                 uniform vec3 gravity;
                 uniform bool looping;
-                uniform bool billboard;
 
                 flat out int discard_frag;
                 out vec2 texcoord;
@@ -344,24 +343,8 @@ class ParticleManager(Entity):
                     vec3 adjusted_position = (position+velocity*adjusted_time + 0.5*gravity*adjusted_time*adjusted_time);
 
                     progress = life;
-                    
-                    
-                    if (billboard) {
-                        mat4 custom_ModelViewMatrix = p3d_ModelViewMatrix;
-                        custom_ModelViewMatrix[0][0] = 1;
-                        custom_ModelViewMatrix[0][1] = 0;
-                        custom_ModelViewMatrix[0][2] = 0;
-                        custom_ModelViewMatrix[1][0] = 0;
-                        custom_ModelViewMatrix[1][1] = 1;
-                        custom_ModelViewMatrix[1][2] = 0;
-                        custom_ModelViewMatrix[2][0] = 0;
-                        custom_ModelViewMatrix[2][1] = 0;
-                        custom_ModelViewMatrix[2][2] = 1;
-                        vec4 temp = custom_ModelViewMatrix * vec4((v + adjusted_position), p3d_Vertex.w);
-                        gl_Position = p3d_ProjectionMatrix * temp;
-                    } else {
-                        gl_Position = p3d_ProjectionMatrix * p3d_ModelViewMatrix * vec4((v + adjusted_position), p3d_Vertex.w);
-                    }
+
+                    gl_Position = p3d_ModelViewProjectionMatrix * vec4(v + adjusted_position, p3d_Vertex.w);
                 }""",
         fragment="""
                     #version 430
@@ -381,7 +364,7 @@ class ParticleManager(Entity):
                         int frame = int(progress * frames_per_loop);
                         int x = frame % int(frames.x);
                         int y = int(mod(frame / int(frames.x), int(frames.y)));
-                        vec2 adjusted_texcoord = vec2((texcoord.x + x) / frames.x, (texcoord.y + y) / frames.y);
+                        vec2 adjusted_texcoord = vec2(texcoord.x / frames.x + x / frames.x, texcoord.y / frames.y + y / frames.y);
                         fragColor = texture(p3d_Texture0, adjusted_texcoord)  * p3d_ColorScale * new_color;
                     }""")
 
@@ -397,7 +380,6 @@ class ParticleManager(Entity):
         trail_resolution=10,
         frames=None,
         frames_per_loop=None,
-        billboard=False,
         **kwargs,
     ):
         """Creates a new ParticleManager
@@ -421,7 +403,6 @@ class ParticleManager(Entity):
         self.simulation_speed = simulation_speed
         self.gravity = gravity
         self.trail_segments = trail_segments
-        self.billboard = billboard
         self._particles = particles
 
         self.frames = frames if frames is not None else Vec2(1, 1)
@@ -634,17 +615,6 @@ class ParticleManager(Entity):
     def frames_per_loop(self, value):
         self._frames_per_loop = value
         self.set_shader_input("frames_per_loop", value)
-
-
-
-    @property
-    def billboard(self):
-        return self._billboard
-    
-    @billboard.setter
-    def billboard(self, value):
-        self._billboard = value
-        self.set_shader_input("billboard", value)
 
     def __setattr__(self, key, value):
         if key.startswith("trail_"):
