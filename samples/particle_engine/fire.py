@@ -13,8 +13,8 @@ def generate_particle():
             random.random() * 5 - 2.5, random.random() * 0.5, random.random() * 5 - 2.5
         ),
         velocity=Vec3(
-            random.random() * 3 - 1.5,
             random.random() * 3 + 2,
+            random.random() * 3 - 1.5,
             random.random() * 3 - 1.5,
         ),
         lifetime=random.random() * 5 + 3,
@@ -22,8 +22,10 @@ def generate_particle():
         init_scale=Vec3(random.random() * 0.5),
         end_scale=Vec3(random.random() * 0.2),
         init_color=Vec4(random.random(), random.random(), random.random(), 0) * 0.2
-        + color.orange,
-        end_color=Vec4(Vec3(random.random()), 1),
+        + color.yellow,
+        end_color=color.white,
+        trail_init_color=color.orange,
+        trail_end_color=color.red
     )
 
 
@@ -32,17 +34,21 @@ def generate_particles(n):
 
 
 manager = ParticleManager(
-    texture="radial_gradient",
     scale=1,
     particles=generate_particles(10_000),
     gravity=Vec3(0, 1, 0),
     position=Vec3(0, -3, 0),
     looping=True,
     culling=False,
+    trail_thickness=1,
+    trail_duration=0.5,
+    model="diamond",
 )
 
 
 def input(key):
+    if key == "space":
+        manager.simulation_speed = 0 if manager.simulation_speed != 0 else 1
     if key == "-":
         manager.simulation_speed -= 0.1
     if key == "+":
@@ -52,3 +58,4 @@ def input(key):
 EditorCamera()
 
 app.run()
+
