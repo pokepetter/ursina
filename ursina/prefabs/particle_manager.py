@@ -93,11 +93,21 @@ class Trail(Entity):
                 }
 
                 void main() {
+                    if (duration == 0) {
+                        discard_frag = 1;
+                        return;
+                    }
+                    
                     int layer = int(p3d_Vertex.y);
                     
                     float prev_progress = 0;
                     float progress = float(layer) / float(segments);
                     float next_progress = 1;
+                    
+                    if (elapsed_time - delay - duration< 0) {
+                        discard_frag = 1;
+                        return;
+                    }
                     
                     float start_time = mod(elapsed_time - delay - duration, lifetime);
                     float end_time = mod(elapsed_time - delay, lifetime);
@@ -300,9 +310,10 @@ class ParticleManager(Entity):
                 flat out int discard_frag;
                 out vec2 texcoord;
                 out vec4 new_color;
+                out float progress;
 
                 void main() {
-
+                        
                     float adjusted_time = elapsed_time - delay;
                     float life = adjusted_time / lifetime;
 
@@ -331,21 +342,30 @@ class ParticleManager(Entity):
 
                     vec3 adjusted_position = (position+velocity*adjusted_time + 0.5*gravity*adjusted_time*adjusted_time);
 
+                    progress = life;
+
                     gl_Position = p3d_ModelViewProjectionMatrix * vec4(v + adjusted_position, p3d_Vertex.w);
                 }""",
         fragment="""
                     #version 430
                     uniform sampler2D p3d_Texture0;
                     uniform vec4 p3d_ColorScale;
+                    uniform vec2 frames;
+                    uniform int frames_per_loop;
                     in vec2 texcoord;
                     flat in int discard_frag;
                     in vec4 new_color;
+                    in float progress;
                     out vec4 fragColor;
                     void main() {
                         if (discard_frag == 1) {
                             discard;
                         }
-                        fragColor = texture(p3d_Texture0, texcoord)  * p3d_ColorScale * new_color;
+                        int frame = int(progress * frames_per_loop);
+                        int x = frame % int(frames.x);
+                        int y = int(mod(frame / int(frames.x), int(frames.y)));
+                        vec2 adjusted_texcoord = vec2(texcoord.x / frames.x + x / frames.x, texcoord.y / frames.y + y / frames.y);
+                        fragColor = texture(p3d_Texture0, adjusted_texcoord)  * p3d_ColorScale * new_color;
                     }""")
 
     def __init__(
@@ -355,9 +375,11 @@ class ParticleManager(Entity):
         gravity=Vec3(0, -9.8, 0),
         particles=[],
         model="quad",
-        trail_duration=1,
+        trail_duration=0,
         trail_segments=10,
         trail_resolution=10,
+        frames=None,
+        frames_per_loop=None,
         **kwargs,
     ):
         """Creates a new ParticleManager
@@ -383,6 +405,8 @@ class ParticleManager(Entity):
         self.trail_segments = trail_segments
         self._particles = particles
 
+        self.frames = frames if frames is not None else Vec2(1, 1)
+        self.frames_per_loop = frames_per_loop if frames_per_loop is not None else 1
 
         for key, value in kwargs.items():
             if key.startswith("trail_"):
@@ -574,6 +598,35 @@ class ParticleManager(Entity):
         if hasattr(self, "trail") and isinstance(self.trail, Trail):
             self.trail.set_shader_input("looping", value)
 
+    @property
+    def frames(self):
+        return self._frames
+    
+    @frames.setter
+    def frames(self, value):
+        self._frames = value
+        self.set_shader_input("frames", value)
+
+    @property
+    def frames_per_loop(self):
+        return self._frames_per_loop
+    
+    @frames_per_loop.setter
+    def frames_per_loop(self, value):
+        self._frames_per_loop = value
+        self.set_shader_input("frames_per_loop", value)
+
+    def __setattr__(self, key, value):
+        if key.startswith("trail_"):
+            setattr(self.trail, key[6:], value)
+        else:
+            super().__setattr__(key, value)
+    
+    def __getattr__(self, key):
+        if key.startswith("trail_"):
+            return getattr(self.trail, key[6:])
+        else:
+            return super().__getattr__(key)
 
 if __name__ == "__main__":
     import random
@@ -608,7 +661,6 @@ if __name__ == "__main__":
     def generate_particles(n):
         return [generate_particle() for _ in range(n)]
 
-
     manager = ParticleManager(
         scale=1,
         particles=generate_particles(10_000),
@@ -616,6 +668,7 @@ if __name__ == "__main__":
         position=Vec3(0, -3, 0),
         looping=True,
         culling=False,
+        trail_duration=1,
         trail_thickness=1,
         model="diamond",
     )
