@@ -306,8 +306,8 @@ class ParticleManager(Entity):
         vertex="""
                 #version 430
 
-                uniform mat4 p3d_ModelViewProjectionMatrix;
                 uniform mat4 p3d_ModelViewMatrix;
+                uniform mat4 p3d_ProjectionMatrix;
                 in vec4 p3d_Vertex;
                 in vec2 p3d_MultiTexCoord0;
 
@@ -323,6 +323,7 @@ class ParticleManager(Entity):
                 uniform float elapsed_time;
                 uniform vec3 gravity;
                 uniform bool looping;
+                uniform bool billboard;
 
                 flat out int discard_frag;
                 out vec2 texcoord;
@@ -360,10 +361,6 @@ class ParticleManager(Entity):
                     vec3 adjusted_position = (position+velocity*adjusted_time + 0.5*gravity*adjusted_time*adjusted_time);
 
                     progress = life;
-<<<<<<< Updated upstream
-
-                    gl_Position = p3d_ModelViewProjectionMatrix * vec4(v + adjusted_position, p3d_Vertex.w);
-=======
                     
                     
                     if (billboard) {
@@ -383,7 +380,6 @@ class ParticleManager(Entity):
                     } else {
                         gl_Position = p3d_ProjectionMatrix * p3d_ModelViewMatrix * vec4((v + adjusted_position), p3d_Vertex.w);
                     }
->>>>>>> Stashed changes
                 }""",
         fragment="""
                     #version 430
@@ -655,10 +651,6 @@ class ParticleManager(Entity):
         self._frames_per_loop = value
         self.set_shader_input("frames_per_loop", value)
 
-<<<<<<< Updated upstream
-=======
-
-
     @property
     def billboard(self):
         return self._billboard
@@ -670,7 +662,6 @@ class ParticleManager(Entity):
         if hasattr(self, "trail") and isinstance(self.trail, Trail):
             self.trail.set_shader_input("billboard", value)
 
->>>>>>> Stashed changes
     def __setattr__(self, key, value):
         if key.startswith("trail_"):
             setattr(self.trail, key[6:], value)
