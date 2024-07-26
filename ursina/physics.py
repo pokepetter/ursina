@@ -250,7 +250,10 @@ if __name__ == '__main__':
     ground = Entity(model='plane', texture='grass', scale=30)
     RigidBody(shape=PlaneShape(), entity=ground)
 
-    cube = Entity(model='cube', texture='white_cube', y=7)
+    cube = Entity(model='cube', texture='white_cube')
+    # cube.rotation = Vec3(0,45,68)
+    # cube.scale = Vec3(.5)
+    cube.y = 7
     cube_body = RigidBody(shape=BoxShape(), entity=cube, mass=1)
 
     sphere = Entity(model='sphere', texture='brick', y=30)
