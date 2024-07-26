@@ -189,21 +189,19 @@ class RigidBody(_PhysicsBody):
 
         if entity:
             self.node_path = entity.getParent().attachNewNode(self.rigid_body_node)
-            self.scale = entity.world_scale
-            entity.reparentTo(self.node_path)
             self.position = entity.world_position
-            entity.position = Vec3.zero    # Reset local position of the entity
             self.rotation = entity.world_rotation
-            entity.world_scale = self.scale
+            self.scale = entity.world_scale
+            entity.world_parent = self.node_path
         else:
             self.node_path = render.attachNewNode(self.rigid_body_node)
         self.node_path.node().setIntoCollideMask(BitMask32(mask))
 
         if not isinstance(shape, (list, tuple)):    # add just one shape
-            self.node_path.node().addShape(_convert_shape(shape, entity, dynamic=not self.rigid_body_node.isStatic()), TransformState.makePosHpr(shape.center, entity.getHpr()))
+            self.node_path.node().addShape(_convert_shape(shape, entity, dynamic=not self.rigid_body_node.isStatic()), TransformState.makePos(shape.center))
         else:    # add multiple shapes
             for s in shape:
-                self.node_path.node().addShape(_convert_shape(s, entity, dynamic=not self.rigid_body_node.isStatic()), TransformState.makePosHpr(s.center, entity.getHpr()))
+                self.node_path.node().addShape(_convert_shape(s, entity, dynamic=not self.rigid_body_node.isStatic()), TransformState.makePos(s.center))
 
         self.attach()
         self.node_path.setPythonTag('Entity', entity)
