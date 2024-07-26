@@ -615,7 +615,6 @@ if __name__ == "__main__":
 
 
     manager = ParticleManager(
-        texture="radial_gradient",
         scale=1,
         particles=generate_particles(10_000),
         gravity=Vec3(0, 1, 0),
@@ -623,7 +622,7 @@ if __name__ == "__main__":
         looping=True,
         culling=False,
         trail_thickness=1,
-        model="cube",
+        model="diamond",
     )
 
 
