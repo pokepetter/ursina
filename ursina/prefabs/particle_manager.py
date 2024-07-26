@@ -38,7 +38,7 @@ class Trail(Entity):
         self.duration = duration
         self.shader = Shader(
             vertex="""
-                #version 140
+                #version 430
 
                 uniform mat4 p3d_ModelViewProjectionMatrix;
                 uniform mat4 p3d_ModelViewMatrix;
@@ -128,10 +128,10 @@ class Trail(Entity):
 
                     vec3 adjusted_position = get_position(adjusted_time);
                     
-                    gl_Position = gl_ModelViewProjectionMatrix * vec4((v + adjusted_position), p3d_Vertex.w);
+                    gl_Position = p3d_ModelViewProjectionMatrix * vec4((v + adjusted_position), p3d_Vertex.w);
                 }""",
             fragment="""
-                    #version 140
+                    #version 430
                     uniform sampler2D p3d_Texture0;
                     uniform vec4 p3d_ColorScale;
                     in vec2 texcoord;
@@ -277,7 +277,7 @@ class ParticleManager(Entity):
         name=f"particle_shader",
         language=Shader.GLSL,
         vertex="""
-                #version 140
+                #version 430
 
                 uniform mat4 p3d_ModelViewProjectionMatrix;
                 uniform mat4 p3d_ModelViewMatrix;
@@ -331,10 +331,10 @@ class ParticleManager(Entity):
 
                     vec3 adjusted_position = (position+velocity*adjusted_time + 0.5*gravity*adjusted_time*adjusted_time);
 
-                    gl_Position = gl_ModelViewProjectionMatrix * vec4(v + adjusted_position, p3d_Vertex.w);
+                    gl_Position = p3d_ModelViewProjectionMatrix * vec4(v + adjusted_position, p3d_Vertex.w);
                 }""",
         fragment="""
-                    #version 140
+                    #version 430
                     uniform sampler2D p3d_Texture0;
                     uniform vec4 p3d_ColorScale;
                     in vec2 texcoord;
@@ -574,11 +574,6 @@ class ParticleManager(Entity):
         if hasattr(self, "trail") and isinstance(self.trail, Trail):
             self.trail.set_shader_input("looping", value)
 
-    @property
-    def billboard_setter(self, value):
-        if hasattr(self, "trail") and isinstance(self.trail, Trail):
-            self.trail.billboard = value
-        return super().billboard_setter(value)
 
 if __name__ == "__main__":
     import random
