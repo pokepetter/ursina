@@ -71,6 +71,27 @@ class Trail(Entity):
                     return (position+velocity*time + 0.5*gravity*time*time);
                 }
 
+                vec3 get_tangent(float time) {
+                    return normalize(velocity + gravity*time);
+                }
+
+                mat3 get_rotation_matrix(vec3 tangent) {
+                    vec3 from = vec3(0,1,0);
+                    if (tangent == from * -1) {
+                        return mat3(1);
+                    }
+                    vec3 v = cross(from, tangent);
+                    float s = length(v);
+                    float c = dot(from, tangent);
+                    mat3 vx = mat3(
+                        0, -v.z, v.y,
+                        v.z, 0, -v.x,
+                        -v.y, v.x, 0
+                    );
+                    return mat3(1) + vx + vx*vx*(1-c)/(s*s);
+                    
+                }
+
                 void main() {
                     int layer = int(p3d_Vertex.y);
                     
@@ -97,9 +118,9 @@ class Trail(Entity):
                     }
                     discard_frag = 0;
 
-                    vec4 new_scale = vec4(mix(init_scale, end_scale, life), 1.0);
+                    vec3 new_scale = mix(init_scale, end_scale, life);
 
-                    vec4 v = p3d_Vertex * new_scale;
+                    vec3 v = get_rotation_matrix(get_tangent(adjusted_time)) * vec3(p3d_Vertex.x, 0, p3d_Vertex.z) * new_scale;
                     
                     texcoord = p3d_MultiTexCoord0;
 
@@ -107,7 +128,7 @@ class Trail(Entity):
 
                     vec3 adjusted_position = get_position(adjusted_time);
                     
-                    gl_Position = gl_ModelViewProjectionMatrix * vec4((vec3(v.x,0,v.z) + adjusted_position), p3d_Vertex.w);
+                    gl_Position = gl_ModelViewProjectionMatrix * vec4((v + adjusted_position), p3d_Vertex.w);
                 }""",
             fragment="""
                     #version 140
@@ -300,9 +321,9 @@ class ParticleManager(Entity):
                     }
                     discard_frag = 0;
 
-                    vec4 new_scale = vec4(mix(init_scale, end_scale, life), 1.0);
+                    vec3 new_scale = mix(init_scale, end_scale, life);
 
-                    vec4 v = p3d_Vertex * new_scale;
+                    vec3 v = p3d_Vertex.xyz * new_scale;
                     
                     texcoord = p3d_MultiTexCoord0;
 
@@ -310,23 +331,21 @@ class ParticleManager(Entity):
 
                     vec3 adjusted_position = (position+velocity*adjusted_time + 0.5*gravity*adjusted_time*adjusted_time);
 
-                    gl_Position = gl_ModelViewProjectionMatrix * vec4((v.xyz + adjusted_position), p3d_Vertex.w);
+                    gl_Position = gl_ModelViewProjectionMatrix * vec4(v + adjusted_position, p3d_Vertex.w);
                 }""",
-        fragment="""#version 140
-
+        fragment="""
+                    #version 140
                     uniform sampler2D p3d_Texture0;
                     uniform vec4 p3d_ColorScale;
                     in vec2 texcoord;
                     flat in int discard_frag;
                     in vec4 new_color;
                     out vec4 fragColor;
-
-
                     void main() {
                         if (discard_frag == 1) {
                             discard;
                         }
-                        fragColor = texture(p3d_Texture0, texcoord) * p3d_ColorScale * new_color;
+                        fragColor = texture(p3d_Texture0, texcoord)  * p3d_ColorScale * new_color;
                     }""")
 
     def __init__(
@@ -335,7 +354,6 @@ class ParticleManager(Entity):
         simulation_speed=1,
         gravity=Vec3(0, -9.8, 0),
         particles=[],
-        billboard=True,
         model="quad",
         trail_duration=1,
         trail_segments=10,
@@ -353,7 +371,6 @@ class ParticleManager(Entity):
         self.instance = ParticleManager.i
         super().__init__(
             model=model,
-            billboard=billboard,
             shader=ParticleManager.particle_shader,
         )
         ParticleManager.i += 1
@@ -481,8 +498,14 @@ class ParticleManager(Entity):
                 
                 if hasattr(particle, "trail_init_color") and particle.trail_init_color is not None:
                     trail_init_color_i.add_data4(*particle.trail_init_color)
-                    if hasattr(particle, "trail_end_color") and particle.trail_end_color is not None:
-                        trail_end_color_i.add_data4(*particle.trail_end_color)
+                else:
+                    trail_init_color_i.add_data4(*color.white)
+                if hasattr(particle, "trail_end_color") and particle.trail_end_color is not None:
+                    trail_end_color_i.add_data4(*particle.trail_end_color)
+                else:
+                    trail_end_color_i.add_data4(*color.white)
+                        
+                        
                 
                 
         self.set_instance_count(to_generate)
@@ -550,3 +573,69 @@ class ParticleManager(Entity):
         self.set_shader_input("looping", value)
         if hasattr(self, "trail") and isinstance(self.trail, Trail):
             self.trail.set_shader_input("looping", value)
+
+    @property
+    def billboard_setter(self, value):
+        if hasattr(self, "trail") and isinstance(self.trail, Trail):
+            self.trail.billboard = value
+        return super().billboard_setter(value)
+
+if __name__ == "__main__":
+    import random
+
+
+    window.vsync = False
+    app = Ursina()
+
+
+    def generate_particle():
+        return Particle(
+            position=Vec3(
+                random.random() * 5 - 2.5, random.random() * 0.5, random.random() * 5 - 2.5
+            ),
+            velocity=Vec3(
+                random.random() * 3 + 2,
+                random.random() * 3 - 1.5,
+                random.random() * 3 - 1.5,
+            ),
+            lifetime=random.random() * 5 + 3,
+            delay=random.random() * 4,
+            init_scale=Vec3(random.random() * 0.5),
+            end_scale=Vec3(random.random() * 0.2),
+            init_color=Vec4(random.random(), random.random(), random.random(), 0) * 0.2
+            + color.yellow,
+            end_color=color.white,
+            trail_init_color=color.orange,
+            trail_end_color=color.red
+        )
+
+
+    def generate_particles(n):
+        return [generate_particle() for _ in range(n)]
+
+
+    manager = ParticleManager(
+        texture="radial_gradient",
+        scale=1,
+        particles=generate_particles(10_000),
+        gravity=Vec3(0, 1, 0),
+        position=Vec3(0, -3, 0),
+        looping=True,
+        culling=False,
+        trail_thickness=1,
+        model="cube",
+    )
+
+
+    def input(key):
+        if key == "space":
+            manager.simulation_speed = 0 if manager.simulation_speed != 0 else 1
+        if key == "-":
+            manager.simulation_speed -= 0.1
+        if key == "+":
+            manager.simulation_speed += 0.1
+
+
+    EditorCamera()
+
+    app.run()
