@@ -415,6 +415,7 @@ class ParticleManager(Entity):
         trail_resolution=10,
         frames=None,
         frames_per_loop=None,
+        billboard=False,
         **kwargs,
     ):
         """Creates a new ParticleManager
@@ -438,6 +439,7 @@ class ParticleManager(Entity):
         self.simulation_speed = simulation_speed
         self.gravity = gravity
         self.trail_segments = trail_segments
+        self.billboard = billboard
         self._particles = particles
 
         self.frames = frames if frames is not None else Vec2(1, 1)
