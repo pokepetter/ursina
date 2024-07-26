@@ -40,8 +40,8 @@ class Trail(Entity):
             vertex="""
                 #version 430
 
-                uniform mat4 p3d_ModelViewProjectionMatrix;
                 uniform mat4 p3d_ModelViewMatrix;
+                uniform mat4 p3d_ProjectionMatrix;
                 in vec4 p3d_Vertex;
                 in vec2 p3d_MultiTexCoord0;
 
@@ -61,6 +61,7 @@ class Trail(Entity):
                 uniform int resolution;
                 uniform int segments;
                 uniform float duration;
+                uniform bool billboard;
                 
                 flat out int discard_frag;
                 out vec2 texcoord;
@@ -138,7 +139,23 @@ class Trail(Entity):
 
                     vec3 adjusted_position = get_position(adjusted_time);
                     
-                    gl_Position = p3d_ModelViewProjectionMatrix * vec4((v + adjusted_position), p3d_Vertex.w);
+                    if (billboard) {
+                        mat4 custom_ModelViewMatrix = p3d_ModelViewMatrix;
+                        custom_ModelViewMatrix[0][0] = 1;
+                        custom_ModelViewMatrix[0][1] = 0;
+                        custom_ModelViewMatrix[0][2] = 0;
+                        custom_ModelViewMatrix[1][0] = 0;
+                        custom_ModelViewMatrix[1][1] = 1;
+                        custom_ModelViewMatrix[1][2] = 0;
+                        custom_ModelViewMatrix[2][0] = 0;
+                        custom_ModelViewMatrix[2][1] = 0;
+                        custom_ModelViewMatrix[2][2] = 1;
+                        vec4 temp = custom_ModelViewMatrix * vec4(v, p3d_Vertex.w) + p3d_ModelViewMatrix * vec4(adjusted_position, p3d_Vertex.w);
+                        temp.w = p3d_Vertex.w;
+                        gl_Position = p3d_ProjectionMatrix * temp;
+                    } else {
+                        gl_Position = p3d_ProjectionMatrix * p3d_ModelViewMatrix * vec4((v + adjusted_position), p3d_Vertex.w);
+                    }
                 }""",
             fragment="""
                     #version 430
@@ -343,8 +360,30 @@ class ParticleManager(Entity):
                     vec3 adjusted_position = (position+velocity*adjusted_time + 0.5*gravity*adjusted_time*adjusted_time);
 
                     progress = life;
+<<<<<<< Updated upstream
 
                     gl_Position = p3d_ModelViewProjectionMatrix * vec4(v + adjusted_position, p3d_Vertex.w);
+=======
+                    
+                    
+                    if (billboard) {
+                        mat4 custom_ModelViewMatrix = p3d_ModelViewMatrix;
+                        custom_ModelViewMatrix[0][0] = 1;
+                        custom_ModelViewMatrix[0][1] = 0;
+                        custom_ModelViewMatrix[0][2] = 0;
+                        custom_ModelViewMatrix[1][0] = 0;
+                        custom_ModelViewMatrix[1][1] = 1;
+                        custom_ModelViewMatrix[1][2] = 0;
+                        custom_ModelViewMatrix[2][0] = 0;
+                        custom_ModelViewMatrix[2][1] = 0;
+                        custom_ModelViewMatrix[2][2] = 1;
+                        vec4 temp = custom_ModelViewMatrix * vec4(v, p3d_Vertex.w) + p3d_ModelViewMatrix * vec4(adjusted_position, p3d_Vertex.w);
+                        temp.w = p3d_Vertex.w;
+                        gl_Position = p3d_ProjectionMatrix * temp;
+                    } else {
+                        gl_Position = p3d_ProjectionMatrix * p3d_ModelViewMatrix * vec4((v + adjusted_position), p3d_Vertex.w);
+                    }
+>>>>>>> Stashed changes
                 }""",
         fragment="""
                     #version 430
@@ -616,6 +655,22 @@ class ParticleManager(Entity):
         self._frames_per_loop = value
         self.set_shader_input("frames_per_loop", value)
 
+<<<<<<< Updated upstream
+=======
+
+
+    @property
+    def billboard(self):
+        return self._billboard
+    
+    @billboard.setter
+    def billboard(self, value):
+        self._billboard = value
+        self.set_shader_input("billboard", value)
+        if hasattr(self, "trail") and isinstance(self.trail, Trail):
+            self.trail.set_shader_input("billboard", value)
+
+>>>>>>> Stashed changes
     def __setattr__(self, key, value):
         if key.startswith("trail_"):
             setattr(self.trail, key[6:], value)

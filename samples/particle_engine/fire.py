@@ -42,7 +42,7 @@ manager = ParticleManager(
     culling=False,
     trail_thickness=1,
     trail_duration=0.5,
-    model="diamond",
+    model="diamond"
 )
 
 
