@@ -28,14 +28,16 @@ class Particle:
     trail_end_color: Vec4 = None
 
 class Trail(Entity):
-    def __init__(self, manager, duration=1, resolution=10, segments=10, thickness=0.3, **kwargs):
-        super().__init__(**kwargs)
-        self.resolution = resolution
-        self.segments = segments
-        self.thickness = thickness
-        self.generate_model()
-        self.manager = manager
-        self.duration = duration
+    def __init__(self,
+                manager, 
+                duration=1, 
+                resolution=10, 
+                segments=10, 
+                thickness=0.3, 
+                frames=Vec2(1,1),
+                frames_per_loop=1,
+                **kwargs):
+        super().__init__(**kwargs,parent = manager)
         self.shader = Shader(
             vertex="""
                 #version 430
@@ -57,16 +59,16 @@ class Trail(Entity):
                 uniform float elapsed_time;
                 uniform vec3 gravity;
                 uniform bool looping;
+                uniform bool billboard;
 
                 uniform int resolution;
                 uniform int segments;
                 uniform float duration;
-                uniform bool billboard;
                 
                 flat out int discard_frag;
                 out vec2 texcoord;
                 out vec4 new_color;
-
+                out float progress;
 
                 vec3 get_position(float time) {
                     return (position+velocity*time + 0.5*gravity*time*time);
@@ -137,6 +139,8 @@ class Trail(Entity):
 
                     new_color = mix(init_color, end_color, life);
 
+                    progress = life;
+
                     vec3 adjusted_position = get_position(adjusted_time);
                     
                     if (billboard) {
@@ -161,16 +165,32 @@ class Trail(Entity):
                     #version 430
                     uniform sampler2D p3d_Texture0;
                     uniform vec4 p3d_ColorScale;
+                    uniform vec2 frames;
+                    uniform int frames_per_loop;
                     in vec2 texcoord;
                     flat in int discard_frag;
                     in vec4 new_color;
+                    in float progress;
                     out vec4 fragColor;
                     void main() {
                         if (discard_frag == 1) {
                             discard;
                         }
-                        fragColor = texture(p3d_Texture0, texcoord)  * p3d_ColorScale * new_color;
+                        int frame = int(progress * frames_per_loop);
+                        int x = frame % int(frames.x);
+                        int y = int(mod(frame / int(frames.x), int(frames.y)));
+                        vec2 adjusted_texcoord = vec2(texcoord.x / frames.x + x / frames.x, texcoord.y / frames.y + y / frames.y);
+                        fragColor = texture(p3d_Texture0, adjusted_texcoord)  * p3d_ColorScale * new_color;
                     }""")
+
+        self.resolution = resolution
+        self.segments = segments
+        self.thickness = thickness
+        self.generate_model()
+        self.manager = manager
+        self.duration = duration
+        self.frames = frames
+        self.frames_per_loop = frames_per_loop
 
     def generate_model(self):
         if not(hasattr(self, "resolution") and hasattr(self, "segments") and hasattr(self, "thickness")):
@@ -193,7 +213,7 @@ class Trail(Entity):
                 vert *= dist
                 vert.y = i
                 circle.append(vert)
-                uv.append((progress,j/resolution))
+                uv.append((j/resolution,progress))
             vertices.extend(circle)
             if i!=segments-1:
                 i_res = i*resolution
@@ -204,7 +224,7 @@ class Trail(Entity):
                     triangles.append([i_plus_1+j_plus_1,i_plus_1+j,i_res+j_plus_1])
                     
         vertices += [Vec3(0,segments,0)]
-        uv.append([1,0.5])
+        uv.append([0.5,1])
         triangles += [[i*resolution+(j+1)%resolution,segments*resolution,i*resolution+j] for j in range(resolution)]
         model = Mesh(
             vertices=vertices,
@@ -294,9 +314,25 @@ class Trail(Entity):
         self._thickness = value
         self.generate_model()
 
-    def update(self):
-        self.position = self.manager.position
-        
+    
+    @property
+    def frames(self):
+        return self._frames
+    
+    @frames.setter
+    def frames(self, value):
+        self._frames = value
+        self.set_shader_input("frames", value)
+
+    @property
+    def frames_per_loop(self):
+        return self._frames_per_loop
+    
+    @frames_per_loop.setter
+    def frames_per_loop(self, value):
+        self._frames_per_loop = value
+        self.set_shader_input("frames_per_loop", value)
+    
 class ParticleManager(Entity):
     max_particles = 1_000_000
     i = 0
@@ -711,7 +747,7 @@ if __name__ == "__main__":
 
     manager = ParticleManager(
         scale=1,
-        particles=generate_particles(10_000),
+        particles=generate_particles(100),
         gravity=Vec3(0, 1, 0),
         position=Vec3(0, -3, 0),
         looping=True,
@@ -729,8 +765,13 @@ if __name__ == "__main__":
             manager.simulation_speed -= 0.1
         if key == "+":
             manager.simulation_speed += 0.1
-
-
-    EditorCamera()
+    
+    def update():
+        movement =  Vec3(held_keys["d"] - held_keys["a"], held_keys["w"] - held_keys["s"], held_keys["up arrow"] - held_keys["down arrow"]) 
+        if movement.length() > 0:
+            movement = movement.normalized()
+        manager.position += movement * time.dt * 5
+        
+        manager.rotation_y += (held_keys["left mouse"] - held_keys["right mouse"]) * 100 * time.dt
 
     app.run()
