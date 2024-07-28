@@ -33,7 +33,8 @@ class Trail(Entity):
                 duration=1, 
                 resolution=10, 
                 segments=10, 
-                thickness=0.3, 
+                init_thickness=0.3,
+                end_thickness=0, 
                 frames=Vec2(1,1),
                 frames_per_loop=1,
                 **kwargs):
@@ -68,7 +69,7 @@ class Trail(Entity):
                 flat out int discard_frag;
                 out vec2 texcoord;
                 out vec4 new_color;
-                out float progress;
+                out float anim_progress;
 
                 vec3 get_position(float time) {
                     return (position+velocity*time + 0.5*gravity*time*time);
@@ -95,6 +96,22 @@ class Trail(Entity):
                     
                 }
 
+                mat4 remove_rotation(mat4 m) {
+                    m[0][0] = 1;
+                    m[0][1] = 0;
+                    m[0][2] = 0;
+                    
+                    m[1][0] = 0;
+                    m[1][1] = 1;
+                    m[1][2] = 0;
+                    
+                    m[2][0] = 0;
+                    m[2][1] = 0;
+                    m[2][2] = 1;
+                    
+                    return m;
+                }
+                
                 void main() {
                     if (duration == 0) {
                         discard_frag = 1;
@@ -119,9 +136,7 @@ class Trail(Entity):
                         end_time = lifetime;
                     }
                     
-                    float prev_adjusted_time = mix(start_time, end_time, 1-prev_progress);
                     float adjusted_time = mix(start_time, end_time, 1-progress);
-                    float next_adjusted_time = mix(start_time, end_time, 1-next_progress);
                     
                     float life = adjusted_time / lifetime;
                     
@@ -139,21 +154,12 @@ class Trail(Entity):
 
                     new_color = mix(init_color, end_color, life);
 
-                    progress = life;
+                    anim_progress = start_time / lifetime;
 
                     vec3 adjusted_position = get_position(adjusted_time);
                     
                     if (billboard) {
-                        mat4 custom_ModelViewMatrix = p3d_ModelViewMatrix;
-                        custom_ModelViewMatrix[0][0] = 1;
-                        custom_ModelViewMatrix[0][1] = 0;
-                        custom_ModelViewMatrix[0][2] = 0;
-                        custom_ModelViewMatrix[1][0] = 0;
-                        custom_ModelViewMatrix[1][1] = 1;
-                        custom_ModelViewMatrix[1][2] = 0;
-                        custom_ModelViewMatrix[2][0] = 0;
-                        custom_ModelViewMatrix[2][1] = 0;
-                        custom_ModelViewMatrix[2][2] = 1;
+                        mat4 custom_ModelViewMatrix = remove_rotation(p3d_ModelViewMatrix);
                         vec4 temp = custom_ModelViewMatrix * vec4(v, p3d_Vertex.w) + p3d_ModelViewMatrix * vec4(adjusted_position, p3d_Vertex.w);
                         temp.w = p3d_Vertex.w;
                         gl_Position = p3d_ProjectionMatrix * temp;
@@ -163,29 +169,33 @@ class Trail(Entity):
                 }""",
             fragment="""
                     #version 430
+                    
                     uniform sampler2D p3d_Texture0;
                     uniform vec4 p3d_ColorScale;
                     uniform vec2 frames;
                     uniform int frames_per_loop;
-                    in vec2 texcoord;
+                    
                     flat in int discard_frag;
+                    in vec2 texcoord;
                     in vec4 new_color;
-                    in float progress;
+                    in float anim_progress;
+                    
                     out vec4 fragColor;
                     void main() {
                         if (discard_frag == 1) {
                             discard;
                         }
-                        int frame = int(progress * frames_per_loop);
-                        int x = frame % int(frames.x);
+                        int frame = int(anim_progress * frames_per_loop);
+                        int x = int(mod(frame, int(frames.x)));
                         int y = int(mod(frame / int(frames.x), int(frames.y)));
                         vec2 adjusted_texcoord = vec2(texcoord.x / frames.x + x / frames.x, texcoord.y / frames.y + y / frames.y);
                         fragColor = texture(p3d_Texture0, adjusted_texcoord)  * p3d_ColorScale * new_color;
                     }""")
 
-        self.resolution = resolution
-        self.segments = segments
-        self.thickness = thickness
+        self._resolution = resolution
+        self._segments = segments
+        self._init_thickness = init_thickness
+        self._end_thickness = end_thickness
         self.generate_model()
         self.manager = manager
         self.duration = duration
@@ -193,47 +203,54 @@ class Trail(Entity):
         self.frames_per_loop = frames_per_loop
 
     def generate_model(self):
-        if not(hasattr(self, "resolution") and hasattr(self, "segments") and hasattr(self, "thickness")):
+        if not(hasattr(self, "resolution") and hasattr(self, "segments") and hasattr(self, "init_thickness") and hasattr(self, "end_thickness")):
             return
         resolution = self.resolution
         segments = self.segments
-        thickness = self.thickness
+        init_thickness = self.init_thickness
+        end_thickness = self.end_thickness
         triangles = []
         uv = []
         vertices = []
         angle_step = math.radians(1/resolution*360)
-        half_thickness = thickness/2
-        for i in range(segments):
+        for i in range(segments+1):
             circle = []
             progress = i/segments
+            thickness = lerp(init_thickness, end_thickness, progress)
+            half_thickness = thickness/2
+            i_res = i*resolution
+            i_plus_1 = i_res+resolution
             for j in range(resolution):
+                
                 angle = j*angle_step
-                vert = (Vec3(0,0,1)*math.cos(angle) + Vec3(1,0,0)*math.sin(angle))
-                dist = half_thickness * (1-progress)
+                dist = half_thickness
+                
+                vert = Vec3(math.sin(angle),0,math.cos(angle))
                 vert *= dist
                 vert.y = i
+                
                 circle.append(vert)
+                
                 uv.append((j/resolution,progress))
+                
+                if i == segments:
+                    continue
+                
+                triangles.append([i_res+j, i_res+(j+1)%resolution, i_plus_1+j])
+                triangles.append([i_plus_1+j, i_res+(j+1)%resolution, i_plus_1+(j+1)%resolution])
+                
             vertices.extend(circle)
-            if i!=segments-1:
-                i_res = i*resolution
-                i_plus_1 = i_res+resolution
-                for j in range(resolution):
-                    j_plus_1 = (j+1)%resolution
-                    triangles.append([i_res+j_plus_1,i_plus_1+j,i_res+j])
-                    triangles.append([i_plus_1+j_plus_1,i_plus_1+j,i_res+j_plus_1])
-                    
-        vertices += [Vec3(0,segments,0)]
-        uv.append([0.5,1])
-        triangles += [[i*resolution+(j+1)%resolution,segments*resolution,i*resolution+j] for j in range(resolution)]
+        
         model = Mesh(
             vertices=vertices,
             uvs=uv,
             triangles=triangles)
+        
         model.generate()
         self.model = model
 
     def generate_format(self):
+        
         geom_node = self.find("**/+GeomNode").node()
 
         if geom_node.getNumGeoms() == 0:
@@ -246,25 +263,28 @@ class Trail(Entity):
             
             self._model_nb_rows = geom_node.getGeom(0).getVertexData().getNumRows()
         
-            self.iformat = GeomVertexArrayFormat()
-            self.iformat.setDivisor(1)
-            self.iformat.addColumn(f"position", 3, Geom.NT_stdfloat, Geom.C_vector)
-            self.iformat.addColumn(f"velocity", 3, Geom.NT_stdfloat, Geom.C_vector)
-
-            self.iformat.addColumn(f"lifetime", 1, Geom.NT_stdfloat, Geom.C_vector)
-            self.iformat.addColumn(f"delay", 1, Geom.NT_stdfloat, Geom.C_vector)
-
-            self.iformat.addColumn(f"init_scale", 3, Geom.NT_stdfloat, Geom.C_vector)
-            self.iformat.addColumn(f"end_scale", 3, Geom.NT_stdfloat, Geom.C_vector)
-
-            self.iformat.addColumn(f"init_color", 4, Geom.NT_stdfloat, Geom.C_vector)
-            self.iformat.addColumn(f"end_color", 4, Geom.NT_stdfloat, Geom.C_vector)
-
             self.vformat = GeomVertexFormat(
                 geom_node.getGeom(0).getVertexData().getFormat()
             )
             
-            self.vformat.addArray(self.iformat)
+            if not self.vformat.hasColumn("lifetime"):
+                self.iformat = GeomVertexArrayFormat()
+                self.iformat.setDivisor(1)
+                self.iformat.addColumn(f"position", 3, Geom.NT_stdfloat, Geom.C_vector)
+                self.iformat.addColumn(f"velocity", 3, Geom.NT_stdfloat, Geom.C_vector)
+
+                self.iformat.addColumn(f"lifetime", 1, Geom.NT_stdfloat, Geom.C_vector)
+                self.iformat.addColumn(f"delay", 1, Geom.NT_stdfloat, Geom.C_vector)
+
+                self.iformat.addColumn(f"init_scale", 3, Geom.NT_stdfloat, Geom.C_vector)
+                self.iformat.addColumn(f"end_scale", 3, Geom.NT_stdfloat, Geom.C_vector)
+
+                self.iformat.addColumn(f"init_color", 4, Geom.NT_stdfloat, Geom.C_vector)
+                self.iformat.addColumn(f"end_color", 4, Geom.NT_stdfloat, Geom.C_vector)
+
+                
+                self.vformat.addArray(self.iformat)
+                
             self.vformat = GeomVertexFormat.registerFormat(self.vformat)
 
 
@@ -306,12 +326,31 @@ class Trail(Entity):
         self.generate_model()
 
     @property
-    def thickness(self):
-        return self._thickness
+    def resolution(self):
+        return self._resolution 
+
+    @resolution.setter
+    def resolution(self, value):
+        self._resolution = value
+        self.set_shader_input("resolution", value)
+        self.generate_model()
+
+    @property
+    def init_thickness(self):
+        return self._init_thickness
     
-    @thickness.setter
-    def thickness(self, value):
-        self._thickness = value
+    @init_thickness.setter
+    def init_thickness(self, value):
+        self._init_thickness = value
+        self.generate_model()
+        
+    @property
+    def end_thickness(self):
+        return self._end_thickness
+    
+    @end_thickness.setter
+    def end_thickness(self, value):
+        self._end_thickness = value
         self.generate_model()
 
     
@@ -499,25 +538,29 @@ class ParticleManager(Entity):
             
             self._model_nb_rows = geom_node.getGeom(0).getVertexData().getNumRows()
         
-            self.iformat = GeomVertexArrayFormat()
-            self.iformat.setDivisor(1)
-            self.iformat.addColumn(f"position", 3, Geom.NT_stdfloat, Geom.C_vector)
-            self.iformat.addColumn(f"velocity", 3, Geom.NT_stdfloat, Geom.C_vector)
-
-            self.iformat.addColumn(f"lifetime", 1, Geom.NT_stdfloat, Geom.C_vector)
-            self.iformat.addColumn(f"delay", 1, Geom.NT_stdfloat, Geom.C_vector)
-
-            self.iformat.addColumn(f"init_scale", 3, Geom.NT_stdfloat, Geom.C_vector)
-            self.iformat.addColumn(f"end_scale", 3, Geom.NT_stdfloat, Geom.C_vector)
-
-            self.iformat.addColumn(f"init_color", 4, Geom.NT_stdfloat, Geom.C_vector)
-            self.iformat.addColumn(f"end_color", 4, Geom.NT_stdfloat, Geom.C_vector)
 
             self.vformat = GeomVertexFormat(
                 geom_node.getGeom(0).getVertexData().getFormat()
             )
             
-            self.vformat.addArray(self.iformat)
+            if not self.vformat.hasColumn("lifetime"):
+                
+                self.iformat = GeomVertexArrayFormat()
+                self.iformat.setDivisor(1)
+                self.iformat.addColumn(f"position", 3, Geom.NT_stdfloat, Geom.C_vector)
+                self.iformat.addColumn(f"velocity", 3, Geom.NT_stdfloat, Geom.C_vector)
+
+                self.iformat.addColumn(f"lifetime", 1, Geom.NT_stdfloat, Geom.C_vector)
+                self.iformat.addColumn(f"delay", 1, Geom.NT_stdfloat, Geom.C_vector)
+
+                self.iformat.addColumn(f"init_scale", 3, Geom.NT_stdfloat, Geom.C_vector)
+                self.iformat.addColumn(f"end_scale", 3, Geom.NT_stdfloat, Geom.C_vector)
+
+                self.iformat.addColumn(f"init_color", 4, Geom.NT_stdfloat, Geom.C_vector)
+                self.iformat.addColumn(f"end_color", 4, Geom.NT_stdfloat, Geom.C_vector)
+            
+                self.vformat.addArray(self.iformat)
+                
             self.vformat = GeomVertexFormat.registerFormat(self.vformat)
 
 
@@ -542,8 +585,10 @@ class ParticleManager(Entity):
         if hasattr(self, "trail") and isinstance(self.trail, Trail):
             self.trail.generate_format()
             trail_vdata = self.trail.vdata
+            trail_vdata.setNumRows(self.trail._model_nb_rows)
             trail_vdata.setNumRows(to_generate + self.trail._model_nb_rows)
             
+        self.vdata.setNumRows(self._model_nb_rows)
         self.vdata.setNumRows(to_generate + self._model_nb_rows)
 
         position_i = GeomVertexWriter(self.vdata, f"position")
@@ -753,7 +798,7 @@ if __name__ == "__main__":
         looping=True,
         culling=False,
         trail_duration=1,
-        trail_thickness=1,
+        trail_init_thickness=1,
         model="diamond",
     )
 

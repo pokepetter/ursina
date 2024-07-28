@@ -40,7 +40,7 @@ manager = ParticleManager(
     position=Vec3(0, -3, 0),
     looping=True,
     culling=False,
-    trail_thickness=1,
+    trail_init_thickness=1,
     trail_duration=0.5,
     model="diamond"
 )
