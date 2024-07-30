@@ -190,11 +190,8 @@ class RigidBody(_PhysicsBody):
         if entity:
             self.node_path = entity.getParent().attachNewNode(self.rigid_body_node)
             self.scale = entity.world_scale
-            entity.reparentTo(self.node_path)
             self.position = entity.world_position
-            entity.position = Vec3.zero    # Reset local position of the entity
-            self.rotation = entity.world_rotation
-            entity.world_scale = self.scale
+            entity.world_parent = self.node_path
         else:
             self.node_path = render.attachNewNode(self.rigid_body_node)
         self.node_path.node().setIntoCollideMask(BitMask32(mask))
@@ -253,7 +250,10 @@ if __name__ == '__main__':
     ground = Entity(model='plane', texture='grass', scale=30)
     RigidBody(shape=PlaneShape(), entity=ground)
 
-    cube = Entity(model='cube', texture='white_cube', y=7)
+    cube = Entity(model='cube', texture='white_cube')
+    # cube.rotation = Vec3(0,45,68)
+    # cube.scale = Vec3(.5)
+    cube.y = 7
     cube_body = RigidBody(shape=BoxShape(), entity=cube, mass=1)
 
     sphere = Entity(model='sphere', texture='brick', y=30)
