@@ -4,6 +4,7 @@ from ursina import curve
 from ursina.ursinastuff import invoke
 from ursina.ursinastuff import destroy as _destroy
 from ursina.string_utilities import print_info, print_warning
+from pathlib import Path
 
 from panda3d.core import Filename
 
@@ -55,6 +56,10 @@ class Audio(Entity):
 
 
     def clip_setter(self, value):
+        if isinstance(value, Path):
+            self._clip = loader.loadSfx(Filename.fromOsSpecific(str(value.resolve())))  # type: ignore
+            return
+
         if isinstance(value, str):
             self.name = value
 
