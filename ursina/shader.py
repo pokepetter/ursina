@@ -69,10 +69,11 @@ class Shader:
 
     def __init__(self, name='untitled_shader', language=GLSL, vertex=default_vertex_shader, fragment=default_fragment_shader, geometry='', **kwargs):
 
-        from inspect import getframeinfo, stack
-        _stack = stack()
-        _caller = getframeinfo(_stack[1][0])
-        self.path = Path(_caller.filename)
+        if not ('__compiled__' in globals() and str(globals()['__compiled__'].__class__.__name__) == '__nuitka_version__'):
+            from inspect import getframeinfo, stack
+            _stack = stack()
+            _caller = getframeinfo(_stack[1][0])
+            self.path = Path(_caller.filename)
 
         self.name = name
         self.language = language
