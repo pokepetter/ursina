@@ -84,7 +84,7 @@ class PlatformerController2d(Entity):
             distance=abs(self.scale_x/2),
             ignore=self.ignore_list,
             traverse_target=self.traverse_target,
-            thickness=(self.scale_x*.99, self.scale_y*.9),
+            thickness=(self.scale_x*.99, self.scale_y*10),
             ).hit:
 
             self.x += self.velocity * time.dt * self.walk_speed
