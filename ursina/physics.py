@@ -1,5 +1,5 @@
 from panda3d.core import BitMask32, TransformState
-from panda3d.bullet import BulletRigidBodyNode, BulletPlaneShape, BulletBoxShape, BulletSphereShape, BulletCapsuleShape, XUp, YUp, ZUp, BulletTriangleMesh, BulletTriangleMeshShape, BulletDebugNode, BulletWorld
+from panda3d.bullet import BulletRigidBodyNode, BulletPlaneShape, BulletBoxShape, BulletSphereShape, BulletCapsuleShape, BulletCylinderShape, BulletConeShape, XUp, YUp, ZUp, BulletTriangleMesh, BulletTriangleMeshShape, BulletDebugNode, BulletWorld
 from ursina.scripts.property_generator import generate_properties_for_class
 from ursina import Entity, scene, time, Vec3
 
@@ -49,6 +49,20 @@ class SphereShape:
         self.radius = radius
 
 class CapsuleShape:
+    def __init__(self, center=(0,0,0), radius=.5, height=2, axis='y'):
+        self.center = center
+        self.radius = radius
+        self.height = height
+        self.axis = axis
+
+class CylinderShape:
+    def __init__(self, center=(0,0,0), radius=.5, height=2, axis='y'):
+        self.center = center
+        self.radius = radius
+        self.height = height
+        self.axis = axis
+
+class ConeShape:
     def __init__(self, center=(0,0,0), radius=.5, height=2, axis='y'):
         self.center = center
         self.radius = radius
@@ -224,6 +238,24 @@ def _convert_shape(shape, entity, dynamic=True):
         elif shape.axis == 'x':
             axis = XUp
         return BulletCapsuleShape(shape.radius, shape.height-1, axis)
+    
+    elif isinstance(shape, CylinderShape):
+        if shape.axis == 'y':
+            axis = YUp
+        elif shape.axis == 'z':
+            axis = ZUp
+        elif shape.axis == 'x':
+            axis = XUp
+        return BulletCylinderShape(shape.radius, shape.height, axis)
+    
+    elif isinstance(shape, ConeShape):
+        if shape.axis == 'y':
+            axis = YUp
+        elif shape.axis == 'z':
+            axis = ZUp
+        elif shape.axis == 'x':
+            axis = XUp
+        return BulletConeShape(shape.radius, shape.height, axis)
 
     elif isinstance(shape, MeshShape):
         if entity:
@@ -243,7 +275,7 @@ def _convert_shape(shape, entity, dynamic=True):
 
 
 if __name__ == '__main__':
-    from ursina import Ursina, Capsule, Sequence, Func, curve, Wait, EditorCamera
+    from ursina import Ursina, Capsule, Cone, Cylinder, Sequence, Func, curve, Wait, EditorCamera
 
     app = Ursina(borderless=False)
 
@@ -262,6 +294,12 @@ if __name__ == '__main__':
     capsule = Entity(model=Capsule(height=2, radius=.5), texture='brick', y=17)
     RigidBody(shape=CapsuleShape(height=2, radius=.5), entity=capsule, mass=3)
 
+    cylinder = Entity(model=Cylinder(height=2, radius=.5, start=-1), texture='brick', y=10)
+    RigidBody(shape=CylinderShape(height=2, radius=.5), entity=cylinder, mass=3)
+
+    cone = Entity(model=Cone(8, height=2, radius=.5), texture='brick', y=15)
+    RigidBody(shape=ConeShape(height=2, radius=.5), entity=cone, mass=2)
+
     platform = Entity(model='cube', texture='white_cube', y=1, scale=(4,1,4))
     platform_body = RigidBody(shape=BoxShape(), entity=platform, kinematic=True, friction=1)
     platform_sequence = Sequence(entity=platform, loop=True)
@@ -269,7 +307,7 @@ if __name__ == '__main__':
     path = [Vec3(-2,1,-2), Vec3(2,1,-2), Vec3(0, 1, 2)]
     travel_time = 2
     for target_pos in path:
-        platform_sequence.append(Func(platform_body.animate_position, value=target_pos, duration=travel_time, curve=curve.linear), regenerate=False)
+        platform_sequence.append(Func(platform_body.animate_position, value=target_pos, duration=travel_time, curve=curve.linear))
         platform_sequence.append(Wait(travel_time))
     platform_sequence.start()
 
