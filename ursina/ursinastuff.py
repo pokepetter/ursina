@@ -130,6 +130,51 @@ def _destroy(entity, force_destroy=False):
 
     del entity
 
+class Array2D(list):
+    __slots__ = ('width', 'height', 'default_value', 'data')
+    def __init__(self, width:int, height:int, default_value=0):
+        self.width = int(width)
+        self.height = int(height)
+        self.default_value = default_value
+        # super().__init__([[self.default_value for y in range(self.height)] for x in range(self.width)])
+        super().__init__()
+        for x in range(self.width):
+            self.append([self.default_value for y in range(self.height)])
+
+    # def __getitem__(self, x):
+    #     return super()[x]
+
+    # def __setitem__(self, x, value):
+    #     super().__setitem__(x, value)
+
+    def reset(self):
+        for x in range(self.width):
+            for y in range(self.height):
+                self[x][y] = self.default_value
+
+
+
+class Array3D(list):
+    __slots__ = ('width', 'height', 'depth', 'default_value', 'data')
+
+    def __init__(self, width:int, height:int, depth:int, default_value=0):
+        self.width = int(width)
+        self.height = int(height)
+        self.depth = int(depth)
+        self.default_value = default_value
+        super().__init__([Array2D(self.height, self.depth) for x in range(self.width)])
+
+    def __getitem__(self, x):
+        return super().__getitem__(x)
+
+    def __setitem__(self, x, value):
+        super().__setitem__(x, value)
+
+    def reset(self):
+        for x in range(self.width):
+            for y in range(self.height):
+                for z in range(self.depth):
+                    self[x][y][z] = self.default_value
 
 
 def chunk_list(target_list, chunk_size):
@@ -157,6 +202,13 @@ def enumerate_2d(target_2d_list):    # usage: for (x, y), value in enumerate_2d(
     for x, line in enumerate(target_2d_list):
         for y, value in enumerate(line):
             yield (x, y), value
+
+
+def enumerate_3d(target_3d_list):   # usage: for (x, y, z), value in enumerate_3d(my_3d_list)
+    for x, vertical_slice in enumerate(target_3d_list):
+        for y, log in enumerate(vertical_slice):
+            for z, value in enumerate(log):
+                yield (x, y, z), value
 
 
 def rotate_2d_list(target_2d_list):
