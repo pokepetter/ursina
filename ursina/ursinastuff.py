@@ -141,12 +141,6 @@ class Array2D(list):
         for x in range(self.width):
             self.append([self.default_value for y in range(self.height)])
 
-    # def __getitem__(self, x):
-    #     return super()[x]
-
-    # def __setitem__(self, x, value):
-    #     super().__setitem__(x, value)
-
     def reset(self):
         for x in range(self.width):
             for y in range(self.height):
@@ -163,12 +157,6 @@ class Array3D(list):
         self.depth = int(depth)
         self.default_value = default_value
         super().__init__([Array2D(self.height, self.depth) for x in range(self.width)])
-
-    def __getitem__(self, x):
-        return super().__getitem__(x)
-
-    def __setitem__(self, x, value):
-        super().__setitem__(x, value)
 
     def reset(self):
         for x in range(self.width):
