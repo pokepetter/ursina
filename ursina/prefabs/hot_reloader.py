@@ -21,7 +21,7 @@ def make_code_reload_safe(code):
     dedent_next = False
 
     for line in code.split('\n'):
-        if 'Ursina(' in line or line.strip().endswith('app.run()') or line.strip().endswith('HotReloader()'):
+        if line.strip().endswith('app.run()') or line.strip().endswith('HotReloader()'):
             continue
         if 'eternal=True' in line:
             continue
