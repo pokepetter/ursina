@@ -1,0 +1,18 @@
+# title ursina engine donate
+# insert menu.txt
+
+
+### Donate
+
+Supporting the development of ursina and other projects will help cover the cost of hosting the website and spend more time on development.
+Even if you can't support the project finantially, simply sharing the word about ursina is appreciated.
+
+
+Support on GitHub Sponsors:
+
+[GitHub Sponsors, https://github.com/sponsors/pokepetter]
+
+
+Support on Patreon:
+
+[Patreon, https://www.patreon.com/ursinaengine]

@@ -48,6 +48,16 @@ Free<br>
 <br>
 ursina is free and open source.<br>
 <br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
+</script>
 
 </body>
 </html>
