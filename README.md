@@ -1,4 +1,7 @@
 # ursina    ʕ •ᴥ•ʔゝ□
+
+[Website](https://www.ursinaengine.org/index.html) | [Discord](https://discord.gg/ydXfhyb) | [Twitter](https://twitter.com/ursinaengine) | [Patreon](https://www.patreon.com/ursinaengine) | [Sponsor](https://github.com/sponsors/pokepetter)
+
 An easy to use game engine/framework for python.
 
 ![Banner](/docs/made_with_ursina.jpg)
