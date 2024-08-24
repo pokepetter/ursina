@@ -294,7 +294,7 @@ if __name__ == '__main__':
     capsule = Entity(model=Capsule(height=2, radius=.5), texture='brick', y=17)
     RigidBody(shape=CapsuleShape(height=2, radius=.5), entity=capsule, mass=3)
 
-    cylinder = Entity(model=Cylinder(height=2, radius=.5, start=-1), texture='brick', y=10)
+    cylinder = Entity(model=Cylinder(height=2, radius=.5), texture='brick', y=10)
     RigidBody(shape=CylinderShape(height=2, radius=.5), entity=cylinder, mass=3)
 
     cone = Entity(model=Cone(8, height=2, radius=.5), texture='brick', y=15)
