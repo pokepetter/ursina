@@ -6,6 +6,7 @@ import array
 
 from ursina import application
 from ursina import color
+from ursina.color import Color
 from ursina.scripts.generate_normals import generate_normals
 from ursina.scripts.project_uvs import project_uvs
 from ursina.scripts.colorize import colorize
