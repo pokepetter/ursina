@@ -1,7 +1,7 @@
 # this will clear the scene and try to execute the main.py code without
 # restarting the program
 
-from ursina import Entity, camera, texture_importer, mesh_importer, scene, application, print_on_screen
+from ursina import Entity, camera, texture_importer, mesh_importer, scene, application, print_on_screen, window
 from pathlib import Path
 import time
 import ast
@@ -68,6 +68,8 @@ class HotReloader(Entity):
             'f8'     : self.reload_shaders,
             'f9'     : self.toggle_hotreloading,
             }
+            
+        self.hotreload_window_settings = dict(size=(window.size[0]/2,window.size[1]/2), always_on_top=True, position=(window.fullscreen_size[0]-window.size[0]/22, 0))
 
 
     def input(self, key):
@@ -101,6 +103,9 @@ class HotReloader(Entity):
     def toggle_hotreloading(self):
         self.hotreload = not self.hotreload
         print_on_screen(f'<azure>hotreloading: {self.hotreload}')
+        if self.hotreload_window_settings:
+            for key, value in self.hotreload_window_settings.items():
+                setattr(window, key, value)
 
 
 
@@ -351,7 +356,7 @@ if __name__ == '__main__':
     from ursina import *
     app = Ursina()
     # hot_reloader = HotReloader()
-    application.hot_reloader.path = application.asset_folder.parent.parent / 'samples' / 'platformer.py'
+    # application.hot_reloader.path = application.asset_folder.parent.parent / 'samples' / 'platformer.py'
     # Sky()
 
     '''
@@ -382,6 +387,8 @@ if __name__ == '__main__':
 
 
     Sky(color=color.light_gray)
+
+    print(Sky.instances)
     EditorCamera()
 
     def update():
