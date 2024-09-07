@@ -228,6 +228,9 @@ def in_out_bounce(t):
 def zero(t):
     return 0    
 
+def one(t):
+    return 1  
+
 def combine(curve_a, curve_b, split_at):
     def new_curve_func(t):
         if t < split_at:
