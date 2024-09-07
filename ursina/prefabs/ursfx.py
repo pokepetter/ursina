@@ -41,7 +41,7 @@ def ursfx(volume_curve, volume=.75, wave='sine', pitch=0, pitch_change=0, speed=
     a = Audio(wave, loop=True, pitch=pow(1 / 1.05946309436, -pitch), volume=volume_curve[0][1] * volume, ignore_paused=ignore_paused)
 
     for i in range(len(volume_curve)-1):
-        a.animate('volume', volume_curve[i+1][1] * volume, duration=(volume_curve[i+1][0] - volume_curve[i][0]) / speed, delay=volume_curve[i][0] / speed, curve=curve.linear, unscaled=True)
+        invoke(a.animate, 'volume', volume_curve[i+1][1] * volume, duration=(volume_curve[i+1][0] - volume_curve[i][0]) / speed, curve=curve.linear, unscaled=True, delay=volume_curve[i][0]/speed)
 
     a.animate('pitch', pow(1 / 1.05946309436, -pitch-pitch_change), duration=volume_curve[i-1][0] / speed, curve=pitch_curve, unscaled=True)
     a.animations.append(invoke(a.stop, delay=volume_curve[4][0] / speed, unscaled=True))
@@ -293,6 +293,6 @@ def open_gui():
 if __name__ == '__main__':
     app = Ursina()
     sfx_editor = UrsfxGUI()
-    application.paused = True
+    # application.paused = True
     Sprite('shore', z=10, ppu=64, color=color.gray)
     app.run()
