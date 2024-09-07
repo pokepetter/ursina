@@ -81,8 +81,8 @@ class Shader:
         self.fragment = fragment
         self.geometry = geometry
 
-        self.entity = None
         self.default_input = dict()
+        self.continuous_input = dict()
         self.compiled = False
         if self not in imported_shaders:
             imported_shaders[self.name] = self

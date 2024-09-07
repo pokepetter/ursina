@@ -12,6 +12,7 @@ from ursina.scene import instance as scene
 from ursina.camera import instance as camera
 from ursina.mouse import instance as mouse
 from ursina import entity
+from ursina import shader
 
 
 import __main__
@@ -186,6 +187,10 @@ class Ursina(ShowBase):
                 for script in e.scripts:
                     if script.enabled and hasattr(script, 'update') and callable(script.update):
                         script.update()
+
+            if e.shader:
+                for key, value in e.shader.continuous_input.items():
+                    e.set_shader_input(key, value())
 
         return Task.cont
 

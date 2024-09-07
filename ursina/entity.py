@@ -669,15 +669,15 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def shader_setter(self, value):
+        self._shader = value
         if not self.model:
             return
 
         if value is None:
-            self._shader = value
             self.model.setShaderAuto()
             return
 
-        if isinstance(value, Panda3dShader): #panda3d shader
+        if isinstance(value, Panda3dShader): # panda3d shader
             self._shader = value
             self.model.setShader(value)
             return
