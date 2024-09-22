@@ -157,8 +157,7 @@ class Window(WindowProperties):
 
         self.input_entity = Entity(name='window.input_entity', input=window_input, ignore_paused=True)
 
-        self.exit_button = Button(parent=self.editor_ui, text='x', eternal=True, ignore_paused=True, origin=(.5, .5), enabled=self.borderless,
-            position=self.top_right, z=-999, scale=(.05, .025), color=color.red.tint(-.2), shortcuts=('control+shift+alt+q', 'alt+f4'), on_click=application.quit, name='exit_button')
+        self.exit_button = Button(parent=self.editor_ui, text='x', eternal=True, ignore_paused=True, origin=(.5, .5), enabled=self.borderless and application.development_mode, position=self.top_right, z=-999, scale=(.05, .025), color=color.red.tint(-.2), shortcuts=('control+shift+alt+q', 'alt+f4'), on_click=application.quit, name='exit_button')
 
         def _exit_button_input(key):
             if input_handler.get_combined_key(key) in self.exit_button.shortcuts:
@@ -175,7 +174,7 @@ class Window(WindowProperties):
             self.fps_counter.i += 1
         self.fps_counter.update = _fps_counter_update
 
-        self.entity_counter = Text(parent=self.editor_ui, eternal=True, origin=(-.5,.5), text='00', ignore=False, t=0,
+        self.entity_counter = Text(parent=self.editor_ui, enabled=application.development_mode, eternal=True, origin=(-.5,.5), text='00', ignore=False, t=0,
             position=((.5*self.aspect_ratio)-self.exit_button.scale_x, .425+(.02*(not self.exit_button.enabled)), -999))
         self.entity_counter.text_entity = Text(parent=self.entity_counter, text='entities:', origin=(-.5,-.75), scale=.4, add_to_scene_entities=False, eternal=True)
         
@@ -186,7 +185,7 @@ class Window(WindowProperties):
             self.entity_counter.t += time.dt
         self.entity_counter.update = _entity_counter_update
 
-        self.collider_counter = Text(parent=self.editor_ui, eternal=True, origin=(-.5,.5), text='00', ignore=False, t=.1,
+        self.collider_counter = Text(parent=self.editor_ui, enabled=application.development_mode, eternal=True, origin=(-.5,.5), text='00', ignore=False, t=.1,
             position=((.5*self.aspect_ratio)-self.exit_button.scale_x, .38+(.02*(not self.exit_button.enabled)), -999))
         self.collider_counter.text_entity = Text(parent=self.collider_counter, text='colliders:', origin=(-.5,-.75), scale=.4, add_to_scene_entities=False, eternal=True)
         
@@ -221,7 +220,7 @@ class Window(WindowProperties):
         # print(self.cog_menu.scale_y)
         # self.cog_menu.scale *= .75
         self.cog_menu.highlight.color = color.azure
-        self.cog_button = Button(parent=self.editor_ui, eternal=True, model='quad', texture='cog', scale=.015, origin=(1,-1), position=self.bottom_right, ignore_paused=True, name='cog_button')
+        self.cog_button = Button(parent=self.editor_ui, eternal=True, model='quad', texture='cog', scale=.015, origin=(1,-1), position=self.bottom_right, ignore_paused=True, name='cog_button', enabled=application.development_mode)
         self.cog_menu.y = self.cog_button.y + (self.cog_menu.bg.scale_y * self.cog_menu.scale_y) + Text.size
         info_text ='''This menu is not enabled in builds. To see how the app will look like in builds, do Ursina(development_mode=False), which will disable all editor ui and start the app in fullscreen. To disable only this menu, do window.cog_menu.enabled = False'''
         self.cog_menu.info = Button(parent=self.cog_menu, model='circle', text='<gray>?', scale=.025, origin=(.5,-.5), tooltip=Tooltip(info_text, scale=.75, origin=(-.5,-.5), eternal=True), eternal=True, name='cog_menu_info')
