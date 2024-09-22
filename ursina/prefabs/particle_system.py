@@ -20,7 +20,7 @@ def ParticleSystem(**kwargs):
         # print('id:', id, f'{id}_0000', load_model(f'{id}_0000'))
 
         if kwargs['use_cache'] and load_model(f'{id}_0000'): # if the particle system has been baked, return a FrameAnimation3D
-            print('return particled baked to FrameAnimation3d', id)
+            # print('return particled baked to FrameAnimation3d', id)
             kwargs |= {'name':f'{id}_', 'fps':30, 'loop':False}
             instance = FrameAnimation3d(**kwargs)
             return instance
@@ -29,20 +29,20 @@ def ParticleSystem(**kwargs):
             cache[id].position = kwargs.get('position', Vec3.zero)
             cache[id].auto_destroy = False
             cache[id].play()
-            print('return cached', id)
+            # print('return cached', id)
             return cache[id]
 
     instance = _ParticleSystem(**kwargs)
     if id and kwargs['use_cache']:
         cache[id] = instance
-        print('add to cache:', id)
+        # print('add to cache:', id)
 
     return instance
 
 
 @generate_properties_for_class()
 class _ParticleSystem(Entity):
-    default_values = Entity.default_values | dict(
+    default_values = dict(
         start_size=1,
         end_size=0,
         size_curve=curve.in_expo,
@@ -74,13 +74,14 @@ class _ParticleSystem(Entity):
 
         world_space=False,
         shader=unlit_shader,
+        texture=None,
         always_on_top=False,
         unlit=True,
 
         spawn_points=(Vec3.zero, ),
         spawn_type='burst', # 'burst', 'random' / 'sequential' / 'continious'
         loop_every=0,
-        spawn_interval=0,     # only applies if spawn_type is random, sequential or continious
+        spawn_interval=0,     # only applies if spawn_type is random, sequential or continuous
         delay=0,
 
         auto_destroy=True,
@@ -89,11 +90,8 @@ class _ParticleSystem(Entity):
         use_cache=True, # set to False to force making a new instance
     )
 
-
     def __init__(self, **kwargs):
-
         kwargs = __class__.default_values | kwargs
-        print('------------', 'init new particl system', kwargs['name'])
         super().__init__(**kwargs)
 
         if self.num_particles == 0:
@@ -193,7 +191,7 @@ class _ParticleSystem(Entity):
         if self.seed is None:
             random.seed(self.seed)
         else:
-            random.seed(self.seed+i)    # use seed + particle index so the particle system will be somewhat random, but prevent each particle from facing the same dircetion.
+            random.seed(self.seed+i)    # use seed + particle index so the particle system will be somewhat random, but prevent each particle from facing the same direction.
 
         if len(self.particles) >= self.max_particles:
             return
@@ -207,7 +205,7 @@ class _ParticleSystem(Entity):
         if isinstance(move_direction, str):
             move_direction = getattr(e, move_direction).normalized()
             # e.look_at(e.position + direction)
-        m = Entity(parent=e, model=model, origin=self.origin, double_sided=self.double_sided, shader=self.shader, always_on_top=self.always_on_top, unlit=self.unlit, texture=self.texture)
+        m = Entity(parent=e, model=model, origin=self.origin, double_sided=self.double_sided, shader=self.shader, texture=self.texture, always_on_top=self.always_on_top, unlit=self.unlit)
         m.rotation = self.start_rotation + Vec3(*[random.uniform(-e/2, e/2) for e in self.rotation_randomness])
 
         if self.world_space:
@@ -217,12 +215,12 @@ class _ParticleSystem(Entity):
         should_destroy = False
         if not (self.use_cache and self.name and self.seed is not None) or self.loop_every > 0:
             should_destroy = True
-            print_on_screen('should_destroy:', should_destroy)
+            # print_on_screen('should_destroy:', should_destroy)
 
 
         self.anims.append(Sequence(
             Wait(delay),
-            Func(print, 'enable'),
+            # Func(print, 'enable'),
             Func(self.try_enabling, e),
             Func(setattr, e, 'position', e.position),
             Func(setattr, e, 'rotation', e.rotation),
@@ -232,9 +230,14 @@ class _ParticleSystem(Entity):
             Func(setattr, m, 'y', m.y),
             started=False, auto_destroy=should_destroy, name='start_sequence'))
         self.anims.extend(e.animate_position(e.position + (move_direction * random.uniform(self.speed[0], self.speed[1])), duration=self.lifetime, delay=delay, curve=self.speed_curve, auto_play=False, auto_destroy=should_destroy))
-        self.anims.append(m.animate_scale(self.end_size, duration=self.lifetime, delay=delay, curve=self.size_curve, auto_play=False, auto_destroy=should_destroy))
-        self.anims.append(m.animate_color(random.choice(self.end_color), duration=self.lifetime, delay=delay, curve=self.color_curve, auto_play=False, auto_destroy=should_destroy))
-        self.anims.extend(m.animate_rotation(self.spin * self.lifetime, duration=self.lifetime, delay=delay, curve=self.spin_curve, auto_play=False, auto_destroy=should_destroy))
+        if self.end_size != self.start_size:
+            self.anims.append(m.animate_scale(self.end_size, duration=self.lifetime, delay=delay, curve=self.size_curve, auto_play=False, auto_destroy=should_destroy))
+    
+        if self.end_color != self.start_color:
+            self.anims.append(m.animate_color(random.choice(self.end_color), duration=self.lifetime, delay=delay, curve=self.color_curve, auto_play=False, auto_destroy=should_destroy))
+    
+        if self.spin:
+            self.anims.extend(m.animate_rotation(self.spin * self.lifetime, duration=self.lifetime, delay=delay, curve=self.spin_curve, auto_play=False, auto_destroy=should_destroy))
 
         self.anims.append(m.animate_y(self.bounce, duration=self.lifetime, delay=delay, curve=self.bounce_curve, auto_play=False, auto_destroy=should_destroy))
         # m.animate_y(self.sway, duration=self.lifetime, delay=delay, curve=self.sway_curve)
@@ -280,18 +283,43 @@ class _ParticleSystem(Entity):
         except:
             print('can not disable particle, already destroyed')
 
-class ParticleSystemViewer(Entity):
+from ursina.prefabs.vec_field import VecField
+from ursina.editor.level_editor import ColorField
+class ParticleSystemUI(Entity):
     def __init__(self):
+        super().__init__()
         self.parent = camera.ui
-        self.ui = Entity(parent=self, enabled=False)
-        self.shortcuts = ('control+')
+        self.ui = Entity(parent=self, enabled=1, position=window.top_left+Vec3(.1,-.1,0), scale=.75, model=Circle(radius=.01))
+        i = 0
+        for key ,value in _ParticleSystem.default_values.items():
+            # print(i, key ,value)
+            field = None
+            if isinstance(value, Vec3):
+                field = VecField(value, parent=self.ui)
+                
+            elif isinstance(value, bool):
+                # print('---aaa')
+                field = CheckBox(parent=self.ui, x=.025, value=value)
+            
+            
+            elif isinstance(value, int):
+                field = VecField(value, parent=self.ui)
+
+            elif isinstance(value, Color):
+                field = ColorField(attr_name='color', is_shader_input=False, value=value, parent=self.ui, scale_y=.05)
+                
+            if field:
+                field.y = -i * .05
+                Text(text=key, parent=field, y=.5, z=-1, x=.5, world_scale=20)
+                i += 1
+            else:
+                print('no field for:', key, value)
+        print('made fields')
 
     def input(self, key):
         combo = ['control', 'shift' , 'alt', 'p', 'a']
         if key in combo and all([held_keys[e] for e in combo]):
             self.ui.enabled = not self.ui.enabled
-
-
 
 
 
@@ -423,6 +451,8 @@ if __name__ == '__main__':
         spin=Vec3(0,15,0) * 10,
         # spin_curve=curve.linear,
         mesh='coin',
+        # shader=matcap_shader,
+        # texture='matcap_1',
         start_color = (color.yellow, color.white),
         # end_color = (color.gold, hsv(40,.9,.9)),
         end_color = (color.gold, hsv(40,.9,.9)),
@@ -455,11 +485,15 @@ if __name__ == '__main__':
         num_particles=10,
         spawn_type = 'burst',
         name='landing_dust', seed=0,
+
+        shader=matcap_shader,
+        texture='matcap_1',
     )
 
 
     jump_effects = (
-        dict(position=player.position+Vec3(0,.25,0), scale=.5,
+        dict(
+            position=player.position+Vec3(0,.25,0), scale=.5,
             start_size = Vec3(.25,2,.25),
             end_size = Vec3(0,8,0),
             speed=8,
@@ -506,10 +540,59 @@ if __name__ == '__main__':
         )
     )
 
+    gems = (
+        dict(
+            position=player.position+Vec3(0,.5,0), scale=.5,
+            start_size = Vec3(1,1.5,1) * .5,
+            end_size = Vec3(1,1.5,1) * .0,
+            speed_curve=curve.combine(curve.zero, curve.out_circ, .2),
+            auto_play=False,
+            mesh='diamond',
+            size_curve = curve.combine(curve.in_back, curve.linear, .3),
+            start_color = (color.white),
+            spin=Vec3(200,200,200),
+            rotation_randomness=Vec3(360),
+            num_particles=0,
+            spawn_points = [v.xzy for v in Circle(radius=.75, resolution=5).vertices][::-1],
+            move_directions='forward',
+            spawn_type = 'sequential',
+            speed=5,
+            lifetime=2,
+            delay=.1,
+            spawn_interval=.05,
+            shader=matcap_shader,
+            texture='matcap_dall_e',
+            unlit=True,
+            bounce=2,
+            bounce_curve=curve.combine(curve.out_expo, curve.reverse(curve.linear), .2),
+            name='spawn_gems',
+            seed=0,
+        ),
+
+        dict(
+            position=player.position+Vec3(0,.5,0), scale=.5,
+            speed=1,
+            lifetime=.4,
+            auto_play=False,
+            num_particles=6,
+            direction_randomness=Vec3(360,360,360),
+            move_directions='up',
+            mesh=Cone(3, radius=.3),
+            start_size=(1,1.5,1),
+            end_size=0,
+            size_curve = curve.linear,
+            start_color = (color.white, ),
+            end_color = (color.azure, color.cyan),
+            color_curve=curve.out_expo,
+            name='burst', 
+            seed=0,
+        )
+    )
+
     
     # buttons = (hit_impact_button, burst_button, power_up_button, heal_button, gold_button, landing_dust_button, jump_effect_button)
     buttons = []
-    for particle_system_setting in (hit_impact_particles, burst_particles, power_up_particles, heal_particles, gold_particles, landing_dust_particles):
+    for particle_system_setting in (hit_impact_particles, burst_particles, power_up_particles, heal_particles, gold_particles, landing_dust_particles, jump_effects, gems):
         if not isinstance(particle_system_setting, (tuple, list)):
             particle_system_setting = (particle_system_setting, )
         name = '/'.join([sub_system.get('name', 'unnamed') for sub_system in particle_system_setting])
@@ -554,86 +637,18 @@ if __name__ == '__main__':
         run_particles.ignore = input_strength < .01
 
 
-    test_particles = dict(
-        position=(0,.5,0),
-        scale=1,
-        start_size=Vec3(.25),
-        end_size=Vec3(0),
-        size_curve=curve.linear,
-        speed=(1.5,2.5),
-        speed_curve=curve.out_circ,
-        lifetime=1,
-        auto_play=False,
-        direction_randomness=Vec3(0,360,0),
-        rotation_randomness=Vec3(360,360,360),
-        spin=Vec3(15) * 20,
-        mesh='diamond',
-        start_color=(color.white, color.white),
-        end_color=(color.light_gray, color.light_gray),
-        color_curve=curve.out_expo,
-        num_particles=10,
-        spawn_type='burst',
-        spawn_interval=.005,
-        bounce=-1,
 
-        name='test_particles',
-        seed=0,
-        )
+    # ParticleSystemUI()
 
-    particles = dict(
-        position=player.position + Vec3(0,1,0),
-        scale=.5,
-        end_size = Vec3(1),
-        speed=5,
-        lifetime=1,
-        direction_randomness=Vec3(0,360,0),
-        spin=Vec3(0,15,0) * 10,
-        # spin_curve=curve.linear,
-        mesh='coin',
-        start_color = (color.yellow, color.white),
-        # end_color = (color.gold, hsv(40,.9,.9)),
-        end_color = (color.gold, hsv(40,.9,.9)),
-        color_curve=curve.out_expo,
-        num_particles=0,
-        spawn_points = [v.xzy for v in Circle(radius=3).vertices][::-1],
-        move_directions=[v.xzy.normalized() for v in Circle(radius=3).vertices][::-1],
-        spawn_type = 'sequential',
-        spawn_interval=.01,
 
-        origin_y=-.5,
-        bounce=-2,
-        name='gold_particles',
-        seed=0,
-        auto_play=False,
-        auto_destroy=False,
-        parent=player,
-    )
-
-    def input(key):
-        if key in '123456789'[:len(buttons)-1]:
-            buttons[int(key)].on_click()
-
-        if key in ('right arrow', 'right arrow hold', 'space', 'space hold'):
-            for seq in test_particles.anims:
-                seq.t += 1/60
-                seq.started = True
-                seq.update()
-                seq.started = False
-
-        if key == 'b':
-            # test_particles.bake()
-            # gold_button.on_click.funcs[0]().bake()
-
-            print('--------------------', particles.name)
-            # particles.play()
-            particles.bake()
-
-        if key == 'f':
-            FrameAnimation3d('gold_particles_0_')
-
-    # print('lllllllllllll', len(test_particlesanims))
     ground = Entity(model='plane', scale=8, texture='grass', texture_scale=Vec2(1), color=color.dark_gray)
 
     # FrameAnimation3d('test_particles_', fps=30, loop=True, position=(4,1,0), color=color.azure)
 
+    def input(key):
+        if key == 'space':
+            for e in gems:
+                ParticleSystem(**e)
+
+  
     app.run()
