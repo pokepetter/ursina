@@ -66,7 +66,6 @@ class HealthBar(Button):
     def __setattr__(self, name, value):
         if name == 'scale' and hasattr(self, 'model') and self.model:  # update rounded corners of background when scaling
             self.model.aspect = self.world_scale_x / self.world_scale_y
-            # print(self.name, 'aaaaaaaaaaaaa updat scale', self.scale)
             self.model.generate()
             if hasattr(self, 'bar'):
                 self.bar.model = Quad(aspect=self.world_scale_x/self.world_scale_y, radius=self.roundness)
