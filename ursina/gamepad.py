@@ -12,8 +12,6 @@ if __name__ == '__main__':
 
 # input_handler.gamepad = None
 input_handler.gamepads = base.devices.getDevices(InputDevice.DeviceClass.gamepad)
-if input_handler.gamepads:
-    input_handler.gamepad = input_handler.gamepads[0]
 
 # def disconnect_all():
 
@@ -83,6 +81,13 @@ def update():
         held_keys[f'{gamepad_name} left trigger'] = gamepad.findAxis(InputDevice.Axis.left_trigger).value
         held_keys[f'{gamepad_name} right trigger'] = gamepad.findAxis(InputDevice.Axis.right_trigger).value
 
+from ursina import curve, invoke, Func
+def vibrate(gamepad_index=0, low_freq_motor=1, high_freq_motor=1, duration=.1, curve=curve.one):
+    if not input_handler.gamepads or gamepad_index < len(input_handler.gamepads)-1:
+        return
+    input_handler.gamepads[gamepad_index].set_vibration(low_freq_motor, high_freq_motor)
+    invoke(Func(input_handler.gamepads[gamepad_index].set_vibration, 0, 0), delay=duration)
+
 Entity(name='gamepad_handler', update=update, eternal=True) # connect update() to an entity so it runs
 connect_all()
 
@@ -90,8 +95,8 @@ connect_all()
 if __name__ == '__main__':
     text_entity = Text()
     print('---------------', input_handler.gamepads)
-    print('---------------', input_handler.gamepad)
     [print('-----------', gamepad) for gamepad in input_handler.gamepads]
+ 
     gamepad_list = Text('\n'.join([f'{i}) {gamepad}' for i, gamepad in enumerate(input_handler.gamepads)]), x=-.5, y=.3)
     player = Entity(model='cube', color=color.azure)
 
@@ -109,9 +114,12 @@ if __name__ == '__main__':
                 print('set main gamepad to:', input_handler.gamepads[i])
                 main_gamepad_index = i
                 connect_all()
+
+        if key == 'gamepad x':
+            from ursina import gamepad
+            gamepad.vibrate()
                 # input_handler.gamepads = [target_gamepad, ] + input_handler.gamepads
                 # target_gamepad = input_handler.gamepads.pop(i)
                 # input_handler.gamepad = input_handler.gamepads[i]
-
 
     app.run()
