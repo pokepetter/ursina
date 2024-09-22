@@ -98,9 +98,6 @@ class Window(WindowProperties):
         self.editor_ui = None
         if application.window_type != 'none':
             base.accept('aspectRatioChanged', self.update_aspect_ratio)
-            if self.always_on_top:
-                self.setZOrder(WindowProperties.Z_top)
-
 
 
     @property
@@ -138,22 +135,27 @@ class Window(WindowProperties):
         self.editor_ui = Entity(parent=camera.ui, eternal=True, enabled=bool(application.development_mode))
 
         def window_input(key):
-            if key == 'f12':
+            combined_key = input_handler.get_combined_key(key)
+            if combined_key == 'f12':
                 self.editor_ui.enabled = not self.editor_ui.enabled
 
-            elif key == 'f11':
+            elif combined_key == 'f11':
                 self.fullscreen = not self.fullscreen
 
-            elif key == 'f10':
-                if held_keys['shift']:
-                    self.render_mode = 'default'
-                else:
-                    i = self.render_modes.index(self.render_mode) + 1
-                    if i >= len(self.render_modes):
-                        i = 0
+            elif combined_key == 'f10':
+                i = self.render_modes.index(self.render_mode) + 1
+                if i >= len(self.render_modes):
+                    i = 0
 
-                    self.render_mode = self.render_modes[i]
-        self.input_entity = Entity(name = 'window.input_entity', input=window_input)
+                self.render_mode = self.render_modes[i]
+
+            elif combined_key == 'shift+f10':
+                self.render_mode = 'default'
+
+            elif combined_key == 'control+f10':
+                self.toggle_editor_camera()
+
+        self.input_entity = Entity(name='window.input_entity', input=window_input, ignore_paused=True)
 
         self.exit_button = Button(parent=self.editor_ui, text='x', eternal=True, ignore_paused=True, origin=(.5, .5), enabled=self.borderless,
             position=self.top_right, z=-999, scale=(.05, .025), color=color.red.tint(-.2), shortcuts=('control+shift+alt+q', 'alt+f4'), on_click=application.quit, name='exit_button')
@@ -176,6 +178,7 @@ class Window(WindowProperties):
         self.entity_counter = Text(parent=self.editor_ui, eternal=True, origin=(-.5,.5), text='00', ignore=False, t=0,
             position=((.5*self.aspect_ratio)-self.exit_button.scale_x, .425+(.02*(not self.exit_button.enabled)), -999))
         self.entity_counter.text_entity = Text(parent=self.entity_counter, text='entities:', origin=(-.5,-.75), scale=.4, add_to_scene_entities=False, eternal=True)
+        
         def _entity_counter_update():
             if self.entity_counter.t > 1:
                 self.entity_counter.text = str(max(0, len([e for e in scene.entities if e.model and e.enabled])-5))
@@ -186,6 +189,7 @@ class Window(WindowProperties):
         self.collider_counter = Text(parent=self.editor_ui, eternal=True, origin=(-.5,.5), text='00', ignore=False, t=.1,
             position=((.5*self.aspect_ratio)-self.exit_button.scale_x, .38+(.02*(not self.exit_button.enabled)), -999))
         self.collider_counter.text_entity = Text(parent=self.collider_counter, text='colliders:', origin=(-.5,-.75), scale=.4, add_to_scene_entities=False, eternal=True)
+        
         def _collider_counter_update():
             if self.collider_counter.t > 1:
                 self.collider_counter.text = str(max(0, len([e for e in scene.entities if e.collider and e.enabled])-4))
@@ -193,6 +197,7 @@ class Window(WindowProperties):
             self.collider_counter.t += time.dt
         self.collider_counter.update = _collider_counter_update
 
+    
 
         import webbrowser
         self.cog_menu = ButtonList({
@@ -203,6 +208,7 @@ class Window(WindowProperties):
             # 'Open Scene Editor' : Func(print, ' '),
             'Change Render Mode <gray>[F10]<default>' : self.next_render_mode,
             'Reset Render Mode <gray>[Shift+F10]<default>' : Func(setattr, self, 'render_mode', 'default'),
+            'Toggle Editor Camera <gray>[Control+F10]<default>' : self.toggle_editor_camera,
             'Toggle Hotreloading <gray>[F9]<default>' : application.hot_reloader.toggle_hotreloading,
             'Reload Shaders <gray>[F7]<default>' : application.hot_reloader.reload_shaders,
             'Reload Models <gray>[F7]<default>' : application.hot_reloader.reload_models,
@@ -361,6 +367,25 @@ class Window(WindowProperties):
         self.render_mode = self.render_modes[i]
 
 
+    def toggle_editor_camera(self):
+        from ursina import EditorCamera, Text, camera, color
+
+        if not application.development_mode:
+            print('window.toggle_editor_camera() is only available in development_mode')
+            return
+        if not hasattr(self, 'editor_camera'):
+            self.editor_camera = EditorCamera(ignore_paused=True)
+            Text(parent=camera.ui, loose_parent=self.editor_camera, text='Editor Camera enabled.', color=color.lime, scale=.5, origin=(0,.5), y=.49)
+
+        if not self.editor_camera.enabled:
+            self.editor_camera.world_position = camera.world_position
+            self.editor_camera.enabled = True
+        else:
+            self.editor_camera.enabled = False
+
+        application.paused = self.editor_camera.enabled
+
+
     @property
     def title(self):
         return self._title
@@ -429,7 +454,31 @@ class Window(WindowProperties):
         base.win.request_properties(self)
         # except:
         #     print_warning('failed to set fullscreen', value)
-        #     pass
+        #     pass'
+
+    @property
+    def always_on_top(self):
+        return self._always_on_top
+    
+    @always_on_top.setter
+    def always_on_top(self, value):
+        if value:
+            self.setZOrder(WindowProperties.Z_top)
+            if sys.platform == "linux":
+                from Xlib import display, X, Xatom
+                d = display.Display()
+                root = d.screen().root
+                window_id = base.win.getWindowHandle().getIntHandle()
+                window = d.create_resource_object('window', window_id)  # Get the window from X11
+                NET_WM_STATE = d.intern_atom('_NET_WM_STATE')   
+                NET_WM_STATE_ABOVE = d.intern_atom('_NET_WM_STATE_ABOVE')
+                window.change_property(NET_WM_STATE, Xatom.ATOM, 32, [NET_WM_STATE_ABOVE])
+
+                # window.change_property(NET_WM_STATE, X.Atom.ATOM, 32, [NET_WM_STATE_ABOVE])     # Change the window property to make it "always on top"
+                d.sync()    # Map the changes and flush the display
+
+        else:
+            self.clearZOrder()
 
     @property
     def color(self):
@@ -558,5 +607,5 @@ if __name__ == '__main__':
     #     if key == 'space':
     #         window.center_on_screen()
 
-    # Entity(model='cube', color=color.green, collider='box', texture='shore')
+    Entity(model='cube', color=color.green, collider='box', texture='shore')
     app.run()
