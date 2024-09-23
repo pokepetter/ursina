@@ -7,6 +7,7 @@ class Scene(NodePath):
     def __init__(self):
         super().__init__('scene')
         self.entities = []
+        self.post_update_entities = []
         self.collidables = set()
         self._children = []
 
@@ -32,9 +33,11 @@ class Scene(NodePath):
             except Exception as e:
                 print('failed to destroy entity', e)
 
-
         self.entities = to_keep
-
+        self.post_update_entities = []
+        for e in self.entities:
+            if hasattr(e, 'post_update') and callable(e.post_update):
+                self.post_update_entities.append(e)
 
         application.sequences.clear()
 
