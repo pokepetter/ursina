@@ -30,10 +30,11 @@ class DirectionalLight(Light):
         render.setLight(node_path)
         self.shadow_map_resolution = Vec2(1024, 1024)
 
+        self._bounds_entity = scene
+
+        self.shadows = shadows
         for key, value in kwargs.items():
             setattr(self, key ,value)
-
-        invoke(setattr, self, 'shadows', shadows, delay=1/60)
 
 
     @property
@@ -53,6 +54,7 @@ class DirectionalLight(Light):
     def update_bounds(self, entity=scene):  # update the shadow area to fit the bounds of target entity, defaulted to scene.
         # don't include skydome when calculating shadow bounds
         [e.disable() for e in Sky.instances]
+
         bounds = entity.get_tight_bounds(self)
         if bounds is not None:
             bmin, bmax = bounds
@@ -62,6 +64,12 @@ class DirectionalLight(Light):
             lens.set_film_size(bmax.xy - bmin.xy)
 
         [e.enable() for e in Sky.instances]
+        
+        self._bounds_entity = entity
+
+    def look_at(self, target, axis='forward', up=None): # up defaults to self.up
+        super().look_at(target, axis=axis, up=up)
+        self.update_bounds(self._bounds_entity)
 
 
 class PointLight(Light):
