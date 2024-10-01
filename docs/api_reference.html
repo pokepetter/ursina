@@ -42,7 +42,7 @@ function copy_to_clipboard(containerid) {
             <a href="#Audio">Audio</a><br></div>
         <br>
     </div>
-
+    
     <div class="sidebar_box" style="color: hsl(50deg 94% 21%);">
         <div class="group_header">Core Modules</div>
         <div class="group_content">
@@ -53,7 +53,7 @@ function copy_to_clipboard(containerid) {
             <a href="#scene">scene</a><br></div>
         <br>
     </div>
-
+    
     <div class="sidebar_box" style="color: hsl(70deg 94% 21%);">
         <div class="group_header">Graphics</div>
         <div class="group_content">
@@ -68,7 +68,7 @@ function copy_to_clipboard(containerid) {
             <a href="#SpotLight">SpotLight</a><br></div>
         <br>
     </div>
-
+    
     <div class="sidebar_box" style="color: hsl(90deg 94% 21%);">
         <div class="group_header">Procedural Models</div>
         <div class="group_content">
@@ -82,7 +82,7 @@ function copy_to_clipboard(containerid) {
             <a href="#Terrain">Terrain</a><br></div>
         <br>
     </div>
-
+    
     <div class="sidebar_box" style="color: hsl(110deg 94% 21%);">
         <div class="group_header">modules</div>
         <div class="group_content">
@@ -92,7 +92,7 @@ function copy_to_clipboard(containerid) {
             <a href="#string_utilities">string_utilities</a><br></div>
         <br>
     </div>
-
+    
     <div class="sidebar_box" style="color: hsl(130deg 94% 21%);">
         <div class="group_header">Animation</div>
         <div class="group_content">
@@ -104,7 +104,7 @@ function copy_to_clipboard(containerid) {
             <a href="#curve">curve</a><br></div>
         <br>
     </div>
-
+    
     <div class="sidebar_box" style="color: hsl(150deg 94% 21%);">
         <div class="group_header">Math</div>
         <div class="group_content">
@@ -115,7 +115,7 @@ function copy_to_clipboard(containerid) {
             <a href="#CubicBezier">CubicBezier</a><br></div>
         <br>
     </div>
-
+    
     <div class="sidebar_box" style="color: hsl(170deg 94% 21%);">
         <div class="group_header">Gameplay</div>
         <div class="group_content">
@@ -125,7 +125,7 @@ function copy_to_clipboard(containerid) {
             <a href="#Keys">Keys</a><br></div>
         <br>
     </div>
-
+    
     <div class="sidebar_box" style="color: hsl(190deg 94% 21%);">
         <div class="group_header">Collision</div>
         <div class="group_content">
@@ -139,7 +139,7 @@ function copy_to_clipboard(containerid) {
             <a href="#MeshCollider">MeshCollider</a><br></div>
         <br>
     </div>
-
+    
     <div class="sidebar_box" style="color: hsl(210deg 94% 21%);">
         <div class="group_header">Prefabs</div>
         <div class="group_content">
@@ -152,7 +152,7 @@ function copy_to_clipboard(containerid) {
             <a href="#Node">Node</a><br></div>
         <br>
     </div>
-
+    
     <div class="sidebar_box" style="color: hsl(230deg 94% 21%);">
         <div class="group_header">UI</div>
         <div class="group_content">
@@ -180,7 +180,7 @@ function copy_to_clipboard(containerid) {
             <a href="#ColorPicker">ColorPicker</a><br></div>
         <br>
     </div>
-
+    
     <div class="sidebar_box" style="color: hsl(250deg 94% 21%);">
         <div class="group_header">Editor</div>
         <div class="group_content">
@@ -190,7 +190,7 @@ function copy_to_clipboard(containerid) {
             <a href="#ASCIIEditor">ASCIIEditor</a><br></div>
         <br>
     </div>
-
+    
     <div class="sidebar_box" style="color: hsl(270deg 94% 21%);">
         <div class="group_header">Scripts</div>
         <div class="group_content">
@@ -203,7 +203,7 @@ function copy_to_clipboard(containerid) {
             <a href="#build">build</a><br></div>
         <br>
     </div>
-
+    
     <div class="sidebar_box" style="color: hsl(290deg 94% 21%);">
         <div class="group_header">Assets</div>
         <div class="group_content">
@@ -211,7 +211,7 @@ function copy_to_clipboard(containerid) {
             <a href="#textures">textures</a><br></div>
         <br>
     </div>
-
+    
     <div class="sidebar_box" style="color: hsl(310deg 94% 21%);">
         <div class="group_header">Shaders</div>
         <div class="group_content">
@@ -242,7 +242,7 @@ function copy_to_clipboard(containerid) {
     <div class="class_box" id="Ursina">
         <h1>Ursina</h1>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/main.py"><gray>ursina/main</gray></a><br><br>
-        <div class="params">Ursina(title='ursina', icon='textures/ursina.ico', borderless=True, fullscreen=False, size=None, forced_aspect_ratio=None, position=None, vsync=True, editor_ui_enabled=True, window_type='onscreen', development_mode=True, render_mode=None, show_ursina_splash=False, **kwargs)</div><br>
+        <div class="params">Ursina(title='ursina', icon='textures/ursina.ico', borderless=False, fullscreen=False, size=None, forced_aspect_ratio=None, position=None, vsync=True, editor_ui_enabled=True, window_type='onscreen', development_mode=True, render_mode=None, show_ursina_splash=False, **kwargs)</div><br>
         <table> <!-- attributes -->
             <tr>
                 <td>.mouse<gray> = mouse</gray></td><td></td>
@@ -271,7 +271,7 @@ function copy_to_clipboard(containerid) {
         </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Ursina_example)">copy</button><p id="Ursina_example"><purple>from</purple> ursina <purple>import</purple> *
-app = <purple><b>Ursina</b></purple>(use_ingame_console=True)
+app = <purple><b>Ursina</b></purple>(development_<olive>mode</olive>=False, use_ingame_console=True)
 <purple>def</purple> input(key):
     <blue>print</blue>(key)
 app.run()</p>
@@ -582,7 +582,7 @@ app.run()</p>
                 <td> &nbsp;add_script(<gray>class_instance</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;combine(<gray>analyze=False, auto_destroy=True, ignore=[]</gray>)</td> <td><span></span></td>
+                <td> &nbsp;combine(<gray>analyze=False, auto_destroy=True, ignore=[], ignore_disabled=True, include_normals=False</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
                 <td> &nbsp;look_at(<gray>target, axis='forward', up=None</gray>)</td> <td><span>up defaults to self.up</span></td>
@@ -790,7 +790,7 @@ app.run()</p>
     <div class="class_box" id="Sprite">
         <h1>Sprite<a style="color: gray; font-weight:normal;" href="#Entity">(Entity)</a></h1>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/sprite.py"><gray>ursina/prefabs/sprite</gray></a><br><br>
-        <div class="params">Sprite(texture=None, **kwargs)</div><br>
+        <div class="params">Sprite(texture=None, ppu:int=None, **kwargs)</div><br>
         <table> <!-- attributes -->
             <tr>
                 <td>Sprite.ppu = 100</td><td></td>
@@ -802,15 +802,14 @@ app.run()</p>
                 <td>.texture<gray> = texture</gray></td><td></td>
             </tr>
             <tr>
-                <td>.ppu<gray> = Sprite.ppu</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.aspect_ratio<gray> = self.texture.width / self.texture.height</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.scale_x<gray> = self.scale_y * self.aspect_ratio</gray></td><td></td>
+                <td>.ppu<gray> = ppu if ppu else Sprite.ppu   </gray></td><td><span>pixels per unit</span></td>
             </tr>
         </table><br>
+        <div><gray>functions:</gray></div>
+        <table>
+            <tr>
+                <td> &nbsp;update_scale()</td> <td><span>get called automatically on __init__, but if you change the texture or ppu, you can call this to update the scale.</span></td>
+            </tr>
         </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Sprite_example)">copy</button><p id="Sprite_example">app = Ursina()
@@ -1110,40 +1109,31 @@ app.run()</p>
                 <td>.overlay<gray> = Entity(parent=self.ui, model='quad', scale=99, color=color.clear, eternal=True, z=-99, add_to_scene_entities=False)</gray></td><td></td>
             </tr>
         </table><br>
+        <div><gray>properties:</gray></div>
+        <table>
+            <tr>
+                <td>.orthographic</td><td><span></span></td>
+            </tr>
+            <tr>
+                <td>.fov</td><td><span></span></td>
+            </tr>
+            <tr>
+                <td>.clip_plane_near</td><td><span></span></td>
+            </tr>
+            <tr>
+                <td>.clip_plane_far</td><td><span></span></td>
+            </tr>
+            <tr>
+                <td>.aspect_ratio</td><td><span>get currect aspect ratio. can not be set.</span></td>
+            </tr>
+            <tr>
+                <td>.shader</td><td><span>for applying post-processing effects.</span></td>
+            </tr>
+        </table><br>
         <div><gray>functions:</gray></div>
         <table>
             <tr>
                 <td> &nbsp;set_up()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;orthographic_getter()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;orthographic_setter(<gray>value</gray>)</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;fov_getter()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;fov_setter(<gray>value</gray>)</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;clip_plane_near_getter()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;clip_plane_near_setter(<gray>value</gray>)</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;clip_plane_far_getter()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;clip_plane_far_setter(<gray>value</gray>)</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;aspect_ratio_getter()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;shader_setter(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
                 <td> &nbsp;set_shader_input(<gray>name, value</gray>)</td> <td><span></span></td>
@@ -1264,58 +1254,46 @@ app.run()</p>
                 <td>.enabled<gray> = True</gray></td><td></td>
             </tr>
         </table><br>
-        <div><gray>functions:</gray></div>
+        <div><gray>properties:</gray></div>
         <table>
             <tr>
-                <td> &nbsp;x()</td> <td><span></span></td>
+                <td>.x</td><td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;x(<gray>value</gray>)</td> <td><span></span></td>
+                <td>.y</td><td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;y()</td> <td><span></span></td>
+                <td>.position</td><td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;y(<gray>value</gray>)</td> <td><span></span></td>
+                <td>.locked</td><td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;position()</td> <td><span></span></td>
+                <td>.visible</td><td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;position(<gray>value</gray>)</td> <td><span></span></td>
+                <td>.normal</td><td><span>returns the normal of the polygon, in local space.</span></td>
             </tr>
             <tr>
-                <td> &nbsp;locked()</td> <td><span></span></td>
+                <td>.world_normal</td><td><span>returns the normal of the polygon, in world space.</span></td>
             </tr>
             <tr>
-                <td> &nbsp;locked(<gray>value</gray>)</td> <td><span></span></td>
+                <td>.point</td><td><span>returns the point hit, in local space</span></td>
             </tr>
             <tr>
-                <td> &nbsp;visible()</td> <td><span></span></td>
+                <td>.world_point</td><td><span>returns the point hit, in world space</span></td>
             </tr>
             <tr>
-                <td> &nbsp;visible(<gray>value</gray>)</td> <td><span></span></td>
+                <td>.is_outside</td><td><span></span></td>
             </tr>
+        </table><br>
+        <div><gray>functions:</gray></div>
+        <table>
             <tr>
                 <td> &nbsp;input(<gray>key</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
                 <td> &nbsp;update()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;normal()</td> <td><span>returns the normal of the polygon, in local space.</span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;world_normal()</td> <td><span>returns the normal of the polygon, in world space.</span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;point()</td> <td><span>returns the point hit, in local space</span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;world_point()</td> <td><span>returns the point hit, in world space</span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;is_outside()</td> <td><span></span></td>
             </tr>
             <tr>
                 <td> &nbsp;find_collision()</td> <td><span></span></td>
@@ -1409,7 +1387,7 @@ app.run()</p>
             </tr>
             <tr>
                 <td>.exit_button<gray> = Button(parent=self.editor_ui, text='x', eternal=True, ignore_paused=True, origin=(.5, .5), enabled=self.borderless,
-        position=self.top_right, z=-999, scale=(.05, .025), color=color.red.tint(-.2), on_click=application.quit, name='exit_button')</gray></td><td></td>
+        position=self.top_right, z=-999, scale=(.05, .025), color=color.red.tint(-.2), shortcuts=('control+shift+alt+q', 'alt+f4'), on_click=application.quit, name='exit_button')</gray></td><td></td>
             </tr>
             <tr>
                 <td>.fps_counter<gray> = Text(parent=self.editor_ui, eternal=True, text='60', ignore=False, i=0, ignore_paused=True,
@@ -1448,6 +1426,60 @@ app.run()</p>
                 <td>.render_mode<gray> = self.render_modes[i]</gray></td><td></td>
             </tr>
         </table><br>
+        <div><gray>properties:</gray></div>
+        <table>
+            <tr>
+                <td>.left</td><td><span></span></td>
+            </tr>
+            <tr>
+                <td>.right</td><td><span></span></td>
+            </tr>
+            <tr>
+                <td>.top_left</td><td><span></span></td>
+            </tr>
+            <tr>
+                <td>.top_right</td><td><span></span></td>
+            </tr>
+            <tr>
+                <td>.bottom_left</td><td><span></span></td>
+            </tr>
+            <tr>
+                <td>.bottom_right</td><td><span></span></td>
+            </tr>
+            <tr>
+                <td>.position</td><td><span></span></td>
+            </tr>
+            <tr>
+                <td>.size</td><td><span></span></td>
+            </tr>
+            <tr>
+                <td>.aspect_ratio</td><td><span></span></td>
+            </tr>
+            <tr>
+                <td>.forced_aspect_ratio</td><td><span></span></td>
+            </tr>
+            <tr>
+                <td>.render_mode</td><td><span></span></td>
+            </tr>
+            <tr>
+                <td>.title</td><td><span></span></td>
+            </tr>
+            <tr>
+                <td>.icon</td><td><span></span></td>
+            </tr>
+            <tr>
+                <td>.borderless</td><td><span></span></td>
+            </tr>
+            <tr>
+                <td>.fullscreen</td><td><span></span></td>
+            </tr>
+            <tr>
+                <td>.color</td><td><span></span></td>
+            </tr>
+            <tr>
+                <td>.vsync</td><td><span></span></td>
+            </tr>
+        </table><br>
         <div><gray>functions:</gray></div>
         <table>
             <tr>
@@ -1455,24 +1487,6 @@ app.run()</p>
             </tr>
             <tr>
                 <td> &nbsp;apply_settings()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;left()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;right()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;top_left()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;top_right()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;bottom_left()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;bottom_right()</td> <td><span></span></td>
             </tr>
             <tr>
                 <td> &nbsp;center_on_screen()</td> <td><span></span></td>
@@ -1487,70 +1501,7 @@ app.run()</p>
                 <td> &nbsp;update_aspect_ratio()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;position()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;position(<gray>value</gray>)</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;size()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;size(<gray>value</gray>)</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;aspect_ratio()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;forced_aspect_ratio()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;forced_aspect_ratio(<gray>value</gray>)</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;render_mode()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;render_mode(<gray>value</gray>)</td> <td><span></span></td>
-            </tr>
-            <tr>
                 <td> &nbsp;next_render_mode()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;title()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;title(<gray>value</gray>)</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;icon()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;icon(<gray>value</gray>)</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;borderless()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;borderless(<gray>value</gray>)</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;fullscreen()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;fullscreen(<gray>value</gray>)</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;color()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;color(<gray>value</gray>)</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;vsync()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;vsync(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -1694,6 +1645,18 @@ app.run()</p>
                 <td>.collidables<gray> = set()</gray></td><td></td>
             </tr>
         </table><br>
+        <div><gray>properties:</gray></div>
+        <table>
+            <tr>
+                <td>.fog_color</td><td><span></span></td>
+            </tr>
+            <tr>
+                <td>.fog_density</td><td><span></span></td>
+            </tr>
+            <tr>
+                <td>.children</td><td><span></span></td>
+            </tr>
+        </table><br>
         <div><gray>functions:</gray></div>
         <table>
             <tr>
@@ -1703,22 +1666,7 @@ app.run()</p>
                 <td> &nbsp;clear()</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;fog_color()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;fog_color(<gray>value</gray>)</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;fog_density()</td> <td><span></span></td>
-            </tr>
-            <tr>
                 <td> &nbsp;fog_density(<gray>value</gray>)</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;children()</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;children(<gray>value</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -1990,9 +1938,6 @@ app.run()</p>
                 <td>.generated_vertices</td><td><span></span></td>
             </tr>
             <tr>
-                <td>.recipe</td><td><span></span></td>
-            </tr>
-            <tr>
                 <td>.render_points_in_3d</td><td><span></span></td>
             </tr>
             <tr>
@@ -2003,6 +1948,12 @@ app.run()</p>
         <table>
             <tr>
                 <td> &nbsp;generate()</td> <td><span></span></td>
+            </tr>
+            <tr>
+                <td> &nbsp;recipe()</td> <td><span></span></td>
+            </tr>
+            <tr>
+                <td> &nbsp;serialize(<gray>vertex_decimal_limit=4, color_decimal_limit=4, uv_decimal_limit=4, normal_decimal_limit=4</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
                 <td> &nbsp;generate_normals(<gray>smooth=True, regenerate=True</gray>)</td> <td><span></span></td>
@@ -2017,7 +1968,7 @@ app.run()</p>
                 <td> &nbsp;clear(<gray>regenerate=True</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
-                <td> &nbsp;save(<gray>name='', folder:Path=Func(getattr, application, 'compressed_models_folder'), flip_faces=False, max_decimals=16</gray>)</td> <td><span></span></td>
+                <td> &nbsp;save(<gray>name='', folder:Path=Func(getattr, application, 'compressed_models_folder'), flip_faces=False, vertex_decimal_limit=5, color_decimal_limit=4</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -2159,8 +2110,7 @@ Text(<olive>parent</olive>=clear_test, <olive>text</olive>=<green>'.clear() test
 window.color = color.black
 EditorCamera()
 
-<blue>print</blue>(load_model(<green>'cube'</green>, application.internal_models_compressed_folder, use_deepcop<olive>y</olive>=True).recipe)
-
+<blue>print</blue>(load_model(<green>'sphere'</green>, application.internal_models_compressed_folder, use_deepcop<olive>y</olive>=True).serialize())
 app.run()</p>
 </div>
 
@@ -2182,9 +2132,6 @@ app.run()</p>
             </tr>
             <tr>
                 <td>Shader.SPIR_V = Panda3dShader.SL_SPIR_V</td><td></td>
-            </tr>
-            <tr>
-                <td>.path<gray> = Path(_caller.filename)</gray></td><td></td>
             </tr>
             <tr>
                 <td>.name<gray> = name</gray></td><td></td>
@@ -2329,7 +2276,6 @@ e.texture.apply()</p>
                 <td>.color</td><td><span></span></td>
             </tr>
         </table><br>
-        </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Light_example)">copy</button><p id="Light_example"><purple>from</purple> ursina <purple>import</purple> Ursina, EditorCamera, color, Vec<yellow>3</yellow>
 
@@ -2403,7 +2349,6 @@ app.run()</p>
         <div class="params">PointLight(**kwargs)</div><br>
         <table> <!-- attributes -->
         </table><br>
-        </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(PointLight_example)">copy</button><p id="PointLight_example"><purple>from</purple> ursina <purple>import</purple> Ursina, EditorCamera, color, Vec<yellow>3</yellow>
 
@@ -2433,7 +2378,6 @@ app.run()</p>
         <div class="params">AmbientLight(**kwargs)</div><br>
         <table> <!-- attributes -->
         </table><br>
-        </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(AmbientLight_example)">copy</button><p id="AmbientLight_example"><purple>from</purple> ursina <purple>import</purple> Ursina, EditorCamera, color, Vec<yellow>3</yellow>
 
@@ -2462,7 +2406,6 @@ app.run()</p>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/lights.py"><gray>ursina/lights</gray></a><br><br>
         <div class="params">SpotLight(**kwargs)</div><br>
         <table> <!-- attributes -->
-        </table><br>
         </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(SpotLight_example)">copy</button><p id="SpotLight_example"><purple>from</purple> ursina <purple>import</purple> Ursina, EditorCamera, color, Vec<yellow>3</yellow>
@@ -2496,7 +2439,6 @@ app.run()</p>
                 <td>.vertices<gray> = list()</gray></td><td></td>
             </tr>
         </table><br>
-        </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Circle_example)">copy</button><p id="Circle_example">app = Ursina()
 e = <olive>Entity</olive>(<olive>model</olive>=<purple><b>Circle</b></purple>(<yellow>8</yellow>, <olive>mode</olive>=<green>'line'</green>, <olive>thickness</olive>=<yellow>1</yellow><yellow>0</yellow>), <olive>color</olive>=color.hsv(<yellow>6</yellow><yellow>0</yellow>,<yellow>1</yellow>,<yellow>1</yellow>,.<yellow>3</yellow>))
@@ -2519,7 +2461,6 @@ app.run()</p>
             <tr>
                 <td>.uvs<gray> = list()</gray></td><td></td>
             </tr>
-        </table><br>
         </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Plane_example)">copy</button><p id="Plane_example">app = Ursina()
@@ -2545,7 +2486,6 @@ app.run()</p>
                 <td>.height<gray> = height</gray></td><td></td>
             </tr>
         </table><br>
-        </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Grid_example)">copy</button><p id="Grid_example">app = Ursina()
 <olive>Entity</olive>(<olive>model</olive>=<purple><b>Grid</b></purple>(<yellow>2</yellow>, <yellow>6</yellow>))
@@ -2559,7 +2499,6 @@ app.run()</p>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/models/procedural/cone.py"><gray>ursina/models/procedural/cone</gray></a><br><br>
         <div class="params">Cone(resolution=4, radius=.5, height=1, add_bottom=True, mode='triangle', **kwargs)</div><br>
         <table> <!-- attributes -->
-        </table><br>
         </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Cone_example)">copy</button><p id="Cone_example"><purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, color, EditorCamera
@@ -2579,7 +2518,6 @@ app.run()</p>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/models/procedural/cylinder.py"><gray>ursina/models/procedural/cylinder</gray></a><br><br>
         <div class="params">Cylinder(resolution=8, radius=.5, start=0, height=1, direction=(0,1,0), mode='triangle', **kwargs)</div><br>
         <table> <!-- attributes -->
-        </table><br>
         </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Cylinder_example)">copy</button><p id="Cylinder_example">app = Ursina()
@@ -2805,14 +2743,11 @@ app.run()</p>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(mesh_importer_example)">copy</button><p id="mesh_importer_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, EditorCamera, Sky
 app = Ursina()
+m = obj_to_ursinamesh(folder=application.asset_folder.parent / <green>'samples'</green>, name=<green>'procedural_rock_0'</green>, save_to_file=False, delete_obj=False)
+<blue>print</blue>(m.serialize())
 
 
 
-application.asset_folder = Path(r<green><green><green>''</green></green>'C:\Users\Petter\Downloads<green><green>''</green></green>'</green>)
-t = perf_counter()
-<olive>Entity</olive>(<olive>model</olive>=<green>'untitled'</green>)
-<blue>print</blue>(<green>'-------'</green>, perf_counter() - t)
-m = load_model(<green>'cube'</green>, use_deepcop<olive>y</olive>=True)
 
 
 
@@ -2952,13 +2887,16 @@ printvar(<green>'test'</green>)</p>
     <div class="class_box" id="FrameAnimation3d">
         <h1>FrameAnimation3d<a style="color: gray; font-weight:normal;" href="#Entity">(Entity)</a></h1>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/frame_animation_3d.py"><gray>ursina/prefabs/frame_animation_3d</gray></a><br><br>
-        <div class="params">FrameAnimation3d(name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs)</div><br>
+        <div class="params">FrameAnimation3d(name, fps=12, loop=True, autoplay=True, frame_times=None, auto_destroy=False, **kwargs)</div><br>
         <table> <!-- attributes -->
+            <tr>
+                <td>.play<gray> = self.start</gray></td><td></td>
+            </tr>
             <tr>
                 <td>.frames<gray> = [Entity(parent=self, model=e.stem, enabled=False, add_to_scene_entities=False) for e in model_names]</gray></td><td></td>
             </tr>
             <tr>
-                <td>.sequence<gray> = Sequence(loop=loop, auto_destroy=False)</gray></td><td></td>
+                <td>.sequence<gray> = Sequence(loop=loop, auto_destroy=auto_destroy)</gray></td><td></td>
             </tr>
             <tr>
                 <td>.autoplay<gray> = autoplay</gray></td><td></td>
@@ -3080,7 +3018,6 @@ app.run()</p>
             <tr>
                 <td>.state</td><td><span></span></td>
             </tr>
-        </table><br>
         </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Animator_example)">copy</button><p id="Animator_example">app = Ursina()
@@ -3287,6 +3224,15 @@ app.run()</p>
                 <td> &nbsp;in_out_bounce(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
+                <td> &nbsp;zero(<gray>t</gray>)</td> <td><span></span></td>
+            </tr>
+            <tr>
+                <td> &nbsp;combine(<gray>curve_a, curve_b, split_at</gray>)</td> <td><span></span></td>
+            </tr>
+            <tr>
+                <td> &nbsp;reverse(<gray>curve_function</gray>)</td> <td><span></span></td>
+            </tr>
+            <tr>
                 <td> &nbsp;{e}_boomerang(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
         </table><br>
@@ -3301,27 +3247,23 @@ camera.fov = <yellow>1</yellow><yellow>6</yellow>
 camera.position = (<yellow>9</yellow>, <yellow>6</yellow>)
 window.color = color.black
 
-i = <yellow>0</yellow>
-<purple>for</purple> e in dir(curve):
-    try:
-        item = <blue>getattr</blue>(curve, e)
-        <blue>print</blue>(item.__name__, <green>':'</green>, item(.<yellow>7</yellow><yellow>5</yellow>))
-        curve_renderer = <olive>Entity</olive>(
-            <olive>model</olive>=Mesh(<olive>vertices</olive>=[Vec3(i / <yellow>3</yellow><yellow>1</yellow>, item(i / <yellow>3</yellow><yellow>1</yellow>), <yellow>0</yellow>) <purple>for</purple> i in <blue>range</blue>(<yellow>3</yellow><yellow>2</yellow>)], <olive>mode</olive>=<green>'line'</green>, <olive>thickness</olive>=<yellow>2</yellow>),
-            <olive>color</olive>=color.light_gray)
-        row = floor(i / <yellow>8</yellow>)
-        curve_renderer.x = (i % <yellow>8</yellow>) * <yellow>2</yellow>.<yellow>5</yellow>
-        curve_renderer.y = row * <yellow>1</yellow>.<yellow>7</yellow><yellow>5</yellow>
-        label = Text(<olive>parent</olive>=curve_renderer, <olive>text</olive>=item.__name__, <olive>scale</olive>=<yellow>8</yellow>, <olive>color</olive>=color.gray, <olive>y</olive>=-.<yellow>1</yellow>)
-        i += <yellow>1</yellow>
-    except:
-        pass
+<purple>def</purple> render_<purple><b>curve</b></purple>(curve_function, name):
+    curve_renderer = <olive>Entity</olive>(<olive>model</olive>=Mesh(<olive>vertices</olive>=[Vec3(i / <yellow>3</yellow><yellow>1</yellow>, curve_function(i / <yellow>3</yellow><yellow>1</yellow>), <yellow>0</yellow>) <purple>for</purple> i in <blue>range</blue>(<yellow>3</yellow><yellow>2</yellow>)], <olive>mode</olive>=<green>'line'</green>, <olive>thickness</olive>=<yellow>2</yellow>), <olive>color</olive>=color.light_gray)
+    label = Text(<olive>parent</olive>=curve_renderer, <olive>text</olive>=name, <olive>scale</olive>=<yellow>8</yellow>, <olive>color</olive>=color.gray, <olive>y</olive>=-.<yellow>1</yellow>)
+    return curve_renderer
+
+
+
 
 c = CubicBezier(<yellow>0</yellow>, .<yellow>5</yellow>, <yellow>1</yellow>, .<yellow>5</yellow>)
 <blue>print</blue>(<green>'-----------'</green>, c.calculate(.<yellow>2</yellow><yellow>3</yellow>))
 
 window.exit_button.visible = False
 window.fps_counter.enabled = False
+
+custom_curve = combine(linear, reverse(in_expo), .<yellow>2</yellow><yellow>5</yellow>)
+render_<purple><b>curve</b></purple>(custom_curve, <green>'custom_curve'</green>)
+EditorCamera()
 app.run()
 <green><green>''</green>'
 These are used by Entity when animating, like this:
@@ -3433,7 +3375,6 @@ app.run()</p>
                 <td>.yx</td><td><span></span></td>
             </tr>
         </table><br>
-        </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Vec2_example)">copy</button><p id="Vec2_example">a = <purple><b>Vec2</b></purple>(<yellow>1</yellow>,<yellow>1</yellow>)
 <blue>print</blue>(a)
@@ -3480,7 +3421,6 @@ app.run()</p>
                 <td>.Z</td><td><span></span></td>
             </tr>
         </table><br>
-        </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Vec3_example)">copy</button><p id="Vec3_example">a = <purple><b>Vec3</b></purple>(<yellow>1</yellow>,<yellow>0</yellow>,<yellow>0</yellow>) * <yellow>2</yellow>
 a = <purple><b>Vec3</b></purple>(<yellow>1</yellow>,<yellow>0</yellow>,<yellow>1</yellow>) * <purple><b>Vec3</b></purple>(<yellow>2</yellow>,<yellow>1</yellow>,<yellow>2</yellow>)
@@ -3494,7 +3434,6 @@ b += <purple><b>Vec3</b></purple>(<yellow>0</yellow>,<yellow>1</yellow>)</p>
         <h1>Vec4<a style="color: gray; font-weight:normal;" href="#PandaVec4">(PandaVec4)</a></h1>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/vec4.py"><gray>ursina/vec4</gray></a><br><br>
         <table> <!-- attributes -->
-        </table><br>
         </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Vec4_example)">copy</button><p id="Vec4_example">a = Vec<yellow>4</yellow>(<yellow>1</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>) * <yellow>2</yellow>
@@ -3570,27 +3509,23 @@ camera.fov = <yellow>1</yellow><yellow>6</yellow>
 camera.position = (<yellow>9</yellow>, <yellow>6</yellow>)
 window.color = color.black
 
-i = <yellow>0</yellow>
-<purple>for</purple> e in dir(curve):
-    try:
-        item = <blue>getattr</blue>(curve, e)
-        <blue>print</blue>(item.__name__, <green>':'</green>, item(.<yellow>7</yellow><yellow>5</yellow>))
-        curve_renderer = <olive>Entity</olive>(
-            <olive>model</olive>=Mesh(<olive>vertices</olive>=[Vec3(i / <yellow>3</yellow><yellow>1</yellow>, item(i / <yellow>3</yellow><yellow>1</yellow>), <yellow>0</yellow>) <purple>for</purple> i in <blue>range</blue>(<yellow>3</yellow><yellow>2</yellow>)], <olive>mode</olive>=<green>'line'</green>, <olive>thickness</olive>=<yellow>2</yellow>),
-            <olive>color</olive>=color.light_gray)
-        row = floor(i / <yellow>8</yellow>)
-        curve_renderer.x = (i % <yellow>8</yellow>) * <yellow>2</yellow>.<yellow>5</yellow>
-        curve_renderer.y = row * <yellow>1</yellow>.<yellow>7</yellow><yellow>5</yellow>
-        label = Text(<olive>parent</olive>=curve_renderer, <olive>text</olive>=item.__name__, <olive>scale</olive>=<yellow>8</yellow>, <olive>color</olive>=color.gray, <olive>y</olive>=-.<yellow>1</yellow>)
-        i += <yellow>1</yellow>
-    except:
-        pass
+<purple>def</purple> render_curve(curve_function, name):
+    curve_renderer = <olive>Entity</olive>(<olive>model</olive>=Mesh(<olive>vertices</olive>=[Vec3(i / <yellow>3</yellow><yellow>1</yellow>, curve_function(i / <yellow>3</yellow><yellow>1</yellow>), <yellow>0</yellow>) <purple>for</purple> i in <blue>range</blue>(<yellow>3</yellow><yellow>2</yellow>)], <olive>mode</olive>=<green>'line'</green>, <olive>thickness</olive>=<yellow>2</yellow>), <olive>color</olive>=color.light_gray)
+    label = Text(<olive>parent</olive>=curve_renderer, <olive>text</olive>=name, <olive>scale</olive>=<yellow>8</yellow>, <olive>color</olive>=color.gray, <olive>y</olive>=-.<yellow>1</yellow>)
+    return curve_renderer
+
+
+
 
 c = <purple><b>CubicBezier</b></purple>(<yellow>0</yellow>, .<yellow>5</yellow>, <yellow>1</yellow>, .<yellow>5</yellow>)
 <blue>print</blue>(<green>'-----------'</green>, c.calculate(.<yellow>2</yellow><yellow>3</yellow>))
 
 window.exit_button.visible = False
 window.fps_counter.enabled = False
+
+custom_curve = combine(linear, reverse(in_expo), .<yellow>2</yellow><yellow>5</yellow>)
+render_curve(custom_curve, <green>'custom_curve'</green>)
+EditorCamera()
 app.run()
 <green><green>''</green>'
 These are used by Entity when animating, like this:
@@ -3638,6 +3573,9 @@ e2.animate_y(1, curve=curve.<b>CubicBezier</b>(0,.7,1,.3))
             </tr>
             <tr>
                 <td> &nbsp;enumerate_2d(<gray>target_2d_list):    # usage: for (x, y), value in enumerate_2d(my_2d_list</gray>)</td> <td><span>usage: for (x, y), value in enumerate_2d(my_2d_list)</span></td>
+            </tr>
+            <tr>
+                <td> &nbsp;enumerate_3d(<gray>target_3d_list):   # usage: for (x, y, z), value in enumerate_3d(my_3d_list</gray>)</td> <td><span>usage: for (x, y, z), value in enumerate_3d(my_3d_list)</span></td>
             </tr>
             <tr>
                 <td> &nbsp;rotate_2d_list(<gray>target_2d_list</gray>)</td> <td><span></span></td>
@@ -3796,7 +3734,6 @@ app.run()</p>
             <tr>
                 <td>.kwargs<gray> = kwargs</gray></td><td></td>
             </tr>
-        </table><br>
         </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Func_example)">copy</button><p id="Func_example"><purple>from</purple> ursina <purple>import</purple> *
@@ -4230,7 +4167,7 @@ app.run()</p>
     <div class="class_box" id="Collider">
         <h1>Collider</h1>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/collider.py"><gray>ursina/collider</gray></a><br><br>
-        <div class="params">Collider(entity, shape, bvh=False, bvh_max_depth=8, bvh_max_shapes=None, bvh_only_xz=False, bvh_flatten=False)</div><br>
+        <div class="params">Collider(entity, shape)</div><br>
         <table> <!-- attributes -->
             <tr>
                 <td>.collision_node<gray> = CollisionNode('CollisionNode')</gray></td><td></td>
@@ -4250,12 +4187,6 @@ app.run()</p>
         </table><br>
         <div><gray>functions:</gray></div>
         <table>
-            <tr>
-                <td> &nbsp;show_bounds(<gray>only_leaves=True</gray>)</td> <td><span></span></td>
-            </tr>
-            <tr>
-                <td> &nbsp;hide_bounds()</td> <td><span></span></td>
-            </tr>
             <tr>
                 <td> &nbsp;remove()</td> <td><span></span></td>
             </tr>
@@ -4308,7 +4239,6 @@ app.run()</p>
                 <td>.size<gray> = size</gray></td><td></td>
             </tr>
         </table><br>
-        </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(BoxCollider_example)">copy</button><p id="BoxCollider_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, Pipe, Circle, Button, scene, EditorCamera, color
@@ -4357,7 +4287,6 @@ app.run()</p>
                 <td>.radius<gray> = radius</gray></td><td></td>
             </tr>
         </table><br>
-        </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(SphereCollider_example)">copy</button><p id="SphereCollider_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, Pipe, Circle, Button, scene, EditorCamera, color
@@ -4397,7 +4326,7 @@ app.run()</p>
     <div class="class_box" id="MeshCollider">
         <h1>MeshCollider<a style="color: gray; font-weight:normal;" href="#Collider">(Collider)</a></h1>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/collider.py"><gray>ursina/collider</gray></a><br><br>
-        <div class="params">MeshCollider(entity, mesh=None, center=(0,0,0), bvh=False, bvh_max_depth=8, bvh_max_shapes=None, bvh_only_xz=False, bvh_flatten=False)</div><br>
+        <div class="params">MeshCollider(entity, mesh=None, center=(0,0,0))</div><br>
         <table> <!-- attributes -->
             <tr>
                 <td>.center<gray> = center</gray></td><td></td>
@@ -5318,7 +5247,6 @@ app.run()</p>
         <div class="params">ThinSlider(*args, **kwargs)</div><br>
         <table> <!-- attributes -->
         </table><br>
-        </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(ThinSlider_example)">copy</button><p id="ThinSlider_example">app = Ursina()
 
@@ -5592,7 +5520,7 @@ app = Ursina()
 Button(<green>'button'</green>).fit_to_text()
 camera.orthographic = True
 camera.fov = <yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>
-<purple><b>Cursor</b></purple>()
+cursor =  <purple><b>Cursor</b></purple>(<olive>model</olive>=Mesh(<olive>vertices</olive>=[(-.<yellow>5</yellow>,<yellow>0</yellow>,<yellow>0</yellow>),(.<yellow>5</yellow>,<yellow>0</yellow>,<yellow>0</yellow>),(<yellow>0</yellow>,-.<yellow>5</yellow>,<yellow>0</yellow>),(<yellow>0</yellow>,.<yellow>5</yellow>,<yellow>0</yellow>)], <olive>triangles</olive>=[(<yellow>0</yellow>,<yellow>1</yellow>),(<yellow>2</yellow>,<yellow>3</yellow>)], <olive>mode</olive>=<green>'line'</green>, <olive>thickness</olive>=<yellow>2</yellow>), <olive>scale</olive>=.<yellow>0</yellow><yellow>2</yellow>)
 mouse.visible = False
 app.run()</p>
 </div>
@@ -5689,7 +5617,6 @@ app.run()</p>
             <tr>
                 <td>ContentTypes.math = float + '+-*/'</td><td></td>
             </tr>
-        </table><br>
         </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(ContentTypes_example)">copy</button><p id="ContentTypes_example">app = Ursina()
@@ -5805,7 +5732,7 @@ app.run()</p>
     <div class="class_box" id="ButtonGroup">
         <h1>ButtonGroup<a style="color: gray; font-weight:normal;" href="#Entity">(Entity)</a></h1>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/button_group.py"><gray>ursina/prefabs/button_group</gray></a><br><br>
-        <div class="params">ButtonGroup(options, default='', min_selection=1, max_selection=1, origin=(-.5,.5,0), spacing=(0.025,0,0), **kwargs)</div><br>
+        <div class="params">ButtonGroup(options, default='', min_selection=1, max_selection=1, origin=(-.5,.5,0), spacing=(0.025,0,0), label='', **kwargs)</div><br>
         <table> <!-- attributes -->
             <tr>
                 <td>.deselected_color<gray> = Button.default_color</gray></td><td></td>
@@ -5849,6 +5776,9 @@ app.run()</p>
             <tr>
                 <td>.value</td><td><span></span></td>
             </tr>
+            <tr>
+                <td>.label</td><td><span></span></td>
+            </tr>
         </table><br>
         <div><gray>functions:</gray></div>
         <table>
@@ -5870,7 +5800,7 @@ app.run()</p>
 app = Ursina()
 
 center = <olive>Entity</olive>(<olive>parent</olive>=camera.ui, <olive>model</olive>=<green>'circle'</green>, <olive>scale</olive>=.<yellow>0</yellow><yellow>0</yellow><yellow>5</yellow>, <olive>color</olive>=color.red, <olive>z</olive>=-<yellow>1</yellow>)
-gender_selection = <purple><b>ButtonGroup</b></purple>((<green>'man'</green>, <green>'woman'</green>, <green>'other'</green>), <olive>origin</olive>=(-.<yellow>5</yellow>,<yellow>0</yellow>))
+gender_selection = <purple><b>ButtonGroup</b></purple>((<green>'man'</green>, <green>'woman'</green>, <green>'other'</green>), <olive>origin</olive>=(-.<yellow>5</yellow>,<yellow>0</yellow>), label=<green>'choose gender:'</green>)
 
 <purple>def</purple> on_value_changed():
     <blue>print</blue>(<green>'set gender:'</green>, gender_selection.value)
@@ -5942,7 +5872,6 @@ app.run()</p>
                 <td>.height<gray> = height</gray></td><td></td>
             </tr>
         </table><br>
-        </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(Space_example)">copy</button><p id="Space_example"><green><green>''</green>'
 WindowPanel is an easy way to create UI. It will automatically layout the content.
@@ -5976,61 +5905,10 @@ app.run()</p>
     <div class="class_box" id="FileBrowser">
         <h1>FileBrowser<a style="color: gray; font-weight:normal;" href="#Entity">(Entity)</a></h1>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/file_browser.py"><gray>ursina/prefabs/file_browser</gray></a><br><br>
-        <div class="params">FileBrowser(file_button_class=FileButton, selection_limit=1, start_path=None, **kwargs)</div><br>
+        <div class="params">FileBrowser(file_button_class=FileButton, selection_limit=1, start_path=None, file_types:list=None, **kwargs)</div><br>
         <table> <!-- attributes -->
             <tr>
-                <td>.file_types<gray> = ['.*', ]</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.start_path<gray> = start_path</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.file_button_class<gray> = file_button_class</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.return_files<gray> = True</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.return_folders<gray> = False</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.selection_limit<gray> = selection_limit</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.max_buttons<gray> = 24</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.title_bar<gray> = Button(parent=self, scale=(.9,.035), text='&ltgray&gtOpen', color=color.dark_gray, highlight_color=color.dark_gray)</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.address_bar<gray> = Button(parent=self, scale=(.8,.035), text='//', text_origin=(-.5,0), y=-.05, highlight_color=color.black)</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.folder_up_button<gray> = Button(parent=self, scale=(.035,.035), texture='arrow_down', rotation_z=180, position=(-.42,-.05,-1), color=color.white, highlight_color=color.azure, on_click=self.folder_up)</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.button_parent<gray> = Entity(parent=self)</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.back_panel<gray> = Entity(parent=self, model='quad', collider='box', origin_y=.5, scale=(.9,(self.max_buttons*.025)+.19), color=color._32, z=.1)</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.bg<gray> = Button(parent=self, z=1, scale=(999,999), color=color.black66, highlight_color=color.black66, pressed_color=color.black66)</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.cancel_button<gray> = Button(parent=self, scale=(.875*.24, .05), y=(-self.max_buttons*.025)-.15, origin_x=-.5, x=-.875/2, text='Cancel', on_click=self.close)</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.open_button<gray> = Button(parent=self, scale=(.875*.74, .05), y=(-self.max_buttons*.025)-.15, origin_x=.5, x=.875/2, text='Open', color=color.dark_gray, on_click=self.open)</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.cancel_button_2<gray> = Button(parent=self.title_bar, model=Circle(), world_scale=self.title_bar.world_scale_y*.75, origin_x=.5, x=.495, z=-.1, text='&ltgray&gtx', on_click=self.close)</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.can_scroll_up_indicator<gray> = Entity(parent=self, model='quad', texture='arrow_down', rotation_z=180, scale=(.05,.05), y=-.0765, z=-.1, color=color.dark_gray, enabled=False, add_to_scene_entities=False)</gray></td><td></td>
-            </tr>
-            <tr>
-                <td>.can_scroll_down_indicator<gray> = Entity(parent=self, model='quad', texture='arrow_down', scale=(.05,.05), y=(-self.max_buttons*.025)-.104, z=-.1, color=color.dark_gray, enabled=False, add_to_scene_entities=False)</gray></td><td></td>
+                <td>.file_types<gray> = file_types if file_types else ['.*', ]</gray></td><td></td>
             </tr>
         </table><br>
         <div><gray>properties:</gray></div>
@@ -6270,7 +6148,6 @@ app.run()</p>
         <div class="params">DropdownMenuButton(text='', **kwargs)</div><br>
         <table> <!-- attributes -->
         </table><br>
-        </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(DropdownMenuButton_example)">copy</button><p id="DropdownMenuButton_example"><purple>from</purple> ursina.prefabs.dropdown_menu <purple>import</purple> DropdownMenu, DropdownMenuButton
 
@@ -6361,7 +6238,6 @@ app.run()</p>
         <div class="params">RadialMenuButton(**kwargs)</div><br>
         <table> <!-- attributes -->
         </table><br>
-        </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(RadialMenuButton_example)">copy</button><p id="RadialMenuButton_example">app = Ursina()
 
@@ -6434,7 +6310,6 @@ app.run()</p>
                 <td>.bar_color</td><td><span></span></td>
             </tr>
         </table><br>
-        </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(HealthBar_example)">copy</button><p id="HealthBar_example">app = Ursina()
 
@@ -6478,7 +6353,6 @@ app.run()</p>
             <tr>
                 <td>.preview<gray> = Button(parent=self, scale=(.5*.84,.05), origin=[0,.5], y=slider.y-.02, color=color.white)</gray></td><td></td>
             </tr>
-        </table><br>
         </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(ColorPicker_example)">copy</button><p id="ColorPicker_example"><purple>from</purple> ursina <purple>import</purple> Ursina
@@ -7122,7 +6996,6 @@ app.run()</p>
                 <td>sky_dome</td><td></td>
             </tr>
         </table><br>
-        </table><br>
 
 </div>
 <br>
@@ -7205,7 +7078,6 @@ app.run()</p>
                 <td>sky_default</td><td></td>
             </tr>
         </table><br>
-        </table><br>
 
 </div>
 <br>
@@ -7222,7 +7094,6 @@ app.run()</p>
             <tr>
                 <td>    'texture_offset' : Vec2(0.0, 0.0),</td><td></td>
             </tr>
-        </table><br>
         </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(unlit_shader_example)">copy</button><p id="unlit_shader_example"><purple>from</purple> ursina <purple>import</purple> *
@@ -7256,7 +7127,12 @@ app.run()</p>
             <tr>
                 <td>    'shadow_color' : Color(0, .5, 1, .25),</td><td></td>
             </tr>
-        </table><br>
+            <tr>
+                <td>    'shadow_blur': .005,</td><td></td>
+            </tr>
+            <tr>
+                <td>    'shadow_samples': 4</td><td></td>
+            </tr>
         </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(lit_with_shadows_shader_example)">copy</button><p id="lit_with_shadows_shader_example"><purple>from</purple> ursina <purple>import</purple> *
@@ -7296,7 +7172,6 @@ app.run()</p>
         <h1>matcap_shader</h1>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/matcap_shader.py"><gray>ursina/shaders/matcap_shader</gray></a><br><br>
         <table> <!-- attributes -->
-        </table><br>
         </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(matcap_shader_example)">copy</button><p id="matcap_shader_example"><purple>from</purple> ursina <purple>import</purple> *
@@ -7349,7 +7224,6 @@ app.run()</p>
                 <td>    'back_color': color.hsv(240, .05, .76),</td><td></td>
             </tr>
         </table><br>
-        </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(colored_lights_shader_example)">copy</button><p id="colored_lights_shader_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina.prefabs.primitives <purple>import</purple> *
@@ -7400,7 +7274,6 @@ app.run()</p>
                 <td>    'fresnel_texture' : Func(load_texture, 'white_cube'),</td><td></td>
             </tr>
         </table><br>
-        </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(fresnel_shader_example)">copy</button><p id="fresnel_shader_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
@@ -7439,7 +7312,6 @@ app.run()</p>
         <h1>projector_shader</h1>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/projector_shader.py"><gray>ursina/shaders/projector_shader</gray></a><br><br>
         <table> <!-- attributes -->
-        </table><br>
         </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(projector_shader_example)">copy</button><p id="projector_shader_example"><purple>from</purple> ursina <purple>import</purple> *
@@ -7484,34 +7356,23 @@ app.run()</p>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/texture_blend_shader.py"><gray>ursina/shaders/texture_blend_shader</gray></a><br><br>
         <table> <!-- attributes -->
         </table><br>
-        </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(texture_blend_shader_example)">copy</button><p id="texture_blend_shader_example"><purple>from</purple> ursina <purple>import</purple> *
 Texture.default_filtering = <green>'bilinear'</green>
 app = Ursina(vsync=False)
 
 e = <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>shader</olive>=texture_blend_shader, <olive>texture</olive>=<green>'shore'</green>)
-
-e.set_shader_input(<green>'red_texture'</green>, load_texture(<green>'dirt.tif'</green>))
-
-e.set_shader_input(<green>'green_texture'</green>, load_texture(<green>'grass.png'</green>))
-e.set_shader_input(<green>'green_blend_texture'</green>, load_texture(<green>'grass_blend_map'</green>))
+e.set_shader_input(<green>'red_texture'</green>, load_texture(<green>'dirt'</green>))
+e.set_shader_input(<green>'green_texture'</green>, load_texture(<green>'grass_tintable.tif'</green>))
 e.set_shader_input(<green>'green_tint'</green>, color.hex(<green>'#6f6d24'</green>))
-
 e.set_shader_input(<green>'blue_texture'</green>, load_texture(<green>'cobblestone.tif'</green>))
-e.set_shader_input(<green>'blue_uv'</green>, Vec2(<yellow>2</yellow>))
-e.set_shader_input(<green>'blue_blend_texture'</green>, load_texture(<green>'cobblestone_blend_map'</green>))
-
-blend_map = load_texture(<green>'blend_map_example'</green>)
+blend_map = load_texture(<green>'texture_blend_map_example'</green>)
 e.set_shader_input(<green>'blend_map'</green>, blend_map)
-
 e.scale_x = blend_map.width / blend_map.height
 e.scale *= <yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>
 
 
 EditorCamera(<olive>rotation_x</olive>=<yellow>3</yellow><yellow>0</yellow>)
-
-app.draw_color = color.green
 
 <purple>def</purple> input(key):
     <purple>if</purple> key == <green>'space'</green>:
@@ -7523,20 +7384,13 @@ app.draw_color = color.green
     <purple>if</purple> key == <green>'left mouse up'</green>:
         blend_map.apply()
 
-    <purple>if</purple> key == <green>'1'</green>:
-        app.draw_color = color.red
-    <purple>if</purple> key == <green>'2'</green>:
-        app.draw_color = color.green
-    <purple>if</purple> key == <green>'3'</green>:
-        app.draw_color = color.blue
-
 
 e.collider = <green>'mesh'</green>
 <purple>def</purple> update():
     <purple>if</purple> mouse.left and mouse.hovered_entity == e:
         x, _, y = mouse.point + Vec3(.<yellow>5</yellow>)
         <blue>print</blue>(x, y)
-        blend_map.set_pixel(int(x*blend_map.width), int(y*blend_map.height), app.draw_color)
+        blend_map.set_pixel(int(x*blend_map.width), int(y*blend_map.height), color.green)
         blend_map.apply()
 
 
@@ -7549,30 +7403,12 @@ app.run()</p>
         <h1>instancing_shader</h1>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/instancing_shader.py"><gray>ursina/shaders/instancing_shader</gray></a><br><br>
         <table> <!-- attributes -->
-            <tr>
-                <td>default_input</td><td></td>
-            </tr>
-            <tr>
-                <td>    'texture_scale' : Vec2(1,1),</td><td></td>
-            </tr>
-            <tr>
-                <td>    'texture_offset' : Vec2(0.0, 0.0),</td><td></td>
-            </tr>
-            <tr>
-                <td>    'position_offsets' : [Vec3(i,0,0) for i in range(256)],</td><td></td>
-            </tr>
-            <tr>
-                <td>    'rotation_offsets' : [Vec4(0) for i in range(256)],</td><td></td>
-            </tr>
-            <tr>
-                <td>    'scale_multipliers' : [Vec3(1) for i in range(256)],</td><td></td>
-            </tr>
-        </table><br>
         </table><br>
     <div><gray>example:</gray></div>
-   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(instancing_shader_example)">copy</button><p id="instancing_shader_example"><purple>from</purple> ursina <purple>import</purple> Ursina, <olive>Entity</olive>, EditorCamera, Vec<yellow>3</yellow>, color, application, time, Cone
+   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(instancing_shader_example)">copy</button><p id="instancing_shader_example"><purple>from</purple> ursina <purple>import</purple> Ursina, window, <olive>Entity</olive>, EditorCamera, Vec<yellow>3</yellow>, color, application, time, Cone
 <purple>import</purple> random
-app = Ursina(vsync=False)
+window.vsync = False
+app = Ursina()
 
 instances = []
 <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>texture</olive>=<green>'grass'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>2</yellow><yellow>8</yellow>)
@@ -7585,13 +7421,14 @@ p.setInstanceCount(<yellow>2</yellow><yellow>5</yellow><yellow>6</yellow>)
 
 <purple>for</purple> z in <blue>range</blue>(<yellow>1</yellow><yellow>6</yellow>):
     <purple>for</purple> x in <blue>range</blue>(<yellow>1</yellow><yellow>6</yellow>):
-        e = <olive>Entity</olive>(<olive>position</olive>=Vec3(x, <yellow>0</yellow>, z), <olive>color</olive>=color.lime, rotation_<olive>y</olive>=random.random()*<yellow>3</yellow><yellow>6</yellow><yellow>0</yellow>)
+        e = <olive>Entity</olive>(add_to_scene_entities=False, <olive>position</olive>=Vec3(x, <yellow>0</yellow>, z), <olive>color</olive>=color.lime, rotation_<olive>y</olive>=random.random()*<yellow>3</yellow><yellow>6</yellow><yellow>0</yellow>)
         instances.append(e)
         <blue>print</blue>(e.quaternion, Quat())
 
 p.set_shader_input(<green>'position_offsets'</green>, [e.position*<yellow>4</yellow> <purple>for</purple> e in instances])
 p.set_shader_input(<green>'rotation_offsets'</green>, [e.quaternion <purple>for</purple> e in instances])
 p.set_shader_input(<green>'scale_multipliers'</green>,[e.scale*random.uniform(.<yellow>9</yellow>,<yellow>2</yellow>) <purple>for</purple> e in instances])
+p.set_shader_input(<green>'colors'</green>, p.model.colors)
 
 <blue>print</blue>(len(p.model.vertices) * len(instances))
 EditorCamera()
@@ -7617,7 +7454,6 @@ app.run()</p>
             <tr>
                 <td>    'side_texture_scale' : Vec2(1,1),</td><td></td>
             </tr>
-        </table><br>
         </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(triplanar_shader_example)">copy</button><p id="triplanar_shader_example"><purple>from</purple> ursina <purple>import</purple> *
@@ -7662,7 +7498,6 @@ app.run()</p>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/normals_shader.py"><gray>ursina/shaders/normals_shader</gray></a><br><br>
         <table> <!-- attributes -->
         </table><br>
-        </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(normals_shader_example)">copy</button><p id="normals_shader_example"><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina.prefabs.primitives <purple>import</purple> *
@@ -7694,28 +7529,29 @@ app.run()</p>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/transition_shader.py"><gray>ursina/shaders/transition_shader</gray></a><br><br>
         <table> <!-- attributes -->
         </table><br>
-        </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(transition_shader_example)">copy</button><p id="transition_shader_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
 window.color = color._<yellow>1</yellow><yellow>6</yellow>
 Texture.default_filtering = <green>'bilinear'</green>
 
-e = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>shader</olive>=transition_shader, <olive>scale</olive>=<yellow>5</yellow>, cutoff=<yellow>0</yellow>)
-mask = load_texture(<green>'transition_shader_example_texture'</green>)
-<blue>print</blue>(mask)
+e = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>shader</olive>=transition_shader, <olive>scale</olive>=<yellow>5</yellow>, cutoff=<yellow>0</yellow>, 
+    <olive>texture</olive>=<green>'sword_slash'</green>, <olive>color</olive>=color.azure
+    )
+mask = load_texture(<green>'sword_slash'</green>)
 e.set_shader_input(<green>'mask_texture'</green>, mask)
 EditorCamera()
 
-cutoff_slider = Slider(<yellow>0</yellow>, <yellow>1</yellow>, dynamic=True, <olive>y</olive>=-.<yellow>4</yellow>)
+min_cutoff_slider = Slider(<yellow>0</yellow>, <yellow>1</yellow>, dynamic=True, <olive>y</olive>=-.<yellow>4</yellow>)
 <purple>def</purple> on_value_changed():
-    e.set_shader_input(<green>'cutoff'</green>, cutoff_slider.value)
-cutoff_slider.on_value_changed = on_value_changed
+    e.set_shader_input(<green>'min_cutoff'</green>, min_cutoff_slider.value)
+min_cutoff_slider.on_value_changed = on_value_changed
 
-smooth_slider = Slider(<yellow>0</yellow>, <yellow>1</yellow>, dynamic=True, <olive>y</olive>=-.<yellow>4</yellow><yellow>5</yellow>)
+max_cutoff_slider = Slider(<yellow>0</yellow>, <yellow>1</yellow>, default=<yellow>1</yellow>, dynamic=True, <olive>y</olive>=-.<yellow>4</yellow><yellow>5</yellow>)
 <purple>def</purple> on_value_changed():
-    e.set_shader_input(<green>'smooth_size'</green>, smooth_slider.value)
-smooth_slider.on_value_changed = on_value_changed
+    e.set_shader_input(<green>'max_cutoff'</green>, max_cutoff_slider.value)
+max_cutoff_slider.on_value_changed = on_value_changed
+
 
 <purple>def</purple> input(key):
     <purple>if</purple> key == <green>'space'</green>:
@@ -7738,7 +7574,6 @@ app.run()</p>
             <tr>
                 <td>    'window_size': Vec2(1280,720),</td><td></td>
             </tr>
-        </table><br>
         </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(fxaa_example)">copy</button><p id="fxaa_example">app = Ursina()
@@ -7770,7 +7605,6 @@ app.run()</p>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/screenspace_shaders/ssao.py"><gray>ursina/shaders/screenspace_shaders/ssao</gray></a><br><br>
         <table> <!-- attributes -->
         </table><br>
-        </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(ssao_example)">copy</button><p id="ssao_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
@@ -7779,7 +7613,6 @@ e = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, <olive>c
 e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=-<yellow>1</yellow>)
 e = <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>, <olive>y</olive>=-<yellow>1</yellow>)
 camera.shader = ssao_shader
-camera.clip_plane_near = <yellow>1</yellow>
 
 EditorCamera()
 
@@ -7803,7 +7636,6 @@ app.run()</p>
         <h1>camera_outline_shader</h1>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/screenspace_shaders/camera_outline_shader.py"><gray>ursina/shaders/screenspace_shaders/camera_outline_shader</gray></a><br><br>
         <table> <!-- attributes -->
-        </table><br>
         </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(camera_outline_shader_example)">copy</button><p id="camera_outline_shader_example"><purple>from</purple> ursina <purple>import</purple> *
@@ -7837,7 +7669,6 @@ app.run()</p>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/screenspace_shaders/pixelation_shader.py"><gray>ursina/shaders/screenspace_shaders/pixelation_shader</gray></a><br><br>
         <table> <!-- attributes -->
         </table><br>
-        </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(pixelation_shader_example)">copy</button><p id="pixelation_shader_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
@@ -7862,7 +7693,6 @@ app.run()</p>
             <tr>
                 <td>    'contrast': 1,</td><td></td>
             </tr>
-        </table><br>
         </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(camera_contrast_example)">copy</button><p id="camera_contrast_example"><purple>from</purple> ursina <purple>import</purple> *
@@ -7899,7 +7729,6 @@ app.run()</p>
                 <td>    blur_size<gray> = .1</gray></td><td></td>
             </tr>
         </table><br>
-        </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(camera_vertical_blur_example)">copy</button><p id="camera_vertical_blur_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
@@ -7916,8 +7745,6 @@ slider = ThinSlider(max=.<yellow>1</yellow>, dynamic=True, <olive>position</oliv
     <blue>print</blue>(slider.value)
     camera.set_shader_input("blur_size", slider.value)
 
-<purple>def</purple> update():
-    camera.set_shader_input(<green>'blur_size'</green>, mouse.x)
 
 
 slider.on_value_changed = set_blur
@@ -7932,7 +7759,6 @@ app.run()</p>
         <h1>camera_grayscale</h1>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/shaders/screenspace_shaders/camera_grayscale.py"><gray>ursina/shaders/screenspace_shaders/camera_grayscale</gray></a><br><br>
         <table> <!-- attributes -->
-        </table><br>
         </table><br>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(camera_grayscale_example)">copy</button><p id="camera_grayscale_example"><purple>from</purple> ursina <purple>import</purple> *

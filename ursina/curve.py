@@ -232,17 +232,17 @@ def one(t):
     return 1  
 
 def combine(curve_a, curve_b, split_at):
-    def new_curve_func(t):
+    def _new_curve_func(t):
         if t < split_at:
             return curve_a(t / split_at)
         else:
             return curve_b(min((t / (1-split_at)) - split_at, 1))
-    return new_curve_func
+    return _new_curve_func
 
 def reverse(curve_function):
-    def new_curve_func(t):
+    def _new_curve_func(t):
         return curve_function(1-t)
-    return new_curve_func
+    return _new_curve_func
 
 
 # generate boomeranged versions of all the functions
