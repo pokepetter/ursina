@@ -312,10 +312,11 @@ def get_functions(str, is_class=False, include_properties=True):
                 if not include_properties:
                     continue
             # ignore_functions_for_property_generation:
+            # print('--name:', name)
             if name.endswith('_getter') or name.endswith('_setter'):
                 is_property = True
                 if not include_properties:
-                        continue
+                    continue
 
             params = line.replace('(self, ', '(')
             params = params.replace('(self)', '()')
@@ -493,7 +494,6 @@ for file in path.glob('**/*.py'):
             if attrs or funcs:
                 module_info[name] = Info(path=file, attributes=attrs, functions=funcs, example=example)
 
-            # continue
             classes = get_classes(code)
             for class_name, class_definition in classes.items():
                 print('parsing class:', class_name)
@@ -519,11 +519,10 @@ for file in path.glob('**/*.py'):
 
                     if name not in properties:
                         properties[name] = SimpleNamespace(name=name, comment=prop.comment)
-                    elif not properties[name].comment:  # in case we have a comment on the sett but not on the getter
+                    elif not properties[name].comment:  # in case we have a comment on the setter but not on the getter
                         properties[name].comment = prop.comment
 
                 properties = properties.values()
-
 
                 example = get_example(code, class_name)
 
@@ -537,13 +536,30 @@ for file in path.glob('**/*.py'):
             module_name = file.stem
             classes = get_classes(code)
             for class_name, class_definition in classes.items():
-                print('parsing module:', module_name)
+                # print('parsing singleton:', module_name)
                 attrs, methods = list(), list()
                 attrs = get_class_attributes(class_definition)
-                methods = get_functions(class_definition, is_class=True)
-                example = get_example(code, class_name)
+                
+                all_methods = get_functions(class_definition, is_class=True)
+                methods = [e for e in all_methods if not e.is_property]
 
-                module_info[module_name] = Info(path=file, attributes=attrs, functions=methods, example=example)
+                properties = dict()
+                for prop in [e for e in all_methods if e.is_property]:
+                    name = prop.name
+                    if prop.name.endswith('_getter'):
+                        name = prop.name[:-len('_getter')]
+                    if prop.name.endswith('_setter'):
+                        name = prop.name[:-len('_setter')]
+
+                    if name not in properties:
+                        properties[name] = SimpleNamespace(name=name, comment=prop.comment)
+                    elif not properties[name].comment:  # in case we have a comment on the setter but not on the getter
+                        properties[name].comment = prop.comment
+
+                properties = properties.values()
+                example = get_example(code, class_name)
+                module_info[module_name] = Info(path=file, attributes=attrs, properties=properties, functions=methods, example=example)
+
 
 def html_color(value):
     return f'hsl({value.h}, {int(value.s*100)}%, {int(value.v*100)}%)'
@@ -626,7 +642,7 @@ for group_name, group in groups.items():
             print('no info found for', name)
         # f, params, attrs, methods, example = data
         # funcs, example = data
-        print(f'make html for: {group_name} -> {name}:')
+        # print(f'make html for: {groclearup_name} -> {name}:')
         # for key in ('path', 'parent_class', 'parameters', 'class_vars', 'attributes', 'properties', 'functions'):
         #     print(f'    {key}: {getattr(data, key)}')
 
@@ -709,14 +725,14 @@ for group_name, group in groups.items():
             html += '        <div><gray>functions:</gray></div>\n'
             html += '        <table>\n'
 
-        for function in data.functions:
-            html += (
-                f'''            <tr>\n'''
-                f'''                <td> &nbsp;{function.name}(<gray>{function.parameters}</gray>)</td> <td><span>{function.comment[1:].strip()}</span></td>\n'''
-                f'''            </tr>\n'''
-            )
+            for function in data.functions:
+                html += (
+                    f'''            <tr>\n'''
+                    f'''                <td> &nbsp;{function.name}(<gray>{function.parameters}</gray>)</td> <td><span>{function.comment[1:].strip()}</span></td>\n'''
+                    f'''            </tr>\n'''
+                )
 
-        html += '        </table><br>\n'
+            html += '        </table><br>\n'
 
         if data.example:
             html += '    <div><gray>example:</gray></div>\n'
