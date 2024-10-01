@@ -122,11 +122,11 @@ class Camera(Entity):
         self.lens.set_far(value)
 
 
-    def aspect_ratio_getter(self):
+    def aspect_ratio_getter(self):      # get currect aspect ratio. can not be set.
         return self.perspective_lens.get_aspect_ratio()
 
 
-    def shader_setter(self, value):
+    def shader_setter(self, value):     # for applying post-processing effects.
         self._shader = value
         if value is None:
             self.filter_manager.cleanup()
@@ -159,7 +159,10 @@ class Camera(Entity):
             self.filter_quad.set_shader_input("tex", self.render_texture)
             self.filter_quad.set_shader_input("dtex", self.depth_texture)
 
-            self.clip_plane_near = 1
+            if hasattr(value.default_input, 'clip_plane_near'):
+                self.clip_plane_near = value.default_input['clip_plane_near']
+            if hasattr(value.default_input, 'clip_plane_far'):
+                self.clip_plane_far = value.default_input['clip_plane_far']
             # self.filter_quad.set_shader_input("ntex", self.normals_texture)
 
         self.filter_quad.setShader(shader)
