@@ -1124,7 +1124,7 @@ app.run()</p>
                 <td>.clip_plane_far</td><td><span></span></td>
             </tr>
             <tr>
-                <td>.aspect_ratio</td><td><span>get currect aspect ratio. can not be set.</span></td>
+                <td>.aspect_ratio</td><td><span>get current aspect ratio. can not be set.</span></td>
             </tr>
             <tr>
                 <td>.shader</td><td><span>for applying post-processing effects.</span></td>
@@ -1383,22 +1383,21 @@ app.run()</p>
                 <td>.editor_ui<gray> = Entity(parent=camera.ui, eternal=True, enabled=bool(application.development_mode))</gray></td><td></td>
             </tr>
             <tr>
-                <td>.input_entity<gray> = Entity(name</gray></td><td></td>
+                <td>.input_entity<gray> = Entity(name='window.input_entity', input=window_input, ignore_paused=True)</gray></td><td></td>
             </tr>
             <tr>
-                <td>.exit_button<gray> = Button(parent=self.editor_ui, text='x', eternal=True, ignore_paused=True, origin=(.5, .5), enabled=self.borderless,
-        position=self.top_right, z=-999, scale=(.05, .025), color=color.red.tint(-.2), shortcuts=('control+shift+alt+q', 'alt+f4'), on_click=application.quit, name='exit_button')</gray></td><td></td>
+                <td>.exit_button<gray> = Button(parent=self.editor_ui, text='x', eternal=True, ignore_paused=True, origin=(.5, .5), enabled=self.borderless and application.development_mode, position=self.top_right, z=-999, scale=(.05, .025), color=color.red.tint(-.2), shortcuts=('control+shift+alt+q', 'alt+f4'), on_click=application.quit, name='exit_button')</gray></td><td></td>
             </tr>
             <tr>
                 <td>.fps_counter<gray> = Text(parent=self.editor_ui, eternal=True, text='60', ignore=False, i=0, ignore_paused=True,
         position=((.5*self.aspect_ratio)-self.exit_button.scale_x, .47+(.02*(not self.exit_button.enabled)), -999))</gray></td><td></td>
             </tr>
             <tr>
-                <td>.entity_counter<gray> = Text(parent=self.editor_ui, eternal=True, origin=(-.5,.5), text='00', ignore=False, t=0,
+                <td>.entity_counter<gray> = Text(parent=self.editor_ui, enabled=application.development_mode, eternal=True, origin=(-.5,.5), text='00', ignore=False, t=0,
         position=((.5*self.aspect_ratio)-self.exit_button.scale_x, .425+(.02*(not self.exit_button.enabled)), -999))</gray></td><td></td>
             </tr>
             <tr>
-                <td>.collider_counter<gray> = Text(parent=self.editor_ui, eternal=True, origin=(-.5,.5), text='00', ignore=False, t=.1,
+                <td>.collider_counter<gray> = Text(parent=self.editor_ui, enabled=application.development_mode, eternal=True, origin=(-.5,.5), text='00', ignore=False, t=.1,
         position=((.5*self.aspect_ratio)-self.exit_button.scale_x, .38+(.02*(not self.exit_button.enabled)), -999))</gray></td><td></td>
             </tr>
             <tr>
@@ -1407,6 +1406,7 @@ app.run()</p>
         'ursfx (Sound Effect Maker)' : lambda: exec('from ursina.prefabs import ursfx; ursfx.open_gui()'),
         'Change Render Mode &ltgray&gt[F10]&ltdefault&gt' : self.next_render_mode,
         'Reset Render Mode &ltgray&gt[Shift+F10]&ltdefault&gt' : Func(setattr, self, 'render_mode', 'default'),
+        'Toggle Editor Camera &ltgray&gt[Control+F10]&ltdefault&gt' : self.toggle_editor_camera,
         'Toggle Hotreloading &ltgray&gt[F9]&ltdefault&gt' : application.hot_reloader.toggle_hotreloading,
         'Reload Shaders &ltgray&gt[F7]&ltdefault&gt' : application.hot_reloader.reload_shaders,
         'Reload Models &ltgray&gt[F7]&ltdefault&gt' : application.hot_reloader.reload_models,
@@ -1414,7 +1414,7 @@ app.run()</p>
         'Reload Code &ltgray&gt[F5]&ltdefault&gt' : application.hot_reloader.reload_code,</gray></td><td></td>
             </tr>
             <tr>
-                <td>.cog_button<gray> = Button(parent=self.editor_ui, eternal=True, model='quad', texture='cog', scale=.015, origin=(1,-1), position=self.bottom_right, ignore_paused=True, name='cog_button')</gray></td><td></td>
+                <td>.cog_button<gray> = Button(parent=self.editor_ui, eternal=True, model='quad', texture='cog', scale=.015, origin=(1,-1), position=self.bottom_right, ignore_paused=True, name='cog_button', enabled=application.development_mode)</gray></td><td></td>
             </tr>
             <tr>
                 <td>.prev_size<gray> = self.size</gray></td><td></td>
@@ -1474,6 +1474,9 @@ app.run()</p>
                 <td>.fullscreen</td><td><span></span></td>
             </tr>
             <tr>
+                <td>.always_on_top</td><td><span></span></td>
+            </tr>
+            <tr>
                 <td>.color</td><td><span></span></td>
             </tr>
             <tr>
@@ -1502,6 +1505,9 @@ app.run()</p>
             </tr>
             <tr>
                 <td> &nbsp;next_render_mode()</td> <td><span></span></td>
+            </tr>
+            <tr>
+                <td> &nbsp;toggle_editor_camera()</td> <td><span></span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -1549,6 +1555,7 @@ position_text = Text(<olive>y</olive>=.<yellow>5</yellow>,)
 
 
 
+<olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.green, <olive>collider</olive>=<green>'box'</green>, <olive>texture</olive>=<green>'shore'</green>)
 app.run()</p>
 </div>
 
@@ -2149,10 +2156,10 @@ app.run()</p>
                 <td>.geometry<gray> = geometry</gray></td><td></td>
             </tr>
             <tr>
-                <td>.entity<gray> = None</gray></td><td></td>
+                <td>.default_input<gray> = dict()</gray></td><td></td>
             </tr>
             <tr>
-                <td>.default_input<gray> = dict()</gray></td><td></td>
+                <td>.continuous_input<gray> = dict()</gray></td><td></td>
             </tr>
             <tr>
                 <td>.compiled<gray> = False</gray></td><td></td>
@@ -2307,6 +2314,9 @@ app.run()</p>
             <tr>
                 <td>.shadow_map_resolution<gray> = Vec2(1024, 1024)</gray></td><td></td>
             </tr>
+            <tr>
+                <td>.shadows<gray> = shadows</gray></td><td></td>
+            </tr>
         </table><br>
         <div><gray>properties:</gray></div>
         <table>
@@ -2318,6 +2328,9 @@ app.run()</p>
         <table>
             <tr>
                 <td> &nbsp;update_bounds(<gray>entity=scene</gray>)</td> <td><span>update the shadow area to fit the bounds of target entity, defaulted to scene.</span></td>
+            </tr>
+            <tr>
+                <td> &nbsp;look_at(<gray>target, axis='forward', up=None</gray>)</td> <td><span>up defaults to self.up</span></td>
             </tr>
         </table><br>
     <div><gray>example:</gray></div>
@@ -3225,6 +3238,9 @@ app.run()</p>
             </tr>
             <tr>
                 <td> &nbsp;zero(<gray>t</gray>)</td> <td><span></span></td>
+            </tr>
+            <tr>
+                <td> &nbsp;one(<gray>t</gray>)</td> <td><span></span></td>
             </tr>
             <tr>
                 <td> &nbsp;combine(<gray>curve_a, curve_b, split_at</gray>)</td> <td><span></span></td>
@@ -6265,10 +6281,10 @@ app.run()</p>
     <div class="class_box" id="HealthBar">
         <h1>HealthBar<a style="color: gray; font-weight:normal;" href="#Button">(Button)</a></h1>
         <a href="https://github.com/pokepetter/ursina/blob/master/ursina/prefabs/health_bar.py"><gray>ursina/prefabs/health_bar</gray></a><br><br>
-        <div class="params">HealthBar(max_value=100, value=Default, roundness=.25, animation_duration=.1, show_text=True, show_lines=False, text_size=.7, origin=(-.5,.5), **kwargs)</div><br>
+        <div class="params">HealthBar(max_value=100, value=Default, roundness=.25, bar_color=color.red.tint(-.2), highlight_color=color.black66, animation_duration=.1, show_text=True, show_lines=False, text_size=.7, scale=(.5,.025), origin=(-.5,.5), name='health_bar', **kwargs)</div><br>
         <table> <!-- attributes -->
             <tr>
-                <td>.bar<gray> = Entity(parent=self, model=Quad(radius=roundness), origin=origin, z=-.005, color=color.red.tint(-.2), ignore=True)</gray></td><td></td>
+                <td>.bar<gray> = Entity(parent=self, model=Quad(radius=roundness), origin=origin, z=-.005, color=bar_color, highlight_color=highlight_color, ignore=True)</gray></td><td></td>
             </tr>
             <tr>
                 <td>.lines<gray> = Entity(parent=self.bar, y=-1, color=color.black33, ignore=True, enabled=show_lines, z=-.05)</gray></td><td></td>
@@ -6313,7 +6329,7 @@ app.run()</p>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(HealthBar_example)">copy</button><p id="HealthBar_example">app = Ursina()
 
-health_bar_<yellow>1</yellow> = <purple><b>HealthBar</b></purple>(bar_<olive>color</olive>=color.lime.tint(-.<yellow>2</yellow><yellow>5</yellow>), roundness=.<yellow>5</yellow>, max_value=<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>, value=<yellow>5</yellow><yellow>0</yellow>)
+health_bar_<yellow>1</yellow> = <purple><b>HealthBar</b></purple>(bar_<olive>color</olive>=color.lime.tint(-.<yellow>2</yellow><yellow>5</yellow>), roundness=.<yellow>5</yellow>, max_value=<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>, value=<yellow>5</yellow><yellow>0</yellow>, <olive>scale</olive>=(.<yellow>5</yellow>,.<yellow>1</yellow>))
 <blue>print</blue>(health_bar_<yellow>1</yellow>.text_entity.enabled, health_bar_<yellow>1</yellow>.text_entity.text)
 
 <purple>def</purple> input(key):
@@ -6386,7 +6402,11 @@ app.run()</p>
         'f7'     : self.reload_models,
         'f8'     : self.reload_shaders,
         'f9'     : self.toggle_hotreloading,
-        }</gray></td><td></td>
+        }
+        </gray></td><td></td>
+            </tr>
+            <tr>
+                <td>.hotreload_window_settings<gray> = dict(size=(window.size[0]/2,window.size[1]/2), always_on_top=True, position=(window.fullscreen_size[0]-window.size[0]/22, 0))</gray></td><td></td>
             </tr>
         </table><br>
         <div><gray>functions:</gray></div>
@@ -6419,7 +6439,6 @@ app.run()</p>
     <div><gray>example:</gray></div>
    <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard(HotReloader_example)">copy</button><p id="HotReloader_example"><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
-application.hot_reloader.path = application.asset_folder.parent.parent / <green>'samples'</green> / <green>'platformer.py'</green>
 
 <green><green>''</green>'
 By default you can press F5 to reload the starting script, F6 to reimport textures and F7 to reload models.

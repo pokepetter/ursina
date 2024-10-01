@@ -122,7 +122,7 @@ class Camera(Entity):
         self.lens.set_far(value)
 
 
-    def aspect_ratio_getter(self):      # get currect aspect ratio. can not be set.
+    def aspect_ratio_getter(self):      # get current aspect ratio. can not be set.
         return self.perspective_lens.get_aspect_ratio()
 
 
