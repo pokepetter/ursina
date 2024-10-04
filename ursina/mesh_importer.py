@@ -188,7 +188,7 @@ def load_blender_scene(name, path=Func(getattr, application, 'asset_folder'), re
 
 def get_blender(blend_file):    # try to get a matching blender version in case we have multiple blender version installed
     if not application.blender_paths:
-        print_warning('error: trying to load .blend file, but no blender installation was found. blender_paths:', application.blender_paths)
+        print_warning(f"Error: Trying to load .blend file, but no blender installation was found. blender_paths: {application.blender_paths}. If Blender is not installed, install it. If Blender is installed, but not found, make sure to install it to the default install location. If it's still not found, you can provide a custom path like this: application.blender_paths['default'] = Path('C:\Program Files\...')")
         return None
 
     if len(application.blender_paths) == 1:
@@ -213,8 +213,8 @@ def blend_to_obj(blend_file:Path, out_folder=Func(getattr, application, 'compres
     if callable(out_folder):
         out_folder = out_folder()
 
-    if not application.compressed_models_folder.exists():
-        application.compressed_models_folder.mkdir()
+    if not out_folder.exists():
+        out_folder.mkdir()
 
     export_script_path = application.internal_scripts_folder / '_blend_export.py'
     exported = []
