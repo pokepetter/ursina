@@ -100,12 +100,15 @@ class Entity(NodePath, metaclass=PostInitCaller):
         if not _Ursina_instance and _warn_if_ursina_not_instantiated and add_to_scene_entities:
             print_warning('Tried to instantiate Entity before Ursina. Please create an instance of Ursina first (app = Ursina())', self.line_definition)
 
+        if 'shader' not in kwargs and Entity.default_shader:
+            kwargs['shader'] = Entity.default_shader
 
         # make sure things get set in the correct order. both colliders and texture need the model to be set first.
         for key in ('model', 'origin', 'origin_x', 'origin_y', 'origin_z', 'collider', 'shader', 'texture', 'texture_scale', 'texture_offset'):
             if key in kwargs:
                 setattr(self, key, kwargs[key])
                 del kwargs[key]
+        
 
         for key, value in kwargs.items():
             setattr(self, key, value)
