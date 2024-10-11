@@ -395,9 +395,9 @@ class DatagramWriter:
             int: self.write_int64,
             float: self.write_float64,
             str: self.write_string32,
-            p3d.Vec2: self.write_vec2,
-            p3d.Vec3: self.write_vec3,
-            p3d.Vec4: self.write_vec4,
+            Vec2: self.write_vec2,
+            Vec3: self.write_vec3,
+            Vec4: self.write_vec4,
             tuple: self.write_tuple,
             list: self.write_list,
             bytes: self.write_blob
