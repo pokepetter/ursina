@@ -390,10 +390,22 @@ class Peer:
 class DatagramWriter:
     def __init__(self):
         self.datagram = PyDatagram()
-        self.type_functions = dict()
+        self.builtin_type_functions = {
+            bool: self.write_bool,
+            int: self.write_int64,
+            float: self.write_float64,
+            str: self.write_string32,
+            p3d.Vec2: self.write_vec2,
+            p3d.Vec3: self.write_vec3,
+            p3d.Vec4: self.write_vec4,
+            tuple: self.write_tuple,
+            list: self.write_list,
+            bytes: self.write_blob
+        }
+        self.extra_type_functions = dict()
 
     def register_type(self, the_type, write_func):
-        self.type_functions[the_type] = write_func
+        self.extra_type_functions[the_type] = write_func
 
     def clear(self):
         self.datagram = PyDatagram()
@@ -402,39 +414,14 @@ class DatagramWriter:
         return self.datagram
 
     def write(self, value):
-        converter_func = self.type_functions.get(type(value))
-        if converter_func is not None:
-            converter_func(self, value)
+        type_of_value = type(value)
+        builtin_converter_func = self.builtin_type_functions.get(type_of_value)
+        if builtin_converter_func is not None:
+            builtin_converter_func(value)
         else:
-            if isinstance(value, bool):
-                self.write_bool(value)
-            elif isinstance(value, int):
-                self.write_int64(value)
-            elif isinstance(value, float):
-                self.write_float64(value)
-            elif isinstance(value, str):
-                self.write_string32(value)
-            elif isinstance(value, p3d.Vec2):
-                self.write_float64(value[0])
-                self.write_float64(value[1])
-            elif isinstance(value, p3d.Vec3):
-                self.write_float64(value[0])
-                self.write_float64(value[1])
-                self.write_float64(value[2])
-            elif isinstance(value, p3d.Vec4):
-                self.write_float64(value[0])
-                self.write_float64(value[1])
-                self.write_float64(value[2])
-                self.write_float64(value[3])
-            elif isinstance(value, tuple):
-                for v in value:
-                    self.write(v)
-            elif isinstance(value, list):
-                self.write_int16(len(value))
-                for v in value:
-                    self.write(v)
-            elif isinstance(value, bytes):
-                self.write_blob(value)
+            converter_func = self.extra_type_functions.get(type_of_value)
+            if converter_func is not None:
+                converter_func(self, value)
             else:
                 raise Exception(f"Unsupported value type for DatagramWriter: {type(value).__name__}")
 
@@ -471,6 +458,30 @@ class DatagramWriter:
     def write_blob32(self, value):
         self.datagram.addBlob32(value)
 
+    def write_vec2(self, value):
+        self.write_float64(value[0])
+        self.write_float64(value[1])
+
+    def write_vec3(self, value):
+        self.write_float64(value[0])
+        self.write_float64(value[1])
+        self.write_float64(value[2])
+
+    def write_vec4(self, value):
+        self.write_float64(value[0])
+        self.write_float64(value[1])
+        self.write_float64(value[2])
+        self.write_float64(value[3])
+
+    def write_tuple(self, value):
+        for v in value:
+            self.write(v)
+
+    def write_list(self, value):
+        self.write_int16(len(value))
+        for v in value:
+            self.write(v)
+
 
 # Used internally by networking module.
 class ExceedsListLimitException(Exception):
@@ -483,10 +494,21 @@ class DatagramReader:
     def __init__(self):
         self.datagram = None
         self.iter = None
-        self.read_functions = dict()
+        self.builtin_read_functions = {
+            bool: self.read_bool,
+            int: self.read_int64,
+            float: self.read_float64,
+            str: self.read_string32,
+            Vec2: self.read_vec2,
+            Vec3: self.read_vec3,
+            Vec4: self.read_vec4,
+            bytes: self.read_blob
+
+        }
+        self.extra_read_functions = dict()
 
     def register_type(self, the_type, read_func):
-        self.read_functions[the_type] = read_func
+        self.extra_read_functions[the_type] = read_func
 
     def set_datagram(self, datagram):
         self.datagram = datagram
@@ -499,49 +521,37 @@ class DatagramReader:
         self.set_datagram(p3d.Datagram(blob))
 
     def read(self, value_type, max_list_length=1000):
-        converter_func = self.read_functions.get(value_type)
-        if converter_func is not None:
-            return converter_func(self)
+        builtin_converter_func = self.builtin_read_functions.get(value_type)
+        if builtin_converter_func is not None:
+            return builtin_converter_func()
         else:
-            if value_type is bool:
-                return self.read_bool()
-            elif value_type is int:
-                return self.read_int64()
-            elif value_type is float:
-                return self.read_float64()
-            elif value_type is str:
-                return self.read_string32()
-            elif value_type is Vec2:
-                return Vec2(self.read_float64(), self.read_float64())
-            elif value_type is Vec3:
-                return Vec3(self.read_float64(), self.read_float64(), self.read_float64())
-            elif value_type is Vec4:
-                return Vec4(self.read_float64(), self.read_float64(), self.read_float64(), self.read_float64())
-            elif type(value_type) is tuple:
-                origin_type = value_type[0]
-                if origin_type is tuple:
-                    arg_types = value_type[1]
-                    values = []
-                    for arg_type in arg_types:
-                        values.append(self.read(arg_type))
-                    return tuple(values)
-                elif origin_type is list:
-                    arg_type = value_type[1][0]
-                    if arg_type is list:
-                        raise Exception("DatagramReader does not support lists of lists.")
-                    l = self.read_int16()
-                    if l > max_list_length:
-                        raise ExceedsListLimitException("Received list that exceeds the max list length allowed by the DatagramReader.")
-                    values = []
-                    for i in range(l):
-                        values.append(self.read(arg_type))
-                    return values
+            converter_func = self.extra_read_functions.get(value_type)
+            if converter_func is not None:
+                return converter_func(self)
+            else:
+                if type(value_type) is tuple:
+                    origin_type = value_type[0]
+                    if origin_type is tuple:
+                        arg_types = value_type[1]
+                        values = []
+                        for arg_type in arg_types:
+                            values.append(self.read(arg_type))
+                        return tuple(values)
+                    elif origin_type is list:
+                        arg_type = value_type[1][0]
+                        if arg_type is list:
+                            raise Exception("DatagramReader does not support lists of lists.")
+                        l = self.read_int16()
+                        if l > max_list_length:
+                            raise ExceedsListLimitException("Received list that exceeds the max list length allowed by the DatagramReader.")
+                        values = []
+                        for i in range(l):
+                            values.append(self.read(arg_type))
+                        return values
+                    else:
+                        raise Exception(f"Unsupported value type for DatagramReader: {value_type.__name__}")
                 else:
                     raise Exception(f"Unsupported value type for DatagramReader: {value_type.__name__}")
-            elif value_type is bytes:
-                return self.read_blob()
-            else:
-                raise Exception(f"Unsupported value type for DatagramReader: {value_type.__name__}")
 
     def read_string(self):
         return self.iter.getString()
@@ -575,6 +585,15 @@ class DatagramReader:
 
     def read_blob32(self):
         return self.iter.getBlob32()
+
+    def read_vec2(self):
+        return Vec2(self.read_float64(), self.read_float64())
+
+    def read_vec3(self):
+        return Vec3(self.read_float64(), self.read_float64(), self.read_float64())
+
+    def read_vec4(self):
+        return Vec4(self.read_float64(), self.read_float64(), self.read_float64(), self.read_float64())
 
 
 # Gives a 32 bit hash value (shifted one right (31 bit)) that is the same across runs and devices.
