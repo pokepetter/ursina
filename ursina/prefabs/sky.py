@@ -10,6 +10,7 @@ class Sky(Entity):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
+        self.setDepthWrite(False)
         __class__.instances.append(self)
 
 
