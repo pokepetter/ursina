@@ -8,12 +8,14 @@ from ursina.entity import Entity
 from ursina.sequence import Sequence, Func, Wait
 from ursina import color
 from ursina import destroy
+from ursina.shaders.text_shader import text_shader
+from ursina.scripts.property_generator import generate_properties_for_class
 # note:
 # <scale:n> tag doesn't work well in the middle of text.
 # only good for titles for now.
 
+@generate_properties_for_class()
 class Text(Entity):
-
     size = .025
     default_font = 'OpenSans-Regular.ttf'
     default_resolution = 1080 * size * 2
@@ -26,7 +28,6 @@ class Text(Entity):
         self.parent = camera.ui
 
         self.setColorScaleOff()
-        self.shader = None
         self.text_nodes = []
         self.images = []
         self.origin = (-.5, .5)
@@ -48,6 +49,7 @@ class Text(Entity):
         self._background = None
         self.appear_sequence = None # gets created when calling appear()
 
+
         if 'origin' in kwargs:   # set the scale before model for correct corners
             setattr(self, 'origin', kwargs['origin'])
         if 'use_tags' in kwargs:
@@ -61,9 +63,10 @@ class Text(Entity):
                 continue
             setattr(self, key, value)
 
+        self.shader = text_shader
 
-    @property
-    def text(self):
+
+    def text_getter(self):
         t = ''
         y = 0
         if self.text_nodes:
@@ -79,8 +82,7 @@ class Text(Entity):
         return t
 
 
-    @text.setter     # set this to update the text.
-    def text(self, text):
+    def text_setter(self, text): # set this to update the text.
         self.raw_text = text
 
         # clear stuff
@@ -226,12 +228,8 @@ class Text(Entity):
 
         return self.text_node
 
-    @property
-    def font(self):
-        return self._font
 
-    @font.setter
-    def font(self, value):
+    def font_setter(self, value):
         font = builtins.loader.loadFont(value)
         if font:
             self._font = font
@@ -241,12 +239,8 @@ class Text(Entity):
             if self.text:
                 self.text = self.raw_text   # update tex
 
-    @property
-    def color(self): # sets the default color.
-        return getattr(self, '_color', color.white)
 
-    @color.setter
-    def color(self, value):
+    def color_setter(self, value):
         self._color = value
         self.current_color = value
         self.text_colors['default'] = value
@@ -256,12 +250,21 @@ class Text(Entity):
             img.color = value
 
 
-    @property
-    def line_height(self):
+    def shader_setter(self, value):
+        self._shader = value
+        if not value.compiled:
+            value.compile()
+
+        for tn in self.text_nodes:
+            tn.setShader(value._shader)
+            for key, shader_input in value.default_input.items():
+                tn.setShaderInput(key, shader_input)
+
+
+    def line_height_getter(self):
         return getattr(self, '_line_height', 1)
 
-    @line_height.setter
-    def line_height(self, value):
+    def line_height_setter(self, value):
         self._line_height = value
         if self.use_tags and self.text:
             self.text = self.raw_text
@@ -291,23 +294,14 @@ class Text(Entity):
     def lines(self):
         return self.text.splitlines()
 
-    @property
-    def resolution(self):
+    def resolution_getter(self):
         return self._font.getPixelsPerUnit()
 
-    @resolution.setter
-    def resolution(self, value):
+    def resolution_setter(self, value):
         self._font.setPixelsPerUnit(value)
 
-    @property
-    def wordwrap(self): # set this to make the text wrap after a certain number of characters.
-        if hasattr(self, '_wordwrap'):
-            return self._wordwrap
-        else:
-            return 0
 
-    @wordwrap.setter
-    def wordwrap(self, value):
+    def wordwrap_setter(self, value):   # set this to make the text wrap after a certain number of characters.
         self._wordwrap = value
         if not value:
             return
@@ -331,22 +325,13 @@ class Text(Entity):
         self.text = new_text
 
 
-    @property
-    def origin(self):
-        return self._origin
-
-    @origin.setter
-    def origin(self, value):
+    def origin_setter(self, value):
         self._origin = value
         if self.text:
             self.text = self.raw_text
 
-    @property
-    def background(self):
-        return self._background
 
-    @background.setter
-    def background(self, value):
+    def background_setter(self, value):
         if value is True:
             self.create_background()
         elif self._background:
@@ -448,7 +433,17 @@ if __name__ == '__main__':
     # Text.default_font = 'consola.ttf'
     # color.text_color = color.lime
     Text.default_resolution = 1080 * Text.size
-    test = Text(text=descr, wordwrap=30)
+    test = Text(text=descr, wordwrap=30, scale=4)
+    
+    from ursina.shaders import transition_shader as text_shader
+    # from ursina.shaders import unlit_shader as text_shader
+    
+    # text_shader.compile()
+    # for e in test.text_nodes:
+    #     e.setShader(text_shader._shader)
+    #     for key, value in text_shader.default_input.items():
+    #         e.setShaderInput(key, value)
+
     # test.align()
     # test = Text(descr)
 
