@@ -33,6 +33,8 @@ class Text(Entity):
         self.origin = (-.5, .5)
 
         self.font = Text.default_font
+        self.shader = text_shader
+        self.shader.compile()
         self.resolution = Text.default_resolution
         self.use_tags = True
         self.line_height = 1
@@ -43,7 +45,7 @@ class Text(Entity):
         for color_name in color.color_names:
             self.text_colors[color_name] = color.colors[color_name]
 
-        self.tag = Text.start_tag+'default'+Text.end_tag
+        self.tag = Text.start_tag + 'default' + Text.end_tag
         self.current_color = self.text_colors['default']
         self.scale_override = 1
         self._background = None
@@ -63,7 +65,7 @@ class Text(Entity):
                 continue
             setattr(self, key, value)
 
-        self.shader = text_shader
+        
 
 
     def text_getter(self):
@@ -216,10 +218,11 @@ class Text(Entity):
         self.text_node.setText(text)
         self.text_node.setTextColor(self.current_color)
         self.text_node.setPreserveTrailingWhitespace(True)
-        # self.text_node_path.setPos(
-        #     x * self.size * self.scale_override,
-        #     0,
-        #     (y * self.size * self.line_height) - .75 * self.size)
+
+        self.text_node_path.setShader(self.shader._shader)
+        for key, shader_input in self.shader.default_input.items():
+            self.text_node_path.setShaderInput(key, shader_input)
+
         self.text_node_path.setPos(
             x * self.size * self.scale_override,
             (y * self.size * self.line_height) - .75 * self.size,
@@ -252,8 +255,6 @@ class Text(Entity):
 
     def shader_setter(self, value):
         self._shader = value
-        if not value.compiled:
-            value.compile()
 
         for tn in self.text_nodes:
             tn.setShader(value._shader)
@@ -435,14 +436,6 @@ if __name__ == '__main__':
     Text.default_resolution = 1080 * Text.size
     test = Text(text=descr, wordwrap=30, scale=4)
     
-    from ursina.shaders import transition_shader as text_shader
-    # from ursina.shaders import unlit_shader as text_shader
-    
-    # text_shader.compile()
-    # for e in test.text_nodes:
-    #     e.setShader(text_shader._shader)
-    #     for key, value in text_shader.default_input.items():
-    #         e.setShaderInput(key, value)
 
     # test.align()
     # test = Text(descr)

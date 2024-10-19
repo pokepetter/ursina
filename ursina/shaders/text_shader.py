@@ -56,12 +56,12 @@ void main() {
     alpha /= 3.0; //weighted average, 1*1 + 4*0.5 = 3, so divide by 3
     //outline
     float outline = pow(texture(p3d_Texture0, uvs-outline_offset).a, outline_power);
-    FINAL_COLOR = mix(vec4(outline_color.rgb, outline_color.a * outline), vertex_color, alpha);
+    FINAL_COLOR = mix(vec4(vertex_color.rgb, outline_color.a * outline), vertex_color, alpha);
 }
 ''',
 
 default_input = {
-    'outline_color': color.black,
+    'outline_color': color.white,
     'outline_offset': Vec2(10,10),
     'outline_power': 1.0,
 }
