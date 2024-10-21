@@ -24,7 +24,7 @@ keyboard_keys = '1234567890qwertyuiopasdfghjklzxcvbnm'
 from ursina.scripts.singleton_decorator import singleton
 @singleton
 class Ursina(ShowBase):
-    def __init__(self, title='ursina', icon='textures/ursina.ico', borderless=False, fullscreen=False, size=None, forced_aspect_ratio=None, position=None, vsync=True, editor_ui_enabled=True, window_type='onscreen', development_mode=True, render_mode=None, show_ursina_splash=False, **kwargs):
+    def __init__(self, title='ursina', icon='textures/ursina.ico', borderless=False, fullscreen=False, size=None, forced_aspect_ratio=None, position=None, vsync=True, editor_ui_enabled=True, window_type='onscreen', development_mode=True, render_mode=None, show_ursina_splash=False, use_ingame_console=False, **kwargs):
         """The main class of Ursina. This class is a singleton, so you can only have one instance of it.
 
         Keyword Args (optional):
@@ -126,7 +126,7 @@ class Ursina(ShowBase):
 
         if application.window_type != 'none':
             window.make_editor_gui()
-            if 'use_ingame_console' in kwargs and kwargs['use_ingame_console']:
+            if use_ingame_console:
                 import builtins
                 from ursina import Entity, TextField, color
                 window.console = Entity(parent=window.editor_ui, position=window.top_left, z=-999, eternal=True)
@@ -150,8 +150,7 @@ class Ursina(ShowBase):
                 window.console.text_input = _console_text_input
 
 
-        if 'editor_ui_enabled' in kwargs:
-            window.editor_ui.enabled = kwargs['editor_ui_enabled']
+        window.editor_ui.enabled = editor_ui_enabled
 
         print('package_folder:', application.package_folder)
         print('asset_folder:', application.asset_folder)

@@ -3,21 +3,25 @@ from ursina import *
 class Draggable(Button):
     _z_plane = None
 
-    def __init__(self, **kwargs):
+    def __init__(self, require_key=None, step=Vec3.zero, plane_direction=Vec3.forward, lock=None, min_x=-inf, min_y=-inf, min_z=-inf, max_x=inf, max_y=inf, max_z=inf, **kwargs):
         if not __class__._z_plane:
             __class__._z_plane = Entity(name='_z_plane', scale=(9999,9999), enabled=False, eternal=True)
 
         super().__init__(**kwargs)
-        self.require_key = None
+        self.require_key = require_key
         self.dragging = False
         self.delta_drag = 0
         self.start_pos = self.world_position
         self.start_offset = (0,0,0)
-        self.step = (0,0,0)
-        self.plane_direction = (0,0,1)
-        self.lock = Vec3(0,0,0)     # set to 1 to lock movement on any of x, y and z axes
-        self.min_x, self.min_y, self.min_z = -inf, -inf, -inf
-        self.max_x, self.max_y, self.max_z = inf, inf, inf
+        self.step = step
+        self.plane_direction = plane_direction
+        self.lock = lock if lock else Vec3(0,0,0)     # set to 1 to lock movement on any of x, y and z axes
+        self.min_x = min_x 
+        self.min_y = min_y
+        self.min_z = min_z
+        self.max_x = max_x
+        self.max_y = max_y
+        self.max_z = max_z
 
         if not Draggable._z_plane.model: # set these after game start so it can load the model
             Draggable._z_plane.model = 'quad'
@@ -27,7 +31,7 @@ class Draggable(Button):
 
         for key, value in kwargs.items():
             if key == 'collider' and value == 'sphere' and self.has_ancestor(camera.ui):
-                print('error: sphere colliders are not supported on Draggables in ui space.')
+                raise Exception('error: sphere colliders are not supported on Draggables in ui space.')
 
             if key == 'text' or key in self.attributes:
                 continue
