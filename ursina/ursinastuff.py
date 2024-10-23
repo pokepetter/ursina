@@ -11,6 +11,24 @@ class Empty():
         for key, value in kwargs.items():
             setattr(self, key ,value)
 
+class DotDict(dict):
+    """Custom dictionary class to allow dot notation access."""
+    def __getattr__(self, attr):
+        try:
+            return self[attr]
+        except KeyError:
+            raise AttributeError(f"'DotDict' object has no attribute '{attr}'")
+
+    def __setattr__(self, attr, value):
+        self[attr] = value
+
+    def __delattr__(self, attr):
+        try:
+            del self[attr]
+        except KeyError:
+            raise AttributeError(f"'DotDict' object has no attribute '{attr}'")
+
+
 class Default:
     pass
 
@@ -133,16 +151,28 @@ def _destroy(entity, force_destroy=False):
 
     del entity
 
+from typing import List
 class Array2D(list):
-    __slots__ = ('width', 'height', 'default_value', 'data')
-    def __init__(self, width:int, height:int, default_value=0):
-        self.width = int(width)
-        self.height = int(height)
+    __slots__ = ('width', 'height', 'default_value')
+
+    def __init__(self, width:int=None, height:int=None, default_value=0, data:List[List]=None):    
         self.default_value = default_value
-        # super().__init__([[self.default_value for y in range(self.height)] for x in range(self.width)])
-        super().__init__()
-        for x in range(self.width):
-            self.append([self.default_value for y in range(self.height)])
+
+        if data is not None:                # initialize with provided data
+            self.width = len(data)
+            self.height = len(data[0]) if self.width > 0 else 0
+            if any(len(row) != self.height for row in data):
+                raise ValueError("All rows in the data must have the same length.")
+            super().__init__(data)
+        
+        else:   # Initialize with default values 
+            if width is None or height is None:
+                raise ValueError("Width and height must be provided if no data is given.")
+            
+            self.width = width
+            self.height = height
+            super().__init__([[self.default_value for _ in range(self.height)] for _ in range(self.width)])
+
 
     def reset(self):
         for x in range(self.width):
