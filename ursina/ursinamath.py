@@ -82,11 +82,11 @@ def slerp(q1, q2, t):
     costheta = clamp(costheta, -1.0, 1.0)
 
     theta = acos(costheta)
-    if abs(theta) < 0.01:
+    if abs(theta) < 0.0001:
         return q2
 
     sintheta = sqrt(1.0 - costheta * costheta)
-    if abs(sintheta) < 0.01:
+    if abs(sintheta) < 0.0001:
         return (q1+q2)*0.5
 
     r1 = sin((1.0 - t) * theta) / sintheta
