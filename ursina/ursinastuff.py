@@ -151,93 +151,6 @@ def _destroy(entity, force_destroy=False):
 
     del entity
 
-from typing import List
-class Array2D(list):
-    __slots__ = ('width', 'height', 'default_value')
-
-    def __init__(self, width:int=None, height:int=None, default_value=0, data:List[List]=None):    
-        self.default_value = default_value
-
-        if data is not None:                # initialize with provided data
-            self.width = len(data)
-            self.height = len(data[0]) if self.width > 0 else 0
-            if any(len(row) != self.height for row in data):
-                raise ValueError("All rows in the data must have the same length.")
-            super().__init__(data)
-        
-        else:   # Initialize with default values 
-            if width is None or height is None:
-                raise ValueError("Width and height must be provided if no data is given.")
-            
-            self.width = width
-            self.height = height
-            super().__init__([[self.default_value for _ in range(self.height)] for _ in range(self.width)])
-
-
-    def reset(self):
-        for x in range(self.width):
-            for y in range(self.height):
-                self[x][y] = self.default_value
-
-
-
-class Array3D(list):
-    __slots__ = ('width', 'height', 'depth', 'default_value', 'data')
-
-    def __init__(self, width:int, height:int, depth:int, default_value=0):
-        self.width = int(width)
-        self.height = int(height)
-        self.depth = int(depth)
-        self.default_value = default_value
-        super().__init__([Array2D(self.height, self.depth) for x in range(self.width)])
-
-    def reset(self):
-        for x in range(self.width):
-            for y in range(self.height):
-                for z in range(self.depth):
-                    self[x][y][z] = self.default_value
-
-
-def chunk_list(target_list, chunk_size):
-    # yield successive chunks from list
-    for i in range(0, len(target_list), chunk_size):
-        yield target_list[i:i + chunk_size]
-
-
-def flatten_list(target_list):
-    # return [item for sublist in l for item in sublist]
-    import itertools
-    return list(itertools.chain(*target_list))
-
-
-def flatten_completely(target_list):
-    for i in target_list:
-        if isinstance(i, (sub_list, tuple)):
-            for j in flatten_list(i):
-                yield j
-        else:
-            yield i
-
-
-def enumerate_2d(target_2d_list):    # usage: for (x, y), value in enumerate_2d(my_2d_list)
-    for x, line in enumerate(target_2d_list):
-        for y, value in enumerate(line):
-            yield (x, y), value
-
-
-def enumerate_3d(target_3d_list):   # usage: for (x, y, z), value in enumerate_3d(my_3d_list)
-    for x, vertical_slice in enumerate(target_3d_list):
-        for y, log in enumerate(vertical_slice):
-            for z, value in enumerate(log):
-                yield (x, y, z), value
-
-
-def rotate_2d_list(target_2d_list):
-    return list(zip(*target_2d_list[::-1]))   # rotate
-
-
-def list_2d_to_string(target_2d_list, characters='.#'):
-    return '\n'.join([''.join([characters[e] for e in line]) for line in target_2d_list])
 
 
 def size_list():    # return a list of current python objects sorted by size
@@ -300,9 +213,6 @@ def print_on_screen(text, position=(0,0), origin=(-.5,.5), scale=1, duration=1):
     destroy(text_entity, delay=duration)
 
 
-class LoopingList(list):
-    def __getitem__(self, i):
-        return super().__getitem__(i % len(self))
 
 
 # define a new metaclass which overrides the "__call__" function
@@ -318,13 +228,7 @@ if __name__ == '__main__':
     app = Ursina()
 
 
-    list_2d = [
-        [1,0,0,1, 0, 1,1,1,0, 0, 1,1,1,1, 0, 0,1,0,0],
-        [1,0,0,1, 0, 1,0,0,1, 0, 1,1,1,0, 0, 0,1,0,0],
-        [1,0,0,1, 0, 1,1,1,0, 0, 0,0,0,1, 0, 0,1,0,0],
-        [0,1,1,0, 0, 1,0,0,1, 0, 1,1,1,1, 0, 0,1,0,0],
-    ]
-    print(list_2d_to_string(list_2d))
+    
 
 
     a = Audio('sine')
