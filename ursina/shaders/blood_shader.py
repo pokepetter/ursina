@@ -1,4 +1,4 @@
-from ursina import Shader, color; blood_shader = Shader(language=Shader.GLSL, name='blood_shader', vertex='''#version 130
+from ursina import Shader, color; blood_shader = Shader(name='blood_shader', language=Shader.GLSL, vertex='''#version 130
 uniform mat4 p3d_ModelViewProjectionMatrix;
 
 in vec4 p3d_Vertex;
@@ -18,6 +18,7 @@ fragment='''
 uniform sampler2D p3d_Texture0;
 uniform sampler2D noise_texture;
 uniform float blood_coef;
+uniform float surface_opacity_influence;
 uniform vec3 blood_color;
 
 in vec2 texcoord;
@@ -27,15 +28,18 @@ void main() {
     vec4 surface_texture = texture(p3d_Texture0, texcoord);
     vec4 noise_tex_sample = texture(noise_texture, texcoord);
 
+    float blood_opacity = mix(1.0, surface_texture.a, surface_opacity_influence);
+    vec4 final_blood_color = vec4(noise_tex_sample.rgb * blood_color, blood_opacity);
+
     float is_blood = step(noise_tex_sample.r, blood_coef);
-    vec3 final_color = mix(surface_texture.rgb, noise_tex_sample.rgb * blood_color, is_blood);
-    fragColor = vec4(final_color, surface_texture.a);
+    fragColor = mix(surface_texture, final_blood_color, is_blood);
 }
 
 ''',
 default_input={
     'blood_coef': .5,
-    'blood_color': color.red
+    'blood_color': color.red,
+    'surface_opacity_influence': 1.0 # the opacity of the surface texture influences the opacity of the blood [0.0; 1.0]
     }
 )
 
