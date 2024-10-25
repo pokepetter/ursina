@@ -41,6 +41,7 @@ from ursina.lights import *
 
 from ursina.text import Text
 from ursina.mesh import Mesh, MeshModes
+from ursina.prefabs.nine_slice import NineSlice
 
 from ursina.prefabs.sprite import Sprite
 from ursina.prefabs.button import Button
