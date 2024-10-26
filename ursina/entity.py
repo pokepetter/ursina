@@ -881,12 +881,14 @@ class Entity(NodePath, metaclass=PostInitCaller):
             size = end - start
             return Bounds(start=start, end=end, center=center, size=size)
 
-        return Vec3(0,0,0)
+        return None
 
 
     @property
     def bounds(self):
         _bounds = self.model_bounds
+        if _bounds is None:
+            return None
         return Bounds(start=_bounds.start*self.scale, end=_bounds.end*self.scale, center=_bounds.center, size=_bounds.size*self.scale)
 
 
