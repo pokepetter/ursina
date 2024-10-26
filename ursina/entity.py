@@ -66,9 +66,6 @@ class Entity(NodePath, metaclass=PostInitCaller):
             scene.entities.append(self)
 
         self._shader_inputs = {}
-        if Entity.default_shader:
-            self.shader = Entity.default_shader
-
         self.setPythonTag('Entity', self)   # for the raycast to get the Entity and not just the NodePath
         self.scripts = []   # add with add_script(class_instance). will assign an 'entity' variable to the script.
         self.animations = []
@@ -677,12 +674,12 @@ class Entity(NodePath, metaclass=PostInitCaller):
             return
 
         if value is None:
-            self.model.setShaderAuto()
+            self.setShaderAuto()
             return
 
         if isinstance(value, Panda3dShader): # panda3d shader
             self._shader = value
-            self.model.setShader(value)
+            self.setShader(value)
             return
 
         if isinstance(value, str):
@@ -697,7 +694,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
             if not value.compiled:
                 value.compile()
 
-            self.model.setShader(value._shader)
+            self.setShader(value._shader)
             value.entity = self
 
             for key, value in value.default_input.items():
@@ -1082,13 +1079,20 @@ class Entity(NodePath, metaclass=PostInitCaller):
 #------------
 # ANIMATIONS
 #------------
-    def animate(self, name, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt='kill', time_step=None, unscaled=False, auto_play=True, auto_destroy=True):
+
+    def _getattr(self, name):
+        return getattr(self, name)
+
+    def _setattr(self, name, value):
+        setattr(self, name, value)
+
+    def animate(self, name, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt='kill', time_step=None, unscaled=False, ignore_paused=None, auto_play=True, auto_destroy=True, getattr_function=None, setattr_function=None):
         if duration == 0 and delay == 0:
             setattr(self, name, value)
             return None
 
-        if self.ignore_paused:
-            unscaled = True
+        if ignore_paused is None:   # if ignore_pause is not specified, inherit it from the entity
+            ignore_paused = self.ignore_paused
 
         animator_name = name + '_animator'
         # print('start animating value:', name, animator_name )
@@ -1098,7 +1102,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
         if hasattr(self, animator_name) and getattr(self, animator_name) in self.animations:
             self.animations.remove(getattr(self, animator_name))
 
-        sequence = Sequence(loop=loop, time_step=time_step, auto_destroy=auto_destroy, unscaled=unscaled, ignore_paused=self.ignore_paused, name=name)
+        sequence = Sequence(loop=loop, time_step=time_step, auto_destroy=auto_destroy, unscaled=unscaled, ignore_paused=ignore_paused, name=name)
         sequence.append(Wait(delay))
         
         setattr(self, animator_name, sequence)
@@ -1107,12 +1111,18 @@ class Entity(NodePath, metaclass=PostInitCaller):
         if not resolution:
             resolution = max(int(duration * 60), 1)
 
+        # if no custom getattr and setattr functions are provided (for example  when using animate_shader_input), animate the entity's variable. 
+        if not getattr_function:
+            getattr_function = self._getattr
+        if not setattr_function:
+            setattr_function = self._setattr
+
         for i in range(resolution+1):
             t = i / resolution
             t = curve(t)
 
             sequence.append(Wait(duration / resolution))
-            sequence.append(Func(setattr, self, name, lerp(getattr(self, name), value, t)))
+            sequence.append(Func(setattr_function, name, lerp(getattr_function(name), value, t)))
 
         if auto_play:
             sequence.start()
@@ -1140,6 +1150,12 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
         return self.animate('scale', value, duration=duration, **kwargs)
 
+
+    def animate_shader_input(self, name, value, **kwargs):
+        # instead of settings entity variables, set shader input
+        self.animate(name, value, getattr_function=self.get_shader_input, setattr_function=self.set_shader_input, **kwargs)
+
+
     # generate animation functions
     for e in ('x', 'y', 'z', 'rotation_x', 'rotation_y', 'rotation_z', 'scale_x', 'scale_y', 'scale_z'):
         exec(dedent(f'''
@@ -1148,7 +1164,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
         '''))
 
 
-    def shake(self, duration=.2, magnitude=1, speed=.05, direction=(1,1), delay=0, attr_name='position', interrupt='finish', unscaled=False):
+    def shake(self, duration=.2, magnitude=1, speed=.05, direction=(1,1), delay=0, attr_name='position', interrupt='finish', unscaled=False, ignore_paused=True):
         import random
 
         if hasattr(self, 'shake_sequence') and self.shake_sequence:
@@ -1169,7 +1185,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
         self.animations.append(self.shake_sequence)
         self.shake_sequence.unscaled = unscaled
-        self.shake_sequence.ignore_paused = self.ignore_paused
+        self.shake_sequence.ignore_paused = ignore_paused
         self.shake_sequence.start()
         return self.shake_sequence
 

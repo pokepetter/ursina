@@ -138,25 +138,23 @@ class Audio(Entity):
         if destroy:
             _destroy(self)
 
-    def fade(self, value, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True):
-        self.animate('volume', value=value, duration=duration, delay=delay, curve=curve, resolution=resolution, interrupt=interrupt)
+    def fade(self, value, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt=True, ignore_paused=True):
+        self.animate('volume', value=value, duration=duration, delay=delay, curve=curve, resolution=resolution, interrupt=interrupt, ignore_paused=ignore_paused)
 
-    def fade_in(self, value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt='finish',
-                destroy_on_ended=False):
+    def fade_in(self, value=1, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt='finish', destroy_on_ended=False, ignore_paused=True):
         if duration+delay <= 0:
             self.volume = value
         else:
-            self.animate('volume', value, duration=duration, delay=delay, curve=curve, resolution=resolution, interrupt=interrupt)
+            self.animate('volume', value, duration=duration, delay=delay, curve=curve, resolution=resolution, interrupt=interrupt, ignore_paused=ignore_paused)
         if destroy_on_ended:
             _destroy(self, delay=delay+duration + .01)
 
-    def fade_out(self, value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt='finish',
-                 destroy_on_ended=True):
+    def fade_out(self, value=0, duration=.5, delay=0, curve=curve.in_expo, resolution=None, interrupt='finish', destroy_on_ended=True, ignore_paused=True):
 
         if duration+delay <= 0:
             self.volume = value
         else:
-            self.animate('volume', value, duration=duration, delay=delay, curve=curve, resolution=resolution, interrupt=interrupt)
+            self.animate('volume', value, duration=duration, delay=delay, curve=curve, resolution=resolution, interrupt=interrupt, ignore_paused=ignore_paused)
         if destroy_on_ended:
             _destroy(self, delay=delay+duration + .05)
 

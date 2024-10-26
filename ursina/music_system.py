@@ -1,6 +1,7 @@
 from ursina.audio import Audio
 from ursina.ursinastuff import invoke
 from ursina import curve
+from ursina.string_utilities import print_warning
 
 
 tracks = dict()
@@ -20,7 +21,7 @@ def play(track_name, fade_out_duration=2):
     if track_name not in tracks:
         audio_instance = Audio(track_name, loop=True, autoplay=False, group='music')
         if not audio_instance.clip:
-            print_warning('music track not found:', value)
+            print_warning('music track not found:', track_name)
             return
         tracks[track_name] = audio_instance
 
@@ -30,9 +31,11 @@ def play(track_name, fade_out_duration=2):
         return
 
     # fade out current track and play new one after
-    tracks[current_track].fade_out(duration=fade_out_duration, curve=curve.linear)
+    print('music_system: fade out:', current_track)
+    tracks[current_track].fade_out(duration=fade_out_duration, curve=curve.linear, destroy_on_ended=False, ignore_paused=True)
     tracks.pop(current_track, None)
-    invoke(tracks[track_name].play, delay=fade_out_duration)
+    print('music_system: fade in:', track_name)
+    invoke(tracks[track_name].play, delay=fade_out_duration, ignore_paused=True)
     current_track = track_name
 
 

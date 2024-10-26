@@ -14,6 +14,7 @@ from ursina.main import Ursina
 from panda3d.core import Mat3, Mat4
 from ursina.ursinamath import *
 from ursina.ursinastuff import *
+from ursina.array_tools import *
 from ursina import input_handler
 from ursina.input_handler import held_keys, Keys
 from ursina.string_utilities import *

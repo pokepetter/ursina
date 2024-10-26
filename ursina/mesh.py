@@ -10,7 +10,7 @@ from ursina.color import Color
 from ursina.scripts.generate_normals import generate_normals
 from ursina.scripts.project_uvs import project_uvs
 from ursina.scripts.colorize import colorize
-from ursina.ursinastuff import LoopingList
+from ursina.array_tools import LoopingList
 from ursina.vec3 import Vec3
 from ursina.vec2 import Vec2
 from ursina.sequence import Func

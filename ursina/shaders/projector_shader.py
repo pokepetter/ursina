@@ -100,7 +100,7 @@ if __name__ == '__main__':
     scene.fog_density = (10, 200)
 
     projector_texture = load_texture('vignette', application.internal_textures_folder)
-    # projector_texture.repeat = False
+    projector_texture.repeat = False
     projector_shader.default_input['projector_texture'] = projector_texture
 
     def update():

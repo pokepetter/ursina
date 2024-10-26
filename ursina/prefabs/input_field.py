@@ -1,5 +1,5 @@
 from ursina import *
-
+from ursina.scripts.property_generator import generate_properties_for_class
 
 class ContentTypes:
     int = '0123456789'
@@ -7,11 +7,11 @@ class ContentTypes:
     int_math = int + '+-*/'
     math = float + '+-*/'
 
-
+@generate_properties_for_class()
 class InputField(Button):
     def __init__(self, default_value='', label='', max_lines=1, character_limit=24, text='', active=False, **kwargs):
-        if not 'scale' in kwargs and not 'scale_x' in kwargs and not 'scale_y' in kwargs:
-            kwargs['scale'] = (.5, Text.size*2*max_lines)
+        if not 'scale' in kwargs and not 'scale_y' in kwargs:
+            kwargs['scale'] = (kwargs.get('scale_x', .5), Text.size*2*max_lines)
 
 
         super().__init__(highlight_scale=1, pressed_scale=1, highlight_color=color.black, **kwargs)
@@ -65,9 +65,9 @@ class InputField(Button):
             self.label = Text(str(label) + ':', parent = self, position = self.text_field.position, scale = 1.25)
             self.text_field.x += 0.1 * (len(str(label)) + 1.0) / 6.0
 
-
         for key, value in kwargs.items():
             setattr(self, key, value)
+
 
     def input(self, key):
         if key == 'tab' and self.text_field.cursor.y >= self.text_field.max_lines-1 and self.active:
@@ -85,38 +85,29 @@ class InputField(Button):
             return True # eat input when entering text to prevent unwanted actions while typing.
 
 
-    @property
-    def text(self):
+    def text_getter(self):
         return self.text_field.text
 
-    @text.setter
-    def text(self, value):
+    def text_setter(self, value):
         self.text_field.text = ''
         self.text_field.cursor.position = (0,0)
         self.text_field.add_text(value, move_cursor=True)
         self.text_field.render()
 
-    @property
-    def text_color(self):
-        return self.text_field.text_entity.color
 
-    @text_color.setter
-    def text_color(self, value):
+    def text_color_getter(self):
+        return self.text_field.text_entity.color
+    def text_color_setter(self, value):
         self.text_field.text_entity.color = value
 
-
-    @property
-    def active(self):
+    def active_getter(self):
         return self.text_field.active
-
-    @active.setter
-    def active(self, value):
+    def active_setter(self, value):
         self.text_field.active = value
-        # if value == True:
-        #     # self.text_field.select_all()
-        #     invoke(self.text_field.select_all, delay=.1)
-        #     # self.text_field.input(' ')
-        #     # self.text_field.erase()
+
+    # def text_origin_setter(self, value):
+    #     self.text_field.text_entity.text_origin = value
+
 
 
 if __name__ == '__main__':
@@ -125,7 +116,7 @@ if __name__ == '__main__':
     # background = Entity(model='quad', texture='pixelscape_combo', parent=camera.ui, scale=(camera.aspect_ratio,1), color=color.white)
     gradient = Entity(model='quad', texture='vertical_gradient', parent=camera.ui, scale=(camera.aspect_ratio,1), color=color.hsv(240,.6,.1,.75))
 
-    username_field = InputField(y=-.12, limit_content_to='0123456789', default_value='11', active=True)
+    username_field = InputField(y=-.12, limit_content_to='0123456789', default_value='11', active=True, scale_x=1)
     username_field.text = '0929468098'
     password_field = InputField(y=-.18, hide_content=True)
     username_field.next_field = password_field

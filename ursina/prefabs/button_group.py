@@ -6,7 +6,7 @@ from ursina.scripts.property_generator import generate_properties_for_class
 class ButtonGroup(Entity):
     default_selected_color = color.azure
 
-    def __init__(self, options, default='', min_selection=1, max_selection=1, origin=(-.5,.5,0), spacing=(0.025,0,0), label='', **kwargs):
+    def __init__(self, options, default='', min_selection=1, max_selection=1, origin=(-.5,.5), spacing=(0.025,0), label='', **kwargs):
         super().__init__()
         self.deselected_color = Button.default_color
         self.selected_color = ButtonGroup.default_selected_color
@@ -68,7 +68,7 @@ class ButtonGroup(Entity):
             b.value = e
             self.buttons.append(b)
 
-        grid_layout(self.buttons, origin=self.origin, spacing=self.spacing)
+        grid_layout(self.buttons, origin=self.origin.xy, spacing=self.spacing)
 
 
     def input(self, key):
