@@ -41,6 +41,7 @@ class Text(Entity):
         self.start_tag = start_tag
         self.end_tag = end_tag
         self.text_colors = {'default' : color.text_color}
+        self.color = color.text_color
 
         for color_name in color.color_names:
             self.text_colors[color_name] = color.colors[color_name]
