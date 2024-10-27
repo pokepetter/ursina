@@ -16,17 +16,21 @@ class Array2D(list):
 
         if data is not None:                # initialize with provided data
             self.width = len(data)
-            self.height = len(data[0]) if self.width > 0 else 0
+            self.height = len(data[0])
+            if self.width == 0 or self.height == 0:
+                raise ValueError("width and height must be >= 1.")
+
             if any(len(row) != self.height for row in data):
-                raise ValueError("All rows in the data must have the same length.")
+                raise ValueError("all rows in the data must have the same length.")
+                
             super().__init__(data)
         
         else:   # Initialize with default values 
             if width is None or height is None:
-                raise ValueError("Width and height must be provided if no data is given.")
+                raise ValueError("width and height must be provided if no data is given.")
             
-            self.width = width
-            self.height = height
+            self.width = int(width)
+            self.height = int(height)
             super().__init__([[self.default_value for _ in range(self.height)] for _ in range(self.width)])
 
     def to_string(self):

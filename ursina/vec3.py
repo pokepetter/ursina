@@ -105,6 +105,12 @@ class Vec3(PandaVec3):
     @property
     def Z(self):
         return int(self.z)
+    @property
+    def XY(self):
+        return (self.X, self.Y)
+    @property
+    def XZ(self):
+        return (self.X, self.Z)
 
 
     def __mul__(self, value):
