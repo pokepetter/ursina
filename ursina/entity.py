@@ -195,25 +195,21 @@ class Entity(NodePath, metaclass=PostInitCaller):
             self._model = value
 
         elif isinstance(value, str): # pass model asset name
-            m = load_model(value, application.asset_folder)
+            m = load_model(value)
             if not m:
-                m = load_model(value, application.internal_models_compressed_folder)
-            if m:
-                if self.model is not None:
-                    self.model.removeNode()
-
-                m.name = value
-                m.setPos(Vec3(0,0,0))
-                self._model = m
-                # import mesh_importer
-                # if not value in mesh_importer.imported_meshes:
-                #     print_info('loaded model successfully:', value)
-            else:
                 if application.raise_exception_on_missing_model:
                     raise ValueError(f"missing model: '{value}'")
 
                 print_warning(f"missing model: '{value}'")
                 return
+
+            if self.model is not None:
+                self.model.removeNode()
+
+            m.name = value
+            m.setPos(Vec3(0,0,0))
+            self._model = m
+                
 
         if self._model:
             self._model.reparentTo(self)

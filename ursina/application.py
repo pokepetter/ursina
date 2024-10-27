@@ -31,7 +31,6 @@ raise_exception_on_missing_texture = False
 
 internal_models_folder = package_folder / 'models/'
 internal_models_compressed_folder = package_folder / 'models_compressed/'
-internal_prefabs_folder = package_folder / 'prefabs/'
 internal_scripts_folder = package_folder / 'scripts/'
 internal_textures_folder = package_folder / 'textures/'
 internal_fonts_folder = package_folder / 'fonts/'
@@ -41,8 +40,8 @@ scenes_folder = asset_folder / 'scenes/'
 scripts_folder = asset_folder / 'scripts/'
 fonts_folder = asset_folder / 'fonts/'
 
-compressed_textures_folder = asset_folder / 'textures_compressed/'
-compressed_models_folder = asset_folder / 'models_compressed/'
+textures_compressed_folder = asset_folder / 'textures_compressed/'
+models_compressed_folder = asset_folder / 'models_compressed/'
 
 # fonts are loaded py panda3d, so add paths here
 _model_path = getModelPath()

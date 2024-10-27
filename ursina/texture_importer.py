@@ -8,29 +8,24 @@ from ursina.texture import Texture
 
 imported_textures = dict()
 file_types = ('.tif', '.jpg', '.jpeg', '.png', '.gif')
-folders = [ # folder search order
-    application.compressed_textures_folder,
-    application.asset_folder,
-    application.internal_textures_folder,
-    ]
 textureless = False
 
 
-def load_texture(name, path=None, use_cache=True, filtering='default'):
+def load_texture(name, folder=None, use_cache=True, filtering='default'):
     if textureless:
         return None
 
     if use_cache and name in imported_textures:
         return copy(imported_textures[name])
 
+    if folder is not None:
+        if not isinstance(folder, Path):
+            raise TypeError(f'folder must be a Path, not a {type(folder)}')
+        _folders = (folder,)
+    
+    else:
+        _folders = (application.textures_compressed_folder, application.asset_folder, application.internal_textures_folder)
 
-    _folders = folders
-    # print('looking in:', _folders)
-    if path:
-        if isinstance(path, str):
-            _folders = (Path(path),)
-        else:
-            _folders = (path,)
 
     if name.endswith('.mp4'):
         for folder in _folders:

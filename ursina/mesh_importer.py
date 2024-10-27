@@ -12,19 +12,20 @@ import panda3d.core as p3d
 import gltf
 import builtins
 from ursina.sequence import Func
+from ursina import application
 
 
 imported_meshes = dict()
 blender_scenes = dict()
+# folders = (application.asset_folder, )
 
-def load_model(name, folder=Func(getattr, application, 'asset_folder'), file_types=('.bam', '.ursinamesh', '.obj', '.glb', '.gltf', '.blend'), use_deepcopy=False, gltf_no_srgb=Func(getattr, application, 'gltf_no_srgb')):
-    if callable(folder):
-        folder = folder()
+def load_model(name, folder=None, file_types=('.bam', '.ursinamesh', '.obj', '.glb', '.gltf', '.blend'), use_deepcopy=False, gltf_no_srgb=Func(getattr, application, 'gltf_no_srgb')):
     if callable(gltf_no_srgb):
         gltf_no_srgb = gltf_no_srgb()
 
     if not isinstance(name, str):
         raise TypeError(f"Argument save must be of type str, not {type(str)}")
+        
 
     if '.' in name:
         full_name = name
@@ -45,56 +46,66 @@ def load_model(name, folder=Func(getattr, application, 'asset_folder'), file_typ
         except:
             pass
 
+    if folder is not None:
+        if not isinstance(folder, Path):
+            raise TypeError(f'folder must be a Path, not a {type(folder)}')
+        _folders = (folder,)
+    
+    else:
+        _folders = (application.models_compressed_folder, application.asset_folder, application.internal_models_compressed_folder)
+
+
     for filetype in file_types:
         if use_deepcopy and filetype == '.bam':
             continue
-        # warning: glob is case-insensitive on windows, so m.path will be all lowercase
-        for file_path in folder.glob(f'**/{name}{filetype}'):
-            if filetype == '.bam':
-                # print_info('loading bam')
-                return builtins.loader.loadModel(file_path)  # type: ignore
-
-            if filetype == '.gltf' or filetype == '.glb':
-                gltf_settings = gltf.GltfSettings()
-                gltf_settings.no_srgb = gltf_no_srgb
-                model_root = gltf.load_model(str(file_path), gltf_settings=gltf_settings)
-                imported_meshes[name] = p3d.NodePath(model_root)
-                return p3d.NodePath(model_root)
-
-            if filetype == '.ursinamesh':
-                try:
-                    with open(file_path) as f:
-                        m = eval(f.read())
-                        m.path = file_path
-                        m.name = name
-                        m.vertices = [Vec3(*v) for v in m.vertices]
-                        imported_meshes[name] = m
-                        return m
-                except:
-                    raise Exception('invalid ursinamesh file:', file_path)
-
-
-            if filetype == '.obj':
-                # print('found obj', file_path)
-                m = obj_to_ursinamesh(folder=folder, name=name, return_mesh=True)
-                m.path = file_path
-                m.name = name
-                imported_meshes[name] = m
-                if not use_deepcopy:
-                    m.save(f'{name}.bam')
-
-                return m
-
-            elif filetype == '.blend':
-                print_info('found blend file:', file_path)
-                if blend_to_obj(file_path):
-                    # obj_to_ursinamesh(name=name)
-                    return load_model(name, folder, use_deepcopy=use_deepcopy)
-            else:
-                try:
+        for folder in _folders:
+            # warning: glob is case-insensitive on windows, so m.path will be all lowercase
+            for file_path in folder.glob(f'**/{name}{filetype}'):
+                if filetype == '.bam':
+                    # print_info('loading bam')
                     return builtins.loader.loadModel(file_path)  # type: ignore
-                except:
-                    pass
+
+                if filetype == '.gltf' or filetype == '.glb':
+                    gltf_settings = gltf.GltfSettings()
+                    gltf_settings.no_srgb = gltf_no_srgb
+                    model_root = gltf.load_model(str(file_path), gltf_settings=gltf_settings)
+                    imported_meshes[name] = p3d.NodePath(model_root)
+                    return p3d.NodePath(model_root)
+
+                if filetype == '.ursinamesh':
+                    try:
+                        with open(file_path) as f:
+                            m = eval(f.read())
+                            m.path = file_path
+                            m.name = name
+                            m.vertices = [Vec3(*v) for v in m.vertices]
+                            imported_meshes[name] = m
+                            return m
+                    except:
+                        raise Exception('invalid ursinamesh file:', file_path)
+
+
+                if filetype == '.obj':
+                    # print('found obj', file_path)
+                    m = obj_to_ursinamesh(folder=folder, name=name, return_mesh=True)
+                    m.path = file_path
+                    m.name = name
+                    imported_meshes[name] = m
+                    if not use_deepcopy:
+                        m.save(f'{name}.bam')
+
+                    return m
+
+                elif filetype == '.blend':
+                    print_info('found blend file:', file_path)
+                    if blend_to_obj(file_path):
+                        # obj_to_ursinamesh(name=name)
+                        return load_model(name, folder, use_deepcopy=use_deepcopy)
+                else:
+                    try:
+                        return builtins.loader.loadModel(file_path)  # type: ignore
+                    except:
+                        pass
 
     return None
 
@@ -236,7 +247,7 @@ def blend_to_obj(blend_file:Path, out_folder=Func(getattr, application, 'compres
     return exported
 
 
-def obj_to_ursinamesh(folder=Func(getattr, application, 'compressed_models_folder'), out_folder=Func(getattr, application, 'compressed_models_folder'), name='*', return_mesh=True, save_to_file=False, delete_obj=False):
+def obj_to_ursinamesh(folder=Func(getattr, application, 'models_compressed_folder'), out_folder=Func(getattr, application, 'models_compressed_folder'), name='*', return_mesh=True, save_to_file=False, delete_obj=False):
     if callable(folder):
         folder = folder()
     if callable(out_folder):

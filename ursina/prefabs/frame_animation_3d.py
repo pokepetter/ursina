@@ -6,7 +6,7 @@ class FrameAnimation3d(Entity):
         super().__init__(name=name)
         self.play = self.start
 
-        model_folders = [application.compressed_models_folder, application.asset_folder]
+        model_folders = (application.models_compressed_folder, application.asset_folder)
         model_names = find_sequence(name, ('*',), folders=model_folders)
         if not model_names:
             if application.raise_exception_on_missing_model:
