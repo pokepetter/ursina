@@ -724,12 +724,18 @@ class Entity(NodePath, metaclass=PostInitCaller):
         for key, value in value.items():
             self.set_shader_input(key, value)
 
+
     def material_setter(self, value):  # a way to set shader, texture, texture_scale, texture_offset and shader inputs in one go
-        for name in ('shader', 'texture', 'texture_scale', 'texture_offset', 'color'):
+        _shader = value.get('shader', None)
+        if _shader is not None:
+            self.shader = _shader
+
+        for name in ('texture', 'texture_scale', 'texture_offset', 'color'):
             if name in value:
                 setattr(self, name, value[name])
 
-        self.shader_input = {key: value for key, value in value.items() if key not in ('shader', 'texture', 'texture_scale', 'texture_offset', 'color')}
+        if self.shader is not None:
+            self.shader_input = {key: value for key, value in value.items() if key in _shader.default_input}
 
 
     def texture_setter(self, value):    # set model with texture='texture_name'. requires a model to be set beforehand.
