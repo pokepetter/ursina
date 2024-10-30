@@ -116,7 +116,7 @@ If you need help, you can watch documentation sites:
    * [Ursina Documentation](https://www.ursinaengine.org/documentation.html)
       - Can give you a lot of help, because it explains how Ursina works
    * [Ursina API Reference](https://www.ursinaengine.org/api_reference.html)
-      - List the different functionnalities of ursina, with example code
+      - List the different functionalities of ursina, with example code
    * [Samples](https://www.ursinaengine.org/samples.html)
       - Little games with simple code, as examples
 
