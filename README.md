@@ -26,7 +26,7 @@ pip install git+https://github.com/pokepetter/ursina.git
 
 
 If you want to easily edit the source, it's recommended to clone the git
-repo and install as develop like this. Make sure you have git installed. https://git-scm.com/
+repo and install as develop like this. Make sure you have [git](https://git-scm.com) installed.
 
 ```
 git clone https://github.com/pokepetter/ursina.git
