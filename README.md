@@ -73,9 +73,9 @@ app.run()                       # opens a window and starts the game.
 ```
 
 
-* [Minecraft Clone](/samples/minecraft_clone.py)
+* [Minecraft Clone](https://www.ursinaengine.org/minecraft_clone.html)
 
-* [Platformer Game](/samples/platformer.py)
+* [Platformer Game](https://www.ursinaengine.org/platformer.html)
 
 There is other examples at [the samples folder](/samples/), or at [samples website](https://www.ursinaengine.org/samples.html)
 
