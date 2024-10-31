@@ -77,7 +77,7 @@ app.run()                       # opens a window and starts the game.
 
 * [Platformer Game](https://www.ursinaengine.org/platformer.html)
 
-There is other examples at [the samples folder](/samples/), or at [samples website](https://www.ursinaengine.org/samples.html)
+There is other examples at [the samples folder](https://github.com/pokepetter/ursina/tree/master/samples), or at [samples website](https://www.ursinaengine.org/samples.html)
 
 ## How do I make a game?
 Ursina games are made by writing Python code. You can use any text editor you want, but personally I like to use Atom.
