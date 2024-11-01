@@ -1,4 +1,4 @@
-from ursina import Entity, Vec2, invoke, scene, color
+from ursina import Entity, Vec2, invoke, scene, color, Vec3
 from ursina.prefabs.sky import Sky
 from panda3d.core import DirectionalLight as PandaDirectionalLight
 from panda3d.core import PointLight as PandaPointLight
@@ -67,8 +67,8 @@ class DirectionalLight(Light):
         
         self._bounds_entity = entity
 
-    def look_at(self, target, axis='forward', up=None): # up defaults to self.up
-        super().look_at(target, axis=axis, up=up)
+    def look_at(self, target, axis=Vec3.forward):
+        super().look_at(target, axis=axis)
         self.update_bounds(self._bounds_entity)
 
 
