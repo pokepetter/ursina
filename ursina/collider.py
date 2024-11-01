@@ -20,10 +20,11 @@ class Collider(NodePath):
 
 
     def remove(self):
-        self.node_path.node().clearSolids()
-        self.node_path.removeNode()
-        self.node_path = None
-        # print('remove  collider')
+        if self.node_path is not None:
+            self.node_path.node().clearSolids()
+            self.node_path.removeNode()
+            self.node_path = None
+            # print('remove  collider')
 
 
     @property
