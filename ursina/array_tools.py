@@ -103,7 +103,7 @@ class Array2D(list):
 
     def add_margin(self, top=0, right=0, bottom=0, left=0, value=None):
         if top < 0 or right < 0 or right < 0 or left < 0:
-            raise ValueError('input muste be >= 0')
+            raise ValueError('input must be >= 0')
         if value is None:
             value = self.default_value
 
