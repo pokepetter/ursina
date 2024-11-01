@@ -7,6 +7,35 @@ def _test(function, test_input, expected_result):
         print('result:', result)
         print('expected result:', expected_result)
 
+
+def flatten_list(target_list):
+    import itertools
+    return list(itertools.chain(*target_list))
+
+
+def flatten_completely(target_list):
+    for i in target_list:
+        if isinstance(i, (tuple, list)):
+            for j in flatten_list(i):
+                yield j
+        else:
+            yield i
+
+
+def enumerate_2d(target_2d_list):    # usage: for (x, y), value in enumerate_2d(my_2d_list)
+    for x, line in enumerate(target_2d_list):
+        for y, value in enumerate(line):
+            yield (x, y), value
+
+
+def enumerate_3d(target_3d_list):   # usage: for (x, y, z), value in enumerate_3d(my_3d_list)
+    for x, vertical_slice in enumerate(target_3d_list):
+        for y, log in enumerate(vertical_slice):
+            for z, value in enumerate(log):
+                yield (x, y, z), value
+
+
+
 from typing import List
 class Array2D(list):
     __slots__ = ('width', 'height', 'default_value')
@@ -35,9 +64,17 @@ class Array2D(list):
 
     def to_string(self):
         lines = []
-        for y in range(self.height-1, -1, -1):
-            line = ', '.join([str(self[x][y]) for x in range(self.width)])
-            lines.append(line)
+        flat = flatten_list(self)
+        if max(len(str(value)) for value in flatten_list(self)) > 1:    # separate each element with ', '
+            for y in range(self.height-1, -1, -1):
+                line = ', '.join([str(self[x][y]) for x in range(self.width)])
+                lines.append(line)
+        else:   # make string without spaces since all the values are the same width
+            for y in range(self.height-1, -1, -1):
+                line = ''.join([str(self[x][y]) for x in range(self.width)])
+                lines.append(line)
+
+
         return '\n'.join(lines)
 
     def __str__(self):
@@ -46,8 +83,8 @@ class Array2D(list):
         for y in range(self.height-1, -1, -1):
             lines[y] = f'{self.height-1-y:<{longest_number}}| {lines[y]}'
         
-        lines.append(f'{'o':<{longest_number}}{'-'*self.width}')
-        result = '\n'.join(lines)
+        lines.append(f'{'o':<{longest_number+2}}{'-'*(self.width)}w:{self.width}')
+        result = '\n'+'\n'.join(lines)
         return result
 
                   
@@ -56,11 +93,41 @@ class Array2D(list):
             for y in range(self.height):
                 self[x][y] = self.default_value
 
+    def paste(self, data, x, y, ignore=-1):
+        for true_x in range(x, min(self.width, x+data.width)):
+            for true_y in range(y, min(self.height, y+data.height)):
+                if data[true_x-x][true_y-y] == ignore:
+                    continue
+                self[true_x][true_y] = data[true_x-x][true_y-y]
+
+
+    def add_margin(self, top=0, right=0, bottom=0, left=0, value=None):
+        if top < 0 or right < 0 or right < 0 or left < 0:
+            raise ValueError('input muste be >= 0')
+        if value is None:
+            value = self.default_value
+
+        new_width = self.width + right + left
+        new_height = self.height + top + bottom
+        new_array = Array2D(new_width, new_height, default_value=value)
+        new_array.paste(self, left, bottom)
+        return new_array
+    
+
+    def get_area(self, start, end):
+        cropped_array = Array2D(width=end[0]-start[0], height=end[1]-start[1], default_value=self.default_value)
+        # print('original_size:', self.width, self.height, 'new_size:', end[0]-start[0], end[1]-start[1])
+        for (x, y), _ in enumerate_2d(cropped_array):
+            cropped_array[x][y] = self[x+start[0]][y+start[1]]
+
+        return cropped_array
 
 if __name__ == '__main__':
     grid = Array2D(width=16, height=8)
     print(grid)
-
+    padded_grid = grid.add_margin(top=4, right=7, bottom=3, left=2, value=7)
+    print('added margin:', padded_grid)
+    print('cropped_array:\n', padded_grid.get_area((2,3), (padded_grid.width-7, padded_grid.height-4)))
 
 
 class Array3D(list):
@@ -84,33 +151,6 @@ def chunk_list(target_list, chunk_size):
     # yield successive chunks from list
     for i in range(0, len(target_list), chunk_size):
         yield target_list[i:i + chunk_size]
-
-
-def flatten_list(target_list):
-    import itertools
-    return list(itertools.chain(*target_list))
-
-
-def flatten_completely(target_list):
-    for i in target_list:
-        if isinstance(i, (tuple, list)):
-            for j in flatten_list(i):
-                yield j
-        else:
-            yield i
-
-
-def enumerate_2d(target_2d_list):    # usage: for (x, y), value in enumerate_2d(my_2d_list)
-    for x, line in enumerate(target_2d_list):
-        for y, value in enumerate(line):
-            yield (x, y), value
-
-
-def enumerate_3d(target_3d_list):   # usage: for (x, y, z), value in enumerate_3d(my_3d_list)
-    for x, vertical_slice in enumerate(target_3d_list):
-        for y, log in enumerate(vertical_slice):
-            for z, value in enumerate(log):
-                yield (x, y, z), value
 
 
 def rotate_2d_list(target_2d_list):
