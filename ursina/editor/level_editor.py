@@ -377,7 +377,11 @@ class LevelEditorScene:
                     target_class = imported_classes[line["class"]]
 
 
-                instance = target_class(**kwargs)
+                try:
+                    instance = target_class(**kwargs)
+                except:
+                    instance = ErrorEntity()
+
                 self.entities.append(instance)
 
 
@@ -1396,7 +1400,7 @@ class Spawner(Entity):
             else:
                 button.text = '\n'.join(chunk_list(prefab.__name__, 5))
 
-        grid_layout(self.ui.children, origin=(0,-.5), spacing=(.05,0,0), max_x=32)
+        grid_layout(self.ui.children, origin=(0,-.5), spacing=(.005,0), max_x=32)
 
 
 
@@ -1796,7 +1800,7 @@ class InspectorInputField(InputField):
 
 
 class InspectorButton(Button):
-    defaults = dict(model='quad', origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, color=color.black90, highlight_color=color._32)
+    defaults = dict(model='quad', origin=(-.5,.5), text='?', text_origin=(-.5,0), text_color=color.light_gray, color=color.black90, highlight_color=color._32)
 
     def __init__(self, **kwargs):
         kwargs = __class__.defaults | kwargs
@@ -2099,12 +2103,12 @@ class ModelMenu(AssetMenu):
             else:
                 changes.append((index, 'model', e.model.name, name))
 
-        for e in LEVEL_EDITOR.selection:
-            e.model = name
-            if name == 'cube':
-                e.collider = 'cube'
-            else:
-                e.collider = None
+        # for e in LEVEL_EDITOR.selection:
+        #     e.model = name
+        #     if name == 'cube':
+        #         e.collider = 'box'
+        #     else:
+        #         e.collider = None
 
         LEVEL_EDITOR.menu_handler.state = 'None'
 
