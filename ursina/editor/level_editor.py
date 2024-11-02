@@ -677,7 +677,7 @@ class RotationGizmo(Entity):
                 path = Circle(24).vertices
                 path.append(path[0])
                 RotationGizmo.model = Pipe(base_shape=Quad(radius=0), path=[Vec3(e)*32 for e in path])
-                RotationGizmo.model.save('rotation_gizmo_model.ursinamesh', application.internal_models_compressed_folder, max_decimals=4)
+                RotationGizmo.model.save('rotation_gizmo_model.ursinamesh', application.internal_models_compressed_folder)
 
         self.rotator = Entity(parent=LEVEL_EDITOR.gizmo)
         self.axis = Vec3(0,1,0)
