@@ -10,11 +10,9 @@ uniform struct {
     mat4 shadowViewMatrix;
 } p3d_LightSource[1];
 
-const float M_PI = 3.141592653589793;
 
 uniform mat4 p3d_ModelViewProjectionMatrix;
 uniform mat4 p3d_ModelViewMatrix;
-uniform mat3 p3d_NormalMatrix;
 
 in vec4 vertex;
 in vec3 normal;
@@ -25,10 +23,13 @@ uniform vec2 texture_scale;
 uniform vec2 texture_offset;
 out vec2 texcoords;
 
+out vec4 vertex_color;
+
+uniform mat3 p3d_NormalMatrix;
 out vec3 vertex_position;
 out vec3 normal_vector;
 out vec4 shadow_coord[1];
-out vec4 vertex_color;
+
 
 void main() {
     gl_Position = p3d_ModelViewProjectionMatrix * vertex;
@@ -59,32 +60,20 @@ uniform sampler2D p3d_Texture0;
 uniform vec4 p3d_ColorScale;
 in vec2 texcoords;
 
-uniform struct {
-    vec4 ambient;
-} p3d_LightModel;
 
-uniform struct {
-    vec4 ambient;
-    vec4 diffuse;
-    vec3 specular;
-    float roughness;
-} p3d_Material;
+in vec4 vertex_color;
+out vec4 fragment_color;
 
 in vec3 vertex_position;
 in vec3 normal_vector;
 in vec4 shadow_coord[1];
-in vec4 vertex_color;
 
-out vec4 fragment_color;
+uniform float shadow_bias;
 uniform vec4 shadow_color;
-
 uniform float shadow_blur;
 uniform int shadow_samples;
 
-void main() {
-    fragment_color = texture(p3d_Texture0, texcoords) * p3d_ColorScale * vertex_color;
-    vec3 N = normal_vector;
-
+vec4 cast_shadows(vec4 color) {
     float shadow_samples_float = float(shadow_samples);
     float half_shadow_blur = shadow_blur / 2.0;
 
@@ -92,15 +81,14 @@ void main() {
         vec3 diff = p3d_LightSource[i].position.xyz - vertex_position * p3d_LightSource[i].position.w;
         vec3 L = normalize(diff);
 
-        float NdotL = clamp(dot(N, L), 0.001, 1.0);
-        vec3 color =  NdotL * p3d_LightSource[i].color / M_PI;
-        const float bias = 0.001;
+        float NdotL = clamp(dot(normal_vector, L), 0.001, 1.0);
+        vec3 light_contribution = NdotL * p3d_LightSource[i].color / M_PI;
 
         vec4 shadow_coordinates = shadow_coord[i];
-        shadow_coordinates.z += bias;
+        shadow_coordinates.z += shadow_bias;
 
-        vec3 converted_shadow_color = (vec3(1.,1.,1.) - shadow_color.rgb) * shadow_color.a;
-        fragment_color.rgb *= p3d_LightSource[i].color.rgb;
+        vec3 converted_shadow_color = (vec3(1.0, 1.0, 1.0) - shadow_color.rgb) * shadow_color.a;
+        color.rgb *= p3d_LightSource[i].color.rgb;
 
         float shadow = 0.0;
         for (int x = 0; x < shadow_samples; ++x) {
@@ -115,9 +103,18 @@ void main() {
         }
         shadow /= (shadow_samples_float * shadow_samples_float);
 
-        fragment_color.rgb += shadow * converted_shadow_color;
-        fragment_color.rgb += color - converted_shadow_color;
+        color.rgb += shadow * converted_shadow_color;
+        color.rgb += light_contribution - converted_shadow_color;
     }
+
+    return color;
+}
+
+void main() {
+    fragment_color = texture(p3d_Texture0, texcoords) * p3d_ColorScale * vertex_color;
+
+    // Call the function to handle lighting and shadowing
+    fragment_color = cast_shadows(fragment_color);
 }
 
 ''',
@@ -125,8 +122,9 @@ default_input = {
     'texture_scale': Vec2(1,1),
     'texture_offset': Vec2(0,0),
     'shadow_color' : Color(0, .5, 1, .25),
+    'shadow_bias': 0.001,
     'shadow_blur': .005,
-    'shadow_samples': 4
+    'shadow_samples': 4,
     }
 )
 

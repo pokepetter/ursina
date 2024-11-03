@@ -397,8 +397,8 @@ class Mesh(p3d.NodePath):
     def colorize(self, left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white, smooth=True, world_space=True, strength=1):
         colorize(self, left, right, down, up, back, forward, smooth, world_space, strength)
 
-    def project_uvs(self, aspect_ratio=1, direction='forward'):
-        project_uvs(self, aspect_ratio)
+    def project_uvs(self, aspect_ratio=1, direction=Vec3.forward):
+        project_uvs(self, aspect_ratio, direction=direction)
 
     def clear(self, regenerate=True):
         if self.vertex_buffer is not None:

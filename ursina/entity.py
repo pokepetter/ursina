@@ -935,29 +935,161 @@ class Entity(NodePath, metaclass=PostInitCaller):
             self.setAttrib(CullFaceAttrib.make(CullFaceAttrib.MCullCounterClockwise))
 
 
-    def look_at(self, target, axis='forward', up=None): # up defaults to self.up
+    def look_at(self, target, axis=Vec3.forward):
         if isinstance(target, Entity):
             target = Vec3(*target.world_position)
         elif not isinstance(target, Vec3):
             target = Vec3(*target)
 
-        up_axis = self.up
-        if up:
-            up_axis = up
-        self.lookAt(target, up_axis)
-
+        if isinstance(axis, str):
+            print_warning('look_at axis as str is deprecated, use one of: Vec3.forward/Vec3.back/Vec3.up/Vec3.down/Vec3.right/Vec3.left')
         if axis == 'forward':
-            return
+            axis = Vec3.forward
+        elif axis == 'back':
+            axis = Vec3.back
+        elif axis == 'up':
+            axis = Vec3.up
+        elif axis == 'down':
+            axis = Vec3.down
+        elif axis == 'right':
+            axis = Vec3.right
+        elif axis == 'left':
+            axis = Vec3.left
 
-        rotation_offset = {
-            'back'    : Quat(0,0,1,0),
-            'down'    : Quat(-.707,.707,0,0),
-            'up'      : Quat(-.707,-.707,0,0),
-            'right'   : Quat(-.707,0,.707,0),
-            'left'    : Quat(-.707,0,-.707,0),
-            }[axis]
+        self.look_in_direction((target-self.world_position).normalized(), axis)
 
-        self.setQuat(rotation_offset * self.getQuat())
+
+    def look_in_direction(self, direction, forward_axis):
+        import math
+        def normalize_vector(v):
+            length = math.sqrt(v[0]**2 + v[1]**2 + v[2]**2)
+            if length == 0:
+                return (0, 0, 0)
+            return (v[0] / length, v[1] / length, v[2] / length)
+
+        def dot_product(v1, v2):
+            """Dot product of two 3D vectors."""
+            return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2]
+
+        def cross_product(v1, v2):
+            """Cross product of two 3D vectors."""
+            return (
+                v1[1] * v2[2] - v1[2] * v2[1],
+                v1[2] * v2[0] - v1[0] * v2[2],
+                v1[0] * v2[1] - v1[1] * v2[0]
+            )
+
+        def quaternion_multiply(q1, q2):
+            w1, x1, y1, z1 = q1
+            w2, x2, y2, z2 = q2
+            
+            w = w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2
+            x = w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2
+            y = w1 * y2 + y1 * w2 + z1 * x2 - x1 * z2
+            z = w1 * z2 + z1 * w2 + x1 * y2 - y1 * x2
+            
+            return Quat(w, x, y, z)
+
+        def rotate_vector_by_quaternion(vec, quat):
+            """Rotate vector v by quaternion q."""
+            # Quaternion for the vector
+            vec_quat = Quat(0, vec[0], vec[1], vec[2])
+            
+            quat_conjugate = Quat(quat[0], -quat[1], -quat[2], -quat[3])
+            
+            # Rotate the vector using quaternion multiplication
+            vec_rotated = quaternion_multiply(quaternion_multiply(quat, vec_quat), quat_conjugate)
+            
+            return Vec3(vec_rotated[1], vec_rotated[2], vec_rotated[3])
+
+        def align_vectors(v1, v2, forward):
+            """Align v1 to v2 around the forward axis by computing the roll quaternion."""
+            # Compute the axis perpendicular to both vectors
+            axis = cross_product(v1, v2)
+            
+            # Normalize the axis
+            axis = normalize_vector(axis)
+            
+            # Compute the angle between the vectors
+            cos_angle = dot_product(v1, v2)
+            cos_angle = max(min(cos_angle, 1.0), -1.0)  # Clamp to avoid math errors
+            angle = math.acos(cos_angle)
+            
+            # Create a quaternion that rotates around the forward axis
+            half_angle = angle / 2
+            sin_half_angle = math.sin(half_angle)
+            
+            roll_quaternion = (
+                math.cos(half_angle),
+                forward[0] * sin_half_angle,
+                forward[1] * sin_half_angle,
+                forward[2] * sin_half_angle
+            )
+            
+            return roll_quaternion
+        def quaternion_from_axis_angle(axis, angle):
+            """Create a quaternion from an axis and an angle."""
+            half_angle = angle / 2
+            sin_half_angle = math.sin(half_angle)
+            return (
+                math.cos(half_angle),
+                axis[0] * sin_half_angle,
+                axis[1] * sin_half_angle,
+                axis[2] * sin_half_angle
+            )
+
+        """
+        Create a quaternion that aligns the specified forward_axis with the direction vector 
+        while maintaining the orientation of other axes as defined by previous_rotation.
+        
+        :param direction: The target direction to look in.
+        :param forward_axis: The axis of the entity to align with the direction.
+        :param previous_rotation: The quaternion representing the previous rotation.
+        :return: A quaternion that represents the new rotation.
+        """
+        previous_rotation = self.quaternion
+        # Normalize inputs
+        direction = normalize_vector(direction)
+        forward_axis = normalize_vector(forward_axis)
+
+        # Check for near-zero direction to avoid invalid rotations
+        if all(v == 0 for v in direction):
+            return previous_rotation  # No rotation if direction is zero
+
+        # Step 1: Calculate the target forward direction based on previous rotation
+        current_forward = rotate_vector_by_quaternion(forward_axis, previous_rotation)
+
+        dot_prod = dot_product(current_forward, direction)
+
+        # Handle the edge case of 180-degree rotation
+        if dot_prod < -0.9999:  # Vectors are nearly opposite
+            # Choose an arbitrary axis to rotate around (perpendicular to forward_axis)
+            # In this case, we need to rotate by 180 degrees
+            arbitrary_axis = (1, 0, 0) if abs(dot_product(forward_axis, (1, 0, 0))) < 0.9999 else (0, 1, 0)
+            sin_half_angle = math.sin(math.pi / 2)
+            rotation_quat = (
+                0,  # cos(180° / 2) = 0
+                arbitrary_axis[0] * sin_half_angle,
+                arbitrary_axis[1] * sin_half_angle,
+                arbitrary_axis[2] * sin_half_angle
+            )
+        else:
+            # Step 2: Find the rotation needed to align current_forward to the target direction
+            rotation_axis = cross_product(current_forward, direction)
+            rotation_angle = math.acos(max(min(dot_product(current_forward, direction), 1.0), -1.0))
+
+            # Step 3: Create a quaternion for this rotation
+            sin_half_angle = math.sin(rotation_angle / 2)
+            rotation_quat = Quat(
+                math.cos(rotation_angle / 2),
+                rotation_axis[0] * sin_half_angle,
+                rotation_axis[1] * sin_half_angle,
+                rotation_axis[2] * sin_half_angle
+                )
+
+        # Step 4: Combine the new rotation with the previous rotation
+        new_rotation = quaternion_multiply(rotation_quat, previous_rotation)
+        self.quaternion = new_rotation.normalized()
 
 
     def look_at_2d(self, target, axis='z'):
@@ -1023,7 +1155,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
     def attributes(self): # attribute names. used by duplicate().
         return ('name', 'enabled', 'eternal', 'visible', 'parent',
             'origin', 'position', 'rotation', 'scale',
-            'model', 'color', 'texture', 'texture_scale', 'texture_offset',
+            'shader', 'model', 'color', 'texture', 'texture_scale', 'texture_offset',
             'render_queue', 'always_on_top', 'collider', 'collision', 'scripts')
 
     def __str__(self):

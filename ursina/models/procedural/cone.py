@@ -38,7 +38,7 @@ if __name__ == '__main__':
     #     e.model.vertices[i] = Vec3(x, y, v.z)
     #
     # e.model.generate()
-
+    Entity(model='wireframe_cube')
     origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
     ed = EditorCamera()
     app.run()

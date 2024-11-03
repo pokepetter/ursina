@@ -94,6 +94,9 @@ class _PhysicsBody:
     animate_scale_y = Entity.animate_scale_y
     animate_scale_z = Entity.animate_scale_z
 
+    _getattr = Entity._getattr
+    _setattr = Entity._setattr
+
     def __init__(self, name: str, world):
         self.world = world
         self.attached = False

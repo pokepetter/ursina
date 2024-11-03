@@ -41,12 +41,12 @@ if __name__ == '__main__':
     Texture.default_filtering = 'bilinear'
 
     e = Entity(model='quad', shader=transition_shader, scale=5, cutoff=0, 
-        texture='sword_slash', color=color.azure
+        texture='shore', color=color.azure
         )
     # mask = load_texture('explosion_particle')
     # mask = load_texture('transition_shader_example_texture')
     # mask = load_texture('perlin_noise')
-    mask = load_texture('sword_slash')
+    mask = load_texture('shore')
     # print(mask)
     e.set_shader_input('mask_texture', mask)
     EditorCamera()
