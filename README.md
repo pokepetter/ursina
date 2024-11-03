@@ -112,7 +112,7 @@ app.run()                     # opens a window and starts the game.
    To close the window, you can by default, press shift+q or press the red x. to disable this, write `window.exit_button.enabled = False` somewhere in your code.
 
 ## Documentation
-If you need help, you can watch documentation sites:
+If you need help, you can refer to the following documentation sites:
    * [Ursina Documentation](https://pokepetter.github.io/ursina/documentation.html)
       - Can give you a lot of help, because it explains how Ursina works
    * [Ursina API Reference](https://pokepetter.github.io/ursina/api_reference.html)
