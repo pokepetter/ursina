@@ -67,7 +67,7 @@ def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[], ignore_
                 cols.extend((e.color, ) * len(e.model.vertices))
             
             if include_normals:
-                if e.model.colors: # if has normals
+                if e.model.normals: # if has normals
                     norms.extend(e.model.normals)
                 else:
                     norms.extend((Vec3.up, ) * len(e.model.vertices))
@@ -94,29 +94,32 @@ def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[], ignore_
 
 if __name__ == '__main__':
     from ursina import *
-    from ursina.mesh_exporter import ursinamesh_to_obj
     app = Ursina()
 
-
+    from ursina.shaders import lit_with_shadows_shader
+    Entity.default_shader = lit_with_shadows_shader
+    
     p = Entity(texture='brick')
     e1 = Entity(parent=p, model='sphere', y=1.5, color=color.pink)
     e2 = Entity(parent=p, model='cube', color=color.yellow, x=1, origin_y=-.5, texture='brick')
     e3 = Entity(parent=e2, model='cube', color=color.yellow, y=2, scale=.5, texture='brick', texture_scale=Vec2(3,3), texture_offset=(.1,.1))
+    e4 = Entity(parent=p, model='plane', color=color.lime, scale=10, texture='brick', texture_scale=Vec2(5,5))
 
     def input(key):
         if key == 'space':
             from time import perf_counter
             t = perf_counter()
-            p.combine()
+            p.combine(include_normals=True)
+            # p.model.generate_normals(smooth=False)
+            p.shader = lit_with_shadows_shader
             p.texture='brick'
+            print(p.model.normals)
             print('combined in:', perf_counter() - t)
 
-    print('----------', p.children)
-    # p.combine(include_normals=True)
-    # p.y=2
-    # p.model.save()
-    # ursinamesh_to_obj(p.model, name='combined_model_test', out_path=application.asset_folder)
-    # print('----combined model:', repr(p.model))
+
+    from ursina.lights import DirectionalLight
+    sun = DirectionalLight()
+    sun.look_at(Vec3(-1,-1,-1))
 
     EditorCamera()
     app.run()
