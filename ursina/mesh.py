@@ -389,7 +389,7 @@ class Mesh(p3d.NodePath):
         self.setRenderModeThickness(value)
 
     def generate_normals(self, smooth=True, regenerate=True):
-        self.normals = list(generate_normals(self.vertices, self.triangles, smooth))
+        self.normals = list(generate_normals(self.vertices, self.indices, smooth))
         if regenerate:
             self.generate()
         return self.normals

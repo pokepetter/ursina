@@ -4,8 +4,11 @@ from time import perf_counter
 from ursina.string_utilities import print_info
 
 
-def ursinamesh_to_obj(mesh, name='', out_path=application.compressed_models_folder, max_decimals=5, flip_faces=True):
+def ursinamesh_to_obj(mesh, name='', out_path=None, max_decimals=5, flip_faces=True):
     from ursina.string_utilities import camel_to_snake
+
+    if out_path is None:
+        out_path = application.compressed_models_folder
 
     obj = ''
     obj += f'mtllib {name}.mtl\n'

@@ -48,6 +48,7 @@ class Pipe(Mesh):
 
                 if self.color_gradient:
                     self.colors.extend([self.color_gradient[0], ]*3)
+                self.uvs.extend([(0,0) for i in range(3)])
 
         for i in range(1, len(self.path)):
             self.prev.position = self.path[i-1]
@@ -98,6 +99,14 @@ class Pipe(Mesh):
                         from_color,
                         to_color,
                     ])
+                self.uvs.extend([
+                    ((i-0)/(len(self.path)-1), 0),
+                    ((i-1)/(len(self.path)-1), 0),
+                    ((i-1)/(len(self.path)-1), 0),
+                    ((i-0)/(len(self.path)-1), 0),
+                    ((i-1)/(len(self.path)-1), 0),
+                    ((i-0)/(len(self.path)-1), 0),
+                    ])
 
         # cap end
         if self.cap_ends:
@@ -111,6 +120,7 @@ class Pipe(Mesh):
 
                 if self.color_gradient:
                     self.colors.extend([self.color_gradient[-1], ]*3)
+                self.uvs.extend([(0,0) for i in range(3)])
 
         self.vertices = verts
         super().generate()
@@ -127,7 +137,7 @@ if __name__ == '__main__':
 
     path.append(path[0])
     # thicknesses = ((1,1), (.5,.5), (.75,.75), (.5,.5), (1,1))
-    e = Entity(model=Pipe(path=path, cap_ends=False))
+    e = Entity(model=Pipe(path=path, cap_ends=False), texture='shore')
     # print(e.model.colors)
     print(len(e.model.vertices), len(e.model.colors))
     # e.model.colorize()
