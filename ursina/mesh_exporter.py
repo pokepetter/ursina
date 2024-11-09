@@ -8,7 +8,7 @@ def ursinamesh_to_obj(mesh, name='', out_path=None, max_decimals=5, flip_faces=T
     from ursina.string_utilities import camel_to_snake
 
     if out_path is None:
-        out_path = application.compressed_models_folder
+        out_path = application.models_compressed_folder
 
     obj = ''
     obj += f'mtllib {name}.mtl\n'
@@ -75,7 +75,7 @@ def ursinamesh_to_obj(mesh, name='', out_path=None, max_decimals=5, flip_faces=T
 
 
 
-def ursinamesh_to_dae(mesh, name, folder:Path=application.compressed_models_folder, texture_name=''):
+def ursinamesh_to_dae(mesh, name, folder:Path=application.models_compressed_folder, texture_name=''):
     num_vertices = len(mesh.generated_vertices)
     vertices = ' '.join([f'{v[2]} {v[1]} {v[0]}' for v in mesh.generated_vertices])
 

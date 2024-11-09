@@ -156,7 +156,7 @@ class HotReloader(Entity):
             if e.texture.name in reloaded_textures or not hasattr(e.texture, 'path') or not e.texture.path:
                 continue
 
-            if e.texture.path.parent.name == application.compressed_textures_folder.name:
+            if e.texture.path.parent.name == application.textures_compressed_folder.name:
                 print('texture is made from .psd file', e.texture.path.stem + '.psd')
                 texture_importer.compress_textures(e.texture.path.stem)
             print('reloaded texture:', e.texture.path)
@@ -198,7 +198,7 @@ class HotReloader(Entity):
 
             # print('model is made from .blend file:', model_path)
             mesh_importer.blend_to_obj(model_path)
-            mesh_importer.obj_to_ursinamesh(application.compressed_models_folder, application.compressed_models_folder, return_mesh=True, save_to_file=False, delete_obj=True).save(f'{name}.bam')
+            mesh_importer.obj_to_ursinamesh(application.models_compressed_folder, application.models_compressed_folder, return_mesh=True, save_to_file=False, delete_obj=True).save(f'{name}.bam')
             # print(f'compressed {name}.blend sucessfully')
             changed_models.append(name)
 

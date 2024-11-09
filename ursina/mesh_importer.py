@@ -408,13 +408,13 @@ def obj_to_ursinamesh(folder=Func(getattr, application, 'models_compressed_folde
 def blend_to_obj_fast(model_name=None, write_to_disk=False):
     print_info('find models')
     from tinyblend import BlenderFile  # type: ignore
-    application.compressed_models_folder.mkdir(parents=True, exist_ok=True)
+    application.models_compressed_folder.mkdir(parents=True, exist_ok=True)
 
     files = os.listdir(application.models_folder)
 
     for f in files:
         if f.endswith('.blend'):
-            # print('f:', application.compressed_models_folder + '/' + f)
+            # print('f:', application.models_compressed_folder + '/' + f)
             print('compress______', f)
             blend = BlenderFile(application.models_folder + '/' + f)
             number_of_objects = len(blend.list('Object'))
@@ -435,7 +435,7 @@ def blend_to_obj_fast(model_name=None, write_to_disk=False):
                 file_name = ''.join([f.split('.')[0], '.ursinamesh'])
                 if number_of_objects > 1:
                     file_name = ''.join([f.split('.')[0], '_', object_name, '.ursinamesh'])
-                file_path = os.path.join(application.compressed_models_folder, file_name)
+                file_path = os.path.join(application.models_compressed_folder, file_name)
                 print(file_path)
 
                 tris = tuple(triindex.v for triindex in o.data.mloop)
@@ -535,7 +535,7 @@ def compress_internal():
 
 
 if __name__ == '__main__':
-    # compress_internal()
+    compress_internal()
     from ursina import *
     from ursina import Ursina, Entity, EditorCamera, Sky
     app = Ursina()

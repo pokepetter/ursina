@@ -166,7 +166,7 @@ class _ParticleSystem(Entity):
         num_frames = int(self.total_duration / duration_per_frame)
         print('num_frames:', num_frames)
 
-        folder = application.compressed_models_folder / self.name
+        folder = application.models_compressed_folder / self.name
         if folder.exists() and folder.is_dir():
             shutil.rmtree(folder)
         folder.mkdir(parents=True, exist_ok=True)
