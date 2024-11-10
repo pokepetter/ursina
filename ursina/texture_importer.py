@@ -69,8 +69,8 @@ def compress_textures(name=''):
         return e
 
 
-    if not application.compressed_textures_folder.exists():
-        application.compressed_textures_folder.mkdir()
+    if not application.textures_compressed_folder.exists():
+        application.textures_compressed_folder.mkdir()
 
 
     file_type = '.*'
@@ -102,17 +102,17 @@ def compress_textures(name=''):
         # print('............', image.mode)
         if image and image.mode != 'RGBA' and max(image.size) > 512:
             image.save(
-                application.compressed_textures_folder / (Path(f).stem + '.jpg'),
+                application.textures_compressed_folder / (Path(f).stem + '.jpg'),
                 'JPEG',
                 quality=80,
                 optimize=True,
                 progressive=True
                 )
-            print('    compressing to jpg:', application.compressed_textures_folder / (f.stem + '.jpg'))
+            print('    compressing to jpg:', application.textures_compressed_folder / (f.stem + '.jpg'))
             continue
         else:
-            image.save(application.compressed_textures_folder / (f.stem + '.png'), 'PNG')
-            print('    compressing to png:', application.compressed_textures_folder / (f.stem + '.png'))
+            image.save(application.textures_compressed_folder / (f.stem + '.png'), 'PNG')
+            print('    compressing to png:', application.textures_compressed_folder / (f.stem + '.png'))
 
 
 
