@@ -83,7 +83,8 @@ class Array2D(list):
         for y in range(self.height-1, -1, -1):
             lines[y] = f'{self.height-1-y:<{longest_number}}| {lines[y]}'
         
-        lines.append(f'{'o':<{longest_number+2}}{'-'*(self.width)}w:{self.width}')
+        padding = longest_number + 2
+        lines.append(f'{"o":<{padding}}{"-"*(self.width)}w:{self.width}')
         result = '\n'+'\n'.join(lines)
         return result
 
