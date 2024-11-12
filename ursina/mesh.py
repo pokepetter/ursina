@@ -413,7 +413,7 @@ class Mesh(p3d.NodePath):
         if regenerate:
             self.generate()
 
-    def save(self, name='', folder:Path=Func(getattr, application, 'compressed_models_folder'), flip_faces=False, vertex_decimal_limit=5, color_decimal_limit=4):
+    def save(self, name='', folder:Path=Func(getattr, application, 'models_compressed_folder'), flip_faces=False, vertex_decimal_limit=5, color_decimal_limit=4):
         if callable(folder):
             folder = folder()
         if not folder.exists():

@@ -220,7 +220,7 @@ def get_blender(blend_file):    # try to get a matching blender version in case 
             return application.blender_paths['default']
 
 
-def blend_to_obj(blend_file:Path, out_folder=Func(getattr, application, 'compressed_models_folder'), export_mtl=True):
+def blend_to_obj(blend_file:Path, out_folder=Func(getattr, application, 'models_compressed_folder'), export_mtl=True):
     if callable(out_folder):
         out_folder = out_folder()
 
@@ -459,7 +459,7 @@ def blend_to_obj_fast(model_name=None, write_to_disk=False):
 
                 return file_content
 
-def ursina_mesh_to_obj(mesh, name='', out_path=Func(getattr, application, 'compressed_models_folder'), max_decimals=5, flip_faces=True):
+def ursina_mesh_to_obj(mesh, name='', out_path=Func(getattr, application, 'models_compressed_folder'), max_decimals=5, flip_faces=True):
     if callable(out_path):
         out_path = out_path()
 
