@@ -303,6 +303,16 @@ class GridEditor(Entity):
             self.render()
             self.record_undo()
 
+        # replace value
+        if combined_key == 'shift+g' and self.canvas_collider.hovered:
+            value_to_replace = self.grid[self.cursor.X][self.cursor.Y]
+            for (x,y), value in enumerate_2d(self.grid):
+                if value == value_to_replace:
+                    self.grid[x][y] = self.selected_char
+
+            self.render()
+            self.record_undo()
+
         if combined_key == 'x' and self.brush_size > 1:
             self.brush_size -= 1
             self.cursor_graphics.scale = self.brush_size
