@@ -42,11 +42,11 @@ pip install ursina[extras]
 
 
 On some systems you might have to use pip3 instead of pip in order to use Python 3 and not the old Python 2.
-To use a specific Pyhton version, use:
+To use a specific Python version, use:
 ```
 python3.xx -m pip install ursina
 ```
-Where 3.xx is the version you wan to target.
+Where 3.xx is the version you want to target.
 
 
 ## Dependencies
