@@ -29,7 +29,7 @@ repo and install as develop like this. Make sure you have git installed. https:/
 
 ```
 git clone https://github.com/pokepetter/ursina.git
-python setup.py develop
+pip install --editable .
 ```
 
 
@@ -42,6 +42,11 @@ pip install ursina[extras]
 
 
 On some systems you might have to use pip3 instead of pip in order to use Python 3 and not the old Python 2.
+To use a specific Pyhton version, use:
+```
+python3.xx -m pip install ursina
+```
+Where 3.xx is the version you wan to target.
 
 
 ## Dependencies
