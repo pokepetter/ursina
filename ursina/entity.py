@@ -714,8 +714,10 @@ class Entity(NodePath, metaclass=PostInitCaller):
         if isinstance(value, Texture):
             value = value._texture    # make sure to send the panda3d texture to the shader
 
-        super().set_shader_input(name, value)
-
+        try:
+            super().set_shader_input(name, value)
+        except:
+            raise Exception(f'Incorrect input to shader: {name} {value}')
 
     def shader_input_getter(self):
         return self._shader_inputs
@@ -726,6 +728,8 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def material_setter(self, value):  # a way to set shader, texture, texture_scale, texture_offset and shader inputs in one go
+        if value is None:
+            raise ValueError('material can not be set to None')
         _shader = value.get('shader', None)
         if _shader is not None:
             self.shader = _shader
