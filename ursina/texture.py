@@ -6,6 +6,7 @@ from pathlib import Path
 from ursina.vec2 import Vec2
 from ursina import color
 from ursina.ursinamath import clamp
+from ursina.array_tools import Array2D
 
 
 class Texture():
@@ -87,13 +88,14 @@ class Texture():
     def pixels(self):
         from numpy import asarray, flip
         from PIL import Image
+        from ursina.array_tools import rotate_2d_list
 
         if self._cached_image:
-            return asarray(self._cached_image)
+            return Array2D(data=asarray(self._cached_image))
 
         pixels = asarray(Image.open(self.path))
-        pixels = flip(pixels, axis=0)
-        return pixels
+        pixels = rotate_2d_list(pixels)
+        return Array2D(data=pixels)
 
 
     @property
@@ -183,12 +185,6 @@ class Texture():
         return self.name
 
 
-    def __del__(self):
-        # self._texture.releaseAll()
-        del self._cached_image
-
-
-
 if __name__ == '__main__':
     from ursina import *
     from ursina import texture_importer
@@ -248,6 +244,13 @@ if __name__ == '__main__':
     e.texture = 'brick'
     # e.texture.set_pixels([e for e in e.texture.get_pixels()])
     e.texture.apply()
+    
     tex = Texture.new((512,512), (255,0,0))
 
+    pixels = e.texture.pixels
+    new_grid = Array2D(width=pixels.width, height=pixels.height)
+    for (x,y), value in enumerate_2d(pixels):
+        new_grid[x][y] = int(color.rgba32(*value).v > .5)
+
+    print(new_grid)
     app.run()
