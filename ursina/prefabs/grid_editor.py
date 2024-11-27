@@ -303,6 +303,16 @@ class GridEditor(Entity):
             self.render()
             self.record_undo()
 
+        # replace value
+        if combined_key == 'shift+g' and self.canvas_collider.hovered:
+            value_to_replace = self.grid[self.cursor.X][self.cursor.Y]
+            for (x,y), value in enumerate_2d(self.grid):
+                if value == value_to_replace:
+                    self.grid[x][y] = self.selected_char
+
+            self.render()
+            self.record_undo()
+
         if combined_key == 'x' and self.brush_size > 1:
             self.brush_size -= 1
             self.cursor_graphics.scale = self.brush_size
@@ -499,7 +509,11 @@ class PixelEditor(GridEditor):
         self.canvas.texture = texture
         self.w, self.h = int(texture.width), int(texture.height)
         self.canvas.scale_x = self.canvas.scale_y * self.w / self.h
-        self.grid = [[texture.get_pixel(x,y) for y in range(texture.height)] for x in range(texture.width)]
+        
+        # pixels = texture.pixels
+        self.grid = Array2D(width=texture.width, height=texture.height)
+        for (x,y), _ in enumerate_2d(self.grid):
+            self.grid[x][y] = texture.get_pixel(x,y)
         self.canvas.texture.filtering = None
 
         self.gizmo_parent.scale = Vec2(1/self.w, 1/self.h)
@@ -510,7 +524,6 @@ class PixelEditor(GridEditor):
             self.undo_stack.clear()
             self.record_undo()
             self.undo_index = 0
-
 
         if render:
             self.render()
@@ -526,9 +539,8 @@ class PixelEditor(GridEditor):
 
 
     def render(self):
-        for y in range(self.h):
-            for x in range(self.w):
-                self.canvas.texture.set_pixel(x, y, self.grid[x][y])
+        for (x,y), value in enumerate_2d(self.grid):
+            self.canvas.texture.set_pixel(x, y, value)
 
         self.canvas.texture.apply()
 
@@ -561,8 +573,7 @@ if __name__ == '__main__':
     '''
     from PIL import Image
     t = Texture(Image.new(mode='RGBA', size=(32,32), color=(0,0,0,1)))
-    editor = PixelEditor(parent=scene, texture=load_texture('brick'), scale=10)
-    # editor.set_texture(Texture('/home/rain/MechanicalHeart/Levels/Up.png'))
+    editor = PixelEditor(parent=scene, texture=load_texture('test_tileset'), scale=10)
     camera.orthographic = True
     camera.fov = 15
     EditorCamera(rotation_speed=0)

@@ -256,7 +256,9 @@ class Text(Entity):
 
     def shader_setter(self, value):
         self._shader = value
-
+        if not hasattr(self, 'text_nodes'): # trying to set shader before init has finish, for example by using Entity.default_shader
+            return
+        
         for tn in self.text_nodes:
             tn.setShader(value._shader)
             for key, shader_input in value.default_input.items():
