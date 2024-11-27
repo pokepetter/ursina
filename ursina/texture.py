@@ -91,7 +91,7 @@ class Texture():
         from ursina.array_tools import rotate_2d_list
 
         if self._cached_image:
-            return Array2D(data=asarray(self._cached_image))
+            return Array2D(data=rotate_2d_list(asarray(self._cached_image)))
 
         pixels = asarray(Image.open(self.path))
         pixels = rotate_2d_list(pixels)
@@ -197,7 +197,7 @@ if __name__ == '__main__':
         A texture file can be a .png, .jpg or .psd.
         If it's a .psd it and no compressed version exists, it will compress it automatically.
     '''
-    e = Entity(model='quad', texture='brick')
+    e = Entity(model='quad', texture='test_tileset')
     e.texture.set_pixel(0, 2, color.blue)
     e.texture.apply()
     #
@@ -241,16 +241,17 @@ if __name__ == '__main__':
             for key, value in texture_importer.imported_textures.items():
                 print(key, value)
 
-    e.texture = 'brick'
+    e.texture = 'test_tileset'
     # e.texture.set_pixels([e for e in e.texture.get_pixels()])
     e.texture.apply()
     
-    tex = Texture.new((512,512), (255,0,0))
+    # tex = Texture.new((512,512), (255,0,0))
 
     pixels = e.texture.pixels
     new_grid = Array2D(width=pixels.width, height=pixels.height)
+    print('w:', pixels.width, 'h:', pixels.height)
     for (x,y), value in enumerate_2d(pixels):
         new_grid[x][y] = int(color.rgba32(*value).v > .5)
 
-    print(new_grid)
+    # print(new_grid)
     app.run()
