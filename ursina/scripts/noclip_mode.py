@@ -29,7 +29,7 @@ class NoclipMode:
         if hasattr(window, 'exit_button'):
             window.exit_button.ignore = held_keys[self.require_key]
 
-        if not held_keys[self.require_key]:
+        if self.require_key is not None and not held_keys[self.require_key]:
             return
 
         self.entity.y += (held_keys['e'] - held_keys['q']) * time.dt * self.speed
