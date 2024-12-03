@@ -13,7 +13,7 @@ textureless = False
 
 def load_texture(name, folder=None, use_cache=True, filtering='default'):
     if textureless:
-        return None
+        return Texture(builtins.loader.loadTexture(application.internal_textures_folder/'white_cube.png'))
 
     if use_cache and name in imported_textures:
         return copy(imported_textures[name])
