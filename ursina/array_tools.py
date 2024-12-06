@@ -155,7 +155,7 @@ def chunk_list(target_list, chunk_size):
 
 
 def rotate_2d_list(target_2d_list):
-    return list(zip(*target_2d_list[::-1]))   # rotate
+    return [list(row) for row in zip(*target_2d_list[::-1])]  # rotate
 
 
 def string_to_2d_list(string, char_value_map={'.':0, '#':1}):
@@ -163,7 +163,7 @@ def string_to_2d_list(string, char_value_map={'.':0, '#':1}):
     grid = dedent(string).strip()
     grid = grid.split('\n')
     grid = [[char_value_map.get(e, 0) for e in line] for line in grid]
-    grid = list(zip(*grid[::-1]))   # rotate
+    grid = [list(row) for row in zip(*grid[::-1])]  # rotate
     return grid
 
 if __name__ == '__main__':
@@ -174,10 +174,10 @@ if __name__ == '__main__':
         .##..#..#.####..#..
         '''
     expected_result = rotate_2d_list([
-        (1,0,0,1, 0, 1,1,1,0, 0, 1,1,1,1, 0, 0,1,0,0),
-        (1,0,0,1, 0, 1,0,0,1, 0, 1,1,1,0, 0, 0,1,0,0),
-        (1,0,0,1, 0, 1,1,1,0, 0, 0,0,0,1, 0, 0,1,0,0),
-        (0,1,1,0, 0, 1,0,0,1, 0, 1,1,1,1, 0, 0,1,0,0),
+        [1,0,0,1, 0, 1,1,1,0, 0, 1,1,1,1, 0, 0,1,0,0],
+        [1,0,0,1, 0, 1,0,0,1, 0, 1,1,1,0, 0, 0,1,0,0],
+        [1,0,0,1, 0, 1,1,1,0, 0, 0,0,0,1, 0, 0,1,0,0],
+        [0,1,1,0, 0, 1,0,0,1, 0, 1,1,1,1, 0, 0,1,0,0],
     ])
 
     _test(string_to_2d_list, test_input, expected_result)

@@ -97,6 +97,14 @@ def _destroy(entity, force_destroy=False):
     if entity.eternal and not force_destroy:
         return
 
+    if hasattr(entity, 'scripts'):
+        for s in entity.scripts:
+            del s
+
+    if hasattr(entity, 'animations'):
+        for anim in entity.animations:
+            anim.kill()
+
     for child in entity.children:
         _destroy(child)
 
@@ -123,14 +131,6 @@ def _destroy(entity, force_destroy=False):
         
     if hasattr(entity, '_loose_parent') and entity._loose_parent and hasattr(entity._loose_parent, '_loose_children') and entity in entity._loose_parent._loose_children:
         entity._loose_parent._loose_children.remove(entity)
-
-    if hasattr(entity, 'scripts'):
-        for s in entity.scripts:
-            del s
-
-    if hasattr(entity, 'animations'):
-        for anim in entity.animations:
-            anim.kill()
 
     if hasattr(entity, 'tooltip'):
         _destroy(entity.tooltip)

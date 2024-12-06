@@ -8,27 +8,22 @@ class Tilemap(GridEditor):
             self.tilemap = load_texture(tilemap)
 
         self.grid = [[self.tilemap.get_pixel(x,y) for y in range(self.tilemap.height)] for x in range(self.tilemap.width)]
-        super().__init__(
-            texture=self.tilemap,
-            size=self.tilemap.size,
-            palette=(color.white, color.black, color.green, color.blue, color.red),
-            edit_mode=False,
-            **kwargs)
+        super().__init__(texture=self.tilemap, size=self.tilemap.size, palette=(color.white, color.black, color.green, color.blue, color.red), edit_mode=False, **kwargs)
 
+        # self.canvas.visible_self = False
+        self.canvas.alpha = .5
         self.tileset = tileset
         self.tileset_size = tileset_size
         self.model = Mesh()
         self.texture = tileset
-        self.colliders = list()
-        # self.texture.filtering = None
+        self.colliders = []
 
-        # self.grid = [[self.tilemap.get_pixel(x,y) for y in range(self.h)] for x in range(self.w)]
         self.auto_render = False
         self.outline = Entity(parent=self, model=Quad(segments=0, mode='line', thickness=1), color=color.cyan, z=.01, origin=(-.5,-.5), enabled=self.edit_mode)
 
         self._quad = Quad(segments=0)
         self._quad.vertices = [Vec3(*v)+Vec3(.5,.5,0) for v in self._quad.vertices]
-        self._garbage = Entity(parent=self, add_to_scene_entities=False)
+        self._garbage = Entity(parent=self.canvas, add_to_scene_entities=False)
 
         self.uv_dict = {
             '11111111' : [(4,1), (5,1), (6,1), (7,1)],     # fill
@@ -75,7 +70,6 @@ class Tilemap(GridEditor):
             self.variation_chance = [0,]
 
         self.uv_margin = .002
-
         self.render()
 
 
@@ -93,10 +87,9 @@ class Tilemap(GridEditor):
             parent=self._garbage,
             model='quad',
             scale=Vec3(1/self.tilemap.width, 1/self.tilemap.height, 1) * self.brush_size,
-            position=self.cursor.position,
-            z=-.1,
+            position=Vec3(self.cursor.x/self.tilemap.width, self.cursor.y/self.tilemap.height, -.1),
+            # always_on_top=True,
             texture=self.texture,
-
             texture_scale=Vec2(1/self.tileset_size[0], 1/self.tileset_size[1]),
             texture_offset=Vec2(.33, .33),
             origin=(-.5,-.5),
@@ -105,8 +98,6 @@ class Tilemap(GridEditor):
         if self.selected_char == self.palette[0]:
             e.color = window.color
             e.texture = None
-
-
 
 
     def input(self, key):
@@ -220,7 +211,7 @@ class Tilemap(GridEditor):
 
 if __name__ == '__main__':
     app = Ursina()
-    EditorCamera()
+    EditorCamera(rotation_speed=0)
     tilemap = Tilemap('tilemap_test_level', tileset='test_tileset', tileset_size=(8,4), parent=scene)
     tilemap.canvas.texture = 'tilemap_test_level'
     # tilemap = Tilemap('brick', tileset='tileset_cave', tileset_size=(8,4), parent=scene)
@@ -228,6 +219,6 @@ if __name__ == '__main__':
     camera.position = tilemap.tilemap.size / 2
     camera.fov = tilemap.tilemap.height
 
-    Text('press tab to toggle edit mode', origin=(.5,0), position=(-.55,.4))
+    Text('press tab to toggle edit mode', position=window.top_left)
 
     app.run()
