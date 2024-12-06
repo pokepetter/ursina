@@ -97,13 +97,13 @@ class Vec3(PandaVec3):
         self[2] = value[1]
 
     @property
-    def X(self):
+    def X(self):    # get x as int
         return int(self.x)
     @property
-    def Y(self):
+    def Y(self):    # get y as int
         return int(self.y)
     @property
-    def Z(self):
+    def Z(self):    # get z as int
         return int(self.z)
     @property
     def XY(self):
