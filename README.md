@@ -120,7 +120,7 @@ app.run()                     # opens a window and starts the game.
 
 ## Documentation
    * [Ursina Documentation](https://pokepetter.github.io/ursina/documentation.html)
-      - Written explainations of core concepts and how Ursina works.
+      - Written explanations of core concepts and how Ursina works.
    * [Ursina API Reference](https://pokepetter.github.io/ursina/api_reference.html)
       - List of Ursina's functions, classes and assets.
    * [Samples](https://pokepetter.github.io/ursina/samples.html)
