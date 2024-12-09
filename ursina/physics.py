@@ -1,5 +1,5 @@
 from panda3d.core import BitMask32, TransformState
-from panda3d.bullet import BulletRigidBodyNode, BulletPlaneShape, BulletBoxShape, BulletSphereShape, BulletCapsuleShape, BulletCylinderShape, BulletConeShape, XUp, YUp, ZUp, BulletTriangleMesh, BulletTriangleMeshShape, BulletDebugNode, BulletWorld
+from panda3d.bullet import BulletRigidBodyNode, BulletPlaneShape, BulletBoxShape, BulletSphereShape, BulletCylinderShape, BulletCapsuleShape, BulletConeShape, XUp, YUp, ZUp, BulletTriangleMesh, BulletTriangleMeshShape, BulletDebugNode, BulletWorld
 from ursina.scripts.property_generator import generate_properties_for_class
 from ursina import Entity, scene, time, Vec3
 
@@ -23,6 +23,7 @@ class _PhysicsHandler(Entity):
     def update(self):
         if self.active:
             self.world.doPhysics(time.dt)
+            # print("physics handler now active")
 
     def debug_setter(self, value):
         if value:
@@ -48,14 +49,14 @@ class SphereShape:
         self.center = center
         self.radius = radius
 
-class CapsuleShape:
+class CylinderShape:
     def __init__(self, center=(0,0,0), radius=.5, height=2, axis='y'):
         self.center = center
         self.radius = radius
         self.height = height
         self.axis = axis
 
-class CylinderShape:
+class CapsuleShape:
     def __init__(self, center=(0,0,0), radius=.5, height=2, axis='y'):
         self.center = center
         self.radius = radius
@@ -104,8 +105,8 @@ class _PhysicsBody:
         self.ignore_paused = False
         self.animations = []
 
-    def __getattr__(self, attribute):
-        return getattr(self.node_path.node(), attribute)
+    def __getattr__(self, attr):
+        return getattr(self.node_path.node(), attr)
         
 
     def attach(self):
@@ -193,10 +194,17 @@ class _PhysicsBody:
         else:
             self.node_path.node().applyCentralForce(force)
 
+    def apply_impulse(self, force, point=(0,0,0)):
+        self.node_path.node().setActive(True)
+        if point != (0,0,0):
+            self.node_path.node().applyImpulse(force, point)
+        else:
+            self.node_path.node().applyCentralImpulse(force)
+
 
 class RigidBody(_PhysicsBody):
     def __init__(self, shape, world=physics_handler.world, entity=None, mass=0, kinematic=False, friction=.5, mask=0x1):
-        if not physics_handler.active and world is physics_handler.world:
+        if world is physics_handler.world and not physics_handler.active:
             physics_handler.active = True
         super().__init__(name='RigidBody', world=world)
         self.rigid_body_node = BulletRigidBodyNode('RigidBody')
@@ -233,15 +241,6 @@ def _convert_shape(shape, entity, dynamic=True):
     elif isinstance(shape, SphereShape):
         return BulletSphereShape(shape.radius)
 
-    elif isinstance(shape, CapsuleShape):
-        if shape.axis == 'y':
-            axis = YUp
-        elif shape.axis == 'z':
-            axis = ZUp
-        elif shape.axis == 'x':
-            axis = XUp
-        return BulletCapsuleShape(shape.radius, shape.height-1, axis)
-    
     elif isinstance(shape, CylinderShape):
         if shape.axis == 'y':
             axis = YUp
@@ -250,7 +249,16 @@ def _convert_shape(shape, entity, dynamic=True):
         elif shape.axis == 'x':
             axis = XUp
         return BulletCylinderShape(shape.radius, shape.height, axis)
-    
+
+    elif isinstance(shape, CapsuleShape):
+        if shape.axis == 'y':
+            axis = YUp
+        elif shape.axis == 'z':
+            axis = ZUp
+        elif shape.axis == 'x':
+            axis = XUp
+        return BulletCapsuleShape(shape.radius, shape.height-1, axis)
+
     elif isinstance(shape, ConeShape):
         if shape.axis == 'y':
             axis = YUp
@@ -278,7 +286,7 @@ def _convert_shape(shape, entity, dynamic=True):
 
 
 if __name__ == '__main__':
-    from ursina import Ursina, Capsule, Cone, Cylinder, Sequence, Func, curve, Wait, EditorCamera
+    from ursina import Ursina, Cylinder, Capsule, Cone, Sequence, Func, curve, Wait, EditorCamera
 
     app = Ursina(borderless=False)
 
@@ -294,13 +302,13 @@ if __name__ == '__main__':
     sphere = Entity(model='sphere', texture='brick', y=30)
     RigidBody(shape=SphereShape(), entity=sphere, mass=5)
 
-    capsule = Entity(model=Capsule(height=2, radius=.5), texture='brick', y=17)
-    RigidBody(shape=CapsuleShape(height=2, radius=.5), entity=capsule, mass=3)
-
-    cylinder = Entity(model=Cylinder(height=2, radius=.5, start=-1), texture='brick', y=10)
+    cylinder = Entity(model=Cylinder(height=2, radius=.5, start=-1), texture='brick', y=17)
     RigidBody(shape=CylinderShape(height=2, radius=.5), entity=cylinder, mass=3)
 
-    cone = Entity(model=Cone(8, height=2, radius=.5), texture='brick', y=15)
+    capsule = Entity(model=Capsule(height=2, radius=.5), texture='brick', y=15)
+    RigidBody(shape=CapsuleShape(height=2, radius=.5), entity=capsule, mass=3)
+
+    cone = Entity(model=Cone(resolution=8, height=2, radius=.5), texture='brick', y=13)
     RigidBody(shape=ConeShape(height=2, radius=.5), entity=cone, mass=2)
 
     platform = Entity(model='cube', texture='white_cube', y=1, scale=(4,1,4))
@@ -310,17 +318,19 @@ if __name__ == '__main__':
     path = [Vec3(-2,1,-2), Vec3(2,1,-2), Vec3(0, 1, 2)]
     travel_time = 2
     for target_pos in path:
-        platform_sequence.append(Func(platform_body.animate_position, value=target_pos, duration=travel_time, curve=curve.linear))
-        platform_sequence.append(Wait(travel_time))
+        platform_sequence.append(Func(platform_body.animate_position, value=target_pos, duration=travel_time, curve=curve.linear), regenerate=False)
+        platform_sequence.append(Wait(travel_time), regenerate=False)
+    platform_sequence.generate()
     platform_sequence.start()
+    
 
     def input(key):
         if key == 'space up':
             e = Entity(model='cube', texture='white_cube', y=7)
             RigidBody(shape=BoxShape(), entity=e, mass=1, friction=1)
         if key == 'up arrow':
-            cube_body.add_force(force=Vec3(0, 1000, 0), point=Vec3(0,0,0))
-            print('force applied')
+            cube_body.apply_impulse(force=Vec3(0, 10, 0), point=Vec3(0,0,0))
+            print('impulse applied')
 
     physics_handler.debug = True
 
