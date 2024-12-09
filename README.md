@@ -18,7 +18,7 @@ pip install ursina
 ```
 
 
-If you want to install the newest version from git, you can install like this:
+To get the newest, in development version from GitHub, install it like this:
 
 ```
 pip install git+https://github.com/pokepetter/ursina.git
@@ -26,10 +26,11 @@ pip install git+https://github.com/pokepetter/ursina.git
 
 
 If you want to easily edit the source, it's recommended to clone the git
-repo and install as develop like this. Make sure you have [git](https://git-scm.com) installed.
+repo and pip install with --editable flag like this. Make sure you have [git](https://git-scm.com) installed.
 
 ```
 git clone https://github.com/pokepetter/ursina.git
+cd ursina
 pip install --editable .
 ```
 
@@ -107,25 +108,26 @@ def update():                  # update gets automatically called by the engine.
 app.run()                     # opens a window and starts the game.
 ```
 
-3) Type this in the terminal to start the game:
+3) Run this in the terminal start the game:
 
        python ursina_game.py
-   If you use Atom, I recommend installing the package atom-python-run to run your scripts with the press of a button.
+   
+   ... or run it with your editor/IDE of choice.
 
 4) You can now move the orange box around with 'a' and 'd'!
 
-   To close the window, you can by default, press shift+q or press the red x. to disable this, write `window.exit_button.enabled = False` somewhere in your code.
+   To close the window, you can by default, press control+shift+alt+q or press the red x.
 
 ## Documentation
-If you need help, you can refer to the following documentation sites:
    * [Ursina Documentation](https://pokepetter.github.io/ursina/documentation.html)
-      - Can give you a lot of help, because it explains how Ursina works
+      - Written explainations of core concepts and how Ursina works.
    * [Ursina API Reference](https://pokepetter.github.io/ursina/api_reference.html)
-      - List the different functionalities of ursina, with example code
+      - List of Ursina's functions, classes and assets.
    * [Samples](https://pokepetter.github.io/ursina/samples.html)
-      - Little games with simple code, as examples
+      - Small example games.
 
-You found a bug? You can help ursina by posting it in [the issues](https://github.com/pokepetter/ursina/issues), or by making a [pull request](https://github.com/pokepetter/ursina/pulls)
+Found a bug? Posting it in [Issues](https://github.com/pokepetter/ursina/issues).
+Fixed a bug? Make a [pull request](https://github.com/pokepetter/ursina/pulls).
 
 
 ## Project Structure
