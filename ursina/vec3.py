@@ -97,6 +97,15 @@ class Vec3(PandaVec3):
         self[2] = value[1]
 
     @property
+    def xzy(self):
+        return Vec3(self.x, self.z, self.y)
+    @xzy.setter
+    def xzy(self, value):
+        self[0] = value[0]
+        self[2] = value[1]
+        self[1] = value[2]
+
+    @property
     def X(self):    # get x as int
         return int(self.x)
     @property
