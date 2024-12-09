@@ -1,6 +1,6 @@
 # ursina    ʕ •ᴥ•ʔゝ□
 
-[Website](https://www.ursinaengine.org/index.html) | [Discord](https://discord.gg/ydXfhyb) | [Twitter](https://twitter.com/ursinaengine) | [Patreon](https://www.patreon.com/ursinaengine) | [Sponsor](https://github.com/sponsors/pokepetter)
+[Website](https://pokepetter.github.io/ursina/index.html) | [Discord](https://discord.gg/ydXfhyb) | [Twitter](https://twitter.com/ursinaengine) | [Patreon](https://www.patreon.com/ursinaengine) | [Sponsor](https://github.com/sponsors/pokepetter)
 
 An easy to use game engine/framework for python.
 
@@ -9,7 +9,8 @@ An easy to use game engine/framework for python.
 [![Trailer](/docs/ursina_trailer_preview.webp)](https://youtu.be/j71j88oCTNo)
 
 ## Getting Started
-1) Install Python 3.6 or newer. https://www.python.org/downloads/
+1) Install [Python 3.10 or newer.](https://www.python.org/downloads/release/python-3100)
+
 2) Open cmd/terminal and type:
 
 ```
@@ -25,7 +26,7 @@ pip install git+https://github.com/pokepetter/ursina.git
 
 
 If you want to easily edit the source, it's recommended to clone the git
-repo and install as develop like this. Make sure you have git installed. https://git-scm.com/
+repo and install as develop like this. Make sure you have [git](https://git-scm.com) installed.
 
 ```
 git clone https://github.com/pokepetter/ursina.git
@@ -50,7 +51,7 @@ Where 3.xx is the version you want to target.
 
 
 ## Dependencies
-  * python 3.6+
+  * python 3.10+
   * panda3d
   * pillow, for texture manipulation
   * psd-tools, for converting .psd files
@@ -77,10 +78,11 @@ app.run()                       # opens a window and starts the game.
 ```
 
 
-* [Minecraft Clone](/samples/minecraft_clone.py)
+* [Minecraft Clone](https://pokepetter.github.io/ursina/minecraft_clone.html)
 
-* [Platformer Game](/samples/platformer.py)
+* [Platformer Game](https://pokepetter.github.io/ursina/platformer.html)
 
+There are other examples in [the samples folder](https://github.com/pokepetter/ursina/tree/master/samples), or in [samples website](https://pokepetter.github.io/ursina/samples.html)
 
 ## How do I make a game?
 Ursina games are made by writing Python code. You can use any text editor you want, but personally I like to use Atom.
@@ -113,6 +115,17 @@ app.run()                     # opens a window and starts the game.
 4) You can now move the orange box around with 'a' and 'd'!
 
    To close the window, you can by default, press shift+q or press the red x. to disable this, write `window.exit_button.enabled = False` somewhere in your code.
+
+## Documentation
+If you need help, you can refer to the following documentation sites:
+   * [Ursina Documentation](https://pokepetter.github.io/ursina/documentation.html)
+      - Can give you a lot of help, because it explains how Ursina works
+   * [Ursina API Reference](https://pokepetter.github.io/ursina/api_reference.html)
+      - List the different functionalities of ursina, with example code
+   * [Samples](https://pokepetter.github.io/ursina/samples.html)
+      - Little games with simple code, as examples
+
+You found a bug? You can help ursina by posting it in [the issues](https://github.com/pokepetter/ursina/issues), or by making a [pull request](https://github.com/pokepetter/ursina/pulls)
 
 
 ## Project Structure
