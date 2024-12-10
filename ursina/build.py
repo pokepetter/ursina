@@ -13,8 +13,8 @@ project_name = project_folder.stem
 build_folder = Path(project_folder / f'build_{platform.system()}')
 build_folder.mkdir(exist_ok=True)
 
-resource_hacker = os.path.abspath(os.path.dirname(__file__)) + "/scripts/resource_hacker.exe"
-print("Resource hacker at: ", resource_hacker)
+rcedit = os.path.abspath(os.path.dirname(__file__)) + "/scripts/rcedit.exe"
+print("Rcedit at: ", rcedit)
 
 ignore_folders = []
 ignore_filetypes = []
@@ -122,7 +122,7 @@ if (build_engine and python_dest.exists() or (build_game and src_dest.exists()))
     if '--overwrite' not in sys.argv:
         for e in (python_dest, src_dest):
             msg = f'Folder {e} already exists. \nProceed to delete and overwrite?'
-            overwrite = input("%s (y/N) " % msg).lower() == 'y'
+            overwrite = input("%s (y/n) " % msg).lower() == 'y'
             # if not overwrite:
             #     print('stopped building')
             #     exit()
@@ -217,6 +217,9 @@ if build_engine:
 
     # def copy_ursina():
     print('copying ursina')
+    #if sys.version_info[1] >= 12:
+        #import importlib.util #Have to change to import importlib.util in python 3.12?
+    #else:
     import importlib
     spec = importlib.util.find_spec('ursina')
     ursina_path = Path(spec.origin).parent
@@ -312,40 +315,24 @@ if build_game:
 
     if icon:
         import subprocess
-        print("changing icon to custom icon")
+        from pathlib import Path
 
-        python = Path(build_folder / "python/python.exe")
-        output_path = Path(build_folder / 'python/python.exe')
+        print("Changing icon to custom icon")
 
-        delete_command = [
-            resource_hacker,
-            "-open", python,
-            "-save", output_path,
-            "-action", "delete",
-            "-mask", "ICONGROUP,"
-        ]
-
-        add_command  = [
-            resource_hacker,
-            "-open", python,
-            "-save", output_path,
-            "-action", "add",
-            "-res", icon,
-            "-mask", "ICONGROUP,MAINICON,"
-        ]
+        python_exe = Path(build_folder / "python/python.exe")
 
         try:
-            subprocess.run(delete_command, check=True, capture_output=True, text=True)
-            print("Old icons deleted successfully.")
-        except subprocess.CalledProcessError as e:
-            print("Error deleting icons:", e.stderr)
+            update_icon_command = [
+                str(rcedit),
+                str(python_exe),
+                "--set-icon", str(icon) 
+            ]
 
-        # Run the add command
-        try:
-            subprocess.run(add_command, check=True, capture_output=True, text=True)
-            print("New icon added successfully.")
+            subprocess.run(update_icon_command, check=True, capture_output=True, text=True)
+            print("Icon updated successfully.")
         except subprocess.CalledProcessError as e:
-            print("Error adding new icon:", e.stderr)
+            print("Error updating icon:", e.stderr)
+
 
 # make exe
 # import subprocess
