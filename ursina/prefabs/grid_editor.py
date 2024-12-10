@@ -187,7 +187,8 @@ class GridEditor(Entity):
                         self.prev_draw = (x,y)
 
                 else:   # sample color
-                    self.selected_char = self.grid[x][y]
+                    self.sample(x, y)
+
 
         if held_keys[self.shortcuts['select']]:     # selection
             self.rect_selection[1] = self.get_cursor_position()
@@ -232,6 +233,10 @@ class GridEditor(Entity):
 
         if self.auto_render:
             self.render()
+
+
+    def sample(self, x, y):
+        self.selected_char = self.grid[x][y]
 
 
     def input(self, key):
