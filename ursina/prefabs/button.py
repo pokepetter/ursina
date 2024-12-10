@@ -9,7 +9,7 @@ class Button(Entity):
     default_color = color.black90
     default_model = None # will default to rounded Quad
 
-    def __init__(self, text='', parent=camera.ui, model=Default, radius=.1, origin=(0,0), text_origin=(0,0), text_size=1, color=Default, collider='box', highlight_scale=1, pressed_scale=1, disabled=False, **kwargs):
+    def __init__(self, text='', parent=camera.ui, model=Default, radius=.1, origin=(0,0), text_origin=(0,0), text_size=1, text_color=color.white, color=Default, collider='box', highlight_scale=1, pressed_scale=1, disabled=False, **kwargs):
         super().__init__(parent=parent)
 
         for key in ('scale', 'scale_x', 'scale_y', 'scale_z', 'world_scale', 'world_scale_x', 'world_scale_y', 'world_scale_z'):
@@ -45,6 +45,7 @@ class Button(Entity):
         if text:
             self.text = text
             self.text_size = text_size
+            self.text_color = text_color
 
         for key, value in kwargs.items():
             setattr(self, key, value)
