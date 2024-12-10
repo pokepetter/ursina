@@ -25,7 +25,7 @@ class GridEditor(Entity):
 
         self.gizmo_parent = Entity(parent=self.canvas, scale=(1/self.w, 1/self.h))
         self.cursor = Entity(parent=self.gizmo_parent)
-        self.cursor_graphics = Entity(parent=self.cursor, model=Quad(segments=0, mode='line', thickness=2), origin=(-.5,-.5), color=hsv(120,1,1,.5), z=-.2, shader=unlit_shader)
+        self.cursor_graphics = Entity(parent=self.cursor, model=Quad(segments=0, mode='line', thickness=2), origin=(-.5,-.5), color=hsv(120,1,1,.5), z=0, shader=unlit_shader)
 
         self.selected_char = palette[1]
         self.palette = palette
@@ -47,33 +47,34 @@ class GridEditor(Entity):
         self.undo_stack.append(deepcopy(self.grid))
         self.undo_index = 0
 
+        self.shortcuts = {
+            'draw': 'left mouse',
+            'sample_modifier': 'alt',
+            'lock_axis_modifier': 'shift',
+            'draw_line_modifier': 'control',
+            'toggle_edit_mode': ('tab', ),
+            'increase_brush_size': ('d', '+'),
+            'decrease_brush_size': ('x', '-'),
+            'save': ('control+s', ),
+            'fill': ('g', ),
+            'replace': ('shift+g', ),
+            'undo': ('control+z', ),
+            'redo': ('control+y', 'control+shift+z'),
+            'flip_horizontally': ('f4', ),
+            'select': 'right mouse',            
+            'subtract_selection_modifier': 'alt',            
+            'add_selection_modifier': 'shift',            
+            'copy': ('control+c', ),
+            'cut': ('control+x', ),
+            'paste': ('control+v', ),
+            'apply_pasted': ('left mouse down', ),
+            'discard_pasted': ('right mouse down', ),
+        }
+
         self.help_icon = Button(parent=self.canvas, scale=.025, model='circle', origin=(-.5,-.5), position=(-.0,1.005,-1), text='?', target_scale=.025)
+
         self.help_icon.tooltip = Tooltip(
-            text=dedent('''
-                left mouse:                 draw
-                left mouse + shift:         draw straight line
-                control + left click:       draw lines
-                alt + left click:           sample color
-                g:                          fill
-
-                ctrl + z:                   undo
-                ctrl + y:                   redo
-                ctrl + s:                   save
-                tab:                        generate and preview
-                ctrl + e:                   export level
-
-                right click and drag:       start selection
-                right click + hold shift:   add to selection
-                right click + hold alt:     subtract from selection
-
-                ctrl + c:                   copy
-                ctrl + x:                   cut
-                ctrl + v:                   paste
-
-                o:                          open level menu
-                ctrl + alt + right arrow:   go to next level
-                ctrl + alt + left arrow:    go to previous level
-            '''),
+            text='\n'.join([f'{key:<20}: {value}' for key, value in self.shortcuts.items()]),
             font='VeraMono.ttf',
             wordwrap=100,
             # scale=.75,
@@ -130,8 +131,8 @@ class GridEditor(Entity):
             self.cursor.y = floor(self.cursor.y * self.h)
 
 
-            if self.start_pos and mouse.left:
-                if held_keys['shift'] and self.prev_draw:
+            if self.start_pos and held_keys[self.shortcuts['draw']]:
+                if held_keys[self.shortcuts['lock_axis_modifier']] and self.prev_draw:
                     if not self.lock_axis:
                         if abs(mouse.velocity[0]) > abs(mouse.velocity[1]):
                             self.lock_axis = 'horizontal'
@@ -151,7 +152,7 @@ class GridEditor(Entity):
                     self.prev_draw = (clamp(x, 0, self.w), clamp(y, 0, self.h))
                     return
 
-                if not held_keys['alt'] and not self.is_in_paste_mode:
+                if not held_keys[self.shortcuts['sample_modifier']] and not self.is_in_paste_mode:
                     if self.prev_draw is not None and distance_2d(self.prev_draw, (x,y)) > 1:
                         dist = distance_2d(self.prev_draw, (x,y))
 
@@ -188,7 +189,7 @@ class GridEditor(Entity):
                 else:   # sample color
                     self.selected_char = self.grid[x][y]
 
-        if mouse.right:     # selection
+        if held_keys[self.shortcuts['select']]:     # selection
             self.rect_selection[1] = self.get_cursor_position()
             if self.rect_selection[0] == self.rect_selection[1]:
                 self.rect_tool.start = Vec2(0,0)
@@ -209,7 +210,7 @@ class GridEditor(Entity):
 
         if hasattr(self, 'line_preview'):
             self.line_preview.enabled = held_keys['control']
-        if held_keys['control'] and self.prev_draw:
+        if held_keys[self.shortcuts['draw_line_modifier']] and self.prev_draw:
             if not hasattr(self, 'line_preview'):
                 self.line_preview = Entity(parent=self.gizmo_parent, model=Mesh(mode='line', vertices=[Vec3.zero, Vec3.up], thickness=3), color=color.azure, z=-.1)
 
@@ -236,49 +237,46 @@ class GridEditor(Entity):
     def input(self, key):
         combined_key = input_handler.get_combined_key(key)
 
-        if key == 'tab':
+        if key in self.shortcuts['toggle_edit_mode']:
             self.edit_mode = not self.edit_mode
 
         if not self.edit_mode:
             return
+        
+        if key in self.shortcuts['apply_pasted'] and self.is_in_paste_mode:
+            self.paste()
+            return  # prevent drawing right after pasting if draw and apply_pasted keys are the same
 
-        if key == 'left mouse down' and self.canvas_collider.hovered and not self.is_in_paste_mode:
+        if key in self.shortcuts['discard_pasted'] and self.is_in_paste_mode:
+            self.paste(discard=True)
+
+
+        if key == self.shortcuts['draw']+' down' or key == self.shortcuts['draw'] and self.canvas_collider.hovered and not self.is_in_paste_mode:
             self.start_pos = self.get_cursor_position()
-            if not held_keys['control']:
+            if not held_keys[self.shortcuts['draw_line_modifier']]:
                 self.prev_draw = None
 
-        if key == 'left mouse up' and self.start_pos:
+        if key == self.shortcuts['draw']+' up' and self.start_pos:
             self.start_pos = None
             self.lock_axis = None
             self.render()
 
-            if not held_keys['control']:
+            if not held_keys[self.shortcuts['draw_line_modifier']]: # only record undo after all connected lines has been drawn, not each segment
                 self.record_undo()
 
-        if key == 'right mouse down' and not self.is_in_paste_mode:
-            if not held_keys['shift'] and not held_keys['alt']:
+        if key in (self.shortcuts['select']+' down', self.shortcuts['select']) and not self.is_in_paste_mode:
+            if not held_keys[self.shortcuts['add_selection_modifier']] and not held_keys[self.shortcuts['subtract_selection_modifier']]:
                 self.selection_mode = 'overwrite'
                 self.clear_selection()
-            elif (held_keys['control'] or held_keys['shift']) and not held_keys['alt']:
+            elif held_keys[self.shortcuts['add_selection_modifier']] and not held_keys[self.shortcuts['subtract_selection_modifier']]:
                 self.selection_mode = 'add'
-            elif held_keys['alt'] and not (held_keys['control'] or held_keys['shift']):
+            elif held_keys[self.shortcuts['subtract_selection_modifier']] and not held_keys[self.shortcuts['add_selection_modifier']]:
                 self.selection_mode = 'subtract'
 
             self.rect_selection[0] = self.get_cursor_position()
 
-
-        if key == 'left mouse down' and self.is_in_paste_mode:
-            self.paste()
-
-
-        if key == 'right mouse down' and self.is_in_paste_mode:
-            self.paste(discard=True)
-
-
-        elif key == 'right mouse up':
+        if key == self.shortcuts['select']+' up':
             self.rect_tool.enabled = False
-            # if self.selection_mode == 'overwrite':
-            #     self.clear_selection()
 
             new_value = int(self.selection_mode == 'overwrite' or self.selection_mode == 'add')
             for y in range(self.rect_tool.start.Y, self.rect_tool.end.Y):
@@ -288,23 +286,21 @@ class GridEditor(Entity):
             self.render_selection()
 
 
-        if key == 'shift up':
+        elif key in self.shortcuts['lock_axis_modifier']+' up':
             self._lock_origin = None
 
-        if combined_key == 'control+z':
+        elif combined_key in self.shortcuts['undo']:
             self.undo()
 
-        if combined_key in ('control+y', 'control+shift+z'):
+        elif combined_key in self.shortcuts['redo']:
             self.redo()
 
-        # fill
-        if combined_key == 'g' and self.canvas_collider.hovered:
+        elif combined_key in self.shortcuts['fill'] and self.canvas_collider.hovered:
             self.floodfill(self.grid, self.cursor.X, self.cursor.Y)
             self.render()
             self.record_undo()
 
-        # replace value
-        if combined_key == 'shift+g' and self.canvas_collider.hovered:
+        elif combined_key in self.shortcuts['replace'] and self.canvas_collider.hovered:
             value_to_replace = self.grid[self.cursor.X][self.cursor.Y]
             for (x,y), value in enumerate_2d(self.grid):
                 if value == value_to_replace:
@@ -313,30 +309,30 @@ class GridEditor(Entity):
             self.render()
             self.record_undo()
 
-        if combined_key == 'x' and self.brush_size > 1:
+        elif combined_key in self.shortcuts['decrease_brush_size'] and self.brush_size > 1:
             self.brush_size -= 1
             self.cursor_graphics.scale = self.brush_size
             self.prev_draw = None
 
-        if combined_key == 'd' and self.brush_size <  8:
+        elif combined_key in self.shortcuts['increase_brush_size'] and self.brush_size <  8:
             self.brush_size += 1
             self.cursor_graphics.scale = self.brush_size
             self.prev_draw = None
 
-        if combined_key == 'control+s':
+        elif combined_key in self.shortcuts['save']:
             if hasattr(self, 'save'):
                 self.save()
 
-        if combined_key == 'control+c':
+        elif combined_key in self.shortcuts['copy']:
             self.copy()
 
-        if combined_key == 'control+x':
+        elif combined_key in self.shortcuts['cut']:
             self.cut()
 
-        if combined_key == 'control+v':
+        elif combined_key in self.shortcuts['paste']:
             self.enter_paste_mode()
 
-        if combined_key == 'f4':
+        elif combined_key in self.shortcuts['flip_horizontally']:
             self.flip_horizontally()
 
 
