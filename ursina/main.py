@@ -155,8 +155,7 @@ class Ursina(ShowBase):
                         window.console.text_field.enabled = not window.console.text_field.enabled
                 window.console.text_input = _console_text_input
 
-
-        window.editor_ui.enabled = editor_ui_enabled
+            window.editor_ui.enabled = editor_ui_enabled
 
         print('package_folder:', application.package_folder)
         print('asset_folder:', application.asset_folder)
