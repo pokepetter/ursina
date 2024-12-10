@@ -25,7 +25,7 @@ class GridEditor(Entity):
 
         self.gizmo_parent = Entity(parent=self.canvas, scale=(1/self.w, 1/self.h))
         self.cursor = Entity(parent=self.gizmo_parent)
-        self.cursor_graphics = Entity(parent=self.cursor, model=Quad(segments=0, mode='line', thickness=2), origin=(-.5,-.5), color=hsv(120,1,1,.5), z=0, shader=unlit_shader)
+        self.cursor_graphics = Entity(parent=self.cursor, model=Quad(segments=0, mode='line', thickness=2), origin=(-.5,-.5), color=hsv(120,1,1,.5), z=-.02, shader=unlit_shader)
 
         self.selected_char = palette[1]
         self.palette = palette
