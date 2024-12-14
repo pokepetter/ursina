@@ -64,6 +64,8 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.add_to_scene_entities = add_to_scene_entities # set to False to be ignored by the engine, but still get rendered.
         if add_to_scene_entities:
             scene.entities.append(self)
+            if hasattr(self, 'post_update') and callable(self.post_update):
+                scene.post_update_entities.append(self)
 
         self._shader_inputs = {}
         self.setPythonTag('Entity', self)   # for the raycast to get the Entity and not just the NodePath
