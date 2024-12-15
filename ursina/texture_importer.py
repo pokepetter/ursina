@@ -1,7 +1,7 @@
 from pathlib import Path
 from copy import copy
 import builtins
-import importlib
+import importlib.util
 from ursina import application
 from ursina.texture import Texture
 
