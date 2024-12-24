@@ -8,7 +8,13 @@ class Pipe(Mesh):
         if callable(base_shape):
             base_shape = base_shape()
 
-        self.base_shape = base_shape
+        if isinstance(base_shape, Mesh):
+            self.base_shape = base_shape.vertices
+        elif isinstance(base_shape, (list, tuple)):
+            self.base_shape = base_shape
+        else:
+            raise ValueError(f'base_shape must be Mesh/list/tuple, not {type(base_shape)}')
+
         self.origin = origin
         self.path = path
         self.thicknesses = thicknesses
@@ -23,11 +29,10 @@ class Pipe(Mesh):
 
 
     def generate(self):
-        shape = self.base_shape.vertices
         # make the base shape and rotate it
         if not self.prev:
             self.prev = Entity(position=self.path[0], scale=self.thicknesses[0], origin=self.origin, enabled=False)
-            for p in shape:
+            for p in self.base_shape:
                 Entity(parent=self.prev, position=Vec3(p), scale=(.05, .05, .05), color=color.yellow, enabled=False)
 
             self.prev.look_at(self.path[1])
@@ -35,6 +40,7 @@ class Pipe(Mesh):
 
         verts = []
         self.colors = []
+        self.uvs = []
 
         # cap start
         if self.cap_ends:
@@ -59,8 +65,8 @@ class Pipe(Mesh):
                 if i+1 < len(self.path):
                     self.curr.look_at(self.path[i+1])
 
-                if i == len(self.path)-1 and self.path[0] == self.path[-1]: # if the first and last point are the same, make the end math the rotation of the start.
-                    self.curr.look_at(self.path[1])
+                if i == len(self.path)-1 and len(self.path) > 2 and self.path[0] == self.path[-1]: # if the first and last point are the same, make the end math the rotation of the start.
+                    self.curr.look_at(self.path[2])
 
             # for debugging sections
             # clone = duplicate(e)
@@ -138,6 +144,9 @@ if __name__ == '__main__':
     path.append(path[0])
     # thicknesses = ((1,1), (.5,.5), (.75,.75), (.5,.5), (1,1))
     e = Entity(model=Pipe(path=path, cap_ends=False), texture='shore')
+    color_gradient = [color.magenta, color.cyan.tint(-.5), color.clear]
+    color_gradient = color_gradient[::-1]
+
     # print(e.model.colors)
     print(len(e.model.vertices), len(e.model.colors))
     # e.model.colorize()
