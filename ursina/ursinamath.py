@@ -74,12 +74,13 @@ def lerp_angle(start_angle, end_angle, t):
 
 def slerp(q1, q2, t):
     costheta = q1.dot(q2)
+    
+    # ensure shortest path by flipping q2 if dot product is negative
     if costheta < 0.0:
+        q2 = -q2
         costheta = -costheta
-        q1 = q1.conjugate()
-    elif costheta > 1.0:
-        costheta = 1.0
-    costheta = clamp(costheta, -1.0, 1.0)
+    
+    costheta = clamp(costheta, -1.0, 1.0)   # ensure valid range for acos
 
     theta = acos(costheta)
     if abs(theta) < 0.0001:
@@ -87,11 +88,11 @@ def slerp(q1, q2, t):
 
     sintheta = sqrt(1.0 - costheta * costheta)
     if abs(sintheta) < 0.0001:
-        return (q1+q2)*0.5
+        return (q1 + q2) * 0.5
 
     r1 = sin((1.0 - t) * theta) / sintheta
     r2 = sin(t * theta) / sintheta
-    return (q1*r1) + (q2*r2)
+    return (q1 * r1) + (q2 * r2)
 
 
 
