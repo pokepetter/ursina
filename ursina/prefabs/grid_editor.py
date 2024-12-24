@@ -324,7 +324,8 @@ class GridEditor(Entity):
             self.cursor_graphics.scale = self.brush_size
             self.prev_draw = None
 
-        elif combined_key in self.shortcuts['save']:
+        if combined_key in self.shortcuts['save']:
+            print('saved:', self.canvas.texture.path)
             if hasattr(self, 'save'):
                 self.save()
 
