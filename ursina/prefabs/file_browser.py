@@ -90,7 +90,7 @@ class FileBrowser(Entity):
 
     def input(self, key):
         if key == 'scroll down':
-            if self.scroll + self.max_buttons < len(self.button_parent.children)-1:
+            if self.scroll + self.max_buttons < len(self.button_parent.children):
                 self.scroll += 1
 
         if key == 'scroll up':
@@ -109,7 +109,7 @@ class FileBrowser(Entity):
 
         self.button_parent.y = value * .025
         self.can_scroll_up_indicator.enabled = value > 0
-        self.can_scroll_down_indicator.enabled = value + self.max_buttons + 1 != len(self.button_parent.children)
+        self.can_scroll_down_indicator.enabled = value + self.max_buttons != len(self.button_parent.children)
 
 
     def path_setter(self, value):
@@ -196,6 +196,7 @@ if __name__ == '__main__':
 
     fb.on_submit = on_submit
 
+    Text('Press Tab to open file browser', origin=(0,0), z=1)
     def input(key):
         if key == 'tab':
             fb.enabled = not fb.enabled
