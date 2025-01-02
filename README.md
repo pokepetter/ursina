@@ -1,3 +1,26 @@
+# Ursina Engine - Now with Particles 
+
+## What is this?
+This is a fork of the Ursina Engine, a game engine for Python. This fork adds particles, allowing you to use the brand new ursina particle manager I made.
+
+## How do I use it?
+
+### Installation
+
+1. Clone this repository (in the particles branch)
+2. Copy the `ursina` folder into your project folder
+3. Import `ursina` in your project using `from ursina import *`
+4. Run your project like you would a normal Ursina project
+
+### Usage
+
+There is a new folder in the samples one which contains an example of how to use the particle manager.
+
+## Suport me ;)
+<a href="https://www.buymeacoffee.com/anatolesot" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-violet.png" alt="Buy Me A Coffee" style="height: 50px !important;width: 200px !important;" ></a>
+
+# Original `README.md` from [pokepetter/ursina](https://github.com/pokepetter/ursina)
+
 # ursina    ʕ •ᴥ•ʔゝ□
 
 [Website](https://pokepetter.github.io/ursina/index.html) | [Discord](https://discord.gg/ydXfhyb) | [Twitter](https://twitter.com/ursinaengine) | [Patreon](https://www.patreon.com/ursinaengine) | [Sponsor](https://github.com/sponsors/pokepetter)
