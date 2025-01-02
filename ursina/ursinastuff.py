@@ -213,6 +213,14 @@ def print_on_screen(text, position=(0,0), origin=(-.5,.5), scale=1, duration=1):
     destroy(text_entity, delay=duration)
 
 
+def _test(function, test_input, expected_result):
+    result = function(*test_input)
+    if result == expected_result:
+        print('\33[42mPASSED\033[0m', function.__name__)
+    else:
+        print('\33[41mFAILED\033[0m', function.__name__)
+        print('result:', result)
+        print('expected result:', expected_result)
 
 
 # define a new metaclass which overrides the "__call__" function

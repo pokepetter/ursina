@@ -1,13 +1,3 @@
-def _test(function, test_input, expected_result):
-    result = function(test_input)
-    if result == expected_result:
-        print('PASSED:', function.__name__)
-    else:
-        print('FAILED:', function.__name__)
-        print('result:', result)
-        print('expected result:', expected_result)
-
-
 def flatten_list(target_list):
     import itertools
     return list(itertools.chain(*target_list))
@@ -167,6 +157,8 @@ def string_to_2d_list(string, char_value_map={'.':0, '#':1}):
     return grid
 
 if __name__ == '__main__':
+    from ursina.ursinastuff import _test
+
     test_input = '''
         #..#.###..####..#..
         #..#.#..#.###...#..
@@ -180,7 +172,7 @@ if __name__ == '__main__':
         [0,1,1,0, 0, 1,0,0,1, 0, 1,1,1,1, 0, 0,1,0,0],
     ])
 
-    _test(string_to_2d_list, test_input, expected_result)
+    _test(string_to_2d_list, (test_input, ), expected_result=expected_result)
 
 
 def list_2d_to_string(target_2d_list, characters='.#'):
@@ -201,7 +193,7 @@ if __name__ == '__main__':
         .##..#..#.####..#..
         ''').strip()
 
-    _test(list_2d_to_string, list_2d, expected_result)
+    _test(list_2d_to_string, (list_2d, ), expected_result=expected_result)
 
 
 class LoopingList(list):

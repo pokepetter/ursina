@@ -59,8 +59,14 @@ def lerp(a, b, t):
         print(f'''can't lerp types {type(a)} and {type(b)}''')
 
 
-def inverselerp(a, b, t) :
-    return (a - b) / (t - b)
+def inverselerp(a, b, value):   # get *where* between a and b, value is (0.0 - 1.0)
+    return (value - a) / (b - a)
+
+if __name__ == '__main__':
+    from ursina.ursinastuff import _test
+    print('----------------------------')
+    _test(inverselerp, (0, 100, 50), .5)
+    _test(lerp, (0, 100, .5), 50)
 
 
 def lerp_angle(start_angle, end_angle, t):
