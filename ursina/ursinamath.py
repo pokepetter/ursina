@@ -60,6 +60,8 @@ def lerp(a, b, t):
 
 
 def inverselerp(a, b, value):   # get *where* between a and b, value is (0.0 - 1.0)
+    if a == b:
+        return .5
     return (value - a) / (b - a)
 
 if __name__ == '__main__':
