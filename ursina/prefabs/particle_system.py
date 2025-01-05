@@ -11,57 +11,99 @@ cache = dict()
 # However, this means you can only have one instance playing at the same time.
 # If the particle effect has been baked, it will instead load an FrameAnimation3D.
 
+particle_system_list = Entity(parent=camera.ui)
+
+_unbaked_instances = dict()
+CAN_RETURN_BAKED = True
+
 # Instead of dealing with metaclass mess, just use a function to determine whether we should return a new ParticleSystem, acached one, or a FrameAnimations3D(baked).
 def ParticleSystem(**kwargs):
     kwargs = _ParticleSystem.default_values | kwargs
-    id = None
+    system_id = ''
     if kwargs['name'] and kwargs['seed'] is not None:
-        id = f'{kwargs['name']}_{kwargs['seed']}'
-        # print('name:', kwargs['name'], 'seed:', kwargs['seed'], load_model(f'{kwargs['name']}_{kwargs['seed']}_baked.ursinamesh'))
-
-        if kwargs['use_cache']: # if the particle system has been baked
-            m = load_model(f'{kwargs['name']}_{kwargs['seed']}_baked_*.ursinamesh', use_deepcopy=True)
-            animation_texture = load_texture(f'{kwargs['name']}_{kwargs['seed']}_baked_fps*_bounds*.png')
-            if m and animation_texture:
-                print('name:', kwargs['name'], 'seed:', kwargs['seed'], load_model(f'{kwargs['name']}_{kwargs['seed']}_baked.ursinamesh'))
-
-                from ursina.shaders.vertex_animation_shader import vertex_animation_shader
-                instance = Entity(model=Mesh(vertices=[Vec3.zero for i in range(animation_texture.width)]), shader=vertex_animation_shader)
+        system_id = f"{kwargs['name']}_{kwargs['seed']}"
+    
+    if CAN_RETURN_BAKED and system_id:   # if we have a name and seed, it's bakable, so check if there's a baked version.
+        animation_texture = load_texture(f'{system_id}_baked_fps*_bounds*.png')
+        if animation_texture:   # if the particle system has been baked
+            vat_instance = vertex_animation(animation_texture, auto_play=kwargs['auto_play'])
+            if not kwargs['auto_play']:
+                vat_instance.enabled = False
                 
-                fps = float(animation_texture.path.stem.split('_fps')[1].split('_')[0])
-                min_x, max_x, min_y, max_y, min_z, max_z = [int(e) for e in animation_texture.path.stem.split('_bounds')[1].split('_')]
-
-                instance.set_shader_input('pos_min', Vec3(min_x, min_y, min_z))
-                instance.set_shader_input('pos_max', Vec3(max_x, max_y, max_z))
-                instance.set_shader_input('num_verts', animation_texture.width)
-
-                animation_texture.filtering = 'bilinear'
-                animation_texture.repeat = False
-
-                instance.set_shader_input('frameTexture', animation_texture)
-                instance.set_shader_input('totalFrames', animation_texture.size[1])
-                # instance.set_shader_input('frameIndex', 5)
-                animation_duration = 1/fps * animation_texture.size[1]
-                loop = False
-                instance.animate_shader_input('frameIndex', animation_texture.size[1]-1, duration=animation_duration, loop=loop, curve=curve.linear, resolution=120)
-                if not loop:
-                    destroy(instance, delay=animation_duration)
-
-                return instance
-
-        # if kwargs['use_cache'] and id in cache:
-        #     cache[id].position = kwargs.get('position', Vec3.zero)
-        #     cache[id].auto_destroy = False
-        #     cache[id].play()
-        #     # print('return cached', id)
-        #     return cache[id]
+            return vat_instance
 
     instance = _ParticleSystem(**kwargs)
-    if id and kwargs['use_cache']:
-        cache[id] = instance
-        print('add to cache:', id)
-
+    
+    if system_id and application.development_mode: # add it to the list of current particles systems so we can add ui for playing and baking.
+        _unbaked_instances[system_id] = instance
+        # if particle_system_list.enabled:
+        #     render_particle_system_list()
     return instance
+
+
+def vertex_animation(animation_texture, auto_play=True):
+    from ursina.shaders.vertex_animation_shader import vertex_animation_shader
+    instance = Entity(model=Mesh(vertices=[Vec3.zero for i in range(animation_texture.width)]), shader=vertex_animation_shader)
+    
+    fps = float(animation_texture.path.stem.split('_fps')[1].split('_')[0])
+    min_x, max_x, min_y, max_y, min_z, max_z = [int(e) for e in animation_texture.path.stem.split('_bounds')[1].split('_')]
+    animation_texture.filtering = 'bilinear'
+    animation_texture.repeat = False
+
+    instance.set_shader_input('pos_min', Vec3(min_x, min_y, min_z))
+    instance.set_shader_input('pos_max', Vec3(max_x, max_y, max_z))
+    instance.set_shader_input('num_verts', animation_texture.width)
+    instance.set_shader_input('frame_texture', animation_texture)
+    instance.set_shader_input('total_frames', animation_texture.size[1])
+    animation_duration = 1/fps * animation_texture.size[1]
+    loop = False
+
+    if auto_play:
+        instance.animate_shader_input('frame_index', animation_texture.size[1]-1, duration=animation_duration, loop=loop, curve=curve.linear, resolution=120)
+    
+    if not loop:
+        destroy(instance, delay=animation_duration)
+    return instance
+
+
+
+def render_particle_system_list():
+    [destroy(e) for e in particle_system_list.children]
+    buttons = []
+    bake_buttons = []
+    # print(instance_ids)
+    for system_id, particle_system in _unbaked_instances.items():
+        # if isinstance(particle_system, _ParticleSystem):
+        play_unbaked_button = Button(parent=particle_system_list, scale=(.2,.05), text=f'{system_id}\n(unbaked)', text_size=.5, color=color.violet)
+        buttons.append(play_unbaked_button)
+        def play_unbaked(particle_system=particle_system):
+            settings = particle_system.original_settings
+            settings['auto_destroy'] = True
+            settings['auto_play'] = True
+            ParticleSystem(**settings)
+        play_unbaked_button.on_click = play_unbaked
+
+        animation_texture = load_texture(f'{system_id}_baked_fps*_bounds*.png')
+        if not animation_texture:
+            play_baked_button = Button(parent=particle_system_list, scale=(.2,.05), text=f'no baked\nversion found', text_size=.5, color=color.dark_gray)
+        else:
+            fps = animation_texture.name.split('_fps')[1].split('_',1)[0]
+            play_baked_button = Button(parent=particle_system_list, scale=(.2,.05), text=f'{system_id}\n(VAT) {fps}FPS', text_size=.5, color=color.green.tint(-.5))
+            def play_baked(animation_texture=animation_texture):
+                vertex_animation(animation_texture)
+            play_baked_button.on_click = play_baked
+        buttons.append(play_baked_button)
+
+        for target_fps in (12,30,60):
+            bake_button = Button(parent=particle_system_list, scale=(.1,.05), text=f'Bake to VAT\n({target_fps}FPS)', text_size=.5, color=color.orange.tint(-.2))
+            bake_button.on_click = Func(particle_system.bake, target_fps)
+            bake_buttons.append(bake_button)
+
+    if not buttons:
+        return
+    grid_layout(buttons, max_x=2, offset=((window.aspect_ratio*-.5)+.25,.4), origin=(-.5,.5), spacing=(.01,.01))
+    grid_layout(bake_buttons, max_x=3, offset=((window.aspect_ratio*-.5)+.25+.42,.4), origin=(-.5,.5), spacing=(.01,.01))
+
 
 
 @generate_properties_for_class()
@@ -115,6 +157,7 @@ class _ParticleSystem(Entity):
     )
 
     def __init__(self, **kwargs):
+        self.original_settings = kwargs
         kwargs = __class__.default_values | kwargs
         super().__init__(**kwargs)
 
@@ -140,7 +183,7 @@ class _ParticleSystem(Entity):
 
         self.generate()
         if self.auto_play:
-            invoke(self.play, delay=self.delay)
+            invoke(self.play)
 
 
     def update(self):
@@ -160,13 +203,13 @@ class _ParticleSystem(Entity):
         self.anims = []
 
         if self.spawn_type == 'burst':
-            [self.generate_particle_animations(position=Vec3.zero, move_direction=self.move_directions[i], delay=i*self.spawn_interval, i=i) for i in range(self.num_particles)]
+            [self.generate_particle_animations(position=Vec3.zero, move_direction=self.move_directions[i], delay=self.delay+(i*self.spawn_interval), i=i) for i in range(self.num_particles)]
 
         elif self.spawn_type == 'random':
-            [self.generate_particle_animations(position=random.choice(self.spawn_points), move_direction=self.move_directions[i], delay=i*self.spawn_interval, i=i) for i in range(self.num_particles)]
+            [self.generate_particle_animations(position=random.choice(self.spawn_points), move_direction=self.move_directions[i], delay=self.delay+(i*self.spawn_interval), i=i) for i in range(self.num_particles)]
 
         elif self.spawn_type == 'sequential':
-            [self.generate_particle_animations(position=self.spawn_points[i], move_direction=self.move_directions[i], delay=i*self.spawn_interval, i=i) for i in range(self.num_particles)]
+            [self.generate_particle_animations(position=self.spawn_points[i], move_direction=self.move_directions[i], delay=self.delay+(i*self.spawn_interval), i=i) for i in range(self.num_particles)]
 
 
     def play(self):
@@ -204,58 +247,60 @@ class _ParticleSystem(Entity):
 
         for i in range(num_frames):
             bake_parent.model = None
-            if self.children:
-                self.parent = bake_parent
-                bake_parent.combine(auto_destroy=False)
-            else:
-                bake_parent.model = Mesh()
+            if not self.children:
+                raise Exception('no particles to bake')
+            
+            self.parent = bake_parent
+            bake_parent.combine(auto_destroy=False)
 
-            # self.model.save(f'{self.name}_{self.seed}_{str(i).zfill(4)}.bam', folder)
             for seq in self.anims:
                 seq.t += duration_per_frame
                 seq.started = True
                 seq.update()
                 seq.started = False
 
-            frames.append(bake_parent.model.vertices)
-            Entity(model=Mesh(vertices=bake_parent.model.vertices)) # debug render
+            frames.append(deepcopy(bake_parent.model))
+            Entity(model=Mesh(vertices=bake_parent.model.vertices), wireframe=True, color=color.green) # debug render
 
+
+        # num_vertices = max(len(e.vertices) for e in frames)
+        num_vertices = len(frames[0].vertices)
+        if num_vertices <= 0:
+            raise Exception('can\'t bake particle system with 0 vertices.')
 
         min_x, max_x, min_y, max_y, min_z, max_z = 0, 0, 0, 0, 0, 0
         for frame in frames:
-            min_x = min(min_x, floor(min((v.x for v in frame))))
-            min_y = min(min_y, floor(min((v.y for v in frame))))
-            min_z = min(min_z, floor(min((v.z for v in frame))))
-            max_x = max(max_x, ceil(max((v.x for v in frame))))
-            max_y = max(max_y, ceil(max((v.y for v in frame))))
-            max_z = max(max_z, ceil(max((v.z for v in frame))))
+            min_x = min(min_x, floor(min((v.x for v in frame.vertices))))
+            min_y = min(min_y, floor(min((v.y for v in frame.vertices))))
+            min_z = min(min_z, floor(min((v.z for v in frame.vertices))))
+            max_x = max(max_x, ceil(max((v.x for v in frame.vertices))))
+            max_y = max(max_y, ceil(max((v.y for v in frame.vertices))))
+            max_z = max(max_z, ceil(max((v.z for v in frame.vertices))))
         
         self.parent = original_parent
-        num_vertices = max(len(e) for e in frames)
-        num_vertices = len(frames[0])
-        if num_vertices <= 0:
-            raise Exception('can\'t bake particle system with 0 vertices.')
         # print('verts:', num_vertices)
-        texture_width = num_vertices  # Texture dimensions (square texture)
-        texture_height = len(frames)        # Height grows with the number of frames
+        texture_width = num_vertices * 2    # one pixel per vertex. one color per vertex.
+        texture_height = len(frames)
 
         if texture_width > 4096 or texture_height > 4096:
-            raise Exception(f'Particle system animation won\'t fit in a 4096x4096 texture: num_frames:{len(frames)}, vertices:{num_vertices}')
+            raise Exception(f'Particle system animation won\'t fit in a 4096x4096 texture: num_frames:{len(frames.vertices)}, vertices:{num_vertices}')
 
         print(texture_width, texture_height)
         from PIL import Image
         texture = Texture(Image.new(mode="RGB", size=(texture_width, texture_height)))
 
         for y, frame in enumerate(frames):
-            for x, v in enumerate(frame):
+            for x, v in enumerate(frame.vertices):
                 # v = v - frames[0][x] # get offset from first frame
                 texture.set_pixel(x, y, color.rgb(
                     inverselerp(min_x, max_x, v.x),
                     inverselerp(min_y, max_y, v.y),
                     inverselerp(min_z, max_z, v.z))
                 )
+            for x, c in enumerate(frame.colors):
+                texture.set_pixel(x+num_vertices, y, c)
         
-        Mesh(vertices=frames[0]).save(f'{self.name}_{self.seed}_baked_{min_x}_{max_x}_{min_y}_{max_y}_{min_z}_{max_z}.ursinamesh', folder)
+        # Mesh(vertices=frames[0]).save(f'{self.name}_{self.seed}_baked_{min_x}_{max_x}_{min_y}_{max_y}_{min_z}_{max_z}.ursinamesh', folder)
         destroy(bake_parent)
 
         texture.save(folder / f'{self.name}_{self.seed}_baked_fps{fps}_bounds{min_x}_{max_x}_{min_y}_{max_y}_{min_z}_{max_z}.png')
@@ -273,7 +318,7 @@ class _ParticleSystem(Entity):
 
         model = self.mesh
         if not isinstance(model, str):
-            model = copy(model)
+            model = deepcopy(model)
 
         e = Entity(parent=self, scale=self.start_size, position=position, enabled=False)
         e.rotation = self.start_direction + Vec3(*[random.uniform(-e/2, e/2) for e in self.direction_randomness])
@@ -407,7 +452,11 @@ class ParticleSystemUI(Entity):
             self.ui.enabled = not self.ui.enabled
 
 
-
+particle_system_UI = Entity(parent=camera.ui)
+def _input(key):
+    if key == 'tab':
+        render_particle_system_list()
+particle_system_UI.input = _input
 
 
 
@@ -673,43 +722,68 @@ if __name__ == '__main__':
             seed=0,
         )
     )
+    CAN_RETURN_BAKED = False
+    for particle_system_settings in (hit_impact_particles, burst_particles, power_up_particles, heal_particles, gold_particles, landing_dust_particles, jump_effects, gems):
+        if not isinstance(particle_system_settings, (tuple, list)):
+            particle_system_settings = (particle_system_settings, )
+        if any([e.get('loop_every', False) for e in particle_system_settings]):
+            # skip looping particle system
+            continue
+        for e in particle_system_settings:
+            e |= {'auto_play':False, }
+            ParticleSystem(**e)
+
+    render_particle_system_list()
+
+
+    # buttons = (hit_impact_button, burst_button, power_up_button, heal_button, gold_button, landing_dust_button, jump_effect_button)
+    # buttons = []
+    # for particle_system_setting in (hit_impact_particles, burst_particles, power_up_particles, heal_particles, gold_particles, landing_dust_particles, jump_effects, gems):
+    #     if not isinstance(particle_system_setting, (tuple, list)):
+    #         particle_system_setting = (particle_system_setting, )
+    #     name = '/'.join([sub_system.get('name', 'unnamed') for sub_system in particle_system_setting])
+
+    #     play_uncached_button = Button(scale=.1, text=f'{name}\n(uncached)', text_size=.5, color=color.orange)
+    #     def play_uncached(particle_system_setting=particle_system_setting):
+    #         for e in particle_system_setting:
+    #             ParticleSystem(**e)
 
     
-    # buttons = (hit_impact_button, burst_button, power_up_button, heal_button, gold_button, landing_dust_button, jump_effect_button)
-    buttons = []
-    for particle_system_setting in (hit_impact_particles, burst_particles, power_up_particles, heal_particles, gold_particles, landing_dust_particles, jump_effects, gems):
-        if not isinstance(particle_system_setting, (tuple, list)):
-            particle_system_setting = (particle_system_setting, )
-        name = '/'.join([sub_system.get('name', 'unnamed') for sub_system in particle_system_setting])
-
-        play_uncached_button = Button(scale=.1, text=f'{name}\n(uncached)', text_size=.5, color=color.orange)
-        def play_uncached(particle_system_setting=particle_system_setting):
-            for e in particle_system_setting:
-                e |= {'use_cache':False, 'auto_play':True}
-                ParticleSystem(**e)
-        play_uncached_button.on_click = play_uncached
-        buttons.append(play_uncached_button)
-
-        play_button = Button(scale=.1, text=f'{name}\n', text_size=.5, color=color.azure)
-        def play(particle_system_setting=particle_system_setting):
-            for e in particle_system_setting:
-                e |= {'use_cache':True, 'auto_play':True}
-                ParticleSystem(**e)
-        play_button.on_click = play
-        buttons.append(play_button)
-
-        for fps in (12, 30, 60):
-            bake_button = Button(scale=.1, text=f'bake\n{name}\n{fps} fps', text_size=.5)
-            def _bake(particle_system_setting=particle_system_setting, fps=fps):
-                for e in particle_system_setting:
-                    e |= {'use_cache':False, 'auto_play':False}
-                    instance = ParticleSystem(**e)
-                    instance.bake(fps=fps)
-            bake_button.on_click = _bake
-            buttons.append(bake_button)
 
 
-    grid_layout(buttons, max_x=5, offset=((window.aspect_ratio*-.5)+.25,.4), origin=(-.5,.5), spacing=(.01,.01))
+    #     if not isinstance(particle_system_setting, (tuple, list)):
+    #         particle_system_setting = (particle_system_setting, )
+    #     name = '/'.join([sub_system.get('name', 'unnamed') for sub_system in particle_system_setting])
+
+    #     play_uncached_button = Button(scale=.1, text=f'{name}\n(uncached)', text_size=.5, color=color.orange)
+    #     def play_uncached(particle_system_setting=particle_system_setting):
+    #         for e in particle_system_setting:
+    #             e |= {'use_cache':False, 'auto_play':True}
+    #             ParticleSystem(**e)
+    #     play_uncached_button.on_click = play_uncached
+    #     buttons.append(play_uncached_button)
+
+    #     play_button = Button(scale=.1, text=f'{name}\n', text_size=.5, color=color.azure)
+    #     def play(particle_system_setting=particle_system_setting):
+    #         for e in particle_system_setting:
+    #             e |= {'use_cache':True, 'auto_play':True}
+    #             ParticleSystem(**e)
+    #     play_button.on_click = play
+    #     buttons.append(play_button)
+
+    #     for fps in (12, 30, 60):
+    #         bake_button = Button(scale=.1, text=f'bake\n{name}\n{fps} fps', text_size=.5)
+    #         def _bake(particle_system_setting=particle_system_setting, fps=fps):
+    #             for e in particle_system_setting:
+    #                 e |= {'use_cache':False, 'auto_play':False}
+    #                 instance = ParticleSystem(**e)
+    #                 instance.bake(fps=fps)
+    #         bake_button.on_click = _bake
+    #         buttons.append(bake_button)
+
+
+    # grid_layout(buttons, max_x=5, offset=((window.aspect_ratio*-.5)+.25,.4), origin=(-.5,.5), spacing=(.01,.01))
+    
 
     def update():
         h = max((held_keys['gamepad left stick x'], held_keys['d']-held_keys['a']), key=lambda x: abs(x))
