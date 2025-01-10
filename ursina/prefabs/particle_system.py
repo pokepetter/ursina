@@ -13,7 +13,7 @@ cache = dict()
 
 
 
-def load_particle_system(name, use_cache=True, auto_play=True):
+def play_particle_system(name, use_cache=True, auto_play=True, auto_destroy=True, **kwargs):
     print('try loading particle system:', name) 
     if use_cache:
         animation_texture = load_texture(f'{name}_*_baked_fps*_bounds*.png')
@@ -21,7 +21,9 @@ def load_particle_system(name, use_cache=True, auto_play=True):
             vat_instance = vertex_animation(animation_texture, auto_play=auto_play)
             if not auto_play:
                 vat_instance.enabled = False
-                
+
+            for key, value in kwargs.items():
+                setattr(vat_instance, key, value)
             return vat_instance
 
     whole_file_name = f'{name}.ursinaparticles'
@@ -35,8 +37,14 @@ def load_particle_system(name, use_cache=True, auto_play=True):
     
     relevant_part = 'ParticleSystemContainer(' + text.split('ParticleSystemContainer(',1)[1].split("if __name__ == ")[0]
     particle_container = eval(relevant_part)
+    for key, value in kwargs.items():
+        setattr(particle_container, key, value)
+
     if auto_play:
         particle_container.play()
+    if auto_destroy:
+        destroy(particle_container, delay=particle_container.total_duration)
+
     return particle_container
 
 
@@ -45,166 +53,25 @@ class ParticleSystemContainer(Entity):
 
     def __init__(self, subsystems:list, **kwargs):
         super().__init__(**kwargs)
-        for e in subsystems:
+        self.subsystems = subsystems
+        for e in self.subsystems:
             e.parent = self
-    
-        if self not in __class__.instances:
-            __class__.instances.append(self)
+        self.total_duration = max([c.delay + c.total_duration for c in self.subsystems])
+
 
     def play(self):
-        for e in self.children:
+        for e in self.subsystems:
             e.play()
 
 
-def vertex_animation(animation_texture, auto_play=True):
-    from ursina.shaders.vertex_animation_shader import vertex_animation_shader
-    instance = Entity(model=Mesh(vertices=[Vec3.zero for i in range(animation_texture.width)]), shader=vertex_animation_shader)
-    
-    fps = float(animation_texture.path.stem.split('_fps')[1].split('_')[0])
-    min_x, max_x, min_y, max_y, min_z, max_z = [int(e) for e in animation_texture.path.stem.split('_bounds')[1].split('_')]
-    animation_texture.filtering = 'bilinear'
-    animation_texture.repeat = False
-
-    instance.set_shader_input('pos_min', Vec3(min_x, min_y, min_z))
-    instance.set_shader_input('pos_max', Vec3(max_x, max_y, max_z))
-    instance.set_shader_input('num_verts', animation_texture.width)
-    instance.set_shader_input('frame_texture', animation_texture)
-    instance.set_shader_input('total_frames', animation_texture.size[1])
-    animation_duration = 1/fps * animation_texture.size[1]
-    loop = False
-
-    if auto_play:
-        instance.animate_shader_input('frame_index', animation_texture.size[1]-1, duration=animation_duration, loop=loop, curve=curve.linear, resolution=120)
-    
-    if not loop:
-        destroy(instance, delay=animation_duration)
-    return instance
-
-
-@generate_properties_for_class()
-class ParticleSystem(Entity):
-    default_values = dict(
-        start_size=1,
-        end_size=0,
-        size_curve=curve.in_expo,
-        color_curve=curve.in_expo,
-
-        start_color=color.white,
-        end_color=color.white,
-
-        start_direction=Vec3(0,0,0),
-        direction_randomness=Vec3(0,0,0),
-        start_rotation=Vec3(0,0,0),
-        rotation_randomness=Vec3(0,0,0),    # rotates the model only, not the direction it moves in
-        spin=Vec3(0,0,0),
-        spin_curve = curve.linear,
-
-        auto_play=True,
-        num_particles=1,   # if 0, will be set to the length of the spawn_points list
-        speed=0,
-        speed_curve=curve.linear,
-        move_directions='forward',  # local forward
-
-        bounce=0,
-        bounce_curve=curve.out_bounce,
-
-        max_particles=20,
-        lifetime=1,
-        mesh='quad',
-        double_sided=True,
-
-        world_space=False,
-        shader=unlit_shader,
-        texture=None,
-        always_on_top=False,
-        unlit=True,
-
-        spawn_points=(Vec3.zero, ),
-        spawn_type='burst', # 'burst', 'random' / 'sequential' / 'continious'
-        loop_every=0,
-        spawn_interval=0,     # only applies if spawn_type is random, sequential or continuous
-        delay=0,
-
-        # auto_destroy=True,
-        name='',    # if we give a name and a seed, cache the generated particle animation.
-        seed=None,  # set which random seed to use. int / int tuple/list
-    )
-
-    def __init__(self, **kwargs):
-        self.original_settings = kwargs
-        kwargs = __class__.default_values | kwargs
-        super().__init__(**kwargs)
-
-        if self.num_particles == 0:
-            self.num_particles = len(self.spawn_points)
-
-        if not isinstance(self.move_directions, (tuple, list)):
-            self.move_directions = [self.move_directions for i in range(self.num_particles)]
-
-        if not isinstance(self.start_color, (tuple, list)):
-            self.start_color = (self.start_color, )
-        if not isinstance(self.end_color, (tuple, list)):
-            self.end_color = (self.end_color, )
-
-        if not isinstance(self.speed, (tuple, list)):
-            self.speed = (self.speed, self.speed)
-
-        self.spawn_points = LoopingList(self.spawn_points)
-        self.particles = []
-        self.t = 0
-        self.total_duration = self.lifetime + (self.num_particles * self.spawn_interval)
-        self.is_playing = False
-
-        self.generate()
-        if self.auto_play:
-            invoke(self.play)
-
-
-    def update(self):
-        if self.loop_every == 0:
-            return
-        if self.is_playing:
-            # print(self.t,)
-            self.t += time.dt
-
-        if self.t > self.loop_every:
-            self.generate()
-            self.play()
-            self.t = 0
-
-
-    def generate(self):
-        self.anims = []
-
-        if self.spawn_type == 'burst':
-            [self.generate_particle_animations(position=Vec3.zero, move_direction=self.move_directions[i], delay=self.delay+(i*self.spawn_interval), i=i) for i in range(self.num_particles)]
-
-        elif self.spawn_type == 'random':
-            [self.generate_particle_animations(position=random.choice(self.spawn_points), move_direction=self.move_directions[i], delay=self.delay+(i*self.spawn_interval), i=i) for i in range(self.num_particles)]
-
-        elif self.spawn_type == 'sequential':
-            [self.generate_particle_animations(position=self.spawn_points[i], move_direction=self.move_directions[i], delay=self.delay+(i*self.spawn_interval), i=i) for i in range(self.num_particles)]
-
-
-    def play(self):
-        self.t = 0
-        for e in self.anims:
-            e.start()
-        self.is_playing = True
-
-
-    def bake(self, fps=30):     # bake to vertex animation texture
+    def bake(self, name, seed, fps=30):     # bake to vertex animation texture
         import numpy as np
         from PIL import Image
 
-        if not self.name:
-            raise Exception(f'can not bake, {self} has no name')
-
-        if self.seed is None:
-            raise Exception(f'can not bake, {self} has no seed')
-
-        if not self.anims:
-            self.generate()
+        animations = []
+        for c in self.subsystems:
+            animations.extend(c.anims)
+            # print('------------',c.total_duration)
 
         duration_per_frame = 1 / fps
         num_frames = int(self.total_duration / duration_per_frame)
@@ -218,16 +85,16 @@ class ParticleSystem(Entity):
         frames = []
         bake_parent = Entity()
         original_parent = self.parent
+        self.parent = bake_parent
 
         for i in range(num_frames):
             bake_parent.model = None
             if not self.children:
                 raise Exception('no particles to bake')
             
-            self.parent = bake_parent
             bake_parent.combine(auto_destroy=False)
 
-            for seq in self.anims:
+            for seq in animations:
                 seq.t += duration_per_frame
                 seq.started = True
                 seq.update()
@@ -277,13 +144,148 @@ class ParticleSystem(Entity):
         # Mesh(vertices=frames[0]).save(f'{self.name}_{self.seed}_baked_{min_x}_{max_x}_{min_y}_{max_y}_{min_z}_{max_z}.ursinamesh', folder)
         destroy(bake_parent)
 
-        texture.save(folder / f'{self.name}_{self.seed}_baked_fps{fps}_bounds{min_x}_{max_x}_{min_y}_{max_y}_{min_z}_{max_z}.png')
+        texture.save(folder / f'{name}_seed{seed}_baked_fps{fps}_bounds{min_x}_{max_x}_{min_y}_{max_y}_{min_z}_{max_z}.png')
 
+
+def vertex_animation(animation_texture, auto_play=True):
+    from ursina.shaders.vertex_animation_shader import vertex_animation_shader
+    instance = Entity(model=Mesh(vertices=[Vec3.zero for i in range(animation_texture.width)]), shader=vertex_animation_shader)
+    
+    fps = float(animation_texture.path.stem.split('_fps')[1].split('_')[0])
+    min_x, max_x, min_y, max_y, min_z, max_z = [int(e) for e in animation_texture.path.stem.split('_bounds')[1].split('_')]
+    animation_texture.filtering = 'bilinear'
+    animation_texture.repeat = False
+
+    instance.set_shader_input('pos_min', Vec3(min_x, min_y, min_z))
+    instance.set_shader_input('pos_max', Vec3(max_x, max_y, max_z))
+    instance.set_shader_input('num_verts', animation_texture.width)
+    instance.set_shader_input('frame_texture', animation_texture)
+    instance.set_shader_input('total_frames', animation_texture.size[1])
+    animation_duration = 1/fps * animation_texture.size[1]
+    loop = False
+
+    if auto_play:
+        instance.animate_shader_input('frame_index', animation_texture.size[1]-1, duration=animation_duration, loop=loop, curve=curve.linear, resolution=120)
+    
+    if not loop:
+        destroy(instance, delay=animation_duration)
+    return instance
+
+
+@generate_properties_for_class()
+class ParticleSystem(Entity):
+    default_values = dict(
+        start_size=1,
+        end_size=0,
+        size_curve=curve.in_expo,
+        color_curve=curve.in_expo,
+
+        start_color=color.white,
+        end_color=color.white,
+
+        start_direction=Vec3(0,0,0),
+        direction_randomness=Vec3(0,0,0),
+        start_rotation=Vec3(0,0,0),
+        rotation_randomness=Vec3(0,0,0),    # rotates the model only, not the direction it moves in
+        spin=Vec3(0,0,0),
+        spin_curve = curve.linear,
+
+        num_particles=1,   # if 0, will be set to the length of the spawn_points list
+        speed=0,
+        speed_curve=curve.linear,
+        move_directions='forward',  # local forward
+
+        bounce=0,
+        bounce_curve=curve.out_bounce,
+
+        max_particles=20,
+        lifetime=1,
+        mesh='quad',
+        double_sided=True,
+
+        world_space=False,
+        shader=unlit_shader,
+        texture=None,
+        always_on_top=False,
+        unlit=True,
+
+        spawn_points=(Vec3.zero, ),
+        spawn_type='burst', # 'burst', 'random' / 'sequential' / 'continious'
+        loop_every=0,
+        spawn_interval=0,     # only applies if spawn_type is random, sequential or continuous
+        delay=0,
+        auto_play=False,
+        # auto_destroy=True,
+        name='',
+        seed=None,  # set which random seed to use. int / int tuple/list
+    )
+
+    def __init__(self, **kwargs):
+        self.original_settings = kwargs
+        kwargs = __class__.default_values | kwargs
+        super().__init__(**kwargs)
+
+        if self.num_particles == 0:
+            self.num_particles = len(self.spawn_points)
+
+        if not isinstance(self.move_directions, (tuple, list)):
+            self.move_directions = [self.move_directions for i in range(self.num_particles)]
+
+        if not isinstance(self.start_color, (tuple, list)):
+            self.start_color = (self.start_color, )
+        if not isinstance(self.end_color, (tuple, list)):
+            self.end_color = (self.end_color, )
+
+        if not isinstance(self.speed, (tuple, list)):
+            self.speed = (self.speed, self.speed)
+
+        self.spawn_points = LoopingList(self.spawn_points)
+        self.particles = []
+        self.t = 0
+        self.total_duration = self.lifetime + (self.num_particles * self.spawn_interval)
+        self.is_playing = False
+
+        self.generate()
+        if self.auto_play:
+            self.play()
+
+
+    def update(self):
+        if self.loop_every == 0:
+            return
+        if self.is_playing:
+            # print(self.t,)
+            self.t += time.dt
+
+        if self.t > self.loop_every:
+            self.generate()
+            self.play()
+            self.t = 0
+
+
+    def generate(self):
+        self.anims = []
+
+        if self.spawn_type == 'burst':
+            [self.generate_particle_animations(position=Vec3.zero, move_direction=self.move_directions[i], delay=self.delay+(i*self.spawn_interval), i=i) for i in range(self.num_particles)]
+
+        elif self.spawn_type == 'random':
+            [self.generate_particle_animations(position=random.choice(self.spawn_points), move_direction=self.move_directions[i], delay=self.delay+(i*self.spawn_interval), i=i) for i in range(self.num_particles)]
+
+        elif self.spawn_type == 'sequential':
+            [self.generate_particle_animations(position=self.spawn_points[i], move_direction=self.move_directions[i], delay=self.delay+(i*self.spawn_interval), i=i) for i in range(self.num_particles)]
+
+
+    def play(self):
+        self.t = 0
+        for e in self.anims:
+            e.start()
+        self.is_playing = True
 
 
     def generate_particle_animations(self, position, move_direction, delay=0, i=0):
         if self.seed is None:
-            random.seed(self.seed)
+            random.seed(None)
         else:
             random.seed(self.seed+i)    # use seed + particle index so the particle system will be somewhat random, but prevent each particle from facing the same direction.
 
@@ -310,8 +312,8 @@ class ParticleSystem(Entity):
         should_destroy_particles = self.loop_every > 0
 
         self.anims.append(Sequence(
+            Func(self.try_disabling, e),
             Wait(delay),
-            # Func(print, 'enable'),
             Func(self.try_enabling, e),
             Func(setattr, e, 'position', e.position),
             Func(setattr, e, 'rotation', e.rotation),
@@ -342,19 +344,19 @@ class ParticleSystem(Entity):
                 name='end_sequence',
             )
         )
-        # if should_destroy_particles:
-        #     self.anims.append(Sequence(
-        #         Wait(delay + self.total_duration + .1), 
-        #         Func(destroy, e), 
-        #         auto_destroy=True, name='destroy_particle_sequence')
-        #         )
+        if self.loop_every > 0:
+            self.anims.append(Sequence(
+                Wait(delay + self.total_duration + .1), 
+                Func(destroy, e), 
+                auto_destroy=True, name='destroy_particle_sequence')
+                )
 
-        # if self.auto_destroy and self.loop_every == 0:
+        # if self.loop_every > 0:
         #     destroy(self, delay=delay + self.total_duration + .1)
             # del cache[self.name] 
         #     self.anims.append(Sequence(Func(destroy, self, delay=self.lifetime+delay+.05)))
         # if not self.loop_every and not cached:
-        random.seed(None)
+        # random.seed(None)
         # self.anims.extend(animations)
         # print('-----', delay, '-------', animations)
         # return animations
@@ -379,7 +381,7 @@ class ParticleSystem(Entity):
     def try_disabling(self, particle):
         try:
             # particle.enabled = False
-            particle.model_parent.world_scale = Vec3(.01)  # keep enabled and scale to 0 to keep vertices after combine() and make baking easier.
+            particle.model_parent.world_scale = Vec3(.001)  # keep enabled and scale to 0 to keep vertices after combine() and make baking easier.
         except:
             print('can not disable particle, already destroyed')
 
@@ -422,88 +424,6 @@ class ParticleSystem(Entity):
 #             self.ui.enabled = not self.ui.enabled
 
 
-# class ParticleSystemUI(Entity):
-#     def __init__(self):
-#         super().__init__(parent=camera.ui)
-#         from ursina.prefabs.window_panel import WindowPanel
-#         from ursina import Text
-
-#         self.overwrite_label = Text('Overwrite\nFILE?', scale=.75)
-#         self.overwrite_button = Button(text='Yes', color=color.azure)
-#         self.cancel_button = Button(text='Cancel', color=color.black)
-        
-#         self.overwrite_dialog = WindowPanel(
-#             title='Overwrite?', 
-#             content=[self.overwrite_label, self.overwrite_button, self.cancel_button], 
-#             parent=self, z=-10, popup=True, enabled=False)
-
-#         self.cancel_button.on_click = self.overwrite_dialog.disable
-#         self.buttons = []
-#         self.bake_buttons = []
-
-#     def input(self, key):
-#         if key == 'tab':
-#             self.render_particle_system_list()
-
-
-#     def on_enable(self):
-#         self.render_particle_system_list()
-
-
-#     def render_particle_system_list(self):
-#         [destroy(e) for e in self.buttons]
-#         [destroy(e) for e in self.bake_buttons]
-#         self.buttons = []
-#         self.bake_buttons = []
-#         # print(instance_ids)
-#         particle_system_assets = application.asset_folder.glob('**/*.ursinaparticles')
-
-#         for file in particle_system_assets:
-#             # if isinstance(particle_system, _ParticleSystem):
-#             name = file.stem
-#             print('-_________________-', name)
-#             play_unbaked_button = Button(parent=self, scale=(.2,.05), text=f'{file.stem}\n(unbaked)', text_size=.5, color=color.violet)
-#             play_unbaked_button.on_click = Func(load_particle_system, file.stem, use_cache=False)
-#             self.buttons.append(play_unbaked_button)
-
-#             # animation_texture = load_texture(f'{system_id}_baked_fps*_bounds*.png')
-#             # if not animation_texture:
-#             #     play_baked_button = Button(parent=self, scale=(.2,.05), text=f'no baked\nversion found', text_size=.5, color=color.dark_gray)
-#             # else:
-#             #     fps = animation_texture.name.split('_fps')[1].split('_',1)[0]
-#             #     play_baked_button = Button(parent=self, scale=(.2,.05), text=f'{system_id}\n(VAT) {fps}FPS', text_size=.5, color=color.green.tint(-.5))
-#             #     def play_baked(animation_texture=animation_texture):
-#             #         vertex_animation(animation_texture)
-#             #     play_baked_button.on_click = play_baked
-#             # self.buttons.append(play_baked_button)
-
-#             # for target_fps in (12,30,60):
-#             #     def _try_bake(particle_system=particle_system, animation_texture=animation_texture, target_fps=target_fps):
-#             #         if not animation_texture:
-#             #             particle_system.bake(target_fps)
-#             #             return
-#             #         if animation_texture.path.exists():
-#             #             print('replace?', animation_texture.path)
-#             #             if fps != target_fps:
-#             #                 print(f'{fps} -> {target_fps}', '----------', animation_texture.path.name)
-#             #                 self.overwrite_dialog.enabled = True
-#             #                 self.overwrite_label.text = f'Overwrite\n{animation_texture.path.name}?'
-#             #                 self.overwrite_button.on_click = Sequence(
-#             #                     animation_texture.path.unlink,
-#             #                     Func(particle_system.bake, target_fps), 
-#             #                     self.overwrite_dialog.disable
-#             #                     )
-#             #             return
-                    
-#             #     bake_button = Button(parent=self, scale=(.1,.05), text=f'Bake to VAT\n({target_fps}FPS)', text_size=.5, color=color.orange.tint(-.2))
-#             #     bake_button.on_click = _try_bake
-#             #     self.bake_buttons.append(bake_button)
-
-#         if not self.buttons:
-#             return
-#         grid_layout(self.buttons, max_x=2, offset=((window.aspect_ratio*-.5)+.25,.4), origin=(-.5,.5), spacing=(.01,.01))
-#         # grid_layout(self.bake_buttons, max_x=3, offset=((window.aspect_ratio*-.5)+.25+.42,.4), origin=(-.5,.5), spacing=(.01,.01))
-
 class ParticleSystemUI(Entity):
     def __init__(self, asset_file, particle_system_container):
         super().__init__(parent=camera.ui)
@@ -514,8 +434,10 @@ class ParticleSystemUI(Entity):
         self.particle_system_container = particle_system_container
         self.seed_slider = Slider(min=0, max=16, step=1, x=-.5-.1, y=-.4, text='seed')
         def preview_particle_system():
-            for c in self.particle_system_container.children:
+            particle_system_container.seed = self.seed_slider.value
+            for c in self.particle_system_container.subsystems:
                 c.seed = self.seed_slider.value
+                c.generate()
             self.particle_system_container.play()
 
         self.seed_slider.on_value_changed = preview_particle_system
@@ -552,31 +474,33 @@ class ParticleSystemUI(Entity):
         self.play_baked_buttons = []
         self.bake_buttons = []
 
-        vertex_animation_textures = tuple(application.asset_folder.glob(f'**/{self.asset_file.stem}_*_baked_fps*_bounds*.png'))
+        vertex_animation_paths = tuple(application.asset_folder.glob(f'**/{self.asset_file.stem}_seed*_baked_fps*_bounds*.png'))
 
-        for vat_file in vertex_animation_textures:
-            fps = vat_file.name.split('_fps')[1].split('_',1)[0]
-            play_baked_button = Button(parent=self, scale=(.2,.05), text=f'{vat_file.stem}\n(VAT) {fps}FPS', text_size=.5, color=color.green.tint(-.5))
-            def play_baked(vat_file=vat_file):
-                vertex_animation(vat_file)
+        for vat_path in vertex_animation_paths:
+            fps = vat_path.name.split('_fps')[1].split('_',1)[0]
+            play_baked_button = Button(parent=self, scale=(.2,.05), text=f'{vat_path.stem}\n(VAT) {fps}FPS', text_size=.5, color=color.green.tint(-.5))
+            def play_baked(vat_path=vat_path):
+                vertex_animation(Texture(vat_path))
             play_baked_button.on_click = play_baked
             self.play_baked_buttons.append(play_baked_button)
 
         for target_fps in (12,30,60):
             def _try_bake(target_fps=target_fps):
-                animation_texture = load_texture(f'{self.particle_system_container.name}_*_baked_fps*_bounds*.png')
+                animation_texture = load_texture(f'{self.asset_file.stem}_seed*_baked_fps*_bounds*.png')
                 if not animation_texture:
-                    self.particle_system_container.bake(target_fps)
+                    self.particle_system_container.bake(self.asset_file.stem, self.seed_slider.value, target_fps)
                     return
                 if animation_texture.path.exists():
                     print('replace?', animation_texture.path)
                     if fps != target_fps:
                         print(f'{fps} -> {target_fps}', '----------', animation_texture.path.name)
+                        base_name = animation_texture.path.stem.split('_seed')[0]
+                        seed = animation_texture.path.stem.split('_seed')[1].split('_',1)[0]
                         self.overwrite_dialog.enabled = True
                         self.overwrite_label.text = f'Overwrite\n{animation_texture.path.name}?'
                         self.overwrite_button.on_click = Sequence(
                             animation_texture.path.unlink,
-                            Func(self.particle_system_container.bake, target_fps), 
+                            Func(self.particle_system_container.bake, base_name, seed, target_fps), 
                             self.overwrite_dialog.disable
                             )
                     return
@@ -609,29 +533,16 @@ if __name__ == '__main__':
         end_color = color.red,
         end_size=0,
         direction_randomness=Vec3(360),
-        auto_play=True,
         loop_every=.1,
+        auto_play=True
         # name='run particles',
     )
     EditorCamera()
     window.color = color.black
 
-    hit_impact_particles = dict(position=player.position+Vec3.up, scale=.5,
-        speed=4,
-        lifetime=.15,
-        auto_play=False,
-        num_particles=5,
-        direction_randomness=Vec3(0,0,360),
-        move_directions='up',
-        billboard=True,
-        start_size=Vec3(1,2,1),
-        end_size=Vec3(.5,.25,.5),
-        name='hit_impact', seed=0,
-    )
     burst_particles = dict(position=player.position, scale=.5,
         speed=3,
         lifetime=.125,
-        auto_play=False,
         num_particles=6,
         direction_randomness=Vec3(360,360,360),
         move_directions='up',
@@ -646,7 +557,6 @@ if __name__ == '__main__':
     power_up_particles = dict(position=player.position+Vec3(0,.5,0), scale=(.5,1.5,.5),
         speed=2,
         lifetime=.2,
-        auto_play=False,
         # direction_randomness=Vec3(360,360,360),
         move_directions='up',
         mesh='diamond',
@@ -663,47 +573,7 @@ if __name__ == '__main__':
         # loop=True
         name='power_up_particles', seed=0,
     )
-    heal_particles = ParticleSystemContainer((
-        ParticleSystem(position=player.position + Vec3(0,.5,0), scale=.5,
-            start_size = Vec3(1,4,1)* .5,
-            end_size = Vec3(0,5,0) * .5,
-            speed=4,
-            lifetime=.5,
-            auto_play=False,
-            direction_randomness=Vec3(0,360,0),
-            move_directions='up',
-            mesh='diamond',
-            size_curve = curve.linear,
-            start_color = (color.cyan, hsv(300,.5,1)),
-            end_color = (color.lime, color.magenta),
-            color_curve=curve.linear,
-            num_particles=0,
-            spawn_points = [v.xzy for v in Circle(radius=3).vertices][::-1],
-            spawn_type = 'random',
-            spawn_interval=.0125,
-            name='heal', seed=0,
-        )
-        ,
-        ParticleSystem(position=player.position+Vec3(0,.5,0), scale=(.5,.5,.5),
-            speed=1,
-            lifetime=.5,
-            auto_play=False,
-            direction_randomness=Vec3(360,360,360),
-            move_directions='up',
-            mesh='icosphere',
-            start_size=.5,
-            end_size=0,
-            size_curve = curve.linear,
-            start_color = color.cyan,
-            end_color = color.blue,
-            color_curve=curve.linear,
-            num_particles=0,
-            spawn_points = [v.xzy for v in Circle(radius=3).vertices][::-1],
-            spawn_type = 'random',
-            spawn_interval=.0125,
-            name='heal_dust', seed=0,
-        )
-    ))
+    
 
     
     
@@ -714,7 +584,6 @@ if __name__ == '__main__':
         speed=4,
         speed_curve=curve.out_circ,
         lifetime=.75,
-        auto_play=False,
         direction_randomness=Vec3(0,360,0),
         spin=Vec3(0,15,0) * 10,
         # spin_curve=curve.linear,
@@ -747,7 +616,7 @@ if __name__ == '__main__':
     #         e |= {'auto_play':False, }
     #         ParticleSystem(**e)
 
-    particle_system_ui = ParticleSystemUI()
+    particle_system_ui = ParticleSystemUI(Path(__file__), ParticleSystemContainer((run_particles, ), parent=player))
     # particle_system_ui.render_particle_system_list()
 
 
