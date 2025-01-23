@@ -27,12 +27,12 @@ class Animation(Sprite):
             texture_folders = (application.textures_compressed_folder, application.asset_folder, application.internal_textures_folder)
             self.frames = [Texture(e) for e in find_sequence(name, ('png', 'jpg'), texture_folders)]
 
-
-        if self.frames:
-            super().__init__(texture=self.frames[0])
-
+        if not self.frames:
+            self.frames = [load_texture('white_cube.png')]
+        
+        super().__init__(texture=self.frames[0])
+        
         self.sequence = Sequence(loop=loop, auto_destroy=False)
-
         self.frame_times = frame_times
         if not self.frame_times:
             self.frame_times = [1/fps for i in range(len(self.frames))]
