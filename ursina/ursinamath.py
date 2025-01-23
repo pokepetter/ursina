@@ -149,30 +149,41 @@ def sum(l):
     return total
 
 
-def make_gradient(index_color_dict):    # returns a list of 256 colors
+def make_gradient(index_value_dict):
     '''
-    given a dict of positions and colors, interpolates the colors into a list of 256 colors
+    given a dict of positions and values (usually colors), interpolates the values into a list of with the interpolated values.
     example input: {'0':color.hex('#9d9867'), '38':color.hex('#828131'), '54':color.hex('#5d5b2a'), '255':color.hex('#000000')}
     '''
-    gradient = [color.black for i in range(256)]
+    max_index = max(int(e) for e in index_value_dict.keys())
+    gradient = [None for _ in range(max_index+1)]
 
-    gradient_color_keys = tuple(index_color_dict.keys())
-    gradient_color_values = tuple(index_color_dict.values())
+    sorted_dict = [(idx, index_value_dict[str(idx)]) for idx in sorted([int(key) for key in index_value_dict.keys()])]
+    # print(sorted_dict)
 
-    for i in range(len(gradient_color_values)):
-        from_col = color.hex(gradient_color_values[i-1])
-        to_col = color.hex(gradient_color_values[i])
-
-        from_num = 0
-        if i > 0:
-            from_num = int(gradient_color_keys[i-1])
-        to_num = int(gradient_color_keys[i])
-        dist = to_num - from_num
-
-        for j in range(dist):
-            gradient[from_num+j] = lerp(from_col, to_col, j/dist)
+    for i in range(len(sorted_dict)-1):
+        start_index, start_value = sorted_dict[i]
+        next_index, next_value = sorted_dict[i+1]
+        # print(start_index, '-->', next_index, ':', start_value, '-->', next_value)
+        dist = next_index - start_index
+        for j in range(dist+1):
+            gradient[start_index+j] = lerp(start_value, next_value, j/dist)
 
     return gradient
+
+if __name__ == '__main__':
+    _test(make_gradient, ({'0':color.hex('#ff0000ff'), '2':color.hex('#ffffffff')}, ), expected_result=[
+        color.hex('#ff0000ff'), 
+        lerp(color.hex('#ff0000ff'), color.hex('#ffffffff'), .5), 
+        color.hex('#ffffffff'),
+        ])
+    _test(make_gradient, ({'0':color.hex('#ff0000ff'), '4':color.hex('#ffffffff')}, ), expected_result=[
+        color.hex('#ff0000ff'), 
+        lerp(color.hex('#ff0000ff'), color.hex('#ffffffff'), .25), 
+        lerp(color.hex('#ff0000ff'), color.hex('#ffffffff'), .5), 
+        lerp(color.hex('#ff0000ff'), color.hex('#ffffffff'), .75), 
+        color.hex('#ffffffff'),
+        ])
+    _test(make_gradient, ({'0':16, '2':0}, ), expected_result=[16, 8, 0])
 
 
 def sample_gradient(list_of_values, t):     # distribute list_of_values equally on a line and get the interpolated value at t (0-1).
