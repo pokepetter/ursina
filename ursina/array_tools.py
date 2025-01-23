@@ -196,6 +196,41 @@ if __name__ == '__main__':
     _test(list_2d_to_string, (list_2d, ), expected_result=expected_result)
 
 
+def sample_bilinear(target_2d_list, x, y):
+    X = int(x)
+    Y = int(y)
+    # Check that the indices are within the bounds of the height_map
+    if X+1 >= len(target_2d_list) or Y+1 >= len(target_2d_list[0]) or X < 0 or Y < 0:
+        raise ValueError("The requested point is out of bounds.")
+
+    # Heights at the four surrounding points
+    height_bottom_left = target_2d_list[X][Y]
+    height_bottom_right = target_2d_list[X+1][Y]
+    height_top_left = target_2d_list[X][Y+1]
+    height_top_right = target_2d_list[X+1][Y+1]
+
+    x_fraction = x - X
+    y_fraction = y - Y
+
+    bottom_row_interpolation = (1 - x_fraction) * height_bottom_left + x_fraction * height_bottom_right
+    top_row_interpolation = (1 - x_fraction) * height_top_left + x_fraction * height_top_right
+    interpolated_height = (1 - y_fraction) * bottom_row_interpolation + y_fraction * top_row_interpolation
+
+    return interpolated_height
+
+if __name__ == '__main__':
+    list_2d = [
+        [1,1,0],
+        [1,0,0],
+        [1,0,0],
+    ]
+    _test(sample_bilinear, (list_2d, 0, 0), expected_result=1)
+    _test(sample_bilinear, (list_2d, 1, 1), expected_result=0)
+    _test(sample_bilinear, (list_2d, .5, .5), expected_result=.75)
+    _test(sample_bilinear, (list_2d, .5, .75), expected_result=.625)
+
+
+
 class LoopingList(list):
     def __getitem__(self, i):
         return super().__getitem__(i % len(self))
