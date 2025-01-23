@@ -12,7 +12,7 @@ textureless = False
 
 
 def load_texture(name, folder=None, use_cache=True, filtering='default'):
-    if textureless:
+    if textureless and '*' not in name:
         return Texture(application.internal_textures_folder/'white_cube.png')
 
     if use_cache and name in imported_textures:
