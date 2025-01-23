@@ -15,16 +15,20 @@ cache = dict()
 
 def play_particle_system(name, use_cache=True, auto_play=True, auto_destroy=True, **kwargs):
     print('try loading particle system:', name) 
-    if use_cache:
+    if name in cache:
+        animation_texture = cache[name]
+    else:
         animation_texture = load_texture(f'{name}_*_baked_fps*_bounds*.png')
-        if animation_texture:   # if the particle system has been baked
-            vat_instance = vertex_animation(animation_texture, auto_play=auto_play)
-            if not auto_play:
-                vat_instance.enabled = False
+        cache[name] = animation_texture
 
-            for key, value in kwargs.items():
-                setattr(vat_instance, key, value)
-            return vat_instance
+    if animation_texture:   # if the particle system has been baked
+        vat_instance = vertex_animation(animation_texture, auto_play=auto_play)
+        if not auto_play:
+            vat_instance.enabled = False
+
+        for key, value in kwargs.items():
+            setattr(vat_instance, key, value)
+        return vat_instance
 
     whole_file_name = f'{name}.ursinaparticles'
     particle_files = tuple(application.asset_folder.glob(f'**/{whole_file_name}'))
