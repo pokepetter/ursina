@@ -8,20 +8,30 @@ from pathlib import Path
 
 from panda3d.core import Filename
 
+from ursina.ursinastuff import DotDict
+audio_groups = DotDict(
+    music =     DotDict(volume_multiplier=1),
+    ambient =   DotDict(volume_multiplier=1),
+    sfx =       DotDict(volume_multiplier=1),
+    dialogue =  DotDict(volume_multiplier=1),
+)
+
+
 from ursina.scripts.property_generator import generate_properties_for_class
 @generate_properties_for_class()
 class Audio(Entity):
 
-    volume_multiplier = .5  #
+    volume_multiplier = .5  # master volume
 
-    def __init__(self, sound_file_name='', volume=1, pitch=1, balance=0, loop=False, loops=1, autoplay=True, auto_destroy=False, **kwargs):
+    def __init__(self, sound_file_name='', volume=1, pitch=1, balance=0, loop=False, loops=1, autoplay=True, auto_destroy=False, group='sfx', **kwargs):
         super().__init__(**kwargs)
         # printvar(sound_file_name)
         self.clip = sound_file_name
+        self.group = group
         if not self.clip:
             print_warning('missing audio clip:', sound_file_name)
             return
-
+        
         self.volume = volume
         self.pitch = pitch
         self.balance = balance
@@ -31,6 +41,7 @@ class Audio(Entity):
         self.autoplay = autoplay
         self.auto_destroy = auto_destroy
 
+
         if self.autoplay:
             self.play()
 
@@ -39,18 +50,23 @@ class Audio(Entity):
 
 
     def volume_setter(self, value):
+        if not self._clip:  return
         self._volume = value
-        self._clip.setVolume(value * Audio.volume_multiplier)
+        group_volume_multiplier = audio_groups[self.group].volume_multiplier if self.group else 1
+        self._clip.setVolume(value * Audio.volume_multiplier * group_volume_multiplier)
 
     def pitch_setter(self, value):
+        if not self._clip:  return
         self._pitch = value
         self._clip.setPlayRate(value)
 
     def loop_setter(self, value):
+        if not self._clip:  return
         self._loop = value
         self._clip.setLoop(value)
 
     def loops_setter(self, value):
+        if not self._clip:  return
         self._loops = value
         self._clip.setLoopCount(value)
 
