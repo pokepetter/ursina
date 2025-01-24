@@ -9,20 +9,14 @@ class PipeEditor(Entity):
         self.model = Pipe()
         self.edit_mode = False
         self.add_collider = False
-
         self.generate()
 
 
     def generate(self):
-        # self.model.path = [e.get_position(relative_to=self) for e in self._point_gizmos]
-        # self.model.thicknesses = [e.scale.xz for e in self._point_gizmos]
-        #
-        # self.model.generate()
         self.model = Pipe(
             path = [e.get_position(relative_to=self) for e in self._point_gizmos],
             thicknesses = [e.scale.xz for e in self._point_gizmos]
         )
-        # print('GENERATE')
         self.texture = 'grass'
 
         if self.add_collider:
@@ -53,8 +47,7 @@ class PipeEditor(Entity):
 
             [setattr(e, 'selectable', True) for e in self._point_gizmos]
         else:
-            # print(self._point_gizmos[0] in LEVEL_EDITOR.entities)
-            [LEVEL_EDITOR.entities.remove(e) for e in self._point_gizmos]
+            [LEVEL_EDITOR.entities.remove(e) for e in self._point_gizmos if e in LEVEL_EDITOR.entities]
             [setattr(e, 'selectable', True) for e in LEVEL_EDITOR.entities]
             if True in [e in LEVEL_EDITOR.selection for e in self._point_gizmos]: # if point is selected when exiting edit mode, select the poke shape
                 LEVEL_EDITOR.selection = [self, ]
@@ -67,24 +60,19 @@ class PipeEditor(Entity):
         if combined_key == 'tab':
             if self in LEVEL_EDITOR.selection or True in [e in LEVEL_EDITOR.selection for e in self._point_gizmos]:
                 self.edit_mode = not self.edit_mode
+                return
 
-
-        # elif key == '+' and len(LEVEL_EDITOR.selection) == 1 and LEVEL_EDITOR.selection[0] in self._point_gizmos:
-        #     print('add point')
-        #     i = self._point_gizmos.index(LEVEL_EDITOR.selection[0])
-        #
-        #     new_point = Entity(parent=self, original_parent=self, position=lerp(self._point_gizmos[i].position, self._point_gizmos[i+1].position, .5), selectable=True, is_gizmo=True)
-        #     LEVEL_EDITOR.entities.append(new_point)
-        #     self._point_gizmos.insert(i+1, new_point)
-        #     LEVEL_EDITOR.render_selection()
-        #     # self.generate()
-
+        elif key == '+' and len(LEVEL_EDITOR.selection) == 1 and LEVEL_EDITOR.selection[0] in self._point_gizmos:
+            print('add point')
+            i = self._point_gizmos.index(LEVEL_EDITOR.selection[0])
+        
+            new_point = Entity(parent=self, original_parent=self, position=lerp(self._point_gizmos[i].position, self._point_gizmos[i+1].position, .5), selectable=True, is_gizmo=True)
+            LEVEL_EDITOR.entities.append(new_point)
+            self._point_gizmos.insert(i+1, new_point)
+            LEVEL_EDITOR.render_selection()
 
         elif key == 'space':
             self.generate()
-
-        # elif key == 'double click' and LEVEL_EDITOR.selection == [self, ] and selector.get_hovered_entity() == self:
-        #     self.edit_mode = not self.edit_mode
 
         elif self.edit_mode and key.endswith(' up'):
             invoke(self.generate, delay=3/60)
