@@ -5,7 +5,7 @@ from ursina.string_utilities import print_warning
 
 
 tracks = dict()
-current_track = None
+current_track:str = None
 
 def play(track_name, fade_out_duration=2):
     global current_track
@@ -14,7 +14,7 @@ def play(track_name, fade_out_duration=2):
         return
 
     if track_name is None and current_track:
-        current_track.fade_out(fade_out_duration)
+        tracks[current_track].fade_out(fade_out_duration)
         current_track = None
         return
 
