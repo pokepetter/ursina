@@ -197,6 +197,7 @@ class Text(Entity):
                 texture_name = tag.split(':')[1]
                 image = Entity(
                     parent=self.text_node_path,
+                    shader=None,
                     name='inline_image',
                     model='quad',
                     texture=texture_name,
