@@ -72,8 +72,8 @@ class Camera(Entity):
         self._ui_lens_node = LensNode('_ui_lens_node', self.ui_lens)
 
         self.ui_render = NodePath('ui_render')
-        self.ui_render.set_depth_test(0)
-        self.ui_render.set_depth_write(0)
+        self.ui_render.set_depth_test(True)
+        self.ui_render.set_depth_write(True)
         self.ui_camera.reparent_to(self.ui_render)
         self.ui_display_region.set_camera(self.ui_camera)
         scene.ui_camera = self.ui_camera
@@ -171,7 +171,6 @@ class Camera(Entity):
             for key, value in value.default_input.items():
                 if callable(value):
                     value = value()
-
                 self.set_shader_input(key, value)
 
 
