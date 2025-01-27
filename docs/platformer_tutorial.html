@@ -84,7 +84,7 @@ level_parent = <olive>Entity</olive>(<olive>model</olive>=Mesh(<olive>vertices</
                 level_parent.model.uvs += quad.uvs
                 <gray># <olive>Entity</olive>(<olive>parent</olive>=level_parent, <olive>position</olive>=(x,y), <olive>model</olive>=<green>'cube'</green>, <olive>origin</olive>=(-.<yellow>5</yellow>,-.<yellow>5</yellow>), <olive>color</olive>=color.gray, <olive>texture</olive>=<green>'white_cube'</green>, <olive>visible</olive>=True)</gray>
                 <purple>if</purple> <purple>not</purple> collider:
-                    collider = <olive>Entity</olive>(<olive>parent</olive>=level_parent, <olive>position</olive>=(x,y), <olive>model</olive>=<green>'quad'</green>, <olive>origin</olive>=(-.<yellow>5</yellow>,-.<yellow>5</yellow>), <olive>collider</olive>=<green>'box'</green>, <olive>visible</olive>=False)
+                    collider = <olive>Entity</olive>(<olive>parent</olive>=level_parent, <olive>position</olive>=(x,y), <olive>model</olive>=<green>'cube'</green>, <olive>origin</olive>=(-.<yellow>5</yellow>,-.<yellow>5</yellow>), <olive>collider</olive>=<green>'box'</green>, <olive>visible</olive>=False)
                 <purple>else</purple>:
                     <gray># instead of creating a new collider per tile, stretch the previous collider right.</gray>
                     collider.scale_x += <yellow>1</yellow>
@@ -142,7 +142,8 @@ Start the game<br>
 </h2><br>
 <br>
 <br>
-<div class="code_block" id="code_block_7" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_7)">copy</button>app.run()
+<div class="code_block" id="code_block_7" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_7)">copy</button>EditorCamera()
+app.run()
 </div><br>
 <h2><div id="Result"/><br>
 Result<br>
@@ -178,7 +179,7 @@ level_parent = <olive>Entity</olive>(<olive>model</olive>=Mesh(<olive>vertices</
                 level_parent.model.uvs += quad.uvs
                 <gray># <olive>Entity</olive>(<olive>parent</olive>=level_parent, <olive>position</olive>=(x,y), <olive>model</olive>=<green>'cube'</green>, <olive>origin</olive>=(-.<yellow>5</yellow>,-.<yellow>5</yellow>), <olive>color</olive>=color.gray, <olive>texture</olive>=<green>'white_cube'</green>, <olive>visible</olive>=True)</gray>
                 <purple>if</purple> <purple>not</purple> collider:
-                    collider = <olive>Entity</olive>(<olive>parent</olive>=level_parent, <olive>position</olive>=(x,y), <olive>model</olive>=<green>'quad'</green>, <olive>origin</olive>=(-.<yellow>5</yellow>,-.<yellow>5</yellow>), <olive>collider</olive>=<green>'box'</green>, <olive>visible</olive>=False)
+                    collider = <olive>Entity</olive>(<olive>parent</olive>=level_parent, <olive>position</olive>=(x,y), <olive>model</olive>=<green>'cube'</green>, <olive>origin</olive>=(-.<yellow>5</yellow>,-.<yellow>5</yellow>), <olive>collider</olive>=<green>'box'</green>, <olive>visible</olive>=False)
                 <purple>else</purple>:
                     <gray># instead of creating a new collider per tile, stretch the previous collider right.</gray>
                     collider.scale_x += <yellow>1</yellow>
@@ -208,6 +209,7 @@ enemy = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive
         player.position = player.start_position
 
 
+EditorCamera()
 app.run()
 
 

@@ -56,7 +56,7 @@ def make_level(texture):
                 level_parent.model.uvs += quad.uvs
                 # Entity(parent=level_parent, position=(x,y), model='cube', origin=(-.5,-.5), color=color.gray, texture='white_cube', visible=True)
                 if not collider:
-                    collider = Entity(parent=level_parent, position=(x,y), model='quad', origin=(-.5,-.5), collider='box', visible=False)
+                    collider = Entity(parent=level_parent, position=(x,y), model='cube', origin=(-.5,-.5), collider='box', visible=False)
                 else:
                     # instead of creating a new collider per tile, stretch the previous collider right.
                     collider.scale_x += 1
@@ -105,6 +105,7 @@ def update():
 
 # ## Start the game
 #
+EditorCamera()
 app.run()
 
 # ## Adding level graphics
