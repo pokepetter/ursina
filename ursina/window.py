@@ -68,6 +68,7 @@ class Window(WindowProperties):
 
         self.windowed_position = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode
         self.show_ursina_splash = False
+        self.editor_ui_enabled = editor_ui_enabled
 
         self.top = Vec2(0, .5)
         self.bottom = Vec2(0, -.5)
