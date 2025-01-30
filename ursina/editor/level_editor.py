@@ -6,7 +6,6 @@ import builtins
 import pyperclip
 import inspect
 
-
 class LevelEditor(Entity):
     def __init__(self, **kwargs):
         super().__init__()
@@ -136,24 +135,32 @@ class LevelEditor(Entity):
 
 
     def input(self, key):
-        if held_keys['control'] and not held_keys['shift'] and not held_keys['alt'] and key == 's':
+        combined_key = input_handler.get_combined_key(key)
+        if combined_key == 'control+s':
             if not self.current_scene:
                 print("no current_scene, can't save")
                 return
 
             self.current_scene.save()
 
-        if held_keys['control']:
-            if key == 'z' and self.current_scene:
+        if self.current_scene:
+            if combined_key == 'control+z':
                 self.current_scene.undo.undo()
-            elif key == 'y' and self.current_scene:
+            elif combined_key == 'control+y':
                 self.current_scene.undo.redo()
 
-        if self.selection and key == 'f':
+        if self.selection and combined_key == 'f':
             self.editor_camera.animate_position(self.gizmo.world_position, duration=.1, curve=curve.linear)
 
-        if held_keys['control'] and key == 'e':
+        elif combined_key == 'control+e':
             self.edit_mode = not self.edit_mode
+
+        elif combined_key == 'control++':
+            for e in self.ui.children:
+                e.scale *= 1.1
+        elif combined_key == 'control+-':
+            for e in self.ui.children:
+                e.scale /= 1.1
 
 
     @property
@@ -1706,10 +1713,10 @@ class LevelMenu(Entity):
 
 class HierarchyList(Entity):
     def __init__(self):
-        super().__init__(parent=LEVEL_EDITOR.ui)
+        super().__init__(parent=LEVEL_EDITOR.ui, position=window.top_left+Vec2(0,-.05))
         self.quad_model = load_model('quad', application.internal_models_folder, use_deepcopy=True)
-        self.bg = Entity(parent=self, model='quad', collider='box', origin=(-.5,.5), color=color.black90, position=window.top_left+Vec2(0,-.05), scale=(.15,10))
-        self.entity_list_text = Text(font='VeraMono.ttf', parent=self, scale=.6, line_height=1, position=window.top_left+Vec2(.005,-.05), z=-2)
+        self.bg = Entity(parent=self, model='quad', collider='box', origin=(-.5,.5), color=color.black90, scale=(.15,10))
+        self.entity_list_text = Text(font='VeraMono.ttf', parent=self, scale=.6, line_height=1, position=Vec2(.005,0), z=-2)
         self.selected_renderer = Entity(parent=self.entity_list_text, scale=(.25,Text.size), model=Mesh(vertices=[]), color=hsv(210,.9,.6), origin=(-.5,.5), x=-.01, z=-1)
         self.selected_renderer.world_parent = self
         self.selected_renderer.z= -.1
@@ -1835,7 +1842,7 @@ class ColorField(InspectorButton):
 
 class Inspector(Entity):
     def __init__(self):
-        super().__init__(parent=LEVEL_EDITOR.ui, position=window.top_left+Vec2(.15,-.04))
+        super().__init__(parent=LEVEL_EDITOR.hierarchy_list, x=.15)
         self.selected_entity = None
         self.ui = Entity(parent=self)
         self.name_field = InspectorInputField(parent=self.ui, default_value='name', origin=(-.5,.5), scale_x=.15*3, scale_y=.05*.75, color=hsv(210,.9,.6))
@@ -2065,21 +2072,16 @@ class MenuHandler(Entity):
             self.state = self.keybinds[key]
             # print('sets state:', self.keybinds[key], self.state)
 
-class AssetMenu(Entity):
+class AssetMenu(ButtonList):
     def __init__(self):
-        super().__init__(parent=LEVEL_EDITOR.ui, enabled=False, z=-2, name=__class__.__name__)
-        self.button_list = ButtonList({}, parent=self, font='VeraMono.ttf', x=-.25*.75, scale=.75)
-        self.bg = Entity(parent=self.button_list, model='quad', collider='box', color=color.black33, on_click=self.disable, z=.1, scale=100)
+        super().__init__(button_dict=dict(), parent=LEVEL_EDITOR.ui, enabled=False, popup=True, z=-2, name=__class__.__name__, scale=.5)
 
     def on_enable(self):
         if not self.asset_names:
             print('no texture assets found')
-            # return
-        asset_dict = {name : Func(self.on_select_asset, name) for name in self.asset_names}
-        self.button_list.button_dict = asset_dict
-        self.button_list.y = len(asset_dict) / 2 * self.button_list.button_height * Text.size
-        self.button_list.x = mouse.x
-        self.button_list.y = mouse.y
+        self.button_dict = {name : Func(self.on_select_asset, name) for name in self.asset_names}
+        self.x = mouse.x
+        self.y = mouse.y
 
 
 class ModelMenu(AssetMenu):
