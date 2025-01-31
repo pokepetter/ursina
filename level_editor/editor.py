@@ -1,3 +1,5 @@
+import json
+
 class LevelEditor:
 
     def __init__(self):
@@ -35,6 +37,14 @@ class LevelEditor:
         if obj in self.level_data:
             self.level_data.remove(obj)
             print(f"Object {obj} removed from the level")
+        else:
+            print(f"Object {obj} not found in the level")
+
+    def modify_object(self, obj, new_obj):
+        if obj in self.level_data:
+            index = self.level_data.index(obj)
+            self.level_data[index] = new_obj
+            print(f"Object {obj} modified to {new_obj}")
         else:
             print(f"Object {obj} not found in the level")
 

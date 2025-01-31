@@ -19,3 +19,23 @@ class ObjectRotator:
 
         self.canvas.coords(obj, *new_coords)
         print(f"Rotated object {obj} by {angle} degrees")
+
+    def enable(self):
+        self.canvas.bind("<Button-2>", self.start_rotating)
+        self.canvas.bind("<B2-Motion>", self.perform_rotating)
+        self.canvas.bind("<ButtonRelease-2>", self.stop_rotating)
+        self.rotating = False
+
+    def start_rotating(self, event):
+        self.rotating = True
+        self.start_x = event.x
+        self.start_y = event.y
+
+    def perform_rotating(self, event):
+        if self.rotating:
+            angle = math.atan2(event.y - self.start_y, event.x - self.start_x)
+            obj = self.canvas.find_closest(self.start_x, self.start_y)
+            self.rotate_object(obj, angle)
+
+    def stop_rotating(self, event):
+        self.rotating = False
