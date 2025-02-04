@@ -1,9 +1,11 @@
-from ursina import Entity, Slider, color, Button, camera, Quad, copy
+from ursina import Entity, Slider, color, Button, camera, Quad, copy, Color
 
 
 class ColorPicker(Entity):
+    default_values = dict(parent=camera.ui)
+
     def __init__(self, dynamic=True, **kwargs):
-        super().__init__(parent=camera.ui, **kwargs)
+        super().__init__(**(__class__.default_values | kwargs))
 
         self.bg = Entity(parent=self, z=.01, model=Quad(aspect=.5/.2), scale=[.5,.225], origin=[0,.5], color=color.black66)
         self.h_slider = Slider(parent=self, max=360, step=1, dynamic=dynamic, on_value_changed=self._calculate_color)
@@ -35,6 +37,18 @@ class ColorPicker(Entity):
 
         for key, value in kwargs.items():
             setattr(self, key, value)
+
+    @property
+    def value(self):
+        return color.hsv(self.h_slider.value, self.s_slider.value/100, self.v_slider.value/100, self.a_slider.value/100)
+
+    @value.setter
+    def value(self, value:Color):
+        value = value.hsv
+        self.h_slider.value = value[0]
+        self.s_slider.value = value[1]*100
+        self.v_slider.value = value[2]*100
+        self.a_slider.value = value[3]*100
 
 
     def _calculate_color(self):

@@ -154,8 +154,11 @@ def make_gradient(index_value_dict):
     given a dict of positions and values (usually colors), interpolates the values into a list of with the interpolated values.
     example input: {'0':color.hex('#9d9867'), '38':color.hex('#828131'), '54':color.hex('#5d5b2a'), '255':color.hex('#000000')}
     '''
+    min_index = min(int(e) for e in index_value_dict.keys())
     max_index = max(int(e) for e in index_value_dict.keys())
-    gradient = [None for _ in range(max_index+1)]
+    # default_value = index_value_dict.values()[0]
+    # print('-------------', tuple(index_value_dict.values())[0])
+    gradient = [None for _ in range(max_index+1-min_index)]
 
     sorted_dict = [(idx, index_value_dict[str(idx)]) for idx in sorted([int(key) for key in index_value_dict.keys()])]
     # print(sorted_dict)
@@ -166,7 +169,7 @@ def make_gradient(index_value_dict):
         # print(start_index, '-->', next_index, ':', start_value, '-->', next_value)
         dist = next_index - start_index
         for j in range(dist+1):
-            gradient[start_index+j] = lerp(start_value, next_value, j/dist)
+            gradient[start_index+j-min_index] = lerp(start_value, next_value, j/dist)
 
     return gradient
 
@@ -184,6 +187,8 @@ if __name__ == '__main__':
         color.hex('#ffffffff'),
         ])
     _test(make_gradient, ({'0':16, '2':0}, ), expected_result=[16, 8, 0])
+
+    _test(make_gradient, ({'6':0, '8':8}, ), expected_result=[0, 4, 8])
 
 
 def sample_gradient(list_of_values, t):     # distribute list_of_values equally on a line and get the interpolated value at t (0-1).

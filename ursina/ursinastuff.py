@@ -221,6 +221,25 @@ def _test(function, test_input, expected_result):
         print('\33[41mFAILED\033[0m', function.__name__)
         print('result:', result)
         print('expected result:', expected_result)
+        if type(result) != type(expected_result):
+            print(f'result should be: {type(expected_result)}, not: {type(result)}')
+        
+        if isinstance(expected_result, (tuple, list)):
+            if len(result) != len(expected_result):
+                print(f'resulting tuple/list should be {len(expected_result)} long, not {len(result)}')
+
+            if type(result[0]) != type(expected_result[0]):
+                print(f'resulting list/tuple should contain: {type(expected_result[0])}, not: {type(result[0])}')
+    return result
+
+def _assert(passed:bool, name=''):
+    if passed:
+        print('\33[42mPASSED\033[0m', name)
+    else:
+        print('\33[41mFAILED\033[0m', name)
+    return passed
+
+
 
 
 # define a new metaclass which overrides the "__call__" function
