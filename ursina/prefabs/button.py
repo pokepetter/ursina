@@ -175,7 +175,6 @@ class Button(Entity):
     def on_mouse_enter(self):
         if not self.disabled and self.model:
             self.model.setColorScale(self.highlight_color)
-            print('------------', self.highlight_color)
 
             if self.highlight_scale != 1:
                 self.model.setScale(Vec3(self.highlight_scale, self.highlight_scale, 1))
@@ -255,5 +254,5 @@ if __name__ == '__main__':
         if key == 'space':
             b.text = 'updated text'
 
-
+    Sky()
     app.run()
