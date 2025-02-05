@@ -32,7 +32,7 @@ class Ursina(ShowBase):
             fullscreen (bool): Whether the window should be fullscreen or not.\n
             size (tuple(int, int)): The size of the window.\n
             forced_aspect_ratio (bool): Whether the window should have a forced aspect ratio or not.\n
-            position (tuple(int, int)): The position of the window.\n
+            position (tuple(int, int)): The position of the window. Defaults to center of main monitor.\n
             vsync (bool): Whether the window should have vsync enabled or not.\n
             borderless (bool): Whether the window should be borderless or not.\n
             show_ursina_splash (bool): Whether the Ursina splash should be shown or not.\n
@@ -58,12 +58,13 @@ class Ursina(ShowBase):
         if 'gltf_no_srgb' in kwargs:
             application.gltf_no_srgb = kwargs['gltf_no_srgb']
 
+        if editor_ui_enabled is None:
+            editor_ui_enabled = bool(application.development_mode)
+
         if fullscreen is None and not application.development_mode:
             fullscreen = True
             if borderless is None:
                 borderless = True
-            if editor_ui_enabled is None:
-                editor_ui_enabled = False
 
         window.ready(title=title, icon=icon,
             borderless=borderless, fullscreen=fullscreen, size=size, forced_aspect_ratio=forced_aspect_ratio, position=position, vsync=vsync, window_type=window_type,
@@ -154,8 +155,6 @@ class Ursina(ShowBase):
                     if key == '|':
                         window.console.text_field.enabled = not window.console.text_field.enabled
                 window.console.text_input = _console_text_input
-
-            window.editor_ui.enabled = editor_ui_enabled
 
         print('package_folder:', application.package_folder)
         print('asset_folder:', application.asset_folder)
@@ -341,7 +340,10 @@ class Ursina(ShowBase):
 
 if __name__ == '__main__':
     from ursina import *
-    app = Ursina(development_mode=False, use_ingame_console=True)
+    app = Ursina(
+        # development_mode=False, 
+        # use_ingame_console=True
+    )
     def input(key):
         print(key)
     app.run()
