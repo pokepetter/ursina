@@ -195,6 +195,25 @@ class Ursina(ShowBase):
                 for key, value in e.shader.continuous_input.items():
                     e.set_shader_input(key, value())
 
+        if hasattr(__main__, 'post_update') and __main__.post_update and not application.paused:
+            __main__.post_update()
+
+        for e in scene.post_update_entities:
+            if not e.enabled or e.ignore:
+                continue
+            if application.paused and e.ignore_paused is False:
+                continue
+            if e.has_disabled_ancestor():
+                continue
+
+            if hasattr(e, 'post_update') and callable(e.post_update):
+                e.post_update()
+
+            if hasattr(e, 'scripts'):
+                for script in e.scripts:
+                    if script.enabled and hasattr(script, 'post_update') and callable(script.post_update):
+                        script.post_update()
+
         return Task.cont
 
 
