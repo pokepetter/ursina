@@ -1,8 +1,0 @@
-class;parent;position;rotation;scale;model;origin;shader;color;collider
-Entity;;Vec3(1.2385, 0.032, 6.6089);;;'cube';Vec3(0, -0.5, 0);'lit_with_shadows_shader';'#4175b5ff';'box'
-Entity;;Vec3(0.1564, 0.032, 6.6415);;;'cube';Vec3(0, -0.5, 0);'lit_with_shadows_shader';'#c126aaff';'box'
-Entity;;Vec3(-1.9521, 0.032, 6.7786);;;'cube';Vec3(0, -0.5, 0);'lit_with_shadows_shader';color.white;'box'
-Entity;;Vec3(3.7492, 0.032, 7.5643);;;'cube';Vec3(0, -0.5, 0);'lit_with_shadows_shader';color.white;'box'
-Entity;;Vec3(2.7378, 0.032, 4.839);;;'cube';Vec3(0, -0.5, 0);'lit_with_shadows_shader';color.white;'box'
-Entity;;Vec3(-0.7162, 0.0319985, 9.3221);;;'cube';Vec3(0, -0.5, 0);'lit_with_shadows_shader';color.white;'box'
-Entity;;Vec3(-1.2551, 0.032, 5.5488);;;'cube';Vec3(0, -0.5, 0);'lit_with_shadows_shader';'#4175b5ff';'box'
