@@ -1,0 +1,3 @@
+[submodule "ursina/editor/GamePlusEditor"]
+	path = ursina/editor/GamePlusEditor
+	url = https://github.com/IndividualCoder/GamePlus-Editor
