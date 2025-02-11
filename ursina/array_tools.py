@@ -30,7 +30,7 @@ from typing import List
 class Array2D(list):
     __slots__ = ('width', 'height', 'default_value')
 
-    def __init__(self, width:int=None, height:int=None, default_value=0, data:List[List]=None):    
+    def __init__(self, width:int=None, height:int=None, default_value=0, data:List[List]=None):
         self.default_value = default_value
 
         if data is not None:                # initialize with provided data
@@ -41,13 +41,13 @@ class Array2D(list):
 
             if any(len(row) != self.height for row in data):
                 raise ValueError("all rows in the data must have the same length.")
-                
+
             super().__init__(data)
-        
-        else:   # Initialize with default values 
+
+        else:   # Initialize with default values
             if width is None or height is None:
                 raise ValueError("width and height must be provided if no data is given.")
-            
+
             self.width = int(width)
             self.height = int(height)
             super().__init__([[self.default_value for _ in range(self.height)] for _ in range(self.width)])
@@ -72,13 +72,19 @@ class Array2D(list):
         longest_number = int(len(str(self.height)))
         for y in range(self.height-1, -1, -1):
             lines[y] = f'{self.height-1-y:<{longest_number}}| {lines[y]}'
-        
+
         padding = longest_number + 2
         lines.append(f'{"o":<{padding}}{"-"*(self.width)}w:{self.width}')
         result = '\n'+'\n'.join(lines)
         return result
 
-                  
+
+    def map(self, func):
+        for (x, y), value in enumerate_2d(self):
+            self[x][y] = func(x, y, value)
+        return self
+
+
     def reset(self):
         for x in range(self.width):
             for y in range(self.height):
@@ -103,13 +109,20 @@ class Array2D(list):
         new_array = Array2D(new_width, new_height, default_value=value)
         new_array.paste(self, left, bottom)
         return new_array
-    
 
-    def get_area(self, start, end):
+
+    def get_area(self, start, end, allow_out_of_bounds=False):
         cropped_array = Array2D(width=end[0]-start[0], height=end[1]-start[1], default_value=self.default_value)
         # print('original_size:', self.width, self.height, 'new_size:', end[0]-start[0], end[1]-start[1])
-        for (x, y), _ in enumerate_2d(cropped_array):
-            cropped_array[x][y] = self[x+start[0]][y+start[1]]
+        if not allow_out_of_bounds:
+            for (x, y), _ in enumerate_2d(cropped_array):
+                cropped_array[x][y] = self[x+start[0]][y+start[1]]
+        else:
+            for (x, y), _ in enumerate_2d(cropped_array):
+                try:
+                    cropped_array[x][y] = self[x+start[0]][y+start[1]]
+                except:
+                    cropped_array[x][y] = self.default_value
 
         return cropped_array
 
