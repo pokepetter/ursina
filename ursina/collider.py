@@ -86,7 +86,6 @@ class MeshCollider(Collider):
                     self.collision_polygons.append(poly)
 
             elif mesh.mode == 'ngon':
-                # NOTE: does not support vertices len < 3. Is already being intercepted by pandas3D.
                 for i in range(2, len(mesh.vertices)):
                     poly = CollisionPolygon(
                         Vec3(*mesh.vertices[i]),
