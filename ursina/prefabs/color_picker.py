@@ -4,7 +4,7 @@ from ursina import Entity, Slider, color, Button, camera, Quad, copy, Color
 class ColorPicker(Entity):
     default_values = dict(parent=camera.ui)
 
-    def __init__(self, dynamic=True, **kwargs):
+    def __init__(self, dynamic=True, show_exit_button=False, **kwargs):
         super().__init__(**(__class__.default_values | kwargs))
 
         self.bg = Entity(parent=self, z=.01, model=Quad(aspect=.5/.2), scale=[.5,.225], origin=[0,.5], color=color.black66)
@@ -33,6 +33,7 @@ class ColorPicker(Entity):
             slider.x = -.25+.05
 
         self.preview = Button(parent=self, scale=(.5*.84,.05), origin=[0,.5], y=slider.y-.02, color=color.white)
+        self.exit_button = Button(parent=self, scale=.05, position=(.25-.01,-.01), model='circle', color=color.red.tint(-.25), text='x', on_click=self.disable, enabled=show_exit_button)
         self._calculate_color()
 
         for key, value in kwargs.items():
