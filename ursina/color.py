@@ -3,13 +3,10 @@ import random
 import sys
 from math import floor
 from ursina.vec4 import Vec4
-
-try:
-    from warnings import deprecated
-except:
-    from ursina.scripts.deprecated_decorator import deprecated
+from ursina.scripts.property_generator import generate_properties_for_class
 
 
+@generate_properties_for_class()
 class Color(Vec4):
     def __init__(self,*p):
         super().__init__(*p)
@@ -17,46 +14,35 @@ class Color(Vec4):
     def __repr__(self):
         return f'Color({self[0]}, {self[1]}, {self[2]}, {self[3]})'
 
-    @property
-    def name(self):
+    def name_getter(self):
         for key, value in colors.items():
             if value == self:
                 return key
         return None
 
-    @property
-    def r(self):
+    def r_getter(self):
         return self[0]
-    @property
-    def g(self):
+    def g_getter(self):
         return self[1]
-    @property
-    def b(self):
+    def b_getter(self):
         return self[2]
-    @property
-    def a(self):
+    def a_getter(self):
         return self[3]
 
-    @property
-    def hsv(self):
+    def hsv_getter(self):
         result = to_hsv((self[0], self[1], self[2], self[3]))
         result[0] =  floor(result[0] * 360)
         return result
 
-    @property
-    def h(self):
+    def h_getter(self):
         return self.hsv[0]
-    @property
-    def s(self):
+    def s_getter(self):
         return self.hsv[1]
-    @property
-    def v(self):
+    def v_getter(self):
         return self.hsv[2]
 
-    @property
-    def brightness(self):
+    def brightness_getter(self):
         return brightness(self)
-
 
     def invert(self):
         return inverse(self)
@@ -64,9 +50,6 @@ class Color(Vec4):
     def tint(self, amount):
         return tint(self, amount)
 
-@deprecated("Use hsv(...) instead of color(...)")
-def color(h,s,v,a=1):
-    return hsv(h,s,v,a)
 
 def hsv(h, s, v, a=1):
     return Color(colorsys.hsv_to_rgb((h / 360) - floor(h / 360), s, v) + (a,))
@@ -195,5 +178,5 @@ if __name__ == '__main__':
     print(e.color.name)
     print('rgb to hex:', color.rgb_to_hex(*color.blue))
     # e.color = hex('ced9a9')
-    e.color = color.color(1,2,3)
+    e.color = color.rgba32(1,2,3)
     app.run()
