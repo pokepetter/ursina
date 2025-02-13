@@ -66,7 +66,7 @@ class Vec3(PandaVec3):
 
     @property
     def xy(self):
-        return Vec2(self.x, self.y)
+        return Vec2(self[0], self[1])
     @xy.setter
     def xy(self, value):
         self[0] = value[0]
@@ -74,7 +74,7 @@ class Vec3(PandaVec3):
 
     @property
     def yx(self):
-        return Vec2(self.y, self.x)
+        return Vec2(self[1], self[0])
     @yx.setter
     def yx(self, value):
         self[1] = value[0]
@@ -82,7 +82,7 @@ class Vec3(PandaVec3):
 
     @property
     def xz(self):
-        return Vec2(self.x, self.z)
+        return Vec2(self[0], self[2])
     @xz.setter
     def xz(self, value):
         self[0] = value[0]
@@ -90,7 +90,7 @@ class Vec3(PandaVec3):
 
     @property
     def yz(self):
-        return Vec2(self.y, self.z)
+        return Vec2(self[1], self[2])
     @yz.setter
     def yz(self, value):
         self[1] = value[0]
@@ -98,7 +98,7 @@ class Vec3(PandaVec3):
 
     @property
     def xzy(self):
-        return Vec3(self.x, self.z, self.y)
+        return Vec3(self[0], self[2], self[1])
     @xzy.setter
     def xzy(self, value):
         self[0] = value[0]
@@ -153,20 +153,32 @@ Vec3.back = Vec3(0,0,-1)
 
 
 if __name__ == '__main__':
-    a = Vec3(1,0,0) * 2
-    a = Vec3(1,0,1) * Vec3(2,1,2)
-    b = Vec3(1.252352324,0,1)
-    b += Vec3(0,1)
+    from ursinastuff import _assert, _test
+    _assert(Vec3(1,0,-1) * 2 == Vec3(2,0,-2), name='Vec3*int')
+    _assert(Vec3(1,0,-1) * Vec3(1,2,3) == Vec3(1,0,-3), name='Vec3*Vec3')
 
+    b = Vec3(1,0,1)
+    b += Vec3(0,1,0)
+    _assert(b == Vec3(1,1,1), name='Vec3+=Vec3')
+
+    b = Vec3(0,0,0)
+    b.x += 1
+    b.y += 1
+    b.z += 1
+    _assert(b == Vec3(1,1,1), name='Vec3.x+=int')
+
+    _test(round, (Vec3(1.14,2.86,1.25), 0), expected_result=Vec3(1,3,1))
+    _test(abs, (Vec3(1,-2,-3), ), expected_result=Vec3(1,2,3))
+
+
+    # print(round(b))
     # test
-    print(a)
-    b.x += 2
-    print(b.x)
-    print('xy:', b.xy)
-    print(round(b))
-    print(round(b.xy))
-    print('-----------', a * 2)
-    print('-----------', 2 * a)
-    print(abs(Vec3(-1,2,-3)))
+    # b.x += 2
+    # print(b.x)
+    # print('xy:', b.xy)
+    # print(round(b.xy))
+    # print('-----------', a * 2)
+    # print('-----------', 2 * a)
+    # print(abs(Vec3(-1,2,-3)))
 
-    print(Vec3(1,1,1) * (2,2))
+    # print(Vec3(1,1,1) * (2,2))
