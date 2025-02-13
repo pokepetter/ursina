@@ -13,13 +13,6 @@ class PlatformerController2d(Entity):
         self.collider = 'box'
 
         self.animator = Animator({'idle' : None, 'walk' : None, 'jump' : None})
-        # self.animation_state_machine.state = 'jump'
-        # self.idle_animation = None
-        # self.walk_animation = None
-        # self.jump_animation = None
-        # self.idle_animation = Entity(parent=self, model='cube', color=color.gray, origin_y=-.5, scale_z=2)
-        # self.walk_animation = Animation(parent=self, texture='ursina_wink', color=color.red, origin_y=-.5, scale=(2,2), double_sided=True)
-        # self.model = None
 
         self.walk_speed = 8
         self.walking = False
@@ -50,7 +43,6 @@ class PlatformerController2d(Entity):
         invoke(setattr, self, 'gravity', target_gravity, delay=1/60)
         self._original_scale_x = self.scale_x
 
-        Entity(model='cube', scale=.1, parent=self, color=color.azure, x=.5, y=.5)
         self.min_x = -99999
         self.max_x = 99999
 
