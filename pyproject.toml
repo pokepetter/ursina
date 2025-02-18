@@ -23,7 +23,7 @@ pyperclip = "*"
 screeninfo = "*"
 
 [tool.poetry.extras]
-extras = ["numpy", "imageio", "psd-tools3", "psutil", "tripy", "thumbhash"]
+extras = ["numpy", "imageio", "psd-tools3", "psutil", "tripy", "thumbhash-python"]
 
 
 
