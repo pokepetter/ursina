@@ -16,6 +16,8 @@ audio_groups = DotDict(
     dialogue =  DotDict(volume_multiplier=1),
 )
 
+audio_clip_cache = dict()
+
 
 from ursina.scripts.property_generator import generate_properties_for_class
 @generate_properties_for_class()
@@ -31,7 +33,7 @@ class Audio(Entity):
         if not self.clip:
             print_warning('missing audio clip:', sound_file_name)
             return
-        
+
         self.volume = volume
         self.pitch = pitch
         self.balance = balance
@@ -72,6 +74,10 @@ class Audio(Entity):
 
 
     def clip_setter(self, value):
+        if value in audio_clip_cache:
+            self._clip = audio_clip_cache[value]
+            return
+
         if isinstance(value, Path):
             self._clip = loader.loadSfx(Filename.fromOsSpecific(str(value.resolve())))  # type: ignore
             return
@@ -89,6 +95,7 @@ class Audio(Entity):
                     for f in folder.glob(f'**/{value}{suffix}'):
                         self.path = str(f.resolve())
                         self._clip = loader.loadSfx(Filename.fromOsSpecific(self.path))  # type: ignore
+                        audio_clip_cache[value] = self._clip
                         # print('...loaded audio clip:', p, self._clip)
                         return
 
@@ -124,6 +131,9 @@ class Audio(Entity):
 
 
     def play(self, start=0):
+        if application.paused and not self.ignore_paused:
+            return
+
         if self.clip:
             # print('play from:', start, self.clip)
             self.time = start
@@ -205,5 +215,7 @@ if __name__ == '__main__':
     #
     # def update():
     #     print(a.time)
+
+
 
     app.run()
