@@ -65,7 +65,7 @@ def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[], ignore_
                 cols.extend([Color(*vcol) * e.color for vcol in e.model.colors])
             else:
                 cols.extend((e.color, ) * len(e.model.vertices))
-            
+
             if include_normals:
                 rotation_scale_matrix = vertex_to_world_matrix.getUpper3()  # get the rotation and scaling part of the matrix
                 normal_to_world_matrix = rotation_scale_matrix
@@ -103,22 +103,21 @@ if __name__ == '__main__':
 
     from ursina.shaders import lit_with_shadows_shader, normals_shader
     Entity.default_shader = lit_with_shadows_shader
-    # Entity.default_shader = normals_shader
-    
-    p = Entity(texture='brick')
-    e1 = Entity(parent=p, model='sphere', y=1.5, color=color.pink, rotation_y=90)
-    e2 = Entity(parent=p, model='cube', color=color.yellow, x=1, origin_y=-.5, texture='brick')
+
+    combine_parent = Entity(texture='brick')
+    e1 = Entity(parent=combine_parent, model='sphere', y=1.5, color=color.pink, rotation_y=90)
+    e2 = Entity(parent=combine_parent, model='cube', color=color.yellow, x=1, origin_y=-.5, texture='brick')
     e3 = Entity(parent=e2, model='cube', color=color.yellow, y=2, scale=.5, texture='brick', texture_scale=Vec2(3,3), texture_offset=(.1,.1))
-    e4 = Entity(parent=p, model='plane', color=color.lime, scale=10, texture='brick', texture_scale=Vec2(5,5))
+    e4 = Entity(parent=combine_parent, model='plane', color=color.lime, scale=10, texture='brick', texture_scale=Vec2(5,5))
+    Text(position=window.top, origin=(0,.5), text='Press space to combine')
 
     def input(key):
         if key == 'space':
             from time import perf_counter
             t = perf_counter()
-            p.combine(include_normals=True)
-            p.shader = lit_with_shadows_shader
-            # p.shader = normals_shader
-            p.texture='brick'
+            combine_parent.combine(include_normals=True)
+            combine_parent.shader = lit_with_shadows_shader
+            # combine_parent.shader = normals_shader
             print('combined in:', perf_counter() - t)
 
 
