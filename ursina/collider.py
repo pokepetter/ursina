@@ -1,5 +1,5 @@
 from panda3d.core import CollisionNode, CollisionBox, CollisionSphere, CollisionCapsule, CollisionPolygon
-from panda3d.core import NodePath
+from panda3d.core import NodePath, GeomVertexReader
 from ursina.vec3 import Vec3
 from ursina.mesh import Mesh
 
@@ -64,11 +64,6 @@ class CapsuleCollider(Collider):
         self.radius = radius
         super().__init__(entity, CollisionCapsule(center[0], center[1] + radius, center[2], center[0], center[1] + height, center[2], radius))
 
-
-from panda3d.core import (CollisionNode, CollisionBox, CollisionSphere, CollisionCapsule,
-                          CollisionPolygon, NodePath, GeomVertexReader)
-from ursina.vec3 import Vec3
-from ursina.mesh import Mesh
 
 class MeshCollider(Collider):
     """
