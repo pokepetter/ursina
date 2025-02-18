@@ -191,7 +191,7 @@ class Ursina(ShowBase):
                     if script.enabled and hasattr(script, 'update') and callable(script.update):
                         script.update()
 
-            if e.shader:
+            if e.shader and hasattr(e.shader, "continuous_input"):
                 for key, value in e.shader.continuous_input.items():
                     e.set_shader_input(key, value())
 
