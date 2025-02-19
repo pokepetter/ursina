@@ -6,6 +6,7 @@ import builtins
 import pyperclip
 import inspect
 
+
 class LevelEditor(Entity):
     def __init__(self, **kwargs):
         super().__init__()
@@ -13,6 +14,8 @@ class LevelEditor(Entity):
         self.scene_folder = application.asset_folder / 'scenes'
         self.scenes = [[LevelEditorScene(x, y, f'untitled_scene[{x},{y}]') for y in range(8)] for x in range(8)]
         self.current_scene = None
+
+        self.ui_scale_factor = 1.0  # Default scale #
 
         self.grid = Entity(parent=self, model=Grid(16,16), rotation_x=90, scale=64, collider='box', color=color.white33, enabled=False)
         self.origin_mode = 'center'
@@ -24,20 +27,30 @@ class LevelEditor(Entity):
 
 
         self.ui = Entity(parent=camera.ui, name='LEVEL_EDITOR.ui')
+
+        self.ui.scale *= self.ui_scale_factor #
+
         self.point_renderer = Entity(parent=self, model=Mesh([], mode='point', thickness=.1, render_points_in_3d=True), texture='circle_outlined', always_on_top=True, unlit=True, render_queue=1)
         self.cubes = [Entity(wireframe=True, color=color.azure, parent=self, enabled=True) for i in range(128)] # max selection
 
-        self.origin_mode_menu = ButtonGroup(['last', 'center', 'individual'], min_selection=1, position=window.top_left+Vec2(.45,0), parent=self.ui)
-        self.origin_mode_menu.scale *= .5
-        self.origin_mode_menu.on_value_changed = self.render_selection
-        self.local_global_menu = ButtonGroup(['local', 'global'], default='global', min_selection=1, position=window.top_left+Vec2(.25,0), parent=self.ui)
-        self.local_global_menu.scale *= .5
-        self.local_global_menu.on_value_changed = self.render_selection
-        # self.play_button = Button(parent=camera.ui, position=window.top, scale=.02, text='p', origin_y=.5)
-        # def play_button_on_click():
-        #     self.edit_mode = not self.edit_mode
-        # self.play_button.on_click = play_button_on_click
+        self.origin_mode_menu = ButtonGroup(['last', 'center', 'individual'], min_selection=1, position=window.top, parent=self.ui)
 
+        self.origin_mode_menu.scale *= scale_factor #
+
+        self.origin_mode_menu.on_value_changed = self.render_selection
+        self.local_global_menu = ButtonGroup(['local', 'global'], default='global', min_selection=1, position=window.top - Vec2(.2,0), parent=self.ui)
+        
+        self.local_global_menu.scale *= scale_factor #
+        #
+        def update_text_scale(button_group):
+            for button in button_group.buttons:
+                button.text_entity.scale *= self.ui_scale_factor
+
+        update_text_scale(self.origin_mode_menu)
+        update_text_scale(self.local_global_menu)
+        #
+
+        self.local_global_menu.on_value_changed = self.render_selection
         self.target_fov = 90
 
         self.sun_handler = SunHandler()
@@ -49,6 +62,11 @@ class LevelEditor(Entity):
         self.gizmo_toggler = GizmoToggler()
 
         self.quick_grabber = QuickGrabber()   # requires gizmo, selector
+
+        self.gizmo.scale *= self.ui_scale_factor #
+        self.gizmo_toggler.scale *= self.ui_scale_factor #
+        self.quick_grabber.scale *= self.ui_scale_factor #
+
         self.quick_scaler = QuickScaler()    # requires scale_gizmo, gizmo_toggler, selector
         self.quick_rotator = QuickRotator()
         self.rotate_to_view = RotateRelativeToView(target_entity=None)
@@ -81,6 +99,10 @@ class LevelEditor(Entity):
         self.inspector = Inspector()
         self.point_of_view_selector = PointOfViewSelector()
         self.help = Help()
+
+        self.help.scale *= self.ui_scale_factor #
+        self.inspector.scale *= self.ui_scale_factor #
+
 
         self._edit_mode = True
 
@@ -149,8 +171,10 @@ class LevelEditor(Entity):
             elif combined_key == 'control+y':
                 self.current_scene.undo.redo()
 
+
         if self.selection and combined_key == 'f':
             self.editor_camera.animate_position(self.gizmo.world_position, duration=.1, curve=curve.linear)
+
 
         elif combined_key == 'control+e':
             self.edit_mode = not self.edit_mode
@@ -169,9 +193,6 @@ class LevelEditor(Entity):
 
     @edit_mode.setter
     def edit_mode(self, value):
-        if not self.current_scene:
-            return
-
         if not value and self._edit_mode:   # enter play mode
             for e in self.children:
                 e.ignore = True
@@ -180,10 +201,14 @@ class LevelEditor(Entity):
             self.editor_camera.original_target_z = self.editor_camera.target_z
             self.editor_camera.enabled = False
             self.ui.enabled = False
+
             for e in self.current_scene.entities:
                 # switch editor colliders out for what they should have during play
                 if hasattr(e, 'edit_mode') and e.edit_mode:
                     e.edit_mode = False
+
+                if hasattr(e, 'text_entity'): #
+                    e.text_entity.scale *= self.ui_scale_factor  # Scale text elements #
 
                 e.editor_collider = e.collider
                 if e.collider:
@@ -200,6 +225,9 @@ class LevelEditor(Entity):
 
         elif value and not self._edit_mode: # back to editor mode
             self.ui.enabled = True
+
+            self.ui.scale *= self.ui_scale_factor #
+
             for e in self.current_scene.entities:
                 if hasattr(e, 'stop') and callable(e.stop):
                     e.stop()
@@ -227,6 +255,8 @@ class LevelEditor(Entity):
         self.point_renderer.model.vertices = []
         self.point_renderer.model.colors = []
 
+        self.point_renderer.model.thickness *= self.ui_scale_factor #
+
         for e in self.entities:
             if not e or e.model and e.model.name == 'cube':
                 continue
@@ -248,7 +278,7 @@ class LevelEditor(Entity):
 
         # self.point_renderer.model.colors = [color.azure if e in self.selection else lerp(color.orange, color.hsv(0,0,1,0), distance(e.world_position, camera.world_position)/100) for e in self.entities if e.selectable and not e.collider]
         self.point_renderer.model.triangles = []
-        # print('--------------', len(self.point_renderer.model.vertices), len(self.point_renderer.model.colors), self.point_renderer.model.serialize())
+        # print('--------------', len(self.point_renderer.model.vertices), len(self.point_renderer.model.colors), self.point_renderer.model.recipe)
         self.point_renderer.model.generate()
 
         # self.gizmo.enabled = bool(self.selection and self.selection[-1])
@@ -259,6 +289,8 @@ class LevelEditor(Entity):
                 self.gizmo.world_position = self.selection[-1].world_position
             elif self.origin_mode_menu.value == 'center':
                 self.gizmo.world_position = sum([e.world_position for e in self.selection]) / len(self.selection)
+
+            self.gizmo.scale *= self.ui_scale_factor  # Scale gizmo #
 
             if self.local_global_menu.value == 'local' and self.origin_mode_menu.value == 'last':
                 self.gizmo.world_rotation = self.selection[-1].world_rotation
@@ -272,6 +304,9 @@ class LevelEditor(Entity):
                 self.cubes[i].world_transform = e.world_transform
                 self.cubes[i].origin = e.origin
                 self.cubes[i].model = copy(e.model)
+
+                self.cubes[i].scale *= self.ui_scale_factor #
+
                 self.cubes[i].enabled = True
 
         # print('---------- rendered selection')
@@ -281,6 +316,9 @@ class LevelEditor(Entity):
 
     def on_enable(self):
         if hasattr(self, 'ui'):
+
+            self.ui.scale *= self.ui_scale_factor #
+
             self.ui.enabled = True
 
     def on_disable(self):
@@ -384,11 +422,7 @@ class LevelEditorScene:
                     target_class = imported_classes[line["class"]]
 
 
-                try:
-                    instance = target_class(**kwargs)
-                except:
-                    instance = ErrorEntity()
-
+                instance = target_class(**kwargs)
                 self.entities.append(instance)
 
 
@@ -420,8 +454,7 @@ class LevelEditorScene:
 
         self.selection = []
         self.entities = []
-        if self.scene_parent:
-            destroy(self.scene_parent)
+        destroy(self.scene_parent)
 
 
 class Undo(Entity):
@@ -684,7 +717,7 @@ class RotationGizmo(Entity):
                 path = Circle(24).vertices
                 path.append(path[0])
                 RotationGizmo.model = Pipe(base_shape=Quad(radius=0), path=[Vec3(e)*32 for e in path])
-                RotationGizmo.model.save('rotation_gizmo_model.ursinamesh', application.internal_models_compressed_folder)
+                RotationGizmo.model.save('rotation_gizmo_model.ursinamesh', application.internal_models_compressed_folder, max_decimals=4)
 
         self.rotator = Entity(parent=LEVEL_EDITOR.gizmo)
         self.axis = Vec3(0,1,0)
@@ -1342,7 +1375,7 @@ class ClassSpawner(Entity):
             print_warning('class to spawn not found in LEVEL_EDITOR.class_menu.available_classes:', self.class_to_spawn)
             return
 
-        if self.class_to_spawn and self.class_to_spawn != 'None':
+        if self.class_to_spawn:
             print('spawn class', self.class_to_spawn)
             self.class_instance = LEVEL_EDITOR.class_menu.available_classes[self.class_to_spawn](world_transform=self.world_transform, add_to_scene_entities=False)
 
@@ -1401,13 +1434,13 @@ class Spawner(Entity):
         # LEVEL_EDITOR.prefabs =
 
         for i, prefab in enumerate(LEVEL_EDITOR.built_in_prefabs + LEVEL_EDITOR.prefabs):
-            button = Button(parent=self.ui, scale=.075/2, text=' ', text_size=.5, on_click=Func(self.spawn_entity, prefab))
+            button = Button(parent=self.ui, scale=.075/2, text=' ', text_size=1, on_click=Func(self.spawn_entity, prefab)) # changes size of the text at the bottom, origina=.5 #
             if hasattr(prefab, 'icon'):
                 button.icon = prefab.icon
             else:
                 button.text = '\n'.join(chunk_list(prefab.__name__, 5))
 
-        grid_layout(self.ui.children, origin=(0,-.5), spacing=(.005,0), max_x=32)
+        grid_layout(self.ui.children, origin=(0,-.5), spacing=(.05,0,0), max_x=32)
 
 
 
@@ -1588,7 +1621,7 @@ class LevelMenu(Entity):
         # self.tabs = [Button(parent=self.menu, scale=(1/4,1/8), position=(-1+(i/4),.5), origin=(-.5,-.5), color=color.hsv(90*i,.5,.3)) for i in range(4)]
 
 
-        self.current_scene_label = Text(parent=self.menu, x=-1, y=-.5, text='current scene:', z=-10, scale=2.5)
+        self.current_scene_label = Text(parent=self.menu, x=-1, y=-.5, text='current scene:', z=-10, scale=5) # changes text size of the bottom right corner, original=2.5 #
 
         self.load_scenes()
         # self.goto_scene(0, 0)
@@ -1645,13 +1678,13 @@ class LevelMenu(Entity):
             #     print(f'move scene at {start_x},{start_y} to {x},{y}')
             #     scene_a = LEVEL_EDITOR.scenes[start_x][start_y]
             #     scene_a.coordinates = (x,y)
-            #     scene_a.name = scene_a.name.split('[')[0] + f'[{x},{y}]'
+            #     scene_a.name = scene_a.name.split('['')[0] + f'[{x},{y}]'
             #     if scene_a.path:
             #         scene_a.path = scene_a.path.parent / (scene_a.name + '.py')
             #
             #     scene_b = LEVEL_EDITOR.scenes[x][y]
             #     scene_b.coordinates = (start_x, start_y)
-            #     scene_b.name = scene_a.name.split('[')[0] + f'[{start_x},{start_y}]'
+            #     scene_b.name = scene_b.name.split('['')[0] + f'[{start_x},{start_y}]'
             #     if scene_b.path:
             #         scene_b.path = scene_b.path.parent / (scene_b.name + '.py')
             #
@@ -1715,6 +1748,7 @@ class HierarchyList(Entity):
     def __init__(self):
         super().__init__(parent=LEVEL_EDITOR.ui, position=window.top_left+Vec2(0,-.05))
         self.quad_model = load_model('quad', application.internal_models_folder, use_deepcopy=True)
+
         self.bg = Entity(parent=self, model='quad', collider='box', origin=(-.5,.5), color=color.black90, scale=(.15,10))
         self.entity_list_text = Text(font='VeraMono.ttf', parent=self, scale=.6, line_height=1, position=Vec2(.005,0), z=-2)
         self.selected_renderer = Entity(parent=self.entity_list_text, scale=(.25,Text.size), model=Mesh(vertices=[]), color=hsv(210,.9,.6), origin=(-.5,.5), x=-.01, z=-1)
@@ -1801,13 +1835,13 @@ class InspectorInputField(InputField):
         super().__init__(**kwargs)
         self.text_field.x = .05
         self.text_field.y = -.25
-        self.text_field.world_scale = 25 * .75
+        self.text_field.world_scale = 25 * 1 # changes text size of the of the entity description box, original self.text_field.world_scale = 25 * .75 #
         self.text_field.text_entity.color = color.light_gray
         self.highlight_color = color._32
 
 
 class InspectorButton(Button):
-    defaults = dict(model='quad', origin=(-.5,.5), text='?', text_origin=(-.5,0), text_color=color.light_gray, color=color.black90, highlight_color=color._32)
+    defaults = dict(model='quad', origin=(-.5,.5), text_origin=(-.5,0), text_color=color.light_gray, color=color.black90, highlight_color=color._32)
 
     def __init__(self, **kwargs):
         kwargs = __class__.defaults | kwargs
@@ -1972,7 +2006,7 @@ class Inspector(Entity):
 
                 elif isinstance(value, Color):
                     color_field = ColorField(parent=self.shader_inputs_parent, text=f' {name}', y=-i, is_shader_input=True, attr_name=name, value=value)
-                    color_field.text_entity.scale *= .6
+                    color_field.text_entity.scale *= .6 # purpose unknown #
 
 
                 i += 1
@@ -1989,7 +2023,7 @@ class Inspector(Entity):
                 if attr is False or attr is True:
                 # if isinstance(attr, bool):
                     b = InspectorButton(parent=self.shader_inputs_parent, text=f' {name}:', highlight_color=color.red, y=-i, origin=(-.5,0))
-                    b.text_entity.scale *= .6
+                    b.text_entity.scale *= 1 # changes the text size of the shader's names, original=.6 #
                     def toggle_value(name=name):
                         new_value = not getattr(self.selected_entity, name)
                         for e in LEVEL_EDITOR.selection:
@@ -2002,9 +2036,9 @@ class Inspector(Entity):
                 elif _type in (float, int):
                     field = VecField(default_value=attr, parent=self.shader_inputs_parent, model='quad', scale=(1,1), x=.5, y=-i, text=f'  {name}')
                     for e in field.fields:
-                        e.text_field.scale *= .6
+                        e.text_field.scale *= 2 # original e.text_field.scale *= .6, purpose unknown #
                         e.text_field.text_entity.color = color.light_gray
-                    field.text_entity.scale *= .6*.75
+                    field.text_entity.scale *= 2 # original field.text_entity.scale *= .6*.75, purpose unknown #
                     field.text_entity.color = color.light_gray
 
                     def on_submit(name=name, field=field):
@@ -2019,7 +2053,7 @@ class Inspector(Entity):
                         text = attr.__name__
 
                     b = InspectorButton(parent=self.shader_inputs_parent, text=f' {name}: {text}', y=-i, origin=(-.5,0))
-                    b.text_entity.scale *= .6
+                    b.text_entity.scale *= 1 # b.text_entity.scale *= .6, purpose unknown
                     b.on_click = Func(setattr, LEVEL_EDITOR.menu_handler, 'state', 'class_menu')
 
                 i += 1
@@ -2105,12 +2139,12 @@ class ModelMenu(AssetMenu):
             else:
                 changes.append((index, 'model', e.model.name, name))
 
-        # for e in LEVEL_EDITOR.selection:
-        #     e.model = name
-        #     if name == 'cube':
-        #         e.collider = 'box'
-        #     else:
-        #         e.collider = None
+        for e in LEVEL_EDITOR.selection:
+            e.model = name
+            if name == 'cube':
+                e.collider = 'cube'
+            else:
+                e.collider = None
 
         LEVEL_EDITOR.menu_handler.state = 'None'
 
@@ -2196,7 +2230,7 @@ class ColorMenu(Entity):
             e.y = -i * .03
             e.knob.color = color.white
 
-        self.scale *= .5
+        self.scale *= 1 # changes the size of color slider, original self.scale *= .5
 
         self.bg = Entity(parent=self, model='quad', collider='box', visible_self=False, scale=10, z=1, on_click=self.close)
         self.apply_color = True     # set to False when you want to move the sliders but not update the color of the entities.
@@ -2287,7 +2321,7 @@ class ClassMenu(AssetMenu):
 
 class Help(Button):
     def __init__(self, **kwargs):
-        super().__init__(parent=LEVEL_EDITOR.ui, text='?', scale=.025, model='circle', origin=(-.5,.5), text_origin=(0,0), position=window.top_left)
+        super().__init__(parent=LEVEL_EDITOR.ui, text='?', scale=.025, model='circle', origin=(-.5,.5), text_origin=(0,0), position=window.top_left) # scale=.025 changes the size of the circle #
         self.tooltip = Text(
             position=self.position + Vec3(.05,-.05,-10),
             # wordwrap=0,
@@ -2314,7 +2348,7 @@ class Help(Button):
                 shift+d:    duplicate
             ''').strip(),
             background=True,
-            scale=.5
+            scale=1 # original scale=.5, changes the sizes of the text inside the help menu #
         )
         self.tooltip.background.color = color.black
         self.tooltip.original_scale = .75
@@ -2499,12 +2533,9 @@ if __name__ == '__main__':
     # level_editor.goto_scene(0,0)
 
 
-    from ursina.prefabs.first_person_controller import FirstPersonController
-    level_editor.class_menu.available_classes |= {'WhiteCube': WhiteCube, 'EditorCamera':EditorCamera, 'FirstPersonController':FirstPersonController}
-    from ursina.shaders import ssao_shader
-    # camera.clip_plane_far = 100
-    # camera.clip_plane_near = 1
-    # camera.shader = ssao_shader
+
+    level_editor.class_menu.available_classes |= {'WhiteCube': WhiteCube, 'EditorCamera':EditorCamera, }
+
     app.run()
 
 
