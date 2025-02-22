@@ -63,7 +63,7 @@ def invoke(function, *args, **kwargs):  # reserved keywords: 'delay', 'unscaled'
     )
 
 
-def after(delay, unscaled=True):    # function for @after decorator. Use the docrator, not this.
+def after(delay, unscaled=True, ignore_paused=False):    # function for @after decorator. Use the docrator, not this.
     '''@after decorator for calling a function after some time.
 
         example:
@@ -74,7 +74,7 @@ def after(delay, unscaled=True):    # function for @after decorator. Use the doc
     '''
     def _decorator(func):
         def wrapper(*args, **kwargs):
-            invoke(func, *args, **kwargs, delay=delay, unscaled=unscaled)
+            invoke(func, *args, **kwargs, delay=delay, unscaled=unscaled, ignore_paused=ignore_paused)
         return wrapper()
     return _decorator
 
@@ -125,10 +125,10 @@ def _destroy(entity, force_destroy=False):
 
     if hasattr(entity, '_parent') and entity._parent and hasattr(entity._parent, '_children') and entity in entity._parent._children:
         entity._parent._children.remove(entity)
-        
+
     for e in entity.loose_children:
         destroy(e)
-        
+
     if hasattr(entity, '_loose_parent') and entity._loose_parent and hasattr(entity._loose_parent, '_loose_children') and entity in entity._loose_parent._loose_children:
         entity._loose_parent._loose_children.remove(entity)
 
@@ -223,7 +223,7 @@ def _test(function, test_input, expected_result, label=''):
         print('expected result:', expected_result)
         if type(result) != type(expected_result):
             print(f'result should be: {type(expected_result)}, not: {type(result)}')
-        
+
         if isinstance(expected_result, (tuple, list)):
             if len(result) != len(expected_result):
                 print(f'resulting tuple/list should be {len(expected_result)} long, not {len(result)}')
@@ -255,7 +255,7 @@ if __name__ == '__main__':
     app = Ursina()
 
 
-    
+
 
 
     a = Audio('sine')
