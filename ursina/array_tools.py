@@ -209,18 +209,16 @@ if __name__ == '__main__':
     _test(list_2d_to_string, (list_2d, ), expected_result=expected_result)
 
 
-def sample_bilinear(target_2d_list, x, y):
-    X = int(x)
-    Y = int(y)
-    # Check that the indices are within the bounds of the height_map
-    if X+1 >= len(target_2d_list) or Y+1 >= len(target_2d_list[0]) or X < 0 or Y < 0:
-        raise ValueError("The requested point is out of bounds.")
+def sample_bilinear(target_2d_list:Array2D, x, y, clamp_if_outside=True):
+    X = clamp(int(x), 0, target_2d_list.width-1)
+    Y = clamp(int(y), 0, target_2d_list.height-1)
+    next_x = clamp(X+1, 0, target_2d_list.width-1)
+    next_y = clamp(Y+1, 0, target_2d_list.height-1)
 
-    # Heights at the four surrounding points
     height_bottom_left = target_2d_list[X][Y]
-    height_bottom_right = target_2d_list[X+1][Y]
-    height_top_left = target_2d_list[X][Y+1]
-    height_top_right = target_2d_list[X+1][Y+1]
+    height_bottom_right = target_2d_list[next_x][Y]
+    height_top_left = target_2d_list[X][next_y]
+    height_top_right = target_2d_list[next_x][next_y]
 
     x_fraction = x - X
     y_fraction = y - Y
@@ -232,11 +230,11 @@ def sample_bilinear(target_2d_list, x, y):
     return interpolated_height
 
 if __name__ == '__main__':
-    list_2d = [
+    list_2d = Array2D(data=[
         [1,1,0],
         [1,0,0],
         [1,0,0],
-    ]
+    ])
     _test(sample_bilinear, (list_2d, 0, 0), expected_result=1)
     _test(sample_bilinear, (list_2d, 1, 1), expected_result=0)
     _test(sample_bilinear, (list_2d, .5, .5), expected_result=.75)
