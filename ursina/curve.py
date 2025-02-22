@@ -226,10 +226,10 @@ def in_out_bounce(t):
     return (out_bounce((t * 2) - 1) * .5) + .5
 
 def zero(t):
-    return 0    
+    return 0
 
 def one(t):
-    return 1  
+    return 1
 
 def combine(curve_a, curve_b, split_at):
     def _new_curve_func(t):
@@ -261,7 +261,6 @@ for e in dir(sys.modules[__name__]):
         '''))
 
 
-# bezier code is translated  from WebKit implementation
 class CubicBezier:
     __slots__ = ['a', 'b', 'c', 'd', 'cx', 'bx', 'ax', 'cy', 'by', 'ay']
 
@@ -367,7 +366,7 @@ if __name__ == '__main__':
     #     except:
     #         pass
 
-    
+
 
     c = CubicBezier(0, .5, 1, .5)
     print('-----------', c.calculate(.23))
