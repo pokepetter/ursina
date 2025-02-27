@@ -120,6 +120,9 @@ def _destroy(entity, force_destroy=False):
     if entity in scene.entities:
         scene.entities.remove(entity)
 
+    if entity in scene.post_update_entities:
+        scene.post_update_entities.remove(entity)
+
     if entity in scene.collidables:
         scene.collidables.remove(entity)
 
