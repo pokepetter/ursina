@@ -970,11 +970,9 @@ class Entity(NodePath, metaclass=PostInitCaller):
             return (v[0] / length, v[1] / length, v[2] / length)
 
         def dot_product(v1, v2):
-            """Dot product of two 3D vectors."""
             return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2]
 
         def cross_product(v1, v2):
-            """Cross product of two 3D vectors."""
             return (
                 v1[1] * v2[2] - v1[2] * v2[1],
                 v1[2] * v2[0] - v1[0] * v2[2],
@@ -993,15 +991,9 @@ class Entity(NodePath, metaclass=PostInitCaller):
             return Quat(w, x, y, z)
 
         def rotate_vector_by_quaternion(vec, quat):
-            """Rotate vector v by quaternion q."""
-            # Quaternion for the vector
             vec_quat = Quat(0, vec[0], vec[1], vec[2])
-
             quat_conjugate = Quat(quat[0], -quat[1], -quat[2], -quat[3])
-
-            # Rotate the vector using quaternion multiplication
-            vec_rotated = quaternion_multiply(quaternion_multiply(quat, vec_quat), quat_conjugate)
-
+            vec_rotated = quaternion_multiply(quaternion_multiply(quat, vec_quat), quat_conjugate)  # Rotate the vector using quaternion multiplication
             return Vec3(vec_rotated[1], vec_rotated[2], vec_rotated[3])
 
         def align_vectors(v1, v2, forward):
@@ -1009,7 +1001,6 @@ class Entity(NodePath, metaclass=PostInitCaller):
             # Compute the axis perpendicular to both vectors
             axis = cross_product(v1, v2)
 
-            # Normalize the axis
             axis = normalize_vector(axis)
 
             # Compute the angle between the vectors
@@ -1021,24 +1012,13 @@ class Entity(NodePath, metaclass=PostInitCaller):
             half_angle = angle / 2
             sin_half_angle = math.sin(half_angle)
 
-            roll_quaternion = (
-                math.cos(half_angle),
-                forward[0] * sin_half_angle,
-                forward[1] * sin_half_angle,
-                forward[2] * sin_half_angle
-            )
-
+            roll_quaternion = (math.cos(half_angle), forward[0]*sin_half_angle, forward[1]*sin_half_angle, forward[2]*sin_half_angle)
             return roll_quaternion
-        def quaternion_from_axis_angle(axis, angle):
-            """Create a quaternion from an axis and an angle."""
+
+        def quaternion_from_axis_and_angle(axis, angle):
             half_angle = angle / 2
             sin_half_angle = math.sin(half_angle)
-            return (
-                math.cos(half_angle),
-                axis[0] * sin_half_angle,
-                axis[1] * sin_half_angle,
-                axis[2] * sin_half_angle
-            )
+            return (math.cos(half_angle), axis[0]*sin_half_angle, axis[1]*sin_half_angle, axis[2]*sin_half_angle)
 
         """
         Create a quaternion that aligns the specified forward_axis with the direction vector
