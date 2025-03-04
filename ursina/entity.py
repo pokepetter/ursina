@@ -1130,13 +1130,13 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
         return False
 
-    def get_decendants(self, include_disabled=True):   # recursively get all descendants (children, grandchildren, etc.).
+    def get_descendants(self, include_disabled=True):       # recursively get all descendants (children, grandchildren, and so on)
         descendants = []
         for child in self.children:
-            if not include_disabled:
-                continue
+            if not include_disabled and not child.enabled:
+                continue  # Skip disabled children if include_disabled is False
             descendants.append(child)
-            descendants.extend(get_all_descendants(child))  # Recursively get child's descendants
+            descendants.extend(child.get_descendants(include_disabled))  # Recursive call
         return descendants
 
 
