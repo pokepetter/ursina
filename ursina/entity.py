@@ -1300,8 +1300,8 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def animate_shader_input(self, name, value, **kwargs):
-        # instead of settings entity variables, set shader input
-        self.animate(name, value, getattr_function=self.get_shader_input, setattr_function=self.set_shader_input, **kwargs)
+        # instead of setting entity variables, set shader input
+        return self.animate(name, value, getattr_function=self.get_shader_input, setattr_function=self.set_shader_input, **kwargs)
 
 
     # generate animation functions
