@@ -655,13 +655,11 @@ class Entity(NodePath, metaclass=PostInitCaller):
     @property
     def screen_position(self): # get screen position(ui space) from world space.
         from ursina import camera
-        p3d = camera.getRelativePoint(self, Vec3.zero)
-        full = camera.lens.getProjectionMat().xform(Vec4(*p3d, 1))
-        recip_full3 = 1
-        if full[3] > 0:
-            recip_full3 = 1 / full[3]
-        p2d = full * recip_full3
-        return Vec2(p2d[0]*camera.aspect_ratio/2, p2d[1]/2)
+        world_pos = camera.getRelativePoint(self, Vec3.zero)
+        projected_pos = camera.lens.getProjectionMat().xform(Vec4(*world_pos, 1))
+        reciprocal_w = 1 / projected_pos[3] if projected_pos[3] > 0 else 1
+        normalized_pos = projected_pos * reciprocal_w
+        return Vec2(normalized_pos[0] * camera.aspect_ratio / 2, normalized_pos[1] / 2)
 
 
     def shader_setter(self, value):
