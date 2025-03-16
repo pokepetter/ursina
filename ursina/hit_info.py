@@ -4,13 +4,13 @@ class HitInfo:
 
     def __init__(self, **kwargs):
 
-        self.hit = None
-        self.entity = None
-        self.point = None
-        self.world_point = None
-        self.distance = 9999
-        self.normal = None
-        self.world_normal = None
+        self.hit:bool = None
+        self.entity:Entity = None
+        self.point:Vec3 = None
+        self.world_point:Vec3 = None
+        self.distance:float = 9999
+        self.normal:Vec3 = None
+        self.world_normal:Vec3 = None
         self.hits = []
         self.entities = []
 
