@@ -26,7 +26,7 @@ Rubik's Cube<br>
 app = Ursina()
 
 cube_colors = [
-    color.pink,  <gray># right</gray>
+    color.pink,     <gray># right</gray>
     color.orange,   <gray># left</gray>
     color.white,    <gray># top</gray>
     color.yellow,   <gray># bottom</gray>
@@ -36,15 +36,13 @@ cube_colors = [
 
 <gray># make a model with a separate color on each face</gray>
 combine_parent = <olive>Entity</olive>(<olive>enabled</olive>=False)
-<purple>for</purple> i in <blue>range</blue>(<yellow>3</yellow>):
-    dir = Vec3(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)
-    dir[i] = <yellow>1</yellow>
+<purple>for</purple> i, direction in enumerate((Vec<yellow>3</yellow>.right, Vec<yellow>3</yellow>.up, Vec<yellow>3</yellow>.forward)):
 
     e = <olive>Entity</olive>(<olive>parent</olive>=combine_parent, <olive>model</olive>=<green>'plane'</green>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>texture</olive>=<green>'white_cube'</green>, <olive>color</olive>=cube_colors[i*<yellow>2</yellow>])
-    e.look_at(dir, <green>'up'</green>)
+    e.look_at(direction, Vec<yellow>3</yellow>.up)
 
     e_flipped = <olive>Entity</olive>(<olive>parent</olive>=combine_parent, <olive>model</olive>=<green>'plane'</green>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>texture</olive>=<green>'white_cube'</green>, <olive>color</olive>=cube_colors[(i*<yellow>2</yellow>)+<yellow>1</yellow>])
-    e_flipped.look_at(-dir, <green>'up'</green>)
+    e_flipped.look_at(-direction, Vec<yellow>3</yellow>.up)
 
 combine_parent.combine()
 
