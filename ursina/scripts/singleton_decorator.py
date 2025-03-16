@@ -1,33 +1,28 @@
 def singleton(cls):
-    if not isinstance(cls, type):
-        raise TypeError(f"@singleton must be used on a class, but got {type(cls).__name__}")
+    def get_instance(*args, **kwargs):
+        if not hasattr(cls, '_singleton_instance') or not cls._singleton_instance:
+            cls._singleton_instance = cls(*args, **kwargs)
+        return cls._singleton_instance
 
-    class SingletonWrapper(cls):
-        _instance = None  # Store instance at the wrapper level
-
-        def __new__(subcls, *args, **kwargs):
-            if subcls is not SingletonWrapper:  # Prevent subclassing
-                raise TypeError(f"Cannot inherit class {cls.__name__} because it is a singleton. Use composition instead.")
-            if SingletonWrapper._instance is None:
-                SingletonWrapper._instance = super().__new__(cls)
-            return SingletonWrapper._instance
-
-    # Prevent subclassing explicitly
-    def prevent_subclassing(subcls, **kwargs):
-        raise TypeError(f"Cannot inherit class {cls.__name__} because it is a singleton. Use composition instead.")
-
-    cls.__init_subclass__ = classmethod(prevent_subclassing)
-
-    return SingletonWrapper
-
+    return get_instance
 
 
 if __name__ == '__main__':
-    from ursina import Ursina
-    app = Ursina()
-    app2 = Ursina()
+    from ursina.ursinastuff import _test, _assert
 
-    print(app == app2)
+    class MyBaseClass:
+        def __init__(self, name):
+            self.name = name
 
-    class Game(Ursina):
-        pass
+    @singleton
+    class DecoratedClass(MyBaseClass):
+        def __init__(self, name='decorated_class'):
+            super().__init__(name)
+
+    app = DecoratedClass()
+    app_2 = DecoratedClass()
+    _assert(app == app_2)
+
+    # # this won't work
+    # class Game(DecoratedClass):
+    #     pass
