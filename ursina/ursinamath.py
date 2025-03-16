@@ -57,8 +57,7 @@ def lerp(a, b, t):
         else:
             return type(a)(*lerped)
     else:
-        print(f'''can't lerp types {type(a)} and {type(b)}''')
-
+        raise TypeError(f'''can't lerp types {type(a)} and {type(b)}''')
 
 def inverselerp(a, b, value):   # get *where* between a and b, value is (0.0 - 1.0)
     if a == b:
