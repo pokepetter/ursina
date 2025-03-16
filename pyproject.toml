@@ -1,31 +1,53 @@
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
 
-[tool.poetry]
+[project]
 name = "ursina"
 version = "7.0.0"
 description = "An easy to use game engine/framework for python."
 authors = [
-    "Petter Amland <pokepetter@gmail.com>",
-    ]
-license = "MIT"
-homepage = "https://github.com/pokepetter/ursina"
+    {name = "Petter Amland", email = "pokepetter@gmail.com"}
+]
+license = {text = "MIT"}
 keywords = ["game development"]
 readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "panda3d>=1.10.15",
+    "panda3d-gltf>=1.2.1",
+    "pillow>=8.0.0",
+    "pyperclip>=1.9.0",
+    "screeninfo>=0.8.1",
+]
 
-[tool.poetry.dependencies]
-python = ">=3.10"
-panda3d = "*"
-panda3d-gltf = "*"
-pillow = "*"
-pyperclip = "*"
-screeninfo = "*"
+[tool.setuptools]
+packages = ["ursina"]
 
-[tool.poetry.extras]
-extras = ["numpy", "imageio", "psd-tools3", "psutil", "tripy", "thumbhash-python"]
+[tool.setuptools.package-data]
+"*" = ["*.*"]
 
+[project.urls]
+homepage = "https://github.com/pokepetter/ursina"
 
+[project.optional-dependencies]
+extra = [
+    "imageio>=2.37.0",
+    "numpy>=2.2.3",
+    "psutil>=7.0.0",
+    "thumbhash-python>=1.0.1",
+    "tripy>=1.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "imageio>=2.37.0",
+    "numpy>=2.2.3",
+    "psutil>=7.0.0",
+    "ruff>=0.9.9",
+    "sswg>=2.3.0",
+    "tripy>=1.0.0",
+]
 
 [tool.ruff]
 # Allow lines to be as long as 300 characters.
@@ -63,3 +85,4 @@ builtins = [
     "Tooltip", "Sprite", "Draggable", "Panel", "Slider", "ThinSlider", "ButtonList", "ButtonGroup", "WindowPanel", "Space", "TextField", "InputField", "ContentTypes", "Cursor",
     "raycast", "boxcast", "terraincast"
     ]
+
