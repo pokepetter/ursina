@@ -539,7 +539,7 @@ for file in path.glob('**/*.py'):
                 # print('parsing singleton:', module_name)
                 attrs, methods = list(), list()
                 attrs = get_class_attributes(class_definition)
-                
+
                 all_methods = get_functions(class_definition, is_class=True)
                 methods = [e for e in all_methods if not e.is_property]
 
@@ -621,7 +621,7 @@ for group_name, group in groups.items():
 html += '</div>\n'
 html += '<main_section>\n'
 html += '    <h1 class="main_header">ursina API Reference</h1>\n'
-html += '    <p>v7.0.0</p>\n'
+html += '    <p>v8.0.0</p>\n'
 # print(module_info)
 # main part
 for group_name, group in groups.items():
@@ -774,14 +774,14 @@ for sample_name in ('Tic Tac Toe', 'Inventory', 'Pong', 'Minecraft Clone', "Rubi
         print('no image:', image_path)
 
     if file_path.exists():
-        print(f'generate webpage for: {sample_name} -> {file_path.stem}.txt')
+        print(f'generate webpage for: {sample_name} -> {file_path.stem}.sswg')
         with open(file_path, 'r') as source_file:
             source_code = source_file.read()
 
-        with open(f'{file_path.stem}.txt', 'w') as file:
+        with open(f'{file_path.stem}.sswg', 'w') as file:
             file.write(textwrap.dedent(f'''\
                 # title ursina engine documentation
-                # insert menu.txt
+                # insert menu.sswg
 
                 ### {sample_name}
                 <a href="{github_link}">{github_link}</a>
@@ -797,7 +797,7 @@ for sample_name in ('Tic Tac Toe', 'Inventory', 'Pong', 'Minecraft Clone', "Rubi
 
 samples_page_content = dedent('''\
     # title ursina engine samples
-    # insert menu.txt
+    # insert menu.sswg
 
     ### Samples
     ''')
@@ -809,5 +809,5 @@ samples_page_content += dedent('''\
     [Value of Life, https://github.com/pokepetter/ld44_life_is_currency, icons/value_of_life_icon.jpg]
     [Castaway, https://github.com/pokepetter/pyweek_30_castaway, icons/castaway_icon.jpg]
     ''')
-with open('samples.txt', 'w') as f:
+with open('samples.sswg', 'w') as f:
     f.write(samples_page_content)
