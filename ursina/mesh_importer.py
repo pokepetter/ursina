@@ -257,9 +257,7 @@ def obj_to_ursinamesh(folder=Func(getattr, application, 'models_compressed_folde
         name = name[:-4]
 
     for file_path in folder.glob(f'**/{name}.obj'):
-        # filepath = path / (os.path.splitext(f)[0] + '.obj')
         print('read obj at:', file_path)
-
 
         with file_path.open('r') as file:
             lines = file.readlines()
@@ -287,7 +285,6 @@ def obj_to_ursinamesh(folder=Func(getattr, application, 'models_compressed_folde
                 vert[0] = -vert[0]
                 verts.append(tuple(vert))
                 if len(parts) > 3:
-                    # current_color = color.rgb(*parts[3:])
                     vertex_colors_packed.append(color.rgb(*parts[3:]))
 
             elif l.startswith('vn '):
@@ -364,30 +361,36 @@ def obj_to_ursinamesh(folder=Func(getattr, application, 'models_compressed_folde
                         for i in range(len(mtl_data)-1):
                             if mtl_data[i].startswith('newmtl '):
                                 material_name = mtl_data[i].strip()[7:] # remove 'newmtl '
+                                mtl_dict[material_name] = {}
                                 for j in range(i+1, min(i+8, len(mtl_data))):
                                     if mtl_data[j].startswith('newmtl'):
                                         break
                                     if mtl_data[j].startswith('Kd '):
                                         material_color = [float(e) for e in mtl_data[j].strip()[3:].split(' ')]
-                                        mtl_dict[material_name] = *material_color, 1
-
+                                        mtl_dict[material_name]['diffuse'] = material_color
+                                    if mtl_data[j].startswith('map_Kd '):
+                                        texture_file = mtl_data[j].strip()[7:]
+                                        mtl_dict[material_name]['texture'] = texture_file
 
             elif l.startswith('usemtl ') and mtl_data: # apply material color
                 material_name = l[7:].strip()    # remove 'usemtl '
                 if material_name in mtl_dict:
-                    current_color = mtl_dict[material_name]
-
+                    current_color = mtl_dict[material_name]['diffuse'] if 'diffuse' in mtl_dict[material_name] else None
+                    current_texture = mtl_dict[material_name]['texture'] if 'texture' in mtl_dict[material_name] else None
 
         if norms: # make sure we have normals and not just normal indices (weird edge case).
             normals = [(-norms[nid][0], norms[nid][1], norms[nid][2]) for nid in norm_indices]
 
         if return_mesh:
-            return Mesh(
+            mesh = Mesh(
                 vertices=[verts[t] for t in tris],
                 normals=normals,
                 uvs=[uvs[uid] for uid in uv_indices],
                 colors=vertex_colors
-                )
+            )
+            if current_texture:
+                mesh.texture = current_texture
+            return mesh
 
         mesh = Mesh(vertices=tuple(verts[t] for t in tris), colors=tuple(col for col in vertex_colors), uvs=tuple(uvs[uid] for uid in uv_indices), normals=normals)
 
@@ -395,8 +398,6 @@ def obj_to_ursinamesh(folder=Func(getattr, application, 'models_compressed_folde
             return mesh
 
         out_path = (out_folder / file_path.stem).with_suffix('.ursinamesh')
-        # with open(out_path, 'w') as file:
-        #     file.write(meshstring)
         mesh.save(folder=out_folder, name=f'{file_path.stem}.ursinamesh')
 
         if delete_obj:
