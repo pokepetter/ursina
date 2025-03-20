@@ -105,7 +105,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
             if key in kwargs:
                 setattr(self, key, kwargs[key])
                 del kwargs[key]
-        
+
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -209,7 +209,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
             m.name = value
             m.setPos(Vec3(0,0,0))
             self._model = m
-                
+
 
         if self._model:
             self._model.reparentTo(self)
@@ -655,13 +655,11 @@ class Entity(NodePath, metaclass=PostInitCaller):
     @property
     def screen_position(self): # get screen position(ui space) from world space.
         from ursina import camera
-        p3d = camera.getRelativePoint(self, Vec3.zero)
-        full = camera.lens.getProjectionMat().xform(Vec4(*p3d, 1))
-        recip_full3 = 1
-        if full[3] > 0:
-            recip_full3 = 1 / full[3]
-        p2d = full * recip_full3
-        return Vec2(p2d[0]*camera.aspect_ratio/2, p2d[1]/2)
+        world_pos = camera.getRelativePoint(self, Vec3.zero)
+        projected_pos = camera.lens.getProjectionMat().xform(Vec4(*world_pos, 1))
+        reciprocal_w = 1 / projected_pos[3] if projected_pos[3] > 0 else 1
+        normalized_pos = projected_pos * reciprocal_w
+        return Vec2(normalized_pos[0] * camera.aspect_ratio / 2, normalized_pos[1] / 2)
 
 
     def shader_setter(self, value):
@@ -972,11 +970,9 @@ class Entity(NodePath, metaclass=PostInitCaller):
             return (v[0] / length, v[1] / length, v[2] / length)
 
         def dot_product(v1, v2):
-            """Dot product of two 3D vectors."""
             return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2]
 
         def cross_product(v1, v2):
-            """Cross product of two 3D vectors."""
             return (
                 v1[1] * v2[2] - v1[2] * v2[1],
                 v1[2] * v2[0] - v1[0] * v2[2],
@@ -986,66 +982,48 @@ class Entity(NodePath, metaclass=PostInitCaller):
         def quaternion_multiply(q1, q2):
             w1, x1, y1, z1 = q1
             w2, x2, y2, z2 = q2
-            
+
             w = w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2
             x = w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2
             y = w1 * y2 + y1 * w2 + z1 * x2 - x1 * z2
             z = w1 * z2 + z1 * w2 + x1 * y2 - y1 * x2
-            
+
             return Quat(w, x, y, z)
 
         def rotate_vector_by_quaternion(vec, quat):
-            """Rotate vector v by quaternion q."""
-            # Quaternion for the vector
             vec_quat = Quat(0, vec[0], vec[1], vec[2])
-            
             quat_conjugate = Quat(quat[0], -quat[1], -quat[2], -quat[3])
-            
-            # Rotate the vector using quaternion multiplication
-            vec_rotated = quaternion_multiply(quaternion_multiply(quat, vec_quat), quat_conjugate)
-            
+            vec_rotated = quaternion_multiply(quaternion_multiply(quat, vec_quat), quat_conjugate)  # Rotate the vector using quaternion multiplication
             return Vec3(vec_rotated[1], vec_rotated[2], vec_rotated[3])
 
         def align_vectors(v1, v2, forward):
             """Align v1 to v2 around the forward axis by computing the roll quaternion."""
             # Compute the axis perpendicular to both vectors
             axis = cross_product(v1, v2)
-            
-            # Normalize the axis
+
             axis = normalize_vector(axis)
-            
+
             # Compute the angle between the vectors
             cos_angle = dot_product(v1, v2)
             cos_angle = max(min(cos_angle, 1.0), -1.0)  # Clamp to avoid math errors
             angle = math.acos(cos_angle)
-            
+
             # Create a quaternion that rotates around the forward axis
             half_angle = angle / 2
             sin_half_angle = math.sin(half_angle)
-            
-            roll_quaternion = (
-                math.cos(half_angle),
-                forward[0] * sin_half_angle,
-                forward[1] * sin_half_angle,
-                forward[2] * sin_half_angle
-            )
-            
+
+            roll_quaternion = (math.cos(half_angle), forward[0]*sin_half_angle, forward[1]*sin_half_angle, forward[2]*sin_half_angle)
             return roll_quaternion
-        def quaternion_from_axis_angle(axis, angle):
-            """Create a quaternion from an axis and an angle."""
+
+        def quaternion_from_axis_and_angle(axis, angle):
             half_angle = angle / 2
             sin_half_angle = math.sin(half_angle)
-            return (
-                math.cos(half_angle),
-                axis[0] * sin_half_angle,
-                axis[1] * sin_half_angle,
-                axis[2] * sin_half_angle
-            )
+            return (math.cos(half_angle), axis[0]*sin_half_angle, axis[1]*sin_half_angle, axis[2]*sin_half_angle)
 
         """
-        Create a quaternion that aligns the specified forward_axis with the direction vector 
+        Create a quaternion that aligns the specified forward_axis with the direction vector
         while maintaining the orientation of other axes as defined by previous_rotation.
-        
+
         :param direction: The target direction to look in.
         :param forward_axis: The axis of the entity to align with the direction.
         :param previous_rotation: The quaternion representing the previous rotation.
@@ -1129,6 +1107,16 @@ class Entity(NodePath, metaclass=PostInitCaller):
                     p = p.parent
 
         return False
+
+    def get_descendants(self, include_disabled=True):       # recursively get all descendants (children, grandchildren, and so on)
+        descendants = []
+        for child in self.children:
+            if not include_disabled and not child.enabled:
+                continue  # Skip disabled children if include_disabled is False
+            descendants.append(child)
+            descendants.extend(child.get_descendants(include_disabled))  # Recursive call
+        return descendants
+
 
     def has_disabled_ancestor(self):
         p = self
@@ -1244,14 +1232,14 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
         sequence = Sequence(loop=loop, time_step=time_step, auto_destroy=auto_destroy, unscaled=unscaled, ignore_paused=ignore_paused, name=name)
         sequence.append(Wait(delay))
-        
+
         setattr(self, animator_name, sequence)
         self.animations.append(sequence)
 
         if not resolution:
             resolution = max(int(duration * 60), 1)
 
-        # if no custom getattr and setattr functions are provided (for example  when using animate_shader_input), animate the entity's variable. 
+        # if no custom getattr and setattr functions are provided (for example  when using animate_shader_input), animate the entity's variable.
         if not getattr_function:
             getattr_function = self._getattr
         if not setattr_function:
@@ -1292,8 +1280,8 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def animate_shader_input(self, name, value, **kwargs):
-        # instead of settings entity variables, set shader input
-        self.animate(name, value, getattr_function=self.get_shader_input, setattr_function=self.set_shader_input, **kwargs)
+        # instead of setting entity variables, set shader input
+        return self.animate(name, value, getattr_function=self.get_shader_input, setattr_function=self.set_shader_input, **kwargs)
 
 
     # generate animation functions

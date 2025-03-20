@@ -49,7 +49,7 @@ class FileButton(Button):
 class FileBrowser(Entity):
     def __init__(self, file_button_class=FileButton, selection_limit=1, start_path=None, file_types:list=None, **kwargs):
         self.file_types = file_types if file_types else ['.*', ]
-    
+
         if not start_path:
             start_path = Path('.').resolve()
         self.start_path = start_path
@@ -139,7 +139,7 @@ class FileBrowser(Entity):
 
             else:
                 # print('create new:', i)
-                b = self.file_button_class(parent=self.button_parent, path=f, text_origin=(-.5,0), text=prefix+f.name, y=-i*.025 -.09, load_menu=self, add_to_scene_entities=False)
+                b = self.file_button_class(parent=self.button_parent, path=f, text_origin=(-.5,0), text=prefix+f.name, y=-i*.025 -.09, load_menu=self)
 
         self.scroll = 0
 

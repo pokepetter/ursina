@@ -58,5 +58,5 @@ for path in files:
     text += ''.join([e[1] for e in code_parts])
     text += '\n# text'
 
-    with open(f'{path.stem}.txt', 'w', encoding='utf-8') as text_file:
+    with open(f'{path.stem}.sswg', 'w', encoding='utf-8') as text_file:
         text_file.write(text)

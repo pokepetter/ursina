@@ -63,7 +63,7 @@ def invoke(function, *args, **kwargs):  # reserved keywords: 'delay', 'unscaled'
     )
 
 
-def after(delay, unscaled=True):    # function for @after decorator. Use the docrator, not this.
+def after(delay, unscaled=True, ignore_paused=False):    # function for @after decorator. Use the docrator, not this.
     '''@after decorator for calling a function after some time.
 
         example:
@@ -74,7 +74,7 @@ def after(delay, unscaled=True):    # function for @after decorator. Use the doc
     '''
     def _decorator(func):
         def wrapper(*args, **kwargs):
-            invoke(func, *args, **kwargs, delay=delay, unscaled=unscaled)
+            invoke(func, *args, **kwargs, delay=delay, unscaled=unscaled, ignore_paused=ignore_paused)
         return wrapper()
     return _decorator
 
@@ -125,10 +125,10 @@ def _destroy(entity, force_destroy=False):
 
     if hasattr(entity, '_parent') and entity._parent and hasattr(entity._parent, '_children') and entity in entity._parent._children:
         entity._parent._children.remove(entity)
-        
+
     for e in entity.loose_children:
         destroy(e)
-        
+
     if hasattr(entity, '_loose_parent') and entity._loose_parent and hasattr(entity._loose_parent, '_loose_children') and entity in entity._loose_parent._loose_children:
         entity._loose_parent._loose_children.remove(entity)
 
@@ -213,17 +213,41 @@ def print_on_screen(text, position=(0,0), origin=(-.5,.5), scale=1, duration=1):
     destroy(text_entity, delay=duration)
 
 
-def _test(function, test_input, expected_result, label=''):
+def _test(function, test_input, expected_result, label='', approximate=False):
+    from math import isclose
+    from inspect import getframeinfo, stack, getsourcefile, getsourcelines
+
     result = function(*test_input)
-    if result == expected_result:
+    result_type = type(result)
+    expected_result_type = type(expected_result)
+
+    if not approximate and result == expected_result:
         print('\33[42mPASSED\033[0m', function.__name__, label)
+        return result
+
+    elif approximate and result_type is float and expected_result_type is float and isclose(result, expected_result, rel_tol=1e-7, abs_tol=0.0):
+        print('\33[42mPASSED\033[0m', function.__name__, label)
+        return result
+
     else:
         print('\33[41mFAILED\033[0m', function.__name__, label)
+        caller = getframeinfo(stack()[1][0])
+        url = f"{caller.filename}:{caller.lineno}"
+
+        # function_source_file = getsourcefile(function)
+        # function_line_number = getsourcelines(function)[1]
+        # function_url = f"{function_source_file}:{function_line_number}"
+        # GRAY = '\033[90m'
+        # RESET = '\033[0m'
+        # print(f"{GRAY}\033]8;;{url}\033\\{'[test]'}\033]8;;\033\\{RESET}" + f"{GRAY}\033]8;;{function_url}\033\\{'[function]'}\033]8;;\033\\{RESET}")
+
+        print(f"\033[90m{url}:\033[0m")
+
         print('result:', result)
         print('expected result:', expected_result)
         if type(result) != type(expected_result):
             print(f'result should be: {type(expected_result)}, not: {type(result)}')
-        
+
         if isinstance(expected_result, (tuple, list)):
             if len(result) != len(expected_result):
                 print(f'resulting tuple/list should be {len(expected_result)} long, not {len(result)}')
@@ -255,7 +279,7 @@ if __name__ == '__main__':
     app = Ursina()
 
 
-    
+
 
 
     a = Audio('sine')

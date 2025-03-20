@@ -1,4 +1,5 @@
 from math import sqrt, sin, acos, pi, cos, floor
+from math import hypot
 from panda3d.core import Vec4, LVector3f
 from ursina.vec2 import Vec2
 from ursina.vec3 import Vec3
@@ -56,8 +57,7 @@ def lerp(a, b, t):
         else:
             return type(a)(*lerped)
     else:
-        print(f'''can't lerp types {type(a)} and {type(b)}''')
-
+        raise TypeError(f'''can't lerp types {type(a)} and {type(b)}''')
 
 def inverselerp(a, b, value):   # get *where* between a and b, value is (0.0 - 1.0)
     if a == b:
@@ -71,6 +71,10 @@ if __name__ == '__main__':
     _test(lerp, (0, 100, .5), 50)
 
 
+def lerp_exponential_decay(a, b, decay_rate):    # frame-rate independent lerp for use in update. use this instead of lerp(a, b, time.dt) in update.
+    return lerp(a, b, 1 - pow(0.01, decay_rate))
+
+
 def lerp_angle(start_angle, end_angle, t):
     start_angle = start_angle % 360
     end_angle = end_angle % 360
@@ -82,12 +86,12 @@ def lerp_angle(start_angle, end_angle, t):
 
 def slerp(q1, q2, t):
     costheta = q1.dot(q2)
-    
+
     # ensure shortest path by flipping q2 if dot product is negative
     if costheta < 0.0:
         q2 = -q2
         costheta = -costheta
-    
+
     costheta = clamp(costheta, -1.0, 1.0)   # ensure valid range for acos
 
     theta = acos(costheta)
@@ -102,6 +106,9 @@ def slerp(q1, q2, t):
     r2 = sin(t * theta) / sintheta
     return (q1 * r1) + (q2 * r2)
 
+
+def slerp_exponential_decay(q1, q2, decay_rate):    # frame-rate independent version of slerp for use in update.
+    return slerp(q1, q2, 1 - pow(0.01, decay_rate))
 
 
 def clamp(value, floor, ceiling):
@@ -175,15 +182,15 @@ def make_gradient(index_value_dict):
 
 if __name__ == '__main__':
     _test(make_gradient, ({'0':color.hex('#ff0000ff'), '2':color.hex('#ffffffff')}, ), expected_result=[
-        color.hex('#ff0000ff'), 
-        lerp(color.hex('#ff0000ff'), color.hex('#ffffffff'), .5), 
+        color.hex('#ff0000ff'),
+        lerp(color.hex('#ff0000ff'), color.hex('#ffffffff'), .5),
         color.hex('#ffffffff'),
         ])
     _test(make_gradient, ({'0':color.hex('#ff0000ff'), '4':color.hex('#ffffffff')}, ), expected_result=[
-        color.hex('#ff0000ff'), 
-        lerp(color.hex('#ff0000ff'), color.hex('#ffffffff'), .25), 
-        lerp(color.hex('#ff0000ff'), color.hex('#ffffffff'), .5), 
-        lerp(color.hex('#ff0000ff'), color.hex('#ffffffff'), .75), 
+        color.hex('#ff0000ff'),
+        lerp(color.hex('#ff0000ff'), color.hex('#ffffffff'), .25),
+        lerp(color.hex('#ff0000ff'), color.hex('#ffffffff'), .5),
+        lerp(color.hex('#ff0000ff'), color.hex('#ffffffff'), .75),
         color.hex('#ffffffff'),
         ])
     _test(make_gradient, ({'0':16, '2':0}, ), expected_result=[16, 8, 0])
@@ -222,10 +229,14 @@ class Bounds:
 
 if __name__ == '__main__':
     from ursina import *
+    from ursinastuff import _assert, _test
     app = Ursina()
     e1 = Entity(position = (0,0,0))
     e2 = Entity(position = (0,1,1))
-    distance(e1, e2)
+    _test(distance, (e1, e2), expected_result=1.4142135623730951)
+
+    _test(distance_2d, (Vec2(0,0), Vec2(1,1)), expected_result=1.4142135623730951)
+
     distance_xz(e1, e2.position)
 
     between_color = lerp(color.lime, color.magenta, .5)

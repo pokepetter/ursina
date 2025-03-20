@@ -15,7 +15,14 @@ class Texture():
 
     def __init__(self, value, filtering='default'):
 
-        if isinstance(value, str):
+        if isinstance(value, str) and value.startswith('data:image/png;base64'):
+            import base64
+            from PIL import Image
+            from io import BytesIO
+            base64_data = value.lstrip('data:image/png;base64')   # remove prefix
+            value = Image.open(BytesIO(base64.b64decode(base64_data))).convert('RGBA')
+
+        elif isinstance(value, str):
             value = Path(value)
 
         if isinstance(value, Path):
@@ -244,7 +251,7 @@ if __name__ == '__main__':
     e.texture = 'test_tileset'
     # e.texture.set_pixels([e for e in e.texture.get_pixels()])
     e.texture.apply()
-    
+
     # tex = Texture.new((512,512), (255,0,0))
 
     pixels = e.texture.pixels
@@ -252,6 +259,10 @@ if __name__ == '__main__':
     print('w:', pixels.width, 'h:', pixels.height)
     for (x,y), value in enumerate_2d(pixels):
         new_grid[x][y] = int(color.rgba32(*value).v > .5)
+
+
+    texture_from_base64_string = Entity(model='cube', y=1.5, scale=1, texture=Texture('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAAJ0lEQVR4nGK5d/gdAwODArcEkGRiQAKMmut0gdTX/YroMoAAAAD//8caBbV8Qu6pAAAAAElFTkSuQmCC'))
+    EditorCamera()
 
     # print(new_grid)
     app.run()

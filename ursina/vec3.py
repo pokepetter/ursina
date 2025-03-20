@@ -1,8 +1,9 @@
 from panda3d.core import Vec3 as PandaVec3
 from ursina.vec2 import Vec2
+from ursina.scripts.property_generator import generate_properties_for_class
 
 
-
+@generate_properties_for_class()
 class Vec3(PandaVec3):
     def __round__(self, decimals=4):
         return Vec3(*(round(e,decimals) for e in self))
@@ -43,83 +44,66 @@ class Vec3(PandaVec3):
             return Vec3(self[0]-value[0], self[1]-value[1], self[2])
 
 
-    @property
-    def x(self):
+    def x_getter(self):
         return self[0]
-    @x.setter
-    def x(self, value):
+    def x_setter(self, value):
         self[0] = value
 
-    @property
-    def y(self):
+    def y_getter(self):
         return self[1]
-    @y.setter
-    def y(self, value):
+    def y_setter(self, value):
         self[1] = value
 
-    @property
-    def z(self):
+    def z_getter(self):
         return self[2]
-    @z.setter
-    def z(self, value):
+    def z_setter(self, value):
         self[2] = value
 
-    @property
-    def xy(self):
+    def xy_getter(self):
         return Vec2(self[0], self[1])
-    @xy.setter
-    def xy(self, value):
+    def xy_setter(self, value):
         self[0] = value[0]
         self[1] = value[1]
 
-    @property
-    def yx(self):
+    def yx_getter(self):
         return Vec2(self[1], self[0])
-    @yx.setter
-    def yx(self, value):
+    def yx_setter(self, value):
         self[1] = value[0]
         self[0] = value[1]
 
-    @property
-    def xz(self):
+    def xz_getter(self):
         return Vec2(self[0], self[2])
-    @xz.setter
-    def xz(self, value):
+    def xz_setter(self, value):
         self[0] = value[0]
         self[2] = value[1]
 
-    @property
-    def yz(self):
+    def yz_getter(self):
         return Vec2(self[1], self[2])
-    @yz.setter
-    def yz(self, value):
+    def yz_setter(self, value):
         self[1] = value[0]
         self[2] = value[1]
 
-    @property
-    def xzy(self):
+    def xzy_getter(self):
         return Vec3(self[0], self[2], self[1])
-    @xzy.setter
-    def xzy(self, value):
+    def xzy_setter(self, value):
         self[0] = value[0]
         self[2] = value[1]
         self[1] = value[2]
 
-    @property
-    def X(self):    # get x as int
+    def X_getter(self):    # get x as int
         return int(self.x)
-    @property
-    def Y(self):    # get y as int
+    def Y_getter(self):    # get y as int
         return int(self.y)
-    @property
-    def Z(self):    # get z as int
+    def Z_getter(self):    # get z as int
         return int(self.z)
-    @property
-    def XY(self):
-        return (self.X, self.Y)
-    @property
-    def XZ(self):
-        return (self.X, self.Z)
+    def XY_getter(self):
+        return Vec2(self.X, self.Y)
+    def XZ_getter(self):
+        return Vec2(self.X, self.Z)
+    def XYZ_getter(self):
+        return (self.X, self.Y, self.Z)
+    def XZY_getter(self):
+        return (self.X, self.Z, self.Y)
 
 
     def __mul__(self, value):
@@ -170,15 +154,14 @@ if __name__ == '__main__':
     _test(round, (Vec3(1.14,2.86,1.25), 0), expected_result=Vec3(1,3,1))
     _test(abs, (Vec3(1,-2,-3), ), expected_result=Vec3(1,2,3))
 
-
-    # print(round(b))
-    # test
-    # b.x += 2
-    # print(b.x)
-    # print('xy:', b.xy)
-    # print(round(b.xy))
-    # print('-----------', a * 2)
-    # print('-----------', 2 * a)
-    # print(abs(Vec3(-1,2,-3)))
-
-    # print(Vec3(1,1,1) * (2,2))
+    test_input = Vec3(1.1, 2.5, 3.4)
+    _test(test_input.x_getter, (), 1.1, approximate=True)
+    _test(test_input.X_getter, (), 1)
+    _test(test_input.y_getter, (), 2.5, approximate=True)
+    _test(test_input.Y_getter, (), 2)
+    _test(test_input.z_getter, (), 3.4, approximate=True)
+    _test(test_input.Z_getter, (), 3)
+    _test(test_input.xy_getter, (), Vec2(1.1,2.5))
+    _test(test_input.XY_getter, (), Vec2(1,2))
+    _test(test_input.xz_getter, (), Vec2(1.1,3.4))
+    _test(test_input.XZ_getter, (), Vec2(1,3))

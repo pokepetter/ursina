@@ -22,7 +22,6 @@ Pong<br>
 <img src="icons/pong.jpg"></img> <br>
 <div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina <purple>import</purple> *
 
-
 app = Ursina()
 
 window.color = color.black
@@ -37,12 +36,24 @@ ceiling = duplicate(floor, <olive>y</olive>=.<yellow>5</yellow>, rotation_<olive
 left_wall = duplicate(floor, x=-.<yellow>5</yellow>*window.aspect_ratio, rotation_<olive>z</olive>=<yellow>9</yellow><yellow>0</yellow>, <olive>visible</olive>=True)
 right_wall = duplicate(floor, x=.<yellow>5</yellow>*window.aspect_ratio, rotation_<olive>z</olive>=-<yellow>9</yellow><yellow>0</yellow>, <olive>visible</olive>=True)
 
+<gray># Score variables</gray>
+left_score = <yellow>0</yellow>
+right_score = <yellow>0</yellow>
+max_score = <yellow>5</yellow>
+game_paused = False  <gray># Added variable to track the game's paused state</gray>
 
 collision_cooldown = .<yellow>1</yellow><yellow>5</yellow>
 ball = <olive>Entity</olive>(<olive>model</olive>=<green>'circle'</green>, <olive>scale</olive>=.<yellow>0</yellow><yellow>5</yellow>, <olive>collider</olive>=<green>'box'</green>, speed=<yellow>0</yellow>, collision_cooldown=collision_cooldown)
 
+<gray># Score text</gray>
+score_text = Text(<olive>text</olive>=f"{left_score} : {right_score}", <olive>position</olive>=(<yellow>0</yellow>, .<yellow>4</yellow><yellow>5</yellow>), <olive>scale</olive>=<yellow>2</yellow>, <olive>origin</olive>=(<yellow>0</yellow>, <yellow>0</yellow>))
 
 <purple>def</purple> update():
+    global left_score, right_score, game_paused
+
+    <purple>if</purple> game_paused:
+        return  <gray># Stop all updates <purple>if</purple> the game is paused</gray>
+
     ball.collision_cooldown -= time.dt
     ball.position += ball.right * time.dt * ball.speed
 
@@ -50,64 +61,63 @@ ball = <olive>Entity</olive>(<olive>model</olive>=<green>'circle'</green>, <oliv
     right_paddle.y += (held_keys[<green>'up arrow'</green>] - held_keys[<green>'down arrow'</green>]) * time.dt * <yellow>1</yellow>
 
     <purple>if</purple> ball.collision_cooldown &gt; <yellow>0</yellow>:
-        <gray># after a collision, wait a little while before another collision can occur.</gray>
-        <gray># this is to prevent the ball <purple>from</purple> colliding multiple times with the same wall because</gray>
-        <gray># it hasn't got time to be moved away <purple>from</purple> it yet.</gray>
         return
 
     hit_info = ball.intersects()
     <purple>if</purple> hit_info.hit:
         ball.collision_cooldown = collision_cooldown
 
-        <purple>if</purple> hit_info.entity in (left_paddle, right_paddle, left_wall, right_wall):
-            hit_info.entity.collision = False
-            invoke(setattr, hit_info.entity, <green>'collision'</green>, False, dela<olive>y</olive>=.<yellow>1</yellow>)
-            direction_multiplier = <yellow>1</yellow>
-            <purple>if</purple> hit_info.entity == left_paddle:
-                direction_multiplier = -<yellow>1</yellow>
-
-                left_paddle.collision = False <gray># disable collision <purple>for</purple> the current paddle so it doesn't collide twice in a row</gray>
-                right_paddle.collision = True
-            <purple>else</purple>:
-                right_paddle.collision = False
-                left_paddle.collision = True
-
-            ball.rotation_z += <yellow>1</yellow><yellow>8</yellow><yellow>0</yellow> * direction_multiplier
-            ball.rotation_z -= (hit_info.entity.world_y - ball.y) * <yellow>2</yellow><yellow>0</yellow> * <yellow>3</yellow><yellow>2</yellow> * direction_multiplier
+        <purple>if</purple> hit_info.entity in (left_paddle, right_paddle):
+            ball.rotation_z += <yellow>1</yellow><yellow>8</yellow><yellow>0</yellow> * (-<yellow>1</yellow> <purple>if</purple> hit_info.entity == left_paddle else <yellow>1</yellow>)
+            ball.rotation_z -= (hit_info.entity.world_y - ball.y) * <yellow>2</yellow><yellow>0</yellow> * <yellow>3</yellow><yellow>2</yellow> * (-<yellow>1</yellow> <purple>if</purple> hit_info.entity == left_paddle else <yellow>1</yellow>)
             ball.speed *= <yellow>1</yellow>.<yellow>1</yellow>
 
-        <purple>else</purple>:   <gray># hit wall</gray>
-            ball.rotation_z *= -abs(hit_info.world_normal.normalized()[<yellow>1</yellow>])
+        <purple>elif</purple> hit_info.entity == right_wall:
+            left_score += <yellow>1</yellow>
+            update_score()
 
-        <gray># create a particle on collision</gray>
+        <purple>elif</purple> hit_info.entity == left_wall:
+            right_score += <yellow>1</yellow>
+            update_score()
+
+        <gray># Particle effect on collision</gray>
         particle = <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>position</olive>=hit_info.world_point, <olive>scale</olive>=<yellow>0</yellow>, <olive>texture</olive>=<green>'circle'</green>, add_to_scene_entities=False)
         particle.animate_scale(.<yellow>2</yellow>, .<yellow>5</yellow>, <olive>curve</olive>=curve.out_expo)
         particle.animate_color(color.clear, duration=.<yellow>5</yellow>, <olive>curve</olive>=curve.out_expo)
         destroy(particle, dela<olive>y</olive>=.<yellow>5</yellow>)
 
+    <gray># Ball bounces off top and bottom of the screen</gray>
+    <purple>if</purple> ball.y &gt; ceiling.y - ball.scale_y/<yellow>2</yellow> or ball.y &lt; floor.y + ball.scale_y/<yellow>2</yellow>:
+        ball.rotation_z = -ball.rotation_z  <gray># Reverse vertical direction</gray>
+
+<purple>def</purple> update_score():
+    global left_score, right_score, game_paused
+    score_text.text = f"{left_score} : {right_score}"
+
+    <purple>if</purple> left_score &gt;= max_score or right_score &gt;= max_score:
+        winner_text = Text(f"{<green>'Left'</green> <purple>if</purple> left_score &gt;= max_score else <green>'Right'</green>} Player Wins!", <olive>y</olive>=<yellow>0</yellow>, <olive>scale</olive>=<yellow>2</yellow>, <olive>origin</olive>=(<yellow>0</yellow>, <yellow>0</yellow>))
+        ball.speed = <yellow>0</yellow>
+        game_paused = True  <gray># Pause the game after a win</gray>
+        invoke(destroy, winner_text, dela<olive>y</olive>=<yellow>3</yellow>)
+    <purple>else</purple>:
+        reset()
 
 <purple>def</purple> reset():
-    ball.position = (<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)
-    ball.rotation = (<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)
+    ball.position = (<yellow>0</yellow>, <yellow>0</yellow>, <yellow>0</yellow>)
+    ball.rotation = (<yellow>0</yellow>, <yellow>0</yellow>, <yellow>0</yellow>)
     ball.speed = <yellow>1</yellow><yellow>0</yellow>
     <purple>for</purple> paddle in (left_paddle, right_paddle):
         paddle.collision = True
         paddle.y = <yellow>0</yellow>
 
-
 info_text = Text("press space to play", <olive>y</olive>=-.<yellow>4</yellow><yellow>5</yellow>)
 
 <purple>def</purple> input(key):
-    <purple>if</purple> key == <green>'space'</green>:
+    global game_paused
+
+    <purple>if</purple> key == <green>'space'</green> and <purple>not</purple> game_paused:  <gray># Prevent restarting when the game is paused</gray>
         info_text.enabled = False
         reset()
-
-    <purple>if</purple> key == <green>'t'</green>:
-        ball.speed += <yellow>5</yellow>
-
-
-<gray># TODO: register when the ball exits either side and give points</gray>
-
 
 app.run()
 
