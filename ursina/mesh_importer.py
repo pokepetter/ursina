@@ -91,6 +91,30 @@ def load_model(name, folder=None, file_types=('.bam', '.ursinamesh', '.obj', '.g
                     m.path = file_path
                     m.name = name
                     imported_meshes[name] = m
+
+                    # Check for associated .mtl file and load materials if found
+                    mtl_file_path = file_path.with_suffix('.mtl')
+                    if mtl_file_path.exists():
+                        with open(mtl_file_path, 'r') as mtl_file:
+                            mtl_data = mtl_file.readlines()
+                            mtl_dict = {}
+                            material_name = None
+                            for line in mtl_data:
+                                if line.startswith('newmtl '):
+                                    material_name = line.strip().split()[1]
+                                    mtl_dict[material_name] = {}
+                                elif line.startswith('Kd ') and material_name:
+                                    mtl_dict[material_name]['diffuse'] = [float(v) for v in line.strip().split()[1:]]
+                                elif line.startswith('map_Kd ') and material_name:
+                                    mtl_dict[material_name]['texture'] = line.strip().split()[1]
+
+                            # Apply materials to the mesh
+                            for material_name, properties in mtl_dict.items():
+                                if 'diffuse' in properties:
+                                    m.color = properties['diffuse']
+                                if 'texture' in properties:
+                                    m.texture = properties['texture']
+
                     if not use_deepcopy:
                         m.save(f'{name}.bam')
 
