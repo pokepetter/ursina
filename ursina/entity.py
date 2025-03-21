@@ -1257,9 +1257,10 @@ class Entity(NodePath, metaclass=PostInitCaller):
             t = i / resolution
             t = curve(t)
 
-            sequence.append(Wait(duration / resolution))
-            sequence.append(Func(setattr_function, name, lerp(getattr_function(name), value, t)))
+            sequence.append(Wait(duration / resolution), regenerate=False)
+            sequence.append(Func(setattr_function, name, lerp(getattr_function(name), value, t)), regenerate=False)
 
+        sequence.generate()
         if auto_play:
             sequence.start()
         return sequence
