@@ -3,6 +3,7 @@ from ursina import *
 
 class FirstPersonController(Entity):
     def __init__(self, **kwargs):
+        self.prepared = False
         self.cursor = Entity(parent=camera.ui, model='quad', color=color.pink, scale=.008, rotation_z=45)
         super().__init__()
         self.speed = 5
@@ -36,9 +37,13 @@ class FirstPersonController(Entity):
             ray = raycast(self.world_position+(0,self.height,0), self.down, traverse_target=self.traverse_target, ignore=self.ignore_list)
             if ray.hit:
                 self.y = ray.world_point.y
+        self.prepared = True
 
 
     def update(self):
+        if not self.prepared:
+            return
+            
         self.rotation_y += mouse.velocity[0] * self.mouse_sensitivity[1]
 
         self.camera_pivot.rotation_x -= mouse.velocity[1] * self.mouse_sensitivity[0]
