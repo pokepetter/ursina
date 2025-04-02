@@ -1,3 +1,29 @@
+"""
+ursina/mesh_importer.py
+
+This module provides functions for loading and importing 3D models into the Ursina engine.
+It supports various file formats such as .bam, .ursinamesh, .obj, .glb, .gltf, and .blend.
+The module also includes functions for converting Blender files to OBJ format and loading Blender scenes.
+
+Dependencies:
+- os
+- platform
+- subprocess
+- copy
+- pathlib.Path
+- ursina.mesh.Mesh
+- ursina.application
+- ursina.color
+- time.perf_counter
+- ursina.string_utilities.print_info
+- ursina.string_utilities.print_warning
+- ursina.vec3.Vec3
+- panda3d.core
+- gltf
+- builtins
+- ursina.sequence.Func
+"""
+
 import os
 import platform
 import subprocess
@@ -20,6 +46,23 @@ blender_scenes = dict()
 # folders = (application.asset_folder, )
 
 def load_model(name, folder=None, file_types=('.bam', '.ursinamesh', '.obj', '.glb', '.gltf', '.blend'), use_deepcopy=False, gltf_no_srgb=Func(getattr, application, 'gltf_no_srgb')):
+    """
+    Load a 3D model from the specified folder and file types.
+
+    Args:
+        name (str): The name of the model to load.
+        folder (Path, optional): The folder to search for the model. Defaults to None.
+        file_types (tuple, optional): The file types to search for. Defaults to ('.bam', '.ursinamesh', '.obj', '.glb', '.gltf', '.blend').
+        use_deepcopy (bool, optional): Whether to use deepcopy for the model. Defaults to False.
+        gltf_no_srgb (Func, optional): Function to determine if GLTF should use sRGB. Defaults to Func(getattr, application, 'gltf_no_srgb').
+
+    Returns:
+        NodePath: The loaded model as a Panda3D NodePath.
+
+    Raises:
+        TypeError: If the name is not a string or the folder is not a Path.
+        Exception: If there is an error loading a .ursinamesh file.
+    """
     if callable(gltf_no_srgb):
         gltf_no_srgb = gltf_no_srgb()
 
@@ -146,6 +189,27 @@ if application.development_mode:
 
 
 def load_blender_scene(name, path=Func(getattr, application, 'asset_folder'), reload=False, skip_hidden=True, models_only=False, uvs=True, vertex_colors=True, normals=True, triangulate=True, decimals=4):
+    """
+    Load a Blender scene and convert it to Ursina format.
+
+    Args:
+        name (str): The name of the Blender scene to load.
+        path (Path, optional): The path to the Blender file. Defaults to Func(getattr, application, 'asset_folder').
+        reload (bool, optional): Whether to reload the scene if it already exists. Defaults to False.
+        skip_hidden (bool, optional): Whether to skip hidden objects. Defaults to True.
+        models_only (bool, optional): Whether to load only models. Defaults to False.
+        uvs (bool, optional): Whether to include UVs. Defaults to True.
+        vertex_colors (bool, optional): Whether to include vertex colors. Defaults to True.
+        normals (bool, optional): Whether to include normals. Defaults to True.
+        triangulate (bool, optional): Whether to triangulate the mesh. Defaults to True.
+        decimals (int, optional): The number of decimal places for vertex coordinates. Defaults to 4.
+
+    Returns:
+        dict: The loaded Blender scene as a dictionary.
+
+    Raises:
+        ValueError: If no Blender file is found at the specified path.
+    """
     if callable(path):
         path = path()
 
@@ -198,6 +262,18 @@ def load_blender_scene(name, path=Func(getattr, application, 'asset_folder'), re
 
 
 def get_blender(blend_file):    # try to get a matching blender version in case we have multiple blender version installed
+    """
+    Get the path to the Blender executable for the specified Blender file.
+
+    Args:
+        blend_file (Path): The path to the Blender file.
+
+    Returns:
+        Path: The path to the Blender executable.
+
+    Raises:
+        Warning: If no Blender installation is found.
+    """
     if not application.blender_paths:
         print_warning(f"Error: Trying to load .blend file, but no blender installation was found. blender_paths: {application.blender_paths}. If Blender is not installed, install it. If Blender is installed, but not found, make sure to install it to the default install location. If it's still not found, you can provide a custom path like this: application.blender_paths['default'] = Path('C:\Program Files\...')")
         return None
@@ -207,7 +283,7 @@ def get_blender(blend_file):    # try to get a matching blender version in case 
 
     with open(blend_file, 'rb') as f:
         try:
-            blender_version_number = (f.read(12).decode("utf-8"))[-3:]   # get version from start of .blend file e.g. 'BLENDER-v280'
+            blender_version_number = (f.read(12).decode("utf-8", "strict"))[-3:]   # get version from start of .blend file e.g. 'BLENDER-v280'
             blender_version_number = blender_version_number[0] + '.' + blender_version_number[1:2]
             print_info('blender_version:', blender_version_number)
             if blender_version_number in application.blender_paths:
@@ -221,6 +297,17 @@ def get_blender(blend_file):    # try to get a matching blender version in case 
 
 
 def blend_to_obj(blend_file:Path, out_folder=Func(getattr, application, 'models_compressed_folder'), export_mtl=True):
+    """
+    Convert a Blender file to OBJ format.
+
+    Args:
+        blend_file (Path): The path to the Blender file.
+        out_folder (Path, optional): The folder to save the OBJ file. Defaults to Func(getattr, application, 'models_compressed_folder').
+        export_mtl (bool, optional): Whether to export the MTL file. Defaults to True.
+
+    Returns:
+        list: A list of exported Blender files.
+    """
     if callable(out_folder):
         out_folder = out_folder()
 
@@ -248,6 +335,23 @@ def blend_to_obj(blend_file:Path, out_folder=Func(getattr, application, 'models_
 
 
 def obj_to_ursinamesh(folder=Func(getattr, application, 'models_compressed_folder'), out_folder=Func(getattr, application, 'models_compressed_folder'), name='*', return_mesh=True, save_to_file=False, delete_obj=False):
+    """
+    Convert an OBJ file to Ursina Mesh format.
+
+    Args:
+        folder (Path, optional): The folder containing the OBJ file. Defaults to Func(getattr, application, 'models_compressed_folder').
+        out_folder (Path, optional): The folder to save the Ursina Mesh file. Defaults to Func(getattr, application, 'models_compressed_folder').
+        name (str, optional): The name of the OBJ file. Defaults to '*'.
+        return_mesh (bool, optional): Whether to return the mesh. Defaults to True.
+        save_to_file (bool, optional): Whether to save the mesh to a file. Defaults to False.
+        delete_obj (bool, optional): Whether to delete the OBJ file after conversion. Defaults to False.
+
+    Returns:
+        Mesh: The converted Ursina Mesh.
+
+    Raises:
+        Warning: If there is an error in the OBJ file.
+    """
     if callable(folder):
         folder = folder()
     if callable(out_folder):
@@ -289,6 +393,7 @@ def obj_to_ursinamesh(folder=Func(getattr, application, 'models_compressed_folde
                 if len(parts) > 3:
                     # current_color = color.rgb(*parts[3:])
                     vertex_colors_packed.append(color.rgb(*parts[3:]))
+
 
             elif l.startswith('vn '):
                 n = l[3:].strip().split(' ')
@@ -406,6 +511,16 @@ def obj_to_ursinamesh(folder=Func(getattr, application, 'models_compressed_folde
 
 # faster, but does not apply modifiers
 def blend_to_obj_fast(model_name=None, write_to_disk=False):
+    """
+    Convert a Blender file to OBJ format using the tinyblend library.
+
+    Args:
+        model_name (str, optional): The name of the model to convert. Defaults to None.
+        write_to_disk (bool, optional): Whether to write the OBJ file to disk. Defaults to False.
+
+    Returns:
+        str: The converted OBJ file content.
+    """
     print_info('find models')
     from tinyblend import BlenderFile  # type: ignore
     application.models_compressed_folder.mkdir(parents=True, exist_ok=True)
@@ -460,6 +575,16 @@ def blend_to_obj_fast(model_name=None, write_to_disk=False):
                 return file_content
 
 def ursina_mesh_to_obj(mesh, name='', out_path=Func(getattr, application, 'models_compressed_folder'), max_decimals=5, flip_faces=True):
+    """
+    Convert a Ursina Mesh to OBJ format.
+
+    Args:
+        mesh (Mesh): The Ursina Mesh to convert.
+        name (str, optional): The name of the OBJ file. Defaults to ''.
+        out_path (Path, optional): The folder to save the OBJ file. Defaults to Func(getattr, application, 'models_compressed_folder').
+        max_decimals (int, optional): The maximum number of decimal places for vertex coordinates. Defaults to 5.
+        flip_faces (bool, optional): Whether to flip the faces of the mesh. Defaults to True.
+    """
     if callable(out_path):
         out_path = out_path()
 
@@ -529,6 +654,9 @@ def ursina_mesh_to_obj(mesh, name='', out_path=Func(getattr, application, 'model
 
 
 def compress_internal():
+    """
+    Compress internal models by converting Blender files to OBJ format and then to Ursina Mesh format.
+    """
     for blend_file in application.internal_models_folder.glob('*.blend'):
         blend_to_obj(blend_file, export_mtl=False)
         obj_to_ursinamesh(application.internal_models_compressed_folder, application.internal_models_compressed_folder, return_mesh=False, save_to_file=True, delete_obj=True)

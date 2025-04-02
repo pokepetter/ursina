@@ -1,3 +1,34 @@
+"""
+ursina/networking.py
+
+This module provides networking capabilities for the Ursina engine. It includes classes and functions for creating
+networked applications, handling connections, sending and receiving data, and performing remote procedure calls (RPCs).
+The module supports both client and server roles, as well as secure communication using TLS.
+
+Dependencies:
+- panda3d.core
+- direct.distributed.PyDatagram
+- direct.distributed.PyDatagramIterator
+- enum
+- collections
+- queue
+- uuid
+- hashlib
+- types
+- typing
+- inspect
+- socket
+- ssl
+- select
+- errno
+- struct
+- time
+- atexit
+- signal
+- threading
+- asyncio
+"""
+
 from ursina.vec2 import Vec2
 from ursina.vec3 import Vec3
 from ursina.vec4 import Vec4
@@ -47,6 +78,15 @@ class PeerEvent(Enum):
 # This is useful for mapping from a connection to player data.
 class Connection:
     def __init__(self, peer, socket, address, connection_timeout):
+        """
+        Initialize a Connection object.
+
+        Args:
+            peer (Peer): The peer associated with this connection.
+            socket (socket.socket): The socket object for the connection.
+            address (tuple): The address of the connection.
+            connection_timeout (float): The timeout value for the connection.
+        """
         self.peer = peer
         self.socket = socket
         self.address = address
@@ -66,12 +106,33 @@ class Connection:
         self.receiving_thread = None
 
     def __hash__(self):
+        """
+        Return the hash value of the connection.
+
+        Returns:
+            int: The hash value of the connection.
+        """
         return hash(self.uid)
 
     def __eq__(self, other):
+        """
+        Check if two connections are equal based on their unique IDs.
+
+        Args:
+            other (Connection): The other connection to compare.
+
+        Returns:
+            bool: True if the connections are equal, False otherwise.
+        """
         return self.uid == other.uid
 
     def send(self, data):
+        """
+        Send data over the connection.
+
+        Args:
+            data (bytes): The data to send.
+        """
         b = bytearray()
         b += struct.pack(">H", len(data))
         b += data
@@ -81,6 +142,9 @@ class Connection:
             pass
 
     def disconnect(self):
+        """
+        Disconnect the connection.
+        """
         if self.connected:
             try:
                 self.socket.shutdown(socket.SHUT_RDWR)
@@ -91,12 +155,27 @@ class Connection:
             self.peer._remove_connection(self)
 
     def is_timed_out(self):
+        """
+        Check if the connection has timed out.
+
+        Returns:
+            bool: True if the connection has timed out, False otherwise.
+        """
         return self.timed_out
 
     def is_connected(self):
+        """
+        Check if the connection is still connected.
+
+        Returns:
+            bool: True if the connection is connected, False otherwise.
+        """
         return self.connected
 
     def _receive(self):
+        """
+        Internal method to receive data from the connection.
+        """
         try:
             while True:
                 data = None
@@ -160,6 +239,21 @@ class Peer:
                  path_to_certchain=None, path_to_private_key=None,
                  path_to_cabundle=None,
                  socket_address_family="INET"):
+        """
+        Initialize a Peer object.
+
+        Args:
+            on_connect (function): Callback function for connection events.
+            on_disconnect (function): Callback function for disconnection events.
+            on_data (function): Callback function for data events.
+            on_raw_data (function): Callback function for raw data events.
+            connection_timeout (float): Timeout value for connections.
+            use_tls (bool): Whether to use TLS for secure communication.
+            path_to_certchain (str): Path to the certificate chain file.
+            path_to_private_key (str): Path to the private key file.
+            path_to_cabundle (str): Path to the certificate authority bundle file.
+            socket_address_family (str): Socket address family ("INET" or "INET6").
+        """
         self.on_connect = on_connect
         self.on_disconnect = on_disconnect
         self.on_data = on_data
@@ -214,9 +308,26 @@ class Peer:
         signal.signal(signal.SIGINT, on_keyboard_interrupt)
 
     def is_using_tls(self):
+        """
+        Check if TLS is being used for secure communication.
+
+        Returns:
+            bool: True if TLS is being used, False otherwise.
+        """
         return self.use_tls
 
     def start(self, host_name, port, is_host=False, backlog=100, tls_host_name=None, socket_address_family=None):
+        """
+        Start the peer.
+
+        Args:
+            host_name (str): The host name or IP address to connect to.
+            port (int): The port number to connect to.
+            is_host (bool): Whether the peer is acting as a host.
+            backlog (int): The maximum number of queued connections.
+            tls_host_name (str): The TLS host name for secure communication.
+            socket_address_family (str): The socket address family ("INET" or "INET6").
+        """
         if self.running:
             self.stop()
 
@@ -252,6 +363,9 @@ class Peer:
         self.main_thread.start()
 
     def stop(self):
+        """
+        Stop the peer.
+        """
         if not self.running:
             return
 
@@ -273,6 +387,12 @@ class Peer:
             self.output_event_queue.get()
 
     def update(self, max_events=100):
+        """
+        Update the peer and process events.
+
+        Args:
+            max_events (int): The maximum number of events to process.
+        """
         for i in range(max_events):
             if self.output_event_queue.empty():
                 break
@@ -294,32 +414,79 @@ class Peer:
                     self.on_data(next_event[1], d, t)
 
     def send(self, connection, data):
+        """
+        Send data to a connection.
+
+        Args:
+            connection (Connection): The connection to send data to.
+            data (bytes): The data to send.
+        """
         connection.send(data)
 
     def disconnect(self, connection):
+        """
+        Disconnect a connection.
+
+        Args:
+            connection (Connection): The connection to disconnect.
+        """
         connection.disconnect()
 
     def disconnect_all(self):
+        """
+        Disconnect all connections.
+        """
         connections = self.get_connections()
         for connection in connections:
             connection.disconnect()
 
     def is_running(self):
+        """
+        Check if the peer is running.
+
+        Returns:
+            bool: True if the peer is running, False otherwise.
+        """
         return self.running
 
     def is_hosting(self):
+        """
+        Check if the peer is acting as a host.
+
+        Returns:
+            bool: True if the peer is hosting, False otherwise.
+        """
         return self.is_host
 
     def connection_count(self):
+        """
+        Get the number of active connections.
+
+        Returns:
+            int: The number of active connections.
+        """
         return len(self.connections)
 
     def get_connections(self):
+        """
+        Get a copy of the list of active connections.
+
+        Returns:
+            list: A copy of the list of active connections.
+        """
         connections_copy = None
         with self.connections_lock:
             connections_copy = self.connections.copy()
         return connections_copy
 
     def _add_connection(self, socket, address):
+        """
+        Internal method to add a new connection.
+
+        Args:
+            socket (socket.socket): The socket object for the connection.
+            address (tuple): The address of the connection.
+        """
         connection = Connection(self, socket, address, self.connection_timeout)
         with self.connections_lock:
             self.connections.append(connection)
@@ -328,12 +495,21 @@ class Peer:
         connection.receiving_thread.start()
 
     def _remove_connection(self, connection):
+        """
+        Internal method to remove a connection.
+
+        Args:
+            connection (Connection): The connection to remove.
+        """
         with self.connections_lock:
             if connection in self.connections:
                 self.connections.remove(connection)
                 self.output_event_queue.put((PeerEvent.DISCONNECT, connection, None, time.time()))
 
     def _run_server(self):
+        """
+        Internal method to run the server.
+        """
         try:
             self.listen_socket = socket.socket(self.socket_address_family, socket.SOCK_STREAM, 0)
             self.listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -357,6 +533,9 @@ class Peer:
             self._add_connection(client_socket, address)
 
     def _run_client(self):
+        """
+        Internal method to run the client.
+        """
         client_socket = None
         if self.use_tls:
             try:
@@ -379,6 +558,9 @@ class Peer:
             self.running = True
 
     def _run(self):
+        """
+        Internal method to run the peer.
+        """
         if self.is_host:
             self._run_server()
         else:
@@ -389,6 +571,9 @@ class Peer:
 # Main serialization class used by the networking module.
 class DatagramWriter:
     def __init__(self):
+        """
+        Initialize a DatagramWriter object.
+        """
         self.datagram = PyDatagram()
         self.builtin_type_functions = {
             bool: self.write_bool,
@@ -405,15 +590,37 @@ class DatagramWriter:
         self.extra_type_functions = dict()
 
     def register_type(self, the_type, write_func):
+        """
+        Register a custom type and its corresponding write function.
+
+        Args:
+            the_type (type): The custom type to register.
+            write_func (function): The function to write the custom type.
+        """
         self.extra_type_functions[the_type] = write_func
 
     def clear(self):
+        """
+        Clear the datagram.
+        """
         self.datagram = PyDatagram()
 
     def get_datagram(self):
+        """
+        Get the datagram.
+
+        Returns:
+            PyDatagram: The datagram object.
+        """
         return self.datagram
 
     def write(self, value):
+        """
+        Write a value to the datagram.
+
+        Args:
+            value: The value to write.
+        """
         type_of_value = type(value)
         builtin_converter_func = self.builtin_type_functions.get(type_of_value)
         if builtin_converter_func is not None:
@@ -426,58 +633,154 @@ class DatagramWriter:
                 raise Exception(f"Unsupported value type for DatagramWriter: {type(value).__name__}")
 
     def write_string(self, value):
+        """
+        Write a string to the datagram.
+
+        Args:
+            value (str): The string to write.
+        """
         self.datagram.addString(value)
 
     def write_string32(self, value):
+        """
+        Write a 32-bit string to the datagram.
+
+        Args:
+            value (str): The string to write.
+        """
         self.datagram.addString32(value)
 
     def write_bool(self, value):
+        """
+        Write a boolean value to the datagram.
+
+        Args:
+            value (bool): The boolean value to write.
+        """
         self.datagram.addBool(value)
 
     def write_int8(self, value):
+        """
+        Write an 8-bit integer to the datagram.
+
+        Args:
+            value (int): The 8-bit integer to write.
+        """
         self.datagram.addInt8(value)
 
     def write_int16(self, value):
+        """
+        Write a 16-bit integer to the datagram.
+
+        Args:
+            value (int): The 16-bit integer to write.
+        """
         self.datagram.addBeInt16(value)
 
     def write_int32(self, value):
+        """
+        Write a 32-bit integer to the datagram.
+
+        Args:
+            value (int): The 32-bit integer to write.
+        """
         self.datagram.addBeInt32(value)
 
     def write_int64(self, value):
+        """
+        Write a 64-bit integer to the datagram.
+
+        Args:
+            value (int): The 64-bit integer to write.
+        """
         self.datagram.addBeInt64(value)
 
     def write_float32(self, value):
+        """
+        Write a 32-bit floating-point value to the datagram.
+
+        Args:
+            value (float): The 32-bit floating-point value to write.
+        """
         self.datagram.addBeFloat32(value)
 
     def write_float64(self, value):
+        """
+        Write a 64-bit floating-point value to the datagram.
+
+        Args:
+            value (float): The 64-bit floating-point value to write.
+        """
         self.datagram.addBeFloat64(value)
 
     def write_blob(self, value):
+        """
+        Write a binary blob to the datagram.
+
+        Args:
+            value (bytes): The binary blob to write.
+        """
         self.datagram.addBlob(value)
 
     def write_blob32(self, value):
+        """
+        Write a 32-bit binary blob to the datagram.
+
+        Args:
+            value (bytes): The binary blob to write.
+        """
         self.datagram.addBlob32(value)
 
     def write_vec2(self, value):
+        """
+        Write a Vec2 value to the datagram.
+
+        Args:
+            value (Vec2): The Vec2 value to write.
+        """
         self.write_float64(value[0])
         self.write_float64(value[1])
 
     def write_vec3(self, value):
+        """
+        Write a Vec3 value to the datagram.
+
+        Args:
+            value (Vec3): The Vec3 value to write.
+        """
         self.write_float64(value[0])
         self.write_float64(value[1])
         self.write_float64(value[2])
 
     def write_vec4(self, value):
+        """
+        Write a Vec4 value to the datagram.
+
+        Args:
+            value (Vec4): The Vec4 value to write.
+        """
         self.write_float64(value[0])
         self.write_float64(value[1])
         self.write_float64(value[2])
         self.write_float64(value[3])
 
     def write_tuple(self, value):
+        """
+        Write a tuple to the datagram.
+
+        Args:
+            value (tuple): The tuple to write.
+        """
         for v in value:
             self.write(v)
 
     def write_list(self, value):
+        """
+        Write a list to the datagram.
+
+        Args:
+            value (list): The list to write.
+        """
         self.write_int16(len(value))
         for v in value:
             self.write(v)
@@ -492,6 +795,9 @@ class ExceedsListLimitException(Exception):
 # Main deserialization class used by the networking module.
 class DatagramReader:
     def __init__(self):
+        """
+        Initialize a DatagramReader object.
+        """
         self.datagram = None
         self.iter = None
         self.builtin_read_functions = {
@@ -508,19 +814,54 @@ class DatagramReader:
         self.extra_read_functions = dict()
 
     def register_type(self, the_type, read_func):
+        """
+        Register a custom type and its corresponding read function.
+
+        Args:
+            the_type (type): The custom type to register.
+            read_func (function): The function to read the custom type.
+        """
         self.extra_read_functions[the_type] = read_func
 
     def set_datagram(self, datagram):
+        """
+        Set the datagram for reading.
+
+        Args:
+            datagram (PyDatagram): The datagram to set.
+        """
         self.datagram = datagram
         self.iter = PyDatagramIterator(self.datagram)
 
     def get_datagram(self):
+        """
+        Get the datagram.
+
+        Returns:
+            PyDatagram: The datagram object.
+        """
         return self.datagram
 
     def set_datagram_from_blob(self, blob):
+        """
+        Set the datagram from a binary blob.
+
+        Args:
+            blob (bytes): The binary blob to set.
+        """
         self.set_datagram(p3d.Datagram(blob))
 
     def read(self, value_type, max_list_length=1000):
+        """
+        Read a value from the datagram.
+
+        Args:
+            value_type (type): The type of the value to read.
+            max_list_length (int): The maximum length of a list.
+
+        Returns:
+            The read value.
+        """
         builtin_converter_func = self.builtin_read_functions.get(value_type)
         if builtin_converter_func is not None:
             return builtin_converter_func()
@@ -554,50 +895,143 @@ class DatagramReader:
                     raise Exception(f"Unsupported value type for DatagramReader: {value_type.__name__}")
 
     def read_string(self):
+        """
+        Read a string from the datagram.
+
+        Returns:
+            str: The read string.
+        """
         return self.iter.getString()
 
     def read_string32(self):
+        """
+        Read a 32-bit string from the datagram.
+
+        Returns:
+            str: The read string.
+        """
         return self.iter.getString32()
 
     def read_bool(self):
+        """
+        Read a boolean value from the datagram.
+
+        Returns:
+            bool: The read boolean value.
+        """
         return self.iter.getBool()
 
     def read_int8(self):
+        """
+        Read an 8-bit integer from the datagram.
+
+        Returns:
+            int: The read 8-bit integer.
+        """
         return self.iter.getInt8()
 
     def read_int16(self):
+        """
+        Read a 16-bit integer from the datagram.
+
+        Returns:
+            int: The read 16-bit integer.
+        """
         return self.iter.getBeInt16()
 
     def read_int32(self):
+        """
+        Read a 32-bit integer from the datagram.
+
+        Returns:
+            int: The read 32-bit integer.
+        """
         return self.iter.getBeInt32()
 
     def read_int64(self):
+        """
+        Read a 64-bit integer from the datagram.
+
+        Returns:
+            int: The read 64-bit integer.
+        """
         return self.iter.getBeInt64()
 
     def read_float32(self):
+        """
+        Read a 32-bit floating-point value from the datagram.
+
+        Returns:
+            float: The read 32-bit floating-point value.
+        """
         return self.iter.getBeFloat32()
 
     def read_float64(self):
+        """
+        Read a 64-bit floating-point value from the datagram.
+
+        Returns:
+            float: The read 64-bit floating-point value.
+        """
         return self.iter.getBeFloat64()
 
     def read_blob(self):
+        """
+        Read a binary blob from the datagram.
+
+        Returns:
+            bytes: The read binary blob.
+        """
         return self.iter.getBlob()
 
     def read_blob32(self):
+        """
+        Read a 32-bit binary blob from the datagram.
+
+        Returns:
+            bytes: The read binary blob.
+        """
         return self.iter.getBlob32()
 
     def read_vec2(self):
+        """
+        Read a Vec2 value from the datagram.
+
+        Returns:
+            Vec2: The read Vec2 value.
+        """
         return Vec2(self.read_float64(), self.read_float64())
 
     def read_vec3(self):
+        """
+        Read a Vec3 value from the datagram.
+
+        Returns:
+            Vec3: The read Vec3 value.
+        """
         return Vec3(self.read_float64(), self.read_float64(), self.read_float64())
 
     def read_vec4(self):
+        """
+        Read a Vec4 value from the datagram.
+
+        Returns:
+            Vec4: The read Vec4 value.
+        """
         return Vec4(self.read_float64(), self.read_float64(), self.read_float64(), self.read_float64())
 
 
 # Gives a 32 bit hash value (shifted one right (31 bit)) that is the same across runs and devices.
 def procedure_hash(name):
+    """
+    Generate a 32-bit hash value for a given name.
+
+    Args:
+        name (str): The name to hash.
+
+    Returns:
+        int: The 32-bit hash value.
+    """
     h = hashlib.sha1(name.encode("utf-8"), usedforsecurity=False).digest()
     return int.from_bytes(h[:4], byteorder="big") >> 1
 
@@ -617,6 +1051,13 @@ def procedure_hash(name):
 # See the networking samples on how to use this class.
 class RPCPeer:
     def __init__(self, max_list_length=16, **kwargs):
+        """
+        Initialize an RPCPeer object.
+
+        Args:
+            max_list_length (int): The maximum length of lists for remote procedure calls.
+            **kwargs: Additional keyword arguments passed to the Peer class.
+        """
         self.peer = Peer(**kwargs)
 
         self.max_list_length = max_list_length
@@ -672,37 +1113,107 @@ class RPCPeer:
         self.reader = DatagramReader()
 
     def is_using_tls(self):
+        """
+        Check if TLS is being used for secure communication.
+
+        Returns:
+            bool: True if TLS is being used, False otherwise.
+        """
         return self.peer.is_using_tls()
 
     def start(self, host_name, port, is_host=False, backlog=100, tls_host_name=None, socket_address_family=None):
+        """
+        Start the RPCPeer.
+
+        Args:
+            host_name (str): The host name or IP address to connect to.
+            port (int): The port number to connect to.
+            is_host (bool): Whether the RPCPeer is acting as a host.
+            backlog (int): The maximum number of queued connections.
+            tls_host_name (str): The TLS host name for secure communication.
+            socket_address_family (str): The socket address family ("INET" or "INET6").
+        """
         return self.peer.start(host_name, port, is_host=is_host, backlog=backlog, tls_host_name=tls_host_name, socket_address_family=socket_address_family)
 
     def stop(self):
+        """
+        Stop the RPCPeer.
+        """
         self.peer.stop()
 
     def update(self, max_events=100):
+        """
+        Update the RPCPeer and process events.
+
+        Args:
+            max_events (int): The maximum number of events to process.
+        """
         self.peer.update(max_events=max_events)
 
     def is_running(self):
+        """
+        Check if the RPCPeer is running.
+
+        Returns:
+            bool: True if the RPCPeer is running, False otherwise.
+        """
         return self.peer.is_running()
 
     def is_hosting(self):
+        """
+        Check if the RPCPeer is acting as a host.
+
+        Returns:
+            bool: True if the RPCPeer is hosting, False otherwise.
+        """
         return self.peer.is_hosting()
 
     def disconnect_all(self):
+        """
+        Disconnect all connections.
+        """
         self.peer.disconnect_all()
 
     def connection_count(self):
+        """
+        Get the number of active connections.
+
+        Returns:
+            int: The number of active connections.
+        """
         return self.peer.connection_count()
 
     def get_connections(self):
+        """
+        Get a copy of the list of active connections.
+
+        Returns:
+            list: A copy of the list of active connections.
+        """
         return self.peer.get_connections()
 
     def register_type(self, the_type, write_func, read_func):
+        """
+        Register a custom type and its corresponding write and read functions.
+
+        Args:
+            the_type (type): The custom type to register.
+            write_func (function): The function to write the custom type.
+            read_func (function): The function to read the custom type.
+        """
         self.writer.register_type(the_type, write_func)
         self.reader.register_type(the_type, read_func)
 
     def register_procedure(self, proc, host_only=False, client_only=False, prefix=None):
+        """
+        Register a remote procedure.
+
+        Args:
+            proc (function): The remote procedure to register.
+            host_only (bool): Whether the procedure is host-only.
+            client_only (bool): Whether the procedure is client-only.
+            prefix (str): An optional prefix for the procedure name.
+        """
         func_spec = inspect.getfullargspec(proc)
         if not len(func_spec.args) >= 2:
             raise Exception(f"{proc.__name__} must have at least two arguments, connection and time_received.")
@@ -731,6 +1242,15 @@ class RPCPeer:
             self.procedures[procedure_name_hash] = (proc_name, arg_types, proc, host_only, client_only)
 
     def __getattr__(self, name):
+        """
+        Get a remote procedure call by name.
+
+        Args:
+            name (str): The name of the remote procedure call.
+
+        Returns:
+            function: The remote procedure call function.
+        """
         def remote_procedure(*args):
             if not len(args) >= 1:
                 raise Exception(f"Remote procedure call '{name}' must have at least one argument, the connection.")
@@ -747,6 +1267,14 @@ class RPCPeer:
         return remote_procedure
 
     def rpc_on_data(self, connection, data, time_received):
+        """
+        Handle incoming data for remote procedure calls.
+
+        Args:
+            connection (Connection): The connection that received the data.
+            data (bytes): The received data.
+            time_received (float): The time the data was received.
+        """
         self.reader.set_datagram(p3d.Datagram(data))
 
         proc_name = None
@@ -802,6 +1330,17 @@ class RPCPeer:
 # def foo(connection, time_received, x: int):
 #     print(x)
 def rpc(peer, host_only=False, client_only=False):
+    """
+    Decorator to register a function as a remote procedure call.
+
+    Args:
+        peer (RPCPeer): The RPCPeer object.
+        host_only (bool): Whether the procedure is host-only.
+        client_only (bool): Whether the procedure is client-only.
+
+    Returns:
+        function: The decorator function.
+    """
     def wrapper(f):
         peer.register_procedure(f, host_only=host_only, client_only=client_only)
     return wrapper

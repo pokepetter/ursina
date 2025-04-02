@@ -1,3 +1,48 @@
+"""
+ursina/entity.py
+
+This module defines the Entity class, which is the base class for all objects in the Ursina engine.
+Entities can have models, textures, colors, shaders, and other properties. They can also have children,
+colliders, and animations. This module also provides various utility functions for manipulating entities.
+
+Dependencies:
+- builtins
+- pathlib.Path
+- panda3d.core.NodePath
+- panda3d.core.Quat
+- panda3d.core.TransparencyAttrib
+- panda3d.core.TexGenAttrib
+- panda3d.core.MovieTexture
+- panda3d.core.TextureStage
+- panda3d.core.CullFaceAttrib
+- ursina.vec2.Vec2
+- ursina.vec3.Vec3
+- ursina.vec4.Vec4
+- ursina.texture.Texture
+- ursina.collider.Collider
+- ursina.collider.BoxCollider
+- ursina.collider.SphereCollider
+- ursina.collider.MeshCollider
+- ursina.collider.CapsuleCollider
+- ursina.mesh.Mesh
+- ursina.sequence.Sequence
+- ursina.sequence.Func
+- ursina.sequence.Wait
+- ursina.ursinamath.lerp
+- ursina.curve
+- ursina.mesh_importer.load_model
+- ursina.texture_importer.load_texture
+- ursina.string_utilities.camel_to_snake
+- ursina.string_utilities.print_warning
+- ursina.ursinamath.Bounds
+- ursina.ursinastuff.invoke
+- ursina.ursinastuff.PostInitCaller
+- ursina.color
+- ursina.color.Color
+- ursina.scene.instance
+- ursina.scripts.property_generator.generate_properties_for_class
+"""
+
 import ursina
 import builtins
 from pathlib import Path
@@ -44,6 +89,14 @@ _warn_if_ursina_not_instantiated = True # gets set to True after Ursina.__init__
 from ursina.scripts.property_generator import generate_properties_for_class
 @generate_properties_for_class()
 class Entity(NodePath, metaclass=PostInitCaller):
+    """
+    Base class for all objects in the Ursina engine.
+
+    Attributes:
+        rotation_directions (tuple): The rotation directions for the entity.
+        default_shader: The default shader for the entity.
+        default_values (dict): The default values for the entity's attributes.
+    """
     rotation_directions = (-1,-1,1)
     default_shader = None
     default_values = {
@@ -52,6 +105,14 @@ class Entity(NodePath, metaclass=PostInitCaller):
         'shader':None, 'texture':None, 'texture_scale':Vec2(1,1), 'color':color.white, 'collider':None}
 
     def __init__(self, add_to_scene_entities=True, enabled=True, **kwargs):
+        """
+        Initialize the Entity.
+
+        Args:
+            add_to_scene_entities (bool, optional): Whether to add the entity to the scene entities. Defaults to True.
+            enabled (bool, optional): Whether the entity is enabled. Defaults to True.
+            **kwargs: Additional keyword arguments for setting attributes.
+        """
         self._children = []
         super().__init__(self.__class__.__name__)
 
@@ -121,6 +182,9 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def __post_init__(self):
+        """
+        Post-initialization method called after the entity is created.
+        """
         if self.enabled and hasattr(self, 'on_enable'):
             self.on_enable()
 
@@ -130,6 +194,15 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def _list_to_vec(self, value):
+        """
+        Convert a list to a Vec2 or Vec3.
+
+        Args:
+            value (list): The list to convert.
+
+        Returns:
+            Vec2 or Vec3: The converted vector.
+        """
         if isinstance(value, (int, float, complex)):
             return Vec3(value, value, value)
 
@@ -149,17 +222,35 @@ class Entity(NodePath, metaclass=PostInitCaller):
         return new_value
 
 
-    def enable(self): # same as .enabled = True
+    def enable(self):
+        """
+        Enable the entity.
+        """
         self.enabled = True
 
-    def disable(self): # same as .enabled = False
+    def disable(self):
+        """
+        Disable the entity.
+        """
         self.enabled = False
 
 
     def enabled_getter(self):
+        """
+        Get the enabled state of the entity.
+
+        Returns:
+            bool: True if the entity is enabled, False otherwise.
+        """
         return getattr(self, '_enabled', True)
 
-    def enabled_setter(self, value):    # disabled entities will not be visible nor run code.
+    def enabled_setter(self, value):
+        """
+        Set the enabled state of the entity.
+
+        Args:
+            value (bool): True to enable the entity, False to disable it.
+        """
         original_value = self.enabled
         self._enabled = value
 
@@ -181,7 +272,13 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
 
-    def model_setter(self, value):  # set model with model='model_name' (without file type extension)
+    def model_setter(self, value):
+        """
+        Set the model for the entity.
+
+        Args:
+            value: The model to set. Can be a NodePath, a string (model asset name), or None.
+        """
         if value is None:
             if self.model:
                 self.model.removeNode()
@@ -223,9 +320,21 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def color_getter(self):
+        """
+        Get the color of the entity.
+
+        Returns:
+            Vec4: The color of the entity.
+        """
         return getattr(self, '_color', color.white)
 
     def color_setter(self, value):
+        """
+        Set the color of the entity.
+
+        Args:
+            value (str, Vec4, or tuple): The color to set.
+        """
         if isinstance(value, str):
             value = color.hex(value)
 
@@ -241,29 +350,65 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def eternal_getter(self):
+        """
+        Get the eternal state of the entity.
+
+        Returns:
+            bool: True if the entity is eternal, False otherwise.
+        """
         return getattr(self, '_eternal', False)
 
-    def eternal_setter(self, value):    # eternal entities does not get destroyed on scene.clear()
+    def eternal_setter(self, value):
+        """
+        Set the eternal state of the entity.
+
+        Args:
+            value (bool): True to make the entity eternal, False to make it non-eternal.
+        """
         self._eternal = value
         for c in self.children + self.loose_children:
             c.eternal = value
 
 
     def double_sided_setter(self, value):
+        """
+        Set the double-sided state of the entity.
+
+        Args:
+            value (bool): True to make the entity double-sided, False to make it single-sided.
+        """
         self._double_sided = value
         self.setTwoSided(value)
 
 
     def render_queue_getter(self):
+        """
+        Get the render queue value of the entity.
+
+        Returns:
+            int: The render queue value.
+        """
         return getattr(self, '_render_queue', 0)
 
-    def render_queue_setter(self, value):   # for custom sorting in case of conflict. To sort things in 2d, set .z instead of using this.
+    def render_queue_setter(self, value):
+        """
+        Set the render queue value of the entity.
+
+        Args:
+            value (int): The render queue value.
+        """
         self._render_queue = value
         if self.model:
             self.model.setBin('fixed', value)
 
 
     def parent_setter(self, value):
+        """
+        Set the parent of the entity.
+
+        Args:
+            value: The parent entity.
+        """
         if hasattr(self, '_parent') and self._parent and hasattr(self._parent, '_children') and self in self._parent._children:
             self._parent._children.remove(self)
 
@@ -280,9 +425,21 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def loose_parent_getter(self):
+        """
+        Get the loose parent of the entity.
+
+        Returns:
+            The loose parent entity.
+        """
         return getattr(self, '_loose_parent', None)
 
     def loose_parent_setter(self, value):
+        """
+        Set the loose parent of the entity.
+
+        Args:
+            value: The loose parent entity.
+        """
         if hasattr(self, '_loose_parent') and self._loose_parent and hasattr(self._loose_parent, '_loose_children') and self in self._loose_parent._loose_children:
             self._loose_parent._loose_children.remove(self)
 
@@ -294,9 +451,21 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def world_parent_getter(self):
+        """
+        Get the world parent of the entity.
+
+        Returns:
+            The world parent entity.
+        """
         return getattr(self, '_parent', None)
 
-    def world_parent_setter(self, value):  # change the parent, but keep position, rotation and scale
+    def world_parent_setter(self, value):
+        """
+        Set the world parent of the entity.
+
+        Args:
+            value: The world parent entity.
+        """
         if hasattr(self, '_parent') and self._parent and hasattr(self._parent, '_children') and self in self._parent._children:
             self._parent._children.remove(self)
 
@@ -309,25 +478,55 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     @property
-    def types(self): # get all class names including those this inhertits from.
+    def types(self):
+        """
+        Get all class names including those this inherits from.
+
+        Returns:
+            list: A list of class names.
+        """
         from inspect import getmro
         return [c.__name__ for c in getmro(self.__class__)]
 
 
     def visible_getter(self):
+        """
+        Get the visibility of the entity.
+
+        Returns:
+            bool: True if the entity is visible, False otherwise.
+        """
         return getattr(self, '_visible', True)
 
     def visible_setter(self, value):
+        """
+        Set the visibility of the entity.
+
+        Args:
+            value (bool): True to make the entity visible, False to hide it.
+        """
         self._visible = value
         if value:
             self.show()
         else:
             self.hide()
 
-    def visible_self_getter(self): # set visibility of self, without affecting children.
+    def visible_self_getter(self):
+        """
+        Get the visibility of the entity itself, without affecting children.
+
+        Returns:
+            bool: True if the entity itself is visible, False otherwise.
+        """
         return getattr(self, '_visible_self', True)
 
     def visible_self_setter(self, value):
+        """
+        Set the visibility of the entity itself, without affecting children.
+
+        Args:
+            value (bool): True to make the entity itself visible, False to hide it.
+        """
         self._visible_self = value
         if not self.model:
             return
@@ -338,9 +537,21 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def collider_getter(self):
+        """
+        Get the collider of the entity.
+
+        Returns:
+            Collider: The collider of the entity.
+        """
         return getattr(self, '_collider', None)
 
-    def collider_setter(self, value):   # set to 'box'/'sphere'/'capsule'/'mesh' for auto fitted collider.
+    def collider_setter(self, value):
+        """
+        Set the collider for the entity.
+
+        Args:
+            value: The collider to set. Can be a Collider instance, a string (collider type), or None.
+        """
         if value is None and self.collider:
             self._collider.remove()
             self._collider = None
@@ -394,9 +605,21 @@ class Entity(NodePath, metaclass=PostInitCaller):
         return
 
     def collision_getter(self):
+        """
+        Get the collision state of the entity.
+
+        Returns:
+            bool: True if the entity has collision enabled, False otherwise.
+        """
         return getattr(self, '_collision', False)
 
-    def collision_setter(self, value):  # toggle collision without changing collider.
+    def collision_setter(self, value):
+        """
+        Set the collision state of the entity.
+
+        Args:
+            value (bool): True to enable collision, False to disable it.
+        """
         self._collision = value
         if not hasattr(self, 'collider') or not self.collider:
             if self in scene.collidables:
@@ -413,18 +636,42 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def on_click_getter(self):
+        """
+        Get the on_click callback function.
+
+        Returns:
+            function: The on_click callback function.
+        """
         return getattr(self, '_on_click', None)
 
     def on_click_setter(self, value):
+        """
+        Set the on_click callback function.
+
+        Args:
+            value (function): The on_click callback function.
+        """
         if not callable(value):
             raise TypeError(f'on_click must be a callabe, not {type(value)}')
         self._on_click = value
 
 
     def origin_getter(self):
+        """
+        Get the origin of the entity.
+
+        Returns:
+            Vec3: The origin of the entity.
+        """
         return getattr(self, '_origin', Vec3.zero)
 
     def origin_setter(self, value):
+        """
+        Set the origin of the entity.
+
+        Args:
+            value (Vec2, Vec3, or list): The origin to set.
+        """
         if not isinstance(value, (Vec2, Vec3)):
             value = self._list_to_vec(value)
         if isinstance(value, Vec2):
@@ -437,24 +684,72 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def origin_x_getter(self):
+        """
+        Get the x-coordinate of the origin.
+
+        Returns:
+            float: The x-coordinate of the origin.
+        """
         return self.origin[0]
     def origin_x_setter(self, value):
+        """
+        Set the x-coordinate of the origin.
+
+        Args:
+            value (float): The x-coordinate of the origin.
+        """
         self.origin = Vec3(value, self.origin_y, self.origin_z)
 
     def origin_y_getter(self):
+        """
+        Get the y-coordinate of the origin.
+
+        Returns:
+            float: The y-coordinate of the origin.
+        """
         return self.origin[1]
     def origin_y_setter(self, value):
+        """
+        Set the y-coordinate of the origin.
+
+        Args:
+            value (float): The y-coordinate of the origin.
+        """
         self.origin = Vec3(self.origin_x, value, self.origin_z)
 
     def origin_z_getter(self):
+        """
+        Get the z-coordinate of the origin.
+
+        Returns:
+            float: The z-coordinate of the origin.
+        """
         return self.origin[2]
     def origin_z_setter(self, value):
+        """
+        Set the z-coordinate of the origin.
+
+        Args:
+            value (float): The z-coordinate of the origin.
+        """
         self.origin = Vec3(self.origin_x, self.origin_y, value)
 
     def world_position_getter(self):
+        """
+        Get the world position of the entity.
+
+        Returns:
+            Vec3: The world position of the entity.
+        """
         return Vec3(self.get_position(scene))
 
     def world_position_setter(self, value):
+        """
+        Set the world position of the entity.
+
+        Args:
+            value (Vec2, Vec3, or list): The world position to set.
+        """
         if not isinstance(value, (Vec2, Vec3)):
             value = self._list_to_vec(value)
         if isinstance(value, Vec2):
@@ -463,23 +758,71 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.setPos(scene, Vec3(value[0], value[1], value[2]))
 
     def world_x_getter(self):
+        """
+        Get the x-coordinate of the world position.
+
+        Returns:
+            float: The x-coordinate of the world position.
+        """
         return self.getX(scene)
     def world_y_getter(self):
+        """
+        Get the y-coordinate of the world position.
+
+        Returns:
+            float: The y-coordinate of the world position.
+        """
         return self.getY(scene)
     def world_z_getter(self):
+        """
+        Get the z-coordinate of the world position.
+
+        Returns:
+            float: The z-coordinate of the world position.
+        """
         return self.getZ(scene)
 
     def world_x_setter(self, value):
+        """
+        Set the x-coordinate of the world position.
+
+        Args:
+            value (float): The x-coordinate of the world position.
+        """
         self.setX(scene, value)
     def world_y_setter(self, value):
+        """
+        Set the y-coordinate of the world position.
+
+        Args:
+            value (float): The y-coordinate of the world position.
+        """
         self.setY(scene, value)
     def world_z_setter(self, value):
+        """
+        Set the z-coordinate of the world position.
+
+        Args:
+            value (float): The z-coordinate of the world position.
+        """
         self.setZ(scene, value)
 
     def position_getter(self):
+        """
+        Get the position of the entity.
+
+        Returns:
+            Vec3: The position of the entity.
+        """
         return Vec3(*self.getPos())
 
-    def position_setter(self, value):   # right, up, forward. can also set self.x, self.y, self.z
+    def position_setter(self, value):
+        """
+        Set the position of the entity.
+
+        Args:
+            value (Vec2, Vec3, or list): The position to set.
+        """
         if not isinstance(value, (Vec2, Vec3)):
             value = self._list_to_vec(value)
         if isinstance(value, Vec2):
@@ -488,60 +831,174 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.setPos(value[0], value[1], value[2])
 
     def x_getter(self):
+        """
+        Get the x-coordinate of the position.
+
+        Returns:
+            float: The x-coordinate of the position.
+        """
         return self.getX()
     def x_setter(self, value):
+        """
+        Set the x-coordinate of the position.
+
+        Args:
+            value (float): The x-coordinate of the position.
+        """
         self.setX(value)
 
     def y_getter(self):
+        """
+        Get the y-coordinate of the position.
+
+        Returns:
+            float: The y-coordinate of the position.
+        """
         return self.getY()
     def y_setter(self, value):
+        """
+        Set the y-coordinate of the position.
+
+        Args:
+            value (float): The y-coordinate of the position.
+        """
         self.setY(value)
 
     def z_getter(self):
+        """
+        Get the z-coordinate of the position.
+
+        Returns:
+            float: The z-coordinate of the position.
+        """
         return self.getZ()
     def z_setter(self, value):
+        """
+        Set the z-coordinate of the position.
+
+        Args:
+            value (float): The z-coordinate of the position.
+        """
         self.setZ(value)
 
     @property
-    def X(self):    # shortcut for int(entity.x)
+    def X(self):
+        """
+        Get the x-coordinate of the position as an integer.
+
+        Returns:
+            int: The x-coordinate of the position as an integer.
+        """
         return int(self.x)
     @property
-    def Y(self):    # shortcut for int(entity.y)
+    def Y(self):
+        """
+        Get the y-coordinate of the position as an integer.
+
+        Returns:
+            int: The y-coordinate of the position as an integer.
+        """
         return int(self.y)
     @property
-    def Z(self):    # shortcut for int(entity.z)
+    def Z(self):
+        """
+        Get the z-coordinate of the position as an integer.
+
+        Returns:
+            int: The z-coordinate of the position as an integer.
+        """
         return int(self.z)
 
     def world_rotation_getter(self):
+        """
+        Get the world rotation of the entity.
+
+        Returns:
+            Vec3: The world rotation of the entity.
+        """
         rotation = self.getHpr(scene)
         return Vec3(rotation[1], rotation[0], rotation[2]) * Entity.rotation_directions
 
     def world_rotation_setter(self, value):
+        """
+        Set the world rotation of the entity.
+
+        Args:
+            value (Vec2, Vec3, or list): The world rotation to set.
+        """
         self.setHpr(scene, Vec3(value[1], value[0], value[2]) * Entity.rotation_directions)
 
     def world_rotation_x_getter(self):
+        """
+        Get the x-coordinate of the world rotation.
+
+        Returns:
+            float: The x-coordinate of the world rotation.
+        """
         return self.world_rotation[0]
 
     def world_rotation_x_setter(self, value):
+        """
+        Set the x-coordinate of the world rotation.
+
+        Args:
+            value (float): The x-coordinate of the world rotation.
+        """
         self.world_rotation = Vec3(value, self.world_rotation[1], self.world_rotation[2])
 
     def world_rotation_y_getter(self):
+        """
+        Get the y-coordinate of the world rotation.
+
+        Returns:
+            float: The y-coordinate of the world rotation.
+        """
         return self.world_rotation[1]
 
     def world_rotation_y_setter(self, value):
+        """
+        Set the y-coordinate of the world rotation.
+
+        Args:
+            value (float): The y-coordinate of the world rotation.
+        """
         self.world_rotation = Vec3(self.world_rotation[0], value, self.world_rotation[2])
 
     def world_rotation_z_getter(self):
+        """
+        Get the z-coordinate of the world rotation.
+
+        Returns:
+            float: The z-coordinate of the world rotation.
+        """
         return self.world_rotation[2]
 
     def world_rotation_z_setter(self, value):
+        """
+        Set the z-coordinate of the world rotation.
+
+        Args:
+            value (float): The z-coordinate of the world rotation.
+        """
         self.world_rotation = Vec3(self.world_rotation[0], self.world_rotation[1], value)
 
     def rotation_getter(self):
+        """
+        Get the rotation of the entity.
+
+        Returns:
+            Vec3: The rotation of the entity.
+        """
         rotation = self.getHpr()
         return Vec3(rotation[1], rotation[0], rotation[2]) * Entity.rotation_directions
 
-    def rotation_setter(self, value):   # can also set self.rotation_x, self.rotation_y, self.rotation_z
+    def rotation_setter(self, value):
+        """
+        Set the rotation of the entity.
+
+        Args:
+            value (Vec2, Vec3, or list): The rotation to set.
+        """
         if not isinstance(value, (Vec2, Vec3)):
             value = self._list_to_vec(value)
         if isinstance(value, Vec2):
@@ -550,28 +1007,88 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.setHpr(Vec3(value[1], value[0], value[2]) * Entity.rotation_directions)
 
     def rotation_x_getter(self):
+        """
+        Get the x-coordinate of the rotation.
+
+        Returns:
+            float: The x-coordinate of the rotation.
+        """
         return self.rotation.x
     def rotation_x_setter(self, value):
+        """
+        Set the x-coordinate of the rotation.
+
+        Args:
+            value (float): The x-coordinate of the rotation.
+        """
         self.rotation = Vec3(value, self.rotation[1], self.rotation[2])
 
     def rotation_y_getter(self):
+        """
+        Get the y-coordinate of the rotation.
+
+        Returns:
+            float: The y-coordinate of the rotation.
+        """
         return self.rotation.y
     def rotation_y_setter(self, value):
+        """
+        Set the y-coordinate of the rotation.
+
+        Args:
+            value (float): The y-coordinate of the rotation.
+        """
         self.rotation = Vec3(self.rotation[0], value, self.rotation[2])
 
     def rotation_z_getter(self):
+        """
+        Get the z-coordinate of the rotation.
+
+        Returns:
+            float: The z-coordinate of the rotation.
+        """
         return self.rotation.z
     def rotation_z_setter(self, value):
+        """
+        Set the z-coordinate of the rotation.
+
+        Args:
+            value (float): The z-coordinate of the rotation.
+        """
         self.rotation = Vec3(self.rotation[0], self.rotation[1], value)
 
     def quaternion_getter(self):
+        """
+        Get the quaternion rotation of the entity.
+
+        Returns:
+            Quat: The quaternion rotation of the entity.
+        """
         return self.get_quat()
     def quaternion_setter(self, value):
+        """
+        Set the quaternion rotation of the entity.
+
+        Args:
+            value (Quat): The quaternion rotation to set.
+        """
         self.set_quat(value)
 
     def world_scale_getter(self):
+        """
+        Get the world scale of the entity.
+
+        Returns:
+            Vec3: The world scale of the entity.
+        """
         return Vec3(*self.getScale(scene))
     def world_scale_setter(self, value):
+        """
+        Set the world scale of the entity.
+
+        Args:
+            value (Vec2, Vec3, or list): The world scale to set.
+        """
         if not isinstance(value, (Vec2, Vec3)):
             value = self._list_to_vec(value)
 
@@ -582,28 +1099,76 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.setScale(scene, value)
 
     def world_scale_x_getter(self):
+        """
+        Get the x-coordinate of the world scale.
+
+        Returns:
+            float: The x-coordinate of the world scale.
+        """
         return self.getScale(scene)[0]
     def world_scale_x_setter(self, value):
+        """
+        Set the x-coordinate of the world scale.
+
+        Args:
+            value (float): The x-coordinate of the world scale.
+        """
         value = value if value != 0 else .001 # prevent panda3d erroring when scale is 0
         self.setScale(scene, Vec3(value, self.world_scale_y, self.world_scale_z))
 
     def world_scale_y_getter(self):
+        """
+        Get the y-coordinate of the world scale.
+
+        Returns:
+            float: The y-coordinate of the world scale.
+        """
         return self.getScale(scene)[1]
     def world_scale_y_setter(self, value):
-        value = value if value != 0 else .001 # prevent panda3d erroring when scale is 0
+        """
+        Set the y-coordinate of the world scale.
+
+        Args:
+            value (float): The y-coordinate of the world scale.
+        """
+        value = value if value != 0 else .001  # prevent panda3d erroring when scale is 0
         self.setScale(scene, Vec3(self.world_scale_x, value, self.world_scale_z))
 
     def world_scale_z_getter(self):
+        """
+        Get the z-coordinate of the world scale.
+
+        Returns:
+            float: The z-coordinate of the world scale.
+        """
         return self.getScale(scene)[2]
     def world_scale_z_setter(self, value):
-        value = value if value != 0 else .001 # prevent panda3d erroring when scale is 0
+        """
+        Set the z-coordinate of the world scale.
+
+        Args:
+            value (float): The z-coordinate of the world scale.
+        """
+        value = value if value != 0 else .001  # prevent panda3d erroring when scale is 0
         self.setScale(scene, Vec3(self.world_scale_x, self.world_scale_y, value))
 
     def scale_getter(self):
+        """
+        Get the scale of the entity.
+
+        Returns:
+            Vec3: The scale of the entity.
+        """
         scale = self.getScale()
         return Vec3(scale[0], scale[1], scale[2])
 
-    def scale_setter(self, value):  # can also set self.scale_x, self.scale_y, self.scale_z
+    def scale_setter(self, value):
+        """
+        Set the scale of the entity.
+
+        Args:
+            value (Vec2, Vec3, or list): The scale to set.
+        """
         if not isinstance(value, (Vec2, Vec3)):
             value = self._list_to_vec(value)
         if isinstance(value, Vec2):
@@ -613,55 +1178,161 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.setScale(value[0], value[1], value[2])
 
     def scale_x_getter(self):
+        """
+        Get the x-coordinate of the scale.
+
+        Returns:
+            float: The x-coordinate of the scale.
+        """
         return self.scale[0]
     def scale_x_setter(self, value):
+
+        """
+        Set the x-coordinate of the scale.
+
+        Args:
+            value (float): The x-coordinate of the scale.
+        """
+
         value = value if value != 0 else .001 # prevent panda3d erroring when scale is 0
+
         self.setScale(value, self.scale_y, self.scale_z)
 
     def scale_y_getter(self):
+        """
+        Get the y-coordinate of the scale.
+
+        Returns:
+            float: The y-coordinate of the scale.
+        """
         return self.scale[1]
     def scale_y_setter(self, value):
+
+        """
+        Set the y-coordinate of the scale.
+
+        Args:
+            value (float): The y-coordinate of the scale.
+        """
         value = value if value != 0 else .001 # prevent panda3d erroring when scale is 0
         self.setScale(self.scale_x, value, self.scale_z)
 
     def scale_z_getter(self):
+        """
+        Get the z-coordinate of the scale.
+
+        Returns:
+            float: The z-coordinate of the scale.
+        """
         return self.scale[2]
     def scale_z_setter(self, value):
+        """
+        Set the z-coordinate of the scale.
+
+        Args:
+            value (float): The z-coordinate of the scale.
+        """
         value = value if value != 0 else .001 # prevent panda3d erroring when scale is 0
         self.setScale(self.scale_x, self.scale_y, value)
 
-    def transform_getter(self): # get/set position, rotation and scale
+    def transform_getter(self):
+        """
+        Get the transform of the entity (position, rotation, scale).
+
+        Returns:
+            tuple: The transform of the entity (position, rotation, scale).
+        """
         return (self.position, self.rotation, self.scale)
     def transform_setter(self, value):
+        """
+        Set the transform of the entity (position, rotation, scale).
+
+        Args:
+            value (tuple): The transform to set (position, rotation, scale).
+        """
         self.position, self.rotation, self.scale = value
 
-    def world_transform_getter(self): # get/set world_position, world_rotation and world_scale
+    def world_transform_getter(self):
+        """
+        Get the world transform of the entity (world_position, world_rotation, world_scale).
+
+        Returns:
+            tuple: The world transform of the entity (world_position, world_rotation, world_scale).
+        """
         return (self.world_position, self.world_rotation, self.world_scale)
     def world_transform_setter(self, value):
+        """
+        Set the world transform of the entity (world_position, world_rotation, world_scale).
+
+        Args:
+            value (tuple): The world transform to set (world_position, world_rotation, world_scale).
+        """
         self.world_position, self.world_rotation, self.world_scale = value
 
 
     @property
-    def forward(self): # get forward direction.
+    def forward(self):
+        """
+        Get the forward direction of the entity.
+
+        Returns:
+            Vec3: The forward direction of the entity.
+        """
         return Vec3(*scene.getRelativeVector(self, (0, 0, 1)))
     @property
-    def back(self): # get backwards direction.
+    def back(self):
+        """
+        Get the backward direction of the entity.
+
+        Returns:
+            Vec3: The backward direction of the entity.
+        """
         return -self.forward
     @property
-    def right(self): # get right direction.
+    def right(self):
+        """
+        Get the right direction of the entity.
+
+        Returns:
+            Vec3: The right direction of the entity.
+        """
         return Vec3(*scene.getRelativeVector(self, (1, 0, 0)))
     @property
-    def left(self): # get left direction.
+    def left(self):
+        """
+        Get the left direction of the entity.
+
+        Returns:
+            Vec3: The left direction of the entity.
+        """
         return -self.right
     @property
-    def up(self): # get up direction.
+    def up(self):
+        """
+        Get the upward direction of the entity.
+
+        Returns:
+            Vec3: The upward direction of the entity.
+        """
         return Vec3(*scene.getRelativeVector(self, (0, 1, 0)))
     @property
-    def down(self): # get down direction.
+    def down(self):
+        """
+        Get the downward direction of the entity.
+
+        Returns:
+            Vec3: The downward direction of the entity.
+        """
         return -self.up
 
     @property
-    def screen_position(self): # get screen position(ui space) from world space.
+    def screen_position(self):
+        """
+        Get the screen position (UI space) from world space.
+
+        Returns:
+            Vec2: The screen position of the entity.
+        """
         from ursina import camera
         world_pos = camera.getRelativePoint(self, Vec3.zero)
         projected_pos = camera.lens.getProjectionMat().xform(Vec4(*world_pos, 1))
@@ -671,6 +1342,12 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def shader_setter(self, value):
+        """
+        Set the shader for the entity.
+
+        Args:
+            value: The shader to set. Can be a Panda3dShader, a string (shader name), or a Shader instance.
+        """
         self._shader = value
         if not self.model:
             return
@@ -710,9 +1387,25 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def get_shader_input(self, name):
+        """
+        Get the value of a shader input.
+
+        Args:
+            name (str): The name of the shader input.
+
+        Returns:
+            The value of the shader input.
+        """
         return self._shader_inputs.get(name, None)
 
     def set_shader_input(self, name, value):
+        """
+        Set the value of a shader input.
+
+        Args:
+            name (str): The name of the shader input.
+            value: The value to set.
+        """
         self._shader_inputs[name] = value
         if isinstance(value, str):
             value = load_texture(value)
@@ -726,14 +1419,32 @@ class Entity(NodePath, metaclass=PostInitCaller):
             raise Exception(f'Incorrect input to shader: {name} {value}')
 
     def shader_input_getter(self):
+        """
+        Get the shader inputs of the entity.
+
+        Returns:
+            dict: The shader inputs of the entity.
+        """
         return self._shader_inputs
 
     def shader_input_setter(self, value):
+        """
+        Set the shader inputs of the entity.
+
+        Args:
+            value (dict): The shader inputs to set.
+        """
         for key, value in value.items():
             self.set_shader_input(key, value)
 
 
-    def material_setter(self, value):  # a way to set shader, texture, texture_scale, texture_offset and shader inputs in one go
+    def material_setter(self, value):
+        """
+        Set the material for the entity.
+
+        Args:
+            value (dict): The material to set.
+        """
         if value is None:
             raise ValueError('material can not be set to None')
         _shader = value.get('shader', None)
@@ -748,7 +1459,13 @@ class Entity(NodePath, metaclass=PostInitCaller):
             self.shader_input = {key: value for key, value in value.items() if key in _shader.default_input}
 
 
-    def texture_setter(self, value):    # set model with texture='texture_name'. requires a model to be set beforehand.
+    def texture_setter(self, value):
+        """
+        Set the texture for the entity.
+
+        Args:
+            value: The texture to set. Can be a string (texture name), a Texture instance, or None.
+        """
         if value is None and self.texture:
             # print('remove texture')
             self._texture = None
@@ -782,21 +1499,45 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def texture_scale_getter(self):
+        """
+        Get the texture scale of the entity.
+
+        Returns:
+            Vec2: The texture scale of the entity.
+        """
         if 'texture_scale' in self._shader_inputs:
             return self._shader_inputs['texture_scale']
         else:
             return Vec2(1,1)
 
-    def texture_scale_setter(self, value):  # how many times the texture should repeat, eg. texture_scale=(8,8).
+    def texture_scale_setter(self, value):
+        """
+        Set the texture scale for the entity.
+
+        Args:
+            value (Vec2 or list): The texture scale to set.
+        """
         value = Vec2(*value)
         if self.model and self.texture:
             self.model.setTexScale(TextureStage.getDefault(), value[0], value[1])
             self.set_shader_input('texture_scale', value)
 
     def texture_offset_getter(self):
+        """
+        Get the texture offset of the entity.
+
+        Returns:
+            Vec2: The texture offset of the entity.
+        """
         return getattr(self, '_texture_offset', Vec2(0,0))
 
     def texture_offset_setter(self, value):
+        """
+        Set the texture offset for the entity.
+
+        Args:
+            value (Vec2 or list): The texture offset to set.
+        """
         value = Vec2(*value)
         if self.model and self.texture:
             self.model.setTexOffset(TextureStage.getDefault(), value[0], value[1])
@@ -804,36 +1545,84 @@ class Entity(NodePath, metaclass=PostInitCaller):
             self.set_shader_input('texture_offset', value)
         self._texture_offset = value
 
-    def tileset_size_getter(self):         # if the texture is a tileset, say how many tiles there are so it only use one tile of the texture, e.g. tileset_size=[8,4]
+    def tileset_size_getter(self):
+        """
+        Get the tileset size of the entity.
+
+        Returns:
+            Vec2: The tileset size of the entity.
+        """
         return self._tileset_size
     def tileset_size_setter(self, value):
+        """
+        Set the tileset size for the entity.
+
+        Args:
+            value (Vec2 or list): The tileset size to set.
+        """
         self._tileset_size = value
         self.texture_scale = Vec2(1/value[0], 1/value[1])
 
-    def tile_coordinate_getter(self):      # set the tile coordinate, starts in the lower left.
+    def tile_coordinate_getter(self):
+        """
+        Get the tile coordinate of the entity.
+
+        Returns:
+            Vec2: The tile coordinate of the entity.
+        """
         return self._tile_coordinate
     def tile_coordinate_setter(self, value):
+        """
+        Set the tile coordinate for the entity.
+
+        Args:
+            value (Vec2 or list): The tile coordinate to set.
+        """
         self._tile_coordinate = value
         self.texture_offset = Vec2(value[0] / self.tileset_size[0], value[1] / self.tileset_size[1])
 
 
     def alpha_getter(self):
+        """
+        Get the alpha (transparency) value of the entity.
+
+        Returns:
+            float: The alpha value of the entity.
+        """
         return self.color[3]
 
-    def alpha_setter(self, value):  # shortcut for setting color's transparency/opacity
+    def alpha_setter(self, value):
+        """
+        Set the alpha (transparency) value of the entity.
+
+        Args:
+            value (float): The alpha value to set.
+        """
         if value > 1:
             value = value / 255
         self.color = color.hsv(self.color.h, self.color.s, self.color.v, value)
 
 
     def always_on_top_setter(self, value):
+        """
+        Set the always_on_top state of the entity.
+
+        Args:
+            value (bool): True to make the entity always on top, False to disable it.
+        """
         self._always_on_top = value
         self.set_bin("fixed", 0)
         self.set_depth_write(not value)
         self.set_depth_test(not value)
 
 
-    def unlit_setter(self, value):  # set to True to ignore light and not cast shadows
+    def unlit_setter(self, value):
+        """
+        Set the unlit state of the entity.
+
+        Args:
+            value (bool): True to make the entity unlit, False to disable it.
+        """
         self._unlit = value
         self.setLightOff(value)
         if value:
@@ -842,18 +1631,37 @@ class Entity(NodePath, metaclass=PostInitCaller):
             self.show(0b0001)
 
 
-    def billboard_setter(self, value):  # set to True to make this Entity always face the camera.
+    def billboard_setter(self, value):
+        """
+        Set the billboard state of the entity.
+
+        Args:
+            value (bool): True to make the entity always face the camera, False to disable it.
+        """
         self._billboard = value
         if value:
             self.setBillboardPointEye(value)
 
 
-    def wireframe_setter(self, value):  # set to True to render model as wireframe
+    def wireframe_setter(self, value):
+        """
+        Set the wireframe state of the entity.
+
+        Args:
+            value (bool): True to render the model as wireframe, False to disable it.
+        """
         self._wireframe = value
         self.setRenderModeWireframe(value)
 
 
     def generate_sphere_map(self, size=512, name=f'sphere_map_{len(scene.entities)}'):
+        """
+        Generate a sphere map for the entity.
+
+        Args:
+            size (int, optional): The size of the sphere map. Defaults to 512.
+            name (str, optional): The name of the sphere map. Defaults to 'sphere_map_{len(scene.entities)}'.
+        """
         from ursina import camera
         _name = 'textures/' + name + '.jpg'
         org_pos = camera.position
@@ -867,6 +1675,13 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def generate_cube_map(self, size=512, name=f'cube_map_{len(scene.entities)}'):
+        """
+        Generate a cube map for the entity.
+
+        Args:
+            size (int, optional): The size of the cube map. Defaults to 512.
+            name (str, optional): The name of the cube map. Defaults to 'cube_map_{len(scene.entities)}'.
+        """
         from ursina import camera
         _name = 'textures/' + name
         org_pos = camera.position
@@ -882,6 +1697,12 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
     @property
     def model_bounds(self):
+        """
+        Get the bounds of the model.
+
+        Returns:
+            Bounds: The bounds of the model.
+        """
         if self.model:
             if not self.model.getTightBounds():
                 return Bounds(start=self.world_position, end=self.world_position, center=Vec3.zero, size=Vec3.zero)
@@ -898,21 +1719,50 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
     @property
     def bounds(self):
+        """
+        Get the bounds of the entity.
+
+        Returns:
+            Bounds: The bounds of the entity.
+        """
         _bounds = self.model_bounds
         if _bounds is None:
             return None
         return Bounds(start=_bounds.start*self.scale, end=_bounds.end*self.scale, center=_bounds.center, size=_bounds.size*self.scale)
 
 
-    def get_position(self, relative_to=scene):  # get position relative to on other Entity. In most cases, use .position instead.
+    def get_position(self, relative_to=scene):
+        """
+        Get the position of the entity relative to another entity.
+
+        Args:
+            relative_to: The entity to get the position relative to. Defaults to scene.
+
+        Returns:
+            Vec3: The position of the entity relative to the specified entity.
+        """
         return Vec3(*self.getPos(relative_to))
 
 
-    def set_position(self, value, relative_to=scene): # set position relative to on other Entity. In most cases, use .position instead.
+    def set_position(self, value, relative_to=scene):
+        """
+        Set the position of the entity relative to another entity.
+
+        Args:
+            value (Vec2, Vec3, or list): The position to set.
+            relative_to: The entity to set the position relative to. Defaults to scene.
+        """
         self.setPos(relative_to, Vec3(value[0], value[1], value[2]))
 
 
-    def rotate(self, value, relative_to=None):  # rotate around local axis.
+    def rotate(self, value, relative_to=None):
+        """
+        Rotate the entity around its local axis.
+
+        Args:
+            value (Vec2, Vec3, or list): The rotation value.
+            relative_to: The entity to rotate relative to. Defaults to self.
+        """
         if not relative_to:
             relative_to = self
 
@@ -920,6 +1770,15 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def add_script(self, class_instance):
+        """
+        Add a script to the entity.
+
+        Args:
+            class_instance: The script class instance to add.
+
+        Returns:
+            The added script class instance.
+        """
         if isinstance(class_instance, object) and not isinstance(class_instance, str):
             class_instance.entity = self
             class_instance.enabled = True
@@ -931,6 +1790,19 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def combine(self, analyze=False, auto_destroy=True, ignore=[], ignore_disabled=True, include_normals=False):
+        """
+        Combine the entity with its children into a single model.
+
+        Args:
+            analyze (bool, optional): Whether to analyze the model. Defaults to False.
+            auto_destroy (bool, optional): Whether to automatically destroy the children. Defaults to True.
+            ignore (list, optional): List of entities to ignore. Defaults to [].
+            ignore_disabled (bool, optional): Whether to ignore disabled entities. Defaults to True.
+            include_normals (bool, optional): Whether to include normals. Defaults to False.
+
+        Returns:
+            The combined model.
+        """
         from ursina.scripts.combine import combine
 
         self.model = combine(self, analyze, auto_destroy, ignore, ignore_disabled, include_normals)
@@ -938,6 +1810,12 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def flipped_faces_setter(self, value):
+        """
+        Set the flipped faces state of the entity.
+
+        Args:
+            value (bool): True to flip the faces, False to disable it.
+        """
         self._flipped_faces = value
         if value:
             self.setAttrib(CullFaceAttrib.make(CullFaceAttrib.MCullClockwise))
@@ -946,6 +1824,13 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def look_at(self, target, axis=Vec3.forward):
+        """
+        Make the entity look at a target.
+
+        Args:
+            target (Entity, Vec3, or list): The target to look at.
+            axis (Vec3 or str, optional): The axis to align with the target. Defaults to Vec3.forward.
+        """
         if isinstance(target, Entity):
             target = Vec3(*target.world_position)
         elif not isinstance(target, Vec3):
@@ -970,6 +1855,13 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def look_in_direction(self, direction, forward_axis):
+        """
+        Make the entity look in a specific direction.
+
+        Args:
+            direction (Vec3 or list): The direction to look in.
+            forward_axis (Vec3 or str): The forward axis to align with the direction.
+        """
         import math
         def normalize_vector(v):
             length = math.sqrt(v[0]**2 + v[1]**2 + v[2]**2)
@@ -1083,6 +1975,13 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def look_at_2d(self, target, axis='z'):
+        """
+        Make the entity look at a target in 2D space.
+
+        Args:
+            target (Entity, Vec3, or list): The target to look at.
+            axis (str, optional): The axis to align with the target. Defaults to 'z'.
+        """
         from math import degrees, atan2
         if isinstance(target, Entity):
             target = Vec3(target.world_position)
@@ -1096,12 +1995,33 @@ class Entity(NodePath, metaclass=PostInitCaller):
             self.rotation_x = degrees(atan2(pos[1], pos[2]))
 
     def look_at_xy(self, target):
+        """
+        Make the entity look at a target in the XY plane.
+
+        Args:
+            target (Entity, Vec3, or list): The target to look at.
+        """
         self.look_at_2d(target)
     def look_at_xz(self, target):
+        """
+        Make the entity look at a target in the XZ plane.
+
+        Args:
+            target (Entity, Vec3, or list): The target to look at.
+        """
         self.look_at_2d(target, 'y')
 
 
     def has_ancestor(self, possible_ancestor):
+        """
+        Check if the entity has a specific ancestor.
+
+        Args:
+            possible_ancestor (Entity): The possible ancestor entity.
+
+        Returns:
+            bool: True if the entity has the specified ancestor, False otherwise.
+        """
         if self.parent == possible_ancestor:
             return True
 
@@ -1116,7 +2036,16 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
         return False
 
-    def get_descendants(self, include_disabled=True):       # recursively get all descendants (children, grandchildren, and so on)
+    def get_descendants(self, include_disabled=True):
+        """
+        Recursively get all descendants (children, grandchildren, and so on) of the entity.
+
+        Args:
+            include_disabled (bool, optional): Whether to include disabled descendants. Defaults to True.
+
+        Returns:
+            list: A list of all descendants.
+        """
         descendants = []
         for child in self.children:
             if not include_disabled and not child.enabled:
@@ -1127,6 +2056,12 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def has_disabled_ancestor(self):
+        """
+        Check if the entity has a disabled ancestor.
+
+        Returns:
+            bool: True if the entity has a disabled ancestor, False otherwise.
+        """
         p = self
         for i in range(100):
             if not p.parent:
@@ -1142,29 +2077,68 @@ class Entity(NodePath, metaclass=PostInitCaller):
         return False
 
     def children_getter(self):
+        """
+        Get the children of the entity.
+
+        Returns:
+            list: A list of children entities.
+        """
         return [e for e in getattr(self, '_children', []) if e]     # make sure list doesn't contain destroyed entities
 
     def children_setter(self, value):
+        """
+        Set the children of the entity.
+
+        Args:
+            value (list): A list of children entities.
+        """
         self._children = value
 
     def loose_children_getter(self):
+        """
+        Get the loose children of the entity.
+
+        Returns:
+            list: A list of loose children entities.
+        """
         return getattr(self, '_loose_children', [])
 
 
     @property
-    def attributes(self): # attribute names. used by duplicate().
+    def attributes(self):
+        """
+        Get the attribute names of the entity.
+
+        Returns:
+            tuple: A tuple of attribute names.
+        """
         return ('name', 'enabled', 'eternal', 'visible', 'parent',
             'origin', 'position', 'rotation', 'scale',
             'shader', 'model', 'color', 'texture', 'texture_scale', 'texture_offset',
             'render_queue', 'always_on_top', 'collider', 'collision', 'scripts')
 
     def __str__(self):
+        """
+        Get the string representation of the entity.
+
+        Returns:
+            str: The string representation of the entity.
+        """
         try:
             return self.name
         except:
             return '*destroyed entity*'
 
-    def get_changes(self, target_class=None): # returns a dict of all the changes
+    def get_changes(self, target_class=None):
+        """
+        Get the changes made to the entity's attributes.
+
+        Args:
+            target_class (class, optional): The target class to compare against. Defaults to the entity's class.
+
+        Returns:
+            dict: A dictionary of attribute changes.
+        """
         if not target_class:
             target_class = self.__class__
 
@@ -1204,11 +2178,26 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def __repr__(self):
+        """
+        Get the string representation of the entity with attribute changes.
+
+        Returns:
+            str: The string representation of the entity with attribute changes.
+        """
         changes = self.get_changes(self.__class__)
         return f'{self.__class__.__name__}(' +  ''.join(f'{key}={value}, ' for key, value in changes.items()) + ')'
 
 
     def __deepcopy__(self, memo):
+        """
+        Create a deep copy of the entity.
+
+        Args:
+            memo: The memo dictionary for deep copy.
+
+        Returns:
+            The deep copy of the entity.
+        """
         return eval(repr(self))
 
 
@@ -1217,12 +2206,51 @@ class Entity(NodePath, metaclass=PostInitCaller):
 #------------
 
     def _getattr(self, name):
+        """
+        Get the value of an attribute.
+
+        Args:
+            name (str): The name of the attribute.
+
+        Returns:
+            The value of the attribute.
+        """
         return getattr(self, name)
 
     def _setattr(self, name, value):
+        """
+        Set the value of an attribute.
+
+        Args:
+            name (str): The name of the attribute.
+            value: The value to set.
+        """
         setattr(self, name, value)
 
     def animate(self, name, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt='kill', time_step=None, unscaled=False, ignore_paused=None, auto_play=True, auto_destroy=True, getattr_function=None, setattr_function=None):
+        """
+        Animate an attribute of the entity.
+
+        Args:
+            name (str): The name of the attribute to animate.
+            value: The target value of the attribute.
+            duration (float, optional): The duration of the animation. Defaults to .1.
+            delay (float, optional): The delay before starting the animation. Defaults to 0.
+            curve (function, optional): The curve function for the animation. Defaults to curve.in_expo.
+            loop (bool, optional): Whether to loop the animation. Defaults to False.
+            resolution (int, optional): The resolution of the animation. Defaults to None.
+            interrupt (str, optional): The interrupt behavior ('kill' or 'finish'). Defaults to 'kill'.
+            time_step (float, optional): The time step for the animation. Defaults to None.
+            unscaled (bool, optional): Whether to use unscaled time. Defaults to False.
+            ignore_paused (bool, optional): Whether to ignore paused state. Defaults to None.
+            auto_play (bool, optional): Whether to automatically play the animation. Defaults to True.
+            auto_destroy (bool, optional): Whether to automatically destroy the animation. Defaults to True.
+            getattr_function (function, optional): The function to get the attribute value. Defaults to None.
+            setattr_function (function, optional): The function to set the attribute value. Defaults to None.
+
+        Returns:
+            Sequence: The animation sequence.
+        """
         if duration == 0 and delay == 0:
             setattr(self, name, value)
             return None
@@ -1266,6 +2294,17 @@ class Entity(NodePath, metaclass=PostInitCaller):
         return sequence
 
     def animate_position(self, value, duration=.1, **kwargs):
+        """
+        Animate the position of the entity.
+
+        Args:
+            value (Vec2, Vec3, or list): The target position.
+            duration (float, optional): The duration of the animation. Defaults to .1.
+            **kwargs: Additional keyword arguments for the animation.
+
+        Returns:
+            tuple: The animation sequences for x, y, and z coordinates.
+        """
         x = self.animate('x', value[0], duration,  **kwargs)
         y = self.animate('y', value[1], duration,  **kwargs)
         z = None
@@ -1274,12 +2313,34 @@ class Entity(NodePath, metaclass=PostInitCaller):
         return x, y, z
 
     def animate_rotation(self, value, duration=.1,  **kwargs):
+        """
+        Animate the rotation of the entity.
+
+        Args:
+            value (Vec2, Vec3, or list): The target rotation.
+            duration (float, optional): The duration of the animation. Defaults to .1.
+            **kwargs: Additional keyword arguments for the animation.
+
+        Returns:
+            tuple: The animation sequences for x, y, and z coordinates.
+        """
         x = self.animate('rotation_x', value[0], duration,  **kwargs)
         y = self.animate('rotation_y', value[1], duration,  **kwargs)
         z = self.animate('rotation_z', value[2], duration,  **kwargs)
         return x, y, z
 
     def animate_scale(self, value, duration=.1, **kwargs):
+        """
+        Animate the scale of the entity.
+
+        Args:
+            value (Vec2, Vec3, or list): The target scale.
+            duration (float, optional): The duration of the animation. Defaults to .1.
+            **kwargs: Additional keyword arguments for the animation.
+
+        Returns:
+            Sequence: The animation sequence.
+        """
         if isinstance(value, (int, float, complex)):
             value = Vec3(value, value, value)
         elif isinstance(value, tuple) and len(value) == 2:
@@ -1289,6 +2350,17 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def animate_shader_input(self, name, value, **kwargs):
+        """
+        Animate a shader input of the entity.
+
+        Args:
+            name (str): The name of the shader input.
+            value: The target value of the shader input.
+            **kwargs: Additional keyword arguments for the animation.
+
+        Returns:
+            Sequence: The animation sequence.
+        """
         # instead of setting entity variables, set shader input
         return self.animate(name, value, getattr_function=self.get_shader_input, setattr_function=self.set_shader_input, **kwargs)
 
@@ -1302,6 +2374,23 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def shake(self, duration=.2, magnitude=1, speed=.05, direction=(1,1), delay=0, attr_name='position', interrupt='finish', unscaled=False, ignore_paused=True):
+        """
+        Shake the entity.
+
+        Args:
+            duration (float, optional): The duration of the shake. Defaults to .2.
+            magnitude (float, optional): The magnitude of the shake. Defaults to 1.
+            speed (float, optional): The speed of the shake. Defaults to .05.
+            direction (tuple, optional): The direction of the shake. Defaults to (1,1).
+            delay (float, optional): The delay before starting the shake. Defaults to 0.
+            attr_name (str, optional): The attribute to shake. Defaults to 'position'.
+            interrupt (str, optional): The interrupt behavior ('kill' or 'finish'). Defaults to 'finish'.
+            unscaled (bool, optional): Whether to use unscaled time. Defaults to False.
+            ignore_paused (bool, optional): Whether to ignore paused state. Defaults to True.
+
+        Returns:
+            Sequence: The shake sequence.
+        """
         import random
 
         if hasattr(self, 'shake_sequence') and self.shake_sequence:
@@ -1327,20 +2416,81 @@ class Entity(NodePath, metaclass=PostInitCaller):
         return self.shake_sequence
 
     def animate_color(self, value, duration=.1, interrupt='finish', unscaled=False, **kwargs):
+        """
+        Animate the color of the entity.
+
+        Args:
+            value (Color): The target color.
+            duration (float, optional): The duration of the animation. Defaults to .1.
+            interrupt (str, optional): The interrupt behavior ('kill' or 'finish'). Defaults to 'finish'.
+            unscaled (bool, optional): Whether to use unscaled time. Defaults to False.
+            **kwargs: Additional keyword arguments for the animation.
+
+        Returns:
+            Sequence: The animation sequence.
+        """
         return self.animate('color', value, duration, **kwargs)
 
     def fade_out(self, value=0, duration=.5, unscaled=False, **kwargs):
+        """
+        Fade out the entity.
+
+        Args:
+            value (float, optional): The target alpha value. Defaults to 0.
+            duration (float, optional): The duration of the fade out. Defaults to .5.
+            unscaled (bool, optional): Whether to use unscaled time. Defaults to False.
+            **kwargs: Additional keyword arguments for the animation.
+
+        Returns:
+            Sequence: The fade out sequence.
+        """
         return self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration=duration, **kwargs)
 
     def fade_in(self, value=1, duration=.5, **kwargs):
+        """
+        Fade in the entity.
+
+        Args:
+            value (float, optional): The target alpha value. Defaults to 1.
+            duration (float, optional): The duration of the fade in. Defaults to .5.
+            **kwargs: Additional keyword arguments for the animation.
+
+        Returns:
+            Sequence: The fade in sequence.
+        """
         return self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration=duration, **kwargs)
 
     def blink(self, value=ursina.color.clear, duration=.1, delay=0, curve=curve.in_expo_boomerang, interrupt='finish', **kwargs):
+        """
+        Blink the entity.
+
+        Args:
+            value (Color, optional): The target color. Defaults to ursina.color.clear.
+            duration (float, optional): The duration of the blink. Defaults to .1.
+            delay (float, optional): The delay before starting the blink. Defaults to 0.
+            curve (function, optional): The curve function for the blink. Defaults to curve.in_expo_boomerang.
+            interrupt (str, optional): The interrupt behavior ('kill' or 'finish'). Defaults to 'finish'.
+            **kwargs: Additional keyword arguments for the animation.
+
+        Returns:
+            Sequence: The blink sequence.
+        """
         return self.animate_color(value, duration=duration, delay=delay, curve=curve, interrupt=interrupt, **kwargs)
 
 
 
     def intersects(self, traverse_target=scene, ignore:list=None, debug=False):
+        """
+        Check if the entity intersects with other entities.
+
+        Args:
+            traverse_target: The target to traverse for intersections. Defaults to scene.
+            ignore (list, optional): List of entities to ignore. Defaults to None.
+            debug (bool, optional): Whether to enable debug mode. Defaults to False.
+
+        Returns:
+            HitInfo: The hit information.
+        """
         if not ignore:
             ignore = []
         ignore = list(ignore)
@@ -1419,6 +2569,12 @@ if __name__ == '__main__':
     '''example of inheriting Entity'''
     class Player(Entity):
         def __init__(self, **kwargs):
+            """
+            Initialize the Player entity.
+
+            Args:
+                **kwargs: Additional keyword arguments for setting attributes.
+            """
             super().__init__()
             self.model='cube'
             self.color = color.red
@@ -1429,11 +2585,20 @@ if __name__ == '__main__':
 
         # input and update functions gets automatically called by the engine
         def input(self, key):
+            """
+            Handle input events.
+
+            Args:
+                key (str): The input key.
+            """
             if key == 'space':
                 # self.color = self.color.inverse()
                 self.animate_x(2, duration=1)
 
         def update(self):
+            """
+            Update the Player entity.
+            """
             self.x += held_keys['d'] * time.dt * 10
             self.x -= held_keys['a'] * time.dt * 10
 
