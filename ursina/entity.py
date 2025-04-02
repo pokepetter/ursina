@@ -1091,9 +1091,11 @@ class Entity(NodePath, metaclass=PostInitCaller):
         """
         if not isinstance(value, (Vec2, Vec3)):
             value = self._list_to_vec(value)
+
         if isinstance(value, Vec2):
             value = Vec3(*value, self.scale_z)
 
+        value = Vec3(*[e if e!=0 else .001 for e in value])
         self.setScale(scene, value)
 
     def world_scale_x_getter(self):
@@ -1111,6 +1113,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
         Args:
             value (float): The x-coordinate of the world scale.
         """
+        value = value if value != 0 else .001 # prevent panda3d erroring when scale is 0
         self.setScale(scene, Vec3(value, self.world_scale_y, self.world_scale_z))
 
     def world_scale_y_getter(self):
@@ -1128,6 +1131,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
         Args:
             value (float): The y-coordinate of the world scale.
         """
+        value = value if value != 0 else .001  # prevent panda3d erroring when scale is 0
         self.setScale(scene, Vec3(self.world_scale_x, value, self.world_scale_z))
 
     def world_scale_z_getter(self):
@@ -1145,6 +1149,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
         Args:
             value (float): The z-coordinate of the world scale.
         """
+        value = value if value != 0 else .001  # prevent panda3d erroring when scale is 0
         self.setScale(scene, Vec3(self.world_scale_x, self.world_scale_y, value))
 
     def scale_getter(self):
@@ -1181,12 +1186,16 @@ class Entity(NodePath, metaclass=PostInitCaller):
         """
         return self.scale[0]
     def scale_x_setter(self, value):
+
         """
         Set the x-coordinate of the scale.
 
         Args:
             value (float): The x-coordinate of the scale.
         """
+
+        value = value if value != 0 else .001 # prevent panda3d erroring when scale is 0
+
         self.setScale(value, self.scale_y, self.scale_z)
 
     def scale_y_getter(self):
@@ -1198,12 +1207,14 @@ class Entity(NodePath, metaclass=PostInitCaller):
         """
         return self.scale[1]
     def scale_y_setter(self, value):
+
         """
         Set the y-coordinate of the scale.
 
         Args:
             value (float): The y-coordinate of the scale.
         """
+        value = value if value != 0 else .001 # prevent panda3d erroring when scale is 0
         self.setScale(self.scale_x, value, self.scale_z)
 
     def scale_z_getter(self):
@@ -1221,6 +1232,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
         Args:
             value (float): The z-coordinate of the scale.
         """
+        value = value if value != 0 else .001 # prevent panda3d erroring when scale is 0
         self.setScale(self.scale_x, self.scale_y, value)
 
     def transform_getter(self):
@@ -2273,9 +2285,10 @@ class Entity(NodePath, metaclass=PostInitCaller):
             t = i / resolution
             t = curve(t)
 
-            sequence.append(Wait(duration / resolution))
-            sequence.append(Func(setattr_function, name, lerp(getattr_function(name), value, t)))
+            sequence.append(Wait(duration / resolution), regenerate=False)
+            sequence.append(Func(setattr_function, name, lerp(getattr_function(name), value, t)), regenerate=False)
 
+        sequence.generate()
         if auto_play:
             sequence.start()
         return sequence
