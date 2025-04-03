@@ -1,0 +1,9 @@
+[submodule "ursina/editor/GamePlusEditor"]
+	path = ursina/editor/GamePlusEditor
+	url = https://github.com/IndividualCoder/GamePlus-Editor
+[submodule "ursina/ursinanetworking"]
+	path = ursina/ursinanetworking
+	url = https://github.com/kstzl/UrsinaNetworking
+[submodule "ursina/ursina/shaders/shader-editor-ursina"]
+	path = ursina/ursina/shaders/shader-editor-ursina
+	url = https://github.com/ano0002/shader-editor-ursina

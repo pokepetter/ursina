@@ -1,3 +1,28 @@
+"""
+ursina/mesh.py
+
+This module provides the Mesh class for creating and manipulating 3D meshes in the Ursina engine.
+It supports various mesh modes, including triangles, quads, lines, and points. The module also includes
+functions for generating normals, projecting UVs, and colorizing meshes.
+
+Dependencies:
+- pathlib.Path
+- enum.Enum
+- textwrap.dedent
+- numbers
+- array
+- ursina.application
+- ursina.color
+- ursina.scripts.generate_normals
+- ursina.scripts.project_uvs
+- ursina.scripts.colorize
+- ursina.array_tools.LoopingList
+- ursina.vec3.Vec3
+- ursina.vec2.Vec2
+- ursina.sequence.Func
+- panda3d.core
+"""
+
 from pathlib import Path
 from enum import Enum
 from textwrap import dedent
@@ -24,6 +49,9 @@ except:
 
 
 class MeshModes(Enum):
+    """
+    Enum class for different mesh modes.
+    """
     triangle = 'triangle'
     ngon = 'ngon'
     quad = 'quad'
@@ -34,23 +62,59 @@ class MeshModes(Enum):
     def __hash__(self):
         return hash(self.value)
 
-    def __eq__(self, other): # overridden __eq__ to allow for both str and MeshModes comparisons
+    def __eq__(self, other):
+        """
+        Overridden __eq__ to allow for both str and MeshModes comparisons.
+        """
         if isinstance(other, MeshModes):
             return self.value == other.value
         return self.value == other
 
 
-
 class Mesh(p3d.NodePath):
+    """
+    Mesh class for creating and manipulating 3D meshes in the Ursina engine.
+
+    Attributes:
+        vertices (list): List of vertices.
+        triangles (list): List of triangles.
+        colors (list): List of colors.
+        uvs (list): List of UV coordinates.
+        normals (list): List of normals.
+        static (bool): Whether the mesh is static.
+        mode (str): The mode of the mesh (e.g., 'triangle', 'line').
+        thickness (float): The thickness of the mesh.
+        render_points_in_3d (bool): Whether to render points in 3D.
+        vertex_buffer (array): Vertex buffer.
+        vertex_buffer_length (int): Length of the vertex buffer.
+        vertex_buffer_format (str): Format of the vertex buffer.
+    """
     _modes = {
-        'triangle' : p3d.GeomTriangles,
-        'tristrip' : p3d.GeomTristrips,
-        'ngon' : p3d.GeomTrifans,
-        'line' : p3d.GeomLinestrips,
-        'point' : p3d.GeomPoints,
+        'triangle': p3d.GeomTriangles,
+        'tristrip': p3d.GeomTristrips,
+        'ngon': p3d.GeomTrifans,
+        'line': p3d.GeomLinestrips,
+        'point': p3d.GeomPoints,
     }
 
     def __init__(self, vertices=None, triangles=None, colors=None, uvs=None, normals=None, static=True, mode='triangle', thickness=1, render_points_in_3d=True, vertex_buffer=None, vertex_buffer_length=None, vertex_buffer_format=None):
+        """
+        Initialize the Mesh.
+
+        Args:
+            vertices (list, optional): List of vertices. Defaults to None.
+            triangles (list, optional): List of triangles. Defaults to None.
+            colors (list, optional): List of colors. Defaults to None.
+            uvs (list, optional): List of UV coordinates. Defaults to None.
+            normals (list, optional): List of normals. Defaults to None.
+            static (bool, optional): Whether the mesh is static. Defaults to True.
+            mode (str, optional): The mode of the mesh. Defaults to 'triangle'.
+            thickness (float, optional): The thickness of the mesh. Defaults to 1.
+            render_points_in_3d (bool, optional): Whether to render points in 3D. Defaults to True.
+            vertex_buffer (array, optional): Vertex buffer. Defaults to None.
+            vertex_buffer_length (int, optional): Length of the vertex buffer. Defaults to None.
+            vertex_buffer_format (str, optional): Format of the vertex buffer. Defaults to None.
+        """
         super().__init__('mesh')
         self.vertices = vertices
         self.triangles = triangles
@@ -75,8 +139,16 @@ class Mesh(p3d.NodePath):
         if (self.vertices is not None and len(self.vertices) > 0) or self.vertex_buffer is not None:
             self.generate()
 
-
     def _ravel(self, data):
+        """
+        Flatten a nested list into a single list.
+
+        Args:
+            data (list): The nested list to flatten.
+
+        Returns:
+            list: The flattened list.
+        """
         if not isinstance(data[0], numbers.Real):
             d = []
             for v in data:
@@ -84,8 +156,15 @@ class Mesh(p3d.NodePath):
             return d
         return data
 
-
     def _set_array_data(self, array_handle, data, dtype_string='f'):
+        """
+        Set the data for a GeomVertexArrayData.
+
+        Args:
+            array_handle (GeomVertexArrayData): The array handle to set the data for.
+            data (list): The data to set.
+            dtype_string (str, optional): The data type string. Defaults to 'f'.
+        """
         a = None
         try:
             a = memoryview(data).cast('B').cast(dtype_string)
@@ -99,6 +178,9 @@ class Mesh(p3d.NodePath):
             raise Exception(f'Error in Mesh. Ensure Mesh is valid and the inputs have same length: vertices:{len(self.vertices)}, triangles:{len(self.triangles)}, normals:{len(self.normals)}, colors:{len(self.colors)}, uvs:{len(self.uvs)}')
 
     def generate(self):
+        """
+        Generate the mesh.
+        """
         self._generated_vertices = None
 
         if hasattr(self, 'geomNode'):
@@ -253,9 +335,14 @@ class Mesh(p3d.NodePath):
         if self.mode == 'point':
             self.setTexGen(p3d.TextureStage.getDefault(), p3d.TexGenAttrib.MPointSprite)
 
-
     @property
     def indices(self):
+        """
+        Get the indices of the mesh.
+
+        Returns:
+            list: The indices of the mesh.
+        """
         if not self.triangles:
             return list(range(len(self.vertices)))
 
@@ -264,13 +351,11 @@ class Mesh(p3d.NodePath):
 
         indices = []
         for tup in self.triangles:
-            # if len(tup) == 2:
-            #     line_segments.append(tup)
             if len(tup) == 3:
                 indices.extend(tup)
             elif len(tup) == 4:
                 indices.extend((tup[0], tup[1], tup[2],
-                                  tup[2], tup[3], tup[0]))
+                                tup[2], tup[3], tup[0]))
             elif len(tup) > 4:
                 tup = LoopingList(tup)
                 for i in range(1, len(tup)):
@@ -278,9 +363,14 @@ class Mesh(p3d.NodePath):
 
         return indices
 
-
     @property
     def generated_vertices(self):
+        """
+        Get the generated vertices of the mesh.
+
+        Returns:
+            list: The generated vertices of the mesh.
+        """
         if self._generated_vertices is None:
             if self.triangles is not None and len(self.triangles) > 0:
                 if not isinstance(self.triangles[0], numbers.Real):
@@ -308,6 +398,18 @@ class Mesh(p3d.NodePath):
         return self.serialize()
 
     def serialize(self, vertex_decimal_limit=4, color_decimal_limit=4, uv_decimal_limit=4, normal_decimal_limit=4):
+        """
+        Serialize the mesh to a string representation.
+
+        Args:
+            vertex_decimal_limit (int, optional): The decimal limit for vertices. Defaults to 4.
+            color_decimal_limit (int, optional): The decimal limit for colors. Defaults to 4.
+            uv_decimal_limit (int, optional): The decimal limit for UVs. Defaults to 4.
+            normal_decimal_limit (int, optional): The decimal limit for normals. Defaults to 4.
+
+        Returns:
+            str: The serialized string representation of the mesh.
+        """
         vbuf_format = self.vertex_buffer_format
         if vbuf_format is not None:
             vbuf_format = f'"{vbuf_format}"'
@@ -329,9 +431,14 @@ class Mesh(p3d.NodePath):
         mesh_as_string += '\n    )'
         return mesh_as_string
 
-
     @property
     def render_points_in_3d(self):
+        """
+        Get whether to render points in 3D.
+
+        Returns:
+            bool: Whether to render points in 3D.
+        """
         return self._render_points_in_3d
 
     @render_points_in_3d.setter
@@ -382,25 +489,74 @@ class Mesh(p3d.NodePath):
 
     @property
     def thickness(self):
+        """
+        Get the thickness of the mesh.
+
+        Returns:
+            float: The thickness of the mesh.
+        """
         return self.getRenderModeThickness()
 
     @thickness.setter
     def thickness(self, value):
+        """
+        Set the thickness of the mesh.
+
+        Args:
+            value (float): The thickness of the mesh.
+        """
         self.setRenderModeThickness(value)
 
     def generate_normals(self, smooth=True, regenerate=True):
+        """
+        Generate normals for the mesh.
+
+        Args:
+            smooth (bool, optional): Whether to generate smooth normals. Defaults to True.
+            regenerate (bool, optional): Whether to regenerate the mesh. Defaults to True.
+
+        Returns:
+            list: The generated normals.
+        """
         self.normals = list(generate_normals(self.vertices, self.indices, smooth))
         if regenerate:
             self.generate()
         return self.normals
 
     def colorize(self, left=color.white, right=color.blue, down=color.red, up=color.green, back=color.white, forward=color.white, smooth=True, world_space=True, strength=1):
+        """
+        Colorize the mesh.
+
+        Args:
+            left (Color, optional): Color for the left side. Defaults to color.white.
+            right (Color, optional): Color for the right side. Defaults to color.blue.
+            down (Color, optional): Color for the down side. Defaults to color.red.
+            up (Color, optional): Color for the up side. Defaults to color.green.
+            back (Color, optional): Color for the back side. Defaults to color.white.
+            forward (Color, optional): Color for the forward side. Defaults to color.white.
+            smooth (bool, optional): Whether to smooth the colors. Defaults to True.
+            world_space (bool, optional): Whether to use world space for colorization. Defaults to True.
+            strength (float, optional): The strength of the colorization. Defaults to 1.
+        """
         colorize(self, left, right, down, up, back, forward, smooth, world_space, strength)
 
     def project_uvs(self, aspect_ratio=1, direction=Vec3.forward):
+        """
+        Project UVs onto the mesh.
+
+        Args:
+            aspect_ratio (float, optional): The aspect ratio for UV projection. Defaults to 1.
+            direction (Vec3, optional): The direction for UV projection. Defaults to Vec3.forward.
+        """
         project_uvs(self, aspect_ratio, direction=direction)
 
     def clear(self, regenerate=True):
+        """
+        Clear the mesh data.
+
+        Args:
+            regenerate (bool, optional): Whether to regenerate the mesh. Defaults to True.
+        """
         if self.vertex_buffer is not None:
             self.vertex_buffer = None
             self.vertex_buffer_length = None
@@ -414,6 +570,16 @@ class Mesh(p3d.NodePath):
             self.generate()
 
     def save(self, name='', folder:Path=Func(getattr, application, 'models_compressed_folder'), flip_faces=False, vertex_decimal_limit=5, color_decimal_limit=4):
+        """
+        Save the mesh to a file.
+
+        Args:
+            name (str, optional): The name of the file. Defaults to ''.
+            folder (Path, optional): The folder to save the file. Defaults to Func(getattr, application, 'models_compressed_folder').
+            flip_faces (bool, optional): Whether to flip the faces of the mesh. Defaults to False.
+            vertex_decimal_limit (int, optional): The decimal limit for vertices. Defaults to 5.
+            color_decimal_limit (int, optional): The decimal limit for colors. Defaults to 4.
+        """
         if callable(folder):
             folder = folder()
         if not folder.exists():
@@ -428,7 +594,6 @@ class Mesh(p3d.NodePath):
             with open(folder / name, 'w') as f:
                 f.write(self.serialize(vertex_decimal_limit=vertex_decimal_limit, color_decimal_limit=color_decimal_limit))
             print('saved .ursinamesh to:', folder / name, 'vertex_decimal_limit:', vertex_decimal_limit, 'color_decimal_limit:', color_decimal_limit)
-
 
         elif name.endswith('.obj'):
             from ursina.mesh_exporter import ursinamesh_to_obj

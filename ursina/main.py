@@ -1,3 +1,24 @@
+"""
+ursina/main.py
+
+This module defines the main Ursina class, which is responsible for initializing and managing the Ursina engine.
+It handles window settings, input events, and the main update loop.
+
+Dependencies:
+- direct.showbase.ShowBase
+- direct.task.Task
+- panda3d.core.ConfigVariableBool
+- ursina.window
+- ursina.application
+- ursina.input_handler
+- ursina.scene
+- ursina.camera
+- ursina.mouse
+- ursina.entity
+- ursina.shader
+- ursina.scripts.singleton_decorator
+"""
+
 import time
 import platform
 
@@ -24,22 +45,46 @@ keyboard_keys = '1234567890qwertyuiopasdfghjklzxcvbnm'
 from ursina.scripts.singleton_decorator import singleton
 @singleton
 class Ursina(ShowBase):
-    def __init__(self, title='ursina', icon='textures/ursina.ico', borderless:bool=None, fullscreen:bool=None, size=None, forced_aspect_ratio=None, position=None, vsync=True, editor_ui_enabled:bool=None, window_type='onscreen', development_mode:bool=None, render_mode=None, show_ursina_splash=False, use_ingame_console=False, **kwargs):
-        """The main class of Ursina. This class is a singleton, so you can only have one instance of it.
+    """
+    The main class of Ursina. This class is a singleton, so you can only have one instance of it.
 
-        Keyword Args (optional):
-            title (str): The title of the window.\n
-            fullscreen (bool): Whether the window should be fullscreen or not.\n
-            size (tuple(int, int)): The size of the window.\n
-            forced_aspect_ratio (bool): Whether the window should have a forced aspect ratio or not.\n
-            position (tuple(int, int)): The position of the window. Defaults to center of main monitor.\n
-            vsync (bool): Whether the window should have vsync enabled or not.\n
-            borderless (bool): Whether the window should be borderless or not.\n
-            show_ursina_splash (bool): Whether the Ursina splash should be shown or not.\n
-            render_mode (str): The render mode of the window.\n
-            development_mode (bool): Whether the development mode should be enabled or not.\n
-            editor_ui_enabled (bool): Whether the editor UI should be enabled or not.\n
-            window_type (str): The type of the window. Can be 'onscreen', 'offscreen' or 'none'.\n
+    Attributes:
+        title (str): The title of the window.
+        icon (str): The icon of the window.
+        borderless (bool): Whether the window should be borderless or not.
+        fullscreen (bool): Whether the window should be fullscreen or not.
+        size (tuple): The size of the window.
+        forced_aspect_ratio (float): The forced aspect ratio of the window.
+        position (tuple): The position of the window.
+        vsync (bool): Whether the window should have vsync enabled or not.
+        editor_ui_enabled (bool): Whether the editor UI should be enabled or not.
+        window_type (str): The type of the window.
+        development_mode (bool): Whether the development mode should be enabled or not.
+        render_mode (str): The render mode of the window.
+        show_ursina_splash (bool): Whether the Ursina splash should be shown or not.
+        use_ingame_console (bool): Whether the in-game console should be used or not.
+    """
+
+    def __init__(self, title='ursina', icon='textures/ursina.ico', borderless:bool=None, fullscreen:bool=None, size=None, forced_aspect_ratio=None, position=None, vsync=True, editor_ui_enabled:bool=None, window_type='onscreen', development_mode:bool=None, render_mode=None, show_ursina_splash=False, use_ingame_console=False, **kwargs):
+        """
+        Initialize the Ursina engine.
+
+        Args:
+            title (str): The title of the window.
+            icon (str): The icon of the window.
+            borderless (bool, optional): Whether the window should be borderless. Defaults to None.
+            fullscreen (bool, optional): Whether the window should be fullscreen. Defaults to None.
+            size (tuple, optional): The size of the window. Defaults to None.
+            forced_aspect_ratio (float, optional): The forced aspect ratio of the window. Defaults to None.
+            position (tuple, optional): The position of the window. Defaults to None.
+            vsync (bool, optional): Whether the window should have vsync enabled. Defaults to True.
+            editor_ui_enabled (bool, optional): Whether the editor UI should be enabled. Defaults to None.
+            window_type (str, optional): The type of the window. Defaults to 'onscreen'.
+            development_mode (bool, optional): Whether the development mode should be enabled. Defaults to None.
+            render_mode (str, optional): The render mode of the window. Defaults to None.
+            show_ursina_splash (bool, optional): Whether the Ursina splash should be shown. Defaults to False.
+            use_ingame_console (bool, optional): Whether the in-game console should be used. Defaults to False.
+            **kwargs: Additional keyword arguments.
         """
         entity._warn_if_ursina_not_instantiated = False
         application.window_type = window_type
@@ -163,7 +208,15 @@ class Ursina(ShowBase):
 
 
     def _update(self, task):
-        """Internal task that runs every frame. Updates time, mouse, sequences and entities."""
+        """
+        Internal task that runs every frame. Updates time, mouse, sequences and entities.
+
+        Args:
+            task (Task): The task object.
+
+        Returns:
+            Task.cont: Continue the task.
+        """
         if application.calculate_dt:
             time.dt_unscaled = globalClock.getDt()
             time.dt = time.dt_unscaled * application.time_scale          # time between frames
@@ -198,7 +251,14 @@ class Ursina(ShowBase):
         return Task.cont
 
 
-    def input_up(self, key, is_raw=False): # internal method for key release
+    def input_up(self, key, is_raw=False):
+        """
+        Internal method for key release.
+
+        Args:
+            key (str): The input key.
+            is_raw (bool, optional): Whether the input is raw. Defaults to False.
+        """
         if not is_raw and key in keyboard_keys:
             return
 
@@ -209,7 +269,14 @@ class Ursina(ShowBase):
         self.input(key)
 
 
-    def input_hold(self, key, is_raw=False):   # internal method for handling repeating input that occurs when you hold the key
+    def input_hold(self, key, is_raw=False):
+        """
+        Internal method for handling repeating input that occurs when you hold the key.
+
+        Args:
+            key (str): The input key.
+            is_raw (bool, optional): Whether the input is raw. Defaults to False.
+        """
         key = key.replace('control-', '')
         key = key.replace('shift-', '')
         key = key.replace('alt-', '')
@@ -221,12 +288,14 @@ class Ursina(ShowBase):
         self.input(key)
 
 
-    def input(self, key, is_raw=False): # internal method for handling input
-        """Built-in input handler. Propagates the input to all entities and the input function of the main script. Main use case for this it to simulate input though code, like: app.input('a').
+    def input(self, key, is_raw=False):
+        """
+        Built-in input handler. Propagates the input to all entities and the input function of the main script.
+        Main use case for this it to simulate input though code, like: app.input('a').
 
         Args:
-            key (Any): The input key.
-            is_raw (bool, optional): Whether or not the input should be treated as "raw". Defaults to False.
+            key (str): The input key.
+            is_raw (bool, optional): Whether the input is raw. Defaults to False.
         """
         if not is_raw and key in keyboard_keys:
             return
@@ -294,7 +363,13 @@ class Ursina(ShowBase):
             mouse.input(key)
 
 
-    def text_input(self, key):  # internal method for handling text input
+    def text_input(self, key):
+        """
+        Internal method for handling text input.
+
+        Args:
+            key (str): The input key.
+        """
         key_code = ord(key)
         if key_code < 32 or (key_code >= 127 and key_code <= 160):
             return
@@ -320,11 +395,21 @@ class Ursina(ShowBase):
                     if script.enabled and hasattr(script, 'text_input') and callable(script.text_input):
                         script.text_input(key)
 
-    def step(self): # use this control the update loop yourself. call app.step() in a while loop for example, instead of app.run()
+
+    def step(self):
+        """
+        Use this to control the update loop yourself. Call app.step() in a while loop for example, instead of app.run().
+        """
         self.taskMgr.step()
 
 
     def run(self, info=True):
+        """
+        Run the Ursina engine.
+
+        Args:
+            info (bool, optional): Whether to print information about the application. Defaults to True.
+        """
         if application.show_ursina_splash:
             from ursina.prefabs.splash_screen import SplashScreen
             application.ursina_splash = SplashScreen()
