@@ -9,28 +9,24 @@ class Space():
 
 class WindowPanel(Draggable):
     def __init__(self, title='', content=[], **kwargs):
-        super().__init__(origin=(-0,.5), scale=(.5, Text.size*2), color=color.black)
-
         self.content = content
-        self.text = title
         self.popup = False
         self._prev_input_field = None
+        super().__init__(origin=(-0,.5), scale=(.5, .05), text=title, color=color.black)
         self._original_scale = self.scale
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
-
-        if self.text_entity:
-            self.text_entity.world_scale_y = 1
 
         self.panel = Entity(parent=self, model='quad', origin=(0,.5), z=.1, color=self.color.tint(.1), collider='box')
 
         if self.popup:
             self.lock = Vec3(1,1,1)
             self.bg = Button(parent=self, z=1, scale=(999, 999), color=color.black66, highlight_color=color.black66, pressed_color=color.black66)
-            self.bg.on_click = self.close
+            self.bg.on_click = self.disable
 
-        self.layout()
+        if self.content:
+            self.layout()
 
 
     def layout(self):
@@ -38,7 +34,7 @@ class WindowPanel(Draggable):
         if not content:
             return
         spacing = .25
-        height = 1 + spacing
+        height = 1.5 + spacing
 
         if isinstance(content, dict):
             content = content.values()
@@ -53,6 +49,7 @@ class WindowPanel(Draggable):
                 c.position = (0, -height, 0)
 
                 if isinstance(c, InputField):
+                    c.text_field.text_entity.world_scale = Vec3(20,20,1)
                     if self._prev_input_field:
                         self._prev_input_field.next_field = c
                     self._prev_input_field = c
@@ -82,7 +79,7 @@ class WindowPanel(Draggable):
                     height += c.scale_y
 
                 if hasattr(c, 'text_entity') and c.text_entity is not None:
-                    c.text_entity.world_scale = (1,1,1)
+                    c.text_entity.world_scale = Vec3(20,20,1)
 
                 height += spacing
 
@@ -90,21 +87,6 @@ class WindowPanel(Draggable):
         self.panel.model = Quad(aspect=self.panel.world_scale_x/self.panel.world_scale_y, radius=.025)
         self.panel.origin = (0, .5)
 
-
-    def on_enable(self):
-        pass
-        try:
-            if self.popup:
-                self.bg.enabled = True
-                self.animate_scale(self._original_scale, duration=.1)
-        except:
-            pass
-
-    def close(self):
-        if self.popup:
-            self.bg.enabled = False
-        self.animate_scale_y(0, duration=.1)
-        invoke(setattr, self, 'enabled', False, delay=.2)
 
 
 if __name__ == '__main__':
@@ -123,7 +105,13 @@ if __name__ == '__main__':
             Slider(),
             ButtonGroup(('test', 'eslk', 'skffk'))
             ),
+        popup=True
         )
     wp.y = wp.panel.scale_y / 2 * wp.scale_y    # center the window panel
+    wp.layout()
+
+    def input(key):
+        if key == 'space':
+            wp.enabled = True
 
     app.run()

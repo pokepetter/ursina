@@ -17,7 +17,7 @@ def texture_to_height_values(heightmap, skip=1):
     width, depth = heightmap.width//skip, heightmap.height//skip
     img = Image.open(heightmap.path).convert('L')
     if skip > 1:
-        img = img.resize([width, depth], Image.ANTIALIAS)
+        img = img.resize([width, depth], Image.LANCZOS)
 
     height_values = asarray(img)
     height_values = flip(height_values, axis=0)
@@ -25,8 +25,9 @@ def texture_to_height_values(heightmap, skip=1):
     return height_values
 
 
+
 class Terrain(Mesh):
-    def __init__(self, heightmap='', height_values=None, skip=1, **kwargs):
+    def __init__(self, heightmap='', height_values=None, gradient=None, skip=1, **kwargs):
 
         if heightmap:
             self.height_values = texture_to_height_values(heightmap, skip)
@@ -38,6 +39,7 @@ class Terrain(Mesh):
         self.width = len(self.height_values)
         self.depth = len(self.height_values[0])
         self.aspect_ratio = self.width / self.depth
+        self.gradient = gradient
         super().__init__()
         self.generate()
 
@@ -50,11 +52,8 @@ class Terrain(Mesh):
         self.normals = []
 
         _height_values = [[j/255 for j in i] for i in self.height_values]
-
-
         w, h = self.width, self.depth
         min_dim = min(w, h)
-
         centering_offset = Vec2(-.5, -.5)
 
         # create the plane
@@ -62,12 +61,11 @@ class Terrain(Mesh):
         for z in range(h):
             for x in range(w):
 
-                self.vertices.append(Vec3(x/(w-0), _height_values[x][z], z/(h-0)) + Vec3(centering_offset.x, 0, centering_offset.y))
+                self.vertices.append(Vec3((x/(w-1))+(centering_offset.x), _height_values[x][z], (z/(h-1))+centering_offset.y))
                 self.uvs.append((x/w, z/h))
 
                 if x > 0 and z > 0:
-                    # self.triangles.append((i, i-1, i-w-1, i-w))
-                    self.triangles.extend(((i-w-1, i-w, i), (i-w-1, i, i-1)))
+                    self.triangles.append((i, i-1, i-w-1, i-w-0))
 
                 # normals
                 if x > 0 and z > 0 and x < w-1 and z < h-1:
@@ -78,6 +76,17 @@ class Terrain(Mesh):
                     self.normals.append(Vec3(0,1,0))
 
                 i += 1
+
+        if self.gradient:
+            self.colors = []
+            for z, column in enumerate(self.height_values):
+                for x, row in enumerate(column):
+                    self.vertices.append(Vec3(x/w, self.height_values[x][z], z/h) + Vec3(centering_offset.x, 0, centering_offset.y))
+                    # terrain.model.colors.append(hsv(0, 0, 1-(terrain.model.height_values[x][z]*1)))
+                    y = int(self.height_values[x][z]*16)
+                    y = clamp(y, 0, 255)
+                    self.colors.append(self.gradient[y])
+
 
         super().generate()
 
@@ -94,22 +103,24 @@ if __name__ == '__main__':
     '''
     hv = terrain_from_heightmap_texture.model.height_values.tolist()
     terrain_from_list = Entity(model=Terrain(height_values=hv), scale=(40,5,20), texture='heightmap_1', x=40)
+    terrain_bounds = Entity(model='wireframe_cube', origin_y=-.5, scale=(40,5,20), color=color.lime)
 
     def input(key):
         if key == 'space':  # randomize the terrain
             terrain_from_list.model.height_values = [[random.uniform(0,255) for a in column] for column in terrain_from_list.model.height_values]
             terrain_from_list.model.generate()
 
-    EditorCamera()
+    EditorCamera(rotation_x=90)
+    camera.orthographic = True
     Sky()
-
     player = Entity(model='sphere', color=color.azure, scale=.2, origin_y=-.5)
-    hv = terrain_from_list.model.height_values
 
     def update():
         direction = Vec3(held_keys['d'] - held_keys['a'], 0, held_keys['w'] - held_keys['s']).normalized()
         player.position += direction * time.dt * 8
-        player.y = terraincast(player.world_position, terrain_from_list, hv)
+        y = terraincast(player.world_position, terrain_from_list, terrain_from_list.model.height_values)
+        if y is not None:
+            player.y = y
 
 
 

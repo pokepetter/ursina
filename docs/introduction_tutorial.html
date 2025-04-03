@@ -1,27 +1,22 @@
-
 <!DOCTYPE HTML>
-<!--generated with sswg-->
-
-<html>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<head>
-    <link rel="stylesheet" href="sswg.css">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<left>
-<title>introduction_tutorial</title>
-<br>
-
-<div style="font-size: 20.0px;max-width: 1200px; margin: auto;">
+        <!--generated with sswg-->
+        <html lang="en">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <head>
+            <title>introduction_tutorial</title>
+            <link rel="stylesheet" href="sswg.css">
+            <link rel="stylesheet" href="style.css">
+            <link rel="icon" type="image/x-icon" href="favicon.ico">
+        </head>
+        <body>
+        <left><div style="font-size: 20.0px;max-width: 1200px; margin: auto;">
 <div style="font-weight: bold;font-size: 60.0px;">
 Introduction Tutorial<br>
 <div style="font-weight: normal;font-size: 20.0px;">
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Creating and running a game"/><br>
+<h2><div id="Creating and running a game"/><br>
 Creating and running a game<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 1) Open your preferred text editor. If you're new to programming, here are some suggestions:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;* Atom<br>
@@ -37,21 +32,21 @@ Creating and running a game<br>
 <br>
 <br>
 3) At the top of the file, write:<br>
-<div class="code_block" style="margin-left: 2em;"><purple>from</purple> ursina <purple>import</purple> *
+<div class="code_block" id="code_block_0" style="margin-left: 2em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina <purple>import</purple> *
 </div><br>
 &nbsp;&nbsp;&nbsp;&nbsp;This will import all the necessary things we need from the engine in one line.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;It means something like 'from ursina import all'. It's also possible to import parts of the engine<br>
 &nbsp;&nbsp;&nbsp;&nbsp;like this:<br>
-<div class="code_block" style="margin-left: 2em;"><purple>from</purple> ursina.prefabs <purple>import</purple> Button
+<div class="code_block" id="code_block_1" style="margin-left: 2em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button><purple>from</purple> ursina.prefabs <purple>import</purple> Button
 </div><br>
 &nbsp;&nbsp;&nbsp;&nbsp;Or import something that's not included by default:<br>
-<div class="code_block" style="margin-left: 2em;"><purple>from</purple> ursina.prefabs.first_person_controller <purple>import</purple> FirstPersonController
+<div class="code_block" id="code_block_2" style="margin-left: 2em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_2)">copy</button><purple>from</purple> ursina.prefabs.first_person_controller <purple>import</purple> FirstPersonController
 </div><br>
 <br>
 4) Here's a really basic example game with comments to explain what we're doing.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;We will simply make an orange box move right and left when we press 'd' or 'a'.<br>
 <br>
-<div class="code_block" style="margin-left: 1em;"><purple>from</purple> ursina <purple>import</purple> *
+<div class="code_block" id="code_block_3" style="margin-left: 1em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_3)">copy</button><purple>from</purple> ursina <purple>import</purple> *
 
 <gray># create a window</gray>
 app = Ursina()
@@ -98,11 +93,21 @@ app.run()
 &nbsp;&nbsp;&nbsp;&nbsp;go to the current folder. An easy way to do this is to type 'cmd' in the address bar.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Run the command below.<br>
 <br>
-<div class="code_block" style="margin-left: 1em;">python main.py
+<div class="code_block" id="code_block_4" style="margin-left: 1em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_4)">copy</button>python main.py
 </div><br>
 &nbsp;&nbsp;&nbsp;&nbsp;An alternative is to install the 'atom-python-run' package in Atom so you can start<br>
 &nbsp;&nbsp;&nbsp;&nbsp;the game by pressing F5.<br>
 <br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
+</script>
 
 </body>
 </html>

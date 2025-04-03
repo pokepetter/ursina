@@ -1,26 +1,20 @@
 from ursina import *
+from ursina.scripts.property_generator import generate_properties_for_class
 
-
+@generate_properties_for_class()
 class FileButton(Button):
-    def __init__(self, load_menu, **kwargs):
-        super().__init__(
-            model='quad',
-            highlight_color = color.orange,
-            scale = (.875,.025),
-            pressed_scale = 1,
-            selected = False,
-            )
+    def __init__(self, load_menu, path, **kwargs):
         self.load_menu = load_menu
-
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-
+        self.path = path
+        super().__init__(model='quad', highlight_color=color.dark_gray, scale=(.875,.025), pressed_scale=1, ignore_paused=True, **kwargs)
         self.text_entity.scale *= .75
+        self.original_color = self.color
+        self.selected = False
 
 
     def on_click(self):
-        if len(self.load_menu.selection) >= self.load_menu.selection_limit and not self.selected:
-            for e in self.parent.children:
+        if len([e for e in self.parent.children if e.selected]) >= self.load_menu.selection_limit and not self.selected:
+            for e in self.parent.children:  # clear selection
                 e.selected = False
 
         self.selected = not self.selected
@@ -38,42 +32,44 @@ class FileButton(Button):
             self.load_menu.open()
 
 
-    @property
-    def selected(self):
-        return self._selected
-
-    @selected.setter
-    def selected(self, value):
+    def selected_setter(self, value):
         self._selected = value
         if value == True:
             self.color = color.azure
-            self.highlight_color = color.azure
+            self.highlight_color = color.azure.tint(.1)
         else:
-            self.color = Button.color
+            self.color = self.original_color
+            self.highlight_color = color.dark_gray
 
         self.load_menu.open_button.color = color.azure if self.load_menu.selection else color.dark_gray
 
 
 
+@generate_properties_for_class()
 class FileBrowser(Entity):
-    def __init__(self, **kwargs):
+    def __init__(self, file_button_class=FileButton, selection_limit=1, start_path=None, file_types:list=None, **kwargs):
+        self.file_types = file_types if file_types else ['.*', ]
 
-        self.file_types = ['.*', ]
-        self.start_path = Path('.').resolve()
-        super().__init__(parent=camera.ui, scale=(1,1), model='quad', color=color.clear, collider='box', y=.45)
+        if not start_path:
+            start_path = Path('.').resolve()
+        self.start_path = start_path
+        self.file_button_class = file_button_class
+        kwargs = dict(ignore_paused=True) | kwargs
+
+        super().__init__(parent=camera.ui, y=.45, **kwargs)
 
         self.return_files = True
         self.return_folders = False
-        self.selection_limit = 1
+        self.selection_limit = selection_limit
         self.max_buttons = 24
 
-        self.title_bar = Button(parent=self, scale=(.9,.035), text='<gray>Open', color=color.dark_gray, collision=False)
+        self.title_bar = Button(parent=self, scale=(.9,.035), text='<gray>Open', color=color.dark_gray, highlight_color=color.dark_gray)
         self.address_bar = Button(parent=self, scale=(.8,.035), text='//', text_origin=(-.5,0), y=-.05, highlight_color=color.black)
         self.address_bar.text_entity.scale *= .75
         self.address_bar.text_entity.x = -.5 + Text.get_width(' ')
         self.address_bar.text_entity.color = color.red
 
-        self.folder_up_button = Button(parent=self, scale=(.035,.035), texture='arrow_down', rotation_z=180, position=(-.42,-.05), color=color.white, highlight_color=color.azure, on_click=self.folder_up)
+        self.folder_up_button = Button(parent=self, scale=(.035,.035), texture='arrow_down', rotation_z=180, position=(-.42,-.05,-1), color=color.white, highlight_color=color.azure, on_click=self.folder_up)
         self.button_parent = Entity(parent=self)
         self.back_panel = Entity(parent=self, model='quad', collider='box', origin_y=.5, scale=(.9,(self.max_buttons*.025)+.19), color=color._32, z=.1)
         self.bg = Button(parent=self, z=1, scale=(999,999), color=color.black66, highlight_color=color.black66, pressed_color=color.black66)
@@ -90,14 +86,11 @@ class FileBrowser(Entity):
         for key, value in kwargs.items():
             setattr(self, key ,value)
 
-        if self.enabled:
-            self.path = self.start_path     # this will populate the list
-            self.scroll = 0
 
 
     def input(self, key):
         if key == 'scroll down':
-            if self.scroll + self.max_buttons < len(self.button_parent.children)-1:
+            if self.scroll + self.max_buttons < len(self.button_parent.children):
                 self.scroll += 1
 
         if key == 'scroll up':
@@ -105,34 +98,26 @@ class FileBrowser(Entity):
                 self.scroll -= 1
 
 
-    @property
-    def scroll(self):
-        return self._scroll
-
-    @scroll.setter
-    def scroll(self, value):
+    def scroll_setter(self, value):
         self._scroll = value
 
         for i, c in enumerate(self.button_parent.children):
-            if i < value or i > value + self.max_buttons:
+            if i < value or i >= value + self.max_buttons:
                 c.enabled = False
             else:
                 c.enabled = True
 
         self.button_parent.y = value * .025
         self.can_scroll_up_indicator.enabled = value > 0
-        self.can_scroll_down_indicator.enabled = value + self.max_buttons + 1 != len(self.button_parent.children)
+        self.can_scroll_down_indicator.enabled = value + self.max_buttons != len(self.button_parent.children)
 
 
-    @property
-    def path(self):
-        return self._path
+    def path_setter(self, value):
+        if not value:
+            value = self.start_path
 
-    @path.setter
-    def path(self, value):
         self._path = value
         self.address_bar.text_entity.text = '<light_gray>' + str(value.resolve())
-
 
         files = [e for e in value.iterdir() if e.is_dir() or e.suffix in self.file_types or '.*' in self.file_types]
         files.sort(key=lambda x : x.is_file())  # directories first
@@ -154,29 +139,21 @@ class FileBrowser(Entity):
 
             else:
                 # print('create new:', i)
-                b = FileButton(
-                    parent = self.button_parent,
-                    text = prefix + f.name,
-                    text_origin = (-.5, 0),
-                    y = -i*.025 -.09,
-                    load_menu = self,
-                    path = f,
-                    add_to_scene_entities = False
-                    )
+                b = self.file_button_class(parent=self.button_parent, path=f, text_origin=(-.5,0), text=prefix+f.name, y=-i*.025 -.09, load_menu=self)
 
         self.scroll = 0
 
 
     def on_enable(self):
+        # print('-------------', 'start path:', self.start_path)
         if not hasattr(self, 'path'):
             self.path = self.start_path
-            invoke(setattr, self, 'scroll', 0, delay=.05)
+            self.scroll = 0
             return
 
-        self.scale = 1
-        self.path = self.path
+        self.path = self.path if hasattr(self, 'path') else self.start_path
         self.button_parent.y = 0
-        invoke(setattr, self, 'scroll', 0, delay=.1)
+        self.scroll = 0
 
 
     def close(self):
@@ -201,10 +178,8 @@ class FileBrowser(Entity):
         self.close()
 
 
-    @property
-    def selection(self):
+    def selection_getter(self):
         return [c.path for c in self.button_parent.children if c.selected == True]
-
 
 
 
@@ -212,7 +187,7 @@ class FileBrowser(Entity):
 if __name__ == '__main__':
     app = Ursina()
 
-    fb = FileBrowser(file_types=('.*'), enabled=True)
+    fb = FileBrowser(file_types=('.*'), enabled=False)
 
     def on_submit(paths):
         print('--------', paths)
@@ -220,5 +195,11 @@ if __name__ == '__main__':
             print('---', p)
 
     fb.on_submit = on_submit
+
+    Text('Press Tab to open file browser', origin=(0,0), z=1)
+    def input(key):
+        if key == 'tab':
+            fb.enabled = not fb.enabled
+
 
     app.run()

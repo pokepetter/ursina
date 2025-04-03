@@ -22,10 +22,10 @@ for i, (name, value) in enumerate(data.items()):
         model = 'cube',
         x = i - (len(names)/2),
         scale = (.5, value/50, .5),
-        color = color.color(30*i, 1, .7),
+        color = color.hsv(30*i, 1, .7),
         origin_y = -.5,
         text = name,
-        tooltip = Tooltip('00') # to ensure uniform with
+        tooltip = Tooltip('00', color=color.light_text) # to ensure uniform with
     )
     column.tooltip.text = str(value)
     column.text_entity.scale *= .4

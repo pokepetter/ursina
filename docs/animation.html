@@ -1,19 +1,17 @@
-
 <!DOCTYPE HTML>
-<!--generated with sswg-->
-
-<html>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<head>
-    <link rel="stylesheet" href="sswg.css">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<left>
-<title>animation</title>
+        <!--generated with sswg-->
+        <html lang="en">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <head>
+            <title> ursina engine animation</title>
+            <link rel="stylesheet" href="sswg.css">
+            <link rel="stylesheet" href="style.css">
+            <link rel="icon" type="image/x-icon" href="favicon.ico">
+        </head>
+        <body>
+        <left><div style="max-width: 1200px; margin: auto;">
 <br>
-
-<div style="font-size: 20.0px;max-width: 1200px; margin: auto;">
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" donate.html" class="button">Donate</a><br>
 <br>
 <div class="sidebar"><br>
 <b><a href="documentation.html">Documentation</a></b><br>
@@ -25,7 +23,9 @@
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Model">Model</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Texture">Texture</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Color">Color</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position, Rotation, Scale">Position, Rotation, Scale</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position">Position</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Rotation">Rotation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Scale">Scale</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Update">Update</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Input">Input</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Mouse Input">Mouse Input</a><br>
@@ -59,8 +59,38 @@
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#Actor (3D)">Actor (3D)</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#FrameAnimation3D (3D)">FrameAnimation3D (3D)</a><br>
 <br>
+<br>
+<a href="networking.html">Networking</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#~~ Networking Concepts ~~">~~ Networking Concepts ~~</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#How Data Goes from Point A to Point B">How Data Goes from Point A to Point B</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#IP Addresses">IP Addresses</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Ports">Ports</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Communication Protocols">Communication Protocols</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#References">References</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#~~ Game Networking Concepts ~~">~~ Game Networking Concepts ~~</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Multiplayer Preparations">Multiplayer Preparations</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Sending Inputs">Sending Inputs</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Sending Game State">Sending Game State</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Client Authoritative">Client Authoritative</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Server Authoritative">Server Authoritative</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Deterministic Lockstep">Deterministic Lockstep</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Snapshot Interpolation">Snapshot Interpolation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Server Side Lag Compensation">Server Side Lag Compensation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Client Side Prediction">Client Side Prediction</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#References">References</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#~~ Introduction to Ursina Networking ~~">~~ Introduction to Ursina Networking ~~</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Limitations">Limitations</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Basics">Basics</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Samples">Samples</a><br>
+<br>
 <a href="faq.html">F.A.Q.</a><br>
+<br>
 <a href="building.html">Build and Release</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="building.html#Building Your App with ursina.build">Building Your App with ursina.build</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="building.html#Building with Nuitka">Building with Nuitka</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="building.html#Building Your App with auto-py-to-exe">Building Your App with auto-py-to-exe</a><br>
+<br>
+<br>
 </div><br>
 <br>
 <div style="font-size: 60.0px;font-weight: bold;">
@@ -68,10 +98,9 @@
 Animation<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="SpriteSheetAnimation (2D)"/><br>
+<h2><div id="SpriteSheetAnimation (2D)"/><br>
 SpriteSheetAnimation (2D)<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 Use a sprite sheet to make an animation. A sprite sheet is an image<br>
 containing the all animation frames in on image, laid out in a grid.<br>
@@ -79,25 +108,23 @@ containing the all animation frames in on image, laid out in a grid.<br>
 <a href="https://www.ursinaengine.org/api_reference.html#SpriteSheetAnimation">SpriteSheetAnimation Documentation</a><br>
 <br>
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Animation (2D)"/><br>
+<h2><div id="Animation (2D)"/><br>
 Animation (2D)<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 Loads an image sequence or a .gif as an animation.<br>
 <a href="https://www.ursinaengine.org/api_reference.html#Animation">Animation Documentation</a><br>
 <br>
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Actor (3D)"/><br>
+<h2><div id="Actor (3D)"/><br>
 Actor (3D)<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 For skeletal animations you can use panda3d's Actor.<br>
 Export the model as .glft/.glb since that format support<br>
 mesh data, texture data, animations and more, all in one file.<br>
 <br>
-<div class="code_block" style="margin-left: 0em;"><purple>from</purple> ursina <purple>import</purple> *
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> direct.actor.Actor <purple>import</purple> Actor
 
 app = Ursina()
@@ -114,10 +141,11 @@ app.run()
 See the <a href="https://docs.panda3d.org/1.10/python/programming/models-and-actors/actor-animations">panda3d documentation</a> for more info.<br>
 <br>
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="FrameAnimation3D (3D)"/><br>
+<h2><div id="FrameAnimation3D (3D)"/><br>
 FrameAnimation3D (3D)<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
+<br>
+<a href="https://www.ursinaengine.org/api_reference.html#FrameAnimation3D">FrameAnimation3D Documentation</a><br>
 <br>
 FrameAnimation3d loads a sequence of models and cycles through them so it looks like it animates.<br>
 This a memory intensive option, so it's recommended to not have very a high poly count.<br>
@@ -130,8 +158,18 @@ First, export your animation as a sequence of 3d models.<br>
 Assuming you have a bunch of models named run_cycle_000.obj, run_cycle_001.obj, run_cycle_002.obj and so on,<br>
 you can load the animation like this:<br>
 <br>
-<div class="code_block" style="margin-left: 0em;">FrameAnimation<yellow>3</yellow>d(<green>'run_cycle_'</green>)
+<div class="code_block" id="code_block_1" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>FrameAnimation<yellow>3</yellow>d(<green>'run_cycle_'</green>)
 </div><br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
+</script>
 
 </body>
 </html>

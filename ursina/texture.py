@@ -3,19 +3,26 @@ from panda3d.core import SamplerState
 from panda3d.core import Filename
 from panda3d.core import PNMImage
 from pathlib import Path
-from direct.showbase import Loader
 from ursina.vec2 import Vec2
 from ursina import color
-# from PIL import Image
+from ursina.ursinamath import clamp
+from ursina.array_tools import Array2D
 
 
 class Texture():
 
     default_filtering = None      # options: None / 'bilinear' / 'mipmap'
 
-    def __init__(self, value):
+    def __init__(self, value, filtering='default'):
 
-        if isinstance(value, str):
+        if isinstance(value, str) and value.startswith('data:image/png;base64'):
+            import base64
+            from PIL import Image
+            from io import BytesIO
+            base64_data = value.lstrip('data:image/png;base64')   # remove prefix
+            value = Image.open(BytesIO(base64.b64decode(base64_data))).convert('RGBA')
+
+        elif isinstance(value, str):
             value = Path(value)
 
         if isinstance(value, Path):
@@ -36,9 +43,10 @@ class Texture():
             # self._cached_image = image.transpose(Image.FLIP_TOP_BOTTOM)
             self.path = None
 
+        if filtering == 'default':
+            filtering = Texture.default_filtering      # None/'bilinear'/'mipmap' default: 'None'
+        self.filtering = filtering
 
-
-        self.filtering = Texture.default_filtering      # None/'bilinear'/'mipmap' default: 'None'
 
     @staticmethod
     def new(size, color=(255,255,255)):
@@ -52,13 +60,16 @@ class Texture():
         return Texture(panda_tex)
 
 
-
     @property
     def name(self):
         try:
             return self.path.name
         except:
             return f'PIL_texture_{self.size}'
+
+    def __str__(self):
+        return self.name
+
 
     @property
     def size(self):
@@ -84,13 +95,14 @@ class Texture():
     def pixels(self):
         from numpy import asarray, flip
         from PIL import Image
+        from ursina.array_tools import rotate_2d_list
 
         if self._cached_image:
-            return asarray(self._cached_image)
+            return Array2D(data=rotate_2d_list(asarray(self._cached_image)))
 
         pixels = asarray(Image.open(self.path))
-        pixels = flip(pixels, axis=0)
-        return pixels
+        pixels = rotate_2d_list(pixels)
+        return Array2D(data=pixels)
 
 
     @property
@@ -137,7 +149,7 @@ class Texture():
             if self._cached_image.mode == 'L':
                 col = (col[0], col[0], col[0])
 
-            return color.rgba(*col)
+            return color.rgba32(*col)
         except Exception as e:
             print(e)
             return None
@@ -180,14 +192,9 @@ class Texture():
         return self.name
 
 
-    def __del__(self):
-        # self._texture.releaseAll()
-        del self._cached_image
-
-
-
 if __name__ == '__main__':
     from ursina import *
+    from ursina import texture_importer
     app = Ursina()
     '''
         The Texture class rarely used manually but usually instantiated
@@ -197,7 +204,7 @@ if __name__ == '__main__':
         A texture file can be a .png, .jpg or .psd.
         If it's a .psd it and no compressed version exists, it will compress it automatically.
     '''
-    e = Entity(model='quad', texture='brick')
+    e = Entity(model='quad', texture='test_tileset')
     e.texture.set_pixel(0, 2, color.blue)
     e.texture.apply()
     #
@@ -211,8 +218,8 @@ if __name__ == '__main__':
     e = Entity(model='quad')
     # from PIL import Image
 
-    from ursina.prefabs.memory_counter import MemoryCounter
-    MemoryCounter()
+    # from ursina.prefabs.memory_counter import MemoryCounter
+    # MemoryCounter()
     def input(key):
         if key == 'a':
             # img = Image.open(r'C:\sync\high resolution images\tesla_city.png')
@@ -241,9 +248,21 @@ if __name__ == '__main__':
             for key, value in texture_importer.imported_textures.items():
                 print(key, value)
 
-    e.texture = 'brick'
+    e.texture = 'test_tileset'
     # e.texture.set_pixels([e for e in e.texture.get_pixels()])
     e.texture.apply()
-    tex = Texture.new((512,512), (255,0,0))
 
+    # tex = Texture.new((512,512), (255,0,0))
+
+    pixels = e.texture.pixels
+    new_grid = Array2D(width=pixels.width, height=pixels.height)
+    print('w:', pixels.width, 'h:', pixels.height)
+    for (x,y), value in enumerate_2d(pixels):
+        new_grid[x][y] = int(color.rgba32(*value).v > .5)
+
+
+    texture_from_base64_string = Entity(model='cube', y=1.5, scale=1, texture=Texture('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAAJ0lEQVR4nGK5d/gdAwODArcEkGRiQAKMmut0gdTX/YroMoAAAAD//8caBbV8Qu6pAAAAAElFTkSuQmCC'))
+    EditorCamera()
+
+    # print(new_grid)
     app.run()

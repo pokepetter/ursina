@@ -28,14 +28,11 @@ in vec3 view_normal;
 out vec4 fragColor;
 
 void main() {
-
-    vec3 r = reflect( eye, view_normal );
-    float m = 2. * sqrt( pow( r.x, 2. ) + pow( r.y, 2. ) + pow( r.z + 1., 2. ) );
+    vec3 r = reflect(eye, view_normal);
+    float m = 2. * sqrt(pow(r.x, 2.) + pow(r.y, 2.) + pow(r.z + 1., 2.));
     vec2 vN = r.xy / m + .5;
 
-    vec3 base = texture2D( p3d_Texture0, vN ).rgb;
-    // vec3 base = texture2D( p3d_Texture0, uv ).rgb;
-    fragColor = vec4( base, 1. ) * p3d_ColorScale;
+    fragColor = texture(p3d_Texture0, vN) * p3d_ColorScale;
 }
 
 ''',

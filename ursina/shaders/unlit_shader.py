@@ -4,13 +4,18 @@ from ursina import *; unlit_shader = Shader(name='unlit_shader', language=Shader
 uniform mat4 p3d_ModelViewProjectionMatrix;
 in vec4 p3d_Vertex;
 in vec2 p3d_MultiTexCoord0;
-out vec2 texcoords;
+out vec2 uvs;
 uniform vec2 texture_scale;
 uniform vec2 texture_offset;
 
+in vec4 p3d_Color;
+out vec4 vertex_color;
+
+
 void main() {
     gl_Position = p3d_ModelViewProjectionMatrix * p3d_Vertex;
-    texcoords = (p3d_MultiTexCoord0 * texture_scale) + texture_offset;
+    uvs = (p3d_MultiTexCoord0 * texture_scale) + texture_offset;
+    vertex_color = p3d_Color;
 }
 ''',
 
@@ -19,11 +24,13 @@ fragment='''
 
 uniform sampler2D p3d_Texture0;
 uniform vec4 p3d_ColorScale;
-in vec2 texcoords;
+in vec2 uvs;
 out vec4 fragColor;
 
+in vec4 vertex_color;
+
 void main() {
-    vec4 color = texture(p3d_Texture0, texcoords) * p3d_ColorScale;
+    vec4 color = texture(p3d_Texture0, uvs) * p3d_ColorScale * vertex_color;
     fragColor = color.rgba;
 }
 

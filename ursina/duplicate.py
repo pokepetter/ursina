@@ -1,12 +1,12 @@
-from ursina import *
-from copy import copy, deepcopy
+from ursina import Entity, Audio
+from copy import copy
 
 
-def duplicate(entity, copy_children=True, **kwargs): # use a for loop instead of duplicate() if you can.
+def duplicate(entity, copy_children=True, *args, **kwargs): # use a for loop instead of duplicate() if you can.
     if entity.__class__ == Entity:
-        e = entity.__class__(entity.add_to_scene_entities)
+        e = entity.__class__(entity.add_to_scene_entities, *args, **kwargs)
     else:
-        e = entity.__class__()
+        e = entity.__class__(*args, **kwargs)
 
 
     if hasattr(entity, 'model') and entity.model:
@@ -16,17 +16,20 @@ def duplicate(entity, copy_children=True, **kwargs): # use a for loop instead of
     for name in entity.attributes:
         if name == 'model':
             continue
-        elif name == 'collider' and entity.collider and entity.collider.name:
+        if name == 'collider' and entity.collider and entity.collider.name:
             # TODO: currently only copies colliders set with strings, not custom colliders.
             e.collider = entity.collider.name
-
-        elif name == 'scripts':
+            continue
+        if name == 'scripts':
             for script in entity.scripts:
                 e.add_script(copy(script))
+            continue
 
         else:
             if hasattr(entity, name):
                 setattr(e, name, getattr(entity, name))
+
+    e.shader_input = entity.shader_input
 
     for c in entity.children:
         clone = duplicate(c, copy_children=False)
@@ -54,6 +57,8 @@ def duplicate(entity, copy_children=True, **kwargs): # use a for loop instead of
 
 
 if __name__ == '__main__':
+    from ursina import *
+    from ursina import Ursina, Button, scene, EditorCamera
     app = Ursina()
 
     # quad = Button(parent=scene, model='quad', texture='brick', x=-1, collider='box')
@@ -70,7 +75,7 @@ if __name__ == '__main__':
     #     e2 = duplicate(e)
     #     e2.y += 1.5
 
-    e = Button(parent=scene, scale=1, text='yolo')
+    e = Button(parent=scene, scale=1, text='yolo', texture='shore', texture_scale=Vec2(2), color=color.gray)
     # e.c = Entity(parent=e, model='cube', scale=.5, y=.5, color=color.azure)
     e2 = duplicate(e, x=1.25)
     # print(e.text_entity.z, e2.text_entity.z)

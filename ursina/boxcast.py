@@ -1,20 +1,49 @@
-import sys
+"""
+ursina/boxcast.py
+
+This module provides a function for performing boxcasts in the Ursina engine.
+A boxcast is similar to a raycast, but with width and height, allowing for more complex collision detection.
+
+Dependencies:
+- ursina.entity.Entity
+- ursina.scene.instance
+- ursina.vec3.Vec3
+- ursina.color
+- ursina.ursinastuff.invoke
+"""
 
 from ursina.entity import Entity
 from ursina.scene import instance as scene
 from ursina.vec3 import Vec3
-from math import sqrt, inf
-from ursina.hit_info import HitInfo
-from ursina import ursinamath, color
+from ursina import color
 from ursina.ursinastuff import invoke
 
+# Create a global box entity for performing boxcasts
+_boxcast_box = Entity(model='cube', origin_z=-.5, collider='box', color=color.white33, enabled=False, eternal=True, add_to_scene_entities=False)
 
-_boxcast_box = Entity(model='cube', origin_z=-.5, collider='box', color=color.white33, enabled=False, eternal=True)
+def boxcast(origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_target=scene, ignore:list=None, debug=False):
+    """
+    Perform a boxcast from the origin in the specified direction.
 
-def boxcast(origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_target=scene, ignore=[], debug=False): # similar to raycast, but with width and height
+    Args:
+        origin (Vec3): The starting point of the boxcast.
+        direction (tuple): The direction of the boxcast. Defaults to (0,0,1).
+        distance (float): The distance the boxcast should travel. Defaults to 9999.
+        thickness (tuple): The width and height of the box. Defaults to (1,1).
+        traverse_target (Entity): The target entity to traverse. Defaults to scene.
+        ignore (list, optional): A list of entities to ignore. Defaults to None.
+        debug (bool, optional): Whether to enable debug mode. Defaults to False.
+
+    Returns:
+        HitInfo: Information about the hit, if any.
+    """
+    if not ignore:
+        ignore = []
+
     if isinstance(thickness, (int, float, complex)):
         thickness = (thickness, thickness)
 
+    # Enable the box entity and set its properties
     _boxcast_box.enabled = True
     _boxcast_box.collision = True
     _boxcast_box.position = origin
@@ -22,16 +51,12 @@ def boxcast(origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_
     _boxcast_box.always_on_top = debug
     _boxcast_box.visible = debug
 
+    # Rotate the box entity to face the direction of the boxcast
     _boxcast_box.look_at(origin + direction)
     hit_info = _boxcast_box.intersects(traverse_target=traverse_target, ignore=ignore)
-    if hit_info.world_point:
-        hit_info.distance = ursinamath.distance(origin, hit_info.world_point)
-    else:
-        hit_info.distance = distance
 
     if debug:
         _boxcast_box.collision = False
-        _boxcast_box.scale_z = hit_info.distance
         invoke(setattr, _boxcast_box, 'enabled', False, delay=.2)
     else:
         _boxcast_box.enabled = False
@@ -39,9 +64,8 @@ def boxcast(origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_
     return hit_info
 
 
-
 if __name__ == '__main__':
-    from ursina import *
+    from ursina import Ursina, held_keys, camera, duplicate, raycast, time, EditorCamera
     app = Ursina()
 
     '''
@@ -57,8 +81,13 @@ if __name__ == '__main__':
 
 
     class Player(Entity):
-
+        """
+        A simple player class that moves based on input and avoids walls.
+        """
         def update(self):
+            """
+            Update the player's position based on input and avoid walls.
+            """
             self.direction = Vec3(
                 self.forward * (held_keys['w'] - held_keys['s'])
                 + self.right * (held_keys['d'] - held_keys['a'])

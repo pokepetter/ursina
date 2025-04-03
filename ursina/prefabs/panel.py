@@ -8,7 +8,7 @@ class Panel(Entity):
         super().__init__()
         self.parent = camera.ui
         self.model = Quad()
-        self.color = Button.color
+        self.color = Button.default_color
 
         for key, value in kwargs.items():
             setattr(self, key, value)

@@ -56,7 +56,7 @@ def check_for_victory():
 
     if won:
         print('winner is:', name)
-        destroy(cursor)
+        cursor.text = ''
         mouse.visible = True
         Panel(z=1, scale=10, model='quad')
         t = Text(f'player\n{name}\nwon!', scale=3, origin=(0,0), background=True)

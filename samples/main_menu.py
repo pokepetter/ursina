@@ -29,7 +29,7 @@ state_handler = Animator({
 main_menu.buttons = [
     MenuButton('start', on_click=Func(setattr, state_handler, 'state', 'load_menu')),
     MenuButton('options', on_click=Func(setattr, state_handler, 'state', 'options_menu')),
-    MenuButton('quit', on_click=Sequence(Wait(.01), Func(sys.exit))),
+    MenuButton('quit', on_click=Sequence(Wait(.01), Func(application.quit))),
 ]
 for i, e in enumerate(main_menu.buttons):
     e.parent = main_menu

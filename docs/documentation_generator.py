@@ -1,8 +1,17 @@
+import keyword
+import builtins
+import textwrap
+from types import SimpleNamespace
+
+from ursina import application
 
 html = '''
+<!DOCTYPE HTML>
+<!--generated with documentation_generator.py-->
 <html>
 <head>
     <link rel="stylesheet" href="api_reference.css">
+    <title>ursina API Reference</title>
 </head>
 <body>
 <input type="checkbox" id="checkbox" onClick="save()"></input>
@@ -16,6 +25,15 @@ function save() {
 // loading
 var checked = JSON.parse(localStorage.getItem("checkbox"));
 document.getElementById("checkbox").checked = checked;
+
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
 
 </script>
 <bg></bg>
@@ -83,6 +101,7 @@ groups = {
     'ursinastuff',
     'Sequence',
     'Func',
+    'Keys',
 ],
 'Collision' : [
     'raycast',
@@ -125,6 +144,7 @@ groups = {
     'RadialMenu',
     'RadialMenuButton',
     'HealthBar',
+    'ColorPicker',
 ],
 'Editor': [
     'HotReloader',
@@ -144,16 +164,28 @@ groups = {
 'Assets': [
     'models',
     'textures',
-    'shaders',
+],
+'Shaders': [
+    'unlit_shader',
+    'lit_with_shadows_shader',
+    'matcap_shader',
+    'colored_lights_shader',
+    'fresnel_shader',
+    'projector_shader',
+    'texture_blend_shader',
+    'instancing_shader',
+    'triplanar_shader',
+    'normals_shader',
+    'transition_shader',
+    'fxaa',
+    'ssao',
+    'camera_outline_shader',
+    'pixelation_shader',
+    'camera_contrast',
+    'camera_vertical_blur',
+    'camera_grayscale',
 ],
 }
-from pathlib import Path
-from pprint import pprint
-import keyword
-import builtins
-import textwrap
-from ursina import color, lerp, application
-
 
 
 def indentation(line):
@@ -161,7 +193,7 @@ def indentation(line):
 
 
 def get_module_attributes(str):
-    attrs = list()
+    attrs = []
 
     for l in str.split('\n'):
         if len(l) == 0:
@@ -185,9 +217,24 @@ def get_classes(str):
     return classes
 
 
+def get_class_scope_variables(str):
+    vars = []
+    for i, line in enumerate(str.split('\n')):
+        if not line or line.strip().endswith(','):
+            continue
+        if line.strip().startswith('_'):
+            continue
+        if line.strip().startswith('def'):
+            break
+
+        vars.append(SimpleNamespace(name=line, comment=''))
+
+    return vars
+
+
 def get_class_attributes(str):
-    attributes = list()
-    lines = str.split('\n')
+    attributes = []
+    lines = [l for l in str.split('\n') if not l.strip().startswith('#')]
     start = 0
     end = len(lines)
     for i, line in enumerate(lines):
@@ -201,9 +248,7 @@ def get_class_attributes(str):
 
             start = i
             for j in range(i+1, len(lines)):
-                if (indentation(lines[j]) == indentation(line)
-                and not lines[j].strip().startswith('def late_init')
-                ):
+                if (indentation(lines[j]) == indentation(line) and not lines[j].strip().startswith('def late_init')):
                     end = j
                     found_init = True
                     break
@@ -236,22 +281,11 @@ def get_class_attributes(str):
 
             attributes.append(key + ' = ' + value)
 
-    if '@property' in code:
-        for i, line in enumerate(lines):
-            if line.strip().startswith('@property'):
-                name = lines[i+1].split('def ')[1].split('(')[0]
-
-                # include comments for properties
-                if '#' in lines[i+1]:
-                    name += ((20-len(name)) * ' ') + '<gray>#' + lines[i+1].split('#',1)[1] + '</gray>'
-
-                if not name in [e.split(' = ')[0] for e in attributes]:
-                    attributes.append(name)
 
     return attributes
 
 
-def get_functions(str, is_class=False):
+def get_functions(str, is_class=False, include_properties=True):
     functions = dict()
     lines = str.split('\n')
 
@@ -260,7 +294,6 @@ def get_functions(str, is_class=False):
     # ignore_functions_for_property_generation = 'generate_properties(' in str
 
     for i, line in enumerate(lines):
-
         if line == '''if __name__ == '__main__':''' or 'docignore' in line:
             break
         if line.strip().startswith('def '):
@@ -268,13 +301,22 @@ def get_functions(str, is_class=False):
                 continue
 
             name = line.split('def ')[1].split('(')[0]
-            if name.startswith('_') or lines[i-1].strip().startswith('@'):
+            if name.startswith('_'):
                 continue
 
-            # if ignore_functions_for_property_generation:
-            #     if name.startswith('get_') or name.startswith('set_'):
-            #         continue
-
+            is_property = False
+            is_property = False
+            # ignore properties
+            if lines[i-1].strip().startswith('@property') or lines[i-1].strip().endswith('.setter'):
+                is_property = True
+                if not include_properties:
+                    continue
+            # ignore_functions_for_property_generation:
+            # print('--name:', name)
+            if name.endswith('_getter') or name.endswith('_setter'):
+                is_property = True
+                if not include_properties:
+                    continue
 
             params = line.replace('(self, ', '(')
             params = params.replace('(self)', '()')
@@ -284,7 +326,7 @@ def get_functions(str, is_class=False):
             if '#' in line:
                 comment = '#' + line.split('#')[1]
 
-            functions.append((name, params, comment))
+            functions.append(SimpleNamespace(name=name, parameters=params, comment=comment, is_property=is_property))
 
     return functions
 
@@ -310,7 +352,8 @@ def get_example(str, name=None):    # use name to highlight the relevant class
     example = '\n'.join(lines)
     example = textwrap.dedent(example)
     example = example.split('# test\n')[0]
-    ignore = ('app = Ursina()', 'app.run()', 'from ursina import *')
+    # ignore = ('app = Ursina()', 'app.run()', 'from ursina import *')
+    ignore = ()
     if 'class Ursina' in str:   # don't ignore in main.py
         ignore = ()
 
@@ -353,8 +396,8 @@ def get_example(str, name=None):    # use name to highlight the relevant class
             line = line.replace(f'{i}', f'<yellow>{i}</yellow>')
 
         # destyle Vec2 and Vec3
-        line = line.replace(f'<yellow>3</yellow>(', '3(')
-        line = line.replace(f'<yellow>2</yellow>(', '2(')
+        line = line.replace('<yellow>3</yellow>(', '3(')
+        line = line.replace('<yellow>2</yellow>(', '2(')
 
         # highlight class name
         if name:
@@ -411,32 +454,46 @@ def is_singleton(str):
         if l.startswith('instance = '):
             return True
 
-    result = False
+    return False
+
+
+class Info:
+    def __init__(self, path=None, parent_class='', parameters='', class_vars=None, attributes=None, properties=None, functions=None, example=''):
+        self.path = path
+        self.parent_class = parent_class
+        self.parameters = parameters
+        self.class_vars = class_vars if class_vars else []
+        self.attributes = attributes if attributes else []
+        self.properties = properties if properties else []
+        self.functions = functions if functions else []
+        self.example = example
+
 
 
 path = application.package_folder
 module_info = dict()
 class_info = dict()
-module_info['textures'] = ('', '', '', ('noise', 'grass', 'vignette', 'arrow_right', 'test_tileset', 'tilemap_test_level', 'shore', 'file_icon', 'sky_sunset', 'radial_gradient', 'circle', 'perlin_noise', 'brick', 'grass_tintable', 'circle_outlined', 'ursina_logo', 'arrow_down', 'cog', 'vertical_gradient', 'white_cube', 'horizontal_gradient', 'folder', 'rainbow', 'heightmap_1', 'sky_default',), (), ())
-module_info['models'] = ('', '', '', ('quad', 'wireframe_cube', 'plane', 'circle', 'diamond', 'wireframe_quad', 'sphere', 'cube', 'icosphere', 'cube_uv_top', 'arrow', 'sky_dome', ), (), ())
-module_info['shaders'] = ('', '', '', ('colored_lights_shader', 'fresnel_shader', 'projector_shader', 'instancing_shader', 'texture_blend_shader', 'matcap_shader', 'triplanar_shader', 'unlit_shader', 'geom_shader', 'normals_shader', 'transition_shader', 'noise_fog_shader', 'lit_with_shadows_shader', 'fxaa', 'camera_empty', 'ssao', 'camera_outline_shader', 'pixelation_shader', 'camera_contrast', 'camera_vertical_blur', 'camera_grayscale', ), (), ())
+# shader_info = dict()
+# path=file, parent_class=parent_class, parameters=params, class_vars=class_vars, attributes=attrs, properties=properties, functions=methods, example=example
+module_info['textures'] = Info(attributes=['noise', 'grass', 'vignette', 'arrow_right', 'test_tileset', 'tilemap_test_level', 'shore', 'file_icon', 'sky_sunset', 'radial_gradient', 'circle', 'perlin_noise', 'brick', 'grass_tintable', 'circle_outlined', 'ursina_logo', 'arrow_down', 'cog', 'vertical_gradient', 'white_cube', 'nine_sliced','horizontal_gradient', 'folder', 'rainbow', 'heightmap_1', 'sky_default', ])
+module_info['models'] = Info(attributes=['quad', 'wireframe_cube', 'plane', 'circle', 'diamond', 'wireframe_quad', 'sphere', 'cube', 'icosphere', 'cube_uv_top', 'arrow', 'sky_dome', ])
+# module_info['shaders'] = Info(attributes=['colored_lights_shader', 'fresnel_shader', 'projector_shader', 'instancing_shader', 'texture_blend_shader', 'matcap_shader', 'triplanar_shader', 'unlit_shader', 'geom_shader', 'normals_shader', 'transition_shader', 'noise_fog_shader', 'lit_with_shadows_shader', 'fxaa', 'camera_empty', 'ssao', 'camera_outline_shader', 'pixelation_shader', 'camera_contrast', 'camera_vertical_blur', 'camera_grayscale', ])
 
-
-for f in path.glob('**/*.py'):
-    with open(f, encoding='utf-8') as t:
-        code = t.read()
+# find all modules and classes
+for file in path.glob('**/*.py'):
+    with open(file, encoding='utf-8') as f:
+        code = f.read()
         code = code.replace('<', '&lt').replace('>', '&gt')
 
         if not is_singleton(code):
-            name = f.stem
-            attrs, funcs = list(), list()
+            name = file.stem
+            attrs, funcs = [], []
             attrs = get_module_attributes(code)
             funcs = get_functions(code)
             example = get_example(code, name)
             if attrs or funcs:
-                module_info[name] = (f, '', '', attrs, funcs, example)
+                module_info[name] = Info(path=file, attributes=attrs, functions=funcs, example=example)
 
-            # continue
             classes = get_classes(code)
             for class_name, class_definition in classes.items():
                 print('parsing class:', class_name)
@@ -445,30 +502,105 @@ for f in path.glob('**/*.py'):
                 if 'def __init__' in class_definition:
                     # init line
                     params =  '__init__('+ class_definition.split('def __init__(')[1].split('\n')[0][:-1]
+
+                class_vars = get_class_scope_variables(class_definition)
                 attrs = get_class_attributes(class_definition)
-                methods = get_functions(class_definition, is_class=True)
+
+                all_methods = get_functions(class_definition, is_class=True)
+                methods = [e for e in all_methods if not e.is_property]
+
+                properties = dict()
+                for prop in [e for e in all_methods if e.is_property]:
+                    name = prop.name
+                    if prop.name.endswith('_getter'):
+                        name = prop.name[:-len('_getter')]
+                    if prop.name.endswith('_setter'):
+                        name = prop.name[:-len('_setter')]
+
+                    if name not in properties:
+                        properties[name] = SimpleNamespace(name=name, comment=prop.comment)
+                    elif not properties[name].comment:  # in case we have a comment on the setter but not on the getter
+                        properties[name].comment = prop.comment
+
+                properties = properties.values()
+
                 example = get_example(code, class_name)
 
+                parent_class = ''
                 if ('(') in class_name:
                     parent_class = class_name.split('(')[1].split(')')[0]
                     class_name =  class_name.split('(')[0]
-                class_info[class_name] = (f, parent_class, params, attrs, methods, example)
+                class_info[class_name] = Info(path=file, parent_class=parent_class, parameters=params, class_vars=class_vars, attributes=attrs, properties=properties, functions=methods, example=example)
         # singletons
         else:
-            module_name = f.stem
+            module_name = file.stem
             classes = get_classes(code)
             for class_name, class_definition in classes.items():
-                # print(module_name)
+                # print('parsing singleton:', module_name)
                 attrs, methods = list(), list()
                 attrs = get_class_attributes(class_definition)
-                methods = get_functions(class_definition, is_class=True)
+
+                all_methods = get_functions(class_definition, is_class=True)
+                methods = [e for e in all_methods if not e.is_property]
+
+                properties = dict()
+                for prop in [e for e in all_methods if e.is_property]:
+                    name = prop.name
+                    if prop.name.endswith('_getter'):
+                        name = prop.name[:-len('_getter')]
+                    if prop.name.endswith('_setter'):
+                        name = prop.name[:-len('_setter')]
+
+                    if name not in properties:
+                        properties[name] = SimpleNamespace(name=name, comment=prop.comment)
+                    elif not properties[name].comment:  # in case we have a comment on the setter but not on the getter
+                        properties[name].comment = prop.comment
+
+                properties = properties.values()
                 example = get_example(code, class_name)
+                module_info[module_name] = Info(path=file, attributes=attrs, properties=properties, functions=methods, example=example)
 
-                module_info[module_name] = (f, '', '', attrs, methods, example)
 
-def html_color(color):
-    return f'hsl({color.h}, {int(color.s*100)}%, {int(color.v*100)}%)'
+def html_color(value):
+    return f'hsl({value.h}, {int(value.s*100)}%, {int(value.v*100)}%)'
 
+
+# find shader info
+for shader_name in groups['Shaders']:
+    path_to_shader = tuple(path.glob(f'*/**/{shader_name}.py'))
+    if not path_to_shader:
+        raise FileNotFoundError(shader_name)
+    else:
+        path_to_shader = path_to_shader[0]
+
+    print('parsing shader:', shader_name)
+    # import sys, inspect
+    # sys.path.append(str(path_to_shader.parent))
+    # exec(f'import {shader_name}')
+    # shader_object = getattr(sys.modules[shader_name], shader_name, None)
+    # if not shader_object:
+    #     print('error: could not find shader:', path_to_shader, shader_name)
+    #     del module_info[shader_name]
+    #     continue
+    # default_input = getattr(shader_object, 'default_input', None)
+
+    try:
+        with path_to_shader.open('r') as f:
+            default_input_code = f.read().split(',\ndefault_input')[1].split('if __name__ ==')[0]
+            default_input = [line for line in default_input_code.split('\n') if any(char.isalpha() or char.isdigit() for char in line)] # skip lines without alphanumeric symbols
+            if default_input:
+                default_input = ['default_input'] + default_input
+    except:
+        print(path_to_shader, 'has no default_input')
+        default_input = []
+
+    example = module_info[shader_name].example  # example already got extracted when we parsed all the files/modules earlier, so retain it.
+
+    module_info[shader_name] = Info(
+        path=path_to_shader,
+        attributes=default_input,
+        example=example
+        )
 
 
 # make index menu
@@ -489,7 +621,7 @@ for group_name, group in groups.items():
 html += '</div>\n'
 html += '<main_section>\n'
 html += '    <h1 class="main_header">ursina API Reference</h1>\n'
-html += '    <p>v5.0.0</p>\n'
+html += '    <p>v8.0.0</p>\n'
 # print(module_info)
 # main part
 for group_name, group in groups.items():
@@ -502,18 +634,23 @@ for group_name, group in groups.items():
             data = module_info[name]
         elif name in class_info:
             data = class_info[name]
+        # elif name in shader_info:
+        #     data = shader_info[name]
 
         if not data:
             continue
             print('no info found for', name)
         # f, params, attrs, methods, example = data
-        location, parent_class, params, attrs, funcs, example = data
-        params = params.replace('__init__', name.split('(')[0])
+        # funcs, example = data
+        # print(f'make html for: {groclearup_name} -> {name}:')
+        # for key in ('path', 'parent_class', 'parameters', 'class_vars', 'attributes', 'properties', 'functions'):
+        #     print(f'    {key}: {getattr(data, key)}')
+
+        params = data.parameters.replace('__init__', name.split('(')[0])
         params = params.replace('(self, ', '(')
         params = params.replace('(self)', '()')
 
-        parent_class = parent_class.replace('ShowBase', '')
-        parent_class = parent_class.replace('NodePath', '')
+        parent_class = data.parent_class.replace('ShowBase', '').replace('NodePath', '')
         link_to_parent_class = ''
         if parent_class:
             link_to_parent_class = f'<a style="color: gray; font-weight:normal;" href="#{parent_class}">({parent_class})</a>'
@@ -522,7 +659,7 @@ for group_name, group in groups.items():
             f'''    <div class="class_box" id="{name}">\n'''
             f'''        <h1>{name}{link_to_parent_class}</h1>\n'''
             )
-        location = str(location)
+        location = str(data.path)
         if 'ursina' in location:
             location = location.split('ursina')[-1]
             github_link = 'https://github.com/pokepetter/ursina/blob/master/ursina' + location.replace('\\', '/')
@@ -534,17 +671,28 @@ for group_name, group in groups.items():
 
         html += '        <table> <!-- attributes -->\n'
 
+        for class_var in data.class_vars:
+            html += (
+            f'            <tr>\n'
+            f'                <td>{name}.{class_var.name.strip()}<gray></gray></td><td>{class_var.comment}</td>\n'
+            f'            </tr>\n'
+            )
+
+
         dot = '.'
-        if group_name == 'Assets':    # don't add a . for asset names
+        if group_name in ('Assets', 'Shaders'):    # don't add a . for asset names
             dot = ''
 
-        for e in attrs:
-            attr_name = e
+        variables = data.attributes
+        # variables.extend(data.properties)
+
+        for attr in variables:
+            attr_name = attr
             default = ''
             info = ''
 
-            if '# ' in e:
-                attr_name, info = e.split('# ', 1)
+            if '# ' in attr:
+                attr_name, info = attr.split('# ', 1)
             if ' = ' in attr_name:
                 attr_name, default = attr_name.split(' = ', 1)
                 default = f' = {default}'
@@ -560,24 +708,36 @@ for group_name, group in groups.items():
 
         html += '        </table><br>\n'
 
-        if funcs:
+        if data.properties:
+            html += '        <div><gray>properties:</gray></div>\n'
+            html += '        <table>\n'
+
+            for prop in data.properties:
+                html += (
+                    f'            <tr>\n'
+                    f'                <td>.{prop.name}</td><td><span>{prop.comment[1:].strip()}</span></td>\n'
+                    f'            </tr>\n'
+                )
+            html += '        </table><br>\n'
+
+
+        if data.functions:
             html += '        <div><gray>functions:</gray></div>\n'
             html += '        <table>\n'
 
-        for e in funcs:
-            html += (
-                f'''            <tr>\n'''
-                f'''                <td> &nbsp;{e[0]}(<gray>{e[1]}</gray>) <span>{e[2][2:]}</span></td>\n'''
-                f'''            </tr>\n'''
-            )
+            for function in data.functions:
+                html += (
+                    f'''            <tr>\n'''
+                    f'''                <td> &nbsp;{function.name}(<gray>{function.parameters}</gray>)</td> <td><span>{function.comment[1:].strip()}</span></td>\n'''
+                    f'''            </tr>\n'''
+                )
 
-        html += '        </table><br>\n'
+            html += '        </table><br>\n'
 
-        if example:
+        if data.example:
             html += '    <div><gray>example:</gray></div>\n'
-            html += f'    <div class="example">{example}\n</div>\n'
+            html += f'   <div class="example"><button class="copy_code_button" onclick="copy_to_clipboard({name}_example)">copy</button><p id="{name}_example">{data.example}</p>\n</div>\n'
 
-        # html += '\n</div></div>'
         html = html.replace('<gray></gray>', '')
 
         html += dedent('''
@@ -593,3 +753,61 @@ html += '''
 '''
 with open('api_reference.html', 'w', encoding='utf-8') as f:
     f.write(html)
+
+
+from pathlib import Path
+# generate sample pages:
+samples_folder = application.package_folder.parent / 'samples'
+generated_sample_pages = dict()
+
+for sample_name in ('Tic Tac Toe', 'Inventory', 'Pong', 'Minecraft Clone', "Rubik's Cube", 'Clicker Game', 'Platformer', 'FPS', 'Particle System', 'Column Graph'):
+    file_name = sample_name.replace(' ','_').replace('\'','').lower() + '.py'
+    file_path = samples_folder / file_name
+    image_path = Path(f'icons/{file_path.stem}.jpg')
+    image_code = ''
+    image_url = f'icons/{file_path.stem}.jpg'
+    github_link = f'https://github.com/pokepetter/ursina/blob/master/samples/{file_name}'
+    if image_path.exists():
+        image_code = f'# image {image_url}'
+    else:
+        image_code = f'# image icons/installation_guide.jpg'
+        print('no image:', image_path)
+
+    if file_path.exists():
+        print(f'generate webpage for: {sample_name} -> {file_path.stem}.sswg')
+        with open(file_path, 'r') as source_file:
+            source_code = source_file.read()
+
+        with open(f'{file_path.stem}.sswg', 'w') as file:
+            file.write(textwrap.dedent(f'''\
+                # title ursina engine documentation
+                # insert menu.sswg
+
+                ### {sample_name}
+                <a href="{github_link}">{github_link}</a>
+
+                {image_code}
+                ```\n''')
+                + source_code
+                + '\n```'
+            )
+            generated_sample_pages[sample_name] = (f'{file_path.stem}.html', image_url)
+    else:
+        print('sample not found:', file_path)
+
+samples_page_content = dedent('''\
+    # title ursina engine samples
+    # insert menu.sswg
+
+    ### Samples
+    ''')
+for name, urls in generated_sample_pages.items():
+    html_url, image_url = urls
+    samples_page_content += f'[{name}, {html_url}, {image_url}]\n'
+
+samples_page_content += dedent('''\
+    [Value of Life, https://github.com/pokepetter/ld44_life_is_currency, icons/value_of_life_icon.jpg]
+    [Castaway, https://github.com/pokepetter/pyweek_30_castaway, icons/castaway_icon.jpg]
+    ''')
+with open('samples.sswg', 'w') as f:
+    f.write(samples_page_content)

@@ -1,16 +1,16 @@
 from ursina import *
 import os, shutil
 import numpy as np
-# import imageio    # gets imported in convert_to_gif
-# from panda3d.core import PNMImage
+import subprocess
+
 
 class VideoRecorder(Entity):
-    def __init__(self, duration=5, name='untitled_video', **kwargs):
+    def __init__(self, max_duration=5, name='untitled_video', **kwargs):
         super().__init__()
         self.recording = False
         self.file_path = Path(application.asset_folder) / 'video_temp'
         self.i = 0
-        self.duration = duration
+        self.max_duration = max_duration
         self.fps = 30
         self.video_name = name
         self.t = 0
@@ -18,22 +18,29 @@ class VideoRecorder(Entity):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-        self.max_frames = int(self.duration * self.fps)
+        self.max_frames = int(self.max_duration * self.fps)
         self.frames = []
 
 
     def start_recording(self):
-        print('start recording,', self.duration, self.file_path)
+        print('start recording,', self.max_duration, self.file_path)
         window.fps_counter.enabled = False
         window.exit_button.visible = False
         self.frames = []
-        self.max_frames = self.duration * self.fps
+        self.max_frames = self.max_duration * self.fps
+
+        if self.file_path.exists():
+            shutil.rmtree(self.file_path)   # delete temp folder
+
         if not self.file_path.exists():
             self.file_path.mkdir()
-        base.movie(namePrefix=f'\\video_temp\\{self.video_name}', duration=2.0, fps=30, format='png', sd=4)
+        # base.movie(namePrefix=f'\\video_temp\\{self.video_name}', max_duration=2.0, fps=30, format='mp4', sd=4)
 
+        application.calculate_dt = True
+        time.dt = 1/self.fps
         self.recording = True
-        invoke(self.stop_recording, delay=self.duration)
+        invoke(self.stop_recording, delay=self.max_duration)
+
 
 
     def stop_recording(self):
@@ -41,57 +48,30 @@ class VideoRecorder(Entity):
         window.fps_counter.enabled = True
         window.exit_button.visible = True
         print('stop recording')
-        self.convert_to_gif()
+        # self.convert_to_gif()
+        # command = 'ffmpeg -framerate 60 -f image2 -i video_temp/%04d.png -c:v libvpx-vp9 -pix_fmt yuva420p untitled_video.webm'
+        command = f'ffmpeg -framerate {self.fps} -f image2 -i {self.file_path}/{self.video_name}_%04d.png {self.video_name}.mp4'
+        result = subprocess.Popen(command, shell=True)
+        application.calculate_dt = True
 
+        # print('converting to video:', result)
+        print('saved webm to:', Path(f'{self.file_path.parent}/{self.video_name}.webm'))
 
     def update(self):
         if not self.recording:
             return
 
-            self.t += time.dt
-            if self.t >= 1/30:
-                base.screenshot(
-                 	namePrefix = '\\video_temp\\' + self.video_name + '_' + str(self.i).zfill(4) + '.png',
-                 	defaultFilename = 0,
-                    )
-                self.t = 0
-        # # self.frames.append(self.renderToPNM())
-        # image = base.win.getScreenshot()
-        # data = image.getRamImageAs("RGB").getData()
-        # # from PIL import Image
-        # # image = Image.fromarray(data)
-        # # img = data.convert("RGBA")
-        # data = np.array(data)
-        #
-        # # image = deepcopy(camera.render_texture)
-        # self.frames.append(data)
+        time.dt = 1/60
+        base.screenshot(namePrefix=self.file_path / f'{self.video_name}_{str(self.i).zfill(4)}.png', defaultFilename=0)
         self.i += 1
 
-    # store screenshot in memory
-    # def renderToPNM(self):
-        # base.graphicsEngine.renderFrame()
-        # if hasattr(camera, 'render_texure'):
-        #     return copy(camera.render_texure)
-        # # image = PNMImage()
-        # # dr = base.camNode.getDisplayRegion(0)
-        # # dr.getScreenshot(image)
-        # # win.setupRenderTexture()
-        # return None
-
-
-    def convert_to_gif(self):
-        import imageio
-        images = []
-        if not os.path.exists(self.file_path):
-            return
-
-        for filename in os.listdir(self.file_path):
-            images.append(imageio.imread(self.file_path/filename))
-
-        imageio.mimsave(Path(f'{self.file_path.parent}/{self.video_name}.gif'), images)
-        shutil.rmtree(self.file_path)   # delete temp folder
-        print('saved gif to:', Path(f'{self.file_path.parent}/{self.video_name}.gif'))
-
+    def input(self, key):
+        combo = ['control', 'r', 'e', 'c']
+        if key in combo and all([held_keys[e] for e in combo]):
+            if not self.recording:
+                self.start_recording()
+            else:
+                self.stop_recording()
 
 
 class VideoRecorderUI(WindowPanel):
@@ -134,31 +114,22 @@ class VideoRecorderUI(WindowPanel):
     def start_recording(self):
         print(self.name_field)
         if self.name_field.text == '':
-            self.name_field.blink(color.color(0,1,1,.5), .5)
+            self.name_field.blink(color.hsv(0,1,1,.5), .5)
             print('enter name')
             return
 
         # self.start_button.color=color.lime
         self.visible = False
-        application.video_recorder.duration = float(self.duration_field.text)
+        application.video_recorder.max_duration = float(self.max_duration.text)
         application.video_recorder.video_name = self.name_field.text
         application.video_recorder.frame_skip = 60 // int(self.fps_field.text)
         application.video_recorder.recording = True
 
 
 
-
 if __name__ == '__main__':
     app = Ursina()
-    # window.size = (1600/3,900/3)
-    # cube = primitives.RedCube()
-    # cube.animate_x(5, duration=5, curve=curve.linear)
-    # cube.animate_x(0, duration=5, curve=curve.linear, delay=5)
-    # vr = VideoRecorder()
-    # invoke(setattr, vr, 'recording', True, delay=1)
-    # invoke(os._exit, 0, delay=6)
-    # vr.recording = True
-    window.size *= .5
+    window.size = (1280*.5, 720*.5)
     from ursina.prefabs.first_person_controller import FirstPersonController
     from ursina.shaders import lit_with_shadows_shader
     random.seed(0)
@@ -189,12 +160,7 @@ if __name__ == '__main__':
     sun.look_at(Vec3(1,-1,-1))
     Sky()
 
-    vr = VideoRecorder(duration=2)
-    def input(key):
-        if key == '5':
-            vr.start_recording()
-        if key == '6':
-            vr.stop_recording()
+    vr = VideoRecorder(max_duration=120)
 
 
 

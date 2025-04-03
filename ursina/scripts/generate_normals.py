@@ -17,20 +17,17 @@ def normalize_v3(arr):
 def generate_normals(vertices, triangles=None, smooth=True):
     import numpy
 
-    if not triangles:
-        # print('generated triangles:', triangles)
-        new_tris = [(i, i+1, i+2) for i in range(0, len(vertices), 3)]
-    else:
-        new_tris = list()
-        for t in triangles:
-            if isinstance(t, int):
-                new_tris.append(t)
-            elif len(t) == 3:
-                new_tris.extend(t)
-            elif len(t) == 4:
-                new_tris.extend((t[0], t[1], t[2], t[2], t[3], t[0]))
+    if not vertices:
+        raise ValueError("can't generate normals for a mesh with 0 vertices")
 
-        new_tris = [(new_tris[i], new_tris[i+1], new_tris[i+2]) for i in range(0, len(new_tris), 3)]
+    if not triangles:
+        new_tris = [(i, i+1, i+2) for i in range(0, len(vertices), 3)]
+        
+    elif not isinstance(triangles[0], int):
+        raise TypeError(f'triangles must be ints, not {type(triangles[0])} ({triangles[0]})')
+
+    else:
+        new_tris = [(triangles[i], triangles[i+1], triangles[i+2]) for i in range(0, len(triangles), 3)]
 
 
     vertices = numpy.array(vertices)
@@ -59,21 +56,21 @@ def generate_normals(vertices, triangles=None, smooth=True):
 
     # smooth
     if smooth:
-        vertices=vertices.tolist()
-        bucket = list()
+        vertices = vertices.tolist()
+        bucket = set()
+        visited = set()
+
         for i, v in enumerate(vertices):
-            if i in bucket:
+            if i in visited:
                 continue
 
-            overlapping_verts_indices = list()
-            for j, w in enumerate(vertices):
-                if w == v:
-                    overlapping_verts_indices.append(j)
-                    bucket.append(j)
+            overlapping_verts_indices = [j for j, w in enumerate(vertices) if w == v and j not in visited]
+            visited.update(overlapping_verts_indices)
 
-            average_normal = sum(normals[e] for e in overlapping_verts_indices) / 3
-            for index in overlapping_verts_indices:
-                normals[index] = average_normal
+            if overlapping_verts_indices:
+                average_normal = sum(normals[e] for e in overlapping_verts_indices) / 3
+                for index in overlapping_verts_indices:
+                    normals[index] = average_normal
 
 
     return normals
@@ -84,7 +81,10 @@ if __name__ == '__main__':
         (0.361804, -0.22, -0.26), (0.3, -0.32, -0.22), (0.40, -0.25, -0.14),
         (-0.0, -0.5, 0.0), (-0.038, -0.48, -0.11), (-0.03, -0.48, -0.11)
     )
-    norms = generate_normals(vertices)
+    from time import perf_counter
+    t = perf_counter()
+    norms = generate_normals(vertices, smooth=True)
+    print('------', perf_counter() - t)
     # print(norms)
     # from ursina import *
     # app = Ursina()

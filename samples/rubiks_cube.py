@@ -4,7 +4,7 @@ from ursina import *
 app = Ursina()
 
 cube_colors = [
-    color.pink,  # right
+    color.pink,     # right
     color.orange,   # left
     color.white,    # top
     color.yellow,   # bottom
@@ -14,15 +14,13 @@ cube_colors = [
 
 # make a model with a separate color on each face
 combine_parent = Entity(enabled=False)
-for i in range(3):
-    dir = Vec3(0,0,0)
-    dir[i] = 1
+for i, direction in enumerate((Vec3.right, Vec3.up, Vec3.forward)):
 
     e = Entity(parent=combine_parent, model='plane', origin_y=-.5, texture='white_cube', color=cube_colors[i*2])
-    e.look_at(dir, 'up')
+    e.look_at(direction, Vec3.up)
 
     e_flipped = Entity(parent=combine_parent, model='plane', origin_y=-.5, texture='white_cube', color=cube_colors[(i*2)+1])
-    e_flipped.look_at(-dir, 'up')
+    e_flipped.look_at(-direction, Vec3.up)
 
 combine_parent.combine()
 
@@ -55,32 +53,34 @@ rotation_helper = Entity()
 def rotate_side(normal, direction=1, speed=1):
     if normal == Vec3(1,0,0):
         [setattr(e, 'world_parent', rotation_helper) for e in cubes if e.x > 0]
-        rotation_helper.animate('rotation_x', 90 * direction, duration=.2*speed, curve=curve.linear)
+        rotation_helper.animate('rotation_x', 90 * direction, duration=.15*speed, curve=curve.linear, interrupt='finish')
     elif normal == Vec3(-1,0,0):
         [setattr(e, 'world_parent', rotation_helper) for e in cubes if e.x < 0]
-        rotation_helper.animate('rotation_x', -90 * direction, duration=.2*speed, curve=curve.linear)
+        rotation_helper.animate('rotation_x', -90 * direction, duration=.15*speed, curve=curve.linear, interrupt='finish')
 
     elif normal == Vec3(0,1,0):
         [setattr(e, 'world_parent', rotation_helper) for e in cubes if e.y > 0]
-        rotation_helper.animate('rotation_y', 90 * direction, duration=.2*speed, curve=curve.linear)
+        rotation_helper.animate('rotation_y', 90 * direction, duration=.15*speed, curve=curve.linear, interrupt='finish')
     elif normal == Vec3(0,-1,0):
         [setattr(e, 'world_parent', rotation_helper) for e in cubes if e.y < 0]
-        rotation_helper.animate('rotation_y', -90 * direction, duration=.2*speed, curve=curve.linear)
+        rotation_helper.animate('rotation_y', -90 * direction, duration=.15*speed, curve=curve.linear, interrupt='finish')
 
     elif normal == Vec3(0,0,1):
         [setattr(e, 'world_parent', rotation_helper) for e in cubes if e.z > 0]
-        rotation_helper.animate('rotation_z', -90 * direction, duration=.2*speed, curve=curve.linear)
+        rotation_helper.animate('rotation_z', -90 * direction, duration=.15*speed, curve=curve.linear, interrupt='finish')
     elif normal == Vec3(0,0,-1):
         [setattr(e, 'world_parent', rotation_helper) for e in cubes if e.z < 0]
-        rotation_helper.animate('rotation_z', 90 * direction, duration=.2*speed, curve=curve.linear)
+        rotation_helper.animate('rotation_z', 90 * direction, duration=.15*speed, curve=curve.linear, interrupt='finish')
 
 
-    invoke(reset_rotation_helper, delay=.22*speed)
+    invoke(reset_rotation_helper, delay=.2*speed)
 
     if speed:
         collider.ignore_input = True
-        invoke(setattr, collider, 'ignore_input', False, delay=.24*speed)
-        invoke(check_for_win, delay=.25*speed)
+        @after(.25*speed)
+        def _():
+            collider.ignore_input = False
+            check_for_win()
 
 
 def reset_rotation_helper():

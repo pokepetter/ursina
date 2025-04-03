@@ -110,7 +110,6 @@ def update():
         if mouse.left:
             x = int(cursor.x/(terrain.scale_x/w) + w/2)
             z = int(cursor.z/(terrain.scale_z/h) + h/2)
-            i = (z*(w)) + x
 
             heights = []
             for z_offset in range(-3, 3):
@@ -170,10 +169,10 @@ def update():
 
 
 
-def input(key):
-    if key == 'tab':    # press tab to toggle edit/play mode
-        ec.enabled = not ec.enabled
-        player.enabled = not player.enabled
+# def input(key):
+#     if key == 'tab':    # press tab to toggle edit/play mode
+#         ec.enabled = not ec.enabled
+#         player.enabled = not player.enabled
 
 Sky()
 # DirectionalLight().look_at(Vec3(-.5,-1,-1))

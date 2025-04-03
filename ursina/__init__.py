@@ -1,8 +1,9 @@
 # do imports here so I can do a single line import
 from pathlib import Path
 from textwrap import dedent
-import time
+import math
 import random
+import time
 from copy import copy, deepcopy
 from math import floor, ceil, inf
 
@@ -10,8 +11,10 @@ from ursina.window import instance as window
 from ursina.camera import instance as camera
 from ursina.mouse import instance as mouse
 from ursina.main import Ursina
+from panda3d.core import Mat3, Mat4
 from ursina.ursinamath import *
 from ursina.ursinastuff import *
+from ursina.array_tools import *
 from ursina import input_handler
 from ursina.input_handler import held_keys, Keys
 from ursina.string_utilities import *
@@ -27,6 +30,7 @@ from ursina.collider import *
 from ursina.raycast import raycast
 from ursina.boxcast import boxcast
 from ursina.audio import Audio
+from ursina import music_system
 from ursina.duplicate import duplicate
 from panda3d.core import Quat
 from ursina.vec2 import Vec2
@@ -37,6 +41,7 @@ from ursina.lights import *
 
 from ursina.text import Text
 from ursina.mesh import Mesh, MeshModes
+from ursina.models.procedural.nine_slice import NineSlice
 
 from ursina.prefabs.sprite import Sprite
 from ursina.prefabs.button import Button
@@ -59,10 +64,12 @@ from ursina.models.procedural.capsule import Capsule
 from ursina.models.procedural.grid import Grid
 from ursina.models.procedural.terrain import Terrain
 
-from ursina.scripts.terraincast import terraincast
+from ursina.terraincast import terraincast
 from ursina.scripts.smooth_follow import SmoothFollow
 from ursina.scripts.grid_layout import grid_layout
 from ursina.scripts.scrollable import Scrollable
+from ursina.scripts.property_generator import generate_properties_for_class
+from ursina.scripts.every_decorator import every
 
 from ursina.prefabs.tooltip import Tooltip
 from ursina.prefabs.text_field import TextField
@@ -72,6 +79,7 @@ from ursina.prefabs.slider import Slider, ThinSlider
 from ursina.prefabs.button_group import ButtonGroup
 from ursina.prefabs.window_panel import WindowPanel, Space
 from ursina.prefabs.button_list import ButtonList
+from ursina.prefabs.checkbox import CheckBox
 # from ursina.prefabs.file_browser import FileBrowser
 # from ursina.prefabs import primitives
 

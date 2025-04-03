@@ -1,7 +1,7 @@
 # this will clear the scene and try to execute the main.py code without
 # restarting the program
 
-from ursina import Entity, camera, texture_importer, mesh_importer, scene, application, print_on_screen
+from ursina import Entity, camera, texture_importer, mesh_importer, scene, application, print_on_screen, window
 from pathlib import Path
 import time
 import ast
@@ -21,7 +21,7 @@ def make_code_reload_safe(code):
     dedent_next = False
 
     for line in code.split('\n'):
-        if 'Ursina(' in line or line.strip().endswith('app.run()') or line.strip().endswith('HotReloader()'):
+        if line.strip().endswith('app.run()') or line.strip().endswith('HotReloader()'):
             continue
         if 'eternal=True' in line:
             continue
@@ -68,6 +68,8 @@ class HotReloader(Entity):
             'f8'     : self.reload_shaders,
             'f9'     : self.toggle_hotreloading,
             }
+            
+        self.hotreload_window_settings = dict(size=(window.size[0]/2,window.size[1]/2), always_on_top=True, position=(window.fullscreen_size[0]-window.size[0]/22, 0))
 
 
     def input(self, key):
@@ -101,6 +103,9 @@ class HotReloader(Entity):
     def toggle_hotreloading(self):
         self.hotreload = not self.hotreload
         print_on_screen(f'<azure>hotreloading: {self.hotreload}')
+        if self.hotreload_window_settings:
+            for key, value in self.hotreload_window_settings.items():
+                setattr(window, key, value)
 
 
 
@@ -126,6 +131,7 @@ class HotReloader(Entity):
         t = time.time()
         try:
             d = dict(locals(), **globals())
+            d['__name__'] = '__main__'
             application.paused = True
             exec(text, d, d)
 
@@ -147,10 +153,10 @@ class HotReloader(Entity):
         reloaded_textures = list()
 
         for e in textured_entities:
-            if e.texture.name in reloaded_textures:
+            if e.texture.name in reloaded_textures or not hasattr(e.texture, 'path') or not e.texture.path:
                 continue
 
-            if e.texture.path.parent.name == application.compressed_textures_folder.name:
+            if e.texture.path.parent.name == application.textures_compressed_folder.name:
                 print('texture is made from .psd file', e.texture.path.stem + '.psd')
                 texture_importer.compress_textures(e.texture.path.stem)
             print('reloaded texture:', e.texture.path)
@@ -161,26 +167,38 @@ class HotReloader(Entity):
 
 
     def reload_models(self):
+        print('reloading models...')
         entities = [e for e in scene.entities if e.model]
-        unique_names = list({e.model.name.split('.')[0] for e in entities})
+        unique_names = list(set(e.model.name.split('.')[0] for e in entities))
         # print(unique_names)
-        changed_models = list()
+        changed_models = []
 
         for name in unique_names:
             matches = [e for e in application.asset_folder.glob(f'**/{name}.blend')]
+
+            if not matches or not application.blender_paths:    # reload bam files converted from obj
+                [e for e in application.asset_folder.glob(f'**/{name}.obj')]
+                if matches:
+                    m = mesh_importer.load_model(f'{matches[0]}.obj')
+                    print('-----------------load:', f'{matches[0]}.obj', m)
+                    mesh_importer.imported_meshes[name] = m
+                    changed_models.append(name)
+                    continue
+
             if not matches:
                 continue
 
-            blend_path = matches[0]
+            model_path = matches[0]
             # ignore internal models
-            if blend_path.parent == application.internal_models_folder or '/build/' in str(blend_path):
+            if model_path.parent == application.internal_models_folder or '/build/' in str(model_path):
                 continue
 
             if name in mesh_importer.imported_meshes:
                 mesh_importer.imported_meshes.pop(name, None)
 
-            # print('model is made from .blend file:', blend_path)
-            mesh_importer.compress_models(path=blend_path.parent, name=name)
+            # print('model is made from .blend file:', model_path)
+            mesh_importer.blend_to_obj(model_path)
+            mesh_importer.obj_to_ursinamesh(application.models_compressed_folder, application.models_compressed_folder, return_mesh=True, save_to_file=False, delete_obj=True).save(f'{name}.bam')
             # print(f'compressed {name}.blend sucessfully')
             changed_models.append(name)
 
@@ -188,12 +206,12 @@ class HotReloader(Entity):
         for e in entities:
             if e.model:
                 name = e.model.name.split('.')[0]
-                print(name, changed_models, name in changed_models)
+                # print(name, changed_models, name in changed_models)
                 if name in changed_models:
                     e.model = None
                     e.model = name
                     e.origin = e.origin
-                    print('reloaded model:', name, e.model)
+                    print('reloaded model:', name)
 
 
     def reload_shaders(self):
@@ -243,15 +261,15 @@ class HotReloader(Entity):
 #         self.file_path = path
 #
 #         self.add_script(Scrollable(min=0, max=10))
-#         self.bg = Entity(parent=self, model='quad', scale_x=camera.aspect_ratio, color=color.color(0,0,0,.9), z=1, collider='box', origin_y=.5, y=.5, scale_y=10, eternal=True)
+#         self.bg = Entity(parent=self, model='quad', scale_x=camera.aspect_ratio, color=color.hsv(0,0,0,.9), z=1, collider='box', origin_y=.5, y=.5, scale_y=10, eternal=True)
 #         self.header = Text(parent=self, x=-.5, y=.475, text=self.file_path.name)
 #         self.text_editor = TextField(parent=self, font_size=14, max_lines=50)
-#         self.text_editor.text_entity.text_colors['default'] = color.color(219, .0, .95)
-#         self.text_editor.text_entity.text_colors['class_color'] = color.color(40, .61, .9)
-#         self.text_editor.text_entity.text_colors['kw_color'] = color.color(210, .59, .94)
-#         self.text_editor.text_entity.text_colors['func_color'] = color.color(250, .46, .87)
-#         self.text_editor.text_entity.text_colors['param_clor'] = color.color(30, .71, .92)
-#         self.text_editor.text_entity.text_colors['string_color'] = color.color(90, .48, .86)
+#         self.text_editor.text_entity.text_colors['default'] = color.hsv(219, .0, .95)
+#         self.text_editor.text_entity.text_colors['class_color'] = color.hsv(40, .61, .9)
+#         self.text_editor.text_entity.text_colors['kw_color'] = color.hsv(210, .59, .94)
+#         self.text_editor.text_entity.text_colors['func_color'] = color.hsv(250, .46, .87)
+#         self.text_editor.text_entity.text_colors['param_clor'] = color.hsv(30, .71, .92)
+#         self.text_editor.text_entity.text_colors['string_color'] = color.hsv(90, .48, .86)
 #
 #
 #         self.text_editor.replacements = {
@@ -338,7 +356,7 @@ if __name__ == '__main__':
     from ursina import *
     app = Ursina()
     # hot_reloader = HotReloader()
-    application.hot_reloader.path = application.asset_folder.parent.parent / 'samples' / 'platformer.py'
+    # application.hot_reloader.path = application.asset_folder.parent.parent / 'samples' / 'platformer.py'
     # Sky()
 
     '''
@@ -369,6 +387,8 @@ if __name__ == '__main__':
 
 
     Sky(color=color.light_gray)
+
+    print(Sky.instances)
     EditorCamera()
 
     def update():

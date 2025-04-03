@@ -12,7 +12,7 @@ class Slider(Entity):
         if default is None:
             default = min
         self.default = default
-        self.step = 0
+        self.step = 0                   # for example, setting .step to 1, would make the slider snap to the closest integer.
         self.height = height
 
         self.on_value_changed = None    # set this to a function you want to be called when the slider changes

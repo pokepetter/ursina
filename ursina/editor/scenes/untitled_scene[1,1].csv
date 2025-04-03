@@ -1,0 +1,2 @@
+class;parent;position;rotation;scale;model;origin;shader;color
+Entity;;Vec3(0.8914, 0.3707, -3.1759);Vec3(0, 40.2606, 0);Vec3(5.452, 5.452, 5.452);'wireframe_cube';Vec3(0, -0.5, 0);'lit_with_shadows_shader';color.white

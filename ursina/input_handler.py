@@ -1,9 +1,18 @@
+"""
+ursina/input_handler.py
+
+This module handles input events and key bindings for the Ursina engine.
+It provides functionality for managing key states, rebinding keys, and handling input events.
+"""
+
 from collections import defaultdict
 from enum import Enum
 
 
-
 class Keys(Enum):
+    """
+    Enum class representing various input keys and events.
+    """
     left_mouse_down = 'left mouse down'
     left_mouse_up = 'left mouse up'
     middle_mouse_down = 'middle mouse down'
@@ -76,34 +85,62 @@ class Keys(Enum):
     gamepad_right_shoulder = 'gamepad right shoulder'
     gamepad_right_shoulder_up = 'gamepad right shoulder up'
 
-
-
     def __hash__(self):
+        """
+        Override the hash method to use the value of the enum.
+        """
         return hash(self.value)
 
     def __eq__(self, other):
-        # overridden __eq__ to allow for both str and InputEvent comparisons
+        """
+        Override the equality method to allow for both str and InputEvent comparisons.
+        """
         if isinstance(other, Keys):
             return self.value == other.value
         return self.value == other
 
 
-
+# Dictionary to keep track of held keys and their states
 held_keys = defaultdict(lambda: 0)
+# Dictionary to store key rebindings
 rebinds = dict()
 
 
 def bind(original_key, alternative_key):
-    rebinds[original_key] = alternative_key
+    """
+    Bind an alternative key to an original key.
+
+    Args:
+        original_key (str): The original key to bind.
+        alternative_key (str): The alternative key to bind to the original key.
+    """
+    if not original_key in rebinds:
+        rebinds[original_key] = {original_key, }
+
+    rebinds[original_key].add(alternative_key)
+
     if ' mouse ' in alternative_key:
-        rebinds[original_key + ' up'] = alternative_key[:-5] + ' up'
+        if not rebinds.get(f'{original_key} up'):
+            rebinds[f'{original_key} up'] = {original_key, }
+        rebinds[f'{original_key} up'].add(f'{alternative_key[:-5]} up')
         return
 
-    rebinds[original_key + ' hold'] = alternative_key + ' hold'
-    rebinds[original_key + ' up'] = alternative_key + ' up'
+    if not rebinds.get(f'{original_key} hold'):
+        rebinds[f'{original_key} hold'] = {f'{original_key} hold', }
+    rebinds[f'{original_key} hold'].add(f'{alternative_key} hold')
+
+    if not rebinds.get(f'{original_key} up'):
+        rebinds[f'{original_key} up'] = {f'{original_key} up', }
+    rebinds[f'{original_key} up'].add(f'{alternative_key} up')
 
 
 def unbind(key):
+    """
+    Unbind a key and its associated bindings.
+
+    Args:
+        key (str): The key to unbind.
+    """
     if key in rebinds:
         del rebinds[key]
         del rebinds[key + ' hold']
@@ -113,46 +150,60 @@ def unbind(key):
 
 
 def rebind(to_key, from_key):
+    """
+    Rebind a key to another key.
+
+    Args:
+        to_key (str): The key to rebind.
+        from_key (str): The key to bind to.
+    """
     unbind(to_key)
     bind(to_key, from_key)
 
 
 def input(key):
+    """
+    Handle input events and update the held_keys dictionary.
+
+    Args:
+        key (str): The input key.
+    """
     if key.endswith('hold') or key == Keys.scroll_down or key == Keys.scroll_up:
         return
 
     key = key.replace('mouse down', 'mouse')
 
-    if key.endswith('up') and key != 'page up':
+    if key.endswith(' up') and key != 'page up' and key != 'gamepad dpad up':
         held_keys[key[:-3]] = 0
     else:
         held_keys[key] = 1
 
 
+def get_combined_key(key):
+    """
+    Add control, shift, and alt prefix to the key.
+
+    Args:
+        key (str): The input key.
+
+    Returns:
+        str: The combined key with prefixes.
+    """
+    return ''.join(e+'+' for e in ('control', 'shift', 'alt') if held_keys[e] and not e == key) + key
+
 
 if __name__ == '__main__':
     from ursina import *
+    from ursina import Ursina, input_handler
 
-    app = Ursina()
-    input_handler.rebind('z', 'w')  # 'z'-key will now be registered as 'w'-key
+    app = Ursina(borderless=False)
+    input_handler.bind('z', 'w')  # 'z'-key will now be registered as 'w'-key
+    input_handler.bind('left mouse down', 'attack')  # 'left mouse down'-key will now send 'attack'to input functions
+    input_handler.bind('gamepad b', 'attack')  # 'gamepad b'-key will now be registered as 'attack'-key
 
-    def test():
-        print('----')
-    # input_handler.rebind('a', 'f')
     def input(key):
-        print(key)
-        if key == 'left mouse down':
-            print('pressed left mouse button')
-
-        if key == Keys.left_mouse_down:   # same as above, but with Keys enum.
-            print('pressed left mouse button')
-
-
-    def update():
-        for key, value in held_keys.items():
-            if value != 0:
-                print(key, value)
-
-
+        print('got key:', key)
+        if key == 'attack':
+            destroy(Entity(model='cube', color=color.blue), delay=.2)
 
     app.run()

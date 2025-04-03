@@ -71,12 +71,12 @@ void main() {
 ''',
 geometry='',
 default_input = {
-    'top_color': color.color(220, .12, .82),
-    'bottom_color': color.color(285, .13, .47),
-    'left_color': color.color(217, .3, .68),
-    'right_color': color.color(0, .25, .93),
-    'front_color': color.color(231, .08, .69),
-    'back_color': color.color(240, .05, .76),
+    'top_color': color.hsv(220, .12, .82),
+    'bottom_color': color.hsv(285, .13, .47),
+    'left_color': color.hsv(217, .3, .68),
+    'right_color': color.hsv(0, .25, .93),
+    'front_color': color.hsv(231, .08, .69),
+    'back_color': color.hsv(240, .05, .76),
     }
 )
 

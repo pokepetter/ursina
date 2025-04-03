@@ -2,7 +2,7 @@ from ursina import *
 
 
 class Circle(Mesh):
-    def __init__(self, resolution=16, radius=.5, rotate=True, mode='ngon', **kwargs):
+    def __init__(self, resolution=16, radius=.5, mode='ngon', **kwargs):
         origin = Entity()
         point = Entity(parent=origin)
         point.y = radius
@@ -21,8 +21,8 @@ class Circle(Mesh):
 
 if __name__ == '__main__':
     app = Ursina()
-    e = Entity(model=Circle(8, mode='line', thickness=10), color=color.color(60,1,1,.3))
-    print(e.model.recipe)
+    e = Entity(model=Circle(8, mode='line', thickness=10), color=color.hsv(60,1,1,.3))
+    print(e.model)
     origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
     ed = EditorCamera(rotation_speed = 200, panning_speed=200)
     app.run()

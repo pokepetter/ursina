@@ -1,22 +1,74 @@
+"""
+ursina/mesh_importer.py
+
+This module provides functions for loading and importing 3D models into the Ursina engine.
+It supports various file formats such as .bam, .ursinamesh, .obj, .glb, .gltf, and .blend.
+The module also includes functions for converting Blender files to OBJ format and loading Blender scenes.
+
+Dependencies:
+- os
+- platform
+- subprocess
+- copy
+- pathlib.Path
+- ursina.mesh.Mesh
+- ursina.application
+- ursina.color
+- time.perf_counter
+- ursina.string_utilities.print_info
+- ursina.string_utilities.print_warning
+- ursina.vec3.Vec3
+- panda3d.core
+- gltf
+- builtins
+- ursina.sequence.Func
+"""
+
 import os
-import glob
 import platform
 import subprocess
 from copy import copy, deepcopy
 from pathlib import Path
 from ursina.mesh import Mesh
-from ursina import application
-from panda3d.core import CullFaceAttrib
+from ursina import application, color
 from time import perf_counter
 from ursina.string_utilities import print_info, print_warning
-from ursina import color
+from ursina.vec3 import Vec3
+import panda3d.core as p3d
+import gltf
+import builtins
+from ursina.sequence import Func
+from ursina import application
+
 
 imported_meshes = dict()
 blender_scenes = dict()
+# folders = (application.asset_folder, )
 
-def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursinamesh', '.obj', '.glb', '.gltf', '.blend'), use_deepcopy=False):
+def load_model(name, folder=None, file_types=('.bam', '.ursinamesh', '.obj', '.glb', '.gltf', '.blend'), use_deepcopy=False, gltf_no_srgb=Func(getattr, application, 'gltf_no_srgb')):
+    """
+    Load a 3D model from the specified folder and file types.
+
+    Args:
+        name (str): The name of the model to load.
+        folder (Path, optional): The folder to search for the model. Defaults to None.
+        file_types (tuple, optional): The file types to search for. Defaults to ('.bam', '.ursinamesh', '.obj', '.glb', '.gltf', '.blend').
+        use_deepcopy (bool, optional): Whether to use deepcopy for the model. Defaults to False.
+        gltf_no_srgb (Func, optional): Function to determine if GLTF should use sRGB. Defaults to Func(getattr, application, 'gltf_no_srgb').
+
+    Returns:
+        NodePath: The loaded model as a Panda3D NodePath.
+
+    Raises:
+        TypeError: If the name is not a string or the folder is not a Path.
+        Exception: If there is an error loading a .ursinamesh file.
+    """
+    if callable(gltf_no_srgb):
+        gltf_no_srgb = gltf_no_srgb()
+
     if not isinstance(name, str):
         raise TypeError(f"Argument save must be of type str, not {type(str)}")
+        
 
     if '.' in name:
         full_name = name
@@ -37,46 +89,66 @@ def load_model(name, path=application.asset_folder, file_types=('.bam', '.ursina
         except:
             pass
 
+    if folder is not None:
+        if not isinstance(folder, Path):
+            raise TypeError(f'folder must be a Path, not a {type(folder)}')
+        _folders = (folder,)
+    
+    else:
+        _folders = (application.models_compressed_folder, application.asset_folder, application.internal_models_compressed_folder)
+
+
     for filetype in file_types:
-        # warning: glob is case-insensitive on windows, so m.path will be all lowercase
-        for filename in path.glob(f'**/{name}{filetype}'):
-            if filetype == '.bam':
-                print_info('loading bam')
-                return loader.loadModel(filename)  # type: ignore
+        if use_deepcopy and filetype == '.bam':
+            continue
+        for folder in _folders:
+            # warning: glob is case-insensitive on windows, so m.path will be all lowercase
+            for file_path in folder.glob(f'**/{name}{filetype}'):
+                if filetype == '.bam':
+                    # print_info('loading bam')
+                    return builtins.loader.loadModel(file_path)  # type: ignore
 
-            if filetype == '.ursinamesh':
-                try:
-                    with open(filename) as f:
-                        m = eval(f.read())
-                        m.path = filename
-                        m.name = name
-                        imported_meshes[name] = m
-                        return m
-                except:
-                    print_warning('invalid ursinamesh file:', filename)
+                if filetype == '.gltf' or filetype == '.glb':
+                    gltf_settings = gltf.GltfSettings()
+                    gltf_settings.no_srgb = gltf_no_srgb
+                    model_root = gltf.load_model(str(file_path), gltf_settings=gltf_settings)
+                    imported_meshes[name] = p3d.NodePath(model_root)
+                    return p3d.NodePath(model_root)
+
+                if filetype == '.ursinamesh':
+                    try:
+                        with open(file_path) as f:
+                            m = eval(f.read())
+                            m.path = file_path
+                            m.name = name
+                            m.vertices = [Vec3(*v) for v in m.vertices]
+                            imported_meshes[name] = m
+                            return m
+                    except:
+                        raise Exception('invalid ursinamesh file:', file_path)
 
 
-            if filetype == '.obj':
-                # print('found obj', filename)
-                # m = loader.loadModel(filename)
-                # m.setAttrib(CullFaceAttrib.make(CullFaceAttrib.MCullCounterClockwise))
-                m = obj_to_ursinamesh(path=path, name=name, return_mesh=True)
-                m.path = filename
-                m.name = name
-                imported_meshes[name] = m
-                return m
+                if filetype == '.obj':
+                    # print('found obj', file_path)
+                    m = obj_to_ursinamesh(folder=folder, name=name, return_mesh=True)
+                    m.path = file_path
+                    m.name = name
+                    imported_meshes[name] = m
+                    if not use_deepcopy:
+                        m.save(f'{name}.bam')
 
-            elif filetype == '.blend':
-                print_info('found blend file:', filename)
-                if compress_models(path=path, name=name):
-                    # obj_to_ursinamesh(name=name)
-                    return load_model(name, path)
+                    return m
 
-            else:
-                try:
-                    return loader.loadModel(filename)  # type: ignore
-                except:
-                    pass
+                elif filetype == '.blend':
+                    print_info('found blend file:', file_path)
+                    if blend_to_obj(file_path):
+                        # obj_to_ursinamesh(name=name)
+                        return load_model(name, folder, use_deepcopy=use_deepcopy)
+                else:
+                    try:
+                        return builtins.loader.loadModel(file_path)  # type: ignore
+                    except:
+                        pass
 
     return None
 
@@ -116,7 +188,31 @@ if application.development_mode:
             application.blender_paths['default'] = blender_exec
 
 
-def load_blender_scene(name, path=application.asset_folder, load=True, reload=False, skip_hidden=True, models_only=False, uvs=True, vertex_colors=True, normals=True, decimals=4):
+def load_blender_scene(name, path=Func(getattr, application, 'asset_folder'), reload=False, skip_hidden=True, models_only=False, uvs=True, vertex_colors=True, normals=True, triangulate=True, decimals=4):
+    """
+    Load a Blender scene and convert it to Ursina format.
+
+    Args:
+        name (str): The name of the Blender scene to load.
+        path (Path, optional): The path to the Blender file. Defaults to Func(getattr, application, 'asset_folder').
+        reload (bool, optional): Whether to reload the scene if it already exists. Defaults to False.
+        skip_hidden (bool, optional): Whether to skip hidden objects. Defaults to True.
+        models_only (bool, optional): Whether to load only models. Defaults to False.
+        uvs (bool, optional): Whether to include UVs. Defaults to True.
+        vertex_colors (bool, optional): Whether to include vertex colors. Defaults to True.
+        normals (bool, optional): Whether to include normals. Defaults to True.
+        triangulate (bool, optional): Whether to triangulate the mesh. Defaults to True.
+        decimals (int, optional): The number of decimal places for vertex coordinates. Defaults to 4.
+
+    Returns:
+        dict: The loaded Blender scene as a dictionary.
+
+    Raises:
+        ValueError: If no Blender file is found at the specified path.
+    """
+    if callable(path):
+        path = path()
+
     scenes_folder = Path(application.asset_folder / 'scenes')
     if not scenes_folder.exists():
         scenes_folder.mkdir()
@@ -125,15 +221,12 @@ def load_blender_scene(name, path=application.asset_folder, load=True, reload=Fa
     # print('loading:', out_file_path)
     if reload or not out_file_path.exists():
         print_info('reload:')
-        t = perf_counter()
         blend_file = tuple(path.glob(f'**/{name}.blend'))
         if not blend_file:
             raise ValueError('no blender file found at:', path / name)
 
         blend_file = blend_file[0]
         print_info('loading blender scene:', blend_file, '-->', out_file_path)
-        blender = get_blender(blend_file)
-        script_path = application.internal_scripts_folder / '_blender_scene_to_ursina.py'
 
         args = [
             get_blender(blend_file),
@@ -147,6 +240,7 @@ def load_blender_scene(name, path=application.asset_folder, load=True, reload=Fa
             '--uvs' if uvs else '',
             '--normals' if normals else '',
             '--vertex_colors' if vertex_colors else '',
+            '--triangulate' if triangulate else '',
             f'--decimals={decimals}',
         ]
 
@@ -168,15 +262,28 @@ def load_blender_scene(name, path=application.asset_folder, load=True, reload=Fa
 
 
 def get_blender(blend_file):    # try to get a matching blender version in case we have multiple blender version installed
+    """
+    Get the path to the Blender executable for the specified Blender file.
+
+    Args:
+        blend_file (Path): The path to the Blender file.
+
+    Returns:
+        Path: The path to the Blender executable.
+
+    Raises:
+        Warning: If no Blender installation is found.
+    """
     if not application.blender_paths:
-        raise Exception('error: trying to load .blend file, but no blender installation was found. blender_paths:', application.blender_paths)
+        print_warning(f"Error: Trying to load .blend file, but no blender installation was found. blender_paths: {application.blender_paths}. If Blender is not installed, install it. If Blender is installed, but not found, make sure to install it to the default install location. If it's still not found, you can provide a custom path like this: application.blender_paths['default'] = Path('C:\Program Files\...')")
+        return None
 
     if len(application.blender_paths) == 1:
         return application.blender_paths['default']
 
     with open(blend_file, 'rb') as f:
         try:
-            blender_version_number = (f.read(12).decode("utf-8"))[-3:]   # get version from start of .blend file e.g. 'BLENDER-v280'
+            blender_version_number = (f.read(12).decode("utf-8", "strict"))[-3:]   # get version from start of .blend file e.g. 'BLENDER-v280'
             blender_version_number = blender_version_number[0] + '.' + blender_version_number[1:2]
             print_info('blender_version:', blender_version_number)
             if blender_version_number in application.blender_paths:
@@ -189,48 +296,76 @@ def get_blender(blend_file):    # try to get a matching blender version in case 
             return application.blender_paths['default']
 
 
-def compress_models(path=None, outpath=application.compressed_models_folder, name='*'):
+def blend_to_obj(blend_file:Path, out_folder=Func(getattr, application, 'models_compressed_folder'), export_mtl=True):
+    """
+    Convert a Blender file to OBJ format.
 
-    if not application.compressed_models_folder.exists():
-        application.compressed_models_folder.mkdir()
+    Args:
+        blend_file (Path): The path to the Blender file.
+        out_folder (Path, optional): The folder to save the OBJ file. Defaults to Func(getattr, application, 'models_compressed_folder').
+        export_mtl (bool, optional): Whether to export the MTL file. Defaults to True.
+
+    Returns:
+        list: A list of exported Blender files.
+    """
+    if callable(out_folder):
+        out_folder = out_folder()
+
+    if not out_folder.exists():
+        out_folder.mkdir()
 
     export_script_path = application.internal_scripts_folder / '_blend_export.py'
     exported = []
+    export_mtl_arg = '--export_mtl' if export_mtl else ''
 
-    for blend_file in path.glob(f'**/{name}.blend'):
-        blender = get_blender(blend_file)
+    blender = get_blender(blend_file)
 
-        out_file_path = outpath / (blend_file.stem + '.obj')
-        print_info('converting .blend file to .obj:', blend_file, '-->', out_file_path, 'using:', blender)
+    name = f'{blend_file.stem}.obj'
+    out_file_path = out_folder / name
+    print_info('converting .blend file to .obj:', blend_file, '-->', out_file_path, 'using:', blender)
 
-        if platform.system() == 'Windows':
-            subprocess.call(f'''"{blender}" "{blend_file}" --background --python "{export_script_path}" "{out_file_path}"''')
-        else:
-            subprocess.run((blender, blend_file, '--background', '--python', export_script_path, out_file_path))
+    if platform.system() == 'Windows':
+        subprocess.call(f'''"{blender}" "{blend_file}" --background --python "{export_script_path}" {export_mtl_arg} "{out_file_path}"''')
+    else:
+        subprocess.run((blender, blend_file, '--background', '--python', export_script_path, export_mtl_arg, out_file_path))
 
-        exported.append(blend_file)
+    exported.append(blend_file)
 
     return exported
 
 
-def obj_to_ursinamesh(
-    path=application.compressed_models_folder,
-    outpath=application.compressed_models_folder,
-    name='*',
-    return_mesh=True,
-    save_to_file=False,
-    delete_obj=False
-    ):
+def obj_to_ursinamesh(folder=Func(getattr, application, 'models_compressed_folder'), out_folder=Func(getattr, application, 'models_compressed_folder'), name='*', return_mesh=True, save_to_file=False, delete_obj=False):
+    """
+    Convert an OBJ file to Ursina Mesh format.
+
+    Args:
+        folder (Path, optional): The folder containing the OBJ file. Defaults to Func(getattr, application, 'models_compressed_folder').
+        out_folder (Path, optional): The folder to save the Ursina Mesh file. Defaults to Func(getattr, application, 'models_compressed_folder').
+        name (str, optional): The name of the OBJ file. Defaults to '*'.
+        return_mesh (bool, optional): Whether to return the mesh. Defaults to True.
+        save_to_file (bool, optional): Whether to save the mesh to a file. Defaults to False.
+        delete_obj (bool, optional): Whether to delete the OBJ file after conversion. Defaults to False.
+
+    Returns:
+        Mesh: The converted Ursina Mesh.
+
+    Raises:
+        Warning: If there is an error in the OBJ file.
+    """
+    if callable(folder):
+        folder = folder()
+    if callable(out_folder):
+        out_folder = out_folder()
 
     if name.endswith('.obj'):
         name = name[:-4]
 
-    for f in path.glob(f'**/{name}.obj'):
+    for file_path in folder.glob(f'**/{name}.obj'):
         # filepath = path / (os.path.splitext(f)[0] + '.obj')
-        print('read obj at:', f)
+        print('read obj at:', file_path)
 
 
-        with f.open('r') as file:
+        with file_path.open('r') as file:
             lines = file.readlines()
 
         verts = []
@@ -243,16 +378,22 @@ def obj_to_ursinamesh(
         normals = [] # final normals made getting norms with norm_indices
 
         vertex_colors = []
+        vertex_colors_packed = []
         current_color = None
         mtl_data = None
         mtl_dict = {}
 
         # parse the obj file to a Mesh
-        for i, l in enumerate(lines):
+        for i, l in enumerate(lines):  # noqa: E741
             if l.startswith('v '):
-                vert = [float(v) for v in l[2:].strip().split(' ')]
+                parts = [float(v) for v in l[2:].strip().split(' ')]
+                vert = parts[:3]
                 vert[0] = -vert[0]
                 verts.append(tuple(vert))
+                if len(parts) > 3:
+                    # current_color = color.rgb(*parts[3:])
+                    vertex_colors_packed.append(color.rgb(*parts[3:]))
+
 
             elif l.startswith('vn '):
                 n = l[3:].strip().split(' ')
@@ -264,8 +405,8 @@ def obj_to_ursinamesh(
                 uvs.append(tuple(float(e) for e in uv))
 
             elif l.startswith('f '):
-                l = l[2:]
-                l = l.split(' ')
+                l = l[2:]  # noqa: E741
+                l = l.split(' ')  # noqa: E741
 
                 try:
                     tri = tuple(int(t.split('/')[0])-1 for t in l if t != '\n')
@@ -276,17 +417,24 @@ def obj_to_ursinamesh(
                     tris.extend(tri)
                     if current_color:
                         vertex_colors.extend([current_color for i in range(3)])
+                    elif vertex_colors_packed:
+                        vertex_colors.extend([vertex_colors_packed[idx] if idx < len(vertex_colors_packed) else color.white for idx in tri])
 
                 elif len(tri) == 4:
                     tris.extend((tri[0], tri[1], tri[2], tri[2], tri[3], tri[0]))
                     if current_color:
                         vertex_colors.extend([current_color for i in range(6)])
+                    elif vertex_colors_packed:
+                        vertex_colors.extend([vertex_colors_packed[idx] for idx in (tri[0], tri[1], tri[2], tri[2], tri[3], tri[0])])
 
                 else: # ngon
                     for i in range(1, len(tri)-1):
                         tris.extend((tri[i], tri[i+1], tri[0]))
                     if current_color:
                         vertex_colors.extend([current_color for i in range(len(tri))])
+                    elif vertex_colors_packed:
+                        for i in range(1, len(tri)-1):
+                            vertex_colors.extend([vertex_colors_packed[idx] for idx in (tri[i], tri[i+1], tri[0])])
 
                 try:
                     uv = tuple(int(t.split('/')[1])-1 for t in l)
@@ -313,9 +461,9 @@ def obj_to_ursinamesh(
                     pass
 
             elif l.startswith('mtllib '):    # load mtl file
-                mtl_file_name = Path(f).with_suffix('.mtl')
+                mtl_file_name = file_path.with_suffix('.mtl')
                 if mtl_file_name.exists():
-                    with open(mtl_file_name) as mtl_file:
+                    with open(mtl_file_name, mode='r', encoding='utf-8') as mtl_file:
                         mtl_data = mtl_file.readlines()
 
                         for i in range(len(mtl_data)-1):
@@ -344,52 +492,44 @@ def obj_to_ursinamesh(
                 normals=normals,
                 uvs=[uvs[uid] for uid in uv_indices],
                 colors=vertex_colors
-            )
+                )
 
-        meshstring = ''
-        meshstring += 'Mesh('
-
-        meshstring += '\nvertices='
-        meshstring += str(tuple(verts[t] for t in tris))
-
-        if vertex_colors:
-            meshstring += '\ncolors='
-            meshstring += str(tuple(col for col in vertex_colors))
-
-        if uv_indices:
-            meshstring += ', \nuvs='
-            meshstring += str(tuple(uvs[uid] for uid in uv_indices))
-
-        if normals:
-            meshstring += ', \nnormals='
-            meshstring += str(normals)
-
-        meshstring += ''', \nmode='triangle')'''
+        mesh = Mesh(vertices=tuple(verts[t] for t in tris), colors=tuple(col for col in vertex_colors), uvs=tuple(uvs[uid] for uid in uv_indices), normals=normals)
 
         if not save_to_file:
-            return meshstring
+            return mesh
 
-        outfilepath = outpath / (os.path.splitext(f)[0] + '.ursinamesh')
-        with open(outfilepath, 'w') as file:
-            file.write(meshstring)
+        out_path = (out_folder / file_path.stem).with_suffix('.ursinamesh')
+        # with open(out_path, 'w') as file:
+        #     file.write(meshstring)
+        mesh.save(folder=out_folder, name=f'{file_path.stem}.ursinamesh')
 
         if delete_obj:
-            os.remove(outfilepath)
+            os.remove((out_folder / file_path.stem).with_suffix('.obj'))
 
-        print_info('saved ursinamesh to:', outfilepath)
+        print_info('saved ursinamesh to:', out_path)
 
 # faster, but does not apply modifiers
-def compress_models_fast(model_name=None, write_to_disk=False):
+def blend_to_obj_fast(model_name=None, write_to_disk=False):
+    """
+    Convert a Blender file to OBJ format using the tinyblend library.
+
+    Args:
+        model_name (str, optional): The name of the model to convert. Defaults to None.
+        write_to_disk (bool, optional): Whether to write the OBJ file to disk. Defaults to False.
+
+    Returns:
+        str: The converted OBJ file content.
+    """
     print_info('find models')
     from tinyblend import BlenderFile  # type: ignore
-    application.compressed_models_folder.mkdir(parents=True, exist_ok=True)
+    application.models_compressed_folder.mkdir(parents=True, exist_ok=True)
 
     files = os.listdir(application.models_folder)
-    compressed_files = os.listdir(application.compressed_models_folder)
 
     for f in files:
         if f.endswith('.blend'):
-            # print('f:', application.compressed_models_folder + '/' + f)
+            # print('f:', application.models_compressed_folder + '/' + f)
             print('compress______', f)
             blend = BlenderFile(application.models_folder + '/' + f)
             number_of_objects = len(blend.list('Object'))
@@ -410,7 +550,7 @@ def compress_models_fast(model_name=None, write_to_disk=False):
                 file_name = ''.join([f.split('.')[0], '.ursinamesh'])
                 if number_of_objects > 1:
                     file_name = ''.join([f.split('.')[0], '_', object_name, '.ursinamesh'])
-                file_path = os.path.join(application.compressed_models_folder, file_name)
+                file_path = os.path.join(application.models_compressed_folder, file_name)
                 print(file_path)
 
                 tris = tuple(triindex.v for triindex in o.data.mloop)
@@ -434,15 +574,32 @@ def compress_models_fast(model_name=None, write_to_disk=False):
 
                 return file_content
 
-def ursina_mesh_to_obj(mesh, name='', out_path=application.compressed_models_folder, max_decimals=3):
+def ursina_mesh_to_obj(mesh, name='', out_path=Func(getattr, application, 'models_compressed_folder'), max_decimals=5, flip_faces=True):
+    """
+    Convert a Ursina Mesh to OBJ format.
+
+    Args:
+        mesh (Mesh): The Ursina Mesh to convert.
+        name (str, optional): The name of the OBJ file. Defaults to ''.
+        out_path (Path, optional): The folder to save the OBJ file. Defaults to Func(getattr, application, 'models_compressed_folder').
+        max_decimals (int, optional): The maximum number of decimal places for vertex coordinates. Defaults to 5.
+        flip_faces (bool, optional): Whether to flip the faces of the mesh. Defaults to True.
+    """
+    if callable(out_path):
+        out_path = out_path()
+
     from ursina.string_utilities import camel_to_snake
+
+    obj = ''
+    obj += f'mtllib {name}.mtl\n'
+    obj += f'usemtl {name}\n'
 
     if not name:
         name = camel_to_snake(mesh.__class__.__name__)
-    obj = 'o ' + name + '\n'
+    obj += 'o ' + name + '\n'
+    verts = mesh.vertices
 
-
-    for v in mesh.vertices:
+    for v in verts:
         v = [round(e, max_decimals) for e in v]
         obj += f'v {v[0]} {v[1]} {v[2]}\n'
 
@@ -460,9 +617,15 @@ def ursina_mesh_to_obj(mesh, name='', out_path=application.compressed_models_fol
             new_tris = []
             for t in tris:
                 if len(t) == 3:
-                    new_tris.extend([t[0], t[1], t[2]])
+                    if not flip_faces:
+                        new_tris.extend([t[0], t[1], t[2]])
+                    else:
+                        new_tris.extend([t[2], t[1], t[0]])
                 elif len(t) == 4: # turn quad into tris
-                    new_tris.extend([t[0], t[1], t[2], t[2], t[3], t[0]])
+                    if not flip_faces:
+                        new_tris.extend([t[0], t[1], t[2], t[2], t[3], t[0]])
+                    else:
+                        new_tris.extend([t[2], t[1], t[0], t[0], t[3], t[2]])
 
             tris = new_tris
 
@@ -482,7 +645,7 @@ def ursina_mesh_to_obj(mesh, name='', out_path=application.compressed_models_fol
             obj += '/'+str(t+1)
         obj += ' '
 
-
+    obj += '\n'
     # print(obj)
     with open(out_path / (name + '.obj'), 'w') as f:
         f.write(obj)
@@ -491,21 +654,23 @@ def ursina_mesh_to_obj(mesh, name='', out_path=application.compressed_models_fol
 
 
 def compress_internal():
-    compress_models(application.internal_models_folder)
-    obj_to_ursinamesh(
-        application.internal_models_compressed_folder,
-        application.internal_models_compressed_folder,
-        return_mesh=False, save_to_file=True, delete_obj=True
-        )
+    """
+    Compress internal models by converting Blender files to OBJ format and then to Ursina Mesh format.
+    """
+    for blend_file in application.internal_models_folder.glob('*.blend'):
+        blend_to_obj(blend_file, export_mtl=False)
+        obj_to_ursinamesh(application.internal_models_compressed_folder, application.internal_models_compressed_folder, return_mesh=False, save_to_file=True, delete_obj=True)
 
 
 if __name__ == '__main__':
-    # compress_internal()
+    compress_internal()
     from ursina import *
+    from ursina import Ursina, Entity, EditorCamera, Sky
     app = Ursina()
     # print('imported_meshes:\n', imported_meshes)
     # Entity(model='quad').model.save('quad.bam')
-    # m = obj_to_ursinamesh(path=application.asset_folder.parent / 'samples', name='procedural_rock_0')
+    m = obj_to_ursinamesh(folder=application.asset_folder.parent / 'samples', name='procedural_rock_0', save_to_file=False, delete_obj=False)
+    print(m.serialize())
     # Entity(model=m)
     # EditorCamera()
 
@@ -518,10 +683,11 @@ if __name__ == '__main__':
     # Entity(model='race')
     # Entity(model='ambulance', x=1.5)
 
-    application.asset_folder = Path(r'''C:\Users\Petter\Downloads''')
-    t = perf_counter()
-    Entity(model='untitled')
-    print('-------', perf_counter() - t)
+    # application.asset_folder = Path(r'''C:\Users\Petter\Downloads''')
+    # t = perf_counter()
+    # Entity(model='untitled')
+    # print('-------', perf_counter() - t)
+    # m = load_model('cube', use_deepcopy=True)
     # ground = Entity(model='plane', scale=10, texture='brick', texture_scale=Vec2(4))
     # DirectionalLight()
 

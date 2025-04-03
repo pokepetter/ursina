@@ -37,25 +37,25 @@ from ursina import *
 #     return a
 
 
-def ursfx(volume_curve, volume=.75, wave='sine', pitch=0, pitch_change=0, speed=1, pitch_curve=curve.linear):  # play a retro style sound effect
-    a = Audio(wave, loop=True, pitch=pow(1 / 1.05946309436, -pitch), volume=volume_curve[0][1] * volume)
+def ursfx(volume_curve, volume=.75, wave='sine', pitch=0, pitch_change=0, speed=1, pitch_curve=curve.linear, ignore_paused=False):  # play a retro style sound effect
+    a = Audio(wave, loop=True, pitch=pow(1 / 1.05946309436, -pitch), volume=volume_curve[0][1] * volume, ignore_paused=ignore_paused)
 
-    cumulative_time = 0
     for i in range(len(volume_curve)-1):
-        a.animate('volume', volume_curve[i+1][1] * volume, duration=(volume_curve[i+1][0] - volume_curve[i][0]) / speed, delay=volume_curve[i][0] / speed, curve=curve.linear)
+        invoke(a.animate, 'volume', volume_curve[i+1][1] * volume, duration=(volume_curve[i+1][0] - volume_curve[i][0]) / speed, curve=curve.linear, unscaled=True, delay=volume_curve[i][0]/speed)
 
-    a.animate('pitch', pow(1 / 1.05946309436, -pitch-pitch_change), duration=volume_curve[i-1][0] / speed, curve=pitch_curve)
-    a.animations.append(invoke(a.stop, delay=volume_curve[4][0] / speed))
+    a.animate('pitch', pow(1 / 1.05946309436, -pitch-pitch_change), duration=volume_curve[i-1][0] / speed, curve=pitch_curve, unscaled=True)
+    a.animations.append(invoke(a.stop, delay=volume_curve[4][0] / speed, unscaled=True))
 
-    invoke(a.stop, delay=volume_curve[4][0] / speed)
+    invoke(a.stop, delay=volume_curve[4][0] / speed, unscaled=True, ignore_paused=ignore_paused)
     return a
 
 
-class SynthGUI(Entity):
-    def __init__(self, **kwargs):
-        super().__init__(parent=camera.ui, z=-998, **kwargs)
+class UrsfxGUI(Entity):
+    def __init__(self, ignore_paused=True, play_after_change=True, **kwargs):
+        super().__init__(**(dict(parent=camera.ui, z=-998, ignore_paused=ignore_paused) | kwargs))
 
         default_positions = [(0,0), (.1,.9), (.15,.75), (.6,.75), (1,0)]
+        self.play_after_change = play_after_change
         self.wave_panel = Entity(parent=self, scale=.35, x=-0)
         self.waveform = Entity(parent=self.wave_panel, scale_y=.75)
         self.waveform_bg = Entity(parent=self.waveform, model='quad', origin=(-.5,-.5), z=.01, color=color.black66)
@@ -63,12 +63,10 @@ class SynthGUI(Entity):
         self.volume_slider = Slider(parent=self.wave_panel, x=-.05, vertical=True, scale=1.95, min=.05, max=1, default=.75, step=.01, on_value_changed=self.play)
 
         self.wave_selector = ButtonGroup(('sine', 'triangle', 'square', 'noise'), parent=self.wave_panel, scale=.11, y=-.075)
-        for e in self.wave_selector.buttons:
-            e.text_entity.world_scale = .5
 
-        self.pitch_slider = Slider(parent=self.wave_panel, y=-.25, scale=1.95, min=-36, max=36, default=0, step=1, on_value_changed=self.play, text='pitch')
-        self.pitch_change_slider =  Slider(parent=self.wave_panel, y=-.325, scale=1.95, min=-12, max=12, default=0, step=1, on_value_changed=self.play, text='pitch change')
-        self.speed_slider =  Slider(parent=self.wave_panel, scale=1.95, min=.5, max=4, default=1, step=.1, on_value_changed=self.play, y=-.4, text='speed')
+        self.pitch_slider = Slider(parent=self.wave_panel, y=-.25, scale=1.95, min=-36, max=36, default=0, step=1, on_value_changed=self.play_updated, text='pitch')
+        self.pitch_change_slider =  Slider(parent=self.wave_panel, y=-.325, scale=1.95, min=-12, max=12, default=0, step=1, on_value_changed=self.play_updated, text='pitch change')
+        self.speed_slider =  Slider(parent=self.wave_panel, scale=1.95, min=.5, max=4, default=1, step=.1, on_value_changed=self.play_updated, y=-.4, text='speed')
 
         def coin_sound():
             self.paste_code(f"ursfx([(0,1), ({random.uniform(.05,.15)},.5), (.25,.5), ({random.uniform(.25,.5)},.5), (1,0)], pitch={random.randint(-3, 24)}, speed={random.uniform(2.5,3)})")
@@ -90,8 +88,7 @@ class SynthGUI(Entity):
         self.paste_button.text_entity.scale *= .5
 
         self.code_text = Text('', parent=self.wave_panel, scale=2, position=(self.paste_button.x+self.paste_button.scale_x+.025,1.11))
-
-        self.wave_selector.on_value_changed = self.play
+        self.wave_selector.on_value_changed = self.play_updated
         self.background_panel = Entity(model=Quad(radius=.025), parent=self.wave_panel, color=color.black66, z=1, origin=(-.5,-.5), scale=(1.125,1.75+.025), position=(-.1,-.6))
 
         for i, knob in enumerate(self.knobs):
@@ -120,6 +117,10 @@ class SynthGUI(Entity):
             knob.drop = drop
 
         self.draw()
+
+        for e in scene.entities:
+            if e.has_ancestor(self):
+                e.ignore_paused = ignore_paused
 
 
     def update(self):
@@ -265,24 +266,33 @@ class SynthGUI(Entity):
             wave=self.wave_selector.value,
             pitch=self.pitch_slider.value,
             pitch_change=self.pitch_slider.value + self.pitch_change_slider.value,
-            speed=self.speed_slider.value
+            speed=self.speed_slider.value,
+            ignore_paused=self.ignore_paused,
             )
 
         self.code_text.text = self.recipe
 
+    def play_updated(self):
+        if self.play_after_change:
+            self.play()
+
+
+gui = None
+def open_gui():
+    global gui
+    if not gui:
+        gui = UrsfxGUI(enabled=False)
+
+        def toggle_gui_input(key):
+            if key == 'f3':
+                gui.enabled = not gui.enabled
+        Entity(input=toggle_gui_input)
+    gui.enabled = True
+
+
 if __name__ == '__main__':
     app = Ursina()
-
-gui = SynthGUI(enabled=False)
-
-def toggle_gui_input(key):
-    if key == 'f3':
-        gui.enabled = not gui.enabled
-
-Entity(input=toggle_gui_input)
-
-
-if __name__ == '__main__':
+    sfx_editor = UrsfxGUI()
+    # application.paused = True
     Sprite('shore', z=10, ppu=64, color=color.gray)
-    gui.enabled = True
     app.run()

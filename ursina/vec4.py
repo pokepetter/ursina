@@ -55,6 +55,9 @@ class Vec4(PandaVec4):
         return Vec4(self[0]/value[0], self[1]/value[1], self[2]/value[2], self[3]/value[3])
 
 
+    def __abs__(self):
+        return Vec4(*[abs(e) for e in self])
+
 if __name__ == '__main__':
     a = Vec4(1,0,0,0) * 2
     a = Vec4(1,0,1,1) * Vec4(2,1,2,3)

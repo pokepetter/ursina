@@ -1,20 +1,21 @@
-from panda3d.core import TransparencyAttrib
-from panda3d.core import Filename
 from panda3d.core import TextNode
-# from direct.interval.IntervalGlobal import Sequence, Func, Wait, SoundInterval
+import builtins
+import re
 
 import ursina
-# from ursina import *
 from ursina import camera
 from ursina.entity import Entity
 from ursina.sequence import Sequence, Func, Wait
 from ursina import color
+from ursina import destroy
+from ursina.shaders.text_shader import text_shader
+from ursina.scripts.property_generator import generate_properties_for_class
 # note:
 # <scale:n> tag doesn't work well in the middle of text.
 # only good for titles for now.
 
+@generate_properties_for_class()
 class Text(Entity):
-
     size = .025
     default_font = 'OpenSans-Regular.ttf'
     default_resolution = 1080 * size * 2
@@ -27,27 +28,30 @@ class Text(Entity):
         self.parent = camera.ui
 
         self.setColorScaleOff()
-        self.shader = None
         self.text_nodes = []
         self.images = []
         self.origin = (-.5, .5)
 
         self.font = Text.default_font
+        self.shader = text_shader
+        self.shader.compile()
         self.resolution = Text.default_resolution
-        self.line_height = 1
         self.use_tags = True
+        self.line_height = 1
         self.start_tag = start_tag
         self.end_tag = end_tag
         self.text_colors = {'default' : color.text_color}
+        self.color = color.text_color
 
         for color_name in color.color_names:
             self.text_colors[color_name] = color.colors[color_name]
 
-        self.tag = Text.start_tag+'default'+Text.end_tag
+        self.tag = Text.start_tag + 'default' + Text.end_tag
         self.current_color = self.text_colors['default']
         self.scale_override = 1
         self._background = None
         self.appear_sequence = None # gets created when calling appear()
+
 
         if 'origin' in kwargs:   # set the scale before model for correct corners
             setattr(self, 'origin', kwargs['origin'])
@@ -62,9 +66,10 @@ class Text(Entity):
                 continue
             setattr(self, key, value)
 
+        
 
-    @property
-    def text(self):
+
+    def text_getter(self):
         t = ''
         y = 0
         if self.text_nodes:
@@ -80,8 +85,7 @@ class Text(Entity):
         return t
 
 
-    @text.setter     # set this to update the text.
-    def text(self, text):
+    def text_setter(self, text): # set this to update the text.
         self.raw_text = text
 
         # clear stuff
@@ -93,6 +97,8 @@ class Text(Entity):
         for tn in self.text_nodes:
             tn.remove_node()
         self.text_nodes = []
+        if not text:
+            return
 
         # check if using tags
         if (not self.use_tags
@@ -176,7 +182,7 @@ class Text(Entity):
             if tag.startswith('hsb('):   # set color based on numbers
                 tag = tag[4:-1]
                 hsb_values = tuple(float(e.strip()) for e in tag.split(','))
-                self.current_color = color.color(*hsb_values)
+                self.current_color = color.hsv(*hsb_values)
 
             elif tag.startswith('rgb('):   # set color based on numbers
                 tag = tag[4:-1]
@@ -191,6 +197,7 @@ class Text(Entity):
                 texture_name = tag.split(':')[1]
                 image = Entity(
                     parent=self.text_node_path,
+                    shader=None,
                     name='inline_image',
                     model='quad',
                     texture=texture_name,
@@ -213,10 +220,11 @@ class Text(Entity):
         self.text_node.setText(text)
         self.text_node.setTextColor(self.current_color)
         self.text_node.setPreserveTrailingWhitespace(True)
-        # self.text_node_path.setPos(
-        #     x * self.size * self.scale_override,
-        #     0,
-        #     (y * self.size * self.line_height) - .75 * self.size)
+
+        self.text_node_path.setShader(self.shader._shader)
+        for key, shader_input in self.shader.default_input.items():
+            self.text_node_path.setShaderInput(key, shader_input)
+
         self.text_node_path.setPos(
             x * self.size * self.scale_override,
             (y * self.size * self.line_height) - .75 * self.size,
@@ -225,26 +233,19 @@ class Text(Entity):
 
         return self.text_node
 
-    @property
-    def font(self):
-        return self._font
 
-    @font.setter
-    def font(self, value):
-        font = loader.loadFont(value)
+    def font_setter(self, value):
+        font = builtins.loader.loadFont(value)
         if font:
             self._font = font
             self._font.clear()  # remove assertion warning
             self._font.setPixelsPerUnit(self.resolution)
             self._font.setLineHeight(self.line_height)
-            self.text = self.raw_text   # update tex
+            if self.text:
+                self.text = self.raw_text   # update tex
 
-    @property
-    def color(self): # sets the default color.
-        return self._color
 
-    @color.setter
-    def color(self, value):
+    def color_setter(self, value):
         self._color = value
         self.current_color = value
         self.text_colors['default'] = value
@@ -254,17 +255,23 @@ class Text(Entity):
             img.color = value
 
 
-    @property
-    def line_height(self):
-        try:
-            return self._line_height
-        except:
-            return 1
+    def shader_setter(self, value):
+        self._shader = value
+        if not hasattr(self, 'text_nodes'): # trying to set shader before init has finish, for example by using Entity.default_shader
+            return
+        
+        for tn in self.text_nodes:
+            tn.setShader(value._shader)
+            for key, shader_input in value.default_input.items():
+                tn.setShaderInput(key, shader_input)
 
-    @line_height.setter
-    def line_height(self, value):
+
+    def line_height_getter(self):
+        return getattr(self, '_line_height', 1)
+
+    def line_height_setter(self, value):
         self._line_height = value
-        if self.use_tags:
+        if self.use_tags and self.text:
             self.text = self.raw_text
         else:
             self._font.setLineHeight(value)
@@ -281,74 +288,56 @@ class Text(Entity):
         for line in self.text.split('\n'):
             longest_line_length = max(longest_line_length, temp_text_node.calcWidth(line))
 
-        return longest_line_length  * self.scale_x * self.size
+        return longest_line_length * self.size
 
 
     @property
     def height(self): # gets the height of the text
-        return (len(self.lines) * self.line_height * self.scale_y * self.size)
+        return (len(self.lines) * self.line_height * self.size)
 
     @property
     def lines(self):
         return self.text.splitlines()
 
-    @property
-    def resolution(self):
+    def resolution_getter(self):
         return self._font.getPixelsPerUnit()
 
-    @resolution.setter
-    def resolution(self, value):
+    def resolution_setter(self, value):
         self._font.setPixelsPerUnit(value)
 
-    @property
-    def wordwrap(self): # set this to make the text wrap after a certain number of characters.
-        if hasattr(self, '_wordwrap'):
-            return self._wordwrap
-        else:
-            return 0
 
-    @wordwrap.setter
-    def wordwrap(self, value):
+    def wordwrap_setter(self, value):   # set this to make the text wrap after a certain number of characters.
         self._wordwrap = value
         if not value:
             return
 
         new_text = ''
-        x = 0
-        for word in self.raw_text.replace(self.end_tag, self.end_tag+' ').split(' '):
+        for line in self.raw_text.split('\n'):
+            x = 0
+            for word in line.split(' '):
+                clean_string = re.sub('<.*?>', '', word)
+                x += len(clean_string) + 1
+                # print('w:', word, 'len:', len(clean_string), 'clean str:', clean_string)
 
-            if word.startswith(self.start_tag) and new_text:
-                new_text = new_text[:-1]
+                if x >= value:
+                    new_text += '\n'
+                    x = 0
 
-            if not word.startswith(self.start_tag):
-                x += len(word) + 1
+                new_text += word + ' '
 
-            if x >= value:
-                new_text += '\n'
-                x = 0
-
-            new_text += word + ' '
+            new_text += '\n'
 
         self.text = new_text
 
 
-    @property
-    def origin(self):
-        return self._origin
-
-    @origin.setter
-    def origin(self, value):
+    def origin_setter(self, value):
         self._origin = value
         if self.text:
             self.text = self.raw_text
 
-    @property
-    def background(self):
-        return self._background
 
-    @background.setter
-    def background(self, value):
-        if value == True:
+    def background_setter(self, value):
+        if value is True:
             self.create_background()
         elif self._background:
             from ursina.ursinastuff import destroy
@@ -359,11 +348,12 @@ class Text(Entity):
         value = self.origin
 
         linewidths = [self.text_nodes[0].node().calcWidth(line) for line in self.lines]
-        # print('.........', linewidths)
         for tn in self.text_nodes:
             # center text horizontally
             # linenumber = abs(int(tn.getZ() / self.size / self.line_height))
             linenumber = abs(int(tn.getY() / self.size / self.line_height))
+            linenumber = clamp(linenumber, 0, len(linewidths)-1)
+
             tn.setX(tn.getX() - (linewidths[linenumber] / 2 * self.size * tn.getScale()[0] / self.size))
             # tn.setX(tn.getX() - (linewidths[linenumber] / 2 * self.size))
             # add offset based on origin/value
@@ -397,25 +387,23 @@ class Text(Entity):
         #     self._background.x += self.origin_x * self.width * 2
         self._background.y -= self.origin_y * self.height
 
-        self._background.model = Quad(radius=radius, scale=(w/self.scale_x, h/self.scale_y))
+        self._background.model = Quad(radius=radius, scale=(w, h))
         self._background.color = color
 
 
-    def appear(self, speed=.025, delay=0):
-        from ursina.ursinastuff import invoke
+    def appear(self, speed=.025):
         self.enabled = True
         # self.visible = True   # setting visible seems to reset the colors
         if self.appear_sequence:
             self.appear_sequence.finish()
 
-        x = 0
         self.appear_sequence = Sequence()
-        for i, tn in enumerate(self.text_nodes):
+        for tn in self.text_nodes:
             target_text = tn.node().getText()
             tn.node().setText('')
             new_text = ''
 
-            for j, char in enumerate(target_text):
+            for char in target_text:
                 new_text += char
                 self.appear_sequence.append(Wait(speed))
                 self.appear_sequence.append(Func(tn.node().setText, new_text))
@@ -437,13 +425,12 @@ class Text(Entity):
 
 if __name__ == '__main__':
     from ursina import *
+    from ursina import Ursina, dedent, window
     app = Ursina()
     # Text.size = .001
     descr = dedent('''
-        Rainstorm
-        Summon a rain storm to deal 5 water
-
-        damage to everyone, test including yourself.
+        <red>Rainstorm<default> <red>Rainstorm<default>
+        Summon a rain storm to deal 5 <blue>water<default> damage to everyone, test including yourself.
         1234 1234 1234 1234 1234 1234 2134 1234 1234 1234 1234 1234 2134 2134 1234 1234 1234 1234
         Lasts for 4 rounds.''').strip()
 
@@ -451,7 +438,9 @@ if __name__ == '__main__':
     # Text.default_font = 'consola.ttf'
     # color.text_color = color.lime
     Text.default_resolution = 1080 * Text.size
-    test = Text(text=descr, wordwrap=30)
+    test = Text(text=descr, wordwrap=30, scale=4)
+    
+
     # test.align()
     # test = Text(descr)
 
@@ -475,6 +464,8 @@ if __name__ == '__main__':
             test.text = '<default><image:file_icon> <red><image:file_icon> test '
             print('by', test.text)
 
+        if key == 'c':
+            test.text = ''
     # test.create_background()
     window.fps_counter.enabled = False
     print('....', Text.get_width('yolo'))

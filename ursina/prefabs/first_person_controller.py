@@ -24,12 +24,16 @@ class FirstPersonController(Entity):
         self.jumping = False
         self.air_time = 0
 
+        self.traverse_target = scene     # by default, it will collide with everything. change this to change the raycasts' traverse targets.
+        self.ignore_list = [self, ]
+        self.on_destroy = self.on_disable
+
         for key, value in kwargs.items():
             setattr(self, key ,value)
 
         # make sure we don't fall through the ground if we start inside it
         if self.gravity:
-            ray = raycast(self.world_position+(0,self.height,0), self.down, ignore=(self,))
+            ray = raycast(self.world_position+(0,self.height,0), self.down, traverse_target=self.traverse_target, ignore=self.ignore_list)
             if ray.hit:
                 self.y = ray.world_point.y
 
@@ -45,18 +49,18 @@ class FirstPersonController(Entity):
             + self.right * (held_keys['d'] - held_keys['a'])
             ).normalized()
 
-        feet_ray = raycast(self.position+Vec3(0,0.5,0), self.direction, ignore=(self,), distance=.5, debug=False)
-        head_ray = raycast(self.position+Vec3(0,self.height-.1,0), self.direction, ignore=(self,), distance=.5, debug=False)
+        feet_ray = raycast(self.position+Vec3(0,0.5,0), self.direction, traverse_target=self.traverse_target, ignore=self.ignore_list, distance=.5, debug=False)
+        head_ray = raycast(self.position+Vec3(0,self.height-.1,0), self.direction, traverse_target=self.traverse_target, ignore=self.ignore_list, distance=.5, debug=False)
         if not feet_ray.hit and not head_ray.hit:
             move_amount = self.direction * time.dt * self.speed
 
-            if raycast(self.position+Vec3(-.0,1,0), Vec3(1,0,0), distance=.5, ignore=(self,)).hit:
+            if raycast(self.position+Vec3(-.0,1,0), Vec3(1,0,0), distance=.5, traverse_target=self.traverse_target, ignore=self.ignore_list).hit:
                 move_amount[0] = min(move_amount[0], 0)
-            if raycast(self.position+Vec3(-.0,1,0), Vec3(-1,0,0), distance=.5, ignore=(self,)).hit:
+            if raycast(self.position+Vec3(-.0,1,0), Vec3(-1,0,0), distance=.5, traverse_target=self.traverse_target, ignore=self.ignore_list).hit:
                 move_amount[0] = max(move_amount[0], 0)
-            if raycast(self.position+Vec3(-.0,1,0), Vec3(0,0,1), distance=.5, ignore=(self,)).hit:
+            if raycast(self.position+Vec3(-.0,1,0), Vec3(0,0,1), distance=.5, traverse_target=self.traverse_target, ignore=self.ignore_list).hit:
                 move_amount[2] = min(move_amount[2], 0)
-            if raycast(self.position+Vec3(-.0,1,0), Vec3(0,0,-1), distance=.5, ignore=(self,)).hit:
+            if raycast(self.position+Vec3(-.0,1,0), Vec3(0,0,-1), distance=.5, traverse_target=self.traverse_target, ignore=self.ignore_list).hit:
                 move_amount[2] = max(move_amount[2], 0)
             self.position += move_amount
 
@@ -65,8 +69,7 @@ class FirstPersonController(Entity):
 
         if self.gravity:
             # gravity
-            ray = raycast(self.world_position+(0,self.height,0), self.down, ignore=(self,))
-            # ray = boxcast(self.world_position+(0,2,0), self.down, ignore=(self,))
+            ray = raycast(self.world_position+(0,self.height,0), self.down, traverse_target=self.traverse_target, ignore=self.ignore_list)
 
             if ray.distance <= self.height+.1:
                 if not self.grounded:
@@ -87,7 +90,6 @@ class FirstPersonController(Entity):
     def input(self, key):
         if key == 'space':
             self.jump()
-
 
     def jump(self):
         if not self.grounded:
@@ -111,11 +113,17 @@ class FirstPersonController(Entity):
     def on_enable(self):
         mouse.locked = True
         self.cursor.enabled = True
+        # restore parent and position/rotation from before disablem in case you moved the camera in the meantime.
+        if hasattr(self, 'camera_pivot') and hasattr(self, '_original_camera_transform'):
+            camera.parent = self.camera_pivot
+            camera.transform = self._original_camera_transform
 
 
     def on_disable(self):
         mouse.locked = False
         self.cursor.enabled = False
+        self._original_camera_transform = camera.transform  # store original position and rotation
+        camera.world_parent = scene
 
 
 
@@ -135,8 +143,12 @@ if __name__ == '__main__':
     player.gun = None
 
 
-    gun = Button(parent=scene, model='cube', color=color.blue, origin_y=-.5, position=(3,0,3), collider='box')
-    gun.on_click = Sequence(Func(setattr, gun, 'parent', camera), Func(setattr, player, 'gun', gun))
+    gun = Button(parent=scene, model='cube', color=color.blue, origin_y=-.5, position=(3,0,3), collider='box', scale=(.2,.2,1))
+    def get_gun():
+        gun.parent = camera
+        gun.position = Vec3(.5,0,.5)
+        player.gun = gun
+    gun.on_click = get_gun
 
     gun_2 = duplicate(gun, z=7, x=8)
     slope = Entity(model='cube', collider='box', position=(0,0,8), scale=6, rotation=(45,0,0), texture='brick', texture_scale=(8,8))

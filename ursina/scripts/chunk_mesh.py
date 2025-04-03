@@ -1,73 +1,73 @@
-from ursina import *
-from math import floor
 
-app = Ursina()
-t = time.time()
-
-application.asset_folder = application.asset_folder.parent.parent
-terrain = Entity(model=Terrain('heightmap_1', skip=8), texture='grass', texture_scale=(3,3), scale=256)
+from ursina.array_tools import Array2D, chunk_list, enumerate_2d
+from math import floor, ceil
+from ursina.ursinamath import clamp
 
 
-# grid = [[[None for z in range(8)] for y in range(1)] for x in range(8)] # make 2d array of entities
-grid = [[None for z in range(8)] for x in range(8)] # make 2d array of entities
+def chunk_mesh(mesh, num_chunks, chunk_size=1/8):
+    chunks = Array2D(width=num_chunks[0], height=num_chunks[1])
+    for (x,z), value in enumerate_2d(chunks):
+        chunks[x][z] = []
 
-x_slices = 8
-# y = 1
-z_slices = 8
+    polys = list(chunk_list(mesh.generated_vertices, 3))
 
-for z in range(z_slices):
-    for x in range(x_slices):
-        part = Entity(
-            parent=terrain,
-            x=(x/x_slices) - .5 + (1/x_slices/2),
-            z=(z/z_slices) - .5 + (1/z_slices/2),
-            color=color.random_color(),
-            model=Mesh(),
-            always_on_top=True
-            )
-        grid[x][z] = part
+    for i, tri in enumerate(polys):
+        if chunk_size >= 1:
+            min_x = floor(min(v.x for v in tri) / chunk_size)
+            min_y = floor(min(v.z for v in tri) / chunk_size)
+            max_x = ceil(max(v.x for v in tri) / chunk_size)
+            max_y = ceil(max(v.z for v in tri) / chunk_size)
+        else:
+            min_x = floor(min(v.x for v in tri) / chunk_size)
+            min_y = floor(min(v.z for v in tri) / chunk_size)
+            max_x = ceil(max(v.x for v in tri) / chunk_size)
+            max_y = ceil(max(v.z for v in tri) / chunk_size)
 
-terrain.model.generated_vertices = [v+Vec3(.5,0.5) for v in terrain.model.generated_vertices]
-for i in range(0, len(terrain.model.generated_vertices), 3):
-    v = terrain.model.generated_vertices[i]
-    x = floor(v.x * x_slices)
-    z = floor(v.z * z_slices)
-    x = min(x, x_slices-1)
-    z = min(z, z_slices-1)
+        min_x = clamp(min_x, 0, chunks.width-1)
+        max_x = clamp(max_x, 0, chunks.width-1)
+        min_y = clamp(min_y, 0, chunks.height-1)
+        max_y = clamp(max_y, 0, chunks.height-1)
 
-    offset = Vec3(- (x/x_slices) - (1/x_slices/2), -.5, -(z/z_slices) - (1/x_slices/2))
-    grid[x][z].model.vertices.extend([
-        terrain.model.generated_vertices[i]   + offset,
-        terrain.model.generated_vertices[i+1] + offset,
-        terrain.model.generated_vertices[i+2] + offset,
-        ])
+        # print(min_x, max_x, min_y, max_y)
+        for x in range(min_x, max_x+1):
+            for y in range(min_y, max_y+1):
+                # print('append tri', i, 'to chunk', x, y)
+                chunks[x][y].append(tri)
 
+    return chunks
 
-for z in range(z_slices):
-    for x in range(x_slices):
-        grid[x][z].model.generate()
-        # Entity(parent=grid[x][z], model='cube', scale=.01, color=color.red, always_on_top=True)
-        # grid[x][z].enabled = False
+if __name__ == '__main__':
+    from ursina import Ursina, Entity, Terrain, color, Vec3, Vec2, Grid, Mesh, flatten_list, load_model, EditorCamera
+    app = Ursina()
 
-        grid[x][z].collider = 'mesh'
-        # grid[x][z].model = None
+    reference = Entity(x=-1, model=Terrain('heightmap_1', skip=4), texture='grass', texture_scale=(3,3), origin=(-.5,0,-.5), wireframe=True, color=color.green)
+    target_mesh = reference.model
+    target_mesh.vertices = [v+Vec3(.5,0,.5) for v in target_mesh.vertices]
+    chunk_size = 1/8
+    num_chunks = Vec2(8,8)
+    chunks = chunk_mesh(target_mesh, num_chunks, chunk_size)
+    grid = Entity(x=-1, model=Grid(*num_chunks), rotation_x=90, color=color.red, scale=num_chunks*chunk_size, origin=(-.5,-.5))
 
-
-from ursina.prefabs.first_person_controller import FirstPersonController
-# player = FirstPersonController(position=(0,200,0))
-# player.add_script(NoclipMode())
-# player = EditorCamera(rotation_x=90, y=128)
-EditorCamera()
-
-
-# def update():
-#     for part in terrain.children:
-#         part.enabled = distance_xz(part.world_position, player.world_position) < 256/8
-        # print(distance_xz(part.world_position, camera.world_position), 256/4)
+    for (x,z), value in enumerate_2d(chunks):
+        if not value:
+            chunks[x][z] = Entity(model='cube', color=color.random_color(), position=Vec3(x-1,0,z)*chunk_size, origin=(-.5,-.5,-.5), scale=chunk_size)
+            continue
+        chunks[x][z] = Entity(x=-1, model=Mesh(vertices=flatten_list(value)), color=color.random_color())
 
 
+    # target_mesh = load_model('tower_collider.ursinamesh')
+    # reference = Entity(model=target_mesh, wireframe=True)
+    # chunk_size = 8
+    # num_chunks = Vec2(5,7)
+    # chunks = chunk_mesh(target_mesh, num_chunks, chunk_size)
+    # grid = Entity(model=Grid(*num_chunks), rotation_x=90, color=color.red, scale=num_chunks*chunk_size, origin=(-.5,-.5))
 
+    # for (x,z), value in enumerate_2d(chunks):
+    #     if not value:
+    #         chunks[x][z] = Entity(model='wireframe_cube', color=color.random_color(), position=Vec3(x,0,z)*chunk_size, origin=(-.5,-.5,-.5), scale=chunk_size)
+    #         continue
+    #     chunks[x][z] = Entity(model=Mesh(vertices=flatten_list(value)), color=color.random_color())
 
+    EditorCamera()
 
-
-app.run()
+    app.run()

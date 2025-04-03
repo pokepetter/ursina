@@ -1,7 +1,25 @@
-import sys
+"""
+ursina/mouse.py
+
+This module defines the Mouse class, which handles mouse input and interactions in the Ursina engine.
+It provides functionality for tracking mouse position, velocity, clicks, and collisions with entities.
+
+Dependencies:
+- time
+- panda3d.core.CollisionTraverser
+- panda3d.core.CollisionNode
+- panda3d.core.CollisionHandlerQueue
+- panda3d.core.CollisionRay
+- ursina.application
+- ursina.window
+- ursina.scene
+- ursina.camera
+- ursina.hit_info
+- ursina.vec3
+- ursina.ursinamath
+"""
+
 import time
-import traceback
-from panda3d.core import *
 from panda3d.core import CollisionTraverser, CollisionNode
 from panda3d.core import CollisionHandlerQueue, CollisionRay
 from ursina import application
@@ -9,12 +27,54 @@ from ursina.window import instance as window
 from ursina.scene import instance as scene
 from ursina.camera import instance as camera
 from ursina.hit_info import HitInfo
+from ursina.vec3 import Vec3
 from ursina.ursinamath import distance
 
 
-class Mouse():
+class Mouse:
+    """
+    The Mouse class handles mouse input and interactions in the Ursina engine.
+    It provides functionality for tracking mouse position, velocity, clicks, and collisions with entities.
+
+    Attributes:
+        enabled (bool): Whether the mouse is enabled.
+        visible (bool): Whether the mouse cursor is visible.
+        locked (bool): Whether the mouse cursor is locked to the center of the screen.
+        position (Vec3): The current position of the mouse.
+        delta (Vec3): The movement of the mouse since the last click.
+        prev_x (float): The previous x-coordinate of the mouse.
+        prev_y (float): The previous y-coordinate of the mouse.
+        start_x (float): The x-coordinate of the mouse when a button was pressed.
+        start_y (float): The y-coordinate of the mouse when a button was pressed.
+        velocity (Vec3): The current velocity of the mouse.
+        moving (bool): Whether the mouse is currently moving.
+        prev_click_time (float): The time of the previous click.
+        prev_click_pos (tuple): The position of the previous click.
+        double_click_distance (float): The maximum time between clicks to register a double click.
+        double_click_movement_limit (float): The maximum movement between clicks to register a double click.
+        hovered_entity (Entity): The entity currently hovered by the mouse.
+        left (bool): Whether the left mouse button is pressed.
+        right (bool): Whether the right mouse button is pressed.
+        middle (bool): Whether the middle mouse button is pressed.
+        delta_drag (Vec3): The movement of the mouse between left mouse down and left mouse up.
+        update_step (int): The number of frames between updates.
+        traverse_target (NodePath): The target node to traverse for collisions.
+        _i (int): Internal counter for update steps.
+        _mouse_watcher (MouseWatcher): The Panda3D MouseWatcher object.
+        _picker (CollisionTraverser): The collision traverser for mouse picking.
+        _pq (CollisionHandlerQueue): The collision handler queue for mouse picking.
+        _pickerNode (CollisionNode): The collision node for the mouse ray.
+        _pickerNP (NodePath): The node path for the mouse ray.
+        _pickerRay (CollisionRay): The collision ray for mouse picking.
+        raycast (bool): Whether to perform raycasting for collisions.
+        collision (HitInfo): The current collision information.
+        collisions (list): A list of all collisions.
+    """
 
     def __init__(self):
+        """
+        Initialize the Mouse object with default values.
+        """
         self.enabled = False
         self.visible = True
         self.locked = False
@@ -58,33 +118,71 @@ class Mouse():
 
     @property
     def x(self):
-        if not self._mouse_watcher.has_mouse():
+        """
+        Get the x-coordinate of the mouse in the window.
+
+        Returns:
+            float: The x-coordinate of the mouse.
+        """
+        pointer = base.win.get_pointer(0)
+        if not pointer.in_window:
             return 0
-        return self._mouse_watcher.getMouseX() / 2 * window.aspect_ratio  # same space as ui stuff
+        return ((pointer.get_x() / window.size.x) -.5) * window.aspect_ratio  # same space as ui stuff
 
     @x.setter
     def x(self, value):
+        """
+        Set the x-coordinate of the mouse in the window.
+
+        Args:
+            value (float): The x-coordinate to set.
+        """
         self.position = (value, self.y)
 
 
     @property
     def y(self):
-        if not self._mouse_watcher.has_mouse():
-            return 0
+        """
+        Get the y-coordinate of the mouse in the window.
 
-        return self._mouse_watcher.getMouseY() / 2
+        Returns:
+            float: The y-coordinate of the mouse.
+        """
+        pointer = base.win.get_pointer(0)
+        if not pointer.in_window:
+            return 0
+        return -((pointer.get_y() / window.size.y) -.5) # same space as ui stuff
+
 
     @y.setter
     def y(self, value):
+        """
+        Set the y-coordinate of the mouse in the window.
+
+        Args:
+            value (float): The y-coordinate to set.
+        """
         self.position = (self.x, value)
 
 
     @property
     def position(self):
+        """
+        Get the position of the mouse in the window.
+
+        Returns:
+            Vec3: The position of the mouse.
+        """
         return Vec3(self.x, self.y, 0)
 
     @position.setter
     def position(self, value):
+        """
+        Set the position of the mouse in the window.
+
+        Args:
+            value (Vec3): The position to set.
+        """
         if not application.base:
             return
         application.base.win.move_pointer(
@@ -95,15 +193,27 @@ class Mouse():
 
     @property
     def locked(self):
+        """
+        Get whether the mouse cursor is locked to the center of the screen.
+
+        Returns:
+            bool: True if the mouse cursor is locked, False otherwise.
+        """
         if not hasattr(self, '_locked'):
             return False
         return self._locked
 
     @locked.setter
     def locked(self, value):
+        """
+        Set whether the mouse cursor is locked to the center of the screen.
+
+        Args:
+            value (bool): True to lock the mouse cursor, False to unlock it.
+        """
         self._locked = value
         if value:
-            window.set_mouse_mode(window.M_relative)
+            window.set_mouse_mode(window.M_confined)
         else:
             window.set_mouse_mode(window.M_absolute)
 
@@ -119,19 +229,38 @@ class Mouse():
 
     @property
     def visible(self):
+        """
+        Get whether the mouse cursor is visible.
+
+        Returns:
+            bool: True if the mouse cursor is visible, False otherwise.
+        """
         if not hasattr(self, '_visible'):
             return True
         return self._visible
 
     @visible.setter
     def visible(self, value):
+        """
+        Set whether the mouse cursor is visible.
+
+        Args:
+            value (bool): True to make the mouse cursor visible, False to hide it.
+        """
         self._visible = value
-        window.set_cursor_hidden(not value)
+        window.set_cursor_hidden(!value)
         if application.base:
+            # window.position = window.position
             application.base.win.requestProperties(window)
 
 
     def input(self, key):
+        """
+        Handle input events for the mouse.
+
+        Args:
+            key (str): The input key.
+        """
         if not self.enabled:
             return
 
@@ -145,33 +274,25 @@ class Mouse():
         if key == 'left mouse down':
             self.left = True
             if self.hovered_entity:
-                if hasattr(self.hovered_entity, 'on_click') and callable(self.hovered_entity.on_click):
-                    try:
-                        self.hovered_entity.on_click()
-                    except Exception as e:
-                        print(traceback.format_exc())
-                        application.quit()
+                if self.hovered_entity.on_click:
+                    self.hovered_entity.on_click()
 
                 for s in self.hovered_entity.scripts:
-                    if hasattr(s, 'on_click') and callable(s.on_click):
+                    if hasattr(s, 'on_click') and s.on_click:
                         s.on_click()
 
             # double click
             if time.time() - self.prev_click_time <= self.double_click_distance:
-                if abs(self.x-self.prev_click_pos[0]) > self.double_click_movement_limit or abs(self.y-self.prev_click_pos[1]) > self.double_click_movement_limit:
+                if self.prev_click_pos and (abs(self.x-self.prev_click_pos[0]) > self.double_click_movement_limit or abs(self.y-self.prev_click_pos[1]) > self.double_click_movement_limit):
                     return # moused moved too much since previous click, so don't register double click.
 
                 application.base.input('double click')
                 if self.hovered_entity:
-                    if hasattr(self.hovered_entity, 'on_double_click'):
-                        try:
+                    if hasattr(self.hovered_entity, 'on_double_click') and self.hovered_entity.on_double_click:
                             self.hovered_entity.on_double_click()
-                        except Exception as e:
-                            print(traceback.format_exc())
-                            application.quit()
 
                     for s in self.hovered_entity.scripts:
-                        if hasattr(s, 'on_double_click'):
+                        if hasattr(s, 'on_double_click') and s.on_double_click:
                             s.on_double_click()
 
             self.prev_click_time = time.time()
@@ -192,6 +313,12 @@ class Mouse():
 
 
     def update(self):
+        """
+        Update the mouse state, including position, velocity, and collisions.
+        """
+        if application.window_type != 'onscreen':
+            return
+
         if not self.enabled or not self._mouse_watcher.has_mouse() or self._locked_mouse_last_frame:
             self.velocity = Vec3(0,0,0)
             self._locked_mouse_last_frame = False
@@ -250,30 +377,71 @@ class Mouse():
                             s.on_mouse_exit()
 
     @property
-    def normal(self): # returns the normal of the polygon, in local space.
+    def normal(self): 
+        """
+        Get the normal of the polygon at the collision point in local space.
+
+        Returns:
+            Vec3: The normal vector at the collision point.
+        """
         if not self.collision is not None:
             return None
         return Vec3(*self.collision.normal)
 
     @property
-    def world_normal(self): # returns the normal of the polygon, in world space.
+    def world_normal(self): 
+        """
+        Get the normal of the polygon at the collision point in world space.
+
+        Returns:
+            Vec3: The normal vector at the collision point.
+        """
         if not self.collision is not None:
             return None
         return Vec3(*self.collision.world_normal)
 
     @property
-    def point(self): # returns the point hit, in local space
+    def point(self): 
+        """
+        Get the point of collision in local space.
+
+        Returns:
+            Vec3: The point of collision.
+        """
         if self.collision is not None:
             return Vec3(*self.collision.point)
         return None
 
     @property
-    def world_point(self): # returns the point hit, in world space
+    def world_point(self): 
+        """
+        Get the point of collision in world space.
+
+        Returns:
+            Vec3: The point of collision.
+        """
         if self.collision is not None:
             return Vec3(*self.collision.world_point)
         return None
 
+    @property
+    def is_outside(self):
+        """
+        Check if the mouse is outside the window.
+
+        Returns:
+            bool: True if the mouse is outside the window, False otherwise.
+        """
+        return not self._mouse_watcher.has_mouse()
+
+
     def find_collision(self):
+        """
+        Find the collision information for the mouse ray.
+
+        Returns:
+            bool: True if a collision was found, False otherwise.
+        """
         self.collisions = []
         self.collision = None
         if not self.raycast or self._pq.get_num_entries() == 0:
@@ -315,6 +483,9 @@ class Mouse():
 
 
     def unhover_everything_not_hit(self):
+        """
+        Unhover all entities that are not currently hit by the mouse ray.
+        """
         for e in scene.entities:
             if e == self.hovered_entity:
                 continue
@@ -334,6 +505,7 @@ instance = Mouse()
 
 if __name__ == '__main__':
     from ursina import *
+    from ursina import Ursina, Button, mouse
     app = Ursina()
     Button(parent=scene, text='a')
 
@@ -342,7 +514,7 @@ if __name__ == '__main__':
             mouse.locked = not mouse.locked
             print(mouse.velocity)
 
-    # Cursor()
+    Cursor()
     # mouse.visible = False
 
 

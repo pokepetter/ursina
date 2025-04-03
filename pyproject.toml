@@ -1,0 +1,93 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ursina"
+version = "7.0.0"
+description = "An easy to use game engine/framework for python."
+authors = [
+    {name = "Petter Amland", email = "pokepetter@gmail.com"}
+]
+license = {text = "MIT"}
+keywords = ["game development"]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "panda3d>=1.10.15",
+    "panda3d-gltf>=1.2.1",
+    "pillow>=8.0.0",
+    "pyperclip>=1.9.0",
+    "screeninfo>=0.8.1",
+]
+
+[tool.setuptools]
+packages = ["ursina"]
+
+[tool.setuptools.package-data]
+"*" = ["*.*"]
+
+[project.urls]
+homepage = "https://github.com/pokepetter/ursina"
+
+[project.optional-dependencies]
+extra = [
+    "imageio>=2.37.0",
+    "numpy>=2.2.3",
+    "psutil>=7.0.0",
+    "thumbhash-python>=1.0.1",
+    "tripy>=1.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "imageio>=2.37.0",
+    "numpy>=2.2.3",
+    "psutil>=7.0.0",
+    "ruff>=0.9.9",
+    "sswg>=2.3.0",
+    "tripy>=1.0.0",
+]
+
+[tool.ruff]
+# Allow lines to be as long as 300 characters.
+line-length = 300
+lint.ignore-init-module-imports = true
+# F403: ignore to allow `from my_module import *`
+# E402: ignore to allow import not at top of file
+# E722: ignore to allow bare except
+# E405: ignore to allow undefined or from star import
+# E741: ignore to allow single character variable names
+# E711: ignore to allow var == None instead of var is None
+# F401: ignore to allow importing all the stuff in __init__.py without using __all__
+# E701: ignore to allow multiple statements on one line (colon). This is rarely done anyway.
+lint.ignore = ["F403", "E402", "E722", "E713", "E741", "E711", "F401", "E701"]
+# Make linter not complain about stuff imported with * import
+builtins = [
+    "Ursina", "Path", "base", "loader", "render", "globalClock", "LEVEL_EDITOR",
+    "time", "random", "math", "copy", "deepcopy",
+    "floor", "ceil", "inf", "lerp", "inverselerp", "lerp_angle", "slerp", "distance", "distance_2d", "distance_xz", "clamp", "round_to_closest", "rotate_around_point_2d",
+    "Vec2", "Vec3", "Vec4", "Quat",
+    "window", "camera", "mouse", "scene", "application", "input_handler", "held_keys", "Keys",
+    "load_model", "load_texture", "load_blender_scene", "texture_importer", "Texture", "Shader",
+    "Entity", "Audio", "Text", "Button",
+    "color", "Color", "hsv", "rgb",
+    "dedent", "camel_to_snake", "snake_to_camel", "multireplace", "printvar", "print_info", "print_warning", "print_on_screen",
+    "chunk_list", "flatten_list", "flatten_completely", "size_list", "find_sequence",
+    "grid_layout",
+    "EditorCamera", "Empty", "LoopingList", "Default",
+    "Mesh", "MeshModes", "Quad", "Plane", "Circle", "Pipe", "Cone", "Cube", "Cylinder", "Capsule", "Grid", "Terrain",
+    "Func", "Wait", "Sequence", "invoke", "destroy", "duplicate",
+    "singleton", "generate_properties_for_class", "every", "after",
+    "BoxCollider", "SphereCollider", "CapsuleCollider", "MeshCollider",
+    "Animation", "SpriteSheetAnimation", "FrameAnimation3d", "Animator", "curve", "SmoothFollow",
+    "Sky", "DirectionalLight",
+    "Tooltip", "Sprite", "Draggable", "Panel", "Slider", "ThinSlider", "ButtonList", "ButtonGroup", "WindowPanel", "Space", "TextField", "InputField", "ContentTypes", "Cursor",
+    "raycast", "boxcast", "terraincast"
+    ]
+
+[tool.pytest.ini_options]
+testpaths = [
+    "tests",
+    "ursina/tests",
+]

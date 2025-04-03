@@ -34,14 +34,12 @@ in vec2 texcoord;
 out vec4 fragColor;
 
 uniform sampler2D p3d_Texture0;
-uniform sampler2D top_texture;
+uniform sampler2D side_texture;
 in vec3 world_normal;
 in vec3 vertex_world_position;
 
 uniform vec2 texture_scale;
-uniform vec2 top_texture_scale;
-in vec2 normalRepeat;
-in vec2 normalScale;
+uniform vec2 side_texture_scale;
 
 in vec4 vertex_color;
 
@@ -58,34 +56,29 @@ vec3 TriPlanarBlendWeightsStandard(vec3 normal) {
 	return blend_weights*rcpBlend;
 }
 
-//Constant width Triplanar blending
-vec3 TriPlanarBlendWeightsConstantOverlap(vec3 normal) {
+void main() {
+    // vec3 blendFast = TriPlanarBlendWeightsConstantOverlap(world_normal);
 
-	vec3 blend_weights = normal*normal;//or abs(normal) for linear falloff(and adjust BlendZone)
-	float maxBlend = max(blend_weights.x, max(blend_weights.y, blend_weights.z));
+    //Constant width Triplanar blending
+    vec3 blend_weights = world_normal * world_normal;//or abs(world_normal) for linear falloff(and adjust BlendZone)
+    float maxBlend = max(blend_weights.x, max(blend_weights.y, blend_weights.z));
 
     float BlendZone = 0.8f;
-	blend_weights = blend_weights - maxBlend*BlendZone;
+    blend_weights = blend_weights - maxBlend*BlendZone;
+    blend_weights = max(blend_weights, 0.0);
 
-	blend_weights = max(blend_weights, 0.0);
+    float rcpBlend = 1.0 / (blend_weights.x + blend_weights.y + blend_weights.z);
+    vec3 blend = blend_weights * rcpBlend;
 
-	float rcpBlend = 1.0 / (blend_weights.x + blend_weights.y + blend_weights.z);
-	return blend_weights*rcpBlend;
-}
-
-void main(){
-    vec3 blendFast = TriPlanarBlendWeightsConstantOverlap(world_normal);
-    vec3 blend = blendFast;
-
-    vec3 albedoX = texture(p3d_Texture0, vertex_world_position.zy * texture_scale).rgb*blend.x;
-	vec3 albedoY = texture(p3d_Texture0, vertex_world_position.xz * texture_scale).rgb*blend.y;
-	vec3 albedoZ = texture(p3d_Texture0, vertex_world_position.xy * texture_scale).rgb*blend.z;
+    vec3 albedoX = texture(side_texture, vertex_world_position.zy * side_texture_scale).rgb*blend.x;
+  	vec3 albedoY = texture(side_texture, vertex_world_position.xz * side_texture_scale).rgb*blend.y;
+  	vec3 albedoZ = texture(side_texture, vertex_world_position.xy * side_texture_scale).rgb*blend.z;
 
     if (world_normal.y > .0) {
-		albedoY = texture(top_texture, vertex_world_position.xz * top_texture_scale.xy).rgb*blend.y;
+		    albedoY = texture(p3d_Texture0, vertex_world_position.xz * texture_scale.xy).rgb*blend.y;
     }
 
-	vec3 triPlanar = (albedoX + albedoY + albedoZ);
+	   vec3 triPlanar = (albedoX + albedoY + albedoZ);
 
     fragColor = vec4(triPlanar.rgb, 1) * vertex_color;
 }
@@ -94,10 +87,8 @@ void main(){
 geometry='',
 default_input = {
     'texture_scale' : Vec2(1,1),
-    'top_texture_scale' : Vec2(1,1),
-    'normalRepeat' : Vec2(10,10),
-    'normalScale' : Vec2(1,1),
-    'top_texture' : Func(load_texture, 'grass'),
+    'side_texture' : 'brick',
+    'side_texture_scale' : Vec2(1,1),
     }
 )
 
@@ -113,28 +104,28 @@ if __name__ == '__main__':
     shader = triplanar_shader
 
     a = Draggable(parent=scene, model='cube', shader=shader, texture=load_texture('brick'), plane_direction=Vec3(0,1,0))
-    a.model.uvs= []
-    a.model.generate()
+    # a.model.uvs= []
+    # a.model.generate()
     # a.model.setTexture(a.texture._texture, 1)
     t = load_texture('brick')._texture
     print('------', type(t))
-    a.set_shader_input('top_texture', load_texture('grass'))
+    a.set_shader_input('side_texture', load_texture('brick'))
     # print('---------', a.texture._texture)
 
-    b = AzureSphere(shader=shader, rotation_y=180, x=3, texture='brick')
+    b = AzureSphere(shader=shader, rotation_y=180, x=3, texture='grass')
     b.texture.filtering = False
     GrayPlane(scale=10, y=-2, texture='shore')
-    b.set_shader_input('top_texture', load_texture('grass'))
+    b.set_shader_input('side_texture', load_texture('brick'))
 
     Sky(color=color.light_gray)
     EditorCamera()
 
-    def set_top_texture_scale():
-        value = top_texture_scale_slider.value
-        b.set_shader_input('top_texture_scale', Vec2(value, value))
-        a.set_shader_input('top_texture_scale', Vec2(value, value))
+    def set_side_texture_scale():
+        value = side_texture_scale_slider.value
+        b.set_shader_input('side_texture_scale', Vec2(value, value))
+        a.set_shader_input('side_texture_scale', Vec2(value, value))
 
-    top_texture_scale_slider = Slider(text='top_texture_scale', min=0, max=10, default=1, dynamic=True, on_value_changed=set_top_texture_scale)
+    side_texture_scale_slider = Slider(text='side_texture_scale', min=0, max=10, default=1, dynamic=True, on_value_changed=set_side_texture_scale)
 
 
     def update():

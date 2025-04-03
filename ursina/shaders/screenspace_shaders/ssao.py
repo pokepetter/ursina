@@ -97,6 +97,7 @@ default_input = {
     'strength' : 0.001,
     'falloff' : 0.000002,
     'random_texture' : Func(load_texture, 'noise'),
+    'clip_plane_near' : 1,
 }
 )
 if __name__ == '__main__':
@@ -107,8 +108,6 @@ if __name__ == '__main__':
     e = Entity(model='cube', y=-1)
     e = Entity(model='plane', scale=100, y=-1)
     camera.shader = ssao_shader
-    #camera.clip_plane_far = 500
-    camera.clip_plane_near = 1
 
     EditorCamera()
 

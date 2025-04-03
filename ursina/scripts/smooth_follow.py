@@ -2,7 +2,7 @@ from ursina import *
 
 class SmoothFollow():
 
-    def __init__(self, target=None, offset=(0,0,0), speed=8, rotation_speed=0, rotation_offset=(0,0,0)):
+    def __init__(self, target=None, offset=Vec3.zero, speed=8, rotation_speed=0, rotation_offset=(0,0,0)):
         self.target = target
         self.offset = offset
         self.speed = speed

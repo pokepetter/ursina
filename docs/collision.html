@@ -1,19 +1,17 @@
-
 <!DOCTYPE HTML>
-<!--generated with sswg-->
-
-<html>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<head>
-    <link rel="stylesheet" href="sswg.css">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<left>
-<title>collision</title>
+        <!--generated with sswg-->
+        <html lang="en">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <head>
+            <title> ursina engine collision</title>
+            <link rel="stylesheet" href="sswg.css">
+            <link rel="stylesheet" href="style.css">
+            <link rel="icon" type="image/x-icon" href="favicon.ico">
+        </head>
+        <body>
+        <left><div style="max-width: 1200px; margin: auto;">
 <br>
-
-<div style="font-size: 20.0px;max-width: 1200px; margin: auto;">
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" donate.html" class="button">Donate</a><br>
 <br>
 <div class="sidebar"><br>
 <b><a href="documentation.html">Documentation</a></b><br>
@@ -25,7 +23,9 @@
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Model">Model</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Texture">Texture</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Color">Color</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position, Rotation, Scale">Position, Rotation, Scale</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position">Position</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Rotation">Rotation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Scale">Scale</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Update">Update</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Input">Input</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Mouse Input">Mouse Input</a><br>
@@ -59,8 +59,38 @@
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#Actor (3D)">Actor (3D)</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#FrameAnimation3D (3D)">FrameAnimation3D (3D)</a><br>
 <br>
+<br>
+<a href="networking.html">Networking</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#~~ Networking Concepts ~~">~~ Networking Concepts ~~</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#How Data Goes from Point A to Point B">How Data Goes from Point A to Point B</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#IP Addresses">IP Addresses</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Ports">Ports</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Communication Protocols">Communication Protocols</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#References">References</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#~~ Game Networking Concepts ~~">~~ Game Networking Concepts ~~</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Multiplayer Preparations">Multiplayer Preparations</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Sending Inputs">Sending Inputs</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Sending Game State">Sending Game State</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Client Authoritative">Client Authoritative</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Server Authoritative">Server Authoritative</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Deterministic Lockstep">Deterministic Lockstep</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Snapshot Interpolation">Snapshot Interpolation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Server Side Lag Compensation">Server Side Lag Compensation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Client Side Prediction">Client Side Prediction</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#References">References</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#~~ Introduction to Ursina Networking ~~">~~ Introduction to Ursina Networking ~~</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Limitations">Limitations</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Basics">Basics</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Samples">Samples</a><br>
+<br>
 <a href="faq.html">F.A.Q.</a><br>
+<br>
 <a href="building.html">Build and Release</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="building.html#Building Your App with ursina.build">Building Your App with ursina.build</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="building.html#Building with Nuitka">Building with Nuitka</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="building.html#Building Your App with auto-py-to-exe">Building Your App with auto-py-to-exe</a><br>
+<br>
+<br>
 </div><br>
 <br>
 <div style="font-size: 60.0px;font-weight: bold;">
@@ -68,12 +98,11 @@
 Collision<br>
 <div style="font-size: 20.0px;font-weight: normal;">
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Adding Colliders"/><br>
+<h2><div id="Adding Colliders"/><br>
 Adding Colliders<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
-<div class="code_block" style="margin-left: 0em;">e = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, x=<yellow>2</yellow>)
+<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>e = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, x=<yellow>2</yellow>)
 e.collider = <green>'box'</green>      <gray># add BoxCollider based on entity's bounds.</gray>
 e.collider = <green>'sphere'</green>   <gray># add SphereCollider based on entity's bounds.</gray>
 e.collider = <green>'mesh'</green>     <gray># add MeshCollider based on entity's bounds.</gray>
@@ -85,14 +114,13 @@ e.collider = MeshCollider(e, mesh=e.model, center=Vec3(<yellow>0</yellow>,<yello
 Usually you add the collider when you create the Entity, but make sure you set the model<br>
 before setting the collider if you want it to fit its bounds.<br>
 <br>
-<div class="code_block" style="margin-left: 0em;">e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>)
+<div class="code_block" id="code_block_1" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>)
 </div><br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="raycast()"/><br>
+<h2><div id="raycast()"/><br>
 raycast()<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
-<div class="code_block" style="margin-left: 0em;">raycast(origin, direction=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>), distance=inf, traverse_target=scene, <olive>ignore</olive>=list(), debug=False)
+<div class="code_block" id="code_block_2" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_2)">copy</button>raycast(origin, direction=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>), distance=inf, traverse_target=scene, <olive>ignore</olive>=list(), debug=False)
 </div><br>
 Casts a ray from *origin*, in *direction*, with length *distance* and returns<br>
 a HitInfo containing information about what it hit. This ray will only hit entities with a collider.<br>
@@ -103,7 +131,7 @@ Setting debug to True will draw the line on screen.<br>
 <br>
 Example where we only move if a wall is not hit:<br>
 <br>
-<div class="code_block" style="margin-left: 0em;"><purple>from</purple> ursina <purple>import</purple> *
+<div class="code_block" id="code_block_3" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_3)">copy</button><purple>from</purple> ursina <purple>import</purple> *
 app = Ursina()
 
 class Player(<olive>Entity</olive>):
@@ -127,23 +155,21 @@ camera.y = <yellow>2</yellow>
 app.run()
 </div><br>
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="boxcast()"/><br>
+<h2><div id="boxcast()"/><br>
 boxcast()<br>
-<div style="font-size: 20.0px;font-weight: normal;">
-<div class="code_block" style="margin-left: 0em;">boxcast(origin, direction=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>), distance=<yellow>9</yellow><yellow>9</yellow><yellow>9</yellow><yellow>9</yellow>, <olive>thickness</olive>=(<yellow>1</yellow>,<yellow>1</yellow>), traverse_target=scene, <olive>ignore</olive>=list(), debug=False)   <gray># similar to raycast, but with width and height</gray>
+</h2><br>
+<div class="code_block" id="code_block_4" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_4)">copy</button>boxcast(origin, direction=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>1</yellow>), distance=<yellow>9</yellow><yellow>9</yellow><yellow>9</yellow><yellow>9</yellow>, <olive>thickness</olive>=(<yellow>1</yellow>,<yellow>1</yellow>), traverse_target=scene, <olive>ignore</olive>=list(), debug=False)   <gray># similar to raycast, but with width and height</gray>
 </div><br>
 boxcast is similar to raycast, but the "ray" has thickness, height and width.<br>
 <br>
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="intersects()"/><br>
+<h2><div id="intersects()"/><br>
 intersects()<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 Check if a entity (with a collider) intersects other entities with colliders.<br>
 <br>
-<div class="code_block" style="margin-left: 0em;"><purple>from</purple> ursina <purple>import</purple> *
+<div class="code_block" id="code_block_5" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_5)">copy</button><purple>from</purple> ursina <purple>import</purple> *
 
 
 app = Ursina()
@@ -167,14 +193,13 @@ app.run()
 <br>
 <br>
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="HitInfo"/><br>
+<h2><div id="HitInfo"/><br>
 HitInfo<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 All of these functions will return a HitInfo. This contains information about what it hit.<br>
 <br>
-<div class="code_block" style="margin-left: 0em;">hit = None
+<div class="code_block" id="code_block_6" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_6)">copy</button>hit = None
 entity = None
 point = None
 world_point = None
@@ -184,15 +209,14 @@ world_normal = None
 hits = []
 entities = []
 </div><br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Distance Check"/><br>
+<h2><div id="Distance Check"/><br>
 Distance Check<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 Sometimes it enough to just check the distance between two entities.<br>
 For example if you want a pickup:<br>
 <br>
-<div class="code_block" style="margin-left: 0em;"><purple>from</purple> ursina <purple>import</purple> *
+<div class="code_block" id="code_block_7" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_7)">copy</button><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina.prefabs.first_person_controller <purple>import</purple> FirstPersonController
 
 
@@ -215,29 +239,38 @@ pickup = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, <ol
 app.run()
 </div><br>
 <br>
-<div style="font-size: 40.0px;font-weight: bold;">
-<div id="Mouse Collision"/><br>
+<h2><div id="Mouse Collision"/><br>
 Mouse Collision<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+</h2><br>
 <br>
 The mouse does raycast automatically.<br>
 Both UI elements(Entities parented to camera.ui) and Entities in 3d space (parented to scene) can<br>
 get hit as long as they have a collider. UI elements will however block things behind them.<br>
 <br>
-mouse.hovered_entity&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returns<br>
-mouse.normal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# returns the normal of the polygon, in local space.<br>
-mouse.world_normal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# returns the normal of the polygon, in world space.<br>
-mouse.point&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # returns the point hit, in local space<br>
-mouse.world_point&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # returns the point hit, in world space<br>
-<br>
+<div class="code_block" id="code_block_8" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_8)">copy</button>mouse.hovered_entity      returns
+mouse.normal              <gray># returns the normal of the polygon, in local space.</gray>
+mouse.world_normal        <gray># returns the normal of the polygon, in world space.</gray>
+mouse.point               <gray># returns the point hit, in local space</gray>
+mouse.world_point         <gray># returns the point hit, in world space</gray>
+</div><br>
 Handling clicks is very easy, just add a collider and on_click.<br>
 The on_click function will then be called when you click on the Entity with the mouse.<br>
 <br>
-<div class="code_block" style="margin-left: 0em;"><purple>def</purple> action():
+<div class="code_block" id="code_block_9" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_9)">copy</button><purple>def</purple> action():
     <blue>print</blue>(<green>'Ow! That hurt!'</green>)
 
 <olive>Entity</olive>(<olive>model</olive>=<green>'quad'</green>, <olive>parent</olive>=camera.ui, <olive>scale</olive>=.<yellow>1</yellow>, <olive>collider</olive>=<green>'box'</green>, <olive>on_click</olive>=action) <gray># on_click should be a function/callable/Func/Sequence</gray>
 </div><br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
+</script>
 
 </body>
 </html>
