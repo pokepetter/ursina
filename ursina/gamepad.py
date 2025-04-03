@@ -1,19 +1,15 @@
-from ursina import input_handler, held_keys, Entity
+from ursina import input_handler, held_keys, Entity, Ursina, Text, time, color, window
 from panda3d.core import InputDevice, InputDeviceManager
 
 main_gamepad_index = 0
 
-
+# Initialize Ursina app
 if __name__ == '__main__':
-    from ursina import Ursina, Text, time, color, window
     app = Ursina()
     window.color = color.black
 
-
 # input_handler.gamepad = None
 input_handler.gamepads = base.devices.getDevices(InputDevice.DeviceClass.gamepad)
-
-# def disconnect_all():
 
 def connect_all():
     for i, gamepad in enumerate(input_handler.gamepads):
@@ -48,7 +44,6 @@ def connect_all():
         for original_name, new_name in buttons.items():
             base.accept(f'{gamepad_name}-{original_name}', base.input, extraArgs=[f'{gamepad_name} {new_name}'])
             base.accept(f'{gamepad_name}-{original_name}-up', base.input, extraArgs=[f'{gamepad_name} {new_name} up'])
-            # print(original_name, new_name)
 
 def update():
     for i, gamepad in enumerate(input_handler.gamepads):
@@ -91,7 +86,6 @@ def vibrate(gamepad_index=0, low_freq_motor=1, high_freq_motor=1, duration=.1, c
 Entity(name='gamepad_handler', update=update, eternal=True) # connect update() to an entity so it runs
 connect_all()
 
-
 if __name__ == '__main__':
     text_entity = Text()
     print('---------------', input_handler.gamepads)
@@ -118,8 +112,5 @@ if __name__ == '__main__':
         if key == 'gamepad x':
             from ursina import gamepad
             gamepad.vibrate()
-                # input_handler.gamepads = [target_gamepad, ] + input_handler.gamepads
-                # target_gamepad = input_handler.gamepads.pop(i)
-                # input_handler.gamepad = input_handler.gamepads[i]
 
     app.run()

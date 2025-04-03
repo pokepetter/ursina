@@ -1,0 +1,27 @@
+{
+    "entities":[
+        {
+            "name":"main",
+            "model":"plane",
+            "position":[0,0,0],
+            "rotation":[0,0,0],
+            "scale":[100,1,100],
+            "material":{
+                "texture":"grass",
+                "color":"white"
+            }
+        }
+    ],
+    "lights": [
+        {
+            "type": "ambient",
+            "color": [1, 1, 1]
+        }
+    ],
+    "camera":{
+        "position": [79.45, 100.02, -224.91],
+        "rotation": [22.75, -19.5, 0],
+        "fov": 40,
+        "orthographic": false
+    }
+}

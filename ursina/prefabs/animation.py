@@ -1,9 +1,37 @@
+"""
+animation.py
+
+This file contains the Animation class, which is responsible for handling frame-based animations in the Ursina engine.
+It extends the Sprite class and provides functionality to load and play animations from image sequences or GIF files.
+"""
+
 from ursina import *
 
 
 class Animation(Sprite):
-    def __init__(self, name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs):
+    """
+    The Animation class is used to create and control frame-based animations.
 
+    Attributes:
+        frames (list): A list of Texture objects representing the frames of the animation.
+        sequence (Sequence): A Sequence object to manage the animation playback.
+        frame_times (list): A list of frame durations in seconds.
+        is_playing (bool): A flag indicating whether the animation is currently playing.
+        autoplay (bool): A flag indicating whether the animation should start playing automatically.
+    """
+
+    def __init__(self, name, fps=12, loop=True, autoplay=True, frame_times=None, **kwargs):
+        """
+        Initialize the Animation object.
+
+        Args:
+            name (str or Path): The name or path of the animation frames or GIF file.
+            fps (int, optional): The frames per second for the animation. Defaults to 12.
+            loop (bool, optional): Whether the animation should loop. Defaults to True.
+            autoplay (bool, optional): Whether the animation should start playing automatically. Defaults to True.
+            frame_times (list, optional): A list of frame durations in seconds. Defaults to None.
+            **kwargs: Additional keyword arguments to set as attributes.
+        """
         if isinstance(name, Path):
             texture = load_texture(name.name, name.parent)
         else:
@@ -54,28 +82,53 @@ class Animation(Sprite):
 
 
     def start(self):
+        """
+        Start playing the animation.
+        """
         if self.is_playing:
             self.finish()
         self.sequence.start()
         self.is_playing = True
 
     def pause(self):
+        """
+        Pause the animation.
+        """
         self.sequence.pause()
 
     def resume(self):
+        """
+        Resume the animation.
+        """
         self.sequence.resume()
 
     def finish(self):
+        """
+        Finish the animation and stop playing.
+        """
         self.sequence.finish()
         self.is_playing = False
 
 
     @property
-    def duration(self):     # get the duration of the animation. you can't set it. to do so, change the fps instead.
+    def duration(self):
+        """
+        Get the duration of the animation.
+
+        Returns:
+            float: The duration of the animation in seconds.
+        """
         return self.sequence.duration
 
 
     def __setattr__(self, name, value):
+        """
+        Set an attribute of the Animation object.
+
+        Args:
+            name (str): The name of the attribute.
+            value: The value to set for the attribute.
+        """
         if hasattr(self, 'frames') and name in ('color', 'origin'):
             for f in self.frames:
                 setattr(f, name, value)
@@ -87,9 +140,6 @@ class Animation(Sprite):
             super().__setattr__(name, value)
         except Exception as e:
             return e
-
-
-
 
 
 if __name__ == '__main__':
