@@ -1,14 +1,17 @@
 from panda3d.core import TextNode
+from panda3d.core import FontPool
 import builtins
 import re
 
 import ursina
 from ursina import camera
+from ursina import application
 from ursina.entity import Entity
 from ursina.sequence import Sequence, Func, Wait
 from ursina import color
 from ursina import destroy
 from ursina.shaders.text_shader import text_shader
+from ursina.string_utilities import print_warning
 from ursina.scripts.property_generator import generate_properties_for_class
 # note:
 # <scale:n> tag doesn't work well in the middle of text.
@@ -66,7 +69,7 @@ class Text(Entity):
                 continue
             setattr(self, key, value)
 
-        
+
 
 
     def text_getter(self):
@@ -235,7 +238,36 @@ class Text(Entity):
 
 
     def font_setter(self, value):
-        font = builtins.loader.loadFont(value)
+
+        from functools import lru_cache
+        @lru_cache
+        def _search_for_file(name, folders, file_types=None): # prioritizes based on file_type order, then folder order.
+            if file_types is None and '.' not in name:
+                raise Exception(f'name({name}) has no file type, and no file_types were provided.')
+
+            if '.' in name:
+                file_types = ('', )
+
+            for file_type in file_types:
+                for folder in folders:
+                    # print('-----', 'searchpattern:', f'{folder}/**/{name}{file_type}', 'result:', list(folder.glob(f'**/{name}.{file_type}')))
+                    for file_path in folder.glob(f'**/{name}{file_type}'):
+                        # print('FOUND FONT:', file_path)
+                        return file_path
+
+            return None
+
+        # print(_search_for_file.cache_info())
+
+        font_file_types = ('.ttf', '.otf') if '.' not in value else ('', )
+        folders = (application.fonts_folder, application.asset_folder, application.internal_fonts_folder)
+        font_file_path = _search_for_file(value, folders, font_file_types)
+
+        if not font_file_path:
+            print_warning('missing font:', value)
+
+        font = FontPool.load_font(str(font_file_path))
+
         if font:
             self._font = font
             self._font.clear()  # remove assertion warning
@@ -259,7 +291,7 @@ class Text(Entity):
         self._shader = value
         if not hasattr(self, 'text_nodes'): # trying to set shader before init has finish, for example by using Entity.default_shader
             return
-        
+
         for tn in self.text_nodes:
             tn.setShader(value._shader)
             for key, shader_input in value.default_input.items():
@@ -439,7 +471,7 @@ if __name__ == '__main__':
     # color.text_color = color.lime
     Text.default_resolution = 1080 * Text.size
     test = Text(text=descr, wordwrap=30, scale=4)
-    
+
 
     # test.align()
     # test = Text(descr)
@@ -467,6 +499,8 @@ if __name__ == '__main__':
         if key == 'c':
             test.text = ''
     # test.create_background()
+    Sky(color=color.dark_gray)
+    EditorCamera()
     window.fps_counter.enabled = False
     print('....', Text.get_width('yolo'))
     app.run()
