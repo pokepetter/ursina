@@ -1,6 +1,6 @@
 from ursina import *
 
-
+@generate_properties_for_class()
 class Slider(Entity):
     def __init__(self, min=0, max=1, default=None, height=Text.size, text='', dynamic=False, radius=Text.size/2, bar_color=color.black66, **kwargs):
         super().__init__(add_to_scene_entities=False) # add later, when __init__ is done
@@ -67,25 +67,19 @@ class Slider(Entity):
         scene.entities.append(self)
 
 
-    @property
-    def value(self):
+    def value_getter(self):
         val = lerp(self.min, self.max, self.knob.x * 2)
         if isinstance(self.step, int) and not self.step == 0:
             val = int(round(val, 0))
 
         return val
 
-    @value.setter
-    def value(self, value):
+    def value_setter(self, value, call_on_value_changed=True):
         self.knob.x = (value - self.min) / (self.max - self.min) / 2
-        self.slide()
+        self.slide(call_on_value_changed=call_on_value_changed)
 
-    @property
-    def step(self):
-        return self._step
 
-    @step.setter
-    def step(self, value):
+    def step_setter(self, value):
         self._step = value
         self.knob.step = value / (self.max-self.min) / 2
 
@@ -93,14 +87,14 @@ class Slider(Entity):
         if self.knob.dragging:
             self.slide()
 
-    def slide(self):
+    def slide(self, call_on_value_changed=True):
         t = self.knob.x / .5
 
         if self.step > 0:
             if isinstance(self.step, int) or self.step.is_integer():
                 self.knob.text_entity.text = str(self.value)
 
-        if self.dynamic and self._prev_value != t:
+        if call_on_value_changed and self.dynamic and self._prev_value != t:
             if self.on_value_changed:
                 self.on_value_changed()
 

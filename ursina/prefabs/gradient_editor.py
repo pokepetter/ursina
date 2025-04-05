@@ -7,10 +7,10 @@ gradient_editor_arrow = Mesh(vertices=[(v+Vec3(0,-.4,0))*Vec3(.0175,.025,1) for 
 @generate_properties_for_class()
 class GradientEditor(Entity):
     default_values = dict(parent=camera.ui, )
-    
+
     def __init__(self, value={'0':color.hex('#ffffffff'), '32':color.hex('#ffffffff'),}, resolution=32, on_value_changed:callable=None, **kwargs):
         super().__init__(**(__class__.default_values | kwargs))
-        
+
         self.color_picker = ColorPicker(parent=self, scale=.75, enabled=False, show_exit_button=True)
         self.color_picker.exit_button.on_click = self.stop_editing_color
 
@@ -72,18 +72,17 @@ class GradientEditor(Entity):
     def value_getter(self):
         return {str(slider.value) : slider.knob.color for slider in self.sliders}
 
-    def value_setter(self, value):
-        # print('soeifjwseoifjseofijoij')
+    def value_setter(self, value, call_on_value_changed=True):
         for i, (key, col) in enumerate(value.items()):
             if isinstance(col, str):
                 col = color.hex(col)
 
             self.sliders[i].knob.color = col
-            self.sliders[i].value = int(key)
+            self.sliders[i].value_setter(int(key), call_on_value_changed=False)
 
         self._value = value
         self.preview_gradient()
-        if self.on_value_changed:
+        if self.on_value_changed and call_on_value_changed:
             self.on_value_changed()
 
     def copy(self):
