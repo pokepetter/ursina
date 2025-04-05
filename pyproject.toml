@@ -22,8 +22,10 @@ dependencies = [
 ]
 
 [tool.setuptools]
-packages = ["ursina"]
 include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
 
 [tool.setuptools.package-data]
 "ursina.audio" = ["*"]
