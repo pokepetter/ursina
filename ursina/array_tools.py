@@ -27,6 +27,8 @@ def enumerate_3d(target_3d_list):   # usage: for (x, y, z), value in enumerate_3
 
 
 from typing import List
+from ursina.scripts.property_generator import generate_properties_for_class
+@generate_properties_for_class()
 class Array2D(list):
     __slots__ = ('width', 'height', 'default_value')
 
@@ -52,12 +54,15 @@ class Array2D(list):
             self.height = int(height)
             super().__init__([[self.default_value for _ in range(self.height)] for _ in range(self.width)])
 
-    def to_string(self):
+    def to_string(self, separator=', ', always_separate=False):
         lines = []
         flat = flatten_list(self)
-        if max(len(str(value)) for value in flatten_list(self)) > 1:    # separate each element with ', '
+
+        longest_width = max(len(str(value)) for (_,_), value in enumerate_2d(self))
+
+        if always_separate or longest_width > 1:    # separate each element with ', '
             for y in range(self.height-1, -1, -1):
-                line = ', '.join([str(self[x][y]) for x in range(self.width)])
+                line = separator.join([f'{str(self[x][y]):>{longest_width}}' for x in range(self.width)])
                 lines.append(line)
         else:   # make string without spaces since all the values are the same width
             for y in range(self.height-1, -1, -1):
@@ -66,6 +71,12 @@ class Array2D(list):
 
 
         return '\n'.join(lines)
+
+    def rows_getter(self):
+        return [[self[x][y] for x in range(self.width)] for y in range(self.height)]
+
+    def columns_getter(self):
+        return [[self[x][y] for y in range(self.height)] for x in range(self.width)]
 
     def __str__(self):
         lines = self.to_string().strip().split('\n')
@@ -127,28 +138,81 @@ class Array2D(list):
         return cropped_array
 
 if __name__ == '__main__':
+    from ursina.ursinastuff import _test
     grid = Array2D(width=16, height=8)
-    print(grid)
+    # print(grid)
     padded_grid = grid.add_margin(top=4, right=7, bottom=3, left=2, value=7)
-    print('added margin:', padded_grid)
-    print('cropped_array:\n', padded_grid.get_area((2,3), (padded_grid.width-7, padded_grid.height-4)))
+    # print('added margin:', padded_grid)
+    # print('cropped_array:\n', padded_grid.get_area((2,3), (padded_grid.width-7, padded_grid.height-4)))
+
+    test_array2D = Array2D(data=[[1,6], [2,7], [3,8], [4,9], [5,10]])
+    _test(test_array2D.to_string, (), expected_result='''\
+ 6,  7,  8,  9, 10
+ 1,  2,  3,  4,  5''')
+
+    _test(test_array2D.rows_getter, (), expected_result=[[1,2,3,4,5], [6,7,8,9,10]])
+    # _assert(test_array2D.columns == [[6,7,8,9,10], [1,2,3,4,5]], Array2D.rows)
+
 
 
 class Array3D(list):
-    __slots__ = ('width', 'height', 'depth', 'default_value', 'data')
+    __slots__ = ('width', 'height', 'depth', 'default_value')
 
-    def __init__(self, width:int, height:int, depth:int, default_value=0):
-        self.width = int(width)
-        self.height = int(height)
-        self.depth = int(depth)
+    def __init__(self, width:int=None, height:int=None, depth:int=None, default_value=0, data:List[List]=None):
         self.default_value = default_value
-        super().__init__([Array2D(self.height, self.depth) for x in range(self.width)])
+
+        if data is not None:                # initialize with provided data
+            self.width = len(data)
+            self.height = len(data[0])
+            self.depth = len(data[0][0])
+            if self.width == 0 or self.height == 0 or self.depth == 0:
+                raise ValueError("width, height, depth must be >= 1.")
+
+            if any(len(row) != self.height for row in data):
+                raise ValueError("all rows in the data must have the same length.")
+
+            super().__init__(data)
+
+        else:   # Initialize with default values
+            if width is None or height is None or depth is None:
+                raise ValueError("width and height and depth must be provided if no data is given.")
+
+            self.width = int(width)
+            self.height = int(height)
+            self.depth = int(depth)
+            super().__init__([[[self.default_value for _ in range(self.depth)] for _ in range(self.height)] for _ in range(self.width)])
+
+
+    @property
+    def size(self):
+        from ursina.vec3 import Vec3
+        return Vec3(self.width, self.height, self.depth)
+
+    # @property
+    # def bounds(self):
+    #     from ursinamath import Bounds
+
+
+    def get(self, x, y, z, default=0):
+        x, y, z = int(x), int(y), int(z)
+        try:
+            return self[x][y][z]
+        except:
+            return default
+
 
     def reset(self):
-        for x in range(self.width):
-            for y in range(self.height):
-                for z in range(self.depth):
-                    self[x][y][z] = self.default_value
+        for x,y,z, _ in enumerate_3d(self):
+            self[x][y][z] = self.default_value
+
+
+    def paste(self, data, x, y, z, ignore=-1):
+        for true_x in range(x, min(self.width, x+data.width)):
+            for true_y in range(y, min(self.height, y+data.height)):
+                for true_z in range(z, min(self.depth, y+data.depth)):
+                    if data[true_x-x][true_y-y][true_z-z] == ignore:
+                        continue
+                    self[true_x][true_y][true_z] = data[true_x-x][true_y-y][true_z-z]
 
 
 def chunk_list(target_list, chunk_size):
@@ -159,6 +223,24 @@ def chunk_list(target_list, chunk_size):
 
 def rotate_2d_list(target_2d_list):
     return [list(row) for row in zip(*target_2d_list[::-1])]  # rotate
+
+
+def rotate_3d_list(target_3d_list, clockwise=True): # rotates around the y (up) axis where 1 is 90 degrees clockwise
+    new_data = Array3D(width=target_3d_list.depth, height=target_3d_list.height, depth=target_3d_list.width)
+    print('rotate array3d, clockwise:', clockwise)
+
+    if clockwise:
+        for (x, y, z), value in enumerate_3d(target_3d_list):
+            new_x = z
+            new_z = target_3d_list.width - 1 - x
+            new_data[new_x][y][new_z] = value
+    else:
+        for (x, y, z), value in enumerate_3d(target_3d_list):
+            new_x = target_3d_list.depth - 1 - z
+            new_z = x
+            new_data[new_x][y][new_z] = value
+
+    return new_data
 
 
 def string_to_2d_list(string, char_value_map={'.':0, '#':1}):
