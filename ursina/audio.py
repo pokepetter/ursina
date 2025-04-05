@@ -88,7 +88,7 @@ class Audio(Entity):
             if '.' in value:
                 file_types = ('',)
             else:
-                file_types = ('.ogg', '.wav')
+                file_types = ('.ogg', '.wav', '.mp3')
 
             for folder in (application.asset_folder, application.internal_audio_folder):
                 for suffix in file_types:
