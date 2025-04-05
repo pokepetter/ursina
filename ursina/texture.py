@@ -1,4 +1,5 @@
 from panda3d.core import Texture as PandaTexture
+from panda3d.core import TexturePool
 from panda3d.core import SamplerState
 from panda3d.core import Filename
 from panda3d.core import PNMImage
@@ -27,7 +28,7 @@ class Texture():
 
         if isinstance(value, Path):
             self.path = Path(value)
-            self._texture = loader.loadTexture(Filename.fromOsSpecific(str(value)))
+            self._texture = TexturePool.loadTexture(Filename.fromOsSpecific(str(value)))
             self._cached_image = None   # for get_pixel() method
 
         elif isinstance(value, PandaTexture):
