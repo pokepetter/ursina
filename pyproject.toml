@@ -23,9 +23,18 @@ dependencies = [
 
 [tool.setuptools]
 packages = ["ursina"]
+include-package-data = true
 
 [tool.setuptools.package-data]
-"*" = ["*.*"]
+"ursina.audio" = ["*"]
+"ursina.fonts" = ["*"]
+"ursina.models.procedural" = ["*"]
+"ursina.models_compressed" = ["*"]
+"ursina.prefabs" = ["*"]
+"ursina.scripts" = ["*"]
+"ursina.textures" = ["*"]
+"ursina.textures.items" = ["*"]
+"ursina.shaders.screenspace_shaders" = ["*"]
 
 [project.urls]
 homepage = "https://github.com/pokepetter/ursina"
