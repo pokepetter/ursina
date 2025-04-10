@@ -61,9 +61,9 @@ class GridEditor(Entity):
             'undo': ('control+z', ),
             'redo': ('control+y', 'control+shift+z'),
             'flip_horizontally': ('f4', ),
-            'select': 'right mouse',            
-            'subtract_selection_modifier': 'alt',            
-            'add_selection_modifier': 'shift',            
+            'select': 'right mouse',
+            'subtract_selection_modifier': 'alt',
+            'add_selection_modifier': 'shift',
             'copy': ('control+c', ),
             'cut': ('control+x', ),
             'paste': ('control+v', ),
@@ -119,7 +119,8 @@ class GridEditor(Entity):
         if not self.edit_mode:
             return
 
-        self.cursor.enabled = self.canvas_collider.hovered
+        self.cursor.enabled = self.canvas_collider.hovered and self.start_pos is not None
+        print('---', self.start_pos)
         if self.canvas_collider.hovered:
             self.cursor.position = mouse.point*2 - Vec3(.5,.5,0)
 
@@ -131,7 +132,7 @@ class GridEditor(Entity):
             self.cursor.y = floor(self.cursor.y * self.h)
 
 
-            if self.start_pos and held_keys[self.shortcuts['draw']]:
+            if self.start_pos is not None and held_keys[self.shortcuts['draw']]:
                 if held_keys[self.shortcuts['lock_axis_modifier']] and self.prev_draw:
                     if not self.lock_axis:
                         if abs(mouse.velocity[0]) > abs(mouse.velocity[1]):
@@ -247,7 +248,7 @@ class GridEditor(Entity):
 
         if not self.edit_mode:
             return
-        
+
         if key in self.shortcuts['apply_pasted'] and self.is_in_paste_mode:
             self.paste()
             return  # prevent drawing right after pasting if draw and apply_pasted keys are the same
@@ -256,7 +257,7 @@ class GridEditor(Entity):
             self.paste(discard=True)
 
 
-        if key == self.shortcuts['draw']+' down' or key == self.shortcuts['draw'] and self.canvas_collider.hovered and not self.is_in_paste_mode:
+        if (key == self.shortcuts['draw']+' down' or key == self.shortcuts['draw']) and self.canvas_collider.hovered and not self.is_in_paste_mode:
             self.start_pos = self.get_cursor_position()
             if not held_keys[self.shortcuts['draw_line_modifier']]:
                 self.prev_draw = None
@@ -358,7 +359,7 @@ class GridEditor(Entity):
         self.undo_index += 1
         self.undo_stack = self.undo_stack[:self.undo_index]
         self.undo_stack.append(deepcopy(self.grid))
-        print('-----', self.undo_index, len(self.undo_stack))
+        # print('-----', self.undo_index, len(self.undo_stack))
 
 
     def floodfill(self, matrix, x, y, first=True):
@@ -511,7 +512,7 @@ class PixelEditor(GridEditor):
         self.canvas.texture = texture
         self.w, self.h = int(texture.width), int(texture.height)
         self.canvas.scale_x = self.canvas.scale_y * self.w / self.h
-        
+
         # pixels = texture.pixels
         self.grid = Array2D(width=texture.width, height=texture.height)
         for (x,y), _ in enumerate_2d(self.grid):
