@@ -1,5 +1,7 @@
-from ursina import *
-from panda3d.core import Shader as Panda3dShader
+from ursina.shader import Shader
+from ursina.vec2 import Vec2
+from ursina.vec3 import Vec3
+from ursina import color
 
 
 colored_lights_shader = Shader(name='colored_lights_shader', language=Shader.GLSL,

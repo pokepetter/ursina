@@ -1,4 +1,10 @@
-from ursina import *; matcap_shader = Shader(name='matcap_shader', language=Shader.GLSL, vertex = '''#version 140
+from ursina.shader import Shader
+from ursina.vec2 import Vec2
+from ursina.vec3 import Vec3
+from ursina import color
+
+
+matcap_shader = Shader(name='matcap_shader', language=Shader.GLSL, vertex = '''#version 140
 uniform mat4 p3d_ModelViewProjectionMatrix;
 uniform mat4 p3d_ModelMatrix;
 uniform mat4 p3d_ModelViewMatrix;

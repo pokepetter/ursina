@@ -1,4 +1,9 @@
-from ursina import Shader, Vec2, Color; lit_with_shadows_shader = Shader(language=Shader.GLSL, name='lit_with_shadows_shader', vertex = '''#version 150
+from ursina.shader import Shader
+from ursina.vec2 import Vec2
+from ursina.vec3 import Vec3
+from ursina import color
+
+lit_with_shadows_shader = Shader(language=Shader.GLSL, name='lit_with_shadows_shader', vertex = '''#version 150
 uniform struct {
     vec4 position;
     vec3 color;
@@ -121,7 +126,7 @@ void main() {
 default_input = {
     'texture_scale': Vec2(1,1),
     'texture_offset': Vec2(0,0),
-    'shadow_color' : Color(0, .5, 1, .25),
+    'shadow_color' : color.rgba(0, .5, 1, .25),
     'shadow_bias': 0.001,
     'shadow_blur': .005,
     'shadow_samples': 4,
