@@ -90,6 +90,7 @@ class LevelEditor(Entity):
             if not hasattr(entity, key):
                 setattr(entity, key, value)
 
+        entity.parent = LEVEL_EDITOR.current_scene.scene_parent
         LEVEL_EDITOR.current_scene.entities.append(entity)
 
 
@@ -1701,14 +1702,15 @@ class LevelMenu(Entity):
         self.current_scene_indicator.position = (x,y)
         [[LEVEL_EDITOR.scenes[_x][_y].unload() for _x in range(8)] for _y in range(8)]
         LEVEL_EDITOR.current_scene = LEVEL_EDITOR.scenes[x][y]
-        LEVEL_EDITOR.current_scene.load()
+        loaded_scene = LEVEL_EDITOR.current_scene.load()
+        if loaded_scene is None:
+            LEVEL_EDITOR.current_scene.scene_parent = Entity()
         self.current_scene_label.text = LEVEL_EDITOR.current_scene.name
         self.draw()
         LEVEL_EDITOR.render_selection()
 
         LEVEL_EDITOR.inspector.update_inspector()
-        if LEVEL_EDITOR.current_scene.scene_parent:
-            LEVEL_EDITOR.sun_handler.update_bounds(LEVEL_EDITOR.current_scene.scene_parent)
+        LEVEL_EDITOR.sun_handler.update_bounds(LEVEL_EDITOR.current_scene.scene_parent)
 
 
 class HierarchyList(Entity):
@@ -1750,6 +1752,8 @@ class HierarchyList(Entity):
 
 
     def draw(self, entity, indent=0):
+        if entity not in LEVEL_EDITOR.entities:
+            return
         self.entity_indices[self.i] = LEVEL_EDITOR.entities.index(entity)
         if not entity in LEVEL_EDITOR.selection:
             self._text += f'<gray>{" "*indent}{entity.name if entity.name else "lol"}\n'
@@ -1767,29 +1771,15 @@ class HierarchyList(Entity):
 
         self.i = 0
         current_node = None
+        if LEVEL_EDITOR.current_scene is None or LEVEL_EDITOR.current_scene.scene_parent is None:
+            return
 
-        for entity in LEVEL_EDITOR.entities:
+        for entity in LEVEL_EDITOR.current_scene.scene_parent.get_descendants():
             if hasattr(entity, 'is_gizmo') and entity.is_gizmo:
                 continue
 
             if entity.parent == LEVEL_EDITOR.current_scene.scene_parent:
                 self.draw(entity, indent=0)
-
-                for child in [e for e in entity.children if e in LEVEL_EDITOR.entities]:
-                    if hasattr(child, 'is_gizmo') and child.is_gizmo:
-                        continue
-                    self.draw(child, indent=1)
-
-                    for child_2 in [e for e in child.children if e in LEVEL_EDITOR.entities]:
-                        if hasattr(child_2, 'is_gizmo') and child_2.is_gizmo:
-                            continue
-                        self.draw(child_2, indent=2)
-
-                        for child_3 in [e for e in child_2.children if e in LEVEL_EDITOR.entities]:
-                            if hasattr(child_3, 'is_gizmo') and child_3.is_gizmo:
-                                continue
-                            self.draw(child_3, indent=3)
-
 
         self.entity_list_text.text = self._text
         self.selected_renderer.model.generate()
