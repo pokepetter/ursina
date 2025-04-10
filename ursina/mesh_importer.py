@@ -24,8 +24,8 @@ def load_model(name, folder=None, file_types=('.bam', '.ursinamesh', '.obj', '.g
         gltf_no_srgb = gltf_no_srgb()
 
     if not isinstance(name, str):
-        raise TypeError(f"Argument save must be of type str, not {type(str)}")
-        
+        raise TypeError(f"Argument name must be of type str, not {type(str)}")
+
 
     if '.' in name:
         full_name = name
@@ -50,7 +50,7 @@ def load_model(name, folder=None, file_types=('.bam', '.ursinamesh', '.obj', '.g
         if not isinstance(folder, Path):
             raise TypeError(f'folder must be a Path, not a {type(folder)}')
         _folders = (folder,)
-    
+
     else:
         _folders = (application.models_compressed_folder, application.asset_folder, application.internal_models_compressed_folder)
 
@@ -99,8 +99,15 @@ def load_model(name, folder=None, file_types=('.bam', '.ursinamesh', '.obj', '.g
                 elif filetype == '.blend':
                     print_info('found blend file:', file_path)
                     if blend_to_obj(file_path):
-                        # obj_to_ursinamesh(name=name)
-                        return load_model(name, folder, use_deepcopy=use_deepcopy)
+                        m = obj_to_ursinamesh(folder=folder, name=name, return_mesh=True)
+                        m.path = file_path
+                        m.name = name
+                        imported_meshes[name] = m
+                        if not use_deepcopy:
+                            m.save(f'{name}.bam')
+
+                        return m
+                        # return load_model(name, folder, use_deepcopy=use_deepcopy)
                 else:
                     try:
                         return builtins.loader.loadModel(file_path)  # type: ignore
@@ -145,9 +152,9 @@ if application.development_mode:
             application.blender_paths['default'] = blender_exec
 
 
-def load_blender_scene(name, path=Func(getattr, application, 'asset_folder'), reload=False, skip_hidden=True, models_only=False, uvs=True, vertex_colors=True, normals=True, triangulate=True, decimals=4):
-    if callable(path):
-        path = path()
+def load_blender_scene(name, folder:Path=Func(getattr, application, 'asset_folder'), reload=False, skip_hidden=True, models_only=False, uvs=True, vertex_colors=True, normals=True, triangulate=True, decimals=4):
+    if callable(folder):
+        folder = folder()
 
     scenes_folder = Path(application.asset_folder / 'scenes')
     if not scenes_folder.exists():
@@ -157,9 +164,9 @@ def load_blender_scene(name, path=Func(getattr, application, 'asset_folder'), re
     # print('loading:', out_file_path)
     if reload or not out_file_path.exists():
         print_info('reload:')
-        blend_file = tuple(path.glob(f'**/{name}.blend'))
+        blend_file = tuple(folder.glob(f'**/{name}.blend'))
         if not blend_file:
-            raise ValueError('no blender file found at:', path / name)
+            raise ValueError('no blender file found at:', folder / name)
 
         blend_file = blend_file[0]
         print_info('loading blender scene:', blend_file, '-->', out_file_path)
@@ -240,7 +247,7 @@ def blend_to_obj(blend_file:Path, out_folder=Func(getattr, application, 'models_
     if platform.system() == 'Windows':
         subprocess.call(f'''"{blender}" "{blend_file}" --background --python "{export_script_path}" {export_mtl_arg} "{out_file_path}"''')
     else:
-        subprocess.run((blender, blend_file, '--background', '--python', export_script_path, export_mtl_arg, out_file_path))
+        subprocess.run((blender, blend_file, '--background', '--python', export_script_path, out_file_path))
 
     exported.append(blend_file)
 
