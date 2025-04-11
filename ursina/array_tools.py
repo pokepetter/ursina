@@ -127,6 +127,13 @@ class Array2D(list):
         new_array.paste(self, left, bottom)
         return new_array
 
+    def get(self, x, y, default=0):
+        x, y = int(x), int(y)
+        try:
+            return self[x][y]
+        except:
+            return default
+
 
     def get_area(self, start, end, allow_out_of_bounds=False):
         cropped_array = Array2D(width=end[0]-start[0], height=end[1]-start[1], default_value=self.default_value)
@@ -193,10 +200,6 @@ class Array3D(list):
     def size(self):
         from ursina.vec3 import Vec3
         return Vec3(self.width, self.height, self.depth)
-
-    # @property
-    # def bounds(self):
-    #     from ursinamath import Bounds
 
 
     def get(self, x, y, z, default=0):
