@@ -90,6 +90,10 @@ Vec2.left = Vec2(-1,0)
 Vec2.up = Vec2(0,1)
 Vec2.down = Vec2(0,-1)
 
+Vec2.cardinal_directions = (Vec2.up, Vec2.right, Vec2.down, Vec2.left)
+Vec2.ordinal_directions = (Vec2(1,1), Vec2(1,-1), Vec2(-1,-1), Vec2(-1,1))
+Vec2.compass_directions = Vec2.cardinal_directions + Vec2.ordinal_directions
+
 
 
 if __name__ == '__main__':
