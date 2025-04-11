@@ -12,10 +12,16 @@ def flatten_completely(target_list):
             yield i
 
 
-def enumerate_2d(target_2d_list):    # usage: for (x, y), value in enumerate_2d(my_2d_list)
-    for x, line in enumerate(target_2d_list):
-        for y, value in enumerate(line):
-            yield (x, y), value
+def enumerate_2d(lst):    # usage: for (x, y), value in enumerate_2d(my_2d_list)
+    if isinstance(lst, Array2D):
+        width = lst.width
+        height = lst.height
+    else:
+        width = len(lst)
+        height = len(lst[0])
+    for y in range(height):
+        for x in range(width):
+            yield (x, y), lst[x][y]
 
 
 def enumerate_3d(target_3d_list):   # usage: for (x, y, z), value in enumerate_3d(my_3d_list)
