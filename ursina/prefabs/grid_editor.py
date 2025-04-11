@@ -120,7 +120,6 @@ class GridEditor(Entity):
             return
 
         self.cursor.enabled = self.canvas_collider.hovered and self.start_pos is not None
-        print('---', self.start_pos)
         if self.canvas_collider.hovered:
             self.cursor.position = mouse.point*2 - Vec3(.5,.5,0)
 
