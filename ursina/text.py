@@ -1,5 +1,7 @@
 from panda3d.core import TextNode
 from panda3d.core import FontPool
+from panda3d.core import Filename
+
 import builtins
 import re
 
@@ -16,6 +18,25 @@ from ursina.scripts.property_generator import generate_properties_for_class
 # note:
 # <scale:n> tag doesn't work well in the middle of text.
 # only good for titles for now.
+
+from functools import lru_cache
+@lru_cache()
+def _search_for_file(name, folders, file_types=None): # prioritizes based on file_type order, then folder order.
+    if file_types is None and '.' not in name:
+        raise Exception(f'name({name}) has no file type, and no file_types were provided.')
+
+    if '.' in name:
+        file_types = ('', )
+
+    for file_type in file_types:
+        for folder in folders:
+            # print('-----', 'searchpattern:', f'{folder}/**/{name}{file_type}', 'result:', list(folder.glob(f'**/{name}.{file_type}')))
+            for file_path in folder.glob(f'**/{name}{file_type}'):
+                #print('FOUND FONT:', file_path)
+                return file_path
+
+    return None
+
 
 @generate_properties_for_class()
 class Text(Entity):
@@ -238,27 +259,6 @@ class Text(Entity):
 
 
     def font_setter(self, value):
-
-        from functools import lru_cache
-        @lru_cache
-        def _search_for_file(name, folders, file_types=None): # prioritizes based on file_type order, then folder order.
-            if file_types is None and '.' not in name:
-                raise Exception(f'name({name}) has no file type, and no file_types were provided.')
-
-            if '.' in name:
-                file_types = ('', )
-
-            for file_type in file_types:
-                for folder in folders:
-                    # print('-----', 'searchpattern:', f'{folder}/**/{name}{file_type}', 'result:', list(folder.glob(f'**/{name}.{file_type}')))
-                    for file_path in folder.glob(f'**/{name}{file_type}'):
-                        # print('FOUND FONT:', file_path)
-                        return file_path
-
-            return None
-
-        # print(_search_for_file.cache_info())
-
         font_file_types = ('.ttf', '.otf') if '.' not in value else ('', )
         folders = (application.fonts_folder, application.asset_folder, application.internal_fonts_folder)
         font_file_path = _search_for_file(value, folders, font_file_types)
@@ -266,7 +266,7 @@ class Text(Entity):
         if not font_file_path:
             print_warning('missing font:', value)
 
-        font = FontPool.load_font(str(font_file_path))
+        font = FontPool.load_font(str(font_file_path.name))
 
         if font:
             self._font = font
