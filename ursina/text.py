@@ -4,6 +4,7 @@ from panda3d.core import Filename
 
 import builtins
 import re
+import sys
 
 import ursina
 from ursina import camera
@@ -266,7 +267,10 @@ class Text(Entity):
         if not font_file_path:
             print_warning('missing font:', value)
 
-        font = FontPool.load_font(str(font_file_path.name))
+        if sys.platform == 'linux':
+            font = FontPool.load_font(str(font_file_path))
+        else:
+            font = FontPool.load_font(str(font_file_path.name))
 
         if font:
             self._font = font
