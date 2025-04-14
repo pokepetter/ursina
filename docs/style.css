@@ -64,9 +64,11 @@
 }
 
 body {
-    font-family: Lato, Arial, Sans-Serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.5;
     margin: auto;
     max-width: 100%;
+    font-size: 1em;
 }
 html {
     max-width:100%;
@@ -78,8 +80,9 @@ html {
 }
 
 h2 {
+    font-size: 2rem;
+    font-weight: 600;
     color: var(--header_color);
-    font-weight: normal;
 }
 
 a:link, a:visited {color: var(--link);}
@@ -97,7 +100,8 @@ a.button {
     border-radius: 2em;
     border-width: 2px;
     text-decoration: none;
-    font-size: 20px;
+    font-family: Lato, Arial, Sans-Serif;
+    font-size: 1.5em;
     line-height: 2.5em;
     border-style: solid;
     background-color: transparent;
@@ -120,6 +124,7 @@ img {
 }
 
 #header {
+    font-family: Lato, Arial, Sans-Serif;
     font-size: min(180px, 18vw);
     font-weight: bold;
     background: linear-gradient(120deg, var(--gradient_start), var(--gradient_end));
