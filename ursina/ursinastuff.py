@@ -80,12 +80,16 @@ def after(delay, unscaled=True, ignore_paused=False):    # function for @after d
 
 
 
-def destroy(entity, delay=0):
+def destroy(entity, delay=0, unscaled=True, ignore_paused=False):
+    if application.development_mode:
+        # get the calling function and the file it's from, so we can give a better error message if we try to use it after destroy
+        entity.destroy_source = f'caller: {sys._getframe(1).f_code.co_name} file: {sys._getframe(1).f_code.co_filename}'
+
     if delay == 0:
         _destroy(entity)
         return True
 
-    return invoke(_destroy, entity, delay=delay)
+    return invoke(_destroy, entity, delay=delay, unscaled=unscaled, ignore_paused=ignore_paused)
     # return Sequence(Wait(delay), Func(_destroy, entity), auto_destroy=True, started=True)
 
 

@@ -248,6 +248,12 @@ class Entity(NodePath, metaclass=PostInitCaller):
         for c in self.children + self.loose_children:
             c.eternal = value
 
+    def _ensure_is_not_destroyed(self):
+        if not application.development_mode:
+            return
+        if self.is_empty():
+            raise Exception(f'entity has been destroyed by: {self.destroy_source}')
+
 
     def double_sided_setter(self, value):
         self._double_sided = value
@@ -452,9 +458,11 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.origin = Vec3(self.origin_x, self.origin_y, value)
 
     def world_position_getter(self):
+        self._ensure_is_not_destroyed()
         return Vec3(self.get_position(scene))
 
     def world_position_setter(self, value):
+        self._ensure_is_not_destroyed()
         if not isinstance(value, (Vec2, Vec3)):
             value = self._list_to_vec(value)
         if isinstance(value, Vec2):
@@ -463,23 +471,31 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.setPos(scene, Vec3(value[0], value[1], value[2]))
 
     def world_x_getter(self):
+        self._ensure_is_not_destroyed()
         return self.getX(scene)
     def world_y_getter(self):
+        self._ensure_is_not_destroyed()
         return self.getY(scene)
     def world_z_getter(self):
+        self._ensure_is_not_destroyed()
         return self.getZ(scene)
 
     def world_x_setter(self, value):
+        self._ensure_is_not_destroyed()
         self.setX(scene, value)
     def world_y_setter(self, value):
+        self._ensure_is_not_destroyed()
         self.setY(scene, value)
     def world_z_setter(self, value):
+        self._ensure_is_not_destroyed()
         self.setZ(scene, value)
 
     def position_getter(self):
+        self._ensure_is_not_destroyed()
         return Vec3(*self.getPos())
 
     def position_setter(self, value):   # right, up, forward. can also set self.x, self.y, self.z
+        self._ensure_is_not_destroyed()
         if not isinstance(value, (Vec2, Vec3)):
             value = self._list_to_vec(value)
         if isinstance(value, Vec2):
@@ -488,18 +504,24 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.setPos(value[0], value[1], value[2])
 
     def x_getter(self):
+        self._ensure_is_not_destroyed()
         return self.getX()
     def x_setter(self, value):
+        self._ensure_is_not_destroyed()
         self.setX(value)
 
     def y_getter(self):
+        self._ensure_is_not_destroyed()
         return self.getY()
     def y_setter(self, value):
+        self._ensure_is_not_destroyed()
         self.setY(value)
 
     def z_getter(self):
+        self._ensure_is_not_destroyed()
         return self.getZ()
     def z_setter(self, value):
+        self._ensure_is_not_destroyed()
         self.setZ(value)
 
     @property
@@ -513,35 +535,45 @@ class Entity(NodePath, metaclass=PostInitCaller):
         return int(self.z)
 
     def world_rotation_getter(self):
+        self._ensure_is_not_destroyed()
         rotation = self.getHpr(scene)
         return Vec3(rotation[1], rotation[0], rotation[2]) * Entity.rotation_directions
 
     def world_rotation_setter(self, value):
+        self._ensure_is_not_destroyed()
         self.setHpr(scene, Vec3(value[1], value[0], value[2]) * Entity.rotation_directions)
 
     def world_rotation_x_getter(self):
+        self._ensure_is_not_destroyed()
         return self.world_rotation[0]
 
     def world_rotation_x_setter(self, value):
+        self._ensure_is_not_destroyed()
         self.world_rotation = Vec3(value, self.world_rotation[1], self.world_rotation[2])
 
     def world_rotation_y_getter(self):
+        self._ensure_is_not_destroyed()
         return self.world_rotation[1]
 
     def world_rotation_y_setter(self, value):
+        self._ensure_is_not_destroyed()
         self.world_rotation = Vec3(self.world_rotation[0], value, self.world_rotation[2])
 
     def world_rotation_z_getter(self):
+        self._ensure_is_not_destroyed()
         return self.world_rotation[2]
 
     def world_rotation_z_setter(self, value):
+        self._ensure_is_not_destroyed()
         self.world_rotation = Vec3(self.world_rotation[0], self.world_rotation[1], value)
 
     def rotation_getter(self):
+        self._ensure_is_not_destroyed()
         rotation = self.getHpr()
         return Vec3(rotation[1], rotation[0], rotation[2]) * Entity.rotation_directions
 
     def rotation_setter(self, value):   # can also set self.rotation_x, self.rotation_y, self.rotation_z
+        self._ensure_is_not_destroyed()
         if not isinstance(value, (Vec2, Vec3)):
             value = self._list_to_vec(value)
         if isinstance(value, Vec2):
@@ -550,28 +582,38 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.setHpr(Vec3(value[1], value[0], value[2]) * Entity.rotation_directions)
 
     def rotation_x_getter(self):
+        self._ensure_is_not_destroyed()
         return self.rotation.x
     def rotation_x_setter(self, value):
+        self._ensure_is_not_destroyed()
         self.rotation = Vec3(value, self.rotation[1], self.rotation[2])
 
     def rotation_y_getter(self):
+        self._ensure_is_not_destroyed()
         return self.rotation.y
     def rotation_y_setter(self, value):
+        self._ensure_is_not_destroyed()
         self.rotation = Vec3(self.rotation[0], value, self.rotation[2])
 
     def rotation_z_getter(self):
+        self._ensure_is_not_destroyed()
         return self.rotation.z
     def rotation_z_setter(self, value):
+        self._ensure_is_not_destroyed()
         self.rotation = Vec3(self.rotation[0], self.rotation[1], value)
 
     def quaternion_getter(self):
+        self._ensure_is_not_destroyed()
         return self.get_quat()
     def quaternion_setter(self, value):
+        self._ensure_is_not_destroyed()
         self.set_quat(value)
 
     def world_scale_getter(self):
+        self._ensure_is_not_destroyed()
         return Vec3(*self.getScale(scene))
     def world_scale_setter(self, value):
+        self._ensure_is_not_destroyed()
         if not isinstance(value, (Vec2, Vec3)):
             value = self._list_to_vec(value)
 
@@ -582,28 +624,36 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.setScale(scene, value)
 
     def world_scale_x_getter(self):
+        self._ensure_is_not_destroyed()
         return self.getScale(scene)[0]
     def world_scale_x_setter(self, value):
+        self._ensure_is_not_destroyed()
         value = value if value != 0 else .001 # prevent panda3d erroring when scale is 0
         self.setScale(scene, Vec3(value, self.world_scale_y, self.world_scale_z))
 
     def world_scale_y_getter(self):
+        self._ensure_is_not_destroyed()
         return self.getScale(scene)[1]
     def world_scale_y_setter(self, value):
+        self._ensure_is_not_destroyed()
         value = value if value != 0 else .001 # prevent panda3d erroring when scale is 0
         self.setScale(scene, Vec3(self.world_scale_x, value, self.world_scale_z))
 
     def world_scale_z_getter(self):
+        self._ensure_is_not_destroyed()
         return self.getScale(scene)[2]
     def world_scale_z_setter(self, value):
+        self._ensure_is_not_destroyed()
         value = value if value != 0 else .001 # prevent panda3d erroring when scale is 0
         self.setScale(scene, Vec3(self.world_scale_x, self.world_scale_y, value))
 
     def scale_getter(self):
+        self._ensure_is_not_destroyed()
         scale = self.getScale()
         return Vec3(scale[0], scale[1], scale[2])
 
     def scale_setter(self, value):  # can also set self.scale_x, self.scale_y, self.scale_z
+        self._ensure_is_not_destroyed()
         if not isinstance(value, (Vec2, Vec3)):
             value = self._list_to_vec(value)
         if isinstance(value, Vec2):
@@ -613,31 +663,41 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.setScale(value[0], value[1], value[2])
 
     def scale_x_getter(self):
+        self._ensure_is_not_destroyed()
         return self.scale[0]
     def scale_x_setter(self, value):
+        self._ensure_is_not_destroyed()
         value = value if value != 0 else .001 # prevent panda3d erroring when scale is 0
         self.setScale(value, self.scale_y, self.scale_z)
 
     def scale_y_getter(self):
+        self._ensure_is_not_destroyed()
         return self.scale[1]
     def scale_y_setter(self, value):
+        self._ensure_is_not_destroyed()
         value = value if value != 0 else .001 # prevent panda3d erroring when scale is 0
         self.setScale(self.scale_x, value, self.scale_z)
 
     def scale_z_getter(self):
+        self._ensure_is_not_destroyed()
         return self.scale[2]
     def scale_z_setter(self, value):
+        self._ensure_is_not_destroyed()
         value = value if value != 0 else .001 # prevent panda3d erroring when scale is 0
         self.setScale(self.scale_x, self.scale_y, value)
 
     def transform_getter(self): # get/set position, rotation and scale
+        self._ensure_is_not_destroyed()
         return (self.position, self.rotation, self.scale)
     def transform_setter(self, value):
+        self._ensure_is_not_destroyed()
         self.position, self.rotation, self.scale = value
 
     def world_transform_getter(self): # get/set world_position, world_rotation and world_scale
+        self._ensure_is_not_destroyed()
         return (self.world_position, self.world_rotation, self.world_scale)
     def world_transform_setter(self, value):
+        self._ensure_is_not_destroyed()
         self.world_position, self.world_rotation, self.world_scale = value
 
 
