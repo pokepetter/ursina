@@ -16,7 +16,7 @@ from panda3d.core import CullFaceAttrib
 
 from ursina import application
 from ursina.collider import Collider, BoxCollider, SphereCollider, MeshCollider, CapsuleCollider
-from ursina.mesh import Mesh
+from ursina.mesh import Mesh, MeshModes
 from ursina.sequence import Sequence, Func, Wait
 from ursina.ursinamath import lerp
 from ursina import curve
@@ -33,6 +33,7 @@ from ursina.ursinastuff import invoke, PostInitCaller
 
 from ursina import color
 from ursina.color import Color
+from ursina.shaders.unlit_shader import unlit_shader
 try:
     from ursina.scene import instance as scene
 except:
@@ -45,11 +46,11 @@ from ursina.scripts.property_generator import generate_properties_for_class
 @generate_properties_for_class()
 class Entity(NodePath, metaclass=PostInitCaller):
     rotation_directions = (-1,-1,1)
-    default_shader = None
+    default_shader = unlit_shader
     default_values = {
-        # 'parent':scene,
+        'parent':scene,
         'name':'entity', 'enabled':True, 'eternal':False, 'position':Vec3(0,0,0), 'rotation':Vec3(0,0,0), 'scale':Vec3(1,1,1), 'model':None, 'origin':Vec3(0,0,0),
-        'shader':None, 'texture':None, 'texture_scale':Vec2(1,1), 'color':color.white, 'collider':None}
+        'shader':'unlit_shader', 'texture':None, 'texture_scale':Vec2(1,1), 'color':color.white, 'collider':None}
 
     def __init__(self, add_to_scene_entities=True, enabled=True, **kwargs):
         self._children = []
@@ -62,8 +63,6 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
         self.parent = scene     # default parent is scene, which means it's in 3d space. to use UI space, set the parent to camera.ui instead.
         self.add_to_scene_entities = add_to_scene_entities # set to False to be ignored by the engine, but still get rendered.
-        if add_to_scene_entities:
-            scene.entities.append(self)
 
         self._shader_inputs = {}
         self.setPythonTag('Entity', self)   # for the raycast to get the Entity and not just the NodePath
@@ -97,11 +96,14 @@ class Entity(NodePath, metaclass=PostInitCaller):
         if not _Ursina_instance and _warn_if_ursina_not_instantiated and add_to_scene_entities:
             print_warning('Tried to instantiate Entity before Ursina. Please create an instance of Ursina first (app = Ursina())', self.line_definition)
 
-        if 'shader' not in kwargs and Entity.default_shader:
-            kwargs['shader'] = Entity.default_shader
+        if 'shader' in kwargs:
+            self.shader = kwargs['shader']
+            del kwargs['shader']
+        # else:
+        #     self.shader = __class__.default_shader
 
         # make sure things get set in the correct order. both colliders and texture need the model to be set first.
-        for key in ('model', 'origin', 'origin_x', 'origin_y', 'origin_z', 'collider', 'shader', 'texture', 'texture_scale', 'texture_offset'):
+        for key in ('model', 'origin', 'origin_x', 'origin_y', 'origin_z', 'collider', 'texture', 'texture_scale', 'texture_offset'):
             if key in kwargs:
                 setattr(self, key, kwargs[key])
                 del kwargs[key]
@@ -121,6 +123,9 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def __post_init__(self):
+        if self.add_to_scene_entities:
+            scene.entities.append(self)
+
         if self.enabled and hasattr(self, 'on_enable'):
             self.on_enable()
 
@@ -188,6 +193,13 @@ class Entity(NodePath, metaclass=PostInitCaller):
                 # print('removed model')
             self._model = value
             return
+
+        # if isinstance(value, Mesh) and value.mode == MeshModes.point:
+        #     from ursina.shaders.point_shader import point_shader
+        #     self.shader = point_shader
+        #     self.set_shader_input('render_points_in_3d', value.render_points_in_3d)
+        #     self.set_shader_input('thickness', value.thickness)
+
 
         if isinstance(value, NodePath): # pass procedural model
             if self.model and value != self.model:
@@ -729,14 +741,24 @@ class Entity(NodePath, metaclass=PostInitCaller):
         normalized_pos = projected_pos * reciprocal_w
         return Vec2(normalized_pos[0] * camera.aspect_ratio / 2, normalized_pos[1] / 2)
 
+    # def shader_getter(self):
+    #     return self._shader
 
     def shader_setter(self, value):
-        self._shader = value
-        if not self.model:
-            return
 
-        if value is None:
-            self.setShaderAuto()
+        # if not self.model:
+        #     return
+
+        # if value is None:
+        #     self.setShaderAuto()
+        #     return
+        # # test
+        # if value == Entity.default_shader:
+        #     self.setShaderAuto()
+        #     return
+
+        if value is None and self.name != 'camera':
+            self._shader = value
             return
 
         if isinstance(value, Panda3dShader): # panda3d shader
@@ -1474,47 +1496,58 @@ if __name__ == '__main__':
     from ursina import *
     app = Ursina()
 
-    e = Entity(model='quad', color=color.orange, position=(0,0,1), scale=1.5, rotation=(0,0,45), texture='brick')
+    # e = Entity(model='quad', color=color.orange, position=(0,0,1), scale=1.5, rotation=(0,0,45), texture='brick')
 
-    '''example of inheriting Entity'''
-    class Player(Entity):
-        def __init__(self, **kwargs):
-            super().__init__()
-            self.model='cube'
-            self.color = color.red
-            self.scale_y = 2
+    # '''example of inheriting Entity'''
+    # class Player(Entity):
+    #     def __init__(self, **kwargs):
+    #         super().__init__()
+    #         self.model='cube'
+    #         self.color = color.red
+    #         self.scale_y = 2
 
-            for key, value in kwargs.items():
-                setattr(self, key, value)
+    #         for key, value in kwargs.items():
+    #             setattr(self, key, value)
 
-        # input and update functions gets automatically called by the engine
-        def input(self, key):
-            if key == 'space':
-                # self.color = self.color.inverse()
-                self.animate_x(2, duration=1)
+    #     # input and update functions gets automatically called by the engine
+    #     def input(self, key):
+    #         if key == 'space':
+    #             # self.color = self.color.inverse()
+    #             self.animate_x(2, duration=1)
 
-        def update(self):
-            self.x += held_keys['d'] * time.dt * 10
-            self.x -= held_keys['a'] * time.dt * 10
+    #     def update(self):
+    #         self.x += held_keys['d'] * time.dt * 10
+    #         self.x -= held_keys['a'] * time.dt * 10
 
-    player = Player(x=-1)
-
-
-    # test
-    e = Entity(model='cube', collider='box', texture='shore', texture_scale=Vec2(2), color=hsv(.3,1,.5))
-    print(repr(e))
-    # a = Entity()
-    # b = Entity(parent=a)
+    # player = Player(x=-1)
 
 
-    # e.animate_x(3, duration=2, delay=.5, loop=True)
-    # e.animate_position(Vec3(1,1,1), duration=1, loop=True)
-    # e.animate_rotation(Vec3(45,45,45))
-    # e.animate_scale(2, duration=1, curve=curve.out_expo_boomerang, loop=True)
-    # e.animate_color(color.green, loop=True)
-    # e.shake()
-    # e.fade_out(delay=.5)
-    # e.fade_in(delay=2.5)
-    # e.blink(color.red, duration=1, curve=curve.linear_boomerang, loop=True)
+    # # test
+    # e = Entity(model='cube', collider='box', texture='shore', texture_scale=Vec2(2), color=hsv(.3,1,.5))
+    # print(repr(e))
+    # # a = Entity()
+    # # b = Entity(parent=a)
 
+
+    # # e.animate_x(3, duration=2, delay=.5, loop=True)
+    # # e.animate_position(Vec3(1,1,1), duration=1, loop=True)
+    # # e.animate_rotation(Vec3(45,45,45))
+    # # e.animate_scale(2, duration=1, curve=curve.out_expo_boomerang, loop=True)
+    # # e.animate_color(color.green, loop=True)
+    # # e.shake()
+    # # e.fade_out(delay=.5)
+    # # e.fade_in(delay=2.5)
+    # # e.blink(color.red, duration=1, curve=curve.linear_boomerang, loop=True)
+
+
+    # shader test
+    from ursina.shaders import matcap_shader, lit_with_shadows_shader
+    ground = Entity(model='plane', texture='grass', scale=10, shader=lit_with_shadows_shader)
+    e = Entity(model='cube', y=1, texture='grass',
+        # shader=unlit_shader
+        )
+    e1 = Entity(parent=e, model='cube', y=1, x=.5, shader=matcap_shader, texture='shore')
+    e2 = Entity(parent=e1, model='cube', x=2, shader=lit_with_shadows_shader, texture='white_cube')
+    DirectionalLight().look_at(Vec3(1,-1,.5))
+    EditorCamera()
     app.run()

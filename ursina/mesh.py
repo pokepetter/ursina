@@ -193,6 +193,7 @@ class Mesh(p3d.NodePath):
                 self._set_array_data(vdata.modify_array(normal_attribute_index), self._ravel(self.normals), 'f')
 
         geom = p3d.Geom(vdata)
+        self.geom = geom
 
         if len(self.triangles) == 0:    # no triangles provided, so just add them in order
             prim = Mesh._modes[self.mode](static_mode)
@@ -252,6 +253,7 @@ class Mesh(p3d.NodePath):
 
         if self.mode == 'point':
             self.setTexGen(p3d.TextureStage.getDefault(), p3d.TexGenAttrib.MPointSprite)
+            # self.setShaderAuto()
 
 
     @property
@@ -421,8 +423,8 @@ class Mesh(p3d.NodePath):
 
         if not name and hasattr(self, 'path'):
             name = self.path.stem
-            if '.' not in name:
-                name += '.ursinamesh'
+        if '.' not in name:
+            name += '.ursinamesh'
 
         if name.endswith('ursinamesh'):
             with open(folder / name, 'w') as f:
@@ -448,6 +450,9 @@ class Mesh(p3d.NodePath):
 if __name__ == '__main__':
     from ursina import *
     app = Ursina()
+
+    from ursina.shaders.unlit_shader import unlit_shader
+    Entity.default_shader = unlit_shader
 
     # verts as list of tuples
     e = Entity(position=(0,0), model=Mesh(vertices=[(-.5,0,0), (.5,0,0), (0, 1, 0)]))
@@ -504,11 +509,19 @@ if __name__ == '__main__':
         ), color=color.magenta)
     Text(parent=line_segments, text='line_segments', y=1, scale=5)
 
-    points = Entity(position=(6,0), model=Mesh(vertices=(Vec3(0,0,0), Vec3(.6,.3,0), Vec3(1,1,0), Vec3(.6,1.7,0), Vec3(0,2,0)), mode='point', thickness=.05), color=color.red)
-    Text(parent=points, text='points', y=1, scale=5)
+    points_3d = Entity(position=(6,0), model=Mesh(vertices=(Vec3(0,0,0), Vec3(.6,.3,0), Vec3(1,1,0), Vec3(.6,1.7,0), Vec3(0,2,0)), mode='point', thickness=.05),
+        color=color.red,
+        texture='circle',
+        )
+    # points_3d.setShaderAuto()
+    # points_3d.model.setShaderAuto()
+    # points_3d.shader = None
+    Text(parent=points_3d, text='points_3d', y=1, scale=5)
 
-    points_2d = Entity(position=(6,-2), model=Mesh(vertices=(Vec3(0,0,0), Vec3(.6,.3,0), Vec3(1,1,0), Vec3(.6,1.7,0), Vec3(0,2,0)), mode='point', thickness=10, render_points_in_3d=False), color=color.red)
+    points_2d = Entity(position=(6,-2), model=Mesh(vertices=(Vec3(0,0,0), Vec3(.6,.3,0), Vec3(1,1,0), Vec3(.6,1.7,0), Vec3(0,2,0)), mode='point', thickness=10, render_points_in_3d=False), color=color.red, texture='circle')
     Text(parent=points_2d, text='points_2d', y=1, scale=5)
+    points_2d.set_shader_auto()
+    print('----------------------', points_2d.model.getShader())
 
     quad = Entity(
         position=(8,0),
@@ -537,6 +550,7 @@ if __name__ == '__main__':
             uvs=((1, 1), (0, 1), (0, 0), (1, 0), (1, 1), (0, 0)),
             normals=[(-0.0, 0.0, -1.0), (-0.0, 0.0, -1.0), (-0.0, 0.0, -1.0), (-0.0, 0.0, -1.0), (-0.0, 0.0, -1.0), (-0.0, 0.0, -1.0)],
             mode='triangle'),
+        texture='shore',
         )
     Text(parent=quad, text='quad_with_usv_and_normals', y=1, scale=5, origin=(0,-.5))
 
@@ -548,6 +562,7 @@ if __name__ == '__main__':
             normals=[(-0.0, 0.0, -1.0), (-0.0, 0.0, -1.0), (-0.0, 0.0, -1.0), (-0.0, 0.0, -1.0), (-0.0, 0.0, -1.0), (-0.0, 0.0, -1.0)],
             colors=[color.red, color.yellow, color.green, color.cyan, color.blue, color.magenta],
             mode='triangle'),
+        texture='shore'
         )
     Text(parent=quad, text='quad_with_usv_and_normals_and_vertex_colors', y=1, scale=5, origin=(0,-.5))
 
@@ -595,6 +610,6 @@ if __name__ == '__main__':
     EditorCamera()
 
     # m = Mesh()
-    print(load_model('sphere', application.internal_models_compressed_folder, use_deepcopy=True).serialize())
+    # print(load_model('sphere', application.internal_models_compressed_folder, use_deepcopy=True).serialize())
     # print()
     app.run()

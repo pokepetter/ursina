@@ -15,10 +15,11 @@ from ursina.string_utilities import print_info
 from ursina.scripts.property_generator import generate_properties_for_class
 @generate_properties_for_class()
 class Camera(Entity):
-    def __init__(self):
+
+    def __init__(self, **kwargs):
         original_warn_if_ursina_not_instantiated = entity._warn_if_ursina_not_instantiated
         entity._warn_if_ursina_not_instantiated = False
-        super().__init__()
+        super().__init__(**kwargs)
         entity._warn_if_ursina_not_instantiated = original_warn_if_ursina_not_instantiated
 
         self.parent = scene
@@ -127,6 +128,8 @@ class Camera(Entity):
 
 
     def shader_setter(self, value):     # for applying post-processing effects.
+        if value == Entity.default_shader:
+            return
         self._shader = value
         if value is None:
             self.filter_manager.cleanup()
@@ -175,6 +178,7 @@ class Camera(Entity):
 
 
         print_info('set camera shader to:', shader)
+
 
 
     def set_shader_input(self, name, value):
