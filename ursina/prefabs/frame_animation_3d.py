@@ -15,7 +15,7 @@ class FrameAnimation3d(Entity):
             self.sequence = Sequence(loop=loop, auto_destroy=auto_destroy)
             return
 
-        self.frames = [Entity(parent=self, model=e.stem, enabled=False, add_to_scene_entities=False) for e in model_names]
+        self.frames = [Entity(parent=self, model=e.stem, enabled=False) for e in model_names]
         self.frames[0].enabled = True
 
         self.sequence = Sequence(loop=loop, auto_destroy=auto_destroy)
@@ -23,6 +23,12 @@ class FrameAnimation3d(Entity):
             self.sequence.append(Func(setattr, self.frames[i-1], 'enabled', False))
             self.sequence.append(Func(setattr, self.frames[i], 'enabled', True))
             self.sequence.append(Wait(1/fps))
+
+        if loop == 'boomerang':
+            for i in range(len(self.frames)-1, 0, -1):
+                self.sequence.append(Func(setattr, self.frames[i], 'enabled', False))
+                self.sequence.append(Func(setattr, self.frames[i-1], 'enabled', True))
+                self.sequence.append(Wait(1/fps))
 
         if auto_destroy:
             self.sequence.append(Func(destroy, self))
