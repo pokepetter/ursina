@@ -63,7 +63,7 @@ def invoke(function, *args, **kwargs):  # reserved keywords: 'delay', 'unscaled'
     )
 
 
-def after(delay, unscaled=True, ignore_paused=False):    # function for @after decorator. Use the docrator, not this.
+def after(delay, unscaled=True, ignore_paused=False, entity=None):    # function for @after decorator. Use the docrator, not this.
     '''@after decorator for calling a function after some time.
 
         example:
@@ -74,7 +74,10 @@ def after(delay, unscaled=True, ignore_paused=False):    # function for @after d
     '''
     def _decorator(func):
         def wrapper(*args, **kwargs):
-            invoke(func, *args, **kwargs, delay=delay, unscaled=unscaled, ignore_paused=ignore_paused)
+            sequence = invoke(func, *args, **kwargs, delay=delay, unscaled=unscaled, ignore_paused=ignore_paused)
+            if entity is not None:
+                entity.animations.append(sequence)
+
         return wrapper()
     return _decorator
 
@@ -253,6 +256,9 @@ def _test(function, test_input, expected_result, label='', approximate=False):
             print(f'result should be: {type(expected_result)}, not: {type(result)}')
 
         if isinstance(expected_result, (tuple, list)):
+            if hasattr(result, '__iter__') and not hasattr(result, '__len__'):  # convert genearator to tuple
+                result = tuple(result)
+
             if len(result) != len(expected_result):
                 print(f'resulting tuple/list should be {len(expected_result)} long, not {len(result)}')
 
