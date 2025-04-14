@@ -47,5 +47,5 @@ if __name__ == '__main__':
     #slider.on_value_changed = set_blur
 
     EditorCamera()
-
+    Sky()
     app.run()

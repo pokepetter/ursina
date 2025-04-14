@@ -1,4 +1,9 @@
-from ursina import *; unlit_shader = Shader(name='unlit_shader', language=Shader.GLSL, vertex = '''#version 130
+from ursina.shader import Shader
+from ursina.vec2 import Vec2
+from ursina.vec3 import Vec3
+from ursina import color
+
+unlit_shader = Shader(name='unlit_shader', language=Shader.GLSL, vertex = '''#version 130
 
 
 uniform mat4 p3d_ModelViewProjectionMatrix;
@@ -30,6 +35,10 @@ out vec4 fragColor;
 in vec4 vertex_color;
 
 void main() {
+    //// for point support use gl_PointCoord instead of p3d_MultiTexCoord0
+    //vec2 pointUV = gl_PointCoord;  // Use built-in point sprite UVs
+    //vec4 texColor = texture(p3d_Texture0, pointUV);  // Sample the texture
+
     vec4 color = texture(p3d_Texture0, uvs) * p3d_ColorScale * vertex_color;
     fragColor = color.rgba;
 }
