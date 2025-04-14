@@ -100,6 +100,8 @@ def load_model(name, folder=None, file_types=('.bam', '.ursinamesh', '.obj', '.g
                     print_info('found blend file:', file_path)
                     if blend_to_obj(file_path):
                         m = obj_to_ursinamesh(folder=folder, name=name, return_mesh=True)
+                        if not m:
+                            raise ValueError('obj_to_ursinamesh failed to convert:', file_path)
                         m.path = file_path
                         m.name = name
                         imported_meshes[name] = m
@@ -239,6 +241,8 @@ def blend_to_obj(blend_file:Path, out_folder=Func(getattr, application, 'models_
     export_mtl_arg = '--export_mtl' if export_mtl else ''
 
     blender = get_blender(blend_file)
+    if blender is None:
+        raise Exception('trying to use blend_to_obj, but no blender installation was found. Please install blender to the default install location or provide a custom path in application.blender_paths.')
 
     name = f'{blend_file.stem}.obj'
     out_file_path = out_folder / name
