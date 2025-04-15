@@ -1,28 +1,42 @@
+
+## Installing Python
+# By getting Python from the official website
 1) Install Python 3.10 or newer. https://www.python.org/downloads/
 
-2) Open cmd/terminal and type:
+# By using uv
+...
+
+# Downloading ursina from PyPi (stable version)
 ```
-pip install ursina
+python -m pip install ursina
 ```
 
 
-If you want to install the newest version from GitHub, you can install like this.
+# Installing the most recent version from GitHub
 ```
-pip uninstall ursina
-pip install https://github.com/pokepetter/ursina/archive/master.zip
+python -m pip uninstall ursina
+python -m pip install https://github.com/pokepetter/ursina/archive/master.zip
 ```
-
 
 Keep in mind that things *could* break.
 
 
+# Installing the most recent version from GitHub, by cloning the repo
 If you want to easily edit the source, it's recommended to clone the git
 repo and install as develop like this. Make sure you have git installed. https://git-scm.com/
 ```
 git clone https://github.com/pokepetter/ursina.git
-pip install --editable .
+python -m pip install --editable .
 ```
 
+# Installing version from a specific git commit
+```
+python -m pip uninstall ursina
+python -m pip install https://github.com/pokepetter/ursina/archive/master.zip
+```
+
+
+# Installing optional dependencies
 Also install any of the optional dependencies you want from the list below,
 or install them all with:
 ```

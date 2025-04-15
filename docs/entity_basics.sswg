@@ -1,11 +1,10 @@
-# title ursina engine samples
-# insert menu.sswg
-# insert doc_index_sidebar.sswg
+#title ursina engine samples
+#insert menu.sswg
+#insert doc_index_sidebar.sswg
 
 ### Entity Basics
 
 ## What is an Entity?
-
 An entity is a thing in the world, and is the "god class" in ursina.
 It's like a GameObject in Unity or an Actor in Unreal.
 
@@ -17,7 +16,6 @@ For an overview of all its attributes and functions, see https://www.ursinaengin
 
 
 ## Model
-
 There are several included models like 'quad', 'plane', 'cube', and 'sphere',
 but you can also use your own.
 To do that simply give the base name of your model and it will glob/search for
@@ -35,8 +33,7 @@ Entity(model='name_of_your_model')
 
 
 
-## Texture
-
+## Texure
 Setting a texture is similar to setting a model. Just give it a name in this case as well:
 
 ```
@@ -59,7 +56,6 @@ print(s.aspect_ratio)
 
 
 ## Color
-
 ```
 e.color = color.red # set it to a color in the color module
 
@@ -74,7 +70,6 @@ e.color = lerp(color.red, color.green, .5) # set it to a color half way between 
 
 
 ## Position
-
 To set the position relative to the parent, set .position:
 ```
 e = Entity()
@@ -117,7 +112,6 @@ information on how the coordinate system works.
 
 
 ## Rotation
-```
 e.rotation = (0,0,0)
 e.rotation_y = 90
 ```
@@ -143,8 +137,9 @@ e = Entity(model='cube', scale=(3,1,1))
 
 
 ## Update
-
 An Entity's update method will be called automatically:
+
+# Assigning update to an entity
 ```
 e = Entity()
 def my_update():
@@ -154,6 +149,7 @@ e.update = my_update
 ```
 
 
+# By inheriting Entity
 Or you can implement it by inheriting the Entity class:
 ```
 class Player(Entity):
@@ -162,6 +158,7 @@ class Player(Entity):
 ```
 
 
+update in __main__ (starting script)
 The third option is to put a function called update in __main__, the starting script.
 You'll see this in a lot of examples since it's convenient for small scripts.
 Keep in mind this won't work if you import a module with an update function defined at module level.

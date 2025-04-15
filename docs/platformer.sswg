@@ -1,10 +1,10 @@
-# title ursina engine documentation
-# insert menu.sswg
+#title ursina engine documentation
+#insert menu.sswg
 
 ### Platformer
 <a href="https://github.com/pokepetter/ursina/blob/master/samples/platformer.py">https://github.com/pokepetter/ursina/blob/master/samples/platformer.py</a>
 
-# image icons/platformer.jpg
+#image icons/platformer.jpg
 ```
 import time
 # t = time.time()

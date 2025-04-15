@@ -1,10 +1,9 @@
-# title ursina engine text
-# insert menu.sswg
-# insert doc_index_sidebar.sswg
+#title ursina engine text
+#insert menu.sswg
+#insert doc_index_sidebar.sswg
 
-### Text
-
-## Text Size
+## Text
+# Text Size
 
 Set .scale or .world_scale:
 ```
@@ -24,7 +23,6 @@ button.text_entity.world_scale = 2  # make the text_entity twice as big.
 
 
 ## Font and Resolution
-
 For one Text Entity:
 
 ```
@@ -42,16 +40,15 @@ Text.default_resolution = 100 * Text.size
 Keep in mind you don't *have* to change the resolution, but for pixel fonts for example, you
 might want a higher resolution in order for it to not appear blurry.
 
-## Text Alignment
-
+# Text Alignment
 Change text alignment by setting .origin:
 ```
 Text('Hello\nWorld!', origin=(-.5,.5))  # the default. text starts in the upper left like normal.
-Text('Hello\nWorld!', origin=(0,0))     ``` is centered both horizontally and vertically.
+Text('Hello\nWorld!', origin=(0,0))     # text is centered both horizontally and vertically.
 ```
 
 
-## Text Colors
+# Text Colors
 
 Set .color to color the whole text.
 ```

@@ -1,10 +1,10 @@
-# title ursina engine documentation
-# insert menu.sswg
+#title ursina engine documentation
+#insert menu.sswg
 
 ### Rubik's Cube
 <a href="https://github.com/pokepetter/ursina/blob/master/samples/rubiks_cube.py">https://github.com/pokepetter/ursina/blob/master/samples/rubiks_cube.py</a>
 
-# image icons/rubiks_cube.jpg
+#image icons/rubiks_cube.jpg
 ```
 from ursina import *
 

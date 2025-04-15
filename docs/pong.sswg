@@ -1,10 +1,10 @@
-# title ursina engine documentation
-# insert menu.sswg
+#title ursina engine documentation
+#insert menu.sswg
 
 ### Pong
 <a href="https://github.com/pokepetter/ursina/blob/master/samples/pong.py">https://github.com/pokepetter/ursina/blob/master/samples/pong.py</a>
 
-# image icons/pong.jpg
+#image icons/pong.jpg
 ```
 from ursina import *
 

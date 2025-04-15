@@ -1,10 +1,10 @@
-# title ursina engine documentation
-# insert menu.sswg
+#title ursina engine documentation
+#insert menu.sswg
 
 ### Minecraft Clone
 <a href="https://github.com/pokepetter/ursina/blob/master/samples/minecraft_clone.py">https://github.com/pokepetter/ursina/blob/master/samples/minecraft_clone.py</a>
 
-# image icons/minecraft_clone.jpg
+#image icons/minecraft_clone.jpg
 ```
 '''
 Disclaimer: This solution is not scalable for creating a big world.

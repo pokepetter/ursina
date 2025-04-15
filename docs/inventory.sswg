@@ -1,10 +1,10 @@
-# title ursina engine documentation
-# insert menu.sswg
+#title ursina engine documentation
+#insert menu.sswg
 
 ### Inventory
 <a href="https://github.com/pokepetter/ursina/blob/master/samples/inventory.py">https://github.com/pokepetter/ursina/blob/master/samples/inventory.py</a>
 
-# image icons/inventory.jpg
+#image icons/inventory.jpg
 ```
 from ursina import *
 

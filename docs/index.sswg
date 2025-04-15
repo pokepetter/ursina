@@ -1,10 +1,8 @@
-# title ursina engine
-# insert menu.sswg
-
+#title ursina engine
+#insert menu.sswg
 <meta property="og:title" content="Ursina Engine"/> <meta property="og:type" content="website"/> <meta property="og:url" content="https://www.ursinaengine.org"/> <meta property="og:description" content="Ursina, an open source, python powered game engine"/> <meta property="og:image" content="https://www.ursinaengine.org/made_with_ursina.jpg"/>
-# center
+#center
 <div id="header">ursina engine</div>
-# size 1, normal
 A Python powered, open source game engine
 
 <a href="https://github.com/pokepetter/ursina"><img src="icons/github_icon.png"></img></a>  <a href="https://discord.gg/ydXfhyb"><img src="icons/discord_icon.png"></img></a>  <a href="https://twitter.com/ursinaengine"><img src="icons/twitter_icon.png"></img></a>  <a href="https://www.patreon.com/ursinaengine"><img src="icons/patreon_icon.png"></img></a>
@@ -12,12 +10,9 @@ A Python powered, open source game engine
 
 <a href="https://youtu.be/j71j88oCTNo" target="_blank" rel="noopener noreferrer"><img src="ursina_trailer_preview.webp" alt="link to ursina trailer" style="width:900px;height:491px;"></a>
 
-# left
+#left
 ## Powered by Python
-
 Python is the world's most popular programming language for a reason. The ease of use of Python combined with ursina's design, makes it easy to write concise code and avoid lots of boilerplate code.
-
-# size 0.8
 ```
 from ursina import *
 
@@ -34,18 +29,15 @@ EditorCamera()  # add camera controls for orbiting and moving the camera
 app.run()
 
 ```
-# size 1
 
 
 ## Make Any Type of Game
-
 2D games, 3D games, applications, visualizations, you can make anything you want with ursina.
 
-# image made_with_ursina.jpg
+#image made_with_ursina.jpg
 
 
 ## Iterate Faster
-
 • Reload code/textures/models while in-game
 • Automatic import of .psd and .blend files
 • Compile times:
@@ -62,28 +54,25 @@ Unity           11.45s          1145x
 
 
 ## Modern UI
-
 • Sleek modern design.
 • Full control. Change the looks of anything, down to the smallest details.
 • Built with Entities like everything else, so you don't have to relearn anything.
 
-# image ursina_ui_banner.jpg
+#image ursina_ui_banner.jpg
 
 
 
 ## Batteries Included
-
 • Easy to use mesh class for making procedural geometry
 • Built-in animation and tweening
 • Pre-made prefabs such as FirstPersonController, 2d platformer controller, editor camera
 • Lots of included procedural 3D primitives
 • Many shaders to choose from, or write your own with GLSL
 
-# image ursina_batteries_included_banner.jpg
+#image ursina_batteries_included_banner.jpg
 
 
 ## Free
-
 Licensed under the permissive MIT license,
 you can use Ursina for whatever you want.
 
@@ -92,7 +81,6 @@ you can use Ursina for whatever you want.
 
 
 ## Dependencies
-
 • python 3.10+
 • panda3d
 • pillow, for texture manipulation
@@ -106,11 +94,9 @@ Optional:
 
 
 ## Platforms
-
 • Windows
 • Linux
 • Mac (not officially supported, but will most likely work)
-
 
 
 
