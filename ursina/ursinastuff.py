@@ -256,7 +256,7 @@ def _test(function, test_input, expected_result, label='', approximate=False):
             print(f'result should be: {type(expected_result)}, not: {type(result)}')
 
         if isinstance(expected_result, (tuple, list)):
-            if hasattr(result, '__iter__') and not hasattr(result, '__len__'):  # convert genearator to tuple
+            if hasattr(result, '__iter__') and not hasattr(result, '__len__'):  # Convert generator to tuple
                 result = tuple(result)
 
             if len(result) != len(expected_result):
