@@ -51,20 +51,18 @@ class Color(Vec4):
         return tint(self, amount)
 
 
-def hsv(h, s, v, a=1):
+def hsv(h, s, v, a=1.0):
     return Color(colorsys.hsv_to_rgb((h / 360) - floor(h / 360), s, v) + (a,))
 
 def rgba32(r, g, b, a=255):
     return Color(r/255, g/255, b/255, a/255)
 
-def rgb32(r, g, b):
-    return Color(r/255, g/255, b/255, 1)
+rgb32 = rgba32   # alias for rgba32()
 
-def rgba(r, g, b, a):
+def rgba(r, g, b, a=1.0):
     return Color(r, g, b, a)
 
-def rgb(r, g, b):
-    return Color(r, g, b, 1)
+rgb = rgba  # alias for rgba()
 
 def to_hsv(color):
     return Color(colorsys.rgb_to_hsv(color[0], color[1], color[2]) + (color[3],))
@@ -77,7 +75,7 @@ def hex(value):
         value = value[1:]
     return rgb32(*tuple(int(value[i:i+2], 16) for i in (0, 2, 4)))
 
-def rgb_to_hex(r, g, b, a=1):
+def rgb_to_hex(r, g, b, a=1.0):
     return "#{0:02x}{1:02x}{2:02x}{3:02x}".format(int(r*255), int(g*255), int(b*255), int(a*255))
 
 
