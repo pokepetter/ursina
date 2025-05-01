@@ -1,18 +1,18 @@
 <!DOCTYPE HTML>
-        <!--generated with sswg-->
-        <html lang="en">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <head>
-            <title> ursina engine text</title>
-            <link rel="stylesheet" href="sswg.css">
-            <link rel="stylesheet" href="style.css">
-            <link rel="icon" type="image/x-icon" href="favicon.ico">
-        </head>
-        <body>
-        <left><div style="max-width: 1200px; margin: auto;">
+<!--generated with sswg-->
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <title> ursina engine text</title>
+    <link rel="stylesheet" href="sswg.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+<div style="max-width:1200px; margin:auto;">
+<div style="text-align:left;">
 <br>
 <a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" donate.html" class="button">Donate</a><br>
-<br>
 <div class="sidebar"><br>
 <b><a href="documentation.html">Documentation</a></b><br>
 <br>
@@ -21,7 +21,7 @@
 <a href="entity_basics.html">Entity Basics</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#What is an Entity?">What is an Entity?</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Model">Model</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Texture">Texture</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Texure">Texure</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Color">Color</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position">Position</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Rotation">Rotation</a><br>
@@ -47,10 +47,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Mouse Collision">Mouse Collision</a><br>
 <br>
 <a href="text.html">Text</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Size">Text Size</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text">Text</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Font and Resolution">Font and Resolution</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Alignment">Text Alignment</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Colors">Text Colors</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Changing Text of Prefabs">Changing Text of Prefabs</a><br>
 <br>
 <a href="animation.html">Animation</a><br>
@@ -93,66 +91,64 @@
 <br>
 </div><br>
 <br>
-<div style="font-size: 60.0px;font-weight: bold;">
-<div id="Text"/><br>
-Text<br>
-<div style="font-size: 20.0px;font-weight: normal;">
-<br>
-<h2><div id="Text Size"/><br>
-Text Size<br>
-</h2><br>
-<br>
+<h2 id="Text">
+Text
+</h2><h3 id="Text Size">
+Text Size
+</h3><br>
 Set .scale or .world_scale:<br>
-<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>text_entity = Text(<green>'hello'</green>, world_<olive>scale</olive>=<yellow>2</yellow>)
-</div><br>
+<code_block id="code_block_0"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>text_entity = Text(<green>'hello'</green>, world_<olive>scale</olive>=<yellow>2</yellow>)
+</code_block>
+<br>
 Changing default text size (globally):<br>
-<div class="code_block" id="code_block_1" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>Text.size = .<yellow>0</yellow><yellow>5</yellow> <gray># make all the text double as big (default: .<yellow>0</yellow><yellow>2</yellow><yellow>5</yellow>).</gray>
-</div><br>
+<code_block id="code_block_1"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>Text.size = .<yellow>0</yellow><yellow>5</yellow> <gray># make all the text double as big (default: .<yellow>0</yellow><yellow>2</yellow><yellow>5</yellow>).</gray>
+</code_block>
+<br>
 Changing the text size of the non-uniformly scaled Button:<br>
-<div class="code_block" id="code_block_2" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_2)">copy</button>button = Button(<olive>scale</olive>=(.<yellow>2</yellow>,.<yellow>1</yellow>), <olive>text</olive>=<green>'Start'</green>)
-button.text_entity.world_scale = <yellow>2</yellow>  <gray># make the text_entity twice as big.</gray>
-</div><br>
+<code_block id="code_block_2"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_2)">copy</button>button = Button(<olive>scale</olive>=(.<yellow>2</yellow>,.<yellow>1</yellow>), <olive>text</olive>=<green>'Start'</green>)
+button.text_entity.world_scale = <yellow>2</yellow>&nbsp;&nbsp;<gray># make the text_entity twice as big.</gray>
+</code_block>
 <br>
-<h2><div id="Font and Resolution"/><br>
-Font and Resolution<br>
-</h2><br>
 <br>
-For one Text Entity:<br>
+<h2 id="Font and Resolution">
+Font and Resolution
+</h2>For one Text Entity:<br>
 <br>
-<div class="code_block" id="code_block_3" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_3)">copy</button>text = Text(font=<green>'VeraMono.ttf'</green>, resolution=<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>*Text.size)
+<code_block id="code_block_3"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_3)">copy</button>text = Text(font=<green>'VeraMono.ttf'</green>, resolution=<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>*Text.size)
 text.text = descr
-</div><br>
+</code_block>
+<br>
 For all Text Entities:<br>
 <br>
-<div class="code_block" id="code_block_4" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_4)">copy</button>Text.default_font = <green>'VeraMono.ttf'</green>
+<code_block id="code_block_4"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_4)">copy</button>Text.default_font = <green>'VeraMono.ttf'</green>
 Text.default_resolution = <yellow>1</yellow><yellow>0</yellow><yellow>0</yellow> * Text.size
-</div><br>
+</code_block>
+<br>
 Keep in mind you don't *have* to change the resolution, but for pixel fonts for example, you<br>
 might want a higher resolution in order for it to not appear blurry.<br>
 <br>
-<h2><div id="Text Alignment"/><br>
-Text Alignment<br>
-</h2><br>
+<h3 id="Text Alignment">
+Text Alignment
+</h3>Change text alignment by setting .origin:<br>
+<code_block id="code_block_5"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_5)">copy</button>Text(<green>'Hello\nWorld!'</green>, <olive>origin</olive>=(-.<yellow>5</yellow>,.<yellow>5</yellow>))&nbsp;&nbsp;<gray># the default. text starts in the upper left like normal.</gray>
+Text(<green>'Hello\nWorld!'</green>, <olive>origin</olive>=(<yellow>0</yellow>,<yellow>0</yellow>))&nbsp;&nbsp;&nbsp;&nbsp; <gray># text is centered both horizontally and vertically.</gray>
+</code_block>
 <br>
-Change text alignment by setting .origin:<br>
-<div class="code_block" id="code_block_5" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_5)">copy</button>Text(<green>'Hello\nWorld!'</green>, <olive>origin</olive>=(-.<yellow>5</yellow>,.<yellow>5</yellow>))  <gray># the default. text starts in the upper left like normal.</gray>
-Text(<green>'Hello\nWorld!'</green>, <olive>origin</olive>=(<yellow>0</yellow>,<yellow>0</yellow>))     ``` is centered both horizontally and vertically.
-</div><br>
 <br>
-<h2><div id="Text Colors"/><br>
-Text Colors<br>
-</h2><br>
-<br>
+<h3 id="Text Colors">
+Text Colors
+</h3><br>
 Set .color to color the whole text.<br>
-<div class="code_block" id="code_block_6" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_6)">copy</button>t = Text(<green>'This is some text'</green>, <olive>color</olive>=color.blue)
-</div><br>
-Use tags to color parts of the text.<br>
-<div class="code_block" id="code_block_7" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_7)">copy</button>t = Text(<green>'This is some &lt;pink&gt;colored text. &lt;default&gt;Reset color back to default.'</green>, <olive>color</olive>=color.blue)
-</div><br>
-<h2><div id="Changing Text of Prefabs"/><br>
-Changing Text of Prefabs<br>
-</h2><br>
+<code_block id="code_block_6"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_6)">copy</button>t = Text(<green>'This is some text'</green>, <olive>color</olive>=color.blue)
+</code_block>
 <br>
+Use tags to color parts of the text.<br>
+<code_block id="code_block_7"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_7)">copy</button>t = Text(<green>'This is some &lt;pink&gt;colored text. &lt;default&gt;Reset color back to default.'</green>, <olive>color</olive>=color.blue)
+</code_block>
+<br>
+<h2 id="Changing Text of Prefabs">
+Changing Text of Prefabs
+</h2><br>
 Things like Slider, InputField, etc., usually has .text_entity which you can access if you need it.<br>
 <br>
 <script>
@@ -165,6 +161,7 @@ function copy_to_clipboard(containerid) {
     window.getSelection().removeAllRanges()
 }
 </script>
-
+<br>
+<br>
 </body>
 </html>

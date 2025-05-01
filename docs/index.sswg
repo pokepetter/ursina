@@ -81,16 +81,17 @@ you can use Ursina for whatever you want.
 
 
 ## Dependencies
-• python 3.10+
+• python 3.12+
 • panda3d
 • pillow, for texture manipulation
 • pyperclip, for cut and paste support
 
 Optional:
+• Blender, for converting .blend files
 • psutil, for measuring memory usage
 • imageio, for recording and converting to gifs
 • psd-tools3, for converting .psd files
-• Blender, for converting .blend files
+• thumbhash-python, for generating and loading low resolution placeholder textures
 
 
 ## Platforms
@@ -100,4 +101,4 @@ Optional:
 
 
 
-[⭳ Download, installation.html]
+[Download, installation.html]

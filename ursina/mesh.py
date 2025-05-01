@@ -304,10 +304,6 @@ class Mesh(p3d.NodePath):
     def generated_vertices(self, value):
         self._generated_vertices = value
 
-    @property
-    @deprecated("Use .serialize() instead of .recipe")
-    def recipe(self):
-        return self.serialize()
 
     def serialize(self, vertex_decimal_limit=4, color_decimal_limit=4, uv_decimal_limit=4, normal_decimal_limit=4):
         vbuf_format = self.vertex_buffer_format

@@ -1,18 +1,18 @@
 <!DOCTYPE HTML>
-        <!--generated with sswg-->
-        <html lang="en">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <head>
-            <title> Networking Concepts</title>
-            <link rel="stylesheet" href="sswg.css">
-            <link rel="stylesheet" href="style.css">
-            <link rel="icon" type="image/x-icon" href="favicon.ico">
-        </head>
-        <body>
-        <left><div style="max-width: 1200px; margin: auto;">
+<!--generated with sswg-->
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <title> Networking Concepts</title>
+    <link rel="stylesheet" href="sswg.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+<div style="max-width:1200px; margin:auto;">
+<div style="text-align:left;">
 <br>
 <a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" donate.html" class="button">Donate</a><br>
-<br>
 <div class="sidebar"><br>
 <b><a href="documentation.html">Documentation</a></b><br>
 <br>
@@ -21,7 +21,7 @@
 <a href="entity_basics.html">Entity Basics</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#What is an Entity?">What is an Entity?</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Model">Model</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Texture">Texture</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Texure">Texure</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Color">Color</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position">Position</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Rotation">Rotation</a><br>
@@ -47,10 +47,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Mouse Collision">Mouse Collision</a><br>
 <br>
 <a href="text.html">Text</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Size">Text Size</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text">Text</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Font and Resolution">Font and Resolution</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Alignment">Text Alignment</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Colors">Text Colors</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Changing Text of Prefabs">Changing Text of Prefabs</a><br>
 <br>
 <a href="animation.html">Animation</a><br>
@@ -93,15 +91,12 @@
 <br>
 </div><br>
 <br>
-<div style="font-size: 60.0px;font-weight: bold;">
-<div id="Networking"/><br>
-Networking<br>
-<div style="font-size: 20.0px;font-weight: normal;">
-<br>
-<h2><div id="~~ Networking Concepts ~~"/><br>
-~~ Networking Concepts ~~<br>
+<h1 id="Networking">
+Networking
+</h1><br>
+<h2 id="~~ Networking Concepts ~~">
+~~ Networking Concepts ~~
 </h2><br>
-<br>
 This section will cover basic networking concepts, not just those applicable to video games.<br>
 There are many resources covering these topics so I will try to give the brief rundown as is relevant to video games.<br>
 This is an oversimplification, but should give you some idea of how things work.<br>
@@ -109,10 +104,9 @@ This is an oversimplification, but should give you some idea of how things work.
 You can skip this section if you are familiar with networking basics.<br>
 <br>
 <br>
-<h2><div id="How Data Goes from Point A to Point B"/><br>
-How Data Goes from Point A to Point B<br>
+<h2 id="How Data Goes from Point A to Point B">
+How Data Goes from Point A to Point B
 </h2><br>
-<br>
 When two computers try to send data to each other over the internet that data must have some way of findings its way to the other<br>
 computer. The protocol for doing that is known as Internet Protocol (IP). Data is transmitted via *packets*. These packets contain<br>
 not only the data that the user wishes to send, but extra information in *headers* that contain information on where to send that<br>
@@ -126,10 +120,9 @@ disruption by allowing packets to take multiple *routes* between the source and 
 still be *lost*.<br>
 <br>
 <br>
-<h2><div id="IP Addresses"/><br>
-IP Addresses<br>
+<h2 id="IP Addresses">
+IP Addresses
 </h2><br>
-<br>
 There are two main types of IP addresses you will probably encounter, IPv4 (INET), and IPv6 (INET6). In the past IPv4 had enough<br>
 possible address values for all the computers on the internet, but as the internet rapidly increased in size, they ran out of<br>
 IPv4 addresses, this oversight led to the creation of IPv6, which has more than enough possible values. But much of the software<br>
@@ -151,10 +144,9 @@ There are also several more layers in between us and the LAN, but those are outs
 to configure our routers to allow certain traffic through. This usually comes in the form of *port forwarding* when hosting a server locally.<br>
 <br>
 <br>
-<h2><div id="Ports"/><br>
-Ports<br>
+<h2 id="Ports">
+Ports
 </h2><br>
-<br>
 In addition to IP addresses telling us where to send information to, we may also have multiple destinations at that destination<br>
 computer. If you are running two different networked applications on the same computer then the packets need to not only know<br>
 which computer to go to, but which application on that computer once it gets there. This is what the *port number* is for.<br>
@@ -168,10 +160,9 @@ instructions for your specific router online. If you are hosting on a server pro
 configure some network traffic / firewalls rules, similar to port forwarding.<br>
 <br>
 <br>
-<h2><div id="Communication Protocols"/><br>
-Communication Protocols<br>
+<h2 id="Communication Protocols">
+Communication Protocols
 </h2><br>
-<br>
 There are two widely used protocols for transmitting data on top of IP. They are the User Datagram Protocol (UDP), and<br>
 Transmission Control Protocol (TCP). A protocol being the agreed upon way to communicate between computers. UDP is the more raw<br>
 way to communicate, it leaves it up to the user to do what needs to be done. UDP does not have connections, establishing a<br>
@@ -185,10 +176,9 @@ than UDP, but it comes with downsides. The resending behavior is not ideal for r
 high latency spikes.<br>
 <br>
 <br>
-<h2><div id="References"/><br>
-References<br>
+<h2 id="References">
+References
 </h2><br>
-<br>
 + <a href="https://en.wikipedia.org/wiki/Internet_Protocol">https://en.wikipedia.org/wiki/Internet_Protocol</a><br>
 + <a href="https://en.wikipedia.org/wiki/Local_area_network">https://en.wikipedia.org/wiki/Local_area_network</a><br>
 + <a href="https://en.wikipedia.org/wiki/Wide_area_network">https://en.wikipedia.org/wiki/Wide_area_network</a><br>
@@ -202,18 +192,16 @@ References<br>
 <br>
 <br>
 <br>
-<h2><div id="~~ Game Networking Concepts ~~"/><br>
-~~ Game Networking Concepts ~~<br>
+<h2 id="~~ Game Networking Concepts ~~">
+~~ Game Networking Concepts ~~
 </h2><br>
-<br>
 There are different game networking models for different types of games. This section will cover some of them.<br>
 You can skip this section if you are familiar with game networking concepts.<br>
 <br>
 <br>
-<h2><div id="Multiplayer Preparations"/><br>
-Multiplayer Preparations<br>
+<h2 id="Multiplayer Preparations">
+Multiplayer Preparations
 </h2><br>
-<br>
 Adding multiplayer after the fact to a game may be infeasible. It's a good idea to think about multiplayer from the beginning.<br>
 However, not all the details need to be thought out from the beginning. With good preparation adding multiplayer can be made much<br>
 easier. Making the game logic mostly deterministic or entirely deterministic in the case of deterministic lockstep networking can<br>
@@ -230,10 +218,9 @@ networking method needs to replay game state. If the game struggles to run at th
 with multiplayer. Make sure there is still a good chunk of compute still available for use.<br>
 <br>
 <br>
-<h2><div id="Sending Inputs"/><br>
-Sending Inputs<br>
+<h2 id="Sending Inputs">
+Sending Inputs
 </h2><br>
-<br>
 One option is to only send player inputs across the network. This can either take the form of a "dumb terminal" or a<br>
 *deterministic lockstep* game. In the "dumb terminal" setup, each player sends their input to a server that is running the actual<br>
 game, and the servers sends back render information telling the clients how to display its game state. The clients themselves are<br>
@@ -244,10 +231,9 @@ and does not depend on the complexity or size of the game simulation, allowing t
 each client to run. It's CPU/GPU bound, rather than network bound.<br>
 <br>
 <br>
-<h2><div id="Sending Game State"/><br>
-Sending Game State<br>
+<h2 id="Sending Game State">
+Sending Game State
 </h2><br>
-<br>
 Another option is to send game state across the network. In this setup one peer is the server that has authority over the game<br>
 state. The server sends game state every time an action is taken for non-realtime games or at a fixed rate for realtime games.<br>
 The game state data sent over the network usually consists of an array of entity data and a unique ID number for each.<br>
@@ -260,10 +246,9 @@ not become too large. If you are unsure whether to send just inputs or game stat
 just inputs places extra constraints on the game's code, and bandwidth has been increasing over time and continues to increase.<br>
 <br>
 <br>
-<h2><div id="Client Authoritative"/><br>
-Client Authoritative<br>
+<h2 id="Client Authoritative">
+Client Authoritative
 </h2><br>
-<br>
 In client authoritative games the clients can determine their own player's state. They calculate their player state locally and<br>
 send it to the other peers/server.&nbsp;&nbsp;This approach can simplify the networking code a lot for a game, but opens the game up to easy<br>
 cheating since each player is in full control of their own state. However, many games manage to get away with this approach and if<br>
@@ -272,10 +257,9 @@ optimal choice in terms of complexity. Games that will use this method include p
 This method is not well suited for a game that wants to have match making between strangers.<br>
 <br>
 <br>
-<h2><div id="Server Authoritative"/><br>
-Server Authoritative<br>
+<h2 id="Server Authoritative">
+Server Authoritative
 </h2><br>
-<br>
 Server authoritative games have the server by the final authority over what the current game state is. Players may send their<br>
 inputs and/or state, but it's up to the server to choose what to do with that. Each client receives updates from the server and<br>
 use that to update their local state. If their local state does not match that which was received from the server, they use the<br>
@@ -287,10 +271,9 @@ If you want your game to be competitive, or allow for match making between stran
 is the best choice.<br>
 <br>
 <br>
-<h2><div id="Deterministic Lockstep"/><br>
-Deterministic Lockstep<br>
+<h2 id="Deterministic Lockstep">
+Deterministic Lockstep
 </h2><br>
-<br>
 Deterministic lockstep is one of the main networking methods used in video games. It involves sending inputs between peers and<br>
 when they are ready, stepping, meaning running a single frame of the simulation with the given inputs. If each peer involved<br>
 has a simulation that gives the *exact same result* for a given starting state and inputs, then each peer will have the *exact<br>
@@ -314,10 +297,9 @@ send over the network, and fighting games due to them historically being determi
 without floating point hardware and they want to allow for easy peer-to-peer (no server) networking.<br>
 <br>
 <br>
-<h2><div id="Snapshot Interpolation"/><br>
-Snapshot Interpolation<br>
+<h2 id="Snapshot Interpolation">
+Snapshot Interpolation
 </h2><br>
-<br>
 Snapshot interpolation is likely the most commonly used method today. It's a method in which after receiving the game state the<br>
 peers also interpolate between states. The interpolation is used to *visually* smooth out state between updates. If a peer is<br>
 receiving game state updates at a fixed rate of 20 times per second, then if the peer simply updates their local state with that<br>
@@ -333,10 +315,9 @@ additional work may be required in the form of *server side lag compensation* to
 already existing gap of network latency.<br>
 <br>
 <br>
-<h2><div id="Server Side Lag Compensation"/><br>
-Server Side Lag Compensation<br>
+<h2 id="Server Side Lag Compensation">
+Server Side Lag Compensation
 </h2><br>
-<br>
 To make up for network latency, and added latency of interpolation methods. The server/peers may decide to give some slack to<br>
 a player's actions. To explain this, consider a first person shooter game with snapshot interpolation. When a player aims at<br>
 another player they are aiming at a past version of that player, the actual player state on the server is ahead in time due to<br>
@@ -361,10 +342,9 @@ back in time a rewind is allowed to go. The concept of rewinding and replaying a
 as they too need to handle latency and responsiveness.<br>
 <br>
 <br>
-<h2><div id="Client Side Prediction"/><br>
-Client Side Prediction<br>
+<h2 id="Client Side Prediction">
+Client Side Prediction
 </h2><br>
-<br>
 When a player takes an action and sends that input to the server, there is some latency from the network travel time, the server<br>
 process time, and return network travel time for the state update. If the client wait for that state update the player will have<br>
 a very unpleasant experience in which all of their inputs have latency. Even a small amount of latency is noticeable for this if<br>
@@ -396,10 +376,9 @@ immediate inputs, it can't be applied to other players well. For other players a
 is used.<br>
 <br>
 <br>
-<h2><div id="References"/><br>
-References<br>
+<h2 id="References">
+References
 </h2><br>
-<br>
 Gaffer on Games, highly recommended.<br>
 <br>
 + <a href="https://www.gafferongames.com/post/deterministic_lockstep/">https://www.gafferongames.com/post/deterministic_lockstep/</a><br>
@@ -443,14 +422,12 @@ used by modern fighting games.<br>
 <br>
 <br>
 <br>
-<h2><div id="~~ Introduction to Ursina Networking ~~"/><br>
-~~ Introduction to Ursina Networking ~~<br>
+<h2 id="~~ Introduction to Ursina Networking ~~">
+~~ Introduction to Ursina Networking ~~
 </h2><br>
-<br>
-<h2><div id="Limitations"/><br>
-Limitations<br>
+<h2 id="Limitations">
+Limitations
 </h2><br>
-<br>
 Ursina's networking currently uses TCP. Partially because it's much easier to implement, and partially because it makes things<br>
 more simple for the user. The general thing to keep in mind is that TCP works well for video games when there is little to no<br>
 packet loss, resulting in few or no packet resends. Meaning that the network connection by the users must be stable and reliable.<br>
@@ -460,10 +437,9 @@ game to work everywhere, for as many users as possible, then you may want to use
 This does not apply to non-realtime networked games though, as any latency spikes causes by resends doesn't really matter.<br>
 <br>
 <br>
-<h2><div id="Basics"/><br>
-Basics<br>
+<h2 id="Basics">
+Basics
 </h2><br>
-<br>
 The recommended way to do networking in Ursina is by using *remote procedure calls* (RPCs). This is an abstraction that lets<br>
 the user call functions on the server/client/peer. Effectively allowing the user to run functions (aka procedures) that exist on<br>
 another machine via a network connection. This hides all the details of packing up data and sending it over TCP to the other<br>
@@ -471,7 +447,7 @@ machine, where it is unpacked and then used to call some function. Usage of remo
 samples that come with Ursina.<br>
 <br>
 RPC code will look something like this in typical use:<br>
-<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><gray># ...</gray>
+<code_block id="code_block_0"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><gray># ...</gray>
 
 rpc_peer = RPCPeer()
 
@@ -494,18 +470,19 @@ rpc_peer = RPCPeer()
 	rpc_peer.update()
 
 <gray># ...</gray>
-</div><br>
+</code_block>
+<br>
 Then the <span>say</span> function can be called by another peer via their own <span>RPCPeer</span>:<br>
-<div class="code_block" id="code_block_1" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button><gray># If connected, this will run the say function on the other peer over the internet.</gray>
+<code_block id="code_block_1"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button><gray># If connected, this will run the say function on the other peer over the internet.</gray>
 rpc_peer.say(rpc_peer.get_connections()[<yellow>0</yellow>], "Hello, World!")
-</div><br>
+</code_block>
+<br>
 Note that type hints are **required** for user arguments such as the <span>message</span> argument in the example.<br>
 The RPC code needs the type information to serialize and deserialize the data. Custom user types can be added.<br>
 <br>
-<h2><div id="Samples"/><br>
-Samples<br>
+<h2 id="Samples">
+Samples
 </h2><br>
-<br>
 It's recommended to read the networking samples included with Ursina. They build on each other and <span>club_bear.py</span><br>
 is a functional realtime multiplayer game tested on a real server. Their order is:<br>
 <br>
@@ -525,6 +502,7 @@ function copy_to_clipboard(containerid) {
     window.getSelection().removeAllRanges()
 }
 </script>
-
+<br>
+<br>
 </body>
 </html>

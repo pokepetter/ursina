@@ -1,26 +1,24 @@
 <!DOCTYPE HTML>
-        <!--generated with sswg-->
-        <html lang="en">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <head>
-            <title> ursina engine documentation</title>
-            <link rel="stylesheet" href="sswg.css">
-            <link rel="stylesheet" href="style.css">
-            <link rel="icon" type="image/x-icon" href="favicon.ico">
-        </head>
-        <body>
-        <left><div style="max-width: 1200px; margin: auto;">
+<!--generated with sswg-->
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <title> ursina engine documentation</title>
+    <link rel="stylesheet" href="sswg.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+<div style="max-width:1200px; margin:auto;">
+<div style="text-align:left;">
 <br>
 <a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" donate.html" class="button">Donate</a><br>
-<br>
-<div style="font-size: 60.0px;font-weight: bold;">
-<div id="Minecraft Clone"/><br>
-Minecraft Clone<br>
-<div style="font-size: 20.0px;font-weight: normal;">
-<a href="https://github.com/pokepetter/ursina/blob/master/samples/minecraft_clone.py">https://github.com/pokepetter/ursina/blob/master/samples/minecraft_clone.py</a><br>
+<h1 id="Minecraft Clone">
+Minecraft Clone
+</h1><a href="https://github.com/pokepetter/ursina/blob/master/samples/minecraft_clone.py">https://github.com/pokepetter/ursina/blob/master/samples/minecraft_clone.py</a><br>
 <br>
 <img src="icons/minecraft_clone.jpg"></img> <br>
-<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><green>''</green>'
+<code_block id="code_block_0"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><green>''</green>'
 Disclaimer: This solution is <purple>not</purple> scalable <purple>for</purple> creating a big world.
 Creating a game like Minecraft requires specialized knowledge and is <purple>not</purple> as easy
 to make as it looks.
@@ -42,34 +40,35 @@ app = Ursina()
 <gray># By setting the parent to scene and the model to <green>'cube'</green> it becomes a <yellow>3</yellow>d button.</gray>
 
 class Voxel(Button):
-    <purple>def</purple> __init__(self, <olive>position</olive>=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)):
-        super().__init__(<olive>parent</olive>=scene,
-            <olive>position</olive>=position,
-            <olive>model</olive>=<green>'cube'</green>,
-            origin_<olive>y</olive>=.<yellow>5</yellow>,
-            <olive>texture</olive>=<green>'white_cube'</green>,
-            <olive>color</olive>=color.hsv(<yellow>0</yellow>, <yellow>0</yellow>, random.uniform(.<yellow>9</yellow>, <yellow>1</yellow>.<yellow>0</yellow>)),
-            <olive>highlight_color</olive>=color.lime,
-        )
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>def</purple> __init__(self, <olive>position</olive>=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>)):
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super().__init__(<olive>parent</olive>=scene,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<olive>position</olive>=position,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<olive>model</olive>=<green>'cube'</green>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;origin_<olive>y</olive>=.<yellow>5</yellow>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<olive>texture</olive>=<green>'white_cube'</green>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<olive>color</olive>=color.hsv(<yellow>0</yellow>, <yellow>0</yellow>, random.uniform(.<yellow>9</yellow>, <yellow>1</yellow>.<yellow>0</yellow>)),
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<olive>highlight_color</olive>=color.lime,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
 
 <purple>for</purple> z in <blue>range</blue>(<yellow>8</yellow>):
-    <purple>for</purple> x in <blue>range</blue>(<yellow>8</yellow>):
-        voxel = Voxel(<olive>position</olive>=(x,<yellow>0</yellow>,z))
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>for</purple> x in <blue>range</blue>(<yellow>8</yellow>):
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;voxel = Voxel(<olive>position</olive>=(x,<yellow>0</yellow>,z))
 
 
 <purple>def</purple> input(key):
-    <purple>if</purple> key == <green>'left mouse down'</green>:
-        hit_info = raycast(camera.world_position, camera.forward, distance=<yellow>5</yellow>)
-        <purple>if</purple> hit_info.hit:
-            Voxel(<olive>position</olive>=hit_info.entity.position + hit_info.normal)
-    <purple>if</purple> key == <green>'right mouse down'</green> and mouse.hovered_entity:
-        destroy(mouse.hovered_entity)
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> key == <green>'left mouse down'</green>:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hit_info = raycast(camera.world_position, camera.forward, distance=<yellow>5</yellow>)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> hit_info.hit:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Voxel(<olive>position</olive>=hit_info.entity.position + hit_info.normal)
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> key == <green>'right mouse down'</green> and mouse.hovered_entity:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;destroy(mouse.hovered_entity)
 
 
 player = FirstPersonController()
 app.run()
 
-</div><script>
+</code_block>
+<script>
 function copy_to_clipboard(containerid) {
     var range = document.createRange()
     range.selectNode(containerid)
@@ -79,6 +78,7 @@ function copy_to_clipboard(containerid) {
     window.getSelection().removeAllRanges()
 }
 </script>
-
+<br>
+<br>
 </body>
 </html>
