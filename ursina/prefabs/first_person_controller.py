@@ -2,11 +2,11 @@ from ursina import *
 
 
 class FirstPersonController(Entity):
-    def __init__(self, **kwargs):
+    def __init__(self, height=2, **kwargs):
         self.cursor = Entity(parent=camera.ui, model='quad', color=color.pink, scale=.008, rotation_z=45)
         super().__init__()
         self.speed = 5
-        self.height = 2
+        self.height = height
         self.camera_pivot = Entity(parent=self, y=self.height)
 
         camera.parent = self.camera_pivot
@@ -139,7 +139,7 @@ if __name__ == '__main__':
     e = Entity(model='cube', scale=(1,5,10), x=-2, y=.01, collider='box', texture='white_cube')
     e.texture_scale = (e.scale_z, e.scale_y)
 
-    player = FirstPersonController(y=2, origin_y=-.5)
+    player = FirstPersonController(y=2, origin_y=-.5, height=1)
     player.gun = None
 
 
@@ -153,6 +153,7 @@ if __name__ == '__main__':
     gun_2 = duplicate(gun, z=7, x=8)
     slope = Entity(model='cube', collider='box', position=(0,0,8), scale=6, rotation=(45,0,0), texture='brick', texture_scale=(8,8))
     slope = Entity(model='cube', collider='box', position=(5,0,10), scale=6, rotation=(80,0,0), texture='brick', texture_scale=(8,8))
+    ceiling = Entity(model='cube', collider='box', position=(10,2,10), scale=(6,1,2), texture='brick', texture_scale=(8,8))
     # hill = Entity(model='sphere', position=(20,-10,10), scale=(25,25,25), collider='sphere', color=color.green)
     # hill = Entity(model='sphere', position=(20,-0,10), scale=(25,25,25), collider='mesh', color=color.green)
     # from ursina.shaders import basic_lighting_shader
