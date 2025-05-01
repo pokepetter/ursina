@@ -18,14 +18,9 @@ Platformer
 </h1><a href="https://github.com/pokepetter/ursina/blob/master/samples/platformer.py">https://github.com/pokepetter/ursina/blob/master/samples/platformer.py</a><br>
 <br>
 <img src="icons/platformer.jpg"></img> <br>
-<code_block id="code_block_0"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>import</purple> time
-<gray># t = time.time()</gray>
-
-<purple>from</purple> ursina <purple>import</purple> *
+<code_block id="code_block_0"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina.prefabs.platformer_controller_<yellow>2</yellow>d <purple>import</purple> PlatformerController<yellow>2</yellow>d
 
-<gray># window.vsync = False</gray>
-window.borderless = False
 app = Ursina()
 window.color = color.light_gray
 camera.orthographic = True
@@ -35,15 +30,11 @@ ground = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <oliv
 random.seed(<yellow>4</yellow>)
 <purple>for</purple> i in <blue>range</blue>(<yellow>1</yellow><yellow>0</yellow>):
 &nbsp;&nbsp;&nbsp;&nbsp;<olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.dark_gray, <olive>collider</olive>=<green>'box'</green>, <olive>ignore</olive>=True, <olive>position</olive>=(random.randint(-<yellow>2</yellow><yellow>0</yellow>,<yellow>2</yellow><yellow>0</yellow>), random.randint(<yellow>0</yellow>,<yellow>1</yellow><yellow>0</yellow>)), <olive>scale</olive>=(random.randint(<yellow>1</yellow>,<yellow>2</yellow><yellow>0</yellow>), random.randint(<yellow>2</yellow>,<yellow>5</yellow>), <yellow>1</yellow><yellow>0</yellow>))
-<gray># ground = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.white<yellow>3</yellow><yellow>3</yellow>, origin_<olive>y</olive>=.<yellow>5</yellow>, <olive>scale</olive>=(<yellow>2</yellow><yellow>0</yellow>, <yellow>1</yellow><yellow>0</yellow>, <yellow>1</yellow>), <olive>collider</olive>=<green>'box'</green>)</gray>
-<gray># wall = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.azure, <olive>origin</olive>=(-.<yellow>5</yellow>,.<yellow>5</yellow>), <olive>scale</olive>=(<yellow>5</yellow>,<yellow>1</yellow><yellow>0</yellow>), x=<yellow>1</yellow><yellow>0</yellow>, <olive>y</olive>=.<yellow>5</yellow>, <olive>collider</olive>=<green>'box'</green>)</gray>
-<gray># ceiling = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.white<yellow>3</yellow><yellow>3</yellow>, origin_<olive>y</olive>=.<yellow>5</yellow>, <olive>scale</olive>=(<yellow>1</yellow><yellow>0</yellow>, <yellow>1</yellow>, <yellow>1</yellow>), <olive>y</olive>=<yellow>4</yellow>, <olive>collider</olive>=<green>'box'</green>)</gray>
 
 player = PlatformerController<yellow>2</yellow>d()
-player.x=<yellow>1</yellow>
+player.x = <yellow>1</yellow>
 player.y = raycast(player.world_position, player.down).world_point[<yellow>1</yellow>] + .<yellow>0</yellow><yellow>1</yellow>
 camera.add_script(SmoothFollow(target=player, offset=[<yellow>0</yellow>,<yellow>5</yellow>,-<yellow>3</yellow><yellow>0</yellow>], speed=<yellow>4</yellow>))
-
 
 
 input_handler.bind(<green>'right arrow'</green>, <green>'d'</green>)
@@ -53,9 +44,9 @@ input_handler.bind(<green>'gamepad dpad right'</green>, <green>'d'</green>)
 input_handler.bind(<green>'gamepad dpad left'</green>, <green>'a'</green>)
 input_handler.bind(<green>'gamepad a'</green>, <green>'space'</green>)
 
-<gray># test</gray>
-<purple>from</purple> ursina.scripts.noclip_mode <purple>import</purple> NoclipMode<yellow>2</yellow>d
-player.add_script(NoclipMode<yellow>2</yellow>d())
+<purple>if</purple> application.development_mode:&nbsp;&nbsp;&nbsp;&nbsp;<gray># cheats</gray>
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>from</purple> ursina.scripts.noclip_mode <purple>import</purple> NoclipMode<yellow>2</yellow>d
+&nbsp;&nbsp;&nbsp;&nbsp;player.add_script(NoclipMode<yellow>2</yellow>d())
 
 app.run()
 

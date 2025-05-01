@@ -73,7 +73,7 @@ class Inventory(<olive>Entity</olive>):
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;origin = (-.<yellow>5</yellow>,.<yellow>5</yellow>),
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x = x * <yellow>1</yellow>/self.texture_scale[<yellow>0</yellow>],
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;y = -y * <yellow>1</yellow>/self.texture_scale[<yellow>1</yellow>],
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;z = -.<yellow>5</yellow>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;z = -<yellow>1</yellow>,
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name = item.replace(<green>'_'</green>, <green>' '</green>).title()
 
@@ -87,12 +87,12 @@ class Inventory(<olive>Entity</olive>):
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<purple>def</purple> drag():
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;icon.org_pos = (icon.x, icon.y)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;icon.z -= .<yellow>0</yellow><yellow>1</yellow>&nbsp;&nbsp; <gray># ensure the dragged item overlaps the rest</gray>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;icon.z = -<yellow>2</yellow>&nbsp;&nbsp; <gray># ensure the dragged item overlaps the rest</gray>
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<purple>def</purple> drop():
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;icon.x = int((icon.x + (icon.scale_x/<yellow>2</yellow>)) * self.width) / self.width
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;icon.y = int((icon.y - (icon.scale_y/<yellow>2</yellow>)) * self.height) / self.height
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;icon.z += .<yellow>0</yellow><yellow>1</yellow>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;icon.z = -<yellow>1</yellow>
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<gray># <purple>if</purple> outside, return to original position</gray>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> icon.x &lt; <yellow>0</yellow> or icon.x &gt;= <yellow>1</yellow> or icon.y &gt; <yellow>0</yellow> or icon.y &lt;= -<yellow>1</yellow>:
