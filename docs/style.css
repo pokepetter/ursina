@@ -181,6 +181,8 @@ span {
     font-family: monospace;
     font-size: .9em;
     border-radius: .5em;
+    overflow: auto;
+    white-space: wrap;
 }
 
 /* ===== Scrollbar CSS ===== */

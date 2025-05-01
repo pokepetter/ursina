@@ -1,12 +1,7 @@
 
 [← Back, documentation.html]
-# arial, normal, size 1, width 1250
-# center, bold, size 4
-Platformer Tutorial
-# left, size 1, normal
 
-
-
+### Platformer Tutorial
 Start by importing ursina and creating a window.
 
 ```

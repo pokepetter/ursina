@@ -1,9 +1,7 @@
 class HitInfo:
     __slots__ = ['hit', 'entity', 'point', 'world_point', 'distance', 'normal', 'world_normal', 'hits', 'entities']
 
-
     def __init__(self, **kwargs):
-
         self.hit:bool = None
         self.entity:Entity = None
         self.point:Vec3 = None

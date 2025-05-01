@@ -1,18 +1,18 @@
 <!DOCTYPE HTML>
-        <!--generated with sswg-->
-        <html lang="en">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <head>
-            <title> ursina engine coordinate system</title>
-            <link rel="stylesheet" href="sswg.css">
-            <link rel="stylesheet" href="style.css">
-            <link rel="icon" type="image/x-icon" href="favicon.ico">
-        </head>
-        <body>
-        <left><div style="max-width: 1200px; margin: auto;">
+<!--generated with sswg-->
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <title> ursina engine coordinate system</title>
+    <link rel="stylesheet" href="sswg.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+<div style="max-width:1200px; margin:auto;">
+<div style="text-align:left;">
 <br>
 <a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" donate.html" class="button">Donate</a><br>
-<br>
 <div class="sidebar"><br>
 <b><a href="documentation.html">Documentation</a></b><br>
 <br>
@@ -47,10 +47,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Mouse Collision">Mouse Collision</a><br>
 <br>
 <a href="text.html">Text</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Size">Text Size</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text">Text</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Font and Resolution">Font and Resolution</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Alignment">Text Alignment</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Colors">Text Colors</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Changing Text of Prefabs">Changing Text of Prefabs</a><br>
 <br>
 <a href="animation.html">Animation</a><br>
@@ -93,53 +91,50 @@
 <br>
 </div><br>
 <br>
-<div style="font-size: 60.0px;font-weight: bold;">
-<div id="Coordinate System"/><br>
-Coordinate System<br>
-<div style="font-size: 20.0px;font-weight: normal;">
-<br>
-<h2><div id="Entity Coordinate System"/><br>
-Entity Coordinate System<br>
+<h1 id="Coordinate System">
+Coordinate System
+</h1><br>
+<h2 id="Entity Coordinate System">
+Entity Coordinate System
 </h2><br>
-<br>
-<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>
-            y (up)
-            |
-            |
+<code_block id="code_block_0"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;y (up)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
 (forward) z |
-          \ |
-           \|
-            *---------- x (right)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ |
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \|
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*---------- x (right)
 
-</div><br>
+</code_block>
 <br>
 <br>
 <br>
-<h2><div id="UI Coordinate System"/><br>
-UI Coordinate System<br>
+<br>
+<h2 id="UI Coordinate System">
+UI Coordinate System
 </h2><br>
+<code_block id="code_block_1"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(-.<yellow>5</yellow>, .<yellow>5</yellow>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (.<yellow>5</yellow>, .<yellow>5</yellow>)
+&nbsp;&nbsp;(window.top_right)_______|__(window.top)____|_______(window.top_right)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <green>'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'</green>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <green>'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'</green>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <green>'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'</green>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <green>'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'</green>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (window.left)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <green>'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<yellow>0</yellow>, <yellow>0</yellow>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'</green>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (window.right or Vec2(.<yellow>5</yellow>*window.aspect_ratio, <yellow>0</yellow>))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <green>'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'</green>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <green>'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'</green>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <green>'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'</green>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |_______<green>'__________________'</green>_______|
+(window.bottom_left)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;(window.bottom) |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (window.bottom_right)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(-.<yellow>5</yellow>, -.<yellow>5</yellow>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(.<yellow>5</yellow>, -.<yellow>5</yellow>)
+</code_block>
 <br>
-<div class="code_block" id="code_block_1" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>                      (-.<yellow>5</yellow>, .<yellow>5</yellow>)           (.<yellow>5</yellow>, .<yellow>5</yellow>)
-  (window.top_right)_______|__(window.top)____|_______(window.top_right)
-                   |       <green>'                  '</green>       |
-                   |       <green>'                  '</green>       |
-                   |       <green>'                  '</green>       |
-                   |       <green>'                  '</green>       |
-       (window.left)       <green>'      (<yellow>0</yellow>, <yellow>0</yellow>)      '</green>       (window.right or Vec2(.<yellow>5</yellow>*window.aspect_ratio, <yellow>0</yellow>))
-                   |       <green>'                  '</green>       |
-                   |       <green>'                  '</green>       |
-                   |       <green>'                  '</green>       |
-                   |_______<green>'__________________'</green>_______|
-(window.bottom_left)       |  (window.bottom) |       (window.bottom_right)
-                      (-.<yellow>5</yellow>, -.<yellow>5</yellow>)          (.<yellow>5</yellow>, -.<yellow>5</yellow>)
-</div><br>
 Want a different UI coordinate system? No problem. camera.ui is an Entity as well so you can move and scale it as you see fit.<br>
 <br>
 <br>
-<h2><div id="Rotation"/><br>
-Rotation<br>
+<h2 id="Rotation">
+Rotation
 </h2><br>
-<br>
 Positive rotation means rotating clockwise around the axis, looking from the outside in.<br>
 The exception to this is the z-axis, which is counter-clockwise.<br>
 While this is inconsistent, it makes setting rotation_z in 2D also clockwise.<br>
@@ -151,44 +146,45 @@ In general when working with rotation you'll want to only set one of the axes at
 For more complicated rotations you can use <span>entity.look_at(position)</span>, <span>entity.look_at_2d(position)</span><br>
 or even set/get .quaternion if you're comfortable with that. For continuous rotation, <span>entity.rotate(amount)</span> can be good as it will add a rotation to the current rotation.<br>
 <br>
-<div class="code_block" id="code_block_2" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_2)">copy</button>
-           _______
-          /
-          \-&gt;
-    __
-   /  \     y
-   v  |     |
-      |  z  |                __
-          \ |               /  \
-           \|               v   |
-            *---------- x       |
-                                |
-</div><br>
+<code_block id="code_block_2"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_2)">copy</button>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _______
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\-&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;__
+&nbsp;&nbsp; /&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp; y
+&nbsp;&nbsp; v&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp; |
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;z&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /&nbsp;&nbsp;\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v&nbsp;&nbsp; |
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*---------- x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
+</code_block>
 <br>
 <br>
 <br>
-<h2><div id="Origin"/><br>
-Origin<br>
+<br>
+<h2 id="Origin">
+Origin
 </h2><br>
-<br>
 Setting the origin will move the origin point of the model.<br>
 This can be especially useful when working with the UI.<br>
 <br>
-<div class="code_block" id="code_block_3" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_3)">copy</button>             (-.<yellow>5</yellow>,.<yellow>5</yellow>)
-+---------+      <yellow>0</yellow>---------+
-|  (<yellow>0</yellow>,<yellow>0</yellow>)  |      |         |
-|    <yellow>0</yellow>    |      |         |
-|         |      |         |
-+---------+      +---------+
+<code_block id="code_block_3"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_3)">copy</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (-.<yellow>5</yellow>,.<yellow>5</yellow>)
++---------+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<yellow>0</yellow>---------+
+|&nbsp;&nbsp;(<yellow>0</yellow>,<yellow>0</yellow>)&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
+|&nbsp;&nbsp;&nbsp;&nbsp;<yellow>0</yellow>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
++---------+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+---------+
 
-   (<yellow>0</yellow>,.<yellow>5</yellow>)
-+----<yellow>0</yellow>----+      +---------+
-|         |      |         |
-|         |      |         <yellow>0</yellow> (.<yellow>5</yellow>,<yellow>0</yellow>)
-|         |      |         |
-+---------+      +---------+
+&nbsp;&nbsp; (<yellow>0</yellow>,.<yellow>5</yellow>)
++----<yellow>0</yellow>----+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+---------+
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <yellow>0</yellow> (.<yellow>5</yellow>,<yellow>0</yellow>)
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
++---------+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+---------+
 
-</div><br>
+</code_block>
+<br>
 <script>
 function copy_to_clipboard(containerid) {
     var range = document.createRange()
@@ -199,6 +195,7 @@ function copy_to_clipboard(containerid) {
     window.getSelection().removeAllRanges()
 }
 </script>
-
+<br>
+<br>
 </body>
 </html>

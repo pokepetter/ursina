@@ -1,18 +1,18 @@
 <!DOCTYPE HTML>
-        <!--generated with sswg-->
-        <html lang="en">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <head>
-            <title> ursina engine animation</title>
-            <link rel="stylesheet" href="sswg.css">
-            <link rel="stylesheet" href="style.css">
-            <link rel="icon" type="image/x-icon" href="favicon.ico">
-        </head>
-        <body>
-        <left><div style="max-width: 1200px; margin: auto;">
+<!--generated with sswg-->
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <title> ursina engine animation</title>
+    <link rel="stylesheet" href="sswg.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+<div style="max-width:1200px; margin:auto;">
+<div style="text-align:left;">
 <br>
 <a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" donate.html" class="button">Donate</a><br>
-<br>
 <div class="sidebar"><br>
 <b><a href="documentation.html">Documentation</a></b><br>
 <br>
@@ -47,10 +47,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Mouse Collision">Mouse Collision</a><br>
 <br>
 <a href="text.html">Text</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Size">Text Size</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text">Text</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Font and Resolution">Font and Resolution</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Alignment">Text Alignment</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Colors">Text Colors</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Changing Text of Prefabs">Changing Text of Prefabs</a><br>
 <br>
 <a href="animation.html">Animation</a><br>
@@ -93,38 +91,33 @@
 <br>
 </div><br>
 <br>
-<div style="font-size: 60.0px;font-weight: bold;">
-<div id="Animation"/><br>
-Animation<br>
-<div style="font-size: 20.0px;font-weight: normal;">
-<br>
-<h2><div id="SpriteSheetAnimation (2D)"/><br>
-SpriteSheetAnimation (2D)<br>
+<h1 id="Animation">
+Animation
+</h1><br>
+<h2 id="SpriteSheetAnimation (2D)">
+SpriteSheetAnimation (2D)
 </h2><br>
-<br>
 Use a sprite sheet to make an animation. A sprite sheet is an image<br>
 containing the all animation frames in on image, laid out in a grid.<br>
 <br>
 <a href="https://www.ursinaengine.org/api_reference.html#SpriteSheetAnimation">SpriteSheetAnimation Documentation</a><br>
 <br>
 <br>
-<h2><div id="Animation (2D)"/><br>
-Animation (2D)<br>
+<h2 id="Animation (2D)">
+Animation (2D)
 </h2><br>
-<br>
 Loads an image sequence or a .gif as an animation.<br>
 <a href="https://www.ursinaengine.org/api_reference.html#Animation">Animation Documentation</a><br>
 <br>
 <br>
-<h2><div id="Actor (3D)"/><br>
-Actor (3D)<br>
+<h2 id="Actor (3D)">
+Actor (3D)
 </h2><br>
-<br>
 For skeletal animations you can use panda3d's Actor.<br>
 Export the model as .glft/.glb since that format support<br>
 mesh data, texture data, animations and more, all in one file.<br>
 <br>
-<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+<code_block id="code_block_0"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> direct.actor.Actor <purple>import</purple> Actor
 
 app = Ursina()
@@ -134,17 +127,17 @@ entity = <olive>Entity</olive>()
 actor = Actor("filename.gltf")
 actor.reparent_to(entity)
 
-actor.loop("animation_name")  <gray># use .play() instead of loop() to play it once.</gray>
+actor.loop("animation_name")&nbsp;&nbsp;<gray># use .play() instead of loop() to play it once.</gray>
 
 app.run()
-</div><br>
+</code_block>
+<br>
 See the <a href="https://docs.panda3d.org/1.10/python/programming/models-and-actors/actor-animations">panda3d documentation</a> for more info.<br>
 <br>
 <br>
-<h2><div id="FrameAnimation3D (3D)"/><br>
-FrameAnimation3D (3D)<br>
+<h2 id="FrameAnimation3D (3D)">
+FrameAnimation3D (3D)
 </h2><br>
-<br>
 <a href="https://www.ursinaengine.org/api_reference.html#FrameAnimation3D">FrameAnimation3D Documentation</a><br>
 <br>
 FrameAnimation3d loads a sequence of models and cycles through them so it looks like it animates.<br>
@@ -158,8 +151,9 @@ First, export your animation as a sequence of 3d models.<br>
 Assuming you have a bunch of models named run_cycle_000.obj, run_cycle_001.obj, run_cycle_002.obj and so on,<br>
 you can load the animation like this:<br>
 <br>
-<div class="code_block" id="code_block_1" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>FrameAnimation<yellow>3</yellow>d(<green>'run_cycle_'</green>)
-</div><br>
+<code_block id="code_block_1"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>FrameAnimation<yellow>3</yellow>d(<green>'run_cycle_'</green>)
+</code_block>
+<br>
 <script>
 function copy_to_clipboard(containerid) {
     var range = document.createRange()
@@ -170,6 +164,7 @@ function copy_to_clipboard(containerid) {
     window.getSelection().removeAllRanges()
 }
 </script>
-
+<br>
+<br>
 </body>
 </html>

@@ -3,7 +3,6 @@ from ursina import *
 app = Ursina()
 
 # ## Using the built in platformer controller
-#
 # A simple way to get stared is to use the built in platformer controller.
 # It's pretty basic, so you might want to write your own at a later point.
 # It is however a good starting point, so let's import it like this:
@@ -18,12 +17,11 @@ player = PlatformerController2d(y=1, z=.01, scale_y=1, max_jumps=2)
 ground = Entity(model='quad', scale_x=10, collider='box', color=color.black)
 
 # ## Making a "level editor"
-#
 # Now, it works, but it's a pretty boring game, so let's make a more interesting level.
 # There are many ways to go about making a level, but for this we'll make an image
 # where we can simply draw the level and then generate a level based on that.
 #
-# # image platformer_tutorial_level.png
+# #image platformer_tutorial_level.png
 # ↑
 # Make sure to save this image to same folder or below as your script.
 #
@@ -73,7 +71,6 @@ def make_level(texture):
 make_level(load_texture('platformer_tutorial_level'))   # generate the level
 
 # ## Positioning the camera
-#
 # Set the camera to orthographic so there's no perspective.
 # Move the camera to the middle of the level and set the fov so the level fits nicely.
 # Setting the fov on an orthographic camera means setting how many units vertically the camera can see.
@@ -83,7 +80,6 @@ camera.fov = 16
 
 
 # ## Adding player graphics and animations
-#
 # Loads an image sequence as a frame animation.
 # So if you have some frames named image_000.png, image_001.png, image_002.png and so on,
 # you can load it like this: Animation('image')
@@ -104,7 +100,6 @@ def update():
 
 
 # ## Start the game
-#
 EditorCamera()
 app.run()
 

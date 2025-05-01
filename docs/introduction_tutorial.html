@@ -1,52 +1,60 @@
 <!DOCTYPE HTML>
-        <!--generated with sswg-->
-        <html lang="en">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <head>
-            <title>introduction_tutorial</title>
-            <link rel="stylesheet" href="sswg.css">
-            <link rel="stylesheet" href="style.css">
-            <link rel="icon" type="image/x-icon" href="favicon.ico">
-        </head>
-        <body>
-        <left><div style="font-size: 20.0px;max-width: 1200px; margin: auto;">
-<div style="font-weight: bold;font-size: 60.0px;">
-Introduction Tutorial<br>
-<div style="font-weight: normal;font-size: 20.0px;">
-<br>
-<h2><div id="Creating and running a game"/><br>
-Creating and running a game<br>
+<!--generated with sswg-->
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <title>introduction_tutorial</title>
+    <link rel="stylesheet" href="sswg.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+<div style="max-width:1200px; margin:auto;">
+<div style="text-align:left;">
+<h1 id="Introduction Tutorial">
+Introduction Tutorial
+</h1><br>
+<h2 id="Creating and running a game">
+Creating and running a game
 </h2><br>
-<br>
 1) Open your preferred text editor. If you're new to programming, here are some suggestions:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;* Atom<br>
 &nbsp;&nbsp;&nbsp;&nbsp;* Visual Studio Code<br>
 &nbsp;&nbsp;&nbsp;&nbsp;* Sublime Text<br>
 <br>
 <br>
-2) Create a new folder for your project. This will contain scripts and assets.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;For ursina to find 3d models and textures, they should be in the same folder or in<br>
-&nbsp;&nbsp;&nbsp;&nbsp;a folder below the starting script.<br>
+<h3 id="2) Create a new project">
+2) Create a new project
+</h3>Create a new folder for your project. This will contain scripts and assets.<br>
+For ursina to find 3d models and textures, they should be in the same folder or in<br>
+a folder below the starting script.<br>
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;In this folder, create a new file called main.py. This will contain our little game.<br>
+In this folder, create a new file called main.py. This will contain our little game.<br>
 <br>
 <br>
-3) At the top of the file, write:<br>
-<div class="code_block" id="code_block_0" style="margin-left: 2em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina <purple>import</purple> *
-</div><br>
-&nbsp;&nbsp;&nbsp;&nbsp;This will import all the necessary things we need from the engine in one line.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;It means something like 'from ursina import all'. It's also possible to import parts of the engine<br>
-&nbsp;&nbsp;&nbsp;&nbsp;like this:<br>
-<div class="code_block" id="code_block_1" style="margin-left: 2em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button><purple>from</purple> ursina.prefabs <purple>import</purple> Button
-</div><br>
-&nbsp;&nbsp;&nbsp;&nbsp;Or import something that's not included by default:<br>
-<div class="code_block" id="code_block_2" style="margin-left: 2em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_2)">copy</button><purple>from</purple> ursina.prefabs.first_person_controller <purple>import</purple> FirstPersonController
-</div><br>
+<h3 id="3) Import ursina">
+3) Import ursina
+</h3>At the top of the file, write:<br>
+<code_block id="code_block_0"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+</code_block>
 <br>
-4) Here's a really basic example game with comments to explain what we're doing.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;We will simply make an orange box move right and left when we press 'd' or 'a'.<br>
+This will import all the necessary things we need from the engine in one line.<br>
+It means something like 'from ursina import all'. It's also possible to import parts of the engine<br>
+like this:<br>
+<code_block id="code_block_1"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button><purple>from</purple> ursina.prefabs <purple>import</purple> Button
+</code_block>
 <br>
-<div class="code_block" id="code_block_3" style="margin-left: 1em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_3)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+Or import something that's not included by default:<br>
+<code_block id="code_block_2"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_2)">copy</button><purple>from</purple> ursina.prefabs.first_person_controller <purple>import</purple> FirstPersonController
+</code_block>
+<br>
+<br>
+<h3 id="4) Example code">
+4) Example code
+</h3>Here's a really basic example game with comments to explain what we're doing.<br>
+We will simply make an orange box move right and left when we press 'd' or 'a'.<br>
+<br>
+<code_block id="code_block_3"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_3)">copy</button><purple>from</purple> ursina <purple>import</purple> *
 
 <gray># create a window</gray>
 app = Ursina()
@@ -67,8 +75,8 @@ player = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <oliv
 <gray># this will automatically get called by the engine every frame.</gray>
 
 <purple>def</purple> update():
-    player.x += held_keys[<green>'d'</green>] * time.dt
-    player.x -= held_keys[<green>'a'</green>] * time.dt
+&nbsp;&nbsp;&nbsp;&nbsp;player.x += held_keys[<green>'d'</green>] * time.dt
+&nbsp;&nbsp;&nbsp;&nbsp;player.x -= held_keys[<green>'a'</green>] * time.dt
 
 <gray># this part will make the player move left or right based on our input.</gray>
 <gray># to check which keys are held down, we can check the held_keys dictionary.</gray>
@@ -78,25 +86,28 @@ player = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <oliv
 
 
 <purple>def</purple> input(key):
-    <purple>if</purple> key == <green>'space'</green>:
-        player.y += <yellow>1</yellow>
-        invoke(setattr, player, <green>'y'</green>, player.y-<yellow>1</yellow>, dela<olive>y</olive>=.<yellow>2</yellow><yellow>5</yellow>)
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> key == <green>'space'</green>:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;player.y += <yellow>1</yellow>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;invoke(setattr, player, <green>'y'</green>, player.y-<yellow>1</yellow>, dela<olive>y</olive>=.<yellow>2</yellow><yellow>5</yellow>)
 
 
 <gray># start running the game</gray>
 app.run()
 
 
-</div><br>
+</code_block>
 <br>
-5) Now we have to tell Python to run the script. To do this, open the command line and<br>
-&nbsp;&nbsp;&nbsp;&nbsp;go to the current folder. An easy way to do this is to type 'cmd' in the address bar.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Run the command below.<br>
+<h3 id="5) Running the script">
+5) Running the script
+</h3>Now we have to tell Python to run the script. To do this, open the command line and<br>
+go to the current folder. An easy way to do this is to type 'cmd' in the address bar.<br>
+Run the command below.<br>
 <br>
-<div class="code_block" id="code_block_4" style="margin-left: 1em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_4)">copy</button>python main.py
-</div><br>
-&nbsp;&nbsp;&nbsp;&nbsp;An alternative is to install the 'atom-python-run' package in Atom so you can start<br>
-&nbsp;&nbsp;&nbsp;&nbsp;the game by pressing F5.<br>
+<code_block id="code_block_4"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_4)">copy</button>python main.py
+</code_block>
+<br>
+An alternative is to install the 'atom-python-run' package in Atom so you can start<br>
+the game by pressing F5.<br>
 <br>
 <script>
 function copy_to_clipboard(containerid) {
@@ -108,6 +119,7 @@ function copy_to_clipboard(containerid) {
     window.getSelection().removeAllRanges()
 }
 </script>
-
+<br>
+<br>
 </body>
 </html>

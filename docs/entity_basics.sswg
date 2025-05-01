@@ -33,7 +33,7 @@ Entity(model='name_of_your_model')
 
 
 
-## Texure
+## Texture
 Setting a texture is similar to setting a model. Just give it a name in this case as well:
 
 ```
@@ -112,10 +112,10 @@ information on how the coordinate system works.
 
 
 ## Rotation
+```
 e.rotation = (0,0,0)
 e.rotation_y = 90
 ```
-
 
 The look_at() method can also be for pointing an entity at something:
 ```
@@ -129,17 +129,15 @@ e.look_at(other_entity, axis='up') # optionally define which axis
 
 ## Scale
 Change the size of the entity by setting the scale attribute:
-
 ```
 e = Entity(model='cube', scale=(3,1,1))
 ```
 
 
-
 ## Update
 An Entity's update method will be called automatically:
 
-# Assigning update to an entity
+# By assigning update to an entity
 ```
 e = Entity()
 def my_update():
@@ -148,8 +146,7 @@ def my_update():
 e.update = my_update
 ```
 
-
-# By inheriting Entity
+# By inheriting the Entity class
 Or you can implement it by inheriting the Entity class:
 ```
 class Player(Entity):
@@ -157,8 +154,7 @@ class Player(Entity):
         self.x += 1 * time.dt
 ```
 
-
-update in __main__ (starting script)
+# By having an update function in __main__ (starting script)
 The third option is to put a function called update in __main__, the starting script.
 You'll see this in a lot of examples since it's convenient for small scripts.
 Keep in mind this won't work if you import a module with an update function defined at module level.
@@ -169,8 +165,7 @@ def update():
 
 
 ## Input
-
-The same goes for the input method:
+The same goes for the `input` method:
 ```
 class Player(Entity):
     def input(self, key):
@@ -184,9 +179,7 @@ class Player(Entity):
             self.animate('rotation_y', self.rotation_y - 90, duration=.1)
 ```
 
-
 ## Mouse Input
-
 Entities can react to the mouse as long as they have collider.
 Buttons will have one by default, but you can also assign one.
 
@@ -195,12 +188,10 @@ To get the entity currently under the mouse:
 print(mouse.hovered_entity)
 ```
 
-
-To check if and entity with a collider is hovered by the mouse:
+To check if an entity with a collider is hovered by the mouse:
 ```
 print(my_entity.hovered)
 ```
-
 
 There are also functions for handling mouse clicks and hover/unhover.
 These only works if the Entity has a collider and the function/callable is assigned.
@@ -212,8 +203,7 @@ on_mouse_enter()
 on_mouse_exit()
 ```
 
-
-Example using on_click:
+Example using `on_click`:
 ```
 def action():
     print('Ow! That hurt!')
@@ -221,8 +211,7 @@ def action():
 Entity(model='quad', parent=camera.ui, scale=.1, collider='box', on_click=action) # on_click should be a function/callable/Func/Sequence
 ```
 
-
-on_mouse_enter and on_mouse_exit example:
+Example using `on_mouse_enter` and `on_mouse_exit`:
 ```
 b = Button(scale=(.5, .25), text='zzz')
 b.on_mouse_enter = Func(setattr, b, 'text', 'Hi, friend :D')
@@ -231,9 +220,7 @@ b.on_mouse_exit = Func(setattr, b, 'text', '''No! Don't leave me ;-;''')
 
 
 ## Other Magic Functions
-
 Sometimes you want side effects when you enable/disable an entity, like play an animation or something.
-
 ```
 on_enable()
 on_disable()

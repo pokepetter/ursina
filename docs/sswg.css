@@ -1,23 +1,9 @@
 
       html {max-width: 100%; margin: auto; color: #333333;}
-      body {
-          font-size: 1em;
-          line-height: 1.5;
-          margin: auto;
-          max-width: 100%;
-      }
-      h1 {
-          font-size: 4em;
-          line-height: 1;
-      }
-      h2 {
-          font-size: 2em;
-          font-weight: 600;
-          line-height: 1;
-      }
-      h3 {
-          font-size:1.5em;
-      }
+      body {font-size: 1em; line-height: 1.5; margin: auto; max-width: 100%;}
+      h1 {font-size: 4em; line-height: 1;}
+      h2 {font-size: 2em; font-weight: 600; line-height: 1;}
+      h3 {font-size:1.5em;}
 
       a {transition: color .2s; color: #19405c; white-space: nowrap;}
       a:link, a:visited {color: #19405c;}
@@ -33,7 +19,7 @@
       span {background-color: rgba(0, 0, 0, 0.55); padding: .1em; line-height: 1.35em;}
       img {max-width: 100%; vertical-align: top;}
       code_block {display: block;
-width: 100%; background-color: whitesmoke; padding: 10px; margin: 0; position: relative; font-family: monospace; font-size: 1em; font-weight: normal; white-space: pre; overflow: auto; border-radius:4px; scrollbar-color:red;}
+width: 100%; background-color: whitesmoke; padding: 10px; margin: 1.5em 0px 1.5em 0px; position: relative; font-family: monospace; font-size: 1em; font-weight: normal; white-space: pre; overflow: auto; border-radius:4px; scrollbar-color:red;}
       .copy_code_button {position:absolute; right:10px; border:none; border-radius:5px; font-family:inherit; color:gray; user-select:none; -webkit-user-select:none;}
       /* Hide scrollbar for Chrome, Safari and Opera */
       code_block::-webkit-scrollbar {
