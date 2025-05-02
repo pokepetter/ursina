@@ -1,4 +1,7 @@
-from ursina import Shader
+from ursina.shader import Shader
+from ursina.vec2 import Vec2
+from ursina.vec3 import Vec3
+from ursina import color
 
 
 camera_grayscale_shader = Shader(
@@ -37,5 +40,5 @@ if __name__ == '__main__':
             else:
                 camera.shader = camera_grayscale_shader
 
-
+    Sky()
     app.run()

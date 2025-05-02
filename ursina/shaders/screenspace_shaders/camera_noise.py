@@ -42,7 +42,7 @@ if __name__ == '__main__':
     EditorCamera()
 
     #camera.set_shader_input("strength", .2) 
-
+    Sky()
     def update():
         # Since there isn't really a way to generate pseudorandom numbers in GLSL by themselves, this needs to be put here, otherwise the noise will be static.
         camera.set_shader_input("noise_offset", random.randint(0, 100)/100)

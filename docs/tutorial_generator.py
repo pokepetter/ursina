@@ -41,22 +41,20 @@ for path in files:
     # print('converted:', path)
     text = f'''
 [← Back, documentation.html]
-# arial, normal, size 1, width 1250
-# center, bold, size 4
-{path.stem.title().replace('_',' ')}
-# left, size 1, normal\n\n\n
+
+### {path.stem.title().replace('_',' ')}
 '''
     for i, (comment, code) in enumerate(zip(comment_parts, code_parts)):
         # text += f'## {i}\n'
         text += comment
-        text += '\n# code\n'
+        text += '\n```\n'
         text += code[1].rstrip()
-        text += '\n# text\n\n'
+        text += '\n```\n\n'
 
-    text += '## Result\n\n'
-    text += '# code\n'
+    text += '## Result\n'
+    text += '```\n'
     text += ''.join([e[1] for e in code_parts])
-    text += '\n# text'
+    text += '\n```'
 
     with open(f'{path.stem}.sswg', 'w', encoding='utf-8') as text_file:
         text_file.write(text)

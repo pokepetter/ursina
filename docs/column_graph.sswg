@@ -1,10 +1,10 @@
-# title ursina engine documentation
-# insert menu.sswg
+#title ursina engine documentation
+#insert menu.sswg
 
 ### Column Graph
 <a href="https://github.com/pokepetter/ursina/blob/master/samples/column_graph.py">https://github.com/pokepetter/ursina/blob/master/samples/column_graph.py</a>
 
-# image icons/column_graph.jpg
+#image icons/column_graph.jpg
 ```
 from ursina import *
 import random

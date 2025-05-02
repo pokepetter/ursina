@@ -53,7 +53,7 @@ class Inventory(Entity):
             origin = (-.5,.5),
             x = x * 1/self.texture_scale[0],
             y = -y * 1/self.texture_scale[1],
-            z = -.5,
+            z = -1,
             )
         name = item.replace('_', ' ').title()
 
@@ -67,12 +67,12 @@ class Inventory(Entity):
 
         def drag():
             icon.org_pos = (icon.x, icon.y)
-            icon.z -= .01   # ensure the dragged item overlaps the rest
+            icon.z = -2   # ensure the dragged item overlaps the rest
 
         def drop():
             icon.x = int((icon.x + (icon.scale_x/2)) * self.width) / self.width
             icon.y = int((icon.y - (icon.scale_y/2)) * self.height) / self.height
-            icon.z += .01
+            icon.z = -1
 
             # if outside, return to original position
             if icon.x < 0 or icon.x >= 1 or icon.y > 0 or icon.y <= -1:

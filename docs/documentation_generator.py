@@ -481,6 +481,7 @@ module_info['models'] = Info(attributes=['quad', 'wireframe_cube', 'plane', 'cir
 
 # find all modules and classes
 for file in path.glob('**/*.py'):
+    # print('--', file.name)
     with open(file, encoding='utf-8') as f:
         code = f.read()
         code = code.replace('<', '&lt').replace('>', '&gt')
@@ -536,7 +537,7 @@ for file in path.glob('**/*.py'):
             module_name = file.stem
             classes = get_classes(code)
             for class_name, class_definition in classes.items():
-                # print('parsing singleton:', module_name)
+                print('parsing singleton:', module_name)
                 attrs, methods = list(), list()
                 attrs = get_class_attributes(class_definition)
 
@@ -768,9 +769,9 @@ for sample_name in ('Tic Tac Toe', 'Inventory', 'Pong', 'Minecraft Clone', "Rubi
     image_url = f'icons/{file_path.stem}.jpg'
     github_link = f'https://github.com/pokepetter/ursina/blob/master/samples/{file_name}'
     if image_path.exists():
-        image_code = f'# image {image_url}'
+        image_code = f'#image {image_url}'
     else:
-        image_code = f'# image icons/installation_guide.jpg'
+        image_code = f'#image icons/installation_guide.jpg'
         print('no image:', image_path)
 
     if file_path.exists():
@@ -780,8 +781,8 @@ for sample_name in ('Tic Tac Toe', 'Inventory', 'Pong', 'Minecraft Clone', "Rubi
 
         with open(f'{file_path.stem}.sswg', 'w') as file:
             file.write(textwrap.dedent(f'''\
-                # title ursina engine documentation
-                # insert menu.sswg
+                #title ursina engine documentation
+                #insert menu.sswg
 
                 ### {sample_name}
                 <a href="{github_link}">{github_link}</a>
@@ -796,18 +797,21 @@ for sample_name in ('Tic Tac Toe', 'Inventory', 'Pong', 'Minecraft Clone', "Rubi
         print('sample not found:', file_path)
 
 samples_page_content = dedent('''\
-    # title ursina engine samples
-    # insert menu.sswg
+    #title ursina engine samples
+    #insert menu.sswg
 
     ### Samples
+    ## Single File
     ''')
 for name, urls in generated_sample_pages.items():
     html_url, image_url = urls
     samples_page_content += f'[{name}, {html_url}, {image_url}]\n'
 
 samples_page_content += dedent('''\
+    ## Projects
     [Value of Life, https://github.com/pokepetter/ld44_life_is_currency, icons/value_of_life_icon.jpg]
     [Castaway, https://github.com/pokepetter/pyweek_30_castaway, icons/castaway_icon.jpg]
+    [Protein Visualization, https://github.com/HarrisonTCodes/ursina-proteins, icons/protein_visualization_icon.jpg]
     ''')
 with open('samples.sswg', 'w') as f:
     f.write(samples_page_content)

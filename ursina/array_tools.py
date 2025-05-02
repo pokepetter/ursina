@@ -1,3 +1,7 @@
+if __name__ == '__main__':
+    from ursina.ursinastuff import _test, _assert
+
+
 def flatten_list(target_list):
     import itertools
     return list(itertools.chain(*target_list))
@@ -60,6 +64,16 @@ class Array2D(list):
             self.height = int(height)
             super().__init__([[self.default_value for _ in range(self.height)] for _ in range(self.width)])
 
+    @staticmethod
+    def from_string(string, convert_to_type=str, starts_lower_left=True):
+            string = string.strip()
+            if starts_lower_left:
+                data = [[convert_to_type(word.strip()) for word in line.split(',') if word] for line in string.split('\n') if line]
+                data = [list(row) for row in zip(*data[::-1])]  # rotate
+                return Array2D(data=data)
+            else:
+                return Array2D(data=[[word.strip() for word in line.split(',') if word] for line in string.split('\n') if line])
+
     def to_string(self, separator=', ', always_separate=False):
         lines = []
         flat = flatten_list(self)
@@ -77,6 +91,12 @@ class Array2D(list):
 
 
         return '\n'.join(lines)
+
+    @property
+    def size(self):
+        from ursina.vec2 import Vec2
+        return Vec2(self.width, self.height)
+
 
     def rows_getter(self):
         return [[self[x][y] for x in range(self.width)] for y in range(self.height)]
@@ -129,10 +149,9 @@ class Array2D(list):
 
     def get(self, x, y, default=0):
         x, y = int(x), int(y)
-        try:
-            return self[x][y]
-        except:
+        if x < 0 or x >= self.width or y < 0 or y >= self.height:
             return default
+        return self[x][y]
 
 
     def get_area(self, start, end, allow_out_of_bounds=False):
@@ -151,7 +170,7 @@ class Array2D(list):
         return cropped_array
 
 if __name__ == '__main__':
-    from ursina.ursinastuff import _test
+    from textwrap import dedent, indent
     grid = Array2D(width=16, height=8)
     # print(grid)
     padded_grid = grid.add_margin(top=4, right=7, bottom=3, left=2, value=7)
@@ -159,13 +178,26 @@ if __name__ == '__main__':
     # print('cropped_array:\n', padded_grid.get_area((2,3), (padded_grid.width-7, padded_grid.height-4)))
 
     test_array2D = Array2D(data=[[1,6], [2,7], [3,8], [4,9], [5,10]])
-    _test(test_array2D.to_string, (), expected_result='''\
- 6,  7,  8,  9, 10
- 1,  2,  3,  4,  5''')
+    _test(test_array2D.to_string, (), expected_result=indent(dedent('''
+        6,  7,  8,  9, 10
+        1,  2,  3,  4,  5
+        ''').strip(), ' ')
+    )
 
     _test(test_array2D.rows_getter, (), expected_result=[[1,2,3,4,5], [6,7,8,9,10]])
-    # _assert(test_array2D.columns == [[6,7,8,9,10], [1,2,3,4,5]], Array2D.rows)
 
+    _test(Array2D.from_string, ('''
+        0,1,0
+        2,3,4
+        0,1,1
+        0,0,0
+        ''', int),
+        expected_result=Array2D(data=[
+        [0,0,2,0],
+        [0,1,3,1],
+        [0,1,4,0]
+        ])
+    )
 
 
 class Array3D(list):
@@ -330,6 +362,7 @@ if __name__ == '__main__':
     _test(sample_bilinear, (list_2d, 1, 1), expected_result=0)
     _test(sample_bilinear, (list_2d, .5, .5), expected_result=.75)
     _test(sample_bilinear, (list_2d, .5, .75), expected_result=.625)
+
 
 
 

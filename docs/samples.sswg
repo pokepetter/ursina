@@ -1,7 +1,8 @@
-# title ursina engine samples
-# insert menu.sswg
+#title ursina engine samples
+#insert menu.sswg
 
 ### Samples
+## Single File
 [Tic Tac Toe, tic_tac_toe.html, icons/tic_tac_toe.jpg]
 [Inventory, inventory.html, icons/inventory.jpg]
 [Pong, pong.html, icons/pong.jpg]
@@ -12,5 +13,7 @@
 [FPS, fps.html, icons/fps.jpg]
 [Particle System, particle_system.html, icons/particle_system.jpg]
 [Column Graph, column_graph.html, icons/column_graph.jpg]
+## Projects
 [Value of Life, https://github.com/pokepetter/ld44_life_is_currency, icons/value_of_life_icon.jpg]
 [Castaway, https://github.com/pokepetter/pyweek_30_castaway, icons/castaway_icon.jpg]
+[Protein Visualization, https://github.com/HarrisonTCodes/ursina-proteins, icons/protein_visualization_icon.jpg]

@@ -80,7 +80,7 @@ class QuadMesh(Mesh):
         # make the line connect back to start
         if mode == 'line':
             self.vertices.append(self.vertices[0])
-
+        self.normals = [Vec3.back for _ in self.vertices]
         self.generate()
         cached_quads[f'QuadMesh({radius}, {segments}, {aspect}, {scale}, {mode}, {thickness})'] = self
 

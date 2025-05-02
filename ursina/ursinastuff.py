@@ -63,7 +63,7 @@ def invoke(function, *args, **kwargs):  # reserved keywords: 'delay', 'unscaled'
     )
 
 
-def after(delay, unscaled=True, ignore_paused=False):    # function for @after decorator. Use the docrator, not this.
+def after(delay, unscaled=True, ignore_paused=False, entity=None):    # function for @after decorator. Use the docrator, not this.
     '''@after decorator for calling a function after some time.
 
         example:
@@ -74,18 +74,25 @@ def after(delay, unscaled=True, ignore_paused=False):    # function for @after d
     '''
     def _decorator(func):
         def wrapper(*args, **kwargs):
-            invoke(func, *args, **kwargs, delay=delay, unscaled=unscaled, ignore_paused=ignore_paused)
+            sequence = invoke(func, *args, **kwargs, delay=delay, unscaled=unscaled, ignore_paused=ignore_paused)
+            if entity is not None:
+                entity.animations.append(sequence)
+
         return wrapper()
     return _decorator
 
 
 
-def destroy(entity, delay=0):
+def destroy(entity, delay=0, unscaled=True, ignore_paused=False):
+    if application.development_mode:
+        # get the calling function and the file it's from, so we can give a better error message if we try to use it after destroy
+        entity.destroy_source = f'caller: {sys._getframe(1).f_code.co_name} file: {sys._getframe(1).f_code.co_filename}'
+
     if delay == 0:
         _destroy(entity)
         return True
 
-    return invoke(_destroy, entity, delay=delay)
+    return invoke(_destroy, entity, delay=delay, unscaled=unscaled, ignore_paused=ignore_paused)
     # return Sequence(Wait(delay), Func(_destroy, entity), auto_destroy=True, started=True)
 
 
@@ -249,6 +256,9 @@ def _test(function, test_input, expected_result, label='', approximate=False):
             print(f'result should be: {type(expected_result)}, not: {type(result)}')
 
         if isinstance(expected_result, (tuple, list)):
+            if hasattr(result, '__iter__') and not hasattr(result, '__len__'):  # Convert generator to tuple
+                result = tuple(result)
+
             if len(result) != len(expected_result):
                 print(f'resulting tuple/list should be {len(expected_result)} long, not {len(result)}')
 

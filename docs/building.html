@@ -1,18 +1,18 @@
 <!DOCTYPE HTML>
-        <!--generated with sswg-->
-        <html lang="en">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <head>
-            <title> ursina engine build and release</title>
-            <link rel="stylesheet" href="sswg.css">
-            <link rel="stylesheet" href="style.css">
-            <link rel="icon" type="image/x-icon" href="favicon.ico">
-        </head>
-        <body>
-        <left><div style="max-width: 1200px; margin: auto;">
+<!--generated with sswg-->
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <title> ursina engine build and release</title>
+    <link rel="stylesheet" href="sswg.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+<div style="max-width:1200px; margin:auto;">
+<div style="text-align:left;">
 <br>
 <a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" donate.html" class="button">Donate</a><br>
-<br>
 <div class="sidebar"><br>
 <b><a href="documentation.html">Documentation</a></b><br>
 <br>
@@ -47,10 +47,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Mouse Collision">Mouse Collision</a><br>
 <br>
 <a href="text.html">Text</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Size">Text Size</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text">Text</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Font and Resolution">Font and Resolution</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Alignment">Text Alignment</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Colors">Text Colors</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Changing Text of Prefabs">Changing Text of Prefabs</a><br>
 <br>
 <a href="animation.html">Animation</a><br>
@@ -93,18 +91,16 @@
 <br>
 </div><br>
 <br>
-<div style="font-size: 60.0px;font-weight: bold;">
-<div id="Building"/><br>
-Building<br>
-<div style="font-size: 20.0px;font-weight: normal;">
-<br>
-<h2><div id="Building Your App with ursina.build"/><br>
-Building Your App with ursina.build<br>
+<h1 id="Building">
+Building
+</h1><br>
+<h2 id="Building Your App with ursina.build">
+Building Your App with ursina.build
 </h2><br>
-<br>
 Open cmd in the project folder and run<br>
-<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>python -m ursina.build
-</div><br>
+<code_block id="code_block_0"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>python -m ursina.build
+</code_block>
+<br>
 It will then move the necessary files to a 'build' directory which you can then distribute.<br>
 <br>
 Package ursina application for Windows 10.<br>
@@ -113,30 +109,29 @@ it copies python and project's dependent packages. Requires a main.py file.<br>
 Copies game scripts and assets into 'build/scr' folder.<br>
 Creates a .bat file to start the game.<br>
 <br>
-<div class="code_block" id="code_block_1" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>--ignore            <gray># add assets to ignore</gray>
---name              <gray># change project name</gray>
---include_modules   <gray># include extra modules like this: --include_modules module_one,module_two,module_tree</gray>
---overwrite         <gray># don't ask to overwrite existing build, just overwrite</gray>
+<code_block id="code_block_1"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>--ignore&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<gray># add assets to ignore</gray>
+--name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<gray># change project name</gray>
+--include_modules&nbsp;&nbsp; <gray># include extra modules like this: --include_modules module_one,module_two,module_tree</gray>
+--overwrite&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <gray># don't ask to overwrite existing build, just overwrite</gray>
 --skip_engine
 --skip_game
 --compile_to_pyc=True
 --compile_to_pyc=False
-</div><br>
+</code_block>
+<br>
 Make sure to include any extra modules with --include_modules PIL,numpy for example.<br>
 Any errors while the application is running will be logged in log.sswg instead of the console.<br>
 <br>
 <br>
-<h2><div id="Building with Nuitka"/><br>
-Building with Nuitka<br>
+<h2 id="Building with Nuitka">
+Building with Nuitka
 </h2><br>
-<br>
 Follow the instructions on <a href="https://nuitka.net/">https://nuitka.net/</a><br>
 <br>
 <br>
-<h2><div id="Building Your App with auto-py-to-exe"/><br>
-Building Your App with auto-py-to-exe<br>
+<h2 id="Building Your App with auto-py-to-exe">
+Building Your App with auto-py-to-exe
 </h2><br>
-<br>
 This way is not recommended since it will slow to open and have a bigger file size.<br>
 <br>
 1. <span>pip install auto-py-to-exe</span><br>
@@ -169,6 +164,7 @@ function copy_to_clipboard(containerid) {
     window.getSelection().removeAllRanges()
 }
 </script>
-
+<br>
+<br>
 </body>
 </html>

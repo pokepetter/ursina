@@ -5,28 +5,28 @@
 <a href="installation.html">Installation</a>
 
 <a href="entity_basics.html">Entity Basics</a>
-    # index entity_basics.sswg
+    #index entity_basics.sswg
 
 <a href="coordinate_system.html">Coordinate System</a>
-    # index coordinate_system.sswg
+    #index coordinate_system.sswg
 
 <a href="collision.html">Collision</a>
-    # index collision.sswg
+    #index collision.sswg
 
 <a href="text.html">Text</a>
-    # index text.sswg
+    #index text.sswg
 
 <a href="animation.html">Animation</a>
-    # index animation.sswg
+    #index animation.sswg
 
 
 <a href="networking.html">Networking</a>
-    # index networking.sswg
+    #index networking.sswg
 
 <a href="faq.html">F.A.Q.</a>
 
 <a href="building.html">Build and Release</a>
-    # index building.sswg
+    #index building.sswg
 
 
 </div>

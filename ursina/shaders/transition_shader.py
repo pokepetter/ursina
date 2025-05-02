@@ -1,4 +1,8 @@
-from ursina import *;
+from ursina.shader import Shader
+from ursina.vec2 import Vec2
+from ursina.vec3 import Vec3
+from ursina import color
+
 transition_shader = Shader(name='transition_shader', language=Shader.GLSL, fragment='''
 #version 140
 
@@ -21,7 +25,7 @@ void main() {
     if (value <= min_cutoff || value > max_cutoff) {
         alpha = 0.;
     }
-    
+
     COLOR = vec4(color.rgb, alpha * p3d_ColorScale.a);
 }
 
@@ -40,7 +44,7 @@ if __name__ == '__main__':
     window.color = color._16
     Texture.default_filtering = 'bilinear'
 
-    e = Entity(model='quad', shader=transition_shader, scale=5, cutoff=0, 
+    e = Entity(model='quad', shader=transition_shader, scale=5, cutoff=0,
         texture='shore', color=color.azure
         )
     # mask = load_texture('explosion_particle')

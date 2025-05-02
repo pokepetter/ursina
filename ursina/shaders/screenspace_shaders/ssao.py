@@ -1,4 +1,12 @@
-from ursina import *; ssao_shader = Shader(language=Shader.GLSL, fragment='''
+from ursina.shader import Shader
+from ursina.vec2 import Vec2
+from ursina.vec3 import Vec3
+from ursina import color
+from ursina.ursinastuff import Func
+from ursina.texture_importer import load_texture
+
+
+ssao_shader = Shader(language=Shader.GLSL, fragment='''
 #version 140
 
 
@@ -107,6 +115,8 @@ if __name__ == '__main__':
     e = Entity(model='sphere', color=color.orange)
     e = Entity(model='cube', y=-1)
     e = Entity(model='plane', scale=100, y=-1)
+    Sky()
+    Button(y=-.4, scale=.1)
     camera.shader = ssao_shader
 
     EditorCamera()
@@ -123,4 +133,6 @@ if __name__ == '__main__':
     for i in range(20):
         e = Entity(model='cube', position=Vec3(random.random(),random.random(),random.random())*3, rotation=Vec3(random.random(),random.random(),random.random())*360)
         # e.shader = matcap_shader
+
+
     app.run()

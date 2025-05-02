@@ -1,10 +1,10 @@
-# title ursina engine download
-# insert menu.sswg
-# insert doc_index_sidebar.sswg
+#title ursina engine download
+#insert menu.sswg
+#insert doc_index_sidebar.sswg
 
 ### Downloading and Installing Ursina
 
-# insert _getting_started.sswg
+#insert _getting_started.sswg
 
 3) If everything went well, you can go to the introduction tutorial where
    we'll cover how to create a basic program and how to run it.

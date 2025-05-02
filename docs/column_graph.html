@@ -1,26 +1,24 @@
 <!DOCTYPE HTML>
-        <!--generated with sswg-->
-        <html lang="en">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <head>
-            <title> ursina engine documentation</title>
-            <link rel="stylesheet" href="sswg.css">
-            <link rel="stylesheet" href="style.css">
-            <link rel="icon" type="image/x-icon" href="favicon.ico">
-        </head>
-        <body>
-        <left><div style="max-width: 1200px; margin: auto;">
+<!--generated with sswg-->
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <title> ursina engine documentation</title>
+    <link rel="stylesheet" href="sswg.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+<div style="max-width:1200px; margin:auto;">
+<div style="text-align:left;">
 <br>
 <a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" donate.html" class="button">Donate</a><br>
-<br>
-<div style="font-size: 60.0px;font-weight: bold;">
-<div id="Column Graph"/><br>
-Column Graph<br>
-<div style="font-size: 20.0px;font-weight: normal;">
-<a href="https://github.com/pokepetter/ursina/blob/master/samples/column_graph.py">https://github.com/pokepetter/ursina/blob/master/samples/column_graph.py</a><br>
+<h1 id="Column Graph">
+Column Graph
+</h1><a href="https://github.com/pokepetter/ursina/blob/master/samples/column_graph.py">https://github.com/pokepetter/ursina/blob/master/samples/column_graph.py</a><br>
 <br>
 <img src="icons/column_graph.jpg"></img> <br>
-<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+<code_block id="code_block_0"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina <purple>import</purple> *
 <purple>import</purple> random
 
 
@@ -33,47 +31,47 @@ names = [<green>'Amy'</green>, <green>'Ruby'</green>, <green>'Tara'</green>, <gr
 random.seed(<yellow>0</yellow>)
 data = dict()
 <purple>for</purple> name in names:
-    data[name] = random.randint(<yellow>0</yellow>, <yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>)
+&nbsp;&nbsp;&nbsp;&nbsp;data[name] = random.randint(<yellow>0</yellow>, <yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>)
 
 sliders = list()
 
 <purple>for</purple> i, (name, value) in enumerate(data.items()):
-    column = Button(
-        parent = scene,
-        name = name,
-        model = <green>'cube'</green>,
-        x = i - (len(names)/<yellow>2</yellow>),
-        scale = (.<yellow>5</yellow>, value/<yellow>5</yellow><yellow>0</yellow>, .<yellow>5</yellow>),
-        color = color.hsv(<yellow>3</yellow><yellow>0</yellow>*i, <yellow>1</yellow>, .<yellow>7</yellow>),
-        origin_y = -.<yellow>5</yellow>,
-        text = name,
-        tooltip = Tooltip(<green>'<yellow>0</yellow><yellow>0</yellow>'</green>, <olive>color</olive>=color.light_text) <gray># to ensure uniform with</gray>
-    )
-    column.tooltip.text = str(value)
-    column.text_entity.scale *= .<yellow>4</yellow>
-    column.text_entity.world_y = column.world_y - .<yellow>2</yellow>
-    column.text_entity.z = -.<yellow>5</yellow>
-    column.text_entity.world_parent = scene
-    column.text_entity.color = column.color.tint(-.<yellow>5</yellow>)
+&nbsp;&nbsp;&nbsp;&nbsp;column = Button(
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parent = scene,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name = name,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model = <green>'cube'</green>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x = i - (len(names)/<yellow>2</yellow>),
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scale = (.<yellow>5</yellow>, value/<yellow>5</yellow><yellow>0</yellow>, .<yellow>5</yellow>),
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;color = color.hsv(<yellow>3</yellow><yellow>0</yellow>*i, <yellow>1</yellow>, .<yellow>7</yellow>),
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;origin_y = -.<yellow>5</yellow>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;text = name,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tooltip = Tooltip(<green>'<yellow>0</yellow><yellow>0</yellow>'</green>, <olive>color</olive>=color.light_text) <gray># to ensure uniform with</gray>
+&nbsp;&nbsp;&nbsp;&nbsp;)
+&nbsp;&nbsp;&nbsp;&nbsp;column.tooltip.text = str(value)
+&nbsp;&nbsp;&nbsp;&nbsp;column.text_entity.scale *= .<yellow>4</yellow>
+&nbsp;&nbsp;&nbsp;&nbsp;column.text_entity.world_y = column.world_y - .<yellow>2</yellow>
+&nbsp;&nbsp;&nbsp;&nbsp;column.text_entity.z = -.<yellow>5</yellow>
+&nbsp;&nbsp;&nbsp;&nbsp;column.text_entity.world_parent = scene
+&nbsp;&nbsp;&nbsp;&nbsp;column.text_entity.color = column.color.tint(-.<yellow>5</yellow>)
 
-    slider = ThinSlider(<olive>text</olive>=name, min=<yellow>0</yellow>, max=<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>, default=value, x=-.<yellow>6</yellow><yellow>5</yellow>, <olive>y</olive>=(-i*.<yellow>0</yellow><yellow>4</yellow>*.<yellow>7</yellow><yellow>5</yellow>) - .<yellow>1</yellow><yellow>5</yellow>, step=<yellow>1</yellow>, dynamic=True)
-    slider.scale *= .<yellow>7</yellow><yellow>5</yellow>
-    sliders.append(slider)
+&nbsp;&nbsp;&nbsp;&nbsp;slider = ThinSlider(<olive>text</olive>=name, min=<yellow>0</yellow>, max=<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>, default=value, x=-.<yellow>6</yellow><yellow>5</yellow>, <olive>y</olive>=(-i*.<yellow>0</yellow><yellow>4</yellow>*.<yellow>7</yellow><yellow>5</yellow>) - .<yellow>1</yellow><yellow>5</yellow>, step=<yellow>1</yellow>, dynamic=True)
+&nbsp;&nbsp;&nbsp;&nbsp;slider.scale *= .<yellow>7</yellow><yellow>5</yellow>
+&nbsp;&nbsp;&nbsp;&nbsp;sliders.append(slider)
 
-    <purple>def</purple> on_slider_changed(slider=slider, column=column):
-        column.scale_y = slider.value/<yellow>5</yellow><yellow>0</yellow>
-        column.tooltip.text = str(slider.value)
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>def</purple> on_slider_changed(slider=slider, column=column):
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;column.scale_y = slider.value/<yellow>5</yellow><yellow>0</yellow>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;column.tooltip.text = str(slider.value)
 
-    slider.on_value_changed = on_slider_changed
+&nbsp;&nbsp;&nbsp;&nbsp;slider.on_value_changed = on_slider_changed
 
 
 randomize_button = Button(<olive>position</olive>=(-.<yellow>6</yellow><yellow>6</yellow>,-.<yellow>4</yellow><yellow>5</yellow>), <olive>origin</olive>=(-.<yellow>5</yellow>,.<yellow>5</yellow>), <olive>color</olive>=color.dark_gray, <olive>text</olive>=<green>'&lt;white&gt;Randomize!'</green>, <olive>scale</olive>=(.<yellow>2</yellow><yellow>5</yellow>, .<yellow>0</yellow><yellow>5</yellow>))
 randomize_button.scale *= .<yellow>7</yellow><yellow>5</yellow>
 
 <purple>def</purple> randomize():
-    <purple>for</purple> s in sliders:
-        s.value = random.randint(<yellow>0</yellow>,<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>)
-        s.on_value_changed()
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>for</purple> s in sliders:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s.value = random.randint(<yellow>0</yellow>,<yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s.on_value_changed()
 
 randomize_button.on_click = randomize
 
@@ -88,7 +86,8 @@ EditorCamera()
 
 app.run()
 
-</div><script>
+</code_block>
+<script>
 function copy_to_clipboard(containerid) {
     var range = document.createRange()
     range.selectNode(containerid)
@@ -98,6 +97,7 @@ function copy_to_clipboard(containerid) {
     window.getSelection().removeAllRanges()
 }
 </script>
-
+<br>
+<br>
 </body>
 </html>

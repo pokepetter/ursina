@@ -65,6 +65,7 @@
 
 body {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 1.5em;
     line-height: 1.5;
     margin: auto;
     max-width: 100%;
@@ -83,6 +84,7 @@ h2 {
     font-size: 2rem;
     font-weight: 600;
     color: var(--header_color);
+    font-weight: 600;
 }
 
 a:link, a:visited {color: var(--link);}
@@ -101,7 +103,7 @@ a.button {
     border-width: 2px;
     text-decoration: none;
     font-family: Lato, Arial, Sans-Serif;
-    font-size: 1.5em;
+    font-size: .85em;
     line-height: 2.5em;
     border-style: solid;
     background-color: transparent;
@@ -182,6 +184,8 @@ span {
     font-family: monospace;
     font-size: .9em;
     border-radius: .5em;
+    overflow: auto;
+    white-space: wrap;
 }
 
 /* ===== Scrollbar CSS ===== */

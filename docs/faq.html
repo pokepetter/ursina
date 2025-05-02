@@ -1,18 +1,18 @@
 <!DOCTYPE HTML>
-        <!--generated with sswg-->
-        <html lang="en">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <head>
-            <title> ursina engine faq</title>
-            <link rel="stylesheet" href="sswg.css">
-            <link rel="stylesheet" href="style.css">
-            <link rel="icon" type="image/x-icon" href="favicon.ico">
-        </head>
-        <body>
-        <left><div style="max-width: 1200px; margin: auto;">
+<!--generated with sswg-->
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <title> ursina engine faq</title>
+    <link rel="stylesheet" href="sswg.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+<div style="max-width:1200px; margin:auto;">
+<div style="text-align:left;">
 <br>
 <a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" donate.html" class="button">Donate</a><br>
-<br>
 <div class="sidebar"><br>
 <b><a href="documentation.html">Documentation</a></b><br>
 <br>
@@ -47,10 +47,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Mouse Collision">Mouse Collision</a><br>
 <br>
 <a href="text.html">Text</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Size">Text Size</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text">Text</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Font and Resolution">Font and Resolution</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Alignment">Text Alignment</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text Colors">Text Colors</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Changing Text of Prefabs">Changing Text of Prefabs</a><br>
 <br>
 <a href="animation.html">Animation</a><br>
@@ -93,33 +91,30 @@
 <br>
 </div><br>
 <br>
-<div style="font-size: 60.0px;font-weight: bold;">
-<div id="Frequently Asked Questions"/><br>
-Frequently Asked Questions<br>
-<div style="font-size: 20.0px;font-weight: normal;">
+<h1 id="Frequently Asked Questions">
+Frequently Asked Questions
+</h1><br>
 <br>
-<br>
-<h2><div id="How should I structure my project?"/><br>
-How should I structure my project?<br>
+<h2 id="How should I structure my project?">
+How should I structure my project?
 </h2><br>
-<br>
-<div class="code_block" id="code_block_0" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>project_folder/         <gray># create a new folder <purple>for</purple> each project</gray>
-    enemies.py
-    level.py
-    main.py             <gray># the starting script</gray>
-    player.py
-    player_sprite.png
-    textures/           <gray># assets can be placed alongside the scripts or in a folder below</gray>
-        enemy_<yellow>1</yellow>.png
-        enemy_<yellow>2</yellow>.png
-</div><br>
-<br>
+<code_block id="code_block_0"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>project_folder/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <gray># create a new folder <purple>for</purple> each project</gray>
+&nbsp;&nbsp;&nbsp;&nbsp;enemies.py
+&nbsp;&nbsp;&nbsp;&nbsp;level.py
+&nbsp;&nbsp;&nbsp;&nbsp;main.py&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <gray># the starting script</gray>
+&nbsp;&nbsp;&nbsp;&nbsp;player.py
+&nbsp;&nbsp;&nbsp;&nbsp;player_sprite.png
+&nbsp;&nbsp;&nbsp;&nbsp;textures/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <gray># assets can be placed alongside the scripts or in a folder below</gray>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enemy_<yellow>1</yellow>.png
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enemy_<yellow>2</yellow>.png
+</code_block>
 <br>
 <br>
-<h2><div id="How do I move the camera?"/><br>
-How do I move the camera?<br>
+<br>
+<br>
+<h2 id="How do I move the camera?">
+How do I move the camera?
 </h2><br>
-<br>
 The camera is an Entity, so you can move and rotate it just like everything else:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;```<br>
 &nbsp;&nbsp;&nbsp;&nbsp;camera.position = Vec3(1,1,0)<br>
@@ -127,10 +122,9 @@ The camera is an Entity, so you can move and rotate it just like everything else
 <br>
 <br>
 <br>
-<h2><div id="Why should I use Python for game development. Isn't it slow?"/><br>
-Why should I use Python for game development. Isn't it slow?<br>
+<h2 id="Why should I use Python for game development. Isn't it slow?">
+Why should I use Python for game development. Isn't it slow?
 </h2><br>
-<br>
 Not really. The most performance critical part are written in C++ or shader code.<br>
 Python can make you more productive as a developer and thus make it easier<br>
 to structure your project in a good way, rather than micro-optimize.<br>
@@ -138,18 +132,17 @@ to structure your project in a good way, rather than micro-optimize.<br>
 <br>
 <br>
 <br>
-<h2><div id="How do I call a function with a delay?</b>"/><br>
-How do I call a function with a delay?</b><br>
+<h2 id="How do I call a function with a delay?</b>">
+How do I call a function with a delay?</b>
 </h2><br>
+<code_block id="code_block_1"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>invoke(some_function, arg<yellow>1</yellow>, kwarg<yellow>1</yellow>=<green>'some kwarg'</green>, dela<olive>y</olive>=<yellow>2</yellow>)
+</code_block>
 <br>
-<div class="code_block" id="code_block_1" style="margin-left: 0em;"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>invoke(some_function, arg<yellow>1</yellow>, kwarg<yellow>1</yellow>=<green>'some kwarg'</green>, dela<olive>y</olive>=<yellow>2</yellow>)
-</div><br>
 <br>
 <br>
-<h2><div id="How can I use panda3d alongside ursina?"/><br>
-How can I use panda3d alongside ursina?<br>
+<h2 id="How can I use panda3d alongside ursina?">
+How can I use panda3d alongside ursina?
 </h2><br>
-<br>
 What you need to know is that Entity is a NodePath and Ursina is a ShowBase.<br>
 You can also write custom shaders, see panda3d's shader documentation for that.<br>
 <br>
@@ -163,6 +156,7 @@ function copy_to_clipboard(containerid) {
     window.getSelection().removeAllRanges()
 }
 </script>
-
+<br>
+<br>
 </body>
 </html>
