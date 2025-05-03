@@ -23,8 +23,6 @@ class Player(Entity):   # inherits Entity, out base class for most things. Like 
         self.scale_z = 1
         self.world_scale = (1,2)
 
-
-
         self.model = 'quad' # tries to load model from /models folder
         # you can also set it to a built in procedural model
         # self.model = Circle(resolution=16)
@@ -35,17 +33,9 @@ class Player(Entity):   # inherits Entity, out base class for most things. Like 
         # call compress_textures() to compress .psd files and big png files
         self.texture = 'white_cube'
 
-        self.color = color.orange
-        # self.color = color.random.color()
-        # self.color = color.hsv(90, 1, 1, 1) #hsv color
-
+        self.color = color.hsv(90, 1, 1, 1) #hsv color
         self.collider = 'box'
-
-        self.text_entity = Text(
-            text = '< a     d >',
-            parent = scene,
-            z = -.1
-            )
+        self.text_entity = Text(text = 'a     d', parent=scene, z=-.1)
 
     def input(self, key):
         print(key)
