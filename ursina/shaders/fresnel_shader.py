@@ -38,13 +38,14 @@ out vec4 fragColor;
 uniform vec4 fresnel_color;
 uniform sampler2D fresnel_texture;
 uniform vec3 camera_world_position;
+uniform float bias;
+uniform float scale;
+uniform float power;
 
 vec3 do_fresnel(vec4 color) {
-    float _Bias = .05;
-    float _Scale = .5;
-    float _Power = 3.0;
-    vec3 I = normalize(world_position - camera_world_position.xyz);
-    float fresnel = _Bias + _Scale * pow(1.0 + dot(I, world_normal), _Power);
+    vec3 offset_camera_world_position = camera_world_position + vec3(0.,0.,-1.);
+    vec3 I = normalize(world_position - offset_camera_world_position.xyz);
+    float fresnel = bias + scale * pow(1.0 + dot(I, world_normal), power);
 
     fresnel *= texture(fresnel_texture, texcoord).r;
     return mix(color.rgb, fresnel_color.rgb, fresnel*fresnel_color.a);
@@ -65,8 +66,16 @@ default_input = {
 
     'fresnel_color' : color.light_gray,
     'fresnel_texture' : Func(load_texture, 'white_cube'),
-}
+    'bias' : .05,
+    'scale' : 1,
+    'power' : 2.0,
+    'camera_world_position': Func(getattr, camera, 'world_position'),
+},
+continuous_input = {
+    'camera_world_position': Func(getattr, camera, 'world_position'),
+    }
 )
+
 
 
 if __name__ == '__main__':
@@ -75,36 +84,17 @@ if __name__ == '__main__':
     # window.color=color.black
 
     b = Entity(model='sphere', color=color.black, shader=fresnel_shader)
+    b = Entity(model=Quad(), color=color.dark_gray, shader=fresnel_shader, x=.25, parent=camera.ui, scale=.2, ignore=True)
+    b.shader_input = {
+        'bias': .01,
+        'scale': 1.5,
+        'power': 1.5,
+        'fresnel_color': color.hex('#123123')
+    }
+    b.animate_rotation_y(15, duration=1, curve=curve.linear_boomerang, loop=True)
     ground = Entity(model='plane', color=color.gray, shader=fresnel_shader, y=-1, scale=64, texture='grass', texture_scale=Vec2(32,32))
     ground.set_shader_input('fresnel_color', color.gray)
     ground.set_shader_input('fresnel_texture', load_texture('white_cube'))
     EditorCamera()
-
-    for i in range(16):
-        e = Entity(model='cube', origin_y=-.5, scale=2, texture='brick', texture_scale=(1,2),
-            x=random.uniform(-8,8),
-            z=random.uniform(-8,8) + 8,
-            # collider='box',
-            scale_y = random.uniform(2,3),
-            color=color.hsv(0, 0, random.uniform(.9, 1)),
-            shader=fresnel_shader,
-            )
-        e.set_shader_input('fresnel_texture', load_texture('brick'))
-
-    def update():
-        for e in scene.entities:
-            if hasattr(e, 'shader') and e.shader == fresnel_shader:
-                e.set_shader_input('camera_world_position', camera.world_position)
-
-
-        # ground.set_shader_input('camera_world_position', camera.world_position)
-
-
-    # def update():
-    #     b.rotation_y += 1
-    #     #b.rotation_z += 1
-    #     b.rotation_x += 1
-    #     b.set_shader_input('transform_matrix', b.getNetTransform().getMat())
-    # EditorCamera()
 
     app.run()
