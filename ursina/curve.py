@@ -352,19 +352,19 @@ if __name__ == '__main__':
         label = Text(parent=curve_renderer, text=name, scale=8, color=color.gray, y=-.1)
         return curve_renderer
 
-    # j = 0
-    # for e in dir(curve):
-    #     try:
-    #         item = getattr(curve, e)
-    #         print(item.__name__, ':', item(.75))
-    #         curve_renderer = render_curve(item, item.__name__)
-    #         row = floor(j / 8)
-    #         curve_renderer.x = (j % 8) * 2.5
-    #         curve_renderer.y = row * 1.75
-    #         label = Text(parent=curve_renderer, text=item.__name__, scale=8, color=color.gray, y=-.1)
-    #         j += 1
-    #     except:
-    #         pass
+    j = 0
+    for e in dir(curve):
+        try:
+            item = getattr(curve, e)
+            print(item.__name__, ':', item(.75))
+            curve_renderer = render_curve(item, item.__name__)
+            row = floor(j / 8)
+            curve_renderer.x = (j % 8) * 2.5
+            curve_renderer.y = row * 1.75
+            label = Text(parent=curve_renderer, text=item.__name__, scale=8, color=color.gray, y=-.1)
+            j += 1
+        except:
+            pass
 
 
 
