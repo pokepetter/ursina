@@ -59,11 +59,23 @@ def set_text_scale():
 text_scale_slider.on_value_changed = set_text_scale
 
 
+def update_volume_for_currently_playing():
+    for e in scene.entities:
+        if isinstance(e, Audio):
+            e.volume = e.volume
 
-volume_slider = Slider(0, 1, default=Audio.volume_multiplier, step=.1, text='Master Volume:', parent=options_menu, x=-.25)
-def set_volume_multiplier():
-    Audio.volume_multiplier = volume_slider.value
-volume_slider.on_value_changed = set_volume_multiplier
+volume_slider = Slider(0, 1, default=Audio.volume_multiplier, step=.1, text='Master Volume:', parent=options_menu, x=-.25,
+    on_value_changed = lambda: (
+        setattr(Audio, 'volume_multiplier', volume_slider.value),
+        update_volume_for_currently_playing()
+    )
+)
+# @(lambda f:setattr(volume_slider, 'on_value_changed', f))
+# def anon():
+#     Audio.volume_multiplier = volume_slider.value
+#     update_volume_for_currently_playing()
+
+# volume_slider.on_value_changed = set_volume_multiplier
 
 options_back = MenuButton(parent=options_menu, text='Back', x=-.25, origin_x=-.5, on_click=Func(setattr, state_handler, 'state', 'main_menu'))
 
@@ -89,6 +101,7 @@ for menu in (main_menu, load_menu, options_menu):
     menu.on_enable = animate_in_menu
 
 
-background = Entity(parent=menu_parent, model='quad', texture='shore', scale=(camera.aspect_ratio,1), color=color.white, z=1, world_y=0)
-
+background = Entity(parent=menu_parent, model='quad', texture='shore', scale=(camera.aspect_ratio,1), color=color.dark_gray, z=1, world_y=0)
+# application.asset_folder = application.asset_folder.parent
+# Audio('chillstep_1.ogg')
 app.run()
