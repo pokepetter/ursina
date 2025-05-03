@@ -24,7 +24,7 @@ class Animator():
     def state(self, value):
 
         if not value in self.animations:
-            print(self, 'has no animation:', value)
+            print_warning(self, 'has no animation:', value)
 
         elif not self._state == value:
             # only show set state and disable the rest
