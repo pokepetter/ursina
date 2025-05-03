@@ -62,9 +62,14 @@ class DirectionalLight(Light):
             lens.set_near_far(bmin.z*2, bmax.z*2)
             lens.set_film_offset((bmin.xy + bmax.xy) * .5)
             lens.set_film_size(bmax.xy - bmin.xy)
+        else:
+            lens = self._light.get_lens()
+            lens.set_near_far(1, 100)
+            lens.set_film_offset((0, 0))
+            lens.set_film_size((1, 1))
 
         [e.enable() for e in Sky.instances]
-        
+
         self._bounds_entity = entity
 
     def look_at(self, target, axis=Vec3.forward):
