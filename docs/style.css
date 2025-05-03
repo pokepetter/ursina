@@ -173,7 +173,11 @@ purple {color: var(--purple)}
     left: 10px;
     bottom: 10px;
     overflow-y: scroll;
+    white-space: normal;
+    max-width: 15vw;
 }
+@media screen and (max-width: 1800px) {.sidebar {display:none;}}
+
 
 span {
     background-color: var(--inline_code_bg_color);
@@ -192,7 +196,7 @@ span {
 /* Firefox */
 * {
     scrollbar-width: auto;
-    scrollbar-color: #3c3c3c #c2beb3;
+    scrollbar-color: #ededed #d4d4d4;
 }
 
 /* Chrome, Edge, and Safari */
