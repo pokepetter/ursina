@@ -136,7 +136,7 @@ img {
     text-decoration: none; !important
 }
 
-.code_block {
+code_block {
     /* background-color: #312832; */
     background-color: var(--code_block_bg_color);
     color: var(--code_block_text_color);
