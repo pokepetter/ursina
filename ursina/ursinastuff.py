@@ -63,7 +63,7 @@ def invoke(function, *args, **kwargs):  # reserved keywords: 'delay', 'unscaled'
     )
 
 
-def after(delay, unscaled=True, ignore_paused=False, entity=None):    # function for @after decorator. Use the docrator, not this.
+def after(delay, unscaled=True, ignore_paused=False, entity=None):    # function for @after decorator. Use the decorator, not this.
     '''@after decorator for calling a function after some time.
 
         example:
