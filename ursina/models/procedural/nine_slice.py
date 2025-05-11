@@ -1,69 +1,92 @@
 from ursina import *
 
+'''
+nineslice mesh:
+
+11-10--15--14
+|   |   |   |
+8---9--12--13
+|   |   |   |
+3---2---7---6
+|   |   |   |
+0---1---4---5
+
+'''
+
+
 class NineSlice(Mesh):
-    def __init__(self, xSize:float, ySize:float):
-        corner_size = min(xSize, ySize) / 4 # Set a fixed corner size for 9-slicing texture
+    def __init__(self, entity_scale=Vec3.one, scale_multiplier=1):
+        verts = [Vec3(*e,0)*scale_multiplier for e in (
+            (-.5,-.5), (0,-.5), (0,0), (-.5,0),
+            (0,-.5), (.5,-.5), (.5,-0), (0,-0),
+            (-.5,0), (-0,0), (-0,.5), (-.5,.5),
+            (0,0), (.5,0), (.5,.5), (0,.5),
+            )]
 
-        # Define vertices for a 3x3 grid (9-slice pattern)
-        vertices = [
-            # Top row
-            Vec3(-xSize / 2, ySize / 2, 0),  # 0: Top-left corner
-            Vec3(-xSize / 2 + corner_size, ySize / 2, 0),  # 1: Top-left border-right
-            Vec3(xSize / 2 - corner_size, ySize / 2, 0),  # 2: Top-right border-left
-            Vec3(xSize / 2, ySize / 2, 0),  # 3: Top-right corner
+        offset = (entity_scale - Vec3.one)
+        for i in range(0,4):
+            verts[i] -= offset * .5
+            verts[i] *= Vec3.one / entity_scale
+        for i in range(4,8):
+            verts[i] += offset * Vec3(1,-1,1) * .5
+            verts[i] *= Vec3.one / entity_scale
+        for i in range(8,11):
+            verts[i] += offset * Vec3(-1,1,1) * .5
+            verts[i] *= Vec3.one / entity_scale
+        for i in range(12,16):
+            verts[i] += offset * .5
+            verts[i] *= Vec3.one / entity_scale
 
-            # Middle row
-            Vec3(-xSize / 2, ySize / 2 - corner_size, 0),  # 4: Middle-left border-down
-            Vec3(-xSize / 2 + corner_size, ySize / 2 - corner_size, 0),  # 5: Top-left of center
-            Vec3(xSize / 2 - corner_size, ySize / 2 - corner_size, 0),  # 6: Top-right of center
-            Vec3(xSize / 2, ySize / 2 - corner_size, 0),  # 7: Middle-right border-down
+        super().__init__(
+            vertices=verts,
+            triangles=(
+                (0,1,2,3),
+                (1,4,7,2),
+                (4,5,6,7),
+                (3,2,9,8,),
+                (2,7,12,9),
+                (7,6,13,12),
+                (8,9,10,11),
+                (9,12,15,10),
+                (12,13,14,15)
+                ),
+            uvs=(
+                (0,0), (.5,0), (.5,.5), (0,.5),
+                (.5,0), (1,0), (1,.5), (.5,.5),
+                (0,.5), (.5,.5), (.5,1), (0,1),
+                (.5,.5), (1,.5), (1,1), (.5,1)
+                ),
+            )
 
-            # Bottom row
-            Vec3(-xSize / 2, -ySize / 2 + corner_size, 0),  # 8: Bottom-left border-up
-            Vec3(-xSize / 2 + corner_size, -ySize / 2 + corner_size, 0),  # 9: Bottom-left of center
-            Vec3(xSize / 2 - corner_size, -ySize / 2 + corner_size, 0),  # 10: Bottom-right of center
-            Vec3(xSize / 2, -ySize / 2 + corner_size, 0),  # 11: Bottom-right border-up
 
-            # Bottom row corners
-            Vec3(-xSize / 2, -ySize / 2, 0),  # 12: Bottom-left corner
-            Vec3(-xSize / 2 + corner_size, -ySize / 2, 0),  # 13: Bottom-left border-right
-            Vec3(xSize / 2 - corner_size, -ySize / 2, 0),  # 14: Bottom-right border-left
-            Vec3(xSize / 2, -ySize / 2, 0)  # 15: Bottom-right corner
-        ]
-
-        # Define triangles for 9-slice grid
-        triangles = [
-            # Top row
-            (0, 4, 1), (1, 4, 5),  # Top-left corner
-            (1, 5, 2), (2, 5, 6),  # Top border
-            (2, 6, 3), (3, 6, 7),  # Top-right corner
-
-            # Middle row
-            (4, 8, 5), (5, 8, 9),  # Left border
-            (5, 9, 6), (6, 9, 10),  # Center
-            (6, 10, 7), (7, 10, 11),  # Right border
-
-            # Bottom row
-            (8, 12, 9), (9, 12, 13),  # Bottom-left corner
-            (9, 13, 10), (10, 13, 14),  # Bottom border
-            (10, 14, 11), (11, 14, 15)  # Bottom-right corner
-        ]
-
-        # Define UV coordinates for a 3x3 grid layout (relative to a 1x1 texture space)
-        uvs = [
-            # Top row
-            (0, 1), (0.25, 1), (0.75, 1), (1, 1),
-            (0, 0.75), (0.25, 0.75), (0.75, 0.75), (1, 0.75),
-            # Bottom row
-            (0, 0.25), (0.25, 0.25), (0.75, 0.25), (1, 0.25),
-            (0, 0), (0.25, 0), (0.75, 0), (1, 0)
-        ]
-
-        super().__init__(vertices=vertices, triangles=triangles, uvs=uvs, colors=[color.white] * 16, mode='triangle')
 
 if __name__ == '__main__':
     app = Ursina()
-    button1 = Button(text="Hi !!", model=NineSlice(0.2, 0.3), position=(-0.2, -0.3), texture="nine_sliced", color=color.white)
-    button2 = Button(text="Hello !!!", model=NineSlice(0.5, 0.3), position=(0.2, -0.3), texture="nine_sliced", color=color.white)
-    button3 = Button(text="As you can see, the texture goes \nwell for every button size.", model=NineSlice(0.4, 0.4), position=(0, 0.1), texture="nine_sliced", color=color.white)
+    m = NineSlice(entity_scale=Vec3(2,1,1),
+        scale_multiplier=1.4,   # account for whitespace and drop shadow in the texture
+        )
+
+    window.color = color._240
+
+    Entity(parent=camera.ui, model='wireframe_quad', scale=Vec2(2,1)*.1, color=color.red)
+    for i, nineslice_texture in enumerate(('nineslice_rainbow', 'nineslice_double', 'circle')):
+        b = Draggable(model=copy(m),
+            parent=camera.ui,
+            scale=Vec2(2,1)*.1,
+            texture=nineslice_texture,
+            text='Next',
+            color=color.white,
+            text_color=color.dark_gray,
+            text_origin=(0,0),
+            highlight_color=hsv(210,.1,1),
+            pressed_scale=.9,
+            pressed_color=hsv(180,.2,.7),
+            # wireframe=True,
+            y=-i*.2
+            )
+
+    # button1 = Entity(text="Hi !!", model=NineSlice(0.2, 0.3), position=(-0.2, -0.3), texture="nine_sliced", color=color.white)
+    # button2 = Entity(text="Hello !!!", model=NineSlice(0.5, 0.3), position=(0.2, -0.3), texture="nine_sliced", color=color.white)
+    # button3 = Entity(text="As you can see, the texture goes \nwell for every button size.", model=NineSlice(0.4, 0.4), position=(0, 0.1), texture="nine_sliced", color=color.white)
+    EditorCamera()
     app.run()
