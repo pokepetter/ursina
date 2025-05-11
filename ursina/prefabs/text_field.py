@@ -9,7 +9,7 @@ class TextField(Entity):
     def __init__(self, max_lines=64, line_height=1.1, character_limit=None, **kwargs):
         super().__init__(parent=camera.ui, x=-.5, y=.4, ignore_paused=True)
 
-        self.font = 'VeraMono.ttf'
+        self.font = Text.default_monospace_font
         self.line_height = line_height
         self.max_lines = max_lines
         self.character_limit = character_limit

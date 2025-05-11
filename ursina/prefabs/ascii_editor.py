@@ -3,7 +3,7 @@ from ursina import color, held_keys, Text
 import pyperclip
 
 class ASCIIEditor(GridEditor):
-    def __init__(self, size=(61,28), palette=(' ', '#', '|', 'A', '/', '\\', 'o', '_', '-', 'i', 'M', '.'), font='VeraMono.ttf', canvas_color=color.black, line_height=1.1, **kwargs):
+    def __init__(self, size=(61,28), palette=(' ', '#', '|', 'A', '/', '\\', 'o', '_', '-', 'i', 'M', '.'), font=Text.default_monospace_font, canvas_color=color.black, line_height=1.1, **kwargs):
         super().__init__(size=size, palette=palette, canvas_color=canvas_color, **kwargs)
         rotated_grid = list(zip(*self.grid[::-1]))
         text = '\n'.join([''.join(reversed(line)) for line in reversed(rotated_grid)])

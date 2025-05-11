@@ -30,7 +30,7 @@ class VecField(Button):
 
         for i in range(len(default_value)):
             field = InputField(str(self.default_value[i])[:self.character_limit], character_limit=self.character_limit, model='quad', parent=self, limit_content_to=content_type,
-                x=(i*w)+w/2, scale=(w,1), z=-1, color=color._8, font='VeraMono.ttf', submit_on=['enter','tab'])
+                x=(i*w)+w/2, scale=(w,1), z=-1, color=color._8, font=Text.default_monospace_font, submit_on=['enter','tab'])
             field.grid = Entity(parent=field, model='wireframe_quad', color=color.dark_gray, z=-1)
             field.text_field.scale *= .75
             field.on_submit = self.convert_text_to_vector

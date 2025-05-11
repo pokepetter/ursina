@@ -225,7 +225,7 @@ if __name__ == '__main__':
     # # test settging default colors
     # Button.default_color = color.magenta
     # Button.default_highlight_color = color.blue
-    
+
     b = Button(model='quad', scale=.05, x=-.5, color=color.lime, text='text scale\ntest', text_size=.5, text_color=color.black)
     b.text_size = .5
     b.on_click = Sequence(Wait(.5), Func(print, 'aaaaaa'), )

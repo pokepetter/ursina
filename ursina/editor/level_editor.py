@@ -1718,7 +1718,7 @@ class HierarchyList(Entity):
         super().__init__(parent=LEVEL_EDITOR.ui, position=window.top_left+Vec2(0,-.05))
         self.quad_model = load_model('quad', application.internal_models_folder, use_deepcopy=True)
         self.bg = Entity(parent=self, model='quad', collider='box', origin=(-.5,.5), color=color.black90, scale=(.15,10))
-        self.entity_list_text = Text(font='VeraMono.ttf', parent=self, scale=.6, line_height=1, position=Vec2(.005,0), z=-2)
+        self.entity_list_text = Text(font=Text.default_monospace_font, parent=self, scale=.6, line_height=1, position=Vec2(.005,0), z=-2)
         self.selected_renderer = Entity(parent=self.entity_list_text, scale=(.25,Text.size), model=Mesh(vertices=[]), color=hsv(210,.9,.6), origin=(-.5,.5), x=-.01, z=-1)
         self.selected_renderer.world_parent = self
         self.selected_renderer.z= -.1
@@ -2281,7 +2281,7 @@ class Help(Button):
         self.tooltip = Text(
             position=self.position + Vec3(.05,-.05,-10),
             # wordwrap=0,
-            font='VeraMono.ttf',
+            font=Text.default_monospace_font,
             enabled=False,
             text=dedent('''
                 Hotkeys:

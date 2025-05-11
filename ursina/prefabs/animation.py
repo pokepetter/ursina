@@ -29,9 +29,9 @@ class Animation(Sprite):
 
         if not self.frames:
             self.frames = [load_texture('white_cube.png')]
-        
+
         super().__init__(texture=self.frames[0])
-        
+
         self.sequence = Sequence(loop=loop, auto_destroy=False)
         self.frame_times = frame_times
         if not self.frame_times:

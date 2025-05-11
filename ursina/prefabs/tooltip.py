@@ -34,7 +34,7 @@ storm <default>to deal 5 <blue>water
 damage <default>to <red>everyone, <default>including <orange>yourself. <default>
 Lasts for 4 rounds.'''.replace('\n', ' '),
         background_color=color.violet,
-        font='VeraMono.ttf',
+        font=Text.default_monospace_font,
         wordwrap=50,
 )
 
