@@ -43,6 +43,7 @@ def _search_for_file(name, folders, file_types=None): # prioritizes based on fil
 class Text(Entity):
     size = .025
     default_font = 'OpenSans-Regular.ttf'
+    default_monospace_font = 'VeraMono.ttf'
     default_resolution = 1080 * size * 2
     start_tag = '<'
     end_tag = '>'
@@ -141,7 +142,8 @@ class Text(Entity):
         section = ''
         tag = self.start_tag+'default'+self.end_tag
         temp_text_node = TextNode('temp_text_node')
-        temp_text_node.setFont(self.font)
+        if self.font is not None:
+            temp_text_node.setFont(self.font)
         x = 0
         y = 0
 
@@ -258,6 +260,8 @@ class Text(Entity):
 
         return self.text_node
 
+    def font_getter(self):
+        return getattr(self, '_font', None)
 
     def font_setter(self, value):
         font_file_types = ('.ttf', '.otf') if '.' not in value else ('', )
@@ -307,6 +311,8 @@ class Text(Entity):
 
     def line_height_setter(self, value):
         self._line_height = value
+        if self.font is None:
+            return
         if self.use_tags and self.text:
             self.text = self.raw_text
         else:
@@ -318,6 +324,9 @@ class Text(Entity):
             return 0
 
         temp_text_node = TextNode('temp')
+        if self.font is None:
+            print_warning('font not loaded, so Text.width may be wrong')
+            return 1
         temp_text_node.setFont(self._font)
 
         longest_line_length = 0
@@ -339,6 +348,8 @@ class Text(Entity):
         return self._font.getPixelsPerUnit()
 
     def resolution_setter(self, value):
+        if self.font is None:
+            return
         self._font.setPixelsPerUnit(value)
 
 
