@@ -13,6 +13,9 @@ project_name = project_folder.stem
 build_folder = Path(project_folder / f'build_{platform.system()}')
 build_folder.mkdir(exist_ok=True)
 
+rcedit = os.path.abspath(os.path.dirname(__file__)) + "/scripts/rcedit.exe"
+print("Rcedit at: ", rcedit)
+
 ignore_folders = []
 ignore_filetypes = []
 
@@ -55,6 +58,7 @@ python_lib_dest = Path(build_folder / 'python/Lib')
 src_dest = Path(build_folder / 'src')
 build_engine = True
 build_game = True
+icon = False
 compile_to_pyc = True
 entry_point = 'main.py'
 
@@ -71,6 +75,7 @@ for i, arg in enumerate(sys.argv):
             --ignore_filetypes=*    # filetype to ignore, for example: --ignore_filetypes=.blend,.psd
             --name=''               # change project name
             --include_modules=*     # include extra modules like this: --include_modules=module_one,module_two,module_tree
+            --icon=''               # Add an icon to the game, has to be .ico format, for example: --icon=new.ico
             --overwrite             # don't ask to overwrite existing build, just overwrite
             --skip_engine
             --skip_game
@@ -97,6 +102,9 @@ for i, arg in enumerate(sys.argv):
     elif arg.startswith('--include_modules='):
         include_modules = arg.split('=')[1].split(',')
 
+    elif arg.startswith("--icon="):
+        icon = Path(project_folder / arg.split('=')[1])
+
     elif arg == '--skip_engine':
         build_engine = False
     elif arg == '--skip_game':
@@ -114,7 +122,7 @@ if (build_engine and python_dest.exists() or (build_game and src_dest.exists()))
     if '--overwrite' not in sys.argv:
         for e in (python_dest, src_dest):
             msg = f'Folder {e} already exists. \nProceed to delete and overwrite?'
-            overwrite = input("%s (y/N) " % msg).lower() == 'y'
+            overwrite = input("%s (y/n) " % msg).lower() == 'y'
             # if not overwrite:
             #     print('stopped building')
             #     exit()
@@ -209,6 +217,9 @@ if build_engine:
 
     # def copy_ursina():
     print('copying ursina')
+    #if sys.version_info[1] >= 12:
+        #import importlib.util #Have to change to import importlib.util in python 3.12?
+    #else:
     import importlib
     spec = importlib.util.find_spec('ursina')
     ursina_path = Path(spec.origin).parent
@@ -301,6 +312,27 @@ if build_game:
 
             call "python\python.exe" "src\{entry_point}{c}" > "log.txt" 2>&1'''
         ))
+
+    if icon:
+        import subprocess
+        from pathlib import Path
+
+        print("Changing icon to custom icon")
+
+        python_exe = Path(build_folder / "python/python.exe")
+
+        try:
+            update_icon_command = [
+                str(rcedit),
+                str(python_exe),
+                "--set-icon", str(icon) 
+            ]
+
+            subprocess.run(update_icon_command, check=True, capture_output=True, text=True)
+            print("Icon updated successfully.")
+        except subprocess.CalledProcessError as e:
+            print("Error updating icon:", e.stderr)
+
 
 # make exe
 # import subprocess
