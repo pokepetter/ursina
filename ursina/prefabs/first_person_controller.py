@@ -16,6 +16,7 @@ class FirstPersonController(Entity):
         mouse.locked = True
         self.mouse_sensitivity = Vec2(40, 40)
 
+        self.flight = True
         self.gravity = 1
         self.grounded = False
         self.jump_height = 2
@@ -30,6 +31,10 @@ class FirstPersonController(Entity):
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
+
+        # disable gravity if in flight
+        if self.flight:
+            self.gravity = 0
 
         # make sure we don't fall through the ground if we start inside it
         if self.gravity:
@@ -47,6 +52,7 @@ class FirstPersonController(Entity):
         self.direction = Vec3(
             self.forward * (held_keys['w'] - held_keys['s'])
             + self.right * (held_keys['d'] - held_keys['a'])
+            + self.up * (held_keys['space'] - held_keys['shift']) * int(self.flight)
             ).normalized()
 
         feet_ray = raycast(self.position+Vec3(0,0.5,0), self.direction, traverse_target=self.traverse_target, ignore=self.ignore_list, distance=.5, debug=False)
@@ -62,6 +68,10 @@ class FirstPersonController(Entity):
                 move_amount[2] = min(move_amount[2], 0)
             if raycast(self.position+Vec3(-.0,1,0), Vec3(0,0,-1), distance=.5, traverse_target=self.traverse_target, ignore=self.ignore_list).hit:
                 move_amount[2] = max(move_amount[2], 0)
+            if raycast(self.position+Vec3(-.0,1,0), Vec3(0,1,0), distance=.5, traverse_target=self.traverse_target, ignore=self.ignore_list).hit:
+                move_amount[1] = min(move_amount[1], 0)
+            if raycast(self.position+Vec3(-.0,1,0), Vec3(0,-1,0), distance=.5, traverse_target=self.traverse_target, ignore=self.ignore_list).hit:
+                move_amount[1] = max(move_amount[1], 0)
             self.position += move_amount
 
             # self.position += self.direction * self.speed * time.dt
@@ -88,7 +98,7 @@ class FirstPersonController(Entity):
 
 
     def input(self, key):
-        if key == 'space':
+        if key == 'space' and not self.flight:
             self.jump()
 
     def jump(self):
