@@ -216,15 +216,28 @@ def sample_gradient(list_of_values, t):     # distribute list_of_values equally 
 
 
 
-
-
 class Bounds:
     __slots__ = ['start', 'end', 'center', 'size']
-    def __init__(self, start, end, center, size):
-        self.start = start
-        self.end = end
-        self.center = center
-        self.size = size
+
+    def __init__(self, *, start:Vec3=None, end:Vec3=None, center:Vec3=None, size:Vec3=None):
+        if start is not None and end is not None:
+            self.start = start
+            self.end = end
+            self.size = end - start
+            self.center = start + (self.size * 0.5)
+
+        elif center is not None and size is not None:
+            self.center = center
+            self.size = size
+            half = size * 0.5
+            self.start = center - half
+            self.end = center + half
+
+        else:
+            raise ValueError("Must provide either (start and end) or (center and size)")
+
+    def __repr__(self):
+        return f"Bounds(start={self.start}, end={self.end}, center={self.center}, size={self.size})"
 
 
 if __name__ == '__main__':

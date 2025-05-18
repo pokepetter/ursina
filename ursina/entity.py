@@ -966,14 +966,14 @@ class Entity(NodePath, metaclass=PostInitCaller):
     def model_bounds(self):
         if self.model:
             if not self.model.getTightBounds():
-                return Bounds(start=self.world_position, end=self.world_position, center=Vec3.zero, size=Vec3.zero)
+                return Bounds(center=Vec3.zero, size=Vec3.zero)
 
             start, end = self.model.getTightBounds()
             start = Vec3(start)
             end = Vec3(end)
             center = (start + end) / 2
             size = end - start
-            return Bounds(start=start, end=end, center=center, size=size)
+            return Bounds(center=center, size=size)
 
         return None
 
@@ -983,7 +983,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
         _bounds = self.model_bounds
         if _bounds is None:
             return None
-        return Bounds(start=_bounds.start*self.scale, end=_bounds.end*self.scale, center=_bounds.center, size=_bounds.size*self.scale)
+        return Bounds(center=_bounds.center, size=_bounds.size*self.scale)
 
 
     def get_position(self, relative_to=scene):  # get position relative to on other Entity. In most cases, use .position instead.

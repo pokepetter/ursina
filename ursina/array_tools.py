@@ -97,7 +97,6 @@ class Array2D(list):
         from ursina.vec2 import Vec2
         return Vec2(self.width, self.height)
 
-
     def rows_getter(self):
         return [[self[x][y] for x in range(self.width)] for y in range(self.height)]
 
@@ -169,6 +168,8 @@ class Array2D(list):
 
         return cropped_array
 
+
+
 if __name__ == '__main__':
     from textwrap import dedent, indent
     grid = Array2D(width=16, height=8)
@@ -232,6 +233,29 @@ class Array3D(list):
     def size(self):
         from ursina.vec3 import Vec3
         return Vec3(self.width, self.height, self.depth)
+
+
+    @property
+    def bounds(self):
+        from ursina.ursinamath import Bounds
+        from ursina.vec3 import Vec3
+        min_x = self.width
+        min_y = self.height
+        min_z = self.depth
+        max_x = 0
+        max_y = 0
+        max_z = 0
+
+        for (x, y, z), value in enumerate_3d(self):
+            if value:
+                min_x = min(min_x, x)
+                min_y = min(min_y, y)
+                min_z = min(min_z, z)
+                max_x = max(max_x, x)
+                max_y = max(max_y, y)
+                max_z = max(max_z, z)
+
+        return Bounds(start=Vec3(min_x, min_y, min_z), end=Vec3(max_x, max_y, max_z))
 
 
     def get(self, x, y, z, default=0):
