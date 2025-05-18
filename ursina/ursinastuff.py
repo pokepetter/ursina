@@ -214,9 +214,9 @@ def import_all_classes(path=application.asset_folder, debug=False):
     return imported_successfully
 
 
-def print_on_screen(text, position=(0,0), origin=(-.5,.5), scale=1, duration=1):
+def print_on_screen(text, position=(0,0), origin=(-.5,.5), scale=1, duration=1, color=(1,1,1,1)):
     from ursina.text import Text
-    text_entity = Text(text=text, position=position, origin=origin, scale=scale)
+    text_entity = Text(text=text, position=position, origin=origin, scale=scale, color=color)
     destroy(text_entity, delay=duration)
 
 
