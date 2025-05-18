@@ -7,9 +7,10 @@ from pathlib import Path
 from ursina.vec2 import Vec2
 from ursina import color
 from ursina.ursinamath import clamp
-from ursina.array_tools import Array2D
+from ursina.array_tools import Array2D, enumerate_2d
+from ursina.scripts.property_generator import generate_properties_for_class
 
-
+@generate_properties_for_class()
 class Texture():
 
     default_filtering = None      # options: None / 'bilinear' / 'mipmap'
@@ -36,7 +37,7 @@ class Texture():
 
         else:
             from PIL import Image
-            image = value
+            image = value.convert('RGBA')
             self._texture = PandaTexture()
             self._texture.setup2dTexture(image.width, image.height, PandaTexture.TUnsignedByte, PandaTexture.FRgba)
             self._texture.setRamImageAs(image.transpose(Image.FLIP_TOP_BOTTOM).tobytes(), image.mode)
@@ -61,57 +62,54 @@ class Texture():
         return Texture(panda_tex)
 
 
-    @property
-    def name(self):
+    def name_getter(self):
         try:
             return self.path.name
         except:
             return f'PIL_texture_{self.size}'
 
+
     def __str__(self):
         return self.name
 
 
-    @property
-    def size(self):
+    def size_getter(self):
         return Vec2(self.width, self.height)
 
-    @property
-    def width(self):
+    def width_getter(self):
         if self._cached_image:
             return self._cached_image.size[0]
         elif self._texture.getOrigFileXSize() > 0:
             return self._texture.getOrigFileXSize()
         return 0
 
-    @property
-    def height(self):
+    def height_getter(self):
         if self._cached_image:
             return self._cached_image.size[1]
         elif self._texture.getOrigFileYSize() > 0:
             return self._texture.getOrigFileYSize()
         return 0
 
-    @property
-    def pixels(self):
+
+    def pixels_getter(self):
         from numpy import asarray, flip
         from PIL import Image
         from ursina.array_tools import rotate_2d_list
 
-        if self._cached_image:
-            return Array2D(data=rotate_2d_list(asarray(self._cached_image)))
+        # if self._cached_image:
+        #     return Array2D(data=rotate_2d_list(asarray(self._cached_image)))
 
-        pixels = asarray(Image.open(self.path))
-        pixels = rotate_2d_list(pixels)
-        return Array2D(data=pixels)
+        # pixels = asarray(Image.open(self.path))
+        # pixels = rotate_2d_list(pixels)
+        # for (x,y), value in enumerate_2d(pixels):
+        #     pixels[x][y] = color.rgb32(*value)
+        pixels = Array2D(*self.size, default_value=None)
+        for (x,y), value in enumerate_2d(pixels):
+            pixels[x][y] = self.get_pixel(x, y)
 
+        return pixels
 
-    @property
-    def filtering(self):
-        return self._filtering
-
-    @filtering.setter
-    def filtering(self, value):
+    def filtering_setter(self, value):
         # print('setting filtering:', value)
         if value in (None, False, 'nearest', 'nearest neighbor', 'point'):
             self._texture.setMagfilter(SamplerState.FT_nearest)
@@ -125,12 +123,8 @@ class Texture():
             self._texture.setMinfilter(SamplerState.FT_linear_mipmap_linear)
             self._filtering = 'mipmap'
 
-    @property
-    def repeat(self):
-        return self._repeat
 
-    @repeat.setter
-    def repeat(self, value):
+    def repeat_setter(self, value):
         self._repeat = value
         self._texture.setWrapU(value)
         self._texture.setWrapV(value)
@@ -174,6 +168,7 @@ class Texture():
 
         self._cached_image.putpixel((x, self.height-y-1), tuple(int(e*255) for e in color))
 
+
     def apply(self):
         from PIL import Image
         if not self._cached_image:
@@ -182,12 +177,34 @@ class Texture():
         self._texture.setRamImageAs(self._cached_image.transpose(Image.FLIP_TOP_BOTTOM).tobytes(), self._cached_image.mode)
         # self._texture.setRamImageAs(self._cached_image.tobytes(), self._cached_image.mode)
 
+
     def save(self, path):
         if not self._cached_image:
             from PIL import Image
             self._cached_image = Image.open(self.path)
 
         self._cached_image.save(path)
+
+
+    def to_PIL_Image(self):
+        from PIL import Image
+        # Ensure the texture data is available
+        # self._texture.prepareRamImage()
+
+        # Get the size and format
+        width = self._texture.getXSize()
+        height = self._texture.getYSize()
+
+        # Get the raw image data as bytes in RGB format
+        data = self._texture.getRamImageAs("RGB")
+        if data is None:
+            raise RuntimeError("Texture has no RAM image data")
+
+        # Convert from bottom-up to top-down image
+        image = Image.frombytes("RGB", (width, height), data.getData())
+        image = image.transpose(Image.FLIP_TOP_BOTTOM)
+        return image
+
 
     def __repr__(self):
         return self.name
