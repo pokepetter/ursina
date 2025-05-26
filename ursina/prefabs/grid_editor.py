@@ -149,9 +149,6 @@ class GridEditor(Entity):
 
                 y = int(round(self.cursor.y))
                 x = int(round(self.cursor.x))
-                if x < 0 or x > self.w-1 or y < 0 or y > self.h-1:
-                    self.prev_draw = (clamp(x, 0, self.w), clamp(y, 0, self.h))
-                    return
 
                 if not held_keys[self.shortcuts['sample_modifier']] and not self.is_in_paste_mode:
                     if self.prev_draw is not None and distance_2d(self.prev_draw, (x,y)) > 1:
@@ -529,8 +526,8 @@ class PixelEditor(GridEditor):
 
 
     def draw(self, x, y):
-        for _y in range(y, min(y+self.brush_size, self.h)):
-            for _x in range(x, min(x+self.brush_size, self.w)):
+        for _y in range(max(y,0), min(y+self.brush_size, self.h)):
+            for _x in range(max(x,0), min(x+self.brush_size, self.w)):
                 self.grid[_x][_y] = self.selected_char
                 self.canvas.texture.set_pixel(_x, _y, self.grid[_x][_y])
 
