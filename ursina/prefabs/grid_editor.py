@@ -19,7 +19,7 @@ class GridEditor(Entity):
         sys.setrecursionlimit(max(sys.getrecursionlimit(), self.w * self.h))
         # self.grid = [[palette[0] for x in range(self.w)] for y in range(self.h)]
         if not hasattr(self, 'grid'):
-            self.grid = [[palette[0] for y in range(self.h)] for x in range(self.w)]
+            self.grid = Array2D(self.w, self.h, default_value=palette[0])
         self.brush_size = 1
         self.auto_render = True
 
@@ -69,6 +69,7 @@ class GridEditor(Entity):
             'paste': ('control+v', ),
             'apply_pasted': ('left mouse down', ),
             'discard_pasted': ('right mouse down', ),
+            'flip_pasted_horizontally': ('f', ),
         }
 
         self.help_icon = Button(parent=self.canvas, scale=.025, model='circle', origin=(-.5,-.5), position=(-.0,1.005,-1), text='?', target_scale=.025)
@@ -227,9 +228,9 @@ class GridEditor(Entity):
 
 
     def draw(self, x, y):
-        for _y in range(y, min(y+self.brush_size, self.h)):
-            for _x in range(x, min(x+self.brush_size, self.w)):
-                self.grid[_x][_y] = self.selected_char
+        for _y in range(y, y + self.brush_size):
+            for _x in range(x, x + self.brush_size):
+                self.grid.set(_x, _y, self.selected_char)
 
         if self.auto_render:
             self.render()
@@ -338,6 +339,12 @@ class GridEditor(Entity):
         elif combined_key in self.shortcuts['paste']:
             self.enter_paste_mode()
 
+        elif self.is_in_paste_mode and combined_key in self.shortcuts['flip_pasted_horizontally']:
+            # for (x,y), colr in enumerate(self.pastedata):
+            #     self.paste_data[x][y] = self.paste_data[][]
+            self.paste_data = Array2D(data=self.paste_data[::-1])
+            self.update_paste_texture()
+
         elif combined_key in self.shortcuts['flip_horizontally']:
             self.flip_horizontally()
 
@@ -397,8 +404,14 @@ class GridEditor(Entity):
         # cropped_matrix = [[matrix[i][j] for j in range(start_y, max(cols) + 1)] for i in range(start_x, max(rows) + 1)]
 
         copy_data = [[tuple(self.grid[start_x+x][start_y+y]) if self.selection_matrix[start_x+x][start_y+y] else None for y in range(selection_height)] for x in range(selection_width)]
-        pyperclip.copy(json.dumps(dict(data=copy_data)))
 
+        copy_data = self.grid.get_area(Vec2(start_x, start_y).XY, Vec2(start_x+selection_width, start_y+selection_height).XY)
+        # pyperclip.copy(json.dumps(dict(data=copy_data)))
+        for (x,y), colr in enumerate_2d(copy_data):
+            copy_data[x][y] = color.rgb_to_hex(*colr)
+
+        pyperclip.copy(copy_data.to_string())
+        print('copied:', copy_data.to_string())
 
     def cut(self):
         self.copy()
@@ -416,59 +429,43 @@ class GridEditor(Entity):
             print("trying to paste, but there's nothing on the clipboard")
             return
         try:
-            self.paste_data = json.loads(self.paste_data)
-        except:
-            print_warning('error parsing paste data as json:', self.paste_data)
+            self.paste_data = Array2D.from_string(self.paste_data, convert_to_type=str)
+            for (x,y), hex_code in enumerate_2d(self.paste_data):
+                self.paste_data[x][y] = color.hex(hex_code)
+
+        except Exception as e:
+            self.paste_data = None
+            print_warning('error parsing paste data as json:', self.paste_data, e)
             return
 
-        self.paste_data = self.paste_data['data']
-        w = len(self.paste_data)
-        h = len(self.paste_data[1])
+        w = self.paste_data.width
+        h = self.paste_data.height
 
         self.temp_paste_layer.enabled = True
-        self.temp_paste_layer.scale = (w,h)
+        self.temp_paste_layer.scale = (w, h)
 
         if not self.temp_paste_layer.texture or self.temp_paste_layer.texture.size != (w,h):
             self.temp_paste_layer.texture = Texture(Image.new(mode='RGBA', size=(w,h), color=(0,0,0,0)))
+        self.update_paste_texture()
 
-        for x in range(w):
-            for y in range(h):
-                pixel = self.paste_data[x][y]
-                if not pixel:
-                    pixel = color.clear
 
-                self.temp_paste_layer.texture.set_pixel(x, y, pixel)
+    def update_paste_texture(self):
+        for (x,y), colr in enumerate_2d(self.paste_data):
+            self.temp_paste_layer.texture.set_pixel(x, y, colr)
         self.temp_paste_layer.texture.apply()
 
 
     def paste(self, discard=False, record_undo=True):
         self.is_in_paste_mode = False
         self.temp_paste_layer.enabled = False
-        x_offset = self.cursor.X
-        y_offset = self.cursor.Y
-        w = len(self.paste_data)
-        h = len(self.paste_data[1])
-
         if discard:
             return
 
-        for x in range(w):
-            for y in range(h):
-                real_x = x + x_offset
-                real_y = y + y_offset
+        self.grid.paste(self.paste_data, self.cursor.X, self.cursor.Y, ignore=color.clear)
 
-                if real_x < 0 or real_x >= self.w or real_y < 0 or real_y >= self.h:
-                    continue
-
-                pixel = self.paste_data[x][y]
-                if not pixel:
-                    continue
-
-                self.grid[x+x_offset][y+y_offset] = pixel
-
-        # self.record_undo()
         self.clear_selection()
         self.render()
+
 
     def flip_horizontally(self):
         self.grid = self.grid[::-1]
