@@ -1,5 +1,6 @@
 from ursina.prefabs.button import Button
 from ursina.entity import Entity
+from ursina.text import Text
 from ursina.vec2 import Vec2
 from ursina.prefabs.input_field import InputField, ContentTypes
 from ursina import color, camera, mouse, round_to_closest
