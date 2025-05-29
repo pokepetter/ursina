@@ -1051,7 +1051,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.look_in_direction((target-self.world_position).normalized(), axis)
 
 
-    def look_in_direction(self, direction, forward_axis):
+    def look_in_direction(self, direction, forward_axis=Vec3.forward):
         import math
         def normalize_vector(v):
             length = math.sqrt(v[0]**2 + v[1]**2 + v[2]**2)
@@ -1287,6 +1287,10 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
     def __repr__(self):
         changes = self.get_changes(self.__class__)
+
+        if 'parent' in changes: # ignore parent since we can't really get it as a string. you could handle this yourself though.
+            del changes['parent']
+
         return f'{self.__class__.__name__}(' +  ''.join(f'{key}={value}, ' for key, value in changes.items()) + ')'
 
 
@@ -1550,4 +1554,10 @@ if __name__ == '__main__':
     e2 = Entity(parent=e1, model='cube', x=2, shader=lit_with_shadows_shader, texture='white_cube')
     DirectionalLight().look_at(Vec3(1,-1,.5))
     EditorCamera()
+
+    # # test deepcopy
+    # print_warning(repr(e1))
+    # e1_copy = deepcopy(e1)
+
+
     app.run()

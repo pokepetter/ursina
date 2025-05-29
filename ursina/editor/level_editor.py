@@ -2326,7 +2326,7 @@ class Duplicator(Entity):
         ]
 
     def update(self):
-        if self.plane.enabled:
+        if self.plane.enabled and mouse.world_point:
             self.dragger.position = mouse.world_point
             if self.axis_lock is not None:
 
@@ -2345,6 +2345,7 @@ class Duplicator(Entity):
             LEVEL_EDITOR.menu_handler.state = 'None'
             self.clones = []
             for e in LEVEL_EDITOR.selection:
+                print(repr(e))
                 clone = deepcopy(e)
                 clone.original_parent = e.parent
                 clone.color = e.color
@@ -2408,7 +2409,11 @@ class SunHandler(Entity):
         self.sun.look_at(Vec3(-2,-1,-1))
         # self.update_bounds()
 
-    def update_bounds(self, entity):
+    def update_bounds(self, entity=None):
+        if entity is None:
+            if not LEVEL_EDITOR.current_scene:
+                return
+            entity = LEVEL_EDITOR.current_scene.scene_parent
         self.sun.update_bounds(entity)
 
     def input(self, key):
