@@ -22,19 +22,16 @@ class Light(Entity):
 
 
 class DirectionalLight(Light):
-    def __init__(self, shadows=True, **kwargs):
+    def __init__(self, shadow_map_resolution=Vec2(1024,1024), shadows=True):
         super().__init__()
         self._light = PandaDirectionalLight('directional_light')
         node_path = self.attachNewNode(self._light)
         node_path.node().setCameraMask(0b0001)
         render.setLight(node_path)
-        self.shadow_map_resolution = Vec2(1024, 1024)
 
+        self.shadow_map_resolution = shadow_map_resolution
         self._bounds_entity = scene
-
         self.shadows = shadows
-        for key, value in kwargs.items():
-            setattr(self, key ,value)
 
 
     @property
@@ -119,7 +116,7 @@ if __name__ == '__main__':
     EditorCamera()
     Entity(model='plane', scale=10, color=color.gray, shader=lit_with_shadows_shader)
     Entity(model='cube', y=1, shader=lit_with_shadows_shader, color=color.light_gray)
-    light = DirectionalLight(shadows=True)
+    light = DirectionalLight(shadow_map_resolution=Vec2(8), shadows=True)
     light.look_at(Vec3(1,-1,1))
 
     dont_cast_shadow = Entity(model='cube', y=1, shader=lit_with_shadows_shader, x=2, color=color.light_gray)
