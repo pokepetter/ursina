@@ -36,6 +36,10 @@ class Vec3(PandaVec3):
             return Vec3(self[0]+value[0], self[1]+value[1], self[2])
 
 
+    def __neg__(self):
+        return Vec3(-self[0], -self[1], -self[2])
+
+
     def __sub__(self, value):
         if len(value) == 3:
             return Vec3(self[0]-value[0], self[1]-value[1], self[2]-value[2])
