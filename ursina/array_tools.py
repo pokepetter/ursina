@@ -146,6 +146,24 @@ class Array2D(list):
         new_array.paste(self, left, bottom)
         return new_array
 
+    @property
+    def bounds(self):
+        from ursina.ursinamath import Bounds
+        from ursina.vec3 import Vec3
+        min_x = self.width
+        min_y = self.height
+        max_x = 0
+        max_y = 0
+
+        for (x, y), value in enumerate_2d(self):
+            if value:
+                min_x = min(min_x, x)
+                min_y = min(min_y, y)
+                max_x = max(max_x, x)
+                max_y = max(max_y, y)
+
+        return Bounds(start=Vec3(min_x, min_y, 1), end=Vec3(max_x, max_y, 1))
+
     def get(self, x, y, default=0):
         x, y = int(x), int(y)
         if x < 0 or x >= self.width or y < 0 or y >= self.height:
@@ -158,13 +176,10 @@ class Array2D(list):
         # print('original_size:', self.width, self.height, 'new_size:', end[0]-start[0], end[1]-start[1])
         if not allow_out_of_bounds:
             for (x, y), _ in enumerate_2d(cropped_array):
-                cropped_array[x][y] = self[x+start[0]][y+start[1]]
+                cropped_array[x][y] = self[int(x+start[0])][int(y+start[1])]
         else:
             for (x, y), _ in enumerate_2d(cropped_array):
-                try:
-                    cropped_array[x][y] = self[x+start[0]][y+start[1]]
-                except:
-                    cropped_array[x][y] = self.default_value
+                cropped_array[x][y] = self.get(x+start[0], y+start[1], default=self.default_value)
 
         return cropped_array
 
