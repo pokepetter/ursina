@@ -4,73 +4,66 @@ from time import perf_counter
 from ursina.string_utilities import print_info
 
 
-def ursinamesh_to_obj(mesh, name='', out_path=None, max_decimals=5, flip_faces=True):
+def ursinamesh_to_obj(mesh, name='', out_path:Path=None, max_decimals=5, flip_faces=True):
     from ursina.string_utilities import camel_to_snake
+    from ursina.array_tools import chunk_list
 
-    if out_path is None:
-        out_path = application.models_compressed_folder
+
+    if not name:
+        name = camel_to_snake(mesh.__class__.__name__)
 
     obj = ''
     obj += f'mtllib {name}.mtl\n'
     obj += f'usemtl {name}\n'
+    obj += f'o {name}\n'
 
-    if not name:
-        name = camel_to_snake(mesh.__class__.__name__)
-    obj += 'o ' + name + '\n'
-    verts = mesh.vertices
+    # Vertices
+    for v in mesh.vertices:
+        obj += f'v {round(v[0], max_decimals)} {round(v[1], max_decimals)} {round(v[2], max_decimals)}\n'
 
-    for v in verts:
-        v = [round(e, max_decimals) for e in v]
-        obj += f'v {v[0]} {v[1]} {v[2]}\n'
-
-    if mesh.uvs:
+    # UVs
+    has_uvs = bool(mesh.uvs)
+    if has_uvs:
         for uv in mesh.uvs:
-            uv = [round(e, max_decimals) for e in uv]
-            obj += f'vt {uv[0]} {uv[1]}\n'
+            obj += f'vt {round(uv[0], max_decimals)} {round(uv[1], max_decimals)}\n'
+
+    # Normals
+    has_normals = bool(mesh.normals)
+    if has_normals:
+        for n in mesh.normals:
+            obj += f'vn {round(n[0], max_decimals)} {round(n[1], max_decimals)} {round(n[2], max_decimals)}\n'
 
     obj += 's off\n'
 
-    if mesh.triangles:
-        tris = mesh.triangles
+    # Triangles
+    tris = mesh.triangles if mesh.triangles else chunk_list(mesh.indices, 3)
 
-        if isinstance(tris[0], tuple): # convert from tuples to flat
-            new_tris = []
-            for t in tris:
-                if len(t) == 3:
-                    if not flip_faces:
-                        new_tris.extend([t[0], t[1], t[2]])
-                    else:
-                        new_tris.extend([t[2], t[1], t[0]])
-                elif len(t) == 4: # turn quad into tris
-                    if not flip_faces:
-                        new_tris.extend([t[0], t[1], t[2], t[2], t[3], t[0]])
-                    else:
-                        new_tris.extend([t[2], t[1], t[0], t[0], t[3], t[2]])
+    for tri in tris:
+        if flip_faces:
+            tri = (tri[2], tri[1], tri[0])  # reverse winding
 
-            tris = new_tris
+        obj += 'f'
+        for idx in tri:
+            v_idx = idx + 1  # OBJ is 1-indexed
+            vt_idx = v_idx if has_uvs else ''
+            vn_idx = v_idx if has_normals else ''
 
+            if has_uvs and has_normals:
+                obj += f' {v_idx}/{vt_idx}/{vn_idx}'
+            elif has_uvs:
+                obj += f' {v_idx}/{vt_idx}'
+            elif has_normals:
+                obj += f' {v_idx}//{vn_idx}'
+            else:
+                obj += f' {v_idx}'
+        obj += '\n'
 
-    if mesh.mode == 'ngon':
-        tris = []
-        for i in range(1, len(mesh.vertices)-1):
-            tris.extend((i, i+1, 0))
-
-
-    # tris must be a list of indices
-    for i, t in enumerate(tris):
-        if i % 3 == 0:
-            obj += '\nf '
-        obj += str(t+1)
-        if mesh.uvs:
-            obj += '/'+str(t+1)
-        obj += ' '
-
-    obj += '\n'
-    # print(obj)
-    with open(out_path / (name + '.obj'), 'w') as f:
+    out_file = out_path / f'{name}.obj'
+    out_file.parent.mkdir(parents=True, exist_ok=True)
+    with open(out_file, 'w') as f:
         f.write(obj)
-        print_info('saved obj:', out_path / (name + '.obj'))
 
+    print_info(f'saved obj: {out_file}')
 
 
 
