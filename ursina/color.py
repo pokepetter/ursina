@@ -20,6 +20,15 @@ class Color(Vec4):
                 return key
         return None
 
+    def rgb_getter(self):
+        return (self[0], self[1], self[2])
+    def rgba_getter(self):
+        return (self[0], self[1], self[2], self[3])
+    def rgb32_getter(self):
+        return tuple(int(e*255) for e in self.rgb)
+    def rgba32_getter(self):
+        return tuple(int(e*255) for e in self.rgba)
+
     def r_getter(self):
         return self[0]
     def g_getter(self):
@@ -157,9 +166,13 @@ for cn in color_names:
 if __name__ == '__main__':
     from ursina import *
     from ursina import Ursina, Entity, Button, Quad, grid_layout, color
+    from ursina.ursinastuff import _test, _assert
     app = Ursina()
 
-    print(color.brightness(color.blue))
+    _test(hsv, (30,1,1), expected_result=color.orange)
+    _assert(color.brightness(color.blue) == 1.0, '.brightness')
+    _assert(color.red.rgb == (1.0, 0.0, 0.0), '.rgb')
+    _assert(color.red.rgba == (1.0, 0.0, 0.0, 1.0), '.rgba')
 
     p = Entity(x=-2)
     for key in color.colors:
