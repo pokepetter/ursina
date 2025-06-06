@@ -29,7 +29,7 @@ class DropdownMenu(DropdownMenuButton):
                     e.x = 1
                     e.y += 1
 
-        self.arrow_symbol = Text(world_parent=self, text='>', origin=(.5,.5), position=(.95, 0), color=color.gray)
+        self.arrow_symbol = Text(world_parent=self, text='>', origin=(.5,.5), position=Vec3(.95,0,-.01), color=color.gray)
         for key, value in kwargs.items():
             setattr(self, key, value)
 
