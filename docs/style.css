@@ -113,7 +113,7 @@ a.button {
 a.button:hover {
     color: var(--button_hover);
     border-color: var(--button_hover);
-    background-color: transparent;}
+    background-color: transparent;
 }
 
 @font-face {
@@ -133,7 +133,7 @@ img {
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    text-decoration: none; !important
+    text-decoration: none;
 }
 
 code_block {
@@ -148,6 +148,8 @@ code_block {
     font-weight: normal;
     white-space: pre;
     overflow: auto;
+    max-width: fit-content;
+    padding-right: 80px;
 }
 .copy_code_button {
     position: absolute;
