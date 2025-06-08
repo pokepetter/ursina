@@ -4,8 +4,8 @@ from copy import deepcopy
 
 class Quad(Mesh):
     _cache = {}
-    corner_maker = None
-    point_placer = None
+    _corner_maker = None
+    _point_placer = None
 
     def __new__(cls, radius=.1, segments=8, aspect=1, scale=(1,1), mode='ngon', thickness=1):
         # special case: plain quad
@@ -33,10 +33,10 @@ class Quad(Mesh):
             return
         self._initialized = True
 
-        if not Quad.corner_maker:
-            Quad.corner_maker = Entity(eternal=True, add_to_scene_entities=False)
-        if not Quad.point_placer:
-            Quad.point_placer = Entity(parent=Quad.corner_maker, x=-radius, eternal=True, add_to_scene_entities=False)
+        if not Quad._corner_maker:
+            Quad._corner_maker = Entity(eternal=True, add_to_scene_entities=False)
+        if not Quad._point_placer:
+            Quad._point_placer = Entity(parent=Quad._corner_maker, x=-radius, eternal=True, add_to_scene_entities=False)
 
         super().__init__()
         self.radius = radius
@@ -48,18 +48,18 @@ class Quad(Mesh):
         _segments = segments + 1
         if _segments > 1:
             new_verts = []
-            Quad.corner_maker.rotation_z = -90 / _segments / 2
-            Quad.corner_maker.position = Vec3(0, 0, 0)
-            Quad.point_placer.position = Vec3(-radius, 0, 0)
+            Quad._corner_maker.rotation_z = -90 / _segments / 2
+            Quad._corner_maker.position = Vec3(0, 0, 0)
+            Quad._point_placer.position = Vec3(-radius, 0, 0)
 
             corrections = [Vec3(radius, radius, 0), Vec3(-radius, radius, 0),
                            Vec3(-radius, -radius, 0), Vec3(radius, -radius, 0)]
 
             for j in range(4):
-                Quad.corner_maker.position = self.vertices[j] + corrections[j]
+                Quad._corner_maker.position = self.vertices[j] + corrections[j]
                 for i in range(_segments):
-                    new_verts.append(Quad.point_placer.world_position)
-                    Quad.corner_maker.rotation_z -= 90 / _segments
+                    new_verts.append(Quad._point_placer.world_position)
+                    Quad._corner_maker.rotation_z -= 90 / _segments
 
             self.vertices = new_verts
 
