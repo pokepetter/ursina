@@ -2,26 +2,31 @@ from ursina import Entity, camera, destroy, held_keys, mouse, curve, lerp, clamp
 
 class EditorCamera(Entity):
 
-    def __init__(self, **kwargs):
+    def __init__(self,
+        rotation_speed=200, pan_speed=Vec2(5,5), move_speed=10,
+        zoom_speed=1.25, zoom_smoothing=8, ignore_scroll_on_ui=True,
+        rotation_smoothing=0, rotate_key='right mouse', rotate_around_mouse_hit=False,
+        **kwargs
+        ):
         camera.editor_position = camera.position
         super().__init__(name='editor_camera', eternal=False)
 
         # self.gizmo = Entity(parent=self, model='sphere', color=color.orange, scale=.025, add_to_scene_entities=False, enabled=False)
 
-        self.rotation_speed = 200
-        self.pan_speed = Vec2(5, 5)
-        self.move_speed = 10
+        self.rotation_speed = rotation_speed
+        self.pan_speed = pan_speed
+        self.move_speed = move_speed
         self.target_fov = camera.fov
-        self.zoom_speed = 1.25
-        self.zoom_smoothing = 8
-        self.rotate_around_mouse_hit = False
-        self.ignore_scroll_on_ui = True
+        self.zoom_speed = zoom_speed
+        self.zoom_smoothing = zoom_smoothing
+        self.rotate_around_mouse_hit = rotate_around_mouse_hit
+        self.ignore_scroll_on_ui = ignore_scroll_on_ui
 
         self.smoothing_helper = Entity(add_to_scene_entities=False)
-        self.rotation_smoothing = 0
+        self.rotation_smoothing = rotation_smoothing
         self.look_at = self.smoothing_helper.look_at
         self.look_at_2d = self.smoothing_helper.look_at_2d
-        self.rotate_key = 'right mouse'
+        self.rotate_key = rotate_key
 
         for key, value in kwargs.items():
             setattr(self, key, value)
