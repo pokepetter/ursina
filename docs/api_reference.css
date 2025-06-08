@@ -88,7 +88,7 @@ bg {
   width: 100%;
   height: 100%;
   position: fixed;
-  z-index: -1
+  z-index: -1;
   top: 0;
   left: 0;
   background-color: var(--bg_color);
@@ -117,7 +117,7 @@ table {
 }
 table span {
     background-color: var(--span_bg_color);
-    color: var(--span_text_color)
+    color: var(--span_text_color);
     border-radius: 5px;
     padding-top: 1px;
     padding-bottom: 1px;
@@ -254,8 +254,6 @@ blue {color: var(--blue);}
     background-color:white;
     border-radius: 1em;
     cursor: pointer;
-}
-
 }
 /* moving the checkbox circle when it's toggled by the user */
 #checkbox:checked::before {
