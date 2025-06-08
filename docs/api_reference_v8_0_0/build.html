@@ -1,0 +1,190 @@
+<!DOCTYPE HTML>
+<!--generated with sswg-->
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <title>build</title>
+    <link rel="stylesheet" href="../sswg.css">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+<div style="max-width:1200px; margin:auto;">
+<div style="text-align:left;">
+<h1 id="build">
+build
+</h1><gray>&lt;/&gt;</gray><a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/build.py"> ursina.build</a><br>
+<h2 id="Functions">
+Functions
+</h2><h3 id="main()">
+main()
+</h3><div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/build.py#L11" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#main" onclick="navigator.clipboard.writeText('#main')" title="Copy permalink">◃-</a></div><hr></hr><br>
+<h2 id="Examples">
+Examples
+</h2><br>
+<code_block id="code_block_0"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>Basics
+&nbsp;&nbsp;&lt;a href="ursina.html"&gt;Ursina&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="entity.html"&gt;<olive>Entity</olive>&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="button.html"&gt;Button&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="sprite.html"&gt;Sprite&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="text.html"&gt;Text&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="audio.html"&gt;Audio&lt;/a&gt;
+
+Core Modules
+&nbsp;&nbsp;&lt;a href="camera.html"&gt;camera&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="mouse.html"&gt;mouse&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="window.html"&gt;window&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="application.html"&gt;application&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="scene.html"&gt;scene&lt;/a&gt;
+
+Graphics
+&nbsp;&nbsp;&lt;a href="color.html"&gt;color&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="mesh.html"&gt;Mesh&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="shader.html"&gt;Shader&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="texture.html"&gt;Texture&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="light.html"&gt;Light&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="directional_light.html"&gt;DirectionalLight&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="point_light.html"&gt;PointLight&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="ambient_light.html"&gt;AmbientLight&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="spot_light.html"&gt;SpotLight&lt;/a&gt;
+
+Procedural Models
+&nbsp;&nbsp;&lt;a href="quad.html"&gt;Quad&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="circle.html"&gt;Circle&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="plane.html"&gt;Plane&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="grid.html"&gt;Grid&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="cone.html"&gt;Cone&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="cylinder.html"&gt;Cylinder&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="pipe.html"&gt;Pipe&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="terrain.html"&gt;Terrain&lt;/a&gt;
+
+modules
+&nbsp;&nbsp;&lt;a href="input_handler.html"&gt;input_handler&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="mesh_importer.html"&gt;mesh_importer&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="texture_importer.html"&gt;texture_importer&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="string_utilities.html"&gt;string_utilities&lt;/a&gt;
+
+Animation
+&nbsp;&nbsp;&lt;a href="animation.html"&gt;Animation&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="frame_animation<yellow>3</yellow>d.html"&gt;FrameAnimation<yellow>3</yellow>d&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="sprite_sheet_animation.html"&gt;SpriteSheetAnimation&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="animator.html"&gt;Animator&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="trail_renderer.html"&gt;TrailRenderer&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="curve.html"&gt;curve&lt;/a&gt;
+
+Math
+&nbsp;&nbsp;&lt;a href="ursinamath.html"&gt;ursinamath&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="vec<yellow>2</yellow>.html"&gt;Vec<yellow>2</yellow>&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="vec<yellow>3</yellow>.html"&gt;Vec<yellow>3</yellow>&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="vec<yellow>4</yellow>.html"&gt;Vec<yellow>4</yellow>&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="cubic_bezier.html"&gt;CubicBezier&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="array_tools.html"&gt;array_tools&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="array<yellow>2</yellow>_d.html"&gt;Array<yellow>2</yellow>D&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="array<yellow>3</yellow>_d.html"&gt;Array<yellow>3</yellow>D&lt;/a&gt;
+
+Gameplay
+&nbsp;&nbsp;&lt;a href="ursinastuff.html"&gt;ursinastuff&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="sequence.html"&gt;Sequence&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="func.html"&gt;Func&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="keys.html"&gt;Keys&lt;/a&gt;
+
+Collision
+&nbsp;&nbsp;&lt;a href="raycast.html"&gt;raycast&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="terraincast.html"&gt;terraincast&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="boxcast.html"&gt;boxcast&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="hit_info.html"&gt;HitInfo&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="collider.html"&gt;Collider&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="box_collider.html"&gt;BoxCollider&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="sphere_collider.html"&gt;SphereCollider&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="mesh_collider.html"&gt;MeshCollider&lt;/a&gt;
+
+Prefabs
+&nbsp;&nbsp;&lt;a href="sky.html"&gt;Sky&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="editor_camera.html"&gt;EditorCamera&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="tilemap.html"&gt;Tilemap&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="first_person_controller.html"&gt;FirstPersonController&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="platformer_controller<yellow>2</yellow>d.html"&gt;PlatformerController<yellow>2</yellow>d&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="conversation.html"&gt;Conversation&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="node.html"&gt;Node&lt;/a&gt;
+
+UI
+&nbsp;&nbsp;&lt;a href="button.html"&gt;Button&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="draggable.html"&gt;Draggable&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="tooltip.html"&gt;Tooltip&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="slider.html"&gt;Slider&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="thin_slider.html"&gt;ThinSlider&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="text_field.html"&gt;TextField&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="input_field.html"&gt;InputField&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="content_types.html"&gt;ContentTypes&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="checkbox.html"&gt;Checkbox&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="button_list.html"&gt;ButtonList&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="button_group.html"&gt;ButtonGroup&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="window_panel.html"&gt;WindowPanel&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="file_browser.html"&gt;FileBrowser&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="file_browser_save.html"&gt;FileBrowserSave&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="dropdown_menu.html"&gt;DropdownMenu&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="radial_menu.html"&gt;RadialMenu&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="health_bar.html"&gt;HealthBar&lt;/a&gt;
+
+Editor
+&nbsp;&nbsp;&lt;a href="hot_reloader.html"&gt;HotReloader&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="grid_editor.html"&gt;GridEditor&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="pixel_editor.html"&gt;PixelEditor&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="ascii_editor.html"&gt;ASCIIEditor&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="color_picker.html"&gt;ColorPicker&lt;/a&gt;
+
+Scripts
+&nbsp;&nbsp;&lt;a href="grid_layout.html"&gt;grid_layout&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="duplicate.html"&gt;duplicate&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="smooth_follow.html"&gt;SmoothFollow&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="scrollable.html"&gt;Scrollable&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="noclip_mode.html"&gt;NoclipMode&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="noclip_mode<yellow>2</yellow>d.html"&gt;NoclipMode<yellow>2</yellow>d&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="build.html"&gt;build&lt;/a&gt;
+
+Assets
+&nbsp;&nbsp;&lt;a href="models.html"&gt;models&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="textures.html"&gt;textures&lt;/a&gt;
+
+Shaders
+&nbsp;&nbsp;&lt;a href="unlit_shader.html"&gt;unlit_shader&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="lit_with_shadows_shader.html"&gt;lit_with_shadows_shader&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="matcap_shader.html"&gt;matcap_shader&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="colored_lights_shader.html"&gt;colored_lights_shader&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="fresnel_shader.html"&gt;fresnel_shader&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="projector_shader.html"&gt;projector_shader&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="texture_blend_shader.html"&gt;texture_blend_shader&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="instancing_shader.html"&gt;instancing_shader&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="triplanar_shader.html"&gt;triplanar_shader&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="normals_shader.html"&gt;normals_shader&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="transition_shader.html"&gt;transition_shader&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="fxaa.html"&gt;fxaa&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="ssao.html"&gt;ssao&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="camera_outline_shader.html"&gt;camera_outline_shader&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="pixelation_shader.html"&gt;pixelation_shader&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="camera_contrast.html"&gt;camera_contrast&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="camera_vertical_blur.html"&gt;camera_vertical_blur&lt;/a&gt;
+&nbsp;&nbsp;&lt;a href="camera_grayscale.html"&gt;camera_grayscale&lt;/a&gt;
+&lt;/div&gt;
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
+</script>
+<br>
+<br>
+</body>
+</html><style>
+h1 {margin-bottom:0em; margin-top:1em}
+h2 {margin-bottom:.5em;}
+h3 {margin:0em; font-size:1em;}
+code_block {margin-top:.0em; margin-bottom:1em;}
+hr {border-color:gray; opacity:.25;}
+.links {width:fit-content;}
+.links a {text-decoration:none; opacity:.5;}
+</style>

@@ -1,0 +1,262 @@
+<!DOCTYPE HTML>
+<!--generated with sswg-->
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <title>EditorCamera</title>
+    <link rel="stylesheet" href="../sswg.css">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+<div style="max-width:1200px; margin:auto;">
+<div style="text-align:left;">
+<h1 id="EditorCamera">
+EditorCamera
+</h1><gray>&lt;/&gt;</gray><a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/prefabs/editor_camera.py"> ursina.prefabs.editor_camera</a><br>
+<gray>Inherits</gray> <a href="entity.html">Entity</a><br>
+<br>
+<h2 id="Initialization">
+Initialization
+</h2><code_block id="code_block_0"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>EditorCamera(
+&nbsp;&nbsp;&nbsp;&nbsp;rotation_speed=<yellow>2</yellow><yellow>0</yellow><yellow>0</yellow>, 
+&nbsp;&nbsp;&nbsp;&nbsp;pan_speed=Vec2(<yellow>5</yellow>, <yellow>5</yellow>), 
+&nbsp;&nbsp;&nbsp;&nbsp;move_speed=<yellow>1</yellow><yellow>0</yellow>, 
+&nbsp;&nbsp;&nbsp;&nbsp;zoom_speed=<yellow>1</yellow>.<yellow>2</yellow><yellow>5</yellow>, 
+&nbsp;&nbsp;&nbsp;&nbsp;zoom_smoothing=<yellow>8</yellow>, 
+&nbsp;&nbsp;&nbsp;&nbsp;ignore_scroll_on_ui=True, 
+&nbsp;&nbsp;&nbsp;&nbsp;rotation_smoothing=<yellow>0</yellow>, 
+&nbsp;&nbsp;&nbsp;&nbsp;rotate_ke<olive>y</olive>=<green>'right mouse'</green>, 
+&nbsp;&nbsp;&nbsp;&nbsp;rotate_around_mouse_hit=False
+&nbsp;&nbsp;&nbsp;&nbsp;)
+</code_block>
+<br>
+<h2 id="Attributes">
+Attributes
+</h2><h3 id=".target_fov">
+.target_fov
+</h3><gray>default: </gray><span>camera.fov</span><br>
+<hr></hr><br>
+<h3 id=".smoothing_helper">
+.smoothing_helper
+</h3><gray>default: </gray><span>Entity(add_to_scene_entities=False)</span><br>
+<hr></hr><br>
+<h3 id=".look_at">
+.look_at
+</h3><gray>default: </gray><span>self.smoothing_helper.look_at</span><br>
+<hr></hr><br>
+<h3 id=".look_at_2d">
+.look_at_2d
+</h3><gray>default: </gray><span>self.smoothing_helper.look_at_2d</span><br>
+<hr></hr><br>
+<h3 id=".start_position">
+.start_position
+</h3><gray>default: </gray><span>self.position</span><br>
+<hr></hr><br>
+<h3 id=".perspective_fov">
+.perspective_fov
+</h3><gray>default: </gray><span>camera.fov</span><br>
+<hr></hr><br>
+<h3 id=".orthographic_fov">
+.orthographic_fov
+</h3><gray>default: </gray><span>camera.fov</span><br>
+<hr></hr><br>
+<h3 id=".on_destroy">
+.on_destroy
+</h3><gray>default: </gray><span>self.on_disable</span><br>
+<hr></hr><br>
+<h3 id=".shortcuts">
+.shortcuts
+</h3><gray>default: </gray><span>{'toggle_orthographic': 'shift+p', 'focus': 'shift...</span><br>
+<hr></hr><br>
+<h2 id="Methods">
+Methods
+</h2><h3 id="on_enable()">
+on_enable()
+</h3><div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/prefabs/editor_camera.py#L41" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#on_enable" onclick="navigator.clipboard.writeText('#on_enable')" title="Copy permalink">◃-</a></div><hr></hr><br>
+<br>
+<h3 id="on_disable()">
+on_disable()
+</h3><div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/prefabs/editor_camera.py#L52" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#on_disable" onclick="navigator.clipboard.writeText('#on_disable')" title="Copy permalink">◃-</a></div><hr></hr><br>
+<br>
+<h3 id="on_destroy()">
+on_destroy()
+</h3><div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/prefabs/editor_camera.py#L62" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#on_destroy" onclick="navigator.clipboard.writeText('#on_destroy')" title="Copy permalink">◃-</a></div><hr></hr><br>
+<br>
+<h3 id="input()">
+input()
+</h3><code_block id="code_block_1"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>input(ke<olive>y</olive>=None)
+</code_block>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/prefabs/editor_camera.py#L66" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#input" onclick="navigator.clipboard.writeText('#input')" title="Copy permalink">◃-</a></div><hr></hr><br>
+<br>
+<h3 id="update()">
+update()
+</h3><div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/prefabs/editor_camera.py#L117" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#update" onclick="navigator.clipboard.writeText('#update')" title="Copy permalink">◃-</a></div><hr></hr><br>
+<br>
+<div class="sidebar"><span>8.0.0</span><br>
+Basics<br>
+  <a href="ursina.html">Ursina</a><br>
+  <a href="entity.html">Entity</a><br>
+  <a href="button.html">Button</a><br>
+  <a href="sprite.html">Sprite</a><br>
+  <a href="text.html">Text</a><br>
+  <a href="audio.html">Audio</a><br>
+<br>
+Core Modules<br>
+  <a href="camera.html">camera</a><br>
+  <a href="mouse.html">mouse</a><br>
+  <a href="window.html">window</a><br>
+  <a href="application.html">application</a><br>
+  <a href="scene.html">scene</a><br>
+<br>
+Graphics<br>
+  <a href="color.html">color</a><br>
+  <a href="mesh.html">Mesh</a><br>
+  <a href="shader.html">Shader</a><br>
+  <a href="texture.html">Texture</a><br>
+  <a href="light.html">Light</a><br>
+  <a href="directional_light.html">DirectionalLight</a><br>
+  <a href="point_light.html">PointLight</a><br>
+  <a href="ambient_light.html">AmbientLight</a><br>
+  <a href="spot_light.html">SpotLight</a><br>
+<br>
+Procedural Models<br>
+  <a href="quad.html">Quad</a><br>
+  <a href="circle.html">Circle</a><br>
+  <a href="plane.html">Plane</a><br>
+  <a href="grid.html">Grid</a><br>
+  <a href="cone.html">Cone</a><br>
+  <a href="cylinder.html">Cylinder</a><br>
+  <a href="pipe.html">Pipe</a><br>
+  <a href="terrain.html">Terrain</a><br>
+<br>
+modules<br>
+  <a href="input_handler.html">input_handler</a><br>
+  <a href="mesh_importer.html">mesh_importer</a><br>
+  <a href="texture_importer.html">texture_importer</a><br>
+  <a href="string_utilities.html">string_utilities</a><br>
+<br>
+Animation<br>
+  <a href="animation.html">Animation</a><br>
+  <a href="frame_animation3d.html">FrameAnimation3d</a><br>
+  <a href="sprite_sheet_animation.html">SpriteSheetAnimation</a><br>
+  <a href="animator.html">Animator</a><br>
+  <a href="trail_renderer.html">TrailRenderer</a><br>
+  <a href="curve.html">curve</a><br>
+<br>
+Math<br>
+  <a href="ursinamath.html">ursinamath</a><br>
+  <a href="vec2.html">Vec2</a><br>
+  <a href="vec3.html">Vec3</a><br>
+  <a href="vec4.html">Vec4</a><br>
+  <a href="cubic_bezier.html">CubicBezier</a><br>
+  <a href="array_tools.html">array_tools</a><br>
+  <a href="array2_d.html">Array2D</a><br>
+  <a href="array3_d.html">Array3D</a><br>
+<br>
+Gameplay<br>
+  <a href="ursinastuff.html">ursinastuff</a><br>
+  <a href="sequence.html">Sequence</a><br>
+  <a href="func.html">Func</a><br>
+  <a href="keys.html">Keys</a><br>
+<br>
+Collision<br>
+  <a href="raycast.html">raycast</a><br>
+  <a href="terraincast.html">terraincast</a><br>
+  <a href="boxcast.html">boxcast</a><br>
+  <a href="hit_info.html">HitInfo</a><br>
+  <a href="collider.html">Collider</a><br>
+  <a href="box_collider.html">BoxCollider</a><br>
+  <a href="sphere_collider.html">SphereCollider</a><br>
+  <a href="mesh_collider.html">MeshCollider</a><br>
+<br>
+Prefabs<br>
+  <a href="sky.html">Sky</a><br>
+  <a href="editor_camera.html">EditorCamera</a><br>
+  <a href="tilemap.html">Tilemap</a><br>
+  <a href="first_person_controller.html">FirstPersonController</a><br>
+  <a href="platformer_controller2d.html">PlatformerController2d</a><br>
+  <a href="conversation.html">Conversation</a><br>
+  <a href="node.html">Node</a><br>
+<br>
+UI<br>
+  <a href="button.html">Button</a><br>
+  <a href="draggable.html">Draggable</a><br>
+  <a href="tooltip.html">Tooltip</a><br>
+  <a href="slider.html">Slider</a><br>
+  <a href="thin_slider.html">ThinSlider</a><br>
+  <a href="text_field.html">TextField</a><br>
+  <a href="input_field.html">InputField</a><br>
+  <a href="content_types.html">ContentTypes</a><br>
+  <a href="checkbox.html">Checkbox</a><br>
+  <a href="button_list.html">ButtonList</a><br>
+  <a href="button_group.html">ButtonGroup</a><br>
+  <a href="window_panel.html">WindowPanel</a><br>
+  <a href="file_browser.html">FileBrowser</a><br>
+  <a href="file_browser_save.html">FileBrowserSave</a><br>
+  <a href="dropdown_menu.html">DropdownMenu</a><br>
+  <a href="radial_menu.html">RadialMenu</a><br>
+  <a href="health_bar.html">HealthBar</a><br>
+<br>
+Editor<br>
+  <a href="hot_reloader.html">HotReloader</a><br>
+  <a href="grid_editor.html">GridEditor</a><br>
+  <a href="pixel_editor.html">PixelEditor</a><br>
+  <a href="ascii_editor.html">ASCIIEditor</a><br>
+  <a href="color_picker.html">ColorPicker</a><br>
+<br>
+Scripts<br>
+  <a href="grid_layout.html">grid_layout</a><br>
+  <a href="duplicate.html">duplicate</a><br>
+  <a href="smooth_follow.html">SmoothFollow</a><br>
+  <a href="scrollable.html">Scrollable</a><br>
+  <a href="noclip_mode.html">NoclipMode</a><br>
+  <a href="noclip_mode2d.html">NoclipMode2d</a><br>
+  <a href="build.html">build</a><br>
+<br>
+Assets<br>
+  <a href="models.html">models</a><br>
+  <a href="textures.html">textures</a><br>
+<br>
+Shaders<br>
+  <a href="unlit_shader.html">unlit_shader</a><br>
+  <a href="lit_with_shadows_shader.html">lit_with_shadows_shader</a><br>
+  <a href="matcap_shader.html">matcap_shader</a><br>
+  <a href="colored_lights_shader.html">colored_lights_shader</a><br>
+  <a href="fresnel_shader.html">fresnel_shader</a><br>
+  <a href="projector_shader.html">projector_shader</a><br>
+  <a href="texture_blend_shader.html">texture_blend_shader</a><br>
+  <a href="instancing_shader.html">instancing_shader</a><br>
+  <a href="triplanar_shader.html">triplanar_shader</a><br>
+  <a href="normals_shader.html">normals_shader</a><br>
+  <a href="transition_shader.html">transition_shader</a><br>
+  <a href="fxaa.html">fxaa</a><br>
+  <a href="ssao.html">ssao</a><br>
+  <a href="camera_outline_shader.html">camera_outline_shader</a><br>
+  <a href="pixelation_shader.html">pixelation_shader</a><br>
+  <a href="camera_contrast.html">camera_contrast</a><br>
+  <a href="camera_vertical_blur.html">camera_vertical_blur</a><br>
+  <a href="camera_grayscale.html">camera_grayscale</a><br>
+</div><br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
+</script>
+<br>
+<br>
+</body>
+</html><style>
+h1 {margin-bottom:0em; margin-top:1em}
+h2 {margin-bottom:.5em;}
+h3 {margin:0em; font-size:1em;}
+code_block {margin-top:.0em; margin-bottom:1em;}
+hr {border-color:gray; opacity:.25;}
+.links {width:fit-content;}
+.links a {text-decoration:none; opacity:.5;}
+</style>
