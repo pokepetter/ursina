@@ -1,7 +1,7 @@
 from ursina import *
 
 
-def texture_to_height_values(heightmap, skip=1):
+def texture_to_height_values(heightmap:Texture, skip=1):
     from PIL import Image
     from numpy import asarray, flip, swapaxes
 
@@ -15,7 +15,7 @@ def texture_to_height_values(heightmap, skip=1):
             return
 
     width, depth = heightmap.width//skip, heightmap.height//skip
-    img = Image.open(heightmap.path).convert('L')
+    img = heightmap.to_PIL_Image().convert('L')
     if skip > 1:
         img = img.resize([width, depth], Image.LANCZOS)
 
