@@ -28,19 +28,19 @@ class Camera(Entity):
 
         self._cam = None
         self._render = None
-        self.ui_size = 40
 
         self._ui_lens_node = None
-        self.perspective_lens_node = None
-        self.orthographic_lens_node = None
-        self.ui = Entity(eternal=True, name='ui', scale=(self.ui_size*.5, self.ui_size*.5), add_to_scene_entities=False)
+        self._perspective_lens_node = None
+        self._orthographic_lens_node = None
+        self._ui_size = 40
+        self.ui = Entity(eternal=True, name='ui', scale=(self._ui_size*.5, self._ui_size*.5), add_to_scene_entities=False)
         self.overlay = Entity(parent=self.ui, model='quad', scale=99, color=color.clear, eternal=True, z=-99, add_to_scene_entities=False)
         # self.ready = False
         # self._orthographic = False
         # self._fov = 40   # horizontal fov
 
 
-    def set_up(self):
+    def _set_up(self):
         self.display_region = application.base.camNode.get_display_region(0)
         win = self.display_region.get_window()
 
@@ -48,12 +48,12 @@ class Camera(Entity):
         self.perspective_lens = application.base.camLens # use panda3d's default for automatic aspect ratio on window resize
         self.lens = self.perspective_lens
         self.perspective_lens.set_aspect_ratio(window.aspect_ratio)
-        self.perspective_lens_node = LensNode('perspective_lens_node', self.perspective_lens)
-        self.lens_node = self.perspective_lens_node
+        self._perspective_lens_node = LensNode('_perspective_lens_node', self.perspective_lens)
+        self.lens_node = self._perspective_lens_node
 
         self.orthographic_lens = OrthographicLens()
         self.orthographic_lens.set_film_size(self.fov * window.aspect_ratio, self.fov)
-        self.orthographic_lens_node = LensNode('orthographic_lens_node', self.orthographic_lens)
+        self._orthographic_lens_node = LensNode('_orthographic_lens_node', self.orthographic_lens)
 
         application.base.cam.node().set_lens(self.lens)
 
@@ -94,7 +94,7 @@ class Camera(Entity):
 
     def orthographic_setter(self, value):
         self._orthographic = value
-        self.lens_node = (self.perspective_lens_node, self.orthographic_lens_node)[value] # this need to be set for the mouse raycasting
+        self.lens_node = (self._perspective_lens_node, self._orthographic_lens_node)[value] # this need to be set for the mouse raycasting
         application.base.cam.node().set_lens((self.perspective_lens, self.orthographic_lens)[value])
         self.fov = self.fov
 

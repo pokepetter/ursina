@@ -11,7 +11,7 @@ class Scene(NodePath):
         self._children = []
 
 
-    def set_up(self):
+    def _set_up(self):
         self.reparent_to(render)
         self.fog = Fog('fog')
         self.setFog(self.fog)

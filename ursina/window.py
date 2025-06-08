@@ -12,14 +12,14 @@ from ursina import input_handler
 
 class Window(WindowProperties):
 
-    def ready(self, title, icon, borderless, fullscreen, size, forced_aspect_ratio, position, vsync, editor_ui_enabled, window_type, render_mode):
+    def _ready(self, title, icon, borderless, fullscreen, size, forced_aspect_ratio, position, vsync, editor_ui_enabled, window_type, render_mode):
         loadPrcFileData('', 'window-title ursina')
         loadPrcFileData('', 'notify-level-util error')
         loadPrcFileData('', 'textures-auto-power-2 #t')
         loadPrcFileData('', 'load-file-type p3assimp')
         # loadPrcFileData('', 'allow-portal-cull #t')
-        # loadPrcFileData("", "framebuffer-multisample 1")
-        # loadPrcFileData('', 'multisamples 2')
+        loadPrcFileData("", "framebuffer-multisample 1")
+        loadPrcFileData('', 'multisamples 2')
         # loadPrcFileData('', 'textures-power-2 none')
         # loadPrcFileData('', 'threading-model Cull/Draw')
         loadPrcFileData('', 'coordinate-system y-up-left')
@@ -27,6 +27,7 @@ class Window(WindowProperties):
         loadPrcFileData('', 'aux-display pandadx9')
         loadPrcFileData('', 'aux-display pandadx8')
         loadPrcFileData('', 'aux-display tinydisplay')
+        loadPrcFileData('', 'allow-incomplete-render 1')
 
         loadPrcFileData('', f'undecorated {borderless}')
         self.title = title
@@ -178,7 +179,7 @@ class Window(WindowProperties):
         self.entity_counter = Text(parent=self.editor_ui, enabled=application.development_mode, eternal=True, origin=(-.5,.5), text='00', ignore=False, t=0,
             position=((.5*self.aspect_ratio)-self.exit_button.scale_x, .425+(.02*(not self.exit_button.enabled)), -999))
         self.entity_counter.text_entity = Text(parent=self.entity_counter, text='entities:', origin=(-.5,-.75), scale=.4, add_to_scene_entities=False, eternal=True)
-        
+
         def _entity_counter_update():
             if self.entity_counter.t > 1:
                 self.entity_counter.text = str(max(0, len([e for e in scene.entities if e.model and e.enabled])-5))
@@ -189,7 +190,7 @@ class Window(WindowProperties):
         self.collider_counter = Text(parent=self.editor_ui, enabled=application.development_mode, eternal=True, origin=(-.5,.5), text='00', ignore=False, t=.1,
             position=((.5*self.aspect_ratio)-self.exit_button.scale_x, .38+(.02*(not self.exit_button.enabled)), -999))
         self.collider_counter.text_entity = Text(parent=self.collider_counter, text='colliders:', origin=(-.5,-.75), scale=.4, add_to_scene_entities=False, eternal=True)
-        
+
         def _collider_counter_update():
             if self.collider_counter.t > 1:
                 self.collider_counter.text = str(max(0, len([e for e in scene.entities if e.collider and e.enabled])-4))
@@ -197,7 +198,7 @@ class Window(WindowProperties):
             self.collider_counter.t += time.dt
         self.collider_counter.update = _collider_counter_update
 
-    
+
 
         import webbrowser
         self.cog_menu = ButtonList({
@@ -246,7 +247,7 @@ class Window(WindowProperties):
 
         print_info('changed aspect ratio:', round(self.prev_aspect_ratio, 3), '->', round(self.aspect_ratio, 3))
 
-        camera.ui_lens.set_film_size(camera.ui_size * .5 * self.aspect_ratio, camera.ui_size * .5)
+        camera.ui_lens.set_film_size(camera._ui_size * .5 * self.aspect_ratio, camera._ui_size * .5)
         for e in [e for e in scene.entities if e.parent == camera.ui] + self.editor_ui.children:
             e.x /= self.prev_aspect_ratio / self.aspect_ratio
 
@@ -459,7 +460,7 @@ class Window(WindowProperties):
     @property
     def always_on_top(self):
         return self._always_on_top
-    
+
     @always_on_top.setter
     def always_on_top(self, value):
         if value:
@@ -467,10 +468,10 @@ class Window(WindowProperties):
             if sys.platform == "linux":
                 from Xlib import display, X, Xatom
                 d = display.Display()
-                root = d.screen().root
+                # root = d.screen().root
                 window_id = base.win.getWindowHandle().getIntHandle()
                 window = d.create_resource_object('window', window_id)  # Get the window from X11
-                NET_WM_STATE = d.intern_atom('_NET_WM_STATE')   
+                NET_WM_STATE = d.intern_atom('_NET_WM_STATE')
                 NET_WM_STATE_ABOVE = d.intern_atom('_NET_WM_STATE_ABOVE')
                 window.change_property(NET_WM_STATE, Xatom.ATOM, 32, [NET_WM_STATE_ABOVE])
 
@@ -501,16 +502,16 @@ class Window(WindowProperties):
     def vsync(self, value):
         self._vsync = value
         if not 'base' in sys.modules:     # set vsync/framerate before window opened
-            if value == True or value == False:
+            if value is True or value is False:
                 loadPrcFileData('', f'sync-video {value}')
             elif isinstance(value, int):
                 loadPrcFileData('', 'clock-mode limited')
                 loadPrcFileData('', f'clock-frame-rate {value}')
         else:
             from panda3d.core import ClockObject                      # set vsync/framerate in runtime
-            if value == True:
+            if value is True:
                 globalClock.setMode(ClockObject.MNormal)
-            elif value == False:
+            elif value is False:
                 print_warning('error: disabling vsync during runtime is not yet implemented')
 
             elif isinstance(value, (int, float, complex)):

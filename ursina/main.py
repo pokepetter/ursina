@@ -66,7 +66,7 @@ class Ursina(ShowBase):
             if borderless is None:
                 borderless = True
 
-        window.ready(title=title, icon=icon,
+        window._ready(title=title, icon=icon,
             borderless=borderless, fullscreen=fullscreen, size=size, forced_aspect_ratio=forced_aspect_ratio, position=position, vsync=vsync, window_type=window_type,
             editor_ui_enabled=editor_ui_enabled, render_mode=render_mode)
 
@@ -79,7 +79,7 @@ class Ursina(ShowBase):
             camera.render = self.render
             camera.position = (0, 0, -20)
             scene.camera = camera
-            camera.set_up()
+            camera._set_up()
 
         # input
         if application.window_type == 'onscreen':
@@ -117,7 +117,7 @@ class Ursina(ShowBase):
         mouse.enabled = True
         self.mouse = mouse
 
-        scene.set_up()
+        scene._set_up()
         self._update_task = self.taskMgr.add(self._update, "update")
 
         # try to load settings that need to be applied before entity creation
