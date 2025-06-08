@@ -1,4 +1,11 @@
-from ursina import *; projector_shader = Shader(name='projector_shader', language=Shader.GLSL, vertex = '''
+from ursina.shader import Shader
+from ursina.vec2 import Vec2
+from ursina.vec3 import Vec3
+from ursina import color
+from ursina.ursinastuff import Func
+from ursina import window, camera, load_texture
+
+projector_shader = Shader(name='projector_shader', language=Shader.GLSL, vertex = '''
 #version 140
 uniform mat4 p3d_ModelViewProjectionMatrix;
 uniform mat4 p3d_ModelMatrix;

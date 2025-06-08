@@ -5,6 +5,7 @@ from copy import deepcopy
 import sys
 from math import floor
 from ursina.shaders import unlit_shader
+from ursina.array_tools import Array2D, enumerate_2d
 import json
 
 
@@ -476,7 +477,6 @@ class GridEditor(Entity):
 
 
     def render_selection(self):
-        quad = load_model('quad', use_deepcopy=True)
         self.selection_renderer.model.clear(False)
         verts = []
         for x in range(self.w):

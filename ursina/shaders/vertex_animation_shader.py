@@ -1,5 +1,6 @@
-from ursina import Shader, Vec2
+from ursina import Shader, Vec2, Vec3
 from ursina.shaders.unlit_shader import unlit_shader
+
 vertex_animation_shader = Shader(
 vertex='''
 #version 330 core
@@ -30,7 +31,7 @@ void main() {
     uvs = (p3d_MultiTexCoord0 * texture_scale) + texture_offset;
     vertex_color = p3d_Color;
     vertex_color = texture(frame_texture, vec2((gl_VertexID/num_verts) + ((1./num_verts)*.5) +.5, (frame_index/total_frames) + (frame_height*.5)));
-}    
+}
 
 ''',
 
@@ -60,7 +61,7 @@ default_input = {
 
 
 if __name__ == '__main__':
-    from ursina import *
+    from ursina import Ursina, Entity, load_texture, EditorCamera
     app = Ursina()
     e = Entity(model='cube', shader=vertex_animation_shader, texture='grass')
     animation_texture = load_texture('grass')

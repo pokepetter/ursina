@@ -53,8 +53,7 @@ default_input={
 
 
 if __name__ == '__main__':
-    from ursina import *
-    from ursina.prefabs.primitives import *
+    from ursina import Ursina, Entity, EditorCamera
     app = Ursina()
     # window.color=color.black
     # from ursina.lights import DirectionalLight
@@ -70,7 +69,7 @@ if __name__ == '__main__':
     # myMaterial.setAmbient((0, 0, 1, 1)) #Make this material blue
     # b.set_material(myMaterial)
     # AzureSphere(shader=a.shader, y=2)
-    ground = GrayPlane(scale=10, y=-2, texture='shore', shader=shader, texture_scale=(10,10))
+    ground = Entity(model='plane', color=color.gray, scale=10, y=-2, texture='shore', shader=shader, texture_scale=(10,10))
     ground.set_shader_input('texture_scale', Vec2(2, 1))
     #Sky(color=color.light_gray)
     EditorCamera()

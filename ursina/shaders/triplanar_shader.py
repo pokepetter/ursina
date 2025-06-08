@@ -97,8 +97,7 @@ default_input = {
 
 
 if __name__ == '__main__':
-    from ursina import *
-    from ursina.prefabs.primitives import *
+    from ursina import Ursina, window, color, Draggable, load_texture, Sky, EditorCamera, scene, Entity, Slider
     app = Ursina()
     window.color=color.black
 
@@ -115,9 +114,9 @@ if __name__ == '__main__':
     a.set_shader_input('side_texture', load_texture('brick'))
     # print('---------', a.texture._texture)
 
-    b = AzureSphere(shader=shader, rotation_y=180, x=3, texture='grass')
+    b = Entity(model='sphere', shader=shader, color=color.azure, rotation_y=180, x=3, texture='grass')
     b.texture.filtering = False
-    GrayPlane(scale=10, y=-2, texture='shore')
+    Entity(model='plane', color=color.gray, scale=10, y=-2, texture='shore')
     b.set_shader_input('side_texture', load_texture('brick'))
 
     Sky(color=color.light_gray)

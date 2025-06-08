@@ -70,7 +70,7 @@ def stop_override():
 
 if __name__ == '__main__':
     from ursina import *
-    # from ursina import music_system
+    from ursina import music_system
 
     app = Ursina()
 

@@ -12,7 +12,6 @@ import panda3d.core as p3d
 import gltf
 import builtins
 from ursina.sequence import Func
-from ursina import application
 
 
 imported_meshes = dict()

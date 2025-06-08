@@ -76,8 +76,6 @@ class Array2D(list):
 
     def to_string(self, separator=', ', always_separate=False):
         lines = []
-        flat = flatten_list(self)
-
         longest_width = max(len(str(value)) for (_,_), value in enumerate_2d(self))
 
         if always_separate or longest_width > 1:    # separate each element with ', '
