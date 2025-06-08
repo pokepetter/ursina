@@ -1,4 +1,4 @@
-from ursina import Entity, camera, Text, Vec2, mouse, color, floor, clamp, time, held_keys, destroy
+from ursina import Entity, camera, Text, Vec2, mouse, color, floor, clamp, time, held_keys, destroy, curve
 import pyperclip
 
 from ursina.string_utilities import multireplace
@@ -20,7 +20,7 @@ class TextField(Entity):
         self.character_width = Text.get_width('a', font=self.font)
         self.cursor_parent = Entity(parent=self.scroll_parent, scale=(self.character_width, -1*Text.size*self.line_height))
         self.cursor = Entity(name='text_field_cursor', parent=self.cursor_parent, model='cube', color=color.cyan, origin=(-.5, -.5), scale=(.1, 1, 0), enabled=False)
-        self.cursor.blink(duration=1.2, loop=True)
+        self.cursor.animate_color(color.red, duration=1.2, curve=curve.linear_boomerang, loop=True)
         self.bg = Entity(name='text_field_bg', parent=self, model='quad', double_sided=True, color=color.dark_gray, origin=(-.5,.5), z=0.005, scale=(120, Text.size*self.max_lines*self.line_height), collider='box', visible=True)
 
         self.selection = [Vec2(0,0), Vec2(0,0)]
