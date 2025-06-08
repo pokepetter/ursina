@@ -5,6 +5,9 @@ from ursina.ursinamath import clamp
 
 
 def chunk_mesh(mesh, num_chunks, chunk_size=1/8):
+    if not hasattr(mesh, 'vertices'):
+        raise Exception(f'{mesh} has no vertices')
+
     chunks = Array2D(width=num_chunks[0], height=num_chunks[1])
     for (x,z), value in enumerate_2d(chunks):
         chunks[x][z] = []
