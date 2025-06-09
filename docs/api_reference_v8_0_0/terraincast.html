@@ -27,11 +27,11 @@ terraincast()
 </h3><code_block id="code_block_0"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>terraincast(world_<olive>position</olive>=None, terrain_entit<olive>y</olive>=None, height_values=None, return_<olive>normals</olive>=False)
 </code_block>
 <purple>uses x and z to return y on terrain.</purple><br>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/terraincast.py#L7" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#terraincast" onclick="navigator.clipboard.writeText('#terraincast')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<h2 id="Examples">
-Examples
-</h2><br>
-<code_block id="code_block_1"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/terraincast.py#L7" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#terraincast" onclick="navigator.clipboard.writeText('#terraincast')" title="Copy permalink">◃-</a></div><br>
+<hr></hr>## Examples<br>
+<br>
+<code_block id="code_block_1"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>app = Ursina()
+
 terrain_entity = <olive>Entity</olive>(<olive>model</olive>=Terrain(<green><green>'heightmap_<yellow>1</yellow>'</green></green>, skip=<yellow>8</yellow>), <olive>scale</olive>=(<yellow>4</yellow><yellow>0</yellow>, <yellow>5</yellow>, <yellow>2</yellow><yellow>0</yellow>), <olive>texture</olive>=<green><green>'heightmap_<yellow>1</yellow>'</green></green>)
 player = <olive>Entity</olive>(<olive>model</olive>=<green>'sphere'</green>, <olive>color</olive>=color.azure, <olive>scale</olive>=.<yellow>2</yellow>, origin_<olive>y</olive>=-.<yellow>5</yellow>)
 
@@ -51,7 +51,9 @@ camera.shader = ssao_shader
 Sky()
 
 app.run()
+
 </code_block>
+<div class="sidebar"><span>8.0.0</span><br>
 Basics<br>
   <a href="ursina.html">Ursina</a><br>
   <a href="entity.html">Entity</a><br>
@@ -135,7 +137,6 @@ Prefabs<br>
   <a href="first_person_controller.html">FirstPersonController</a><br>
   <a href="platformer_controller2d.html">PlatformerController2d</a><br>
   <a href="conversation.html">Conversation</a><br>
-  <a href="node.html">Node</a><br>
 <br>
 UI<br>
   <a href="button.html">Button</a><br>

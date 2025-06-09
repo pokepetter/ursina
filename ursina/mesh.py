@@ -98,7 +98,7 @@ class Mesh(p3d.NodePath):
         except:
             raise Exception(f'Error in Mesh. Ensure Mesh is valid and the inputs have same length: vertices:{len(self.vertices)}, triangles:{len(self.triangles)}, normals:{len(self.normals)}, colors:{len(self.colors)}, uvs:{len(self.uvs)}')
 
-    def generate(self):
+    def generate(self): # Must be called after a mesh's values has been updated in order to update visually
         self._generated_vertices = None
 
         if hasattr(self, 'geomNode'):
@@ -257,7 +257,7 @@ class Mesh(p3d.NodePath):
 
 
     @property
-    def indices(self):
+    def indices(self):  # Get the vertex indices as a flat list. For example if you have tuples in triangles :((0,1,2),(3,4,5)) -> (0,1,2,3,4,5). Or with quads: ((0,1,2,3),) -> (0,1,2,2,3,0).
         if not self.triangles:
             return list(range(len(self.vertices)))
 
@@ -319,7 +319,7 @@ class Mesh(p3d.NodePath):
         mesh_as_string += f'\n    static={self.static},' if not self.static else ''
         mesh_as_string += f'\n    mode="{self.mode}",' if self.mode != 'triangle' else ''
         mesh_as_string += f'\n    thickness={self.thickness},' if self.thickness != 1 else ''
-        mesh_as_string += f'\n    render_points_in_3d={self.render_points_in_3d},' if self.render_points_in_3d != True else ''
+        mesh_as_string += f'\n    render_points_in_3d={self.render_points_in_3d},' if not self.render_points_in_3d else ''
         mesh_as_string += f'\n    vertex_buffer={self.vertex_buffer},' if self.vertex_buffer is not None else ''
         mesh_as_string += f'\n    vertex_buffer_length={self.vertex_buffer_length},' if self.vertex_buffer_length is not None else ''
         mesh_as_string += f'\n    vertex_buffer_format={vbuf_format},' if self.vertex_buffer_format is not None else ''
@@ -432,7 +432,7 @@ class Mesh(p3d.NodePath):
             from ursina.mesh_exporter import ursinamesh_to_obj
             import os
             name = str(os.path.splitext(name)[0])
-            ursinamesh_to_obj(self, name, folder, flip_faces)
+            ursinamesh_to_obj(self, name, folder, flip_faces=flip_faces)
         elif name.endswith('.dae'):
             from ursina.mesh_exporter import ursinamesh_to_dae
             import os

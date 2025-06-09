@@ -63,7 +63,7 @@ class NineSlice(Mesh):
 if __name__ == '__main__':
     app = Ursina()
     m = NineSlice(entity_scale=Vec3(2,1,1),
-        scale_multiplier=1.4,   # account for whitespace and drop shadow in the texture
+        # scale_multiplier=1.4,   # account for whitespace and drop shadow in the texture
         )
 
     window.color = color._240

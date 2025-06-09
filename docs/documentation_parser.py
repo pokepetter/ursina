@@ -403,7 +403,7 @@ if __name__ == '__main__':
             'FirstPersonController',
             'PlatformerController2d',
             'Conversation',
-            'Node',
+            # 'Node',
         ],
         'UI': [
             'Button',
@@ -599,21 +599,27 @@ if __name__ == '__main__':
         if function_info.comment:
             text += f'<purple>{function_info.comment}</purple>\n'
 
-        text += add_links(function_info)
-        # # text += 'Example:\n'
-        # function_examples = []
-        # for example in function_examples:
-        #     text += dedent(f'''\
-        #         {example.name}
-        #         ```
-        #         {example.content}
-        #         ```
-        #         ''')
-        # text += '\n'
 
+        # examples_folder = application.package_folder.parent / 'examples'
+        example_file_base_name = function_info.name
+        if function_info.from_class:
+            example_file_base_name = f'{function_info.from_class.name}_{example_file_base_name}'
 
+        for separate_example_file in Path('.').glob(f'{example_file_base_name}_example*.py'):
+            print('found external example:', separate_example_file)
+            example_name = separate_example_file.stem.split('example')[1]
+            if not example_name:
+                example_name = 'Example'
+            text += f'{example_name}\n'
 
-        text += '<hr></hr>\n'
+            with separate_example_file.open('r') as f:
+                text += dedent(f'''\
+```
+{f.read()}
+```
+''')
+        text += add_links(function_info) +'\n'
+        text += '<hr></hr>'
         return text
 
 
@@ -647,6 +653,22 @@ if __name__ == '__main__':
             <hr></hr>
         ''')
         return text
+
+
+    def render_property_section(method_info):
+                text = ''
+                text += dedent(f'''\
+                    # {method_info.base_name}
+                    ''')
+                if method_info.comment:
+                    text += dedent(f'''\
+                        <purple>{method_info.comment}</purple>
+                        ''')
+                text += add_links(method_info)
+                text += dedent('''\
+                    <hr></hr>
+                    ''')
+                return text
 
 
     singleton_infos = {key : value for key, value in module_infos.items() if value.is_singleton}
@@ -730,19 +752,21 @@ if __name__ == '__main__':
             if module_info.examples:
                 text += '## Examples\n'
                 for example in module_info.examples:
-                    text += f'{example.name}\n'
-                    text += '```'
-                    text += example.content
-                    text += '```'
-
-            # examples_folder = application.package_folder.parent / 'examples'
+                    text += dedent(f'''\
+{example.name}
+```
+{example.content}
+```
+''')
             for separate_example_file in Path('.').glob(f'{module_info.name}_example*.py'):
-                # print('------------------------', separate_example_file)
+                print('found external example:', separate_example_file)
                 with separate_example_file.open('r') as f:
-                    text += f'{separate_example_file.stem}\n'
-                    text += '```'
-                    text += f.read()
-                    text += '```'
+                    text += dedent(f'''\
+{separate_example_file.stem}
+```
+{f.read()}
+```
+''')
 
 
         ### classes ###
@@ -824,20 +848,7 @@ if __name__ == '__main__':
             getters_only = [m for m in getters if m.base_name not in [p.base_name for p in setters]]
             two_way_properties = [m for m in setters if m.base_name not in [p.base_name for p in getters_only]]
 
-            def render_property_section(method_info):
-                text = ''
-                text += dedent(f'''\
-                    # {method_info.base_name}
-                    ''')
-                if method_info.comment:
-                    text += dedent(f'''\
-                        <purple>{method_info.comment}</purple>
-                        ''')
-                text += add_links(method_info)
-                text += dedent('''\
-                    <hr></hr>
-                    ''')
-                return text
+
 
             if getters_only:
                 text += '\n## Getters\n'
@@ -865,16 +876,33 @@ if __name__ == '__main__':
                 # print('EXAMPLE::::')
                 text += '## Examples\n'
                 for example in class_info.examples:
-                    text += f'{example.name}\n'
-                    text += '```'
-                    text += example.content
-                    text += '```'
+                    text += dedent(f'''\
+{example.name}
+```
+{example.content}
+```
+# ''')
+            for separate_example_file in Path('.').glob(f'{class_info.name}_example*.py'):
+                example_name = separate_example_file.stem.split('example')[1]
+                print('found external example:', separate_example_file, example_name)
+                if not example_name:
+                    example_name = 'Example'
+                text += f'{example_name}\n'
 
+                with separate_example_file.open('r') as f:
+                    text += f'''\
+```
+{f.read()}
+```
+'''
 
         # convert sswg to html without having to save it to disk first
         path = output_folder / f'{camel_to_snake(name)}.sswg'
         with path.open('w') as f:
             f.write(text)
+            print('saved:', path)
+            # if name == 'DirectionalLight':
+            #     print('---------------------------------', text)
 
         # add sidebar
         sidebar_content = '<div class="sidebar">'

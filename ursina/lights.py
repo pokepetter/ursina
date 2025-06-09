@@ -112,24 +112,30 @@ if __name__ == '__main__':
 
     app = Ursina()
 
-    ground = Entity(model='plane', scale=10, color=color.gray, shader=lit_with_shadows_shader)
-    lit_cube = Entity(model='cube', y=1, shader=lit_with_shadows_shader, color=color.light_gray)
+    Entity.default_shader = lit_with_shadows_shader
+    ground = Entity(model='plane', scale=10, texture='grass')
+    lit_cube = Entity(model='cube', y=1, color=color.light_gray)
 
-    light = DirectionalLight(shadow_map_resolution=Vec2(512,512), shadows=True)
+    light = DirectionalLight()
     light.look_at(Vec3(1,-1,1))
 
-    dont_cast_shadow = Entity(model='cube', y=1, shader=lit_with_shadows_shader, x=2, color=color.light_gray)
+    dont_cast_shadow = Entity(model='cube', y=1, x=2, color=color.light_gray)
     dont_cast_shadow.hide(0b0001)
 
     unlit_entity = Entity(model='cube', y=1,x=-2, unlit=True, color=color.light_gray)
 
-    bar = Entity(model='cube', position=(0,3,-2), shader=lit_with_shadows_shader, scale=(10,.2,.2), color=color.light_gray)
+    bar = Entity(model='cube', position=(0,3,-2), scale=(10,.2,.2), color=color.light_gray)
     # dont_cast_shadow.hide(0b0001)
 
     # How to render shows in a limited area.
     # to make it easier to see, make a box to define where we will have shadows. we can make this invisible after.
-    shadow_bounds_box = Entity(model='wireframe_cube', scale=10, y=5, visible=False)
+    shadow_bounds_box = Entity(model='wireframe_cube', scale=5, visible=0)
     light.update_bounds(shadow_bounds_box)
 
     EditorCamera(rotation=(30,30,0))
+    Sky()
+    # from ursina import window
+    # window.borderless = True
+    # window.size = Vec2(1920,1080) * .5
+    # window.editor_ui.enabled = False
     app.run()

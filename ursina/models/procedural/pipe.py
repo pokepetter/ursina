@@ -139,11 +139,10 @@ if __name__ == '__main__':
     app = Ursina()
     # e = Entity(model=Prism(mode='line'))
     path = [e*5 for e in Circle().vertices]
-    # path = [e.xzy for e in path]
-
     path.append(path[0])
-    # thicknesses = ((1,1), (.5,.5), (.75,.75), (.5,.5), (1,1))
-    e = Entity(model=Pipe(path=path, cap_ends=False), texture='shore')
+
+    thicknesses = ((1,1), (.5,.5), (.75,.75), (.5,.5), (1,1))
+    e = Entity(model=Pipe(path=path, cap_ends=False, thicknesses=thicknesses), texture='shore')
     color_gradient = [color.magenta, color.cyan.tint(-.5), color.clear]
     color_gradient = color_gradient[::-1]
 

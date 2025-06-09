@@ -438,7 +438,7 @@ class Text(Entity):
         self._background.color = color
 
 
-    def appear(self, speed=.025):
+    def appear(self, speed=.025):   # make the text animate in, one character at a time
         self.enabled = True
         # self.visible = True   # setting visible seems to reset the colors
         if self.appear_sequence:

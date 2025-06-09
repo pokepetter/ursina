@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ursina"
-version = "7.0.0"
+version = "8.0.0"
 description = "An easy to use game engine/framework for python."
 authors = [
     {name = "Petter Amland", email = "pokepetter@gmail.com"}
@@ -12,13 +12,14 @@ authors = [
 license = {text = "MIT"}
 keywords = ["game development"]
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
     "panda3d>=1.10.15",
-    "panda3d-gltf>=1.2.1",
+    "panda3d-gltf>=1.3.0",
     "pillow>=8.0.0",
     "pyperclip>=1.9.0",
     "screeninfo>=0.8.1",
+    "sswg==4.3.0",
 ]
 
 [tool.setuptools]
@@ -56,7 +57,7 @@ dev = [
     "numpy>=2.2.3",
     "psutil>=7.0.0",
     "ruff>=0.9.9",
-    "sswg>=4.1.0",
+    "sswg>=4.3.0",
     "tripy>=1.0.0",
 ]
 

@@ -32,7 +32,7 @@ Class Variables
 <br>
 <h2 id="Initialization">
 Initialization
-</h2><code_block id="code_block_0"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><olive>Entity</olive>(add_to_scene_entities=True, <olive>enabled</olive>=True, <olive>parent</olive>=scene, <olive>model</olive>=<green>''</green>, <olive>shader</olive>=Default, <olive>collider</olive>=None)
+</h2><code_block id="code_block_0"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><olive>Entity</olive>(add_to_scene_entities=True, <olive>enabled</olive>=True, <olive>parent</olive>=scene, <olive>model</olive>=<green>''</green>, <olive>shader</olive>=Default)
 </code_block>
 <br>
 <h2 id="Attributes">
@@ -370,115 +370,135 @@ Methods
 </h2><h3 id="enable()">
 enable()
 </h3><purple>same as .enabled = True</purple><br>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L181" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#enable" onclick="navigator.clipboard.writeText('#enable')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L181" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#enable" onclick="navigator.clipboard.writeText('#enable')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="disable()">
 disable()
 </h3><purple>same as .enabled = False</purple><br>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L184" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#disable" onclick="navigator.clipboard.writeText('#disable')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L184" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#disable" onclick="navigator.clipboard.writeText('#disable')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="get_shader_input()">
 get_shader_input()
 </h3><code_block id="code_block_1"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>get_shader_input(name=None)
 </code_block>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L826" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#get_shader_input" onclick="navigator.clipboard.writeText('#get_shader_input')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L826" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#get_shader_input" onclick="navigator.clipboard.writeText('#get_shader_input')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="set_shader_input()">
 set_shader_input()
 </h3><code_block id="code_block_2"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_2)">copy</button>set_shader_input(name=None, value=None)
 </code_block>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L829" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#set_shader_input" onclick="navigator.clipboard.writeText('#set_shader_input')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L829" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#set_shader_input" onclick="navigator.clipboard.writeText('#set_shader_input')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="get_position()">
 get_position()
 </h3><code_block id="code_block_3"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_3)">copy</button>get_position(relative_to=scene)
 </code_block>
 <purple>get position relative to on other Entity. In most cases, use .position instead.</purple><br>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1021" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#get_position" onclick="navigator.clipboard.writeText('#get_position')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1021" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#get_position" onclick="navigator.clipboard.writeText('#get_position')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="set_position()">
 set_position()
 </h3><code_block id="code_block_4"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_4)">copy</button>set_position(value=None, relative_to=scene)
 </code_block>
 <purple>set position relative to on other Entity. In most cases, use .position instead.</purple><br>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1025" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#set_position" onclick="navigator.clipboard.writeText('#set_position')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1025" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#set_position" onclick="navigator.clipboard.writeText('#set_position')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="rotate()">
 rotate()
 </h3><code_block id="code_block_5"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_5)">copy</button>rotate(value=None, relative_to=None)
 </code_block>
 <purple>rotate around local axis.</purple><br>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1029" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#rotate" onclick="navigator.clipboard.writeText('#rotate')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1029" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#rotate" onclick="navigator.clipboard.writeText('#rotate')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="add_script()">
 add_script()
 </h3><code_block id="code_block_6"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_6)">copy</button>add_script(class_instance=None)
 </code_block>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1036" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#add_script" onclick="navigator.clipboard.writeText('#add_script')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1036" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#add_script" onclick="navigator.clipboard.writeText('#add_script')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="combine()">
 combine()
 </h3><code_block id="code_block_7"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_7)">copy</button>combine(analyze=False, auto_destro<olive>y</olive>=True, <olive>ignore</olive>=[], ignore_disabled=True, include_<olive>normals</olive>=False)
 </code_block>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1047" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#combine" onclick="navigator.clipboard.writeText('#combine')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1047" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#combine" onclick="navigator.clipboard.writeText('#combine')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="look_at()">
 look_at()
 </h3><code_block id="code_block_8"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_8)">copy</button>look_at(target=None, axis=Vec<yellow>3</yellow>.forward)
 </code_block>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1062" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#look_at" onclick="navigator.clipboard.writeText('#look_at')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1062" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#look_at" onclick="navigator.clipboard.writeText('#look_at')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="look_in_direction()">
 look_in_direction()
 </h3><code_block id="code_block_9"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_9)">copy</button>look_in_direction(direction=None, forward_axis=Vec<yellow>3</yellow>.forward)
 </code_block>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1086" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#look_in_direction" onclick="navigator.clipboard.writeText('#look_in_direction')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1086" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#look_in_direction" onclick="navigator.clipboard.writeText('#look_in_direction')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="look_at_2d()">
 look_at_2d()
 </h3><code_block id="code_block_10"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_10)">copy</button>look_at_<yellow>2</yellow>d(target=None, axis=<green>'z'</green>)
 </code_block>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1199" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#look_at_2d" onclick="navigator.clipboard.writeText('#look_at_2d')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+Example<br>
+<code_block id="code_block_11"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_11)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+
+
+app = Ursina()
+
+start_point = Draggable(<olive>model</olive>=<green>'circle'</green>, <olive>color</olive>=color.orange, <olive>scale</olive>=.<yellow>0</yellow><yellow>2</yellow><yellow>5</yellow>, <olive>position</olive>=(-<yellow>0</yellow>,-<yellow>0</yellow>))
+end_point = Draggable(<olive>model</olive>=<green>'circle'</green>, <olive>color</olive>=color.orange, <olive>scale</olive>=.<yellow>0</yellow><yellow>2</yellow><yellow>5</yellow>, <olive>position</olive>=(.<yellow>2</yellow>,.<yellow>1</yellow>))
+
+line = <olive>Entity</olive>(<olive>parent</olive>=camera.ui, <olive>model</olive>=<green>'line'</green>, <olive>origin_x</olive>=-.<yellow>5</yellow>) <gray># set origin_x = -.<yellow>5</yellow> o it starts at the left and <purple>not</purple> the middle.</gray>
+
+<purple>def</purple> update():
+&nbsp;&nbsp;&nbsp;&nbsp;line.position = start_point.position
+&nbsp;&nbsp;&nbsp;&nbsp;line.look_at_<yellow>2</yellow>d(end_point)&nbsp;&nbsp;<gray># could also ise .look_at() (<yellow>3</yellow>d) <purple>for</purple> this.</gray>
+&nbsp;&nbsp;&nbsp;&nbsp;line.rotation_z -= <yellow>9</yellow><yellow>0</yellow> <gray># look_at_<yellow>2</yellow>d assumes up as forward, so offset by -<yellow>9</yellow><yellow>0</yellow> degrees.</gray>
+&nbsp;&nbsp;&nbsp;&nbsp;line.scale_x = distance_<yellow>2</yellow>d(start_point, end_point)
+
+app.run()
+
+</code_block>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1199" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#look_at_2d" onclick="navigator.clipboard.writeText('#look_at_2d')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="look_at_xy()">
 look_at_xy()
-</h3><code_block id="code_block_11"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_11)">copy</button>look_at_xy(target=None)
+</h3><code_block id="code_block_12"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_12)">copy</button>look_at_xy(target=None)
 </code_block>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1212" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#look_at_xy" onclick="navigator.clipboard.writeText('#look_at_xy')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1212" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#look_at_xy" onclick="navigator.clipboard.writeText('#look_at_xy')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="look_at_xz()">
 look_at_xz()
-</h3><code_block id="code_block_12"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_12)">copy</button>look_at_xz(target=None)
+</h3><code_block id="code_block_13"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_13)">copy</button>look_at_xz(target=None)
 </code_block>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1214" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#look_at_xz" onclick="navigator.clipboard.writeText('#look_at_xz')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1214" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#look_at_xz" onclick="navigator.clipboard.writeText('#look_at_xz')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="has_ancestor()">
 has_ancestor()
-</h3><code_block id="code_block_13"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_13)">copy</button>has_ancestor(possible_ancestor=None)
+</h3><code_block id="code_block_14"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_14)">copy</button>has_ancestor(possible_ancestor=None)
 </code_block>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1218" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#has_ancestor" onclick="navigator.clipboard.writeText('#has_ancestor')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1218" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#has_ancestor" onclick="navigator.clipboard.writeText('#has_ancestor')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="get_descendants()">
 get_descendants()
-</h3><code_block id="code_block_14"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_14)">copy</button>get_descendants(include_disabled=True)
+</h3><code_block id="code_block_15"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_15)">copy</button>get_descendants(include_disabled=True)
 </code_block>
 <purple>recursively get all descendants (children, grandchildren, and so on)</purple><br>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1233" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#get_descendants" onclick="navigator.clipboard.writeText('#get_descendants')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1233" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#get_descendants" onclick="navigator.clipboard.writeText('#get_descendants')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="has_disabled_ancestor()">
 has_disabled_ancestor()
-</h3><div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1243" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#has_disabled_ancestor" onclick="navigator.clipboard.writeText('#has_disabled_ancestor')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+</h3><div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1243" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#has_disabled_ancestor" onclick="navigator.clipboard.writeText('#has_disabled_ancestor')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="get_changes()">
 get_changes()
-</h3><code_block id="code_block_15"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_15)">copy</button>get_changes(target_class=None)
+</h3><code_block id="code_block_16"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_16)">copy</button>get_changes(target_class=None)
 </code_block>
 <purple>returns a dict of all the changes</purple><br>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1281" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#get_changes" onclick="navigator.clipboard.writeText('#get_changes')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1281" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#get_changes" onclick="navigator.clipboard.writeText('#get_changes')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="animate()">
 animate()
-</h3><code_block id="code_block_16"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_16)">copy</button>animate(
+</h3><code_block id="code_block_17"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_17)">copy</button>animate(
 &nbsp;&nbsp;&nbsp;&nbsp;name=None, 
 &nbsp;&nbsp;&nbsp;&nbsp;value=None, 
 &nbsp;&nbsp;&nbsp;&nbsp;duration=<yellow>0</yellow>.<yellow>1</yellow>, 
@@ -496,35 +516,35 @@ animate()
 &nbsp;&nbsp;&nbsp;&nbsp;setattr_function=None
 &nbsp;&nbsp;&nbsp;&nbsp;)
 </code_block>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1343" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#animate" onclick="navigator.clipboard.writeText('#animate')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1343" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#animate" onclick="navigator.clipboard.writeText('#animate')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="animate_position()">
 animate_position()
-</h3><code_block id="code_block_17"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_17)">copy</button>animate_position(value=None, duration=<yellow>0</yellow>.<yellow>1</yellow>)
+</h3><code_block id="code_block_18"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_18)">copy</button>animate_position(value=None, duration=<yellow>0</yellow>.<yellow>1</yellow>)
 </code_block>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1386" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#animate_position" onclick="navigator.clipboard.writeText('#animate_position')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1386" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#animate_position" onclick="navigator.clipboard.writeText('#animate_position')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="animate_rotation()">
 animate_rotation()
-</h3><code_block id="code_block_18"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_18)">copy</button>animate_rotation(value=None, duration=<yellow>0</yellow>.<yellow>1</yellow>)
+</h3><code_block id="code_block_19"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_19)">copy</button>animate_rotation(value=None, duration=<yellow>0</yellow>.<yellow>1</yellow>)
 </code_block>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1394" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#animate_rotation" onclick="navigator.clipboard.writeText('#animate_rotation')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1394" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#animate_rotation" onclick="navigator.clipboard.writeText('#animate_rotation')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="animate_scale()">
 animate_scale()
-</h3><code_block id="code_block_19"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_19)">copy</button>animate_scale(value=None, duration=<yellow>0</yellow>.<yellow>1</yellow>)
+</h3><code_block id="code_block_20"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_20)">copy</button>animate_scale(value=None, duration=<yellow>0</yellow>.<yellow>1</yellow>)
 </code_block>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1400" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#animate_scale" onclick="navigator.clipboard.writeText('#animate_scale')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1400" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#animate_scale" onclick="navigator.clipboard.writeText('#animate_scale')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="animate_shader_input()">
 animate_shader_input()
-</h3><code_block id="code_block_20"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_20)">copy</button>animate_shader_input(name=None, value=None)
+</h3><code_block id="code_block_21"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_21)">copy</button>animate_shader_input(name=None, value=None)
 </code_block>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1409" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#animate_shader_input" onclick="navigator.clipboard.writeText('#animate_shader_input')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1409" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#animate_shader_input" onclick="navigator.clipboard.writeText('#animate_shader_input')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="shake()">
 shake()
-</h3><code_block id="code_block_21"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_21)">copy</button>shake(
+</h3><code_block id="code_block_22"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_22)">copy</button>shake(
 &nbsp;&nbsp;&nbsp;&nbsp;duration=<yellow>0</yellow>.<yellow>2</yellow>, 
 &nbsp;&nbsp;&nbsp;&nbsp;magnitude=<yellow>1</yellow>, 
 &nbsp;&nbsp;&nbsp;&nbsp;speed=<yellow>0</yellow>.<yellow>0</yellow><yellow>5</yellow>, 
@@ -536,38 +556,38 @@ shake()
 &nbsp;&nbsp;&nbsp;&nbsp;ignore_paused=True
 &nbsp;&nbsp;&nbsp;&nbsp;)
 </code_block>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1422" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#shake" onclick="navigator.clipboard.writeText('#shake')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1422" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#shake" onclick="navigator.clipboard.writeText('#shake')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="animate_color()">
 animate_color()
-</h3><code_block id="code_block_22"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_22)">copy</button>animate_color(value=None, duration=<yellow>0</yellow>.<yellow>1</yellow>, interrupt=<green>'finish'</green>, unscaled=False)
+</h3><code_block id="code_block_23"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_23)">copy</button>animate_color(value=None, duration=<yellow>0</yellow>.<yellow>1</yellow>, interrupt=<green>'finish'</green>, unscaled=False)
 </code_block>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1447" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#animate_color" onclick="navigator.clipboard.writeText('#animate_color')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1447" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#animate_color" onclick="navigator.clipboard.writeText('#animate_color')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="fade_out()">
 fade_out()
-</h3><code_block id="code_block_23"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_23)">copy</button>fade_out(value=<yellow>0</yellow>, duration=<yellow>0</yellow>.<yellow>5</yellow>, unscaled=False)
+</h3><code_block id="code_block_24"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_24)">copy</button>fade_out(value=<yellow>0</yellow>, duration=<yellow>0</yellow>.<yellow>5</yellow>, unscaled=False)
 </code_block>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1450" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#fade_out" onclick="navigator.clipboard.writeText('#fade_out')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1450" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#fade_out" onclick="navigator.clipboard.writeText('#fade_out')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="fade_in()">
 fade_in()
-</h3><code_block id="code_block_24"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_24)">copy</button>fade_in(value=<yellow>1</yellow>, duration=<yellow>0</yellow>.<yellow>5</yellow>)
+</h3><code_block id="code_block_25"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_25)">copy</button>fade_in(value=<yellow>1</yellow>, duration=<yellow>0</yellow>.<yellow>5</yellow>)
 </code_block>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1453" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#fade_in" onclick="navigator.clipboard.writeText('#fade_in')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1453" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#fade_in" onclick="navigator.clipboard.writeText('#fade_in')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="blink()">
 blink()
-</h3><code_block id="code_block_25"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_25)">copy</button>blink(<olive>color</olive>=ursina.color.white, <olive>shader</olive>=unlit_shader, duration=<yellow>0</yellow>.<yellow>1</yellow>)
+</h3><code_block id="code_block_26"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_26)">copy</button>blink(<olive>color</olive>=ursina.color.white, <olive>shader</olive>=unlit_shader, duration=<yellow>0</yellow>.<yellow>1</yellow>)
 </code_block>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1456" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#blink" onclick="navigator.clipboard.writeText('#blink')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1456" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#blink" onclick="navigator.clipboard.writeText('#blink')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="intersects()">
 intersects()
-</h3><code_block id="code_block_26"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_26)">copy</button>intersects(traverse_target=scene, ignore: list=None, debug=False)
+</h3><code_block id="code_block_27"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_27)">copy</button>intersects(traverse_target=scene, ignore: list=None, debug=False)
 </code_block>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1477" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#intersects" onclick="navigator.clipboard.writeText('#intersects')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/entity.py#L1477" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#intersects" onclick="navigator.clipboard.writeText('#intersects')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <div class="sidebar"><span>8.0.0</span><br>
 Basics<br>
   <a href="ursina.html">Ursina</a><br>
@@ -652,7 +672,6 @@ Prefabs<br>
   <a href="first_person_controller.html">FirstPersonController</a><br>
   <a href="platformer_controller2d.html">PlatformerController2d</a><br>
   <a href="conversation.html">Conversation</a><br>
-  <a href="node.html">Node</a><br>
 <br>
 UI<br>
   <a href="button.html">Button</a><br>

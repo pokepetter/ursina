@@ -4,6 +4,7 @@ from ursina.models.procedural.quad import Quad
 import textwrap
 
 from ursina.scripts.property_generator import generate_properties_for_class
+
 @generate_properties_for_class()
 class Button(Entity):
 
@@ -11,7 +12,8 @@ class Button(Entity):
     default_highlight_color = None
     default_model = None # will default to rounded Quad
 
-    def __init__(self, text='', parent=camera.ui, model=Default, radius=.1, origin=(0,0), text_origin=(0,0), text_size=1, text_color=Default, color=Default, collider='box', highlight_scale=1, pressed_scale=1, disabled=False, **kwargs):
+    def __init__(self,
+        text='', parent=camera.ui, model=Default, radius=.1, origin=(0,0), text_origin=(0,0), text_size=1, text_color=Default, color=Default, collider='box', highlight_scale=1, pressed_scale=1, disabled=False, **kwargs):
         super().__init__(parent=parent)
 
         for key in ('scale', 'scale_x', 'scale_y', 'scale_z', 'world_scale', 'world_scale_x', 'world_scale_y', 'world_scale_z'):
@@ -40,7 +42,7 @@ class Button(Entity):
         self.highlight_sound = None
         self.pressed_sound = None
         self.collider = collider
-        self.disabled = disabled
+        self.disabled = disabled    # Used for temporary deactivating buttons without making them invisible, and still have collision.
 
         self.text_entity = None
         self.text_origin = text_origin
@@ -172,7 +174,7 @@ class Button(Entity):
                 self.model.setScale(Vec3(1,1,1))
 
 
-    def on_mouse_enter(self):
+    def on_mouse_enter(self):   # Handles color tinting, scale change, audio and Tooltip when hovering the Button
         if not self.disabled and self.model:
             self.model.setColorScale(self.highlight_color)
 
@@ -189,7 +191,7 @@ class Button(Entity):
             self.tooltip.enabled = True
 
 
-    def on_mouse_exit(self):
+    def on_mouse_exit(self):    # Handles color tinting, scale change, audio and Tooltip when unhovering the Button
         if not self.disabled and self.model:
             self.model.setColorScale(self.color)
 

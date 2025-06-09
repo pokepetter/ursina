@@ -23,7 +23,8 @@ Variables
 <h2 id="Examples">
 Examples
 </h2><br>
-<code_block id="code_block_0"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>app = Ursina()
+<code_block id="code_block_0"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina <purple>import</purple> Ursina, window, color, Draggable, load_texture, Sky, EditorCamera, scene, <olive>Entity</olive>, Slider
+app = Ursina()
 window.<olive>color</olive>=color.black
 
 shader = triplanar_shader
@@ -54,7 +55,9 @@ side_texture_scale_slider = Slider(<olive>text</olive>=<green>'side_texture_scal
 &nbsp;&nbsp;&nbsp;&nbsp;b.rotation_x += <yellow>1</yellow>
 
 app.run()
+
 </code_block>
+<div class="sidebar"><span>8.0.0</span><br>
 Basics<br>
   <a href="ursina.html">Ursina</a><br>
   <a href="entity.html">Entity</a><br>
@@ -138,7 +141,6 @@ Prefabs<br>
   <a href="first_person_controller.html">FirstPersonController</a><br>
   <a href="platformer_controller2d.html">PlatformerController2d</a><br>
   <a href="conversation.html">Conversation</a><br>
-  <a href="node.html">Node</a><br>
 <br>
 UI<br>
   <a href="button.html">Button</a><br>

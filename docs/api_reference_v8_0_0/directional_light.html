@@ -35,14 +35,33 @@ update_bounds()
 </h3><code_block id="code_block_1"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>update_bounds(entit<olive>y</olive>=scene)
 </code_block>
 <purple>update the shadow area to fit the bounds of target entity, defaulted to scene.</purple><br>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/lights.py#L48" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#update_bounds" onclick="navigator.clipboard.writeText('#update_bounds')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/lights.py#L48" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#update_bounds" onclick="navigator.clipboard.writeText('#update_bounds')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
 <h3 id="look_at()">
 look_at()
 </h3><code_block id="code_block_2"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_2)">copy</button>look_at(target=None, axis=Vec<yellow>3</yellow>.forward)
 </code_block>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/lights.py#L69" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#look_at" onclick="navigator.clipboard.writeText('#look_at')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<br>
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/lights.py#L69" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#look_at" onclick="navigator.clipboard.writeText('#look_at')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
+Example<br>
+<code_block id="code_block_3"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_3)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina.shaders <purple>import</purple> lit_with_shadows_shader <gray># you have to apply this shader to enties <purple>for</purple> them to receive shadows.</gray>
+
+app = Ursina()
+<olive>Entity</olive>.default_shader = lit_with_shadows_shader
+ground = <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>texture</olive>=<green>'grass'</green>)
+lit_cube = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>y</olive>=<yellow>1</yellow>, <olive>color</olive>=color.light_gray)
+
+light = DirectionalLight()
+light.look_at(Vec3(<yellow>1</yellow>,-<yellow>1</yellow>,<yellow>1</yellow>))
+
+shadow_bounds_box = <olive>Entity</olive>(<olive>model</olive>=<green>'wireframe_cube'</green>, <olive>scale</olive>=<yellow>5</yellow>, <olive>visible</olive>=<yellow>0</yellow>)
+light.update_bounds(shadow_bounds_box)
+
+EditorCamera(<olive>rotation</olive>=(<yellow>3</yellow><yellow>0</yellow>,<yellow>3</yellow><yellow>0</yellow>,<yellow>0</yellow>))
+Sky()
+app.run()
+</code_block>
 <div class="sidebar"><span>8.0.0</span><br>
 Basics<br>
   <a href="ursina.html">Ursina</a><br>
@@ -127,7 +146,6 @@ Prefabs<br>
   <a href="first_person_controller.html">FirstPersonController</a><br>
   <a href="platformer_controller2d.html">PlatformerController2d</a><br>
   <a href="conversation.html">Conversation</a><br>
-  <a href="node.html">Node</a><br>
 <br>
 UI<br>
   <a href="button.html">Button</a><br>

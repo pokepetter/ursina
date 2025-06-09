@@ -21,11 +21,11 @@ duplicate()
 </h3><code_block id="code_block_0"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>duplicate(entit<olive>y</olive>=None, copy_children=True)
 </code_block>
 <purple>use a for loop instead of duplicate() if you can.</purple><br>
-<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/duplicate.py#L5" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#duplicate" onclick="navigator.clipboard.writeText('#duplicate')" title="Copy permalink">◃-</a></div><hr></hr><br>
-<h2 id="Examples">
-Examples
-</h2><br>
-<code_block id="code_block_1"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button><purple>from</purple> ursina <purple>import</purple> Ursina, Button, scene, EditorCamera
+<div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/duplicate.py#L5" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#duplicate" onclick="navigator.clipboard.writeText('#duplicate')" title="Copy permalink">◃-</a></div><br>
+<hr></hr>## Examples<br>
+<br>
+<code_block id="code_block_1"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina <purple>import</purple> Ursina, Button, scene, EditorCamera
 app = Ursina()
 
 
@@ -38,7 +38,9 @@ e.c<yellow>2</yellow> = <olive>Entity</olive>(<olive>parent</olive>=e.c, <olive>
 e<yellow>2</yellow> = duplicate(e, x=<yellow>2</yellow>.<yellow>2</yellow><yellow>5</yellow>, <olive>parent</olive>=new_parent)
 EditorCamera()
 app.run()
+
 </code_block>
+<div class="sidebar"><span>8.0.0</span><br>
 Basics<br>
   <a href="ursina.html">Ursina</a><br>
   <a href="entity.html">Entity</a><br>
@@ -122,7 +124,6 @@ Prefabs<br>
   <a href="first_person_controller.html">FirstPersonController</a><br>
   <a href="platformer_controller2d.html">PlatformerController2d</a><br>
   <a href="conversation.html">Conversation</a><br>
-  <a href="node.html">Node</a><br>
 <br>
 UI<br>
   <a href="button.html">Button</a><br>
