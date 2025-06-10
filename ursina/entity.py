@@ -1,5 +1,6 @@
 import ursina
 import builtins
+from typing import Literal
 from pathlib import Path
 from panda3d.core import NodePath
 from ursina.vec2 import Vec2
@@ -29,7 +30,7 @@ from ursina import shader
 from ursina.shader import Shader
 from ursina.string_utilities import print_warning
 from ursina.ursinamath import Bounds
-from ursina.ursinastuff import invoke, PostInitCaller
+from ursina.ursinastuff import invoke, PostInitCaller, after, Default
 
 from ursina import color
 from ursina.color import Color
@@ -42,6 +43,7 @@ except:
 _Ursina_instance = None
 _warn_if_ursina_not_instantiated = True # gets set to True after Ursina.__init__() to ensure the correct order.
 
+
 from ursina.scripts.property_generator import generate_properties_for_class
 @generate_properties_for_class()
 class Entity(NodePath, metaclass=PostInitCaller):
@@ -52,7 +54,25 @@ class Entity(NodePath, metaclass=PostInitCaller):
         'name':'entity', 'enabled':True, 'eternal':False, 'position':Vec3(0,0,0), 'rotation':Vec3(0,0,0), 'scale':Vec3(1,1,1), 'model':None, 'origin':Vec3(0,0,0),
         'shader':'unlit_shader', 'texture':None, 'texture_scale':Vec2(1,1), 'color':color.white, 'collider':None}
 
-    def __init__(self, add_to_scene_entities=True, enabled=True, **kwargs):
+    def __init__(self,
+        add_to_scene_entities=True,
+        enabled=True,
+        parent=scene,
+        position=Vec3(0,0,0),
+        rotation=Vec3(0,0,0),
+        scale=Vec3(1,1,1),
+        model='',
+        origin=Vec3(0,0,0),
+        shader=Default,
+        color=color.white,
+        texture='',
+        texture_scale=Vec2.one,
+        texture_offset=Vec2.zero,
+        collider=None,
+        eternal=False,
+    #     # name='entity',
+        **kwargs
+        ):
         self._children = []
         super().__init__(self.__class__.__name__)
 
@@ -60,8 +80,6 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.ignore = False     # if True, will not try to run code.
         self.ignore_paused = False      # if True, will still run when application is paused. useful when making a pause menu for example.
         self.ignore_input = False
-
-        self.parent = scene     # default parent is scene, which means it's in 3d space. to use UI space, set the parent to camera.ui instead.
         self.add_to_scene_entities = add_to_scene_entities # set to False to be ignored by the engine, but still get rendered.
 
         self._shader_inputs = {}
@@ -69,8 +87,36 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.scripts = []   # add with add_script(class_instance). will assign an 'entity' variable to the script.
         self.animations = []
         self.hovered = False    # will return True if mouse hovers entity.
-        self.line_definition = None # returns a Traceback(filename, lineno, function, code_context, index).
 
+        self.parent = parent     # default parent is scene, which means it's in 3d space. to use UI space, set the parent to camera.ui instead.
+        self.position = position
+        self.rotation = rotation
+        self.scale = scale
+
+        self.shader = shader if shader is not Default else __class__.default_shader
+        self.model = model
+        if origin != __class__.default_values['origin']: self.origin = origin
+        if color != __class__.default_values['color']: self.color = color
+        self.texture = texture
+        self.texture_scale = texture_scale
+        self.texture_offset = texture_offset
+        self.enabled = enabled
+        self.eternal = eternal
+        self.collider = collider
+
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+
+        # look for @every decorator and start a looping Sequence for decorated method
+        from ursina.scripts.every_decorator import every, get_class_name
+        for method in every.decorated_methods:
+            if get_class_name(method._func) == self.types[0]:
+                self.animations.append(Sequence(Func(method, self), Wait(method._every.interval), loop=True, started=True, entity=self))
+                print('append to animations:', self)
+
+
+        self.line_definition = None # returns a Traceback(filename, lineno, function, code_context, index).
         if application.trace_entity_definition and add_to_scene_entities or (not _Ursina_instance and _warn_if_ursina_not_instantiated and add_to_scene_entities):
             from inspect import getframeinfo, stack
             _stack = stack()
@@ -92,34 +138,9 @@ class Entity(NodePath, metaclass=PostInitCaller):
                 if application.print_entity_definition:
                     print(f'{Path(caller.filename).name} ->  {caller.lineno} -> {caller.code_context}')
 
-
         if not _Ursina_instance and _warn_if_ursina_not_instantiated and add_to_scene_entities:
             print_warning('Tried to instantiate Entity before Ursina. Please create an instance of Ursina first (app = Ursina())', self.line_definition)
 
-        if 'shader' in kwargs:
-            self.shader = kwargs['shader']
-            del kwargs['shader']
-        # else:
-        #     self.shader = __class__.default_shader
-
-        # make sure things get set in the correct order. both colliders and texture need the model to be set first.
-        for key in ('model', 'origin', 'origin_x', 'origin_y', 'origin_z', 'collider', 'texture', 'texture_scale', 'texture_offset'):
-            if key in kwargs:
-                setattr(self, key, kwargs[key])
-                del kwargs[key]
-
-
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-
-        self.enabled = enabled
-
-        # look for @every decorator and start a looping Sequence for decorated method
-        from ursina.scripts.every_decorator import every, get_class_name
-        for method in every.decorated_methods:
-            if get_class_name(method._func) == self.types[0]:
-                self.animations.append(Sequence(Func(method, self), Wait(method._every.interval), loop=True, started=True, entity=self))
-                print('append to animations:', self)
 
 
     def __post_init__(self):
@@ -187,6 +208,8 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def model_setter(self, value):  # set model with model='model_name' (without file type extension)
+        if value == '':
+            value = None
         if value is None:
             if self.model:
                 self.model.removeNode()
@@ -237,7 +260,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
     def color_getter(self):
         return getattr(self, '_color', color.white)
 
-    def color_setter(self, value):
+    def color_setter(self, value):  # example: Entity(model='cube', color=hsv(30,1,.5))
         if isinstance(value, str):
             value = color.hex(value)
 
@@ -327,7 +350,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     @property
-    def types(self): # get all class names including those this inhertits from.
+    def types(self): # get all class names including those this inherits from.
         from inspect import getmro
         return [c.__name__ for c in getmro(self.__class__)]
 
@@ -358,7 +381,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
     def collider_getter(self):
         return getattr(self, '_collider', None)
 
-    def collider_setter(self, value):   # set to 'box'/'sphere'/'capsule'/'mesh' for auto fitted collider.
+    def collider_setter(self, value: Collider | Literal['box','sphere','capsule','mesh']):   # set to 'box'/'sphere'/'capsule'/'mesh' for auto fitted collider.
         if value is None and self.collider:
             self._collider.remove()
             self._collider = None
@@ -434,6 +457,12 @@ class Entity(NodePath, metaclass=PostInitCaller):
         return getattr(self, '_on_click', None)
 
     def on_click_setter(self, value):
+        '''
+        def action():
+            print('Ow! That hurt!')
+
+        Entity(model='quad', parent=camera.ui, scale=.1, collider='box', on_click=action)
+        '''
         if not callable(value):
             raise TypeError(f'on_click must be a callabe, not {type(value)}')
         self._on_click = value
@@ -456,17 +485,17 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
     def origin_x_getter(self):
         return self.origin[0]
-    def origin_x_setter(self, value):
+    def origin_x_setter(self, value):   # Convenience property for setting first element of origin
         self.origin = Vec3(value, self.origin_y, self.origin_z)
 
     def origin_y_getter(self):
         return self.origin[1]
-    def origin_y_setter(self, value):
+    def origin_y_setter(self, value): # Convenience property for setting second element of origin. Example: Entity(model='cube', origin_y=-.5) # The origin point of the cube is now at the bottom instead of the center.
         self.origin = Vec3(self.origin_x, value, self.origin_z)
 
     def origin_z_getter(self):
         return self.origin[2]
-    def origin_z_setter(self, value):
+    def origin_z_setter(self, value):   # Convenience property for setting second element of origin
         self.origin = Vec3(self.origin_x, self.origin_y, value)
 
     def world_position_getter(self):
@@ -831,9 +860,9 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def texture_setter(self, value):    # set model with texture='texture_name'. requires a model to be set beforehand.
-        if value is None and self.texture:
+        if not value:
             # print('remove texture')
-            self._texture = None
+            self._texture = value
             if self.model:
                 self.model.clearTexture()
             return
@@ -935,31 +964,31 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.setRenderModeWireframe(value)
 
 
-    def generate_sphere_map(self, size=512, name=f'sphere_map_{len(scene.entities)}'):
-        from ursina import camera
-        _name = 'textures/' + name + '.jpg'
-        org_pos = camera.position
-        camera.position = self.position
-        application.base.saveSphereMap(_name, size=size)
-        camera.position = org_pos
+    # def generate_sphere_map(self, size=512, name=f'sphere_map_{len(scene.entities)}'):
+    #     from ursina import camera
+    #     _name = 'textures/' + name + '.jpg'
+    #     org_pos = camera.position
+    #     camera.position = self.position
+    #     application.base.saveSphereMap(_name, size=size)
+    #     camera.position = org_pos
 
-        # print('saved sphere map:', name)
-        self.model.setTexGen(TextureStage.getDefault(), TexGenAttrib.MEyeSphereMap)
-        self.reflection_map = name
+    #     # print('saved sphere map:', name)
+    #     self.model.setTexGen(TextureStage.getDefault(), TexGenAttrib.MEyeSphereMap)
+    #     self.reflection_map = name
 
 
-    def generate_cube_map(self, size=512, name=f'cube_map_{len(scene.entities)}'):
-        from ursina import camera
-        _name = 'textures/' + name
-        org_pos = camera.position
-        camera.position = self.position
-        application.base.saveCubeMap(_name+'.jpg', size=size)
-        camera.position = org_pos
+    # def generate_cube_map(self, size=512, name=f'cube_map_{len(scene.entities)}'):
+    #     from ursina import camera
+    #     _name = 'textures/' + name
+    #     org_pos = camera.position
+    #     camera.position = self.position
+    #     application.base.saveCubeMap(_name+'.jpg', size=size)
+    #     camera.position = org_pos
 
-        # print('saved cube map:', name + '.jpg')
-        self.model.setTexGen(TextureStage.getDefault(), TexGenAttrib.MWorldCubeMap)
-        self.reflection_map = _name + '#.jpg'
-        self.model.setTexture(builtins.loader.loadCubeMap(_name + '#.jpg'), 1)
+    #     # print('saved cube map:', name + '.jpg')
+    #     self.model.setTexGen(TextureStage.getDefault(), TexGenAttrib.MWorldCubeMap)
+    #     self.reflection_map = _name + '#.jpg'
+    #     self.model.setTexture(builtins.loader.loadCubeMap(_name + '#.jpg'), 1)
 
 
     @property
@@ -1421,8 +1450,24 @@ class Entity(NodePath, metaclass=PostInitCaller):
     def fade_in(self, value=1, duration=.5, **kwargs):
         return self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration=duration, **kwargs)
 
-    def blink(self, value=ursina.color.clear, duration=.1, delay=0, curve=curve.in_expo_boomerang, interrupt='finish', **kwargs):
-        return self.animate_color(value, duration=duration, delay=delay, curve=curve, interrupt=interrupt, **kwargs)
+    def blink(self, color=ursina.color.white, shader=unlit_shader, duration=.1):
+        if not getattr(self, 'org_shader', False):
+            self.org_shader = self.shader
+            self.org_texture = self.texture
+            self.org_color = self.color
+
+        self.shader = shader
+        self.texture = None
+        self.color = color
+
+        @after(duration)
+        def _reset(self=self):
+            self.shader = self.org_shader
+            self.texture = self.org_texture
+            self.color = self.org_color
+
+
+        # return self.animate_color(value, duration=duration, delay=delay, curve=curve, interrupt=interrupt, **kwargs)
 
 
 
@@ -1553,7 +1598,7 @@ if __name__ == '__main__':
     e1 = Entity(parent=e, model='cube', y=1, x=.5, shader=matcap_shader, texture='shore')
     e2 = Entity(parent=e1, model='cube', x=2, shader=lit_with_shadows_shader, texture='white_cube')
     DirectionalLight().look_at(Vec3(1,-1,.5))
-    EditorCamera()
+    EditorCamera(rotation_x=15)
 
     # # test deepcopy
     # print_warning(repr(e1))
