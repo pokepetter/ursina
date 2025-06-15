@@ -69,9 +69,13 @@ if __name__ == '__main__':
     window.color = color._240
 
     Entity(parent=camera.ui, model='wireframe_quad', scale=Vec2(2,1)*.1, color=color.red)
-    for i, nineslice_texture in enumerate(('nineslice_rainbow', 'nineslice_double', 'circle')):
-        b = Draggable(model=copy(m),
-            parent=camera.ui,
+    for i, (nineslice_texture, scale_multiplier) in enumerate(
+        zip(
+            ('nineslice_rainbow', 'nineslice_double', 'circle'),
+            (1.4, 1.4, 1)
+        )):
+        b = Draggable(
+            model=NineSlice(entity_scale=Vec3(2,1,1), scale_multiplier=scale_multiplier),
             scale=Vec2(2,1)*.1,
             texture=nineslice_texture,
             text='Next',
