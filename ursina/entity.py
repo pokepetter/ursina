@@ -1337,7 +1337,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
     def _setattr(self, name, value):
         setattr(self, name, value)
 
-    def animate(self, name, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt='kill', time_step=None, unscaled=False, ignore_paused=None, auto_play=True, auto_destroy=True, getattr_function=None, setattr_function=None):
+    def animate(self, name, value, duration=.1, delay=0, curve=curve.in_expo, loop=False, resolution=None, interrupt='kill', time_step=None, unscaled=False, ignore_paused=None, auto_play=True, auto_destroy=True, getattr_function=None, setattr_function=None, lerp_function=lerp):
         if duration == 0 and delay == 0:
             setattr(self, name, value)
             return None
@@ -1373,7 +1373,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
             t = curve(t)
 
             sequence.append(Wait(duration / resolution), regenerate=False)
-            sequence.append(Func(setattr_function, name, lerp(getattr_function(name), value, t)), regenerate=False)
+            sequence.append(Func(setattr_function, name, lerp_function(getattr_function(name), value, t)), regenerate=False)
 
         sequence.generate()
         if auto_play:
