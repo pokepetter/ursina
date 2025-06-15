@@ -118,7 +118,6 @@ class Ursina(ShowBase):
         self.mouse = mouse
 
         scene._set_up()
-        self._update_task = self.taskMgr.add(self._update, "update")
 
         # try to load settings that need to be applied before entity creation
         application.load_settings()
@@ -160,6 +159,20 @@ class Ursina(ShowBase):
         print('asset_folder:', application.asset_folder)
 
         entity._Ursina_instance = self
+        self._update_task = self.taskMgr.add(self._update, "update")
+
+        # since opening a window is non-blocking, we need a way to call functions exectly when the window is ready, for example to make the splash screen animation not finish before you get to see it, or the camera to move before you see anything.
+        def _wait_for_window_open(task):
+            if self.win and self.win.isValid():
+                if hasattr(__main__, 'on_window_ready') and __main__.on_window_ready:
+                    __main__.on_window_ready()
+
+                for e in scene.entities:
+                    if hasattr(e, 'on_window_ready') and callable(e.on_window_ready):
+                        e.on_window_ready()
+                return Task.done
+            return Task.cont
+        self.taskMgr.add(_wait_for_window_open, 'wait_for_window')
 
 
     def _update(self, task):
