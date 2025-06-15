@@ -206,7 +206,7 @@ class Text(Entity):
         if tag != '<>':
             tag = tag[1:-1]
 
-            if tag.startswith('hsb('):   # set color based on numbers
+            if tag.startswith('hsv('):   # set color based on numbers
                 tag = tag[4:-1]
                 hsb_values = tuple(float(e.strip()) for e in tag.split(','))
                 self.current_color = color.hsv(*hsb_values)
