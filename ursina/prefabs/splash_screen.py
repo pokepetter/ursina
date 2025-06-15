@@ -1,7 +1,11 @@
 from ursina import *
+from ursina.ursinamath import sample_gradient
+from ursina.prefabs.particle_system import play_particle_system
 
 
 class SplashScreen(Sprite):
+    '''A simple splash screen that shows a static image'''
+
     def __init__(self, texture='ursina_logo', **kwargs):
         super().__init__(parent=camera.ui, texture=texture, world_z=camera.overlay.z-1, scale=.1, color=color.clear, **kwargs)
 
@@ -20,7 +24,6 @@ class SplashScreen(Sprite):
         camera.overlay.animate_color(color.clear, duration=.25)
 
 
-from ursina.ursinamath import sample_gradient
 class UrsinaSplashScreen(Entity):
     def __init__(self):
         super().__init__(self, parent=camera.ui, world_z=camera.overlay.z-1, name='UrsinaSplashScreen')
@@ -32,8 +35,6 @@ class UrsinaSplashScreen(Entity):
         hues = (color.hex('#0c72d8'), color.hex('#a964df'), color.hex('#cc38a5'))
         colors = [sample_gradient(hues, i/len(text)) for i in range(len(text))]
         hsv_tags = [f'hsv({','.join([str(e) for e in colr.hsv])})' for colr in colors]
-        # for e in hsv_tags:
-        #     print('---', e)
 
         text = ''.join([f'<{hsv_tags[i]}>{char}' for i, char in enumerate(text)])
         self.text_entity = Text(parent=self, text=text, origin=(0,0), y=-.175, original_scale=3.5, enabled=False)
@@ -49,12 +50,12 @@ class UrsinaSplashScreen(Entity):
 
 
     def on_window_ready(self):
+        camera.overlay.color = color.black
         self.animations.append(invoke(self.play_animation, delay=.2))
 
 
     def play_animation(self):
-        camera.overlay.color = color.clear
-        play_particle_system('blue_burst', parent=self.logo, y=-1, scale=2)
+        play_particle_system('ursina_splash_flourish', parent=self.logo, y=-1, scale=2)
         self.text_entity.enabled = False
         self.text_entity.scale = self.text_entity.original_scale
         self.logo.scale_y = 0
@@ -83,12 +84,8 @@ class UrsinaSplashScreen(Entity):
 
 
 if __name__ == '__main__':
-    app = Ursina(size=Vec2(1920,1080))
-    from ursina.prefabs.particle_system import play_particle_system
+    app = Ursina(size=Vec2(1920,1080), )
 
-    #     play_particle_system('blue_burst', y=-.5, scale=1.3)
-    # def on_window_ready():
-    # # ursina_splash = SplashScreen(texture='')
     window.color = color.black
     ursina_splash_screen = UrsinaSplashScreen()
 

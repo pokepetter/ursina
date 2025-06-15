@@ -1,0 +1,44 @@
+if __name__ == '__main__':
+    from ursina import * 
+    from ursina.prefabs.particle_system import ParticleSystem, ParticleSystemContainer
+    from ursina.shaders import matcap_shader
+    app = Ursina()
+
+mesh_importer.imported_meshes['coin'] = Cylinder(direction=(0,0,1), height=.1)
+
+    
+particle_system_container = ParticleSystemContainer((
+    ParticleSystem(
+        position=Vec3(0,1,0),
+        scale=.5,
+        end_size = Vec3(1),
+        speed=5,
+        lifetime=1,
+        auto_play=False,
+        direction_randomness=Vec3(0,360,0),
+        spin=Vec3(0,15,0) * 10,
+        # spin_curve=curve.linear,
+        mesh='coin',
+        # shader=matcap_shader,
+        # texture='matcap_1',
+        start_color = (color.yellow, color.white),
+        # end_color = (color.gold, hsv(40,.9,.9)),
+        end_color = (color.gold, hsv(40,.9,.9)),
+        color_curve=curve.out_expo,
+        num_particles=0,
+        spawn_points = [v.xzy for v in Circle(radius=3).vertices][::-1],
+        move_directions=[v.xzy.normalized() for v in Circle(radius=3).vertices][::-1],
+        spawn_type = 'sequential',
+        spawn_interval=.01,
+
+        origin_y=-.5,
+        bounce=-2,
+        name='gold_particles', seed=0
+    ),
+))
+
+if __name__ == '__main__':
+    from ursina.prefabs.particle_system import ParticleSystemUI
+    ParticleSystemUI(Path(__file__), particle_system_container)
+    EditorCamera()
+    app.run()

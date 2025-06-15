@@ -339,8 +339,8 @@ class Ursina(ShowBase):
 
     def run(self, info=True):
         if application.show_ursina_splash:
-            from ursina.prefabs.splash_screen import SplashScreen
-            application.ursina_splash = SplashScreen()
+            from ursina.prefabs.splash_screen import UrsinaSplashScreen
+            application.ursina_splash = UrsinaSplashScreen()
 
         application.load_settings()
         if info:
@@ -355,7 +355,8 @@ if __name__ == '__main__':
     from ursina import *
     app = Ursina(
         # development_mode=False,
-        # use_ingame_console=True
+        # use_ingame_console=True,
+        # show_ursina_splash=True,
     )
     def input(key):
         print(key)
