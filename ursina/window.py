@@ -134,7 +134,7 @@ class Window(WindowProperties):
         from ursina import camera, Entity, Text, Button, ButtonList, Func, Tooltip, held_keys, mouse
         import time
 
-        self.editor_ui = Entity(parent=camera.ui, eternal=True, enabled=bool(application.development_mode))
+        self.editor_ui = Entity(parent=camera.ui, eternal=True, enabled=self.editor_ui_enabled)
 
         def window_input(key):
             combined_key = input_handler.get_combined_key(key)
