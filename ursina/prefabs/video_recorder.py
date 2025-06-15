@@ -5,13 +5,13 @@ import subprocess
 
 
 class VideoRecorder(Entity):
-    def __init__(self, max_duration=5, name='untitled_video', **kwargs):
+    def __init__(self, max_duration=5, fps=30, name='untitled_video', **kwargs):
         super().__init__()
         self.recording = False
         self.file_path = Path(application.asset_folder) / 'video_temp'
         self.i = 0
         self.max_duration = max_duration
-        self.fps = 30
+        self.fps = fps
         self.video_name = name
         self.t = 0
 
@@ -19,27 +19,24 @@ class VideoRecorder(Entity):
             setattr(self, key, value)
 
         self.max_frames = int(self.max_duration * self.fps)
-        self.frames = []
 
 
     def start_recording(self):
         print('start recording,', self.max_duration, self.file_path)
         window.fps_counter.enabled = False
         window.exit_button.visible = False
-        self.frames = []
         self.max_frames = self.max_duration * self.fps
 
         if self.file_path.exists():
             shutil.rmtree(self.file_path)   # delete temp folder
 
-        if not self.file_path.exists():
-            self.file_path.mkdir()
+        self.file_path.mkdir(parents=True, exist_ok=True)
         # base.movie(namePrefix=f'\\video_temp\\{self.video_name}', max_duration=2.0, fps=30, format='mp4', sd=4)
 
-        application.calculate_dt = True
-        time.dt = 1/self.fps
+        application.calculate_dt = False
+        time.dt = 1 / self.fps
         self.recording = True
-        invoke(self.stop_recording, delay=self.max_duration)
+        # invoke(self.stop_recording, delay=self.max_duration)
 
 
 
@@ -50,7 +47,13 @@ class VideoRecorder(Entity):
         print('stop recording')
         # self.convert_to_gif()
         # command = 'ffmpeg -framerate 60 -f image2 -i video_temp/%04d.png -c:v libvpx-vp9 -pix_fmt yuva420p untitled_video.webm'
-        command = f'ffmpeg -framerate {self.fps} -f image2 -i {self.file_path}/{self.video_name}_%04d.png {self.video_name}.mp4'
+        command = (
+            f'ffmpeg -y '
+            f'-framerate {self.fps} '
+            f'-i "{self.file_path}/{self.video_name}_%04d.png" '
+            f'-c:v libx264 -crf 18 -pix_fmt yuv420p '
+            f'"{self.video_name}.mp4"'
+        )
         result = subprocess.Popen(command, shell=True)
         application.calculate_dt = True
 
@@ -61,9 +64,12 @@ class VideoRecorder(Entity):
         if not self.recording:
             return
 
-        time.dt = 1/60
+        time.dt = 1/self.fps
         base.screenshot(namePrefix=self.file_path / f'{self.video_name}_{str(self.i).zfill(4)}.png', defaultFilename=0)
         self.i += 1
+        if self.i >= self.max_frames:
+            self.stop_recording()
+
 
     def input(self, key):
         combo = ['control', 'r', 'e', 'c']
