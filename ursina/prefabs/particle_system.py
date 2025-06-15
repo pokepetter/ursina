@@ -82,6 +82,14 @@ class ParticleSystemContainer(Entity):
         original_parent = entity.parent
         entity.parent = bake_parent
 
+        duration_per_frame = 1 / fps
+        total_duration = max(seq.func_call_time[-1] for seq in entity.animations)
+        num_frames = int(total_duration / duration_per_frame)
+        if num_frames <= 0:
+            raise Exception('can\'t bake particle system with 0 frames')
+        print('num_frames:', num_frames)
+
+
         for i in range(num_frames):
             bake_parent.model = None
             if not bake_parent.children:
@@ -169,7 +177,6 @@ class ParticleSystemContainer(Entity):
             raise Exception(f'Particle system animation won\'t fit in a 4096x4096 texture: num_frames:{len(frames.vertices)}, vertices:{num_vertices}')
 
         print(texture_width, texture_height)
-        from PIL import Image
         texture = Texture(Image.new(mode="RGB", size=(texture_width, texture_height)))
 
         for y, frame in enumerate(frames):
@@ -290,6 +297,8 @@ class ParticleSystem(Entity):
 
         if not isinstance(self.move_directions, (tuple, list)):
             self.move_directions = [self.move_directions for i in range(self.num_particles)]
+        if not isinstance(self.start_direction, (tuple, list)):
+            self.start_direction = [self.start_direction for i in range(self.num_particles)]
 
         if not isinstance(self.start_color, (tuple, list)):
             self.start_color = (self.start_color, )
@@ -327,13 +336,28 @@ class ParticleSystem(Entity):
         self.anims = []
 
         if self.spawn_type == 'burst':
-            [self.generate_particle_animations(position=Vec3.zero, move_direction=self.move_directions[i], delay=self.delay+(i*self.spawn_interval), i=i) for i in range(self.num_particles)]
+            [self.generate_particle_animations(
+                position=Vec3.zero,
+                start_direction=self.start_direction[i],
+                move_direction=self.move_directions[i],
+                delay=self.delay+(i*self.spawn_interval), i=i)
+                for i in range(self.num_particles)]
 
         elif self.spawn_type == 'random':
-            [self.generate_particle_animations(position=random.choice(self.spawn_points), move_direction=self.move_directions[i], delay=self.delay+(i*self.spawn_interval), i=i) for i in range(self.num_particles)]
+            [self.generate_particle_animations(
+                position=random.choice(self.spawn_points),
+                start_direction=self.start_direction[i],
+                move_direction=self.move_directions[i],
+                delay=self.delay+(i*self.spawn_interval), i=i)
+                for i in range(self.num_particles)]
 
         elif self.spawn_type == 'sequential':
-            [self.generate_particle_animations(position=self.spawn_points[i], move_direction=self.move_directions[i], delay=self.delay+(i*self.spawn_interval), i=i) for i in range(self.num_particles)]
+            [self.generate_particle_animations(
+                position=self.spawn_points[i],
+                start_direction=self.start_direction[i],
+                move_direction=self.move_directions[i],
+                delay=self.delay+(i*self.spawn_interval), i=i)
+                for i in range(self.num_particles)]
 
 
     def play(self):
@@ -343,7 +367,7 @@ class ParticleSystem(Entity):
         self.is_playing = True
 
 
-    def generate_particle_animations(self, position, move_direction, delay=0, i=0):
+    def generate_particle_animations(self, position, start_direction, move_direction, delay=0, i=0):
         if self.seed is None:
             random.seed(None)
         else:
@@ -357,7 +381,10 @@ class ParticleSystem(Entity):
             model = deepcopy(model)
 
         e = Entity(parent=self, scale=self.start_size, position=position, enabled=False)
-        e.rotation = self.start_direction + Vec3(*[random.uniform(-e/2, e/2) for e in self.direction_randomness])
+        # e.rotation = start_direction + Vec3(*[random.uniform(-e/2, e/2) for e in self.direction_randomness])
+        e.look_in_direction(start_direction)
+        e.rotation += Vec3(*[random.uniform(-e/2, e/2) for e in self.direction_randomness])
+
         if isinstance(move_direction, str):
             move_direction = getattr(e, move_direction).normalized()
             # e.look_at(e.position + direction)
@@ -467,7 +494,7 @@ class ParticleSystem(Entity):
 
 #             elif isinstance(value, bool):
 #                 # print('---aaa')
-#                 field = CheckBox(parent=self.ui, x=.025, value=value)
+#                 field = Checkbox(parent=self.ui, x=.025, value=value)
 
 
 #             elif isinstance(value, int):
@@ -773,21 +800,8 @@ if __name__ == '__main__':
         run_particles.ignore = input_strength < .01
 
 
-
     # ParticleSystemUI()
-
-
     ground = Entity(model='plane', scale=8, texture='grass', texture_scale=Vec2(1), color=color.dark_gray)
-
     # FrameAnimation3d('test_particles_', fps=30, loop=True, position=(4,1,0), color=color.azure)
-
-    def input(key):
-        if key == 'space':
-            for e in gems:
-                ParticleSystem(**e)
-
-
-
-
 
     app.run()
