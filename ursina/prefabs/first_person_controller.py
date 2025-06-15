@@ -10,8 +10,8 @@ class FirstPersonController(Entity):
         self.camera_pivot = Entity(parent=self, y=self.height)
 
         camera.parent = self.camera_pivot
-        camera.position = (0,0,0)
-        camera.rotation = (0,0,0)
+        camera.position = Vec3.zero
+        camera.rotation = Vec3.zero
         camera.fov = 90
         mouse.locked = True
         self.mouse_sensitivity = Vec2(40, 40)
@@ -36,6 +36,10 @@ class FirstPersonController(Entity):
             ray = raycast(self.world_position+(0,self.height,0), self.down, traverse_target=self.traverse_target, ignore=self.ignore_list)
             if ray.hit:
                 self.y = ray.world_point.y
+
+
+    def on_window_ready(self):
+        camera.rotation = Vec3.zero
 
 
     def update(self):
