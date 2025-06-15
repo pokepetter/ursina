@@ -80,8 +80,8 @@ def load_model(name, folder=None, file_types=('.bam', '.ursinamesh', '.obj', '.g
                             m.vertices = [Vec3(*v) for v in m.vertices]
                             imported_meshes[name] = m
                             return m
-                    except:
-                        raise Exception('invalid ursinamesh file:', file_path)
+                    except Exception as e:
+                        raise Exception('invalid ursinamesh file:', file_path, e)
 
 
                 if filetype == '.obj':
