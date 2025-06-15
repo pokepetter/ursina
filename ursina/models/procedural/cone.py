@@ -1,7 +1,18 @@
 from ursina import Mesh, Vec3, rotate_around_point_2d
+from copy import deepcopy
 
 
 class Cone(Mesh):
+    _cache = {}
+    def __new__(cls, resolution=4, radius=.5, height=1, add_bottom=True, mode='triangle'):
+        key = (resolution, radius, height, add_bottom, mode)
+        if key in cls._cache:
+            return deepcopy(cls._cache[key])
+
+        instance = super().__new__(cls)
+        cls._cache[key] = instance
+        return instance
+
     def __init__(self, resolution=4, radius=.5, height=1, add_bottom=True, mode='triangle', **kwargs):
 
         v = Vec3(radius, 0, 0)
