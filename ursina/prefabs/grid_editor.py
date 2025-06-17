@@ -367,7 +367,7 @@ class GridEditor(Entity):
 
 
     def floodfill(self, matrix, x, y, first=True):
-        if matrix[x][y] == self.selected_char:
+        if matrix.get(x, y, default=self.selected_char) == self.selected_char:
             return
 
         if first:
