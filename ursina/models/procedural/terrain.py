@@ -32,7 +32,7 @@ class Terrain(Mesh):
         if heightmap:
             self.height_values = texture_to_height_values(heightmap, skip)
 
-        elif height_values:
+        elif height_values is not None:
             self.height_values = height_values
 
 
