@@ -80,8 +80,8 @@ if __name__ == '__main__':
         # test.look_at(test.world_position + normal)
 
     EditorCamera()
-    from ursina.shaders import ssao_shader
-    camera.shader = ssao_shader
+    # from ursina.shaders import ssao_shader
+    # camera.shader = ssao_shader
     Sky()
 
     app.run()
