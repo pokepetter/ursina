@@ -41,10 +41,10 @@ class Scene(NodePath):
 
     @property
     def fog_color(self):
-        return self.fog.getColor()
-
+        return self._fog_color
     @fog_color.setter
     def fog_color(self, value):
+        self._fog_color = value
         self.fog.setColor(value)
 
 
