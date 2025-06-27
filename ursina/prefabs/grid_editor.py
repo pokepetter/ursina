@@ -234,6 +234,10 @@ class GridEditor(Entity):
             self.render()
 
 
+    def render(self):
+        print_warning('render() not implemented. GridEditor is a base class you can inherit, but doesn\'t implement a render function itself.')
+
+
     def sample(self, x, y):
         self.selected_char = self.grid[x][y]
 
@@ -556,7 +560,6 @@ class PixelEditor(GridEditor):
     def texture(self, value):
         if hasattr(self, 'canvas'):
             self.canvas.texture = value
-
 
 
 

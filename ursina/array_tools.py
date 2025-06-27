@@ -169,6 +169,13 @@ class Array2D(list):
         return self[x][y]
 
 
+    def set(self, x, y, value):
+        x, y = int(x), int(y)
+        if x < 0 or x >= self.width or y < 0 or y >= self.height:
+            return
+        self[x][y] = value
+
+
     def get_area(self, start, end, allow_out_of_bounds=False):
         cropped_array = Array2D(width=end[0]-start[0], height=end[1]-start[1], default_value=self.default_value)
         # print('original_size:', self.width, self.height, 'new_size:', end[0]-start[0], end[1]-start[1])

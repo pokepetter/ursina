@@ -7,13 +7,13 @@ class Tilemap(GridEditor):
         if isinstance(tilemap, str):
             self.tilemap = load_texture(tilemap)
 
-        self.grid = [[self.tilemap.get_pixel(x,y) for y in range(self.tilemap.height)] for x in range(self.tilemap.width)]
+        self.grid = self.tilemap.pixels
         super().__init__(texture=self.tilemap, size=self.tilemap.size, palette=(color.white, color.black, color.green, color.blue, color.red), edit_mode=False, **kwargs)
 
         # self.canvas.visible_self = False
         self.canvas.alpha = .5
         self.tileset = tileset
-        self.tileset_size = tileset_size
+        self._tileset_size = tileset_size
         self.model = Mesh()
         self.texture = tileset
         self.colliders = []
@@ -90,8 +90,8 @@ class Tilemap(GridEditor):
             position=Vec3(self.cursor.x/self.tilemap.width, self.cursor.y/self.tilemap.height, -.1),
             # always_on_top=True,
             texture=self.texture,
-            texture_scale=Vec2(1/self.tileset_size[0], 1/self.tileset_size[1]),
-            texture_offset=Vec2(.33, .33),
+            texture_scale=Vec2.one/self._tileset_size,
+            texture_offset=Vec2(.5, .0),
             origin=(-.5,-.5),
             ignore=True,
             )
@@ -115,7 +115,7 @@ class Tilemap(GridEditor):
             destroy(e)
         self.colliders.clear()
 
-        tile_size = Vec2(1/self.tileset_size[0], 1/self.tileset_size[1])
+        tile_size = Vec2.one/self._tileset_size
 
         i = 0
         for y in range(self.tilemap.height):
@@ -173,11 +173,12 @@ class Tilemap(GridEditor):
                             _x, _y = self.single_block_coordinates[variation_index]
 
                     uv = [
-                        Vec2(tile_size[0] * _x,     tile_size[1] * _y)     + Vec2(self.uv_margin, self.uv_margin),
-                        Vec2(tile_size[0] * (_x+1), tile_size[1] * _y)     + Vec2(-self.uv_margin, self.uv_margin),
-                        Vec2(tile_size[0] * (_x+1), tile_size[1] * (_y+1)) + Vec2(-self.uv_margin, -self.uv_margin),
-                        Vec2(tile_size[0] * _x,     tile_size[1] * (_y+1)) + Vec2(self.uv_margin, -self.uv_margin),
+                        (tile_size * Vec2(_x,  _y))   + Vec2( self.uv_margin,  self.uv_margin),
+                        (tile_size * Vec2(_x+1,_y))   + Vec2(-self.uv_margin,  self.uv_margin),
+                        (tile_size * Vec2(_x+1,_y+1)) + Vec2(-self.uv_margin, -self.uv_margin),
+                        (tile_size * Vec2(_x,  _y+1)) + Vec2( self.uv_margin, -self.uv_margin),
                     ]
+                    print(uv)
                     if tile_scale == '1,1':
                         pass
                     elif tile_scale == '-1,1':
@@ -212,7 +213,7 @@ class Tilemap(GridEditor):
 if __name__ == '__main__':
     app = Ursina()
     EditorCamera(rotation_speed=0)
-    tilemap = Tilemap('tilemap_test_level', tileset='test_tileset', tileset_size=(8,4), parent=scene)
+    tilemap = Tilemap('tilemap_test_level', tileset='test_tileset', tileset_size=Vec2(8,4), parent=scene)
     tilemap.canvas.texture = 'tilemap_test_level'
     # tilemap = Tilemap('brick', tileset='tileset_cave', tileset_size=(8,4), parent=scene)
     camera.orthographic = True
