@@ -96,6 +96,11 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.shader = shader if shader is not Default else __class__.default_shader
         self.model = model
         if origin != __class__.default_values['origin']: self.origin = origin
+        for key in ('origin_x', 'origin_y', 'origin_z'):
+            if key in kwargs:
+                setattr(self, key, kwargs[key])
+                del kwargs[key]
+
         if color != __class__.default_values['color']: self.color = color
         self.texture = texture
         self.texture_scale = texture_scale
