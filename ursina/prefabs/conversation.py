@@ -20,7 +20,7 @@ class Conversation(Entity):
         self.question.text_entity.position = (-.45, -.05)
         self.question.highlight_color = self.question.color
         self.more_indicator = Entity(parent=self.question, model=Circle(3), position=(.45,-.4,-1), rotation_z=180, color=color.azure, world_scale=.5, z=-1, enabled=False)
-        self.more_indicator.blink(duration=1, loop=True)
+        self.more_indicator.animate_color(color.white, duration=1, loop=True, curve=curve.linear_boomerang)
         self.spacing = 4 * .02
         self.wordwrap = 65
         self.button_model = Quad(radius=.5, aspect=1/.075)
