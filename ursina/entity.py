@@ -1465,7 +1465,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.texture = None
         self.color = color
 
-        @after(duration)
+        @after(duration, entity=self)
         def _reset(self=self):
             self.shader = self.org_shader
             self.texture = self.org_texture
