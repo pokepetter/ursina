@@ -74,9 +74,9 @@ class Audio(Entity):
 
 
     def clip_setter(self, value):
-        if value in audio_clip_cache:
-            self._clip = audio_clip_cache[value]
-            return
+        # if value in audio_clip_cache:
+        #     self._clip = copy(audio_clip_cache[value])
+        #     return
 
         if isinstance(value, Path):
             self._clip = loader.loadSfx(Filename.fromOsSpecific(str(value.resolve())))  # type: ignore
