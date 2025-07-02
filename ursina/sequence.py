@@ -17,21 +17,27 @@ class Func:
 
 class Sequence:
     default_time_step = None
-    defaults = dict(unscaled=False, started=False, ignore_paused=False, loop=False, auto_destroy=False, entity=None, name='sequence')
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, unscaled=False, started=False, ignore_paused=False, loop=False, auto_destroy=False, entity=None, time_scale=1, name='sequence', **kwargs):
         super().__init__()
         self.args = list(args)
         self.t = 0
         self.time_step = Sequence.default_time_step
+        self.time_scale = time_scale
         self.duration = 0
         self.funcs = []
         self.func_call_time = []
         self.func_finished_statuses = []
+        self.unscaled = unscaled
         self.paused = False
-        self.entity = None  # you can assign this to make the sequence pause when the entity is disabled or .ignore is True
+        self.name = name
+        self.entity = entity  # you can assign this to make the sequence pause when the entity is disabled or .ignore is True
+        self.ignore_paused = ignore_paused
+        self.loop = loop
+        self.auto_destroy = auto_destroy
+        self.started = started
 
-        for key, value in (__class__.defaults | kwargs).items():
+        for key, value in kwargs.items():
             setattr(self, key, value)
 
         self.generate()
@@ -120,7 +126,7 @@ class Sequence:
 
         if self.time_step is None:
             if not self.unscaled:
-                self.t += time.dt
+                self.t += time.dt * self.time_scale
             else:
                 self.t += time.dt_unscaled
         else:
