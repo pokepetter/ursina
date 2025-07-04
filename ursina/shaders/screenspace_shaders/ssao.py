@@ -36,7 +36,6 @@ uniform float amount;
 uniform float strength;
 uniform float falloff;
 
-
 vec3 get_normal(vec2 texcoords) {
     const vec2 offset1 = vec2(0.0, 0.001);
     const vec2 offset2 = vec2(0.001, 0.0);
@@ -100,10 +99,10 @@ void main() {
 
 default_input = {
     'numsamples' : 16,
-    'radius' : 0.01, # 0.05 is broken and cool
-    'amount' : 3.0,
+    'radius' : 0.01,
+    'amount' : 5.0,
     'strength' : 0.001,
-    'falloff' : 0.000002,
+    'falloff' : 0.00005,
     'random_texture' : Func(load_texture, 'noise'),
     'clip_plane_near' : 1,
 }
