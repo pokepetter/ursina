@@ -141,31 +141,35 @@ Vec3.back = Vec3(0,0,-1)
 
 
 if __name__ == '__main__':
-    from ursinastuff import _assert, _test
-    _assert(Vec3(1,0,-1) * 2 == Vec3(2,0,-2), name='Vec3*int')
-    _assert(Vec3(1,0,-1) * Vec3(1,2,3) == Vec3(1,0,-3), name='Vec3*Vec3')
+    from ursinastuff import _test
+    import math
+    _test(Vec3(1,0,-1) * 2 == Vec3(2,0,-2))
+    _test(Vec3(1,0,-1) * Vec3(1,2,3) == Vec3(1,0,-3))
 
-    b = Vec3(1,0,1)
-    b += Vec3(0,1,0)
-    _assert(b == Vec3(1,1,1), name='Vec3+=Vec3')
+    def _test_Vec3_plus_equal():
+        b = Vec3(1,0,1)
+        b += Vec3(0,1,0)
+        return b == Vec3(1,1,1)
+    _test(_test_Vec3_plus_equal)
 
-    b = Vec3(0,0,0)
-    b.x += 1
-    b.y += 1
-    b.z += 1
-    _assert(b == Vec3(1,1,1), name='Vec3.x+=int')
+    def _test_Vec3x_plus_equal_int():
+        b = Vec3(0,0,0)
+        b.x += 1
+        b.y += 1
+        b.z += 1
+        return b == Vec3(1,1,1)
 
-    _test(round, (Vec3(1.14,2.86,1.25), 0), expected_result=Vec3(1,3,1))
-    _test(abs, (Vec3(1,-2,-3), ), expected_result=Vec3(1,2,3))
+    _test(round(Vec3(1.14,2.86,1.25), 0) == Vec3(1,3,1))
+    _test(abs(Vec3(1,-2,-3)) == Vec3(1,2,3))
 
-    test_input = Vec3(1.1, 2.5, 3.4)
-    _test(test_input.x_getter, (), 1.1, approximate=True)
-    _test(test_input.X_getter, (), 1)
-    _test(test_input.y_getter, (), 2.5, approximate=True)
-    _test(test_input.Y_getter, (), 2)
-    _test(test_input.z_getter, (), 3.4, approximate=True)
-    _test(test_input.Z_getter, (), 3)
-    _test(test_input.xy_getter, (), Vec2(1.1,2.5))
-    _test(test_input.XY_getter, (), Vec2(1,2))
-    _test(test_input.xz_getter, (), Vec2(1.1,3.4))
-    _test(test_input.XZ_getter, (), Vec2(1,3))
+    _test(math.isclose(Vec3(1.1, 2.5, 3.4).x, 1.1, rel_tol=1e-7))
+    _test(math.isclose(Vec3(1.1, 2.5, 3.4).y, 2.5, rel_tol=1e-7))
+    _test(math.isclose(Vec3(1.1, 2.5, 3.4).z, 3.4, rel_tol=1e-7))
+    _test(Vec3(1.1, 2.5, 3.4).xy == Vec2(1.1, 2.5))
+    _test(Vec3(1.1, 2.5, 3.4).xz == Vec2(1.1, 3.4))
+
+    _test(Vec3(1.1, 2.5, 3.4).X == 1)
+    _test(Vec3(1.1, 2.5, 3.4).Y == 2)
+    _test(Vec3(1.1, 2.5, 3.4).Z == 3)
+    _test(Vec3(1.1, 2.5, 3.4).XY == Vec2(1, 2))
+    _test(Vec3(1.1, 2.5, 3.4).XZ == Vec2(1, 3))

@@ -46,6 +46,9 @@ def print_warning(str, *args):
 
 
 if __name__ == '__main__':
-    print(camel_to_snake('CamelToSnake'))
-    print(snake_to_camel('snake_to_camel'))
-    printvar('test')
+    from ursina .ursinastuff import _test
+    _test(camel_to_snake('CamelToSnake') == 'camel_to_snake')
+    _test(snake_to_camel('snake_to_camel') == 'SnakeToCamel')
+
+    test_var = 1
+    printvar(test_var)

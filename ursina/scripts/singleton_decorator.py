@@ -8,7 +8,7 @@ def singleton(cls):
 
 
 if __name__ == '__main__':
-    from ursina.ursinastuff import _test, _assert
+    from ursina.ursinastuff import _test
 
     class MyBaseClass:
         def __init__(self, name):
@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
     app = DecoratedClass()
     app_2 = DecoratedClass()
-    _assert(app == app_2)
+    _test(app == app_2)
 
     # # this won't work
     # class Game(DecoratedClass):

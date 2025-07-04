@@ -220,58 +220,77 @@ def print_on_screen(text, position=(0,0), origin=(-.5,.5), scale=1, duration=1, 
     destroy(text_entity, delay=duration)
 
 
-def _test(function, test_input, expected_result, label='', approximate=False):
-    from math import isclose
-    from inspect import getframeinfo, stack, getsourcefile, getsourcelines
+import traceback
+from inspect import getframeinfo, stack
+import ast
+import textwrap
+import inspect
 
-    result = function(*test_input)
-    result_type = type(result)
-    expected_result_type = type(expected_result)
+def _test(result):
+    if callable(result):
+        result = result()
 
-    if not approximate and result == expected_result:
-        print('\33[42mPASSED\033[0m', function.__name__, label)
-        return result
+    caller_frame = stack()[1][0]
+    caller_info = getframeinfo(caller_frame)
+    filename, lineno = caller_info.filename, caller_info.lineno
 
-    elif approximate and result_type is float and expected_result_type is float and isclose(result, expected_result, rel_tol=1e-7, abs_tol=0.0):
-        print('\33[42mPASSED\033[0m', function.__name__, label)
-        return result
+    # Get full multi-line _test call source
+    source_lines, starting_line_no = inspect.getsourcelines(caller_frame)
+    rel_lineno = lineno - starting_line_no
+    lines = source_lines[rel_lineno:]
+    call_text = ""
+    parens = 0
+    started = False
+    for line in lines:
+        stripped = line.strip()
+        if not started and stripped.startswith("_test"):
+            started = True
+        if started:
+            call_text += line
+            parens += line.count("(") - line.count(")")
+            if parens <= 0:
+                break
+    call_text = textwrap.dedent(call_text)
 
+    try:
+        tree = ast.parse(call_text, mode='exec')
+        call = tree.body[0].value  # _test(...)
+        arg_source = ast.unparse(call.args[0])
+    except Exception:
+        arg_source = "<expression>"
+
+    def extract_func_name(expr_ast):
+        if isinstance(expr_ast, ast.Call):
+            return extract_func_name(expr_ast.func)
+        elif isinstance(expr_ast, ast.Attribute):
+            value = extract_func_name(expr_ast.value)
+            return f"{value}.{expr_ast.attr}"
+        elif isinstance(expr_ast, ast.Name):
+            return expr_ast.id
+        else:
+            return "<unknown>"
+
+    try:
+        expr_ast = ast.parse(arg_source, mode='eval').body
+        if isinstance(expr_ast, ast.Compare):
+            func_name = extract_func_name(expr_ast.left)
+        else:
+            func_name = extract_func_name(expr_ast)
+    except Exception:
+        func_name = "<unknown>"
+
+    MAX_LEN = 32
+    display_expr = (arg_source[:MAX_LEN] + '...') if len(arg_source) > MAX_LEN else arg_source
+
+    if result:
+        print(f'\33[42mPASSED\033[0m {func_name} {display_expr}')
+        return True
     else:
-        print('\33[41mFAILED\033[0m', function.__name__, label)
-        caller = getframeinfo(stack()[1][0])
-        url = f"{caller.filename}:{caller.lineno}"
-
-        # function_source_file = getsourcefile(function)
-        # function_line_number = getsourcelines(function)[1]
-        # function_url = f"{function_source_file}:{function_line_number}"
-        # GRAY = '\033[90m'
-        # RESET = '\033[0m'
-        # print(f"{GRAY}\033]8;;{url}\033\\{'[test]'}\033]8;;\033\\{RESET}" + f"{GRAY}\033]8;;{function_url}\033\\{'[function]'}\033]8;;\033\\{RESET}")
-
-        print(f"\033[90m{url}:\033[0m")
-
-        print('result:', result)
-        print('expected result:', expected_result)
-        if type(result) is not type(expected_result):
-            print(f'result should be: {type(expected_result)}, not: {type(result)}')
-
-        if isinstance(expected_result, (tuple, list)):
-            if hasattr(result, '__iter__') and not hasattr(result, '__len__'):  # Convert generator to tuple
-                result = tuple(result)
-
-            if len(result) != len(expected_result):
-                print(f'resulting tuple/list should be {len(expected_result)} long, not {len(result)}')
-
-            if type(result[0]) is not type(expected_result[0]):
-                print(f'resulting list/tuple should contain: {type(expected_result[0])}, not: {type(result[0])}')
-    return result
-
-def _assert(passed:bool, name=''):
-    if passed:
-        print('\33[42mPASSED\033[0m', name)
-    else:
-        print('\33[41mFAILED\033[0m', name)
-    return passed
+        print(f'\33[41mFAILED\033[0m {func_name} {display_expr}')
+        print(f' --> {filename}:{lineno}')
+        print("Stack trace (most recent call last):")
+        traceback.print_stack(f=caller_frame)
+        return False
 
 
 

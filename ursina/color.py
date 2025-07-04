@@ -166,13 +166,13 @@ for cn in color_names:
 if __name__ == '__main__':
     from ursina import *
     from ursina import Ursina, Entity, Button, Quad, grid_layout, color
-    from ursina.ursinastuff import _test, _assert
+    from ursina.ursinastuff import _test
     app = Ursina()
 
-    _test(hsv, (30,1,1), expected_result=color.orange)
-    _assert(color.brightness(color.blue) == 1.0, '.brightness')
-    _assert(color.red.rgb == (1.0, 0.0, 0.0), '.rgb')
-    _assert(color.red.rgba == (1.0, 0.0, 0.0, 1.0), '.rgba')
+    _test(hsv(30,1,1) == color.orange)
+    _test(color.brightness(color.blue) == 1.0)
+    _test(color.red.rgb == (1.0, 0.0, 0.0))
+    _test(color.red.rgba == (1.0, 0.0, 0.0, 1.0))
 
     p = Entity(x=-2)
     for key in color.colors:

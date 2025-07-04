@@ -1,5 +1,5 @@
 if __name__ == '__main__':
-    from ursina.ursinastuff import _test, _assert
+    from ursina.ursinastuff import _test
 
 
 def flatten_list(target_list):
@@ -198,22 +198,24 @@ if __name__ == '__main__':
     # print('added margin:', padded_grid)
     # print('cropped_array:\n', padded_grid.get_area((2,3), (padded_grid.width-7, padded_grid.height-4)))
 
-    test_array2D = Array2D(data=[[1,6], [2,7], [3,8], [4,9], [5,10]])
-    _test(test_array2D.to_string, (), expected_result=indent(dedent('''
+    _test(
+        Array2D(data=[[1,6], [2,7], [3,8], [4,9], [5,10]]).to_string()
+        ==
+        indent(dedent('''
         6,  7,  8,  9, 10
         1,  2,  3,  4,  5
         ''').strip(), ' ')
     )
 
-    _test(test_array2D.rows_getter, (), expected_result=[[1,2,3,4,5], [6,7,8,9,10]])
+    _test(Array2D(data=[[1,6], [2,7], [3,8], [4,9], [5,10]]).rows == [[1,2,3,4,5], [6,7,8,9,10]])
 
-    _test(Array2D.from_string, ('''
+    _test(Array2D.from_string('''
         0,1,0
         2,3,4
         0,1,1
         0,0,0
-        ''', int),
-        expected_result=Array2D(data=[
+        ''', int) ==
+        Array2D(data=[
         [0,0,2,0],
         [0,1,3,1],
         [0,1,4,0]
@@ -339,20 +341,20 @@ def string_to_2d_list(string, char_value_map={'.':0, '#':1}):
 if __name__ == '__main__':
     from ursina.ursinastuff import _test
 
-    test_input = '''
+    _test(string_to_2d_list('''\
         #..#.###..####..#..
         #..#.#..#.###...#..
         #..#.###.....#..#..
         .##..#..#.####..#..
-        '''
-    expected_result = rotate_2d_list([
+        ''')
+        ==
+        rotate_2d_list([
         [1,0,0,1, 0, 1,1,1,0, 0, 1,1,1,1, 0, 0,1,0,0],
         [1,0,0,1, 0, 1,0,0,1, 0, 1,1,1,0, 0, 0,1,0,0],
         [1,0,0,1, 0, 1,1,1,0, 0, 0,0,0,1, 0, 0,1,0,0],
         [0,1,1,0, 0, 1,0,0,1, 0, 1,1,1,1, 0, 0,1,0,0],
     ])
-
-    _test(string_to_2d_list, (test_input, ), expected_result=expected_result)
+    )
 
 
 def list_2d_to_string(target_2d_list, characters='.#'):
@@ -373,7 +375,7 @@ if __name__ == '__main__':
         .##..#..#.####..#..
         ''').strip()
 
-    _test(list_2d_to_string, (list_2d, ), expected_result=expected_result)
+    _test(list_2d_to_string(list_2d) == expected_result)
 
 
 def sample_bilinear(target_2d_list:Array2D, x, y, clamp_if_outside=True):
@@ -402,11 +404,10 @@ if __name__ == '__main__':
         [1,0,0],
         [1,0,0],
     ])
-    _test(sample_bilinear, (list_2d, 0, 0), expected_result=1)
-    _test(sample_bilinear, (list_2d, 1, 1), expected_result=0)
-    _test(sample_bilinear, (list_2d, .5, .5), expected_result=.75)
-    _test(sample_bilinear, (list_2d, .5, .75), expected_result=.625)
-
+    _test(sample_bilinear(list_2d, 0, 0) == 1)
+    _test(sample_bilinear(list_2d, 1, 1) == 0)
+    _test(sample_bilinear(list_2d, .5, .5) == .75)
+    _test(sample_bilinear(list_2d, .5, .75) == 0.625)
 
 
 

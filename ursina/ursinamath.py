@@ -5,7 +5,7 @@ from ursina.vec2 import Vec2
 from ursina.vec3 import Vec3
 from ursina import color
 from ursina.color import Color
-internal_sum = sum
+_sum = sum
 
 
 def distance(a, b):
@@ -66,9 +66,8 @@ def inverselerp(a, b, value):   # get *where* between a and b, value is (0.0 - 1
 
 if __name__ == '__main__':
     from ursina.ursinastuff import _test
-    print('----------------------------')
-    _test(inverselerp, (0, 100, 50), .5)
-    _test(lerp, (0, 100, .5), 50)
+    _test(inverselerp(0, 100, 50) == .5)
+    _test(lerp(0, 100, .5) == 50)
 
 
 def lerp_exponential_decay(a, b, decay_rate):    # frame-rate independent lerp for use in update. use this instead of lerp(a, b, time.dt) in update.
@@ -145,7 +144,7 @@ def world_position_to_screen_position(point): # get screen position(ui space) fr
 
 def sum(l):
     try:
-        return internal_sum(l)
+        return _sum(l)
     except:
         pass
 
@@ -181,21 +180,21 @@ def make_gradient(index_value_dict):
     return gradient
 
 if __name__ == '__main__':
-    _test(make_gradient, ({'0':color.hex('#ff0000ff'), '2':color.hex('#ffffffff')}, ), expected_result=[
+    _test(make_gradient({'0':color.hex('#ff0000ff'), '2':color.hex('#ffffffff')}) == [
         color.hex('#ff0000ff'),
         lerp(color.hex('#ff0000ff'), color.hex('#ffffffff'), .5),
         color.hex('#ffffffff'),
         ])
-    _test(make_gradient, ({'0':color.hex('#ff0000ff'), '4':color.hex('#ffffffff')}, ), expected_result=[
+    _test(make_gradient({'0':color.hex('#ff0000ff'), '4':color.hex('#ffffffff')}) == [
         color.hex('#ff0000ff'),
         lerp(color.hex('#ff0000ff'), color.hex('#ffffffff'), .25),
         lerp(color.hex('#ff0000ff'), color.hex('#ffffffff'), .5),
         lerp(color.hex('#ff0000ff'), color.hex('#ffffffff'), .75),
         color.hex('#ffffffff'),
         ])
-    _test(make_gradient, ({'0':16, '2':0}, ), expected_result=[16, 8, 0])
+    _test(make_gradient({'0':16, '2':0}) == [16, 8, 0])
 
-    _test(make_gradient, ({'6':0, '8':8}, ), expected_result=[0, 4, 8])
+    _test(make_gradient({'6':0, '8':8}) == [0, 4, 8])
 
 
 def sample_gradient(list_of_values, t):     # distribute list_of_values equally on a line and get the interpolated value at t (0-1).
@@ -242,13 +241,12 @@ class Bounds:
 
 if __name__ == '__main__':
     from ursina import *
-    from ursinastuff import _assert, _test
+    from ursinastuff import _test
     app = Ursina()
     e1 = Entity(position = (0,0,0))
     e2 = Entity(position = (0,1,1))
-    _test(distance, (e1, e2), expected_result=1.4142135623730951)
-
-    _test(distance_2d, (Vec2(0,0), Vec2(1,1)), expected_result=1.4142135623730951)
+    _test(distance(e1, e2) == 1.4142135623730951)
+    _test(distance_2d(Vec2(0,0), Vec2(1,1)) == 1.4142135623730951)
 
     distance_xz(e1, e2.position)
 
