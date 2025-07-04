@@ -70,7 +70,7 @@ class HealthBar(Button):
             if hasattr(self, 'bar'):
                 self.bar.model = Quad(aspect=self.world_scale_x/self.world_scale_y, radius=self.roundness)
                 self.bar.origin = self.origin
-            
+
             if hasattr(self, 'text_entity') and self.text_entity:
                 self.text_entity.world_scale = 25 * self.text_size
 

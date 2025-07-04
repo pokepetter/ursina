@@ -22,8 +22,10 @@ class Quad(Mesh):
 
         key = (radius, segments, aspect, scale, mode, thickness)
         if key in cls._cache:
-            return deepcopy(cls._cache[key])
-
+            try:
+                return deepcopy(cls._cache[key])
+            except:     # deepcopy can fail if the model has been destroyed
+                pass
         instance = super().__new__(cls)
         cls._cache[key] = instance
         return instance
