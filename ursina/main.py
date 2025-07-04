@@ -188,7 +188,7 @@ class Ursina(ShowBase):
         for seq in application.sequences:
             seq.update()
 
-        for e in scene.entities:
+        for e in list(scene.entities):
             if not e.enabled or e.ignore:
                 continue
             if application.paused and e.ignore_paused is False:
