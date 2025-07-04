@@ -120,7 +120,8 @@ class FileBrowser(Entity):
         self.address_bar.text_entity.text = '<light_gray>' + str(value.resolve())
 
         files = [e for e in value.iterdir() if e.is_dir() or e.suffix in self.file_types or '.*' in self.file_types]
-        files.sort(key=lambda x : x.is_file())  # directories first
+        files.sort(key=lambda x : x.name)
+        files.sort(key=lambda x : x.is_file())  # directories first. sort is stable, so both directories and files are still sorted by name
 
         for i in range(len(self.button_parent.children) - len(files)):
             destroy(self.button_parent.children.pop())
