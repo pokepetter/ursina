@@ -10,6 +10,7 @@ from math import floor, ceil, inf
 from ursina.window import instance as window
 from ursina.camera import instance as camera
 from ursina.mouse import instance as mouse
+from ursina.scene import instance as scene
 from ursina.main import Ursina
 from panda3d.core import Mat3, Mat4
 from ursina.ursinamath import *

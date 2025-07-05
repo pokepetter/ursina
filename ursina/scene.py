@@ -21,8 +21,7 @@ class Scene(NodePath):
 
 
     def clear(self):
-        from ursina.ursinastuff import destroy
-        from ursina import application
+        from ursina import application, destroy
 
         to_destroy = [e for e in self.entities if not e.eternal]
         to_keep = [e for e in self.entities if e.eternal]

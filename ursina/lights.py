@@ -7,8 +7,9 @@ from panda3d.core import Spotlight as PandaSpotLight
 
 
 class Light(Entity):
+    default_values = {'rotation_x':90, }
     def __init__(self, **kwargs):
-        super().__init__(rotation_x=90, **kwargs)
+        super().__init__(**(__class__.default_values | kwargs))
 
     @property
     def color(self):

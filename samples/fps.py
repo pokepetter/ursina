@@ -43,8 +43,8 @@ def shoot():
         invoke(gun.muzzle_flash.disable, delay=.05)
         invoke(setattr, gun, 'on_cooldown', False, delay=.15)
         if mouse.hovered_entity and hasattr(mouse.hovered_entity, 'hp'):
-            mouse.hovered_entity.hp -= 10
             mouse.hovered_entity.blink(color.red)
+            mouse.hovered_entity.hp -= 10
 
 
 from ursina.prefabs.health_bar import HealthBar
