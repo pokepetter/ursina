@@ -619,7 +619,7 @@ if __name__ == '__main__':
 ```
 ''')
         text += add_links(function_info) +'\n'
-        text += '<hr></hr>'
+        text += '<hr></hr>\n'
         return text
 
 
@@ -732,6 +732,7 @@ if __name__ == '__main__':
         if name in module_infos:
             module_info = module_infos[name]
             text += render_url_section(module_info.path)
+            module_info.variables = [var for var in module_info.variables if not var.name.startswith('_')]
 
             if Path(f'images/{name}.webp').exists():
                 text += f'#image ../images/{name}.webp\n'
@@ -739,8 +740,6 @@ if __name__ == '__main__':
             if module_info.variables:
                 text += '## Variables\n'
                 for var in module_info.variables:
-                    if var.name.startswith('_'):
-                        continue
                     # text += render_variable_info(var, truncate_at=10) + '\n'
                     text += render_variable_section(var)
 
@@ -882,8 +881,17 @@ if __name__ == '__main__':
 {example.content}
 ```
 # ''')
-            for separate_example_file in Path('.').glob(f'{class_info.name}_example*.py'):
+            base_name = class_info.name
+            if class_info.module.is_singleton:
+                base_name = camel_to_snake(base_name)
+
+            external_examples = list(Path('.').glob(f'{base_name}_example*.py'))
+            if len(external_examples) > 0 and not class_info.examples:
+                text += '## Examples\n'
+
+            for separate_example_file in external_examples:
                 example_name = separate_example_file.stem.split('example')[1]
+                example_name = example_name.lstrip('_')
                 print('found external example:', separate_example_file, example_name)
                 if not example_name:
                     example_name = 'Example'
@@ -896,13 +904,11 @@ if __name__ == '__main__':
 ```
 '''
 
-        # convert sswg to html without having to save it to disk first
-        path = output_folder / f'{camel_to_snake(name)}.sswg'
-        with path.open('w') as f:
-            f.write(text)
-            print('saved:', path)
-            # if name == 'DirectionalLight':
-            #     print('---------------------------------', text)
+        # # convert sswg to html without having to save it to disk first
+        # path = output_folder / f'{camel_to_snake(name)}.sswg'
+        # with path.open('w') as f:
+        #     f.write(text)
+        #     print('saved:', path)
 
         # add sidebar
         sidebar_content = '<div class="sidebar">'
@@ -943,7 +949,7 @@ if __name__ == '__main__':
     samples_folder = application.package_folder.parent / 'samples'
     generated_sample_pages = dict()
 
-    for sample_name in ('Tic Tac Toe', 'Inventory', 'Pong', 'Minecraft Clone', "Rubik's Cube", 'Clicker Game', 'Platformer', 'FPS', 'Particle System', 'Column Graph'):
+    for sample_name in ('Tic Tac Toe', 'Inventory', 'Pong', 'Minecraft Clone', "Rubik's Cube", 'Clicker Game', 'Platformer', 'FPS', 'Column Graph'):
         file_name = sample_name.replace(' ','_').replace('\'','').lower() + '.py'
         file_path = samples_folder / file_name
         image_path = Path(f'icons/{file_path.stem}.jpg')
@@ -957,7 +963,7 @@ if __name__ == '__main__':
             print('no image:', image_path)
 
         if file_path.exists():
-            print(f'generate webpage for: {sample_name} -> {file_path.stem}.html')
+            # print(f'generate webpage for: {sample_name} -> {file_path.stem}.html')
             with open(file_path, 'r') as source_file:
                 source_code = source_file.read()
 
