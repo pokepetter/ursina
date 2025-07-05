@@ -115,7 +115,6 @@ class Text(Entity):
         self.raw_text = text
 
         # clear stuff
-        from ursina.ursinastuff import destroy  # needed to destroy inline images
         for img in self.images:
             destroy(img)
         self.images = []

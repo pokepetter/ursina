@@ -13,6 +13,7 @@ from ursina.mouse import instance as mouse
 from ursina.main import Ursina
 from panda3d.core import Mat3, Mat4
 from ursina.ursinamath import *
+from ursina.destroy import destroy
 from ursina.ursinastuff import *
 from ursina.array_tools import *
 from ursina import input_handler

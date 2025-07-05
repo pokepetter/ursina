@@ -188,8 +188,14 @@ class Ursina(ShowBase):
         for seq in application.sequences:
             seq.update()
 
+        if scene._entities_marked_for_removal:
+            scene.entities = [e for e in scene.entities if e not in scene._entities_marked_for_removal]
+            scene._entities_marked_for_removal.clear()
+
         for e in scene.entities:
             if not e.enabled or e.ignore:
+                continue
+            if e in scene._entities_marked_for_removal:
                 continue
             if application.paused and e.ignore_paused is False:
                 continue

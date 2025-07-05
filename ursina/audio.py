@@ -2,7 +2,7 @@ from ursina import application
 from ursina.entity import Entity
 from ursina import curve
 from ursina.ursinastuff import invoke
-from ursina.ursinastuff import destroy as _destroy
+from ursina.destroy import destroy as _destroy
 from ursina.string_utilities import print_info, print_warning
 from pathlib import Path
 

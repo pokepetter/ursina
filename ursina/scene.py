@@ -7,6 +7,7 @@ class Scene(NodePath):
     def __init__(self):
         super().__init__('scene')
         self.entities = []
+        self._entities_marked_for_removal = []
         self.collidables = set()
         self._children = []
 

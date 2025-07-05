@@ -7,7 +7,7 @@ from ursina.vec3 import Vec3
 from copy import copy
 from ursina.hit_info import HitInfo
 from ursina import ursinamath, color
-from ursina.ursinastuff import destroy
+from ursina.destroy import destroy
 
 
 
