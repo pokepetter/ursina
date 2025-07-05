@@ -1,6 +1,5 @@
 from ursina import *
 
-
 class Circle(Mesh):
     def __init__(self, resolution=16, radius=.5, mode='ngon', **kwargs):
         origin = Entity()
