@@ -92,17 +92,6 @@ class Texture():
 
 
     def pixels_getter(self):
-        from numpy import asarray, flip
-        from PIL import Image
-        from ursina.array_tools import rotate_2d_list
-
-        # if self._cached_image:
-        #     return Array2D(data=rotate_2d_list(asarray(self._cached_image)))
-
-        # pixels = asarray(Image.open(self.path))
-        # pixels = rotate_2d_list(pixels)
-        # for (x,y), value in enumerate_2d(pixels):
-        #     pixels[x][y] = color.rgb32(*value)
         pixels = Array2D(*self.size, default_value=None)
         for (x,y), value in enumerate_2d(pixels):
             pixels[x][y] = self.get_pixel(x, y)
