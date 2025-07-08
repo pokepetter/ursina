@@ -1,13 +1,12 @@
 import sys
-import os
-from panda3d.core import WindowProperties
-from panda3d.core import loadPrcFileData
-from ursina.vec2 import Vec2
-from ursina import color, application
-from ursina.scene import instance as scene    # for toggling collider visibility
-from ursina.string_utilities import print_info, print_warning
+
+from panda3d.core import WindowProperties, loadPrcFileData
 from screeninfo import get_monitors
-from ursina import input_handler
+
+from ursina import application, color, input_handler
+from ursina.scene import instance as scene  # for toggling collider visibility
+from ursina.string_utilities import print_info, print_warning
+from ursina.vec2 import Vec2
 
 
 class Window(WindowProperties):
@@ -131,8 +130,9 @@ class Window(WindowProperties):
 
 
     def make_editor_gui(self):     # called by main after setting up camera and application.development_mode
-        from ursina import camera, Entity, Text, Button, ButtonList, Func, Tooltip, held_keys, mouse
         import time
+
+        from ursina import Button, ButtonList, Entity, Func, Text, Tooltip, camera
 
         self.editor_ui = Entity(parent=camera.ui, eternal=True, enabled=self.editor_ui_enabled)
 
@@ -466,7 +466,7 @@ class Window(WindowProperties):
         if value:
             self.setZOrder(WindowProperties.Z_top)
             if sys.platform == "linux":
-                from Xlib import display, X, Xatom
+                from Xlib import Xatom, display
                 d = display.Display()
                 # root = d.screen().root
                 window_id = base.win.getWindowHandle().getIntHandle()
@@ -508,13 +508,13 @@ class Window(WindowProperties):
                 loadPrcFileData('', 'clock-mode limited')
                 loadPrcFileData('', f'clock-frame-rate {value}')
         else:
-            from panda3d.core import ClockObject                      # set vsync/framerate in runtime
+            from panda3d.core import ClockObject  # set vsync/framerate in runtime
             if value is True:
                 globalClock.setMode(ClockObject.MNormal)
             elif value is False:
                 print_warning('error: disabling vsync during runtime is not yet implemented')
 
-            elif isinstance(value, (int, float, complex)):
+            elif isinstance(value, int | float | complex):
                 globalClock.setMode(ClockObject.MLimited)
                 globalClock.setFrameRate(int(value))
 

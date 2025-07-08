@@ -62,6 +62,14 @@ dev = [
 ]
 
 [tool.ruff]
+# - E: pycodestyle (errors, e.g., whitespace, line length)
+# - F: pyflakes (unused imports, undefined variables)
+# - I: isort (import sorting)
+# - B: flake8-bugbear (bug risks, e.g., mutable defaults)
+# - UP: pyupgrade (code modernization, e.g., f-strings)
+# - D: pydocstyle (docstring conventions, optional)
+select = ["E", "F", "I", "B", "UP"]
+
 # Allow lines to be as long as 300 characters.
 line-length = 300
 lint.ignore-init-module-imports = true
@@ -71,9 +79,8 @@ lint.ignore-init-module-imports = true
 # E405: ignore to allow undefined or from star import
 # E741: ignore to allow single character variable names
 # E711: ignore to allow var == None instead of var is None
-# F401: ignore to allow importing all the stuff in __init__.py without using __all__
 # E701: ignore to allow multiple statements on one line (colon). This is rarely done anyway.
-lint.ignore = ["F403", "E402", "E722", "E713", "E741", "E711", "F401", "E701"]
+lint.ignore = ["F403", "E402", "E722", "E713", "E741", "E711", "E701"]
 # Make linter not complain about stuff imported with * import
 builtins = [
     "Ursina", "Path", "base", "loader", "render", "globalClock", "LEVEL_EDITOR",
