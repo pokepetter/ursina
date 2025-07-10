@@ -1,9 +1,10 @@
-from ursina import application
+from ursina import application  # noqa: I001
 from ursina.entity import Entity
 from ursina import curve
 from ursina.ursinastuff import invoke
 from ursina.destroy import destroy as _destroy
-from ursina.string_utilities import print_info, print_warning
+from ursina.string_utilities import print_warning
+from ursina.scripts.property_generator import generate_properties_for_class
 from pathlib import Path
 
 from panda3d.core import Filename
@@ -18,8 +19,6 @@ audio_groups = DotDict(
 
 audio_clip_cache = dict()
 
-
-from ursina.scripts.property_generator import generate_properties_for_class
 @generate_properties_for_class()
 class Audio(Entity):
 
@@ -186,8 +185,9 @@ class Audio(Entity):
 
 
 if __name__ == '__main__':
-    from ursina import Ursina
     import random
+
+    from ursina import Ursina
 
     app = Ursina()
     a = Audio('sine', loop=True, autoplay=True)

@@ -1,8 +1,8 @@
+import math
+
 from ursina import *
 from ursina import color
-import math
 from ursina.vec3 import Vec3
-# import numpy as np
 
 
 def get_world_normals(model):

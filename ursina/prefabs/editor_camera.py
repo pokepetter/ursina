@@ -1,4 +1,5 @@
-from ursina import Entity, camera, destroy, held_keys, mouse, curve, lerp, clamp, time, Vec2, Vec3, slerp
+from ursina import Entity, Vec2, Vec3, camera, clamp, curve, destroy, held_keys, lerp, mouse, slerp, time
+
 
 class EditorCamera(Entity):
 

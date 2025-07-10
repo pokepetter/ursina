@@ -1,9 +1,8 @@
+from ursina import color, window
 from ursina.shader import Shader
+from ursina.ursinastuff import Func
 from ursina.vec2 import Vec2
 from ursina.vec3 import Vec3
-from ursina import color
-from ursina.ursinastuff import Func
-from ursina import window, camera
 
 point_shader = Shader(name='point_shader', language=Shader.GLSL,
 vertex='''

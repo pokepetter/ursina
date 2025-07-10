@@ -1,5 +1,6 @@
 from ursina import *
 
+
 class TrailRenderer(Entity):
     def __init__(self, size=[1,.01], segments=8, min_spacing=.05, fade_speed=0, color_gradient=[color.white, color.clear], **kwargs):
         super().__init__(**kwargs)

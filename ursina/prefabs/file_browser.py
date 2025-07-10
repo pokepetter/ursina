@@ -1,6 +1,7 @@
 from ursina import *
 from ursina.scripts.property_generator import generate_properties_for_class
 
+
 @generate_properties_for_class()
 class FileButton(Button):
     def __init__(self, load_menu, path, **kwargs):
@@ -34,7 +35,7 @@ class FileButton(Button):
 
     def selected_setter(self, value):
         self._selected = value
-        if value == True:
+        if value:
             self.color = color.azure
             self.highlight_color = color.azure.tint(.1)
         else:

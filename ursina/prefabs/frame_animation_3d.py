@@ -19,7 +19,7 @@ class FrameAnimation3d(Entity):
         self.frames[0].enabled = True
 
         self.sequence = Sequence(loop=loop, auto_destroy=auto_destroy)
-        for i, frame in enumerate(self.frames):
+        for i, _frame in enumerate(self.frames):
             self.sequence.append(Func(setattr, self.frames[i-1], 'enabled', False))
             self.sequence.append(Func(setattr, self.frames[i], 'enabled', True))
             self.sequence.append(Wait(1/fps))

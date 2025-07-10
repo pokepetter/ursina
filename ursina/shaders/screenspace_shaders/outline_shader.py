@@ -1,4 +1,6 @@
-from ursina import *; outline_shader = Shader(fragment='''
+from ursina import Func, Shader, camera, color, window
+
+outline_shader = Shader(fragment='''
 #version 430
 
 uniform sampler2D tex;

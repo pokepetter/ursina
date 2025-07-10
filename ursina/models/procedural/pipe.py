@@ -10,7 +10,7 @@ class Pipe(Mesh):
 
         if isinstance(base_shape, Mesh):
             self.base_shape = base_shape.vertices
-        elif isinstance(base_shape, (list, tuple)):
+        elif isinstance(base_shape, list | tuple):
             self.base_shape = base_shape
         else:
             raise ValueError(f'base_shape must be Mesh/list/tuple, not {type(base_shape)}')

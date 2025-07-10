@@ -5,6 +5,7 @@ import csv
 import builtins
 import pyperclip
 import inspect
+import sys
 
 class LevelEditor(Entity):
     def __init__(self, **kwargs):
@@ -352,7 +353,7 @@ class LevelEditorScene:
 
         # get all imported classes
         imported_classes = dict()
-        for module_name, module in list(sys.modules.items()):
+        for _module_name, module in list(sys.modules.items()):
             if hasattr(module, '__file__') and module.__file__ and not module.__file__.startswith(sys.prefix):  # filter out built-in modules and modules from the standard library
                 for _, obj in inspect.getmembers(module):
                     if inspect.isclass(obj):
@@ -362,7 +363,7 @@ class LevelEditorScene:
         with self.path.open('r') as f:
             self.scene_parent = Entity()
             reader = csv.DictReader(f, delimiter=';')
-            fields = reader.fieldnames[1:]
+            _fields = reader.fieldnames[1:]
 
             for line in reader:
                 kwargs = {key : value for key, value in line.items() if value and not key == 'class'}

@@ -1,9 +1,8 @@
+from ursina import camera, color
 from ursina.shader import Shader
+from ursina.ursinastuff import Func
 from ursina.vec2 import Vec2
 from ursina.vec3 import Vec3
-from ursina import color
-from ursina.ursinastuff import Func
-from ursina import window, camera, load_texture
 
 sky_fade_shader = Shader(name='sky_fade_shader', language=Shader.GLSL, vertex='''
 #version 140
@@ -143,7 +142,8 @@ continuous_input = {
 
 if __name__ == '__main__':
     import random
-    from ursina import Ursina, Sky, Entity
+
+    from ursina import Entity, Sky, Ursina
     from ursina.prefabs.first_person_controller import FirstPersonController
     app = Ursina()
     FirstPersonController(gravity=0)

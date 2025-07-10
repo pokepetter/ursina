@@ -1,7 +1,6 @@
 from ursina import *
 from ursina.scripts.property_generator import generate_properties_for_class
 from ursina.shaders.unlit_shader import unlit_shader
-from ursina.shaders.matcap_shader import matcap_shader
 
 # _instances = dict() # keeps track of all the instances so we can make a menu that lists all instances, with the option for baking them.
 
@@ -111,7 +110,6 @@ class ParticleSystemContainer(Entity):
 
 
     def bake(self, name, seed, fps=30):     # bake to vertex animation texture
-        import numpy as np
         from PIL import Image
 
         animations = []
@@ -162,12 +160,12 @@ class ParticleSystemContainer(Entity):
 
         min_x, max_x, min_y, max_y, min_z, max_z = 0, 0, 0, 0, 0, 0
         for frame in frames:
-            min_x = min(min_x, floor(min((v.x for v in frame.vertices))))
-            min_y = min(min_y, floor(min((v.y for v in frame.vertices))))
-            min_z = min(min_z, floor(min((v.z for v in frame.vertices))))
-            max_x = max(max_x, ceil(max((v.x for v in frame.vertices))))
-            max_y = max(max_y, ceil(max((v.y for v in frame.vertices))))
-            max_z = max(max_z, ceil(max((v.z for v in frame.vertices))))
+            min_x = min(min_x, floor(min(v.x for v in frame.vertices)))
+            min_y = min(min_y, floor(min(v.y for v in frame.vertices)))
+            min_z = min(min_z, floor(min(v.z for v in frame.vertices)))
+            max_x = max(max_x, ceil(max(v.x for v in frame.vertices)))
+            max_y = max(max_y, ceil(max(v.y for v in frame.vertices)))
+            max_z = max(max_z, ceil(max(v.z for v in frame.vertices)))
 
         # print('verts:', num_vertices)
         texture_width = num_vertices * 2    # one pixel per vertex. one color per vertex.
@@ -295,17 +293,17 @@ class ParticleSystem(Entity):
         if self.num_particles == 0:
             self.num_particles = len(self.spawn_points)
 
-        if not isinstance(self.move_directions, (tuple, list)):
+        if not isinstance(self.move_directions, tuple | list):
             self.move_directions = [self.move_directions for i in range(self.num_particles)]
-        if not isinstance(self.start_direction, (tuple, list)):
+        if not isinstance(self.start_direction, tuple | list):
             self.start_direction = [self.start_direction for i in range(self.num_particles)]
 
-        if not isinstance(self.start_color, (tuple, list)):
+        if not isinstance(self.start_color, tuple | list):
             self.start_color = (self.start_color, )
-        if not isinstance(self.end_color, (tuple, list)):
+        if not isinstance(self.end_color, tuple | list):
             self.end_color = (self.end_color, )
 
-        if not isinstance(self.speed, (tuple, list)):
+        if not isinstance(self.speed, tuple | list):
             self.speed = (self.speed, self.speed)
 
         self.spawn_points = LoopingList(self.spawn_points)
@@ -520,8 +518,8 @@ class ParticleSystem(Entity):
 class ParticleSystemUI(Entity):
     def __init__(self, asset_file, particle_system_container):
         super().__init__(parent=camera.ui)
-        from ursina.prefabs.window_panel import WindowPanel
         from ursina import Text
+        from ursina.prefabs.window_panel import WindowPanel
 
         self.asset_file = asset_file
         self.particle_system_container = particle_system_container
@@ -611,7 +609,6 @@ class ParticleSystemUI(Entity):
 
 
 if __name__ == '__main__':
-    from ursina.ursinamath import rotate_around_point_2d
     app = Ursina()
 
     player = Entity(model='wireframe_cube', color=color.magenta, origin_y=-.5, alpha=1)

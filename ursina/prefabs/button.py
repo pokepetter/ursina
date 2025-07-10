@@ -1,7 +1,6 @@
 from ursina import Entity, Text, camera, color, mouse, BoxCollider, Sequence, Func, Vec2, Vec3, scene, Default, Audio
 from ursina import color as color_module
 from ursina.models.procedural.quad import Quad
-import textwrap
 
 from ursina.scripts.property_generator import generate_properties_for_class
 

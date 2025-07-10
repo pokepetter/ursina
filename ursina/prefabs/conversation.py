@@ -1,6 +1,6 @@
-from ursina import *
-from collections import namedtuple
 from copy import copy
+
+from ursina import *
 
 
 class _ConversationNode:

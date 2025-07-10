@@ -1,8 +1,7 @@
+from ursina import color
 from ursina.shader import Shader
 from ursina.vec2 import Vec2
 from ursina.vec3 import Vec3
-from ursina import color
-
 
 triplanar_shader = Shader(
 name='triplanar_shader', language=Shader.GLSL,
@@ -74,14 +73,14 @@ void main() {
     vec3 blend = blend_weights * rcpBlend;
 
     vec3 albedoX = texture(side_texture, vertex_world_position.zy * side_texture_scale).rgb*blend.x;
-  	vec3 albedoY = texture(side_texture, vertex_world_position.xz * side_texture_scale).rgb*blend.y;
-  	vec3 albedoZ = texture(side_texture, vertex_world_position.xy * side_texture_scale).rgb*blend.z;
+    vec3 albedoY = texture(side_texture, vertex_world_position.xz * side_texture_scale).rgb*blend.y;
+    vec3 albedoZ = texture(side_texture, vertex_world_position.xy * side_texture_scale).rgb*blend.z;
 
     if (world_normal.y > .0) {
-		    albedoY = texture(p3d_Texture0, vertex_world_position.xz * texture_scale.xy).rgb*blend.y;
+        albedoY = texture(p3d_Texture0, vertex_world_position.xz * texture_scale.xy).rgb*blend.y;
     }
 
-	   vec3 triPlanar = (albedoX + albedoY + albedoZ);
+    vec3 triPlanar = (albedoX + albedoY + albedoZ);
 
     fragColor = vec4(triPlanar.rgb, 1) * vertex_color;
 }
@@ -97,7 +96,7 @@ default_input = {
 
 
 if __name__ == '__main__':
-    from ursina import Ursina, window, color, Draggable, load_texture, Sky, EditorCamera, scene, Entity, Slider
+    from ursina import Draggable, EditorCamera, Entity, Sky, Slider, Ursina, color, load_texture, scene, window
     app = Ursina()
     window.color=color.black
 

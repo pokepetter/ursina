@@ -106,7 +106,7 @@ class PlatformerController2d(Entity):
             if not self.grounded:
                 self.land()
 
-            self.y = max((r.world_point.y for r in (ray, left_ray, right_ray) if r.hit))
+            self.y = max(r.world_point.y for r in (ray, left_ray, right_ray) if r.hit)
             self.grounded = True
             return
         else:
@@ -126,7 +126,6 @@ class PlatformerController2d(Entity):
             hit_above_left = raycast(self.world_position+Vec3(-self.scale_x*.49,self.scale_y/2,0), self.up, distance=self.jump_height-(self.scale_y/2), traverse_target=self.traverse_target, ignore=self.ignore_list)
             hit_above_right = raycast(self.world_position+Vec3(self.scale_x*.49,self.scale_y/2,0), self.up, distance=self.jump_height-(self.scale_y/2), traverse_target=self.traverse_target, ignore=self.ignore_list)
             if any((hit_above.hit, hit_above_left.hit, hit_above_right.hit)):
-                target_y = min(min((r.world_point.y for r in (hit_above, hit_above_left, hit_above_right) if r.hit)), self.y)
                 if hasattr(self, 'y_animator'):
                     self.y_animator.kill()
                 self.air_time = 0

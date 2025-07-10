@@ -1,11 +1,11 @@
 from ursina.prefabs.grid_editor import GridEditor
-from ursina import color, held_keys, Text
+from ursina import color, held_keys, Text, rotate_2d_list
 import pyperclip
 
 class ASCIIEditor(GridEditor):
     def __init__(self, size=(61,28), palette=(' ', '#', '|', 'A', '/', '\\', 'o', '_', '-', 'i', 'M', '.'), font=Text.default_monospace_font, canvas_color=color.black, line_height=1.1, **kwargs):
         super().__init__(size=size, palette=palette, canvas_color=canvas_color, **kwargs)
-        rotated_grid = list(zip(*self.grid[::-1]))
+        rotated_grid = rotate_2d_list(self.grid)
         text = '\n'.join([''.join(reversed(line)) for line in reversed(rotated_grid)])
 
         self.text_entity = Text(parent=self.parent, text=text, x=-.0, y=.5, line_height=line_height, font=font)
@@ -16,7 +16,7 @@ class ASCIIEditor(GridEditor):
         self.text_entity.position = (0, 1, -.001)
 
     def render(self):
-        rotated_grid = list(zip(*self.grid[::-1]))
+        rotated_grid = rotate_2d_list(self.grid)
         self.text_entity.text = '\n'.join([''.join(reversed(line)) for line in reversed(rotated_grid)])
 
 

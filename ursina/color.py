@@ -2,8 +2,9 @@ import colorsys
 import random
 import sys
 from math import floor
-from ursina.vec4 import Vec4
+
 from ursina.scripts.property_generator import generate_properties_for_class
+from ursina.vec4 import Vec4
 
 
 @generate_properties_for_class()
@@ -85,7 +86,7 @@ def hex(value):
     return rgb32(*tuple(int(value[i:i+2], 16) for i in (0, 2, 4)))
 
 def rgb_to_hex(r, g, b, a=1.0):
-    return "#{0:02x}{1:02x}{2:02x}{3:02x}".format(int(r*255), int(g*255), int(b*255), int(a*255))
+    return f"#{int(r*255):02x}{int(g*255):02x}{int(b*255):02x}{int(a*255):02x}"
 
 
 def brightness(color):
@@ -165,7 +166,7 @@ for cn in color_names:
 
 if __name__ == '__main__':
     from ursina import *
-    from ursina import Ursina, Entity, Button, Quad, grid_layout, color
+    from ursina import Button, Entity, Quad, Ursina, color, grid_layout
     from ursina.ursinastuff import _test
     app = Ursina()
 

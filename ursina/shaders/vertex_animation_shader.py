@@ -1,5 +1,4 @@
 from ursina import Shader, Vec2, Vec3
-from ursina.shaders.unlit_shader import unlit_shader
 
 vertex_animation_shader = Shader(
 vertex='''
@@ -61,7 +60,7 @@ default_input = {
 
 
 if __name__ == '__main__':
-    from ursina import Ursina, Entity, load_texture, EditorCamera
+    from ursina import EditorCamera, Entity, Ursina, load_texture
     app = Ursina()
     e = Entity(model='cube', shader=vertex_animation_shader, texture='grass')
     animation_texture = load_texture('grass')

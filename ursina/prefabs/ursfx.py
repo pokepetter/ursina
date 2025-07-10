@@ -1,7 +1,5 @@
 from ursina import *
 
-
-
 # def play_synth_adsr(
 #     wave = 'sine',
 #     max_volume = .75,

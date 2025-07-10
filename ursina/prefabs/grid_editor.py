@@ -1,15 +1,16 @@
-from ursina import *
+import sys
+from copy import deepcopy
+from math import floor
+
 import pyperclip
 from PIL import Image
-from copy import deepcopy
-import sys
-from math import floor
-from ursina.shaders import unlit_shader
+
+from ursina import *
 from ursina.array_tools import Array2D, enumerate_2d
-import json
-
-
 from ursina.scripts.property_generator import generate_properties_for_class
+from ursina.shaders import unlit_shader
+
+
 @generate_properties_for_class()
 class GridEditor(Entity):
     def __init__(self, size=(32,32), palette=(' ', '#', '|', 'o'), canvas_color=color.white, edit_mode=True, **kwargs):

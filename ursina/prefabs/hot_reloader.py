@@ -1,10 +1,11 @@
 # this will clear the scene and try to execute the main.py code without
 # restarting the program
 
-from ursina import Entity, camera, texture_importer, mesh_importer, scene, application, print_on_screen, window
-from pathlib import Path
-import time
 import ast
+import time
+from pathlib import Path
+
+from ursina import Entity, application, camera, mesh_importer, print_on_screen, scene, texture_importer, window
 
 
 def is_valid_python(code):
@@ -68,7 +69,7 @@ class HotReloader(Entity):
             'f8'     : self.reload_shaders,
             'f9'     : self.toggle_hotreloading,
             }
-            
+
         self.hotreload_window_settings = dict(size=(window.size[0]/2,window.size[1]/2), always_on_top=True, position=(window.fullscreen_size[0]-window.size[0]/22, 0))
 
 

@@ -1,6 +1,5 @@
-from ursina import Mesh, Entity, Vec3, generate_properties_for_class, camera, color, ThinSlider, copy, Func, Plane, Button, Vec2, make_gradient
+from ursina import Button, Entity, Func, Mesh, Plane, ThinSlider, Vec2, Vec3, camera, color, copy, generate_properties_for_class, make_gradient
 from ursina.prefabs.color_picker import ColorPicker
-
 
 gradient_editor_arrow = Mesh(vertices=[(v+Vec3(0,-.4,0))*Vec3(.0175,.025,1) for v in (Vec3(0,0,0),Vec3(-.5,.5,0),Vec3(.5,.5,0),Vec3(-.5,.75,0),Vec3(.5,.75,0))], triangles=(0,2,1,1,2,4,4,3,1))
 

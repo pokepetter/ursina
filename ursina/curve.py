@@ -1,6 +1,6 @@
 '''Translated from https://github.com/AndrewRayCode/easing-utils/blob/master/src/easing.js'''
 
-from math import cos, pi, sqrt, sin, asin, floor
+from math import asin, cos, floor, pi, sin, sqrt
 
 
 def linear(t):
@@ -339,7 +339,7 @@ class CubicBezier:
 if __name__ == '__main__':
     '''Draws a sheet with every curve and its name'''
     from ursina import *
-    from ursina import Ursina, camera, window, curve, Entity, Mesh, Text, color
+    from ursina import Entity, Mesh, Text, Ursina, camera, color, curve, window
 
     app = Ursina()
     camera.orthographic = True
@@ -349,7 +349,7 @@ if __name__ == '__main__':
 
     def render_curve(curve_function, name):
         curve_renderer = Entity(model=Mesh(vertices=[Vec3(i / 31, curve_function(i / 31), 0) for i in range(32)], mode='line', thickness=2), color=color.light_gray)
-        label = Text(parent=curve_renderer, text=name, scale=8, color=color.gray, y=-.1)
+        _label = Text(parent=curve_renderer, text=name, scale=8, color=color.gray, y=-.1)
         return curve_renderer
 
     j = 0

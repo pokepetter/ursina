@@ -1,9 +1,8 @@
+from ursina import color
 from ursina.entity import Entity
 from ursina.scene import instance as scene
-from ursina.vec3 import Vec3
-from ursina import color
 from ursina.ursinastuff import invoke
-
+from ursina.vec3 import Vec3
 
 _boxcast_box = Entity(model='cube', origin_z=-.5, collider='box', color=color.white33, enabled=False, eternal=True, add_to_scene_entities=False)
 
@@ -11,7 +10,7 @@ def boxcast(origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_
     if not ignore:
         ignore = []
 
-    if isinstance(thickness, (int, float, complex)):
+    if isinstance(thickness, int | float | complex):
         thickness = (thickness, thickness)
 
     _boxcast_box.enabled = True
@@ -35,7 +34,7 @@ def boxcast(origin, direction=(0,0,1), distance=9999, thickness=(1,1), traverse_
 
 
 if __name__ == '__main__':
-    from ursina import Ursina, held_keys, camera, duplicate, raycast, time, EditorCamera
+    from ursina import EditorCamera, Ursina, camera, duplicate, held_keys, raycast, time
     app = Ursina()
 
     '''

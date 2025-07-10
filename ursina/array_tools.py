@@ -1,3 +1,5 @@
+from ursina.scripts.property_generator import generate_properties_for_class
+
 if __name__ == '__main__':
     from ursina.ursinastuff import _test
 
@@ -9,9 +11,8 @@ def flatten_list(target_list):
 
 def flatten_completely(target_list):
     for i in target_list:
-        if isinstance(i, (tuple, list)):
-            for j in flatten_list(i):
-                yield j
+        if isinstance(i, tuple | list):
+            yield from flatten_list(i)
         else:
             yield i
 
@@ -36,13 +37,11 @@ def enumerate_3d(target_3d_list):   # usage: for (x, y, z), value in enumerate_3
 
 
 
-from typing import List
-from ursina.scripts.property_generator import generate_properties_for_class
 @generate_properties_for_class()
 class Array2D(list):
     __slots__ = ('width', 'height', 'default_value')
 
-    def __init__(self, width:int=None, height:int=None, default_value=0, data:List[List]=None):
+    def __init__(self, width:int=None, height:int=None, default_value=0, data:list[list]=None):
         self.default_value = default_value
 
         if data is not None:                # initialize with provided data
@@ -69,7 +68,7 @@ class Array2D(list):
             string = string.strip()
             if starts_lower_left:
                 data = [[convert_to_type(word.strip()) for word in line.split(',') if word] for line in string.split('\n') if line]
-                data = [list(row) for row in zip(*data[::-1])]  # rotate
+                data = [list(row) for row in zip(*data[::-1], strict=True)]  # rotate
                 return Array2D(data=data)
             else:
                 return Array2D(data=[[word.strip() for word in line.split(',') if word] for line in string.split('\n') if line])
@@ -226,7 +225,7 @@ if __name__ == '__main__':
 class Array3D(list):
     __slots__ = ('width', 'height', 'depth', 'default_value')
 
-    def __init__(self, width:int=None, height:int=None, depth:int=None, default_value=0, data:List[List]=None):
+    def __init__(self, width:int=None, height:int=None, depth:int=None, default_value=0, data:list[list]=None):
         self.default_value = default_value
 
         if data is not None:                # initialize with provided data
@@ -309,7 +308,7 @@ def chunk_list(target_list, chunk_size):
 
 
 def rotate_2d_list(target_2d_list):
-    return [list(row) for row in zip(*target_2d_list[::-1])]  # rotate
+    return [list(row) for row in zip(*target_2d_list[::-1], strict=True)]  # rotate
 
 
 def rotate_3d_list(target_3d_list, clockwise=True): # rotates around the y (up) axis where 1 is 90 degrees clockwise
@@ -330,12 +329,14 @@ def rotate_3d_list(target_3d_list, clockwise=True): # rotates around the y (up) 
     return new_data
 
 
-def string_to_2d_list(string, char_value_map={'.':0, '#':1}):
+def string_to_2d_list(string, char_value_map=None): # char_value_map default: {'.': 0, '#': 1}
     from textwrap import dedent
+    if char_value_map is None:
+        char_value_map = {'.': 0, '#': 1}
     grid = dedent(string).strip()
     grid = grid.split('\n')
     grid = [[char_value_map.get(e, 0) for e in line] for line in grid]
-    grid = [list(row) for row in zip(*grid[::-1])]  # rotate
+    grid = [list(row) for row in zip(*grid[::-1], strict=True)]  # rotate
     return grid
 
 if __name__ == '__main__':

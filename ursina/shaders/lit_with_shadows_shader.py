@@ -1,7 +1,7 @@
+from ursina import color
 from ursina.shader import Shader
 from ursina.vec2 import Vec2
 from ursina.vec3 import Vec3
-from ursina import color
 
 lit_with_shadows_shader = Shader(language=Shader.GLSL, name='lit_with_shadows_shader', vertex = '''#version 150
 uniform struct {

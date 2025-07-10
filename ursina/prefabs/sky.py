@@ -1,6 +1,7 @@
 from ursina import *
 from ursina.shaders import unlit_shader
 
+
 class Sky(Entity):
     default_values = dict(parent=camera, name='sky', model='sky_dome', texture='sky_default', scale=9900, shader=unlit_shader, unlit=True)
     instances = []

@@ -1,5 +1,4 @@
-from ursina import *
-# from ursina.prefabs.slider import ThinSlider as Slider
+from ursina import Animator, Audio, Button, Entity, Slider, Text, audio, camera, color, hsv, scene
 from ursina.prefabs.button_group import ButtonGroup
 
 
@@ -27,7 +26,7 @@ class OptionsMenu(Entity):
             for t in [e for e in scene.entities if isinstance(e, Text) and hasattr(e, 'original_scale')]:
                 t.scale = t.original_scale * text_scale_slider.value
         text_scale_slider.on_value_changed = set_text_scale
-        
+
         for i, e in enumerate(self.accessibility_menu.children):
             e.y = .3 + (-i * button_spacing)
 
@@ -66,14 +65,14 @@ class OptionsMenu(Entity):
         window_mode_setting.on_value_changed = _set_window_mode
 
         window_index_setting = ButtonGroup([f'{i: ^10}' for i in range(len(window.monitors))], y=.3, origin=(0,.5), parent=self.graphics_menu, label='Monitor')
-        
+
         for i, e in enumerate((window_mode_setting, window_index_setting)):
             e.y = .3 + (-i * button_spacing*3)
 
 
         self.language_menu = Entity(parent=self)
         ButtonGroup(('English', 'Mandarin Chinese (官话)', 'Spanish (español)', 'Japanese (日本語 )', 'German (Deutsch)', 'Norwegian (bokmål)'), y=.3, origin=(0,.5), parent=self.language_menu, max_x=1)
-       
+
         self.controls_menu = Entity(parent=self)
 
         self.state_handler = Animator({
@@ -100,6 +99,7 @@ class OptionsMenu(Entity):
 
 
 if __name__ == '__main__':
+    from ursina import Ursina, window, Button
     app = Ursina()
     # Text.default_font = 'VeraMono.ttf'
     window.color = hsv(0, 0, 10/255)

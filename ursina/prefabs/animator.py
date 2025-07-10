@@ -1,7 +1,7 @@
 from ursina import *
 
 
-class Animator():
+class Animator:
     def __init__(self, animations=None, start_state='', pause_disabled=True):
 
         self.animations = animations    # dict

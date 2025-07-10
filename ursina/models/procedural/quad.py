@@ -1,5 +1,6 @@
-from ursina import *
 from copy import deepcopy
+
+from ursina import *
 
 
 class Quad(Mesh):

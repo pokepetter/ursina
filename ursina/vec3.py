@@ -1,6 +1,7 @@
 from panda3d.core import Vec3 as PandaVec3
-from ursina.vec2 import Vec2
+
 from ursina.scripts.property_generator import generate_properties_for_class
+from ursina.vec2 import Vec2
 
 
 @generate_properties_for_class()
@@ -111,7 +112,7 @@ class Vec3(PandaVec3):
 
 
     def __mul__(self, value):
-        if isinstance(value, (int, float, complex)):
+        if isinstance(value, int | float | complex):
             return Vec3(*(e*value for e in self))
 
         return Vec3(self[0]*value[0], self[1]*value[1], self[2]* (value[2] if len(value) > 2 else 1))
@@ -121,7 +122,7 @@ class Vec3(PandaVec3):
 
 
     def __truediv__(self, value):
-        if isinstance(value, (int, float, complex)):
+        if isinstance(value, int | float | complex):
             return Vec3(*(e/value for e in self))
 
         return Vec3(self[0]/value[0], self[1]/value[1], self[2]/value[2])
@@ -141,8 +142,9 @@ Vec3.back = Vec3(0,0,-1)
 
 
 if __name__ == '__main__':
-    from ursinastuff import _test
     import math
+
+    from ursinastuff import _test
     _test(Vec3(1,0,-1) * 2 == Vec3(2,0,-2))
     _test(Vec3(1,0,-1) * Vec3(1,2,3) == Vec3(1,0,-3))
 

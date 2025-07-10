@@ -1,5 +1,6 @@
 from ursina import *
 
+
 @generate_properties_for_class()
 class Slider(Entity):
     def __init__(self, min=0, max=1, default=None, height=Text.size, text='', dynamic=False, radius=Text.size/2, bar_color=color.black66, **kwargs):

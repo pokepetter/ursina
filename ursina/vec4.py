@@ -39,7 +39,7 @@ class Vec4(PandaVec4):
 
 
     def __mul__(self, value):
-        if isinstance(value, (int, float, complex)):
+        if isinstance(value, int | float | complex):
             return Vec4(*(e*value for e in self))
 
         return Vec4(self[0]*value[0], self[1]*value[1], self[2]*value[2], self[3]*value[3])
@@ -49,7 +49,7 @@ class Vec4(PandaVec4):
 
 
     def __truediv__(self, value):
-        if isinstance(value, (int, float, complex)):
+        if isinstance(value, int | float | complex):
             return Vec4(*(e/value for e in self))
 
         return Vec4(self[0]/value[0], self[1]/value[1], self[2]/value[2], self[3]/value[3])

@@ -294,7 +294,6 @@ if __name__ == '__main__':
     print('--- module variables ---')
     for e in module_info.variables:
         # print('module level var:', e)
-        assert type(e) is VarInfo
         if e.name.startswith('_'):
             continue
         type_hint = f': {e.type_hint}' if e.type_hint is not None else ''
@@ -309,7 +308,6 @@ if __name__ == '__main__':
         print(f'class: {class_info.name}({', '.join(class_info.base_classes)})')
         print('--- class_variables ---')
         for e in class_info.class_variables:
-            assert type(e) is VarInfo
             if e.name.startswith('_'):
                 continue
             # print(f'    {class_info.name}.{e.name} = ')
@@ -319,7 +317,6 @@ if __name__ == '__main__':
         print('--- init ---')
         print(f'{class_info.name}(')
         for e in class_info.init_args:
-            assert type(e) is VarInfo
             if e.name.startswith('_'):
                 continue
             type_hint = f': {e.type_hint}' if e.type_hint is not None else ''

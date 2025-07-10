@@ -1,7 +1,9 @@
-import os
-import psutil
 import math
-from ursina import Text, Vec2, window, camera
+import os
+
+import psutil
+
+from ursina import Text, Vec2, camera, window
 
 
 def size(size_bytes):
@@ -11,7 +13,7 @@ def size(size_bytes):
     i = int(math.floor(math.log(size_bytes, 1024)))
     p = math.pow(1024, i)
     s = round(size_bytes / p, 2)
-    return "%s %s" % (s, size_name[i])
+    return f"{s} {size_name[i]}"
 
 
 class MemoryCounter(Text):

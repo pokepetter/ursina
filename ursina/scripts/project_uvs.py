@@ -18,7 +18,7 @@ def project_uvs(model, aspect_ratio=1, direction=Vec3.forward, regenerate=False)
 
 
 if __name__ == '__main__':
-    from ursina import Ursina, Entity, EditorCamera
+    from ursina import EditorCamera, Entity, Ursina
     from ursina.scripts.project_uvs import project_uvs
     app = Ursina()
 

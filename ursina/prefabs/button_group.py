@@ -1,4 +1,4 @@
-from ursina import Entity, Button, camera, color, Text, window, mouse, destroy, Vec2, inverselerp
+from ursina import Entity, Button, camera, color, Text, window, mouse, destroy, Vec2
 from ursina.scripts.grid_layout import grid_layout
 from ursina.scripts.property_generator import generate_properties_for_class
 
@@ -129,7 +129,7 @@ class ButtonGroup(Entity):
 if __name__ == '__main__':
     from ursina import *
     app = Ursina()
-    
+
     # # test setting custom default colors
     # Text.default_font = 'VeraMono.ttf'
     # color.text_color = color.orange
@@ -138,9 +138,9 @@ if __name__ == '__main__':
     # ButtonGroup.default_highlight_selected_color = color.white
 
     center = Entity(parent=camera.ui, model='circle', scale=.005, color=color.red, z=-1)
-    gender_selection = ButtonGroup(('man', 'woman', 'other'), 
-        origin=(-.5,0), 
-        label='choose gender:', 
+    gender_selection = ButtonGroup(('man', 'woman', 'other'),
+        origin=(-.5,0),
+        label='choose gender:',
         max_x=1
         )
 
@@ -163,5 +163,5 @@ if __name__ == '__main__':
             tooltip=Tooltip(str(e)),
             on_click=Func(setattr, gender_selection, 'origin', e),
         )
-        
+
     app.run()

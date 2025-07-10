@@ -1,18 +1,18 @@
-from ursina import entity
-from ursina.entity import Entity
-from panda3d.core import PerspectiveLens, OrthographicLens, LensNode, NodePath
-from panda3d.core import Camera as PandaCamera
-from panda3d.core import Texture as PandaTexture
 from direct.filter.FilterManager import FilterManager
-from ursina import application
+from panda3d.core import Camera as PandaCamera
+from panda3d.core import LensNode, NodePath, OrthographicLens, PerspectiveLens
+from panda3d.core import Texture as PandaTexture
+
+from ursina import application, color, entity
+from ursina.entity import Entity
 from ursina.scene import instance as scene
-from ursina.window import instance as window
-from ursina import color
-from ursina.texture import Texture
+from ursina.scripts.property_generator import generate_properties_for_class
 from ursina.shader import Shader
 from ursina.string_utilities import print_info
+from ursina.texture import Texture
+from ursina.window import instance as window
 
-from ursina.scripts.property_generator import generate_properties_for_class
+
 @generate_properties_for_class()
 class Camera(Entity):
 
@@ -171,10 +171,10 @@ class Camera(Entity):
         self.filter_quad.setShader(shader)
 
         if hasattr(value, 'default_input'):
-            for key, value in value.default_input.items():
-                if callable(value):
-                    value = value()
-                self.set_shader_input(key, value)
+            for key, input_value in value.default_input.items():
+                if callable(input_value):
+                    input_value = input_value()
+                self.set_shader_input(key, input_value)
 
 
         print_info('set camera shader to:', shader)
@@ -196,7 +196,7 @@ instance = Camera()
 
 if __name__ == '__main__':
     from ursina import *
-    from ursina import Ursina, camera, Entity, EditorCamera
+    from ursina import EditorCamera, Entity, Ursina, camera
 
     # window.borderless = False
     app = Ursina()

@@ -1,6 +1,5 @@
 from ursina import Shader
 
-
 camera_noise_shader = Shader(
 fragment='''
 #version 430
@@ -41,7 +40,7 @@ if __name__ == '__main__':
     camera.shader = camera_noise_shader
     EditorCamera()
 
-    #camera.set_shader_input("strength", .2) 
+    #camera.set_shader_input("strength", .2)
     Sky()
     def update():
         # Since there isn't really a way to generate pseudorandom numbers in GLSL by themselves, this needs to be put here, otherwise the noise will be static.

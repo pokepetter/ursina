@@ -47,7 +47,6 @@ def shoot():
             mouse.hovered_entity.hp -= 10
 
 
-from ursina.prefabs.health_bar import HealthBar
 
 class Enemy(Entity):
     def __init__(self, **kwargs):

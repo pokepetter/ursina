@@ -1,7 +1,4 @@
 from ursina.shader import Shader
-from ursina.vec2 import Vec2
-from ursina.vec3 import Vec3
-from ursina.color import Color
 
 normals_shader = Shader(name='normals_shader',language=Shader.GLSL,
 vertex = '''
@@ -39,7 +36,7 @@ geometry='',
 
 if __name__ == '__main__':
     from ursina import *
-    from ursina.prefabs.primitives import *
+    from ursina.prefabs.primitives import AzureSphere, GrayPlane, WhiteCube
     app = Ursina()
     window.color=color.black
 

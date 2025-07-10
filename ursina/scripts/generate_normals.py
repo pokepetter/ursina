@@ -1,8 +1,3 @@
-# import numpy
-
-
-
-
 def normalize_v3(arr):
     ''' Normalize a numpy array of 3 component vectors shape=(n,3) '''
     import numpy
@@ -22,7 +17,7 @@ def generate_normals(vertices, triangles=None, smooth=True):
 
     if not triangles:
         new_tris = [(i, i+1, i+2) for i in range(0, len(vertices), 3)]
-        
+
     elif not isinstance(triangles[0], int):
         raise TypeError(f'triangles must be ints, not {type(triangles[0])} ({triangles[0]})')
 
@@ -57,7 +52,6 @@ def generate_normals(vertices, triangles=None, smooth=True):
     # smooth
     if smooth:
         vertices = vertices.tolist()
-        bucket = set()
         visited = set()
 
         for i, v in enumerate(vertices):

@@ -2,8 +2,8 @@ from ursina import *
 
 
 def texture_to_height_values(heightmap:Texture, skip=1):
-    from PIL import Image
     from numpy import asarray, flip, swapaxes
+    from PIL import Image
 
     heightmap = heightmap
     skip = skip    # should be power of two. only works with heightmap, not height_values.
@@ -53,7 +53,6 @@ class Terrain(Mesh):
 
         _height_values = [[j/255 for j in i] for i in self.height_values]
         w, h = self.width, self.depth
-        min_dim = min(w, h)
         centering_offset = Vec2(-.5, -.5)
 
         # create the plane

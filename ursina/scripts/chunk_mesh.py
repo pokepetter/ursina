@@ -1,6 +1,7 @@
 
+from math import ceil, floor
+
 from ursina.array_tools import Array2D, chunk_list, enumerate_2d
-from math import floor, ceil
 from ursina.ursinamath import clamp
 
 
@@ -9,7 +10,7 @@ def chunk_mesh(mesh, num_chunks, chunk_size=1/8):
         raise Exception(f'{mesh} has no vertices')
 
     chunks = Array2D(width=num_chunks[0], height=num_chunks[1])
-    for (x,z), value in enumerate_2d(chunks):
+    for (x,z), _value in enumerate_2d(chunks):
         chunks[x][z] = []
 
     polys = list(chunk_list(mesh.generated_vertices, 3))
@@ -40,7 +41,7 @@ def chunk_mesh(mesh, num_chunks, chunk_size=1/8):
     return chunks
 
 if __name__ == '__main__':
-    from ursina import Ursina, Entity, Terrain, color, Vec3, Vec2, Grid, Mesh, flatten_list, load_model, EditorCamera
+    from ursina import EditorCamera, Entity, Grid, Mesh, Terrain, Ursina, Vec2, Vec3, color, flatten_list
     app = Ursina()
 
     reference = Entity(x=-1, model=Terrain('heightmap_1', skip=4), texture='grass', texture_scale=(3,3), origin=(-.5,0,-.5), wireframe=True, color=color.green)

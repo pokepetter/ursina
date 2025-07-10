@@ -1,7 +1,9 @@
 import sys
+
 from ursina import application
 from ursina.scene import instance as scene
 from ursina.ursinastuff import invoke
+
 
 def destroy(entity, delay=0, unscaled=True, ignore_paused=False):
     if application.development_mode:
@@ -81,7 +83,7 @@ def _destroy(entity, force_destroy=False):
 
 
 if __name__ == '__main__':
-    from ursina import Ursina, Entity
+    from ursina import Entity, Ursina
     app = Ursina()
     class E(Entity):
         def __init__(self, name):

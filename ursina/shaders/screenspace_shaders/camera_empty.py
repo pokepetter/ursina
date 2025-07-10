@@ -1,6 +1,5 @@
 from ursina import Shader
 
-
 camera_empty_shader = Shader(
 vertex='''
 #version 430

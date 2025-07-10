@@ -1,5 +1,5 @@
-from functools import wraps
 from types import FunctionType
+
 
 def generate_properties_for_class(getter_suffix='_getter', setter_suffix='_setter', deleter_suffix='_deleter'):
     def decorator(cls):
@@ -9,7 +9,7 @@ def generate_properties_for_class(getter_suffix='_getter', setter_suffix='_sette
         deleters = {}
 
         # local_methods = dir(cls)
-        local_methods = {x:y for x, y in cls.__dict__.items() if isinstance(y, (FunctionType, classmethod, staticmethod))}
+        local_methods = {x:y for x, y in cls.__dict__.items() if isinstance(y, FunctionType | classmethod | staticmethod)}
         for name in local_methods:
             if name.endswith(getter_suffix):
                 base_name = name[:-len(getter_suffix)]

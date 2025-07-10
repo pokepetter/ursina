@@ -22,12 +22,12 @@ def Cube(bevel=0, subdivisions=(1,1,1), mode='triangle', **kwargs):
         w,h,d = subdivisions
         e = Entity()
 
-        front =  Entity(parent=e, model=Plane((w,h)), z=-.5, rotation_x=-90)
-        back =   Entity(parent=e, model=Plane((w,h)), z=.5, rotation_x=90)
-        top =    Entity(parent=e, model=Plane((w,d)), y=.5)
-        bottom = Entity(parent=e, model=Plane((w,d)), y=-.5, rotation_x=-180)
-        right =  Entity(parent=e, model=Plane((d,h)), x=.5, rotation_z=90)
-        left =   Entity(parent=e, model=Plane((d,h)), x=-.5, rotation_z=-90)
+        _front =  Entity(parent=e, model=Plane((w,h)), z=-.5, rotation_x=-90)
+        _back =   Entity(parent=e, model=Plane((w,h)), z=.5, rotation_x=90)
+        _top =    Entity(parent=e, model=Plane((w,d)), y=.5)
+        _bottom = Entity(parent=e, model=Plane((w,d)), y=-.5, rotation_x=-180)
+        _right =  Entity(parent=e, model=Plane((d,h)), x=.5, rotation_z=90)
+        _left =   Entity(parent=e, model=Plane((d,h)), x=-.5, rotation_z=-90)
 
         cube = e.combine()
         cube.mode = mode

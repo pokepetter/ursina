@@ -72,7 +72,7 @@ if __name__ == '__main__':
     for i, (nineslice_texture, scale_multiplier) in enumerate(
         zip(
             ('nineslice_rainbow', 'nineslice_double', 'circle'),
-            (1.4, 1.4, 1)
+            (1.4, 1.4, 1), strict=True
         )):
         b = Draggable(
             model=NineSlice(entity_scale=Vec3(2,1,1), scale_multiplier=scale_multiplier),

@@ -1,4 +1,4 @@
-from ursina import *
+from ursina import Shader
 
 point_shader = Shader(language=Shader.GLSL,
 vertex = '''

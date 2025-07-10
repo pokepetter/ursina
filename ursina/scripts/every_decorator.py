@@ -35,7 +35,7 @@ def get_class_name(func):
 
 
 if __name__ == '__main__':
-    from ursina import*
+    from ursina import *
     app = Ursina()
 
     # @every(.1)

@@ -1,5 +1,6 @@
 from ursina import *
 
+
 class Draggable(Button):
     _z_plane = None
 
@@ -16,7 +17,7 @@ class Draggable(Button):
         self.step = step
         self.plane_direction = plane_direction
         self.lock = lock if lock else Vec3(0,0,0)     # set to 1 to lock movement on any of x, y and z axes
-        self.min_x = min_x 
+        self.min_x = min_x
         self.min_y = min_y
         self.min_z = min_z
         self.max_x = max_x
@@ -124,7 +125,7 @@ class Draggable(Button):
 
     @step.setter
     def step(self, value):
-        if isinstance(value, (int, float, complex)):
+        if isinstance(value, int | float | complex):
             value = (value, value, value)
 
         self._step = value

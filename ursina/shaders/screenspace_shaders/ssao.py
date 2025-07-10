@@ -1,10 +1,8 @@
-from ursina.shader import Shader
-from ursina.vec2 import Vec2
-from ursina.vec3 import Vec3
 from ursina import color
-from ursina.ursinastuff import Func
+from ursina.shader import Shader
 from ursina.texture_importer import load_texture
-
+from ursina.ursinastuff import Func
+from ursina.vec3 import Vec3
 
 ssao_shader = Shader(language=Shader.GLSL, fragment='''
 #version 140

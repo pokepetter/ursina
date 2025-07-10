@@ -1,6 +1,7 @@
 from ursina import *
 
-class Scrollable():
+
+class Scrollable:
 
     def __init__(self, **kwargs):
         super().__init__()

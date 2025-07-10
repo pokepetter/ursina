@@ -1,7 +1,7 @@
-from ursina import *
-import os, shutil
-import numpy as np
+import shutil
 import subprocess
+
+from ursina import *
 
 
 class VideoRecorder(Entity):
@@ -54,7 +54,7 @@ class VideoRecorder(Entity):
             f'-c:v libx264 -crf 18 -pix_fmt yuv420p '
             f'"{self.video_name}.mp4"'
         )
-        result = subprocess.Popen(command, shell=True)
+        subprocess.Popen(command, shell=True)
         application.calculate_dt = True
 
         # print('converting to video:', result)

@@ -1,16 +1,16 @@
-from ursina.prefabs.button import Button
+from ursina import camera, color, mouse, round_to_closest
 from ursina.entity import Entity
+from ursina.prefabs.button import Button
+from ursina.prefabs.input_field import ContentTypes, InputField
 from ursina.text import Text
 from ursina.vec2 import Vec2
-from ursina.prefabs.input_field import InputField, ContentTypes
-from ursina import color, camera, mouse, round_to_closest
 
 
 class VecField(Button):
-    def __init__(self, default_value=Vec2(0.0,0.0), character_limit=8, content_type=ContentTypes.math, **kwargs):
+    def __init__(self, default_value=Vec2.zero, character_limit=8, content_type=ContentTypes.math, **kwargs):
         kwargs = dict(parent=camera.ui, scale=(.5,.05), character_limit=character_limit, text='', text_origin=(-.5,0), color=color.black90) | kwargs
         super().__init__(**kwargs)
-        if isinstance(default_value, (int, float)):
+        if isinstance(default_value, int | float):
             default_value = [default_value, ]
 
         self.default_value = default_value
@@ -56,7 +56,7 @@ class VecField(Button):
                 print('invalid')
                 return
         # print('vector:', vector, 'fotype', type(self.default_value))
-        if not isinstance(self.default_value, (tuple, list)):
+        if not isinstance(self.default_value, tuple | list):
             vector = type(self.default_value)(*vector)
 
         self.value = vector
@@ -104,10 +104,10 @@ class VecField(Button):
         if mouse.left and self._dragging_on and not self._dragging_on.active:
             # print('drag on:', self._dragging_on, mouse.velocity.x)
             idx = self.fields.index(self._dragging_on)
-            if self.data_type == float:
+            if self.data_type is float:
                 self._temp_value[idx] += mouse.velocity.x
                 self._value = [round_to_closest(e, .01) for e in self._temp_value]
-            elif self.data_type == int:
+            elif self.data_type is int:
                 self._temp_value[idx] += mouse.velocity.x * 10
                 self._value = [int(e) for e in self._temp_value]
 

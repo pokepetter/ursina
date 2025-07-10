@@ -1,6 +1,7 @@
 from ursina import *
 from ursina.scripts.property_generator import generate_properties_for_class
 
+
 class ContentTypes:
     int = '0123456789'
     float = int + '.,'

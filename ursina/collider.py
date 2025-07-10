@@ -1,7 +1,7 @@
-from panda3d.core import CollisionNode, CollisionBox, CollisionSphere, CollisionCapsule, CollisionPolygon
-from panda3d.core import NodePath
-from ursina.vec3 import Vec3
+from panda3d.core import CollisionBox, CollisionCapsule, CollisionNode, CollisionPolygon, CollisionSphere, NodePath
+
 from ursina.mesh import Mesh
+from ursina.vec3 import Vec3
 
 
 class Collider(NodePath):
@@ -12,7 +12,7 @@ class Collider(NodePath):
         self.shape = shape
         self.node_path = entity.attachNewNode(self.collision_node)
 
-        if isinstance(shape, (list, tuple)):
+        if isinstance(shape, list | tuple):
             for e in shape:
                 self.node_path.node().addSolid(e)
         else:
@@ -136,7 +136,7 @@ class MeshCollider(Collider):
 
 if __name__ == '__main__':
     from ursina import *
-    from ursina import Ursina, Entity, Pipe, Circle, Button, scene, EditorCamera, color
+    from ursina import Button, Circle, EditorCamera, Pipe, Ursina, color, scene
     app = Ursina()
 
     e = Button(parent=scene, model='sphere', x=2)

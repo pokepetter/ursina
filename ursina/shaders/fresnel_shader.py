@@ -1,10 +1,7 @@
+from ursina import camera, color, load_texture
 from ursina.shader import Shader
-from ursina.vec2 import Vec2
-from ursina.vec3 import Vec3
-from ursina import color
 from ursina.ursinastuff import Func
-from ursina import window, camera, load_texture
-
+from ursina.vec2 import Vec2
 
 fresnel_shader = Shader(name='fresnel_shader', language=Shader.GLSL,
 vertex = '''
