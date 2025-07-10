@@ -26,7 +26,7 @@ Keep in mind, comments like this must add something, not simply repeat the funct
 
 ## Updating Samples
 Samples are also added by docs/documentation_generator.py, since it takes the source code from files in  samples/ and turns them into .sswg files.
-Afer modifying a sample, to make it aslo update on the website, do:
+After modifying a sample, to make it also update on the website, do:
 1) `python docs/documentation_generator.py`
 2) `python -m sswg`
 
@@ -36,7 +36,7 @@ The ursina website is made using sswg, a format similar to Markdown.
 To update website content, edit the .sswg file, *not* the .html files.
 To convert the .sswg file, run:
 ```
-pyhton -m sswg
+python -m sswg
 ```
 in the folder (docs/)
 
