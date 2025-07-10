@@ -22,16 +22,18 @@ duplicate()
 </code_block>
 <purple>use a for loop instead of duplicate() if you can.</purple><br>
 <div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/duplicate.py#L5" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#duplicate" onclick="navigator.clipboard.writeText('#duplicate')" title="Copy permalink">◃-</a></div><br>
-<hr></hr>## Examples<br>
-<br>
+<hr></hr><br>
+<h2 id="Examples">
+Examples
+</h2><br>
 <code_block id="code_block_1"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button><purple>from</purple> ursina <purple>import</purple> *
 <purple>from</purple> ursina <purple>import</purple> Ursina, Button, scene, EditorCamera
 app = Ursina()
 
 
-new_parent = <olive>Entity</olive>(<olive>scale</olive>=<yellow>2</yellow>)
+new_parent = <olive>Entity</olive>(<olive>scale</olive>=<yellow>1</yellow>)
 <purple>from</purple> ursina.shaders <purple>import</purple> matcap_shader, triplanar_shader
-e = Button(<olive>parent</olive>=scene, <olive>scale</olive>=<yellow>2</yellow>, <olive>text</olive>=<green>'yolo'</green>, <olive>texture</olive>=<green>'shore'</green>, <olive>texture_scale</olive>=Vec2(<yellow>2</yellow>), <olive>color</olive>=color.gray)
+e = Button(<olive>parent</olive>=scene, <olive>scale</olive>=<yellow>2</yellow>, <olive>text</olive>=<green>'test'</green>, <olive>texture</olive>=<green>'shore'</green>, <olive>texture_scale</olive>=Vec2(<yellow>2</yellow>), <olive>color</olive>=color.gray)
 e.c = <olive>Entity</olive>(<olive>parent</olive>=e, <olive>model</olive>=<green>'icosphere'</green>, <olive>scale</olive>=.<yellow>5</yellow>, <olive>y</olive>=.<yellow>5</yellow>, <olive>shader</olive>=matcap_shader, <olive>texture</olive>=<green>'matcap_<yellow>4</yellow>'</green>)
 e.c<yellow>2</yellow> = <olive>Entity</olive>(<olive>parent</olive>=e.c, <olive>model</olive>=<green>'cube'</green>, <olive>scale</olive>=.<yellow>5</yellow>, <olive>y</olive>=.<yellow>5</yellow>, x=<yellow>1</yellow>, <olive>color</olive>=color.green, <olive>shader</olive>=triplanar_shader, <olive>texture</olive>=<green>'grass'</green>)
 

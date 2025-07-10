@@ -174,18 +174,39 @@ input()
 </code_block>
 <div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/mouse.py#L134" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#input" onclick="navigator.clipboard.writeText('#input')" title="Copy permalink">◃-</a></div><br>
 <hr></hr><br>
+<br>
 <h3 id="update()">
 update()
 </h3><div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/mouse.py#L186" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#update" onclick="navigator.clipboard.writeText('#update')" title="Copy permalink">◃-</a></div><br>
 <hr></hr><br>
+<br>
 <h3 id="find_collision()">
 find_collision()
 </h3><div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/mouse.py#L276" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#find_collision" onclick="navigator.clipboard.writeText('#find_collision')" title="Copy permalink">◃-</a></div><br>
 <hr></hr><br>
+<br>
 <h3 id="unhover_everything_not_hit()">
 unhover_everything_not_hit()
 </h3><div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/mouse.py#L317" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#unhover_everything_not_hit" onclick="navigator.clipboard.writeText('#unhover_everything_not_hit')" title="Copy permalink">◃-</a></div><br>
 <hr></hr><br>
+<br>
+<h2 id="Examples">
+Examples
+</h2>getting_mouse_position_in_3d<br>
+<code_block id="code_block_1"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+
+app = Ursina()
+
+cursor_<yellow>3</yellow>d = <olive>Entity</olive>(<olive>model</olive>=<green>'icosphere'</green>, <olive>scale</olive>=.<yellow>1</yellow>, <olive>color</olive>=color.azure)
+plane = <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>scale</olive>=<yellow>1</yellow><yellow>0</yellow>, <olive>collider</olive>=<green>'box'</green>, <olive>color</olive>=color.light_gray)
+EditorCamera(<olive>rotation_x</olive>=<yellow>3</yellow><yellow>0</yellow>)
+
+<purple>def</purple> update():
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> mouse.world_point:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cursor_<yellow>3</yellow>d.position = mouse.world_point
+
+app.run()
+</code_block>
 <div class="sidebar"><span>8.0.0</span><br>
 Basics<br>
   <a href="ursina.html">Ursina</a><br>

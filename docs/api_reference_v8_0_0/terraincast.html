@@ -28,8 +28,10 @@ terraincast()
 </code_block>
 <purple>uses x and z to return y on terrain.</purple><br>
 <div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/terraincast.py#L7" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#terraincast" onclick="navigator.clipboard.writeText('#terraincast')" title="Copy permalink">◃-</a></div><br>
-<hr></hr>## Examples<br>
-<br>
+<hr></hr><br>
+<h2 id="Examples">
+Examples
+</h2><br>
 <code_block id="code_block_1"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>app = Ursina()
 
 terrain_entity = <olive>Entity</olive>(<olive>model</olive>=Terrain(<green><green>'heightmap_<yellow>1</yellow>'</green></green>, skip=<yellow>8</yellow>), <olive>scale</olive>=(<yellow>4</yellow><yellow>0</yellow>, <yellow>5</yellow>, <yellow>2</yellow><yellow>0</yellow>), <olive>texture</olive>=<green><green>'heightmap_<yellow>1</yellow>'</green></green>)
@@ -46,8 +48,6 @@ hv = terrain_entity.model.height_values
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;player.y = y
 
 EditorCamera()
-<purple>from</purple> ursina.shaders <purple>import</purple> ssao_shader
-camera.shader = ssao_shader
 Sky()
 
 app.run()

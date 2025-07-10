@@ -14,9 +14,7 @@
 <h1 id="boxcast">
 boxcast
 </h1><gray>&lt;/&gt;</gray><a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/boxcast.py"> ursina.boxcast</a><br>
-<h2 id="Variables">
-Variables
-</h2><h2 id="Functions">
+<h2 id="Functions">
 Functions
 </h2><h3 id="boxcast()">
 boxcast()
@@ -24,8 +22,10 @@ boxcast()
 </code_block>
 <purple>similar to raycast, but with width and height</purple><br>
 <div class="links">  <a href="https://github.com/pokepetter/ursina/tree/v8_0_0/ursina/boxcast.py#L10" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>  <a href="#boxcast" onclick="navigator.clipboard.writeText('#boxcast')" title="Copy permalink">◃-</a></div><br>
-<hr></hr>## Examples<br>
-<br>
+<hr></hr><br>
+<h2 id="Examples">
+Examples
+</h2><br>
 <code_block id="code_block_1"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button><purple>from</purple> ursina <purple>import</purple> Ursina, held_keys, camera, duplicate, raycast, time, EditorCamera
 app = Ursina()
 
@@ -41,13 +41,31 @@ Example where we only move <purple>if</purple> a wall is <purple>not</purple> hi
 <green>''</green>'
 
 
+class Player(<olive>Entity</olive>):
 
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>def</purple> update(self):
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.direction = Vec3(
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.forward * (held_keys[<green>'w'</green>] - held_keys[<green>'s'</green>])
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ self.right * (held_keys[<green>'d'</green>] - held_keys[<green>'a'</green>])
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;).normalized()&nbsp;&nbsp;<gray># get the direction we're trying to walk in.</gray>
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;origin = self.world_position + (self.up*.<yellow>5</yellow>) <gray># the ray should start slightly up <purple>from</purple> the ground so we can walk up slopes or walk over small objects.</gray>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hit_info = raycast(origin , self.direction, <olive>ignore</olive>=(self,), distance=.<yellow>5</yellow>, debug=False)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> <purple>not</purple> hit_info.hit:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.position += self.direction * <yellow>5</yellow> * time.dt
 
+Player(<olive>model</olive>=<green>'cube'</green>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>color</olive>=color.orange)
+wall_left = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>collider</olive>=<green>'box'</green>, scale_<olive>y</olive>=<yellow>3</yellow>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>color</olive>=color.azure, x=-<yellow>4</yellow>)
+wall_right = duplicate(wall_left, x=<yellow>4</yellow>)
+camera.y = <yellow>2</yellow>
+app.run()
 
+breakpoint()
 d = <olive>Entity</olive>(<olive>parent</olive>=scene, <olive>position</olive>=(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>2</yellow>), <olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.orange, <olive>collider</olive>=<green>'box'</green>, <olive>scale</olive>=<yellow>2</yellow>)
 e = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.lime)
 
+camera.position = (<yellow>0</yellow>, <yellow>1</yellow><yellow>5</yellow>, -<yellow>1</yellow><yellow>5</yellow>)
+camera.look_at(e)
 speed = .<yellow>0</yellow><yellow>1</yellow>
 rotation_speed = <yellow>1</yellow>
 intersection_marker = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>scale</olive>=.<yellow>2</yellow>, <olive>color</olive>=color.red)
@@ -60,13 +78,9 @@ intersection_marker = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</
 
 &nbsp;&nbsp;&nbsp;&nbsp;e.rotation_y -= held_keys[<green>'q'</green>] * rotation_speed
 &nbsp;&nbsp;&nbsp;&nbsp;e.rotation_y += held_keys[<green>'e'</green>] * rotation_speed
-&nbsp;&nbsp;&nbsp;&nbsp;e.rotation_z -= held_keys[<green>'i'</green>] * rotation_speed
-&nbsp;&nbsp;&nbsp;&nbsp;e.rotation_z += held_keys[<green>'k'</green>] * rotation_speed
 
 &nbsp;&nbsp;&nbsp;&nbsp;ray = boxcast(e.world_position, e.right, <yellow>3</yellow>, debug=True)
-&nbsp;&nbsp;&nbsp;&nbsp;<blue>print</blue>(ray.world_point)
-&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> ray.hit:
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;intersection_marker.world_position = ray.world_point
+&nbsp;&nbsp;&nbsp;&nbsp;intersection_marker.world_position = ray.world_point
 &nbsp;&nbsp;&nbsp;&nbsp;intersection_marker.visible = ray.hit
 &nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> ray.hit:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d.color = color.azure
@@ -74,10 +88,9 @@ intersection_marker = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d.color = color.orange
 
 t = time.time()
-ray = raycast(e.world_position, e.forward, <yellow>3</yellow>, debug=True)
 <blue>print</blue>(time.time() - t)
 
-EditorCamera(<olive>rotation_x</olive>=<yellow>3</yellow><yellow>0</yellow>)
+EditorCamera()
 app.run()
 
 </code_block>
