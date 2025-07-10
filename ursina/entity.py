@@ -1181,7 +1181,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
             )
         else:
             # Step 2: Find the rotation needed to align current_forward to the target direction
-            rotation_axis = cross_product(current_forward, direction)
+            rotation_axis = normalize_vector(cross_product(current_forward, direction))
             rotation_angle = math.acos(max(min(dot_product(current_forward, direction), 1.0), -1.0))
 
             # Step 3: Create a quaternion for this rotation
