@@ -921,7 +921,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self._texture_offset = value
 
     def tileset_size_getter(self):         # if the texture is a tileset, say how many tiles there are so it only use one tile of the texture, e.g. tileset_size=[8,4]
-        return self._tileset_size
+        return getattr(self, '_tileset_size', Vec2.one)
     def tileset_size_setter(self, value):
         self._tileset_size = value
         self.texture_scale = Vec2(1/value[0], 1/value[1])

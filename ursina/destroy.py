@@ -3,6 +3,7 @@ import sys
 from ursina import application
 from ursina.scene import instance as scene
 from ursina.ursinastuff import invoke
+from ursina.sequence import Sequence
 
 
 def destroy(entity, delay=0, unscaled=True, ignore_paused=False):

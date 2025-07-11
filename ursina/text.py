@@ -75,7 +75,7 @@ class Text(Entity):
         self.tag = Text.start_tag + 'default' + Text.end_tag
         self.current_color = self.text_colors['default']
         self.scale_override = 1
-        self._background = None
+        self.background_entity = None
         self.appear_sequence = None # gets created when calling appear()
 
 
@@ -385,9 +385,9 @@ class Text(Entity):
     def background_setter(self, value):
         if value is True:
             self.create_background()
-        elif self._background:
+        elif self.background_entity:
             from ursina.ursinastuff import destroy
-            destroy(self._background)
+            destroy(self.background_entity)
 
 
     def align(self):
@@ -419,22 +419,22 @@ class Text(Entity):
     def create_background(self, padding=size*2, radius=size, color=ursina.color.black66):
         from ursina import Quad, destroy
 
-        if self._background:
-            destroy(self._background)
+        if self.background_entity:
+            destroy(self.background_entity)
 
-        self._background = Entity(parent=self, z=.01)
+        self.background_entity = Entity(parent=self, z=.01)
 
         if isinstance(padding, (int, float, complex)):
             padding = (padding, padding)
 
         w, h = self.width + padding[0], self.height + padding[1]
-        self._background.x -= self.origin_x * self.width
+        self.background_entity.x -= self.origin_x * self.width
         # if self.origin_x == .5:
         #     self._background.x += self.origin_x * self.width * 2
-        self._background.y -= self.origin_y * self.height
+        self.background_entity.y -= self.origin_y * self.height
 
-        self._background.model = Quad(radius=radius, scale=(w, h))
-        self._background.color = color
+        self.background_entity.model = Quad(radius=radius, scale=(w, h))
+        self.background_entity.color = color
 
 
     def appear(self, speed=.025):   # make the text animate in, one character at a time

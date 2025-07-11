@@ -11,7 +11,7 @@ class Tooltip(Text):
             setattr(self, key, value)
 
         self.create_background()
-        self.background.color = background_color
+        self.background_entity.color = background_color
 
 
     def update(self):
