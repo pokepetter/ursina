@@ -459,7 +459,7 @@ class Text(Entity):
 
 
     def get_width(string, font=None):
-        t = Text(string)
+        t = Text(string, add_to_scene_entities=False)
         if font:
             t.font = font
         w = t.width
