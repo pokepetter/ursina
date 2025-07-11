@@ -54,8 +54,6 @@ class Terrain(Mesh):
         _height_values = [[j/255 for j in i] for i in self.height_values]
         w, h = self.width, self.depth
         centering_offset = Vec2(-.5, -.5)
-        dx = 1/(w-1)
-        dz = 1/(h-1)
 
         # create the plane
         i = 0
@@ -70,9 +68,9 @@ class Terrain(Mesh):
 
                 # normals
                 if x > 0 and z > 0 and x < w-1 and z < h-1:
-                    rl =  (_height_values[x+1][z] - _height_values[x-1][z]) / (2*dx)
-                    fb =  (_height_values[x][z+1] - _height_values[x][z-1]) / (2*dz)
-                    self.normals.append(Vec3(-rl, 1, -fb).normalized())
+                    rl =  _height_values[x+1][z] - _height_values[x-1][z]
+                    fb =  _height_values[x][z+1] - _height_values[x][z-1]
+                    self.normals.append(Vec3(rl, 1, fb).normalized())
                 else:
                     self.normals.append(Vec3(0,1,0))
 
@@ -93,6 +91,7 @@ class Terrain(Mesh):
 
 
 if __name__ == '__main__':
+    from ursina.shaders.normals_shader import normals_shader
     app = Ursina()
     '''Terrain using an RGB texture as input'''
     terrain_from_heightmap_texture = Entity(model=Terrain('heightmap_1', skip=8), scale=(40,5,20), texture='heightmap_1')
@@ -102,7 +101,7 @@ if __name__ == '__main__':
     It should be a list of lists, where each value is between 0 and 255.
     '''
     hv = terrain_from_heightmap_texture.model.height_values.tolist()
-    terrain_from_list = Entity(model=Terrain(height_values=hv), scale=(40,5,20), texture='heightmap_1', x=40)
+    terrain_from_list = Entity(model=Terrain(height_values=hv), scale=(40,5,20), texture='heightmap_1', x=40, shader=normals_shader)
     terrain_bounds = Entity(model='wireframe_cube', origin_y=-.5, scale=(40,5,20), color=color.lime)
 
     def input(key):
