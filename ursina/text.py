@@ -416,7 +416,7 @@ class Text(Entity):
             tn.setY(tn.getY() - (halfheight * value[1] * 2 * self.size))
 
 
-    def create_background(self, padding=size*2, radius=size, color=ursina.color.black66):
+    def create_background(self, padding=size*2, radius=.1, color=ursina.color.black66):
         from ursina import Quad, destroy
 
         if self.background_entity:
@@ -433,7 +433,9 @@ class Text(Entity):
         #     self._background.x += self.origin_x * self.width * 2
         self.background_entity.y -= self.origin_y * self.height
 
-        self.background_entity.model = Quad(radius=radius, scale=(w, h))
+        self.background_entity.scale = (w,h)
+        self.background_entity.model = Quad(radius=radius, aspect=w/h)
+        # self.background_entity.model = 'quad'
         self.background_entity.color = color
 
 
@@ -484,7 +486,7 @@ if __name__ == '__main__':
     # Text.default_font = 'consola.ttf'
     # color.text_color = color.lime
     Text.default_resolution = 1080 * Text.size
-    test = Text(text=descr, wordwrap=30, scale=4)
+    test = Text(text=descr, wordwrap=30, scale=1)
 
 
     # test.align()
@@ -512,7 +514,7 @@ if __name__ == '__main__':
 
         if key == 'c':
             test.text = ''
-    # test.create_background()
+    test.create_background()
     Sky(color=color.dark_gray)
     EditorCamera()
     window.fps_counter.enabled = False
