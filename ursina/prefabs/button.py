@@ -12,7 +12,10 @@ class Button(Entity):
     default_model = None # will default to rounded Quad
 
     def __init__(self,
-        text='', parent=camera.ui, model=Default, radius=.1, origin=(0,0), text_origin=(0,0), text_size=1, text_color=Default, color=Default, collider='box', highlight_scale=1, pressed_scale=1, disabled=False, **kwargs):
+        text='', parent=camera.ui, model=Default, radius=.1, origin=(0,0), color=Default, collider='box',
+            text_color=Default, text_origin=(0,0), text_size=1, highlight_text_size=None, highlight_text_color=None,
+            highlight_scale=1, pressed_scale=1,
+            disabled=False, **kwargs):
         super().__init__(parent=parent)
 
         for key in ('scale', 'scale_x', 'scale_y', 'scale_z', 'world_scale', 'world_scale_x', 'world_scale_y', 'world_scale_z'):
@@ -40,16 +43,18 @@ class Button(Entity):
         self.pressed_scale = pressed_scale     # multiplier
         self.highlight_sound = None
         self.pressed_sound = None
+        self.highlight_text_size = highlight_text_size if highlight_text_size is not None else text_size
         self.collider = collider
         self.disabled = disabled    # Used for temporary deactivating buttons without making them invisible, and still have collision.
 
         self.text_entity = None
         self.text_origin = text_origin
         text_color = text_color if text_color is not Default else color_module.text_color
+        self.highlight_text_color = highlight_text_color if highlight_text_color is not None else text_color
         if text:
             self.text = text
-            self.text_size = text_size
-            self.text_color = text_color
+        self.text_size = text_size
+        self.text_color = text_color
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -92,11 +97,12 @@ class Button(Entity):
         self.text_entity.origin = value
         self.text_entity.world_parent = self
 
-    def text_color_getter(self):
-        return self.text_entity.color
 
-    def text_color_setter(self, value):
-        self.text_entity.color = value
+    def text_color_setter(self, value, temp=False):
+        if not temp:
+            self._text_color = value
+        if self.text_entity:
+            self.text_entity.color = value
 
     def icon_getter(self):
         return getattr(self, 'icon_entity', None)
@@ -128,8 +134,9 @@ class Button(Entity):
     def text_size_getter(self):
         return getattr(self, '_text_size', 1)
 
-    def text_size_setter(self, value):
-        self._text_size = value
+    def text_size_setter(self, value, temp=False):
+        if not temp:
+            self._text_size = value
         if self.text_entity:
             self.text_entity.world_scale = Vec3(value * 20)
 
@@ -174,11 +181,15 @@ class Button(Entity):
 
 
     def on_mouse_enter(self):   # Handles color tinting, scale change, audio and Tooltip when hovering the Button
-        if not self.disabled and self.model:
-            self.model.setColorScale(self.highlight_color)
+        if not self.disabled:
+            if self.model:
+                self.model.setColorScale(self.highlight_color)
+                if self.highlight_scale != 1:
+                    self.model.setScale(Vec3(self.highlight_scale, self.highlight_scale, 1))
 
-            if self.highlight_scale != 1:
-                self.model.setScale(Vec3(self.highlight_scale, self.highlight_scale, 1))
+            if self.text:
+                self.text_size_setter(self.highlight_text_size, temp=True)
+                self.text_color_setter(self.highlight_text_color, temp=True)
 
             if self.highlight_sound:
                 if isinstance(self.highlight_sound, Audio):
@@ -191,11 +202,15 @@ class Button(Entity):
 
 
     def on_mouse_exit(self):    # Handles color tinting, scale change, audio and Tooltip when unhovering the Button
-        if not self.disabled and self.model:
-            self.model.setColorScale(self.color)
+        if not self.disabled:
+            if self.model:
+                self.model.setColorScale(self.color)
+                if not mouse.left and self.highlight_scale != 1:
+                    self.model.setScale(Vec3(1,1,1))
 
-            if not mouse.left and self.highlight_scale != 1:
-                self.model.setScale(Vec3(1,1,1))
+        if self.text:
+            self.text_size_setter(self.text_size, temp=True)
+            self.text_color_setter(self.text_color, temp=True)
 
         if hasattr(self, 'tooltip') and self.tooltip:
             self.tooltip.enabled = False
@@ -227,8 +242,7 @@ if __name__ == '__main__':
     # Button.default_color = color.magenta
     # Button.default_highlight_color = color.blue
 
-    b = Button(model='quad', scale=.05, x=-.5, color=color.lime, text='text scale\ntest', text_size=.5, text_color=color.black)
-    b.text_size = .5
+    b = Button(model='quad', scale=.05, x=-.5, color=color.lime, text='text_size\ntest', text_size=.5, text_color=color.black)
     b.on_click = Sequence(Wait(.5), Func(print, 'aaaaaa'), )
 
     b = Button(parent=camera.ui, text='hello world!', scale=.25)
@@ -244,6 +258,7 @@ if __name__ == '__main__':
 
     Button(text='sound', scale=.2, position=(-.25,-.2), color=color.pink, highlight_sound='blip_1', pressed_sound=Audio('coin_1', autoplay=False))
 
+    Button('highlight\ntest', scale=(.2,.1), highlight_color=color.magenta, highlight_text_color=color.cyan, highlight_scale=1.2, highlight_text_size=1.2, position=(.2))
     # Entity(model='quad', parent=b, x=1)
     Text('Text size\nreference', x=.15)
     # b.eternal = True
