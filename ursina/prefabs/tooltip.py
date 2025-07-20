@@ -12,6 +12,8 @@ class Tooltip(Text):
 
         self.create_background()
         self.background_entity.color = background_color
+        self._width = self.width
+
 
 
     def update(self):
@@ -20,7 +22,7 @@ class Tooltip(Text):
             mouse.x + (self.margin[0] * self.size/2) + .01,
             mouse.y + (self.margin[1] * self.size/2) + .01
             )
-        self.x = min(self.x, (.5 * window.aspect_ratio) - self.width - self.size - .005)
+        self.x = min(self.x, (.5 * window.aspect_ratio) - self._width - self.size - .005)
         self.y = min(self.y, .5 - (self.height + self.size + .005))
         self.z = -99
 
