@@ -10,7 +10,7 @@ class ContentTypes:
 
 @generate_properties_for_class()
 class InputField(Button):
-    def __init__(self, default_value='', label='', max_lines=1, character_limit=24, text='', active=False, **kwargs):
+    def __init__(self, default_value='', label='', max_lines=1, character_limit=24, text='', text_color=None, active=False, **kwargs):
         if not 'scale' in kwargs and not 'scale_y' in kwargs:
             kwargs['scale'] = (kwargs.get('scale_x', .5), Text.size*2*max_lines)
 
@@ -98,8 +98,9 @@ class InputField(Button):
 
     def text_color_getter(self):
         return self.text_field.text_entity.color
-    def text_color_setter(self, value):
-        self.text_field.text_entity.color = value
+    def text_color_setter(self, value, temp=False):
+        if hasattr(self, 'text_color'):
+            self.text_field.text_entity.color = value
 
     def active_getter(self):
         return self.text_field.active
