@@ -82,7 +82,7 @@ void main() {
 
     vec3 triPlanar = (albedoX + albedoY + albedoZ);
 
-    fragColor = vec4(triPlanar.rgb, 1) * vertex_color;
+    fragColor = vec4(triPlanar.rgba) * vertex_color;
 }
 
 ''',
