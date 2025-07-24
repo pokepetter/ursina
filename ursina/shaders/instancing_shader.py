@@ -73,7 +73,6 @@ if __name__ == '__main__':
     p.set_shader_input('position_offsets', [e.position*4 for e in instances])
     p.set_shader_input('rotation_offsets', [e.quaternion for e in instances])
     p.set_shader_input('scale_multipliers',[e.scale*random.uniform(.9,2) for e in instances])
-    p.set_shader_input('colors', p.model.colors)
 
     print(len(p.model.vertices) * len(instances))
     EditorCamera()
