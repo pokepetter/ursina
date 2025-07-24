@@ -529,6 +529,8 @@ class DatagramReader:
             if converter_func is not None:
                 return converter_func(self)
             else:
+                if type(value_type) is types.GenericAlias:
+                    value_type = (typing.get_origin(value_type), typing.get_args(value_type))
                 if type(value_type) is tuple:
                     origin_type = value_type[0]
                     if origin_type is tuple:
