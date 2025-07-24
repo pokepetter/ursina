@@ -351,6 +351,10 @@ class Ursina(ShowBase):
         application.load_settings()
         if info:
             print('os:', platform.system())
+            import sys
+            print(f'python version: {sys.version}')
+            from importlib.metadata import version
+            print(f'ursina version: {version('ursina')}')
             print('development mode:', application.development_mode)
             print('application successfully started')
 
