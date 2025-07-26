@@ -1,14 +1,16 @@
-from ursina import Entity, Vec2, invoke, scene, color, Vec3, print_warning
-from ursina.prefabs.sky import Sky
+from panda3d.core import AmbientLight as PandaAmbientLight
 from panda3d.core import DirectionalLight as PandaDirectionalLight
 from panda3d.core import PointLight as PandaPointLight
-from panda3d.core import AmbientLight as PandaAmbientLight
 from panda3d.core import Spotlight as PandaSpotLight
+
+from ursina import Entity, Vec2, Vec3, color, scene
+from ursina.prefabs.sky import Sky
+from ursina.scripts.property_generator import generate_properties_for_class
 
 
 class Light(Entity):
     default_values = {'rotation_x':90, }
-    def __init__(self, **kwargs):
+    def __init__(self, color=color.white, **kwargs):
         super().__init__(**(__class__.default_values | kwargs))
 
     @property
@@ -19,8 +21,6 @@ class Light(Entity):
     def color(self, value):
         self._color = value
         self._light.setColor(value)
-
-from ursina.scripts.property_generator import generate_properties_for_class
 
 
 @generate_properties_for_class()
@@ -108,8 +108,8 @@ class SpotLight(Light):
 
 
 if __name__ == '__main__':
-    from ursina import Ursina, EditorCamera, color, Vec3
-    from ursina.shaders import lit_with_shadows_shader # you have to apply this shader to enties for them to receive shadows.
+    from ursina import EditorCamera, Ursina, Vec3, color
+    from ursina.shaders import lit_with_shadows_shader  # you have to apply this shader to enties for them to receive shadows.
 
     app = Ursina()
 
