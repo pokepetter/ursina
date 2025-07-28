@@ -624,7 +624,7 @@ def generate_documentation():
         image_path = Path(f'icons/{file_path.stem}.jpg')
         image_code = ''
         image_url = f'icons/{file_path.stem}.jpg'
-        github_link = f'https://github.com/pokepetter/ursina/tree/{version_tag}/samples/{file_name}'
+        github_link = f'https://github.com/pokepetter/ursina/tree/v{package_version}/samples/{file_name}'
         if image_path.exists():
             image_code = f'#image {image_url}'
         else:
