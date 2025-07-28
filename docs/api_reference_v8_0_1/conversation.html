@@ -1,0 +1,274 @@
+<!DOCTYPE HTML>
+<!--generated with sswg-->
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <title>Conversation</title>
+    <link rel="stylesheet" href="../sswg.css">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+<div style="max-width:1200px; margin:auto;">
+<div style="text-align:left;">
+<h1 id="Conversation">
+Conversation
+</h1><gray>&lt;/&gt;</gray><a href="https://github.com/pokepetter/ursina/tree/v8_0_1/ursina/prefabs/conversation.py"> ursina.prefabs.conversation</a><br>
+<gray>Inherits</gray> <a href="entity.html">Entity</a><br>
+<br>
+<h2 id="Initialization">
+Initialization
+</h2><code_block id="code_block_0"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button>Conversation(variables_object=None)
+</code_block>
+<br>
+<h2 id="Attributes">
+Attributes
+</h2><h3 id=".question">
+.question
+</h3><gray>default: </gray><span>Button(parent=self, text_origin=(-0.5, 0), scale=(...</span><br>
+<hr></hr><br>
+<h3 id=".more_indicator">
+.more_indicator
+</h3><gray>default: </gray><span>Entity(parent=self.question, model=Circle(3), posi...</span><br>
+<hr></hr><br>
+<h3 id=".spacing">
+.spacing
+</h3><gray>default: </gray><span>4 * 0.02</span><br>
+<hr></hr><br>
+<h3 id=".wordwrap">
+.wordwrap
+</h3><gray>default: </gray><span>65</span><br>
+<hr></hr><br>
+<h3 id=".button_model">
+.button_model
+</h3><gray>default: </gray><span>Quad(radius=0.5, aspect=1 / 0.075)</span><br>
+<hr></hr><br>
+<h3 id=".answer_0">
+.answer_0
+</h3><gray>default: </gray><span>Button(parent=self, text='answer_0', y=self.questi...</span><br>
+<hr></hr><br>
+<h3 id=".answer_1">
+.answer_1
+</h3><gray>default: </gray><span>Button(parent=self, text='answer_1', y=self.answer...</span><br>
+<hr></hr><br>
+<h3 id=".answer_2">
+.answer_2
+</h3><gray>default: </gray><span>Button(parent=self, text='answer_2', y=self.answer...</span><br>
+<hr></hr><br>
+<h3 id=".buttons">
+.buttons
+</h3><gray>default: </gray><span>(self.answer_0, self.answer_1, self.answer_2)</span><br>
+<hr></hr><br>
+<h3 id=".question_appear_sequence">
+.question_appear_sequence
+</h3><gray>default: </gray><span>None</span><br>
+<hr></hr><br>
+<h3 id=".button_appear_sequence">
+.button_appear_sequence
+</h3><gray>default: </gray><span>None</span><br>
+<hr></hr><br>
+<h3 id=".started">
+.started
+</h3><gray>default: </gray><span>False</span><br>
+<hr></hr><br>
+<h2 id="Methods">
+Methods
+</h2><h3 id="ask()">
+ask()
+</h3><code_block id="code_block_1"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button>ask(node=None, question_part=<yellow>0</yellow>)
+</code_block>
+<div class="links">&nbsp;&nbsp;<a href="https://github.com/pokepetter/ursina/tree/v8_0_1/ursina/prefabs/conversation.py#L47" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>&nbsp;&nbsp;<a href="#ask" onclick="navigator.clipboard.writeText('#ask')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
+<br>
+<h3 id="input()">
+input()
+</h3><code_block id="code_block_2"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_2)">copy</button>input(ke<olive>y</olive>=None)
+</code_block>
+<div class="links">&nbsp;&nbsp;<a href="https://github.com/pokepetter/ursina/tree/v8_0_1/ursina/prefabs/conversation.py#L122" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>&nbsp;&nbsp;<a href="#input" onclick="navigator.clipboard.writeText('#input')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
+<br>
+<h3 id="next()">
+next()
+</h3><div class="links">&nbsp;&nbsp;<a href="https://github.com/pokepetter/ursina/tree/v8_0_1/ursina/prefabs/conversation.py#L127" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>&nbsp;&nbsp;<a href="#next" onclick="navigator.clipboard.writeText('#next')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
+<br>
+<h3 id="start_conversation()">
+start_conversation()
+</h3><code_block id="code_block_3"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_3)">copy</button>start_conversation(conversation=None)
+</code_block>
+<div class="links">&nbsp;&nbsp;<a href="https://github.com/pokepetter/ursina/tree/v8_0_1/ursina/prefabs/conversation.py#L141" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>&nbsp;&nbsp;<a href="#start_conversation" onclick="navigator.clipboard.writeText('#start_conversation')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
+<br>
+<h3 id="parse_conversation()">
+parse_conversation()
+</h3><code_block id="code_block_4"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_4)">copy</button>parse_conversation(convo=None)
+</code_block>
+<div class="links">&nbsp;&nbsp;<a href="https://github.com/pokepetter/ursina/tree/v8_0_1/ursina/prefabs/conversation.py#L148" alt="Source Code" title="View Source Code" style="font-size:.75em;">&lt;/&gt;</a>&nbsp;&nbsp;<a href="#parse_conversation" onclick="navigator.clipboard.writeText('#parse_conversation')" title="Copy permalink">◃-</a></div><br>
+<hr></hr><br>
+<br>
+<div class="sidebar"><span>8.0.1</span><br>
+Basics<br>
+&nbsp;&nbsp;<a href="ursina.html">Ursina</a><br>
+&nbsp;&nbsp;<a href="entity.html">Entity</a><br>
+&nbsp;&nbsp;<a href="button.html">Button</a><br>
+&nbsp;&nbsp;<a href="sprite.html">Sprite</a><br>
+&nbsp;&nbsp;<a href="text.html">Text</a><br>
+&nbsp;&nbsp;<a href="audio.html">Audio</a><br>
+<br>
+Core Modules<br>
+&nbsp;&nbsp;<a href="camera.html">camera</a><br>
+&nbsp;&nbsp;<a href="mouse.html">mouse</a><br>
+&nbsp;&nbsp;<a href="window.html">window</a><br>
+&nbsp;&nbsp;<a href="application.html">application</a><br>
+&nbsp;&nbsp;<a href="scene.html">scene</a><br>
+<br>
+Graphics<br>
+&nbsp;&nbsp;<a href="color.html">color</a><br>
+&nbsp;&nbsp;<a href="mesh.html">Mesh</a><br>
+&nbsp;&nbsp;<a href="shader.html">Shader</a><br>
+&nbsp;&nbsp;<a href="texture.html">Texture</a><br>
+&nbsp;&nbsp;<a href="light.html">Light</a><br>
+&nbsp;&nbsp;<a href="directional_light.html">DirectionalLight</a><br>
+&nbsp;&nbsp;<a href="point_light.html">PointLight</a><br>
+&nbsp;&nbsp;<a href="ambient_light.html">AmbientLight</a><br>
+&nbsp;&nbsp;<a href="spot_light.html">SpotLight</a><br>
+<br>
+Procedural Models<br>
+&nbsp;&nbsp;<a href="quad.html">Quad</a><br>
+&nbsp;&nbsp;<a href="circle.html">Circle</a><br>
+&nbsp;&nbsp;<a href="plane.html">Plane</a><br>
+&nbsp;&nbsp;<a href="grid.html">Grid</a><br>
+&nbsp;&nbsp;<a href="cone.html">Cone</a><br>
+&nbsp;&nbsp;<a href="cylinder.html">Cylinder</a><br>
+&nbsp;&nbsp;<a href="pipe.html">Pipe</a><br>
+&nbsp;&nbsp;<a href="terrain.html">Terrain</a><br>
+<br>
+modules<br>
+&nbsp;&nbsp;<a href="input_handler.html">input_handler</a><br>
+&nbsp;&nbsp;<a href="mesh_importer.html">mesh_importer</a><br>
+&nbsp;&nbsp;<a href="texture_importer.html">texture_importer</a><br>
+&nbsp;&nbsp;<a href="string_utilities.html">string_utilities</a><br>
+<br>
+Animation<br>
+&nbsp;&nbsp;<a href="animation.html">Animation</a><br>
+&nbsp;&nbsp;<a href="frame_animation3d.html">FrameAnimation3d</a><br>
+&nbsp;&nbsp;<a href="sprite_sheet_animation.html">SpriteSheetAnimation</a><br>
+&nbsp;&nbsp;<a href="animator.html">Animator</a><br>
+&nbsp;&nbsp;<a href="trail_renderer.html">TrailRenderer</a><br>
+&nbsp;&nbsp;<a href="curve.html">curve</a><br>
+<br>
+Math<br>
+&nbsp;&nbsp;<a href="ursinamath.html">ursinamath</a><br>
+&nbsp;&nbsp;<a href="vec2.html">Vec2</a><br>
+&nbsp;&nbsp;<a href="vec3.html">Vec3</a><br>
+&nbsp;&nbsp;<a href="vec4.html">Vec4</a><br>
+&nbsp;&nbsp;<a href="cubic_bezier.html">CubicBezier</a><br>
+&nbsp;&nbsp;<a href="array_tools.html">array_tools</a><br>
+&nbsp;&nbsp;<a href="array2_d.html">Array2D</a><br>
+&nbsp;&nbsp;<a href="array3_d.html">Array3D</a><br>
+<br>
+Gameplay<br>
+&nbsp;&nbsp;<a href="ursinastuff.html">ursinastuff</a><br>
+&nbsp;&nbsp;<a href="sequence.html">Sequence</a><br>
+&nbsp;&nbsp;<a href="func.html">Func</a><br>
+&nbsp;&nbsp;<a href="keys.html">Keys</a><br>
+<br>
+Collision<br>
+&nbsp;&nbsp;<a href="raycast.html">raycast</a><br>
+&nbsp;&nbsp;<a href="terraincast.html">terraincast</a><br>
+&nbsp;&nbsp;<a href="boxcast.html">boxcast</a><br>
+&nbsp;&nbsp;<a href="hit_info.html">HitInfo</a><br>
+&nbsp;&nbsp;<a href="collider.html">Collider</a><br>
+&nbsp;&nbsp;<a href="box_collider.html">BoxCollider</a><br>
+&nbsp;&nbsp;<a href="sphere_collider.html">SphereCollider</a><br>
+&nbsp;&nbsp;<a href="mesh_collider.html">MeshCollider</a><br>
+<br>
+Prefabs<br>
+&nbsp;&nbsp;<a href="sky.html">Sky</a><br>
+&nbsp;&nbsp;<a href="editor_camera.html">EditorCamera</a><br>
+&nbsp;&nbsp;<a href="tilemap.html">Tilemap</a><br>
+&nbsp;&nbsp;<a href="first_person_controller.html">FirstPersonController</a><br>
+&nbsp;&nbsp;<a href="platformer_controller2d.html">PlatformerController2d</a><br>
+&nbsp;&nbsp;<a href="conversation.html">Conversation</a><br>
+<br>
+UI<br>
+&nbsp;&nbsp;<a href="button.html">Button</a><br>
+&nbsp;&nbsp;<a href="draggable.html">Draggable</a><br>
+&nbsp;&nbsp;<a href="tooltip.html">Tooltip</a><br>
+&nbsp;&nbsp;<a href="slider.html">Slider</a><br>
+&nbsp;&nbsp;<a href="thin_slider.html">ThinSlider</a><br>
+&nbsp;&nbsp;<a href="text_field.html">TextField</a><br>
+&nbsp;&nbsp;<a href="input_field.html">InputField</a><br>
+&nbsp;&nbsp;<a href="content_types.html">ContentTypes</a><br>
+&nbsp;&nbsp;<a href="checkbox.html">Checkbox</a><br>
+&nbsp;&nbsp;<a href="button_list.html">ButtonList</a><br>
+&nbsp;&nbsp;<a href="button_group.html">ButtonGroup</a><br>
+&nbsp;&nbsp;<a href="window_panel.html">WindowPanel</a><br>
+&nbsp;&nbsp;<a href="file_browser.html">FileBrowser</a><br>
+&nbsp;&nbsp;<a href="file_browser_save.html">FileBrowserSave</a><br>
+&nbsp;&nbsp;<a href="dropdown_menu.html">DropdownMenu</a><br>
+&nbsp;&nbsp;<a href="radial_menu.html">RadialMenu</a><br>
+&nbsp;&nbsp;<a href="health_bar.html">HealthBar</a><br>
+<br>
+Editor<br>
+&nbsp;&nbsp;<a href="hot_reloader.html">HotReloader</a><br>
+&nbsp;&nbsp;<a href="grid_editor.html">GridEditor</a><br>
+&nbsp;&nbsp;<a href="pixel_editor.html">PixelEditor</a><br>
+&nbsp;&nbsp;<a href="ascii_editor.html">ASCIIEditor</a><br>
+&nbsp;&nbsp;<a href="color_picker.html">ColorPicker</a><br>
+<br>
+Scripts<br>
+&nbsp;&nbsp;<a href="grid_layout.html">grid_layout</a><br>
+&nbsp;&nbsp;<a href="duplicate.html">duplicate</a><br>
+&nbsp;&nbsp;<a href="smooth_follow.html">SmoothFollow</a><br>
+&nbsp;&nbsp;<a href="scrollable.html">Scrollable</a><br>
+&nbsp;&nbsp;<a href="noclip_mode.html">NoclipMode</a><br>
+&nbsp;&nbsp;<a href="noclip_mode2d.html">NoclipMode2d</a><br>
+&nbsp;&nbsp;<a href="build.html">build</a><br>
+<br>
+Assets<br>
+&nbsp;&nbsp;<a href="models.html">models</a><br>
+&nbsp;&nbsp;<a href="textures.html">textures</a><br>
+<br>
+Shaders<br>
+&nbsp;&nbsp;<a href="unlit_shader.html">unlit_shader</a><br>
+&nbsp;&nbsp;<a href="lit_with_shadows_shader.html">lit_with_shadows_shader</a><br>
+&nbsp;&nbsp;<a href="matcap_shader.html">matcap_shader</a><br>
+&nbsp;&nbsp;<a href="colored_lights_shader.html">colored_lights_shader</a><br>
+&nbsp;&nbsp;<a href="fresnel_shader.html">fresnel_shader</a><br>
+&nbsp;&nbsp;<a href="projector_shader.html">projector_shader</a><br>
+&nbsp;&nbsp;<a href="texture_blend_shader.html">texture_blend_shader</a><br>
+&nbsp;&nbsp;<a href="instancing_shader.html">instancing_shader</a><br>
+&nbsp;&nbsp;<a href="triplanar_shader.html">triplanar_shader</a><br>
+&nbsp;&nbsp;<a href="normals_shader.html">normals_shader</a><br>
+&nbsp;&nbsp;<a href="transition_shader.html">transition_shader</a><br>
+&nbsp;&nbsp;<a href="fxaa.html">fxaa</a><br>
+&nbsp;&nbsp;<a href="ssao.html">ssao</a><br>
+&nbsp;&nbsp;<a href="camera_outline_shader.html">camera_outline_shader</a><br>
+&nbsp;&nbsp;<a href="pixelation_shader.html">pixelation_shader</a><br>
+&nbsp;&nbsp;<a href="camera_contrast.html">camera_contrast</a><br>
+&nbsp;&nbsp;<a href="camera_vertical_blur.html">camera_vertical_blur</a><br>
+&nbsp;&nbsp;<a href="camera_grayscale.html">camera_grayscale</a><br>
+</div><br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
+</script>
+<br>
+<br>
+</body>
+</html><style>
+h1 {margin-bottom:0em; margin-top:1em}
+h2 {margin-bottom:.5em;}
+h3 {margin:0em; font-size:1em;}
+code_block {margin-top:.0em; margin-bottom:1em;}
+hr {border-color:gray; opacity:.25;}
+.links {width:fit-content;}
+.links a {text-decoration:none; opacity:.5;}
+</style>

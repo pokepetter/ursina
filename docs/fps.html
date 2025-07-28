@@ -12,10 +12,10 @@
 <div style="max-width:1200px; margin:auto;">
 <div style="text-align:left;">
 <br>
-<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" donate.html" class="button">Donate</a><br>
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference_v8_0_0/index.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" donate.html" class="button">Donate</a><br>
 <h1 id="FPS">
 FPS
-</h1><a href="https://github.com/pokepetter/ursina/tree/v8_0_0/samples/fps.py">https://github.com/pokepetter/ursina/tree/v8_0_0/samples/fps.py</a><br>
+</h1><a href="https://github.com/pokepetter/ursina/tree/v8.0.1/samples/fps.py">https://github.com/pokepetter/ursina/tree/v8.0.1/samples/fps.py</a><br>
 <br>
 <img src="icons/fps.jpg"></img> <br>
 <code_block id="code_block_0"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina <purple>import</purple> *
@@ -67,7 +67,6 @@ mouse.traverse_target = shootables_parent
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mouse.hovered_entity.hp -= <yellow>1</yellow><yellow>0</yellow>
 
 
-<purple>from</purple> ursina.prefabs.health_bar <purple>import</purple> HealthBar
 
 class Enemy(<olive>Entity</olive>):
 &nbsp;&nbsp;&nbsp;&nbsp;<purple>def</purple> __init__(self, **kwargs):
