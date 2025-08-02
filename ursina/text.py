@@ -270,10 +270,12 @@ class Text(Entity):
         if not font_file_path:
             print_warning('missing font:', value)
 
-        if sys.platform == 'linux':
-            font = FontPool.load_font(str(font_file_path))
-        else:
-            font = FontPool.load_font(str(font_file_path.name))
+        # font = FontPool.load_font(str(font_file_path))
+        # since FontPool can't import fonts from path on Windows, add the directory to the "model path" and load by name
+        from panda3d.core import getModelPath
+        _model_path = getModelPath()
+        _model_path.append_path(str(font_file_path.parent.resolve()))
+        font = FontPool.load_font(font_file_path.name)
 
         if font:
             self._font = font
@@ -281,7 +283,7 @@ class Text(Entity):
             self._font.setPixelsPerUnit(self.resolution)
             self._font.setLineHeight(self.line_height)
             if self.text:
-                self.text = self.raw_text   # update tex
+                self.text = self.raw_text   # update text
 
 
     def color_setter(self, value):
