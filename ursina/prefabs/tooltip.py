@@ -10,7 +10,7 @@ class Tooltip(Text):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-        self.create_background(padding=padding, model_class=background_model_class, radius=background_radius)
+        self.create_background(padding=padding, model_class=background_model_class, radius=background_radius, )
         self.background_entity.color = background_color
         self._width = self.width
 
@@ -38,7 +38,7 @@ Lasts for 4 rounds.'''.replace('\n', ' '),
         background_color=color.white,
         background_model_class=NineSlice,
         background_radius = .25,
-        padding=Vec2(.2),
+        padding=Vec2(.1),
         font=Text.default_monospace_font,
         wordwrap=50,
 )

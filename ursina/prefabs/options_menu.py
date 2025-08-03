@@ -111,6 +111,14 @@ if __name__ == '__main__':
     # color.text_color = hsv(240, 1, .8)
     # color.text_color = hsv(60, 0, 10/255)
     # Button.default_color
+    from ursina import NineSlice
+    NineSlice.outset = .4
+    Button.default_color = color.white
+    Button.default_model = NineSlice
+    Button.default_texture = 'nineslice_rainbow'
+    Button.default_radius = .5
+
+
     options_menu = OptionsMenu()
     # window.color = color._16
     background = Entity(parent=camera.ui, model='quad', texture='shore', scale=(camera.aspect_ratio,1), color=color.dark_gray, z=1, world_y=0)
