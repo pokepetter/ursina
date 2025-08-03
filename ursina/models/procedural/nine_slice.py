@@ -1,4 +1,6 @@
-from ursina import *
+from ursina.mesh import Mesh
+from ursina.vec2 import Vec2
+from ursina.vec3 import Vec3
 
 '''
 nineslice mesh:
@@ -31,7 +33,7 @@ class NineSlice(Mesh):
 
         if entity_scale.x > entity_scale.y:
             aspect_ratio = (entity_scale.x / entity_scale.y)
-            print('aspect_ratio', aspect_ratio, entity_scale)
+            # print('aspect_ratio', aspect_ratio, entity_scale)
             for idx in (1,2,9,10):
                 verts[idx].x += radius / aspect_ratio
             for idx in (4,7,12,15):
@@ -77,40 +79,27 @@ class NineSlice(Mesh):
 
 
 if __name__ == '__main__':
+    from ursina import Ursina, window, color, Entity, camera, Draggable, scene, EditorCamera, Grid, Button, NineSlice
+
     app = Ursina()
+    Button.default_texture = 'nineslice_rainbow'
+    Button.default_color = color.white
     m = NineSlice(entity_scale=Vec3(2,1,1),
         # scale_multiplier=1.4,   # account for whitespace and drop shadow in the texture
         )
 
-    window.color = color._0
+    window.color = color.white
 
     Entity(parent=camera.ui, model='wireframe_quad', scale=Vec2(2,1)*.1, color=color.red)
-    # for i, (nineslice_texture, scale_multiplier) in enumerate(
-    #     zip(
-    #         ('nineslice_rainbow', 'nineslice_double', 'circle'),
-    #         (1.4, 1.4, 1), strict=True
-    #     )):
-    #     b = Draggable(
-    #         model=NineSlice(entity_scale=Vec3(2,1,1), scale_multiplier=scale_multiplier),
-    #         scale=Vec2(2,1)*.1,
-    #         texture=nineslice_texture,
-    #         text='Next',
-    #         color=color.white,
-    #         text_color=color.dark_gray,
-    #         text_origin=(0,0),
-    #         highlight_color=hsv(210,.1,1),
-    #         pressed_scale=.9,
-    #         pressed_color=hsv(180,.2,.7),
-    #         # wireframe=True,
-    #         y=-i*.2
-    #         )
 
-    # button1 = Entity(text="Hi !!", model=NineSlice(2, 3), scale=(.2,.3), position=(-0.2, -0.3), texture="nineslice_rainbow", color=color.white)
-    button2 = Draggable(parent=scene, model=NineSlice((1,1)), scale=1, position=(0,0), origin=(-.5,-.5), texture="nineslice_rainbow", color=color.white)
-    button2 = Draggable(parent=scene, model=NineSlice((2,1)), scale=(2,1), position=(0,1), origin=(-.5,-.5), texture="nineslice_rainbow", color=color.white, wireframe=False)
-    button2 = Draggable(parent=scene, model=NineSlice((1,3)), scale=(1,3), position=(1,-2), origin=(-.5,-.5), texture="nineslice_rainbow", color=color.white, wireframe=False)
-    button2 = Draggable(parent=scene, model=NineSlice((3,1)), scale=(3,1), position=(-2,-1), origin=(-.5,-.5), texture="nineslice_rainbow", color=color.white, wireframe=False)
-    # button3 = Entity(text="As you can see, the texture goes \nwell for every button size.", model=NineSlice(0.4, 0.4), position=(0, 0.1), texture="nine_sliced", color=color.white)
+    button_1 = Draggable(parent=scene, radius=.5, model=NineSlice, scale=1, position=(0,0), origin=(-.5,-.5), texture="nineslice_rainbow", color=color.white) # if entity_scale is not provided to NineSlice, use self.scale
+
+    button_2 = Draggable(parent=scene, radius=.5, model=NineSlice((2,1)), scale=(2,1), position=(0,1), origin=(-.5,-.5), texture="nineslice_rainbow", color=color.white, wireframe=False)
+
+    button_3 = Draggable(parent=scene, radius=.5, model=NineSlice, scale=(1,3), position=(1,-2), origin=(-.5,-.5))
+    button_4 = Draggable(parent=scene, radius=.25, model=NineSlice, scale=(3,1), position=(-2,-1), origin=(-.5,-.5))
+
+
     EditorCamera()
     Entity(model=Grid(8,8), scale=8)
 

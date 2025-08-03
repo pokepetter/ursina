@@ -62,7 +62,7 @@ class Inventory(Entity):
             name = '<orange>Rare ' + name
 
         icon.tooltip = Tooltip(name)
-        icon.tooltip.background.color = color.hsv(0,0,0,.8)
+        icon.tooltip.background_entity.color = color.hsv(0,0,0,.8)
 
 
         def drag():

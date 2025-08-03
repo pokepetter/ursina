@@ -148,11 +148,9 @@ def sum(l):
     except:
         pass
 
-    total = l[0].__class__()
-    for e in l:
-        total += e
-
-    return total
+    # Normally you can't sum a list of Vec3, unless you do `sum(vec3_list, Vec3(0,0,0))`, which is annoying.
+    # So if the python's sum fails, start with a new Vec3 instance and add too that.
+    return _sum(l, l[0].__class__())
 
 
 def make_gradient(index_value_dict):

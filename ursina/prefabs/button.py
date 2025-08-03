@@ -9,10 +9,12 @@ class Button(Entity):
 
     default_color = color.black90
     default_highlight_color = None
-    default_model = None # will default to rounded Quad
+    default_model = Quad
+    default_radius = .1
+    default_texture = ''
 
     def __init__(self,
-        text='', parent=camera.ui, model=Default, radius=.1, origin=(0,0), color=Default, collider='box',
+        text='', parent=camera.ui, model=Default, radius=Default, origin=(0,0), texture=Default, color=Default, collider='box',
             text_color=Default, text_origin=(0,0), text_size=1, highlight_text_size=None, highlight_text_color=None,
             highlight_scale=1, pressed_scale=1,
             disabled=False, **kwargs):
@@ -22,22 +24,15 @@ class Button(Entity):
             if key in kwargs:   # set the scale before model for correct corners
                 setattr(self, key, kwargs[key])
 
-        if model == Default:
-            if not Button.default_model:
-                if self.scale[0] != 0 and self.scale[1] != 0:
-                    self.model = Quad(aspect=self.scale[0] / self.scale[1], radius=radius)
-            else:
-                self.model = Button.default_model
-        else:
-            self.model = model
+        self.radius = Button.default_radius if radius is Default else radius
+        self.model = Button.default_model if model is Default else model
 
         self.origin = origin
 
-        if color == Default:
-            color = Button.default_color
-        self.color = color
+        self.texture = Button.default_texture if texture is Default else texture
+        self.color = color = Button.default_color if color is Default else color
 
-        self.highlight_color = self.color.tint(.2) if __class__.default_highlight_color is None else __class__.default_highlight_color
+        self.highlight_color = self.color.tint(.2) if Button.default_highlight_color is None else Button.default_highlight_color
         self.pressed_color = self.color.tint(-.2)
         self.highlight_scale = highlight_scale    # multiplier
         self.pressed_scale = pressed_scale     # multiplier
@@ -228,7 +223,7 @@ class Button(Entity):
         self.scale += Vec2(*padding)
         self.position += self.text_origin * self.scale.xy * .5
 
-        self.model = Quad(aspect=self.scale_x/self.scale_y, radius=radius)
+        self.model = self.model.__class__
         self.parent = self.original_parent
         self.text_entity.world_parent = self
 
@@ -239,8 +234,11 @@ if __name__ == '__main__':
     app = Ursina()
 
     # # test settging default colors
-    # Button.default_color = color.magenta
     # Button.default_highlight_color = color.blue
+    Button.default_color = color.white
+    Button.default_model = NineSlice
+    Button.default_texture = 'nineslice_rainbow'
+    Button.default_radius = .5
 
     b = Button(model='quad', scale=.05, x=-.5, color=color.lime, text='text_size\ntest', text_size=.5, text_color=color.black)
     b.on_click = Sequence(Wait(.5), Func(print, 'aaaaaa'), )

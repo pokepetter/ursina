@@ -3,14 +3,14 @@ from ursina import *
 
 class Tooltip(Text):
 
-    def __init__(self, text='', wordwrap=40, background_color=color.black66, **kwargs):
+    def __init__(self, text='', wordwrap=40, background_color=color.black66, background_model_class=Quad, background_radius=.1, padding=.05, **kwargs):
         super().__init__(text=text, ignore=False, parent=camera.ui, wordwrap=wordwrap, origin=(-.5,-.5), margin=(2,2),
             background_color=color.inverse(color.text_color), enabled=False)
 
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-        self.create_background()
+        self.create_background(padding=padding, model_class=background_model_class, radius=background_radius)
         self.background_entity.color = background_color
         self._width = self.width
 
@@ -35,10 +35,13 @@ if __name__ == '__main__':
 storm <default>to deal 5 <blue>water
 damage <default>to <red>everyone, <default>including <orange>yourself. <default>
 Lasts for 4 rounds.'''.replace('\n', ' '),
-        background_color=color.violet,
+        background_color=color.white,
+        background_model_class=NineSlice,
+        background_radius = .25,
+        padding=Vec2(.2),
         font=Text.default_monospace_font,
         wordwrap=50,
 )
-
+    tooltip_test.background_entity.texture = 'nineslice_rainbow'
     tooltip_test.enabled = True
     app.run()

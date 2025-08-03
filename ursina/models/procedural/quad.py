@@ -1,6 +1,9 @@
 from copy import deepcopy
 
-from ursina import *
+from ursina.mesh import Mesh
+from ursina.vec3 import Vec3
+from ursina.vec2 import Vec2
+from ursina.ursinamath import sum
 
 
 class Quad(Mesh):
@@ -37,6 +40,7 @@ class Quad(Mesh):
         self._initialized = True
 
         if not Quad._corner_maker:
+            from ursina.entity import Entity
             Quad._corner_maker = Entity(eternal=True, add_to_scene_entities=False)
         if not Quad._point_placer:
             Quad._point_placer = Entity(parent=Quad._corner_maker, x=-radius, eternal=True, add_to_scene_entities=False)
@@ -94,6 +98,7 @@ class Quad(Mesh):
 
 
 if __name__ == '__main__':
+    from ursina import Ursina, Entity, color, camera
     app = Ursina()
     from time import perf_counter
     t = perf_counter()
@@ -101,7 +106,7 @@ if __name__ == '__main__':
     for i in range(100):
         Entity(model=Quad(scale=(3,1), thickness=3, segments=3, mode='line'), color = color.hsv(0,1,1,.7))
     # Entity(scale=(3,1), model=Quad(aspect=3), color = color.hsv(60,1,1,.3))
-    print('-------', (perf_counter() - t))
+    # print('-------', (perf_counter() - t))
 
     origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
     # ed = EditorCamera(rotation_speed = 200, panning_speed=200)

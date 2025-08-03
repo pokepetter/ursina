@@ -16,6 +16,7 @@ from ursina import destroy
 from ursina.shaders.text_shader import text_shader
 from ursina.string_utilities import print_warning
 from ursina.scripts.property_generator import generate_properties_for_class
+from ursina.models.procedural.quad import Quad
 # note:
 # <scale:n> tag doesn't work well in the middle of text.
 # only good for titles for now.
@@ -383,6 +384,8 @@ class Text(Entity):
         if self.text:
             self.text = self.raw_text
 
+    def background_getter(self):
+        return getattr(self, 'background_entity', None)
 
     def background_setter(self, value):
         if value is True:
@@ -418,7 +421,7 @@ class Text(Entity):
             tn.setY(tn.getY() - (halfheight * value[1] * 2 * self.size))
 
 
-    def create_background(self, padding=size*2, radius=.1, color=ursina.color.black66):
+    def create_background(self, padding=size*2, radius=.1, color=ursina.color.black66, model_class=Quad):
         from ursina import Quad, destroy
 
         if self.background_entity:
@@ -436,7 +439,10 @@ class Text(Entity):
         self.background_entity.y -= self.origin_y * self.height
 
         self.background_entity.scale = (w,h)
-        self.background_entity.model = Quad(radius=radius, aspect=w/h)
+        if model_class == Quad:
+            self.background_entity.model = Quad(aspect=self.background_entity.scale.x/self.background_entity.scale.y, radius=radius)
+        else:
+            self.background_entity.model = model_class(entity_scale=self.background_entity.scale.xy, radius=radius)
         # self.background_entity.model = 'quad'
         self.background_entity.color = color
 

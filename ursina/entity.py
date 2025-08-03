@@ -30,7 +30,9 @@ from ursina import shader
 from ursina.shader import Shader
 from ursina.string_utilities import print_warning
 from ursina.ursinamath import Bounds
-from ursina.ursinastuff import invoke, PostInitCaller, after, Default
+from ursina.ursinastuff import PostInitCaller, after, Default
+from ursina.models.procedural.quad import Quad
+from ursina.models.procedural.nine_slice import NineSlice
 
 from ursina import color
 from ursina.color import Color
@@ -250,6 +252,11 @@ class Entity(NodePath, metaclass=PostInitCaller):
             m.setPos(Vec3(0,0,0))
             self._model = m
 
+        elif value is Quad:
+            self._model = Quad(aspect=self.scale.x/self.scale.y, radius=getattr(self, 'radius', .1))
+
+        elif value is NineSlice:
+            self._model = NineSlice(entity_scale=self.scale.xy, radius=getattr(self, 'radius', .1))
 
         if self._model:
             self._model.reparentTo(self)
@@ -292,7 +299,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
         if not application.development_mode:
             return
         if self.is_empty():
-            raise Exception(f'entity has been destroyed by: {self.destroy_source}')
+            raise Exception(f'entity has been destroyed by: {getattr(self, 'destroy_source', 'unknown')}')
 
 
     def double_sided_setter(self, value):
