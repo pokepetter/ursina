@@ -7,8 +7,7 @@ class FileButton(Button):
     def __init__(self, load_menu, path, **kwargs):
         self.load_menu = load_menu
         self.path = path
-        super().__init__(model='quad', highlight_color=color.dark_gray, scale=(.875,.025), pressed_scale=1, ignore_paused=True, **kwargs)
-        self.text_entity.scale *= .75
+        super().__init__(model='quad', highlight_color=color.dark_gray, scale=(.875,.025), pressed_scale=1, ignore_paused=True, text_size=.75, **kwargs)
         self.original_color = self.color
         self.selected = False
 
@@ -65,8 +64,8 @@ class FileBrowser(Entity):
         self.max_buttons = 24
 
         self.title_bar = Button(parent=self, scale=(.9,.035), text='<gray>Open', color=color.dark_gray, highlight_color=color.dark_gray)
-        self.address_bar = Button(parent=self, scale=(.8,.035), text='//', text_origin=(-.5,0), y=-.05, highlight_color=color.black)
-        self.address_bar.text_entity.scale *= .75
+        self.address_bar = Button(parent=self, scale=(.8,.035), text='//', text_origin=(-.5,0), y=-.05, highlight_color=color.black, text_size=.75)
+        # self.address_bar.text_entity.scale *= .75
         self.address_bar.text_entity.x = -.5 + Text.get_width(' ')
         self.address_bar.text_entity.color = color.red
 
