@@ -662,6 +662,13 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self._ensure_is_not_destroyed()
         self.set_quat(value)
 
+    def world_quaternion_getter(self):
+        self._ensure_is_not_destroyed()
+        return self.getQuat(scene)
+    def world_quaternion_setter(self, value):
+        self._ensure_is_not_destroyed()
+        self.setQuat(scene, value)
+
     def world_scale_getter(self):
         self._ensure_is_not_destroyed()
         return Vec3(*self.getScale(scene))
@@ -1160,7 +1167,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
         :param previous_rotation: The quaternion representing the previous rotation.
         :return: A quaternion that represents the new rotation.
         """
-        previous_rotation = self.quaternion
+        previous_rotation = self.world_quaternion
         # Normalize inputs
         direction = normalize_vector(direction)
         forward_axis = normalize_vector(forward_axis)
@@ -1202,7 +1209,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
         # Step 4: Combine the new rotation with the previous rotation
         new_rotation = quaternion_multiply(rotation_quat, previous_rotation)
-        self.quaternion = new_rotation.normalized()
+        self.world_quaternion = new_rotation.normalized()
 
 
     def look_at_2d(self, target, axis='z'):
