@@ -15,10 +15,10 @@ class SmoothFollow:
         if not self.target:
             return
 
-        self.entity.world_position = lerp_exponential_decay(self.entity.world_position, self.target.world_position+self.offset, time.dt*self.speed/4)
+        self.entity.world_position = lerp_exponential_decay(self.entity.world_position, self.target.world_position+self.offset, time.dt*self.speed)
 
         if self.rotation_speed > 0:
-            self.entity.world_rotation = lerp_exponential_decay(self.entity.world_rotation, self.target.world_rotation+self.rotation_offset, time.dt*self.rotation_speed/4)
+            self.entity.world_rotation = lerp_exponential_decay(self.entity.world_rotation, self.target.world_rotation+self.rotation_offset, time.dt*self.rotation_speed)
 
 
 if __name__ == '__main__':

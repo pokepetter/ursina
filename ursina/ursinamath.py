@@ -1,4 +1,4 @@
-from math import sqrt, sin, acos, pi, cos, floor
+from math import sqrt, sin, acos, pi, cos, floor, exp
 from math import hypot
 from panda3d.core import Vec4, LVector3f
 from ursina.vec2 import Vec2
@@ -70,8 +70,8 @@ if __name__ == '__main__':
     _test(lerp(0, 100, .5) == 50)
 
 
-def lerp_exponential_decay(a, b, decay_rate):    # frame-rate independent lerp for use in update. use this instead of lerp(a, b, time.dt) in update.
-    return lerp(a, b, 1 - pow(0.01, decay_rate))
+def lerp_exponential_decay(a, b, dt, decay_rate=1):    # frame-rate independent lerp for use in update. use this instead of lerp(a, b, time.dt) in update.
+    return lerp(a, b, 1 - exp(-decay_rate * dt))
 
 
 def lerp_angle(start_angle, end_angle, t):

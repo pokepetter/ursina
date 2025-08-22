@@ -1,4 +1,4 @@
-from ursina import Entity, Vec2, Vec3, camera, clamp, curve, destroy, held_keys, lerp, mouse, slerp, time
+from ursina import Entity, Vec2, Vec3, camera, clamp, curve, destroy, held_keys, lerp, mouse, slerp, time, lerp_exponential_decay
 
 
 class EditorCamera(Entity):
@@ -149,9 +149,11 @@ class EditorCamera(Entity):
             self.position -= camera.up * mouse.velocity[1] * self.pan_speed[1] * zoom_compensation
 
         if not camera.orthographic:
-            camera.z = lerp(camera.z, self.target_z, time.dt*self.zoom_smoothing)
+            # camera.z = lerp(camera.z, self.target_z, time.dt*self.zoom_smoothing)
+            camera.z = lerp_exponential_decay(camera.z, self.target_z, time.dt*self.zoom_smoothing)
         else:
-            camera.fov = lerp(camera.fov, self.target_fov, time.dt*self.zoom_smoothing)
+            # camera.fov = lerp(camera.fov, self.target_fov, time.dt*self.zoom_smoothing)
+            camera.fov = lerp_exponential_decay(camera.fov, self.target_fov, time.dt*self.zoom_smoothing/4)
 
         if self.rotation_smoothing == 0:
             self.rotation = self.smoothing_helper.rotation
