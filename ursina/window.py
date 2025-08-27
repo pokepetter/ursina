@@ -60,11 +60,11 @@ class Window(WindowProperties):
 
         if not fullscreen:
             if forced_aspect_ratio is None:
-                loadPrcFileData('', f'win-size {self.windowed_size[0]} {self.windowed_size[1]}')
+                loadPrcFileData('', f'win-size {int(self.windowed_size[0])} {int(self.windowed_size[1])}')
             else:
-                loadPrcFileData('', f'win-size {self.windowed_size[1] * forced_aspect_ratio} {self.windowed_size[1]}')
+                loadPrcFileData('', f'win-size {int(self.windowed_size[1] * forced_aspect_ratio)} {int(self.windowed_size[1])}')
         else:
-            loadPrcFileData('', f'win-size {self.fullscreen_size[0]} {self.fullscreen_size[1]}')
+            loadPrcFileData('', f'win-size {int(self.fullscreen_size[0])} {int(self.fullscreen_size[1])}')
 
         self.windowed_position = None   # gets set when entering fullscreen so position will be correct when going back to windowed mode
         self.show_ursina_splash = False
