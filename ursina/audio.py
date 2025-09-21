@@ -8,6 +8,7 @@ from ursina.scripts.property_generator import generate_properties_for_class
 from pathlib import Path
 
 from panda3d.core import Filename
+from panda3d.core import AudioManager
 
 from ursina.ursinastuff import DotDict
 audio_groups = DotDict(
@@ -18,6 +19,8 @@ audio_groups = DotDict(
 )
 
 audio_clip_cache = dict()
+_audio_manager = AudioManager.create_AudioManager()
+
 
 @generate_properties_for_class()
 class Audio(Entity):
@@ -78,7 +81,7 @@ class Audio(Entity):
         #     return
 
         if isinstance(value, Path):
-            self._clip = loader.loadSfx(Filename.fromOsSpecific(str(value.resolve())))  # type: ignore
+            self._clip = _audio_manager.getSound(Filename.fromOsSpecific(str(value.resolve())))  # type: ignore
             return
 
         if isinstance(value, str):
@@ -93,7 +96,7 @@ class Audio(Entity):
                 for suffix in file_types:
                     for f in folder.glob(f'**/{value}{suffix}'):
                         self.path = str(f.resolve())
-                        self._clip = loader.loadSfx(Filename.fromOsSpecific(self.path))  # type: ignore
+                        self._clip = _audio_manager.getSound(Filename.fromOsSpecific(self.path))  # type: ignore
                         audio_clip_cache[value] = self._clip
                         # print('...loaded audio clip:', p, self._clip)
                         return
