@@ -16,10 +16,10 @@ from ursina.window import instance as window
 @generate_properties_for_class()
 class Camera(Entity):
 
-    def __init__(self, **kwargs):
+    def __init__(self, shader=None, **kwargs):
         original_warn_if_ursina_not_instantiated = entity._warn_if_ursina_not_instantiated
         entity._warn_if_ursina_not_instantiated = False
-        super().__init__(**kwargs)
+        super().__init__(shader=shader, **kwargs)
         entity._warn_if_ursina_not_instantiated = original_warn_if_ursina_not_instantiated
 
         self.parent = scene
@@ -124,11 +124,14 @@ class Camera(Entity):
 
 
     def aspect_ratio_getter(self):      # get current aspect ratio. can not be set.
-        return self.perspective_lens.get_aspect_ratio()
+        if hasattr(self, 'perspective_lens'):
+            return self.perspective_lens.get_aspect_ratio()
+        return window.aspect_ratio
 
 
-    def shader_setter(self, value):     # for applying post-processing effects.
-        if value == Entity.default_shader:
+
+    def shader_setter(self, value):     # for applying post-processing effects.q
+        if value is None or value == Entity.default_shader:
             return
         self._shader = value
         if value is None:
