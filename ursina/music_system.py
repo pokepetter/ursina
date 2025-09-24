@@ -1,11 +1,9 @@
-from ursina.audio import Audio
-from ursina.ursinastuff import invoke
-from ursina import curve
-from ursina.string_utilities import print_warning
-from ursina.ursinastuff import after
 from typing import Literal
 
-
+from ursina import curve
+from ursina.audio import Audio
+from ursina.string_utilities import print_warning
+from ursina.ursinastuff import after
 
 tracks = dict()
 current_music_track = ''

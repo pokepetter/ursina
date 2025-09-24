@@ -1,56 +1,43 @@
-import ursina
-import builtins
-from typing import Literal
 from pathlib import Path
-from panda3d.core import NodePath
+from textwrap import dedent
+from typing import Literal
+
+from panda3d.core import CullFaceAttrib, MovieTexture, NodePath, Quat, TextureStage, TransparencyAttrib
+from panda3d.core import Shader as Panda3dShader
+
+import ursina
+from ursina import application, color, curve, shader
+from ursina.collider import BoxCollider, CapsuleCollider, Collider, MeshCollider, SphereCollider
+from ursina.color import Color
+from ursina.mesh import Mesh
+from ursina.mesh_importer import load_model
+from ursina.models.procedural.nine_slice import NineSlice
+from ursina.models.procedural.quad import Quad
+from ursina.scene import instance as scene
+from ursina.scripts.every_decorator import every, get_class_name
+from ursina.sequence import Func, Sequence, Wait
+from ursina.shader import Shader
+from ursina.shaders.unlit_shader import unlit_shader
+from ursina.string_utilities import camel_to_snake, print_warning
+from ursina.texture import Texture
+from ursina.texture_importer import load_texture
+from ursina.ursinamath import Bounds, lerp
+from ursina.ursinastuff import Default, PostInitCaller, after
 from ursina.vec2 import Vec2
 from ursina.vec3 import Vec3
 from ursina.vec4 import Vec4
-from panda3d.core import Quat
-from panda3d.core import TransparencyAttrib
-from panda3d.core import TexGenAttrib
-
-from ursina.texture import Texture
-from panda3d.core import MovieTexture
-from panda3d.core import TextureStage
-from panda3d.core import CullFaceAttrib
-
-from ursina import application
-from ursina.collider import Collider, BoxCollider, SphereCollider, MeshCollider, CapsuleCollider
-from ursina.mesh import Mesh, MeshModes
-from ursina.sequence import Sequence, Func, Wait
-from ursina.ursinamath import lerp
-from ursina import curve
-from ursina.mesh_importer import load_model
-from ursina.texture_importer import load_texture
-from ursina.string_utilities import camel_to_snake
-from textwrap import dedent
-from panda3d.core import Shader as Panda3dShader
-from ursina import shader
-from ursina.shader import Shader
-from ursina.string_utilities import print_warning
-from ursina.ursinamath import Bounds
-from ursina.ursinastuff import PostInitCaller, after, Default
-from ursina.models.procedural.quad import Quad
-from ursina.models.procedural.nine_slice import NineSlice
-
-from ursina import color
-from ursina.color import Color
-from ursina.shaders.unlit_shader import unlit_shader
-try:
-    from ursina.scene import instance as scene
-except:
-    pass
 
 _Ursina_instance = None
-_warn_if_ursina_not_instantiated = True # gets set to True after Ursina.__init__() to ensure the correct order.
+_warn_if_ursina_not_instantiated = False # gets set to True after Ursina.__init__() to ensure the correct order.
 
 
 from ursina.scripts.property_generator import generate_properties_for_class
+
+
 @generate_properties_for_class()
 class Entity(NodePath, metaclass=PostInitCaller):
     rotation_directions = (-1,-1,1)
-    default_shader = unlit_shader
+    default_shader = unlit_shader # defaults to unlit_shader
     default_values = {
         'parent':scene,
         'name':'entity', 'enabled':True, 'eternal':False, 'position':Vec3(0,0,0), 'rotation':Vec3(0,0,0), 'scale':Vec3(1,1,1), 'model':None, 'origin':Vec3(0,0,0),
@@ -72,13 +59,12 @@ class Entity(NodePath, metaclass=PostInitCaller):
         texture_offset=Vec2.zero,
         collider=None,
         eternal=False,
-    #     # name='entity',
+        name='',
         **kwargs
         ):
         self._children = []
-        super().__init__(self.__class__.__name__)
-
-        self.name = camel_to_snake(self.__class__.__name__)
+        name = name if name is not Default else str(type(self))
+        super().__init__(name)
         self.ignore = False     # if True, will not try to run code.
         self.ignore_paused = False      # if True, will still run when application is paused. useful when making a pause menu for example.
         self.ignore_input = False
@@ -95,7 +81,16 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.rotation = rotation
         self.scale = scale
 
+        # if shader is not None:
+        #     if scene.fog_color != ursina.color.clear:
+        #         from ursina.shaders.unlit_shader_with_fog import unlit_shader_with_fog
+        #         default_shader = Entity.default_shader if Entity.default_shader is not None else unlit_shader_with_fog
+        #     else:
+        #         from ursina.shaders.unlit_shader import unlit_shader
+        #         default_shader = unlit_shader
+
         self.shader = shader if shader is not Default else __class__.default_shader
+
         self.model = model
         if origin != __class__.default_values['origin']: self.origin = origin
         for key in ('origin_x', 'origin_y', 'origin_z'):
@@ -116,7 +111,6 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
         # look for @every decorator and start a looping Sequence for decorated method
-        from ursina.scripts.every_decorator import every, get_class_name
         for method in every.decorated_methods:
             if get_class_name(method._func) == self.types[0]:
                 self.animations.append(Sequence(Func(method, self), Wait(method._every.interval), loop=True, started=True, entity=self))
@@ -163,7 +157,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def _list_to_vec(self, value):
-        if isinstance(value, (int, float, complex)):
+        if isinstance(value, int | float | complex):
             return Vec3(value, value, value)
 
         if len(value) % 2 == 0:
@@ -484,7 +478,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
         return getattr(self, '_origin', Vec3.zero)
 
     def origin_setter(self, value):
-        if not isinstance(value, (Vec2, Vec3)):
+        if not isinstance(value, Vec2 | Vec3):
             value = self._list_to_vec(value)
         if isinstance(value, Vec2):
             value = Vec3(*value, self.origin_z)
@@ -549,7 +543,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
     def position_setter(self, value):   # right, up, forward. can also set self.x, self.y, self.z
         self._ensure_is_not_destroyed()
-        if not isinstance(value, (Vec2, Vec3)):
+        if not isinstance(value, Vec2 | Vec3):
             value = self._list_to_vec(value)
         if isinstance(value, Vec2):
             value = Vec3(*value, self.z)
@@ -627,7 +621,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
     def rotation_setter(self, value):   # can also set self.rotation_x, self.rotation_y, self.rotation_z
         self._ensure_is_not_destroyed()
-        if not isinstance(value, (Vec2, Vec3)):
+        if not isinstance(value, Vec2 | Vec3):
             value = self._list_to_vec(value)
         if isinstance(value, Vec2):
             value = Vec3(*value, self.rotation_z)
@@ -674,7 +668,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
         return Vec3(*self.getScale(scene))
     def world_scale_setter(self, value):
         self._ensure_is_not_destroyed()
-        if not isinstance(value, (Vec2, Vec3)):
+        if not isinstance(value, Vec2 | Vec3):
             value = self._list_to_vec(value)
 
         if isinstance(value, Vec2):
@@ -714,7 +708,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
     def scale_setter(self, value):  # can also set self.scale_x, self.scale_y, self.scale_z
         self._ensure_is_not_destroyed()
-        if not isinstance(value, (Vec2, Vec3)):
+        if not isinstance(value, Vec2 | Vec3):
             value = self._list_to_vec(value)
         if isinstance(value, Vec2):
             value = Vec3(*value, self.scale_z)
@@ -805,7 +799,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
         #     self.setShaderAuto()
         #     return
 
-        if value is None and self.name != 'camera':
+        if value is None:
             self._shader = value
             return
 
@@ -829,10 +823,10 @@ class Entity(NodePath, metaclass=PostInitCaller):
             self.setShader(value._shader)
             value.entity = self
 
-            for key, value in value.default_input.items():
-                if callable(value):
-                    value = value()
-                self.set_shader_input(key, value)
+            for key, shader_input in value.default_input.items():
+                if callable(shader_input):
+                    shader_input = shader_input()
+                self.set_shader_input(key, shader_input)
 
             return
 
@@ -859,8 +853,8 @@ class Entity(NodePath, metaclass=PostInitCaller):
         return self._shader_inputs
 
     def shader_input_setter(self, value):
-        for key, value in value.items():
-            self.set_shader_input(key, value)
+        for key, shader_input in value.items():
+            self.set_shader_input(key, shader_input)
 
 
     def material_setter(self, value):  # a way to set shader, texture, texture_scale, texture_offset and shader inputs in one go
@@ -1060,9 +1054,11 @@ class Entity(NodePath, metaclass=PostInitCaller):
             return class_instance
 
 
-    def combine(self, analyze=False, auto_destroy=True, ignore=[], ignore_disabled=True, include_normals=False):
+    def combine(self, analyze=False, auto_destroy=True, ignore:list=None, ignore_disabled=True, include_normals=False):
         from ursina.scripts.combine import combine
 
+        if ignore is None:
+            ignore = []
         self.model = combine(self, analyze, auto_destroy, ignore, ignore_disabled, include_normals)
         return self.model
 
@@ -1212,12 +1208,12 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.world_quaternion = new_rotation.normalized()
 
 
-    def look_at_2d(self, target, axis='z'):
-        from math import degrees, atan2
+    def look_at_2d(self, target, axis='z', position_attr='world_position'):
+        from math import atan2, degrees
         if isinstance(target, Entity):
-            target = Vec3(target.world_position)
+            target = Vec3(getattr(target, world_position))
 
-        pos = target - self.world_position
+        pos = target - getattr(self, position_attr)
         if axis == 'z':
             self.rotation_z = degrees(atan2(pos[0], pos[1]))
         elif axis == 'y':
@@ -1237,7 +1233,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
         p = self
         if isinstance(possible_ancestor, Entity):
-            for i in range(100):
+            for _i in range(100):
                 if p.parent:
                     if p.parent == possible_ancestor:
                         return True
@@ -1258,7 +1254,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
     def has_disabled_ancestor(self):
         p = self
-        for i in range(100):
+        for _i in range(100):
             if not p.parent:
                 return False
             if not hasattr(p, 'parent') or not hasattr(p.parent, 'enabled'):
@@ -1299,7 +1295,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
             target_class = self.__class__
 
         changes = dict()
-        for key, value in target_class.default_values.items():
+        for key, _value in target_class.default_values.items():
             attr = getattr(self, key)
             if attr == target_class.default_values[key]:
                 continue
@@ -1414,7 +1410,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
         return x, y, z
 
     def animate_scale(self, value, duration=.1, **kwargs):
-        if isinstance(value, (int, float, complex)):
+        if isinstance(value, int | float | complex):
             value = Vec3(value, value, value)
         elif isinstance(value, tuple) and len(value) == 2:
             value = Vec3(*value, self.z)
@@ -1439,12 +1435,12 @@ class Entity(NodePath, metaclass=PostInitCaller):
         import random
 
         if hasattr(self, 'shake_sequence') and self.shake_sequence:
-            getattr(getattr(self, 'shake_sequence'), interrupt)()
+            getattr(self.shake_sequence, interrupt)()
 
         self.shake_sequence = Sequence(Wait(delay))
         original_position = getattr(self, attr_name)
 
-        for i in range(int(duration / speed)):
+        for _i in range(int(duration / speed)):
             self.shake_sequence.append(Func(setattr, self, attr_name,
                 Vec3(
                     original_position[0] + (random.uniform(-.1, .1) * magnitude * direction[0]),
@@ -1469,7 +1465,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
     def fade_in(self, value=1, duration=.5, **kwargs):
         return self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration=duration, **kwargs)
 
-    def blink(self, color=ursina.color.white, shader=unlit_shader, duration=.1):
+    def blink(self, color=ursina.color.white, shader='unlit_shader', duration=.1):
         if not getattr(self, 'org_shader', False):
             self.org_shader = self.shader
             self.org_texture = self.texture
@@ -1506,7 +1502,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
         from ursina import distance
         if not hasattr(self, '_picker'):
-            from panda3d.core import CollisionTraverser, CollisionNode, CollisionHandlerQueue
+            from panda3d.core import CollisionHandlerQueue, CollisionNode, CollisionTraverser
 
             self._picker = CollisionTraverser()  # Make a traverser
             self._pq = CollisionHandlerQueue()  # Make a handler
@@ -1529,7 +1525,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
             return self.hit
 
         ignore.append(self)
-        ignore.extend((e for e in scene.entities if not e.collision))
+        ignore.extend(e for e in scene.entities if not e.collision)
 
         self._pq.sort_entries()
         entries = self._pq.getEntries()
@@ -1557,8 +1553,6 @@ class Entity(NodePath, metaclass=PostInitCaller):
         hit_info.world_normal = Vec3(*collision.get_surface_normal(scene).normalized())
 
         return hit_info
-
-
 
 if __name__ == '__main__':
     from ursina import *
@@ -1609,16 +1603,18 @@ if __name__ == '__main__':
 
 
     # shader test
-    from ursina.shaders import matcap_shader, lit_with_shadows_shader
+    from ursina.shaders import lit_with_shadows_shader, matcap_shader
     ground = Entity(model='plane', texture='grass', scale=10, shader=lit_with_shadows_shader)
     e = Entity(model='cube', y=1, texture='grass',
         # shader=unlit_shader
         )
-    e1 = Entity(parent=e, model='cube', y=1, x=.5, shader=matcap_shader, texture='shore')
-    e2 = Entity(parent=e1, model='cube', x=2, shader=lit_with_shadows_shader, texture='white_cube')
+    # e1 = Entity(parent=e, model='cube', y=1, x=.5, shader=matcap_shader, texture='shore')
+    # e2 = Entity(parent=e1, model='cube', x=2, shader=lit_with_shadows_shader, texture='white_cube')
     DirectionalLight().look_at(Vec3(1,-1,.5))
     EditorCamera(rotation_x=15)
 
+    scene.fog_color = color.blue
+    scene.fog_density = (0,100)
     # # test deepcopy
     # print_warning(repr(e1))
     # e1_copy = deepcopy(e1)

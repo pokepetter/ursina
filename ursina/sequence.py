@@ -1,6 +1,6 @@
-from ursina import application
 import time
 
+from ursina import application
 
 Wait = float
 
@@ -51,7 +51,7 @@ class Sequence:
         self.func_finished_statuses = []
 
         for arg in self.args:
-            if isinstance(arg, (int, float)):
+            if isinstance(arg, int | float):
                 self.duration += arg
 
             elif callable(arg):
@@ -61,7 +61,7 @@ class Sequence:
 
         # print('-----------')
     def __str__(self):
-        return '\n'.join([str(e) for e in zip(self.funcs, self.func_call_time, self.func_finished_statuses)])
+        return '\n'.join([str(e) for e in zip(self.funcs, self.func_call_time, self.func_finished_statuses, strict=True)])
 
     def __call__(self):
         self.start()
@@ -70,7 +70,7 @@ class Sequence:
 
     def append(self, arg, regenerate=True):
         # print('---------------', arg, callable(arg))
-        if not callable(arg) and not isinstance(arg, (int, float)):
+        if not callable(arg) and not isinstance(arg, int | float):
             raise TypeError(f'Invalid type: {arg}. Must be callable, Func, Wait or float.')
 
         self.args.append(arg)
@@ -157,7 +157,7 @@ class Sequence:
 
 if __name__ == '__main__':
     from ursina import *
-    from ursina import Ursina, Entity
+    from ursina import Entity, Ursina
     app = Ursina()
     e = Entity(model='quad')
     def some_func():
