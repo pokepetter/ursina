@@ -333,11 +333,8 @@ class Window(WindowProperties):
         base.wireframeOff()
 
         # disable collision display mode
-        if hasattr(self, 'original_colors'):
-            for i, e in enumerate([e for e in scene.entities if hasattr(e, 'color')]):
-                e.color = self.original_colors[i]
-                if e.collider:
-                    e.collider.visible = False
+        for e in [e for e in scene.entities if e.model or e.collider]:
+            e.collider_visible = False
 
         for e in [e for e in scene.entities if e.model and e.alpha]:
             e.show_normals = False
@@ -346,12 +343,8 @@ class Window(WindowProperties):
             base.wireframeOn()
 
         elif value == 'colliders':
-            self.original_colors = [e.color for e in scene.entities if hasattr(e, 'color')]
-            for e in scene.entities:
-                e.color = color.clear
-                if e.collider:
-                    # e.visible = False
-                    e.collider.visible = True
+            for e in [e for e in scene.entities if e.model or e.collider]:
+                e.collider_visible = True
 
         elif value == 'normals':
             for e in [e for e in scene.entities if e.model and e.alpha]:
