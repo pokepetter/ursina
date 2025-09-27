@@ -340,7 +340,7 @@ class Window(WindowProperties):
                     e.collider.visible = False
 
         for e in [e for e in scene.entities if e.model and e.alpha]:
-            e.setShaderAuto()
+            e.show_normals = False
 
         if value == 'wireframe':
             base.wireframeOn()
@@ -354,10 +354,8 @@ class Window(WindowProperties):
                     e.collider.visible = True
 
         elif value == 'normals':
-            from ursina.shaders import normals_shader
             for e in [e for e in scene.entities if e.model and e.alpha]:
-                e.shader = normals_shader
-                e.set_shader_input('transform_matrix', e.getNetTransform().getMat())
+                e.show_normals = True
 
 
     def next_render_mode(self):
