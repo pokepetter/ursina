@@ -17,8 +17,8 @@ from ursina.scene import instance as scene
 from ursina.scripts.every_decorator import every, get_class_name
 from ursina.sequence import Func, Sequence, Wait
 from ursina.shader import Shader
-from ursina.shaders.unlit_shader import unlit_shader
-from ursina.string_utilities import camel_to_snake, print_warning
+from ursina.shaders.unlit_with_fog_shader import unlit_with_fog_shader
+from ursina.string_utilities import print_warning
 from ursina.texture import Texture
 from ursina.texture_importer import load_texture
 from ursina.ursinamath import Bounds, lerp
@@ -37,7 +37,7 @@ from ursina.scripts.property_generator import generate_properties_for_class
 @generate_properties_for_class()
 class Entity(NodePath, metaclass=PostInitCaller):
     rotation_directions = (-1,-1,1)
-    default_shader = unlit_shader # defaults to unlit_shader
+    default_shader = unlit_with_fog_shader
     default_values = {
         'parent':scene,
         'name':'entity', 'enabled':True, 'eternal':False, 'position':Vec3(0,0,0), 'rotation':Vec3(0,0,0), 'scale':Vec3(1,1,1), 'model':None, 'origin':Vec3(0,0,0),
@@ -83,12 +83,11 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
         # if shader is not None:
         #     if scene.fog_color != ursina.color.clear:
-        #         from ursina.shaders.unlit_shader_with_fog import unlit_shader_with_fog
-        #         default_shader = Entity.default_shader if Entity.default_shader is not None else unlit_shader_with_fog
+        #         from ursina.shaders.unlit_with_fog_shader import unlit_with_fog_shader
+        #         default_shader = Entity.default_shader if Entity.default_shader is not None else unlit_with_fog_shader
         #     else:
         #         from ursina.shaders.unlit_shader import unlit_shader
         #         default_shader = unlit_shader
-
         self.shader = shader if shader is not Default else __class__.default_shader
 
         self.model = model

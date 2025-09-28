@@ -2,6 +2,7 @@ from pathlib import Path
 from panda3d.core import Shader as Panda3dShader
 from ursina import application
 
+
 default_vertex_shader = '''
 #version 430
 uniform mat4 p3d_ModelViewProjectionMatrix;
@@ -118,6 +119,16 @@ class Shader:
         return cls(language, **parts)
 
 
+    def __setattr__(self, key, value):
+        super().__setattr__(key, value)
+        from ursina.scene import instance as scene
+        if hasattr(self, 'default_input') and key in self.default_input:
+            print('setting global shader input:', key, value)
+            for entity_with_this_shader in [e for e in scene.entities if e.shader == self]:
+                entity_with_this_shader.set_shader_input(key, value)
+
+
+
 if __name__ == '__main__':
     from time import perf_counter
     t = perf_counter()
@@ -125,9 +136,8 @@ if __name__ == '__main__':
     from ursina import Ursina, Entity, held_keys, scene, EditorCamera
 
     app = Ursina()
-    Entity(model='cube', shader=Shader())
+    Entity(model='cube', shader=Shader(name='test_shader'))
     EditorCamera()
-    print('ttttttttttttt', perf_counter() - t)
     def input(key):
         if held_keys['control'] and key == 'r':
             reload_shaders()

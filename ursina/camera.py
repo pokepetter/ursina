@@ -15,7 +15,6 @@ from ursina.window import instance as window
 
 @generate_properties_for_class()
 class Camera(Entity):
-
     def __init__(self, shader=None, **kwargs):
         original_warn_if_ursina_not_instantiated = entity._warn_if_ursina_not_instantiated
         entity._warn_if_ursina_not_instantiated = False

@@ -149,6 +149,7 @@ if __name__ == '__main__':
     sun.look_at(Vec3(-1,-1,-10))
     # sun._light.show_frustum()
     scene.fog_density = (1, 50)
+    scene.fog_color = color.blue
     Sky(color=color.light_gray)
     EditorCamera()
 

@@ -3,21 +3,19 @@ from ursina import color
 
 
 class Scene(NodePath):
-
     def __init__(self):
         super().__init__('scene')
         self.entities = []
         self._entities_marked_for_removal = []
         self.collidables = set()
         self._children = []
-
+        self.fog = Fog('fog')
+        self.setFog(self.fog)
+        self.fog_color = color.clear
+        self.fog_density = 0
 
     def _set_up(self):
         self.reparent_to(render)
-        self.fog = Fog('fog')
-        self.setFog(self.fog)
-        self.fog_color = color.light_gray
-        self.fog_density = 0
 
 
     def clear(self):
@@ -32,10 +30,7 @@ class Scene(NodePath):
             except Exception as e:
                 print('failed to destroy entity', e)
 
-
         self.entities = to_keep
-
-
         application.sequences.clear()
 
 
@@ -46,19 +41,28 @@ class Scene(NodePath):
     def fog_color(self, value):
         self._fog_color = value
         self.fog.setColor(value)
+        for e in self.entities:
+            if e in self._entities_marked_for_removal:
+                continue
+            if e.shader and 'fog_color' in e.shader.default_input:
+                e.set_shader_input('fog_color', value)
 
 
     @property
     def fog_density(self):
         return self._fog_density
 
-    @fog_density.setter     # set to a number for exponential density or (start, end) for linear.
+    @fog_density.setter     # set to (start, end) for linear fog.
     def fog_density(self, value):
         self._fog_density = value
         if isinstance(value, tuple):     # linear fog
             self.fog.setLinearRange(value[0], value[1])
-        else:
-            self.fog.setExpDensity(value)
+            for e in self.entities:
+                if e.shader and 'fog_start' in e.shader.default_input and 'fog_end' in e.shader.default_input:
+                    e.set_shader_input('fog_start', value[0])
+                    e.set_shader_input('fog_end', value[1])
+        # else:
+        #     self.fog.setExpDensity(value)
 
     @property
     def children(self):
@@ -90,7 +94,14 @@ if __name__ == '__main__':
             scene.clear()
             Entity(model='cube')
 
-    scene.fog_density = .1          # sets exponential density
-    scene.fog_density = (50, 200)   # sets linear density start and end
+
+    from ursina.shaders.unlit_with_fog_shader import unlit_with_fog_shader
+    e = Entity(model='cube', shader=unlit_with_fog_shader)
+    # scene.fog_density = .1          # sets exponential density
+    unlit_with_fog_shader.fog_color = color.blue
+    unlit_with_fog_shader.fog_density = (0,100)
+
+    # scene.fog_density = (0, 200)   # sets linear density start and end
+    # scene.fog_color = color.green
 
     app.run()
