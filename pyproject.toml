@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ursina"
-version = "8.1.1"
+version = "8.2.0"
 description = "An easy to use game engine/framework for python."
 authors = [
     {name = "Petter Amland", email = "pokepetter@gmail.com"}
