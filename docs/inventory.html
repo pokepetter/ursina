@@ -15,7 +15,7 @@
 <a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference_v8_2_0/index.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" donate.html" class="button">Donate</a><br>
 <h1 id="Inventory">
 Inventory
-</h1><a href="https://github.com/pokepetter/ursina/blob/master/samples/inventory.py">https://github.com/pokepetter/ursina/blob/master/samples/inventory.py</a><br>
+</h1><a href="https://github.com/pokepetter/ursina/tree/v8.2.0/samples/inventory.py">https://github.com/pokepetter/ursina/tree/v8.2.0/samples/inventory.py</a><br>
 <br>
 <img src="icons/inventory.jpg"></img> <br>
 <code_block id="code_block_0"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina <purple>import</purple> *
@@ -82,7 +82,7 @@ class Inventory(<olive>Entity</olive>):
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name = <green>'&lt;orange&gt;Rare '</green> + name
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;icon.tooltip = Tooltip(name)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;icon.tooltip.background.color = color.hsv(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,.<yellow>8</yellow>)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;icon.tooltip.background_entity.color = color.hsv(<yellow>0</yellow>,<yellow>0</yellow>,<yellow>0</yellow>,.<yellow>8</yellow>)
 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<purple>def</purple> drag():
