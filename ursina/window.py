@@ -249,6 +249,8 @@ class Window(WindowProperties):
 
         camera.ui_lens.set_film_size(camera._ui_size * .5 * self.aspect_ratio, camera._ui_size * .5)
         for e in [e for e in scene.entities if e.parent == camera.ui] + self.editor_ui.children:
+            if e in scene._entities_marked_for_removal:
+                continue
             e.x /= self.prev_aspect_ratio / self.aspect_ratio
 
         if camera.orthographic:
