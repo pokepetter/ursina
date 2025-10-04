@@ -41,7 +41,16 @@ class Scene(NodePath):
     def fog_color(self, value):
         self._fog_color = value
         self.fog.setColor(value)
+        # for c in self.children:     # scene is just pretending to be an entity, so have to do this
+        #     for e in c.get_descendants():
         for e in self.entities:
+            try:
+                from ursina.camera import instance as camera
+                if e.has_ancestor(camera.ui):
+                    continue
+            except:
+                pass
+
             if e in self._entities_marked_for_removal:
                 continue
             if e.shader and 'fog_color' in e.shader.default_input:
@@ -103,5 +112,6 @@ if __name__ == '__main__':
 
     # scene.fog_density = (0, 200)   # sets linear density start and end
     # scene.fog_color = color.green
+    Entity(parent=camera.ui, model='quad', scale=.1)
 
     app.run()

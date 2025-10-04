@@ -1,6 +1,7 @@
 from ursina import Entity, Text, camera, color, mouse, BoxCollider, Sequence, Func, Vec2, Vec3, scene, Default, Audio
 from ursina import color as color_module
 from ursina.models.procedural.quad import Quad
+from ursina.shaders.unlit_shader import unlit_shader
 
 from ursina.scripts.property_generator import generate_properties_for_class
 
@@ -17,7 +18,7 @@ class Button(Entity):
         text='', parent=camera.ui, model=Default, radius=Default, origin=(0,0), texture=Default, color=Default, collider='box',
             text_color=Default, text_origin=(0,0), text_size=1, highlight_text_size=None, highlight_text_color=None,
             highlight_scale=1, pressed_scale=1,
-            disabled=False, **kwargs):
+            disabled=False, shader=unlit_shader, **kwargs):
         super().__init__(parent=parent)
 
         for key in ('scale', 'scale_x', 'scale_y', 'scale_z', 'world_scale', 'world_scale_x', 'world_scale_y', 'world_scale_z'):

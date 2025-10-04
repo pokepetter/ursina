@@ -65,9 +65,6 @@ default_input={
     'fog_end': 100,
     'camera_world_position' : Vec3.zero,
 },
-continuous_input = {
-    'fog_color': Func(getattr, scene, 'fog_color'),
-}
 )
 def get_camera_world_position():
     from ursina import camera

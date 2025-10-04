@@ -33,7 +33,8 @@ def _destroy(entity, force_destroy=False):
 
     if hasattr(entity, 'animations'):
         for anim in entity.animations:
-            anim.kill()
+            if anim:
+                anim.kill()
 
     for child in entity.children:
         _destroy(child)
