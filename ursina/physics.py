@@ -166,7 +166,15 @@ class _PhysicsBody:
         return Vec3(rotation[1], rotation[0], rotation[2])
 
     def rotation_setter(self, value):
-        self.node_path.setHpr(Vec3(value[1], value[0], value[2]))
+        print('SET ROTATION')
+        self.node_path.setHpr(Vec3(value[1], -value[0], value[2]))
+
+    def rotation_x_setter(self, value):
+        print('SET ROTATION X')
+        new_value = self.rotation
+        new_value[0] = value
+        self.rotation = new_value
+
 
     def scale_getter(self):
         scale = self.node_path.getScale()
@@ -193,7 +201,7 @@ class _PhysicsBody:
 
 @generate_properties_for_class()
 class RigidBody(_PhysicsBody):
-    def __init__(self, shape, world=physics_handler.world, entity=None, mass=0, kinematic=False, friction=.5, mask=0x1):
+    def __init__(self, shape=None, world=physics_handler.world, entity=None, mass=0, kinematic=False, friction=.5, mask=0x1):
         super().__init__()
         self.world = world
         if self.world is physics_handler.world and not physics_handler.active:
@@ -205,7 +213,7 @@ class RigidBody(_PhysicsBody):
         self.friction = friction
 
         if entity:
-            self.node_path = entity.getParent().attachNewNode(self.rigid_body_node)
+            self.node_path = entity.parent.attachNewNode(self.rigid_body_node)
             self.scale = entity.world_scale
             self.position = entity.world_position
             entity.world_parent = self.node_path
@@ -213,14 +221,16 @@ class RigidBody(_PhysicsBody):
             self.node_path = render.attachNewNode(self.rigid_body_node)
         self.node_path.node().setIntoCollideMask(BitMask32(mask))
 
-        if isinstance(shape, (list, tuple)):
-            for s in shape:
-                self.node_path.node().addShape(_convert_shape(s, entity, dynamic=not self.rigid_body_node.isStatic()), TransformState.makePosHpr(s.center, entity.getHpr()))
-        else:
-            self.node_path.node().addShape(_convert_shape(shape, entity, dynamic=not self.rigid_body_node.isStatic()), TransformState.makePosHpr(shape.center, entity.getHpr()))
+        if shape:
+            if isinstance(shape, list | tuple):
+                for s in shape:
+                    self.rigid_body_node.addShape(s)
+            else:
+                self.rigid_body_node.addShape(shape)
 
-        self.world.attachRigidBody(self.node_path.node())
+        self.world.attachRigidBody(self.rigid_body_node)
         self.node_path.setPythonTag('Entity', entity)
+
 
     def remove(self):
         self.world.removeRigidBody(self.node_path.node())
@@ -241,6 +251,18 @@ class RigidBody(_PhysicsBody):
         return self.rigid_body_node.setLinearVelocity(value)
 
 
+def PlaneCollider(center=Vec3.zero, normal=Vec3.up, offset=0):
+    return BulletPlaneShape(normal, offset)
+def BoxCollider(center=Vec3.zero, size=Vec3.one):
+    return BulletBoxShape(Vec3(*size)/2)
+def SphereCollider(radius=.5):
+    return BulletSphereShape(radius)
+
+def CapsuleCollider(radius=.5, height=2, axis='y'):
+    if axis == 'y':         axis = YUp
+    elif axis == 'z':       axis = ZUp
+    elif axis == 'x':       axis = XUp
+    return BulletCapsuleShape(radius, height-1, axis)
 
 
 def _convert_shape(shape, entity, dynamic=True):
@@ -324,21 +346,119 @@ def raycast(origin, direction:Vec3=(0,0,1), distance=9999, traverse_target:Entit
     )
 
 
-from math import atan2, degrees, radians
+from ursina import Vec2, Default
+@generate_properties_for_class()
+class PhysicsEntity:
+    def __init__(self,
+        mass=0,
+        kinematic=False,
+        friction=.5,
+        mask=0x1,
+        collider=None,
+        world=physics_handler.world,
+        **kwargs
+        ):
 
-def signed_angle_deg(v1, v2, up):
-    # Ensure normalized
-    v1 = v1.normalized()
-    v2 = v2.normalized()
-    up = up.normalized()
+        entity_kwargs = {key : value for key, value in kwargs.items() if key not in ('mass', 'kinematic', 'friction', 'mask', 'world', 'position', 'rotation', 'x', 'y', 'z', 'rotation_x', 'rotation_y', 'rotation_z')}
+        transform_kwargs = {key : value for key, value in kwargs.items() if key in ('position', 'x', 'y', 'z', 'rotation', 'rotation_x', 'rotation_y', 'rotation_z')}
+        rb_kwargs = {key : value for key, value in kwargs.items() if key not in entity_kwargs and key not in transform_kwargs}
 
-    # Cross and dot products
-    cross = v1.cross(v2)
-    dot = v1.dot(v2)
 
-    # Angle in radians, with sign based on 'up' direction
-    angle = atan2(cross.dot(up), dot)
-    return degrees(angle)
+        self.entity = Entity(**entity_kwargs)
+        rb_kwargs['entity'] = self.entity
+
+
+        self.rb = RigidBody(**rb_kwargs)
+        for key, value in transform_kwargs.items():
+            print('set rb transform:', key, value)
+            setattr(self.rb, key, value)
+        #     if key in kwargs:
+        #         rb_kwargs[key] = kwargs[key]
+        self.collider = collider
+        # self.mass = mass
+        # self.kinematic = kinematic
+        # self.friction = friction
+        # self.mask = mask
+
+    def __getattr__(self, attr):
+        return getattr(self.entity, attr)
+    # def position_getter(self):
+    #     return self.rb.position
+    # def position_setter(self, value):
+    #     self.rb.position = value
+
+    # def __setattr__(self, name, value):
+    #     setattr(self.rb, name, value)
+    # def rotation_setter(self, value):
+    #     self.rb.setHpr(Vec3(value[1], value[0], value[2]))
+    #     print('set rbrot')
+    # def rotation_x_setter(self, value):
+    #     new_value = self.rotation
+    #     new_value[0] = value
+    #     self.rotation = new_value
+
+
+
+    def collider_setter(self, value):   # set to 'box'/'sphere'/'capsule'/'mesh' for auto fitted collider.
+        print('set rb colliderto:', value)
+        if value is None and self.collider:
+            self.rb.rigid_body_node.removeShape(value)
+            self._collider = None
+            # self.collision = False
+            return
+
+        # destroy existing collider
+        if value and self.collider:
+            self.rb.rigid_body_node.removeShape(value)
+
+        if isinstance(value, BulletPlaneShape | BulletBoxShape | BulletSphereShape | BulletCylinderShape | BulletCapsuleShape | BulletConeShape | BulletTriangleMeshShape):
+            self._collider = value
+
+        if isinstance(value, str) and value not in ('box', 'sphere', 'capsule', 'mesh'):
+            raise ValueError(f"Incorrect value for auto-fitted collider: {value}. Choose one of: 'box', 'sphere', 'capsule', 'mesh'")
+
+        elif value == 'box':
+            if self.entity.model:
+                _bounds = self.entity.model_bounds
+                print('_bounds.size', _bounds.size)
+                self._collider = BoxCollider(center=_bounds.center, size=_bounds.size)
+            else:
+                self._collider = BoxCollider()
+
+
+        elif value == 'plane':
+            self._collider = BoxCollider()
+
+        self.rb.rigid_body_node.addShape(self._collider)
+        # elif value == 'sphere':
+        #     self._collider = SphereCollider(entity=self, center=-self.origin)
+        #     self._collider.name = value
+
+        # elif value == 'capsule':
+        #     self._collider = CapsuleCollider(entity=self, center=-self.origin)
+        #     self._collider.name = value
+
+        # elif value == 'mesh' and self.model:
+        #     self._collider = MeshCollider(entity=self, mesh=self.model, center=-self.origin)
+        #     self._collider.name = value
+
+        # elif isinstance(value, Mesh):
+        #     self._collider = MeshCollider(entity=self, mesh=value, center=-self.origin)
+
+        # elif isinstance(value, str):
+        #     m = load_model(value)
+        #     if not m:
+        #         self._collider = None
+        #         self._collision = False
+        #         return
+        #     self._collider = MeshCollider(entity=self, mesh=m, center=-self.origin)
+        #     self._collider.name = value
+
+
+        # self.collision = bool(self.collider)
+        return
+
+
 
 if __name__ == '__main__':
     from ursina import Ursina, Cylinder, Capsule, Cone, Sequence, Func, curve, Wait, EditorCamera
@@ -347,13 +467,13 @@ if __name__ == '__main__':
     app = Ursina(borderless=False)
 
     ground = Entity(model='cube', origin_y=.5, texture='grass', scale=30)
-    RigidBody(shape=PlaneShape(), entity=ground)
+    RigidBody(shape=PlaneCollider(), entity=ground)
 
     cube = Entity(model='cube', texture='white_cube')
     # cube.rotation = Vec3(0,45,68)
     # cube.scale = Vec3(.5)
     # cube.y = 7
-    cube_body = RigidBody(shape=BoxShape(), entity=cube, mass=1, friction=1)
+    cube_body = RigidBody(shape=BoxCollider(), entity=cube, mass=1, friction=1)
 
     # sphere = Entity(model='sphere', texture='brick', y=30)
     # RigidBody(shape=SphereShape(), entity=sphere, mass=5)
@@ -388,17 +508,17 @@ if __name__ == '__main__':
     #         cube_body.apply_impulse(force=Vec3(0, 10, 0), point=Vec3(0,0,0))
     #         print('impulse applied')
 
-    # physics_handler.show_debug = True
+    physics_handler.show_debug = True
     print('----------------------------', physics_handler.show_debug)
     physics_handler.gravity = 50
 
     from ursina import *
-    from ursina.physics import raycast
+    from ursina.physics import raycast, CapsuleCollider, BoxCollider
     class Player(Entity):
         def __init__(self):
             super().__init__(model=Capsule(), color=color.orange, y=2, z=0)
             Entity(parent=self, model='sphere', z=.2, y=.25, scale=1, color=color.red)
-            self.rb = RigidBody(shape=CapsuleShape(), entity=self, mass=1, kinematic=False, friction=1)
+            self.rb = RigidBody(shape=CapsuleCollider(), entity=self, mass=1, kinematic=False, friction=1)
             self.rb.setLinearFactor(Vec3(1,1,1))
             self.rb.lock_rotation = Vec3(1,1,1)
 
@@ -406,7 +526,7 @@ if __name__ == '__main__':
 
             self.rotation_helper = Entity(loose_parent=self)
             def rotation_helper_update():
-                print(self.rb.position)
+                # print(self.rb.position)
                 self.rotation_helper.position = self.rb.position
                 self.rotation_helper.rotation_y = self.camera_controller.rotation_y
             self.rotation_helper.update = rotation_helper_update
@@ -443,7 +563,8 @@ if __name__ == '__main__':
             vel.z = xz_vel.y
             self.rb.velocity = vel
 
-            self.grounded = raycast(self.world_position+(Vec3.down*.9), Vec3.down, distance=.2).hit
+            self.grounded = raycast(self.rb.position+(Vec3.down*.9), Vec3.down, distance=.2).hit
+            self.color = color.orange if self.grounded else color.azure
             if not self.grounded:   # prevent sticking to walls
                 self.rb.friction = 0
 
@@ -459,10 +580,15 @@ if __name__ == '__main__':
 
 
     player = Player()
-    ground = Entity(model='cube', scale=10, collider='box', z=10, rotation_x=-30, y=2, color=color.gray, name='ground')
-    ground.rb = RigidBody(entity=ground, shape=BoxShape(size=Vec3(1,1,1), center=(0,0,0)))
-    ground = Entity(model='cube', scale=10, collider='box', x=-8, z=-10, rotation_x=-10, y=-5, color=color.gray, name='ground')
-    ground.rb = RigidBody(entity=ground, shape=BoxShape(size=Vec3(1,1,1), center=(0,0,0)))
+    # ground = Entity(model='cube', scale=10, collider='box', z=10, rotation_x=-30, y=2, color=color.gray, name='ground')
+    # ground.rb = RigidBody(entity=ground, shape=BoxShape(size=Vec3(1,1,1), center=(0,0,0)))
+    # ground = Entity(model='cube', scale=10, collider='box', x=-8, z=-10, rotation_x=-10, y=-5, color=color.gray, name='ground')
+    # ground.rb = RigidBody(entity=ground, shape=BoxShape(size=Vec3(1,1,1), center=(0,0,0)))
+    ground = PhysicsEntity(model='plane', collider='plane', scale=10, x=-8, z=10, rotation_x=-30, y=2, color=color.red)
+    ground = PhysicsEntity(model='cube', collider='box', scale=10, x=8, z=10, rotation_x=-30, y=2, color=color.violet)
+    # ground = Entity(model='plane', collider='box', scale=10, x=-8, z=10, rotation_x=-30, y=2, color=color.green)
+    # ground.rb.rotation = Vec3(-30,0,0)
+    # ground.rb = RigidBody(entity=ground, shape=PlaneCollider())
 
     camera.fov = 100
 
