@@ -978,6 +978,39 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.setRenderModeWireframe(value)
 
 
+    def show_normals_getter(self):
+        return self._show_normals
+
+
+    def show_normals_setter(self, value):
+        self._show_normals = value
+
+        if value:
+            from ursina.shaders import normals_shader
+            self._original_shader = self.shader
+            self.shader = normals_shader
+            self.set_shader_input('transform_matrix', self.getNetTransform().getMat())
+
+        elif hasattr(self, "_original_shader") and self._original_shader:
+            self.shader = self._original_shader
+
+
+    def collider_visible_getter(self):
+        return self._show_collider
+
+
+    def collider_visible_setter(self, value):
+        if self.collider:
+            self.collider.visible = value
+
+        if value:
+            self._original_color = self.color
+            self.color = color.clear
+
+        elif hasattr(self, "_original_color") and self._original_color:
+            self.color = self._original_color
+
+
     # def generate_sphere_map(self, size=512, name=f'sphere_map_{len(scene.entities)}'):
     #     from ursina import camera
     #     _name = 'textures/' + name + '.jpg'
