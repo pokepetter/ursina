@@ -995,11 +995,11 @@ class Entity(NodePath, metaclass=PostInitCaller):
             self.shader = self._original_shader
 
 
-    def collider_visible_getter(self):
+    def show_collider_getter(self):
         return self._show_collider
 
-
-    def collider_visible_setter(self, value):
+    def show_collider_setter(self, value):
+        self._show_collider = value
         if self.collider:
             self.collider.visible = value
 
