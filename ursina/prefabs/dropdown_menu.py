@@ -3,11 +3,11 @@ from ursina import *
 
 class DropdownMenuButton(Button):
     def __init__(self, text='', **kwargs):
-        super().__init__(scale=(.25,.025), origin=(-.5,.5), pressed_scale=1, text_origin=(-.5,0), text=text, **kwargs)
+        super().__init__(scale=(.25,.025), origin=(-.5,.5), pressed_scale=1, text_origin=(-.5,0), text_size=.8, text=text, **kwargs)
 
         if self.text_entity:
             self.text_entity.x = .05
-            self.text_entity.scale *= .8
+            # self.text_entity.scale *= .8
 
 
 class DropdownMenu(DropdownMenuButton):
