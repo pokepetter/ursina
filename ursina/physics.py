@@ -235,6 +235,11 @@ class RigidBody(_PhysicsBody):
         self._lock_rotation = value
         self.rigid_body_node.setAngularFactor(Vec3(*[1-e for e in value]))
 
+    def velocity_getter(self):
+        return self.rigid_body_node.getLinearVelocity()
+    def velocity_setter(self, value):
+        return self.rigid_body_node.setLinearVelocity(value)
+
 
 
 
@@ -404,7 +409,6 @@ if __name__ == '__main__':
                 print(self.rb.position)
                 self.rotation_helper.position = self.rb.position
                 self.rotation_helper.rotation_y = self.camera_controller.rotation_y
-                # self.camera_controller
             self.rotation_helper.update = rotation_helper_update
 
             self.direction_helper = Entity(parent=self.rotation_helper, scale=.1, model='sphere', always_on_top=True, enabled=1)
@@ -429,7 +433,7 @@ if __name__ == '__main__':
 
             limit = 10
             self.rb.friction = 10 if self.direction.length() <.1 else .5
-            vel = self.rb.getLinearVelocity()
+            vel = self.rb.velocity
             xz_vel = (self.forward * 100 * self.input_strength).xz
             speed = xz_vel.length()
             if speed > limit:
@@ -437,7 +441,7 @@ if __name__ == '__main__':
                 xz_vel *= limit
             vel.x = xz_vel.x
             vel.z = xz_vel.y
-            self.rb.setLinearVelocity(vel)
+            self.rb.velocity = vel
 
             self.grounded = raycast(self.world_position+(Vec3.down*.9), Vec3.down, distance=.2).hit
             if not self.grounded:   # prevent sticking to walls
