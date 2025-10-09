@@ -336,7 +336,7 @@ class Window(WindowProperties):
 
         # disable collision display mode
         for e in [e for e in scene.entities if e.model or e.collider]:
-            e.collider_visible = False
+            e.show_collider = False
 
         for e in [e for e in scene.entities if e.model and e.alpha]:
             e.show_normals = False
@@ -346,7 +346,7 @@ class Window(WindowProperties):
 
         elif value == 'colliders':
             for e in [e for e in scene.entities if e.model or e.collider]:
-                e.collider_visible = True
+                e.show_collider = True
 
         elif value == 'normals':
             for e in [e for e in scene.entities if e.model and e.alpha]:
