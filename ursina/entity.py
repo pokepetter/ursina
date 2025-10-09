@@ -17,6 +17,7 @@ from ursina.scene import instance as scene
 from ursina.scripts.every_decorator import every, get_class_name
 from ursina.sequence import Func, Sequence, Wait
 from ursina.shader import Shader
+from ursina.shaders.unlit_shader import unlit_shader
 from ursina.shaders.unlit_with_fog_shader import unlit_with_fog_shader
 from ursina.string_utilities import print_warning
 from ursina.texture import Texture
