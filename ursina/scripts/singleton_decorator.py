@@ -1,14 +1,23 @@
 def singleton(cls):
-    def get_instance(*args, **kwargs):
-        if not hasattr(cls, '_singleton_instance') or not cls._singleton_instance:
-            cls._singleton_instance = cls(*args, **kwargs)
-        return cls._singleton_instance
+    class SingletonProxy:
+        _singleton_instance = None
 
-    return get_instance
+        def __new__(proxy_cls, *args, **kwargs):
+            if SingletonProxy._singleton_instance is None:
+                SingletonProxy._singleton_instance = cls(*args, **kwargs)
+            return SingletonProxy._singleton_instance
+
+        def __init_subclass__(sub_cls, **kwargs):
+            raise TypeError(
+                f"Cannot subclass @{singleton.__name__}-decorated class '{cls.__name__}'."
+            )
+
+    SingletonProxy.__name__ = cls.__name__
+    SingletonProxy.__doc__ = cls.__doc__
+    return SingletonProxy
 
 
 if __name__ == '__main__':
-    from ursina.ursinastuff import _test
 
     class MyBaseClass:
         def __init__(self, name):
@@ -21,8 +30,8 @@ if __name__ == '__main__':
 
     app = DecoratedClass()
     app_2 = DecoratedClass()
-    _test(app == app_2)
+    assert(app == app_2)
 
-    # # this won't work
-    # class Game(DecoratedClass):
-    #     pass
+    # this won't work
+    class Game(DecoratedClass):
+        pass
