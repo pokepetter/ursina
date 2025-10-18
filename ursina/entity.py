@@ -39,6 +39,7 @@ from ursina.scripts.property_generator import generate_properties_for_class
 class Entity(NodePath, metaclass=PostInitCaller):
     rotation_directions = (-1,-1,1)
     default_shader = unlit_with_fog_shader
+    ignore_paused = False
     default_values = {
         'parent':scene,
         'name':'entity', 'enabled':True, 'eternal':False, 'position':Vec3(0,0,0), 'rotation':Vec3(0,0,0), 'scale':Vec3(1,1,1), 'model':None, 'origin':Vec3(0,0,0),
@@ -59,6 +60,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
         texture_scale=Vec2.one,
         texture_offset=Vec2.zero,
         collider=None,
+        ignore_paused=Default,
         eternal=False,
         name='',
         **kwargs
@@ -67,7 +69,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
         name = name if name is not Default else str(type(self))
         super().__init__(name)
         self.ignore = False     # if True, will not try to run code.
-        self.ignore_paused = False      # if True, will still run when application is paused. useful when making a pause menu for example.
+        self.ignore_paused = ignore_paused if ignore_paused is not Default else __class__.ignore_paused      # if True, will still run when application is paused. useful when making a pause menu for example.
         self.ignore_input = False
         self.add_to_scene_entities = add_to_scene_entities # set to False to be ignored by the engine, but still get rendered.
 
@@ -1001,7 +1003,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
     def show_collider_setter(self, value):
         self._show_collider = value
-        if self.collider:
+        if self.collider and hasattr(self.collider, 'visible'): # Bullet colliders have no .visible
             self.collider.visible = value
 
         if value:
@@ -1246,15 +1248,18 @@ class Entity(NodePath, metaclass=PostInitCaller):
     def look_at_2d(self, target, axis='z', position_attr='world_position'):
         from math import atan2, degrees
         if isinstance(target, Entity):
-            target = Vec3(getattr(target, world_position))
+            target = Vec3(getattr(target, position_attr))
 
         pos = target - getattr(self, position_attr)
         if axis == 'z':
             self.rotation_z = degrees(atan2(pos[0], pos[1]))
+            return self.rotation_z
         elif axis == 'y':
             self.rotation_y = degrees(atan2(pos[0], pos[2]))
+            return self.rotation_y
         elif axis == 'x':
             self.rotation_x = degrees(atan2(pos[1], pos[2]))
+            return self.rotation_x
 
     def look_at_xy(self, target):
         self.look_at_2d(target)
