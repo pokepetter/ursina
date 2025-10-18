@@ -553,6 +553,9 @@ class ParticleSystemUI(Entity):
     def input(self, key):
         if key == 'tab':
             self.render_particle_system_list()
+        if key == 'space':
+            self.play_button.on_click()
+
 
 
     def on_enable(self):
