@@ -36,10 +36,16 @@ def _destroy(entity, force_destroy=False):
             if anim:
                 anim.kill()
 
-    for child in entity.children:
-        _destroy(child)
+    # for child in entity.children:
+    #     try:
+    #         _destroy(child)
+    #     except:
+    #         pass
+    if hasattr(entity, 'rb') and hasattr(entity.rb, 'remove'):
+        entity.rb.remove()
 
-    if entity.collider:
+
+    if entity.collider and hasattr(entity.collider, 'remove'):
         entity.collider.remove()
 
     if hasattr(entity, 'clip') and hasattr(entity, 'stop'): # stop audio
