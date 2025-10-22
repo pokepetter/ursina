@@ -24,7 +24,7 @@ keyboard_keys = '1234567890qwertyuiopasdfghjklzxcvbnm'
 from ursina.scripts.singleton_decorator import singleton
 @singleton
 class Ursina(ShowBase):
-    def __init__(self, title='ursina', icon='textures/ursina.ico', borderless:bool=False, fullscreen:bool=None, size=None, forced_aspect_ratio=None, position=None, vsync=True, editor_ui_enabled:bool=None, window_type='onscreen', development_mode:bool=None, render_mode=None, show_ursina_splash=False, use_ingame_console=False, **kwargs):
+    def __init__(self, title='ursina', icon='textures/ursina.ico', borderless:bool=None, fullscreen:bool=None, size=None, forced_aspect_ratio=None, position=None, vsync=True, editor_ui_enabled:bool=None, window_type='onscreen', development_mode:bool=None, render_mode=None, show_ursina_splash=False, use_ingame_console=False, **kwargs):
         """The main class of Ursina. This class is a singleton, so you can only have one instance of it.
 
         Keyword Args (optional):
