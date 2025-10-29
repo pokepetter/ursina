@@ -6,16 +6,16 @@ from ursina.ursinastuff import invoke
 from ursina.sequence import Sequence
 
 
-def destroy(entity, delay=0, unscaled=True, ignore_paused=False):
+def destroy(entity, delay=0, unscaled=True, ignore_paused=False, force_destroy=False):
     if application.development_mode:
         # get the calling function and the file it's from, so we can give a better error message if we try to use it after destroy
         entity.destroy_source = f'caller: {sys._getframe(1).f_code.co_name} file: {sys._getframe(1).f_code.co_filename}'
 
     if delay == 0:
-        _destroy(entity)
+        _destroy(entity, force_destroy=force_destroy)
         return True
 
-    return invoke(_destroy, entity, delay=delay, unscaled=unscaled, ignore_paused=ignore_paused)
+    return invoke(_destroy, entity, delay=delay, unscaled=unscaled, ignore_paused=ignore_paused, force_destroy=force_destroy)
     # return Sequence(Wait(delay), Func(_destroy, entity), auto_destroy=True, started=True)
 
 
@@ -86,7 +86,7 @@ def _destroy(entity, force_destroy=False):
     # if hasattr(entity, 'texture') and entity.texture != None:
     #     entity.texture.releaseAll()
 
-    del entity
+    # del entity
 
 
 

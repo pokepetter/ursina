@@ -33,7 +33,7 @@ class Camera(Entity):
         self._orthographic_lens_node = None
         self._ui_size = 40
         self.ui = Entity(eternal=True, name='ui', scale=(self._ui_size*.5, self._ui_size*.5), add_to_scene_entities=False)
-        self.overlay = Entity(parent=self.ui, model='quad', scale=99, color=color.clear, eternal=True, z=-99, add_to_scene_entities=False)
+        self.overlay = Entity(parent=self.ui, model='quad', scale=99, color=color.clear, eternal=True, z=-99, add_to_scene_entities=False, ignore_paused=True)
         # self.ready = False
         # self._orthographic = False
         # self._fov = 40   # horizontal fov
