@@ -4,10 +4,10 @@ from ursina.scripts.property_generator import generate_properties_for_class
 @generate_properties_for_class()
 class HealthBar(Button):
 
-    def __init__(self, max_value=100, value=Default, roundness=.25, bar_color=color.red.tint(-.2), highlight_color=color.black66, animation_duration=.1, show_text=True, show_lines=False, text_size=.7, scale=(.5,.025), origin=(-.5,.5), name='health_bar', **kwargs):
-        super().__init__(name=name, position=(-.45*window.aspect_ratio,.45), origin=origin, scale=scale, text='hp / max hp', text_size=text_size, radius=roundness, ignore=True)
+    def __init__(self, max_value=100, value=Default, roundness=.25, bar_color=color.red.tint(-.2), highlight_color=color.black66, animation_duration=.1, show_text=True, show_lines=False, text_size=.7, scale=(.5,.025), origin=(-.5,.5), name='health_bar', ignore_paused=True, **kwargs):
+        super().__init__(name=name, position=(-.45*window.aspect_ratio,.45), origin=origin, scale=scale, text='hp / max hp', text_size=text_size, radius=roundness, ignore=True, ignore_paused=ignore_paused, disabled=True)
 
-        self.bar = Entity(parent=self, model=Quad(radius=roundness), origin=origin, z=-.005, color=bar_color, highlight_color=highlight_color, ignore=True)
+        self.bar = Entity(parent=self, model=Quad(radius=roundness), origin=origin, z=-.005, color=bar_color, highlight_color=highlight_color, ignore=True, ignore_paused=ignore_paused)
         self.lines = Entity(parent=self.bar, y=-1, color=color.black33, ignore=True, enabled=show_lines, z=-.05)
 
         self.max_value = max_value
