@@ -8,6 +8,8 @@ from ursina.ursinastuff import after
 tracks = dict()
 current_music_track = ''
 current_ambiance_track = ''
+prev_music_track = ''
+prev_ambiance_track = ''
 
 
 def _load_audio(track_name, audio_group='music'):
@@ -20,57 +22,56 @@ def _load_audio(track_name, audio_group='music'):
 
 
 def play(track_name, fade_out_duration=2, start=0, track_group:Literal['music','ambiance']='music'):
-    global current_music_track, current_ambiance_track
+    global current_music_track, current_ambiance_track, prev_music_track, prev_ambiance_track
 
     if track_group == 'music':
-        current_track = current_music_track
+        if track_name == current_music_track:
+            return
+
+        prev_music_track = current_music_track
+        current_music_track = track_name
+        # print(f'change music track: {prev_music_track} --> {current_music_track}')
+
     elif track_group == 'ambiance':
-        current_track = current_ambiance_track
+        if track_name == current_ambiance_track:
+            return
+
+        prev_ambiance_track = current_ambiance_track
+        current_ambiance_track = track_name
+        # print(f'change ambiance track: {prev_ambiance_track} --> {current_ambiance_track}')
+
     else:
         print_warning(f'Invalid audio group: {track_group}')
         return
 
-    if track_name == current_track:
-        return
 
-    if not track_name and current_track:
-        tracks[current_track].fade_out(fade_out_duration)
-        if track_group == 'music':
-            current_music_track = None
-        elif track_group == 'ambiance':
-            current_ambiance_track = None
-        return
-
-    if track_name not in tracks:
+    if track_name and track_name not in tracks:
         audio_group = track_group
         if track_group == 'ambiance':
             audio_group = 'ambient'
         audio = _load_audio(track_name, audio_group)
         if audio is None:
-            print('audio not found')
-            return
+            print_warning('audio not found:', track_name)
 
-    if not current_track:  # if no music/ambiance playing, start immediately
-        tracks[track_name].play(start)
-        if track_group == 'music':
-            current_music_track = track_name
-        elif track_group == 'ambiance':
-            current_ambiance_track = track_name
+    prev_track = prev_music_track if track_group == 'music' else prev_ambiance_track
+    current_track = current_music_track if track_group == 'music' else current_ambiance_track
+
+    if not prev_track:  # if no music/ambiance playing, start immediately
+        tracks[current_track].play(start)
+        tracks[current_track].volume = 1
         return
 
-    # fade out current track and play new one after
-    print(f'{track_group}_system: fade out:', current_track)
-    tracks[current_track].fade_out(duration=fade_out_duration, curve=curve.linear, destroy_on_ended=False, ignore_paused=True)
-    print(f'{track_group}_system: fade in:', track_name)
+    # fade out prev track and play new one after
+    if prev_track:
+        tracks[prev_track].fade_out(duration=fade_out_duration, curve=curve.linear, destroy_on_ended=False, ignore_paused=True)
+
+    if not current_track:
+        return
 
     @after(fade_out_duration, ignore_paused=True)
     def _():
-        tracks[track_name].play(start=start)
-        tracks[track_name].fade_in(duration=fade_out_duration)
-    if track_group == 'music':
-        current_music_track = track_name
-    elif track_group == 'ambiance':
-        current_ambiance_track = track_name
+        tracks[current_track].play(start=start)
+        tracks[current_track].fade_in(duration=fade_out_duration, curve=curve.linear, ignore_paused=True)
 
 
 def play_ambiance(track_name, fade_out_duration=2, start=0):
@@ -98,12 +99,12 @@ if __name__ == '__main__':
     #             music_system.play('rain', track_group='ambiance')
     #         else:
     #             music_system.play('forest', track_group='ambiance')
-    music_changer = ButtonGroup(('None', 'crestlands_part', 'dunes_part'), label='music', )
+    music_changer = ButtonGroup(('', 'crestlands_part', 'dunes_part'), label='music', )
     def on_music_selected():
         music_system.play(music_changer.value if music_changer.value != 'None' else None)
     music_changer.on_value_changed = on_music_selected
 
-    ambiance_changer = ButtonGroup(('None', 'noise', 'square'), label='ambiance', y=-.1)
+    ambiance_changer = ButtonGroup(('', 'noise', 'square'), label='ambiance', y=-.1)
     def on_ambiance_selected():
         music_system.play_ambiance(ambiance_changer.value if ambiance_changer.value != 'None' else None)
     ambiance_changer.on_value_changed = on_ambiance_selected
@@ -112,7 +113,10 @@ if __name__ == '__main__':
     def update():
         t.text = f'''\
             current_music_track:    {music_system.current_music_track},
+            prev_music_track: {music_system.prev_music_track},
+
             current_ambiance_track: {music_system.current_ambiance_track},
+            prev_ambiance_track: {music_system.prev_ambiance_track},
             '''
 
     app.run()
