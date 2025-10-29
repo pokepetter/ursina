@@ -165,7 +165,7 @@ class Button(Entity):
                     if isinstance(self.pressed_sound, Audio):
                         self.pressed_sound.play()
                     elif isinstance(self.pressed_sound, str):
-                        Audio(self.pressed_sound, auto_destroy=True)
+                        Audio(self.pressed_sound, auto_destroy=True, ignore_paused=self.ignore_paused)
 
         if key == 'left mouse up':
             if self.hovered:
@@ -191,7 +191,7 @@ class Button(Entity):
                 if isinstance(self.highlight_sound, Audio):
                     self.highlight_sound.play()
                 elif isinstance(self.highlight_sound, str):
-                    Audio(self.highlight_sound, auto_destroy=True)
+                    Audio(self.highlight_sound, auto_destroy=True, ignore_paused=self.ignore_paused)
 
         if hasattr(self, 'tooltip') and self.tooltip:
             self.tooltip.enabled = True
@@ -204,9 +204,9 @@ class Button(Entity):
                 if not mouse.left and self.highlight_scale != 1:
                     self.model.setScale(Vec3(1,1,1))
 
-        if self.text:
-            self.text_size_setter(self.text_size, temp=True)
-            self.text_color_setter(self.text_color, temp=True)
+            if self.text:
+                self.text_size_setter(self.text_size, temp=True)
+                self.text_color_setter(self.text_color, temp=True)
 
         if hasattr(self, 'tooltip') and self.tooltip:
             self.tooltip.enabled = False
