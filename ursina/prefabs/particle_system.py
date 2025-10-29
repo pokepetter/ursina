@@ -12,7 +12,7 @@ cache = dict()
 
 
 
-def play_particle_system(name, use_cache=True, auto_play=True, auto_destroy=True, unscaled=False, **kwargs):
+def play_particle_system(name, use_cache=True, auto_play=True, auto_destroy=True, unscaled=False, ignore_paused=False, **kwargs):
     # print('try loading particle system:', name)
     if name in cache:
         animation_texture = cache[name]
@@ -21,7 +21,7 @@ def play_particle_system(name, use_cache=True, auto_play=True, auto_destroy=True
         cache[name] = animation_texture
 
     if animation_texture:   # if the particle system has been baked
-        vat_instance = vertex_animation(animation_texture, auto_play=auto_play, unscaled=unscaled)
+        vat_instance = vertex_animation(animation_texture, auto_play=auto_play, auto_destroy=auto_destroy, unscaled=unscaled, ignore_paused=ignore_paused)
         if not auto_play:
             vat_instance.enabled = False
 
@@ -46,11 +46,12 @@ def play_particle_system(name, use_cache=True, auto_play=True, auto_destroy=True
     for subsystem in particle_container.subsystems:
         for seq in subsystem.anims:
             seq.unscaled = unscaled
+            seq.ignore_paused = ignore_paused
 
     if auto_play:
         particle_container.play()
     if auto_destroy:
-        destroy(particle_container, delay=particle_container.total_duration, unscaled=unscaled)
+        destroy(particle_container, delay=particle_container.total_duration, unscaled=unscaled, ignore_paused=ignore_paused)
 
     return particle_container
 
@@ -194,7 +195,7 @@ class ParticleSystemContainer(Entity):
         texture.save(folder / f'{name}_seed{seed}_baked_fps{fps}_bounds{min_x}_{max_x}_{min_y}_{max_y}_{min_z}_{max_z}.png')
 
 
-def vertex_animation(animation_texture, auto_play=True, unscaled=False):
+def vertex_animation(animation_texture, auto_play=True, auto_destroy=True, unscaled=False, ignore_paused=False):
     from ursina.shaders.vertex_animation_shader import vertex_animation_shader
     instance = Entity(model=Mesh(vertices=[Vec3.zero for i in range(animation_texture.width)]), shader=vertex_animation_shader)
 
@@ -212,10 +213,10 @@ def vertex_animation(animation_texture, auto_play=True, unscaled=False):
     loop = False
 
     if auto_play:
-        instance.animate_shader_input('frame_index', animation_texture.size[1]-1, duration=animation_duration, loop=loop, curve=curve.linear, resolution=120, unscaled=unscaled)
+        instance.animate_shader_input('frame_index', animation_texture.size[1]-1, duration=animation_duration, loop=loop, curve=curve.linear, resolution=120, unscaled=unscaled, ignore_paused=ignore_paused)
 
-    if not loop:
-        destroy(instance, delay=animation_duration, unscaled=unscaled)
+    if auto_destroy:
+        destroy(instance, delay=animation_duration, unscaled=unscaled, ignore_paused=ignore_paused)
     return instance
 
 def _sample_random(seq, i):
@@ -366,6 +367,7 @@ class ParticleSystem(Entity):
 
 
     def generate_particle_animations(self, position, start_direction, move_direction, delay=0, i=0):
+        original_state = random.getstate()
         if self.seed is None:
             random.seed(None)
         else:
@@ -439,6 +441,8 @@ class ParticleSystem(Entity):
                 Func(destroy, e),
                 auto_destroy=True, name='destroy_particle_sequence')
                 )
+
+        random.setstate(original_state)
 
         # if self.loop_every > 0:
         #     destroy(self, delay=delay + self.total_duration + .1)
