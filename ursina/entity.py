@@ -1505,7 +1505,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
     def fade_in(self, value=1, duration=.5, **kwargs):
         return self.animate('color', Vec4(self.color[0], self.color[1], self.color[2], value), duration=duration, **kwargs)
 
-    def blink(self, color=ursina.color.white, shader='unlit_shader', duration=.1):
+    def blink(self, color=ursina.color.white, shader='unlit_shader', duration=.1, ignore_paused=False):
         if not getattr(self, 'org_shader', False):
             self.org_shader = self.shader
             self.org_texture = self.texture
@@ -1515,7 +1515,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.texture = None
         self.color = color
 
-        @after(duration, entity=self)
+        @after(duration, entity=self, ignore_paused=ignore_paused)
         def _reset(self=self):
             self.shader = self.org_shader
             self.texture = self.org_texture
