@@ -1293,19 +1293,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
 
     def has_disabled_ancestor(self):
-        p = self
-        for _i in range(100):
-            if not p.parent:
-                return False
-            if not hasattr(p, 'parent') or not hasattr(p.parent, 'enabled'):
-                return False
-
-            p = p.parent
-
-            if p.enabled is False:
-                return True
-
-        return False
+        return not self.get_stashed_ancestor().is_empty()
 
     def children_getter(self):
         return [e for e in getattr(self, '_children', []) if e]     # make sure list doesn't contain destroyed entities
