@@ -193,9 +193,9 @@ class Ursina(ShowBase):
             scene._entities_marked_for_removal.clear()
 
         for e in scene.entities:
-            if not e.enabled or e.ignore:
-                continue
             if e in scene._entities_marked_for_removal:
+                continue
+            if not e.enabled or e.ignore:
                 continue
             if application.paused and e.ignore_paused is False:
                 continue
@@ -204,11 +204,15 @@ class Ursina(ShowBase):
 
             if hasattr(e, 'update') and callable(e.update):
                 e.update()
+            if not e:   # could have been destroyed in update
+                continue
 
             if hasattr(e, 'scripts'):
                 for script in e.scripts:
                     if script.enabled and hasattr(script, 'update') and callable(script.update):
                         script.update()
+            if not e:
+                continue
 
             if e.shader and hasattr(e.shader, "continuous_input"):
                 for key, value in e.shader.continuous_input.items():
