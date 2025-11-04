@@ -16,5 +16,5 @@ class HitInfo:
         return self.hit
 
     def __repr__(self):
-        values_str = ", ".join(f"{slot}={getattr(self, slot)!r}" for slot in self.__slots__)
-        return f"{self.__class__.__name__}({values_str})"
+        values_str = ', '.join(f'{slot}={getattr(self, slot)!r}' for slot in self.__slots__)
+        return f'{self.__class__.__name__}({values_str})'
