@@ -14,3 +14,7 @@ class HitInfo:
 
     def __bool__(self):
         return self.hit
+
+    def __repr__(self):
+        values_str = ', '.join(f'{slot}={repr(getattr(self, slot))}' for slot in self.__slots__)
+        return f'{self.__class__.__name__}({values_str})'
