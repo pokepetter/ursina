@@ -438,6 +438,20 @@ class PhysicsEntity:
                 self.world.removeRigidBody(self.node)
 
 
+    # def intersects(self, other):
+    #     result = self.world.contactTest(self.node)
+
+    #     if not result.getNumContacts():
+    #         return HitInfo()
+
+    #     for i in range(result.getNumContacts()):
+    #         contact = result.getContact(i)
+    #         node0 = contact.getNode0()
+    #         node1 = contact.getNode1()
+    #         if node
+
+
+
 if __name__ == '__main__':
     from ursina import Ursina, Cylinder, Capsule, Cone, Sequence, Func, curve, Wait, EditorCamera
     from ursina.physics import *
