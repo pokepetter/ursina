@@ -316,6 +316,9 @@ class Entity(NodePath, metaclass=PostInitCaller):
         if hasattr(self, '_parent') and self._parent and hasattr(self._parent, '_children') and self in self._parent._children:
             self._parent._children.remove(self)
 
+        if hasattr(value, 'parent_target'):
+            value = value.parent_target
+
         if hasattr(value, '_children') and self not in value._children:
             value._children.append(self)
 
