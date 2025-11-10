@@ -185,11 +185,11 @@ class PhysicsEntity:
 
         self.collider = collider # set collider before resetting entity, since we need to get scale. we can't scale rb nodes
         if kinematic:
-            self.position = self.entity.position
+            self.position = self.entity.position - self.entity.origin
             self.rotation = self.entity.rotation
             self.scale = self.entity.scale
         else: # simulated rigidbodies can't be parented, so use world transform
-            self.position = self.entity.world_position
+            self.position = self.entity.world_position - (self.entity.origin * self.entity.world_scale)
             self.rotation = self.entity.world_rotation
             self.scale = self.entity.world_scale
 
@@ -198,6 +198,7 @@ class PhysicsEntity:
         self.entity.position = Vec3.zero
         self.entity.rotation = Vec3.zero
         self.entity.scale = Vec3.one
+        self.entity.origin = Vec3.zero
 
         self.mass = mass
         self.kinematic = kinematic
@@ -223,6 +224,8 @@ class PhysicsEntity:
         self.down = self.entity.down
         self.screen_position = self.entity.screen_position
         self.get_tight_bounds = self.entity.get_tight_bounds
+        self.blink = self.entity.blink
+        self.has_ancestor = self.entity.has_ancestor
 
 
     def remove(self):
@@ -405,7 +408,7 @@ class PhysicsEntity:
         elif value == 'box' or value == 'plane':
             if self.entity.model:
                 _bounds = self.entity.model_bounds
-                self._collider = BoxCollider(center=_bounds.center, size=_bounds.size)
+                self._collider = BoxCollider(center=_bounds.center-(_bounds.size*self.entity.origin), size=_bounds.size)
             else:
                 self._collider = BoxCollider()
 
@@ -414,7 +417,7 @@ class PhysicsEntity:
 
         elif value == 'sphere':
             _bounds = self.entity.model_bounds
-            self._collider = SphereCollider(center=_bounds.center, radius=_bounds.size.x/2)
+            self._collider = SphereCollider(center=_bounds.center-(_bounds.size), radius=_bounds.size.x/2)
 
         if self._collider:
             self.node.addShape(self._collider)
@@ -534,6 +537,7 @@ if __name__ == '__main__':
 
     ground = Entity(model='cube', origin_y=.5, texture='grass', scale=Vec3(30,1,30), collider='box')
     cube = Entity(model='cube', texture='white_cube', x=2, y=3, collider='box', color=color.lime, mass=0)
+    cube_with_origin = Entity(model='icosphere', origin=(0,-.5,0), scale=2, x=-1, y=3, z=-3, collider='sphere', color=color.orange, mass=0)
 
     slope = Entity(model='plane', collider='box', scale=10, x=-8, z=10, rotation_x=-30, y=2, color=color.red)
 
