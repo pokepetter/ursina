@@ -41,9 +41,6 @@ def _destroy(entity, force_destroy=False):
     #         _destroy(child)
     #     except:
     #         pass
-    if hasattr(entity, 'rb') and hasattr(entity.rb, 'remove'):
-        entity.rb.remove()
-
 
     if entity.collider and hasattr(entity.collider, 'remove'):
         entity.collider.remove()
@@ -98,6 +95,7 @@ if __name__ == '__main__':
             super().__init__()
             self.num_frames = 0
             self.name = name
+            # destroy(self)
 
         def update(self):
             self.num_frames += 1
@@ -113,10 +111,10 @@ if __name__ == '__main__':
     e3 = E("e3")
 
 
-    def update():
-        print()
-        if e1.num_frames > 4:
-            exit()
+    # def update():
+    #     print()
+    #     if e1.num_frames > 4:
+    #         exit()
 
 
     app.run()

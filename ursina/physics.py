@@ -226,10 +226,11 @@ class PhysicsEntity:
         self.get_tight_bounds = self.entity.get_tight_bounds
         self.blink = self.entity.blink
         self.has_ancestor = self.entity.has_ancestor
+        self.hasPythonTag = self.entity.hasPythonTag
+        self.clearPythonTag = self.entity.clearPythonTag
 
-
-    def remove(self):
-        self.world.removeRigidBody(self.rb)
+    def removeNode(self):   # for destroy() compatibility
+        self.world.removeRigidBody(self.node)
         self.rb.removeNode()
 
     def parent_target_getter(self):
@@ -562,7 +563,22 @@ if __name__ == '__main__':
             # sphere.rb.enabled = not sphere.rb.enabled
             # sphere.rb.rigid_body_node.setActive(False)
 
+        if key == 'c':
+            for e in scene.entities:
+                if e == player or e.parent==player:
+                    continue
+
+                if isinstance(e, PhysicsEntity):
+                    destroy(e)
+                    # physics_handler.world.remove(e.node)
+                    # e.rb.removeNode()
+
+                    # self.world.removeRigidBody(self.node)
+                    # self.rb.removeNode()
+
+
     physics_handler.gravity = 50
     physics_handler.show_debug = True
     print('----------------------------', physics_handler.show_debug)
+
     app.run()
