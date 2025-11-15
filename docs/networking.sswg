@@ -167,7 +167,7 @@ def on_disconnect(connection, time_disconnected):
 	print("This is run when a disconnect happens.")
 
 @rpc(rpc_peer)
-def say(connection, time_received, message: str)
+def say(connection, time_received, message: str):
 	print(message)
 
 def update():
