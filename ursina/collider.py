@@ -11,6 +11,7 @@ class Collider(NodePath):
 
         self.shape = shape
         self.node_path = entity.attachNewNode(self.collision_node)
+        self.visible = False
 
         if isinstance(shape, list | tuple):
             for e in shape:
