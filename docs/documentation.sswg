@@ -1,12 +1,20 @@
 #title ursina engine documentation
 #insert menu.sswg
 
-### Documentation
+
+<div id="documentation" style="display: flex; flex-direction: row; width: 100%; justify-content: space-between;">
+<div>
+## Documentation
 
 #insert doc_index.sswg
+</div>
 
 
+<div>
 ## Tutorials
 
     [Introduction, introduction_tutorial.html, icons/entity_basics_icon.jpg]
     [Platformer Tutorial, platformer_tutorial.html, icons/platformer.jpg]
+</div>
+
+</div>
