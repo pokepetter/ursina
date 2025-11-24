@@ -106,12 +106,12 @@ def raycast(origin, direction: Vec3 = Vec3(0, 0, 1), distance=9999,
         hit = True
 
     if debug or physics_handler.show_debug:
-        temp = Entity(position=origin, model=copy(_line_model), scale=Vec3(1, 1, min(distance, 9999)), color=color, add_to_scene_entities=False)
+        temp = Entity(position=origin, model=copy(_line_model), scale=Vec3(1, 1, min(distance, 9999)), color=color, add_to_scene_entities=1)
         temp.look_at(to_pos)
         destroy(temp, delay=1/30)
 
     if not hit:
-        return HitInfo()
+        return HitInfo(hit=False)
 
     return HitInfo(
         hit=True,
@@ -154,6 +154,8 @@ class PhysicsEntity:
     _getattr = Entity._getattr
     _setattr = Entity._setattr
     look_at_2d = Entity.look_at_2d
+    look_at_xy = Entity.look_at_xy
+    look_at_xz = Entity.look_at_xz
     look_in_direction = Entity.look_in_direction
     look_at = Entity.look_at
     _list_to_vec = Entity._list_to_vec
@@ -228,6 +230,11 @@ class PhysicsEntity:
         self.has_ancestor = self.entity.has_ancestor
         self.hasPythonTag = self.entity.hasPythonTag
         self.clearPythonTag = self.entity.clearPythonTag
+        self.children = []
+
+        for key, value in kwargs.items():
+            if not hasattr(self, key):
+                setattr(self, key, value)
 
     def removeNode(self):   # for destroy() compatibility
         self.world.removeRigidBody(self.node)
@@ -335,6 +342,11 @@ class PhysicsEntity:
             value = Vec3(*value, self.scale[2])
         value = [e if e!=0 else .001 for e in value]
         self.rb.setScale(scene, (value[0], value[1], value[2]))
+
+    def color_getter(self):
+        return self.entity.color
+    def color_setter(self, value):
+        self.entity.color = value
 
     def texture_getter(self):
         return self.entity.texture
