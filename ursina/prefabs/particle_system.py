@@ -17,7 +17,7 @@ def play_particle_system(name, use_cache=True, auto_play=True, auto_destroy=True
     if name in cache:
         animation_texture = cache[name]
     else:
-        animation_texture = load_texture(f'{name}_*_baked_fps*_bounds*.png')
+        animation_texture = load_texture(f'{name}_seed*_baked_fps*_bounds*.png')
         cache[name] = animation_texture
 
     if animation_texture:   # if the particle system has been baked
@@ -35,6 +35,7 @@ def play_particle_system(name, use_cache=True, auto_play=True, auto_destroy=True
         print_warning('missing particle system:', whole_file_name)
         return
 
+    # print('loaded particle system:', particle_files[0])
     with particle_files[0].open('r') as f:
         text = f.read()
 
