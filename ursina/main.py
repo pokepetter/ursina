@@ -13,6 +13,7 @@ from ursina.camera import instance as camera
 from ursina.mouse import instance as mouse
 from ursina import entity
 from ursina import shader
+from ursina.audio import _audio_manager
 
 
 import __main__
@@ -175,7 +176,7 @@ class Ursina(ShowBase):
         self.taskMgr.add(_wait_for_window_open, 'wait_for_window')
 
 
-    def _update(self, task):
+    def _update(self, task=None):
         """Internal task that runs every frame. Updates time, mouse, sequences and entities."""
         if application.calculate_dt:
             time.dt_unscaled = globalClock.getDt()
@@ -217,6 +218,8 @@ class Ursina(ShowBase):
             if e.shader and hasattr(e.shader, "continuous_input"):
                 for key, value in e.shader.continuous_input.items():
                     e.set_shader_input(key, value())
+
+        _audio_manager.update()
 
         return Task.cont
 
