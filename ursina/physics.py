@@ -259,6 +259,11 @@ class PhysicsEntity:
     def model_setter(self, value):
         self.entity.model = value
 
+    def origin_getter(self):
+        return self.entity.origin
+    def origin_setter(self, value):
+        self.entity.origin = value
+
     def shader_getter(self): return self.entity.shader
     def shader_setter(self, value):
         self.entity.shader = value
@@ -347,6 +352,11 @@ class PhysicsEntity:
         return self.entity.color
     def color_setter(self, value):
         self.entity.color = value
+
+    def alpha_getter(self):
+        return self.entity.alpha
+    def alpha_setter(self, value):
+        self.entity.alpha = value
 
     def texture_getter(self):
         return self.entity.texture
