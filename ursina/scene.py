@@ -67,6 +67,15 @@ class Scene(NodePath):
         if isinstance(value, tuple):     # linear fog
             self.fog.setLinearRange(value[0], value[1])
             for e in self.entities:
+                try:
+                    from ursina.camera import instance as camera
+                    if e.has_ancestor(camera.ui):
+                        continue
+                except:
+                    pass
+
+                if e in self._entities_marked_for_removal:
+                    continue
                 if e.shader and 'fog_start' in e.shader.default_input and 'fog_end' in e.shader.default_input:
                     e.set_shader_input('fog_start', value[0])
                     e.set_shader_input('fog_end', value[1])

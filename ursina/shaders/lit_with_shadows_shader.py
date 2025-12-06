@@ -35,10 +35,14 @@ out vec3 vertex_position;
 out vec3 normal_vector;
 out vec4 shadow_coord[1];
 
+uniform mat4 p3d_ModelMatrix;
+out vec3 vertex_world_position;
+
 
 void main() {
     gl_Position = p3d_ModelViewProjectionMatrix * vertex;
     vertex_position = vec3(p3d_ModelViewMatrix * vertex);
+    vertex_world_position = (p3d_ModelMatrix * vertex).xyz;
     normal_vector = normalize(p3d_NormalMatrix * normal);
     shadow_coord[0] = p3d_LightSource[0].shadowViewMatrix * vec4(vertex_position, 1);
     texcoords = (p3d_MultiTexCoord0 * texture_scale) + texture_offset;
@@ -69,8 +73,14 @@ in vec2 texcoords;
 in vec4 vertex_color;
 out vec4 fragment_color;
 
-in vec3 vertex_position;
+uniform vec4 fog_color;
+uniform float fog_start;
+uniform float fog_end;
+uniform vec3 camera_world_position;
+in vec3 vertex_world_position;
+
 in vec3 normal_vector;
+in vec3 vertex_position;
 in vec4 shadow_coord[1];
 
 uniform float shadow_bias;
@@ -120,6 +130,12 @@ void main() {
 
     // Call the function to handle lighting and shadowing
     fragment_color = cast_shadows(fragment_color);
+
+    float distance_to_camera = length(vertex_world_position.xyz - camera_world_position);
+    float fog_length = fog_end - fog_start;
+    float t = distance_to_camera/fog_length;
+    t = clamp(t, 0., 1.);
+    fragment_color.rgb = mix(fragment_color.rgb, fog_color.rgb, t * fog_color.a);
 }
 
 ''',
@@ -130,9 +146,17 @@ default_input = {
     'shadow_bias': 0.001,
     'shadow_blur': .005,
     'shadow_samples': 4,
+
+    'fog_color': color.clear,
+    'fog_start': 10,
+    'fog_end': 100,
+    'camera_world_position' : Vec3.zero,
     }
 )
-
+def get_camera_world_position():
+    from ursina import camera
+    return camera.world_position
+lit_with_shadows_shader.continuous_input['camera_world_position'] = get_camera_world_position
 
 if __name__ == '__main__':
     from ursina import *
@@ -148,7 +172,7 @@ if __name__ == '__main__':
     sun = DirectionalLight(shadow_map_resolution=(2048,2048))
     sun.look_at(Vec3(-1,-1,-10))
     # sun._light.show_frustum()
-    scene.fog_density = (1, 50)
+    scene.fog_density = (10, 500)
     scene.fog_color = color.blue
     Sky(color=color.light_gray)
     EditorCamera()

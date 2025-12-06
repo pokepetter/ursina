@@ -16,9 +16,6 @@ in vec2 p3d_MultiTexCoord0;
 out vec2 uvs;
 uniform vec2 texture_scale;
 uniform vec2 texture_offset;
-uniform vec4 fog_color;
-uniform float fog_start;
-uniform float fog_end;
 
 in vec4 p3d_Color;
 out vec4 vertex_color;
