@@ -1,307 +1,385 @@
-from modulefinder import ModuleFinder
-import os
-import sys
 import shutil
-from shutil import copy
-from pathlib import Path
+import subprocess
+import sys
 import time
+import zipfile
+from pathlib import Path
+from shutil import copy
 from textwrap import dedent
-import platform
+import platform as py_platform
 
-def build():
-    project_folder = Path.cwd()
-    project_name = project_folder.stem
-    build_folder = Path(project_folder / f'build_{platform.system()}')
-    build_folder.mkdir(exist_ok=True)
 
-    ignore_folders = []
-    ignore_filetypes = []
+from ursina.cmd_tool_maker import auto_log_method_calls, auto_validate_input, make_command_line_app
 
-    compressed_textures = []
-    compressed_textures_folder = Path(project_folder/'textures_compressed')
-    if compressed_textures_folder.exists():
-        compressed_textures = compressed_textures_folder.iterdir()
 
-    def copytree(src, dst, symlinks=False, ignore_patterns=[], ignore_filetypes=[]):
-        src = str(src)
-        dst = str(dst)
+def ask_to_overwrite(path):
+    msg = f'{path} already exists. \nProceed to delete and overwrite?'
+    return input(f"{msg} (y/N) ").lower() == 'y'
 
-        for item in os.listdir(src):
-            if item in ignore_patterns:
+
+def copytree(src, dst, symlinks=False, ignore_patterns=None, ignore_filetypes=None):
+    src = Path(src)
+    dst = Path(dst)
+    ignore_patterns = ignore_patterns if ignore_patterns is not None else []
+    ignore_filetypes = ignore_filetypes if ignore_filetypes is not None else []
+
+    for item in src.iterdir():
+        if item.name in ignore_patterns:
+            continue
+
+        dest_item = dst / item.name
+
+        if item.is_dir():
+            try:
+                ignore_pattern = shutil.ignore_patterns(*(ignore_patterns + [f'*{e}' for e in ignore_filetypes]))
+                shutil.copytree(item, dest_item, symlinks=symlinks, ignore=ignore_pattern)
+            except Exception as e:
+                print(e)
+        else:
+            if item.suffix in ignore_filetypes:
+                print('ignore filetype:', item.suffix)
+                continue
+            # if item.stem in self.compressed_textures:
+            #     continue
+            shutil.copy2(item, dest_item)
+
+PROJECT_FOLDER = Path.cwd()
+SRC_FOLDER = PROJECT_FOLDER / PROJECT_FOLDER.name
+
+print('SRC_FOLDER:', SRC_FOLDER)
+
+@auto_validate_input
+@auto_log_method_calls
+class UrsinaBuild:
+    # TODO: Need __init__  make_command_line_app to work currently, but remove after that's fixed.
+    def __init__(self):
+        self.ignore_folders = []
+        self.ignore_filetypes = []
+
+
+    def build(self,
+            output_folder='builds',
+            platform='Windows',
+            build_engine=True,
+            build_game=True,
+            compile_to_pyc=True,
+            make_bat_file=True,
+            entry_point='main.py',
+            overwrite=False,
+            pyproject_path='..',
+            python_version='',
+        ):
+        if not (SRC_FOLDER/entry_point).exists():
+            raise Exception(f'No {(SRC_FOLDER/entry_point)} found.')
+
+        project_name = PROJECT_FOLDER.stem
+        if isinstance(output_folder, str):
+            output_folder = PROJECT_FOLDER / output_folder
+        output_folder.mkdir(exist_ok=True)
+        self.build_folder = Path(output_folder / f'build_{platform}_v{'x_x_x'}')
+        self.build_folder.mkdir(exist_ok=True)
+
+        print('building project:', SRC_FOLDER)
+        start_time = time.time()
+
+        if build_engine:
+            self.build_engine(overwrite=overwrite, python_version=python_version)
+
+        if build_game:
+            self.build_game(overwrite=overwrite, compile_to_pyc=compile_to_pyc)
+
+        if make_bat_file:
+            self.make_bat_file(entry_point=entry_point, is_pyc=compile_to_pyc)
+
+        print('build complete! time elapsed:', time.time() - start_time)
+
+
+
+    def build_engine(self, overwrite=False, into='builds/_test_build/python', python_version=''):
+        into = (PROJECT_FOLDER / into)
+        into.mkdir(parents=True, exist_ok=True)
+
+        # python_dest = self.build_folder / 'python'
+        # python_dlls_dest = self.build_folder / 'python/DLLs'
+        # python_lib_dest = self.build_folder / 'python/Lib'
+
+        # if python_dest.exists() and not overwrite:
+        #     overwrite = ask_to_overwrite()
+        # if not overwrite:
+        #     return self
+
+        if into.exists():
+            shutil.rmtree(str(into))
+        # python_dest.mkdir()
+        # python_dlls_dest.mkdir()
+        # python_lib_dest.mkdir()
+
+        if not python_version:
+            python_version = py_platform.python_version()
+            print(f'No python_version specified, using default: {python_version}')
+        self.copy_python(into=into, python_version=python_version)
+        self.copy_modules(into=into/'Lib/site-packages', python_version=python_version)
+
+        return self
+
+
+
+    def copy_python(self, python_version='', platform='Windows',
+                    into='builds/_test_build/python/',
+                    use_cache=True,
+                    cache_dir='build_cache/python_embeds'):
+        import shutil
+        import urllib.request
+        import zipfile
+
+        if not python_version:
+            python_version = py_platform.python_version()
+            print(f'No python_version specified, using default: {python_version}')
+
+        # Resolve target dir
+        if isinstance(into, str):
+            into = PROJECT_FOLDER / into
+        into.mkdir(parents=True, exist_ok=True)
+
+        # Resolve cache dir
+        if isinstance(cache_dir, str):
+            cache_dir = PROJECT_FOLDER / cache_dir
+        cache_dir.mkdir(parents=True, exist_ok=True)
+
+        # Cache file path (per Python version)
+        cache_zip = cache_dir / f"python-{python_version}-embed-amd64.zip"
+
+        # If cached, reuse it; otherwise download and cache
+        if use_cache and cache_zip.exists():
+            print(f"      Using cached embeddable Python {python_version} at: {cache_zip}")
+        else:
+            url = f"https://www.python.org/ftp/python/{python_version}/python-{python_version}-embed-amd64.zip"
+            print(f"      Downloading Windows embeddable Python {python_version} from: {url} ...")
+            urllib.request.urlretrieve(url, cache_zip)
+            print("      Downloaded and cached at:", cache_zip)
+
+        # Copy cached file into build directory (optional, but nice separation)
+        zip_file = into / "python-embed.zip"
+        if zip_file.exists():
+            zip_file.unlink()
+        shutil.copy2(cache_zip, zip_file)
+
+        print("      Extracting...")
+        with zipfile.ZipFile(zip_file) as zf:
+            zf.extractall(into)
+        print("      Windows embeddable Python extracted.")
+
+        major, minor, _ = python_version.split('.')
+        print('INTO:', into)
+        print(major, minor, _)
+        pth_file = into / f'python{major}{minor}._pth'
+        print('      pth_file:', pth_file)
+        # add build folder so it can import the src as package, and import site to load other packages
+        with pth_file.open('a') as f:
+            f.write('\n..\nimport site\n')
+
+        return self
+
+            # copy files in python installation folder, but not the folders
+            # python_folder = Path(sys.executable).parent
+            # [copy(str(f), str(python_dest / f.name)) for f in python_folder.iterdir() if f.is_file()]
+
+
+    def copy_modules(self,
+                    into='builds/_test_build/python/Lib/site-packages/',
+                    cache_dir="build_cache/wheels",
+                    platform_tag = "win_amd64",
+                    python_version='',
+                    abi='',
+                    ):
+
+        if isinstance(into, str):
+            into = Path(into)
+        into.mkdir(parents=True, exist_ok=True)
+
+        cache_dir = PROJECT_FOLDER / cache_dir
+        cache_dir.mkdir(parents=True, exist_ok=True)
+        print("     copy modules to:", into)
+
+        if not python_version:
+            python_version = py_platform.python_version()
+            print(f'No python_version specified, using default: {python_version}')
+        major, minor, patch = python_version.split('.')
+        python_major_minor = f'{major}.{minor}'
+        if not abi:
+            abi = f'cp{major}{minor}'
+
+        # ensure requirements.txt exists
+        # if not (PROJECT_FOLDER / "requirements.txt").exists():
+        subprocess.run(["uv", "pip", "compile", "pyproject.toml",
+                            "-o", "requirements.txt"],
+                        capture_output=True, text=True)
+
+        with open(PROJECT_FOLDER / "requirements.txt") as f:
+            packages = [line for line in f.read().split("\n")
+                        if line and not line.strip().startswith('#')]
+
+        print("packages:", "\n".join(packages))
+
+        pip_base = [sys.executable, "-m", "pip", "download"]
+        pip_args = [
+            "--platform", platform_tag,
+            "--python-version", python_major_minor,
+            "--implementation", "cp",
+            "--abi", abi,
+            "-d", str(cache_dir),  # << store wheels in cache
+        ]
+
+        success = []
+        fail = []
+
+        # Pass 1 — Try to reuse cache before downloading
+        for pkg in packages:
+            cached_wheels = list(cache_dir.glob(f"{pkg.replace('-', '_')}*{python_major_minor}*.whl"))
+            if cached_wheels:
+                print(f"      Using cached wheel for {pkg}")
+                success.append(pkg)
                 continue
 
-            s = os.path.join(src, item)
-            d = os.path.join(dst, item)
-            if os.path.isdir(s):
-                try:
-                    ignore_pattern = shutil.ignore_patterns(*(ignore_patterns + [f'*{e}' for e in ignore_filetypes]))
-                    shutil.copytree(s, d, symlinks, ignore_pattern)
-                except Exception as e:
-                    print(e)
+            print(f"      No cache for {pkg}, trying binary download")
+            result = subprocess.run(pip_base + ["--only-binary=:all:"] + pip_args + [pkg])
+            if result.returncode == 0:
+                success.append(pkg)
             else:
-                if Path(s).suffix in ignore_filetypes:
-                    print('ignore filetype:', Path(s).suffix)
-                    continue
-                if Path(s).stem in compressed_textures:
-                    continue
-                shutil.copy2(s, d)
+                fail.append(pkg)
+
+        # Pass 2 — fallback to source wheels if binary wasn’t available
+        for pkg in fail[:]:
+            print(f"      Trying source fallback for {pkg}")
+            result = subprocess.run(pip_base + ["--no-binary=:all:"] + pip_args + [pkg])
+            if result.returncode == 0:
+                success.append(pkg)
+                fail.remove(pkg)
+
+        if fail:
+            print(f"⚠️ Failed to download: {fail}")
+        else:
+            print("All packages downloaded successfully.")
+
+        print("Extracting wheels...")
+
+        # Copy from cache → into
+        for wheel in cache_dir.glob("*.whl"):
+            shutil.copy2(wheel, into / wheel.name)
+
+        # Extract wheels
+        for wheel in into.glob("*.whl"):
+            with zipfile.ZipFile(wheel, 'r') as z:
+                z.extractall(into)   # MUST extract into site-packages
+            print(f"Extracted {wheel.name}")
+            wheel.unlink()
+
+        print("✅ Module install complete (cached+extracted).")
+        return self
 
 
 
-    include_modules = []
+    def build_game(self, into='', overwrite=False, compile_to_pyc=False, copy_assets=True):
+        if not into:
+            into = Path(f'builds/_test_build/{PROJECT_FOLDER.name}/')
 
-    python_dest = Path(build_folder / 'python')
-    python_dlls_dest = Path(build_folder / 'python/DLLs')
-    python_lib_dest = Path(build_folder / 'python/Lib')
-    src_dest = Path(build_folder / 'src')
-    build_engine = True
-    build_game = True
-    compile_to_pyc = True
-    entry_point = 'main.py'
+        if isinstance(into, str):
+            into = Path(into)
 
-    for i, arg in enumerate(sys.argv):
-        if arg == '--help':
-            print(dedent('''
-                package ursina application for windows10.
-                provided with project folder path, creates a build folder where
-                it copies python and project's dependent packages. requires a main.py file.
-                copies game scripts and assets into 'build/src' folder.
-                creates a .bat file to start the game.
+        if not into.exists():
+            overwrite = True
+        if into.exists() and not overwrite:
+            overwrite = ask_to_overwrite(into)
+        if not overwrite:
+            return self
 
-                --ignore_folders=*      # add assets to ignore, for example: --ignore_folders=temp,unused
-                --ignore_filetypes=*    # filetype to ignore, for example: --ignore_filetypes=.blend,.psd
-                --name=''               # change project name
-                --include_modules=*     # include extra modules like this: --include_modules=module_one,module_two,module_tree
-                --overwrite             # don't ask to overwrite existing build, just overwrite
-                --skip_engine
-                --skip_game
-                --compile_to_pyc=True/False
+        if into.exists():
+            shutil.rmtree(str(into))
+        into.mkdir(exist_ok=True)
 
-                Make sure to include any extra modules with --include_modules PIL,numpy for example.
-                Any errors while the application is running will be logged in log.txt instead of the console.
-                '''
-                )
-            )
-            sys.exit()
+        # self.ignore_folders.extend(['build_Windows', 'build_Linux', 'build.bat', '__pycache__', '.git'])
+        # self.ignore_filetypes.extend(['.gitignore', '.psd', '.zip'])
 
-        elif arg.startswith('--ignore_folders='):
-            ignore_folders = arg.split('=')[1].split(',')
-            print('ignoring folders:', ignore_folders)
-
-        elif arg.startswith('--ignore_filetypes='):
-            ignore_filetypes = arg.split('=')[1].split(',')
-            print('ignoring filetypes:', ignore_filetypes)
-
-        elif arg == '--name':
-            project_name = sys.argv[i+1]
-
-        elif arg.startswith('--include_modules='):
-            include_modules = arg.split('=')[1].split(',')
-
-        elif arg == '--skip_engine':
-            build_engine = False
-        elif arg == '--skip_game':
-            build_game = False
-
-        elif arg == '--compile_to_pyc=True':
-            compile_to_pyc = True
-        elif arg == '--compile_to_pyc=False':
-            compile_to_pyc = False
-        elif arg.startswith('--entry_point='):
-            entry_point = arg.split('=')[1]
-
-
-    if (build_engine and python_dest.exists() or (build_game and src_dest.exists())):
-        if '--overwrite' not in sys.argv:
-            for e in (python_dest, src_dest):
-                msg = f'Folder {e} already exists. \nProceed to delete and overwrite?'
-                overwrite = input("%s (y/N) " % msg).lower() == 'y'
-                # if not overwrite:
-                #     print('stopped building')
-                #     exit()
-                if e == python_dest:
-                    build_engine = overwrite
-                elif e == src_dest:
-                    build_game = overwrite
-
-
-    print('building project:', project_folder)
-    start_time = time.time()
-
-    if build_engine:
-        if python_dest.exists():
-            shutil.rmtree(str(python_dest))
-        python_dest.mkdir()
-        python_dlls_dest.mkdir()
-        python_lib_dest.mkdir()
-
-
-        # def copy_python():
-        # copy files in python installation folder, but not the folders
-        print('copying python')
-        python_folder = Path(sys.executable).parent
-        [copy(str(f), str(python_dest / f.name)) for f in python_folder.iterdir() if f.is_file()]
-
-
-        # def copy_python_lib():
-        print('copying python Lib files')
-        [copy(str(f), str(python_lib_dest / f.name)) for f in Path(python_folder / 'Lib').iterdir() if f.is_file()]
-
-
-        # def copy_always_included():
-        print('copying always included modules and extra modules')
-        include_modules = [f'Lib/site-packages/{e}' for e in include_modules]
-
-        always_include = [
-            'Lib/collections',
-            'Lib/ctypes',
-            'Lib/encodings',
-            'Lib/importlib',
-            'Lib/urllib',
-            'Lib/logging',
-            'Lib/xml',
-            'Lib/re',
-            'Lib/json',
-            # 'Lib/site-packages/panda3d/',
-            'Lib/site-packages/direct/',
-            'Lib/site-packages/pyperclip/',
-            'Lib/site-packages/PIL/',
-            'Lib/site-packages/screeninfo/',
-            'DLLs/libffi-7.dll',
-            'DLLs/_ctypes.pyd',
-            'DLLs',
-            'Lib/site-packages/gltf',
-            ]
-
-        for path in always_include + include_modules:
-            source = python_folder / path
-            dest = python_dest / path
-            print('copying always include:', source, '-->', dest)
-
-            if source.is_file():
-                dest.parent.mkdir(parents=True, exist_ok=True)
-                copy(str(source), str(dest))
-            elif source.is_dir():
-                dest.mkdir(parents=True, exist_ok=True)
-                copytree(source, dest)
-
-
-        print('copying panda3d')
-        (python_dest / 'Lib/site-packages/panda3d/').mkdir(parents=True, exist_ok=True)
-
-        for f in (python_folder / 'Lib/site-packages/panda3d/').iterdir():
-            if f.name in (
-                'avcodec-55.dll',
-                'fmodex64.dll',
-                'egg.cp39-win_amd64.pyd',
-                'libpandaode.dll',
-                'ode.cp39-win_amd64.pyd',
-                'models',
-                'libp3tinydisplay.dll',
-                'libp3assimp.dll',
-                ):
-                continue
-            print('copying:', f, '-->', str(python_dest / 'Lib/site-packages/panda3d/' / f.name))
-            if f.is_file():
-                copy(str(f), str(python_dest / 'Lib/site-packages/panda3d/' / f.name))
-            else:
-                (python_dest / 'Lib/site-packages/panda3d/' / f.name).mkdir(parents=True, exist_ok=True)
-                copytree(f, (python_dest / 'Lib/site-packages/panda3d/' / f.name))
-
-        # def copy_ursina():
-        print('copying ursina')
-        import importlib
-        spec = importlib.util.find_spec('ursina')
-        ursina_path = Path(spec.origin).parent
-        print('found ursina at:', ursina_path)
-        dest = build_folder / 'python/Lib/site-packages/ursina'
-        dest.mkdir(parents=True, exist_ok=True)
-        copytree(ursina_path, dest, ignore_patterns=['samples', 'unused'], ignore_filetypes=['.blend', '.obj'])
-
-
-        # print('copying found modules')
-        # finder = ModuleFinder()
-        # finder.run_script(str(project_folder) + '/main.py')
-
-        # for name, mod in finder.modules.items():
-        #     filename = mod.__file__
-        #
-        #     if filename is None:
-        #         continue
-        #     if '__' in name:
-        #         print('ignore:', filename)
-        #         continue
-        #
-        #     if 'Python' in filename and 'DLLs' in filename:
-        #         print('copying:', filename)
-        #         copy(filename, str(build_folder / 'python/DLLs'))
-        #
-        #     elif 'lib\\site-packages\\' in filename:
-        #         print('copying module:', filename)
-        #         forward_slashed = filename.split('lib\\site-packages\\')[1].replace('\\', '/')
-        #         dir = build_folder / 'python/lib/site-packages' / forward_slashed
-        #         dir.parent.mkdir(parents=True, exist_ok=True)
-        #         copy(filename, dir)
-
-
-
-    if build_game:
-        if src_dest.exists():
-            shutil.rmtree(str(src_dest))
-        src_dest.mkdir()
-
-        ignore_folders.extend(['build_Windows', 'build_Linux', 'build.bat', '__pycache__', '.git'])
-        ignore_filetypes.extend(['.gitignore', '.psd', '.zip'])
-
+        ignore_filetypes=['.gitignore', '.psd', '.zip']
         if compile_to_pyc:
-            import py_compile
-            for f in project_folder.glob('**/*.py'):
-                in_ignore = False
-                for e in ignore_folders:
-                    if e in [str(e.name) for e  in f.parents]:
-                        in_ignore = True
-                        print('skip compiling:', f)
-                        break
-                if in_ignore:
-                    continue
-
-                parents = f.relative_to(project_folder).parents
-                if 'scenes' in parents:
-                    continue
-                py_compile.compile(f, src_dest / (str(f)[len(str(project_folder))+1:]+'c'))
-
+            self.compile_to_pyc()
             ignore_filetypes.append('.py')
 
+        if copy_assets:
+            self.copy_assets(into=into, ignore_filetypes=ignore_filetypes)
 
-        print('copying assets')
-        for f in project_folder.iterdir():
-            name = f.name
-            dest = Path(src_dest / f.name)
-            if name in ignore_folders:
-                print('ignore:', f)
+        self.make_bat_file(is_pyc=compile_to_pyc)
+        return self
+
+
+    def compile_to_pyc(self, into='builds/_test_build/src/', glob_pattern='**//*.py'):
+        if isinstance(into, str):
+            into = PROJECT_FOLDER / into
+
+        import py_compile
+        for f in SRC_FOLDER.glob(glob_pattern):
+            print('maybe copy:', f)
+            in_ignore = False
+            for e in self.ignore_folders:
+                if e in [str(e.name) for e  in f.parents]:
+                    in_ignore = True
+                    print('skip compiling:', f)
+                    break
+            if in_ignore:
                 continue
-            elif f.is_dir():
-                print('copying assetfolder:', f, 'to', dest)
-                dest.mkdir(parents=True, exist_ok=True)
-                copytree(project_folder / f, dest, ignore_patterns=ignore_folders, ignore_filetypes=ignore_filetypes)
-            elif f.is_file():
-                if f.suffix in ignore_filetypes:
-                    continue
-                print('copying asset:', f, 'to', src_dest / f.name)
-                copy(str(f), str(dest))
+
+            parents = f.relative_to(SRC_FOLDER).parents
+            if 'scenes' in parents:
+                continue
+            py_compile.compile(f, into / f'{f.stem}.pyc')
 
 
-        print('creating .bat file')
-        c = ''
-        if compile:
-            c = 'c'
-        with Path(build_folder / f'{project_name}.bat').open('w') as f:
+    def copy_assets(self,
+            ignore_folders=['builds', '.venv', 'build_Windows','build_Linux','build.bat','__pycache__','.git'],
+            ignore_filetypes=['.gitignore', '.psd', '.zip'],
+            into='builds/_test_build/src/',
+        ):
+
+        compressed_textures = []
+        compressed_textures_folder = Path(SRC_FOLDER / 'textures_compressed')
+        if compressed_textures_folder.exists():
+            compressed_textures = list(compressed_textures_folder.glob('**/*.*'))
+            compressed_textures = [f for f in compressed_textures if f.suffix not in ignore_filetypes]
+
+
+        for f in SRC_FOLDER.rglob('*'):
+            if f.is_dir():
+                continue  # folder creation happens implicitly via mkdir
+
+            rel = f.relative_to(SRC_FOLDER)
+
+            # folder ignore rule
+            if any(ign in rel.parts for ign in ignore_folders):
+                print(f"ignore folder rule: {rel}")
+                continue
+
+            # extension ignore rule
+            if f.suffix in ignore_filetypes:
+                print(f"ignore filetype: {rel}")
+                continue
+
+            dest = into / rel
+            dest.parent.mkdir(parents=True, exist_ok=True)
+
+            print("copy:", rel, "->", dest)
+            shutil.copy2(f, dest)
+
+
+    def make_bat_file(self, entry_point='main.py', name='launch.bat', into='builds/_test_build/', is_pyc=False):
+        c = 'c' if is_pyc else ''
+        with (Path(into) / name).open('w') as f:
             f.write(dedent(fr'''
                 chcp 65001
                 set PYTHONIOENCODING=utf-8
 
-                call "python\python.exe" "src\{entry_point}{c}" > "log.txt" 2>&1'''
+                call "python\python.exe" "{PROJECT_FOLDER.name}\{entry_point}{c}" > "log.txt" 2>&1'''
             ))
+        return self
 
     # make exe
     # import subprocess
@@ -311,12 +389,9 @@ def build():
     # subprocess.call([
     #     f'{ursina_path}\\scripts\\_bat_to_exe.bat',
     #     f'{build_folder}\\{project_name}.bat',
-    #     f'\\build\\{project_folder.stem}.exe'
+    #     f'\\build\\{PROJECT_FOLDER.stem}.exe'
     #     ])
 
 
-    print('build complete! time elapsed:', time.time() - start_time)
-
-
 if __name__ == '__main__':
-    build()
+    make_command_line_app(UrsinaBuild)
