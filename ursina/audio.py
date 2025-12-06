@@ -186,6 +186,8 @@ class Audio(Entity):
         if destroy_on_ended:
             _destroy(self, delay=delay+duration + .05)
 
+    def note_pitch_setter(self, offset):
+        self.pitch = pow(1 / 1.05946309436, offset)
 
 if __name__ == '__main__':
     import random
