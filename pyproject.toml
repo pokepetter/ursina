@@ -27,6 +27,8 @@ include-package-data = true
 
 [tool.setuptools.packages.find]
 where = ["."]
+include = ["ursina*"]      # Only include ursina and its subpackages
+exclude = ["tests*", "docs*", "samples*"]  # Exclude top-level unwanted folders
 
 [tool.setuptools.package-data]
 "ursina.audio" = ["*"]
