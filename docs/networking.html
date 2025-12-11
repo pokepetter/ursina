@@ -276,7 +276,7 @@ rpc_peer = RPCPeer()
 	<blue>print</blue>("This is run when a disconnect happens.")
 
 @rpc(rpc_peer)
-<purple>def</purple> say(connection, time_received, message: str)
+<purple>def</purple> say(connection, time_received, message: str):
 	<blue>print</blue>(message)
 
 <purple>def</purple> update():
