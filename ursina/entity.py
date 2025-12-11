@@ -792,22 +792,15 @@ class Entity(NodePath, metaclass=PostInitCaller):
     #     return self._shader
 
     def shader_setter(self, value):
+        self._shader = value
+        return
         from ursina import camera
         if hasattr(camera, 'ui') and self.has_ancestor(camera.ui) and self.shader == unlit_with_fog_shader:
             value = unlit_shader
-        # if not self.model:
-        #     return
-
-        # if value is None:
-        #     self.setShaderAuto()
-        #     return
-        # # test
-        # if value == Entity.default_shader:
-        #     self.setShaderAuto()
-        #     return
 
         if value is None:
             self._shader = value
+            self.setShaderAuto()
             return
 
         if isinstance(value, Panda3dShader): # panda3d shader
@@ -1651,6 +1644,7 @@ if __name__ == '__main__':
     e = Entity(model='cube', y=1, texture='grass',
         # shader=unlit_shader
         )
+
     # e1 = Entity(parent=e, model='cube', y=1, x=.5, shader=matcap_shader, texture='shore')
     # e2 = Entity(parent=e1, model='cube', x=2, shader=lit_with_shadows_shader, texture='white_cube')
     DirectionalLight().look_at(Vec3(1,-1,.5))
@@ -1658,9 +1652,12 @@ if __name__ == '__main__':
 
     scene.fog_color = color.blue
     scene.fog_density = (0,100)
+
     # # test deepcopy
     # print_warning(repr(e1))
     # e1_copy = deepcopy(e1)
 
+    # Text('Press i to generate .pyi file, so geterated properties')
+    # def input
 
     app.run()

@@ -41,8 +41,6 @@ class Scene(NodePath):
     def fog_color(self, value):
         self._fog_color = value
         self.fog.setColor(value)
-        # for c in self.children:     # scene is just pretending to be an entity, so have to do this
-        #     for e in c.get_descendants():
         for e in self.entities:
             try:
                 from ursina.camera import instance as camera
@@ -79,8 +77,9 @@ class Scene(NodePath):
                 if e.shader and 'fog_start' in e.shader.default_input and 'fog_end' in e.shader.default_input:
                     e.set_shader_input('fog_start', value[0])
                     e.set_shader_input('fog_end', value[1])
-        # else:
-        #     self.fog.setExpDensity(value)
+
+        else: #todo: set exponential fog for shaders that support it. at the time of writing, none of them do.
+            self.fog.setExpDensity(value)
 
     @property
     def children(self):
