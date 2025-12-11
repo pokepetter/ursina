@@ -792,8 +792,6 @@ class Entity(NodePath, metaclass=PostInitCaller):
     #     return self._shader
 
     def shader_setter(self, value):
-        self._shader = value
-        return
         from ursina import camera
         if hasattr(camera, 'ui') and self.has_ancestor(camera.ui) and self.shader == unlit_with_fog_shader:
             value = unlit_shader
