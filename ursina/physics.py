@@ -77,7 +77,7 @@ _line_model = Mesh(vertices=[Vec3(0,0,0), Vec3(0,0,1)], mode='line')
 from ursina.hit_info import HitInfo
 
 def raycast(origin, direction: Vec3 = Vec3(0, 0, 1), distance=9999,
-            traverse_target=None, ignore: list = None, debug=False, color=color.white):
+            traverse_target=None, ignore: list = None, debug=False, color=color.white, return_hit_only=False):
     world = physics_handler.world
     from_pos = origin
     to_pos = origin + (direction * distance)
@@ -109,6 +109,9 @@ def raycast(origin, direction: Vec3 = Vec3(0, 0, 1), distance=9999,
         temp = Entity(position=origin, model=copy(_line_model), scale=Vec3(1, 1, min(distance, 9999)), color=color, add_to_scene_entities=1)
         temp.look_at(to_pos)
         destroy(temp, delay=1/30)
+
+    if return_hit_only:
+        return hit
 
     if not hit:
         return HitInfo(hit=False)
