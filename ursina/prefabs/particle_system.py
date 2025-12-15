@@ -257,6 +257,7 @@ def vertex_animation(animation_texture, auto_play=True, auto_destroy=True, unsca
     instance.set_shader_input('num_verts', animation_texture.width)
     instance.set_shader_input('frame_texture', animation_texture)
     instance.set_shader_input('total_frames', animation_texture.size[1])
+    instance.set_shader_input('frame_index', 0)
     animation_duration = 1/fps * animation_texture.size[1]
     loop = False
 
@@ -634,8 +635,8 @@ class ParticleSystemUI(Entity):
             def _try_bake(target_fps=target_fps):
                 animation_texture = load_texture(f'{self.asset_file.stem}_seed*_baked_fps*_bounds*.png')
                 if not animation_texture:
-                    # self.particle_system_container.bake(self.asset_file.stem, self.seed_slider.value, target_fps)
-                    bake_to_vertex_animation_texture(self.particle_system_container, self.asset_file.stem, self.seed_slider.value, target_fps)
+                    self.particle_system_container.bake(self.asset_file.stem, self.seed_slider.value, target_fps)
+                    # bake_to_vertex_animation_texture(self.particle_system_container, self.asset_file.stem, self.seed_slider.value, target_fps)
                     return
                 if animation_texture.path.exists():
                     print('replace?', animation_texture.path)
