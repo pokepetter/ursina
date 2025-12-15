@@ -6,6 +6,7 @@ import time
 from pathlib import Path
 
 from ursina import Entity, application, camera, mesh_importer, print_on_screen, scene, texture_importer, window
+from ursina.mesh_importer import load_model
 
 
 def is_valid_python(code):
@@ -174,34 +175,45 @@ class HotReloader(Entity):
         # print(unique_names)
         changed_models = []
 
-        for name in unique_names:
-            matches = [e for e in application.asset_folder.glob(f'**/{name}.blend')]
+        for base_name in unique_names:
+            m = load_model(f'{base_name}.blend')
+            if m:
+                changed_models.append(base_name)
+            # m.save()
+            if not m:
+                m = load_model(f'{base_name}.obj', use_deepcopy=True)
+                if m:
+                    m.save(f'{base_name}.bam')
+                    changed_models.append(base_name)
+            # matches = [e for e in application.asset_folder.glob(f'**/{name}.blend')]
 
-            if not matches or not application.blender_paths:    # reload bam files converted from obj
-                [e for e in application.asset_folder.glob(f'**/{name}.obj')]
-                if matches:
-                    m = mesh_importer.load_model(f'{matches[0]}.obj')
-                    print('-----------------load:', f'{matches[0]}.obj', m)
-                    mesh_importer.imported_meshes[name] = m
-                    changed_models.append(name)
-                    continue
+            # if not matches or not application.blender_paths:    # reload bam files converted from obj
+            #     matches = [e for e in application.asset_folder.glob(f'**/{name}.obj')]
+            #     if matches:
+            #         m = mesh_importer.load_model(f'{matches[0]}.obj')
+            #         if m:
+            #             print('-----------------update bam:', f'{matches[0]}.obj --> {matches[0]}.bam')
+            #             m.save(f'{matches[0]}.bam')
+            #             mesh_importer.imported_meshes[name] = m
+            #             changed_models.append(name)
+            #             continue
 
-            if not matches:
-                continue
+            # if not matches:
+            #     continue
 
-            model_path = matches[0]
-            # ignore internal models
-            if model_path.parent == application.internal_models_folder or '/build/' in str(model_path):
-                continue
+            # model_path = matches[0]
+            # # ignore internal models
+            # if model_path.parent == application.internal_models_folder or '/build/' in str(model_path):
+            #     continue
 
-            if name in mesh_importer.imported_meshes:
-                mesh_importer.imported_meshes.pop(name, None)
+            # if name in mesh_importer.imported_meshes:
+            #     mesh_importer.imported_meshes.pop(name, None)
 
-            # print('model is made from .blend file:', model_path)
-            mesh_importer.blend_to_obj(model_path)
-            mesh_importer.obj_to_ursinamesh(application.models_compressed_folder, application.models_compressed_folder, return_mesh=True, save_to_file=False, delete_obj=True).save(f'{name}.bam')
-            # print(f'compressed {name}.blend sucessfully')
-            changed_models.append(name)
+            # # print('model is made from .blend file:', model_path)
+            # mesh_importer.blend_to_obj(model_path)
+            # mesh_importer.obj_to_ursinamesh(application.models_compressed_folder, application.models_compressed_folder, return_mesh=True, save_to_file=False, delete_obj=True).save(f'{name}.bam')
+            # # print(f'compressed {name}.blend sucessfully')
+            # changed_models.append(name)
 
 
         for e in entities:
