@@ -14,34 +14,8 @@ from ursina.cmd_tool_maker import auto_log_method_calls, auto_validate_input, ma
 
 def ask_to_overwrite(path):
     msg = f'{path} already exists. \nProceed to delete and overwrite?'
-    return input(f"{msg} (y/N) ").lower() == 'y'
+    return input(f'{msg} (y/N) ').lower() == 'y'
 
-
-def copytree(src, dst, symlinks=False, ignore_patterns=None, ignore_filetypes=None):
-    src = Path(src)
-    dst = Path(dst)
-    ignore_patterns = ignore_patterns if ignore_patterns is not None else []
-    ignore_filetypes = ignore_filetypes if ignore_filetypes is not None else []
-
-    for item in src.iterdir():
-        if item.name in ignore_patterns:
-            continue
-
-        dest_item = dst / item.name
-
-        if item.is_dir():
-            try:
-                ignore_pattern = shutil.ignore_patterns(*(ignore_patterns + [f'*{e}' for e in ignore_filetypes]))
-                shutil.copytree(item, dest_item, symlinks=symlinks, ignore=ignore_pattern)
-            except Exception as e:
-                print(e)
-        else:
-            if item.suffix in ignore_filetypes:
-                print('ignore filetype:', item.suffix)
-                continue
-            # if item.stem in self.compressed_textures:
-            #     continue
-            shutil.copy2(item, dest_item)
 
 PROJECT_FOLDER = Path.cwd()
 SRC_FOLDER = PROJECT_FOLDER / PROJECT_FOLDER.name
@@ -58,7 +32,8 @@ class UrsinaBuild:
 
 
     def build(self,
-            output_folder='builds',
+            builds_folder='builds',
+            build_name='',
             platform='Windows',
             build_engine=True,
             build_game=True,
@@ -72,60 +47,48 @@ class UrsinaBuild:
         if not (SRC_FOLDER/entry_point).exists():
             raise Exception(f'No {(SRC_FOLDER/entry_point)} found.')
 
-        project_name = PROJECT_FOLDER.stem
-        if isinstance(output_folder, str):
-            output_folder = PROJECT_FOLDER / output_folder
-        output_folder.mkdir(exist_ok=True)
-        self.build_folder = Path(output_folder / f'build_{platform}_v{'x_x_x'}')
-        self.build_folder.mkdir(exist_ok=True)
+        if isinstance(builds_folder, str):
+            builds_folder = PROJECT_FOLDER / builds_folder
+        builds_folder.mkdir(exist_ok=True)
+        build_name = build_name if build_name else PROJECT_FOLDER.name
 
         print('building project:', SRC_FOLDER)
         start_time = time.time()
 
         if build_engine:
-            self.build_engine(overwrite=overwrite, python_version=python_version)
+            self.build_engine(builds_folder=builds_folder, build_name=build_name, platform=platform, overwrite=overwrite, python_version=python_version)
 
         if build_game:
-            self.build_game(overwrite=overwrite, compile_to_pyc=compile_to_pyc)
+            self.build_game(builds_folder=builds_folder, build_name=build_name, platform=platform, overwrite=overwrite, compile_to_pyc=compile_to_pyc)
 
         if make_bat_file:
-            self.make_bat_file(entry_point=entry_point, is_pyc=compile_to_pyc)
+            self.make_bat_file(builds_folder=builds_folder, build_name=build_name, platform=platform, entry_point=entry_point, is_pyc=compile_to_pyc)
 
         print('build complete! time elapsed:', time.time() - start_time)
 
 
 
-    def build_engine(self, overwrite=False, into='builds/_test_build/python', python_version=''):
-        into = (PROJECT_FOLDER / into)
+    def build_engine(self, overwrite=False, builds_folder='builds', build_name='', platform='Windows', python_version=''): # copies python and modules into the 'python' folder
+        build_name = build_name if build_name else PROJECT_FOLDER.name
+        into = Path(f'{builds_folder}/{build_name}_{platform}/python/')
         into.mkdir(parents=True, exist_ok=True)
-
-        # python_dest = self.build_folder / 'python'
-        # python_dlls_dest = self.build_folder / 'python/DLLs'
-        # python_lib_dest = self.build_folder / 'python/Lib'
-
-        # if python_dest.exists() and not overwrite:
-        #     overwrite = ask_to_overwrite()
-        # if not overwrite:
-        #     return self
 
         if into.exists():
             shutil.rmtree(str(into))
-        # python_dest.mkdir()
-        # python_dlls_dest.mkdir()
-        # python_lib_dest.mkdir()
 
         if not python_version:
             python_version = py_platform.python_version()
             print(f'No python_version specified, using default: {python_version}')
-        self.copy_python(into=into, python_version=python_version)
-        self.copy_modules(into=into/'Lib/site-packages', python_version=python_version)
-
+        self.copy_python(builds_folder=builds_folder, build_name=build_name, platform=platform, python_version=python_version)
+        self.copy_modules(builds_folder=builds_folder, build_name=build_name, platform=platform, python_version=python_version)
         return self
 
 
-
-    def copy_python(self, python_version='', platform='Windows',
-                    into='builds/_test_build/python/',
+    def copy_python(self,
+                    builds_folder='builds',
+                    build_name='',
+                    platform='Windows',
+                    python_version='',
                     use_cache=True,
                     cache_dir='build_cache/python_embeds'):
         import shutil
@@ -136,38 +99,33 @@ class UrsinaBuild:
             python_version = py_platform.python_version()
             print(f'No python_version specified, using default: {python_version}')
 
-        # Resolve target dir
-        if isinstance(into, str):
-            into = PROJECT_FOLDER / into
+        build_name = build_name if build_name else PROJECT_FOLDER.name
+        into = Path(f'{builds_folder}/{build_name}_{platform}/python/')
         into.mkdir(parents=True, exist_ok=True)
 
-        # Resolve cache dir
         if isinstance(cache_dir, str):
             cache_dir = PROJECT_FOLDER / cache_dir
         cache_dir.mkdir(parents=True, exist_ok=True)
+        cache_zip = cache_dir / f'python-{python_version}-embed-amd64.zip'
 
-        # Cache file path (per Python version)
-        cache_zip = cache_dir / f"python-{python_version}-embed-amd64.zip"
-
-        # If cached, reuse it; otherwise download and cache
         if use_cache and cache_zip.exists():
-            print(f"      Using cached embeddable Python {python_version} at: {cache_zip}")
+            print(f'      Using cached embeddable Python {python_version} at: {cache_zip}')
         else:
-            url = f"https://www.python.org/ftp/python/{python_version}/python-{python_version}-embed-amd64.zip"
-            print(f"      Downloading Windows embeddable Python {python_version} from: {url} ...")
+            url = f'https://www.python.org/ftp/python/{python_version}/python-{python_version}-embed-amd64.zip'
+            print(f'      Downloading Windows embeddable Python {python_version} from: {url} ...')
             urllib.request.urlretrieve(url, cache_zip)
-            print("      Downloaded and cached at:", cache_zip)
+            print('      Downloaded and cached at:', cache_zip)
 
         # Copy cached file into build directory (optional, but nice separation)
-        zip_file = into / "python-embed.zip"
+        zip_file = into / 'python-embed.zip'
         if zip_file.exists():
             zip_file.unlink()
         shutil.copy2(cache_zip, zip_file)
 
-        print("      Extracting...")
+        print('      Extracting...')
         with zipfile.ZipFile(zip_file) as zf:
             zf.extractall(into)
-        print("      Windows embeddable Python extracted.")
+        print('      Windows embeddable Python extracted.')
 
         major, minor, _ = python_version.split('.')
         print('INTO:', into)
@@ -180,26 +138,23 @@ class UrsinaBuild:
 
         return self
 
-            # copy files in python installation folder, but not the folders
-            # python_folder = Path(sys.executable).parent
-            # [copy(str(f), str(python_dest / f.name)) for f in python_folder.iterdir() if f.is_file()]
-
 
     def copy_modules(self,
-                    into='builds/_test_build/python/Lib/site-packages/',
-                    cache_dir="build_cache/wheels",
-                    platform_tag = "win_amd64",
+                    builds_folder='builds',
+                    build_name='',
+                    platform='Windows',
+                    cache_dir='build_cache/wheels',
+                    platform_tag = 'win_amd64',
                     python_version='',
                     abi='',
                     ):
-
-        if isinstance(into, str):
-            into = Path(into)
+        build_name = build_name if build_name else PROJECT_FOLDER.name
+        into = Path(f'{builds_folder}/{build_name}_{platform}/python/Lib/site-packages/')
         into.mkdir(parents=True, exist_ok=True)
 
         cache_dir = PROJECT_FOLDER / cache_dir
         cache_dir.mkdir(parents=True, exist_ok=True)
-        print("     copy modules to:", into)
+        print('     copy modules to:', into)
 
         if not python_version:
             python_version = py_platform.python_version()
@@ -210,24 +165,25 @@ class UrsinaBuild:
             abi = f'cp{major}{minor}'
 
         # ensure requirements.txt exists
-        # if not (PROJECT_FOLDER / "requirements.txt").exists():
-        subprocess.run(["uv", "pip", "compile", "pyproject.toml",
-                            "-o", "requirements.txt"],
+        # if not (PROJECT_FOLDER / 'requirements.txt').exists():
+        subprocess.run(['uv', 'pip', 'compile', 'pyproject.toml',
+                            '-o', 'requirements.txt'],
                         capture_output=True, text=True)
 
-        with open(PROJECT_FOLDER / "requirements.txt") as f:
-            packages = [line for line in f.read().split("\n")
+        with open(PROJECT_FOLDER / 'requirements.txt') as f:
+            packages = [line for line in f.read().split('\n')
                         if line and not line.strip().startswith('#')]
 
-        print("packages:", "\n".join(packages))
+        print('packages:', '\n'.join(packages))
 
-        pip_base = [sys.executable, "-m", "pip", "download"]
+
+        pip_base = [sys.executable, '-m', 'pip', 'download']
         pip_args = [
-            "--platform", platform_tag,
-            "--python-version", python_major_minor,
-            "--implementation", "cp",
-            "--abi", abi,
-            "-d", str(cache_dir),  # << store wheels in cache
+            '--platform', platform_tag,
+            '--python-version', python_major_minor,
+            '--implementation', 'cp',
+            '--abi', abi,
+            '-d', str(cache_dir),  # << store wheels in cache
         ]
 
         success = []
@@ -235,14 +191,27 @@ class UrsinaBuild:
 
         # Pass 1 — Try to reuse cache before downloading
         for pkg in packages:
-            cached_wheels = list(cache_dir.glob(f"{pkg.replace('-', '_')}*{python_major_minor}*.whl"))
+            cached_wheels = list(cache_dir.glob(f'{pkg.replace('-', '_')}*{python_major_minor}*.whl'))
             if cached_wheels:
-                print(f"      Using cached wheel for {pkg}")
+                print(f'      Using cached wheel for {pkg}')
                 success.append(pkg)
                 continue
 
-            print(f"      No cache for {pkg}, trying binary download")
-            result = subprocess.run(pip_base + ["--only-binary=:all:"] + pip_args + [pkg])
+            # detect local path: contains slash or begins with ., .., or /
+            if '/' in pkg or pkg.startswith('.'):
+                local_path = Path(pkg).resolve()
+                if not local_path.is_dir():
+                    print(f'Skipping {local_path}, folder not found')
+                    continue
+
+                result = subprocess.run(['pip', 'wheel', pkg, '-w', cache_dir])
+                if result.returncode == 0:
+                    success.append(pkg)
+                else:
+                    fail.append(pkg)
+
+            print(f'      No cache for {pkg}, trying binary download')
+            result = subprocess.run(pip_base + ['--only-binary=:all:'] + pip_args + [pkg])
             if result.returncode == 0:
                 success.append(pkg)
             else:
@@ -250,41 +219,38 @@ class UrsinaBuild:
 
         # Pass 2 — fallback to source wheels if binary wasn’t available
         for pkg in fail[:]:
-            print(f"      Trying source fallback for {pkg}")
-            result = subprocess.run(pip_base + ["--no-binary=:all:"] + pip_args + [pkg])
+            print(f'      Trying source fallback for {pkg}')
+            result = subprocess.run(pip_base + ['--no-binary=:all:'] + pip_args + [pkg])
             if result.returncode == 0:
                 success.append(pkg)
                 fail.remove(pkg)
 
         if fail:
-            print(f"⚠️ Failed to download: {fail}")
+            print(f'⚠️ Failed to download: {fail}')
         else:
-            print("All packages downloaded successfully.")
+            print('All packages downloaded successfully.')
 
-        print("Extracting wheels...")
+        print('Extracting wheels...')
 
         # Copy from cache → into
-        for wheel in cache_dir.glob("*.whl"):
+        for wheel in cache_dir.glob('*.whl'):
             shutil.copy2(wheel, into / wheel.name)
 
         # Extract wheels
-        for wheel in into.glob("*.whl"):
+        for wheel in into.glob('*.whl'):
             with zipfile.ZipFile(wheel, 'r') as z:
                 z.extractall(into)   # MUST extract into site-packages
-            print(f"Extracted {wheel.name}")
+            print(f'Extracted {wheel.name}')
             wheel.unlink()
 
-        print("✅ Module install complete (cached+extracted).")
+        print('✅ Module install complete (cached+extracted).')
         return self
 
 
 
-    def build_game(self, into='', overwrite=False, compile_to_pyc=False, copy_assets=True):
-        if not into:
-            into = Path(f'builds/_test_build/{PROJECT_FOLDER.name}/')
-
-        if isinstance(into, str):
-            into = Path(into)
+    def build_game(self, builds_folder='builds', build_name='', platform='Windows', overwrite=False, compile_to_pyc=True, copy_assets=True):
+        build_name = build_name if build_name else PROJECT_FOLDER.name
+        into = Path(f'{builds_folder}/{build_name}_{platform}/{PROJECT_FOLDER.name}/')
 
         if not into.exists():
             overwrite = True
@@ -295,26 +261,23 @@ class UrsinaBuild:
 
         if into.exists():
             shutil.rmtree(str(into))
-        into.mkdir(exist_ok=True)
+        into.mkdir(exist_ok=True, parents=True)
 
-        # self.ignore_folders.extend(['build_Windows', 'build_Linux', 'build.bat', '__pycache__', '.git'])
-        # self.ignore_filetypes.extend(['.gitignore', '.psd', '.zip'])
-
-        ignore_filetypes=['.gitignore', '.psd', '.zip']
-        if compile_to_pyc:
-            self.compile_to_pyc()
-            ignore_filetypes.append('.py')
+        extra_ignore_filetypes = ['.py'] if compile_to_pyc else ['.pyc']
 
         if copy_assets:
-            self.copy_assets(into=into, ignore_filetypes=ignore_filetypes)
+            self.copy_assets(builds_folder=builds_folder, build_name=build_name, platform=platform, extra_ignore_filetypes=extra_ignore_filetypes)
 
-        self.make_bat_file(is_pyc=compile_to_pyc)
+        if compile_to_pyc: # make sur to do this after copying assets since it deletes the folder
+            self.compile_to_pyc()
+
+        self.make_bat_file(builds_folder=builds_folder, build_name=build_name, platform=platform, is_pyc=compile_to_pyc)
         return self
 
 
-    def compile_to_pyc(self, into='builds/_test_build/src/', glob_pattern='**//*.py'):
-        if isinstance(into, str):
-            into = PROJECT_FOLDER / into
+    def compile_to_pyc(self, builds_folder='builds', build_name='', platform='Windows', glob_pattern='**//*.py'):
+        build_name = build_name if build_name else PROJECT_FOLDER.name
+        into = Path(f'{builds_folder}/{build_name}_{platform}/{PROJECT_FOLDER.name}/')
 
         import py_compile
         for f in SRC_FOLDER.glob(glob_pattern):
@@ -335,16 +298,31 @@ class UrsinaBuild:
 
 
     def copy_assets(self,
-            ignore_folders=['builds', '.venv', 'build_Windows','build_Linux','build.bat','__pycache__','.git'],
-            ignore_filetypes=['.gitignore', '.psd', '.zip'],
-            into='builds/_test_build/src/',
+            builds_folder='builds',
+            build_name='',
+            platform='Windows',
+            ignore_folders=['builds', '.venv', 'build.bat','__pycache__','.git'],
+            ignore_filetypes=['.gitignore', '.psd', '.zip', '.blend', '.blend1', '.kra', '.kra~'],
+            extra_ignore_filetypes=[],
         ):
+        ignore_filetypes.extend(extra_ignore_filetypes)
+
+        build_name = build_name if build_name else PROJECT_FOLDER.name
+        into = Path(f'{builds_folder}/{build_name}_{platform}/{PROJECT_FOLDER.name}/')
+        if into.exists():
+            shutil.rmtree(str(into))
 
         compressed_textures = []
         compressed_textures_folder = Path(SRC_FOLDER / 'textures_compressed')
         if compressed_textures_folder.exists():
             compressed_textures = list(compressed_textures_folder.glob('**/*.*'))
-            compressed_textures = [f for f in compressed_textures if f.suffix not in ignore_filetypes]
+            compressed_textures = [f.stem for f in compressed_textures if f.suffix not in ignore_filetypes]
+
+        compressed_models = []
+        compressed_models_folder = Path(SRC_FOLDER / 'models_compressed')
+        if compressed_models_folder.exists():
+            compressed_models = list(compressed_models_folder.glob('**/*.bam'))
+            compressed_models = [f.stem for f in compressed_models if f.suffix not in ignore_filetypes]
 
 
         for f in SRC_FOLDER.rglob('*'):
@@ -355,29 +333,53 @@ class UrsinaBuild:
 
             # folder ignore rule
             if any(ign in rel.parts for ign in ignore_folders):
-                print(f"ignore folder rule: {rel}")
+                print(f'ignore folder rule: {rel}')
                 continue
 
             # extension ignore rule
             if f.suffix in ignore_filetypes:
-                print(f"ignore filetype: {rel}")
+                print(f'ignore filetype: {rel}')
+                continue
+
+            if f.stem in compressed_textures and f.parent != compressed_textures_folder:
+                continue
+            # print(f.name, f.parent, f.stem in compressed_models)
+            if f.stem in compressed_models and f.parent != compressed_models_folder:
                 continue
 
             dest = into / rel
             dest.parent.mkdir(parents=True, exist_ok=True)
 
-            print("copy:", rel, "->", dest)
+            print('copy:', rel, '->', dest)
             shutil.copy2(f, dest)
 
 
-    def make_bat_file(self, entry_point='main.py', name='launch.bat', into='builds/_test_build/', is_pyc=False):
+    def make_bat_file(self, entry_point='main.py', name='launch', builds_folder='builds', build_name='', platform='Windows', is_pyc=False):
+        build_name = build_name if build_name else PROJECT_FOLDER.name
+        into = Path(f'{builds_folder}/{build_name}_{platform}/')
+
         c = 'c' if is_pyc else ''
-        with (Path(into) / name).open('w') as f:
+        # launch_debug, with output to log.txt
+        with (Path(into) / f'{name}_debug.bat').open('w') as f:
             f.write(dedent(fr'''
                 chcp 65001
                 set PYTHONIOENCODING=utf-8
 
-                call "python\python.exe" "{PROJECT_FOLDER.name}\{entry_point}{c}" > "log.txt" 2>&1'''
+                pushd "{PROJECT_FOLDER.name}"
+                call "..\python\python.exe" "{entry_point}{c}" > "..\log.txt" 2>&1
+                popd
+                '''
+            ))
+
+        with (Path(into) / f'{name}.bat').open('w') as f:
+            f.write(dedent(fr'''
+                chcp 65001å
+                set PYTHONIOENCODING=utf-8
+
+                pushd "{PROJECT_FOLDER.name}"
+                call "..\python\pythonw.exe" "{entry_point}{c}"
+                popd
+                '''
             ))
         return self
 
