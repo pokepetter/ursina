@@ -10,7 +10,7 @@ Text.default_resolution *= 2
 
 player = Entity(name='o', color=color.azure)
 cursor = Tooltip(player.name, color=player.color, origin=(0,0), scale=4, enabled=True)
-cursor.background_entity.color = color.clear
+cursor.background_color.color = color.clear
 bg = Entity(parent=scene, model='quad', texture='shore', scale=(16,8), z=10, color=color.light_gray)
 mouse.visible = False
 
