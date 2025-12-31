@@ -575,7 +575,7 @@ class GizmoArrow(Draggable):
         self.parent = LEVEL_EDITOR.gizmo.arrow_parent
         self.position = (0,0,0)
         self.rotation = self.original_rotation
-        self.scale = Vec3.one
+        self.scale = Vec3(getattr(self, 'original_scale', self.scale))
         LEVEL_EDITOR.render_selection()
 
     def input(self, key):
