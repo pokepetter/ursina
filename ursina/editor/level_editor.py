@@ -575,6 +575,7 @@ class GizmoArrow(Draggable):
         self.parent = LEVEL_EDITOR.gizmo.arrow_parent
         self.position = (0,0,0)
         self.rotation = self.original_rotation
+        self.scale = Vec3.one
         LEVEL_EDITOR.render_selection()
 
     def input(self, key):
@@ -1370,10 +1371,10 @@ class TriplanarCube(Entity):
 
 
 class Pyramid(Entity):
-    default_values = Entity.default_values | dict(name='pyramid', model=Cone(4), texture='brick') # combine dicts
+    default_values = Entity.default_values | dict(name='pyramid', texture='brick') # combine dicts
 
     def __init__(self, **kwargs):
-        super().__init__(**__class__.default_values | kwargs)
+        super().__init__(**__class__.default_values | dict(model=Cone(4)) | kwargs)
 
     def __deepcopy__(self, memo):
         return eval(repr(self))
@@ -2498,6 +2499,7 @@ if __name__ == '__main__':
     from ursina.prefabs.first_person_controller import FirstPersonController
     level_editor.class_menu.available_classes |= {'WhiteCube': WhiteCube, 'EditorCamera':EditorCamera, 'FirstPersonController':FirstPersonController}
     from ursina.shaders import ssao_shader
+
     # camera.clip_plane_far = 100
     # camera.clip_plane_near = 1
     # camera.shader = ssao_shader
