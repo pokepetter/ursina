@@ -877,6 +877,11 @@ class Entity(NodePath, metaclass=PostInitCaller):
             if self.model:
                 self.model.clearTexture()
             return
+            
+        if value.__class__ is MovieTexture:
+            self._texture = value
+            self.model.setTexture(value, 1)
+            return
 
         if isinstance(value, str):
             texture_name = value
