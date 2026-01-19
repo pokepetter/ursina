@@ -35,7 +35,8 @@ def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[], ignore_
                 print('combining:', e)
 
             vertex_to_world_matrix = e.model.getTransform(combine_parent).getMat()
-            verts += [Vec3(*vertex_to_world_matrix.xformPoint(Vec3(*v))) for v in e.model.vertices]
+            world_space_verts = [Vec3(*vertex_to_world_matrix.xformPoint(Vec3(*v))) for v in e.model.vertices]
+            verts += world_space_verts
 
             if not e.model.triangles:
                 new_tris = [i for i in range(len(e.model.vertices))]
@@ -55,6 +56,10 @@ def combine(combine_parent, analyze=False, auto_destroy=True, ignore=[], ignore_
 
             o += len(e.model.vertices)
             tris += new_tris
+
+            if not auto_destroy: # need this data for static batching
+                e.tris = new_tris
+                e.world_space_verts = world_space_verts
 
             if e.model.uvs:
                 uvs.extend([(uv * e.texture_scale) + e.texture_offset for uv in e.model.uvs])
