@@ -22,11 +22,10 @@ def load_model(name, folder=None, file_types=('.bam', '.ursinamesh', '.obj', '.g
     if callable(gltf_no_srgb):
         gltf_no_srgb = gltf_no_srgb()
 
-    if not isinstance(name, str):
-        raise TypeError(f"Argument name must be of type str, not {type(str)}")
+    if not isinstance(name, str |  Path):
+        raise TypeError(f"Argument name must be of type str or Path, not {type(str)}")
 
-
-    if '.' in name:
+    if isinstance(name, str) and '.' in name:
         full_name = name
         name = full_name.split('.')[0]
         file_types = ('.' + full_name.split('.',1)[1],)
@@ -45,6 +44,12 @@ def load_model(name, folder=None, file_types=('.bam', '.ursinamesh', '.obj', '.g
         except:
             pass
 
+    if isinstance(name, Path):
+        m = builtins.loader.loadModel(name)
+        imported_meshes[name] = m
+        return m  # type: ignore
+
+
     if folder is not None:
         if not isinstance(folder, Path):
             raise TypeError(f'folder must be a Path, not a {type(folder)}')
@@ -52,7 +57,6 @@ def load_model(name, folder=None, file_types=('.bam', '.ursinamesh', '.obj', '.g
 
     else:
         _folders = (application.models_compressed_folder, application.asset_folder, application.internal_models_compressed_folder)
-
 
     for filetype in file_types:
         if use_deepcopy and filetype == '.bam':
@@ -62,7 +66,9 @@ def load_model(name, folder=None, file_types=('.bam', '.ursinamesh', '.obj', '.g
             for file_path in folder.glob(f'**/{name}{filetype}'):
                 if filetype == '.bam':
                     # print_info('loading bam')
-                    return builtins.loader.loadModel(file_path)  # type: ignore
+                    m = builtins.loader.loadModel(file_path)
+                    imported_meshes[name] = m
+                    return m  # type: ignore
 
                 if filetype == '.gltf' or filetype == '.glb':
                     gltf_settings = gltf.GltfSettings()
