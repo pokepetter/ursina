@@ -1,6 +1,20 @@
 from ursina import *
 
 class Circle(Mesh):
+    _cache = {}
+
+    def __new__(cls, resolution=16, radius=.5, mode='ngon', thickness=1):
+        key = (resolution, radius, mode, thickness)
+        if key in cls._cache:
+            try:
+                # print('using cached Circle:', key)
+                return deepcopy(cls._cache[key])
+            except:     # deepcopy can fail if the model has been destroyed
+                pass
+        instance = super().__new__(cls)
+        cls._cache[key] = instance
+        return instance
+
     def __init__(self, resolution=16, radius=.5, mode='ngon', **kwargs):
         origin = Entity()
         point = Entity(parent=origin)
@@ -21,6 +35,7 @@ class Circle(Mesh):
 if __name__ == '__main__':
     app = Ursina()
     e = Entity(model=Circle(8, mode='line', thickness=10), color=color.hsv(60,1,1,.3))
+    e = Entity(model=Circle(8, mode='line', thickness=10), color=color.hsv(60,1,1,.3), x=1)
     print(e.model)
     origin = Entity(model='quad', color=color.orange, scale=(.05, .05))
     ed = EditorCamera(rotation_speed = 200, panning_speed=200)
