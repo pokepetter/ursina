@@ -6,7 +6,7 @@ from direct.task.Task import Task
 from panda3d.core import ConfigVariableBool
 
 import __main__
-from ursina import application, entity, input_handler
+from ursina import application, entity, input_handler, shader
 from ursina.audio import _audio_manager
 from ursina.camera import instance as camera
 from ursina.mouse import instance as mouse
@@ -125,7 +125,7 @@ class Ursina(ShowBase):
         application.hot_reloader = HotReloader(__main__.__file__ if hasattr(__main__, '__file__') else 'None', enabled=application.development_mode)  # make sure it's running from a file and not an interactive session.
 
         try:
-            pass
+            from ursina import gamepad
         except Exception as e:
             print(e)
 
