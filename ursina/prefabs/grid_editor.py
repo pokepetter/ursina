@@ -240,7 +240,8 @@ class GridEditor(Entity):
 
 
     def sample(self, x, y):
-        self.selected_char = self.grid[x][y]
+        if x >= 0 and x < self.grid.width and y >= 0 and y < self.grid.height:
+            self.selected_char = self.grid[x][y]
 
 
     def input(self, key):

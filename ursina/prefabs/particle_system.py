@@ -478,6 +478,7 @@ class ParticleSystem(Entity):
         self.anims.append(
             Sequence(
                 Wait(self.lifetime+delay),
+                Wait(1/60), # wait one frame so the scale animation can finish (try_disabling sets scale to ~0)
                 Func(self.try_disabling, e),
                 started=False,
                 auto_destroy=should_destroy_particles,
@@ -524,7 +525,9 @@ class ParticleSystem(Entity):
     def try_disabling(self, particle):
         try:
             # particle.enabled = False
-            particle.model_parent.world_scale = Vec3(.001)  # keep enabled and scale to 0 to keep vertices after combine() and make baking easier.
+            # particle.model_parent.animate_scale(.001, duration=0)
+            # print('dispable particle', particle, particle.graphics)
+            particle.world_scale = Vec3(.001)  # keep enabled and scale to 0 to keep vertices after combine() and make baking easier.
         except:
             pass
             # print('can not disable particle, already destroyed')
@@ -751,28 +754,48 @@ if __name__ == '__main__':
     spawn_points = [Vec3(*[random.uniform(-S,S) for _ in range(3)]) for i in range(1)]
     print(spawn_points)
     particle_system_container = ParticleSystemContainer((
+        # ParticleSystem(
+        #     # scale=.75 * .5,
+        #     start_size=.5,
+        #     end_size = Vec3(0),
+        #     size_curve=curve.linear,
+        #     speed=1,
+        #     # speed_curve=curve.out_circ,
+        #     lifetime=6,
+        #     direction_randomness=Vec3(0,360,0),
+        #     # spin=Vec3(0,15,0) * 10,
+        #     # spin_curve=curve.linear,
+        #     mesh='icosphere',
+        #     start_color = (color.white, color.white),
+        #     # end_color = (color.light_gray, color.light_gray),
+        #     # color_curve=curve.out_expo,
+        #     num_particles=10,
+        #     spawn_type = 'random',
+        #     name='snow',
+        #     spawn_interval=.2,
+        #     # seed=0,
+        #     loop_every=1,
+        #     spawn_points=spawn_points,
+        # ),
         ParticleSystem(
-            # scale=.75 * .5,
-            start_size=.5,
-            end_size = Vec3(0),
-            size_curve=curve.linear,
-            speed=1,
-            # speed_curve=curve.out_circ,
-            lifetime=6,
-            direction_randomness=Vec3(0,360,0),
-            # spin=Vec3(0,15,0) * 10,
-            # spin_curve=curve.linear,
-            mesh='icosphere',
-            start_color = (color.white, color.white),
-            # end_color = (color.light_gray, color.light_gray),
-            # color_curve=curve.out_expo,
-            num_particles=10,
-            spawn_type = 'random',
-            name='snow',
-            spawn_interval=.2,
-            # seed=0,
-            loop_every=1,
-            spawn_points=spawn_points,
+            start_size=(.25,.25,.75),
+            end_size=Vec3(8,5,1)*.5,
+            size_curve=curve.combine(curve.linear, curve.reverse(curve.in_expo), .33),
+            # speed=.5,
+            lifetime=.4,
+            auto_play=False,
+            direction_randomness=Vec3(0,0,360),
+            move_directions='up',
+            mesh='cube',
+            start_color = [hsv(200+(i*10),1-((i*.1)),1) for i in range(12*2)],
+            end_color = [hsv(200+20+(i*10),.5,1-(i*.15)) for i in range(12*2)],
+            color_curve=curve.linear,
+            color_sample_function='sequential',
+            num_particles=0,
+            spawn_points = [Vec3(0,0,z*.5) for z in range(12*2)],
+            spawn_type = 'sequential',
+            spawn_interval=.0125/1,
+            name='blink_particles', seed=2,
         ),
     ))
 
@@ -790,7 +813,7 @@ if __name__ == '__main__':
     #         e |= {'auto_play':False, }
     #         ParticleSystem(**e)
 
-    particle_system_ui = ParticleSystemUI(Path(__file__), ParticleSystemContainer((run_particles, ), parent=player))
+    particle_system_ui = ParticleSystemUI(Path(__file__), particle_system_container)
     # particle_system_ui.render_particle_system_list()
 
 

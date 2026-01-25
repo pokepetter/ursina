@@ -84,10 +84,13 @@ class GradientEditor(Entity):
         if self.on_value_changed and call_on_value_changed:
             self.on_value_changed()
 
+    def hex_values_getter(self):
+        return {key:color.rgb_to_hex(*col) for key, col in self.value.items()}
+
     def copy(self):
         # print('copied:', {key:color.rgb_to_hex(*col) for key, col in self.value.items()})
         import pyperclip
-        pyperclip.copy(str({key:color.rgb_to_hex(*col) for key, col in self.value.items()}))
+        pyperclip.copy(str(self.hex_values))
 
 
 if __name__ == '__main__':

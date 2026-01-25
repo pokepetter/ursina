@@ -290,6 +290,13 @@ class Array3D(list):
             return default
 
 
+    def set(self, x, y, z, value):
+        x, y, z = int(x), int(y), int(z)
+        if x < 0 or x >= self.width or y < 0 or y >= self.height or z < 0 or z >= self.depth:
+            return
+        self[x][y][z] = value
+
+
     def reset(self):
         for x,y,z, _ in enumerate_3d(self):
             self[x][y][z] = self.default_value
