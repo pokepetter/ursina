@@ -1,12 +1,9 @@
-def normalize_v3(arr):
-    ''' Normalize a numpy array of 3 component vectors shape=(n,3) '''
+def normalize_v3(v):
     import numpy
-
-    lens = numpy.sqrt( arr[:,0]**2 + arr[:,1]**2 + arr[:,2]**2 )
-    arr[:,0] /= lens
-    arr[:,1] /= lens
-    arr[:,2] /= lens
-    return arr
+    lens = numpy.linalg.norm(v, axis=1)
+    mask = lens > 0
+    v[mask] /= lens[mask][:, None]
+    # leave zero vectors as zero
 
 
 def generate_normals(vertices, triangles=None, smooth=True):
