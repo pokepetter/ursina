@@ -220,6 +220,7 @@ class PhysicsEntity:
         self.collision = True
         self.eternal = False
         self.ignore_paused = False
+        self.scripts = []
         self.animations = []
         self.animate = self.entity.animate
         scene.entities.append(self)
@@ -455,6 +456,10 @@ class PhysicsEntity:
     def kinematic_setter(self, value):
         self._kinematic = value
         self.node.setKinematic(value)
+
+    def static_setter(self, value):
+        self._static = value
+        self.node.setStatic(value)
 
     def enabled_getter(self):
         return getattr(self, '_enabled', True)
