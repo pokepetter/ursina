@@ -30,8 +30,9 @@ if __name__ == '__main__':
 
     app = DecoratedClass()
     app_2 = DecoratedClass()
-    assert(app == app_2)
+    from ursina.ursinastuff import _test
+    _test(app == app_2)
 
-    # this won't work
-    class Game(DecoratedClass):
-        pass
+    ## this won't work
+    # class Game(DecoratedClass):
+    #     pass
