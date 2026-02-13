@@ -63,8 +63,8 @@ class Array2D(list):
             self.height = int(height)
             super().__init__([[self.default_value for _ in range(self.height)] for _ in range(self.width)])
 
-    @staticmethod
-    def from_string(string, convert_to_type=str, starts_lower_left=True, split_lines_on=','):
+    @classmethod
+    def from_string(cls, string, convert_to_type=str, starts_lower_left=True, split_lines_on=','):
             string = string.strip()
             if starts_lower_left:
                 if split_lines_on == '':     # example input: '010\n001\n000'
@@ -72,9 +72,9 @@ class Array2D(list):
                 else:                       # example input: '0,1,0\n0,0,1\n0,0,0'
                     data = [[convert_to_type(word.strip()) for word in line.split(split_lines_on) if word] for line in string.split('\n') if line]
                 data = [list(row) for row in zip(*data[::-1], strict=True)]  # rotate
-                return Array2D(data=data)
+                return cls(data=data)
             else:
-                return Array2D(data=[[word.strip() for word in line.split(split_lines_on) if word] for line in string.split('\n') if line])
+                return cls(data=[[word.strip() for word in line.split(split_lines_on) if word] for line in string.split('\n') if line])
 
     def to_string(self, separator=', ', always_separate=False):
         lines = []
