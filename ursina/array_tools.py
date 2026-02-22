@@ -284,6 +284,8 @@ class Array3D(list):
 
     def get(self, x, y, z, default=0):
         x, y, z = int(x), int(y), int(z)
+        if x < 0 or y < 0 or z < 0:
+            return default
         try:
             return self[x][y][z]
         except:
