@@ -10,7 +10,7 @@ Text.default_resolution *= 2
 
 player = Entity(name='o', color=color.azure)
 cursor = Tooltip(player.name, color=player.color, origin=(0,0), scale=4, enabled=True)
-cursor.background_entity.color = color.clear
+cursor.background_color = color.clear
 bg = Entity(parent=scene, model='quad', texture='shore', scale=(16,8), z=10, color=color.light_gray)
 mouse.visible = False
 
@@ -61,7 +61,7 @@ def check_for_victory():
         Panel(z=1, scale=10, model='quad')
         t = Text(f'player\n{name}\nwon!', scale=3, origin=(0,0), background=True)
         t.create_background(padding=(.5,.25), radius=Text.size/2)
-        t.background_entity.color = player.color.tint(-.2)
+        t.background_color = player.color.tint(-.2)
 
 if __name__ == '__main__':
     app.run()
