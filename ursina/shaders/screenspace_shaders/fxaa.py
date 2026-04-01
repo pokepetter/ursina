@@ -98,6 +98,7 @@ default_input={
 
 
 if __name__ == '__main__':
+    from ursina import *
     app = Ursina()
     window.color=color.black
 
