@@ -348,7 +348,7 @@ def string_to_2d_list(string, char_value_map=None): # char_value_map default: {'
     grid = dedent(string).strip()
     grid = grid.split('\n')
     grid = [[char_value_map.get(e, 0) for e in line] for line in grid]
-    grid = [list(row) for row in zip(*grid[::-1], strict=True)]  # rotate
+    grid = [list(row) for row in zip(*grid[::-1], strict=False)]  # rotate
     return grid
 
 if __name__ == '__main__':
