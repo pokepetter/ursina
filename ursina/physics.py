@@ -101,6 +101,8 @@ def raycast(origin, direction: Vec3 = Vec3(0, 0, 1), distance=9999,
         valid_hits = [h for h in all_results.getHits() if h.getNode() not in ignored_nodes]
 
         if not valid_hits:
+            if return_hit_only:
+                return False
             return HitInfo()  # no valid hits
 
         valid_hits.sort(key=lambda h: h.getHitFraction())
@@ -166,6 +168,7 @@ class PhysicsEntity:
     _list_to_vec = Entity._list_to_vec
     enable = Entity.enable
     disable = Entity.disable
+    add_script = Entity.add_script
 
     def __init__(self, mass=0, kinematic=None, friction=.5, mask=0x1, collider=None, world=physics_handler.world, lock_axis=Vec3.zero, lock_rotation=Vec3.zero,
             enabled=True,
@@ -298,7 +301,8 @@ class PhysicsEntity:
     def set_shader_input(self, key, value):
         self.entity.set_shader_input(key, value)
 
-
+    def _ensure_is_not_destroyed(self):
+        return self.entity._ensure_is_not_destroyed()
 
     # for rigidbody
     def position_getter(self):
@@ -336,6 +340,11 @@ class PhysicsEntity:
         return self.rb.getQuat()
     def quaternion_setter(self, value):
         self.rb.setQuat(value)
+
+    def world_quaternion_getter(self):
+        return self.entity.world_quaternion
+    def world_quaternion_setter(self, value):
+        self.entity.world_quaternion = value
 
     def rotation_x_setter(self, value):
         new_value = self.rotation
@@ -499,17 +508,26 @@ class PhysicsEntity:
                 self.world.removeRigidBody(self.node)
 
 
-    # def intersects(self, other):
-    #     result = self.world.contactTest(self.node)
+    def intersects(self, other=None, ignore=None):
+        if not other:
+            result = self.world.contactTest(self.node)
+        else:
+            result = self.world.contactTestPair(self.node, other)
+        # print(result.getNumContacts())
+        if not ignore:
+            return result.getNumContacts() > 0
 
-    #     if not result.getNumContacts():
-    #         return HitInfo()
+        contacts = [result.getContact(i).getNode0() for i in range(result.getNumContacts())]
+        contacts = [e for e in contacts if e not in ignore]
+        return contacts
+        # if not result.getNumContacts():
+        #     return HitInfo()
 
-    #     for i in range(result.getNumContacts()):
-    #         contact = result.getContact(i)
-    #         node0 = contact.getNode0()
-    #         node1 = contact.getNode1()
-    #         if node
+        # for i in range(result.getNumContacts()):
+        #     contact = result.getContact(i)
+        #     node0 = contact.getNode0()
+        #     node1 = contact.getNode1()
+        #     if node
 
 
 
