@@ -393,7 +393,7 @@ class UrsinaBuild:
 
         with (Path(into) / f'{name}.bat').open('w') as f:
             f.write(dedent(fr'''
-                chcp 65001å
+                chcp 65001
                 set PYTHONIOENCODING=utf-8
 
                 pushd "{PROJECT_FOLDER.name}"
