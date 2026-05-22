@@ -271,7 +271,7 @@ class Text(Entity):
 
         if not font_file_path:
             print_warning('missing font:', value)
-
+            return
         # font = FontPool.load_font(str(font_file_path))
         # since FontPool can't import fonts from path on Windows, add the directory to the "model path" and load by name
         from panda3d.core import getModelPath
@@ -300,7 +300,7 @@ class Text(Entity):
 
     def shader_setter(self, value):
         self._shader = value
-        if not hasattr(self, 'text_nodes'): # trying to set shader before init has finish, for example by using Entity.default_shader
+        if not hasattr(self, 'text_nodes'): # trying to set shader before init has finished, for example by using Entity.default_shader
             return
 
         for tn in self.text_nodes:
