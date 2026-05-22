@@ -83,7 +83,10 @@ def hex(value):
 
     if value.startswith('#'):
         value = value[1:]
-    return rgb32(*tuple(int(value[i:i+2], 16) for i in (0, 2, 4)))
+    try:
+        return rgb32(*tuple(int(value[i:i+2], 16) for i in (0, 2, 4)))
+    except:
+        raise ValueError(f'Invalid hex string: {value}')
 
 def rgb_to_hex(r, g, b, a=1.0):
     return f"#{int(r*255):02x}{int(g*255):02x}{int(b*255):02x}{int(a*255):02x}"
