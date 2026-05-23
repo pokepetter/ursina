@@ -79,14 +79,23 @@ def to_hsv(color):
 
 def hex(value):
     if isinstance(value, int):
-        return rgb(*tuple((value >> (8 * i)) & 0xff for i in [2,1,0]))
+        if value <= 0xFFFFFF:
+            return rgb((value >> 16) & 0xff, (value >> 8) & 0xff, value & 0xff)
+        else:
+            return rgba((value >> 24) & 0xff, (value >> 16) & 0xff, (value >> 8) & 0xff, value & 0xff)
 
     if value.startswith('#'):
         value = value[1:]
+
     try:
-        return rgb32(*tuple(int(value[i:i+2], 16) for i in (0, 2, 4)))
-    except:
-        raise ValueError(f'Invalid hex string: {value}')
+        if len(value) == 6:
+            return rgb32(*(int(value[i:i+2], 16) for i in (0,2,4)))
+        elif len(value) == 8:
+            return rgba32(*(int(value[i:i+2], 16) for i in (0,2,4,6)))
+    except Exception:
+        pass
+
+    raise ValueError(f'Invalid hex string: {value}')
 
 def rgb_to_hex(r, g, b, a=1.0):
     return f"#{int(r*255):02x}{int(g*255):02x}{int(b*255):02x}{int(a*255):02x}"
