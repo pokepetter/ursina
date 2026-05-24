@@ -47,11 +47,10 @@ uniform float fog_end;
 void main() {
     color = texture(p3d_Texture0, uvs) * p3d_ColorScale * vertex_color;
     float distance_to_camera = length(vertex_world_position.xyz - camera_world_position);
-    float fog_length = fog_end - fog_start;
-    float t = distance_to_camera/fog_length;
-    t = clamp(t, 0., 1.);
+    float t = smoothstep(fog_start, fog_end, distance_to_camera);
     color.rgb = mix(color.rgb, fog_color.rgb, t * fog_color.a);
 }
+
 
 ''',
 default_input={
