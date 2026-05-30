@@ -52,7 +52,7 @@ class Texture():
 
     @staticmethod
     def new(size, color=(255,255,255)):
-        img = PNMImage(*size)
+        img = PNMImage(*size, num_channels=len(color))
         if len(color) == 4:
             img.addAlpha()
 
@@ -95,8 +95,16 @@ class Texture():
         pixels = Array2D(*self.size, default_value=None)
         for (x,y), value in enumerate_2d(pixels):
             pixels[x][y] = self.get_pixel(x, y)
-
         return pixels
+
+
+    def raw_pixels_getter(self):
+        pixels = Array2D(*self.size, default_value=None)
+        for (x,y), value in enumerate_2d(pixels):
+            pixels[x][y] = self.get_pixel_raw(x, y)
+        return pixels
+
+
 
     def filtering_setter(self, value):
         # print('setting filtering:', value)
@@ -119,24 +127,23 @@ class Texture():
         self._texture.setWrapV(value)
 
 
+    def get_pixel_raw(self, x, y):
+        if not self._cached_image:
+            from PIL import Image
+            self._cached_image = Image.open(self.path)
+
+        return self._cached_image.getpixel((x, self.height-y-1))
+
+
     def get_pixel(self, x, y):
-        try:
-            if not self._cached_image:
-                from PIL import Image
-                self._cached_image = Image.open(self.path)
+        col = self.get_pixel_raw(x, y)
 
+        if self._cached_image.mode == 'LA':
+            col = (col[0], col[0], col[0], col[1])
+        elif self._cached_image.mode == 'L':
+            col = (col[0], col[0], col[0])
 
-            col = self._cached_image.getpixel((x, self.height-y-1))
-            if self._cached_image.mode == 'LA':
-                col = (col[0], col[0], col[0], col[1])
-
-            if self._cached_image.mode == 'L':
-                col = (col[0], col[0], col[0])
-
-            return color.rgba32(*col)
-        except Exception as e:
-            print(e)
-            return None
+        return color.rgba32(*col)
 
 
     def get_pixels(self, start, end):
