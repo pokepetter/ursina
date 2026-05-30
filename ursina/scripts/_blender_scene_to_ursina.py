@@ -41,7 +41,8 @@ meshes = {
 '''
 
 dg = bpy.context.evaluated_depsgraph_get() #getting the dependency graph
-bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
+if bpy.context.object:
+    bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
 objects = [ob for ob in bpy.data.objects if ob.type == 'MESH']
 unique_objects = {}
 # print('meshes:', meshes)
@@ -162,7 +163,7 @@ scene_parent.{ob.name.replace('.', '_')} = Entity(
             code += f'''
     color=({round(color[0],5)}, {round(color[1],5)}, {round(color[2],5)}, {round(color[3],5)}),'''
 
-        code += f'''
+        code += '''
     ignore=True,
     )'''
     code += '''\n\nscene_parent.meshes = meshes'''
