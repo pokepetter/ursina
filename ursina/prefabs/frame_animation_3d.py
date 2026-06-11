@@ -49,9 +49,11 @@ class FrameAnimation3d(Entity):
 
     def pause(self):
         self.sequence.pause()
+        self.is_playing = False
 
     def resume(self):
         self.sequence.resume()
+        self.is_playing = True
 
     def finish(self):
         self.sequence.finish()
