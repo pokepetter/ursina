@@ -80,12 +80,9 @@ class Terrain(Mesh):
 
         if self.gradient:
             self.colors = []
-            for z, column in enumerate(self.height_values):
-                for x, row in enumerate(column):
-                    self.vertices.append(Vec3(x/w, self.height_values[x][z], z/h) + Vec3(centering_offset.x, 0, centering_offset.y))
-                    y = int(self.height_values[x][z]*1)
-                    y = clamp(y, 0, 255)
-                    self.colors.append(self.gradient[y])
+            for (x,z), y in enumerate_2d(self.height_values):
+                y = int(clamp(y, 0, 255))
+                self.colors.append(self.gradient[y])
 
 
         super().generate()
