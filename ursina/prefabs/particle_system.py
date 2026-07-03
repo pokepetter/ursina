@@ -14,7 +14,7 @@ cache = dict()
 
 def play_particle_system(name, use_cache=True, auto_play=True, auto_destroy=True, unscaled=False, ignore_paused=False, **kwargs):
     # print('try loading particle system:', name)
-    if name in cache:
+    if use_cache and name in cache:
         animation_texture = cache[name]
     else:
         animation_texture = load_texture(f'{name}_seed*_baked_fps*_bounds*.png')
@@ -309,7 +309,6 @@ class ParticleSystem(Entity):
         bounce=0,
         bounce_curve=curve.out_bounce,
 
-        max_particles=20,
         lifetime=1,
         mesh='quad',
         double_sided=True,
@@ -357,7 +356,6 @@ class ParticleSystem(Entity):
             self.speed = (self.speed, self.speed)
 
         self.spawn_points = LoopingList(self.spawn_points)
-        self.particles = []
         self.t = 0
         self.total_duration = self.lifetime + (self.num_particles * self.spawn_interval)
         self.is_playing = False
@@ -422,9 +420,6 @@ class ParticleSystem(Entity):
         else:
             random.seed(self.seed+i)    # use seed + particle index so the particle system will be somewhat random, but prevent each particle from facing the same direction.
 
-        if len(self.particles) >= self.max_particles:
-            return
-
         model = self.mesh
         if not isinstance(model, str):
             model = deepcopy(model)
@@ -485,12 +480,13 @@ class ParticleSystem(Entity):
                 name='end_sequence',
             )
         )
-        if self.loop_every > 0:
-            self.anims.append(Sequence(
-                Wait(delay + self.total_duration + .1),
-                Func(destroy, e),
-                auto_destroy=True, name='destroy_particle_sequence')
-                )
+        # if self.loop_every > 0:
+        self.anims.append(Sequence(
+            Wait(delay + self.total_duration + .1),
+            Func(destroy, e),
+            Func(destroy, graphics),
+            auto_destroy=True, name='destroy_particle_sequence')
+            )
 
         random.setstate(original_state)
 
@@ -880,5 +876,12 @@ if __name__ == '__main__':
     # ParticleSystemUI()
     ground = Entity(model='plane', scale=8, texture='grass', texture_scale=Vec2(1), color=color.dark_gray)
     # FrameAnimation3d('test_particles_', fps=30, loop=True, position=(4,1,0), color=color.azure)
+    def input(key):
+        if key == 'l':
+            for e in scene.entities:
+                if e.name:
+                    print('e:', e.name)
+                if e in scene._entities_marked_for_removal:
+                    print('marked for removal:', e.name)
 
     app.run()
