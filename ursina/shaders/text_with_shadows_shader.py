@@ -72,6 +72,8 @@ if __name__ == '__main__':
     def input(key):
         if key == 'f':
             text_entity.fade_out()
+        if key == 'o':
+            text_entity.set_shader_input('shadow_offset', Vec2(.1,.1))
 
 
     EditorCamera()

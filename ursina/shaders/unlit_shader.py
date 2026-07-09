@@ -7,7 +7,7 @@ from ursina import color
 # from ursina.camera import instance as camera
 # from ursina.scene import instance as scene
 
-unlit_shader = Shader(name='unlit_shader', language=Shader.GLSL, vertex = '''#version 130
+unlit_shader = Shader(name='unlit_shader', language=Shader.GLSL, vertex = '''#version 140
 
 uniform mat4 p3d_ModelViewProjectionMatrix;
 uniform mat4 p3d_ModelViewMatrix;
@@ -37,7 +37,6 @@ in vec2 uvs;
 out vec4 fragColor;
 
 in vec4 vertex_color;
-in vec3 vertex_world_position;
 
 void main() {
     vec4 color = texture(p3d_Texture0, uvs) * p3d_ColorScale * vertex_color;
@@ -50,8 +49,6 @@ default_input={
     'texture_offset': Vec2(0.0, 0.0),
 },
 )
-
-
 
 if __name__ == '__main__':
     from ursina import EditorCamera, Entity, Ursina, camera

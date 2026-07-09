@@ -56,9 +56,9 @@ void main() {
 default_input={
     'texture_scale': Vec2(1,1),
     'texture_offset': Vec2(0.0, 0.0),
-    'fog_color': color.clear,
-    'fog_start': 10,
-    'fog_end': 100,
+    'fog_color': scene.fog_color,
+    'fog_start': scene.fog_density[0],
+    'fog_end': scene.fog_density[1],
     'camera_world_position' : Vec3.zero,
 },
 )
@@ -91,8 +91,8 @@ if __name__ == '__main__':
     #Sky(color=color.light_gray)
     EditorCamera()
 
-    scene.fog_color = color.blue
-    scene.fog_density = (0, 100)
+    # scene.fog_color = color.blue
+    # scene.fog_density = (0, 100)
 
     # def input(key):
     #     if key == 'b':

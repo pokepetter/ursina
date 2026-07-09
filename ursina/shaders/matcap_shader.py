@@ -22,7 +22,7 @@ void main() {
 }
 ''',
 fragment='''
-#version 130
+#version 140
 uniform sampler2D p3d_Texture0;
 uniform vec4 p3d_ColorScale;
 

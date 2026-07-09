@@ -12,7 +12,7 @@ class Scene(NodePath):
         self.fog = Fog('fog')
         self.setFog(self.fog)
         self.fog_color = color.clear
-        self.fog_density = 0
+        self.fog_density = (0, 500)
 
     def _set_up(self):
         self.reparent_to(render)
