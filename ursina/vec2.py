@@ -50,6 +50,11 @@ class Vec2(PandaVec2):
         self[0] = value[1]
 
     @property
+    def x_y_getter(self):
+        from ursina.vec3 import Vec3
+        return Vec3(self[0], 0, self[1])
+
+    @property
     def X(self):    # get x as int
         return int(self.x)
     @property
