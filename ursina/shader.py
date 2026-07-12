@@ -128,6 +128,98 @@ class Shader:
                 entity_with_this_shader.set_shader_input(key, value)
 
 
+    def __add__(self, other):
+        self_vertex_lines = self.vertex.split('\n')
+        vertex_version = ''
+        def get_version(shader_code):
+            return shader_code.split('#version', 1)[1].split('\n')[0]
+
+        this_version, other_version = get_version(self.vertex), get_version(other.vertex)
+        if this_version != other_version:
+            raise Exception(f'Vertex shaders does not have matching versions: {this_version}, {other_version}')
+        # if get_version(self.fragment) != get_version(other.fragment):
+        #     raise Exception('Vertex shaders does not have mathcing versions.')
+
+        # inputs = set()
+        vertex_shader_input_self = [l for l in self.vertex.split('\n') if l.startswith('in ')]
+        vertex_shader_input_other = [l for l in other.vertex.split('\n') if l.startswith('in ')]
+        vertex_shader_uniforms_self = [l for l in self.vertex.split('\n') if l.startswith('uniform ')]
+        vertex_shader_uniforms_other = [l for l in other.vertex.split('\n') if l.startswith('uniform ')]
+        vertex_shader_output_self = [l for l in self.vertex.split('\n') if l.startswith('out ')]
+        vertex_shader_output_other = [l for l in other.vertex.split('\n') if l.startswith('out ')]
+
+        import re
+        def extract_functions(glsl):
+            header_pattern = re.compile(r'([a-zA-Z_]\w*)\s+([a-zA-Z_]\w*)\s*\((.*?)\)\s*\{', re.DOTALL)
+            functions = {}
+
+            for match in header_pattern.finditer(glsl):
+                start = match.start()
+
+                brace_pos = glsl.find('{', match.end() - 1)
+                depth = 1
+                i = brace_pos + 1
+
+                while i < len(glsl) and depth:
+                    if glsl[i] == '{':
+                        depth += 1
+                    elif glsl[i] == '}':
+                        depth -= 1
+                    i += 1
+
+                functions[f'{match.group(2)}->{match.group(1)}'] = {
+                    "return_type": match.group(1),
+                    "name": match.group(2),
+                    "args": match.group(3).strip(),
+                    "source": glsl[start:i],
+                    "returns": [l for l in glsl[start:i].split('\n') if l.lstrip().startswith('return ')],
+                }
+
+            return functions
+
+        vertex_shader_functions = extract_functions(self.vertex)
+        for name, func_data in extract_functions(other.vertex).items():
+            if name not in vertex_shader_functions:
+                vertex_shader_functions[name] = func_data
+                continue
+
+            # if both shader have identical function name and return type
+
+            # if name == 'main':
+            #     original_function = vertex_shader_functions[name]
+            #     if len(original_function['returns'])
+
+        # print(vertex_shader_functions_self)
+
+        # vertex_functions_self = [l for l in self.vertex.split('\n') if l.startswith('uniform ') or l.startswith('in ') or l.startswith('out ')]
+        # vertex_functions_other = [l for l in self.vertex.split('\n') if l.startswith('uniform ') or l.startswith('in ') or l.startswith('out ')]
+        # combined_shader_input = set(vertex_shader_input_self, vertex_shader_input_other)
+
+        combined_vertex_shader_input = set(vertex_shader_input_self + vertex_shader_input_other)
+        combined_vertex_shader_uniforms = set(vertex_shader_uniforms_self + vertex_shader_uniforms_other)
+        combined_vertex_shader_output = set(vertex_shader_output_self + vertex_shader_output_other)
+
+        from textwrap import dedent
+        combined_shader = dedent(f'''\
+#version {this_version}
+// vertex in
+{'\n'.join(combined_vertex_shader_input)}
+// vertex uniform
+{'\n'.join(combined_vertex_shader_uniforms)}
+// vertex out
+{'\n'.join(combined_vertex_shader_output)}
+''')
+        print(combined_shader)
+        # if self.vertex.split('#version ',1)[] == #version
+
+
+        # if 'void main()' in self.fragment and 'void main()' in other.fragment:
+        #     # merge fragment mains
+
+
+
+
+
 
 if __name__ == '__main__':
     from time import perf_counter
@@ -147,5 +239,12 @@ if __name__ == '__main__':
             if hasattr(e, '_shader'):
                 print('-------', e.shader)
                 # e._shader = Panda3dShader.make(language, vertex, fragment, geometry)
+
+
+    from ursina.shaders.unlit_shader import unlit_shader
+    from ursina.shaders.matcap_shader import matcap_shader
+
+    combined_shader = unlit_shader + matcap_shader
+    print(combined_shader)
 
     app.run()
