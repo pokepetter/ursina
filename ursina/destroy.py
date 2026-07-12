@@ -36,11 +36,8 @@ def _destroy(entity, force_destroy=False):
             if anim:
                 anim.kill()
 
-    # for child in entity.children:
-    #     try:
-    #         _destroy(child)
-    #     except:
-    #         pass
+    for child in entity.children:
+        _destroy(child)
 
     if entity.collider and hasattr(entity.collider, 'remove'):
         entity.collider.remove()
