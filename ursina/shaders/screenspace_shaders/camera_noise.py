@@ -5,27 +5,33 @@ fragment='''
 #version 430
 
 uniform sampler2D tex;
-uniform float noise_offset = 1;
-uniform float strength = 1;
+uniform vec3 noise_offset = vec3(1.0, 1.0, 1.0);
+uniform float strength = 1.0;
 in vec2 uv;
 out vec4 color;
 
 void main() {
     vec3 rgb = texture(tex, uv).rgb;
 
-    float noise = fract(sin(dot(uv+noise_offset, vec2(12.9898, 78.233))) * 43758.5453);
-    noise -= .5;
-    noise *= strength;
+    // Compute per-channel noise using vec3 offset
+    vec3 noise = vec3(
+        fract(sin(dot(uv + noise_offset.rg, vec2(12.9898, 78.233))) * 43758.5453),
+        fract(sin(dot(uv + noise_offset.gb, vec2(12.9898, 78.233))) * 43758.5453),
+        fract(sin(dot(uv + noise_offset.br, vec2(12.9898, 78.233))) * 43758.5453)
+    );
 
-    rgb += noise;
+    noise -= 0.5;     // center around 0
+    noise *= strength; // scale noise
 
-    color = vec4(rgb.r, rgb.g, rgb.b, 1.0);
+    rgb += noise; // add noise per channel
+
+    color = vec4(rgb, 1.0);
 }
 
 ''',
 geometry='',
 default_input={
-    'noise_offset':1,
+    'noise_offset':2,
     'strength':.2
 })
 
@@ -44,6 +50,6 @@ if __name__ == '__main__':
     Sky()
     def update():
         # Since there isn't really a way to generate pseudorandom numbers in GLSL by themselves, this needs to be put here, otherwise the noise will be static.
-        camera.set_shader_input("noise_offset", random.randint(0, 100)/100)
+        camera.set_shader_input("noise_offset", Vec3(*(random.randint(0, 100)/100 for _ in range(3))))
 
     app.run()
