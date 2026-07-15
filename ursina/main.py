@@ -1,28 +1,26 @@
-import time
 import platform
+import time
 
 from direct.showbase.ShowBase import ShowBase
 from direct.task.Task import Task
 from panda3d.core import ConfigVariableBool
 
-from ursina.window import instance as window
-from ursina import application
-from ursina import input_handler
-from ursina.scene import instance as scene
+import __main__
+from ursina import application, entity, input_handler, shader
+from ursina.audio import _audio_manager
 from ursina.camera import instance as camera
 from ursina.mouse import instance as mouse
-from ursina import entity
-from ursina import shader
-from ursina.audio import _audio_manager
+from ursina.scene import instance as scene
+from ursina.window import instance as window
 
-
-import __main__
 time.dt = 0
 time.dt_unscaled = 0
 keyboard_keys = '1234567890qwertyuiopasdfghjklzxcvbnm'
 
 
 from ursina.scripts.singleton_decorator import singleton
+
+
 @singleton
 class Ursina(ShowBase):
     def __init__(self, title='ursina', icon='textures/ursina.ico', borderless:bool=False, fullscreen:bool=None, size=None, forced_aspect_ratio=None, position=None, vsync=True, editor_ui_enabled:bool=None, window_type='onscreen', development_mode:bool=None, render_mode=None, show_ursina_splash=False, use_ingame_console=False, **kwargs):
@@ -135,6 +133,7 @@ class Ursina(ShowBase):
             window.make_editor_gui()
             if use_ingame_console:
                 import builtins
+
                 from ursina import Entity, TextField, color
                 window.console = Entity(parent=window.editor_ui, position=window.top_left, z=-999, eternal=True)
                 window.console.text_field = TextField(parent=window.console, scale=.75, max_lines=20, position=(0,0), register_mouse_input=True, text_input=None, eternal=True)
@@ -360,7 +359,7 @@ class Ursina(ShowBase):
             print('os:', platform.system())
             import sys
             print(f'python version: {sys.version}')
-            from importlib.metadata import version, packages_distributions
+            from importlib.metadata import packages_distributions, version
             ursina_version = version('ursina') if 'ursina' in packages_distributions() else 'unknown'
             print(f'ursina version: {ursina_version}')
             print('development mode:', application.development_mode)
