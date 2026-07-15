@@ -21,7 +21,7 @@ class Button(Entity):
             disabled=False, shader=unlit_shader, **kwargs):
         super().__init__(parent=parent)
 
-        for key in ('scale', 'scale_x', 'scale_y', 'scale_z', 'world_scale', 'world_scale_x', 'world_scale_y', 'world_scale_z'):
+        for key in ('scale', 'scale_x', 'scale_y', 'scale_z', 'world_scale', 'world_scale_x', 'world_scale_y', 'world_scale_z', 'transform', 'world_transform'):
             if key in kwargs:   # set the scale before model for correct corners
                 setattr(self, key, kwargs[key])
 
