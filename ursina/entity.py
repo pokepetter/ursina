@@ -853,7 +853,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
 
         try:
             super().set_shader_input(name, value)
-        except:
+        except Exception:
             raise Exception(f'Incorrect input to shader: {name} {value}')
 
     def shader_input_getter(self):
@@ -1323,7 +1323,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
     def __str__(self):
         try:
             return self.name
-        except:
+        except AttributeError:
             return '*destroyed entity*'
 
     def get_changes(self, target_class=None): # returns a dict of all the changes
