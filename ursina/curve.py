@@ -64,7 +64,7 @@ def in_out_quart(t):
     if t < .5:
         return 8 * t * t * t * t
     else:
-        1 - 8 * t1 * t1 * t1 * t1
+        return 1 - 8 * t1 * t1 * t1 * t1
 
 
 def in_quint(t):
