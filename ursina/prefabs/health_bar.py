@@ -29,15 +29,15 @@ class HealthBar(Button):
             n = clamp(n, 0, self.max_value)
 
         self._value = n
-
-        self.bar.animate_scale_x(n/self.max_value, duration=self.animation_duration, curve=curve.in_out_bounce)
+        if self.max_value > 0:
+            self.bar.animate_scale_x(n/self.max_value, duration=self.animation_duration, curve=curve.in_out_bounce)
         self.text_entity.text = f'{n} / {self.max_value}'
 
         if self.lines.enabled:
             self.lines.model = Grid(n, 1)
             self.lines.origin = (-.5,-.5)
 
-        if n / self.max_value >= self.scale_y / self.scale_x:
+        if self.max_value > 0 and n / self.max_value >= self.scale_y / self.scale_x:
             aspect_ratio = n/self.max_value*self.scale_x / self.scale_y
             self.bar.model = Quad(radius=self.roundness, aspect=aspect_ratio)
         else:
