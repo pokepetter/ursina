@@ -1,0 +1,421 @@
+<!DOCTYPE HTML>
+<!--generated with sswg-->
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <title>fps_tutorial</title>
+    <link rel="stylesheet" href="sswg.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+<div style="max-width:1200px; margin:auto;">
+<div style="text-align:left;">
+<a href=" documentation.html" class="button">← Back</a><br>
+<h1 id="FPS Tutorial">
+FPS Tutorial
+</h1><br>
+<img src="icons/fps.jpg"></img> <br>
+<br>
+This tutorial walks you through building a simple 3D first‑person shooter in Ursina. We'll start from importing the engine and end with a functional FPS demo including movement, shooting, enemies, and a pause/editor mode.<br>
+<br>
+---<br>
+<br>
+<h2 id="Creating a Window">
+Creating a Window
+</h2><br>
+Start by importing Ursina and creating the application:<br>
+<br>
+<code_block id="code_block_0"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_0)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+app = Ursina()
+</code_block>
+<br>
+---<br>
+<br>
+<h2 id="Using the built‑in FirstPersonController">
+Using the built‑in FirstPersonController
+</h2><br>
+Ursina includes a simple first‑person controller which handles walking, jumping, and mouse look.<br>
+<br>
+<code_block id="code_block_1"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_1)">copy</button><purple>from</purple> ursina.prefabs.first_person_controller <purple>import</purple> FirstPersonController
+player = FirstPersonController(
+&nbsp;&nbsp;&nbsp;&nbsp;<olive>model</olive>=<green>'cube'</green>,
+&nbsp;&nbsp;&nbsp;&nbsp;origin_<olive>y</olive>=-.<yellow>5</yellow>,
+&nbsp;&nbsp;&nbsp;&nbsp;<olive>z</olive>=-<yellow>1</yellow><yellow>0</yellow>,
+&nbsp;&nbsp;&nbsp;&nbsp;speed=<yellow>8</yellow>,
+&nbsp;&nbsp;&nbsp;&nbsp;<olive>collider</olive>=<green>'box'</green>,
+&nbsp;&nbsp;&nbsp;&nbsp;<olive>color</olive>=color.orange
+)
+</code_block>
+<br>
+This gives us basic FPS movement without writing custom logic.<br>
+We also adjust the collider manually so the player has a proper height:<br>
+<br>
+<code_block id="code_block_2"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_2)">copy</button>player.collider = BoxCollider(player, Vec3(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>0</yellow>), Vec3(<yellow>1</yellow>,<yellow>2</yellow>,<yellow>1</yellow>))
+</code_block>
+<br>
+---<br>
+<br>
+<h2 id="Setting Up Lighting and Defaults">
+Setting Up Lighting and Defaults
+</h2><br>
+We enable a lit shader with shadows for all entities:<br>
+<br>
+<code_block id="code_block_3"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_3)">copy</button><purple>from</purple> ursina.shaders <purple>import</purple> lit_with_shadows_shader
+<olive>Entity</olive>.default_shader = lit_with_shadows_shader
+</code_block>
+<br>
+---<br>
+<br>
+<h2 id="Adding a Ground">
+Adding a Ground
+</h2><br>
+Without a collider, the player will fall forever. So let's add a plane:<br>
+<br>
+<code_block id="code_block_4"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_4)">copy</button>ground = <olive>Entity</olive>(
+&nbsp;&nbsp;&nbsp;&nbsp;<olive>model</olive>=<green>'plane'</green>,
+&nbsp;&nbsp;&nbsp;&nbsp;<olive>collider</olive>=<green>'box'</green>,
+&nbsp;&nbsp;&nbsp;&nbsp;<olive>scale</olive>=<yellow>6</yellow><yellow>4</yellow>,
+&nbsp;&nbsp;&nbsp;&nbsp;<olive>texture</olive>=<green>'grass'</green>,
+&nbsp;&nbsp;&nbsp;&nbsp;<olive>texture_scale</olive>=(<yellow>4</yellow>,<yellow>4</yellow>)
+)
+</code_block>
+<br>
+---<br>
+<br>
+<h2 id="Adding a Gun">
+Adding a Gun
+</h2><br>
+We can attach a gun model to the camera so it stays in the player's view.<br>
+<br>
+<code_block id="code_block_5"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_5)">copy</button>gun = <olive>Entity</olive>(
+&nbsp;&nbsp;&nbsp;&nbsp;<olive>model</olive>=<green>'cube'</green>,
+&nbsp;&nbsp;&nbsp;&nbsp;<olive>parent</olive>=camera,
+&nbsp;&nbsp;&nbsp;&nbsp;<olive>position</olive>=(.<yellow>5</yellow>,-.<yellow>2</yellow><yellow>5</yellow>,.<yellow>2</yellow><yellow>5</yellow>),
+&nbsp;&nbsp;&nbsp;&nbsp;<olive>scale</olive>=(.<yellow>3</yellow>,.<yellow>2</yellow>,<yellow>1</yellow>),
+&nbsp;&nbsp;&nbsp;&nbsp;origin_<olive>z</olive>=-.<yellow>5</yellow>,
+&nbsp;&nbsp;&nbsp;&nbsp;<olive>color</olive>=color.red,
+&nbsp;&nbsp;&nbsp;&nbsp;on_cooldown=False
+)
+</code_block>
+<br>
+<h3 id="Muzzle Flash">
+Muzzle Flash
+</h3><br>
+A small, quick flash effect shown when firing:<br>
+<br>
+<code_block id="code_block_6"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_6)">copy</button>gun.muzzle_flash = <olive>Entity</olive>(
+&nbsp;&nbsp;&nbsp;&nbsp;<olive>parent</olive>=gun,
+&nbsp;&nbsp;&nbsp;&nbsp;<olive>model</olive>=<green>'quad'</green>,
+&nbsp;&nbsp;&nbsp;&nbsp;<olive>color</olive>=color.yellow,
+&nbsp;&nbsp;&nbsp;&nbsp;world_<olive>scale</olive>=.<yellow>5</yellow>,
+&nbsp;&nbsp;&nbsp;&nbsp;<olive>z</olive>=<yellow>1</yellow>,
+&nbsp;&nbsp;&nbsp;&nbsp;<olive>enabled</olive>=False
+)
+</code_block>
+<br>
+---<br>
+<br>
+<h2 id="Spawn Some Obstacles">
+Spawn Some Obstacles
+</h2><br>
+We add 16 random blocks for the player to shoot at.<br>
+<br>
+<code_block id="code_block_7"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_7)">copy</button><purple>for</purple> i in <blue>range</blue>(<yellow>1</yellow><yellow>6</yellow>):
+&nbsp;&nbsp;&nbsp;&nbsp;<olive>Entity</olive>(
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<olive>model</olive>=<green>'cube'</green>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;origin_<olive>y</olive>=-.<yellow>5</yellow>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<olive>scale</olive>=<yellow>2</yellow>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<olive>texture</olive>=<green>'brick'</green>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<olive>texture_scale</olive>=(<yellow>1</yellow>,<yellow>2</yellow>),
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x=random.uniform(-<yellow>8</yellow>,<yellow>8</yellow>),
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<olive>z</olive>=random.uniform(-<yellow>8</yellow>,<yellow>8</yellow>) + <yellow>8</yellow>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<olive>collider</olive>=<green>'box'</green>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scale_<olive>y</olive>=random.uniform(<yellow>2</yellow>,<yellow>3</yellow>)
+&nbsp;&nbsp;&nbsp;&nbsp;)
+</code_block>
+<br>
+---<br>
+<br>
+<h2 id="Making an Enemy">
+Making an Enemy
+</h2><br>
+We'll create an enemy that:<br>
+<br>
+* Faces the player<br>
+* Walks toward them<br>
+* Has HP and a health bar<br>
+* Dies when health reaches zero<br>
+<br>
+<code_block id="code_block_8"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_8)">copy</button><purple>from</purple> ursina.prefabs.health_bar <purple>import</purple> HealthBar
+
+class Enemy(<olive>Entity</olive>):
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>def</purple> __init__(self, **kwargs):
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super().__init__(
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<olive>parent</olive>=shootables_parent,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<olive>model</olive>=<green>'cube'</green>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;origin_<olive>y</olive>=-.<yellow>5</yellow>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scale_<olive>y</olive>=<yellow>2</yellow>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<olive>collider</olive>=<green>'box'</green>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<olive>color</olive>=color.light_gray,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**kwargs
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.health_bar = <olive>Entity</olive>(
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<olive>parent</olive>=self,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<olive>model</olive>=<green>'cube'</green>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<olive>color</olive>=color.red,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;world_<olive>scale</olive>=(<yellow>1</yellow>.<yellow>5</yellow>,.<yellow>1</yellow>,.<yellow>1</yellow>),
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<olive>y</olive>=<yellow>1</yellow>.<yellow>2</yellow>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.max_hp = <yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.hp = self.max_hp
+</code_block>
+<br>
+<h3 id="Enemy Behavior">
+Enemy Behavior
+</h3><br>
+<code_block id="code_block_9"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_9)">copy</button><purple>def</purple> update(self):
+&nbsp;&nbsp;&nbsp;&nbsp;dist = distance_xz(player.position, self.position)
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> dist &gt; <yellow>4</yellow><yellow>0</yellow>: return
+
+&nbsp;&nbsp;&nbsp;&nbsp;self.health_bar.alpha = max(<yellow>0</yellow>, self.health_bar.alpha - time.dt)
+&nbsp;&nbsp;&nbsp;&nbsp;self.look_at_<yellow>2</yellow>d(player.position, <green>'y'</green>)
+
+&nbsp;&nbsp;&nbsp;&nbsp;hit_info = raycast(self.world_position + Vec3(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>0</yellow>), self.forward, <yellow>3</yellow><yellow>0</yellow>, <olive>ignore</olive>=(self,))
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> hit_info.entity == player:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> dist &gt; <yellow>2</yellow>:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.position += self.forward * time.dt * <yellow>5</yellow>
+</code_block>
+<br>
+<h3 id="HP Property">
+HP Property
+</h3><br>
+<code_block id="code_block_10"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_10)">copy</button>@property
+<purple>def</purple> hp(self):
+&nbsp;&nbsp;&nbsp;&nbsp;return self._hp
+
+@hp.setter
+<purple>def</purple> hp(self, value):
+&nbsp;&nbsp;&nbsp;&nbsp;self._hp = value
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> value &lt;= <yellow>0</yellow>:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;destroy(self)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return
+
+&nbsp;&nbsp;&nbsp;&nbsp;self.health_bar.world_scale_x = (self.hp / self.max_hp) * <yellow>1</yellow>.<yellow>5</yellow>
+&nbsp;&nbsp;&nbsp;&nbsp;self.health_bar.alpha = <yellow>1</yellow>
+</code_block>
+<br>
+---<br>
+<br>
+<h2 id="Shooting">
+Shooting
+</h2><br>
+We'll detect mouse clicks inside the global <span>update()</span> loop:<br>
+<br>
+<code_block id="code_block_11"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_11)">copy</button><purple>def</purple> update():
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> held_keys[<green>'left mouse'</green>]:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;shoot()
+</code_block>
+<br>
+<h3 id="Shooting Logic">
+Shooting Logic
+</h3><br>
+<code_block id="code_block_12"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_12)">copy</button><purple>def</purple> shoot():
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> <purple>not</purple> gun.on_cooldown:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gun.on_cooldown = True
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gun.muzzle_flash.enabled = True
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<purple>from</purple> ursina.prefabs.ursfx <purple>import</purple> ursfx
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ursfx([(<yellow>0</yellow>.<yellow>0</yellow>,<yellow>0</yellow>.<yellow>0</yellow>), (<yellow>0</yellow>.<yellow>1</yellow>,<yellow>0</yellow>.<yellow>9</yellow>), (<yellow>0</yellow>.<yellow>1</yellow><yellow>5</yellow>,<yellow>0</yellow>.<yellow>7</yellow><yellow>5</yellow>), (<yellow>0</yellow>.<yellow>3</yellow>,<yellow>0</yellow>.<yellow>1</yellow><yellow>4</yellow>), (<yellow>0</yellow>.<yellow>6</yellow>,<yellow>0</yellow>.<yellow>0</yellow>)], volume=.<yellow>5</yellow>, wave=<green>'noise'</green>)
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;invoke(gun.muzzle_flash.disable, dela<olive>y</olive>=.<yellow>0</yellow><yellow>5</yellow>)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;invoke(setattr, gun, <green>'on_cooldown'</green>, False, dela<olive>y</olive>=.<yellow>1</yellow><yellow>5</yellow>)
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> mouse.hovered_entity and <blue>hasattr</blue>(mouse.hovered_entity, <green>'hp'</green>):
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mouse.hovered_entity.hp -= <yellow>1</yellow><yellow>0</yellow>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mouse.hovered_entity.blink(color.red)
+</code_block>
+<br>
+---<br>
+<br>
+<h2 id="Pause and Editor Mode">
+Pause and Editor Mode
+</h2><br>
+You can toggle the EditorCamera with TAB.<br>
+<br>
+<code_block id="code_block_13"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_13)">copy</button><purple>def</purple> pause_input(key):
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> key == <green>'tab'</green>:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;editor_camera.enabled = <purple>not</purple> editor_camera.enabled
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gun.enabled = <purple>not</purple> editor_camera.enabled
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;player.cursor.enabled = <purple>not</purple> editor_camera.enabled
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mouse.locked = <purple>not</purple> editor_camera.enabled
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;editor_camera.position = player.position
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;application.paused = editor_camera.enabled
+
+pause_handler = <olive>Entity</olive>(ignore_paused=True, input=pause_input)
+</code_block>
+<br>
+---<br>
+<br>
+<h2 id="Lighting and Sky">
+Lighting and Sky
+</h2><br>
+<code_block id="code_block_14"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_14)">copy</button>sun = DirectionalLight()
+sun.look_at(Vec3(<yellow>1</yellow>,-<yellow>1</yellow>,-<yellow>1</yellow>))
+Sky()
+</code_block>
+<br>
+---<br>
+<br>
+<h2 id="Creating Enemies">
+Creating Enemies
+</h2><br>
+<code_block id="code_block_15"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_15)">copy</button>enemies = [Enemy(x=x*<yellow>4</yellow>) <purple>for</purple> x in <blue>range</blue>(<yellow>4</yellow>)]
+</code_block>
+<br>
+---<br>
+<br>
+<h2 id="Start the Game">
+Start the Game
+</h2><br>
+<code_block id="code_block_16"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_16)">copy</button>EditorCamera(<olive>enabled</olive>=False)
+app.run()
+</code_block>
+<br>
+---<br>
+<br>
+<h2 id="Result">
+Result
+</h2><br>
+<code_block id="code_block_17"><button class="copy_code_button" onclick="copy_to_clipboard(code_block_17)">copy</button><purple>from</purple> ursina <purple>import</purple> *
+<purple>from</purple> ursina.prefabs.first_person_controller <purple>import</purple> FirstPersonController
+<purple>from</purple> ursina.shaders <purple>import</purple> lit_with_shadows_shader
+
+app = Ursina()
+
+random.seed(<yellow>0</yellow>)
+<olive>Entity</olive>.default_shader = lit_with_shadows_shader
+
+ground = <olive>Entity</olive>(<olive>model</olive>=<green>'plane'</green>, <olive>collider</olive>=<green>'box'</green>, <olive>scale</olive>=<yellow>6</yellow><yellow>4</yellow>, <olive>texture</olive>=<green>'grass'</green>, <olive>texture_scale</olive>=(<yellow>4</yellow>,<yellow>4</yellow>))
+
+editor_camera = EditorCamera(<olive>enabled</olive>=False, ignore_paused=True)
+player = FirstPersonController(<olive>model</olive>=<green>'cube'</green>, <olive>z</olive>=-<yellow>1</yellow><yellow>0</yellow>, <olive>color</olive>=color.orange, origin_<olive>y</olive>=-.<yellow>5</yellow>, speed=<yellow>8</yellow>, <olive>collider</olive>=<green>'box'</green>)
+player.collider = BoxCollider(player, Vec3(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>0</yellow>), Vec3(<yellow>1</yellow>,<yellow>2</yellow>,<yellow>1</yellow>))
+
+gun = <olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, <olive>parent</olive>=camera, <olive>position</olive>=(.<yellow>5</yellow>,-.<yellow>2</yellow><yellow>5</yellow>,.<yellow>2</yellow><yellow>5</yellow>), <olive>scale</olive>=(.<yellow>3</yellow>,.<yellow>2</yellow>,<yellow>1</yellow>), origin_<olive>z</olive>=-.<yellow>5</yellow>, <olive>color</olive>=color.red, on_cooldown=False)
+gun.muzzle_flash = <olive>Entity</olive>(<olive>parent</olive>=gun, <olive>z</olive>=<yellow>1</yellow>, world_<olive>scale</olive>=.<yellow>5</yellow>, <olive>model</olive>=<green>'quad'</green>, <olive>color</olive>=color.yellow, <olive>enabled</olive>=False)
+
+shootables_parent = <olive>Entity</olive>()
+mouse.traverse_target = shootables_parent
+
+
+<purple>for</purple> i in <blue>range</blue>(<yellow>1</yellow><yellow>6</yellow>):
+&nbsp;&nbsp;&nbsp;&nbsp;<olive>Entity</olive>(<olive>model</olive>=<green>'cube'</green>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>scale</olive>=<yellow>2</yellow>, <olive>texture</olive>=<green>'brick'</green>, <olive>texture_scale</olive>=(<yellow>1</yellow>,<yellow>2</yellow>),
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x=random.uniform(-<yellow>8</yellow>,<yellow>8</yellow>),
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<olive>z</olive>=random.uniform(-<yellow>8</yellow>,<yellow>8</yellow>) + <yellow>8</yellow>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<olive>collider</olive>=<green>'box'</green>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scale_y = random.uniform(<yellow>2</yellow>,<yellow>3</yellow>),
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<olive>color</olive>=color.hsv(<yellow>0</yellow>, <yellow>0</yellow>, random.uniform(.<yellow>9</yellow>, <yellow>1</yellow>))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
+
+<purple>def</purple> update():
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> held_keys[<green>'left mouse'</green>]:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;shoot()
+
+<purple>def</purple> shoot():
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> <purple>not</purple> gun.on_cooldown:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<gray># <blue>print</blue>(<green>'shoot'</green>)</gray>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gun.on_cooldown = True
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gun.muzzle_flash.<olive>enabled</olive>=True
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<purple>from</purple> ursina.prefabs.ursfx <purple>import</purple> ursfx
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ursfx([(<yellow>0</yellow>.<yellow>0</yellow>, <yellow>0</yellow>.<yellow>0</yellow>), (<yellow>0</yellow>.<yellow>1</yellow>, <yellow>0</yellow>.<yellow>9</yellow>), (<yellow>0</yellow>.<yellow>1</yellow><yellow>5</yellow>, <yellow>0</yellow>.<yellow>7</yellow><yellow>5</yellow>), (<yellow>0</yellow>.<yellow>3</yellow>, <yellow>0</yellow>.<yellow>1</yellow><yellow>4</yellow>), (<yellow>0</yellow>.<yellow>6</yellow>, <yellow>0</yellow>.<yellow>0</yellow>)], volume=<yellow>0</yellow>.<yellow>5</yellow>, wave=<green>'noise'</green>, pitch=random.uniform(-<yellow>1</yellow><yellow>3</yellow>,-<yellow>1</yellow><yellow>2</yellow>), pitch_change=-<yellow>1</yellow><yellow>2</yellow>, speed=<yellow>3</yellow>.<yellow>0</yellow>)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;invoke(gun.muzzle_flash.disable, dela<olive>y</olive>=.<yellow>0</yellow><yellow>5</yellow>)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;invoke(setattr, gun, <green>'on_cooldown'</green>, False, dela<olive>y</olive>=.<yellow>1</yellow><yellow>5</yellow>)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> mouse.hovered_entity and <blue>hasattr</blue>(mouse.hovered_entity, <green>'hp'</green>):
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mouse.hovered_entity.hp -= <yellow>1</yellow><yellow>0</yellow>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mouse.hovered_entity.blink(color.red)
+
+
+<purple>from</purple> ursina.prefabs.health_bar <purple>import</purple> HealthBar
+
+class Enemy(<olive>Entity</olive>):
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>def</purple> __init__(self, **kwargs):
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super().__init__(<olive>parent</olive>=shootables_parent, <olive>model</olive>=<green>'cube'</green>, scale_<olive>y</olive>=<yellow>2</yellow>, origin_<olive>y</olive>=-.<yellow>5</yellow>, <olive>color</olive>=color.light_gray, <olive>collider</olive>=<green>'box'</green>, **kwargs)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.health_bar = <olive>Entity</olive>(<olive>parent</olive>=self, <olive>y</olive>=<yellow>1</yellow>.<yellow>2</yellow>, <olive>model</olive>=<green>'cube'</green>, <olive>color</olive>=color.red, world_<olive>scale</olive>=(<yellow>1</yellow>.<yellow>5</yellow>,.<yellow>1</yellow>,.<yellow>1</yellow>))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.max_hp = <yellow>1</yellow><yellow>0</yellow><yellow>0</yellow>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.hp = self.max_hp
+
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>def</purple> update(self):
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dist = distance_xz(player.position, self.position)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> dist &gt; <yellow>4</yellow><yellow>0</yellow>:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.health_bar.alpha = max(<yellow>0</yellow>, self.health_bar.alpha - time.dt)
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.look_at_<yellow>2</yellow>d(player.position, <green>'y'</green>)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hit_info = raycast(self.world_position + Vec3(<yellow>0</yellow>,<yellow>1</yellow>,<yellow>0</yellow>), self.forward, <yellow>3</yellow><yellow>0</yellow>, <olive>ignore</olive>=(self,))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<gray># <blue>print</blue>(hit_info.entity)</gray>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> hit_info.entity == player:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> dist &gt; <yellow>2</yellow>:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.position += self.forward * time.dt * <yellow>5</yellow>
+
+&nbsp;&nbsp;&nbsp;&nbsp;@property
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>def</purple> hp(self):
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return self._hp
+
+&nbsp;&nbsp;&nbsp;&nbsp;@hp.setter
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>def</purple> hp(self, value):
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self._hp = value
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> value &lt;= <yellow>0</yellow>:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;destroy(self)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.health_bar.world_scale_x = self.hp / self.max_hp * <yellow>1</yellow>.<yellow>5</yellow>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.health_bar.alpha = <yellow>1</yellow>
+
+<gray># Enemy()</gray>
+enemies = [Enemy(x=x*<yellow>4</yellow>) <purple>for</purple> x in <blue>range</blue>(<yellow>4</yellow>)]
+
+
+<purple>def</purple> pause_input(key):
+&nbsp;&nbsp;&nbsp;&nbsp;<purple>if</purple> key == <green>'tab'</green>:&nbsp;&nbsp;&nbsp;&nbsp;<gray># press tab to toggle edit/play mode</gray>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;editor_camera.enabled = <purple>not</purple> editor_camera.enabled
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;player.visible_self = editor_camera.enabled
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;player.cursor.enabled = <purple>not</purple> editor_camera.enabled
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gun.enabled = <purple>not</purple> editor_camera.enabled
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mouse.locked = <purple>not</purple> editor_camera.enabled
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;editor_camera.position = player.position
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;application.paused = editor_camera.enabled
+
+pause_handler = <olive>Entity</olive>(ignore_paused=True, input=pause_input)
+
+
+sun = DirectionalLight()
+sun.look_at(Vec3(<yellow>1</yellow>,-<yellow>1</yellow>,-<yellow>1</yellow>))
+Sky()
+
+app.run()
+
+</code_block>
+<br>
+<br>
+<br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
+</script>
+<br>
+<br>
+</body>
+</html>

@@ -1,0 +1,86 @@
+#title ursina engine ui
+#insert menu.sswg
+#insert doc_index_sidebar.sswg
+
+### UI
+
+## Button
+
+A clickable UI element with built-in highlight, pressed state, sound hooks, text handling and scaling. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/button.html">Button Documentation</a>
+
+## Draggable
+
+A UI element that can be clicked and dragged using the mouse.
+Useful for movable windows, panels, or inventory items. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/draggable.html">Draggable Documentation</a>
+
+## Tooltip
+
+Displays text when hovering a UI element.
+Can show descriptions, hints or help messages. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/tooltip.html">Tooltip Documentation</a>
+
+## Slider
+
+A horizontal slider for selecting a float value between a minimum and maximum.
+Comes with draggable handle and optional text label. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/slider.html">Slider Documentation</a>
+
+## ThinSlider
+
+A minimal, compact slider variant with reduced visuals.
+Takes less screen space than the regular Slider. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/thin_slider.html">ThinSlider Documentation</a>
+
+## TextField
+
+A simple field containing editable text.
+Not auto-focused; meant for inline or small text modifications. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/text_field.html">TextField Documentation</a>
+
+## InputField
+
+A more advanced input widget that supports user text entry, caret movement, validation and events. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/input_field.html">InputField Documentation</a>
+
+## ContentTypes
+
+Used internally by InputField to categorize input types, such as text, numbers or custom sets. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/content_types.html">ContentTypes Documentation</a>
+
+## Checkbox
+
+A toggleable UI button representing a boolean state.
+Can display checkmarks or custom icons. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/checkbox.html">Checkbox Documentation</a>
+
+## ButtonList
+
+A vertical list of Buttons with automatic layout and optional spacing control.
+Useful for menus, selections or tool panels. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/button_list.html">ButtonList Documentation</a>
+
+## ButtonGroup
+
+A group that ensures only one button is active at a time.
+Ideal for radio-button-like selections. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/button_group.html">ButtonGroup Documentation</a>
+
+## WindowPanel
+
+A draggable, closable UI window with a title bar and customizable content area.
+Suitable for tool panels, options windows, popup UIs. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/window_panel.html">WindowPanel Documentation</a>
+
+## FileBrowser
+
+A UI browser for selecting existing files.
+Shows directory contents visually and emits events on selection. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/file_browser.html">FileBrowser Documentation</a>
+
+## FileBrowserSave
+
+A file browser specialized for saving operations, including filename entry. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/file_browser_save.html">FileBrowserSave Documentation</a>
+
+## DropdownMenu
+
+A clickable menu that expands into a vertical list of selectable items.
+Useful for compact settings controls or tool menus. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/dropdown_menu.html">DropdownMenu Documentation</a>
+
+## RadialMenu
+
+Displays buttons arranged in a circle around a central point.
+Works well for quick-action menus or context radial selectors. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/radial_menu.html">RadialMenu Documentation</a>
+
+## HealthBar
+
+A horizontal bar representing health or any analog value.
+Automatically updates scale based on a numeric input. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/health_bar.html">HealthBar Documentation</a>
