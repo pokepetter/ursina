@@ -9,8 +9,10 @@ from ursina.ursinastuff import DotDict
 
 
 class MainMenu(Entity):
-    def __init__(self, button_class=Button, button_size=Vec2(.25,.075)):
+    def __init__(self, button_class=Button, button_size=Vec2(.25,.075), **kwargs):
         super().__init__(parent=camera.ui)
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
         button_spacing = .075 * 1.25
 
@@ -70,6 +72,7 @@ class MainMenu(Entity):
         for i, e in enumerate((text_scale_slider, volume_slider, options_back)):
             e.y = -i * button_spacing
 
+        target_alpha = self.main_menu.buttons.new.alpha
         for menu in (self.main_menu, self.load_menu, self.options_menu):
             def animate_in(menu=menu):
                 for i, e in enumerate(menu.children):
@@ -77,7 +80,7 @@ class MainMenu(Entity):
                     e.x += .1
                     e.animate_x(e.original_x, delay=i * .05, duration=.1, curve=curve.out_quad)
                     e.alpha = 0
-                    e.animate('alpha', .7, delay=i * .05, duration=.1, curve=curve.out_quad)
+                    e.animate('alpha', target_alpha, delay=i * .05, duration=.1, curve=curve.out_quad)
                     if hasattr(e, 'text_entity'):
                         e.text_entity.alpha = 0
                         e.text_entity.animate('alpha', 1, delay=i * .05, duration=.1)
