@@ -217,6 +217,10 @@ class Text(Entity):
                 rgb_values = (float(e.strip()) for e in tag.split(','))
                 self.current_color = color.rgba(*rgb_values)
 
+            elif tag.startswith('hex('):   # set color based on hex code
+                hex_color = tag[4:-1].strip().strip("'\"")
+                self.current_color = color.hex(hex_color)
+
             if tag.startswith('scale:'):
                 scale = tag.split(':')[1]
                 self.scale_override = float(scale)
@@ -307,6 +311,11 @@ class Text(Entity):
             tn.setShader(value._shader)
             for key, shader_input in value.default_input.items():
                 tn.setShaderInput(key, shader_input)
+
+    # def shader_input_setter(self, value):
+    #     for tn in self.text_nodes:
+    #         for key, shader_input in value.items():
+    #             tn.setShaderInput(key, shader_input)
 
 
     def line_height_getter(self):
@@ -428,7 +437,7 @@ class Text(Entity):
         if self.background_entity:
             destroy(self.background_entity)
 
-        self.background_entity = Entity(parent=self, z=.01)
+        self.background_entity = Entity(parent=self, z=.01, add_to_scene_entities=False)
 
         if isinstance(padding, (int, float, complex)):
             padding = (padding, padding)
@@ -488,7 +497,7 @@ if __name__ == '__main__':
     descr = dedent('''
         <red>Rainstorm<default> <red>Rainstorm<default>
         Summon a rain storm to deal 5 <blue>water<default> damage to everyone, test including yourself.
-        1234 1234 1234 1234 1234 1234 2134 1234 1234 1234 1234 1234 2134 2134 1234 1234 1234 1234
+        1234 1234 1234 1234 1234 <hex('#3d966e')> 1234<default> 2134 1234 1234 1234 1234 1234 2134 2134 1234 1234 1234 1234
         Lasts for 4 rounds.''').strip()
 
     # Text.default_font = 'VeraMono.ttf'
