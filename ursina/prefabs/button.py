@@ -230,7 +230,7 @@ class Button(Entity):
         self.model = self.model.__class__
         self.parent = self.original_parent
         self.text_entity.world_parent = self
-
+        return self
 
 
 if __name__ == '__main__':
