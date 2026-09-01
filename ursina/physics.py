@@ -227,7 +227,6 @@ class PhysicsEntity:
         self.ignore_paused = False
         self.scripts = []
         self.animations = []
-        self.animate = self.entity.animate
         scene.entities.append(self)
         self.forward = self.entity.forward
         self.back = self.entity.back
@@ -621,7 +620,10 @@ if __name__ == '__main__':
 
     e = PhysicsEntity(z=-2)
     sphere = PhysicsEntity(parent=e, model='icosphere', collider='sphere', x=-4, scale=3, color=color.blue, )
-    ground = PhysicsEntity(model='cube', scale=10, collider='box', x=-8, z=-10, rotation_x=-10, y=-5, color=color.gray, name='ground')
+    moving_platform = PhysicsEntity(model='cube', scale=10, collider='box', x=-8, z=-10, rotation_x=-10, y=-5, color=color.gray, name='ground', kinematic=False, static=False)
+
+    PhysicsEntity.animate_y = Entity.animate_y
+    moving_platform.animate_y(.2, duration=2, curve=curve.in_out_expo_boomerang, loop=True)
 
     camera.fov = 100
 
