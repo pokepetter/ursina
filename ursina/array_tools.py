@@ -1,4 +1,6 @@
 from ursina.scripts.property_generator import generate_properties_for_class
+from ursina.vec2 import Vec2, IntVec2
+from ursina.vec3 import Vec3
 
 if __name__ == '__main__':
     from ursina.ursinastuff import _test
@@ -95,7 +97,7 @@ class Array2D(list):
     @property
     def size(self):
         from ursina.vec2 import Vec2
-        return Vec2(self.width, self.height)
+        return IntVec2(self.width, self.height)
 
     def rows_getter(self):
         return [[self[x][y] for x in range(self.width)] for y in range(self.height)]
@@ -149,7 +151,6 @@ class Array2D(list):
     @property
     def bounds(self):
         from ursina.ursinamath import Bounds
-        from ursina.vec3 import Vec3
         min_x = self.width
         min_y = self.height
         max_x = 0
@@ -179,14 +180,14 @@ class Array2D(list):
 
 
     def get_area(self, start, end, allow_out_of_bounds=False):
-        cropped_array = Array2D(width=end[0]-start[0], height=end[1]-start[1], default_value=self.default_value)
-        # print('original_size:', self.width, self.height, 'new_size:', end[0]-start[0], end[1]-start[1])
+        start, end = Vec2(*start), Vec2(*end)
+        cropped_array = Array2D(*(end-start), default_value=self.default_value)
         if not allow_out_of_bounds:
-            for (x, y), _ in enumerate_2d(cropped_array):
-                cropped_array[x][y] = self[int(x+start[0])][int(y+start[1])]
+            for coord, _ in enumerate_2d(cropped_array):
+                cropped_array.set(*coord, self.get(*(start+coord)))
         else:
-            for (x, y), _ in enumerate_2d(cropped_array):
-                cropped_array[x][y] = self.get(x+start[0], y+start[1], default=self.default_value)
+            for coord, _ in enumerate_2d(cropped_array):
+                cropped_array.set(*coord, self.get(*(start+coord)), default=self.default_value)
 
         return cropped_array
 
@@ -255,14 +256,12 @@ class Array3D(list):
 
     @property
     def size(self):
-        from ursina.vec3 import Vec3
         return Vec3(self.width, self.height, self.depth)
 
 
     @property
     def bounds(self):
         from ursina.ursinamath import Bounds
-        from ursina.vec3 import Vec3
         min_x = self.width
         min_y = self.height
         min_z = self.depth
@@ -303,14 +302,33 @@ class Array3D(list):
         for x,y,z, _ in enumerate_3d(self):
             self[x][y][z] = self.default_value
 
+    def get_area(self, start, end, allow_out_of_bounds=False):
+        start, end = Vec3(start), Vec3(end)
+        cropped_array = Array3D(*(end-start), default_value=self.default_value)
+        if not allow_out_of_bounds:
+            for coord, _ in enumerate_3d(cropped_array):
+                cropped_array.set(*coord, self.get(*(start+coord)))
+        else:
+            for coord, _ in enumerate_3d(cropped_array):
+                cropped_array.set(*coord, self.get(*(start+coord)), default=self.default_value)
+
+        return cropped_array
 
     def paste(self, data, x, y, z, ignore=-1):
-        for true_x in range(x, min(self.width, x+data.width)):
-            for true_y in range(y, min(self.height, y+data.height)):
-                for true_z in range(z, min(self.depth, y+data.depth)):
-                    if data[true_x-x][true_y-y][true_z-z] == ignore:
-                        continue
-                    self[true_x][true_y][true_z] = data[true_x-x][true_y-y][true_z-z]
+        for coord, value in enumerate_3d(data):
+            new_coord = Vec3(*coord) + Vec3(x,y,z)
+            if new_coord.x < 0 or new_coord.y < 0 or new_coord.z < 0:
+                continue
+            if new_coord.x > self.width or new_coord.y > self.height or new_coord.z > self.depth:
+                continue
+            self.set(*new_coord, value)
+
+        # for true_x in range(max(0,x), min(self.width, x+data.width)):
+        #     for true_y in range(max(0,y), min(self.height, y+data.height)):
+        #         for true_z in range(max(0,z), min(self.depth, y+data.depth)):
+        #             if data[true_x-x][true_y-y][true_z-z] == ignore:
+        #                 continue
+        #             self[true_x][true_y][true_z] = data[true_x-x][true_y-y][true_z-z]
 
 
 def chunk_list(target_list, chunk_size):
