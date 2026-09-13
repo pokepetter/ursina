@@ -17,7 +17,7 @@ class Button(Entity):
     def __init__(self,
         text='', parent=camera.ui, model=Default, radius=Default, origin=(0,0), texture=Default, color=Default, collider='box',
             text_color=Default, text_origin=(0,0), text_size=1, highlight_text_size=None, highlight_text_color=None,
-            highlight_scale=1, pressed_scale=1,
+            highlight_scale=1, pressed_scale=1, highlight_sound=None, pressed_sound=None,
             disabled=False, shader=unlit_shader, **kwargs):
         super().__init__(parent=parent)
 
@@ -37,8 +37,8 @@ class Button(Entity):
         self.pressed_color = self.color.tint(-.2)
         self.highlight_scale = highlight_scale    # multiplier
         self.pressed_scale = pressed_scale     # multiplier
-        self.highlight_sound = None
-        self.pressed_sound = None
+        self.highlight_sound = highlight_sound
+        self.pressed_sound = pressed_sound
         self.highlight_text_size = highlight_text_size
         self.collider = collider
         self.disabled = disabled    # Used for temporary deactivating buttons without making them invisible, and still have collision.
