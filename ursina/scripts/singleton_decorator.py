@@ -1,20 +1,24 @@
-def singleton(cls):
-    class SingletonProxy:
+from typing import Any, TypeVar, cast
+
+T = TypeVar("T")
+
+def singleton[T](cls: type[T]):
+    class SingletonProxy(type[T]):
         _singleton_instance = None
 
-        def __new__(proxy_cls, *args, **kwargs):
+        def __new__(proxy_cls, *args: Any, **kwargs: Any) -> T:
             if SingletonProxy._singleton_instance is None:
                 SingletonProxy._singleton_instance = cls(*args, **kwargs)
             return SingletonProxy._singleton_instance
 
-        def __init_subclass__(sub_cls, **kwargs):
+        def __init_subclass__(sub_cls, **kwargs: Any) -> None:
             raise TypeError(
                 f"Cannot subclass @{singleton.__name__}-decorated class '{cls.__name__}'."
             )
 
     SingletonProxy.__name__ = cls.__name__
     SingletonProxy.__doc__ = cls.__doc__
-    return SingletonProxy
+    return cast(type[T], SingletonProxy)
 
 
 if __name__ == '__main__':
