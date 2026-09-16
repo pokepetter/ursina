@@ -18,20 +18,17 @@ def ask_to_overwrite(path):
 
 
 PROJECT_FOLDER = Path.cwd()
-SRC_FOLDER = PROJECT_FOLDER / PROJECT_FOLDER.name
-
-print('SRC_FOLDER:', SRC_FOLDER)
 
 @auto_validate_input
 @auto_log_method_calls
 class UrsinaBuild:
-    # TODO: Need __init__  make_command_line_app to work currently, but remove after that's fixed.
     def __init__(self):
         self.ignore_folders = []
         self.ignore_filetypes = []
 
 
     def build(self,
+            source_folder='', # relative. defaults to same as project name (name of current folder)
             builds_folder='builds',
             build_name='',
             platform='Windows',
@@ -45,15 +42,16 @@ class UrsinaBuild:
             python_version='',
             use_cache=True,
         ):
-        if not (SRC_FOLDER/entry_point).exists():
-            raise Exception(f'No {(SRC_FOLDER/entry_point)} found.')
+        self.source_folder = PROJECT_FOLDER / source_folder or PROJECT_FOLDER / PROJECT_FOLDER.name
+        if not (self.source_folder / entry_point).exists():
+            raise Exception(f'No {(self.source_folder/entry_point)} found.')
 
         if isinstance(builds_folder, str):
             builds_folder = PROJECT_FOLDER / builds_folder
         builds_folder.mkdir(exist_ok=True)
-        build_name = build_name if build_name else PROJECT_FOLDER.name
+        build_name = build_name or PROJECT_FOLDER.name
 
-        print('building project:', SRC_FOLDER)
+        print('building project:', self.source_folder)
         start_time = time.time()
 
         if build_engine:
@@ -160,7 +158,8 @@ class UrsinaBuild:
 
         cache_dir = PROJECT_FOLDER / cache_dir
         # if not use_cache:
-        shutil.rmtree(str(cache_dir))
+        if cache_dir.exists():
+            shutil.rmtree(str(cache_dir))
         cache_dir.mkdir(parents=True, exist_ok=True)
         print('     copy modules to:', site_packages)
 
@@ -300,7 +299,7 @@ class UrsinaBuild:
         into = Path(f'{builds_folder}/{build_name}_{platform}/{PROJECT_FOLDER.name}/')
 
         import py_compile
-        for f in SRC_FOLDER.glob(glob_pattern):
+        for f in self.source_folder.glob(glob_pattern):
             print('maybe copy:', f)
             in_ignore = False
             for e in self.ignore_folders:
@@ -311,7 +310,7 @@ class UrsinaBuild:
             if in_ignore:
                 continue
 
-            parents = f.relative_to(SRC_FOLDER).parents
+            parents = f.relative_to(self.source_folder).parents
             if 'scenes' in parents:
                 continue
             py_compile.compile(f, into / f'{f.stem}.pyc')
@@ -333,23 +332,23 @@ class UrsinaBuild:
             shutil.rmtree(str(into))
 
         compressed_textures = []
-        compressed_textures_folder = Path(SRC_FOLDER / 'textures_compressed')
+        compressed_textures_folder = Path(self.source_folder / 'textures_compressed')
         if compressed_textures_folder.exists():
             compressed_textures = list(compressed_textures_folder.glob('**/*.*'))
             compressed_textures = [f.stem for f in compressed_textures if f.suffix not in ignore_filetypes]
 
         compressed_models = []
-        compressed_models_folder = Path(SRC_FOLDER / 'models_compressed')
+        compressed_models_folder = Path(self.source_folder / 'models_compressed')
         if compressed_models_folder.exists():
             compressed_models = list(compressed_models_folder.glob('**/*.bam'))
             compressed_models = [f.stem for f in compressed_models if f.suffix not in ignore_filetypes]
 
 
-        for f in SRC_FOLDER.rglob('*'):
+        for f in self.source_folder.rglob('*'):
             if f.is_dir():
                 continue  # folder creation happens implicitly via mkdir
 
-            rel = f.relative_to(SRC_FOLDER)
+            rel = f.relative_to(self.source_folder)
 
             # folder ignore rule
             if any(ign in rel.parts for ign in ignore_folders):
