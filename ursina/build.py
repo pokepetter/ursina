@@ -25,6 +25,7 @@ class UrsinaBuild:
     def __init__(self):
         self.ignore_folders = []
         self.ignore_filetypes = []
+        self.source_folder = PROJECT_FOLDER / PROJECT_FOLDER.name
 
 
     def build(self,
@@ -191,28 +192,44 @@ class UrsinaBuild:
                     continue
 
                 print('Making wheel from local package:', pkg)
-
                 result = subprocess.run([
                     sys.executable,
                     "-m",
                     "pip",
                     "wheel",
                     str(local_path),
-                    "-w",
+                    "--wheel-dir",
                     str(cache_dir),
                     "--no-deps",
                     "--no-cache-dir"
                 ])
-
                 if result.returncode != 0:
                     print("Failed building local wheel:", pkg)
-
                 continue
 
 
             # download package
-            print("Downloading:", pkg)
+            # print("Checking local cache:", pkg)
+            # result = subprocess.run([
+            #     sys.executable, "-m", "pip", "download",
+            #     "--platform", platform_tag,
+            #     "--python-version", python_major_minor,
+            #     "--implementation", "cp",
+            #     "--abi", abi,
+            #     "--only-binary=:all:",
+            #     "--no-deps",
+            #     "--no-cache-dir",
+            #     "--no-index",
+            #     "--find-links", str(cache_dir),
+            #     "--dest", str(cache_dir),
+            #     pkg
+            # ])
 
+            # if result.returncode == 0:
+            #     print("Using cached package:", pkg)
+            #     continue
+
+            print("Not in cache, downloading:", pkg)
             result = subprocess.run([
                 sys.executable, "-m", "pip", "download",
                 "--platform", platform_tag,
@@ -222,29 +239,24 @@ class UrsinaBuild:
                 "--only-binary=:all:",
                 "--no-deps",
                 "--no-cache-dir",
-                "-d", str(cache_dir),
+                "--find-links", str(cache_dir), # allow "downloading" from local cache_dir
+                "--dest", str(cache_dir),
                 pkg
             ])
 
             if result.returncode != 0:
-                print("Binary failed, trying source:", pkg)
+                raise RuntimeError(f"Failed to download {pkg}")
 
-                subprocess.run([
-                    sys.executable, "-m", "pip", "download",
-                    "--platform", platform_tag,
-                    "--python-version", python_major_minor,
-                    "--implementation", "cp",
-                    "--abi", abi,
-                    "--no-binary=:all:",
-                    "--no-deps",
-                    "--no-cache-dir",
-                    "-d", str(cache_dir),
-                    pkg
-                ])
+            if result.returncode != 0:
+                print("Binary failed, trying to build wheel:", pkg)
+                result = subprocess.run([sys.executable, "-m", "pip", "wheel", "--no-deps", "--no-cache-dir", "--wheel-dir", str(cache_dir), pkg])
+
+                if result.returncode != 0:
+                    raise RuntimeError(f"Failed: {pkg}")
+
 
         print('Extracting wheels...')
-
-        for wheel in cache_dir.glob("*.whl"):
+        for wheel in (list(cache_dir.glob("*.whl")) + list(cache_dir.glob("*.zip"))):
             pkg_name = wheel.name.split("-")[0].replace("-", "_")
 
             # remove old package folder
@@ -269,7 +281,7 @@ class UrsinaBuild:
 
     def build_game(self, builds_folder='builds', build_name='', platform='Windows', overwrite=False, compile_to_pyc=True, copy_assets=True):
         build_name = build_name if build_name else PROJECT_FOLDER.name
-        into = Path(f'{builds_folder}/{build_name}_{platform}/{PROJECT_FOLDER.name}/')
+        into = Path(f'{builds_folder}/{build_name}_{platform}/{self.source_folder.name}/')
 
         if not into.exists():
             overwrite = True
@@ -296,7 +308,7 @@ class UrsinaBuild:
 
     def compile_to_pyc(self, builds_folder='builds', build_name='', platform='Windows', glob_pattern='**//*.py'):
         build_name = build_name if build_name else PROJECT_FOLDER.name
-        into = Path(f'{builds_folder}/{build_name}_{platform}/{PROJECT_FOLDER.name}/')
+        into = Path(f'{builds_folder}/{build_name}_{platform}/{self.source_folder.name}/')
 
         import py_compile
         for f in self.source_folder.glob(glob_pattern):
@@ -327,7 +339,7 @@ class UrsinaBuild:
         ignore_filetypes.extend(extra_ignore_filetypes)
 
         build_name = build_name if build_name else PROJECT_FOLDER.name
-        into = Path(f'{builds_folder}/{build_name}_{platform}/{PROJECT_FOLDER.name}/')
+        into = Path(f'{builds_folder}/{build_name}_{platform}/{self.source_folder.name}/')
         if into.exists():
             shutil.rmtree(str(into))
 
@@ -384,7 +396,7 @@ class UrsinaBuild:
                 chcp 65001
                 set PYTHONIOENCODING=utf-8
 
-                pushd "{PROJECT_FOLDER.name}"
+                pushd "{self.source_folder.name}"
                 call "..\python\python.exe" "{entry_point}{c}" > "..\log.txt" 2>&1
                 popd
                 '''
@@ -395,7 +407,7 @@ class UrsinaBuild:
                 chcp 65001
                 set PYTHONIOENCODING=utf-8
 
-                pushd "{PROJECT_FOLDER.name}"
+                pushd "{self.source_folder.name}"
                 call "..\python\pythonw.exe" "{entry_point}{c}"
                 popd
                 '''
