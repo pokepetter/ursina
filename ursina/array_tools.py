@@ -187,7 +187,7 @@ class Array2D(list):
                 cropped_array.set(*coord, self.get(*(start+coord)))
         else:
             for coord, _ in enumerate_2d(cropped_array):
-                cropped_array.set(*coord, self.get(*(start+coord)), value=self.default_value)
+                cropped_array.set(*coord, self.get(*(start+coord)), self.default_value)
 
         return cropped_array
 
