@@ -179,16 +179,11 @@ class Array2D(list):
         self[x][y] = value
 
 
-    def get_area(self, start, end, allow_out_of_bounds=False):
+    def get_area(self, start, end):
         start, end = Vec2(*start), Vec2(*end)
         cropped_array = Array2D(*(end-start), default_value=self.default_value)
-        if not allow_out_of_bounds:
-            for coord, _ in enumerate_2d(cropped_array):
-                cropped_array.set(*coord, self.get(*(start+coord)))
-        else:
-            for coord, _ in enumerate_2d(cropped_array):
-                cropped_array.set(*coord, self.get(*(start+coord)), self.default_value)
-
+        for coord, _ in enumerate_2d(cropped_array):
+            cropped_array.set(*coord, self.get(*(start+coord)))
         return cropped_array
 
 
@@ -302,16 +297,11 @@ class Array3D(list):
         for x,y,z, _ in enumerate_3d(self):
             self[x][y][z] = self.default_value
 
-    def get_area(self, start, end, allow_out_of_bounds=False):
+    def get_area(self, start, end):
         start, end = Vec3(start), Vec3(end)
         cropped_array = Array3D(*(end-start), default_value=self.default_value)
-        if not allow_out_of_bounds:
-            for coord, _ in enumerate_3d(cropped_array):
-                cropped_array.set(*coord, self.get(*(start+coord)))
-        else:
-            for coord, _ in enumerate_3d(cropped_array):
-                cropped_array.set(*coord, self.get(*(start+coord)), default=self.default_value)
-
+        for coord, _ in enumerate_3d(cropped_array):
+            cropped_array.set(*coord, self.get(*(start+coord)))
         return cropped_array
 
     def paste(self, data, x, y, z, ignore=-1):
