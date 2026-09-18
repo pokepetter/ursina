@@ -39,7 +39,6 @@ class UrsinaBuild:
             make_bat_file=True,
             entry_point='__main__.py',
             overwrite=False,
-            pyproject_path='..',
             python_version='',
             use_cache=True,
         ):
