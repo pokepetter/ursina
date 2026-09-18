@@ -181,7 +181,7 @@ class UrsinaBuild:
 
 
         for pkg in packages:
-
+            print('Getting package:', pkg)
             # local package
             if Path(pkg).exists():
                 local_path = Path(pkg).resolve()
@@ -206,27 +206,17 @@ class UrsinaBuild:
                     print("Failed building local wheel:", pkg)
                 continue
 
+            # package from specific git commit. needs to converted to wheel.
+            if " @ " in pkg:
+                url = pkg.split(" @ ", 1)[1].strip()
+                if url.startswith(("git+", "hg+", "svn+", "bzr+")):
+                    print(f"Building wheel from version control source: {pkg}")
+                    result = subprocess.run([sys.executable, "-m", "pip", "wheel", "--no-deps", "--no-cache-dir", "--wheel-dir", str(cache_dir), pkg])
 
-            # download package
-            # print("Checking local cache:", pkg)
-            # result = subprocess.run([
-            #     sys.executable, "-m", "pip", "download",
-            #     "--platform", platform_tag,
-            #     "--python-version", python_major_minor,
-            #     "--implementation", "cp",
-            #     "--abi", abi,
-            #     "--only-binary=:all:",
-            #     "--no-deps",
-            #     "--no-cache-dir",
-            #     "--no-index",
-            #     "--find-links", str(cache_dir),
-            #     "--dest", str(cache_dir),
-            #     pkg
-            # ])
+                    if result.returncode != 0:
+                        raise RuntimeError(f"Failed to build wheel: {pkg}")
+                    continue
 
-            # if result.returncode == 0:
-            #     print("Using cached package:", pkg)
-            #     continue
 
             print("Not in cache, downloading:", pkg)
             result = subprocess.run([
@@ -255,7 +245,7 @@ class UrsinaBuild:
 
 
         print('Extracting wheels...')
-        for wheel in (list(cache_dir.glob("*.whl")) + list(cache_dir.glob("*.zip"))):
+        for wheel in cache_dir.glob("*.whl"):
             pkg_name = wheel.name.split("-")[0].replace("-", "_")
 
             # remove old package folder
@@ -412,17 +402,6 @@ class UrsinaBuild:
                 '''
             ))
         return self
-
-    # make exe
-    # import subprocess
-    # import importlib
-    # spec = importlib.util.find_spec('ursina')
-    # ursina_path = Path(spec.origin).parent
-    # subprocess.call([
-    #     f'{ursina_path}\\scripts\\_bat_to_exe.bat',
-    #     f'{build_folder}\\{project_name}.bat',
-    #     f'\\build\\{PROJECT_FOLDER.stem}.exe'
-    #     ])
 
 
 if __name__ == '__main__':
