@@ -1,4 +1,4 @@
-from ursina import Entity, Text, camera, color, mouse, BoxCollider, Sequence, Func, Vec2, Vec3, scene, Default, Audio
+from ursina import Entity, Text, camera, color, mouse, BoxCollider, Sequence, Func, Vec2, Vec3, scene, Default, Audio, input_handler
 from ursina import color as color_module
 from ursina.models.procedural.quad import Quad
 from ursina.shaders.unlit_shader import unlit_shader
@@ -18,7 +18,7 @@ class Button(Entity):
         text='', parent=camera.ui, model=Default, radius=Default, origin=(0,0), texture=Default, color=Default, collider='box',
             text_color=Default, text_origin=(0,0), text_size=1, highlight_text_size=None, highlight_text_color=None,
             highlight_scale=1, pressed_scale=1, highlight_sound=None, pressed_sound=None,
-            disabled=False, shader=unlit_shader, **kwargs):
+            disabled=False, shader=unlit_shader, shortcut='', **kwargs):
         super().__init__(parent=parent)
 
         for key in ('scale', 'scale_x', 'scale_y', 'scale_z', 'world_scale', 'world_scale_x', 'world_scale_y', 'world_scale_z', 'transform', 'world_transform'):
@@ -27,9 +27,7 @@ class Button(Entity):
 
         self.radius = Button.default_radius if radius is Default else radius
         self.model = Button.default_model if model is Default else model
-
         self.origin = origin
-
         self.texture = Button.default_texture if texture is Default else texture
         self.color = color = Button.default_color if color is Default else color
 
@@ -42,6 +40,7 @@ class Button(Entity):
         self.highlight_text_size = highlight_text_size
         self.collider = collider
         self.disabled = disabled    # Used for temporary deactivating buttons without making them invisible, and still have collision.
+        self.shortcut = shortcut
 
         self.text_entity = None
         self.text_origin = text_origin
@@ -175,6 +174,11 @@ class Button(Entity):
             else:
                 self.model.setColorScale(self.color)
                 self.model.setScale(Vec3(1,1,1))
+
+        if self.shortcut and self.on_click:
+            combined_key = input_handler.get_combined_key(key)
+            if combined_key == self.shortcut:
+                self.on_click()
 
 
     def on_mouse_enter(self):   # Handles color tinting, scale change, audio and Tooltip when hovering the Button
