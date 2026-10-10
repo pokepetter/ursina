@@ -42,7 +42,7 @@ class UrsinaBuild:
             python_version='',
             use_cache=True,
         ):
-        self.source_folder = PROJECT_FOLDER / source_folder or PROJECT_FOLDER / PROJECT_FOLDER.name
+        self.source_folder = PROJECT_FOLDER / source_folder if source_folder else PROJECT_FOLDER / PROJECT_FOLDER.name
         if not (self.source_folder / entry_point).exists():
             raise Exception(f'No {(self.source_folder/entry_point)} found.')
 
