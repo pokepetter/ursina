@@ -96,7 +96,7 @@ if __name__ == '__main__':
     text_entity = Text()
     print('---------------', input_handler.gamepads)
     [print('-----------', gamepad) for gamepad in input_handler.gamepads]
- 
+
     gamepad_list = Text('\n'.join([f'{i}) {gamepad}' for i, gamepad in enumerate(input_handler.gamepads)]), x=-.5, y=.3)
     player = Entity(model='cube', color=color.azure)
 

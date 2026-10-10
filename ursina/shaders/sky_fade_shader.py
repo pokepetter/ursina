@@ -156,5 +156,4 @@ if __name__ == '__main__':
         Entity(model='cube', scale=(25,random.randint(10,150),25), x=-1000+(random.random()*2000), z=-1000+(random.random()*2000), origin_y=-.5, shader=sky_fade_shader, shader_input=dict(sky_texture=sky.texture))
     # camera.fov = 100
     # camera.clip_plane_far = 1000
-    print('-----------', camera.clip_plane_far)
     app.run()

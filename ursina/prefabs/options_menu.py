@@ -122,7 +122,6 @@ class OptionsMenu(Entity):
                 self.key_picker.old_key = field.text
                 self.key_picker.on_submit = on_picked_key
             field.on_click = open_key_picker
-            print('-----------', str(key))
             self.rebind_fields[key] = field
 
             # rebind_fields.append(text)
