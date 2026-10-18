@@ -236,7 +236,7 @@ def combine(curve_a, curve_b, split_at):
         if t < split_at:
             return curve_a(t / split_at)
         else:
-            return curve_b(min((t / (1-split_at)) - split_at, 1))
+            return curve_b(min((t - split_at) / (1-split_at), 1))
     return _new_curve_func
 
 def reverse(curve_function):
