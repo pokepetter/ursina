@@ -1,0 +1,208 @@
+<!DOCTYPE HTML>
+<!--generated with sswg-->
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <title> ursina engine ui</title>
+    <link rel="stylesheet" href="sswg.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+<div style="max-width:1200px; margin:auto;">
+<div style="text-align:left;">
+<br>
+<a href="index.html"><img src="ursina_logo_wireframe.webp" style="width:50px; height:auto; margin-right:10px;"/></a> <a href=" installation.html" class="button">Download</a> <a href=" documentation.html" class="button">Documentation</a> <a href=" api_reference_v8_2_0/index.html" class="button">API Reference</a> <a href=" samples.html" class="button">Samples</a> <a href=" asset_store.html" class="button">Asset Store</a> <a href=" donate.html" class="button">Donate</a><br>
+<div class="sidebar"><br>
+<b><a href="documentation.html">Documentation</a></b><br>
+<br>
+<a href="installation.html">Installation</a><br>
+<br>
+<a href="entity_basics.html">Entity Basics</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#What is an Entity?">What is an Entity?</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Model">Model</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Texture">Texture</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Color">Color</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Position">Position</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Rotation">Rotation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Scale">Scale</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Update">Update</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Input">Input</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Mouse Input">Mouse Input</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="entity_basics.html#Other Magic Functions">Other Magic Functions</a><br>
+<br>
+<a href="coordinate_system.html">Coordinate System</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#Entity Coordinate System">Entity Coordinate System</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#UI Coordinate System">UI Coordinate System</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#Rotation">Rotation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="coordinate_system.html#Origin">Origin</a><br>
+<br>
+<a href="collision.html">Collision</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Adding Colliders">Adding Colliders</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#raycast()">raycast()</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#boxcast()">boxcast()</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#intersects()">intersects()</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#HitInfo">HitInfo</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Distance Check">Distance Check</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="collision.html#Mouse Collision">Mouse Collision</a><br>
+<br>
+<a href="text.html">Text</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Text">Text</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Font and Resolution">Font and Resolution</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="text.html#Changing Text of Prefabs">Changing Text of Prefabs</a><br>
+<br>
+<a href="animation.html">Animation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#SpriteSheetAnimation (2D)">SpriteSheetAnimation (2D)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#Animation (2D)">Animation (2D)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#Actor (3D)">Actor (3D)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="animation.html#FrameAnimation3D (3D)">FrameAnimation3D (3D)</a><br>
+<br>
+<br>
+<a href="networking.html">Networking</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#~~ Networking Concepts ~~">~~ Networking Concepts ~~</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#How Data Goes from Point A to Point B">How Data Goes from Point A to Point B</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#IP Addresses">IP Addresses</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Ports">Ports</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Communication Protocols">Communication Protocols</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#References">References</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#~~ Game Networking Concepts ~~">~~ Game Networking Concepts ~~</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Multiplayer Preparations">Multiplayer Preparations</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Sending Inputs">Sending Inputs</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Sending Game State">Sending Game State</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Client Authoritative">Client Authoritative</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Server Authoritative">Server Authoritative</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Deterministic Lockstep">Deterministic Lockstep</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Snapshot Interpolation">Snapshot Interpolation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Server Side Lag Compensation">Server Side Lag Compensation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Client Side Prediction">Client Side Prediction</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#References">References</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#~~ Introduction to Ursina Networking ~~">~~ Introduction to Ursina Networking ~~</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Limitations">Limitations</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Basics">Basics</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="networking.html#Samples">Samples</a><br>
+<br>
+<a href="faq.html">F.A.Q.</a><br>
+<br>
+<a href="building.html">Build and Release</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="building.html#Building Your App with ursina.build">Building Your App with ursina.build</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="building.html#Building with Nuitka">Building with Nuitka</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <a href="building.html#Building Your App with auto-py-to-exe">Building Your App with auto-py-to-exe</a><br>
+<br>
+<br>
+</div><br>
+<br>
+<h1 id="UI">
+UI
+</h1><br>
+<h2 id="Button">
+Button
+</h2><br>
+A clickable UI element with built-in highlight, pressed state, sound hooks, text handling and scaling. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/button.html">Button Documentation</a><br>
+<br>
+<h2 id="Draggable">
+Draggable
+</h2><br>
+A UI element that can be clicked and dragged using the mouse.<br>
+Useful for movable windows, panels, or inventory items. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/draggable.html">Draggable Documentation</a><br>
+<br>
+<h2 id="Tooltip">
+Tooltip
+</h2><br>
+Displays text when hovering a UI element.<br>
+Can show descriptions, hints or help messages. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/tooltip.html">Tooltip Documentation</a><br>
+<br>
+<h2 id="Slider">
+Slider
+</h2><br>
+A horizontal slider for selecting a float value between a minimum and maximum.<br>
+Comes with draggable handle and optional text label. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/slider.html">Slider Documentation</a><br>
+<br>
+<h2 id="ThinSlider">
+ThinSlider
+</h2><br>
+A minimal, compact slider variant with reduced visuals.<br>
+Takes less screen space than the regular Slider. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/thin_slider.html">ThinSlider Documentation</a><br>
+<br>
+<h2 id="TextField">
+TextField
+</h2><br>
+A simple field containing editable text.<br>
+Not auto-focused; meant for inline or small text modifications. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/text_field.html">TextField Documentation</a><br>
+<br>
+<h2 id="InputField">
+InputField
+</h2><br>
+A more advanced input widget that supports user text entry, caret movement, validation and events. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/input_field.html">InputField Documentation</a><br>
+<br>
+<h2 id="ContentTypes">
+ContentTypes
+</h2><br>
+Used internally by InputField to categorize input types, such as text, numbers or custom sets. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/content_types.html">ContentTypes Documentation</a><br>
+<br>
+<h2 id="Checkbox">
+Checkbox
+</h2><br>
+A toggleable UI button representing a boolean state.<br>
+Can display checkmarks or custom icons. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/checkbox.html">Checkbox Documentation</a><br>
+<br>
+<h2 id="ButtonList">
+ButtonList
+</h2><br>
+A vertical list of Buttons with automatic layout and optional spacing control.<br>
+Useful for menus, selections or tool panels. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/button_list.html">ButtonList Documentation</a><br>
+<br>
+<h2 id="ButtonGroup">
+ButtonGroup
+</h2><br>
+A group that ensures only one button is active at a time.<br>
+Ideal for radio-button-like selections. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/button_group.html">ButtonGroup Documentation</a><br>
+<br>
+<h2 id="WindowPanel">
+WindowPanel
+</h2><br>
+A draggable, closable UI window with a title bar and customizable content area.<br>
+Suitable for tool panels, options windows, popup UIs. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/window_panel.html">WindowPanel Documentation</a><br>
+<br>
+<h2 id="FileBrowser">
+FileBrowser
+</h2><br>
+A UI browser for selecting existing files.<br>
+Shows directory contents visually and emits events on selection. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/file_browser.html">FileBrowser Documentation</a><br>
+<br>
+<h2 id="FileBrowserSave">
+FileBrowserSave
+</h2><br>
+A file browser specialized for saving operations, including filename entry. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/file_browser_save.html">FileBrowserSave Documentation</a><br>
+<br>
+<h2 id="DropdownMenu">
+DropdownMenu
+</h2><br>
+A clickable menu that expands into a vertical list of selectable items.<br>
+Useful for compact settings controls or tool menus. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/dropdown_menu.html">DropdownMenu Documentation</a><br>
+<br>
+<h2 id="RadialMenu">
+RadialMenu
+</h2><br>
+Displays buttons arranged in a circle around a central point.<br>
+Works well for quick-action menus or context radial selectors. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/radial_menu.html">RadialMenu Documentation</a><br>
+<br>
+<h2 id="HealthBar">
+HealthBar
+</h2><br>
+A horizontal bar representing health or any analog value.<br>
+Automatically updates scale based on a numeric input. <a href="https://www.ursinaengine.org/api_reference_v8_2_0/health_bar.html">HealthBar Documentation</a><br>
+<br>
+<script>
+function copy_to_clipboard(containerid) {
+    var range = document.createRange()
+    range.selectNode(containerid)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    document.execCommand("copy")
+    window.getSelection().removeAllRanges()
+}
+</script>
+<br>
+<br>
+</body>
+</html>
