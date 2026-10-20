@@ -72,7 +72,6 @@ def MeshCollider(mesh):
     return BulletTriangleMeshShape(output, dynamic=False)
 
 
-
 _line_model = Mesh(vertices=[Vec3(0,0,0), Vec3(0,0,1)], mode='line')
 from ursina.hit_info import HitInfo
 
@@ -169,6 +168,7 @@ class PhysicsEntity:
     enable = Entity.enable
     disable = Entity.disable
     add_script = Entity.add_script
+    get_descendants = Entity.get_descendants
 
     def __init__(self, mass=0, kinematic=None, friction=.5, mask=0x1, collider=None, world=physics_handler.world, lock_axis=Vec3.zero, lock_rotation=Vec3.zero,
             enabled=True,
@@ -407,6 +407,8 @@ class PhysicsEntity:
     def scale_y_setter(self, value):
         self.scale = Vec3(self.scale.x, value, self.scale.z)
 
+    def _has_enabled_ancestor_getter(self):
+        return self.entity._has_enabled_ancestor
 
     def mass_getter(self):
         return self.node.getMass()
