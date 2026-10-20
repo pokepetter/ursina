@@ -200,7 +200,7 @@ class Ursina(ShowBase):
                 continue
             if application.paused and e.ignore_paused is False:
                 continue
-            if e.has_disabled_ancestor():
+            if not e._has_enabled_ancestor:
                 continue
 
             if hasattr(e, 'update') and callable(e.update):

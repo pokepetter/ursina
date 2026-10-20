@@ -106,6 +106,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
         self.texture_scale = texture_scale
         self.texture_offset = texture_offset
         self.enabled = enabled
+        self._has_enabled_ancestor = parent is scene or getattr(parent, 'enabled', True)
         self.eternal = eternal
         self.collider = collider
 
@@ -192,6 +193,10 @@ class Entity(NodePath, metaclass=PostInitCaller):
         return getattr(self, '_enabled', True)
 
     def enabled_setter(self, value):    # disabled entities will not be visible nor run code.
+        # should be faster than calling has_disabled_ancestor() on each entity every frame.
+        for descendant in self.get_descendants():
+            descendant._has_enabled_ancestor = value
+
         original_value = self.enabled
         self._enabled = value
 
@@ -202,10 +207,10 @@ class Entity(NodePath, metaclass=PostInitCaller):
             self.on_disable()
 
         if value:
-            if hasattr(self, 'is_singleton') and not self.is_singleton():
+            if hasattr(self, 'is_singleton') and not self.is_singleton() and not self.is_empty():
                 self.unstash()
         else:
-            if hasattr(self, 'is_singleton') and not self.is_singleton():
+            if hasattr(self, 'is_singleton') and not self.is_singleton() and not self.is_empty():
                 self.stash()
 
         for loose_child in self.loose_children:
