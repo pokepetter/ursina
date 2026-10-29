@@ -1513,6 +1513,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
             self.org_shader = self.shader
             self.org_texture = self.texture
             self.org_color = self.color
+            self.org_shader_input = {key: value for key, value in self.shader_input.items()}
 
         self.shader = shader
         self.texture = None
@@ -1523,8 +1524,7 @@ class Entity(NodePath, metaclass=PostInitCaller):
             self.shader = self.org_shader
             self.texture = self.org_texture
             self.color = self.org_color
-
-        # return self.animate_color(value, duration=duration, delay=delay, curve=curve, interrupt=interrupt, **kwargs)
+            self.shader_input = self.org_shader_input
 
 
 
