@@ -244,6 +244,13 @@ def reverse(curve_function):
         return curve_function(1-t)
     return _new_curve_func
 
+def boomerang(curve_function):
+    def _new_curve_func(t):
+        if t < .5:
+            return curve_function(t*2)
+        else:
+            return curve_function(1-((t-.5)*2))
+    return _new_curve_func
 
 # generate boomeranged versions of all the functions
 import sys
