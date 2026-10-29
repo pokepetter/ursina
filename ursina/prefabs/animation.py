@@ -10,18 +10,12 @@ class Animation(Sprite):
             texture = load_texture(name)
 
         if texture and texture.path.suffix == '.gif':   # load gif
-            import imageio
-            from PIL import Image
-            path = load_texture(name).path
-            gif = imageio.get_reader(path)
-            img = Image.open(path)
-            img.seek(0)
+            from PIL import Image, ImageSequence
+            self.frames = []
             frame_times = []
-            for i in range(len(gif)):
-                img.seek(i)
-                frame_times.append(img.info['duration'] / 1000)
-
-            self.frames = [Texture(Image.fromarray(frame)) for frame in gif]
+            for frame in ImageSequence.Iterator(Image.open(texture.path)):
+                self.frames.append(Texture(frame.convert('RGBA')))
+                frame_times.append(frame.info.get('duration', 1000/fps) / 1000)
 
         else:   # load image sequence
             texture_folders = (application.textures_compressed_folder, application.asset_folder, application.internal_textures_folder)
