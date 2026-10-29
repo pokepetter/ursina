@@ -57,6 +57,7 @@ def play(track_name, fade_out_duration=2, start=0, volume=1, track_group:Literal
     current_track = current_music_track if track_group == 'music' else current_ambiance_track
 
     if not prev_track:  # if no music/ambiance playing, start immediately
+        # if tracks.get('current_track', None):
         tracks[current_track].play(start)
         tracks[current_track].volume = volume
         return
