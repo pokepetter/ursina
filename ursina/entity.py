@@ -260,6 +260,8 @@ class Entity(NodePath, metaclass=PostInitCaller):
             self._model = Quad(aspect=self.scale.x/self.scale.y, radius=getattr(self, 'radius', .1), for_button=True)
 
         elif value is NineSlice:
+            if self.model:
+                self.model.removeNode()
             self._model = NineSlice(entity_scale=self.scale.xy, radius=getattr(self, 'radius', .1))
 
         if self._model:
