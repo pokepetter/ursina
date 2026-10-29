@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ursina"
-version = "8.2.0"
+version = "8.4.0"
 description = "An easy to use game engine/framework for python."
 authors = [
     {name = "Petter Amland", email = "pokepetter@gmail.com"}
@@ -23,6 +23,9 @@ dependencies = [
 
 [tool.setuptools]
 include-package-data = false
+
+[tool.setuptools.dynamic]
+version = {attr = "ursina.__version__"}
 
 [tool.setuptools.packages.find]
 where = ["."]
@@ -44,7 +47,6 @@ homepage = "https://github.com/pokepetter/ursina"
 
 [project.optional-dependencies]
 extra = [
-    "imageio>=2.37.2",
     "numpy>=2.3.5",
     "psutil>=7.1.3",
     "thumbhash-python>=1.0.1",
@@ -53,7 +55,6 @@ extra = [
 
 [dependency-groups]
 dev = [
-    "imageio>=2.37.0",
     "numpy>=2.2.3",
     "psutil>=7.0.0",
     "ruff>=0.14.9",
