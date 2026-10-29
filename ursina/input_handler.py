@@ -151,6 +151,12 @@ def get_combined_key(key):
     return ''.join(e+'+' for e in ('control', 'shift', 'alt') if held_keys[e] and not e == key) + key
 
 
+def get_key_for_action(name): # name could for example be 'attack', in which case this could return for example 'A', the name of the actual key. Useful for input hints.
+    for input_key, bindings in rebinds.items():
+        if name in bindings:
+            return input_key
+    return name
+
 
 if __name__ == '__main__':
     from ursina import *
