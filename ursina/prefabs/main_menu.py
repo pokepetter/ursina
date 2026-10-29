@@ -11,6 +11,7 @@ from ursina.ursinastuff import DotDict
 class MainMenu(Entity):
     def __init__(self, button_class=Button, button_size=Vec2(.25,.075), **kwargs):
         super().__init__(parent=camera.ui)
+        self.button_size= button_size
         for key, value in kwargs.items():
             setattr(self, key, value)
 
@@ -21,9 +22,6 @@ class MainMenu(Entity):
         self.load_menu = Entity(parent=self.menu_parent)
         # self.options_menu = Entity(parent=self.menu_parent)
         from ursina.prefabs.options_menu import OptionsMenu
-        from hyposolus import apply_rebinds
-        apply_rebinds()
-        print('...........................', len(input_handler.rebinds))
         self.options_menu = OptionsMenu(parent=camera.ui, enabled=False)
 
         self.state_handler = Animator({
@@ -38,7 +36,7 @@ class MainMenu(Entity):
             new = button_class(text='New Game', scale=button_size, on_click=Func(print_on_screen, 'Assign MainMenu().main_menu.buttons.new.on_click', origin=(0,0), position=(0,.1,-1), color=color.red)),
             load = button_class(text='Load', scale=button_size, on_click=Func(setattr, self.state_handler, 'state', 'load_menu')),
             options = button_class(text='Options', scale=button_size, on_click=Func(setattr, self.state_handler, 'state', 'options_menu')),
-            quit = button_class(text='Quit', scale=button_size, on_click=Sequence(Wait(.01), Func(application.quit))),
+            quit = button_class(text='Quit', scale=button_size, on_click=application.quit),
         )
 
         for i, (name, button) in enumerate(self.main_menu.buttons.items()):

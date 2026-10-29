@@ -105,10 +105,8 @@ class Slider(Entity):
 
             self._prev_value = t
 
-        invoke(self._update_text, delay=1/60)
+        self.knob.text_entity.text = str(round(self.value, 2))
 
-    def _update_text(self):
-            self.knob.text_entity.text = str(round(self.value, 2))
 
 
     def __setattr__(self, name, value):

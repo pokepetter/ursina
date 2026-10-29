@@ -16,6 +16,7 @@ button_spacing = .05
 class OptionsMenu(Entity):
     default_values = dict(parent=camera.ui)
     def __init__(self, z=-100, on_close:callable=Func(print, 'close'), **kwargs):
+        Entity.ignore_paused = True
         super().__init__(z=z, **(__class__.default_values | kwargs))
         self.on_close = on_close
         self.bg = Entity(parent=self, z=.01, scale=Vec2(1.1,.875), color=hsv(0,0,.1))
@@ -100,7 +101,7 @@ class OptionsMenu(Entity):
                 if e not in input_handler.Keys and len(e.split(' ',1)[0]) > 1 and not e.endswith(' up') and not e.endswith(' hold') and e != 'space':
                     rebinds[e] = input_key
 
-        longest_word = sorted([(len(w), w) for w in rebinds.keys()], reverse=True)[0][1]
+        longest_word = sorted([(len(w), w) for w in rebinds.keys()], reverse=True)[0][1] if rebinds else ''
         max_width = Text.get_width(longest_word+'    ', Text.default_monospace_font)
         # print('max_width:', max_width, longest_word)
 
@@ -160,14 +161,16 @@ class OptionsMenu(Entity):
         def on_tab_changed():
             self.state_handler.state = tabs.value.strip().lower()
         tabs.on_value_changed = on_tab_changed
+        Entity.ignore_paused = False
         # # options_back = MenuButton(parent=options_menu, text='Back', x=-.25, origin_x=-.5, on_click=Func(setattr, state_handler, 'state', 'main_menu'))
 
 
 
 if __name__ == '__main__':
-    from ursina import Ursina, window, Button
+    from ursina import Ursina, window, Button, application
     app = Ursina()
     # Text.default_font = 'VeraMono.ttf'
+    application.paused = True
     window.color = hsv(0, 0, 10/255)
     Button.default_color = color._24
     Button.default_highlight_color = color._32
