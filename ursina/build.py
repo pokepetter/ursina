@@ -41,6 +41,7 @@ class UrsinaBuild:
             overwrite=False,
             python_version='',
             use_cache=True,
+            ignore_paths=[],
         ):
         self.source_folder = PROJECT_FOLDER / source_folder if source_folder else PROJECT_FOLDER / PROJECT_FOLDER.name
         if not (self.source_folder / entry_point).exists():
@@ -50,6 +51,7 @@ class UrsinaBuild:
             builds_folder = PROJECT_FOLDER / builds_folder
         builds_folder.mkdir(exist_ok=True)
         build_name = build_name or PROJECT_FOLDER.name
+        ignore_paths = ignore_paths or []
 
         print('building project:', self.source_folder)
         start_time = time.time()
@@ -58,7 +60,7 @@ class UrsinaBuild:
             self.build_engine(builds_folder=builds_folder, build_name=build_name, platform=platform, overwrite=overwrite, python_version=python_version)
 
         if build_game:
-            self.build_game(builds_folder=builds_folder, build_name=build_name, platform=platform, overwrite=overwrite, compile_to_pyc=compile_to_pyc)
+            self.build_game(builds_folder=builds_folder, build_name=build_name, platform=platform, overwrite=overwrite, compile_to_pyc=compile_to_pyc, ignore_paths=ignore_paths)
 
         if make_bat_file:
             self.make_bat_file(builds_folder=builds_folder, build_name=build_name, platform=platform, entry_point=entry_point, is_pyc=compile_to_pyc)
@@ -268,7 +270,7 @@ class UrsinaBuild:
 
 
 
-    def build_game(self, builds_folder='builds', build_name='', platform='Windows', overwrite=False, compile_to_pyc=True, copy_assets=True):
+    def build_game(self, builds_folder='builds', build_name='', platform='Windows', overwrite=False, compile_to_pyc=True, copy_assets=True, ignore_paths=[]):
         build_name = build_name if build_name else PROJECT_FOLDER.name
         into = Path(f'{builds_folder}/{build_name}_{platform}/{self.source_folder.name}/')
 
@@ -284,9 +286,10 @@ class UrsinaBuild:
         into.mkdir(exist_ok=True, parents=True)
 
         extra_ignore_filetypes = ['.py'] if compile_to_pyc else ['.pyc']
+        ignore_paths = ignore_paths or []
 
         if copy_assets:
-            self.copy_assets(builds_folder=builds_folder, build_name=build_name, platform=platform, extra_ignore_filetypes=extra_ignore_filetypes)
+            self.copy_assets(builds_folder=builds_folder, build_name=build_name, platform=platform, extra_ignore_filetypes=extra_ignore_filetypes, ignore_paths=ignore_paths)
 
         if compile_to_pyc: # make sur to do this after copying assets since it deletes the folder
             self.compile_to_pyc()
@@ -304,7 +307,7 @@ class UrsinaBuild:
             print('maybe copy:', f)
             in_ignore = False
             for e in self.ignore_folders:
-                if e in [str(e.name) for e  in f.parents]:
+                if e in [str(e.name) for e in f.parents]:
                     in_ignore = True
                     print('skip compiling:', f)
                     break
@@ -321,10 +324,12 @@ class UrsinaBuild:
             builds_folder='builds',
             build_name='',
             platform='Windows',
-            ignore_folders=['builds', '.venv', 'build.bat','__pycache__','.git'],
-            ignore_filetypes=['.gitignore', '.psd', '.zip', '.blend', '.blend1', '.kra', '.kra~'],
+            ignore_paths=[],
+            ignore_folders=['builds', '.venv', 'build.bat','__pycache__','.git',],
+            ignore_filetypes=['.gitignore', '.psd', '.zip', '.blend', '.blend1', '.kra', '.kra~', '*.egg-info', ],
             extra_ignore_filetypes=[],
         ):
+        # ignore_paths = ignore_paths or []
         ignore_filetypes.extend(extra_ignore_filetypes)
 
         build_name = build_name if build_name else PROJECT_FOLDER.name
@@ -346,6 +351,9 @@ class UrsinaBuild:
 
 
         for f in self.source_folder.rglob('*'):
+            if f in ignore_paths:
+                print('ignore path:', f)
+                continue
             if f.is_dir():
                 continue  # folder creation happens implicitly via mkdir
 
@@ -370,7 +378,7 @@ class UrsinaBuild:
             dest = into / rel
             dest.parent.mkdir(parents=True, exist_ok=True)
 
-            print('copy:', rel, '->', dest)
+            # print('copy:', rel, '->', dest)
             shutil.copy2(f, dest)
 
 
