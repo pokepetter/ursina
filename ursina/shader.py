@@ -3,7 +3,7 @@ from panda3d.core import Shader as Panda3dShader
 from ursina import application
 
 
-default_vertex_shader = '''
+default_program = '''
 #version 430
 uniform mat4 p3d_ModelViewProjectionMatrix;
 in vec4 p3d_Vertex;
@@ -68,7 +68,7 @@ class Shader:
     HLSL = Panda3dShader.SL_HLSL
     SPIR_V = Panda3dShader.SL_SPIR_V
 
-    def __init__(self, name='untitled_shader', language=GLSL, vertex=default_vertex_shader, fragment=default_fragment_shader, geometry='', **kwargs):
+    def __init__(self, name='untitled_shader', language=GLSL, vertex=default_program, fragment=default_fragment_shader, geometry='', **kwargs):
 
         if not ('__compiled__' in globals() and str(globals()['__compiled__'].__class__.__name__) == '__nuitka_version__'):
             from inspect import getframeinfo, stack
@@ -129,94 +129,89 @@ class Shader:
 
 
     def __add__(self, other):
-        self_vertex_lines = self.vertex.split('\n')
-        vertex_version = ''
-        def get_version(shader_code):
-            return shader_code.split('#version', 1)[1].split('\n')[0]
+        combined_shader = Shader()
+        for program_name in ('vertex', 'fragment'):
+            program = getattr(self, program_name)
+            program_other = getattr(other, program_name)
 
-        this_version, other_version = get_version(self.vertex), get_version(other.vertex)
-        if this_version != other_version:
-            raise Exception(f'Vertex shaders does not have matching versions: {this_version}, {other_version}')
-        # if get_version(self.fragment) != get_version(other.fragment):
-        #     raise Exception('Vertex shaders does not have mathcing versions.')
+            def get_version(shader_code):
+                return shader_code.split('#version', 1)[1].split('\n')[0].strip()
 
-        # inputs = set()
-        vertex_shader_input_self = [l for l in self.vertex.split('\n') if l.startswith('in ')]
-        vertex_shader_input_other = [l for l in other.vertex.split('\n') if l.startswith('in ')]
-        vertex_shader_uniforms_self = [l for l in self.vertex.split('\n') if l.startswith('uniform ')]
-        vertex_shader_uniforms_other = [l for l in other.vertex.split('\n') if l.startswith('uniform ')]
-        vertex_shader_output_self = [l for l in self.vertex.split('\n') if l.startswith('out ')]
-        vertex_shader_output_other = [l for l in other.vertex.split('\n') if l.startswith('out ')]
+            this_version, other_version = get_version(program), get_version(program_other)
+            if this_version != other_version:
+                raise Exception(f'{program_name} program does not have matching versions: \'{this_version}\', \'{other_version}\'')
 
-        import re
-        def extract_functions(glsl):
-            header_pattern = re.compile(r'([a-zA-Z_]\w*)\s+([a-zA-Z_]\w*)\s*\((.*?)\)\s*\{', re.DOTALL)
-            functions = {}
 
-            for match in header_pattern.finditer(glsl):
-                start = match.start()
+            program_input_self = [l for l in program.split('\n') if l.startswith('in ')]
+            program_input_other = [l for l in program_other.split('\n') if l.startswith('in ')]
+            program_uniforms_self = [l for l in program.split('\n') if l.startswith('uniform ')]
+            program_uniforms_other = [l for l in program_other.split('\n') if l.startswith('uniform ')]
+            program_output_self = [l for l in program.split('\n') if l.startswith('out ')]
+            program_output_other = [l for l in program_other.split('\n') if l.startswith('out ')]
 
-                brace_pos = glsl.find('{', match.end() - 1)
-                depth = 1
-                i = brace_pos + 1
+            import re
+            def extract_functions(glsl):
+                header_pattern = re.compile(r'([a-zA-Z_]\w*)\s+([a-zA-Z_]\w*)\s*\((.*?)\)\s*\{', re.DOTALL)
+                functions = {}
 
-                while i < len(glsl) and depth:
-                    if glsl[i] == '{':
-                        depth += 1
-                    elif glsl[i] == '}':
-                        depth -= 1
-                    i += 1
+                for match in header_pattern.finditer(glsl):
+                    start = match.start()
 
-                functions[f'{match.group(2)}->{match.group(1)}'] = {
-                    "return_type": match.group(1),
-                    "name": match.group(2),
-                    "args": match.group(3).strip(),
-                    "source": glsl[start:i],
-                    "returns": [l for l in glsl[start:i].split('\n') if l.lstrip().startswith('return ')],
-                }
+                    brace_pos = glsl.find('{', match.end() - 1)
+                    depth = 1
+                    i = brace_pos + 1
 
-            return functions
+                    while i < len(glsl) and depth:
+                        if glsl[i] == '{':
+                            depth += 1
+                        elif glsl[i] == '}':
+                            depth -= 1
+                        i += 1
 
-        vertex_shader_functions = extract_functions(self.vertex)
-        for name, func_data in extract_functions(other.vertex).items():
-            if name not in vertex_shader_functions:
-                vertex_shader_functions[name] = func_data
-                continue
+                    functions[f'{match.group(2)}->{match.group(1)}'] = {
+                        "return_type": match.group(1),
+                        "name": match.group(2),
+                        "args": match.group(3).strip(),
+                        "source": glsl[start:i],
+                        "returns": [l for l in glsl[start:i].split('\n') if l.lstrip().startswith('return ')],
+                    }
 
-            # if both shader have identical function name and return type
+                return functions
 
-            # if name == 'main':
-            #     original_function = vertex_shader_functions[name]
-            #     if len(original_function['returns'])
+            program_functions = extract_functions(program)
+            # print('{other.name} has functions:', extract_functions(program_other))
+            for name, func_data in extract_functions(program_other).items():
+                if name not in program_functions:
+                    program_functions[name] = func_data
+                    # print('add new function', name)
+                    continue
+                else:
+                    # print('combine into existing function:', name)
+                    program_functions[name]['source'] += func_data['source']
+                    # this will make two functions after another with the same name, so call a replace to move the second definition, merging them.
+                    func_name = program_functions[name]['name']
+                    program_functions[name]['source'] = program_functions[name]['source'].replace(f'}}void {func_name}() {{', f'\n    // from {other.name}') # double {{ to escape here.
 
-        # print(vertex_shader_functions_self)
 
-        # vertex_functions_self = [l for l in self.vertex.split('\n') if l.startswith('uniform ') or l.startswith('in ') or l.startswith('out ')]
-        # vertex_functions_other = [l for l in self.vertex.split('\n') if l.startswith('uniform ') or l.startswith('in ') or l.startswith('out ')]
-        # combined_shader_input = set(vertex_shader_input_self, vertex_shader_input_other)
+            combined_program_input = set(program_input_self + program_input_other)
+            combined_program_uniforms = set(program_uniforms_self + program_uniforms_other)
+            combined_program_output = set(program_output_self + program_output_other)
 
-        combined_vertex_shader_input = set(vertex_shader_input_self + vertex_shader_input_other)
-        combined_vertex_shader_uniforms = set(vertex_shader_uniforms_self + vertex_shader_uniforms_other)
-        combined_vertex_shader_output = set(vertex_shader_output_self + vertex_shader_output_other)
-
-        from textwrap import dedent
-        combined_shader = dedent(f'''\
+            from textwrap import dedent
+            combined_program = dedent(f'''\
 #version {this_version}
-// vertex in
-{'\n'.join(combined_vertex_shader_input)}
-// vertex uniform
-{'\n'.join(combined_vertex_shader_uniforms)}
-// vertex out
-{'\n'.join(combined_vertex_shader_output)}
+{'\n'.join(combined_program_input)}
+{'\n'.join(combined_program_uniforms)}
+{'\n'.join(combined_program_output)}
+
+{'\n'.join([data['source'] for data in program_functions.values()])}
 ''')
-        print(combined_shader)
-        # if self.vertex.split('#version ',1)[] == #version
+            print(f'combined {program_name} program:')
+            print(combined_program)
+            setattr(combined_shader, program_name, combined_program)
 
-
-        # if 'void main()' in self.fragment and 'void main()' in other.fragment:
-        #     # merge fragment mains
-
-
+        combined_shader.default_input = self.default_input | other.default_input # merge dicts
+        return combined_shader
 
 
 
@@ -228,7 +223,7 @@ if __name__ == '__main__':
     from ursina import Ursina, Entity, held_keys, scene, EditorCamera
 
     app = Ursina()
-    Entity(model='cube', shader=Shader(name='test_shader'))
+
     EditorCamera()
     def input(key):
         if held_keys['control'] and key == 'r':
@@ -243,8 +238,12 @@ if __name__ == '__main__':
 
     from ursina.shaders.unlit_shader import unlit_shader
     from ursina.shaders.matcap_shader import matcap_shader
+    from ursina.shaders.fog_shader import fog_shader
 
-    combined_shader = unlit_shader + matcap_shader
-    print(combined_shader)
+    combined_shader = unlit_shader + fog_shader
+    # combined_shader.compile()
+    # print(combined_shader)
+    Entity(model='sphere', shader=combined_shader, texture='shore')
+    scene.fog_color = color.blue
 
     app.run()

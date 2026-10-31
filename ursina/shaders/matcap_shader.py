@@ -1,14 +1,17 @@
 from ursina import color
 from ursina.shader import Shader
 
-matcap_shader = Shader(name='matcap_shader', language=Shader.GLSL, vertex = '''#version 140
+matcap_shader = Shader(name='matcap_shader', language=Shader.GLSL, vertex = '''\
+#version 140
 uniform mat4 p3d_ModelViewProjectionMatrix;
 uniform mat4 p3d_ModelMatrix;
 uniform mat4 p3d_ModelViewMatrix;
 uniform mat3 p3d_NormalMatrix;
 in vec4 p3d_Vertex;
 in vec3 p3d_Normal;
+in vec4 p3d_Color;
 
+out vec4 vertex_color;
 out vec3 eye;
 out vec3 view_normal;
 // reflect alternative:
@@ -16,26 +19,28 @@ out vec3 view_normal;
 
 void main() {
     gl_Position = p3d_ModelViewProjectionMatrix * p3d_Vertex;
-
     eye = normalize(vec3(p3d_ModelViewMatrix * vec4(p3d_Vertex.xyz, 1.0)));
     view_normal = normalize( p3d_NormalMatrix * p3d_Normal );
+    vertex_color = p3d_Color;
 }
 ''',
 fragment='''
 #version 140
 uniform sampler2D p3d_Texture0;
 uniform vec4 p3d_ColorScale;
+in vec4 p3d_Color;
+in vec4 vertex_color;
 
 in vec3 eye;
 in vec3 view_normal;
-out vec4 fragColor;
+out vec4 frag_color;
 
 void main() {
     vec3 r = reflect(eye, view_normal);
     float m = 2. * sqrt(pow(r.x, 2.) + pow(r.y, 2.) + pow(r.z + 1., 2.));
     vec2 vN = r.xy / m + .5;
 
-    fragColor = texture(p3d_Texture0, vN) * p3d_ColorScale;
+    frag_color = texture(p3d_Texture0, vN) * p3d_ColorScale * vertex_color;
 }
 
 ''',
@@ -52,6 +57,10 @@ if __name__ == '__main__':
     shader = matcap_shader
 
     a = WhiteCube(shader=shader, texture='shore')
+    a.model = load_model('cube', use_deepcopy=True)
+    a.model.colors = [color.random_color() for v in a.model.vertices]
+    a.model.generate()
+    a.shader = shader
     b = WhiteSphere(shader=shader, rotation_y=180, x=3, texture='shore')
     # AzureSphere(shader=a.shader, y=2)
     GrayPlane(scale=10, y=-2, texture='shore')

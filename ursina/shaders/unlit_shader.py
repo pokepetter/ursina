@@ -7,8 +7,8 @@ from ursina import color
 # from ursina.camera import instance as camera
 # from ursina.scene import instance as scene
 
-unlit_shader = Shader(name='unlit_shader', language=Shader.GLSL, vertex = '''#version 140
-
+unlit_shader = Shader(name='unlit_shader', language=Shader.GLSL, vertex = '''\
+#version 140
 uniform mat4 p3d_ModelViewProjectionMatrix;
 uniform mat4 p3d_ModelViewMatrix;
 uniform mat4 p3d_ModelMatrix;
@@ -28,19 +28,16 @@ void main() {
 }
 ''',
 
-fragment='''
+fragment='''\
 #version 140
-
 uniform sampler2D p3d_Texture0;
 uniform vec4 p3d_ColorScale;
 in vec2 uvs;
-out vec4 fragColor;
-
 in vec4 vertex_color;
+out vec4 frag_color;
 
 void main() {
-    vec4 color = texture(p3d_Texture0, uvs) * p3d_ColorScale * vertex_color;
-    fragColor = color;
+    frag_color = texture(p3d_Texture0, uvs) * p3d_ColorScale * vertex_color;
 }
 
 ''',
