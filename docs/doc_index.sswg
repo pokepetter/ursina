@@ -1,25 +1,58 @@
 <a href="installation.html">Installation</a>
+<details>
+    <summary><a href="entity_basics.html">Entity Basics</a></summary>
 
-<a href="entity_basics.html">Entity Basics</a>
-    #index entity_basics.sswg
+    <div style="margin-left: 15px;">
+        #index entity_basics.sswg
+    </div>
+</details>
 
-<a href="coordinate_system.html">Coordinate System</a>
-    #index coordinate_system.sswg
+<details>
+    <summary><a href="coordinate_system.html">Coordinate System</a></summary>
 
-<a href="collision.html">Collision</a>
-    #index collision.sswg
+    <div style="margin-left: 15px;">
+        #index coordinate_system.sswg
+    </div>
+</details>
 
-<a href="text.html">Text</a>
-    #index text.sswg
+<details>
+    <summary><a href="collision.html">Collision</a></summary>
 
-<a href="animation.html">Animation</a>
-    #index animation.sswg
+    <div style="margin-left: 15px;">
+        #index collision.sswg
+    </div>
+</details>
 
+<details>
+    <summary><a href="text.html">Text</a></summary>
 
-<a href="networking.html">Networking</a>
-    #index networking.sswg
+    <div style="margin-left: 15px;">
+        #index text.sswg
+    </div>
+</details>
+
+<details>
+    <summary><a href="animation.html">Animation</a></summary>
+
+    <div style="margin-left: 15px;">
+        #index animation.sswg
+    </div>
+</details>
+
+<details>
+    <summary><a href="networking.html">Networking</a></summary>
+
+    <div style="margin-left: 15px;">
+        #index networking.sswg
+    </div>
+</details>
+
+<details>
+    <summary><a href="building.html">Build and Release</a></summary>
+
+    <div style="margin-left: 15px;">
+        #index building.sswg
+    </div>
+</details>
 
 <a href="faq.html">F.A.Q.</a>
-
-<a href="building.html">Build and Release</a>
-    #index building.sswg
