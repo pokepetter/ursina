@@ -95,7 +95,9 @@ def slerp(q1, q2, t):
 
     theta = acos(costheta)
     if abs(theta) < 0.0001:
-        return q2
+        result = q1 * (1.0 - t) + q2 * t
+        result.normalize()
+        return result
 
     sintheta = sqrt(1.0 - costheta * costheta)
     if abs(sintheta) < 0.0001:
