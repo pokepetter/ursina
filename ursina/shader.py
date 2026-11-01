@@ -206,8 +206,8 @@ class Shader:
 
 {'\n'.join([data['source'] for data in program_functions.values()])}
 ''')
-            print(f'combined {program_name} program:')
-            print(combined_program)
+            # print(f'combined {program_name} program:')
+            # print(combined_program)
             setattr(combined_shader, program_name, combined_program)
 
         combined_shader.default_input = self.default_input | other.default_input # merge dicts
