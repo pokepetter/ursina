@@ -170,6 +170,23 @@ green {color: var(--green);}
 blue {color: var(--blue);}
 purple {color: var(--purple)}
 
+#documentation br {
+    display: none;
+}
+
+#documentation a {
+    text-decoration: none;
+}
+
+details > div > br {
+    display: inline !important;
+}
+
+#documentation > details > div {
+    margin-left: 15px;
+}
+
+
 .sidebar {
     position: fixed;
     left: 10px;
