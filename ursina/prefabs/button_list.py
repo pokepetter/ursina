@@ -84,7 +84,7 @@ class ButtonList(Entity):
     def selected(self):
         if not self.selection_marker.enabled:
             return None
-        index = int(-self.selection_marker.y * len(self.button_dict))
+        index = round(-self.selection_marker.y * len(self.button_dict))
         return self.button_dict.items()[index]
 
 
@@ -121,14 +121,15 @@ if __name__ == '__main__':
         if key == 'space':
             bl.button_dict = {
                 'one' :     None,
-                'two' :     default,
-                'tree' :    Func(test, 3, 4),
-                'four' :    Func(test, b=3, a=4),
-            }
+                'two' :     Func(print, 2),
+                'three' :    Func(print, 3),
+                'four' :    Func(print, 4),
+                }
+            bl.selected = 'three'
+
         if key == 'o':
             bl.enabled = True
 
-    bl.selected = 'button 7'
 
     bl.button_dict = {}
 
