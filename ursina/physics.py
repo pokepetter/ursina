@@ -117,16 +117,21 @@ def raycast(origin, direction: Vec3 = Vec3(0, 0, 1), distance=9999,
         return hit
 
     if not hit:
+        print('hit nothing')
         return HitInfo(hit=False)
 
+    from panda3d.core import NodePath
+    node = result.getNode()
+    node_path = NodePath(node)
+    normal = result.getHitNormal()
     return HitInfo(
         hit=True,
-        entity=result.getNode(),
+        entity=node_path,
         point=Vec3(*result.getHitPos()),
         world_point=Vec3(*result.getHitPos()),
         distance=result.getHitFraction() * distance,
-        normal=Vec3(*result.getHitNormal()),
-        world_normal=Vec3(*result.getHitNormal()),
+        normal=Vec3(*normal),
+        world_normal=Vec3(*node_path.getNetTransform().getMat().xformVec(normal)).normalized(),
         hits=None,
         entities=None
     )
