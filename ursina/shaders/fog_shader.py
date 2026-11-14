@@ -11,6 +11,7 @@ fog_shader = Shader(name='fog_shader', language=Shader.GLSL, vertex='''\
 uniform vec4 fog_color;
 uniform float fog_start;
 uniform float fog_end;
+uniform mat4 p3d_ModelViewMatrix;
 out vec3 camera_world_pos;
 void main() {
     // Transform vertex to camera/view space
