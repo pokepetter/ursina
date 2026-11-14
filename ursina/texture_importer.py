@@ -15,9 +15,9 @@ thumbhashes = None
 thumbhash_path = application.textures_compressed_folder / 'thumbhashes.json'
 
 
-def load_texture(name, folder:Path=None, use_cache=True, filtering='default'):
+def load_texture(name, folder:Path=None, use_cache=True, filtering='default', repeat=False):
     if textureless and '*' not in name:
-        return Texture(application.internal_textures_folder/'white_cube.png')
+        return Texture(application.internal_textures_folder/'white_cube.png', filtering=filtering, repeat=repeat)
 
     if use_cache and name in imported_textures:
         return copy(imported_textures[name])
@@ -32,7 +32,7 @@ def load_texture(name, folder:Path=None, use_cache=True, filtering='default'):
 
         if name in thumbhashes:
             image = thumbhash.thumbhash_to_image(thumbhashes[name])
-            tex = Texture(image, filtering='bilinear')
+            tex = Texture(image, filtering='bilinear', repeat=repeat)
             imported_textures[name] = tex
             return tex
 
@@ -55,14 +55,14 @@ def load_texture(name, folder:Path=None, use_cache=True, filtering='default'):
     for folder in _folders:
         if '.' in name: # got name with file extension
             for filename in folder.glob('**/' + name):
-                t = Texture(filename.resolve(), filtering=filtering)
+                t = Texture(filename.resolve(), filtering=filtering, repeat=repeat)
                 imported_textures[name] = t
                 return t
 
         for filename in folder.glob('**/' + name + '.*'): # no file extension given, so try all supported
             if filename.suffix in file_types:
                 # print('found:', filename)
-                t = Texture(filename.resolve(), filtering=filtering)
+                t = Texture(filename.resolve(), filtering=filtering, repeat=repeat)
                 imported_textures[name] = t
                 return t
 
