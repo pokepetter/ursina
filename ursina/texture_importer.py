@@ -15,7 +15,7 @@ thumbhashes = None
 thumbhash_path = application.textures_compressed_folder / 'thumbhashes.json'
 
 
-def load_texture(name, folder:Path=None, use_cache=True, filtering='default', repeat=False):
+def load_texture(name, folder:Path=None, use_cache=True, filtering='default', repeat=True):
     if textureless and '*' not in name:
         return Texture(application.internal_textures_folder/'white_cube.png', filtering=filtering, repeat=repeat)
 
