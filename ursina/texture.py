@@ -15,7 +15,7 @@ class Texture():
 
     default_filtering = None      # options: None / 'bilinear' / 'mipmap'
 
-    def __init__(self, value, filtering='default'):
+    def __init__(self, value, filtering='default', repeat=True):
 
         if isinstance(value, str) and value.startswith('data:image/png;base64'):
             import base64
@@ -48,6 +48,7 @@ class Texture():
         if filtering == 'default':
             filtering = Texture.default_filtering      # None/'bilinear'/'mipmap' default: 'None'
         self.filtering = filtering
+        self.repeat = repeat
 
 
     @staticmethod
