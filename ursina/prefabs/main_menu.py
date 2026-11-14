@@ -9,13 +9,13 @@ from ursina.ursinastuff import DotDict
 
 
 class MainMenu(Entity):
-    def __init__(self, button_class=Button, button_size=Vec2(.25,.075), **kwargs):
+    def __init__(self, button_class=Button, button_size=Vec2(.25,.075), button_spacing=1.25, **kwargs):
         super().__init__(parent=camera.ui)
-        self.button_size= button_size
+        self.button_size = button_size
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-        button_spacing = .075 * 1.25
+        absoulte_button_spacing = button_size[1] * button_spacing
 
         self.menu_parent = Entity(parent=self, y=0)
         self.main_menu = Entity(parent=self.menu_parent, y=.15)
@@ -41,14 +41,14 @@ class MainMenu(Entity):
 
         for i, (name, button) in enumerate(self.main_menu.buttons.items()):
             button.parent = self.main_menu
-            button.y = (-i - 2) * button_spacing
+            button.y = (-i - 2) * absoulte_button_spacing
 
         self.main_menu.buttons.load.buttons = []
         for i in range(3):
-            b = button_class(parent=self.load_menu, scale=button_size, text=f'Slot {i}', y=-i * button_spacing)
+            b = button_class(parent=self.load_menu, scale=button_size, text=f'Slot {i}', y=-i * absoulte_button_spacing)
             self.main_menu.buttons.load.buttons.append(b)
 
-        button_class(parent=self.load_menu, scale=button_size, text='Back', y=-5 * button_spacing, on_click=Func(setattr, self.state_handler, 'state', 'main_menu'))
+        button_class(parent=self.load_menu, scale=button_size, text='Back', y=-5 * absoulte_button_spacing, on_click=Func(setattr, self.state_handler, 'state', 'main_menu'))
 
 
         # text_scale_slider = Slider(0, 2, default=1, step=.1, dynamic=True, text='Text Size:', parent=self.options_menu, x=-.25)
