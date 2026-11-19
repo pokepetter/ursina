@@ -60,7 +60,7 @@ def ursinamesh_to_obj(mesh, name='', out_path:Path=None, max_decimals=5, flip_fa
 
     out_file = out_path / f'{name}.obj'
     out_file.parent.mkdir(parents=True, exist_ok=True)
-    with open(out_file, 'w') as f:
+    with open(out_file, 'w', encoding='utf-8') as f:
         f.write(obj)
 
     print_info(f'saved obj: {out_file}')
