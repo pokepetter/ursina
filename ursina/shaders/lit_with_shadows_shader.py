@@ -63,6 +63,16 @@ uniform struct {
     mat4 shadowViewMatrix;
 } p3d_LightSource[1];
 
+struct p3d_MaterialParameters {
+        vec4 ambient;
+        vec4 diffuse;
+        vec4 emission;
+        vec3 specular;
+        float shininess;
+    };
+
+uniform p3d_MaterialParameters p3d_Material;
+
 const float M_PI = 3.141592653589793;
 
 uniform sampler2D p3d_Texture0;
@@ -126,7 +136,7 @@ vec4 cast_shadows(vec4 color) {
 }
 
 void main() {
-    fragment_color = texture(p3d_Texture0, texcoords) * p3d_ColorScale * vertex_color;
+    fragment_color = texture(p3d_Texture0, texcoords) * p3d_Material.diffuse * p3d_ColorScale * vertex_color;
 
     // Call the function to handle lighting and shadowing
     fragment_color = cast_shadows(fragment_color);
@@ -137,7 +147,6 @@ void main() {
     t = clamp(t, 0., 1.);
     fragment_color.rgb = mix(fragment_color.rgb, fog_color.rgb, t * fog_color.a);
 }
-
 ''',
 default_input = {
     'texture_scale': Vec2(1,1),
