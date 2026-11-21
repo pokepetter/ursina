@@ -278,7 +278,7 @@ def obj_to_ursinamesh(folder=Func(getattr, application, 'models_compressed_folde
         print('read obj at:', file_path)
 
 
-        with file_path.open('r') as file:
+        with file_path.open('r', encoding='utf-8') as file:
             lines = file.readlines()
 
         verts = []
@@ -539,7 +539,7 @@ def ursina_mesh_to_obj(mesh, name='', out_path=Func(getattr, application, 'model
 
     obj += '\n'
     # print(obj)
-    with open(out_path / (name + '.obj'), 'w') as f:
+    with open(out_path / (name + '.obj'), 'w', encoding='utf-8') as f:
         f.write(obj)
         print_info('saved obj:', out_path / (name + '.obj'))
 
