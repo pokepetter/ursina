@@ -64,7 +64,7 @@ def quit():
 
 def load_settings(path=asset_folder / 'ursina_settings.py'):
     if path.exists():
-        with open(path) as f:
+        with open(path, encoding='utf-8-sig') as f:  # Python source files are UTF-8, some editors add a BOM
             try:
                 d = dict(locals(), **globals())
                 exec(f.read(), d, d)
